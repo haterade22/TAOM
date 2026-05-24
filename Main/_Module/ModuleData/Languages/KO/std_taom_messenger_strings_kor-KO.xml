@@ -31,9 +31,9 @@
     <string id="taom_messenger_error" text="Messenger Error" />
     <string id="taom_messenger_dialog_init" text="I may need to send you a message later. Can I dispatch a messenger to you?" />
     <string id="taom_messenger_dialog_npc_accept" text="Of course. I'll make sure to receive your messenger when they arrive." />
-    <string id="taom_messenger_dialog_send" text="Send the messenger ({COST} denars)" />
-    <string id="taom_messenger_dialog_decline" text="On second thought, never mind." />
-    <string id="taom_messenger_dialog_decline_ack" text="As you wish." />
-    <string id="taom_messenger_dialog_sent" text="I'll be expecting your messenger then." />
+    <string id="taom_messenger_dialog_send" text="전령 보내기 ({COST} 데나르)" />
+    <string id="taom_messenger_dialog_decline" text="다시 생각해보니, 괜찮습니다." />
+    <string id="taom_messenger_dialog_decline_ack" text="알겠습니다." />
+    <string id="taom_messenger_dialog_sent" text="그럼 당신의 전령을 기다리겠습니다." />
   </strings>
 </base>

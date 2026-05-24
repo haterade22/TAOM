@@ -406,26 +406,26 @@
     <string id="ItueKmqd" text="Tu clan ahora está en guerra con {QUEST_GIVER_SETTLEMENT_FACTION}. Tu contrato con {QUEST_GIVER.LINK} está cancelado." />
     <string id="izwKmH2I" text="{RULER.NAME} ha decidido formar una alianza con {KINGDOM_NAME} con el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
     <string id="jaioXYDc" text="{RULER.NAME} ha decidido no formar una alianza con {KINGDOM_NAME} con el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has decided to make peace with {KINGDOM} despite the opposition of {?PEACEMAKER_RULER.GENDER}her{?}his{\?} council." />
+    <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido hacer la paz con {KINGDOM} a pesar de la oposición de {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo." />
     <string id="JJQ0Hp4m" text="Un mensajero ha llegado de {MAP_FACTION_NAME}. {MAP_FACTION_NAME} pagará {GOLD_AMOUNT} {GOLD_ICON} en tributo cada día para terminar la guerra entre vuestros reinos. Tus vasallos han dejado la decisión contigo." />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} es actualmente más poderoso que nosotros. Necesitamos tiempo para fortalecer nuestras fuerzas." />
     <string id="JQligd8z" text="El consejo de {KINGDOM} ha elegido a {KING.NAME} como el nuevo gobernante." />
-    <string id="JY717hPW" text="I do not have the authority to make peace on behalf of {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} and {?ENEMY_RULER.GENDER}her{?}his{\?} council should decide whether to offer peace, and what the terms will be." />
+    <string id="JY717hPW" text="No tengo la autoridad para hacer la paz en nombre de {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} y {?ENEMY_RULER.GENDER}su{?}su{\?} consejo deberían decidir si ofrecer la paz y cuáles serán los términos." />
     <string id="K5w135N9" text="{RULER.NAME} ha decidido no responder al llamado de {CALLING_KINGDOM} y no hará la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión fue tomada en contra del consejo de {?RULER.GENDER}su{?}su{\?} consejo." />
     <string id="KFHj7ckm" text="Como gobernante, debes decidir si se hará la paz con {KINGDOM_NAME}" />
     <string id="KlATZEbb" text="Formando una Alianza con {KINGDOM_NAME}." />
     <string id="KSrNutEO" text="{FACTION_LEADER} decidirá si se declarará la guerra a {KINGDOM_NAME}. Puedes elegir tu postura respecto a esta decisión." />
-    <string id="Ktpia7Pa" text="{RULER.NAME} of {KINGDOM} grants {SETTLEMENT} to {LEADER.NAME} despite {?RULER.GENDER}her{?}his{\?} council's opposition." />
-    <string id="l5H9x7Lo" text="{RULER.NAME} of {KINGDOM} grants {SETTLEMENT} to {LEADER.NAME}, with {?RULER.GENDER}her{?}his{\?} council evenly split." />
+    <string id="Ktpia7Pa" text="{RULER.NAME} de {KINGDOM} otorga {SETTLEMENT} a {LEADER.NAME} a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
+    <string id="l5H9x7Lo" text="{RULER.NAME} de {KINGDOM} otorga {SETTLEMENT} a {LEADER.NAME}, con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente." />
     <string id="L802I9W2" text="Sí, me uniré a {FACTION_NAME}." />
     <string id="L81DPSom" text="Como {RULER_NAME_AND_TITLE}, debes decidir si tu reino responderá al llamado de {CALLING_KINGDOM} y declarará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="Lalj0T1i" text="{RULER.NAME} has answered the call of {CALLING_KINGDOM} name and declared war on {KINGDOM_TO_CALL_TO_WAR_AGAINST} despite opposition from {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="Lalj0T1i" text="{RULER.NAME} ha respondido al llamado de {CALLING_KINGDOM} y declarado la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
     <string id="lseJ70y0" text="Tu reino está en guerra con {KINGDOM_NAME}." />
     <string id="LVX2x6Jf" text="Quisiera terminar mi contrato con {SERVED_FACTION}." />
     <string id="m69pvful" text="{KINGDOM_LEADER} decidirá si tu reino responderá al llamado de {CALLING_KINGDOM} y declarará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_PAYMENT}{GOLD_ICON}. Puedes elegir tu postura respecto a esta decisión." />
-    <string id="m6OVl6Dg" text="{RULER.NAME} has expelled {CLAN} clan from {KINGDOM}, with {?RULER.GENDER}her{?}his{\?} council evenly split on the matter." />
+    <string id="m6OVl6Dg" text="{RULER.NAME} ha expulsado al clan {CLAN} de {KINGDOM}, con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente en el asunto." />
     <string id="mfYzCeGR" text="{CHARACTER.NAME} fue {TITLE} de {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
-    <string id="mRrYn2qm" text="{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has chosen not to make peace with {KINGDOM} with the support of {?PEACEMAKER_RULER.GENDER}her{?}his{\?} council." />
+    <string id="mRrYn2qm" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha elegido no hacer la paz con {KINGDOM} con el apoyo de {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo." />
     <string id="MSr3HRa1" text="{QUEST_GIVER.NAME}, {?QUEST_GIVER.GENDER}una dama{?}un señor{\?} de {CLAN}, quiere que un miembro joven del clan sea entrenado en las artes de la guerra." />
     <string id="mvkKP6OE" text="{RULER.NAME} decidió no expulsar al clan {CLAN} de {KINGDOM}." />
     <string id="MYIgSsfk" text="{RULER.NAME} ha decidido no llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión fue en contra del consejo de {?RULER.GENDER}su{?}su{\?} consejo." />
@@ -439,12 +439,12 @@
     <string id="o69PZuce" text="{OLD_LEADER.LINK} ya no es el líder de {CLAN_NAME}. {NEW_LEADER.LINK} ha asumido como gobernante del clan." />
     <string id="O9XpB5Ah" text="Como gobernante, debes decidir si se hará un acuerdo comercial con {KINGDOM}" />
     <string id="oAw74q3r" text="Como {RULER_NAME_AND_TITLE}, debes decidir si tu reino responderá al llamado de {CALLING_KINGDOM} y declarará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
-    <string id="Oe1NdVLe" text="{RULER.NAME} chose not to expel {CLAN} clan from {KINGDOM} with {?RULER.GENDER}her{?}his{\?} council evenly split on the matter." />
+    <string id="Oe1NdVLe" text="{RULER.NAME} eligió no expulsar al clan {CLAN} de {KINGDOM} con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente en el asunto." />
     <string id="Oi20UrO2" text="Nuestra guerra con {TARGET_SETTLEMENT_FACTION_INFORMAL_NAME} va bastante bien. Pero hay quienes dicen que no tenemos suficiente que mostrar por toda la sangre y plata que hemos gastado. Una victoria clara en esta etapa haría mucho bien. Creo que me gustaría ver nuestra bandera ondeando desde las torres de {TARGET_SETTLEMENT}.[ib:normal2][if:convo_thinking]" />
     <string id="OlIWwLbP" text="Sí. Se trata de la guerra con {ENEMYFACTION_INFORMALNAME}. [ib:closed][if:convo_pondering]Necesitamos ocupar algunas de sus fuerzas, y la manera más fácil sería asaltar sus aldeas. Es un negocio cruel y será duro para la gente común, pero sus señores tendrán que perseguir a los asaltantes y les impedirá hacer lo mismo con nosotros. Si asumes esto, te recompensaré si tienes éxito." />
-    <string id="Ouj6eSWC" text="{RULER.NAME} has decided not to answer the call of {CALLING_KINGDOM} name and will not war on {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision had the support of half of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="Ouj6eSWC" text="{RULER.NAME} ha decidido no responder al llamado de {CALLING_KINGDOM} y no hará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión tuvo el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
     <string id="PneX4Ayw" text="Un mensajero portando una oferta de llamado a la guerra de {KINGDOM_NAME} contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} ha llegado a la corte de tu reino." />
-    <string id="PP7KD7OC" text="{RULER.NAME} of {KINGDOM} has decided to sign a trade agreement with {OTHER_KINGDOM}, with his {?RULER.GENDER}her{?}his{\?} council evenly divided on the matter." />
+    <string id="PP7KD7OC" text="{RULER.NAME} de {KINGDOM} ha decidido firmar un acuerdo comercial con {OTHER_KINGDOM}, con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente en el asunto." />
     <string id="PutoRsWp" text="Un mensajero llega de {CLAN_NAME}. Te ofrecen {GOLD_AMOUNT}{GOLD_ICON} como rescate si liberas a {CAPTIVE_HERO.NAME}." />
     <string id="q9DnHVcZ" text="No es de nuestro interés unirnos a {KINGDOM_NAME} en su guerra." />
     <string id="qa4FlTWS" text="{RULER.NAME} de {KINGDOM} toma {SETTLEMENT} como {?RULER.GENDER}su{?}su{\?} feudo a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
@@ -466,7 +466,7 @@
     <string id="UQq4ekeu" text="{RULER.NAME} de {KINGDOM} ha decidido no firmar un acuerdo comercial con {OTHER_KINGDOM}." />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK} ha llamado a {CALLED_KINGDOM_LINK} a declarar la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}." />
     <string id="uWdj1X2c" text="{CHARACTER.NAME} era miembro de {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
-    <string id="V097rA1v" text="{LORD.FIRSTNAME} is a head of {CLAN_NAME}, a rising new clan. {?LORD.GENDER}She{?}He{\?} is still making {?LORD.GENDER}her{?}his{\?} reputation." />
+    <string id="V097rA1v" text="{LORD.FIRSTNAME} es el líder de {CLAN_NAME}, un nuevo clan en ascenso. {?LORD.GENDER}Ella{?}Él{\?} todavía está forjando {?LORD.GENDER}su{?}su{\?} reputación." />
     <string id="vf2pb7Ts" text="{RULER.NAME} ha respondido al llamado de {CALLING_KINGDOM} y declaró la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="Vg5RmOqL" text="{FACTION_LEADER} decidirá si {KINGDOM} firmará un acuerdo comercial con {OTHER_KINGDOM}. Puedes elegir tu postura sobre esta decisión." />
     <string id="VWoHoUin" text="No habrá paz entre nosotros y {ENEMY_INFORMAL_NAME}, así como el lobo no hace la paz con las ovejas." />
@@ -486,11 +486,11 @@
     <string id="ZZ1oLfEq" text="{RULER.NAME} ha respondido al llamado de {CALLING_KINGDOM} y declaró la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
     <string id="taom_shaghana_name" text="Shaghâna" />
     <string id="taom_shaghana_short_name" text="Shaghâna" />
-    <string id="taom_shaghana_title" text="Taskralan of Shaghâna" />
+    <string id="taom_shaghana_title" text="Taskralan de Shaghâna" />
     <string id="taom_shaghana_ruler_title" text="Taskral" />
-    <string id="taom_shaghana_desc" text="Shaghâna is the eastern reach of Harad, a land of sun-scorched steppes and ancient fortresses. Its nine tribal clans are fierce warriors, bound together by oath and blood, striking fear into those who dare oppose them." />
+    <string id="taom_shaghana_desc" text="Shaghâna es la región oriental de Harad, una tierra de estepas abrasadas por el sol y fortalezas antiguas. Sus nueve clanes tribales son guerreros feroces, unidos por juramentos y sangre, que infunden temor en aquellos que se atreven a oponerse a ellos." />
     <string id="aom_shaghana_name" text="Shaghâna" />
-    <string id="aom_shaghana_desc" text="The Shaghâna are a fierce tribal people of the eastern Harad steppes, renowned as relentless raiders and skilled horsemen. Bound by oath and clan, they answer to their Taskral and serve the dark designs of Sauron from their sun-scorched fortresses." />
+    <string id="aom_shaghana_desc" text="Los Shaghâna son un pueblo tribal feroz de las estepas orientales de Harad, reconocidos como saqueadores implacables y jinetes hábiles. Unidos por juramentos y clanes, responden a su Taskral y sirven a los designios oscuros de Sauron desde sus fortalezas abrasadas por el sol." />
     <string id="aom_lord_SH1_1_name" text="Zarkan" />
     <string id="aom_lord_SH2_1_name" text="Rakhim" />
     <string id="aom_lord_SH3_1_name" text="Tadeen" />
@@ -509,23 +509,23 @@
     <string id="aom_clan_shaghana_7_name" text="Alâranin" />
     <string id="aom_clan_shaghana_8_name" text="Banûgand" />
     <string id="aom_clan_shaghana_9_name" text="Acammes" />
-    <string id="aom_sh_notable_0" text="Shrewd Shaghâna trader" />
-    <string id="aom_sh_notable_0b" text="Shaghâna spice dealer" />
-    <string id="aom_sh_notable_1" text="Shaghâna caravan owner" />
-    <string id="aom_sh_notable_1b" text="Eastern steppes merchant" />
-    <string id="aom_sh_notable_2" text="Shaghâna silk trader" />
-    <string id="aom_sh_notable_2b" text="Harad steppe trader" />
-    <string id="aom_sh_notable_3" text="Shaghâna money-changer" />
-    <string id="aom_sh_notable_3b" text="Eastern goods broker" />
-    <string id="aom_sh_notable_4" text="Shaghâna bazaar master" />
-    <string id="aom_sh_notable_4b" text="Devious Shaghâna merchant" />
-    <string id="aom_sh_notable_5" text="Shaghâna sun-priest" />
-    <string id="aom_sh_notable_6" text="Shaghâna tribal elder" />
-    <string id="aom_sh_notable_7" text="Keeper of Shaghâna traditions" />
-    <string id="aom_sh_notable_8" text="Shaghâna metalworker" />
-    <string id="aom_sh_notable_9" text="Shaghâna weapon-crafter" />
-    <string id="aom_sh_notable_gl1" text="Shaghâna enforcer" />
-    <string id="aom_sh_notable_10" text="Shaghâna crime lord" />
+    <string id="aom_sh_notable_0" text="Astuto comerciante Shaghâna" />
+    <string id="aom_sh_notable_0b" text="Comerciante de especias Shaghâna" />
+    <string id="aom_sh_notable_1" text="Dueño de caravana Shaghâna" />
+    <string id="aom_sh_notable_1b" text="Mercader de las estepas orientales" />
+    <string id="aom_sh_notable_2" text="Comerciante de seda Shaghâna" />
+    <string id="aom_sh_notable_2b" text="Comerciante de las estepas de Harad" />
+    <string id="aom_sh_notable_3" text="Cambista de Shaghâna" />
+    <string id="aom_sh_notable_3b" text="Corredor de bienes orientales" />
+    <string id="aom_sh_notable_4" text="Maestro del bazar de Shaghâna" />
+    <string id="aom_sh_notable_4b" text="Mercader astuto de Shaghâna" />
+    <string id="aom_sh_notable_5" text="Sacerdote del sol de Shaghâna" />
+    <string id="aom_sh_notable_6" text="Anciano tribal de Shaghâna" />
+    <string id="aom_sh_notable_7" text="Guardián de las tradiciones de Shaghâna" />
+    <string id="aom_sh_notable_8" text="Herrero de Shaghâna" />
+    <string id="aom_sh_notable_9" text="Forjador de armas de Shaghâna" />
+    <string id="aom_sh_notable_gl1" text="Ejecutor de Shaghâna" />
+    <string id="aom_sh_notable_10" text="Señor del crimen de Shaghâna" />
     <string id="aom_sh_notable_11" text="Jefe de los asaltantes Shaghâna" />
     <string id="aom_sh_notable_gl4" text="Cacique de la banda Shaghâna" />
     <string id="aom_sh_notable_12" text="Jefe callejero Shaghâna" />

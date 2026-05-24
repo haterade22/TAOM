@@ -241,7 +241,7 @@
     <string id="aom_response_2.spc_wanderer_gundabad_2_text" text="약자의 약탈자가 하는 신앙심이로군." />
     <string id="aom_backstory_d.spc_wanderer_gundabad_2_text" text="만약 전쟁군주가 사나운 칼날을 찾는다면, 나보다 더 굶주린 자는 없소." />
     <string id="aom_generic_backstory.spc_wanderer_gundabad_2_text" text="내 아비는 내게 피로 우리의 운명을 새기라 명했소. 군다바드의 자식들 사이에선 흔한 일이오." />
-    <string id="aom_prebackstory.spc_wanderer_gundabad_3_text" text="Heard of Bolg's fall at the Lonely Mountain?" />
+    <string id="aom_prebackstory.spc_wanderer_gundabad_3_text" text="외로운 산에서 볼그가 쓰러진 것에 대해 들었나?" />
     <string id="aom_backstory_a.spc_wanderer_gundabad_3_text" text="거짓말, 모두 거짓말이오. 나는 볼그 아래서 싸웠소, 자랑스럽고 사나웠지. 그러다 패배했소. 난쟁이들, 엘프들, 인간들이 우리를 짓밟았소. 치욕이 아직도 타오르오." />
     <string id="aom_backstory_b.spc_wanderer_gundabad_3_text" text="무리에겐 힘든 일이었소. 약한 동맹자들에게 배신당하고, 패주의 책임을 뒤집어썼소. 우리는 속임수가 있다는 걸 알았지만, 변명은 안 되오." />
     <string id="aom_backstory_c.spc_wanderer_gundabad_3_text" text="하나로 돌격할 수도 있었소, 깨지지 않게. 승리가 아니더라도, 송곳니를 드러낸 채 죽을 수 있었소. 대신, 우리는 흩어졌고, 혈족을 약탈하고, 쓰러진 자들을 죽였소. 치욕이오." />
@@ -257,7 +257,7 @@
     <string id="aom_response_2.spc_wanderer_gundabad_4_text" text="통제되지 않은 분노는 냉혹한 살인보다 더 많은 것을 망친다." />
     <string id="aom_backstory_d.spc_wanderer_gundabad_4_text" text="평화를 선택하고, 대장간을 돌보고, 새끼들을 낳고 싶었다. 하지만 어둠이 피를 명한다. 심연에서는 족장들이 학살의 대가를 치른다." />
     <string id="aom_generic_backstory.spc_wanderer_gundabad_4_text" text="한때 대장장이였다. 분노로 살인을 저질렀고, 공물을 낼 수 없어 도망쳤다. 군다바드 구덩이에선 흔한 일이지. 피의 운명을 받아들여라." />
-    <string id="aom_prebackstory.spc_wanderer_gundabad_5_text" text="Snarl, I'm here to gorge, not yap. But fine, quick." />
+    <string id="aom_prebackstory.spc_wanderer_gundabad_5_text" text="으르렁, 난 먹으러 온 거지 떠들러 온 게 아니다. 하지만 좋아, 빨리 해." />
     <string id="aom_backstory_a.spc_wanderer_gundabad_5_text" text="오크는 칼날로 원한을 갚는다. 증인 없나? 싸워. 약하냐? 살인청부업자를 고용해. 난 피로 번영하고, 쇠를 위해 내 송곳니를 바친다." />
     <string id="aom_backstory_b.spc_wanderer_gundabad_5_text" text="충돌을 좋아해. 내장을 쏟고, 찌꺼기를 챙기고, 먹어치우고, 반복하지, 어두운 정의를 위해." />
     <string id="aom_backstory_c.spc_wanderer_gundabad_5_text" text="너무 열성적이라고들 하지. 감독관들이 결투를 금지했어. 창피하군. 끝없는 사냥보다 빠른 살인이 좋은데. 화살도 없고, 매복도 없어. 그냥 분노, 피, 잔치." />
@@ -529,7 +529,7 @@
     <string id="aom_response_1.spc_wanderer_rohan_7_text" text="동물들은 종종 사람들이 놓치는 것을 감지합니다." />
     <string id="aom_response_2.spc_wanderer_rohan_7_text" text="말들은 많은 것에 놀랍니다." />
     <string id="aom_backstory_d.spc_wanderer_rohan_7_text" text="받아주신다면, 기수의 기술과 말의 지혜를 제공하겠습니다." />
-    <string id="aom_prebackstory.spc_wanderer_rohan_8_text" text="The finest riders serve truth, not corrupted kings..." />
+    <string id="aom_prebackstory.spc_wanderer_rohan_8_text" text="최고의 기병들은 타락한 왕이 아닌 진실을 섬기지..." />
     <string id="aom_backstory_a.spc_wanderer_rohan_8_text" text="저는 왕의 호위대, 왕족 곁에서 말을 타는 정예 부대로 선발되었습니다. 그것은 기수가 달성할 수 있는 최고의 명예였습니다. 자부심을 가지고 섬겼습니다, 우리 왕이 웜텅의 영향 아래 얼마나 타락했는지 보기 전까지는." />
     <string id="aom_backstory_b.spc_wanderer_rohan_8_text" text="한때 강력했던 세오덴 왕은 이제 창백하고 혼란스러운 모습으로 앉아 있고, 그림자혀는 독을 속삭입니다. 나는 이해할 수 없는 명령들을 들었습니다 - 위협받는 국경에서 병력을 철수시키고, 불확실한 목적지로 보급품을 보내는 명령들을요." />
     <string id="aom_backstory_c.spc_wanderer_rohan_8_text" text="내가 이런 명령들에 의문을 제기하자, 그림자혀는 나를 '신뢰할 수 없는 자'로 낙인찍었습니다. 나는 먼 변경 순찰대로 재배치되었다가, 결국 완전히 해임되었습니다. 진짜 위협이 힘을 모으는 동안 꼭두각시 왕을 섬기지는 않겠습니다." />
@@ -783,7 +783,7 @@
     <string id="aom_response_2.spc_wanderer_lothlorien_9_text" text="죽은 자는 정의 따위에 관심이 없습니다." />
     <string id="aom_backstory_d.spc_wanderer_lothlorien_9_text" text="제 활은 안정적이고 제 조준은 정확합니다. 저를 받아주시겠습니까?" />
     <string id="aom_generic_backstory.spc_wanderer_lothlorien_9_text" text="황금 숲의 황금 궁수, 목적과 모험을 찾고 있습니다." />
-    <string id="aom_prebackstory.spc_wanderer_dolguldur_0_text" text="Knowledge is the truest weapon, and I have spent a lifetime gathering it..." />
+    <string id="aom_prebackstory.spc_wanderer_dolguldur_0_text" text="지식이야말로 가장 진실한 무기이며, 나는 평생을 그것을 모으는 데 바쳤다..." />
     <string id="aom_backstory_a.spc_wanderer_dolguldur_0_text" text="저는 돌 굴두르에서 고대의 기술을 익혔고, 네크로맨서의 기술자들로부터 건축과 공성술의 비밀을 배웠습니다. 제 가문은 대대로 건축가로 복무하며, 성벽을 세우고 방어 시설을 만들었습니다." />
     <string id="aom_backstory_b.spc_wanderer_dolguldur_0_text" text="하지만 경쟁자가 제가 적을 위해 우리 요새를 약화시켰다고 고발했을 때, 저는 결백했음에도 추방당했습니다. 제가 세운 성벽은 여전히 서 있지만, 제 이름은 건축가 명부에서 지워졌습니다." />
     <string id="aom_backstory_c.spc_wanderer_dolguldur_0_text" text="이제 저는 방랑하며, 정치보다 기술을 중시하는 이들에게 제 지식을 제공합니다. 어둠이 커지고 있고, 요새의 우루크들은 그 어느 때보다 방어 시설이 필요합니다." />
@@ -894,7 +894,7 @@
     <string id="aom_response_1.spc_wanderer_dunland_3_text" text="치유자의 연민은 희귀한 재능입니다." />
     <string id="aom_response_2.spc_wanderer_dunland_3_text" text="적을 치유하는 것은 전사들에게 더 많은 일거리만 만들어줄 뿐이지." />
     <string id="aom_backstory_d.spc_wanderer_dunland_3_text" text="당신의 백성들의 생명을 소중히 여긴다면, 제가 그들을 돌보게 해주십시오." />
-    <string id="aom_generic_backstory.spc_wanderer_dunland_3_text" text="A herb-woman from the hills of Dunland, seeking purpose and adventure." />
+    <string id="aom_generic_backstory.spc_wanderer_dunland_3_text" text="던랜드의 언덕에서 온 약초사로, 목적과 모험을 찾고 있다." />
     <string id="aom_prebackstory.spc_wanderer_dunland_4_text" text="황금은 칼로 열 수 없는 문을 열어줍니다..." />
     <string id="aom_backstory_a.spc_wanderer_dunland_4_text" text="저는 던랜드의 언덕을 가로지르는 무역망을 구축하여 던렌딩족과 먼 땅의 물품들을 연결했습니다. 제 캐러밴은 부족장들이 높이 평가하던 번영과 희귀한 보급품을 가져왔습니다." />
     <string id="aom_backstory_b.spc_wanderer_dunland_4_text" text="하지만 질투심 많은 상단이 저를 밀수 혐의로 누명 씌우려 음모를 꾸몄습니다. 그들은 제 창고를 압수하고, 제 인맥을 흩어놓고, 등에 걸친 옷과 머릿속 지식만을 남겨두었습니다." />
@@ -1024,7 +1024,7 @@
     <string id="aom_backstory_d.spc_wanderer_harad_9_text" text="내 활은 흔들림이 없고 조준은 정확하다. 받아주겠는가?" />
     <string id="aom_generic_backstory.spc_wanderer_harad_9_text" text="하라드 땅에서 온 매의 눈을 가진 자로, 목적과 모험을 찾고 있다." />
     <string id="aom_prebackstory.spc_wanderer_rhun_0_text" text="지식이야말로 가장 진실한 무기이며, 나는 평생을 그것을 모으는데 바쳤다..." />
-    <string id="aom_backstory_a.spc_wanderer_rhun_0_text" text="I studied the ancient arts of the eastern steppes, learning the secrets of construction and siege-craft from the Kagan's own engineers. My family served as builders for generations, raising walls and forging defenses." />
+    <string id="aom_backstory_a.spc_wanderer_rhun_0_text" text="나는 동방 초원의 고대 기술을 배워, 카간의 기술자들로부터 건축과 공성술의 비밀을 익혔다. 우리 가문은 대대로 건축가로서, 성벽을 쌓고 방어 시설을 만들어왔다." />
     <string id="aom_backstory_b.spc_wanderer_rhun_0_text" text="하지만 경쟁자가 내가 적을 위해 방어시설을 약화시켰다고 고발했고, 결백함에도 불구하고 추방당했다. 내가 세운 성벽은 여전히 서 있지만, 내 이름은 건축가 명부에서 지워졌다." />
     <string id="aom_backstory_c.spc_wanderer_rhun_0_text" text="이제 나는 방랑하며, 정치보다 기술을 중시하는 이들에게 내 지식을 제공한다. 어둠이 커지고 있으며, 동방인들은 그 어느 때보다 방어시설이 필요하다." />
     <string id="aom_response_1.spc_wanderer_rhun_0_text" text="건축가의 기술은 이 어두운 시대에 전사의 기술보다 가치가 있다." />
@@ -1120,7 +1120,7 @@
     <string id="aom_backstory_d.spc_wanderer_umbar_1_text" text="받아주신다면, 내 칼은 당신의 것이오." />
     <string id="aom_generic_backstory.spc_wanderer_umbar_1_text" text="목적과 모험을 찾아 움바르 항구에서 온 검술 대장." />
     <string id="aom_prebackstory.spc_wanderer_umbar_2_text" text="야생은 마을 사람들이 꿈도 꾸지 못하는 비밀을 간직하고 있다..." />
-    <string id="aom_backstory_a.spc_wanderer_umbar_2_text" text="I served as a scout in the Haven of Umbar, ranging far beyond our borders to watch for threats. I know every path through the sea fortress and can track a fox through running water." />
+    <string id="aom_backstory_a.spc_wanderer_umbar_2_text" text="나는 움바르 항구에서 정찰병으로 복무하며, 위협을 감시하기 위해 국경 너머 멀리까지 나갔다. 나는 바다 요새의 모든 길을 알고 있으며 흐르는 물 위로도 여우를 추적할 수 있다." />
     <string id="aom_backstory_b.spc_wanderer_umbar_2_text" text="순찰 중에 나는 우리 백성 사이의 음모를 발견했다 - 곤도르의 함대와 협력하는 밀수꾼들. 그것을 보고했을 때, 나는 밀수꾼들이 강력한 누군가로부터 보호를 사들였다는 것을 알게 되었다. 나는 본 것을 잊으라는 명령을 받았다." />
     <string id="aom_backstory_c.spc_wanderer_umbar_2_text" text="나는 눈감기를 거부했고 그 대가를 치렀다. 이제 나는 홀로 떠돌며, 내 기술을 사용해 생존하고 내 길을 가로지르는 자들을 돕는다. 야생은 위험하지만, 적어도 정직하다." />
     <string id="aom_response_1.spc_wanderer_umbar_2_text" text="진실은 어떤 대가를 치르더라도 가치가 있다." />

@@ -460,8 +460,8 @@
     <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}の{AGGRESSOR_RULER.NAME}が{KINGDOM}に宣戦布告した。" />
     <string id="SR9FC5jH" text="{MAP_FACTION_NAME}から和平の申し出を携えた使者が到着した。{MAP_FACTION_NAME}は両国間の戦争を終結させるため、毎日{GOLD_AMOUNT}{GOLD_ICON}の貢納金を支払うという。王国はこの提案を受け入れるかどうかを投票する。" />
     <string id="syGyjjKE" text="{CALLING_KINGDOM}の要請に応え、{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告する。" />
-    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} is offering you work as a mercenary, paying {GOLD_AMOUNT}{GOLD_ICON} per influence point that you would gain from fighting on their behalf. Do you accept?" />
-    <string id="uc4M4bhG" text="Well, there is something I want. There is one {?TARGET_HERO.GENDER}lady{?}lord{\?} of {TARGET_FACTION} with whom I have a long, long relationship. And not a friendly one. Now that we are at war, as long as {?TARGET_HERO.GENDER}she{?}he{\?} is free, I know my life and lands are not safe. As I say, it won't be easy at all. But whoever manages to do that, bring {?TARGET_HERO.GENDER}her{?}him{\?} back alive to me, having my gratitude aside, will be a very rich man indeed.[if:convo_grave][ib:closed2]" />
+    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}が傭兵としての仕事を提供しています。彼らのために戦って得られる影響力ポイント1につき{GOLD_AMOUNT}{GOLD_ICON}が支払われます。受諾しますか?" />
+    <string id="uc4M4bhG" text="実は、望むことがあるのだ。{TARGET_FACTION}に一人の{?TARGET_HERO.GENDER}貴婦人{?}貴族{\?}がいてな、長い長い因縁がある。そして友好的なものではない。今我々は戦争状態にあり、{?TARGET_HERO.GENDER}彼女{?}彼{\?}が自由である限り、私の命も領地も安全ではないのだ。言っておくが、決して容易なことではない。だが、それを成し遂げ、{?TARGET_HERO.GENDER}彼女{?}彼{\?}を生きたまま私のもとへ連れ戻した者は、私の感謝はさておき、大変な富を手にすることになろう。[if:convo_grave][ib:closed2]" />
     <string id="uiY3ds0Z" text="{RULER.NAME}は{CALLING_KINGDOM}の要請に応え、{?RULER.GENDER}彼女{?}彼{\?}の評議会の半数の支持を得て{KINGDOM_TO_CALL_TO_WAR_AGAINST}に宣戦布告した。" />
     <string id="UQq4ekeu" text="{KINGDOM}の{RULER.NAME}は{OTHER_KINGDOM}との貿易協定に署名しないことを選択した。" />
     <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}が{CALLED_KINGDOM_LINK}に{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}との戦争への参戦を要請した。" />

@@ -105,7 +105,7 @@
     <string id="aom_response_2.spc_wanderer_mordor_0_text" text="恐怖の言語を理解する者。" />
     <string id="aom_backstory_d.spc_wanderer_mordor_0_text" text="他者が得られぬ情報を、彼らが敢えて用いぬ手段で引き出す。" />
     <string id="aom_generic_backstory.spc_wanderer_mordor_0_text" text="バラド=ドゥアの元尋問官。囚人の死が望まぬ注目を集めた後に逃亡した。" />
-    <string id="aom_prebackstory.spc_wanderer_mordor_1_text" text="Not all who leave Mordor do so by choice, but some find freedom in exile..." />
+    <string id="aom_prebackstory.spc_wanderer_mordor_1_text" text="モルドールを去る者すべてが選択によってそうするわけではないが、追放の中に自由を見出す者もいる..." />
     <string id="aom_backstory_a.spc_wanderer_mordor_1_text" text="私はモルグルの襲撃の先陣として戦い、魔王自身に仕えた者たちの末裔だ。二十の戦い、一度も退かず。我が刃はエルフの血、ドワーフの血、人間の血を味わった。戦闘の狂熱が我が血管に強く流れる。私こそオークが本来あるべき姿だ。" />
     <string id="aom_backstory_b.spc_wanderer_mordor_1_text" text="ゴンドールの前哨基地への襲撃中、隊長は勝利が手の届くところにあるのに撤退を命じた。臆病者は別の日のために戦団を温存したかったのだ。私は命令を無視し、勇気ある者を集結させ、砦を奪取した。隊長は私を不服従で告発し、奴隷坑への刑を宣告した。" />
     <string id="aom_backstory_c.spc_wanderer_mordor_1_text" text="鎖に繋がれる前に逃げた。強者は自由に戦う資格があり、進取の気性を示したことで闇の中で朽ちるべきではない。今や至る所に戦争があり、人間の時代は崩壊しつつある。戦える者が運命を切り開くだろう。主人は不要だ、ただ相応しい敵がいればいい。" />
@@ -217,7 +217,7 @@
     <string id="aom_response_2.spc_wanderer_mordor_14_text" text="傭兵の忠誠心も、適切に管理すれば有用だ。" />
     <string id="aom_backstory_d.spc_wanderer_mordor_14_text" text="私は外交的接触、文化的知識、そして柔軟な道徳観を提供する。すべて妥当な報酬でな。" />
     <string id="aom_generic_backstory.spc_wanderer_mordor_14_text" text="ゴンドールの裏切り者で横領犯。外交の調停役として仕えた後、盗んだ富を持ってモルドールから逃亡した。" />
-    <string id="aom_prebackstory.spc_wanderer_gundabad_0_text" text="You know, we orcs suffer when the weak are spared..." />
+    <string id="aom_prebackstory.spc_wanderer_gundabad_0_text" text="いいか、俺たちオークは弱者を生かしておくと苦しむんだ..." />
     <string id="aom_backstory_a.spc_wanderer_gundabad_0_text" text="私はグンダバドの深い洞窟に住んでいた。そこでは影が秘密を囁く。私の母は狡猾なシャーマンで、族長たちのために毒と呪いを調合していた。私は彼女の暗黒術を学び、汚れた薬草で傷を癒し、山の霊を呼び出した。生活は絶え間ない闘争だったが、襲撃まで耐え抜いた。" />
     <string id="aom_backstory_b.spc_wanderer_gundabad_0_text" text="あの日、私の世界は砕け散った。深淵から来た敵対するゴブリン一族が我々を襲い、我々の鍛冶場と奴隷を求めた。彼らは私の母と、私が仕えるよう縛られていた獣を殺した。我々の巣は燃え、財宝は略奪された。生き残った者たちは凍てつく峰々に散り散りになった。" />
     <string id="aom_backstory_c.spc_wanderer_gundabad_0_text" text="他の者たちは新しい暴君の下で再建するために這い戻るだろうが、私は違う。唸る獣が誰でも支配権を主張できる穴で卑屈になるのを拒む。私は戦団の間で呪いと薬を売り、運命を捻じ曲げ血を流すことを学ぶ。もし巣を手に入れるなら、ゴブリンの争いの中ではなく、闇の王の旗の下でだ。" />
@@ -687,7 +687,7 @@
     <string id="aom_response_2.spc_wanderer_mirkwood_7_text" text="矜持では冬の寒さは凌げぬ。" />
     <string id="aom_backstory_d.spc_wanderer_mirkwood_7_text" text="私を養い炉を与えてくれれば、あなたの鋼を鋭く保ちます。" />
     <string id="aom_generic_backstory.spc_wanderer_mirkwood_7_text" text="闇の森の王国から来た木工職人、目的と冒険を求めている。" />
-    <string id="aom_prebackstory.spc_wanderer_mirkwood_8_text" text="There is no freedom like the wind in your face atop a swift horse..." />
+    <string id="aom_prebackstory.spc_wanderer_mirkwood_8_text" text="速い馬の背に乗って顔に風を受けるような自由は他にない..." />
     <string id="aom_backstory_a.spc_wanderer_mirkwood_8_text" text="私は闇の森の王国の騎馬部隊に仕え、国境を巡回しドル・グルドゥアの蜘蛛やオークの襲撃隊に対して素早く打撃を与えた。私の馬術はシルヴァンエルフの中で比類なきものだった。" />
     <string id="aom_backstory_b.spc_wanderer_mirkwood_8_text" text="ある襲撃の際、指揮官は逃げる民間人を踏みにじるよう命じた――敵の支持者かもしれないと言うのだ。私は拒否し、不服従で軍法会議にかけられた。" />
     <string id="aom_backstory_c.spc_wanderer_mirkwood_8_text" text="今は一人で馬を駆け、誉れを持って戦う者に槍を貸している。開けた道は、駐屯任務よりも私には相応しい。" />
@@ -783,7 +783,7 @@
     <string id="aom_response_2.spc_wanderer_lothlorien_9_text" text="死者は正義など気にしない。" />
     <string id="aom_backstory_d.spc_wanderer_lothlorien_9_text" text="私の弓は安定し、狙いは正確だ。受け入れてもらえるか?" />
     <string id="aom_generic_backstory.spc_wanderer_lothlorien_9_text" text="黄金の森から来た黄金の射手、目的と冒険を求めて。" />
-    <string id="aom_prebackstory.spc_wanderer_dolguldur_0_text" text="Knowledge is the truest weapon, and I have spent a lifetime gathering it..." />
+    <string id="aom_prebackstory.spc_wanderer_dolguldur_0_text" text="知識こそが最も真実の武器であり、私は生涯をかけてそれを集めてきた..." />
     <string id="aom_backstory_a.spc_wanderer_dolguldur_0_text" text="私はドル・グルドゥアの古代技術を学び、死霊術師自身の技師たちから建設と攻城術の秘密を習得した。我が一族は何世代にもわたり建設者として仕え、壁を築き防衛を築いてきた。" />
     <string id="aom_backstory_b.spc_wanderer_dolguldur_0_text" text="だが、敵のために要塞を弱体化させたと競争相手に告発され、無実にもかかわらず追放された。私が築いた壁は今も立っているが、私の名は建設者の名簿から抹消された。" />
     <string id="aom_backstory_c.spc_wanderer_dolguldur_0_text" text="今は放浪し、政治より技術を重んじる者に知識を提供している。影は広がり、要塞のウルク=ハイたちはこれまで以上に要塞を必要としている。" />
@@ -866,7 +866,7 @@
     <string id="aom_prebackstory.spc_wanderer_dunland_0_text" text="知識こそ最も真実な武器であり、私は一生をかけてそれを集めてきた..." />
     <string id="aom_backstory_a.spc_wanderer_dunland_0_text" text="私はドゥンランドの丘陵で古代の技を学び、氏族長直属の技師から建築と攻城術の秘密を習得した。我が一族は何世代にもわたり建築者として仕え、城壁を築き防衛を固めてきた。" />
     <string id="aom_backstory_b.spc_wanderer_dunland_0_text" text="しかし敵のために防備を弱めたと対立者に告発され、無実にもかかわらず追放された。私が建てた壁は今も立っているが、私の名は建築者の名簿から消された。" />
-    <string id="aom_backstory_c.spc_wanderer_dunland_0_text" text="Now I wander, offering my knowledge to those who value skill over politics. The Shadow grows, and the Dunlendings need fortifications more than ever." />
+    <string id="aom_backstory_c.spc_wanderer_dunland_0_text" text="今、私は放浪し、政治よりも技能を重んじる者たちに知識を提供している。闇の勢力は増大しており、ドゥネダインには今まで以上に要塞が必要なのだ。" />
     <string id="aom_response_1.spc_wanderer_dunland_0_text" text="この暗黒の時代には、建築者の技能は戦士の技能よりも価値がある。" />
     <string id="aom_response_2.spc_wanderer_dunland_0_text" text="石の壁では来るべきものは止められない。" />
     <string id="aom_backstory_d.spc_wanderer_dunland_0_text" text="戦うことも建てることもできる者が必要なら、私はあなたに仕えよう。" />
@@ -943,7 +943,7 @@
     <string id="aom_response_2.spc_wanderer_dunland_9_text" text="死者は正義など気にかけない。" />
     <string id="aom_backstory_d.spc_wanderer_dunland_9_text" text="私の弓は安定し、照準は正確だ。私を受け入れてくれるか?" />
     <string id="aom_generic_backstory.spc_wanderer_dunland_9_text" text="ドゥンランドの丘陵から来た鋭き目、目的と冒険を求めて。" />
-    <string id="aom_prebackstory.spc_wanderer_harad_0_text" text="Knowledge is the truest weapon, and I have spent a lifetime gathering it..." />
+    <string id="aom_prebackstory.spc_wanderer_harad_0_text" text="知識こそが最も真実の武器であり、私は生涯をかけてそれを集めてきた..." />
     <string id="aom_backstory_a.spc_wanderer_harad_0_text" text="私はハラドの地で古の技を学び、蛇の王の工兵から建築と攻城術の秘密を習得した。私の一族は何世代にもわたって建築者として仕え、城壁を築き防衛を鍛えてきた。" />
     <string id="aom_backstory_b.spc_wanderer_harad_0_text" text="だが、ある敵対者が、私が敵のために要塞を弱体化させたと告発し、私は無実にもかかわらず追放された。私が築いた城壁は今も立っているが、私の名は建築者の名簿から消された。" />
     <string id="aom_backstory_c.spc_wanderer_harad_0_text" text="今は放浪し、政治よりも技術を重んじる者に知識を提供している。影は大きくなり、ハラドリムにはこれまで以上に要塞が必要だ。" />
@@ -1103,7 +1103,7 @@
     <string id="aom_response_2.spc_wanderer_rhun_9_text" text="死者は正義など気にしない。" />
     <string id="aom_backstory_d.spc_wanderer_rhun_9_text" text="私の弓は安定し、狙いは正確だ。私を受け入れてくれるか?" />
     <string id="aom_generic_backstory.spc_wanderer_rhun_9_text" text="東方の草原から来た嵐の射手。目的と冒険を求めている。" />
-    <string id="aom_prebackstory.spc_wanderer_umbar_0_text" text="Knowledge is the truest weapon, and I have spent a lifetime gathering it..." />
+    <string id="aom_prebackstory.spc_wanderer_umbar_0_text" text="知識こそが最も真実の武器であり、私は生涯をかけてそれを集めてきた..." />
     <string id="aom_backstory_a.spc_wanderer_umbar_0_text" text="私はウンバールの避難港で古の技を学び、海賊諸侯の技師たちから建築と攻城術の秘密を習得した。我が一族は代々建築者として仕え、城壁を築き、防備を鍛えてきた。" />
     <string id="aom_backstory_b.spc_wanderer_umbar_0_text" text="しかし、敵のために我々の要塞を弱体化させたと対立者に告発され、無実にもかかわらず追放された。私が築いた城壁は今も立っているが、私の名は建築者の名簿から削除された。" />
     <string id="aom_backstory_c.spc_wanderer_umbar_0_text" text="今、私は放浪し、政治より技術を重んじる者に知識を提供している。影は成長し、ウンバールの海賊たちはかつてないほど要塞化を必要としている。" />
@@ -1129,7 +1129,7 @@
     <string id="aom_generic_backstory.spc_wanderer_umbar_2_text" text="ウンバールの避難港から来た海の斥候。目的と冒険を求めている。" />
     <string id="aom_prebackstory.spc_wanderer_umbar_3_text" text="治癒できたはずの傷で死ぬ者をあまりに多く見てきた..." />
     <string id="aom_backstory_a.spc_wanderer_umbar_3_text" text="私はウンバールの避難港で治療師として訓練を受け、ウンバールの海賊たちが知るあらゆる薬草と治療法の特性を学んだ。私はゴンドールの海軍との小競り合いの後、負傷者の世話をし、数え切れない命を救った。" />
-    <string id="aom_backstory_b.spc_wanderer_umbar_3_text" text="But when a noble's son died despite my best efforts - the wound was beyond any healer's skill - his father blamed me and demanded my execution. I fled rather than face a rigged tribunal." />
+    <string id="aom_backstory_b.spc_wanderer_umbar_3_text" text="だが、貴族の息子が私の最善の努力にもかかわらず死んだとき―傷は治療者の技能を超えていた―彼の父は私を責め、処刑を要求した。不当な審判に直面するよりも、私は逃亡を選んだ。" />
     <string id="aom_backstory_c.spc_wanderer_umbar_3_text" text="今、私はできる限りどこでも技術を実践し、忠誠に関係なく病人や負傷者を助けている。死は差別せず、治療も差別すべきではない。" />
     <string id="aom_response_1.spc_wanderer_umbar_3_text" text="癒し手の慈悲は稀なる賜物なり。" />
     <string id="aom_response_2.spc_wanderer_umbar_3_text" text="敵を癒すとは戦士の仕事を増やすだけだ。" />

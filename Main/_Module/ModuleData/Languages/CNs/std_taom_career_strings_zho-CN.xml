@@ -889,46 +889,46 @@
     <string id="taom_cr_t2_b_p3_desc" text="氏族自给自足。-5%部队薪饷。" />
     <string id="taom_cr_t2_b_p4" text="丘陵骑士之躯" />
     <string id="taom_cr_t2_b_p4_desc" text="矮马的力量化为己用。+45生命值。" />
-    <string id="taom_cr_t3_a_key" text="Clan of Riders" />
-    <string id="taom_cr_t3_a_key_desc" text="Every rider in Dunland rides under your banner. Warpack Charge radius +5." />
-    <string id="taom_cr_t3_a_p1" text="Avalanche Charge" />
-    <string id="taom_cr_t3_a_p1_desc" text="Your charge cannot be stopped. +14% horse charge damage." />
-    <string id="taom_cr_t3_a_p2" text="Mountain Born" />
-    <string id="taom_cr_t3_a_p2_desc" text="You were born to this saddle. +75 health." />
-    <string id="taom_cr_t3_a_p3" text="Great Warpack" />
-    <string id="taom_cr_t3_a_p3_desc" text="Hundreds of riders follow at your signal. +12% party size." />
-    <string id="taom_cr_t3_a_p4" text="Dunlending Legend" />
-    <string id="taom_cr_t3_a_p4_desc" text="Songs of your charge echo from the Misty Mountains. +12% battle renown gain." />
-    <string id="taom_cr_t3_b_key" text="Ever Charging" />
-    <string id="taom_cr_t3_b_key_desc" text="The warpack is always at full fury. Warpack Charge cost -30." />
-    <string id="taom_cr_t3_b_p1" text="Clan's Fury" />
-    <string id="taom_cr_t3_b_p1_desc" text="The clans ride as one unstoppable force. +12% troop damage." />
-    <string id="taom_cr_t3_b_p2" text="Endless Riders" />
-    <string id="taom_cr_t3_b_p2_desc" text="The warpack covers the land from horizon to horizon. +14% party size." />
-    <string id="taom_cr_t3_b_p3" text="Raider's Renown" />
-    <string id="taom_cr_t3_b_p3_desc" text="Your raids are feared from Edoras to Orthanc. +14% battle renown gain." />
-    <string id="taom_cr_t3_b_p4" text="Unbreakable Warpack" />
-    <string id="taom_cr_t3_b_p4_desc" text="No force on earth breaks the Dunlending warpack. +8% party movement speed." />
-    <string id="taom_blademaster_of_ren_root_desc" text="Twin Strike grants +5% melee damage and heightens dueling precision." />
-    <string id="taom_bor_t1a_key" text="Twin Strike radius increased, blades reach further." />
-    <string id="taom_bor_t1a_p1" text="+8% swing speed." />
-    <string id="taom_bor_t1a_p2" text="+7% melee damage." />
-    <string id="taom_bor_t1a_p3" text="+5% armor penetration." />
-    <string id="taom_bor_t1a_p4" text="+5% battle renown gain." />
-    <string id="taom_bor_t1b_key" text="Twin Strike duration extended, sustained dueling flurry." />
-    <string id="taom_bor_t1b_p1" text="+6% resistance." />
-    <string id="taom_bor_t1b_p2" text="+5% armor penetration." />
-    <string id="taom_bor_t1b_p3" text="+30 max health." />
-    <string id="taom_bor_t1b_p4" text="+5% movement speed." />
-    <string id="taom_bor_t2a_key" text="Twin Strike charge reduced, relentless precision strikes." />
-    <string id="taom_bor_t2a_p1" text="+12% swing speed." />
-    <string id="taom_bor_t2a_p2" text="+10% armor penetration." />
-    <string id="taom_bor_t2a_p3" text="+10% battle renown gain." />
-    <string id="taom_bor_t2a_p4" text="+3 party size." />
-    <string id="taom_bor_t2b_key" text="Twin Strike boosts precision window, maximum damage on first strike." />
-    <string id="taom_bor_t2b_p1" text="+10% melee damage." />
-    <string id="taom_bor_t2b_p2" text="+50 max health." />
-    <string id="taom_bor_t2b_p3" text="+10% resistance." />
+    <string id="taom_cr_t3_a_key" text="骑士氏族" />
+    <string id="taom_cr_t3_a_key_desc" text="登兰德的每个骑士都在你的旗帜下作战。战群冲锋范围+5。" />
+    <string id="taom_cr_t3_a_p1" text="雪崩冲锋" />
+    <string id="taom_cr_t3_a_p1_desc" text="你的冲锋势不可挡。+14%马匹冲锋伤害。" />
+    <string id="taom_cr_t3_a_p2" text="山地之子" />
+    <string id="taom_cr_t3_a_p2_desc" text="你生来就属于这座马鞍。+75生命值。" />
+    <string id="taom_cr_t3_a_p3" text="强大战群" />
+    <string id="taom_cr_t3_a_p3_desc" text="数百名骑士听从你的号令。+12%队伍规模。" />
+    <string id="taom_cr_t3_a_p4" text="登兰德传奇" />
+    <string id="taom_cr_t3_a_p4_desc" text="你冲锋的歌谣在迷雾山脉回荡。+12%战斗声望获取。" />
+    <string id="taom_cr_t3_b_key" text="永恒冲锋" />
+    <string id="taom_cr_t3_b_key_desc" text="战群始终保持全力狂怒。战群冲锋消耗-30。" />
+    <string id="taom_cr_t3_b_p1" text="氏族之怒" />
+    <string id="taom_cr_t3_b_p1_desc" text="氏族如同不可阻挡的力量般齐头并进。+12%部队伤害。" />
+    <string id="taom_cr_t3_b_p2" text="无尽骑士" />
+    <string id="taom_cr_t3_b_p2_desc" text="战群覆盖大地,从地平线到地平线。+14%队伍规模。" />
+    <string id="taom_cr_t3_b_p3" text="劫掠者声名" />
+    <string id="taom_cr_t3_b_p3_desc" text="从埃多拉斯到欧尔桑克,你的劫掠令人闻风丧胆。+14%战斗声望获取。" />
+    <string id="taom_cr_t3_b_p4" text="不屈战群" />
+    <string id="taom_cr_t3_b_p4_desc" text="世上没有任何力量能击溃登兰德战群。+8%队伍移动速度。" />
+    <string id="taom_blademaster_of_ren_root_desc" text="双击授予+5%近战伤害并提升决斗精准度。" />
+    <string id="taom_bor_t1a_key" text="双击范围增加,剑刃触及更远。" />
+    <string id="taom_bor_t1a_p1" text="+8%挥砍速度。" />
+    <string id="taom_bor_t1a_p2" text="+7%近战伤害。" />
+    <string id="taom_bor_t1a_p3" text="+5%护甲穿透。" />
+    <string id="taom_bor_t1a_p4" text="+5%战斗声望获取。" />
+    <string id="taom_bor_t1b_key" text="双击持续时间延长,维持决斗连击。" />
+    <string id="taom_bor_t1b_p1" text="+6%抗性。" />
+    <string id="taom_bor_t1b_p2" text="+5%护甲穿透。" />
+    <string id="taom_bor_t1b_p3" text="+30最大生命值。" />
+    <string id="taom_bor_t1b_p4" text="+5%移动速度。" />
+    <string id="taom_bor_t2a_key" text="双击充能减少,无情精准打击。" />
+    <string id="taom_bor_t2a_p1" text="+12%挥砍速度。" />
+    <string id="taom_bor_t2a_p2" text="+10%护甲穿透。" />
+    <string id="taom_bor_t2a_p3" text="+10%战斗声望获取。" />
+    <string id="taom_bor_t2a_p4" text="+3队伍规模。" />
+    <string id="taom_bor_t2b_key" text="双击提升精准时间窗,首次打击造成最大伤害。" />
+    <string id="taom_bor_t2b_p1" text="+10%近战伤害。" />
+    <string id="taom_bor_t2b_p2" text="+50最大生命值。" />
+    <string id="taom_bor_t2b_p3" text="+10%抗性。" />
     <string id="taom_bor_t2b_p4" text="+10%部队伤害。" />
     <string id="taom_bor_t3a_key" text="双子打击范围大幅扩展,四面皆是死亡。" />
     <string id="taom_bor_t3a_p1" text="+15%近战伤害。" />
@@ -1250,7 +1250,7 @@
     <string id="taom_dg2_t3_b_p2" text="+15% 生命恢复。" />
     <string id="taom_dg2_t3_b_p3" text="+20% 部队士气。" />
     <string id="taom_dg2_t3_b_p4" text="+15%部队恢复速度。" />
-    <string id="taom_dale_marksman_root_desc" text="Black Arrow grants +5% ranged damage in honor of Bard the Bowman." />
+    <string id="taom_dale_marksman_root_desc" text="黑箭赋予+5%远程伤害,以纪念神射手巴德。" />
     <string id="taom_dm_t1_a_key" text="黑箭范围增大,覆盖更广的杀伤区域。" />
     <string id="taom_dm_t1_a_p1" text="+8%远程伤害。" />
     <string id="taom_dm_t1_a_p2" text="+5%护甲穿透。" />
@@ -1374,7 +1374,7 @@
     <string id="taom_cbm_t3_b_p2" text="+15%移动速度。" />
     <string id="taom_cbm_t3_b_p3" text="+75最大生命值。" />
     <string id="taom_cbm_t3_b_p4" text="+15%队伍侦察范围。" />
-    <string id="taom_ram_rider_root_desc" text="Mountain Charge grants +5% melee damage, the ram lowers its horns." />
+    <string id="taom_ram_rider_root_desc" text="山地冲锋赋予+5%近战伤害,公羊低下双角。" />
     <string id="taom_rr_t1_a_key" text="山地冲锋范围扩大,横扫更宽阵型。" />
     <string id="taom_rr_t1_a_p1" text="+8%近战伤害。" />
     <string id="taom_rr_t1_a_p2" text="+7%坐骑冲锋伤害。" />
@@ -1653,7 +1653,7 @@
     <string id="taom_sva_t3_b_p2" text="+15%移动速度。" />
     <string id="taom_sva_t3_b_p3" text="+75最大生命值。" />
     <string id="taom_sva_t3_b_p4" text="+15%队伍侦察范围。" />
-    <string id="taom_elk_rider_root_desc" text="Antler Crash grants +5% melee damage, the great elk charges." />
+    <string id="taom_elk_rider_root_desc" text="鹿角冲撞赋予+5%近战伤害,巨鹿发起冲锋。" />
     <string id="taom_elk_t1_a_key" text="鹿角冲撞范围扩大,横扫更广阵型。" />
     <string id="taom_elk_t1_a_p1" text="+8%近战伤害。" />
     <string id="taom_elk_t1_a_p2" text="+7%坐骑冲锋伤害。" />

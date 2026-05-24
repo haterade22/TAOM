@@ -377,7 +377,7 @@
     <string id="aom_response_2.spc_wanderer_isengard_9_text" text="Sırları çalıp en yüksek fiyatı verene satan biri." />
     <string id="aom_backstory_d.spc_wanderer_isengard_9_text" text="Saruman'ın operasyonları ve planları hakkında uygun bedel karşılığında istihbarat sağlıyorum." />
     <string id="aom_generic_backstory.spc_wanderer_isengard_9_text" text="Saruman'ın sırlarını satan Orthanc ulağı. Servete değer çalıntı istihbaratla kaçtı." />
-    <string id="aom_prebackstory.spc_wanderer_erebor_0_text" text="The Lonely Mountain is reclaimed, but not all dwarves found peace in its halls..." />
+    <string id="aom_prebackstory.spc_wanderer_erebor_0_text" text="Yalnız Dağ geri alındı, ama tüm cüceler salonlarında huzur bulamadı..." />
     <string id="aom_backstory_a.spc_wanderer_erebor_0_text" text="Erebor'un revirinde şifacı olarak hizmet ettim, eski altında kalan ejder-hastalığından hâlâ hasta olanları tedavi ettim. Babam bana kadim sanatları öğretti, Demir Tepeler'den otlar, zehir çeken taşlar. Krallık zenginleşiyor ama gölgeler büyüyor. Her ay doğu devriyelerinden daha fazla yaralı geliyor." />
     <string id="aom_backstory_b.spc_wanderer_erebor_0_text" text="Bir klan anlaşmazlığı her şeyi değiştirdi. Ailem madencilik hakları üzerindeki çekişmede yanlış tarafı destekledi. Kral Dáin adil olsa da, politika derinlere uzanır. Mevkimizi, atölyemizi, itibarımızı kaybettik. Utanç içinde yaşamaktansa, sürgünü seçtim." />
     <string id="aom_backstory_c.spc_wanderer_erebor_0_text" text="Erebor zenginleşiyor, ama fırtına bulutlarının toplandığını görüyorum. Gri Dağlar'da orklar toplanıyor, tuhaf ulaklar güneye gidiyor. Şifa becerilerim ve düşman bilgim gelecek olanlara hazırlananlar için yararlı olacak. Dağ bana ihtiyaç duymayabilir, ama daha geniş dünya duyuyor." />
@@ -516,7 +516,7 @@
     <string id="aom_response_2.spc_wanderer_rohan_5_text" text="Savaş korkunç seçimler gerektirir." />
     <string id="aom_backstory_d.spc_wanderer_rohan_5_text" text="İhtiyacınız varsa, sert beceriler ve daha sert dersler sunuyorum." />
     <string id="aom_prebackstory.spc_wanderer_rohan_6_text" text="Yay, at sırtından en gerçek şekilde şarkı söyler..." />
-    <string id="aom_backstory_a.spc_wanderer_rohan_6_text" text="My father bred horses, my mother was from the Wold where archery is prized. I combined both traditions, becoming one of the few horse archers in the Mark. I could put an arrow through a ring at full gallop." />
+    <string id="aom_backstory_a.spc_wanderer_rohan_6_text" text="Babam at yetiştirirdi, annem okçuluğun değerli olduğu Wold'dandı. İki geleneği birleştirerek Mark'taki sayılı atlı okçulardan biri oldum. Dörtnala giderken okumu bir halkadan geçirebilirdim." />
     <string id="aom_backstory_b.spc_wanderer_rohan_6_text" text="Isengard yakınlarında keşif yaparken, var olmaması gereken şeyler gördüm - devasa çukurlar, garip ateşler ve çarpık yaratıklar. Daha yakından bakmaya çalıştığımda, kurtlar beni takip etti - ama dik yürüyen ve karanlık dillerde konuşan kurtlar." />
     <string id="aom_backstory_c.spc_wanderer_rohan_6_text" text="Kaptanım bana inanmadı, içki içtiğimi söyledi. Solucanburnu hikayemi duydu ve beni deli ilan etti, hapsedilmemi önerdi. O gece kaçtım. Gördüğüm gerçekti ve Mark uyarılmalı." />
     <string id="aom_response_1.spc_wanderer_rohan_6_text" text="Karanlık zamanlar karanlık yaratıklar doğurur." />
@@ -927,7 +927,7 @@
     <string id="aom_response_2.spc_wanderer_dunland_7_text" text="İlkeler seni kışın sıcak tutmaz." />
     <string id="aom_backstory_d.spc_wanderer_dunland_7_text" text="Beni doyur ve bana bir ocak ver, çeliğini keskin tutayım." />
     <string id="aom_generic_backstory.spc_wanderer_dunland_7_text" text="Dunland tepelerinden bir demir işçisi, amaç ve macera arıyor." />
-    <string id="aom_prebackstory.spc_wanderer_dunland_8_text" text="There is no freedom like the wind in your face atop a swift horse..." />
+    <string id="aom_prebackstory.spc_wanderer_dunland_8_text" text="Hızlı bir atın sırtında yüzünüze çarpan rüzgar gibi özgürlük yoktur..." />
     <string id="aom_backstory_a.spc_wanderer_dunland_8_text" text="Dunland tepelerinin atlı kuvvetlerinde hizmet ettim, sınırları devriye gezerek ve Rohan'ın At-lordlarının akın gruplarına karşı hızlı saldırılar yaparak. Dunlendingliler arasında atlı ustalığım eşsizdi." />
     <string id="aom_backstory_b.spc_wanderer_dunland_8_text" text="Bir akın sırasında komutanım kaçan sivilleri çiğnememizi emretti - düşman sempatizanları olabilirlerdi, dedi. Reddettim ve itaatsizlikten askeri mahkemeye çıkarıldım." />
     <string id="aom_backstory_c.spc_wanderer_dunland_8_text" text="Şimdi yalnız sürüyorum, mızrağım onurla savaşanlara kiralık. Açık yol bana garnizon görevinden çok daha uygun." />
@@ -999,7 +999,7 @@
     <string id="aom_response_2.spc_wanderer_harad_6_text" text="Planlar nadiren düşmanla temastan sağ çıkar." />
     <string id="aom_backstory_d.spc_wanderer_harad_6_text" text="Seferlerini planlamama izin ver ve stratejinin neler başarabileceğini göstereyim." />
     <string id="aom_generic_backstory.spc_wanderer_harad_6_text" text="Harad topraklarından bir savaş kaptanı, amaç ve macera arıyor." />
-    <string id="aom_prebackstory.spc_wanderer_harad_7_text" text="The ring of hammer on steel is the music I was born to play..." />
+    <string id="aom_prebackstory.spc_wanderer_harad_7_text" text="Çekicin çeliğe çarpma sesi, çalmak için doğduğum müziktir..." />
     <string id="aom_backstory_a.spc_wanderer_harad_7_text" text="Harad topraklarında bir usta demircidim, Haradrimlerin her şeyden çok değer verdiği silahlar ve zırhlar yaparak. Ocağım parşömeni gibi düşman zırhını yaran kılıçlar üretti." />
     <string id="aom_backstory_b.spc_wanderer_harad_7_text" text="Ama onları masum insanlara karşı kullanmayı planlayan yozlaşmış bir lord için silah yapmayı reddettim. Ocağımı yaktı ve beni dövdürdü. Hayatta kaldım ama atölyem yok edildi." />
     <string id="aom_backstory_c.spc_wanderer_harad_7_text" text="Şimdi becerilerimi nereye gidersem götürüyorum, birlikte seyahat ettiğim kişilerin silahlarını bakımını yaparak ve geliştirerek. Eğitimli ellerdeki iyi bir kılıç bir savaşın seyrini değiştirebilir." />

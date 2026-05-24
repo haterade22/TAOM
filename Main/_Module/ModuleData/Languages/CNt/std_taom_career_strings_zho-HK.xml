@@ -89,7 +89,7 @@
     <string id="taom_career_warg_scout" text="座狼斥候" />
     <string id="taom_career_warg_scout_desc" text="騎乘迅捷座狼的狡猾強獸人騎士,在艾辛格大軍前方偵察,追捕逃亡的獵物。" />
     <string id="taom_career_cave_troll_master" text="洞穴巨魔馭者" />
-    <string id="taom_career_cave_troll_master_desc" text="A brutal orc chieftain who commands cave trolls in battle, driving them forward with whip and cunning." />
+    <string id="taom_career_cave_troll_master_desc" text="一位殘暴的獸人酋長,在戰鬥中指揮洞穴巨魔,用鞭子和狡詐驅使牠們前進。" />
     <string id="taom_career_goblin_sniper" text="哥布林狙擊手" />
     <string id="taom_career_goblin_sniper_desc" text="潛伏在山間峭壁的惡毒哥布林射手,用毒鏢和粗製弓箭狙殺目標。" />
     <string id="taom_career_warg_pack_leader" text="座狼群首領" />
@@ -206,7 +206,7 @@
     <string id="taom_ability_corsair_crossbow_tt" text="從穩定位置以致命精度射擊,大幅提升遠程傷害和準確度。" />
     <string id="taom_ability_corsair_captain" text="掠奪" />
     <string id="taom_ability_corsair_captain_tt" text="以掠奪的承諾激勵你的船員,提升速度、傷害和部隊士氣。" />
-    <string id="taom_ranger_of_ithilien_root_desc" text="Ambush grants +5% ranged damage and scales duration with Bow skill." />
+    <string id="taom_ranger_of_ithilien_root_desc" text="伏擊賦予+5%遠程傷害,持續時間隨弓術技能提升。" />
     <string id="taom_roi_t1a_key" text="伏擊範圍增加,從隱蔽處射出的箭矢造成額外傷害。" />
     <string id="taom_roi_t1a_p1" text="+8%遠程傷害。" />
     <string id="taom_roi_t1a_p2" text="+5%護甲穿透。" />
@@ -1416,46 +1416,46 @@
     <string id="taom_bd_t1_b_p2" text="+5% 部隊士氣。" />
     <string id="taom_bd_t1_b_p3" text="+5% 部隊抗性。" />
     <string id="taom_bd_t1_b_p4" text="+5% 部隊恢復。" />
-    <string id="taom_bd_t2_a_key" text="Starlight Weave charge reduced, activating more frequently." />
-    <string id="taom_bd_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_bd_t2_a_p2" text="+2 party size." />
-    <string id="taom_bd_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_bd_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_bd_t2_b_key" text="Starlight Weave grants additional defensive buffs while active." />
-    <string id="taom_bd_t2_b_p1" text="+12% resistance." />
-    <string id="taom_bd_t2_b_p2" text="+60 max health." />
-    <string id="taom_bd_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_bd_t2_b_p4" text="+10% troop damage." />
-    <string id="taom_bd_t3_a_key" text="Starlight Weave radius greatly expanded, devastating power." />
-    <string id="taom_bd_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_bd_t3_a_p2" text="+100 max health." />
-    <string id="taom_bd_t3_a_p3" text="+15% troop damage." />
-    <string id="taom_bd_t3_a_p4" text="+4 party size." />
-    <string id="taom_bd_t3_b_key" text="Starlight Weave charge greatly reduced, nearly always available." />
-    <string id="taom_bd_t3_b_p1" text="+18% resistance." />
-    <string id="taom_bd_t3_b_p2" text="+15% health regeneration." />
-    <string id="taom_bd_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_bd_t3_b_p4" text="+15% troop regeneration." />
-    <string id="taom_elven_archer_root_desc" text="Elven Sight grants +5% ranged damage with centuries of practice." />
-    <string id="taom_elar_t1_a_key" text="Elven Sight radius increased, covering wider kill zones." />
-    <string id="taom_elar_t1_a_p1" text="+8% ranged damage." />
-    <string id="taom_elar_t1_a_p2" text="+5% armor penetration." />
-    <string id="taom_elar_t1_a_p3" text="+7% movement speed." />
-    <string id="taom_elar_t1_a_p4" text="+5% battle renown gain." />
-    <string id="taom_elar_t1_b_key" text="Elven Sight duration extended, sustained barrage." />
-    <string id="taom_elar_t1_b_p1" text="+5% resistance." />
-    <string id="taom_elar_t1_b_p2" text="+25 max health." />
-    <string id="taom_elar_t1_b_p3" text="+5% party spotting range." />
-    <string id="taom_elar_t1_b_p4" text="+5% stealth bonus." />
-    <string id="taom_elar_t2_a_key" text="Elven Sight charge reduced, maintaining constant pressure." />
-    <string id="taom_elar_t2_a_p1" text="+10% party spotting range." />
-    <string id="taom_elar_t2_a_p2" text="+10% movement speed." />
-    <string id="taom_elar_t2_a_p3" text="+10% stealth bonus." />
-    <string id="taom_elar_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_elar_t2_b_key" text="Elven Sight gains additional penetration while active." />
-    <string id="taom_elar_t2_b_p1" text="+12% ranged damage." />
-    <string id="taom_elar_t2_b_p2" text="+10% armor penetration." />
-    <string id="taom_elar_t2_b_p3" text="+50 max health." />
+    <string id="taom_bd_t2_a_key" text="星光編織充能減少,啟動更加頻繁。" />
+    <string id="taom_bd_t2_a_p1" text="+10% 部隊士氣。" />
+    <string id="taom_bd_t2_a_p2" text="+2 隊伍規模。" />
+    <string id="taom_bd_t2_a_p3" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_bd_t2_a_p4" text="-10% 部隊薪資。" />
+    <string id="taom_bd_t2_b_key" text="星光編織在啟動時賦予額外防禦增益。" />
+    <string id="taom_bd_t2_b_p1" text="+12% 抗性。" />
+    <string id="taom_bd_t2_b_p2" text="+60 最大生命值。" />
+    <string id="taom_bd_t2_b_p3" text="+10% 部隊抗性。" />
+    <string id="taom_bd_t2_b_p4" text="+10% 部隊傷害。" />
+    <string id="taom_bd_t3_a_key" text="星光編織範圍大幅擴展,毀滅性力量。" />
+    <string id="taom_bd_t3_a_p1" text="+15% 近戰傷害。" />
+    <string id="taom_bd_t3_a_p2" text="+100 最大生命值。" />
+    <string id="taom_bd_t3_a_p3" text="+15% 部隊傷害。" />
+    <string id="taom_bd_t3_a_p4" text="+4 隊伍規模。" />
+    <string id="taom_bd_t3_b_key" text="星光編織充能大幅減少,幾乎始終可用。" />
+    <string id="taom_bd_t3_b_p1" text="+18% 抗性。" />
+    <string id="taom_bd_t3_b_p2" text="+15% 生命回復。" />
+    <string id="taom_bd_t3_b_p3" text="+20% 部隊士氣。" />
+    <string id="taom_bd_t3_b_p4" text="+15% 部隊回復。" />
+    <string id="taom_elven_archer_root_desc" text="精靈視覺憑藉數世紀的練習賦予+5%遠程傷害。" />
+    <string id="taom_elar_t1_a_key" text="精靈視覺範圍增加,覆蓋更廣的殺戮區域。" />
+    <string id="taom_elar_t1_a_p1" text="+8% 遠程傷害。" />
+    <string id="taom_elar_t1_a_p2" text="+5% 護甲穿透。" />
+    <string id="taom_elar_t1_a_p3" text="+7% 移動速度。" />
+    <string id="taom_elar_t1_a_p4" text="+5% 戰鬥聲望獲取。" />
+    <string id="taom_elar_t1_b_key" text="精靈視覺持續時間延長,持續火力壓制。" />
+    <string id="taom_elar_t1_b_p1" text="+5% 抗性。" />
+    <string id="taom_elar_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_elar_t1_b_p3" text="+5% 隊伍偵查範圍。" />
+    <string id="taom_elar_t1_b_p4" text="+5% 潛行加成。" />
+    <string id="taom_elar_t2_a_key" text="精靈視覺充能減少,保持持續壓力。" />
+    <string id="taom_elar_t2_a_p1" text="+10% 隊伍偵察範圍。" />
+    <string id="taom_elar_t2_a_p2" text="+10% 移動速度。" />
+    <string id="taom_elar_t2_a_p3" text="+10% 隱蔽加成。" />
+    <string id="taom_elar_t2_a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_elar_t2_b_key" text="精靈視界在啟動期間獲得額外穿透力。" />
+    <string id="taom_elar_t2_b_p1" text="+12% 遠程傷害。" />
+    <string id="taom_elar_t2_b_p2" text="+10% 護甲穿透。" />
+    <string id="taom_elar_t2_b_p3" text="+50 最大生命值。" />
     <string id="taom_elar_t2_b_p4" text="+5% 部隊傷害。" />
     <string id="taom_elar_t3_a_key" text="精靈視野大幅擴展,齊射無可避免。" />
     <string id="taom_elar_t3_a_p1" text="+18% 遠程傷害。" />
@@ -1622,7 +1622,7 @@
     <string id="taom_shw_t3_b_p2" text="+15% 生命恢復。" />
     <string id="taom_shw_t3_b_p3" text="+20% 部隊士氣。" />
     <string id="taom_shw_t3_b_p4" text="+15% 部隊恢復。" />
-    <string id="taom_silvan_archer_root_desc" text="Canopy Strike grants +5% ranged damage from the treetops." />
+    <string id="taom_silvan_archer_root_desc" text="林冠突襲從樹頂賦予 +5% 遠程傷害。" />
     <string id="taom_sva_t1_a_key" text="樹冠打擊範圍增加,覆蓋更廣闊的殺戮區域。" />
     <string id="taom_sva_t1_a_p1" text="+8% 遠程傷害。" />
     <string id="taom_sva_t1_a_p2" text="+5% 護甲穿透。" />
@@ -1736,46 +1736,46 @@
     <string id="taom_ucb_t2_b_p2" text="+10% 破甲能力。" />
     <string id="taom_ucb_t2_b_p3" text="+50 最大生命值。" />
     <string id="taom_ucb_t2_b_p4" text="+5% 部隊傷害。" />
-    <string id="taom_ucb_t3_a_key" text="Iron Rain radius greatly expanded, inescapable volleys." />
-    <string id="taom_ucb_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_ucb_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_ucb_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_ucb_t3_a_p4" text="+10% troop damage." />
-    <string id="taom_ucb_t3_b_key" text="Iron Rain charge greatly reduced, relentless fire." />
-    <string id="taom_ucb_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_ucb_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_ucb_t3_b_p3" text="+75 max health." />
-    <string id="taom_ucb_t3_b_p4" text="+15% party spotting range." />
-    <string id="taom_warg_scout_root_desc" text="Pack Howl grants +5% melee damage and terrifies nearby foes." />
-    <string id="taom_wsc_t1_a_key" text="Pack Howl radius expanded, sweeping wider formations." />
-    <string id="taom_wsc_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_wsc_t1_a_p2" text="+7% horse charge damage." />
-    <string id="taom_wsc_t1_a_p3" text="+7% swing speed." />
-    <string id="taom_wsc_t1_a_p4" text="+5% party movement speed." />
-    <string id="taom_wsc_t1_b_key" text="Pack Howl duration extended, maintaining momentum." />
-    <string id="taom_wsc_t1_b_p1" text="+30 horse health." />
-    <string id="taom_wsc_t1_b_p2" text="+25 max health." />
-    <string id="taom_wsc_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_wsc_t1_b_p4" text="+5% resistance." />
-    <string id="taom_wsc_t2_a_key" text="Pack Howl charge reduced, swifter activation." />
-    <string id="taom_wsc_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_wsc_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_wsc_t2_a_p3" text="+10% troop morale." />
-    <string id="taom_wsc_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_wsc_t2_b_key" text="Pack Howl boosts mount resilience while active." />
-    <string id="taom_wsc_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_wsc_t2_b_p2" text="+12% horse charge damage." />
-    <string id="taom_wsc_t2_b_p3" text="+60 horse health." />
-    <string id="taom_wsc_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_wsc_t3_a_key" text="Pack Howl radius greatly expanded, unstoppable impact." />
-    <string id="taom_wsc_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_wsc_t3_a_p2" text="+18% horse charge damage." />
-    <string id="taom_wsc_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_wsc_t3_a_p4" text="+15% troop damage." />
-    <string id="taom_wsc_t3_b_key" text="Pack Howl charge greatly reduced, ride without ceasing." />
-    <string id="taom_wsc_t3_b_p1" text="+100 horse health." />
-    <string id="taom_wsc_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_wsc_t3_b_p3" text="+15% party movement speed." />
+    <string id="taom_ucb_t3_a_key" text="鐵雨範圍大幅擴展,無可逃避的齊射。" />
+    <string id="taom_ucb_t3_a_p1" text="+18% 遠程傷害。" />
+    <string id="taom_ucb_t3_a_p2" text="+15% 護甲穿透。" />
+    <string id="taom_ucb_t3_a_p3" text="+15% 戰鬥聲望獲取。" />
+    <string id="taom_ucb_t3_a_p4" text="+10% 部隊傷害。" />
+    <string id="taom_ucb_t3_b_key" text="鐵雨充能大幅降低,無情的火力。" />
+    <string id="taom_ucb_t3_b_p1" text="+15% 隱蔽加成。" />
+    <string id="taom_ucb_t3_b_p2" text="+15% 移動速度。" />
+    <string id="taom_ucb_t3_b_p3" text="+75 最大生命值。" />
+    <string id="taom_ucb_t3_b_p4" text="+15% 隊伍偵察範圍。" />
+    <string id="taom_warg_scout_root_desc" text="狼群嚎叫賦予 +5% 近戰傷害並使附近敵人恐懼。" />
+    <string id="taom_wsc_t1_a_key" text="狼群嚎叫範圍擴展,橫掃更廣闊的陣型。" />
+    <string id="taom_wsc_t1_a_p1" text="+8% 近戰傷害。" />
+    <string id="taom_wsc_t1_a_p2" text="+7% 騎乘衝鋒傷害。" />
+    <string id="taom_wsc_t1_a_p3" text="+7% 揮擊速度。" />
+    <string id="taom_wsc_t1_a_p4" text="+5% 隊伍移動速度。" />
+    <string id="taom_wsc_t1_b_key" text="狼群嚎叫持續時間延長,維持衝勢。" />
+    <string id="taom_wsc_t1_b_p1" text="+30 坐騎生命值。" />
+    <string id="taom_wsc_t1_b_p2" text="+25 最大生命值。" />
+    <string id="taom_wsc_t1_b_p3" text="-5% 部隊薪資。" />
+    <string id="taom_wsc_t1_b_p4" text="+5% 抗性。" />
+    <string id="taom_wsc_t2_a_key" text="狼群嚎叫充能降低,更快的啟動。" />
+    <string id="taom_wsc_t2_a_p1" text="+10% 隊伍移動速度。" />
+    <string id="taom_wsc_t2_a_p2" text="-10% 部隊薪資。" />
+    <string id="taom_wsc_t2_a_p3" text="+10% 部隊士氣。" />
+    <string id="taom_wsc_t2_a_p4" text="+10% 戰鬥聲望獲取。" />
+    <string id="taom_wsc_t2_b_key" text="狼群嚎叫在啟動期間提升坐騎韌性。" />
+    <string id="taom_wsc_t2_b_p1" text="+12% 近戰傷害。" />
+    <string id="taom_wsc_t2_b_p2" text="+12% 騎乘衝鋒傷害。" />
+    <string id="taom_wsc_t2_b_p3" text="+60 坐騎生命值。" />
+    <string id="taom_wsc_t2_b_p4" text="+10% 揮擊速度。" />
+    <string id="taom_wsc_t3_a_key" text="狼群嚎叫範圍大幅擴展,衝擊勢不可擋。" />
+    <string id="taom_wsc_t3_a_p1" text="+18% 近戰傷害。" />
+    <string id="taom_wsc_t3_a_p2" text="+18% 騎乘衝鋒傷害。" />
+    <string id="taom_wsc_t3_a_p3" text="+15% 揮擊速度。" />
+    <string id="taom_wsc_t3_a_p4" text="+15% 部隊傷害。" />
+    <string id="taom_wsc_t3_b_key" text="狼群嚎叫充能大幅減少,策騎不息。" />
+    <string id="taom_wsc_t3_b_p1" text="+100 坐騎生命值。" />
+    <string id="taom_wsc_t3_b_p2" text="-15% 部隊薪餉。" />
+    <string id="taom_wsc_t3_b_p3" text="+15% 隊伍移動速度。" />
     <string id="taom_wsc_t3_b_p4" text="+75 最大生命值。" />
     <string id="taom_cave_troll_master_root_desc" text="巨魔狂暴賦予+25生命值,並驅使你的巨魔陷入狂暴。" />
     <string id="taom_ctm_t1_a_key" text="巨魔狂暴範圍增加,強化更多戰士。" />

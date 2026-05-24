@@ -863,7 +863,7 @@
     <string id="aom_response_2.spc_wanderer_dolguldur_9_text" text="死者不在乎正義。" />
     <string id="aom_backstory_d.spc_wanderer_dolguldur_9_text" text="我的弓弦穩固,箭法精準。你願意收留我嗎?" />
     <string id="aom_generic_backstory.spc_wanderer_dolguldur_9_text" text="一位來自多爾哥多的戳眼者,尋求目標與冒險。" />
-    <string id="aom_prebackstory.spc_wanderer_dunland_0_text" text="Knowledge is the truest weapon, and I have spent a lifetime gathering it..." />
+    <string id="aom_prebackstory.spc_wanderer_dunland_0_text" text="知識是最真實的武器,而我用一生的時間來收集它..." />
     <string id="aom_backstory_a.spc_wanderer_dunland_0_text" text="我在登蘭德的丘陵研習古老技藝,從氏族首領的工程師那裡學習建築與攻城技藝的秘密。我的家族世代擔任建造者,築起城牆、鍛造防禦工事。" />
     <string id="aom_backstory_b.spc_wanderer_dunland_0_text" text="但當一個對手指控我為敵人削弱我們的防禦工事時,儘管我是清白的,我還是被驅逐了。我建造的城牆仍然屹立,但我的名字已從建造者名冊中抹去。" />
     <string id="aom_backstory_c.spc_wanderer_dunland_0_text" text="現在我四處流浪,將我的知識獻給那些重視技藝勝過政治的人。黑暗勢力正在增長,登蘭德人比以往任何時候都更需要防禦工事。" />
@@ -1167,7 +1167,7 @@
     <string id="aom_response_2.spc_wanderer_umbar_7_text" text="原則不能讓你在冬天保暖。" />
     <string id="aom_backstory_d.spc_wanderer_umbar_7_text" text="讓我有飯吃並給我一座鍛爐,我會保持你的鋼刃鋒利。" />
     <string id="aom_generic_backstory.spc_wanderer_umbar_7_text" text="一名來自昂巴港的船錨鐵匠,尋求目標與冒險。" />
-    <string id="aom_prebackstory.spc_wanderer_umbar_8_text" text="There is no freedom like the wind in your face atop a swift horse..." />
+    <string id="aom_prebackstory.spc_wanderer_umbar_8_text" text="沒有什麼自由能比得上騎著駿馬迎面而來的風..." />
     <string id="aom_backstory_a.spc_wanderer_umbar_8_text" text="我在昂巴港的騎兵部隊服役,巡邏邊境並快速打擊剛鐸海軍的突襲隊。我的馬術在昂巴海盜中無人能及。" />
     <string id="aom_backstory_b.spc_wanderer_umbar_8_text" text="在一次突襲中,我的指揮官命令我們踐踏逃跑的平民——他說他們可能是敵方同情者。我拒絕了,並因抗命被軍事法庭審判。" />
     <string id="aom_backstory_c.spc_wanderer_umbar_8_text" text="現在我獨自騎行,將我的長矛出租給那些光榮作戰的人。開闊的道路比駐守要更適合我。" />

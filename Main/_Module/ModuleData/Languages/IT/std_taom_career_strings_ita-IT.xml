@@ -1096,46 +1096,46 @@
     <string id="taom_mbr_t3b_p3" text="+15% danni truppe." />
     <string id="taom_mbr_t3b_p4" text="+75 salute massima." />
     <string id="taom_far_harad_halftroll_root_desc" text="Brutalità Vile garantisce enorme bonus salute e instilla terrore." />
-    <string id="taom_fhh_t1a_key" text="Vile Brutality radius increased, terror spreads wider." />
-    <string id="taom_fhh_t1a_p1" text="+35 max health." />
-    <string id="taom_fhh_t1a_p2" text="+8% resistance." />
-    <string id="taom_fhh_t1a_p3" text="+8% melee damage." />
-    <string id="taom_fhh_t1a_p4" text="+5% troop morale." />
-    <string id="taom_fhh_t1b_key" text="Vile Brutality duration extended, the troll's rage lasts longer." />
-    <string id="taom_fhh_t1b_p1" text="+8% troop resistance." />
-    <string id="taom_fhh_t1b_p2" text="+5% troop damage." />
-    <string id="taom_fhh_t1b_p3" text="+5% battle renown gain." />
-    <string id="taom_fhh_t1b_p4" text="+25 max health." />
-    <string id="taom_fhh_t2a_key" text="Vile Brutality charge reduced, rage ignites faster." />
-    <string id="taom_fhh_t2a_p1" text="+12% resistance." />
-    <string id="taom_fhh_t2a_p2" text="+50 max health." />
-    <string id="taom_fhh_t2a_p3" text="+12% troop resistance." />
-    <string id="taom_fhh_t2a_p4" text="+10% troop morale." />
-    <string id="taom_fhh_t2b_key" text="Vile Brutality makes the halftroll even more terrifying." />
-    <string id="taom_fhh_t2b_p1" text="+60 max health." />
-    <string id="taom_fhh_t2b_p2" text="+10% melee damage." />
-    <string id="taom_fhh_t2b_p3" text="+10% troop damage." />
-    <string id="taom_fhh_t2b_p4" text="+10% battle renown gain." />
-    <string id="taom_fhh_t3a_key" text="Vile Brutality radius greatly expanded, all tremble." />
-    <string id="taom_fhh_t3a_p1" text="+75 max health." />
-    <string id="taom_fhh_t3a_p2" text="+15% resistance." />
-    <string id="taom_fhh_t3a_p3" text="+15% troop resistance." />
-    <string id="taom_fhh_t3a_p4" text="+20% troop morale." />
-    <string id="taom_fhh_t3b_key" text="Vile Brutality charge greatly reduced, the rage never fades." />
-    <string id="taom_fhh_t3b_p1" text="+15% melee damage." />
-    <string id="taom_fhh_t3b_p2" text="+15% troop damage." />
-    <string id="taom_fhh_t3b_p3" text="+15% battle renown gain." />
-    <string id="taom_fhh_t3b_p4" text="+5 party size." />
-    <string id="taom_cl_root_desc" text="Shieldwall grants +5% resistance and your formation holds firm against all odds." />
-    <string id="taom_cl_t1_a_key" text="Shieldwall radius expanded, protecting a wider formation." />
-    <string id="taom_cl_t1_a_p1" text="+8% resistance." />
-    <string id="taom_cl_t1_a_p2" text="+5% troop resistance." />
-    <string id="taom_cl_t1_a_p3" text="+30 max health." />
-    <string id="taom_cl_t1_a_p4" text="+5% troop morale." />
-    <string id="taom_cl_t1_b_key" text="Shieldwall duration extended, enduring the longest assaults." />
-    <string id="taom_cl_t1_b_p1" text="+8% melee damage." />
-    <string id="taom_cl_t1_b_p2" text="+25 max health." />
-    <string id="taom_cl_t1_b_p3" text="+5% troop resistance." />
+    <string id="taom_fhh_t1a_key" text="Raggio di Brutalità Vile aumentato, il terrore si diffonde più ampiamente." />
+    <string id="taom_fhh_t1a_p1" text="+35 salute massima." />
+    <string id="taom_fhh_t1a_p2" text="+8% resistenza." />
+    <string id="taom_fhh_t1a_p3" text="+8% danno in mischia." />
+    <string id="taom_fhh_t1a_p4" text="+5% morale delle truppe." />
+    <string id="taom_fhh_t1b_key" text="Durata di Brutalità Vile estesa, la rabbia del troll dura più a lungo." />
+    <string id="taom_fhh_t1b_p1" text="+8% resistenza delle truppe." />
+    <string id="taom_fhh_t1b_p2" text="+5% danno delle truppe." />
+    <string id="taom_fhh_t1b_p3" text="+5% guadagno reputazione in battaglia." />
+    <string id="taom_fhh_t1b_p4" text="+25 salute massima." />
+    <string id="taom_fhh_t2a_key" text="Carica di Brutalità Vile ridotta, la rabbia si accende più velocemente." />
+    <string id="taom_fhh_t2a_p1" text="+12% resistenza." />
+    <string id="taom_fhh_t2a_p2" text="+50 salute massima." />
+    <string id="taom_fhh_t2a_p3" text="+12% resistenza delle truppe." />
+    <string id="taom_fhh_t2a_p4" text="+10% morale delle truppe." />
+    <string id="taom_fhh_t2b_key" text="Brutalità Vile rende il mezzotroll ancora più terrificante." />
+    <string id="taom_fhh_t2b_p1" text="+60 salute massima." />
+    <string id="taom_fhh_t2b_p2" text="+10% danno in mischia." />
+    <string id="taom_fhh_t2b_p3" text="+10% danno delle truppe." />
+    <string id="taom_fhh_t2b_p4" text="+10% guadagno reputazione in battaglia." />
+    <string id="taom_fhh_t3a_key" text="Raggio di Brutalità Vile notevolmente ampliato, tutti tremano." />
+    <string id="taom_fhh_t3a_p1" text="+75 salute massima." />
+    <string id="taom_fhh_t3a_p2" text="+15% resistenza." />
+    <string id="taom_fhh_t3a_p3" text="+15% resistenza delle truppe." />
+    <string id="taom_fhh_t3a_p4" text="+20% morale delle truppe." />
+    <string id="taom_fhh_t3b_key" text="Carica di Brutalità Vile notevolmente ridotta, la rabbia non svanisce mai." />
+    <string id="taom_fhh_t3b_p1" text="+15% danno in mischia." />
+    <string id="taom_fhh_t3b_p2" text="+15% danno delle truppe." />
+    <string id="taom_fhh_t3b_p3" text="+15% guadagno reputazione in battaglia." />
+    <string id="taom_fhh_t3b_p4" text="+5 dimensione gruppo." />
+    <string id="taom_cl_root_desc" text="Muro di Scudi garantisce +5% resistenza e la tua formazione rimane salda contro ogni avversità." />
+    <string id="taom_cl_t1_a_key" text="Raggio di Muro di Scudi ampliato, proteggendo una formazione più ampia." />
+    <string id="taom_cl_t1_a_p1" text="+8% resistenza." />
+    <string id="taom_cl_t1_a_p2" text="+5% resistenza delle truppe." />
+    <string id="taom_cl_t1_a_p3" text="+30 salute massima." />
+    <string id="taom_cl_t1_a_p4" text="+5% morale delle truppe." />
+    <string id="taom_cl_t1_b_key" text="Durata di Muro di Scudi estesa, resistendo agli assalti più lunghi." />
+    <string id="taom_cl_t1_b_p1" text="+8% danni in mischia." />
+    <string id="taom_cl_t1_b_p2" text="+25 salute massima." />
+    <string id="taom_cl_t1_b_p3" text="+5% resistenza truppe." />
     <string id="taom_cl_t1_b_p4" text="+7% velocità di attacco con armi da taglio." />
     <string id="taom_cl_t2_a_key" text="Carica del muro di scudi ridotta, radunando il muro più spesso." />
     <string id="taom_cl_t2_a_p1" text="+10% resistenza delle truppe." />
@@ -1736,46 +1736,46 @@
     <string id="taom_ucb_t2_b_p2" text="+10% penetrazione armatura." />
     <string id="taom_ucb_t2_b_p3" text="+50 salute massima." />
     <string id="taom_ucb_t2_b_p4" text="+5% danno truppe." />
-    <string id="taom_ucb_t3_a_key" text="Iron Rain radius greatly expanded, inescapable volleys." />
-    <string id="taom_ucb_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_ucb_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_ucb_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_ucb_t3_a_p4" text="+10% troop damage." />
-    <string id="taom_ucb_t3_b_key" text="Iron Rain charge greatly reduced, relentless fire." />
-    <string id="taom_ucb_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_ucb_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_ucb_t3_b_p3" text="+75 max health." />
-    <string id="taom_ucb_t3_b_p4" text="+15% party spotting range." />
-    <string id="taom_warg_scout_root_desc" text="Pack Howl grants +5% melee damage and terrifies nearby foes." />
-    <string id="taom_wsc_t1_a_key" text="Pack Howl radius expanded, sweeping wider formations." />
-    <string id="taom_wsc_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_wsc_t1_a_p2" text="+7% horse charge damage." />
-    <string id="taom_wsc_t1_a_p3" text="+7% swing speed." />
-    <string id="taom_wsc_t1_a_p4" text="+5% party movement speed." />
-    <string id="taom_wsc_t1_b_key" text="Pack Howl duration extended, maintaining momentum." />
-    <string id="taom_wsc_t1_b_p1" text="+30 horse health." />
-    <string id="taom_wsc_t1_b_p2" text="+25 max health." />
-    <string id="taom_wsc_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_wsc_t1_b_p4" text="+5% resistance." />
-    <string id="taom_wsc_t2_a_key" text="Pack Howl charge reduced, swifter activation." />
-    <string id="taom_wsc_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_wsc_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_wsc_t2_a_p3" text="+10% troop morale." />
-    <string id="taom_wsc_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_wsc_t2_b_key" text="Pack Howl boosts mount resilience while active." />
-    <string id="taom_wsc_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_wsc_t2_b_p2" text="+12% horse charge damage." />
-    <string id="taom_wsc_t2_b_p3" text="+60 horse health." />
-    <string id="taom_wsc_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_wsc_t3_a_key" text="Pack Howl radius greatly expanded, unstoppable impact." />
-    <string id="taom_wsc_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_wsc_t3_a_p2" text="+18% horse charge damage." />
-    <string id="taom_wsc_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_wsc_t3_a_p4" text="+15% troop damage." />
-    <string id="taom_wsc_t3_b_key" text="Pack Howl charge greatly reduced, ride without ceasing." />
-    <string id="taom_wsc_t3_b_p1" text="+100 horse health." />
-    <string id="taom_wsc_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_wsc_t3_b_p3" text="+15% party movement speed." />
+    <string id="taom_ucb_t3_a_key" text="Raggio di Pioggia di Ferro enormemente espanso, salve inevitabili." />
+    <string id="taom_ucb_t3_a_p1" text="+18% danni a distanza." />
+    <string id="taom_ucb_t3_a_p2" text="+15% penetrazione armatura." />
+    <string id="taom_ucb_t3_a_p3" text="+15% acquisizione fama in battaglia." />
+    <string id="taom_ucb_t3_a_p4" text="+10% danni truppe." />
+    <string id="taom_ucb_t3_b_key" text="Carica di Pioggia di Ferro notevolmente ridotta, fuoco incessante." />
+    <string id="taom_ucb_t3_b_p1" text="+15% bonus furtività." />
+    <string id="taom_ucb_t3_b_p2" text="+15% velocità di movimento." />
+    <string id="taom_ucb_t3_b_p3" text="+75 salute massima." />
+    <string id="taom_ucb_t3_b_p4" text="+15% raggio di avvistamento gruppo." />
+    <string id="taom_warg_scout_root_desc" text="Ululato del Branco garantisce +5% danni in mischia e terrorizza i nemici vicini." />
+    <string id="taom_wsc_t1_a_key" text="Raggio di Ululato del Branco espanso, investendo formazioni più ampie." />
+    <string id="taom_wsc_t1_a_p1" text="+8% danni in mischia." />
+    <string id="taom_wsc_t1_a_p2" text="+7% danni carica a cavallo." />
+    <string id="taom_wsc_t1_a_p3" text="+7% velocità di attacco." />
+    <string id="taom_wsc_t1_a_p4" text="+5% velocità movimento gruppo." />
+    <string id="taom_wsc_t1_b_key" text="Durata di Ululato del Branco estesa, mantenendo lo slancio." />
+    <string id="taom_wsc_t1_b_p1" text="+30 salute cavallo." />
+    <string id="taom_wsc_t1_b_p2" text="+25 salute massima." />
+    <string id="taom_wsc_t1_b_p3" text="-5% salari truppe." />
+    <string id="taom_wsc_t1_b_p4" text="+5% resistenza." />
+    <string id="taom_wsc_t2_a_key" text="Carica di Ululato del Branco ridotta, attivazione più rapida." />
+    <string id="taom_wsc_t2_a_p1" text="+10% velocità movimento gruppo." />
+    <string id="taom_wsc_t2_a_p2" text="-10% salari truppe." />
+    <string id="taom_wsc_t2_a_p3" text="+10% morale truppe." />
+    <string id="taom_wsc_t2_a_p4" text="+10% acquisizione fama in battaglia." />
+    <string id="taom_wsc_t2_b_key" text="Ululato del Branco aumenta la resistenza della cavalcatura quando attivo." />
+    <string id="taom_wsc_t2_b_p1" text="+12% danni in mischia." />
+    <string id="taom_wsc_t2_b_p2" text="+12% danni carica a cavallo." />
+    <string id="taom_wsc_t2_b_p3" text="+60 salute cavallo." />
+    <string id="taom_wsc_t2_b_p4" text="+10% velocità di attacco." />
+    <string id="taom_wsc_t3_a_key" text="Raggio di Ululato del Branco enormemente espanso, impatto inarrestabile." />
+    <string id="taom_wsc_t3_a_p1" text="+18% danni in mischia." />
+    <string id="taom_wsc_t3_a_p2" text="+18% danni carica a cavallo." />
+    <string id="taom_wsc_t3_a_p3" text="+15% velocità di attacco." />
+    <string id="taom_wsc_t3_a_p4" text="+15% danni truppe." />
+    <string id="taom_wsc_t3_b_key" text="Carica di Ululato del Branco notevolmente ridotta, cavalca senza sosta." />
+    <string id="taom_wsc_t3_b_p1" text="+100 salute del cavallo." />
+    <string id="taom_wsc_t3_b_p2" text="-15% salari delle truppe." />
+    <string id="taom_wsc_t3_b_p3" text="+15% velocità di movimento del gruppo." />
     <string id="taom_wsc_t3_b_p4" text="+75 salute massima." />
     <string id="taom_cave_troll_master_root_desc" text="Frenesia del Troll garantisce +25 salute e rende i tuoi troll berserk." />
     <string id="taom_ctm_t1_a_key" text="Raggio di Frenesia del Troll aumentato, potenziando più guerrieri." />

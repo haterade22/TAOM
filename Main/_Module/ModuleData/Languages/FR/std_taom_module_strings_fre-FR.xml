@@ -447,7 +447,7 @@
     <string id="PP7KD7OC" text="{RULER.NAME} de {KINGDOM} a décidé de signer un accord commercial avec {OTHER_KINGDOM}, avec {?RULER.GENDER}son{?}son{\?} conseil également divisé sur la question." />
     <string id="PutoRsWp" text="Un messager arrive de {CLAN_NAME}. Ils vous offrent {GOLD_AMOUNT}{GOLD_ICON} en rançon si vous libérez {CAPTIVE_HERO.NAME}." />
     <string id="q9DnHVcZ" text="Il n'est pas dans notre intérêt de rejoindre {KINGDOM_NAME} dans leur guerre." />
-    <string id="qa4FlTWS" text="{RULER.NAME} of {KINGDOM} takes {SETTLEMENT} as {?RULER.GENDER}her{?}his{\?} fief despite {?RULER.GENDER}her{?}his{\?} council's opposition." />
+    <string id="qa4FlTWS" text="{RULER.NAME} de {KINGDOM} prend {SETTLEMENT} comme {?RULER.GENDER}son{?}son{\?} fief malgré l'opposition de {?RULER.GENDER}son{?}son{\?} conseil." />
     <string id="qgN9o2ip" text="Il est temps d'appeler notre allié {KINGDOM_NAME} à la guerre contre {KINGDOM_TO_CALL_TO_WAR_AGAINST} ! Votre royaume votera pour proposer un accord d'appel à la guerre." />
     <string id="qN3x2usk" text="Voter pour appeler {CALLED_KINGDOM} à la guerre contre {KINGDOM_TO_CALL_TO_WAR_AGAINST} pour {CALL_TO_WAR_COST}{GOLD_ICON}." />
     <string id="R0bJS0pn" text="Faire la paix avec {OTHER_FACTION}" />
@@ -480,7 +480,7 @@
     <string id="xM97H0oR" text="Voter pour déclarer la guerre à {KINGDOM_NAME}." />
     <string id="yBL3TzXw" text="{RULER.NAME} a choisi de ne pas expulser le clan {CLAN} de {KINGDOM} avec le soutien de {?RULER.GENDER}son conseil{?}son conseil{\?}." />
     <string id="yUYNlQhU" text="Bien, je vais faire rédiger un contrat simple par mes hommes. Au nom de {KINGDOM_FORMAL_NAME}, je vous souhaite la bienvenue. Puissiez-vous mettre votre épée à bon usage contre nos ennemis." />
-    <string id="Zckbdm4Z" text="{RULER.NAME} of {KINGDOM} takes {SETTLEMENT} as {?RULER.GENDER}her{?}his{\?} fief with {?RULER.GENDER}her{?}his{\?} council's support." />
+    <string id="Zckbdm4Z" text="{RULER.NAME} de {KINGDOM} prend {SETTLEMENT} comme {?RULER.GENDER}son{?}son{\?} fief avec le soutien de {?RULER.GENDER}son{?}son{\?} conseil." />
     <string id="zd9sawl9" text="Vous êtes déjà allié avec {KINGDOM_NAME}." />
     <string id="zXuo0Wbj" text="Signer un accord commercial avec {KINGDOM}" />
     <string id="ZZ1oLfEq" text="{RULER.NAME} a répondu à l'appel de {CALLING_KINGDOM} et a déclaré la guerre à {KINGDOM_TO_CALL_TO_WAR_AGAINST} avec le soutien de {?RULER.GENDER}son conseil{?}son conseil{\?}." />

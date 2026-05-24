@@ -60,7 +60,7 @@
     <string id="taom_career_dale_outrider_desc" text="谷間の国とはなれ山の間を行き交う隊商を護衛する、北方交易路の騎馬哨戒兵。" />
     <string id="taom_career_ironguard" text="鋼鉄護衛兵" />
     <string id="taom_career_ironguard_desc" text="ミスリル鍛造の鎧に身を包み、オークと竜からエレボールの深淵を守る、ドワーフの精鋭戦士。" />
-    <string id="taom_career_crossbow_master" text="Crossbow Master" />
+    <string id="taom_career_crossbow_master" text="弩の達人" />
     <string id="taom_career_crossbow_master_desc" text="驚異的な制止力を持つ名工の弩を操るドワーフの技師戦士。一本一本の矢が精密に製作されている。" />
     <string id="taom_career_ram_rider" text="雄羊騎兵" />
     <string id="taom_career_ram_rider_desc" text="馬が通れない険しい山道を突進する、巨大な軍用雄羊に跨るドワーフの騎兵戦士。" />
@@ -105,7 +105,7 @@
     <string id="taom_career_corsair_crossbow" text="海賊の弩兵" />
     <string id="taom_career_corsair_crossbow_desc" text="海賊艦隊の射撃手。索具から致命的な精度で舵手や士官を狙撃する。" />
     <string id="taom_career_corsair_captain" text="海賊船長" />
-    <string id="taom_career_corsair_captain_desc" text="A seasoned fleet commander who leads from the prow, inspiring crews with promises of plunder and glory on the high seas." />
+    <string id="taom_career_corsair_captain_desc" text="船首から指揮を執る歴戦の艦隊司令官。略奪と栄光の約束で船員たちを鼓舞する。" />
     <string id="taom_ability_ranger_of_ithilien" text="待ち伏せ" />
     <string id="taom_ability_ranger_of_ithilien_tt" text="致命的な待ち伏せを仕掛け、短時間、射撃ダメージ、引き速度、移動速度を向上させる。" />
     <string id="taom_ability_captain_of_osgiliath" text="戦線死守" />
@@ -1536,525 +1536,525 @@
     <string id="taom_gar_t1_a_p3" text="移動速度+7%。" />
     <string id="taom_gar_t1_a_p4" text="戦闘名声獲得+5%。" />
     <string id="taom_gar_t1_b_key" text="シルヴァーレインの持続時間が延長され、継続的な弾幕を放つ。" />
-    <string id="taom_gar_t1_b_p1" text="+5% resistance." />
-    <string id="taom_gar_t1_b_p2" text="+25 max health." />
-    <string id="taom_gar_t1_b_p3" text="+5% party spotting range." />
-    <string id="taom_gar_t1_b_p4" text="+5% stealth bonus." />
-    <string id="taom_gar_t2_a_key" text="Silver Rain charge reduced, maintaining constant pressure." />
-    <string id="taom_gar_t2_a_p1" text="+10% party spotting range." />
-    <string id="taom_gar_t2_a_p2" text="+10% movement speed." />
-    <string id="taom_gar_t2_a_p3" text="+10% stealth bonus." />
-    <string id="taom_gar_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_gar_t2_b_key" text="Silver Rain gains additional penetration while active." />
-    <string id="taom_gar_t2_b_p1" text="+12% ranged damage." />
-    <string id="taom_gar_t2_b_p2" text="+10% armor penetration." />
-    <string id="taom_gar_t2_b_p3" text="+50 max health." />
-    <string id="taom_gar_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_gar_t3_a_key" text="Silver Rain radius greatly expanded, inescapable volleys." />
-    <string id="taom_gar_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_gar_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_gar_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_gar_t3_a_p4" text="+10% troop damage." />
-    <string id="taom_gar_t3_b_key" text="Silver Rain charge greatly reduced, relentless fire." />
-    <string id="taom_gar_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_gar_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_gar_t3_b_p3" text="+75 max health." />
-    <string id="taom_gar_t3_b_p4" text="+15% party spotting range." />
-    <string id="taom_sentinel_root_desc" text="Elanor Swiftness grants +5% melee damage and elven grace." />
-    <string id="taom_snt_t1_a_key" text="Elanor Swiftness radius expanded, sweeping wider formations." />
-    <string id="taom_snt_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_snt_t1_a_p2" text="+7% horse charge damage." />
-    <string id="taom_snt_t1_a_p3" text="+7% swing speed." />
-    <string id="taom_snt_t1_a_p4" text="+5% party movement speed." />
-    <string id="taom_snt_t1_b_key" text="Elanor Swiftness duration extended, maintaining momentum." />
-    <string id="taom_snt_t1_b_p1" text="+30 horse health." />
-    <string id="taom_snt_t1_b_p2" text="+25 max health." />
-    <string id="taom_snt_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_snt_t1_b_p4" text="+5% resistance." />
-    <string id="taom_snt_t2_a_key" text="Elanor Swiftness charge reduced, swifter activation." />
-    <string id="taom_snt_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_snt_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_snt_t2_a_p3" text="+10% troop morale." />
-    <string id="taom_snt_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_snt_t2_b_key" text="Elanor Swiftness boosts mount resilience while active." />
-    <string id="taom_snt_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_snt_t2_b_p2" text="+12% horse charge damage." />
-    <string id="taom_snt_t2_b_p3" text="+60 horse health." />
-    <string id="taom_snt_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_snt_t3_a_key" text="Elanor Swiftness radius greatly expanded, unstoppable impact." />
-    <string id="taom_snt_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_snt_t3_a_p2" text="+18% horse charge damage." />
-    <string id="taom_snt_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_snt_t3_a_p4" text="+15% troop damage." />
-    <string id="taom_snt_t3_b_key" text="Elanor Swiftness charge greatly reduced, ride without ceasing." />
-    <string id="taom_snt_t3_b_p1" text="+100 horse health." />
-    <string id="taom_snt_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_snt_t3_b_p3" text="+15% party movement speed." />
-    <string id="taom_snt_t3_b_p4" text="+75 max health." />
-    <string id="taom_shadow_walker_root_desc" text="Forest Cloak grants +5% resistance and shadows conceal you." />
-    <string id="taom_shw_t1_a_key" text="Forest Cloak radius increased, empowering more warriors." />
-    <string id="taom_shw_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_shw_t1_a_p2" text="+5% troop damage." />
-    <string id="taom_shw_t1_a_p3" text="+30 max health." />
-    <string id="taom_shw_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_shw_t1_b_key" text="Forest Cloak duration extended, fortifying the defense." />
-    <string id="taom_shw_t1_b_p1" text="+8% resistance." />
-    <string id="taom_shw_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_shw_t1_b_p3" text="+5% troop resistance." />
-    <string id="taom_shw_t1_b_p4" text="+5% troop regeneration." />
-    <string id="taom_shw_t2_a_key" text="Forest Cloak charge reduced, activating more frequently." />
-    <string id="taom_shw_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_shw_t2_a_p2" text="+2 party size." />
-    <string id="taom_shw_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_shw_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_shw_t2_b_key" text="Forest Cloak grants additional defensive buffs while active." />
-    <string id="taom_shw_t2_b_p1" text="+12% resistance." />
-    <string id="taom_shw_t2_b_p2" text="+60 max health." />
-    <string id="taom_shw_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_shw_t2_b_p4" text="+10% troop damage." />
-    <string id="taom_shw_t3_a_key" text="Forest Cloak radius greatly expanded, devastating power." />
-    <string id="taom_shw_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_shw_t3_a_p2" text="+100 max health." />
-    <string id="taom_shw_t3_a_p3" text="+15% troop damage." />
-    <string id="taom_shw_t3_a_p4" text="+4 party size." />
-    <string id="taom_shw_t3_b_key" text="Forest Cloak charge greatly reduced, nearly always available." />
-    <string id="taom_shw_t3_b_p1" text="+18% resistance." />
-    <string id="taom_shw_t3_b_p2" text="+15% health regeneration." />
-    <string id="taom_shw_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_shw_t3_b_p4" text="+15% troop regeneration." />
-    <string id="taom_silvan_archer_root_desc" text="Canopy Strike grants +5% ranged damage from the treetops." />
-    <string id="taom_sva_t1_a_key" text="Canopy Strike radius increased, covering wider kill zones." />
-    <string id="taom_sva_t1_a_p1" text="+8% ranged damage." />
-    <string id="taom_sva_t1_a_p2" text="+5% armor penetration." />
-    <string id="taom_sva_t1_a_p3" text="+7% movement speed." />
-    <string id="taom_sva_t1_a_p4" text="+5% battle renown gain." />
-    <string id="taom_sva_t1_b_key" text="Canopy Strike duration extended, sustained barrage." />
-    <string id="taom_sva_t1_b_p1" text="+5% resistance." />
-    <string id="taom_sva_t1_b_p2" text="+25 max health." />
-    <string id="taom_sva_t1_b_p3" text="+5% party spotting range." />
-    <string id="taom_sva_t1_b_p4" text="+5% stealth bonus." />
-    <string id="taom_sva_t2_a_key" text="Canopy Strike charge reduced, maintaining constant pressure." />
-    <string id="taom_sva_t2_a_p1" text="+10% party spotting range." />
-    <string id="taom_sva_t2_a_p2" text="+10% movement speed." />
-    <string id="taom_sva_t2_a_p3" text="+10% stealth bonus." />
-    <string id="taom_sva_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_sva_t2_b_key" text="Canopy Strike gains additional penetration while active." />
-    <string id="taom_sva_t2_b_p1" text="+12% ranged damage." />
-    <string id="taom_sva_t2_b_p2" text="+10% armor penetration." />
-    <string id="taom_sva_t2_b_p3" text="+50 max health." />
-    <string id="taom_sva_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_sva_t3_a_key" text="Canopy Strike radius greatly expanded, inescapable volleys." />
-    <string id="taom_sva_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_sva_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_sva_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_sva_t3_a_p4" text="+10% troop damage." />
-    <string id="taom_sva_t3_b_key" text="Canopy Strike charge greatly reduced, relentless fire." />
-    <string id="taom_sva_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_sva_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_sva_t3_b_p3" text="+75 max health." />
-    <string id="taom_sva_t3_b_p4" text="+15% party spotting range." />
-    <string id="taom_elk_rider_root_desc" text="Antler Crash grants +5% melee damage, the great elk charges." />
-    <string id="taom_elk_t1_a_key" text="Antler Crash radius expanded, sweeping wider formations." />
-    <string id="taom_elk_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_elk_t1_a_p2" text="+7% horse charge damage." />
-    <string id="taom_elk_t1_a_p3" text="+7% swing speed." />
-    <string id="taom_elk_t1_a_p4" text="+5% party movement speed." />
-    <string id="taom_elk_t1_b_key" text="Antler Crash duration extended, maintaining momentum." />
-    <string id="taom_elk_t1_b_p1" text="+30 horse health." />
-    <string id="taom_elk_t1_b_p2" text="+25 max health." />
-    <string id="taom_elk_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_elk_t1_b_p4" text="+5% resistance." />
-    <string id="taom_elk_t2_a_key" text="Antler Crash charge reduced, swifter activation." />
-    <string id="taom_elk_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_elk_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_elk_t2_a_p3" text="+10% troop morale." />
-    <string id="taom_elk_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_elk_t2_b_key" text="Antler Crash boosts mount resilience while active." />
-    <string id="taom_elk_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_elk_t2_b_p2" text="+12% horse charge damage." />
-    <string id="taom_elk_t2_b_p3" text="+60 horse health." />
-    <string id="taom_elk_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_elk_t3_a_key" text="Antler Crash radius greatly expanded, unstoppable impact." />
-    <string id="taom_elk_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_elk_t3_a_p2" text="+18% horse charge damage." />
-    <string id="taom_elk_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_elk_t3_a_p4" text="+15% troop damage." />
-    <string id="taom_elk_t3_b_key" text="Antler Crash charge greatly reduced, ride without ceasing." />
-    <string id="taom_elk_t3_b_p1" text="+100 horse health." />
-    <string id="taom_elk_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_elk_t3_b_p3" text="+15% party movement speed." />
-    <string id="taom_elk_t3_b_p4" text="+75 max health." />
-    <string id="taom_uruk_berserker_root_desc" text="Blood Rage grants +25 health, pain fuels your fury." />
-    <string id="taom_ub_t1_a_key" text="Blood Rage radius increased, empowering more warriors." />
-    <string id="taom_ub_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_ub_t1_a_p2" text="+5% troop damage." />
-    <string id="taom_ub_t1_a_p3" text="+30 max health." />
-    <string id="taom_ub_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_ub_t1_b_key" text="Blood Rage duration extended, fortifying the defense." />
-    <string id="taom_ub_t1_b_p1" text="+8% resistance." />
-    <string id="taom_ub_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_ub_t1_b_p3" text="+5% troop resistance." />
-    <string id="taom_ub_t1_b_p4" text="+5% troop regeneration." />
-    <string id="taom_ub_t2_a_key" text="Blood Rage charge reduced, activating more frequently." />
-    <string id="taom_ub_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_ub_t2_a_p2" text="+2 party size." />
-    <string id="taom_ub_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_ub_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_ub_t2_b_key" text="Blood Rage grants additional defensive buffs while active." />
-    <string id="taom_ub_t2_b_p1" text="+12% resistance." />
-    <string id="taom_ub_t2_b_p2" text="+60 max health." />
-    <string id="taom_ub_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_ub_t2_b_p4" text="+10% troop damage." />
-    <string id="taom_ub_t3_a_key" text="Blood Rage radius greatly expanded, devastating power." />
-    <string id="taom_ub_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_ub_t3_a_p2" text="+100 max health." />
-    <string id="taom_ub_t3_a_p3" text="+15% troop damage." />
-    <string id="taom_ub_t3_a_p4" text="+4 party size." />
-    <string id="taom_ub_t3_b_key" text="Blood Rage charge greatly reduced, nearly always available." />
-    <string id="taom_ub_t3_b_p1" text="+18% resistance." />
-    <string id="taom_ub_t3_b_p2" text="+15% health regeneration." />
-    <string id="taom_ub_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_ub_t3_b_p4" text="+15% troop regeneration." />
-    <string id="taom_uruk_crossbow_root_desc" text="Iron Rain grants +5% ranged damage with Orthanc-forged bolts." />
-    <string id="taom_ucb_t1_a_key" text="Iron Rain radius increased, covering wider kill zones." />
-    <string id="taom_ucb_t1_a_p1" text="+8% ranged damage." />
-    <string id="taom_ucb_t1_a_p2" text="+5% armor penetration." />
-    <string id="taom_ucb_t1_a_p3" text="+7% movement speed." />
-    <string id="taom_ucb_t1_a_p4" text="+5% battle renown gain." />
-    <string id="taom_ucb_t1_b_key" text="Iron Rain duration extended, sustained barrage." />
-    <string id="taom_ucb_t1_b_p1" text="+5% resistance." />
-    <string id="taom_ucb_t1_b_p2" text="+25 max health." />
-    <string id="taom_ucb_t1_b_p3" text="+5% party spotting range." />
-    <string id="taom_ucb_t1_b_p4" text="+5% stealth bonus." />
-    <string id="taom_ucb_t2_a_key" text="Iron Rain charge reduced, maintaining constant pressure." />
-    <string id="taom_ucb_t2_a_p1" text="+10% party spotting range." />
-    <string id="taom_ucb_t2_a_p2" text="+10% movement speed." />
-    <string id="taom_ucb_t2_a_p3" text="+10% stealth bonus." />
-    <string id="taom_ucb_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_ucb_t2_b_key" text="Iron Rain gains additional penetration while active." />
-    <string id="taom_ucb_t2_b_p1" text="+12% ranged damage." />
-    <string id="taom_ucb_t2_b_p2" text="+10% armor penetration." />
-    <string id="taom_ucb_t2_b_p3" text="+50 max health." />
-    <string id="taom_ucb_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_ucb_t3_a_key" text="Iron Rain radius greatly expanded, inescapable volleys." />
-    <string id="taom_ucb_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_ucb_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_ucb_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_ucb_t3_a_p4" text="+10% troop damage." />
-    <string id="taom_ucb_t3_b_key" text="Iron Rain charge greatly reduced, relentless fire." />
-    <string id="taom_ucb_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_ucb_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_ucb_t3_b_p3" text="+75 max health." />
-    <string id="taom_ucb_t3_b_p4" text="+15% party spotting range." />
-    <string id="taom_warg_scout_root_desc" text="Pack Howl grants +5% melee damage and terrifies nearby foes." />
-    <string id="taom_wsc_t1_a_key" text="Pack Howl radius expanded, sweeping wider formations." />
-    <string id="taom_wsc_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_wsc_t1_a_p2" text="+7% horse charge damage." />
-    <string id="taom_wsc_t1_a_p3" text="+7% swing speed." />
-    <string id="taom_wsc_t1_a_p4" text="+5% party movement speed." />
-    <string id="taom_wsc_t1_b_key" text="Pack Howl duration extended, maintaining momentum." />
-    <string id="taom_wsc_t1_b_p1" text="+30 horse health." />
-    <string id="taom_wsc_t1_b_p2" text="+25 max health." />
-    <string id="taom_wsc_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_wsc_t1_b_p4" text="+5% resistance." />
-    <string id="taom_wsc_t2_a_key" text="Pack Howl charge reduced, swifter activation." />
-    <string id="taom_wsc_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_wsc_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_wsc_t2_a_p3" text="+10% troop morale." />
-    <string id="taom_wsc_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_wsc_t2_b_key" text="Pack Howl boosts mount resilience while active." />
-    <string id="taom_wsc_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_wsc_t2_b_p2" text="+12% horse charge damage." />
-    <string id="taom_wsc_t2_b_p3" text="+60 horse health." />
-    <string id="taom_wsc_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_wsc_t3_a_key" text="Pack Howl radius greatly expanded, unstoppable impact." />
-    <string id="taom_wsc_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_wsc_t3_a_p2" text="+18% horse charge damage." />
-    <string id="taom_wsc_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_wsc_t3_a_p4" text="+15% troop damage." />
-    <string id="taom_wsc_t3_b_key" text="Pack Howl charge greatly reduced, ride without ceasing." />
-    <string id="taom_wsc_t3_b_p1" text="+100 horse health." />
-    <string id="taom_wsc_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_wsc_t3_b_p3" text="+15% party movement speed." />
-    <string id="taom_wsc_t3_b_p4" text="+75 max health." />
-    <string id="taom_cave_troll_master_root_desc" text="Troll Frenzy grants +25 health and drives your trolls berserk." />
-    <string id="taom_ctm_t1_a_key" text="Troll Frenzy radius increased, empowering more warriors." />
-    <string id="taom_ctm_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_ctm_t1_a_p2" text="+5% troop damage." />
-    <string id="taom_ctm_t1_a_p3" text="+30 max health." />
-    <string id="taom_ctm_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_ctm_t1_b_key" text="Troll Frenzy duration extended, fortifying the defense." />
-    <string id="taom_ctm_t1_b_p1" text="+8% resistance." />
-    <string id="taom_ctm_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_ctm_t1_b_p3" text="+5% troop resistance." />
-    <string id="taom_ctm_t1_b_p4" text="+5% troop regeneration." />
-    <string id="taom_ctm_t2_a_key" text="Troll Frenzy charge reduced, activating more frequently." />
-    <string id="taom_ctm_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_ctm_t2_a_p2" text="+2 party size." />
-    <string id="taom_ctm_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_ctm_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_ctm_t2_b_key" text="Troll Frenzy grants additional defensive buffs while active." />
-    <string id="taom_ctm_t2_b_p1" text="+12% resistance." />
-    <string id="taom_ctm_t2_b_p2" text="+60 max health." />
-    <string id="taom_ctm_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_ctm_t2_b_p4" text="+10% troop damage." />
-    <string id="taom_ctm_t3_a_key" text="Troll Frenzy radius greatly expanded, devastating power." />
-    <string id="taom_ctm_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_ctm_t3_a_p2" text="+100 max health." />
-    <string id="taom_ctm_t3_a_p3" text="+15% troop damage." />
-    <string id="taom_ctm_t3_a_p4" text="+4 party size." />
-    <string id="taom_ctm_t3_b_key" text="Troll Frenzy charge greatly reduced, nearly always available." />
-    <string id="taom_ctm_t3_b_p1" text="+18% resistance." />
-    <string id="taom_ctm_t3_b_p2" text="+15% health regeneration." />
-    <string id="taom_ctm_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_ctm_t3_b_p4" text="+15% troop regeneration." />
-    <string id="taom_goblin_sniper_root_desc" text="Poison Dart grants +5% ranged damage with cave fungus toxin." />
-    <string id="taom_gbs_t1_a_key" text="Poison Dart radius increased, covering wider kill zones." />
-    <string id="taom_gbs_t1_a_p1" text="+8% ranged damage." />
-    <string id="taom_gbs_t1_a_p2" text="+5% armor penetration." />
-    <string id="taom_gbs_t1_a_p3" text="+7% movement speed." />
-    <string id="taom_gbs_t1_a_p4" text="+5% battle renown gain." />
-    <string id="taom_gbs_t1_b_key" text="Poison Dart duration extended, sustained barrage." />
-    <string id="taom_gbs_t1_b_p1" text="+5% resistance." />
-    <string id="taom_gbs_t1_b_p2" text="+25 max health." />
-    <string id="taom_gbs_t1_b_p3" text="+5% party spotting range." />
-    <string id="taom_gbs_t1_b_p4" text="+5% stealth bonus." />
-    <string id="taom_gbs_t2_a_key" text="Poison Dart charge reduced, maintaining constant pressure." />
-    <string id="taom_gbs_t2_a_p1" text="+10% party spotting range." />
-    <string id="taom_gbs_t2_a_p2" text="+10% movement speed." />
-    <string id="taom_gbs_t2_a_p3" text="+10% stealth bonus." />
-    <string id="taom_gbs_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_gbs_t2_b_key" text="Poison Dart gains additional penetration while active." />
-    <string id="taom_gbs_t2_b_p1" text="+12% ranged damage." />
-    <string id="taom_gbs_t2_b_p2" text="+10% armor penetration." />
-    <string id="taom_gbs_t2_b_p3" text="+50 max health." />
-    <string id="taom_gbs_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_gbs_t3_a_key" text="Poison Dart radius greatly expanded, inescapable volleys." />
-    <string id="taom_gbs_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_gbs_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_gbs_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_gbs_t3_a_p4" text="+10% troop damage." />
-    <string id="taom_gbs_t3_b_key" text="Poison Dart charge greatly reduced, relentless fire." />
-    <string id="taom_gbs_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_gbs_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_gbs_t3_b_p3" text="+75 max health." />
-    <string id="taom_gbs_t3_b_p4" text="+15% party spotting range." />
-    <string id="taom_warg_pack_leader_root_desc" text="Alpha Howl grants +5% melee damage and the pack hunts." />
-    <string id="taom_wpl_t1_a_key" text="Alpha Howl radius expanded, sweeping wider formations." />
-    <string id="taom_wpl_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_wpl_t1_a_p2" text="+7% horse charge damage." />
-    <string id="taom_wpl_t1_a_p3" text="+7% swing speed." />
-    <string id="taom_wpl_t1_a_p4" text="+5% party movement speed." />
-    <string id="taom_wpl_t1_b_key" text="Alpha Howl duration extended, maintaining momentum." />
-    <string id="taom_wpl_t1_b_p1" text="+30 horse health." />
-    <string id="taom_wpl_t1_b_p2" text="+25 max health." />
-    <string id="taom_wpl_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_wpl_t1_b_p4" text="+5% resistance." />
-    <string id="taom_wpl_t2_a_key" text="Alpha Howl charge reduced, swifter activation." />
-    <string id="taom_wpl_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_wpl_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_wpl_t2_a_p3" text="+10% troop morale." />
-    <string id="taom_wpl_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_wpl_t2_b_key" text="Alpha Howl boosts mount resilience while active." />
-    <string id="taom_wpl_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_wpl_t2_b_p2" text="+12% horse charge damage." />
-    <string id="taom_wpl_t2_b_p3" text="+60 horse health." />
-    <string id="taom_wpl_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_wpl_t3_a_key" text="Alpha Howl radius greatly expanded, unstoppable impact." />
-    <string id="taom_wpl_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_wpl_t3_a_p2" text="+18% horse charge damage." />
-    <string id="taom_wpl_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_wpl_t3_a_p4" text="+15% troop damage." />
-    <string id="taom_wpl_t3_b_key" text="Alpha Howl charge greatly reduced, ride without ceasing." />
-    <string id="taom_wpl_t3_b_p1" text="+100 horse health." />
-    <string id="taom_wpl_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_wpl_t3_b_p3" text="+15% party movement speed." />
-    <string id="taom_wpl_t3_b_p4" text="+75 max health." />
-    <string id="taom_shadow_warrior_root_desc" text="Soul Drain grants +25 health and drains enemy life force." />
-    <string id="taom_swr_t1_a_key" text="Soul Drain radius increased, empowering more warriors." />
-    <string id="taom_swr_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_swr_t1_a_p2" text="+5% troop damage." />
-    <string id="taom_swr_t1_a_p3" text="+30 max health." />
-    <string id="taom_swr_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_swr_t1_b_key" text="Soul Drain duration extended, fortifying the defense." />
-    <string id="taom_swr_t1_b_p1" text="+8% resistance." />
-    <string id="taom_swr_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_swr_t1_b_p3" text="+5% troop resistance." />
-    <string id="taom_swr_t1_b_p4" text="+5% troop regeneration." />
-    <string id="taom_swr_t2_a_key" text="Soul Drain charge reduced, activating more frequently." />
-    <string id="taom_swr_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_swr_t2_a_p2" text="+2 party size." />
-    <string id="taom_swr_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_swr_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_swr_t2_b_key" text="Soul Drain grants additional defensive buffs while active." />
-    <string id="taom_swr_t2_b_p1" text="+12% resistance." />
-    <string id="taom_swr_t2_b_p2" text="+60 max health." />
-    <string id="taom_swr_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_swr_t2_b_p4" text="+10% troop damage." />
-    <string id="taom_swr_t3_a_key" text="Soul Drain radius greatly expanded, devastating power." />
-    <string id="taom_swr_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_swr_t3_a_p2" text="+100 max health." />
-    <string id="taom_swr_t3_a_p3" text="+15% troop damage." />
-    <string id="taom_swr_t3_a_p4" text="+4 party size." />
-    <string id="taom_swr_t3_b_key" text="Soul Drain charge greatly reduced, nearly always available." />
-    <string id="taom_swr_t3_b_p1" text="+18% resistance." />
-    <string id="taom_swr_t3_b_p2" text="+15% health regeneration." />
-    <string id="taom_swr_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_swr_t3_b_p4" text="+15% troop regeneration." />
-    <string id="taom_necromancer_acolyte_root_desc" text="Dark Bolt grants +5% ranged damage with necromantic energy." />
-    <string id="taom_nca_t1_a_key" text="Dark Bolt radius increased, covering wider kill zones." />
-    <string id="taom_nca_t1_a_p1" text="+8% ranged damage." />
-    <string id="taom_nca_t1_a_p2" text="+5% armor penetration." />
-    <string id="taom_nca_t1_a_p3" text="+7% movement speed." />
-    <string id="taom_nca_t1_a_p4" text="+5% battle renown gain." />
-    <string id="taom_nca_t1_b_key" text="Dark Bolt duration extended, sustained barrage." />
-    <string id="taom_nca_t1_b_p1" text="+5% resistance." />
-    <string id="taom_nca_t1_b_p2" text="+25 max health." />
-    <string id="taom_nca_t1_b_p3" text="+5% party spotting range." />
-    <string id="taom_nca_t1_b_p4" text="+5% stealth bonus." />
-    <string id="taom_nca_t2_a_key" text="Dark Bolt charge reduced, maintaining constant pressure." />
-    <string id="taom_nca_t2_a_p1" text="+10% party spotting range." />
-    <string id="taom_nca_t2_a_p2" text="+10% movement speed." />
-    <string id="taom_nca_t2_a_p3" text="+10% stealth bonus." />
-    <string id="taom_nca_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_nca_t2_b_key" text="Dark Bolt gains additional penetration while active." />
-    <string id="taom_nca_t2_b_p1" text="+12% ranged damage." />
-    <string id="taom_nca_t2_b_p2" text="+10% armor penetration." />
-    <string id="taom_nca_t2_b_p3" text="+50 max health." />
-    <string id="taom_nca_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_nca_t3_a_key" text="Dark Bolt radius greatly expanded, inescapable volleys." />
-    <string id="taom_nca_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_nca_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_nca_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_nca_t3_a_p4" text="+10% troop damage." />
-    <string id="taom_nca_t3_b_key" text="Dark Bolt charge greatly reduced, relentless fire." />
-    <string id="taom_nca_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_nca_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_nca_t3_b_p3" text="+75 max health." />
-    <string id="taom_nca_t3_b_p4" text="+15% party spotting range." />
-    <string id="taom_fell_rider_root_desc" text="Dread Charge grants +5% melee damage, shadow wreathing your mount." />
-    <string id="taom_flr_t1_a_key" text="Dread Charge radius expanded, sweeping wider formations." />
-    <string id="taom_flr_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_flr_t1_a_p2" text="+7% horse charge damage." />
-    <string id="taom_flr_t1_a_p3" text="+7% swing speed." />
-    <string id="taom_flr_t1_a_p4" text="+5% party movement speed." />
-    <string id="taom_flr_t1_b_key" text="Dread Charge duration extended, maintaining momentum." />
-    <string id="taom_flr_t1_b_p1" text="+30 horse health." />
-    <string id="taom_flr_t1_b_p2" text="+25 max health." />
-    <string id="taom_flr_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_flr_t1_b_p4" text="+5% resistance." />
-    <string id="taom_flr_t2_a_key" text="Dread Charge charge reduced, swifter activation." />
-    <string id="taom_flr_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_flr_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_flr_t2_a_p3" text="+10% troop morale." />
-    <string id="taom_flr_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_flr_t2_b_key" text="Dread Charge boosts mount resilience while active." />
-    <string id="taom_flr_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_flr_t2_b_p2" text="+12% horse charge damage." />
-    <string id="taom_flr_t2_b_p3" text="+60 horse health." />
-    <string id="taom_flr_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_flr_t3_a_key" text="Dread Charge radius greatly expanded, unstoppable impact." />
-    <string id="taom_flr_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_flr_t3_a_p2" text="+18% horse charge damage." />
-    <string id="taom_flr_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_flr_t3_a_p4" text="+15% troop damage." />
-    <string id="taom_flr_t3_b_key" text="Dread Charge charge greatly reduced, ride without ceasing." />
-    <string id="taom_flr_t3_b_p1" text="+100 horse health." />
-    <string id="taom_flr_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_flr_t3_b_p3" text="+15% party movement speed." />
-    <string id="taom_flr_t3_b_p4" text="+75 max health." />
+    <string id="taom_gar_t1_b_p1" text="+5% 耐性" />
+    <string id="taom_gar_t1_b_p2" text="+25 最大体力" />
+    <string id="taom_gar_t1_b_p3" text="+5% 部隊の索敵範囲" />
+    <string id="taom_gar_t1_b_p4" text="+5% 隠密ボーナス" />
+    <string id="taom_gar_t2_a_key" text="銀の雨のチャージが減少し、絶え間ない圧力を維持。" />
+    <string id="taom_gar_t2_a_p1" text="+10% 部隊の索敵範囲" />
+    <string id="taom_gar_t2_a_p2" text="+10% 移動速度" />
+    <string id="taom_gar_t2_a_p3" text="+10% 隠密ボーナス" />
+    <string id="taom_gar_t2_a_p4" text="+10% 戦闘名声獲得" />
+    <string id="taom_gar_t2_b_key" text="銀の雨が発動中に追加の貫通力を獲得。" />
+    <string id="taom_gar_t2_b_p1" text="+12% 遠距離ダメージ" />
+    <string id="taom_gar_t2_b_p2" text="+10% 装甲貫通" />
+    <string id="taom_gar_t2_b_p3" text="+50 最大体力" />
+    <string id="taom_gar_t2_b_p4" text="+5% 部隊ダメージ" />
+    <string id="taom_gar_t3_a_key" text="銀の雨の範囲が大幅に拡大し、逃れられない一斉射撃。" />
+    <string id="taom_gar_t3_a_p1" text="+18% 遠距離ダメージ" />
+    <string id="taom_gar_t3_a_p2" text="+15% 装甲貫通" />
+    <string id="taom_gar_t3_a_p3" text="+15% 戦闘名声獲得" />
+    <string id="taom_gar_t3_a_p4" text="+10% 部隊ダメージ" />
+    <string id="taom_gar_t3_b_key" text="銀の雨のチャージが大幅に減少し、容赦ない射撃。" />
+    <string id="taom_gar_t3_b_p1" text="+15% 隠密ボーナス" />
+    <string id="taom_gar_t3_b_p2" text="+15% 移動速度" />
+    <string id="taom_gar_t3_b_p3" text="+75 最大体力。" />
+    <string id="taom_gar_t3_b_p4" text="+15% 部隊索敵範囲。" />
+    <string id="taom_sentinel_root_desc" text="エラノールの迅速は+5%近接ダメージとエルフの優雅さを付与する。" />
+    <string id="taom_snt_t1_a_key" text="エラノールの迅速の範囲が拡大し、より広い陣形を包む。" />
+    <string id="taom_snt_t1_a_p1" text="+8% 近接ダメージ。" />
+    <string id="taom_snt_t1_a_p2" text="+7% 馬の突撃ダメージ。" />
+    <string id="taom_snt_t1_a_p3" text="+7% 振り速度。" />
+    <string id="taom_snt_t1_a_p4" text="+5% 部隊移動速度。" />
+    <string id="taom_snt_t1_b_key" text="エラノールの迅速の持続時間が延長され、勢いを維持する。" />
+    <string id="taom_snt_t1_b_p1" text="+30 馬の体力。" />
+    <string id="taom_snt_t1_b_p2" text="+25 最大体力。" />
+    <string id="taom_snt_t1_b_p3" text="-5% 兵士維持費。" />
+    <string id="taom_snt_t1_b_p4" text="+5% 抵抗力。" />
+    <string id="taom_snt_t2_a_key" text="エラノールの迅速のチャージが減少し、より素早く発動する。" />
+    <string id="taom_snt_t2_a_p1" text="+10% 部隊移動速度。" />
+    <string id="taom_snt_t2_a_p2" text="-10% 兵士維持費。" />
+    <string id="taom_snt_t2_a_p3" text="+10% 兵士士気。" />
+    <string id="taom_snt_t2_a_p4" text="+10% 戦闘名声獲得。" />
+    <string id="taom_snt_t2_b_key" text="エラノールの迅速が発動中、騎乗の耐久力を強化する。" />
+    <string id="taom_snt_t2_b_p1" text="+12% 近接ダメージ。" />
+    <string id="taom_snt_t2_b_p2" text="+12% 馬の突撃ダメージ。" />
+    <string id="taom_snt_t2_b_p3" text="+60 馬の体力。" />
+    <string id="taom_snt_t2_b_p4" text="+10% 振り速度。" />
+    <string id="taom_snt_t3_a_key" text="エラノールの迅速の範囲が大幅に拡大し、止められぬ衝撃を与える。" />
+    <string id="taom_snt_t3_a_p1" text="+18% 近接ダメージ。" />
+    <string id="taom_snt_t3_a_p2" text="+18% 馬の突撃ダメージ。" />
+    <string id="taom_snt_t3_a_p3" text="+15% 振り速度。" />
+    <string id="taom_snt_t3_a_p4" text="+15% 兵士ダメージ。" />
+    <string id="taom_snt_t3_b_key" text="エラノールの迅速のチャージが大幅に減少し、絶え間なく駆ける。" />
+    <string id="taom_snt_t3_b_p1" text="+100 馬の体力。" />
+    <string id="taom_snt_t3_b_p2" text="-15% 兵士維持費。" />
+    <string id="taom_snt_t3_b_p3" text="+15% 部隊移動速度。" />
+    <string id="taom_snt_t3_b_p4" text="+75 最大体力。" />
+    <string id="taom_shadow_walker_root_desc" text="森の外套は+5%抵抗力を付与し、影があなたを隠す。" />
+    <string id="taom_shw_t1_a_key" text="森の外套の範囲が増加し、より多くの戦士を強化する。" />
+    <string id="taom_shw_t1_a_p1" text="+8% 近接ダメージ。" />
+    <string id="taom_shw_t1_a_p2" text="+5% 兵士ダメージ。" />
+    <string id="taom_shw_t1_a_p3" text="+30 最大体力。" />
+    <string id="taom_shw_t1_a_p4" text="+7% 振り速度。" />
+    <string id="taom_shw_t1_b_key" text="森の外套の持続時間が延長され、防御を強化する。" />
+    <string id="taom_shw_t1_b_p1" text="+8% 抵抗力。" />
+    <string id="taom_shw_t1_b_p2" text="+5% 部隊士気。" />
+    <string id="taom_shw_t1_b_p3" text="+5% 部隊抵抗力。" />
+    <string id="taom_shw_t1_b_p4" text="+5% 部隊再生力。" />
+    <string id="taom_shw_t2_a_key" text="森の外套のチャージ時間短縮、より頻繁に発動。" />
+    <string id="taom_shw_t2_a_p1" text="+10% 部隊士気。" />
+    <string id="taom_shw_t2_a_p2" text="+2 部隊規模。" />
+    <string id="taom_shw_t2_a_p3" text="+10% 戦闘名声獲得。" />
+    <string id="taom_shw_t2_a_p4" text="-10% 部隊賃金。" />
+    <string id="taom_shw_t2_b_key" text="森の外套が発動中、追加の防御バフを付与。" />
+    <string id="taom_shw_t2_b_p1" text="+12% 抵抗力。" />
+    <string id="taom_shw_t2_b_p2" text="+60 最大体力。" />
+    <string id="taom_shw_t2_b_p3" text="+10% 部隊抵抗力。" />
+    <string id="taom_shw_t2_b_p4" text="+10% 部隊ダメージ。" />
+    <string id="taom_shw_t3_a_key" text="森の外套の範囲が大幅に拡大、壊滅的な威力。" />
+    <string id="taom_shw_t3_a_p1" text="+15% 近接ダメージ。" />
+    <string id="taom_shw_t3_a_p2" text="+100 最大体力。" />
+    <string id="taom_shw_t3_a_p3" text="+15% 部隊ダメージ。" />
+    <string id="taom_shw_t3_a_p4" text="+4 部隊規模。" />
+    <string id="taom_shw_t3_b_key" text="森の外套のチャージ時間を大幅短縮、ほぼ常時使用可能。" />
+    <string id="taom_shw_t3_b_p1" text="+18% 抵抗力。" />
+    <string id="taom_shw_t3_b_p2" text="+15% 体力再生。" />
+    <string id="taom_shw_t3_b_p3" text="+20% 部隊士気。" />
+    <string id="taom_shw_t3_b_p4" text="+15% 部隊再生力。" />
+    <string id="taom_silvan_archer_root_desc" text="樹上襲撃により樹冠から+5% 遠隔ダメージを付与。" />
+    <string id="taom_sva_t1_a_key" text="樹上襲撃の範囲拡大、より広いキルゾーンをカバー。" />
+    <string id="taom_sva_t1_a_p1" text="+8% 遠隔ダメージ。" />
+    <string id="taom_sva_t1_a_p2" text="+5% 装甲貫通力。" />
+    <string id="taom_sva_t1_a_p3" text="+7% 移動速度。" />
+    <string id="taom_sva_t1_a_p4" text="+5% 戦闘名声獲得。" />
+    <string id="taom_sva_t1_b_key" text="樹上襲撃の持続時間延長、継続的な猛攻。" />
+    <string id="taom_sva_t1_b_p1" text="+5% 抵抗力。" />
+    <string id="taom_sva_t1_b_p2" text="+25 最大体力。" />
+    <string id="taom_sva_t1_b_p3" text="+5% 部隊索敵範囲。" />
+    <string id="taom_sva_t1_b_p4" text="+5% 隠密ボーナス。" />
+    <string id="taom_sva_t2_a_key" text="樹上襲撃のチャージ時間短縮、絶え間ない圧力を維持。" />
+    <string id="taom_sva_t2_a_p1" text="+10% 部隊索敵範囲。" />
+    <string id="taom_sva_t2_a_p2" text="+10% 移動速度。" />
+    <string id="taom_sva_t2_a_p3" text="+10% 隠密ボーナス。" />
+    <string id="taom_sva_t2_a_p4" text="+10% 戦闘名声獲得。" />
+    <string id="taom_sva_t2_b_key" text="キャノピーストライクが発動中に追加の貫通力を得る。" />
+    <string id="taom_sva_t2_b_p1" text="+12% 遠隔ダメージ。" />
+    <string id="taom_sva_t2_b_p2" text="+10% 装甲貫通力。" />
+    <string id="taom_sva_t2_b_p3" text="+50 最大体力。" />
+    <string id="taom_sva_t2_b_p4" text="+5% 部隊ダメージ。" />
+    <string id="taom_sva_t3_a_key" text="キャノピーストライクの範囲が大幅に拡大され、避けられない斉射となる。" />
+    <string id="taom_sva_t3_a_p1" text="+18% 遠隔ダメージ。" />
+    <string id="taom_sva_t3_a_p2" text="+15% 装甲貫通力。" />
+    <string id="taom_sva_t3_a_p3" text="+15% 戦闘名声獲得。" />
+    <string id="taom_sva_t3_a_p4" text="+10% 部隊ダメージ。" />
+    <string id="taom_sva_t3_b_key" text="キャノピーストライクのチャージ時間が大幅に短縮され、容赦ない射撃が可能になる。" />
+    <string id="taom_sva_t3_b_p1" text="+15% 隠密ボーナス。" />
+    <string id="taom_sva_t3_b_p2" text="+15% 移動速度。" />
+    <string id="taom_sva_t3_b_p3" text="+75 最大体力。" />
+    <string id="taom_sva_t3_b_p4" text="+15% 部隊発見範囲。" />
+    <string id="taom_elk_rider_root_desc" text="アントラークラッシュにより+5% 近接ダメージが付与され、大鹿が突撃する。" />
+    <string id="taom_elk_t1_a_key" text="アントラークラッシュの範囲が拡大され、より広い陣形を薙ぎ払う。" />
+    <string id="taom_elk_t1_a_p1" text="+8% 近接ダメージ。" />
+    <string id="taom_elk_t1_a_p2" text="+7% 騎乗突撃ダメージ。" />
+    <string id="taom_elk_t1_a_p3" text="+7% 振り速度。" />
+    <string id="taom_elk_t1_a_p4" text="+5% 部隊移動速度。" />
+    <string id="taom_elk_t1_b_key" text="アントラークラッシュの持続時間が延長され、勢いを維持する。" />
+    <string id="taom_elk_t1_b_p1" text="+30 騎乗体力。" />
+    <string id="taom_elk_t1_b_p2" text="+25 最大体力。" />
+    <string id="taom_elk_t1_b_p3" text="-5% 部隊維持費。" />
+    <string id="taom_elk_t1_b_p4" text="+5% 抵抗力。" />
+    <string id="taom_elk_t2_a_key" text="アントラークラッシュのチャージ時間が短縮され、より素早く発動できる。" />
+    <string id="taom_elk_t2_a_p1" text="+10% 部隊移動速度。" />
+    <string id="taom_elk_t2_a_p2" text="-10% 部隊維持費。" />
+    <string id="taom_elk_t2_a_p3" text="+10% 部隊士気。" />
+    <string id="taom_elk_t2_a_p4" text="+10% 戦闘名声獲得。" />
+    <string id="taom_elk_t2_b_key" text="アントラークラッシュの発動中、騎乗の耐久力が向上する。" />
+    <string id="taom_elk_t2_b_p1" text="+12% 近接ダメージ。" />
+    <string id="taom_elk_t2_b_p2" text="+12% 騎乗突撃ダメージ。" />
+    <string id="taom_elk_t2_b_p3" text="+60 騎乗体力。" />
+    <string id="taom_elk_t2_b_p4" text="+10% 振り速度。" />
+    <string id="taom_elk_t3_a_key" text="アントラークラッシュの範囲が大幅に拡大され、止められない衝撃となる。" />
+    <string id="taom_elk_t3_a_p1" text="+18% 近接ダメージ。" />
+    <string id="taom_elk_t3_a_p2" text="+18% 騎乗突撃ダメージ。" />
+    <string id="taom_elk_t3_a_p3" text="+15% 振り速度。" />
+    <string id="taom_elk_t3_a_p4" text="+15% 部隊ダメージ。" />
+    <string id="taom_elk_t3_b_key" text="角突進チャージが大幅に減少、休むことなく駆ける。" />
+    <string id="taom_elk_t3_b_p1" text="+100 馬の体力。" />
+    <string id="taom_elk_t3_b_p2" text="-15% 部隊維持費。" />
+    <string id="taom_elk_t3_b_p3" text="+15% 部隊移動速度。" />
+    <string id="taom_elk_t3_b_p4" text="+75 最大体力。" />
+    <string id="taom_uruk_berserker_root_desc" text="血の激怒は+25体力を付与、痛みが怒りの糧となる。" />
+    <string id="taom_ub_t1_a_key" text="血の激怒の範囲が拡大、より多くの戦士に力を与える。" />
+    <string id="taom_ub_t1_a_p1" text="+8% 近接ダメージ。" />
+    <string id="taom_ub_t1_a_p2" text="+5% 部隊ダメージ。" />
+    <string id="taom_ub_t1_a_p3" text="+30 最大体力。" />
+    <string id="taom_ub_t1_a_p4" text="+7% 振り速度。" />
+    <string id="taom_ub_t1_b_key" text="血の激怒の持続時間が延長、防御を強化する。" />
+    <string id="taom_ub_t1_b_p1" text="+8% 抵抗力。" />
+    <string id="taom_ub_t1_b_p2" text="+5% 部隊士気。" />
+    <string id="taom_ub_t1_b_p3" text="+5% 部隊抵抗力。" />
+    <string id="taom_ub_t1_b_p4" text="+5% 部隊再生力。" />
+    <string id="taom_ub_t2_a_key" text="血の激怒のチャージが減少、より頻繁に発動する。" />
+    <string id="taom_ub_t2_a_p1" text="+10% 部隊士気。" />
+    <string id="taom_ub_t2_a_p2" text="+2 部隊規模。" />
+    <string id="taom_ub_t2_a_p3" text="+10% 戦闘名声獲得。" />
+    <string id="taom_ub_t2_a_p4" text="-10% 部隊維持費。" />
+    <string id="taom_ub_t2_b_key" text="血の激怒は発動中、追加の防御バフを付与する。" />
+    <string id="taom_ub_t2_b_p1" text="+12% 抵抗力。" />
+    <string id="taom_ub_t2_b_p2" text="+60 最大体力。" />
+    <string id="taom_ub_t2_b_p3" text="+10% 部隊抵抗力。" />
+    <string id="taom_ub_t2_b_p4" text="+10% 部隊ダメージ。" />
+    <string id="taom_ub_t3_a_key" text="血の激怒の範囲が大幅に拡大、壊滅的な力。" />
+    <string id="taom_ub_t3_a_p1" text="+15% 近接ダメージ。" />
+    <string id="taom_ub_t3_a_p2" text="+100 最大体力。" />
+    <string id="taom_ub_t3_a_p3" text="+15% 部隊ダメージ。" />
+    <string id="taom_ub_t3_a_p4" text="+4 部隊規模。" />
+    <string id="taom_ub_t3_b_key" text="血の激怒のチャージが大幅に減少、ほぼ常時利用可能。" />
+    <string id="taom_ub_t3_b_p1" text="+18% 抵抗力。" />
+    <string id="taom_ub_t3_b_p2" text="+15% 体力再生。" />
+    <string id="taom_ub_t3_b_p3" text="+20% 部隊士気。" />
+    <string id="taom_ub_t3_b_p4" text="+15% 部隊再生力。" />
+    <string id="taom_uruk_crossbow_root_desc" text="鉄の雨はオルサンクで鍛えられた矢で+5%遠距離ダメージを付与。" />
+    <string id="taom_ucb_t1_a_key" text="鉄の雨の範囲が拡大、より広い殺戮地帯を覆う。" />
+    <string id="taom_ucb_t1_a_p1" text="+8% 遠距離ダメージ。" />
+    <string id="taom_ucb_t1_a_p2" text="+5% 装甲貫通力。" />
+    <string id="taom_ucb_t1_a_p3" text="+7% 移動速度。" />
+    <string id="taom_ucb_t1_a_p4" text="+5% 戦闘名声獲得量。" />
+    <string id="taom_ucb_t1_b_key" text="アイアン・レインの持続時間延長、継続的な弾幕。" />
+    <string id="taom_ucb_t1_b_p1" text="+5% 抵抗力。" />
+    <string id="taom_ucb_t1_b_p2" text="+25 最大体力。" />
+    <string id="taom_ucb_t1_b_p3" text="+5% 部隊索敵範囲。" />
+    <string id="taom_ucb_t1_b_p4" text="+5% 隠密ボーナス。" />
+    <string id="taom_ucb_t2_a_key" text="アイアン・レインのチャージ短縮、絶え間ない圧力を維持。" />
+    <string id="taom_ucb_t2_a_p1" text="+10% 部隊索敵範囲。" />
+    <string id="taom_ucb_t2_a_p2" text="+10% 移動速度。" />
+    <string id="taom_ucb_t2_a_p3" text="+10% 隠密ボーナス。" />
+    <string id="taom_ucb_t2_a_p4" text="+10% 戦闘名声獲得量。" />
+    <string id="taom_ucb_t2_b_key" text="アイアン・レイン発動中、追加の貫通力を獲得。" />
+    <string id="taom_ucb_t2_b_p1" text="+12% 遠隔ダメージ。" />
+    <string id="taom_ucb_t2_b_p2" text="+10% 装甲貫通力。" />
+    <string id="taom_ucb_t2_b_p3" text="+50 最大体力。" />
+    <string id="taom_ucb_t2_b_p4" text="+5% 部隊ダメージ。" />
+    <string id="taom_ucb_t3_a_key" text="アイアン・レインの範囲大幅拡大、逃れられぬ斉射。" />
+    <string id="taom_ucb_t3_a_p1" text="+18% 遠隔ダメージ。" />
+    <string id="taom_ucb_t3_a_p2" text="+15% 装甲貫通力。" />
+    <string id="taom_ucb_t3_a_p3" text="+15% 戦闘名声獲得量。" />
+    <string id="taom_ucb_t3_a_p4" text="+10% 部隊ダメージ。" />
+    <string id="taom_ucb_t3_b_key" text="アイアン・レインのチャージ大幅短縮、容赦なき射撃。" />
+    <string id="taom_ucb_t3_b_p1" text="+15% 隠密ボーナス。" />
+    <string id="taom_ucb_t3_b_p2" text="+15% 移動速度。" />
+    <string id="taom_ucb_t3_b_p3" text="+75 最大体力。" />
+    <string id="taom_ucb_t3_b_p4" text="+15% 部隊索敵範囲。" />
+    <string id="taom_warg_scout_root_desc" text="パック・ハウルは+5%の近接ダメージを付与し、近くの敵を恐怖させる。" />
+    <string id="taom_wsc_t1_a_key" text="パック・ハウルの範囲拡大、より広い陣形を包囲。" />
+    <string id="taom_wsc_t1_a_p1" text="+8% 近接ダメージ。" />
+    <string id="taom_wsc_t1_a_p2" text="+7% 騎馬突撃ダメージ。" />
+    <string id="taom_wsc_t1_a_p3" text="+7% 振り速度。" />
+    <string id="taom_wsc_t1_a_p4" text="+5% 部隊移動速度。" />
+    <string id="taom_wsc_t1_b_key" text="パック・ハウルの持続時間延長、勢いを維持。" />
+    <string id="taom_wsc_t1_b_p1" text="+30 騎馬体力。" />
+    <string id="taom_wsc_t1_b_p2" text="+25 最大体力。" />
+    <string id="taom_wsc_t1_b_p3" text="-5% 部隊賃金。" />
+    <string id="taom_wsc_t1_b_p4" text="+5% 抵抗力。" />
+    <string id="taom_wsc_t2_a_key" text="パック・ハウルのチャージ短縮、迅速な発動。" />
+    <string id="taom_wsc_t2_a_p1" text="部隊移動速度+10%" />
+    <string id="taom_wsc_t2_a_p2" text="兵士の賃金-10%" />
+    <string id="taom_wsc_t2_a_p3" text="兵士の士気+10%" />
+    <string id="taom_wsc_t2_a_p4" text="戦闘での名声獲得+10%" />
+    <string id="taom_wsc_t2_b_key" text="群れの遠吠えは発動中、騎乗の耐久力を強化する。" />
+    <string id="taom_wsc_t2_b_p1" text="近接ダメージ+12%" />
+    <string id="taom_wsc_t2_b_p2" text="馬の突撃ダメージ+12%" />
+    <string id="taom_wsc_t2_b_p3" text="馬の体力+60" />
+    <string id="taom_wsc_t2_b_p4" text="振り速度+10%" />
+    <string id="taom_wsc_t3_a_key" text="群れの遠吠えの範囲が大幅に拡大し、止められぬ衝撃を放つ。" />
+    <string id="taom_wsc_t3_a_p1" text="近接ダメージ+18%" />
+    <string id="taom_wsc_t3_a_p2" text="馬の突撃ダメージ+18%" />
+    <string id="taom_wsc_t3_a_p3" text="振り速度+15%" />
+    <string id="taom_wsc_t3_a_p4" text="兵士のダメージ+15%" />
+    <string id="taom_wsc_t3_b_key" text="群れの遠吠えの充填が大幅に短縮され、休むことなく駆ける。" />
+    <string id="taom_wsc_t3_b_p1" text="馬の体力+100" />
+    <string id="taom_wsc_t3_b_p2" text="兵士の賃金-15%" />
+    <string id="taom_wsc_t3_b_p3" text="部隊移動速度+15%" />
+    <string id="taom_wsc_t3_b_p4" text="最大体力+75" />
+    <string id="taom_cave_troll_master_root_desc" text="トロールの狂乱は+25の体力を付与し、配下のトロールを狂戦士と化す。" />
+    <string id="taom_ctm_t1_a_key" text="トロールの狂乱の範囲が拡大し、より多くの戦士を強化する。" />
+    <string id="taom_ctm_t1_a_p1" text="近接ダメージ+8%" />
+    <string id="taom_ctm_t1_a_p2" text="兵士のダメージ+5%" />
+    <string id="taom_ctm_t1_a_p3" text="最大体力+30" />
+    <string id="taom_ctm_t1_a_p4" text="振り速度+7%" />
+    <string id="taom_ctm_t1_b_key" text="トロールの狂乱の持続時間が延長され、防御を固める。" />
+    <string id="taom_ctm_t1_b_p1" text="耐性+8%" />
+    <string id="taom_ctm_t1_b_p2" text="兵士の士気+5%" />
+    <string id="taom_ctm_t1_b_p3" text="兵士の耐性+5%" />
+    <string id="taom_ctm_t1_b_p4" text="兵士の回復力+5%" />
+    <string id="taom_ctm_t2_a_key" text="トロールの狂乱の充填が短縮され、より頻繁に発動する。" />
+    <string id="taom_ctm_t2_a_p1" text="兵士の士気+10%" />
+    <string id="taom_ctm_t2_a_p2" text="部隊規模+2" />
+    <string id="taom_ctm_t2_a_p3" text="戦闘での名声獲得+10%" />
+    <string id="taom_ctm_t2_a_p4" text="兵士の賃金-10%" />
+    <string id="taom_ctm_t2_b_key" text="トロールの狂乱は発動中、追加の防御強化を付与する。" />
+    <string id="taom_ctm_t2_b_p1" text="耐性+12%" />
+    <string id="taom_ctm_t2_b_p2" text="最大体力+60" />
+    <string id="taom_ctm_t2_b_p3" text="兵士の耐性+10%" />
+    <string id="taom_ctm_t2_b_p4" text="兵士のダメージ+10%" />
+    <string id="taom_ctm_t3_a_key" text="トロールの狂乱の範囲が大幅に拡大、壊滅的な威力。" />
+    <string id="taom_ctm_t3_a_p1" text="近接ダメージ+15%。" />
+    <string id="taom_ctm_t3_a_p2" text="最大体力+100。" />
+    <string id="taom_ctm_t3_a_p3" text="部隊ダメージ+15%。" />
+    <string id="taom_ctm_t3_a_p4" text="部隊規模+4。" />
+    <string id="taom_ctm_t3_b_key" text="トロールの狂乱のチャージが大幅に減少、ほぼ常時使用可能。" />
+    <string id="taom_ctm_t3_b_p1" text="抵抗力+18%。" />
+    <string id="taom_ctm_t3_b_p2" text="体力回復+15%。" />
+    <string id="taom_ctm_t3_b_p3" text="部隊士気+20%。" />
+    <string id="taom_ctm_t3_b_p4" text="部隊回復+15%。" />
+    <string id="taom_goblin_sniper_root_desc" text="毒の矢は洞窟の菌類毒素により遠隔ダメージ+5%を付与。" />
+    <string id="taom_gbs_t1_a_key" text="毒の矢の範囲が増加、より広いキルゾーンを制圧。" />
+    <string id="taom_gbs_t1_a_p1" text="遠隔ダメージ+8%。" />
+    <string id="taom_gbs_t1_a_p2" text="装甲貫通+5%。" />
+    <string id="taom_gbs_t1_a_p3" text="移動速度+7%。" />
+    <string id="taom_gbs_t1_a_p4" text="戦闘名声獲得+5%。" />
+    <string id="taom_gbs_t1_b_key" text="毒の矢の持続時間が延長、持続的な弾幕。" />
+    <string id="taom_gbs_t1_b_p1" text="抵抗力+5%。" />
+    <string id="taom_gbs_t1_b_p2" text="最大体力+25。" />
+    <string id="taom_gbs_t1_b_p3" text="部隊探知範囲+5%。" />
+    <string id="taom_gbs_t1_b_p4" text="隠密ボーナス+5%。" />
+    <string id="taom_gbs_t2_a_key" text="毒の矢のチャージが減少、絶え間ない圧力を維持。" />
+    <string id="taom_gbs_t2_a_p1" text="部隊探知範囲+10%。" />
+    <string id="taom_gbs_t2_a_p2" text="移動速度+10%。" />
+    <string id="taom_gbs_t2_a_p3" text="隠密ボーナス+10%。" />
+    <string id="taom_gbs_t2_a_p4" text="戦闘名声獲得+10%。" />
+    <string id="taom_gbs_t2_b_key" text="毒の矢は発動中に追加の貫通力を獲得。" />
+    <string id="taom_gbs_t2_b_p1" text="遠隔ダメージ+12%。" />
+    <string id="taom_gbs_t2_b_p2" text="装甲貫通+10%。" />
+    <string id="taom_gbs_t2_b_p3" text="最大体力+50。" />
+    <string id="taom_gbs_t2_b_p4" text="部隊ダメージ+5%。" />
+    <string id="taom_gbs_t3_a_key" text="毒の矢の範囲が大幅に拡大、逃れられない一斉射撃。" />
+    <string id="taom_gbs_t3_a_p1" text="遠隔ダメージ+18%。" />
+    <string id="taom_gbs_t3_a_p2" text="装甲貫通+15%。" />
+    <string id="taom_gbs_t3_a_p3" text="戦闘名声獲得+15%。" />
+    <string id="taom_gbs_t3_a_p4" text="部隊ダメージ+10%。" />
+    <string id="taom_gbs_t3_b_key" text="毒の矢のチャージが大幅に減少、容赦ない射撃。" />
+    <string id="taom_gbs_t3_b_p1" text="隠密ボーナス+15%。" />
+    <string id="taom_gbs_t3_b_p2" text="移動速度+15%。" />
+    <string id="taom_gbs_t3_b_p3" text="最大体力+75。" />
+    <string id="taom_gbs_t3_b_p4" text="+15% パーティー索敵範囲。" />
+    <string id="taom_warg_pack_leader_root_desc" text="アルファの咆哮は+5%近接ダメージを付与し、群れが狩りを行う。" />
+    <string id="taom_wpl_t1_a_key" text="アルファの咆哮の範囲が拡大し、より広い陣形を包み込む。" />
+    <string id="taom_wpl_t1_a_p1" text="+8% 近接ダメージ。" />
+    <string id="taom_wpl_t1_a_p2" text="+7% 騎馬突撃ダメージ。" />
+    <string id="taom_wpl_t1_a_p3" text="+7% 振り速度。" />
+    <string id="taom_wpl_t1_a_p4" text="+5% パーティー移動速度。" />
+    <string id="taom_wpl_t1_b_key" text="アルファの咆哮の持続時間が延長され、勢いを維持する。" />
+    <string id="taom_wpl_t1_b_p1" text="+30 馬の体力。" />
+    <string id="taom_wpl_t1_b_p2" text="+25 最大体力。" />
+    <string id="taom_wpl_t1_b_p3" text="-5% 兵士賃金。" />
+    <string id="taom_wpl_t1_b_p4" text="+5% 耐性。" />
+    <string id="taom_wpl_t2_a_key" text="アルファの咆哮のチャージが短縮され、迅速に発動する。" />
+    <string id="taom_wpl_t2_a_p1" text="+10% パーティー移動速度。" />
+    <string id="taom_wpl_t2_a_p2" text="-10% 兵士賃金。" />
+    <string id="taom_wpl_t2_a_p3" text="+10% 兵士士気。" />
+    <string id="taom_wpl_t2_a_p4" text="+10% 戦闘名声獲得。" />
+    <string id="taom_wpl_t2_b_key" text="アルファの咆哮が発動中、騎乗の耐久力を強化する。" />
+    <string id="taom_wpl_t2_b_p1" text="+12% 近接ダメージ。" />
+    <string id="taom_wpl_t2_b_p2" text="+12% 騎馬突撃ダメージ。" />
+    <string id="taom_wpl_t2_b_p3" text="+60 馬の体力。" />
+    <string id="taom_wpl_t2_b_p4" text="+10% 振り速度。" />
+    <string id="taom_wpl_t3_a_key" text="アルファの咆哮の範囲が大幅に拡大し、止められぬ衝撃をもたらす。" />
+    <string id="taom_wpl_t3_a_p1" text="+18% 近接ダメージ。" />
+    <string id="taom_wpl_t3_a_p2" text="+18% 騎馬突撃ダメージ。" />
+    <string id="taom_wpl_t3_a_p3" text="+15% 振り速度。" />
+    <string id="taom_wpl_t3_a_p4" text="+15% 兵士ダメージ。" />
+    <string id="taom_wpl_t3_b_key" text="アルファの咆哮のチャージが大幅に短縮され、休むことなく駆ける。" />
+    <string id="taom_wpl_t3_b_p1" text="+100 馬の体力。" />
+    <string id="taom_wpl_t3_b_p2" text="-15% 兵士賃金。" />
+    <string id="taom_wpl_t3_b_p3" text="+15% パーティー移動速度。" />
+    <string id="taom_wpl_t3_b_p4" text="+75 最大体力。" />
+    <string id="taom_shadow_warrior_root_desc" text="魂の吸収は+25体力を付与し、敵の生命力を奪う。" />
+    <string id="taom_swr_t1_a_key" text="魂の吸収の範囲が拡大し、より多くの戦士を強化する。" />
+    <string id="taom_swr_t1_a_p1" text="+8% 近接ダメージ。" />
+    <string id="taom_swr_t1_a_p2" text="+5% 兵士ダメージ。" />
+    <string id="taom_swr_t1_a_p3" text="+30 最大体力。" />
+    <string id="taom_swr_t1_a_p4" text="+7% 振り速度。" />
+    <string id="taom_swr_t1_b_key" text="魂の吸収の持続時間が延長され、防御を強化する。" />
+    <string id="taom_swr_t1_b_p1" text="+8% 耐性。" />
+    <string id="taom_swr_t1_b_p2" text="部隊士気+5%。" />
+    <string id="taom_swr_t1_b_p3" text="部隊耐性+5%。" />
+    <string id="taom_swr_t1_b_p4" text="部隊再生+5%。" />
+    <string id="taom_swr_t2_a_key" text="ソウル・ドレインのチャージが短縮され、より頻繁に発動する。" />
+    <string id="taom_swr_t2_a_p1" text="部隊士気+10%。" />
+    <string id="taom_swr_t2_a_p2" text="部隊規模+2。" />
+    <string id="taom_swr_t2_a_p3" text="戦闘名声獲得+10%。" />
+    <string id="taom_swr_t2_a_p4" text="部隊維持費-10%。" />
+    <string id="taom_swr_t2_b_key" text="ソウル・ドレイン発動中、追加の防御バフを付与する。" />
+    <string id="taom_swr_t2_b_p1" text="耐性+12%。" />
+    <string id="taom_swr_t2_b_p2" text="最大体力+60。" />
+    <string id="taom_swr_t2_b_p3" text="部隊耐性+10%。" />
+    <string id="taom_swr_t2_b_p4" text="部隊ダメージ+10%。" />
+    <string id="taom_swr_t3_a_key" text="ソウル・ドレインの範囲が大幅に拡大し、壊滅的な力を発揮する。" />
+    <string id="taom_swr_t3_a_p1" text="近接ダメージ+15%。" />
+    <string id="taom_swr_t3_a_p2" text="最大体力+100。" />
+    <string id="taom_swr_t3_a_p3" text="部隊ダメージ+15%。" />
+    <string id="taom_swr_t3_a_p4" text="部隊規模+4。" />
+    <string id="taom_swr_t3_b_key" text="ソウル・ドレインのチャージが大幅に短縮され、ほぼ常に使用可能となる。" />
+    <string id="taom_swr_t3_b_p1" text="耐性+18%。" />
+    <string id="taom_swr_t3_b_p2" text="体力再生+15%。" />
+    <string id="taom_swr_t3_b_p3" text="部隊士気+20%。" />
+    <string id="taom_swr_t3_b_p4" text="部隊再生+15%。" />
+    <string id="taom_necromancer_acolyte_root_desc" text="ダーク・ボルトが死霊エネルギーで遠隔ダメージ+5%を付与する。" />
+    <string id="taom_nca_t1_a_key" text="ダーク・ボルトの範囲が拡大し、より広い殺傷範囲をカバーする。" />
+    <string id="taom_nca_t1_a_p1" text="遠隔ダメージ+8%。" />
+    <string id="taom_nca_t1_a_p2" text="装甲貫通+5%。" />
+    <string id="taom_nca_t1_a_p3" text="移動速度+7%。" />
+    <string id="taom_nca_t1_a_p4" text="戦闘名声獲得+5%。" />
+    <string id="taom_nca_t1_b_key" text="ダーク・ボルトの持続時間が延長され、継続的な弾幕を放つ。" />
+    <string id="taom_nca_t1_b_p1" text="耐性+5%。" />
+    <string id="taom_nca_t1_b_p2" text="最大体力+25。" />
+    <string id="taom_nca_t1_b_p3" text="部隊索敵範囲+5%。" />
+    <string id="taom_nca_t1_b_p4" text="隠密ボーナス+5%。" />
+    <string id="taom_nca_t2_a_key" text="ダーク・ボルトのチャージが短縮され、絶え間ない圧力を維持する。" />
+    <string id="taom_nca_t2_a_p1" text="部隊索敵範囲+10%。" />
+    <string id="taom_nca_t2_a_p2" text="移動速度+10%。" />
+    <string id="taom_nca_t2_a_p3" text="隠密ボーナス+10%。" />
+    <string id="taom_nca_t2_a_p4" text="戦闘名声獲得+10%。" />
+    <string id="taom_nca_t2_b_key" text="ダーク・ボルト発動中、追加の貫通力を獲得する。" />
+    <string id="taom_nca_t2_b_p1" text="+12% 遠距離ダメージ。" />
+    <string id="taom_nca_t2_b_p2" text="+10% 装甲貫通力。" />
+    <string id="taom_nca_t2_b_p3" text="+50 最大体力。" />
+    <string id="taom_nca_t2_b_p4" text="+5% 部隊ダメージ。" />
+    <string id="taom_nca_t3_a_key" text="暗黒の矢の範囲が大幅に拡大され、逃れられぬ一斉射撃となる。" />
+    <string id="taom_nca_t3_a_p1" text="+18% 遠距離ダメージ。" />
+    <string id="taom_nca_t3_a_p2" text="+15% 装甲貫通力。" />
+    <string id="taom_nca_t3_a_p3" text="+15% 戦闘名声獲得。" />
+    <string id="taom_nca_t3_a_p4" text="+10% 部隊ダメージ。" />
+    <string id="taom_nca_t3_b_key" text="暗黒の矢のチャージが大幅に短縮され、容赦なき射撃が可能に。" />
+    <string id="taom_nca_t3_b_p1" text="+15% 隠密ボーナス。" />
+    <string id="taom_nca_t3_b_p2" text="+15% 移動速度。" />
+    <string id="taom_nca_t3_b_p3" text="+75 最大体力。" />
+    <string id="taom_nca_t3_b_p4" text="+15% 部隊索敵範囲。" />
+    <string id="taom_fell_rider_root_desc" text="恐怖の突撃は+5% 近接ダメージを付与し、影が騎乗獣を包み込む。" />
+    <string id="taom_flr_t1_a_key" text="恐怖の突撃の範囲が拡大され、より広い陣形を薙ぎ払う。" />
+    <string id="taom_flr_t1_a_p1" text="+8% 近接ダメージ。" />
+    <string id="taom_flr_t1_a_p2" text="+7% 馬突撃ダメージ。" />
+    <string id="taom_flr_t1_a_p3" text="+7% 振り速度。" />
+    <string id="taom_flr_t1_a_p4" text="+5% 部隊移動速度。" />
+    <string id="taom_flr_t1_b_key" text="恐怖の突撃の持続時間が延長され、勢いを維持する。" />
+    <string id="taom_flr_t1_b_p1" text="+30 馬の体力。" />
+    <string id="taom_flr_t1_b_p2" text="+25 最大体力。" />
+    <string id="taom_flr_t1_b_p3" text="-5% 部隊給与。" />
+    <string id="taom_flr_t1_b_p4" text="+5% 抵抗力。" />
+    <string id="taom_flr_t2_a_key" text="恐怖の突撃のチャージが短縮され、より迅速な発動が可能に。" />
+    <string id="taom_flr_t2_a_p1" text="+10% 部隊移動速度。" />
+    <string id="taom_flr_t2_a_p2" text="-10% 部隊給与。" />
+    <string id="taom_flr_t2_a_p3" text="+10% 部隊士気。" />
+    <string id="taom_flr_t2_a_p4" text="+10% 戦闘名声獲得。" />
+    <string id="taom_flr_t2_b_key" text="恐怖の突撃は発動中、騎乗獣の耐久力を増強する。" />
+    <string id="taom_flr_t2_b_p1" text="+12% 近接ダメージ。" />
+    <string id="taom_flr_t2_b_p2" text="+12% 馬突撃ダメージ。" />
+    <string id="taom_flr_t2_b_p3" text="+60 馬の体力。" />
+    <string id="taom_flr_t2_b_p4" text="+10% 振り速度。" />
+    <string id="taom_flr_t3_a_key" text="恐怖の突撃の範囲が大幅に拡大され、止められぬ衝撃となる。" />
+    <string id="taom_flr_t3_a_p1" text="+18% 近接ダメージ。" />
+    <string id="taom_flr_t3_a_p2" text="+18% 馬突撃ダメージ。" />
+    <string id="taom_flr_t3_a_p3" text="+15% 振り速度。" />
+    <string id="taom_flr_t3_a_p4" text="+15% 部隊ダメージ。" />
+    <string id="taom_flr_t3_b_key" text="恐怖の突撃のチャージが大幅に減少し、休むことなく駆け続ける。" />
+    <string id="taom_flr_t3_b_p1" text="+100 馬の体力。" />
+    <string id="taom_flr_t3_b_p2" text="-15% 部隊維持費。" />
+    <string id="taom_flr_t3_b_p3" text="+15% パーティ移動速度。" />
+    <string id="taom_flr_t3_b_p4" text="+75 最大体力。" />
     <string id="taom_corsair_boarder_root_desc" text="Boarding Action grants +5% resistance in the close-quarters fray." />
-    <string id="taom_crb_t1_a_key" text="Boarding Action radius increased, empowering more warriors." />
-    <string id="taom_crb_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_crb_t1_a_p2" text="+5% troop damage." />
-    <string id="taom_crb_t1_a_p3" text="+30 max health." />
-    <string id="taom_crb_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_crb_t1_b_key" text="Boarding Action duration extended, fortifying the defense." />
-    <string id="taom_crb_t1_b_p1" text="+8% resistance." />
-    <string id="taom_crb_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_crb_t1_b_p3" text="+5% troop resistance." />
-    <string id="taom_crb_t1_b_p4" text="+5% troop regeneration." />
-    <string id="taom_crb_t2_a_key" text="Boarding Action charge reduced, activating more frequently." />
-    <string id="taom_crb_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_crb_t2_a_p2" text="+2 party size." />
-    <string id="taom_crb_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_crb_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_crb_t2_b_key" text="Boarding Action grants additional defensive buffs while active." />
-    <string id="taom_crb_t2_b_p1" text="+12% resistance." />
-    <string id="taom_crb_t2_b_p2" text="+60 max health." />
-    <string id="taom_crb_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_crb_t2_b_p4" text="+10% troop damage." />
-    <string id="taom_crb_t3_a_key" text="Boarding Action radius greatly expanded, devastating power." />
-    <string id="taom_crb_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_crb_t3_a_p2" text="+100 max health." />
-    <string id="taom_crb_t3_a_p3" text="+15% troop damage." />
-    <string id="taom_crb_t3_a_p4" text="+4 party size." />
-    <string id="taom_crb_t3_b_key" text="Boarding Action charge greatly reduced, nearly always available." />
-    <string id="taom_crb_t3_b_p1" text="+18% resistance." />
-    <string id="taom_crb_t3_b_p2" text="+15% health regeneration." />
-    <string id="taom_crb_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_crb_t3_b_p4" text="+15% troop regeneration." />
-    <string id="taom_corsair_crossbow_root_desc" text="Rigging Shot grants +5% ranged damage with steadied aim." />
-    <string id="taom_crc_t1_a_key" text="Rigging Shot radius increased, covering wider kill zones." />
-    <string id="taom_crc_t1_a_p1" text="+8% ranged damage." />
-    <string id="taom_crc_t1_a_p2" text="+5% armor penetration." />
-    <string id="taom_crc_t1_a_p3" text="+7% movement speed." />
-    <string id="taom_crc_t1_a_p4" text="+5% battle renown gain." />
-    <string id="taom_crc_t1_b_key" text="Rigging Shot duration extended, sustained barrage." />
-    <string id="taom_crc_t1_b_p1" text="+5% resistance." />
-    <string id="taom_crc_t1_b_p2" text="+25 max health." />
-    <string id="taom_crc_t1_b_p3" text="+5% party spotting range." />
-    <string id="taom_crc_t1_b_p4" text="+5% stealth bonus." />
-    <string id="taom_crc_t2_a_key" text="Rigging Shot charge reduced, maintaining constant pressure." />
-    <string id="taom_crc_t2_a_p1" text="+10% party spotting range." />
-    <string id="taom_crc_t2_a_p2" text="+10% movement speed." />
-    <string id="taom_crc_t2_a_p3" text="+10% stealth bonus." />
-    <string id="taom_crc_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_crc_t2_b_key" text="Rigging Shot gains additional penetration while active." />
-    <string id="taom_crc_t2_b_p1" text="+12% ranged damage." />
-    <string id="taom_crc_t2_b_p2" text="+10% armor penetration." />
-    <string id="taom_crc_t2_b_p3" text="+50 max health." />
-    <string id="taom_crc_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_crc_t3_a_key" text="Rigging Shot radius greatly expanded, inescapable volleys." />
-    <string id="taom_crc_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_crc_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_crc_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_crc_t3_a_p4" text="+10% troop damage." />
-    <string id="taom_crc_t3_b_key" text="Rigging Shot charge greatly reduced, relentless fire." />
-    <string id="taom_crc_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_crc_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_crc_t3_b_p3" text="+75 max health." />
-    <string id="taom_crc_t3_b_p4" text="+15% party spotting range." />
-    <string id="taom_corsair_captain_root_desc" text="Plunder grants +5% melee damage and rallies your crew." />
-    <string id="taom_crca_t1_a_key" text="Plunder radius expanded, sweeping wider formations." />
-    <string id="taom_crca_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_crca_t1_a_p2" text="+7% horse charge damage." />
-    <string id="taom_crca_t1_a_p3" text="+7% swing speed." />
-    <string id="taom_crca_t1_a_p4" text="+5% party movement speed." />
-    <string id="taom_crca_t1_b_key" text="Plunder duration extended, maintaining momentum." />
-    <string id="taom_crca_t1_b_p1" text="+30 horse health." />
-    <string id="taom_crca_t1_b_p2" text="+25 max health." />
-    <string id="taom_crca_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_crca_t1_b_p4" text="+5% resistance." />
-    <string id="taom_crca_t2_a_key" text="Plunder charge reduced, swifter activation." />
-    <string id="taom_crca_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_crca_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_crca_t2_a_p3" text="+10% troop morale." />
-    <string id="taom_crca_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_crca_t2_b_key" text="Plunder boosts mount resilience while active." />
-    <string id="taom_crca_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_crca_t2_b_p2" text="+12% horse charge damage." />
-    <string id="taom_crca_t2_b_p3" text="+60 horse health." />
-    <string id="taom_crca_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_crca_t3_a_key" text="Plunder radius greatly expanded, unstoppable impact." />
-    <string id="taom_crca_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_crca_t3_a_p2" text="+18% horse charge damage." />
-    <string id="taom_crca_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_crca_t3_a_p4" text="+15% troop damage." />
-    <string id="taom_crca_t3_b_key" text="Plunder charge greatly reduced, ride without ceasing." />
-    <string id="taom_crca_t3_b_p1" text="+100 horse health." />
-    <string id="taom_crca_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_crca_t3_b_p3" text="+15% party movement speed." />
-    <string id="taom_crca_t3_b_p4" text="+75 max health." />
+    <string id="taom_crb_t1_a_key" text="接舷戦闘の範囲が拡大し、より多くの戦士を強化する。" />
+    <string id="taom_crb_t1_a_p1" text="+8% 近接ダメージ。" />
+    <string id="taom_crb_t1_a_p2" text="+5% 部隊ダメージ。" />
+    <string id="taom_crb_t1_a_p3" text="+30 最大体力。" />
+    <string id="taom_crb_t1_a_p4" text="+7% 振り速度。" />
+    <string id="taom_crb_t1_b_key" text="接舷戦闘の持続時間が延長され、防御が強化される。" />
+    <string id="taom_crb_t1_b_p1" text="+8% 抵抗力。" />
+    <string id="taom_crb_t1_b_p2" text="+5% 部隊士気。" />
+    <string id="taom_crb_t1_b_p3" text="+5% 部隊抵抗力。" />
+    <string id="taom_crb_t1_b_p4" text="+5% 部隊回復力。" />
+    <string id="taom_crb_t2_a_key" text="接舷戦闘のチャージが減少し、より頻繁に発動する。" />
+    <string id="taom_crb_t2_a_p1" text="+10% 部隊士気。" />
+    <string id="taom_crb_t2_a_p2" text="+2 パーティサイズ。" />
+    <string id="taom_crb_t2_a_p3" text="+10% 戦闘名声獲得。" />
+    <string id="taom_crb_t2_a_p4" text="-10% 部隊維持費。" />
+    <string id="taom_crb_t2_b_key" text="接舷戦闘は発動中に追加の防御バフを付与する。" />
+    <string id="taom_crb_t2_b_p1" text="+12% 抵抗力。" />
+    <string id="taom_crb_t2_b_p2" text="+60 最大体力。" />
+    <string id="taom_crb_t2_b_p3" text="+10% 部隊抵抗力。" />
+    <string id="taom_crb_t2_b_p4" text="+10% 部隊ダメージ。" />
+    <string id="taom_crb_t3_a_key" text="接舷戦闘の範囲が大幅に拡大し、壊滅的な力を発揮する。" />
+    <string id="taom_crb_t3_a_p1" text="+15% 近接ダメージ。" />
+    <string id="taom_crb_t3_a_p2" text="+100 最大体力。" />
+    <string id="taom_crb_t3_a_p3" text="+15% 部隊ダメージ。" />
+    <string id="taom_crb_t3_a_p4" text="+4 パーティサイズ。" />
+    <string id="taom_crb_t3_b_key" text="接舷戦闘のチャージが大幅に減少し、ほぼ常に使用可能となる。" />
+    <string id="taom_crb_t3_b_p1" text="+18% 抵抗力。" />
+    <string id="taom_crb_t3_b_p2" text="+15% 体力回復。" />
+    <string id="taom_crb_t3_b_p3" text="+20% 部隊士気。" />
+    <string id="taom_crb_t3_b_p4" text="+15% 部隊回復力。" />
+    <string id="taom_corsair_crossbow_root_desc" text="索具射撃は安定した狙いで+5%の遠隔ダメージを付与する。" />
+    <string id="taom_crc_t1_a_key" text="索具射撃の範囲が拡大し、より広い殲滅範囲をカバーする。" />
+    <string id="taom_crc_t1_a_p1" text="+8% 遠隔ダメージ。" />
+    <string id="taom_crc_t1_a_p2" text="+5% 装甲貫通。" />
+    <string id="taom_crc_t1_a_p3" text="移動速度+7%。" />
+    <string id="taom_crc_t1_a_p4" text="戦闘名声獲得+5%。" />
+    <string id="taom_crc_t1_b_key" text="リギング・ショットの持続時間延長、継続的な弾幕。" />
+    <string id="taom_crc_t1_b_p1" text="抵抗力+5%。" />
+    <string id="taom_crc_t1_b_p2" text="最大体力+25。" />
+    <string id="taom_crc_t1_b_p3" text="部隊索敵範囲+5%。" />
+    <string id="taom_crc_t1_b_p4" text="隠密ボーナス+5%。" />
+    <string id="taom_crc_t2_a_key" text="リギング・ショットのチャージ時間短縮、絶え間ない圧力を維持。" />
+    <string id="taom_crc_t2_a_p1" text="部隊索敵範囲+10%。" />
+    <string id="taom_crc_t2_a_p2" text="移動速度+10%。" />
+    <string id="taom_crc_t2_a_p3" text="隠密ボーナス+10%。" />
+    <string id="taom_crc_t2_a_p4" text="戦闘名声獲得+10%。" />
+    <string id="taom_crc_t2_b_key" text="リギング・ショット発動中、追加貫通力を獲得。" />
+    <string id="taom_crc_t2_b_p1" text="遠隔ダメージ+12%。" />
+    <string id="taom_crc_t2_b_p2" text="装甲貫通+10%。" />
+    <string id="taom_crc_t2_b_p3" text="最大体力+50。" />
+    <string id="taom_crc_t2_b_p4" text="部隊ダメージ+5%。" />
+    <string id="taom_crc_t3_a_key" text="リギング・ショットの範囲大幅拡大、逃れられぬ斉射。" />
+    <string id="taom_crc_t3_a_p1" text="遠隔ダメージ+18%。" />
+    <string id="taom_crc_t3_a_p2" text="装甲貫通+15%。" />
+    <string id="taom_crc_t3_a_p3" text="戦闘名声獲得+15%。" />
+    <string id="taom_crc_t3_a_p4" text="部隊ダメージ+10%。" />
+    <string id="taom_crc_t3_b_key" text="リギング・ショットのチャージ時間大幅短縮、容赦なき射撃。" />
+    <string id="taom_crc_t3_b_p1" text="隠密ボーナス+15%。" />
+    <string id="taom_crc_t3_b_p2" text="移動速度+15%。" />
+    <string id="taom_crc_t3_b_p3" text="最大体力+75。" />
+    <string id="taom_crc_t3_b_p4" text="部隊索敵範囲+15%。" />
+    <string id="taom_corsair_captain_root_desc" text="略奪により近接ダメージ+5%、乗組員を奮い立たせる。" />
+    <string id="taom_crca_t1_a_key" text="略奪の範囲拡大、より広い陣形を薙ぎ払う。" />
+    <string id="taom_crca_t1_a_p1" text="近接ダメージ+8%。" />
+    <string id="taom_crca_t1_a_p2" text="馬の突撃ダメージ+7%。" />
+    <string id="taom_crca_t1_a_p3" text="振り速度+7%。" />
+    <string id="taom_crca_t1_a_p4" text="部隊移動速度+5%。" />
+    <string id="taom_crca_t1_b_key" text="略奪の持続時間延長、勢いを維持。" />
+    <string id="taom_crca_t1_b_p1" text="馬の体力+30。" />
+    <string id="taom_crca_t1_b_p2" text="最大体力+25。" />
+    <string id="taom_crca_t1_b_p3" text="部隊維持費-5%。" />
+    <string id="taom_crca_t1_b_p4" text="抵抗力+5%。" />
+    <string id="taom_crca_t2_a_key" text="略奪のチャージ時間短縮、迅速な発動。" />
+    <string id="taom_crca_t2_a_p1" text="部隊移動速度+10%。" />
+    <string id="taom_crca_t2_a_p2" text="部隊維持費-10%。" />
+    <string id="taom_crca_t2_a_p3" text="部隊士気+10%。" />
+    <string id="taom_crca_t2_a_p4" text="戦闘名声獲得+10%。" />
+    <string id="taom_crca_t2_b_key" text="略奪発動中は騎乗動物の耐久力が強化される。" />
+    <string id="taom_crca_t2_b_p1" text="近接ダメージ+12%。" />
+    <string id="taom_crca_t2_b_p2" text="馬の突撃ダメージ+12%。" />
+    <string id="taom_crca_t2_b_p3" text="馬の体力+60。" />
+    <string id="taom_crca_t2_b_p4" text="振り速度+10%。" />
+    <string id="taom_crca_t3_a_key" text="略奪範囲が大幅に拡大され、止められない衝撃力。" />
+    <string id="taom_crca_t3_a_p1" text="近接ダメージ+18%。" />
+    <string id="taom_crca_t3_a_p2" text="馬の突撃ダメージ+18%。" />
+    <string id="taom_crca_t3_a_p3" text="振り速度+15%。" />
+    <string id="taom_crca_t3_a_p4" text="部隊ダメージ+15%。" />
+    <string id="taom_crca_t3_b_key" text="略奪チャージが大幅に短縮され、休むことなく駆ける。" />
+    <string id="taom_crca_t3_b_p1" text="馬の体力+100。" />
+    <string id="taom_crca_t3_b_p2" text="部隊維持費-15%。" />
+    <string id="taom_crca_t3_b_p3" text="部隊移動速度+15%。" />
+    <string id="taom_crca_t3_b_p4" text="最大体力+75。" />
   </strings>
 </base>

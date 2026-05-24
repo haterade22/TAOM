@@ -16,23 +16,23 @@ Built `tools/translate_with_claude.py` and `tools/rebuild_translation_files.py` 
 
 Seeded `tools/translation_overrides/ru.json` with 49 canonical Russian Tolkien names (Kistyakovsky/Muravyov convention) — Беорнинги, Рохиррим, "Войти в Эпоху Людей", etc.
 
-Ran all 11 languages in parallel (RU, SP, DE, FR, IT, BR, JP, KO, TR, CNs, CNt). API credit was exhausted partway through, so coverage is partial on TAOM_Map + LOTRLOME_Armory for several languages — re-running once credit is replenished will resume from cache (effectively free).
+Ran all 11 languages in parallel (RU, SP, DE, FR, IT, BR, JP, KO, TR, CNs, CNt) in two phases. First pass spent ~$140 and exhausted API credit mid-run; after a top-up, a second gap-fill pass spent another ~$41 to fill missing TAOM_Map and Armory entries. Cache made re-running already-translated entries free.
 
-**Coverage achieved (translated / total entries per module):**
+**Final coverage after both passes (translated / total entries per module):**
 
 | Lang | TAOM | TAOM_Map | LOTRLOME_Armory |
 |------|------|----------|-----------------|
-| RU   | 4673/4789 (97%) | 1101/1102 (99%) | 1613/2782 (57%) |
-| SP   | 4405/4789 (91%) | 722/1102 (65%)  | 1109/2782 (39%) |
-| DE   | 4557/4789 (95%) | 600/1102 (54%)  | 0/2782 (0%)     |
-| FR   | 4591/4789 (95%) | 594/1102 (53%)  | 826/2782 (29%)  |
-| IT   | 4578/4789 (95%) | 667/1102 (60%)  | 789/2782 (28%)  |
-| BR   | 4480/4789 (93%) | 652/1102 (59%)  | 829/2782 (29%)  |
-| JP   | 4222/4789 (88%) | 0/1102 (0%)     | 0/2782 (0%)     |
-| KO   | 3185/4789 (66%) | 0/1102 (0%)     | 0/2782 (0%)     |
-| TR   | 2650/4789 (55%) | 0/1102 (0%)     | 0/2782 (0%)     |
-| CNs  | 4743/4789 (99%) | 269/1102 (24%)  | 0/2782 (0%)     |
-| CNt  | 4688/4789 (97%) | 291/1102 (26%)  | 0/2782 (0%)     |
+| RU   | 4756/4789 (99%) | 1101/1102 (99%) | 2582/2782 (92%) |
+| SP   | 4677/4789 (97%) |  722/1102 (65%) | 2421/2782 (87%) |
+| DE   | 4678/4789 (97%) |  724/1102 (65%) | 2292/2782 (82%) |
+| FR   | 4673/4789 (97%) |  594/1102 (53%) | 2577/2782 (92%) |
+| IT   | 4678/4789 (97%) |  722/1102 (65%) | 2464/2782 (88%) |
+| BR   | 4634/4789 (96%) |  723/1102 (65%) | 2418/2782 (86%) |
+| JP   | 4782/4789 (99%) | 1074/1102 (97%) | 2582/2782 (92%) |
+| KO   | 4745/4789 (99%) | 1054/1102 (95%) | 2542/2782 (91%) |
+| TR   | 4546/4789 (94%) |  712/1102 (64%) | 2342/2782 (84%) |
+| CNs  | 4787/4789 (99%) | 1087/1102 (98%) | 2502/2782 (89%) |
+| CNt  | 4777/4789 (99%) | 1102/1102 (100%)| 2542/2782 (91%) |
 
 Untranslated entries (placeholder-validation failures or credit-exhausted batches) fall back to English text rather than corrupting the file. Translators receive AI first drafts and refine, instead of starting from blank stubs.
 
@@ -49,11 +49,11 @@ Untranslated entries (placeholder-validation failures or credit-exhausted batche
 - `TAOM_Map/ModuleData/Languages/<LANG>/loc_settlements.xml`
 - `LOTRLOME_Armory/ModuleData/Languages/<LANG>/loc_*.xml`
 
-**Cost:** ~$140 in Anthropic API spend (Sonnet 4.5, 7.7M input + 7.8M output tokens). Cache makes incremental updates near-free.
+**Cost:** ~$181 total Anthropic API spend (Sonnet 4.5) across both passes — $140 first pass + $41 gap-fill. Cache makes future incremental updates near-free.
 
 **Known limitations:**
-- Morphologically rich languages (RU, JP, KO, TR, CN_t) need more gender conditionals than English, which the strict validator rejects. ~25-65% of complex-conditional entries fall back to English in these languages.
-- TAOM_Map and LOTRLOME_Armory have low coverage for several languages because the Anthropic API credit balance was exhausted mid-run. Re-running with topped-up credit resumes from cache.
+- Latin-script European languages (SP, DE, FR, IT, BR, TR) show 53-65% coverage on TAOM_Map settlement names where the placeholder-preservation validator rejected translations that added gender-agreement conditionals. The Tolkien proper-noun rich content needs case/gender variation that the strict validator drops. Translators can fill these gaps via overrides.
+- 5-200 entries per module per language remain English (~1-15%) where translations couldn't preserve placeholder structure cleanly.
 - Re-translation of failed entries requires either a relaxed validator (risks asymmetric translations) or per-language human curation.
 
 Pilot validation (RU, 50 entries hand-audited): 100% variable preservation, 100% gender conditional preservation, canonical Tolkien names from overrides correctly applied, natural-sounding Russian narrative tone.

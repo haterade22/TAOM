@@ -486,11 +486,11 @@
     <string id="ZZ1oLfEq" text="{RULER.NAME} ha risposto alla chiamata di {CALLING_KINGDOM} e ha dichiarato guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} con il sostegno del {?RULER.GENDER}suo{?}suo{\?} consiglio." />
     <string id="taom_shaghana_name" text="Shaghâna" />
     <string id="taom_shaghana_short_name" text="Shaghâna" />
-    <string id="taom_shaghana_title" text="Taskralan of Shaghâna" />
+    <string id="taom_shaghana_title" text="Taskralan di Shaghâna" />
     <string id="taom_shaghana_ruler_title" text="Taskral" />
-    <string id="taom_shaghana_desc" text="Shaghâna is the eastern reach of Harad, a land of sun-scorched steppes and ancient fortresses. Its nine tribal clans are fierce warriors, bound together by oath and blood, striking fear into those who dare oppose them." />
+    <string id="taom_shaghana_desc" text="Shaghâna è la regione orientale di Harad, una terra di steppe bruciate dal sole e antiche fortezze. I suoi nove clan tribali sono guerrieri feroci, uniti da giuramento e sangue, che incutono terrore in coloro che osano opporsi a loro." />
     <string id="aom_shaghana_name" text="Shaghâna" />
-    <string id="aom_shaghana_desc" text="The Shaghâna are a fierce tribal people of the eastern Harad steppes, renowned as relentless raiders and skilled horsemen. Bound by oath and clan, they answer to their Taskral and serve the dark designs of Sauron from their sun-scorched fortresses." />
+    <string id="aom_shaghana_desc" text="Gli Shaghâna sono un fiero popolo tribale delle steppe orientali di Harad, rinomati come razziatori implacabili e abili cavalieri. Legati da giuramento e clan, rispondono al loro Taskral e servono i disegni oscuri di Sauron dalle loro fortezze bruciate dal sole." />
     <string id="aom_lord_SH1_1_name" text="Zarkan" />
     <string id="aom_lord_SH2_1_name" text="Rakhim" />
     <string id="aom_lord_SH3_1_name" text="Tadeen" />
@@ -509,23 +509,23 @@
     <string id="aom_clan_shaghana_7_name" text="Alâranin" />
     <string id="aom_clan_shaghana_8_name" text="Banûgand" />
     <string id="aom_clan_shaghana_9_name" text="Acammes" />
-    <string id="aom_sh_notable_0" text="Shrewd Shaghâna trader" />
-    <string id="aom_sh_notable_0b" text="Shaghâna spice dealer" />
-    <string id="aom_sh_notable_1" text="Shaghâna caravan owner" />
-    <string id="aom_sh_notable_1b" text="Eastern steppes merchant" />
-    <string id="aom_sh_notable_2" text="Shaghâna silk trader" />
-    <string id="aom_sh_notable_2b" text="Harad steppe trader" />
-    <string id="aom_sh_notable_3" text="Shaghâna money-changer" />
-    <string id="aom_sh_notable_3b" text="Eastern goods broker" />
-    <string id="aom_sh_notable_4" text="Shaghâna bazaar master" />
-    <string id="aom_sh_notable_4b" text="Devious Shaghâna merchant" />
-    <string id="aom_sh_notable_5" text="Shaghâna sun-priest" />
-    <string id="aom_sh_notable_6" text="Shaghâna tribal elder" />
-    <string id="aom_sh_notable_7" text="Keeper of Shaghâna traditions" />
-    <string id="aom_sh_notable_8" text="Shaghâna metalworker" />
-    <string id="aom_sh_notable_9" text="Shaghâna weapon-crafter" />
-    <string id="aom_sh_notable_gl1" text="Shaghâna enforcer" />
-    <string id="aom_sh_notable_10" text="Shaghâna crime lord" />
+    <string id="aom_sh_notable_0" text="Astuto mercante Shaghâna" />
+    <string id="aom_sh_notable_0b" text="Mercante di spezie Shaghâna" />
+    <string id="aom_sh_notable_1" text="Proprietario di carovana Shaghâna" />
+    <string id="aom_sh_notable_1b" text="Mercante delle steppe orientali" />
+    <string id="aom_sh_notable_2" text="Mercante di seta Shaghâna" />
+    <string id="aom_sh_notable_2b" text="Mercante delle steppe di Harad" />
+    <string id="aom_sh_notable_3" text="Cambiavalute Shaghâna" />
+    <string id="aom_sh_notable_3b" text="Intermediario di merci orientali" />
+    <string id="aom_sh_notable_4" text="Maestro del bazar Shaghâna" />
+    <string id="aom_sh_notable_4b" text="Subdolo mercante Shaghâna" />
+    <string id="aom_sh_notable_5" text="Sacerdote del sole Shaghâna" />
+    <string id="aom_sh_notable_6" text="Anziano tribale Shaghâna" />
+    <string id="aom_sh_notable_7" text="Custode delle tradizioni Shaghâna" />
+    <string id="aom_sh_notable_8" text="Fabbro Shaghâna" />
+    <string id="aom_sh_notable_9" text="Fabbricante d'armi Shaghâna" />
+    <string id="aom_sh_notable_gl1" text="Esecutore Shaghâna" />
+    <string id="aom_sh_notable_10" text="Signore del crimine Shaghâna" />
     <string id="aom_sh_notable_11" text="Capo dei predatori Shaghâna" />
     <string id="aom_sh_notable_gl4" text="Capobanda Shaghâna" />
     <string id="aom_sh_notable_12" text="Boss di strada Shaghâna" />

@@ -308,46 +308,46 @@
     <string id="taom_cc_taom_youth_dolguldur_4_desc" text="Du wurdest in das verdrehte Unterholz des südlichen Düsterwaldes geschickt, um jene aufzuspüren und zu beseitigen, die sich der Domäne des Nekromanten näherten, und lerntest, Beute durch verderbten Wald zu verfolgen, ohne ein Geräusch zu machen oder eine Spur zu hinterlassen." />
     <string id="taom_cc_taom_youth_dolguldur_5_text" text="Marschierte in den Schattenlegionen von Dol Guldur." />
     <string id="taom_cc_taom_youth_dolguldur_5_desc" text="Du hast in den eisern disziplinierten Reihen der dunklen Legionen von Dol Guldur gedrillt und gelernt, schwere Waffen in Formation zu führen, während die Verderbnis der Festung des Nekromanten in deinen Schritt und dein Schweigen einsickerte." />
-    <string id="taom_cc_taom_youth_dolguldur_6_text" text="Moved through darkness as a courier of the Necromancer." />
-    <string id="taom_cc_taom_youth_dolguldur_6_desc" text="You carried messages through the corrupted wood that no one would write down, delivering them by hand to agents who never showed their faces. The work demanded silence, patience, and the ability to strike without warning when the shadow required it." />
-    <string id="taom_cc_taom_youth_umbar_1_text" text="Served in the Corsair Fleet." />
-    <string id="taom_cc_taom_youth_umbar_1_desc" text="You joined the Corsair Fleet of Umbar, learning to fight aboard ships and lead boarding parties against Gondor's coastal defenses." />
-    <string id="taom_cc_taom_youth_umbar_2_text" text="Guarded the harbors of Umbar." />
-    <string id="taom_cc_taom_youth_umbar_2_desc" text="You served in the harbor garrisons of Umbar, defending the docks and learning the art of coastal defense." />
-    <string id="taom_cc_taom_youth_umbar_3_text" text="Raided the shores of Gondor with the Corsairs." />
-    <string id="taom_cc_taom_youth_umbar_3_desc" text="You led the charge onto enemy docks, hurling javelins and cutting your way through defenders before retreating to the Black ships with what you had taken. Raids were fast and brutal, and you learned that hesitation cost lives." />
-    <string id="taom_cc_taom_youth_umbar_4_text" text="Navigated the Bay of Belfalas as a Corsair scout." />
-    <string id="taom_cc_taom_youth_umbar_4_desc" text="You served in the masthead and scout-boats of the Corsair fleet, reading tides and spotting prey across open water while learning to loose a bow from a pitching deck. What you saw decided whether a raid went ahead or was abandoned." />
-    <string id="taom_cc_taom_youth_umbar_5_text" text="Stood in the spear line of the Black Numenoreans." />
-    <string id="taom_cc_taom_youth_umbar_5_desc" text="You drilled in the disciplined ground formations of Umbar's infantry, learning to hold a coastal beachhead with spear and shield while the ships unloaded behind you. The Black Numenorean officers expected precision, and they got it." />
-    <string id="taom_cc_taom_youth_umbar_6_text" text="Ran with the outlaws of the Umbar waterfront." />
-    <string id="taom_cc_taom_youth_umbar_6_desc" text="You survived on the rough margins of the harbor city, moving goods that could not be declared and acquiring skills that could not be taught in any school. The Corsair world had a place for those clever enough to see opportunities no one else had noticed." />
-    <string id="taom_cc_taom_youth_empire_1_text" text="Rode with the Hill Riders." />
-    <string id="taom_cc_taom_youth_empire_1_desc" text="Mounted on sturdy hill ponies, you rode with the Hill Riders of Dunland, learning to fight across the rough terrain of the highlands." />
-    <string id="taom_cc_taom_youth_empire_2_text" text="Served in the Tribal Longhouse." />
-    <string id="taom_cc_taom_youth_empire_2_desc" text="Within the tribal longhouses of Dunland, you learned tactics and the art of command, planning raids and defenses for your clan." />
-    <string id="taom_cc_taom_youth_empire_3_text" text="Stood guard with the Border Watch." />
-    <string id="taom_cc_taom_youth_empire_3_desc" text="You joined the Border Watch of Dunland, hurling javelins and fighting with sword to defend your clan's territory." />
-    <string id="taom_cc_taom_youth_empire_4_text" text="Scouted the highlands." />
-    <string id="taom_cc_taom_youth_empire_4_desc" text="You roamed the highlands and forests as a scout, learning to read the land and shoot from horseback." />
-    <string id="taom_cc_taom_youth_empire_5_text" text="Joined the Spear Brothers." />
-    <string id="taom_cc_taom_youth_empire_5_desc" text="You became one of the Spear Brothers of Dunland, learning to fight in tight formations with spear and shield." />
-    <string id="taom_cc_taom_youth_empire_6_text" text="Harried the horse-lords as a Tribal Skirmisher." />
-    <string id="taom_cc_taom_youth_empire_6_desc" text="As a Tribal Skirmisher, you learned to ambush Rohirrim outriders in the passes, hurling javelins and vanishing into the ridgeline before they could counter. The old grudge against the horse-lords lived in every throw." />
-    <string id="taom_cc_taom_youth_vlandia_1_text" text="Trained with the Riders of the Mark." />
-    <string id="taom_cc_taom_youth_vlandia_1_desc" text="You proved your skill as a rider among the Rohirrim, learning to charge with lance and fight from horseback in the traditions of Eorl the Young." />
-    <string id="taom_cc_taom_youth_vlandia_2_text" text="Served in the city watch of Edoras." />
-    <string id="taom_cc_taom_youth_vlandia_2_desc" text="You stood guard over the gates and walls of Edoras, learning tactics and discipline in service of the Golden Hall." />
-    <string id="taom_cc_taom_youth_vlandia_3_text" text="Joined the skirmishers of the Westfold." />
-    <string id="taom_cc_taom_youth_vlandia_3_desc" text="You joined the Westfold skirmishers, learning to fight with thrown weapons and sword on the open plains." />
-    <string id="taom_cc_taom_youth_vlandia_4_text" text="Rode with the scouts of the Wold." />
-    <string id="taom_cc_taom_youth_vlandia_4_desc" text="You rode with the scouts of the Wold, ranging far across the plains to watch for threats from the East." />
-    <string id="taom_cc_taom_youth_vlandia_5_text" text="Stood among the spearmen of the Eastfold." />
-    <string id="taom_cc_taom_youth_vlandia_5_desc" text="As a spearman of the Eastfold, you learned to hold the shieldwall against the enemy's charge." />
-    <string id="taom_cc_taom_youth_vlandia_6_text" text="Traveled with the camp followers of Rohan." />
-    <string id="taom_cc_taom_youth_vlandia_6_desc" text="Rather than taking up arms directly, you traveled with the camp followers, learning to survive on the march and profit from the chaos of war." />
-    <string id="taom_cc_taom_youth_sturgia_1_text" text="Served in the Royal Guard of Dale." />
-    <string id="taom_cc_taom_youth_sturgia_1_desc" text="You pledged your loyalty to the King of Dale, serving in the Royal Guard and learning the martial traditions of the Men of the North." />
+    <string id="taom_cc_taom_youth_dolguldur_6_text" text="Bewegte mich durch die Dunkelheit als Kurier des Nekromanten." />
+    <string id="taom_cc_taom_youth_dolguldur_6_desc" text="Ihr habt Nachrichten durch den verdorbenen Wald getragen, die niemand niederschrieb, und sie persönlich an Agenten überbracht, die niemals ihr Gesicht zeigten. Die Arbeit verlangte Stille, Geduld und die Fähigkeit, ohne Vorwarnung zuzuschlagen, wenn der Schatten es verlangte." />
+    <string id="taom_cc_taom_youth_umbar_1_text" text="Diente in der Korsarenflotte." />
+    <string id="taom_cc_taom_youth_umbar_1_desc" text="Ihr seid der Korsarenflotte von Umbar beigetreten und habt gelernt, an Bord von Schiffen zu kämpfen und Enterkommandos gegen die Küstenverteidigung Gondors anzuführen." />
+    <string id="taom_cc_taom_youth_umbar_2_text" text="Bewachte die Häfen von Umbar." />
+    <string id="taom_cc_taom_youth_umbar_2_desc" text="Ihr habt in den Hafengarnisonen von Umbar gedient, die Docks verteidigt und die Kunst der Küstenverteidigung erlernt." />
+    <string id="taom_cc_taom_youth_umbar_3_text" text="Plünderte die Küsten Gondors mit den Korsaren." />
+    <string id="taom_cc_taom_youth_umbar_3_desc" text="Ihr habt den Angriff auf feindliche Docks angeführt, Speere geschleudert und Euch durch die Verteidiger gekämpft, bevor Ihr mit Eurer Beute zu den Schwarzen Schiffen zurückkehrtet. Raubzüge waren schnell und brutal, und Ihr habt gelernt, dass Zögern Leben kostet." />
+    <string id="taom_cc_taom_youth_umbar_4_text" text="Navigierte die Bucht von Belfalas als Korsarenkundschafter." />
+    <string id="taom_cc_taom_youth_umbar_4_desc" text="Ihr habt im Mastkorb und in den Kundschafterbooten der Korsarenflotte gedient, Gezeiten gelesen und Beute über offenes Wasser hinweg erspäht, während Ihr lerntet, von einem schwankenden Deck aus zu schießen. Was Ihr saht, entschied darüber, ob ein Raubzug durchgeführt oder abgebrochen wurde." />
+    <string id="taom_cc_taom_youth_umbar_5_text" text="Stand in der Speerreihe der Schwarzen Númenórer." />
+    <string id="taom_cc_taom_youth_umbar_5_desc" text="Ihr habt in den disziplinierten Bodenformationen der Infanterie Umbars gedrillt und gelernt, einen Küstenbrückenkopf mit Speer und Schild zu halten, während die Schiffe hinter Euch entladen wurden. Die Offiziere der Schwarzen Númenórer erwarteten Präzision, und sie bekamen sie." />
+    <string id="taom_cc_taom_youth_umbar_6_text" text="Lief mit den Gesetzlosen der Hafenfront von Umbar." />
+    <string id="taom_cc_taom_youth_umbar_6_desc" text="Ihr habt am rauen Rand der Hafenstadt überlebt, Waren bewegt, die nicht deklariert werden konnten, und Fertigkeiten erworben, die in keiner Schule gelehrt werden konnten. Die Korsarenwelt hatte einen Platz für jene, die klug genug waren, Gelegenheiten zu sehen, die niemand sonst bemerkt hatte." />
+    <string id="taom_cc_taom_youth_empire_1_text" text="Ritt mit den Hügelreitern." />
+    <string id="taom_cc_taom_youth_empire_1_desc" text="Auf robusten Hügelponys seid Ihr mit den Hügelreitern von Dunland geritten und habt gelernt, im rauen Gelände des Hochlands zu kämpfen." />
+    <string id="taom_cc_taom_youth_empire_2_text" text="Diente im Stammeslanghaus." />
+    <string id="taom_cc_taom_youth_empire_2_desc" text="In den Stammeslanghäusern von Dunland habt Ihr Taktik und die Kunst der Befehlsführung erlernt und Raubzüge sowie Verteidigungen für Euren Clan geplant." />
+    <string id="taom_cc_taom_youth_empire_3_text" text="Stand Wache bei der Grenzwache." />
+    <string id="taom_cc_taom_youth_empire_3_desc" text="Ihr seid der Grenzwache von Dunland beigetreten, habt Speere geschleudert und mit dem Schwert gekämpft, um das Gebiet Eures Clans zu verteidigen." />
+    <string id="taom_cc_taom_youth_empire_4_text" text="Kundschaftete das Hochland aus." />
+    <string id="taom_cc_taom_youth_empire_4_desc" text="Ihr seid als Kundschafter durch das Hochland und die Wälder gestreift und habt gelernt, das Land zu lesen und vom Pferderücken aus zu schießen." />
+    <string id="taom_cc_taom_youth_empire_5_text" text="Trat den Speerbrüdern bei." />
+    <string id="taom_cc_taom_youth_empire_5_desc" text="Ihr seid einer der Speerbrüder von Dunland geworden und habt gelernt, in engen Formationen mit Speer und Schild zu kämpfen." />
+    <string id="taom_cc_taom_youth_empire_6_text" text="Bedrängte die Rosseherren als Stammesplänkler." />
+    <string id="taom_cc_taom_youth_empire_6_desc" text="Als Stammesplänkler habt Ihr gelernt, Rohirrim-Vorreiter in den Pässen zu überfallen, Speere zu schleudern und im Bergrücken zu verschwinden, bevor sie zurückschlagen konnten. Der alte Groll gegen die Rosseherren lebte in jedem Wurf." />
+    <string id="taom_cc_taom_youth_vlandia_1_text" text="Trainierte mit den Reitern der Mark." />
+    <string id="taom_cc_taom_youth_vlandia_1_desc" text="Ihr habt Euer Können als Reiter unter den Rohirrim bewiesen und gelernt, mit Lanze anzugreifen und vom Pferderücken aus in den Traditionen Eorls des Jungen zu kämpfen." />
+    <string id="taom_cc_taom_youth_vlandia_2_text" text="Diente in der Stadtwache von Edoras." />
+    <string id="taom_cc_taom_youth_vlandia_2_desc" text="Ihr habt an den Toren und Mauern von Edoras Wache gestanden und Taktik sowie Disziplin im Dienst der Goldenen Halle gelernt." />
+    <string id="taom_cc_taom_youth_vlandia_3_text" text="Trat den Plänklern der Westfold bei." />
+    <string id="taom_cc_taom_youth_vlandia_3_desc" text="Ihr seid den Plänklern der Westfold beigetreten und habt gelernt, mit Wurfwaffen und Schwert auf den offenen Ebenen zu kämpfen." />
+    <string id="taom_cc_taom_youth_vlandia_4_text" text="Ritt mit den Kundschaftern des Wolds." />
+    <string id="taom_cc_taom_youth_vlandia_4_desc" text="Ihr seid mit den Kundschaftern des Wolds geritten und habt weit über die Ebenen hinweg nach Bedrohungen aus dem Osten Ausschau gehalten." />
+    <string id="taom_cc_taom_youth_vlandia_5_text" text="Stand unter den Speerkämpfern der Ostfold." />
+    <string id="taom_cc_taom_youth_vlandia_5_desc" text="Als Speerkämpfer der Ostfold habt Ihr gelernt, den Schildwall gegen den Ansturm des Feindes zu halten." />
+    <string id="taom_cc_taom_youth_vlandia_6_text" text="Reiste mit den Trossangehörigen von Rohan." />
+    <string id="taom_cc_taom_youth_vlandia_6_desc" text="Anstatt direkt zu den Waffen zu greifen, reistest du mit den Trossangehörigen und lerntest, auf dem Marsch zu überleben und aus dem Chaos des Krieges Profit zu schlagen." />
+    <string id="taom_cc_taom_youth_sturgia_1_text" text="Diente in der Königsgarde von Thal." />
+    <string id="taom_cc_taom_youth_sturgia_1_desc" text="Du schwörst dem König von Thal die Treue, dientest in der Königsgarde und lerntest die kriegerischen Traditionen der Menschen des Nordens." />
     <string id="taom_cc_taom_youth_sturgia_2_text" text="Verteidigte die Tore von Thal." />
     <string id="taom_cc_taom_youth_sturgia_2_desc" text="Als Mitglied der Garnison verteidigtest du die wiederaufgebauten Tore von Thal und lerntest die Kunst der Belagerungsverteidigung von Veteranen, die den Fall und Wiederaufstieg der Stadt miterlebt hatten." />
     <string id="taom_cc_taom_youth_sturgia_3_text" text="Kämpfte in der Miliz am Ufer des Langen Sees." />

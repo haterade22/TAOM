@@ -16,7 +16,7 @@
     <string id="taom_career_black_uruk_captain_desc" text="Железномускулистый воин Мордора, ведущий военные отряды чёрных uruков в прорыв, принимающий удары, что свалили бы меньших воинов, и переламывающий ход битвы грубой жестокой мощью." />
     <string id="taom_career_mulkerhili_cultist" text="Культист Мулкерхили" />
     <string id="taom_career_mulkerhili_cultist_desc" text="Фанатичный приверженец нашёптываний Единого Кольца, направляющий ужас голоса Саурона на разрушение вражеской решимости, сочетающий проклятую стрельбу из лука с безумным присутствием, разрушающим волю к сопротивлению." />
-    <string id="taom_career_snaga_rider" text="Snaga Rider" />
+    <string id="taom_career_snaga_rider" text="Всадник Снага" />
     <string id="taom_career_snaga_rider_desc" text="Жилистый кавалерийский налётчик Снага, проскальзывающий за вражеские линии с тревожной бесшумностью, атакующий обозы снабжения и изолированные отряды, прежде чем исчезнуть в дыму Мордора." />
     <string id="taom_career_olog_hai_warchief" text="Военный вождь олог-хай" />
     <string id="taom_career_olog_hai_warchief_desc" text="Возвышающийся боевой тролль олог-хай, вступающий в самую гущу сражения как живой таран, выдерживающий чудовищные удары и вколачивающий врагов в землю разрушительными ударами сверху." />
@@ -89,7 +89,7 @@
     <string id="taom_career_warg_scout" text="Варговый разведчик" />
     <string id="taom_career_warg_scout_desc" text="Хитрый урук-всадник на быстром варге, разведывающий путь для армий Изенгарда и настигающий бегущую добычу." />
     <string id="taom_career_cave_troll_master" text="Повелитель пещерных троллей" />
-    <string id="taom_career_cave_troll_master_desc" text="A brutal orc chieftain who commands cave trolls in battle, driving them forward with whip and cunning." />
+    <string id="taom_career_cave_troll_master_desc" text="Жестокий вождь орков, командующий пещерными троллями в бою, погоняя их кнутом и хитростью." />
     <string id="taom_career_goblin_sniper" text="Гоблин-снайпер" />
     <string id="taom_career_goblin_sniper_desc" text="Злобный гоблин-стрелок, скрывающийся в горных расселинах и сражающий цели отравленными дротиками и грубыми луками." />
     <string id="taom_career_warg_pack_leader" text="Вожак варговой стаи" />
@@ -1240,46 +1240,46 @@
     <string id="taom_dg2_t2_b_p2" text="+60 к максимальному здоровью." />
     <string id="taom_dg2_t2_b_p3" text="+10% к сопротивлению отряда." />
     <string id="taom_dg2_t2_b_p4" text="+10% к урону отряда." />
-    <string id="taom_dg2_t3_a_key" text="Gate Hold radius greatly expanded, devastating power." />
-    <string id="taom_dg2_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_dg2_t3_a_p2" text="+100 max health." />
-    <string id="taom_dg2_t3_a_p3" text="+15% troop damage." />
-    <string id="taom_dg2_t3_a_p4" text="+4 party size." />
-    <string id="taom_dg2_t3_b_key" text="Gate Hold charge greatly reduced, nearly always available." />
-    <string id="taom_dg2_t3_b_p1" text="+18% resistance." />
-    <string id="taom_dg2_t3_b_p2" text="+15% health regeneration." />
-    <string id="taom_dg2_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_dg2_t3_b_p4" text="+15% troop regeneration." />
-    <string id="taom_dale_marksman_root_desc" text="Black Arrow grants +5% ranged damage in honor of Bard the Bowman." />
-    <string id="taom_dm_t1_a_key" text="Black Arrow radius increased, covering wider kill zones." />
-    <string id="taom_dm_t1_a_p1" text="+8% ranged damage." />
-    <string id="taom_dm_t1_a_p2" text="+5% armor penetration." />
-    <string id="taom_dm_t1_a_p3" text="+7% movement speed." />
-    <string id="taom_dm_t1_a_p4" text="+5% battle renown gain." />
-    <string id="taom_dm_t1_b_key" text="Black Arrow duration extended, sustained barrage." />
-    <string id="taom_dm_t1_b_p1" text="+5% resistance." />
-    <string id="taom_dm_t1_b_p2" text="+25 max health." />
-    <string id="taom_dm_t1_b_p3" text="+5% party spotting range." />
-    <string id="taom_dm_t1_b_p4" text="+5% stealth bonus." />
-    <string id="taom_dm_t2_a_key" text="Black Arrow charge reduced, maintaining constant pressure." />
-    <string id="taom_dm_t2_a_p1" text="+10% party spotting range." />
-    <string id="taom_dm_t2_a_p2" text="+10% movement speed." />
-    <string id="taom_dm_t2_a_p3" text="+10% stealth bonus." />
-    <string id="taom_dm_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_dm_t2_b_key" text="Black Arrow gains additional penetration while active." />
-    <string id="taom_dm_t2_b_p1" text="+12% ranged damage." />
-    <string id="taom_dm_t2_b_p2" text="+10% armor penetration." />
-    <string id="taom_dm_t2_b_p3" text="+50 max health." />
-    <string id="taom_dm_t2_b_p4" text="+5% troop damage." />
-    <string id="taom_dm_t3_a_key" text="Black Arrow radius greatly expanded, inescapable volleys." />
-    <string id="taom_dm_t3_a_p1" text="+18% ranged damage." />
-    <string id="taom_dm_t3_a_p2" text="+15% armor penetration." />
-    <string id="taom_dm_t3_a_p3" text="+15% battle renown gain." />
-    <string id="taom_dm_t3_a_p4" text="+10% troop damage." />
-    <string id="taom_dm_t3_b_key" text="Black Arrow charge greatly reduced, relentless fire." />
-    <string id="taom_dm_t3_b_p1" text="+15% stealth bonus." />
-    <string id="taom_dm_t3_b_p2" text="+15% movement speed." />
-    <string id="taom_dm_t3_b_p3" text="+75 max health." />
+    <string id="taom_dg2_t3_a_key" text="Радиус удержания ворот значительно расширен, разрушительная мощь." />
+    <string id="taom_dg2_t3_a_p1" text="+15% к урону в ближнем бою." />
+    <string id="taom_dg2_t3_a_p2" text="+100 к максимальному здоровью." />
+    <string id="taom_dg2_t3_a_p3" text="+15% к урону войск." />
+    <string id="taom_dg2_t3_a_p4" text="+4 к размеру отряда." />
+    <string id="taom_dg2_t3_b_key" text="Время восстановления Удержания Врат значительно снижено, почти всегда доступно." />
+    <string id="taom_dg2_t3_b_p1" text="+18% к сопротивлению." />
+    <string id="taom_dg2_t3_b_p2" text="+15% к восстановлению здоровья." />
+    <string id="taom_dg2_t3_b_p3" text="+20% к боевому духу войск." />
+    <string id="taom_dg2_t3_b_p4" text="+15% к восстановлению войск." />
+    <string id="taom_dale_marksman_root_desc" text="Чёрная Стрела дарует +5% к дальнобойному урону в честь Барда Лучника." />
+    <string id="taom_dm_t1_a_key" text="Радиус Чёрной Стрелы увеличен, охватывая более широкие зоны поражения." />
+    <string id="taom_dm_t1_a_p1" text="+8% к дальнобойному урону." />
+    <string id="taom_dm_t1_a_p2" text="+5% к пробитию брони." />
+    <string id="taom_dm_t1_a_p3" text="+7% к скорости передвижения." />
+    <string id="taom_dm_t1_a_p4" text="+5% к получению боевой славы." />
+    <string id="taom_dm_t1_b_key" text="Длительность Чёрной Стрелы увеличена, непрерывный обстрел." />
+    <string id="taom_dm_t1_b_p1" text="+5% к сопротивлению." />
+    <string id="taom_dm_t1_b_p2" text="+25 к максимальному здоровью." />
+    <string id="taom_dm_t1_b_p3" text="+5% к дальности обзора отряда." />
+    <string id="taom_dm_t1_b_p4" text="+5% к бонусу скрытности." />
+    <string id="taom_dm_t2_a_key" text="Время восстановления Чёрной Стрелы снижено, поддерживая постоянное давление." />
+    <string id="taom_dm_t2_a_p1" text="+10% к дальности обзора отряда." />
+    <string id="taom_dm_t2_a_p2" text="+10% к скорости передвижения." />
+    <string id="taom_dm_t2_a_p3" text="+10% к бонусу скрытности." />
+    <string id="taom_dm_t2_a_p4" text="+10% к получению боевой славы." />
+    <string id="taom_dm_t2_b_key" text="Чёрная Стрела получает дополнительное пробитие во время действия." />
+    <string id="taom_dm_t2_b_p1" text="+12% к дальнобойному урону." />
+    <string id="taom_dm_t2_b_p2" text="+10% к пробитию брони." />
+    <string id="taom_dm_t2_b_p3" text="+50 к максимальному здоровью." />
+    <string id="taom_dm_t2_b_p4" text="+5% к урону войск." />
+    <string id="taom_dm_t3_a_key" text="Радиус Чёрной Стрелы значительно расширен, неизбежные залпы." />
+    <string id="taom_dm_t3_a_p1" text="+18% к дальнобойному урону." />
+    <string id="taom_dm_t3_a_p2" text="+15% к пробитию брони." />
+    <string id="taom_dm_t3_a_p3" text="+15% к получению боевой славы." />
+    <string id="taom_dm_t3_a_p4" text="+10% к урону войск." />
+    <string id="taom_dm_t3_b_key" text="Время восстановления Чёрной Стрелы значительно снижено, неустанный огонь." />
+    <string id="taom_dm_t3_b_p1" text="+15% к бонусу скрытности." />
+    <string id="taom_dm_t3_b_p2" text="+15% к скорости передвижения." />
+    <string id="taom_dm_t3_b_p3" text="+75 к максимальному здоровью." />
     <string id="taom_dm_t3_b_p4" text="+15% к дальности обзора отряда." />
     <string id="taom_dale_outrider_root_desc" text="Рывок по торговому пути дает +5% к урону в ближнем бою, и ваш конь ускоряется." />
     <string id="taom_dor_t1_a_key" text="Радиус Рывка по торговому пути расширен, охватывая более широкие построения." />
@@ -1840,46 +1840,46 @@
     <string id="taom_gbs_t3_b_p3" text="+75 к максимальному здоровью." />
     <string id="taom_gbs_t3_b_p4" text="+15% к дальности обзора отряда." />
     <string id="taom_warg_pack_leader_root_desc" text="Вой Вожака даёт +5% к рукопашному урону, и стая идёт на охоту." />
-    <string id="taom_wpl_t1_a_key" text="Alpha Howl radius expanded, sweeping wider formations." />
-    <string id="taom_wpl_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_wpl_t1_a_p2" text="+7% horse charge damage." />
-    <string id="taom_wpl_t1_a_p3" text="+7% swing speed." />
-    <string id="taom_wpl_t1_a_p4" text="+5% party movement speed." />
-    <string id="taom_wpl_t1_b_key" text="Alpha Howl duration extended, maintaining momentum." />
-    <string id="taom_wpl_t1_b_p1" text="+30 horse health." />
-    <string id="taom_wpl_t1_b_p2" text="+25 max health." />
-    <string id="taom_wpl_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_wpl_t1_b_p4" text="+5% resistance." />
-    <string id="taom_wpl_t2_a_key" text="Alpha Howl charge reduced, swifter activation." />
-    <string id="taom_wpl_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_wpl_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_wpl_t2_a_p3" text="+10% troop morale." />
-    <string id="taom_wpl_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_wpl_t2_b_key" text="Alpha Howl boosts mount resilience while active." />
-    <string id="taom_wpl_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_wpl_t2_b_p2" text="+12% horse charge damage." />
-    <string id="taom_wpl_t2_b_p3" text="+60 horse health." />
-    <string id="taom_wpl_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_wpl_t3_a_key" text="Alpha Howl radius greatly expanded, unstoppable impact." />
-    <string id="taom_wpl_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_wpl_t3_a_p2" text="+18% horse charge damage." />
-    <string id="taom_wpl_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_wpl_t3_a_p4" text="+15% troop damage." />
-    <string id="taom_wpl_t3_b_key" text="Alpha Howl charge greatly reduced, ride without ceasing." />
-    <string id="taom_wpl_t3_b_p1" text="+100 horse health." />
-    <string id="taom_wpl_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_wpl_t3_b_p3" text="+15% party movement speed." />
-    <string id="taom_wpl_t3_b_p4" text="+75 max health." />
-    <string id="taom_shadow_warrior_root_desc" text="Soul Drain grants +25 health and drains enemy life force." />
-    <string id="taom_swr_t1_a_key" text="Soul Drain radius increased, empowering more warriors." />
-    <string id="taom_swr_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_swr_t1_a_p2" text="+5% troop damage." />
-    <string id="taom_swr_t1_a_p3" text="+30 max health." />
-    <string id="taom_swr_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_swr_t1_b_key" text="Soul Drain duration extended, fortifying the defense." />
-    <string id="taom_swr_t1_b_p1" text="+8% resistance." />
-    <string id="taom_swr_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_swr_t1_b_p3" text="+5% troop resistance." />
+    <string id="taom_wpl_t1_a_key" text="Радиус Вожачьего Воя расширен, охватывая более широкие строи." />
+    <string id="taom_wpl_t1_a_p1" text="+8% к урону в ближнем бою." />
+    <string id="taom_wpl_t1_a_p2" text="+7% к урону конной атаки." />
+    <string id="taom_wpl_t1_a_p3" text="+7% к скорости замаха." />
+    <string id="taom_wpl_t1_a_p4" text="+5% к скорости передвижения отряда." />
+    <string id="taom_wpl_t1_b_key" text="Длительность Альфа-воя увеличена, сохраняя импульс." />
+    <string id="taom_wpl_t1_b_p1" text="+30 к здоровью лошади." />
+    <string id="taom_wpl_t1_b_p2" text="+25 к максимальному здоровью." />
+    <string id="taom_wpl_t1_b_p3" text="-5% к жалованию войск." />
+    <string id="taom_wpl_t1_b_p4" text="+5% к сопротивлению." />
+    <string id="taom_wpl_t2_a_key" text="Время накопления Альфа-воя сокращено, более быстрая активация." />
+    <string id="taom_wpl_t2_a_p1" text="+10% к скорости передвижения отряда." />
+    <string id="taom_wpl_t2_a_p2" text="-10% к жалованию войск." />
+    <string id="taom_wpl_t2_a_p3" text="+10% к моральному духу войск." />
+    <string id="taom_wpl_t2_a_p4" text="+10% к получению славы в бою." />
+    <string id="taom_wpl_t2_b_key" text="Альфа-вой усиливает стойкость скакуна во время действия." />
+    <string id="taom_wpl_t2_b_p1" text="+12% к урону в ближнем бою." />
+    <string id="taom_wpl_t2_b_p2" text="+12% к урону от конной атаки." />
+    <string id="taom_wpl_t2_b_p3" text="+60 к здоровью лошади." />
+    <string id="taom_wpl_t2_b_p4" text="+10% к скорости замаха." />
+    <string id="taom_wpl_t3_a_key" text="Радиус Альфа-воя значительно увеличен, неудержимое воздействие." />
+    <string id="taom_wpl_t3_a_p1" text="+18% к урону в ближнем бою." />
+    <string id="taom_wpl_t3_a_p2" text="+18% к урону от конной атаки." />
+    <string id="taom_wpl_t3_a_p3" text="+15% к скорости замаха." />
+    <string id="taom_wpl_t3_a_p4" text="+15% к урону войск." />
+    <string id="taom_wpl_t3_b_key" text="Время накопления Альфа-воя значительно сокращено, скачи без остановки." />
+    <string id="taom_wpl_t3_b_p1" text="+100 к здоровью лошади." />
+    <string id="taom_wpl_t3_b_p2" text="-15% к жалованию войск." />
+    <string id="taom_wpl_t3_b_p3" text="+15% к скорости передвижения отряда." />
+    <string id="taom_wpl_t3_b_p4" text="+75 к максимальному здоровью." />
+    <string id="taom_shadow_warrior_root_desc" text="Похищение души дарует +25 к здоровью и выкачивает жизненные силы врага." />
+    <string id="taom_swr_t1_a_key" text="Радиус Похищения души увеличен, усиливая больше воинов." />
+    <string id="taom_swr_t1_a_p1" text="+8% к урону в ближнем бою." />
+    <string id="taom_swr_t1_a_p2" text="+5% к урону войск." />
+    <string id="taom_swr_t1_a_p3" text="+30 к максимальному здоровью." />
+    <string id="taom_swr_t1_a_p4" text="+7% к скорости замаха." />
+    <string id="taom_swr_t1_b_key" text="Длительность Похищения души увеличена, укрепляя оборону." />
+    <string id="taom_swr_t1_b_p1" text="+8% к сопротивлению." />
+    <string id="taom_swr_t1_b_p2" text="+5% к моральному духу войск." />
+    <string id="taom_swr_t1_b_p3" text="+5% к сопротивлению войск." />
     <string id="taom_swr_t1_b_p4" text="+5% к восстановлению войск." />
     <string id="taom_swr_t2_a_key" text="Заряд Похищения Души уменьшен, активируется чаще." />
     <string id="taom_swr_t2_a_p1" text="+10% к моральному духу войск." />
