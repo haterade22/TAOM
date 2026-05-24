@@ -287,7 +287,7 @@ KINGDOM_EQUIPMENT = {
         'shields': ['Item.desert_round_shield'],
         'bows': ['Item.lowland_longbow', 'Item.composite_bow'],
         'heads': ['Item.dunland_caerdh_helmet_heavy_e', 'Item.gondor_nobke_helmet1', 'Item.ithilien_hood_masked_var'],
-        'bodies': ['Item.ar_ardunian_elite_armour', 'Item.gondor_chainmaila', 'Item.ithilien_jerkin_long_slim'],
+        'bodies': ['Item.ar_ardunian_elite_armour', 'Item.gondor_chainmaila', 'Item.ithilien_jerkin_long'],
         'capes': ['Item.citidel_guard_armor_pauldrons', 'Item.fountain_shoulders2'],
         'gloves': ['Item.gondor_nobke_bracers', 'Item.ithilien_bracers'],
         'legs': ['Item.ithilien_boots', 'Item.ithilien_boots_heavy', 'Item.gondor_nobke_boots'],

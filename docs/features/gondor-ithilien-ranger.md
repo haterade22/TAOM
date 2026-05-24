@@ -77,13 +77,13 @@ Eight `<EquipmentRoster>` blocks, each with the same fixed items (`ithilien_brac
 | # | Body | Head | Leg | Cape | Bow | Arrows ×2 |
 |---|---|---|---|---|---|---|
 | 1 | `ithilien_jerkin_long` | `ithilien_hood` | `ithilien_boots` | `ithilien_cloak` | `wm_ithilien_bow_c` | `wm_elven_arrow_v1_a` |
-| 2 | `ithilien_jerkin_long_slim` | `ithilien_hood_var` | `ithilien_boots_heavy` | `ithilien_cloak_var` | `wm_ithilien_bow_b` | `wm_elven_arrow_v2_a` |
+| 2 | `ithilien_jerkin_long` | `ithilien_hood_var` | `ithilien_boots_heavy` | `ithilien_cloak_var` | `wm_ithilien_bow_b` | `wm_elven_arrow_v2_a` |
 | 3 | `ithilien_jerkin_long_var` | `ithilien_hood_masked` | `ithilien_boots` | `ithilien_cloak` | `wm_ithilien_bow_c` | `wm_elven_arrow_v3_a` |
-| 4 | `ithilien_jerkin_long_var_slim` | `ithilien_hood_masked_var` | `ithilien_boots_heavy` | `ithilien_cloak_var` | `wm_ithilien_bow_b` | `wm_elven_arrow_v4_a` |
+| 4 | `ithilien_jerkin_long_var` | `ithilien_hood_masked_var` | `ithilien_boots_heavy` | `ithilien_cloak_var` | `wm_ithilien_bow_b` | `wm_elven_arrow_v4_a` |
 | 5 | `ithilien_jerkin_short` | `ithilien_hood` | `ithilien_boots` | `ithilien_cloak_var` | `wm_ithilien_bow` | `wm_elven_arrow_v1_b` |
-| 6 | `ithilien_jerkin_short_slim` | `ithilien_hood_var` | `ithilien_boots_heavy` | `ithilien_cloak` | `wm_ithilien_bow_c` | `wm_elven_arrow_v1_c` |
+| 6 | `ithilien_jerkin_short` | `ithilien_hood_var` | `ithilien_boots_heavy` | `ithilien_cloak` | `wm_ithilien_bow_c` | `wm_elven_arrow_v1_c` |
 | 7 | `ithilien_jerkin_short_var` | `ithilien_hood_masked` | `ithilien_boots` | `ithilien_cloak_var` | `wm_ithilien_bow_b` | `wm_elven_arrow_v1_d` |
-| 8 | `ithilien_jerkin_short_var_slim` | `ithilien_hood_masked_var` | `ithilien_boots_heavy` | `ithilien_cloak` | `wm_ithilien_bow` | `wm_elven_arrow_v2_b` |
+| 8 | `ithilien_jerkin_short_var` | `ithilien_hood_masked_var` | `ithilien_boots_heavy` | `ithilien_cloak` | `wm_ithilien_bow` | `wm_elven_arrow_v2_b` |
 
 ### Recruitment service: `Main/Features/TroopProgression/VolunteerRecruitmentService.cs`
 
@@ -125,7 +125,7 @@ Civilian roster correctly tagged with `equipmentType="Civilian"` per the standal
 ## Dependencies
 
 - **LOTRLOME_Armory items** (all verified present at author time):
-  - Body: `faramir_armor`, `ithilien_jerkin_{long,long_slim,long_var,long_var_slim,short,short_slim,short_var,short_var_slim}`
+  - Body: `faramir_armor`, `ithilien_jerkin_{long,long_var,short,short_var}`
   - Head: `ithilien_hood{,_var,_masked,_masked_var}`
   - Leg: `ithilien_boots{,_heavy}`
   - Cape: `ithilien_cloak{,_var}`

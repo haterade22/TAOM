@@ -80,13 +80,13 @@
                 IsVisible="@HasSelection">
           <Children>
             <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-                    SuggestedWidth="440" SuggestedHeight="1023"
+                    SuggestedWidth="440" SuggestedHeight="480"
                     HorizontalAlignment="Right" VerticalAlignment="Bottom"
                     MarginRight="10" MarginBottom="6"
                     DoNotAcceptEvents="true">
               <Children>
                 <FactionImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-                                    SuggestedWidth="429" SuggestedHeight="792"
+                                    SuggestedWidth="429" SuggestedHeight="240"
                                     HorizontalAlignment="Right" VerticalAlignment="Top"
                                     MarginTop="4" MarginRight="-20"
                                     ImageId="@FactionImageId"
