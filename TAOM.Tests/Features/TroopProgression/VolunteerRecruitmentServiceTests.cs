@@ -592,9 +592,10 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_EreborCulture_HighRoll_ReturnsIronHills()
     {
-        // Culture pool: erebor_reg_miner(5) + erebor_noble(3) + iron_hills_reg_recruit(2) = 10
-        // Roll 8 should land in iron_hills_reg_recruit range
-        _random.Next(10).Returns(8);
+        // Culture pool: erebor_reg_miner(5) + erebor_noble(3) + iron_hills_reg_recruit(2) + iron_hills_noble(2) = 12
+        // Roll 8 lands in iron_hills_reg_recruit range (5+3=8 .. 5+3+2=10, exclusive upper).
+        // (iron_hills_noble line was added in #212 KEYforce revamp; weight grew from 10 → 12.)
+        _random.Next(12).Returns(8);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
