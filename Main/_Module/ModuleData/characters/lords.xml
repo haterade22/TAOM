@@ -20966,7 +20966,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Patreon supporter lord: Chägermeister (clan Elen-Nolmarë) -->
-    <NPCCharacter id="lord_R3_1" name="{=aom_lord_R3_1_name}Chägermeister" age="30" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Cavalry" face_mesh_cache="true">
+    <NPCCharacter id="lord_R3_1" name="{=aom_lord_R3_1_name}Chägermeister" age="30" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" race ="elf" occupation="Lord" default_group="Cavalry" face_mesh_cache="true">
         <face>
             <BodyProperties version="4" age="30" weight="0.3102" build="0.7477" key="001BD40E4000101A5E8726A491898A7707C4789A37B9B8C50D30207281B0104001FB56140FD6DA7D000000000000000000000000000000000000000045F40142" />
             <hair_tags>
