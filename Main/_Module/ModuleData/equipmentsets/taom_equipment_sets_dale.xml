@@ -77,7 +77,7 @@
 	<!-- ==================== DALE LORD CIVILIAN EQUIPMENT ==================== -->
 
 	<EquipmentRoster id="dale_civ_template_default_a" culture="Culture.sturgia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
 			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
 			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
@@ -91,7 +91,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="dale_civ_template_default_b" culture="Culture.sturgia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sturgia_noble_sword_2_t5" />
 			<Equipment slot="Item1" id="Item.sturgia_lance_2_t5" />
 			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
@@ -104,7 +104,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="dale_civ_template_default_c" culture="Culture.sturgia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sturgia_axe_5_t5" />
 			<Equipment slot="Item1" id="Item.ironrim_riders_kite_shield" />
 			<Equipment slot="Head" id="Item.sturgian_helmet_b_open" />
@@ -118,7 +118,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="dale_civ_template_default_d" culture="Culture.sturgia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
 			<Equipment slot="Item1" id="Item.sturgia_2haxe_2_t5" />
 			<Equipment slot="Head" id="Item.sturgian_helmet_closed" />
@@ -132,7 +132,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="dale_civ_template_default_e" culture="Culture.sturgia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sturgia_noble_sword_4_t5" />
 			<Equipment slot="Item1" id="Item.chivalric_kite_shield" />
 			<Equipment slot="Item2" id="Item.noble_bow" />

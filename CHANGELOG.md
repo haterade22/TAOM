@@ -2,6 +2,30 @@
 
 ## 2026-05-23
 
+### fix(equipment): mark all 96 civilian rosters with `equipmentType="Civilian"` (16 culture files)
+
+Every `<EquipmentSet>` inside a `*_civ_*` / `*_civ_equipment` `<EquipmentRoster>` across `Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_*.xml` was missing the `equipmentType="Civilian"` attribute that vanilla Bannerlord's standalone-roster schema requires (verified against `SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml`). Without it, the engine treats those rosters as battle equipment regardless of roster-ID naming convention — silently breaking civilian-context rendering (encyclopedia preview, settlement walks, dialog scenes).
+
+Likely the actual root cause of Faramir's "peasant in encyclopedia" symptom we just patched cosmetically — the civilian roster wasn't being recognized as civilian at all, so the engine defaulted to battle/random selection and the recently-improved civilian outfit may not have applied in some contexts. Same latent bug exists for every other named lord (Boromir, Imrahil, Forlong, Hirluin, Angbor, Golasgil, Tirnelion, Dain, Theoden, Eomer, Eowyn, Sauron, Witchking, Nazgul, Khamul, Thranduil, Legolas, Glorfindel, Galadriel) and every `*_civ_template_*` culture default.
+
+Per-culture roster counts:
+
+| File | Civ rosters tagged |
+|---|---:|
+| gondor | 13 |
+| mordor | 10 |
+| rohan | 8 |
+| mirkwood | 7 |
+| erebor | 6 |
+| lothlorien | 6 |
+| rivendell | 6 |
+| dale, dolguldur, dunland, gundabad, harad, isengard, rhun, umbar | 5 each |
+| **TOTAL** | **96** |
+
+Battle rosters intentionally untouched (vanilla has no `equipmentType="Battle"` — battle is implicit default; verified zero matches in SandBoxCore). Regression scan confirms 0 false positives — no battle roster was tagged.
+
+Applied via regex sweep anchored on `id="..._civ..."` pattern. XML well-formedness verified on all 16 files via `[xml]` parser. Pure attribute add — fully save-compatible, no schema change, no roster IDs touched.
+
 ### feat(lords): add Patreon supporter Chägermeister + Elen-Nolmarë clan (Rivendell tier-2)
 
 First Patreon-supporter clan in TAOM. Added `clan_rivendell_3` (Elen-Nolmarë, tier 2, owned by `lord_R3_1` Chägermeister) under Imladris, plus the lord himself (elf, Cavalry archetype, custom skills/traits per supporter spec) and a `<Hero text=…/>` biography rendered in the encyclopedia. Establishes the lightweight "Patreon supporter" convention as XML comments on both `clans.xml` and `lords.xml` entries — no new file, no new feature module. Banner reuses Imladris's flag as a placeholder; equipment uses the existing `rivendell_bat_template_medium_c` / `rivendell_civ_template_default_c` template pair.

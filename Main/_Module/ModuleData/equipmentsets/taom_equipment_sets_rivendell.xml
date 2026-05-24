@@ -76,7 +76,7 @@
 	<!-- ==================== RIVENDELL LORD CIVILIAN EQUIPMENT ==================== -->
 
 	<EquipmentRoster id="rivendell_civ_template_default_a" culture="Culture.rivendell">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
 			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
@@ -90,7 +90,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="rivendell_civ_template_default_b" culture="Culture.rivendell">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_silver" />
@@ -104,7 +104,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="rivendell_civ_template_default_c" culture="Culture.rivendell">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
 			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
@@ -118,7 +118,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="rivendell_civ_template_default_d" culture="Culture.rivendell">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
@@ -132,7 +132,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="rivendell_civ_template_default_e" culture="Culture.rivendell">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
 			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circletmask" />
@@ -149,7 +149,7 @@
 	<!-- ==================== GLORFINDEL ==================== -->
 
 	<EquipmentRoster id="glorfindel_civ_equipment" culture="Culture.rivendell">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01_silver" />
 			<Equipment slot="Head" id="Item.glorfindel_helmet" />
 			<Equipment slot="Body" id="Item.glorfindel_body" />

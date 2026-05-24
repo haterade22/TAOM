@@ -74,7 +74,7 @@
 	<!-- ==================== ROHAN LORD CIVILIAN EQUIPMENT ==================== -->
 
 	<EquipmentRoster id="rohan_civ_template_default_a" culture="Culture.vlandia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.vlandia_sword_3_t4" />
 			<Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
 			<Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
@@ -88,7 +88,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="rohan_civ_template_default_b" culture="Culture.vlandia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.vlandia_sword_2_t3" />
 			<Equipment slot="Item1" id="Item.wm_rohan_shield_a02_gsw" />
 			<Equipment slot="Head" id="Item.cts_rohan_helmet3" />
@@ -102,7 +102,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="rohan_civ_template_default_c" culture="Culture.vlandia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
 			<Equipment slot="Item1" id="Item.wm_rohan_shield_a03_gsw" />
 			<Equipment slot="Head" id="Item.cts_rohan_helmet2" />
@@ -116,7 +116,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="rohan_civ_template_default_d" culture="Culture.vlandia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.vlandia_sword_5_t5" />
 			<Equipment slot="Head" id="Item.cts_rohan_helmet3a" />
 			<Equipment slot="Body" id="Item.cts_rohan_armor3" />
@@ -129,7 +129,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="rohan_civ_template_default_e" culture="Culture.vlandia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.eastern_spear_4_t4" />
 			<Equipment slot="Head" id="Item.roh_nbl_hlm_cf" />
 			<Equipment slot="Body" id="Item.roh_nbl_arm_1" />
@@ -158,7 +158,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="theoden_civ_equipment" culture="Culture.vlandia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Body" id="Item.theoden_torso" />
 			<Equipment slot="Gloves" id="Item.theoden_glove" />
 			<Equipment slot="Leg" id="Item.theoden_boots" />
@@ -181,7 +181,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="eomer_civ_equipment" culture="Culture.vlandia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Head" id="Item.cts_rohan_helmet_captain" />
 			<Equipment slot="Body" id="Item.theoden_torso" />
 			<Equipment slot="Cape" id="Item.theoden_shoulder" />
@@ -206,7 +206,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="eowyn_civ_equipment" culture="Culture.vlandia">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Head" id="Item.cts_rohan_helmet4a" />
 			<Equipment slot="Body" id="Item.theoden_torso" />
 			<Equipment slot="Cape" id="Item.theoden_shoulder" />

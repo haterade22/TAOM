@@ -74,7 +74,7 @@
 	<!-- ==================== RHUN LORD CIVILIAN EQUIPMENT ==================== -->
 
 	<EquipmentRoster id="rhun_civ_template_a" culture="Culture.khuzait">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
 			<Equipment slot="Head" id="Item.easterling_head" />
@@ -87,7 +87,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="rhun_civ_template_b" culture="Culture.khuzait">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item1" id="Item.rhun_round_shield_c" />
 			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
@@ -101,7 +101,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="rhun_civ_template_c" culture="Culture.khuzait">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
 			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
@@ -114,7 +114,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="rhun_civ_template_d" culture="Culture.khuzait">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item1" id="Item.rhun_round_shield_c" />
 			<Equipment slot="Head" id="Item.easterling_head" />
@@ -128,7 +128,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="rhun_civ_template_e" culture="Culture.khuzait">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
 			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />

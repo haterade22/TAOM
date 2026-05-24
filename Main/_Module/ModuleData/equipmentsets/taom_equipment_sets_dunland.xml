@@ -65,7 +65,7 @@
     </EquipmentRoster>
     <!-- Civilian Equipment Sets (Lord Civilian) -->
     <EquipmentRoster id="dunland_civ_template_default_a" culture="Culture.empire">
-        <EquipmentSet>
+        <EquipmentSet equipmentType="Civilian">
             <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
@@ -78,7 +78,7 @@
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="dunland_civ_template_default_b" culture="Culture.empire">
-        <EquipmentSet>
+        <EquipmentSet equipmentType="Civilian">
             <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_b" />
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />
@@ -90,7 +90,7 @@
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="dunland_civ_template_default_c" culture="Culture.empire">
-        <EquipmentSet>
+        <EquipmentSet equipmentType="Civilian">
             <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_a" />
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_a" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_medium_a" />
@@ -103,7 +103,7 @@
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="dunland_civ_template_default_d" culture="Culture.empire">
-        <EquipmentSet>
+        <EquipmentSet equipmentType="Civilian">
             <Equipment slot="Head" id="Item.dunland_caerdh_helmet_heavy_b" />
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_heavy_b" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_medium_a" />
@@ -114,7 +114,7 @@
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="dunland_civ_template_default_e" culture="Culture.empire">
-        <EquipmentSet>
+        <EquipmentSet equipmentType="Civilian">
             <Equipment slot="Head" id="Item.dunland_caerdh_helmet_elite_a" />
             <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_elite_a" />
             <Equipment slot="Leg" id="Item.dunland_caerdh_boots_heavy_a" />

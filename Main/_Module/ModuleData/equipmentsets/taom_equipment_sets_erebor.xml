@@ -66,7 +66,7 @@
 	<!-- ==================== EREBOR LORD CIVILIAN EQUIPMENT ==================== -->
 
 	<EquipmentRoster id="erebor_civ_template_default_a" culture="Culture.erebor">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
 			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
 			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_a" />
@@ -78,7 +78,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="erebor_civ_template_default_b" culture="Culture.erebor">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
 			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_b" />
 			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_b" />
@@ -90,7 +90,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="erebor_civ_template_default_c" culture="Culture.erebor">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_c" />
 			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_c" />
 			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_c" />
@@ -102,7 +102,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="erebor_civ_template_default_d" culture="Culture.erebor">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_d" />
 			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_d" />
 			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_heavy_d" />
@@ -114,7 +114,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="erebor_civ_template_default_e" culture="Culture.erebor">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_e" />
 			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_metal_a" />
 			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_plate_med_a" />
@@ -140,7 +140,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="dain_civ_equipment" culture="Culture.erebor">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_dwarf_dain_axe_a" />
 			<Equipment slot="Head" id="Item.sk_dwarf_dain_crown_a" />
 			<Equipment slot="Body" id="Item.sk_dwarf_dain_chest_heavy_d" />

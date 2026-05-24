@@ -74,7 +74,7 @@
 	<!-- ==================== MORDOR LORD CIVILIAN EQUIPMENT ==================== -->
 
 	<EquipmentRoster id="mordor_civ_template_default_a" culture="Culture.mordor">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
 			<Equipment slot="Item1" id="Item.sm_mordor_shield_tower_a" />
 			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_a1" />
@@ -88,7 +88,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="mordor_civ_template_default_b" culture="Culture.mordor">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
 			<Equipment slot="Item1" id="Item.sm_mordor_shield_tower_b" />
 			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_b1" />
@@ -102,7 +102,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="mordor_civ_template_default_c" culture="Culture.mordor">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
 			<Equipment slot="Item1" id="Item.sm_mordor_shield_mid_a" />
 			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_c1" />
@@ -116,7 +116,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="mordor_civ_template_default_d" culture="Culture.mordor">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_mordor_set1_mace_a01" />
 			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_d1" />
 			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_captain_b1" />
@@ -129,7 +129,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="mordor_civ_template_default_e" culture="Culture.mordor">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
 			<Equipment slot="Head" id="Item.sk_uruk_mordor_helmet_elite_a2" />
 			<Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_captain_c1" />
@@ -144,7 +144,7 @@
 	<!-- ==================== SAURON ==================== -->
 
 	<EquipmentRoster id="sauron_civ_equipment">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.wm_sauron_mace" />
 			<Equipment slot="Head" id="Item.sauron_helmet_player" />
 			<Equipment slot="Body" id="Item.sauron_torso" />
@@ -172,7 +172,7 @@
 	<!-- ==================== WITCH-KING OF ANGMAR ==================== -->
 
 	<EquipmentRoster id="witchking_civ_equipment">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.witchking_sword" />
 			<Equipment slot="Head" id="Item.witch_king_helmet" />
 			<Equipment slot="Body" id="Item.witch_king" />
@@ -200,7 +200,7 @@
 	<!-- ==================== NAZGUL (CLASSIC) ==================== -->
 
 	<EquipmentRoster id="nazgul_civ_equipment">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.nazgul_sword" />
 			<Equipment slot="Head" id="Item.nazgul_helmet" />
 			<Equipment slot="Body" id="Item.nazgul_armor" />
@@ -228,7 +228,7 @@
 	<!-- ==================== KHAMUL, THE EASTERLING ==================== -->
 
 	<EquipmentRoster id="khamul_civ_equipment">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.nazgul_sword" />
 			<Equipment slot="Head" id="Item.khamul_helmet" />
 			<Equipment slot="Body" id="Item.khamul_body" />
@@ -254,7 +254,7 @@
 	<!-- ==================== NAZGUL (VARIANT) ==================== -->
 
 	<EquipmentRoster id="nazgul_v1_civ_equipment">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.nazgul_sword" />
 			<Equipment slot="Head" id="Item.nazgul_v1_helmet" />
 			<Equipment slot="Body" id="Item.nazgul_v1_armor" />

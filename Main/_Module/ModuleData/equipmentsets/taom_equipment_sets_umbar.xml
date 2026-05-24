@@ -67,7 +67,7 @@
 	<!-- ==================== UMBAR LORD CIVILIAN EQUIPMENT ==================== -->
 
 	<EquipmentRoster id="umbar_civ_template_default_a" culture="Culture.umbar">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
 			<Equipment slot="Head" id="Item.haradrim_head" />
@@ -78,7 +78,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="umbar_civ_template_default_b" culture="Culture.umbar">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
 			<Equipment slot="Head" id="Item.haradrim02_head" />
@@ -90,7 +90,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="umbar_civ_template_default_c" culture="Culture.umbar">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
 			<Equipment slot="Head" id="Item.haradrim02a_head" />
@@ -102,7 +102,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="umbar_civ_template_default_d" culture="Culture.umbar">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
 			<Equipment slot="Item1" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item2" id="Item.desert_round_shield" />
@@ -115,7 +115,7 @@
 	</EquipmentRoster>
 
 	<EquipmentRoster id="umbar_civ_template_default_e" culture="Culture.umbar">
-		<EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_6_t4" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
 			<Equipment slot="Head" id="Item.haradrim_head" />
