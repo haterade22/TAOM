@@ -18,11 +18,12 @@ internal class CareerButtonPrefab : PrefabExtensionInsertPatch
             "<ButtonWidget " +
             "WidthSizePolicy=\"Fixed\" " +
             "HeightSizePolicy=\"Fixed\" " +
-            "SuggestedWidth=\"295\" " +
-            "SuggestedHeight=\"125\" " +
+            "SuggestedWidth=\"220\" " +
+            "SuggestedHeight=\"93\" " +
             "HorizontalAlignment=\"Center\" " +
             "VerticalAlignment=\"Top\" " +
-            "MarginTop=\"150\" " +
+            "MarginTop=\"30\" " +
+            "PositionXOffset=\"500\" " +
             "IsVisible=\"@HasCareer\" " +
             "Command.Click=\"ExecuteOpenCareerScreen\" " +
             "DoNotPassEventsToChildren=\"true\" " +
