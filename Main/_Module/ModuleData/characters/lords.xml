@@ -20965,6 +20965,52 @@
             <EquipmentSet id="rivendell_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
+    <!-- Patreon supporter lord: Chägermeister (clan Elen-Nolmarë) -->
+    <NPCCharacter id="lord_R3_1" name="{=aom_lord_R3_1_name}Chägermeister" age="30" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Cavalry" face_mesh_cache="true">
+        <face>
+            <BodyProperties version="4" age="30" weight="0.3102" build="0.7477" key="001BD40E4000101A5E8726A491898A7707C4789A37B9B8C50D30207281B0104001FB56140FD6DA7D000000000000000000000000000000000000000045F40142" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="200" />
+            <skill id="TwoHanded" value="250" />
+            <skill id="Polearm" value="150" />
+            <skill id="Bow" value="250" />
+            <skill id="Crossbow" value="80" />
+            <skill id="Throwing" value="100" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="250" />
+            <skill id="Crafting" value="250" />
+            <skill id="Scouting" value="250" />
+            <skill id="Tactics" value="250" />
+            <skill id="Roguery" value="100" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="250" />
+            <skill id="Trade" value="200" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="280" />
+            <skill id="Engineering" value="250" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="rivendell_bat_template_medium_c" />
+            <EquipmentSet id="rivendell_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
     <!-- Culture.sturgia -->
     <NPCCharacter id="lord_2_4_1" name="{=aom_lord_2_4_1_name}Apolanea" age="21" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.sturgia" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>

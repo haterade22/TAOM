@@ -2,6 +2,12 @@
 
 ## 2026-05-23
 
+### feat(lords): add Patreon supporter Chägermeister + Elen-Nolmarë clan (Rivendell tier-2)
+
+First Patreon-supporter clan in TAOM. Added `clan_rivendell_3` (Elen-Nolmarë, tier 2, owned by `lord_R3_1` Chägermeister) under Imladris, plus the lord himself (elf, Cavalry archetype, custom skills/traits per supporter spec) and a `<Hero text=…/>` biography rendered in the encyclopedia. Establishes the lightweight "Patreon supporter" convention as XML comments on both `clans.xml` and `lords.xml` entries — no new file, no new feature module. Banner reuses Imladris's flag as a placeholder; equipment uses the existing `rivendell_bat_template_medium_c` / `rivendell_civ_template_default_c` template pair.
+
+Files: `Main/_Module/ModuleData/characters/clans.xml`, `characters/heroes.xml`, `characters/lords.xml`.
+
 ### fix(lords): re-equip Faramir as Ithilien Ranger Captain (was rendering as a peasant)
 
 Faramir's battle and civilian rosters in [taom_equipment_sets_gondor.xml](Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_gondor.xml) previously used `ithilien_jerkin_long` (30 body armor, brown leather) + `sk_gd_ano_pauld_noble_med_a` + `sk_gd_ano_grvs_noble_med_a` + `sk_gd_ith_noble_helmet_heavy_a` — visually indistinguishable from a peasant in portrait view next to Boromir's heavy Osgiliath plate. Swapped to Faramir's dedicated character-specific kit (all items already in LOTRLOME_Armory):

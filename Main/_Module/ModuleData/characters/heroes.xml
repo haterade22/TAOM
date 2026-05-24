@@ -221,6 +221,12 @@
 		father="Hero.lord_R2_1"
 		faction="Faction.clan_rivendell_2" />
 
+	<!-- Patreon supporter hero: Chägermeister, last scion of Elen-Nolmarë -->
+	<Hero
+		id="lord_R3_1"
+		faction="Faction.clan_rivendell_3"
+		text="{=elen_nolmare_description}Chägermeister, last scion of the Nolimar—guardians of Elvenkind's forgotten wisdom—is both warrior and sage. Born of Maegorn the peerless blade and Lúthiel the luminous scholar, his parents vanished with Gondolin's fall. He carries the final ember of their legacy. Under Elrond's counsel, he wanders not merely to uncover his kin's fate, but to reignite the flame of a fading Elvendom. He is the living bridge between lost ages and the hope of a reborn Elven legacy." />
+
 	<!-- ============================================== -->
 	<!-- MIRKWOOD HEROES (mirkwood culture)             -->
 	<!-- ============================================== -->
