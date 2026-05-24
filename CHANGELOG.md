@@ -2,6 +2,50 @@
 
 ## 2026-05-24
 
+### Fix(localization): translate_with_claude.py write_back O(N×file) perf + SP lang_name alignment
+
+Two findings from `/deep-review` on the localization-pipeline session:
+
+1. **HIGH (perf):** `tools/translate_with_claude.py:write_back()` compiled N regex patterns and ran N `subn()` calls per file. For the 1,431-entry XSLT file × 12 languages, this wasted ~5 minutes of CPU per full-suite run. Replaced with a single regex using id alternation + dictionary lookup in the replacement callback — one compile, one sub. ~10-50× speedup. Verified correctness with a synthetic test covering XML-attr escape handling, partial updates, and tag swap.
+
+2. **LOW (config drift):** Spanish `lang_name` was `"Latin American Spanish"` in `translate_with_claude.py` but `"Spanish (LA)"` in `rebuild_translation_files.py`. Latent — only activated if the translate-script's output is consumed directly without going through `rebuild`. Aligned to `"Spanish (LA)"` (matches what's already on disk and what the canonical rebuild path emits).
+
+Both findings stem from duplicate logic between the two Python tools (LANGUAGES dict, source-XML list, XML escape logic, `{=KEY}default` parsing). Documented in [`docs/reviews/rca-localization-pipeline-2026-05-24.md`](docs/reviews/rca-localization-pipeline-2026-05-24.md) — deferred refactor (extract `tools/_loc_common.py`) flagged for the next localization-tool change. Both tools are stable; surgical fix preferred over mid-session refactor.
+
+No re-translation needed — both bugs were either output-preserving (perf) or latent (mismatch not yet activated in canonical path).
+
+### Fix(battle): NRE in Mission.CheckMissionEnded on first battle — rebuild vendored BehaviorTreeWrapper + BehaviorTrees in-tree
+
+Two users on `bannerlord-1.4.5` reported a `System.NullReferenceException` in `TaleWorlds.MountAndBlade.Mission.CheckMissionEnded()` immediately on entering battle (looter encounter was the first hit, but the bug fires every battle). Root cause: the vendored `BehaviorTreeWrapper.dll`'s `BehaviorTreeMissionLogic` inherited `MissionBehavior` (not `MissionLogic`) while reporting `BehaviorType => Logic`. Vanilla `Mission.AddMissionBehavior` then ran `MissionLogics.Add(missionBehavior as MissionLogic)` → cast returned `null` → null slot in `_missionLogics` → NRE every tick. Same documented bug pattern as the 2026-05-14 fix for MixedFormations/SmartCavalryAI/SiegeDismount, but the 2026-05-14 audit was source-grep only and missed the vendored DLL.
+
+**Fix (no upstream source repo for either DLL, so rebuilt both in-tree for permanent ownership):**
+
+1. Decompiled `Main/_Module/bin/Win64_Shipping_Client/BehaviorTreeWrapper.dll` (~1300 lines) and `BehaviorTrees.dll` (~980 lines) via `ilspycmd`.
+2. Inlined cleaned-up source into `Main/BehaviorTreeWrapper/` and `Main/BehaviorTrees/`. Both compile into `TAOM.dll` — single ship surface, no separate DLLs.
+3. Applied the inheritance fix: `BehaviorTreeMissionLogic : MissionLogic` (was `: MissionBehavior`).
+4. Reconciled v1.3 → v1.4.5 API drift surfaced by the rebuild: `AgentComponent.OnTickAsAI(float)` → `OnTick(float)` at 3 callsites (`BehaviorTreeAgentComponent`, `WargMissionBehavior.cs:127`, `SpiderMissionBehavior.cs:152`); `MBInformationManager.AddQuickInformation` now requires an `Equipment` argument.
+5. Deleted `Main/_Module/bin/Win64_Shipping_Client/BehaviorTreeWrapper.dll` and `BehaviorTrees.dll`; dropped both `<Reference>` entries from `Main/TAOM.csproj`. Dropped C# 12 primary-constructor syntax from the decompile down to C# 10 plain constructors. Dropped unused demo namespaces (`BehaviorTreeWrapper.Tests`, `FPSCounter`).
+6. Added regression test `TAOM.Tests/BehaviorTreeWrapper/BehaviorTreeMissionLogicInheritanceTests.cs` asserting `typeof(MissionLogic).IsAssignableFrom(typeof(BehaviorTreeMissionLogic))` so any future regression fails CI before reaching a player.
+
+**Verified:** `dotnet build` clean, `dotnet test` 2416 passing (one more than before — the new regression test), 1 pre-existing failure unrelated (`GetVolunteerTroopId_EreborCulture_HighRoll` — Rhun recruitment in flight on this branch), 2 skipped.
+
+**Save-compat:** none — vendored DLLs swapped for inlined source with identical type names/namespaces; runtime behavior unchanged except for the bug fix.
+
+**Inherited perf cleanup (deep-review E1–E7, fixed in same session):** the vendored DLL had 7 allocation/cleanup issues that the rebuild surfaced. All seven fixed in the same commit since we now own the source:
+- **E1 (HIGH):** `BehaviorTreeMissionLogic.OnMissionTick` allocated `new object[] { dt }` every frame (60 Hz). Now reuses an instance-cached `_dtArgs` array.
+- **E2:** 15+ `new object[]` allocations across 14 OnAgentXxx event handlers. Now uses a shared `EmptyArgs = Array.Empty<object>()` for empty notifications.
+- **E3:** `FindCalledListeners` allocated `new List<>` per call. Now reuses an instance-cached `_tempMatched` list (documented synchronous-dispatch contract).
+- **E4:** 18+ `list.ForEach(l => ...)` closures across event handlers. Rewritten as plain `for`/`foreach` — no delegate allocation.
+- **E5:** `OnEndMissionInternal` didn't clear `actions`/`tickListeners`/`trees` dicts. Cross-mission leak fixed.
+- **E6:** `Extensions.GetBehaviorTree` did `ContainsKey` + indexer (double dict lookup). Now uses `TryGetValue`.
+- **E7:** `BehaviorTreeAgentComponent` allocated a `new Random()` per agent. Now uses a `static SharedRandom`.
+
+**Memory + CLAUDE.md updates:** extended `feedback_missionbehaviortype_logic_requires_missionlogic_inheritance.md` to require decompiling every vendored MissionBehavior subclass before declaring a `BehaviorType` audit complete; updated CLAUDE.md "Vendored Main-module DLLs" section to remove both library entries and note the inlined source paths.
+
+**Action-set red herring:** the `as_human_warrior does not contain act_map_rider_horse_attack_1h` flood in `rgl_log` that triggered an initial action-set-rebuild hypothesis was a cosmetic vanilla engine warning that fires on stock v1.4.5 too. Not on the crash path. Plan workflow's Phase 1 verification gate caught the misdirection before any of the proposed 175k-line per-race action_set generation was written. RCA: [docs/reviews/rca-looter-battle-nre-2026-05-24.md](docs/reviews/rca-looter-battle-nre-2026-05-24.md).
+
+---
+
 ### Feature: XSLT-injected text now translatable — kingdom/culture/clan/lord/hero descriptions
 
 In-game testing of BR translation surfaced a class of strings that weren't reaching the translation pipeline: the kingdom descriptions ("Gondor stands as a proud bastion..."), hero biographies ("Húrioneth serves the House of..."), and similar narrative text. These live inside TAOM's XSLT files (`heroes.xslt`, `lords.xslt`, `spclans.xslt`, `spkingdoms.xslt`, `spcultures.xslt`) which inject content into vanilla XML at load time.
