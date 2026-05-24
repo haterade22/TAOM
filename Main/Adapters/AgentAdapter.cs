@@ -154,8 +154,18 @@ public class AgentAdapter : IAgentAdapter
             return;
         }
 
+        // Filter rationale (2026-05-24 fix per #219 log evidence):
+        //   agt != _agent            — exclude the warg itself
+        //   agt != _agent.RiderAgent — exclude the warg's own rider. The original
+        //       check `agt.RiderAgent != _agent` was a no-op for humans because
+        //       Agent.RiderAgent is only populated on mounts (returns the rider).
+        //       On a human rider it returns null, so the filter NEVER excluded
+        //       the rider — the warg's bone collision was detecting its own
+        //       rider as a target ~50% of the time, consuming the attack
+        //       opportunity via stopOnFirstHit before reaching an enemy.
+        //   agt.IsActive()           — alive check
         var targets = SpatialGrid.Instance.GetNearAliveAgentsInRange(targetDetectionRange, _agent)
-            .FindAll(agt => agt != _agent && agt.RiderAgent != _agent && agt.IsActive())
+            .FindAll(agt => agt != _agent && agt != _agent.RiderAgent && agt.IsActive())
             .Select(x => _factory.GetAgentAdapter(x))
             .ToList();
 
