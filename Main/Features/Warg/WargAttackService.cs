@@ -131,33 +131,44 @@ public class WargAttackService : IWargAttackService
         ActionIndexCache action;
         string actionName;
 
+        // skeleton_warg bone map (49 bones, verified 2026-05-24 #219):
+        //   17 Chest_M        — body slam impact
+        //   20 Head_M         — head impact
+        //   22 Jaw_M          — jaw root
+        //   23 JawEnd_M       — bite tip
+        //   32 Scapula_R      — right shoulder
+        //   36 Fingers1_R     — right front paw
+        //   37 Fingers2_R     — right front paw tip
+        //   38 Scapula_L      — left shoulder
+        //   42 Fingers1_L     — left front paw
+        //   43 Fingers2_L     — left front paw tip
+        // These 10 bones form the "impact cone" presented during a charge —
+        // anything in front of the warg's chest is likely to overlap at least
+        // one of them as the warg passes through.
         if (warg.MovementVelocity.Y >= 4)
         {
-            // Running attack — aggressive collision window for fast bones (#219).
-            // At 10 m/s the warg covers 16.7cm/frame at 60fps, so a 0.7m bone sphere
-            // overlaps a target for ~5-6 frames. Within those 5-6 frames the bone
-            // pose also has to be extended forward (animation-dependent). The two
-            // narrow windows (spatial + temporal) rarely align — 0/7 hits in the
-            // previous test. Bumping collisionR 0.7→1.5m + widening progress
-            // 0.1-0.7→0.0-0.9 maximizes overlap so the per-frame sample is far more
-            // likely to catch at least ONE bone pair within range.
-            boneIds = new List<sbyte> { 23, 37, 43 };
+            // Running attack — full impact cone for fast charges. Prior single-bone
+            // [23] / 3-bone [23,37,43] / 1.5m-radius variants all failed because
+            // even a wide sphere can't compensate for sampling 3 bones across a
+            // single point on the warg. With 10 bones spread across the warg's
+            // entire front, a 1.0m sphere on each gives a continuous detection
+            // volume around the charging body.
+            boneIds = new List<sbyte> { 17, 20, 22, 23, 32, 36, 37, 38, 42, 43 };
             actionName = "act_warg_attack_running";
             action = ActionIndexCache.Create(actionName);
             actionProgressMin = 0.0f;
             actionProgressMax = 0.9f;
-            boneCollisionRadius = 1.5f;
+            boneCollisionRadius = 1.0f;
         }
         else
         {
-            boneIds = new List<sbyte> { 23, 37, 43 };
+            // Stand attack — same impact cone but tighter radius since warg
+            // is nearly stationary; the bones are positioned precisely each frame.
+            boneIds = new List<sbyte> { 17, 20, 22, 23, 32, 36, 37, 38, 42, 43 };
             actionName = "act_warg_attack_stand";
             action = ActionIndexCache.Create(actionName);
             actionProgressMin = 0.1f;
             actionProgressMax = 0.5f;
-            // Stand attack — collision radius already adequate at low velocity
-            // (1/2 hits at 0.5m in #219 testing). Keep tighter to avoid false-positive
-            // hits when warg is stationary near an ally.
             boneCollisionRadius = 0.5f;
         }
 
