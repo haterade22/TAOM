@@ -3905,7 +3905,7 @@
         <equipment slot="Item2" id="Item.wm_elven_arrow_v2_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
         <equipment slot="Head" id="Item.ithilien_hood_var" />
-        <equipment slot="Body" id="Item.ithilien_jerkin_long_slim" />
+        <equipment slot="Body" id="Item.ithilien_jerkin_long" />
         <equipment slot="Cape" id="Item.ithilien_cloak_var" />
         <equipment slot="Gloves" id="Item.ithilien_bracers" />
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
@@ -3927,7 +3927,7 @@
         <equipment slot="Item2" id="Item.wm_elven_arrow_v4_a" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
         <equipment slot="Head" id="Item.ithilien_hood_masked_var" />
-        <equipment slot="Body" id="Item.ithilien_jerkin_long_var_slim" />
+        <equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
         <equipment slot="Cape" id="Item.ithilien_cloak_var" />
         <equipment slot="Gloves" id="Item.ithilien_bracers" />
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
@@ -3949,7 +3949,7 @@
         <equipment slot="Item2" id="Item.wm_elven_arrow_v1_c" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
         <equipment slot="Head" id="Item.ithilien_hood_var" />
-        <equipment slot="Body" id="Item.ithilien_jerkin_short_slim" />
+        <equipment slot="Body" id="Item.ithilien_jerkin_short" />
         <equipment slot="Cape" id="Item.ithilien_cloak" />
         <equipment slot="Gloves" id="Item.ithilien_bracers" />
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />
@@ -3971,7 +3971,7 @@
         <equipment slot="Item2" id="Item.wm_elven_arrow_v2_b" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a10" />
         <equipment slot="Head" id="Item.ithilien_hood_masked_var" />
-        <equipment slot="Body" id="Item.ithilien_jerkin_short_var_slim" />
+        <equipment slot="Body" id="Item.ithilien_jerkin_short_var" />
         <equipment slot="Cape" id="Item.ithilien_cloak" />
         <equipment slot="Gloves" id="Item.ithilien_bracers" />
         <equipment slot="Leg" id="Item.ithilien_boots_heavy" />

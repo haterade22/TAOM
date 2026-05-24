@@ -1278,7 +1278,7 @@
 			<Equipment slot="Item0" id="Item.wm_gondor_spear" />
 			<Equipment slot="Item2" id="Item.lowland_longbow" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
-			<Equipment slot="Body" id="Item.ithilien_jerkin_long_slim" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
 			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
 			<Equipment slot="Leg" id="Item.ithilien_boots_heavy" />
@@ -1348,7 +1348,7 @@
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
 			<Equipment slot="Item2" id="Item.lowland_longbow" />
 			<Equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
-			<Equipment slot="Body" id="Item.ithilien_jerkin_long_slim" />
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
 			<Equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
 			<Equipment slot="Gloves" id="Item.ithilien_bracers" />
 			<Equipment slot="Leg" id="Item.ithilien_boots" />

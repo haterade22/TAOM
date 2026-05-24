@@ -2,6 +2,15 @@
 
 ## 2026-05-24
 
+### fix(gondor): clothe naked prison guard + drop `_slim` body-item variants everywhere
+
+Two XML data fixes in [`npcs_gondor.xml`](Main/_Module/ModuleData/characters/npcs_gondor.xml), [`troops_gondor.xml`](Main/_Module/ModuleData/troops/troops_gondor.xml), [`troops_umbar.xml`](Main/_Module/ModuleData/troops/troops_umbar.xml), and [`taom_wanderer_equipment.xml`](Main/_Module/ModuleData/equipmentsets/taom_wanderer_equipment.xml):
+
+1. `prison_guard_gondor` had only `Item0` (sword) + `Item1` (shield) in its inline `<EquipmentRoster civilian="true">` — engine rendered the underwear mesh. Added Head/Body/Gloves/Leg slots mirroring `guard_gondor`'s armor (Anórien helmet/bracer/greaves + Cair Andros chainmail half-b).
+2. Per user direction, stripped `_slim` suffix from every body-item reference (25 refs across the 4 files above): `gondor_noble_{coat,jerkin}_{a,b}_slim` → non-slim, and `ithilien_jerkin_{long,long_var,short,short_var}_slim` → non-slim. Women now wear the same item rows as men. All 8 non-slim equivalents verified to exist in `LOTRLOME_Armory/.../gondor/body_armors.xml`.
+
+Not-tested: in-game visual pass on female meshes to check for clipping on the male-cut Body items (acknowledged risk of the slim-strip).
+
 ### feat(career-system): warg-mount cavalry starters for Isengard, Gundabad, Mordor, Dol Guldur
 
 Authored 4 new culture × 2 genders = 8 cavalry rosters in [taom_career_starting_equipment.xml](Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml). All four cultures' existing troop XMLs ([troops_isengard.xml](Main/_Module/ModuleData/troops/troops_isengard.xml), [troops_gundabad.xml](Main/_Module/ModuleData/troops/troops_gundabad.xml), [troops_mordor.xml](Main/_Module/ModuleData/troops/troops_mordor.xml), [troops_dolguldur.xml](Main/_Module/ModuleData/troops/troops_dolguldur.xml)) use wargs as the mount of choice — confirmed by grepping `slot="Horse"` references which all resolved to `Item.warg_brown` / `Item.warg_dark`. So cavalry-archetype career players (`warg_scout` / `warg_pack_leader` / `snaga_rider` / `fell_rider`) now spawn on `warg_brown` + `warg_saddle` from the Alliance.Wargs module instead of falling through to the youth/title-default mount.
