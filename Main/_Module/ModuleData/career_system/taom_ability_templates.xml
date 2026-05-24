@@ -10,7 +10,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="ranger_of_ithilien_particle"
                    sound_effect="ranger_of_ithilien_activate"
-                   tooltip="{=taom_ability_ranger_of_ithilien_tt}Spring a deadly ambush, boosting your ranged damage, draw speed, and movement speed for a short duration." />
+                   tooltip="{=taom_ability_ranger_of_ithilien_tt}Spring a deadly ambush — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="captain_of_osgiliath_ability"
                    display_name="{=taom_ability_captain_of_osgiliath}Hold the Line"
@@ -19,7 +19,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="captain_of_osgiliath_particle"
                    sound_effect="captain_of_osgiliath_activate"
-                   tooltip="{=taom_ability_captain_of_osgiliath_tt}Rally your soldiers with iron discipline, boosting melee damage by 20 for all nearby allies for a short duration." />
+                   tooltip="{=taom_ability_captain_of_osgiliath_tt}Rally your soldiers with iron discipline — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="knight_of_belfalas_ability"
                    display_name="{=taom_ability_knight_of_belfalas}Stampede"
@@ -28,7 +28,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="knight_of_belfalas_particle"
                    sound_effect="knight_of_belfalas_activate"
-                   tooltip="{=taom_ability_knight_of_belfalas_tt}Thunder forward with an unstoppable cavalry charge, boosting your mount speed, charge damage, and melee damage for a short duration." />
+                   tooltip="{=taom_ability_knight_of_belfalas_tt}Thunder forward with an unstoppable cavalry charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- ═══ MORDOR ═══ -->
 
@@ -39,7 +39,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="black_uruk_captain_particle"
                    sound_effect="black_uruk_captain_activate"
-                   tooltip="{=taom_ability_black_uruk_captain_tt}Enter a blood-fuelled rage, dramatically increasing damage resistance and melee power while inspiring Black Uruk troops." />
+                   tooltip="{=taom_ability_black_uruk_captain_tt}Enter a blood-fuelled rage, inspiring nearby Black Uruks — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="mulkerhili_cultist_ability"
                    display_name="{=taom_ability_mulkerhili_cultist}Voice of the One"
@@ -48,7 +48,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="mulkerhili_cultist_particle"
                    sound_effect="mulkerhili_cultist_activate"
-                   tooltip="{=taom_ability_mulkerhili_cultist_tt}Channel the One Ring's whispered dread across the battlefield, sapping enemy morale and empowering your cursed arrows." />
+                   tooltip="{=taom_ability_mulkerhili_cultist_tt}Channel the One Ring's whispered dread, empowering your cursed arrows — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="snaga_rider_ability"
                    display_name="{=taom_ability_snaga_rider}Sneak-Creeping"
@@ -57,7 +57,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="snaga_rider_particle"
                    sound_effect="snaga_rider_activate"
-                   tooltip="{=taom_ability_snaga_rider_tt}Dart through the shadows of the enemy formation, striking flanks with amplified mounted damage before slipping away unseen." />
+                   tooltip="{=taom_ability_snaga_rider_tt}Dart through the shadows of the enemy flanks — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <AbilityTemplate id="olog_hai_warchief_ability"
                    display_name="{=taom_ability_olog_hai_warchief}Hammer Down"
@@ -66,7 +66,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="olog_hai_warchief_particle"
                    sound_effect="olog_hai_warchief_activate"
-                   tooltip="{=taom_ability_olog_hai_warchief_tt}Bring your war-hammer crashing down with titanic force, shaking the ground and greatly boosting your damage mitigation and troop resistance." />
+                   tooltip="{=taom_ability_olog_hai_warchief_tt}Bring your war-hammer crashing down with titanic force — boosts +15% melee damage and +10% damage reduction to allies within 50m for 10s." />
 
   <!-- ═══ ROHAN ═══ -->
 
@@ -77,7 +77,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="marksman_of_aldburg_particle"
                    sound_effect="marksman_of_aldburg_activate"
-                   tooltip="{=taom_ability_marksman_of_aldburg_tt}Nock a flight of swift light-fletch arrows, boosting your ranged damage, draw speed, and movement speed for a short duration." />
+                   tooltip="{=taom_ability_marksman_of_aldburg_tt}Nock a flight of swift light-fletch arrows — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="eotheod_windrider_ability"
                    display_name="{=taom_ability_eotheod_windrider}Warcry of Eorl"
@@ -86,7 +86,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="eotheod_windrider_particle"
                    sound_effect="eotheod_windrider_activate"
-                   tooltip="{=taom_ability_eotheod_windrider_tt}Raise the ancient warcry of Eorl the Young, boosting your mount speed, charge damage, and melee damage for a short duration." />
+                   tooltip="{=taom_ability_eotheod_windrider_tt}Raise the ancient warcry of Eorl the Young — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <AbilityTemplate id="watchman_of_stangard_ability"
                    display_name="{=taom_ability_watchman_of_stangard}Stand Fast"
@@ -95,7 +95,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="watchman_of_stangard_particle"
                    sound_effect="watchman_of_stangard_activate"
-                   tooltip="{=taom_ability_watchman_of_stangard_tt}Dig in with iron resolve, boosting melee damage by 20 for all nearby allies for a short duration." />
+                   tooltip="{=taom_ability_watchman_of_stangard_tt}Dig in with iron resolve — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <!-- ═══ DUNLAND ═══ -->
 
@@ -106,7 +106,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="avanc_luth_raider_particle"
                    sound_effect="avanc_luth_raider_activate"
-                   tooltip="{=taom_ability_avanc_luth_raider_tt}Hurl yourself into the fray with a howling war-rush, massively boosting melee damage and movement speed at the cost of measured defence." />
+                   tooltip="{=taom_ability_avanc_luth_raider_tt}Howl a Dunlending war-cry into the fray — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="wolfskin_hunter_ability"
                    display_name="{=taom_ability_wolfskin_hunter}Marked Prey"
@@ -115,7 +115,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="wolfskin_hunter_particle"
                    sound_effect="wolfskin_hunter_activate"
-                   tooltip="{=taom_ability_wolfskin_hunter_tt}Mark a target through the mists, boosting ranged damage against them and granting your party enhanced tracking awareness." />
+                   tooltip="{=taom_ability_wolfskin_hunter_tt}Mark a target through the mists — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="clanguard_rider_ability"
                    display_name="{=taom_ability_clanguard_rider}Warpack Charge"
@@ -124,7 +124,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="clanguard_rider_particle"
                    sound_effect="clanguard_rider_activate"
-                   tooltip="{=taom_ability_clanguard_rider_tt}Lead your warpack in a coordinated fast charge, boosting mounted damage and party movement speed while harassing the enemy's flanks." />
+                   tooltip="{=taom_ability_clanguard_rider_tt}Lead your warpack in a coordinated charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- ═══ KHAND ═══ -->
 
@@ -135,7 +135,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="blademaster_of_ren_particle"
                    sound_effect="blademaster_of_ren_activate"
-                   tooltip="{=taom_ability_blademaster_of_ren_tt}Execute a precise twin-blade sequence, greatly boosting swing speed and armor penetration." />
+                   tooltip="{=taom_ability_blademaster_of_ren_tt}Execute a precise twin-blade sequence — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="steppe_bowmaster_ability"
                    display_name="{=taom_ability_steppe_bowmaster}Storm of Arrows"
@@ -144,7 +144,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="steppe_bowmaster_particle"
                    sound_effect="steppe_bowmaster_activate"
-                   tooltip="{=taom_ability_steppe_bowmaster_tt}Loose a sustained storm of arrows while retreating at speed, saturating a wide area with volleys." />
+                   tooltip="{=taom_ability_steppe_bowmaster_tt}Loose a sustained storm of arrows from the saddle-edge — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="chariot_warlord_ability"
                    display_name="{=taom_ability_chariot_warlord}Scything Charge"
@@ -153,7 +153,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="chariot_warlord_particle"
                    sound_effect="chariot_warlord_activate"
-                   tooltip="{=taom_ability_chariot_warlord_tt}Drive scythe-bladed chariots through the enemy line, dealing massive AoE charge damage in a wide arc." />
+                   tooltip="{=taom_ability_chariot_warlord_tt}Drive scythe-bladed chariots through the enemy line — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- ═══ HARAD ═══ -->
 
@@ -164,7 +164,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="tribesman_of_jelut_particle"
                    sound_effect="tribesman_of_jelut_activate"
-                   tooltip="{=taom_ability_tribesman_of_jelut_tt}Coat your weapons in desert toxins, increasing melee damage and applying a debilitating attrition effect." />
+                   tooltip="{=taom_ability_tribesman_of_jelut_tt}Coat your weapons in desert toxins — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="pezarsani_javelineer_ability"
                    display_name="{=taom_ability_pezarsani_javelineer}Sunfire Volley"
@@ -173,7 +173,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="pezarsani_javelineer_particle"
                    sound_effect="pezarsani_javelineer_activate"
-                   tooltip="{=taom_ability_pezarsani_javelineer_tt}Unleash a blazing javelin barrage, boosting ranged damage and screening movement speed." />
+                   tooltip="{=taom_ability_pezarsani_javelineer_tt}Unleash a blazing javelin barrage — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="mahud_beast_rider_ability"
                    display_name="{=taom_ability_mahud_beast_rider}Echoes of Mûmakan"
@@ -182,7 +182,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="mahud_beast_rider_particle"
                    sound_effect="mahud_beast_rider_activate"
-                   tooltip="{=taom_ability_mahud_beast_rider_tt}Channel the ancient fear of Mûmakan, boosting beast charge damage and spreading terror through enemy ranks." />
+                   tooltip="{=taom_ability_mahud_beast_rider_tt}Channel the ancient fear of Mûmakan — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- DISABLED 2026-05-14: Far Harad Halftroll ability WIP; not ready for live game yet. Re-enable by uncommenting.
   <AbilityTemplate id="far_harad_halftroll_ability"
@@ -192,7 +192,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="far_harad_halftroll_particle"
                    sound_effect="far_harad_halftroll_activate"
-                   tooltip="{=taom_ability_far_harad_halftroll_tt}Enter a state of savage brutality, massively boosting health and resistance while terrorizing nearby enemies." />
+                   tooltip="{=taom_ability_far_harad_halftroll_tt}Enter a state of savage brutality — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
   -->
 
   <!-- ═══ EASTERLINGS / RHÛN ═══ -->
@@ -204,7 +204,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="codyan_legionaire_particle"
                    sound_effect="codyan_legionaire_activate"
-                   tooltip="{=taom_ability_codyan_legionaire_tt}Lock shields in formation, boosting melee damage by 20 for all nearby allies for a short duration." />
+                   tooltip="{=taom_ability_codyan_legionaire_tt}Lock shields in legionary formation — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="lokhas_drus_marksman_ability"
                    display_name="{=taom_ability_lokhas_drus_marksman}Piercing Volley"
@@ -213,7 +213,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="lokhas_drus_marksman_particle"
                    sound_effect="lokhas_drus_marksman_activate"
-                   tooltip="{=taom_ability_lokhas_drus_marksman_tt}Loose specially-hardened arrows, boosting your ranged damage, draw speed, and movement speed for a short duration." />
+                   tooltip="{=taom_ability_lokhas_drus_marksman_tt}Loose specially-hardened Rhûnish arrows — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="balchoth_kan_ability"
                    display_name="{=taom_ability_balchoth_kan}Unyielding"
@@ -222,7 +222,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="balchoth_kan_particle"
                    sound_effect="balchoth_kan_activate"
-                   tooltip="{=taom_ability_balchoth_kan_tt}Invoke the iron discipline of the Balchoth, boosting your mount speed, charge damage, and melee damage for a short duration." />
+                   tooltip="{=taom_ability_balchoth_kan_tt}Invoke the iron discipline of the Balchoth — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- ═══ DALE ═══ -->
 
@@ -233,7 +233,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="dale_guardsman_particle"
                    sound_effect="dale_guardsman_activate"
-                   tooltip="{=taom_ability_dale_guardsman_tt}Plant your feet and hold the gate, greatly increasing health and resistance while stationary." />
+                   tooltip="{=taom_ability_dale_guardsman_tt}Plant your feet and hold the gate — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="dale_marksman_ability"
                    display_name="{=taom_ability_dale_marksman}Black Arrow"
@@ -242,7 +242,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="dale_marksman_particle"
                    sound_effect="dale_marksman_activate"
-                   tooltip="{=taom_ability_dale_marksman_tt}Channel the legacy of Bard the Bowman, massively boosting your next shots' damage and penetration." />
+                   tooltip="{=taom_ability_dale_marksman_tt}Channel the legacy of Bard the Bowman — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="dale_outrider_ability"
                    display_name="{=taom_ability_dale_outrider}Trade Road Sprint"
@@ -251,7 +251,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="dale_outrider_particle"
                    sound_effect="dale_outrider_activate"
-                   tooltip="{=taom_ability_dale_outrider_tt}Spur your horse along familiar roads, gaining a burst of speed and mounted combat prowess." />
+                   tooltip="{=taom_ability_dale_outrider_tt}Spur your horse along familiar roads — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- ═══ EREBOR ═══ -->
 
@@ -262,7 +262,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="ironguard_particle"
                    sound_effect="ironguard_activate"
-                   tooltip="{=taom_ability_ironguard_tt}Invoke the strength of dwarven craft, boosting melee damage by 20 for all nearby allies for a short duration." />
+                   tooltip="{=taom_ability_ironguard_tt}Invoke the strength of dwarven craft — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="crossbow_master_ability"
                    display_name="{=taom_ability_crossbow_master}Precision Barrage"
@@ -271,7 +271,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="crossbow_master_particle"
                    sound_effect="crossbow_master_activate"
-                   tooltip="{=taom_ability_crossbow_master_tt}Load masterwork bolts, boosting your ranged damage, draw speed, and movement speed for a short duration." />
+                   tooltip="{=taom_ability_crossbow_master_tt}Load masterwork dwarven bolts — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="ram_rider_ability"
                    display_name="{=taom_ability_ram_rider}Mountain Charge"
@@ -280,7 +280,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="ram_rider_particle"
                    sound_effect="ram_rider_activate"
-                   tooltip="{=taom_ability_ram_rider_tt}Drive your war-ram forward, boosting your mount speed, charge damage, and melee damage for a short duration." />
+                   tooltip="{=taom_ability_ram_rider_tt}Drive your war-ram forward — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- ═══ RIVENDELL ═══ -->
 
@@ -291,7 +291,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="blade_dancer_particle"
                    sound_effect="blade_dancer_activate"
-                   tooltip="{=taom_ability_blade_dancer_tt}Enter a graceful combat trance, dodging attacks while striking with elven precision." />
+                   tooltip="{=taom_ability_blade_dancer_tt}Enter a graceful Noldor combat trance — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="elven_archer_ability"
                    display_name="{=taom_ability_elven_archer}Elven Sight"
@@ -300,7 +300,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="elven_archer_particle"
                    sound_effect="elven_archer_activate"
-                   tooltip="{=taom_ability_elven_archer_tt}Focus ancient elven perception, allowing unerring accuracy at extreme range." />
+                   tooltip="{=taom_ability_elven_archer_tt}Focus ancient elven perception — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="rivendell_knight_ability"
                    display_name="{=taom_ability_rivendell_knight}Last Alliance"
@@ -309,7 +309,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="rivendell_knight_particle"
                    sound_effect="rivendell_knight_activate"
-                   tooltip="{=taom_ability_rivendell_knight_tt}Ride with the valor of the Last Alliance, boosting mounted damage and inspiring all nearby allies." />
+                   tooltip="{=taom_ability_rivendell_knight_tt}Ride with the valor of the Last Alliance — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- ═══ LOTHLORIEN ═══ -->
 
@@ -320,7 +320,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="warden_particle"
                    sound_effect="warden_activate"
-                   tooltip="{=taom_ability_warden_tt}Invoke the waters of Nimrodel, healing wounds and boosting resistance for a brief time." />
+                   tooltip="{=taom_ability_warden_tt}Invoke the waters of Nimrodel — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="galadhrim_archer_ability"
                    display_name="{=taom_ability_galadhrim_archer}Silver Rain"
@@ -329,7 +329,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="galadhrim_archer_particle"
                    sound_effect="galadhrim_archer_activate"
-                   tooltip="{=taom_ability_galadhrim_archer_tt}Loose a volley of silver-tipped arrows with blinding speed, shredding enemy ranks." />
+                   tooltip="{=taom_ability_galadhrim_archer_tt}Loose a volley of silver-tipped arrows — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="sentinel_ability"
                    display_name="{=taom_ability_sentinel}Elanor's Swiftness"
@@ -338,7 +338,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="sentinel_particle"
                    sound_effect="sentinel_activate"
-                   tooltip="{=taom_ability_sentinel_tt}Channel the grace of the Golden Wood, surging forward with supernatural speed and precision." />
+                   tooltip="{=taom_ability_sentinel_tt}Channel the grace of the Golden Wood — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- ═══ MIRKWOOD ═══ -->
 
@@ -349,7 +349,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="shadow_walker_particle"
                    sound_effect="shadow_walker_activate"
-                   tooltip="{=taom_ability_shadow_walker_tt}Blend into the forest shadows, boosting melee damage by 20 for all nearby allies for a short duration." />
+                   tooltip="{=taom_ability_shadow_walker_tt}Blend into the forest shadows — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="silvan_archer_ability"
                    display_name="{=taom_ability_silvan_archer}Canopy Strike"
@@ -358,7 +358,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="silvan_archer_particle"
                    sound_effect="silvan_archer_activate"
-                   tooltip="{=taom_ability_silvan_archer_tt}Fire from an elevated vantage, boosting your ranged damage, draw speed, and movement speed for a short duration." />
+                   tooltip="{=taom_ability_silvan_archer_tt}Fire from an elevated woodland vantage — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="elk_rider_ability"
                    display_name="{=taom_ability_elk_rider}Antler Crash"
@@ -367,7 +367,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="elk_rider_particle"
                    sound_effect="elk_rider_activate"
-                   tooltip="{=taom_ability_elk_rider_tt}Lower the great antlers and charge, boosting your mount speed, charge damage, and melee damage for a short duration." />
+                   tooltip="{=taom_ability_elk_rider_tt}Lower the great antlers and charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- ═══ ISENGARD ═══ -->
 
@@ -378,7 +378,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="uruk_berserker_particle"
                    sound_effect="uruk_berserker_activate"
-                   tooltip="{=taom_ability_uruk_berserker_tt}Enter a berserk frenzy, massively boosting damage and health while ignoring pain." />
+                   tooltip="{=taom_ability_uruk_berserker_tt}Enter an Uruk-hai berserk frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="uruk_crossbow_ability"
                    display_name="{=taom_ability_uruk_crossbow}Iron Rain"
@@ -387,7 +387,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="uruk_crossbow_particle"
                    sound_effect="uruk_crossbow_activate"
-                   tooltip="{=taom_ability_uruk_crossbow_tt}Unleash a barrage of Orthanc-forged bolts with devastating penetration and fire rate." />
+                   tooltip="{=taom_ability_uruk_crossbow_tt}Unleash a barrage of Orthanc-forged bolts — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="warg_scout_ability"
                    display_name="{=taom_ability_warg_scout}Pack Howl"
@@ -396,7 +396,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="warg_scout_particle"
                    sound_effect="warg_scout_activate"
-                   tooltip="{=taom_ability_warg_scout_tt}Unleash a terrifying howl that boosts your speed and strikes fear into nearby enemies." />
+                   tooltip="{=taom_ability_warg_scout_tt}Unleash a terrifying warg-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- ═══ GUNDABAD ═══ -->
 
@@ -408,7 +408,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="cave_troll_master_particle"
                    sound_effect="cave_troll_master_activate"
-                   tooltip="{=taom_ability_cave_troll_master_tt}Whip your trolls into a frenzy, massively boosting health and troop damage." />
+                   tooltip="{=taom_ability_cave_troll_master_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
   -->
 
   <AbilityTemplate id="goblin_sniper_ability"
@@ -418,7 +418,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="goblin_sniper_particle"
                    sound_effect="goblin_sniper_activate"
-                   tooltip="{=taom_ability_goblin_sniper_tt}Coat your projectiles in cave fungus toxin, adding damage over time and slowing targets." />
+                   tooltip="{=taom_ability_goblin_sniper_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="warg_pack_leader_ability"
                    display_name="{=taom_ability_warg_pack_leader}Alpha Howl"
@@ -427,7 +427,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="warg_pack_leader_particle"
                    sound_effect="warg_pack_leader_activate"
-                   tooltip="{=taom_ability_warg_pack_leader_tt}Assert dominance with a thundering howl, boosting pack speed and ferocity." />
+                   tooltip="{=taom_ability_warg_pack_leader_tt}Assert dominance with a thundering pack-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- ═══ DOL GULDUR ═══ -->
 
@@ -438,7 +438,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="shadow_warrior_particle"
                    sound_effect="shadow_warrior_activate"
-                   tooltip="{=taom_ability_shadow_warrior_tt}Drain the life force of nearby enemies, healing yourself and weakening their attacks." />
+                   tooltip="{=taom_ability_shadow_warrior_tt}Draw on the shadows of Dol Guldur — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="necromancer_acolyte_ability"
                    display_name="{=taom_ability_necromancer_acolyte}Dark Bolt"
@@ -447,7 +447,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="necromancer_acolyte_particle"
                    sound_effect="necromancer_acolyte_activate"
-                   tooltip="{=taom_ability_necromancer_acolyte_tt}Channel necromantic energy through your attacks, greatly boosting ranged damage and armor penetration." />
+                   tooltip="{=taom_ability_necromancer_acolyte_tt}Channel necromantic energy through your shots — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="fell_rider_ability"
                    display_name="{=taom_ability_fell_rider}Dread Charge"
@@ -456,7 +456,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="fell_rider_particle"
                    sound_effect="fell_rider_activate"
-                   tooltip="{=taom_ability_fell_rider_tt}Charge wreathed in shadow, causing enemies to flee in terror while dealing devastating damage." />
+                   tooltip="{=taom_ability_fell_rider_tt}Charge wreathed in shadow — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
   <!-- ═══ UMBAR ═══ -->
 
@@ -467,7 +467,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="corsair_boarder_particle"
                    sound_effect="corsair_boarder_activate"
-                   tooltip="{=taom_ability_corsair_boarder_tt}Launch a brutal boarding assault, boosting melee damage and resistance in close quarters." />
+                   tooltip="{=taom_ability_corsair_boarder_tt}Launch a brutal boarding assault — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 
   <AbilityTemplate id="corsair_crossbow_ability"
                    display_name="{=taom_ability_corsair_crossbow}Rigging Shot"
@@ -476,7 +476,7 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="corsair_crossbow_particle"
                    sound_effect="corsair_crossbow_activate"
-                   tooltip="{=taom_ability_corsair_crossbow_tt}Fire from a stable position with deadly precision, greatly boosting ranged damage and accuracy." />
+                   tooltip="{=taom_ability_corsair_crossbow_tt}Fire from a stable corsair stance — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
   <AbilityTemplate id="corsair_captain_ability"
                    display_name="{=taom_ability_corsair_captain}Plunder"
@@ -485,6 +485,6 @@
                    cast_type="Instant" target_type="Self" crosshair_type="Self"
                    particle_effect="corsair_captain_particle"
                    sound_effect="corsair_captain_activate"
-                   tooltip="{=taom_ability_corsair_captain_tt}Rally your crew with promises of plunder, boosting speed, damage, and troop morale." />
+                   tooltip="{=taom_ability_corsair_captain_tt}Rally your crew with promises of plunder — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 
 </AbilityTemplates>

@@ -106,105 +106,105 @@
 
 	<!-- ABILITY TEMPLATES -->
 	<string id="taom_ability_ranger_of_ithilien" text="{=taom_ability_ranger_of_ithilien}Ambush" />
-	<string id="taom_ability_ranger_of_ithilien_tt" text="{=taom_ability_ranger_of_ithilien_tt}Spring a deadly ambush, boosting your ranged damage, draw speed, and movement speed for a short duration." />
+	<string id="taom_ability_ranger_of_ithilien_tt" text="{=taom_ability_ranger_of_ithilien_tt}Spring a deadly ambush — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_captain_of_osgiliath" text="{=taom_ability_captain_of_osgiliath}Hold the Line" />
-	<string id="taom_ability_captain_of_osgiliath_tt" text="{=taom_ability_captain_of_osgiliath_tt}Rally your soldiers with iron discipline, boosting melee damage by 20 for all nearby allies for a short duration." />
+	<string id="taom_ability_captain_of_osgiliath_tt" text="{=taom_ability_captain_of_osgiliath_tt}Rally your soldiers with iron discipline — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_knight_of_belfalas" text="{=taom_ability_knight_of_belfalas}Stampede" />
-	<string id="taom_ability_knight_of_belfalas_tt" text="{=taom_ability_knight_of_belfalas_tt}Thunder forward with an unstoppable cavalry charge, boosting your mount speed, charge damage, and melee damage for a short duration." />
+	<string id="taom_ability_knight_of_belfalas_tt" text="{=taom_ability_knight_of_belfalas_tt}Thunder forward with an unstoppable cavalry charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_black_uruk_captain" text="{=taom_ability_black_uruk_captain}Bloodrage" />
-	<string id="taom_ability_black_uruk_captain_tt" text="{=taom_ability_black_uruk_captain_tt}Enter a blood-fuelled rage, dramatically increasing damage resistance and melee power while inspiring Black Uruk troops." />
+	<string id="taom_ability_black_uruk_captain_tt" text="{=taom_ability_black_uruk_captain_tt}Enter a blood-fuelled rage, inspiring nearby Black Uruks — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_mulkerhili_cultist" text="{=taom_ability_mulkerhili_cultist}Voice of the One" />
-	<string id="taom_ability_mulkerhili_cultist_tt" text="{=taom_ability_mulkerhili_cultist_tt}Channel the One Ring's whispered dread across the battlefield, sapping enemy morale and empowering your cursed arrows." />
+	<string id="taom_ability_mulkerhili_cultist_tt" text="{=taom_ability_mulkerhili_cultist_tt}Channel the One Ring's whispered dread, empowering your cursed arrows — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_snaga_rider" text="{=taom_ability_snaga_rider}Sneak-Creeping" />
-	<string id="taom_ability_snaga_rider_tt" text="{=taom_ability_snaga_rider_tt}Dart through the shadows of the enemy formation, striking flanks with amplified mounted damage before slipping away unseen." />
+	<string id="taom_ability_snaga_rider_tt" text="{=taom_ability_snaga_rider_tt}Dart through the shadows of the enemy flanks — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_olog_hai_warchief" text="{=taom_ability_olog_hai_warchief}Hammer Down" />
-	<string id="taom_ability_olog_hai_warchief_tt" text="{=taom_ability_olog_hai_warchief_tt}Bring your war-hammer crashing down with titanic force, shaking the ground and greatly boosting your damage mitigation and troop resistance." />
+	<string id="taom_ability_olog_hai_warchief_tt" text="{=taom_ability_olog_hai_warchief_tt}Bring your war-hammer crashing down with titanic force — boosts +15% melee damage and +10% damage reduction to allies within 50m for 10s." />
 	<string id="taom_ability_marksman_of_aldburg" text="{=taom_ability_marksman_of_aldburg}Light Fletching" />
-	<string id="taom_ability_marksman_of_aldburg_tt" text="{=taom_ability_marksman_of_aldburg_tt}Nock a flight of swift light-fletch arrows, boosting your ranged damage, draw speed, and movement speed for a short duration." />
+	<string id="taom_ability_marksman_of_aldburg_tt" text="{=taom_ability_marksman_of_aldburg_tt}Nock a flight of swift light-fletch arrows — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_eotheod_windrider" text="{=taom_ability_eotheod_windrider}Warcry of Eorl" />
-	<string id="taom_ability_eotheod_windrider_tt" text="{=taom_ability_eotheod_windrider_tt}Raise the ancient warcry of Eorl the Young, boosting your mount speed, charge damage, and melee damage for a short duration." />
+	<string id="taom_ability_eotheod_windrider_tt" text="{=taom_ability_eotheod_windrider_tt}Raise the ancient warcry of Eorl the Young — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_watchman_of_stangard" text="{=taom_ability_watchman_of_stangard}Stand Fast" />
-	<string id="taom_ability_watchman_of_stangard_tt" text="{=taom_ability_watchman_of_stangard_tt}Dig in with iron resolve, boosting melee damage by 20 for all nearby allies for a short duration." />
+	<string id="taom_ability_watchman_of_stangard_tt" text="{=taom_ability_watchman_of_stangard_tt}Dig in with iron resolve — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_avanc_luth_raider" text="{=taom_ability_avanc_luth_raider}Savage Rush" />
-	<string id="taom_ability_avanc_luth_raider_tt" text="{=taom_ability_avanc_luth_raider_tt}Hurl yourself into the fray with a howling war-rush, massively boosting melee damage and movement speed at the cost of measured defence." />
+	<string id="taom_ability_avanc_luth_raider_tt" text="{=taom_ability_avanc_luth_raider_tt}Howl a Dunlending war-cry into the fray — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_wolfskin_hunter" text="{=taom_ability_wolfskin_hunter}Marked Prey" />
-	<string id="taom_ability_wolfskin_hunter_tt" text="{=taom_ability_wolfskin_hunter_tt}Mark a target through the mists, boosting ranged damage against them and granting your party enhanced tracking awareness." />
+	<string id="taom_ability_wolfskin_hunter_tt" text="{=taom_ability_wolfskin_hunter_tt}Mark a target through the mists — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_clanguard_rider" text="{=taom_ability_clanguard_rider}Warpack Charge" />
-	<string id="taom_ability_clanguard_rider_tt" text="{=taom_ability_clanguard_rider_tt}Lead your warpack in a coordinated fast charge, boosting mounted damage and party movement speed while harassing the enemy's flanks." />
+	<string id="taom_ability_clanguard_rider_tt" text="{=taom_ability_clanguard_rider_tt}Lead your warpack in a coordinated charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_blademaster_of_ren" text="{=taom_ability_blademaster_of_ren}Twin Strike" />
-	<string id="taom_ability_blademaster_of_ren_tt" text="{=taom_ability_blademaster_of_ren_tt}Execute a precise twin-blade sequence, greatly boosting swing speed and armor penetration." />
+	<string id="taom_ability_blademaster_of_ren_tt" text="{=taom_ability_blademaster_of_ren_tt}Execute a precise twin-blade sequence — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_steppe_bowmaster" text="{=taom_ability_steppe_bowmaster}Storm of Arrows" />
-	<string id="taom_ability_steppe_bowmaster_tt" text="{=taom_ability_steppe_bowmaster_tt}Loose a sustained storm of arrows while retreating at speed, saturating a wide area with volleys." />
+	<string id="taom_ability_steppe_bowmaster_tt" text="{=taom_ability_steppe_bowmaster_tt}Loose a sustained storm of arrows from the saddle-edge — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_chariot_warlord" text="{=taom_ability_chariot_warlord}Scything Charge" />
-	<string id="taom_ability_chariot_warlord_tt" text="{=taom_ability_chariot_warlord_tt}Drive scythe-bladed chariots through the enemy line, dealing massive AoE charge damage in a wide arc." />
+	<string id="taom_ability_chariot_warlord_tt" text="{=taom_ability_chariot_warlord_tt}Drive scythe-bladed chariots through the enemy line — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_tribesman_of_jelut" text="{=taom_ability_tribesman_of_jelut}Poisoned Blades" />
-	<string id="taom_ability_tribesman_of_jelut_tt" text="{=taom_ability_tribesman_of_jelut_tt}Coat your weapons in desert toxins, increasing melee damage and applying a debilitating attrition effect." />
+	<string id="taom_ability_tribesman_of_jelut_tt" text="{=taom_ability_tribesman_of_jelut_tt}Coat your weapons in desert toxins — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_pezarsani_javelineer" text="{=taom_ability_pezarsani_javelineer}Sunfire Volley" />
-	<string id="taom_ability_pezarsani_javelineer_tt" text="{=taom_ability_pezarsani_javelineer_tt}Unleash a blazing javelin barrage, boosting ranged damage and screening movement speed." />
+	<string id="taom_ability_pezarsani_javelineer_tt" text="{=taom_ability_pezarsani_javelineer_tt}Unleash a blazing javelin barrage — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_mahud_beast_rider" text="{=taom_ability_mahud_beast_rider}Echoes of Mûmakan" />
-	<string id="taom_ability_mahud_beast_rider_tt" text="{=taom_ability_mahud_beast_rider_tt}Channel the ancient fear of Mûmakan, boosting beast charge damage and spreading terror through enemy ranks." />
+	<string id="taom_ability_mahud_beast_rider_tt" text="{=taom_ability_mahud_beast_rider_tt}Channel the ancient fear of Mûmakan — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_far_harad_halftroll" text="{=taom_ability_far_harad_halftroll}Vile Brutality" />
-	<string id="taom_ability_far_harad_halftroll_tt" text="{=taom_ability_far_harad_halftroll_tt}Enter a state of savage brutality, massively boosting health and resistance while terrorizing nearby enemies." />
+	<string id="taom_ability_far_harad_halftroll_tt" text="{=taom_ability_far_harad_halftroll_tt}Enter a state of savage brutality — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_codyan_legionaire" text="{=taom_ability_codyan_legionaire}Shieldwall" />
-	<string id="taom_ability_codyan_legionaire_tt" text="{=taom_ability_codyan_legionaire_tt}Lock shields in formation, boosting melee damage by 20 for all nearby allies for a short duration." />
+	<string id="taom_ability_codyan_legionaire_tt" text="{=taom_ability_codyan_legionaire_tt}Lock shields in legionary formation — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_lokhas_drus_marksman" text="{=taom_ability_lokhas_drus_marksman}Piercing Volley" />
-	<string id="taom_ability_lokhas_drus_marksman_tt" text="{=taom_ability_lokhas_drus_marksman_tt}Loose specially-hardened arrows, boosting your ranged damage, draw speed, and movement speed for a short duration." />
+	<string id="taom_ability_lokhas_drus_marksman_tt" text="{=taom_ability_lokhas_drus_marksman_tt}Loose specially-hardened Rhûnish arrows — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_balchoth_kan" text="{=taom_ability_balchoth_kan}Unyielding" />
-	<string id="taom_ability_balchoth_kan_tt" text="{=taom_ability_balchoth_kan_tt}Invoke the iron discipline of the Balchoth, boosting your mount speed, charge damage, and melee damage for a short duration." />
+	<string id="taom_ability_balchoth_kan_tt" text="{=taom_ability_balchoth_kan_tt}Invoke the iron discipline of the Balchoth — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_dale_guardsman" text="{=taom_ability_dale_guardsman}Gate Hold" />
-	<string id="taom_ability_dale_guardsman_tt" text="{=taom_ability_dale_guardsman_tt}Plant your feet and hold the gate, greatly increasing health and resistance while stationary." />
+	<string id="taom_ability_dale_guardsman_tt" text="{=taom_ability_dale_guardsman_tt}Plant your feet and hold the gate — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_dale_marksman" text="{=taom_ability_dale_marksman}Black Arrow" />
-	<string id="taom_ability_dale_marksman_tt" text="{=taom_ability_dale_marksman_tt}Channel the legacy of Bard the Bowman, massively boosting your next shots' damage and penetration." />
+	<string id="taom_ability_dale_marksman_tt" text="{=taom_ability_dale_marksman_tt}Channel the legacy of Bard the Bowman — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_dale_outrider" text="{=taom_ability_dale_outrider}Trade Road Sprint" />
-	<string id="taom_ability_dale_outrider_tt" text="{=taom_ability_dale_outrider_tt}Spur your horse along familiar roads, gaining a burst of speed and mounted combat prowess." />
+	<string id="taom_ability_dale_outrider_tt" text="{=taom_ability_dale_outrider_tt}Spur your horse along familiar roads — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_ironguard" text="{=taom_ability_ironguard}Mithril Bastion" />
-	<string id="taom_ability_ironguard_tt" text="{=taom_ability_ironguard_tt}Invoke the strength of dwarven craft, boosting melee damage by 20 for all nearby allies for a short duration." />
+	<string id="taom_ability_ironguard_tt" text="{=taom_ability_ironguard_tt}Invoke the strength of dwarven craft — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_crossbow_master" text="{=taom_ability_crossbow_master}Precision Barrage" />
-	<string id="taom_ability_crossbow_master_tt" text="{=taom_ability_crossbow_master_tt}Load masterwork bolts, boosting your ranged damage, draw speed, and movement speed for a short duration." />
+	<string id="taom_ability_crossbow_master_tt" text="{=taom_ability_crossbow_master_tt}Load masterwork dwarven bolts — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_ram_rider" text="{=taom_ability_ram_rider}Mountain Charge" />
-	<string id="taom_ability_ram_rider_tt" text="{=taom_ability_ram_rider_tt}Drive your war-ram forward, boosting your mount speed, charge damage, and melee damage for a short duration." />
+	<string id="taom_ability_ram_rider_tt" text="{=taom_ability_ram_rider_tt}Drive your war-ram forward — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_blade_dancer" text="{=taom_ability_blade_dancer}Starlight Weave" />
-	<string id="taom_ability_blade_dancer_tt" text="{=taom_ability_blade_dancer_tt}Enter a graceful combat trance, dodging attacks while striking with elven precision." />
+	<string id="taom_ability_blade_dancer_tt" text="{=taom_ability_blade_dancer_tt}Enter a graceful Noldor combat trance — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_elven_archer" text="{=taom_ability_elven_archer}Elven Sight" />
-	<string id="taom_ability_elven_archer_tt" text="{=taom_ability_elven_archer_tt}Focus ancient elven perception, allowing unerring accuracy at extreme range." />
+	<string id="taom_ability_elven_archer_tt" text="{=taom_ability_elven_archer_tt}Focus ancient elven perception — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_rivendell_knight" text="{=taom_ability_rivendell_knight}Last Alliance" />
-	<string id="taom_ability_rivendell_knight_tt" text="{=taom_ability_rivendell_knight_tt}Ride with the valor of the Last Alliance, boosting mounted damage and inspiring all nearby allies." />
+	<string id="taom_ability_rivendell_knight_tt" text="{=taom_ability_rivendell_knight_tt}Ride with the valor of the Last Alliance — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_warden" text="{=taom_ability_warden}Nimrodel's Blessing" />
-	<string id="taom_ability_warden_tt" text="{=taom_ability_warden_tt}Invoke the waters of Nimrodel, healing wounds and boosting resistance for a brief time." />
+	<string id="taom_ability_warden_tt" text="{=taom_ability_warden_tt}Invoke the waters of Nimrodel — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_galadhrim_archer" text="{=taom_ability_galadhrim_archer}Silver Rain" />
-	<string id="taom_ability_galadhrim_archer_tt" text="{=taom_ability_galadhrim_archer_tt}Loose a volley of silver-tipped arrows with blinding speed, shredding enemy ranks." />
+	<string id="taom_ability_galadhrim_archer_tt" text="{=taom_ability_galadhrim_archer_tt}Loose a volley of silver-tipped arrows — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_sentinel" text="{=taom_ability_sentinel}Elanor's Swiftness" />
-	<string id="taom_ability_sentinel_tt" text="{=taom_ability_sentinel_tt}Channel the grace of the Golden Wood, surging forward with supernatural speed and precision." />
+	<string id="taom_ability_sentinel_tt" text="{=taom_ability_sentinel_tt}Channel the grace of the Golden Wood — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_shadow_walker" text="{=taom_ability_shadow_walker}Forest Cloak" />
-	<string id="taom_ability_shadow_walker_tt" text="{=taom_ability_shadow_walker_tt}Blend into the forest shadows, boosting melee damage by 20 for all nearby allies for a short duration." />
+	<string id="taom_ability_shadow_walker_tt" text="{=taom_ability_shadow_walker_tt}Blend into the forest shadows — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_silvan_archer" text="{=taom_ability_silvan_archer}Canopy Strike" />
-	<string id="taom_ability_silvan_archer_tt" text="{=taom_ability_silvan_archer_tt}Fire from an elevated vantage, boosting your ranged damage, draw speed, and movement speed for a short duration." />
+	<string id="taom_ability_silvan_archer_tt" text="{=taom_ability_silvan_archer_tt}Fire from an elevated woodland vantage — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_elk_rider" text="{=taom_ability_elk_rider}Antler Crash" />
-	<string id="taom_ability_elk_rider_tt" text="{=taom_ability_elk_rider_tt}Lower the great antlers and charge, boosting your mount speed, charge damage, and melee damage for a short duration." />
+	<string id="taom_ability_elk_rider_tt" text="{=taom_ability_elk_rider_tt}Lower the great antlers and charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_uruk_berserker" text="{=taom_ability_uruk_berserker}Blood Rage" />
-	<string id="taom_ability_uruk_berserker_tt" text="{=taom_ability_uruk_berserker_tt}Enter a berserk frenzy, massively boosting damage and health while ignoring pain." />
+	<string id="taom_ability_uruk_berserker_tt" text="{=taom_ability_uruk_berserker_tt}Enter an Uruk-hai berserk frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_uruk_crossbow" text="{=taom_ability_uruk_crossbow}Iron Rain" />
-	<string id="taom_ability_uruk_crossbow_tt" text="{=taom_ability_uruk_crossbow_tt}Unleash a barrage of Orthanc-forged bolts with devastating penetration and fire rate." />
+	<string id="taom_ability_uruk_crossbow_tt" text="{=taom_ability_uruk_crossbow_tt}Unleash a barrage of Orthanc-forged bolts — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_warg_scout" text="{=taom_ability_warg_scout}Pack Howl" />
-	<string id="taom_ability_warg_scout_tt" text="{=taom_ability_warg_scout_tt}Unleash a terrifying howl that boosts your speed and strikes fear into nearby enemies." />
+	<string id="taom_ability_warg_scout_tt" text="{=taom_ability_warg_scout_tt}Unleash a terrifying warg-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_cave_troll_master" text="{=taom_ability_cave_troll_master}Troll Frenzy" />
-	<string id="taom_ability_cave_troll_master_tt" text="{=taom_ability_cave_troll_master_tt}Whip your trolls into a frenzy, massively boosting health and troop damage." />
+	<string id="taom_ability_cave_troll_master_tt" text="{=taom_ability_cave_troll_master_tt}Whip your trolls into a frenzy — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_goblin_sniper" text="{=taom_ability_goblin_sniper}Poison Dart" />
-	<string id="taom_ability_goblin_sniper_tt" text="{=taom_ability_goblin_sniper_tt}Coat your projectiles in cave fungus toxin, adding damage over time and slowing targets." />
+	<string id="taom_ability_goblin_sniper_tt" text="{=taom_ability_goblin_sniper_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_warg_pack_leader" text="{=taom_ability_warg_pack_leader}Alpha Howl" />
-	<string id="taom_ability_warg_pack_leader_tt" text="{=taom_ability_warg_pack_leader_tt}Assert dominance with a thundering howl, boosting pack speed and ferocity." />
+	<string id="taom_ability_warg_pack_leader_tt" text="{=taom_ability_warg_pack_leader_tt}Assert dominance with a thundering pack-howl — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_shadow_warrior" text="{=taom_ability_shadow_warrior}Soul Drain" />
-	<string id="taom_ability_shadow_warrior_tt" text="{=taom_ability_shadow_warrior_tt}Drain the life force of nearby enemies, healing yourself and weakening their attacks." />
+	<string id="taom_ability_shadow_warrior_tt" text="{=taom_ability_shadow_warrior_tt}Draw on the shadows of Dol Guldur — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_necromancer_acolyte" text="{=taom_ability_necromancer_acolyte}Dark Bolt" />
-	<string id="taom_ability_necromancer_acolyte_tt" text="{=taom_ability_necromancer_acolyte_tt}Channel necromantic energy through your attacks, greatly boosting ranged damage and armor penetration." />
+	<string id="taom_ability_necromancer_acolyte_tt" text="{=taom_ability_necromancer_acolyte_tt}Channel necromantic energy through your shots — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_fell_rider" text="{=taom_ability_fell_rider}Dread Charge" />
-	<string id="taom_ability_fell_rider_tt" text="{=taom_ability_fell_rider_tt}Charge wreathed in shadow, causing enemies to flee in terror while dealing devastating damage." />
+	<string id="taom_ability_fell_rider_tt" text="{=taom_ability_fell_rider_tt}Charge wreathed in shadow — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_corsair_boarder" text="{=taom_ability_corsair_boarder}Boarding Action" />
-	<string id="taom_ability_corsair_boarder_tt" text="{=taom_ability_corsair_boarder_tt}Launch a brutal boarding assault, boosting melee damage and resistance in close quarters." />
+	<string id="taom_ability_corsair_boarder_tt" text="{=taom_ability_corsair_boarder_tt}Launch a brutal boarding assault — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_corsair_crossbow" text="{=taom_ability_corsair_crossbow}Rigging Shot" />
-	<string id="taom_ability_corsair_crossbow_tt" text="{=taom_ability_corsair_crossbow_tt}Fire from a stable position with deadly precision, greatly boosting ranged damage and accuracy." />
+	<string id="taom_ability_corsair_crossbow_tt" text="{=taom_ability_corsair_crossbow_tt}Fire from a stable corsair stance — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_corsair_captain" text="{=taom_ability_corsair_captain}Plunder" />
-	<string id="taom_ability_corsair_captain_tt" text="{=taom_ability_corsair_captain_tt}Rally your crew with promises of plunder, boosting speed, damage, and troop morale." />
+	<string id="taom_ability_corsair_captain_tt" text="{=taom_ability_corsair_captain_tt}Rally your crew with promises of plunder — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<!-- 100 entries -->
 
 	<!-- CAREER CHOICES -->

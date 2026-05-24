@@ -2,6 +2,28 @@
 
 ## 2026-05-24
 
+### fix(career-system): all 50 ability tooltips now state actual archetype effects + duration
+
+Every career ability tooltip in [taom_ability_templates.xml](Main/_Module/ModuleData/career_system/taom_ability_templates.xml) and the mirrored [taom_career_strings.xml](Main/_Module/ModuleData/taom_career_strings.xml) was descriptive-only — "boosting your ranged damage, draw speed, and movement speed for a short duration" — without specific numbers. Two Infantry tooltips (`captain_of_osgiliath`, `watchman_of_stangard`) wrongly stated "boosting melee damage by 20" while the engine actually applies 15% per the tuning XML.
+
+Per user direction (lore + specifics, text matches actual tuning), rewrote all 50 tooltips using the per-archetype numbers from [taom_ability_tuning.xml](Main/_Module/ModuleData/career_system/taom_ability_tuning.xml):
+
+| Archetype | Effect text now displayed |
+|-----------|---------------------------|
+| Infantry  | "boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s" |
+| Ranged    | "boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s" |
+| Cavalry   | "boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s" |
+
+Each tooltip keeps its lore lead-in (e.g., "Spring a deadly ambush", "Bring your war-hammer crashing down with titanic force") and appends the specific stat clause via em-dash. The 49 abilities at 8s duration plus `olog_hai_warchief` at 10s (its actual template duration) are all reflected.
+
+Mechanical rewrite via new tool [tools/rewrite_ability_tooltips.py](tools/rewrite_ability_tooltips.py) — single source-of-truth list of `(career_id, archetype, lore_lead_in)` tuples + per-archetype effect strings + duration override map. Idempotent; can be re-run if tuning numbers change in the future.
+
+Translations in `Main/_Module/ModuleData/Languages/<LANG>/std_taom_career_strings_*.xml` (PL hand-curated + 11 AI-translated) are now stale relative to English. Translation pipeline (`tools/translate_with_claude.py`) needs to re-run to propagate; tracked separately.
+
+Files: ability templates XML, strings XML, new rewrite tool. 100 tooltip rewrites (50 abilities × 2 files). No code change. No new items.
+Save-compat: tooltip text only — no game-state impact.
+Not-tested: in-game spot-check that any one ability now shows the new format (e.g., Hold the Line → "boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s").
+
 ### feat(deps): four stub modules for third-party mod compatibility (Bannerlord.Harmony / .UIExtenderEx / .ButterLib / .MBOptionScreen)
 
 DR3 follow-up. After bundling all BUTR runtime DLLs inside `TAOM.Dependencies` (single `<Id value="TAOM.Dependencies"/>`), third-party Bannerlord mods that declare `<DependedModule Id="Bannerlord.Harmony"/>` (or the other standard BUTR IDs) became un-toggleable in the vanilla launcher's mod menu — the launcher's `AreAllDependenciesOfModulePresent` check does an exact string match on `m.Id` and couldn't find those module IDs anywhere.
