@@ -93,12 +93,12 @@ A separate pool of vendored DLLs lives in `Main/_Module/bin/Win64_Shipping_Clien
 
 | DLL | Origin | Why bundled |
 |---|---|---|
-| `BehaviorTrees.dll` | Third-party Warg/Spider AI wrapper | Compile-time HintPath in `Main/TAOM.csproj`; runtime use by `Main/Features/Warg/...` + `Main/Features/Spider/...` |
-| `BehaviorTreeWrapper.dll` | Third-party (companion to above) | Same |
 | `MinHook.x64.dll` | [TsudaKageyu/MinHook](https://github.com/TsudaKageyu/minhook), MIT — third-party native hook lib | Runtime dep of `TAOM.NativeSkinFixes.dll` |
 | `TAOM.NativeSkinFixes.dll` | **TAOM-owned C++** — source lives outside this repo | TAOM's own native plugin for skin/cloth/hair hook fixes |
 
-**Update procedure (Warg / MinHook / BehaviorTrees):** these are stable third-party binaries; only update when the upstream releases a new build. Drop the new `.dll` into `Main/_Module/bin/Win64_Shipping_Client/`, run `./build.ps1 -RunTests`, smoke test, commit.
+> `BehaviorTrees.dll` + `BehaviorTreeWrapper.dll` were removed from this table on 2026-05-24 — both libraries were decompiled (no upstream source repo) and inlined as TAOM source at `Main/BehaviorTrees/` + `Main/BehaviorTreeWrapper/`. They compile into `TAOM.dll` now. RCA: [docs/reviews/rca-looter-battle-nre-2026-05-24.md](../reviews/rca-looter-battle-nre-2026-05-24.md).
+
+**Update procedure (MinHook):** stable third-party binary; only update when the upstream releases a new build. Drop the new `.dll` into `Main/_Module/bin/Win64_Shipping_Client/`, run `./build.ps1 -RunTests`, smoke test, commit.
 
 **Update procedure (TAOM.NativeSkinFixes):** the C++ source for this DLL currently lives outside this repo. Workflow per build:
 

@@ -45,8 +45,9 @@ Dependencies/_Module/bin/Win64_Shipping_Client/*
 !Main/_Module/bin/
 !Main/_Module/bin/Win64_Shipping_Client/
 Main/_Module/bin/Win64_Shipping_Client/*
-!Main/_Module/bin/Win64_Shipping_Client/BehaviorTrees.dll
-!Main/_Module/bin/Win64_Shipping_Client/BehaviorTreeWrapper.dll
+# BehaviorTrees.dll + BehaviorTreeWrapper.dll allowlists removed 2026-05-24 —
+# both libraries are now inlined in TAOM source (Main/BehaviorTrees/ +
+# Main/BehaviorTreeWrapper/) and compile into TAOM.dll. No standalone DLLs.
 !Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll
 !Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll
 # Gaming.Desktop sibling: build outputs only — stays ignored.
