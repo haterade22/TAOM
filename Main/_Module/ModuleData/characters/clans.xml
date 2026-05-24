@@ -738,7 +738,7 @@
 		culture="Culture.gundabad"
 		super_faction="Kingdom.gundabad"
 		is_noble="true"
-		banner_key="11.2011.2011.1528.1528.764.764.1.0.0.17086.2000.171.700.700.764.764.0.0.0" />
+		banner_key="11.331.331.1528.1528.764.764.1.0.0.22002.213.171.700.700.764.764.0.0.0" />
 
   <!-- Morzûg -->
   <Faction
@@ -750,7 +750,7 @@
 		culture="Culture.gundabad"
 		super_faction="Kingdom.gundabad"
 		is_noble="true"
-		banner_key="11.2011.2011.1528.1528.764.764.1.0.0.17184.2000.171.700.700.764.764.0.0.0" />
+		banner_key="11.331.331.1528.1528.764.764.1.0.0.19003.167.171.700.700.764.764.0.0.0" />
 
   <!-- Krûgash -->
   <Faction
@@ -762,7 +762,7 @@
 		culture="Culture.gundabad"
 		super_faction="Kingdom.gundabad"
 		is_noble="true"
-		banner_key="11.2011.2011.1528.1528.764.764.1.0.0.17240.326.171.700.700.764.764.0.0.0" />
+		banner_key="11.331.331.1528.1528.764.764.1.0.0.19002.2004.171.700.700.764.764.0.0.0" />
 
   <!-- ============================================== -->
   <!-- UMBAR CLANS (umbar culture)                    -->
