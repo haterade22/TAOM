@@ -6,4 +6,5 @@
   <LanguageFile xml_path="RU/std_taom_cc_strings_rus-RU.xml" />
   <LanguageFile xml_path="RU/std_taom_career_strings_rus-RU.xml" />
   <LanguageFile xml_path="RU/std_taom_messenger_strings_rus-RU.xml" />
+  <LanguageFile xml_path="RU/std_taom_xslt_strings_rus-RU.xml" />
 </LanguageData>

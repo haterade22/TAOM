@@ -748,6 +748,16 @@
         <GameType value="EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Loc keys harvested from XSLT transforms (kingdom/culture/clan/lord/hero descriptions) -->
+    <XmlNode>
+      <XmlName id="GameText" path="taom_xslt_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+        <GameType value="CustomGame"/>
+        <GameType value="EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <XmlNode>
       <XmlName id="BannerIcons" path="banner_icons"/>
     </XmlNode>

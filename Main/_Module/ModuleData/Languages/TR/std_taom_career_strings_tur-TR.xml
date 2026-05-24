@@ -646,46 +646,46 @@
     <string id="taom_ew_t2_b_p4" text="Demir Üzengiler" />
     <string id="taom_ew_t2_b_p4_desc" text="En şiddetli yakın dövüşte bile sürüşün güvenli. +40 sağlık." />
     <string id="taom_ew_t3_a_key" text="Rohirrim'in Hücumu" />
-    <string id="taom_ew_t3_a_key_desc" text="The greatest charge in the age of men. Warcry radius +5." />
-    <string id="taom_ew_t3_a_p1" text="Pelennor's Thunder" />
-    <string id="taom_ew_t3_a_p1_desc" text="As at the Fields of the Pelennor, your charge is unstoppable. +14% horse charge damage." />
-    <string id="taom_ew_t3_a_p2" text="Lord of the Mark" />
-    <string id="taom_ew_t3_a_p2_desc" text="The greatest riders follow you. +75 health." />
-    <string id="taom_ew_t3_a_p3" text="Eored Commander" />
-    <string id="taom_ew_t3_a_p3_desc" text="A great eored rides at your back. +12% party size." />
-    <string id="taom_ew_t3_a_p4" text="Rohan's Glory" />
-    <string id="taom_ew_t3_a_p4_desc" text="Your deeds bring glory to the Mark. +12% battle renown gain." />
-    <string id="taom_ew_t3_b_key" text="Ever Ready" />
-    <string id="taom_ew_t3_b_key_desc" text="The warcry is always on your lips. Warcry charge cost -30." />
-    <string id="taom_ew_t3_b_p1" text="Wave of Riders" />
-    <string id="taom_ew_t3_b_p1_desc" text="The Rohirrim crash over the enemy like a wave. +12% troop damage." />
-    <string id="taom_ew_t3_b_p2" text="Swift as the Wind" />
-    <string id="taom_ew_t3_b_p2_desc" text="The Eotheod are faster than legend. +8% party movement speed." />
-    <string id="taom_ew_t3_b_p3" text="Songs of the Riddermark" />
-    <string id="taom_ew_t3_b_p3_desc" text="The deeds of the Eotheod are sung for ages. +14% battle renown gain." />
-    <string id="taom_ew_t3_b_p4" text="The Great Host" />
-    <string id="taom_ew_t3_b_p4_desc" text="The full host of the Eotheod rides to war. +14% party size." />
-    <string id="taom_ws_root_desc" text="River Navigator grants +5% resistance and channels the vigilance of Stangard's border watchers." />
-    <string id="taom_ws_t1_a_key" text="River Ford Mastery" />
-    <string id="taom_ws_t1_a_key_desc" text="You know every crossing. River Navigator radius +3." />
-    <string id="taom_ws_t1_a_p1" text="Shield and Spear" />
-    <string id="taom_ws_t1_a_p1_desc" text="Classic Rohirrim infantry discipline. +5% melee damage." />
-    <string id="taom_ws_t1_a_p2" text="Watch Post Hardening" />
-    <string id="taom_ws_t1_a_p2_desc" text="Years at isolated posts forge you like iron. +25 health." />
-    <string id="taom_ws_t1_a_p3" text="Border Eyes" />
-    <string id="taom_ws_t1_a_p3_desc" text="Nothing crosses the Entwash unseen by you. +5% party spotting range." />
-    <string id="taom_ws_t1_a_p4" text="Wetland Endurance" />
-    <string id="taom_ws_t1_a_p4_desc" text="The damp of the river country makes you resilient. +5% blunt resistance." />
-    <string id="taom_ws_t1_b_key" text="Sustained Watch" />
-    <string id="taom_ws_t1_b_key_desc" text="The watch is maintained through all trials. River Navigator duration +4s." />
-    <string id="taom_ws_t1_b_p1" text="Entwash Swimmer" />
-    <string id="taom_ws_t1_b_p1_desc" text="The river holds no fear for you. +5% movement speed." />
-    <string id="taom_ws_t1_b_p2" text="Warden's Constitution" />
-    <string id="taom_ws_t1_b_p2_desc" text="Years of lonely watch service make you tough as old wood. +30 health." />
-    <string id="taom_ws_t1_b_p3" text="Loyal Guard" />
-    <string id="taom_ws_t1_b_p3_desc" text="Your men need little pay -- duty is enough. -4% troop wages." />
-    <string id="taom_ws_t1_b_p4" text="River Lord's Discipline" />
-    <string id="taom_ws_t1_b_p4_desc" text="Your infantry hold firm when others break. +3% troop resistance." />
+    <string id="taom_ew_t3_a_key_desc" text="İnsanlar çağının en büyük hücumu. Savaş çığlığı yarıçapı +5." />
+    <string id="taom_ew_t3_a_p1" text="Pelennor'un Gök Gürültüsü" />
+    <string id="taom_ew_t3_a_p1_desc" text="Pelennor Ovaları'ndaki gibi, hücumunuz durdurulamaz. +14% at hücum hasarı." />
+    <string id="taom_ew_t3_a_p2" text="Mark Lordu" />
+    <string id="taom_ew_t3_a_p2_desc" text="En büyük atlılar size tabi. +75 sağlık." />
+    <string id="taom_ew_t3_a_p3" text="Eored Komutanı" />
+    <string id="taom_ew_t3_a_p3_desc" text="Arkanızda büyük bir eored. +12% grup büyüklüğü." />
+    <string id="taom_ew_t3_a_p4" text="Rohan'ın Şanı" />
+    <string id="taom_ew_t3_a_p4_desc" text="Kahramanlıklarınız Mark'a şan getirir. +12% savaş şöhret kazanımı." />
+    <string id="taom_ew_t3_b_key" text="Her Zaman Hazır" />
+    <string id="taom_ew_t3_b_key_desc" text="Savaş çığlığı her zaman dudaklarınızda. Savaş çığlığı yük maliyeti -30." />
+    <string id="taom_ew_t3_b_p1" text="Atlı Dalgası" />
+    <string id="taom_ew_t3_b_p1_desc" text="Rohirrim düşmanın üzerine dalga gibi çöker. +12% birlik hasarı." />
+    <string id="taom_ew_t3_b_p2" text="Rüzgar Kadar Çevik" />
+    <string id="taom_ew_t3_b_p2_desc" text="Eotheod efsanelerden daha hızlıdır. +8% grup hareket hızı." />
+    <string id="taom_ew_t3_b_p3" text="Riddermark Türküleri" />
+    <string id="taom_ew_t3_b_p3_desc" text="Eotheod'un kahramanlıkları çağlar boyu söylenir. +14% savaş şöhret kazanımı." />
+    <string id="taom_ew_t3_b_p4" text="Büyük Ordu" />
+    <string id="taom_ew_t3_b_p4_desc" text="Eotheod'un tüm ordusu savaşa gider. +14% grup büyüklüğü." />
+    <string id="taom_ws_root_desc" text="Nehir Seyircisi +5% direnç verir ve Stangard'ın sınır bekçilerinin uyanıklığını yansıtır." />
+    <string id="taom_ws_t1_a_key" text="Nehir Geçidi Ustalığı" />
+    <string id="taom_ws_t1_a_key_desc" text="Her geçidi bilirsiniz. Nehir Seyircisi yarıçapı +3." />
+    <string id="taom_ws_t1_a_p1" text="Kalkan ve Mızrak" />
+    <string id="taom_ws_t1_a_p1_desc" text="Klasik Rohirrim piyade disiplini. +5% yakın dövüş hasarı." />
+    <string id="taom_ws_t1_a_p2" text="Gözetleme Noktası Sertleşmesi" />
+    <string id="taom_ws_t1_a_p2_desc" text="İzole karakollarda geçen yıllar sizi demir gibi güçlendirir. +25 sağlık." />
+    <string id="taom_ws_t1_a_p3" text="Sınır Gözleri" />
+    <string id="taom_ws_t1_a_p3_desc" text="Entwash'ı sizden gizli geçen hiçbir şey yoktur. +5% grup keşif menzili." />
+    <string id="taom_ws_t1_a_p4" text="Sulak Dayanıklılığı" />
+    <string id="taom_ws_t1_a_p4_desc" text="Nehir bölgesinin nemi sizi dirençli kılar. +5% künt silah direnci." />
+    <string id="taom_ws_t1_b_key" text="Sürekli Nöbet" />
+    <string id="taom_ws_t1_b_key_desc" text="Nöbet tüm zorluklara rağmen sürdürülür. Nehir Seyircisi süresi +4sn." />
+    <string id="taom_ws_t1_b_p1" text="Entwash Yüzücüsü" />
+    <string id="taom_ws_t1_b_p1_desc" text="Nehir sizin için korku kaynağı değildir. +5% hareket hızı." />
+    <string id="taom_ws_t1_b_p2" text="Muhafızın Dayanıklılığı" />
+    <string id="taom_ws_t1_b_p2_desc" text="Yıllar süren yalnız nöbet hizmeti sizi eski ağaç kadar sert yapar. +30 sağlık." />
+    <string id="taom_ws_t1_b_p3" text="Sadık Muhafız" />
+    <string id="taom_ws_t1_b_p3_desc" text="Adamlarınız az maaş ister -- görev yeterlidir. -4% asker maaşı." />
+    <string id="taom_ws_t1_b_p4" text="Nehir Lordu'nun Disiplini" />
+    <string id="taom_ws_t1_b_p4_desc" text="Piyade birlikleriniz diğerleri bozulurken sağlam durur. +3% asker direnci." />
     <string id="taom_ws_t2_a_key" text="Hazırlanmış Geçit" />
     <string id="taom_ws_t2_a_key_desc" text="Bu araziyi yıllardır keşfettin. Nehir Navigatörü yüklenme maliyeti -20." />
     <string id="taom_ws_t2_a_p1" text="Kalkan Hattı" />
@@ -1529,7 +1529,7 @@
     <string id="taom_wdn_t3_b_p2" text="+%15 sağlık yenilenme hızı." />
     <string id="taom_wdn_t3_b_p3" text="+%20 birlik morali." />
     <string id="taom_wdn_t3_b_p4" text="+%15 birlik yenilenme hızı." />
-    <string id="taom_galadhrim_archer_root_desc" text="Silver Rain grants +5% ranged damage, arrows tipped in starlight." />
+    <string id="taom_galadhrim_archer_root_desc" text="Gümüş Yağmur +5% menzilli hasar verir, yıldız ışığında batırılmış oklar." />
     <string id="taom_gar_t1_a_key" text="Gümüş Yağmur yarıçapı artırıldı, daha geniş öldürme bölgeleri kapsanıyor." />
     <string id="taom_gar_t1_a_p1" text="+%8 menzilli hasar." />
     <string id="taom_gar_t1_a_p2" text="+%5 zırh delme." />
@@ -1566,46 +1566,46 @@
     <string id="taom_snt_t1_a_p2" text="+%7 at돌진 hasarı." />
     <string id="taom_snt_t1_a_p3" text="+%7 savurma hızı." />
     <string id="taom_snt_t1_a_p4" text="+%5 grup hareket hızı." />
-    <string id="taom_snt_t1_b_key" text="Elanor Swiftness duration extended, maintaining momentum." />
-    <string id="taom_snt_t1_b_p1" text="+30 horse health." />
-    <string id="taom_snt_t1_b_p2" text="+25 max health." />
-    <string id="taom_snt_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_snt_t1_b_p4" text="+5% resistance." />
-    <string id="taom_snt_t2_a_key" text="Elanor Swiftness charge reduced, swifter activation." />
-    <string id="taom_snt_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_snt_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_snt_t2_a_p3" text="+10% troop morale." />
-    <string id="taom_snt_t2_a_p4" text="+10% battle renown gain." />
-    <string id="taom_snt_t2_b_key" text="Elanor Swiftness boosts mount resilience while active." />
-    <string id="taom_snt_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_snt_t2_b_p2" text="+12% horse charge damage." />
-    <string id="taom_snt_t2_b_p3" text="+60 horse health." />
-    <string id="taom_snt_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_snt_t3_a_key" text="Elanor Swiftness radius greatly expanded, unstoppable impact." />
-    <string id="taom_snt_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_snt_t3_a_p2" text="+18% horse charge damage." />
-    <string id="taom_snt_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_snt_t3_a_p4" text="+15% troop damage." />
-    <string id="taom_snt_t3_b_key" text="Elanor Swiftness charge greatly reduced, ride without ceasing." />
-    <string id="taom_snt_t3_b_p1" text="+100 horse health." />
-    <string id="taom_snt_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_snt_t3_b_p3" text="+15% party movement speed." />
-    <string id="taom_snt_t3_b_p4" text="+75 max health." />
-    <string id="taom_shadow_walker_root_desc" text="Forest Cloak grants +5% resistance and shadows conceal you." />
-    <string id="taom_shw_t1_a_key" text="Forest Cloak radius increased, empowering more warriors." />
-    <string id="taom_shw_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_shw_t1_a_p2" text="+5% troop damage." />
-    <string id="taom_shw_t1_a_p3" text="+30 max health." />
-    <string id="taom_shw_t1_a_p4" text="+7% swing speed." />
-    <string id="taom_shw_t1_b_key" text="Forest Cloak duration extended, fortifying the defense." />
-    <string id="taom_shw_t1_b_p1" text="+8% resistance." />
-    <string id="taom_shw_t1_b_p2" text="+5% troop morale." />
-    <string id="taom_shw_t1_b_p3" text="+5% troop resistance." />
-    <string id="taom_shw_t1_b_p4" text="+5% troop regeneration." />
-    <string id="taom_shw_t2_a_key" text="Forest Cloak charge reduced, activating more frequently." />
-    <string id="taom_shw_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_shw_t2_a_p2" text="+2 party size." />
-    <string id="taom_shw_t2_a_p3" text="+10% battle renown gain." />
+    <string id="taom_snt_t1_b_key" text="Elanor Çevikliği süresi uzatıldı, momentum korunuyor." />
+    <string id="taom_snt_t1_b_p1" text="+30 at sağlığı." />
+    <string id="taom_snt_t1_b_p2" text="+25 maksimum sağlık." />
+    <string id="taom_snt_t1_b_p3" text="-5% asker maaşı." />
+    <string id="taom_snt_t1_b_p4" text="+5% direnç." />
+    <string id="taom_snt_t2_a_key" text="Elanor Çevikliği dolum süresi azaltıldı, daha hızlı aktivasyon." />
+    <string id="taom_snt_t2_a_p1" text="+10% grup hareket hızı." />
+    <string id="taom_snt_t2_a_p2" text="-10% asker maaşı." />
+    <string id="taom_snt_t2_a_p3" text="+10% asker morali." />
+    <string id="taom_snt_t2_a_p4" text="+10% savaş şöhreti kazancı." />
+    <string id="taom_snt_t2_b_key" text="Elanor Çevikliği aktifken binek dayanıklılığını artırır." />
+    <string id="taom_snt_t2_b_p1" text="+12% yakın dövüş hasarı." />
+    <string id="taom_snt_t2_b_p2" text="+12% at hücum hasarı." />
+    <string id="taom_snt_t2_b_p3" text="+60 at sağlığı." />
+    <string id="taom_snt_t2_b_p4" text="+10% sallanma hızı." />
+    <string id="taom_snt_t3_a_key" text="Elanor Çevikliği yarıçapı büyük ölçüde genişletildi, durdurulamaz etki." />
+    <string id="taom_snt_t3_a_p1" text="+18% yakın dövüş hasarı." />
+    <string id="taom_snt_t3_a_p2" text="+18% at hücum hasarı." />
+    <string id="taom_snt_t3_a_p3" text="+15% sallanma hızı." />
+    <string id="taom_snt_t3_a_p4" text="+15% asker hasarı." />
+    <string id="taom_snt_t3_b_key" text="Elanor Çevikliği dolum süresi büyük ölçüde azaltıldı, durmaksızın sür." />
+    <string id="taom_snt_t3_b_p1" text="+100 at sağlığı." />
+    <string id="taom_snt_t3_b_p2" text="-15% asker maaşı." />
+    <string id="taom_snt_t3_b_p3" text="+15% grup hareket hızı." />
+    <string id="taom_snt_t3_b_p4" text="+75 maksimum sağlık." />
+    <string id="taom_shadow_walker_root_desc" text="Orman Pelerini +5% direnç verir ve gölgeler seni gizler." />
+    <string id="taom_shw_t1_a_key" text="Orman Pelerini yarıçapı artırıldı, daha fazla savaşçıyı güçlendiriyor." />
+    <string id="taom_shw_t1_a_p1" text="+8% yakın dövüş hasarı." />
+    <string id="taom_shw_t1_a_p2" text="+5% asker hasarı." />
+    <string id="taom_shw_t1_a_p3" text="+30 maksimum sağlık." />
+    <string id="taom_shw_t1_a_p4" text="+7% sallanma hızı." />
+    <string id="taom_shw_t1_b_key" text="Orman Pelerini süresi uzatıldı, savunmayı sağlamlaştırıyor." />
+    <string id="taom_shw_t1_b_p1" text="+8% direnç." />
+    <string id="taom_shw_t1_b_p2" text="+5% asker morali." />
+    <string id="taom_shw_t1_b_p3" text="+5% asker direnci." />
+    <string id="taom_shw_t1_b_p4" text="+5% asker yenilenme." />
+    <string id="taom_shw_t2_a_key" text="Orman Pelerini şarjı azaltıldı, daha sık aktif oluyor." />
+    <string id="taom_shw_t2_a_p1" text="+%10 birlik morali." />
+    <string id="taom_shw_t2_a_p2" text="+2 grup boyutu." />
+    <string id="taom_shw_t2_a_p3" text="+%10 savaş şöhreti kazanımı." />
     <string id="taom_shw_t2_a_p4" text="-10% birlik maaşları." />
     <string id="taom_shw_t2_b_key" text="Orman Pelerini aktifken ek savunma bonusları sağlar." />
     <string id="taom_shw_t2_b_p1" text="+12% direnç." />
@@ -2046,15 +2046,15 @@
     <string id="taom_crca_t2_b_p2" text="+12% at hücum hasarı." />
     <string id="taom_crca_t2_b_p3" text="+60 at sağlığı." />
     <string id="taom_crca_t2_b_p4" text="+10% savurma hızı." />
-    <string id="taom_crca_t3_a_key" text="Plunder radius greatly expanded, unstoppable impact." />
-    <string id="taom_crca_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_crca_t3_a_p2" text="+18% horse charge damage." />
-    <string id="taom_crca_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_crca_t3_a_p4" text="+15% troop damage." />
-    <string id="taom_crca_t3_b_key" text="Plunder charge greatly reduced, ride without ceasing." />
-    <string id="taom_crca_t3_b_p1" text="+100 horse health." />
-    <string id="taom_crca_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_crca_t3_b_p3" text="+15% party movement speed." />
-    <string id="taom_crca_t3_b_p4" text="+75 max health." />
+    <string id="taom_crca_t3_a_key" text="Yağma yarıçapı büyük ölçüde genişletildi, durdurulamaz etki." />
+    <string id="taom_crca_t3_a_p1" text="+%18 yakın dövüş hasarı." />
+    <string id="taom_crca_t3_a_p2" text="+%18 at돌격 hasarı." />
+    <string id="taom_crca_t3_a_p3" text="+%15 savurma hızı." />
+    <string id="taom_crca_t3_a_p4" text="+%15 birlik hasarı." />
+    <string id="taom_crca_t3_b_key" text="Yağma şarjı büyük ölçüde azaltıldı, durmaksızın sür." />
+    <string id="taom_crca_t3_b_p1" text="+100 at sağlığı." />
+    <string id="taom_crca_t3_b_p2" text="-%15 birlik maaşları." />
+    <string id="taom_crca_t3_b_p3" text="+%15 grup hareket hızı." />
+    <string id="taom_crca_t3_b_p4" text="+75 maksimum sağlık." />
   </strings>
 </base>

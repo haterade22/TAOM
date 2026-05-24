@@ -394,7 +394,7 @@
     <string id="FuNbouTu" text="一位信使从{KINGDOM_NAME}赶来。他们号召你的王国对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。你的王国将投票决定是否接受该提议。" />
     <string id="G3qGLAeQ" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会的意愿,将{CLAN}家族逐出{KINGDOM}。" />
     <string id="gf2Lje7o" text="{RULER.NAME}决定不号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}, commanding an army of {QUEST_GIVER_FACTION}, has told you that they need food supplies for their upcoming military campaign. {?QUEST_GIVER.GENDER}She{?}He{\?} wanted you to deliver {GRAIN_AMOUNT} sacks of grain and although it's not necessary, to provide {LIVESTOCK_AMOUNT} live stocks and {WINE_AMOUNT} barrels of wine {?QUEST_GIVER.GENDER}she{?}he{\?} would appreciate it." />
+    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}率领着{QUEST_GIVER_FACTION}的军队,告诉你他们即将进行的军事行动需要粮食补给。{?QUEST_GIVER.GENDER}她{?}他{\?}希望你运送{GRAIN_AMOUNT}袋粮食,虽然不是必须的,但如果你能提供{LIVESTOCK_AMOUNT}头牲畜和{WINE_AMOUNT}桶葡萄酒,{?QUEST_GIVER.GENDER}她{?}他{\?}会非常感激。" />
     <string id="Gj5d9y2g" text="{KINGDOM}的{RULER.NAME}决定与{OTHER_KINGDOM}签订贸易协定。" />
     <string id="gNf0ALKw" text="一位信使从{MAP_FACTION_NAME}赶来。他们向你提议白色和平。你的王国将投票决定是否接受该提议。" />
     <string id="h5eTEYON" text="{RULER.NAME}将{CLAN}家族逐出{KINGDOM}。" />

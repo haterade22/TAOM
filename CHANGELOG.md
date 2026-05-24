@@ -1,5 +1,62 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-24
+
+### Feature: XSLT-injected text now translatable — kingdom/culture/clan/lord/hero descriptions
+
+In-game testing of BR translation surfaced a class of strings that weren't reaching the translation pipeline: the kingdom descriptions ("Gondor stands as a proud bastion..."), hero biographies ("Húrioneth serves the House of..."), and similar narrative text. These live inside TAOM's XSLT files (`heroes.xslt`, `lords.xslt`, `spclans.xslt`, `spkingdoms.xslt`, `spcultures.xslt`) which inject content into vanilla XML at load time.
+
+The text already had `{=KEY}default` loc markup in the XSLTs, but no source loc XML file collected those keys, so the engine had no fallback registry and translators had no discoverable list of what to translate.
+
+**Fix:**
+1. Extracted all 1,431 unique loc keys from 5 XSLT files into a new source XML `Main/_Module/ModuleData/taom_xslt_strings.xml`
+2. Registered as a new GameText path in `SubModule.xml`
+3. Added 7th `<LanguageFile>` entry across all 12 language directories
+4. Created empty stubs for all 12 languages
+5. Updated `tools/translate_with_claude.py` and `tools/rebuild_translation_files.py` to include the new source
+6. Updated `LanguageDataXmlTests.HaveExactlySevenLanguageFiles` (was Six)
+7. Ran translator across 11 languages (~$22) and rebuilt all XML files from cache
+
+**Coverage achieved on the new XSLT strings:**
+- CNs, FR, JP, KO: 100% (1431/1431)
+- CNt, RU: 99.9% (~1429/1431)
+- DE, SP, TR: 97% (~1390/1431)
+- BR, IT: 94% (1351/1431)
+- PL: 0% (preserved — community translator hasn't covered these yet)
+
+Verified BR: `TAOM_gondor_desc` now reads "Gondor ergue-se como um orgulhoso bastião de força e resiliência na Terra-média..." and `TAOM_hero_1_8` reads "Húrioneth serve a Casa de Húrinionath, um guardião firme da tradição dos regentes de Gondor."
+
+This makes the description text the player sees in the Encyclopedia for kingdoms, cultures, lords, and heroes properly translate to the active language.
+
+**Files touched (TAOM repo, git-tracked):**
+- `Main/_Module/ModuleData/taom_xslt_strings.xml` (NEW — 1431 entries)
+- `Main/_Module/SubModule.xml` (added GameText registration)
+- `Main/_Module/ModuleData/Languages/<LANG>/language_data.xml` × 12 (added 7th LanguageFile entry)
+- `Main/_Module/ModuleData/Languages/<LANG>/std_taom_xslt_strings_*.xml` × 12 (new translation files)
+- `tools/translate_with_claude.py`, `tools/rebuild_translation_files.py` (added new source)
+- `tools/translation_cache/*.json` × 11 (~13K new cached translations)
+- `TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs` (count test 6 → 7)
+
+**Known limitation:** XSLT entries with conditional markup hit the same gender-agreement validator rejections as before (~40-80 fallback per language). These specific keys keep English. Translators can fill via overrides.
+
+### data(races): assign race="elf" to all elven NPCCharacters (#216)
+
+Backfilled the `race="elf"` attribute onto every Rivendell / Mirkwood / Lothlórien NPCCharacter in `Main/_Module/ModuleData/` — 266 entries across 7 XML files. Previously only `lord_R3_1` (Chägermeister, added in [`4f61f53`](4f61f53)) carried the attribute, so the other 42 elven lords, all elven town notables (167), all elven recruitable troops (45), and 12 child education templates were rendering with human heads/bodies in elven settlements and battles.
+
+Per-file additions: [`lords.xml`](Main/_Module/ModuleData/characters/lords.xml) +42, [`npcs_rivendell.xml`](Main/_Module/ModuleData/characters/npcs_rivendell.xml) +72, [`npcs_mirkwood.xml`](Main/_Module/ModuleData/characters/npcs_mirkwood.xml) +68, [`npcs_lothlorien.xml`](Main/_Module/ModuleData/characters/npcs_lothlorien.xml) +27, [`troops_rivendell.xml`](Main/_Module/ModuleData/troops/troops_rivendell.xml) +28, [`troops_mirkwood.xml`](Main/_Module/ModuleData/troops/troops_mirkwood.xml) +17, [`taom_education_character_templates.xml`](Main/_Module/ModuleData/taom_education_character_templates.xml) +12. Also normalized the Chägermeister entry's spurious-space `race ="elf"` to the canonical `race="elf"` (matching the established `race="dg_uruk"` style used by 40+ Dol Guldur lords). `taom_wanderers.xml`'s 30 elven entries already had `race="elf"` (no change). `characters/clans.xml` was excluded — its elven entries are `<Faction>` (clan defs), not `<NPCCharacter>`, and Factions don't take a `race` attribute. No `troops_lothlorien.xml` exists; Lothlórien fields no in-game troops.
+
+Implemented as a new idempotent tool — [`tools/add_race_attribute.py`](tools/add_race_attribute.py) (`--dry-run` / `--apply`) — that walks each in-scope XML, handles both single-line and multi-line `<NPCCharacter>` opening-tag layouts, inserts `race="elf"` immediately after the `id="..."` attribute, and re-parses every modified file with `xml.etree.ElementTree` as a well-formedness self-check. Re-running `--apply` is a no-op.
+
+Not-tested: in-game render. The user will spot-check Imladris recruits and a Rivendell lord post-apply (pointed ears + elven head mesh).
+
+### ui(career): reposition button to upper-right header
+
+In-game preview of yesterday's CAREER banner revealed it landed in the center skill-panel band — the 295×125 image at `MarginTop=150 HorizontalAlignment=Center` overlapped the "handed weapon speed/damage" stats text and the top edge of the perks panel. Repositioned to the upper-right of the CharacterDeveloper header so it reads as a secondary nav element next to the name plate instead of dominating the skill area.
+
+Updated [`CareerButtonPrefab.cs`](Main/Features/CareerSystem/UI/CareerButtonPrefab.cs): `SuggestedWidth=220 SuggestedHeight=93 HorizontalAlignment=Right MarginTop=30 MarginRight=100`. Aspect 220/93 ≈ 2.37 preserves the source art's 2.36:1 ratio (no horizontal squash). Still anchored in `TopPanelParent` (no XPath / insert-type change — same safe injection point per `.claude/rules/gui-ui.md`).
+
+Not-tested: live in-game coords. The `MarginTop=30` / `MarginRight=100` values are estimates based on the vanilla layout map; minor follow-up tweaks expected after the user verifies in-game.
+
 ## 2026-05-23
 
 ### ui(career): replace career-button placeholder with themed LOTR banner art
@@ -324,6 +381,16 @@ Mirkwood / Rivendell parents on the Character Creation parent-menu screen render
 **Verification.** XML-only — no C# touched, no rebuild needed (`./build.ps1` is a no-op for this change). In-game smoke test: launch Bannerlord → New Sandbox → pick Mirkwood or Rivendell → advance through CC until the parent-menu youth options render both parents → confirm parents stand upright with proper anim cycling, no T-pose / stretched mesh. Repeat for every culture that uses `race="elf"` in its character templates.
 
 Not-tested: every other CC parent action type beyond the 14 declared here. If a vanilla CC stage references a parent-anim type we missed, the engine will fall through to `as_human_warrior`'s definition (or further down the inheritance chain) — same path the dwarf facegen uses for non-CC-parent actions. If a future Bannerlord patch renames the CC parent action types again, repeat this fix recipe for whatever names the 1.4+ engine looks up.
+
+**Follow-up same session (v2 fix).** The first in-game test of the slim entries above confirmed the parent menu now renders elves upright — but the **Early Childhood** stage (and all subsequent CC stages) still showed the elf child lying down / T-posed. Root cause: the Bannerlord 1.3 facegen action-lookup does **not** fall through `base_set` for post-parent CC action types. Inheriting `act_childhood_*` / `act_character_creation_toddler_*` / `act_inventory_idle*` / `act_stand_*` / `act_sit_*` / `act_rider_story_background_*` / `act_horse_story_background_*` via `base_set="as_human_warrior"` returns nothing because `as_human_warrior` is a combat set, not a facegen set. LOTRLOME's `as_dwarf_facegen` works because it declares all ~100 action types **directly** inside the facegen block, not by inheritance.
+
+Replaced the slim 51-line elf entries with **verbatim copies of LOTRLOME's `as_dwarf_facegen` (lines 16812-17134) and `as_dwarf_female_facegen` (lines 17135-17232) blocks**, with only two edits to each: `id` and `base_set` attributes renamed. Male: `id="as_dwarf_facegen"` → `id="as_elf_facegen"`, `base_set="as_dwarf_warrior"` → `base_set="as_human_warrior"`. Female: `id="as_dwarf_female_facegen"` → `id="as_elf_female_facegen"`, `base_set="as_dwarf_facegen"` → `base_set="as_elf_facegen"`. Every animation file referenced (`anim_male_custom`, `anim_childhood_*`, `anim_father_*`, `anim_mother_*`, `anim_toddler_*`, `anim_rider_story_background_*`) is skeleton-flexible — dwarves use them on the dwarf skeleton, elves will use them on the human skeleton they share via `monster_usage="human"`.
+
+Diff size per file grew from ~51 lines (v1) to ~420 lines (v2). Both `E:\Steam\...\LOTRLOME_Armory\ModuleData\action_sets.xml` and [`docs/reference/lotrlome-armory-snapshot/action_sets.xml`](docs/reference/lotrlome-armory-snapshot/action_sets.xml) re-edited in lockstep; both still parse as valid XML (verified via `python -c "import xml.etree.ElementTree as ET; ET.parse(...)"`).
+
+[`docs/reference/lotrlome-armory-snapshot/README.md`](docs/reference/lotrlome-armory-snapshot/README.md) extended with explicit enumeration of all 6 action-type categories that must be declared directly in any `as_<race>_facegen` (the original "14 CC parent action types" was an incomplete list). Memory `feedback_lotrlome_action_set_aliases.md` 2026-05-22 addendum extended with the "declare everything, don't trust inheritance" sub-rule — when authoring a new race facegen, copy LOTRLOME's `as_dwarf_facegen` verbatim and rename only `id` + `base_set`.
+
+**Verification scope updated:** the in-game smoke test now requires advancing through **every** CC stage (parent menu → Early Childhood → Youth → Adolescence → Adulthood), confirming the agent stands / sits / plays anim correctly at each one, not just the parent menu.
 
 ### chore(shaders): hide Pre-compile Shaders main-menu option
 

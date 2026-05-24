@@ -366,9 +366,9 @@
     <string id="Bk3Wqy5j" text="{RULER.NAME}は{CALLING_KINGDOM}の召集に応えないことを決定し、{KINGDOM_TO_CALL_TO_WAR_AGAINST}と戦争しないことにした。" />
     <string id="BlVjIlZF" text="{FACTION_LEADER}は、{KINGDOM_CONSIDERING_PEACE_NAME}が{TRIBUTE_DURATION}日間{TRIBUTE_AMOUNT}の貢納金を支払うことで{KINGDOM_NAME}と和平を結ぶかどうかを決定する。あなたはこの決定に関する立場を選ぶことができる。" />
     <string id="bMCZ5rWQ" text="{RULER.NAME}は、{KINGDOM_TO_CALL_TO_WAR_AGAINST}との戦争に{CALLED_KINGDOM}を召集しないことを決定した。この決定は{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得た。" />
-    <string id="bR7MIkFi" text="{RULER.NAME} has decided against forming an alliance with {KINGDOM_NAME} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="bR7MIkFi" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{KINGDOM_NAME}との同盟結成を見送ることを決定した。" />
     <string id="bXN2fbcv" text="あなたの部下たちは{SETTLEMENT_NAME}の住民を敵としてではなく{SETTLEMENT_CULTURE_NAME}の迷える臣民として扱い、比較的寛大に接している。" />
-    <string id="bYmc9fi3" text="{RULER.NAME} has decided to form an alliance with {KINGDOM_NAME} despite the opposition of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="bYmc9fi3" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{KINGDOM_NAME}との同盟を結ぶことを決定した。" />
     <string id="Cf0amFBD" text="{KINGDOM_TO_CALL_TO_WAR_AGAINST}に対する{CALLING_KINGDOM}の参戦要請を{CALL_TO_WAR_PAYMENT}{GOLD_ICON}で受諾する" />
     <string id="cRpsjvOM" text="{AGGRESSOR_KINGDOM}の{AGGRESSOR_RULER.NAME}は、{?AGGRESSOR_RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て{KINGDOM}に宣戦布告した。" />
     <string id="CrzFdo2H" text="はい。{ENEMYFACTION_INFORMALNAME}との戦いについてです。[ib:hip][if:convo_excited]彼らの戦力の一部を拘束する必要があります。比較的小規模な部隊が素早く彼らの領土を駆け抜け、村々を襲撃すれば良い陽動となるでしょう。彼らの領主たちは襲撃者を追わねばならず、他の場所で我々を脅かすことができなくなります。あなたはこの任務にふさわしい{?PLAYER.GENDER}戦士{?}男{\?}のようだ。どうでしょうか?成功すれば私の感謝と十分な報酬を得られますよ。" />
@@ -388,9 +388,9 @@
     <string id="EqevKYZD" text="{RULER_NAME_AND_TITLE}として、あなたは{KINGDOM_TO_CALL_TO_WAR_AGAINST}に対する参戦を{CALLED_KINGDOM}に{CALL_TO_WAR_COST}{GOLD_ICON}で要請するかどうか決定しなければならない。" />
     <string id="eTylgLCc" text="{KINGDOM_NAME}から使者が到着した。彼らは同盟を申し出ている。あなたの王国は申し出を受け入れるかどうか投票する。" />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM}はもはや{KINGDOM_TO_CALL_TO_WAR_AGAINST}と戦争状態にない。" />
-    <string id="F7CMsDyG" text="{RULER.NAME} has decided against forming an alliance with {KINGDOM_NAME} despite the opposition of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="F7CMsDyG" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{KINGDOM_NAME}との同盟結成を見送ることを決定した。" />
     <string id="fcuUcjYV" text="{RULER.NAME}は{CALLING_KINGDOM}の要請に応じないことを決定し、{KINGDOM_TO_CALL_TO_WAR_AGAINST}と戦わない。この決定は{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得た。" />
-    <string id="FNCq25P1" text="{RULER.NAME} has decided to form an alliance with {KINGDOM_NAME} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="FNCq25P1" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の支持を得て、{KINGDOM_NAME}との同盟を結ぶことを決定した。" />
     <string id="FuNbouTu" text="{KINGDOM_NAME}から使者が到着した。彼らはあなたの王国に{KINGDOM_TO_CALL_TO_WAR_AGAINST}への参戦を要請している。あなたの王国は申し出を受け入れるかどうか投票する。" />
     <string id="G3qGLAeQ" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の意向に反して{CLAN}一族を{KINGDOM}から追放した。" />
     <string id="gf2Lje7o" text="{RULER.NAME}は{KINGDOM_TO_CALL_TO_WAR_AGAINST}に対する参戦を{CALLED_KINGDOM}に要請しないことを決定した。" />
@@ -404,8 +404,8 @@
     <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}の{PEACEMAKER_RULER.NAME}は、{?PEACEMAKER_RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず{KINGDOM}との講和を見送ることを選択した。" />
     <string id="iOmgCFDI" text="{KINGDOM_NAME}との同盟締結に投票する。" />
     <string id="ItueKmqd" text="あなたの一族は現在{QUEST_GIVER_SETTLEMENT_FACTION}と戦争状態にある。{QUEST_GIVER.LINK}との契約は取り消された。" />
-    <string id="izwKmH2I" text="{RULER.NAME} has decided to form an alliance with {KINGDOM_NAME} with the support of half of {?RULER.GENDER}her{?}his{\?} council." />
-    <string id="jaioXYDc" text="{RULER.NAME} has decided against forming an alliance with {KINGDOM_NAME} with the support of half of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="izwKmH2I" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の半数の支持を得て、{KINGDOM_NAME}との同盟を結ぶことを決定した。" />
+    <string id="jaioXYDc" text="{RULER.NAME}は{?RULER.GENDER}彼女{?}彼{\?}の評議会の半数の支持を得て、{KINGDOM_NAME}との同盟結成を見送ることを決定した。" />
     <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE}の{PEACEMAKER_RULER.NAME}は、{?PEACEMAKER_RULER.GENDER}彼女{?}彼{\?}の評議会の反対にもかかわらず、{KINGDOM}との和平を決定した。" />
     <string id="JJQ0Hp4m" text="{MAP_FACTION_NAME}から使者が到着した。{MAP_FACTION_NAME}は両国間の戦争を終結させるため、毎日{GOLD_AMOUNT}{GOLD_ICON}の貢納金を支払うという。あなたの臣下たちは決定をあなたに委ねている。" />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}は現在我々より強大である。我々は力を蓄える時間が必要だ。" />

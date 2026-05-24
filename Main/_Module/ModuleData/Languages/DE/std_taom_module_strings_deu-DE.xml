@@ -380,7 +380,7 @@
     <string id="dov3iRlt" text="{ENEMY_RULER.NAME} von {ENEMY_KINGDOM_INFORMAL_NAME} ist niederträchtig und gefährlich. Wir müssen uns {?ENEMY_RULER.GENDER}ihrer{?}seiner{\?} annehmen, bevor es zu spät ist." />
     <string id="DphlPaF9" text="{AGGRESSOR_RULER.NAME} von {AGGRESSOR_KINGDOM} hat {KINGDOM} trotz des Widerstands {?AGGRESSOR_RULER.GENDER}ihres{?}seines{\?} Rates den Krieg erklärt." />
     <string id="dPOOmYGQ" text="Glaubt Ihr, die Herren und Krieger von {KINGDOM} werden einfach tatenlos zusehen, wenn ihr Volk entführt wird? Lasst uns besser gehen!" />
-    <string id="drZC1Frp" text="{KINGDOM_NAME} was created in {CREATION_YEAR} by {RULER.NAME}, leader of a group of {CULTURE_ADJECTIVE} rebels." />
+    <string id="drZC1Frp" text="{KINGDOM_NAME} wurde im Jahre {CREATION_YEAR} von {RULER.NAME}, Anführer einer Gruppe {CULTURE_ADJECTIVE} Rebellen, gegründet." />
     <string id="eAhgrwkZ" text="Als {RULER_NAME_AND_TITLE} müsst Ihr entscheiden, ob ein Bündnis mit {KINGDOM_NAME} geschlossen wird." />
     <string id="eEmFbQet" text="{RULER.NAME} hat beschlossen, {CALLED_KINGDOM} zum Krieg gegen {KINGDOM_TO_CALL_TO_WAR_AGAINST} zu rufen. Die Entscheidung hatte die Unterstützung {?RULER.GENDER}ihres{?}seines{\?} Rates." />
     <string id="efTah9rk" text="Ich habe nicht die Befugnis, im Namen von {ENEMY_INFORMAL_NAME} Frieden zu schließen. Unser Rat sollte entscheiden, ob wir Frieden anbieten und zu welchen Bedingungen." />

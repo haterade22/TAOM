@@ -1,0 +1,1441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Portuguese (Brazilian)" />
+  </tags>
+  <strings>
+    <string id="TAOM_dunland" text="Dunlândia" />
+    <string id="TAOM_dunland_short" text="Dunlândia" />
+    <string id="TAOM_dunland_title" text="Clãs da Dunlândia" />
+    <string id="TAOM_dunland_ruler" text="Brenin" />
+    <string id="TAOM_dunland_desc" text="A Dunlândia, uma terra áspera e selvagem de colinas ondulantes e florestas densas, é o lar dos ferozes e independentes dunlendinos. Frequentemente marginalizados e em desacordo com seus vizinhos, o povo da Dunlândia foi endurecido por séculos de luta e sobrevivência. Seus chefes lideram através da força e astúcia, unindo clãs sob um estandarte compartilhado de vingança e liberdade. Conhecidos por seus guerreiros ferozes e caçadores habilidosos, os dunlendinos favorecem machados, lanças e arcos, lutando com uma tenacidade nascida de sua profunda conexão com suas terras ancestrais. Embora seus costumes possam parecer primitivos para outros, os dunlendinos são orgulhosos e engenhosos, prontos para reconquistar seu lugar de direito na Terra-média." />
+    <string id="TAOM_gondor" text="Gondor" />
+    <string id="TAOM_gondor_short" text="Gondor" />
+    <string id="TAOM_gondor_title" text="Regência de Gondor" />
+    <string id="TAOM_gondor_ruler" text="Regente" />
+    <string id="TAOM_gondor_desc" text="Gondor ergue-se como um orgulhoso bastião de força e resiliência na Terra-média, conhecida por suas imponentes cidades de pedra branca, linhagem antiga e exércitos habilidosos. Fundada por Elendil e seus filhos após a queda de Númenor, Gondor há muito protege os reinos dos homens contra a crescente escuridão no leste. Com Minas Tirith como sua capital, o reino é renomado por sua bravura, disciplina e lealdade aos Povos Livres. Embora assolada por anos de conflito com Mordor, os guerreiros e Regentes de Gondor mantiveram a esperança viva, aguardando o retorno do rei para restaurar sua antiga glória." />
+    <string id="TAOM_mordor" text="Mordor" />
+    <string id="TAOM_mordor_short" text="Mordor" />
+    <string id="TAOM_mordor_title" text="Domínio de Mordor" />
+    <string id="TAOM_mordor_ruler" text="Senhor das Trevas" />
+    <string id="TAOM_mordor_desc" text="Mordor é um reino sombrio e desolado, forjado nas trevas e governado pelo Senhor das Trevas Sauron. Aninhado atrás das imponentes montanhas negras, este reino transborda de exércitos orcs, trolls impiedosos e forjas ardentes produzindo armas de guerra. De sua fortaleza em Barad-dûr, Sauron comanda uma força imparável, pronta para espalhar seu domínio por toda a Terra-média. Os céus de Mordor estão nublados de cinzas, e suas terras são áridas, um domínio apropriado para a ambição distorcida e magia sombria de Sauron." />
+    <string id="TAOM_dale" text="Dale" />
+    <string id="TAOM_dale_short" text="Dale" />
+    <string id="TAOM_dale_title" text="Reino de Dale" />
+    <string id="TAOM_dale_ruler" text="Rei" />
+    <string id="TAOM_dale_desc" text="Onde as águas do Rio Veloz encontram a sombra da Montanha Solitária, ergue-se Dale. A Cidade dos Homens foi reconstruída das ruínas após a Batalha dos Cinco Exércitos. Outrora um lugar de música e alegria, de comércio e salões de mercado dourados, Dale prosperou sob a proteção de Erebor. Seus mercadores navegavam barcos velozes pelo Celduin, suas ruas ecoavam com risos, e seu povo conhecia a paz. Mas a paz foi despedaçada quando o dragão chegou. Smaug, a morte alada do Norte, desceu sobre Erebor em chamas e fúria, e Dale foi a primeira a sofrer. A cidade queimou, seu povo fugiu, e por quase dois séculos, as orgulhosas torres abobadadas permaneceram silenciosas e quebradas, um monumento à tristeza. Porém, a ruína não é o fim da história de Dale. Com a morte do dragão, Bard, o Arqueiro, ergueu seu estandarte mais uma vez e chamou seu povo de volta ao lar. Das cinzas e pedra ergueu-se Dale novamente, não como era antes, mas maior. Sob o Rei Bard e seu filho Bain, a cidade prospera de novo, suas muralhas fortes, seu povo orgulhoso, e seu olhar sempre vigilante. Os Homens de Dale não são poderosos em número, nem antigos em magia, mas são resolutos e verdadeiros." />
+    <string id="TAOM_harad" text="Harad" />
+    <string id="TAOM_harad_short" text="Harad" />
+    <string id="TAOM_harad_title" text="Taskralan de Harwan" />
+    <string id="TAOM_harad_ruler" text="Taskral" />
+    <string id="TAOM_harad_desc" text="Harad, uma vasta e diversa região ao sul de Gondor, abrange desertos áridos, selvas exuberantes e oásis férteis. Sua geografia é tão variada quanto seu povo, com dunas intermináveis dando lugar a florestas densas e rios repletos de vida. A história de Harad está mergulhada em tradições antigas, com grandes cidades e fortalezas pontilhando a paisagem, construídas por governantes cujos legados ecoam através das eras. O Grande Deserto de Haradwaith separa sua fronteira norte do interior, enquanto suas costas meridionais fervilham de comércio e pirataria. Unidas sob os estandartes de Sauron, as muitas tribos e reinos de Harad canalizam suas tradições profundamente enraizadas em seus esforços de guerra, transformando esta terra vibrante em uma potência de cultura e conflito." />
+    <string id="TAOM_rohan" text="Rohan" />
+    <string id="TAOM_rohan_short" text="Rohan" />
+    <string id="TAOM_rohan_title" text="Reino de Rohan" />
+    <string id="TAOM_rohan_ruler" text="Rei" />
+    <string id="TAOM_rohan_desc" text="Conhecida como a Marca dos Cavaleiros, Rohan é um vasto e extenso reino de planícies abertas e colinas ondulantes, onde habitam os poderosos Rohirrim — cavaleiros habilidosos e guerreiros ferozes. Fundada por Eorl, o Jovem, após sua lendária cavalgada em auxílio a Gondor, Rohan há muito permanece como um aliado firme de Gondor contra a escuridão de Mordor. Dos salões dourados de Meduseld em Edoras, seus reis governam sobre um povo orgulhoso e resiliente que vive pelo vínculo entre cavalo e cavaleiro. Os Rohirrim são famosos por suas cargas de cavalaria, suas canções de valor e sua coragem inabalável. Embora a sombra de Saruman tenha ameaçado suas fronteiras, os filhos e filhas de Rohan permanecem sempre prontos para atender o chamado às armas, defendendo sua terra natal e os povos livres da Terra-média." />
+    <string id="TAOM_khand" text="Khand" />
+    <string id="TAOM_khand_short" text="Khand" />
+    <string id="TAOM_khand_title" text="Cavaleiros do Vento de Khand" />
+    <string id="TAOM_khand_ruler" text="Khudriag" />
+    <string id="TAOM_khand_desc" text="Khand, uma terra acidentada de estepes ondulantes e planícies áridas, situa-se a sudeste de Mordor e serve como um corredor crítico entre o leste e o oeste. Seu povo, os Variags, são ferozes e nômades, conhecidos por seus cavalos velozes e lâminas curvas mortais. Vivendo em um ambiente hostil, aprimoraram suas habilidades como saqueadores e guerreiros, frequentemente entrando em conflito com seus vizinhos e servindo como mercenários para o maior licitante. A lealdade de Khand há muito é cortejada pelo Senhor das Trevas, e muitos de seus guerreiros cavalgaram para a guerra sob a sombra de Mordor. Porém, os Variags são um povo orgulhoso e independente, leais primeiro a seus clãs e chefes, que governam de acampamentos fortificados espalhados pelas planícies varridas pelo vento." />
+    <string id="TAOM_rhun" text="Rhûn" />
+    <string id="TAOM_rhun_short" text="Rhûn" />
+    <string id="TAOM_rhun_title" text="Reino Dourado de Rhûn" />
+    <string id="TAOM_rhun_ruler" text="Loke-Kan" />
+    <string id="TAOM_rhun_desc" text="Muito além do Mar de Rhûn, passadas as estepes ressequidas e a poeira vermelha de impérios esquecidos, jaz o vasto e velado Leste. Aqui habitam os Orientais, um povo orgulhoso e antigo cuja história antecede até mesmo a ascensão de Gondor. Suas terras estendem-se infinitamente sob céus amplos, das margens do mar interior às montanhas sombrias que marcam a borda do mundo conhecido. Os Orientais não são uma única nação, mas uma tapeçaria de tribos e reinos, unidos apenas em sua reverência pela força e sua longa memória de agravos contra o Ocidente. Alguns serviram o Senhor das Trevas voluntariamente, atraídos por promessas de poder e vingança; outros resistem, apegando-se aos velhos costumes e deuses mais antigos. Seus guerreiros são temidos por sua disciplina e seu domínio da biga e do arco, e suas armaduras douradas reluzem como fogo sob o sol oriental." />
+    <string id="aom_dunland_male_name_1" text="Brodar" />
+    <string id="aom_dunland_male_name_2" text="Dunric" />
+    <string id="aom_dunland_male_name_3" text="Eogan" />
+    <string id="aom_dunland_male_name_4" text="Grimdal" />
+    <string id="aom_dunland_male_name_5" text="Tharn" />
+    <string id="aom_dunland_male_name_6" text="Caddoc" />
+    <string id="aom_dunland_male_name_7" text="Mordran" />
+    <string id="aom_dunland_male_name_8" text="Fynric" />
+    <string id="aom_dunland_male_name_9" text="Caedoc" />
+    <string id="aom_dunland_male_name_10" text="Torlan" />
+    <string id="aom_dunland_male_name_11" text="Ragnor" />
+    <string id="aom_dunland_male_name_12" text="Eldric" />
+    <string id="aom_dunland_male_name_13" text="Halric" />
+    <string id="aom_dunland_male_name_14" text="Wulric" />
+    <string id="aom_dunland_male_name_15" text="Cernoc" />
+    <string id="aom_dunland_male_name_16" text="Brynor" />
+    <string id="aom_dunland_male_name_17" text="Gorran" />
+    <string id="aom_dunland_male_name_18" text="Tordoc" />
+    <string id="aom_dunland_male_name_19" text="Fynric" />
+    <string id="aom_dunland_male_name_20" text="Harroc" />
+    <string id="aom_dunland_male_name_21" text="Caelan" />
+    <string id="aom_dunland_male_name_22" text="Wuldar" />
+    <string id="aom_dunland_male_name_23" text="Thorran" />
+    <string id="aom_dunland_male_name_24" text="Grelric" />
+    <string id="aom_dunland_male_name_25" text="Brador" />
+    <string id="aom_dunland_male_name_26" text="Morlan" />
+    <string id="aom_dunland_male_name_27" text="Ardric" />
+    <string id="aom_dunland_male_name_28" text="Cadroc" />
+    <string id="aom_dunland_male_name_29" text="Graldor" />
+    <string id="aom_dunland_male_name_30" text="Farnoc" />
+    <string id="aom_dunland_male_name_31" text="Ulric" />
+    <string id="aom_dunland_male_name_32" text="Brendoc" />
+    <string id="aom_dunland_male_name_33" text="Eadric" />
+    <string id="aom_dunland_male_name_34" text="Thraldor" />
+    <string id="aom_dunland_male_name_35" text="Wulgan" />
+    <string id="aom_dunland_male_name_36" text="Gorran" />
+    <string id="aom_dunland_male_name_37" text="Ragnald" />
+    <string id="aom_dunland_male_name_38" text="Dunmor" />
+    <string id="aom_dunland_male_name_39" text="Thorlic" />
+    <string id="aom_dunland_male_name_40" text="Fynwald" />
+    <string id="aom_dunland_male_name_41" text="Bryldan" />
+    <string id="aom_dunland_male_name_42" text="Granthar" />
+    <string id="aom_dunland_male_name_43" text="Halmod" />
+    <string id="aom_dunland_male_name_44" text="Thrydan" />
+    <string id="aom_dunland_male_name_45" text="Eorlund" />
+    <string id="aom_dunland_male_name_46" text="Gareth" />
+    <string id="aom_dunland_male_name_47" text="Harwic" />
+    <string id="aom_dunland_male_name_48" text="Gildan" />
+    <string id="aom_dunland_male_name_49" text="Wulfram" />
+    <string id="aom_dunland_male_name_50" text="Thorag" />
+    <string id="aom_dunland_female_name_1" text="Bryndis" />
+    <string id="aom_dunland_female_name_2" text="Eydis" />
+    <string id="aom_dunland_female_name_3" text="Morwyn" />
+    <string id="aom_dunland_female_name_4" text="Grisla" />
+    <string id="aom_dunland_female_name_5" text="Halda" />
+    <string id="aom_dunland_female_name_6" text="Thyra" />
+    <string id="aom_dunland_female_name_7" text="Caedwyn" />
+    <string id="aom_dunland_female_name_8" text="Elrin" />
+    <string id="aom_dunland_female_name_9" text="Fynwyn" />
+    <string id="aom_dunland_female_name_10" text="Thalda" />
+    <string id="aom_dunland_female_name_11" text="Grelwyn" />
+    <string id="aom_dunland_female_name_12" text="Harwyn" />
+    <string id="aom_dunland_female_name_13" text="Aldis" />
+    <string id="aom_dunland_female_name_14" text="Wynla" />
+    <string id="aom_dunland_female_name_15" text="Brythea" />
+    <string id="aom_dunland_female_name_16" text="Eorra" />
+    <string id="aom_dunland_female_name_17" text="Thylda" />
+    <string id="aom_dunland_female_name_18" text="Granna" />
+    <string id="aom_dunland_female_name_19" text="Elwyn" />
+    <string id="aom_dunland_female_name_20" text="Morla" />
+    <string id="aom_dunland_female_name_21" text="Harla" />
+    <string id="aom_dunland_female_name_22" text="Fynla" />
+    <string id="aom_dunland_female_name_23" text="Gryssa" />
+    <string id="aom_dunland_female_name_24" text="Thryssa" />
+    <string id="aom_dunland_female_name_25" text="Halwyn" />
+    <string id="aom_dunland_female_name_26" text="Caelin" />
+    <string id="aom_dunland_female_name_27" text="Grelwyn" />
+    <string id="aom_dunland_female_name_28" text="Thara" />
+    <string id="aom_dunland_female_name_29" text="Morra" />
+    <string id="aom_dunland_female_name_30" text="Bryna" />
+    <string id="aom_dunland_female_name_31" text="Thilda" />
+    <string id="aom_dunland_female_name_32" text="Elis" />
+    <string id="aom_dunland_female_name_33" text="Caelwyn" />
+    <string id="aom_dunland_female_name_34" text="Aldra" />
+    <string id="aom_dunland_female_name_35" text="Harra" />
+    <string id="aom_dunland_female_name_36" text="Wynla" />
+    <string id="aom_dunland_female_name_37" text="Thylda" />
+    <string id="aom_dunland_female_name_38" text="Gresla" />
+    <string id="aom_dunland_female_name_39" text="Fynwyn" />
+    <string id="aom_dunland_female_name_40" text="Elra" />
+    <string id="aom_dunland_female_name_41" text="Morwyn" />
+    <string id="aom_dunland_female_name_42" text="Halda" />
+    <string id="aom_dunland_female_name_43" text="Caedla" />
+    <string id="aom_dunland_female_name_44" text="Thanna" />
+    <string id="aom_dunland_female_name_45" text="Bryndel" />
+    <string id="aom_dunland_female_name_46" text="Griswyn" />
+    <string id="aom_dunland_female_name_47" text="Eydis" />
+    <string id="aom_dunland_female_name_48" text="Fynla" />
+    <string id="aom_dunland_female_name_49" text="Harwyn" />
+    <string id="aom_dunland_female_name_50" text="Wynna" />
+    <string id="aom_dunland_clan_name_01" text="Os Lobos Vermelhos" />
+    <string id="aom_dunland_clan_name_02" text="As Presas de Ferro" />
+    <string id="aom_dunland_clan_name_03" text="Os Quebradores de Pedra" />
+    <string id="aom_dunland_clan_name_04" text="Os Caçadores das Sombras" />
+    <string id="aom_dunland_clan_name_05" text="Os Saqueadores das Colinas" />
+    <string id="aom_dunland_clan_name_06" text="As Lâminas Selvagens" />
+    <string id="aom_dunland_clan_name_07" text="Os Invocadores de Tempestades" />
+    <string id="aom_dunland_clan_name_08" text="Os Corvos Sangrentos" />
+    <string id="aom_dunland_clan_name_09" text="As Lanças de Osso" />
+    <string id="aom_dunland_clan_name_10" text="Os Abalatierras" />
+    <string id="aom_dunland_clan_name_11" text="Os Escudos Espinhosos" />
+    <string id="aom_dunland_clan_name_12" text="Os Lobos Sombrios" />
+    <string id="aom_dunland_clan_name_13" text="Os Machados Quebrados" />
+    <string id="aom_dunland_clan_name_14" text="Os Olhos de Corvo" />
+    <string id="aom_dunland_clan_name_15" text="O Clã Uivo Gélido" />
+    <string id="aom_dunland_clan_name_16" text="Os Vinculados ao Ferro" />
+    <string id="aom_dunland_clan_name_17" text="Os Punhos de Pedra" />
+    <string id="aom_dunland_clan_name_18" text="O Vendaval Uivante" />
+    <string id="aom_dunland_clan_name_19" text="As Sombras da Montanha" />
+    <string id="aom_harad_male_name_1" text="Azaran" />
+    <string id="aom_harad_male_name_2" text="Zamir" />
+    <string id="aom_harad_male_name_3" text="Khalid" />
+    <string id="aom_harad_male_name_4" text="Rashid" />
+    <string id="aom_harad_male_name_5" text="Nazir" />
+    <string id="aom_harad_male_name_6" text="Jameel" />
+    <string id="aom_harad_male_name_7" text="Hasim" />
+    <string id="aom_harad_male_name_8" text="Faraj" />
+    <string id="aom_harad_male_name_9" text="Sahim" />
+    <string id="aom_harad_male_name_10" text="Tariq" />
+    <string id="aom_harad_male_name_11" text="Basim" />
+    <string id="aom_harad_male_name_12" text="Karim" />
+    <string id="aom_harad_male_name_13" text="Salim" />
+    <string id="aom_harad_male_name_14" text="Rayan" />
+    <string id="aom_harad_male_name_15" text="Zafar" />
+    <string id="aom_harad_male_name_16" text="Yasir" />
+    <string id="aom_harad_male_name_17" text="Hakeem" />
+    <string id="aom_harad_male_name_18" text="Ibrahim" />
+    <string id="aom_harad_male_name_19" text="Faisal" />
+    <string id="aom_harad_male_name_20" text="Najeeb" />
+    <string id="aom_harad_male_name_21" text="Munir" />
+    <string id="aom_harad_male_name_22" text="Ashraf" />
+    <string id="aom_harad_male_name_23" text="Zakwan" />
+    <string id="aom_harad_male_name_24" text="Azeem" />
+    <string id="aom_harad_male_name_25" text="Suleiman" />
+    <string id="aom_harad_male_name_26" text="Hakim" />
+    <string id="aom_harad_male_name_27" text="Jibril" />
+    <string id="aom_harad_male_name_28" text="Tahir" />
+    <string id="aom_harad_male_name_29" text="Rafiq" />
+    <string id="aom_harad_male_name_30" text="Malik" />
+    <string id="aom_harad_male_name_31" text="Zahir" />
+    <string id="aom_harad_male_name_32" text="Asim" />
+    <string id="aom_harad_male_name_33" text="Nabil" />
+    <string id="aom_harad_male_name_34" text="Omar" />
+    <string id="aom_harad_male_name_35" text="Qasim" />
+    <string id="aom_harad_male_name_36" text="Halim" />
+    <string id="aom_harad_male_name_37" text="Mansoor" />
+    <string id="aom_harad_male_name_38" text="Yahya" />
+    <string id="aom_harad_male_name_39" text="Shakir" />
+    <string id="aom_harad_male_name_40" text="Adil" />
+    <string id="aom_harad_male_name_41" text="Mahdi" />
+    <string id="aom_harad_male_name_42" text="Fahim" />
+    <string id="aom_harad_male_name_43" text="Latif" />
+    <string id="aom_harad_male_name_44" text="Rameez" />
+    <string id="aom_harad_male_name_45" text="Tameem" />
+    <string id="aom_harad_male_name_46" text="Yazid" />
+    <string id="aom_harad_male_name_47" text="Kamar" />
+    <string id="aom_harad_male_name_48" text="Hassan" />
+    <string id="aom_harad_male_name_49" text="Azim" />
+    <string id="aom_harad_male_name_50" text="Zubaid" />
+    <string id="aom_harad_female_name_1" text="Zahira" />
+    <string id="aom_harad_female_name_2" text="Nadia" />
+    <string id="aom_harad_female_name_3" text="Yasmin" />
+    <string id="aom_harad_female_name_4" text="Amira" />
+    <string id="aom_harad_female_name_5" text="Layla" />
+    <string id="aom_harad_female_name_6" text="Rania" />
+    <string id="aom_harad_female_name_7" text="Jamila" />
+    <string id="aom_harad_female_name_8" text="Hafsa" />
+    <string id="aom_harad_female_name_9" text="Zuleika" />
+    <string id="aom_harad_female_name_10" text="Amina" />
+    <string id="aom_harad_female_name_11" text="Salima" />
+    <string id="aom_harad_female_name_12" text="Lamia" />
+    <string id="aom_harad_female_name_13" text="Samira" />
+    <string id="aom_harad_female_name_14" text="Nazeera" />
+    <string id="aom_harad_female_name_15" text="Ruqaya" />
+    <string id="aom_harad_female_name_16" text="Halima" />
+    <string id="aom_harad_female_name_17" text="Aziza" />
+    <string id="aom_harad_female_name_18" text="Khadija" />
+    <string id="aom_harad_female_name_19" text="Fadwa" />
+    <string id="aom_harad_female_name_20" text="Safiya" />
+    <string id="aom_harad_female_name_21" text="Aalia" />
+    <string id="aom_harad_female_name_22" text="Nawal" />
+    <string id="aom_harad_female_name_23" text="Bushra" />
+    <string id="aom_harad_female_name_24" text="Zahra" />
+    <string id="aom_harad_female_name_25" text="Rihana" />
+    <string id="aom_harad_female_name_26" text="Sumaya" />
+    <string id="aom_harad_female_name_27" text="Naima" />
+    <string id="aom_harad_female_name_28" text="Rashida" />
+    <string id="aom_harad_female_name_29" text="Zainab" />
+    <string id="aom_harad_female_name_30" text="Shaima" />
+    <string id="aom_harad_female_name_31" text="Munira" />
+    <string id="aom_harad_female_name_32" text="Fatima" />
+    <string id="aom_harad_female_name_33" text="Shirin" />
+    <string id="aom_harad_female_name_34" text="Saniya" />
+    <string id="aom_harad_female_name_35" text="Malika" />
+    <string id="aom_harad_female_name_36" text="Afiya" />
+    <string id="aom_harad_female_name_37" text="Zain" />
+    <string id="aom_harad_female_name_38" text="Farida" />
+    <string id="aom_harad_female_name_39" text="Amani" />
+    <string id="aom_harad_female_name_40" text="Nazira" />
+    <string id="aom_harad_female_name_41" text="Huda" />
+    <string id="aom_harad_female_name_42" text="Rahma" />
+    <string id="aom_harad_female_name_43" text="Yamila" />
+    <string id="aom_harad_female_name_44" text="Shama" />
+    <string id="aom_harad_female_name_45" text="Tamina" />
+    <string id="aom_harad_female_name_46" text="Zubaida" />
+    <string id="aom_harad_female_name_47" text="Rabiya" />
+    <string id="aom_harad_female_name_48" text="Asma" />
+    <string id="aom_harad_female_name_49" text="Latifa" />
+    <string id="aom_harad_female_name_50" text="Saida" />
+    <string id="aom_harad_clan_name_01" text="As Areias Ardentes" />
+    <string id="aom_harad_clan_name_02" text="As Lâminas Douradas" />
+    <string id="aom_harad_clan_name_03" text="Os Sóis do Deserto" />
+    <string id="aom_harad_clan_name_04" text="As Lanças Vermelhas" />
+    <string id="aom_harad_clan_name_05" text="Os Cavaleiros das Dunas" />
+    <string id="aom_harad_clan_name_06" text="O Vento Escaldante" />
+    <string id="aom_harad_clan_name_07" text="Os Guerreiros da Tempestade de Areia" />
+    <string id="aom_harad_clan_name_08" text="As Presas da Serpente" />
+    <string id="aom_harad_clan_name_09" text="Os Escorpiões Negros" />
+    <string id="aom_harad_clan_name_10" text="Os Guardiões dos Mûmakil" />
+    <string id="aom_harad_clan_name_11" text="Os Guardiões do Oásis" />
+    <string id="aom_harad_clan_name_12" text="Os Tições" />
+    <string id="aom_harad_clan_name_13" text="Os Escudos Carmesins" />
+    <string id="aom_harad_clan_name_14" text="O Crescente Dourado" />
+    <string id="aom_harad_clan_name_15" text="As Sombras Silenciosas" />
+    <string id="aom_harad_clan_name_16" text="Os Golpeadores do Sol" />
+    <string id="aom_harad_clan_name_17" text="Os Guardiões das Dunas" />
+    <string id="aom_harad_clan_name_18" text="Os Cavaleiros da Serpente" />
+    <string id="aom_harad_clan_name_19" text="Os Cascos Flamejantes" />
+    <string id="aom_harad_clan_name_20" text="A Areia do Crepúsculo" />
+    <string id="aom_rohan_male_name_1" text="Eadred" />
+    <string id="aom_rohan_male_name_2" text="Eomund" />
+    <string id="aom_rohan_male_name_3" text="Ceorl" />
+    <string id="aom_rohan_male_name_4" text="Aethelric" />
+    <string id="aom_rohan_male_name_5" text="Beorhthelm" />
+    <string id="aom_rohan_male_name_6" text="Ealdwulf" />
+    <string id="aom_rohan_male_name_7" text="Wulfgar" />
+    <string id="aom_rohan_male_name_8" text="Theodric" />
+    <string id="aom_rohan_male_name_9" text="Ealric" />
+    <string id="aom_rohan_male_name_10" text="Bryhtwulf" />
+    <string id="aom_rohan_male_name_11" text="Theodwine" />
+    <string id="aom_rohan_male_name_12" text="Cynric" />
+    <string id="aom_rohan_male_name_13" text="Eormenric" />
+    <string id="aom_rohan_male_name_14" text="Eadhelm" />
+    <string id="aom_rohan_male_name_15" text="Aldwulf" />
+    <string id="aom_rohan_male_name_16" text="Frithgar" />
+    <string id="aom_rohan_male_name_17" text="Oswine" />
+    <string id="aom_rohan_male_name_18" text="Leofwine" />
+    <string id="aom_rohan_male_name_19" text="Theobald" />
+    <string id="aom_rohan_male_name_20" text="Wynfrith" />
+    <string id="aom_rohan_male_name_21" text="Hereward" />
+    <string id="aom_rohan_male_name_22" text="Eothain" />
+    <string id="aom_rohan_male_name_23" text="Guthric" />
+    <string id="aom_rohan_male_name_24" text="Theowulf" />
+    <string id="aom_rohan_male_name_25" text="Framric" />
+    <string id="aom_rohan_male_name_26" text="Eadgar" />
+    <string id="aom_rohan_male_name_27" text="Heremod" />
+    <string id="aom_rohan_male_name_28" text="Beornhelm" />
+    <string id="aom_rohan_male_name_29" text="Sigefred" />
+    <string id="aom_rohan_male_name_30" text="Theodenric" />
+    <string id="aom_rohan_male_name_31" text="Ealwulf" />
+    <string id="aom_rohan_male_name_32" text="Garmund" />
+    <string id="aom_rohan_male_name_33" text="Hrothgar" />
+    <string id="aom_rohan_male_name_34" text="Eowald" />
+    <string id="aom_rohan_male_name_35" text="Ceowulf" />
+    <string id="aom_rohan_male_name_36" text="Faramund" />
+    <string id="aom_rohan_male_name_37" text="Aethelhelm" />
+    <string id="aom_rohan_male_name_38" text="Eofor" />
+    <string id="aom_rohan_male_name_39" text="Wynstan" />
+    <string id="aom_rohan_male_name_40" text="Herewine" />
+    <string id="aom_rohan_male_name_41" text="Guthwine" />
+    <string id="aom_rohan_male_name_42" text="Cynwine" />
+    <string id="aom_rohan_male_name_43" text="Aelfric" />
+    <string id="aom_rohan_male_name_44" text="Wulfstan" />
+    <string id="aom_rohan_male_name_45" text="Beorhtwine" />
+    <string id="aom_rohan_male_name_46" text="Theomund" />
+    <string id="aom_rohan_male_name_47" text="Ceowine" />
+    <string id="aom_rohan_male_name_48" text="Theodhelm" />
+    <string id="aom_rohan_male_name_49" text="Leofhelm" />
+    <string id="aom_rohan_male_name_50" text="Aelfwine" />
+    <string id="aom_rohan_male_name_51" text="Wulfnoth" />
+    <string id="aom_rohan_male_name_52" text="Thelward" />
+    <string id="aom_rohan_male_name_53" text="Thelme" />
+    <string id="aom_rohan_male_name_54" text="Eormred" />
+    <string id="aom_rohan_male_name_55" text="Aelwyne" />
+    <string id="aom_rohan_male_name_56" text="Ilfgar" />
+    <string id="aom_rohan_male_name_57" text="Alfgar" />
+    <string id="aom_rohan_male_name_58" text="Ulfar" />
+    <string id="aom_rohan_male_name_59" text="Leofar" />
+    <string id="aom_rohan_male_name_60" text="Leofric" />
+    <string id="aom_rohan_female_name_1" text="Eadgifu" />
+    <string id="aom_rohan_female_name_2" text="Theodwyn" />
+    <string id="aom_rohan_female_name_3" text="Aethelhild" />
+    <string id="aom_rohan_female_name_4" text="Cynethryth" />
+    <string id="aom_rohan_female_name_5" text="Beorthild" />
+    <string id="aom_rohan_female_name_6" text="Frithwyn" />
+    <string id="aom_rohan_female_name_7" text="Wynfrith" />
+    <string id="aom_rohan_female_name_8" text="Eormenhild" />
+    <string id="aom_rohan_female_name_9" text="Hildith" />
+    <string id="aom_rohan_female_name_10" text="Eowynne" />
+    <string id="aom_rohan_female_name_11" text="Leofwyn" />
+    <string id="aom_rohan_female_name_12" text="Ealhild" />
+    <string id="aom_rohan_female_name_13" text="Theowyn" />
+    <string id="aom_rohan_female_name_14" text="Wynfrida" />
+    <string id="aom_rohan_female_name_15" text="Aldgifu" />
+    <string id="aom_rohan_female_name_16" text="Herelind" />
+    <string id="aom_rohan_female_name_17" text="Brynhild" />
+    <string id="aom_rohan_female_name_18" text="Sigewyn" />
+    <string id="aom_rohan_female_name_19" text="Eadwyn" />
+    <string id="aom_rohan_female_name_20" text="Cynwyn" />
+    <string id="aom_rohan_female_name_21" text="Hildred" />
+    <string id="aom_rohan_female_name_22" text="Ethelwyn" />
+    <string id="aom_rohan_female_name_23" text="Ceolwyn" />
+    <string id="aom_rohan_female_name_24" text="Frithlind" />
+    <string id="aom_rohan_female_name_25" text="Theodith" />
+    <string id="aom_rohan_female_name_26" text="Ethelfrida" />
+    <string id="aom_rohan_female_name_27" text="Beorhild" />
+    <string id="aom_rohan_female_name_28" text="Eormhild" />
+    <string id="aom_rohan_female_name_29" text="Leofhild" />
+    <string id="aom_rohan_female_name_30" text="Aldwyn" />
+    <string id="aom_rohan_female_name_31" text="Wynhild" />
+    <string id="aom_rohan_female_name_32" text="Hildwyn" />
+    <string id="aom_rohan_female_name_33" text="Eadfrida" />
+    <string id="aom_rohan_female_name_34" text="Theodlin" />
+    <string id="aom_rohan_female_name_35" text="Cynfrith" />
+    <string id="aom_rohan_female_name_36" text="Guthwyn" />
+    <string id="aom_rohan_female_name_37" text="Hildwynne" />
+    <string id="aom_rohan_female_name_38" text="Ealhfrida" />
+    <string id="aom_rohan_female_name_39" text="Sigith" />
+    <string id="aom_rohan_female_name_40" text="Wynfrithia" />
+    <string id="aom_rohan_female_name_41" text="Eadgitha" />
+    <string id="aom_rohan_female_name_42" text="Aethelreda" />
+    <string id="aom_rohan_female_name_43" text="Beorthwyn" />
+    <string id="aom_rohan_female_name_44" text="Frithgifu" />
+    <string id="aom_rohan_female_name_45" text="Theodfrith" />
+    <string id="aom_rohan_female_name_46" text="Wynhilda" />
+    <string id="aom_rohan_female_name_47" text="Ealhfrith" />
+    <string id="aom_rohan_female_name_48" text="Cynethild" />
+    <string id="aom_rohan_female_name_49" text="Ealhwyn" />
+    <string id="aom_rohan_female_name_50" text="Eadwynne" />
+    <string id="aom_rohan_clan_name_01" text="Harolding" />
+    <string id="aom_rohan_clan_name_02" text="Earfening" />
+    <string id="aom_rohan_clan_name_03" text="Aldoringas" />
+    <string id="aom_rohan_clan_name_04" text="Hamaingas" />
+    <string id="aom_rohan_clan_name_05" text="Arngriming" />
+    <string id="aom_rohan_clan_name_06" text="Sweordbora" />
+    <string id="aom_rohan_clan_name_07" text="Wundeming" />
+    <string id="aom_rohan_clan_name_08" text="Marovanding" />
+    <string id="aom_rohan_clan_name_09" text="Kalmundas" />
+    <string id="aom_rohan_clan_name_10" text="Earmynding" />
+    <string id="aom_rhun_male_name_1" text="Khalrud" />
+    <string id="aom_rhun_male_name_2" text="Torgash" />
+    <string id="aom_rhun_male_name_3" text="Vaskir" />
+    <string id="aom_rhun_male_name_4" text="Rhazir" />
+    <string id="aom_rhun_male_name_5" text="Nazruk" />
+    <string id="aom_rhun_male_name_6" text="Tharun" />
+    <string id="aom_rhun_male_name_7" text="Dagrim" />
+    <string id="aom_rhun_male_name_8" text="Zarnash" />
+    <string id="aom_rhun_male_name_9" text="Varlek" />
+    <string id="aom_rhun_male_name_10" text="Fazrik" />
+    <string id="aom_rhun_male_name_11" text="Orzun" />
+    <string id="aom_rhun_male_name_12" text="Khulgar" />
+    <string id="aom_rhun_male_name_13" text="Durzag" />
+    <string id="aom_rhun_male_name_14" text="Marok" />
+    <string id="aom_rhun_male_name_15" text="Zahgrim" />
+    <string id="aom_rhun_male_name_16" text="Narash" />
+    <string id="aom_rhun_male_name_17" text="Tahrik" />
+    <string id="aom_rhun_male_name_18" text="Vazrik" />
+    <string id="aom_rhun_male_name_19" text="Uzrad" />
+    <string id="aom_rhun_male_name_20" text="Zhoram" />
+    <string id="aom_rhun_male_name_21" text="Rhashad" />
+    <string id="aom_rhun_male_name_22" text="Barkhan" />
+    <string id="aom_rhun_male_name_23" text="Sargul" />
+    <string id="aom_rhun_male_name_24" text="Thurgan" />
+    <string id="aom_rhun_male_name_25" text="Varim" />
+    <string id="aom_rhun_male_name_26" text="Mazrik" />
+    <string id="aom_rhun_male_name_27" text="Khalzar" />
+    <string id="aom_rhun_male_name_28" text="Nashor" />
+    <string id="aom_rhun_male_name_29" text="Gurash" />
+    <string id="aom_rhun_male_name_30" text="Durzag" />
+    <string id="aom_rhun_male_name_31" text="Zharkal" />
+    <string id="aom_rhun_male_name_32" text="Torakh" />
+    <string id="aom_rhun_male_name_33" text="Farnul" />
+    <string id="aom_rhun_male_name_34" text="Marzuk" />
+    <string id="aom_rhun_male_name_35" text="Zharun" />
+    <string id="aom_rhun_male_name_36" text="Naruk" />
+    <string id="aom_rhun_male_name_37" text="Sargan" />
+    <string id="aom_rhun_male_name_38" text="Thurmik" />
+    <string id="aom_rhun_male_name_39" text="Dazrik" />
+    <string id="aom_rhun_male_name_40" text="Kharnul" />
+    <string id="aom_rhun_male_name_41" text="Vashkir" />
+    <string id="aom_rhun_male_name_42" text="Rhodan" />
+    <string id="aom_rhun_male_name_43" text="Tazruk" />
+    <string id="aom_rhun_male_name_44" text="Gorash" />
+    <string id="aom_rhun_male_name_45" text="Nazrin" />
+    <string id="aom_rhun_male_name_46" text="Tharkal" />
+    <string id="aom_rhun_male_name_47" text="Mazhad" />
+    <string id="aom_rhun_male_name_48" text="Orzrik" />
+    <string id="aom_rhun_male_name_49" text="Zharnak" />
+    <string id="aom_rhun_male_name_50" text="Farzuk" />
+    <string id="aom_rhun_female_name_1" text="Rhazira" />
+    <string id="aom_rhun_female_name_2" text="Tazmina" />
+    <string id="aom_rhun_female_name_3" text="Vazira" />
+    <string id="aom_rhun_female_name_4" text="Mazrika" />
+    <string id="aom_rhun_female_name_5" text="Zahrina" />
+    <string id="aom_rhun_female_name_6" text="Khalira" />
+    <string id="aom_rhun_female_name_7" text="Orzila" />
+    <string id="aom_rhun_female_name_8" text="Durzanna" />
+    <string id="aom_rhun_female_name_9" text="Narima" />
+    <string id="aom_rhun_female_name_10" text="Tharila" />
+    <string id="aom_rhun_female_name_11" text="Varila" />
+    <string id="aom_rhun_female_name_12" text="Dazira" />
+    <string id="aom_rhun_female_name_13" text="Rhamira" />
+    <string id="aom_rhun_female_name_14" text="Fazira" />
+    <string id="aom_rhun_female_name_15" text="Uzrila" />
+    <string id="aom_rhun_female_name_16" text="Zhalina" />
+    <string id="aom_rhun_female_name_17" text="Khulisa" />
+    <string id="aom_rhun_female_name_18" text="Barkhira" />
+    <string id="aom_rhun_female_name_19" text="Nariza" />
+    <string id="aom_rhun_female_name_20" text="Tharnila" />
+    <string id="aom_rhun_female_name_21" text="Rhashira" />
+    <string id="aom_rhun_female_name_22" text="Mazhara" />
+    <string id="aom_rhun_female_name_23" text="Varshira" />
+    <string id="aom_rhun_female_name_24" text="Zharnira" />
+    <string id="aom_rhun_female_name_25" text="Sarkira" />
+    <string id="aom_rhun_female_name_26" text="Farniza" />
+    <string id="aom_rhun_female_name_27" text="Goriza" />
+    <string id="aom_rhun_female_name_28" text="Nazira" />
+    <string id="aom_rhun_female_name_29" text="Kharnila" />
+    <string id="aom_rhun_female_name_30" text="Torila" />
+    <string id="aom_rhun_female_name_31" text="Dhurina" />
+    <string id="aom_rhun_female_name_32" text="Vashila" />
+    <string id="aom_rhun_female_name_33" text="Nariza" />
+    <string id="aom_rhun_female_name_34" text="Fazrim" />
+    <string id="aom_rhun_female_name_35" text="Mazhira" />
+    <string id="aom_rhun_female_name_36" text="Khalia" />
+    <string id="aom_rhun_female_name_37" text="Sarniza" />
+    <string id="aom_rhun_female_name_38" text="Orlina" />
+    <string id="aom_rhun_female_name_39" text="Ruhana" />
+    <string id="aom_rhun_female_name_40" text="Tharniza" />
+    <string id="aom_rhun_female_name_41" text="Zhalira" />
+    <string id="aom_rhun_female_name_42" text="Rhazina" />
+    <string id="aom_rhun_female_name_43" text="Durshira" />
+    <string id="aom_rhun_female_name_44" text="Barkhira" />
+    <string id="aom_rhun_female_name_45" text="Thariza" />
+    <string id="aom_rhun_female_name_46" text="Mazina" />
+    <string id="aom_rhun_female_name_47" text="Narilia" />
+    <string id="aom_rhun_female_name_48" text="Farnina" />
+    <string id="aom_rhun_female_name_49" text="Zhalima" />
+    <string id="aom_rhun_female_name_50" text="Orzina" />
+    <string id="aom_rhun_clan_name_01" text="Lanças de Ferro" />
+    <string id="aom_rhun_clan_name_02" text="Cimitarras Douradas" />
+    <string id="aom_rhun_clan_name_03" text="Estandartes Vermelhos" />
+    <string id="aom_rhun_clan_name_04" text="Lâminas Ardentes" />
+    <string id="aom_rhun_clan_name_05" text="Sangue de Rhûn" />
+    <string id="aom_rhun_clan_name_06" text="Guerreiros Carmesins" />
+    <string id="aom_rhun_clan_name_07" text="Escudos Negros" />
+    <string id="aom_rhun_clan_name_08" text="Invocadores de Tempestades" />
+    <string id="aom_rhun_clan_name_09" text="Guardiões Escarlates" />
+    <string id="aom_rhun_clan_name_10" text="Horda Dourada" />
+    <string id="aom_empire_name" text="Dunlandinos" />
+    <string id="aom_empire_desc" text="Os Dunlandinos são um povo rude e feroz, que habita as colinas selvagens e terras indomadas a oeste de Rohan. Há muito ressentidos com os Rohirrim, a quem veem como invasores de suas terras ancestrais, os Dunlandinos são unidos por sua herança compartilhada e feroz independência. Hábeis em guerrilha e sobrevivência, confiam na astúcia e ferocidade para superar seus inimigos. Embora frequentemente desprezados como simples montanheses, os Dunlandinos são um povo orgulhoso e resistente, que protege ferozmente suas terras e modo de vida. Movidos por um rancor profundo contra Rohan, aliaram-se às forças das trevas, buscando vingança e a restauração de suas terras perdidas." />
+    <string id="aom_aserai_name" text="Haradrim" />
+    <string id="aom_aserai_desc" text="Os Haradrim são um povo orgulhoso e feroz originário dos desertos e savanas do distante sul. Renomados por seu domínio de bestas exóticas como os mûmakil, seus guerreiros combinam habilidade, resistência e precisão mortal em batalha. Harad é uma terra de extremos, com seu sol escaldante, areias douradas e oásis vibrantes. Seu povo é unido por antigas tradições, lealdade às suas tribos e o chamado de seus chefes e reis. Frequentemente aliados às forças das trevas, os Haradrim são motivados pela vingança contra Gondor e pela promessa de poder e domínio oferecida por Sauron." />
+    <string id="aom_vlandia_name" text="Rohirrim" />
+    <string id="aom_vlandia_desc" text="Os Rohirrim, ou Senhores dos Cavalos de Rohan, são renomados por sua cavalaria incomparável e profundo vínculo com seus corcéis. Orgulhosos e de espírito livre, habitam as planícies ondulantes de Riddermark, vivendo em aldeias e fortalezas como Edoras. Guiados por seu Rei e leais ao seu povo, os Rohirrim prezam a honra, lealdade e coragem. Seus guerreiros cavalgam destemidamente para a batalha, formando a espinha dorsal da resistência da Terra-média contra a sombra. Embora firmes em suas tradições, os Rohirrim estão sempre prontos para defender suas terras e aliados, empunhando lanças, espadas e escudos com precisão." />
+    <string id="aom_khuzait_name" text="Orientais" />
+    <string id="aom_khuzait_desc" text="Os Orientais são um povo diverso e temível das distantes terras de Rhûn. Conhecidos por sua lealdade a Sauron, marcham para a guerra com precisão e disciplina, empunhando lâminas curvas, lanças e enormes tambores de guerra que ecoam pelo campo de batalha. Suas armaduras douradas e estandartes carmesins refletem seu feroz orgulho e proeza marcial. Divididos em clãs e tribos, os Orientais se unem sob poderosos chefes para trazer o poder de Rhûn contra os Povos Livres da Terra-média." />
+    <string id="TAOM_sturgia_culture" text="Bardense" />
+    <string id="TAOM_sturgia_desc" text="Os Bardenses de Dale, assim nomeados em honra a Bard, o Arqueiro, são um povo orgulhoso e trabalhador que ascendeu à proeminência após reconquistar sua terra natal da sombra de Smaug. Situada entre a Montanha Solitária e o Lago Comprido, Dale prospera como um centro de comércio e cultura. Conhecidos por sua resiliência e artesanato, os Bardenses se destacam na forja de armas e armaduras, rivalizando até mesmo com os Anões de Erebor. Seus exércitos, compostos por arqueiros disciplinados, espadachins robustos e escaramuçadores ágeis, defendem suas terras com determinação feroz. Unidos sob líderes nobres, os Bardenses estão sempre vigilantes, protegendo contra as trevas que avançam e preservando seu rico patrimônio." />
+    <string id="TAOM_battania_culture" text="Variag" />
+    <string id="TAOM_battania_desc" text="The Variags of Khand are a fierce and warlike people, hailing from the dry and rugged lands east of Mordor. Known for their mercenary prowess and loyalty to Sauron, the Variags fight with unmatched ferocity. They ride swift warhorses into battle, wielding curved blades and long spears with deadly precision. Their bronze and crimson armor, adorned with intricate designs, reflects their proud and martial heritage. Divided into tribes and clans, the Variags unite under powerful warlords, bringing fear and chaos to the enemies of the Dark Lord." />
+    <string id="TAOM_clan_empire_north_1" text="Blaidd-luth" />
+    <string id="TAOM_clan_empire_north_2" text="Turch-luth" />
+    <string id="TAOM_clan_empire_north_3" text="Uch-luth" />
+    <string id="TAOM_clan_empire_north_4" text="Arth-luth" />
+    <string id="TAOM_clan_empire_north_5" text="Cigfran-luth" />
+    <string id="TAOM_clan_empire_north_6" text="Hebog-luth" />
+    <string id="TAOM_clan_empire_north_7" text="Draig-luth" />
+    <string id="TAOM_clan_empire_north_8" text="Caru-luth" />
+    <string id="TAOM_clan_empire_north_9" text="Avanc-luth" />
+    <string id="TAOM_clan_empire_west_1" text="House of Húrinionath" />
+    <string id="TAOM_clan_empire_west_2" text="House of Imrazôrionath" />
+    <string id="TAOM_clan_empire_west_3" text="House of Eärnurionath" />
+    <string id="TAOM_clan_empire_west_4" text="House of Barahirionath" />
+    <string id="TAOM_clan_empire_west_5" text="House of Ausirionath" />
+    <string id="TAOM_clan_empire_west_6" text="House of Halboronionath" />
+    <string id="TAOM_clan_empire_west_7" text="House of Malandilionath" />
+    <string id="TAOM_clan_empire_west_8" text="House of Olindurionath" />
+    <string id="TAOM_clan_empire_west_9" text="House of Danuhirionath" />
+    <string id="TAOM_clan_empire_south_1" text="Dôlgubêth" />
+    <string id="TAOM_clan_empire_south_2" text="Goearnediad" />
+    <string id="TAOM_clan_empire_south_3" text="Melkondili" />
+    <string id="TAOM_clan_empire_south_4" text="Môrgukar" />
+    <string id="TAOM_clan_empire_south_5" text="Bolgrûkig" />
+    <string id="TAOM_clan_empire_south_6" text="Kâm Lagúrz" />
+    <string id="TAOM_clan_empire_south_7" text="Bragzûkish" />
+    <string id="TAOM_clan_empire_south_8" text="Khôrahîm" />
+    <string id="TAOM_clan_empire_south_9" text="Wâwrim" />
+    <string id="TAOM_clan_sturgia_1" text="House of Girion" />
+    <string id="TAOM_clan_sturgia_2" text="House of Bard" />
+    <string id="TAOM_clan_sturgia_3" text="House of Brand" />
+    <string id="TAOM_clan_sturgia_4" text="House of Bain" />
+    <string id="TAOM_clan_sturgia_5" text="House of Esgaroth" />
+    <string id="TAOM_clan_sturgia_6" text="House of the River" />
+    <string id="TAOM_clan_sturgia_7" text="House of the Archers" />
+    <string id="TAOM_clan_sturgia_8" text="House of Long Lake" />
+    <string id="TAOM_clan_sturgia_9" text="House of the Dragon-slayer" />
+    <string id="TAOM_clan_aserai_1" text="Ayerikkä" />
+    <string id="TAOM_clan_aserai_2" text="Khadnomäa" />
+    <string id="TAOM_clan_aserai_3" text="Kamalakä" />
+    <string id="TAOM_clan_aserai_4" text="Calmacilioni" />
+    <string id="TAOM_clan_aserai_5" text="Tacfimin" />
+    <string id="TAOM_clan_aserai_6" text="Medjanomä" />
+    <string id="TAOM_clan_aserai_7" text="Ziyalokkä" />
+    <string id="TAOM_clan_aserai_8" text="Awzalikä" />
+    <string id="TAOM_clan_aserai_9" text="Ikendakä" />
+    <string id="TAOM_clan_vlandia_1" text="Casa de Eorling" />
+    <string id="TAOM_clan_vlandia_2" text="Casa de Cerdicing" />
+    <string id="TAOM_clan_vlandia_3" text="Casa de Grimingas" />
+    <string id="TAOM_clan_vlandia_4" text="Casa de Felánding" />
+    <string id="TAOM_clan_vlandia_5" text="Casa de Oscyteling" />
+    <string id="TAOM_clan_vlandia_6" text="Casa de Ordlacing" />
+    <string id="TAOM_clan_vlandia_7" text="Casa de Æthellafing" />
+    <string id="TAOM_clan_vlandia_8" text="Casa de Grimmóding" />
+    <string id="TAOM_clan_vlandia_9" text="Casa de Dúning" />
+    <string id="TAOM_clan_vlandia_10" text="Casa de Eoforing" />
+    <string id="TAOM_clan_vlandia_11" text="Casa de Tordaging" />
+    <string id="TAOM_clan_battania_1" text="Vangaris" />
+    <string id="TAOM_clan_battania_2" text="Araz" />
+    <string id="TAOM_clan_battania_3" text="Torabai" />
+    <string id="TAOM_clan_battania_4" text="Khorvash" />
+    <string id="TAOM_clan_battania_5" text="Khurdan" />
+    <string id="TAOM_clan_battania_6" text="Urdash" />
+    <string id="TAOM_clan_battania_7" text="Karhatai" />
+    <string id="TAOM_clan_battania_8" text="Varyash" />
+    <string id="TAOM_ghilman_name" text="Guarda da Serpente" />
+    <string id="TAOM_ghilman_short" text="Guarda da Serpente" />
+    <string id="TAOM_ghilman_text" text="A Guarda da Serpente são soldados montados a serviço do Senhor das Serpentes de Harad Próximo. Criados na sela nas planícies ondulantes ao sul do Ephel Dúath, são inigualáveis como arqueiros montados em todas as terras do sul da Terra-média. Em tempos de paz entre Harad e Mordor, a Guarda aluga seus serviços aos senhores haradrim e a qualquer outro poder rico o suficiente para pagar sua taxa de ouro." />
+    <string id="TAOM_legion_name" text="A Companhia Cinzenta" />
+    <string id="TAOM_legion_short" text="Companhia Cinzenta" />
+    <string id="TAOM_legion_text" text="A Companhia Cinzenta é a última irmandade organizada dos Monteiros Dúnedain, descendentes dos reis de Arnor que perderam seu reino há eras. Eles cavalgam pelo Norte sem um lar próprio, mantendo a paz em terras que esqueceram seus nomes. Embora sua primeira lealdade seja à linhagem de Elendil, aceitam contratos de senhores por toda a Terra-média quando suas andanças os levam por terras civilizadas." />
+    <string id="TAOM_skolderbrotva_name" text="Machadeiros de Erebor" />
+    <string id="TAOM_skolderbrotva_short" text="Machadeiros" />
+    <string id="TAOM_skolderbrotva_text" text="Os Machadeiros de Erebor são veteranos das batalhas do Rei Thorin que acharam o tempo de paz inadequado ao seu temperamento. Treinados na luta corpo a corpo dos salões anões — muralha de escudos, machado curto, picareta — são formidáveis em qualquer terreno, mas se destacam nas passagens das montanhas que conectam Erebor aos reinos dos homens. Aceitam contratos de qualquer um que possa pagar sua taxa, mas não levantarão um machado contra Erebor ou Valfenda." />
+    <string id="TAOM_company_name" text="Lâminas Corsárias" />
+    <string id="TAOM_company_short" text="Corsários" />
+    <string id="TAOM_company_text" text="As Lâminas Corsárias são veteranos de combate marítimo dos portos de Umbar que passaram a vender suas habilidades em terra. Lutam como besteiros — a arma preferida da guerra a bordo — e estão tão confortáveis num cerco quanto num convés balançante. Seu capitão, um exilado númenoreano marcado por cicatrizes, os mantém fiéis aos contratos com disciplina férrea, sabendo que sua reputação é sua carga mais valiosa." />
+    <string id="TAOM_beni_zilal_name" text="O Olho Cego" />
+    <string id="TAOM_beni_zilal_short" text="Olho Cego" />
+    <string id="TAOM_beni_zilal_text" text="O Olho Cego é uma irmandade de contrabandistas, receptadores e assassinos de aluguel que operam pelas costas de Harad e pelo deserto profundo. Dizem que descendem de um culto de assassinos que serviu a um rei haradrim esquecido, e seus métodos — veneno, sombra e a exploração de segredos — permanecem inalterados. Senhores que desejam remover discretamente um rival, ou mercadores que precisam transportar carga sem inspeção alfandegária, sabem onde deixar uma moeda de ouro e uma carta lacrada." />
+    <string id="TAOM_wolfskins_name" text="Devastadores Variag" />
+    <string id="TAOM_wolfskins_short" text="Devastadores" />
+    <string id="TAOM_wolfskins_text" text="Os Devastadores Variag são bandos de guerra de jovens guerreiros variag das estepes de Khand que passam sua juventude em um estado de guerra ritual: não podem possuir comida cozida, dormir sob nenhum teto permanente e não demonstrar misericórdia. Embora a maioria eventualmente retorne à vida estabelecida de seus clãs, alguns nunca o fazem, e estes formam os Devastadores — fora-da-lei que atacam as estradas de Khand e fazem incursões através de suas fronteiras em Harad e Gondor." />
+    <string id="TAOM_brotherhood_name" text="Saqueadores Dunlendinos" />
+    <string id="TAOM_brotherhood_short" text="Saqueadores" />
+    <string id="TAOM_brotherhood_text" text="Os Saqueadores Dunlendinos são o remanescente despedaçado de um clã das colinas que outrora habitava os vales agora governados pelos rohirrim. Seus avós foram expulsos de terras férteis para as alturas rochosas, e eles nutriram essa amargura numa filosofia de saqueadores: tudo tomado de um sulista ou de um homem do rei é meramente a restauração do que foi roubado. Na prática são bandidos, mas perigosos, que conhecem cada trilha de cabras pelas colinas." />
+    <string id="TAOM_hidden_hand_name" text="Os Servos da Boca" />
+    <string id="TAOM_hidden_hand_short" text="Servos" />
+    <string id="TAOM_hidden_hand_text" text="Os Servos da Boca são os Olhos de Barad-dûr operando além do Portão Negro — informantes, capangas e espiões infiltrados entre os povos que fazem fronteira com Mordor. Onde os exércitos de Sauron ainda não podem alcançar, esses agentes coletam tributos e silenciam dissidências. Eles trabalham através de suborno, chantagem e assassinatos silenciosos, garantindo que nenhuma conspiração contra o Senhor do Escuro crie raízes antes de ser arrancada e esmagada." />
+    <string id="TAOM_lakepike_name" text="Destruidores do Lago Comprido" />
+    <string id="TAOM_lakepike_short" text="Destruidores" />
+    <string id="TAOM_lakepike_text" text="Os Destruidores do Lago Comprido vivem nos canaviais e velhos cais apodrecidos das margens sombrias do Lago Comprido, longe das luzes respeitáveis de Esgaroth. Eles ganham a vida atraindo barcaças para bancos de areia ocultos com lanternas falsas, depois saqueando a carga e vendendo-a através de receptadores na própria cidade. Apesar dos esforços do Mestre da Cidade do Lago e dos mercadores de Dale, os Destruidores têm amigos demais nas tavernas do cais para serem facilmente expulsos." />
+    <string id="TAOM_embers_name" text="Culto do Olho Sem Pálpebra" />
+    <string id="TAOM_embers_short" text="Culto do Olho" />
+    <string id="TAOM_embers_text" text="O Culto do Olho Sem Pálpebra é uma sociedade secreta enraizada na tradição dos Númenorianos Negros, venerando Sauron como um deus-rei que restaurará seus fiéis à glória quando ele se erguer novamente. Eles recrutam entre os despossuídos de Dunland e os cantos esquecidos do reino, prometendo favor divino e poder terreno. Na verdade, seus líderes respondem a agentes de Barad-dûr, e sua estrutura baseada em células os torna quase impossíveis de erradicar pela justiça de qualquer senhor." />
+    <string id="TAOM_jawwal_name" text="Os Cavaleiros da Areia" />
+    <string id="TAOM_jawwal_short" text="Cavaleiros da Areia" />
+    <string id="TAOM_jawwal_text" text="Os Cavaleiros da Areia são os clãs nômades do deserto do interior profundo de Harad, mestres dos desertos sem água entre o Ephel Dúath e o distante mar do sul. Eles percorrem rotas conhecidas apenas por eles mesmos, exigindo tributo de qualquer caravana ousada o suficiente para cruzar seu território. Os senhores assentados do Harad Próximo os tratam como um incômodo; os Cavaleiros da Areia consideram os senhores assentados ladrões que roubaram o que o deserto já havia dado livremente." />
+    <string id="TAOM_karakhuzaits_name" text="Os Orientais Selvagens" />
+    <string id="TAOM_karakhuzaits_short" text="Selvagens" />
+    <string id="TAOM_karakhuzaits_text" text="Os Orientais Selvagens são os clãs das estepes não conquistados do Mar de Rhûn, que resistiram à autoridade de todo senhor que tentou trazê-los ao jugo — chefe de Rhûn, tenente de Mordor e Rei de Dale igualmente. Eles vagam pelas pradarias a leste do Celduin, reunindo cavalos, atacando rebanhos e coletando tributo de estrada de qualquer caravana tola o suficiente para cruzar sua estepe sem escolta armada." />
+    <string id="TAOM_forest_people_name" text="Os Drúedain" />
+    <string id="TAOM_forest_people_short" text="Woses" />
+    <string id="TAOM_forest_people_text" text="Os Drúedain, conhecidos pelos Homens como Woses ou os Homens Selvagens dos Bosques, são um povo antigo que habita a floresta profunda de Drúadan e os vales escondidos das Montanhas Brancas. Eles limpam o solo com fogo, cultivam o que precisam no solo rico em cinzas e seguem adiante quando a terra se esgota — um modo de vida que os povos assentados da Terra-média nunca entenderam e nunca se preocuparam em entender. Os Drúedain não querem senhor algum, não pagam impostos e pedem apenas para serem deixados no silêncio da floresta." />
+    <string id="TAOM_eleftheroi_name" text="Os Beornings" />
+    <string id="TAOM_eleftheroi_short" text="Beornings" />
+    <string id="TAOM_eleftheroi_text" text="Os Beornings são os grandes homens dos bosques que habitam o vale do Anduin entre as Montanhas Nevoentas e a Floresta das Trevas, liderados pelos metamorfos da linhagem de Beorn. Eles não permitem que nenhum Orc cruze seu território, cobram pedágio no Vau de Carrock para financiar sua vigília e não respondem a nenhum rei na Terra-média. Embora negociem e conversem com Elfos e Anões, qualquer exército que marche através de sua floresta sem permissão descobrirá que os Beornings têm dentes muito grandes." />
+    <string id="TAOM_clan_khuzait_1" text="Hûz" />
+    <string id="TAOM_clan_khuzait_2" text="Salurian" />
+    <string id="TAOM_clan_khuzait_3" text="Nikathian" />
+    <string id="TAOM_clan_khuzait_4" text="Karmian" />
+    <string id="TAOM_clan_khuzait_5" text="Amdûrid" />
+    <string id="TAOM_clan_khuzait_6" text="Khundolar" />
+    <string id="TAOM_clan_khuzait_7" text="Kuzaithian" />
+    <string id="TAOM_clan_khuzait_8" text="Mashakian" />
+    <string id="TAOM_clan_khuzait_9" text="Bozorganith" />
+    <string id="aom_lord_1_1_name" text="Brenin Wulf, o Mão de Ferro" />
+    <string id="aom_lord_1_2_name" text="Freya Coração de Lobo" />
+    <string id="aom_lord_1_3_name" text="Gorwulf, O Javali" />
+    <string id="aom_lord_1_4_name" text="Brunhild Garra de Ferro" />
+    <string id="aom_lord_1_5_name" text="Othric O Selvagem" />
+    <string id="aom_lord_1_6_name" text="Torvald Chifre de Boi" />
+    <string id="aom_lord_1_7_name" text="Denethor II, Regente de Gondor" />
+    <string id="aom_lord_1_8_name" text="Húrioneth" />
+    <string id="aom_lord_1_9_name" text="Imrahil, Príncipe de Dol Amroth" />
+    <string id="aom_lord_1_10_name" text="Aranel" />
+    <string id="aom_lord_1_25_name" text="Elphir" />
+    <string id="aom_lord_1_35_name" text="Erchirion" />
+    <string id="aom_lord_1_11_name" text="Ciryandur" />
+    <string id="aom_lord_1_111_name" text="Elarwen" />
+    <string id="aom_lord_1_12_name" text="Findariel" />
+    <string id="aom_lord_1_14_name" text="Boca de Sauron" />
+    <string id="aom_lord_1_15_name" text="Rei Bruxo de Angmar" />
+    <string id="aom_lord_1_155_name" text="Nazgûl, O Marechal Sombrio" />
+    <string id="aom_lord_1_16_name" text="Nazgûl, O Cavaleiro de Umbar" />
+    <string id="aom_lord_1_17_name" text="Sauron" />
+    <string id="aom_lord_1_177_name" text="Honoratus" />
+    <string id="aom_lord_1_18_name" text="Jathea" />
+    <string id="aom_lord_1_21_name" text="Fenrik, o Lobo Vermelho" />
+    <string id="aom_lord_1_22_name" text="Bjornric Braço Forte" />
+    <string id="aom_lord_1_23_name" text="Caladwen" />
+    <string id="aom_lord_1_24_name" text="Amrothos" />
+    <string id="aom_lord_1_75_name" text="Boromir" />
+    <string id="aom_lord_1_26_name" text="Hirgon" />
+    <string id="aom_lord_1_27_name" text="Maugrash" />
+    <string id="aom_lord_1_28_name" text="Nazgûl, O Traidor" />
+    <string id="aom_lord_1_29_name" text="Sanion" />
+    <string id="aom_lord_1_31_name" text="Zrsa Presa Negra" />
+    <string id="aom_lord_1_32_name" text="Eldra Canto do Javali" />
+    <string id="aom_lord_1_33_name" text="Brigid, a Uivante" />
+    <string id="aom_lord_1_422_name" text="Drengulf Presa de Ferro" />
+    <string id="aom_lord_1_34_name" text="Faramir" />
+    <string id="aom_lord_1_36_name" text="Ivriniel" />
+    <string id="aom_lord_1_37_name" text="Goshank" />
+    <string id="aom_lord_1_38_name" text="Nazgûl, o Imortal" />
+    <string id="aom_lord_1_39_name" text="Debana" />
+    <string id="aom_lord_1_41_name" text="Beregund Nascido do Lobo" />
+    <string id="aom_lord_1_411_name" text="Grimwulf Presa de Ferro" />
+    <string id="aom_lord_1_42_name" text="Hrodgar Couro de Ferro" />
+    <string id="aom_lord_1_43_name" text="Gormund Flanco de Boi" />
+    <string id="aom_lord_1_44_name" text="Nemos" />
+    <string id="aom_lord_1_47_name" text="Ulbos" />
+    <string id="aom_lord_1_49_name" text="Obron" />
+    <string id="aom_lord_1_20_name" text="Astrid Garradeurso" />
+    <string id="aom_lord_1_64_name" text="Thormund Cortapardo" />
+    <string id="aom_lord_1_50_name" text="Corwyn Olhodecorvo" />
+    <string id="aom_lord_1_66_name" text="Talric Chamacorvo" />
+    <string id="aom_lord_1_51_name" text="Haldric Golpetalão" />
+    <string id="aom_lord_1_58_name" text="Gorvin, o Cruel" />
+    <string id="aom_lord_1_70_name" text="Veyra, a Sombra" />
+    <string id="aom_lord_1_67_name" text="Eorwyn Flechapena" />
+    <string id="aom_lord_1_40_name" text="Borhador" />
+    <string id="aom_lord_1_46_name" text="Malrior" />
+    <string id="aom_lord_1_45_name" text="Forlong, Senhor de Lossarnach" />
+    <string id="aom_lord_1_57_name" text="Baranor" />
+    <string id="aom_lord_1_52_name" text="Hirluin, Senhor de Pinnath Gelin" />
+    <string id="aom_lord_1_53_name" text="Angbor, Senhor de Lamedon" />
+    <string id="aom_lord_1_71_name" text="Golasgil, Senhor de Anfalas" />
+    <string id="aom_lord_1_73_name" text="Narmir" />
+    <string id="aom_lord_1_62_name" text="Oromar" />
+    <string id="aom_lord_1_30_name" text="Gothmog, Tenente de Morgul" />
+    <string id="aom_lord_1_48_name" text="Khamûl, o Oriental" />
+    <string id="aom_lord_1_54_name" text="Shagrat, Capitão de Cirith Ungol" />
+    <string id="aom_lord_1_55_name" text="Mathmog" />
+    <string id="aom_lord_1_63_name" text="Gorbag, Capitão de Minas Morgul" />
+    <string id="aom_lord_1_56_name" text="Tormund, o Martelo" />
+    <string id="aom_lord_1_68_name" text="Tharos" />
+    <string id="aom_lord_1_69_name" text="Niphon" />
+    <string id="aom_lord_1_72_name" text="Bolg" />
+    <string id="aom_lord_1_74_name" text="Zachanis" />
+    <string id="aom_lord_1_1_1_name" text="Eldith Garracinza" />
+    <string id="aom_lord_1_1_2_name" text="Sigga Matadragão" />
+    <string id="aom_lord_1_1_3_name" text="Sigrun Presajavali" />
+    <string id="aom_lord_1_1_4_name" text="Thyra Presasangue" />
+    <string id="aom_lord_1_1_5_name" text="Hilda Quebra-ossos" />
+    <string id="aom_lord_1_1_6_name" text="Yrsa, o Javali do Inverno" />
+    <string id="aom_lord_1_1_7_name" text="Freydis Jubadeboi" />
+    <string id="aom_lord_1_1_8_name" text="Eira Garrasombria" />
+    <string id="aom_lord_1_1_9_name" text="Sifra Andaossos" />
+    <string id="aom_lord_1_1_10_name" text="Haldis Névoa-rubra" />
+    <string id="aom_lord_1_1_11_name" text="Yrla Peledefantasma" />
+    <string id="aom_lord_1_1_15_name" text="Aelwyn Olhodefalcão" />
+    <string id="aom_lord_1_1_16_name" text="Brianna Asa-de-Dardo" />
+    <string id="aom_lord_1_27_1_name" text="Verina" />
+    <string id="aom_lord_1_27_2_name" text="Throznak" />
+    <string id="aom_lord_1_27_3_name" text="Vasilia" />
+    <string id="aom_lord_1_47_1_name" text="Mina" />
+    <string id="aom_lord_1_47_2_name" text="Casyrea" />
+    <string id="aom_lord_1_47_3_name" text="Colambea" />
+    <string id="aom_lord_1_49_1_name" text="Tristania" />
+    <string id="aom_lord_1_49_2_name" text="Gordiana" />
+    <string id="aom_lord_1_1_12_name" text="Freya Rasga-Garra" />
+    <string id="aom_lord_1_1_13_name" text="Gundrun Pata-de-Ferro" />
+    <string id="aom_lord_1_1_14_name" text="Morgith" />
+    <string id="aom_lord_1_1_17_name" text="Branoc Haste-de-Pluma" />
+    <string id="aom_lord_1_40_1_name" text="Lindariel" />
+    <string id="aom_lord_1_46_1_name" text="Thorwen" />
+    <string id="aom_lord_1_45_1_name" text="Berethiel" />
+    <string id="aom_lord_1_45_2_name" text="Caldamir" />
+    <string id="aom_lord_1_45_3_name" text="Rúmil" />
+    <string id="aom_lord_1_57_1_name" text="Calathiel" />
+    <string id="aom_lord_1_57_2_name" text="Imloth" />
+    <string id="aom_lord_1_52_1_name" text="Anariel" />
+    <string id="aom_lord_1_52_2_name" text="Barandor" />
+    <string id="aom_lord_1_73_1_name" text="Belwen" />
+    <string id="aom_lord_1_62_1_name" text="Arytha" />
+    <string id="aom_lord_1_30_1_name" text="Svala Presa-Vermelha" />
+    <string id="aom_lord_1_30_2_name" text="Callinia" />
+    <string id="aom_lord_1_30_3_name" text="Synesios" />
+    <string id="aom_lord_1_48_1_name" text="Nazgûl, o Corrompido" />
+    <string id="aom_lord_1_48_2_name" text="Nazgûl, a Sombra dos Homens do Norte" />
+    <string id="aom_lord_1_48_3_name" text="Nazgûl, a Sombra de Umbar" />
+    <string id="aom_lord_1_54_1_name" text="Constalia" />
+    <string id="aom_lord_1_55_1_name" text="Megethia" />
+    <string id="aom_lord_1_63_1_name" text="Valaria" />
+    <string id="aom_lord_1_63_2_name" text="Comatasa" />
+    <string id="aom_lord_1_63_3_name" text="Elidilea" />
+    <string id="aom_lord_1_56_1_name" text="Gwenna" />
+    <string id="aom_lord_1_56_2_name" text="Rustica" />
+    <string id="aom_lord_1_68_1_name" text="Silvina" />
+    <string id="aom_lord_1_69_1_name" text="Areliana" />
+    <string id="aom_lord_1_69_2_name" text="Dorathila" />
+    <string id="aom_lord_1_72_1_name" text="Viviana" />
+    <string id="aom_lord_1_74_1_name" text="Zena" />
+    <string id="aom_lord_2_1_name" text="Bardo II" />
+    <string id="aom_lord_2_2_name" text="Asta" />
+    <string id="aom_lord_2_3_name" text="Thorin III Elmo de Pedra" />
+    <string id="aom_lord_2_4_name" text="Siga" />
+    <string id="aom_lord_2_5_name" text="Ori" />
+    <string id="aom_lord_2_6_name" text="Erta" />
+    <string id="aom_lord_2_7_name" text="Simir" />
+    <string id="aom_lord_2_8_name" text="Urik" />
+    <string id="aom_lord_2_9_name" text="Lek" />
+    <string id="aom_lord_2_10_name" text="Valla" />
+    <string id="aom_lord_2_11_name" text="Idrun" />
+    <string id="aom_lord_2_111_name" text="Rozhivol" />
+    <string id="aom_lord_2_12_name" text="Svana" />
+    <string id="aom_lord_2_121_name" text="Osven" />
+    <string id="aom_lord_2_13_name" text="Vidar" />
+    <string id="aom_lord_2_14_name" text="Isvan" />
+    <string id="aom_lord_2_15_name" text="Ratagost" />
+    <string id="aom_lord_2_16_name" text="Bofur" />
+    <string id="aom_lord_2_17_name" text="Thorin II Escudo de Carvalho" />
+    <string id="aom_lord_2_18_name" text="Glóin" />
+    <string id="aom_lord_2_19_name" text="Dwalin" />
+    <string id="aom_lord_2_20_name" text="Óin" />
+    <string id="aom_lord_2_21_name" text="Svedorn" />
+    <string id="aom_lord_2_22_name" text="Lashonek" />
+    <string id="aom_lord_2_23_name" text="Galden" />
+    <string id="aom_lord_2_24_name" text="Alvar" />
+    <string id="aom_lord_2_4_1_name" text="Apolanea" />
+    <string id="aom_lord_2_7_1_name" text="Mimir" />
+    <string id="aom_lord_2_13_1_name" text="Lilizha" />
+    <string id="aom_lord_2_13_2_name" text="Andruta" />
+    <string id="aom_lord_2_13_3_name" text="Luda" />
+    <string id="aom_lord_2_13_4_name" text="Teta" />
+    <string id="aom_lord_2_14_1_name" text="Valkava" />
+    <string id="aom_lord_2_14_2_name" text="Zaverena" />
+    <string id="aom_lord_2_14_3_name" text="Vizhduna" />
+    <string id="aom_lord_2_15_1_name" text="Yachana" />
+    <string id="aom_lord_2_15_2_name" text="Milanka" />
+    <string id="aom_lord_2_15_3_name" text="Velina" />
+    <string id="aom_lord_2_15_4_name" text="Bovan" />
+    <string id="aom_lord_2_16_1_name" text="Tyaska" />
+    <string id="aom_lord_2_17_1_name" text="Dracha" />
+    <string id="aom_lord_2_18_1_name" text="Zorika" />
+    <string id="aom_lord_2_19_1_name" text="Vitomira" />
+    <string id="aom_lord_2_20_1_name" text="Kisha" />
+    <string id="aom_lord_2_21_1_name" text="Izdenka" />
+    <string id="aom_lord_2_22_1_name" text="Zheneva" />
+    <string id="aom_lord_2_23_1_name" text="Zlatka" />
+    <string id="aom_lord_2_24_1_name" text="Zorina" />
+    <string id="aom_dead_lord_2_1_name" text="Olek, o Velho" />
+    <string id="aom_dead_lord_2_2_name" text="Varra" />
+    <string id="aom_lord_3_1_name" text="Khadurak" />
+    <string id="aom_lord_3_2_name" text="Espaço Reservado Harad" />
+    <string id="aom_lord_3_3_name" text="Calemir" />
+    <string id="aom_lord_3_4_name" text="Maraa" />
+    <string id="aom_lord_3_5_name" text="Haldir" />
+    <string id="aom_lord_3_51_name" text="Haqan" />
+    <string id="aom_lord_3_6_name" text="Ruma" />
+    <string id="aom_lord_3_7_name" text="Dhiyul" />
+    <string id="aom_lord_3_8_name" text="Addas" />
+    <string id="aom_lord_3_9_name" text="Usair" />
+    <string id="aom_lord_3_10_name" text="Anidha" />
+    <string id="aom_lord_3_11_name" text="Arwa" />
+    <string id="aom_lord_3_12_name" text="Manan" />
+    <string id="aom_lord_3_13_name" text="Nuqar" />
+    <string id="aom_lord_3_14_name" text="Thamza" />
+    <string id="aom_lord_3_15_name" text="Ghuzid" />
+    <string id="aom_lord_3_16_name" text="Rúmil" />
+    <string id="aom_lord_3_17_name" text="Orophin" />
+    <string id="aom_lord_3_18_name" text="Aranthon" />
+    <string id="aom_lord_3_19_name" text="Aethirion" />
+    <string id="aom_lord_3_20_name" text="Karith" />
+    <string id="aom_lord_3_21_name" text="Ukhai" />
+    <string id="aom_lord_3_22_name" text="Duilin" />
+    <string id="aom_lord_3_23_name" text="Qahin" />
+    <string id="aom_lord_3_3_1_name" text="Tariq" />
+    <string id="aom_lord_3_13_1_name" text="Sira" />
+    <string id="aom_lord_3_13_2_name" text="Razana" />
+    <string id="aom_lord_3_14_1_name" text="Sasaitha" />
+    <string id="aom_lord_3_15_1_name" text="Shimra" />
+    <string id="aom_lord_3_15_2_name" text="Bushila" />
+    <string id="aom_lord_3_16_1_name" text="Farina" />
+    <string id="aom_lord_3_17_1_name" text="Shaima" />
+    <string id="aom_lord_3_17_2_name" text="Sanit" />
+    <string id="aom_lord_3_18_1_name" text="Farzana" />
+    <string id="aom_lord_3_18_2_name" text="Hafisa" />
+    <string id="aom_lord_3_18_3_name" text="Zuad" />
+    <string id="aom_lord_3_18_4_name" text="Jalfar" />
+    <string id="aom_lord_3_19_1_name" text="Salma" />
+    <string id="aom_lord_3_19_2_name" text="Zulaika" />
+    <string id="aom_lord_3_19_3_name" text="Sulhana" />
+    <string id="aom_lord_3_20_1_name" text="Judira" />
+    <string id="aom_lord_3_20_2_name" text="Azina" />
+    <string id="aom_lord_3_21_1_name" text="Ashisa" />
+    <string id="aom_lord_3_22_1_name" text="Yamina" />
+    <string id="aom_lord_3_22_2_name" text="Suna" />
+    <string id="aom_lord_3_22_3_name" text="Zanuwa" />
+    <string id="aom_lord_3_22_4_name" text="Hajara" />
+    <string id="aom_lord_3_23_1_name" text="Sukayna" />
+    <string id="aom_dead_lord_3_1_name" text="Nimr" />
+    <string id="aom_lord_4_1_name" text="Théoden" />
+    <string id="aom_lord_4_2_name" text="Elfhild" />
+    <string id="aom_lord_4_4_name" text="Elthild" />
+    <string id="aom_lord_4_5_name" text="Unthery" />
+    <string id="aom_lord_4_6_name" text="Grimbold Grimingas" />
+    <string id="aom_lord_4_7_name" text="Théodred Eorling" />
+    <string id="aom_lord_4_8_name" text="Furnhard" />
+    <string id="aom_lord_4_9_name" text="Thomund" />
+    <string id="aom_lord_4_10_name" text="Elys" />
+    <string id="aom_lord_4_11_name" text="Liena" />
+    <string id="aom_lord_4_12_name" text="Silvind" />
+    <string id="aom_lord_4_121_name" text="Lasand" />
+    <string id="aom_lord_4_13_name" text="Romund" />
+    <string id="aom_lord_4_14_name" text="Morcon" />
+    <string id="aom_lord_4_141_name" text="Amorcon" />
+    <string id="aom_lord_4_15_name" text="Erdurand" />
+    <string id="aom_lord_4_16_name" text="Erkenbrand Felánding" />
+    <string id="aom_lord_4_17_name" text="Elbet" />
+    <string id="aom_lord_4_18_name" text="Amalgun" />
+    <string id="aom_lord_4_181_name" text="Arthamund" />
+    <string id="aom_lord_4_19_name" text="Asela" />
+    <string id="aom_lord_4_20_name" text="Varmund" />
+    <string id="aom_lord_4_21_name" text="Cuthræd Ordlacing" />
+    <string id="aom_lord_4_22_name" text="Wulf Celmunding" />
+    <string id="aom_lord_4_23_name" text="Marhath Marhad" />
+    <string id="aom_lord_4_24_name" text="Gríma Grimmóding" />
+    <string id="aom_lord_4_25_name" text="Lucand" />
+    <string id="aom_lord_4_26_name" text="Peric" />
+    <string id="aom_lord_4_27_name" text="Ælle Æthellafing" />
+    <string id="aom_lord_4_28_name" text="Fasthelm Morcargas" />
+    <string id="aom_lord_4_3_1_name" text="Éomer Eoforing" />
+    <string id="aom_lord_4_6_1_name" text="Déorwyn Grimingas" />
+    <string id="aom_lord_4_16_1_name" text="Mérthú Felánding" />
+    <string id="aom_lord_4_20_1_name" text="Ingeltrud" />
+    <string id="aom_lord_4_22_1_name" text="Sunnifa Celmunding" />
+    <string id="aom_lord_4_23_1_name" text="Wulfwynn Marhad" />
+    <string id="aom_lord_4_23_2_name" text="Eleduran Marhad" />
+    <string id="aom_lord_4_23_3_name" text="Eleduran" />
+    <string id="aom_lord_4_25_1_name" text="Bertliana" />
+    <string id="aom_lord_4_27_1_name" text="Wærburg Æthellafing" />
+    <string id="aom_lord_4_28_1_name" text="Morcar" />
+    <string id="aom_lord_4_28_2_name" text="Hereswith" />
+    <string id="aom_lord_V11_l_name" text="Léomund Deáfringas" />
+    <string id="aom_lord_4_26_1_name" text="Reingarda" />
+    <string id="aom_lord_4_24_1_name" text="Adaltrud" />
+    <string id="aom_lord_4_24_2_name" text="Gudonhelda" />
+    <string id="aom_lord_4_24_3_name" text="Ingunde" />
+    <string id="aom_lord_4_24_4_name" text="Irmgard" />
+    <string id="aom_lord_4_3_name" text="Aldric" />
+    <string id="aom_lord_V11_c1_name" text="Elendara" />
+    <string id="aom_lord_V11_c2_name" text="Dagunic" />
+    <string id="aom_lord_V11_u_name" text="Voleric" />
+    <string id="aom_lord_V9_u_name" text="Urundulf" />
+    <string id="aom_lord_5_1_name" text="Vargûl, o Alto Senhor da Guerra de Khand" />
+    <string id="aom_lord_5_7_name" text="Marcador de Posição de Khand" />
+    <string id="aom_lord_5_3_name" text="Ergeon" />
+    <string id="aom_lord_5_4_name" text="Nywin" />
+    <string id="aom_lord_5_5_name" text="Melidir" />
+    <string id="aom_lord_5_6_name" text="Alcaea" />
+    <string id="aom_lord_5_8_name" text="Sein" />
+    <string id="aom_lord_5_9_name" text="Culharn" />
+    <string id="aom_lord_5_91_name" text="Tegan" />
+    <string id="aom_lord_5_10_name" text="Corein" />
+    <string id="aom_lord_5_11_name" text="Alynneth" />
+    <string id="aom_lord_5_12_name" text="Wythuin" />
+    <string id="aom_lord_5_13_name" text="Muinser" />
+    <string id="aom_lord_5_131_name" text="Rath" />
+    <string id="aom_lord_5_15_name" text="Pryndor" />
+    <string id="aom_lord_5_14_name" text="Luichan" />
+    <string id="aom_lord_5_16_name" text="Aeron" />
+    <string id="aom_lord_5_17_name" text="Aradwyr" />
+    <string id="aom_lord_5_18_name" text="Branoc" />
+    <string id="aom_lord_5_19_name" text="Fenagan" />
+    <string id="aom_lord_5_20_name" text="Siaramus" />
+    <string id="aom_lord_5_21_name" text="Carfyd" />
+    <string id="aom_lord_5_22_name" text="Fiarad" />
+    <string id="aom_lord_5_1_1_name" text="RandomDude" />
+    <string id="aom_lord_5_3_1_name" text="Ranaon" />
+    <string id="aom_lord_5_3_2_name" text="Ladogual" />
+    <string id="aom_lord_5_5_1_name" text="Eilidh" />
+    <string id="aom_lord_5_13_1_name" text="Beasag" />
+    <string id="aom_lord_5_15_1_name" text="Floraidh" />
+    <string id="aom_lord_5_15_2_name" text="Beitrin" />
+    <string id="aom_lord_5_15_3_name" text="Diarbhain" />
+    <string id="aom_lord_5_14_1_name" text="Eabyr" />
+    <string id="aom_lord_5_16_1_name" text="Liasin" />
+    <string id="aom_lord_5_16_2_name" text="Gawen" />
+    <string id="aom_lord_5_17_1_name" text="Brighan" />
+    <string id="aom_lord_5_18_1_name" text="Seonag" />
+    <string id="aom_lord_5_21_1_name" text="Beathag" />
+    <string id="aom_lord_5_21_2_name" text="Taorse" />
+    <string id="aom_lord_6_1_name" text="Zhamik Zhamian" />
+    <string id="aom_lord_6_2_name" text="Maraia" />
+    <string id="aom_lord_6_3_name" text="Bagai" />
+    <string id="aom_lord_6_4_name" text="Gûrtilm Salurian" />
+    <string id="aom_lord_6_5_name" text="Irbo Nikathian" />
+    <string id="aom_lord_6_51_name" text="Khada" />
+    <string id="aom_lord_6_6_name" text="Suran" />
+    <string id="aom_lord_6_7_name" text="Chaghan" />
+    <string id="aom_lord_6_8_name" text="Esur" />
+    <string id="aom_lord_6_81_name" text="Nayantai" />
+    <string id="aom_lord_6_9_name" text="Temun" />
+    <string id="aom_lord_6_10_name" text="Alijin" />
+    <string id="aom_lord_6_101_name" text="Bolat" />
+    <string id="aom_lord_6_11_name" text="Yana" />
+    <string id="aom_lord_6_12_name" text="Abagai" />
+    <string id="aom_lord_6_13_name" text="Bortu" />
+    <string id="aom_lord_6_15_name" text="Oragur" />
+    <string id="aom_lord_6_16_name" text="Akvoth Karmian" />
+    <string id="aom_lord_6_17_name" text="Amdûr Amdûrid" />
+    <string id="aom_lord_6_18_name" text="Lûthkan Khundolar" />
+    <string id="aom_lord_6_19_name" text="Vakheraltan Khundolar" />
+    <string id="aom_lord_6_20_name" text="Khurubra Mashakian" />
+    <string id="aom_lord_6_21_name" text="Molluk Illnoria" />
+    <string id="aom_lord_6_22_name" text="Shakhal II Shakhalian" />
+    <string id="aom_lord_6_23_name" text="Hûz-Margôz Hûz" />
+    <string id="aom_lord_6_24_name" text="Nikath Adekig" />
+    <string id="aom_lord_6_15_1_name" text="Khorijin" />
+    <string id="aom_lord_6_15_2_name" text="Sechen" />
+    <string id="aom_lord_6_16_1_name" text="Chambui" />
+    <string id="aom_lord_6_16_2_name" text="Unagen" />
+    <string id="aom_lord_6_17_1_name" text="Ergene" />
+    <string id="aom_lord_6_17_2_name" text="Yesum" />
+    <string id="aom_lord_6_18_1_name" text="Tilun" />
+    <string id="aom_lord_6_18_2_name" text="Chagun" />
+    <string id="aom_lord_6_19_1_name" text="Sokhatai" />
+    <string id="aom_lord_6_19_2_name" text="Korte" />
+    <string id="aom_lord_6_20_1_name" text="Jigur" />
+    <string id="aom_lord_K8_u_name" text="Boronchar" />
+    <string id="aom_lord_6_21_1_name" text="Esachei" />
+    <string id="aom_lord_6_22_1_name" text="Eselen" />
+    <string id="aom_lord_K9_l_name" text="Valathmir Mashakian" />
+    <string id="aom_lord_K9_s_name" text="Sevin" />
+    <string id="aom_lord_K9_c1_name" text="Altu" />
+    <string id="aom_lord_K9_c2_name" text="Mela" />
+    <string id="aom_dead_lord_6_1_name" text="Urkhun" />
+    <string id="aom_dead_lord_6_2_name" text="Solun" />
+    <string id="aom_dead_lord_6_3_name" text="Kuyug" />
+    <string id="aom_dead_lord_6_4_name" text="Undul" />
+    <string id="aom_lord_A9_c_name" text="Dhila" />
+    <string id="aom_lord_A9_l_name" text="Caradan" />
+    <string id="aom_lord_A9_s_name" text="Thiqa" />
+    <string id="aom_lord_A9_u_name" text="Qaban" />
+    <string id="aom_lord_B8_c_name" text="Guaran" />
+    <string id="aom_lord_B8_l_name" text="Maireas" />
+    <string id="aom_lord_B8_s_name" text="Rodarac" />
+    <string id="aom_lord_NE7_u_name" text="Haldric the Black Fang" />
+    <string id="aom_lord_NE8_c1_name" text="Cerdic, the Anvil" />
+    <string id="aom_lord_NE8_c2_name" text="Morwen" />
+    <string id="aom_lord_NE8_l_name" text="Eadric, The Swift" />
+    <string id="aom_lord_NE8_s_name" text="Aeloria" />
+    <string id="aom_lord_NE9_d_name" text="Sylva Serpent-Strike" />
+    <string id="aom_lord_NE9_l_name" text="Valthor Scalecleaver" />
+    <string id="aom_lord_NE9_s_name" text="Rurik Fanghew" />
+    <string id="aom_lord_S8_u_name" text="Galyk" />
+    <string id="aom_lord_S9_c_name" text="Forim" />
+    <string id="aom_lord_S9_l_name" text="Bombur" />
+    <string id="aom_lord_S9_m_name" text="Dakhila" />
+    <string id="aom_lord_S9_u_name" text="Chastimir" />
+    <string id="aom_lord_SE8_c_name" text="Itaria" />
+    <string id="aom_lord_SE9_c1_name" text="Pagarios" />
+    <string id="aom_lord_SE9_c2_name" text="Diasca" />
+    <string id="aom_lord_SE9_l_name" text="Grishnákh, Uruk Captain" />
+    <string id="aom_lord_SE9_s_name" text="Jonna" />
+    <string id="aom_lord_WE8_c_name" text="Pelendur" />
+    <string id="aom_lord_WE8_u_name" text="Barandil" />
+    <string id="aom_lord_WE9_l_name" text="Duinhir" />
+    <string id="aom_lord_WE9_u_name" text="Duilin" />
+    <string id="aom_lord_WE9_u2_name" text="Rosfin" />
+    <string id="TAOM_hero_dead_2_1" text="The elder Barding lord fell defending Dale against Easterling raiders. His sacrifice secured the mountain passes and is remembered in songs throughout the kingdom." />
+    <string id="TAOM_hero_dead_2_2" text="A noblewoman of Dale who perished in the winter plague that followed the war. She was known for her charity to the common folk." />
+    <string id="TAOM_hero_dead_3_1" text="A Haradrim warlord who led the desert cavalry at the Battle of the Black Gate. He fell to Gondorian arrows but is revered as a martyr in the south." />
+    <string id="TAOM_hero_dead_6_1" text="The great Khan who first united the Easterling tribes under the banner of Rhun. His conquests pushed the borders of the Golden Realm to the shores of the Sea of Rhun." />
+    <string id="TAOM_hero_dead_6_2" text="A respected noyan who fell in battle against the Free Peoples. His widow Gurtilm now leads their clan with iron determination." />
+    <string id="TAOM_hero_dead_6_3" text="Chief noyan of the Arkit clan. His tactical brilliance in horse archery tactics influenced an entire generation of Easterling warriors." />
+    <string id="TAOM_hero_dead_6_4" text="A noble of the Arkit clan, son of the great noyan. He died young but showed promise as a warrior." />
+    <string id="TAOM_hero_1_1" text="Brenin Wulf rules the wild clans of Dunland with an iron fist. Known as the Ironhand, he united the scattered hill tribes through conquest and cunning. He dreams of reclaiming the lands taken by the Horse-lords of Rohan." />
+    <string id="TAOM_hero_1_2" text="Freya Wolfheart is the fierce wife of Brenin Wulf. She commands respect among the warriors for her skill with axe and shield." />
+    <string id="TAOM_hero_1_41" text="Beregund Wolfborn is a trusted captain of Dunland, known for his skill in raiding Rohirric settlements." />
+    <string id="TAOM_hero_1_411" text="Grimwulf Presaferro perpetua o legado de seu pai de saques e guerras contra Rohan." />
+    <string id="TAOM_hero_1_31" text="Zrsa Presanegra é herdeira dos Mãodeferro, ansiosa para provar-se digna do legado de seu pai." />
+    <string id="TAOM_hero_1_1_1" text="Eldith Garracinza é uma feroz guerreira de Dunland, renomada por sua ferocidade em batalha." />
+    <string id="TAOM_hero_1_1_2" text="Sigga Matadragão ganhou seu nome ao matar uma grande serpente nas passagens das montanhas." />
+    <string id="TAOM_hero_1_21" text="Fenrik o Lobo Vermelho lidera grupos de saqueadores nas profundezas do território inimigo." />
+    <string id="TAOM_hero_1_3" text="Gorwulf o Javali é um chefe selvagem conhecido por seus brutais saques em assentamentos fronteiriços." />
+    <string id="TAOM_hero_1_4" text="Brunhild Garraferro é a formidável esposa de Gorwulf, igualmente habilidosa em batalha como seu marido." />
+    <string id="TAOM_hero_1_22" text="Bjornric Braçoforte é um poderoso guerreiro que empunha um grande machado de guerra em batalha." />
+    <string id="TAOM_hero_1_42" text="Hrodgar Peleférrea serve como campeão do clã, sua armadura marcada por incontáveis batalhas." />
+    <string id="TAOM_hero_1_32" text="Eldra Cantojavali perpetua as ferozes tradições de seus pais." />
+    <string id="TAOM_hero_1_422" text="Drengulf Presaferro é um jovem guerreiro ansioso para provar seu valor em batalha." />
+    <string id="TAOM_hero_1_1_3" text="Sigrun Presajavali é conhecida por suas investidas destemidas nas fileiras inimigas." />
+    <string id="TAOM_hero_1_1_4" text="Thyra Presasangue ganhou seu epíteto através de incontáveis vitórias." />
+    <string id="TAOM_hero_1_1_5" text="Hilda Quebra-ossos é temida por sua força devastadora em combate." />
+    <string id="TAOM_hero_1_1_6" text="Yrsa a Javali do Inverno lidera saques durante as estações mais rigorosas quando os inimigos menos esperam ataques." />
+    <string id="TAOM_hero_1_5" text="Othric o Selvagem é um chefe cujas táticas imprevisíveis lhe renderam muitas vitórias. Seu clã reivindica descender de antigos reis de Dunland." />
+    <string id="TAOM_hero_1_1_7" text="Freydis Jubaboi é esposa de Othric e uma habilidosa curandeira além de guerreira." />
+    <string id="TAOM_hero_1_1_8" text="Eira Garrasombria move-se silenciosamente através de acampamentos inimigos, atacando sem aviso." />
+    <string id="TAOM_hero_1_6" text="Torvald Cornoboi é o herdeiro de Othric, já mostrando o espírito selvagem de seu pai." />
+    <string id="TAOM_hero_1_33" text="Brigid a Uivante lidera bandos de guerra através das passagens das montanhas." />
+    <string id="TAOM_hero_1_43" text="Gormund Flancobravo serve como tenente de confiança do chefe do clã." />
+    <string id="TAOM_hero_1_1_9" text="Sifra Andamortos caminha entre os caídos após a batalha, coletando troféus dos mortos." />
+    <string id="TAOM_hero_1_1_10" text="Haldis Névoa-rubra deixa um rastro de sangue onde quer que cavalgue em batalha." />
+    <string id="TAOM_hero_1_1_11" text="Yrla Peleespectro veste a pele de um lobo branco, que dizem conceder-lhe proteção em batalha." />
+    <string id="TAOM_hero_1_1_12" text="Freya Garrarasga lidera um bando de guerra de ferozes donzelas-guerreiras em batalha. Ela treinou como guerreira desde a infância e nunca conheceu a derrota." />
+    <string id="TAOM_hero_1_1_13" text="Gundrun Pataferro é uma guerreira veterana com mãos marcadas por incontáveis empunhaduras de espada." />
+    <string id="TAOM_hero_1_20" text="Astrid Garra-de-urso é conhecida por seu estilo de luta feroz e manto de pele de urso." />
+    <string id="TAOM_hero_1_64" text="Thormund Talha-urso abre caminho através das fileiras inimigas com seu grande machado de duas mãos." />
+    <string id="TAOM_hero_1_1_14" text="Morgith é uma figura misteriosa que comunga com os espíritos das antigas colinas." />
+    <string id="TAOM_hero_1_1_17" text="Branoc Hastepluma é o melhor arqueiro entre os Dunlendings, capaz de atirar no olho de um corvo a cem passos." />
+    <string id="TAOM_hero_1_50" text="Corwyn Olhocorvo vê presságios no voo das aves e aconselha o clã em assuntos de guerra." />
+    <string id="TAOM_hero_1_66" text="Talric Chamacorvo pode imitar o canto de qualquer ave, usando-os como sinais em batalha." />
+    <string id="TAOM_hero_1_1_15" text="Aelwyn Olhofalcão comanda uma companhia de batedores das colinas que patrulham as fronteiras." />
+    <string id="TAOM_hero_1_1_16" text="Brianna Dardasveloz aprendeu tiro com arco com sua mãe e agora a supera em habilidade." />
+    <string id="TAOM_hero_1_51" text="Haldric Golpetalão lidera emboscadas dos altos penhascos." />
+    <string id="TAOM_hero_1_67" text="Eorwyn Flechapluma prefere o arco à lâmina, atacando das sombras." />
+    <string id="TAOM_hero_1_58" text="Gorvin o Cruel é um sombrio chefe cuja crueldade é lendária até mesmo entre os Dunlendings." />
+    <string id="TAOM_hero_1_70" text="Veyra a Sombra desliza invisível em acampamentos inimigos para cortar gargantas na noite." />
+    <string id="TAOM_hero_NE7_u" text="Um guerreiro grisalho que serve como conselheiro do chefe do clã." />
+    <string id="TAOM_hero_NE8_l" text="Chefe de um clã das montanhas, endurecido por anos de guerra fronteiriça." />
+    <string id="TAOM_hero_NE8_s" text="Esposa do chefe, hábil nas artes da cura e conhecimento de ervas." />
+    <string id="TAOM_hero_NE8_c1" text="Primogênito do clã, treinado em guerra desde a infância." />
+    <string id="TAOM_hero_NE8_c2" text="Segundo filho do líder do clã, conhecido por sua astúcia e ambição." />
+    <string id="TAOM_hero_1_56" text="Tormund, o Martelo, ganhou seu nome através de investidas devastadoras com seu martelo de guerra." />
+    <string id="TAOM_hero_1_56_1" text="Gwenna é esposa de Tormund, administrando as propriedades do clã enquanto ele está em campanha." />
+    <string id="TAOM_hero_NE9_l" text="Um chefe idoso cuja sabedoria é procurada por todos os clãs de Dunland." />
+    <string id="TAOM_hero_NE9_s" text="Filho do velho chefe, ansioso para provar seu valor em batalha." />
+    <string id="TAOM_hero_NE9_d" text="Filha do clã, treinada tanto em combate quanto em diplomacia." />
+    <string id="TAOM_hero_1_7" text="Denethor II, Regente de Gondor, governa da Torre Branca de Minas Tirith. Outrora um homem de grande sabedoria, tornou-se orgulhoso e inflexível. Ele resiste ao retorno do rei, acreditando que somente ele pode salvar Gondor da sombra de Mordor." />
+    <string id="TAOM_hero_1_75" text="Boromir, filho mais velho de Denethor, é Capitão-General de Gondor. Um grande guerreiro de renome, ele busca qualquer arma para defender seu povo contra a escuridão." />
+    <string id="TAOM_hero_1_8" text="Húrioneth serve a Casa de Húrinionath, um guardião firme da tradição dos regentes de Gondor." />
+    <string id="TAOM_hero_1_34" text="Faramir, filho mais novo de Denethor, é Capitão dos Monteiros de Ithilien. Embora negligenciado por seu pai, é amado por seus homens por sua sabedoria, misericórdia e força silenciosa." />
+    <string id="TAOM_hero_1_24" text="Amrothos, filho mais novo de Imrahil, ainda é jovem mas já demonstra o espírito marcial e o caráter nobre de sua família." />
+    <string id="TAOM_hero_1_44" text="Nemos é um capitão da Guarda da Torre, jurado para proteger o Regente." />
+    <string id="TAOM_hero_1_9" text="Imrahil II, Príncipe de Dol Amroth, é o maior cavaleiro de Gondor. Sua linhagem carrega sangue élfico, e diz-se que ele é o mais formoso senhor de todo o reino. Seus Cavaleiros do Cisne são lendários por toda a Terra-média." />
+    <string id="TAOM_hero_1_9_5" text="Lothwen, Princesa de Dol Amroth, esteve ao lado de Imrahil através de décadas de serviço a Gondor. Ela é conhecida por sua graça e sabedoria tranquila." />
+    <string id="TAOM_hero_1_10" text="Aranel, esposa de Elphir, é uma nobre dama de Gondor conhecida por sua dignidade e mente perspicaz." />
+    <string id="TAOM_hero_1_35" text="Erchirion, segundo filho de Imrahil, serve como cavaleiro de Dol Amroth. Audacioso em batalha e leal à sua casa, cavalga com os Cavaleiros do Cisne de seu pai." />
+    <string id="TAOM_hero_1_25" text="Elphir, filho mais velho de Imrahil, é herdeiro de Dol Amroth. Ele comanda os Cavaleiros do Cisne com precisão marcial e carrega o porte nobre de seu pai." />
+    <string id="TAOM_hero_1_23" text="Caladwen, esposa de Erchirion, juntou-se à casa de Imrazôrionath através de sua união. Ela é uma mulher de coragem silenciosa." />
+    <string id="TAOM_hero_1_11" text="Ciryandur comanda as defesas do norte de Gondor, um veterano experiente de muitas incursões de orcs. Ele é metódico e implacável na defesa das fronteiras do reino." />
+    <string id="TAOM_hero_1_111" text="Elarwen, esposa de Hirgon, é uma mulher das fronteiras conhecida por sua resiliência e sabedoria prática." />
+    <string id="TAOM_hero_1_12" text="Findariel, esposa de Ciryandur, administra os assuntos de sua casa com cuidado e inteligência." />
+    <string id="TAOM_hero_1_36" text="Ivriniel, filha de Ciryandur, cresceu nas marcas do norte de Gondor e demonstra tanto a resiliência de seu pai quanto a sabedoria de sua mãe." />
+    <string id="TAOM_hero_1_26" text="Hirgon, irmão de Ciryandur, serve como mensageiro de Gondor. Veloz e confiável, ele leva mensagens entre os senhores do reino." />
+    <string id="TAOM_hero_1_40" text="Borhador, Senhor de Barahirionath, é um dos senhores mais velhos de Gondor. Seus longos anos lhe deram sabedoria, embora seu corpo enfraqueça com a idade. Seu conselho é respeitado por todos." />
+    <string id="TAOM_hero_1_40_1" text="Lindariel, esposa de Borhador, tem sido a força de sua casa através de muitos longos anos. Ela é uma presença graciosa e duradoura na nobreza de Gondor." />
+    <string id="TAOM_hero_1_46" text="Malrior, filho de Borhador, assume os deveres de seu pai à medida que o velho senhor envelhece. Ele é firme e confiável, respeitado por seu clã." />
+    <string id="TAOM_hero_1_46_1" text="Thorwen, esposa de Malrior, é uma mulher capaz que administra sua casa com determinação silenciosa." />
+    <string id="TAOM_hero_1_45" text="Forlong, o Gordo, Senhor de Lossarnach, lidera o maior contingente dos feudos para a defesa de Minas Tirith. Apesar de sua corpulência, ele é um guerreiro feroz e experiente." />
+    <string id="TAOM_hero_1_45_1" text="Berethiel, esposa de Forlong, é a Senhora de Lossarnach. Ela supervisiona os vales férteis enquanto seu marido cavalga para a guerra." />
+    <string id="TAOM_hero_1_45_2" text="Caldamir, jovem filho de Forlong, atingiu recentemente a maioridade e cavalga para a guerra ansioso para provar seu valor." />
+    <string id="TAOM_hero_1_45_3" text="Rúmil, irmão mais velho de Forlong, é uma presença constante na Casa de Ausirionath. Seus longos anos de serviço lhe renderam o respeito de seus parentes." />
+    <string id="TAOM_hero_1_57" text="Baranor serve como capitão no contingente de Lossarnach, um oficial de confiança do Senhor Forlong." />
+    <string id="TAOM_hero_1_57_1" text="Calathiel, esposa de Caldamir, é uma jovem nobre de Lossarnach." />
+    <string id="TAOM_hero_1_57_2" text="Imloth é filha de Baranor, aprendendo os modos da nobreza de Gondor nos vales de Lossarnach." />
+    <string id="TAOM_hero_1_52" text="Hirluin, o Belo, Senhor de Pinnath Gelin, lidera seus guerreiros vestidos de verde das colinas de Gondor. Ele é conhecido por sua bravura e lealdade ao Regente." />
+    <string id="TAOM_hero_1_52_4" text="Nauriel, esposa de Hirluin, é a Senhora de Pinnath Gelin, conhecida por sua firmeza e cuidado com o povo das colinas verdes." />
+    <string id="TAOM_hero_1_52_1" text="Anariel, filha de Hirluin, cresceu entre os guerreiros de Pinnath Gelin e pode se defender em batalha." />
+    <string id="TAOM_hero_1_52_2" text="Barandor, filho de Hirluin, treina para um dia liderar os guerreiros de Pinnath Gelin. Ele cavalga com a companhia vestida de verde de seu pai." />
+    <string id="TAOM_hero_1_62" text="Oromar, marido de Anariel, uniu-se à casa de Halboronionath através de sua união. Ele serve o Senhor de Pinnath Gelin fielmente." />
+    <string id="TAOM_hero_1_62_1" text="Isfin, esposa de Barandor, é uma mulher das Colinas Verdes conhecida por sua graça." />
+    <string id="TAOM_hero_1_53" text="Angbor, o Destemido, Senhor de Lamedon, reuniu seus homens mesmo quando os Mortos marcharam por suas terras. Ele é audaz e rápido para agir." />
+    <string id="TAOM_hero_1_73" text="Narmir, irmão mais novo de Angbor, serve na defesa de Lamedon. Ele compartilha a coragem de seu irmão, se não ainda sua experiência." />
+    <string id="TAOM_hero_1_73_1" text="Belwen, esposa de Angbor, permanece firmemente ao lado de seu marido na defesa de Lamedon." />
+    <string id="TAOM_hero_1_71" text="Golasgil, Senhor de Anfalas, comanda a longa costa contra os ataques dos Corsários. Ele é um senhor do mar experiente que tem defendido as costas de Gondor por décadas." />
+    <string id="TAOM_hero_1_71_1" text="Laswen, esposa de Golasgil, supervisiona os assentamentos costeiros de Anfalas enquanto seu marido guarda as rotas marítimas." />
+    <string id="TAOM_hero_WE8_c" text="Pelendur, filho de Golasgil, está sendo treinado para um dia defender a costa de Anfalas como seu pai tem feito." />
+    <string id="TAOM_hero_WE8_u" text="Barandil, irmão de Golasgil, serve como capitão da guarda costeira de Anfalas." />
+    <string id="TAOM_hero_WE9_l" text="Duinhir, Senhor de Morthond, lidera seus arqueiros do Vale da Raiz Negra para a defesa de Gondor. Ele é um comandante severo e capaz." />
+    <string id="TAOM_hero_WE9_u" text="Duilin, filho mais velho de Duinhir, lidera sua própria companhia de arqueiros e luta ao lado de seu pai na defesa de Gondor." />
+    <string id="TAOM_hero_WE9_u2" text="Rosfin, esposa de Duinhir, administra os assuntos do Vale da Raiz Negra na ausência de seu marido." />
+    <string id="TAOM_hero_1_14" text="A Boca de Sauron fala com a autoridade do Senhor do Escuro. Outrora um Númenoreano Negro, ele esqueceu seu próprio nome após eras de serviço ao mal. Ele comanda a guarnição do Portão Negro." />
+    <string id="TAOM_hero_1_27" text="Maugrash é um capitão Orc que ascendeu através de pura brutalidade e astúcia." />
+    <string id="TAOM_hero_1_27_1" text="Verina é uma feiticeira Númenoreana Negra a serviço da Torre Escura." />
+    <string id="TAOM_hero_1_27_2" text="Throznak lidera grupos de ataque às terras ocidentais." />
+    <string id="TAOM_hero_1_27_3" text="Vasilia serve o Senhor do Escuro nas sombras." />
+    <string id="TAOM_hero_1_37" text="Goshank comanda um regimento de orcs de Mordor com cruel eficiência." />
+    <string id="TAOM_hero_1_47" text="Ulbos é um capataz Orc, conduzindo escravos nas forjas do Monte da Perdição." />
+    <string id="TAOM_hero_1_47_1" text="Mina serve os poderes sombrios de Mordor." />
+    <string id="TAOM_hero_1_47_2" text="Casyrea é uma serva da Sombra." />
+    <string id="TAOM_hero_1_47_3" text="Colambea habita na escuridão de Mordor." />
+    <string id="TAOM_hero_1_15" text="O Rei-Bruxo de Angmar, Senhor dos Nazgul, é o servo mais terrível de Sauron. Ele foi outrora um grande rei dos Homens, corrompido por seu Anel de Poder em um espectro imortal." />
+    <string id="TAOM_hero_1_155" text="O Marechal Sombrio comanda os Nazgul em batalha, subordinado apenas ao Rei-Bruxo." />
+    <string id="TAOM_hero_1_16" text="O Cavaleiro de Umbar foi outrora um senhor dos Corsários antes de tomar o Anel." />
+    <string id="TAOM_hero_1_28" text="O Traidor foi outrora um rei no Leste antes de sua corrupção." />
+    <string id="TAOM_hero_1_38" text="O Imortal foi um rei-feiticeiro que buscou imortalidade e encontrou apenas servidão eterna." />
+    <string id="TAOM_hero_1_48" text="Khamul, o Oriental, segundo dos Nove, outrora governou um grande reino em Rhun antes de aceitar um Anel de Poder." />
+    <string id="TAOM_hero_1_48_1" text="O Corrompido espalha corrupção por onde cavalga." />
+    <string id="TAOM_hero_1_48_2" text="A Sombra dos Homens do Norte caça nas terras frias." />
+    <string id="TAOM_hero_1_48_3" text="A Sombra de Umbar assombra as costas do sul." />
+    <string id="TAOM_hero_1_177" text="Honoratus serve como oficial nos exércitos de Mordor." />
+    <string id="TAOM_hero_1_29" text="Sanion é um capitão Númenoreano Negro que comanda uma fortaleza." />
+    <string id="TAOM_hero_1_17" text="Sauron, o Grande, Senhor do Escuro de Mordor. Esta entrada existe apenas para exibir sua terrível armadura." />
+    <string id="TAOM_hero_1_18" text="Jathea serve na hierarquia sombria de Mordor." />
+    <string id="TAOM_hero_1_39" text="Debana é uma serva da Sombra, habilidosa nas artes sombrias." />
+    <string id="TAOM_hero_1_30" text="Gothmog, Tenente de Morgul, comanda os exércitos de Mordor nos Campos de Pelennor. Um Orc brutal e astuto, ele lidera pela frente." />
+    <string id="TAOM_hero_1_30_1" text="Svala Presadevermelha é um capitão Orc sob o comando de Gothmog." />
+    <string id="TAOM_hero_1_49" text="Obron lidera uma companhia de orcs de Mordor." />
+    <string id="TAOM_hero_1_49_1" text="Tristania serve nas forças sombrias." />
+    <string id="TAOM_hero_1_49_2" text="Gordiana habita à sombra da Torre Escura." />
+    <string id="TAOM_hero_1_30_2" text="Callinia serve os poderes sombrios de Mordor." />
+    <string id="TAOM_hero_1_30_3" text="Synesios é um servo da Sombra." />
+    <string id="TAOM_hero_1_56_2" text="Rustica serve nos exércitos das trevas." />
+    <string id="TAOM_hero_1_63_2" text="Comatasa é um Orc criado para a guerra." />
+    <string id="TAOM_hero_1_63_3" text="Elidilea serve na hierarquia sombria." />
+    <string id="TAOM_hero_1_63" text="Gorbag, Capitão de Minas Morgul, lidera a guarnição da cidade morta. Ele é astuto até mesmo para os padrões Orcs." />
+    <string id="TAOM_hero_1_63_1" text="Valaria serve na cidadela dos mortos." />
+    <string id="TAOM_hero_1_74" text="Zachanis comanda um regimento de orcs." />
+    <string id="TAOM_hero_1_74_1" text="Zena serve os mestres sombrios de Mordor." />
+    <string id="TAOM_hero_1_54" text="Shagrat, Capitão de Cirith Ungol, guarda a passagem para Mordor. Ele é conhecido por sua crueldade mesmo entre os Orcs." />
+    <string id="TAOM_hero_1_54_1" text="Constalia serve na torre de Cirith Ungol." />
+    <string id="TAOM_hero_1_68" text="Tharos é um capitão Orc servindo na passagem." />
+    <string id="TAOM_hero_1_68_1" text="Silvina serve na guarnição da passagem da aranha." />
+    <string id="TAOM_hero_1_69_2" text="Dorathila serve nos exércitos sombrios." />
+    <string id="TAOM_hero_1_69" text="Niphon comanda uma fortaleza nas fronteiras de Mordor." />
+    <string id="TAOM_hero_1_69_1" text="Areliana serve nas terras fronteiriças." />
+    <string id="TAOM_hero_1_55" text="Mathmog é um poderoso chefe de guerra Uruk-hai." />
+    <string id="TAOM_hero_1_55_1" text="Megethia serve os poderes sombrios." />
+    <string id="TAOM_hero_1_72" text="Bolg é um poderoso chefe Orc, descendente de Azog, o Profanador." />
+    <string id="TAOM_hero_1_72_1" text="Viviana serve na hierarquia sombria." />
+    <string id="TAOM_hero_SE8_c" text="Um Orc criado nas fossas de Mordor." />
+    <string id="TAOM_hero_SE9_l" text="Um lorde Númenoreano Negro que comanda uma fortaleza em Mordor." />
+    <string id="TAOM_hero_SE9_s" text="Uma feiticeira Númenoreana Negra de poder sombrio." />
+    <string id="TAOM_hero_SE9_c1" text="Herdeiro de uma casa Númenoreana Negra, treinado nas artes sombrias." />
+    <string id="TAOM_hero_SE9_c2" text="Segundo filho do lorde Númenoreano Negro." />
+    <string id="TAOM_hero_2_1" text="Bard II, Rei de Dale, é neto do lendário Bard, o Arqueiro, que matou Smaug. Ele governa o próspero reino ao pé de Erebor, aliado aos Anões da Montanha Solitária." />
+    <string id="TAOM_hero_2_2" text="Asta é Rainha de Dale, amada por sua sabedoria e graça." />
+    <string id="TAOM_hero_2_13_1" text="Lilizha é uma filha de uma casa nobre dos Bardos." />
+    <string id="TAOM_hero_2_13_2" text="Andruta serve na casa do rei." />
+    <string id="TAOM_hero_2_13_3" text="Luda é uma jovem nobre de Dale." />
+    <string id="TAOM_hero_2_13_4" text="Teta é uma filha nobre de Dale." />
+    <string id="TAOM_hero_2_7" text="Simir é um príncipe de Dale, herdeiro do trono de seu pai." />
+    <string id="TAOM_hero_2_7_1" text="Mimir é um príncipe da casa real de Dale." />
+    <string id="TAOM_hero_2_10" text="Valla é uma princesa de Dale, treinada em diplomacia e arte de governar." />
+    <string id="TAOM_hero_2_13" text="Vidar é um senhor das marcas do norte, guardando contra incursões dos Orientais." />
+    <string id="TAOM_hero_2_3" text="Thorin III Elmo de Pedra, Rei sob a Montanha, governa os Anões de Erebor. Ele mantém a antiga aliança com Dale e está pronto para defender contra a Sombra." />
+    <string id="TAOM_hero_2_4" text="Siga é uma nobre Anã da linhagem de Durin." />
+    <string id="TAOM_hero_2_4_1" text="Apolanea é uma donzela Anã de nascimento nobre." />
+    <string id="TAOM_hero_2_8" text="Urik é um príncipe Anão de Erebor, habilidoso em forja e guerra." />
+    <string id="TAOM_hero_2_11" text="Idrun é um guerreiro Anão da guarda real." />
+    <string id="TAOM_hero_2_111" text="Rozhivol é um guerreiro Anão que guarda os portões da montanha." />
+    <string id="TAOM_hero_2_5" text="Ori é um senhor Anão descendente de um dos companheiros de Thorin Escudo de Carvalho. Ele gerencia as rotas comerciais entre Erebor e Dale." />
+    <string id="TAOM_hero_2_6" text="Erta é esposa de Ori, conhecida por sua habilidade em lapidar gemas." />
+    <string id="TAOM_hero_2_9" text="Lek é herdeiro das propriedades de Ori, treinado tanto em comércio quanto em combate." />
+    <string id="TAOM_hero_2_12" text="Svana é uma filha da casa comercial." />
+    <string id="TAOM_hero_2_121" text="Osven gerencia caravanas entre a montanha e a cidade." />
+    <string id="TAOM_hero_2_14" text="Isvan é um senhor das marcas orientais, guardando o Lago Comprido." />
+    <string id="TAOM_hero_2_14_1" text="Valkava é esposa do Senhor Isvan." />
+    <string id="TAOM_hero_2_14_2" text="Zaverena é herdeira das propriedades orientais." />
+    <string id="TAOM_hero_2_14_3" text="Vizhduna é uma jovem nobre das marcas orientais." />
+    <string id="TAOM_hero_2_16" text="Bofur é um senhor Anão de Erebor, descendente da lendária companhia." />
+    <string id="TAOM_hero_2_16_1" text="Tyaska é esposa de Bofur, habilidosa nas artes da cura." />
+    <string id="TAOM_hero_2_21" text="Svedorn comanda a guarnição de Esgaroth." />
+    <string id="TAOM_hero_2_21_1" text="Izdenka gerencia os assuntos de Esgaroth." />
+    <string id="TAOM_hero_2_17" text="Thorin II Escudo de Carvalho é lembrado como o herói que recuperou Erebor de Smaug. Seu espírito inspira seus descendentes." />
+    <string id="TAOM_hero_2_17_1" text="Dracha mantém viva a memória do antigo rei." />
+    <string id="TAOM_hero_2_22" text="Lashonek comanda guerreiros de Dale." />
+    <string id="TAOM_hero_2_22_1" text="Zheneva é esposa de Lashonek." />
+    <string id="TAOM_hero_2_24" text="Alvar é um capitão da Guarda de Dale." />
+    <string id="TAOM_hero_2_24_1" text="Zorina é uma dama nobre de Dale." />
+    <string id="TAOM_hero_2_18" text="Glóin é um senhor Anão de Erebor, pai de Gimli da Sociedade." />
+    <string id="TAOM_hero_2_18_1" text="Zorika é esposa de Glóin, mãe do famoso Gimli." />
+    <string id="TAOM_hero_2_23" text="Galden comanda a guarnição sul de Dale." />
+    <string id="TAOM_hero_2_23_1" text="Zlatka é filha de Galden." />
+    <string id="TAOM_hero_2_15" text="Ratagost é um sábio conselheiro que aconselha o rei em assuntos de estado." />
+    <string id="TAOM_hero_2_15_1" text="Yachana serve na corte real." />
+    <string id="TAOM_hero_2_15_2" text="Milanka é uma nobre da corte." />
+    <string id="TAOM_hero_2_15_3" text="Velina serve a casa real." />
+    <string id="TAOM_hero_2_15_4" text="Bovan é um jovem nobre de Dale." />
+    <string id="TAOM_hero_2_19" text="Dwalin é um guerreiro Anão de grande renome, último sobrevivente da companhia original." />
+    <string id="TAOM_hero_2_19_1" text="Vitomira serve ao lado de Dwalin." />
+    <string id="TAOM_hero_2_20" text="Óin é um ancião Anão, guardião do conhecimento antigo e das artes de cura." />
+    <string id="TAOM_hero_2_20_1" text="Kisha é esposa de Óin, habilidosa no conhecimento de ervas." />
+    <string id="TAOM_hero_S8_u" text="Um veterano experiente que guarda os salões da montanha." />
+    <string id="TAOM_hero_3_1" text="Khadurak é o Taskral de Harad, comandante supremo dos exércitos do sul. Ele lidera os Mumakil, elefantes de guerra, contra os inimigos de seu povo, aliado a Mordor contra Gondor." />
+    <string id="TAOM_hero_3_2" text="Uma dama nobre Haradrim de alta posição." />
+    <string id="TAOM_hero_3_7" text="Dhiyul é herdeiro do Taskral, treinado nos caminhos dos cavaleiros de Mumak." />
+    <string id="TAOM_hero_3_10" text="Anidha é uma filha do Taskral, versada em política da corte." />
+    <string id="TAOM_hero_3_13" text="Nuqar comanda a elite Guarda da Serpente de Harad." />
+    <string id="TAOM_hero_3_13_1" text="Sira é esposa de Nuqar." />
+    <string id="TAOM_hero_3_13_2" text="Razana é filha do comandante da Guarda Serpente." />
+    <string id="TAOM_hero_3_8" text="Addas é um príncipe guerreiro Haradrim." />
+    <string id="TAOM_hero_3_11" text="Arwa é uma princesa das tribos do deserto." />
+    <string id="TAOM_hero_3_3" text="Calemir é um chefe dos Haradrim orientais, senhor dos assentamentos do oásis." />
+    <string id="TAOM_hero_3_3_1" text="Tariq é herdeiro dos senhores do oásis oriental." />
+    <string id="TAOM_hero_3_4" text="Maraa é esposa de Calemir, conhecida por sua sabedoria." />
+    <string id="TAOM_hero_3_5" text="Haldir comanda os Haradrim costeiros, aliados aos Corsários de Umbar." />
+    <string id="TAOM_hero_3_51" text="Haqan é um capitão marítimo das tribos costeiras." />
+    <string id="TAOM_hero_3_12" text="Manan saqueia os assentamentos costeiros de Gondor." />
+    <string id="TAOM_hero_3_20" text="Karith comanda grupos de ataque em terras inimigas." />
+    <string id="TAOM_hero_3_20_1" text="Judira é esposa de Karith." />
+    <string id="TAOM_hero_3_20_2" text="Azina é filha de um capitão de ataque." />
+    <string id="TAOM_hero_3_6" text="Ruma é esposa de Haldir, administrando suas propriedades costeiras." />
+    <string id="TAOM_hero_3_9" text="Usair é herdeiro das propriedades costeiras." />
+    <string id="TAOM_hero_3_14" text="Thamza lidera caravanas através dos desertos áridos." />
+    <string id="TAOM_hero_3_14_1" text="Sasaitha administra as rotas comerciais do deserto." />
+    <string id="TAOM_hero_3_15" text="Ghuzid comanda os cavaleiros Mumak do extremo sul." />
+    <string id="TAOM_hero_3_15_1" text="Shimra é esposa do senhor Mumak." />
+    <string id="TAOM_hero_3_15_2" text="Bushila treina jovens cavaleiros Mumak." />
+    <string id="TAOM_hero_3_16" text="Rumil é um chefe das tribos do estandarte dourado." />
+    <string id="TAOM_hero_3_16_1" text="Farina é esposa do chefe do estandarte dourado." />
+    <string id="TAOM_hero_3_17" text="Orophin comanda os cavaleiros serpente do extremo sul." />
+    <string id="TAOM_hero_3_17_1" text="Shaima é esposa de Orophin." />
+    <string id="TAOM_hero_3_17_2" text="Sanit é herdeiro dos cavaleiros serpente." />
+    <string id="TAOM_hero_3_21" text="Ukhai lidera saqueadores do deserto contra caravanas do norte." />
+    <string id="TAOM_hero_3_21_1" text="Ashisa é esposa do capitão saqueador." />
+    <string id="TAOM_hero_3_18" text="Aranthon é um rico príncipe mercador do sul." />
+    <string id="TAOM_hero_3_18_1" text="Farzana é filha do príncipe mercador." />
+    <string id="TAOM_hero_3_18_2" text="Hafisa administra conexões comerciais." />
+    <string id="TAOM_hero_3_18_3" text="Zuad é um jovem mercador em treinamento." />
+    <string id="TAOM_hero_3_18_4" text="Jalfar guarda as caravanas comerciais." />
+    <string id="TAOM_hero_3_19" text="Aethirion comanda uma fortaleza na fronteira norte." />
+    <string id="TAOM_hero_3_19_1" text="Salma é esposa do comandante da fronteira." />
+    <string id="TAOM_hero_3_19_2" text="Zulaika treina com a guarnição da fronteira." />
+    <string id="TAOM_hero_3_19_3" text="Sulhana é uma nobre da fronteira." />
+    <string id="TAOM_hero_3_23" text="Qahin lidera batedores em território inimigo." />
+    <string id="TAOM_hero_3_23_1" text="Sukayna é esposa do comandante dos batedores." />
+    <string id="TAOM_hero_3_22" text="Duilin comanda arqueiros das tribos do deserto." />
+    <string id="TAOM_hero_3_22_1" text="Yamina é esposa do comandante dos arqueiros." />
+    <string id="TAOM_hero_3_22_2" text="Suna treina jovens arqueiros." />
+    <string id="TAOM_hero_3_22_3" text="Zanuwa é um arqueiro habilidoso da tribo." />
+    <string id="TAOM_hero_3_22_4" text="Hajara guarda as torres de vigia do deserto." />
+    <string id="TAOM_hero_4_1" text="Théoden, Rei de Rohan, governa de Meduseld em Edoras. Outrora enfeitiçado pelo servo de Saruman, Gríma, foi libertado por Gandalf e conduziu seu povo à glória em Forte da Trombeta e nos Campos do Pelennor." />
+    <string id="TAOM_hero_4_2" text="Elfhild foi rainha de Rohan, mãe de Théodred. Ela morreu no parto, uma dor que ensombrou o reinado de Théoden." />
+    <string id="TAOM_hero_4_7" text="Théodred era o único filho do Rei Théoden, Príncipe de Rohan. Ele caiu defendendo os Vaus do Isen contra os Uruk-hai de Saruman." />
+    <string id="TAOM_hero_4_10" text="Elys é uma dama nobre da corte dos Rohirrim." />
+    <string id="TAOM_hero_4_13" text="Romund serve como capitão da Guarda Real." />
+    <string id="TAOM_hero_4_14" text="Morcon é um capitão de confiança da casa do rei." />
+    <string id="TAOM_hero_4_141" text="Amorcon serve ao lado de seu parente na guarda." />
+    <string id="TAOM_hero_4_15" text="Erdurand é um cavaleiro da casa de Théoden." />
+    <string id="TAOM_hero_4_3" text="Théodwyn era irmã do Rei Théoden e mãe de Éomer e Éowyn. Ela morreu de tristeza após seu marido Éomund ser morto por Orcs." />
+    <string id="TAOM_hero_4_3_1" text="Éomer Éadig, Terceiro Marechal da Marca, é sobrinho de Théoden e herdeiro do trono. Ele lidera os cavaleiros do Folde Oriental com feroz lealdade." />
+    <string id="TAOM_hero_4_4" text="Elthild é uma dama nobre dos Eoforing." />
+    <string id="TAOM_hero_4_8" text="Furnhard serve como um cavaleiro de confiança sob o comando de Éomer." />
+    <string id="TAOM_hero_4_11" text="Liena serve a casa real." />
+    <string id="TAOM_hero_4_6" text="Grimbold de Grimslade comanda os cavaleiros do Folde Ocidental. Um guerreiro feroz, ele defendeu os Vaus do Isen e mais tarde morreu heroicamente no Pelennor." />
+    <string id="TAOM_hero_4_6_1" text="Deorwyn é herdeiro do comando de Grimbold." />
+    <string id="TAOM_hero_4_5" text="Unthery serve como capitão dos cavaleiros do Folde Ocidental." />
+    <string id="TAOM_hero_4_9" text="Thomund comanda uma companhia de cavaleiros do Folde Ocidental." />
+    <string id="TAOM_hero_4_12" text="Silvind é uma donzela de escudo do Folde Ocidental." />
+    <string id="TAOM_hero_4_121" text="Lasand serve na guarnição do Folde Ocidental." />
+    <string id="TAOM_hero_4_16" text="Erkenbrand, Senhor do Folde Ocidental, comanda a fortaleza do Forte da Trombeta. Ele chegou com Gandalf ao Abismo de Helm para virar a maré da batalha." />
+    <string id="TAOM_hero_4_16_1" text="Merthu é esposa de Erkenbrand, Senhora do Forte da Trombeta." />
+    <string id="TAOM_hero_4_17" text="Elbet serve na casa de Erkenbrand." />
+    <string id="TAOM_hero_4_18" text="Amalgun é herdeiro de Erkenbrand." />
+    <string id="TAOM_hero_4_181" text="Arthamund serve como capitão da guarnição do Forte da Trombeta." />
+    <string id="TAOM_hero_4_19" text="Asela é uma donzela de escudo que guarda o Vale do Baluarte." />
+    <string id="TAOM_hero_4_25" text="Lucand comanda cavaleiros do Eastemnet." />
+    <string id="TAOM_hero_4_25_1" text="Bertliana é esposa de Lucand." />
+    <string id="TAOM_hero_4_21" text="Cuthraed Ordlacing patrulha as fronteiras orientais." />
+    <string id="TAOM_hero_4_20" text="Varmund comanda a guarnição de Aldburg." />
+    <string id="TAOM_hero_4_20_1" text="Ingeltrud é esposa de Varmund, Senhora de Aldburg." />
+    <string id="TAOM_hero_4_22" text="Wulf Celmunding lidera cavaleiros dos vales setentrionais." />
+    <string id="TAOM_hero_4_22_1" text="Sunnifa é esposa de Wulf." />
+    <string id="TAOM_hero_4_23" text="Marhath lidera criadores de cavalos das pradarias meridionais." />
+    <string id="TAOM_hero_4_23_1" text="Wulfwynn é filha de Marhath, uma cavaleira habilidosa." />
+    <string id="TAOM_hero_4_23_2" text="Eleduran treina cavalos de guerra para o exército do rei." />
+    <string id="TAOM_hero_4_23_3" text="Eleduran, o jovem, serve como guardião de cavalos." />
+    <string id="TAOM_hero_4_24" text="Gríma Língua de Cobra foi conselheiro de Théoden, secretamente um espião de Saruman. Suas mentiras sussurradas envenenaram a mente do rei até que Gandalf quebrou o feitiço." />
+    <string id="TAOM_hero_4_24_1" text="Eowyn, Senhora de Rohan, é irmã de Eomer e sobrinha de Theoden. Ela matou o Rei-Bruxo no Pelennor, derrubando o terror das eras." />
+    <string id="TAOM_hero_4_24_2" text="Elfgrim serve como cavaleiro da casa real." />
+    <string id="TAOM_hero_4_24_3" text="Herubrand guarda o salão do rei." />
+    <string id="TAOM_hero_4_24_4" text="Siegeberht patrulha as fronteiras de Rohan." />
+    <string id="TAOM_hero_4_26" text="Peric comanda cavaleiros ao longo da Passagem de Rohan." />
+    <string id="TAOM_hero_4_26_1" text="Reingarda é uma donzela-escudeira da Passagem." />
+    <string id="TAOM_hero_4_27" text="Aelle Aethellafing guarda as Dobras contra ataques dos Dunlandeses." />
+    <string id="TAOM_hero_4_27_1" text="Waerburg é esposa de Aelle." />
+    <string id="TAOM_hero_V9_u" text="Um cavaleiro experiente que aconselha o thane local." />
+    <string id="TAOM_hero_4_28" text="Fasthelm Morcargas comanda os postos de vigilância do sul." />
+    <string id="TAOM_hero_4_28_1" text="Morcar é filho de Fasthelm." />
+    <string id="TAOM_hero_4_28_2" text="Hereswith é filha do comandante da vigilância do sul." />
+    <string id="TAOM_hero_5_1" text="Vargul, o Alto Senhor da Guerra de Khand, lidera os ferozes cavaleiros Variag. Sua aliança com Mordor traz seus guerreiros contra Gondor na guerra pela Terra-média." />
+    <string id="TAOM_hero_5_1_1" text="Um guerreiro do séquito do Alto Senhor da Guerra." />
+    <string id="TAOM_hero_5_3" text="Ergeon é um chefe que lidera os clãs Variag do leste, conhecidos por suas táticas rápidas de cavalaria." />
+    <string id="TAOM_hero_5_3_1" text="Ranaon é herdeiro da tropa de guerra de Ergeon." />
+    <string id="TAOM_hero_5_3_2" text="Ladogual serve como capitão no exército de Ergeon." />
+    <string id="TAOM_hero_5_4" text="Nywin é esposa de Ergeon, habilidosa nas artes da cura." />
+    <string id="TAOM_hero_5_5" text="Melidir lidera invasores nas terras de Gondor." />
+    <string id="TAOM_hero_5_5_1" text="Eilidh administra os rebanhos de cavalos do clã." />
+    <string id="TAOM_hero_5_6" text="Alcaea é esposa de Melidir." />
+    <string id="TAOM_hero_5_7" text="Um chefe guerreiro Variag de Khand." />
+    <string id="TAOM_hero_5_8" text="Sein comanda uma companhia de cavalaria Variag." />
+    <string id="TAOM_hero_5_9" text="Culharn é um guerreiro Variag de reputação crescente." />
+    <string id="TAOM_hero_5_91" text="Tegan serve ao lado de Culharn." />
+    <string id="TAOM_hero_5_10" text="Corein é um nobre Variag da corte do Alto Senhor da Guerra." />
+    <string id="TAOM_hero_5_11" text="Alynneth é uma nobre Variag." />
+    <string id="TAOM_hero_5_12" text="Wythuin treina jovens cavaleiros Variag." />
+    <string id="TAOM_hero_5_13" text="Muinser comanda invasores nas regiões do norte." />
+    <string id="TAOM_hero_5_131" text="Rath serve sob o comando de Muinser." />
+    <string id="TAOM_hero_5_13_1" text="Beasag é uma guerreira Variag dos clãs do norte." />
+    <string id="TAOM_hero_5_15" text="Pryndor guarda as passagens das montanhas para Khand." />
+    <string id="TAOM_hero_5_15_1" text="Floraidh é filha do guardião das montanhas." />
+    <string id="TAOM_hero_5_15_2" text="Beitrin patrulha as trilhas das montanhas." />
+    <string id="TAOM_hero_5_15_3" text="Diarbhain guarda as passagens altas." />
+    <string id="TAOM_hero_5_14" text="Luichan comanda cavaleiros Variag das planícies ocidentais." />
+    <string id="TAOM_hero_5_14_1" text="Eabyr é esposa de Luichan." />
+    <string id="TAOM_hero_5_16" text="Aeron lidera guerreiros das estepes centrais." />
+    <string id="TAOM_hero_5_16_1" text="Liasin é esposa de Aeron." />
+    <string id="TAOM_hero_5_16_2" text="Gawen é herdeiro da tropa de guerra de Aeron." />
+    <string id="TAOM_hero_5_17" text="Aradwyr comanda as forças da fronteira leste." />
+    <string id="TAOM_hero_5_17_1" text="Brighan é esposa de Aradwyr." />
+    <string id="TAOM_hero_5_18" text="Branoc lidera batedores em território inimigo." />
+    <string id="TAOM_hero_5_18_1" text="Seonag é esposa de Branoc." />
+    <string id="TAOM_hero_5_19" text="Fenagan é um campeão Variag conhecido por sua proeza em duelos." />
+    <string id="TAOM_hero_5_20" text="Siaramus comanda os guerreiros de bigas de Khand." />
+    <string id="TAOM_hero_5_21" text="Carfyd lidera saqueadores Variag ao longo da fronteira." />
+    <string id="TAOM_hero_5_21_1" text="Beathag é esposa de Carfyd." />
+    <string id="TAOM_hero_5_21_2" text="Taorse é herdeiro do bando de saqueadores de Carfyd." />
+    <string id="TAOM_hero_5_22" text="Fiarad guarda as rotas comerciais do sul." />
+    <string id="TAOM_hero_6_1" text="Zhamik Zhamian, Loke-Khan de Rhun, governa o Reino Dourado dos Orientais. Seus ancestrais serviram Sauron, e ele continua essa aliança sombria, sonhando em conquistar as terras do Ocidente." />
+    <string id="TAOM_hero_6_2" text="Maraia é esposa do Loke-Khan, rainha do Reino Dourado." />
+    <string id="TAOM_hero_6_3" text="Bagai serve como capitão da guarda real." />
+    <string id="TAOM_hero_6_4" text="Gurtilm Salurian comanda os exércitos ocidentais de Rhun. Após a morte de seu marido, ela assumiu o comando com determinação férrea." />
+    <string id="TAOM_hero_6_5" text="Irbo Nikathian lidera o clã Arkit, famosos arqueiros montados das estepes orientais." />
+    <string id="TAOM_hero_6_51" text="Khada é herdeiro do clã Arkit." />
+    <string id="TAOM_hero_6_6" text="Suran comanda guerreiros das tribos do sul." />
+    <string id="TAOM_hero_6_7" text="Chaghan é um príncipe de Rhun, herdeiro do Reino Dourado." />
+    <string id="TAOM_hero_6_8" text="Esur é um guerreiro do exército de Gurtilm." />
+    <string id="TAOM_hero_6_81" text="Nayantai serve como capitão no exército de Gurtilm." />
+    <string id="TAOM_hero_6_9" text="Temun é um guerreiro do clã Arkit." />
+    <string id="TAOM_hero_6_10" text="Alijin é um príncipe da casa real." />
+    <string id="TAOM_hero_6_101" text="Bolat serve na casa real." />
+    <string id="TAOM_hero_6_11" text="Yana é um nobre do exército de Gurtilm." />
+    <string id="TAOM_hero_6_12" text="Abagai é herdeiro das propriedades Arkit." />
+    <string id="TAOM_hero_6_13" text="Bortu é um nobre da casa real." />
+    <string id="TAOM_hero_6_15" text="Oragur lidera os arqueiros montados Arkit." />
+    <string id="TAOM_hero_6_15_1" text="Khorijin é esposa de Oragur." />
+    <string id="TAOM_hero_6_15_2" text="Sechen é herdeiro do comando de Oragur." />
+    <string id="TAOM_hero_6_16" text="Akvoth Karmian comanda as fronteiras do sul de Rhun." />
+    <string id="TAOM_hero_6_16_1" text="Chambui é esposa de Akvoth." />
+    <string id="TAOM_hero_6_16_2" text="Unagen é herdeiro do comando de Akvoth." />
+    <string id="TAOM_hero_6_17" text="Amdur Amdurid lidera um clã poderoso das estepes orientais." />
+    <string id="TAOM_hero_6_17_1" text="Ergene é esposa de Amdur." />
+    <string id="TAOM_hero_6_17_2" text="Yesum é herdeiro das propriedades Amdurid." />
+    <string id="TAOM_hero_6_18" text="Luthkan Khundolar comanda guerreiros das províncias ocidentais." />
+    <string id="TAOM_hero_6_18_1" text="Tilun é esposa de Luthkan." />
+    <string id="TAOM_hero_6_18_2" text="Chagun é herdeiro dos Khundolar." />
+    <string id="TAOM_hero_6_19" text="Vakheraltan Khundolar é irmão de Luthkan, comandando batedores de cavalaria." />
+    <string id="TAOM_hero_6_19_1" text="Sokhatai é esposa de Vakheraltan." />
+    <string id="TAOM_hero_6_19_2" text="Korte é herdeiro dos batedores de Vakheraltan." />
+    <string id="TAOM_hero_6_20" text="Khurubra Mashakian comanda as tribos do norte de Rhun." />
+    <string id="TAOM_hero_6_20_1" text="Jigur é esposa de Khurubra." />
+    <string id="TAOM_hero_K8_u" text="Um guerreiro experiente que aconselha o chefe do norte." />
+    <string id="TAOM_hero_6_21" text="Molluk Illnoria comanda um poderoso clã de guerreiros montados." />
+    <string id="TAOM_hero_6_21_1" text="Esachei é esposa de Molluk." />
+    <string id="TAOM_hero_6_22" text="Shakhal II Shakhalian governa um clã mercante rico do Mar de Rhun." />
+    <string id="TAOM_hero_6_22_1" text="Eselen é esposa de Shakhal." />
+    <string id="TAOM_hero_6_23" text="Huz-Margoz Huz comanda guarnições de fortalezas ao longo da fronteira ocidental." />
+    <string id="TAOM_hero_6_24" text="Nikath Adekig guarda as passagens do sul para Rhun." />
+    <string id="TAOM_hero_A9_l" text="Um chefe Haradrim dos ermos do sul." />
+    <string id="TAOM_hero_A9_s" text="Esposa do chefe dos ermos do sul." />
+    <string id="TAOM_hero_A9_c" text="Herdeiro do chefe dos ermos do sul." />
+    <string id="TAOM_hero_A9_u" text="Um guerreiro das tribos do sul." />
+    <string id="TAOM_hero_V11_l" text="Um senhor Rohirrim dos vales ocidentais." />
+    <string id="TAOM_hero_V11_u" text="Um cavaleiro veterano que aconselha o senhor." />
+    <string id="TAOM_hero_V11_c1" text="Herdeiro das terras dos vales ocidentais." />
+    <string id="TAOM_hero_V11_c2" text="Segundo filho do senhor dos vales ocidentais." />
+    <string id="TAOM_hero_S9_l" text="Um nobre de Valle que guarda as aproximações do norte." />
+    <string id="TAOM_hero_S9_m" text="Matriarca de um clã Barding do norte." />
+    <string id="TAOM_hero_S9_c" text="Jovem herdeiro das terras do norte." />
+    <string id="TAOM_hero_S9_u" text="Um guerreiro experiente da guarnição do norte." />
+    <string id="TAOM_hero_K9_l" text="Um chefe das tribos distantes dos Orientais." />
+    <string id="TAOM_hero_K9_s" text="Esposa do chefe distante." />
+    <string id="TAOM_hero_K9_c1" text="Herdeiro das terras tribais distantes." />
+    <string id="TAOM_hero_K9_c2" text="Segundo filho do chefe distante." />
+    <string id="TAOM_hero_B8_l" text="Um senhor da guerra Variag das colinas orientais." />
+    <string id="TAOM_hero_B8_s" text="Esposa do senhor da guerra Variag." />
+    <string id="TAOM_hero_B8_c" text="Herdeiro do senhor da guerra Variag." />
+  </strings>
+</base>

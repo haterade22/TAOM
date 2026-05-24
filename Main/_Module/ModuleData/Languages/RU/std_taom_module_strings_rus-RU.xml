@@ -365,53 +365,53 @@
     <string id="bjEN2OzZ" text="В результате ваших враждебных намерений по отношению к нейтральной деревне {KINGDOM} объявляет вам войну." />
     <string id="Bk3Wqy5j" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="BlVjIlZF" text="{FACTION_LEADER} решит, заключит ли {KINGDOM_CONSIDERING_PEACE_NAME} мир с {KINGDOM_NAME}, заплатив {TRIBUTE_AMOUNT} в качестве дани на {TRIBUTE_DURATION} дней. Вы можете выбрать свою позицию относительно этого решения." />
-    <string id="bMCZ5rWQ" text="{RULER.NAME} has decided not to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision had the support of {?RULER.GENDER}her{?}his{\?} council." />
-    <string id="bR7MIkFi" text="{RULER.NAME} has decided against forming an alliance with {KINGDOM_NAME} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="bMCZ5rWQ" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано {?RULER.GENDER}её{?}его{\?} советом." />
+    <string id="bR7MIkFi" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
     <string id="bXN2fbcv" text="Ваши люди обращаются с жителями {SETTLEMENT_NAME} как с заблудшими подданными {SETTLEMENT_CULTURE_NAME}, а не как с врагами, и относятся к ним довольно хорошо." />
-    <string id="bYmc9fi3" text="{RULER.NAME} has decided to form an alliance with {KINGDOM_NAME} despite the opposition of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="bYmc9fi3" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
     <string id="Cf0amFBD" text="Принять призыв {CALLING_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}" />
-    <string id="cRpsjvOM" text="{AGGRESSOR_RULER.NAME} of {AGGRESSOR_KINGDOM} has declared war on {KINGDOM} with the support of {?AGGRESSOR_RULER.GENDER}her{?}his{\?} council." />
+    <string id="cRpsjvOM" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM} при поддержке {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
     <string id="CrzFdo2H" text="Да. Речь о войне с {ENEMYFACTION_INFORMALNAME}. [ib:hip][if:convo_excited]Нам нужно сковать часть их сил. Относительно небольшой отряд, быстро перемещающийся по их землям и успешно разоряющий их деревни, должен стать хорошей отвлекающей манёвром. Их лордам придётся преследовать налётчиков, и они не смогут угрожать нам в других местах. Вы кажетесь подходящ{?PLAYER.GENDER}ей воительницей{?}им воином{\?} для этой работы. Что скажете? Вы заслужите мою благодарность и будете щедро вознаграждены в случае успеха." />
-    <string id="CswzBb02" text="{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has decided to make peace with {KINGDOM}." />
+    <string id="CswzBb02" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM}." />
     <string id="d6KbdIWg" text=" В результате ваших враждебных действий по отношению к нейтральной деревне {MERCENARY_KINGDOM} разрывает контракт с вами, а {KINGDOM} объявляет вам войну." />
-    <string id="dCDBqYsh" text="{RULER.NAME} of {KINGDOM} has chosen not to sign a trade agreement with {OTHER_KINGDOM} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="dCDBqYsh" text="{RULER.NAME} из {KINGDOM} решил не подписывать торговое соглашение с {OTHER_KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
     <string id="dDsJyerw" text="Призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="dEsIQDo3" text="Пришло время призвать нашего союзника {CALLED_KINGDOM} к войне!" />
-    <string id="dov3iRlt" text="{ENEMY_RULER.NAME} of {ENEMY_KINGDOM_INFORMAL_NAME} is vile and dangerous. We must deal with {?ENEMY_RULER.GENDER}her{?}him{\?} before it is too late." />
-    <string id="DphlPaF9" text="{AGGRESSOR_RULER.NAME} of {AGGRESSOR_KINGDOM} has declared war on {KINGDOM} despite opposition from {?AGGRESSOR_RULER.GENDER}her{?}his{\?} council." />
+    <string id="dov3iRlt" text="{ENEMY_RULER.NAME} из {ENEMY_KINGDOM_INFORMAL_NAME} подл и опасен. Мы должны разобраться с {?ENEMY_RULER.GENDER}ней{?}ним{\?}, пока не стало слишком поздно." />
+    <string id="DphlPaF9" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM} вопреки возражениям {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
     <string id="dPOOmYGQ" text="Вы думаете, лорды и воины {KINGDOM} просто будут стоять в стороне, когда их людей похищают? Вам лучше отпустить нас!" />
     <string id="drZC1Frp" text="{KINGDOM_NAME} было создано в {CREATION_YEAR} году {RULER.NAME}, лидером группы {CULTURE_ADJECTIVE} повстанцев." />
     <string id="eAhgrwkZ" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, будет ли заключён союз с {KINGDOM_NAME}." />
-    <string id="eEmFbQet" text="{RULER.NAME} has decided to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision had the support of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="eEmFbQet" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано {?RULER.GENDER}её{?}его{\?} советом." />
     <string id="efTah9rk" text="У меня нет полномочий заключать мир от имени {ENEMY_INFORMAL_NAME}. Наш совет должен решить, предлагать ли мир и каковы будут условия." />
     <string id="eiGl6XBr" text="Голосование о том, отвечать ли на призыв {CALLING_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
     <string id="EqevKYZD" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, будет ли {CALLED_KINGDOM} призвано к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}" />
     <string id="eTylgLCc" text="Прибыл курьер из {KINGDOM_NAME}. Они предлагают вам союз. Ваше королевство проголосует, принять ли это предложение." />
     <string id="eUWYqwE6" text="{CALLING_KINGDOM} больше не находится в состоянии войны с {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="F7CMsDyG" text="{RULER.NAME} has decided against forming an alliance with {KINGDOM_NAME} despite the opposition of {?RULER.GENDER}her{?}his{\?} council." />
-    <string id="fcuUcjYV" text="{RULER.NAME} has decided not to answer the call of {CALLING_KINGDOM} name and will not war on {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision had the support of {?RULER.GENDER}her{?}his{\?} council." />
-    <string id="FNCq25P1" text="{RULER.NAME} has decided to form an alliance with {KINGDOM_NAME} with the support of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="F7CMsDyG" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
+    <string id="fcuUcjYV" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать с {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано {?RULER.GENDER}её{?}его{\?} советом." />
+    <string id="FNCq25P1" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
     <string id="FuNbouTu" text="Прибыл курьер из {KINGDOM_NAME}. Они призывают ваше королевство к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Ваше королевство проголосует, принять ли это предложение." />
-    <string id="G3qGLAeQ" text="{RULER.NAME} has expelled {CLAN} clan from {KINGDOM} against the wishes of {?RULER.GENDER}her{?}his{\?} council." />
-    <string id="gf2Lje7o" text="{RULER.NAME} has decided not to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}, commanding an army of {QUEST_GIVER_FACTION}, has told you that they need food supplies for their upcoming military campaign. {?QUEST_GIVER.GENDER}She{?}He{\?} wanted you to deliver {GRAIN_AMOUNT} sacks of grain and although it's not necessary, to provide {LIVESTOCK_AMOUNT} live stocks and {WINE_AMOUNT} barrels of wine {?QUEST_GIVER.GENDER}she{?}he{\?} would appreciate it." />
-    <string id="Gj5d9y2g" text="{RULER.NAME} of {KINGDOM} has decided to sign a trade agreement with {OTHER_KINGDOM}." />
+    <string id="G3qGLAeQ" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM} вопреки желаниям {?RULER.GENDER}её{?}его{\?} совета." />
+    <string id="gf2Lje7o" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}, командующий армией {QUEST_GIVER_FACTION}, сообщил вам, что им нужны запасы провианта для предстоящей военной кампании. {?QUEST_GIVER.GENDER}Она{?}Он{\?} попросил вас доставить {GRAIN_AMOUNT} мешков зерна, и хотя это не обязательно, предоставить {LIVESTOCK_AMOUNT} голов скота и {WINE_AMOUNT} бочек вина {?QUEST_GIVER.GENDER}она{?}он{\?} был бы признателен." />
+    <string id="Gj5d9y2g" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM}." />
     <string id="gNf0ALKw" text="Прибыл курьер из {MAP_FACTION_NAME}. Они предлагают вам белый мир. Ваше королевство проголосует, принять ли это предложение." />
-    <string id="h5eTEYON" text="{RULER.NAME} has expelled {CLAN} clan from {KINGDOM}." />
+    <string id="h5eTEYON" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM}." />
     <string id="h9bWTLgK" text="Пришло время присоединиться к нашим союзникам, {KINGDOM_NAME}, в их войне." />
     <string id="IB1xsVEr" text="Прибыл курьер из {MAP_FACTION_NAME}. Они предлагают вам белый мир. Ваши вассалы оставили решение за вами." />
-    <string id="INfHUqxT" text="{RULER.NAME} has decided to form an alliance with {KINGDOM_NAME}." />
-    <string id="Ing5gFbO" text="{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has chosen not to make peace with {KINGDOM} over the objections of {?PEACEMAKER_RULER.GENDER}her{?}his{\?} council." />
+    <string id="INfHUqxT" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME}." />
+    <string id="Ing5gFbO" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM} вопреки возражениям {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
     <string id="iOmgCFDI" text="Голосование о заключении союза с {KINGDOM_NAME}." />
     <string id="ItueKmqd" text="Ваш клан теперь в состоянии войны с {QUEST_GIVER_SETTLEMENT_FACTION}. Ваш контракт с {QUEST_GIVER.LINK} расторгнут." />
-    <string id="izwKmH2I" text="{RULER.NAME} has decided to form an alliance with {KINGDOM_NAME} with the support of half of {?RULER.GENDER}her{?}his{\?} council." />
-    <string id="jaioXYDc" text="{RULER.NAME} has decided against forming an alliance with {KINGDOM_NAME} with the support of half of {?RULER.GENDER}her{?}his{\?} council." />
-    <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has decided to make peace with {KINGDOM} despite the opposition of {?PEACEMAKER_RULER.GENDER}her{?}his{\?} council." />
+    <string id="izwKmH2I" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME} при поддержке половины {?RULER.GENDER}её{?}его{\?} совета." />
+    <string id="jaioXYDc" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME} при поддержке половины {?RULER.GENDER}её{?}его{\?} совета." />
+    <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM} вопреки возражениям {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
     <string id="JJQ0Hp4m" text="Прибыл гонец из {MAP_FACTION_NAME}. {MAP_FACTION_NAME} будет платить {GOLD_AMOUNT} {GOLD_ICON} дани ежедневно, чтобы прекратить войну между вашими королевствами. Ваши вассалы оставили решение за вами." />
     <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} в настоящее время сильнее нас. Нам нужно время, чтобы укрепить свою мощь." />
     <string id="JQligd8z" text="Совет {KINGDOM} избрал {KING.NAME} новым правителем." />
     <string id="JY717hPW" text="У меня нет полномочий заключать мир от имени {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} и {?ENEMY_RULER.GENDER}её{?}его{\?} совет должны решить, предлагать ли мир и каковы будут условия." />
-    <string id="K5w135N9" text="{RULER.NAME} has decided not to answer the call of {CALLING_KINGDOM} name and will not war on {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision was taken against the advice of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="K5w135N9" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать с {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было принято вопреки совету {?RULER.GENDER}её{?}его{\?} совета." />
     <string id="KFHj7ckm" text="Как правитель, вы должны решить, будет ли заключён мир с {KINGDOM_NAME}" />
     <string id="KlATZEbb" text="Заключение союза с {KINGDOM_NAME}." />
     <string id="KSrNutEO" text="{FACTION_LEADER} решит, будет ли объявлена война {KINGDOM_NAME}. Вы можете выбрать свою позицию относительно этого решения." />
@@ -419,30 +419,30 @@
     <string id="l5H9x7Lo" text="{RULER.NAME} из {KINGDOM} дарует {SETTLEMENT} {LEADER.NAME}, при этом {?RULER.GENDER}её{?}его{\?} совет разделился поровну." />
     <string id="L802I9W2" text="Да, я присоединюсь к {FACTION_NAME}." />
     <string id="L81DPSom" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, ответит ли ваше королевство на призыв {CALLING_KINGDOM} и объявит ли войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="Lalj0T1i" text="{RULER.NAME} has answered the call of {CALLING_KINGDOM} name and declared war on {KINGDOM_TO_CALL_TO_WAR_AGAINST} despite opposition from {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="Lalj0T1i" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
     <string id="lseJ70y0" text="Ваше королевство в состоянии войны с {KINGDOM_NAME}." />
     <string id="LVX2x6Jf" text="Я хотел бы расторгнуть контракт с {SERVED_FACTION}." />
     <string id="m69pvful" text="{KINGDOM_LEADER} решит, ответит ли ваше королевство на призыв {CALLING_KINGDOM} и объявит ли войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}. Вы можете выбрать свою позицию относительно этого решения." />
-    <string id="m6OVl6Dg" text="{RULER.NAME} has expelled {CLAN} clan from {KINGDOM}, with {?RULER.GENDER}her{?}his{\?} council evenly split on the matter." />
-    <string id="mfYzCeGR" text="{CHARACTER.NAME} was {TITLE} of {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
-    <string id="mRrYn2qm" text="{PEACEMAKER_RULER.NAME} of {KINGDOM_CONSIDERING_PEACE} has chosen not to make peace with {KINGDOM} with the support of {?PEACEMAKER_RULER.GENDER}her{?}his{\?} council." />
+    <string id="m6OVl6Dg" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM}, при этом {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
+    <string id="mfYzCeGR" text="{CHARACTER.NAME} был {TITLE} {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
+    <string id="mRrYn2qm" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM} при поддержке {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
     <string id="MSr3HRa1" text="{QUEST_GIVER.NAME}, {?QUEST_GIVER.GENDER}госпожа{?}лорд{\?} из {CLAN}, желает, чтобы молодой член клана был обучен военному искусству." />
-    <string id="mvkKP6OE" text="{RULER.NAME} chose not to expel {CLAN} clan from {KINGDOM}." />
-    <string id="MYIgSsfk" text="{RULER.NAME} has decided not to call {CALLED_KINGDOM} to war against {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision went against the advice of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="mvkKP6OE" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM}." />
+    <string id="MYIgSsfk" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было принято вопреки совету {?RULER.GENDER}её{?}его{\?} совета." />
     <string id="n4I3pWOn" text="Как правитель, вы должны решить, будет ли заключён мир с {KINGDOM_NAME} путём выплаты {TRIBUTE_AMOUNT} дани в течение {TRIBUTE_DURATION} дней." />
     <string id="Nd0Vhkxn" text="Прибыл гонец из {MAP_FACTION_NAME}. Они предлагают вам мир, если вы согласитесь платить {GOLD_AMOUNT} {GOLD_ICON} ежедневной дани. Ваши вассалы оставили решение за вами." />
     <string id="NFuezpbG" text="{CALLED_KINGDOM} уже в состоянии войны с {KINGDOM_NAME}." />
     <string id="NjPMRWbW" text="Заключить мир с {KINGDOM_NAME}. Наше королевство будет получать {TRIBUTE_AMOUNT} дани ежедневно в течение {TRIBUTE_DURATION} дней." />
     <string id="nkvT88r2" text="У вас недостаточно денег, чтобы призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
     <string id="NuYzgBZB" text="Вы заходите слишком далеко. {KINGDOM} не потерпит уничтожения своих караванов." />
-    <string id="o4IxXHnB" text="{RULER.NAME} has decided against forming an alliance with {KINGDOM_NAME}." />
-    <string id="o69PZuce" text="{OLD_LEADER.LINK} is no longer the head of {CLAN_NAME}. {NEW_LEADER.LINK} has taken over as ruler of the clan." />
+    <string id="o4IxXHnB" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME}." />
+    <string id="o69PZuce" text="{OLD_LEADER.LINK} больше не является главой {CLAN_NAME}. {NEW_LEADER.LINK} стал новым правителем клана." />
     <string id="O9XpB5Ah" text="Как правитель, вы должны решить, будет ли заключено торговое соглашение с {KINGDOM}" />
     <string id="oAw74q3r" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, ответит ли ваше королевство на призыв {CALLING_KINGDOM} и объявит ли войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
-    <string id="Oe1NdVLe" text="{RULER.NAME} chose not to expel {CLAN} clan from {KINGDOM} with {?RULER.GENDER}her{?}his{\?} council evenly split on the matter." />
+    <string id="Oe1NdVLe" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM}, при этом {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
     <string id="Oi20UrO2" text="Наша война с {TARGET_SETTLEMENT_FACTION_INFORMAL_NAME} идёт достаточно хорошо. Но некоторые говорят, что у нас недостаточно результатов за всю кровь и серебро, что мы потратили. Явная победа на этом этапе принесла бы много пользы. Я думаю, мне хотелось бы увидеть наше знамя над башнями {TARGET_SETTLEMENT}.[ib:normal2][if:convo_thinking]" />
     <string id="OlIWwLbP" text="Да. Это касается войны с {ENEMYFACTION_INFORMALNAME}. [ib:closed][if:convo_pondering]Нам нужно связать часть их войск, и самый простой способ — разорить их деревни. Это жестокое дело и тяжело отразится на простом народе, но их лорды будут вынуждены преследовать разорителей, и это не позволит им сделать то же самое с нами. Если вы возьмётесь за это, я награжу вас в случае успеха." />
-    <string id="Ouj6eSWC" text="{RULER.NAME} has decided not to answer the call of {CALLING_KINGDOM} name and will not war on {KINGDOM_TO_CALL_TO_WAR_AGAINST}. The decision had the support of half of {?RULER.GENDER}her{?}his{\?} council." />
+    <string id="Ouj6eSWC" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать с {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано половиной {?RULER.GENDER}её{?}его{\?} совета." />
     <string id="PneX4Ayw" text="Курьер с призывом к войне от {KINGDOM_NAME} против {KINGDOM_TO_CALL_TO_WAR_AGAINST} прибыл ко двору вашего королевства." />
     <string id="PP7KD7OC" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM}, при том что {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
     <string id="PutoRsWp" text="Прибыл курьер от {CLAN_NAME}. Они предлагают вам {GOLD_AMOUNT}{GOLD_ICON} выкупа, если вы освободите {CAPTIVE_HERO.NAME}." />

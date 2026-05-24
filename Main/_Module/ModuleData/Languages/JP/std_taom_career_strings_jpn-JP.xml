@@ -1963,7 +1963,7 @@
     <string id="taom_flr_t3_b_p2" text="-15% 部隊維持費。" />
     <string id="taom_flr_t3_b_p3" text="+15% パーティ移動速度。" />
     <string id="taom_flr_t3_b_p4" text="+75 最大体力。" />
-    <string id="taom_corsair_boarder_root_desc" text="Boarding Action grants +5% resistance in the close-quarters fray." />
+    <string id="taom_corsair_boarder_root_desc" text="接舷戦闘は近接戦闘において+5%の耐性を付与する。" />
     <string id="taom_crb_t1_a_key" text="接舷戦闘の範囲が拡大し、より多くの戦士を強化する。" />
     <string id="taom_crb_t1_a_p1" text="+8% 近接ダメージ。" />
     <string id="taom_crb_t1_a_p2" text="+5% 部隊ダメージ。" />

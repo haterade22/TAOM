@@ -6,34 +6,34 @@
     <tag language="Turkish" />
   </tags>
   <strings>
-    <string id="taom_send_messenger" text="Send Messenger" />
-    <string id="taom_messenger_target_unavailable" text="This person cannot be reached by messenger at this time." />
-    <string id="taom_messenger_disabled" text="The messenger system is disabled in settings." />
-    <string id="taom_messenger_not_available" text="Messenger system not available." />
-    <string id="taom_messenger_invalid_target" text="Invalid target." />
-    <string id="taom_messenger_cannot_send" text="Cannot Send Messenger" />
-    <string id="taom_messenger_no_gold" text="Not enough gold! You need {COST} denars." />
-    <string id="taom_messenger_already_sent" text="A messenger has already been dispatched to this person." />
-    <string id="taom_messenger_hero_dead" text="{HERO_NAME} is dead." />
-    <string id="taom_messenger_hero_prisoner" text="{HERO_NAME} is imprisoned and cannot receive messengers." />
-    <string id="taom_messenger_hero_fugitive" text="{HERO_NAME} is a fugitive and cannot be found." />
-    <string id="taom_messenger_hero_child" text="{HERO_NAME} is too young to receive messengers." />
-    <string id="taom_messenger_confused" text="The messenger seems confused — they were trying to reach someone in your own party!" />
-    <string id="taom_messenger_sent" text="A messenger has been dispatched to {HERO_NAME} and will arrive within {DAYS} days." />
-    <string id="taom_messenger_sent_title" text="Messenger Sent" />
-    <string id="taom_messenger_arrived" text="A messenger from {HERO_NAME} has arrived. Do you wish to speak with them?" />
-    <string id="taom_messenger_arrived_title" text="Messenger Arrived" />
-    <string id="taom_messenger_speak" text="Speak" />
-    <string id="taom_messenger_dismiss" text="Dismiss" />
-    <string id="taom_messenger_lost" text="Your messenger to {HERO_NAME} was ambushed by bandits and never arrived." />
-    <string id="taom_messenger_recipient_gone" text="Your messenger to {HERO_NAME} returned without delivering — the recipient is no longer reachable." />
-    <string id="taom_messenger_lost_title" text="Messenger Lost" />
-    <string id="taom_messenger_error" text="Messenger Error" />
-    <string id="taom_messenger_dialog_init" text="I may need to send you a message later. Can I dispatch a messenger to you?" />
-    <string id="taom_messenger_dialog_npc_accept" text="Of course. I'll make sure to receive your messenger when they arrive." />
-    <string id="taom_messenger_dialog_send" text="Send the messenger ({COST} denars)" />
-    <string id="taom_messenger_dialog_decline" text="On second thought, never mind." />
-    <string id="taom_messenger_dialog_decline_ack" text="As you wish." />
-    <string id="taom_messenger_dialog_sent" text="I'll be expecting your messenger then." />
+    <string id="taom_send_messenger" text="Ulak Gönder" />
+    <string id="taom_messenger_target_unavailable" text="Bu kişiye şu anda ulak ile ulaşılamaz." />
+    <string id="taom_messenger_disabled" text="Ulak sistemi ayarlarda devre dışı bırakılmış." />
+    <string id="taom_messenger_not_available" text="Ulak sistemi mevcut değil." />
+    <string id="taom_messenger_invalid_target" text="Geçersiz hedef." />
+    <string id="taom_messenger_cannot_send" text="Ulak Gönderilemez" />
+    <string id="taom_messenger_no_gold" text="Yeterli altın yok! {COST} denara ihtiyacınız var." />
+    <string id="taom_messenger_already_sent" text="Bu kişiye zaten bir ulak gönderildi." />
+    <string id="taom_messenger_hero_dead" text="{HERO_NAME} öldü." />
+    <string id="taom_messenger_hero_prisoner" text="{HERO_NAME} hapis ve ulak alamaz." />
+    <string id="taom_messenger_hero_fugitive" text="{HERO_NAME} kaçak ve bulunamaz." />
+    <string id="taom_messenger_hero_child" text="{HERO_NAME} ulak almak için çok genç." />
+    <string id="taom_messenger_confused" text="Ulak kafası karışmış görünüyor — kendi grubunuzdaki birine ulaşmaya çalışıyordu!" />
+    <string id="taom_messenger_sent" text="{HERO_NAME} için bir ulak gönderildi ve {DAYS} gün içinde varacak." />
+    <string id="taom_messenger_sent_title" text="Ulak Gönderildi" />
+    <string id="taom_messenger_arrived" text="{HERO_NAME} tarafından gönderilen bir ulak geldi. Onlarla konuşmak ister misiniz?" />
+    <string id="taom_messenger_arrived_title" text="Ulak Geldi" />
+    <string id="taom_messenger_speak" text="Konuş" />
+    <string id="taom_messenger_dismiss" text="Gönder" />
+    <string id="taom_messenger_lost" text="{HERO_NAME} için gönderdiğiniz ulak haydutlar tarafından pusuya düşürüldü ve hiç varmadı." />
+    <string id="taom_messenger_recipient_gone" text="{HERO_NAME} için gönderdiğiniz ulak teslim etmeden geri döndü — alıcıya artık ulaşılamıyor." />
+    <string id="taom_messenger_lost_title" text="Ulak Kayboldu" />
+    <string id="taom_messenger_error" text="Ulak Hatası" />
+    <string id="taom_messenger_dialog_init" text="Daha sonra size bir mesaj göndermem gerekebilir. Size bir ulak gönderebilir miyim?" />
+    <string id="taom_messenger_dialog_npc_accept" text="Elbette. Ulağınız geldiğinde onu almayı garantilerim." />
+    <string id="taom_messenger_dialog_send" text="Ulağı gönder ({COST} denar)" />
+    <string id="taom_messenger_dialog_decline" text="Düşündüm de, boş ver." />
+    <string id="taom_messenger_dialog_decline_ack" text="Nasıl isterseniz." />
+    <string id="taom_messenger_dialog_sent" text="O halde ulağınızı bekliyor olacağım." />
   </strings>
 </base>

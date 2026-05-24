@@ -132,6 +132,7 @@ def rebuild_language(lang):
         ("taom_cc_strings.xml",                           f"std_taom_cc_strings_{locale}.xml"),
         ("taom_career_strings.xml",                       f"std_taom_career_strings_{locale}.xml"),
         ("taom_messenger_strings.xml",                    f"std_taom_messenger_strings_{locale}.xml"),
+        ("taom_xslt_strings.xml",                         f"std_taom_xslt_strings_{locale}.xml"),
     ]
     taom_target_dir = REPO_ROOT / "Main" / "_Module" / "ModuleData" / "Languages" / lang
     for src_rel, tgt_name in taom_sources:

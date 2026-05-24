@@ -767,7 +767,7 @@
     <string id="taom_alr_t2_b_p3_desc" text="공정한 전리품 분배는 부족의 충성심을 유지한다. 병력 급료 -5%." />
     <string id="taom_alr_t2_b_p4" text="상처와 자긍심" />
     <string id="taom_alr_t2_b_p4_desc" text="모든 상처는 살아남은 승리를 말해준다. 생명력 +45." />
-    <string id="taom_alr_t3_a_key" text="Blood of Avanc-luth" />
+    <string id="taom_alr_t3_a_key" text="아반크루스의 혈통" />
     <string id="taom_alr_t3_a_key_desc" text="고대 부족의 분노가 전장 전체를 뒤덮는다. 야만적 돌진 반경 +5." />
     <string id="taom_alr_t3_a_p1" text="부족의 전투 광기" />
     <string id="taom_alr_t3_a_p1_desc" text="모든 던렌딩이 당신의 이름으로 광전사처럼 싸운다. 근접 피해 +12%." />
@@ -1250,7 +1250,7 @@
     <string id="taom_dg2_t3_b_p2" text="체력 재생 +15%." />
     <string id="taom_dg2_t3_b_p3" text="부대 사기 +20%." />
     <string id="taom_dg2_t3_b_p4" text="부대 재생 +15%." />
-    <string id="taom_dale_marksman_root_desc" text="Black Arrow grants +5% ranged damage in honor of Bard the Bowman." />
+    <string id="taom_dale_marksman_root_desc" text="검은 화살은 활잡이 바르드를 기리며 원거리 피해 +5%를 부여합니다." />
     <string id="taom_dm_t1_a_key" text="검은 화살의 범위가 증가하여 더 넓은 사살 구역을 커버." />
     <string id="taom_dm_t1_a_p1" text="원거리 피해량 +8%." />
     <string id="taom_dm_t1_a_p2" text="방어구 관통력 +5%." />
@@ -2041,20 +2041,20 @@
     <string id="taom_crca_t2_a_p2" text="-10% 병력 급여." />
     <string id="taom_crca_t2_a_p3" text="+10% 병력 사기." />
     <string id="taom_crca_t2_a_p4" text="+10% 전투 명성 획득." />
-    <string id="taom_crca_t2_b_key" text="Plunder boosts mount resilience while active." />
-    <string id="taom_crca_t2_b_p1" text="+12% melee damage." />
-    <string id="taom_crca_t2_b_p2" text="+12% horse charge damage." />
-    <string id="taom_crca_t2_b_p3" text="+60 horse health." />
-    <string id="taom_crca_t2_b_p4" text="+10% swing speed." />
-    <string id="taom_crca_t3_a_key" text="Plunder radius greatly expanded, unstoppable impact." />
-    <string id="taom_crca_t3_a_p1" text="+18% melee damage." />
-    <string id="taom_crca_t3_a_p2" text="+18% horse charge damage." />
-    <string id="taom_crca_t3_a_p3" text="+15% swing speed." />
-    <string id="taom_crca_t3_a_p4" text="+15% troop damage." />
-    <string id="taom_crca_t3_b_key" text="Plunder charge greatly reduced, ride without ceasing." />
-    <string id="taom_crca_t3_b_p1" text="+100 horse health." />
-    <string id="taom_crca_t3_b_p2" text="-15% troop wages." />
-    <string id="taom_crca_t3_b_p3" text="+15% party movement speed." />
-    <string id="taom_crca_t3_b_p4" text="+75 max health." />
+    <string id="taom_crca_t2_b_key" text="약탈이 활성화되어 있는 동안 탈것의 회복력을 증가시킵니다." />
+    <string id="taom_crca_t2_b_p1" text="+12% 근접 피해." />
+    <string id="taom_crca_t2_b_p2" text="+12% 말 돌진 피해." />
+    <string id="taom_crca_t2_b_p3" text="+60 말 체력." />
+    <string id="taom_crca_t2_b_p4" text="+10% 휘두르기 속도." />
+    <string id="taom_crca_t3_a_key" text="약탈 범위가 크게 확장되고 막을 수 없는 충격을 가합니다." />
+    <string id="taom_crca_t3_a_p1" text="+18% 근접 피해." />
+    <string id="taom_crca_t3_a_p2" text="+18% 말 돌진 피해." />
+    <string id="taom_crca_t3_a_p3" text="+15% 휘두르기 속도." />
+    <string id="taom_crca_t3_a_p4" text="+15% 병력 피해." />
+    <string id="taom_crca_t3_b_key" text="약탈 충전이 크게 감소하고 쉬지 않고 달립니다." />
+    <string id="taom_crca_t3_b_p1" text="+100 말 체력." />
+    <string id="taom_crca_t3_b_p2" text="-15% 병력 급료." />
+    <string id="taom_crca_t3_b_p3" text="+15% 부대 이동 속도." />
+    <string id="taom_crca_t3_b_p4" text="+75 최대 체력." />
   </strings>
 </base>
