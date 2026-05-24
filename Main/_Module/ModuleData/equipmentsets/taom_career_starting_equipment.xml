@@ -95,4 +95,69 @@
         </EquipmentSet>
     </EquipmentRoster>
 
+    <!-- ═══ WARG-RIDING CAVALRY (Isengard, Gundabad, Mordor, Dol Guldur) ═══
+         All four cultures' existing troop rosters use wargs (verified in
+         troops_isengard.xml / _gundabad.xml / _mordor.xml / _dolguldur.xml).
+         Cavalry career starters here mount warg_brown + warg_saddle from
+         Alliance.Wargs. Body/Leg/weapons intentionally NOT overridden —
+         FillFrom is slot-merge, so culture-default armor + weapons inherit
+         through. Authoring full starter armor sets for these cultures is
+         a separate follow-up. -->
+
+    <EquipmentRoster id="player_career_isengard_cavalry_m" culture="Culture.isengard">
+        <EquipmentSet>
+            <Equipment slot="Horse" id="Item.warg_brown" />
+            <Equipment slot="HorseHarness" id="Item.warg_saddle" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_isengard_cavalry_f" culture="Culture.isengard">
+        <EquipmentSet>
+            <Equipment slot="Horse" id="Item.warg_brown" />
+            <Equipment slot="HorseHarness" id="Item.warg_saddle" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_gundabad_cavalry_m" culture="Culture.gundabad">
+        <EquipmentSet>
+            <Equipment slot="Horse" id="Item.warg_brown" />
+            <Equipment slot="HorseHarness" id="Item.warg_saddle" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_gundabad_cavalry_f" culture="Culture.gundabad">
+        <EquipmentSet>
+            <Equipment slot="Horse" id="Item.warg_brown" />
+            <Equipment slot="HorseHarness" id="Item.warg_saddle" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_mordor_cavalry_m" culture="Culture.mordor">
+        <EquipmentSet>
+            <Equipment slot="Horse" id="Item.warg_brown" />
+            <Equipment slot="HorseHarness" id="Item.warg_saddle" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_mordor_cavalry_f" culture="Culture.mordor">
+        <EquipmentSet>
+            <Equipment slot="Horse" id="Item.warg_brown" />
+            <Equipment slot="HorseHarness" id="Item.warg_saddle" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_dolguldur_cavalry_m" culture="Culture.dolguldur">
+        <EquipmentSet>
+            <Equipment slot="Horse" id="Item.warg_brown" />
+            <Equipment slot="HorseHarness" id="Item.warg_saddle" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_dolguldur_cavalry_f" culture="Culture.dolguldur">
+        <EquipmentSet>
+            <Equipment slot="Horse" id="Item.warg_brown" />
+            <Equipment slot="HorseHarness" id="Item.warg_saddle" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
 </EquipmentRosters>

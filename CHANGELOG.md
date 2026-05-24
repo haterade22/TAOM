@@ -2,6 +2,16 @@
 
 ## 2026-05-24
 
+### feat(career-system): warg-mount cavalry starters for Isengard, Gundabad, Mordor, Dol Guldur
+
+Authored 4 new culture × 2 genders = 8 cavalry rosters in [taom_career_starting_equipment.xml](Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml). All four cultures' existing troop XMLs ([troops_isengard.xml](Main/_Module/ModuleData/troops/troops_isengard.xml), [troops_gundabad.xml](Main/_Module/ModuleData/troops/troops_gundabad.xml), [troops_mordor.xml](Main/_Module/ModuleData/troops/troops_mordor.xml), [troops_dolguldur.xml](Main/_Module/ModuleData/troops/troops_dolguldur.xml)) use wargs as the mount of choice — confirmed by grepping `slot="Horse"` references which all resolved to `Item.warg_brown` / `Item.warg_dark`. So cavalry-archetype career players (`warg_scout` / `warg_pack_leader` / `snaga_rider` / `fell_rider`) now spawn on `warg_brown` + `warg_saddle` from the Alliance.Wargs module instead of falling through to the youth/title-default mount.
+
+Each roster only overrides Horse + HorseHarness — `Equipment.FillFrom` is a slot-merge, so body/leg/weapons cleanly inherit from the culture-default applied just before. Full starter armor sets for these cultures are a separate follow-up (matching the Gondor proof-of-life pattern from 2026-05-19).
+
+Files: 8 new EquipmentRoster entries, single-file edit. No new items authored — `warg_brown` + `warg_saddle` already ship with Alliance.Wargs.
+Save-compat: equipment binds at character-creation finalize; no migration.
+Not-tested: in-game spawn (Isengard/Gundabad/Mordor/Dol Guldur → cavalry career → confirm warg mount + warg saddle in inventory).
+
 ### fix(career-system): Gondor cavalry starter — low-tier horse + low-armor harness
 
 `player_career_gondor_cavalry_m/f` were spawning brand-new players on `Item.charger` (vanilla war-horse, difficulty 30, charge_damage 22) with `Item.chain_horse_harness` (28-armor chainmail). Both too good for a starter.
