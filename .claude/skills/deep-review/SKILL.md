@@ -18,16 +18,19 @@ The feature or area to review: `$ARGUMENTS` (if empty, review all uncommitted ch
 **Trigger when:** `$ARGUMENTS` contains `--codex` (strip `--codex` from the feature name before proceeding).
 
 If triggered:
-1. Identify changed files (same logic as Step 1 below)
-2. Dispatch Codex via the plugin:
-   ```
-   /codex:review --background
-   ```
-3. Continue to Step 1 immediately — do NOT wait for Codex here
-4. After all 5 Claude agents complete (Step 2), retrieve Codex results:
-   ```
-   /codex:result
-   ```
+1. Identify changed files (same logic as Step 1 below).
+2. **Dispatch Codex directly via Bash** -- Claude does this itself, no terminal hand-off:
+   - Pre-flight: `codex login status` -- expect `Logged in using ChatGPT`. If not, surface the message and continue WITHOUT the Codex pre-review (don't block the Claude agents).
+   - Write a focused prompt to `docs/reviews/codex-prereview-{feature}-{date}.prompt.md` (short version of the `/review-codex` prompt -- focus on Known Suspects + architectural risks; skip the heavy vanilla-decompile block).
+   - Run via Bash:
+     ```
+     command: cd "<repo-root>" && codex exec - < "docs/reviews/codex-prereview-{feature}-{date}.prompt.md" > "docs/reviews/codex-prereview-{feature}-{date}.md" 2>&1
+     run_in_background: true
+     timeout: 600000
+     ```
+   - See `.claude/skills/review-codex/SKILL.md` "Codex CLI invocation contract" for full dispatch semantics.
+3. Continue to Step 1 immediately — do NOT wait for Codex here. The 5 Claude agents run in parallel with the Codex background job.
+4. After all 5 Claude agents complete (Step 2), check if the Codex background job has notified. If yes, read `docs/reviews/codex-prereview-{feature}-{date}.md`. If not yet (Claude agents finish faster on this kind of work), Codex result will arrive later -- proceed with Step 3 using just the Claude agent results and append Codex when it arrives.
 5. Include Codex findings in the Step 3 compiled report as a sixth section:
    ```
    CODEX REVIEW:  [PASS/ISSUES — N findings]
@@ -233,6 +236,20 @@ TRACE THESE DATA FLOWS:
 2. **Enum Coverage:** For every enum type referenced in changed files, check that ALL enum values have at least one handler. Flag any enum value with zero callsites.
    - Example bug pattern: `PassiveEffectType` has 50 values but only 15 are wired into GameModels.
    - Example bug pattern: `ChargeType` has 5 values but only 1 is emitted by mission behavior.
+
+2b. **MCM toggle coverage (MANDATORY — applies to EVERY toggle, not a hand-listed subset):** For every MCM `AttributeGlobalSettings<>` / `AttributePerCampaignSettings<>` derived class in the changed files, enumerate EVERY property (excluding metadata: Id/DisplayName/FormatType/FolderName/etc.) and grep the entire feature's source for read sites. For each property:
+   - If the property has ZERO read sites, it's a dead toggle — flag as HIGH.
+   - If the property has EXACTLY ONE read site at startup (`SubModule.OnSubModuleLoad`, `IoC.Configure`, a static initializer), AND the MCM hint text promises runtime behavior (words like "when off", "disables", "no-op", "stops"), the toggle promise mismatches the implementation — flag as HIGH (user-facing-promise pattern).
+   - If the property has runtime read sites, verify each read actually gates behavior — a read-but-discard (e.g., logged but not branched on) is the same as dead.
+   - **Why this rule is rigid:** the deep-review Agent 5 on the CrashReport feature (2026-05-25) cross-referenced 5 of 6 toggles but missed the master toggle (`EnableCrashCapture`); Codex caught it as HIGH. The agent prompt previously listed toggles to check by name and missed the one not on the list. Generalised: enumerate from the class itself, not from a list in the prompt.
+
+2c. **DTO non-empty-output trace (MANDATORY):** For every DTO collection field (`IReadOnlyList<T>`, `List<T>`, etc.) populated by a collector in the changed files, trace whether non-empty values are actually produced under normal operation — NOT just whether the populator runs. Specifically:
+   - Find the populator method.
+   - Trace every code path that adds items to the collection.
+   - For each path, identify the precondition (parameter non-null, branch taken, etc.).
+   - Check the caller(s): is the precondition actually satisfied by the caller in production?
+   - If a collection field is structurally populated but the precondition is never met by any caller, the field is dead code (always empty) — flag as HIGH if the field appears in user-facing docs/CHANGELOG.
+   - **Why this rule exists:** Codex review 41 (CrashReport, 2026-05-25) caught `HarmonyCorrelationCollector.Collect(stack, frames=null)` — the optional `frames` parameter controlled the per-stack-frame patch-info block; the sole caller skipped it; the renderer faithfully rendered empty lists in every report; "Harmony patches per stack frame" feature advertised in CHANGELOG was DEAD CODE. The 5 deep-review agents all passed and the test suite passed because no test covered the integration. Generalisation: "is the field populated?" is not the same as "are non-empty values actually produced?" — extend traces to ask the second question explicitly.
 
 3. **Mutation/Transform Chain Completeness:** When data is transformed through a pipeline (raw → mutated → applied), verify every stage connects to the next.
    - Example bug pattern: Mutation service mutates `MaxCharge` on template, but `CareerAbility` reads `MaxCharge` from career definition (unmutated source).

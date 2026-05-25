@@ -90,8 +90,8 @@ See also `.claude/rules/think-before-coding.md` (always-load) for the assumption
 | `/commit-split` | Group changed files by concern and commit each group atomically |
 | `/deep-review [feature]` | Launch 5+ agents: standards, compat, efficiency, completeness, data flow (8 trace categories incl. sprite verification + vanilla interaction safety). No agent limit. |
 | `/deep-review [feature] --codex` | Full review: Codex independent pre-review + 5+ Claude agents + adaptive expansion |
-| `/codex-verify [feature]` | Dispatch independent Codex verification job in background |
-| `/review-codex` | Auto-detect what was built, write Codex prompt, guide dispatch, verify results + implement fixes |
+| `/codex-verify [feature]` | Dispatch lightweight Codex verification directly via `codex exec` (5-20 min); harness notifies on completion |
+| `/review-codex` | Heavyweight adversarial review: write prompt, dispatch Codex directly via `codex exec` (10-45 min), auto-verify findings + implement fixes when notification arrives |
 | `/context-budget [--verbose]` | Audit token consumption across `.claude/` (agents, skills, rules, MCP, CLAUDE.md). Recommend trims. |
 | `/freeze` | Hard-block all Edit/Write outside a chosen directory for the rest of the session. Pair with `/unfreeze` to release. |
 | `/unfreeze` | Release the directory edit lock set by `/freeze`. |
@@ -381,21 +381,31 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 
 ## Codex Integration
 
-Codex operates as an independent verifier via the `codex-plugin-cc` Claude Code plugin. It shares no session context with Claude — providing a genuine second opinion.
+Codex operates as an independent verifier via the local `codex` CLI binary (`C:\Users\mikew\AppData\Roaming\npm\codex.cmd` on Windows). It shares no session context with Claude — providing a genuine second opinion.
 
-| Command | Purpose |
-|---------|---------|
-| `/codex-verify [feature]` | Background Codex verification while Claude builds |
-| `/deep-review [feature] --codex` | Full review: Codex + 4 Claude agents |
-| `/codex:adversarial-review` | Challenge specific decisions |
-| `/codex:rescue [task]` | Delegate investigation to Codex |
-| `/codex:status` | Check background job progress |
-| `/codex:result` | Retrieve completed results |
+**As of 2026-05-25, Claude dispatches Codex DIRECTLY via Bash — no terminal hand-off to the user.** Previous workflow asked the user to run `/codex:adversarial-review --background` in a separate terminal; the new flow uses `codex exec - < prompt.md > output.md 2>&1` from inside the skill (`run_in_background: true`). The user receives one notification when the background job completes and Claude continues automatically. See `.claude/skills/{codex-verify,review-codex}/SKILL.md` "Codex CLI invocation contract" for the full dispatch contract.
 
-**Config:** `.codex/config.toml` | **Instructions:** `AGENTS.md` (project root)
+| Skill | Purpose | Dispatch model |
+|-------|---------|----------------|
+| `/codex-verify [feature]` | Lightweight verification (architectural compliance, 5-20 min) | Claude → `codex exec` via Bash, background |
+| `/review-codex [feature]` | Heavyweight adversarial review (Known Suspects + vanilla decompile + RCA, 10-45 min) | Claude → `codex exec` via Bash, background |
+| `/deep-review [feature] --codex` | Codex pre-review + 5+ Claude agents in parallel | Claude → `codex exec` + parallel `Agent` calls |
+| `/codex:rescue [task]` | Delegate investigation to Codex (plugin-based; interactive) | Plugin/`SendMessage` (user prompt) |
 
-**Enhanced completion workflow:**
-1. `/verify` -> 2. `/codex-verify` (background) -> 3. Continue building -> 4. `/codex:result` -> 5. Fix CRITICAL/HIGH -> 6. `/deep-review` -> 7. Issue + docs + CHANGELOG
+**Pre-flight:** every skill that dispatches calls `codex login status` first. If not `Logged in using ChatGPT`, the skill stops and surfaces the message — the user must run `codex login` (interactive browser flow). Claude does NOT attempt to authenticate.
+
+**Config:** `~/.codex/config.toml` (model + reasoning effort; project root has `.codex/config.toml` for project-scoped overrides if needed) | **Instructions:** `AGENTS.md` (project root)
+
+**Completion workflow (MANDATORY for every C# feature, no exceptions):**
+1. `/verify` — build + tests pass
+2. `/deep-review [feature]` — 5+ parallel Claude agents
+3. Fix all confirmed findings (HIGH must be fixed in-session per `.claude/skills/deep-review/SKILL.md` "HIGH findings — no silent deferrals")
+4. `/review-codex [feature]` — dispatches Codex via Bash, harness notifies on completion
+5. Claude auto-resumes when notification arrives — verify Codex findings, implement confirmed fixes, write Phase 3e RCA
+6. `/verify` again — confirm green after fixes
+7. Issue + docs + CHANGELOG + final commit
+
+Steps 2-6 are blocking before commit. Past failure mode: the session author skipped 2 and 4 and shipped a 60-file feature with 1 HIGH + 2 MED + 3 LOW deep-review findings (see `docs/reviews/rca-crash-report-2026-05-25.md` meta-finding). With direct dispatch, there's no "I forgot to open the terminal" excuse — invoking the skill IS the dispatch.
 
 ## Agent Teams
 
@@ -475,18 +485,20 @@ Before closing out any feature or fix, run this FULL sequence:
 ```
 Phase 1: BUILD & INTERNAL REVIEW
   1. /verify                        — build + tests pass
-  2. /deep-review [feature]         — 4 parallel agents (standards, compat, efficiency, completeness)
-  3. Fix issues from deep-review
+  2. /deep-review [feature]         — 5+ parallel agents (standards, compat, efficiency, completeness, data-flow)
+  3. Fix all confirmed findings (HIGH must fix in-session)
 
-Phase 2: CODEX ADVERSARIAL REVIEW
-  4. /review-codex                  — auto-detects what was built, writes Codex prompt
-  5. Dispatch to Codex              — /codex:adversarial-review --background (terminal)
-  6. /review-codex                  — detects review file, verifies findings, implements fixes
+Phase 2: CODEX ADVERSARIAL REVIEW (Claude dispatches directly, no user terminal step)
+  4. /review-codex                  — writes prompt to docs/reviews/codex-adversarial-{feature}-{date}.prompt.md
+                                      AND dispatches via `codex exec - < prompt.md > output.md 2>&1` (run_in_background)
+                                      AND tells the user once: "dispatched, expected window 10-45 min"
+  5. (harness notifies on completion — Claude auto-resumes; no /review-codex re-invocation needed)
+  6. Verify each Codex finding by reading TAOM source + decompiling vanilla targets — implement confirmed fixes
 
 Phase 3: SELF-REVIEW (review our OWN fixes)
-  7. /review-codex                  — detects fix changes, writes new Codex prompt for our fixes
-  8. Dispatch to Codex              — /codex:adversarial-review --background (terminal)
-  9. /review-codex                  — verifies findings on our fixes, implements confirmed fixes
+  7. /review-codex                  — second pass, same auto-dispatch flow against the post-fix diff
+  8. (harness notifies on completion)
+  9. Verify findings on our fixes, implement confirmed fixes
 
 Phase 4: CLOSE OUT
   10. /verify                       — final build + tests pass

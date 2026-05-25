@@ -18,6 +18,8 @@ Tests: `dotnet build TAOM.Dependencies.csproj` 0 errors; deploy target unchanged
 
 ### chore(workflow): Codex dispatch is now Claude-direct via `codex exec` (no user terminal step)
 
+> **Note:** the prose entry below was authored in the same session as the code change but was accidentally squashed into the [`chore(deps)`](https://github.com/haterade22/TAOM/commit/30794ea) commit. The actual `.claude/skills/{codex-verify,review-codex,deep-review}/SKILL.md` + `CLAUDE.md` code changes ship in the present commit (immediately following).
+
 Updated `/codex-verify`, `/review-codex`, and `/deep-review --codex` to dispatch Codex DIRECTLY from inside the skill via Bash (`codex exec - < prompt.md > output.md 2>&1` with `run_in_background: true`). Previous workflow asked the user to open a separate terminal and run `/codex:adversarial-review --background` manually; the new flow eliminates that hand-off — invoking the skill IS the dispatch. The harness notification on background-job completion triggers Claude's auto-resume; no `/review-codex` re-invocation needed.
 
 **Why:** the manual terminal step was friction that the session author dropped during the CrashReport feature build, shipping a 60-file feature with 1 HIGH + 2 MED + 3 LOW deep-review findings that should have been caught before close-out. RCA: [docs/reviews/rca-crash-report-2026-05-25.md](docs/reviews/rca-crash-report-2026-05-25.md) meta-finding. Direct dispatch removes the "I forgot to open the terminal" excuse.

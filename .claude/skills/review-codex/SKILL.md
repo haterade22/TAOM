@@ -1,18 +1,43 @@
 ---
 name: review-codex
-description: Auto-detect what was built, write a Codex adversarial prompt, dispatch instructions, then verify results when ready
+description: Auto-detect what was built, write a Codex adversarial prompt, dispatch Codex directly via `codex exec`, then verify results when complete
 argument-hint: "[optional: feature-name or path-to-review.md]"
 ---
 
 # Codex Adversarial Review Pipeline
 
-Handles the full Codex review lifecycle automatically. Detects what needs reviewing from context.
+Handles the full Codex review lifecycle automatically — Claude dispatches Codex directly via the local `codex` CLI (no terminal hand-off to the user). Detects what needs reviewing from context.
 
 **Argument handling:**
-- No argument: auto-detect from git what was changed, write prompt, guide dispatch
-- Feature name (no `.md`): write prompt for that feature, guide dispatch
+- No argument: auto-detect from git what was changed, write prompt, dispatch
+- Feature name (no `.md`): write prompt for that feature, dispatch
 - Path to `.md` file: verify that existing Codex review, implement fixes
 - If a `codex-adversarial-*.md` file was recently created in `docs/reviews/`, ask user if they want to verify it
+
+## Codex CLI invocation contract (added 2026-05-25)
+
+Claude has direct access to Codex via the `codex` binary (`C:\Users\mikew\AppData\Roaming\npm\codex.cmd` on Windows, `codex` on POSIX). Dispatch is a **Bash call from inside this skill** — the user does NOT open a separate terminal.
+
+**Required pre-flight (Phase 2 only — once per skill invocation):**
+```bash
+codex login status
+```
+Expect `Logged in using ChatGPT` (or equivalent). If not logged in, stop the skill and surface the message — the user must run `codex login` themselves (interactive browser flow).
+
+**Dispatch command (Phase 2e):**
+```bash
+cd "<repo-root>" && codex exec - < "<prompt-file-path>" > "<output-file-path>" 2>&1
+```
+- `codex exec -` reads the prompt from stdin (avoids argv length limits for large prompts).
+- Output (stdout + stderr) goes to `docs/reviews/codex-adversarial-{feature}-{date}.md`.
+- Wrap with `run_in_background: true` on the Bash tool call — Codex with `model_reasoning_effort = "xhigh"` typically runs 10-45 minutes. The harness notifies when the background job completes.
+- Model + reasoning effort come from `~/.codex/config.toml` (currently `model = "gpt-5.5"`, `model_reasoning_effort = "xhigh"`). Do NOT override unless the user asks.
+- Codex picks up project rules from `AGENTS.md` automatically (no need to mention it in the prompt).
+
+**When the background job notifies completion:**
+1. Read the output file. Confirm it's a real Codex review (starts with review structure, not an error message).
+2. If the output starts with `Error:` / `panic:` / login failure / empty file, fall back to manual dispatch by telling the user the failure mode.
+3. Otherwise, proceed to Phase 3 (verify findings).
 
 ## Phase 1: Detect What to Review
 
@@ -90,19 +115,31 @@ NOTE: "rohan" is NOT a valid ID. Rohan uses "vlandia". "dol_guldur" is NOT valid
    FAILURES: Codex assumed empire=Rohan (it is Dunland). Codex flagged vanilla-matching code as bugs. Codex skipped hard sections.
 9. Output to: docs/reviews/codex-adversarial-{feature}-{date}.md
 
-### 2e: Display and guide dispatch
+### 2e: Dispatch Codex directly
 
-Output the complete prompt, then tell the user:
+1. **Write the prompt to disk** at `docs/reviews/codex-adversarial-{feature}-{date}.prompt.md` so it's reviewable + reusable.
+2. **Pre-flight Codex auth** — run `codex login status` once. If not `Logged in`, stop and tell the user to `codex login`.
+3. **Dispatch via Bash** in background:
+   ```
+   Bash tool call:
+     command: cd "<repo-root>" && codex exec - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/codex-adversarial-{feature}-{date}.md" 2>&1
+     run_in_background: true
+     timeout: 600000  (10 min — Codex usually finishes inside this; harness will notify when actually done)
+   ```
+4. **Tell the user once** what was dispatched: feature name, prompt path, output path, expected completion window (10-45 min on `xhigh` reasoning). Do NOT poll the background job — the harness sends a notification when the job actually completes.
+5. **Continue with other work or stop**. When the background notification arrives, automatically proceed to Phase 3 by reading the output file. Do NOT re-prompt the user to "run /review-codex again" — Claude continues the lifecycle itself.
+
+Fallback path (only if direct dispatch fails — `codex` binary missing, auth expired, sandbox refuses):
 
 ```
-Copy the prompt above and dispatch to Codex:
-  /codex:adversarial-review --background
-
-When the review file appears at docs/reviews/codex-adversarial-{feature}-{date}.md, run:
-  /review-codex
+Tell the user:
+  Direct Codex dispatch failed: <exact error from Bash output>.
+  Manual fallback:
+    1. Open a terminal
+    2. cd <repo-root>
+    3. codex exec - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/codex-adversarial-{feature}-{date}.md"
+    4. When done, re-invoke /review-codex with the .md file path as argument
 ```
-
-Then **stop and wait** — Codex runs in a separate terminal.
 
 ## Phase 3: Verify Codex Review
 
