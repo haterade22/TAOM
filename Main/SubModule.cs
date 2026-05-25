@@ -66,6 +66,8 @@ using TAOM.Features.MixedFormations.Hooks;
 using TAOM.Features.SmartCavalryAI.Hooks;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.FiefManagement.Hooks;
+using TAOM.Features.SettlementNameplateFade;
+using TAOM.Features.SettlementNameplateFade.Hooks;
 using TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
@@ -479,6 +481,8 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch34_QuickActions");
         _harmony.PatchCategory("Patch35_CompanionTactics");
         _harmony.PatchCategory("Patch36_FiefManagement");
+        SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.Initialize(IoC.Resolve<INameplateFadeService>());
+        _harmony.PatchCategory("Patch38_SettlementNameplateFade");
 
         // CompanionTactics — manual patch for the PRIVATE method
         // OrderOfBattleHeroItemVM.GetCaptainTooltip (private in v1.3.15, can't use

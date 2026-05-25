@@ -46,6 +46,7 @@ using TAOM.Features.CulturalFeats;
 using TAOM.Features.CultureMarketplace;
 using TAOM.Features.MissionDiagnostic;
 using TAOM.Features.CrashReport;
+using TAOM.Features.SettlementNameplateFade;
 
 namespace TAOM;
 
@@ -105,6 +106,7 @@ public static class IoC
         CultureMarketplaceIoC.RegisterCultureMarketplaceFeature(container);
         MissionDiagnosticIoC.RegisterMissionDiagnosticFeature(container);
         CrashReportIoC.RegisterCrashReportFeature(container);
+        NameplateFadeIoC.RegisterSettlementNameplateFadeFeature(container);
 
         _container = container;
 

@@ -2,6 +2,26 @@
 
 ## 2026-05-25
 
+### feat(map): distance-based settlement nameplate fade (#223)
+
+Settlement nameplates on the campaign map now fade smoothly with camera distance. Vanilla shows all nameplates at full visibility regardless of distance; on TAOM's 863-settlement map this is visually noisy. New feature module:
+
+- Harmony Postfix on `SettlementNameplateWidget.DetermineTargetAlphaValue()` multiplies the vanilla target alpha by a fade factor in [0, 1] derived from the widget's `DistanceToCamera`. Vanilla's lerp toward the new target smooths transitions automatically.
+- Three new MCM settings under `Map UI/Settlement Nameplates`: `EnableNameplateFade` (toggle, default on), `NameplateFadeNearDistance` (5-500, default 80), `NameplateFadeFarDistance` (10-1000, default 200).
+- Applies uniformly to towns, castles, villages, and hideouts (`SettlementNameplateWidget` is shared across all settlement types).
+- Disabled / NaN / `Far <= Near` paths short-circuit to multiplier 1.0 (vanilla behavior preserved).
+
+`/deep-review` caught 1 HIGH + 1 MED + 1 LOW before commit, all fixed in-session — full RCA at [docs/reviews/rca-settlement-nameplate-fade-2026-05-25.md](docs/reviews/rca-settlement-nameplate-fade-2026-05-25.md). Highlights: cached `TaomSettings.Instance` reference in the provider constructor (9000 redundant singleton dereferences/sec on a 60 FPS × 50-settlement load → one); switched from `Lazy<INameplateFadeService>` to the project-standard `Initialize(svc)` + static-field service capture; added the missing `InfinityNearDistance` regression test to symmetrize the NaN/Infinity coverage matrix.
+
+`/review-codex` not run for this 150-line feature — user discretion. Per CLAUDE.md, Codex pass requires explicit user intent.
+
+**Build:** 0 errors, 0 new warnings. **Tests:** 2501/2503 passing (2 unrelated skipped), 19 new tests for this feature.
+
+Feature doc: [docs/features/settlement-nameplate-fade.md](docs/features/settlement-nameplate-fade.md).
+
+Research: ilspycmd on installed `TaleWorlds.MountAndBlade.GauntletUI.Widgets.dll` v1.4.5 — verified `SettlementNameplateWidget.DetermineTargetAlphaValue` (private float, no params), `DistanceToCamera` (public float property).
+Not-tested: Harmony patch invocation in live game (verified manually by moving camera).
+
 ### fix(crash-report): Codex adversarial review (Review 41) — 8 confirmed findings, all fixed
 
 `/review-codex` on the CrashReport feature surfaced **2 HIGH + 4 MEDIUM + 2 LOW** findings beyond the 6 caught by Phase 1 `/deep-review`. All 8 independently verified against TAOM source + decompiled vanilla DLLs, no false positives, all fixed in the same session. Full RCA: [docs/reviews/rca-crash-report-codex-2026-05-25.md](docs/reviews/rca-crash-report-codex-2026-05-25.md). Codex output: [docs/reviews/codex-adversarial-crash-report-2026-05-25.md](docs/reviews/codex-adversarial-crash-report-2026-05-25.md).

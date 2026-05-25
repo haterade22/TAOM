@@ -428,6 +428,23 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Show diagnostic [BattleActionBar] messages.")]
     public bool BattleActionBarDebug { get; set; } = false;
 
+    // --- Map UI / Settlement Nameplates ---
+
+    [SettingPropertyGroup("Map UI/Settlement Nameplates", GroupOrder = 40)]
+    [SettingPropertyBool("Enable Settlement Nameplate Fade", Order = 0,
+        HintText = "Fade settlement nameplates with camera distance. When off, all nameplates display at full visibility regardless of distance (vanilla).")]
+    public bool EnableNameplateFade { get; set; } = true;
+
+    [SettingPropertyGroup("Map UI/Settlement Nameplates")]
+    [SettingPropertyFloatingInteger("Fade Start Distance", 5f, 500f, "#0", Order = 1,
+        HintText = "Camera distance at which fade begins. Nameplates closer than this stay fully opaque. Default 80.")]
+    public float NameplateFadeNearDistance { get; set; } = 80f;
+
+    [SettingPropertyGroup("Map UI/Settlement Nameplates")]
+    [SettingPropertyFloatingInteger("Fade End Distance", 10f, 1000f, "#0", Order = 2,
+        HintText = "Camera distance at which fade completes. Nameplates farther than this are fully hidden. Must be greater than Fade Start Distance. Default 200.")]
+    public float NameplateFadeFarDistance { get; set; } = 200f;
+
     // --- Map Tools / Distance Cache Rebuild ---
     //
     // Rebuilds Modules/TAOM_Map/ModuleData/DistanceCaches/settlements_distance_cache_Default.bin
