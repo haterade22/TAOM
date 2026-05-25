@@ -566,7 +566,7 @@
     </upgrade_targets>
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_black_ash_a" />
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
@@ -575,7 +575,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_a" />
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
@@ -584,7 +584,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_b" />
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_b" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
@@ -593,7 +593,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_silver_a" />
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
@@ -602,7 +602,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_silver_b" />
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_b" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
@@ -611,7 +611,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
@@ -646,7 +646,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_silver_full_a" />
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
@@ -655,7 +655,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_a" />
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
@@ -664,7 +664,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_b" />
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_b" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
@@ -673,7 +673,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_silver_a" />
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
@@ -682,7 +682,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_silver_b" />
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_b" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />
@@ -691,7 +691,7 @@
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
       </EquipmentRoster>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_2h_axe_black_ash_a" />
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_black_ash_a" />
         <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_los_inf_chest_heavy_a" />

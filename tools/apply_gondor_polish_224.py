@@ -209,6 +209,20 @@ EQUIPMENT_DELTAS: Dict[str, List[Tuple[Any, ...]]] = {
     "gondor_loss_vet_axe_thrower": [("clear", "Item1")],
 }
 
+# Block-scoped string replacements: substitute every occurrence of `old` with `new`
+# inside the named troop's NPCCharacter block. Use for uniform rename patterns
+# across multi-roster troops where slot-by-slot replace would mean N near-identical ops.
+# Format: {troop_id: [(old_substring, new_substring), ...]}
+BLOCK_RENAMES: Dict[str, List[Tuple[str, str]]] = {
+    # === Lossarnach Guard line — swap 2h axe for 1h axe across all rosters ===
+    # Both troops carry 2h axe + shield in every roster (illegal grip — shield doesn't
+    # render with 2h weapon). 1h variants share identical suffixes (_a/_b/_silver_a/
+    # _silver_b/_black_ash_a/_silver_full_a), so a single substring rename per troop
+    # block converts every roster's Item0 to the matching 1h axe.
+    "gondor_loss_guard":     [("wm_gondor_lossarnach_2h_axe_", "wm_gondor_lossarnach_1h_axe_")],
+    "gondor_loss_vet_guard": [("wm_gondor_lossarnach_2h_axe_", "wm_gondor_lossarnach_1h_axe_")],
+}
+
 # Pinnath Gelin cavalry — 2 new NPCs branching off gondor_pg_spearman upgrade_target.
 NEW_TROOPS_XML = """\
 
@@ -466,6 +480,22 @@ def main():
             content = content[:start] + block + content[end:]
             troops_touched += 1
 
+    # 1b. Apply block-scoped string renames (uniform substring substitution per troop)
+    renames_applied = 0
+    for troop_id, rules in BLOCK_RENAMES.items():
+        start, end = find_npc_block(content, troop_id)
+        if start < 0:
+            troops_missing.append(troop_id)
+            continue
+        block = content[start:end]
+        new_block = block
+        for old, new in rules:
+            if old in new_block:
+                new_block = new_block.replace(old, new)
+        if new_block != block:
+            content = content[:start] + new_block + content[end:]
+            renames_applied += 1
+
     # 2. Add new troops (PG cavalry pair) if not already present
     new_added = 0
     for tid in NEW_TROOP_IDS:
@@ -495,6 +525,7 @@ def main():
     print(f"Gondor polish (issue #224):")
     print(f"  Troops touched:        {troops_touched}/{len(EQUIPMENT_DELTAS)}")
     print(f"  Ops applied:           {ops_applied}/{ops_total}")
+    print(f"  Block renames applied: {renames_applied}/{len(BLOCK_RENAMES)}")
     print(f"  New troops added:      {new_added}/{len(NEW_TROOP_IDS)}")
     print(f"  Upgrade-target patch:  {'YES' if upgrade_patched else 'no-op (already patched or pattern missing)'}")
     if troops_missing:
