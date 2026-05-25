@@ -2,7 +2,7 @@
 
 ## Overview
 
-A standalone T9 Gondor recruit, `gondor_ithilien_ranger` (level 41, `is_basic_troop="true"`, `default_group="Ranged"`), recruitable directly from notables in Minas Tirith and the two Ithilien-area castles. Equipped exclusively from the LOTRLOME_Armory Ithilien wardrobe (8 jerkin variants × matching hood/cloak/boots/bracers + Ithilien bows + Noldar Elven Arrows). Also re-equips Faramir as Captain of the Ithilien Rangers using his dedicated character-specific armor.
+A standalone T9 Gondor recruit, `gondor_ithilien_ranger` (level 41, `is_basic_troop="true"`, `default_group="Ranged"`), recruitable directly from notables in Minas Tirith and the two Ithilien-area castles. Equipped exclusively from the LOTRLOME_Armory Ithilien wardrobe (8 jerkin variants × matching hood/cloak/boots/bracers + Ithilien bows + Noldor Elven Arrows). Also re-equips Faramir as Captain of the Ithilien Rangers using his dedicated character-specific armor.
 
 ## Why This Exists
 
@@ -30,7 +30,7 @@ Pure data-layer feature — no new C# code, no new GameModel override, no Harmon
 - Three settlement entries in the existing `VolunteerRecruitmentService.cs` static initializer
 - Per-slot equipment swap on the existing `faramir_bat_equipment` and `faramir_civ_equipment` rosters
 
-The new troop has 8 `<EquipmentRoster>` blocks, each pairing a unique Ithilien jerkin variant with a matching hood, boots, cloak, bracers, bow, and a unique Noldar Elven Arrow variant. The engine picks one roster per spawn, giving visual diversity across squads.
+The new troop has 8 `<EquipmentRoster>` blocks, each pairing a unique Ithilien jerkin variant with a matching hood, boots, cloak, bracers, bow, and a unique Noldor Elven Arrow variant. The engine picks one roster per spawn, giving visual diversity across squads.
 
 ### Component Diagram
 
