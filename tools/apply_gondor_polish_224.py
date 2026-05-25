@@ -73,9 +73,20 @@ EQUIPMENT_DELTAS: Dict[str, List[Tuple[Any, ...]]] = {
     # === Anfalas Footman — sword replaces eastern_mace ===
     "gondor_anf_footman":    [("set", "Item0", "wm_gondor_sword_a03")],
 
+    # === Anorien militia chainmail tier fix (post-#224 follow-up 2026-05-25) ===
+    # Peasant gets Half Chainmail A (T1); Militia + Footman + Skirmisher + Archer Militia
+    # get Half Chainmail B (T2+). Original state had Peasant=B, Militia=A, Archer Militia=A
+    # (swapped); Footman + Skirmisher had Full Chainmail A (wrong tier).
+    "gondor_ano_peasant":        [("set", "Body", "sk_gd_ano_chainmail_half_a")],
+    "gondor_ano_militia":        [("set", "Body", "sk_gd_ano_chainmail_half_b")],
+    "gondor_ano_footman":        [("set", "Body", "sk_gd_ano_chainmail_half_b")],
+
     # === Anorien archer line — add tier-matched 1h sword as sidearm (Item3) ===
-    "gondor_ano_archer_militia": [("set", "Item3", GONDOR_SWORD_TIER[11])],
-    "gondor_ano_skirmisher":     [("set", "Item3", GONDOR_SWORD_TIER[16])],
+    # gondor_ano_archer_militia + skirmisher also get Half Chainmail B body upgrade.
+    "gondor_ano_archer_militia": [("set", "Item3", GONDOR_SWORD_TIER[11]),
+                                  ("set", "Body", "sk_gd_ano_chainmail_half_b")],
+    "gondor_ano_skirmisher":     [("set", "Item3", GONDOR_SWORD_TIER[16]),
+                                  ("set", "Body", "sk_gd_ano_chainmail_half_b")],
     "gondor_ano_bowman":         [("set", "Item3", GONDOR_SWORD_TIER[21])],
     "gondor_ano_archer":         [("set", "Item3", GONDOR_SWORD_TIER[26])],
 
