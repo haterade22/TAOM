@@ -11,14 +11,17 @@ public class FileLogger : IModLogger
     private readonly Thread _writerThread;
     private volatile bool _stopping;
     private StreamWriter _logFile;
+    private readonly string _logPath;
     private const string LogDirectory = "Logs";
+
+    public string? LogFilePath => _logPath;
 
     public FileLogger()
     {
         var timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-        var logPath = Path.Combine(LogDirectory, $"taom_debug_{timestamp}.log");
+        _logPath = Path.Combine(LogDirectory, $"taom_debug_{timestamp}.log");
         Directory.CreateDirectory(LogDirectory);
-        _logFile = new StreamWriter(logPath, true);
+        _logFile = new StreamWriter(_logPath, true);
 
         _writerThread = new Thread(ProcessQueue) { IsBackground = true, Name = "TAOM.FileLogger" };
         _writerThread.Start();

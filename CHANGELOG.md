@@ -2,6 +2,45 @@
 
 ## 2026-05-25
 
+### fix(crash-report): Codex adversarial review (Review 41) — 8 confirmed findings, all fixed
+
+`/review-codex` on the CrashReport feature surfaced **2 HIGH + 4 MEDIUM + 2 LOW** findings beyond the 6 caught by Phase 1 `/deep-review`. All 8 independently verified against TAOM source + decompiled vanilla DLLs, no false positives, all fixed in the same session. Full RCA: [docs/reviews/rca-crash-report-codex-2026-05-25.md](docs/reviews/rca-crash-report-codex-2026-05-25.md). Codex output: [docs/reviews/codex-adversarial-crash-report-2026-05-25.md](docs/reviews/codex-adversarial-crash-report-2026-05-25.md).
+
+**Combined `/deep-review` + `/review-codex` workflow caught 14 total bugs in a 60-file feature that the author tried to declare "done" after `/verify` alone.** See REVIEW-LOG Review 41 entry.
+
+**HIGH-1:** [Main/Features/CrashReport/Hooks/CrashReportPatchHelper.cs](Main/Features/CrashReport/Hooks/CrashReportPatchHelper.cs) — static `_service` cache survived `OnSubModuleUnloaded` → post-reload Finalizers called disposed `FileLogger`. Added `ResetForUnload()` + call site in `SubModule.OnSubModuleUnloaded`.
+
+**HIGH-2:** [Main/Features/CrashReport/CrashReportSettings.cs](Main/Features/CrashReport/CrashReportSettings.cs) — `EnableCrashCapture` MCM hint promised runtime no-op + AppDomain unsubscribe but property was read only at startup. Same shape as Phase 1's `SuspendButterLibHandler` decorative-toggle bug. Runtime gates added in `CrashReportPatchHelper.HandleAndSwallow`, `AppDomainExceptionHook.OnUnhandled`, both dev triggers.
+
+**MED-1:** [SubModule.cs](Main/SubModule.cs) — Patch37 attached at line 108, but `IoC.Configure()` (88), UIExtender setup (90-92), `ITimeAccelerationService` resolve (94), `Harmony` ctor (96), `CrashReportSettings.Instance` read (104) all ran BEFORE — throws in those lines uncatchable. Moved `_harmony = new Harmony(...)` + Patch37 attach to immediately after `IoC.Configure()`. Only remaining blind spot is `IoC.Configure()` itself (documented).
+
+**MED-2 (effectively CRITICAL — Codex understated):** [HarmonyCorrelationCollector.cs](Main/Features/CrashReport/Collectors/HarmonyCorrelationCollector.cs) — `Collect(stack, frames=null)` ran the per-stack-frame `Harmony.GetPatchInfo(mb)` block only when the optional `frames` parameter was non-null. The sole production caller passed only the snapshot list. Result: the "Harmony patches affecting every frame" feature advertised in CHANGELOG was **DEAD CODE** — every per-frame entry constructed with an empty `Patches` list. Added `CollectFromException(exception, stack)` overload that builds raw `StackFrame[]` internally; service calls the new overload.
+
+**MED-3:** [AppDomainExceptionHook.cs](Main/Features/CrashReport/Hooks/AppDomainExceptionHook.cs) — `OnUnhandled` can fire on TaleWorlds worker threads (`TWParallel.For` agent ticks); Mission/Campaign collectors read main-thread-only engine state; `InformationManager.ShowInquiry` invokes UI subscribers off-thread. Main thread id captured at `Subscribe()`; off-thread captures tag exception's `Data` dict with `OffMainThreadDataKey`; service switches to reduced-capture mode (skips Mission/Campaign + UI inquiry).
+
+**MED-4:** [CrashReportService.cs](Main/Features/CrashReport/CrashReportService.cs) — `_butterLibSuspended` one-shot flag prevented re-disable after user re-enabled ButterLib via its own MCM at runtime. Codex decompiled ButterLib's `Disable()` and confirmed it's idempotent. Removed the flag; `TrySuspend()` now called per crash when MCM toggle is on.
+
+**LOW-1:** [CrashReportApplicationTickTrigger.cs](Main/Features/CrashReport/DevTriggers/CrashReportApplicationTickTrigger.cs) + [CrashReportDevTrigger.cs](Main/Features/CrashReport/DevTriggers/CrashReportDevTrigger.cs) — `CrashReportSettings.Instance` per-tick is a provider scan (Codex decompiled MCMv5 `BaseSettingsProvider.GetSettings(id)`), not a static-field read. Cached via `??=` in both dev triggers.
+
+**LOW-2:** [CrashBundleWriter.cs](Main/Features/CrashReport/Rendering/CrashBundleWriter.cs) — `Write` returned the zip path even after mid-write `catch`, pointing player at a broken bundle. On mid-write failure: rename to `*.zip.partial` + return `null`.
+
+**Plus pre-existing build warnings fixed earlier in the session:**
+- **BHA0001** (BUTR.Harmony.Analyzer) on all 10 Patch37 classes — swapped attribute order to `[HarmonyPatch(...)]` FIRST, `[HarmonyPatchCategory(...)]` SECOND (matches existing TAOM convention).
+- **MSB3277** (System.Management version conflict) — `<Reference Include="System.Management" />` resolved to .NET 4.7.2 BCL v4.0.0.0 but TaleWorlds.* DLLs depend on v4.0.1.0 from `<game>\bin\Win64_Shipping_Client\System.Management.dll`. Switched to HintPath. [Main/TAOM.csproj](Main/TAOM.csproj).
+
+**Build:** 0 warnings, 0 errors. **Tests:** 2440/2440 passing, 2 skipped, 0 failed.
+
+**Process improvements triggered:**
+- [AGENTS.md](AGENTS.md) — added 7 new "Bugs Codex caught Claude missed" lessons (one per Review 41 finding) + bumped lesson counter to 38 reviews / 114 bugs.
+- [docs/reviews/REVIEW-LOG.md](docs/reviews/REVIEW-LOG.md) — Review 41 entry with full findings table + RCA + Codex quality notes.
+- [.claude/skills/deep-review/SKILL.md](.claude/skills/deep-review/SKILL.md) — Agent 5 prompts tightened: (2b) MCM toggle-cross-reference now applies to EVERY toggle enumerated from the settings class (previously hand-listed; let HIGH-2 slip past); (2c) DTO Completeness extended from "is this populated?" to "are non-empty values actually produced under normal operation?" (would have caught MED-2 dead Harmony correlation at deep-review time).
+
+Constraint: ButterLib re-enable at runtime breaks `_butterLibSuspended` semantics — removing the flag is the simpler fix than tracking ButterLib state.
+Research: ilspycmd against installed v1.4.5 DLLs for ScreenManager / InformationManager / MCMv5 BaseSettingsProvider / ButterLib ExceptionHandlerSubSystem.
+Rejected: keeping `_butterLibSuspended` and polling ButterLib state — premature optimisation; `Disable()` is idempotent and cheap per decompile.
+Save-compat: no save-data changes.
+Not-tested: thread-safety tests for off-main-thread captures, lifecycle tests for `ResetForUnload()`, master-toggle-disabled tests — listed as test-debt follow-up in the RCA.
+
 ### chore(deps): deep-review cleanup of stub-module changeset — glob tighten + doc resync + RCA (#221)
 
 Post-ship deep review of commits `031283c` (stub modules) + `8a9d18f` (auto-enable) found 1 MED + 3 LOW findings — all doc-drift / discoverability, zero functional defects. Fixes:

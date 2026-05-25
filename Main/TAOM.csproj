@@ -14,6 +14,24 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<!-- System.Management hosts the WMI API surface used by
+		     Features/CrashReport/Collectors/GpuDisplayCollector for GPU vendor/driver/VRAM
+		     reporting. MUST HintPath to the TaleWorlds-shipped copy (4.0.1.0) — referencing the
+		     .NET 4.7.2 BCL reference assembly resolves to 4.0.0.0 and produces MSB3277 conflict
+		     warnings on every build because every TaleWorlds.* DLL depends on 4.0.1.0 via
+		     System.Management.dll v4.700.19.56404 at <game>\bin\Win64_Shipping_Client\. At
+		     runtime the game has already loaded the 4.0.1.0 copy, so compile-time matching is
+		     required for predictable behavior. -->
+		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\System.Management.dll">
+			<HintPath>%(Identity)</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<!-- System.IO.Compression hosts ZipArchive used by Features/CrashReport/Rendering/CrashBundleWriter
+		     to bundle the crash report + log files + RGL log into a single ZIP for upload. The .NET
+		     4.7.2 BCL reference here is fine — TaleWorlds doesn't ship its own copy and there's
+		     no version skew. -->
+		<Reference Include="System.IO.Compression" />
+		<Reference Include="System.IO.Compression.FileSystem" />
 		<Reference Include="$(GameFolder)\bin\$(GameBinariesFolder)\System.Numerics.Vectors.dll">
 			<HintPath>%(Identity)</HintPath>
 			<Private>False</Private>

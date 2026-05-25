@@ -87,13 +87,36 @@ public class SubModule : MBSubModuleBase
 
         IoC.Configure();
 
+        // Codex review #46 (2026-05-25) MED-01: attach Patch37_CrashReport IMMEDIATELY
+        // after IoC.Configure() so its Finalizers cover the rest of OnSubModuleLoad
+        // (UIExtender init, time-acceleration resolve, downstream PatchCategory calls).
+        // Previous order left lines 88-107 uncatchable. The only unavoidable blind spot
+        // is the IoC.Configure() call itself — if THAT throws, the entire feature is
+        // unreachable. Split CrashReport bootstrap doesn't fix this without re-implementing
+        // a manual DI container; accept and document the residual.
+        _harmony = new Harmony("com.taom.mod");
+        if ((TAOM.Features.CrashReport.CrashReportSettings.Instance?.EnableCrashCapture) ?? true)
+        {
+            try
+            {
+                _harmony.PatchCategory("Patch37_CrashReport");
+                IoC.Resolve<TAOM.Features.CrashReport.Hooks.AppDomainExceptionHook>().Subscribe();
+                if ((TAOM.Features.CrashReport.CrashReportSettings.Instance?.EnableNativeToManagedCapture) ?? true)
+                {
+                    IoC.Resolve<TAOM.Features.CrashReport.Hooks.Native2ManagedPatcher>().AttachAll(_harmony);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                IoC.Resolve<IModLogger>().LogError($"[CrashReport] init failed: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+
         _uiExtender = UIExtender.Create("TAOM");
         _uiExtender.Register(typeof(SubModule).Assembly);
         _uiExtender.Enable();
 
         _timeAccelerationService = IoC.Resolve<ITimeAccelerationService>();
-
-        _harmony = new Harmony("com.taom.mod");
 
         // Must be first — intercepts GetLocalizedText before any game texts are resolved.
         // Loads English string overrides from taom_module_strings.xml (removes hardcoded "The" articles).
@@ -565,6 +588,11 @@ public class SubModule : MBSubModuleBase
         if (diagSvc != null && raceMgr != null && diagLogger != null)
             mission.AddMissionBehavior(new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(diagSvc, raceMgr, diagLogger));
 
+        // Dev-trigger behavior watches the CrashReport MCM toggle and throws a tagged
+        // TaomDevTriggerException on the next OnMissionTick when the player flips
+        // "Throw On Next Mission Tick". QA only — no-op in normal play.
+        mission.AddMissionBehavior(new Features.CrashReport.DevTriggers.CrashReportDevTriggerMissionBehavior());
+
         var careerAbilityService = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAbilityService>();
         if (careerAbilityService != null && Campaign.Current != null)
         {
@@ -605,7 +633,19 @@ public class SubModule : MBSubModuleBase
     protected override void OnSubModuleUnloaded()
     {
         base.OnSubModuleUnloaded();
+        // Detach the AppDomain.UnhandledException subscription BEFORE IoC disposal so
+        // the hook doesn't hold a stale reference to a disposed CrashReportService
+        // across game-restart-in-same-process. Deep-review INC 3 (2026-05-25).
+        try { IoC.Resolve<TAOM.Features.CrashReport.Hooks.AppDomainExceptionHook>()?.Unsubscribe(); }
+        catch { /* IoC may already be torn down — best-effort */ }
+
         _harmony?.UnpatchAll("com.taom.mod");
         IoC.Dispose();
+
+        // Codex review #46 (2026-05-25) HIGH-01: clear the static service cache in
+        // the patch helper so the next module load resolves a fresh service graph from
+        // the new IoC container. Without this, Finalizers fire against a disposed
+        // FileLogger after reload and silently drop every log line.
+        TAOM.Features.CrashReport.Hooks.CrashReportPatchHelper.ResetForUnload();
     }
 }
