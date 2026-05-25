@@ -65,9 +65,9 @@ JAVELIN = "imperial_throwing_spear_1_t4"
 # Per-troop deltas. Tuple format: (op, slot, args...).
 EQUIPMENT_DELTAS: Dict[str, List[Tuple[Any, ...]]] = {
     # === Boots fixes (T1 entry-point troops missing leg armour) ===
+    # Note: gondor_leb_militia's boots are wired in the Lebennin block below (combined with sword).
     "gondor_anf_levy":       [("set", "Leg", BOOTS)],
     "gondor_bel_recruit":    [("set", "Leg", BOOTS)],
-    "gondor_leb_militia":    [("set", "Leg", BOOTS)],
     "gondor_pg_volunteer":   [("set", "Leg", BOOTS)],
 
     # === Anfalas Footman — sword replaces eastern_mace ===
@@ -177,10 +177,14 @@ EQUIPMENT_DELTAS: Dict[str, List[Tuple[Any, ...]]] = {
                                     ("set", "Item1", BOLT_TIER[36]),
                                     ("set", "Item3", GONDOR_SWORD_TIER[36])],
 
-    # === Lossarnach Axe Thrower line — keep only 2h axe + thrown axe; remove 1h ===
-    "gondor_loss_axe_thrower":     [("clear", "Item2"), ("clear", "Item3")],
-    "gondor_loss_skirmisher":      [("clear", "Item2"), ("clear", "Item3")],
-    "gondor_loss_vet_axe_thrower": [("clear", "Item2"), ("clear", "Item3")],
+    # === Lossarnach Axe Thrower line — keep throwing axe + 2h axe; remove 1h ===
+    # Layout per roster: Item0=throwing axe, Item1=1h axe (DROP), Item2=2h axe (KEEP).
+    # apply_clear removes ALL roster occurrences of Item1 per troop (6 rosters each).
+    # Original #224 commit wrongly cleared Item2/Item3 and used count=1 — RCA at
+    # docs/reviews/rca-gondor-polish-224-deep-review-2026-05-25.md.
+    "gondor_loss_axe_thrower":     [("clear", "Item1")],
+    "gondor_loss_skirmisher":      [("clear", "Item1")],
+    "gondor_loss_vet_axe_thrower": [("clear", "Item1")],
 }
 
 # Pinnath Gelin cavalry — 2 new NPCs branching off gondor_pg_spearman upgrade_target.
@@ -287,8 +291,18 @@ def find_npc_block(content: str, troop_id: str) -> Tuple[int, int]:
     return m.start(), m.end()
 
 
+# Non-roster slot names: these live in <Equipments> directly, not inside <EquipmentRoster>.
+# When inserting a slot that doesn't currently exist, these go before </Equipments>.
+NON_ROSTER_SLOTS = {"Horse", "HorseHarness"}
+
+
 def apply_set(block: str, slot: str, item_id: str) -> Tuple[str, bool]:
-    """Set or insert the slot line. Returns (new_block, changed)."""
+    """Set or insert the slot line. Returns (new_block, changed).
+
+    Multi-roster note: this only touches the FIRST matching slot in the block.
+    For per-roster slot edits, the existing slot will be replaced. If the slot
+    is missing entirely, the new line is inserted at an appropriate location.
+    """
     # Match existing slot line with any whitespace/closing style.
     slot_re = re.compile(
         r'<equipment\s+slot="' + re.escape(slot) + r'"\s+id="Item\.[^"]+"\s*/>',
@@ -298,12 +312,19 @@ def apply_set(block: str, slot: str, item_id: str) -> Tuple[str, bool]:
     if slot_re.search(block):
         new_block = slot_re.sub(new_line, block, count=1)
         return new_block, new_block != block
-    # Slot not present — insert before </EquipmentRoster> (or end of Equipments if no roster).
+    # Slot not present — find insertion target.
     # Find indent from a sibling equipment line.
     sibling = re.search(r'^([ \t]+)<equipment\s+slot="', block, re.MULTILINE)
     indent = sibling.group(1) if sibling else "        "
     insert_line = f'{indent}{new_line}\n'
-    # Insert before </EquipmentRoster> if present, else before </Equipments>.
+    if slot in NON_ROSTER_SLOTS:
+        # Horse + HorseHarness live in <Equipments> directly, not inside <EquipmentRoster>.
+        eq_close = block.find("</Equipments>")
+        if eq_close < 0:
+            return block, False
+        new_block = block[:eq_close] + insert_line + block[eq_close:]
+        return new_block, True
+    # Weapon/armor slots live inside <EquipmentRoster>. Insert before the first </EquipmentRoster>.
     roster_close = block.find("</EquipmentRoster>")
     if roster_close >= 0:
         new_block = block[:roster_close] + insert_line + block[roster_close:]
@@ -316,15 +337,19 @@ def apply_set(block: str, slot: str, item_id: str) -> Tuple[str, bool]:
 
 
 def apply_clear(block: str, slot: str) -> Tuple[str, bool]:
-    """Remove the slot line entirely. Returns (new_block, changed)."""
+    """Remove ALL occurrences of the slot across every roster in the troop block.
+
+    Earlier (#224 initial apply) this used count=1, which only removed the first
+    occurrence in multi-roster troops (Lossarnach axe-throwers have 6 rosters).
+    Per-troop deltas should apply uniformly across all rosters — if you want to
+    drop a slot from one specific roster, that needs a different operation type.
+    """
     slot_re = re.compile(
         r'[ \t]*<equipment\s+slot="' + re.escape(slot) + r'"\s+id="Item\.[^"]+"\s*/>\s*\n',
         re.IGNORECASE,
     )
-    if slot_re.search(block):
-        new_block = slot_re.sub("", block, count=1)
-        return new_block, new_block != block
-    return block, False
+    new_block = slot_re.sub("", block)  # remove ALL matches
+    return new_block, new_block != block
 
 
 def apply_replace(block: str, slot: str, old_id: str, new_id: str) -> Tuple[str, bool]:

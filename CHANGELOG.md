@@ -53,6 +53,8 @@ Build: 0 errors, 1042 warnings (pre-existing). Validator: PASS all 7 cultures, 0
 
 Issue: #224.
 
+**Post-commit deep-review fix (same day):** `/deep-review` Agent 5 (data-flow) caught a HIGH gap — the Lossarnach Axe Thrower line's 1h-axe-clear targeted `Item2`/`Item3` instead of `Item1`, so the 1h axe stayed everywhere and one 2h axe was wrongly cleared. Plus 2 latent MEDIUM script bugs (`apply_set` insertion path for non-roster slots; duplicate `gondor_leb_militia` dict key). All fixed in `apply_gondor_polish_224.py`; Lossarnach state corrected (1h axe now 0/6 rosters per troop, 2h axe restored to all 6/6). RCA: `docs/reviews/rca-gondor-polish-224-deep-review-2026-05-25.md`.
+
 ---
 
 ### feat(map): distance-based settlement nameplate fade (#223)
