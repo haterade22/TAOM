@@ -1203,6 +1203,9 @@ public class VolunteerRecruitmentServiceTests
     {
         _random.Next(Arg.Any<int>()).Returns(0);
         // Seed the Ithil conditional pool (mirrors what the JSON loader does in production).
+        // cultureId="unconfigured_test_culture" ensures the culture fallback is also absent —
+        // the test intent is "conditional fails → no fallback → null". Using "mordor" here
+        // would now hit the new InitializeMordorCulture pool and obscure the conditional behaviour.
         VolunteerRecruitmentService.AddSettlementConditional(
             "town_ES2_test_mordor",
             ctx => ctx.OwnerCultureId == "gondor",
@@ -1214,13 +1217,13 @@ public class VolunteerRecruitmentServiceTests
                 settlementId: "town_ES2_test_mordor",
                 boundSettlementId: null,
                 ownerClanId: null,
-                cultureId: "mordor",
+                cultureId: "unconfigured_test_culture",
                 ownerCultureId: "mordor");
 
             var result = _sut.GetVolunteerTroopId(context);
 
             // Condition fails (mordor owner) → conditional pool skipped → no Gondor pool → no settlement pool →
-            // no clan pool → no culture pool for "mordor" → returns null.
+            // no clan pool → no culture pool for unconfigured_test_culture → returns null.
             Assert.IsNull(result);
             Assert.AreNotEqual("gondor_ith_watcher", result);
             Assert.AreNotEqual("gondor_ith_veteran", result);
@@ -1513,6 +1516,225 @@ public class VolunteerRecruitmentServiceTests
                 return candidate;
         }
         return null;
+    }
+
+    // --- Mordor settlement pools ---
+    // Town pool: mordor_uruk_grunt(3) + mordor_orc_recruit(4) + mordor_orc_impaler(1) + mordor_orc_hunter(1) + mordor_warg_tamer(1) = 10
+    // Castle pool: same MINUS Black Uruks — orc_recruit(4) + orc_impaler(1) + orc_hunter(1) + warg_tamer(1) = 7
+
+    [TestMethod]
+    [DataRow("town_ES1", "mordor_uruk_grunt")]  // Danustica
+    [DataRow("town_ES2", "mordor_uruk_grunt")]  // Pelgaur — Mordor-owned (default) falls through Ithil Guard conditional
+    [DataRow("town_ES3", "mordor_uruk_grunt")]  // Tharbilid
+    public void GetVolunteerTroopId_MordorTowns_Roll0_ReturnsBlackUrukGrunt(
+        string settlementId, string expected)
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: settlementId,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "mordor",
+            ownerCultureId: "mordor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    // Town pool boundary rolls — total weight 10
+    [DataRow(0, "mordor_uruk_grunt")]
+    [DataRow(2, "mordor_uruk_grunt")]
+    [DataRow(3, "mordor_orc_recruit")]
+    [DataRow(6, "mordor_orc_recruit")]
+    [DataRow(7, "mordor_orc_impaler")]
+    [DataRow(8, "mordor_orc_hunter")]
+    [DataRow(9, "mordor_warg_tamer")]
+    public void GetVolunteerTroopId_Danustica_BoundaryRolls_ReturnExpectedTroop(int roll, string expected)
+    {
+        _random.Next(10).Returns(roll);
+        var context = new VolunteerContext(
+            settlementId: "town_ES1",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "mordor",
+            ownerCultureId: "mordor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    [DataRow("castle_ES1", "mordor_orc_recruit")]  // The Morannon
+    [DataRow("castle_ES2", "mordor_orc_recruit")]  // Carach Angren
+    [DataRow("castle_ES3", "mordor_orc_recruit")]  // Cirith Ungol
+    [DataRow("castle_ES4", "mordor_orc_recruit")]  // Mornaur
+    [DataRow("castle_ES5", "mordor_orc_recruit")]  // Barad Nûrn
+    [DataRow("castle_ES6", "mordor_orc_recruit")]  // Cirith Nargil
+    [DataRow("castle_ES7", "mordor_orc_recruit")]  // Barad Wath
+    [DataRow("castle_ES8", "mordor_orc_recruit")]  // Lûglurag
+    public void GetVolunteerTroopId_MordorCastles_Roll0_ReturnsOrcRecruit(
+        string settlementId, string expected)
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: settlementId,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "mordor",
+            ownerCultureId: "mordor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    // Castle pool boundary rolls — total weight 7 (no Black Uruks)
+    [DataRow(0, "mordor_orc_recruit")]
+    [DataRow(3, "mordor_orc_recruit")]
+    [DataRow(4, "mordor_orc_impaler")]
+    [DataRow(5, "mordor_orc_hunter")]
+    [DataRow(6, "mordor_warg_tamer")]
+    public void GetVolunteerTroopId_TheMorannon_BoundaryRolls_ReturnExpectedTroop(int roll, string expected)
+    {
+        _random.Next(7).Returns(roll);
+        var context = new VolunteerContext(
+            settlementId: "castle_ES1",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "mordor",
+            ownerCultureId: "mordor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    // Black Uruks are town-only — no roll on any Mordor castle should return them.
+    [DataRow("castle_ES1", 0)]
+    [DataRow("castle_ES1", 3)]
+    [DataRow("castle_ES1", 6)]
+    [DataRow("castle_ES5", 0)]
+    [DataRow("castle_ES5", 4)]
+    [DataRow("castle_ES8", 6)]
+    public void GetVolunteerTroopId_MordorCastle_AnyRoll_NeverReturnsBlackUruk(string settlementId, int roll)
+    {
+        _random.Next(Arg.Any<int>()).Returns(roll);
+        var context = new VolunteerContext(
+            settlementId: settlementId,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "mordor",
+            ownerCultureId: "mordor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreNotEqual("mordor_uruk_grunt", result, $"castle {settlementId} at roll {roll} returned Black Uruk Grunt — castle pool must exclude all Black Uruks");
+    }
+
+    // --- Mordor culture fallback (engine id "mordor", custom TAOM culture) ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_MordorCulture_Roll0_ReturnsBlackUrukGrunt()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "mordor",
+            ownerCultureId: "mordor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("mordor_uruk_grunt", result);
+    }
+
+    [TestMethod]
+    // Culture pool same as town pool — total weight 10
+    [DataRow(0, "mordor_uruk_grunt")]
+    [DataRow(2, "mordor_uruk_grunt")]
+    [DataRow(3, "mordor_orc_recruit")]
+    [DataRow(6, "mordor_orc_recruit")]
+    [DataRow(7, "mordor_orc_impaler")]
+    [DataRow(8, "mordor_orc_hunter")]
+    [DataRow(9, "mordor_warg_tamer")]
+    public void GetVolunteerTroopId_MordorCulture_BoundaryRolls_ReturnExpectedTroop(int roll, string expected)
+    {
+        _random.Next(10).Returns(roll);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "mordor",
+            ownerCultureId: null);
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expected, result);
+    }
+
+    // --- Mordor village bound-settlement fallback ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_MordorVillage_BoundToCastle_InheritsCastlePool_NoBlackUruks()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: "village_ES_unknown",
+            boundSettlementId: "castle_ES3",
+            ownerClanId: null,
+            cultureId: "mordor",
+            ownerCultureId: "mordor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        // castle_ES3 = castle pool, roll 0 → orc_recruit (NOT black uruk grunt)
+        Assert.AreEqual("mordor_orc_recruit", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_MordorVillage_BoundToTown_InheritsTownPool_BlackUrukAvailable()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: "village_ES_unknown",
+            boundSettlementId: "town_ES1",
+            ownerClanId: null,
+            cultureId: "mordor",
+            ownerCultureId: "mordor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        // town_ES1 = town pool, roll 0 → black uruk grunt
+        Assert.AreEqual("mordor_uruk_grunt", result);
+    }
+
+    // --- town_ES2 conditional precedence regression ---
+    // Existing Ithil Guard conditional on town_ES2 fires when OwnerCultureId == "gondor".
+    // After adding Mordor SettlementMap entry for town_ES2, the Mordor-owned default path must
+    // fall through to the Mordor town pool — NOT a null return.
+
+    [TestMethod]
+    public void GetVolunteerTroopId_TownES2_MordorOwned_FallsThroughToMordorTownPool()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: "town_ES2",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "mordor",
+            ownerCultureId: "mordor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        // Ithil Guard conditional predicate fails (mordor owner) → falls through to Mordor town pool
+        // → roll 0 → Black Uruk Grunt (first entry, weight 3)
+        Assert.AreEqual("mordor_uruk_grunt", result);
     }
 
     // --- BuildPool validation ---

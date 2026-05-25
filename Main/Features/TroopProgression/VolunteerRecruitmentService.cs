@@ -41,6 +41,9 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeRhunSettlements();
         InitializeRhunCulture();
         InitializeGundabadCulture();
+        InitializeMordorSettlements();
+        InitializeMordorCulture();
+        // (No InitializeMordorClans — user explicitly chose to skip clan pools.)
     }
 
     // --- Gundabad Culture Fallback ---
@@ -53,6 +56,62 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("gundabad_snaga", 7),
             new VolunteerChance("gundabad_grunt", 2),
             new VolunteerChance("gundabad_fighter", 1)
+        };
+    }
+
+    // --- Mordor Settlement Mappings ---
+    // Two distinct pools by settlement type:
+    //   - Towns (3): canonical Mordor pool with Black Uruks as the rareish elite path (weight 3/10),
+    //                orcs as the common path (weight 4 on orc_recruit), plus 3 specialist tier-2 entries.
+    //   - Castles (8): town pool MINUS Black Uruks (per user spec: BU recruitable in towns only).
+    //
+    // town_ES2 (Pelgaur / Minas Morgul) has the existing AddSettlementConditional Ithil Guard rule
+    // that fires BEFORE this SettlementMap lookup when Gondor owns the town. When Mordor owns
+    // (default), the conditional predicate fails and resolution falls through to this town pool.
+
+    private static void InitializeMordorSettlements()
+    {
+        (string, int)[] townPool =
+        {
+            ("mordor_uruk_grunt",   3),  // Black Uruk Grunt — line entry; rareish elite
+            ("mordor_orc_recruit",  4),  // Orc Recruit — common baseline
+            ("mordor_orc_impaler",  1),  // mid-tier orc polearm specialist
+            ("mordor_orc_hunter",   1),  // mid-tier orc ranged
+            ("mordor_warg_tamer",   1),  // warg cavalry line entry
+        };
+        AddSettlement("town_ES1", townPool);  // Danustica
+        AddSettlement("town_ES2", townPool);  // Pelgaur — falls through Ithil Guard conditional when Mordor-owned
+        AddSettlement("town_ES3", townPool);  // Tharbilid
+
+        (string, int)[] castlePool =
+        {
+            ("mordor_orc_recruit",  4),
+            ("mordor_orc_impaler",  1),
+            ("mordor_orc_hunter",   1),
+            ("mordor_warg_tamer",   1),
+        };
+        AddSettlement("castle_ES1", castlePool);  // The Morannon
+        AddSettlement("castle_ES2", castlePool);  // Carach Angren
+        AddSettlement("castle_ES3", castlePool);  // Cirith Ungol
+        AddSettlement("castle_ES4", castlePool);  // Mornaur
+        AddSettlement("castle_ES5", castlePool);  // Barad Nûrn
+        AddSettlement("castle_ES6", castlePool);  // Cirith Nargil
+        AddSettlement("castle_ES7", castlePool);  // Barad Wath
+        AddSettlement("castle_ES8", castlePool);  // Lûglurag
+    }
+
+    // --- Mordor Culture Fallback ---
+    // Matches the town pool (includes Black Uruks). Safety net for any Mordor settlement not
+    // explicitly mapped above — none expected, but explicit > implicit per simplicity-criterion.md.
+    private static void InitializeMordorCulture()
+    {
+        CultureMap["mordor"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("mordor_uruk_grunt",   3),
+            new VolunteerChance("mordor_orc_recruit",  4),
+            new VolunteerChance("mordor_orc_impaler",  1),
+            new VolunteerChance("mordor_orc_hunter",   1),
+            new VolunteerChance("mordor_warg_tamer",   1),
         };
     }
 
