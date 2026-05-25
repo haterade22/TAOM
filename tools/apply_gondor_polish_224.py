@@ -60,7 +60,9 @@ BOLT_TIER = {
 }
 
 BOOTS = "sk_gd_ano_boots_a"
-JAVELIN = "imperial_throwing_spear_1_t4"
+JAVELIN = "imperial_throwing_spear_1_t4"  # Pelargir line — heavy pilum / throwing-spear
+PG_JAVELIN_T5 = "western_javelin_2_t3"    # Pinnath Gelin Light Horseman — light western javelin
+PG_JAVELIN_T6 = "western_javelin_3_t4"    # Pinnath Gelin Veteran Horseman — heaviest western javelin
 
 # Per-troop deltas. Tuple format: (op, slot, args...).
 EQUIPMENT_DELTAS: Dict[str, List[Tuple[Any, ...]]] = {
@@ -207,6 +209,13 @@ EQUIPMENT_DELTAS: Dict[str, List[Tuple[Any, ...]]] = {
     "gondor_loss_axe_thrower":     [("clear", "Item1")],
     "gondor_loss_skirmisher":      [("clear", "Item1")],
     "gondor_loss_vet_axe_thrower": [("clear", "Item1")],
+
+    # === Pinnath Gelin cavalry — javelins (not pilums) ===
+    # NEW_TROOPS_XML originally baked imperial_throwing_spear_1_t4 (pilum). Per user,
+    # PG cavalry should use lighter western javelins matching their light-horse role.
+    # Delta entries ensure idempotent re-application even after the troops are present.
+    "gondor_pg_cavalry":           [("set", "Item3", PG_JAVELIN_T5)],
+    "gondor_pg_vet_cavalry":       [("set", "Item3", PG_JAVELIN_T6)],
 }
 
 # Block-scoped string replacements: substitute every occurrence of `old` with `new`
@@ -254,7 +263,7 @@ NEW_TROOPS_XML = """\
         <equipment slot="Item0" id="Item.wm_gondor_pg_speara" />
         <equipment slot="Item1" id="Item.wm_gondor_sword_a05" />
         <equipment slot="Item2" id="Item.gond_shield_three_green" />
-        <equipment slot="Item3" id="Item.imperial_throwing_spear_1_t4" />
+        <equipment slot="Item3" id="Item.western_javelin_2_t3" />
         <equipment slot="Head" id="Item.sk_gd_pin_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_osg_pauld_cape_inf_elite_a" />
@@ -293,7 +302,7 @@ NEW_TROOPS_XML = """\
         <equipment slot="Item0" id="Item.wm_gondor_pg_spearb" />
         <equipment slot="Item1" id="Item.wm_gondor_sword_a06" />
         <equipment slot="Item2" id="Item.gond_shield_three_green" />
-        <equipment slot="Item3" id="Item.imperial_throwing_spear_1_t4" />
+        <equipment slot="Item3" id="Item.western_javelin_3_t4" />
         <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />

@@ -7301,7 +7301,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_pg_speara" />
         <equipment slot="Item1" id="Item.wm_gondor_sword_a05" />
         <equipment slot="Item2" id="Item.gond_shield_three_green" />
-        <equipment slot="Item3" id="Item.imperial_throwing_spear_1_t4" />
+        <equipment slot="Item3" id="Item.western_javelin_2_t3" />
         <equipment slot="Head" id="Item.sk_gd_pin_inf_helmet_med_a" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_osg_pauld_cape_inf_elite_a" />
@@ -7341,7 +7341,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_pg_spearb" />
         <equipment slot="Item1" id="Item.wm_gondor_sword_a06" />
         <equipment slot="Item2" id="Item.gond_shield_three_green" />
-        <equipment slot="Item3" id="Item.imperial_throwing_spear_1_t4" />
+        <equipment slot="Item3" id="Item.western_javelin_3_t4" />
         <equipment slot="Head" id="Item.sk_gd_pin_spear_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_pin_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
