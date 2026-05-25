@@ -2,6 +2,59 @@
 
 ## 2026-05-25
 
+### feat(troops): Gondor troop polish — equipment audit + Pinnath Gelin cavalry (#224)
+
+Follow-up to #212 KEYforce troop tree revamp. Visual review of the Gondor trees in custom battle surfaced concrete equipment gaps. Single delta-style apply script (`tools/apply_gondor_polish_224.py`) — distinct from the full-roster-swap pattern used by #99/#212.
+
+**58 troops touched, 94 equipment ops applied, 2 new NPCCharacter blocks, 1 upgrade-target patch.**
+
+**Changes by category:**
+
+| Category | Troops | Change |
+|----------|--------|--------|
+| **T1 boots fix** | 4 (Anfalas Levy, Belfalas Recruit, Lebennin Militia, PG Volunteer) | Added `sk_gd_ano_boots_a` Leg slot |
+| **1h sword sidearms** | 11 (Anorien archer line × 4, Methir archer × 3, Ithil Guard × 3, Cair Andros, Anfalas Footman) | Tier-matched `wm_gondor_sword_a01–a09` per troop level |
+| **Lebennin → Lebennin swords** | 8 (whole militia/archer/infantry chain) | `wm_pelargir_sword_a01/a02` replaces generic `wm_gondor_sword_*` |
+| **Lamedon → 2h swords + drop shield** | 5 (whole Clansman → Hill-Warden chain) | `wm_gondor_lamedon_2h_sword_a/b/c/d` + cleared shield |
+| **Anorien cavalry chain** | 3 (`mt_cavalry/heavy_cavalry/knight`) | Banner Spear IV/I/II + canonical Gondor (Light) Horse Armour |
+| **Arndir cavalry → Numenorean 2h** | 4 (whole chain) | `numenorean_sword_2h_d/f/i/l` + cleared shield |
+| **Calembel — drop shield on 2h users** | 3 (Heavy Swordsman, Sergeant, Vale Knight) | Cleared `gond_shield_one_red` (was illegal with 2h sword) |
+| **Dol Amroth — horse armour + spear + sword** | 5 (Squire → Swan Knight) | Belfalas / Belfalas / Belfalas / Swan I / (unchanged) harnesses; speara/speara/speara/spearb pairs; tier-matched 1h sword sidearm; Swan Knight gets lance II + sword I |
+| **Pelargir — javelins across chain** | 5 (Skirmisher → Anchor Guard) | 1–2 stacks `imperial_throwing_spear_1_t4` |
+| **Crossbow troops — use crossbows + bolts** | 7 (Lond-Galen × 2, Tolfalas × 5) | Vanilla `crossbow_b–f` + `bolt_b–d` (no LOTRLOME variant exists) + tier-matched sidearm sword |
+| **Lossarnach Axe Thrower line** | 3 (Thrower, Skirmisher, Vet Thrower) | Cleared extra 1h axe slot — keep only 2h axe + thrown axe per user spec |
+
+**New troops (Pinnath Gelin cavalry branch):**
+
+| Troop | Level | Tier | Loadout |
+|-------|-------|------|---------|
+| `gondor_pg_cavalry` | 26 | T5 | PG spear A + sword T5 + green shield + 1 javelin + empire_horse + Pinnath Gelin Light Horse Armour |
+| `gondor_pg_vet_cavalry` | 31 | T6 | PG spear B + sword T6 + green shield + 1 javelin + t2_empire_horse + Pinnath Gelin Horse Armour |
+
+Branches off `gondor_pg_spearman` `upgrade_target` (`gondor_pg_spearman` now upgrades to either `gondor_pg_vet_spearman` OR `gondor_pg_cavalry`).
+
+**Downstream updates:**
+- `Main/_Module/ModuleData/taom_partyTemplates.xml` — added 2 stacks (`gondor_pg_cavalry` + `gondor_pg_vet_cavalry`) to `kingdom_hero_party_gondor_template`.
+- `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` — added Gondor section + `gondor_pg_vet_cavalry` weight 2.0 (T6 elite tier).
+- No recruitment-pool change — PG cavalry is upgrade-only (`is_basic_troop="false"`); recruitment via Spearman upgrade.
+- No `recruitment_pools/gondor.json` edit — parallel session owns it.
+
+**Decisions:**
+- Empire-themed vanilla items used where no LOTRLOME Gondor variant exists: crossbows + bolts + javelins + empire/imperial horses. Consistent with TAOM's XSLT Empire→Gondor culture remap.
+- Tier-matched 1h sword convention: L+5 step = +1 tier (`wm_gondor_sword_a01` at L6, `_a02` at L11, ..., `_a09` at L46). Same convention as #99 / #211 / #212.
+- Apply script is **delta-style** (`set`/`clear`/`replace` operations per slot), not full-roster swap. Header comment notes this so future clones don't mis-apply the wrong pattern.
+
+**Out of scope:**
+- Lossarnach Axebearer line — user mentioned "axebearer line should have 1h axe + shield" but no Axebearer troops exist in TAOM. Deferred pending clarification on add-vs-rename approach.
+- Patrol-level / vassal-reward templates for new PG cavalry (only `kingdom_hero_party_*` expanded this pass).
+- Localization XML for `gondor_pg_cavalry_name` / `gondor_pg_vet_cavalry_name` — falls back to inline `name="..."` attribute.
+
+Build: 0 errors, 1042 warnings (pre-existing). Validator: PASS all 7 cultures, 0 missing. Gondor: 181 troops (was 179, +2 PG cavalry).
+
+Issue: #224.
+
+---
+
 ### feat(map): distance-based settlement nameplate fade (#223)
 
 Settlement nameplates on the campaign map now fade smoothly with camera distance. Vanilla shows all nameplates at full visibility regardless of distance; on TAOM's 863-settlement map this is visually noisy. New feature module:

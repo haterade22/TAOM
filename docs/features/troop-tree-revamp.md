@@ -182,4 +182,63 @@ If KEYforce's spec changes and a new troop ID needs to be added to (e.g.) Mordor
 
 - **Issue:** #212
 - **Status:** Closed
-- **Related:** #99 (Gondor), #211 (Armory authoring), Rhun session (separate)
+- **Related:** #99 (Gondor), #211 (Armory authoring), Rhun session (separate), #224 (Gondor polish pass — see below)
+
+---
+
+## Gondor polish pass (#224, 2026-05-25)
+
+Visual review of the Gondor trees in custom battle after #212 surfaced equipment gaps that the per-troop spec didn't catch. Single delta-style apply script (`tools/apply_gondor_polish_224.py`) — distinct from the full-roster swap pattern used by #99/#212.
+
+### What this script is (and what it isn't)
+
+- **Delta-style**: each entry in `EQUIPMENT_DELTAS` is `(op, slot, args...)` — `set`, `clear`, or `replace`. Only the named slots are mutated; every other slot on the troop is preserved.
+- **Idempotent**: re-running `--apply` after the first pass is a no-op (each operation either matches the desired state or has nothing to do).
+- **NOT a tree restructure**: the upgrade chain is unchanged except for one new branch (`gondor_pg_spearman → gondor_pg_cavalry → gondor_pg_vet_cavalry`).
+
+### Surface area
+
+| Bucket | Troops | Op count |
+|--------|--------|----------|
+| T1 boots fix | 4 | 4 sets |
+| 1h sword sidearms (tier-matched) | 11 | 11 sets |
+| Lebennin → Lebennin swords | 8 | 8 sets |
+| Lamedon → 2h swords + drop shield | 5 | 10 ops |
+| Anorien cavalry chain (banner spear + Gondor horse armour) | 3 | 6 ops |
+| Arndir cavalry → Numenorean 2h + drop shield | 4 | 8 ops |
+| Calembel — drop shield on 2h users | 3 | 3 clears |
+| Dol Amroth — horse armour + spear + sword | 5 | 14 ops |
+| Pelargir — javelins across chain | 5 | 8 sets |
+| Lond-Galen + Tolfalas — crossbows + bolts + sidearm | 7 | 21 sets |
+| Lossarnach Axe Thrower — drop 1h axe | 3 | 6 clears |
+| **TOTAL** | **58 troops** | **94 applied / 100 attempted** |
+
+The 6 "missed" ops are expected — they're `clear` operations on slots that don't exist (e.g., Lamedon troops without shields, Arndir cavalry without shields). Idempotency design works correctly.
+
+### New troops
+
+- `gondor_pg_cavalry` (L26 T5) — Pinnath Gelin Light Horseman. PG spear A + sword T5 + green shield + 1 javelin + empire_horse + PG Light Horse Armour.
+- `gondor_pg_vet_cavalry` (L31 T6) — Pinnath Gelin Veteran Horseman. PG spear B + sword T6 + green shield + 1 javelin + t2_empire_horse + PG Horse Armour.
+
+Branches off `gondor_pg_spearman.upgrade_target` (now expands to `vet_spearman | cavalry`).
+
+### Item resolution highlights
+
+- **"Gondor One-Handed I-X"** = `wm_gondor_sword_a01..a10` (verified against LOTRLOME_Armory display names).
+- **"Gondor Banner Spear I/II"** = `wm_gondor_gondorknight_speara/speara` (not `wm_gondor_swanknight_*`, which is the Belfalas/Dol Amroth variant).
+- **"Lebennin 1h sword"** = `wm_pelargir_sword_a01/a02` (the Pelargir item line is the canonical Lebennin sword family).
+- **No LOTRLOME Gondor variant exists for crossbow / bolt / javelin** — used vanilla `Item.crossbow_b–g`, `Item.bolt_b/c/d`, `Item.imperial_throwing_spear_1_t4`. Empire-themed vanilla items are intentional Gondor stand-ins (Bannerlord ships Empire as Gondor's aesthetic match; TAOM XSLT remaps Empire→Gondor culture).
+
+### Slot-naming gotcha
+
+`troops_gondor.xml` uses `<equipment slot="Item0/Item1/Item2/Item3">` for the 4 weapon slots (NOT `Weapon0/.../Weapon3` as Bannerlord docs sometimes show). The apply script emits `Item0..Item3`. Future polish-style clones must use the same convention or every "set" op will be a no-op.
+
+### How to add another polish entry
+
+1. Find the troop's NPCCharacter block in `Main/_Module/ModuleData/troops/troops_gondor.xml`.
+2. Determine the slot you want to change (`Item0..Item3`, `Head`, `Body`, `Cape`, `Gloves`, `Leg`, `Horse`, `HorseHarness`).
+3. Add an entry to `EQUIPMENT_DELTAS` in `tools/apply_gondor_polish_224.py`:
+   ```python
+   "gondor_xxx": [("set", "Item3", "wm_gondor_sword_a05")],
+   ```
+4. `--dry-run` to preview; `--apply` to write; `validate_all_troop_refs.py` to gate.

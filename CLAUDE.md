@@ -712,3 +712,4 @@ Opt-in preview (requires v2.1.78+). Runs PowerShell natively instead of routing 
 | `tools/apply_erebor_troop_revamp.py` | EquipmentRoster swap (41 refits) + 13 new `iron_hills_noble_*` troops; 0 deletes (issue #212) | `--dry-run`, `--apply` |
 | `tools/cleanup_deleted_troops_212.py` | Sweep deleted-troop refs from `taom_partyTemplates.xml`, `troop_weights.xml`, `troop_resource_costs.xml` (issue #212) | `--dry-run`, `--apply` |
 | `tools/expand_party_templates_212.py` | Insert new troops into `kingdom_hero_party_<culture>_template` blocks via positional splice (issue #212) | `--dry-run`, `--apply` |
+| `tools/apply_gondor_polish_224.py` | **Delta-style** Gondor equipment polish: per-slot `set`/`clear`/`replace` ops + 2 new PG cavalry NPCs + upgrade-target patch (issue #224, distinct from full-roster swap pattern) | `--dry-run`, `--apply` |

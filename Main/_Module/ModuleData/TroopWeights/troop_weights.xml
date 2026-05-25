@@ -105,6 +105,10 @@
     <TroopWeight id="gundabad_warg_tamer" weight="2.0" />
     <TroopWeight id="gundabad_bolgs_ironfang" weight="6.0" />
 
+    <!-- ===== GONDOR ===== -->
+    <!-- Pinnath Gelin cavalry (#224 polish pass) — T6 elite cavalry -->
+    <TroopWeight id="gondor_pg_vet_cavalry" weight="2.0" />
+
     <!-- ===== ISENGARD ===== -->
     <!-- Orthanc Guard Line (Weight 2.0) -->
     <TroopWeight id="orthanc_guard" weight="2.0" />
