@@ -25,8 +25,8 @@ Self-healing infra silently masks the real problem, then breaks differently next
 
 | Symptom | What NOT to do | What TO do |
 |---------|----------------|------------|
-| `ilspycmd: command not found` | `dotnet tool install -g ilspycmd` | "ilspycmd is missing — needed for v1.3.15 signature verification. Install with `dotnet tool install -g ilspycmd`?" |
-| `E:\Decompiled_Bannerlord\` empty | `git clone` something into it | "Decompiled folder is empty. Has the v1.4 dump moved? I need a path." |
+| `ilspycmd: command not found` | `dotnet tool install -g ilspycmd` | "ilspycmd is missing — needed for v1.4.5 signature verification. Install with `dotnet tool install -g ilspycmd`?" |
+| `E:\Decompiled_Bannerlord\` empty | `git clone` something into it | "Decompiled folder is empty. Has the v1.4.5 dump moved? I need a path." |
 | `dotnet build` fails: `MSBuild not found` | Edit `.csproj`, change SDK ref | "MSBuild path not picked up — likely a Visual Studio install issue. Investigate from your end." |
 | Serena MCP returns no results | Restart MCP, reinstall | "Serena MCP is returning empty. The mcp-health hook may have marked it unhealthy. Check `.claude/logs/`." |
 | `gh auth status` fails | `gh auth login` interactively | "gh CLI isn't authenticated. Run `gh auth login` when convenient." |

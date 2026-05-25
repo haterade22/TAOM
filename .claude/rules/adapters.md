@@ -30,7 +30,7 @@ Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter
 
 TaleWorlds' inventory and equipment APIs frequently expose **two parallel overloads**: a simpler `(ItemObject, int)` form and a richer `(EquipmentElement, int)` form. The simpler form internally calls `new EquipmentElement(item)` — discarding any `ItemModifier` (durability state, quality prefix like "Sharp"/"Damaged", cosmetic item, quest-item flag). When the adapter touches a slot that vanilla treats as `EquipmentElement`-shaped, **the richer overload is the correct API surface.**
 
-**Examples of the parallel-overload pattern in v1.3.15:**
+**Examples of the parallel-overload pattern in v1.4.5:**
 - `ItemRoster.AddToCounts(ItemObject, int)` ↔ `ItemRoster.AddToCounts(EquipmentElement, int)`
 - `Equipment[EquipmentIndex] = ?` accepts only `EquipmentElement` — already lossless if you pass the captured element through
 - `EquipmentHelper.AssignHeroEquipmentFromEquipment` takes `Equipment` directly — preserves modifier

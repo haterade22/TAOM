@@ -94,7 +94,7 @@ Each wave targets different risk vectors. The v4 template is the base; customize
 
 | Wave | Primary Focus | Vanilla Methods to Decompile | Config Cross-Ref |
 |------|--------------|------------------------------|-----------------|
-| 1 (Critical) | Patch targets exist in v1.3.15, GameModel base call correctness | All 15 patched methods + 13 overridden GameModel methods | Faction IDs, settlement IDs |
+| 1 (Critical) | Patch targets exist in v1.4.5, GameModel base call correctness | All 15 patched methods + 13 overridden GameModel methods | Faction IDs, settlement IDs |
 | 2 (High) | GameModel math correctness, feat interaction | 7 overridden GameModel methods | Race configs, CC narrative data |
 | 3 (Medium) | Mission behavior lifecycle, agent state, race assignment | Patch targets for 9 patches | Troop IDs, scene configs |
 | 4 (Low) | Transpiler IL correctness, dead code detection | 5 transpiler/patch targets | Startup configs |

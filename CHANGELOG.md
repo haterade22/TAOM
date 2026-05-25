@@ -2,6 +2,14 @@
 
 ## 2026-05-25
 
+### docs(target): declare TAOM is on Bannerlord 1.4.5
+
+Bumped declarative target-version statements from v1.3.15 → v1.4.5 across [README.md](README.md), [CLAUDE.md](CLAUDE.md), [AGENTS.md](AGENTS.md), and four scoped rule files (`adapters`, `gui-ui`, `harmony-patches`, `environment-failures`). Reframed the CLAUDE.md "🚧 Active migration" banner and [docs/migration/TRACKING.md](docs/migration/TRACKING.md) header to honestly state: S0–S5b ✅ landed 2026-05-22 (adapters, GameModels, equipment XML, roster authoring); S6–S12 (smoke test, per-tier feature validation, Codex review, closeout) were rolled into ongoing feature work on the `bannerlord-1.4.5` branch rather than executed as discrete gates. TRACKING.md S6 note now directs runtime crashes to one-off `/investigate`, not a stage gate.
+
+Also updated [docs/reviews/REVIEW-PLAN.md](docs/reviews/REVIEW-PLAN.md) Wave 1 patch-target verification version, and [docs/tools/spider-skeleton-tpac-tools.md](docs/tools/spider-skeleton-tpac-tools.md) GitHub raw-URL branch from `bannerlord-1.3.15` → `bannerlord-1.4.5`.
+
+Historical narrative preserved as Tier-4 (feature descriptions citing "ported in 1.3.15 era", EMPIRICAL `memory/feedback_*.md` entries with version-stamped observations, archived review prompts, migration-source-version refs in `1.3.15 → 1.4.5` framings). Verification grep on `1\.3\.15` confirmed zero residual forward-looking claims.
+
 ### fix(deps): auto-enable stub modules so third-party mods become toggleable
 
 Follow-up to commit `031283c` (four BUTR stub modules). In-game verification surfaced that the stubs were deployed correctly but the launcher's first-launch enablement logic left them **un-ticked** by default. Decompiling `LauncherModsVM.cs:~350`:

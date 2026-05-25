@@ -22,25 +22,25 @@ To author these manually in the Skeleton Editor, you click through every bone, s
 
 ## Where the tools live
 
-GitHub: `haterade22/TAOM` repo, `bannerlord-1.3.15` branch, `tools/` directory.
+GitHub: `haterade22/TAOM` repo, `bannerlord-1.4.5` branch, `tools/` directory.
 
 | Tool | Browse | Raw download |
 |---|---|---|
-| `tpac_skeleton_scan.py` | [view](https://github.com/haterade22/TAOM/blob/bannerlord-1.3.15/tools/tpac_skeleton_scan.py) | [raw](https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.3.15/tools/tpac_skeleton_scan.py) |
-| `tpac_skeleton_dump.py` | [view](https://github.com/haterade22/TAOM/blob/bannerlord-1.3.15/tools/tpac_skeleton_dump.py) | [raw](https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.3.15/tools/tpac_skeleton_dump.py) |
-| `tpac_skeleton_transplant.py` | [view](https://github.com/haterade22/TAOM/blob/bannerlord-1.3.15/tools/tpac_skeleton_transplant.py) | [raw](https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.3.15/tools/tpac_skeleton_transplant.py) |
-| `extract_fbx_bones.js` | [view](https://github.com/haterade22/TAOM/blob/bannerlord-1.3.15/tools/extract_fbx_bones.js) | [raw](https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.3.15/tools/extract_fbx_bones.js) |
-| `check_fbx_ik.js` | [view](https://github.com/haterade22/TAOM/blob/bannerlord-1.3.15/tools/check_fbx_ik.js) | [raw](https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.3.15/tools/check_fbx_ik.js) |
-| `blender_bone_retargeter.py` (Blender add-on, separate workflow) | [view](https://github.com/haterade22/TAOM/blob/bannerlord-1.3.15/tools/blender_bone_retargeter.py) | [raw](https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.3.15/tools/blender_bone_retargeter.py) |
+| `tpac_skeleton_scan.py` | [view](https://github.com/haterade22/TAOM/blob/bannerlord-1.4.5/tools/tpac_skeleton_scan.py) | [raw](https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.4.5/tools/tpac_skeleton_scan.py) |
+| `tpac_skeleton_dump.py` | [view](https://github.com/haterade22/TAOM/blob/bannerlord-1.4.5/tools/tpac_skeleton_dump.py) | [raw](https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.4.5/tools/tpac_skeleton_dump.py) |
+| `tpac_skeleton_transplant.py` | [view](https://github.com/haterade22/TAOM/blob/bannerlord-1.4.5/tools/tpac_skeleton_transplant.py) | [raw](https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.4.5/tools/tpac_skeleton_transplant.py) |
+| `extract_fbx_bones.js` | [view](https://github.com/haterade22/TAOM/blob/bannerlord-1.4.5/tools/extract_fbx_bones.js) | [raw](https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.4.5/tools/extract_fbx_bones.js) |
+| `check_fbx_ik.js` | [view](https://github.com/haterade22/TAOM/blob/bannerlord-1.4.5/tools/check_fbx_ik.js) | [raw](https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.4.5/tools/check_fbx_ik.js) |
+| `blender_bone_retargeter.py` (Blender add-on, separate workflow) | [view](https://github.com/haterade22/TAOM/blob/bannerlord-1.4.5/tools/blender_bone_retargeter.py) | [raw](https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.4.5/tools/blender_bone_retargeter.py) |
 
 ### Grab all three Python tools in one shot
 
 ```bash
 mkdir -p tools
 cd tools
-curl -O https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.3.15/tools/tpac_skeleton_scan.py
-curl -O https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.3.15/tools/tpac_skeleton_dump.py
-curl -O https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.3.15/tools/tpac_skeleton_transplant.py
+curl -O https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.4.5/tools/tpac_skeleton_scan.py
+curl -O https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.4.5/tools/tpac_skeleton_dump.py
+curl -O https://raw.githubusercontent.com/haterade22/TAOM/bannerlord-1.4.5/tools/tpac_skeleton_transplant.py
 ```
 
 (Or `wget` if you prefer. Or just clone the repo and copy `tools/`.)
@@ -180,7 +180,7 @@ Useful for verifying bone counts match between an animation FBX and the skeleton
 
 ## Adapting `classify_bone()` for non-spider creatures
 
-The transplant tool's only creature-specific logic lives in one function: `classify_bone(name)` in [`tpac_skeleton_transplant.py`](https://github.com/haterade22/TAOM/blob/bannerlord-1.3.15/tools/tpac_skeleton_transplant.py). The pattern is:
+The transplant tool's only creature-specific logic lives in one function: `classify_bone(name)` in [`tpac_skeleton_transplant.py`](https://github.com/haterade22/TAOM/blob/bannerlord-1.4.5/tools/tpac_skeleton_transplant.py). The pattern is:
 
 ```python
 def classify_bone(name: str) -> dict:
@@ -339,7 +339,7 @@ The public TpacTool's `Skeleton.ReadMetadata()` override reads exactly 21 bytes 
 The tools handle SkeletonUserData (Bodies + Constraints + Usage). They do NOT:
 
 - **Create Animation Clip wrappers.** Those come from the Modding Kit's animation import flow. If your action_set is silent in-game (e.g., "Action set X could not be found"), that's a missing Clip wrapper, not a missing constraint.
-- **Set bone-name conventions on the FBX side.** The `_notused` suffix on animation FBX root bones is a separate convention enforced by your DCC export (Blender / Maya). See [`tools/blender_bone_retargeter.py`](https://github.com/haterade22/TAOM/blob/bannerlord-1.3.15/tools/blender_bone_retargeter.py) for an animation-retargeting Blender add-on that handles the cleanup step.
+- **Set bone-name conventions on the FBX side.** The `_notused` suffix on animation FBX root bones is a separate convention enforced by your DCC export (Blender / Maya). See [`tools/blender_bone_retargeter.py`](https://github.com/haterade22/TAOM/blob/bannerlord-1.4.5/tools/blender_bone_retargeter.py) for an animation-retargeting Blender add-on that handles the cleanup step.
 - **Replace Skeleton Editor work for fine tuning.** Defaults are a "Wargs baseline." A skilled rigger eyeballing each bone in the editor can tighten swing limits further (especially for legs and head) for better visual results — load the patched tpac in the editor, tune what looks wrong, Save, done.
 
 ---
@@ -372,7 +372,7 @@ The full workflow (animator's 5-step pipeline + this tooling):
 ## Origin / credits
 
 - Built for **TAOM** (Tales From The Age of Men), a LOTR total-conversion mod for Mount & Blade II: Bannerlord 1.3.15.
-- Source repo: [github.com/haterade22/TAOM](https://github.com/haterade22/TAOM) (`bannerlord-1.3.15` branch)
+- Source repo: [github.com/haterade22/TAOM](https://github.com/haterade22/TAOM) (`bannerlord-1.4.5` branch)
 - TPAC binary format reverse-engineered from [szszss/TpacTool](https://github.com/szszss/TpacTool) decompilation (MIT-licensed C# source).
 - Tools developed in collaboration with Claude Code during iterative spider-skeleton debugging sessions in April–May 2026.
 

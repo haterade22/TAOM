@@ -1,7 +1,7 @@
 # Migration Tracking
 
-**Current migration:** Bannerlord 1.3.15 → 1.4.5 (started 2026-05-21).
-**Status:** S0 (Foundation) in progress.
+**Migration: Bannerlord 1.3.15 → 1.4.5 — Functional foundation complete (2026-05-22).**
+**Status:** S0–S5b ✅ landed (adapters, GameModels, equipment XML migration, roster authoring). S6–S12 (smoke test, per-tier feature validation, Codex review, closeout) were rolled into ongoing feature work on the `bannerlord-1.4.5` branch rather than executed as discrete gates — see commit history from 2026-05-22 onward for de-facto validation (CC fixes, warg combat, faction-map UI overhaul, career system tooltips, etc.). The formal validation pipeline was not run; runtime exposure has come through feature development.
 
 For detailed analysis see:
 - [v1.4.x-overview.md](v1.4.x-overview.md) — executive summary + session map
@@ -181,7 +181,9 @@ Visual order may now be inverted. S5 task: verify in-game; swap to `VerticalTopT
 
 ### S6–S12 — see plan file
 
-Pending. S6 is the smoke-test gate; S7-S10 are feature validation; S11 is Codex; S12 is closeout.
+**Note (2026-05-25):** Formal stages skipped. The build is green, tests pass (2,419/2 skip), and 1.4.5 feature work has been shipping on this branch since 2026-05-22 (warg combat, CC layout, faction-map overhaul, career tooltips, etc.). Treat any in-game crash or Harmony binding failure as a one-off `/investigate`, not a migration-stage gate.
+
+S6 was the smoke-test gate; S7-S10 were feature validation; S11 was Codex; S12 was closeout.
 
 ### Risk surface inventory (verified)
 

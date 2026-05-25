@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
+Bannerlord 1.4 total conversion mod (TAOM - Tales From the Age of Men)
 
-> **🚧 Active migration: v1.3.15 → v1.4.5** (started 2026-05-21 on branch `bannerlord-1.4.5`). Build target is currently v1.3.15; v1.4.5 install is live but no code has been migrated yet beyond S0 (Foundation). See [`docs/migration/v1.4.x-overview.md`](docs/migration/v1.4.x-overview.md) and [`docs/migration/TRACKING.md`](docs/migration/TRACKING.md) before touching GameModels, adapters, or XML data files. **Until S6 reports green, the migration is in flight and any non-migration work must coordinate with the active sessions.**
+> **Target: Bannerlord 1.4.5.** Migration from v1.3.15 landed 2026-05-22 (S0–S5b complete: adapters, GameModels, equipment XML migration, roster authoring). Formal validation stages S6–S12 (smoke test, per-tier feature validation, Codex review, closeout) were rolled into ongoing feature work on the `bannerlord-1.4.5` branch rather than executed as discrete gates — see [`docs/migration/TRACKING.md`](docs/migration/TRACKING.md) for the audit trail and [`docs/migration/v1.4.x-overview.md`](docs/migration/v1.4.x-overview.md) for the original plan.
 
 ## Commands
 
@@ -22,9 +22,9 @@ Bannerlord 1.3 total conversion mod (TAOM - Tales From the Age of Men)
 | **No `#if DEBUG`** | Except IoC.cs registration (ADR-005) |
 | **Adapter Pattern** | Services use `IHeroAdapter` etc, NEVER `Hero` etc (ADR-007) |
 | **Thin Entry Points** | <150 lines, delegate to services (ADR-002) |
-| **Research First** | Never guess TaleWorlds behavior - check `E:\Decompiled_Bannerlord\` for concepts, but **verify signatures via `ilspycmd` on installed DLLs** (decompiled folder is v1.4, installed is v1.3.15) |
+| **Research First** | Never guess TaleWorlds behavior - check `E:\Decompiled_Bannerlord\` for concepts, but **verify signatures via `ilspycmd` on installed DLLs** (decompiled folder and installed DLLs are both v1.4.5; `ilspycmd` on installed DLLs remains authoritative) |
 | **Verify Before Reference** | Before writing `Sprite="X"` read `TAOMSpriteData.xml`. Before `PrefabExtension` injection, decompile vanilla target to check child assumptions. Before `IoC.Resolve` in hot path, use lazy cache. |
-| **`/deep-review` Mandatory** | Run before EVERY commit touching C# — catches adapter violations, v1.3 incompatibilities, missing tests, data flow gaps |
+| **`/deep-review` Mandatory** | Run before EVERY commit touching C# — catches adapter violations, v1.4 incompatibilities, missing tests, data flow gaps |
 
 ## Working Discipline
 
@@ -544,12 +544,12 @@ Phase 4: CLOSE OUT
 
 ### TaleWorlds Research — Lookup Order
 
-**Always use `taom-src` first.** It runs `ilspycmd` against the installed v1.3.15 DLLs and caches under `~/.taom-src/v1.3.15/`. The v1.4 dump at `E:\Decompiled_Bannerlord\` is fine for browsing namespaces/patterns but **NEVER trust its method signatures** — they drift from v1.3.15.
+**Always use `taom-src` first.** It runs `ilspycmd` against the installed v1.4.5 DLLs and caches under `~/.taom-src/v1.4.5/` (the script auto-detects the version from `Version.xml`, so old `~/.taom-src/v1.3.15/` caches remain on disk but are unused). The v1.4.5 dump at `E:\Decompiled_Bannerlord\` is fine for browsing namespaces/patterns; for authoritative method signatures still prefer `taom-src` against the installed DLLs.
 
 | Step | Action | When |
 |------|--------|------|
-| 1. **`pwsh tools/taom-src.ps1 path <Type>`** | One command — decompiles v1.3.15 DLL on cache miss, returns absolute path | **ALWAYS first** for any signature verification (Harmony patch, GameModel override, adapter, API call) |
-| 2. **Browse `E:\Decompiled_Bannerlord\`** | `Read` / `Grep` / `find` against the v1.4 dump (see folder layout below) | Finding which DLL a class lives in, exploring a namespace tree — NEVER for signatures |
+| 1. **`pwsh tools/taom-src.ps1 path <Type>`** | One command — decompiles v1.4.5 DLL on cache miss, returns absolute path | **ALWAYS first** for any signature verification (Harmony patch, GameModel override, adapter, API call) |
+| 2. **Browse `E:\Decompiled_Bannerlord\`** | `Read` / `Grep` / `find` against the v1.4.5 dump (see folder layout below) | Finding which DLL a class lives in, exploring a namespace tree |
 | 3. **ILSpy MCP** | `mcp__ilspy__decompile_type` / `mcp__ilspy__list_types` | Fallback if `taom-src` fails (e.g., need a full DLL type listing) |
 
 See `.claude/skills/taom-src/SKILL.md` for full usage. Composes with standard tools:
@@ -618,10 +618,9 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 
 - Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
-- Target: Bannerlord v1.3.15 (installed game version)
-- **WARNING:** `E:\Decompiled_Bannerlord\` is v1.4 — DO NOT use for signature verification. Use `ilspycmd` on installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\` instead.
-- Migration from v1.2 requires API changes - see `docs/migration/`
-- Future: Refactor to v1.4 when game installation is updated
+- Target: Bannerlord v1.4.5 (installed game version)
+- `E:\Decompiled_Bannerlord\` holds the fresh v1.4.5 dump (re-decompiled 2026-05-22). Browse for patterns; `ilspycmd` on installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\` remains authoritative for signatures.
+- Historical migration notes (1.2 → 1.3, 1.3 → 1.4) — see `docs/migration/`
 - No git actions unless explicitly asked
 
 ## PowerShell Tool (Windows)

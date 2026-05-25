@@ -12,7 +12,7 @@ ALWAYS decompile the target method with `ilspycmd` before writing a patch. Verif
 - Exact method signature (parameters, return types, access modifiers)
 - Whether the method is virtual, sealed, or static
 - Correct namespace and class hierarchy
-- Method existence in Bannerlord v1.3.12
+- Method existence in Bannerlord v1.4.5
 
 ## Patch Types
 - **Prefix** — Runs before original method. Return `false` to skip original.

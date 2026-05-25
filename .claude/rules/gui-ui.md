@@ -78,7 +78,7 @@ public static void OnFinalize_Prefix(GauntletInventoryScreen __instance)
 
 **Why:** EquipPresets shipped with the "Presets" inventory-overlay button as a silent no-op. The custom layer at z-order 1000 was added without `SetInputRestrictions()`. Button rendered, datasource bindings active, but the layer never registered with the input dispatcher — mouse events passed through to vanilla inventory. Two prior reviews (`/deep-review` + Codex review #28) both missed it because they focused on service-layer correctness and TAOM had no other `ScreenBase` overlay to compare against. **Rendering ≠ live.** RCA: `docs/reviews/rca-equippresets-presets-button-silent-2026-05-19.md`. Feedback memory: `feedback_gauntlet_overlay_input_wiring.md`.
 
-**Verification:** `taom-src` confirmed `GauntletLayer.InputRestrictions` is `TaleWorlds.ScreenSystem.InputRestrictions` (defined on base class `ScreenLayer`), and `SetInputRestrictions(bool isMouseVisible = true, InputUsageMask mask = InputUsageMask.All)` has both defaults supplied — parameterless call is valid in v1.3.15.
+**Verification:** `taom-src` confirmed `GauntletLayer.InputRestrictions` is `TaleWorlds.ScreenSystem.InputRestrictions` (defined on base class `ScreenLayer`), and `SetInputRestrictions(bool isMouseVisible = true, InputUsageMask mask = InputUsageMask.All)` has both defaults supplied — parameterless call is valid in v1.4.5.
 
 ## TaleWorlds VM property setters: verify no-op early returns (MANDATORY)
 
@@ -106,7 +106,7 @@ If the setter is guarded, **mutating the underlying collection then re-setting t
 
 **Do NOT** use the indirection of `prop = -1; prop = 0;` — many setters fire downstream callbacks (`_onChange.Invoke(this)`) that crash on the intermediate sentinel value (e.g., `OnCharacterSelection` dereferences `selector.SelectedItem.Character`, which is null at index -1).
 
-**When this rule applies:** Any C# file that mutates TaleWorlds VM properties post-construction (filter patches, refresh hooks, mid-mission UI updates). Decompile the setter via `ilspycmd` against the installed v1.3.15 DLL before writing the assignment. The guard on `_setter` is invisible at the call site.
+**When this rule applies:** Any C# file that mutates TaleWorlds VM properties post-construction (filter patches, refresh hooks, mid-mission UI updates). Decompile the setter via `ilspycmd` against the installed v1.4.5 DLL before writing the assignment. The guard on `_setter` is invisible at the call site.
 
 ## TaleWorlds VM property notification: prefer public setter over reflected field+notify (MANDATORY)
 

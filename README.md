@@ -1,6 +1,6 @@
 # TAOM - Tales From the Age of Men
 
-A Lord of the Rings total conversion mod for Mount & Blade II: Bannerlord v1.3.15.
+A Lord of the Rings total conversion mod for Mount & Blade II: Bannerlord v1.4.5.
 
 ## Overview
 
@@ -176,7 +176,7 @@ All GameModel overrides extend vanilla behavior with LOTR-appropriate rules. Car
 
 ### Requirements
 
-- Mount & Blade II: Bannerlord **v1.3.15+**
+- Mount & Blade II: Bannerlord **v1.4.5+**
 - [Bannerlord.Harmony](https://www.nexusmods.com/mountandblade2bannerlord/mods/2006)
 - [Mod Configuration Menu (MCM)](https://www.nexusmods.com/mountandblade2bannerlord/mods/612)
 - Alliance.Wargs module (bundled)
