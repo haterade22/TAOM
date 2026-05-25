@@ -87,13 +87,13 @@
               <Children>
                 <FactionImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
                                     SuggestedWidth="429" SuggestedHeight="240"
-                                    HorizontalAlignment="Right" VerticalAlignment="Top"
-                                    MarginTop="4" MarginRight="-20"
+                                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                                    MarginTop="4" MarginLeft="0"
                                     ImageId="@FactionImageId"
                                     DoNotAcceptEvents="true" />
                 <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
                         SuggestedWidth="396" SuggestedHeight="220"
-                        HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                        HorizontalAlignment="Left" VerticalAlignment="Bottom"
                         DoNotAcceptEvents="true">
                   <Children>
                     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
