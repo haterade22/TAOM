@@ -16,9 +16,9 @@ These are pulled via `<PackageReference>` in `Dependencies/TAOM.Dependencies.csp
 
 | Package | Version pin | What it provides |
 |---|---|---|
-| `Lib.Harmony` | `2.2.2` | `0Harmony.dll` (Harmony 2.x + MonoMod + Cecil + Iced ILRepack'd) |
+| `Lib.Harmony` | `2.4.2` | `0Harmony.dll` (Harmony 2.x + MonoMod + Cecil + Iced ILRepack'd) |
 | `Bannerlord.UIExtenderEx` | `2.13.1` | `Bannerlord.UIExtenderEx.dll` |
-| `Bannerlord.MCM` | `5.11.3` | `MCMv5.dll` (the MCM API — settings attributes, base classes) |
+| `Bannerlord.MCM` | `5.11.4` | `MCMv5.dll` (the MCM API — settings attributes, base classes) |
 | `System.Runtime.CompilerServices.Unsafe` | `6.0.0` | `System.Runtime.CompilerServices.Unsafe.dll` (Harmony dep) |
 | `Harmony.Extensions` | `3.2.0.77` | Source-only extension methods |
 | `BUTR.Harmony.Analyzer` | `1.0.1.50` | Roslyn analyzer (compile-time only) |
@@ -27,9 +27,12 @@ These are pulled via `<PackageReference>` in `Dependencies/TAOM.Dependencies.csp
 **Update procedure:**
 1. Open `Dependencies/TAOM.Dependencies.csproj` in an editor.
 2. Bump the `Version=` attribute of the relevant `<PackageReference>`.
-3. Run `dotnet restore Dependencies/TAOM.Dependencies.csproj`.
-4. Run `./build.ps1 -RunTests` — must pass.
-5. Run smoke test (see "Verification" below).
+3. **For `Lib.Harmony` / `Bannerlord.UIExtenderEx` / `Bannerlord.MCM` bumps**: ALSO bump the matching stub `<Version>` in `Stubs/Bannerlord.Harmony/_Module/SubModule.xml` (or `.UIExtenderEx`, `.MBOptionScreen` — note: MCM's stub is `Bannerlord.MBOptionScreen`). Third-party mods may pin the stub via `<DependedModuleMetadata version="..."/>`; drift here silently fails BLSE-enforced version checks. See "Stub modules" section below.
+4. Run `dotnet restore Dependencies/TAOM.Dependencies.csproj`.
+5. Run `./build.ps1 -RunTests` — must pass.
+6. Run smoke test (see "Verification" below).
+
+**Build prerequisite:** Bannerlord must be CLOSED during `./build.ps1`. The MSBuild `PostBuildCopyToModules` step deploys DLLs (including `0Harmony.dll`) directly into the game install — if Bannerlord is running, those files are file-locked and the build fails with `UnauthorizedAccessException`. Close the game, retry build.
 
 ### Category 2 — Bundled BUTR runtime DLLs (manually copied from Steam Workshop)
 

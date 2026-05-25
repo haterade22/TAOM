@@ -50,6 +50,10 @@
 		     in practice. SubModule.cs additionally registers an AssemblyResolve handler
 		     that explicitly returns the loaded 0Harmony for ANY requested version, as
 		     belt-and-braces against environments where strict binding is enforced. -->
+		<!-- WHEN BUMPING any of these three PackageReference versions: also bump the matching
+		     stub <Version> in Stubs/<ID>/_Module/SubModule.xml — third-party mods may pin via
+		     <DependedModuleMetadata version="..."/>. See docs/migration/dr3-maintenance.md
+		     "Stub modules" section + .serena/memories/task_completion_checklist.md. -->
 		<PackageReference Include="Lib.Harmony" Version="2.4.2" />
 		<PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.1" />
 		<PackageReference Include="Bannerlord.MCM" Version="5.11.4" />
@@ -74,7 +78,10 @@
 	        AfterTargets="PostBuildCopyToModules"
 	        Condition="Exists($(GameFolder)) AND $(DisableModuleCopy) != 'true'">
 		<ItemGroup>
-			<_TaomStubFiles Include="$(MSBuildThisFileDirectory)..\Stubs\**\*.*" />
+			<!-- Explicit `**\SubModule.xml` (not `**\*.*`) so stray editor swap/backup
+			     files in Stubs/ never deploy. Deep-review 2026-05-25 caught the
+			     over-permissive glob. -->
+			<_TaomStubFiles Include="$(MSBuildThisFileDirectory)..\Stubs\**\SubModule.xml" />
 		</ItemGroup>
 		<Copy SourceFiles="@(_TaomStubFiles)"
 		      DestinationFiles="@(_TaomStubFiles->'$(GameFolder)\Modules\%(RecursiveDir)%(Filename)%(Extension)')"

@@ -2,6 +2,89 @@
 
 ## 2026-05-25
 
+### chore(deps): deep-review cleanup of stub-module changeset — glob tighten + doc resync + RCA (#221)
+
+Post-ship deep review of commits `031283c` (stub modules) + `8a9d18f` (auto-enable) found 1 MED + 3 LOW findings — all doc-drift / discoverability, zero functional defects. Fixes:
+
+- **Tightened MSBuild deploy glob** in `Dependencies/TAOM.Dependencies.csproj`: `..\Stubs\**\*.*` → `..\Stubs\**\SubModule.xml`. Prevents accidental deployment of stray `.bak` / `.tmp` / editor swap files to the game install. Build still reports `deployed 4 stub-module files`.
+- **Resynced `docs/migration/dr3-maintenance.md` Category 1 table**: `Lib.Harmony 2.2.2` → `2.4.2`, `Bannerlord.MCM 5.11.3` → `5.11.4`. Both pins were bumped in earlier same-day commits (csproj + stubs updated) but the doc summary table lagged.
+- **Added inline csproj comment** above the three BUTR `<PackageReference>` lines: "WHEN BUMPING any of these three PackageReference versions: also bump the matching stub `<Version>` in `Stubs/<ID>/_Module/SubModule.xml`." Point-of-edit reminder so a maintainer doesn't have to read external docs first.
+- **Added Step 7 to `.serena/memories/task_completion_checklist.md`**: explicit stub-version-sync step. Covers the case where a PR bumps a `<PackageReference>` without reading the maintenance doc.
+- **Added build prerequisite note** to dr3-maintenance.md: "Bannerlord must be CLOSED during `./build.ps1`." File-locked `0Harmony.dll` causes `UnauthorizedAccessException`.
+- **Wrote RCA** at `docs/reviews/rca-stub-modules-2026-05-25.md` per harness-facts rule (every confirmed finding requires RCA regardless of severity). Documents the systemic doc-drift pattern + proposed feedback memory `feedback_version_pin_doc_drift.md` (grep all docs for old version strings when changing a pin).
+- **Created retroactive GitHub issue #221** documenting the third-party-mod-compatibility scenario for future-maintainer discoverability.
+
+Tests: `dotnet build TAOM.Dependencies.csproj` 0 errors; deploy target unchanged behavior. No production C# touched.
+
+### chore(workflow): Codex dispatch is now Claude-direct via `codex exec` (no user terminal step)
+
+Updated `/codex-verify`, `/review-codex`, and `/deep-review --codex` to dispatch Codex DIRECTLY from inside the skill via Bash (`codex exec - < prompt.md > output.md 2>&1` with `run_in_background: true`). Previous workflow asked the user to open a separate terminal and run `/codex:adversarial-review --background` manually; the new flow eliminates that hand-off — invoking the skill IS the dispatch. The harness notification on background-job completion triggers Claude's auto-resume; no `/review-codex` re-invocation needed.
+
+**Why:** the manual terminal step was friction that the session author dropped during the CrashReport feature build, shipping a 60-file feature with 1 HIGH + 2 MED + 3 LOW deep-review findings that should have been caught before close-out. RCA: [docs/reviews/rca-crash-report-2026-05-25.md](docs/reviews/rca-crash-report-2026-05-25.md) meta-finding. Direct dispatch removes the "I forgot to open the terminal" excuse.
+
+**Files modified:**
+
+- [.claude/skills/review-codex/SKILL.md](.claude/skills/review-codex/SKILL.md) — added "Codex CLI invocation contract" section; rewrote Phase 2e from "guide user to dispatch" to "Bash dispatch in background"; documented harness-notification auto-resume; added explicit fallback path for `codex` CLI missing/auth failure.
+- [.claude/skills/codex-verify/SKILL.md](.claude/skills/codex-verify/SKILL.md) — same contract; rewrote Steps 1-4 to dispatch directly via Bash with a lighter focused prompt.
+- [.claude/skills/deep-review/SKILL.md](.claude/skills/deep-review/SKILL.md) — Step 0 `--codex` mode updated to direct dispatch; explicitly notes parallel Codex run with Claude agents.
+- [CLAUDE.md](CLAUDE.md) — Codex Integration section rewritten with the dispatch contract + skill table; Completion Workflow phase blocks updated to remove the "Dispatch to Codex — /codex:adversarial-review --background (terminal)" hand-off lines.
+- `~/.claude/commands/codex-verify.md` — user-level slash command updated for consistency (works across all of mikew's projects, not just TAOM).
+
+**"Never auto-invoke" tier unchanged.** `/codex-verify` and `/review-codex` still require explicit user intent — Codex costs real money. The change is that when the user DOES invoke, Claude does the dispatch instead of telling the user where to point a terminal.
+
+**Pre-flight contract:** every dispatch starts with `codex login status`. If not `Logged in using ChatGPT`, the skill stops and tells the user to run `codex login` (interactive browser flow). Claude does NOT attempt authentication.
+
+Not-tested: skills can't be unit-tested; verification is the next `/review-codex` invocation working end-to-end. The CrashReport feature's `/review-codex` run on 2026-05-25 was the first dispatch via the new contract and produced a multi-MB Codex review file at `docs/reviews/codex-adversarial-crash-report-2026-05-25.md`.
+
+### feat(crash-report): comprehensive crash diagnostic capture (10 Harmony Finalizers + AutoGenerated reflection + ZIP bundle)
+
+New feature module at [Main/Features/CrashReport/](Main/Features/CrashReport) — TAOM-native crash diagnostic capture inspired by (but not a port of) BetterExceptionWindow v8.0.0. BEW is GNU AGPL v3, so we authored equivalents from scratch using BEW only as a design reference for *what to patch* and *what to display*; the TaleWorlds API surface BEW patches is uncopyrightable. Full feature doc at [docs/features/crash-report.md](docs/features/crash-report.md).
+
+**Catch points (Patch37_CrashReport — registered FIRST in [SubModule.cs](Main/SubModule.cs:97) `OnSubModuleLoad`).** 10 Harmony Finalizers at priority 800 on `Managed.ApplicationTick` / `ScriptComponentBehavior.OnTick` / `Module.OnApplicationTick` / `MissionView.OnMissionScreenTick` / `ScreenManager.Tick` / `ScreenManager.Update` (private no-arg) / `Mission.Tick` / `MissionBehavior.OnMissionTick` / `MBSubModuleBase.OnSubModuleLoad` — plus reflection-attached Finalizers on every static method in `TaleWorlds.{MountAndBlade,Engine,DotNet}.AutoGenerated.dll` types whose names end with `CallbacksGenerated` (BEW's "native2managed" mode, gated by MCM toggle, default ON). Plus `AppDomain.CurrentDomain.UnhandledException` as a final safety net. All 10 patch targets verified against v1.4.5 install via `ilspycmd`.
+
+**Comprehensive data capture.** [ExceptionContext](Main/Features/CrashReport/Domain/ExceptionContext.cs) DTO aggregates 18 record types covering: identity (Bannerlord + TAOM versions, exe FileVersion, TAOM.dll SHA1, language), exception + inner chain (depth-capped at 10) + `Exception.Data` dictionary, every stack frame with file/line (PDB-aware) + IL offset, Harmony patches affecting **every frame in the stack** (not just the throwing one) + full process-wide inventory grouped by owner, every active mod with main DLL SHA1 + declared deps + dep-order inversion detection + declared XML files, every loaded assembly, campaign state (hero, party with tier histogram, location, recent CampaignEvents ring buffer), mission state (teams + formations + player agent + wielded item), TAOM-specific state (career/resources/feats/revolt/messengers stubs ready for per-feature wiring), full reflected MCM settings snapshot from every `AttributeGlobalSettings`/`AttributePerCampaignSettings` provider (TAOM + third-party), process state (working set, GC totals + gen counts, throwing thread metadata), GPU info via WMI (vendor/driver/VRAM per adapter), display info, OS + locale + CLR, AppDomain, filtered env vars (`BANNERLORD_*`/`TAOM_*`/`DOTNET_*`/`STEAM_*`), frame timing ring buffer (v1 storage only; hook to populate is v2), and log tails (TAOM debug log + RGL log auto-located at `%USERPROFILE%\Documents\Mount and Blade II Bannerlord\logs\`).
+
+**Crash bundle ZIP** — uses in-BCL `System.IO.Compression.ZipArchive` (added `<Reference Include="System.IO.Compression" />` to [Main/TAOM.csproj](Main/TAOM.csproj); no new package). Writes `Logs/taom_crash_{utc}_{sig8}.zip` containing `report.txt` (sectioned plain text) + `report.json` (Newtonsoft.Json) + `taom_debug.log` (live session) + `rgl_log.txt` (live session) + `manifest.txt`. Players upload one file; we reproduce locally. Crash signature is SHA1 of `(ExceptionType + originatingPatchTarget + top-5 frame method names)` → first 8 chars in the filename for visual dedup matching across reports.
+
+**BUTR coexistence.** TAOM ships `Bannerlord.ButterLib` 2.10.4 with its own `ExceptionHandlerSubSystem`. Our [ButterLibExceptionHandlerAdapter](Main/Features/CrashReport/Adapters/ButterLibExceptionHandlerAdapter.cs) reflects in `ExceptionHandlerSubSystem.Instance.Disable()` on first capture so only one crash UI fires. MCM toggle (`Master → Suspend BUTR Exception Handler`, default ON) controls this. No hard compile-time dependency on `Bannerlord.ButterLib.ExceptionHandler.dll`.
+
+**Re-entry protection.** Two layers of thread-static `_handling` guards: one in `CrashReportPatchHelper` (the Finalizer sink) and one in `CrashReportService.HandleException`. A throw inside any collector / renderer breaks the loop and lets vanilla / BUTR take over.
+
+**Player-facing surface.** v1 uses `InformationManager.ShowInquiry` (2-button native dialog: *Continue (risky)* / *Open bundle folder*). Richer Gauntlet overlay deliberately deferred to v2 — the comprehensive data is in the log + bundle either way, and a Gauntlet movie is fragile relative to the diagnostic value. Open-bundle-folder action shells out to `explorer.exe /select,<zip>` so the player can drag-and-drop into Discord / issue tracker.
+
+**MCM page.** Dedicated `TAOM — Crash Report` page (separate from `TaomSettings`) at [CrashReportSettings.cs](Main/Features/CrashReport/CrashReportSettings.cs). Groups: *Master* (enable, suspend BUTR, native-to-managed), *Bundle* (write ZIP), *QA — Dev Triggers* (throw on next mission tick / app tick — auto-reset after firing).
+
+**Dev triggers for QA.** [CrashReportDevTriggerMissionBehavior](Main/Features/CrashReport/DevTriggers/CrashReportDevTrigger.cs) (wired into every mission via `OnMissionBehaviorInitialize`) reads the `ThrowOnNextMissionTick` MCM toggle and throws a tagged `TaomDevTriggerException`. [CrashReportApplicationTickTrigger](Main/Features/CrashReport/DevTriggers/CrashReportApplicationTickTrigger.cs) does the same for `Module.OnApplicationTick` so QA can exercise the pipeline from the main menu without entering a mission.
+
+**`IModLogger` extension.** Added `string? LogFilePath { get; }` to [IModLogger.cs](Main/Core/Logging/IModLogger.cs) so CrashReport can attach the live TAOM debug log to the bundle without downcasting to `FileLogger`. NSubstitute mocks in `TAOM.Tests` auto-implement the new property — no test breakage.
+
+**21 new unit tests** at [TAOM.Tests/Features/CrashReport/](TAOM.Tests/Features/CrashReport) covering the pure utilities: `ExceptionFrameBuilder` (depth cap, null, inner chain, `Data`), `StackFrameSnapshotBuilder`, `CrashSignatureCalculator` (determinism, frame-depth-5 cutoff), `RingBuffer` (overflow ordering, clear, capacity-0 edge), `PlainTextCrashReportRenderer` (all 18 sections render, header signature, inner-chain depth labels, collector failure visibility). Full suite green: 2440/2440 passed, 2 skipped, 0 failed.
+
+Not-tested: 10 Harmony Finalizers + service composition + TaleWorlds-facing collectors (Modules/Mission/Campaign/Gpu/Logs) + ButterLib reflection adapter + UI notifier — all require integration / manual QA. Tagged `Not-tested:` per the commit trailer convention.
+
+**Files added/modified:**
+
+- 18 new DTO records under [Main/Features/CrashReport/Domain/](Main/Features/CrashReport/Domain)
+- 14 collectors + 5 utility classes under [Main/Features/CrashReport/Collectors/](Main/Features/CrashReport/Collectors)
+- 2 renderers + 1 bundle writer under [Main/Features/CrashReport/Rendering/](Main/Features/CrashReport/Rendering)
+- 1 reflection adapter under [Main/Features/CrashReport/Adapters/](Main/Features/CrashReport/Adapters)
+- 4 patch / hook classes under [Main/Features/CrashReport/Hooks/](Main/Features/CrashReport/Hooks)
+- 3 dev-trigger classes under [Main/Features/CrashReport/DevTriggers/](Main/Features/CrashReport/DevTriggers)
+- 1 notifier under [Main/Features/CrashReport/UI/](Main/Features/CrashReport/UI)
+- [CrashReportService.cs](Main/Features/CrashReport/CrashReportService.cs), [ICrashReportService.cs](Main/Features/CrashReport/ICrashReportService.cs), [CrashReportIoC.cs](Main/Features/CrashReport/CrashReportIoC.cs), [CrashReportSettings.cs](Main/Features/CrashReport/CrashReportSettings.cs)
+- 5 test classes under [TAOM.Tests/Features/CrashReport/](TAOM.Tests/Features/CrashReport)
+- [IoC.cs](Main/IoC.cs): register `CrashReportIoC`
+- [SubModule.cs](Main/SubModule.cs): apply Patch37 FIRST + subscribe AppDomain hook + attach Native2ManagedPatcher; add `CrashReportDevTriggerMissionBehavior` to every mission
+- [Main/TAOM.csproj](Main/TAOM.csproj): added `<Reference Include="System.Management" />` + `<Reference Include="System.IO.Compression" />` + `System.IO.Compression.FileSystem` (.NET 4.7.2 BCL — no new packages)
+- [IModLogger.cs](Main/Core/Logging/IModLogger.cs) + [FileLogger.cs](Main/Core/Logging/FileLogger.cs): added `string? LogFilePath { get; }`
+
+Constraint: BEW is GPL/AGPL v3, can't ship its DLL — reimplemented from architectural reference only.
+Research: ilspycmd against installed v1.4.5 DLLs for every patch target signature + ButterLib reflection target.
+Rejected: WinForms HTML window (BEW's choice — drags `System.Windows.Forms` into TAOM.dll, fullscreen DX focus-steal risk, ugly mismatch); Gauntlet overlay (deferred to v2 — fragile relative to data value).
+Save-compat: No save-data changes. New MCM settings file created on first launch.
+Not-tested: 10 Harmony Finalizer patches + service composition + TaleWorlds-facing collectors + UI notifier (manual QA via MCM dev triggers).
+
+
 ### docs(target): declare TAOM is on Bannerlord 1.4.5
 
 Bumped declarative target-version statements from v1.3.15 → v1.4.5 across [README.md](README.md), [CLAUDE.md](CLAUDE.md), [AGENTS.md](AGENTS.md), and four scoped rule files (`adapters`, `gui-ui`, `harmony-patches`, `environment-failures`). Reframed the CLAUDE.md "🚧 Active migration" banner and [docs/migration/TRACKING.md](docs/migration/TRACKING.md) header to honestly state: S0–S5b ✅ landed 2026-05-22 (adapters, GameModels, equipment XML, roster authoring); S6–S12 (smoke test, per-tier feature validation, Codex review, closeout) were rolled into ongoing feature work on the `bannerlord-1.4.5` branch rather than executed as discrete gates. TRACKING.md S6 note now directs runtime crashes to one-off `/investigate`, not a stage gate.
