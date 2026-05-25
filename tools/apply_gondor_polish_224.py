@@ -73,22 +73,30 @@ EQUIPMENT_DELTAS: Dict[str, List[Tuple[Any, ...]]] = {
     # === Anfalas Footman — sword replaces eastern_mace ===
     "gondor_anf_footman":    [("set", "Item0", "wm_gondor_sword_a03")],
 
-    # === Anorien militia chainmail tier fix (post-#224 follow-up 2026-05-25) ===
-    # Peasant gets Half Chainmail A (T1); Militia + Footman + Skirmisher + Archer Militia
-    # get Half Chainmail B (T2+). Original state had Peasant=B, Militia=A, Archer Militia=A
-    # (swapped); Footman + Skirmisher had Full Chainmail A (wrong tier).
+    # === Anorien militia/infantry chainmail tier fix (post-#224 follow-up 2026-05-25) ===
+    # Peasant + Militia + Archer Militia: Half Chainmail A/B (low-tier rabble line).
+    # Footman: Half Chainmail B chest + med greaves (transitional tier).
+    # Skirmisher: Full Chainmail A (light skirmish-style infantry, distinct silhouette).
+    # Bowman / Archer + Anorien Infantry / Vet Infantry / Cavalry / Heavy Cavalry / Knight:
+    # standard Anorien chest_med_a (T4 ranged) / chest_med_b (T5+ infantry/cavalry).
+    # User direction: standardise the Anorien line on med_b chest across mid-to-elite tier
+    # (replaces previous heavy_a/heavy_b assignments on infantry + cavalry + knight).
     "gondor_ano_peasant":        [("set", "Body", "sk_gd_ano_chainmail_half_a")],
     "gondor_ano_militia":        [("set", "Body", "sk_gd_ano_chainmail_half_b")],
-    "gondor_ano_footman":        [("set", "Body", "sk_gd_ano_chainmail_half_b")],
+    "gondor_ano_footman":        [("set", "Body", "sk_gd_ano_inf_chest_med_b"),
+                                  ("set", "Leg",  "sk_gd_ano_grvs_inf_med_a")],
+    "gondor_ano_infantry":       [("set", "Body", "sk_gd_ano_inf_chest_med_b")],
+    "gondor_ano_vet_infantry":   [("set", "Body", "sk_gd_ano_inf_chest_med_b")],
 
     # === Anorien archer line — add tier-matched 1h sword as sidearm (Item3) ===
-    # gondor_ano_archer_militia + skirmisher also get Half Chainmail B body upgrade.
     "gondor_ano_archer_militia": [("set", "Item3", GONDOR_SWORD_TIER[11]),
                                   ("set", "Body", "sk_gd_ano_chainmail_half_b")],
     "gondor_ano_skirmisher":     [("set", "Item3", GONDOR_SWORD_TIER[16]),
-                                  ("set", "Body", "sk_gd_ano_chainmail_half_b")],
-    "gondor_ano_bowman":         [("set", "Item3", GONDOR_SWORD_TIER[21])],
-    "gondor_ano_archer":         [("set", "Item3", GONDOR_SWORD_TIER[26])],
+                                  ("set", "Body", "sk_gd_ano_chainmail_full_a")],
+    "gondor_ano_bowman":         [("set", "Item3", GONDOR_SWORD_TIER[21]),
+                                  ("set", "Body", "sk_gd_ano_inf_chest_med_a")],
+    "gondor_ano_archer":         [("set", "Item3", GONDOR_SWORD_TIER[26]),
+                                  ("set", "Body", "sk_gd_ano_inf_chest_med_b")],
 
     # === Cair Andros Spearman — add sidearm sword (Item2 — Item0=sword, Item1=shield, leaves room) ===
     # Existing Item0 already wm_gondor_sword_a05. Add a second sword to Item2 as backup if missing.
@@ -121,13 +129,16 @@ EQUIPMENT_DELTAS: Dict[str, List[Tuple[Any, ...]]] = {
     "gondor_lam_vet_swordman": [("set", "Item0", "wm_gondor_lamedon_2h_sword_c"), ("clear", "Item1")],
     "gondor_lam_hill_warden":  [("set", "Item0", "wm_gondor_lamedon_2h_sword_d"), ("clear", "Item1")],
 
-    # === Anorien cavalry chain — banner spears + canonical Gondor horse armours ===
+    # === Anorien cavalry chain — banner spears + canonical Gondor horse armours + med_b chest ===
     "gondor_ano_mt_cavalry":        [("set", "Item0", "wm_gondor_spear_b"),
-                                     ("set", "HorseHarness", "gondor_horse_armor_2")],
+                                     ("set", "HorseHarness", "gondor_horse_armor_2"),
+                                     ("set", "Body", "sk_gd_ano_inf_chest_med_b")],
     "gondor_ano_mt_heavy_cavalry":  [("set", "Item0", "wm_gondor_gondorknight_speara"),
-                                     ("set", "HorseHarness", "gondor_horse_armor_1")],
+                                     ("set", "HorseHarness", "gondor_horse_armor_1"),
+                                     ("set", "Body", "sk_gd_ano_inf_chest_med_b")],
     "gondor_ano_mt_knight":         [("set", "Item0", "wm_gondor_gondorknight_spearb"),
-                                     ("set", "HorseHarness", "gondor_horse_armor_1")],
+                                     ("set", "HorseHarness", "gondor_horse_armor_1"),
+                                     ("set", "Body", "sk_gd_ano_inf_chest_med_b")],
 
     # === Arndir cavalry — Numenorean 2h swords, drop shield ===
     "gondor_arn_cavalry":      [("set", "Item0", "numenorean_sword_2h_d"), ("clear", "Item1")],

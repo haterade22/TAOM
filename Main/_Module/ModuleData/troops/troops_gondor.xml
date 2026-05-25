@@ -6745,10 +6745,10 @@
         <equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
-        <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_b" />
+        <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
-        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
       </EquipmentRoster>
       <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
     </Equipments>
@@ -6820,7 +6820,7 @@
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Item2" id="Item.wm_gondor_sword_a07" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-        <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+        <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
@@ -6856,7 +6856,7 @@
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Item2" id="Item.wm_gondor_sword_a08" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_heavy_a" />
-        <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+        <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
@@ -6893,7 +6893,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_spear_b" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Head" id="Item.sk_gd_ano_cav_helmet_heavy_a" />
-        <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_a" />
+        <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_b" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
@@ -6932,7 +6932,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_gondorknight_speara" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Head" id="Item.sk_gd_ano_cav_helmet_heavy_b" />
-        <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_a" />
+        <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
@@ -6969,7 +6969,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_gondorknight_spearb" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Head" id="Item.sk_gd_ano_cav_helmet_heavy_b" />
-        <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_heavy_b" />
+        <equipment slot="Body" id="Item.sk_gd_ano_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
@@ -7047,7 +7047,7 @@
         <equipment slot="Item1" id="Item.bodkin_arrows_a" />
         <equipment slot="Item2" id="Item.bodkin_arrows_a" />
         <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
-        <equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_b" />
+        <equipment slot="Body" id="Item.sk_gd_ano_chainmail_full_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
