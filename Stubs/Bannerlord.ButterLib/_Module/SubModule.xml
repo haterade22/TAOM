@@ -9,7 +9,8 @@
     <Id value="Bannerlord.ButterLib" />
     <Name value="ButterLib (provided by TAOM.Dependencies)" />
     <Version value="v2.10.4" />
-    <DefaultModule value="false" />
+    <!-- DefaultModule="true" — see Stubs/Bannerlord.Harmony/_Module/SubModule.xml for rationale. -->
+    <DefaultModule value="true" />
     <ModuleCategory value="Singleplayer" />
     <ModuleType value="Community" />
     <DependedModules>

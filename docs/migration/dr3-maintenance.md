@@ -196,8 +196,11 @@ Each stub:
 - Declares the standard BUTR `<Id>` so the vanilla launcher's `AreAllDependenciesOfModulePresent` check passes.
 - Has `<SubModules />` empty — no DLLs load from the stub, so no duplicate `0Harmony.dll` / `Bannerlord.ButterLib.dll` enters the AppDomain.
 - Declares `<DependedModule Id="TAOM.Dependencies"/>` with `<DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis"/>` so the real DLLs are loaded by TAOM.Dependencies BEFORE any third-party mod tries to consume them.
+- Uses `<DefaultModule value="true"/>` so the vanilla launcher auto-ticks the stub on first launch. Without this flag, the launcher's first-launch enablement logic (`item.IsSelected = item.IsNative || ((item.IsRequiredOfficial || item.IsDefault) && AreAllDependenciesOfModulePresent(item))` in `LauncherModsVM.cs:~350`) leaves the stub unchecked — and while the launcher's dep-presence check is file-on-disk only (doesn't require the stub to be ticked), users perceive un-ticked stubs as "deps missing" and may not realize they need to manually tick four placeholder entries. Auto-enable is the BetaDeps-community convention for stub modules.
 
 **Maintenance rule:** when a `PackageReference` version in `Dependencies/TAOM.Dependencies.csproj` changes (or a vendored BUTR DLL is updated), the corresponding stub's `<Version>` must be bumped to match. Third-party mods with strict version constraints via `<DependedModuleMetadata>` will see the stub's version as the authoritative answer for "what version of Harmony is available?".
+
+**Red `(!)` icon on third-party mods:** this is the launcher's `IsDangerous` flag (`LauncherModuleVM.cs:280-282`) fired by TaleWorlds's `LauncherDLLData` code-verification system whenever an unsigned/third-party DLL is detected. It is a permanent warning tooltip ("Couldn't verify some or all of the code included in this module") and is **independent of toggleability** — every non-Bannerlord mod gets it. Do not mistake it for a missing-dep error. The two phenomena (`IsDisabled` = greyed/un-toggleable from missing deps, vs `IsDangerous` = red icon from unsigned code) are separate concepts in the launcher source.
 
 ### External Bannerlord.Harmony module conflict (HIGH)
 

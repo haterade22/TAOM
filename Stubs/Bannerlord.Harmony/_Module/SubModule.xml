@@ -22,7 +22,11 @@
     <Id value="Bannerlord.Harmony" />
     <Name value="Harmony (provided by TAOM.Dependencies)" />
     <Version value="v2.4.2" />
-    <DefaultModule value="false" />
+    <!-- DefaultModule="true" so the launcher auto-ticks this stub on first launch.
+         Without auto-enable, third-party mods that depend on Bannerlord.Harmony
+         see the stub present but unselected and remain effectively un-toggleable.
+         BetaDeps-style convention. -->
+    <DefaultModule value="true" />
     <ModuleCategory value="Singleplayer" />
     <ModuleType value="Community" />
     <DependedModules>

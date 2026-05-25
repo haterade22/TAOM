@@ -9,7 +9,8 @@
     <Id value="Bannerlord.UIExtenderEx" />
     <Name value="UIExtenderEx (provided by TAOM.Dependencies)" />
     <Version value="v2.13.1" />
-    <DefaultModule value="false" />
+    <!-- DefaultModule="true" — see Stubs/Bannerlord.Harmony/_Module/SubModule.xml for rationale. -->
+    <DefaultModule value="true" />
     <ModuleCategory value="Singleplayer" />
     <ModuleType value="Community" />
     <DependedModules>
