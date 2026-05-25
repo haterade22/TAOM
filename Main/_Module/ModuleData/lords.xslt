@@ -928,7 +928,7 @@
             </skills>
             <Traits>
                 <Trait id="Honor" value="-2"/>
-                <Trait id="Generosity" value="-1"/>
+                <Trait id="Generosity" value="-2"/>
                 <Trait id="Calculating" value="2"/>
                 <Trait id="Mercy" value="-2"/>
                 <Trait id="Valor" value="2"/>
