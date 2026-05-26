@@ -823,7 +823,7 @@
   <!-- ═══════════════════════════════════════════════════════════ -->
 
   <Career id="uruk_berserker"
-          display_name="{=taom_career_uruk_berserker}Uruk Berserker"
+          display_name="{=taom_career_uruk_berserker}Uruk-Hai Berserker"
           description="{=taom_career_uruk_berserker_desc}A frenzied Uruk-hai who charges headlong into battle, growing stronger as wounds fuel an unstoppable rage."
           portrait_sprite="career_uruk_berserker_portrait"
           ability_template_id="uruk_berserker_ability"
@@ -843,7 +843,7 @@
   </Career>
 
   <Career id="uruk_crossbow"
-          display_name="{=taom_career_uruk_crossbow}Uruk Crossbow"
+          display_name="{=taom_career_uruk_crossbow}Uruk-Hai Crossbowman"
           description="{=taom_career_uruk_crossbow_desc}A disciplined Uruk marksman wielding Saruman's iron crossbows, delivering devastating volleys from Orthanc's forges."
           portrait_sprite="career_uruk_crossbow_portrait"
           ability_template_id="uruk_crossbow_ability"
@@ -863,7 +863,7 @@
   </Career>
 
   <Career id="warg_scout"
-          display_name="{=taom_career_warg_scout}Warg Scout"
+          display_name="{=taom_career_warg_scout}Warg Rider"
           description="{=taom_career_warg_scout_desc}A cunning Uruk rider mounted on a swift warg, scouting ahead of the armies of Isengard and running down fleeing prey."
           portrait_sprite="career_warg_scout_portrait"
           ability_template_id="warg_scout_ability"

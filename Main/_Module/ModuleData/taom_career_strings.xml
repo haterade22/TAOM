@@ -78,11 +78,11 @@
 	<string id="taom_career_silvan_archer_desc" text="{=taom_career_silvan_archer_desc}A keen-eyed hunter of the Woodland Realm who strikes from the treetops with lethal precision." />
 	<string id="taom_career_elk_rider" text="{=taom_career_elk_rider}Elk Rider" />
 	<string id="taom_career_elk_rider_desc" text="{=taom_career_elk_rider_desc}A mounted warrior of Thranduil's guard who rides great forest elk into battle, crashing through underbrush and foe alike." />
-	<string id="taom_career_uruk_berserker" text="{=taom_career_uruk_berserker}Uruk Berserker" />
+	<string id="taom_career_uruk_berserker" text="{=taom_career_uruk_berserker}Uruk-Hai Berserker" />
 	<string id="taom_career_uruk_berserker_desc" text="{=taom_career_uruk_berserker_desc}A frenzied Uruk-hai who charges headlong into battle, growing stronger as wounds fuel an unstoppable rage." />
-	<string id="taom_career_uruk_crossbow" text="{=taom_career_uruk_crossbow}Uruk Crossbow" />
+	<string id="taom_career_uruk_crossbow" text="{=taom_career_uruk_crossbow}Uruk-Hai Crossbowman" />
 	<string id="taom_career_uruk_crossbow_desc" text="{=taom_career_uruk_crossbow_desc}A disciplined Uruk marksman wielding Saruman's iron crossbows, delivering devastating volleys from Orthanc's forges." />
-	<string id="taom_career_warg_scout" text="{=taom_career_warg_scout}Warg Scout" />
+	<string id="taom_career_warg_scout" text="{=taom_career_warg_scout}Warg Rider" />
 	<string id="taom_career_warg_scout_desc" text="{=taom_career_warg_scout_desc}A cunning Uruk rider mounted on a swift warg, scouting ahead of the armies of Isengard and running down fleeing prey." />
 	<string id="taom_career_cave_troll_master" text="{=taom_career_cave_troll_master}Cave Troll Master" />
 	<string id="taom_career_cave_troll_master_desc" text="{=taom_career_cave_troll_master_desc}A brutal orc chieftain who commands cave trolls in battle, driving them forward with whip and cunning." />

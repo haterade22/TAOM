@@ -2,6 +2,20 @@
 
 ## 2026-05-26
 
+### fix(career-system): rename Isengard careers to Tolkien-flavored display names
+
+Same pattern as the Dale rename — player-facing display names only, career IDs (`uruk_berserker` / `uruk_crossbow` / `warg_scout`) unchanged so all wiring keeps resolving identically.
+
+| Career ID | Was | Now |
+|-----------|-----|-----|
+| `uruk_berserker` | Uruk Berserker | Uruk-Hai Berserker |
+| `uruk_crossbow` | Uruk Crossbow | Uruk-Hai Crossbowman |
+| `warg_scout` | Warg Scout | Warg Rider |
+
+Two-file rename in [`taom_careers.xml`](Main/_Module/ModuleData/career_system/taom_careers.xml) lines 826/846/866 + [`taom_career_strings.xml`](Main/_Module/ModuleData/taom_career_strings.xml) lines 81/83/85. Localization keys unchanged so existing translations in the 12 language files still resolve safely (now stale relative to English — same pending re-run as ff75c93 + Dale rename).
+
+Files: 2 XML files, 3 lines each. No code change. Save-compat: career IDs unchanged.
+
 ### fix(career-system): rename Dale careers to Tolkien-flavored display names
 
 Player-facing display names only — career IDs (`dale_guardsman` / `dale_marksman` / `dale_outrider`) stay the same so all archetype mappings, choice trees, ability templates, and equipment rosters keep resolving identically.
