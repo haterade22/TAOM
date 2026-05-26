@@ -3861,7 +3861,7 @@
   <NPCCharacter
       id="gondor_ithilien_ranger"
       default_group="Ranged"
-      level="41"
+      level="51"
       name="{=aom_gondor_ithilien_ranger_name}[Gondor] Ithilien Ranger"
       occupation="Soldier"
       culture="Culture.gondor"
@@ -3870,12 +3870,12 @@
       <face_key_template value="BodyProperty.fighter_empire" />
     </face>
     <skills>
-      <skill id="Athletics" value="155" />
-      <skill id="Riding" value="40" />
+      <skill id="Athletics" value="215" />
+      <skill id="Riding" value="140" />
       <skill id="OneHanded" value="230" />
       <skill id="TwoHanded" value="145" />
       <skill id="Polearm" value="145" />
-      <skill id="Bow" value="280" />
+      <skill id="Bow" value="300" />
       <skill id="Crossbow" value="55" />
       <skill id="Throwing" value="70" />
     </skills>
