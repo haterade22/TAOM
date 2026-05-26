@@ -888,7 +888,7 @@
 
   <!-- DISABLED 2026-05-14: Cave Troll Master career WIP; not ready for live game yet. Re-enable by uncommenting.
   <Career id="cave_troll_master"
-          display_name="{=taom_career_cave_troll_master}Cave Troll Master"
+          display_name="{=taom_career_cave_troll_master}Gundabad Berserker"
           description="{=taom_career_cave_troll_master_desc}A brutal orc chieftain who commands cave trolls in battle, driving them forward with whip and cunning."
           portrait_sprite="career_cave_troll_master_portrait"
           ability_template_id="cave_troll_master_ability"
@@ -909,7 +909,7 @@
   -->
 
   <Career id="goblin_sniper"
-          display_name="{=taom_career_goblin_sniper}Goblin Sniper"
+          display_name="{=taom_career_goblin_sniper}Gundabad Orc Hunter"
           description="{=taom_career_goblin_sniper_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows."
           portrait_sprite="career_goblin_sniper_portrait"
           ability_template_id="goblin_sniper_ability"
@@ -929,7 +929,7 @@
   </Career>
 
   <Career id="warg_pack_leader"
-          display_name="{=taom_career_warg_pack_leader}Warg Pack Leader"
+          display_name="{=taom_career_warg_pack_leader}Gundabad Fell Warg Pack Leader"
           description="{=taom_career_warg_pack_leader_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains."
           portrait_sprite="career_warg_pack_leader_portrait"
           ability_template_id="warg_pack_leader_ability"

@@ -2,6 +2,20 @@
 
 ## 2026-05-26
 
+### fix(career-system): rename Gundabad careers to Tolkien-flavored display names
+
+Same two-file pattern as the prior renames.
+
+| Career ID | Was | Now |
+|-----------|-----|-----|
+| `cave_troll_master` | Cave Troll Master | Gundabad Berserker |
+| `goblin_sniper` | Goblin Sniper | Gundabad Orc Hunter |
+| `warg_pack_leader` | Warg Pack Leader | Gundabad Fell Warg Pack Leader |
+
+Two-file rename in [`taom_careers.xml`](Main/_Module/ModuleData/career_system/taom_careers.xml) lines 891/912/932 + [`taom_career_strings.xml`](Main/_Module/ModuleData/taom_career_strings.xml) lines 87/89/91. Note: `cave_troll_master` ID retained even though the display name no longer references trolls — it's still disabled in [`CareerSystemIoC.cs`](Main/Features/CareerSystem/CareerSystemIoC.cs) (the original `DISABLED 2026-05-14: Troll careers WIP` line), so the Infantry slot will only appear in-menu once that registration is uncommented. ID rename can follow if/when the user wants it.
+
+Files: 2 XML files, 3 lines each. No code change.
+
 ### fix(career-system): rename Rivendell careers to Ñoldor-themed display names
 
 Same two-file pattern as the prior renames.

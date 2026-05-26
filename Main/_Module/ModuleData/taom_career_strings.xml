@@ -84,11 +84,11 @@
 	<string id="taom_career_uruk_crossbow_desc" text="{=taom_career_uruk_crossbow_desc}A disciplined Uruk marksman wielding Saruman's iron crossbows, delivering devastating volleys from Orthanc's forges." />
 	<string id="taom_career_warg_scout" text="{=taom_career_warg_scout}Warg Rider" />
 	<string id="taom_career_warg_scout_desc" text="{=taom_career_warg_scout_desc}A cunning Uruk rider mounted on a swift warg, scouting ahead of the armies of Isengard and running down fleeing prey." />
-	<string id="taom_career_cave_troll_master" text="{=taom_career_cave_troll_master}Cave Troll Master" />
+	<string id="taom_career_cave_troll_master" text="{=taom_career_cave_troll_master}Gundabad Berserker" />
 	<string id="taom_career_cave_troll_master_desc" text="{=taom_career_cave_troll_master_desc}A brutal orc chieftain who commands cave trolls in battle, driving them forward with whip and cunning." />
-	<string id="taom_career_goblin_sniper" text="{=taom_career_goblin_sniper}Goblin Sniper" />
+	<string id="taom_career_goblin_sniper" text="{=taom_career_goblin_sniper}Gundabad Orc Hunter" />
 	<string id="taom_career_goblin_sniper_desc" text="{=taom_career_goblin_sniper_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows." />
-	<string id="taom_career_warg_pack_leader" text="{=taom_career_warg_pack_leader}Warg Pack Leader" />
+	<string id="taom_career_warg_pack_leader" text="{=taom_career_warg_pack_leader}Gundabad Fell Warg Pack Leader" />
 	<string id="taom_career_warg_pack_leader_desc" text="{=taom_career_warg_pack_leader_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains." />
 	<string id="taom_career_shadow_warrior" text="{=taom_career_shadow_warrior}Shadow Warrior" />
 	<string id="taom_career_shadow_warrior_desc" text="{=taom_career_shadow_warrior_desc}A dark champion of Dol Guldur empowered by the Necromancer's sorcery, draining the life of all who stand before them." />
