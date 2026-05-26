@@ -45,7 +45,22 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeMordorCulture();
         // (No InitializeMordorClans — user explicitly chose to skip clan pools.)
         InitializeDaleCulture();
+        InitializeDaleSettlements();
         InitializeRohanClans();
+    }
+
+    // --- Dale Settlement-Specific Pools ---
+    // Only town_S1 (Lake-Town) gets a settlement-specific override per user spec. All
+    // other Sturgia settlements fall through to the culture pool in InitializeDaleCulture.
+    //
+    // Lake-Town pool: heavy weight on the Lake-Town Peasant (9) — it's a fishing-folk
+    // settlement, so common recruits are smallfolk. Dalian Levy (1) preserves a rare
+    // route into the royal lines for players who specifically want to recruit there.
+    private static void InitializeDaleSettlements()
+    {
+        AddSettlement("town_S1",
+            ("dale_recruit", 9),  // Lake-Town Peasant
+            ("dale_squire",  1)); // Dalian Levy
     }
 
     // --- Rohan Clan Pools ---

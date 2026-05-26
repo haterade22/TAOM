@@ -1821,14 +1821,48 @@ public class VolunteerRecruitmentServiceTests
         Assert.AreEqual("dale_recruit", result);
     }
 
+    // --- Lake-Town (town_S1) settlement-specific pool ---
+    // Pool weights: dale_recruit(9) + dale_squire(1) = 10. Rolls [0..8] = recruit, [9] = squire.
+
     [TestMethod]
-    public void GetVolunteerTroopId_DaleSettlement_NoSettlementPool_FallsThroughToCulture()
+    public void GetVolunteerTroopId_TownS1_LakeTown_LowRoll_ReturnsLakeTownPeasant()
     {
-        // Dale (sturgia) has no per-settlement entries authored — recruitment must fall
-        // through to the culture pool. Confirms no silent null return.
         _random.Next(Arg.Any<int>()).Returns(0);
         var context = new VolunteerContext(
-            settlementId: "town_S1",  // hypothetical Dale settlement id
+            settlementId: "town_S1",  // Lake-Town
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "sturgia");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dale_recruit", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_TownS1_LakeTown_HighRoll_ReturnsDalianLevy()
+    {
+        // Roll 9 is the rare Dalian Levy slot (weight 1 of 10).
+        _random.Next(10).Returns(9);
+        var context = new VolunteerContext(
+            settlementId: "town_S1",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "sturgia");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dale_squire", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_OtherDaleSettlement_NoSettlementPool_FallsThroughToCulture()
+    {
+        // A non-S1 Dale settlement (e.g. town_S2) must fall through to the culture pool.
+        // Confirms the Lake-Town override is town_S1-only.
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: "town_S2",
             boundSettlementId: null,
             ownerClanId: null,
             cultureId: "sturgia");

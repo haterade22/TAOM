@@ -2,6 +2,22 @@
 
 ## 2026-05-26
 
+### feat(dale,armory): Lake-Town recruitment override + Armoury helmet hair_cover_type bulk fix
+
+Two independent user-directed changes shipped together.
+
+**Lake-Town settlement-specific recruitment pool** — `town_S1` (Lake-Town per user clarification; vanilla "Dale") gets a unique 2-troop pool, all other Sturgia settlements still use the culture default:
+- Lake-Town Peasant (`dale_recruit`) — 9
+- Dalian Levy (`dale_squire`) — 1
+
+New `InitializeDaleSettlements()` static initialiser added to `VolunteerRecruitmentService`. `SettlementMap["town_S1"]` is checked BEFORE the culture pool, so Lake-Town recruits ~90% Peasants and ~10% Levies regardless of clan ownership.
+
+3 new unit tests: roll 0 → Peasant; roll 9 → Levy (rare terminal slot); `town_S2` fallthrough confirms the override is town_S1-only.
+
+**Armoury helmet hair_cover_type bulk → "all"** — `LOTRLOME_Armory/ModuleData/LOTRLOME_items/**/head_armors.xml` across all 18 culture folders. Was a mix of `all` (560), `type2` (279), `type1` (115), `none` (11) = 965 helmets total. Now uniformly `all`. Also updated `tools/generate_dale_armor.py` so future regeneration defaults to `all`.
+
+Verification: build green; 9/9 tests pass (4 Dale culture + 3 Rohan clan + 2 new Lake-Town settlement); helmet bulk-replace verified zero non-`all` values remain (`grep -roh hair_cover_type=` shows 965/965 = "all").
+
 ### feat(dale): single-variant armor, Riverman→infrantry, cavalry color swap, Veteran Northman Scout
 
 User-directed cleanup pass. 34 → 35 troops (added Dalian Veteran Northman Scout); recruitment pool replaced.

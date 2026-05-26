@@ -287,7 +287,7 @@ def generate_item_xml(p: ParsedMesh, has_slim_variant: bool) -> str:
     if p.slot == "head":
         armor_attrs.append(f'head_armor="{stats["head_armor"]}"')
         armor_attrs.append('has_gender_variations="false"')
-        armor_attrs.append('hair_cover_type="type2"')
+        armor_attrs.append('hair_cover_type="all"')
         armor_attrs.append('beard_cover_type="all"')
         armor_attrs.append(f'modifier_group="{modifier_group}"')
         armor_attrs.append(f'material_type="{material}"')
