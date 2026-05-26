@@ -2,6 +2,21 @@
 
 ## 2026-05-26
 
+### fix(dale): swap Royal/Master so "Royal" reads as the highest rank
+
+User-directed rename — "Royal" should denote the most-elite tier across all Dale lines.
+
+Crossbow line (pair swap on the line that had them inverted):
+- T6 `dale_royal_crossbowman` "Dalian Royal Crossbowman" → "Dalian Master Crossbowman"
+- T7 `dale_master_crossbowman` "Dalian Master Crossbowman" → "Dalian Royal Crossbowman"
+
+Great Infantry line (apply the same principle to its T7 terminal):
+- T7 `dale_running_river_warden` "Dalian Master Swordsman" → "Dalian Royal Swordsman"
+
+IDs intentionally desynced from display names in 2 places (`dale_royal_crossbowman` now displays "Master Crossbowman"; `dale_master_crossbowman` now displays "Royal Crossbowman"). Save-compat preserved — only display strings changed. Documented in `docs/features/dale.md`.
+
+Verification: 4 Dale tests + 3 Rohan clan tests still pass (7/7); ID-to-display mapping spot-checked.
+
 ### feat(dale): explicit per-tier armor (bronze/silver) + Crossbowman line
 
 User-directed armor mapping pass for all royal Dale lines + new ranged sub-line. 30 → 34 troops (4 new crossbowmen).

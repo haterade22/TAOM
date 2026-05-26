@@ -736,7 +736,7 @@
         id="dale_royal_crossbowman"
         default_group="Ranged"
         level="32"
-        name="{=aom_dale_royal_crossbowman_name}[Dale] Dalian Royal Crossbowman"
+        name="{=aom_dale_royal_crossbowman_name}[Dale] Dalian Master Crossbowman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -783,7 +783,7 @@
         id="dale_master_crossbowman"
         default_group="Ranged"
         level="39"
-        name="{=aom_dale_master_crossbowman_name}[Dale] Dalian Master Crossbowman"
+        name="{=aom_dale_master_crossbowman_name}[Dale] Dalian Royal Crossbowman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -969,7 +969,7 @@
         id="dale_running_river_warden"
         default_group="Infantry"
         level="39"
-        name="{=aom_dale_running_river_warden_name}[Dale] Dalian Master Swordsman"
+        name="{=aom_dale_running_river_warden_name}[Dale] Dalian Royal Swordsman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>

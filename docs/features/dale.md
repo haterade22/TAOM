@@ -69,11 +69,11 @@ VolunteerRecruitmentService.cs (+ InitializeDaleCulture)
 - T4 `dale_bowman` "Dalian Yeoman" → T5 `dale_longbowman` "Dalian Bowman" → T6 `dale_royal_archer` "Dalian Marksman" → T7 `dale_black_arrow_marksman` "Dalian Barding" (T7 terminal — Dale caps at T7)
 
 **Royal Crossbowmen** (parallel ranged branch off Dalian Levy; vanilla crossbows + bolts + 1H sword sidearm; **silver** archer armor `b01-b04`):
-- T4 `dale_crossbowman` "Dalian Crossbowman" → T5 `dale_veteran_crossbowman` "Dalian Veteran Crossbowman" → T6 `dale_royal_crossbowman` "Dalian Royal Crossbowman" → T7 `dale_master_crossbowman` "Dalian Master Crossbowman" (T7 terminal)
+- T4 `dale_crossbowman` "Dalian Crossbowman" → T5 `dale_veteran_crossbowman` "Dalian Veteran Crossbowman" → T6 `dale_royal_crossbowman` "Dalian Master Crossbowman" → T7 `dale_master_crossbowman` "Dalian Royal Crossbowman" (T7 terminal). Note: ID order and display-name order intentionally desynced — "Royal" is reserved as the highest-rank title across the kingdom, so the T7 troop holds it even though its ID was originally authored as `dale_master_*`.
 - Weapons: `crossbow_c` (T4) → `crossbow_d` (T5) → `crossbow_e` (T6) → `crossbow_f` (T7) with `bolt_a/b/c/d/e` ammo progression.
 
-**Great Infantry** (Dalian Militia → Dalian Master Swordsman; "variation per level" — one bronze + one silver infrantry variant per tier: `aNN`+`bNN`):
-- T4 `dale_man_at_arms` "Dalian Militia" → T5 `dale_guardsman` "Dalian Guardsman" → T6 `dale_royal_guard` "Dalian Swordsman" → T7 `dale_running_river_warden` "Dalian Master Swordsman" (T7 terminal)
+**Great Infantry** (Dalian Militia → Dalian Royal Swordsman; "variation per level" — one bronze + one silver infrantry variant per tier: `aNN`+`bNN`):
+- T4 `dale_man_at_arms` "Dalian Militia" → T5 `dale_guardsman` "Dalian Guardsman" → T6 `dale_royal_guard` "Dalian Swordsman" → T7 `dale_running_river_warden` "Dalian Royal Swordsman" (T7 terminal)
 
 **Riverman line** (spear + shield + 1H sword, Lake-Town armor; royal-tier water-folk):
 - T4 `dale_riverman` "Dalian Riverman" → T5 `dale_shipman` "Dalian Shipman" → T6 `dale_dalian_mariner` "Dalian Mariner" (terminal)

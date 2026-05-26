@@ -816,7 +816,7 @@ def build_troops() -> list[Troop]:
 
     troops.append(Troop(
         id="dale_royal_crossbowman",
-        display_name="Dalian Royal Crossbowman",
+        display_name="Dalian Master Crossbowman",
         tier=6, default_group="Ranged",
         skills=s_royal_crossbowman_t6(),
         upgrades=["dale_master_crossbowman"],
@@ -838,7 +838,7 @@ def build_troops() -> list[Troop]:
 
     troops.append(Troop(
         id="dale_master_crossbowman",
-        display_name="Dalian Master Crossbowman",
+        display_name="Dalian Royal Crossbowman",
         tier=7, default_group="Ranged",
         skills=s_master_crossbowman_t7(),
         upgrades=[],  # T7 terminal (Dale caps at T7)
@@ -928,7 +928,7 @@ def build_troops() -> list[Troop]:
 
     troops.append(Troop(
         id="dale_running_river_warden",
-        display_name="Dalian Master Swordsman",
+        display_name="Dalian Royal Swordsman",
         tier=7, default_group="Infantry",
         skills=s_river_warden_t7(),
         upgrades=[],  # T7 terminal (Dale caps at T7)
