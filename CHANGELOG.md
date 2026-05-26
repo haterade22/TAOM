@@ -2,6 +2,38 @@
 
 ## 2026-05-26
 
+### feat(dale): Dalian rebrand + cavalry split (Light/Heavy) + King's Guard T7
+
+User-directed naming pass + cavalry restructure. 29 → 30 troops (added Dalian King's Guard at T7).
+
+**11 display renames** (all IDs unchanged; save-compat preserved):
+- `dale_squire`: "Dale Levy" → "Dalian Levy"
+- `dale_man_at_arms`: "Dale Militia" → "Dalian Militia"
+- `dale_riverman`: "Riverman" → "Dalian Riverman"
+- `dale_shipman`: "Shipmen" → "Dalian Shipman" (singular, matching other prefixed names; "Shipment" in spec was a typo)
+- `dale_bowman`: "Yeoman" → "Dalian Yeoman"
+- `dale_longbowman`: "Bowman" → "Dalian Bowman"
+- `dale_royal_archer`: "Marksman of Dale" → "Dalian Marksman"
+- `dale_black_arrow_marksman`: "Barding Marksman" → "Dalian Barding"
+- `dale_outrider`: "Merchant Guard" → "Dalian Merchant Guard"
+- `dale_knight`: "Northman Scout" → "Dalian Northman Scout"
+- (`dale_dalian_mariner` already "Dalian Mariner" from prior pass — no change)
+
+**Cavalry split** — the linear T4→T5→T6→T7 chain becomes a Y-split at T4:
+- T4 `dale_outrider` "Dalian Merchant Guard" — now has **two** upgrade targets:
+  - **LIGHT**: T5 `dale_knight` "Dalian Northman Scout" — terminal (single-tier branch; was upgrading to royal_cavalier).
+  - **HEAVY**: T5 `dale_royal_cavalier` "Dalian Cavalry" → T6 `dale_kinsman_of_eorl` "Dalian Heavy Cavalry" → T7 `dale_kings_guard` "Dalian King's Guard" (NEW terminal).
+
+**Tier downshift** for the heavy line (user-approved): `dale_royal_cavalier` T6→T5, `dale_kinsman_of_eorl` T7→T6, and the NEW `dale_kings_guard` takes T7. Skill curves rebalanced to match new tiers — added `s_dalian_cavalry_t5` (heavy-entry, +Riding/Polearm vs Northman Scout); renamed `s_royal_cavalier_t6` → `s_heavy_cavalry_t6` and `s_kinsman_eorl_t7` → `s_kings_guard_t7` for clarity. Armor mesh also shifts: Dalian Cavalry now uses chivlary a03/a04 (was b01/b02), Heavy Cavalry uses b01/b02 (was b01/b02 — unchanged at T6), King's Guard takes the top chivlary mesh **b03/b04** via `cavalry_armor(8, ...)` (the b03/b04 slot was previously unused — Dale capped at T7 with b01/b02 cavalry armor).
+
+**Party templates**:
+- `vassal_reward_troops_dale`: swapped `dale_kinsman_of_eorl` → `dale_kings_guard` (the elite-reward stack now reflects the new T7 terminal).
+- `kingdom_hero_party_dale_template`: added 1-2 stack `dale_kings_guard`.
+
+**Verification**: 4 Dale tests pass against existing TAOM.dll (no C# in this change); validator PASS across all 8 cultures (Dale: 31 troops [30+wrapper], 120 armor refs [+10 for King's Guard's 5 armor slots × 2 rosters], 0 missing); cavalry tree spot-checked — Merchant Guard splits to {knight (terminal), royal_cavalier→kinsman→kings_guard}.
+
+Save-compat: All existing troop IDs preserved. Tier downshifts on royal_cavalier + kinsman_of_eorl rebalance their levels (32→25, 39→32) and re-pick equipment on next load — no troop disappears from any party.
+
 ### fix(dale): swap Watch/Pikeman weapons + drop Peasant bracers
 
 User-directed correction. Names were tactically backwards relative to the equipment:

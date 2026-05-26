@@ -978,6 +978,7 @@
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.dale_dalian_mariner" />
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.dale_black_arrow_marksman" />
 			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.dale_lake_town_hearthguard" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.dale_kings_guard" />
 		</stacks>
 	</MBPartyTemplate>
 
@@ -1044,7 +1045,7 @@
 		<stacks>
 			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dale_running_river_warden" />
 			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.dale_black_arrow_marksman" />
-			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dale_kinsman_of_eorl" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dale_kings_guard" />
 			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dale_lake_town_hearthguard" />
 		</stacks>
 	</MBPartyTemplate>

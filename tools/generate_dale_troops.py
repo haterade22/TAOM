@@ -22,8 +22,11 @@ Tree design (lore-grounded — see docs/features/dale.md for sources):
     Riverman / Shipmen / Dalian Mariner — spear + shield + 1H sword, Lake-
       Town armor; royal-tier water-folk line (T4-T6).
     Decent Cavalry (T4-T7 capped — Dale isn't horse-country per Tolkien):
-      Merchant Guard → Northman Scout → Dalian Cavalry → Dalian Heavy
-      Cavalry. Skill curve ~70% of Rohan tier-matched parity.
+      Merchant Guard (T4) splits into:
+        LIGHT: Dalian Northman Scout (T5 terminal, single-tier)
+        HEAVY: Dalian Cavalry (T5) → Dalian Heavy Cavalry (T6) → Dalian
+               King's Guard (T7 terminal, top chivlary mesh)
+      Skill curve ~70% of Rohan tier-matched parity.
 - The Pikeman line extends to T7 via the Lake-Town Hearthguard (off Veteran
   Pikeman) — Lake-Town's royal-tier shock infantry.
 - Plus 4 militia troops referenced by spcultures.xslt for garrison spawns.
@@ -227,16 +230,25 @@ def s_hearthguard_t7() -> Skills:
 # tier-matched parity — clearly inferior to Rohirrim horse-lords (lore-correct per Tolkien's
 # Éothéod-vs-Bardings split) but a useable third branch alongside Excellent Archers and
 # Great Infantry.
-def s_outrider_t4() -> Skills:
+#
+# Structure (user spec): T4 Merchant Guard splits into LIGHT and HEAVY:
+#   LIGHT: T5 Dalian Northman Scout (terminal — single-tier light branch)
+#   HEAVY: T5 Dalian Cavalry → T6 Dalian Heavy Cavalry → T7 Dalian King's Guard
+def s_merchant_guard_t4() -> Skills:
     return Skills(Athletics=65, Riding=115, OneHanded=80, Polearm=110, Bow=40)
 
-def s_knight_t5() -> Skills:
-    return Skills(Athletics=80, Riding=150, OneHanded=115, Polearm=155, Bow=50)
+def s_northman_scout_t5() -> Skills:
+    # Light cavalry — slightly more Bow + agility, less Polearm than the heavy entry
+    return Skills(Athletics=85, Riding=155, OneHanded=110, Polearm=145, Bow=60)
 
-def s_royal_cavalier_t6() -> Skills:
+def s_dalian_cavalry_t5() -> Skills:
+    # Heavy entry — slightly more Riding/Polearm, less Bow than Northman Scout
+    return Skills(Athletics=85, Riding=160, OneHanded=120, Polearm=170, Bow=40)
+
+def s_heavy_cavalry_t6() -> Skills:
     return Skills(Athletics=95, Riding=185, OneHanded=145, Polearm=195, Bow=60)
 
-def s_kinsman_eorl_t7() -> Skills:
+def s_kings_guard_t7() -> Skills:
     return Skills(Athletics=110, Riding=220, OneHanded=180, Polearm=235, Bow=70)
 
 
@@ -579,10 +591,10 @@ def build_troops() -> list[Troop]:
         ],
     ))
 
-    # ----- Royal root (T3, branches to archer/infantry/cavalry/riverman) -----
+    # ----- Royal root (T3, branches to riverman/infantry/archer/cavalry) -----
     troops.append(Troop(
         id="dale_squire",
-        display_name="Dale Levy",
+        display_name="Dalian Levy",
         tier=3, default_group="Infantry",
         is_basic_troop=True,
         skills=s_militia(),
@@ -604,7 +616,7 @@ def build_troops() -> list[Troop]:
     # ----- Royal Archer branch (T4-T8) -----
     troops.append(Troop(
         id="dale_bowman",
-        display_name="Yeoman",
+        display_name="Dalian Yeoman",
         tier=4, default_group="Ranged",
         skills=s_bowman_t4(),
         upgrades=["dale_longbowman"],
@@ -630,7 +642,7 @@ def build_troops() -> list[Troop]:
     # (yew is the stronger of the two). T5 keeps the longbow, T6 graduates to yew.
     troops.append(Troop(
         id="dale_longbowman",
-        display_name="Bowman",
+        display_name="Dalian Bowman",
         tier=5, default_group="Ranged",
         skills=s_longbowman_t5(),
         upgrades=["dale_royal_archer"],
@@ -652,7 +664,7 @@ def build_troops() -> list[Troop]:
 
     troops.append(Troop(
         id="dale_royal_archer",
-        display_name="Marksman of Dale",
+        display_name="Dalian Marksman",
         tier=6, default_group="Ranged",
         skills=s_royal_archer_t6(),
         upgrades=["dale_black_arrow_marksman"],
@@ -674,7 +686,7 @@ def build_troops() -> list[Troop]:
 
     troops.append(Troop(
         id="dale_black_arrow_marksman",
-        display_name="Barding Marksman",
+        display_name="Dalian Barding",
         tier=7, default_group="Ranged",
         skills=s_black_arrow_t7(),
         upgrades=[],  # T7 terminal (Dale caps at T7)
@@ -697,7 +709,7 @@ def build_troops() -> list[Troop]:
     # ----- Royal Infantry branch (T4-T8, "Great Infantry") -----
     troops.append(Troop(
         id="dale_man_at_arms",
-        display_name="Dale Militia",
+        display_name="Dalian Militia",
         tier=4, default_group="Infantry",
         skills=s_man_at_arms_t4(),
         upgrades=["dale_guardsman"],
@@ -782,13 +794,16 @@ def build_troops() -> list[Troop]:
         ],
     ))
 
-    # ----- Royal Cavalry branch (T4-T7, "Decent Cavalry") -----
+    # ----- Cavalry branches (T4-T7) — Merchant Guard splits into Light + Heavy -----
+    # Light: T5 Northman Scout (terminal). Heavy: T5 Cavalry → T6 Heavy Cavalry → T7 King's Guard.
+    # Armor downshifts one tier (dale_royal_cavalier T6→T5, dale_kinsman_of_eorl T7→T6) per user
+    # spec; the new dale_kings_guard takes the top chivlary mesh (b03/b04 via cavalry_armor(8, .)).
     troops.append(Troop(
         id="dale_outrider",
-        display_name="Merchant Guard",
+        display_name="Dalian Merchant Guard",
         tier=4, default_group="Cavalry",
-        skills=s_outrider_t4(),
-        upgrades=["dale_knight"],
+        skills=s_merchant_guard_t4(),
+        upgrades=["dale_knight", "dale_royal_cavalier"],  # splits to Light (knight) + Heavy (royal_cavalier)
         rosters=[
             EquipmentRoster({
                 "Item0": "sturgia_sword_4_t4",
@@ -809,12 +824,13 @@ def build_troops() -> list[Troop]:
         ],
     ))
 
+    # LIGHT CAVALRY — T5 terminal, single-tier branch (per user spec)
     troops.append(Troop(
         id="dale_knight",
-        display_name="Northman Scout",
+        display_name="Dalian Northman Scout",
         tier=5, default_group="Cavalry",
-        skills=s_knight_t5(),
-        upgrades=["dale_royal_cavalier"],
+        skills=s_northman_scout_t5(),
+        upgrades=[],  # T5 terminal — light cavalry is the short branch
         rosters=[
             EquipmentRoster({
                 "Item0": "sturgia_lance_1_t4",
@@ -825,8 +841,8 @@ def build_troops() -> list[Troop]:
                 **cavalry_armor(5, "a"),
             }),
             EquipmentRoster({
-                "Item0": "sturgia_lance_2_t5",
-                "Item1": "heavy_horsemans_kite_shield",
+                "Item0": "sturgia_lance_1_t4",
+                "Item1": "horsemans_heater_shield",
                 "Item2": "sturgia_noble_sword_1_t5",
                 "Horse": "charger",
                 "HorseHarness": "chain_horse_harness",
@@ -835,12 +851,40 @@ def build_troops() -> list[Troop]:
         ],
     ))
 
+    # HEAVY CAVALRY — T5 entry (was T6); downshifted one tier per user spec
     troops.append(Troop(
         id="dale_royal_cavalier",
         display_name="Dalian Cavalry",
-        tier=6, default_group="Cavalry",
-        skills=s_royal_cavalier_t6(),
+        tier=5, default_group="Cavalry",
+        skills=s_dalian_cavalry_t5(),
         upgrades=["dale_kinsman_of_eorl"],
+        rosters=[
+            EquipmentRoster({
+                "Item0": "sturgia_lance_2_t5",
+                "Item1": "heavy_horsemans_kite_shield",
+                "Item2": "sturgia_noble_sword_1_t5",
+                "Horse": "charger",
+                "HorseHarness": "chain_horse_harness",
+                **cavalry_armor(5, "a"),
+            }),
+            EquipmentRoster({
+                "Item0": "sturgia_lance_2_t5",
+                "Item1": "heavy_horsemans_kite_shield",
+                "Item2": "sturgia_noble_sword_2_t5",
+                "Horse": "charger",
+                "HorseHarness": "chain_horse_harness",
+                **cavalry_armor(5, "b"),
+            }),
+        ],
+    ))
+
+    # HEAVY CAVALRY — T6 (was T7); downshifted one tier per user spec
+    troops.append(Troop(
+        id="dale_kinsman_of_eorl",
+        display_name="Dalian Heavy Cavalry",
+        tier=6, default_group="Cavalry",
+        skills=s_heavy_cavalry_t6(),
+        upgrades=["dale_kings_guard"],
         rosters=[
             EquipmentRoster({
                 "Item0": "sturgia_lance_2_t5",
@@ -861,12 +905,15 @@ def build_troops() -> list[Troop]:
         ],
     ))
 
+    # NEW HEAVY CAVALRY TERMINAL — T7 Dalian King's Guard. Uses cavalry_armor(8, ...) to
+    # pick up the top chivlary mesh (b03/b04); _armor_suffix's T7→b01/b02 mapping is
+    # claimed by the archer line at T7, so kings_guard borrows the T8-slot suffix instead.
     troops.append(Troop(
-        id="dale_kinsman_of_eorl",
-        display_name="Dalian Heavy Cavalry",
+        id="dale_kings_guard",
+        display_name="Dalian King's Guard",
         tier=7, default_group="Cavalry",
-        skills=s_kinsman_eorl_t7(),
-        upgrades=[],  # cavalry capped at T7 per lore — Dale isn't horse-country
+        skills=s_kings_guard_t7(),
+        upgrades=[],  # T7 terminal (Dale caps at T7)
         rosters=[
             EquipmentRoster({
                 "Item0": "sturgia_lance_2_t5",
@@ -874,7 +921,7 @@ def build_troops() -> list[Troop]:
                 "Item2": "sturgia_noble_sword_3_t5",
                 "Horse": "charger",
                 "HorseHarness": "rohan_horse_armor_scalemail",
-                **cavalry_armor(7, "a"),
+                **cavalry_armor(8, "a"),  # chivlary b03
             }),
             EquipmentRoster({
                 "Item0": "sturgia_polearm_1_t5",
@@ -882,7 +929,7 @@ def build_troops() -> list[Troop]:
                 "Item2": "sturgia_noble_sword_4_t5",
                 "Horse": "charger",
                 "HorseHarness": "rohan_horse_armor_scalemail",
-                **cavalry_armor(7, "b"),
+                **cavalry_armor(8, "b"),  # chivlary b04
             }),
         ],
     ))
@@ -890,7 +937,7 @@ def build_troops() -> list[Troop]:
     # ----- Riverman line (T4-T6, off Dale Levy) — spear + shield + sword, Lake-Town armor -----
     troops.append(Troop(
         id="dale_riverman",
-        display_name="Riverman",
+        display_name="Dalian Riverman",
         tier=4, default_group="Infantry",
         skills=s_riverman_t4(),
         upgrades=["dale_shipman"],
@@ -912,7 +959,7 @@ def build_troops() -> list[Troop]:
 
     troops.append(Troop(
         id="dale_shipman",
-        display_name="Shipmen",
+        display_name="Dalian Shipman",
         tier=5, default_group="Infantry",
         skills=s_shipman_t5(),
         upgrades=["dale_dalian_mariner"],
@@ -934,7 +981,7 @@ def build_troops() -> list[Troop]:
 
     troops.append(Troop(
         id="dale_dalian_mariner",
-        display_name="Dalian Mariner",
+        display_name="Dalian Mariner",  # already prefixed in prior pass
         tier=6, default_group="Infantry",
         skills=s_dalian_mariner_t6(),
         upgrades=[],  # terminal in Riverman line

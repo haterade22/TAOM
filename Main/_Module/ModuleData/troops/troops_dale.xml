@@ -406,7 +406,7 @@
         id="dale_squire"
         default_group="Infantry"
         level="12"
-        name="{=aom_dale_squire_name}[Dale] Dale Levy"
+        name="{=aom_dale_squire_name}[Dale] Dalian Levy"
         occupation="Soldier"
         is_basic_troop="true"
         culture="Culture.sturgia">
@@ -455,7 +455,7 @@
         id="dale_bowman"
         default_group="Ranged"
         level="19"
-        name="{=aom_dale_bowman_name}[Dale] Yeoman"
+        name="{=aom_dale_bowman_name}[Dale] Dalian Yeoman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -502,7 +502,7 @@
         id="dale_longbowman"
         default_group="Ranged"
         level="25"
-        name="{=aom_dale_longbowman_name}[Dale] Bowman"
+        name="{=aom_dale_longbowman_name}[Dale] Dalian Bowman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -549,7 +549,7 @@
         id="dale_royal_archer"
         default_group="Ranged"
         level="32"
-        name="{=aom_dale_royal_archer_name}[Dale] Marksman of Dale"
+        name="{=aom_dale_royal_archer_name}[Dale] Dalian Marksman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -596,7 +596,7 @@
         id="dale_black_arrow_marksman"
         default_group="Ranged"
         level="39"
-        name="{=aom_dale_black_arrow_marksman_name}[Dale] Barding Marksman"
+        name="{=aom_dale_black_arrow_marksman_name}[Dale] Dalian Barding"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -641,7 +641,7 @@
         id="dale_man_at_arms"
         default_group="Infantry"
         level="19"
-        name="{=aom_dale_man_at_arms_name}[Dale] Dale Militia"
+        name="{=aom_dale_man_at_arms_name}[Dale] Dalian Militia"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -826,7 +826,7 @@
         id="dale_outrider"
         default_group="Cavalry"
         level="19"
-        name="{=aom_dale_outrider_name}[Dale] Merchant Guard"
+        name="{=aom_dale_outrider_name}[Dale] Dalian Merchant Guard"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -844,6 +844,7 @@
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_knight" />
+            <upgrade_target id="NPCCharacter.dale_royal_cavalier" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
@@ -877,25 +878,23 @@
         id="dale_knight"
         default_group="Cavalry"
         level="25"
-        name="{=aom_dale_knight_name}[Dale] Northman Scout"
+        name="{=aom_dale_knight_name}[Dale] Dalian Northman Scout"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="80" />
-            <skill id="Riding" value="150" />
-            <skill id="OneHanded" value="115" />
+            <skill id="Athletics" value="85" />
+            <skill id="Riding" value="155" />
+            <skill id="OneHanded" value="110" />
             <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="155" />
-            <skill id="Bow" value="50" />
+            <skill id="Polearm" value="145" />
+            <skill id="Bow" value="60" />
             <skill id="Crossbow" value="0" />
             <skill id="Throwing" value="0" />
         </skills>
-        <upgrade_targets>
-            <upgrade_target id="NPCCharacter.dale_royal_cavalier" />
-        </upgrade_targets>
+        <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_lance_1_t4" />
@@ -910,8 +909,8 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sturgia_lance_2_t5" />
-                <equipment slot="Item1" id="Item.heavy_horsemans_kite_shield" />
+                <equipment slot="Item0" id="Item.sturgia_lance_1_t4" />
+                <equipment slot="Item1" id="Item.horsemans_heater_shield" />
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_1_t5" />
                 <equipment slot="Horse" id="Item.charger" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
@@ -927,8 +926,59 @@
     <NPCCharacter
         id="dale_royal_cavalier"
         default_group="Cavalry"
-        level="32"
+        level="25"
         name="{=aom_dale_royal_cavalier_name}[Dale] Dalian Cavalry"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="85" />
+            <skill id="Riding" value="160" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="0" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="40" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="0" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.dale_kinsman_of_eorl" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sturgia_lance_2_t5" />
+                <equipment slot="Item1" id="Item.heavy_horsemans_kite_shield" />
+                <equipment slot="Item2" id="Item.sturgia_noble_sword_1_t5" />
+                <equipment slot="Horse" id="Item.charger" />
+                <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a03" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a03" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a03" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a03" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a03" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sturgia_lance_2_t5" />
+                <equipment slot="Item1" id="Item.heavy_horsemans_kite_shield" />
+                <equipment slot="Item2" id="Item.sturgia_noble_sword_2_t5" />
+                <equipment slot="Horse" id="Item.charger" />
+                <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dale_kinsman_of_eorl"
+        default_group="Cavalry"
+        level="32"
+        name="{=aom_dale_kinsman_of_eorl_name}[Dale] Dalian Heavy Cavalry"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -945,7 +995,7 @@
             <skill id="Throwing" value="0" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.dale_kinsman_of_eorl" />
+            <upgrade_target id="NPCCharacter.dale_kings_guard" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
@@ -976,10 +1026,10 @@
     </NPCCharacter>
 
     <NPCCharacter
-        id="dale_kinsman_of_eorl"
+        id="dale_kings_guard"
         default_group="Cavalry"
         level="39"
-        name="{=aom_dale_kinsman_of_eorl_name}[Dale] Dalian Heavy Cavalry"
+        name="{=aom_dale_kings_guard_name}[Dale] Dalian King's Guard"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -1003,11 +1053,11 @@
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_3_t5" />
                 <equipment slot="Horse" id="Item.charger" />
                 <equipment slot="HorseHarness" id="Item.rohan_horse_armor_scalemail" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b01" />
-                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b01" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b01" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b01" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b01" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b03" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b03" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b03" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b03" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b03" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
@@ -1015,11 +1065,11 @@
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_4_t5" />
                 <equipment slot="Horse" id="Item.charger" />
                 <equipment slot="HorseHarness" id="Item.rohan_horse_armor_scalemail" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b02" />
-                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b02" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b02" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b02" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b02" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b04" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b04" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b04" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b04" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b04" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1028,7 +1078,7 @@
         id="dale_riverman"
         default_group="Infantry"
         level="19"
-        name="{=aom_dale_riverman_name}[Dale] Riverman"
+        name="{=aom_dale_riverman_name}[Dale] Dalian Riverman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -1075,7 +1125,7 @@
         id="dale_shipman"
         default_group="Infantry"
         level="25"
-        name="{=aom_dale_shipman_name}[Dale] Shipmen"
+        name="{=aom_dale_shipman_name}[Dale] Dalian Shipman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
