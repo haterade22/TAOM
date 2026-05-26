@@ -33,20 +33,16 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_sword_1_t2" />
                 <equipment slot="Item1" id="Item.sturgia_old_shield_a" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
                 <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
                 <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.northern_spear_1_t2" />
                 <equipment slot="Item1" id="Item.sturgia_old_shield_b" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a02" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a02" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a02" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a02" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -88,10 +84,10 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.northern_spear_2_t3" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a02" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a02" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a02" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a02" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
             </EquipmentRoster>
         </Equipments>
@@ -124,20 +120,20 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.fine_pike_t4" />
                 <equipment slot="Item1" id="Item.sturgia_sword_4_t4" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a02" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a02" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a02" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a02" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.military_fork_pike_t3" />
                 <equipment slot="Item1" id="Item.sturgia_sword_5_t4" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a02" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a02" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a02" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a02" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -178,10 +174,10 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.thamaskene_pike_t4" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_1_t5" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
         </Equipments>
@@ -212,20 +208,20 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_2_t5" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b01" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b01" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b01" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b01" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_3_t5" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b02" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b02" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -257,20 +253,20 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_2haxe_1_t4" />
                 <equipment slot="Item1" id="Item.sturgia_sword_4_t4" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b01" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b01" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.billhook_polearm_t2" />
                 <equipment slot="Item1" id="Item.sturgia_sword_5_t4" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b01" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b01" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -302,20 +298,20 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
                 <equipment slot="Item1" id="Item.sturgia_sword_5_t5" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b02" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b02" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_2haxe_2_t5" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_1_t5" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b02" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b02" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -340,25 +336,70 @@
             <skill id="Crossbow" value="0" />
             <skill id="Throwing" value="0" />
         </skills>
-        <upgrade_targets></upgrade_targets>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.dale_lake_town_hearthguard" />
+        </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_2_t5" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b01" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b01" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b01" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b01" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b03" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b03" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b03" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b03" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_2haxe_2_t5" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_3_t5" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b02" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b02" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b03" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b03" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b03" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b03" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dale_lake_town_hearthguard"
+        default_group="Infantry"
+        level="39"
+        name="{=aom_dale_lake_town_hearthguard_name}[Dale] Lake-Town Hearthguard"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="145" />
+            <skill id="Riding" value="0" />
+            <skill id="OneHanded" value="150" />
+            <skill id="TwoHanded" value="150" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="35" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="0" />
+        </skills>
+        <upgrade_targets></upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
+                <equipment slot="Item1" id="Item.sturgia_noble_sword_3_t5" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b04" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b04" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b04" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b04" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sturgia_2haxe_2_t5" />
+                <equipment slot="Item1" id="Item.sturgia_noble_sword_4_t5" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b04" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b04" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b04" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b04" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -385,10 +426,10 @@
             <skill id="Throwing" value="30" />
         </skills>
         <upgrade_targets>
-            <upgrade_target id="NPCCharacter.dale_bowman" />
-            <upgrade_target id="NPCCharacter.dale_man_at_arms" />
-            <upgrade_target id="NPCCharacter.dale_outrider" />
             <upgrade_target id="NPCCharacter.dale_riverman" />
+            <upgrade_target id="NPCCharacter.dale_man_at_arms" />
+            <upgrade_target id="NPCCharacter.dale_bowman" />
+            <upgrade_target id="NPCCharacter.dale_outrider" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
@@ -557,7 +598,7 @@
         id="dale_black_arrow_marksman"
         default_group="Ranged"
         level="39"
-        name="{=aom_dale_black_arrow_marksman_name}[Dale] Barding"
+        name="{=aom_dale_black_arrow_marksman_name}[Dale] Barding Marksman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -573,9 +614,7 @@
             <skill id="Crossbow" value="0" />
             <skill id="Throwing" value="35" />
         </skills>
-        <upgrade_targets>
-            <upgrade_target id="NPCCharacter.dale_kings_bowman" />
-        </upgrade_targets>
+        <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.noble_bow" />
@@ -596,51 +635,6 @@
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b02" />
                 <equipment slot="Leg" id="Item.sk_dale_boots_archer_b02" />
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b01" />
-            </EquipmentRoster>
-        </Equipments>
-    </NPCCharacter>
-
-    <NPCCharacter
-        id="dale_kings_bowman"
-        default_group="Ranged"
-        level="46"
-        name="{=aom_dale_kings_bowman_name}[Dale] King's Bowman"
-        occupation="Soldier"
-        culture="Culture.sturgia">
-        <face>
-            <face_key_template value="BodyProperty.fighter_sturgia" />
-        </face>
-        <skills>
-            <skill id="Athletics" value="155" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="120" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="80" />
-            <skill id="Bow" value="230" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="40" />
-        </skills>
-        <upgrade_targets></upgrade_targets>
-        <Equipments>
-            <EquipmentRoster>
-                <equipment slot="Item0" id="Item.noble_bow" />
-                <equipment slot="Item1" id="Item.barbed_arrows" />
-                <equipment slot="Item2" id="Item.sturgia_noble_sword_3_t5" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_archer_b03" />
-                <equipment slot="Body" id="Item.sk_dale_chest_archer_b03" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b03" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_archer_b03" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b03" />
-            </EquipmentRoster>
-            <EquipmentRoster>
-                <equipment slot="Item0" id="Item.noble_bow" />
-                <equipment slot="Item1" id="Item.barbed_arrows" />
-                <equipment slot="Item2" id="Item.sturgia_noble_sword_4_t5" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_archer_b04" />
-                <equipment slot="Body" id="Item.sk_dale_chest_archer_b04" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b04" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_archer_b04" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b04" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -790,7 +784,7 @@
         id="dale_running_river_warden"
         default_group="Infantry"
         level="39"
-        name="{=aom_dale_running_river_warden_name}[Dale] Warden of the Running River"
+        name="{=aom_dale_running_river_warden_name}[Dale] Dalian Master Swordsman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -806,9 +800,7 @@
             <skill id="Crossbow" value="0" />
             <skill id="Throwing" value="0" />
         </skills>
-        <upgrade_targets>
-            <upgrade_target id="NPCCharacter.dale_kings_champion" />
-        </upgrade_targets>
+        <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
@@ -828,50 +820,6 @@
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b02" />
                 <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b02" />
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b02" />
-            </EquipmentRoster>
-        </Equipments>
-    </NPCCharacter>
-
-    <NPCCharacter
-        id="dale_kings_champion"
-        default_group="Infantry"
-        level="46"
-        name="{=aom_dale_kings_champion_name}[Dale] King's Champion"
-        occupation="Soldier"
-        culture="Culture.sturgia">
-        <face>
-            <face_key_template value="BodyProperty.fighter_sturgia" />
-        </face>
-        <skills>
-            <skill id="Athletics" value="160" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="220" />
-            <skill id="TwoHanded" value="160" />
-            <skill id="Polearm" value="205" />
-            <skill id="Bow" value="40" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
-        </skills>
-        <upgrade_targets></upgrade_targets>
-        <Equipments>
-            <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
-                <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
-                <equipment slot="Item2" id="Item.sturgia_polearm_1_t5" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b03" />
-                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b03" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b03" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b03" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b03" />
-            </EquipmentRoster>
-            <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sturgia_2haxe_2_t5" />
-                <equipment slot="Item2" id="Item.sturgia_noble_sword_4_t5" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b04" />
-                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b04" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b04" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b04" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b04" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

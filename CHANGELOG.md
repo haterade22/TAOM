@@ -2,6 +2,45 @@
 
 ## 2026-05-26
 
+### feat(dale): T8 removed, Lake-Town Hearthguard added, per-tier explicit armor
+
+Third pass on the Dale tree per user direction. 30 → 29 troops (deleted 2 T8 elites, added 1 T7 terminal). Dale now caps at T7 — no T8 troops.
+
+**Tree changes:**
+- Dale Levy (`dale_squire`) upgrade order reordered top→bottom: **dale_riverman, dale_man_at_arms, dale_bowman, dale_outrider** (was bowman/man_at_arms/outrider/riverman).
+- Deleted T8 troops: `dale_kings_bowman` "King's Bowman" and `dale_kings_champion` "King's Champion" removed entirely. Skill functions `s_kings_bowman_t8` / `s_kings_champion_t8` deleted.
+- `dale_black_arrow_marksman` upgrades=[] (was → dale_kings_bowman). Display: **"Barding"** → **"Barding Marksman"**.
+- `dale_running_river_warden` upgrades=[] (was → dale_kings_champion). Display: **"Warden of the Running River"** → **"Dalian Master Swordsman"**.
+- New T7 troop **`dale_lake_town_hearthguard`** "Lake-Town Hearthguard" — Lake-Town royal-tier 2H polearm shock infantry. `dale_veteran_spearman` now upgrades to it (was terminal). Skill curve: Polearm-primary (220), mild TwoHanded (150), OneHanded (150).
+
+**Explicit per-tier mariner armor** for all 8 existing Lake-Town troops (Watch line + Pikeman line + levy root) + the new Hearthguard, per user spec. Each tier maps to a single mariner suffix across all 5 slots:
+
+| Troop | Suffix | Helmet | Chest | Bracers | Boots | Shoulder |
+|---|---|---|---|---|---|---|
+| Lake-Town Peasant (T2) | a01 | — | a01 | a01 | a01 | — |
+| Lake-Town Militia (T3) | a01 | a01 | a01 | a01 | a01 | a01 |
+| Lake-Town Watchman (T4) | a02 | a02 | a02 | a02 | a02 | a01* |
+| Lake-Town Veteran Watchman (T5) | a03 | a03 | a03 | a03 | a03 | a03 |
+| Lake-Town Officer of the Watch (T6) | a04 | a04 | a04 | a04 | a04 | a03* |
+| Lake-Town Patrolman (T4) | b01 | b01 | b01 | b01 | b01 | b01 |
+| Lake-Town Pikeman (T5) | b02 | b02 | b02 | b02 | b02 | b01* |
+| Lake-Town Veteran Pikeman (T6) | b03 | b03 | b03 | b03 | b03 | b03 |
+| Lake-Town Hearthguard (T7) | b04 | b04 | b04 | b04 | b04 | b03* |
+
+*Solus's mariner shoulder mesh exists only at a01/a03/b01/b03. For tiers a02/a04/b02/b04 the shoulder falls back to the next-lower available variant (a02→a01, a04→a03, b02→b01, b04→b03). Documented in `tools/generate_dale_troops.py:lake_town_armor_explicit`.
+
+**Party template updates** (`Main/_Module/ModuleData/taom_partyTemplates.xml`):
+- `vassal_reward_troops_dale`: removed `dale_kings_champion` + `dale_kings_bowman` stacks; added `dale_running_river_warden` (2), `dale_black_arrow_marksman` (3), `dale_lake_town_hearthguard` (1) — keeps `dale_kinsman_of_eorl` (2). 8 elite-T7 troops total per vassal reward.
+- `kingdom_hero_party_dale_template`: added 1-2 stack `dale_lake_town_hearthguard`.
+
+**Verification**: `python tools/generate_dale_troops.py --dry-run` shows 29 troops, all 25 upgrade refs resolve, T8 troops confirmed gone, Hearthguard confirmed present. `validate_all_troop_refs.py` PASS (Dale: 30 troops [29 + wrapper-count offset], 110 armor refs, 0 missing). 4 Dale tests pass against the existing TAOM.dll (no C# changes in this commit — pure data + Python tool + docs).
+
+Save-compat: All existing troop IDs preserved (display-name only renames). Deletion of `dale_kings_bowman` / `dale_kings_champion` would break only saves where one of those specific IDs is referenced inline (vassal-reward parties not yet generated, since vassal_reward_troops_dale shipped only in ce978f5 today and no campaigns have run long enough for it to fire). The new `dale_lake_town_hearthguard` ID is additive.
+
+Not-tested: live in-game upgrade chain to Hearthguard, per-tier mariner armor visual verification. Per ADR-008.
+
+Build-state note: `dotnet build Main` fails the post-build deploy step on a locked `0Harmony.dll` (game/launcher holds handle); the deploy step is orthogonal to this change-set, which is pure data. Tests pass against the prior TAOM.dll.
+
 ### feat(dale): troop tree restructure — Lake-Town renames + Riverman line + vanilla pikes
 
 User-directed second pass after the initial Dale ship (commit `ce978f5`). Reorganises the 27-troop tree into 30 troops with display-name renames, equipment swaps for the two Lake-Town infantry lines, and a new royal-tier spear-and-shield line off Dale Levy. All troop IDs unchanged (save-compat preserved per `troops.md` rule); display names + equipment changed in-place.

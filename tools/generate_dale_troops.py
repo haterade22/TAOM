@@ -11,16 +11,19 @@ Tree design (lore-grounded — see docs/features/dale.md for sources):
     Pikeman line — 2H halberds/polearms, shock infantry: Patrolman → Pikeman
       → Veteran Pikeman.
   Both Lake-Town lines wear mariner-class armor (light-medium, Esgaroth theme).
-- Royal line (T3-T8) — Dale Levy (basic_troop) branches into four:
-    Excellent Archers — Yeoman → Bowman → Marksman of Dale → Barding →
-      King's Bowman. +10-15 Bow over standard tier baseline.
+- Royal line (T3-T7) — Dale Levy (basic_troop) branches into four (Dale caps
+  at T7; no T8 troops):
+    Excellent Archers — Yeoman → Bowman → Marksman of Dale → Barding
+      Marksman (T7 terminal). +10-15 Bow over standard tier baseline.
     Great Infantry — Dale Militia → Dalian Guardsman → Dalian Swordsman →
-      Warden of the Running River → King's Champion.
+      Dalian Master Swordsman (T7 terminal).
     Riverman / Shipmen / Dalian Mariner — spear + shield + 1H sword, Lake-
       Town armor; royal-tier water-folk line (T4-T6).
     Decent Cavalry (T4-T7 capped — Dale isn't horse-country per Tolkien):
       Merchant Guard → Northman Scout → Dalian Cavalry → Dalian Heavy
       Cavalry. Skill curve ~70% of Rohan tier-matched parity.
+- The Pikeman line extends to T7 via the Lake-Town Hearthguard (off Veteran
+  Pikeman) — Lake-Town's royal-tier shock infantry.
 - Plus 4 militia troops referenced by spcultures.xslt for garrison spawns.
 
 Equipment uses:
@@ -195,9 +198,6 @@ def s_royal_archer_t6() -> Skills:
 def s_black_arrow_t7() -> Skills:
     return Skills(Athletics=135, OneHanded=100, Polearm=70, Bow=195, Throwing=35)
 
-def s_kings_bowman_t8() -> Skills:
-    return Skills(Athletics=155, OneHanded=120, Polearm=80, Bow=230, Throwing=40)
-
 
 # ---------- Royal Infantry branch ("Great Infantry") ----------
 def s_man_at_arms_t4() -> Skills:
@@ -212,8 +212,11 @@ def s_royal_guard_t6() -> Skills:
 def s_river_warden_t7() -> Skills:
     return Skills(Athletics=140, OneHanded=190, Polearm=175, TwoHanded=130, Bow=35)
 
-def s_kings_champion_t8() -> Skills:
-    return Skills(Athletics=160, OneHanded=220, Polearm=205, TwoHanded=160, Bow=40)
+# ---------- Lake-Town Hearthguard (T7 terminal off the Pikeman line) ----------
+# 2H polearm shock infantry — the Lake-Town royal-tier counterpart to the Watch
+# line's anti-cavalry pikemen. Polearm-primary, mild TwoHanded for overhead swing.
+def s_hearthguard_t7() -> Skills:
+    return Skills(Athletics=145, OneHanded=150, TwoHanded=150, Polearm=220, Bow=35)
 
 
 # ---------- Royal Cavalry branch ("Decent Cavalry" — capped at T7, ~30% under Rohan parity) ----------
@@ -311,6 +314,32 @@ def lake_town_armor(tier: int, variant: str) -> dict[str, str]:
     }
 
 
+def lake_town_armor_explicit(suffix: str, *, no_helmet: bool = False, no_shoulder: bool = False) -> dict[str, str]:
+    """Build a Lake-Town armor set keyed by an EXPLICIT mariner-suffix (a01..b04),
+    not the tier-derived implicit suffix. Used for the Lake-Town Watch / Pikeman /
+    levy lines per user spec — each tier gets a specific suffix:
+        Peasant a01 (no helmet/shoulder) → Militia a01 → Watchman a02 →
+        Veteran Watchman a03 → Officer of the Watch a04;
+        Patrolman b01 → Pikeman b02 → Veteran Pikeman b03 → Hearthguard b04.
+
+    Solus's mariner shoulder mesh exists only at a01/a03/b01/b03; suffixes
+    a02/a04/b02/b04 fall back to the next-lower available shoulder.
+    """
+    armor: dict[str, str] = {}
+    if not no_helmet:
+        armor["Head"] = f"sk_dale_lake_town_helmet_mariner_{suffix}"
+    armor["Body"] = f"sk_dale_lake_town_chest_mariner_{suffix}"
+    armor["Gloves"] = f"sk_dale_lake_town_bracers_mariner_{suffix}"
+    armor["Leg"] = f"sk_dale_lake_town_boots_mariner_{suffix}"
+    if not no_shoulder:
+        shoulder_fallback = {
+            "a01": "a01", "a02": "a01", "a03": "a03", "a04": "a03",
+            "b01": "b01", "b02": "b01", "b03": "b03", "b04": "b03",
+        }
+        armor["Cape"] = f"sk_dale_lake_town_shoulder_mariner_{shoulder_fallback[suffix]}"
+    return armor
+
+
 def _armor_suffix(tier: int, variant: str) -> str:
     """Map (tier, variant) -> armor suffix (a01/a02/a03/a04/b01/b02/b03/b04)."""
     table = {
@@ -350,6 +379,9 @@ def build_troops() -> list[Troop]:
     troops: list[Troop] = []
 
     # ----- Lake-Town Levy Root -----
+    # Per user spec: explicit per-tier mariner armor suffixes.
+    # Peasant: a01 chest/bracers/boots only (no helmet, no shoulder).
+    # Militia: a01 across all 5 slots.
     troops.append(Troop(
         id="dale_recruit",
         display_name="Lake-Town Peasant",
@@ -361,12 +393,12 @@ def build_troops() -> list[Troop]:
             EquipmentRoster({
                 "Item0": "sturgia_sword_1_t2",
                 "Item1": "sturgia_old_shield_a",
-                **lake_town_armor(2, "a"),
+                **lake_town_armor_explicit("a01", no_helmet=True, no_shoulder=True),
             }),
             EquipmentRoster({
                 "Item0": "northern_spear_1_t2",
                 "Item1": "sturgia_old_shield_b",
-                **lake_town_armor(2, "b"),
+                **lake_town_armor_explicit("a01", no_helmet=True, no_shoulder=True),
             }),
         ],
     ))
@@ -381,17 +413,18 @@ def build_troops() -> list[Troop]:
             EquipmentRoster({
                 "Item0": "sturgia_sword_2_t3",
                 "Item1": "sturgia_old_shield_c",
-                **lake_town_armor(3, "a"),
+                **lake_town_armor_explicit("a01"),
             }),
             EquipmentRoster({
                 "Item0": "northern_spear_2_t3",
                 "Item1": "sturgia_infantry_shield_a",
-                **lake_town_armor(3, "b"),
+                **lake_town_armor_explicit("a01"),
             }),
         ],
     ))
 
     # ----- Lake-Town Watch line (T4-T6) — vanilla pikes + 1H sword sidearm, no shield -----
+    # Armor: Watchman a02, Veteran Watchman a03, Officer of the Watch a04 (full 5-slot mariner).
     troops.append(Troop(
         id="dale_lake_town_skirmisher",
         display_name="Lake-Town Watchman",
@@ -402,12 +435,12 @@ def build_troops() -> list[Troop]:
             EquipmentRoster({
                 "Item0": "fine_pike_t4",
                 "Item1": "sturgia_sword_4_t4",
-                **lake_town_armor(4, "a"),
+                **lake_town_armor_explicit("a02"),
             }),
             EquipmentRoster({
                 "Item0": "military_fork_pike_t3",
                 "Item1": "sturgia_sword_5_t4",
-                **lake_town_armor(4, "b"),
+                **lake_town_armor_explicit("a02"),
             }),
         ],
     ))
@@ -422,12 +455,12 @@ def build_troops() -> list[Troop]:
             EquipmentRoster({
                 "Item0": "vlandia_pike_1_t5",
                 "Item1": "sturgia_sword_5_t5",
-                **lake_town_armor(5, "a"),
+                **lake_town_armor_explicit("a03"),
             }),
             EquipmentRoster({
                 "Item0": "thamaskene_pike_t4",
                 "Item1": "sturgia_noble_sword_1_t5",
-                **lake_town_armor(5, "b"),
+                **lake_town_armor_explicit("a03"),
             }),
         ],
     ))
@@ -442,17 +475,18 @@ def build_troops() -> list[Troop]:
             EquipmentRoster({
                 "Item0": "vlandia_pike_1_t5",
                 "Item1": "sturgia_noble_sword_2_t5",
-                **lake_town_armor(6, "a"),
+                **lake_town_armor_explicit("a04"),
             }),
             EquipmentRoster({
                 "Item0": "vlandia_pike_1_t5",
                 "Item1": "sturgia_noble_sword_3_t5",
-                **lake_town_armor(6, "b"),
+                **lake_town_armor_explicit("a04"),
             }),
         ],
     ))
 
-    # ----- Lake-Town Pikeman line (T4-T6) — 2H halberds/polearms, no shield -----
+    # ----- Lake-Town Pikeman line (T4-T7) — 2H halberds/polearms, no shield -----
+    # Armor: Patrolman b01, Pikeman b02, Veteran Pikeman b03, Hearthguard b04.
     troops.append(Troop(
         id="dale_footman",
         display_name="Lake-Town Patrolman",
@@ -463,12 +497,12 @@ def build_troops() -> list[Troop]:
             EquipmentRoster({
                 "Item0": "sturgia_2haxe_1_t4",
                 "Item1": "sturgia_sword_4_t4",
-                **lake_town_armor(4, "a"),
+                **lake_town_armor_explicit("b01"),
             }),
             EquipmentRoster({
                 "Item0": "billhook_polearm_t2",
                 "Item1": "sturgia_sword_5_t4",
-                **lake_town_armor(4, "b"),
+                **lake_town_armor_explicit("b01"),
             }),
         ],
     ))
@@ -483,12 +517,12 @@ def build_troops() -> list[Troop]:
             EquipmentRoster({
                 "Item0": "sturgia_polearm_1_t5",
                 "Item1": "sturgia_sword_5_t5",
-                **lake_town_armor(5, "a"),
+                **lake_town_armor_explicit("b02"),
             }),
             EquipmentRoster({
                 "Item0": "sturgia_2haxe_2_t5",
                 "Item1": "sturgia_noble_sword_1_t5",
-                **lake_town_armor(5, "b"),
+                **lake_town_armor_explicit("b02"),
             }),
         ],
     ))
@@ -498,17 +532,37 @@ def build_troops() -> list[Troop]:
         display_name="Lake-Town Veteran Pikeman",
         tier=6, default_group="Infantry",
         skills=s_veteran_spearman_t6(),
-        upgrades=[],
+        upgrades=["dale_lake_town_hearthguard"],
         rosters=[
             EquipmentRoster({
                 "Item0": "sturgia_polearm_1_t5",
                 "Item1": "sturgia_noble_sword_2_t5",
-                **lake_town_armor(6, "a"),
+                **lake_town_armor_explicit("b03"),
             }),
             EquipmentRoster({
                 "Item0": "sturgia_2haxe_2_t5",
                 "Item1": "sturgia_noble_sword_3_t5",
-                **lake_town_armor(6, "b"),
+                **lake_town_armor_explicit("b03"),
+            }),
+        ],
+    ))
+
+    troops.append(Troop(
+        id="dale_lake_town_hearthguard",
+        display_name="Lake-Town Hearthguard",
+        tier=7, default_group="Infantry",
+        skills=s_hearthguard_t7(),
+        upgrades=[],  # T7 terminal (Dale caps at T7)
+        rosters=[
+            EquipmentRoster({
+                "Item0": "sturgia_polearm_1_t5",
+                "Item1": "sturgia_noble_sword_3_t5",
+                **lake_town_armor_explicit("b04"),
+            }),
+            EquipmentRoster({
+                "Item0": "sturgia_2haxe_2_t5",
+                "Item1": "sturgia_noble_sword_4_t5",
+                **lake_town_armor_explicit("b04"),
             }),
         ],
     ))
@@ -520,7 +574,7 @@ def build_troops() -> list[Troop]:
         tier=3, default_group="Infantry",
         is_basic_troop=True,
         skills=s_militia(),
-        upgrades=["dale_bowman", "dale_man_at_arms", "dale_outrider", "dale_riverman"],
+        upgrades=["dale_riverman", "dale_man_at_arms", "dale_bowman", "dale_outrider"],
         rosters=[
             EquipmentRoster({
                 "Item0": "sturgia_sword_2_t3",
@@ -608,10 +662,10 @@ def build_troops() -> list[Troop]:
 
     troops.append(Troop(
         id="dale_black_arrow_marksman",
-        display_name="Barding",
+        display_name="Barding Marksman",
         tier=7, default_group="Ranged",
         skills=s_black_arrow_t7(),
-        upgrades=["dale_kings_bowman"],
+        upgrades=[],  # T7 terminal (Dale caps at T7)
         rosters=[
             EquipmentRoster({
                 "Item0": "noble_bow",
@@ -624,28 +678,6 @@ def build_troops() -> list[Troop]:
                 "Item1": "barbed_arrows",
                 "Item2": "sturgia_noble_sword_4_t5",
                 **archer_armor(7, "b"),
-            }),
-        ],
-    ))
-
-    troops.append(Troop(
-        id="dale_kings_bowman",
-        display_name="King's Bowman",
-        tier=8, default_group="Ranged",
-        skills=s_kings_bowman_t8(),
-        upgrades=[],
-        rosters=[
-            EquipmentRoster({
-                "Item0": "noble_bow",
-                "Item1": "barbed_arrows",
-                "Item2": "sturgia_noble_sword_3_t5",
-                **archer_armor(8, "a"),
-            }),
-            EquipmentRoster({
-                "Item0": "noble_bow",
-                "Item1": "barbed_arrows",
-                "Item2": "sturgia_noble_sword_4_t5",
-                **archer_armor(8, "b"),
             }),
         ],
     ))
@@ -719,10 +751,10 @@ def build_troops() -> list[Troop]:
 
     troops.append(Troop(
         id="dale_running_river_warden",
-        display_name="Warden of the Running River",
+        display_name="Dalian Master Swordsman",
         tier=7, default_group="Infantry",
         skills=s_river_warden_t7(),
-        upgrades=["dale_kings_champion"],
+        upgrades=[],  # T7 terminal (Dale caps at T7)
         rosters=[
             EquipmentRoster({
                 "Item0": "sturgia_noble_sword_3_t5",
@@ -734,27 +766,6 @@ def build_troops() -> list[Troop]:
                 "Item0": "sturgia_2haxe_2_t5",
                 "Item2": "sturgia_noble_sword_4_t5",
                 **infantry_armor(7, "b"),
-            }),
-        ],
-    ))
-
-    troops.append(Troop(
-        id="dale_kings_champion",
-        display_name="King's Champion",
-        tier=8, default_group="Infantry",
-        skills=s_kings_champion_t8(),
-        upgrades=[],
-        rosters=[
-            EquipmentRoster({
-                "Item0": "sturgia_noble_sword_3_t5",
-                "Item1": "sturgia_infantry_shield_a",
-                "Item2": "sturgia_polearm_1_t5",
-                **infantry_armor(8, "a"),
-            }),
-            EquipmentRoster({
-                "Item0": "sturgia_2haxe_2_t5",
-                "Item2": "sturgia_noble_sword_4_t5",
-                **infantry_armor(8, "b"),
             }),
         ],
     ))
