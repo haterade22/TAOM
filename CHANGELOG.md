@@ -2,6 +2,20 @@
 
 ## 2026-05-26
 
+### fix(career-system): rename Dunland careers to Tolkien-flavored display names
+
+Same two-file pattern as the Dale + Isengard renames. Player-facing display names only — career IDs unchanged so all wiring keeps resolving.
+
+| Career ID | Was | Now |
+|-----------|-----|-----|
+| `avanc_luth_raider` | Avanc-lúth Raider | Dunlending Champion |
+| `wolfskin_hunter` | Wolfskin Hunter | Dunlending Archer |
+| `clanguard_rider` | Clanguard Rider | Dunlending Outrider |
+
+Two-file rename in [`taom_careers.xml`](Main/_Module/ModuleData/career_system/taom_careers.xml) lines 228/248/268 + [`taom_career_strings.xml`](Main/_Module/ModuleData/taom_career_strings.xml) lines 25/27/29. Localization keys unchanged; same pending translation re-run.
+
+Files: 2 XML files, 3 lines each. No code change. Save-compat: career IDs unchanged.
+
 ### fix(career-system): rename Isengard careers to Tolkien-flavored display names
 
 Same pattern as the Dale rename — player-facing display names only, career IDs (`uruk_berserker` / `uruk_crossbow` / `warg_scout`) unchanged so all wiring keeps resolving identically.

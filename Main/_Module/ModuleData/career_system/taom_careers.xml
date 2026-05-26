@@ -225,7 +225,7 @@
   <!-- ═══════════════════════════════════════════════════════════ -->
 
   <Career id="avanc_luth_raider"
-          display_name="{=taom_career_avanc_luth_raider}Avanc-lúth Raider"
+          display_name="{=taom_career_avanc_luth_raider}Dunlending Champion"
           description="{=taom_career_avanc_luth_raider_desc}A blood-painted skirmisher of the Avanc-lúth clan who charges into melee with reckless aggression, trading surgical precision for raw savage force that overwhelms opponents through sheer relentless pressure."
           portrait_sprite="career_avanc_luth_raider_portrait"
           ability_template_id="avanc_luth_raider_ability"
@@ -245,7 +245,7 @@
   </Career>
 
   <Career id="wolfskin_hunter"
-          display_name="{=taom_career_wolfskin_hunter}Wolfskin Hunter"
+          display_name="{=taom_career_wolfskin_hunter}Dunlending Archer"
           description="{=taom_career_wolfskin_hunter_desc}A patient stalker who dresses in wolf-pelts and moves through the Misty Mountain foothills like a ghost, marking prey from concealment before unleashing a precisely aimed shaft that the victim never hears coming."
           portrait_sprite="career_wolfskin_hunter_portrait"
           ability_template_id="wolfskin_hunter_ability"
@@ -265,7 +265,7 @@
   </Career>
 
   <Career id="clanguard_rider"
-          display_name="{=taom_career_clanguard_rider}Clanguard Rider"
+          display_name="{=taom_career_clanguard_rider}Dunlending Outrider"
           description="{=taom_career_clanguard_rider_desc}A fast-raiding clan cavalryman who harasses enemy flanks with swift hit-and-run assaults, using superior speed and pack coordination to disrupt formations before the clan's infantry close in for the kill."
           portrait_sprite="career_clanguard_rider_portrait"
           ability_template_id="clanguard_rider_ability"

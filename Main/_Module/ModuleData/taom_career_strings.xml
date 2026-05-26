@@ -22,11 +22,11 @@
 	<string id="taom_career_eotheod_windrider_desc" text="{=taom_career_eotheod_windrider_desc}A descendant of the ancient Eothéod horsemasters who rides with the thunder of generations of legend, inspiring allies with a warcry that echoes Eorl the Young and scattering enemies under hooves of unstoppable heavy cavalry." />
 	<string id="taom_career_watchman_of_stangard" text="{=taom_career_watchman_of_stangard}Watchman of Stangard" />
 	<string id="taom_career_watchman_of_stangard_desc" text="{=taom_career_watchman_of_stangard_desc}A grizzled river-warden of Stangard who patrols the Anduin crossings by flatboat and on foot, guarding Rohan's eastern flank through endurance, local knowledge, and a boatswain's tenacious grip on contested ground." />
-	<string id="taom_career_avanc_luth_raider" text="{=taom_career_avanc_luth_raider}Avanc-lúth Raider" />
+	<string id="taom_career_avanc_luth_raider" text="{=taom_career_avanc_luth_raider}Dunlending Champion" />
 	<string id="taom_career_avanc_luth_raider_desc" text="{=taom_career_avanc_luth_raider_desc}A blood-painted skirmisher of the Avanc-lúth clan who charges into melee with reckless aggression, trading surgical precision for raw savage force that overwhelms opponents through sheer relentless pressure." />
-	<string id="taom_career_wolfskin_hunter" text="{=taom_career_wolfskin_hunter}Wolfskin Hunter" />
+	<string id="taom_career_wolfskin_hunter" text="{=taom_career_wolfskin_hunter}Dunlending Archer" />
 	<string id="taom_career_wolfskin_hunter_desc" text="{=taom_career_wolfskin_hunter_desc}A patient stalker who dresses in wolf-pelts and moves through the Misty Mountain foothills like a ghost, marking prey from concealment before unleashing a precisely aimed shaft that the victim never hears coming." />
-	<string id="taom_career_clanguard_rider" text="{=taom_career_clanguard_rider}Clanguard Rider" />
+	<string id="taom_career_clanguard_rider" text="{=taom_career_clanguard_rider}Dunlending Outrider" />
 	<string id="taom_career_clanguard_rider_desc" text="{=taom_career_clanguard_rider_desc}A fast-raiding clan cavalryman who harasses enemy flanks with swift hit-and-run assaults, using superior speed and pack coordination to disrupt formations before the clan's infantry close in for the kill." />
 	<string id="taom_career_blademaster_of_ren" text="{=taom_career_blademaster_of_ren}Blademaster of Rên" />
 	<string id="taom_career_blademaster_of_ren_desc" text="{=taom_career_blademaster_of_ren_desc}A precision duelist from the warrior-courts of Rên who dispatches enemies with calculated, lethal blade work." />
