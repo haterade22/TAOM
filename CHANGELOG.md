@@ -2,6 +2,14 @@
 
 ## 2026-05-25
 
+### chore(harness): broaden GauntletLayer input-wiring rule to cover MissionScreen overlays
+
+Followup to commit `28c8d1e` (#225). The rule codified in commit `0b951c7` (#204) for issue #202 was scoped to ScreenBase overlays only and explicitly excluded MissionScreen overlays — based on the wrong inference that `BattleActionBar` "worked" without `SetInputRestrictions()`. It didn't; only its hotkey path worked, which masked the broken mouse path. The OOB and BattleActionBar bugs in #225 are direct consequences of that scope error.
+
+Broadens [.claude/rules/gui-ui.md](.claude/rules/gui-ui.md) "Custom GauntletLayer Input Wiring", [.claude/skills/deep-review/SKILL.md](.claude/skills/deep-review/SKILL.md) Standards-agent check #10, and the [`feedback_gauntlet_overlay_input_wiring.md`](~/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_gauntlet_overlay_input_wiring.md) memory entry to cover BOTH `ScreenBase` overlays (Harmony postfix on `OnInitialize`) AND `MissionScreen` overlays (`MissionView.OnMissionScreenInitializeFirstTime`, `MissionLogic` attach, etc.). The v1.4.5 input dispatcher does not distinguish the two host types for this purpose. Display-only HUDs (no `ButtonWidget` / `Command.Click` matches) remain the documented exception.
+
+RCA at `docs/reviews/rca-companiontactics-overlay-input-2026-05-25.md` captures the recurring "rule scope inferred from a working sibling without verifying which input path made the sibling work" pattern + a process change: when codifying a rule from one instance, sweep the codebase for siblings before treating the rule as load-bearing. The original sweep would have caught the OOB + BattleActionBar instances immediately.
+
 ### fix(companiontactics): wire input restrictions on OOB + battle-bar overlays
 
 User reported that on the pre-battle Order-of-Battle (deployment) screen, the two TAOM-added buttons "Assign Heroes" and "Presets" did nothing when clicked while the adjacent vanilla "Reset Deployment" / "Ready" buttons worked normally. Same bug class as the EquipPresets fix from earlier (commit `d141304`, #202) — the custom `GauntletLayer` in [OOBOverlayService.cs:114](Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs#L114) was added without `_layer.InputRestrictions.SetInputRestrictions()`, so it painted but never registered with the MissionScreen's input dispatcher.

@@ -47,9 +47,11 @@ mapInfo.SecondaryInfoItems.Add(new MapInfoItemVM(...))  // NEVER DO THIS
 
 ## Custom GauntletLayer Input Wiring (MANDATORY)
 
-When adding a custom `GauntletLayer` overlay to a `ScreenBase` via Harmony postfix on `OnInitialize` (NOT a `MissionScreen` overlay, NOT a full-screen replacement), the layer MUST call `_layer.InputRestrictions.SetInputRestrictions()` after construction or it paints but is invisible to the screen's input dispatcher — buttons render but never receive clicks. Pair with `_layer.InputRestrictions.ResetInputRestrictions()` in the teardown path before `RemoveLayer`.
+When adding a custom `GauntletLayer` overlay that contains interactive widgets (buttons, click bindings, drag handles) to **either** a `ScreenBase` (via Harmony postfix on `OnInitialize`) **or** a `MissionScreen` (via `MissionView.OnMissionScreenInitializeFirstTime`, `MissionLogic` overlay attach, or any other feature-overlay attach path), the layer MUST call `_layer.InputRestrictions.SetInputRestrictions()` after construction or it paints but never registers with the screen's input dispatcher — mouse clicks pass through. Pair with `_layer.InputRestrictions.ResetInputRestrictions()` in the teardown path before `RemoveLayer`.
 
-**Correct pattern:**
+The v1.4.5 input dispatcher does NOT distinguish between `ScreenBase` and `MissionScreen` hosts for this purpose. Both require explicit input registration. Display-only overlays with zero interactive widgets (no `ButtonWidget`, no `Command.Click`, no `AcceptEvents` — e.g., the CareerSystem `AbilityHUD`) are the only exception; verify with grep before claiming it.
+
+**Correct pattern (ScreenBase overlay via Harmony):**
 ```csharp
 [HarmonyPostfix]
 [HarmonyPatch(typeof(GauntletInventoryScreen), "OnInitialize")]
@@ -74,9 +76,39 @@ public static void OnFinalize_Prefix(GauntletInventoryScreen __instance)
 }
 ```
 
+**Correct pattern (MissionScreen overlay via MissionView):**
+```csharp
+public override void OnMissionScreenInitializeFirstTime()
+{
+    base.OnMissionScreenInitializeFirstTime();
+    _vm = new MyOverlayVM(...);
+    _layer = new GauntletLayer("GauntletLayer", zOrder, false);
+    _layer.InputRestrictions.SetInputRestrictions();        // ← REQUIRED (same as ScreenBase)
+    _layer.LoadMovie(prefabName, _vm);
+    MissionScreen.AddLayer(_layer);
+}
+
+public override void OnMissionScreenFinalize()
+{
+    if (_layer != null)
+    {
+        _layer.InputRestrictions.ResetInputRestrictions();  // ← REQUIRED before Remove
+        MissionScreen?.RemoveLayer(_layer);
+        _layer = null;
+    }
+    base.OnMissionScreenFinalize();
+}
+```
+
 **Do NOT** also set `IsFocusLayer = true` on a parasitic overlay — that steals Esc/Tab/hotkey focus from the live vanilla screen underneath. `IsFocusLayer = true` is appropriate ONLY for full-screen replacements (`GauntletCareerScreen`, `GauntletFiefManagementScreen`), where the layer IS the screen. For overlays, the parent widget in the prefab should have `DoNotAcceptEvents="true"` so non-button areas pass clicks through to vanilla.
 
-**Why:** EquipPresets shipped with the "Presets" inventory-overlay button as a silent no-op. The custom layer at z-order 1000 was added without `SetInputRestrictions()`. Button rendered, datasource bindings active, but the layer never registered with the input dispatcher — mouse events passed through to vanilla inventory. Two prior reviews (`/deep-review` + Codex review #28) both missed it because they focused on service-layer correctness and TAOM had no other `ScreenBase` overlay to compare against. **Rendering ≠ live.** RCA: `docs/reviews/rca-equippresets-presets-button-silent-2026-05-19.md`. Feedback memory: `feedback_gauntlet_overlay_input_wiring.md`.
+**Why:** Two shipping bugs in 6 days:
+1. **EquipPresets "Presets" inventory button** (2026-05-19, #202) — `ScreenBase` overlay missing `SetInputRestrictions()`. Click was a silent no-op. RCA: `docs/reviews/rca-equippresets-presets-button-silent-2026-05-19.md`.
+2. **CompanionTactics OOB "Assign Heroes" + "Presets" + BattleActionBar mouse clicks** (2026-05-25, #225) — two `MissionScreen` overlays with the same defect. RCA: `docs/reviews/rca-companiontactics-overlay-input-2026-05-25.md`.
+
+Bug #2 shipped past the rule written for bug #1 because the original rule scoped to ScreenBase only — that scoping was based on the wrong inference that `BattleActionBar` "worked" without `SetInputRestrictions()`. It didn't work; only the hotkey path worked, which masked the broken mouse path. **Lesson: when classifying a sibling as a working precedent, verify it works via the SAME input path you care about. A working alternative input path is not evidence the broken path also works.**
+
+Feedback memory: `feedback_gauntlet_overlay_input_wiring.md`. **Rendering ≠ live.**
 
 **Verification:** `taom-src` confirmed `GauntletLayer.InputRestrictions` is `TaleWorlds.ScreenSystem.InputRestrictions` (defined on base class `ScreenLayer`), and `SetInputRestrictions(bool isMouseVisible = true, InputUsageMask mask = InputUsageMask.All)` has both defaults supplied — parameterless call is valid in v1.4.5.
 
