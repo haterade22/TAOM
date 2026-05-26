@@ -343,6 +343,14 @@ See:
 - [`docs/reference/lotrlome-armory-snapshot/README.md`](../reference/lotrlome-armory-snapshot/README.md) — per-race restoration checklist + post-restore sanity grep.
 - [`docs/reviews/rca-elf-cc-facegen-2026-05-22.md`](../reviews/rca-elf-cc-facegen-2026-05-22.md) — full RCA on the slim-vs-full iteration.
 
+### Vanilla age-30 animation override (Patch20)
+
+Beyond the LOTRLOME data layer, vanilla `CharacterCreationCampaignBehavior.AgeSelectionAdultOptionOnSelect` hard-codes `SetAnimationId("act_childhood_athlete")` at the Starting Age menu's age-30 option, and that animation produces a horizontally-stretched / lying-down pose on the human_skeleton chain in Bannerlord 1.3.15 — affecting **every** TAOM race (orc / dwarf / uruk / elf / human). The other three age handlers (`_focus` at 20, `_sharp` at 40, `_tough` at 50) work correctly on the same skeleton chain. LOTRLOME data is fine: `as_<race>_facegen` blocks declare `act_childhood_athlete → anim_childhood_athlete` identically across races, and the action type is registered in `Native/ModuleData/action_types.xml`. The bug is at the `anim_childhood_athlete ↔ human_skeleton` binding layer at runtime.
+
+`CharacterCreationCampaignBehavior_AgeSelectionAdultOptionOnSelect_Patch` (in [`Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs`](../../Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs), Patch20 category) is a thin Harmony Postfix on `AgeSelectionAdultOptionOnSelect` that re-sets the animation to `act_childhood_focus` (the proven-working age-20 anim) post-vanilla. All other vanilla effects — `ChangeAge(30)`, `SetEquipment`, `SetBirthDay(-30y)`, `StartingAge = 30`, focus/attribute bonuses — are preserved; only the visible animation changes.
+
+The Postfix's scope is deliberately limited to the age-30 code path. Vanilla references `act_childhood_athlete` in two other locations (`CharacterCreationCampaignBehavior.cs:1599` + `:2016`, both youth backstory option handlers); those are untouched. If a future report surfaces broken poses at those backstory options, repeat the same Postfix recipe targeting `MerchantsParentsOptionOnSelect` / whichever specific method.
+
 ## GitHub Issue
 - **Race filter (Patch9_RaceFilter re-implementation):** [#107](https://github.com/haterade22/TAOM/issues/107) — closed 2026-05-06
 - **Per-culture default BodyProperties (Patch29_CCBodyProperties):** added in same session, not separately ticketed

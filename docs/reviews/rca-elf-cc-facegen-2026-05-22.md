@@ -69,3 +69,88 @@ The pattern across all 12 LOTRLOME facegens was the evidence. I read it and chos
 - v1 → v2 same-day iteration: ~30 min of additional work, ~420 lines of additional diff per file (live LOTRLOME + tracked snapshot).
 - Counterfactual cost if v1 had shipped without immediate in-game test and the lying-down-child bug was reported days later: full RCA + context-reload + cold rediscovery of the slim-vs-full distinction. Probably 2-3x.
 - Lesson worth carrying forward: when shipping any XML data fix in a poorly-documented engine schema, the in-game test is the only credible verification. Code-only validation (XML parses, schema looks right, action types match what the screenshot suggested) does not catch failure modes at adjacent stages.
+
+---
+
+## Addendum v3 (same session, 2026-05-22) — vanilla age-30 animation bug, NOT a LOTRLOME data issue
+
+After the elf v2 fix shipped and the user confirmed elf rendering worked at every CC stage (parent menu → Early Childhood → Youth → Adolescence → Adulthood), a third bug surfaced: at the **Starting Age** narrative menu, clicking age 30 ("You are at your prime...") rendered the player as a horizontally-stretched / lying-down mesh. Ages 20/40/50 worked correctly. User initially reported this for orc; on the third clarification round they confirmed in-game testing showed the bug on every race (dwarf / uruk / elf / human / orc).
+
+### Investigation
+
+The user's initial hypothesis was "controlled by action set ids youth, adult, etc." That was off-target — no such IDs exist in LOTRLOME or Native action_sets.xml. Vanilla `CharacterCreationCampaignBehavior` actually uses the same `as_<race>_facegen` action_set across all ages and just hard-codes a different animation_id per age handler:
+
+| Age | Vanilla animation ID | Status |
+|---|---|---|
+| 20 | `act_childhood_focus` | works |
+| **30** | **`act_childhood_athlete`** | **broken on all races** |
+| 40 | `act_childhood_sharp` | works |
+| 50 | `act_childhood_tough` | works |
+
+Bit-for-bit compare confirmed orc / dwarf / uruk / elf facegens are identical — all map `act_childhood_athlete → anim_childhood_athlete`. The action type is properly declared in `Native/ModuleData/action_types.xml` (line 15301). The bug is at the runtime `anim_childhood_athlete ↔ human_skeleton` binding layer — a vanilla v1.3.15 regression on a single animation file, not an LOTRLOME data issue.
+
+### Findings table (v3)
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|-----|-----|----------|------------|-------------------|
+| 1 | HIGH | Vanilla age-30 CC option plays a broken animation on the human_skeleton chain (all TAOM races affected) | TaleWorlds engine bug | The bug shipped in vanilla v1.3.15 itself; not introduced by TAOM or LOTRLOME. Caught only at the user's first traversal of the Starting Age menu. | **Memory addendum v3** in `feedback_lotrlome_action_set_aliases.md`: when all races break at the same CC stage despite identical action_set data, the bug is at the engine/anim binding layer and a TAOM-side Harmony override is the only fix. Pre-flight audit checklist: (a) is the action_set declaration present + correct? (b) is the action type registered in `Native/action_types.xml`? (c) does the anim file render correctly on the relevant skeleton (test in-game)? |
+| 2 | LOW | User hypothesis "action set ids youth, adult, etc." led the investigation toward a non-existent LOTRLOME data pattern | Communication / hypothesis verification | The user had reasonable intuition that "ages produce different visuals → action_set is age-keyed", but the actual lookup is anim-id per age, not action_set per age. | No rule change — re-verify hypotheses against decompiled source when the data trail goes dry. Took two grep cycles to refute (LOTRLOME action_set IDs + Native action_set IDs). |
+
+### Fix shape (v3)
+
+Single Harmony Postfix appended to the existing `Patch20_NarrativeHorseGuard` group in [`Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs`](../../Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs):
+
+```csharp
+[HarmonyPatch]
+[HarmonyPatchCategory("Patch20_NarrativeHorseGuard")]
+public static class CharacterCreationCampaignBehavior_AgeSelectionAdultOptionOnSelect_Patch
+{
+    static MethodBase TargetMethod() =>
+        AccessTools.DeclaredMethod(
+            typeof(CharacterCreationCampaignBehavior),
+            "AgeSelectionAdultOptionOnSelect");
+
+    [HarmonyPostfix]
+    static void Postfix(CharacterCreationManager characterCreationManager)
+    {
+        var characters = characterCreationManager?.CurrentMenu?.Characters;
+        if (characters == null) return;
+        foreach (var character in characters)
+        {
+            if (character.StringId == "player_age_selection_character")
+            {
+                character.SetAnimationId("act_childhood_focus");
+                break;
+            }
+        }
+    }
+}
+```
+
+The Postfix runs **after** vanilla, finds the `player_age_selection_character`, and re-sets the animation to `act_childhood_focus` (proven-working age-20 anim). Vanilla's `ChangeAge(30)`, `SetEquipment(...)`, `SetBirthDay(-30y)`, `StartingAge = 30`, and focus/attribute bonuses are all preserved.
+
+Scope deliberately limited to the age-30 code path. Vanilla references `act_childhood_athlete` in two other locations (`CharacterCreationCampaignBehavior.cs:1599` + `:2016`, both youth backstory option handlers); those are untouched because no user report has surfaced lying-down behavior there yet.
+
+### Build status (v3)
+
+C# compile: `dotnet build Main/TAOM.csproj -t:Restore,Compile` → **0 errors / 0 warnings**. Post-build deploy step blocked by Bannerlord holding `0Harmony.dll` + `DryIoc.dll` locked (user has the game running). This is a pure environment issue, not a code issue — the deploy will succeed on the next clean build after the game is closed. Per `.claude/rules/environment-failures.md`, no process killing or DLL-unlock workaround attempted.
+
+### Why each agent / step missed (or caught)
+
+- **Phase-1 Explore agent on the original elf bug (2026-05-22):** N/A — the orc-age-30 bug wasn't in scope.
+- **v1 + v2 elf fix:** N/A — different code path.
+- **First Phase-1 Explore agent on this v3 bug:** ✗ misled by the TAOM `NarrativeHorseGuardService.AnimationId = "act_childhood_schooled"` constant — claimed TAOM was forcing a single anim across all ages and overriding vanilla's per-age selection. Actually wrong: `NarrativeHorseGuardService` is for the no-horse-culture guard at Youth/Adult menus, not the Age Selection menu. Misread.
+- **Manual decompile check on `CharacterCreationCampaignBehavior` lines 3290-3470:** ✅ caught the four hard-coded animation IDs per age handler, identifying `act_childhood_athlete` at age 30 as the unique variable across the four options.
+- **User in-game test of all races:** ✅ confirmed global scope (not orc-specific), which de-scoped data fixes and confirmed a TAOM-side patch was needed.
+
+### Cost
+
+- v3 investigation + fix + docs: ~45 min (one round of misdirected agent exploration on the wrong service, then a 5-min decompile that pinpointed it).
+- The fix itself is ~25 lines of C# (one Harmony Postfix class with xmldoc + null guard).
+- Counterfactual cost if shipped without the user's "all races" clarification: I would have proposed a data-side fix that masked the engine bug at one call site and probably broke the two unrelated youth-option call sites — a regression worse than the original bug.
+
+### Lessons (v3-specific, on top of v1/v2 lessons)
+
+1. **Hypothesis discipline.** "Action set IDs youth, adult, etc." was a plausible guess from a user with hands-on context. It was also wrong. I verified by grepping LOTRLOME + Native first (took 30 sec), then went to the decompiled source. Cheap verification rounds before deep dives save context. Without grep-first I might have spent time auditing skin maturity types, age_keys, body morphs — none of which were the bug.
+2. **"All races break" is the diagnostic signal.** Whenever a CC bug shows on multiple races with identical underlying data, the bug is upstream of the data layer (engine, anim binding, vanilla code). XML edits cannot fix it. The fix must be C# Harmony.
+3. **Don't change data to mask engine bugs.** If LOTRLOME had remapped `act_childhood_athlete → anim_childhood_focus` to fix this, the change would propagate to the other two call sites where the original anim was working fine. Engine bugs need targeted Harmony patches, not data overrides.

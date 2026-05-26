@@ -262,3 +262,40 @@ internal static class NarrativeHorseGuardPatchHelper
         }
     }
 }
+
+/// <summary>
+/// Overrides the vanilla age-30 animation in the Starting Age menu.
+/// Vanilla <c>CharacterCreationCampaignBehavior.AgeSelectionAdultOptionOnSelect</c> calls
+/// <c>SetAnimationId("act_childhood_athlete")</c>, which renders the player as a
+/// horizontally-stretched / lying-down mesh on every TAOM race (all use the human_skeleton
+/// chain). Ages 20/40/50 use other anims and render correctly. Replace with
+/// <c>act_childhood_focus</c> (the age-20 anim) post-vanilla so the agent stands upright.
+/// All other vanilla effects (ChangeAge(30), SetEquipment, SetBirthDay, StartingAge=30,
+/// focus/attribute bonuses) are preserved.
+/// </summary>
+[HarmonyPatch]
+[HarmonyPatchCategory("Patch20_NarrativeHorseGuard")]
+public static class CharacterCreationCampaignBehavior_AgeSelectionAdultOptionOnSelect_Patch
+{
+    static MethodBase TargetMethod() =>
+        AccessTools.DeclaredMethod(
+            typeof(CharacterCreationCampaignBehavior),
+            "AgeSelectionAdultOptionOnSelect");
+
+    [HarmonyPostfix]
+    static void Postfix(CharacterCreationManager characterCreationManager)
+    {
+        var characters = characterCreationManager?.CurrentMenu?.Characters;
+        if (characters == null)
+            return;
+
+        foreach (var character in characters)
+        {
+            if (character.StringId == "player_age_selection_character")
+            {
+                character.SetAnimationId("act_childhood_focus");
+                break;
+            }
+        }
+    }
+}
