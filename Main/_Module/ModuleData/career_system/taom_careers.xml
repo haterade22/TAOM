@@ -631,7 +631,7 @@
   <!-- ═══════════════════════════════════════════════════════════ -->
 
   <Career id="blade_dancer"
-          display_name="{=taom_career_blade_dancer}Blade Dancer"
+          display_name="{=taom_career_blade_dancer}Ñoldor Blademaster"
           description="{=taom_career_blade_dancer_desc}A graceful elven warrior who weaves through battle like flowing water, striking with ancient blades forged in the First Age."
           portrait_sprite="career_blade_dancer_portrait"
           ability_template_id="blade_dancer_ability"
@@ -651,7 +651,7 @@
   </Career>
 
   <Career id="elven_archer"
-          display_name="{=taom_career_elven_archer}Elven Archer"
+          display_name="{=taom_career_elven_archer}Ñoldor Sentinel"
           description="{=taom_career_elven_archer_desc}A peerless marksman of Imladris whose arrows fly true across vast distances, guided by centuries of practice."
           portrait_sprite="career_elven_archer_portrait"
           ability_template_id="elven_archer_ability"
@@ -671,7 +671,7 @@
   </Career>
 
   <Career id="rivendell_knight"
-          display_name="{=taom_career_rivendell_knight}Rivendell Knight"
+          display_name="{=taom_career_rivendell_knight}Ñoldor Knight"
           description="{=taom_career_rivendell_knight_desc}A mounted warrior of Elrond's household who rides to war on swift elven steeds, a beacon of hope against the shadow."
           portrait_sprite="career_rivendell_knight_portrait"
           ability_template_id="rivendell_knight_ability"

@@ -60,11 +60,11 @@
 	<string id="taom_career_crossbow_master_desc" text="{=taom_career_crossbow_master_desc}A dwarven engineer-warrior who wields masterwork crossbows of incredible stopping power, each bolt precision-crafted." />
 	<string id="taom_career_ram_rider" text="{=taom_career_ram_rider}Ram Rider" />
 	<string id="taom_career_ram_rider_desc" text="{=taom_career_ram_rider_desc}A dwarven cavalry warrior mounted on a great war-ram, charging through tight mountain passes where horses cannot tread." />
-	<string id="taom_career_blade_dancer" text="{=taom_career_blade_dancer}Blade Dancer" />
+	<string id="taom_career_blade_dancer" text="{=taom_career_blade_dancer}Ñoldor Blademaster" />
 	<string id="taom_career_blade_dancer_desc" text="{=taom_career_blade_dancer_desc}A graceful elven warrior who weaves through battle like flowing water, striking with ancient blades forged in the First Age." />
-	<string id="taom_career_elven_archer" text="{=taom_career_elven_archer}Elven Archer" />
+	<string id="taom_career_elven_archer" text="{=taom_career_elven_archer}Ñoldor Sentinel" />
 	<string id="taom_career_elven_archer_desc" text="{=taom_career_elven_archer_desc}A peerless marksman of Imladris whose arrows fly true across vast distances, guided by centuries of practice." />
-	<string id="taom_career_rivendell_knight" text="{=taom_career_rivendell_knight}Rivendell Knight" />
+	<string id="taom_career_rivendell_knight" text="{=taom_career_rivendell_knight}Ñoldor Knight" />
 	<string id="taom_career_rivendell_knight_desc" text="{=taom_career_rivendell_knight_desc}A mounted warrior of Elrond's household who rides to war on swift elven steeds, a beacon of hope against the shadow." />
 	<string id="taom_career_warden" text="{=taom_career_warden}Warden of Lorien" />
 	<string id="taom_career_warden_desc" text="{=taom_career_warden_desc}A silent guardian of the Golden Wood who strikes without warning, defending the borders of Lothlorien with ancient resolve." />

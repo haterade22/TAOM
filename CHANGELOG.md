@@ -2,6 +2,20 @@
 
 ## 2026-05-26
 
+### fix(career-system): rename Rivendell careers to Ñoldor-themed display names
+
+Same two-file pattern as the prior renames.
+
+| Career ID | Was | Now |
+|-----------|-----|-----|
+| `blade_dancer` | Blade Dancer | Ñoldor Blademaster |
+| `elven_archer` | Elven Archer | Ñoldor Sentinel |
+| `rivendell_knight` | Rivendell Knight | Ñoldor Knight |
+
+Two-file rename in [`taom_careers.xml`](Main/_Module/ModuleData/career_system/taom_careers.xml) lines 634/654/674 + [`taom_career_strings.xml`](Main/_Module/ModuleData/taom_career_strings.xml) lines 63/65/67. Localization keys unchanged. The `Ñ` character is U+00D1 — both files are UTF-8 (CRLF) per the project convention so the encoding round-trips cleanly.
+
+Files: 2 XML files, 3 lines each. No code change. Save-compat: career IDs unchanged.
+
 ### fix(career-system): rename Dunland careers to Tolkien-flavored display names
 
 Same two-file pattern as the Dale + Isengard renames. Player-facing display names only — career IDs unchanged so all wiring keeps resolving.
