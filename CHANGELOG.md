@@ -2,6 +2,43 @@
 
 ## 2026-05-26
 
+### feat(dale): explicit per-tier armor (bronze/silver) + Crossbowman line
+
+User-directed armor mapping pass for all royal Dale lines + new ranged sub-line. 30 → 34 troops (4 new crossbowmen).
+
+**Color convention** (per user clarification): `a` suffix = **bronze** mesh; `b` suffix = **silver** mesh. Same shape, different paint.
+
+**Three new explicit-suffix armor helpers** in `tools/generate_dale_troops.py` (parallel to `lake_town_armor_explicit`):
+- `chivalry_armor_explicit(suffix)` — chivlary cavalry mesh (chivalry on chest, chivlary elsewhere — Solus's typo split).
+- `infantry_armor_explicit(suffix)` — infrantry royal-infantry mesh.
+- `archer_armor_explicit(suffix)` — archer mesh; falls back on the missing shoulder variants (a02/a04/b02/b04 → next-lower available, since Solus authored archer shoulders only at a01/a03/a04/b01/b03/b04 — note a04/b04 DO exist for archer shoulders, unlike mariner).
+
+**Armor rewires** (existing troops, IDs unchanged):
+
+| Line | New armor mapping |
+|---|---|
+| Light cavalry (T4-T5) | chivlary a01/a02 (Merchant Guard) → a03/a04 (Northman Scout) |
+| Heavy cavalry (T5-T7) | chivlary b01/b02 (Dalian Cavalry) → b02/b03 (Heavy Cavalry) → b03/b04 (King's Guard); adjacent tiers overlap one variant for continuity |
+| Royal Infantry (T4-T7) | "variation per level" — `aNN`+`bNN` per tier (T4: a01+b01, T5: a02+b02, T6: a03+b03, T7: a04+b04) |
+| Bow line (T4-T7) | bronze a01-a04 with overlap (T4: a01+a02, T5: a02+a03, T6: a03+a04, T7: a04+a04) |
+
+**NEW Crossbowman line** (4 troops T4-T7, off Dalian Levy; silver archer armor b01-b04):
+- T4 `dale_crossbowman` "Dalian Crossbowman" (b01+b02; crossbow_c + bolt_a)
+- T5 `dale_veteran_crossbowman` "Dalian Veteran Crossbowman" (b02+b03; crossbow_d + bolt_b)
+- T6 `dale_royal_crossbowman` "Dalian Royal Crossbowman" (b03+b04; crossbow_e + bolt_c/d)
+- T7 `dale_master_crossbowman` "Dalian Master Crossbowman" (b04+b04 — top silver; crossbow_f + bolt_d/e — T7 terminal)
+- Skill curves: Crossbow-primary scaling 90→125→160→195 across T4-T7, with OneHanded sidearm + low Bow. Sturgia noble sword sidearms at higher tiers.
+
+**Dalian Levy** (T3 `dale_squire`) upgrade list extended from 4 → 5 targets: now also upgrades to `dale_crossbowman` (alongside riverman/man_at_arms/bowman/outrider).
+
+**Party templates**:
+- `kingdom_hero_party_dale_template`: added 3 crossbowman stacks (crossbowman 3-8, veteran 2-5, royal 1-3).
+- `patrol_party_dale_template_level_2`: added veteran crossbowman 2-4.
+
+**Verification**: build green; 7/7 tests (4 Dale culture + 3 Rohan clan) still pass; validator PASS across all 8 cultures (Dale: 35 troops [34+wrapper], 154 armor refs, 0 missing); all 9 new vanilla weapon IDs (`crossbow_c..f`, `bolt_a..e`) verified in SandBoxCore; spot-check confirmed correct chivlary/infrantry/archer + a/b suffix mapping per troop.
+
+Save-compat: All existing IDs preserved (chest mesh changes for existing troops are part of the routine armor rebalance — engine re-picks equipment on next load, no troops disappear from existing parties). The 4 new crossbowman IDs + Dalian Levy's 5th upgrade target are additive.
+
 ### feat(rohan): every Rohan clan recruits all 7 basic troops at weight 1
 
 User request: surface every Rohan `is_basic_troop="true"` troop to the player from every Rohan clan, so any clan-bound Rohan settlement can recruit the full T2 lineup regardless of region.

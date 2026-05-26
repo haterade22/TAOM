@@ -2,7 +2,7 @@
 
 ## Overview
 
-Dale is the kingdom of the Bardings — the descendants of Bard the Bowman, ruling the rebuilt city at the foot of the Lonely Mountain (Erebor) and the surviving folk of Lake-town (Esgaroth). This feature adds Dale-themed armor (163 items modeled by Solus) and a 30-troop tree (Dale caps at T7 — no T8 elites) spanning **Excellent Archers**, **Great Infantry**, **Decent Cavalry**, a royal **Riverman** spear-and-shield line, two Lake-Town infantry lines (**Watch** pikes and **Pikeman** halberds → T7 Hearthguard), plus 4 garrison militia troops.
+Dale is the kingdom of the Bardings — the descendants of Bard the Bowman, ruling the rebuilt city at the foot of the Lonely Mountain (Erebor) and the surviving folk of Lake-town (Esgaroth). This feature adds Dale-themed armor (163 items modeled by Solus) and a 34-troop tree (Dale caps at T7 — no T8 elites) spanning **Excellent Archers** (bronze) + **Royal Crossbowmen** (silver), **Great Infantry**, **Cavalry** split into Light (bronze) + Heavy (silver), a royal **Riverman** spear-and-shield line, two Lake-Town infantry lines (**Watch** halberds and **Pikeman** vanilla pikes), plus 4 garrison militia troops.
 
 ## Why This Exists
 
@@ -38,7 +38,7 @@ generate_dale_armor.py             (parses manifest, applies STAT_TIERS + class/
         |
 LOTRLOME_Armory/.../dale/*.xml     (163 items across 5 slot files)
 
-troop_design (Python data structure, 30 troops with explicit equipment)
+troop_design (Python data structure, 34 troops with explicit equipment)
         |
 generate_dale_troops.py
         |
@@ -65,19 +65,23 @@ VolunteerRecruitmentService.cs (+ InitializeDaleCulture)
 
 **Dalian Levy** (T3, elite_basic_troop; the royal-line recruit) — branches four ways:
 
-**Excellent Archers** (Bard's heritage; +10-15 Bow over baseline at every tier):
+**Excellent Archers** (Bard's heritage; +10-15 Bow over baseline at every tier; **bronze** archer armor `a01-a04` overlap):
 - T4 `dale_bowman` "Dalian Yeoman" → T5 `dale_longbowman` "Dalian Bowman" → T6 `dale_royal_archer` "Dalian Marksman" → T7 `dale_black_arrow_marksman` "Dalian Barding" (T7 terminal — Dale caps at T7)
 
-**Great Infantry** (Dalian Militia → Dalian Master Swordsman):
+**Royal Crossbowmen** (parallel ranged branch off Dalian Levy; vanilla crossbows + bolts + 1H sword sidearm; **silver** archer armor `b01-b04`):
+- T4 `dale_crossbowman` "Dalian Crossbowman" → T5 `dale_veteran_crossbowman` "Dalian Veteran Crossbowman" → T6 `dale_royal_crossbowman` "Dalian Royal Crossbowman" → T7 `dale_master_crossbowman` "Dalian Master Crossbowman" (T7 terminal)
+- Weapons: `crossbow_c` (T4) → `crossbow_d` (T5) → `crossbow_e` (T6) → `crossbow_f` (T7) with `bolt_a/b/c/d/e` ammo progression.
+
+**Great Infantry** (Dalian Militia → Dalian Master Swordsman; "variation per level" — one bronze + one silver infrantry variant per tier: `aNN`+`bNN`):
 - T4 `dale_man_at_arms` "Dalian Militia" → T5 `dale_guardsman` "Dalian Guardsman" → T6 `dale_royal_guard` "Dalian Swordsman" → T7 `dale_running_river_warden` "Dalian Master Swordsman" (T7 terminal)
 
 **Riverman line** (spear + shield + 1H sword, Lake-Town armor; royal-tier water-folk):
 - T4 `dale_riverman` "Dalian Riverman" → T5 `dale_shipman` "Dalian Shipman" → T6 `dale_dalian_mariner` "Dalian Mariner" (terminal)
 
 **Decent Cavalry** (T4 root splits into LIGHT + HEAVY; ~30% under Rohan parity per Tolkien's Éothéod-vs-Bardings split):
-- T4 `dale_outrider` "Dalian Merchant Guard" — splits to two branches:
-  - **LIGHT CAVALRY**: T5 `dale_knight` "Dalian Northman Scout" (single-tier terminal — Dale isn't a horse-power; the light branch is intentionally short)
-  - **HEAVY CAVALRY**: T5 `dale_royal_cavalier` "Dalian Cavalry" → T6 `dale_kinsman_of_eorl` "Dalian Heavy Cavalry" → T7 `dale_kings_guard` "Dalian King's Guard" (T7 terminal — top chivlary mesh `b03/b04`)
+- T4 `dale_outrider` "Dalian Merchant Guard" (bronze `a01/a02`) — splits to two branches:
+  - **LIGHT CAVALRY** (bronze chivlary `a01-a04`): T5 `dale_knight` "Dalian Northman Scout" (`a03/a04` — single-tier terminal; Dale isn't a horse-power so the light branch is short)
+  - **HEAVY CAVALRY** (silver chivlary `b01-b04`): T5 `dale_royal_cavalier` "Dalian Cavalry" (`b01/b02`) → T6 `dale_kinsman_of_eorl` "Dalian Heavy Cavalry" (`b02/b03`) → T7 `dale_kings_guard` "Dalian King's Guard" (`b03/b04` — T7 terminal)
 
 **Militia** (XSLT bindings for garrison spawns):
 - T2 `dale_militia_spearman` → T4 `dale_militia_veteran_spearman`
@@ -99,7 +103,7 @@ No JSON or runtime-tunable config. Two author-time data sources:
 | File | Purpose |
 |------|---------|
 | `tools/dale_armor_meshes.txt` | Frozen manifest of Solus's mesh IDs (re-emit by re-running `tpac_skeleton_scan.py --all-types` against the 5 dale_kingdom .tpac files) |
-| `tools/generate_dale_troops.py` `build_troops()` | Hardcoded 30-troop manifest with explicit equipment + skill curves |
+| `tools/generate_dale_troops.py` `build_troops()` | Hardcoded 34-troop manifest with explicit equipment + skill curves |
 
 ## Key Files
 
@@ -110,7 +114,7 @@ No JSON or runtime-tunable config. Two author-time data sources:
 | `tools/generate_dale_armor.py` | Generator: manifest → 5 armor XML files |
 | `tools/generate_dale_troops.py` | Generator: hardcoded troop list → troops_dale.xml |
 | `tools/dale_armor_meshes.txt` | Mesh ID manifest (one per line, deduped, sorted) |
-| `Main/_Module/ModuleData/troops/troops_dale.xml` | 30 NPCCharacter definitions |
+| `Main/_Module/ModuleData/troops/troops_dale.xml` | 34 NPCCharacter definitions |
 | `<armory>/ModuleData/LOTRLOME_items/dale/head_armors.xml` | 32 helmets |
 | `<armory>/ModuleData/LOTRLOME_items/dale/body_armors.xml` | 41 chests (incl. 5 with gender-variation slim meshes + 9 cloth overlays) |
 | `<armory>/ModuleData/LOTRLOME_items/dale/leg_armors.xml` | 32 boots |
