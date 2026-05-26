@@ -230,6 +230,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | Check migration status | [migration/TRACKING.md](./docs/migration/TRACKING.md) |
 | Update BUTR/MCM/ButterLib dependencies | [migration/dr3-maintenance.md](./docs/migration/dr3-maintenance.md) — version pinning, Steam Workshop fallback, smoke test, risk scenarios |
 | Use agent teams | [agent-teams.md](./docs/ai-includes/agent-teams.md) |
+| Author a new culture's armor + troop tree (end-to-end) | [new-culture-authoring.md](./docs/ai-includes/new-culture-authoring.md) — phases, helpers, color convention, iteration loops |
 | Plan future GameModel overrides | [roadmap.md](./docs/roadmap.md) |
 | Add or update translations | [TRANSLATOR_GUIDE.md](./docs/localization/TRANSLATOR_GUIDE.md) + [tools/README.md](./tools/README.md#localization-pipeline) |
 

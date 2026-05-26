@@ -2,6 +2,17 @@
 
 ## 2026-05-26
 
+### docs(culture-authoring): repeatable end-to-end process guide from the Dale session
+
+Captures the patterns that emerged from the 11-commit Dale culture session as a reusable workflow for future cultures.
+
+- **New**: [`docs/ai-includes/new-culture-authoring.md`](docs/ai-includes/new-culture-authoring.md) — phase-by-phase guide. Prerequisites → armor manifest from `.tpac` → armor generator + Armory registration → lore research → troop tree design → troop generator + SubModule registration → XSLT culture binding (with the full CultureObject attribute list per Codex #227) → 9 party templates → Volunteer recruitment pool with the 4-level lookup priority → validation → `/verify` + `/deep-review` + `/review-codex` + RCA → 8 known iteration loop kinds. Includes the bronze/silver color convention, "Royal goes last" naming rule, per-tier explicit-suffix armor helpers, light/heavy split via Y-fork pattern, save-compat rules covering tier shifts and display-name desync, and a file reference table.
+- **Modified**: [`.claude/rules/troops.md`](.claude/rules/troops.md) — added 4 new sections: Volunteer Recruitment Lookup Priority (Conditional > Settlement > Clan > Culture), Per-Tier Explicit Armor Pattern (with the helper table), "Royal Goes Last" Naming Convention, Cross-Reference Vanilla Weapon Stats Before Tier-Ordered Picks (per the bow-tier-inversion Codex finding). Save-compat rules extended to cover tier shifts + display-name desync.
+- **Modified**: [`CLAUDE.md`](CLAUDE.md) Doc Lookup — added link to the new guide.
+- **Modified**: [`docs/features/dale.md`](docs/features/dale.md) — added a banner pointing at the new authoring guide so future readers find the repeatable process.
+
+No code or game-data changes.
+
 ### fix(career-system): rename Gundabad careers to Tolkien-flavored display names
 
 Same two-file pattern as the prior renames.

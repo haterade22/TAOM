@@ -1,5 +1,7 @@
 # Dale (Bardings of the Long Lake)
 
+> **Authoring guide**: this feature is the worked example for the end-to-end culture authoring process. See [`docs/ai-includes/new-culture-authoring.md`](../ai-includes/new-culture-authoring.md) for the repeatable phase-by-phase guide (armor manifest → generator → wiring → recruitment → review → iteration loops). Dale shipped in 11 commits; expect a similar shape for the next culture.
+
 ## Overview
 
 Dale is the kingdom of the Bardings — the descendants of Bard the Bowman, ruling the rebuilt city at the foot of the Lonely Mountain (Erebor) and the surviving folk of Lake-town (Esgaroth). This feature adds Dale-themed armor (163 items modeled by Solus) and a 35-troop tree (Dale caps at T7 — no T8 elites) spanning **Excellent Archers** (bronze) + **Royal Crossbowmen** (silver), **Great Infantry**, **Cavalry** split into Light (bronze) + Heavy (silver), a royal **Riverman** spear-and-shield line, two Lake-Town infantry lines (**Watch** halberds and **Pikeman** vanilla pikes), plus 4 garrison militia troops.

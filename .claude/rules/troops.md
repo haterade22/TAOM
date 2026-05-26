@@ -60,3 +60,48 @@ Each culture typically has these templates in `taom_partyTemplates.xml`:
 - **Never change troop IDs** — rename display names only (keep `id` attribute)
 - **Never delete troops** — orphan them (remove from upgrade_targets) but keep in file
 - **is_basic_troop** — marks a troop as a standalone recruitment entry point
+- **Tier shifts are allowed** — moving a troop from T6 → T5 is fine if you also re-pick its skill curve + armor + equipment to match the new tier. Engine re-applies on next load. (Dale `dale_royal_cavalier` T6→T5, `dale_kinsman_of_eorl` T7→T6 worked cleanly across an existing save.)
+- **Display-name desync is OK** — `dale_master_crossbowman` can legitimately display "Royal Crossbowman" if a later rename swap put "Royal" at the higher tier. Document the desync in the feature doc.
+
+## Volunteer Recruitment Lookup Priority (MANDATORY when editing `VolunteerRecruitmentService.cs`)
+
+The pool resolution order is (highest priority first):
+
+1. **`ConditionalSettlementMap[settlementId]`** — state-sensitive (e.g., Ithil Guard at `town_ES2` only when Gondor-owned).
+2. **`SettlementMap[settlementId]`** — per-settlement override (e.g., Lake-Town `town_S1` = 9× Peasant + 1× Levy).
+3. **`ClanMap[ownerClanId]`** — per-clan override (e.g., all 11 `clan_vlandia_*` recruit all 7 Rohan basic troops).
+4. **`CultureMap[cultureId]`** — culture-level fallback.
+
+When you add an entry to a higher-priority map, lower-priority entries are **shadowed** for that settlement/clan — not merged. If you want per-settlement to extend (not replace) the culture pool, you must copy the culture entries into the settlement entry explicitly.
+
+## Per-Tier Explicit Armor Pattern (use when authoring a culture's tree)
+
+Don't rely on the generic `_armor_suffix(tier, variant)` tier→suffix table for new cultures. Use explicit-suffix helpers that take a literal `a01`..`b04` string:
+
+| Helper (in `tools/generate_dale_troops.py`) | Mesh class | Solus spelling quirk |
+|---|---|---|
+| `chivalry_armor_explicit(suffix)` | cavalry (chivlary + chivalry chest) | chest uses `chivalry`, other 4 slots use `chivlary` typo |
+| `infantry_armor_explicit(suffix)` | royal infantry | `infrantry` typo throughout |
+| `archer_armor_explicit(suffix)` | archer / crossbowman | shoulder fallback for missing `a02/b02` variants |
+| `lake_town_armor_explicit(suffix, no_helmet=, no_shoulder=, no_bracers=)` | Lake-Town mariner | shoulder fallback `a02→a01, a04→a03, b02→b01, b04→b03` |
+
+Color convention: `a` = bronze, `b` = silver. Light lines use `a`, heavy lines use `b` (or invert per user spec — Dale's cavalry inverts this).
+
+## "Royal Goes Last" Naming Convention
+
+Across all Dale lines, "Royal" is reserved for the highest-rank tier (typically T7). "Master" is the T6 stepping-stone. If you author a chain with both, "Royal" must be on the more elite troop. If only "Master" exists (no "Royal" sibling in the line), it's fine to leave "Master" at the top.
+
+This is a TAOM-wide convention as of Dale (May 2026). Apply when authoring new culture trees.
+
+## Cross-Reference Vanilla Weapon Stats Before Tier-Ordered Picks
+
+Names don't imply tier. Codex Review #227 caught Dale's `lowland_yew_bow` placed at T5 while `lowland_longbow` at T6, but vanilla stats: yew = higher difficulty / damage / speed than longbow. The T5 archer could roll a stronger bow than its T6 upgrade.
+
+Before committing tier-ordered weapons (bows, crossbows, polearms, swords), grep vanilla stats:
+
+```bash
+grep -A20 'id="<weapon_id>"' "<game>/Modules/SandBoxCore/ModuleData/items/weapons.xml" \
+  | grep -E 'difficulty|damage|missile_speed|speed'
+```
+
+Then sort by primary damage stat and assign tiers in ascending order.
