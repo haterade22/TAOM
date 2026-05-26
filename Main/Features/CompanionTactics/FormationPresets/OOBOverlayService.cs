@@ -88,7 +88,11 @@ public sealed class OOBOverlayService : IOOBOverlayService
     {
         if (_layer != null && _attachedScreen != null)
         {
-            try { _attachedScreen.RemoveLayer(_layer); }
+            try
+            {
+                _layer.InputRestrictions.ResetInputRestrictions();
+                _attachedScreen.RemoveLayer(_layer);
+            }
             catch (System.Exception ex) { _logger.LogWarning($"[CompanionTactics] Detach layer failed: {ex.Message}"); }
         }
         _vm?.OnFinalize();
@@ -108,6 +112,11 @@ public sealed class OOBOverlayService : IOOBOverlayService
 
             _vm = new OOBButtonsVM(_presetService, _vmTracker, _logger);
             _layer = new GauntletLayer("GauntletLayer", 200, false);
+            // Required: without InputRestrictions the layer renders but never registers with the
+            // MissionScreen's input dispatcher — buttons paint, clicks pass through. Same bug
+            // class as #202 (EquipPresets). MissionScreen overlays need this just like ScreenBase
+            // overlays; the v1.3.15 input dispatcher does not distinguish the two.
+            _layer.InputRestrictions.SetInputRestrictions();
             _layer.LoadMovie("OOBButtonsOverlay", _vm);
             missionScreen.AddLayer(_layer);
             _attachedScreen = missionScreen;

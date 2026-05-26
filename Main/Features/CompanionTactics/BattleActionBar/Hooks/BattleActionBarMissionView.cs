@@ -52,6 +52,12 @@ public sealed class BattleActionBarMissionView : MissionView
         {
             _vm = new BattleActionBarVM(_service, _stances);
             _layer = new GauntletLayer("GauntletLayer", 100, false);
+            // Required: without InputRestrictions the layer renders but never registers with the
+            // MissionScreen's input dispatcher — mouse clicks on the action-bar buttons silently
+            // fall through. The hotkey path via HandleHotkeyInput continues to work either way
+            // (it polls Mission.InputManager directly), which is why this latent bug was masked
+            // until #225. Same fix class as #202 / d141304.
+            _layer.InputRestrictions.SetInputRestrictions();
             _layer.LoadMovie("BattleActionBar", _vm);
             MissionScreen.AddLayer(_layer);
             _isInitialized = true;
@@ -86,7 +92,11 @@ public sealed class BattleActionBarMissionView : MissionView
             try
             {
                 _stances?.ClearAllStances();
-                if (_layer != null) MissionScreen?.RemoveLayer(_layer);
+                if (_layer != null)
+                {
+                    _layer.InputRestrictions.ResetInputRestrictions();
+                    MissionScreen?.RemoveLayer(_layer);
+                }
             }
             catch (System.Exception ex) { _logger?.LogWarning($"[BattleActionBar] cleanup: {ex.Message}"); }
             _vm?.OnFinalize();

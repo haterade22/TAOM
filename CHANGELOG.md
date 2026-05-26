@@ -2,6 +2,19 @@
 
 ## 2026-05-25
 
+### fix(companiontactics): wire input restrictions on OOB + battle-bar overlays
+
+User reported that on the pre-battle Order-of-Battle (deployment) screen, the two TAOM-added buttons "Assign Heroes" and "Presets" did nothing when clicked while the adjacent vanilla "Reset Deployment" / "Ready" buttons worked normally. Same bug class as the EquipPresets fix from earlier (commit `d141304`, #202) — the custom `GauntletLayer` in [OOBOverlayService.cs:114](Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs#L114) was added without `_layer.InputRestrictions.SetInputRestrictions()`, so it painted but never registered with the MissionScreen's input dispatcher.
+
+Latent twin caught while investigating: [BattleActionBarMissionView.cs:54](Main/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs#L54) had the same broken pattern. The `BattleActionBar.xml` prefab has `Command.Click="ExecuteAction"` button bindings but mouse clicks were silently dropped; the bar happened to remain functional via numeric hotkeys (`HandleHotkeyInput` polls `Mission.InputManager` directly, bypassing the Gauntlet input dispatcher entirely), which masked the mouse-path bug until now.
+
+Fix in both files: add `_layer.InputRestrictions.SetInputRestrictions()` after layer construction (paired with `_layer.InputRestrictions.ResetInputRestrictions()` before `RemoveLayer` in the teardown path). Closes #225.
+
+The fact that this slipped past the rule we codified in commit `0b951c7` (#204) is itself a process bug — the rule was scoped to ScreenBase overlays only and explicitly excluded MissionScreen overlays based on a wrong inference. Followup commit broadens the rule + writes the RCA at `docs/reviews/rca-companiontactics-overlay-input-2026-05-25.md`.
+
+Research: ilspycmd verified `GauntletLayer.InputRestrictions.SetInputRestrictions()` / `ResetInputRestrictions()` exist on v1.3.15 base class `ScreenLayer.InputRestrictions` regardless of whether the layer is hosted on `ScreenBase` or `MissionScreen`.
+Not-tested: MissionView entry points are tested live in-game per ADR-008.
+
 ### feat(troops): Gondor troop polish — equipment audit + Pinnath Gelin cavalry (#224)
 
 Follow-up to #212 KEYforce troop tree revamp. Visual review of the Gondor trees in custom battle surfaced concrete equipment gaps. Single delta-style apply script (`tools/apply_gondor_polish_224.py`) — distinct from the full-roster-swap pattern used by #99/#212.
