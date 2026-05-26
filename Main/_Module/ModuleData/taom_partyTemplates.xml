@@ -959,6 +959,90 @@
 		</stacks>
 	</MBPartyTemplate>
 
+	<!-- ===================== DALE ===================== -->
+	<MBPartyTemplate id="kingdom_hero_party_dale_template">
+		<stacks>
+			<PartyTemplateStack min_value="10" max_value="20" troop="NPCCharacter.dale_recruit" />
+			<PartyTemplateStack min_value="5" max_value="15" troop="NPCCharacter.dale_militia" />
+			<PartyTemplateStack min_value="5" max_value="12" troop="NPCCharacter.dale_footman" />
+			<PartyTemplateStack min_value="5" max_value="12" troop="NPCCharacter.dale_bowman" />
+			<PartyTemplateStack min_value="3" max_value="10" troop="NPCCharacter.dale_man_at_arms" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.dale_longbowman" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.dale_guardsman" />
+			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.dale_royal_archer" />
+			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.dale_royal_guard" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.dale_knight" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.dale_royal_cavalier" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.dale_black_arrow_marksman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_mercenary_dale_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.dale_recruit" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.dale_lake_town_skirmisher" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.dale_longbowman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_outlaw_dale_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.dale_recruit" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.dale_militia" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.dale_militia_spearman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="militia_dale_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dale_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dale_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_dale_template_level_1">
+		<stacks>
+			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.dale_recruit" />
+			<PartyTemplateStack min_value="3" max_value="6" troop="NPCCharacter.dale_militia" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.dale_bowman" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.dale_footman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_dale_template_level_2">
+		<stacks>
+			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.dale_footman" />
+			<PartyTemplateStack min_value="3" max_value="6" troop="NPCCharacter.dale_man_at_arms" />
+			<PartyTemplateStack min_value="3" max_value="6" troop="NPCCharacter.dale_longbowman" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.dale_outrider" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_dale_template_level_3">
+		<stacks>
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.dale_guardsman" />
+			<PartyTemplateStack min_value="3" max_value="6" troop="NPCCharacter.dale_royal_archer" />
+			<PartyTemplateStack min_value="3" max_value="6" troop="NPCCharacter.dale_royal_guard" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.dale_knight" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="rebels_dale_template">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.dale_recruit" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.dale_militia_spearman" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.dale_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="vassal_reward_troops_dale">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dale_kings_champion" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.dale_kings_bowman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dale_kinsman_of_eorl" />
+		</stacks>
+	</MBPartyTemplate>
+
 	<!-- ===================== DUNLAND ===================== -->
 
 	<MBPartyTemplate id="villager_dunland_template">

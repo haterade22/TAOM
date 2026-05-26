@@ -61,7 +61,7 @@ def validate_culture(culture: str, armory_ids: set) -> int:
 def main():
     cultures = [
         "gondor", "mordor", "isengard", "dolguldur",
-        "gundabad", "erebor", "rhun_new",
+        "gundabad", "erebor", "rhun_new", "dale",
     ]
     armory_ids = collect_armory_ids()
     print(f"Armory IDs (recursive): {len(armory_ids):,}\n")

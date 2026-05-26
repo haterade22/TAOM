@@ -1,5 +1,61 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-26
+
+### feat(dale): Dale culture — armor authoring + 27-troop tree
+
+Solus completed the Dale armor mesh set (163 items across 5 slots: head/body/leg/arm/shoulder). This change wires them into LOTRLOME_Armory and adds a full troop tree on the vanilla `Culture.sturgia` id (renamed "Barding" via existing XSLT).
+
+**Task A — Armor** (`tools/generate_dale_armor.py` + manifest `tools/dale_armor_meshes.txt`):
+- Mesh IDs harvested from the 5 `.tpac` files via the existing spider-skeleton `tools/tpac_skeleton_scan.py --all-types` tool. 169 mesh IDs deduped to 163 authored items (6 `_slim` female-fit meshes auto-paired with their base via `has_gender_variations="true"`, not authored as separate items).
+- All items: `culture="Culture.sturgia"` + `<Flags UseTeamColor="true" />` per spec.
+- Special covers_hands="false" applied to the 10 user-specified bracer/archer-gauntlet IDs; the other 22 hand items get `covers_hands="true"`.
+- Material/modifier-group lookup by (class, tier) — archer light → Cloth, archer elite → Chainmail; chivalry light → Chainmail, chivalry medium+ → Plate; infantry light → Leather, infantry heavy+ → Plate; mariner stays Cloth/Leather with Chainmail only at elite veteran.
+- 5 XML files written to `LOTRLOME_Armory/ModuleData/LOTRLOME_items/dale/`; folder registered in `LOTRLOME_Armory/SubModule.xml`.
+- Solus's mesh naming quirks preserved verbatim — `chivlary` typo on 4 slots, `chivalry` correct spelling on chest slot, `infrantry` typo, `lake_town_mariner` for Lake-town bracers.
+
+**Task B — Troop tree** (`tools/generate_dale_troops.py`):
+- 27 troops in `Main/_Module/ModuleData/troops/troops_dale.xml`, lore-grounded per a web-research pass (Tolkien sources cited in `docs/features/dale.md`).
+- Three royal branches off a shared T3 Squire root:
+  - **Excellent Archers** (T4-T8): Bowman → Longbowman → Royal Archer → Black Arrow Marksman → King's Bowman. +10-15 Bow skill above standard tier curve.
+  - **Great Infantry** (T4-T8): Man-at-Arms → Guardsman → Royal Guard → Warden of the Running River → King's Champion.
+  - **Decent Cavalry** (T4-T7, capped — Dale isn't horse-country per Tolkien): Outrider → Knight → Royal Cavalier → Kinsman of Eorl. Skill curve ~10% under Rohan parity.
+- Lake-town smallfolk line (T2 Recruit → T3 Militia → T4-T6 Lake-town Skirmisher/Mariner/Veteran or Footman/Spearman/Veteran) for low-tier Esgaroth militia.
+- 4 militia troops (`dale_militia_spearman/archer/veteran_spearman/veteran_archer`) referenced by spcultures.xslt for garrison spawns.
+- Equipment uses new Dale armor items + vanilla Sturgia weapons (`sturgia_sword_*`, `northern_spear_*`, `sturgia_lance_*`) + shared LOTRAOM horses/shields + bow line keyed on Bard's longbow tradition (`hunting_bow` → `lowland_yew_bow` → `lowland_longbow` → `noble_bow`).
+
+**Registration changes:**
+- `Main/_Module/SubModule.xml` — registered `troops/troops_dale` XmlNode next to Erebor.
+- `Main/_Module/ModuleData/spcultures.xslt` — added 9 military attribute overrides on the existing `Culture[@id='sturgia']` block (`basic_troop`, `elite_basic_troop`, 4 militia slots, `default_party_template`, 2 equipment-roster slots).
+- `Main/_Module/ModuleData/taom_partyTemplates.xml` — 9 new Dale templates (kingdom_hero, mercenary, outlaw, militia, 3 patrol levels, rebels, vassal_reward).
+- `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` — added `InitializeDaleCulture()` binding `CultureMap["sturgia"]` to a 5-entry pool (recruit/militia/bowman/footman/squire). Single culture-level pool, no per-settlement granularity (deferred follow-up).
+- `tools/validate_all_troop_refs.py` — added `"dale"` to the culture list. All 121 Dale armor refs + 50 weapon/horse/shield refs resolve.
+
+**Tests** (`TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs`):
+- 4 new tests covering the Dale culture pool weighted-random distribution (low/mid/high rolls) + settlement-with-no-pool fallthrough.
+
+**Lore sourcing** (cited inline in `docs/features/dale.md`):
+- *Hobbit* ch. 14 + 17 ("Fire and Water" + "The Clouds Burst") — Black Arrow as heirloom of Girion, Bardings "armed with long swords and tall spears, bearing great bows."
+- *LOTR* Appendix A III — Erebor-made mail-shirts traded to Esgaroth.
+- *LOTR* Appendix B — Battle of Dale TA 3019, Brand falls before the Gate.
+- *Two Towers* "Riders of Rohan" — Rohirrim kin to "the Bardings of Dale, and the Beornings of the Wood."
+
+**Verification:**
+- `/verify quick` — build green.
+- `/deep-review dale` (5 agents) — Standards PASS, API Compatibility PASS, Efficiency PASS, Completeness identified missing tests/doc/issue/CHANGELOG (all addressed this session), Data Flow 7/7 flows connected, 1 MEDIUM follow-up (lord rosters in `taom_equipment_sets_dale.xml` still reference vanilla Sturgia items — Dale TROOPS look correct but Dale LORDS still look vanilla Sturgian; documented in feature doc as known limitation).
+- `/review-codex dale` (Codex adversarial) — 3 confirmed findings, all fixed in-session:
+  - **P1**: 6 XSLT culture-template bindings missing (`militia_party_template`, `rebels_party_template`, `vassal_reward_party_template`, `settlement_patrol_template_level_1/2/3`) — Dale's new militia/patrol/rebels/reward party templates were dead code because the vanilla XML's passthrough preserved `militia_sturgia_template` etc. Fixed in `spcultures.xslt`.
+  - **P2**: Bow tier inversion — `lowland_yew_bow` (difficulty 50, damage 69) is stronger than `lowland_longbow` (difficulty 30, damage 57). T5 `dale_longbowman` could roll the yew bow; T6 `dale_royal_archer` only had the weaker longbow. Swapped — T5 now uses longbow, T6 graduates to yew_bow.
+  - **P3**: Cavalry skill curve was 40-45% under Rohan, not the "~10% under" the generator comment claimed. Bumped Riding/Polearm by ~35-45% so Dale cavalry lands at roughly 70% of Rohan tier-matched parity (still clearly weaker per Tolkien's Éothéod-vs-Bardings split). Updated comments to match.
+- 4 Dale tests pass after fixes; full test suite unaffected.
+- RCA at `docs/reviews/rca-dale-2026-05-26.md`. Key process lesson: the 5-agent `/deep-review` checks "what we DID is correct" but doesn't check "what we DIDN'T DO, was that intentional." Codex's vanilla-deserializer decompile is the right way to catch missing bindings. Feedback memory codified at `feedback_xslt_passthrough_unintended_inheritance.md`.
+
+Closes #226.
+
+Research: `pwsh tools/taom-src.ps1 path TaleWorlds.Core.CultureObject` — confirmed `BasicTroop`/`EliteBasicTroop`/militia/party-template/equipment-roster attribute deserialization paths.
+Save-compat: New troops are additive; no existing troop IDs renamed or deleted. Sturgia kingdom save loads will lazily populate Dale recruits on next volunteer tick.
+Not-tested: visual/in-game rendering of armor items (gender-variation auto-swap, UseTeamColor banner tint, mesh binding) — verified live in custom battle per ADR-008.
+
 ## 2026-05-25
 
 ### chore(harness): broaden GauntletLayer input-wiring rule to cover MissionScreen overlays
