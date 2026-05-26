@@ -2,6 +2,19 @@
 
 ## 2026-05-26
 
+### feat(rohan): every Rohan clan recruits all 7 basic troops at weight 1
+
+User request: surface every Rohan `is_basic_troop="true"` troop to the player from every Rohan clan, so any clan-bound Rohan settlement can recruit the full T2 lineup regardless of region.
+
+New `InitializeRohanClans()` static initialiser in `VolunteerRecruitmentService` populates `ClanMap` for all 11 Rohan clans (`clan_vlandia_1` through `clan_vlandia_11`) with the 7 Rohan basic troops at weight 1 each:
+- `rohan_wold_recruit`, `rohan_westemnet_recruit`, `rohan_eastemnet_recruit`, `rohan_eastfold_recruit`, `rohan_westfold_recruit`, `rohan_westmarches_recruit`, `rohan_edoras_recruit`
+
+The `ClanMap` lookup runs AFTER per-settlement pools (none authored for Rohan yet) and BEFORE the culture-level fallback, so any future per-settlement Rohan flavor still wins. Without per-settlement entries, every Rohan clan-bound settlement now resolves to this uniform 7-way pool.
+
+3 unit tests added covering low-roll (0 → wold_recruit), high-roll (6 → edoras_recruit, terminal slot), and highest-numbered-clan (`clan_vlandia_11` — catches off-by-one in the loop range).
+
+Verification: 3/3 new tests pass; 4 Dale tests still green (no regression in shared static-ctor state); validator green across all 8 cultures.
+
 ### feat(dale): Dalian rebrand + cavalry split (Light/Heavy) + King's Guard T7
 
 User-directed naming pass + cavalry restructure. 29 → 30 troops (added Dalian King's Guard at T7).

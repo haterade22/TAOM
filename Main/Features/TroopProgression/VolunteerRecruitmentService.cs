@@ -45,6 +45,35 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeMordorCulture();
         // (No InitializeMordorClans — user explicitly chose to skip clan pools.)
         InitializeDaleCulture();
+        InitializeRohanClans();
+    }
+
+    // --- Rohan Clan Pools ---
+    // Every Rohan (Culture.vlandia) clan recruits all 7 Rohan basic troops (is_basic_troop=true)
+    // at equal weight 1, so the player can recruit the full Rohan T2 lineup from any settlement
+    // bound to a Rohan clan regardless of region (Wold, Westemnet, Eastemnet, Eastfold, Westfold,
+    // Westmarches, Edoras). Per-clan flavor is intentionally flat — recruitment is uniform across
+    // the kingdom so players aren't forced to chase specific clans for specific basic troops.
+    //
+    // ClanMap is checked AFTER SettlementMap and BEFORE CultureMap in the lookup order, so any
+    // future per-settlement Rohan pool would still win. Without a per-settlement entry, the lookup
+    // falls through to this clan-level pool.
+    private static void InitializeRohanClans()
+    {
+        (string, int)[] basicTroops =
+        {
+            ("rohan_wold_recruit",        1),
+            ("rohan_westemnet_recruit",   1),
+            ("rohan_eastemnet_recruit",   1),
+            ("rohan_eastfold_recruit",    1),
+            ("rohan_westfold_recruit",    1),
+            ("rohan_westmarches_recruit", 1),
+            ("rohan_edoras_recruit",      1),
+        };
+        for (int i = 1; i <= 11; i++)
+        {
+            AddClan($"clan_vlandia_{i}", basicTroops);
+        }
     }
 
     // --- Dale Culture Fallback ---

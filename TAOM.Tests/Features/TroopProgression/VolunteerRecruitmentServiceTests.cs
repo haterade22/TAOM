@@ -1834,4 +1834,56 @@ public class VolunteerRecruitmentServiceTests
 
         Assert.AreEqual("dale_recruit", result);
     }
+
+    // --- Rohan (vlandia) clan recruitment pool ---
+    // Per InitializeRohanClans: every clan_vlandia_1..11 maps to the 7 Rohan basic troops
+    // at weight 1 each. Total weight 7; rolls 0..6 map directly to ordered slot index.
+
+    [TestMethod]
+    public void GetVolunteerTroopId_RohanClan_Roll0_ReturnsWoldRecruit()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_vlandia_1",
+            cultureId: "vlandia");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("rohan_wold_recruit", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_RohanClan_Roll6_ReturnsEdorasRecruit()
+    {
+        // Roll 6 = last slot in the ordered weight-1 pool = rohan_edoras_recruit
+        _random.Next(7).Returns(6);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_vlandia_5",
+            cultureId: "vlandia");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("rohan_edoras_recruit", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_RohanClan_HighestNumberedClan_HasSamePool()
+    {
+        // Confirms clan_vlandia_11 (the highest-numbered Rohan clan) has the pool too —
+        // catches off-by-one regressions in the loop range.
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_vlandia_11",
+            cultureId: "vlandia");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("rohan_wold_recruit", result);
+    }
 }
