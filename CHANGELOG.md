@@ -2,6 +2,22 @@
 
 ## 2026-05-26
 
+### fix(career-system): rename Dale careers to Tolkien-flavored display names
+
+Player-facing display names only — career IDs (`dale_guardsman` / `dale_marksman` / `dale_outrider`) stay the same so all archetype mappings, choice trees, ability templates, and equipment rosters keep resolving identically.
+
+| Career ID | Was | Now |
+|-----------|-----|-----|
+| `dale_guardsman` | Dale Guardsman | Dalian Master Swordsman |
+| `dale_marksman` | Dale Marksman | Barding Marksman |
+| `dale_outrider` | Dale Outrider | Dalian Cavalier |
+
+Two-file rename (single source of truth pattern): [`taom_careers.xml`](Main/_Module/ModuleData/career_system/taom_careers.xml) lines 506/526/546 (`display_name="{=key}fallback"`) + [`taom_career_strings.xml`](Main/_Module/ModuleData/taom_career_strings.xml) lines 51/53/55 (the matching `<string>` registry entry). Localization keys unchanged so existing translations in the 12 language files still resolve safely — they're now stale relative to English but the game won't crash; the translation pipeline (`tools/translate_with_claude.py`) needs to re-run to propagate, tracked with the same ongoing follow-up as the 50 ability tooltip rewrite (commit `ff75c93`).
+
+Files: 2 XML files, 3 lines each. No code change. No new items. No tests needed (data only).
+Save-compat: career IDs unchanged → existing saves resolve careers identically.
+Not-tested: in-game spot-check that career menu + encyclopedia show the new names.
+
 ### feat(native-skin-fixes): adopt + port NativeSkinFixes into TAOM (v1.4.5, in-repo, pattern-scanning)
 
 Pulls the entire **NativeSkinFixes** mod (covers_head morph fix + hair cloth + beard cloth) into TAOM as a first-party feature. Replaces the inert vendored `TAOM.NativeSkinFixes.dll` (v1.4.0 RVAs, no managed loader committed) with a full integration:

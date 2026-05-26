@@ -48,11 +48,11 @@
 	<string id="taom_career_lokhas_drus_marksman_desc" text="{=taom_career_lokhas_drus_marksman_desc}An armor-piercing specialist of the Lôkhas Drûs corps who trains to drive arrows through the heaviest plate at range." />
 	<string id="taom_career_balchoth_kan" text="{=taom_career_balchoth_kan}Balchoth Kân" />
 	<string id="taom_career_balchoth_kan_desc" text="{=taom_career_balchoth_kan_desc}A heavy cavalry commander of the Balchoth who leads unstoppable mounted charges, maintaining iron morale no matter the odds." />
-	<string id="taom_career_dale_guardsman" text="{=taom_career_dale_guardsman}Dale Guardsman" />
+	<string id="taom_career_dale_guardsman" text="{=taom_career_dale_guardsman}Dalian Master Swordsman" />
 	<string id="taom_career_dale_guardsman_desc" text="{=taom_career_dale_guardsman_desc}A stalwart protector of the rebuilt city of Dale who holds the gate against all comers with shield and spear." />
-	<string id="taom_career_dale_marksman" text="{=taom_career_dale_marksman}Dale Marksman" />
+	<string id="taom_career_dale_marksman" text="{=taom_career_dale_marksman}Barding Marksman" />
 	<string id="taom_career_dale_marksman_desc" text="{=taom_career_dale_marksman_desc}A legendary bowman of Dale whose ancestors slew Smaug, carrying on the tradition of unerring marksmanship." />
-	<string id="taom_career_dale_outrider" text="{=taom_career_dale_outrider}Dale Outrider" />
+	<string id="taom_career_dale_outrider" text="{=taom_career_dale_outrider}Dalian Cavalier" />
 	<string id="taom_career_dale_outrider_desc" text="{=taom_career_dale_outrider_desc}A mounted patrol of the northern trade roads who safeguards caravans between Dale and the Lonely Mountain." />
 	<string id="taom_career_ironguard" text="{=taom_career_ironguard}Ironguard" />
 	<string id="taom_career_ironguard_desc" text="{=taom_career_ironguard_desc}An elite dwarven warrior clad in mithril-forged plate who holds the deeps of Erebor against orc and dragon alike." />

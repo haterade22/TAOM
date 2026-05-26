@@ -503,7 +503,7 @@
   <!-- ═══════════════════════════════════════════════════════════ -->
 
   <Career id="dale_guardsman"
-          display_name="{=taom_career_dale_guardsman}Dale Guardsman"
+          display_name="{=taom_career_dale_guardsman}Dalian Master Swordsman"
           description="{=taom_career_dale_guardsman_desc}A stalwart protector of the rebuilt city of Dale who holds the gate against all comers with shield and spear."
           portrait_sprite="career_dale_guardsman_portrait"
           ability_template_id="dale_guardsman_ability"
@@ -523,7 +523,7 @@
   </Career>
 
   <Career id="dale_marksman"
-          display_name="{=taom_career_dale_marksman}Dale Marksman"
+          display_name="{=taom_career_dale_marksman}Barding Marksman"
           description="{=taom_career_dale_marksman_desc}A legendary bowman of Dale whose ancestors slew Smaug, carrying on the tradition of unerring marksmanship."
           portrait_sprite="career_dale_marksman_portrait"
           ability_template_id="dale_marksman_ability"
@@ -543,7 +543,7 @@
   </Career>
 
   <Career id="dale_outrider"
-          display_name="{=taom_career_dale_outrider}Dale Outrider"
+          display_name="{=taom_career_dale_outrider}Dalian Cavalier"
           description="{=taom_career_dale_outrider_desc}A mounted patrol of the northern trade roads who safeguards caravans between Dale and the Lonely Mountain."
           portrait_sprite="career_dale_outrider_portrait"
           ability_template_id="dale_outrider_ability"
