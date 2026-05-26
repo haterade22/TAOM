@@ -490,10 +490,10 @@
                 <equipment slot="Item0" id="Item.mountain_hunting_bow" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.sturgia_sword_4_t4" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a02" />
-                <equipment slot="Body" id="Item.sk_dale_chest_archer_a02" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a02" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a02" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
             </EquipmentRoster>
         </Equipments>
@@ -537,11 +537,11 @@
                 <equipment slot="Item0" id="Item.lowland_longbow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.sturgia_sword_5_t5" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a03" />
-                <equipment slot="Body" id="Item.sk_dale_chest_archer_a03" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a03" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a03" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a02" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_a02" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a02" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a02" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -584,11 +584,11 @@
                 <equipment slot="Item0" id="Item.lowland_yew_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_c" />
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_2_t5" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
-                <equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a03" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_a03" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a03" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a03" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a03" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -676,10 +676,10 @@
                 <equipment slot="Item0" id="Item.crossbow_c" />
                 <equipment slot="Item1" id="Item.bolt_a" />
                 <equipment slot="Item2" id="Item.sturgia_sword_4_t4" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_archer_b02" />
-                <equipment slot="Body" id="Item.sk_dale_chest_archer_b02" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b02" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_archer_b02" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_b01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_b01" />
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b01" />
             </EquipmentRoster>
         </Equipments>
@@ -723,11 +723,11 @@
                 <equipment slot="Item0" id="Item.crossbow_d" />
                 <equipment slot="Item1" id="Item.bolt_b" />
                 <equipment slot="Item2" id="Item.sturgia_sword_5_t5" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_archer_b03" />
-                <equipment slot="Body" id="Item.sk_dale_chest_archer_b03" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b03" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_archer_b03" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b03" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_b02" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_b02" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b02" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_b02" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -770,11 +770,11 @@
                 <equipment slot="Item0" id="Item.crossbow_e" />
                 <equipment slot="Item1" id="Item.bolt_d" />
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_2_t5" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_archer_b04" />
-                <equipment slot="Body" id="Item.sk_dale_chest_archer_b04" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b04" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_archer_b04" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b04" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_b03" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_b03" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b03" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_b03" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b03" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1052,11 +1052,11 @@
                 <equipment slot="Item2" id="Item.northern_spear_4_t4" />
                 <equipment slot="Horse" id="Item.sturgia_horse" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a02" />
-                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a02" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a02" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a02" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a02" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1081,7 +1081,9 @@
             <skill id="Crossbow" value="0" />
             <skill id="Throwing" value="0" />
         </skills>
-        <upgrade_targets></upgrade_targets>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.dale_veteran_northman_scout" />
+        </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_lance_1_t4" />
@@ -1089,11 +1091,11 @@
                 <equipment slot="Item2" id="Item.sturgia_sword_5_t5" />
                 <equipment slot="Horse" id="Item.charger" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a03" />
-                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a03" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a03" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a03" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b02" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b02" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b02" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b02" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b02" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_lance_1_t4" />
@@ -1101,11 +1103,60 @@
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_1_t5" />
                 <equipment slot="Horse" id="Item.charger" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
-                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b02" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b02" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b02" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b02" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b02" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dale_veteran_northman_scout"
+        default_group="Cavalry"
+        level="32"
+        name="{=aom_dale_veteran_northman_scout_name}[Dale] Dalian Veteran Northman Scout"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="95" />
+            <skill id="Riding" value="180" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="0" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="0" />
+        </skills>
+        <upgrade_targets></upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sturgia_lance_2_t5" />
+                <equipment slot="Item1" id="Item.horsemans_heater_shield" />
+                <equipment slot="Item2" id="Item.sturgia_noble_sword_2_t5" />
+                <equipment slot="Horse" id="Item.charger" />
+                <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b03" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b03" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b03" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b03" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b03" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sturgia_lance_2_t5" />
+                <equipment slot="Item1" id="Item.horsemans_heater_shield" />
+                <equipment slot="Item2" id="Item.sturgia_noble_sword_3_t5" />
+                <equipment slot="Horse" id="Item.charger" />
+                <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b04" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b04" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b04" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b04" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b04" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1140,11 +1191,11 @@
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_1_t5" />
                 <equipment slot="Horse" id="Item.charger" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b01" />
-                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b01" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b01" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b01" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b01" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a02" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a02" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a02" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a02" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a02" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_lance_2_t5" />
@@ -1152,11 +1203,11 @@
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_2_t5" />
                 <equipment slot="Horse" id="Item.charger" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b02" />
-                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b02" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b02" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b02" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b02" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a02" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a02" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a02" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a02" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a02" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1191,11 +1242,11 @@
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_2_t5" />
                 <equipment slot="Horse" id="Item.charger" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b02" />
-                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b02" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b02" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b02" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b02" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a03" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a03" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a03" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a03" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
@@ -1203,11 +1254,11 @@
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_3_t5" />
                 <equipment slot="Horse" id="Item.charger" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b03" />
-                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b03" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b03" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b03" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b03" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a03" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a03" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a03" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a03" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a03" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1240,11 +1291,11 @@
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_3_t5" />
                 <equipment slot="Horse" id="Item.charger" />
                 <equipment slot="HorseHarness" id="Item.rohan_horse_armor_scalemail" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b03" />
-                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b03" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b03" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b03" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b03" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
@@ -1252,11 +1303,11 @@
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_4_t5" />
                 <equipment slot="Horse" id="Item.charger" />
                 <equipment slot="HorseHarness" id="Item.rohan_horse_armor_scalemail" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b04" />
-                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_b04" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b04" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b04" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b04" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1289,21 +1340,21 @@
                 <equipment slot="Item0" id="Item.northern_spear_3_t4" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
                 <equipment slot="Item2" id="Item.sturgia_sword_4_t4" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b01" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.northern_spear_4_t4" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
                 <equipment slot="Item2" id="Item.sturgia_sword_5_t4" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1336,21 +1387,21 @@
                 <equipment slot="Item0" id="Item.northern_spear_4_t5" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
                 <equipment slot="Item2" id="Item.sturgia_sword_5_t5" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b02" />
+                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b02" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b02" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b02" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b02" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.eastern_spear_5_t5" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_1_t5" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b02" />
+                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b02" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b02" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b02" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b02" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1381,21 +1432,21 @@
                 <equipment slot="Item0" id="Item.northern_spear_4_t5" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_2_t5" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b01" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b01" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b01" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b01" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b03" />
+                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b03" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b03" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b03" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b03" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.eastern_spear_5_t5" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
                 <equipment slot="Item2" id="Item.sturgia_noble_sword_3_t5" />
-                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
-                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b02" />
-                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b02" />
-                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b03" />
+                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b03" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b03" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b03" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b03" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

@@ -80,21 +80,30 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
     // Dale (vanilla Culture.sturgia renamed to "Barding" via spcultures.xslt) recruits from
     // a single culture-level pool — no per-settlement / per-clan flavor variants in this
     // session. Sturgia kingdom settlements (Lake-town, Dale proper) all draw from this.
-    // If we later want Lake-town settlements to favor the mariner line, add a
-    // recruitment_pools/dale.json (Gondor pattern) or AddSettlement() entries here.
     //
-    // Weight rationale: 5+3 = 8 weight on the levy root + militia (the common case), 1
-    // weight each on bowman/footman/squire (rare archer/infantry/noble starts). Players
-    // who specifically want the noble lines will upgrade through, not pull random recruits.
+    // Pool reflects the user-designed Dale tree: Dalian Levy (weight 4) is the most common
+    // recruit and serves as the royal-line root. The 6 other slots (weight 1 each) cover
+    // one representative entry troop for each branch + the Lake-Town levy entry. Total weight 10.
+    //
+    // Branch entry points:
+    //   - Dalian Levy        (dale_squire)       → 4 royal branches (riverman/militia/yeoman/crossbow/merchant)
+    //   - Dalian Riverman    (dale_riverman)     → Riverman spear+shield line
+    //   - Dalian Militia     (dale_man_at_arms)  → Great Infantry line (NOT dale_militia / Lake-Town Militia)
+    //   - Dalian Yeoman      (dale_bowman)       → Excellent Archers (bow) line
+    //   - Dalian Crossbowman (dale_crossbowman)  → Royal Crossbow line
+    //   - Dalian Merchant Guard (dale_outrider)  → Cavalry split (Light + Heavy)
+    //   - Lake-Town Peasant  (dale_recruit)      → Lake-Town levy + Watch + Pikeman lines
     private static void InitializeDaleCulture()
     {
         CultureMap["sturgia"] = new List<VolunteerChance>
         {
-            new VolunteerChance("dale_recruit",  5),
-            new VolunteerChance("dale_militia",  3),
-            new VolunteerChance("dale_bowman",   1),
-            new VolunteerChance("dale_footman",  1),
-            new VolunteerChance("dale_squire",   1),
+            new VolunteerChance("dale_squire",       4),
+            new VolunteerChance("dale_riverman",     1),
+            new VolunteerChance("dale_man_at_arms",  1),
+            new VolunteerChance("dale_bowman",       1),
+            new VolunteerChance("dale_crossbowman",  1),
+            new VolunteerChance("dale_outrider",     1),
+            new VolunteerChance("dale_recruit",      1),
         };
     }
 

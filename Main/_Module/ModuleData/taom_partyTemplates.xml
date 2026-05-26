@@ -974,6 +974,7 @@
 			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.dale_royal_archer" />
 			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.dale_royal_guard" />
 			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.dale_knight" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.dale_veteran_northman_scout" />
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.dale_royal_cavalier" />
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.dale_dalian_mariner" />
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.dale_black_arrow_marksman" />

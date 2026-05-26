@@ -257,6 +257,11 @@ def s_northman_scout_t5() -> Skills:
     # Light cavalry — slightly more Bow + agility, less Polearm than the heavy entry
     return Skills(Athletics=85, Riding=155, OneHanded=110, Polearm=145, Bow=60)
 
+def s_veteran_northman_scout_t6() -> Skills:
+    # Light cavalry terminal — between Northman Scout (T5) and the Heavy line at T6.
+    # Higher Bow than heavy cav reflects light-cav scout flavor.
+    return Skills(Athletics=95, Riding=180, OneHanded=130, Polearm=170, Bow=70)
+
 def s_dalian_cavalry_t5() -> Skills:
     # Heavy entry — slightly more Riding/Polearm, less Bow than Northman Scout
     return Skills(Athletics=85, Riding=160, OneHanded=120, Polearm=170, Bow=40)
@@ -674,8 +679,7 @@ def build_troops() -> list[Troop]:
     ))
 
     # ----- Royal Archer branch (T4-T7) — bronze archer armor a01-a04 -----
-    # Armor pattern: a01+a02 (T4) → a02+a03 (T5) → a03+a04 (T6) → a04 only (T7).
-    # Tiers overlap by one variant to give continuity between adjacent ranks.
+    # 1 variant per tier (both rosters use the same armor mesh; weapons vary).
     troops.append(Troop(
         id="dale_bowman",
         display_name="Dalian Yeoman",
@@ -693,7 +697,7 @@ def build_troops() -> list[Troop]:
                 "Item0": "mountain_hunting_bow",
                 "Item1": "default_arrows",
                 "Item2": "sturgia_sword_4_t4",
-                **archer_armor_explicit("a02"),
+                **archer_armor_explicit("a01"),
             }),
         ],
     ))
@@ -719,7 +723,7 @@ def build_troops() -> list[Troop]:
                 "Item0": "lowland_longbow",
                 "Item1": "bodkin_arrows_b",
                 "Item2": "sturgia_sword_5_t5",
-                **archer_armor_explicit("a03"),
+                **archer_armor_explicit("a02"),
             }),
         ],
     ))
@@ -741,7 +745,7 @@ def build_troops() -> list[Troop]:
                 "Item0": "lowland_yew_bow",
                 "Item1": "bodkin_arrows_c",
                 "Item2": "sturgia_noble_sword_2_t5",
-                **archer_armor_explicit("a04"),
+                **archer_armor_explicit("a03"),
             }),
         ],
     ))
@@ -769,7 +773,7 @@ def build_troops() -> list[Troop]:
     ))
 
     # ----- NEW Royal Crossbow branch (T4-T7, off Dalian Levy) — silver archer armor b01-b04 -----
-    # Parallel to bow line; crossbow + bolts + 1H sword sidearm, no shield.
+    # 1 variant per tier (both rosters use the same armor mesh; bolts/sidearms vary).
     troops.append(Troop(
         id="dale_crossbowman",
         display_name="Dalian Crossbowman",
@@ -787,7 +791,7 @@ def build_troops() -> list[Troop]:
                 "Item0": "crossbow_c",
                 "Item1": "bolt_a",
                 "Item2": "sturgia_sword_4_t4",
-                **archer_armor_explicit("b02"),
+                **archer_armor_explicit("b01"),
             }),
         ],
     ))
@@ -809,7 +813,7 @@ def build_troops() -> list[Troop]:
                 "Item0": "crossbow_d",
                 "Item1": "bolt_b",
                 "Item2": "sturgia_sword_5_t5",
-                **archer_armor_explicit("b03"),
+                **archer_armor_explicit("b02"),
             }),
         ],
     ))
@@ -831,7 +835,7 @@ def build_troops() -> list[Troop]:
                 "Item0": "crossbow_e",
                 "Item1": "bolt_d",
                 "Item2": "sturgia_noble_sword_2_t5",
-                **archer_armor_explicit("b04"),
+                **archer_armor_explicit("b03"),
             }),
         ],
     ))
@@ -951,7 +955,8 @@ def build_troops() -> list[Troop]:
     # Light: T5 Northman Scout (terminal). Heavy: T5 Cavalry → T6 Heavy Cavalry → T7 King's Guard.
     # Armor downshifts one tier (dale_royal_cavalier T6→T5, dale_kinsman_of_eorl T7→T6) per user
     # spec; the new dale_kings_guard takes the top chivlary mesh (b03/b04 via cavalry_armor(8, .)).
-    # LIGHT CAVALRY entry (also shared with HEAVY at split). Armor: chivlary a01/a02 (bronze).
+    # CAVALRY split-point. Armor: chivlary a01 (roster A, bronze) + b01 (roster B, silver) per
+    # user spec — visually represents the branching choice between Light (bronze) and Heavy (silver).
     troops.append(Troop(
         id="dale_outrider",
         display_name="Dalian Merchant Guard",
@@ -973,18 +978,18 @@ def build_troops() -> list[Troop]:
                 "Item2": "northern_spear_4_t4",
                 "Horse": "sturgia_horse",
                 "HorseHarness": "chain_horse_harness",
-                **chivalry_armor_explicit("a02"),
+                **chivalry_armor_explicit("b01"),
             }),
         ],
     ))
 
-    # LIGHT CAVALRY terminal — T5, single-tier branch. Armor: chivlary a03/a04 (bronze).
+    # LIGHT CAVALRY T5 (Northman Scout) — chivlary b02 (silver, single variant).
     troops.append(Troop(
         id="dale_knight",
         display_name="Dalian Northman Scout",
         tier=5, default_group="Cavalry",
         skills=s_northman_scout_t5(),
-        upgrades=[],  # T5 terminal — light cavalry is the short branch
+        upgrades=["dale_veteran_northman_scout"],
         rosters=[
             EquipmentRoster({
                 "Item0": "sturgia_lance_1_t4",
@@ -992,7 +997,7 @@ def build_troops() -> list[Troop]:
                 "Item2": "sturgia_sword_5_t5",
                 "Horse": "charger",
                 "HorseHarness": "chain_horse_harness",
-                **chivalry_armor_explicit("a03"),
+                **chivalry_armor_explicit("b02"),
             }),
             EquipmentRoster({
                 "Item0": "sturgia_lance_1_t4",
@@ -1000,12 +1005,39 @@ def build_troops() -> list[Troop]:
                 "Item2": "sturgia_noble_sword_1_t5",
                 "Horse": "charger",
                 "HorseHarness": "chain_horse_harness",
-                **chivalry_armor_explicit("a04"),
+                **chivalry_armor_explicit("b02"),
             }),
         ],
     ))
 
-    # HEAVY CAVALRY entry (T5). Armor: chivlary b01/b02 (silver, light-end of heavy spread).
+    # LIGHT CAVALRY T6 terminal — Dalian Veteran Northman Scout. Armor: chivlary b03 + b04.
+    troops.append(Troop(
+        id="dale_veteran_northman_scout",
+        display_name="Dalian Veteran Northman Scout",
+        tier=6, default_group="Cavalry",
+        skills=s_veteran_northman_scout_t6(),
+        upgrades=[],  # T6 terminal — light cav caps one tier below heavy
+        rosters=[
+            EquipmentRoster({
+                "Item0": "sturgia_lance_2_t5",
+                "Item1": "horsemans_heater_shield",
+                "Item2": "sturgia_noble_sword_2_t5",
+                "Horse": "charger",
+                "HorseHarness": "chain_horse_harness",
+                **chivalry_armor_explicit("b03"),
+            }),
+            EquipmentRoster({
+                "Item0": "sturgia_lance_2_t5",
+                "Item1": "horsemans_heater_shield",
+                "Item2": "sturgia_noble_sword_3_t5",
+                "Horse": "charger",
+                "HorseHarness": "chain_horse_harness",
+                **chivalry_armor_explicit("b04"),
+            }),
+        ],
+    ))
+
+    # HEAVY CAVALRY entry (T5). Armor: chivlary a02 (bronze).
     troops.append(Troop(
         id="dale_royal_cavalier",
         display_name="Dalian Cavalry",
@@ -1019,7 +1051,7 @@ def build_troops() -> list[Troop]:
                 "Item2": "sturgia_noble_sword_1_t5",
                 "Horse": "charger",
                 "HorseHarness": "chain_horse_harness",
-                **chivalry_armor_explicit("b01"),
+                **chivalry_armor_explicit("a02"),
             }),
             EquipmentRoster({
                 "Item0": "sturgia_lance_2_t5",
@@ -1027,12 +1059,12 @@ def build_troops() -> list[Troop]:
                 "Item2": "sturgia_noble_sword_2_t5",
                 "Horse": "charger",
                 "HorseHarness": "chain_horse_harness",
-                **chivalry_armor_explicit("b02"),
+                **chivalry_armor_explicit("a02"),
             }),
         ],
     ))
 
-    # HEAVY CAVALRY mid (T6). Armor: chivlary b02/b03 (silver, overlap with T5/T7 for continuity).
+    # HEAVY CAVALRY mid (T6). Armor: chivlary a03 (bronze).
     troops.append(Troop(
         id="dale_kinsman_of_eorl",
         display_name="Dalian Heavy Cavalry",
@@ -1046,7 +1078,7 @@ def build_troops() -> list[Troop]:
                 "Item2": "sturgia_noble_sword_2_t5",
                 "Horse": "charger",
                 "HorseHarness": "chain_horse_harness",
-                **chivalry_armor_explicit("b02"),
+                **chivalry_armor_explicit("a03"),
             }),
             EquipmentRoster({
                 "Item0": "sturgia_polearm_1_t5",
@@ -1054,12 +1086,12 @@ def build_troops() -> list[Troop]:
                 "Item2": "sturgia_noble_sword_3_t5",
                 "Horse": "charger",
                 "HorseHarness": "chain_horse_harness",
-                **chivalry_armor_explicit("b03"),
+                **chivalry_armor_explicit("a03"),
             }),
         ],
     ))
 
-    # HEAVY CAVALRY terminal (T7) — Dalian King's Guard. Armor: chivlary b03/b04 (top silver).
+    # HEAVY CAVALRY terminal (T7) — Dalian King's Guard. Armor: chivlary a04 (top bronze).
     troops.append(Troop(
         id="dale_kings_guard",
         display_name="Dalian King's Guard",
@@ -1073,7 +1105,7 @@ def build_troops() -> list[Troop]:
                 "Item2": "sturgia_noble_sword_3_t5",
                 "Horse": "charger",
                 "HorseHarness": "rohan_horse_armor_scalemail",
-                **chivalry_armor_explicit("b03"),
+                **chivalry_armor_explicit("a04"),
             }),
             EquipmentRoster({
                 "Item0": "sturgia_polearm_1_t5",
@@ -1081,12 +1113,14 @@ def build_troops() -> list[Troop]:
                 "Item2": "sturgia_noble_sword_4_t5",
                 "Horse": "charger",
                 "HorseHarness": "rohan_horse_armor_scalemail",
-                **chivalry_armor_explicit("b04"),
+                **chivalry_armor_explicit("a04"),
             }),
         ],
     ))
 
-    # ----- Riverman line (T4-T6, off Dale Levy) — spear + shield + sword, Lake-Town armor -----
+    # ----- Riverman line (T4-T6, off Dalian Levy) — spear + shield + sword, infrantry b01-b03 -----
+    # Royal-tier line; armor switched from Lake-Town mariner to Dale royal infrantry mesh
+    # (silver b01-b03) per user spec.
     troops.append(Troop(
         id="dale_riverman",
         display_name="Dalian Riverman",
@@ -1098,13 +1132,13 @@ def build_troops() -> list[Troop]:
                 "Item0": "northern_spear_3_t4",
                 "Item1": "sturgia_infantry_shield_a",
                 "Item2": "sturgia_sword_4_t4",
-                **lake_town_armor(4, "a"),
+                **infantry_armor_explicit("b01"),
             }),
             EquipmentRoster({
                 "Item0": "northern_spear_4_t4",
                 "Item1": "sturgia_infantry_shield_b",
                 "Item2": "sturgia_sword_5_t4",
-                **lake_town_armor(4, "b"),
+                **infantry_armor_explicit("b01"),
             }),
         ],
     ))
@@ -1120,13 +1154,13 @@ def build_troops() -> list[Troop]:
                 "Item0": "northern_spear_4_t5",
                 "Item1": "sturgia_infantry_shield_a",
                 "Item2": "sturgia_sword_5_t5",
-                **lake_town_armor(5, "a"),
+                **infantry_armor_explicit("b02"),
             }),
             EquipmentRoster({
                 "Item0": "eastern_spear_5_t5",
                 "Item1": "sturgia_infantry_shield_b",
                 "Item2": "sturgia_noble_sword_1_t5",
-                **lake_town_armor(5, "b"),
+                **infantry_armor_explicit("b02"),
             }),
         ],
     ))
@@ -1142,13 +1176,13 @@ def build_troops() -> list[Troop]:
                 "Item0": "northern_spear_4_t5",
                 "Item1": "sturgia_infantry_shield_a",
                 "Item2": "sturgia_noble_sword_2_t5",
-                **lake_town_armor(6, "a"),
+                **infantry_armor_explicit("b03"),
             }),
             EquipmentRoster({
                 "Item0": "eastern_spear_5_t5",
                 "Item1": "sturgia_infantry_shield_b",
                 "Item2": "sturgia_noble_sword_3_t5",
-                **lake_town_armor(6, "b"),
+                **infantry_armor_explicit("b03"),
             }),
         ],
     ))

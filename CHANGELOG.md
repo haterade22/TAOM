@@ -2,6 +2,46 @@
 
 ## 2026-05-26
 
+### feat(dale): single-variant armor, Riverman→infrantry, cavalry color swap, Veteran Northman Scout
+
+User-directed cleanup pass. 34 → 35 troops (added Dalian Veteran Northman Scout); recruitment pool replaced.
+
+**Archer + Crossbow lines** — removed the per-troop armor variation (overlap a01+a02, etc.). Now strictly 1 armor variant per tier; both rosters use the same armor mesh and only the weapons vary:
+- Archers: `a01` (T4 Yeoman) → `a02` (T5 Bowman) → `a03` (T6 Marksman) → `a04` (T7 Barding).
+- Crossbowmen: `b01` (T4) → `b02` (T5 Veteran) → `b03` (T6 Master) → `b04` (T7 Royal).
+
+**Riverman line** — armor mesh swapped from `mariner` (Lake-Town look) to `infrantry` silver `b01-b03` (Dale royal look), 1 variant per tier:
+- T4 Dalian Riverman → `b01`; T5 Dalian Shipman → `b02`; T6 Dalian Mariner → `b03`.
+
+**Cavalry restructure** (light + heavy colors swapped — heavy is now bronze, light is silver; the user spec inverts the previous convention):
+- T4 `dale_outrider` "Dalian Merchant Guard": chivlary **`a01` + `b01`** (mixed split-point — one bronze + one silver roster).
+- LIGHT branch (silver chivlary, 2 tiers):
+  - T5 `dale_knight` "Dalian Northman Scout" → `b02`.
+  - **NEW** T6 `dale_veteran_northman_scout` "Dalian Veteran Northman Scout" → `b03` (roster A) + `b04` (roster B). Skill curve `s_veteran_northman_scout_t6` — between Northman Scout (T5) and Heavy Cavalry (T6), with higher Bow reflecting scout flavor. Terminal.
+- HEAVY branch (bronze chivlary, 3 tiers, 1 variant per troop):
+  - T5 `dale_royal_cavalier` "Dalian Cavalry" → `a02`.
+  - T6 `dale_kinsman_of_eorl` "Dalian Heavy Cavalry" → `a03`.
+  - T7 `dale_kings_guard` "Dalian King's Guard" → `a04`.
+
+**Volunteer recruitment pool** for Dale (`VolunteerRecruitmentService.CultureMap["sturgia"]`) — replaced. New pool (total weight 10):
+- Dalian Levy (`dale_squire`) — 4 (the most common recruit; royal-line entry)
+- Dalian Riverman (`dale_riverman`) — 1
+- Dalian Militia (`dale_man_at_arms`, NOT the Lake-Town Militia `dale_militia`) — 1
+- Dalian Yeoman (`dale_bowman`) — 1
+- Dalian Crossbowman (`dale_crossbowman`) — 1
+- Dalian Merchant Guard (`dale_outrider`) — 1
+- Lake-Town Peasant (`dale_recruit`) — 1
+
+Pool surfaces one representative entry troop for every branch + the Lake-Town entry. Replaces the prior pool that included `dale_militia` (Lake-Town Militia) and `dale_footman` and weighted Lake-Town Peasant at 5.
+
+4 Dale unit tests updated to match the new pool order (roll 0 → squire; roll 4 → riverman; roll 9 → Peasant terminal; settlement-fallthrough → squire). 7/7 tests pass (4 Dale + 3 Rohan).
+
+**Party template**: `kingdom_hero_party_dale_template` gains a `dale_veteran_northman_scout` stack (1-3) between Northman Scout and Dalian Cavalry.
+
+Verification: build green, 7/7 tests pass, validator green (Dale: 35 troops, 154 armor refs, 0 missing); spot-check confirmed correct armor mesh per troop after the swap.
+
+Save-compat: All existing IDs preserved; the new `dale_veteran_northman_scout` ID + the recruitment-pool change are additive.
+
 ### fix(dale): swap Royal/Master so "Royal" reads as the highest rank
 
 User-directed rename — "Royal" should denote the most-elite tier across all Dale lines.

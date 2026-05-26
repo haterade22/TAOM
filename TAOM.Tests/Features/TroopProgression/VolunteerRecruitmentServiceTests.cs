@@ -1768,12 +1768,15 @@ public class VolunteerRecruitmentServiceTests
     }
 
     // --- Dale (Sturgia culture) recruitment pool ---
-    // Pool weights: dale_recruit(5) + dale_militia(3) + dale_bowman(1) + dale_footman(1) + dale_squire(1) = 11
-    // Cumulative ranges: [0..4]=recruit, [5..7]=militia, [8]=bowman, [9]=footman, [10]=squire
+    // Pool weights (total 10): dale_squire(4) + dale_riverman(1) + dale_man_at_arms(1)
+    //   + dale_bowman(1) + dale_crossbowman(1) + dale_outrider(1) + dale_recruit(1)
+    // Cumulative ranges: [0..3]=squire, [4]=riverman, [5]=man_at_arms, [6]=bowman,
+    //   [7]=crossbowman, [8]=outrider, [9]=recruit.
 
     [TestMethod]
-    public void GetVolunteerTroopId_DaleCulture_LowRoll_ReturnsRecruit()
+    public void GetVolunteerTroopId_DaleCulture_LowRoll_ReturnsDalianLevy()
     {
+        // Roll 0 lands in the Dalian Levy bucket (weight 4 — the most common recruit).
         _random.Next(Arg.Any<int>()).Returns(0);
         var context = new VolunteerContext(
             settlementId: null,
@@ -1783,39 +1786,39 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("dale_recruit", result);
-    }
-
-    [TestMethod]
-    public void GetVolunteerTroopId_DaleCulture_MidRoll_ReturnsMilitia()
-    {
-        // Roll 5 lands in militia range (recruit covers 0..4)
-        _random.Next(11).Returns(5);
-        var context = new VolunteerContext(
-            settlementId: null,
-            boundSettlementId: null,
-            ownerClanId: null,
-            cultureId: "sturgia");
-
-        var result = _sut.GetVolunteerTroopId(context);
-
-        Assert.AreEqual("dale_militia", result);
-    }
-
-    [TestMethod]
-    public void GetVolunteerTroopId_DaleCulture_HighRoll_ReturnsSquire()
-    {
-        // Roll 10 is the last index (squire is the final weight-1 entry)
-        _random.Next(11).Returns(10);
-        var context = new VolunteerContext(
-            settlementId: null,
-            boundSettlementId: null,
-            ownerClanId: null,
-            cultureId: "sturgia");
-
-        var result = _sut.GetVolunteerTroopId(context);
-
         Assert.AreEqual("dale_squire", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DaleCulture_MidRoll_ReturnsRiverman()
+    {
+        // Roll 4 lands at the start of the riverman bucket (squire covers 0..3, riverman is at 4).
+        _random.Next(10).Returns(4);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "sturgia");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dale_riverman", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DaleCulture_HighRoll_ReturnsLakeTownPeasant()
+    {
+        // Roll 9 is the last index — Lake-Town Peasant (final weight-1 entry).
+        _random.Next(10).Returns(9);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "sturgia");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dale_recruit", result);
     }
 
     [TestMethod]
@@ -1832,7 +1835,7 @@ public class VolunteerRecruitmentServiceTests
 
         var result = _sut.GetVolunteerTroopId(context);
 
-        Assert.AreEqual("dale_recruit", result);
+        Assert.AreEqual("dale_squire", result);
     }
 
     // --- Rohan (vlandia) clan recruitment pool ---
