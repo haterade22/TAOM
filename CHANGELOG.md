@@ -2,6 +2,17 @@
 
 ## 2026-05-26
 
+### fix(dale): swap Watch/Pikeman weapons + drop Peasant bracers
+
+User-directed correction. Names were tactically backwards relative to the equipment:
+- **Watch line** now wields **2H halberds/polearms** (`sturgia_2haxe_1_t4`, `billhook_polearm_t2`, `sturgia_polearm_1_t5`, `sturgia_2haxe_2_t5`) — shock-infantry role. Skill curve adds mild TwoHanded (sturgia_2haxe_* items use the TwoHanded skill).
+- **Pikeman line** now wields **vanilla pikes** (`fine_pike_t4`, `military_fork_pike_t3`, `vlandia_pike_1_t5`, `thamaskene_pike_t4`) — anti-cavalry role. Skill curve drops TwoHanded (pikes use Polearm only).
+- The new T7 `dale_lake_town_hearthguard` follows its line and is now a vanilla-pike royal-tier anti-cavalry unit (TwoHanded dropped 150 → 0; Polearm bumped 220 → 235).
+
+Lake-Town Peasant (T2 `dale_recruit`) armor reduced to chest + boots only — added `no_bracers` parameter to `lake_town_armor_explicit` helper (was `no_helmet=True, no_shoulder=True`; now also `no_bracers=True`).
+
+Verification: validator PASS across all 8 cultures; weapon-swap spot-check confirms Watch Item0 is now `sturgia_2haxe_*` / `sturgia_polearm_1_t5` / `billhook_polearm_t2` and Pikeman Item0 is now `fine_pike_t4` / `military_fork_pike_t3` / `vlandia_pike_1_t5` / `thamaskene_pike_t4`; Peasant slots reduced to {Body, Leg} only.
+
 ### feat(dale): T8 removed, Lake-Town Hearthguard added, per-tier explicit armor
 
 Third pass on the Dale tree per user direction. 30 → 29 troops (deleted 2 T8 elites, added 1 T7 terminal). Dale now caps at T7 — no T8 troops.
@@ -1023,6 +1034,28 @@ Diff size per file grew from ~51 lines (v1) to ~420 lines (v2). Both `E:\Steam\.
 [`docs/reference/lotrlome-armory-snapshot/README.md`](docs/reference/lotrlome-armory-snapshot/README.md) extended with explicit enumeration of all 6 action-type categories that must be declared directly in any `as_<race>_facegen` (the original "14 CC parent action types" was an incomplete list). Memory `feedback_lotrlome_action_set_aliases.md` 2026-05-22 addendum extended with the "declare everything, don't trust inheritance" sub-rule — when authoring a new race facegen, copy LOTRLOME's `as_dwarf_facegen` verbatim and rename only `id` + `base_set`.
 
 **Verification scope updated:** the in-game smoke test now requires advancing through **every** CC stage (parent menu → Early Childhood → Youth → Adolescence → Adulthood), confirming the agent stands / sits / plays anim correctly at each one, not just the parent menu.
+
+### fix(cc): override broken vanilla age-30 animation in Starting Age menu
+
+Third bug surfaced in the same session: at the **Starting Age** narrative menu, clicking age 30 ("You are at your prime...") rendered the player as a horizontally-stretched / lying-down mesh. Ages 20, 40, and 50 worked correctly. Confirmed in-game on all races (dwarf / uruk / elf / human / orc) — not race-specific.
+
+**Root cause.** Vanilla `CharacterCreationCampaignBehavior.AgeSelectionAdultOptionOnSelect` (decompiled v1.3.15) hard-codes `character.SetAnimationId("act_childhood_athlete")` at age 30; the other three age handlers use `act_childhood_focus` (20), `act_childhood_sharp` (40), `act_childhood_tough` (50). LOTRLOME's `as_<race>_facegen` action_sets declare all four action types identically (verified via bit-for-bit compare across orc/dwarf/uruk/elf — all map `act_childhood_athlete → anim_childhood_athlete`), and `act_childhood_athlete` is properly registered in `Native/ModuleData/action_types.xml`. The bug is in the `anim_childhood_athlete ↔ human_skeleton` binding at runtime — a vanilla v1.3.15 regression, not an LOTRLOME data issue.
+
+The user's earlier hypothesis that "action set ids youth, adult, etc." controlled the per-age pose was off-target — vanilla uses the same `as_<race>_facegen` action_set across all four ages and just changes the animation_id per option. No `_youth` / `_adult` / `_elder` action_set IDs exist anywhere in LOTRLOME or Native.
+
+**Fix.** Single Harmony Postfix appended to [`Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs`](Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs) — new class `CharacterCreationCampaignBehavior_AgeSelectionAdultOptionOnSelect_Patch` in the existing `Patch20_NarrativeHorseGuard` category (which is already registered in `SubModule.cs` line 459, so no SubModule changes needed). The Postfix runs after vanilla, finds the `player_age_selection_character`, and re-sets the animation to `act_childhood_focus` (the proven-working age-20 anim). Vanilla's age value, equipment, birthday, StartingAge field, and attribute/focus bonuses are all untouched.
+
+Scope is deliberately tight — the Postfix only intercepts the age-30 code path. The other call sites of `act_childhood_athlete` in vanilla (`CharacterCreationCampaignBehavior.cs:1599` + `:2016`, both in youth backstory option handlers) are NOT touched; the user has not reported breakage there and changing them risks regressions on stages that currently work.
+
+**Files changed:**
+- [`Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs`](Main/Features/CharacterCreation/Hooks/CharacterCreationCampaignBehavior_GetYouthMenuArgs_Patch.cs) — added 38 lines (one `[HarmonyPatch]` + `[HarmonyPostfix]` class, with xmldoc explaining the vanilla bug it works around).
+- [`docs/features/character-creation.md`](docs/features/character-creation.md) — extended the existing "LOTRLOME `as_<race>_facegen` action_set requirement" section with a sub-note about the age-30 vanilla bug + this override.
+- [`docs/reviews/rca-elf-cc-facegen-2026-05-22.md`](docs/reviews/rca-elf-cc-facegen-2026-05-22.md) — appended a third addendum (vanilla-bug-not-LOTRLOME-bug discovery, same session).
+- Memory `feedback_lotrlome_action_set_aliases.md` — appended v3 sub-rule: when all races break at the same CC stage despite identical action_set data, the bug is at the engine/anim layer, not the action_set XML — fix via TAOM-side Harmony override, not data edits.
+
+**Verification.** `dotnet build Main/TAOM.csproj -t:Restore,Compile` succeeded with 0 errors / 0 warnings. Post-build deploy step blocked at write time by Bannerlord holding `0Harmony.dll` / `DryIoc.dll` locked — pure environment issue, not a code issue. In-game smoke test (on the user) once the game is closed and the new DLL deploys: pick any culture → advance CC to the Starting Age menu → click each age option → confirm the agent stands upright at every age including 30.
+
+Not-tested: the two other call sites of `act_childhood_athlete` in vanilla (`CharacterCreationCampaignBehavior.cs:1599` and `:2016` — youth backstory options). If the user encounters the lying-down pose at those stages, those need their own Postfixes following the same recipe.
 
 ### chore(shaders): hide Pre-compile Shaders main-menu option
 

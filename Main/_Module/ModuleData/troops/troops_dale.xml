@@ -34,14 +34,12 @@
                 <equipment slot="Item0" id="Item.sturgia_sword_1_t2" />
                 <equipment slot="Item1" id="Item.sturgia_old_shield_a" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
                 <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.northern_spear_1_t2" />
                 <equipment slot="Item1" id="Item.sturgia_old_shield_b" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
-                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
                 <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
             </EquipmentRoster>
         </Equipments>
@@ -107,7 +105,7 @@
             <skill id="Athletics" value="75" />
             <skill id="Riding" value="0" />
             <skill id="OneHanded" value="70" />
-            <skill id="TwoHanded" value="0" />
+            <skill id="TwoHanded" value="30" />
             <skill id="Polearm" value="95" />
             <skill id="Bow" value="0" />
             <skill id="Crossbow" value="0" />
@@ -118,7 +116,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.fine_pike_t4" />
+                <equipment slot="Item0" id="Item.sturgia_2haxe_1_t4" />
                 <equipment slot="Item1" id="Item.sturgia_sword_4_t4" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a02" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a02" />
@@ -127,7 +125,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.military_fork_pike_t3" />
+                <equipment slot="Item0" id="Item.billhook_polearm_t2" />
                 <equipment slot="Item1" id="Item.sturgia_sword_5_t4" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a02" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a02" />
@@ -152,7 +150,7 @@
             <skill id="Athletics" value="95" />
             <skill id="Riding" value="0" />
             <skill id="OneHanded" value="100" />
-            <skill id="TwoHanded" value="0" />
+            <skill id="TwoHanded" value="50" />
             <skill id="Polearm" value="125" />
             <skill id="Bow" value="0" />
             <skill id="Crossbow" value="0" />
@@ -163,7 +161,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
+                <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
                 <equipment slot="Item1" id="Item.sturgia_sword_5_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
@@ -172,7 +170,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.thamaskene_pike_t4" />
+                <equipment slot="Item0" id="Item.sturgia_2haxe_2_t5" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_1_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
@@ -197,7 +195,7 @@
             <skill id="Athletics" value="115" />
             <skill id="Riding" value="0" />
             <skill id="OneHanded" value="130" />
-            <skill id="TwoHanded" value="0" />
+            <skill id="TwoHanded" value="70" />
             <skill id="Polearm" value="160" />
             <skill id="Bow" value="0" />
             <skill id="Crossbow" value="0" />
@@ -206,7 +204,7 @@
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
+                <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_2_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
@@ -215,7 +213,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
+                <equipment slot="Item0" id="Item.sturgia_2haxe_2_t5" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_3_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
@@ -240,7 +238,7 @@
             <skill id="Athletics" value="80" />
             <skill id="Riding" value="0" />
             <skill id="OneHanded" value="70" />
-            <skill id="TwoHanded" value="30" />
+            <skill id="TwoHanded" value="0" />
             <skill id="Polearm" value="100" />
             <skill id="Bow" value="20" />
             <skill id="Crossbow" value="0" />
@@ -251,7 +249,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sturgia_2haxe_1_t4" />
+                <equipment slot="Item0" id="Item.fine_pike_t4" />
                 <equipment slot="Item1" id="Item.sturgia_sword_4_t4" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b01" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b01" />
@@ -260,7 +258,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.billhook_polearm_t2" />
+                <equipment slot="Item0" id="Item.military_fork_pike_t3" />
                 <equipment slot="Item1" id="Item.sturgia_sword_5_t4" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b01" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b01" />
@@ -285,7 +283,7 @@
             <skill id="Athletics" value="100" />
             <skill id="Riding" value="0" />
             <skill id="OneHanded" value="85" />
-            <skill id="TwoHanded" value="50" />
+            <skill id="TwoHanded" value="0" />
             <skill id="Polearm" value="135" />
             <skill id="Bow" value="25" />
             <skill id="Crossbow" value="0" />
@@ -296,7 +294,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
+                <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
                 <equipment slot="Item1" id="Item.sturgia_sword_5_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
@@ -305,7 +303,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sturgia_2haxe_2_t5" />
+                <equipment slot="Item0" id="Item.thamaskene_pike_t4" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_1_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
@@ -330,7 +328,7 @@
             <skill id="Athletics" value="120" />
             <skill id="Riding" value="0" />
             <skill id="OneHanded" value="100" />
-            <skill id="TwoHanded" value="70" />
+            <skill id="TwoHanded" value="0" />
             <skill id="Polearm" value="170" />
             <skill id="Bow" value="30" />
             <skill id="Crossbow" value="0" />
@@ -341,7 +339,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
+                <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_2_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b03" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b03" />
@@ -350,7 +348,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sturgia_2haxe_2_t5" />
+                <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_3_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b03" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b03" />
@@ -375,8 +373,8 @@
             <skill id="Athletics" value="145" />
             <skill id="Riding" value="0" />
             <skill id="OneHanded" value="150" />
-            <skill id="TwoHanded" value="150" />
-            <skill id="Polearm" value="220" />
+            <skill id="TwoHanded" value="0" />
+            <skill id="Polearm" value="235" />
             <skill id="Bow" value="35" />
             <skill id="Crossbow" value="0" />
             <skill id="Throwing" value="0" />
@@ -384,7 +382,7 @@
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
+                <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_3_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b04" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b04" />
@@ -393,7 +391,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.sturgia_2haxe_2_t5" />
+                <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
                 <equipment slot="Item1" id="Item.sturgia_noble_sword_4_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b04" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b04" />

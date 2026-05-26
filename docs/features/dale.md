@@ -55,11 +55,13 @@ VolunteerRecruitmentService.cs (+ InitializeDaleCulture)
 **Lake-Town Levy** (T2 → T3 root; smallfolk and townsfolk of Esgaroth):
 - T2 `dale_recruit` "Lake-Town Peasant" (basic_troop) → T3 `dale_militia` "Lake-Town Militia"
 
-**Lake-Town Watch line** (T4-T6, off `dale_militia`; vanilla pikes + 1H sword sidearm, no shield, anti-cavalry role):
+**Lake-Town Watch line** (T4-T6, off `dale_militia`; 2H halberds/polearms + 1H sword sidearm, no shield, shock infantry):
 - T4 `dale_lake_town_skirmisher` "Lake-Town Watchman" → T5 `dale_lake_town_mariner` "Lake-Town Veteran Watchman" → T6 `dale_lake_town_veteran` "Lake-Town Officer of the Watch"
+- Weapons: `sturgia_2haxe_1_t4` / `billhook_polearm_t2` (T4); `sturgia_polearm_1_t5` / `sturgia_2haxe_2_t5` (T5-T6). Skill curve: Polearm-primary + mild TwoHanded (for axe-style overhead swings).
 
-**Lake-Town Pikeman line** (T4-T7, off `dale_militia`; 2H halberds/polearms, no shield, shock infantry):
-- T4 `dale_footman` "Lake-Town Patrolman" → T5 `dale_spearman` "Lake-Town Pikeman" → T6 `dale_veteran_spearman` "Lake-Town Veteran Pikeman" → T7 `dale_lake_town_hearthguard` "Lake-Town Hearthguard" (Lake-Town's royal-tier shock infantry; T7 terminal)
+**Lake-Town Pikeman line** (T4-T7, off `dale_militia`; vanilla pikes + 1H sword sidearm, no shield, anti-cavalry):
+- T4 `dale_footman` "Lake-Town Patrolman" → T5 `dale_spearman` "Lake-Town Pikeman" → T6 `dale_veteran_spearman` "Lake-Town Veteran Pikeman" → T7 `dale_lake_town_hearthguard` "Lake-Town Hearthguard" (T7 terminal)
+- Weapons: `fine_pike_t4` / `military_fork_pike_t3` (T4); `vlandia_pike_1_t5` / `thamaskene_pike_t4` (T5+). Skill curve: Polearm-only (no TwoHanded — pikes use Polearm exclusively).
 
 **Dale Levy** (T3, elite_basic_troop; the royal-line recruit) — branches four ways:
 
