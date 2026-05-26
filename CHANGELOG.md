@@ -2,6 +2,57 @@
 
 ## 2026-05-26
 
+### feat(dale): troop tree restructure — Lake-Town renames + Riverman line + vanilla pikes
+
+User-directed second pass after the initial Dale ship (commit `ce978f5`). Reorganises the 27-troop tree into 30 troops with display-name renames, equipment swaps for the two Lake-Town infantry lines, and a new royal-tier spear-and-shield line off Dale Levy. All troop IDs unchanged (save-compat preserved per `troops.md` rule); display names + equipment changed in-place.
+
+**Lake-Town levy line — display renames** (IDs in parens unchanged):
+- `dale_recruit` "Recruit" → "Lake-Town Peasant"
+- `dale_militia` "Militia" → "Lake-Town Militia"
+
+**Lake-Town Watch line — renamed + equipment swapped from javelin to pike (2H) + 1H sword sidearm, no shield**:
+- `dale_lake_town_skirmisher` "Lake-town Skirmisher" → "Lake-Town Watchman" (Item0: `fine_pike_t4` / `military_fork_pike_t3`)
+- `dale_lake_town_mariner` "Lake-town Mariner" → "Lake-Town Veteran Watchman" (Item0: `vlandia_pike_1_t5` / `thamaskene_pike_t4`)
+- `dale_lake_town_veteran` "Lake-town Veteran" → "Lake-Town Officer of the Watch" (Item0: `vlandia_pike_1_t5`)
+- Skill curve adjusted: Throwing-primary → Polearm-primary (matching the new weapons).
+
+**Lake-Town Pikeman line — renamed + equipment swapped from spear+shield to 2H halberds/polearms, no shield, armor swapped from Dale-infrantry to Lake-Town mariner mesh class**:
+- `dale_footman` "Footman" → "Lake-Town Patrolman" (Item0: `sturgia_2haxe_1_t4` / `billhook_polearm_t2`)
+- `dale_spearman` "Spearman" → "Lake-Town Pikeman" (Item0: `sturgia_polearm_1_t5` / `sturgia_2haxe_2_t5`)
+- `dale_veteran_spearman` "Veteran Spearman" → "Lake-Town Veteran Pikeman" (Item0: `sturgia_polearm_1_t5` / `sturgia_2haxe_2_t5`)
+- Skill curve adjusted: added mild TwoHanded for overhead 2H polearm swings.
+
+**Royal Archer branch — display renames**:
+- `dale_bowman` "Bowman" → "Yeoman"
+- `dale_longbowman` "Longbowman" → "Bowman"
+- `dale_royal_archer` "Royal Archer" → "Marksman of Dale"
+- `dale_black_arrow_marksman` "Black Arrow Marksman" → "Barding"
+- `dale_kings_bowman` "King's Bowman" — unchanged
+
+**Royal Infantry branch — display renames**:
+- `dale_man_at_arms` "Man-at-Arms" → "Dale Militia"
+- `dale_guardsman` "Guardsman" → "Dalian Guardsman"
+- `dale_royal_guard` "Royal Guard" → "Dalian Swordsman"
+- `dale_running_river_warden` and `dale_kings_champion` — unchanged
+
+**Royal Cavalry branch — display renames**:
+- `dale_outrider` "Outrider" → "Merchant Guard"
+- `dale_knight` "Knight" → "Northman Scout"
+- `dale_royal_cavalier` "Royal Cavalier" → "Dalian Cavalry"
+- `dale_kinsman_of_eorl` "Kinsman of Eorl" → "Dalian Heavy Cavalry"
+
+**Dale Levy** (T3 royal root, was "Squire"):
+- `dale_squire` "Squire" → "Dale Levy"
+- Added 4th upgrade target: `dale_riverman` (alongside existing `dale_bowman`, `dale_man_at_arms`, `dale_outrider`).
+
+**New troops — Riverman line** (T4-T6, off Dale Levy; spear + shield + 1H sword + Lake-Town armor; royal-tier water-folk):
+- T4 `dale_riverman` "Riverman" → T5 `dale_shipman` "Shipmen" → T6 `dale_dalian_mariner` "Dalian Mariner" (terminal).
+- Added to `kingdom_hero_party_dale_template` (3 stacks) and `patrol_party_dale_template_level_2` (1 stack) in `taom_partyTemplates.xml`.
+
+**Verification**: `python tools/generate_dale_troops.py --dry-run` shows 30 troops with all upgrade chains resolved; all 8 new vanilla weapon IDs (`fine_pike_t4`, `military_fork_pike_t3`, `vlandia_pike_1_t5`, `thamaskene_pike_t4`, `sturgia_2haxe_1_t4`, `sturgia_2haxe_2_t5`, `billhook_polearm_t2`, `sturgia_polearm_1_t5`) verified in vanilla SandBoxCore items; `validate_all_troop_refs.py` PASS (Dale: 31 troops, 121 armor refs, 0 missing).
+
+Not-tested: live in-game pike vs halberd visual differentiation, Riverman line spawning in lord parties. Per ADR-008.
+
 ### feat(dale): Dale culture — armor authoring + 27-troop tree
 
 Solus completed the Dale armor mesh set (163 items across 5 slots: head/body/leg/arm/shoulder). This change wires them into LOTRLOME_Armory and adds a full troop tree on the vanilla `Culture.sturgia` id (renamed "Barding" via existing XSLT).

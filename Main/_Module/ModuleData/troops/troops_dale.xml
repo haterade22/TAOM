@@ -9,7 +9,7 @@
         id="dale_recruit"
         default_group="Infantry"
         level="6"
-        name="{=aom_dale_recruit_name}[Dale] Recruit"
+        name="{=aom_dale_recruit_name}[Dale] Lake-Town Peasant"
         occupation="Soldier"
         is_basic_troop="true"
         culture="Culture.sturgia">
@@ -55,7 +55,7 @@
         id="dale_militia"
         default_group="Infantry"
         level="12"
-        name="{=aom_dale_militia_name}[Dale] Militia"
+        name="{=aom_dale_militia_name}[Dale] Lake-Town Militia"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -101,7 +101,7 @@
         id="dale_lake_town_skirmisher"
         default_group="Infantry"
         level="19"
-        name="{=aom_dale_lake_town_skirmisher_name}[Dale] Lake-town Skirmisher"
+        name="{=aom_dale_lake_town_skirmisher_name}[Dale] Lake-Town Watchman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -112,19 +112,18 @@
             <skill id="Riding" value="0" />
             <skill id="OneHanded" value="70" />
             <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="55" />
+            <skill id="Polearm" value="95" />
             <skill id="Bow" value="0" />
             <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="85" />
+            <skill id="Throwing" value="25" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_lake_town_mariner" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.eastern_throwing_spear_1_t3" />
-                <equipment slot="Item1" id="Item.sturgia_sword_3_t3" />
-                <equipment slot="Item2" id="Item.sturgia_infantry_shield_a" />
+                <equipment slot="Item0" id="Item.fine_pike_t4" />
+                <equipment slot="Item1" id="Item.sturgia_sword_4_t4" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
                 <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
@@ -132,9 +131,8 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.generic_javelin_1_t3" />
-                <equipment slot="Item1" id="Item.sturgia_axe_3_t3" />
-                <equipment slot="Item2" id="Item.sturgia_infantry_shield_b" />
+                <equipment slot="Item0" id="Item.military_fork_pike_t3" />
+                <equipment slot="Item1" id="Item.sturgia_sword_5_t4" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
                 <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
@@ -148,7 +146,7 @@
         id="dale_lake_town_mariner"
         default_group="Infantry"
         level="25"
-        name="{=aom_dale_lake_town_mariner_name}[Dale] Lake-town Mariner"
+        name="{=aom_dale_lake_town_mariner_name}[Dale] Lake-Town Veteran Watchman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -159,19 +157,18 @@
             <skill id="Riding" value="0" />
             <skill id="OneHanded" value="100" />
             <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="70" />
+            <skill id="Polearm" value="125" />
             <skill id="Bow" value="0" />
             <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="105" />
+            <skill id="Throwing" value="30" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_lake_town_veteran" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.eastern_throwing_spear_2_t4" />
-                <equipment slot="Item1" id="Item.sturgia_sword_4_t4" />
-                <equipment slot="Item2" id="Item.sturgia_infantry_shield_a" />
+                <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
+                <equipment slot="Item1" id="Item.sturgia_sword_5_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
                 <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
@@ -179,9 +176,8 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.imperial_throwing_spear_1_t4" />
-                <equipment slot="Item1" id="Item.sturgia_sword_5_t4" />
-                <equipment slot="Item2" id="Item.sturgia_infantry_shield_b" />
+                <equipment slot="Item0" id="Item.thamaskene_pike_t4" />
+                <equipment slot="Item1" id="Item.sturgia_noble_sword_1_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
                 <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
@@ -195,7 +191,7 @@
         id="dale_lake_town_veteran"
         default_group="Infantry"
         level="32"
-        name="{=aom_dale_lake_town_veteran_name}[Dale] Lake-town Veteran"
+        name="{=aom_dale_lake_town_veteran_name}[Dale] Lake-Town Officer of the Watch"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -206,17 +202,16 @@
             <skill id="Riding" value="0" />
             <skill id="OneHanded" value="130" />
             <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="90" />
+            <skill id="Polearm" value="160" />
             <skill id="Bow" value="0" />
             <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="125" />
+            <skill id="Throwing" value="35" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.imperial_throwing_spear_1_t4" />
-                <equipment slot="Item1" id="Item.sturgia_noble_sword_1_t5" />
-                <equipment slot="Item2" id="Item.sturgia_infantry_shield_a" />
+                <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
+                <equipment slot="Item1" id="Item.sturgia_noble_sword_2_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b01" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b01" />
                 <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b01" />
@@ -224,9 +219,8 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.imperial_throwing_spear_1_t4_2" />
-                <equipment slot="Item1" id="Item.sturgia_noble_sword_2_t5" />
-                <equipment slot="Item2" id="Item.sturgia_infantry_shield_b" />
+                <equipment slot="Item0" id="Item.vlandia_pike_1_t5" />
+                <equipment slot="Item1" id="Item.sturgia_noble_sword_3_t5" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
                 <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b02" />
@@ -240,7 +234,7 @@
         id="dale_footman"
         default_group="Infantry"
         level="19"
-        name="{=aom_dale_footman_name}[Dale] Footman"
+        name="{=aom_dale_footman_name}[Dale] Lake-Town Patrolman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -249,9 +243,9 @@
         <skills>
             <skill id="Athletics" value="80" />
             <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="80" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="90" />
+            <skill id="OneHanded" value="70" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="100" />
             <skill id="Bow" value="20" />
             <skill id="Crossbow" value="0" />
             <skill id="Throwing" value="0" />
@@ -261,24 +255,22 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.northern_spear_3_t4" />
-                <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
-                <equipment slot="Item2" id="Item.sturgia_sword_4_t4" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a03" />
-                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a03" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a03" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a03" />
+                <equipment slot="Item0" id="Item.sturgia_2haxe_1_t4" />
+                <equipment slot="Item1" id="Item.sturgia_sword_4_t4" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.northern_spear_4_t4" />
-                <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
-                <equipment slot="Item2" id="Item.sturgia_sword_5_t4" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a04" />
-                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a04" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a04" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a04" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a04" />
+                <equipment slot="Item0" id="Item.billhook_polearm_t2" />
+                <equipment slot="Item1" id="Item.sturgia_sword_5_t4" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -287,7 +279,7 @@
         id="dale_spearman"
         default_group="Infantry"
         level="25"
-        name="{=aom_dale_spearman_name}[Dale] Spearman"
+        name="{=aom_dale_spearman_name}[Dale] Lake-Town Pikeman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -296,9 +288,9 @@
         <skills>
             <skill id="Athletics" value="100" />
             <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="95" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="125" />
+            <skill id="OneHanded" value="85" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="135" />
             <skill id="Bow" value="25" />
             <skill id="Crossbow" value="0" />
             <skill id="Throwing" value="0" />
@@ -308,24 +300,22 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.northern_spear_4_t5" />
-                <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
-                <equipment slot="Item2" id="Item.sturgia_sword_5_t5" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a03" />
-                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a03" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a03" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a03" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a03" />
+                <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
+                <equipment slot="Item1" id="Item.sturgia_sword_5_t5" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.eastern_spear_5_t5" />
-                <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
-                <equipment slot="Item2" id="Item.sturgia_noble_sword_1_t5" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a04" />
-                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a04" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a04" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a04" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a04" />
+                <equipment slot="Item0" id="Item.sturgia_2haxe_2_t5" />
+                <equipment slot="Item1" id="Item.sturgia_noble_sword_1_t5" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -334,7 +324,7 @@
         id="dale_veteran_spearman"
         default_group="Infantry"
         level="32"
-        name="{=aom_dale_veteran_spearman_name}[Dale] Veteran Spearman"
+        name="{=aom_dale_veteran_spearman_name}[Dale] Lake-Town Veteran Pikeman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -343,9 +333,9 @@
         <skills>
             <skill id="Athletics" value="120" />
             <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="115" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="160" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="70" />
+            <skill id="Polearm" value="170" />
             <skill id="Bow" value="30" />
             <skill id="Crossbow" value="0" />
             <skill id="Throwing" value="0" />
@@ -354,23 +344,21 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.sturgia_polearm_1_t5" />
-                <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
-                <equipment slot="Item2" id="Item.sturgia_noble_sword_2_t5" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b01" />
-                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b01" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b01" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b01" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b01" />
+                <equipment slot="Item1" id="Item.sturgia_noble_sword_2_t5" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b01" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b01" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.northern_spear_4_t5" />
-                <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
-                <equipment slot="Item2" id="Item.sturgia_noble_sword_3_t5" />
-                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b02" />
-                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b02" />
-                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b02" />
-                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b02" />
-                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b02" />
+                <equipment slot="Item0" id="Item.sturgia_2haxe_2_t5" />
+                <equipment slot="Item1" id="Item.sturgia_noble_sword_3_t5" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b02" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b02" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -379,7 +367,7 @@
         id="dale_squire"
         default_group="Infantry"
         level="12"
-        name="{=aom_dale_squire_name}[Dale] Squire"
+        name="{=aom_dale_squire_name}[Dale] Dale Levy"
         occupation="Soldier"
         is_basic_troop="true"
         culture="Culture.sturgia">
@@ -400,6 +388,7 @@
             <upgrade_target id="NPCCharacter.dale_bowman" />
             <upgrade_target id="NPCCharacter.dale_man_at_arms" />
             <upgrade_target id="NPCCharacter.dale_outrider" />
+            <upgrade_target id="NPCCharacter.dale_riverman" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
@@ -427,7 +416,7 @@
         id="dale_bowman"
         default_group="Ranged"
         level="19"
-        name="{=aom_dale_bowman_name}[Dale] Bowman"
+        name="{=aom_dale_bowman_name}[Dale] Yeoman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -474,7 +463,7 @@
         id="dale_longbowman"
         default_group="Ranged"
         level="25"
-        name="{=aom_dale_longbowman_name}[Dale] Longbowman"
+        name="{=aom_dale_longbowman_name}[Dale] Bowman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -521,7 +510,7 @@
         id="dale_royal_archer"
         default_group="Ranged"
         level="32"
-        name="{=aom_dale_royal_archer_name}[Dale] Royal Archer"
+        name="{=aom_dale_royal_archer_name}[Dale] Marksman of Dale"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -568,7 +557,7 @@
         id="dale_black_arrow_marksman"
         default_group="Ranged"
         level="39"
-        name="{=aom_dale_black_arrow_marksman_name}[Dale] Black Arrow Marksman"
+        name="{=aom_dale_black_arrow_marksman_name}[Dale] Barding"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -660,7 +649,7 @@
         id="dale_man_at_arms"
         default_group="Infantry"
         level="19"
-        name="{=aom_dale_man_at_arms_name}[Dale] Man-at-Arms"
+        name="{=aom_dale_man_at_arms_name}[Dale] Dale Militia"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -707,7 +696,7 @@
         id="dale_guardsman"
         default_group="Infantry"
         level="25"
-        name="{=aom_dale_guardsman_name}[Dale] Guardsman"
+        name="{=aom_dale_guardsman_name}[Dale] Dalian Guardsman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -754,7 +743,7 @@
         id="dale_royal_guard"
         default_group="Infantry"
         level="32"
-        name="{=aom_dale_royal_guard_name}[Dale] Royal Guard"
+        name="{=aom_dale_royal_guard_name}[Dale] Dalian Swordsman"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -891,7 +880,7 @@
         id="dale_outrider"
         default_group="Cavalry"
         level="19"
-        name="{=aom_dale_outrider_name}[Dale] Outrider"
+        name="{=aom_dale_outrider_name}[Dale] Merchant Guard"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -942,7 +931,7 @@
         id="dale_knight"
         default_group="Cavalry"
         level="25"
-        name="{=aom_dale_knight_name}[Dale] Knight"
+        name="{=aom_dale_knight_name}[Dale] Northman Scout"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -993,7 +982,7 @@
         id="dale_royal_cavalier"
         default_group="Cavalry"
         level="32"
-        name="{=aom_dale_royal_cavalier_name}[Dale] Royal Cavalier"
+        name="{=aom_dale_royal_cavalier_name}[Dale] Dalian Cavalry"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -1044,7 +1033,7 @@
         id="dale_kinsman_of_eorl"
         default_group="Cavalry"
         level="39"
-        name="{=aom_dale_kinsman_of_eorl_name}[Dale] Kinsman of Eorl"
+        name="{=aom_dale_kinsman_of_eorl_name}[Dale] Dalian Heavy Cavalry"
         occupation="Soldier"
         culture="Culture.sturgia">
         <face>
@@ -1085,6 +1074,145 @@
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b02" />
                 <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b02" />
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b02" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dale_riverman"
+        default_group="Infantry"
+        level="19"
+        name="{=aom_dale_riverman_name}[Dale] Riverman"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="80" />
+            <skill id="Riding" value="0" />
+            <skill id="OneHanded" value="80" />
+            <skill id="TwoHanded" value="0" />
+            <skill id="Polearm" value="95" />
+            <skill id="Bow" value="20" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="0" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.dale_shipman" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.northern_spear_3_t4" />
+                <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
+                <equipment slot="Item2" id="Item.sturgia_sword_4_t4" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.northern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
+                <equipment slot="Item2" id="Item.sturgia_sword_5_t4" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dale_shipman"
+        default_group="Infantry"
+        level="25"
+        name="{=aom_dale_shipman_name}[Dale] Shipmen"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="0" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="0" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="25" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="0" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.dale_dalian_mariner" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.northern_spear_4_t5" />
+                <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
+                <equipment slot="Item2" id="Item.sturgia_sword_5_t5" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.eastern_spear_5_t5" />
+                <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
+                <equipment slot="Item2" id="Item.sturgia_noble_sword_1_t5" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a04" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a04" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a04" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a04" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="dale_dalian_mariner"
+        default_group="Infantry"
+        level="32"
+        name="{=aom_dale_dalian_mariner_name}[Dale] Dalian Mariner"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="0" />
+            <skill id="OneHanded" value="125" />
+            <skill id="TwoHanded" value="0" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="0" />
+        </skills>
+        <upgrade_targets></upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.northern_spear_4_t5" />
+                <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
+                <equipment slot="Item2" id="Item.sturgia_noble_sword_2_t5" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b01" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b01" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.eastern_spear_5_t5" />
+                <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
+                <equipment slot="Item2" id="Item.sturgia_noble_sword_3_t5" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b02" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b02" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
