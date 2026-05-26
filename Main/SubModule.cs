@@ -44,6 +44,7 @@ using TAOM.Features.Arena.Models;
 using TAOM.Features.Encyclopedia;
 using TAOM.Features.Encyclopedia.Models;
 using TAOM.Features.MainMenuCustomizer;
+using TAOM.Features.NativeSkinFixes;
 using TAOM.Features.ShaderPrecompilation;
 using TAOM.Features.Siege;
 using TAOM.Features.Siege.Models;
@@ -218,6 +219,14 @@ public class SubModule : MBSubModuleBase
     {
         base.OnBeforeInitialModuleScreenSetAsRoot();
         IoC.Resolve<IMainMenuCustomizerService>().CustomizeMenu();
+
+        // NativeSkinFixes — three native MinHook detours that fix engine bugs
+        // TaleWorlds won't: covers_head morph freeze, hair cloth orphan, beard
+        // cloth orphan. Loads TAOM.NativeSkinFixes.dll from Main/_Module/bin
+        // and pattern-scans TaleWorlds.Native.dll for the hook targets at
+        // install time. Failure is logged and the game continues vanilla — no
+        // crash, no NRE. See docs/features/native-skin-fixes.md.
+        NativeSkinFixesInstaller.Install(IoC.Resolve<IModLogger>());
 
         // DISABLED 2026-05-22: Pre-compile Shaders main-menu button hidden — feature isn't 100% reliable yet.
         // The service, IoC registration, Harmony Patch21_ShaderPrecompilation, and the OnApplicationTick
@@ -642,6 +651,11 @@ public class SubModule : MBSubModuleBase
         // across game-restart-in-same-process. Deep-review INC 3 (2026-05-25).
         try { IoC.Resolve<TAOM.Features.CrashReport.Hooks.AppDomainExceptionHook>()?.Unsubscribe(); }
         catch { /* IoC may already be torn down — best-effort */ }
+
+        // Reverse NativeSkinFixes hooks so DLL unload during reload-in-same-process
+        // doesn't leave dangling MinHook trampolines. Best-effort — swallows.
+        try { NativeSkinFixesInstaller.Uninstall(); }
+        catch { /* shutdown — never block */ }
 
         _harmony?.UnpatchAll("com.taom.mod");
         IoC.Dispose();

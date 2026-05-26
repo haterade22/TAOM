@@ -2,6 +2,35 @@
 
 ## 2026-05-26
 
+### feat(native-skin-fixes): adopt + port NativeSkinFixes into TAOM (v1.4.5, in-repo, pattern-scanning)
+
+Pulls the entire **NativeSkinFixes** mod (covers_head morph fix + hair cloth + beard cloth) into TAOM as a first-party feature. Replaces the inert vendored `TAOM.NativeSkinFixes.dll` (v1.4.0 RVAs, no managed loader committed) with a full integration:
+
+- **C++ source vendored in-repo** at `Dependencies/NativeSkinFixes.NativeHooks/` — six `.cpp` + six `.h` + MinHook 1.3.4 binaries + `.vcxproj` + `Build.ps1`. The `.vcxproj` writes `TAOM.NativeSkinFixes.dll` directly into `Main/_Module/bin/Win64_Shipping_Client/`. No external source location, no "lives outside this repo" footnote.
+- **Hardcoded RVAs replaced with byte-pattern scanning.** New `SignatureScanner.{h,cpp}` parses IDA-style hex patterns (`"48 89 5C 24 ? 48 89 74 24 ?"`) and walks the loaded `TaleWorlds.Native.dll` image at hook-install time. The 7 target signatures (3 hook targets + 4 helpers — `add_skin_meshes`, `cloth_factory`, `render_list_build`, `AddToList`, `GpuInit`, `HasClothData`, `NotifyPhysics`) live in a single `Signatures.h` registry. The original `notifyPhysics = clothFactory - 0xF6A0` inter-function offset (fragile across builds) is gone — `NotifyPhysics` now has its own scanned signature.
+- **C# wrapper inlined into TAOM.dll** under `Main/Features/NativeSkinFixes/` (4 files: `NativeSkinFixesInstaller.cs` + 3 interop classes). Loads from `TaomSubModule.OnBeforeInitialModuleScreenSetAsRoot`, uninstalls from `OnSubModuleUnloaded`. Editor-mode skip preserved (`wEditor` substring check). Localized boot banner via new `taom_nativeskinfixes_loaded` key in `taom_module_strings.xml`.
+- **Unified logging** — replaces the original mod's two scattered log paths (`Modules/NativeSkinFixes/HairClothHook.log` + `C:\ProgramData\...\NativeSkinFixes_renderlist.log`) with a single `%USERPROFILE%\Documents\Mount and Blade II Bannerlord\Logs\TAOM\NativeSkinFixes.log` consistent with other TAOM logging.
+- **Graceful degradation everywhere.** Missing DLL, missing export, unscanned pattern, or pattern miss — each fails individually with a logged warning and the game continues vanilla. No NRE, no crash, no boot block.
+- **TDD:** 8 unit tests in `TAOM.Tests/Features/NativeSkinFixes/NativeSkinFixesInstallerTests.cs` cover editor-mode predicate (null / empty / normal / editor / mixed case / false-positive guard) and the localization-key wiring. All 8 pass. The native interop layer itself can't be unit-tested.
+- **Feature doc:** [`docs/features/native-skin-fixes.md`](docs/features/native-skin-fixes.md) covers each hook's bug-fixed, the scanner architecture, how to rebuild, and the IDA workflow for authoring patterns when a Bannerlord patch breaks scanning.
+- **Open follow-up:** the 7 byte patterns ship as `<PATTERN_TBD>` placeholders. The scanner architecture is verified end-to-end (compiles, tests green, scanner returns 0 + logs cleanly on stub patterns). Authoring the v1.4.5 patterns is a one-time ~30 min IDA session — see the feature doc's "Pattern authoring" section. Until authored, hooks log "pattern not authored for this build (stub)" and stay inert.
+
+Build: 0 errors. Tests: 8/8 NativeSkinFixes tests pass.
+
+Files touched: 13 new C# / C++ files, `Main/SubModule.cs` (3 lines added), `taom_module_strings.xml` (2 lines), feature doc + dr3-maintenance update + CLAUDE.md update.
+
+Not-tested: byte-pattern scanner against live `TaleWorlds.Native.dll`, MinHook trampoline install, the 3 hook bodies (all require a hosted Bannerlord process).
+
+### chore(deep-review,docs): add C++ checks to deep-review skill + CLAUDE.md native port discipline
+
+Post-mortem on the NativeSkinFixes port (`docs/reviews/rca-native-skin-fixes-port-2026-05-26.md`) found that the deep-review skill's Agent 1 (Standards) and Agent 3 (Efficiency) prompts were C#-only — three of four review findings on a hybrid C#/C++ changeset only got caught because I ad-hoc-customized Agent 3's prompt for this session. Memory-only prevention has a poor track record (the same category of bug ships again when the memory isn't in the active context window), so the user directed the skill itself be hardened.
+
+- **`.claude/skills/deep-review/SKILL.md`** — Agent 1 gains check #9b "C++ Native Hook Standards" + Agent 3 gains check #15 "C++ HOT-PATH CHECKS", both conditional on `.cpp`/`.h` files being in the changeset (skipped on pure-C# reviews). Covers hot-path logging gates, SEH filter narrowness, atomic counter usage, SRWLock reader/writer balance, unbounded memory iteration, heap allocations, TLS abuse, `extern "C"` blocks, calling convention symmetry.
+- **`CLAUDE.md`** — new "Native C++ port discipline" section under "Working Discipline" with a 6-point pre-commit checklist for any future C++ port. References the RCA + the three feedback memories.
+- **Feedback memories** — three new entries indexed in MEMORY.md: `feedback_native_port_hot_path_audit.md`, `feedback_seh_filter_specificity.md`, `feedback_degraded_state_distinct_banner.md`.
+
+Prevention layering: skill prompt (mechanical check) + feedback memory (narrative why) + CLAUDE.md discipline (project-level documentation). Each layer covers a failure mode of the other two — memory evicts from context windows, skill prompts get out of date, project docs become wallpaper. Three layers redundant by design.
+
 ### feat(dale,armory): Lake-Town recruitment override + Armoury helmet hair_cover_type bulk fix
 
 Two independent user-directed changes shipped together.

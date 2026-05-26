@@ -794,4 +794,8 @@
 	<string id="taom_career_tier3" text="{=taom_career_tier3}Tier 3" />
 	<string id="taom_career_free_points" text="{=taom_career_free_points}Free Points: {COUNT}" />
 
+	<!-- NativeSkinFixes boot banner -->
+	<string id="taom_nativeskinfixes_loaded" text="{=taom_nativeskinfixes_loaded}NativeSkinFixes active — covers_head morph fix + hair/beard cloth simulation" />
+	<string id="taom_nativeskinfixes_degraded" text="{=taom_nativeskinfixes_degraded}NativeSkinFixes degraded — pattern signatures unauthored for this Bannerlord build; vanilla rendering" />
+
 </strings>

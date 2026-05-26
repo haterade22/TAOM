@@ -97,18 +97,18 @@ A separate pool of vendored DLLs lives in `Main/_Module/bin/Win64_Shipping_Clien
 | DLL | Origin | Why bundled |
 |---|---|---|
 | `MinHook.x64.dll` | [TsudaKageyu/MinHook](https://github.com/TsudaKageyu/minhook), MIT — third-party native hook lib | Runtime dep of `TAOM.NativeSkinFixes.dll` |
-| `TAOM.NativeSkinFixes.dll` | **TAOM-owned C++** — source lives outside this repo | TAOM's own native plugin for skin/cloth/hair hook fixes |
+| `TAOM.NativeSkinFixes.dll` | **TAOM-owned C++** — source vendored at `Dependencies/NativeSkinFixes.NativeHooks/` (in-repo since 2026-05-26) | TAOM's own native plugin for covers_head morph fix + hair/beard cloth simulation. See [`docs/features/native-skin-fixes.md`](../features/native-skin-fixes.md). |
 
 > `BehaviorTrees.dll` + `BehaviorTreeWrapper.dll` were removed from this table on 2026-05-24 — both libraries were decompiled (no upstream source repo) and inlined as TAOM source at `Main/BehaviorTrees/` + `Main/BehaviorTreeWrapper/`. They compile into `TAOM.dll` now. RCA: [docs/reviews/rca-looter-battle-nre-2026-05-24.md](../reviews/rca-looter-battle-nre-2026-05-24.md).
 
 **Update procedure (MinHook):** stable third-party binary; only update when the upstream releases a new build. Drop the new `.dll` into `Main/_Module/bin/Win64_Shipping_Client/`, run `./build.ps1 -RunTests`, smoke test, commit.
 
-**Update procedure (TAOM.NativeSkinFixes):** the C++ source for this DLL currently lives outside this repo. Workflow per build:
+**Update procedure (TAOM.NativeSkinFixes):** the C++ source lives in-repo at `Dependencies/NativeSkinFixes.NativeHooks/`. Workflow per change:
 
-1. Rebuild the C++ project in your external location (Visual Studio C++ project — separate `.vcxproj` not in TAOM.sln).
-2. Copy the new `TAOM.NativeSkinFixes.dll` (and `TAOM.NativeSkinFixes.pdb` if you want symbols) into `Main/_Module/bin/Win64_Shipping_Client/`.
-3. Run `./build.ps1` — `Bannerlord.BuildResources` will deploy the new DLL into the game install on every build automatically.
-4. `git add Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll && git commit` — otherwise teammates / CI / fresh clones will run the stale version.
+1. Edit the C++ source under `Dependencies/NativeSkinFixes.NativeHooks/` (hook bodies in `*Hook.cpp`, byte patterns in `Signatures.h`). The `.vcxproj` is standalone — NOT in `TAOM.sln` — to keep MSVC off the critical path for teammates / CI building `TAOM.dll` only.
+2. Run `pwsh Dependencies/NativeSkinFixes.NativeHooks/Build.ps1` to rebuild. Output writes directly into `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` (and `MinHook.x64.dll` is copied via post-build step).
+3. Run `./build.ps1` — `Bannerlord.BuildResources` will deploy the new DLL into the game install on every dotnet build automatically.
+4. `git add Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll && git commit` — the `.gitignore` allowlist explicitly permits this binary, but `git add` is still required (it's not auto-staged by `dotnet build`).
 
 **Important:** `MCMv5.dll` is NOT in this folder. MCMv5 is provided by `TAOM.Dependencies` (`Bannerlord.MBOptionScreen*.dll` + `MCM.UI.Adapter.MCMv5.dll`) + the `Bannerlord.MCM` NuGet (compile-time). The vestigial `<Reference Include="MCMv5">` block was removed from `Main/TAOM.csproj` in commit `c4231c8`. Do not re-add it.
 
