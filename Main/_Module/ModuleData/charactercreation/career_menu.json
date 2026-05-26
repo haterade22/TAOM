@@ -328,6 +328,14 @@
         "attribute_level_to_add": 1
     },
     {
+        "career_string_id": "cave_troll_master",
+        "skills": ["TwoHanded", "Leadership"],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
         "career_string_id": "warg_pack_leader",
         "skills": ["Riding", "Tactics"],
         "attribute": "Cunning",

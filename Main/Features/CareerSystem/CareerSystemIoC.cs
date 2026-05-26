@@ -139,8 +139,7 @@ public static class CareerSystemIoC
         ["warg_scout"]             = CareerArchetype.Cavalry,
 
         // ═══ GUNDABAD ═══
-        // DISABLED 2026-05-14: Troll careers WIP — re-enable by uncommenting.
-        // ["cave_troll_master"]      = CareerArchetype.Infantry,
+        ["cave_troll_master"]      = CareerArchetype.Infantry,
         ["goblin_sniper"]          = CareerArchetype.Ranged,
         ["warg_pack_leader"]       = CareerArchetype.Cavalry,
 

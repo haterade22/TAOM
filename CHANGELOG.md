@@ -2,6 +2,22 @@
 
 ## 2026-05-26
 
+### feat(career-system): re-enable cave_troll_master as Gundabad Berserker (Infantry)
+
+Reverses the 2026-05-14 WIP disable + matching 2026-05-19 JSON cleanup (commit `9c8d545`). Three coordinated edits restore the career across the three locations the disable touched:
+
+1. [`taom_careers.xml`](Main/_Module/ModuleData/career_system/taom_careers.xml) — unwrap the `<Career id="cave_troll_master">` element from its `<!-- DISABLED ... -->` block. Display name already reads "Gundabad Berserker" from the prior rename. Description updated to clarify Gundabad origin.
+2. [`CareerSystemIoC.cs`](Main/Features/CareerSystem/CareerSystemIoC.cs) line 143 — uncomment `["cave_troll_master"] = CareerArchetype.Infantry,` so the executor registry + archetype-service lookup recognise it.
+3. [`career_menu.json`](Main/_Module/ModuleData/charactercreation/career_menu.json) — restore the entry between `goblin_sniper` and `warg_pack_leader`, with the original `TwoHanded + Leadership / Vigor` skill assignment (recovered from commit `9c8d545`'s removed diff).
+
+Choice trees ([`taom_career_choices.xml`](Main/_Module/ModuleData/career_system/taom_career_choices.xml) lines 6771+) and ability template (`cave_troll_master_ability`) were never removed — they remained intact through the disable, so no further authoring needed.
+
+Gundabad now has 3 selectable careers in CC: **Gundabad Berserker** (Infantry, newly enabled), Gundabad Orc Hunter (Ranged), Gundabad Fell Warg Pack Leader (Cavalry).
+
+Tests: 2520/2522 passing — `CareerCultureCoverageTests.EveryJsonEntry_HasMatchingCareerInXml` + `EveryXmlEntry_HasMatchingJsonEntry` re-balanced. Sister troll career (`far_harad_halftroll`) remains disabled per the 2026-05-14 note.
+Save-compat: existing saves unaffected. New Gundabad campaigns see the third career option.
+Not-tested: in-game spot-check (Gundabad CC → 3-option menu → confirm Gundabad Berserker spawns with TwoHanded + Leadership focus).
+
 ### docs(culture-authoring): repeatable end-to-end process guide from the Dale session
 
 Captures the patterns that emerged from the 11-commit Dale culture session as a reusable workflow for future cultures.

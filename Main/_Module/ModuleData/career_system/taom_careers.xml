@@ -886,10 +886,9 @@
   <!-- GUNDABAD (gundabad)                                        -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <!-- DISABLED 2026-05-14: Cave Troll Master career WIP; not ready for live game yet. Re-enable by uncommenting.
   <Career id="cave_troll_master"
           display_name="{=taom_career_cave_troll_master}Gundabad Berserker"
-          description="{=taom_career_cave_troll_master_desc}A brutal orc chieftain who commands cave trolls in battle, driving them forward with whip and cunning."
+          description="{=taom_career_cave_troll_master_desc}A brutal orc chieftain of Gundabad who commands cave trolls in battle, driving them forward with whip and cunning."
           portrait_sprite="career_cave_troll_master_portrait"
           ability_template_id="cave_troll_master_ability"
           min_clan_tier="0"
@@ -906,7 +905,6 @@
       <Group id="cave_troll_master_t3_b" />
     </ChoiceGroups>
   </Career>
-  -->
 
   <Career id="goblin_sniper"
           display_name="{=taom_career_goblin_sniper}Gundabad Orc Hunter"
