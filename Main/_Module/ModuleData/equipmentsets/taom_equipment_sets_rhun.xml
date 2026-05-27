@@ -19,7 +19,7 @@
 	<EquipmentRoster id="rhun_bat_template_medium_b" culture="Culture.khuzait">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Item1" id="Item.rhun_round_shield_c" />
+			<Equipment slot="Item1" id="Item.battered_kite_shield" />
 			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
 			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
 			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
@@ -46,7 +46,7 @@
 	<EquipmentRoster id="rhun_bat_template_medium_d" culture="Culture.khuzait">
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Item1" id="Item.rhun_round_shield_c" />
+			<Equipment slot="Item1" id="Item.battered_kite_shield" />
 			<Equipment slot="Head" id="Item.easterling_head" />
 			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
 			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
@@ -89,7 +89,7 @@
 	<EquipmentRoster id="rhun_civ_template_b" culture="Culture.khuzait">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Item1" id="Item.rhun_round_shield_c" />
+			<Equipment slot="Item1" id="Item.battered_kite_shield" />
 			<Equipment slot="Head" id="Item.easterlingwarriors04_helmet" />
 			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
 			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />
@@ -116,7 +116,7 @@
 	<EquipmentRoster id="rhun_civ_template_d" culture="Culture.khuzait">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Item1" id="Item.rhun_round_shield_c" />
+			<Equipment slot="Item1" id="Item.battered_kite_shield" />
 			<Equipment slot="Head" id="Item.easterling_head" />
 			<Equipment slot="Body" id="Item.easterlingwarriors04_torso" />
 			<Equipment slot="Cape" id="Item.easterlingwarriors04_cape" />

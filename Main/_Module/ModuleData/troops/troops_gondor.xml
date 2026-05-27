@@ -921,7 +921,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_pelargir_sword_a02" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-        <equipment slot="Item2" id="Item.javelin_1_t3" />
+        <equipment slot="Item2" id="Item.eastern_javelin_2_t3" />
         <equipment slot="Head" id="Item.sk_gd_ano_cav_helmet_heavy_a" />
         <equipment slot="Body" id="Item.sk_gd_leb_inf_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
@@ -959,7 +959,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_pelargir_sword_a02" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-        <equipment slot="Item2" id="Item.javelin_1_t3" />
+        <equipment slot="Item2" id="Item.eastern_javelin_2_t3" />
         <equipment slot="Head" id="Item.sk_gd_ano_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_leb_inf_chest_med_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -995,8 +995,8 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_pelargir_sword_a02" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-        <equipment slot="Item2" id="Item.javelin_1_t3" />
-        <equipment slot="Item3" id="Item.javelin_1_t3" />
+        <equipment slot="Item2" id="Item.eastern_javelin_2_t3" />
+        <equipment slot="Item3" id="Item.eastern_javelin_2_t3" />
         <equipment slot="Head" id="Item.sk_gd_ano_cav_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_leb_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
@@ -4594,7 +4594,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a08" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-        <equipment slot="Item2" id="Item.empire_spear_1_t3" />
+        <equipment slot="Item2" id="Item.imperial_spear_t2" />
         <equipment slot="Head" id="Item.sk_gd_sere_helmet_elite_b" />
         <equipment slot="Body" id="Item.sk_gd_sere_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_sere_pauld_cape_heavy_a" />
@@ -4630,7 +4630,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a09" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-        <equipment slot="Item2" id="Item.empire_spear_1_t3" />
+        <equipment slot="Item2" id="Item.imperial_spear_t2" />
         <equipment slot="Head" id="Item.sk_gd_sere_helmet_elite_b" />
         <equipment slot="Body" id="Item.sk_gd_sere_chest_elite_a" />
         <equipment slot="Cape" id="Item.sk_gd_sere_pauld_cape_elite_a" />
@@ -5015,7 +5015,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-        <equipment slot="Item2" id="Item.fine_glaive_t4" />
+        <equipment slot="Item2" id="Item.eastern_spear_3_t3" />
         <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_elite_a" />
         <equipment slot="Body" id="Item.sk_gd_har_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_heavy_a" />
@@ -5051,7 +5051,7 @@
       <EquipmentRoster>
         <equipment slot="Item0" id="Item.wm_gondor_sword_a08" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
-        <equipment slot="Item2" id="Item.fine_glaive_t4" />
+        <equipment slot="Item2" id="Item.eastern_spear_3_t3" />
         <equipment slot="Head" id="Item.sk_gd_har_inf_helmet_elite_b" />
         <equipment slot="Body" id="Item.sk_gd_har_inf_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
@@ -6287,7 +6287,7 @@
         <equipment slot="Item0" id="Item.wm_gondor_sword_a09" />
         <equipment slot="Item1" id="Item.gond_shield_four_black" />
         <equipment slot="Item2" id="Item.vlandia_pike_1_t5" />
-        <equipment slot="Item3" id="Item.javelin_2_t4" />
+        <equipment slot="Item3" id="Item.eastern_javelin_3_t4" />
         <equipment slot="Head" id="Item.sk_gd_osg_noble_helmet_heavy_b" />
         <equipment slot="Body" id="Item.sk_gd_osg_inf_chest_heavy_b" />
         <equipment slot="Cape" id="Item.sk_gd_osg_pauld_cape_inf_elite_b" />

@@ -1951,21 +1951,21 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.aserai_lance_1_t3" />
+                <equipment slot="Item0" id="Item.khuzait_lance_1_t3" />
                 <equipment slot="Item1" id="Item.desert_round_shield" />
                 <equipment slot="Head" id="Item.haradrim_head" />
                 <equipment slot="Body" id="Item.haradrim_torso" />
                 <equipment slot="Leg" id="Item.haradrim_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.aserai_lance_1_t3" />
+                <equipment slot="Item0" id="Item.khuzait_lance_1_t3" />
                 <equipment slot="Item1" id="Item.desert_round_shield" />
                 <equipment slot="Body" id="Item.haradrim_torso" />
                 <equipment slot="Gloves" id="Item.haradrim_gloves" />
                 <equipment slot="Leg" id="Item.haradrim_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.aserai_lance_1_t3" />
+                <equipment slot="Item0" id="Item.khuzait_lance_1_t3" />
                 <equipment slot="Item1" id="Item.desert_round_shield" />
                 <equipment slot="Head" id="Item.haradrim_head" />
                 <equipment slot="Body" id="Item.haradrim_torso" />
@@ -2086,7 +2086,7 @@
         </skills>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.aserai_lance_2_t4" />
+                <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.desert_round_shield" />
                 <equipment slot="Head" id="Item.haradrim_head" />
                 <equipment slot="Body" id="Item.haradrim_torso" />
@@ -2094,7 +2094,7 @@
                 <equipment slot="Leg" id="Item.haradrim_boots" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.aserai_lance_2_t4" />
+                <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
                 <equipment slot="Item1" id="Item.desert_round_shield" />
                 <equipment slot="Head" id="Item.haradrim_head" />
                 <equipment slot="Body" id="Item.haradrim_torso" />

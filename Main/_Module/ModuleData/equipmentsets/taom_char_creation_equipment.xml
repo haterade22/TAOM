@@ -9865,7 +9865,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item1"
 				id="Item.easterling_shield" />
@@ -9889,7 +9889,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -9907,7 +9907,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item1"
 				id="Item.easterling_shield" />
@@ -9931,7 +9931,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -9949,7 +9949,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item1"
 				id="Item.easterling_shield" />
@@ -9973,7 +9973,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -9991,7 +9991,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item1"
 				id="Item.easterling_shield" />
@@ -10015,7 +10015,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10036,7 +10036,7 @@
 				id="Item.easterling_shield" />
 			<Equipment
 				slot="Item1"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10060,7 +10060,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10081,7 +10081,7 @@
 				id="Item.easterling_shield" />
 			<Equipment
 				slot="Item1"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10105,7 +10105,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10123,7 +10123,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10147,7 +10147,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10165,7 +10165,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10189,7 +10189,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10207,7 +10207,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item2"
 				id="Item.easterling_spear" />
@@ -10228,7 +10228,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10246,7 +10246,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item2"
 				id="Item.easterling_spear" />
@@ -10267,7 +10267,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10285,7 +10285,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10309,7 +10309,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10327,7 +10327,7 @@
 		<EquipmentSet>
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Item2"
 				id="Item.hunting_bow" />
@@ -10351,7 +10351,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10393,7 +10393,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10435,7 +10435,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10474,7 +10474,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10513,7 +10513,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
@@ -10544,7 +10544,7 @@
 			equipmentType="Civilian">
 			<Equipment
 				slot="Item0"
-				id="Item.rhun_1h_sword_a_t1" />
+				id="Item.khuzait_sword_1_t2" />
 			<Equipment
 				slot="Body"
 				id="Item.sk_rh_loke_tunic_a" />
