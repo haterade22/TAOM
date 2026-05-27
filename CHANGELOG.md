@@ -2,6 +2,20 @@
 
 ## 2026-05-27
 
+### fix(deps): DR3 Phase 4 — move IncompatibleModDetector.RunEarlyPhase to OnSubModuleLoad (alias stub ctors don't fire)
+
+Second-launch diag.log (with comprehensive logging from previous commit) confirmed the alias stub ctors are NEVER called by the launcher. Root cause: each alias stub module folder (`Modules/Bannerlord.{Harmony,UIExtenderEx,ButterLib,MBOptionScreen}/`) has no `bin/Win64_Shipping_Client/` subfolder, so when the launcher looks for `TAOM.Dependencies.dll` inside the stub's own bin path (per `<DLLName value="TAOM.Dependencies.dll"/>`), it doesn't find it. Construction silently skips.
+
+Why this works practically — the AssemblyResolve handler installs from `TAOM.Dependencies.SubModule`'s static cctor (642ms BEFORE OnSubModuleLoad, per timestamps in diag.log session 4) which is the right early timing for third-party-mod assembly redirects. The only thing that needed the stub-ctor timing was `IncompatibleModDetector.RunEarlyPhase` (writes crash-loop marker). Pre-OnSubModuleLoad crashes can't be diagnosed by TAOM anyway since our code isn't loaded yet — so deferring 642ms is acceptable.
+
+Fix: moved `IncompatibleModDetector.RunEarlyPhase()` call from `AliasStubSubModule.ctor` (dead code, never invoked) → `Dependencies/SubModule.OnSubModuleLoad` (deterministic timing). Marker writes work, crash-loop detection works.
+
+Alias stub `<SubModule>` entries remain in the alias SubModule.xml files — they cost nothing if never invoked, and BLSE may use their PRESENCE as the "this module loads code" signal even if the construction silently fails.
+
+Verification: `dotnet build` 0 errors. `dotnet test` 2,520/2,522 passing.
+
+Optional follow-up (deferred): deploy 4 copies of `TAOM.Dependencies.dll` into each alias stub's `bin/Win64_Shipping_Client/` so the launcher CAN construct `AliasStubSubModule` and all early-phase shims fire from the canonical BetaDeps timing. Cost: ~240KB extra disk for 4 DLL copies + MSBuild target update. Defer until evidence shows the timing matters.
+
 ### diag(deps): DR3 Phase 4 — comprehensive lifecycle logging + defer late-phase shield installs
 
 First-launch verification of commit `c47d12e` (v1.4.5 signature fixes) revealed:

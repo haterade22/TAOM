@@ -160,13 +160,20 @@ public class SubModule : MBSubModuleBase
         }
 
         // DR3 Phase 4 C-series: install ALL the defensive shields here. Originally
-        // CollectAssemblyTypesShim + SubModuleConstructionGuard were called from
-        // AliasStubSubModule.ctor, but observed 2026-05-27 — stub ctors are not
-        // reliably reached (BLSE / launcher behavior unknown). OnSubModuleLoad fires
-        // for TAOM.Dependencies's main SubModule deterministically, so all shields
-        // install from one known-working hook. PatchShield + SaveShield were already
-        // here; CollectAssemblyTypesShim + SubModuleConstructionGuard moved here.
+        // CollectAssemblyTypesShim + SubModuleConstructionGuard + RunEarlyPhase were
+        // called from AliasStubSubModule.ctor, but observed 2026-05-27 — the launcher
+        // never constructs AliasStubSubModule because the alias stub module folders
+        // have no `bin/<platform>/TAOM.Dependencies.dll` (the DLL lives in TAOM.Dependencies's
+        // own bin/, not duplicated to each stub). OnSubModuleLoad fires for TAOM.Dependencies's
+        // main SubModule deterministically, so all shields install from one known-working hook.
         DiagLog.Log("Dependencies", "OnSubModuleLoad: installing defensive shields");
+
+        // RunEarlyPhase writes session-launching.marker for crash-loop detection. Was
+        // supposed to fire from stub ctors (very early), now fires at OnSubModuleLoad
+        // (~642ms later — acceptable; pre-OnSubModuleLoad crashes can't be diagnosed by
+        // TAOM anyway since our code isn't loaded yet).
+        try { DiagLog.Log("Dependencies", "OnSubModuleLoad: → IncompatibleModDetector.RunEarlyPhase"); IncompatibleModDetector.RunEarlyPhase(); }
+        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "IncompatibleModDetector.RunEarlyPhase", ex); }
 
         try { DiagLog.Log("Dependencies", "OnSubModuleLoad: → CollectAssemblyTypesShim.Install"); CollectAssemblyTypesShim.Install(); }
         catch (Exception ex) { DiagLog.LogCaught("Dependencies", "CollectAssemblyTypesShim.Install", ex); EarlyLog.Error($"[TAOM.Dependencies] CollectAssemblyTypesShim.Install failed: {ex.Message}"); }
