@@ -2,6 +2,79 @@
 
 ## 2026-05-27
 
+### fix(rohan): clothe naked tavern/town NPCs + upgrade guards to chainmail
+
+Two related XML fixes in [`npcs_rohan.xml`](Main/_Module/ModuleData/characters/npcs_rohan.xml).
+
+**Root cause for naked Aldburg tavern NPCs:** 31 civilian-occupation NPCs (Townsfolk, Villager, GoodsTrader, Blacksmith, Weaponsmith, Armorer, HorseTrader, Tavernkeeper, TavernGameHost, TavernWench, Musician, ArenaMaster, ShopWorker) used bare `<EquipmentRoster>` instead of `<EquipmentRoster civilian="true">`. The engine's settlement-walk / tavern / dialog code only selects rosters tagged `civilian="true"`; bare rosters fall through to underwear. Items themselves all resolved correctly in Armory. Vanilla SandBoxCore + TAOM's [`npcs_gondor.xml`](Main/_Module/ModuleData/characters/npcs_gondor.xml) use the attribute correctly. Fix: 56 rosters across 31 NPCs flipped to `civilian="true"` via scoped Python (`occupation` whitelist), leaving the 20 combat-context rosters (PrisonGuard, Soldier, CaravanGuard, gang-leader bodyguards) bare.
+
+**Guard upgrade:** `prison_guard_rohan` (2 rosters) + `guard_rohan` (3 rosters) swapped from `rohan_militia_armour_*` leather (~20 body armor) to proper Rohan chainmail/scalemail. Prison guards now wear `cts_rohan_armor1` (Chainmail I) and `cts_rohan_armor3` (Chainmail II) with `roh_sol_bts` boots. Town guard gets one captain-tier loadout (`cts_rohan_armor2` Scalemail + `cts_rohan_helmet_captain1` + `cts_rohan_captain_bracer` + `cts_rohan_captain_boots`) and two chainmail variants (`armor3`, `armor1` + `roh_sol_bts`) for visual diversity. Helmets/armguards on the chainmail loadouts kept at existing `cts_rohan_helmet1/2/2a` and `armguard1/2/4` for mid-tier soldier aesthetic. `theodred_helmet` / `theoden_helmet` deliberately not used (named-character gear).
+
+Not-tested: in-game visual on Aldburg tavern + dungeon + town walls to confirm fix.
+
+### feat(all-cultures-lords): lore-driven skills + traits for every culture (16 cultures, ~880 adult NPCs across lords.xml + lords.xslt)
+
+Sweep continuation of the Gondor pass (118 NPCs) to cover ALL 16 TAOM cultures with lore-driven skills + traits.
+
+**Cultures shipped this pass** (skills+traits applied per archetype + canonical override per named Tolkien hero):
+
+| Culture | culture_id | adult NPCs touched | Canonical Tolkien overrides |
+|---|---|---|---|
+| Rohan | vlandia | 92 | Théoden, Éomer, Théodred, Éowyn, Erkenbrand, Grimbold, Théodwyn, Elfhild, + family/marshals |
+| Erebor (Dwarves) | erebor | 30 | Dáin II Ironfoot, Thorin III Stonehelm |
+| Dale (Bardings) | sturgia | 82 | bio-driven archetypes (TAOM Slavic-named roster, mostly wives + nobles) |
+| Mirkwood (Silvan Elves) | mirkwood | 29 | Thranduil (Elvenking), Legolas |
+| Rivendell (Imladris) | rivendell | 7 | Elrond, Celebrían, Elladan, Elrohir, Arwen, Glorfindel |
+| Lothlórien | lothlorien | 3 | Galadriel (Charm/Leadership 300), Celeborn |
+| Mordor | mordor | 97 | 3 Nazgûl, Grishnâkh, Verina, Svala Redfang, Black Númenórean family |
+| Dol Guldur | dolguldur | 59 | 6 compound chieftains (Thrangul, Narzugh, Lorgath, Urzara, Throrgash, Thrurg) |
+| Mount Gundabad | gundabad | 50 | 5 compound chieftains incl. Bolgath (Bolg-evoking) |
+| Isengard | isengard | 34 | Uglûk, Mauhûr, Lugdush, Lurtz, Sharku (Warg-Rider Captain) |
+| Dunland | empire | 68 | bio-driven (Norse-themed shieldmaidens + raiders) |
+| Harad | aserai | 73 | bio-driven (Haradrim cavalry + Mumakil + desert ladies) |
+| Khand (Variags) | battania | 56 | bio-driven (Variag cavalry + ladies) |
+| Easterlings/Rhûn | khuzait | 71 | bio-driven (Wainrider/horsearcher archetypes) |
+| Umbar Corsairs | umbar | 10 | Ar-Gimilkhâd line (Black Númenórean corsair lords) |
+| Shaghana | shaghana | 9 | TAOM-invented southern lords (default archetypes) |
+| Abanissa | abanissa | 8 | TAOM-invented coastal lords (default archetypes) |
+
+**New archetypes added** (on top of the 10 Gondor base archetypes):
+- `dale_lord` / `dale_bowman` — Northmen bowmen of Esgaroth
+- `dwarf_king` / `dwarf_lord` / `dwarf_warrior` / `dwarf_lady` / `dwarf_young` — Erebor + Iron Hills; high TwoHanded + Crafting + Engineering
+- `elf_king` / `elf_queen` / `elf_lord` / `elf_warrior` / `elf_archer` / `elf_lady` / `elf_young` — Centuries-trained masters, Bow + Charm + Tactics all 270+
+- `orc_chieftain` / `orc_warrior` / `orc_berserker` / `orc_scout` / `orc_warg` / `orc_female` — Mordor / Dol Guldur / Gundabad / Isengard; Honor/Mercy negative, brutal combat
+- `nazgul` — Ringwraith tier; everything 270+, Charm 280 (terror), Mercy -2
+- `black_numenorean` / `bn_sorceress` — Fallen Númenor: Charm + sorcery + statecraft + combat
+- `dunland_warrior` / `dunland_raider` / `dunland_brenin` — Norse-themed hillfolk
+- `haradrim_lord` / `haradrim_cav` / `mumak_rider` / `desert_lady` — Scarlet-and-gold southrons
+- `variag_lord` / `variag_lady` — Slavic-Mongol cavalry
+- `easterling_lord` / `easterling_archer` / `easterling_lady` — Rhûn wainriders + horse-archers
+- `corsair_lord` / `corsair_captain` — Umbar pirate fleet
+- `rider` / `shieldmaiden` / `horse_breeder` — Rohan-specific (already in Gondor pass)
+
+**Race-aware default archetypes**: `default_archetype` now branches on `culture_data.race` (`man`/`dwarf`/`elf`/`orc`/`uruk_hai`/`nazgul`). Elves never treat low age as "young" (placeholder ages, immortal). Dwarves use combat-heavy defaults regardless of age (250-yr lifespan).
+
+**Power thresholds respected**:
+- Most adult lords cap 200-270 in their specialty
+- Canonical peak Tolkien heroes push 280-295 (Boromir 295 OneHanded, Imrahil 290, Legolas 295 Bow, Glorfindel 295 OneHanded)
+- Three characters hit 300: Galadriel (Charm 300, Leadership 300), Denethor (Steward 300) — all justified by lore (Galadriel is ~8000 years old; Denethor was greatest Steward)
+- Leadership > 275 (party-size bonus territory) reserved for: Imrahil, Boromir, Denethor, Théoden, Éomer, Erkenbrand, Dáin II, Elrond, Galadriel, Celeborn, Nazgûl
+
+**Coverage check**: `lords.xml` 566 NPCs with populated skills + `lords.xslt` 384 templates with populated skills = **950 total NPCs with lore-driven skills**. Pre-existing children skipped.
+
+Applied via the same generalized [`tools/apply_culture_skills_traits.py`](tools/apply_culture_skills_traits.py) (one script, `--culture <name>` flag, per-culture canonical-override dicts).
+
+**Files modified:**
+- [Main/_Module/ModuleData/characters/lords.xml](Main/_Module/ModuleData/characters/lords.xml)
+- [Main/_Module/ModuleData/lords.xslt](Main/_Module/ModuleData/lords.xslt)
+- [tools/apply_culture_skills_traits.py](tools/apply_culture_skills_traits.py) — extended with 14 new cultures + 25 new archetypes
+
+**Save-compat:** see prior Gondor entry — applies the same way; new campaigns see new values, existing baked-in hero stats unchanged.
+
+**Not-tested:** in-game smoke test of named heroes (Théoden, Éomer, Boromir, Dáin, Thranduil, Elrond, Galadriel) and one representative orc chieftain (Uglûk/Grishnâkh). Mandatory before ship.
+
+**Research:** Tolkien Gateway for every culture's canonical roster — `Sources` per culture documented in the session transcript.
+
 ### feat(gondor-lords): lore-driven skills + traits for 118 Gondor NPCs
 
 Filled in skills and traits for every Gondor adult lord across both XML sources. Continuation of the Gondor Lord Review begun 2026-05-26 (Amrothos clan + 11 culture flips + 24 body keys).
