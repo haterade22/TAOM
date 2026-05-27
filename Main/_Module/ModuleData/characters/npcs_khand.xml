@@ -15,7 +15,7 @@
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -83,7 +83,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -107,11 +107,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
@@ -164,7 +164,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -193,7 +193,7 @@
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Cape" id="Item.battania_woodland_cloak" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
@@ -206,7 +206,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Gloves" id="Item.highland_gloves" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
@@ -223,7 +223,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Gloves" id="Item.highland_gloves" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
@@ -245,7 +245,7 @@
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Gloves" id="Item.guarded_padded_vambrace" />
 				<equipment slot="Leg" id="Item.highland_boots" />
 			</EquipmentRoster>
@@ -262,7 +262,7 @@
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Cape" id="Item.battania_civil_cape" />
 				<equipment slot="Leg" id="Item.highland_boots" />
 			</EquipmentRoster>
@@ -280,7 +280,7 @@
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -291,7 +291,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
@@ -328,7 +328,7 @@
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -357,7 +357,7 @@
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.highland_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -485,7 +485,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Cape" id="Item.battania_civil_cape" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
@@ -520,7 +520,7 @@
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.highland_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -532,7 +532,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.highland_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -638,7 +638,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -683,7 +683,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Cape" id="Item.battania_woodland_cloak" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
@@ -711,7 +711,7 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Cape" id="Item.battania_woodland_cloak" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
@@ -746,7 +746,7 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Gloves" id="Item.highland_gloves" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
@@ -782,7 +782,7 @@
 		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Gloves" id="Item.highland_gloves" />
 				<equipment slot="Cape" id="Item.battania_civil_cape" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
@@ -807,7 +807,7 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Leg" id="Item.highland_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -830,7 +830,7 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Cape" id="Item.battania_civil_cape" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
@@ -855,7 +855,7 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Gloves" id="Item.guarded_padded_vambrace" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
@@ -891,7 +891,7 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Cape" id="Item.battania_civil_cape" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
@@ -913,7 +913,7 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Gloves" id="Item.highland_gloves" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
@@ -959,7 +959,7 @@
 		<Traits><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Cape" id="Item.battania_woodland_cloak" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>
@@ -995,7 +995,7 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.highland_jerkin" />
+				<equipment slot="Body" id="Item.highland_cloth" />
 				<equipment slot="Cape" id="Item.battania_woodland_cloak" />
 				<equipment slot="Leg" id="Item.battania_leather_boots" />
 			</EquipmentRoster>

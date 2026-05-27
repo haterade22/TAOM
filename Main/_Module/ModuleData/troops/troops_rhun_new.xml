@@ -3962,7 +3962,7 @@
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.long_bow" />
+                <equipment slot="Item0" id="Item.noble_long_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.aserai_sword_3_t3" />
                 <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_b" />
@@ -4111,7 +4111,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.long_bow" />
+                <equipment slot="Item0" id="Item.noble_long_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Head" id="Item.sk_rh_drag_hood_med_a" />
@@ -4185,7 +4185,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.long_bow" />
+                <equipment slot="Item0" id="Item.noble_long_bow" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.bodkin_arrows_b" />
                 <equipment slot="Head" id="Item.sk_rh_drag_hood_med_b" />

@@ -7260,7 +7260,7 @@
     <upgrade_targets />
     <Equipments>
       <EquipmentRoster>
-        <equipment slot="Item0" id="Item.long_bow" />
+        <equipment slot="Item0" id="Item.noble_long_bow" />
         <equipment slot="Item1" id="Item.default_arrows" />
         <equipment slot="Item2" id="Item.default_arrows" />
         <equipment slot="Item3" id="Item.wm_gondor_sword_a02" />

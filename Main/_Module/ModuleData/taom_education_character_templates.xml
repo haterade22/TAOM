@@ -391,7 +391,7 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.empire_horseman_tunic" />
+					id="Item.empire_horseman_armor" />
 				<equipment
 					slot="Leg"
 					id="Item.strapped_leather_boots" />
@@ -481,7 +481,7 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.padded_leather_coat" />
+					id="Item.padded_leather_overcoat" />
 				<equipment
 					slot="Leg"
 					id="Item.strapped_leather_boots" />
@@ -510,7 +510,7 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.empire_formal_armor" />
+					id="Item.empire_plate_vest_armor" />
 				<equipment
 					slot="Leg"
 					id="Item.empire_horseman_boots" />
@@ -542,7 +542,7 @@
 					id="Item.scarf" />
 				<equipment
 					slot="Body"
-					id="Item.empire_horseman_tunic" />
+					id="Item.empire_horseman_armor" />
 				<equipment
 					slot="Leg"
 					id="Item.strapped_leather_boots" />
@@ -758,7 +758,7 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.empire_horseman_tunic" />
+					id="Item.empire_horseman_armor" />
 				<equipment
 					slot="Leg"
 					id="Item.strapped_leather_boots" />
@@ -848,7 +848,7 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.padded_leather_coat" />
+					id="Item.padded_leather_overcoat" />
 				<equipment
 					slot="Leg"
 					id="Item.strapped_leather_boots" />
@@ -877,7 +877,7 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.empire_formal_armor" />
+					id="Item.empire_plate_vest_armor" />
 				<equipment
 					slot="Leg"
 					id="Item.empire_horseman_boots" />
@@ -909,7 +909,7 @@
 					id="Item.scarf" />
 				<equipment
 					slot="Body"
-					id="Item.empire_horseman_tunic" />
+					id="Item.empire_horseman_armor" />
 				<equipment
 					slot="Leg"
 					id="Item.strapped_leather_boots" />
@@ -939,7 +939,7 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.empire_horseman_tunic" />
+					id="Item.empire_horseman_armor" />
 				<equipment
 					slot="Leg"
 					id="Item.strapped_leather_boots" />
@@ -1026,7 +1026,7 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.padded_leather_coat" />
+					id="Item.padded_leather_overcoat" />
 				<equipment
 					slot="Leg"
 					id="Item.strapped_leather_boots" />
@@ -1054,7 +1054,7 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.empire_formal_armor" />
+					id="Item.empire_plate_vest_armor" />
 				<equipment
 					slot="Leg"
 					id="Item.empire_horseman_boots" />
@@ -1085,7 +1085,7 @@
 					id="Item.scarf" />
 				<equipment
 					slot="Body"
-					id="Item.empire_horseman_tunic" />
+					id="Item.empire_horseman_armor" />
 				<equipment
 					slot="Leg"
 					id="Item.strapped_leather_boots" />

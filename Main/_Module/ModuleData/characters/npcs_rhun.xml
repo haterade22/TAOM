@@ -10,7 +10,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -25,15 +25,15 @@
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -45,11 +45,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -176,11 +176,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -191,11 +191,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -206,7 +206,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -216,7 +216,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -227,7 +227,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -238,7 +238,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -248,7 +248,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -259,7 +259,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -271,7 +271,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -281,7 +281,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -292,7 +292,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -302,7 +302,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -314,11 +314,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -330,12 +330,12 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Gloves" id="Item.easterling_glove" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
@@ -348,13 +348,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Gloves" id="Item.easterling_glove" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
@@ -383,11 +383,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -399,11 +399,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -414,11 +414,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -429,11 +429,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -444,11 +444,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -460,11 +460,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -475,11 +475,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -490,7 +490,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
@@ -520,7 +520,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -531,7 +531,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -542,11 +542,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -570,7 +570,7 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -581,7 +581,7 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -615,7 +615,7 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
@@ -627,7 +627,7 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Gloves" id="Item.easterling_glove" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
@@ -662,7 +662,7 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Gloves" id="Item.easterlingwarriors01_gloves" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
@@ -675,7 +675,7 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -720,7 +720,7 @@
 		<Traits><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Gloves" id="Item.easterling_glove" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
@@ -776,7 +776,7 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -799,7 +799,7 @@
 		<Traits><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -809,7 +809,7 @@
 		<Traits><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_b" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat_b" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -865,7 +865,7 @@
 		<Equipments>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterling_boots" />
 			</EquipmentRoster>
 		</Equipments>
@@ -898,7 +898,7 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+				<equipment slot="Body" id="Item.khuzait_civil_coat" />
 				<equipment slot="Leg" id="Item.easterlingwarriors01_boots" />
 			</EquipmentRoster>
 		</Equipments>

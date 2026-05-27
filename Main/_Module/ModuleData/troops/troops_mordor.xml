@@ -2352,7 +2352,7 @@
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.long_bow" />
+                <equipment slot="Item0" id="Item.noble_long_bow" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_heavy_a1" />
@@ -2361,7 +2361,7 @@
                 <equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_c" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.long_bow" />
+                <equipment slot="Item0" id="Item.noble_long_bow" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.wm_mordor_set1_axe_a02" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_heavy_b1" />
@@ -2369,7 +2369,7 @@
                 <equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_b" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.long_bow" />
+                <equipment slot="Item0" id="Item.noble_long_bow" />
                 <equipment slot="Item1" id="Item.default_arrows" />
                 <equipment slot="Item2" id="Item.wm_mordor_set1_sword_a02" />
                 <equipment slot="Head" id="Item.sk_uruk_mordor_helmet_heavy_d1" />

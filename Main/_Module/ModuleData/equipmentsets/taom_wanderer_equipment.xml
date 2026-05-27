@@ -423,7 +423,7 @@
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.rivendell_sword_b01" />
-			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
@@ -432,7 +432,7 @@
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.rivendell_sword_b01" />
-			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_b" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
@@ -449,7 +449,7 @@
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.rivendell_glaive_a01" />
-			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_silver" />
 			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
 			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
@@ -457,8 +457,8 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
-			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_b" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
@@ -466,7 +466,7 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_greaves4" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 			<Equipment slot="Item2" id="Item.highelf_longbowa" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
@@ -475,7 +475,7 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_silver" />
 			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
 			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
@@ -492,7 +492,7 @@
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.rivendell_sword_b01" />
-			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_elite" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_b" />
 			<Equipment slot="Cape" id="Item.rivendell_pauldron_elite_robe" />
@@ -518,7 +518,7 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
@@ -528,7 +528,7 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
@@ -658,7 +658,7 @@
 	<!-- LOTHLORIEN companion equipment -->
 	<EquipmentRoster id="npc_companion_equipment_template_lothlorien" culture="Culture.lothlorien">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
 			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
@@ -666,8 +666,8 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
-			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
 			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
@@ -675,7 +675,7 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
@@ -683,7 +683,7 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 			<Equipment slot="Item2" id="Item.highelf_longbowc" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_silver" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
@@ -692,7 +692,7 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
 			<Equipment slot="Item2" id="Item.highelf_longbowc" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
 			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
@@ -701,8 +701,8 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
-			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
@@ -710,8 +710,8 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
-			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
 			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
@@ -719,8 +719,8 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
-			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
 			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_a" />
@@ -728,7 +728,7 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
 			<Equipment slot="Item2" id="Item.highelf_longbowc" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
 			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
@@ -737,8 +737,8 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
-			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
@@ -746,7 +746,7 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 			<Equipment slot="Item2" id="Item.highelf_longbowb" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_gold" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
@@ -756,7 +756,7 @@
 		</EquipmentSet>
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.rivendell_sword_b01" />
-			<Equipment slot="Item1" id="Item.rivendell_shield_a01" />
+			<Equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 			<Equipment slot="Head" id="Item.rivendell_helmet_lord_circlet" />
 			<Equipment slot="Body" id="Item.rivendell_body_gold_b" />
 			<Equipment slot="Cape" id="Item.rivendell_cape_b" />
@@ -764,17 +764,17 @@
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.rivendell_sword_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.rivendell_spear_a01" />
+			<Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
 			<Equipment slot="Body" id="Item.rivendell_body_silver_a" />
 			<Equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 		</EquipmentSet>
@@ -1237,7 +1237,7 @@
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
-			<Equipment slot="Body" id="Item.khuzait_civil_coat_a" />
+			<Equipment slot="Body" id="Item.khuzait_civil_coat" />
 			<Equipment slot="Leg" id="Item.khuzait_civil_boots" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
