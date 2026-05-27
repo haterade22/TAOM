@@ -39,11 +39,17 @@ public static class IncompatibleModDetector
     /// </summary>
     public static void RunEarlyPhase()
     {
-        if (System.Threading.Interlocked.Exchange(ref _earlyPhaseRan, 1) != 0) return;
+        DiagLog.Log(Tag, "RunEarlyPhase: entered");
+        if (System.Threading.Interlocked.Exchange(ref _earlyPhaseRan, 1) != 0)
+        {
+            DiagLog.Log(Tag, "RunEarlyPhase: already ran, returning");
+            return;
+        }
 
         try
         {
             var moduleDir = RuntimeLog.ModuleDir;
+            DiagLog.Log(Tag, $"RunEarlyPhase: moduleDir='{moduleDir}'");
             if (string.IsNullOrEmpty(moduleDir))
             {
                 DiagLog.Log(Tag, "RunEarlyPhase: module dir unknown; skipping crash-loop detection");
@@ -52,20 +58,24 @@ public static class IncompatibleModDetector
 
             var markerPath = Path.Combine(moduleDir, LaunchMarkerName);
             var lastGoodPath = Path.Combine(moduleDir, LastGoodModlistName);
+            DiagLog.Log(Tag, $"RunEarlyPhase: markerPath='{markerPath}'");
 
             // Detect previous-session crash-loop: marker present from last launch means
             // the last session's MarkSessionLaunchSuccessful() was never called.
             var previousCrashLoop = File.Exists(markerPath);
+            DiagLog.Log(Tag, $"RunEarlyPhase: previousCrashLoop={previousCrashLoop} (marker exists)");
             if (previousCrashLoop)
             {
-                DiagLog.Log(Tag, "RunEarlyPhase: previous session never reached main menu (launch marker present)");
+                DiagLog.Log(Tag, "RunEarlyPhase: previous session never reached main menu — analysing culprit");
                 AnalyzeCulprit(lastGoodPath);
             }
 
             // Write fresh marker for this session.
+            DiagLog.Log(Tag, "RunEarlyPhase: writing fresh session-launching.marker");
             File.WriteAllText(markerPath,
                 $"launch started {DateTime.Now:yyyy-MM-dd HH:mm:ss}{Environment.NewLine}",
                 Encoding.UTF8);
+            DiagLog.Log(Tag, "RunEarlyPhase: COMPLETE — marker written");
         }
         catch (Exception ex)
         {
@@ -80,24 +90,34 @@ public static class IncompatibleModDetector
     /// </summary>
     public static void MarkSessionLaunchSuccessful()
     {
+        DiagLog.Log(Tag, "MarkSessionLaunchSuccessful: entered");
         try
         {
             var moduleDir = RuntimeLog.ModuleDir;
-            if (string.IsNullOrEmpty(moduleDir)) return;
+            if (string.IsNullOrEmpty(moduleDir))
+            {
+                DiagLog.Log(Tag, "MarkSessionLaunchSuccessful: moduleDir empty; skipping");
+                return;
+            }
 
             var markerPath = Path.Combine(moduleDir, LaunchMarkerName);
             var lastGoodPath = Path.Combine(moduleDir, LastGoodModlistName);
 
-            if (File.Exists(markerPath)) File.Delete(markerPath);
+            if (File.Exists(markerPath))
+            {
+                File.Delete(markerPath);
+                DiagLog.Log(Tag, "MarkSessionLaunchSuccessful: launch marker deleted (crash-loop ok)");
+            }
 
             var modlist = ReadCurrentModlist();
+            DiagLog.Log(Tag, $"MarkSessionLaunchSuccessful: ReadCurrentModlist returned {modlist.Count} entries");
             if (modlist.Count > 0)
             {
                 File.WriteAllLines(lastGoodPath,
                     new[] { $"# Last known-good modlist (reached main menu {DateTime.Now:yyyy-MM-dd HH:mm:ss})" }
                         .Concat(modlist),
                     Encoding.UTF8);
-                DiagLog.Log(Tag, $"MarkSessionLaunchSuccessful: saved {modlist.Count}-mod last-good snapshot");
+                DiagLog.Log(Tag, $"MarkSessionLaunchSuccessful: COMPLETE — saved {modlist.Count}-mod last-good snapshot");
             }
         }
         catch (Exception ex)
@@ -173,8 +193,17 @@ public static class IncompatibleModDetector
                 try
                 {
                     var text = File.ReadAllText(xmlPath);
+
+                    // Strip XML comments before matching the Id — otherwise stubs
+                    // with comment blocks that mention `<Id value="X"/>` get
+                    // mis-recorded. Caught 2026-05-27: Bannerlord.Harmony stub's
+                    // comment mentions `<Id value="TAOM.Dependencies"/>` and was
+                    // recorded as TAOM.Dependencies (duplicate) instead of
+                    // Bannerlord.Harmony.
+                    var stripped = System.Text.RegularExpressions.Regex.Replace(
+                        text, @"<!--[\s\S]*?-->", string.Empty);
                     var idMatch = System.Text.RegularExpressions.Regex.Match(
-                        text, @"<Id\s+value\s*=\s*""([^""]+)""\s*/>");
+                        stripped, @"<Id\s+value\s*=\s*""([^""]+)""\s*/>");
                     if (idMatch.Success) result.Add(idMatch.Groups[1].Value);
                 }
                 catch

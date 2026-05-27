@@ -40,33 +40,46 @@ public static class SubModuleConstructionGuard
 
     public static void Install()
     {
-        if (Interlocked.CompareExchange(ref _installed, 1, 0) != 0) return;
+        DiagLog.Log(Tag, "Install: entered");
+        if (Interlocked.CompareExchange(ref _installed, 1, 0) != 0)
+        {
+            DiagLog.Log(Tag, "Install: already installed, returning");
+            return;
+        }
 
         try
         {
+            DiagLog.Log(Tag, "Install: constructing Harmony instance");
             var harmony = new Harmony(HarmonyId);
+            DiagLog.Log(Tag, "Install: Harmony constructed");
+
             var sharedFinalizer = typeof(SubModuleConstructionGuard).GetMethod(
                 nameof(SwallowFinalizer),
                 BindingFlags.Static | BindingFlags.NonPublic);
             if (sharedFinalizer == null)
             {
-                DiagLog.Log(Tag, "could not resolve SwallowFinalizer; aborting install");
+                DiagLog.Log(Tag, "Install: could not resolve SwallowFinalizer; aborting install");
                 return;
             }
+            DiagLog.Log(Tag, "Install: SwallowFinalizer resolved");
 
             int installed = 0;
 
             // Site 1: MBSubModuleBase ctors (catches base() chain + field-init exceptions)
             try
             {
+                DiagLog.Log(Tag, "Install: enumerating MBSubModuleBase ctors via reflection");
                 var baseCtors = typeof(MBSubModuleBase).GetConstructors(
                     BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                DiagLog.Log(Tag, $"Install: MBSubModuleBase has {baseCtors.Length} reflectable ctor(s)");
                 foreach (var ctor in baseCtors)
                 {
                     try
                     {
+                        DiagLog.Log(Tag, $"Install: patching MBSubModuleBase ctor ({ctor.GetParameters().Length} args)");
                         harmony.Patch(ctor, finalizer: new HarmonyMethod(sharedFinalizer));
                         installed++;
+                        DiagLog.Log(Tag, $"Install: MBSubModuleBase ctor patched");
                     }
                     catch (Exception ex)
                     {
@@ -75,7 +88,7 @@ public static class SubModuleConstructionGuard
                 }
                 if (baseCtors.Length == 0)
                 {
-                    DiagLog.Log(Tag, "MBSubModuleBase has no reflectable ctors (compiler-generated default skipped)");
+                    DiagLog.Log(Tag, "Install: MBSubModuleBase has no reflectable ctors (compiler-generated default skipped)");
                 }
             }
             catch (Exception ex)
@@ -86,18 +99,23 @@ public static class SubModuleConstructionGuard
             // Site 2: Module.AddSubModule (catches derived ctor body exceptions wrapped in TargetInvocationException)
             try
             {
+                DiagLog.Log(Tag, "Install: finding TaleWorlds.MountAndBlade.Module via reflection");
                 var moduleType = ReflectionUtils.FindTypeAcrossLoadedAssemblies(
                     "TaleWorlds.MountAndBlade.Module");
+                DiagLog.Log(Tag, $"Install: moduleType={moduleType?.FullName ?? "(null)"}");
                 if (moduleType != null)
                 {
                     var addSubModule = moduleType.GetMethod("AddSubModule",
                         BindingFlags.Instance | BindingFlags.NonPublic);
+                    DiagLog.Log(Tag, $"Install: addSubModule={addSubModule?.Name ?? "(null)"}");
                     if (addSubModule != null)
                     {
                         try
                         {
+                            DiagLog.Log(Tag, "Install: patching Module.AddSubModule");
                             harmony.Patch(addSubModule, finalizer: new HarmonyMethod(sharedFinalizer));
                             installed++;
+                            DiagLog.Log(Tag, "Install: Module.AddSubModule patched");
                         }
                         catch (Exception ex)
                         {
@@ -106,12 +124,12 @@ public static class SubModuleConstructionGuard
                     }
                     else
                     {
-                        DiagLog.Log(Tag, "Module.AddSubModule not found via reflection (signature may have changed)");
+                        DiagLog.Log(Tag, "Install: Module.AddSubModule not found via reflection (signature may have changed)");
                     }
                 }
                 else
                 {
-                    DiagLog.Log(Tag, "TaleWorlds.MountAndBlade.Module not loaded yet; skipping AddSubModule patch");
+                    DiagLog.Log(Tag, "Install: TaleWorlds.MountAndBlade.Module not loaded yet; skipping AddSubModule patch");
                 }
             }
             catch (Exception ex)
@@ -119,7 +137,7 @@ public static class SubModuleConstructionGuard
                 DiagLog.LogCaught(Tag, "Install/Module.AddSubModule", ex);
             }
 
-            DiagLog.Log(Tag, $"installed Finalizer on {installed} construction site(s)");
+            DiagLog.Log(Tag, $"Install: COMPLETE — Finalizer on {installed} construction site(s)");
         }
         catch (Exception ex)
         {

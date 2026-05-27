@@ -28,17 +28,27 @@ public class AliasStubSubModule : MBSubModuleBase
 
     public AliasStubSubModule()
     {
+        // Proof-of-life. Unconditional DiagLog write so we KNOW the ctor ran even if
+        // the Interlocked guard returns early below or any TrySwallow target silently
+        // fails. Caught 2026-05-27 — previous build's ctor was invisible in diag.log
+        // and we couldn't tell if it ran at all.
+        try { DiagLog.Log(Tag, "ctor entered"); } catch { /* nothing we can do */ }
+
         // Single-instance guard across all 4 stubs — first stub to construct
         // installs the shields; subsequent stub ctors are no-ops on this path.
         if (Interlocked.Exchange(ref _earlyDetectionRan, 1) != 0)
+        {
+            try { DiagLog.Log(Tag, "ctor: subsequent instance, skipping early-phase shims"); } catch { }
             return;
+        }
 
         TrySwallow(SubModule.InstallAssemblyResolveHandler, "ctor/AssemblyResolve");
-        // DR3 Phase 4 C-series: defensive infrastructure installed in stub ctors so it
-        // takes effect BEFORE any third-party mod ctor runs (BetaDeps parity).
         TrySwallow(IncompatibleModDetector.RunEarlyPhase, "ctor/IncompatEarly");
-        TrySwallow(CollectAssemblyTypesShim.Install, "ctor/CollectAssemblyTypesShim");
-        TrySwallow(SubModuleConstructionGuard.Install, "ctor/SubModuleGuard");
+        // NOTE: CollectAssemblyTypesShim.Install + SubModuleConstructionGuard.Install
+        // are intentionally NOT called here — they need Harmony fully initialised,
+        // which isn't reliable at stub-ctor time. They run from
+        // Dependencies/SubModule.OnSubModuleLoad alongside PatchShield + SaveShield
+        // (proven-good timing). Moved 2026-05-27 after observing silent ctor logs.
     }
 
     protected override void OnSubModuleLoad()
@@ -49,7 +59,7 @@ public class AliasStubSubModule : MBSubModuleBase
         // is itself idempotent (Interlocked.CompareExchange gate).
         TrySwallow(SubModule.InstallAssemblyResolveHandler, "OnSubModuleLoad/AssemblyResolve");
         TrySwallow(
-            () => EarlyLog.Info($"[{Tag}] alias stub loaded: {GetType().Assembly.GetName().Name}"),
+            () => DiagLog.Log(Tag, $"alias stub OnSubModuleLoad complete: {GetType().Assembly.GetName().Name}"),
             "OnSubModuleLoad/Log");
     }
 
@@ -61,14 +71,11 @@ public class AliasStubSubModule : MBSubModuleBase
         }
         catch (Exception ex)
         {
-            try
-            {
-                EarlyLog.Error($"[{Tag}] {where}: {ex.Message}");
-            }
-            catch
-            {
-                // Logger itself failed — swallow to prevent ctor escape (BetaDeps v0.7.5 rationale)
-            }
+            // Dual-log: DiagLog (visible in diag.log immediately) + EarlyLog
+            // (drained into Main's FileLogger later). Without DiagLog here, ctor-time
+            // shim exceptions were silent — caught 2026-05-27.
+            try { DiagLog.LogCaught(Tag, where, ex); } catch { }
+            try { EarlyLog.Error($"[{Tag}] {where}: {ex.Message}"); } catch { }
         }
     }
 }

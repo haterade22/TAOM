@@ -2,6 +2,32 @@
 
 ## 2026-05-27
 
+### diag(deps): DR3 Phase 4 — comprehensive lifecycle logging + defer late-phase shield installs
+
+First-launch verification of commit `c47d12e` (v1.4.5 signature fixes) revealed:
+
+1. **`Bannerlord.Harmony` mis-recorded in `last-good-modlist.txt` as `TAOM.Dependencies`** — the IncompatibleModDetector regex matched the FIRST `<Id value="..."/>` pattern in the stub's SubModule.xml, including ones inside XML comments. The Harmony stub's long comment block mentions `<Id value="TAOM.Dependencies"/>` on line 8 before the real `<Module><Id>` on line 42.
+2. **No `[VersionProbe]`, `[CollectAssemblyTypesShim]`, `[SubModuleConstructionGuard]`, or `[AliasStub]` lines in `diag.log`** — early-phase shims wired into AliasStubSubModule.ctor were silent in BOTH diag.log AND drained EarlyLog buffer. Either ctors weren't running, or methods were throwing pre-DiagLog. No way to tell without more instrumentation.
+
+Fixes:
+
+- **`IncompatibleModDetector.ReadCurrentModlist`** — strip XML comments via `Regex.Replace(text, @"<!--[\s\S]*?-->", "")` before matching `<Id>`. Caught Bannerlord.Harmony / TAOM.Dependencies duplicate.
+- **`Dependencies/AliasStubSubModule.cs`** — added unconditional `DiagLog.Log("AliasStub", "ctor entered")` at top of ctor (proof-of-life); subsequent-instance guard now also logs. `TrySwallow` now dual-logs to both DiagLog (immediate visibility) AND EarlyLog (drained later) so any caught exceptions appear in diag.log.
+- **Moved `CollectAssemblyTypesShim.Install` + `SubModuleConstructionGuard.Install` from `AliasStubSubModule.ctor` → `Dependencies/SubModule.OnSubModuleLoad`** — alongside PatchShield + SaveShield (proven-good timing). Stub ctors retain `InstallAssemblyResolveHandler` + `IncompatibleModDetector.RunEarlyPhase` (no Harmony dependency).
+- **Wired `VersionProbe.IsDetected` access from `OnSubModuleLoad`** — was lazy-detect via getter access; nothing was touching the getters so detection never ran.
+- **Comprehensive lifecycle DiagLog instrumentation** across:
+  - `Dependencies/SubModule.cs` — OnSubModuleLoad entry/exit/step-by-step (Harmony guards, UIExtenderEx init, each Install call, ProcessExit hook)
+  - `Dependencies/SubModule.cs` — OnGameInitializationFinished entry/exit/each step
+  - `Dependencies/SubModule.cs` — InstallAssemblyResolveHandler entry/already-installed/registered
+  - `Dependencies/Foundation/CollectAssemblyTypesShim.cs` — Install entry/Harmony ctor/finalizer-resolve/per-patch step + COMPLETE marker
+  - `Dependencies/Foundation/SubModuleConstructionGuard.cs` — same pattern (Harmony ctor, finalizer-resolve, MBSubModuleBase ctor enumeration, AddSubModule reflective find + patch, COMPLETE marker)
+  - `Dependencies/Foundation/VersionProbe.cs` — EnsureDetected entry, DetectViaApplicationVersion entry, type resolution, method resolution + arg count, invoke result, extracted Major/Minor/Revision
+  - `Dependencies/Foundation/IncompatibleModDetector.cs` — RunEarlyPhase + MarkSessionLaunchSuccessful entry/exit/each branch (moduleDir resolve, marker check, modlist count, snapshot write)
+
+Trade-off: diag.log is now significantly more verbose (~30-50 lines per session vs ~6 previously). Acceptable for diagnostic instrumentation phase; revisit log volume after we've used the data to identify what's actually broken.
+
+Verification: `dotnet build TAOM.sln` 0 errors. `dotnet test TAOM.Tests` 2,520/2,522 passing. In-game re-launch will show: (a) every Install method's success or specific failure point, (b) whether AliasStubSubModule.ctor is reached at all, (c) VersionProbe detection result + which strategy succeeded, (d) `Bannerlord.Harmony` now correctly in last-good-modlist (vs duplicate `TAOM.Dependencies`).
+
 ### docs(lord-skills): authoring guide + feature doc + Doc Lookup row + memory entry
 
 Captures the end-to-end lord-skills+traits workflow built over three commits

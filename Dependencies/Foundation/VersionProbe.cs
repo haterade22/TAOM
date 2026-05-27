@@ -43,32 +43,36 @@ public static class VersionProbe
     private static void EnsureDetected()
     {
         if (_detected) return;
+        DiagLog.Log(Tag, "EnsureDetected: entered (first call)");
         _detected = true;
         try
         {
             DetectViaApplicationVersion();
             if (_major > 0)
             {
-                DiagLog.Log(Tag, $"detected Bannerlord v{_major}.{_minor}.{_revision} via ApplicationVersion.FromParametersFile");
+                DiagLog.Log(Tag, $"EnsureDetected: COMPLETE — detected Bannerlord v{_major}.{_minor}.{_revision} via ApplicationVersion.FromParametersFile");
                 return;
             }
+            DiagLog.Log(Tag, "EnsureDetected: DetectViaApplicationVersion returned but _major == 0");
         }
         catch (Exception ex)
         {
             DiagLog.LogCaught(Tag, "EnsureDetected/ApplicationVersion", ex);
         }
-        DiagLog.Log(Tag, "could not detect Bannerlord version (engine reflection paths exhausted)");
+        DiagLog.Log(Tag, "EnsureDetected: could not detect Bannerlord version (engine reflection paths exhausted)");
     }
 
     private static void DetectViaApplicationVersion()
     {
+        DiagLog.Log(Tag, "DetectViaApplicationVersion: entered");
         var avType = ReflectionUtils.FindTypeAcrossLoadedAssemblies(
             "TaleWorlds.Library.ApplicationVersion");
         if (avType == null)
         {
-            DiagLog.Log(Tag, "TaleWorlds.Library.ApplicationVersion not loaded; skipping probe");
+            DiagLog.Log(Tag, "DetectViaApplicationVersion: TaleWorlds.Library.ApplicationVersion not loaded; skipping");
             return;
         }
+        DiagLog.Log(Tag, $"DetectViaApplicationVersion: avType.FullName={avType.FullName}");
 
         // FromParametersFile is a static method taking an optional string arg.
         var fromFile = avType.GetMethod("FromParametersFile",
@@ -78,7 +82,7 @@ public static class VersionProbe
             modifiers: null);
         if (fromFile == null)
         {
-            // Try parameterless overload.
+            DiagLog.Log(Tag, "DetectViaApplicationVersion: FromParametersFile(string) not found, trying parameterless");
             fromFile = avType.GetMethod("FromParametersFile",
                 BindingFlags.Static | BindingFlags.Public,
                 binder: null,
@@ -87,28 +91,35 @@ public static class VersionProbe
         }
         if (fromFile == null)
         {
-            DiagLog.Log(Tag, "ApplicationVersion.FromParametersFile not found via reflection");
+            DiagLog.Log(Tag, "DetectViaApplicationVersion: ApplicationVersion.FromParametersFile not found at all");
             return;
         }
+        DiagLog.Log(Tag, $"DetectViaApplicationVersion: found FromParametersFile with {fromFile.GetParameters().Length} param(s)");
 
         object? versionObj;
         try
         {
-            // Try with one null arg first (most common overload signature).
+            DiagLog.Log(Tag, "DetectViaApplicationVersion: invoking FromParametersFile");
             versionObj = fromFile.GetParameters().Length == 1
                 ? fromFile.Invoke(null, new object?[] { null })
                 : fromFile.Invoke(null, null);
+            DiagLog.Log(Tag, $"DetectViaApplicationVersion: FromParametersFile returned {(versionObj == null ? "null" : versionObj.GetType().Name)}");
         }
         catch (Exception ex)
         {
             DiagLog.LogCaught(Tag, "ApplicationVersion.FromParametersFile.Invoke", ex);
             return;
         }
-        if (versionObj == null) return;
+        if (versionObj == null)
+        {
+            DiagLog.Log(Tag, "DetectViaApplicationVersion: FromParametersFile returned null");
+            return;
+        }
 
         if (TryExtractIntProperty(versionObj, "Major", out var major)) _major = major;
         if (TryExtractIntProperty(versionObj, "Minor", out var minor)) _minor = minor;
         if (TryExtractIntProperty(versionObj, "Revision", out var revision)) _revision = revision;
+        DiagLog.Log(Tag, $"DetectViaApplicationVersion: extracted Major={_major}, Minor={_minor}, Revision={_revision}");
     }
 
     private static bool TryExtractIntProperty(object instance, string propertyName, out int value)

@@ -79,15 +79,21 @@ public class SubModule : MBSubModuleBase
     /// </summary>
     public static void InstallAssemblyResolveHandler()
     {
+        DiagLog.Log("Dependencies", "InstallAssemblyResolveHandler: entered");
         if (Interlocked.CompareExchange(ref _assemblyResolveInstalled, 1, 0) != 0)
+        {
+            DiagLog.Log("Dependencies", "InstallAssemblyResolveHandler: already installed, returning");
             return;
+        }
         try
         {
             AppDomain.CurrentDomain.AssemblyResolve += RedirectBundledDependencies;
+            DiagLog.Log("Dependencies", $"InstallAssemblyResolveHandler: hook registered for {RedirectedSimpleNames.Length} simple names");
             EarlyLog.Info($"[TAOM.Dependencies] AssemblyResolve installed for {RedirectedSimpleNames.Length} simple names");
         }
         catch (Exception ex)
         {
+            DiagLog.LogCaught("Dependencies", "InstallAssemblyResolveHandler", ex);
             EarlyLog.Error($"[TAOM.Dependencies] InstallAssemblyResolveHandler failed: {ex.Message}");
         }
     }
@@ -115,18 +121,24 @@ public class SubModule : MBSubModuleBase
     protected override void OnSubModuleLoad()
     {
         base.OnSubModuleLoad();
+        DiagLog.Log("Dependencies", "OnSubModuleLoad: entered");
         EarlyLog.Info($"[TAOM.Dependencies] Harmony forked v{typeof(Harmony).Assembly.GetName().Version} loaded from {typeof(Harmony).Assembly.GetName().Name}");
+        DiagLog.Log("Dependencies", $"OnSubModuleLoad: Harmony assembly = {typeof(Harmony).Assembly.GetName().Name} v{typeof(Harmony).Assembly.GetName().Version}");
 
         try
         {
+            DiagLog.Log("Dependencies", "OnSubModuleLoad: applying Harmony guards");
             ApplyHarmonyGuards();
+            DiagLog.Log("Dependencies", "OnSubModuleLoad: Harmony guards applied OK");
             EarlyLog.Info("[TAOM.Dependencies] UnpatchAll guard applied");
         }
         catch (Exception ex)
         {
+            DiagLog.LogCaught("Dependencies", "OnSubModuleLoad/ApplyHarmonyGuards", ex);
             EarlyLog.Error($"[TAOM.Dependencies] Failed to apply Harmony guards: {ex.Message}");
         }
 
+        DiagLog.Log("Dependencies", "OnSubModuleLoad: checking for duplicate Harmony");
         CheckForDuplicateHarmony();
 
         try
@@ -136,24 +148,48 @@ public class SubModule : MBSubModuleBase
             // UIConfigPatch.Patch / ViewModelPatch.Patch / etc. are applied.
             // RunClassConstructor forces the static cctor to run (idempotent — JIT
             // marks the type as initialized after the first call).
+            DiagLog.Log("Dependencies", "OnSubModuleLoad: forcing UIExtenderEx static cctor");
             RuntimeHelpers.RunClassConstructor(typeof(Bannerlord.UIExtenderEx.UIExtender).TypeHandle);
+            DiagLog.Log("Dependencies", "OnSubModuleLoad: UIExtenderEx static cctor done");
             EarlyLog.Info("[TAOM.Dependencies] UIExtenderEx static cctor executed (system patches applied)");
         }
         catch (Exception ex)
         {
+            DiagLog.LogCaught("Dependencies", "OnSubModuleLoad/UIExtenderEx", ex);
             EarlyLog.Error($"[TAOM.Dependencies] UIExtenderEx initialization failed: {ex.Message}");
         }
 
-        // DR3 Phase 4 C-series: install the late-phase shields. PatchShield must run
-        // AFTER other mods have applied their Harmony patches — OnSubModuleLoad here
-        // is timely-enough for vanilla launcher; for mods that register patches in
-        // later lifecycle events (OnGameInitializationFinished etc.), PatchShield.Install
-        // is idempotent and safe to re-invoke. SaveShield is also idempotent.
-        try { PatchShield.Install(); }
-        catch (Exception ex) { EarlyLog.Error($"[TAOM.Dependencies] PatchShield.Install failed: {ex.Message}"); }
+        // DR3 Phase 4 C-series: install ALL the defensive shields here. Originally
+        // CollectAssemblyTypesShim + SubModuleConstructionGuard were called from
+        // AliasStubSubModule.ctor, but observed 2026-05-27 — stub ctors are not
+        // reliably reached (BLSE / launcher behavior unknown). OnSubModuleLoad fires
+        // for TAOM.Dependencies's main SubModule deterministically, so all shields
+        // install from one known-working hook. PatchShield + SaveShield were already
+        // here; CollectAssemblyTypesShim + SubModuleConstructionGuard moved here.
+        DiagLog.Log("Dependencies", "OnSubModuleLoad: installing defensive shields");
 
-        try { SaveShield.Install(); }
-        catch (Exception ex) { EarlyLog.Error($"[TAOM.Dependencies] SaveShield.Install failed: {ex.Message}"); }
+        try { DiagLog.Log("Dependencies", "OnSubModuleLoad: → CollectAssemblyTypesShim.Install"); CollectAssemblyTypesShim.Install(); }
+        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "CollectAssemblyTypesShim.Install", ex); EarlyLog.Error($"[TAOM.Dependencies] CollectAssemblyTypesShim.Install failed: {ex.Message}"); }
+
+        try { DiagLog.Log("Dependencies", "OnSubModuleLoad: → SubModuleConstructionGuard.Install"); SubModuleConstructionGuard.Install(); }
+        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "SubModuleConstructionGuard.Install", ex); EarlyLog.Error($"[TAOM.Dependencies] SubModuleConstructionGuard.Install failed: {ex.Message}"); }
+
+        try { DiagLog.Log("Dependencies", "OnSubModuleLoad: → PatchShield.Install (pass 1)"); PatchShield.Install(); }
+        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "PatchShield.Install", ex); EarlyLog.Error($"[TAOM.Dependencies] PatchShield.Install failed: {ex.Message}"); }
+
+        try { DiagLog.Log("Dependencies", "OnSubModuleLoad: → SaveShield.Install"); SaveShield.Install(); }
+        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "SaveShield.Install", ex); EarlyLog.Error($"[TAOM.Dependencies] SaveShield.Install failed: {ex.Message}"); }
+
+        // Trigger VersionProbe explicitly so the version is logged. Without this,
+        // VersionProbe's lazy-detect via Major/Minor getters never fires (no consumer
+        // touches it today). Observed 2026-05-27 — version probe silent in diag.log.
+        try
+        {
+            DiagLog.Log("Dependencies", "OnSubModuleLoad: → VersionProbe (triggering detection)");
+            var detected = VersionProbe.IsDetected;
+            DiagLog.Log("Dependencies", $"OnSubModuleLoad: VersionProbe.IsDetected={detected} (Major={VersionProbe.Major}, Minor={VersionProbe.Minor}, Revision={VersionProbe.Revision})");
+        }
+        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "VersionProbe trigger", ex); }
 
         // Write a session summary to diag.log on process exit so users can see the
         // shield's swallow-counts even if no crash dump is produced.
@@ -163,9 +199,11 @@ public class SubModule : MBSubModuleBase
             {
                 try { PatchShield.WriteSessionSummary(); } catch { }
             };
+            DiagLog.Log("Dependencies", "OnSubModuleLoad: ProcessExit hook for session summary registered");
         }
-        catch (Exception ex) { EarlyLog.Error($"[TAOM.Dependencies] ProcessExit hook failed: {ex.Message}"); }
+        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "ProcessExit hook", ex); EarlyLog.Error($"[TAOM.Dependencies] ProcessExit hook failed: {ex.Message}"); }
 
+        DiagLog.Log("Dependencies", "OnSubModuleLoad: complete");
         EarlyLog.Info("[TAOM.Dependencies] OnSubModuleLoad complete");
     }
 
@@ -178,13 +216,17 @@ public class SubModule : MBSubModuleBase
     public override void OnGameInitializationFinished(Game game)
     {
         base.OnGameInitializationFinished(game);
-        try { IncompatibleModDetector.MarkSessionLaunchSuccessful(); }
-        catch (Exception ex) { EarlyLog.Error($"[TAOM.Dependencies] MarkSessionLaunchSuccessful failed: {ex.Message}"); }
+        DiagLog.Log("Dependencies", "OnGameInitializationFinished: entered (main menu reached)");
+
+        try { DiagLog.Log("Dependencies", "OnGameInitializationFinished: → MarkSessionLaunchSuccessful"); IncompatibleModDetector.MarkSessionLaunchSuccessful(); }
+        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "MarkSessionLaunchSuccessful", ex); EarlyLog.Error($"[TAOM.Dependencies] MarkSessionLaunchSuccessful failed: {ex.Message}"); }
 
         // Second PatchShield pass — captures patches registered by mods that hook this
         // lifecycle event (after our OnSubModuleLoad).
-        try { PatchShield.Install(); }
-        catch (Exception ex) { EarlyLog.Error($"[TAOM.Dependencies] PatchShield.Install (post-init) failed: {ex.Message}"); }
+        try { DiagLog.Log("Dependencies", "OnGameInitializationFinished: → PatchShield.Install (pass 2)"); PatchShield.Install(); }
+        catch (Exception ex) { DiagLog.LogCaught("Dependencies", "PatchShield.Install pass2", ex); EarlyLog.Error($"[TAOM.Dependencies] PatchShield.Install (post-init) failed: {ex.Message}"); }
+
+        DiagLog.Log("Dependencies", "OnGameInitializationFinished: complete");
     }
 
     private static void ApplyHarmonyGuards()

@@ -30,32 +30,44 @@ public static class CollectAssemblyTypesShim
 
     public static void Install()
     {
-        if (Interlocked.CompareExchange(ref _installed, 1, 0) != 0) return;
+        DiagLog.Log(Tag, "Install: entered");
+        if (Interlocked.CompareExchange(ref _installed, 1, 0) != 0)
+        {
+            DiagLog.Log(Tag, "Install: already installed, returning");
+            return;
+        }
 
         try
         {
+            DiagLog.Log(Tag, "Install: constructing Harmony instance");
             var harmony = new Harmony(HarmonyId);
+            DiagLog.Log(Tag, "Install: Harmony constructed");
+
             var getTypes = typeof(Assembly).GetMethod(nameof(Assembly.GetTypes),
                 BindingFlags.Instance | BindingFlags.Public);
             var getExportedTypes = typeof(Assembly).GetMethod(nameof(Assembly.GetExportedTypes),
                 BindingFlags.Instance | BindingFlags.Public);
+            DiagLog.Log(Tag, $"Install: getTypes={getTypes != null}, getExportedTypes={getExportedTypes != null}");
 
             var finalizer = typeof(CollectAssemblyTypesShim).GetMethod(
                 nameof(GetTypesFinalizer),
                 BindingFlags.Static | BindingFlags.NonPublic);
             if (finalizer == null)
             {
-                DiagLog.Log(Tag, "could not resolve finalizer; aborting install");
+                DiagLog.Log(Tag, "Install: could not resolve GetTypesFinalizer; aborting install");
                 return;
             }
+            DiagLog.Log(Tag, "Install: finalizer resolved");
 
             int installed = 0;
             if (getTypes != null)
             {
                 try
                 {
+                    DiagLog.Log(Tag, "Install: patching Assembly.GetTypes");
                     harmony.Patch(getTypes, finalizer: new HarmonyMethod(finalizer));
                     installed++;
+                    DiagLog.Log(Tag, "Install: Assembly.GetTypes patched");
                 }
                 catch (Exception ex) { DiagLog.LogCaught(Tag, "Patch GetTypes", ex); }
             }
@@ -63,12 +75,14 @@ public static class CollectAssemblyTypesShim
             {
                 try
                 {
+                    DiagLog.Log(Tag, "Install: patching Assembly.GetExportedTypes");
                     harmony.Patch(getExportedTypes, finalizer: new HarmonyMethod(finalizer));
                     installed++;
+                    DiagLog.Log(Tag, "Install: Assembly.GetExportedTypes patched");
                 }
                 catch (Exception ex) { DiagLog.LogCaught(Tag, "Patch GetExportedTypes", ex); }
             }
-            DiagLog.Log(Tag, $"installed {installed} Assembly.GetTypes*-Finalizer(s)");
+            DiagLog.Log(Tag, $"Install: COMPLETE — installed {installed} Assembly.GetTypes*-Finalizer(s)");
         }
         catch (Exception ex)
         {
