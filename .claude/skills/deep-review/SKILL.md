@@ -324,6 +324,51 @@ TRACE THESE DATA FLOWS:
    - Example bug pattern: Appending a non-template child to a data-bound `ListPanel` — vanilla teardown may cast all children to the template type.
    - Check: For each `PrefabExtension`, identify the target widget, then search decompiled vanilla code for how that widget's children are accessed. Flag any hardcoded indexing, typed iteration, or count assumptions.
 
+9. **Harmony Patch Category Registration (MANDATORY — fires for every `[HarmonyPatch]` class in scope).** TAOM uses category-based Harmony patching exclusively. `Harmony.PatchAll()` is NEVER called. A patch class with only `[HarmonyPatch(...)]` and no `[HarmonyPatchCategory(...)]` — OR with both attributes but no matching `_harmony.PatchCategory("CategoryName")` call in `Main/SubModule.cs` — is silently dead code (no error, no warning, the patch simply never engages at runtime). The failure mode is invisible: the feature ships, tests pass, but the Harmony patch does nothing.
+   - **Check (apply for every changed file containing `[HarmonyPatch]`):**
+     - Grep the changed file for `[HarmonyPatchCategory(`. If absent, flag as HIGH.
+     - Grep `Main/SubModule.cs` for `_harmony.PatchCategory("<category-name>")`. If absent, flag as HIGH.
+     - The category name in `[HarmonyPatchCategory]` and the string in `_harmony.PatchCategory(...)` must match exactly (case-sensitive).
+   - **Why this rule exists:** Bandit Management Codex review (2026-05-27) — `Patch39_BanditPartySize` had `[HarmonyPatch]` but no `[HarmonyPatchCategory]`. The 5 deep-review agents all missed it because none of them grepped SubModule.cs for the registration. Result: the postfix scaling bandit party troop counts would have been completely dead in production. Memory: [`feedback_harmony_patch_category_registration_verification.md`](C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_harmony_patch_category_registration_verification.md).
+   - **Reference template (correct pattern from `Patch38_SettlementNameplateFade`):**
+     ```csharp
+     [HarmonyPatch(typeof(SettlementNameplateWidget), "DetermineTargetAlphaValue")]
+     [HarmonyPatchCategory("Patch38_SettlementNameplateFade")]   // ← REQUIRED
+     public static class SettlementNameplateWidget_DetermineTargetAlphaValue_Patch
+     ```
+     ```csharp
+     // In Main/SubModule.cs, alongside the other PatchCategory calls:
+     _harmony.PatchCategory("Patch38_SettlementNameplateFade");   // ← REQUIRED
+     ```
+
+10. **Cross-Module XML Data Dependency (MANDATORY — fires whenever modified XML in module A references entities defined in module B, both TAOM-managed).** TAOM ships multiple modules: `TAOM` (Main), `TAOM_Map`, `TAOM.Dependencies`, alias stubs. When module A's XML attribute references an entity defined in module B (`culture="Culture.X"` where X is in B; `troop="NPCCharacter.Y"`; `default_party_template="PartyTemplate.Z"`; settlement IDs; item IDs; etc.), module A's `SubModule.xml` MUST declare `<DependedModule Id="B"/>` AND `<DependedModuleMetadata id="B" order="LoadBeforeThis"/>`. The Bannerlord launcher does NOT infer load-order from XML cross-references — it reads only the `<DependedModules>` declaration.
+    - **Check (apply when ANY modified XML lives in or references a TAOM-controlled module's `ModuleData/`):**
+      - For each modified XML file in module A, grep its `culture=`, `troop=`, `*_party_template=`, settlement-id, and item-id references.
+      - For each reference, identify the producing module (run `grep -l '<Culture\s\+id="X"' Modules/*/ModuleData/*.xml`).
+      - If the producer is a different TAOM-managed module, open `A/SubModule.xml` and verify `<DependedModule Id="<producer>"/>` is present. If absent, flag as HIGH.
+    - **Why this rule exists:** Bandit Management Codex review (2026-05-27) — 5 LOTR bandit cultures defined in TAOM Main's `taom_spcultures.xml`, then 99 hideouts in `TAOM_Map/settlements.xml` rewritten to reference them. `TAOM_Map/SubModule.xml` had no `<DependedModule Id="TAOM"/>`. Load-order was accidental. Memory: [`feedback_cross_module_data_dependency_declaration.md`](C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_cross_module_data_dependency_declaration.md).
+    - **Note:** External modules (Native, SandBoxCore, Sandbox, CustomBattle, StoryMode) have stable well-known load order and don't need this check applied to them. Apply only to TAOM-controlled modules.
+
+11. **XML Parse Smoke Test (MANDATORY — fires for every modified ModuleData XML file).** Every new or modified XML file under any TAOM-managed module's `ModuleData/` must parse cleanly via PowerShell `[xml]$x = Get-Content -Raw <file>`. XML spec edge cases that pass eyeball review but reject at parse time:
+    - `--` (double-hyphen) inside an XML comment body — XML spec forbids; engine rejects file.
+    - Unescaped `&`, `<`, `>` in attribute values.
+    - Mismatched element tags (`<Foo>...</Bar>`).
+    - Duplicate attribute on same element.
+    - Stray BOM in non-root position from copy-paste from concatenated files.
+    - **Check (apply for every modified file in changeset matching `*.xml` under `ModuleData/`):**
+      ```bash
+      pwsh -Command '[xml]$x = Get-Content -Raw "<file path>"; "<file>: OK"'
+      ```
+      If any modified XML throws at parse, flag as CRITICAL — engine WILL reject the file at load.
+    - **Why this rule exists:** Bandit Management Codex review (2026-05-27) — `taom_partyTemplates.xml` had `--` inside a comment body. 5 deep-review Claude agents read the XML semantically but none parsed it. Engine would have rejected the file silently at load. Memory: [`feedback_xml_parser_smoke_test_before_commit.md`](C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_xml_parser_smoke_test_before_commit.md).
+
+12. **Bandit Culture / Clan Pair Coverage (fires when any `<Culture is_bandit="true">` row is added in the changeset).** A `Culture.is_bandit="true"` row alone does NOT create a bandit clan in vanilla — `Hideout.MapFaction` resolves via `clan.IsBanditFaction`, which is loaded from `<Faction is_bandit="true">` rows in `spclans`/`taom_spclans`/`characters/clans.xml`. Every new bandit culture needs a matching bandit clan row.
+    - **Check (apply when any added/modified culture has `is_bandit="true"`):**
+      - For each such culture, grep `Main/_Module/ModuleData/characters/clans.xml` (and any other `spclans*.xml` in scope) for a `<Faction>` row where `is_bandit="true"` AND `culture="Culture.<the-new-culture>"`.
+      - If absent, flag as HIGH. Hideouts referencing the culture will have unresolvable `MapFaction`, and `BanditSpawnCampaignBehavior` may NRE on spawn.
+      - The bandit clan row must also specify `initial_home_settlement` pointing at a real settlement of the right type (typically a hideout), and `default_party_template` pointing at a real party template.
+    - **Why this rule exists:** Bandit Management Codex review (2026-05-27) — 5 new bandit cultures authored without matching clan rows. The reasoning at design time was "the engine will auto-create bandit clans from `is_bandit` cultures" — vanilla does not do this. Memory cross-link: [`feedback_classify_by_grep_not_by_assumption.md`](C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_classify_by_grep_not_by_assumption.md) (sibling pattern).
+
 OUTPUT FORMAT:
 For each trace:
 - DATA FLOW: [source] → [transform] → [consumer]

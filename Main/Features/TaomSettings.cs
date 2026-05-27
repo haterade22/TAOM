@@ -430,6 +430,40 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     // --- Map UI / Settlement Nameplates ---
 
+    // --- World / Bandit Scaling ---
+
+    [SettingPropertyGroup("World/Bandit Scaling", GroupOrder = 35)]
+    [SettingPropertyBool("Enable Bandit Scaling", Order = 0,
+        HintText = "Master toggle. When off, hideout density + bandit party sizes use vanilla values. When on, both scale with PlayerProgress (0.0 new campaign -> 1.0 endgame) per the curves below.")]
+    public bool EnableBanditScaling { get; set; } = true;
+
+    [SettingPropertyGroup("World/Bandit Scaling")]
+    [SettingPropertyFloatingInteger("Density Curve", 0.0f, 5.0f, "#0.0", Order = 1,
+        HintText = "Multiplier on hideout count + parties-per-hideout at PlayerProgress=1.0. Curve: 1 + curve * progress. 0 = vanilla density throughout. 1.5 (default) = up to 2.5x density in endgame.")]
+    public float BanditDensityCurve { get; set; } = 1.5f;
+
+    [SettingPropertyGroup("World/Bandit Scaling")]
+    [SettingPropertyFloatingInteger("Party Size Curve", 0.0f, 5.0f, "#0.0", Order = 2,
+        HintText = "Multiplier on bandit party troop counts at PlayerProgress=1.0. Vanilla already scales 0.4 -> 1.2; this is a final multiplier on top. 1.5 (default) = up to 2.5x bandit party sizes in endgame.")]
+    public float BanditPartySizeCurve { get; set; } = 1.5f;
+
+    [SettingPropertyGroup("World/Bandit Scaling")]
+    [SettingPropertyFloatingInteger("Boss Fight Curve", 0.0f, 5.0f, "#0.0", Order = 3,
+        HintText = "Multiplier on first-fight + boss-fight troop counts inside hideouts at PlayerProgress=1.0. 1.5 (default) = up to 2.5x bandits per hideout assault in endgame.")]
+    public float BanditBossFightCurve { get; set; } = 1.5f;
+
+    [SettingPropertyGroup("World/Bandit Scaling")]
+    [SettingPropertyInteger("Max Hideouts Per Faction Cap", 1, 100, Order = 4,
+        HintText = "Hard cap on hideouts per bandit faction regardless of scaling curve. Vanilla = 9. Default: 15.")]
+    public int BanditMaxHideoutsPerFaction { get; set; } = 15;
+
+    [SettingPropertyGroup("World/Bandit Scaling")]
+    [SettingPropertyInteger("Max Parties Per Hideout Cap", 1, 20, Order = 5,
+        HintText = "Hard cap on bandit parties per hideout regardless of scaling curve. Vanilla = 3. Default: 5.")]
+    public int BanditMaxPartiesPerHideout { get; set; } = 5;
+
+    // --- Map UI / Settlement Nameplates ---
+
     [SettingPropertyGroup("Map UI/Settlement Nameplates", GroupOrder = 40)]
     [SettingPropertyBool("Enable Settlement Nameplate Fade", Order = 0,
         HintText = "Fade settlement nameplates with camera distance. When off, all nameplates display at full visibility regardless of distance (vanilla).")]

@@ -4157,4 +4157,187 @@
     </basic_mercenary_troops>
   </Culture>
 
+  <!-- ============================================== -->
+  <!-- LOTR Bandit Cultures                             -->
+  <!-- ============================================== -->
+  <!-- Replace vanilla forest/mountain/desert/steppe/sea bandit cultures with lore-appropriate
+       LOTR factions. Hideouts in TAOM_Map/settlements.xml reference these cultures' StringIds.
+       Bandit clans inherit IsBanditFaction=true via is_bandit, so engine spawns them automatically.
+  -->
+
+  <!-- Dunlending Raiders (replaces forest_bandits) -->
+  <Culture
+    id="dunland_raiders"
+    name="{=taom_bandit_dunland_name}Dunlending Raiders"
+    bandit_chief="NPCCharacter.dunland_clan_warrior"
+    bandit_raider="NPCCharacter.dunland_raider"
+    bandit_bandit="NPCCharacter.dunland_peasant"
+    bandit_boss="NPCCharacter.dunland_wolf_raider"
+    elite_basic_troop="NPCCharacter.dunland_raider"
+    basic_troop="NPCCharacter.dunland_peasant"
+    is_bandit="true"
+    can_have_settlement="true"
+    encounter_background_mesh="encounter_forest_bandit"
+    bandit_boss_party_template="PartyTemplate.dunland_raiders_boss_party_template">
+    <male_names>
+      <name name="{=taom_bandit_dunland_m1}Caradoc" />
+      <name name="{=taom_bandit_dunland_m2}Gwidion" />
+      <name name="{=taom_bandit_dunland_m3}Brennor" />
+      <name name="{=taom_bandit_dunland_m4}Targal" />
+      <name name="{=taom_bandit_dunland_m5}Maedrun" />
+      <name name="{=taom_bandit_dunland_m6}Drûghu" />
+      <name name="{=taom_bandit_dunland_m7}Olfan" />
+      <name name="{=taom_bandit_dunland_m8}Cethrin" />
+      <name name="{=taom_bandit_dunland_m9}Hwalbor" />
+      <name name="{=taom_bandit_dunland_m10}Idris" />
+    </male_names>
+    <female_names>
+      <name name="{=taom_bandit_dunland_f1}Branwen" />
+      <name name="{=taom_bandit_dunland_f2}Aelis" />
+      <name name="{=taom_bandit_dunland_f3}Maerwen" />
+      <name name="{=taom_bandit_dunland_f4}Gwyneth" />
+      <name name="{=taom_bandit_dunland_f5}Olwen" />
+    </female_names>
+  </Culture>
+
+  <!-- Rhûn Raiders (replaces steppe_bandits) -->
+  <Culture
+    id="rhun_raiders"
+    name="{=taom_bandit_rhun_name}Rhûn Raiders"
+    bandit_chief="NPCCharacter.balcoth_archer"
+    bandit_raider="NPCCharacter.balcoth_footman"
+    bandit_bandit="NPCCharacter.balcoth_volunteer"
+    bandit_boss="NPCCharacter.kharaghul_raider"
+    elite_basic_troop="NPCCharacter.balcoth_footman"
+    basic_troop="NPCCharacter.balcoth_volunteer"
+    is_bandit="true"
+    can_have_settlement="true"
+    encounter_background_mesh="encounter_steppe_bandit"
+    bandit_boss_party_template="PartyTemplate.rhun_raiders_boss_party_template">
+    <male_names>
+      <name name="{=taom_bandit_rhun_m1}Khamûl" />
+      <name name="{=taom_bandit_rhun_m2}Targon" />
+      <name name="{=taom_bandit_rhun_m3}Bûrzakh" />
+      <name name="{=taom_bandit_rhun_m4}Sangar" />
+      <name name="{=taom_bandit_rhun_m5}Hazgrim" />
+      <name name="{=taom_bandit_rhun_m6}Vorzul" />
+      <name name="{=taom_bandit_rhun_m7}Daghir" />
+      <name name="{=taom_bandit_rhun_m8}Olmec" />
+      <name name="{=taom_bandit_rhun_m9}Tarvon" />
+      <name name="{=taom_bandit_rhun_m10}Kharzul" />
+    </male_names>
+    <female_names>
+      <name name="{=taom_bandit_rhun_f1}Sarila" />
+      <name name="{=taom_bandit_rhun_f2}Khazna" />
+      <name name="{=taom_bandit_rhun_f3}Vorina" />
+      <name name="{=taom_bandit_rhun_f4}Tahjia" />
+      <name name="{=taom_bandit_rhun_f5}Sangela" />
+    </female_names>
+  </Culture>
+
+  <!-- Haradrim Raiders (replaces desert_bandits) -->
+  <Culture
+    id="harad_raiders"
+    name="{=taom_bandit_harad_name}Haradrim Raiders"
+    bandit_chief="NPCCharacter.harad_footman"
+    bandit_raider="NPCCharacter.harad_archer"
+    bandit_bandit="NPCCharacter.harad_levy"
+    bandit_boss="NPCCharacter.harad_camelrider"
+    elite_basic_troop="NPCCharacter.harad_archer"
+    basic_troop="NPCCharacter.harad_levy"
+    is_bandit="true"
+    can_have_settlement="true"
+    encounter_background_mesh="encounter_desert_bandit"
+    bandit_boss_party_template="PartyTemplate.harad_raiders_boss_party_template">
+    <male_names>
+      <name name="{=taom_bandit_harad_m1}Suladân" />
+      <name name="{=taom_bandit_harad_m2}Azaghal" />
+      <name name="{=taom_bandit_harad_m3}Khaled" />
+      <name name="{=taom_bandit_harad_m4}Variag" />
+      <name name="{=taom_bandit_harad_m5}Dath" />
+      <name name="{=taom_bandit_harad_m6}Tarkil" />
+      <name name="{=taom_bandit_harad_m7}Mûzan" />
+      <name name="{=taom_bandit_harad_m8}Akhôr" />
+      <name name="{=taom_bandit_harad_m9}Sahir" />
+      <name name="{=taom_bandit_harad_m10}Zûran" />
+    </male_names>
+    <female_names>
+      <name name="{=taom_bandit_harad_f1}Nilhuna" />
+      <name name="{=taom_bandit_harad_f2}Saharia" />
+      <name name="{=taom_bandit_harad_f3}Aklira" />
+      <name name="{=taom_bandit_harad_f4}Bezara" />
+      <name name="{=taom_bandit_harad_f5}Mûzana" />
+    </female_names>
+  </Culture>
+
+  <!-- Gundabad Orc Raiders (replaces mountain_bandits) -->
+  <Culture
+    id="gundabad_raiders"
+    name="{=taom_bandit_gundabad_name}Gundabad Orc Raiders"
+    bandit_chief="NPCCharacter.gundabad_scout"
+    bandit_raider="NPCCharacter.gundabad_grunt"
+    bandit_bandit="NPCCharacter.gundabad_snaga"
+    bandit_boss="NPCCharacter.gundabad_despoiler_of_the_vale"
+    elite_basic_troop="NPCCharacter.gundabad_grunt"
+    basic_troop="NPCCharacter.gundabad_snaga"
+    is_bandit="true"
+    can_have_settlement="true"
+    encounter_background_mesh="encounter_mountain_bandit"
+    bandit_boss_party_template="PartyTemplate.gundabad_raiders_boss_party_template">
+    <male_names>
+      <name name="{=taom_bandit_gundabad_m1}Bolg" />
+      <name name="{=taom_bandit_gundabad_m2}Yazneg" />
+      <name name="{=taom_bandit_gundabad_m3}Fimbul" />
+      <name name="{=taom_bandit_gundabad_m4}Narzug" />
+      <name name="{=taom_bandit_gundabad_m5}Gorbag" />
+      <name name="{=taom_bandit_gundabad_m6}Mauhûr" />
+      <name name="{=taom_bandit_gundabad_m7}Snaga" />
+      <name name="{=taom_bandit_gundabad_m8}Ufthak" />
+      <name name="{=taom_bandit_gundabad_m9}Radbug" />
+      <name name="{=taom_bandit_gundabad_m10}Lugdush" />
+    </male_names>
+    <female_names>
+      <name name="{=taom_bandit_gundabad_f1}Skarra" />
+      <name name="{=taom_bandit_gundabad_f2}Vorga" />
+      <name name="{=taom_bandit_gundabad_f3}Mazra" />
+      <name name="{=taom_bandit_gundabad_f4}Grishta" />
+      <name name="{=taom_bandit_gundabad_f5}Narzga" />
+    </female_names>
+  </Culture>
+
+  <!-- Umbar Corsairs (replaces sea_raiders) -->
+  <Culture
+    id="umbar_corsairs"
+    name="{=taom_bandit_umbar_name}Corsairs of Umbar"
+    bandit_chief="NPCCharacter.umbar_elite_root0"
+    bandit_raider="NPCCharacter.umbar_elite"
+    bandit_bandit="NPCCharacter.aux_basic"
+    bandit_boss="NPCCharacter.umbar_elite_root00"
+    elite_basic_troop="NPCCharacter.umbar_elite"
+    basic_troop="NPCCharacter.aux_basic"
+    is_bandit="true"
+    can_have_settlement="true"
+    encounter_background_mesh="encounter_sea_raider"
+    bandit_boss_party_template="PartyTemplate.umbar_corsairs_boss_party_template">
+    <male_names>
+      <name name="{=taom_bandit_umbar_m1}Castamir" />
+      <name name="{=taom_bandit_umbar_m2}Sangahyandion" />
+      <name name="{=taom_bandit_umbar_m3}Angamaitë" />
+      <name name="{=taom_bandit_umbar_m4}Herumor" />
+      <name name="{=taom_bandit_umbar_m5}Fuinur" />
+      <name name="{=taom_bandit_umbar_m6}Adûnaphel" />
+      <name name="{=taom_bandit_umbar_m7}Aragôl" />
+      <name name="{=taom_bandit_umbar_m8}Calemir" />
+      <name name="{=taom_bandit_umbar_m9}Vorondil" />
+      <name name="{=taom_bandit_umbar_m10}Karazîr" />
+    </male_names>
+    <female_names>
+      <name name="{=taom_bandit_umbar_f1}Berúthiel" />
+      <name name="{=taom_bandit_umbar_f2}Nimreth" />
+      <name name="{=taom_bandit_umbar_f3}Adûniel" />
+      <name name="{=taom_bandit_umbar_f4}Tarmiriel" />
+      <name name="{=taom_bandit_umbar_f5}Inzilbêth" />
+    </female_names>
+  </Culture>
+
 </SPCultures>

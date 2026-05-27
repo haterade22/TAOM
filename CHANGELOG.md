@@ -2,6 +2,61 @@
 
 ## 2026-05-27
 
+### feat(bandit-management): LOTR bandit cultures + PlayerProgress-scaled hideout density + party sizes
+
+Replaces the 5 vanilla bandit cultures with lore-appropriate LOTR factions and adds MCM-tunable difficulty scaling. Greenfield feature — no prior TAOM code touched bandits or hideouts.
+
+LOTR replacement (no save break — hideout IDs preserved):
+
+- `forest_bandits` → **Dunlending Raiders** (troops pulled from `troops_dunland.xml`: peasant, raider, hunter, clan_warrior, wolf_raider)
+- `mountain_bandits` → **Gundabad Orc Raiders** (snaga, hunter, grunt, lurker, scout, despoiler_of_the_vale)
+- `desert_bandits` → **Haradrim Raiders** (levy, skirmisher, archer, camelscout, footman, camelrider)
+- `steppe_bandits` → **Rhûn Raiders** (balcoth_volunteer, balcoth_footman, kharaghul_rider, balcoth_archer, kharaghul_raider)
+- `sea_raiders` → **Corsairs of Umbar** (aux_basic, umbar_elite, umbar_elite_root1, umbar_elite_root0, umbar_elite_root00)
+
+Scaling (curves are `1 + curve × PlayerProgress`, default `curve = 1.5` ⇒ vanilla at new campaign, 2.5× at endgame):
+
+- `TaomBanditDensityModel : DefaultBanditDensityModel` overrides 4 properties (hideouts/faction, parties/hideout, first-fight troops, boss-fight troops). MCM caps default to 15 hideouts/faction and 5 parties/hideout (vanilla = 9 and 3).
+- `Patch39_BanditPartySize` postfixes `DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty`, scaling bandit party troop counts up toward each stack's `MaxValue`. Non-bandit parties pass through. Vanilla floor enforced — bandits never get weaker than vanilla.
+- 6 MCM knobs under TAOM → World / Bandit Scaling (`GroupOrder = 35`): master toggle + 3 curves + 2 caps. All NaN/Infinity-guarded per [`feedback_clamp_nan_infinity_propagates.md`](C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_clamp_nan_infinity_propagates.md). JSON fallback at [`Main/_Module/ModuleData/bandit_management/bandit_scaling_config.json`](Main/_Module/ModuleData/bandit_management/bandit_scaling_config.json).
+
+XML data:
+
+- 5 new `is_bandit="true"` cultures appended to [`taom_spcultures.xml`](Main/_Module/ModuleData/taom_spcultures.xml).
+- 10 new party templates appended to [`taom_partyTemplates.xml`](Main/_Module/ModuleData/taom_partyTemplates.xml) (5 raider + 5 boss).
+- ~80 localization keys appended to [`taom_module_strings.xml`](Main/_Module/ModuleData/taom_module_strings.xml) (culture display names + male/female names).
+- 99 hideouts in **TAOM_Map external module** had `culture=` swapped + `name=` rewritten ("Dunlending Raider's Camp" etc.) via [`tools/migrate_hideouts_to_lotr.py`](tools/migrate_hideouts_to_lotr.py). 12 loc files also updated. Hideout IDs intentionally preserved for save-compat. Backups saved as `.bak`.
+
+Architecture per CLAUDE.md conventions:
+
+- ADR-002 thin entry — `TaomBanditDensityModel` properties delegate to service; no inline branching per [`gamemodels.md`](.claude/rules/gamemodels.md).
+- ADR-007 adapter pattern — service has no TaleWorlds dependencies; all logic is pure math.
+- Constructor injection only — `IBanditScalingService` ← `IBanditScalingSettingsProvider` ← (`IBanditScalingConfigProvider` + static `TaomSettings.Instance`).
+- `FiniteFloatValidator` guards every numeric MCM/JSON field per [`csharp-architecture.md`](.claude/rules/csharp-architecture.md) "Config Providers MUST Validate".
+
+Tests: 31/31 passing in [`TAOM.Tests/Features/BanditManagement/`](TAOM.Tests/Features/BanditManagement/) — `BanditScalingServiceTests` (16) covering curve linearity, NaN/Infinity guards, monotonicity, vanilla floor + `MinPartiesToInfest` delegation; `BanditScalingConfigProviderTests` (15) covering missing/malformed/partial JSON + every validation rule.
+
+Feature doc: [`docs/features/bandit-management.md`](docs/features/bandit-management.md). Includes how-to for adding hideouts, adding bandit cultures, and disabling scaling.
+
+GitHub issue: [#247](https://github.com/haterade22/TAOM/issues/247). RCA: [`docs/reviews/rca-bandit-management-2026-05-27.md`](docs/reviews/rca-bandit-management-2026-05-27.md).
+
+Phase 1 — `/deep-review` (5 parallel Claude agents): Standards/Compat/Efficiency PASS; Agent 5 (Data Flow) caught one MEDIUM gap (`MinPartiesToInfest` was loaded from JSON + validated but never consumed). Fixed in-session.
+
+Phase 2 — `/review-codex` (adversarial): caught **4 additional bugs** Claude missed (1 CRITICAL, 3 HIGH). All fixed in-session before closing:
+
+1. **CRITICAL — XML comment double-hyphen.** `taom_partyTemplates.xml` had `--` inside an XML comment body. XML spec forbids `--` inside comments — engine parser would have rejected the file at load. Fix: replaced `--` with `=` in two lines. Added `pwsh [xml]$x = Get-Content` validation step.
+2. **HIGH — Patch39 was dead code.** `Patch39_BanditPartySize` had `[HarmonyPatch]` but no `[HarmonyPatchCategory]` + no matching `_harmony.PatchCategory(...)` call in `SubModule.cs`. TAOM uses category-based patching exclusively. Result: the bandit party size postfix never engaged. Fix: added `[HarmonyPatchCategory("Patch39_BanditPartySize")]` + `_harmony.PatchCategory("Patch39_BanditPartySize")` to SubModule.
+3. **HIGH — Missing bandit clan rows.** `Culture.is_bandit="true"` alone does NOT create a bandit clan in vanilla. `Hideout.MapFaction` resolves via `clan.IsBanditFaction` (loaded from `<Faction is_bandit="true">` rows). Without matching clan rows, the 99 migrated hideouts would have no resolvable MapFaction and `BanditSpawnCampaignBehavior` would NRE on spawn. Fix: authored 5 `<Faction>` rows in `Main/_Module/ModuleData/characters/clans.xml`, one per new culture, each with `initial_home_settlement` pointing at a migrated hideout + `default_party_template` referencing the new raider party template.
+4. **HIGH — Cross-module dependency missing.** `TAOM_Map/settlements.xml` references cultures defined in TAOM Main but TAOM_Map didn't depend on TAOM in its SubModule.xml. Load-order was accidental. Fix: added `<DependedModule Id="TAOM"/>` + `<DependedModuleMetadata id="TAOM" order="LoadBeforeThis"/>` to TAOM_Map's SubModule.xml. Backup at `SubModule.xml.bak`.
+
+Phase-2 root-cause pattern: all 4 bugs share "data declared in one place, referenced in another, no connection check." Agent 5's prompt enumerates trace categories but didn't include "every `[HarmonyPatch]` needs a `PatchCategory` registration", "every `is_bandit` culture needs a matching `is_bandit` clan", "every cross-module XML reference needs a `<DependedModule>` declaration", or "every modified XML needs a parse smoke-test." Codified as three new feedback memories — [`feedback_harmony_patch_category_registration_verification.md`](C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_harmony_patch_category_registration_verification.md), [`feedback_cross_module_data_dependency_declaration.md`](C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_cross_module_data_dependency_declaration.md), [`feedback_xml_parser_smoke_test_before_commit.md`](C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_xml_parser_smoke_test_before_commit.md) — and as four new trace categories (9, 10, 11, 12) in the [`/deep-review`](.claude/skills/deep-review/SKILL.md) Agent 5 prompt so the same bug class is caught at the next review. CLAUDE.md "Harmony Patch Categories" updated with `Patch39_BanditPartySize`.
+
+Post-fix verification: `dotnet build` 0 errors. `dotnet test` 2551/2553 (2 preexisting skips, zero regressions, +31 BanditManagement tests).
+
+Save-compat: all hideout IDs preserved; new cultures + templates are pure additions; MCM settings have safe defaults. Existing saves load cleanly.
+
+Verification: `dotnet build Main/TAOM.csproj` 0 errors. `dotnet test --filter BanditManagement` 30/30 passing. Dry-run + apply of [`migrate_hideouts_to_lotr.py`](tools/migrate_hideouts_to_lotr.py) reports 99 master rewrites + 99×12 = 1188 loc rewrites.
+
 ### fix(deps): Codex review #42 — 6 correctness defects in Dependencies/Foundation
 
 Adversarial Codex review of the DR3 Phase 4 BetaDeps-parity port (`Dependencies/Foundation/`). 8 architectural Known Suspects + 3 incidental findings → 6 confirmed, 5 disputed with code citations, 0 false positives. All 6 fixed in same session. RCA at [`docs/reviews/rca-dependencies-foundation-2026-05-27.md`](docs/reviews/rca-dependencies-foundation-2026-05-27.md); REVIEW-LOG.md entry [Review 42](docs/reviews/REVIEW-LOG.md#review-42--dependenciesfoundation-dr3-phase-4-betadeps-parity-2026-05-27).

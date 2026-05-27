@@ -1102,4 +1102,86 @@
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
 	 banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19009.212.171.700.700.764.764.0.0.0" />
+
+	<!-- ============================================== -->
+	<!-- LOTR Bandit Clans                                -->
+	<!-- ============================================== -->
+	<!-- One bandit Faction per new is_bandit culture in taom_spcultures.xml.
+	     Vanilla Hideout.MapFaction resolves the hideout's owning faction by iterating
+	     bandit parties then falling back to clan.IsBanditFaction (loaded from these rows).
+	     Without these, hideouts that reference Culture.{dunland_raiders|...} would have
+	     no MapFaction, causing BanditSpawnCampaignBehavior to stall or NRE.
+	     initial_home_settlement points at one of the migrated hideouts per culture.
+	     Banner colors copy the vanilla bandit greyscale (FF8B7C73). -->
+
+	<Faction
+		id="dunland_raiders"
+		initial_home_settlement="Settlement.hideout_forest_1"
+		banner_key="17.181.116.1536.1536.768.768.1.0.0"
+		color="FF8B7C73"
+		color2="FF8B7C73"
+		culture="Culture.dunland_raiders"
+		default_party_template="PartyTemplate.dunland_raiders_raider_party_template"
+		settlement_banner_mesh="none"
+		is_bandit="true"
+		is_outlaw="true"
+		name="{=taom_bandit_dunland_name}Dunlending Raiders"
+		tier="1"></Faction>
+
+	<Faction
+		id="rhun_raiders"
+		initial_home_settlement="Settlement.hideout_steppe_1"
+		banner_key="17.234.116.1536.1536.768.768.1.0.0"
+		color="FF8B7C73"
+		color2="FF8B7C73"
+		culture="Culture.rhun_raiders"
+		default_party_template="PartyTemplate.rhun_raiders_raider_party_template"
+		settlement_banner_mesh="none"
+		is_bandit="true"
+		is_outlaw="true"
+		name="{=taom_bandit_rhun_name}Rhûn Raiders"
+		tier="1"></Faction>
+
+	<Faction
+		id="harad_raiders"
+		initial_home_settlement="Settlement.hideout_desert_1"
+		banner_key="17.234.116.1536.1536.768.768.1.0.0"
+		color="FF8B7C73"
+		color2="FF8B7C73"
+		culture="Culture.harad_raiders"
+		default_party_template="PartyTemplate.harad_raiders_raider_party_template"
+		settlement_banner_mesh="none"
+		is_bandit="true"
+		is_outlaw="true"
+		name="{=taom_bandit_harad_name}Haradrim Raiders"
+		tier="1"></Faction>
+
+	<Faction
+		id="gundabad_raiders"
+		initial_home_settlement="Settlement.hideout_mountain_1"
+		banner_key="16.59.116.1536.1536.768.768.1.0.0"
+		color="FF8B7C73"
+		color2="FF8B7C73"
+		culture="Culture.gundabad_raiders"
+		default_party_template="PartyTemplate.gundabad_raiders_raider_party_template"
+		settlement_banner_mesh="none"
+		is_bandit="true"
+		is_outlaw="true"
+		name="{=taom_bandit_gundabad_name}Gundabad Orc Raiders"
+		tier="1"></Faction>
+
+	<Faction
+		id="umbar_corsairs"
+		initial_home_settlement="Settlement.hideout_seaside_1"
+		banner_key="17.234.116.1536.1536.768.768.1.0.0"
+		color="FF8B7C73"
+		color2="FF8B7C73"
+		culture="Culture.umbar_corsairs"
+		default_party_template="PartyTemplate.umbar_corsairs_raider_party_template"
+		settlement_banner_mesh="none"
+		is_bandit="true"
+		is_outlaw="true"
+		name="{=taom_bandit_umbar_name}Corsairs of Umbar"
+		tier="1"></Faction>
+
 </Factions>

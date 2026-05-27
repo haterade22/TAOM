@@ -1474,4 +1474,107 @@
 		</stacks>
 	</MBPartyTemplate>
 
+	<!-- ============================================== -->
+	<!-- LOTR Bandit Cultures - Raider + Boss Templates -->
+	<!-- ============================================== -->
+	<!-- Replaces vanilla forest/mountain/desert/steppe/sea bandit cultures with lore-appropriate
+	     LOTR factions. Each culture has two templates:
+	       {culture}_raider_party_template = regular bandit warbands roaming the map
+	       {culture}_boss_party_template   = hideout boss + defenders
+	     Troop IDs pulled from each culture's existing troop XML (no new troop defs needed).
+	     Tiered T1 to T4 to keep raider feel; bandit count scales further via TaomBanditDensityModel
+	     plus Patch39_BanditPartySize at runtime.
+	-->
+
+	<!-- Dunland Raiders (replaces forest_bandits) -->
+	<MBPartyTemplate id="dunland_raiders_raider_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.dunland_peasant" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.dunland_raider" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.dunland_hunter" />
+			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.dunland_clan_warrior" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="dunland_raiders_boss_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dunland_wolf_raider" />
+			<PartyTemplateStack min_value="6" max_value="12" troop="NPCCharacter.dunland_clan_warrior" />
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.dunland_raider" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.dunland_hunter" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<!-- Rhûn Raiders (replaces steppe_bandits) -->
+	<MBPartyTemplate id="rhun_raiders_raider_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.balcoth_volunteer" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.balcoth_footman" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.kharaghul_rider" />
+			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.balcoth_archer" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="rhun_raiders_boss_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.kharaghul_raider" />
+			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.balcoth_archer" />
+			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.balcoth_footman" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.kharaghul_rider" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<!-- Haradrim Raiders (replaces desert_bandits) -->
+	<MBPartyTemplate id="harad_raiders_raider_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.harad_levy" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.harad_skirmisher" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.harad_archer" />
+			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.harad_footman" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="harad_raiders_boss_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.harad_camelrider" />
+			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.harad_footman" />
+			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.harad_archer" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.harad_camelscout" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<!-- Gundabad Orc Raiders (replaces mountain_bandits) -->
+	<MBPartyTemplate id="gundabad_raiders_raider_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.gundabad_snaga" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.gundabad_hunter" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.gundabad_grunt" />
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.gundabad_lurker" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="gundabad_raiders_boss_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gundabad_despoiler_of_the_vale" />
+			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.gundabad_scout" />
+			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.gundabad_grunt" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.gundabad_lurker" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.gundabad_hunter" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<!-- Umbar Corsairs (replaces sea_raiders) -->
+	<MBPartyTemplate id="umbar_corsairs_raider_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.aux_basic" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.umbar_elite" />
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.umbar_elite_root1" />
+			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.umbar_elite_root0" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="umbar_corsairs_boss_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.umbar_elite_root00" />
+			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.umbar_elite_root0" />
+			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.umbar_elite" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.umbar_elite_root1" />
+		</stacks>
+	</MBPartyTemplate>
+
 </partyTemplates>

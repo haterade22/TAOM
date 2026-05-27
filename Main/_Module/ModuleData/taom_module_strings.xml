@@ -798,4 +798,101 @@
 	<string id="taom_nativeskinfixes_loaded" text="{=taom_nativeskinfixes_loaded}NativeSkinFixes active — covers_head morph fix + hair/beard cloth simulation" />
 	<string id="taom_nativeskinfixes_degraded" text="{=taom_nativeskinfixes_degraded}NativeSkinFixes degraded — pattern signatures unauthored for this Bannerlord build; vanilla rendering" />
 
+	<!-- ============================================== -->
+	<!-- LOTR Bandit Cultures                            -->
+	<!-- ============================================== -->
+	<!-- Culture display names + male/female names for the 5 LOTR bandit cultures that
+	     replace vanilla forest/mountain/desert/steppe/sea bandits. Keys referenced from
+	     taom_spcultures.xml. -->
+
+	<!-- Dunlending Raiders (replaces forest_bandits) -->
+	<string id="taom_bandit_dunland_name" text="{=taom_bandit_dunland_name}Dunlending Raiders" />
+	<string id="taom_bandit_dunland_m1" text="{=taom_bandit_dunland_m1}Caradoc" />
+	<string id="taom_bandit_dunland_m2" text="{=taom_bandit_dunland_m2}Gwidion" />
+	<string id="taom_bandit_dunland_m3" text="{=taom_bandit_dunland_m3}Brennor" />
+	<string id="taom_bandit_dunland_m4" text="{=taom_bandit_dunland_m4}Targal" />
+	<string id="taom_bandit_dunland_m5" text="{=taom_bandit_dunland_m5}Maedrun" />
+	<string id="taom_bandit_dunland_m6" text="{=taom_bandit_dunland_m6}Drûghu" />
+	<string id="taom_bandit_dunland_m7" text="{=taom_bandit_dunland_m7}Olfan" />
+	<string id="taom_bandit_dunland_m8" text="{=taom_bandit_dunland_m8}Cethrin" />
+	<string id="taom_bandit_dunland_m9" text="{=taom_bandit_dunland_m9}Hwalbor" />
+	<string id="taom_bandit_dunland_m10" text="{=taom_bandit_dunland_m10}Idris" />
+	<string id="taom_bandit_dunland_f1" text="{=taom_bandit_dunland_f1}Branwen" />
+	<string id="taom_bandit_dunland_f2" text="{=taom_bandit_dunland_f2}Aelis" />
+	<string id="taom_bandit_dunland_f3" text="{=taom_bandit_dunland_f3}Maerwen" />
+	<string id="taom_bandit_dunland_f4" text="{=taom_bandit_dunland_f4}Gwyneth" />
+	<string id="taom_bandit_dunland_f5" text="{=taom_bandit_dunland_f5}Olwen" />
+
+	<!-- Rhûn Raiders (replaces steppe_bandits) -->
+	<string id="taom_bandit_rhun_name" text="{=taom_bandit_rhun_name}Rhûn Raiders" />
+	<string id="taom_bandit_rhun_m1" text="{=taom_bandit_rhun_m1}Khamûl" />
+	<string id="taom_bandit_rhun_m2" text="{=taom_bandit_rhun_m2}Targon" />
+	<string id="taom_bandit_rhun_m3" text="{=taom_bandit_rhun_m3}Bûrzakh" />
+	<string id="taom_bandit_rhun_m4" text="{=taom_bandit_rhun_m4}Sangar" />
+	<string id="taom_bandit_rhun_m5" text="{=taom_bandit_rhun_m5}Hazgrim" />
+	<string id="taom_bandit_rhun_m6" text="{=taom_bandit_rhun_m6}Vorzul" />
+	<string id="taom_bandit_rhun_m7" text="{=taom_bandit_rhun_m7}Daghir" />
+	<string id="taom_bandit_rhun_m8" text="{=taom_bandit_rhun_m8}Olmec" />
+	<string id="taom_bandit_rhun_m9" text="{=taom_bandit_rhun_m9}Tarvon" />
+	<string id="taom_bandit_rhun_m10" text="{=taom_bandit_rhun_m10}Kharzul" />
+	<string id="taom_bandit_rhun_f1" text="{=taom_bandit_rhun_f1}Sarila" />
+	<string id="taom_bandit_rhun_f2" text="{=taom_bandit_rhun_f2}Khazna" />
+	<string id="taom_bandit_rhun_f3" text="{=taom_bandit_rhun_f3}Vorina" />
+	<string id="taom_bandit_rhun_f4" text="{=taom_bandit_rhun_f4}Tahjia" />
+	<string id="taom_bandit_rhun_f5" text="{=taom_bandit_rhun_f5}Sangela" />
+
+	<!-- Haradrim Raiders (replaces desert_bandits) -->
+	<string id="taom_bandit_harad_name" text="{=taom_bandit_harad_name}Haradrim Raiders" />
+	<string id="taom_bandit_harad_m1" text="{=taom_bandit_harad_m1}Suladân" />
+	<string id="taom_bandit_harad_m2" text="{=taom_bandit_harad_m2}Azaghal" />
+	<string id="taom_bandit_harad_m3" text="{=taom_bandit_harad_m3}Khaled" />
+	<string id="taom_bandit_harad_m4" text="{=taom_bandit_harad_m4}Variag" />
+	<string id="taom_bandit_harad_m5" text="{=taom_bandit_harad_m5}Dath" />
+	<string id="taom_bandit_harad_m6" text="{=taom_bandit_harad_m6}Tarkil" />
+	<string id="taom_bandit_harad_m7" text="{=taom_bandit_harad_m7}Mûzan" />
+	<string id="taom_bandit_harad_m8" text="{=taom_bandit_harad_m8}Akhôr" />
+	<string id="taom_bandit_harad_m9" text="{=taom_bandit_harad_m9}Sahir" />
+	<string id="taom_bandit_harad_m10" text="{=taom_bandit_harad_m10}Zûran" />
+	<string id="taom_bandit_harad_f1" text="{=taom_bandit_harad_f1}Nilhuna" />
+	<string id="taom_bandit_harad_f2" text="{=taom_bandit_harad_f2}Saharia" />
+	<string id="taom_bandit_harad_f3" text="{=taom_bandit_harad_f3}Aklira" />
+	<string id="taom_bandit_harad_f4" text="{=taom_bandit_harad_f4}Bezara" />
+	<string id="taom_bandit_harad_f5" text="{=taom_bandit_harad_f5}Mûzana" />
+
+	<!-- Gundabad Orc Raiders (replaces mountain_bandits) -->
+	<string id="taom_bandit_gundabad_name" text="{=taom_bandit_gundabad_name}Gundabad Orc Raiders" />
+	<string id="taom_bandit_gundabad_m1" text="{=taom_bandit_gundabad_m1}Bolg" />
+	<string id="taom_bandit_gundabad_m2" text="{=taom_bandit_gundabad_m2}Yazneg" />
+	<string id="taom_bandit_gundabad_m3" text="{=taom_bandit_gundabad_m3}Fimbul" />
+	<string id="taom_bandit_gundabad_m4" text="{=taom_bandit_gundabad_m4}Narzug" />
+	<string id="taom_bandit_gundabad_m5" text="{=taom_bandit_gundabad_m5}Gorbag" />
+	<string id="taom_bandit_gundabad_m6" text="{=taom_bandit_gundabad_m6}Mauhûr" />
+	<string id="taom_bandit_gundabad_m7" text="{=taom_bandit_gundabad_m7}Snaga" />
+	<string id="taom_bandit_gundabad_m8" text="{=taom_bandit_gundabad_m8}Ufthak" />
+	<string id="taom_bandit_gundabad_m9" text="{=taom_bandit_gundabad_m9}Radbug" />
+	<string id="taom_bandit_gundabad_m10" text="{=taom_bandit_gundabad_m10}Lugdush" />
+	<string id="taom_bandit_gundabad_f1" text="{=taom_bandit_gundabad_f1}Skarra" />
+	<string id="taom_bandit_gundabad_f2" text="{=taom_bandit_gundabad_f2}Vorga" />
+	<string id="taom_bandit_gundabad_f3" text="{=taom_bandit_gundabad_f3}Mazra" />
+	<string id="taom_bandit_gundabad_f4" text="{=taom_bandit_gundabad_f4}Grishta" />
+	<string id="taom_bandit_gundabad_f5" text="{=taom_bandit_gundabad_f5}Narzga" />
+
+	<!-- Corsairs of Umbar (replaces sea_raiders) -->
+	<string id="taom_bandit_umbar_name" text="{=taom_bandit_umbar_name}Corsairs of Umbar" />
+	<string id="taom_bandit_umbar_m1" text="{=taom_bandit_umbar_m1}Castamir" />
+	<string id="taom_bandit_umbar_m2" text="{=taom_bandit_umbar_m2}Sangahyandion" />
+	<string id="taom_bandit_umbar_m3" text="{=taom_bandit_umbar_m3}Angamaitë" />
+	<string id="taom_bandit_umbar_m4" text="{=taom_bandit_umbar_m4}Herumor" />
+	<string id="taom_bandit_umbar_m5" text="{=taom_bandit_umbar_m5}Fuinur" />
+	<string id="taom_bandit_umbar_m6" text="{=taom_bandit_umbar_m6}Adûnaphel" />
+	<string id="taom_bandit_umbar_m7" text="{=taom_bandit_umbar_m7}Aragôl" />
+	<string id="taom_bandit_umbar_m8" text="{=taom_bandit_umbar_m8}Calemir" />
+	<string id="taom_bandit_umbar_m9" text="{=taom_bandit_umbar_m9}Vorondil" />
+	<string id="taom_bandit_umbar_m10" text="{=taom_bandit_umbar_m10}Karazîr" />
+	<string id="taom_bandit_umbar_f1" text="{=taom_bandit_umbar_f1}Berúthiel" />
+	<string id="taom_bandit_umbar_f2" text="{=taom_bandit_umbar_f2}Nimreth" />
+	<string id="taom_bandit_umbar_f3" text="{=taom_bandit_umbar_f3}Adûniel" />
+	<string id="taom_bandit_umbar_f4" text="{=taom_bandit_umbar_f4}Tarmiriel" />
+	<string id="taom_bandit_umbar_f5" text="{=taom_bandit_umbar_f5}Inzilbêth" />
+
 </strings>

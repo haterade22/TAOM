@@ -1,0 +1,8 @@
+{
+  "DensityCurve": 1.5,
+  "PartySizeCurve": 1.5,
+  "BossFightCurve": 1.5,
+  "MaxHideoutsPerFactionCap": 15,
+  "MaxPartiesPerHideoutCap": 5,
+  "MinPartiesToInfest": 2
+}
