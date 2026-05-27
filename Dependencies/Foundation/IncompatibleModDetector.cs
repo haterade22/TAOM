@@ -164,17 +164,71 @@ public static class IncompatibleModDetector
     }
 
     /// <summary>
-    /// Returns the set of currently-loaded module IDs by querying the loaded
-    /// MBSubModuleBase types. Returns empty list if reflection fails.
+    /// Returns the set of currently-ACTIVE module IDs. Codex A1 MED fix 2026-05-27:
+    /// previously this scanned every installed `Modules/X/` directory, returning ALL
+    /// installed modules — not just the enabled ones. Diff comments said "enabled"
+    /// but the implementation returned "installed". Now tries
+    /// <c>TaleWorlds.ModuleManager.ModuleHelper.GetActiveModules()</c> first (active /
+    /// enabled at the launcher level — exactly the right granularity for crash-loop
+    /// culprit identification); falls back to the directory scan only when reflection
+    /// fails (very early init, before ModuleHelper has populated its internal state).
     /// </summary>
     private static List<string> ReadCurrentModlist()
+    {
+        // Strategy 1: TaleWorlds.ModuleManager.ModuleHelper.GetActiveModules()
+        var active = TryReadActiveModuleIdsViaReflection();
+        if (active.Count > 0)
+        {
+            DiagLog.Log(Tag, $"ReadCurrentModlist: read {active.Count} active modules via ModuleHelper.GetActiveModules");
+            return active;
+        }
+
+        // Strategy 2: folder scan (returns INSTALLED modules — used only if active
+        // module reflection failed, e.g., during very early init).
+        DiagLog.Log(Tag, "ReadCurrentModlist: GetActiveModules unavailable, falling back to directory scan");
+        return ReadInstalledModuleIdsFromFolders();
+    }
+
+    private static List<string> TryReadActiveModuleIdsViaReflection()
     {
         var result = new List<string>();
         try
         {
-            // Walk Modules/ directory and read each <Id> from SubModule.xml.
-            // Faster than reflecting through TaleWorlds.MountAndBlade.Module.AllModules
-            // and works even very early in load.
+            var helperType = ReflectionUtils.FindTypeAcrossLoadedAssemblies(
+                "TaleWorlds.ModuleManager.ModuleHelper");
+            if (helperType == null) return result;
+
+            var getActive = helperType.GetMethod("GetActiveModules",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            if (getActive == null) return result;
+
+            var modules = getActive.Invoke(null, null) as System.Collections.IEnumerable;
+            if (modules == null) return result;
+
+            foreach (var moduleInfo in modules)
+            {
+                if (moduleInfo == null) continue;
+                try
+                {
+                    var idProp = moduleInfo.GetType().GetProperty("Id");
+                    if (idProp?.GetValue(moduleInfo) is string id && !string.IsNullOrWhiteSpace(id))
+                        result.Add(id);
+                }
+                catch { }
+            }
+        }
+        catch (Exception ex)
+        {
+            DiagLog.LogCaught(Tag, "TryReadActiveModuleIdsViaReflection", ex);
+        }
+        return result;
+    }
+
+    private static List<string> ReadInstalledModuleIdsFromFolders()
+    {
+        var result = new List<string>();
+        try
+        {
             var moduleDir = RuntimeLog.ModuleDir;
             if (string.IsNullOrEmpty(moduleDir)) return result;
 

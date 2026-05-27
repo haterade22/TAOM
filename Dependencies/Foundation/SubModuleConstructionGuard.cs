@@ -147,10 +147,22 @@ public static class SubModuleConstructionGuard
 
     /// <summary>
     /// Shared Finalizer for both patch sites. Unwraps TargetInvocationException (used
-    /// by Module.AddSubModule's `constructor.Invoke` call), logs culprit attribution,
-    /// and swallows non-TAOM exceptions.
+    /// by Module.AddSubModule's `constructor.Invoke` call), attributes the failure to
+    /// the offending submodule's assembly, and swallows non-TAOM exceptions.
+    ///
+    /// Codex S5 HIGH fix 2026-05-27: AddSubModule attribution now uses the patch
+    /// site's own arguments (subModuleInfo + subModuleAssembly) instead of
+    /// ex.TargetSite. Vanilla AddSubModule does
+    ///   constructor.Invoke(new object[0])
+    /// where constructor comes from subModuleAssembly.GetType(subModuleInfo.
+    /// SubModuleClassTypeName). When a third-party ctor body throws via a TaleWorlds
+    /// API (e.g. MBObjectManager.GetObject<T>("missing")), ex.TargetSite is the
+    /// throwing TaleWorlds method, NOT the third-party ctor. The TargetSite-based
+    /// attribution would mis-blame TaleWorlds and swallow exceptions that should be
+    /// surfaced. The (subModuleInfo, subModuleAssembly) args are the authoritative
+    /// source of "whose ctor failed".
     /// </summary>
-    private static Exception? SwallowFinalizer(object __instance, Exception __exception)
+    private static Exception? SwallowFinalizer(object __instance, object[] __args, Exception __exception)
     {
         if (__exception == null) return null;
         try
@@ -160,27 +172,29 @@ public static class SubModuleConstructionGuard
             while (ex is TargetInvocationException && ex.InnerException != null)
                 ex = ex.InnerException;
 
-            // Attribute to the source assembly. For MBSubModuleBase ctor finalizer,
-            // __instance is the derived SubModule itself. For Module.AddSubModule
-            // finalizer, __instance is the Module — and the inner exception's stack
-            // walks back through the offending ctor.
             string asmName;
             string declTypeName;
+
             if (__instance is MBSubModuleBase subMod)
             {
+                // Site 1 — MBSubModuleBase ctor finalizer. __instance is the derived
+                // SubModule itself; direct type read is authoritative.
                 var t = subMod.GetType();
                 declTypeName = t.FullName ?? "(?)";
                 asmName = t.Assembly.GetName().Name ?? "(unknown)";
             }
+            else if (TryResolveAddSubModuleTarget(__args, out asmName, out declTypeName))
+            {
+                // Site 2 — Module.AddSubModule finalizer. Resolved via vanilla args.
+            }
             else
             {
-                // Module.AddSubModule path — walk the exception stack for the first
-                // non-engine frame.
+                // Both attribution strategies failed — last resort.
+                asmName = "(unknown)";
                 declTypeName = ex.TargetSite?.DeclaringType?.FullName ?? "(?)";
-                asmName = ex.TargetSite?.DeclaringType?.Assembly.GetName().Name ?? "(unknown)";
             }
 
-            // Don't shield TAOM-owned ctor failures.
+            // Don't shield TAOM-owned ctor failures — we want to see those.
             if (asmName.StartsWith("TAOM", StringComparison.OrdinalIgnoreCase))
                 return __exception;
 
@@ -192,6 +206,56 @@ public static class SubModuleConstructionGuard
         catch
         {
             return __exception;  // re-throw on internal failure
+        }
+    }
+
+    /// <summary>
+    /// Reads Module.AddSubModule's arguments to find the SubModule class type that
+    /// failed to construct. Vanilla signature:
+    ///   AddSubModule(SubModuleInfo subModuleInfo, Assembly subModuleAssembly)
+    /// args[0] = SubModuleInfo (.SubModuleClassTypeName -> string)
+    /// args[1] = Assembly (.GetType(className) -> Type)
+    /// SubModuleInfo's type is in TaleWorlds.ModuleManager; we don't reference it
+    /// directly to avoid binding to a specific version — reflective read via
+    /// .GetType().GetProperty("SubModuleClassTypeName").
+    /// </summary>
+    private static bool TryResolveAddSubModuleTarget(object[]? args, out string asmName, out string declTypeName)
+    {
+        asmName = "(unknown)";
+        declTypeName = "(unknown)";
+        if (args == null || args.Length < 2) return false;
+
+        try
+        {
+            if (!(args[1] is Assembly subModuleAssembly)) return false;
+            var subModuleInfo = args[0];
+            if (subModuleInfo == null) return false;
+
+            var classNameProp = subModuleInfo.GetType().GetProperty("SubModuleClassTypeName");
+            var className = classNameProp?.GetValue(subModuleInfo) as string;
+            if (string.IsNullOrEmpty(className))
+            {
+                // Couldn't extract class name — fall back to assembly attribution only.
+                asmName = subModuleAssembly.GetName().Name ?? "(unknown)";
+                declTypeName = "(unknown ctor in " + asmName + ")";
+                return true;
+            }
+
+            var type = subModuleAssembly.GetType(className, throwOnError: false);
+            if (type == null)
+            {
+                asmName = subModuleAssembly.GetName().Name ?? "(unknown)";
+                declTypeName = className;
+                return true;
+            }
+
+            asmName = type.Assembly.GetName().Name ?? "(unknown)";
+            declTypeName = type.FullName ?? className;
+            return true;
+        }
+        catch
+        {
+            return false;
         }
     }
 }

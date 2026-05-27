@@ -88,15 +88,46 @@ public static class SaveShield
     };
 
     // Stack-frame attribution: anything starting with these prefixes is "engine" or
-    // "infrastructure" and NOT a culprit. The first frame whose assembly doesn't start
-    // with any of these is the likely culprit mod.
+    // "infrastructure" and NOT a culprit. The first frame whose assembly doesn't match
+    // <see cref="IsEngineAssembly"/> is the likely culprit mod.
+    //
+    // Codex S2 MED fix 2026-05-27: previously this list contained "TAOM" as a broad
+    // prefix, which incorrectly matched consumer assemblies named "TAOM_Online" /
+    // "TAOM_Map" (those ARE third-party mods from TAOM's perspective during stack-walk
+    // attribution). It also missed bundled BUTR infrastructure assemblies. The list
+    // below is the bundled-runtime allowlist; TAOM-owned exact matches are handled
+    // separately in IsEngineAssembly.
     private static readonly string[] _enginePrefixes =
     {
         "TaleWorlds.", "SandBox", "StoryMode", "CustomBattle",
-        "TAOM", "Bannerlord.Harmony", "Bannerlord.UIExtenderEx", "Bannerlord.ButterLib", "MCMv5",
+        "Bannerlord.Harmony", "Bannerlord.UIExtenderEx", "Bannerlord.ButterLib",
+        "Bannerlord.MBOptionScreen", "Bannerlord.ModuleLoader",
+        "MCMv5", "MCM.UI.Adapter", "BUTR.CrashReport",
         "0Harmony", "HarmonyLib", "Mono.Cecil", "MonoMod",
         "System.", "Microsoft.", "mscorlib", "Newtonsoft.Json", "Serilog",
     };
+
+    private static bool IsEngineAssembly(string asmName)
+    {
+        if (string.IsNullOrEmpty(asmName)) return false;
+
+        // Exact-match TAOM-owned assemblies. Use exact equality + ".TAOM." prefix —
+        // NOT a broad "TAOM" StartsWith which would incorrectly catch TAOM_Online
+        // and TAOM_Map (which are independent consumer mods, valid culprits).
+        if (string.Equals(asmName, "TAOM", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(asmName, "TAOM.Dependencies", StringComparison.OrdinalIgnoreCase) ||
+            asmName.StartsWith("TAOM.", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        foreach (var prefix in _enginePrefixes)
+        {
+            if (asmName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+        return false;
+    }
 
     public static int ShieldedCount { get { lock (_lock) return _shielded.Count; } }
     public static long DuplicateKeyHits => Interlocked.Read(ref _duplicateKeyHits);
@@ -269,15 +300,10 @@ public static class SaveShield
                 var asmName = method.DeclaringType?.Assembly.GetName().Name;
                 if (string.IsNullOrEmpty(asmName)) continue;
 
-                bool isEngine = false;
-                foreach (var prefix in _enginePrefixes)
-                {
-                    if (asmName!.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) { isEngine = true; break; }
-                }
-                if (isEngine) continue;
+                if (IsEngineAssembly(asmName!)) continue;
 
                 var frameDesc = $"{method.DeclaringType?.FullName}.{method.Name}";
-                return (asmName, frameDesc);
+                return (asmName!, frameDesc);
             }
         }
         catch { }

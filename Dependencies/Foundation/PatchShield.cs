@@ -39,6 +39,41 @@ public static class PatchShield
     private static readonly HashSet<string> _unpatched = new();
     private static readonly object _lock = new();
 
+    // Codex review 2026-05-27 S1 (HIGH): expanded from "TAOM" prefix only to full
+    // infrastructure-owner allowlist. Vendored BUTR/MCM Harmony IDs ("Bannerlord.ButterLib.SaveSystem",
+    // "MCM.UI.Adapter.MCMv5", etc.) do NOT start with "TAOM" — the prior filter would have
+    // unpatched the entire BUTR stack on the first MissingMethodException, breaking
+    // every dependent mod. This list mirrors the vendored DLLs in
+    // Dependencies/_Module/bin/Win64_Shipping_Client/ + Lib.Harmony's own runtime types.
+    private static readonly string[] ProtectedOwnerPrefixes =
+    {
+        "TAOM",
+        "Bannerlord.ButterLib",
+        "butterlib.",
+        "Bannerlord.UIExtenderEx",
+        "Bannerlord.MBOptionScreen",
+        "Bannerlord.ModuleLoader",
+        "Bannerlord.MCM",
+        "bannerlord.mcm.",
+        "MCM",
+        "MCMv5",
+        "MCM.UI.Adapter",
+        "BUTR.",
+        "HarmonyLib.",
+        "0Harmony",
+    };
+
+    private static bool IsProtectedOwner(string owner)
+    {
+        if (string.IsNullOrEmpty(owner)) return false;
+        foreach (var prefix in ProtectedOwnerPrefixes)
+        {
+            if (owner.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+        return false;
+    }
+
     private static readonly Dictionary<string, int> _ownerCounts =
         new(StringComparer.OrdinalIgnoreCase);
     private static readonly object _ownerLock = new();
@@ -207,7 +242,9 @@ public static class PatchShield
             return true;
         }
 
-        Interlocked.Increment(ref _swallowedOther);
+        // Codex A2 LOW fix 2026-05-27: do NOT increment _swallowedOther here — this
+        // path RETHROWS the exception. The counter previously misled WriteSessionSummary
+        // into reporting rethrown exceptions as swallowed.
         return false;
     }
 
@@ -215,12 +252,21 @@ public static class PatchShield
     {
         if (originalMethod == null) return;
 
+        // Codex A3 LOW fix 2026-05-27: overload-safe dedupe key. Was
+        // <DeclaringType>::<methodName> — overloaded methods shared a key, so the
+        // second overload's failure would skip cleanup. Now uses
+        // <Module.ModuleVersionId>:<MetadataToken> which is unique per method handle.
         string targetKey;
         try
         {
-            targetKey = (originalMethod.DeclaringType?.FullName ?? "?") + "::" + originalMethod.Name;
+            targetKey = $"{originalMethod.Module.ModuleVersionId}:{originalMethod.MetadataToken}";
         }
-        catch { return; }
+        catch
+        {
+            // Fallback if Module/MetadataToken unavailable for this method handle.
+            try { targetKey = originalMethod.ToString(); }
+            catch { return; }
+        }
 
         lock (_lock)
         {
@@ -244,10 +290,11 @@ public static class PatchShield
             {
                 if (string.IsNullOrEmpty(owner) || owner == HarmonyId) continue;
 
-                // Refuse to unpatch our own or anything TAOM-owned.
-                if (owner.StartsWith("TAOM", StringComparison.OrdinalIgnoreCase))
+                // Refuse to unpatch protected infrastructure owners (Codex S1 HIGH fix
+                // 2026-05-27). Filter now covers TAOM + vendored BUTR/MCM/Harmony.
+                if (IsProtectedOwner(owner))
                 {
-                    DiagLog.Log(Tag, $"refusing to unpatch TAOM-owned owner '{owner}' on {targetKey}");
+                    DiagLog.Log(Tag, $"refusing to unpatch protected owner '{owner}' on {targetKey}");
                     continue;
                 }
 

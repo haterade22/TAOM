@@ -2,6 +2,31 @@
 
 ## 2026-05-27
 
+### fix(deps): Codex review #42 — 6 correctness defects in Dependencies/Foundation
+
+Adversarial Codex review of the DR3 Phase 4 BetaDeps-parity port (`Dependencies/Foundation/`). 8 architectural Known Suspects + 3 incidental findings → 6 confirmed, 5 disputed with code citations, 0 false positives. All 6 fixed in same session. RCA at [`docs/reviews/rca-dependencies-foundation-2026-05-27.md`](docs/reviews/rca-dependencies-foundation-2026-05-27.md); REVIEW-LOG.md entry [Review 42](docs/reviews/REVIEW-LOG.md#review-42--dependenciesfoundation-dr3-phase-4-betadeps-parity-2026-05-27).
+
+Confirmed fixes:
+
+- **S1 HIGH — `PatchShield.TryUnpatchOffendingPatches` owner allowlist too narrow.** Was `owner.StartsWith("TAOM")` — the first MissingMethodException in any ButterLib-patched method would have auto-unpatched ButterLib's entire patch set (owners are `Bannerlord.ButterLib.*`, `butterlib.*`, etc.). New `ProtectedOwnerPrefixes` array enumerated via ilspycmd from `new Harmony("X")` call sites in every vendored DLL: TAOM + Bannerlord.ButterLib + butterlib. + Bannerlord.UIExtenderEx + Bannerlord.MBOptionScreen + Bannerlord.ModuleLoader + Bannerlord.MCM + bannerlord.mcm. + MCM + MCMv5 + MCM.UI.Adapter + BUTR. + HarmonyLib. + 0Harmony. `IsProtectedOwner(owner)` helper.
+- **S5 HIGH — `SubModuleConstructionGuard` mis-attributed AddSubModule failures.** Was `ex.TargetSite` (the vanilla `Module.AddSubModule` method itself), not the offending SubModule class. Now reads `__args[0].SubModuleClassTypeName` + `__args[1].GetType(className)` via `TryResolveAddSubModuleTarget` for authoritative attribution.
+- **S2 MED — `SaveShield.IsEngineAssembly` substring trap.** `StartsWith("TAOM")` matched `TAOMBar`, `TAOM.Foo`, anything beginning with `TAOM`. Now exact-match for `TAOM` / `TAOM.Dependencies` + dot-prefix check for `TAOM.` sub-namespaces. Also added missing vendored prefixes (`Bannerlord.MBOptionScreen`, `Bannerlord.ModuleLoader`, `MCM.UI.Adapter`, `BUTR.CrashReport`) and removed redundant raw `TAOM` from `_enginePrefixes` array.
+- **A1 MED — `IncompatibleModDetector.ReadCurrentModlist` returned installed mods, not active ones.** Diff comments said "enabled mods" but folder scan returned every installed module — disabled mods appeared in both old and new modlists, masking the real culprit. Strategy-1 now reflects on `TaleWorlds.ModuleManager.ModuleHelper.GetActiveModules()`; strategy-2 folder scan only as fallback for very early init.
+- **A2 LOW — `PatchShield` counter name lied.** `_swallowedOther` incremented on both the swallow path AND the re-throw path. Re-thrown means not swallowed; removed increment from re-throw branch.
+- **A3 LOW — `PatchShield._shieldedMethods` dedupe collision on overloads.** Key was `DeclaringType.FullName + "::" + method.Name` — method overloads collided, second overload silently skipped. Now `(method.Module.ModuleVersionId, method.MetadataToken)` with `method.ToString()` fallback. Real risk on `Mission.SpawnTroop` (4 overloads in v1.4.5).
+
+Disputed with code citations (would have been bugs if confirmed wrong):
+
+- **S4 (would-be-CRITICAL) — by-ref `__result` Finalizer signature.** Codex DISPUTED that `ref Type[] __result` on `CollectAssemblyTypesShim.SwallowFinalizer` is invalid for an `Assembly.GetTypes()` Finalizer patch. Citing `0Harmony 2.4.2 MethodCreatorTools.EmitCallParameter` showing by-ref `__result` parameters use `Ldloca` (load local address). Verified against the vendored 0Harmony source in this commit.
+- **S3 — `VersionProbe.DetectViaApplicationVersion` null arg.** Codex confirmed safe: reflective lookup uses `Type.EmptyTypes` parameter array, vanilla method is parameterless.
+- **S6 — `PatchShield` double-install guard.** Codex confirmed `Interlocked.CompareExchange(ref _passOneInstalled, 1, 0)` is correct.
+- **S7 — IncompatibleModDetector regex.** Codex confirmed `[\s\S]*?` multi-line strip is correct.
+- **S8 — SaveShield dedupe key.** Codex confirmed `MethodInfo` reference equality is stable for distinct overloads.
+
+Root-cause pattern across all 6 confirmed bugs: "filter/attribute/enumerate based on assumption rather than enumeration of upstream/vendored data." Captured as new feedback memory [`feedback_harmony_owner_allowlist_from_vendored_dll_enumeration.md`](C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_harmony_owner_allowlist_from_vendored_dll_enumeration.md) — sibling rule to `feedback_substring_keyword_matches_external_data.md`. AGENTS.md updated with 7 new lessons; review counter incremented to 42 reviews / 126 bugs found.
+
+Verification: `dotnet build TAOM.sln` 0 errors. `dotnet test TAOM.Tests` 2,520/2,522 passing. Codex findings were exception-path corner cases; in-game main-menu reach unaffected.
+
 ### fix(deps): DR3 Phase 4 — move IncompatibleModDetector.RunEarlyPhase to OnSubModuleLoad (alias stub ctors don't fire)
 
 Second-launch diag.log (with comprehensive logging from previous commit) confirmed the alias stub ctors are NEVER called by the launcher. Root cause: each alias stub module folder (`Modules/Bannerlord.{Harmony,UIExtenderEx,ButterLib,MBOptionScreen}/`) has no `bin/Win64_Shipping_Client/` subfolder, so when the launcher looks for `TAOM.Dependencies.dll` inside the stub's own bin path (per `<DLLName value="TAOM.Dependencies.dll"/>`), it doesn't find it. Construction silently skips.

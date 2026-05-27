@@ -984,6 +984,68 @@ Full RCA at [`docs/reviews/rca-crash-report-codex-2026-05-25.md`](rca-crash-repo
 
 ---
 
+## Review 42 — Dependencies/Foundation (DR3 Phase 4 BetaDeps parity, 2026-05-27)
+
+**Context.** New `Dependencies/Foundation/` namespace porting BetaDeps v0.7.5.1's runtime error-tolerance framework (11 classes: `DiagLog`, `RuntimeLog`, `ReflectionUtils`, `VersionProbe`, `IncompatibleModDetector`, `PatchShield`, `SaveShield` + `FailureRecord` + `FailedModsCatalog`, `SubModuleConstructionGuard`, `CollectAssemblyTypesShim`). Wired into `AliasStubSubModule.ctor` (early phase, never fires because launcher skips bin-less stub ctors) + `Dependencies/SubModule.OnSubModuleLoad` (late phase, actual install site) + `OnGameInitializationFinished` (PatchShield pass 2 for late-registered third-party patches). Authored end-to-end in same session; in-game verification surfaced 3 v1.4.5 signature drift bugs (SaveShield 4 stale targets, VersionProbe wrong class, SubModuleConstructionGuard missing AddSubModule patch site) which were fixed before Codex was dispatched.
+
+**Dispatch mode.** Direct dispatch via `codex exec - < prompt.md > output.md 2>&1` (background). `model=gpt-5.5` `reasoning_effort=xhigh`. Prompt enumerated 8 Known Suspects derived from architectural risk (owner-filter scope, dedupe collision, by-ref Finalizer signature legality, etc.) — Codex confirmed 6 and disputed 2 with code citations.
+
+### Findings vs Verdict (Review 42)
+
+| # | Codex Severity | Claude Verdict | Agree? | Reason |
+|---|---|---|---|---|
+| S1 | HIGH | HIGH | yes | `PatchShield.TryUnpatchOffendingPatches` filtered `owner.StartsWith("TAOM")` only. ButterLib registers as `Bannerlord.ButterLib.*` / `butterlib.*` / etc. — first MissingMethodException in any ButterLib patch would auto-unpatch ButterLib's entire patch set. Confirmed by enumerating `new Harmony("X")` call sites in every vendored DLL via ilspycmd. |
+| S5 | HIGH | HIGH | yes | `SubModuleConstructionGuard.SwallowFinalizer` attributed exceptions via `ex.TargetSite` — for `Module.AddSubModule(SubModuleInfo, Assembly)`, that's the vanilla method itself, not the offending SubModule class. Confirmed via decompile; fix uses `__args[0]` (SubModuleInfo.SubModuleClassTypeName) + `__args[1]` (Assembly.GetType(className)) for authoritative attribution. |
+| S2 | MED | MED | yes | `SaveShield.IsEngineAssembly` used `StartsWith("TAOM")` to skip our own assemblies during culprit attribution — matched `TAOM.Foo`, `TAOMBar`, anything beginning with `TAOM`. Exact-match for `TAOM` / `TAOM.Dependencies` + dot-prefix for `TAOM.` sub-namespaces. Also added missing vendored prefixes (`Bannerlord.MBOptionScreen`, `Bannerlord.ModuleLoader`, `MCM.UI.Adapter`, `BUTR.CrashReport`) and removed redundant raw `TAOM` from `_enginePrefixes`. |
+| A1 | MED | MED | yes | `IncompatibleModDetector.ReadCurrentModlist` scanned every `Modules/X/` directory — returned ALL installed modules, not just enabled ones. Diff comments said "enabled" but implementation returned "installed". Now tries `TaleWorlds.ModuleManager.ModuleHelper.GetActiveModules()` first; falls back to folder scan only when reflection fails. |
+| A2 | LOW | LOW | yes | `PatchShield.ShieldFinalizerWithResult/Void` incremented `_swallowedOther` on the `return false` (re-throw) path. Counter name implied "swallowed by us" but the value included re-thrown exceptions. Re-thrown == not swallowed; removed the increment from the re-throw branch. |
+| A3 | LOW | LOW | yes | `PatchShield._shieldedMethods` dedupe key was `(declaringType.FullName + "::" + method.Name)` — overload methods with same name collided, second overload silently skipped. Changed to `(method.Module.ModuleVersionId + ":" + method.MetadataToken)` with `method.ToString()` fallback. Real risk on overload-heavy targets like `Mission.SpawnTroop`. |
+| S3 | (disputed) | DISPUTED | yes | Codex DISPUTED `VersionProbe.DetectViaApplicationVersion` calling `FromParametersFile(null)` with null arg. Confirmed safe: reflective lookup uses `Type.EmptyTypes` parameter array, vanilla method is parameterless. Not a bug. |
+| S4 | (disputed) | DISPUTED | yes | **Highest-risk suspect.** Codex was asked whether `ref Type[] __result` on `CollectAssemblyTypesShim.SwallowFinalizer` is a valid Harmony Finalizer signature for an `Assembly.GetTypes()` patch (return type `Type[]`). Codex DISPUTED that it's wrong, citing `Lib.Harmony 2.4.2 MethodCreatorTools.EmitCallParameter` showing by-ref `__result` parameters use `Ldloca` (load local address). Confirmed by reading vendored 0Harmony source. Would have been CRITICAL had Codex confirmed wrong. |
+| S6 | (disputed) | DISPUTED | yes | Codex DISPUTED concern about `PatchShield` double-install on second OnSubModuleLoad call. Reviewed install method — `Interlocked.CompareExchange(ref _passOneInstalled, 1, 0)` guards pass 1 properly; pass 2 has its own guard. Not a bug. |
+| S7 | (disputed) | DISPUTED | yes | Codex DISPUTED concern about `IncompatibleModDetector` regex stripping XML comments. Confirmed `Regex.Replace(text, @"<!--[\s\S]*?-->", "")` is correct multi-line strip via `[\s\S]` character class. Not a bug. |
+| S8 | (disputed) | DISPUTED | yes | Codex DISPUTED concern about `SaveShield._shieldedMethods` dedupe key. SaveShield's dedupe is independent from PatchShield's; uses `MethodInfo` reference equality which is stable for distinct overloads. Not a bug. |
+
+**Summary:** 8 suspects + 3 adversarial findings = 11 evaluated. 6 confirmed, 5 disputed with code citations, 0 false positives.
+
+### Root Cause Analysis (Review 42)
+
+Full RCA at [`docs/reviews/rca-dependencies-foundation-2026-05-27.md`](rca-dependencies-foundation-2026-05-27.md). Summary:
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|-----|----------|-----------|-------------------|
+| S1 | Harmony owner allowlist too narrow | Reflection-target enumeration | Author wrote `StartsWith("TAOM")` based on architectural assumption ("we're protecting TAOM code") without enumerating actual vendored Harmony IDs via ilspycmd | New feedback memory [`feedback_harmony_owner_allowlist_from_vendored_dll_enumeration.md`](../../../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_harmony_owner_allowlist_from_vendored_dll_enumeration.md); allowlist now enumerated from `new Harmony("X")` call sites in every vendored DLL |
+| S5 | TargetSite attribution wrong for AddSubModule | Reflection-source vs reflection-target confusion | Author used `ex.TargetSite` (the vanilla method that threw) for culprit attribution, didn't decompile `Module.AddSubModule` parameter shape to realise `__args[0].SubModuleClassTypeName` was the authoritative source | Method signature changed to accept `object[] __args`; `TryResolveAddSubModuleTarget` reads SubModuleInfo + Assembly for authoritative attribution |
+| S2 | StartsWith("TAOM") matches TAOMBar | Substring-vs-exact-match | Same anti-pattern as `feedback_substring_keyword_matches_external_data.md` — broad StartsWith without considering shorter-name collisions. Also missed adding vendored MBOptionScreen/ModuleLoader/MCM.UI.Adapter/BUTR.CrashReport prefixes | New `IsEngineAssembly(asmName)` helper with exact + dot-prefix checks; `_enginePrefixes` expanded to cover all vendored DLL namespaces |
+| A1 | "active modules" actually returned "installed modules" | Documented-vs-actual semantic mismatch | Diff comments said "enabled mods diff" but author wrote folder enumeration — disabled mods would appear in both old and new modlists, hiding the real culprit | Strategy-1 reflection on `ModuleHelper.GetActiveModules()`; strategy-2 folder scan only as fallback (very early init) |
+| A2 | Counter name lied about counted set | Counter-naming-vs-control-flow drift | Counter incremented on both swallow path and rethrow path; name suggested only swallows. Audit failed because counter was emitted into session summary log without correlating to actual swallows | Removed from rethrow path; counter now matches its name |
+| A3 | Overload dedupe collision | Non-unique dedupe key | Dedupe key was DeclaringType.FullName + Name, overload methods collide. Real risk on `Mission.SpawnTroop` (4 overloads in v1.4.5) and similar | Key is now `(MethodBase.Module.ModuleVersionId, MethodBase.MetadataToken)` with `method.ToString()` fallback |
+
+**Root-cause pattern.** All 6 confirmed bugs share the shape "filter/attribute/enumerate based on assumption rather than enumeration of upstream/vendored data." S1 + S2 enumerate Harmony owners / engine prefixes from convention; A1 enumerates "modules" from convention; S5 attributes via TargetSite from convention; A2 counts via name-from-convention; A3 dedupes via Type.FullName from convention. The general lesson: when filtering/attributing/enumerating against external data, enumerate the source-of-truth via decompile/ilspycmd, don't assume.
+
+### Build & Test (Review 42)
+
+- `dotnet build TAOM.sln` — clean, **0 Errors**.
+- `dotnet test TAOM.Tests` — **2,520/2,522 passing, 2 skipped, 0 failed.**
+- In-game verification: prior diag.log session showed PatchShield installing successfully (+42 pass 1, +324 pass 2); SaveShield 11/11 shielded; VersionProbe detecting v1.4.5; SubModuleConstructionGuard installed on 2 sites. Post-Codex-fix behavior identical (Codex findings were exception-path corner cases not exercised in normal main-menu reach).
+
+### Codex Quality Notes (Review 42)
+
+- **Decompiled Lib.Harmony source** to definitively settle S4 (by-ref `__result` Finalizer legality). Highest-risk suspect, would have been CRITICAL if confirmed wrong; instead Codex DISPUTED with citation. This is exactly the value of an independent verifier.
+- **Enumerated `new Harmony("X")` call sites across every vendored DLL** for S1, producing the concrete allowlist needed for the fix. Claude's first attempt would have used architectural reasoning ("anything starting with `Bannerlord.`"); Codex's enumeration found `butterlib.delayedsubmoduleloader.static` (lowercase, no dots after first segment) and `bannerlord.mcm.ui.optionsgauntletscreenpatch` (lowercase) which prefix matching would miss.
+- **Disputed 5 suspects with code citations.** The disputed answers are at least as valuable as the confirmed ones — they prevent over-engineering and surface where the author's risk model differed from actual code shape.
+- **Stayed in scope.** All findings in `Dependencies/Foundation/` + immediate wiring. No drift into the BUTR DLL bundle or AliasStubSubModule architecture.
+- **Calibration.** HIGH=2, MED=2, LOW=2 matched Claude's verification on every row.
+
+### Process improvement triggered by Review 42
+
+1. **AGENTS.md** updated with 7 new lessons (one per confirmed finding + the disputed-S4 lesson on citing Harmony source for by-ref parameter legality).
+2. **New feedback memory** [`feedback_harmony_owner_allowlist_from_vendored_dll_enumeration.md`](../../../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_harmony_owner_allowlist_from_vendored_dll_enumeration.md) — sibling rule to `feedback_substring_keyword_matches_external_data.md`. Both share the "enumerate from source-of-truth, don't filter by convention" shape.
+3. **REVIEW-LOG.md** updated (this entry).
+4. **Numbering collision corrected.** Initial pass labelled this as "Review 41"; existing Review 41 (CrashReport, 2026-05-25) already existed. Renumbered to 42 in AGENTS.md header + footer + RCA reference + feedback memory.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
