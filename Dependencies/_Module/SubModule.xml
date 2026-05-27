@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Module>
+<Module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
 	<Id value="TAOM.Dependencies" />
 	<Name value="TAOM Dependencies" />
 	<Version value="v0.3.0" />
@@ -7,12 +8,53 @@
 	<ModuleCategory value="Singleplayer" />
 	<ModuleType value="Community" />
 	<DependedModules />
+	<!-- ModulesToLoadAfterThis (BetaDeps parity, DR3 Phase 4 — 2026-05-25): expanded
+	     from 5 vanilla entries to 26. Critical for load-order — without these pins
+	     a consumer mod that ships its own bundled BUTR copy (MCMv5, 0Harmony, etc.)
+	     could win the AppDomain slot before TAOM.Dependencies's AssemblyResolve
+	     handler installs. Listing them here guarantees the launcher constructs
+	     TAOM.Dependencies first so SubModule.cs's static cctor + the four alias
+	     stubs' AliasStubSubModule ctors install the redirect hook BEFORE any
+	     consumer mod's bundled copy is touched. Unknown Ids are harmless — the
+	     launcher silently ignores any entry that doesn't match an installed mod.
+	     Reference list adopted from BetaDeps v0.7.5.1 SubModule.xml. -->
 	<ModulesToLoadAfterThis>
+		<!-- TaleWorlds stack -->
 		<Module Id="Native" />
 		<Module Id="SandBoxCore" />
 		<Module Id="Sandbox" />
 		<Module Id="StoryMode" />
 		<Module Id="CustomBattle" />
+		<!-- BUTR alias stubs (also DependedModule us via Stubs/, redundant but explicit) -->
+		<Module Id="Bannerlord.Harmony" />
+		<Module Id="Bannerlord.UIExtenderEx" />
+		<Module Id="Bannerlord.ButterLib" />
+		<Module Id="Bannerlord.MBOptionScreen" />
+		<!-- Consumer mods known to bundle their own MCMv5 / 0Harmony / UIExtenderEx /
+		     ButterLib copies. Pinning order here costs nothing if they're not installed. -->
+		<Module Id="DismembermentPlus" />
+		<Module Id="XorberaxLegacy" />
+		<Module Id="DynaCulture" />
+		<Module Id="ArtemsLivelyAnimations" />
+		<Module Id="FluidCombatLite" />
+		<Module Id="Fluid_Combat_Lite" />
+		<Module Id="BetterSmithing" />
+		<Module Id="FasterTime" />
+		<Module Id="BanditBlackHole" />
+		<Module Id="PerfectFireArrows" />
+		<Module Id="IDontCare" />
+		<Module Id="ImprovedGarrisons" />
+		<Module Id="DistinguishedService" />
+		<Module Id="CulturedStartV2" />
+		<Module Id="DiplomacyFixes" />
+		<Module Id="Diplomacy" />
+		<Module Id="CalradiaExpanded" />
+		<Module Id="CalradiaExpandedKingdoms" />
+		<Module Id="CargoHolds" />
+		<Module Id="CrashDoctor" />
+		<Module Id="AchievementUnblocker" />
+		<Module Id="CREST" />
+		<Module Id="Crest" />
 	</ModulesToLoadAfterThis>
 	<DependedModuleMetadatas>
 		<DependedModuleMetadata id="Native" order="LoadAfterThis" optional="true" />

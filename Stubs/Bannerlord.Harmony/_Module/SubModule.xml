@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  TAOM.Dependencies passive stub module (DR3 follow-up, 2026-05-22).
+  TAOM.Dependencies passive alias stub for Bannerlord.Harmony.
 
   Purpose: satisfy the vanilla Bannerlord launcher's dependency check for
   third-party mods that declare <DependedModule Id="Bannerlord.Harmony"/>.
@@ -9,31 +9,65 @@
   launcher greys out any mod that depends on the standard `Bannerlord.Harmony`
   module ID.
 
-  This file declares the `Bannerlord.Harmony` ID, depends on TAOM.Dependencies
-  (so the real DLL is loaded first), and has an empty <SubModules /> — no
-  duplicate `0Harmony.dll` enters the AppDomain.
+  Version strategy (BetaDeps parity, DR3 Phase 4 — 2026-05-25): pinned to
+  v2.4.99.0 rather than the actual shipped v2.4.2. Third-party mods often
+  declare `<DependedModuleMetadata version="v2.4.x"/>` as a minimum-version
+  check; v2.4.99 satisfies any reasonable v2.4.* lower-bound without claiming
+  a major-version jump we don't actually provide. The vanilla launcher does
+  not enforce these constraints, but BLSE does — BetaDeps's reference list
+  (v0.7.5.1) shows several mods with strict pins this strategy handles.
+  WARNING: legacy mods declaring strict v2.4.0.* wildcards will NOT match
+  v2.4.99.0; if reports come in we may need to revisit.
 
-  Version: keep aligned with the actual `Lib.Harmony` PackageReference in
-  `Dependencies/TAOM.Dependencies.csproj`. When that pin bumps, bump here too.
+  Known dependents in TAOM users' modlists:
+    Character Development Editor v1.0.10 requires Harmony v2.4.2  (satisfied)
+    XorberaxLegacy declares v2.4.* wildcard                       (satisfied)
+    BLSE v2.2.2 minimum                                           (satisfied)
 
-  See docs/migration/dr3-maintenance.md "Stub modules" section.
+  SubModule entry: BetaDeps v0.7.2 → v0.7.5 evolution proved that an empty
+  <SubModules /> block makes BLSE treat the stub as "metadata-only / not
+  actually loaded" — drag-to-reorder breaks with "Missing Bannerlord.Harmony
+  a0.0.0.0 to a0.0.0.0". The TAOM.Dependencies.AliasStubSubModule class is
+  a near-no-op MBSubModuleBase derivative; its ctor work is try/catch-wrapped
+  so any LauncherEx-time exception is logged and swallowed without blowing
+  up the launcher.
+
+  When `<PackageReference Include="Lib.Harmony">` in
+  Dependencies/TAOM.Dependencies.csproj is bumped, also bump <Version> here
+  (keep the .99.0 minor-bump strategy). See dr3-maintenance.md "Stub modules"
+  section.
 -->
-<Module>
+<Module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
     <Id value="Bannerlord.Harmony" />
     <Name value="Harmony (provided by TAOM.Dependencies)" />
-    <Version value="v2.4.2" />
-    <!-- DefaultModule="true" so the launcher auto-ticks this stub on first launch.
-         Without auto-enable, third-party mods that depend on Bannerlord.Harmony
-         see the stub present but unselected and remain effectively un-toggleable.
-         BetaDeps-style convention. -->
+    <Version value="v2.4.99.0" />
+    <!-- DefaultModule="true" auto-ticks the stub on first launch so third-party
+         mods depending on Bannerlord.Harmony become toggleable immediately. -->
     <DefaultModule value="true" />
+    <!-- BetaDeps parity: both old + new format tags for maximum launcher compat.
+         MultiplayerModule=true covers the rare MP mod that depends on Harmony
+         (closes Agent 5 Trace 9 gap from the 2026-05-25 deep-review). -->
+    <SingleplayerModule value="true" />
+    <MultiplayerModule value="true" />
+    <Official value="false" />
     <ModuleCategory value="Singleplayer" />
     <ModuleType value="Community" />
+    <Url value="" />
+
     <DependedModules>
         <DependedModule Id="TAOM.Dependencies" />
     </DependedModules>
     <DependedModuleMetadatas>
         <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" />
     </DependedModuleMetadatas>
-    <SubModules />
+
+    <SubModules>
+        <SubModule>
+            <Name value="Bannerlord.Harmony Alias Stub" />
+            <DLLName value="TAOM.Dependencies.dll" />
+            <SubModuleClassType value="TAOM.Dependencies.AliasStubSubModule" />
+            <Tags />
+        </SubModule>
+    </SubModules>
 </Module>

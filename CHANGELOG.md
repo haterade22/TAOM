@@ -2,6 +2,28 @@
 
 ## 2026-05-27
 
+### feat(deps): DR3 Phase 4 A+B — BetaDeps parity stub hardening + AssemblyResolve expansion (#246)
+
+After source-level review of BetaDeps v0.7.5.1 (Nexus 11274), adopted the BUTR-community-canonical patterns for stub modules + AssemblyResolve coverage. Phase A+B of the 4-phase parity plan; Phase C (defensive infrastructure — PatchShield, SaveShield, IncompatibleModDetector) and Phase D (licenses + docs) follow in subsequent commits.
+
+**Phase A: Stub XML hardening**
+- Bumped stub `<Version>` from exact-match to `vX.Y.99.0` strategy: `Bannerlord.Harmony` 2.4.99.0, `.UIExtenderEx` 2.13.99.0, `.ButterLib` 2.10.99.0, `.MBOptionScreen` 5.11.99.0. Third-party mods often declare `<DependedModuleMetadata version="vX.Y.x"/>` as a minimum-version check; v99 satisfies any reasonable lower-bound without claiming a major-version jump.
+- Added BLSE/multiplayer-mod compat tags: `<SingleplayerModule value="true"/>`, `<MultiplayerModule value="true"/>`, `<Official value="false"/>`, `<Url value=""/>`. The MP flag closes the Agent 5 Trace 9 gap from the 2026-05-25 deep-review — multiplayer mods that depend on standard BUTR IDs are now satisfied.
+- Added `xsi:noNamespaceSchemaLocation` BUTR XSD reference to all four stubs + `Dependencies/_Module/SubModule.xml`. Free editor validation in IDEs; zero runtime impact.
+- **Critical: replaced empty `<SubModules />` with a real `<SubModule>` entry** referencing new `TAOM.Dependencies.AliasStubSubModule`. BetaDeps v0.7.2 → v0.7.5 evolution proved empty `<SubModules />` makes BLSE treat the stub as "metadata-only / not actually loaded" — drag-to-reorder breaks with "Missing Bannerlord.Harmony a0.0.0.0 to a0.0.0.0". Our stubs would have hit the same trap silently if any user installed BLSE.
+- New `Dependencies/AliasStubSubModule.cs` (~70 lines, MBSubModuleBase derivative). Ctor + OnSubModuleLoad both call `SubModule.InstallAssemblyResolveHandler()`, all work try/catch-wrapped so any LauncherEx-time exception is logged but never escapes.
+- Refactored `Dependencies/SubModule.cs`: promoted AssemblyResolve install into a public static `InstallAssemblyResolveHandler()` with `Interlocked.CompareExchange` gate. Idempotent and threadsafe; safe to call from both the SubModule static cctor and the four AliasStubSubModule ctors.
+
+**Phase B: AssemblyResolve coverage + load-order pinning**
+- Expanded `RedirectedSimpleNames` from 4 names to 22 (BetaDeps's reference list): adds Microsoft.Extensions.* family (5), Serilog (2), Mono.Cecil + MonoMod.Core/Utils, System.* polyfills (6), Newtonsoft.Json. Catches version-mismatch scenarios when a consumer mod ships its own bundled copy of any of these.
+- Expanded `<ModulesToLoadAfterThis>` in `Dependencies/_Module/SubModule.xml` from 5 vanilla entries to 26: adds the 4 stub IDs + 17 known BUTR-consumer mod IDs (DismembermentPlus, XorberaxLegacy, DynaCulture, ArtemsLivelyAnimations, FluidCombatLite, BetterSmithing, FasterTime, BanditBlackHole, PerfectFireArrows, IDontCare, ImprovedGarrisons, DistinguishedService, CulturedStartV2, DiplomacyFixes, Diplomacy, CalradiaExpanded, CalradiaExpandedKingdoms, CargoHolds, CrashDoctor, AchievementUnblocker, CREST, Crest). Pinning order so TAOM.Dependencies loads BEFORE any consumer mod's bundled MCMv5/0Harmony copy could win the AppDomain slot. Unknown Ids are silently ignored by the launcher.
+
+**Verification**: `dotnet build TAOM.sln` 0 errors; `dotnet test TAOM.Tests` 2,520/2,522 passing (no regressions). All 4 stubs deployed to game install with new fields verified via PowerShell read-back.
+
+**Architectural decisions (locked, not implemented here)**: continue vendoring official BUTR binaries (no clean-room reimpl), keep MSBuild build-time stub deploy (no runtime `BootstrapAliasFolders`), skip custom MCMOptionRow.xml prefab, defer FOMOD installer. See plan file for full rationale.
+
+Research: full source-level review of BetaDeps v0.7.5.1 distribution (4 alias SubModule.xml, FOMOD installer config, decompiled BetaDeps.Foundation.dll + BetaDeps.Harmony.dll). 22-name AssemblyResolve list mirrors `BetaDeps.Foundation.AssemblyVersionShim._redirectedNames`. 26-entry ModulesToLoadAfterThis mirrors BetaDeps SubModule.xml.
+
 ### feat(docs-kb): Tier-1 buildout from karpathy/autoresearch review — analyze_reviews, structured `---` summaries, atomic writes, `/lint-cleanup-loop` skill
 
 Honest audit after the prior commit's research-only contribution: 0 of 15 documented gaps had been closed. This commit closes the Tier-1 set.

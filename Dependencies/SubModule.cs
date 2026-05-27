@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using HarmonyLib;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.MountAndBlade;
@@ -17,8 +18,7 @@ public class SubModule : MBSubModuleBase
 
     static SubModule()
     {
-        AppDomain.CurrentDomain.AssemblyResolve += RedirectBundledDependencies;
-        EarlyLog.Info("[TAOM.Dependencies] Static init: AssemblyResolve redirect handler registered");
+        InstallAssemblyResolveHandler();
 
         EarlyLog.Info("[TAOM.Dependencies] Static init: loading TaleWorlds.Engine.GauntletUI");
         Assembly.Load("TaleWorlds.Engine.GauntletUI");
@@ -27,13 +27,68 @@ public class SubModule : MBSubModuleBase
         EarlyLog.Info("[TAOM.Dependencies] Static init: DoNotUseGeneratedPrefabs = true");
     }
 
+    /// <summary>
+    /// BetaDeps parity (DR3 Phase 4 — 2026-05-25): list expanded from 4 to 22 simple
+    /// names so that any third-party mod's bundled Microsoft.Extensions.* / Serilog /
+    /// MonoMod.* / System.* copy gets redirected to OUR loaded version. Without this,
+    /// a consumer mod that ships its own Newtonsoft.Json v12 could shadow ours at JIT
+    /// time and break serialisation. List mirrors BetaDeps.Foundation.AssemblyVersionShim.
+    /// </summary>
     private static readonly string[] RedirectedSimpleNames =
     {
+        // BUTR stack (original 4)
         "0Harmony",
+        "MCMv5",
         "Bannerlord.UIExtenderEx",
         "Bannerlord.ButterLib",
-        "MCMv5",
+        "Bannerlord.Harmony",
+        // Microsoft.Extensions family (ButterLib's DI substrate)
+        "Microsoft.Extensions.Logging.Abstractions",
+        "Microsoft.Extensions.DependencyInjection",
+        "Microsoft.Extensions.DependencyInjection.Abstractions",
+        "Microsoft.Extensions.Options",
+        "Microsoft.Extensions.Primitives",
+        // Logging
+        "Serilog",
+        "Serilog.Extensions.Logging",
+        // Harmony's transitive deps (if they ship as separate DLLs alongside Lib.Harmony 2.4.2)
+        "Mono.Cecil",
+        "MonoMod.Core",
+        "MonoMod.Utils",
+        // System.* polyfills (NET 4.7.2 sometimes resolves these differently across mods)
+        "System.Buffers",
+        "System.Memory",
+        "System.Numerics.Vectors",
+        "System.Runtime.CompilerServices.Unsafe",
+        "System.Threading.Tasks.Extensions",
+        "System.ValueTuple",
+        // JSON
+        "Newtonsoft.Json",
     };
+
+    private static int _assemblyResolveInstalled;
+
+    /// <summary>
+    /// Installs the AssemblyResolve handler exactly once across the AppDomain. Safe
+    /// to call from anywhere; subsequent calls are no-ops. Used by both the
+    /// SubModule static cctor (when TAOM.Dependencies loads in normal order) AND by
+    /// the four AliasStubSubModule ctors (which fire earlier when the stub modules
+    /// are constructed before our main SubModule). BetaDeps parity (DR3 Phase 4).
+    /// </summary>
+    public static void InstallAssemblyResolveHandler()
+    {
+        if (Interlocked.CompareExchange(ref _assemblyResolveInstalled, 1, 0) != 0)
+            return;
+        try
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += RedirectBundledDependencies;
+            EarlyLog.Info($"[TAOM.Dependencies] AssemblyResolve installed for {RedirectedSimpleNames.Length} simple names");
+        }
+        catch (Exception ex)
+        {
+            EarlyLog.Error($"[TAOM.Dependencies] InstallAssemblyResolveHandler failed: {ex.Message}");
+        }
+    }
 
     private static Assembly? RedirectBundledDependencies(object sender, ResolveEventArgs args)
     {

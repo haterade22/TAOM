@@ -1,23 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  TAOM.Dependencies passive stub module (DR3 follow-up, 2026-05-22).
-  Satisfies third-party mods declaring <DependedModule Id="Bannerlord.ButterLib"/>.
-  Real Bannerlord.ButterLib.dll + Implementation.1.4.{0,1}.dll load via TAOM.Dependencies.
-  Version pin matches the ButterLib version we vendor from Steam Workshop.
+  TAOM.Dependencies passive alias stub for Bannerlord.ButterLib.
+  See Stubs/Bannerlord.Harmony/_Module/SubModule.xml for the full design
+  rationale. Real ButterLib + Implementation.1.4.{0,1}.dll load via
+  TAOM.Dependencies's SubModule.xml.
 -->
-<Module>
+<Module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/BUTR/Bannerlord.XmlSchemas/master/SubModule.xsd">
     <Id value="Bannerlord.ButterLib" />
     <Name value="ButterLib (provided by TAOM.Dependencies)" />
-    <Version value="v2.10.4" />
-    <!-- DefaultModule="true" — see Stubs/Bannerlord.Harmony/_Module/SubModule.xml for rationale. -->
+    <Version value="v2.10.99.0" />
     <DefaultModule value="true" />
+    <SingleplayerModule value="true" />
+    <MultiplayerModule value="true" />
+    <Official value="false" />
     <ModuleCategory value="Singleplayer" />
     <ModuleType value="Community" />
+    <Url value="" />
+
     <DependedModules>
         <DependedModule Id="TAOM.Dependencies" />
+        <DependedModule Id="Bannerlord.Harmony" />
     </DependedModules>
     <DependedModuleMetadatas>
         <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" />
+        <DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" />
     </DependedModuleMetadatas>
-    <SubModules />
+
+    <SubModules>
+        <SubModule>
+            <Name value="Bannerlord.ButterLib Alias Stub" />
+            <DLLName value="TAOM.Dependencies.dll" />
+            <SubModuleClassType value="TAOM.Dependencies.AliasStubSubModule" />
+            <Tags />
+        </SubModule>
+    </SubModules>
 </Module>
