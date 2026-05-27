@@ -87,3 +87,14 @@ Configuration files are used to control various aspects of the mod, such as game
 1. **Code Review**: Reviewers verify no JSON/YAML in `/ModuleData/`
 2. **Build Process**: MSBuild only copies `.xml` files to output
 3. **Documentation**: Config format documented in development-guide.md
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/adrs/README.md](./README.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -573,3 +573,13 @@ There are no automated unit tests for kingdom XML data. Validation is performed 
 
 - **Issue:** #63 — Harad Split: Shaghana and Abanissa kingdoms
 - **Status:** Closed
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

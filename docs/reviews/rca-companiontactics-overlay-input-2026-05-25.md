@@ -5,8 +5,8 @@
 User reported that the "Assign Heroes" and "Presets" buttons on the pre-battle Order-of-Battle deployment screen do nothing when clicked, while the adjacent vanilla "Reset Deployment" / "Ready" buttons work normally. Investigation found the bug is **identical class** to issue #202 / commit `d141304` from earlier in the same session week (EquipPresets "Presets" inventory button silent no-op): the custom `GauntletLayer` is added to the host screen without `_layer.InputRestrictions.SetInputRestrictions()`, so the layer paints but never registers with the input dispatcher and mouse events pass through.
 
 Two files broken:
-- [Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs:114](Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs#L114) — user-reported, both buttons dead.
-- [Main/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs:54](Main/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs#L54) — **latent**. The `BattleActionBar.xml` prefab has `Command.Click="ExecuteAction"` bindings, but mouse clicks were silently dropped. The bar remained functional only because `HandleHotkeyInput` polls `Mission.InputManager` directly, bypassing Gauntlet entirely — which masked the broken mouse path.
+- [Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs:114](../../Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs#L114) — user-reported, both buttons dead.
+- [Main/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs:54](../../Main/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs#L54) — **latent**. The `BattleActionBar.xml` prefab has `Command.Click="ExecuteAction"` bindings, but mouse clicks were silently dropped. The bar remained functional only because `HandleHotkeyInput` polls `Mission.InputManager` directly, bypassing Gauntlet entirely — which masked the broken mouse path.
 
 Both fixed in commit `28c8d1e`. Closes #225.
 

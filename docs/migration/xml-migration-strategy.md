@@ -339,3 +339,13 @@ Post-Migration:
 - [ ] TRACKING.md updated
 - [ ] Changes documented
 ```
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/migration/README.md](./README.md)
+
+<!-- backlinks-end -->

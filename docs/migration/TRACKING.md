@@ -631,3 +631,16 @@ BannerlordTogether v0.2.2 requires `DependentVersion="v1.3.15.110062"`. TAOM's S
 3. Check off subtask checkboxes as complete
 4. Update "Last Updated" date at top
 5. Add session notes in the log section
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/migration/README.md](./README.md)
+- [docs/migration/templates/README.md](templates/README.md)
+- [docs/migration/v1.4.x-overview.md](./v1.4.x-overview.md)
+
+<!-- backlinks-end -->

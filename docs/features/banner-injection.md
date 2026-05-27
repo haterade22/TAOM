@@ -94,3 +94,13 @@ Banner keys are declared in:
 ## GitHub Issue
 - **Issue:** Unknown
 - **Status:** Unknown
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

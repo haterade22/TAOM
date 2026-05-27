@@ -669,3 +669,13 @@ Dependencies: `CareerPassiveHelper` removal overlaps with #142 + #144. The `IVol
 - **#147 path drift:** the audit body cites `Hero.MainHero.MapFaction.StringId` at line 20; current code is `Hero.MainHero?.Clan?.Kingdom?.StringId`. ADR-007 violation persists either way. Mention this in the fix-PR description so the maintainer knows the audit text didn't lie — the lookup path simply evolved without the violation being addressed.
 - **#134 perk drift:** the audit body cites `DefaultPerks.Engineering.SiegeWorks` and `Counterweights`; current code uses `Stonecutters` and `SiegeEngineer`. NRE risk identical. Worth a quick `ilspycmd` verification that the current perks exist on `DefaultPerks.Engineering` in v1.3.15 when writing the fix (audit text suggests the perk catalog has shifted recently).
 - **No FALSE-POSITIVE, STALE, DUPLICATE, or SEVERITY-DRIFT verdicts in this batch.** All 15 audit findings were confirmed against HEAD with quoted code. No interim commits touched any of the cited files since 2026-05-13.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/triage-results.md](./triage-results.md)
+
+<!-- backlinks-end -->

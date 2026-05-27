@@ -573,3 +573,21 @@ Assert.ThrowsException<ExceptionType>(() => code);
 - [patterns.md](./patterns.md) - Design patterns for testability
 - [architecture.md](./architecture.md) - Testable architecture overview
 - [code-quality.md](./code-quality.md) - Clean code principles
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/agent-teams.md](./agent-teams.md)
+- [docs/ai-includes/architecture.md](./architecture.md)
+- [docs/ai-includes/code-quality.md](./code-quality.md)
+- [docs/ai-includes/decompiled-code-analysis.md](./decompiled-code-analysis.md)
+- [docs/ai-includes/iterative-problem-solving.md](./iterative-problem-solving.md)
+- [docs/ai-includes/multi-approach-validation.md](./multi-approach-validation.md)
+- [docs/ai-includes/research-workflow.md](./research-workflow.md)
+- [docs/ai-includes/testing-guide.md](./testing-guide.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

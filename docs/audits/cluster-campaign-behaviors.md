@@ -315,3 +315,18 @@ The two phases completing in parallel without contention validates that Phase 0'
 |---|---|---|---|---|
 | 2026-05-13 | 0 | initial | `feature-manifest.md`, `README.md` | 17 queued for Phase 1+ |
 | 2026-05-13 | 3 | (skipped Phase 1+2) | `cluster-campaign-behaviors.md`, 16 GitHub issues | 24 P1 + 33 P2 + 25 P3 |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/cluster-harmony-patches.md](./cluster-harmony-patches.md)
+- [docs/audits/phase-4-kickoff.md](./phase-4-kickoff.md)
+- [docs/audits/phase-5-kickoff.md](./phase-5-kickoff.md)
+- [docs/audits/phase-6-kickoff.md](./phase-6-kickoff.md)
+- [docs/audits/phase-7-kickoff.md](./phase-7-kickoff.md)
+- [docs/audits/phase-8-kickoff.md](./phase-8-kickoff.md)
+
+<!-- backlinks-end -->

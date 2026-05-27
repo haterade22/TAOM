@@ -135,3 +135,13 @@ The audit data structure (`docs/audits/*.md`) is preserved for historical refere
 This audit ran across 9 sequential phases over 2 days (2026-05-13 to 2026-05-14), with parallel-subagent fan-out per phase. Phase 9b spanned multiple sessions including a final autonomous marathon that closed 33 issues in approximately one continuous run.
 
 Audit complete.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/README.md](./README.md)
+
+<!-- backlinks-end -->

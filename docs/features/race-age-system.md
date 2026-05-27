@@ -177,3 +177,13 @@ The daily tick iterates all alive heroes to check age-based death. Several optim
 - **Lazy enumeration with two-pass death** — `IHeroAgeAdapter.GetAllAliveHeroAges()` returns `IEnumerable<HeroAgeInfo>` (not a materialized list). `RaceAgeBehavior` uses a two-pass approach: first iterates the lazy enumerable to collect heroes that should die into a reusable `_deathList` field, then kills them in a second pass after enumeration is complete. This avoids both unnecessary list allocation AND the "collection was modified during enumeration" crash that occurs when killing a hero removes it from `Hero.AllAliveHeroes` mid-iteration. The `_deathList` is `.Clear()`'d each tick — zero GC allocation in the common case (no deaths).
 - **O(1) hero lookup** — `KillByOldAge` uses `Hero.Find(heroId)` (dictionary-backed via `CampaignObjectManager`) instead of `Hero.FindFirst` (O(n) linear scan over all characters).
 - **Race entry cache** — `RaceAgeService` caches `raceId → RaceAgeEntry` in a `Dictionary<int, RaceAgeEntry>`. The string-based race name lookup (`IRaceManager.GetRaceNameFromId`) happens once per race ID ever, not on every property access for every hero every tick. This cache is purely in-memory on the singleton service — no save/load impact.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

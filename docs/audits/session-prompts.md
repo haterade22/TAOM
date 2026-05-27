@@ -210,3 +210,13 @@ When `audit-complete.md` is written, the audit project is done. Consider:
 - Closing out the audit branch into master
 - Adding a `/skill-stocktake` cron schedule so this kind of drift gets caught next time before manual intervention
 - Recording lessons learned as a memory entry under `~/.claude/projects/.../memory/` (the audit itself surfacing dozens of bugs is a feedback signal worth preserving)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/phase-2-kickoff.md](./phase-2-kickoff.md)
+
+<!-- backlinks-end -->

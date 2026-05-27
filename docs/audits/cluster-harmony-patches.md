@@ -246,3 +246,16 @@ A 6th `taleworlds-researcher` agent ran `ilspycmd` against installed v1.3.15 DLL
 | Date | Phase | Session | Output | Findings count |
 |---|---|---|---|---|
 | 2026-05-13 | 4 | initial | `cluster-harmony-patches.md`, `phase-4-kickoff.md` (updated by user during run) | 2 P1 + 13 P2 + 11 P3 |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/phase-5-kickoff.md](./phase-5-kickoff.md)
+- [docs/audits/phase-6-kickoff.md](./phase-6-kickoff.md)
+- [docs/audits/phase-7-kickoff.md](./phase-7-kickoff.md)
+- [docs/audits/phase-8-kickoff.md](./phase-8-kickoff.md)
+
+<!-- backlinks-end -->

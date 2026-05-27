@@ -112,3 +112,13 @@ The audit identified 79 issues across 9 phases. Three structural takeaways for f
 3. **Doc staleness is real but specific — test claims drift fastest.** Phase 8 expected v1.2 staleness; the actual finding was stale Tests sections (R8 #198, #199). Future features should auto-link Tests sections to `TAOM.Tests/Features/<X>/` or auto-fail CI when the count drifts.
 
 ## Last verified: 2026-05-13
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/README.md](./README.md)
+
+<!-- backlinks-end -->

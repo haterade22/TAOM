@@ -191,3 +191,13 @@ Editor-only feature with 0.5s minimum regen interval in Live mode. Per regenerat
 
 - **Issue:** [#119](https://github.com/haterade22/TAOM/issues/119) — Scene scripts library: CS_Road procedural mesh generator (clean-room port)
 - **Status:** TBD (closed at commit time)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

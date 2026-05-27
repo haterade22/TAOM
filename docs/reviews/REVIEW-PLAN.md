@@ -167,3 +167,13 @@ After each review:
 | Gap | Decompilation verification | Done | 2 targets verified | LoadingWindowViewModel + BodyGeneratorView |
 
 **ALL FEATURES REVIEWED. 18 Codex reviews, 43 bugs found, 43 fixed. 0 deferred.**
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -143,3 +143,14 @@ The `titleType` is sourced from `manager.CharacterCreationContent.SelectedTitleT
 
 - **Issue:** #42 — [feat: culture-based startup gold and influence distribution](https://github.com/haterade22/TAOM/issues/42)
 - **Status:** Open
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/character-creation.md](./character-creation.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

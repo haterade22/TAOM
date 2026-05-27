@@ -64,3 +64,13 @@ I will add this memory in a follow-up commit after the rule is observed working 
 **READY FOR COMMIT** after:
 1. Re-run `tools/validate_all_troop_refs.py` to confirm 0 missing refs after the rollback + re-author.
 2. Re-run `./build.ps1` to confirm 0 errors.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/multi-culture-armor-revamp.md](../features/multi-culture-armor-revamp.md)
+
+<!-- backlinks-end -->

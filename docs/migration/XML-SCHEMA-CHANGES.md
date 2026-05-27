@@ -306,3 +306,14 @@ After creating XSLT transformations:
 - [ ] Family relationships preserved
 - [ ] No missing heroes/lords in encyclopedia
 - [ ] Campaign can start without crashes
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/migration/README.md](./README.md)
+
+<!-- backlinks-end -->

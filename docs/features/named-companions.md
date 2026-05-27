@@ -150,3 +150,13 @@ Controls which companions spawn, where, and their race.
 | Hero.Deserialize NullReferenceException | In-game crash | Added `faction="Faction.neutral"` to all Hero entries |
 | 6 missing Armory item IDs | In-game (naked companions) | Replaced deleted LOTRAOM items with LOTRLOME_Armory equivalents |
 | Unused `_logger` field in behavior | Codex Review #23 | Removed dead field, simplified constructor |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

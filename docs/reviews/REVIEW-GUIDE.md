@@ -371,3 +371,14 @@ After receiving Codex output, Claude must:
 - [ ] Cross-config coverage: when feature X reads from config A and config B, verify every entry in A has a corresponding entry in B (e.g., every CC culture in cultures.json has at least one career in taom_careers.xml). Review #24 found a crash from this gap.
 - [ ] Verify any proposed remediation actually fixes the issue
 - [ ] Log results in REVIEW-LOG.md
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/adrs/010-knowledge-base-architecture.md](../adrs/010-knowledge-base-architecture.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

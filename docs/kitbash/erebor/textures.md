@@ -91,3 +91,13 @@ same normal + spec + height and differ only in which diffuse channel they use.
 When new textures arrive (C-family walls, additional obsidian colours,
 etc.), add them to the appropriate section above. When a texture's purpose
 or channel set is clarified during a build session, amend the description.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/kitbash/erebor/README.md](./README.md)
+
+<!-- backlinks-end -->

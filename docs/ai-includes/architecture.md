@@ -513,3 +513,21 @@ public class MyAdapter : IMyAdapter
 - [testing-guide.md](./testing-guide.md) - Testing patterns and examples
 - [code-quality.md](./code-quality.md) - Clean code principles
 - [taleworlds-research-guide.md](./taleworlds-research-guide.md) - TaleWorlds investigation
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/agent-teams.md](./agent-teams.md)
+- [docs/ai-includes/code-quality.md](./code-quality.md)
+- [docs/ai-includes/decompiled-code-analysis.md](./decompiled-code-analysis.md)
+- [docs/ai-includes/patterns.md](./patterns.md)
+- [docs/ai-includes/security.md](./security.md)
+- [docs/ai-includes/tdd-enforcement.md](./tdd-enforcement.md)
+- [docs/ai-includes/testing-guide.md](./testing-guide.md)
+- [docs/features/alignment-aware-execution.md](../features/alignment-aware-execution.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

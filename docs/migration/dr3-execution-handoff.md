@@ -168,3 +168,13 @@ Estimated 6-15 hours of focused work to complete Phases A-K. Realistically 2-4 d
 **Session 2 next:** Phase B + C + D (UIExtenderEx + MCM + ButterLib + csproj).
 **Session 3 next:** Phase E + F + G (SubModule + native + iterate errors).
 **Session 4 next:** Phase H + I + J + K (test + deploy + reviews).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

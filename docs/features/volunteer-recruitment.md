@@ -190,3 +190,13 @@ Known overhead: the `LogDebug` call in `GetVolunteerTroopId` interpolates a stri
 
 - **Issue:** #215 — feat(troops): Rhun recruitment + Easterling → Loke-Rim + conditional-pool API
 - **Status:** Closed (delivered in commit `bce0824`)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -252,3 +252,14 @@ be authored by disassembling `TaleWorlds.Native.dll` v1.4.5 (see "Pattern
 authoring" above). Until then the C++ side reports "pattern not authored for
 this build (stub)" and the hooks stay inert. Game runs vanilla in the
 meantime — no crash, just no fix.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/migration/dr3-maintenance.md](../migration/dr3-maintenance.md)
+
+<!-- backlinks-end -->

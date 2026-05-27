@@ -320,3 +320,13 @@ Agent teams multiply token usage. Use this decision framework:
 - [taleworlds-research-guide.md](./taleworlds-research-guide.md) — Decompilation workflow
 - [code-quality.md](./code-quality.md) — Clean code principles
 - [testing-guide.md](./testing-guide.md) — Testing patterns
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -178,3 +178,13 @@ Each culture has a `<cultural_feats>` block with 3 feat IDs:
 1. Follow steps above for 3 feats
 2. Add `[DataRow]` entries in `FeatProperty_Exists_IsPublicStatic`
 3. Add culture name to `EachCulture_HasExactly3Feats` cultures array
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

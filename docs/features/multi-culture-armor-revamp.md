@@ -119,3 +119,13 @@ No runtime impact. Pure data addition. ~277 new items add ~15 KB total to per-cu
 - **Issue:** [#211 — feat(armory): KEYforce multi-culture armor revamp](https://github.com/haterade22/TAOM/issues/211)
 - **Status:** Closed (after this commit)
 - **RCA:** [docs/reviews/rca-multi-culture-armor-revamp-2026-05-22.md](../reviews/rca-multi-culture-armor-revamp-2026-05-22.md)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

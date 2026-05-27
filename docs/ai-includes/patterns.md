@@ -1193,3 +1193,20 @@ When implementing patterns, ensure:
 ✓ No `FirstOrDefault()!` - use null checks or pattern matching
 ✓ No direct dictionary access - use TryGetValue
 ✓ No singleton access without null check
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/agent-teams.md](./agent-teams.md)
+- [docs/ai-includes/architecture.md](./architecture.md)
+- [docs/ai-includes/code-quality.md](./code-quality.md)
+- [docs/ai-includes/decompiled-code-analysis.md](./decompiled-code-analysis.md)
+- [docs/ai-includes/security.md](./security.md)
+- [docs/ai-includes/tdd-enforcement.md](./tdd-enforcement.md)
+- [docs/ai-includes/testing-guide.md](./testing-guide.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

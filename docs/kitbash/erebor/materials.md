@@ -94,3 +94,13 @@ When a mesh turns out to reference a material different from the inference
 above, correct the mapping here. If a new material arrives (e.g., a proper
 C-family wall material, or new obsidian colours), add it to the relevant
 section.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/kitbash/erebor/README.md](./README.md)
+
+<!-- backlinks-end -->

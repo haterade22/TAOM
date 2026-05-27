@@ -340,3 +340,13 @@ Not done in DR3 because:
 - Each iteration requires full game launch to validate.
 
 If ILRepack consolidation is later desired, do it as a focused project with thorough in-game testing of each module's functionality.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

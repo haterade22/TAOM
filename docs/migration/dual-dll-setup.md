@@ -122,3 +122,17 @@ The script currently has `$Version = 'v1.3.15'` hardcoded (line 26). S0 task: ch
 - [v1.4.x-changes.md](v1.4.x-changes.md)
 - [v1.4.x-equipment-overhaul.md](v1.4.x-equipment-overhaul.md)
 - [v1.4.x-taom-impact.md](v1.4.x-taom-impact.md)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/migration/templates/README.md](templates/README.md)
+- [docs/migration/TRACKING.md](./TRACKING.md)
+- [docs/migration/v1.4.x-overview.md](./v1.4.x-overview.md)
+- [docs/migration/v1.4.x-taom-impact.md](./v1.4.x-taom-impact.md)
+
+<!-- backlinks-end -->

@@ -132,3 +132,14 @@ All issues are labelled `audit-impl` + `audit-tests`. Issue numbers #176–#195 
 - Phase 0 manifest text says "43 features" but the table and `Main/Features/` show 44 (excluding `TaomSettings.cs`). Trivial; correct in Phase 8 manifest sweep.
 
 ## Phase 7 complete
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/phase-8-kickoff.md](./phase-8-kickoff.md)
+- [docs/audits/phase-9-kickoff.md](./phase-9-kickoff.md)
+
+<!-- backlinks-end -->

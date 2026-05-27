@@ -212,3 +212,13 @@ Counts per verdict:
 - FALSE-POSITIVE: 0
 - DUPLICATE: 0
 - SEVERITY-DRIFT: 1 (#193)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/triage-results.md](./triage-results.md)
+
+<!-- backlinks-end -->

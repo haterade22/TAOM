@@ -134,3 +134,13 @@ No concerns. Guards spawn once per settlement entry (~20 guards). Config is lazy
 ## Save Compatibility
 
 Fully safe. `GuardsCampaignBehavior.SyncData` is empty -- guards spawn fresh every settlement entry. Adding/removing/changing guard config has zero save impact.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

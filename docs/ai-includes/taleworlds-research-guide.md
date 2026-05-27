@@ -777,3 +777,20 @@ Before implementing ANY TaleWorlds-related code, verify:
 6. Proceed with verified implementation
 
 **Remember**: The decompiled source code is your source of truth for TaleWorlds game mechanics. Use it proactively to avoid bugs, crashes, and incorrect assumptions.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/agent-teams.md](./agent-teams.md)
+- [docs/ai-includes/architecture.md](./architecture.md)
+- [docs/ai-includes/decompiled-code-analysis.md](./decompiled-code-analysis.md)
+- [docs/ai-includes/iterative-problem-solving.md](./iterative-problem-solving.md)
+- [docs/ai-includes/multi-approach-validation.md](./multi-approach-validation.md)
+- [docs/ai-includes/new-culture-authoring.md](./new-culture-authoring.md)
+- [docs/ai-includes/research-workflow.md](./research-workflow.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

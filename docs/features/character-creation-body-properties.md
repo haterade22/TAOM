@@ -180,9 +180,19 @@ This feature went through three iterations before working in-game. Each iteratio
 | Initial | Adapter relied solely on `playerChar.UpdatePlayerCharacterBodyProperties(...)` to write Hero scalars. Direct writes were initially included, then removed as "redundant" during deep-review | `/deep-review` Agent 2 quoted only the BODY of `CharacterObject.UpdatePlayerCharacterBodyProperties`, missing that the entire body is wrapped in `if (IsPlayerCharacter && IsHero)` (and the override does not call `base`). When the guard fails, the call no-ops silently — including `BodyPropertyRange.Init` from `BasicCharacterObject`. The "redundant" direct writes were the actual mechanism | Restored direct `Hero.MainHero.{StaticBodyProperties, Weight, Build}` writes BEFORE the override call. Two-step pattern: direct writes always succeed; override fires `OnPlayerBodyPropertiesChanged` when guard does pass |
 | Second | Service applied vlandia body successfully (logged), but visible body still vanilla | Vanilla `CharacterCreationCultureStageVM.OnCultureSelection` calls `InitializePlayersFaceKeyAccordingToCultureSelection` as its first statement, which writes `culture.DefaultCharacterCreationBodyProperty.BodyPropertyMax` over the player. TAOM's `FactionMap.CultureSettingService` invokes `SetSelectedCulture` (our patch fires) *then* `cultureVM.ExecuteSelectCulture()` → `_onSelection` → `OnCultureSelection` → vanilla overwrite. Our write was clobbered moments later. The reflective-invoke chain hid this from the original signature-only verification | Added sibling postfix on `CharacterCreationCultureStageVM.OnCultureSelection`. Same approach LOTRAOM 1.2.12 used via `SandboxCharacterCreationContent.OnCultureSelected` override; the virtual hook was refactored out in v1.3 (since `CharacterCreationContent` is now sealed), and the body-overwrite logic moved to the stage VM where we can postfix it |
 
-The systemic lesson: **for any state-mutation hook in the CC pipeline, decompile the entire call chain that touches the same state, not just the entry-point method.** Vanilla often has a *parallel* writer that fires from a different code path moments after yours. Captured in [feedback_taleworlds_vm_setter_decompile.md](../../C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_taleworlds_vm_setter_decompile.md).
+The systemic lesson: **for any state-mutation hook in the CC pipeline, decompile the entire call chain that touches the same state, not just the entry-point method.** Vanilla often has a *parallel* writer that fires from a different code path moments after yours. Captured in memory entry `feedback_taleworlds_vm_setter_decompile`.
 
 ## GitHub Issue
 
 - **Issue:** #108 — Per-culture default BodyProperties on Character Creation screen
 - **Status:** Closed — verified working in-game 2026-05-06
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

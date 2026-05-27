@@ -143,3 +143,14 @@ public interface IMyService
 
 // Step 4: Old implementation GONE, no deprecation period
 ```
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/adrs/README.md](./README.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

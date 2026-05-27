@@ -112,3 +112,13 @@ No C# code changed — no unit tests applicable. Verified via:
 
 - **Issue:** #71 — feat: LOTR-themed minor factions (mercenaries, mafias, sects, nomads)
 - **Status:** Open
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

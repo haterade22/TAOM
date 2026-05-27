@@ -145,3 +145,13 @@ Phase 6 is complete when:
 ## What still hasn't been audited at all (forward-looking)
 
 Phases 7, 8, 9 are all unstarted. After Phase 6, the audit shifts from \"find bugs in code\" to \"find untested code\" (Phase 7), \"find stale docs\" (Phase 8), and finally \"fix everything\" (Phase 9). Phase 9 may span multiple sessions depending on the cumulative issue queue (currently 30+ open `audit-*` issues; Phase 6 will add more).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/cluster-cross-feature.md](./cluster-cross-feature.md)
+
+<!-- backlinks-end -->

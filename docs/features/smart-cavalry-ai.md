@@ -182,3 +182,13 @@ The `Patch31` Postfix runs on every `SetMovementOrder` call but bails on non-cav
 
 - **Issue:** TBD — to be opened with feature port commits.
 - **Status:** Pending in-game verification.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

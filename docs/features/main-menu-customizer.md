@@ -121,3 +121,13 @@ The `HideOption` and `RenameOption` calls are idempotent — safe to call on eve
 
 - **Issue:** #55 — Main menu: hide Campaign, rename Sandbox to "Enter The Age Of Men"
 - **Status:** Closed
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

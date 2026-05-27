@@ -575,3 +575,13 @@ Cross-reference: [v1.4.x-equipment-overhaul.md](../v1.4.x-equipment-overhaul.md)
 - [v1.4.x-taom-impact.md](../v1.4.x-taom-impact.md) — TAOM-specific impact summary
 - [xml-data.md](../../../.claude/rules/xml-data.md) — culture/kingdom/settlement id cross-reference + TAOM notable naming convention
 - [xslt.md](../../../.claude/rules/xslt.md) — XSLT passthrough rules
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/migration/templates/README.md](./README.md)
+
+<!-- backlinks-end -->

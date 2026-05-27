@@ -124,3 +124,13 @@ Two safe options:
 ## When you've finished
 
 Save the scene. The mesh persists. On scene reload (in editor or in-game), `CS_Road` re-runs once at init and re-attaches the mesh — no manual `Generate` needed.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/scene-scripts.md](../features/scene-scripts.md)
+
+<!-- backlinks-end -->

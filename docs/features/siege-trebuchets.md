@@ -73,3 +73,13 @@ Edit `Main/Features/Siege/Models/TaomSiegeEventModel.cs`. Each `yield return` ad
 
 - **`FireTrebuchet` is broken in v1.3.15** — the getter returns the non-fire Trebuchet backing field. Do not yield it or players get duplicated Trebuchet entries. Re-check in a future Bannerlord update.
 - Global scope: every defender everywhere gets trebuchets, not just Gondor. If this feels unthematic for, e.g., steppe castle defenders (Rhûn), convert to a culture-gated service.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -165,3 +165,22 @@ Lifecycle correctness across the 6 early-phase categories (`OnSubModuleLoad`):
 - 0 P1 findings.
 
 Phase 1's hypothesis was "any other feature in the Messengers-class state". Result: **one degraded feature (BannerColorPersistence party-icon coloring), zero unfunctional features.** The audit branch's existence is vindicated — the bug is real and silent — but the project-wide wiring discipline is much better than Phase 0's worst-case framing.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/cluster-campaign-behaviors.md](./cluster-campaign-behaviors.md)
+- [docs/audits/cluster-cross-feature.md](./cluster-cross-feature.md)
+- [docs/audits/cluster-harmony-patches.md](./cluster-harmony-patches.md)
+- [docs/audits/cluster-ui.md](./cluster-ui.md)
+- [docs/audits/phase-2-kickoff.md](./phase-2-kickoff.md)
+- [docs/audits/phase-4-kickoff.md](./phase-4-kickoff.md)
+- [docs/audits/phase-5-kickoff.md](./phase-5-kickoff.md)
+- [docs/audits/phase-6-kickoff.md](./phase-6-kickoff.md)
+- [docs/audits/phase-7-kickoff.md](./phase-7-kickoff.md)
+- [docs/audits/phase-8-kickoff.md](./phase-8-kickoff.md)
+
+<!-- backlinks-end -->

@@ -355,3 +355,14 @@ The Postfix's scope is deliberately limited to the age-30 code path. Vanilla ref
 - **Race filter (Patch9_RaceFilter re-implementation):** [#107](https://github.com/haterade22/TAOM/issues/107) — closed 2026-05-06
 - **Per-culture default BodyProperties (Patch29_CCBodyProperties):** added in same session, not separately ticketed
 - **Elf CC rendering + vanilla age-30 animation override (3-iteration fix chain):** [#227](https://github.com/haterade22/TAOM/issues/227) — closed 2026-05-26 (retroactive ticket; v1 ed1131a + v2 0f3a7c0 + v3 b1c70db shipped 2026-05-22). Full RCA at [`docs/reviews/rca-elf-cc-facegen-2026-05-22.md`](../reviews/rca-elf-cc-facegen-2026-05-22.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/race-age-system.md](./race-age-system.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

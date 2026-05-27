@@ -784,3 +784,14 @@ ilspycmd "$dll_path\TaleWorlds.CampaignSystem.dll" -t "TaleWorlds.CampaignSystem
 # Player encounter looting
 ilspycmd "$dll_path\TaleWorlds.CampaignSystem.dll" -t "TaleWorlds.CampaignSystem.PlayerEncounter" 2>&1 | grep -A20 "DoLootParty"
 ```
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/migration/README.md](./README.md)
+
+<!-- backlinks-end -->

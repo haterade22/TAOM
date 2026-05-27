@@ -88,7 +88,7 @@ Pure-class formations (only melee or only ranged) and tiny formations are left a
 
 ### Two MCM settings the original developer shipped were dead code — removed on port
 
-The original `MixedFormations` module exposed `InfantryRowDepth` (1–10, default 3) and `RangedRowDepth` (1–10, default 2) settings with HintText promising "Rows of infantry when infantry is in front" — but no code in the module ever read either field. The actual `filesPerRow` is computed from formation `Width / (Interval + 1)`. Per the [`feedback_user_facing_promise_must_match_code`](../../C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_user_facing_promise_must_match_code.md) memory rule, the dead settings were removed on port rather than ship a mismatch.
+The original `MixedFormations` module exposed `InfantryRowDepth` (1–10, default 3) and `RangedRowDepth` (1–10, default 2) settings with HintText promising "Rows of infantry when infantry is in front" — but no code in the module ever read either field. The actual `filesPerRow` is computed from formation `Width / (Interval + 1)`. Per the memory rule `feedback_user_facing_promise_must_match_code`, the dead settings were removed on port rather than ship a mismatch.
 
 ## Key Files
 
@@ -134,8 +134,8 @@ Adapter (`FormationAdapter`) tested only via integration since `Formation` requi
 - Per-frame work: `OnMissionTick` accumulates dt; once per second calls `ApplyDefaultsToFormations` (one pass over player team formations, ~4 formations); every frame polls `Input.IsKeyDown` for the cycle hotkey. No allocations in the hot path.
 - Per-position-query work: lock acquire + dictionary lookup + 1 conditional `BuildInitialAssignment` if the cache miss, lock release, then `Vec2` math (lock-free). The `BuildInitialAssignment` is the only ω(N) operation and runs once per layout change per formation.
 - `Patch30` caches the `IFormationLayoutService` resolve via static `??=` field — fires once per process, then the dict lookup is bypassed on every subsequent per-unit Prefix call. Per `harmony-patches.md` hot-path-reflection-caching pattern. Caught by deep-review Agent 3.
-- **Thread safety:** Bannerlord runs Formation positioning queries across worker threads (vanilla `Formation.OrderPositionLock`, `IsFormationUnitPositionAvailableAuxMT` uses `TWSharedMutexReadLock(Scene.PhysicsAndRayCastLock)`, `_MT` suffix on `CreateNewOrderWorldPositionMT` etc.). Patch30 fires from those threads, so all dict + `SlotAssignment.ByAgentIndex` mutations in `FormationLayoutService` are protected by a `private readonly object _lock`. Reads on the hot path lock briefly (~25ns uncontended); pure math runs outside the critical section. Caught by Codex review #36; codified in [`feedback_detect_engine_threading_via_mt_suffix.md`](../../C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_detect_engine_threading_via_mt_suffix.md).
-- **Vanilla safety gate replicated:** Patch30 calls `Mission.IsFormationUnitPositionAvailable(ref candidate, team)` before setting `__result`. Vanilla Hold path delegates to `GetOrderPositionOfUnitAux` which validates the candidate against the navmesh and falls back to `unit.GetWorldPosition()` if unavailable. Our skip would have dropped that gate — custom layout positions could land on cliffs, walls, siege props, or non-navigable terrain. Caught by Codex review #36; codified in [`feedback_replicate_vanilla_safety_gates_in_prefix.md`](../../C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_replicate_vanilla_safety_gates_in_prefix.md).
+- **Thread safety:** Bannerlord runs Formation positioning queries across worker threads (vanilla `Formation.OrderPositionLock`, `IsFormationUnitPositionAvailableAuxMT` uses `TWSharedMutexReadLock(Scene.PhysicsAndRayCastLock)`, `_MT` suffix on `CreateNewOrderWorldPositionMT` etc.). Patch30 fires from those threads, so all dict + `SlotAssignment.ByAgentIndex` mutations in `FormationLayoutService` are protected by a `private readonly object _lock`. Reads on the hot path lock briefly (~25ns uncontended); pure math runs outside the critical section. Caught by Codex review #36; codified in memory entry `feedback_detect_engine_threading_via_mt_suffix`.
+- **Vanilla safety gate replicated:** Patch30 calls `Mission.IsFormationUnitPositionAvailable(ref candidate, team)` before setting `__result`. Vanilla Hold path delegates to `GetOrderPositionOfUnitAux` which validates the candidate against the navmesh and falls back to `unit.GetWorldPosition()` if unavailable. Our skip would have dropped that gate — custom layout positions could land on cliffs, walls, siege props, or non-navigable terrain. Caught by Codex review #36; codified in memory entry `feedback_replicate_vanilla_safety_gates_in_prefix`.
 
 ## Known Limitations
 
@@ -173,3 +173,13 @@ Debug-mode round-trip:
 
 - **Issue:** TBD (create with `/issue feature MixedFormations integration` before commit)
 - **Status:** In progress — Phase 1 (port to Main/Features/) complete; awaiting in-game verification.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

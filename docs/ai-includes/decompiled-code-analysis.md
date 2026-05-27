@@ -286,3 +286,13 @@ _logger.LogError($"Failed to process: {ex.Message}");
 - [patterns.md](patterns.md) - Design patterns (Hook, Strategy, Builder)
 - [tdd-enforcement.md](tdd-enforcement.md) - Test-driven development workflow
 - [taleworlds-research-guide.md](taleworlds-research-guide.md) - TaleWorlds decompilation workflow
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

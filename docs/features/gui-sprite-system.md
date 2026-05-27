@@ -288,3 +288,15 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 2. Property name in XML must EXACTLY match `[DataSourceProperty]` name (case-sensitive)
 3. `Command.Click="ExecuteX"` requires a public `void ExecuteX()` method on the ViewModel
 4. `{CollectionName}` requires `MBBindingList<T>` — not `List<T>` or `IReadOnlyList<T>`
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/career-system.md](./career-system.md)
+- [docs/features/special-resources.md](./special-resources.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -220,7 +220,7 @@ Target: accuracy >60%, miss rate <30%, false positives <20%
 
 **Date:** 2026-04-05
 **Prompt version:** v1 (basic — ADR-focused, no decompilation guidance)
-**Report:** [codex-adversarial-cultural-feats-2026-04-05.md](codex-adversarial-cultural-feats-2026-04-05.md)
+**Report:** `codex-adversarial-cultural-feats-2026-04-05.md` (not archived)
 
 ### Codex Findings (4)
 
@@ -249,7 +249,7 @@ Target: accuracy >60%, miss rate <30%, false positives <20%
 
 **Date:** 2026-04-05
 **Prompt version:** v2 (improved — feature-specific focus, DO NOT section, decompilation requested)
-**Report:** [codex-adversarial-banner-color-persistence-2026-04-05.md](codex-adversarial-banner-color-persistence-2026-04-05.md)
+**Report:** `codex-adversarial-banner-color-persistence-2026-04-05.md` (not archived)
 
 ### Codex Findings (3)
 
@@ -280,7 +280,7 @@ Target: accuracy >60%, miss rate <30%, false positives <20%
 
 **Date:** 2026-04-05
 **Prompt version:** v3 (required sections, `E:\Decompiled_Bannerlord\` paths, concrete math scenarios)
-**Report:** [codex-adversarial-army-targeting-2026-04-05.md](codex-adversarial-army-targeting-2026-04-05.md)
+**Report:** `codex-adversarial-army-targeting-2026-04-05.md` (not archived)
 
 ### Codex Findings (0)
 
@@ -318,7 +318,7 @@ Verdict: **approve** — "No blocking no-ship case."
 
 **Date:** 2026-04-05
 **Prompt version:** v4 (verification artifacts, split show/analyze, quality gates)
-**Report:** [codex-adversarial-troop-progression-2026-04-05.md](codex-adversarial-troop-progression-2026-04-05.md)
+**Report:** `codex-adversarial-troop-progression-2026-04-05.md` (not archived)
 
 ### Codex Findings (3)
 
@@ -422,7 +422,7 @@ Claude found no additional bugs. First review where Codex found everything.
 
 **Date:** 2026-04-08
 **Prompt version:** v6
-**Report:** [codex-adversarial-named-companions-2026-04-08.md](codex-adversarial-named-companions-2026-04-08.md)
+**Report:** `codex-adversarial-named-companions-2026-04-08.md` (not archived)
 
 ### Codex Findings
 
@@ -467,7 +467,7 @@ Claude found no additional bugs. First review where Codex found everything.
 
 **Date:** 2026-04-14
 **Prompt version:** v6-adversarial (Known Suspects, config cross-ref, lifecycle tracing)
-**Report:** [codex-adversarial-career-cc-2026-04-14.md](codex-adversarial-career-cc-2026-04-14.md)
+**Report:** `codex-adversarial-career-cc-2026-04-14.md` (not archived)
 
 ### Codex Findings (2)
 
@@ -503,7 +503,7 @@ Claude found no additional bugs. First review where Codex found everything.
 
 **Date:** 2026-04-23
 **Prompt version:** v6 + 6-Known-Suspects
-**Report:** [codex-adversarial-spider-2026-04-23.md](codex-adversarial-spider-2026-04-23.md)
+**Report:** `codex-adversarial-spider-2026-04-23.md` (not archived)
 **Codex model:** gpt-5.5 (ChatGPT-account auth — o4-mini and gpt-5 rejected with "model not supported")
 
 ### Feature scope
@@ -643,7 +643,7 @@ After landing the Codex Review 33 fixes, in-game verification surfaced two furth
 
 | # | Bug | Category | Why Missed | Preventive Action |
 |---|-----|----------|-----------|-------------------|
-| A | Filtered list ordered by iteration source (engine), not config | Logic error / iteration direction | I picked the natural-feeling "iterate the universe, keep what's allowed" pattern. Correct for the SET, wrong for the ORDER. The deep-review's data-flow agent verified mechanical correctness but didn't trace order-as-UX. | Memory file [feedback_filter_order_and_default.md](../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_filter_order_and_default.md) Trap 1 codifies the iteration-source rule. The new `BuildGlobalIndexMap_Mordor_UrukFirstNotHuman` and `BuildGlobalIndexMap_Isengard_UrukHaiBerserkerHumanInThatOrder` tests pin the regression. |
+| A | Filtered list ordered by iteration source (engine), not config | Logic error / iteration direction | I picked the natural-feeling "iterate the universe, keep what's allowed" pattern. Correct for the SET, wrong for the ORDER. The deep-review's data-flow agent verified mechanical correctness but didn't trace order-as-UX. | Memory entry `feedback_filter_order_and_default` Trap 1 codifies the iteration-source rule. The new `BuildGlobalIndexMap_Mordor_UrukFirstNotHuman` and `BuildGlobalIndexMap_Isengard_UrukHaiBerserkerHumanInThatOrder` tests pin the regression. |
 | B | Engine-default selection state landed in allowed-but-non-canonical filtered position | Logic error / default-state semantics | Traced the success path ("does the player's current race resolve to a valid filtered position?") but not the UX path ("what does the user expect the default to be?"). Codex traced `Refresh → 1779` and flagged a different bug (the OnPropertyChangedWithValue reflection bug); neither reviewer enumerated default-state expectations against engine-default state. | Same memory file Trap 2: detect "first encounter" with each filter context via `ConditionalWeakTable`, force-switch when engine-default falls on a non-canonical position. New `ShouldForceSwitchToDefault` helper + four cases. |
 
 ### Build & Test (Review 33 follow-ups)
@@ -981,3 +981,13 @@ Full RCA at [`docs/reviews/rca-crash-report-codex-2026-05-25.md`](rca-crash-repo
 2. **REVIEW-LOG.md** updated (this entry).
 3. **`.claude/skills/deep-review/SKILL.md`** Phase 5 Agent 5 prompts to be updated: (a) toggle-cross-reference applies to EVERY MCM toggle in the page, not a hand-listed subset; (b) DTO Completeness trace extended from "is this populated?" to "are non-empty values actually produced under normal operation?". Both gaps directly let C-H2 and C-M2 slip past deep-review.
 4. **Direct-dispatch contract validated end-to-end** — first time this contract carried a real review without user terminal hand-off. No rough edges; harness notification arrived cleanly; auto-resume worked. The CHANGELOG entry for the contract change references this review as the first user.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

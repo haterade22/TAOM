@@ -81,3 +81,13 @@ Output should contain `as_elf_facegen` and `as_elf_female_facegen`. If either is
 Previous snapshot: 2026-05-04 — initial snapshot with the 1.3 action-type alias edits across the 12 pre-existing facegen sets.
 
 If you re-snapshot later (e.g., after a LOTRLOME update we want to track), bump this date and note any changes vs. the previous snapshot.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/character-creation.md](../../features/character-creation.md)
+
+<!-- backlinks-end -->

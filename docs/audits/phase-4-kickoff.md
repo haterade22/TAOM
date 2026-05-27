@@ -90,3 +90,13 @@ Per finding severity:
 4. `docs/audits/phase-5-kickoff.md` written for the next session (UI cluster).
 5. `docs/audits/README.md` Phases table updated.
 6. `/context-save` snapshot written with descriptor `phase4-patches-complete`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/cluster-harmony-patches.md](./cluster-harmony-patches.md)
+
+<!-- backlinks-end -->

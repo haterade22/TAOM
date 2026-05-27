@@ -234,3 +234,13 @@ DR3 stays on the migration board as a follow-up to be executed after BUTR ships 
 - `docs/migration/dual-dll-setup.md` — DLL acquisition + swap procedure (relevant to DR3 native DLL handling)
 - `docs/adrs/` — pending new ADR documenting DR3 phasing decision
 - `memory/harmony-fork-research.md` — confirms HarmonySharedState handles multi-assembly Harmony coexistence (which is why DR1's merge works alongside external Bannerlord.Harmony when re-enabled)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

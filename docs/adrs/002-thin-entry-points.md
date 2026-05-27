@@ -331,3 +331,15 @@ When refactoring existing code:
 ## Related ADRs
 
 - **ADR-007**: Adapter Pattern for Sealed Classes - Detailed adapter pattern implementation
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/adrs/009-self-documenting-code.md](./009-self-documenting-code.md)
+- [docs/adrs/README.md](./README.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

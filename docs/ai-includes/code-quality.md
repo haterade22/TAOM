@@ -558,3 +558,18 @@ Example:
 - [architecture.md](./architecture.md) - Overall architecture (Entry Points, Services, Adapters)
 - [security.md](./security.md) - Security best practices
 - [research-workflow.md](./research-workflow.md) - When you need to understand unfamiliar code
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/agent-teams.md](./agent-teams.md)
+- [docs/ai-includes/architecture.md](./architecture.md)
+- [docs/ai-includes/security.md](./security.md)
+- [docs/ai-includes/tdd-enforcement.md](./tdd-enforcement.md)
+- [docs/ai-includes/testing-guide.md](./testing-guide.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

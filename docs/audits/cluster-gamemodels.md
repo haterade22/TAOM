@@ -370,3 +370,19 @@ The risk shifted from "silent service drop" (none found) to "systemic rule-4 vio
 - **Phase 7 (test coverage)**: ~35 of 38 models have at least one untested code path because logic is inline. The fix is "extract to service, then test the service."
 - **Phase 8 (docs)**: `docs/features/execution.md` confirmed missing; no other gaps surfaced in this phase.
 - **Phase 9 (triage)**: The 35 P2 findings cluster well into 5 patterns (A–E). Recommend Pattern A as the largest batch fix.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/cluster-campaign-behaviors.md](./cluster-campaign-behaviors.md)
+- [docs/audits/cluster-harmony-patches.md](./cluster-harmony-patches.md)
+- [docs/audits/phase-4-kickoff.md](./phase-4-kickoff.md)
+- [docs/audits/phase-5-kickoff.md](./phase-5-kickoff.md)
+- [docs/audits/phase-6-kickoff.md](./phase-6-kickoff.md)
+- [docs/audits/phase-7-kickoff.md](./phase-7-kickoff.md)
+- [docs/audits/phase-8-kickoff.md](./phase-8-kickoff.md)
+
+<!-- backlinks-end -->

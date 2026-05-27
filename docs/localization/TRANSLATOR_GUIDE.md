@@ -314,3 +314,13 @@ Untranslated entries fall back to English text — the game stays valid, just sh
 ## Questions?
 
 Open an issue on GitHub or reach out on the mod's Discord channel.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

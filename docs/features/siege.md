@@ -66,3 +66,13 @@ The patch is a safety net only; the intended fix is to add the scene entities.
 ## GitHub Issue
 - **Issue:** Unknown (introduced in commit `d3cb87c` — "fix: add patch to guard against IndexOutOfRangeException in siege camp positioning")
 - **Status:** Unknown
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

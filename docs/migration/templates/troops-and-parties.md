@@ -704,3 +704,13 @@ Vanilla covers 6 cultures × `stage_<n>_page_<p>_branch_<b>`. TAOM extends to LO
 - `tools/apply_gondor_troop_revamp.py` — mechanical EquipmentRoster swap (issue #99 precedent)
 - `tools/validate_gondor_refs.py` — underwear-bug gate (cross-checks armor refs against Armory) — extend to other cultures pre-migration
 - `tools/complete_lords_xslt.py` — XSLT-level reference for character XML migration
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/migration/templates/README.md](./README.md)
+
+<!-- backlinks-end -->

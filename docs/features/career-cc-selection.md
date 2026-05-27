@@ -211,3 +211,13 @@ Character creation runs once per new game. All data is loaded and cached on firs
 - **Review:** `docs/archive/codex-reviews-2026-04/codex-adversarial-career-cc-2026-04-14.md`
 - **Review Log:** Review #24 in `docs/reviews/REVIEW-LOG.md`
 - **Findings:** 1 HIGH (empty menu crash — fixed), 1 MEDIUM (test gap — fixed)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -4,7 +4,7 @@
 
 `/deep-review` on the CultureMarketplace feature returned 0 findings on Standards, API Compatibility, Performance, and Completeness — but the Data Flow agent (Agent 5) found **3 LOW dead-code findings**, all in the same category: declared-but-never-used scaffolding. All 3 fixed (deletion) in the same session. Build clean (0 errors), 2254/2254 tests still pass.
 
-**Important:** this is a **repeat-offender pattern**. The exact same rule fired on EquipPresets review #5 (2026-05-06, 14 days ago) and was codified as [`feedback_no_aspirational_enum_values.md`](../../../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_no_aspirational_enum_values.md). The rule existed at session start; I did not apply it during design.
+**Important:** this is a **repeat-offender pattern**. The exact same rule fired on EquipPresets review #5 (2026-05-06, 14 days ago) and was codified as memory entry `feedback_no_aspirational_enum_values`. The rule existed at session start; I did not apply it during design.
 
 ## Findings + Root Cause Table
 
@@ -327,3 +327,13 @@ D1, D2 share a shape: the previous review-and-ship cycles (3 of them) didn't not
 - 17 tests migrated from reflection-private to public-API (same coverage, cleaner contract)
 - Full suite: **2323 passed / 0 failed / 2 skipped** (was 2321 after Phase 4)
 - CultureMarketplace + adapter scope: **89/89** (was 87 after Phase 4)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/rca-crash-report-2026-05-25.md](./rca-crash-report-2026-05-25.md)
+
+<!-- backlinks-end -->

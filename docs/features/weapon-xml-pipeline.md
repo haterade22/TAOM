@@ -284,3 +284,13 @@ The pipeline is project-agnostic. Run `--init` from any directory containing wea
 - **FBX -> .tpac/.meta conversion** — Bannerlord's modding kit handles this; the pipeline only consumes mesh names.
 - **Texture / material assignment** — lives in the FBX/material editor.
 - **Hand-tuning numeric stats** — the manifest is the human-input layer; the pipeline does no balancing.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

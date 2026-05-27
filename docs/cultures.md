@@ -155,3 +155,13 @@
 | 10 | `settlements.xml` / `custom_settlements.xml` | Assign settlements to culture |
 | 11 | `SubModule.xml` | Register new XML files |
 | 12 | `taom_module_strings.xml` | Add localization strings |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/new-culture-authoring.md](ai-includes/new-culture-authoring.md)
+
+<!-- backlinks-end -->

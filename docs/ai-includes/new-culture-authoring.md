@@ -402,3 +402,15 @@ If you author a sub-culture line (e.g., crossbowmen as a parallel to bowmen, or 
 - [`docs/cultures.md`](../cultures.md) — net-new culture in `taom_spcultures.xml` (Phase 0 prerequisite if applicable)
 - [`docs/features/dale.md`](../features/dale.md) — concrete worked example from this session
 - [`docs/ai-includes/taleworlds-research-guide.md`](taleworlds-research-guide.md) — decompile workflow for vanilla weapon/culture/troop API verification
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/dale.md](../features/dale.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reviews/rca-gondor-lord-review-2026-05-26.md](../reviews/rca-gondor-lord-review-2026-05-26.md)
+
+<!-- backlinks-end -->

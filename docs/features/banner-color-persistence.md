@@ -138,3 +138,13 @@ Set `"EnableDriftGuard": false` in `banner_color_config.json`.
 ### Verify BannerPaste is working
 
 Open the Banner Editor in-game, copy another clan's banner code from the encyclopedia, then Ctrl+V in the banner editor. The shield and character model should update immediately.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

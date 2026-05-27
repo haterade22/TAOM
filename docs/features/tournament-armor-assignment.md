@@ -103,3 +103,14 @@ None. `TaomTournamentModel` has no constructor dependencies — instantiated dir
 
 - **Issue:** [#52 — feat: TaomTournamentModel — per-participant culture armor assignment](https://github.com/haterade22/TAOM/issues/52)
 - **Status:** Open (close after in-game verification)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/arena.md](./arena.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

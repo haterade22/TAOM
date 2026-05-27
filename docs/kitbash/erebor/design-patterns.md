@@ -240,3 +240,13 @@ Each time a build iteration reveals something new — a pivot quirk, a
 surprising rotation, a mesh whose shape doesn't match the inference — add
 the correction to this file. This doc is the persistent playbook that
 shortens every future build.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/kitbash/erebor/README.md](./README.md)
+
+<!-- backlinks-end -->

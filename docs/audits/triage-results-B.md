@@ -293,3 +293,12 @@ All sub-items VALID. **VALID P3.**
 - No ilspycmd runs needed in this batch — Cluster F closure section of `cluster-harmony-patches.md` (lines 210-228) already resolved all v1.3.15-unverified flags for issues #157, #159, #160, #162. Cluster F2 (re-verifying `AgentVisuals` ctor + `MBAgentVisuals.CreateAgentVisuals` + `ClothColor1/2` setter behavior in v1.3.15) is queued for Phase 9 BEFORE issue #150's fix lands — not blocking this triage.
 - No new findings filed inline. One drive-by note: the bare `catch { }` on `Patch31_FormationSetMovementOrder.cs` ❌ — actually Patch31 has no try/catch; the Postfix relies on cheap null-checks. So Patch31 is not part of the bare-catch family despite proximity to Patch35.
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/triage-results.md](./triage-results.md)
+
+<!-- backlinks-end -->

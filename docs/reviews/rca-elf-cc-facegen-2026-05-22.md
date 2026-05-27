@@ -154,3 +154,14 @@ C# compile: `dotnet build Main/TAOM.csproj -t:Restore,Compile` → **0 errors / 
 1. **Hypothesis discipline.** "Action set IDs youth, adult, etc." was a plausible guess from a user with hands-on context. It was also wrong. I verified by grepping LOTRLOME + Native first (took 30 sec), then went to the decompiled source. Cheap verification rounds before deep dives save context. Without grep-first I might have spent time auditing skin maturity types, age_keys, body morphs — none of which were the bug.
 2. **"All races break" is the diagnostic signal.** Whenever a CC bug shows on multiple races with identical underlying data, the bug is upstream of the data layer (engine, anim binding, vanilla code). XML edits cannot fix it. The fix must be C# Harmony.
 3. **Don't change data to mask engine bugs.** If LOTRLOME had remapped `act_childhood_athlete → anim_childhood_focus` to fix this, the change would propagate to the other two call sites where the original anim was working fine. Engine bugs need targeted Harmony patches, not data overrides.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/character-creation.md](../features/character-creation.md)
+- [docs/features/race-age-system.md](../features/race-age-system.md)
+
+<!-- backlinks-end -->

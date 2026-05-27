@@ -149,3 +149,13 @@ Phase 5 is complete when:
 ## What still hasn't been audited at all (forward-looking)
 
 Phases 6, 7, 8, 9 are all unstarted. After Phase 5, the audit shifts from "find bugs in code" to "find gaps between features" (Phase 6), then "find untested code" (Phase 7), "find stale docs" (Phase 8), and finally "fix everything" (Phase 9).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/cluster-ui.md](./cluster-ui.md)
+
+<!-- backlinks-end -->

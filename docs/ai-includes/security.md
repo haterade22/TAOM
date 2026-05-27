@@ -404,3 +404,14 @@ Before considering any code complete:
 - [testing-guide.md](./testing-guide.md) - Security testing patterns
 - [architecture.md](./architecture.md) - Secure architecture principles
 - [patterns.md](./patterns.md) - Adapter pattern for safe abstractions
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/code-quality.md](./code-quality.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

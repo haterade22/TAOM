@@ -216,6 +216,8 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 
 ## Doc Lookup
 
+**Start here for any doc question:** [docs/INDEX.md](./docs/INDEX.md) — curated topical map across all 70 feature docs, ADRs, reviews, ai-includes, and migration docs. Knowledge-base architecture: [ADR-010](./docs/adrs/010-knowledge-base-architecture.md).
+
 | Need to... | Read |
 |------------|------|
 | Write tests / TDD workflow | [tdd-enforcement.md](./docs/ai-includes/tdd-enforcement.md) |
@@ -296,6 +298,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | XML config | `Main/_Module/ModuleData/` |
 | XSLT files | `Main/_Module/ModuleData/*.xslt` |
 | Custom lords XML | `Main/_Module/ModuleData/characters/lords.xml` |
+| **TAOM_Map settlements (LIVE)** | `<game>/Modules/TAOM_Map/ModuleData/settlements.xml` + `Languages/<LANG>/loc_settlements.xml` × 12. **External module — NOT in repo.** Engine-registered via `TAOM_Map/SubModule.xml`. The repo's `Main/_Module/ModuleData/settlements.xml` is a **STALE SHADOW** (last touched 2026-04-06, NOT registered in Main `SubModule.xml`, position data has diverged); existing PS scripts target it but they don't affect in-game behavior. For live display-name renames use `tools/Apply-MapVillageNames.py`. See [`docs/reference/taom-map-settlement-naming.md`](docs/reference/taom-map-settlement-naming.md). Memory: `feedback_taom_map_live_vs_stale_shadow.md`. |
 | SpecialResources config | `Main/_Module/ModuleData/special_resources/` (resource defs + troop costs XML) |
 | CultureMarketplace config | `Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml` (optional per-culture blacklist + weight-boost overrides; ships empty — auto-derive from `MBObjectManager` is the default; `FiniteFloatValidator`-guarded weights, NaN/Infinity/negative/>1000 revert to 1.0 with warning) |
 | CareerSystem config | `Main/_Module/ModuleData/career_system/` (career defs + choice trees + ability templates + ability tuning XML) |

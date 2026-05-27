@@ -475,3 +475,14 @@ Edit `KinslayingMultiplier` in `Main/Features/Execution/Hooks/ExecutionActionHoo
 - [Harmony Patches](../../.claude/rules/harmony-patches.md) — Patch conventions
 - `Main/_Module/ModuleData/diplomacy/diplomacy.json` — Kingdom relationship tiers
 - `Main/_Module/ModuleData/factionmap/factions.json` — UI-level faction data (uses LOTR names, NOT kingdom StringIds)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/execution.md](./execution.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -2,7 +2,7 @@
 
 How to investigate and learn when facing uncertainty.
 
-> **Complement to**: [problem-solving-guide.md](../problem-solving-guide.md) which covers TAOM-specific research (TaleWorlds types, decompiled sources, game engine behavior). This guide covers **general research practices**.
+> **Complement to**: [taleworlds-research-guide.md](./taleworlds-research-guide.md), which covers TAOM-specific research (TaleWorlds types, decompiled sources, game engine behavior). This guide covers **general research practices**.
 
 ---
 
@@ -245,7 +245,6 @@ If you exceed the time box:
 For TaleWorlds-specific research (sealed types, game engine behavior, decompiled sources), see:
 
 - [taleworlds-research-guide.md](./taleworlds-research-guide.md) - In-depth TaleWorlds investigation
-- [../problem-solving-guide.md](../problem-solving-guide.md) - Comprehensive problem-solving with TaleWorlds focus
 
 ---
 
@@ -254,3 +253,14 @@ For TaleWorlds-specific research (sealed types, game engine behavior, decompiled
 - [iterative-problem-solving.md](./iterative-problem-solving.md) - Debugging through hypothesis testing
 - [multi-approach-validation.md](./multi-approach-validation.md) - When multiple solutions are viable
 - [tdd-enforcement.md](./tdd-enforcement.md) - Using tests to verify understanding
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/code-quality.md](./code-quality.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

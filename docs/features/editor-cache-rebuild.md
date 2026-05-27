@@ -179,3 +179,13 @@ Edit `cache_rebuild_config.json`: `"forceVanilla": true` or `"enabled": false`. 
 
 - **Issue:** [#118](https://github.com/haterade22/TAOM/issues/118)
 - **Status:** Open (implementation complete; Phase 14 integration test pending vanilla run completion)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

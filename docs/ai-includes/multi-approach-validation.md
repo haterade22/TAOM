@@ -422,5 +422,17 @@ We chose Approach [X] because [specific reasons].
 
 - [tdd-enforcement.md](./tdd-enforcement.md) - Hypothesis-driven development workflow
 - [iterative-problem-solving.md](./iterative-problem-solving.md) - Systematic debugging approach
-- [../problem-solving-guide.md](../problem-solving-guide.md) - Research and investigation
+- [taleworlds-research-guide.md](./taleworlds-research-guide.md) - Research and investigation strategies for TaleWorlds internals
 - [ADRs](../adrs/) - Existing architectural decisions
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/iterative-problem-solving.md](./iterative-problem-solving.md)
+- [docs/ai-includes/research-workflow.md](./research-workflow.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

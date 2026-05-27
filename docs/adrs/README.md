@@ -15,6 +15,7 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 | [007](./007-adapter-pattern.md) | Adapter Pattern for Sealed Classes | Services use adapters, NOT sealed TaleWorlds types | Accepted | **Mandatory** |
 | [008](./008-testability-requirements.md) | Testability Requirements | Business logic must be 100% unit testable | Accepted | **Mandatory** |
 | [009](./009-self-documenting-code.md) | Self-Documenting Code Standards | No inline comments, ELI5 summaries, code reads like English | Accepted | Standard |
+| [010](./010-knowledge-base-architecture.md) | Knowledge-Base Architecture | `docs/INDEX.md` + linter + backlinks + `raw/research/` layers; keep markdown links over Obsidian wikilinks | Accepted | Standard |
 
 ## Quick Rules Reference
 
@@ -39,3 +40,13 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 - **Refactoring**: Read [ADR-003](./003-no-regions.md), [ADR-004](./004-no-obsolete.md)
 - **XML Configuration**: Read [ADR-001](./001-xml-config.md)
 - **Service Design**: Read [ADR-007](./007-adapter-pattern.md) (adapter pattern), [ADR-005](./005-no-preprocessor-directives.md) (environment handling)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

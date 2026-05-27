@@ -163,3 +163,14 @@ Bannerlord must already support the language natively (it must have an entry in 
 ## Performance
 
 No performance impact — translation files are loaded once at startup by the engine and cached in a static dictionary. Empty translation files (the current stub state) add zero overhead.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/localization-override.md](./localization-override.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

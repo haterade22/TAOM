@@ -86,3 +86,14 @@ None. Tier values and wage tables are hardcoded in `VolunteerTierService` and `T
 ## GitHub Issue
 - **Issue:** Unknown
 - **Status:** Unknown
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/gondor-ithilien-ranger.md](./gondor-ithilien-ranger.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

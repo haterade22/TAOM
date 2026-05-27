@@ -90,7 +90,7 @@ The model methods that touch `Game.Current.ObjectManager` and `Items.All` are no
 
 1. Open `Main/_Module/ModuleData/characters/npcs_<culture>.xml`.
 2. Add (or edit) a `<NPCCharacter id="gear_practice_dummy_<culture>" ...>` entry with a `RandomBattleEquipments` block listing the desired equipment templates.
-3. Verify the equipment template IDs exist in `LOTRLOME_Armory` — see [equipment-armory-system.md](../../C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/equipment-armory-system.md). Missing items will leave the participant in underwear.
+3. Verify the equipment template IDs exist in `LOTRLOME_Armory` — see CLAUDE.md "Equipment & Armory" and memory entry `equipment-armory-system`. Missing items will leave the participant in underwear.
 4. No code changes needed. The model resolves the new dummy via `ResolveDummyId` on the next tournament.
 
 ## How to Tune Prize Pool Tier Ranges
@@ -106,3 +106,13 @@ Filtering rules (excludes `NotMerchandise`, requires weapon or armor, excludes h
 
 - **Issue:** None — feature predates the mandatory issue-per-feature policy.
 - **Status:** Shipping. Stable.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

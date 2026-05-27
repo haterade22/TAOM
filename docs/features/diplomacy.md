@@ -145,3 +145,13 @@ Both `triggerDay` values are currently set to 1 (immediate on new game). MCM ove
 ## GitHub Issue
 - **Issue:** Unknown (commits reference `16f7f4e` for initial implementation; no issue number in messages)
 - **Status:** Active
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

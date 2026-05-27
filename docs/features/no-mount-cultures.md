@@ -125,3 +125,13 @@ No unit tests — all patches are thin Harmony entry points with no extractable 
 
 - **Issue #49** — [Arena practice crash for all 13 TAOM cultures](https://github.com/haterade22/TAOM/issues/49) — Closed
 - **Issue #50** — [Dwarf character creation crashes and horse removal](https://github.com/haterade22/TAOM/issues/50) — Closed
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -417,3 +417,14 @@ Eleven of the fourteen target classes have **no 1.3.15 cached source** at `~/.ta
 1. **`DefaultAllianceModel.GetScoreOfStartingAlliance` lost `IFaction evaluatingFaction`** — `TaomAllianceModel` has a hard compile break here. Easy fix (drop one parameter both at override and at `base.` call), but failing to make it will cascade through the Diplomacy module.
 2. **`DefaultAllianceModel` gained 5 new public methods** (`GetSupportScoreOfStartingAllianceForClan`, `CanMakeAlliance`, `GetAllianceFactorForDeclaringWar`, `GetAllianceFactorForDeclaringPeace`, `GetProposerClanForAllianceDecision`). `TaomAllianceModel.MaxNumberOfAlliances => int.MaxValue` may no longer be sufficient to allow unlimited alliances — `CanMakeAlliance` re-checks `MaxNumberOfAlliances` from `Campaign.Current.Models.AllianceModel`, which would respect the int.MaxValue override, but the new method also has player-support / score-threshold gates that could veto an alliance independently. Audit `CanMakeAlliance` behavior before declaring the lore-friendly alliances feature stable.
 3. **Naval DLC surface across BattleReward / CombatSimulation / MilitaryPower / TargetScore.** TAOM does not override any of the new `Ship` / `Figurehead` / `IsTargetingPort` methods, so nothing breaks at compile time. But: vanilla 1.4.5 will now call `CalculateShipDamageAfterDefeat`, `GetFigureheadLoot`, etc. during any naval map event. If TAOM ships a map with naval encounters before evaluating these, expect undefined behavior. Document in the v1.4.x-overview that naval is "Out Of Scope" for the S3 migration unless explicitly opted in.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/migration/templates/README.md](templates/README.md)
+
+<!-- backlinks-end -->

@@ -145,3 +145,26 @@ Phase 0 produced:
 | Date | Phase | Session | Output | Findings count |
 |---|---|---|---|---|
 | 2026-05-13 | 0 | initial | `feature-manifest.md`, `README.md` | 8 + 3 + 3 + 1 + 2 = 17 items queued for Phase 1+ |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/cluster-campaign-behaviors.md](./cluster-campaign-behaviors.md)
+- [docs/audits/cluster-cross-feature.md](./cluster-cross-feature.md)
+- [docs/audits/cluster-gamemodels.md](./cluster-gamemodels.md)
+- [docs/audits/cluster-harmony-patches.md](./cluster-harmony-patches.md)
+- [docs/audits/cluster-ui.md](./cluster-ui.md)
+- [docs/audits/phase-1-kickoff.md](./phase-1-kickoff.md)
+- [docs/audits/phase-2-kickoff.md](./phase-2-kickoff.md)
+- [docs/audits/phase-4-kickoff.md](./phase-4-kickoff.md)
+- [docs/audits/phase-5-kickoff.md](./phase-5-kickoff.md)
+- [docs/audits/phase-6-kickoff.md](./phase-6-kickoff.md)
+- [docs/audits/phase-7-kickoff.md](./phase-7-kickoff.md)
+- [docs/audits/phase-8-kickoff.md](./phase-8-kickoff.md)
+- [docs/audits/phase-9-kickoff.md](./phase-9-kickoff.md)
+- [docs/audits/wiring-matrix.md](./wiring-matrix.md)
+
+<!-- backlinks-end -->

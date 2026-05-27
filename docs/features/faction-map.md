@@ -155,3 +155,13 @@ One entry per region id (matching faction id). Fields:
 ## GitHub Issue
 - **Issue:** Unknown (commit `e32d313`)
 - **Status:** Unknown
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

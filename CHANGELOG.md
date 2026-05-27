@@ -1,6 +1,124 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-27
+
+### feat(gondor-lords): lore-driven skills + traits for 118 Gondor NPCs
+
+Filled in skills and traits for every Gondor adult lord across both XML sources. Continuation of the Gondor Lord Review begun 2026-05-26 (Amrothos clan + 11 culture flips + 24 body keys).
+
+**Scope:** 83 adults in `Main/_Module/ModuleData/characters/lords.xml` + 35 canonical lord templates in `Main/_Module/ModuleData/lords.xslt`. 7 child NPCs skipped (age <14). Total: 118 NPCs received fresh `<skills>` and `<Traits>` blocks.
+
+**Approach:**
+- **10 archetypes** as the base layer: `lord` / `knight` / `ranger` / `lady` / `matriarch` / `elder_lord` / `young_lord` / `young_lady` / `steward` / `errand_rider`. Each archetype is a tuned 18-skill + 8-trait template targeting the typical Bannerlord-female bias (Steward/Charm/Medicine high, combat low) for ladies, and the canonical military-leader profile for lords.
+- **~25 canonical Tolkien overrides** layered on top — explicit per-NPC skill/trait sets for Imrahil (greatest knight, OneHanded 290 / Leadership 290), Boromir (Captain-General, OneHanded 295 / Leadership 285 / Athletics 285), Faramir (Ranger Captain, Bow 275 / Scouting 290 / Mercy +2), Denethor (Steward 300 / Charm 270, Mercy -1 / Authoritarian +2), Forlong "the Fat" (Polearm 255 / Athletics reduced for girth), Hirluin "the Fair" (balanced + Charm 250), Angbor "the Fearless" (Valor +2 / OneHanded 265), Golasgil (coastal lord with Trade 230 / Bow 225), Duinhir (Morthond archer-king, Bow 290), plus Imrahil's family, Húrioneth, Nemos, Hirgon, Borhador, and their wives.
+- **Auto-archetype inference** for the remaining ~80 supplementary lords using a keyword scan against the TAOM bio text in `heroes.xslt` ("ranger" → ranger, "errand-rider" → errand_rider, "knight" / "rides with" → knight, etc.) combined with gender and age (60+ female → matriarch; 14-25 male → young_lord).
+- **Power thresholds respected:** most adults cap 200-270 in their specialty; canonical peak heroes push 280-295. Leadership above 275 deliberately reserved for Imrahil / Boromir / Denethor (each grants meaningful party-size / inspirational bonuses).
+- **Children unchanged** — toddler stat blocks preserved.
+
+Applied via single-pass Python script [`tools/apply_gondor_skills_traits.py`](tools/apply_gondor_skills_traits.py) — kept in repo for future tuning passes and as a pattern for other cultures (Rohan, Dale, etc.).
+
+**Files modified:**
+- [Main/_Module/ModuleData/characters/lords.xml](Main/_Module/ModuleData/characters/lords.xml) — 83 NPC `<skills>` + `<Traits>` blocks rewritten
+- [Main/_Module/ModuleData/lords.xslt](Main/_Module/ModuleData/lords.xslt) — 35 canonical Gondor templates (Denethor / Boromir / Faramir / Imrahil et al.) populated
+- [tools/apply_gondor_skills_traits.py](tools/apply_gondor_skills_traits.py) — new
+
+**Save-compat:** skill values are read on hero creation. Existing campaigns: hero skills are baked into the save file, so this change affects NEW campaigns and any hero NOT yet realised at session start. Wandering companions and reserved NPCs that haven't spawned yet will use the new values.
+
+**Not-tested:** in-game encyclopedia walk + skirmish-test the canonical lords' army-size + medic-tent perks (recommended before ship).
+
+**Constraint:** Bannerlord running during apply locked `0Harmony.dll` → couldn't run `./build.ps1`. XML well-formedness verified independently; no C# touched.
+
+**Research:** Tolkien primary canon (RotK Appendix, UT) for Boromir/Faramir/Denethor/Imrahil; Tolkien Gateway for the Outlands lords (Forlong, Hirluin, Angbor, Golasgil, Duinhir).
+
+### feat(knowledge-base): Karpathy-style layered wiki architecture (ADR-010, 4 phases)
+
+Adopt a self-maintaining knowledge-base architecture on top of the existing `docs/` tree, modeled on Karpathy's "LLM Knowledge Bases" pattern (raw → compiled wiki → Q&A → linting). Four phases, all shipped together:
+
+**Phase 1 — `docs/INDEX.md`** — curated topical map across all 70 feature docs, 10 ADRs, 79 reviews, 13 ai-includes, and 16 migration docs. Grouped by domain (Character/Race, Combat/AI, Career/Progression, Equipment/Armor, Sieges, Economy/Settlements, Faction/Diplomacy, Sandbox/Lifecycle/UI, Infrastructure) plus quickstart paths, cross-cutting concerns where memory and docs intersect, and a glossary section. Wired into CLAUDE.md's Doc Lookup as the entry point. Architecture decision recorded in [`docs/adrs/010-knowledge-base-architecture.md`](docs/adrs/010-knowledge-base-architecture.md) with 4 alternatives considered (Obsidian, docs-site generator, INDEX-only, treat-.claude/-as-KB).
+
+**Phase 2 — `tools/lint_docs.py` + `/lint-docs` skill** — automated doc-health linter. Checks: dead markdown links (with code-fence + inline-code + file:// + whitespace-target filtering, exempting codex transcripts, TEMPLATE.md, and `docs/archive/`); stale version refs (`1.3.15`, `1.3.x`, `Bannerlord 1.3` outside `docs/migration/`/`docs/archive/` and outside rca-/codex-adversarial- filenames); orphan feature docs (no inbound references); missing feature docs (Main/Features/<X>/ with no docs/features/<x>.md). Initial baseline report filed at [`docs/reviews/doc-lint-2026-05-27.md`](docs/reviews/doc-lint-2026-05-27.md): 38 dead links + 184 stale-version refs + 0 orphans + 1 missing doc (MissionDiagnostic).
+
+**Phase 3 — `tools/build_backlinks.py`** — symmetric link footers. Walks `docs/` and writes a `## Referenced by` HTML-comment-delimited block to every doc with inbound references; removes the block when refs drop to zero; idempotent re-runs. First apply touched **150 files**, adding inbound-reference visibility from feature docs → INDEX/ADRs/reviews and the inverse. Same exemption rules as the lint (codex transcripts, TEMPLATE.md, `docs/archive/` are neither footer-targets nor reference-sources). Imports its helpers from `tools/lint_docs.py` to keep the link-parsing logic single-sourced.
+
+**Phase 4 — `docs/raw/` + `docs/research/` + `/knowledge-compile` skill** — ingest layer for unstructured source materials (Tolkien lore clippings, decompiled engine notes, external mod design refs) plus a compile layer that LLM-summarizes raw → wiki nodes with summary/sources/cross-references/key-claims/open-questions. Skill runs `tools/compile_research.py` as a deterministic inventory probe (file listing + keyword-driven cross-ref candidates from existing docs), then Claude drafts the research node, then lint + backlinks regenerate. Large binary policy in `.gitignore` (PDFs, mp4, mov, zip, tar.gz under `docs/raw/` are user-local only).
+
+Links remain markdown `[text](path)` throughout; Obsidian `[[wikilinks]]` migration was considered and rejected on cost (290+ files) and renderer compatibility (GitHub treats `[[X]]` as plain text). Memory files retain their existing `[[name]]` syntax since the auto-memory system supports it.
+
+Out of scope (deferred indefinitely): vector store / RAG layer, CHANGELOG → wiki conversion, automated rewriting of existing feature docs, Karpathy-style "naive search engine" CLI (`Grep` over `docs/` is fast enough at this scale).
+
+Files added (new):
+- `docs/INDEX.md`, `docs/adrs/010-knowledge-base-architecture.md`, `docs/reviews/doc-lint-2026-05-27.md`
+- `docs/raw/README.md`, `docs/research/README.md`
+- `tools/lint_docs.py`, `tools/build_backlinks.py`, `tools/compile_research.py`
+- `.claude/skills/lint-docs/SKILL.md`, `.claude/skills/knowledge-compile/SKILL.md`
+
+Files modified: `CLAUDE.md` (Doc Lookup section); `docs/adrs/README.md` (ADR table row); `.gitignore` (docs/raw binaries); 150 docs got `## Referenced by` footers.
+
+Constraint: bot-authored footers will increase PR diff size when re-generated; the HTML-comment delimiters make them visually skippable in review.
+Research: Karpathy's "LLM Knowledge Bases" post (raw → compiled wiki → Q&A → linting → search → finetune); existing TAOM structure (71 feature docs, 96 memory files, REVIEW-GUIDE.md adversarial loop) already matched ~80% of the pattern.
+
 ## 2026-05-26
+
+### fix(gondor-lords): Amrothos clan + 11 Mordor-mis-tagged Gondor lords + 24 female body keys
+
+Consolidated Gondor noble-roster review. Four bug classes addressed in one pass:
+
+1. **Amrothos clan re-assigned to Imrahil's House (Dol Amroth)** — `heroes.xslt` template for `lord_1_24` was inheriting vanilla `Faction.clan_empire_west_1` (Stewards), now overridden to `clan_empire_west_2` to match his canonical place beside his brothers Elphir + Erchirion. Same `faction` override pattern as the existing Faramir + Lothwen templates; the original Amrothos template forgot it.
+
+2. **Three Gondor noblewomen renamed + culture-corrected** — `lord_1_40_1` Catella → Lindariel, `lord_1_45_1` Vanyalos → Berethiel, `lord_1_46_1` Seorgys → Thorwen. All three were tagged `culture="Culture.mordor"` in `lords.xml` (likely block-copied from a Mordor template) — flipped to `Culture.gondor`. The localized loc-key values in `taom_xslt_strings.xml:758-760` were already correct; only the inline `{=KEY}DEFAULT` fallback values needed updating. Tolkien-name research summarized in [`~/.claude/plans/gondor-lord-review-amrothos-zippy-frost.md`](file).
+
+3. **Tier 2 culture sweep — 8 additional Gondor lords flipped from Culture.mordor → Culture.gondor**: Sophalia, Jephalia, Popilia, Arytha, Brandir, Borlong, Arador, Arvedui (all in `lord_1_*_*` IDs whose vanilla parent faction is `clan_empire_west_*`).
+
+4. **Female body diversity — 24 NPCCharacters got fresh face keys** — user-supplied curated 15 Gondor-female face keys distributed round-robin alphabetical across 23 adult Gondor females. `Lord_EW_1_1` Ciriel additionally redirected to share Dorwen's post-Fix-4 key (#7) so the two visually match per user request. Body key only — each NPC's existing `age`/`weight`/`build` preserved so older matriarchs (Lothwen 72, Nauriel 60, Laswen 53) keep their age weathering. Child NPCs (Lothiriel 1, Ancalimú 6, Jephalia 2) skipped to avoid baby-as-adult visual bug.
+
+Applied via single-pass Python script [`tools/apply_gondor_lord_review.py`](tools/apply_gondor_lord_review.py) — kept in repo for future re-runs (e.g. extending the body-key pool, adding more cultures).
+
+**Files modified:**
+- [Main/_Module/ModuleData/heroes.xslt](Main/_Module/ModuleData/heroes.xslt) — `lord_1_24` template gains `faction` override
+- [Main/_Module/ModuleData/characters/lords.xml](Main/_Module/ModuleData/characters/lords.xml) — 29 NPCCharacters touched (24 body keys, 11 culture flips, 3 name renames; some overlap)
+- [tools/apply_gondor_lord_review.py](tools/apply_gondor_lord_review.py) — new
+
+**Save-compat:** name/culture changes are cosmetic — no save-data impact. Body key changes re-render face on next FaceGen pass; existing cached face meshes may need an in-game encyclopedia visit to refresh.
+
+**Not-tested:** in-game encyclopedia smoke test (mandatory before ship — see plan file Verification section).
+
+**Research:** Tolkien Gateway (Berúthiel, Forlong, Lossarnach), web research on canonical wife names for Forlong (not named in canon).
+
+**Constraint:** `re.sub` with `r'\1' + key_starting_with_0` corrupts output because Python treats `\10` as group-10 backref (FIRST attempt corrupted 24 BodyProperties lines; reverted via `git checkout`). Fix: use lambda replacement `lambda m: m.group(1) + new_k + m.group(2)`.
+
+### feat(taom-map): rename 345 placeholder villages with lore-appropriate names across all 15 regions
+
+Replaced every `Castle Village <PREFIX>X_Y` / `Village <PREFIX>X_Y` placeholder display name on the campaign map with a lore-appropriate name in the linguistic idiom of its parent culture. Done in two passes: Dol Guldur (17) + Mirkwood (17) interactively, then 311 across the remaining 13 regions in one bulk Python pass.
+
+**Scope:** display-name only. Settlement IDs untouched (save-compatible), positions untouched, bound-village relationships untouched. Pure cosmetic / UX change.
+
+**Files modified (EXTERNAL — not in this repo):**
+- `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\TAOM_Map\ModuleData\settlements.xml` — 345 `name="{=key}DEFAULT"` defaults updated
+- `E:\Steam\...\Modules\TAOM_Map\ModuleData\Languages\<LANG>\loc_settlements.xml` × 12 — 345 `<string ... text="..."/>` entries per file (BR/CNs/CNt/DE/FR/IT/JP/KO/PL/RU/SP/TR all carry the same Tolkien-language proper noun — invented names don't translate)
+- **Total: 4,485 string replacements across 13 files**
+
+**Linguistic idiom per region** (full table in `docs/reference/taom-map-settlement-naming.md`):
+
+| Region | Idiom | Example |
+|---|---|---|
+| Dol Guldur, Mordor, Gundabad | Black Speech / Uruk | Ghâshnak, Gûl-mauz, Mazūg-mîr |
+| Mirkwood, Lothlórien, Rivendell, Gondor, Isengard | Sindarin / Silvan | Annon Sirith, Mallorlas, Anduinmir |
+| Rohan | Anglo-Saxon | Seolforhamm, Sealtburg, Hwætland |
+| Erebor | Khuzdul + Old Norse mix | Kibilbund, Frôstkorn, Azanrandol |
+| Dunland | Welsh / Brythonic | Caer Dunwyr, Lhan Penrhos |
+| Khand, Far Harad, Umbar, Rhûn | Variag / Mongol-Arabic / Adunaic | Khond-Vol, Bara-Mukh, Bej-Phazân, Mistrand-Krish |
+
+**Tooling produced (reusable for future map rename passes):**
+- [`tools/Apply-MapVillageNames.py`](tools/Apply-MapVillageNames.py) — bulk renamer with name-mapping dict + uniqueness gate. Idempotent, preserves UTF-8/CRLF/BOM. Run from repo root.
+
+**Documentation:**
+- [`docs/reference/taom-map-settlement-naming.md`](docs/reference/taom-map-settlement-naming.md) — full methodology, region prefix → culture → idiom table, suffix vocabulary per language, save-compatibility guarantees, glyph compatibility notes, known pre-existing duplicate names worth fixing later.
+
+**Critical discovery for future sessions** (codified in memory + docs): TAOM repo's `Main/_Module/ModuleData/settlements.xml` is a STALE SHADOW last touched 2026-04-06 — NOT registered in `Main/_Module/SubModule.xml`, NOT loaded by the engine. The live source is the external TAOM_Map module. Existing PowerShell tools (`Apply-SettlementNames.ps1`, `Generate-Settlements.ps1`) target the stale shadow.
+
+Tests: N/A (display-name change, no code path affected). XML well-formedness verified on all 13 files via `ElementTree.parse`. Zero placeholder substrings remain. No duplicate display names introduced.
+Save-compat: safe — IDs and bound-village relationships unchanged.
+Not-tested: in-game spot-check across all 15 regions (deferred — user verification needed).
 
 ### feat(career-system): re-enable cave_troll_master as Gundabad Berserker (Infantry)
 

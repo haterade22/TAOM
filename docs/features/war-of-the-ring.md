@@ -250,3 +250,14 @@ The WotR system **extends** the existing Diplomacy feature, not replaces it:
 | aserai | Harad | Southern |
 | umbar | Umbar | Southern |
 | battania | Khand | Neutral |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/alignment-aware-execution.md](./alignment-aware-execution.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

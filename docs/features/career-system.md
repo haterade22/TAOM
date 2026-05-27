@@ -219,3 +219,15 @@ The empty `id=""` resolves to a null `ItemObject`, which `Equipment.DeserializeN
 
 ### Add a new ability icon
 See #101 — currently 41 of 50 careers have no PNG. Drop a 256x256 PNG into `Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/Abilities/<career_id>_ability.png` and add the corresponding `<Name>CareerSystem\Abilities\<career_id>_ability</Name>` registration in `Main/_Module/GUI/TAOMSpriteData.xml`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/battle-balance.md](./battle-balance.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reviews/rca-career-starting-equipment-2026-05-19.md](../reviews/rca-career-starting-equipment-2026-05-19.md)
+
+<!-- backlinks-end -->

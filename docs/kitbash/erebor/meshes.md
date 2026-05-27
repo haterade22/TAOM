@@ -230,3 +230,13 @@ texture family exists for these).
 
 Not included in the erebor kitbash (already referenced elsewhere):
 - `sm_nat_rock_b1/b2/b3/b4` (used in `lotraom_prefabs_nature.xml`)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/kitbash/erebor/README.md](./README.md)
+
+<!-- backlinks-end -->

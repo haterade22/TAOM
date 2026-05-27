@@ -167,3 +167,13 @@ Phase 8 expected v1.2 API drift to be the dominant staleness. Actual: **the domi
 (Phase 9 fix queue is now ~79 open `audit-*` issues: Phase 1-6 = #121-#175, Phase 7 = #176-#195, Phase 8 = #196-#199.)
 
 ## Phase 8 complete
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/phase-9-kickoff.md](./phase-9-kickoff.md)
+
+<!-- backlinks-end -->

@@ -185,3 +185,13 @@ Edit attributes on the `<Resource>` element. Each resource can have independent 
 - SpriteWidget caches resolved sprite (loads once, not per-frame)
 - String formatting only when amount changes (cached `_lastAmount`)
 - Comprehensive logging uses `LogDebug` for high-frequency paths, `LogInfo` for events
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

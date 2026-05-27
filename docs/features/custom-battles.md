@@ -151,3 +151,13 @@ Patches and `CustomBattleTeamFixBehavior` are thin entry points — tested indir
 
 The formation mapping uses culture militia properties from `BasicCultureObject`/`CultureObject`. To change which troop appears for a formation:
 - Modify the culture's `melee_militia_troop`, `ranged_militia_troop`, `elite_basic_troop`, or `ranged_elite_militia_troop` attributes in the culture XML definition.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

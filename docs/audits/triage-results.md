@@ -133,3 +133,13 @@ Scope note: Codex was NOT asked to re-verify every single VALID verdict (74 issu
 ## Next step
 
 Step 6: close non-VALID issues with the drafted comments, edit #197 label + body, comment on #193 with mechanism correction, and confirm advisory #191 with the user during checkpoint reporting.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/phase-9-fix-queue.md](./phase-9-fix-queue.md)
+
+<!-- backlinks-end -->

@@ -106,3 +106,13 @@ tools/reports/
 
 # DR3 source-merge: vendored upstream BUTR + Harmony + MonoMod + Cecil source (downloaded fresh from GitHub tags each session — see docs/migration/dr3-mcm-internalization-plan.md)
 Dependencies/.vendor-source/
+
+# Knowledge-base raw materials (see docs/raw/README.md + ADR-010):
+# Large binary source materials (PDFs, screenshots, video) live alongside the
+# markdown summaries but should not bloat the repo. Markdown + small inline
+# images < 500KB commit normally; large binaries are user-local only.
+docs/raw/**/*.pdf
+docs/raw/**/*.mp4
+docs/raw/**/*.mov
+docs/raw/**/*.zip
+docs/raw/**/*.tar.gz

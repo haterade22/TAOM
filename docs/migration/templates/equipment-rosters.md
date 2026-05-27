@@ -699,3 +699,14 @@ All vanilla examples in this document are quoted directly from the installed 1.4
 - `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\StoryMode\ModuleData\story_mode_equipments.xml` (352 lines)
 
 Counts verified via Grep on 2026-05-22.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/migration/templates/characters.md](./characters.md)
+- [docs/migration/templates/README.md](./README.md)
+
+<!-- backlinks-end -->

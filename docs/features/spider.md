@@ -176,3 +176,13 @@ Edit `Main/Features/Spider/SpiderConfig.cs` constants. `SpawnCount` and `SpawnRa
 - **Fang bone indices are placeholders** — bite collision currently uses warg's bone indices (23/37/43) which may be off-target on the spider skeleton. Visual smoke test will confirm whether bites land in the right places.
 - **Custom Battle only in v1** — campaign integration (Mirkwood spider scene triggers, party-template entries) deferred until smoke test passes.
 - **Animations not yet authored against `_c` per Erkam's confirmation that the case-mismatch and bone-count mismatch are resolved** — the in-game smoke test will confirm whether the Modding Kit binding actually succeeded.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

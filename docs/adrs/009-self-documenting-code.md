@@ -329,3 +329,14 @@ private float CalculateDailyFoodConsumption(IPartyAdapter party) =>
 
 - [ADR-002](./002-thin-entry-points.md): Thin entry points force simple, readable code
 - [ADR-003](./003-no-regions.md): Proper decomposition over organizational markers
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/adrs/README.md](./README.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

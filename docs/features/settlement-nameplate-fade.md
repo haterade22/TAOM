@@ -98,3 +98,13 @@ This patch runs at ~3000 calls/second on a populated map (60 FPS × ~50 visible 
 
 - **Issue:** [#223 — feat(map): distance-based settlement nameplate fade](https://github.com/haterade22/TAOM/issues/223)
 - **Status:** Closed
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

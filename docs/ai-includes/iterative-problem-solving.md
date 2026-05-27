@@ -2,7 +2,7 @@
 
 A structured approach to solving complex problems through hypothesis formation, testing, and refinement.
 
-> **Note**: This guide complements [problem-solving-guide.md](../problem-solving-guide.md) which focuses on research strategies. This guide focuses on the **debugging and iteration** process.
+> **Note**: This guide complements [taleworlds-research-guide.md](./taleworlds-research-guide.md), which focuses on research strategies for TaleWorlds internals. This guide focuses on the **debugging and iteration** process.
 
 ---
 
@@ -385,5 +385,16 @@ This builds institutional knowledge for future debugging sessions.
 
 - [tdd-enforcement.md](./tdd-enforcement.md) - Hypothesis-driven development via tests
 - [multi-approach-validation.md](./multi-approach-validation.md) - When to explore multiple solutions
-- [../problem-solving-guide.md](../problem-solving-guide.md) - Research and investigation strategies
 - [taleworlds-research-guide.md](./taleworlds-research-guide.md) - TaleWorlds-specific investigation
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/multi-approach-validation.md](./multi-approach-validation.md)
+- [docs/ai-includes/research-workflow.md](./research-workflow.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

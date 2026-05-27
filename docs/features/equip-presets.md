@@ -138,3 +138,13 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 ## GitHub Issue
 
 To be opened on session close.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

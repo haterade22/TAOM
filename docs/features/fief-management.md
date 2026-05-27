@@ -149,3 +149,13 @@ The hotkey is currently hard-coded as `InputKey.F6` in `MapScreenInputAdapter.Is
 
 - **Issue:** N/A — feature ported as part of the 7-feature LOTRAOM port queue
 - **Status:** Awaiting in-game verification before commit
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -103,3 +103,13 @@ BT must defer `PatchAll()` — or at minimum the `DefaultClanFinanceModel` patch
 - [ ] Racial enmity blocks invalid war declarations (e.g. elves vs elves)
 - [ ] War of the Ring forced wars trigger correctly on host; client mirrors state
 - [ ] Siege defense events fire on host; client sees outcome via state sync
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

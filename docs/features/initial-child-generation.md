@@ -106,3 +106,13 @@ Changes take effect on the next new game. Existing saves are not affected (the b
 ## GitHub Issue
 - **Issue:** Unknown (commit `0b3a1f6`)
 - **Status:** Unknown
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

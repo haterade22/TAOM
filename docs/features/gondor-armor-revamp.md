@@ -131,3 +131,14 @@ No runtime performance impact — this is a pure data refit. Item resolution at 
 
 - **Issue:** [#99 — feat(gondor): KEYforce armor revamp — add 99 items + restructure 13 regional troop trees](https://github.com/haterade22/TAOM/issues/99)
 - **Status:** Closed (after Phase 6 closeout)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/gondor-ithilien-ranger.md](./gondor-ithilien-ranger.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

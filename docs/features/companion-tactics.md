@@ -204,3 +204,13 @@ Not yet created. To create retroactively per CLAUDE.md "GitHub Issue & Knowledge
 ```
 gh issue create --label feature --title "feat(companion-tactics): port CompanionTactics three sub-features" --body "(see docs/features/companion-tactics.md)"
 ```
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

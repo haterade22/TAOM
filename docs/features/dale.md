@@ -189,3 +189,14 @@ Cross-reference validation:
   - Completeness: tests, doc, CHANGELOG, issue identified — addressed in this session
   - Data Flow: 7 flows traced, 0 hard gaps, 1 MEDIUM inconsistency (lord rosters — documented as known follow-up)
 - `python tools/validate_all_troop_refs.py` — 121 armor refs in troops_dale.xml, all resolve. Combined with manual non-armor (weapons/horses/shields/arrows) cross-check against 25,184 vanilla+armory IDs: all 50 non-armor refs resolve.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/new-culture-authoring.md](../ai-includes/new-culture-authoring.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

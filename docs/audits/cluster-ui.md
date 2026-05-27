@@ -214,3 +214,15 @@ Two P2 findings on `PolygonWidget` (static-list race + cross-thread `HoveredFact
 Phase 5's hypothesis was "find UI bugs in the 4 mixin/prefab features + custom widgets." Result: the dominant bug class is **silent broken UI from missing sprite assets** (5 of 6 P1s), not VM logic mistakes. The 1 logic P1 (Messengers wrong-VM notification) was a single mechanical author error. The audit's existence is again vindicated — these are real, hard-to-spot, in-game-only bugs that no compiler / test / build gate catches.
 
 Forward to Phase 6 (cross-feature handshake): the FactionMap custom-widget threading question is a natural pickup; the rest of Phase 6 follows the session-prompts.md template (SmartCavalryAI × MixedFormations × CompanionTactics, CulturalFeats × RevoltTuning, etc.).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/phase-6-kickoff.md](./phase-6-kickoff.md)
+- [docs/audits/phase-7-kickoff.md](./phase-7-kickoff.md)
+- [docs/audits/phase-8-kickoff.md](./phase-8-kickoff.md)
+
+<!-- backlinks-end -->

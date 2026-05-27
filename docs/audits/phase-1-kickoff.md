@@ -149,3 +149,14 @@ Then `/context-save` again before closing out the session.
 3. Read `docs/audits/feature-manifest.md` end-to-end. Read this brief.
 4. Decide commit-Messengers-now vs. defer (recommended: commit first so audit branch is single-concern).
 5. Spawn the 5 parallel probes.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/phase-2-kickoff.md](./phase-2-kickoff.md)
+- [docs/audits/wiring-matrix.md](./wiring-matrix.md)
+
+<!-- backlinks-end -->

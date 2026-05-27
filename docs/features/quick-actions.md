@@ -132,3 +132,13 @@ Update the `SellEvent` / `UnequipEvent` constants in `QuickActionsAudioPlayer.cs
 
 - **Issue:** _to be created with closing commit_
 - **Status:** Open (in-game verification pending)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

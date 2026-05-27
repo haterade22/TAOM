@@ -242,3 +242,13 @@ Branches off `gondor_pg_spearman.upgrade_target` (now expands to `vet_spearman |
    "gondor_xxx": [("set", "Item3", "wm_gondor_sword_a05")],
    ```
 4. `--dry-run` to preview; `--apply` to write; `validate_all_troop_refs.py` to gate.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

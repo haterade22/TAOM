@@ -64,3 +64,13 @@ The setting is stored by MCM in its own JSON store under the `TAOM` folder.
 ## GitHub Issue
 - **Issue:** Unknown (commits reference `9f14d24` and `b68feab` but no issue number)
 - **Status:** Active
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

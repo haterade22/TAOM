@@ -86,3 +86,13 @@ Minimal — one `string.IndexOf` call per mission load. The `PropertyInfo` for r
 
 - **Issue:** #43 — [feat: atmosphere persistence for forced-atmosphere scenes](https://github.com/haterade22/TAOM/issues/43)
 - **Status:** Closed
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

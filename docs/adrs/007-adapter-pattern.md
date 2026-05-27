@@ -773,3 +773,15 @@ See `TAOM.Tests/Architecture/AdapterPatternArchitectureTests.cs` for automated e
 
 - **ADR-002**: Thin Entry Points - Entry points delegate to services (which use adapters)
 - **ADR-005**: No #if DEBUG - All code paths must be testable (adapters enable this)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/adrs/README.md](./README.md)
+- [docs/ai-includes/taleworlds-research-guide.md](../ai-includes/taleworlds-research-guide.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

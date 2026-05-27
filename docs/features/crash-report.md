@@ -239,3 +239,13 @@ Restart the game. Patch37 won't apply; the other mod's Finalizers take over.
 - Per-section MCM disable toggles
 - Save-game attachment toggle (currently the player attaches manually)
 - Crash signature de-dup ring buffer (suppress duplicate-signature crashes after N within a session)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

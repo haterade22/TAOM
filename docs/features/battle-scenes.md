@@ -106,3 +106,13 @@ The `MapScene_Load_DiagnosticPatch` prints to the engine log every time `MapScen
 
 - **Issue:** None.
 - **Status:** Parked pending TAOM_Map integration.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

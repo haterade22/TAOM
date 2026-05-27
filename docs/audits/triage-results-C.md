@@ -363,3 +363,13 @@ None.
 - All STALE-checks done via `git log --since="2026-05-13"` per file. No relevant post-audit commits found for any cited file path.
 - #197 is the only severity adjustment — the disclosure exists (doc bug VALID) but the underlying state changed pre-audit (`0cc457f`, 2026-05-07). Phase 9b fix is a 1-line removal, not a restructure.
 - #167's P2 #8 ordering finding is the only confirmed false-positive sub-finding; the other 5 sub-findings in that issue are VALID and the issue stays VALID overall.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/triage-results.md](./triage-results.md)
+
+<!-- backlinks-end -->

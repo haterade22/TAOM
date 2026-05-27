@@ -23,13 +23,13 @@ The session author skipped the `/deep-review` + `/review-codex` completion workf
 Five of the six concrete findings (F1, F2, F3, F4, F5) share one shape: **a name was introduced at one layer but the corresponding consumer at another layer was forgotten or stubbed.** F1 declares an MCM toggle but the service doesn't read it. F2 declares a DTO field but the collector hardcodes a placeholder. F3 declares an `Unsubscribe()` method but the lifecycle call site is missing. F4/F5 declare DTO fields but the plain-text renderer drops them.
 
 This is the same pattern as:
-- **EquipPresets review #5 (2026-05-06)** — `SlotApplyOutcome.SlotLocked`, `PresetLoadResult.SkippedLockedSlots` declared, never produced. Removed. Memory: [`feedback_no_aspirational_enum_values.md`](../../../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_no_aspirational_enum_values.md).
+- **EquipPresets review #5 (2026-05-06)** — `SlotApplyOutcome.SlotLocked`, `PresetLoadResult.SkippedLockedSlots` declared, never produced. Removed. Memory: memory entry `feedback_no_aspirational_enum_values`.
 - **CultureMarketplace (2026-05-20)** — 3 aspirational artifacts (`CountPerInjection` field, `EnumerateTowns()` method, `TownInjectionContext` POCO). All removed. RCA: [`rca-culturemarketplace-aspirational-scaffolding-2026-05-20.md`](rca-culturemarketplace-aspirational-scaffolding-2026-05-20.md).
 - **CrashReport (today, 2026-05-25)** — 5 of 6 findings, all the same shape.
 
-The rule [`feedback_no_aspirational_enum_values.md`](../../../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_no_aspirational_enum_values.md) has existed for 19 days. The session author has not consulted it at design time on any of the three occurrences. **The rule is in memory; the discipline to apply it is not.**
+The rule memory entry `feedback_no_aspirational_enum_values` has existed for 19 days. The session author has not consulted it at design time on any of the three occurrences. **The rule is in memory; the discipline to apply it is not.**
 
-A second related pattern: **F1 specifically is a "user-facing promise doesn't match code" bug**, the same shape as Codex review #34 (SiegeDismount `DismountKeepOnMap` mode was a silent no-op despite an MCM hint promising it would work). Memory: [`feedback_user_facing_promise_must_match_code.md`](../../../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_user_facing_promise_must_match_code.md). Also pre-existing. Also not consulted at design time.
+A second related pattern: **F1 specifically is a "user-facing promise doesn't match code" bug**, the same shape as Codex review #34 (SiegeDismount `DismountKeepOnMap` mode was a silent no-op despite an MCM hint promising it would work). Memory: memory entry `feedback_user_facing_promise_must_match_code`. Also pre-existing. Also not consulted at design time.
 
 ## Why Each Deep-Review Agent Missed These (or Caught Them)
 
@@ -48,9 +48,9 @@ The deep-review agent prompts are working exactly as designed. **The failure was
 ## Feedback Memories to Codify
 
 **No new feedback memory files.** The patterns are fully covered by the existing:
-- [`feedback_no_aspirational_enum_values.md`](../../../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_no_aspirational_enum_values.md) — declared-without-consumer (F1, F2, F3, F4, F5)
-- [`feedback_user_facing_promise_must_match_code.md`](../../../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_user_facing_promise_must_match_code.md) — MCM toggle promises (F1 specifically)
-- [`feedback_completion_workflow.md`](../../../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_completion_workflow.md) — 4-phase workflow mandatory (meta finding)
+- memory entry `feedback_no_aspirational_enum_values` — declared-without-consumer (F1, F2, F3, F4, F5)
+- memory entry `feedback_user_facing_promise_must_match_code` — MCM toggle promises (F1 specifically)
+- memory entry `feedback_completion_workflow` — 4-phase workflow mandatory (meta finding)
 
 **What's needed instead is the discipline to consult them during design + completion.** Three occurrences of the same pattern in 19 days = the rule is in memory but the author is not reading memory at the right moments.
 

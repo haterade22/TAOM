@@ -143,3 +143,13 @@ Disable round-trip:
 
 - **Issue:** TBD (create with `/issue feature SiegeDismount integration` before commit)
 - **Status:** In progress — Phase 1 (port to Main/Features/) complete; awaiting in-game verification.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

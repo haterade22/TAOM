@@ -89,3 +89,13 @@ Five Claude agents reviewed the rebuild on 2026-05-24 (Standards / Compatibility
 8. ✅ Codex Finding 1: removed manual `comp.OnTick(dt)` in WargMissionBehavior + SpiderMissionBehavior — vanilla `Agent.Tick` (line 4768) auto-calls component OnTick every frame.
 9. ⏳ Open follow-up investigation for the actual NRE source in `Mission.MissionLogics`. Next steps: enumerate every `MissionBehavior` subclass in the loaded community DLLs (`Bannerlord.MBOptionScreen.v1.4.1.dll`, `Bannerlord.ButterLib.Implementation.1.4.1.dll`, `MCM.UI.Adapter.MCMv5.dll`, `MCMv5.dll`, `Bannerlord.UIExtenderEx.dll`, `BUTR.CrashReport.*.dll`) via `ilspycmd --list types`, decompile any class with `BehaviorType` override, find the one returning `Logic` while inheriting `MissionBehavior` directly.
 10. ⏳ User to re-attack looters with the patched build. **Expected outcome: crash MAY still reproduce.** The patched build is no worse than before (and fixes the double-tick + adds source ownership), but doesn't yet address the actual NRE source. If users still crash, that confirms the investigation in #9 needs to start immediately.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/migration/dr3-maintenance.md](../migration/dr3-maintenance.md)
+
+<!-- backlinks-end -->

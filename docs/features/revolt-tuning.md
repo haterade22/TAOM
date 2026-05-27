@@ -117,3 +117,13 @@ Invalid individual fields are reverted to their compiled default; other fields i
 
 - **Issue:** _pending — create via `gh issue create` with the completion workflow_
 - **Status:** Implementation complete; docs updated
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

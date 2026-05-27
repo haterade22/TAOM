@@ -81,7 +81,7 @@ A flat JSON object mapping kingdom `StringId` to alignment string.
 | `rivendell` | free | — |
 | `lothlorien` | free | — |
 | `mirkwood` | free | — |
-| `empire` (Dunland — note: counter-intuitive ID, see [`kingdom-culture-mapping.md`](../../memory…)) | evil | sided with Saruman in the books |
+| `empire` (Dunland — note: counter-intuitive ID, see memory entry `kingdom-culture-mapping`) | evil | sided with Saruman in the books |
 | `empire_s` (Mordor) | evil | — |
 | `isengard` | evil | — |
 | `gundabad` | evil | — |
@@ -159,3 +159,13 @@ If a new gameplay rule needs to gate on alignment (e.g., "different relation rul
 ## See also
 
 - [`alignment-aware-execution.md`](alignment-aware-execution.md) — vanilla execution-flow reverse-engineering, decision-table rationale, kinslaying-multiplier derivation.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

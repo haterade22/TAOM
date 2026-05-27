@@ -169,3 +169,13 @@ The boundary classes (`MessengerCampaignBehavior`, UI mixin/prefab, `MessengerSe
 
 - **Issue:** [#109 — feat(messengers): port LOTRAOM messenger system to TAOM (1.3.15)](https://github.com/haterade22/TAOM/issues/109)
 - **Status:** Open (closes after Codex pass + game-test sign-off)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

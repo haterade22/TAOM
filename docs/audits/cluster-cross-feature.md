@@ -285,3 +285,14 @@ The audit branch has now opened 36+ `audit-*` issues across Phases 1–6 (#121, 
 | Date | Phase | Output | Findings |
 |---|---|---|---|
 | 2026-05-13 | 6 | `cluster-cross-feature.md` + issues #170–#175 | 2 P1, 13 P2, 26 P3 = 41 total across 8 pairs + global sweep |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/phase-7-kickoff.md](./phase-7-kickoff.md)
+- [docs/audits/phase-8-kickoff.md](./phase-8-kickoff.md)
+
+<!-- backlinks-end -->

@@ -576,3 +576,13 @@ Two items worth flagging for Phase 9 but **NOT** filed as separate findings (per
 2. **#131 R4 (validate-before-lookup) trap at `RaceAgeService.GetEntry` is more dangerous than the audit framed.** The "human" fallback also gets cached in `_raceIdCache[raceId]` at line 52 — so a single invalid raceId poisons the cache for the rest of the singleton's life. Reset is needed AND validation. The audit notes the cache + the lookup gap but doesn't connect them; the fix should be paired.
 
 Neither item changes any verdict above. Both stay attached to their existing issue's fix scope.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/audits/triage-results.md](./triage-results.md)
+
+<!-- backlinks-end -->

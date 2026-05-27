@@ -146,3 +146,13 @@ Changes take effect on next game load (config is loaded at construction).
 
 - **Issue:** haterade22/TAOM#67 — feat: Siege Defense — timed settlement defense events for player kingdom
 - **Status:** Open
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->
