@@ -357,34 +357,34 @@
                 <BodyProperties version="4" weight="0.4583" build="0.1343" key="0002540F007010024A6A02B8F08300011060730012EEF7017B0B010E7E918F4500927603091485F7000000000000000000000000000000000000000021342142"/>
             </face>
                                                             <skills>
-                <skill id="OneHanded" value="210"/>
-                <skill id="TwoHanded" value="200"/>
-                <skill id="Polearm" value="200"/>
-                <skill id="Bow" value="155"/>
-                <skill id="Crossbow" value="140"/>
-                <skill id="Throwing" value="175"/>
-                <skill id="Riding" value="170"/>
-                <skill id="Athletics" value="175"/>
-                <skill id="Crafting" value="140"/>
-                <skill id="Scouting" value="180"/>
-                <skill id="Tactics" value="210"/>
-                <skill id="Roguery" value="180"/>
-                <skill id="Charm" value="200"/>
-                <skill id="Leadership" value="205"/>
-                <skill id="Trade" value="180"/>
-                <skill id="Steward" value="210"/>
-                <skill id="Medicine" value="140"/>
-                <skill id="Engineering" value="170"/>
-            </skills>
+                                                                <skill id="OneHanded" value="170" />
+                                                                <skill id="TwoHanded" value="130" />
+                                                                <skill id="Polearm" value="180" />
+                                                                <skill id="Bow" value="130" />
+                                                                <skill id="Crossbow" value="90" />
+                                                                <skill id="Throwing" value="100" />
+                                                                <skill id="Riding" value="200" />
+                                                                <skill id="Athletics" value="170" />
+                                                                <skill id="Crafting" value="150" />
+                                                                <skill id="Scouting" value="220" />
+                                                                <skill id="Tactics" value="280" />
+                                                                <skill id="Roguery" value="130" />
+                                                                <skill id="Charm" value="270" />
+                                                                <skill id="Leadership" value="290" />
+                                                                <skill id="Trade" value="230" />
+                                                                <skill id="Steward" value="300" />
+                                                                <skill id="Medicine" value="160" />
+                                                                <skill id="Engineering" value="240" />
+                                                            </skills>
             <Traits>
-                <Trait id="Honor" value="1"/>
-                <Trait id="Generosity" value="0"/>
-                <Trait id="Calculating" value="2"/>
-                <Trait id="Mercy" value="0"/>
-                <Trait id="Valor" value="0"/>
-                <Trait id="Egalitarian" value="0"/>
-                <Trait id="Oligarchic" value="1"/>
-                <Trait id="Authoritarian" value="2"/>
+                <Trait id="Honor" value="1" />
+                <Trait id="Generosity" value="0" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="-1" />
+                <Trait id="Valor" value="1" />
+                <Trait id="Egalitarian" value="-1" />
+                <Trait id="Oligarchic" value="2" />
+                <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_a" />
@@ -411,12 +411,35 @@
             <face>
                 <BodyProperties version="4" weight="0.5507" build="0.5759" key="000BDC0A000020028672362967865369A91887176B723646DCA3773773849A54056986570636A93300000000000000000000000000000000000000004ADC2082"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="130" />
+                <skill id="TwoHanded" value="90" />
+                <skill id="Polearm" value="110" />
+                <skill id="Bow" value="80" />
+                <skill id="Crossbow" value="70" />
+                <skill id="Throwing" value="70" />
+                <skill id="Riding" value="170" />
+                <skill id="Athletics" value="140" />
+                <skill id="Crafting" value="160" />
+                <skill id="Scouting" value="150" />
+                <skill id="Tactics" value="230" />
+                <skill id="Roguery" value="80" />
+                <skill id="Charm" value="250" />
+                <skill id="Leadership" value="210" />
+                <skill id="Trade" value="230" />
+                <skill id="Steward" value="275" />
+                <skill id="Medicine" value="180" />
+                <skill id="Engineering" value="210" />
+            </skills>
             <Traits>
-                <Trait id="Politician" value="2"/>
-                <Trait id="Manager" value="4"/>
-                <Trait id="Honor" value="1"/>
-                <Trait id="Generosity" value="-1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="1" />
+                <Trait id="Egalitarian" value="0" />
+                <Trait id="Oligarchic" value="2" />
+                <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_b" />
@@ -443,34 +466,34 @@
                 <BodyProperties version="4" weight="0.0185" build="0.7199" key="000A480FC00000022F70080860528544369289B2BF8A7E05776961088DB01839009B06030966530400000000000000000000000000000000000000003D3C1002"/>
             </face>
                                                                                                             <skills>
-                <skill id="OneHanded" value="125"/>
-                <skill id="TwoHanded" value="67"/>
-                <skill id="Polearm" value="57"/>
-                <skill id="Bow" value="62"/>
-                <skill id="Crossbow" value="28"/>
-                <skill id="Throwing" value="53"/>
-                <skill id="Riding" value="96"/>
-                <skill id="Athletics" value="140"/>
-                <skill id="Crafting" value="183"/>
-                <skill id="Scouting" value="164"/>
-                <skill id="Tactics" value="154"/>
-                <skill id="Roguery" value="48"/>
-                <skill id="Charm" value="183"/>
-                <skill id="Leadership" value="139"/>
-                <skill id="Trade" value="96"/>
-                <skill id="Steward" value="193"/>
-                <skill id="Medicine" value="250"/>
-                <skill id="Engineering" value="221"/>
-            </skills>
+                                                                                                                <skill id="OneHanded" value="290" />
+                                                                                                                <skill id="TwoHanded" value="220" />
+                                                                                                                <skill id="Polearm" value="275" />
+                                                                                                                <skill id="Bow" value="180" />
+                                                                                                                <skill id="Crossbow" value="120" />
+                                                                                                                <skill id="Throwing" value="160" />
+                                                                                                                <skill id="Riding" value="290" />
+                                                                                                                <skill id="Athletics" value="260" />
+                                                                                                                <skill id="Crafting" value="110" />
+                                                                                                                <skill id="Scouting" value="230" />
+                                                                                                                <skill id="Tactics" value="275" />
+                                                                                                                <skill id="Roguery" value="90" />
+                                                                                                                <skill id="Charm" value="270" />
+                                                                                                                <skill id="Leadership" value="290" />
+                                                                                                                <skill id="Trade" value="180" />
+                                                                                                                <skill id="Steward" value="250" />
+                                                                                                                <skill id="Medicine" value="170" />
+                                                                                                                <skill id="Engineering" value="190" />
+                                                                                                            </skills>
             <Traits>
-                <Trait id="Honor" value="2"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Calculating" value="0"/>
-                <Trait id="Mercy" value="1"/>
-                <Trait id="Valor" value="2"/>
-                <Trait id="Egalitarian" value="1"/>
-                <Trait id="Oligarchic" value="0"/>
-                <Trait id="Authoritarian" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="2" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="imrahil_bat_equipment" />
@@ -497,13 +520,35 @@
             <face>
                 <BodyProperties version="4" weight="0.4241" build="0.7095" key="000BAC0A00141004B77326194AC4402599338A6798924403D8C24F3379749A46047B6646071634C300000000000000000000000000000000000000001EF41083"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="60" />
+                <skill id="TwoHanded" value="30" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="80" />
+                <skill id="Crossbow" value="60" />
+                <skill id="Throwing" value="50" />
+                <skill id="Riding" value="150" />
+                <skill id="Athletics" value="110" />
+                <skill id="Crafting" value="150" />
+                <skill id="Scouting" value="120" />
+                <skill id="Tactics" value="160" />
+                <skill id="Roguery" value="70" />
+                <skill id="Charm" value="255" />
+                <skill id="Leadership" value="180" />
+                <skill id="Trade" value="200" />
+                <skill id="Steward" value="255" />
+                <skill id="Medicine" value="215" />
+                <skill id="Engineering" value="150" />
+            </skills>
             <Traits>
-                <Trait id="Politician" value="6"/>
-                <Trait id="Manager" value="2"/>
-                <Trait id="Mercy" value="-1"/>
-                <Trait id="Honor" value="-1"/>
-                <Trait id="Calculating" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="2" />
+                <Trait id="Valor" value="0" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_d" />
@@ -529,16 +574,35 @@
             <face>
                 <BodyProperties version="4" weight="0.7886" build="0.5725" key="000BAC088000368E94800B923B3A288737AC765AF2D7A91197858F34731640730199C013097777C600000000000000000000000000000000000000005D204000"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="265" />
+                <skill id="TwoHanded" value="190" />
+                <skill id="Polearm" value="250" />
+                <skill id="Bow" value="140" />
+                <skill id="Crossbow" value="100" />
+                <skill id="Throwing" value="140" />
+                <skill id="Riding" value="285" />
+                <skill id="Athletics" value="255" />
+                <skill id="Crafting" value="80" />
+                <skill id="Scouting" value="180" />
+                <skill id="Tactics" value="230" />
+                <skill id="Roguery" value="70" />
+                <skill id="Charm" value="210" />
+                <skill id="Leadership" value="235" />
+                <skill id="Trade" value="140" />
+                <skill id="Steward" value="200" />
+                <skill id="Medicine" value="130" />
+                <skill id="Engineering" value="140" />
+            </skills>
             <Traits>
-                <Trait id="BalancedFightingSkills" value="3"/>
-                <Trait id="Commander" value="2"/>
-                <Trait id="Politician" value="2"/>
-                <Trait id="Manager" value="4"/>
-                <Trait id="Mercy" value="-1"/>
-                <Trait id="Honor" value="-1"/>
-                <Trait id="Valor" value="1"/>
-                <Trait id="Generosity" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_a" />
@@ -563,15 +627,35 @@
             <face>
                 <BodyProperties version="4" weight="0.6154" build="0.6899" key="00057C04400020029673264B47856554EA72881968858A46D9A28774766555770374963507334537000000000000000000000000000000000000000020FC2003"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="250" />
+                <skill id="TwoHanded" value="200" />
+                <skill id="Polearm" value="235" />
+                <skill id="Bow" value="140" />
+                <skill id="Crossbow" value="100" />
+                <skill id="Throwing" value="150" />
+                <skill id="Riding" value="270" />
+                <skill id="Athletics" value="245" />
+                <skill id="Crafting" value="70" />
+                <skill id="Scouting" value="170" />
+                <skill id="Tactics" value="200" />
+                <skill id="Roguery" value="80" />
+                <skill id="Charm" value="180" />
+                <skill id="Leadership" value="190" />
+                <skill id="Trade" value="110" />
+                <skill id="Steward" value="150" />
+                <skill id="Medicine" value="110" />
+                <skill id="Engineering" value="110" />
+            </skills>
             <Traits>
-                <Trait id="KnightFightingSkills" value="6"/>
-                <Trait id="Commander" value="10"/>
-                <Trait id="Politician" value="4"/>
-                <Trait id="Manager" value="6"/>
-                <Trait id="Valor" value="1"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Calculating" value="-1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="0" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="0" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_b" />
@@ -597,20 +681,35 @@
             <face>
                 <BodyProperties version="4" weight="0.0486" build="0.3495" key="0008A004001403840B8F40126041750131F6838530990000BB79500E79FBFEA200A516030A8BB57C1F6410605020004000000000000017670000000043444003"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="235" />
+                <skill id="TwoHanded" value="185" />
+                <skill id="Polearm" value="225" />
+                <skill id="Bow" value="160" />
+                <skill id="Crossbow" value="120" />
+                <skill id="Throwing" value="140" />
+                <skill id="Riding" value="215" />
+                <skill id="Athletics" value="225" />
+                <skill id="Crafting" value="110" />
+                <skill id="Scouting" value="250" />
+                <skill id="Tactics" value="255" />
+                <skill id="Roguery" value="110" />
+                <skill id="Charm" value="190" />
+                <skill id="Leadership" value="240" />
+                <skill id="Trade" value="140" />
+                <skill id="Steward" value="215" />
+                <skill id="Medicine" value="150" />
+                <skill id="Engineering" value="180" />
+            </skills>
             <Traits>
-                <Trait id="KnightFightingSkills" value="6"/>
-                <Trait id="Commander" value="4"/>
-                <Trait id="Politician" value="4"/>
-                <Trait id="Manager" value="9"/>
-                <Trait id="Valor" value="2"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Mercy" value="0"/>
-                <Trait id="Honor" value="2"/>
-                <Trait id="Calculating" value="0"/>
-                <Trait id="Egalitarian" value="0"/>
-                <Trait id="Oligarchic" value="1"/>
-                <Trait id="Authoritarian" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="0" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_e" />
@@ -637,13 +736,35 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.4" key="000BD0058000328878DAE579759C4B844D469CDC9A3683A59A15AF927269E22C01F004780F5D7806000000000000000000000000000000000000000000C01184"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="80" />
+                <skill id="TwoHanded" value="50" />
+                <skill id="Polearm" value="70" />
+                <skill id="Bow" value="110" />
+                <skill id="Crossbow" value="80" />
+                <skill id="Throwing" value="70" />
+                <skill id="Riding" value="170" />
+                <skill id="Athletics" value="150" />
+                <skill id="Crafting" value="170" />
+                <skill id="Scouting" value="160" />
+                <skill id="Tactics" value="160" />
+                <skill id="Roguery" value="80" />
+                <skill id="Charm" value="220" />
+                <skill id="Leadership" value="180" />
+                <skill id="Trade" value="200" />
+                <skill id="Steward" value="240" />
+                <skill id="Medicine" value="220" />
+                <skill id="Engineering" value="160" />
+            </skills>
             <Traits>
-                <Trait id="HorseArcherFightingSkills" value="5"/>
-                <Trait id="Commander" value="6"/>
-                <Trait id="Politician" value="6"/>
-                <Trait id="Manager" value="2"/>
-                <Trait id="Honor" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="1" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_a" />
@@ -670,13 +791,35 @@
             <face>
                 <BodyProperties version="4" weight="0.4" build="0.5" key="000CA00E40BC2005478D688968868296A6779BB376D6A724D866C7B9A9A97B7D0007077C0D629B660000000000000FFE00000000000000000000000000001080"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="70" />
+                <skill id="TwoHanded" value="40" />
+                <skill id="Polearm" value="60" />
+                <skill id="Bow" value="110" />
+                <skill id="Crossbow" value="80" />
+                <skill id="Throwing" value="60" />
+                <skill id="Riding" value="170" />
+                <skill id="Athletics" value="140" />
+                <skill id="Crafting" value="160" />
+                <skill id="Scouting" value="170" />
+                <skill id="Tactics" value="170" />
+                <skill id="Roguery" value="70" />
+                <skill id="Charm" value="215" />
+                <skill id="Leadership" value="170" />
+                <skill id="Trade" value="180" />
+                <skill id="Steward" value="235" />
+                <skill id="Medicine" value="210" />
+                <skill id="Engineering" value="150" />
+            </skills>
             <Traits>
-                <Trait id="HorseArcherFightingSkills" value="4"/>
-                <Trait id="Commander" value="4"/>
-                <Trait id="Politician" value="8"/>
-                <Trait id="Manager" value="2"/>
-                <Trait id="Honor" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="1" />
+                <Trait id="Egalitarian" value="0" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_b" />
@@ -1134,14 +1277,35 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.7" key="0000B002C000300DEB67D938447261A7658B5985A9A6594E143D5345AAE756A7000522540598D94800001105000030A30000001F000000000000000000787000"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="70" />
+                <skill id="TwoHanded" value="40" />
+                <skill id="Polearm" value="60" />
+                <skill id="Bow" value="90" />
+                <skill id="Crossbow" value="70" />
+                <skill id="Throwing" value="60" />
+                <skill id="Riding" value="160" />
+                <skill id="Athletics" value="130" />
+                <skill id="Crafting" value="130" />
+                <skill id="Scouting" value="130" />
+                <skill id="Tactics" value="140" />
+                <skill id="Roguery" value="60" />
+                <skill id="Charm" value="230" />
+                <skill id="Leadership" value="170" />
+                <skill id="Trade" value="180" />
+                <skill id="Steward" value="235" />
+                <skill id="Medicine" value="210" />
+                <skill id="Engineering" value="130" />
+            </skills>
             <Traits>
-                <Trait id="BalancedFightingSkills" value="4"/>
-                <Trait id="Commander" value="6"/>
-                <Trait id="Politician" value="8"/>
-                <Trait id="Manager" value="8"/>
-                <Trait id="Valor" value="1"/>
-                <Trait id="Calculating" value="-1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="2" />
+                <Trait id="Valor" value="1" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_b" />
@@ -1167,14 +1331,35 @@
             <face>
                 <BodyProperties version="4" weight="0.6" build="0.5" key="0016F00580FC334D7B57826CA4C27CA67949E6ACA88B3ACD7A45DA9768858686000329A20373767B00001105000030A30000001F000000000000000000A06000"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="210" />
+                <skill id="TwoHanded" value="170" />
+                <skill id="Polearm" value="195" />
+                <skill id="Bow" value="130" />
+                <skill id="Crossbow" value="80" />
+                <skill id="Throwing" value="120" />
+                <skill id="Riding" value="240" />
+                <skill id="Athletics" value="230" />
+                <skill id="Crafting" value="70" />
+                <skill id="Scouting" value="150" />
+                <skill id="Tactics" value="170" />
+                <skill id="Roguery" value="70" />
+                <skill id="Charm" value="180" />
+                <skill id="Leadership" value="160" />
+                <skill id="Trade" value="100" />
+                <skill id="Steward" value="140" />
+                <skill id="Medicine" value="100" />
+                <skill id="Engineering" value="100" />
+            </skills>
             <Traits>
-                <Trait id="KnightFightingSkills" value="5"/>
-                <Trait id="Commander" value="8"/>
-                <Trait id="Politician" value="8"/>
-                <Trait id="Manager" value="8"/>
-                <Trait id="Mercy" value="-1"/>
-                <Trait id="Calculating" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="0" />
+                <Trait id="Mercy" value="2" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_c" />
@@ -1200,21 +1385,36 @@
             <face>
                 <BodyProperties version="4" weight="0.4236" build="0.7407" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002"/>
             </face>
-            <skills/>
-            <Traits>
-                <Trait id="KnightFightingSkills" value="10"/>
-                <Trait id="Commander" value="8"/>
-                <Trait id="Politician" value="8"/>
-                <Trait id="Manager" value="10"/>
-                <Trait id="Valor" value="2"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Mercy" value="0"/>
-                <Trait id="Honor" value="2"/>
-                <Trait id="Calculating" value="1"/>
-                <Trait id="Egalitarian" value="0"/>
-                <Trait id="Oligarchic" value="1"/>
-                <Trait id="Authoritarian" value="2"/>
-            </Traits>
+          <skills>
+              <skill id="OneHanded" value="295" />
+              <skill id="TwoHanded" value="255" />
+              <skill id="Polearm" value="240" />
+              <skill id="Bow" value="160" />
+              <skill id="Crossbow" value="110" />
+              <skill id="Throwing" value="170" />
+              <skill id="Riding" value="260" />
+              <skill id="Athletics" value="285" />
+              <skill id="Crafting" value="80" />
+              <skill id="Scouting" value="210" />
+              <skill id="Tactics" value="250" />
+              <skill id="Roguery" value="70" />
+              <skill id="Charm" value="230" />
+              <skill id="Leadership" value="285" />
+              <skill id="Trade" value="110" />
+              <skill id="Steward" value="180" />
+              <skill id="Medicine" value="130" />
+              <skill id="Engineering" value="160" />
+          </skills>
+          <Traits>
+              <Trait id="Honor" value="2" />
+              <Trait id="Generosity" value="2" />
+              <Trait id="Calculating" value="0" />
+              <Trait id="Mercy" value="1" />
+              <Trait id="Valor" value="2" />
+              <Trait id="Egalitarian" value="1" />
+              <Trait id="Oligarchic" value="1" />
+              <Trait id="Authoritarian" value="1" />
+          </Traits>
             <Equipments>
                 <EquipmentSet id="boromir_bat_equipment" />
                 <EquipmentSet id="boromir_civ_equipment" equipmentType="Civilian" />
@@ -1239,15 +1439,35 @@
             <face>
                 <BodyProperties version="4" weight="0.4" build="0.6" key="0016040E400003C67A776955EA791E79989C4B679A8C5255A77376D888C8D68800000DB2055C7BA600001105000030A30000001F000000000000000000048000"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="170" />
+                <skill id="TwoHanded" value="110" />
+                <skill id="Polearm" value="150" />
+                <skill id="Bow" value="160" />
+                <skill id="Crossbow" value="100" />
+                <skill id="Throwing" value="120" />
+                <skill id="Riding" value="285" />
+                <skill id="Athletics" value="255" />
+                <skill id="Crafting" value="70" />
+                <skill id="Scouting" value="275" />
+                <skill id="Tactics" value="170" />
+                <skill id="Roguery" value="120" />
+                <skill id="Charm" value="160" />
+                <skill id="Leadership" value="150" />
+                <skill id="Trade" value="140" />
+                <skill id="Steward" value="130" />
+                <skill id="Medicine" value="100" />
+                <skill id="Engineering" value="90" />
+            </skills>
             <Traits>
-                <Trait id="HorseArcherFightingSkills" value="5"/>
-                <Trait id="Commander" value="6"/>
-                <Trait id="Politician" value="4"/>
-                <Trait id="Manager" value="10"/>
-                <Trait id="Valor" value="-1"/>
-                <Trait id="Honor" value="1"/>
-                <Trait id="Calculating" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="0" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_d" />
@@ -1274,7 +1494,7 @@
             <face>
                 <BodyProperties version="4" weight="0.6" build="0.3" key="000B6C02C0BC100679D8455AA9684859888735557C6493786867627857B2895800058893058735D900001105000030A30000001F000000000000000001686000"/>
             </face>
-                                                                                                                                                                                                                                                            <skills>
+          <skills>
                 <skill id="OneHanded" value="140"/>
                 <skill id="TwoHanded" value="80"/>
                 <skill id="Polearm" value="80"/>
@@ -1614,20 +1834,35 @@
             <face>
                 <BodyProperties version="4" weight="0" build="0.5671" key="0000000400000182107973B1A81103B300A189083A697600991871193FB17D5300990603093A2B0532430001330223550000000000001977000000004D246002"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="240" />
+                <skill id="TwoHanded" value="190" />
+                <skill id="Polearm" value="220" />
+                <skill id="Bow" value="275" />
+                <skill id="Crossbow" value="140" />
+                <skill id="Throwing" value="180" />
+                <skill id="Riding" value="210" />
+                <skill id="Athletics" value="275" />
+                <skill id="Crafting" value="110" />
+                <skill id="Scouting" value="290" />
+                <skill id="Tactics" value="270" />
+                <skill id="Roguery" value="120" />
+                <skill id="Charm" value="230" />
+                <skill id="Leadership" value="250" />
+                <skill id="Trade" value="120" />
+                <skill id="Steward" value="220" />
+                <skill id="Medicine" value="170" />
+                <skill id="Engineering" value="160" />
+            </skills>
             <Traits>
-                <Trait id="HorseArcherFightingSkills" value="7"/>
-                <Trait id="Commander" value="5"/>
-                <Trait id="Politician" value="4"/>
-                <Trait id="Manager" value="2"/>
-                <Trait id="Valor" value="1"/>
-                <Trait id="Generosity" value="2"/>
-                <Trait id="Mercy" value="1"/>
-                <Trait id="Honor" value="2"/>
-                <Trait id="Calculating" value="0"/>
-                <Trait id="Egalitarian" value="1"/>
-                <Trait id="Oligarchic" value="0"/>
-                <Trait id="Authoritarian" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="2" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="2" />
+                <Trait id="Oligarchic" value="0" />
+                <Trait id="Authoritarian" value="-1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="faramir_bat_equipment" />
@@ -1654,13 +1889,35 @@
             <face>
                 <BodyProperties version="4" weight="0.5664" build="0.7577" key="0011900A12142006A87321448876B529E920889893905436D8C49E55747A584504BB86450B3756930000000000000000000000000000000000000000716C3041"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="40" />
+                <skill id="TwoHanded" value="20" />
+                <skill id="Polearm" value="30" />
+                <skill id="Bow" value="70" />
+                <skill id="Crossbow" value="40" />
+                <skill id="Throwing" value="40" />
+                <skill id="Riding" value="120" />
+                <skill id="Athletics" value="100" />
+                <skill id="Crafting" value="110" />
+                <skill id="Scouting" value="90" />
+                <skill id="Tactics" value="100" />
+                <skill id="Roguery" value="50" />
+                <skill id="Charm" value="180" />
+                <skill id="Leadership" value="120" />
+                <skill id="Trade" value="130" />
+                <skill id="Steward" value="170" />
+                <skill id="Medicine" value="150" />
+                <skill id="Engineering" value="100" />
+            </skills>
             <Traits>
-                <Trait id="HorseArcherFightingSkills" value="5"/>
-                <Trait id="Commander" value="2"/>
-                <Trait id="Politician" value="8"/>
-                <Trait id="Manager" value="10"/>
-                <Trait id="Honor" value="1"/>
+                <Trait id="Honor" value="1" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="2" />
+                <Trait id="Valor" value="0" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="0" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_c" />
@@ -2027,15 +2284,36 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="000BCC0CC0004008776C57C967305779596A85AB79877778859898977677345B0000000507A9688700001105000030A30000001F000000000000000000000003"/>
             </face>
-            <skills/>
-            <Traits>
-                <Trait id="BalancedFightingSkills" value="7"/>
-                <Trait id="Commander" value="4"/>
-                <Trait id="Politician" value="8"/>
-                <Trait id="Manager" value="2"/>
-                <Trait id="Mercy" value="-1"/>
-                <Trait id="Honor" value="1"/>
-            </Traits>
+          <skills>
+              <skill id="OneHanded" value="260" />
+              <skill id="TwoHanded" value="210" />
+              <skill id="Polearm" value="250" />
+              <skill id="Bow" value="110" />
+              <skill id="Crossbow" value="90" />
+              <skill id="Throwing" value="120" />
+              <skill id="Riding" value="180" />
+              <skill id="Athletics" value="250" />
+              <skill id="Crafting" value="80" />
+              <skill id="Scouting" value="160" />
+              <skill id="Tactics" value="220" />
+              <skill id="Roguery" value="70" />
+              <skill id="Charm" value="170" />
+              <skill id="Leadership" value="210" />
+              <skill id="Trade" value="100" />
+              <skill id="Steward" value="170" />
+              <skill id="Medicine" value="110" />
+              <skill id="Engineering" value="130" />
+          </skills>
+          <Traits>
+              <Trait id="Honor" value="2" />
+              <Trait id="Generosity" value="1" />
+              <Trait id="Calculating" value="1" />
+              <Trait id="Mercy" value="1" />
+              <Trait id="Valor" value="2" />
+              <Trait id="Egalitarian" value="0" />
+              <Trait id="Oligarchic" value="1" />
+              <Trait id="Authoritarian" value="2" />
+          </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_a" />
                 <EquipmentSet id="gondor_civ_template_default_a" equipmentType="Civilian" />
@@ -2524,20 +2802,35 @@
             <face>
                 <BodyProperties version="4" weight="0" build="0.6157" key="0002000D8014168128800978B7B7C03A848782691464BBA87556440C8D964309009906030997930300000000000000000000000000000000000000003B347002"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="180" />
+                <skill id="TwoHanded" value="130" />
+                <skill id="Polearm" value="170" />
+                <skill id="Bow" value="110" />
+                <skill id="Crossbow" value="90" />
+                <skill id="Throwing" value="100" />
+                <skill id="Riding" value="160" />
+                <skill id="Athletics" value="140" />
+                <skill id="Crafting" value="120" />
+                <skill id="Scouting" value="170" />
+                <skill id="Tactics" value="265" />
+                <skill id="Roguery" value="80" />
+                <skill id="Charm" value="235" />
+                <skill id="Leadership" value="255" />
+                <skill id="Trade" value="200" />
+                <skill id="Steward" value="255" />
+                <skill id="Medicine" value="170" />
+                <skill id="Engineering" value="200" />
+            </skills>
             <Traits>
-                <Trait id="BalancedFightingSkills" value="4"/>
-                <Trait id="Commander" value="2"/>
-                <Trait id="Politician" value="10"/>
-                <Trait id="Manager" value="8"/>
-                <Trait id="Valor" value="2"/>
-                <Trait id="Generosity" value="2"/>
-                <Trait id="Mercy" value="1"/>
-                <Trait id="Honor" value="1"/>
-                <Trait id="Calculating" value="0"/>
-                <Trait id="Egalitarian" value="1"/>
-                <Trait id="Oligarchic" value="0"/>
-                <Trait id="Authoritarian" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="1" />
+                <Trait id="Egalitarian" value="0" />
+                <Trait id="Oligarchic" value="2" />
+                <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_b" />
@@ -2563,15 +2856,35 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="0016B80A00003205954C59997345585A4969B5769B85789865677B96475832690000000307A7968800001105000030A30000001F000000000000000000000000"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="220" />
+                <skill id="TwoHanded" value="160" />
+                <skill id="Polearm" value="210" />
+                <skill id="Bow" value="120" />
+                <skill id="Crossbow" value="90" />
+                <skill id="Throwing" value="120" />
+                <skill id="Riding" value="220" />
+                <skill id="Athletics" value="220" />
+                <skill id="Crafting" value="80" />
+                <skill id="Scouting" value="180" />
+                <skill id="Tactics" value="220" />
+                <skill id="Roguery" value="70" />
+                <skill id="Charm" value="190" />
+                <skill id="Leadership" value="240" />
+                <skill id="Trade" value="140" />
+                <skill id="Steward" value="210" />
+                <skill id="Medicine" value="110" />
+                <skill id="Engineering" value="150" />
+            </skills>
             <Traits>
-                <Trait id="BalancedFightingSkills" value="5"/>
-                <Trait id="Commander" value="2"/>
-                <Trait id="Politician" value="4"/>
-                <Trait id="Manager" value="8"/>
-                <Trait id="Mercy" value="1"/>
-                <Trait id="Honor" value="1"/>
-                <Trait id="Calculating" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="0" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_c" />
@@ -2598,34 +2911,34 @@
                 <BodyProperties version="4" weight="0.9769" build="0.9861" key="0005D40D80001A4304700800605DF10950388DB2BFEA1D017917FB0F8B00683B007FF60307911FFF00000000000000000000000000000000000000003CFC9002"/>
             </face>
                                                                                                                                                             <skills>
-                <skill id="OneHanded" value="140"/>
-                <skill id="TwoHanded" value="80"/>
-                <skill id="Polearm" value="80"/>
-                <skill id="Bow" value="45"/>
-                <skill id="Crossbow" value="30"/>
-                <skill id="Throwing" value="55"/>
-                <skill id="Riding" value="140"/>
-                <skill id="Athletics" value="115"/>
-                <skill id="Crafting" value="50"/>
-                <skill id="Scouting" value="150"/>
-                <skill id="Tactics" value="170"/>
-                <skill id="Roguery" value="160"/>
-                <skill id="Charm" value="250"/>
-                <skill id="Leadership" value="215"/>
-                <skill id="Trade" value="190"/>
-                <skill id="Steward" value="190"/>
-                <skill id="Medicine" value="130"/>
-                <skill id="Engineering" value="80"/>
-            </skills>
+                                                                                                                                                                <skill id="OneHanded" value="235" />
+                                                                                                                                                                <skill id="TwoHanded" value="210" />
+                                                                                                                                                                <skill id="Polearm" value="255" />
+                                                                                                                                                                <skill id="Bow" value="110" />
+                                                                                                                                                                <skill id="Crossbow" value="90" />
+                                                                                                                                                                <skill id="Throwing" value="130" />
+                                                                                                                                                                <skill id="Riding" value="160" />
+                                                                                                                                                                <skill id="Athletics" value="150" />
+                                                                                                                                                                <skill id="Crafting" value="110" />
+                                                                                                                                                                <skill id="Scouting" value="170" />
+                                                                                                                                                                <skill id="Tactics" value="235" />
+                                                                                                                                                                <skill id="Roguery" value="70" />
+                                                                                                                                                                <skill id="Charm" value="210" />
+                                                                                                                                                                <skill id="Leadership" value="250" />
+                                                                                                                                                                <skill id="Trade" value="210" />
+                                                                                                                                                                <skill id="Steward" value="250" />
+                                                                                                                                                                <skill id="Medicine" value="140" />
+                                                                                                                                                                <skill id="Engineering" value="190" />
+                                                                                                                                                            </skills>
             <Traits>
-                <Trait id="Honor" value="2"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Calculating" value="0"/>
-                <Trait id="Mercy" value="1"/>
-                <Trait id="Valor" value="2"/>
-                <Trait id="Egalitarian" value="0"/>
-                <Trait id="Oligarchic" value="1"/>
-                <Trait id="Authoritarian" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="forlong_bat_equipment" />
@@ -2651,15 +2964,35 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="0016D40E407C334E269C3C75A7984761A6AE8C7B19959CAB9CB685D9565BB66A00058BB2057385AB00001105000030A30000001F000000000000000001409000"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="240" />
+                <skill id="TwoHanded" value="180" />
+                <skill id="Polearm" value="230" />
+                <skill id="Bow" value="130" />
+                <skill id="Crossbow" value="100" />
+                <skill id="Throwing" value="120" />
+                <skill id="Riding" value="210" />
+                <skill id="Athletics" value="235" />
+                <skill id="Crafting" value="70" />
+                <skill id="Scouting" value="180" />
+                <skill id="Tactics" value="200" />
+                <skill id="Roguery" value="80" />
+                <skill id="Charm" value="180" />
+                <skill id="Leadership" value="210" />
+                <skill id="Trade" value="110" />
+                <skill id="Steward" value="170" />
+                <skill id="Medicine" value="100" />
+                <skill id="Engineering" value="120" />
+            </skills>
             <Traits>
-                <Trait id="BalancedFightingSkills" value="7"/>
-                <Trait id="Commander" value="4"/>
-                <Trait id="Politician" value="6"/>
-                <Trait id="Manager" value="2"/>
-                <Trait id="Valor" value="1"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Egalitarian" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="0" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_e" />
@@ -2686,31 +3019,34 @@
                 <BodyProperties version="4" weight="0.2176" build="0.4699" key="000594041214000E318040336E417501E7F0868F09990035BB7979087CF51E0A00873603080BB69F1F6410605020004000000000000017670000000043144003"/>
             </face>
                                                                                                             <skills>
-                <skill id="OneHanded" value="130"/>
-                <skill id="TwoHanded" value="90"/>
-                <skill id="Polearm" value="170"/>
-                <skill id="Bow" value="45"/>
-                <skill id="Crossbow" value="40"/>
-                <skill id="Throwing" value="135"/>
-                <skill id="Riding" value="100"/>
-                <skill id="Athletics" value="215"/>
-                <skill id="Crafting" value="220"/>
-                <skill id="Scouting" value="180"/>
-                <skill id="Tactics" value="240"/>
-                <skill id="Roguery" value="60"/>
-                <skill id="Charm" value="100"/>
-                <skill id="Leadership" value="185"/>
-                <skill id="Trade" value="130"/>
-                <skill id="Steward" value="230"/>
-                <skill id="Medicine" value="140"/>
-                <skill id="Engineering" value="280"/>
-            </skills>
+                                                                                                                <skill id="OneHanded" value="235" />
+                                                                                                                <skill id="TwoHanded" value="180" />
+                                                                                                                <skill id="Polearm" value="245" />
+                                                                                                                <skill id="Bow" value="230" />
+                                                                                                                <skill id="Crossbow" value="120" />
+                                                                                                                <skill id="Throwing" value="160" />
+                                                                                                                <skill id="Riding" value="215" />
+                                                                                                                <skill id="Athletics" value="255" />
+                                                                                                                <skill id="Crafting" value="80" />
+                                                                                                                <skill id="Scouting" value="230" />
+                                                                                                                <skill id="Tactics" value="215" />
+                                                                                                                <skill id="Roguery" value="80" />
+                                                                                                                <skill id="Charm" value="250" />
+                                                                                                                <skill id="Leadership" value="235" />
+                                                                                                                <skill id="Trade" value="140" />
+                                                                                                                <skill id="Steward" value="195" />
+                                                                                                                <skill id="Medicine" value="140" />
+                                                                                                                <skill id="Engineering" value="140" />
+                                                                                                            </skills>
             <Traits>
-                <Trait id="Honor" value="2"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Calculating" value="0"/>
-                <Trait id="Mercy" value="1"/>
-                <Trait id="Valor" value="2"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="0" />
+                <Trait id="Mercy" value="2" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="0" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="hirluin_bat_equipment" />
@@ -2737,34 +3073,34 @@
                 <BodyProperties version="4" weight="0" build="0.7037" key="000A140D801439C2A880010FB2807808943182694044AB107776900C8D96EA0900AB06030A9D9F080000000000000000000000000000000000000000194C9002"/>
             </face>
                                                             <skills>
-                <skill id="OneHanded" value="210"/>
-                <skill id="TwoHanded" value="170"/>
-                <skill id="Polearm" value="210"/>
-                <skill id="Bow" value="45"/>
-                <skill id="Crossbow" value="25"/>
-                <skill id="Throwing" value="95"/>
-                <skill id="Riding" value="240"/>
-                <skill id="Athletics" value="175"/>
-                <skill id="Crafting" value="50"/>
-                <skill id="Scouting" value="160"/>
-                <skill id="Tactics" value="180"/>
-                <skill id="Roguery" value="50"/>
-                <skill id="Charm" value="140"/>
-                <skill id="Leadership" value="175"/>
-                <skill id="Trade" value="40"/>
-                <skill id="Steward" value="110"/>
-                <skill id="Medicine" value="80"/>
-                <skill id="Engineering" value="40"/>
-            </skills>
+                                                                <skill id="OneHanded" value="265" />
+                                                                <skill id="TwoHanded" value="215" />
+                                                                <skill id="Polearm" value="255" />
+                                                                <skill id="Bow" value="130" />
+                                                                <skill id="Crossbow" value="110" />
+                                                                <skill id="Throwing" value="150" />
+                                                                <skill id="Riding" value="230" />
+                                                                <skill id="Athletics" value="250" />
+                                                                <skill id="Crafting" value="100" />
+                                                                <skill id="Scouting" value="210" />
+                                                                <skill id="Tactics" value="245" />
+                                                                <skill id="Roguery" value="80" />
+                                                                <skill id="Charm" value="200" />
+                                                                <skill id="Leadership" value="260" />
+                                                                <skill id="Trade" value="150" />
+                                                                <skill id="Steward" value="210" />
+                                                                <skill id="Medicine" value="140" />
+                                                                <skill id="Engineering" value="160" />
+                                                            </skills>
             <Traits>
-                <Trait id="Honor" value="2"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Calculating" value="0"/>
-                <Trait id="Mercy" value="1"/>
-                <Trait id="Valor" value="2"/>
-                <Trait id="Egalitarian" value="0"/>
-                <Trait id="Oligarchic" value="1"/>
-                <Trait id="Authoritarian" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="angbor_bat_equipment" />
@@ -2791,34 +3127,34 @@
                 <BodyProperties version="4" weight="0" build="0.7037" key="000DD00C4014168270800108B005450CDBA588004F440B0579A6906C8DE11697008B06030894B4050000000000000000000000000000000000000000190C4002"/>
             </face>
                                                             <skills>
-                <skill id="OneHanded" value="140"/>
-                <skill id="TwoHanded" value="80"/>
-                <skill id="Polearm" value="80"/>
-                <skill id="Bow" value="45"/>
-                <skill id="Crossbow" value="30"/>
-                <skill id="Throwing" value="55"/>
-                <skill id="Riding" value="140"/>
-                <skill id="Athletics" value="115"/>
-                <skill id="Crafting" value="50"/>
-                <skill id="Scouting" value="150"/>
-                <skill id="Tactics" value="170"/>
-                <skill id="Roguery" value="160"/>
-                <skill id="Charm" value="250"/>
-                <skill id="Leadership" value="215"/>
-                <skill id="Trade" value="190"/>
-                <skill id="Steward" value="190"/>
-                <skill id="Medicine" value="130"/>
-                <skill id="Engineering" value="80"/>
-            </skills>
+                                                                <skill id="OneHanded" value="215" />
+                                                                <skill id="TwoHanded" value="165" />
+                                                                <skill id="Polearm" value="210" />
+                                                                <skill id="Bow" value="225" />
+                                                                <skill id="Crossbow" value="140" />
+                                                                <skill id="Throwing" value="170" />
+                                                                <skill id="Riding" value="180" />
+                                                                <skill id="Athletics" value="245" />
+                                                                <skill id="Crafting" value="110" />
+                                                                <skill id="Scouting" value="255" />
+                                                                <skill id="Tactics" value="230" />
+                                                                <skill id="Roguery" value="110" />
+                                                                <skill id="Charm" value="195" />
+                                                                <skill id="Leadership" value="225" />
+                                                                <skill id="Trade" value="230" />
+                                                                <skill id="Steward" value="210" />
+                                                                <skill id="Medicine" value="140" />
+                                                                <skill id="Engineering" value="170" />
+                                                            </skills>
             <Traits>
-                <Trait id="Honor" value="2"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Calculating" value="0"/>
-                <Trait id="Mercy" value="1"/>
-                <Trait id="Valor" value="2"/>
-                <Trait id="Egalitarian" value="0"/>
-                <Trait id="Oligarchic" value="1"/>
-                <Trait id="Authoritarian" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="0" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="golasgil_bat_equipment" />
@@ -2844,15 +3180,35 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="0011B40B403C10088733440E80468F1FFF4F9274C862B448941B5637963E5D3E000008840B7247A6000000000000000000000000000000000000000000003101"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="235" />
+                <skill id="TwoHanded" value="190" />
+                <skill id="Polearm" value="225" />
+                <skill id="Bow" value="120" />
+                <skill id="Crossbow" value="90" />
+                <skill id="Throwing" value="130" />
+                <skill id="Riding" value="220" />
+                <skill id="Athletics" value="235" />
+                <skill id="Crafting" value="70" />
+                <skill id="Scouting" value="170" />
+                <skill id="Tactics" value="180" />
+                <skill id="Roguery" value="70" />
+                <skill id="Charm" value="180" />
+                <skill id="Leadership" value="180" />
+                <skill id="Trade" value="110" />
+                <skill id="Steward" value="150" />
+                <skill id="Medicine" value="100" />
+                <skill id="Engineering" value="110" />
+            </skills>
             <Traits>
-                <Trait id="BalancedFightingSkills" value="5"/>
-                <Trait id="Commander" value="2"/>
-                <Trait id="Politician" value="4"/>
-                <Trait id="Manager" value="2"/>
-                <Trait id="Honor" value="-1"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Calculating" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="0" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_d" />
@@ -2878,16 +3234,35 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.8" key="000BB00E400003884897D665A3CD435C87D42767B77897C8637A678695873A870005D4B2077B64B500001105000030A30000001F000000000000000000281000"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="230" />
+                <skill id="TwoHanded" value="180" />
+                <skill id="Polearm" value="220" />
+                <skill id="Bow" value="100" />
+                <skill id="Crossbow" value="70" />
+                <skill id="Throwing" value="120" />
+                <skill id="Riding" value="250" />
+                <skill id="Athletics" value="240" />
+                <skill id="Crafting" value="60" />
+                <skill id="Scouting" value="140" />
+                <skill id="Tactics" value="180" />
+                <skill id="Roguery" value="60" />
+                <skill id="Charm" value="160" />
+                <skill id="Leadership" value="160" />
+                <skill id="Trade" value="90" />
+                <skill id="Steward" value="130" />
+                <skill id="Medicine" value="90" />
+                <skill id="Engineering" value="100" />
+            </skills>
             <Traits>
-                <Trait id="BalancedFightingSkills" value="7"/>
-                <Trait id="Commander" value="4"/>
-                <Trait id="Politician" value="6"/>
-                <Trait id="Manager" value="2"/>
-                <Trait id="Valor" value="1"/>
-                <Trait id="Calculating" value="1"/>
-                <Trait id="Mercy" value="-1"/>
-                <Trait id="Honor" value="-1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="0" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="0" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_e" />
@@ -4505,12 +4880,35 @@
             <face>
                 <BodyProperties version="4" weight="0.4" build="0.4" key="000BAC089200100DB976648E6774B835537D86629511323BDCB177278A84F667017776130748B49500000000000000000000000000000000000000003EFC4003"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="60" />
+                <skill id="TwoHanded" value="30" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="80" />
+                <skill id="Crossbow" value="60" />
+                <skill id="Throwing" value="50" />
+                <skill id="Riding" value="160" />
+                <skill id="Athletics" value="120" />
+                <skill id="Crafting" value="170" />
+                <skill id="Scouting" value="140" />
+                <skill id="Tactics" value="180" />
+                <skill id="Roguery" value="70" />
+                <skill id="Charm" value="255" />
+                <skill id="Leadership" value="200" />
+                <skill id="Trade" value="220" />
+                <skill id="Steward" value="265" />
+                <skill id="Medicine" value="230" />
+                <skill id="Engineering" value="160" />
+            </skills>
             <Traits>
-                <Trait id="Politician" value="10"/>
-                <Trait id="Manager" value="2"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Calculating" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="2" />
+                <Trait id="Valor" value="1" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_d" />
@@ -4537,17 +4935,35 @@
             <face>
                 <BodyProperties version="4" weight="0.4" build="0.5" key="000B500A1114300BB69199998669E37568754C66A53693B2BA7A9855C96751D601677613062B368C000000000000000000000000000000000000000040CC4083"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="60" />
+                <skill id="TwoHanded" value="30" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="80" />
+                <skill id="Crossbow" value="60" />
+                <skill id="Throwing" value="50" />
+                <skill id="Riding" value="140" />
+                <skill id="Athletics" value="110" />
+                <skill id="Crafting" value="140" />
+                <skill id="Scouting" value="110" />
+                <skill id="Tactics" value="140" />
+                <skill id="Roguery" value="60" />
+                <skill id="Charm" value="215" />
+                <skill id="Leadership" value="160" />
+                <skill id="Trade" value="185" />
+                <skill id="Steward" value="235" />
+                <skill id="Medicine" value="200" />
+                <skill id="Engineering" value="140" />
+            </skills>
             <Traits>
-                <Trait id="BalancedFightingSkills" value="4"/>
-                <Trait id="Commander" value="8"/>
-                <Trait id="Politician" value="10"/>
-                <Trait id="Manager" value="4"/>
-                <Trait id="Valor" value="-1"/>
-                <Trait id="Honor" value="-1"/>
-                <Trait id="Mercy" value="1"/>
-                <Trait id="Calculating" value="1"/>
-                <Trait id="Egalitarian" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="0" />
+                <Trait id="Egalitarian" value="0" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_e" />
@@ -4574,12 +4990,35 @@
             <face>
                 <BodyProperties version="4" weight="0.0023" build="0.5116" key="000AF80010FC0005B0801020FC60E000A74780010BBD1001654A350A7FFE930400A806030A97B6481F6410605020004000000000000017670000000045441003"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="60" />
+                <skill id="TwoHanded" value="30" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="80" />
+                <skill id="Crossbow" value="60" />
+                <skill id="Throwing" value="50" />
+                <skill id="Riding" value="160" />
+                <skill id="Athletics" value="120" />
+                <skill id="Crafting" value="200" />
+                <skill id="Scouting" value="140" />
+                <skill id="Tactics" value="180" />
+                <skill id="Roguery" value="70" />
+                <skill id="Charm" value="245" />
+                <skill id="Leadership" value="190" />
+                <skill id="Trade" value="230" />
+                <skill id="Steward" value="275" />
+                <skill id="Medicine" value="225" />
+                <skill id="Engineering" value="170" />
+            </skills>
             <Traits>
-                <Trait id="Politician" value="6"/>
-                <Trait id="Manager" value="8"/>
-                <Trait id="Honor" value="1"/>
-                <Trait id="Generosity" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="2" />
+                <Trait id="Valor" value="1" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_a" />
@@ -4606,14 +5045,35 @@
             <face>
                 <BodyProperties version="4" weight="0.1782" build="0.4236" key="0010D808C00010063E8415A71000FF529EC9833001BCE003075810017F905E52009636030980A70600000000000000000000000000000000000000003B2C4002"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="180" />
+                <skill id="TwoHanded" value="150" />
+                <skill id="Polearm" value="170" />
+                <skill id="Bow" value="110" />
+                <skill id="Crossbow" value="80" />
+                <skill id="Throwing" value="110" />
+                <skill id="Riding" value="200" />
+                <skill id="Athletics" value="200" />
+                <skill id="Crafting" value="60" />
+                <skill id="Scouting" value="130" />
+                <skill id="Tactics" value="130" />
+                <skill id="Roguery" value="60" />
+                <skill id="Charm" value="140" />
+                <skill id="Leadership" value="120" />
+                <skill id="Trade" value="90" />
+                <skill id="Steward" value="120" />
+                <skill id="Medicine" value="80" />
+                <skill id="Engineering" value="90" />
+            </skills>
             <Traits>
-                <Trait id="BalancedFightingSkills" value="4"/>
-                <Trait id="Commander" value="6"/>
-                <Trait id="Politician" value="6"/>
-                <Trait id="Manager" value="8"/>
-                <Trait id="Honor" value="1"/>
-                <Trait id="Generosity" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="0" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_b" />
@@ -4640,14 +5100,35 @@
             <face>
                 <BodyProperties version="4" weight="0.4236" build="0.4236" key="000AD806C00011420E8015A716F0F012E910830001B90601675810067F9A5C04007666030720804000000000000000000000000000000000000000003AF43002"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="200" />
+                <skill id="TwoHanded" value="150" />
+                <skill id="Polearm" value="190" />
+                <skill id="Bow" value="90" />
+                <skill id="Crossbow" value="70" />
+                <skill id="Throwing" value="90" />
+                <skill id="Riding" value="180" />
+                <skill id="Athletics" value="160" />
+                <skill id="Crafting" value="110" />
+                <skill id="Scouting" value="180" />
+                <skill id="Tactics" value="270" />
+                <skill id="Roguery" value="80" />
+                <skill id="Charm" value="220" />
+                <skill id="Leadership" value="260" />
+                <skill id="Trade" value="180" />
+                <skill id="Steward" value="240" />
+                <skill id="Medicine" value="160" />
+                <skill id="Engineering" value="190" />
+            </skills>
             <Traits>
-                <Trait id="BalancedFightingSkills" value="4"/>
-                <Trait id="Commander" value="6"/>
-                <Trait id="Politician" value="6"/>
-                <Trait id="Manager" value="8"/>
-                <Trait id="Honor" value="1"/>
-                <Trait id="Generosity" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="0" />
+                <Trait id="Oligarchic" value="2" />
+                <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_c" />
@@ -4674,11 +5155,35 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="000BD80B5114300AC8832858A669275A3AB4CAA26D66686547C4969575DA72990177761307A39755000000000000000000000000000000000000000042E40003"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="40" />
+                <skill id="TwoHanded" value="20" />
+                <skill id="Polearm" value="30" />
+                <skill id="Bow" value="70" />
+                <skill id="Crossbow" value="40" />
+                <skill id="Throwing" value="40" />
+                <skill id="Riding" value="120" />
+                <skill id="Athletics" value="100" />
+                <skill id="Crafting" value="110" />
+                <skill id="Scouting" value="90" />
+                <skill id="Tactics" value="100" />
+                <skill id="Roguery" value="50" />
+                <skill id="Charm" value="180" />
+                <skill id="Leadership" value="120" />
+                <skill id="Trade" value="130" />
+                <skill id="Steward" value="170" />
+                <skill id="Medicine" value="150" />
+                <skill id="Engineering" value="100" />
+            </skills>
             <Traits>
-                <Trait id="Politician" value="4"/>
-                <Trait id="Manager" value="6"/>
-                <Trait id="Mercy" value="1"/>
+                <Trait id="Honor" value="1" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="2" />
+                <Trait id="Valor" value="0" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="0" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_d" />
@@ -4733,20 +5238,35 @@
             <face>
                 <BodyProperties version="4" weight="0.2269" build="0.7361" key="0008700E4000138897700694F0015167328081FFB2570E00756880008F96C80300AB36030A39320100000000000000000000000000000000000000003D3C1002"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="140" />
+                <skill id="TwoHanded" value="80" />
+                <skill id="Polearm" value="120" />
+                <skill id="Bow" value="170" />
+                <skill id="Crossbow" value="110" />
+                <skill id="Throwing" value="110" />
+                <skill id="Riding" value="180" />
+                <skill id="Athletics" value="190" />
+                <skill id="Crafting" value="110" />
+                <skill id="Scouting" value="160" />
+                <skill id="Tactics" value="140" />
+                <skill id="Roguery" value="70" />
+                <skill id="Charm" value="200" />
+                <skill id="Leadership" value="130" />
+                <skill id="Trade" value="130" />
+                <skill id="Steward" value="170" />
+                <skill id="Medicine" value="140" />
+                <skill id="Engineering" value="100" />
+            </skills>
             <Traits>
-                <Trait id="BalancedFightingSkills" value="6"/>
-                <Trait id="Commander" value="3"/>
-                <Trait id="Politician" value="9"/>
-                <Trait id="Manager" value="7"/>
-                <Trait id="Valor" value="2"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Mercy" value="0"/>
-                <Trait id="Honor" value="2"/>
-                <Trait id="Calculating" value="0"/>
-                <Trait id="Egalitarian" value="0"/>
-                <Trait id="Oligarchic" value="1"/>
-                <Trait id="Authoritarian" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="0" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_a" />
@@ -4773,20 +5293,35 @@
             <face>
                 <BodyProperties version="4" weight="0.3981" build="0.4861" key="0020FC0980001282248414071B75011484C884CF8169800109FA00017FF95EA2009766030971A00800000000000000000000000000000000000000003B2C4002"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="180" />
+                <skill id="TwoHanded" value="140" />
+                <skill id="Polearm" value="180" />
+                <skill id="Bow" value="200" />
+                <skill id="Crossbow" value="110" />
+                <skill id="Throwing" value="140" />
+                <skill id="Riding" value="200" />
+                <skill id="Athletics" value="210" />
+                <skill id="Crafting" value="70" />
+                <skill id="Scouting" value="200" />
+                <skill id="Tactics" value="160" />
+                <skill id="Roguery" value="70" />
+                <skill id="Charm" value="170" />
+                <skill id="Leadership" value="160" />
+                <skill id="Trade" value="100" />
+                <skill id="Steward" value="130" />
+                <skill id="Medicine" value="100" />
+                <skill id="Engineering" value="100" />
+            </skills>
             <Traits>
-                <Trait id="BalancedFightingSkills" value="6"/>
-                <Trait id="Commander" value="3"/>
-                <Trait id="Politician" value="9"/>
-                <Trait id="Manager" value="7"/>
-                <Trait id="Valor" value="2"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Mercy" value="0"/>
-                <Trait id="Honor" value="2"/>
-                <Trait id="Calculating" value="0"/>
-                <Trait id="Egalitarian" value="0"/>
-                <Trait id="Oligarchic" value="1"/>
-                <Trait id="Authoritarian" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="1" />
+                <Trait id="Calculating" value="0" />
+                <Trait id="Mercy" value="1" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="0" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_b" />
@@ -4813,10 +5348,35 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="0022CC0580CC100B5867B786DC6B9968B4367A58547AB48D79EAB69452B75745016776130655B895000000000000000000000000000000000000000030C40083"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="60" />
+                <skill id="TwoHanded" value="30" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="70" />
+                <skill id="Crossbow" value="50" />
+                <skill id="Throwing" value="50" />
+                <skill id="Riding" value="140" />
+                <skill id="Athletics" value="110" />
+                <skill id="Crafting" value="140" />
+                <skill id="Scouting" value="110" />
+                <skill id="Tactics" value="130" />
+                <skill id="Roguery" value="60" />
+                <skill id="Charm" value="240" />
+                <skill id="Leadership" value="160" />
+                <skill id="Trade" value="180" />
+                <skill id="Steward" value="240" />
+                <skill id="Medicine" value="210" />
+                <skill id="Engineering" value="130" />
+            </skills>
             <Traits>
-                <Trait id="Manager" value="8"/>
-                <Trait id="Generosity" value="1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="2" />
+                <Trait id="Valor" value="0" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_c" />
@@ -4843,12 +5403,35 @@
             <face>
                 <BodyProperties version="4" weight="0.5" build="0.5" key="0011AC071100300FA554C37EA53BA67A8B6E7AA94D9BAE666B76EB5953835CAB01977613097C478900000000000000000000000000000000000000004D243043"/>
             </face>
-            <skills/>
+            <skills>
+                <skill id="OneHanded" value="60" />
+                <skill id="TwoHanded" value="30" />
+                <skill id="Polearm" value="50" />
+                <skill id="Bow" value="70" />
+                <skill id="Crossbow" value="50" />
+                <skill id="Throwing" value="50" />
+                <skill id="Riding" value="140" />
+                <skill id="Athletics" value="110" />
+                <skill id="Crafting" value="140" />
+                <skill id="Scouting" value="110" />
+                <skill id="Tactics" value="130" />
+                <skill id="Roguery" value="60" />
+                <skill id="Charm" value="240" />
+                <skill id="Leadership" value="160" />
+                <skill id="Trade" value="180" />
+                <skill id="Steward" value="240" />
+                <skill id="Medicine" value="210" />
+                <skill id="Engineering" value="130" />
+            </skills>
             <Traits>
-                <Trait id="Politician" value="2"/>
-                <Trait id="Manager" value="6"/>
-                <Trait id="Generosity" value="1"/>
-                <Trait id="Honor" value="-1"/>
+                <Trait id="Honor" value="2" />
+                <Trait id="Generosity" value="2" />
+                <Trait id="Calculating" value="1" />
+                <Trait id="Mercy" value="2" />
+                <Trait id="Valor" value="0" />
+                <Trait id="Egalitarian" value="1" />
+                <Trait id="Oligarchic" value="1" />
+                <Trait id="Authoritarian" value="0" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="gondor_bat_template_medium_d" />

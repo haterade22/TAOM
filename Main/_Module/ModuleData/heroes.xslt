@@ -582,10 +582,11 @@
 
 	<xsl:template match="Hero[@id='lord_1_24']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother' and local-name() != 'faction']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_24}Amrothos, youngest son of Imrahil, is still young but already shows his family's martial spirit and noble character.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_9</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_9_5</xsl:attribute>
+			<xsl:attribute name="faction">Faction.clan_empire_west_2</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
