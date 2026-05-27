@@ -24,7 +24,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_ruler</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_brenin_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -79,7 +79,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_brenin_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -133,7 +133,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -188,7 +188,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_physician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -242,7 +242,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -296,7 +296,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -350,7 +350,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills_ruler</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_7_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -405,7 +405,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_8_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -459,7 +459,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_physician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_9_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -514,7 +514,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_10_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -568,7 +568,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_25_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -622,7 +622,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_35_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <face>
                 <BodyProperties version="4" weight="0.6154" build="0.6899" key="00057C04400020029673264B47856554EA72881968858A46D9A28774766555770374963507334537000000000000000000000000000000000000000020FC2003"/>
@@ -675,7 +675,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_faris_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_11_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -730,7 +730,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_111_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -785,7 +785,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_12_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -840,7 +840,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_ruler</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -894,7 +894,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_trader_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -948,7 +948,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1003,7 +1003,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1058,7 +1058,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="race">elf</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1112,7 +1112,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1167,7 +1167,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1221,7 +1221,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1275,7 +1275,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_trader_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1330,7 +1330,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_23_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1384,7 +1384,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_24_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1438,7 +1438,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_dandy_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_75_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1492,7 +1492,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_26_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1547,7 +1547,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="race">orc</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1601,7 +1601,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1655,7 +1655,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_huntress_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_black_numenorean_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1710,7 +1710,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1765,7 +1765,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1820,7 +1820,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1874,7 +1874,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_horse_archer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1983,7 +1983,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2038,7 +2038,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2093,7 +2093,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_bn_sorceress_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2148,7 +2148,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_bn_sorceress_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2202,7 +2202,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2256,7 +2256,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2310,7 +2310,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2364,7 +2364,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_berserker_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2418,7 +2418,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_44_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2473,7 +2473,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="race">orc</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2527,7 +2527,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2582,7 +2582,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2636,7 +2636,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2690,7 +2690,7 @@
             <xsl:attribute name="default_group">Ranged</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_trader_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2744,7 +2744,7 @@
             <xsl:attribute name="default_group">Ranged</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2798,7 +2798,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2852,7 +2852,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2907,7 +2907,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_artisan_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2961,7 +2961,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3015,7 +3015,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_40_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3069,7 +3069,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3123,7 +3123,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_45_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3177,7 +3177,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_57_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3231,7 +3231,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_52_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3285,7 +3285,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_53_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3339,7 +3339,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_71_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3393,7 +3393,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_trader_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_73_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3447,7 +3447,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3501,7 +3501,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_shock_troop_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3555,7 +3555,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3609,7 +3609,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3663,7 +3663,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3718,7 +3718,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="race">uruk</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3772,7 +3772,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3826,7 +3826,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3880,7 +3880,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3934,7 +3934,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_peltast_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3988,7 +3988,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_dandy_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4043,7 +4043,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4098,7 +4098,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4153,7 +4153,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4208,7 +4208,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4263,7 +4263,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_dandy_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4318,7 +4318,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4373,7 +4373,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4428,7 +4428,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_physician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4483,7 +4483,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4538,7 +4538,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4593,7 +4593,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_physician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4648,7 +4648,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4703,7 +4703,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4758,7 +4758,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_bn_sorceress_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4813,7 +4813,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4868,7 +4868,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_faris_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4923,7 +4923,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4978,7 +4978,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5033,7 +5033,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5088,7 +5088,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5143,7 +5143,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5198,7 +5198,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5253,7 +5253,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5308,7 +5308,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5363,7 +5363,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5418,7 +5418,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">True</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_40_1_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5473,7 +5473,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_46_1_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5528,7 +5528,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">True</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_45_1_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5583,7 +5583,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_45_2_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5638,7 +5638,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_trader_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_elder_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5693,7 +5693,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5776,7 +5776,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_52_1_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5831,7 +5831,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_52_2_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5886,7 +5886,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_physician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5941,7 +5941,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">True</xsl:attribute>
             <xsl:attribute name="culture">Culture.gondor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5996,7 +5996,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_30_1_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6107,7 +6107,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6162,41 +6162,41 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_faris_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
                                                             <skills>
-                <skill id="OneHanded" value="166"/>
-                <skill id="TwoHanded" value="158"/>
-                <skill id="Polearm" value="156"/>
-                <skill id="Bow" value="120"/>
-                <skill id="Crossbow" value="109"/>
-                <skill id="Throwing" value="140"/>
-                <skill id="Riding" value="130"/>
-                <skill id="Athletics" value="140"/>
-                <skill id="Crafting" value="109"/>
-                <skill id="Scouting" value="143"/>
-                <skill id="Tactics" value="164"/>
-                <skill id="Roguery" value="143"/>
-                <skill id="Charm" value="156"/>
-                <skill id="Leadership" value="159"/>
-                <skill id="Trade" value="140"/>
-                <skill id="Steward" value="164"/>
-                <skill id="Medicine" value="109"/>
-                <skill id="Engineering" value="133"/>
-            </skills>
+                                                                <skill id="OneHanded" value="290" />
+                                                                <skill id="TwoHanded" value="270" />
+                                                                <skill id="Polearm" value="290" />
+                                                                <skill id="Bow" value="210" />
+                                                                <skill id="Crossbow" value="180" />
+                                                                <skill id="Throwing" value="210" />
+                                                                <skill id="Riding" value="290" />
+                                                                <skill id="Athletics" value="285" />
+                                                                <skill id="Crafting" value="210" />
+                                                                <skill id="Scouting" value="290" />
+                                                                <skill id="Tactics" value="295" />
+                                                                <skill id="Roguery" value="290" />
+                                                                <skill id="Charm" value="280" />
+                                                                <skill id="Leadership" value="295" />
+                                                                <skill id="Trade" value="190" />
+                                                                <skill id="Steward" value="260" />
+                                                                <skill id="Medicine" value="170" />
+                                                                <skill id="Engineering" value="240" />
+                                                            </skills>
             <Traits>
-                <Trait id="Honor" value="-2"/>
-                <Trait id="Generosity" value="-1"/>
-                <Trait id="Calculating" value="2"/>
-                <Trait id="Mercy" value="-2"/>
-                <Trait id="Valor" value="2"/>
-                <Trait id="Egalitarian" value="-1"/>
-                <Trait id="Oligarchic" value="1"/>
-                <Trait id="Authoritarian" value="2"/>
+                <Trait id="Honor" value="-2" />
+                <Trait id="Generosity" value="-2" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="-2" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="-2" />
+                <Trait id="Oligarchic" value="2" />
+                <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="nazgul_v1_bat_equipment" />
@@ -6217,41 +6217,41 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
                 <BodyProperties version="4" weight="0.0116" build="1" key="0039F00FC000300010000010010100000001000000000100001011101000000000FF06030F000100000000000000000000000000000000000000000043F44142"/>
             </face>
                                                             <skills>
-                <skill id="OneHanded" value="209"/>
-                <skill id="TwoHanded" value="199"/>
-                <skill id="Polearm" value="199"/>
-                <skill id="Bow" value="154"/>
-                <skill id="Crossbow" value="139"/>
-                <skill id="Throwing" value="174"/>
-                <skill id="Riding" value="169"/>
-                <skill id="Athletics" value="174"/>
-                <skill id="Crafting" value="139"/>
-                <skill id="Scouting" value="179"/>
-                <skill id="Tactics" value="209"/>
-                <skill id="Roguery" value="179"/>
-                <skill id="Charm" value="199"/>
-                <skill id="Leadership" value="204"/>
-                <skill id="Trade" value="179"/>
-                <skill id="Steward" value="209"/>
-                <skill id="Medicine" value="139"/>
-                <skill id="Engineering" value="169"/>
-            </skills>
+                                                                <skill id="OneHanded" value="290" />
+                                                                <skill id="TwoHanded" value="270" />
+                                                                <skill id="Polearm" value="290" />
+                                                                <skill id="Bow" value="210" />
+                                                                <skill id="Crossbow" value="180" />
+                                                                <skill id="Throwing" value="210" />
+                                                                <skill id="Riding" value="290" />
+                                                                <skill id="Athletics" value="285" />
+                                                                <skill id="Crafting" value="210" />
+                                                                <skill id="Scouting" value="290" />
+                                                                <skill id="Tactics" value="295" />
+                                                                <skill id="Roguery" value="290" />
+                                                                <skill id="Charm" value="280" />
+                                                                <skill id="Leadership" value="295" />
+                                                                <skill id="Trade" value="190" />
+                                                                <skill id="Steward" value="260" />
+                                                                <skill id="Medicine" value="170" />
+                                                                <skill id="Engineering" value="240" />
+                                                            </skills>
             <Traits>
-                <Trait id="Honor" value="-2"/>
-                <Trait id="Generosity" value="-1"/>
-                <Trait id="Calculating" value="2"/>
-                <Trait id="Mercy" value="-2"/>
-                <Trait id="Valor" value="2"/>
-                <Trait id="Egalitarian" value="-1"/>
-                <Trait id="Oligarchic" value="1"/>
-                <Trait id="Authoritarian" value="2"/>
+                <Trait id="Honor" value="-2" />
+                <Trait id="Generosity" value="-2" />
+                <Trait id="Calculating" value="2" />
+                <Trait id="Mercy" value="-2" />
+                <Trait id="Valor" value="2" />
+                <Trait id="Egalitarian" value="-2" />
+                <Trait id="Oligarchic" value="2" />
+                <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
                 <EquipmentSet id="nazgul_bat_equipment" />
@@ -6272,7 +6272,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6327,7 +6327,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6382,7 +6382,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6493,7 +6493,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6548,7 +6548,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6603,7 +6603,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6658,7 +6658,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6741,7 +6741,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6796,7 +6796,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6855,7 +6855,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills_ruler</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6910,7 +6910,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6964,7 +6964,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_berserker_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7019,7 +7019,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_berserker_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7073,7 +7073,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7128,7 +7128,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7182,7 +7182,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_archer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7236,7 +7236,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_berserker_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7290,7 +7290,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7345,7 +7345,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7400,7 +7400,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7454,7 +7454,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_artisan_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7509,7 +7509,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_faris_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7563,7 +7563,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7617,7 +7617,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_shock_troop_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7671,7 +7671,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_berserker_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7725,7 +7725,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7779,7 +7779,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_berserker_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7833,7 +7833,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_shock_troop_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7887,7 +7887,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_shock_troop_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7941,7 +7941,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_shock_troop_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -7995,7 +7995,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_berserker_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8049,7 +8049,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8103,7 +8103,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8157,7 +8157,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_shock_troop_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8211,7 +8211,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8266,7 +8266,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_huntress_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8321,7 +8321,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8376,7 +8376,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8431,7 +8431,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8486,7 +8486,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8541,7 +8541,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_huntress_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8596,7 +8596,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_physician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8651,7 +8651,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8706,7 +8706,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8761,7 +8761,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tribal_warrior_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8816,7 +8816,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8871,7 +8871,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8926,7 +8926,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_archer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -8981,7 +8981,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9036,7 +9036,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9091,7 +9091,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_physician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9146,7 +9146,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9201,7 +9201,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_faris_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9256,7 +9256,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_berserker_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9311,7 +9311,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9366,7 +9366,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9421,7 +9421,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9475,7 +9475,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_peltast_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9526,7 +9526,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9581,7 +9581,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_trader_skills_ruler</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_mumak_rider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9636,7 +9636,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_desert_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9690,7 +9690,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9745,7 +9745,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9852,7 +9852,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_faris_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9907,7 +9907,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -9961,7 +9961,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_mumak_rider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10015,7 +10015,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10123,7 +10123,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_desert_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10232,7 +10232,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10339,7 +10339,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10552,7 +10552,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10606,7 +10606,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_cav_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10660,7 +10660,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_faris_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10714,7 +10714,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10768,7 +10768,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_faris_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10822,7 +10822,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10877,7 +10877,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_faris_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10932,7 +10932,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -10987,7 +10987,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_physician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11042,7 +11042,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11097,7 +11097,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_mumak_rider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11180,7 +11180,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11235,7 +11235,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11318,7 +11318,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11373,7 +11373,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11428,7 +11428,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_trader_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11511,7 +11511,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_cav_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11566,7 +11566,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_cav_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11621,7 +11621,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_cav_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11676,7 +11676,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11731,7 +11731,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_desert_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11786,7 +11786,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_dandy_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11841,7 +11841,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_huntress_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11896,7 +11896,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -11951,7 +11951,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12034,7 +12034,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12088,7 +12088,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12143,7 +12143,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills_ruler</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_1_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12198,7 +12198,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_2_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12253,7 +12253,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12308,7 +12308,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_5_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12363,7 +12363,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_6_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12470,7 +12470,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_rider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12524,7 +12524,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_shock_troop_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_rider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12579,7 +12579,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12634,7 +12634,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12689,7 +12689,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_12_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12743,7 +12743,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_121_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12797,7 +12797,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12851,7 +12851,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12905,7 +12905,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -12959,7 +12959,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_shock_troop_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_rider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13013,7 +13013,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_16_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13068,7 +13068,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13122,7 +13122,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_18_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13176,7 +13176,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13231,7 +13231,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_shieldmaiden_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13285,7 +13285,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_shock_troop_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_20_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13392,7 +13392,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_rider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13446,7 +13446,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_horse_breeder_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13500,7 +13500,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13554,7 +13554,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_25_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13608,7 +13608,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_artisan_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_26_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13662,7 +13662,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13716,7 +13716,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_28_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13771,7 +13771,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_3_1_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13826,7 +13826,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_6_1_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13881,7 +13881,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13936,7 +13936,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -13991,7 +13991,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_physician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14046,7 +14046,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_huntress_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14101,7 +14101,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_23_2_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14156,7 +14156,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_berserker_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_23_3_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14211,7 +14211,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14266,7 +14266,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14321,7 +14321,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14376,7 +14376,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14431,7 +14431,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_dandy_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_rider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14486,7 +14486,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_shieldmaiden_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14541,7 +14541,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_24_1_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14596,7 +14596,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_physician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14651,7 +14651,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14706,7 +14706,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_rider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14760,7 +14760,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_4_3_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14815,7 +14815,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_physician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14869,7 +14869,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14923,7 +14923,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_rider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -14977,7 +14977,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.vlandia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_rider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15036,7 +15036,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills_ruler</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_variag_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15090,7 +15090,7 @@
             <xsl:attribute name="default_group">Ranged</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15144,7 +15144,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15199,7 +15199,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15253,7 +15253,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15308,7 +15308,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15362,7 +15362,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_archer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15416,7 +15416,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15470,7 +15470,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15579,7 +15579,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_physician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15634,7 +15634,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_huntress_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15794,7 +15794,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_archer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_variag_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15901,7 +15901,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -15955,7 +15955,7 @@
             <xsl:attribute name="default_group">Ranged</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16009,7 +16009,7 @@
             <xsl:attribute name="default_group">Ranged</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16063,7 +16063,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16117,7 +16117,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_peltast_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16224,7 +16224,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_archer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16307,7 +16307,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16416,7 +16416,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16471,7 +16471,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_huntress_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16526,7 +16526,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_variag_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16581,7 +16581,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_variag_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16636,7 +16636,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_faris_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_variag_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16691,7 +16691,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16746,7 +16746,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_artisan_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16801,7 +16801,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_archer_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16856,7 +16856,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_trader_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16911,7 +16911,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -16966,7 +16966,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -17021,7 +17021,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_trader_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -17080,7 +17080,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills_ruler</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -17135,7 +17135,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -17243,7 +17243,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -17350,7 +17350,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -17436,7 +17436,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -17543,7 +17543,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -17651,7 +17651,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <face>
                 <BodyProperties version="4" key="001CC40FC03C1004E586A65AB6332A27A66555BCBECB2AA6B87BAC8B8567A764000639A302628966000000000000000000000000000000000000000000F030C2"/>
@@ -17705,7 +17705,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -17760,7 +17760,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_huntress_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -17815,7 +17815,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -17922,7 +17922,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_archer_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -17976,7 +17976,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills_clanleader</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18030,7 +18030,7 @@
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18084,7 +18084,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_siege_engineering_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18138,7 +18138,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_archer_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18192,7 +18192,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18246,7 +18246,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18300,7 +18300,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18354,7 +18354,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18408,7 +18408,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18463,7 +18463,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_matriarch_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18518,7 +18518,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18573,7 +18573,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18628,7 +18628,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18683,7 +18683,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_dandy_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18738,7 +18738,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18793,7 +18793,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18848,7 +18848,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18903,7 +18903,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -18958,7 +18958,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_archer_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19013,7 +19013,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19068,7 +19068,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19123,7 +19123,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19178,7 +19178,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19233,7 +19233,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19288,7 +19288,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19343,7 +19343,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19398,7 +19398,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19452,7 +19452,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_archer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19502,7 +19502,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_shock_troop_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19552,7 +19552,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_mounted_archery_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_easterling_archer_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19602,7 +19602,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.khuzait</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_dandy_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19658,7 +19658,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_trader_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19713,7 +19713,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_faris_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19768,7 +19768,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_quartermaster_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19823,7 +19823,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.aserai</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_haradrim_cav_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19878,7 +19878,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_variag_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19933,7 +19933,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_variag_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -19988,7 +19988,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.battania</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_fian_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_variag_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20043,7 +20043,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20098,7 +20098,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_spy_master_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20153,7 +20153,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20208,7 +20208,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_swordsman_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20263,7 +20263,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_politician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20318,7 +20318,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20373,7 +20373,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20428,7 +20428,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_phalanx_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20483,7 +20483,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_courtier_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20538,7 +20538,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20593,7 +20593,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20648,7 +20648,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_intriguer_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_matriarch_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20703,7 +20703,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.sturgia</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_huntress_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dale_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20758,7 +20758,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_cavalry_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20813,7 +20813,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_healer_scholar_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20868,7 +20868,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20923,7 +20923,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_tactician_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20978,7 +20978,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_diplomat_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -21033,7 +21033,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_chatelaine_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -21088,7 +21088,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_dandy_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -21143,7 +21143,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_trader_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_elder_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -21198,7 +21198,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_trader_skills_rookie</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_matriarch_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -21253,7 +21253,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.spc_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>

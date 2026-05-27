@@ -2,6 +2,52 @@
 
 ## 2026-05-27
 
+### fix(lords-skills): TAOM-owned SkillSets — make the lore-driven values actually take effect
+
+Follow-up to the 16-culture lords-skills sweep (commit 8665ca6). In-game testing
+revealed Boromir showing OneHanded=145 instead of the 295 written into his XSLT
+template. Root cause: the engine ignores explicit `<skills>` blocks on hero
+NPCCharacters and uses the value referenced by `skill_template="SkillSet.X"`
+instead. Vanilla's `spc_dandy_skills` (OneHanded=140) was overriding everything.
+
+**Fix:** create TAOM-owned SkillSets that the engine WILL respect, and point
+each adult lord at the right one.
+
+- New file `Main/_Module/ModuleData/taom_lord_skill_sets.xml` with **120 SkillSets**:
+  - 35 archetype sets (`taom_lord_skills`, `taom_knight_skills`, `taom_dwarf_king_skills`,
+    `taom_elf_king_skills`, `taom_nazgul_skills`, `taom_orc_chieftain_skills`, etc.)
+  - 85 per-canonical sets (`taom_canonical_lord_1_75_skills` for Boromir,
+    `taom_canonical_lord_1_9_skills` for Imrahil, `taom_canonical_lord_L1_1_skills`
+    for Galadriel, etc.)
+- Each adult NPCCharacter's `skill_template` attribute swapped from vanilla
+  `SkillSet.spc_*` to the matching TAOM set: e.g. Boromir now points to
+  `SkillSet.taom_canonical_lord_1_75_skills` (OneHanded=295, Leadership=285).
+- Registered in `Main/_Module/SubModule.xml` alongside the existing
+  `taom_wanderer_skill_sets` entry.
+- Tool changes in `tools/apply_culture_skills_traits.py`:
+  - New `build_skill_sets_xml()` — emits the full SkillSets file from
+    `BASE_ARCHETYPES` + per-culture `canonical` dicts (deterministic, sorted by id).
+  - New `update_skill_template_in_block()` — swaps `skill_template="SkillSet.X"`
+    on both lords.xml inline attrs and lords.xslt `<xsl:attribute>` blocks.
+  - New `--all-cultures` flag for batch processing; existing `--culture <key>`
+    still works.
+  - Canonical NPCs now bypass the age<14 skip (fixes two Nazgûl that had
+    placeholder ages 9 + 11 in lords.xslt and were treated as children).
+  - Added Gondor to `CULTURES` dict (was previously handled by a separate
+    Gondor-only script).
+
+Coverage: 737 NPCs across 17 cultures (Gondor through Abanissa) now use TAOM
+SkillSets. 29 children + 1 vanilla NPC (lord_6_6 Suran) still reference vanilla
+`spc_*_skills_rookie` — by design (skip-children rule).
+
+Save-compat: hero skills are baked at hero creation. Existing campaigns keep
+their old stats; new campaigns + un-spawned heroes use the new SkillSets.
+
+Not-tested: in-game spot check of Boromir / Imrahil / Galadriel skill panels
+(blocked by 0Harmony.dll lock — Bannerlord was running during the session).
+
+Refs: #228-#245
+
 ### fix(deps): DR3 Phase 4 follow-up — v1.4.5 signature verification across all defensive shields
 
 First in-game launch (commit `09c94de` ran clean) flagged 4 SaveShield install warnings in `diag.log`. User asked for a full audit of Phase C TaleWorlds touchpoints against the actual v1.4.5 decompile. Three issues found and fixed:

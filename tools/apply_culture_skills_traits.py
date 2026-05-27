@@ -16,6 +16,7 @@ REPO = Path(__file__).resolve().parent.parent
 LORDS_XML = REPO / "Main" / "_Module" / "ModuleData" / "characters" / "lords.xml"
 LORDS_XSLT = REPO / "Main" / "_Module" / "ModuleData" / "lords.xslt"
 HEROES_XSLT = REPO / "Main" / "_Module" / "ModuleData" / "heroes.xslt"
+LORD_SKILL_SETS = REPO / "Main" / "_Module" / "ModuleData" / "taom_lord_skill_sets.xml"
 
 SKILL_ORDER = ['OneHanded','TwoHanded','Polearm','Bow','Crossbow','Throwing','Riding','Athletics',
                'Crafting','Scouting','Tactics','Roguery','Charm','Leadership','Trade','Steward',
@@ -253,6 +254,110 @@ BASE_ARCHETYPES = {
 # CULTURE DATA — keyword → archetype mapping + canonical character overrides
 # ============================================================================
 CULTURES = {
+    # ====================================================================
+    # GONDOR — Men of the West
+    # ====================================================================
+    'gondor': {
+        'culture_id': 'gondor',
+        'lore_name': 'Gondor',
+        'race': 'man',
+        'keyword_archetypes': [
+            (['ranger', 'archer', 'bowmen', 'morthond', 'black root', 'blackroot'], 'ranger'),
+            (['errand-rider', 'messenger', 'rider of gondor'], 'errand_rider'),
+            (['keeper of the lore'], 'steward'),
+            (['captain', 'commander', 'commands', 'rules', 'lord of'], 'lord'),
+            (['knight', 'rides with', 'cavalry'], 'knight'),
+        ],
+        'canonical': {
+            # Stewards
+            'lord_1_7': dict(skills=dict(OneHanded=170,TwoHanded=130,Polearm=180,Bow=130,Crossbow=90,Throwing=100,Riding=200,Athletics=170,Crafting=150,Scouting=220,Tactics=280,Roguery=130,Charm=270,Leadership=290,Trade=230,Steward=300,Medicine=160,Engineering=240),
+                          traits=dict(Honor=1,Generosity=0,Calculating=2,Mercy=-1,Valor=1,Egalitarian=-1,Oligarchic=2,Authoritarian=2)),  # Denethor
+            'lord_1_75': dict(skills=dict(OneHanded=295,TwoHanded=255,Polearm=240,Bow=160,Crossbow=110,Throwing=170,Riding=260,Athletics=285,Crafting=80,Scouting=210,Tactics=250,Roguery=70,Charm=230,Leadership=285,Trade=110,Steward=180,Medicine=130,Engineering=160),
+                          traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),  # Boromir
+            'lord_1_34': dict(skills=dict(OneHanded=240,TwoHanded=190,Polearm=220,Bow=275,Crossbow=140,Throwing=180,Riding=210,Athletics=275,Crafting=110,Scouting=290,Tactics=270,Roguery=120,Charm=230,Leadership=250,Trade=120,Steward=220,Medicine=170,Engineering=160),
+                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=2,Oligarchic=0,Authoritarian=-1)),  # Faramir
+            'lord_1_8':  dict(skills=dict(OneHanded=130,TwoHanded=90,Polearm=110,Bow=80,Crossbow=70,Throwing=70,Riding=170,Athletics=140,Crafting=160,Scouting=150,Tactics=230,Roguery=80,Charm=250,Leadership=210,Trade=230,Steward=275,Medicine=180,Engineering=210),
+                          traits=dict(Honor=2,Generosity=1,Calculating=2,Mercy=1,Valor=1,Egalitarian=0,Oligarchic=2,Authoritarian=1)),  # Hurioneth
+            'lord_1_44': dict(skills=dict(OneHanded=260,TwoHanded=210,Polearm=250,Bow=110,Crossbow=90,Throwing=120,Riding=180,Athletics=250,Crafting=80,Scouting=160,Tactics=220,Roguery=70,Charm=170,Leadership=210,Trade=100,Steward=170,Medicine=110,Engineering=130),
+                          traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=2)),  # Nemos
+            # Dol Amroth
+            'lord_1_9':  dict(skills=dict(OneHanded=290,TwoHanded=220,Polearm=275,Bow=180,Crossbow=120,Throwing=160,Riding=290,Athletics=260,Crafting=110,Scouting=230,Tactics=275,Roguery=90,Charm=270,Leadership=290,Trade=180,Steward=250,Medicine=170,Engineering=190),
+                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),  # Imrahil
+            'lord_1_9_5': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=70,Crossbow=50,Throwing=50,Riding=160,Athletics=110,Crafting=180,Scouting=140,Tactics=210,Roguery=80,Charm=295,Leadership=240,Trade=250,Steward=295,Medicine=260,Engineering=170),
+                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Lothwen
+            'lord_1_25': dict(skills=dict(OneHanded=265,TwoHanded=190,Polearm=250,Bow=140,Crossbow=100,Throwing=140,Riding=285,Athletics=255,Crafting=80,Scouting=180,Tactics=230,Roguery=70,Charm=210,Leadership=235,Trade=140,Steward=200,Medicine=130,Engineering=140),
+                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),  # Elphir
+            'lord_1_35': dict(skills=dict(OneHanded=250,TwoHanded=200,Polearm=235,Bow=140,Crossbow=100,Throwing=150,Riding=270,Athletics=245,Crafting=70,Scouting=170,Tactics=200,Roguery=80,Charm=180,Leadership=190,Trade=110,Steward=150,Medicine=110,Engineering=110),
+                          traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=0)),  # Erchirion
+            'lord_1_24': dict(skills=dict(OneHanded=210,TwoHanded=170,Polearm=195,Bow=130,Crossbow=80,Throwing=120,Riding=240,Athletics=230,Crafting=70,Scouting=150,Tactics=170,Roguery=70,Charm=180,Leadership=160,Trade=100,Steward=140,Medicine=100,Engineering=100),
+                          traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Amrothos
+            'lord_1_10': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=150,Athletics=110,Crafting=150,Scouting=120,Tactics=160,Roguery=70,Charm=255,Leadership=180,Trade=200,Steward=255,Medicine=215,Engineering=150),
+                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Aranel
+            'lord_1_23': dict(skills=dict(OneHanded=70,TwoHanded=40,Polearm=60,Bow=90,Crossbow=70,Throwing=60,Riding=160,Athletics=130,Crafting=130,Scouting=130,Tactics=140,Roguery=60,Charm=230,Leadership=170,Trade=180,Steward=235,Medicine=210,Engineering=130),
+                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Caladwen
+            # Earnurionath
+            'lord_1_11': dict(skills=dict(OneHanded=235,TwoHanded=185,Polearm=225,Bow=160,Crossbow=120,Throwing=140,Riding=215,Athletics=225,Crafting=110,Scouting=250,Tactics=255,Roguery=110,Charm=190,Leadership=240,Trade=140,Steward=215,Medicine=150,Engineering=180),
+                          traits=dict(Honor=2,Generosity=1,Calculating=2,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=1)),  # Ciryandur
+            'lord_1_111': dict(skills=dict(OneHanded=80,TwoHanded=50,Polearm=70,Bow=110,Crossbow=80,Throwing=70,Riding=170,Athletics=150,Crafting=170,Scouting=160,Tactics=160,Roguery=80,Charm=220,Leadership=180,Trade=200,Steward=240,Medicine=220,Engineering=160),
+                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=1,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Elarwen
+            'lord_1_12': dict(skills=dict(OneHanded=70,TwoHanded=40,Polearm=60,Bow=110,Crossbow=80,Throwing=60,Riding=170,Athletics=140,Crafting=160,Scouting=170,Tactics=170,Roguery=70,Charm=215,Leadership=170,Trade=180,Steward=235,Medicine=210,Engineering=150),
+                          traits=dict(Honor=2,Generosity=1,Calculating=2,Mercy=1,Valor=1,Egalitarian=0,Oligarchic=1,Authoritarian=0)),  # Findariel
+            'lord_1_26': dict(skills=dict(OneHanded=170,TwoHanded=110,Polearm=150,Bow=160,Crossbow=100,Throwing=120,Riding=285,Athletics=255,Crafting=70,Scouting=275,Tactics=170,Roguery=120,Charm=160,Leadership=150,Trade=140,Steward=130,Medicine=100,Engineering=90),
+                          traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Hirgon
+            # Barahirionath
+            'lord_1_40': dict(skills=dict(OneHanded=180,TwoHanded=130,Polearm=170,Bow=110,Crossbow=90,Throwing=100,Riding=160,Athletics=140,Crafting=120,Scouting=170,Tactics=265,Roguery=80,Charm=235,Leadership=255,Trade=200,Steward=255,Medicine=170,Engineering=200),
+                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=1,Valor=1,Egalitarian=0,Oligarchic=2,Authoritarian=1)),  # Borhador
+            'lord_1_40_1': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=160,Athletics=120,Crafting=170,Scouting=140,Tactics=180,Roguery=70,Charm=255,Leadership=200,Trade=220,Steward=265,Medicine=230,Engineering=160),
+                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Lindariel
+            'lord_1_46': dict(archetype='lord'),  # Malrior
+            'lord_1_46_1': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=140,Athletics=110,Crafting=140,Scouting=110,Tactics=140,Roguery=60,Charm=215,Leadership=160,Trade=185,Steward=235,Medicine=200,Engineering=140),
+                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=1,Valor=0,Egalitarian=0,Oligarchic=1,Authoritarian=1)),  # Thorwen
+            # Lossarnach
+            'lord_1_45': dict(skills=dict(OneHanded=235,TwoHanded=210,Polearm=255,Bow=110,Crossbow=90,Throwing=130,Riding=160,Athletics=150,Crafting=110,Scouting=170,Tactics=235,Roguery=70,Charm=210,Leadership=250,Trade=210,Steward=250,Medicine=140,Engineering=190),
+                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Forlong
+            'lord_1_45_1': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=160,Athletics=120,Crafting=200,Scouting=140,Tactics=180,Roguery=70,Charm=245,Leadership=190,Trade=230,Steward=275,Medicine=225,Engineering=170),
+                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Berethiel
+            'lord_1_45_2': dict(skills=dict(OneHanded=180,TwoHanded=150,Polearm=170,Bow=110,Crossbow=80,Throwing=110,Riding=200,Athletics=200,Crafting=60,Scouting=130,Tactics=130,Roguery=60,Charm=140,Leadership=120,Trade=90,Steward=120,Medicine=80,Engineering=90),
+                          traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Caldamir/Brandir
+            'lord_1_45_3': dict(archetype='elder_lord'),  # Rumil/Borlong
+            'lord_1_57':   dict(archetype='knight', skills=dict(OneHanded=240,TwoHanded=180,Polearm=230,Bow=130,Crossbow=100,Throwing=120,Riding=210,Athletics=235,Crafting=70,Scouting=180,Tactics=200,Roguery=80,Charm=180,Leadership=210,Trade=110,Steward=170,Medicine=100,Engineering=120),
+                          traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=1)),  # Baranor
+            'lord_1_57_1': dict(archetype='young_lady'),  # Calathiel
+            # Pinnath Gelin
+            'lord_1_52': dict(skills=dict(OneHanded=235,TwoHanded=180,Polearm=245,Bow=230,Crossbow=120,Throwing=160,Riding=215,Athletics=255,Crafting=80,Scouting=230,Tactics=215,Roguery=80,Charm=250,Leadership=235,Trade=140,Steward=195,Medicine=140,Engineering=140),
+                          traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Hirluin
+            'lord_1_52_1': dict(archetype='young_lady', skills=dict(OneHanded=140,TwoHanded=80,Polearm=120,Bow=170,Crossbow=110,Throwing=110,Riding=180,Athletics=190,Crafting=110,Scouting=160,Tactics=140,Roguery=70,Charm=200,Leadership=130,Trade=130,Steward=170,Medicine=140,Engineering=100),
+                          traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Anariel/Arador
+            'lord_1_52_2': dict(archetype='young_lord', skills=dict(OneHanded=180,TwoHanded=140,Polearm=180,Bow=200,Crossbow=110,Throwing=140,Riding=200,Athletics=210,Crafting=70,Scouting=200,Tactics=160,Roguery=70,Charm=170,Leadership=160,Trade=100,Steward=130,Medicine=100,Engineering=100),
+                          traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Barandor/Arvedui
+            'lord_1_52_4': dict(archetype='matriarch'),  # Nauriel
+            'lord_1_62':   dict(archetype='knight'),  # Oromar
+            # Lamedon
+            'lord_1_53': dict(skills=dict(OneHanded=265,TwoHanded=215,Polearm=255,Bow=130,Crossbow=110,Throwing=150,Riding=230,Athletics=250,Crafting=100,Scouting=210,Tactics=245,Roguery=80,Charm=200,Leadership=260,Trade=150,Steward=210,Medicine=140,Engineering=160),
+                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),  # Angbor
+            'lord_1_73':   dict(archetype='knight', skills=dict(OneHanded=235,TwoHanded=190,Polearm=225,Bow=120,Crossbow=90,Throwing=130,Riding=220,Athletics=235,Crafting=70,Scouting=170,Tactics=180,Roguery=70,Charm=180,Leadership=180,Trade=110,Steward=150,Medicine=100,Engineering=110),
+                          traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Narmir
+            'lord_1_73_1': dict(archetype='lady'),  # Belwen/Popilia
+            # Anfalas
+            'lord_1_71':   dict(skills=dict(OneHanded=215,TwoHanded=165,Polearm=210,Bow=225,Crossbow=140,Throwing=170,Riding=180,Athletics=245,Crafting=110,Scouting=255,Tactics=230,Roguery=110,Charm=195,Leadership=225,Trade=230,Steward=210,Medicine=140,Engineering=170),
+                          traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Golasgil
+            'lord_1_71_1': dict(skills=dict(OneHanded=65,TwoHanded=35,Polearm=55,Bow=90,Crossbow=70,Throwing=55,Riding=160,Athletics=130,Crafting=180,Scouting=160,Tactics=200,Roguery=80,Charm=255,Leadership=210,Trade=240,Steward=265,Medicine=235,Engineering=170),
+                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Laswen
+            # Morthond
+            'lord_WE9_l':  dict(skills=dict(OneHanded=205,TwoHanded=160,Polearm=215,Bow=290,Crossbow=140,Throwing=160,Riding=190,Athletics=265,Crafting=110,Scouting=265,Tactics=245,Roguery=90,Charm=180,Leadership=240,Trade=150,Steward=210,Medicine=140,Engineering=140),
+                          traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=0,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=1)),  # Duinhir
+            'lord_WE9_u':  dict(archetype='ranger', skills=dict(OneHanded=200,TwoHanded=150,Polearm=190,Bow=275,Crossbow=130,Throwing=160,Riding=170,Athletics=255,Crafting=100,Scouting=255,Tactics=215,Roguery=90,Charm=170,Leadership=210,Trade=120,Steward=170,Medicine=130,Engineering=120),
+                          traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Duilin
+            'lord_WE9_u2': dict(archetype='lady'),  # Rosfin
+            # Anfalas family
+            'lord_WE8_c':  dict(archetype='young_lord', skills=dict(OneHanded=180,TwoHanded=140,Polearm=170,Bow=200,Crossbow=110,Throwing=140,Riding=190,Athletics=215,Crafting=80,Scouting=220,Tactics=150,Roguery=80,Charm=170,Leadership=140,Trade=130,Steward=140,Medicine=100,Engineering=100),
+                          traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Pelendur
+            'lord_WE8_u':  dict(archetype='knight', skills=dict(OneHanded=215,TwoHanded=165,Polearm=205,Bow=215,Crossbow=135,Throwing=160,Riding=180,Athletics=235,Crafting=90,Scouting=245,Tactics=210,Roguery=100,Charm=180,Leadership=200,Trade=200,Steward=180,Medicine=120,Engineering=140),
+                          traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Barandil
+            'lord_WE8_1':  dict(archetype='lady'),  # Dorwen (Anfalas)
+        },
+    },
+
     # ====================================================================
     # EREBOR — Dwarves of the Lonely Mountain
     # ====================================================================
@@ -844,6 +949,75 @@ def get_skills_traits(npc_id: str, age: int, female: bool, bio: str, culture_dat
     return dict(arch['skills']), dict(arch['traits'])
 
 
+def get_skill_template_name(npc_id: str, age: int, female: bool, bio: str, culture_data: dict) -> str:
+    """Return the TAOM SkillSet id this NPC should reference via skill_template.
+
+    - Canonical NPC with explicit `skills=` override: taom_canonical_<id>_skills
+    - Otherwise: taom_<archetype>_skills
+    """
+    canonical = culture_data.get('canonical', {})
+    if npc_id in canonical and 'skills' in canonical[npc_id]:
+        return f'taom_canonical_{npc_id}_skills'
+    if npc_id in canonical and 'archetype' in canonical[npc_id]:
+        return f"taom_{canonical[npc_id]['archetype']}_skills"
+    return f'taom_{archetype_from_bio(bio, age, female, culture_data)}_skills'
+
+
+def build_skill_sets_xml() -> str:
+    """Generate the full taom_lord_skill_sets.xml content.
+
+    Includes:
+    - One <SkillSet> per archetype in BASE_ARCHETYPES (taom_<arch>_skills)
+    - One <SkillSet> per canonical NPC with explicit `skills=` (taom_canonical_<id>_skills)
+
+    Re-running is deterministic — output is sorted by id.
+    """
+    sets = {}
+    # Archetype sets
+    for arch_name, arch_data in BASE_ARCHETYPES.items():
+        sets[f'taom_{arch_name}_skills'] = arch_data['skills']
+    # Canonical sets (across all cultures)
+    for cul_name, cdata in CULTURES.items():
+        for npc_id, c in cdata.get('canonical', {}).items():
+            if 'skills' in c:
+                # Resolve full skill dict (archetype base + canonical override)
+                if 'archetype' in c:
+                    base = dict(BASE_ARCHETYPES[c['archetype']]['skills'])
+                    base.update(c['skills'])
+                    sets[f'taom_canonical_{npc_id}_skills'] = base
+                else:
+                    # Full explicit skills dict (no archetype base)
+                    sets[f'taom_canonical_{npc_id}_skills'] = dict(c['skills'])
+
+    out = ['<?xml version="1.0" encoding="utf-8"?>',
+           '<SkillSets>',
+           '  <!-- Generated by tools/apply_culture_skills_traits.py. Do not edit by hand. -->',
+           '  <!-- Lord skill templates — referenced from NPCCharacter[@skill_template]. -->',
+           '']
+    for sid in sorted(sets):
+        out.append(f'  <SkillSet id="{sid}">')
+        for skill_name in SKILL_ORDER:
+            if skill_name in sets[sid]:
+                out.append(f'    <skill id="{skill_name}" value="{sets[sid][skill_name]}" />')
+        out.append('  </SkillSet>')
+    out.append('</SkillSets>')
+    out.append('')
+    return '\n'.join(out)
+
+
+def update_skill_template_in_block(block: str, mode: str, new_template: str) -> str:
+    """Replace the skill_template attribute value in an NPCCharacter block."""
+    if mode == 'xml':
+        # Inline attribute on <NPCCharacter ... skill_template="SkillSet.X" ...>
+        return re.sub(r'(skill_template=")SkillSet\.[A-Za-z0-9_]+(")', r'\1SkillSet.' + new_template + r'\2', block, count=1)
+    elif mode == 'xslt':
+        # <xsl:attribute name="skill_template">SkillSet.X</xsl:attribute>
+        return re.sub(
+            r'(<xsl:attribute name="skill_template">)SkillSet\.[A-Za-z0-9_]+(</xsl:attribute>)',
+            r'\1SkillSet.' + new_template + r'\2', block, count=1)
+    return block
+
+
 # ============================================================================
 # RENDERING + REPLACEMENT (same as Gondor script)
 # ============================================================================
@@ -938,19 +1112,23 @@ def load_bios() -> dict:
 
 def process_file(text: str, culture_data: dict, mode: str, bios: dict, label: str) -> tuple[str, int, int]:
     ids = npcs_of_culture(text, culture_data['culture_id'], mode)
+    canonical = culture_data.get('canonical', {})
     touched = skipped = 0
     print(f"  {label}: {len(ids)} NPCs of culture={culture_data['culture_id']}")
     for nid in ids:
         info = find_npc_block(text, nid, mode)
         if not info: continue
         start, end, attrs = info
-        if attrs['age'] < 14:
+        # Skip children UNLESS this NPC has a canonical override (e.g., Nazgûl with placeholder age).
+        if attrs['age'] < 14 and nid not in canonical:
             print(f"    skip child {nid} (age {attrs['age']})")
             skipped += 1
             continue
         sk, tr = get_skills_traits(nid, attrs['age'], attrs['female'], bios.get(nid, ''), culture_data)
+        template = get_skill_template_name(nid, attrs['age'], attrs['female'], bios.get(nid, ''), culture_data)
         block = text[start:end]
         new_block = replace_skills_traits_in_block(block, sk, tr)
+        new_block = update_skill_template_in_block(new_block, mode, template)
         if new_block != block:
             text = text[:start] + new_block + text[end:]
             touched += 1
@@ -959,28 +1137,53 @@ def process_file(text: str, culture_data: dict, mode: str, bios: dict, label: st
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--culture', required=True, help='Culture key (e.g. rohan)')
+    ap.add_argument('--culture', help='Culture key (e.g. rohan); omit with --all-cultures')
+    ap.add_argument('--all-cultures', action='store_true', help='Process every culture in one run')
+    ap.add_argument('--skillsets-only', action='store_true',
+                    help='Only regenerate taom_lord_skill_sets.xml; skip lords.xml/xslt edits')
     ap.add_argument('--apply', action='store_true')
     args = ap.parse_args()
 
-    if args.culture not in CULTURES:
-        print(f"Unknown culture {args.culture!r}. Available: {sorted(CULTURES)}")
-        return 1
-    cdata = CULTURES[args.culture]
     bios = load_bios()
-    print(f"Culture: {args.culture} ({cdata['lore_name']}) — culture_id={cdata['culture_id']}")
+
+    # Always regenerate the SkillSets file (deterministic, fast).
+    sets_xml = build_skill_sets_xml()
+    n_sets = sets_xml.count('<SkillSet id=')
+    print(f"Generated taom_lord_skill_sets.xml ({n_sets} SkillSets)")
+    if args.apply:
+        LORD_SKILL_SETS.write_text(sets_xml, encoding='utf-8')
+        print(f"  WROTE {LORD_SKILL_SETS.relative_to(REPO)}")
+
+    if args.skillsets_only:
+        return 0
+
+    if args.all_cultures:
+        targets = list(CULTURES.keys())
+    elif args.culture:
+        if args.culture not in CULTURES:
+            print(f"Unknown culture {args.culture!r}. Available: {sorted(CULTURES)}")
+            return 1
+        targets = [args.culture]
+    else:
+        print("Specify --culture <name> or --all-cultures (or use --skillsets-only)")
+        return 1
 
     xml = LORDS_XML.read_text(encoding='utf-8')
-    xml_new, x_touched, x_skipped = process_file(xml, cdata, 'xml', bios, 'lords.xml')
     xslt = LORDS_XSLT.read_text(encoding='utf-8')
-    xslt_new, t_touched, t_skipped = process_file(xslt, cdata, 'xslt', bios, 'lords.xslt')
+    total_xml = total_xslt = 0
+    for cul in targets:
+        cdata = CULTURES[cul]
+        print(f"\nCulture: {cul} ({cdata['lore_name']}) — culture_id={cdata['culture_id']}")
+        xml, x_touched, _ = process_file(xml, cdata, 'xml', bios, 'lords.xml')
+        xslt, t_touched, _ = process_file(xslt, cdata, 'xslt', bios, 'lords.xslt')
+        total_xml += x_touched
+        total_xslt += t_touched
 
-    print(f"\nlords.xml: touched {x_touched}, skipped {x_skipped}")
-    print(f"lords.xslt: touched {t_touched}, skipped {t_skipped}")
+    print(f"\nTOTAL touched: lords.xml={total_xml}, lords.xslt={total_xslt}")
 
     if args.apply:
-        LORDS_XML.write_text(xml_new, encoding='utf-8')
-        LORDS_XSLT.write_text(xslt_new, encoding='utf-8')
+        LORDS_XML.write_text(xml, encoding='utf-8')
+        LORDS_XSLT.write_text(xslt, encoding='utf-8')
         print("WROTE lords.xml + lords.xslt")
     else:
         print("(dry-run — pass --apply to write)")
