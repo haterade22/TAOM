@@ -2,6 +2,44 @@
 
 ## 2026-05-27
 
+### feat(career-system): starter equipment rosters for every culture (12 new cultures × 6 archetypes)
+
+Previously only Gondor had full career starter rosters; the four warg cultures (Mordor/Isengard/Gundabad/Dol Guldur) had horse-only cavalry rosters with no body/leg/weapons; the remaining 11 cultures fell through entirely to the youth/title-default outfit.
+
+User direction: "implement the equipments for every career like we did Gondor. Identify the lowest armored stuff in the Armoury. and give it to the player."
+
+New tool [`tools/generate_career_starter_rosters.py`](tools/generate_career_starter_rosters.py) — for each TAOM culture with a dedicated LOTRLOME_Armory folder, parses the folder's `body_armors.xml` + `leg_armors.xml`, picks the item with the lowest `body_armor` / `leg_armor` stat, and emits 6 rosters (Infantry/Ranged/Cavalry × m/f) referencing those armor items + per-culture weapon picks from a hardcoded config table. Idempotent (`--dry-run` / `--apply`); re-runnable when LOTRLOME_Armory ships new low-tier items.
+
+[`taom_career_starting_equipment.xml`](Main/_Module/ModuleData/equipmentsets/taom_career_starting_equipment.xml) regenerated — **78 rosters** total:
+
+| Culture group | Coverage |
+|---|---|
+| Gondor | **Preserved verbatim** — already authored with custom-tuned `starter_*_gondor_*` items |
+| Warg cultures (Mordor, Isengard, Gundabad, Dol Guldur) | Body+leg+weapons added; horse stays warg_brown + warg_saddle |
+| Erebor / Rivendell / Mirkwood / Rohan (vlandia) / Dunland (empire) / Harad (aserai) / Rhun (khuzait) / Dale (sturgia) | Full 6 rosters; non-warg cavalry uses vanilla `saddle_horse` + `leather_horse_harness` |
+| Lothlorien / Umbar / Khand (battania) | **SKIPPED** — no dedicated LOTRLOME_Armory folder. Graceful fallback in `ICareerStartingEquipmentService` keeps the menu functional; player keeps culture-default outfit until rosters are authored later. |
+
+Lowest-armor picks per culture (selected from `body_armor` / `leg_armor` stat, sorted ascending):
+- mordor: `sk_uruk_mordor_chainmail_light_a` / `sk_md_orc_boots_a`
+- isengard: `sk_uruk_hai_tunic_a1` / `sk_uruk_hai_shoes_a1`
+- gundabad: `sk_gb_uruk_chest_light_a` / `sk_gb_uruk_boots_light_a`
+- dolguldur: `sk_dg_uruk_chest_light_a` / `sk_dg_uruk_boots_light_a`
+- erebor: `sk_dwarf_dress_normal_a` / `sk_dwarf_erebor_boots_light_a`
+- rivendell: `rivendell_torso_light_light_tier1` / `rivendell_boots_leather1`
+- mirkwood: `mkwd_inf3_chest` / `mirkwood_boots`
+- vlandia (Rohan): `rohan_militia_tunic_a` / `cts_rohan_boots3`
+- empire (Dunland): `dunland_caerdh_chainmail_light_a` / `dunland_caerdh_boots_light_a`
+- aserai (Harad): `harad08_torso` / `harad08_boots`
+- khuzait (Rhun): `sk_rh_loke_tunic_a` / `easterling02_v1_boots`
+- sturgia (Dale): `clo_sk_dale_chest_archer_a01` / `sk_dale_boots_archer_a01`
+
+Each roster overrides only Body + Leg + Item0..2 (+ Horse + HorseHarness for cavalry) — Head/Cape/Gloves inherit from the culture-default applied just before via `Equipment.FillFrom`'s slot-merge.
+
+Files: new generator tool + regenerated rosters XML. **No new items authored** in LOTRLOME_Armory. No code change.
+Tests: 2520/2522 passing. `CareerCultureCoverageTests` JSON↔XML cross-reference still balanced (rosters are layered on top of careers, not in 1:1 lockstep).
+Save-compat: equipment binds at character-creation finalize; no migration.
+Not-tested: in-game spot-check per culture. Likely visual review needed since some lowest-armor picks (e.g., erebor's `sk_dwarf_dress_normal_a` which is a "dress" mesh, not soldier garb) may want manual override.
+
 ### fix(lords-skills): TAOM-owned SkillSets — make the lore-driven values actually take effect
 
 Follow-up to the 16-culture lords-skills sweep (commit 8665ca6). In-game testing
