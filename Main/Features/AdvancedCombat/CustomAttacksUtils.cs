@@ -120,10 +120,17 @@ public class CustomAttacksUtils
         }
 
         sbyte mainHandItemBoneIndex = attacker.Monster.MainHandItemBoneIndex;
+        // The 3 positional ints below map to (affectorWeaponSlotOrMissileIndex,
+        // StrikeType, DamageType). DamageType MUST match blow.DamageType — vanilla's
+        // combat-log message generator reads the collision data's DamageType, not the
+        // Blow's, so a mismatch makes hits read "Blunt" in the in-game log even when
+        // the Blow correctly says Pierce. LOTRAOM had this set to `2` (Blunt), which
+        // was a long-standing bug that only became visible once warg bites started
+        // landing reliably (post-cc9e0c4). See plan file 2026-05-27.
         AttackCollisionData attackCollisionDataForDebugPurpose = AttackCollisionData.GetAttackCollisionDataForDebugPurpose(
             false, false, false, true, false, false, false, false, false, false, false, false,
             CombatCollisionResult.StrikeAgent,
-            -1, 0, 2,
+            -1, 0, (int)DamageTypes.Pierce,
             blow.BoneIndex,
             BoneBodyPartType.Abdomen,
             mainHandItemBoneIndex,
