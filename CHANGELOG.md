@@ -2,6 +2,28 @@
 
 ## 2026-05-27
 
+### docs(lord-skills): authoring guide + feature doc + Doc Lookup row + memory entry
+
+Captures the end-to-end lord-skills+traits workflow built over three commits
+(`feabca2` → `8665ca6` → `c5dc168`) so future sessions can repeat the process
+without re-discovering the architecture.
+
+- New: [`docs/ai-includes/lord-skills-authoring.md`](docs/ai-includes/lord-skills-authoring.md) —
+  the playbook. TL;DR + 3-layer architecture + end-to-end workflow + script
+  quick-ref + 35-archetype catalog + 3 recipes (add canonical / add archetype /
+  add culture) + verification checklist + commit-split pattern + per-culture
+  GitHub issue creation + gotchas with memory references.
+- New: [`docs/features/lord-skills.md`](docs/features/lord-skills.md) — feature
+  doc per CLAUDE.md mandatory rule.
+- Updated: [`CLAUDE.md`](CLAUDE.md) Doc Lookup table — new row pointing at the
+  authoring guide.
+- Updated: [`docs/INDEX.md`](docs/INDEX.md) — Quickstart paths row + Career &
+  Progression listing.
+- New memory: `feedback_skill_template_overrides_explicit_skills.md` — codifies
+  the systemic learning that hero NPCCharacters use `skill_template` not
+  `<skills>`; future agents must check this BEFORE recommending explicit-skill
+  edits to lord rosters.
+
 ### feat(career-system): starter equipment rosters for every culture (12 new cultures × 6 archetypes)
 
 Previously only Gondor had full career starter rosters; the four warg cultures (Mordor/Isengard/Gundabad/Dol Guldur) had horse-only cavalry rosters with no body/leg/weapons; the remaining 11 cultures fell through entirely to the youth/title-default outfit.

@@ -11,6 +11,7 @@
 | Debugging a regression | [reviews/](reviews/) (search for `rca-<feature>-<date>.md`), then auto-memory `feedback_<symptom>.md` files |
 | Authoring a new feature module | [ai-includes/architecture.md](ai-includes/architecture.md) + [ADR-002](adrs/002-thin-entry-points.md) + [ADR-007](adrs/007-adapter-pattern.md), then pick the nearest existing feature doc as a template |
 | Authoring a new culture's armor + troops end-to-end | [ai-includes/new-culture-authoring.md](ai-includes/new-culture-authoring.md) |
+| Adding or fixing lord skills + traits (any culture) | [ai-includes/lord-skills-authoring.md](ai-includes/lord-skills-authoring.md) |
 | Researching a TaleWorlds API before editing | [ai-includes/taleworlds-research-guide.md](ai-includes/taleworlds-research-guide.md) + `pwsh tools/taom-src.ps1 path <Type>` |
 | Adding text the player will read | [localization/TRANSLATOR_GUIDE.md](localization/TRANSLATOR_GUIDE.md) + [features/localization.md](features/localization.md) |
 | Closing out a feature (build → review → ship) | CLAUDE.md "Completion Workflow" + [reviews/REVIEW-GUIDE.md](reviews/REVIEW-GUIDE.md) |
@@ -49,6 +50,7 @@
 - [troop-tree-revamp](features/troop-tree-revamp.md) — multi-culture troop roster authoring discipline
 - [volunteer-recruitment](features/volunteer-recruitment.md) — per-settlement / clan / culture recruitment pools (TaomVolunteerModel)
 - [equip-presets](features/equip-presets.md) — save/load equipment preset overlay on inventory
+- [lord-skills](features/lord-skills.md) — lore-driven SkillSets for every TAOM lord (~880 NPCs, 17 cultures, 35 archetypes); authoring guide [lord-skills-authoring.md](ai-includes/lord-skills-authoring.md)
 
 ### Equipment & armor authoring
 - [gondor-armor-revamp](features/gondor-armor-revamp.md) — Gondor armor authoring + roster swap (issue #99)
