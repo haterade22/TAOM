@@ -151,6 +151,7 @@ A `tools/search_docs.py` (Karpathy's "naive search engine") is **deferred indefi
 - [docs/adrs/README.md](./README.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/raw/README.md](../raw/README.md)
+- [docs/research/karpathy-autoresearch.md](../research/karpathy-autoresearch.md)
 - [docs/research/README.md](../research/README.md)
 
 <!-- backlinks-end -->

@@ -75,6 +75,7 @@ Gaps in the raw material, contradictions between sources, or follow-up research 
 
 ## Referenced by
 
+- [docs/INDEX.md](../INDEX.md)
 - [docs/raw/README.md](../raw/README.md)
 
 <!-- backlinks-end -->

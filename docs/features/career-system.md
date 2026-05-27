@@ -228,6 +228,7 @@ See #101 — currently 41 of 50 careers have no PNG. Drop a 256x256 PNG into `Ma
 
 - [docs/features/battle-balance.md](./battle-balance.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/research/karpathy-autoresearch.md](../research/karpathy-autoresearch.md)
 - [docs/reviews/rca-career-starting-equipment-2026-05-19.md](../reviews/rca-career-starting-equipment-2026-05-19.md)
 
 <!-- backlinks-end -->

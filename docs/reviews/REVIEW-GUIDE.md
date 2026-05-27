@@ -380,5 +380,6 @@ After receiving Codex output, Claude must:
 
 - [docs/adrs/010-knowledge-base-architecture.md](../adrs/010-knowledge-base-architecture.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/research/karpathy-autoresearch.md](../research/karpathy-autoresearch.md)
 
 <!-- backlinks-end -->

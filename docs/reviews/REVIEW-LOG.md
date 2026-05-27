@@ -989,5 +989,6 @@ Full RCA at [`docs/reviews/rca-crash-report-codex-2026-05-25.md`](rca-crash-repo
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/research/karpathy-autoresearch.md](../research/karpathy-autoresearch.md)
 
 <!-- backlinks-end -->

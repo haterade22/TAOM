@@ -172,6 +172,12 @@ These are recurring lessons the auto-memory system has captured. The memory file
 - **Banner ruling-clan convention** — `clan_<kingdom>_1` inherits kingdom banner_key; don't override in `spclans.xslt`. Memory: `banner-ruling-clan-convention.md`
 - **Lord archetypes** — memory `lords-system.md` (914 lords × 12 archetypes × 13 cultures)
 
+## Research notes
+
+LLM-compiled wiki nodes derived from `docs/raw/`. See [research/README.md](research/README.md) for the structure and `/knowledge-compile` workflow.
+
+- [karpathy-autoresearch](research/karpathy-autoresearch.md) — full review of Karpathy's autoresearch repo (10 files, 52 patterns extracted) + Tier-1/2/3 adoption map for TAOM. Source: `docs/raw/ai-research/karpathy-autoresearch/`.
+
 ## Conventions
 
 - File links use markdown `[text](relative/path.md)` syntax. No Obsidian `[[wikilinks]]`. See [ADR-010](adrs/010-knowledge-base-architecture.md) for rationale.

@@ -328,5 +328,6 @@ Agent teams multiply token usage. Use this decision framework:
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/research/karpathy-autoresearch.md](../research/karpathy-autoresearch.md)
 
 <!-- backlinks-end -->
