@@ -337,8 +337,9 @@ def main(argv: list[str]) -> int:
             pass
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--quick", action="store_true", help="Only run the dead-link check (fastest)")
-    ap.add_argument("--report", type=Path, help="Write report to this path instead of stdout")
+    ap.add_argument("--report", type=Path, help="Write report to this path instead of stdout (atomic via .tmp+rename)")
     ap.add_argument("--fail-on-dead", action="store_true", help="Exit 1 if any dead links found")
+    ap.add_argument("--summary", action="store_true", help="Emit a --- delimited grep-friendly summary block instead of the full markdown report")
     args = ap.parse_args(argv)
 
     files: list[Path] = []
@@ -353,13 +354,31 @@ def main(argv: list[str]) -> int:
         report.orphan_features = check_orphan_features(files)
         report.missing_feature_docs = check_missing_feature_docs(feature_doc_basenames())
 
-    rendered = format_report(report, quick=args.quick)
-    if args.report:
-        args.report.parent.mkdir(parents=True, exist_ok=True)
-        args.report.write_text(rendered, encoding="utf-8")
-        print(f"Wrote report to {rel(args.report)} ({report.total} findings)", file=sys.stderr)
+    if args.summary:
+        # Structured grep-friendly block, modeled on autoresearch's train.py final output
+        summary = "\n".join([
+            "---",
+            f"dead_links:        {len(report.dead_links)}",
+            f"stale_versions:    {len(report.stale_versions)}",
+            f"orphan_features:   {len(report.orphan_features)}",
+            f"missing_features:  {len(report.missing_feature_docs)}",
+            f"total_findings:    {report.total}",
+            "---",
+            "",
+        ])
+        sys.stdout.write(summary)
     else:
-        sys.stdout.write(rendered)
+        rendered = format_report(report, quick=args.quick)
+        if args.report:
+            # Atomic write: write to .tmp then rename. Prevents partial-write
+            # corruption if interrupted mid-write (autoresearch prepare.py pattern).
+            args.report.parent.mkdir(parents=True, exist_ok=True)
+            tmp = args.report.with_suffix(args.report.suffix + ".tmp")
+            tmp.write_text(rendered, encoding="utf-8")
+            tmp.replace(args.report)
+            print(f"Wrote report to {rel(args.report)} ({report.total} findings)", file=sys.stderr)
+        else:
+            sys.stdout.write(rendered)
 
     if args.fail_on_dead and report.dead_links:
         return 1

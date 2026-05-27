@@ -2,6 +2,41 @@
 
 ## 2026-05-27
 
+### feat(docs-kb): Tier-1 buildout from karpathy/autoresearch review — analyze_reviews, structured `---` summaries, atomic writes, `/lint-cleanup-loop` skill
+
+Honest audit after the prior commit's research-only contribution: 0 of 15 documented gaps had been closed. This commit closes the Tier-1 set.
+
+**`tools/analyze_reviews.py`** — mirrors autoresearch's [`analysis.ipynb`](https://github.com/karpathy/autoresearch/blob/master/analysis.ipynb). Parses the markdown tables in [`docs/reviews/REVIEW-LOG.md`](docs/reviews/REVIEW-LOG.md) (32 reviews across two summary tables, 77 real bugs, 8 false positives, 9 missed), computes per-prompt-version accuracy + cumulative real bugs, produces [`docs/reviews/progress.png`](docs/reviews/progress.png) via matplotlib. The PNG is committed even though no TSV equivalent exists in repo — same convention as autoresearch (story-output committed, raw log stays in markdown). `--summary` emits a `---` block; `--no-plot` skips the chart for headless contexts. The chart shows the v1/v2-prompt high-miss-rate era visibly, then 91% accuracy through v4+.
+
+**`--summary` flag on `tools/lint_docs.py` and `tools/build_backlinks.py`** — emits a structured `---`-delimited block of `key:           value` lines designed for `grep "^dead_links:" output.log`. Modeled on autoresearch's `train.py` final-output block. Autonomous loops can now consume tool output without parsing markdown.
+
+**Atomic-write for `tools/lint_docs.py --report`** — write to `.tmp` then `os.rename` (atomic on POSIX + Windows). Mirrors autoresearch's `prepare.py` download pattern. Prevents partial-write corruption if the script is interrupted mid-write — actually relevant since the lint report is ~37KB and we'll start running it from autonomous loops.
+
+**`.claude/skills/lint-cleanup-loop/SKILL.md`** — first program.md-style autonomous campaign skill. Maps every autoresearch primitive into TAOM:
+- `train.py` ↔ TAOM docs being edited
+- `prepare.py` ↔ `tools/lint_docs.py` (the read-only ground-truth metric)
+- `program.md` ↔ the SKILL.md itself
+- `val_bpb` ↔ `total_findings` from `--summary` output
+- `results.tsv` ↔ `.claude/state/lint-cleanup-loop/results.tsv` (gitignored)
+- `autoresearch/<tag>` branch ↔ `taom-lint/<tag>` branch
+- 5-min budget ↔ 10-min per-iteration soft cap
+- "NEVER STOP" ↔ same (cites the rule from CLAUDE.md + program.md)
+- Crash judgment, simplicity criterion, output-capture discipline ↔ same
+
+Stop conditions explicitly enumerated: metric=0, 5 consecutive non-improvements, user interrupt, or `--max-iters` hit. Branch-isolated (`taom-lint/<tag>`) so it can't damage `bannerlord-1.4.5`. Doesn't auto-merge — the user reviews the kept commits before merging.
+
+**`.gitignore`** adds `.claude/state/` for skill working-state (results.tsv, last-lint.md, per-iteration captures).
+
+**What's still un-done** (Tier 2/3 deferred deliberately):
+- Tier 2: fast-fail guards in long-running scripts (covered by the loop's "5 consecutive discards = stop" rule but not per-script-internal yet)
+- Tier 2: exponential-backoff retry in Python tools (only relevant when we have network I/O, which we don't yet)
+- Tier 2: time-budget enforcement with warmup exclusion (relevant when iterations have variable startup time; today they don't)
+- Tier 3: gitignore CLAUDE.md / AGENTS.md (explicitly rejected — TAOM treats them as canonical)
+- Tier 3: move data to `~/.cache/taom/` (explicitly rejected — Modules/ deployment model doesn't map)
+
+Constraint: matplotlib was not previously a TAOM tooling dependency. Installed via `pip install --user matplotlib` on the dev machine; not added to a requirements.txt because we don't have one for `tools/`. If `tools/analyze_reviews.py` runs in CI later, the workflow will need to `pip install matplotlib` explicitly. The `--no-plot` flag makes the script useful headlessly.
+Research: full read of karpathy/autoresearch (10 files, 4 substantive) — see [`docs/research/karpathy-autoresearch.md`](docs/research/karpathy-autoresearch.md) for the 52-pattern catalog this commit was derived from.
+
 ### fix(rohan): clothe naked tavern/town NPCs + upgrade guards to chainmail
 
 Two related XML fixes in [`npcs_rohan.xml`](Main/_Module/ModuleData/characters/npcs_rohan.xml).

@@ -107,6 +107,12 @@ tools/reports/
 # DR3 source-merge: vendored upstream BUTR + Harmony + MonoMod + Cecil source (downloaded fresh from GitHub tags each session — see docs/migration/dr3-mcm-internalization-plan.md)
 Dependencies/.vendor-source/
 
+# Skill state files (per-skill working state — context snapshots, autonomous-loop
+# results.tsv, etc.). Per ADR-010 + lint-cleanup-loop skill, autonomous campaigns
+# follow karpathy/autoresearch's pattern of an untracked results.tsv plus
+# transient state files.
+.claude/state/
+
 # Knowledge-base raw materials (see docs/raw/README.md + ADR-010):
 # Large binary source materials (PDFs, screenshots, video) live alongside the
 # markdown summaries but should not bloat the repo. Markdown + small inline

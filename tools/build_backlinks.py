@@ -174,6 +174,7 @@ def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--dry-run", action="store_true", help="Report changes without writing")
     ap.add_argument("--verbose", action="store_true", help="Also list files unchanged")
+    ap.add_argument("--summary", action="store_true", help="Emit a --- delimited grep-friendly summary block instead of the per-file change list")
     args = ap.parse_args(argv)
 
     files: list[Path] = list(ld.iter_markdown(ld.DOCS_DIR))
@@ -205,7 +206,19 @@ def main(argv: list[str]) -> int:
                     f.write_text(new_content, encoding="utf-8")
 
     # Report
-    if changes:
+    if args.summary:
+        n_update = sum(1 for _, a in changes if a.startswith("update"))
+        n_remove = sum(1 for _, a in changes if a == "remove")
+        sys.stdout.write("\n".join([
+            "---",
+            f"changes:           {len(changes)}",
+            f"footers_updated:   {n_update}",
+            f"footers_removed:   {n_remove}",
+            f"dry_run:           {'yes' if args.dry_run else 'no'}",
+            "---",
+            "",
+        ]))
+    elif changes:
         action_word = "Would change" if args.dry_run else "Changed"
         print(f"{action_word} {len(changes)} files:")
         for p, action in changes:
@@ -213,7 +226,7 @@ def main(argv: list[str]) -> int:
     else:
         print("No changes needed.")
 
-    if args.verbose:
+    if args.verbose and not args.summary:
         unchanged = [f for f in files if file_is_eligible(f)]
         unchanged = [f for f in unchanged if (f, "update") not in changes and (f, "remove") not in changes]
         print(f"\n{len(unchanged)} eligible files unchanged.")
