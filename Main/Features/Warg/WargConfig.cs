@@ -3,14 +3,16 @@ namespace TAOM.Features.Warg;
 public static class WargConfig
 {
     internal static float WargAttackRange = 1f;
-    // 2026-05-24: restored to 3.5f after 1.0f test confirmed it made hit rate
-    // WORSE (0/22 vs prior 1/15). The actual bug was in BoneCheck's _maxRangeForCheck
-    // gate (passed `actionProgressMax=0.7` as squared distance → 0.84m hard cap on
-    // agent-to-agent distance, regardless of detection range). Fixed in
-    // BoneCheckDuringAnimation; restoring this so the BT has enough lead time
-    // to fire the attack BEFORE the warg blasts through the 0.84m gate window.
-    // See issue #219.
-    internal static float TargetDetectionRange = 3.5f;
+    // 2026-05-24: restored to 20f to match the original LOTRAOM value. This was
+    // hardcoded as `float targetDetectionRange = 20f;` inside WargLogic.WargAttack
+    // in LOTRAOM (WargLogic.cs:80). When TAOM extracted it into config during the
+    // v1.4.5 refactor the default was reset to 3.5f, costing the BT enough lead
+    // time to fire WargAttack while the warg was still closing distance on a
+    // running enemy at 8-10 m/s. Earlier session experiments (1.0f, then 3.5f)
+    // were compensating for the BoneCheck `_maxRangeForCheck` gate bug (fixed
+    // in BoneCheckDuringAnimation 5f63606); with that gate fixed AND the 10-bone
+    // impact cone (8a5c89f), the original 20f is the right value. See issue #219.
+    internal static float TargetDetectionRange = 20f;
     internal static int SleepAfterAttack = 3;
     public const float SpeedForMaxDamage = 20f;
     public const int MaxSpeedDamage = 20;

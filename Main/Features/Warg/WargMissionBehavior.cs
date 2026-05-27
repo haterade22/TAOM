@@ -24,7 +24,16 @@ public class WargMissionBehavior : MissionLogic
     private bool _treesAdded = false;
     private bool _managesCombatInfrastructure = false;
     private float _gridUpdateTimer = 0f;
-    private const float GridUpdateInterval = 2f;
+    // 2026-05-24: restored to ~100ms cadence to match LOTRAOM. The original was
+    // `const int GridUpdateInterval = 5` ticks (≈83ms at 60fps); the TAOM refactor
+    // changed the field to a time-based float but defaulted to 2f seconds, making
+    // grid updates 24× less frequent. At 2s intervals, agent positions in the
+    // SpatialGrid drift up to 20m at 10 m/s combat speeds — making the grid
+    // useless as a target filter (both for BT decorators and for WargAttack's
+    // CustomAttack range filter). 0.1f time-based form integrates cleanly with
+    // the existing _gridUpdateTimer accumulator and matches LOTRAOM's frequency.
+    // See issue #219.
+    private const float GridUpdateInterval = 0.1f;
 
     public WargMissionBehavior()
     {
