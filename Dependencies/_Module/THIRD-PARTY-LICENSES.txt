@@ -1,0 +1,113 @@
+TAOM.Dependencies third-party license notices
+=============================================
+
+TAOM.Dependencies redistributes the following third-party software:
+
+----
+
+0Harmony.dll  --  Lib.Harmony 2.4.2
+Copyright (c) Andreas Pardeike
+Licensed under the MIT License.
+Source: https://github.com/pardeike/Harmony
+
+Bannerlord.UIExtenderEx.dll  --  Bannerlord.UIExtenderEx 2.13.1
+Copyright (c) BUTR (Bannerlord Unofficial Tools & Resources)
+Licensed under the MIT License.
+Source: https://github.com/BUTR/Bannerlord.UIExtenderEx
+
+Bannerlord.ButterLib.dll + Bannerlord.ButterLib.Implementation.1.4.*.dll  --  ButterLib 2.10.4
+Copyright (c) BUTR
+Licensed under the MIT License.
+Source: https://github.com/BUTR/Bannerlord.ButterLib
+
+MCMv5.dll  --  Bannerlord.MCM 5.11.4
+Copyright (c) BUTR
+Licensed under the MIT License.
+Source: https://github.com/BUTR/Bannerlord.MCM
+
+Bannerlord.MBOptionScreen.v1.4.*.dll, Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll,
+MCM.UI.Adapter.MCMv5.dll  --  Bannerlord.MBOptionScreen 5.11.4
+Copyright (c) BUTR
+Licensed under the MIT License.
+Source: https://github.com/BUTR/Bannerlord.MCM
+
+BUTR.CrashReport.dll, BUTR.CrashReport.Models.dll,
+BUTR.CrashReport.Renderer.Html.dll, BUTR.CrashReport.Renderer.ImGui.dll,
+BUTR.CrashReport.Renderer.WinForms.dll, BUTR.CrashReport.Renderer.Zip.dll  --  v14.0.0.99
+Copyright (c) BUTR
+Licensed under the MIT License.
+Source: https://github.com/BUTR/Bannerlord.CrashReport
+
+Microsoft.Extensions.DependencyInjection.dll,
+Microsoft.Extensions.DependencyInjection.Abstractions.dll,
+Microsoft.Extensions.Logging.dll,
+Microsoft.Extensions.Logging.Abstractions.dll,
+Microsoft.Extensions.Options.dll,
+Microsoft.Extensions.Primitives.dll,
+Microsoft.Bcl.HashCode.dll
+Copyright (c) .NET Foundation and Contributors
+Licensed under the MIT License.
+Source: https://github.com/dotnet/runtime
+
+Serilog.dll, Serilog.Extensions.Logging.dll, Serilog.Sinks.File.dll
+Copyright (c) Serilog Contributors
+Licensed under the Apache License 2.0.
+Source: https://github.com/serilog/serilog
+
+System.Buffers.dll, System.Collections.Immutable.dll, System.Memory.dll,
+System.Numerics.Vectors.dll, System.Reflection.Metadata.dll,
+System.Runtime.CompilerServices.Unsafe.dll
+Copyright (c) .NET Foundation and Contributors
+Licensed under the MIT License.
+Source: https://github.com/dotnet/runtime
+
+----
+
+The MIT License (MIT)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+----
+
+Apache License 2.0 (for Serilog packages above)
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy
+of the License at: http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
+
+----
+
+All other code in this distribution (Dependencies/Foundation/*.cs,
+Dependencies/SubModule.cs, Dependencies/AliasStubSubModule.cs,
+Dependencies/EarlyLog.cs) is original work, MIT-licensed.
+
+The defensive infrastructure classes in Dependencies/Foundation/
+(DiagLog, RuntimeLog, ReflectionUtils, VersionProbe, IncompatibleModDetector,
+PatchShield, SaveShield, FailureRecord, FailedModsCatalog,
+SubModuleConstructionGuard, CollectAssemblyTypesShim) adopt the design
+of the corresponding classes in BetaDeps.Foundation (https://www.nexusmods.com/mountandblade2bannerlord/mods/11274)
+under a clean-room rewrite. All code is original to TAOM.
+
+Copyright (c) 2026 TAOM project contributors, licensed under the MIT License.

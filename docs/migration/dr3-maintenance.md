@@ -1,12 +1,12 @@
 # DR3 — Dependency Maintenance Guide
 
-**When to use:** Bannerlord ships a new minor/patch version. BUTR releases new versions of Harmony, UIExtenderEx, ButterLib, MCM, or MBOptionScreen. Microsoft.Extensions or Serilog needs a security update.
+**When to use:** Bannerlord ships a new minor/patch version. BUTR releases new versions of Harmony, UIExtenderEx, ButterLib, MCM, or MBOptionScreen. Microsoft.Extensions or Serilog needs a security update. A user reports a third-party mod is greyed out / silently breaking.
 
-This guide explains exactly which files to update and how to verify the change is safe.
+This guide explains exactly which files to update, how to verify changes, and how to read the defensive infrastructure's diagnostic output.
 
 ## Architecture summary
 
-`TAOM.Dependencies` module bundles the entire BUTR + supporting stack. **End-user impact: the launcher needs ONLY `TAOM` + `TAOM.Dependencies` enabled** — no external `Bannerlord.Harmony` / `.ButterLib` / `.UIExtenderEx` / `.MBOptionScreen` modules required.
+`TAOM.Dependencies` module bundles the entire BUTR + supporting stack PLUS 4 stub alias modules PLUS a runtime defensive shield layer. **End-user impact: the launcher needs ONLY `TAOM` + `TAOM.Dependencies` + the 4 auto-ticked stubs** — no external `Bannerlord.Harmony` / `.ButterLib` / `.UIExtenderEx` / `.MBOptionScreen` modules required, and third-party mods that depend on those standard IDs are toggleable + runtime-error-tolerant.
 
 The dependencies fall into three categories:
 
@@ -203,7 +203,55 @@ Each stub:
 
 **Maintenance rule:** when a `PackageReference` version in `Dependencies/TAOM.Dependencies.csproj` changes (or a vendored BUTR DLL is updated), the corresponding stub's `<Version>` must be bumped to match. Third-party mods with strict version constraints via `<DependedModuleMetadata>` will see the stub's version as the authoritative answer for "what version of Harmony is available?".
 
+**Maintenance rule (v99 strategy, BetaDeps parity, DR3 Phase 4 — 2026-05-25):** stub `<Version>` values use the `vX.Y.99.0` pattern, not exact-match to the shipped DLL version. Third-party mods often declare `<DependedModuleMetadata version="vX.Y.x"/>` as a minimum-version check; v99 satisfies any reasonable v2.4.x / v2.13.x / v2.10.x / v5.11.x lower-bound without claiming a major-version jump. When a `PackageReference` BUMPS its minor (e.g., Lib.Harmony 2.4.x → 2.5.x), bump the matching stub to the new minor's `.99.0` (Harmony 2.5.99.0). The vanilla launcher does not enforce these constraints at all, but BLSE-enforced minimum-version checks rely on the stub version being the answer to "what version is available?".
+
 **Red `(!)` icon on third-party mods:** this is the launcher's `IsDangerous` flag (`LauncherModuleVM.cs:280-282`) fired by TaleWorlds's `LauncherDLLData` code-verification system whenever an unsigned/third-party DLL is detected. It is a permanent warning tooltip ("Couldn't verify some or all of the code included in this module") and is **independent of toggleability** — every non-Bannerlord mod gets it. Do not mistake it for a missing-dep error. The two phenomena (`IsDisabled` = greyed/un-toggleable from missing deps, vs `IsDangerous` = red icon from unsigned code) are separate concepts in the launcher source.
+
+### Defensive infrastructure (DR3 Phase 4 — BetaDeps parity)
+
+TAOM.Dependencies ships 11 classes under `Dependencies/Foundation/` that catch third-party mod runtime errors and let the game keep running. Adopted from BetaDeps v0.7.5.1 (Nexus 11274) via clean-room rewrite under MIT — see `Dependencies/_Module/THIRD-PARTY-LICENSES.txt`.
+
+**Components installed in stub-ctor (early phase, before any third-party mod):**
+- `IncompatibleModDetector` — writes `session-launching.marker` at startup, deletes on main-menu reach. If marker survives to next launch, previous session crashed pre-menu; diffs modlist against `last-good-modlist.txt` to identify newly-added likely-culprit mods. **Detection only**, no XML mutation of LauncherData.xml.
+- `CollectAssemblyTypesShim` — wraps `Assembly.GetTypes()` + `.GetExportedTypes()` with a Finalizer that catches `ReflectionTypeLoadException` and returns the partial type list (`ex.Types.Where(t => t != null)`). Prevents cascade failures.
+- `SubModuleConstructionGuard` — Harmony Finalizer on `MBSubModuleBase` ctors. Swallows third-party SubModule ctor exceptions, logs culprit, lets launcher continue. Refuses to shield TAOM-owned SubModules.
+
+**Components installed in TAOM.Dependencies/SubModule.OnSubModuleLoad (late phase):**
+- `PatchShield` — **biggest user-value**. Iterates every Harmony-patched method in the AppDomain, attaches a Finalizer to each non-TAOM patch. Catches the trinity (`MissingMethodException`, `MissingFieldException`, `TypeLoadException`) — the canonical errors when a mod was compiled against an old Bannerlord version. Auto-unpatches the offending owner's prefixes/postfixes/transpilers from the failing target. Re-run in `OnGameInitializationFinished` to catch late-registered patches.
+- `SaveShield` — targeted Finalizer on 10 specific TaleWorlds save/load/mission methods. Catches `DuplicateKey` + other save failures; stack-walks to attribute culprit assembly. Writes records to `failed-mods-catalog.txt` for user diagnosis.
+
+**Diagnostic logs (always written if at all possible):**
+
+| File | Purpose |
+|---|---|
+| `<game>/Modules/TAOM.Dependencies/diag.log` | Append-only runtime event log (DiagLog). All shield activity, AssemblyResolve redirects, version probe results, crash-loop detection. Inspect first when diagnosing any incident. |
+| `<game>/Modules/TAOM.Dependencies/failed-mods-catalog.txt` | One line per (culprit-mod, exception-type, owner-method) that a shield swallowed. Format: `<UTC> | <culprit> | <category> | <ExceptionType> | <owner method> | <message head>`. |
+| `<game>/Modules/TAOM.Dependencies/session-launching.marker` | Crash-loop sentinel. Created at SubModule construction; deleted on `OnGameInitializationFinished` (main menu reached). Survival to next launch = previous session crashed pre-menu. |
+| `<game>/Modules/TAOM.Dependencies/last-good-modlist.txt` | Snapshot of enabled modules at last main-menu reach. Used by `IncompatibleModDetector` to diff against current modlist for culprit identification. |
+
+**Opt-out flags (place an empty file at the path to activate):**
+
+| Flag file (path: `<game>/Modules/TAOM.Dependencies/<name>`) | Effect |
+|---|---|
+| `patchshield-disabled.flag` | Skip `PatchShield.Install` entirely. Use when diagnosing whether a crash is masked by PatchShield vs an actual problem in TAOM. |
+| `saveshield-swallow-disabled.flag` | Install SaveShield BUT re-throw exceptions instead of swallowing. Use when investigating which save/mission method is failing. |
+
+(No opt-out for `SubModuleConstructionGuard` / `CollectAssemblyTypesShim` / `IncompatibleModDetector` — these are detection-only or have no destructive effect.)
+
+**Verifying the shields are healthy:**
+
+After a normal launch (made it to main menu), `diag.log` should contain entries like:
+```
+[INFO  ] [AliasStub]                  alias stub loaded: TAOM.Dependencies
+[INFO  ] [VersionProbe]               detected via ApplicationVersionHelper: v1.4
+[INFO  ] [IncompatibleModDetector]    MarkSessionLaunchSuccessful: saved 47-mod last-good snapshot
+[INFO  ] [PatchShield]                shield pass: +N new, 0 already-shielded, M skipped (total: N)
+[INFO  ] [SaveShield]                 install complete: shielded +K new, 0 already-shielded, 0 skipped
+[INFO  ] [TAOM.Dependencies]          OnSubModuleLoad complete
+[INFO  ] [PatchShield]                SESSION SUMMARY: shielded N method(s), unpatched 0 target(s), swallowed 0 exception(s)...
+```
+
+If the session summary shows non-zero swallow counts, **a mod in the user's modlist is broken** — check `failed-mods-catalog.txt` for the culprit attribution. If swallow counts are climbing across sessions for the same mod, that mod needs updating or removing.
 
 ### External Bannerlord.Harmony module conflict (HIGH)
 

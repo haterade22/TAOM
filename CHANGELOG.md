@@ -2,6 +2,16 @@
 
 ## 2026-05-27
 
+### chore(deps): DR3 Phase 4 D — polish: THIRD-PARTY-LICENSES + maintenance docs + CLAUDE.md (#246)
+
+Closing the BetaDeps parity work with attribution + documentation updates.
+
+- New `Dependencies/_Module/THIRD-PARTY-LICENSES.txt` — explicit MIT (and Apache 2.0 for Serilog) attribution for the 20+ vendored runtime DLLs (0Harmony, Bannerlord.UIExtenderEx, ButterLib, MCMv5, MBOptionScreen, BUTR.CrashReport family, Microsoft.Extensions.*, Serilog.*, System.* polyfills). Plus a note that the `Dependencies/Foundation/` classes are clean-room MIT rewrites of the corresponding BetaDeps.Foundation classes. Deploys automatically via Bannerlord.BuildResources's `_Module/` mirroring; visible at `<game>/Modules/TAOM.Dependencies/THIRD-PARTY-LICENSES.txt`.
+- `docs/migration/dr3-maintenance.md` gets new "Defensive infrastructure" section listing each shield's purpose, the four disk artifacts (`diag.log`, `failed-mods-catalog.txt`, `session-launching.marker`, `last-good-modlist.txt`), the two opt-out flags (`patchshield-disabled.flag`, `saveshield-swallow-disabled.flag`), and a "verifying the shields are healthy" rubric showing what a clean `diag.log` looks like vs what swallow counts indicate a broken mod. Also adds the v99 stub-version maintenance rule explanation.
+- `CLAUDE.md` Key Paths gains a "TAOM.Dependencies defensive infrastructure" row pointing at `Dependencies/Foundation/` with the full 11-class inventory; updates the existing stub-modules row to reflect the new real-`<SubModule>` entry pattern + v99 strategy.
+
+Phase 4 complete: stub-XML hardening (A) + AssemblyResolve/load-order expansion (B) + defensive infrastructure (C) + polish (D). Closes #246.
+
 ### feat(deps): DR3 Phase 4 C — defensive infrastructure ports PatchShield + SaveShield + IncompatibleModDetector (#246)
 
 The high-leverage half of the BetaDeps parity plan. Eight new classes under `Dependencies/Foundation/` port BetaDeps's runtime error-tolerance framework — the components that deliver BetaDeps's "Catches out-of-date mod errors at runtime so the game keeps running" Nexus promise.
