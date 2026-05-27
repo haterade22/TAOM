@@ -55,17 +55,35 @@ public static class SaveShield
     private static readonly object _recentLock = new();
 
     // (TypeFullName, AssemblyName, MethodName, Category)
+    // Targets verified against Bannerlord v1.4.5 via `ilspycmd` (DR3 Phase 4 follow-up,
+    // 2026-05-27). The original BetaDeps target list was developed against a different
+    // Bannerlord version and had 4 stale entries; this list is the v1.4.5-correct set:
+    //   - SandBoxSaveHelper.TryLoadSave    — public entry point user clicks "Load Game"
+    //   - SandBoxSaveHelper.LoadGameAction — private, the actual load delegate
+    //   - SaveManager.Load                 — 2 overloads (string, ISaveDriver) and (..., bool)
+    //   - LoadResult.InitializeObjects     — runs during save deserialization (post-stream)
+    //   - LoadResult.AfterInitializeObjects — runs after objects loaded, before scene init
+    //   - MissionState.OnInitialize        — protected override; calls FinishMissionLoading
+    //   - MissionState.FinishMissionLoading — private; the post-stream init point
+    //   - Mission.Initialize               — public; called when mission goes live
+    //   - Mission.SetMissionMode           — runs at mode transitions inside a mission
+    //   - Mission.SpawnTroop               — spawns agents into the mission
+    // Note: LoadResult is in `TaleWorlds.SaveSystem.Load` namespace (NOT top-level
+    // `TaleWorlds.SaveSystem`). v1.4.5 has no top-level `LoadResult` type.
     private static readonly (string TypeFullName, string AssemblyName, string MethodName, string Category)[] _targets =
     {
+        // Save-load chain
         ("TaleWorlds.Core.MBSaveLoad", "TaleWorlds.Core", "LoadSaveGameData", "SAVE-LOAD"),
+        ("SandBox.SandBoxSaveHelper", "SandBox", "TryLoadSave", "SAVE-LOAD"),
         ("SandBox.SandBoxSaveHelper", "SandBox", "LoadGameAction", "SAVE-LOAD"),
-        ("SandBox.SandBoxSaveHelper", "SandBox", "LoadSaveGame", "SAVE-LOAD"),
         ("TaleWorlds.SaveSystem.SaveManager", "TaleWorlds.SaveSystem", "Load", "SAVE-LOAD"),
-        ("TaleWorlds.SaveSystem.LoadResult", "TaleWorlds.SaveSystem", "Load", "SAVE-LOAD"),
-        ("TaleWorlds.SaveSystem.Load.LoadResult", "TaleWorlds.SaveSystem", "Load", "SAVE-LOAD"),
+        ("TaleWorlds.SaveSystem.Load.LoadResult", "TaleWorlds.SaveSystem", "InitializeObjects", "SAVE-LOAD"),
+        ("TaleWorlds.SaveSystem.Load.LoadResult", "TaleWorlds.SaveSystem", "AfterInitializeObjects", "SAVE-LOAD"),
+        // Mission init chain
+        ("TaleWorlds.MountAndBlade.MissionState", "TaleWorlds.MountAndBlade", "OnInitialize", "MISSION-INIT"),
         ("TaleWorlds.MountAndBlade.MissionState", "TaleWorlds.MountAndBlade", "FinishMissionLoading", "MISSION-INIT"),
+        ("TaleWorlds.MountAndBlade.Mission", "TaleWorlds.MountAndBlade", "Initialize", "MISSION-INIT"),
         ("TaleWorlds.MountAndBlade.Mission", "TaleWorlds.MountAndBlade", "SetMissionMode", "MISSION-INIT"),
-        ("TaleWorlds.MountAndBlade.Mission", "TaleWorlds.MountAndBlade", "OnInitialize", "MISSION-INIT"),
         ("TaleWorlds.MountAndBlade.Mission", "TaleWorlds.MountAndBlade", "SpawnTroop", "MISSION-INIT"),
     };
 

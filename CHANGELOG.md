@@ -2,6 +2,45 @@
 
 ## 2026-05-27
 
+### fix(deps): DR3 Phase 4 follow-up — v1.4.5 signature verification across all defensive shields
+
+First in-game launch (commit `09c94de` ran clean) flagged 4 SaveShield install warnings in `diag.log`. User asked for a full audit of Phase C TaleWorlds touchpoints against the actual v1.4.5 decompile. Three issues found and fixed:
+
+**1. `SaveShield._targets` — 4 stale entries (BetaDeps reference list was for a different Bannerlord version)**
+
+Decompiled v1.4.5 actual signatures via `ilspycmd` against the installed DLLs:
+
+| Stale (BetaDeps original) | v1.4.5 actual | Why |
+|---|---|---|
+| `SandBoxSaveHelper.LoadSaveGame` | `SandBoxSaveHelper.TryLoadSave` | `LoadSaveGame` doesn't exist; `TryLoadSave` is the public entry point |
+| `TaleWorlds.SaveSystem.LoadResult` (top-level) | dropped — class is at `TaleWorlds.SaveSystem.Load.LoadResult` | No top-level `LoadResult` type exists |
+| `TaleWorlds.SaveSystem.Load.LoadResult.Load` | `LoadResult.InitializeObjects` + `LoadResult.AfterInitializeObjects` | Class is the RESULT of load, not the action; hot methods are these two |
+| `TaleWorlds.MountAndBlade.Mission.OnInitialize` | `Mission.Initialize` (public) + `MissionState.OnInitialize` (protected override) | `Mission` has `Initialize`; lifecycle hook lives on `MissionState` |
+
+`_targets` went from 10 entries (4 broken) to 11 entries (all verified). Coverage should now report `+11 new, 0 skipped` instead of `+7 new, 4 skipped`.
+
+**2. `VersionProbe` — both detection strategies referenced types that don't exist in v1.4.5**
+
+- Strategy 1 referenced `TaleWorlds.ModuleManager.ApplicationVersionHelper.GameVersion()` — **type does not exist in v1.4.5**. `ilspycmd` confirms `InvalidOperationException: Could not find type definition`.
+- Strategy 2 referenced `Module.CurrentModule.Version` — `Module` class has no `Version` property in v1.4.5 (verified via decompile).
+
+Replaced with the v1.4.5-correct path: `TaleWorlds.Library.ApplicationVersion.FromParametersFile()` (reads `parameters/Version.xml`, returns `ApplicationVersion` struct with `Major`/`Minor`/`Revision` properties). Dropped the `GameBranch` enum (BetaDeps's auto-disable rule classifier — we don't have those rules yet); the public API is now just `Major`/`Minor`/`Revision`/`IsDetected`. No callers needed updating (no internal use of `Branch`/`IsBeta`/`IsPublic`).
+
+**3. `SubModuleConstructionGuard` — patching MBSubModuleBase ctors alone misses derived ctor body exceptions**
+
+BetaDeps's original implementation patched only `MBSubModuleBase` ctors. But the implicit `base()` call returns successfully BEFORE the derived class's ctor body runs — so exceptions thrown by the derived ctor body (e.g., `new ThirdPartyMod.SubModule()` calling `MissingMethodException`-throwing code in its body) propagate UP past our Finalizer.
+
+Verified the v1.4.5 actual construction site: `Module.AddSubModule(SubModuleInfo, Assembly)` (private) calls `constructor.Invoke(new object[0])` on the derived ctor — the exception path runs through TaleWorlds's `AddSubModule` method, NOT through the base class ctor.
+
+Added a SECOND Finalizer patch site at `Module.AddSubModule` (reflectively located, gracefully degrades if type not loaded yet). Catches exceptions wrapped in `TargetInvocationException`, unwraps to the inner ctor exception, attributes to culprit assembly, swallows non-TAOM exceptions. Shared `SwallowFinalizer` between both patch sites for consistency.
+
+Verification: `dotnet build TAOM.sln` 0 errors. `dotnet test TAOM.Tests` 2,520/2,522 passing. In-game `diag.log` re-launch expected to show:
+- `[SaveShield] install complete: shielded +11 new, 0 already-shielded, 0 skipped` (was +7, 4 skipped)
+- `[VersionProbe] detected Bannerlord v1.4.5 via ApplicationVersion.FromParametersFile` (new strategy, was 0)
+- `[SubModuleConstructionGuard] installed Finalizer on N construction site(s)` where N = (1 to 2) MBSubModuleBase ctors + 1 Module.AddSubModule
+
+Research: `ilspycmd` against installed v1.4.5 DLLs (`TaleWorlds.Core.dll`, `TaleWorlds.Library.dll`, `TaleWorlds.SaveSystem.dll`, `TaleWorlds.MountAndBlade.dll`, `Modules/SandBox/bin/SandBox.dll`). All TaleWorlds reflection targets in Phase C now verified against the actual installed v1.4.5 API.
+
 ### chore(deps): DR3 Phase 4 D — polish: THIRD-PARTY-LICENSES + maintenance docs + CLAUDE.md (#246)
 
 Closing the BetaDeps parity work with attribution + documentation updates.
