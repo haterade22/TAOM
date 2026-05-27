@@ -13,15 +13,15 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -39,11 +39,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
@@ -62,7 +62,7 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
@@ -82,7 +82,7 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
@@ -101,7 +101,7 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
@@ -121,7 +121,7 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
@@ -140,11 +140,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
@@ -164,11 +164,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -191,15 +191,15 @@
             <upgrade_target id="NPCCharacter.rohan_edoras_recruit" />
         </upgrade_targets>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
@@ -217,11 +217,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
@@ -240,7 +240,7 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -260,7 +260,7 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
@@ -279,11 +279,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -303,11 +303,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
@@ -326,12 +326,12 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
@@ -351,12 +351,12 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
@@ -374,12 +374,12 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
@@ -397,12 +397,12 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_armour_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_armour_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
@@ -420,12 +420,12 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
@@ -445,11 +445,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -466,11 +466,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
@@ -488,11 +488,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
@@ -509,11 +509,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -532,12 +532,12 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_armour_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
                 <equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_armour_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
@@ -555,11 +555,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
@@ -579,17 +579,17 @@
         </face>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
                 <equipment slot="Head" id="Item.cts_rohan_helmet1" />
-                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Leg" id="Item.roh_sol_bts" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
                 <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
                 <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Body" id="Item.rohan_militia_armour_d" />
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
                 <equipment slot="Head" id="Item.cts_rohan_helmet2" />
-                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Leg" id="Item.roh_sol_bts" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
                 <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
                 <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
@@ -608,27 +608,27 @@
         </face>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
-                <equipment slot="Head" id="Item.cts_rohan_helmet1" />
-                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
-                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Body" id="Item.cts_rohan_armor2" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet_captain1" />
+                <equipment slot="Leg" id="Item.cts_rohan_captain_boots" />
+                <equipment slot="Gloves" id="Item.cts_rohan_captain_bracer" />
                 <equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
                 <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
                 <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
                 <equipment slot="Head" id="Item.cts_rohan_helmet2" />
-                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Leg" id="Item.roh_sol_bts" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
                 <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
                 <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
                 <equipment slot="Head" id="Item.cts_rohan_helmet2a" />
-                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Leg" id="Item.roh_sol_bts" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
                 <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
@@ -788,12 +788,12 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
@@ -811,13 +811,13 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_armour_d" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
                 <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_armour_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
@@ -1142,11 +1142,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
@@ -1163,7 +1163,7 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
@@ -1181,7 +1181,7 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
@@ -1199,11 +1199,11 @@
             <face_key_template value="BodyProperty.fighter_rohan" />
         </face>
         <Equipments>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
-            <EquipmentRoster>
+            <EquipmentRoster civilian="true">
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
