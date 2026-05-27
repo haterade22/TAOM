@@ -3,8 +3,10 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using HarmonyLib;
+using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.MountAndBlade;
+using TAOM.Dependencies.Foundation;
 
 namespace TAOM.Dependencies;
 
@@ -142,7 +144,47 @@ public class SubModule : MBSubModuleBase
             EarlyLog.Error($"[TAOM.Dependencies] UIExtenderEx initialization failed: {ex.Message}");
         }
 
+        // DR3 Phase 4 C-series: install the late-phase shields. PatchShield must run
+        // AFTER other mods have applied their Harmony patches — OnSubModuleLoad here
+        // is timely-enough for vanilla launcher; for mods that register patches in
+        // later lifecycle events (OnGameInitializationFinished etc.), PatchShield.Install
+        // is idempotent and safe to re-invoke. SaveShield is also idempotent.
+        try { PatchShield.Install(); }
+        catch (Exception ex) { EarlyLog.Error($"[TAOM.Dependencies] PatchShield.Install failed: {ex.Message}"); }
+
+        try { SaveShield.Install(); }
+        catch (Exception ex) { EarlyLog.Error($"[TAOM.Dependencies] SaveShield.Install failed: {ex.Message}"); }
+
+        // Write a session summary to diag.log on process exit so users can see the
+        // shield's swallow-counts even if no crash dump is produced.
+        try
+        {
+            AppDomain.CurrentDomain.ProcessExit += (_, __) =>
+            {
+                try { PatchShield.WriteSessionSummary(); } catch { }
+            };
+        }
+        catch (Exception ex) { EarlyLog.Error($"[TAOM.Dependencies] ProcessExit hook failed: {ex.Message}"); }
+
         EarlyLog.Info("[TAOM.Dependencies] OnSubModuleLoad complete");
+    }
+
+    /// <summary>
+    /// Called when the main menu has rendered — signals the crash-loop detector that
+    /// this session reached menu (deletes the launch marker, snapshots modlist as
+    /// last-good). Override of MBSubModuleBase.OnGameInitializationFinished, the
+    /// closest TaleWorlds lifecycle hook to "we made it past load."
+    /// </summary>
+    public override void OnGameInitializationFinished(Game game)
+    {
+        base.OnGameInitializationFinished(game);
+        try { IncompatibleModDetector.MarkSessionLaunchSuccessful(); }
+        catch (Exception ex) { EarlyLog.Error($"[TAOM.Dependencies] MarkSessionLaunchSuccessful failed: {ex.Message}"); }
+
+        // Second PatchShield pass — captures patches registered by mods that hook this
+        // lifecycle event (after our OnSubModuleLoad).
+        try { PatchShield.Install(); }
+        catch (Exception ex) { EarlyLog.Error($"[TAOM.Dependencies] PatchShield.Install (post-init) failed: {ex.Message}"); }
     }
 
     private static void ApplyHarmonyGuards()

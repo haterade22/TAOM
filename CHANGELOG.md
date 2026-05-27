@@ -2,6 +2,45 @@
 
 ## 2026-05-27
 
+### feat(deps): DR3 Phase 4 C — defensive infrastructure ports PatchShield + SaveShield + IncompatibleModDetector (#246)
+
+The high-leverage half of the BetaDeps parity plan. Eight new classes under `Dependencies/Foundation/` port BetaDeps's runtime error-tolerance framework — the components that deliver BetaDeps's "Catches out-of-date mod errors at runtime so the game keeps running" Nexus promise.
+
+**Component overview:**
+
+- `RuntimeLog.cs` — resolves canonical paths: `<game>/Modules/TAOM.Dependencies/diag.log` for runtime events + `ModuleDir` for shield disable-flag files. Path resolution walks back from `typeof(RuntimeLog).Assembly.Location` to the module root.
+- `DiagLog.cs` — append-only structured logger writing directly to `diag.log`. Threadsafe via single lock. Nested try/catch so logging failures never escape — Finalizers depend on DiagLog being safe to call from inside an exception handler. Session marker written on first log of session.
+- `ReflectionUtils.cs` — small helpers: `FindTypeAcrossLoadedAssemblies`, `TryInvokeStatic`, `GetAssemblySimpleName`. All exception-safe.
+- `VersionProbe.cs` — detects Bannerlord version + branch (Public vs Beta) via reflection. Strategy 1: `ApplicationVersionHelper.GameVersion()`. Strategy 2: `Module.CurrentModule.Version`. Bannerlord 1.4+ classified as Beta.
+- `IncompatibleModDetector.cs` — crash-loop detection. Writes `session-launching.marker` at stub-ctor time; deletes it in `MarkSessionLaunchSuccessful()` from `OnGameInitializationFinished`. If marker survives to next launch, previous session crashed pre-menu — diffs current modlist against `last-good-modlist.txt` to identify newly-added mods as likely culprits. **TAOM Phase 4 ships detection only, NOT auto-disable**; XML mutation of LauncherData.xml is deferred (BetaDeps gates it with `auto-disable-enabled.flag`).
+- `PatchShield.cs` — **biggest user-value component**. Iterates `Harmony.GetAllPatchedMethods()`, attaches a Finalizer to every non-TAOM patch. Finalizer catches the trinity (`MissingMethodException`, `MissingFieldException`, `TypeLoadException`) and auto-unpatches the offending owner's prefixes/postfixes/transpilers from the failing target. The patched method continues running uncaught from the user's perspective — game keeps going. Per-category counters; opt-out via `patchshield-disabled.flag`. Session summary written to `diag.log` on `AppDomain.ProcessExit`. Installed in `OnSubModuleLoad` + re-installed in `OnGameInitializationFinished` to catch late-registering mods.
+- `SaveShield.cs` + `FailureRecord.cs` + `FailedModsCatalog.cs` — targeted Finalizer shield on 10 TaleWorlds save/load/mission methods (`MBSaveLoad.LoadSaveGameData`, `SandBoxSaveHelper.LoadGameAction/LoadSaveGame`, `SaveManager.Load`, `LoadResult.Load`, `MissionState.FinishMissionLoading`, `Mission.SetMissionMode/OnInitialize/SpawnTroop`). Catches DuplicateKey + other save failures. Stack-walks the exception to attribute culprit assembly (skipping engine prefixes like `TaleWorlds.*`, `SandBox`, `0Harmony`, `TAOM`, etc.). Persists records to `failed-mods-catalog.txt` for user diagnosis. Per-session dedupe by (culprit, exception-type, owner). Opt-out via `saveshield-swallow-disabled.flag`.
+- `SubModuleConstructionGuard.cs` — Harmony Finalizer on `MBSubModuleBase` ctors. When a third-party mod's SubModule ctor throws (referencing a removed vanilla API), swallows the exception, logs culprit type + assembly. Refuses to shield TAOM-owned SubModules (we want our own errors to propagate during dev).
+- `CollectAssemblyTypesShim.cs` — Finalizer on `Assembly.GetTypes()` + `Assembly.GetExportedTypes()`. Catches `ReflectionTypeLoadException` and returns the partial-types list (`ex.Types.Where(t => t != null)`) instead of propagating. Prevents cascade failures when one broken third-party mod's `GetTypes()` call brings down launcher utilities that iterate all assemblies.
+
+**Wiring (lifecycle integration):**
+
+- `Dependencies/AliasStubSubModule.cs` (the four stub SubModules' loadable class, from Phase A) ctor now invokes the early-phase shims via `TrySwallow`: `IncompatibleModDetector.RunEarlyPhase`, `CollectAssemblyTypesShim.Install`, `SubModuleConstructionGuard.Install`. These run BEFORE any third-party mod's SubModule ctor.
+- `Dependencies/SubModule.cs` `OnSubModuleLoad` installs late-phase shields: `PatchShield.Install()` + `SaveShield.Install()`. Hooks `AppDomain.ProcessExit` to flush `PatchShield.WriteSessionSummary()`.
+- New override `Dependencies/SubModule.OnGameInitializationFinished(Game)` — calls `IncompatibleModDetector.MarkSessionLaunchSuccessful()` (deletes the crash-loop marker + snapshots `last-good-modlist.txt`) AND re-runs `PatchShield.Install()` to catch late-registered patches.
+
+**Opt-out flags (place in `<game>/Modules/TAOM.Dependencies/`):**
+
+- `patchshield-disabled.flag` — skip PatchShield install entirely
+- `saveshield-swallow-disabled.flag` — install SaveShield but re-throw exceptions instead of swallowing
+
+**Files added (8 under `Dependencies/Foundation/`):**
+
+`RuntimeLog.cs`, `DiagLog.cs`, `ReflectionUtils.cs`, `VersionProbe.cs`, `IncompatibleModDetector.cs`, `PatchShield.cs`, `SaveShield.cs`, `FailureRecord.cs`, `FailedModsCatalog.cs`, `SubModuleConstructionGuard.cs`, `CollectAssemblyTypesShim.cs` (10 files — `Dependencies/Foundation/` is the new namespace mirroring BetaDeps.Foundation).
+
+**Files modified**: `Dependencies/SubModule.cs` (added `using TaleWorlds.Core` + `using TAOM.Dependencies.Foundation`; wired `PatchShield.Install` / `SaveShield.Install` / `OnGameInitializationFinished` override + `ProcessExit` summary hook). `Dependencies/AliasStubSubModule.cs` (ctor now invokes early-phase shims).
+
+**Verification**: `dotnet build TAOM.sln` 0 errors. `dotnet test TAOM.Tests` 2,520/2,522 passing (baseline maintained — no production C# code changed in the Main module, only Dependencies module gained 8 new files and 2 wired hooks).
+
+In-game verification pending: confirm `diag.log` writes appear at `<game>/Modules/TAOM.Dependencies/diag.log` on next launch; that PatchShield shield-counter entries appear in the session summary; that an intentionally-broken third-party Harmony patch is auto-unpatched + logged instead of crashing.
+
+Research: full source-level review of BetaDeps v0.7.5.1 (decompiled BetaDeps.Foundation.dll via ilspycmd). Ports adapt BetaDeps's design but rewrite all code under MIT — see `Dependencies/_Module/THIRD-PARTY-LICENSES.txt` (added in Phase D).
+
 ### feat(deps): DR3 Phase 4 A+B — BetaDeps parity stub hardening + AssemblyResolve expansion (#246)
 
 After source-level review of BetaDeps v0.7.5.1 (Nexus 11274), adopted the BUTR-community-canonical patterns for stub modules + AssemblyResolve coverage. Phase A+B of the 4-phase parity plan; Phase C (defensive infrastructure — PatchShield, SaveShield, IncompatibleModDetector) and Phase D (licenses + docs) follow in subsequent commits.

@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using TaleWorlds.MountAndBlade;
+using TAOM.Dependencies.Foundation;
 
 namespace TAOM.Dependencies;
 
@@ -33,10 +34,11 @@ public class AliasStubSubModule : MBSubModuleBase
             return;
 
         TrySwallow(SubModule.InstallAssemblyResolveHandler, "ctor/AssemblyResolve");
-        // Phase C will append here:
-        //   TrySwallow(IncompatibleModDetector.RunEarlyPhase, "ctor/IncompatEarly");
-        //   TrySwallow(CollectAssemblyTypesShim.Install, "ctor/CollectAssemblyTypesShim");
-        //   TrySwallow(SubModuleConstructionGuard.Install, "ctor/SubModuleGuard");
+        // DR3 Phase 4 C-series: defensive infrastructure installed in stub ctors so it
+        // takes effect BEFORE any third-party mod ctor runs (BetaDeps parity).
+        TrySwallow(IncompatibleModDetector.RunEarlyPhase, "ctor/IncompatEarly");
+        TrySwallow(CollectAssemblyTypesShim.Install, "ctor/CollectAssemblyTypesShim");
+        TrySwallow(SubModuleConstructionGuard.Install, "ctor/SubModuleGuard");
     }
 
     protected override void OnSubModuleLoad()
