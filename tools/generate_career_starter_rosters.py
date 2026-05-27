@@ -31,6 +31,13 @@ ARMORY_ROOT = Path("E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Module
 # Per-culture config.
 # `folder` = LOTRLOME_Armory subfolder name (under LOTRLOME_items/).
 # `extra_folders` = additional folders to scan for armor (e.g. erebor + iron_hills).
+# `body_override` / `leg_override` = explicit item ID that wins over auto-pick.
+#   Use when the auto-picked "lowest armor" item is visually wrong (e.g. a "dress"
+#   mesh that has low armor but isn't appropriate for a soldier). The user's
+#   convention: prefer what the culture's lowest-tier troop actually wears
+#   (look up in troops_<culture>.xml). If even THAT is too heavy stat-wise,
+#   create a `starter_<archetype>_<culture>_body_a` duplicate in LOTRLOME_Armory
+#   with reduced stats — same pattern as Gondor's starter_*_gondor_* items.
 # `horse` / `harness` = Item IDs for cavalry archetype.
 # `arrows` = Item ID for ranged archetype.
 # `inf` / `ranged` / `cavalry` = per-archetype 3-weapon picks (Item0, Item1, Item2 slot IDs).
@@ -69,6 +76,11 @@ CULTURES = {
     },
     "erebor": {
         "folder": "erebor", "extra_folders": ["iron_hills"],
+        # Override auto-pick: the lowest-armor item in erebor/body_armors.xml is
+        # `sk_dwarf_dress_normal_a` (a "dress" mesh, body_armor=5), unsuitable for
+        # a soldier. Use the lowest militia troop's actual body armor instead
+        # (erebor_militia_spearman in troops_erebor.xml line 60).
+        "body_override": "sk_dwarf_erebor_chest_leather_light_a",
         "horse": "saddle_horse", "harness": "leather_horse_harness",
         "arrows": "sk_dwarf_erebor_arrow_a",
         "inf":     ["sm_dwarf_erebor_1h_axe_a", "wooden_round_shield", "sm_dwarf_erebor_spear_a"],
@@ -201,8 +213,16 @@ def generate_rosters_for_culture(taom_culture: str, cfg: dict) -> list[str]:
     extra = [ARMORY_ROOT / f for f in cfg.get("extra_folders", [])]
     all_folders = [folder] + extra
 
-    body_id, body_armor = pick_lowest(all_folders, "body_armors.xml", "body_armor")
-    leg_id, leg_armor = pick_lowest(all_folders, "leg_armors.xml", "leg_armor")
+    body_override = cfg.get("body_override")
+    leg_override = cfg.get("leg_override")
+    if body_override:
+        body_id, body_armor = body_override, "override"
+    else:
+        body_id, body_armor = pick_lowest(all_folders, "body_armors.xml", "body_armor")
+    if leg_override:
+        leg_id, leg_armor = leg_override, "override"
+    else:
+        leg_id, leg_armor = pick_lowest(all_folders, "leg_armors.xml", "leg_armor")
     if not body_id or not leg_id:
         print(f"  WARN  {taom_culture}: missing body or leg armor (body={body_id}, leg={leg_id})", file=sys.stderr)
         return []

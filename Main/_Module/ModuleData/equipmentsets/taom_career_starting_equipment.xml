@@ -375,7 +375,7 @@
             <Equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_a" />
             <Equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
             <Equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
-            <Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+            <Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
             <Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
@@ -385,7 +385,7 @@
             <Equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_a" />
             <Equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
             <Equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
-            <Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+            <Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
             <Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
@@ -395,7 +395,7 @@
             <Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
             <Equipment slot="Item1" id="Item.wooden_round_shield" />
             <Equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
-            <Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+            <Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
             <Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.leather_horse_harness" />
@@ -407,7 +407,7 @@
             <Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
             <Equipment slot="Item1" id="Item.wooden_round_shield" />
             <Equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
-            <Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+            <Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
             <Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.leather_horse_harness" />
@@ -419,7 +419,7 @@
             <Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
             <Equipment slot="Item1" id="Item.wooden_round_shield" />
             <Equipment slot="Item2" id="Item.sm_dwarf_erebor_spear_a" />
-            <Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+            <Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
             <Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
@@ -429,7 +429,7 @@
             <Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
             <Equipment slot="Item1" id="Item.wooden_round_shield" />
             <Equipment slot="Item2" id="Item.sm_dwarf_erebor_spear_a" />
-            <Equipment slot="Body" id="Item.sk_dwarf_dress_normal_a" />
+            <Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
             <Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
