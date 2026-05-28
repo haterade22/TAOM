@@ -260,7 +260,7 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
-		banner_key="11.212.212.1528.1528.764.764.1.0.0.17282.249.171.700.700.764.764.0.0.0" />
+		banner_key="11.211.211.1528.1528.764.764.1.0.0.14003.2000.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_11"
 		name="{=aom_clan_khuzait_11_name}Shakhalian"
@@ -270,7 +270,7 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
-		banner_key="11.116.75.4345.4345.764.764.1.0.0.17354.83.116.550.550.750.750.1.0.0" />
+		banner_key="11.2015.2015.1528.1528.764.764.1.0.0.14003.2000.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_12"
 		name="{=aom_clan_khuzait_12_name}Hûz"
@@ -290,7 +290,7 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
-		banner_key="11.212.212.1528.1528.764.764.1.0.0.17284.249.171.700.700.764.764.0.0.0" />
+		banner_key="11.2015.2015.1528.1528.764.764.1.0.0.14004.250.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_14"
 		name="{=aom_clan_khuzait_14_name}Cilzeron"
@@ -300,7 +300,7 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
-		banner_key="11.18.116.2000.2000.764.764.1.0.0.17354.265.116.600.600.755.755.0.0.0" />
+		banner_key="11.267.267.1528.1528.764.764.1.0.0.14002.2000.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_15"
 		name="{=aom_clan_khuzait_15_name}Kalkian"
@@ -330,7 +330,7 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
-		banner_key="11.212.212.1528.1528.764.764.1.0.0.17285.249.171.700.700.764.764.0.0.0" />
+		banner_key="11.2015.2015.1528.1528.764.764.1.0.0.14012.250.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_18"
 		name="{=aom_clan_khuzait_18_name}Vazevian"
@@ -340,7 +340,7 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
-		banner_key="11.212.212.1528.1528.764.764.1.0.0.17282.2000.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.14011.2002.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_19"
 		name="{=aom_clan_khuzait_19_name}Bozorganith"
@@ -350,7 +350,7 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.17282.249.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.14012.2002.171.700.700.764.764.0.0.0" />
 
   <!-- ============================================== -->
   <!-- EREBOR CLANS (erebor culture)                  -->

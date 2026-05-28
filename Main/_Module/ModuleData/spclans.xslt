@@ -840,6 +840,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_khuzait_2}Salurian</xsl:attribute>
+      <xsl:attribute name="banner_key">11.2001.2001.1528.1528.764.764.1.0.0.14009.171.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -848,6 +849,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_khuzait_3}Nikathian</xsl:attribute>
+      <xsl:attribute name="banner_key">11.2001.2001.1528.1528.764.764.1.0.0.14004.171.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -856,6 +858,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_khuzait_4}Karmian</xsl:attribute>
+      <xsl:attribute name="banner_key">11.2001.2001.1528.1528.764.764.1.0.0.14005.171.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -865,6 +868,7 @@
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
       <xsl:attribute name="name">{=TAOM_clan_khuzait_5}Amdûrid</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.castle_K6</xsl:attribute>
+      <xsl:attribute name="banner_key">11.2001.2001.1528.1528.764.764.1.0.0.14006.171.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -873,6 +877,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_khuzait_6}Khundolar</xsl:attribute>
+      <xsl:attribute name="banner_key">11.2001.2001.1528.1528.764.764.1.0.0.14003.171.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -881,6 +886,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_khuzait_7}Kuzaithian</xsl:attribute>
+      <xsl:attribute name="banner_key">11.161.161.1528.1528.764.764.1.0.0.14004.2000.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -889,6 +895,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*[local-name() != 'name']"/>
       <xsl:attribute name="name">{=TAOM_clan_khuzait_8}Mashakian</xsl:attribute>
+      <xsl:attribute name="banner_key">11.211.211.1528.1528.764.764.1.0.0.14000.2000.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -898,6 +905,7 @@
       <xsl:apply-templates select="@*[local-name() != 'name' and local-name() != 'initial_home_settlement']"/>
       <xsl:attribute name="name">{=TAOM_clan_khuzait_9}Bozorganith</xsl:attribute>
       <xsl:attribute name="initial_home_settlement">Settlement.castle_K7</xsl:attribute>
+      <xsl:attribute name="banner_key">11.211.211.1528.1528.764.764.1.0.0.14005.2000.171.700.700.764.764.0.0.0</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
