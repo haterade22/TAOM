@@ -1,5 +1,26 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-28
+
+### docs(lint): may27a doc-rot cleanup — 186 → 35 findings (first `/lint-cleanup-loop` run)
+
+Merged branch `taom-lint/may27a`: the first production run of the autonomous `/lint-cleanup-loop` skill (the program.md-style campaign skill built from the karpathy/autoresearch review — see [docs/research/karpathy-autoresearch.md](docs/research/karpathy-autoresearch.md)).
+
+**Autonomous loop (7 commits, 7 keeps, 0 discards, 0 crashes):** the loop iterated on `stale_versions` findings, fixing where a `v1.3.15` reference described **timeless API surface** (drop the specifier) or **vanilla behavior expected to still hold** (generalize), and leaving every reference that recorded a **historical fact**. Branch-isolated, single-metric (`total_findings` from `tools/lint_docs.py --summary`), results logged to the gitignored `.claude/state/lint-cleanup-loop/results.tsv`. Content fixes dropped stale_versions 184 → 155 across ~10 feature docs + 2 audit-guidance docs.
+
+**Linter calibration (post-loop):** the run confirmed the residual ~150 were over-flags, not rot. `tools/lint_docs.py` now exempts:
+- `codex-prompt-*` / `codex-result-*` filenames — Codex review transcripts; their `v1.3.15` refs are verification instructions/records, not stale docs.
+- the whole `docs/audits/` tree — the v1.3.15 migration-audit record, where every `v1.3.15-unverified` flag is a historical fact about that campaign.
+This dropped stale_versions 155 → 35 in one config change. The 35 remaining are the irreducible floor: filename links (`api-diff-1.3.15-to-1.4.5.md`, sig `.txt` files), essential version *comparisons* (audit-v1.4.5-refactor), upstream port-context (native-skin-fixes shipped a 1.3.15-only DLL), and historical REVIEW-LOG / issue-body snapshots — all left as-is.
+
+**Dead links:** 2 broken memory-path links in REVIEW-LOG.md (`../../../../.claude/projects/.../feedback_*.md`, non-portable user-home paths) converted to inline-code prose. dead_links 2 → 0.
+
+**Backlinks:** regenerated `## Referenced by` footers for 6 docs (lord-skills, bandit-management, dependencies-foundation, issues-drafts) that had drifted from parallel work.
+
+Final doc-lint state on `bannerlord-1.4.5`: **0 dead links, 35 stale-version refs (all intentional), 0 orphans, 0 missing feature docs.**
+
+Tooling: `tools/lint_docs.py` (+`--summary` grep block, atomic `--report` write), `tools/build_backlinks.py`, `tools/analyze_reviews.py` (→ `docs/reviews/progress.png`), `.claude/skills/lint-cleanup-loop/SKILL.md`. All from the karpathy/autoresearch Tier-1 adoption.
+
 ## 2026-05-27
 
 ### fix(bandit-management): XSLT-remove 5 vanilla hideout-bandit clans (new-game KNFE)
