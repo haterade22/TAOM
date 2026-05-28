@@ -17,7 +17,7 @@ A TAOM map author wanted Alliance mod's `CS_Road.cs` so they could paint roads/r
 ### Design Challenge
 
 1. **License hygiene.** Alliance is GPL v3. Verbatim copy means TAOM-as-a-whole must distribute under GPL v3. Solution: clean-room rewrite from a behavioural spec, documented in `docs/scene-scripts/ATTRIBUTION.md`.
-2. **Engine discovery contract.** Bannerlord v1.3.15 `ScriptComponentBehavior.CollectEditableFields` enumerates **public instance fields** (not properties) for editor exposure. Auto-properties would not appear in the editor's component panel.
+2. **Engine discovery contract.** `ScriptComponentBehavior.CollectEditableFields` enumerates **public instance fields** (not properties) for editor exposure. Auto-properties would not appear in the editor's component panel.
 3. **Reflection-only registration.** Scene scripts are discovered when their containing DLL loads — no IoC, no SubModule.xml entry. TAOM.dll is already loaded by the active TAOM module, so simply adding `CS_Road : ScriptComponentBehavior` to it makes the script available.
 4. **Thin-entry-point ADR-002.** The class can't shrink below ~200 lines because every editor knob must be a class field and every lifecycle method must be overridden in the same class. The fix: keep `CS_Road` as the engine-boundary class and push every line of algorithmic logic into pure C# helpers (parsers, evaluator, geometry builder, sampler, attacher). The helpers are 100% unit-tested.
 
