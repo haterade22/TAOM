@@ -31,6 +31,7 @@ DOCS_DIR = REPO_ROOT / "docs"
 FEATURES_DIR = DOCS_DIR / "features"
 MIGRATION_DIR = DOCS_DIR / "migration"
 ARCHIVE_DIR = DOCS_DIR / "archive"
+AUDITS_DIR = DOCS_DIR / "audits"
 MAIN_FEATURES_DIR = REPO_ROOT / "Main" / "Features"
 
 LINK_RE = re.compile(r"\[([^\]]*)\]\(([^)]+)\)")
@@ -41,15 +42,26 @@ STALE_VERSION_PATTERNS = [
     (re.compile(r"\bv1\.3\.x\b"), "v1.3.x"),
 ]
 # Paths where v1.3 refs are intentional (migration docs, archived material, ADRs that name old versions historically).
+# docs/audits/ is the v1.3.15 migration audit record — every "v1.3.15-unverified" flag and
+# "verified against v1.3.15" note is a historical fact about that audit campaign. Exempt the whole dir.
 STALE_VERSION_EXEMPT_PREFIXES = (
     str(MIGRATION_DIR).replace("\\", "/"),
     str(ARCHIVE_DIR).replace("\\", "/"),
+    str(AUDITS_DIR).replace("\\", "/"),
 )
 DEAD_LINK_EXEMPT_PREFIXES = (
     str(ARCHIVE_DIR).replace("\\", "/"),
 )
 # Some review files document past API surface and intentionally cite 1.3.15.
-STALE_VERSION_EXEMPT_FILENAME_SUBSTRINGS = ("rca-", "codex-adversarial-", "doc-lint-")
+# codex-prompt-* / codex-result-* are Codex review transcripts — by design they instruct/record
+# verification against the version under review, so their v1.3.15 refs are historical, not rot.
+STALE_VERSION_EXEMPT_FILENAME_SUBSTRINGS = (
+    "rca-",
+    "codex-adversarial-",
+    "codex-prompt-",
+    "codex-result-",
+    "doc-lint-",
+)
 # Codex review *transcripts* (prompts + results) are external-tool snapshots, not curated docs.
 # We don't lint their internal links either — they capture historical state and we don't edit them.
 DEAD_LINK_EXEMPT_FILENAME_SUBSTRINGS = (
