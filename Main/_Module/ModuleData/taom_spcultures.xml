@@ -4352,4 +4352,117 @@
     </female_names>
   </Culture>
 
+  <!-- ============================================== -->
+  <!-- LOTR Bandit Cultures — Wave 2 (heroic-faction offshoots) -->
+  <!-- ============================================== -->
+  <!-- Gondor Soldiers, Erebor Warriors, Mirkwood Stalkers. is_bandit + can_have_settlement
+       like the wave-1 cultures. INERT until a matching bandit clan + hideouts of the culture
+       exist (no clan with this culture => not iterated in Clan.BanditFactions => no _hideouts
+       indexer hit => crash-safe). Clans are authored once the hideouts are placed. -->
+
+  <!-- Gondor Soldiers (Anórien outlaw bands) -->
+  <Culture
+    id="gondor_soldiers"
+    name="{=taom_bandit_gondor_name}Gondor Soldiers"
+    bandit_chief="NPCCharacter.gondor_ano_footman"
+    bandit_raider="NPCCharacter.gondor_ano_militia"
+    bandit_bandit="NPCCharacter.gondor_ano_peasant"
+    bandit_boss="NPCCharacter.gondor_ano_skirmisher"
+    elite_basic_troop="NPCCharacter.gondor_ano_militia"
+    basic_troop="NPCCharacter.gondor_ano_peasant"
+    is_bandit="true"
+    can_have_settlement="true"
+    encounter_background_mesh="encounter_forest_bandit"
+    bandit_boss_party_template="PartyTemplate.gondor_soldiers_boss_party_template">
+    <male_names>
+      <name name="{=taom_bandit_gondor_m1}Bergil" />
+      <name name="{=taom_bandit_gondor_m2}Targon" />
+      <name name="{=taom_bandit_gondor_m3}Forlong" />
+      <name name="{=taom_bandit_gondor_m4}Duilas" />
+      <name name="{=taom_bandit_gondor_m5}Hirgon" />
+      <name name="{=taom_bandit_gondor_m6}Beregond" />
+      <name name="{=taom_bandit_gondor_m7}Mardil" />
+      <name name="{=taom_bandit_gondor_m8}Orodreth" />
+      <name name="{=taom_bandit_gondor_m9}Cirion" />
+      <name name="{=taom_bandit_gondor_m10}Halmir" />
+    </male_names>
+    <female_names>
+      <name name="{=taom_bandit_gondor_f1}Ioreth" />
+      <name name="{=taom_bandit_gondor_f2}Lothíriel" />
+      <name name="{=taom_bandit_gondor_f3}Morwen" />
+      <name name="{=taom_bandit_gondor_f4}Gilraen" />
+      <name name="{=taom_bandit_gondor_f5}Anwen" />
+    </female_names>
+  </Culture>
+
+  <!-- Erebor Warriors (exiled dwarven bands) -->
+  <Culture
+    id="erebor_warriors"
+    name="{=taom_bandit_erebor_name}Erebor Warriors"
+    bandit_chief="NPCCharacter.erebor_reg_company"
+    bandit_raider="NPCCharacter.erebor_reg_militia"
+    bandit_bandit="NPCCharacter.erebor_reg_miner"
+    bandit_boss="NPCCharacter.erebor_reg_bowman"
+    elite_basic_troop="NPCCharacter.erebor_reg_militia"
+    basic_troop="NPCCharacter.erebor_reg_miner"
+    is_bandit="true"
+    can_have_settlement="true"
+    encounter_background_mesh="encounter_mountain_bandit"
+    bandit_boss_party_template="PartyTemplate.erebor_warriors_boss_party_template">
+    <male_names>
+      <name name="{=taom_bandit_erebor_m1}Nargûm" />
+      <name name="{=taom_bandit_erebor_m2}Borin" />
+      <name name="{=taom_bandit_erebor_m3}Frar" />
+      <name name="{=taom_bandit_erebor_m4}Lofar" />
+      <name name="{=taom_bandit_erebor_m5}Grimbeard" />
+      <name name="{=taom_bandit_erebor_m6}Thrar" />
+      <name name="{=taom_bandit_erebor_m7}Dwalgin" />
+      <name name="{=taom_bandit_erebor_m8}Náladr" />
+      <name name="{=taom_bandit_erebor_m9}Vidri" />
+      <name name="{=taom_bandit_erebor_m10}Hagri" />
+    </male_names>
+    <female_names>
+      <name name="{=taom_bandit_erebor_f1}Dís" />
+      <name name="{=taom_bandit_erebor_f2}Brila" />
+      <name name="{=taom_bandit_erebor_f3}Vagna" />
+      <name name="{=taom_bandit_erebor_f4}Thora" />
+      <name name="{=taom_bandit_erebor_f5}Frida" />
+    </female_names>
+  </Culture>
+
+  <!-- Mirkwood Stalkers (renegade Silvan ambushers) -->
+  <Culture
+    id="mirkwood_stalkers"
+    name="{=taom_bandit_mirkwood_name}Mirkwood Stalkers"
+    bandit_chief="NPCCharacter.mirkwood_militia_veteran_spearman"
+    bandit_raider="NPCCharacter.mirkwood_militia_archer"
+    bandit_bandit="NPCCharacter.mirkwood_militia_spearman"
+    bandit_boss="NPCCharacter.mirkwood_militia_veteran_archer"
+    elite_basic_troop="NPCCharacter.mirkwood_militia_archer"
+    basic_troop="NPCCharacter.mirkwood_militia_spearman"
+    is_bandit="true"
+    can_have_settlement="true"
+    encounter_background_mesh="encounter_forest_bandit"
+    bandit_boss_party_template="PartyTemplate.mirkwood_stalkers_boss_party_template">
+    <male_names>
+      <name name="{=taom_bandit_mirkwood_m1}Faeglir" />
+      <name name="{=taom_bandit_mirkwood_m2}Thranduil" />
+      <name name="{=taom_bandit_mirkwood_m3}Galion" />
+      <name name="{=taom_bandit_mirkwood_m4}Belegorn" />
+      <name name="{=taom_bandit_mirkwood_m5}Nimloth" />
+      <name name="{=taom_bandit_mirkwood_m6}Orophin" />
+      <name name="{=taom_bandit_mirkwood_m7}Rúmil" />
+      <name name="{=taom_bandit_mirkwood_m8}Haldamir" />
+      <name name="{=taom_bandit_mirkwood_m9}Tauron" />
+      <name name="{=taom_bandit_mirkwood_m10}Lindir" />
+    </male_names>
+    <female_names>
+      <name name="{=taom_bandit_mirkwood_f1}Tauriel" />
+      <name name="{=taom_bandit_mirkwood_f2}Nethloriel" />
+      <name name="{=taom_bandit_mirkwood_f3}Eowen" />
+      <name name="{=taom_bandit_mirkwood_f4}Faelivrin" />
+      <name name="{=taom_bandit_mirkwood_f5}Míriel" />
+    </female_names>
+  </Culture>
+
 </SPCultures>

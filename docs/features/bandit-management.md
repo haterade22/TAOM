@@ -87,7 +87,23 @@ Per [`.claude/rules/csharp-architecture.md`](../../.claude/rules/csharp-architec
 | `steppe_bandits` | `rhun_raiders` | Rhûn Raiders | [`troops/troops_rhun_new.xml`](../../Main/_Module/ModuleData/troops/troops_rhun_new.xml) |
 | `sea_raiders` | `umbar_corsairs` | Corsairs of Umbar | [`troops/troops_umbar.xml`](../../Main/_Module/ModuleData/troops/troops_umbar.xml) |
 
-Each LOTR bandit culture has `is_bandit="true"` (auto-creates a bandit clan at campaign start) and `can_have_settlement="true"` (allows hideout ownership). Troops are pulled from each culture's existing TAOM troop XML — no new troop definitions needed.
+Each LOTR bandit culture has `is_bandit="true"` and `can_have_settlement="true"` (allows hideout ownership). Troops are pulled from each culture's existing TAOM troop XML — no new troop definitions needed.
+
+**Important:** `is_bandit="true"` on a culture does NOT auto-create a bandit clan — a matching `<Faction is_bandit="true">` clan row must be authored separately (in `characters/clans.xml`), and the homeless vanilla bandit clans must be stripped via `spclans.xslt` (see "Bandit clan contract" below). A bandit culture (`is_bandit` + `can_have_settlement`) is **inert** until both a clan references it AND hideouts of its culture exist; with no clan it's never iterated in `Clan.BanditFactions`, and the engine's `_hideouts[clan.Culture]` hard indexer (`BanditSpawnCampaignBehavior.GetInfestedHideoutCount`) only runs for clans whose `Culture.CanHaveSettlement` is true — so a clan with zero hideouts of its culture KNFEs on new-game.
+
+### Wave 2 — heroic-faction offshoots (2026-05-28, live)
+
+Three further bandit cultures themed as renegade offshoots of heroic factions. Fully wired: culture + raider/boss party templates + bandit clan + 10 hideouts each.
+
+| New culture (StringId) | Display name | Parent kingdom (banner) | Troop source | Hideouts |
+|---|---|---|---|---|
+| `gondor_soldiers` | Gondor Soldiers | `empire_w` (Gondor) | `troops/troops_gondor.xml` (Anórien line) | `hideout_gondor_1`–`10` |
+| `erebor_warriors` | Erebor Warriors | `erebor` | `troops/troops_erebor.xml` (regular line) | `hideout_erebor_1`–`10` |
+| `mirkwood_stalkers` | Mirkwood Stalkers | `mirkwood` | `troops/troops_mirkwood.xml` (Silvan militia) | `hideout_mirkwood_1`–`10` |
+
+Hideout `scene_name` = the matching scene id created in the map editor (`hideout_gondor_1` etc.). The clans were authored only after the 10 hideouts of each culture existed (so `_hideouts[culture]` is populated before `GetInfestedHideoutCount` runs — the inert-until-hideouts-exist ordering avoids the new-game KNFE).
+
+Two existing ranges were also expanded via `tools/add_bandit_hideouts.py`: `hideout_desert_30`–`43` → `harad_raiders`, `hideout_seaside_30`–`45` → `umbar_corsairs` (existing cultures+clans, functional immediately).
 
 ### Raider-tier troop roster per culture
 

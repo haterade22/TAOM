@@ -2,9 +2,34 @@
 
 ## 2026-05-28
 
-### data(bandit-management): bandit clans fly parent-kingdom banners
+### feat(bandit-management): wave-2 bandit cultures + hideout expansion
 
-The 5 LOTR bandit clans in `characters/clans.xml` shipped (commit `ae39aae`) with generic vanilla bandit greyscale banner keys. Swapped each clan's `banner_key` to its parent kingdom's heraldry so raiders read as offshoots of their lore faction: `dunland_raiders` → Dunland (`empire`), `rhun_raiders` → Rhûn (`khuzait`), `harad_raiders` → Harad (`aserai`), `gundabad_raiders` → Gundabad, `umbar_corsairs` → Umbar. Keys sourced from `spkingdoms.xslt` (empire/khuzait/aserai) + `taom_spkingdoms.xml` (gundabad/umbar). Data-only change; clan colors left at the bandit greyscale. XML re-validated via `[xml]` parse.
+Three new LOTR bandit cultures (heroic-faction offshoots), each now LIVE with culture + party templates + clan + 10 hideouts. Plus expansion of two existing hideout ranges.
+
+New bandit cultures in `taom_spcultures.xml` (`is_bandit` + `can_have_settlement`), clans in `characters/clans.xml` (banner = parent-kingdom heraldry):
+- `gondor_soldiers` — **Gondor Soldiers** (Anórien troops; banner `empire_w`)
+- `erebor_warriors` — **Erebor Warriors** (regular dwarven line; banner `erebor`)
+- `mirkwood_stalkers` — **Mirkwood Stalkers** (Silvan militia line; banner `mirkwood`; Mirkwood's tree jumps L16→L36 so the Stalkers top out at veteran militia)
+
+Each ships a raider + boss party template (6 total), ~16 loc keys (name + male/female), a bandit clan (`is_bandit`/`is_outlaw`, `initial_home_settlement` → `hideout_<culture>_1`), and 10 hideouts (`hideout_gondor_1`–`10`, `hideout_erebor_1`–`10`, `hideout_mirkwood_1`–`10`) in the external TAOM_Map module. Hideout `scene_name` = the matching scene id authored in the map editor; placeholder positions repositioned in-editor.
+
+**Authoring order (crash-safety):** the cultures were authored INERT first (no clan → not iterated in `Clan.BanditFactions` → never hits the `_hideouts[culture]` hard indexer). The clans were authored only AFTER the 10 hideouts of each culture existed, so `_hideouts[culture]` is populated when `GetInfestedHideoutCount` runs — no new-game KNFE.
+
+Hideout expansion (existing cultures with existing clans, functional immediately) via new idempotent `tools/add_bandit_hideouts.py`:
+- `hideout_desert_30`–`43` (14) → `harad_raiders` (Haradrim Raider's Camp)
+- `hideout_seaside_30`–`45` (16) → `umbar_corsairs` (Corsair's Cove) — `seaside_46` removed (miscount)
+
+Verification: `[xml]` parse on all touched files; per-culture clan + culture + raider-template resolve 1:1; 10 hideouts each resolve to their defined culture; `seaside_46` gone; no lingering pre-rename ids. `.bak2`/`.bak3` backups saved on the external TAOM_Map files.
+
+### fix(bandit-management): strip homeless vanilla bandit clans + kingdom banners
+
+Two follow-ups to the shipped feature (commit `ae39aae`):
+
+1. **New-game crash fix (HIGH).** After the hideout migration repointed all 99 hideouts to the 5 new LOTR bandit cultures, the 5 vanilla bandit clans (`sea_raiders`, `mountain_bandits`, `forest_bandits`, `desert_bandits`, `steppe_bandits`) had no hideouts of their cultures left in the world. Vanilla `BanditSpawnCampaignBehavior.SpawnBanditsAroundHideoutAtNewGame` iterates `Clan.BanditFactions` and indexes `_hideouts[clan.Culture]` with a hard dictionary indexer → `KeyNotFoundException` → new-game crash. Fixed by stripping the 5 vanilla bandit clans via empty-template rules in `spclans.xslt` (`<xsl:template match="Faction[@id='X']"/>`), dropping them from `Clan.BanditFactions`. The vanilla `looters` clan is KEPT — its StringId is hardcoded in `DefaultBanditDensityModel.GetMaxSupportedNumberOfLootersForClan` and it spawns around villages on a separate code path independent of the hideout dictionary. (The new LOTR bandit clans live in the additive `characters/clans.xml`; vanilla clans can only be removed via XSLT transform of the vanilla `spclans.xml`, hence the split.)
+
+2. **Kingdom banners.** The 5 LOTR bandit clans in `characters/clans.xml` shipped with generic vanilla bandit greyscale banner keys. Swapped each clan's `banner_key` to its parent kingdom's heraldry so raiders read as offshoots of their lore faction: `dunland_raiders` → Dunland (`empire`), `rhun_raiders` → Rhûn (`khuzait`), `harad_raiders` → Harad (`aserai`), `gundabad_raiders` → Gundabad, `umbar_corsairs` → Umbar. Keys sourced from `spkingdoms.xslt` (empire/khuzait/aserai) + `taom_spkingdoms.xml` (gundabad/umbar). The bandit faction banner is driven by the clan `banner_key`; bandit cultures intentionally carry no `faction_banner_key` (vanilla bandit cultures don't either — the clan key is authoritative).
+
+Both data-only. XML re-validated via `[xml]` parse on `spclans.xslt` + `clans.xml`.
 
 ### chore(troops): delete urukhai_hunter + urukhai_chosenmarksman
 

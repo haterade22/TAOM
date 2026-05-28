@@ -895,4 +895,58 @@
 	<string id="taom_bandit_umbar_f4" text="{=taom_bandit_umbar_f4}Tarmiriel" />
 	<string id="taom_bandit_umbar_f5" text="{=taom_bandit_umbar_f5}Inzilbêth" />
 
+	<!-- Wave 2: Gondor Soldiers -->
+	<string id="taom_bandit_gondor_name" text="{=taom_bandit_gondor_name}Gondor Soldiers" />
+	<string id="taom_bandit_gondor_m1" text="{=taom_bandit_gondor_m1}Bergil" />
+	<string id="taom_bandit_gondor_m2" text="{=taom_bandit_gondor_m2}Targon" />
+	<string id="taom_bandit_gondor_m3" text="{=taom_bandit_gondor_m3}Forlong" />
+	<string id="taom_bandit_gondor_m4" text="{=taom_bandit_gondor_m4}Duilas" />
+	<string id="taom_bandit_gondor_m5" text="{=taom_bandit_gondor_m5}Hirgon" />
+	<string id="taom_bandit_gondor_m6" text="{=taom_bandit_gondor_m6}Beregond" />
+	<string id="taom_bandit_gondor_m7" text="{=taom_bandit_gondor_m7}Mardil" />
+	<string id="taom_bandit_gondor_m8" text="{=taom_bandit_gondor_m8}Orodreth" />
+	<string id="taom_bandit_gondor_m9" text="{=taom_bandit_gondor_m9}Cirion" />
+	<string id="taom_bandit_gondor_m10" text="{=taom_bandit_gondor_m10}Halmir" />
+	<string id="taom_bandit_gondor_f1" text="{=taom_bandit_gondor_f1}Ioreth" />
+	<string id="taom_bandit_gondor_f2" text="{=taom_bandit_gondor_f2}Lothíriel" />
+	<string id="taom_bandit_gondor_f3" text="{=taom_bandit_gondor_f3}Morwen" />
+	<string id="taom_bandit_gondor_f4" text="{=taom_bandit_gondor_f4}Gilraen" />
+	<string id="taom_bandit_gondor_f5" text="{=taom_bandit_gondor_f5}Anwen" />
+
+	<!-- Wave 2: Erebor Warriors -->
+	<string id="taom_bandit_erebor_name" text="{=taom_bandit_erebor_name}Erebor Warriors" />
+	<string id="taom_bandit_erebor_m1" text="{=taom_bandit_erebor_m1}Nargûm" />
+	<string id="taom_bandit_erebor_m2" text="{=taom_bandit_erebor_m2}Borin" />
+	<string id="taom_bandit_erebor_m3" text="{=taom_bandit_erebor_m3}Frar" />
+	<string id="taom_bandit_erebor_m4" text="{=taom_bandit_erebor_m4}Lofar" />
+	<string id="taom_bandit_erebor_m5" text="{=taom_bandit_erebor_m5}Grimbeard" />
+	<string id="taom_bandit_erebor_m6" text="{=taom_bandit_erebor_m6}Thrar" />
+	<string id="taom_bandit_erebor_m7" text="{=taom_bandit_erebor_m7}Dwalgin" />
+	<string id="taom_bandit_erebor_m8" text="{=taom_bandit_erebor_m8}Náladr" />
+	<string id="taom_bandit_erebor_m9" text="{=taom_bandit_erebor_m9}Vidri" />
+	<string id="taom_bandit_erebor_m10" text="{=taom_bandit_erebor_m10}Hagri" />
+	<string id="taom_bandit_erebor_f1" text="{=taom_bandit_erebor_f1}Dís" />
+	<string id="taom_bandit_erebor_f2" text="{=taom_bandit_erebor_f2}Brila" />
+	<string id="taom_bandit_erebor_f3" text="{=taom_bandit_erebor_f3}Vagna" />
+	<string id="taom_bandit_erebor_f4" text="{=taom_bandit_erebor_f4}Thora" />
+	<string id="taom_bandit_erebor_f5" text="{=taom_bandit_erebor_f5}Frida" />
+
+	<!-- Wave 2: Mirkwood Stalkers -->
+	<string id="taom_bandit_mirkwood_name" text="{=taom_bandit_mirkwood_name}Mirkwood Stalkers" />
+	<string id="taom_bandit_mirkwood_m1" text="{=taom_bandit_mirkwood_m1}Faeglir" />
+	<string id="taom_bandit_mirkwood_m2" text="{=taom_bandit_mirkwood_m2}Thranduil" />
+	<string id="taom_bandit_mirkwood_m3" text="{=taom_bandit_mirkwood_m3}Galion" />
+	<string id="taom_bandit_mirkwood_m4" text="{=taom_bandit_mirkwood_m4}Belegorn" />
+	<string id="taom_bandit_mirkwood_m5" text="{=taom_bandit_mirkwood_m5}Nimloth" />
+	<string id="taom_bandit_mirkwood_m6" text="{=taom_bandit_mirkwood_m6}Orophin" />
+	<string id="taom_bandit_mirkwood_m7" text="{=taom_bandit_mirkwood_m7}Rúmil" />
+	<string id="taom_bandit_mirkwood_m8" text="{=taom_bandit_mirkwood_m8}Haldamir" />
+	<string id="taom_bandit_mirkwood_m9" text="{=taom_bandit_mirkwood_m9}Tauron" />
+	<string id="taom_bandit_mirkwood_m10" text="{=taom_bandit_mirkwood_m10}Lindir" />
+	<string id="taom_bandit_mirkwood_f1" text="{=taom_bandit_mirkwood_f1}Tauriel" />
+	<string id="taom_bandit_mirkwood_f2" text="{=taom_bandit_mirkwood_f2}Nethloriel" />
+	<string id="taom_bandit_mirkwood_f3" text="{=taom_bandit_mirkwood_f3}Eowen" />
+	<string id="taom_bandit_mirkwood_f4" text="{=taom_bandit_mirkwood_f4}Faelivrin" />
+	<string id="taom_bandit_mirkwood_f5" text="{=taom_bandit_mirkwood_f5}Míriel" />
+
 </strings>

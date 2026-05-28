@@ -1577,4 +1577,61 @@
 		</stacks>
 	</MBPartyTemplate>
 
+	<!-- ============================================== -->
+	<!-- LOTR Bandit Cultures — Wave 2 (Gondor/Erebor/Mirkwood offshoots) -->
+	<!-- ============================================== -->
+
+	<!-- Gondor Soldiers -->
+	<MBPartyTemplate id="gondor_soldiers_raider_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.gondor_ano_peasant" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.gondor_ano_militia" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.gondor_ano_archer_militia" />
+			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.gondor_ano_footman" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="gondor_soldiers_boss_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gondor_ano_skirmisher" />
+			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.gondor_ano_footman" />
+			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.gondor_ano_militia" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.gondor_ano_archer_militia" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<!-- Erebor Warriors -->
+	<MBPartyTemplate id="erebor_warriors_raider_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.erebor_reg_miner" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.erebor_reg_militia" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.erebor_reg_skirmisher" />
+			<PartyTemplateStack min_value="1" max_value="4" troop="NPCCharacter.erebor_reg_company" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="erebor_warriors_boss_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_reg_bowman" />
+			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.erebor_reg_company" />
+			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.erebor_reg_militia" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.erebor_reg_skirmisher" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<!-- Mirkwood Stalkers -->
+	<MBPartyTemplate id="mirkwood_stalkers_raider_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="18" troop="NPCCharacter.mirkwood_militia_spearman" />
+			<PartyTemplateStack min_value="5" max_value="12" troop="NPCCharacter.mirkwood_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="6" troop="NPCCharacter.mirkwood_militia_veteran_spearman" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="mirkwood_stalkers_boss_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mirkwood_militia_veteran_archer" />
+			<PartyTemplateStack min_value="6" max_value="12" troop="NPCCharacter.mirkwood_militia_veteran_spearman" />
+			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.mirkwood_militia_archer" />
+			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.mirkwood_militia_spearman" />
+		</stacks>
+	</MBPartyTemplate>
+
 </partyTemplates>
