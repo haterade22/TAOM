@@ -2,6 +2,12 @@
 
 ## 2026-05-28
 
+### chore(troops): delete urukhai_hunter + urukhai_chosenmarksman
+
+- Removed both troops from `troops_isengard.xml` (51 → 49 NPCs). They were orphaned out of the Isengard upgrade graph by the bow-line restructure (c07ed72); the bow line now runs Scout → Tracker → Archer with no Hunter/Chosen-Marksman.
+- Re-pointed the 2 dangling `urukhai_hunter` party-template stacks (`kingdom_hero_party_isengard_template`, `kingdom_hero_party_outlaw_isengard_template`) to `urukhai_scout` — keeps a bow uruk in those AI parties.
+- Save-compat: deleting troop IDs is not save-safe; existing saves that already recruited these two troops will drop them on load. Accepted per explicit request.
+
 ### feat(recruitment): Dunland culture + clan pools, Erebor Iron Hills mix
 
 Two `VolunteerRecruitmentService` pool changes.

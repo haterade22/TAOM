@@ -1390,7 +1390,7 @@
 			<PartyTemplateStack min_value="10" max_value="30" troop="NPCCharacter.urukhai_recruit" />
 			<PartyTemplateStack min_value="5" max_value="15" troop="NPCCharacter.urukhai_fighter" />
 			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.urukhai_warrior" />
-			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.urukhai_hunter" />
+			<PartyTemplateStack min_value="3" max_value="8" troop="NPCCharacter.urukhai_scout" />
 			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.urukhai_spearman" />
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.urukhai_infantry" />
 			<PartyTemplateStack min_value="5" max_value="12" troop="NPCCharacter.isengard_orc_grunt" />
@@ -1421,7 +1421,7 @@
 		<stacks>
 			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.urukhai_recruit" />
 			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.urukhai_feller" />
-			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.urukhai_hunter" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.urukhai_scout" />
 		</stacks>
 	</MBPartyTemplate>
 
