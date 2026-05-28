@@ -101,9 +101,9 @@ The decompiled v1.4 source has two latent issues that the port did NOT propagate
 1. **Hardcoded `0.5f` reform strictness** (decompiled line 517). `UpdateReformingState` ignored `ChargeFormationStrictness` and always used `0.5f` — a user who set strictness to `0.9` (very tight) would still see reform complete at the looser `0.5` tolerance. Our `CavalryChargeService.UpdateReforming` reads the setting. Regression test: `Tick_ReformingAndAligned_TransitionsToIdle` asserts `cav.IsAligned(0.9f)` is what the service queries.
 2. **Per-order HUD spam** (decompiled lines 852–860). The original logged every `SetMovementOrder` invocation to `InformationManager.DisplayMessage` regardless of debug state. Our Postfix gates the HUD message behind `SmartCavalryDebug`. File log via `IModLogger` is unconditional.
 
-## v1.3.15 API drift findings
+## Pre-v1.4 API drift findings
 
-The decompiled source is v1.4. Three v1.3.15 deltas required deviations from the prompt's blueprint:
+The decompiled source is v1.4. Three pre-v1.4 deltas required deviations from the prompt's blueprint:
 
 | Prompt assumption | v1.3.15 reality | Plan deviation |
 |---|---|---|
