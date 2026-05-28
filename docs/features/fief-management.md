@@ -93,7 +93,7 @@ The trade-off: with the toggle off, you can't view stats remotely either. The cl
 - `IRemoteFiefSettlementSwapper` — wraps reflection on `MobileParty._currentSettlement`
 - `IModLogger` — debug + once-per-process error logging if reflection target is missing
 
-### v1.3.15 API surface verified
+### Engine API surface verified
 
 | API | Verified location |
 |-----|-------------------|
@@ -123,7 +123,7 @@ The original 1.2.x module ships three XML prefabs in `GUI/Prefabs/`:
 - `FiefManagement.xml`
 - `FiefNavOverlay.xml`
 
-The DLL **does not load any of them** — `GauntletFiefManagementScreen` loads the vanilla `TownManagement` movie via `_layer.LoadMovie("TownManagement", _dataSource)`. Per the integration plan and `/deep-review` standards, dead prefabs are not copied. If a future iteration wants a custom screen layout, the prefabs would need to be authored fresh against v1.3.15 widget schemas anyway.
+The DLL **does not load any of them** — `GauntletFiefManagementScreen` loads the vanilla `TownManagement` movie via `_layer.LoadMovie("TownManagement", _dataSource)`. Per the integration plan and `/deep-review` standards, dead prefabs are not copied. If a future iteration wants a custom screen layout, the prefabs would need to be authored fresh against the current widget schemas anyway.
 
 ## How to Add a New Menu Option
 

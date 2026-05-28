@@ -6,7 +6,7 @@ Softens vanilla Bannerlord's revolt mechanic so LOTR's frequent settlement flips
 
 ## Why This Exists
 
-- **Vanilla behavior:** `DefaultSettlementLoyaltyModel` in v1.3.15 applies a brutal -3.0/day loyalty penalty when the owner's culture differs from the settlement's culture (and -1.0/day for different-culture governors). Settlements enter a "rebellious" visual state at loyalty ≤ 25 and actually revolt at loyalty ≤ 15, spawning an independent rebel clan via `RebellionsCampaignBehavior.StartRebellionEvent`.
+- **Vanilla behavior:** `DefaultSettlementLoyaltyModel` applies a brutal -3.0/day loyalty penalty when the owner's culture differs from the settlement's culture (and -1.0/day for different-culture governors). Settlements enter a "rebellious" visual state at loyalty ≤ 25 and actually revolt at loyalty ≤ 15, spawning an independent rebel clan via `RebellionsCampaignBehavior.StartRebellionEvent`.
 - **TAOM requirement:** LOTR settings involve constant territory exchange (Gondor↔Mordor, Rohan↔Isengard, Dale↔Easterlings). Under vanilla rules a newly-conquered town hits the revolt threshold in roughly 28 days, which floods the map with rebel kingdoms and destabilizes the War of the Ring narrative.
 - **Without this feature:** Settlements captured during a war revolt before the conqueror can stabilize them, spawning new factions that dilute the intended 18-kingdom LOTR political landscape.
 

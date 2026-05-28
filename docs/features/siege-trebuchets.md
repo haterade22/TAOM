@@ -67,11 +67,11 @@ No direct unit tests. `DefaultSiegeEngineTypes.Trebuchet` resolves via `Game.Cur
 
 ## How To Change the Defender Engine List
 
-Edit `Main/Features/Siege/Models/TaomSiegeEventModel.cs`. Each `yield return` adds one engine. Candidates available in v1.3.15 `DefaultSiegeEngineTypes`: `Ballista`, `FireBallista`, `Catapult`, `FireCatapult`, `Onager`, `FireOnager`, `Bricole`, `Trebuchet`, `FireTrebuchet` **(avoid — v1.3.15 getter bug returns non-fire Trebuchet field)**.
+Edit `Main/Features/Siege/Models/TaomSiegeEventModel.cs`. Each `yield return` adds one engine. Candidates available in `DefaultSiegeEngineTypes`: `Ballista`, `FireBallista`, `Catapult`, `FireCatapult`, `Onager`, `FireOnager`, `Bricole`, `Trebuchet`, `FireTrebuchet` **(avoid — engine getter bug returns non-fire Trebuchet field)**.
 
 ## Known Issues
 
-- **`FireTrebuchet` is broken in v1.3.15** — the getter returns the non-fire Trebuchet backing field. Do not yield it or players get duplicated Trebuchet entries. Re-check in a future Bannerlord update.
+- **`FireTrebuchet` is broken in current Bannerlord** — the getter returns the non-fire Trebuchet backing field. Do not yield it or players get duplicated Trebuchet entries. Re-check in a future Bannerlord update.
 - Global scope: every defender everywhere gets trebuchets, not just Gondor. If this feels unthematic for, e.g., steppe castle defenders (Rhûn), convert to a culture-gated service.
 
 ---

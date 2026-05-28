@@ -2,7 +2,7 @@
 
 ## Overview
 
-Replaces the inventory screen's "Sell All" button with a multi-action menu offering four choices: Sell Damaged, Sell Low Value, Unequip All, and the vanilla bulk-sell. Adds a per-save persistent toggle for the inventory search box. Ported from the external 1.2.x `TransferbuttonMenu` module with the reflection-fallback chains removed (verified unnecessary against v1.3.15 public API).
+Replaces the inventory screen's "Sell All" button with a multi-action menu offering four choices: Sell Damaged, Sell Low Value, Unequip All, and the vanilla bulk-sell. Adds a per-save persistent toggle for the inventory search box. Ported from the external 1.2.x `TransferbuttonMenu` module with the reflection-fallback chains removed (verified unnecessary against the current public API).
 
 ## Why This Exists
 
@@ -14,7 +14,7 @@ Replaces the inventory screen's "Sell All" button with a multi-action menu offer
 
 ### Design Challenge
 
-The original 1.2.x module used heavy reflection (8 probes for the right-pane item list, 5 probes for `SPItemVM`'s sell method) because v1.2.x had non-public field/method names that drifted across patches. **In v1.3.15 those members are all public** (`SPInventoryVM.RightItemListVM`, `SPItemVM.ProcessSellItem`, `IsSearchAvailable`, `ExecuteSellAllItems`) — verified via `ilspycmd` against the installed `TaleWorlds.CampaignSystem.ViewModelCollection.dll`. The TAOM port uses direct property access, with the reflection chain removed entirely.
+The original 1.2.x module used heavy reflection (8 probes for the right-pane item list, 5 probes for `SPItemVM`'s sell method) because v1.2.x had non-public field/method names that drifted across patches. **Those members are all public in the current API** (`SPInventoryVM.RightItemListVM`, `SPItemVM.ProcessSellItem`, `IsSearchAvailable`, `ExecuteSellAllItems`) — verified via `ilspycmd` against the installed `TaleWorlds.CampaignSystem.ViewModelCollection.dll`. The TAOM port uses direct property access, with the reflection chain removed entirely.
 
 A second concern was the "shared adapter for QuickActions + EquipPresets" requirement: both features access the same `SPInventoryVM`, and duplicating reflection across two features is the bug the original module had. This port introduces `IInventoryVMAdapter` that captures the active VM via a Postfix on `SPInventoryVM`'s constructor — a single source of truth that `EquipPresets` (feature #6) will reuse.
 

@@ -24,7 +24,7 @@ This feature sits at a particularly hostile spot in the CC pipeline. Three indep
 
 `BodyProperties` is also a sealed `TaleWorlds.Core` struct. Per ADR-007 it cannot cross service boundaries; only `IPlayerBodyPropertiesAdapter` parses it (`BodyProperties.FromString`) and applies it to `Hero.MainHero` + `CharacterObject.PlayerCharacter`.
 
-There is also a non-obvious engine-side guard: `CharacterObject.UpdatePlayerCharacterBodyProperties` in v1.3.15 wraps its entire body in `if (IsPlayerCharacter && IsHero)` and does not call base. When that guard fails (early CC lifecycle), the override no-ops silently — `BodyPropertyRange.Init` from `BasicCharacterObject` doesn't run either. The adapter therefore writes `Hero.MainHero.{StaticBodyProperties, Weight, Build}` directly *first*, then calls `UpdatePlayerCharacterBodyProperties` to fire `OnPlayerBodyPropertiesChanged` for downstream observers when the guard does pass. The direct writes are the actual mechanism; the override call is for event-firing.
+There is also a non-obvious engine-side guard: `CharacterObject.UpdatePlayerCharacterBodyProperties` wraps its entire body in `if (IsPlayerCharacter && IsHero)` and does not call base. When that guard fails (early CC lifecycle), the override no-ops silently — `BodyPropertyRange.Init` from `BasicCharacterObject` doesn't run either. The adapter therefore writes `Hero.MainHero.{StaticBodyProperties, Weight, Build}` directly *first*, then calls `UpdatePlayerCharacterBodyProperties` to fire `OnPlayerBodyPropertiesChanged` for downstream observers when the guard does pass. The direct writes are the actual mechanism; the override call is for event-firing.
 
 ### Solution Approach
 
@@ -93,7 +93,7 @@ Per-culture body-properties strings. Cultures listed here override the vanilla r
 | Field | Type | Description |
 |-------|------|-------------|
 | `Culture/@id` | string | Culture string id (case-insensitive). Vanilla: `vlandia`, `empire`, `aserai`, `battania`, `sturgia`, `khuzait`. TAOM custom: `mordor`, `gondor`, `erebor`, `mirkwood`, `lothlorien`, `rivendell`, `dolguldur`, `gundabad`, `isengard`, `umbar`, `dale` |
-| `BodyProperties/@version` | int | `4` for the v1.3.15 body-key encoding |
+| `BodyProperties/@version` | int | `4` for the current body-key encoding |
 | `BodyProperties/@key` | hex string | Exactly 128 hex characters. Shorter or empty keys are skipped with a warning |
 | `BodyProperties/@weight` | float (optional) | Defaults to `0` if absent |
 | `BodyProperties/@build` | float (optional) | Defaults to `0` if absent |

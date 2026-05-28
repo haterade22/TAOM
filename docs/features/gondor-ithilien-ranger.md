@@ -19,7 +19,7 @@ The previous Gondor troop tree had no troop named "Ithilien Ranger" despite the 
 Three coupled constraints:
 
 1. **Standalone, not BRV-line.** Per user direction the new troop is NOT integrated into the Blackroot Vale upgrade chain — no existing troop upgrades into it. Players reach it exclusively via notable recruitment in specific settlements.
-2. **Tier filter behavior.** TAOM's `TaomVolunteerModel.MaxVolunteerTier => 6` initially looked like it would block a T9 troop from notable pools. Decompilation of v1.3.15 `RecruitmentCampaignBehavior.UpdateVolunteersOfNotablesInSettlement` (lines 235-249) showed `MaxVolunteerTier` only gates upgrade progression on slots with non-empty `UpgradeTargets`. Initial slot assignment via `GetBasicVolunteer` is unchecked, and the new troop's `<upgrade_targets />` is empty — so the gate never fires.
+2. **Tier filter behavior.** TAOM's `TaomVolunteerModel.MaxVolunteerTier => 6` initially looked like it would block a T9 troop from notable pools. Decompilation of vanilla `RecruitmentCampaignBehavior.UpdateVolunteersOfNotablesInSettlement` (lines 235-249) showed `MaxVolunteerTier` only gates upgrade progression on slots with non-empty `UpgradeTargets`. Initial slot assignment via `GetBasicVolunteer` is unchecked, and the new troop's `<upgrade_targets />` is empty — so the gate never fires.
 3. **Wardrobe-only constraint.** Per user direction, the Ithilien Ranger should only wear items literally branded "Ithilien" in their display name. Excludes Ithil Guard plate (`sk_gd_ith_*`) and Minas Ithil shields (`wm_gondor_shield_*_minas_ithil`) despite the prefix similarity.
 
 ### Solution Approach
