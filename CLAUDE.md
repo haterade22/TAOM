@@ -206,6 +206,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | `simplicity-criterion.md` | _(no `paths:` — always-load)_ | Yes/No matrix for evaluating whether a change is worth keeping. Tiny gain + ugly code is rejected; deletions that hold parity always win. |
 | `think-before-coding.md` | _(no `paths:` — always-load)_ | Surface load-bearing assumptions before the first Edit; ask if uncertain. Don't ask on trivial/mechanical work. |
 | `external-skill-ports.md` | `.claude/skills/**/SKILL.md` | Per-field validation checklist when porting skills from external suites (gstack, etc.). |
+| `vanilla-data-comparison.md` | `**/settlements.xml`, `**/sp_battle_scenes.xml`, `**/spcultures.xml`, `**/taom_spcultures.xml`, `**/spclans.xml`, `**/spkingdoms.xml`, `**/*.xslt` | Compare against current installed vanilla before modifying mirrored data. Vanilla renames/removes scenes & re-schemas XML between versions → stale TAOM refs crash. Scene-ref audit tools + post-bump checklist. |
 
 ## Custom Agents
 
@@ -257,6 +258,8 @@ Pure read-only research agents (`Explore`, `Plan`) need only items 1–2 + scope
 | Check ADR rules | [docs/adrs/](./docs/adrs/README.md) |
 | Ensure code quality | [code-quality.md](./docs/ai-includes/code-quality.md) |
 | Check migration status | [migration/TRACKING.md](./docs/migration/TRACKING.md) |
+| Audit/fix scene refs after a version bump (battle-near-place crashes) | [scene-reference-audit.md](./docs/reference/scene-reference-audit.md) — `audit_scene_names.py` + `audit_battle_scenes.py` + `remap_stale_scene_names.py`; vanilla renames/removes scenes between versions |
+| Compare TAOM data against current vanilla before editing mirrored XML | [.claude/rules/vanilla-data-comparison.md](./.claude/rules/vanilla-data-comparison.md) — settlements/sp_battle_scenes/spcultures/xslt; auto-loads when those files are edited |
 | Update BUTR/MCM/ButterLib dependencies | [migration/dr3-maintenance.md](./docs/migration/dr3-maintenance.md) — version pinning, Steam Workshop fallback, smoke test, risk scenarios |
 | Use agent teams | [agent-teams.md](./docs/ai-includes/agent-teams.md) |
 | Brief/spawn a subagent correctly | [agent-operating-manual.md](./docs/ai-includes/agent-operating-manual.md) — execution model (can't invoke skills), tool catalog, what to recommend |

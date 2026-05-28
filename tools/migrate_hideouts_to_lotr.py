@@ -165,16 +165,16 @@ def main() -> int:
     if not loc_dir.is_dir():
         sys.exit(f"ERROR: {loc_dir} not found")
 
-    # Read master
-    master_text = master.read_text(encoding="utf-8")
+    # Read master (preserve BOM/encoding via byte-level I/O)
+    master_had_bom = master.read_bytes().startswith(b"\xef\xbb\xbf")
+    master_text = master.read_text(encoding="utf-8-sig")
     new_master_text, master_modified = rewrite_master_xml(master_text)
 
     if args.apply and args.backup and master_modified > 0:
-        bak = master.with_suffix(master.suffix + ".bak")
-        bak.write_text(master_text, encoding="utf-8")
+        master.with_suffix(master.suffix + ".bak").write_bytes(master.read_bytes())
 
     if args.apply and master_modified > 0:
-        master.write_text(new_master_text, encoding="utf-8")
+        master.write_bytes((b"\xef\xbb\xbf" if master_had_bom else b"") + new_master_text.encode("utf-8"))
 
     # Build hideout -> new-culture map from post-rewrite master so loc files match
     post_master_map = lookup_hideout_culture_from_master(new_master_text)
@@ -187,14 +187,14 @@ def main() -> int:
         loc_file = lang_dir / "loc_settlements.xml"
         if not loc_file.exists():
             continue
-        loc_text = loc_file.read_text(encoding="utf-8")
+        loc_had_bom = loc_file.read_bytes().startswith(b"\xef\xbb\xbf")
+        loc_text = loc_file.read_text(encoding="utf-8-sig")
         new_loc_text, loc_modified = rewrite_loc_xml(loc_text, post_master_map)
         loc_results.append((loc_file, loc_modified))
         if args.apply and loc_modified > 0:
             if args.backup:
-                bak = loc_file.with_suffix(loc_file.suffix + ".bak")
-                bak.write_text(loc_text, encoding="utf-8")
-            loc_file.write_text(new_loc_text, encoding="utf-8")
+                loc_file.with_suffix(loc_file.suffix + ".bak").write_bytes(loc_file.read_bytes())
+            loc_file.write_bytes((b"\xef\xbb\xbf" if loc_had_bom else b"") + new_loc_text.encode("utf-8"))
 
     # Summary
     print(f"Master settlements.xml: {master_modified} hideouts modified")

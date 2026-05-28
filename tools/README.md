@@ -4,6 +4,24 @@ Data generation, rebalancing, and content pipeline scripts.
 
 All Python scripts support `--dry-run` (preview) and `--apply` (write). Run from the repo root.
 
+## XML I/O convention (MANDATORY for scripts that edit ModuleData XML)
+
+Bannerlord ModuleData XML is UTF-8 (some files with a BOM, e.g. `TAOM_Map/settlements.xml`; most repo files without) and CRLF. To edit byte-faithfully:
+
+```python
+had_bom = path.read_bytes().startswith(b"\xef\xbb\xbf")   # detect
+text = path.read_text(encoding="utf-8-sig")               # decode (strips BOM from the string)
+# ... regex edits ...
+path.write_bytes((b"\xef\xbb\xbf" if had_bom else b"") + text.encode("utf-8"))   # write, re-prepend BOM as bytes
+```
+
+- **Never** write the BOM as a string literal `"﻿"` (fragile if the `.py` is re-encoded).
+- **Never** read with plain `utf-8` (leaves the BOM as a stray U+FEFF in the decoded string).
+- Back up before destructive writes: `path.with_suffix(path.suffix + ".bak").write_bytes(path.read_bytes())`.
+- Scene/asset/id comparisons must be **case-insensitive** (Windows lookup is) — lowercase both sides.
+
+Reference: `docs/reviews/rca-scene-tooling-2026-05-28.md` (why this convention exists) + `.claude/rules/vanilla-data-comparison.md`.
+
 ---
 
 ## Content Generation

@@ -4190,6 +4190,7 @@
     is_bandit="true"
     can_have_settlement="true"
     encounter_background_mesh="encounter_forest_bandit"
+    faction_banner_key="11.181.166.1528.1528.764.764.1.0.0.26004.2000.171.650.650.765.800.0.0.0"
     bandit_boss_party_template="PartyTemplate.dunland_raiders_boss_party_template">
     <male_names>
       <name name="{=taom_bandit_dunland_m1}Caradoc" />
@@ -4225,6 +4226,7 @@
     is_bandit="true"
     can_have_settlement="true"
     encounter_background_mesh="encounter_steppe_bandit"
+    faction_banner_key="11.2014.166.1528.1528.764.764.1.0.0.14010.131.116.700.700.765.765.0.0.90"
     bandit_boss_party_template="PartyTemplate.rhun_raiders_boss_party_template">
     <male_names>
       <name name="{=taom_bandit_rhun_m1}Khamûl" />
@@ -4260,6 +4262,7 @@
     is_bandit="true"
     can_have_settlement="true"
     encounter_background_mesh="encounter_desert_bandit"
+    faction_banner_key="11.149.166.1528.1528.764.764.1.0.0.504.142.171.813.2468.764.599.0.0.178.504.116.171.771.2278.764.599.0.0.178.504.142.171.733.2225.764.599.0.0.178.505.142.171.813.2468.205.600.0.0.0.505.116.171.813.2468.196.600.0.0.0.505.142.171.813.2468.189.600.0.0.0.505.142.171.813.2468.1322.600.0.1.0.505.116.171.813.2468.1331.600.0.1.0.505.142.171.813.2468.1338.600.0.1.0.503.116.171.133.133.763.512.0.1.0.503.142.171.118.118.763.512.0.1.0.504.142.171.49.49.744.564.0.1.314.504.142.171.49.49.783.564.0.0.44.503.116.171.33.71.763.559.0.1.0.503.116.171.106.106.763.512.0.1.0.503.142.171.84.84.763.512.0.1.0.503.116.171.71.71.763.512.0.1.0.503.142.171.49.49.763.512.0.1.0.503.116.171.21.21.763.604.0.1.0.402.116.171.48.48.501.1028.0.1.89.402.116.171.48.48.501.959.0.1.89.402.116.171.48.48.501.892.0.1.89.402.116.171.48.48.501.824.0.1.89.402.116.171.48.48.501.754.0.1.89.402.116.171.48.48.501.690.0.1.89.402.116.171.48.48.501.621.0.1.89.402.116.171.48.48.501.552.0.1.89.402.116.171.48.48.501.486.0.1.89.402.116.171.48.48.501.417.0.1.89.402.116.171.48.48.501.354.0.1.89.402.116.171.48.48.1025.1028.0.1.89.402.116.171.48.48.1025.959.0.1.89.402.116.171.48.48.1025.892.0.1.89.402.116.171.48.48.1025.824.0.1.89.402.116.171.48.48.1025.754.0.1.89.402.116.171.48.48.1025.690.0.1.89.402.116.171.48.48.1025.621.0.1.89.402.116.171.48.48.1025.552.0.1.89.402.116.171.48.48.1025.486.0.1.89.402.116.171.48.48.1025.417.0.1.89.402.116.171.48.48.1025.354.0.1.89.505.116.171.813.2468.109.600.0.0.0.505.142.171.813.2468.103.600.0.0.0.505.116.171.813.2468.1418.600.0.1.0.505.142.171.813.2468.1424.600.0.1.0.504.116.171.26.139.764.408.0.1.0.504.116.171.26.139.681.574.0.1.127.504.116.171.26.139.847.574.0.0.230.504.116.171.26.139.866.521.0.0.269.504.116.171.26.139.662.521.0.1.89.504.116.171.26.139.862.473.0.0.285.504.116.171.26.139.821.423.0.0.327.504.116.171.26.139.707.423.0.1.30.504.116.171.26.139.666.473.0.1.71.13000.2000.116.300.300.755.797.0.0.0"
     bandit_boss_party_template="PartyTemplate.harad_raiders_boss_party_template">
     <male_names>
       <name name="{=taom_bandit_harad_m1}Suladân" />
@@ -4295,6 +4298,7 @@
     is_bandit="true"
     can_have_settlement="true"
     encounter_background_mesh="encounter_mountain_bandit"
+    faction_banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0"
     bandit_boss_party_template="PartyTemplate.gundabad_raiders_boss_party_template">
     <male_names>
       <name name="{=taom_bandit_gundabad_m1}Bolg" />
@@ -4330,6 +4334,7 @@
     is_bandit="true"
     can_have_settlement="true"
     encounter_background_mesh="encounter_sea_raider"
+    faction_banner_key="11.149.166.1528.1528.764.764.1.0.0.505.266.171.483.483.764.764.0.0.44.505.142.171.451.451.764.764.0.0.43.505.266.171.483.483.764.764.0.0.0.505.2014.171.451.451.764.764.0.0.0.503.266.171.40.40.764.532.0.0.0.503.266.171.40.40.764.995.0.0.0.503.266.171.40.40.995.764.0.0.0.503.266.171.40.40.533.764.0.0.0.12000.266.116.200.200.768.774.1.0.0.502.266.116.350.350.765.765.1.0.45.502.266.116.350.350.765.765.1.0.0"
     bandit_boss_party_template="PartyTemplate.umbar_corsairs_boss_party_template">
     <male_names>
       <name name="{=taom_bandit_umbar_m1}Castamir" />
@@ -4373,6 +4378,7 @@
     is_bandit="true"
     can_have_settlement="true"
     encounter_background_mesh="encounter_forest_bandit"
+    faction_banner_key="11.149.149.1528.1528.764.764.1.0.0.10000.172.2000.580.580.765.825.0.0.0"
     bandit_boss_party_template="PartyTemplate.gondor_soldiers_boss_party_template">
     <male_names>
       <name name="{=taom_bandit_gondor_m1}Bergil" />
@@ -4408,6 +4414,7 @@
     is_bandit="true"
     can_have_settlement="true"
     encounter_background_mesh="encounter_mountain_bandit"
+    faction_banner_key="11.100.75.4345.4345.764.764.1.0.0.521.172.100.62.62.630.618.0.0.268.521.172.100.54.54.548.703.0.0.268.521.172.100.42.42.571.810.0.0.268.521.172.100.62.62.899.618.0.1.88.521.172.100.54.54.980.703.0.1.88.521.172.100.42.42.957.810.0.1.88.24019.31.240.400.400.765.873.1.0.0.24510.31.240.200.200.765.556.1.0.0"
     bandit_boss_party_template="PartyTemplate.erebor_warriors_boss_party_template">
     <male_names>
       <name name="{=taom_bandit_erebor_m1}Nargûm" />
@@ -4443,6 +4450,7 @@
     is_bandit="true"
     can_have_settlement="true"
     encounter_background_mesh="encounter_forest_bandit"
+    faction_banner_key="11.2.166.1528.1528.764.764.1.0.0.505.53.171.484.484.764.764.0.0.45.505.126.171.470.470.764.764.0.0.45.505.53.171.454.454.764.764.0.0.45.17003.164.116.500.500.766.770.1.0.0.17002.96.116.500.500.770.772.1.0.0"
     bandit_boss_party_template="PartyTemplate.mirkwood_stalkers_boss_party_template">
     <male_names>
       <name name="{=taom_bandit_mirkwood_m1}Faeglir" />

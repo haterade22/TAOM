@@ -158,8 +158,7 @@ def main() -> int:
     if args.backup:
         master.with_suffix(".xml.bak3").write_bytes(master.read_bytes())
     new_content = new_content.replace("</Settlements>", "".join(new_blocks) + "</Settlements>", 1)
-    bom = "﻿" if had_bom else ""
-    master.write_text(bom + new_content, encoding="utf-8")
+    master.write_bytes((b"\xef\xbb\xbf" if had_bom else b"") + new_content.encode("utf-8"))
     print(f"[APPLY] settlements.xml: +{len(new_blocks)} -{len(removed)}")
 
     line = lambda k, t: f'    <string id="{k}" text="{t}" />\n'
@@ -179,7 +178,7 @@ def main() -> int:
             lc = lc.replace("</base>", block + "</base>", 1)
         if args.backup:
             lf.with_suffix(".xml.bak3").write_bytes(lf.read_bytes())
-        lf.write_text(("﻿" if lbom else "") + lc, encoding="utf-8")
+        lf.write_bytes((b"\xef\xbb\xbf" if lbom else b"") + lc.encode("utf-8"))
     print(f"[APPLY] loc: +{len(loc_add)} -{len(remove_keys)} across {len(LOC_LANGS)} langs")
     return 0
 

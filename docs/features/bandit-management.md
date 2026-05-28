@@ -123,6 +123,10 @@ The 99 existing hideouts in `TAOM_Map/ModuleData/settlements.xml` (external modu
 
 Migration is driven by [`tools/migrate_hideouts_to_lotr.py`](../../tools/migrate_hideouts_to_lotr.py). Safe to re-run idempotently. `--backup` flag writes `.bak` copies of each modified file before overwriting.
 
+### Hideout scenes (scene_name) — must exist on disk
+
+A hideout's `<Location id="hideout_center" scene_name="X">` must resolve to a `Modules/*/SceneObj/X/` folder or **raiding it crashes**. The 99 vanilla-derived hideouts use stock scenes that exist (`bandit_forest_sv`, `desert_hideout_002/004_sv`, `hideout_steppe_001/002_sv`, `mountain_hideout_002/004_sv`, `sea_bandit_a-d_sv`). The 30 wave-2 hideouts (`hideout_gondor/erebor/mirkwood_*`) reference editor scenes not yet exported to `SceneObj/`, so they are **interim-repointed to vanilla hideout scenes** (gondor/mirkwood → `forest_hideout_004_sv`, erebor → `mountain_hideout_002_sv`) to prevent raid crashes; revert each `scene_name` to its settlement id once the custom scenes are compiled. Verify scene refs with [`tools/audit_scene_names.py`](../../tools/audit_scene_names.py) — see [`docs/reference/scene-reference-audit.md`](../reference/scene-reference-audit.md). Vanilla renames scenes between versions, so re-run the audit after any Bannerlord bump.
+
 ## Key Files
 
 | File | Purpose |

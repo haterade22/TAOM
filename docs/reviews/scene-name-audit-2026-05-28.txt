@@ -1,0 +1,344 @@
+On-disk SceneObj folders: 651 | SceneEditData (WIP): 73 (case-insensitive)
+
+vanilla_SandBox: 6 distinct scene_names referenced (E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\SandBox\ModuleData\settlements.xml)
+vanilla_NavalDLC: 7 distinct scene_names referenced (E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\NavalDLC\ModuleData\settlements.xml)
+TAOM_Map: 229 distinct scene_names referenced (E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\TAOM_Map\ModuleData\settlements.xml)
+TAOM_shadow: 189 distinct scene_names referenced (E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\TAOM\ModuleData\settlements.xml)
+
+======================================================================
+CRASH SUSPECTS — scene_name referenced but NO matching SceneObj folder
+======================================================================
+
+[TAOM_Map] 38 missing from SceneObj:
+  battania_house_a_interior_house *** NO SCENE ANYWHERE ***
+      <- town_L1, town_L1, town_L1, town_M1 ...
+  castle_orthanc_gate *** NO SCENE ANYWHERE ***
+      <- castle_orthanc_gate
+  castle_village_isengard_a *** NO SCENE ANYWHERE ***
+      <- castle_village_isengard_a
+  hideout_erebor_1 *** NO SCENE ANYWHERE ***
+      <- hideout_erebor_1
+  hideout_erebor_10 *** NO SCENE ANYWHERE ***
+      <- hideout_erebor_10
+  hideout_erebor_2 *** NO SCENE ANYWHERE ***
+      <- hideout_erebor_2
+  hideout_erebor_3 *** NO SCENE ANYWHERE ***
+      <- hideout_erebor_3
+  hideout_erebor_4 *** NO SCENE ANYWHERE ***
+      <- hideout_erebor_4
+  hideout_erebor_5 *** NO SCENE ANYWHERE ***
+      <- hideout_erebor_5
+  hideout_erebor_6 *** NO SCENE ANYWHERE ***
+      <- hideout_erebor_6
+  hideout_erebor_7 *** NO SCENE ANYWHERE ***
+      <- hideout_erebor_7
+  hideout_erebor_8 *** NO SCENE ANYWHERE ***
+      <- hideout_erebor_8
+  hideout_erebor_9 *** NO SCENE ANYWHERE ***
+      <- hideout_erebor_9
+  hideout_gondor_1 *** NO SCENE ANYWHERE ***
+      <- hideout_gondor_1
+  hideout_gondor_10 *** NO SCENE ANYWHERE ***
+      <- hideout_gondor_10
+  hideout_gondor_2 *** NO SCENE ANYWHERE ***
+      <- hideout_gondor_2
+  hideout_gondor_3 *** NO SCENE ANYWHERE ***
+      <- hideout_gondor_3
+  hideout_gondor_4 *** NO SCENE ANYWHERE ***
+      <- hideout_gondor_4
+  hideout_gondor_5 *** NO SCENE ANYWHERE ***
+      <- hideout_gondor_5
+  hideout_gondor_6 *** NO SCENE ANYWHERE ***
+      <- hideout_gondor_6
+  hideout_gondor_7 *** NO SCENE ANYWHERE ***
+      <- hideout_gondor_7
+  hideout_gondor_8 *** NO SCENE ANYWHERE ***
+      <- hideout_gondor_8
+  hideout_gondor_9 *** NO SCENE ANYWHERE ***
+      <- hideout_gondor_9
+  hideout_mirkwood_1 *** NO SCENE ANYWHERE ***
+      <- hideout_mirkwood_1
+  hideout_mirkwood_10 *** NO SCENE ANYWHERE ***
+      <- hideout_mirkwood_10
+  hideout_mirkwood_2 *** NO SCENE ANYWHERE ***
+      <- hideout_mirkwood_2
+  hideout_mirkwood_3 *** NO SCENE ANYWHERE ***
+      <- hideout_mirkwood_3
+  hideout_mirkwood_4 *** NO SCENE ANYWHERE ***
+      <- hideout_mirkwood_4
+  hideout_mirkwood_5 *** NO SCENE ANYWHERE ***
+      <- hideout_mirkwood_5
+  hideout_mirkwood_6 *** NO SCENE ANYWHERE ***
+      <- hideout_mirkwood_6
+  hideout_mirkwood_7 *** NO SCENE ANYWHERE ***
+      <- hideout_mirkwood_7
+  hideout_mirkwood_8 *** NO SCENE ANYWHERE ***
+      <- hideout_mirkwood_8
+  hideout_mirkwood_9 *** NO SCENE ANYWHERE ***
+      <- hideout_mirkwood_9
+  khuzait_house_a_interior_house *** NO SCENE ANYWHERE ***
+      <- town_RU1, town_RU1, town_RU1, town_RU2 ...
+  lotraom_e_osgiliath_i_forceatmo *** NO SCENE ANYWHERE ***
+      <- town_EW3
+  sturgia_house_a_interior_house *** NO SCENE ANYWHERE ***
+      <- town_E1, town_E1, town_E1, town_E2 ...
+  village_isengard_a *** NO SCENE ANYWHERE ***
+      <- village_isengard_a
+  vlandia_house_d_interior_house *** NO SCENE ANYWHERE ***
+      <- town_V4, town_V4, town_V4
+
+[TAOM_shadow] 8 missing from SceneObj:
+  battania_house_a_interior_house *** NO SCENE ANYWHERE ***
+      <- town_L1, town_L1, town_L1, town_M1 ...
+  castle_orthanc_gate *** NO SCENE ANYWHERE ***
+      <- castle_orthanc_gate
+  castle_village_isengard_a *** NO SCENE ANYWHERE ***
+      <- castle_village_isengard_a
+  khuzait_house_a_interior_house *** NO SCENE ANYWHERE ***
+      <- town_RU1, town_RU1, town_RU1, town_RU2 ...
+  sturgia_house_a_interior_house *** NO SCENE ANYWHERE ***
+      <- town_E1, town_E1, town_E1, town_E2 ...
+  town_isengard *** NO SCENE ANYWHERE ***
+      <- town_isengard
+  village_isengard_a *** NO SCENE ANYWHERE ***
+      <- village_isengard_a
+  vlandia_house_d_interior_house *** NO SCENE ANYWHERE ***
+      <- town_V4, town_V4, town_V4
+
+======================================================================
+DIFF — TAOM_Map scenes NOT used by vanilla (custom or possibly stale)
+======================================================================
+  [OK] Barad_Faen_Castle
+  [OK] Bergraw_Castle
+  [OK] Camloth_Village
+  [OK] HART_isengard
+  [OK] Helms_Deep_Town_forceatmo
+  [OK] Lossarnach_Town
+  [OK] Melgobas_Castle
+  [OK] Mereham_Village
+  [OK] arabian_house_new_a_interior_a_house
+  [OK] arena_aserai_a
+  [OK] arena_battania_a
+  [OK] arena_empire_a
+  [OK] arena_khuzait_a
+  [OK] arena_sturgia_a
+  [OK] aserai_castle_002
+  [OK] aserai_castle_a
+  [OK] aserai_castle_c
+  [OK] aserai_castle_d
+  [OK] aserai_dungeon_stealth
+  [OK] aserai_tavern_interior
+  [OK] aserai_town_a
+  [OK] aserai_town_b
+  [OK] aserai_town_c
+  [OK] aserai_town_d
+  [OK] aserai_town_e
+  [OK] aserai_town_f
+  [OK] aserai_town_g
+  [OK] aserai_town_h
+  [OK] aserai_village_b
+  [OK] aserai_village_c
+  [OK] aserai_village_d
+  [OK] aserai_village_e
+  [OK] aserai_village_g
+  [OK] aserai_village_j
+  [OK] aserai_village_k
+  [OK] aserai_village_l
+  [OK] aserai_village_m
+  [OK] bandit_forest_sv
+  [OK] battania_castle_a
+  [OK] battania_castle_b
+  [OK] battania_dungeon_stealth
+  [MISSING] battania_house_a_interior_house
+  [OK] battania_town_a
+  [OK] battania_town_b
+  [OK] battania_town_c
+  [OK] battania_town_d
+  [OK] battania_town_house_a_interior_a_tavern
+  [OK] battania_village
+  [OK] battania_village_e
+  [OK] battania_village_g
+  [OK] battania_village_h
+  [OK] battania_village_i
+  [OK] battania_village_j
+  [OK] battania_village_k
+  [OK] battania_village_l
+  [OK] battania_village_m
+  [MISSING] castle_orthanc_gate
+  [MISSING] castle_village_isengard_a
+  [OK] desert_hideout_002_sv
+  [OK] desert_hideout_004_sv
+  [OK] empire_castle_004
+  [OK] empire_castle_b
+  [OK] empire_castle_c
+  [OK] empire_castle_f
+  [OK] empire_castle_g
+  [OK] empire_dungeon_a
+  [OK] empire_dungeon_stealth
+  [OK] empire_house_c_tavern_a
+  [OK] empire_house_d_interior_house
+  [OK] empire_siege_001
+  [OK] empire_town_a
+  [OK] empire_town_b
+  [OK] empire_town_e
+  [OK] empire_town_g
+  [OK] empire_town_h
+  [OK] empire_town_k
+  [OK] empire_town_l
+  [OK] empire_town_m
+  [OK] empire_town_p
+  [OK] empire_town_q
+  [OK] empire_town_r
+  [OK] empire_town_s
+  [OK] empire_village_001
+  [OK] empire_village_002
+  [OK] empire_village_003
+  [OK] empire_village_004
+  [OK] empire_village_007
+  [OK] empire_village_008
+  [OK] empire_village_011
+  [OK] empire_village_a
+  [OK] empire_village_b
+  [OK] empire_village_c
+  [OK] empire_village_d
+  [OK] empire_village_e
+  [OK] empire_village_f
+  [OK] empire_village_g
+  [OK] empire_village_h
+  [OK] empire_village_i
+  [OK] empire_village_j
+  [OK] empire_village_k
+  [OK] empire_village_l
+  [OK] empire_village_m
+  [OK] empire_village_o
+  [OK] empire_village_p
+  [OK] empire_village_r
+  [OK] empire_village_t
+  [OK] empire_village_u
+  [OK] empire_village_v
+  [OK] empire_village_x
+  [OK] empire_village_z
+  [OK] forest_hideout_004_sv
+  [MISSING] hideout_erebor_1
+  [MISSING] hideout_erebor_10
+  [MISSING] hideout_erebor_2
+  [MISSING] hideout_erebor_3
+  [MISSING] hideout_erebor_4
+  [MISSING] hideout_erebor_5
+  [MISSING] hideout_erebor_6
+  [MISSING] hideout_erebor_7
+  [MISSING] hideout_erebor_8
+  [MISSING] hideout_erebor_9
+  [MISSING] hideout_gondor_1
+  [MISSING] hideout_gondor_10
+  [MISSING] hideout_gondor_2
+  [MISSING] hideout_gondor_3
+  [MISSING] hideout_gondor_4
+  [MISSING] hideout_gondor_5
+  [MISSING] hideout_gondor_6
+  [MISSING] hideout_gondor_7
+  [MISSING] hideout_gondor_8
+  [MISSING] hideout_gondor_9
+  [MISSING] hideout_mirkwood_1
+  [MISSING] hideout_mirkwood_10
+  [MISSING] hideout_mirkwood_2
+  [MISSING] hideout_mirkwood_3
+  [MISSING] hideout_mirkwood_4
+  [MISSING] hideout_mirkwood_5
+  [MISSING] hideout_mirkwood_6
+  [MISSING] hideout_mirkwood_7
+  [MISSING] hideout_mirkwood_8
+  [MISSING] hideout_mirkwood_9
+  [OK] hideout_steppe_001_sv
+  [OK] hideout_steppe_002_sv
+  [OK] khuzait_castle_002
+  [OK] khuzait_castle_siege_001
+  [OK] khuzait_city_b
+  [OK] khuzait_dungeon_stealth
+  [MISSING] khuzait_house_a_interior_house
+  [OK] khuzait_house_c_interior_a_house
+  [OK] khuzait_tavern_a
+  [OK] khuzait_town_004
+  [OK] khuzait_town_e
+  [OK] khuzait_town_f
+  [OK] khuzait_town_g
+  [OK] khuzait_village_a
+  [OK] khuzait_village_b
+  [OK] khuzait_village_c
+  [OK] khuzait_village_d
+  [OK] khuzait_village_e
+  [OK] khuzait_village_f
+  [OK] khuzait_village_g
+  [OK] khuzait_village_h
+  [OK] khuzait_village_i
+  [OK] khuzait_village_j
+  [OK] khuzait_village_k
+  [OK] khuzait_village_l
+  [MISSING] lotraom_e_osgiliath_i_forceatmo
+  [OK] lotraom_w_osgiliath_i_forceatmo
+  [OK] lotrtaom_hat_gondor_town_calembel
+  [OK] lotrtaom_minas_tirith_forceatmo
+  [OK] mountain_hideout_002_sv
+  [OK] mountain_hideout_004_sv
+  [OK] scn_retirement
+  [OK] sea_bandit_a_sv
+  [OK] sea_bandit_b_sv
+  [OK] sea_bandit_c_sv
+  [OK] sea_bandit_d_sv
+  [OK] sturgia_castle_003
+  [OK] sturgia_castle_c
+  [OK] sturgia_castle_siege_001
+  [OK] sturgia_dungeon_stealth
+  [MISSING] sturgia_house_a_interior_house
+  [OK] sturgia_house_b_interior_tavern
+  [OK] sturgia_town_a
+  [OK] sturgia_town_b
+  [OK] sturgia_town_c
+  [OK] sturgia_town_d
+  [OK] sturgia_town_f
+  [OK] sturgia_town_g
+  [OK] sturgia_town_house_d1_interior_b_house
+  [OK] sturgia_village_a
+  [OK] sturgia_village_b
+  [OK] sturgia_village_c
+  [OK] sturgia_village_d
+  [OK] sturgia_village_e
+  [OK] sturgia_village_f
+  [OK] sturgia_village_g
+  [OK] sturgia_village_h
+  [OK] sturgia_village_j
+  [OK] sturgia_village_k
+  [OK] sturgia_village_l
+  [MISSING] village_isengard_a
+  [OK] vlandia_castle_005a
+  [OK] vlandia_castle_a
+  [OK] vlandia_castle_c
+  [OK] vlandia_castle_d
+  [OK] vlandia_city_a
+  [MISSING] vlandia_house_d_interior_house
+  [OK] vlandia_town_a
+  [OK] vlandia_town_e
+  [OK] vlandia_town_g
+  [OK] vlandia_village_b
+  [OK] vlandia_village_c
+  [OK] vlandia_village_d
+  [OK] vlandia_village_f
+  [OK] vlandia_village_g
+  [OK] vlandia_village_h
+  [OK] vlandia_village_i
+  [OK] vlandia_village_j
+  [OK] vlandia_village_k
+  [OK] vlandia_village_l
+  [OK] vlandia_village_m
+  [OK] vlandia_village_n
+
+======================================================================
+VANILLA scene_name inventory (v1.4.5 SandBox + NavalDLC), folder presence
+======================================================================
+  [OK ] arena_vlandia_a
+  [OK ] vlandia_city_house_a_interior_house
+  [OK ] vlandia_dungeon_stealth
+  [OK ] vlandia_shipyard
+  [OK ] vlandia_tavern_interior_a
+  [OK ] vlandia_town_c
+  [OK ] vlandia_village_e
