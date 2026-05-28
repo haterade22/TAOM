@@ -54,14 +54,8 @@
                     slot="Item1"
                     id="Item.wm_isengard_shield_a04" />
                 <equipment
-                    slot="Head"
-                    id="Item.sk_uruk_hai_helmet_sword_light_a1" />
-                <equipment
                     slot="Body"
                     id="Item.sk_uruk_hai_tunic_a1" />
-                <equipment
-                    slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_light_a1" />
                 <equipment
                     slot="Gloves"
                     id="Item.sk_uruk_hai_gloves_a1" />
@@ -115,6 +109,8 @@
                 id="NPCCharacter.urukhai_warrior" />
             <upgrade_target
                 id="NPCCharacter.urukhai_skirmisher" />
+            <upgrade_target
+                id="NPCCharacter.urukhai_scout" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
@@ -222,7 +218,7 @@
         id="urukhai_scout"
         race="uruk_hai"
         default_group="Ranged"
-        level="6"
+        level="16"
         name="{=aom_urukhai_scout_name}[Isengard] Uruk-Hai Scout"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -233,52 +229,59 @@
         <skills>
             <skill
                 id="Athletics"
-                value="60" />
+                value="95" />
             <skill
                 id="Riding"
-                value="15" />
+                value="20" />
             <skill
                 id="OneHanded"
-                value="40" />
+                value="80" />
             <skill
                 id="TwoHanded"
-                value="40" />
+                value="60" />
             <skill
                 id="Polearm"
-                value="45" />
+                value="60" />
             <skill
                 id="Bow"
-                value="55" />
+                value="85" />
             <skill
                 id="Crossbow"
-                value="25" />
+                value="35" />
             <skill
                 id="Throwing"
-                value="30" />
+                value="40" />
         </skills>
         <upgrade_targets>
             <upgrade_target
-                id="NPCCharacter.urukhai_feller" />
-            <upgrade_target
-                id="NPCCharacter.urukhai_hunter" />
+                id="NPCCharacter.urukhai_tracker" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_2h_axe_b" />
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.isengard_1h_sword_b" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_isengard_arrow_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.urukscout_helmet" />
+                    id="Item.sk_uruk_hai_helmet_skir_a2" />
                 <equipment
                     slot="Body"
-                    id="Item.urukscout_body" />
+                    id="Item.sk_uruk_hai_plate_light_a1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_light_a2" />
                 <equipment
                     slot="Gloves"
-                    id="Item.urukscout_gloves" />
+                    id="Item.sk_uruk_hai_bracer_light_a2" />
                 <equipment
                     slot="Leg"
-                    id="Item.urukscout_boots" />
+                    id="Item.sk_uruk_hai_greaves_medium_a1" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -326,6 +329,8 @@
                 id="NPCCharacter.urukhai_spearman" />
             <upgrade_target
                 id="NPCCharacter.urukhai_swordman" />
+            <upgrade_target
+                id="NPCCharacter.urukhai_feller" />
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
@@ -358,7 +363,7 @@
         id="urukhai_feller"
         race="uruk_hai"
         default_group="Infantry"
-        level="11"
+        level="21"
         name="{=aom_urukhai_feller_name}[Isengard] Uruk-Hai Feller"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -369,19 +374,19 @@
         <skills>
             <skill
                 id="Athletics"
-                value="90" />
+                value="105" />
             <skill
                 id="Riding"
                 value="20" />
             <skill
                 id="OneHanded"
-                value="100" />
+                value="125" />
             <skill
                 id="TwoHanded"
-                value="100" />
+                value="150" />
             <skill
                 id="Polearm"
-                value="110" />
+                value="130" />
             <skill
                 id="Bow"
                 value="15" />
@@ -390,7 +395,7 @@
                 value="20" />
             <skill
                 id="Throwing"
-                value="40" />
+                value="60" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -400,19 +405,22 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_2h_axe_b" />
+                    id="Item.isengard_2h_axe_a" />
                 <equipment
                     slot="Head"
-                    id="Item.clo_urukscout_helmet" />
+                    id="Item.sk_uruk_hai_helmet_sword_med_a2" />
                 <equipment
                     slot="Body"
-                    id="Item.urukscout_body" />
+                    id="Item.sk_uruk_hai_plate_med_b1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
                 <equipment
                     slot="Gloves"
-                    id="Item.urukscout_gloves" />
+                    id="Item.sk_uruk_hai_bracer_medium_a2" />
                 <equipment
                     slot="Leg"
-                    id="Item.urukscout_boots" />
+                    id="Item.sk_uruk_hai_greaves_medium_a3" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -605,10 +613,7 @@
                 id="Throwing"
                 value="40" />
         </skills>
-        <upgrade_targets>
-            <upgrade_target
-                id="NPCCharacter.urukhai_tracker" />
-        </upgrade_targets>
+        <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
                 <equipment
@@ -860,7 +865,7 @@
         id="urukhai_slayer"
         race="uruk_hai"
         default_group="Infantry"
-        level="16"
+        level="26"
         name="{=aom_urukhai_slayer_name}[Isengard] Uruk-Hai Slayer"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -871,28 +876,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="105" />
+                value="110" />
             <skill
                 id="Riding"
-                value="20" />
+                value="25" />
             <skill
                 id="OneHanded"
-                value="135" />
+                value="170" />
             <skill
                 id="TwoHanded"
-                value="125" />
+                value="185" />
             <skill
                 id="Polearm"
-                value="145" />
+                value="185" />
             <skill
                 id="Bow"
-                value="15" />
-            <skill
-                id="Crossbow"
                 value="20" />
             <skill
+                id="Crossbow"
+                value="25" />
+            <skill
                 id="Throwing"
-                value="60" />
+                value="80" />
         </skills>
         <upgrade_targets>
             <upgrade_target
@@ -902,19 +907,22 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_2h_axe_a" />
+                    id="Item.isengard_2h_axe_b" />
                 <equipment
                     slot="Head"
-                    id="Item.urukscout_helmet" />
+                    id="Item.sk_uruk_hai_helmet_sword_med_a4" />
                 <equipment
                     slot="Body"
-                    id="Item.urukscout_body" />
+                    id="Item.sk_uruk_hai_plate_heavy_b1" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a3" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_uruk_hai_bracer_light_a1" />
+                    id="Item.sk_uruk_hai_bracer_heavy_a1" />
                 <equipment
                     slot="Leg"
-                    id="Item.urukscout_boots" />
+                    id="Item.sk_uruk_hai_greaves_heavy_a1" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -923,7 +931,7 @@
         id="urukhai_tracker"
         race="uruk_hai"
         default_group="Ranged"
-        level="16"
+        level="21"
         name="{=aom_urukhai_tracker_name}[Isengard] Uruk-Hai Tracker"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -965,7 +973,7 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.wm_isengard_bow_a01" />
+                    id="Item.wm_isengard_bow_a02" />
                 <equipment
                     slot="Item1"
                     id="Item.isengard_1h_sword_b" />
@@ -974,16 +982,19 @@
                     id="Item.wm_isengard_arrow_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.urukscout_helmet" />
+                    id="Item.sk_uruk_hai_helmet_sapper_a1" />
                 <equipment
                     slot="Body"
-                    id="Item.urukscout_body" />
+                    id="Item.sk_uruk_hai_plate_light_a2" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_uruk_hai_pauldron_med_a1" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_uruk_hai_bracer_light_a2" />
+                    id="Item.sk_uruk_hai_bracer_medium_a1" />
                 <equipment
                     slot="Leg"
-                    id="Item.urukscout_boots" />
+                    id="Item.sk_uruk_hai_greaves_medium_a2" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1409,7 +1420,7 @@
         id="urukhai_reaver"
         race="uruk_hai"
         default_group="Infantry"
-        level="21"
+        level="31"
         name="{=aom_urukhai_reaver_name}[Isengard] Uruk-Hai Reaver"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -1420,50 +1431,50 @@
         <skills>
             <skill
                 id="Athletics"
-                value="110" />
+                value="130" />
             <skill
                 id="Riding"
-                value="25" />
+                value="30" />
             <skill
                 id="OneHanded"
-                value="170" />
+                value="225" />
             <skill
                 id="TwoHanded"
-                value="185" />
+                value="240" />
             <skill
                 id="Polearm"
-                value="185" />
+                value="250" />
             <skill
                 id="Bow"
-                value="20" />
-            <skill
-                id="Crossbow"
                 value="25" />
             <skill
+                id="Crossbow"
+                value="30" />
+            <skill
                 id="Throwing"
-                value="80" />
+                value="90" />
         </skills>
         <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.isengard_2h_axe_a" />
+                    id="Item.isengard_2h_axe_c" />
                 <equipment
                     slot="Head"
-                    id="Item.urukscout_helmet" />
+                    id="Item.sk_uruk_hai_helmet_sword_heavy_a2" />
                 <equipment
                     slot="Body"
-                    id="Item.urukscout_body" />
+                    id="Item.sk_uruk_hai_plate_heavy_b2" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_light_a2" />
+                    id="Item.sk_uruk_hai_pauldron_heavy_a1" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_uruk_hai_bracer_medium_a1" />
+                    id="Item.sk_uruk_hai_bracer_elite_a1" />
                 <equipment
                     slot="Leg"
-                    id="Item.urukscout_boots" />
+                    id="Item.sk_uruk_hai_greaves_heavy_a2" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
@@ -1472,7 +1483,7 @@
         id="urukhai_archer"
         race="uruk_hai"
         default_group="Ranged"
-        level="21"
+        level="26"
         name="{=aom_urukhai_archer_name}[Isengard] Uruk-Hai Archer"
         occupation="Soldier"
         culture="Culture.isengard">
@@ -1506,10 +1517,7 @@
                 id="Throwing"
                 value="60" />
         </skills>
-        <upgrade_targets>
-            <upgrade_target
-                id="NPCCharacter.urukhai_chosenmarksman" />
-        </upgrade_targets>
+        <upgrade_targets />
         <Equipments>
             <EquipmentRoster>
                 <equipment
@@ -1517,28 +1525,25 @@
                     id="Item.wm_isengard_bow_a02" />
                 <equipment
                     slot="Item1"
-                    id="Item.isengard_1h_sword_b" />
+                    id="Item.isengard_1h_sword_a" />
                 <equipment
                     slot="Item2"
-                    id="Item.wm_isengard_shield_a04" />
-                <equipment
-                    slot="Item3"
                     id="Item.wm_isengard_arrow_a01" />
                 <equipment
                     slot="Head"
-                    id="Item.urukscout_helmet" />
+                    id="Item.sk_uruk_hai_helmet_cross_a1" />
                 <equipment
                     slot="Body"
-                    id="Item.urukscout_body" />
+                    id="Item.sk_uruk_hai_plate_med_a1" />
                 <equipment
                     slot="Cape"
-                    id="Item.sk_uruk_hai_pauldron_light_a3" />
+                    id="Item.sk_uruk_hai_pauldron_med_a2" />
                 <equipment
                     slot="Gloves"
-                    id="Item.sk_uruk_hai_bracer_medium_a2" />
+                    id="Item.sk_uruk_hai_bracer_medium_a3" />
                 <equipment
                     slot="Leg"
-                    id="Item.urukscout_boots" />
+                    id="Item.sk_uruk_hai_greaves_medium_a3" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

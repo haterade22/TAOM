@@ -2,6 +2,24 @@
 
 ## 2026-05-28
 
+### feat(isengard): fold Scout sub-tree into main tree (bow + 2H lines) + recruitment pool
+
+Dismantled the standalone Uruk-Hai Scout sub-tree and folded its troops into the main Recruit→Fighter→Warrior progression, per the in-game tree review.
+
+**Bow line under Fighter** — `urukhai_fighter` now upgrades to Scout (alongside Warrior + Skirmisher). Scout (L6→L16) → Tracker (L16→L21) → Archer (L21→L26), cloning the Skirmisher/Arbalest/Crossbowman gear + skills but with the Isengard bow (`wm_isengard_bow_a01`/`a02`) + arrows (`wm_isengard_arrow_a01`) instead of crossbow + bolts. Bow primary at each tier (85/130/170).
+
+**2H line under Warrior** — `urukhai_warrior` now upgrades to Feller (alongside Spearman + Swordman). Feller (L11→L21) → Slayer (L16→L26) → Reaver (L21→L31), cloning the Swordman/Infantry/White-Hand gear + skills but with Isengard 2H axes (`isengard_2h_axe_a`/`b`/`c`, no shield); OneHanded↔TwoHanded swapped so TwoHanded is primary.
+
+**Orphaned** (save-compat — kept in file, dropped from upgrade graph): `urukhai_hunter` (L11) + `urukhai_chosenmarksman` (L26), the old bow line's middle + top. Still valid troops for existing saves + party templates; just unreachable via upgrade.
+
+**Recruit trim** — `urukhai_recruit` (L6) loses its helmet (`sk_uruk_hai_helmet_sword_light_a1`) + shoulder/pauldron (`sk_uruk_hai_pauldron_light_a1`); a level-6 levy doesn't need them. Keeps sword + shield + body + gloves + boots.
+
+**Recruitment pool (new)** — Isengard had none (hostile-faction only; `GetVolunteerTroopId` returned null). New `InitializeIsengardCulture()` adds a culture-level pool (total weight 10): Recruit 4, Skirmisher 2, Orc Warg-Rider Scout 2, Warrior 1, Scout 1. Applies to all Isengard settlements. 3 unit tests (low/mid/high roll).
+
+Verification: `validate_all_troop_refs.py` PASS (all `sk_uruk_hai_*` / `urukscout_*` armor + bow/axe weapon IDs resolve); tree-shape check confirms fighter→{warrior,skirmisher,scout}, warrior→{spearman,swordman,feller}, bow line scout→tracker→archer terminal, 2H line feller→slayer→reaver terminal, hunter+chosenmarksman orphaned; 14/14 Volunteer tests pass (3 new Isengard). C# compiles (deploy step blocked by locked `0Harmony.dll` — environment, Bannerlord open).
+
+Save-compat: all troop IDs preserved (re-tier + re-equip only). Party templates reference the moved troops by ID — still resolve; tier shifts nudge AI composition but don't break. Recruitment pool is additive.
+
 ### feat(skills): add /finish-branch — trunk-integration workflow capture
 
 Captures the branch-integration workflow we ran by hand twice this session (the knowledge-base merges + the may27a lint-cleanup merge) as a skill, per the "Workflow → Skill" convention. Passes the three-part filter: repeatable (every merge), multi-step (FF-check → merge → backlinks → CHANGELOG → delete branch local+remote → push), and carries TAOM-specific gotchas (FF-vs-real-merge detection, don't sweep parallel-work backlink drift into the merge commit, `git branch -d` as a merge gate, push-to-becoming-master confirmation).

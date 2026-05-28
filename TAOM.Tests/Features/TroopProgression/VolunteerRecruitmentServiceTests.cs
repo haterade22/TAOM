@@ -1923,4 +1923,56 @@ public class VolunteerRecruitmentServiceTests
 
         Assert.AreEqual("rohan_wold_recruit", result);
     }
+
+    // --- Isengard (Uruk-Hai) culture recruitment pool ---
+    // Pool weights (total 10): urukhai_recruit(4) + urukhai_skirmisher(2) + orc_warg_scout(2)
+    //   + urukhai_warrior(1) + urukhai_scout(1).
+    // Cumulative: [0..3]=recruit, [4..5]=skirmisher, [6..7]=warg_scout, [8]=warrior, [9]=scout.
+
+    [TestMethod]
+    public void GetVolunteerTroopId_IsengardCulture_LowRoll_ReturnsRecruit()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "isengard");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("urukhai_recruit", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_IsengardCulture_MidRoll_ReturnsSkirmisher()
+    {
+        // Roll 4 lands at the start of the skirmisher bucket (recruit covers 0..3).
+        _random.Next(10).Returns(4);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "isengard");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("urukhai_skirmisher", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_IsengardCulture_HighRoll_ReturnsScout()
+    {
+        // Roll 9 is the last index — Scout (final weight-1 entry, off-by-one guard).
+        _random.Next(10).Returns(9);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "isengard");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("urukhai_scout", result);
+    }
 }

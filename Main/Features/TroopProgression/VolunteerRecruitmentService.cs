@@ -47,6 +47,24 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeDaleCulture();
         InitializeDaleSettlements();
         InitializeRohanClans();
+        InitializeIsengardCulture();
+    }
+
+    // --- Isengard Culture Fallback ---
+    // Isengard had no recruitment pool (hostile-faction only; GetVolunteerTroopId returned null).
+    // Culture-level pool makes the player able to recruit Uruk-Hai. Weighted toward the L6 Recruit
+    // root (4), with the crossbow-line entry (Skirmisher) + Warg-Rider cavalry at 2 each, and the
+    // melee mid (Warrior) + bow-line entry (Scout) at 1 each. Total weight 10.
+    private static void InitializeIsengardCulture()
+    {
+        CultureMap["isengard"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("urukhai_recruit",    4),
+            new VolunteerChance("urukhai_skirmisher", 2),  // crossbow-line entry
+            new VolunteerChance("orc_warg_scout",     2),  // Warg-Rider cavalry
+            new VolunteerChance("urukhai_warrior",    1),  // melee mid
+            new VolunteerChance("urukhai_scout",      1),  // bow-line entry
+        };
     }
 
     // --- Dale Settlement-Specific Pools ---
