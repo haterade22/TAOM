@@ -6,7 +6,7 @@ Three independently-toggleable battle-tactics features bundled in one TAOM modul
 
 1. **CompanionRoles** — equipment-based combat-role detector (11 roles); appends a role badge to companion tooltips on the party screen and OOB hero items.
 2. **FormationPresets** — saveable named OOB hero-to-formation assignments; injects Save / Load / Auto-Assign buttons into the Order of Battle screen.
-3. **BattleActionBar** — context-sensitive on-screen action bar that appears in field battles. 1–9 hotkeys toggle stance buttons (Hold Fire, Brace, Shield Wall, etc.). **Stances are display-only — they record state but do NOT change formation behavior** (the original developer's mod was UI-only here; v1.3.15 doesn't expose the firing-order / tighten-spacing APIs the original referenced).
+3. **BattleActionBar** — context-sensitive on-screen action bar that appears in field battles. 1–9 hotkeys toggle stance buttons (Hold Fire, Brace, Shield Wall, etc.). **Stances are display-only — they record state but do NOT change formation behavior** (the original developer's mod was UI-only here; the engine doesn't expose the firing-order / tighten-spacing APIs the original referenced).
 
 Ported from `Downloads/Features_fixed/CompanionTactics/` (Bannerlord 1.3 mod template) for TAOM v1.3.15. Patch35 reserves the Harmony category. SaveableTypeDefiner BaseId 726900601 (matches the original mod for save-import compat).
 
@@ -32,7 +32,7 @@ Three sub-features with different lifetimes and scopes:
 
 ADR-007 mandates services see only `IXxxAdapter`. Sealed `Hero` / `Agent` / `Equipment` cross the boundary only at adapter implementations + boundary classes (Harmony patches, MissionView, ViewModels, OOBOverlayService).
 
-`OrderOfBattleHeroItemVM.GetCaptainTooltip()` is **private** in v1.3.15 — not patchable via `[HarmonyPatch]` attribute binding. Manual `AccessTools.Method` wiring in `SubModule.cs` is required.
+`OrderOfBattleHeroItemVM.GetCaptainTooltip()` is **private** — not patchable via `[HarmonyPatch]` attribute binding. Manual `AccessTools.Method` wiring in `SubModule.cs` is required.
 
 `MissionGauntletOrderOfBattleUIHandler` exposes `_dataSource` (the OOB VM) and `_isActive` (open/closed flag) only as private fields — `OOBOverlayService` reflects them once at first call and falls into inert mode if they're missing on a future Bannerlord update.
 
@@ -145,7 +145,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 - `ICompanionTacticsSettingsProvider` — typed read from `TaomSettings.Instance` (testable seam).
 - `IModLogger` (TAOM core) — file logger; gated HUD output via Debug toggles.
 - `IFormationAdapter`, `IHeroCombatAdapter`, `IAgentCombatAdapter`, `IBattleEquipmentSnapshot` — sealed-type wrappers per ADR-007.
-- TaleWorlds 1.3.15: `Hero`, `Equipment`, `WeaponClass`, `EquipmentIndex`, `Formation`, `Mission`, `MissionMode`, `OrderOfBattleVM`, `OrderOfBattleHeroItemVM`, `MissionGauntletOrderOfBattleUIHandler`, `GauntletLayer`, `MissionScreen`, `MBBindingList<T>`, `MultiSelectionInquiryData`, `TextInquiryData`.
+- TaleWorlds types used: `Hero`, `Equipment`, `WeaponClass`, `EquipmentIndex`, `Formation`, `Mission`, `MissionMode`, `OrderOfBattleVM`, `OrderOfBattleHeroItemVM`, `MissionGauntletOrderOfBattleUIHandler`, `GauntletLayer`, `MissionScreen`, `MBBindingList<T>`, `MultiSelectionInquiryData`, `TextInquiryData`.
 
 ## Tests
 
@@ -179,7 +179,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 
 ## Known limitations
 
-- **Stances are display-only.** Pressing 1–9 in the action bar updates the stance dict and highlights the button, but the formation behavior is unchanged. The original developer's mod was the same — TAOM Phase 1 ports verbatim. Real stance enforcement (firing-order changes, tightened spacing, brace-pose triggers) requires APIs not exposed in v1.3.15 and is deferred to a follow-up feature.
+- **Stances are display-only.** Pressing 1–9 in the action bar updates the stance dict and highlights the button, but the formation behavior is unchanged. The original developer's mod was the same — TAOM Phase 1 ports verbatim. Real stance enforcement (firing-order changes, tightened spacing, brace-pose triggers) requires APIs not exposed by the engine and is deferred to a follow-up feature.
 - **`CompanionRoleService._cache` does not evict dead heroes.** Cache is keyed by Hero.StringId. When a hero dies or is removed mid-campaign, the cache entry leaks for the rest of the session. The leak is bounded (one entry per Hero ever inspected) and small — a pathological 1000-hero campaign leaks ~50KB. A follow-up could subscribe to `OnHeroKilled` to evict, but it's not blocking.
 - **Hot-path role detection uses `Agent.SpawnEquipment`, not current battle equipment.** `FormationAdapter.EnsurePolearmShieldCounts` reads each agent's spawn-time equipment to compute polearm + shield counts. If a hero swaps weapons mid-battle, the action bar composition does not update until next mission. Tooltip role detection (campaign-time) uses `Hero.BattleEquipment` and is current.
 - **Integration was previously in a `// TEMP-SMARTCAVALRY-EXCLUDE` state** during the 2026-05-06 parallel-port session. **Restored in commit `0cc457f` (2026-05-07).** The feature is now fully wired (`Main/SubModule.cs` + `Main/IoC.cs`) and built into the mod. See `docs/reviews/rca-companiontactics-2026-05-06.md` for the historical RCA on the build-watcher cascade that caused the temporary exclusion.
