@@ -902,4 +902,25 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- ==================== VANILLA HIDEOUT-BANDIT CLANS — REMOVED ====================
+       The bandit-management feature (commit ae39aae) added 5 LOTR-themed bandit
+       cultures + clans (dunland_raiders, rhun_raiders, harad_raiders,
+       gundabad_raiders, umbar_corsairs) and migrated all 99 TAOM_Map hideouts to
+       those cultures via tools/migrate_hideouts_to_lotr.py. After migration, the
+       5 vanilla hideout-bandit clans below have NO hideouts of their cultures in
+       the world, but vanilla BanditSpawnCampaignBehavior.SpawnBanditsAroundHideout-
+       AtNewGame still iterates Clan.BanditFactions and calls _hideouts[clan.Culture]
+       with a hard indexer → KeyNotFoundException → new-game crash. Removing these
+       clan rows drops them from Clan.BanditFactions and bypasses the dict miss.
+
+       The vanilla 'looters' clan is KEPT intact — it is hardcoded by StringId in
+       DefaultBanditDensityModel.GetMaxSupportedNumberOfLootersForClan (vanilla
+       v1.4.5) and spawns around villages via a separate code path independent of
+       the hideout dictionary. -->
+  <xsl:template match="Faction[@id='sea_raiders']"/>
+  <xsl:template match="Faction[@id='mountain_bandits']"/>
+  <xsl:template match="Faction[@id='forest_bandits']"/>
+  <xsl:template match="Faction[@id='desert_bandits']"/>
+  <xsl:template match="Faction[@id='steppe_bandits']"/>
+
 </xsl:stylesheet>

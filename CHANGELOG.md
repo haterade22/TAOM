@@ -2,6 +2,14 @@
 
 ## 2026-05-27
 
+### fix(bandit-management): XSLT-remove 5 vanilla hideout-bandit clans (new-game KNFE)
+
+Starting a new campaign crashed with `KeyNotFoundException` in vanilla `BanditSpawnCampaignBehavior.GetInfestedHideoutCount(Clan)` after the same-day `feat(bandit-management)` work. The migration moved all 99 `TAOM_Map` hideouts to the 5 new TAOM bandit cultures (`dunland_raiders`, `rhun_raiders`, `harad_raiders`, `gundabad_raiders`, `umbar_corsairs`) but left the 5 vanilla hideout-bandit clans (`sea_raiders`, `mountain_bandits`, `forest_bandits`, `desert_bandits`, `steppe_bandits`) in `Clan.BanditFactions`. Vanilla's `OnNewGameCreatedPartialFollowUp` iterates that list and reads `_hideouts[clan.Culture]` with a hard indexer — the 5 vanilla clans no longer have any hideouts of their cultures, so the dict lookup throws.
+
+Fix is XSLT-only: 5 empty-template matches in [`spclans.xslt`](Main/_Module/ModuleData/spclans.xslt) drop those clan rows from the merged XML, so they never reach `Clan.BanditFactions`. Vanilla `looters` is kept intact (hardcoded by StringId in `DefaultBanditDensityModel`, and spawns around villages via a separate code path that doesn't touch `_hideouts`). No C# changes — vanilla `IsLooterFaction` identifies looters structurally (`!Culture.CanHaveSettlement && !HasNavalNavigationCapability && StringId != "deserters"`) so the looter spawn path remains unaffected.
+
+Verified zero vanilla C# code hardcodes the 5 removed clan StringIds (grepped decompiled v1.4.5 sources). Captured by 4 escalating TAOM crash bundles today (`taom_crash_20260528_000340_*` and 3 earlier).
+
 ### feat(bandit-management): LOTR bandit cultures + PlayerProgress-scaled hideout density + party sizes
 
 Replaces the 5 vanilla bandit cultures with lore-appropriate LOTR factions and adds MCM-tunable difficulty scaling. Greenfield feature — no prior TAOM code touched bandits or hideouts.
