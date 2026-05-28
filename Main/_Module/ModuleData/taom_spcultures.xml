@@ -224,6 +224,7 @@
       <feat id="taom_erebor_loyalty" />
       <feat id="taom_erebor_morale" />
       <feat id="taom_erebor_smithing" />
+      <feat id="taom_erebor_snow_speed" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -595,6 +596,7 @@
       <feat id="taom_rivendell_army_influence_cost" />
       <feat id="taom_rivendell_food_consumption" />
       <feat id="taom_rivendell_loyalty" />
+      <feat id="taom_rivendell_forest_speed" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -1677,6 +1679,8 @@
       <feat id="taom_isengard_construction_speed" />
       <feat id="taom_isengard_smithing" />
       <feat id="taom_isengard_raid_damage" />
+      <feat id="taom_isengard_plain_speed" />
+      <feat id="taom_isengard_swamp_speed" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -2037,6 +2041,7 @@
       <feat id="taom_gundabad_wage" />
       <feat id="taom_gundabad_party_size" />
       <feat id="taom_gundabad_raid_damage" />
+      <feat id="taom_gundabad_snow_speed" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -2396,6 +2401,7 @@
       <feat id="taom_umbar_renown" />
       <feat id="taom_umbar_wage" />
       <feat id="taom_umbar_tariff_income" />
+      <feat id="taom_umbar_desert_speed" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -3122,6 +3128,7 @@
       <feat id="taom_gondor_party_size" />
       <feat id="taom_gondor_loyalty" />
       <feat id="taom_gondor_morale" />
+      <feat id="taom_gondor_plain_speed" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -3490,6 +3497,9 @@
       <feat id="taom_mordor_wage" />
       <feat id="taom_mordor_party_size" />
       <feat id="taom_mordor_raid_damage" />
+      <feat id="taom_mordor_plain_speed" />
+      <feat id="taom_mordor_swamp_speed" />
+      <feat id="taom_mordor_night_speed" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -3806,6 +3816,7 @@
       <name name="{=aom_shaghana_clan_9}Acammes" />
     </clan_names>
     <cultural_feats>
+      <feat id="taom_shaghana_desert_speed" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -4069,6 +4080,7 @@
       <name name="{=aom_abanissa_clan_8}House of Tîrdahanâ" />
     </clan_names>
     <cultural_feats>
+      <feat id="taom_abanissa_desert_speed" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />

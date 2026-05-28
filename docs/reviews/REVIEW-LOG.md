@@ -1044,6 +1044,26 @@ Full RCA at [`docs/reviews/rca-dependencies-foundation-2026-05-27.md`](rca-depen
 3. **REVIEW-LOG.md** updated (this entry).
 4. **Numbering collision corrected.** Initial pass labelled this as "Review 41"; existing Review 41 (CrashReport, 2026-05-25) already existed. Renumbered to 42 in AGENTS.md header + footer + RCA reference + feedback memory.
 
+### Review 43 — Cultural-Feats Terrain Movement-Speed Feats (issue #248, post-`/deep-review` Codex follow-up)
+
+Pipeline: `/deep-review` (5 agents, verdict READY — its one CRITICAL "TerrainType.Snow doesn't exist" was a self-contradictory false positive, refuted by decompile: `Snow = 3`) → `/review-codex` (gpt-5.5 xhigh).
+
+Codex findings: **0 CRITICAL / 1 HIGH / 3 MEDIUM / 1 LOW.** 3 confirmed bugs fixed, 2 declined-with-reason.
+
+| # | Sev | Finding | Verdict | Resolution |
+|---|-----|---------|---------|------------|
+| 2 | MED | Mordor night feat applied at sea (vanilla night penalty is land-only) | Confirmed | Fixed — `isNight && !IsCurrentlyAtSea` |
+| 3 | MED | Feat-culture resolved via `Owner.Culture` only vs vanilla `PartyBaseHelper.HasFeat` precedence | Confirmed | Fixed — `ResolvePartyCulture` mirrors vanilla |
+| 5 | LOW | Orphaned/stacked XML-doc summary | Confirmed | Fixed — reordered |
+| 1 | HIGH | Snow feats key off terrain not weather | Declined (by design) | TAOM_Map navmesh painted terrain id 3 (Snow); terrain-only is intentional. Codex correctly hedged ("cannot prove the map has zero Snow faces"). |
+| 4 | MED | Adapter allocation per speed recalc | Declined | Pre-existing; speed recalc is cached (not per-frame); shared-adapter cache = scope creep for marginal GC win (simplicity-criterion) |
+
+Disputed-as-bug (Codex confirmed no-bug): S2 (Snow enum exists), S3 (XSLT preserves vanilla feats + no double-emit, verified by transform), S4 (additive AddFactor stacking correct), S5 (Mordor magnitudes 0.05/0.05/0.10), S6 (Harad/Aserai double-desert intentional), S7 (feat registration ordering safe).
+
+Root-cause pattern (bugs #2, #3): additive GameModel override read vanilla for the *value* but dropped vanilla's *application conditions* (night land-gate; culture precedence). RCA: `docs/reviews/rca-cultural-feats-terrain-2026-05-28.md`. Generalized the existing `feedback_replicate_vanilla_safety_gates_in_prefix` memory (Prefix-returns-false → also additive GameModel overrides). AGENTS.md updated (review 43, 2 new "what Codex does well" bullets incl. the calibrated-hedge lesson).
+
+Build & test: `dotnet test TAOM.Tests` (deploy-skip flags, game running) → **2624 passed / 0 failed / 2 skipped.** Model fixes are thin-entry-point boundary logic — verified by build + in-game per gamemodels rule.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

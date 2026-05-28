@@ -71,22 +71,55 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
 
     // ── PartySpeed ──────────────────────────────────────────────────────
 
-    public void ApplyForestSpeedFeats(
-        ICultureFeatAdapter? culture, bool isForest, float forestPenaltyMagnitude, ref ExplainedNumber result)
+    public void ApplyTerrainSpeedFeats(
+        ICultureFeatAdapter? culture, TerrainKind terrain, bool isNight, ref ExplainedNumber result)
     {
-        if (culture == null || !isForest)
+        if (culture == null)
             return;
 
-        if (culture.HasFeat(TaomCulturalFeats.MirkwoodForestSpeedFeat))
+        switch (terrain)
         {
-            float bonus = TaomCulturalFeats.MirkwoodForestSpeedFeat.EffectBonus * forestPenaltyMagnitude;
-            result.AddFactor(bonus, CultureText);
+            case TerrainKind.Forest:
+                ApplyIfHas(culture, TaomCulturalFeats.MirkwoodForestSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.LothlorienForestSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.RivendellForestSpeedFeat, ref result);
+                break;
+            case TerrainKind.Snow:
+                ApplyIfHas(culture, TaomCulturalFeats.EreborSnowSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.GundabadSnowSpeedFeat, ref result);
+                break;
+            case TerrainKind.Steppe:
+                ApplyIfHas(culture, TaomCulturalFeats.KhandSteppeSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.RhunSteppeSpeedFeat, ref result);
+                break;
+            case TerrainKind.Desert:
+                ApplyIfHas(culture, TaomCulturalFeats.UmbarDesertSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.HaradDesertSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.ShaghanaDesertSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.AbanissaDesertSpeedFeat, ref result);
+                break;
+            case TerrainKind.Plain:
+                ApplyIfHas(culture, TaomCulturalFeats.MordorPlainSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.GondorPlainSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.RohanPlainSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.DalePlainSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.DunlandPlainSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.IsengardPlainSpeedFeat, ref result);
+                break;
+            case TerrainKind.Swamp:
+                ApplyIfHas(culture, TaomCulturalFeats.MordorSwampSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.IsengardSwampSpeedFeat, ref result);
+                break;
         }
-        if (culture.HasFeat(TaomCulturalFeats.LothlorienForestSpeedFeat))
-        {
-            float bonus = TaomCulturalFeats.LothlorienForestSpeedFeat.EffectBonus * forestPenaltyMagnitude;
-            result.AddFactor(bonus, CultureText);
-        }
+
+        if (isNight)
+            ApplyIfHas(culture, TaomCulturalFeats.MordorNightSpeedFeat, ref result);
+    }
+
+    private static void ApplyIfHas(ICultureFeatAdapter culture, FeatObject feat, ref ExplainedNumber result)
+    {
+        if (culture.HasFeat(feat))
+            result.AddFactor(feat.EffectBonus, CultureText);
     }
 
     public void ApplyRohanInfantryPenalty(

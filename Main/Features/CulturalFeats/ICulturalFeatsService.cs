@@ -28,8 +28,13 @@ public interface ICulturalFeatsService
     int ApplyArmyInfluenceCost(ICultureFeatAdapter? culture, int baseCost);
 
     // ── PartySpeed ──────────────────────────────────────────────────────
-    /// <summary>Applies the Mirkwood/Lothlorien forest-speed feats when terrain == Forest.</summary>
-    void ApplyForestSpeedFeats(ICultureFeatAdapter? culture, bool isForest, float forestPenaltyMagnitude, ref ExplainedNumber result);
+    /// <summary>
+    /// Applies the per-culture terrain movement-speed feats whose terrain matches
+    /// <paramref name="terrain"/> (forest/snow/steppe/desert/plain/swamp), plus the
+    /// Mordor night-speed feat when <paramref name="isNight"/>. Flat <c>AddFactor</c>
+    /// of each matching feat's <c>EffectBonus</c>; no-op for <see cref="TerrainKind.None"/>.
+    /// </summary>
+    void ApplyTerrainSpeedFeats(ICultureFeatAdapter? culture, TerrainKind terrain, bool isNight, ref ExplainedNumber result);
 
     /// <summary>Applies the Rohan infantry-speed penalty when &gt;50% of the party is infantry.</summary>
     void ApplyRohanInfantryPenalty(ICultureFeatAdapter? culture, int mountedCount, int totalCount, ref ExplainedNumber result);

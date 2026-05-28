@@ -35,6 +35,28 @@ Verification: `validate_all_troop_refs.py` PASS (all `sk_uruk_hai_*` / `urukscou
 
 Save-compat: all troop IDs preserved (re-tier + re-equip only). Party templates reference the moved troops by ID — still resolve; tier shifts nudge AI composition but don't break. Recruitment pool is additive.
 
+### feat(cultural-feats): terrain-based cultural movement-speed bonuses
+
+Each LOTR culture now moves faster on its "home" terrain, deepening cultural identity on the campaign map. 18 new `FeatObject` terrain-speed feats (total 59 → 77) applied via the existing `TaomPartySpeedModel`/`CulturalFeats` pipeline.
+
+**Bonus matrix:** Forest → Mirkwood/Lothlorien/Rivendell (+10%); Snow → Erebor/Gundabad (+10%); Steppe → Khand/Rhûn (+10%); Desert → Umbar/Harad/Shaghâna/Âbanissa (+10%); Plain → Gondor/Rohan/Dale/Dunland/Isengard (+10%); Swamp → Isengard (+10%); Mordor → plain/swamp **+5%** (deliberately smaller) + **night +10%** (terrain-independent, `Campaign.Current.IsNight`). All bonuses are flat `ExplainedNumber.AddFactor` that stack on vanilla's terrain modifiers (forest -30%, desert -10%, night -25%).
+
+**Elf rework (balance change):** Mirkwood/Lothlorien forest feats changed from scaled penalty-reduction (~+18% / +15% net) to a uniform flat **+10%**, and Rivendell gains a matching forest feat — so all three elven cultures share one consistent forest bonus.
+
+**Architecture:** new TAOM-owned `TerrainKind` enum keeps the service free of TaleWorlds types (ADR-007); `TaomPartySpeedModel.MapTerrain` converts `TerrainType` → `TerrainKind` at the boundary (`Dune` folds into `Desert`). The old `ICulturalFeatsService.ApplyForestSpeedFeats` (scaled) is replaced by `ApplyTerrainSpeedFeats(culture, terrain, isNight, ref result)` — a `switch` over terrain + `ApplyIfHas` helper, hot-path-safe (no allocation). Feat membership: `taom_spcultures.xml` `<cultural_feats>` for the custom cultures; `spcultures.xslt` for the six vanilla-wrapped cultures — Dunland/Rohan appended to their inline override blocks, Harad/Rhûn/Dale/Khand via new `Culture[@id='X']/cultural_feats` templates that copy vanilla feats and append the TAOM feat (vanilla bonuses preserved, verified by transform test).
+
+**Localization:** feat names/descriptions use inline `{=key}default` defaults — matching the existing 59-feat convention (zero `taom_feat_` keys are registered in `taom_module_strings.xml`). Not run through the translation pipeline, to avoid a half-translated feat set; revisit only if all 77 feats are registered+translated uniformly.
+
+**Snow is terrain-based by design:** the snow bonus keys off `TerrainType.Snow` *terrain* (consistent with forest/desert/etc.), not snowy *weather*. The `TAOM_Map` navmesh faces around the snowy regions are author-painted with terrain id `3` (= `TerrainType.Snow`), so `GetFaceTerrainType` returns `Snow` there and the Erebor/Gundabad bonus fires — the terrain-only check is intentional and must not be switched to weather detection (vanilla derives snow from weather, but the TAOM map paints it as terrain).
+
+Tests: `CulturalFeatsServiceTests` (terrain dispatch per terrain, Mordor 5% vs 10%, night-only, null/wrong-terrain/None no-ops, plain+night stack) + `TaomCulturalFeatsDefinitionTests` (counts 59 → 77, per-culture distribution, new DataRows). Full suite 2624 passed / 0 failed / 2 skipped.
+
+**Review (`/deep-review` + `/review-codex`):** Codex found 1 HIGH + 3 MED + 1 LOW. Fixed 3: (a) Mordor night feat was applied at sea where vanilla has no night penalty to offset → now gated `isNight && !IsCurrentlyAtSea`; (b) feat-culture was resolved via `Owner.Culture` only → now mirrors vanilla `PartyBaseHelper.HasFeat` precedence (leader → party → owner → settlement) via a `ResolvePartyCulture` boundary helper, so garrison/militia/caravan and leader-driven parties get the right terrain feats; (c) an orphaned XML-doc summary. Declined 2 with recorded reasons: the HIGH snow-weather finding (terrain-only is intentional — see above) and the per-recalc adapter allocation (pre-existing; speed recalc is cached, not per-frame). RCA: [`docs/reviews/rca-cultural-feats-terrain-2026-05-28.md`](docs/reviews/rca-cultural-feats-terrain-2026-05-28.md).
+
+Save-compat: safe — FeatObjects are init-time campaign objects, no new serialized save fields.
+
+Files: `Main/Features/CulturalFeats/{TerrainKind.cs (new), TaomCulturalFeats.cs, ICulturalFeatsService.cs, CulturalFeatsService.cs, Models/TaomPartySpeedModel.cs}`, `Main/_Module/ModuleData/{taom_spcultures.xml, spcultures.xslt}`, both test files, `docs/features/cultural-feats.md`.
+
 ### feat(skills): add /finish-branch — trunk-integration workflow capture
 
 Captures the branch-integration workflow we ran by hand twice this session (the knowledge-base merges + the may27a lint-cleanup merge) as a skill, per the "Workflow → Skill" convention. Passes the three-part filter: repeatable (every merge), multi-step (FF-check → merge → backlinks → CHANGELOG → delete branch local+remote → push), and carries TAOM-specific gotchas (FF-vs-real-merge detection, don't sweep parallel-work backlink drift into the merge commit, `git branch -d` as a merge gate, push-to-becoming-master confirmation).

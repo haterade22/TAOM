@@ -290,6 +290,7 @@
 				<feat id="battanian_forest_speed" />
 				<feat id="battanian_militia_production" />
 				<feat id="battanian_slower_construction" />
+				<feat id="taom_dunland_plain_speed" />
 			</cultural_feats>
 
 			<!-- Pass through vanilla child elements we don't override -->
@@ -858,6 +859,7 @@
 				<feat id="taom_rohan_infantry_speed" />
 				<feat id="taom_rohan_loyalty" />
 				<feat id="taom_rohan_morale" />
+				<feat id="taom_rohan_plain_speed" />
 			</cultural_feats>
 
 			<!-- Pass through vanilla child elements we don't override -->
@@ -1335,6 +1337,36 @@
 
 			<!-- Pass through vanilla child elements we don't override -->
 			<xsl:apply-templates select="*[not(self::notable_templates)]"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- TAOM terrain movement-speed feats: append to each culture's vanilla cultural_feats,
+	     preserving the existing vanilla feats. Harad/Easterling/Dale/Khand reuse vanilla IDs. -->
+	<xsl:template match="Culture[@id='aserai']/cultural_feats">
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()"/>
+			<feat id="taom_harad_desert_speed" />
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="Culture[@id='khuzait']/cultural_feats">
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()"/>
+			<feat id="taom_rhun_steppe_speed" />
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="Culture[@id='sturgia']/cultural_feats">
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()"/>
+			<feat id="taom_dale_plain_speed" />
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="Culture[@id='battania']/cultural_feats">
+		<xsl:copy>
+			<xsl:apply-templates select="@*|node()"/>
+			<feat id="taom_khand_steppe_speed" />
 		</xsl:copy>
 	</xsl:template>
 

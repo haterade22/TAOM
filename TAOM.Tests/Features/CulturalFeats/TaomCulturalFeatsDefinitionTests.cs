@@ -16,15 +16,15 @@ public class TaomCulturalFeatsDefinitionTests
     /// without the game framework, we verify the code structure via reflection.
     /// </summary>
     [TestMethod]
-    public void AllFeatProperties_ReturnFeatObject_CountIs59()
+    public void AllFeatProperties_ReturnFeatObject_CountIs77()
     {
         var properties = typeof(TaomCulturalFeats)
             .GetProperties(BindingFlags.Public | BindingFlags.Static)
             .Where(p => p.PropertyType == typeof(FeatObject))
             .ToList();
 
-        Assert.AreEqual(59, properties.Count,
-            "Expected 59 culture feat properties (expanded feat set across 11 cultures)");
+        Assert.AreEqual(77, properties.Count,
+            "Expected 77 culture feat properties (59 base + 18 terrain movement-speed feats across 18 cultures)");
     }
 
     [TestMethod]
@@ -44,12 +44,12 @@ public class TaomCulturalFeatsDefinitionTests
     public void GetAllFeats_YieldsZeroOrFullSet()
     {
         // GetAllFeats returns empty when the static `_instance` is null (no game
-        // framework loaded), OR the full 59-feat enumeration when a sibling test
+        // framework loaded), OR the full 77-feat enumeration when a sibling test
         // (e.g. CulturalFeatsServiceTests) reflection-initialised the singleton.
         // Both states are valid in a test process; assert one or the other.
         var feats = TaomCulturalFeats.GetAllFeats().ToList();
-        Assert.IsTrue(feats.Count == 0 || feats.Count == 59,
-            $"GetAllFeats expected 0 (uninitialised) or 59 (full set), got {feats.Count}");
+        Assert.IsTrue(feats.Count == 0 || feats.Count == 77,
+            $"GetAllFeats expected 0 (uninitialised) or 77 (full set), got {feats.Count}");
     }
 
     [TestMethod]
@@ -112,6 +112,24 @@ public class TaomCulturalFeatsDefinitionTests
     [DataRow("RohanInfantrySpeedFeat")]
     [DataRow("RohanLoyaltyFeat")]
     [DataRow("RohanMoraleFeat")]
+    [DataRow("EreborSnowSpeedFeat")]
+    [DataRow("RivendellForestSpeedFeat")]
+    [DataRow("IsengardPlainSpeedFeat")]
+    [DataRow("IsengardSwampSpeedFeat")]
+    [DataRow("GundabadSnowSpeedFeat")]
+    [DataRow("UmbarDesertSpeedFeat")]
+    [DataRow("GondorPlainSpeedFeat")]
+    [DataRow("MordorPlainSpeedFeat")]
+    [DataRow("MordorSwampSpeedFeat")]
+    [DataRow("MordorNightSpeedFeat")]
+    [DataRow("RohanPlainSpeedFeat")]
+    [DataRow("DalePlainSpeedFeat")]
+    [DataRow("KhandSteppeSpeedFeat")]
+    [DataRow("RhunSteppeSpeedFeat")]
+    [DataRow("HaradDesertSpeedFeat")]
+    [DataRow("DunlandPlainSpeedFeat")]
+    [DataRow("ShaghanaDesertSpeedFeat")]
+    [DataRow("AbanissaDesertSpeedFeat")]
     public void FeatProperty_Exists_IsPublicStatic(string propertyName)
     {
         var prop = typeof(TaomCulturalFeats).GetProperty(
@@ -133,17 +151,24 @@ public class TaomCulturalFeatsDefinitionTests
 
         var expectedCounts = new Dictionary<string, int>
         {
-            { "Erebor", 6 },
-            { "Rivendell", 5 },
+            { "Erebor", 7 },
+            { "Rivendell", 6 },
             { "Mirkwood", 5 },
             { "Lothlorien", 6 },
-            { "Isengard", 7 },
-            { "Gundabad", 5 },
-            { "Umbar", 4 },
+            { "Isengard", 9 },
+            { "Gundabad", 6 },
+            { "Umbar", 5 },
             { "DolGuldur", 5 },
-            { "Gondor", 6 },
-            { "Mordor", 5 },
-            { "Rohan", 5 },
+            { "Gondor", 7 },
+            { "Mordor", 8 },
+            { "Rohan", 6 },
+            { "Dale", 1 },
+            { "Khand", 1 },
+            { "Rhun", 1 },
+            { "Harad", 1 },
+            { "Dunland", 1 },
+            { "Shaghana", 1 },
+            { "Abanissa", 1 },
         };
 
         foreach (var kvp in expectedCounts)
@@ -163,8 +188,8 @@ public class TaomCulturalFeatsDefinitionTests
             .Where(f => f.FieldType == typeof(FeatObject))
             .ToList();
 
-        Assert.AreEqual(59, fields.Count,
-            "Expected 59 private FeatObject fields (expanded feat set across 11 cultures)");
+        Assert.AreEqual(77, fields.Count,
+            "Expected 77 private FeatObject fields (59 base + 18 terrain movement-speed feats)");
     }
 
     [TestMethod]

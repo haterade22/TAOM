@@ -109,34 +109,150 @@ public class CulturalFeatsServiceTests
     // ── PartySpeed ──────────────────────────────────────────────────────
 
     [TestMethod]
-    public void ApplyForestSpeedFeats_NotForest_DoesNothing()
+    public void ApplyTerrainSpeedFeats_NullCulture_DoesNothing()
+    {
+        var en = new ExplainedNumber(1f);
+        _sut.ApplyTerrainSpeedFeats(null, TerrainKind.Forest, isNight: false, ref en);
+        Assert.AreEqual(1f, en.ResultNumber);
+    }
+
+    [TestMethod]
+    public void ApplyTerrainSpeedFeats_NoneTerrain_DoesNothing()
     {
         var culture = AdapterWith(TaomCulturalFeats.MirkwoodForestSpeedFeat);
         var en = new ExplainedNumber(1f);
 
-        _sut.ApplyForestSpeedFeats(culture, isForest: false, forestPenaltyMagnitude: 0.3f, ref en);
+        _sut.ApplyTerrainSpeedFeats(culture, TerrainKind.None, isNight: false, ref en);
 
         Assert.AreEqual(1f, en.ResultNumber);
     }
 
     [TestMethod]
-    public void ApplyForestSpeedFeats_Forest_MirkwoodOnly_AppliesScaledBonus()
+    public void ApplyTerrainSpeedFeats_WrongTerrain_DoesNothing()
+    {
+        // Mirkwood's forest feat must NOT apply when the party is on a plain.
+        var culture = AdapterWith(TaomCulturalFeats.MirkwoodForestSpeedFeat);
+        var en = new ExplainedNumber(1f);
+
+        _sut.ApplyTerrainSpeedFeats(culture, TerrainKind.Plain, isNight: false, ref en);
+
+        Assert.AreEqual(1f, en.ResultNumber);
+    }
+
+    [TestMethod]
+    public void ApplyTerrainSpeedFeats_Forest_ElvenFeat_AppliesFlatTenPercent()
     {
         var culture = AdapterWith(TaomCulturalFeats.MirkwoodForestSpeedFeat);
         var en = new ExplainedNumber(1f);
 
-        _sut.ApplyForestSpeedFeats(culture, isForest: true, forestPenaltyMagnitude: 0.3f, ref en);
+        _sut.ApplyTerrainSpeedFeats(culture, TerrainKind.Forest, isNight: false, ref en);
 
-        var expectedBonus = TaomCulturalFeats.MirkwoodForestSpeedFeat.EffectBonus * 0.3f;
-        Assert.AreEqual(1f * (1f + expectedBonus), en.ResultNumber, 0.0001f);
+        // Flat AddFactor of the feat's EffectBonus (0.10), NOT the old scaled value.
+        Assert.AreEqual(1f * (1f + 0.1f), en.ResultNumber, 0.0001f);
     }
 
     [TestMethod]
-    public void ApplyForestSpeedFeats_NullCulture_DoesNothing()
+    public void ApplyTerrainSpeedFeats_Snow_DwarfFeat_AppliesTenPercent()
     {
+        var culture = AdapterWith(TaomCulturalFeats.EreborSnowSpeedFeat);
         var en = new ExplainedNumber(1f);
-        _sut.ApplyForestSpeedFeats(null, isForest: true, forestPenaltyMagnitude: 0.3f, ref en);
+
+        _sut.ApplyTerrainSpeedFeats(culture, TerrainKind.Snow, isNight: false, ref en);
+
+        Assert.AreEqual(1f * (1f + 0.1f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyTerrainSpeedFeats_Steppe_KhandFeat_AppliesTenPercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.KhandSteppeSpeedFeat);
+        var en = new ExplainedNumber(1f);
+
+        _sut.ApplyTerrainSpeedFeats(culture, TerrainKind.Steppe, isNight: false, ref en);
+
+        Assert.AreEqual(1f * (1f + 0.1f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyTerrainSpeedFeats_Desert_HaradFeat_AppliesTenPercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.HaradDesertSpeedFeat);
+        var en = new ExplainedNumber(1f);
+
+        _sut.ApplyTerrainSpeedFeats(culture, TerrainKind.Desert, isNight: false, ref en);
+
+        Assert.AreEqual(1f * (1f + 0.1f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyTerrainSpeedFeats_Plain_MordorFeat_AppliesFivePercent()
+    {
+        // Mordor's terrain buff is deliberately smaller (5%) than the 10% others get.
+        var culture = AdapterWith(TaomCulturalFeats.MordorPlainSpeedFeat);
+        var en = new ExplainedNumber(1f);
+
+        _sut.ApplyTerrainSpeedFeats(culture, TerrainKind.Plain, isNight: false, ref en);
+
+        Assert.AreEqual(1f * (1f + 0.05f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyTerrainSpeedFeats_Swamp_MordorFeat_AppliesFivePercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.MordorSwampSpeedFeat);
+        var en = new ExplainedNumber(1f);
+
+        _sut.ApplyTerrainSpeedFeats(culture, TerrainKind.Swamp, isNight: false, ref en);
+
+        Assert.AreEqual(1f * (1f + 0.05f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyTerrainSpeedFeats_Plain_GondorFeat_AppliesTenPercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.GondorPlainSpeedFeat);
+        var en = new ExplainedNumber(1f);
+
+        _sut.ApplyTerrainSpeedFeats(culture, TerrainKind.Plain, isNight: false, ref en);
+
+        Assert.AreEqual(1f * (1f + 0.1f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyTerrainSpeedFeats_Night_MordorFeat_AppliesTenPercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.MordorNightSpeedFeat);
+        var en = new ExplainedNumber(1f);
+
+        // Night bonus is terrain-independent — passing None still applies it.
+        _sut.ApplyTerrainSpeedFeats(culture, TerrainKind.None, isNight: true, ref en);
+
+        Assert.AreEqual(1f * (1f + 0.1f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyTerrainSpeedFeats_Day_MordorNightFeat_DoesNotApply()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.MordorNightSpeedFeat);
+        var en = new ExplainedNumber(1f);
+
+        _sut.ApplyTerrainSpeedFeats(culture, TerrainKind.Plain, isNight: false, ref en);
+
         Assert.AreEqual(1f, en.ResultNumber);
+    }
+
+    [TestMethod]
+    public void ApplyTerrainSpeedFeats_MordorPlainAtNight_StacksTerrainAndNight()
+    {
+        var culture = AdapterWith(
+            TaomCulturalFeats.MordorPlainSpeedFeat,
+            TaomCulturalFeats.MordorNightSpeedFeat);
+        var en = new ExplainedNumber(1f);
+
+        _sut.ApplyTerrainSpeedFeats(culture, TerrainKind.Plain, isNight: true, ref en);
+
+        // 5% plain + 10% night, additive ExplainedNumber factors.
+        Assert.AreEqual(1f * (1f + 0.05f + 0.1f), en.ResultNumber, 0.0001f);
     }
 
     [TestMethod]
@@ -680,13 +796,13 @@ public class CulturalFeatsServiceTests
                 ("_rivendellFoodConsumption", "taom_rivendell_food_consumption", -0.15f),
                 ("_rivendellLoyalty", "taom_rivendell_loyalty", 0.5f),
 
-                ("_mirkwoodForestSpeed", "taom_mirkwood_forest_speed", 0.6f),
+                ("_mirkwoodForestSpeed", "taom_mirkwood_forest_speed", 0.1f),
                 ("_mirkwoodMilitiaProduction", "taom_mirkwood_militia_production", 0.25f),
                 ("_mirkwoodHearthGrowth", "taom_mirkwood_hearth_growth", -0.2f),
                 ("_mirkwoodFoodConsumption", "taom_mirkwood_food_consumption", -0.15f),
                 ("_mirkwoodMorale", "taom_mirkwood_morale", 3f),
 
-                ("_lothlorienForestSpeed", "taom_lothlorien_forest_speed", 0.5f),
+                ("_lothlorienForestSpeed", "taom_lothlorien_forest_speed", 0.1f),
                 ("_lothlorienGarrisonWage", "taom_lothlorien_garrison_wage", -0.2f),
                 ("_lothlorienConstructionSpeed", "taom_lothlorien_construction_speed", -0.1f),
                 ("_lothlorienFoodConsumption", "taom_lothlorien_food_consumption", -0.15f),
@@ -736,6 +852,26 @@ public class CulturalFeatsServiceTests
                 ("_rohanInfantrySpeed", "taom_rohan_infantry_speed", -0.1f),
                 ("_rohanLoyalty", "taom_rohan_loyalty", 0.5f),
                 ("_rohanMorale", "taom_rohan_morale", 5f),
+
+                // Terrain movement-speed feats (issue: cultural terrain bonuses)
+                ("_ereborSnowSpeed", "taom_erebor_snow_speed", 0.1f),
+                ("_rivendellForestSpeed", "taom_rivendell_forest_speed", 0.1f),
+                ("_isengardPlainSpeed", "taom_isengard_plain_speed", 0.1f),
+                ("_isengardSwampSpeed", "taom_isengard_swamp_speed", 0.1f),
+                ("_gundabadSnowSpeed", "taom_gundabad_snow_speed", 0.1f),
+                ("_umbarDesertSpeed", "taom_umbar_desert_speed", 0.1f),
+                ("_gondorPlainSpeed", "taom_gondor_plain_speed", 0.1f),
+                ("_mordorPlainSpeed", "taom_mordor_plain_speed", 0.05f),
+                ("_mordorSwampSpeed", "taom_mordor_swamp_speed", 0.05f),
+                ("_mordorNightSpeed", "taom_mordor_night_speed", 0.1f),
+                ("_rohanPlainSpeed", "taom_rohan_plain_speed", 0.1f),
+                ("_dalePlainSpeed", "taom_dale_plain_speed", 0.1f),
+                ("_khandSteppeSpeed", "taom_khand_steppe_speed", 0.1f),
+                ("_rhunSteppeSpeed", "taom_rhun_steppe_speed", 0.1f),
+                ("_haradDesertSpeed", "taom_harad_desert_speed", 0.1f),
+                ("_dunlandPlainSpeed", "taom_dunland_plain_speed", 0.1f),
+                ("_shaghanaDesertSpeed", "taom_shaghana_desert_speed", 0.1f),
+                ("_abanissaDesertSpeed", "taom_abanissa_desert_speed", 0.1f),
             };
 
             var effectBonusProp = typeof(FeatObject).GetProperty(
