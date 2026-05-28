@@ -91,17 +91,17 @@ Pattern keys from `cluster-campaign-behaviors.md`:
 | # | Severity | Feature × Patch | Smallest fix |
 |---|---|---|---|
 | **#149** | **P1** | CompanionTactics / Patch35 `SetMovementOrder` | One-line team filter: `if (__instance?.Team != Mission.Current?.PlayerTeam) return;` before `ClearStance` |
-| **#150** | **P1** | BannerColorPersistence / MapConversationTableau leader+bodyguard | Move color injection into Prefix on `AgentVisuals.Create` (Site 5 pattern) OR use native `SetClothColor` if available in v1.3.15 |
+| **#150** | **P1** | BannerColorPersistence / MapConversationTableau leader+bodyguard | Move color injection into Prefix on `AgentVisuals.Create` (Site 5 pattern) OR use native `SetClothColor` if available in the installed version |
 | #151 | P2 | HeroRace / `ActionSetCode_GenerateActionSetNameWithSuffix_Patch` | `public class` → `public static class`; AND investigate whether the patch is a no-op duplicate of vanilla (Cluster D flag) |
 | #152 | P2 | Diplomacy / `AllianceCampaignBehavior_EndAlliance_Patch` | Gate `ShouldPreventAllianceEnd` on alliance-expiry triggers only (not war-declaration) OR suppress the downstream `AddAllianceDecision` |
 | #153 | P2 | Diplomacy / `DeclareWarAction_ApplyInternal_Patch` | Document the `OnWarDeclared` event suppression; force-declare paths must dispatch it manually OR use `DeclareWarAction.ApplyByX` |
 | #155 | P2 | SmartCavalryAI / `CavalryChargeService._states` | Add `private readonly object _lock = new();` + wrap state-dict accesses (mirror `FormationLayoutService` pattern) |
 | #156 | P2 (dormant) | BattleScenes / `MBMapScene_GetBattleSceneIndexMap_Patch` | `volatile static bool _isRetrying` OR `[ThreadStatic]`; move retry to background thread. Dormant; OK to defer until feature re-enabled |
-| #157 | P2 | SettlementGuards / `PrepareGuardAgentDataFromGarrison` | Verify staticness via ilspycmd on v1.3.15 (Cluster F already cleared); also: replace bare `catch{}` with log + meaningful fallback |
+| #157 | P2 | SettlementGuards / `PrepareGuardAgentDataFromGarrison` | Verify staticness via ilspycmd on the installed version (Cluster F already cleared); also: replace bare `catch{}` with log + meaningful fallback |
 | #159 | P2 | BannerColorPersistence / `MobilePartyVisual.AddCharacterToPartyIcon` | Drop the `typeof(ActionIndexCache).MakeByRefType()` param-type array; let Harmony resolve unique-name overload |
 | #160 | P2 | CharacterSelection / `RefreshCharacterEntityAuxPatch` | Replace hard-throw on IL mismatch with logged degradation; add defensive null-guard |
 | #161 | P2 | ArmyTargeting / Patch22 | Cache 3 `IoC.Resolve` calls outside the hot-path loop |
-| #162 | P2 | CustomBattles / Patch19 `OnCultureSelection` | Verify private-method patch on v1.3.15 via ilspycmd (Cluster C/E `v1.3.15-unverified` residual) |
+| #162 | P2 | CustomBattles / Patch19 `OnCultureSelection` | Verify private-method patch on the installed version via ilspycmd (Cluster C/E `v1.3.15-unverified` residual) |
 | #163 | P2 | CharacterCreation / `SpawnNonHuman` Finalizer | Don't unconditionally swallow NREs — log + rethrow OR scoped suppression |
 | #164 | P3 (consolidated) | Multiple | Cleanups: bare `catch{}`, missing `[HarmonyPostfix]` attrs, missing `LogWarning` fallbacks on manual `Patch(...)` calls. Touches multiple files — bundle as one commit per file or split per-feature |
 

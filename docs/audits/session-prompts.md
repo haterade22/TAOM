@@ -85,9 +85,9 @@ Phase 4 = Harmony patch cluster review. Target: every feature with Patch cat pop
 2. Patches on Formation/Mission/Scene types may fire from worker threads (memory: feedback_detect_engine_threading_via_mt_suffix.md). Check for unsynchronized state mutation.
 3. Recursion-guard patterns — any patch that mutates state read by its own hot path needs a thread-static guard.
 4. Postfix vs Prefix correctness — Prefix runs before vanilla logic; Postfix runs after. Some hooks need both.
-5. Manual `_harmony.Patch(...)` calls — verify target method signatures match v1.3.15 via ilspycmd (NOT v1.4 decompiled folder).
+5. Manual `_harmony.Patch(...)` calls — verify target method signatures match the installed Bannerlord version via ilspycmd (NOT the v1.4 decompiled folder).
 
-Per patch category, spawn a taleworlds-researcher subagent to fetch the v1.3.15 vanilla signature + body for the patch target, plus a feature-dev:code-reviewer for the TAOM patch class. Cross-reference.
+Per patch category, spawn a taleworlds-researcher subagent to fetch the vanilla signature + body for the patch target (against the installed Bannerlord version), plus a feature-dev:code-reviewer for the TAOM patch class. Cross-reference.
 
 Aggregate to docs/audits/cluster-harmony-patches.md. Issues with label audit-impl. Write phase-5-kickoff.md. /context-save "phase4-patches-complete". Stop.
 ```
@@ -109,7 +109,7 @@ Per feature, spawn a feature-dev:code-reviewer agent. Apply .claude/rules/gui-ui
 - @PropertyName binding case-sensitivity
 - Localization {=key}Text via TextObject().ToString() (memory feedback_localization_textobject.md)
 
-Also verify the prefab extensions are still finding their target containers in v1.3.15 (run ilspycmd to confirm the target VM still has the property the extension binds to).
+Also verify the prefab extensions are still finding their target containers in the installed Bannerlord version (run ilspycmd to confirm the target VM still has the property the extension binds to).
 
 Aggregate to docs/audits/cluster-ui.md. Issues label audit-impl. Write phase-6-kickoff.md. /context-save "phase5-ui-complete". Stop.
 ```
@@ -165,7 +165,7 @@ Phase 8 = documentation audit. For each of the 43 features:
 1. Confirm docs/features/<x>.md exists. Manifest already flags Execution as missing.
 2. Read the existing doc and check it has every section from TEMPLATE.md: Overview, Why This Exists, Architecture, Configuration, Key Files, Dependencies, Tests, How-To, Performance (if applicable).
 3. Spot-check accuracy: pick 3 random claims (file path, MCM toggle name, save-compat note) and verify against current code. Stale docs are a known failure mode.
-4. Flag docs that are pre-v1.3.15 and reference v1.2 APIs.
+4. Flag docs that reference v1.2 APIs.
 
 Spawn one Explore subagent per feature batch. Each returns a per-feature doc-status row.
 
