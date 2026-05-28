@@ -107,11 +107,11 @@ The decompiled source is v1.4. Three pre-v1.4 deltas required deviations from th
 
 | Prompt assumption | v1.3.15 reality | Plan deviation |
 |---|---|---|
-| `Formation.SetPositioning` is private; reflect via `AccessTools` | **public** in v1.3.15 | Drop reflection. `CavalryCommandAdapter` calls directly. |
-| `Agent.SetMovementDirection` is private; reflect via `AccessTools` | **public** in v1.3.15 (`SetMovementDirection(in Vec2)`) | Drop reflection. `MissionBehavior.ApplyCollisionAvoidance` calls directly. |
-| Compare `MovementOrder.OrderType` against int 4 (Charge) and 5 (ChargeToTarget) | `MovementOrderEnum.Charge = 2`, `ChargeToTarget = 3`; property is `OrderEnum` (no `OrderType`) | Use enum names everywhere. Verbatim port silently mismatches against v1.3.15 enum values. |
+| `Formation.SetPositioning` is private; reflect via `AccessTools` | **public** pre-v1.4 | Drop reflection. `CavalryCommandAdapter` calls directly. |
+| `Agent.SetMovementDirection` is private; reflect via `AccessTools` | **public** pre-v1.4 (`SetMovementDirection(in Vec2)`) | Drop reflection. `MissionBehavior.ApplyCollisionAvoidance` calls directly. |
+| Compare `MovementOrder.OrderType` against int 4 (Charge) and 5 (ChargeToTarget) | `MovementOrderEnum.Charge = 2`, `ChargeToTarget = 3`; property is `OrderEnum` (no `OrderType`) | Use enum names everywhere. Verbatim port silently mismatches against pre-v1.4 enum values. |
 | Read `Formation.MovementOrder` property after `SetMovementOrder` | No public property; use `Formation.GetReadonlyMovementOrderReference()` | `FormationAdapter.CurrentMovementOrderType` and `Patch31` use the readonly-ref accessor. |
-| `Formation.IsCavalry` predicate exists | Doesn't exist on `Formation`. v1.3.15 path: `formation.QuerySystem.IsCavalryFormation` | `FormationAdapter.RepresentativeIsCavalry` queries the query-system. |
+| `Formation.IsCavalry` predicate exists | Doesn't exist on `Formation`. Pre-v1.4 path: `formation.QuerySystem.IsCavalryFormation` | `FormationAdapter.RepresentativeIsCavalry` queries the query-system. |
 
 ## Key Files
 
