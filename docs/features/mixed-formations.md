@@ -19,7 +19,7 @@ LOTR battles often produce mixed formations (a Rohirrim line with archers tucked
 Three constraints:
 
 1. **Position calculation must run inside vanilla's `GetOrderPositionOfUnit`** — that's the single point in the engine where each unit's intended position is queried. Patch the method, prefix-skip vanilla when our layout produces a position, return `true` otherwise.
-2. **Apply only during `Hold` movement state** — during charge, the engine's free-form combat positioning dominates; trying to override would fight the engine. The original developer's `(int)GetMovementState() != 1` check is preserved (in v1.3.15: `MovementStateEnum.Hold = 1`).
+2. **Apply only during `Hold` movement state** — during charge, the engine's free-form combat positioning dominates; trying to override would fight the engine. The original developer's `(int)GetMovementState() != 1` check is preserved (`MovementStateEnum.Hold = 1`).
 3. **Cache assignments per formation** — recomputing the slot grid for every unit on every position query would be O(N²) per formation per tick. Build the assignment once when the layout is set or the formation appears, then look up by `Agent.Index`.
 
 ### Solution Approach
