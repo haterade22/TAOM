@@ -79,3 +79,13 @@ One new memory:
 - `Dependencies/Foundation/IncompatibleModDetector.cs` — A1 (MED)
 
 Verification: `dotnet build TAOM.sln` 0 errors. `dotnet test TAOM.Tests` 2,520/2,522 passing. In-game re-launch will validate via diag.log — expect zero behavioral changes on clean modlist, correct attribution + protection on a deliberately-broken third-party mod.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

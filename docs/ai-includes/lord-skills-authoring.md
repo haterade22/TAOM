@@ -457,3 +457,14 @@ The system was built across three commits:
 | `c5dc168` | 2026-05-27 | TAOM-owned SkillSets — created `taom_lord_skill_sets.xml`, swapped `skill_template` on every adult lord, in-game verified on Boromir |
 
 GitHub issues: #228-#245 (one per culture).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/lord-skills.md](../features/lord-skills.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

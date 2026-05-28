@@ -214,3 +214,13 @@ The 99 hideout name strings in `TAOM_Map/Languages/<LANG>/loc_settlements.xml` w
 | 80+ new loc keys | Pure additions, can't break existing references |
 
 A save from before this feature loads cleanly; the player sees renamed hideouts + LOTR bandit cultures appear at next bandit spawn. A save FROM this feature loads on a version without it provided the bandit clans get re-mapped to vanilla culture IDs — which they do automatically since `is_bandit="true"` cultures are reaped from the loaded spcultures set at campaign init.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/rca-bandit-management-2026-05-27.md](../reviews/rca-bandit-management-2026-05-27.md)
+
+<!-- backlinks-end -->

@@ -47,3 +47,13 @@ Or one-at-a-time:
   - Title: `feat(lords-skills): Shaghana — lore-driven skills + traits for 9 adult NPCs`
 - **[abanissa](lords-skills-abanissa.md)** (Abanissa, culture_id=`abanissa`, 8 NPCs)
   - Title: `feat(lords-skills): Abanissa — lore-driven skills + traits for 8 adult NPCs`
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/lord-skills-authoring.md](../ai-includes/lord-skills-authoring.md)
+
+<!-- backlinks-end -->

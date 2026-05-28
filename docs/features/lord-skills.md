@@ -131,3 +131,14 @@ Total: 17 cultures, ~880 adult NPCs, 120 SkillSets. 18 GitHub issues #228-#245.
 ## Save Compatibility
 
 Hero skills bake at hero CREATION. Existing campaigns keep their old (vanilla SkillSet) values. New campaigns + un-spawned heroes use the new TAOM SkillSets. Document this in any user-facing release notes.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/lord-skills-authoring.md](../ai-includes/lord-skills-authoring.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->
