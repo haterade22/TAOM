@@ -27,7 +27,7 @@ TAOM is a single Bannerlord mod, so team compositions are based on **directory o
 | Feature Dev | `Main/Features/{Name}/` | `dotnet build Main` |
 | Test Dev | `TAOM.Tests/` | `dotnet test TAOM.Tests` |
 | XML/XSLT Dev | `Main/_Module/ModuleData/` | N/A (validated at runtime) |
-| TaleWorlds Researcher | Read-only (decompile DLLs) | `ilspycmd` |
+| TaleWorlds Researcher | Read-only (decompile DLLs) | `pwsh tools/taom-src.ps1 path <Type>` (ilspycmd fallback) |
 | Reviewer | Read-only | N/A |
 
 Typical team size: **2-3 teammates** plus the lead. More than 4 rarely helps for a single-mod project.
@@ -98,8 +98,9 @@ Run tests with: dotnet test TAOM.Tests
 **Spawn prompt (Researcher):**
 ```
 You are a TaleWorlds Researcher for the TAOM Bannerlord mod. Read
-docs/ai-includes/taleworlds-research-guide.md first. Use ilspycmd to decompile DLLs at
-%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client. Your job is to:
+docs/ai-includes/agent-operating-manual.md + taleworlds-research-guide.md first; you cannot
+invoke skills (recommend them instead). Use `pwsh tools/taom-src.ps1 path <Type>` (primary;
+ilspycmd fallback) to decompile the v1.4.5 DLLs. Your job is to:
 1. Decompile the requested classes
 2. Document method signatures, null handling, event timing
 3. Report findings to the lead via message
@@ -191,6 +192,8 @@ Target: **3-6 tasks per teammate per session**. Fewer means the tasks are too la
 
 ## Spawn Prompt Templates
 
+> **Every spawn prompt must also carry the subagent briefing** (CLAUDE.md "Briefing subagents"): start with *"Read [docs/ai-includes/agent-operating-manual.md](./agent-operating-manual.md) first; you cannot invoke skills or spawn agents — recommend them in your report"*, and use `pwsh tools/taom-src.ps1 path <Type>` for signatures. The templates below assume that preamble.
+
 ### Feature Developer
 ```
 You are a Feature Developer for the TAOM Bannerlord mod.
@@ -217,10 +220,12 @@ Test: dotnet test TAOM.Tests
 ```
 You are a TaleWorlds Researcher for the TAOM Bannerlord mod.
 
-Read docs/ai-includes/taleworlds-research-guide.md first.
+Read docs/ai-includes/agent-operating-manual.md AND docs/ai-includes/taleworlds-research-guide.md first.
+You cannot invoke skills or spawn agents — recommend them in your report.
 
-Your job: decompile TaleWorlds DLLs and document findings.
-Tool: ilspycmd "%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\{DLL}" -t "Namespace.Class"
+Your job: decompile TaleWorlds v1.4.5 DLLs and document findings.
+Primary tool: pwsh tools/taom-src.ps1 path <FullTypeName>   (cache-aware; prints a .cs path to grep)
+Fallback: ilspycmd "%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\{DLL}" -t "Namespace.Class"
 
 Key DLLs:
 - TaleWorlds.CampaignSystem.dll (campaign logic, diplomacy)

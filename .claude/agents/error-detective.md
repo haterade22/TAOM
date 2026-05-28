@@ -12,6 +12,9 @@ tools:
 
 When a single root cause manifests as **multiple symptoms across multiple features**, the `/investigate` skill (one-bug-at-a-time, locked to a feature dir) is too narrow. This agent steps back and looks for cross-system error patterns.
 
+## Execution model (read first)
+Fixed tool allowlist (Read/Grep/Glob/Bash, read-only); you **cannot invoke skills or spawn agents**. Your correlation map informs the orchestrator's next move — when you conclude "single root cause at X", **recommend** the orchestrator run `/investigate` scoped there; you don't invoke it. Don't assume CLAUDE.md / `.claude/rules` reached you. Tool catalog + full model: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
+
 ## When to invoke
 
 - Multiple `/investigate` runs in the same session keep finding "different bugs" that share suspicious traits (same call site, same lifecycle phase, same TaleWorlds API, same culture/race ID)

@@ -2,6 +2,60 @@
 
 ## 2026-05-28
 
+### feat(agents): subagent execution-model awareness — operating manual, de-staled agents, spawn-prompt convention
+
+Made every execution context (sessions, custom agents, ad-hoc subagents) understand how/when to use skills and tools. Motivated by an audit that found subagents (a) running on stale knowledge and (b) instructed to do impossible things.
+
+**The constraint** (confirmed via the Claude Code docs): a subagent runs in its own context with a **strict tool allowlist** and is NOT guaranteed to inherit CLAUDE.md / `.claude/rules` / skill descriptions. None of the 5 custom agents have the `Skill`/`Task` tool, so **agents cannot invoke skills** — they must recommend them to the orchestrator.
+
+**New shared reference:** `docs/ai-includes/agent-operating-manual.md` — execution model (allowlist, can't-invoke-skills → recommend, report-don't-self-heal, retry budget), a tool catalog (taom-src primary, build/test, binding gate, validators, snapshot) with exact commands, a skill catalog grouped by purpose (to recommend, not invoke), and where the convention docs live.
+
+**Agent fixes (short inline "Execution model" block + de-stale):**
+- `feature-builder` — removed dead "invoke `/freeze` / `/build-fix` via the Skill tool" instructions (it has no Skill tool) → now "recommend to the orchestrator"; corrected the stale "`E:\Decompiled_Bannerlord\` is a different version" note (it's v1.4.5 now) and made `taom-src` the primary signature tool.
+- `taleworlds-researcher` — de-staled v1.3.15 → v1.4.5, promoted `taom-src` to the primary decompile path (was `ilspycmd`/`ilspy`-MCP only), fixed the `.vscode/mcp.json` → `.mcp.json` reference.
+- `debugger`, `error-detective`, `refactoring-specialist` — added the execution-model block (recommend-don't-invoke).
+
+**Convention + propagation:**
+- CLAUDE.md "Briefing subagents (spawn-prompt convention)" — the orchestrator must brief every ad-hoc `Explore`/`Plan`/`general-purpose` agent (they have no body) with: read the operating manual, can't-invoke-skills, the tool reminder, explicit scope, and which convention docs to read. Manual registered in Doc Lookup.
+- `agent-teams.md` spawn templates updated to carry the briefing preamble + `taom-src` over `ilspycmd`.
+
+Zero eager-context cost: agent bodies + docs load lazily (only when that agent runs / the doc is read).
+
+### feat(skills): convert the workflow backlog to skills + codify "workflow → skill" convention
+
+Batch-converted the documented-but-un-skilled workflow backlog into 6 new skills, and made "every recurring workflow becomes a skill" a standing practice.
+
+**New skills** (`.claude/skills/`):
+- `verify-bindings` — run the TaleWorlds API-binding gate + refresh the committed signature snapshot (the workflow built earlier today).
+- `ship` — orchestrate the MANDATORY completion sequence (`/verify` → `/deep-review` → fix → `/review-codex` → close issue → docs → CHANGELOG). Previously prose-only in CLAUDE.md; the RCA history shows steps got skipped.
+- `new-culture`, `lord-skills`, `author-armor` — thin entry points over the `docs/ai-includes/` authoring guides (culture armor+troops+recruitment; lord SkillSets; armor item + roster revamp), encoding the top gotchas (mesh-typo fidelity, canonical Armory folder, cover attributes, `skill_template`-not-`<skills>`).
+- `localize` — the 12-language propagation pipeline (wrap `{=KEY}` → register → `translate_with_claude.py` → validate).
+
+**Convention + enforcement:**
+- CLAUDE.md "Workflow → Skill convention" — the three-part filter (recurring + multi-step + gotcha-bearing) for when to skill-ify, with an explicit eager-context caveat so one-offs/reference docs stay docs. All 6 skills registered in the Skills table.
+- `/skill-stocktake` gained a "Workflow coverage" checklist item that flags qualifying documented workflows missing a skill (read-only, surfaces for human decision — never auto-creates).
+
+All new descriptions ≤30 words (validated via `context-budget/scan.sh`); total added eager cost ~250 tokens. Skills are thin orchestrators that point to the authoritative docs rather than duplicating them.
+
+### feat(migration): offline TaleWorlds API-binding gate + committed v1.4.5 signature snapshot
+
+Closes the offline-checkable portion of the never-run S6 migration validation gate (`docs/migration/TRACKING.md`). Three new test classes under `TAOM.Tests/Migration/` verify — on every `dotnet test`, no game launch — that TAOM's engine touchpoints still bind against the *installed* v1.4.5 DLLs:
+
+- **`HarmonyPatchBindingTests`** — enumerates all **110** `[HarmonyPatch]` / `TargetMethod` classes in TAOM.dll and resolves each target exactly as Harmony does at `PatchAll`.
+- **`GameModelOverrideBindingTests`** — all **39** GameModels are registered in `SubModule.cs` (`AddModel`), override ≥1 base virtual, and don't shadow a base virtual without `override`. (The compiler already enforces override-signature drift via CS0115 — this targets the gaps it can't see.)
+- **`ReflectionSiteBindingTests`** — **32** auxiliary private/internal reflection members (the EditorCacheRebuild `NavigationCache<T>` web, EquipPresets/CompanionTactics/CC/CustomBattles/SpecialResources private fields) resolve against the installed engine.
+
+`GameAssemblies.cs` pre-loads SandBox/CustomBattle/StoryMode module DLLs so engine types resolve in the test AppDomain. TAOM.Tests now references `Lib.Harmony` (compile + runtime) for the resolution APIs.
+
+**Caught a real defect on first run:** `HeroViewModel_FillFrom_Patch` used a name-only `[HarmonyPatch(..., "FillFrom")]`; `HeroViewModel` inherits two more `FillFrom` overloads from `CharacterViewModel`, so Harmony's `AccessTools.Method` threw `AmbiguousMatchException` at patch time and the postfix silently never applied in v1.4.5 (hero-portrait clan colors broken). Fixed by pinning the argument types — the documented HarmonyLib way to disambiguate overloads.
+
+**Committed signature snapshot** at `docs/reference/taleworlds-api-snapshot/` (`reflection-sites.md`, auto-generated `gamemodel-bases.md` + `patch-targets.md` via `tools/snapshot_api_surface.ps1 [-Check]`) so signature lookups no longer require the external `E:\Decompiled_Bannerlord\` dump. Residual in-game checks itemized in `docs/migration/s6-runtime-punchlist.md`.
+
+Full suite green: **2586 passed / 2 skipped / 0 failed**. Negative-proof confirmed (corrupting a catalogued member turns the gate red).
+
+Not-tested: in-game patch *application* + dynamic-reflection CC flow (require a running game — see s6-runtime-punchlist.md).
+Research: HarmonyLib annotations (overloaded-method argument-type rule), BUTR.Harmony.Analyzer (compile-time complement).
+
 ### docs(lint): may27a doc-rot cleanup — 186 → 35 findings (first `/lint-cleanup-loop` run)
 
 Merged branch `taom-lint/may27a`: the first production run of the autonomous `/lint-cleanup-loop` skill (the program.md-style campaign skill built from the karpathy/autoresearch review — see [docs/research/karpathy-autoresearch.md](docs/research/karpathy-autoresearch.md)).

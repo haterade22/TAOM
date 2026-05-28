@@ -56,6 +56,13 @@ For each skill/agent under audit, check:
 - [ ] Every `docs/...` link resolves
 - [ ] Every ADR reference (e.g. `ADR-007`) maps to a real `docs/adrs/*.md` file
 
+### Workflow coverage (the "workflow → skill" convention)
+- [ ] No qualifying documented workflow is missing a skill. Per CLAUDE.md "Workflow → Skill convention", a process that is **recurring + multi-step + gotcha-bearing** should be a skill. Scan for prose workflows that qualify but aren't skilled, and flag each as `[LOW] un-skilled workflow: <doc> — candidate /<name>`:
+  - Numbered/phased authoring guides in `docs/ai-includes/*.md` with no matching `.claude/skills/<name>/`.
+  - "Workflow (MANDATORY)" / "sequence" / "phases" blocks in CLAUDE.md that only chain other skills as prose.
+  - Recurring `generate → apply → validate` tool pipelines in `tools/README.md` used across ≥2 features.
+  Do NOT auto-create — one-offs, single-command operations, and reference-only docs are exempt (a skill for those just taxes eager context for no benefit). Surface as a human decision.
+
 ### Behavior consistency
 - [ ] Promises in the description match what the skill actually does (e.g., a description claiming "auto-engages /freeze" must have a hook block in frontmatter that engages it)
 - [ ] No claim that a state file alone activates a hook (per Codex review #28; see `harness-facts.md` "Inline-hook activation")

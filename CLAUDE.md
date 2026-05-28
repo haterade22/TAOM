@@ -117,6 +117,20 @@ This is a project-level discipline, not a one-off feature note — every future 
 | `/context-save` | Snapshot working context (git, in-flight tasks, decisions, files) to `.claude/state/context/` so a future session can resume without losing progress. |
 | `/context-restore` | Load the most recent (or named) snapshot from `/context-save`. |
 | `/skill-stocktake` | Quality audit of installed skills + agents. Quick scan (recent only) or `full`. Catches decay (broken refs, stale paths, bloated descriptions). |
+| `/verify-bindings [check\|refresh\|full]` | Verify all Harmony patch / GameModel / reflection bindings resolve against the installed engine + refresh the committed API snapshot. Use after an engine bump or patch/GameModel change. |
+| `/ship [feature]` | Orchestrate the MANDATORY completion sequence: `/verify` → `/deep-review` → fix → `/review-codex` → close issue → docs → CHANGELOG. C# features touching ≥2 files only. |
+| `/new-culture [id]` | Author/revamp a culture's armor + troop tree + recruitment end-to-end (follows `docs/ai-includes/new-culture-authoring.md`). |
+| `/lord-skills [name\|culture]` | Assign lore-driven lord skills + traits via the TAOM SkillSet system (`docs/ai-includes/lord-skills-authoring.md`). |
+| `/localize [c#\|xml\|xslt]` | Propagate new player-facing text through the 12-language localization pipeline. |
+| `/author-armor [culture]` | Author LOTRLOME armor items + swap troop rosters (enforces canonical-folder + cover-attribute rules). |
+
+### Workflow → Skill convention
+
+**Every recurring, multi-step workflow we develop becomes a skill.** When you find yourself running a process that is (a) **repeatable**, (b) **multi-step or chains other skills**, and (c) **carries TAOM-specific gotchas worth encoding**, author a `.claude/skills/<name>/SKILL.md` for it before the knowledge evaporates into a one-off transcript. The skill is a thin entry point — trigger, ordered steps, key tools, top gotchas — that **points to** the authoritative doc (`docs/ai-includes/*`, etc.) rather than duplicating it.
+
+**Do NOT skill-ify** one-offs, pure reference docs, or single-command operations — skill descriptions load **eagerly** into every conversation + Task spawn (see `.claude/rules/harness-facts.md`), so each skill is a permanent context tax. The filter is the three-part test above; when in doubt, leave it a doc and let `/skill-stocktake` flag it if it recurs.
+
+New skills must: keep `description` ≤30 words, follow the frontmatter rules in `.claude/rules/external-skill-ports.md`, register in the table above, and update `CHANGELOG.md` (the pre-commit hook enforces the last one).
 
 ## Skill Routing (when to invoke what)
 
@@ -202,6 +216,18 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | `error-detective` | Cross-system error correlation when one root cause manifests as multiple symptoms across features. |
 | `refactoring-specialist` | Behavior-preserving structural refactoring (extract/rename/move). Use `/deslop` for redundant-code deletion. |
 
+### Briefing subagents (spawn-prompt convention)
+
+A subagent runs in its own context with a **strict tool allowlist** and does NOT reliably inherit this CLAUDE.md, the `.claude/rules`, or skill descriptions (the Claude Code docs don't guarantee it). The 5 custom agents above carry their own "Execution model" block; **ad-hoc agents (`Explore` / `Plan` / `general-purpose`) have no body — so YOU, the orchestrator, must put the briefing in the spawn prompt.** Every non-trivial Task/Agent prompt should include:
+
+1. **"Read [docs/ai-includes/agent-operating-manual.md](./docs/ai-includes/agent-operating-manual.md) first"** — the execution model + tool/skill catalog.
+2. **"You cannot invoke skills or spawn agents — recommend them in your report; the orchestrator runs them."** (No subagent has the `Skill`/`Task` tool.)
+3. **The relevant tool reminder** — e.g. "for TaleWorlds signatures use `pwsh tools/taom-src.ps1 path <Type>`"; "build/test with `dotnet … -p:DisableModuleCopy=true`, not `./build.ps1`".
+4. **Explicit scope** — which dirs/files are in bounds; `Main/IoC.cs` / `Main/SubModule.cs` are single-owner (recommend edits, don't make them).
+5. **Which convention docs to read** — point at the specific `docs/ai-includes/*` or `.claude/rules/*` for the task, since they may not have auto-loaded.
+
+Pure read-only research agents (`Explore`, `Plan`) need only items 1–2 + scope; building/editing agents need all five.
+
 ## Model Routing
 
 | Task | Model | Why |
@@ -232,6 +258,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | Check migration status | [migration/TRACKING.md](./docs/migration/TRACKING.md) |
 | Update BUTR/MCM/ButterLib dependencies | [migration/dr3-maintenance.md](./docs/migration/dr3-maintenance.md) — version pinning, Steam Workshop fallback, smoke test, risk scenarios |
 | Use agent teams | [agent-teams.md](./docs/ai-includes/agent-teams.md) |
+| Brief/spawn a subagent correctly | [agent-operating-manual.md](./docs/ai-includes/agent-operating-manual.md) — execution model (can't invoke skills), tool catalog, what to recommend |
 | Author a new culture's armor + troop tree (end-to-end) | [new-culture-authoring.md](./docs/ai-includes/new-culture-authoring.md) — phases, helpers, color convention, iteration loops |
 | Add or fix lord skills + traits (any culture, any canonical character) | [lord-skills-authoring.md](./docs/ai-includes/lord-skills-authoring.md) — TAOM SkillSet system, archetype catalog, per-NPC override recipes, gotchas |
 | Plan future GameModel overrides | [roadmap.md](./docs/roadmap.md) |

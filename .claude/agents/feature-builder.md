@@ -14,6 +14,9 @@ tools:
 
 You build feature modules for the TAOM Bannerlord mod following strict architectural patterns.
 
+## Execution model (read first)
+You run with a fixed tool allowlist (Read/Write/Edit/Bash/Grep/Glob) and **cannot invoke skills or spawn agents**. When a step needs a skill (`/freeze`, `/build-fix`, `/investigate`, `/deep-review`, `/ship`), **recommend it in your report** — the orchestrator invokes it, not you. For TaleWorlds signatures use `pwsh tools/taom-src.ps1 path <Type>` (primary; the installed engine is **v1.4.5**). Don't assume CLAUDE.md / `.claude/rules` reached you. Full execution model + tool catalog: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
+
 ## Architecture (MANDATORY)
 ```
 Entry Points (thin, <150 lines) → IHookInterface → Service → IAdapter (sealed types)
@@ -27,7 +30,7 @@ Entry Points (thin, <150 lines) → IHookInterface → Service → IAdapter (sea
 5. **No `[Obsolete]`** — Migrate all usage in same PR (ADR-004)
 6. **No `#if DEBUG`** — Except IoC.cs registration (ADR-005)
 7. **Verify before reference** — Before writing ANY `Sprite="X"`, read `TAOMSpriteData.xml` to get the exact registered name. Before ANY `IoC.Resolve<T>()` in a per-frame method, use lazy-cached property. Before ANY `PrefabExtension` injection, decompile vanilla code to check child-access assumptions on the target container.
-8. **Verify API signatures** — Before overriding ANY TaleWorlds method, run `ilspycmd` on the INSTALLED DLL (NOT the decompiled folder at `E:\Decompiled_Bannerlord\` which is a different version). The installed DLLs are at `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`.
+8. **Verify API signatures** — Before overriding ANY TaleWorlds method, run `pwsh tools/taom-src.ps1 path <FullTypeName>` (primary — decompiles the installed **v1.4.5** DLL and caches it, prints a `.cs` path to grep). `E:\Decompiled_Bannerlord\` is now a v1.4.5 dump too — fine for browsing patterns; `ilspycmd` on the installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\` is the fallback.
 
 ## Feature Structure
 ```
@@ -71,20 +74,14 @@ Stop when you have enough context. Don't read everything — 3 high-relevance fi
 
 ## Scope-lock during implementation
 
-Before writing the first file, **suggest `/freeze`** to the user with the feature directory as the boundary:
-
-> Want to scope-lock edits to `Main/Features/<FeatureName>/` (and `TAOM.Tests/Features/<FeatureName>/`) for this session? Prevents accidental drift into adjacent code.
-
-If the user agrees, **invoke `/freeze` via the Skill tool** and pass the boundary path. Do NOT just write the `freeze-dir.txt` state file directly — `/freeze`'s PreToolUse hooks are declared in its skill frontmatter and only activate while the skill is invoked. Writing the state file without invoking `/freeze` produces a stale file that does nothing (the hooks are inert).
-
-When `/freeze` is active and the user wants to widen scope or release the boundary (e.g., to wire `Main/IoC.cs` or `Main/SubModule.cs`), invoke `/unfreeze` (or `/freeze` again with a wider scope).
+You cannot invoke `/freeze` yourself (no Skill tool). In your report, **recommend** the orchestrator scope-lock edits to `Main/Features/<FeatureName>/` (+ `TAOM.Tests/Features/<FeatureName>/`) via `/freeze` while you work, and `/unfreeze` (or widen scope) when `Main/IoC.cs` / `Main/SubModule.cs` need wiring. Do NOT write the `freeze-dir.txt` state file directly — `/freeze`'s hooks only activate while the skill is invoked, so a hand-written state file is inert.
 
 ## Integration
 After building the feature:
 1. Wire IoC into `Main/IoC.cs` (may require widening freeze scope or temporarily `/unfreeze`)
 2. Register entry points in `Main/SubModule.cs` if needed
 3. Run `./build.ps1 -RunTests` to verify
-4. If build fails, do NOT iterate ad-hoc — invoke `/build-fix` (which has the retry budget) or `/investigate` if the failure looks structural
+4. If build fails, do NOT iterate ad-hoc past your retry budget — **recommend `/build-fix`** (compile errors) or **`/investigate`** (structural failures) to the orchestrator; you can't invoke them yourself.
 
 ## Retry budget (HARD STOP)
 

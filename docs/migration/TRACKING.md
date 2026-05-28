@@ -126,7 +126,7 @@ Visual order may now be inverted. S5 task: verify in-game; swap to `VerticalTopT
 | Task | Status |
 |---|---|
 | 70 Harmony patches compile clean against 1.4.5 | ✅ |
-| Runtime binding verification (target methods exist) | ⏳ S6 smoke test |
+| Runtime binding verification (target methods exist) | ✅ **offline gate** — `TAOM.Tests/Migration/HarmonyPatchBindingTests` resolves all 110 patch targets against the installed v1.4.5 engine on every `dotnet test`. Caught + fixed a real ambiguity defect in `HeroViewModel_FillFrom_Patch` on first run (2026-05-28). In-game patch *application* still on the [S6 punch-list](./s6-runtime-punchlist.md). |
 
 ### S5 — Mixin / PrefabExtension (COMPILE-CLEAN, runtime pending S6)
 
@@ -184,6 +184,8 @@ Visual order may now be inverted. S5 task: verify in-game; swap to `VerticalTopT
 **Note (2026-05-25):** Formal stages skipped. The build is green, tests pass (2,419/2 skip), and 1.4.5 feature work has been shipping on this branch since 2026-05-22 (warg combat, CC layout, faction-map overhaul, career tooltips, etc.). Treat any in-game crash or Harmony binding failure as a one-off `/investigate`, not a migration-stage gate.
 
 S6 was the smoke-test gate; S7-S10 were feature validation; S11 was Codex; S12 was closeout.
+
+**Update (2026-05-28): S6's offline-checkable portion is now a standing test gate.** `TAOM.Tests/Migration/` verifies — on every `dotnet test` — that all 110 Harmony patch targets bind, all 39 GameModels are registered + override correctly, and 32 auxiliary reflection members resolve against the *installed* v1.4.5 engine. It caught a real defect on first run (`HeroViewModel_FillFrom_Patch` ambiguity). The residual in-game checks (patch *application*, prefab visual order, ruler equipment, alliances, naval, dynamic-reflection CC flow) are itemized in [`s6-runtime-punchlist.md`](./s6-runtime-punchlist.md). A committed v1.4.5 signature snapshot lives at [`docs/reference/taleworlds-api-snapshot/`](../reference/taleworlds-api-snapshot/) so signature lookups no longer require the external decompile dump.
 
 ### Risk surface inventory (verified)
 

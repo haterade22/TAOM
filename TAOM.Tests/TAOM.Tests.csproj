@@ -10,6 +10,13 @@
 		<PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
 		<PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
 		<PackageReference Include="NSubstitute" Version="5.1.0" />
+		<!-- Compile-time + runtime HarmonyLib (AccessTools, HarmonyPatch, HarmonyMethod) for the
+		     Migration/ binding-verification suite. Main exposes Lib.Harmony as compile-only, which
+		     does NOT flow transitively to consumers. We must bring the runtime asset too: TAOM.dll
+		     binds to 0Harmony, Version=2.4.2.0, and reading its [HarmonyPatch] attributes at test
+		     time forces that assembly to load — so 0Harmony.dll must be in the test bin. A
+		     compile-only reference here suppresses the transitive runtime copy and breaks the load. -->
+		<PackageReference Include="Lib.Harmony" Version="2.4.2" />
 		<PackageReference Include="coverlet.collector" Version="6.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
