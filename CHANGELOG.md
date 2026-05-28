@@ -2,6 +2,10 @@
 
 ## 2026-05-28
 
+### data(bandit-management): bandit clans fly parent-kingdom banners
+
+The 5 LOTR bandit clans in `characters/clans.xml` shipped (commit `ae39aae`) with generic vanilla bandit greyscale banner keys. Swapped each clan's `banner_key` to its parent kingdom's heraldry so raiders read as offshoots of their lore faction: `dunland_raiders` → Dunland (`empire`), `rhun_raiders` → Rhûn (`khuzait`), `harad_raiders` → Harad (`aserai`), `gundabad_raiders` → Gundabad, `umbar_corsairs` → Umbar. Keys sourced from `spkingdoms.xslt` (empire/khuzait/aserai) + `taom_spkingdoms.xml` (gundabad/umbar). Data-only change; clan colors left at the bandit greyscale. XML re-validated via `[xml]` parse.
+
 ### chore(troops): delete urukhai_hunter + urukhai_chosenmarksman
 
 - Removed both troops from `troops_isengard.xml` (51 → 49 NPCs). They were orphaned out of the Isengard upgrade graph by the bow-line restructure (c07ed72); the bow line now runs Scout → Tracker → Archer with no Hunter/Chosen-Marksman.
