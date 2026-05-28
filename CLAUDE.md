@@ -123,6 +123,7 @@ This is a project-level discipline, not a one-off feature note — every future 
 | `/lord-skills [name\|culture]` | Assign lore-driven lord skills + traits via the TAOM SkillSet system (`docs/ai-includes/lord-skills-authoring.md`). |
 | `/localize [c#\|xml\|xslt]` | Propagate new player-facing text through the 12-language localization pipeline. |
 | `/author-armor [culture]` | Author LOTRLOME armor items + swap troop rosters (enforces canonical-folder + cover-attribute rules). |
+| `/finish-branch [branch] [base]` | Integrate a merge-ready branch into trunk: FF-check → merge → regenerate backlinks → CHANGELOG → delete branch (local+remote) → push (confirm). Post-`/ship`; TAOM trunk-based, not Git Flow. |
 
 ### Workflow → Skill convention
 

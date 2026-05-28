@@ -2,6 +2,16 @@
 
 ## 2026-05-28
 
+### feat(skills): add /finish-branch — trunk-integration workflow capture
+
+Captures the branch-integration workflow we ran by hand twice this session (the knowledge-base merges + the may27a lint-cleanup merge) as a skill, per the "Workflow → Skill" convention. Passes the three-part filter: repeatable (every merge), multi-step (FF-check → merge → backlinks → CHANGELOG → delete branch local+remote → push), and carries TAOM-specific gotchas (FF-vs-real-merge detection, don't sweep parallel-work backlink drift into the merge commit, `git branch -d` as a merge gate, push-to-becoming-master confirmation).
+
+Distinct from `/ship` (the pre-merge review gate this follows) and the plugin `git-workflow:finish` (Git Flow + version tags; TAOM is trunk-based on `bannerlord-1.4.5` with ephemeral `taom-*` branches, no tagging).
+
+`/review-trends` (analyze_reviews → progress.png) and the rebalancing CLIs were evaluated against the same filter and **deliberately not** skill-ified — single-command / already-documented operations would just tax eager context. `/skill-stocktake` will flag them if they start recurring.
+
+Files: `.claude/skills/finish-branch/SKILL.md` (new), CLAUDE.md skill table row.
+
 ### feat(agents): subagent execution-model awareness — operating manual, de-staled agents, spawn-prompt convention
 
 Made every execution context (sessions, custom agents, ad-hoc subagents) understand how/when to use skills and tools. Motivated by an audit that found subagents (a) running on stale knowledge and (b) instructed to do impossible things.
