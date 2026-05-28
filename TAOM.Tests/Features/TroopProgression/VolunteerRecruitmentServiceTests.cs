@@ -534,8 +534,10 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_EreborSettlement_HighRoll_ReturnsNoble()
     {
-        // town_E1: erebor_reg_miner(5) + erebor_noble(3) = total 8
-        _random.Next(8).Returns(5);
+        // town_E1 now uses the Erebor+Iron Hills mix (total 12):
+        // miner(5)[0..4] + noble(3)[5..7] + iron_hills_reg_recruit(2)[8..9] + iron_hills_noble(2)[10..11].
+        // Roll 5 still lands in the erebor_noble range.
+        _random.Next(12).Returns(5);
         var context = new VolunteerContext(
             settlementId: "town_E1",
             boundSettlementId: null,
@@ -622,6 +624,42 @@ public class VolunteerRecruitmentServiceTests
         var result = _sut.GetVolunteerTroopId(context);
 
         Assert.AreEqual("erebor_reg_miner", result);
+    }
+
+    // --- Erebor settlement + clan pools now mix Iron Hills with Erebor ---
+    // Mix (weight 12): erebor_reg_miner(5) + erebor_noble(3) + iron_hills_reg_recruit(2) + iron_hills_noble(2).
+    // Cumulative: [0..4]=miner, [5..7]=noble, [8..9]=IH recruit, [10..11]=IH noble.
+
+    [TestMethod]
+    public void GetVolunteerTroopId_EreborTown_Roll8_ReturnsIronHillsRecruit()
+    {
+        // town_E1 settlement pool now includes Iron Hills. Roll 8 → iron_hills_reg_recruit.
+        _random.Next(12).Returns(8);
+        var context = new VolunteerContext(
+            settlementId: "town_E1",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "erebor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("iron_hills_reg_recruit", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_EreborClan_Roll11_ReturnsIronHillsNoble()
+    {
+        // clan_erebor_1 pool now includes Iron Hills. Roll 11 = last entry → iron_hills_noble.
+        _random.Next(12).Returns(11);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_erebor_1",
+            cultureId: "erebor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("iron_hills_noble", result);
     }
 
     // --- Shaghâna culture fallback ---
@@ -1974,5 +2012,89 @@ public class VolunteerRecruitmentServiceTests
         var result = _sut.GetVolunteerTroopId(context);
 
         Assert.AreEqual("urukhai_scout", result);
+    }
+
+    // --- Dunland (Culture.empire) recruitment pools ---
+    // Culture pool: dunland_peasant + noble_son + boar_noble_son + raven_noble_son, weight 1 each (total 4).
+    // Totem clans: peasant + their own noble son (total 2). Other clans: full roster (total 4).
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DunlandCulture_LowRoll_ReturnsPeasant()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "empire");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dunland_peasant", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DunlandCulture_HighRoll_ReturnsRavenNobleSon()
+    {
+        // Roll 3 = last entry (raven noble son) in the weight-1×4 culture pool.
+        _random.Next(4).Returns(3);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "empire");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dunland_raven_noble_son", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DunlandWolfClan_HighRoll_ReturnsWolfNobleSon()
+    {
+        // clan_empire_north_1 (Blaidd/Wolf) pool: peasant(0) + noble_son(1). Roll 1 → wolf noble son.
+        _random.Next(2).Returns(1);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_empire_north_1",
+            cultureId: "empire");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dunland_noble_son", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DunlandBoarClan_HighRoll_ReturnsBoarNobleSon()
+    {
+        // clan_empire_north_2 (Turch/Boar) pool: peasant(0) + boar_noble_son(1). Roll 1 → boar.
+        _random.Next(2).Returns(1);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_empire_north_2",
+            cultureId: "empire");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dunland_boar_noble_son", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DunlandNonTotemClan_HasFullRoster()
+    {
+        // clan_empire_north_4 (Arth/Bear) has no signature noble son → full roster (4 entries).
+        // Roll 3 = last entry (raven noble son), confirming the full roster is wired.
+        _random.Next(4).Returns(3);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_empire_north_4",
+            cultureId: "empire");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("dunland_raven_noble_son", result);
     }
 }

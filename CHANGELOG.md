@@ -2,6 +2,21 @@
 
 ## 2026-05-28
 
+### feat(recruitment): Dunland culture + clan pools, Erebor Iron Hills mix
+
+Two `VolunteerRecruitmentService` pool changes.
+
+**Dunland (`Culture.empire`)** — previously had no pool (fell through to null). Added:
+- Culture pool ("them all"): all 4 Dunland `is_basic_troop="true"` troops at weight 1 — Peasant + the three totem noble sons (Wolf/Blaidd `dunland_noble_son`, Boar/Turch `dunland_boar_noble_son`, Raven/Cigfran `dunland_raven_noble_son`).
+- Clan pools (specific troops by name): the 3 totem clans with a matching noble son recruit Peasant + their own noble son (`clan_empire_north_1` Wolf, `_2` Boar, `_5` Raven, weight 1 each). The 6 totem clans without a named noble son (Uch/Ox, Arth/Bear, Hebog/Hawk, Draig/Dragon, Caru/Stag, Avanc — `_3/_4/_6/_7/_8/_9`) recruit the full roster (Peasant + all 3 noble sons).
+- `SettlementMap` deliberately left empty for Dunland (per spec).
+
+**Erebor** — clans + settlements now field a **mix of Erebor + Iron Hills** troops (was Erebor-only). All 13 Erebor settlement pools (`town_E1-4`, `castle_E1-9`) and 7 clan pools (`clan_erebor_1-7`) now use a shared `EreborMix`: `erebor_reg_miner` 5, `erebor_noble` 3, `iron_hills_reg_recruit` 2, `iron_hills_noble` 2 (same blend as the existing culture fallback). Settlements were updated too because `SettlementMap` is checked before `ClanMap` — a clan-only change would never surface in the mapped Erebor towns/castles.
+
+Tests: 5 new Dunland (culture low/high-roll, Wolf + Boar clan signature, non-totem full roster) + 2 new Erebor-mix (town roll→IH recruit, clan roll→IH noble); 1 existing Erebor settlement test updated for the new total weight (8→12). Full suite 2624 passed / 0 failed / 2 skipped.
+
+Save-compat: additive recruitment-pool changes only; no troop/clan/settlement data touched.
+
 ### feat(isengard): fold Scout sub-tree into main tree (bow + 2H lines) + recruitment pool
 
 Dismantled the standalone Uruk-Hai Scout sub-tree and folded its troops into the main Recruit→Fighter→Warrior progression, per the in-game tree review.

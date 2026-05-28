@@ -48,6 +48,54 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeDaleSettlements();
         InitializeRohanClans();
         InitializeIsengardCulture();
+        InitializeDunlandCulture();
+        InitializeDunlandClans();
+    }
+
+    // --- Dunland (Culture.empire) Culture Fallback ---
+    // "Culture will be them all" — every Dunland is_basic_troop=true troop at equal weight 1:
+    // the generic Peasant plus the three totem noble sons (Wolf/Blaidd, Boar/Turch, Raven/Cigfran).
+    // SettlementMap is intentionally left empty for Dunland (per user spec).
+    private static void InitializeDunlandCulture()
+    {
+        CultureMap["empire"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("dunland_peasant",          1),
+            new VolunteerChance("dunland_noble_son",        1),  // Blaidd-luth (Wolf)
+            new VolunteerChance("dunland_boar_noble_son",   1),  // Turch-luth (Boar)
+            new VolunteerChance("dunland_raven_noble_son",  1),  // Cigfran-luth (Raven)
+        };
+    }
+
+    // --- Dunland Clan Pools ---
+    // "Clan will be specific troops by name." The three totem clans with a matching noble son
+    // recruit the Peasant + their own noble son. The six totem clans WITHOUT a named noble son
+    // (Uch/Ox, Arth/Bear, Hebog/Hawk, Draig/Dragon, Caru/Stag, Avanc) get the full roster
+    // (Peasant + all three noble sons) so they still field a complete clan army.
+    private static void InitializeDunlandClans()
+    {
+        // Totem clans with a signature noble son:
+        AddClan("clan_empire_north_1",  // Blaidd-luth (Wolf)
+            ("dunland_peasant", 1), ("dunland_noble_son", 1));
+        AddClan("clan_empire_north_2",  // Turch-luth (Boar)
+            ("dunland_peasant", 1), ("dunland_boar_noble_son", 1));
+        AddClan("clan_empire_north_5",  // Cigfran-luth (Raven)
+            ("dunland_peasant", 1), ("dunland_raven_noble_son", 1));
+
+        // Totem clans without a signature noble son — full roster:
+        (string, int)[] allDunland =
+        {
+            ("dunland_peasant",         1),
+            ("dunland_noble_son",       1),
+            ("dunland_boar_noble_son",  1),
+            ("dunland_raven_noble_son", 1),
+        };
+        AddClan("clan_empire_north_3", allDunland);  // Uch-luth (Ox)
+        AddClan("clan_empire_north_4", allDunland);  // Arth-luth (Bear)
+        AddClan("clan_empire_north_6", allDunland);  // Hebog-luth (Hawk)
+        AddClan("clan_empire_north_7", allDunland);  // Draig-luth (Dragon)
+        AddClan("clan_empire_north_8", allDunland);  // Caru-luth (Stag)
+        AddClan("clan_empire_north_9", allDunland);  // Avanc-luth
     }
 
     // --- Isengard Culture Fallback ---
@@ -399,37 +447,49 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
 
     // --- Erebor Settlement Mappings ---
 
+    // Erebor recruitment is a mix of Erebor + Iron Hills troops (same blend as the culture pool):
+    // Erebor-leaning 8:4 weight (miner 5 / noble 3 / Iron Hills recruit 2 / Iron Hills noble 2).
+    // Applied to BOTH settlements and clans — settlement pools are checked first, so the mix must
+    // live there too or it would never surface in the mapped Erebor towns/castles.
+    private static readonly (string, int)[] EreborMix =
+    {
+        ("erebor_reg_miner",       5),
+        ("erebor_noble",           3),
+        ("iron_hills_reg_recruit", 2),
+        ("iron_hills_noble",       2),
+    };
+
     private static void InitializeEreborSettlements()
     {
         // Towns
-        AddSettlement("town_E1", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddSettlement("town_E2", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddSettlement("town_E3", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddSettlement("town_E4", ("erebor_reg_miner", 5), ("erebor_noble", 3));
+        AddSettlement("town_E1", EreborMix);
+        AddSettlement("town_E2", EreborMix);
+        AddSettlement("town_E3", EreborMix);
+        AddSettlement("town_E4", EreborMix);
 
         // Castles
-        AddSettlement("castle_E1", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddSettlement("castle_E2", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddSettlement("castle_E3", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddSettlement("castle_E4", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddSettlement("castle_E5", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddSettlement("castle_E6", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddSettlement("castle_E7", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddSettlement("castle_E8", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddSettlement("castle_E9", ("erebor_reg_miner", 5), ("erebor_noble", 3));
+        AddSettlement("castle_E1", EreborMix);
+        AddSettlement("castle_E2", EreborMix);
+        AddSettlement("castle_E3", EreborMix);
+        AddSettlement("castle_E4", EreborMix);
+        AddSettlement("castle_E5", EreborMix);
+        AddSettlement("castle_E6", EreborMix);
+        AddSettlement("castle_E7", EreborMix);
+        AddSettlement("castle_E8", EreborMix);
+        AddSettlement("castle_E9", EreborMix);
     }
 
     // --- Erebor Clan Mappings ---
 
     private static void InitializeEreborClans()
     {
-        AddClan("clan_erebor_1", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddClan("clan_erebor_2", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddClan("clan_erebor_3", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddClan("clan_erebor_4", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddClan("clan_erebor_5", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddClan("clan_erebor_6", ("erebor_reg_miner", 5), ("erebor_noble", 3));
-        AddClan("clan_erebor_7", ("erebor_reg_miner", 5), ("erebor_noble", 3));
+        AddClan("clan_erebor_1", EreborMix);
+        AddClan("clan_erebor_2", EreborMix);
+        AddClan("clan_erebor_3", EreborMix);
+        AddClan("clan_erebor_4", EreborMix);
+        AddClan("clan_erebor_5", EreborMix);
+        AddClan("clan_erebor_6", EreborMix);
+        AddClan("clan_erebor_7", EreborMix);
     }
 
     // --- Erebor Culture Fallback ---
