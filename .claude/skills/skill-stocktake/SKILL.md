@@ -42,6 +42,12 @@ For each skill/agent under audit, check:
 - [ ] `hooks:` if present, command paths resolve (file exists, is executable, in tracked git)
 - [ ] If a `paths:` field is present (rules only), it's intentional — `paths: ["**/*"]` is conditional, not always-load (per `harness-facts.md`)
 
+### Authoring discipline (new or revised skills — per `external-skill-ports.md`)
+- [ ] `description:` is written as triggers ("Use when…"), NOT a workflow summary — a summary makes the agent follow the summary instead of opening the skill body.
+- [ ] Name is active-voice / verb-first or gerund (`new-culture`, `finish-branch`), not a noun phrase (`culture-creation`).
+- [ ] Flowcharts (if any) exist ONLY for non-obvious decisions/loops — never wrapping linear steps, reference tables, or code.
+- [ ] Body is a thin entry point (Overview / When to Use / Steps / Gotchas) that points to a `docs/` file rather than duplicating it.
+
 ### Hook integrity (PreToolUse(Bash) hooks specifically)
 - [ ] If the hook detects `git commit` invocations, it uses the canonical two-stage pattern from `harness-facts.md:58-84` ("Git invocation forms hooks must handle"). Forms it must catch: `git commit`, `git -C path commit`, `git -c key=val commit`. Forms it must REJECT: `git commit-tree`, `git commit-graph`. **Catching review #28's recursion-risk: a bare `*"git commit"*` substring match is a CONFIRMED FAILURE — both Codex pass 1 and pass 4 found this exact bug class.**
 - [ ] If the hook handles `git commit --amend`, it does NOT blanket-skip amends. Per `harness-facts.md` "Amend exemptions": diff-based gates compute `staged ∪ HEAD`; working-tree-state gates don't exempt at all. Caught as a HIGH bypass in review #28.

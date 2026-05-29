@@ -55,6 +55,8 @@ Launch ALL core agents in a SINGLE message (parallel execution). Pass each agent
 
 **Minimum: 5 core agents (always launch all 5).** If the changeset spans multiple features, multiple XML config files, multiple Harmony patches, or touches more than 20 files — launch ADDITIONAL focused agents for each distinct subsystem. There is no upper limit on agent count. The cost of missing a bug in production is always higher than the cost of an extra review agent.
 
+**Triage ordering — spec compliance before code quality** (per `docs/ai-includes/agent-teams.md` "Subagent review ordering"): launch all agents in parallel as above, but when triaging the returned findings, resolve Agent 1 (Standards Compliance — ADR breaches, direct TaleWorlds usage in services, registration gaps) and spec/data-flow findings BEFORE acting on Agent 3 (Efficiency) quality findings. A standards violation can make quality feedback moot — don't optimize code that's about to be restructured.
+
 ### Agent 1: Standards Compliance
 
 ```
@@ -481,6 +483,8 @@ If any agent (or Codex pre-review, if Step 0 ran) returned ANY confirmed finding
 The recurring failure is conflating severity with importance for RCA: we patch LOW symptoms but never extract the systemic lesson, and the same category of bug ships again. Three examples on file: Career cooldown review #31 (NaN gate), EditorCacheRebuild review #38 (NaN gate again), scene-scripts CS_Road 2026-05-13 (NaN gate, THIRD time). All caught by the same rule that was scope-gapped on each project.
 
 **For EVERY confirmed finding (not just HIGH/MED):**
+
+**First, confirm it is actually confirmed.** Per `.claude/rules/evidence-over-claims.md`, a finding is "confirmed" only if you (or the agent) re-read the actual TAOM source / decompiled vanilla and verified the bug exists — not because an agent reported it confidently. If you took an agent's finding on faith, re-read the code now; an unverified finding is re-flagged for investigation, not entered into RCA.
 
 1. Write the finding text + severity.
 2. **Why missed:** what assumption, scope gap, or pattern blindness let it through? Be specific — name the rule that should have caught it, name the file/line that exhibits the pattern.

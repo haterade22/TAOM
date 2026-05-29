@@ -88,6 +88,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/notify-test-results.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/mark-verification-run.sh"
           }
         ]
       }
@@ -147,6 +151,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/check-deep-review.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-verification-evidence.sh"
           },
           {
             "type": "command",

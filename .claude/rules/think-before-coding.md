@@ -41,6 +41,15 @@ Asking about every minor detail is its own bug — friction that erodes trust an
 - **Conventions documented in CLAUDE.md / ADRs / scoped rules** — apply them, don't re-litigate. *"Should I use an adapter for this sealed type?"* is not a question — ADR-007 already answers it.
 - **Recoverable / cheap-to-redo work** — a one-line Edit you can revert in seconds doesn't need an assumption-surfacing preamble.
 
+## When the work is genuinely open-ended (lightweight design pass)
+
+If the request is not just ambiguous but *open-ended* — multiple viable designs, no single obvious approach (a new feature, an architectural choice, *"how should we do X?"*) — do a short design pass before building. Not a silent guess; not a heavyweight spec process either:
+
+- **Ask one question at a time, multiple-choice where possible.** `AskUserQuestion` is the tool — one focused decision per question beats a wall of open prompts. Stop once the load-bearing choices are settled.
+- **Propose 2-3 approaches, each with a one-line trade-off, and a recommendation.** Let the user pick a direction before you invest in one: *"I'd go with B (simplest, fits ADR-007); A is faster but adds an adapter; C is most flexible but YAGNI."*
+
+This is deliberately lighter than a formal design-doc-per-feature gate (rejected as too heavy for an expert solo dev on most TAOM work). It's the same discipline as the rest of this rule — surface the fork before committing to a branch — applied when the fork is a *design* choice rather than an *interpretation* choice. The "When NOT to ask" guard above still governs: trivial / mechanical / recoverable work skips this entirely.
+
 ## How to apply
 
 At the start of a non-trivial task, before the first Edit/Write, say in one line what you're about to do AND what you're assuming.
@@ -67,3 +76,5 @@ If the assumption is uncertain enough that picking wrong wastes meaningful work 
 ## Source
 
 Imported from https://github.com/forrestchang/andrej-karpathy-skills (which packages karpathy/autoresearch behavioral principles). Original framing: *"State your assumptions explicitly. If uncertain, ask."* The "when NOT to ask" section is a TAOM-specific guard — the upstream rule does not address the opposite failure mode of over-questioning, which is a known LLM bug we've hit in past sessions.
+
+The "lightweight design pass" section was added 2026-05-29 from obra/superpowers' `brainstorming` skill — we took its "one question at a time, multiple-choice / propose 2-3 approaches" core but deliberately dropped its mandatory per-feature design-doc-commit + multi-stage approval gate as too heavy for TAOM's workflow.

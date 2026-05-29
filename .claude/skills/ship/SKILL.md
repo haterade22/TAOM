@@ -17,7 +17,7 @@ Run the **mandatory** completion sequence from CLAUDE.md "Completion Workflow" e
 
 ### Phase 1 — Build & internal review
 1. `/verify` — build + tests must pass. If red, stop and fix.
-2. `/deep-review $ARGUMENTS` — 5+ parallel agents (standards, compat, efficiency, completeness, data-flow; C++ checks auto-fire if `.cpp`/`.h` in scope).
+2. `/deep-review $ARGUMENTS` — 5+ parallel agents (standards, compat, efficiency, completeness, data-flow; C++ checks auto-fire if `.cpp`/`.h` in scope). It triages findings spec-compliance-first (see `docs/ai-includes/agent-teams.md`).
 3. Fix all confirmed findings. **HIGH must be fixed in-session** — no silent deferrals (`.claude/skills/deep-review/SKILL.md`).
 
 ### Phase 2 — Codex adversarial review (costs money — explicit go-ahead only)

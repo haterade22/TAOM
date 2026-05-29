@@ -157,6 +157,8 @@ Read the Codex review file. Identify:
 
 ### 3b: Verify Each Finding
 
+**A Codex finding is a hypothesis, not a verdict** (per `.claude/rules/evidence-over-claims.md`; review accuracy is ~95%, not 100% — `feedback_audit_findings_not_always_correct.md`). Verify EVERY finding against the TAOM source and decompiled vanilla BEFORE implementing it — re-read the actual code, don't act on the reviewer's confidence. This skill auto-implements confirmed findings, so an unverified finding becomes an unverified change.
+
 For EACH finding:
 
 **Read the TAOM source.** Does the code do what Codex claims?

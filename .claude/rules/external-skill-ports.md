@@ -1,10 +1,60 @@
 ---
 paths:
   - ".claude/skills/**/SKILL.md"
-description: Per-field validation checklist when porting a skill from an external suite (gstack, everything-claude-code, etc.). Prevents port-drift bugs caught in 2026-04-26 reviews.
+description: How to author a skill from scratch, plus the per-field checklist for porting one from an external suite (gstack, etc.). Prevents bad-description and port-drift bugs.
 ---
 
-# Porting Skills From External Suites — Validation Checklist
+# Authoring & Porting Skills — Validation Checklist
+
+This rule covers two cases: **authoring a skill from scratch** (§ Authoring a skill from scratch) and **porting one from an external suite** (§ Porting from an external suite + the field/hook/script checklists below).
+
+## Authoring a skill from scratch
+
+Before authoring, confirm the skill *should* exist. CLAUDE.md "Workflow → Skill convention" already gives the gate (repeatable + multi-step/chains-skills + TAOM-specific gotchas) and the "do NOT skill-ify" filter (one-offs, pure reference, single commands — descriptions load eagerly, so each skill is a permanent context tax). Two more tests from obra/superpowers worth applying: **was the technique non-obvious to you?** and **would you reference it across multiple tasks?** If a plain doc or a CLAUDE.md line would do, write that instead.
+
+### Description = *when to use*, not *what it does*
+
+Write `description:` as triggering conditions, ideally starting with "Use when…". The agent reads the description to decide whether to invoke; a workflow *summary* makes it follow the summary instead of opening the skill body.
+
+- Good: *"Use when a culture's troop tree or armor set needs authoring or revamping end-to-end."*
+- Bad: *"Scaffolds armor XML, swaps rosters, then validates."* (summarizes the body)
+
+> **CRITICAL divergence from the upstream source.** obra/superpowers permits descriptions up to **1024 characters** because they enumerate triggers verbatim. **TAOM caps descriptions at ≤30 words** (`harness-facts.md` — descriptions load eagerly into every session AND every Task spawn). Adopt the *"Use when…" framing*, NOT the length. Do not "fix" a short TAOM description by expanding it toward the upstream's. `/context-budget` and `/skill-stocktake` flag >30-word descriptions.
+
+### Naming
+
+Active voice, verb-first or gerund: `new-culture`, `finish-branch`, `lint-cleanup-loop` — not `culture-creation`, `branch-finisher`. Matches TAOM's existing skill names.
+
+### Body structure
+
+A skill is a thin entry point, not a manual. Per CLAUDE.md it should "point to the authoritative doc (`docs/ai-includes/*`) rather than duplicate it." Keep it to: Overview / When to Use / ordered Steps or Phases / top Gotchas. Inline code only when short; long reference belongs in a doc.
+
+### Flowcharts only for non-obvious decisions
+
+Use a decision tree only where branching wrong or stopping early causes errors (e.g. `/investigate`'s phase gating). Never wrap linear instructions, reference tables, or code blocks in a flowchart.
+
+### Anti-patterns (from real upstream review)
+
+- Dated narrative examples (*"In session 2026-05-03 we…"*) — they rot; state the rule, not the war story.
+- Code embedded inside a flowchart node.
+- Generic placeholder labels (`step1`, `helper2`).
+- Multi-runtime hedging (*"on Cursor do X, on Copilot do Y"*) — TAOM targets Claude Code; write for it.
+
+### Bulletproofing a discipline skill against rationalization (highest-value technique)
+
+The strongest idea in superpowers is treating a *discipline* skill like code under TDD:
+
+1. **RED** — run the target scenario WITHOUT the skill loaded; record the exact rationalizations the agent uses to dodge the discipline (*"I'll add the test after"*, *"this finding is obviously right"*).
+2. **GREEN** — write the minimal skill text that closes those specific excuses.
+3. **REFACTOR** — re-run, catch the new excuses it invents, add explicit counters. Capture them in a small **rationalization table** (excuse → why it's wrong).
+
+TAOM's discipline rules (`evidence-over-claims`, `think-before-coding`, `simplicity-criterion`, TDD) were written rule-first, not excuse-first. Use this method when authoring the next discipline rule or hardening an existing one — a rule that states its principle only once is easy to rationalize around.
+
+### Don't amplify a rule — point to it
+
+When a skill needs to invoke a discipline that already lives in a rule (`evidence-over-claims.md`, `simplicity-criterion.md`, etc.), **link to the rule and add only the skill-specific delta** — the one thing that's different *here*. Do NOT restate the rule's rationale; that's amplification, not enforcement, and it taxes context on every invocation (`simplicity-criterion.md`). If skill B merely invokes skill A, don't duplicate A's guidance in B — point at A. (RCA `docs/reviews/rca-superpowers-enforcement-2026-05-29.md`: skill prose restating `evidence-over-claims.md` was flagged as "enforcement theater"; the `ship`→`deep-review` duplication was the clearest case.)
+
+## Porting from an external suite
 
 When you copy a skill from another repo (gstack, everything-claude-code, awesome-claude-code-subagents, etc.) into `.claude/skills/`, every frontmatter field, every hook reference, and every behavioral assumption must be validated against current Claude Code semantics. **Other suites target their own runtimes; their conventions don't necessarily transfer.**
 

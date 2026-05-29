@@ -147,6 +147,19 @@ All reviewers are **read-only** — they report findings to the lead via message
 
 ---
 
+## Subagent review ordering (verify spec before quality)
+
+When an orchestrator dispatches fresh subagents to implement and then review work — via Agent Teams, individual `Agent` calls, or a `Workflow` pipeline — apply this ordering (adapted from obra/superpowers' `subagent-driven-development`, 2026-05-29):
+
+1. **Two-stage review — spec compliance FIRST, code quality SECOND.** Stage 1 confirms the implementation does exactly what was asked: nothing missing, nothing extra (an unrequested addition is a finding too). Stage 2 reviews quality / maintainability / ADR compliance. **Running the quality review before spec compliance is confirmed wastes the pass** — quality feedback on code that solves the wrong problem is throwaway.
+2. **Give each subagent complete context in the spawn prompt — never make it re-read your session.** This is already TAOM's "Briefing subagents" convention (CLAUDE.md): the orchestrator puts task text, scope, and the docs-to-read in the prompt. A reviewer subagent gets the description + the plan/requirement + the diff (or `BASE_SHA..HEAD_SHA`), not "go figure out what changed."
+3. **Fix → re-review → repeat until approved.** The implementer subagent fixes findings; the reviewer re-checks the fix. Don't skip the re-review — an unverified fix is an unverified claim (`.claude/rules/evidence-over-claims.md`), and a returned "✅ done" is a claim to verify, not evidence.
+4. **Severity triage:** fix Critical/HIGH in-session (TAOM's `/deep-review` already mandates this), fix Important before proceeding, note Minor for later.
+
+This composes with the `Workflow` tool: a `pipeline()` can implement in stage 1, run spec-compliance review in stage 2, and code-quality review in stage 3 — each item flows through without a barrier. The `parallel()` adversarial-verify pattern in the Workflow docs is the fan-out form of step 3 above.
+
+---
+
 ## When NOT to Use Agent Teams
 
 | Scenario | Use Team? | Why |
