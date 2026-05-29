@@ -2,6 +2,10 @@
 
 ## 2026-05-29
 
+### docs(claude-md): register block-dangerous-git in the Hooks + Hook-Response-Contracts tables
+
+Final CLAUDE.md row for the `block-dangerous-git` guard shipped in the prior commit — documents the hook in the "## Hooks" table and adds its "## Hook Response Contracts" entry (when it prompts, approve only if you intend to discard work). Closes the shared-config doc batch; the earlier series rows (evidence-over-claims, mark-verification-run, check-verification-evidence, /adopt-external + /security-scan skills & routing) were already committed.
+
 ### feat(hooks): block-dangerous-git — confirm before work-destroying git ops
 
 Adopted the one genuine idea from mattpocock/skills (the rest skipped — duplicative/TS-specific/contrary): a PreToolUse(Bash) guard for git ops that permanently discard uncommitted/unpushed work, which TAOM didn't cover (validate-push.sh only guarded push/force-push). New `.claude/hooks/block-dangerous-git.sh` emits `permissionDecision:"ask"` (confirm, NOT hard-block — your choice) for `git reset --hard`, `clean -f[d]`, `branch -D`, `checkout`/`restore` worktree-discard, `stash drop|clear`. **Calibrated to TAOM, not blind-ported:** mattpocock's version hard-blocked ALL pushes with no override (would break our push workflow) — ours excludes push entirely (validate-push owns it), confirms rather than blocks, and fails open.
