@@ -851,7 +851,7 @@
             <Equipment slot="Item0" id="Item.hunting_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.clo_sk_dale_chest_archer_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
             <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
         </EquipmentSet>
     </EquipmentRoster>
@@ -861,7 +861,7 @@
             <Equipment slot="Item0" id="Item.hunting_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.clo_sk_dale_chest_archer_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
             <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
         </EquipmentSet>
     </EquipmentRoster>
@@ -871,7 +871,7 @@
             <Equipment slot="Item0" id="Item.northern_spear_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.clo_sk_dale_chest_archer_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
             <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
@@ -883,7 +883,7 @@
             <Equipment slot="Item0" id="Item.northern_spear_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Body" id="Item.clo_sk_dale_chest_archer_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
             <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
@@ -895,7 +895,7 @@
             <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.northern_spear_1_t2" />
-            <Equipment slot="Body" id="Item.clo_sk_dale_chest_archer_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
             <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
         </EquipmentSet>
     </EquipmentRoster>
@@ -905,7 +905,7 @@
             <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.northern_spear_1_t2" />
-            <Equipment slot="Body" id="Item.clo_sk_dale_chest_archer_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
             <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
         </EquipmentSet>
     </EquipmentRoster>

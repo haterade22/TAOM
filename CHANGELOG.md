@@ -2,6 +2,16 @@
 
 ## 2026-05-29
 
+### chore(items): remove clo_* cloth-sim overlay items from the game
+
+Cloth-simulation mesh overlays (ids prefixed `clo_*`) had leaked into the item pool and were appearing as purchasable shop items (e.g. "[Dale] Cloth Archer Armour A01..A04"). They are duplicates of real armor's cloth-sim mesh and were never meant to be standalone, equippable items. `CultureMarketplace` auto-derives town pools from every culture-tagged `ItemObject` with no type filter, so any `clo_*` item with `culture="Culture.sturgia"` got injected into Dale markets daily — removing the item definitions removes them from `MBObjectManager` and stops the injection.
+
+- **Deleted 11 standalone `clo_*` items** (external `LOTRLOME_Armory`, not git-tracked): 9 from `dale/body_armors.xml` (`clo_sk_dale_chest_archer_a01`..`a04`, `_chivalry_a01`/`a02`, `_infrantry_a01`/`a02`, `_lake_town_chest_mariner_a01`), `clo_urukscout_body` from `isengard/body_armors.xml`, `clo_urukscout_helmet` from `isengard/head_armors.xml`. Left `m_northern_cape_a` untouched (it uses `mesh="clo_…"` — a mesh attribute, not a `clo_*` item id).
+- **Fixed 6 player-career Body refs** in `taom_career_starting_equipment.xml`: `clo_sk_dale_chest_archer_a01` → real twin `sk_dale_chest_archer_a01` (`player_career_sturgia_{ranged,cavalry,infantry}_{m,f}`) — prevents the underwear bug on a Dale career start.
+- **De-clo'd 3 generators** so a future `--apply` can't resurrect the items: `generate_dale_armor.py` now skips `clo_`/overlay meshes from the manifest; `generate_isengard_armor.py` dropped its `clo_urukscout_*` body/head lists; `apply_isengard_troop_revamp.py` swaps its `clo_urukscout_*` equip refs to the real `urukscout_*` twins.
+
+No troops or heroes equipped any `clo_*` item, so deletion is safe. No C# changed.
+
 ### feat(tooling): adopt affaan-m/ECC concepts — config security scanner + /adopt-external workflow skill
 
 Second external-repo review (after obra/superpowers), following the same security-vet → tier → port → adversarial-review → RCA cycle. **Security verdict on ECC:** safe to learn from; installers/hooks are local-only with no install-time code-exec (postinstall is an echo); the sole external vector is an opt-in, closed-source `insa_its` SDK (disabled by default) — moot since we port text, never install. ~88% of ECC (12 language ecosystems, web/enterprise/media) is irrelevant or duplicative for a C#/.NET mod; only the "audit your own agent config" idea was genuinely additive.

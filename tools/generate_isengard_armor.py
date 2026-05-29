@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Author Isengard paint helmets + scout cloth variants per KEYforce spec.
+"""Author Isengard paint helmets per KEYforce spec.
 
 Source-of-truth: E:\\repos\\lotraom-assets\\tools\\isengard_armors_and_troops.txt
 Issue: KEYforce mesh-first revamp (Isengard pass)
 
 Adds `sk_is_orc_*` paint helmets (Isengard variants of generic orc shapes —
-spec excludes Pik/Rdr/Sct, no IS variants exist for those) and the missing
-`clo_urukscout_*` cloth-overlay variants. The 137 sk_uruk_hai_* Legion items
-and the 4 urukscout base pieces already exist — not touched.
+spec excludes Pik/Rdr/Sct, no IS variants exist for those). The 137
+sk_uruk_hai_* Legion items and the 4 urukscout base pieces already exist —
+not touched. (clo_urukscout_* cloth-sim overlays were removed from the game;
+this generator no longer emits them.)
 
 Usage:
     python tools/generate_isengard_armor.py --dry-run
@@ -80,21 +81,9 @@ HEAD_ARMORS = [
     ArmorItem("sk_is_orc_vgd_helmet_heavy_a", "Isengard Orc Vanguard Heavy Helmet", "head", "heavy", "Plate"),
 ]
 
-# Uruk-Hai Scout cloth overlay variants
-BODY_ARMORS = [
-    ArmorItem("clo_urukscout_body", "Uruk-Hai Scout Cloth Overlay", "body", "light", "Cloth", covers_body=True),
-]
-
-HEAD_ARMORS_BODY = [  # Cloth helmet overlay goes in head_armors but uses cloth material
-    ArmorItem("clo_urukscout_helmet", "Uruk-Hai Scout Hood", "head", "light", "Cloth"),
-]
-
-HEAD_ARMORS = HEAD_ARMORS + HEAD_ARMORS_BODY
-
 
 SLOT_MAP = {
     "head":     (HEAD_ARMORS, "head_armors.xml"),
-    "body":     (BODY_ARMORS, "body_armors.xml"),
 }
 
 SLOT_TYPES = {
@@ -197,7 +186,7 @@ def apply(armory_base: str):
 
         section_comment = (
             "\n    <!-- ============================================================== -->\n"
-            "    <!--  KEYforce Isengard paint helmets (sk_is_orc_*) + scout cloth   -->\n"
+            "    <!--  KEYforce Isengard paint helmets (sk_is_orc_*)                 -->\n"
             "    <!-- ============================================================== -->\n\n"
         )
         content = content.replace(closing_tag, f"{section_comment}{new_xml}\n\n{closing_tag}")

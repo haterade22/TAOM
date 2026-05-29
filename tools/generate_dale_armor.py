@@ -376,6 +376,9 @@ def categorize(manifest: list[str]) -> tuple[dict[str, list[ParsedMesh]], set[st
         if p is None:
             skipped.append(f"{mesh_id} (unparseable)")
             continue
+        if p.is_overlay:
+            skipped.append(f"{mesh_id} (clo_ cloth-sim overlay - not emitted as an item)")
+            continue
         parsed_by_id[mesh_id] = p
 
     # Find _slim variants and link to base
