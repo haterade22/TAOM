@@ -124,6 +124,8 @@ This is a project-level discipline, not a one-off feature note — every future 
 | `/localize [c#\|xml\|xslt]` | Propagate new player-facing text through the 12-language localization pipeline. |
 | `/author-armor [culture]` | Author LOTRLOME armor items + swap troop rosters (enforces canonical-folder + cover-attribute rules). |
 | `/finish-branch [branch] [base]` | Integrate a merge-ready branch into trunk: FF-check → merge → regenerate backlinks → CHANGELOG → delete branch (local+remote) → push (confirm). Post-`/ship`; TAOM trunk-based, not Git Flow. |
+| `/adopt-external [url]` | Review an external repo/article and fold the useful parts into TAOM: security-vet first → map novel-vs-duplicative → tiered recommendation → port (never install) → adversarial review → commit. Follows `docs/ai-includes/external-repo-adoption.md`. |
+| `/security-scan` | Audit TAOM's own Claude config (`.claude/`, `.mcp.json`, `settings*.json`, `CLAUDE.md`) for committed secrets, over-broad permissions, hook exfiltration, MCP risk, hidden-unicode injection. Runs `tools/audit_claude_config.py`. |
 
 ### Workflow → Skill convention
 
@@ -161,6 +163,8 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | Multiple seemingly-unrelated bugs in same session/save, suspect shared root | **`error-detective` agent** (Task tool) | None — always |
 | "this method is too long", "this class needs to be split", structural cleanup without behavior change | **`refactoring-specialist` agent** (Task tool) | Tests must be green BEFORE invoking. Tests must remain green AFTER. |
 | "audit our skills", "are any skills broken", quarterly harness check | **`/skill-stocktake`** | None — diagnostic, no destructive action |
+| User shares an external repo/article "to see what we can adopt", "review this repo", "next repo", or pastes a GitHub URL to evaluate for adoption into TAOM | **`/adopt-external`** | None — always. It runs the security-vet-first → map → tier → port-never-install → review → commit cycle. |
+| Before `/ship`, or after editing a hook / MCP server / `settings*.json` permission / `CLAUDE.md` | **`/security-scan`** | Only when config/hooks/permissions changed or shipping — skip for routine feature edits. |
 
 ### Soft suggest (offer, don't auto-invoke)
 
@@ -204,8 +208,9 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | `environment-failures.md` | _(no `paths:` — always-load)_ | Report environment failures (missing tools, paths, MCP down). Don't auto-fix infra. |
 | `harness-facts.md` | _(no `paths:` — always-load)_ | Pinned Claude Code load semantics, hook lifecycle, rule loader rules with doc URLs. Source-of-truth for harness behavior. |
 | `simplicity-criterion.md` | _(no `paths:` — always-load)_ | Yes/No matrix for evaluating whether a change is worth keeping. Tiny gain + ugly code is rejected; deletions that hold parity always win. |
-| `think-before-coding.md` | _(no `paths:` — always-load)_ | Surface load-bearing assumptions before the first Edit; ask if uncertain. Don't ask on trivial/mechanical work. |
-| `external-skill-ports.md` | `.claude/skills/**/SKILL.md` | Per-field validation checklist when porting skills from external suites (gstack, etc.). |
+| `think-before-coding.md` | _(no `paths:` — always-load)_ | Surface load-bearing assumptions before the first Edit; ask if uncertain. Don't ask on trivial/mechanical work. Lightweight design pass (one question at a time, propose 2-3 approaches) for open-ended work. |
+| `evidence-over-claims.md` | _(no `paths:` — always-load)_ | Verify a review finding before implementing it; never sycophantically agree; no "done" claim without fresh verification output (subagent self-reports don't count). |
+| `external-skill-ports.md` | `.claude/skills/**/SKILL.md` | Authoring a skill from scratch + per-field checklist for porting from external suites (gstack, etc.). |
 | `vanilla-data-comparison.md` | `**/settlements.xml`, `**/sp_battle_scenes.xml`, `**/spcultures.xml`, `**/taom_spcultures.xml`, `**/spclans.xml`, `**/spkingdoms.xml`, `**/*.xslt` | Compare against current installed vanilla before modifying mirrored data. Vanilla renames/removes scenes & re-schemas XML between versions → stale TAOM refs crash. Scene-ref audit tools + post-bump checklist. |
 
 ## Custom Agents
@@ -229,6 +234,8 @@ A subagent runs in its own context with a **strict tool allowlist** and does NOT
 5. **Which convention docs to read** — point at the specific `docs/ai-includes/*` or `.claude/rules/*` for the task, since they may not have auto-loaded.
 
 Pure read-only research agents (`Explore`, `Plan`) need only items 1–2 + scope; building/editing agents need all five.
+
+When you dispatch a subagent to **implement then review** work, follow the two-stage review ordering (spec compliance before code quality) in [agent-teams.md](./docs/ai-includes/agent-teams.md#subagent-review-ordering-verify-spec-before-quality).
 
 ## Model Routing
 
@@ -669,6 +676,8 @@ Project-level MCP servers (Serena, GitHub, filesystem, git, ilspy) are configure
 | `check-changelog-changed.sh` | PreToolUse (Bash) | Hard-blocks `git commit` when `.claude/`, `CLAUDE.md`, or `AGENTS.md` is staged but `CHANGELOG.md` is not. Catches the recurring "forgot to update CHANGELOG" process violation. |
 | `check-claude-files-tracked.sh` | PreToolUse (Bash) | Hard-blocks `git commit` when files exist on disk under `.claude/{skills,agents,rules,hooks}/` but are gitignored or untracked. Catches the gitignore-blast bug (`bin/check-freeze.sh` shipped non-functional in efbde5b). |
 | `session-stop.sh` | Stop | Appends commits + modified files to `.claude/logs/session-log.md` |
+| `mark-verification-run.sh` | PostToolUse (Bash) | Touches `.claude/logs/.verification-ran` when `dotnet build`/`dotnet test`/`build.ps1` runs. Feeds the verification Stop hook. |
+| `check-verification-evidence.sh` | Stop | Reminds to build/test when a `.cs` file changed but no verification ran since the last edit. Enforces `.claude/rules/evidence-over-claims.md`. |
 
 ## Hook Response Contracts
 
@@ -679,6 +688,7 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 | `post-compact.sh` | Immediately `Read` MEMORY.md and each file listed under "Files in flight" before resuming work. Do not continue from transcript memory alone — the file is the source of truth. |
 | `detect-docs-gaps.sh` | Mention the gap list once to the user ("I noticed these features have no feature doc: ..."). Do NOT auto-create docs. Wait for user direction — they may have a reason the gap exists. |
 | `validate-push.sh` (blocked) | Never retry with `--no-verify` or downgrade to a non-force push silently. Explain the block and ask the user whether to push to a non-protected branch instead. |
+| `check-verification-evidence.sh` | Run the build/test it names (`./build.ps1 -RunTests`) and read the output before claiming the work is done — don't dismiss the reminder. If the build genuinely can't run (env failure), say so explicitly per `environment-failures.md`; don't silently ignore it. |
 
 ## Status Line
 
