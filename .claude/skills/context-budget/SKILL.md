@@ -120,6 +120,15 @@ These match Anthropic's published rough tokenizer behavior to within ~10%. Good 
 - **Audit after changes.** Run after adding any agent/skill/MCP server to catch creep early.
 - **Re-baseline quarterly.** Token tokenizer drift, model context window changes, and harness churn make the baseline file age fast.
 
+### Token-optimization knobs (beyond trimming)
+
+Trimming the eager surface is the structural lever; these per-session knobs reduce live cost (sourced from affaan-m/ECC's token-optimization guidance, 2026-05-29 — adopted as tips, not enforced). **All numeric values below are `[HEURISTIC]` estimates — re-verify against the current model/MCP limits, do not treat as exact:**
+
+- **Cap thinking tokens.** Set `MAX_THINKING_TOKENS` (default ~32k) to ~10k for routine work — large savings on hidden reasoning cost. Raise it deliberately for genuinely hard reasoning.
+- **Disable unused MCP servers per project.** A 200k window can effectively be ~70k with too many tools enabled. Keep active tool count modest (a useful rule of thumb is well under ~80); disable servers you aren't using in `.mcp.json` / settings rather than carrying all of them.
+- **Compact at a logical breakpoint, not at the wall.** Trigger `/compact` once a plan is finalized (clearing exploration context) rather than waiting for the auto-compact threshold. The `suggest-compact` hook already nudges this.
+- **Model tiering** (already in CLAUDE.md "Model Routing"): Haiku for read-only/search, Sonnet for most coding, Opus for architecture/deep reasoning.
+
 ## Common Findings (Expected for TAOM)
 
 These are illustrative ratios, not current counts (the inventory drifts fast — as of 2026-05-28 it was ~32 skills, 5 agents, 15 rules, 18 hook scripts, 5 MCP servers). **Always run `scan.sh` for the live numbers; do not trust hardcoded counts in this doc:**

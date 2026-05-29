@@ -2,6 +2,19 @@
 
 ## 2026-05-29
 
+### feat(tooling): adopt affaan-m/ECC concepts — config security scanner + /adopt-external workflow skill
+
+Second external-repo review (after obra/superpowers), following the same security-vet → tier → port → adversarial-review → RCA cycle. **Security verdict on ECC:** safe to learn from; installers/hooks are local-only with no install-time code-exec (postinstall is an echo); the sole external vector is an opt-in, closed-source `insa_its` SDK (disabled by default) — moot since we port text, never install. ~88% of ECC (12 language ecosystems, web/enterprise/media) is irrelevant or duplicative for a C#/.NET mod; only the "audit your own agent config" idea was genuinely additive.
+
+Adopted (Tier 1 + the marginal Tier 2), all TAOM-owned:
+- **`tools/audit_claude_config.py`** — deterministic, offline, stdlib-only config security scanner (a TAOM-calibrated subset of ECC's AgentShield). 5 categories: secrets, permissions, hook-exfil, mcp-risk, prompt-injection. Calibrated to TAOM — notably does NOT flag mandated fail-open hooks (`|| true`/`2>/dev/null`/`exit 0`), which upstream does. Placeholder-suppressed, secret-masked, `audit-allow:` inline suppression, exit 2 on CRITICAL (CI gate). **First real catch:** `.mcp.json`'s `filesystem` server uses unpinned `npx -y` (MED — consider pinning `@version`).
+- **`/security-scan`** skill + a pointer from `/skill-stocktake`.
+- **`/adopt-external`** skill + **`docs/ai-includes/external-repo-adoption.md`** — captures the whole review-and-adopt cycle so future sessions run it consistently.
+- **Discoverability** (so future sessions/agents auto-run it): CLAUDE.md "Skill Routing → Strong proactive-invoke" gained a row (share a repo / "next repo" / a GitHub URL → invoke `/adopt-external`) + Skills-table rows; `agent-operating-manual.md` gained an "Adoption/security" recommend-line for subagents; memory `project_external_repo_adoption.md`. (CLAUDE.md edits are staged for the shared-config batch — they take effect locally immediately.)
+- Tier 2: a `[HEURISTIC]`-tagged "Token-optimization knobs" note in `/context-budget`.
+
+**Tested:** scanner runs clean on the real tree (1 MED, exit 0), fires 4 CRITICAL + 8 HIGH on a planted fixture (exit 2), `audit-allow` suppression works, and `_FETCH_EXEC` passes a 6/6 pipe-vs-semicolon test. **Adversarially reviewed** (3-dim find→verify, 32 findings: 20 confirmed / 12 rejected — the 12 rejected being the discipline working: reviewers' own "no fix needed" affirmations killed at verify). 4 real findings fixed pre-commit. **RCA** `docs/reviews/rca-ecc-adoption-2026-05-29.md`: the `/adopt-external`-duplicates-its-doc finding was a REPEAT of superpowers RC2 (amplification) — prevention existed (`external-skill-ports.md` "don't amplify"), the gap was not applying it to my own fresh skill; and a "mandate" was cited that harness-facts.md didn't state (now formalized: a "TAOM hooks MUST fail open" row). CLAUDE.md skill/routing rows left for the shared-config batch.
+
 ### fix(career): party-size passive applied flat, not as a ×N factor
 
 User-reported: Gondor infantry career (Captain of Osgiliath) "+2 party size" choice granted ~+150. Root cause: `TaomPartySizeModel` applied the career `PartySize` passive via `ICareerPassiveService.ApplyFactor` (`ExplainedNumber.AddFactor` — multiplicative), but PartySize magnitudes are authored as whole counts (2–6, per "+N party size" descriptions). `AddFactor(2)` = ×(1+2) = triple the base (~75 → ~225). Switched to `ApplyFlat` (`result.Add`) so +2 means flat +2. The change is type-isolated — the other 9 campaign-layer passive types keep `ApplyFactor` (their magnitudes are fractional). Fixes every direct-schema flat PartySize entry across all careers, not just Gondor. Regression test contrasts flat (+2 → 102) vs factor (×3 → 300). See [RCA](docs/reviews/rca-career-partysize-2026-05-29.md).

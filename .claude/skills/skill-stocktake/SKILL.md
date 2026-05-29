@@ -149,6 +149,7 @@ If full-audit and findings exist, suggest creating GitHub issues for HIGH/MEDIUM
 
 - `/context-budget` — token-cost audit. Stocktake is correctness/quality; context-budget is cost. Run both quarterly.
 - `/deep-review` — applies to one feature/diff; stocktake applies to the harness as a whole.
+- `/security-scan` — `tools/audit_claude_config.py` audits the SAME surface for security (committed secrets, over-broad permissions, hook exfiltration, MCP risk). Stocktake is quality; security-scan is safety. Run it during a full stocktake.
 - `external-skill-ports.md` — when fixing findings on a ported skill, re-check the port-drift checklist there.
 
 ## Notes

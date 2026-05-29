@@ -49,6 +49,7 @@ Grouped by purpose. Authoritative list + when-to-use routing: the **Skills** + *
 - **Research:** `/research` (decompile + analyze a TaleWorlds class), `/taom-src` (one-shot signature lookup), `/xslt-check` (XSLT passthrough).
 - **Authoring:** `/new-feature`, `/new-culture`, `/lord-skills`, `/author-armor`, `/localize`, `/new-adr`, `/issue`.
 - **Scope/hygiene:** `/freeze` + `/unfreeze` (edit lock), `/scope-check`, `/deslop`, `/commit-split`, `/context-save` + `/context-restore`, `/context-budget`, `/skill-stocktake`.
+- **Adoption/security:** `/adopt-external` (review an external repo/article and fold useful parts into TAOM — if your job is evaluating an outside source, recommend this), `/security-scan` (audit TAOM's own Claude config for secrets / permission / hook-exfil / MCP risk via `tools/audit_claude_config.py`).
 
 When your job hits one of these situations, finish your analysis and **name the skill in your report** so the orchestrator runs it.
 
