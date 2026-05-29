@@ -41,6 +41,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/check-claude-files-tracked.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/block-dangerous-git.sh"
           }
         ]
       },

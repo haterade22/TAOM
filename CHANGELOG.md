@@ -2,6 +2,14 @@
 
 ## 2026-05-29
 
+### feat(hooks): block-dangerous-git — confirm before work-destroying git ops
+
+Adopted the one genuine idea from mattpocock/skills (the rest skipped — duplicative/TS-specific/contrary): a PreToolUse(Bash) guard for git ops that permanently discard uncommitted/unpushed work, which TAOM didn't cover (validate-push.sh only guarded push/force-push). New `.claude/hooks/block-dangerous-git.sh` emits `permissionDecision:"ask"` (confirm, NOT hard-block — your choice) for `git reset --hard`, `clean -f[d]`, `branch -D`, `checkout`/`restore` worktree-discard, `stash drop|clear`. **Calibrated to TAOM, not blind-ported:** mattpocock's version hard-blocked ALL pushes with no override (would break our push workflow) — ours excludes push entirely (validate-push owns it), confirms rather than blocks, and fails open.
+
+Detection is **segment-anchored** (split on `| ; && ||`; per segment strip env-prefixes + `git` + global flags; match the subcommand) so it does NOT false-fire on commands that merely mention a destructive phrase as data (`echo "git reset --hard"`, `git log | grep "…"`, `git commit -m "…"` all ALLOW). Robust JSON extraction via jq→python3 (handles escaped quotes), mirroring `check-claude-files-tracked.sh`.
+
+Built through full ship discipline: **adversarially reviewed** (2-dim find→verify, 6 confirmed findings — 1 HIGH + 3 MED false-positives from substring-anywhere matching, all fixed by the segment-anchor rewrite; 1 MED parser-truncation fixed via python3; 1 LOW convention divergence resolved; 1 finding correctly rejected). **Re-tested 38/38** (asks on destructive incl. env/global-flag forms; allows push/checkout-b/branch-switch/reset--soft/restore--staged/data-mentions; fail-open on malformed). Registered in `settings.json` PreToolUse Bash. CLAUDE.md Hooks + Hook-Response-Contracts rows staged for the shared-config batch.
+
 ### docs(process): institutionalize 2 self-review lessons into the /adopt-external cycle
 
 A self-review of the open-design verdict (reading the primary sources directly instead of trusting the subagent summaries) caught two process faults, now codified so the next iteration applies them automatically:
