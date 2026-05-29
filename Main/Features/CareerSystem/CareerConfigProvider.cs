@@ -220,12 +220,18 @@ public class CareerConfigProvider : ICareerConfigProvider
         try
         {
             PassiveEffect passive = null;
-            var passiveEl = el.Element("PassiveEffect");
+            // Two authoring schemas exist: a direct singular child <PassiveEffect ... magnitude=.../>
+            // and a plural wrapper <PassiveEffects><PassiveEffect ... value=.../></PassiveEffects>.
+            // The wrapper form (310 choices) was historically unparsed. Read it as a fallback; all
+            // wrappers carry exactly one child (verified). Direct child wins when both are present.
+            var passiveEl = el.Element("PassiveEffect") ?? el.Element("PassiveEffects")?.Element("PassiveEffect");
             if (passiveEl != null)
             {
                 passive = new PassiveEffect(
                     effectType: ParseEnum<PassiveEffectType>(passiveEl, "type", PassiveEffectType.Special),
-                    magnitude: ParseFloat(passiveEl, "magnitude", 0f),
+                    // Accept value= as an alias for magnitude= (the wrapper schema uses value=).
+                    // magnitude= takes precedence when both are present.
+                    magnitude: ParseFloat(passiveEl, "magnitude", ParseFloat(passiveEl, "value", 0f)),
                     operation: ParseEnum<OperationType>(passiveEl, "operation", OperationType.Add),
                     isPercentage: ParseBool(passiveEl, "is_percentage", false),
                     attackTypeMask: ParseEnum<AttackTypeMask>(passiveEl, "attack_type_mask", AttackTypeMask.All));

@@ -195,6 +195,36 @@ public class CareerPassiveServiceTests
     }
 
     [TestMethod]
+    public void ApplyFlat_PartySizeWholeCountMagnitude_AddsFlatNotFactor()
+    {
+        // Regression guard for the "+2 party size -> +150" bug (issue: party-size math).
+        // PartySize passives are authored as WHOLE COUNTS (magnitude="2", description "+2 party
+        // size"), so TaomPartySizeModel MUST apply them via ApplyFlat (result.Add -> +2), NOT
+        // ApplyFactor (result.AddFactor(2) -> x3 = +200%). This test documents both semantics so
+        // a future change back to ApplyFactor is visibly wrong against the contrast assertion.
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_party_size", 10);
+        _registry.GetChoice("wb_party_size").Returns(new CareerChoiceDefinition(
+            id: "wb_party_size", groupId: "wb_command", type: ChoiceType.Passive,
+            description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.PartySize, 2f),
+            mutations: null));
+        _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
+            id: "wb_root", groupId: "", type: ChoiceType.Passive,
+            description: "", iconSprite: "", passive: null, mutations: null));
+        _service.RefreshCache(_dataService, _registry);
+
+        var flat = new ExplainedNumber(100f);
+        _service.ApplyFlat("hero1", ref flat, PassiveEffectType.PartySize);
+        Assert.AreEqual(102f, flat.ResultNumber, 0.01f, "PartySize must add a flat +2");
+
+        // Contrast: the buggy path (ApplyFactor) triples the base on a whole-count magnitude.
+        var factor = new ExplainedNumber(100f);
+        _service.ApplyFactor("hero1", ref factor, PassiveEffectType.PartySize);
+        Assert.AreEqual(300f, factor.ResultNumber, 0.01f, "ApplyFactor on a whole-count magnitude is the bug");
+    }
+
+    [TestMethod]
     public void ApplyFactor_NullHeroId_IsNoOp()
     {
         var result = new ExplainedNumber(100f);

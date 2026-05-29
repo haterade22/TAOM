@@ -359,7 +359,7 @@
     <string id="taom_buc_t3_b_p3" text="어두운 명성" />
     <string id="taom_buc_t3_b_p3_desc" text="승리는 두려운 명성을 가져온다. 전투 명성 획득 +12%." />
     <string id="taom_buc_t3_b_p4" text="공성전의 군주" />
-    <string id="taom_buc_t3_b_p4_desc" text="당신의 군단은 광대하고 무시무시하다. 부대 규모 +12%." />
+    <string id="taom_buc_t3_b_p4_desc" text="당신의 전쟁 군대는 방대하고 두려운 존재입니다. +5 부대 규모." />
     <string id="taom_mc_root_desc" text="유일자의 목소리는 원거리 피해 +5%를 부여하고 사우론의 어두운 속삭임을 전달한다." />
     <string id="taom_mc_t1_a_key" text="독이 묻은 촉" />
     <string id="taom_mc_t1_a_key_desc" text="당신의 화살은 사악한 독소를 담고 있다. 유일자의 목소리 반경 +3." />
@@ -420,7 +420,7 @@
     <string id="taom_mc_t3_b_p3" text="순교자의 보상" />
     <string id="taom_mc_t3_b_p3_desc" text="사우론의 이름으로 죽는 것은 큰 명성을 가져온다. +12% 전투 명성 획득." />
     <string id="taom_mc_t3_b_p4" text="예언자의 군세" />
-    <string id="taom_mc_t3_b_p4_desc" text="수천 명이 예언자의 부름에 응답한다. +12% 부대 규모." />
+    <string id="taom_mc_t3_b_p4_desc" text="수천 명이 예언자의 부름에 응답합니다. +5 부대 규모." />
     <string id="taom_sr_root_desc" text="은밀한 기어가기는 +5% 이동 속도를 부여하고 기수가 모르도르의 그림자 속으로 사라질 수 있게 한다." />
     <string id="taom_sr_t1_a_key" text="그림자 질주" />
     <string id="taom_sr_t1_a_key_desc" text="당신은 모르도르의 어둠 속으로 사라진다. 은밀한 기어가기 범위 +3." />
@@ -479,7 +479,7 @@
     <string id="taom_sr_t3_b_p2" text="끝없는 어둠의 행군" />
     <string id="taom_sr_t3_b_p2_desc" text="모르도르의 군대는 쉬지 않고 땅을 덮습니다. +8% 부대 이동 속도." />
     <string id="taom_sr_t3_b_p3" text="그림자 군단" />
-    <string id="taom_sr_t3_b_p3_desc" text="당신의 대군은 헤아릴 수 없이 성장합니다. +12% 부대 규모." />
+    <string id="taom_sr_t3_b_p3_desc" text="당신의 무리는 헤아릴 수 없을 만큼 커집니다. +5 부대 규모." />
     <string id="taom_sr_t3_b_p4" text="기수의 명성" />
     <string id="taom_sr_t3_b_p4_desc" text="그림자 기병대의 업적은 전설이 됩니다. +14% 전투 명성 획득." />
     <string id="taom_ohw_root_desc" text="해머 다운은 +8% 생명력을 부여합니다. 올로그의 거대한 덩치가 보병을 흩어버립니다." />
@@ -530,7 +530,7 @@
     <string id="taom_ohw_t3_a_p2" text="죽음도 막지 못하리" />
     <string id="taom_ohw_t3_a_p2_desc" text="심각한 부상조차 올로그를 막을 수 없다. +75 생명력." />
     <string id="taom_ohw_t3_a_p3" text="전쟁대장의 호드" />
-    <string id="taom_ohw_t3_a_p3_desc" text="수만의 무리가 당신의 군기 아래 행군한다. +12% 부대 규모." />
+    <string id="taom_ohw_t3_a_p3_desc" text="수만 명이 당신의 군기 아래 행군합니다. +5 부대 규모." />
     <string id="taom_ohw_t3_a_p4" text="모르도르의 망치" />
     <string id="taom_ohw_t3_a_p4_desc" text="당신의 전군은 앞을 가로막는 모든 자를 분쇄한다. +12% 병력 피해." />
     <string id="taom_ohw_t3_b_key" text="끝없는 분노" />
@@ -542,7 +542,7 @@
     <string id="taom_ohw_t3_b_p3" text="올로그의 전설" />
     <string id="taom_ohw_t3_b_p3_desc" text="당신의 업적은 모르도르의 어두운 전당에서 노래된다. +14% 전투 명성 획득." />
     <string id="taom_ohw_t3_b_p4" text="흑색 군대" />
-    <string id="taom_ohw_t3_b_p4_desc" text="어둠의 군대가 측량할 수 없이 팽창한다. +14% 부대 규모." />
+    <string id="taom_ohw_t3_b_p4_desc" text="어둠의 군대가 헤아릴 수 없이 불어납니다. +6 부대 규모." />
     <string id="taom_moa_root_desc" text="가벼운 깃털은 +5% 원거리 피해를 부여하며, 모든 화살을 소중하게 만든다." />
     <string id="taom_moa_t1_a_key" text="독수리의 눈" />
     <string id="taom_moa_t1_a_key_desc" text="당신의 시력은 어떤 매보다도 예리하다. 가벼운 깃털 범위 +3." />
@@ -603,7 +603,7 @@
     <string id="taom_moa_t3_b_p3" text="마크의 명성" />
     <string id="taom_moa_t3_b_p3_desc" text="당신의 업적은 알드부르크에 영광을 가져다줍니다. +12% 전투 명성 획득." />
     <string id="taom_moa_t3_b_p4" text="마크의 군대" />
-    <string id="taom_moa_t3_b_p4_desc" text="로한 최고의 궁수들이 당신의 깃발 아래 모입니다. +12% 부대 규모." />
+    <string id="taom_moa_t3_b_p4_desc" text="로한 최고의 궁수들이 당신의 깃발 아래 모여듭니다. +5 부대 규모." />
     <string id="taom_ew_root_desc" text="에오를의 함성은 선조들의 천둥을 불러내며 +5% 말 돌격 피해를 부여합니다." />
     <string id="taom_ew_t1_a_key" text="선조의 천둥" />
     <string id="taom_ew_t1_a_key_desc" text="함성이 평원을 가로질러 울려 퍼집니다. 에오를의 함성 범위 +3." />
@@ -652,7 +652,7 @@
     <string id="taom_ew_t3_a_p2" text="마크의 군주" />
     <string id="taom_ew_t3_a_p2_desc" text="가장 위대한 기수들이 당신을 따른다. 체력 +75." />
     <string id="taom_ew_t3_a_p3" text="에오레드 지휘관" />
-    <string id="taom_ew_t3_a_p3_desc" text="위대한 에오레드가 당신의 뒤를 따른다. 부대 규모 +12%." />
+    <string id="taom_ew_t3_a_p3_desc" text="거대한 기병대가 당신을 뒤따릅니다. +5 부대 규모." />
     <string id="taom_ew_t3_a_p4" text="로한의 영광" />
     <string id="taom_ew_t3_a_p4_desc" text="당신의 업적은 마크에 영광을 가져온다. 전투 명성 획득 +12%." />
     <string id="taom_ew_t3_b_key" text="항시 준비" />
@@ -664,7 +664,7 @@
     <string id="taom_ew_t3_b_p3" text="리더마크의 노래" />
     <string id="taom_ew_t3_b_p3_desc" text="에오세오드의 업적은 오랜 세월 노래로 전해진다. 전투 명성 획득 +14%." />
     <string id="taom_ew_t3_b_p4" text="대군세" />
-    <string id="taom_ew_t3_b_p4_desc" text="에오세오드의 전군이 전쟁에 나선다. 부대 규모 +14%." />
+    <string id="taom_ew_t3_b_p4_desc" text="에오테오드의 전 군대가 전쟁에 나섭니다. +6 부대 규모." />
     <string id="taom_ws_root_desc" text="강의 항해자는 저항 +5%를 부여하며 스탕가르드 국경 감시자들의 경계심을 전달한다." />
     <string id="taom_ws_t1_a_key" text="강의 여울 숙달" />
     <string id="taom_ws_t1_a_key_desc" text="당신은 모든 도하 지점을 안다. 강의 항해자 범위 +3." />
@@ -725,7 +725,7 @@
     <string id="taom_ws_t3_b_p3" text="변경지의 수호자" />
     <string id="taom_ws_t3_b_p3_desc" text="변경지의 최고의 수호자. +12% 전투 명성 획득." />
     <string id="taom_ws_t3_b_p4" text="스탕가르드의 군대" />
-    <string id="taom_ws_t3_b_p4_desc" text="스탕가르드의 모든 힘이 당신을 따릅니다. +12% 부대 규모." />
+    <string id="taom_ws_t3_b_p4_desc" text="스탕가르드의 모든 전력이 당신을 따릅니다. +5 부대 규모." />
     <string id="taom_alr_root_desc" text="야만적 돌격은 +5% 근접 피해를 부여하고 던랜드 부족의 분노를 전합니다." />
     <string id="taom_alr_t1_a_key" text="부족의 전투 격노" />
     <string id="taom_alr_t1_a_key_desc" text="조상의 분노가 당신을 통해 흐릅니다. 야만적 돌격 범위 +3." />
@@ -786,7 +786,7 @@
     <string id="taom_alr_t3_b_p3" text="언덕의 전설" />
     <string id="taom_alr_t3_b_p3_desc" text="당신의 이름은 모든 던렌딩 홀에 울려 퍼진다. 전투 명성 획득 +14%." />
     <string id="taom_alr_t3_b_p4" text="통합된 부족들" />
-    <string id="taom_alr_t3_b_p4_desc" text="던랜드의 모든 부족이 당신의 깃발 아래 전사를 보낸다. 부대 규모 +14%." />
+    <string id="taom_alr_t3_b_p4_desc" text="던랜드의 모든 씨족이 당신의 깃발 아래 전사를 보냅니다. +6 부대 규모." />
     <string id="taom_wh_root_desc" text="표적 지정은 원거리 피해 +5%를 부여하고 끈질긴 추적을 위해 대상을 표시한다." />
     <string id="taom_wh_t1_a_key" text="무리 우두머리의 표식" />
     <string id="taom_wh_t1_a_key_desc" text="당신의 표식은 무리 전체를 사냥으로 이끈다. 표적 지정 반경 +3." />
@@ -847,7 +847,7 @@
     <string id="taom_wh_t3_b_p3" text="전리품 수집가" />
     <string id="taom_wh_t3_b_p3_desc" text="모든 전리품이 당신의 무시무시한 전설에 더해집니다. +14% 전투 명성 획득." />
     <string id="taom_wh_t3_b_p4" text="거대한 무리" />
-    <string id="taom_wh_t3_b_p4_desc" text="던랜드의 모든 늑대가죽 사냥꾼이 당신과 함께 달립니다. +14% 부대 규모." />
+    <string id="taom_wh_t3_b_p4_desc" text="던랜드의 모든 늑대가죽 사냥꾼이 당신과 함께 합니다. +6 부대 규모." />
     <string id="taom_cr_root_desc" text="전쟁무리 돌격은 +5% 말 돌격 피해를 부여하고 적진을 혼란에 빠뜨립니다." />
     <string id="taom_cr_t1_a_key" text="씨족의 천둥" />
     <string id="taom_cr_t1_a_key_desc" text="기병들이 내려올 때 대지가 흔들립니다. 전쟁무리 돌격 범위 +3." />
@@ -896,7 +896,7 @@
     <string id="taom_cr_t3_a_p2" text="산악 태생" />
     <string id="taom_cr_t3_a_p2_desc" text="당신은 이 안장에서 태어났다. 체력 +75." />
     <string id="taom_cr_t3_a_p3" text="대전투무리" />
-    <string id="taom_cr_t3_a_p3_desc" text="수백 명의 기수가 당신의 신호를 따른다. 부대 규모 +12%." />
+    <string id="taom_cr_t3_a_p3_desc" text="수백 명의 기병이 당신의 신호를 따릅니다. +5 부대 규모." />
     <string id="taom_cr_t3_a_p4" text="던랜드의 전설" />
     <string id="taom_cr_t3_a_p4_desc" text="당신의 돌격 노래가 안개산맥에서 울려 퍼진다. 전투 명성 획득 +12%." />
     <string id="taom_cr_t3_b_key" text="끊임없는 돌격" />
@@ -904,7 +904,7 @@
     <string id="taom_cr_t3_b_p1" text="씨족의 분노" />
     <string id="taom_cr_t3_b_p1_desc" text="씨족들이 하나의 막을 수 없는 힘으로 달린다. 병력 피해 +12%." />
     <string id="taom_cr_t3_b_p2" text="끝없는 기수들" />
-    <string id="taom_cr_t3_b_p2_desc" text="전투무리가 지평선에서 지평선까지 땅을 덮는다. 부대 규모 +14%." />
+    <string id="taom_cr_t3_b_p2_desc" text="전쟁 무리가 지평선에서 지평선까지 땅을 덮습니다. +6 부대 규모." />
     <string id="taom_cr_t3_b_p3" text="약탈자의 명성" />
     <string id="taom_cr_t3_b_p3_desc" text="당신의 약탈은 에도라스에서 오르상크까지 두려움의 대상이다. 전투 명성 획득 +14%." />
     <string id="taom_cr_t3_b_p4" text="깨지지 않는 전투무리" />

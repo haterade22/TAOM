@@ -359,7 +359,7 @@
     <string id="taom_buc_t3_b_p3" text="Renombre Oscuro" />
     <string id="taom_buc_t3_b_p3_desc" text="La victoria trae reputación temible. +12% ganancia de renombre en batalla." />
     <string id="taom_buc_t3_b_p4" text="Señor del Asedio" />
-    <string id="taom_buc_t3_b_p4_desc" text="Tu hueste de guerra es vasta y terrible. +12% tamaño de grupo." />
+    <string id="taom_buc_t3_b_p4_desc" text="Tu hueste de guerra es vasta y terrible. +5 al tamaño del grupo." />
     <string id="taom_mc_root_desc" text="Voz del Único otorga +5% daño a distancia y canaliza los susurros oscuros de Sauron." />
     <string id="taom_mc_t1_a_key" text="Púa Envenenada" />
     <string id="taom_mc_t1_a_key_desc" text="Tus flechas portan toxinas viles. Radio de Voz del Único +3." />
@@ -420,7 +420,7 @@
     <string id="taom_mc_t3_b_p3" text="Recompensa del Martirio" />
     <string id="taom_mc_t3_b_p3_desc" text="La muerte en nombre de Sauron trae gran renombre. +12% ganancia de renombre en batalla." />
     <string id="taom_mc_t3_b_p4" text="Hueste del Profeta" />
-    <string id="taom_mc_t3_b_p4_desc" text="Miles responden al llamado del profeta. +12% tamaño del grupo." />
+    <string id="taom_mc_t3_b_p4_desc" text="Miles responden al llamado del profeta. +5 al tamaño del grupo." />
     <string id="taom_sr_root_desc" text="Acecho Sigiloso otorga +5% velocidad de movimiento y permite al jinete desvanecerse en la sombra de Mordor." />
     <string id="taom_sr_t1_a_key" text="Galope Sombrío" />
     <string id="taom_sr_t1_a_key_desc" text="Te desvaneces en la oscuridad de Mordor. Radio de Acecho Sigiloso +3." />
@@ -479,7 +479,7 @@
     <string id="taom_sr_t3_b_p2" text="Marcha Oscura Interminable" />
     <string id="taom_sr_t3_b_p2_desc" text="La hueste de Mordor cubre terreno sin descanso. +8% velocidad de movimiento del grupo." />
     <string id="taom_sr_t3_b_p3" text="Legiones de la Sombra" />
-    <string id="taom_sr_t3_b_p3_desc" text="Tu horda crece más allá de todo cálculo. +12% tamaño de grupo." />
+    <string id="taom_sr_t3_b_p3_desc" text="Tu horda crece más allá de toda cuenta. +5 al tamaño del grupo." />
     <string id="taom_sr_t3_b_p4" text="Renombre del Jinete" />
     <string id="taom_sr_t3_b_p4_desc" text="Las hazañas de la caballería de la sombra son legendarias. +14% ganancia de renombre en batalla." />
     <string id="taom_ohw_root_desc" text="Martillo Demoledor otorga +8% salud. La mole del Olog dispersa a la infantería." />
@@ -530,7 +530,7 @@
     <string id="taom_ohw_t3_a_p2" text="La Muerte No Puede Contener" />
     <string id="taom_ohw_t3_a_p2_desc" text="Ni siquiera heridas graves pueden detener al Olog. +75 de salud." />
     <string id="taom_ohw_t3_a_p3" text="Horda del Señor de la Guerra" />
-    <string id="taom_ohw_t3_a_p3_desc" text="Decenas de miles marchan bajo tu estandarte. +12% de tamaño de grupo." />
+    <string id="taom_ohw_t3_a_p3_desc" text="Decenas de miles marchan bajo tu estandarte. +5 al tamaño del grupo." />
     <string id="taom_ohw_t3_a_p4" text="Martillo de Mordor" />
     <string id="taom_ohw_t3_a_p4_desc" text="Tu hueste quiebra a todos los que se oponen. +12% de daño de tropas." />
     <string id="taom_ohw_t3_b_key" text="Siempre Furioso" />
@@ -542,7 +542,7 @@
     <string id="taom_ohw_t3_b_p3" text="Leyenda del Olog" />
     <string id="taom_ohw_t3_b_p3_desc" text="Tus hazañas son cantadas en los salones oscuros de Mordor. +14% de ganancia de renombre en batalla." />
     <string id="taom_ohw_t3_b_p4" text="Ejército Negro" />
-    <string id="taom_ohw_t3_b_p4_desc" text="La hueste oscura crece desmesuradamente. +14% de tamaño de grupo." />
+    <string id="taom_ohw_t3_b_p4_desc" text="La hueste oscura se hincha sin medida. +6 al tamaño del grupo." />
     <string id="taom_moa_root_desc" text="Emplumado Ligero otorga +5% de daño a distancia, haciendo que cada flecha cuente." />
     <string id="taom_moa_t1_a_key" text="Ojo de Águila" />
     <string id="taom_moa_t1_a_key_desc" text="Tu vista es más aguda que la de cualquier halcón. Radio de Emplumado Ligero +3." />
@@ -603,7 +603,7 @@
     <string id="taom_moa_t3_b_p3" text="Fama de la Marca" />
     <string id="taom_moa_t3_b_p3_desc" text="Tus hazañas traen gloria a Aldburg. +12% de ganancia de renombre en batalla." />
     <string id="taom_moa_t3_b_p4" text="Ejército de la Marca" />
-    <string id="taom_moa_t3_b_p4_desc" text="Los mejores arqueros de Rohan se reúnen bajo tu estandarte. +12% de tamaño del grupo." />
+    <string id="taom_moa_t3_b_p4_desc" text="Los mejores arqueros de Rohan se unen a tu estandarte. +5 al tamaño del grupo." />
     <string id="taom_ew_root_desc" text="Grito de Guerra de Eorl otorga +5% de daño de carga a caballo, invocando el trueno de los ancestros." />
     <string id="taom_ew_t1_a_key" text="Trueno Ancestral" />
     <string id="taom_ew_t1_a_key_desc" text="El grito de guerra resuena por la llanura. Radio de Grito de Guerra de Eorl +3." />
@@ -652,7 +652,7 @@
     <string id="taom_ew_t3_a_p2" text="Señor de la Marca" />
     <string id="taom_ew_t3_a_p2_desc" text="Los mejores jinetes te siguen. +75 salud." />
     <string id="taom_ew_t3_a_p3" text="Comandante de Éored" />
-    <string id="taom_ew_t3_a_p3_desc" text="Un gran éored cabalga a tus espaldas. +12% tamaño del grupo." />
+    <string id="taom_ew_t3_a_p3_desc" text="Un gran éored cabalga a tus espaldas. +5 al tamaño del grupo." />
     <string id="taom_ew_t3_a_p4" text="Gloria de Rohan" />
     <string id="taom_ew_t3_a_p4_desc" text="Tus hazañas traen gloria a la Marca. +12% ganancia de renombre en batalla." />
     <string id="taom_ew_t3_b_key" text="Siempre Listo" />
@@ -664,7 +664,7 @@
     <string id="taom_ew_t3_b_p3" text="Canciones de la Marca de los Jinetes" />
     <string id="taom_ew_t3_b_p3_desc" text="Las hazañas de los Éothéod se cantan por siglos. +14% ganancia de renombre en batalla." />
     <string id="taom_ew_t3_b_p4" text="La Gran Hueste" />
-    <string id="taom_ew_t3_b_p4_desc" text="La hueste completa de los Éothéod cabalga a la guerra. +14% tamaño del grupo." />
+    <string id="taom_ew_t3_b_p4_desc" text="La hueste completa de los Éothéod cabalga a la guerra. +6 al tamaño del grupo." />
     <string id="taom_ws_root_desc" text="Navegante del Río otorga +5% resistencia y canaliza la vigilancia de los centinelas fronterizos de Stangard." />
     <string id="taom_ws_t1_a_key" text="Maestría de Vados del Río" />
     <string id="taom_ws_t1_a_key_desc" text="Conoces cada cruce. Radio de Navegante del Río +3." />
@@ -725,7 +725,7 @@
     <string id="taom_ws_t3_b_p3" text="Guardián de la Marca" />
     <string id="taom_ws_t3_b_p3_desc" text="El mejor guardián de la Marca. +12% ganancia de renombre en batalla." />
     <string id="taom_ws_t3_b_p4" text="Hueste de Stangard" />
-    <string id="taom_ws_t3_b_p4_desc" text="Toda la fuerza de Stangard cabalga detrás de ti. +12% tamaño del grupo." />
+    <string id="taom_ws_t3_b_p4_desc" text="Toda la fuerza de Stangard cabalga detrás de ti. +5 al tamaño del grupo." />
     <string id="taom_alr_root_desc" text="Embestida Salvaje otorga +5% daño cuerpo a cuerpo y canaliza la furia de los clanes de Dunland." />
     <string id="taom_alr_t1_a_key" text="Ira de Batalla del Clan" />
     <string id="taom_alr_t1_a_key_desc" text="La ira de tus ancestros fluye a través de ti. Radio de Embestida Salvaje +3." />
@@ -786,7 +786,7 @@
     <string id="taom_alr_t3_b_p3" text="Leyenda de las Colinas" />
     <string id="taom_alr_t3_b_p3_desc" text="Tu nombre resuena en cada salón Dunlendés. +14% ganancia de renombre en batalla." />
     <string id="taom_alr_t3_b_p4" text="Clanes Unidos" />
-    <string id="taom_alr_t3_b_p4_desc" text="Cada clan de Dunland envía guerreros a tu estandarte. +14% tamaño del grupo." />
+    <string id="taom_alr_t3_b_p4_desc" text="Cada clan de Dunland envía guerreros a tu estandarte. +6 al tamaño del grupo." />
     <string id="taom_wh_root_desc" text="Presa Marcada otorga +5% daño a distancia y marca un objetivo para persecución implacable." />
     <string id="taom_wh_t1_a_key" text="Marca del Líder de la Manada" />
     <string id="taom_wh_t1_a_key_desc" text="Tu marca atrae a toda la manada hacia la presa. Radio de Presa Marcada +3." />
@@ -847,7 +847,7 @@
     <string id="taom_wh_t3_b_p3" text="Tomador de Trofeos" />
     <string id="taom_wh_t3_b_p3_desc" text="Cada trofeo añade a tu temible leyenda. +14% ganancia de renombre en batalla." />
     <string id="taom_wh_t3_b_p4" text="Gran Manada" />
-    <string id="taom_wh_t3_b_p4_desc" text="Cada cazador piel de lobo en Dunland cabalga contigo. +14% tamaño de grupo." />
+    <string id="taom_wh_t3_b_p4_desc" text="Cada cazador de piel de lobo en Dunland cabalga contigo. +6 al tamaño del grupo." />
     <string id="taom_cr_root_desc" text="Carga de Manada de Guerra otorga +5% daño de carga de caballo y lleva las líneas enemigas al caos." />
     <string id="taom_cr_t1_a_key" text="Trueno del Clan" />
     <string id="taom_cr_t1_a_key_desc" text="La tierra tiembla cuando los jinetes descienden. Radio de Carga de Manada de Guerra +3." />
@@ -896,7 +896,7 @@
     <string id="taom_cr_t3_a_p2" text="Nacido de las Montañas" />
     <string id="taom_cr_t3_a_p2_desc" text="Naciste para esta montura. +75 de salud." />
     <string id="taom_cr_t3_a_p3" text="Gran Manada de Guerra" />
-    <string id="taom_cr_t3_a_p3_desc" text="Cientos de jinetes siguen tu señal. +12% tamaño de grupo." />
+    <string id="taom_cr_t3_a_p3_desc" text="Cientos de jinetes siguen a tu señal. +5 al tamaño del grupo." />
     <string id="taom_cr_t3_a_p4" text="Leyenda Dunlendesa" />
     <string id="taom_cr_t3_a_p4_desc" text="Canciones de tu carga resuenan desde las Montañas Nubladas. +12% ganancia de renombre en batalla." />
     <string id="taom_cr_t3_b_key" text="Siempre Cargando" />
@@ -904,7 +904,7 @@
     <string id="taom_cr_t3_b_p1" text="Furia del Clan" />
     <string id="taom_cr_t3_b_p1_desc" text="Los clanes cabalgan como una fuerza imparable. +12% daño de tropas." />
     <string id="taom_cr_t3_b_p2" text="Jinetes Infinitos" />
-    <string id="taom_cr_t3_b_p2_desc" text="La manada de guerra cubre la tierra de horizonte a horizonte. +14% tamaño de grupo." />
+    <string id="taom_cr_t3_b_p2_desc" text="La manada de guerra cubre la tierra de horizonte a horizonte. +6 al tamaño del grupo." />
     <string id="taom_cr_t3_b_p3" text="Renombre del Saqueador" />
     <string id="taom_cr_t3_b_p3_desc" text="Tus incursiones son temidas desde Edoras hasta Orthanc. +14% ganancia de renombre en batalla." />
     <string id="taom_cr_t3_b_p4" text="Manada de Guerra Inquebrantable" />

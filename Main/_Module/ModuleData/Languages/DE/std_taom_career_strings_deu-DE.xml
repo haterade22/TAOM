@@ -359,7 +359,7 @@
     <string id="taom_buc_t3_b_p3" text="Finsterer Ruhm" />
     <string id="taom_buc_t3_b_p3_desc" text="Sieg bringt furchterregende Reputation. +12% Schlachtruhm-Gewinn." />
     <string id="taom_buc_t3_b_p4" text="Belagerungsfürst" />
-    <string id="taom_buc_t3_b_p4_desc" text="Euer Kriegsheer ist gewaltig und schrecklich. +12% Truppengröße." />
+    <string id="taom_buc_t3_b_p4_desc" text="Euer Kriegsheer ist gewaltig und furchtbar. +5 Truppengröße." />
     <string id="taom_mc_root_desc" text="Stimme des Einen gewährt +5% Fernkampfschaden und kanalisiert Saurons finsteres Flüstern." />
     <string id="taom_mc_t1_a_key" text="Vergifteter Widerhaken" />
     <string id="taom_mc_t1_a_key_desc" text="Eure Pfeile tragen abscheuliche Gifte. Stimme des Einen-Reichweite +3." />
@@ -420,7 +420,7 @@
     <string id="taom_mc_t3_b_p3" text="Belohnung des Märtyrers" />
     <string id="taom_mc_t3_b_p3_desc" text="Der Tod in Saurons Namen bringt großen Ruhm. +12% Ruhmgewinn aus Schlachten." />
     <string id="taom_mc_t3_b_p4" text="Heer des Propheten" />
-    <string id="taom_mc_t3_b_p4_desc" text="Tausende folgen dem Ruf des Propheten. +12% Gruppengröße." />
+    <string id="taom_mc_t3_b_p4_desc" text="Tausende folgen dem Ruf des Propheten. +5 Truppengröße." />
     <string id="taom_sr_root_desc" text="Schleich-Kriechen gewährt +5% Bewegungsgeschwindigkeit und lässt den Reiter in Mordors Schatten verschwinden." />
     <string id="taom_sr_t1_a_key" text="Schattengalopp" />
     <string id="taom_sr_t1_a_key_desc" text="Du verschwindest in Mordors Dunkelheit. Schleich-Kriechen Radius +3." />
@@ -479,7 +479,7 @@
     <string id="taom_sr_t3_b_p2" text="Endloser Dunkelmarsch" />
     <string id="taom_sr_t3_b_p2_desc" text="Mordors Heer legt Strecken ohne Rast zurück. +8% Bewegungsgeschwindigkeit der Truppe." />
     <string id="taom_sr_t3_b_p3" text="Schattenlegionen" />
-    <string id="taom_sr_t3_b_p3_desc" text="Eure Horde wächst ins Unermessliche. +12% Truppengröße." />
+    <string id="taom_sr_t3_b_p3_desc" text="Eure Horde wächst ins Unermessliche. +5 Truppengröße." />
     <string id="taom_sr_t3_b_p4" text="Ruhm des Reiters" />
     <string id="taom_sr_t3_b_p4_desc" text="Die Taten der Schattenkavallerie sind legendär. +14% Schlachtruhm." />
     <string id="taom_ohw_root_desc" text="Hammer Nieder gewährt +8% Gesundheit. Die schiere Masse des Olog zerstreut die Infanterie." />
@@ -530,7 +530,7 @@
     <string id="taom_ohw_t3_a_p2" text="Der Tod Kann Nicht Halten" />
     <string id="taom_ohw_t3_a_p2_desc" text="Selbst schwere Verletzungen können den Olog nicht aufhalten. +75 Gesundheit." />
     <string id="taom_ohw_t3_a_p3" text="Horde des Kriegshäuptlings" />
-    <string id="taom_ohw_t3_a_p3_desc" text="Zehntausende marschieren unter deinem Banner. +12% Gruppengröße." />
+    <string id="taom_ohw_t3_a_p3_desc" text="Zehntausende marschieren unter Eurem Banner. +5 Truppengröße." />
     <string id="taom_ohw_t3_a_p4" text="Mordors Hammer" />
     <string id="taom_ohw_t3_a_p4_desc" text="Dein Kriegsheer zerbricht alle, die sich dir entgegenstellen. +12% Truppenschaden." />
     <string id="taom_ohw_t3_b_key" text="Ewig Tobend" />
@@ -542,7 +542,7 @@
     <string id="taom_ohw_t3_b_p3" text="Legende des Olog" />
     <string id="taom_ohw_t3_b_p3_desc" text="Deine Taten werden in den dunklen Hallen Mordors besungen. +14% Schlachtruhm-Gewinn." />
     <string id="taom_ohw_t3_b_p4" text="Schwarze Armee" />
-    <string id="taom_ohw_t3_b_p4_desc" text="Das dunkle Heer schwillt ins Unermessliche an. +14% Gruppengröße." />
+    <string id="taom_ohw_t3_b_p4_desc" text="Das dunkle Heer schwillt über alle Maßen an. +6 Truppengröße." />
     <string id="taom_moa_root_desc" text="Leichte Befiederung gewährt +5% Fernkampfschaden und lässt jeden Pfeil zählen." />
     <string id="taom_moa_t1_a_key" text="Adlerauge" />
     <string id="taom_moa_t1_a_key_desc" text="Deine Sicht ist schärfer als die eines Falken. Leichte Befiederung Radius +3." />
@@ -603,7 +603,7 @@
     <string id="taom_moa_t3_b_p3" text="Ruhm der Mark" />
     <string id="taom_moa_t3_b_p3_desc" text="Eure Taten bringen Aldburg Ehre. +12% Schlachtruhm-Gewinn." />
     <string id="taom_moa_t3_b_p4" text="Armee der Mark" />
-    <string id="taom_moa_t3_b_p4_desc" text="Die besten Bogenschützen Rohans scharen sich um Euer Banner. +12% Gruppengröße." />
+    <string id="taom_moa_t3_b_p4_desc" text="Die besten Bogenschützen Rohans scharen sich um Euer Banner. +5 Truppengröße." />
     <string id="taom_ew_root_desc" text="Schlachtruf Eorls gewährt +5% Reiterangriff-Schaden und beschwört den Donner der Ahnen." />
     <string id="taom_ew_t1_a_key" text="Donner der Ahnen" />
     <string id="taom_ew_t1_a_key_desc" text="Der Schlachtruf hallt über die Ebene. Schlachtruf Eorls Radius +3." />
@@ -652,7 +652,7 @@
     <string id="taom_ew_t3_a_p2" text="Herr der Mark" />
     <string id="taom_ew_t3_a_p2_desc" text="Die größten Reiter folgen Euch. +75 Gesundheit." />
     <string id="taom_ew_t3_a_p3" text="Eored-Befehlshaber" />
-    <string id="taom_ew_t3_a_p3_desc" text="Ein großes Eored reitet an Eurer Seite. +12% Gruppengröße." />
+    <string id="taom_ew_t3_a_p3_desc" text="Ein gewaltiger Éored reitet an Eurer Seite. +5 Truppengröße." />
     <string id="taom_ew_t3_a_p4" text="Rohans Ruhm" />
     <string id="taom_ew_t3_a_p4_desc" text="Eure Taten bringen der Mark Ruhm. +12% Ruhm aus Schlachten." />
     <string id="taom_ew_t3_b_key" text="Stets Bereit" />
@@ -664,7 +664,7 @@
     <string id="taom_ew_t3_b_p3" text="Lieder der Riddermark" />
     <string id="taom_ew_t3_b_p3_desc" text="Die Taten der Éothéod werden über Zeitalter besungen. +14% Schlachtruhm-Gewinn." />
     <string id="taom_ew_t3_b_p4" text="Das Große Heer" />
-    <string id="taom_ew_t3_b_p4_desc" text="Das gesamte Heer der Éothéod reitet in den Krieg. +14% Gruppengröße." />
+    <string id="taom_ew_t3_b_p4_desc" text="Das gesamte Heer der Éothéod zieht in den Krieg. +6 Truppengröße." />
     <string id="taom_ws_root_desc" text="Flussnavigator gewährt +5% Widerstand und kanalisiert die Wachsamkeit der Grenzwächter von Stangard." />
     <string id="taom_ws_t1_a_key" text="Meisterung der Flussfurt" />
     <string id="taom_ws_t1_a_key_desc" text="Du kennst jeden Übergang. Flussnavigator-Reichweite +3." />
@@ -725,7 +725,7 @@
     <string id="taom_ws_t3_b_p3" text="Wächter der Mark" />
     <string id="taom_ws_t3_b_p3_desc" text="Der beste Beschützer der Mark. +12% Schlachtruhm-Gewinn." />
     <string id="taom_ws_t3_b_p4" text="Heer von Stangard" />
-    <string id="taom_ws_t3_b_p4_desc" text="Die ganze Stärke Stangards reitet hinter Euch. +12% Gruppengröße." />
+    <string id="taom_ws_t3_b_p4_desc" text="Ganz Stangards Streitmacht reitet hinter Euch. +5 Truppengröße." />
     <string id="taom_alr_root_desc" text="Wilder Ansturm gewährt +5% Nahkampfschaden und kanalisiert die Wut der Dunländer-Sippen." />
     <string id="taom_alr_t1_a_key" text="Sippenkampfwut" />
     <string id="taom_alr_t1_a_key_desc" text="Die Wut Eurer Ahnen fließt durch Euch. Wilder Ansturm-Radius +3." />
@@ -786,7 +786,7 @@
     <string id="taom_alr_t3_b_p3" text="Legende der Hügel" />
     <string id="taom_alr_t3_b_p3_desc" text="Euer Name hallt durch jede Dunländer-Halle. +14% Schlachtruhm-Zuwachs." />
     <string id="taom_alr_t3_b_p4" text="Vereinte Sippen" />
-    <string id="taom_alr_t3_b_p4_desc" text="Jede Sippe aus Dunland sendet Krieger zu Eurem Banner. +14% Gruppengröße." />
+    <string id="taom_alr_t3_b_p4_desc" text="Jeder Clan aus Dunland sendet Krieger zu Eurem Banner. +6 Truppengröße." />
     <string id="taom_wh_root_desc" text="Markierte Beute gewährt +5% Fernkampfschaden und markiert ein Ziel für gnadenlose Verfolgung." />
     <string id="taom_wh_t1_a_key" text="Zeichen des Rudelführers" />
     <string id="taom_wh_t1_a_key_desc" text="Euer Zeichen zieht das gesamte Rudel zur Beute. Radius von Markierte Beute +3." />
@@ -847,7 +847,7 @@
     <string id="taom_wh_t3_b_p3" text="Trophäensammler" />
     <string id="taom_wh_t3_b_p3_desc" text="Jede Trophäe mehrt Eure furchterregende Legende. +14% Schlachtruhm-Gewinn." />
     <string id="taom_wh_t3_b_p4" text="Großes Rudel" />
-    <string id="taom_wh_t3_b_p4_desc" text="Jeder Wolfspelzjäger in Dunland reitet mit Euch. +14% Gruppengröße." />
+    <string id="taom_wh_t3_b_p4_desc" text="Jeder Wolfsfell-Jäger in Dunland reitet mit Euch. +6 Truppengröße." />
     <string id="taom_cr_root_desc" text="Rudelansturm gewährt +5% Pferde-Angriffschaden und treibt feindliche Linien ins Chaos." />
     <string id="taom_cr_t1_a_key" text="Clan-Donner" />
     <string id="taom_cr_t1_a_key_desc" text="Der Boden bebt, wenn die Reiter herabstürmen. Radius des Rudelansturms +3." />
@@ -896,7 +896,7 @@
     <string id="taom_cr_t3_a_p2" text="In den Bergen geboren" />
     <string id="taom_cr_t3_a_p2_desc" text="Ihr wurdet für diesen Sattel geboren. +75 Gesundheit." />
     <string id="taom_cr_t3_a_p3" text="Großes Kriegsrudel" />
-    <string id="taom_cr_t3_a_p3_desc" text="Hunderte Reiter folgen auf dein Zeichen. +12% Truppengröße." />
+    <string id="taom_cr_t3_a_p3_desc" text="Hunderte Reiter folgen auf Euer Zeichen. +5 Truppengröße." />
     <string id="taom_cr_t3_a_p4" text="Dunländische Legende" />
     <string id="taom_cr_t3_a_p4_desc" text="Lieder über deinen Angriff hallen vom Nebelgebirge wider. +12% Schlachtruhm-Gewinn." />
     <string id="taom_cr_t3_b_key" text="Stets angreifend" />
@@ -904,7 +904,7 @@
     <string id="taom_cr_t3_b_p1" text="Zorn des Klans" />
     <string id="taom_cr_t3_b_p1_desc" text="Die Klans reiten als eine unaufhaltsame Macht. +12% Truppenschaden." />
     <string id="taom_cr_t3_b_p2" text="Endlose Reiter" />
-    <string id="taom_cr_t3_b_p2_desc" text="Das Kriegsrudel bedeckt das Land von Horizont zu Horizont. +14% Truppengröße." />
+    <string id="taom_cr_t3_b_p2_desc" text="Das Kriegsrudel bedeckt das Land von Horizont zu Horizont. +6 Truppengröße." />
     <string id="taom_cr_t3_b_p3" text="Ruf des Plünderers" />
     <string id="taom_cr_t3_b_p3_desc" text="Deine Raubzüge werden von Edoras bis Orthanc gefürchtet. +14% Schlachtruhm-Gewinn." />
     <string id="taom_cr_t3_b_p4" text="Unbezwingbares Kriegsrudel" />

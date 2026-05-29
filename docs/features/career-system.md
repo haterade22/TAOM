@@ -70,6 +70,17 @@ Defines careers with: id, display name, description, portrait sprite, ability te
 
 Defines standalone root choices and choice groups. Each group has a tier (1/2/3) and contains choices (Keystone or Passive). Choices can have PassiveEffect (type + magnitude + operation) and Mutations (target template + property + calculator + params).
 
+**Two PassiveEffect schemas are accepted** (`CareerConfigProvider.ParseChoice`):
+- **Direct (preferred):** `<Choice ...><PassiveEffect type="X" magnitude="0.10" operation="Add" is_percentage="true" /></Choice>`
+- **Wrapped:** `<Choice ...><PassiveEffects><PassiveEffect type="X" value="0.10" /></PassiveEffects></Choice>` — the parser reads the *first* `<PassiveEffect>` inside the plural `<PassiveEffects>` wrapper (one child only — multi-child wrappers silently drop the rest), and accepts `value=` as an alias for `magnitude=` (`magnitude=` wins when both are present). The wrapped form was historically unparsed (310 dead choices across all 16 cultures); fixed 2026-05-29 — see [RCA](../reviews/rca-career-partysize-2026-05-29.md).
+
+**Magnitude scale ↔ application method (IMPORTANT).** The cache (`CareerPassiveService`) stores only the summed `Magnitude` float and discards `Operation`/`IsPercentage`; each consuming GameModel chooses flat vs factor by calling `ApplyFlat` (`result.Add`) or `ApplyFactor` (`result.AddFactor`). So a passive's authored magnitude scale MUST match its consumer's method:
+- **Fractional magnitude (0.10 = +10%)** → consumer uses `ApplyFactor`. This is the convention for almost every effect type (TroopWages, PartyMovementSpeed, TroopMorale, etc.).
+- **Whole-count magnitude (2 = +2 units)** → consumer uses `ApplyFlat`. Only **`PartySize`** (`TaomPartySizeModel`) and the agent-stat flat types (`Health`, `CompanionLimit`) are flat. `PartySize` magnitudes are 2–6 (e.g. "+4 party size"). Applying a whole-count via `ApplyFactor` multiplies the base (`AddFactor(2)` = ×3) — this was the "+2 → +150" bug fixed 2026-05-29.
+- **Deferred refactor:** make the cache `IsPercentage`-aware so flat-vs-factor is data-driven per entry rather than a per-call-site decision. Tracked as a known design-debt note.
+
+**Dead-consumer effect types (known limitation).** Five `PassiveEffectType` values are authored in the XML but have **no consumer**, so choices advertising them are no-ops: `Ammo`, `HorseChargeDamage`, `HorseHealth`, `TroopResistance`, `StealthBonus`. Pre-existing; made more visible by the wrapper activation. Implementing consumers is a separate per-type balance/feature decision.
+
 ### Ability Templates (`Main/_Module/ModuleData/career_system/taom_ability_templates.xml`)
 
 Defines per-ability tunables: id, display name, duration (effect window), radius (AoE), max charge (used by mutation system to scale charge thresholds — internal value, not consumed by readiness logic), particle/sound effects, tooltip. Cooldown is *not* per-template; see [Cooldown System](#cooldown-system).

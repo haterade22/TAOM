@@ -809,7 +809,7 @@
             description="{=taom_buc_t3_a_p3_desc}Your warhost grows as your legend spreads. +4 party size."
             icon_sprite="career_choice_buc_t3_a_p3">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.10" />
+        <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
       </PassiveEffects>
     </Choice>
     <Choice id="black_uruk_captain_t3_a_p4" type="Passive"
@@ -860,10 +860,10 @@
     </Choice>
     <Choice id="black_uruk_captain_t3_b_p4" type="Passive"
             display_name="{=taom_buc_t3_b_p4}Siege Lord"
-            description="{=taom_buc_t3_b_p4_desc}Your warhost is vast and terrible. +12% party size."
+            description="{=taom_buc_t3_b_p4_desc}Your warhost is vast and terrible. +5 party size."
             icon_sprite="career_choice_buc_t3_b_p4">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.12" />
+        <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -1097,7 +1097,7 @@
             description="{=taom_mc_t3_a_p3_desc}Believers flock to your banner. +4 party size."
             icon_sprite="career_choice_mc_t3_a_p3">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.10" />
+        <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
       </PassiveEffects>
     </Choice>
     <Choice id="mulkerhili_cultist_t3_a_p4" type="Passive"
@@ -1148,10 +1148,10 @@
     </Choice>
     <Choice id="mulkerhili_cultist_t3_b_p4" type="Passive"
             display_name="{=taom_mc_t3_b_p4}Prophet's Host"
-            description="{=taom_mc_t3_b_p4_desc}Thousands answer the prophet's call. +12% party size."
+            description="{=taom_mc_t3_b_p4_desc}Thousands answer the prophet's call. +5 party size."
             icon_sprite="career_choice_mc_t3_b_p4">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.12" />
+        <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -1377,7 +1377,7 @@
             description="{=taom_sr_t3_a_p2_desc}A vast pack rides under your banner. +4 party size."
             icon_sprite="career_choice_sr_t3_a_p2">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.10" />
+        <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t3_a_p3" type="Passive"
@@ -1428,10 +1428,10 @@
     </Choice>
     <Choice id="snaga_rider_t3_b_p3" type="Passive"
             display_name="{=taom_sr_t3_b_p3}Shadow Legions"
-            description="{=taom_sr_t3_b_p3_desc}Your horde grows beyond reckoning. +12% party size."
+            description="{=taom_sr_t3_b_p3_desc}Your horde grows beyond reckoning. +5 party size."
             icon_sprite="career_choice_sr_t3_b_p3">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.12" />
+        <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
       </PassiveEffects>
     </Choice>
     <Choice id="snaga_rider_t3_b_p4" type="Passive"
@@ -1670,10 +1670,10 @@
     </Choice>
     <Choice id="olog_hai_warchief_t3_a_p3" type="Passive"
             display_name="{=taom_ohw_t3_a_p3}Warchief's Horde"
-            description="{=taom_ohw_t3_a_p3_desc}Tens of thousands march under your standard. +12% party size."
+            description="{=taom_ohw_t3_a_p3_desc}Tens of thousands march under your standard. +5 party size."
             icon_sprite="career_choice_ohw_t3_a_p3">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.12" />
+        <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
       </PassiveEffects>
     </Choice>
     <Choice id="olog_hai_warchief_t3_a_p4" type="Passive"
@@ -1724,10 +1724,10 @@
     </Choice>
     <Choice id="olog_hai_warchief_t3_b_p4" type="Passive"
             display_name="{=taom_ohw_t3_b_p4}Black Army"
-            description="{=taom_ohw_t3_b_p4_desc}The dark host swells beyond measure. +14% party size."
+            description="{=taom_ohw_t3_b_p4_desc}The dark host swells beyond measure. +6 party size."
             icon_sprite="career_choice_ohw_t3_b_p4">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.14" />
+        <PassiveEffect type="PartySize" magnitude="6" operation="Add" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -1960,7 +1960,7 @@
             description="{=taom_moa_t3_a_p3_desc}Your legend draws the finest archers. +4 party size."
             icon_sprite="career_choice_moa_t3_a_p3">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.10" />
+        <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
       </PassiveEffects>
     </Choice>
     <Choice id="marksman_of_aldburg_t3_a_p4" type="Passive"
@@ -2011,10 +2011,10 @@
     </Choice>
     <Choice id="marksman_of_aldburg_t3_b_p4" type="Passive"
             display_name="{=taom_moa_t3_b_p4}Army of the Mark"
-            description="{=taom_moa_t3_b_p4_desc}The finest bowmen of Rohan rally to your banner. +12% party size."
+            description="{=taom_moa_t3_b_p4_desc}The finest bowmen of Rohan rally to your banner. +5 party size."
             icon_sprite="career_choice_moa_t3_b_p4">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.12" />
+        <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -2245,10 +2245,10 @@
     </Choice>
     <Choice id="eotheod_windrider_t3_a_p3" type="Passive"
             display_name="{=taom_ew_t3_a_p3}Eored Commander"
-            description="{=taom_ew_t3_a_p3_desc}A great eored rides at your back. +12% party size."
+            description="{=taom_ew_t3_a_p3_desc}A great eored rides at your back. +5 party size."
             icon_sprite="career_choice_ew_t3_a_p3">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.12" />
+        <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
       </PassiveEffects>
     </Choice>
     <Choice id="eotheod_windrider_t3_a_p4" type="Passive"
@@ -2299,10 +2299,10 @@
     </Choice>
     <Choice id="eotheod_windrider_t3_b_p4" type="Passive"
             display_name="{=taom_ew_t3_b_p4}The Great Host"
-            description="{=taom_ew_t3_b_p4_desc}The full host of the Eotheod rides to war. +14% party size."
+            description="{=taom_ew_t3_b_p4_desc}The full host of the Eotheod rides to war. +6 party size."
             icon_sprite="career_choice_ew_t3_b_p4">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.14" />
+        <PassiveEffect type="PartySize" magnitude="6" operation="Add" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -2536,7 +2536,7 @@
             description="{=taom_ws_t3_a_p3_desc}Your garrison swells with volunteers. +4 party size."
             icon_sprite="career_choice_ws_t3_a_p3">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.10" />
+        <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
       </PassiveEffects>
     </Choice>
     <Choice id="watchman_of_stangard_t3_a_p4" type="Passive"
@@ -2587,10 +2587,10 @@
     </Choice>
     <Choice id="watchman_of_stangard_t3_b_p4" type="Passive"
             display_name="{=taom_ws_t3_b_p4}Host of Stangard"
-            description="{=taom_ws_t3_b_p4_desc}All of Stangard's strength rides behind you. +12% party size."
+            description="{=taom_ws_t3_b_p4_desc}All of Stangard's strength rides behind you. +5 party size."
             icon_sprite="career_choice_ws_t3_b_p4">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.12" />
+        <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -2823,7 +2823,7 @@
             description="{=taom_alr_t3_a_p3_desc}All the hill-clans answer your war-call. +4 party size."
             icon_sprite="career_choice_alr_t3_a_p3">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.10" />
+        <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
       </PassiveEffects>
     </Choice>
     <Choice id="avanc_luth_raider_t3_a_p4" type="Passive"
@@ -2874,10 +2874,10 @@
     </Choice>
     <Choice id="avanc_luth_raider_t3_b_p4" type="Passive"
             display_name="{=taom_alr_t3_b_p4}United Clans"
-            description="{=taom_alr_t3_b_p4_desc}Every clan from Dunland sends warriors to your banner. +14% party size."
+            description="{=taom_alr_t3_b_p4_desc}Every clan from Dunland sends warriors to your banner. +6 party size."
             icon_sprite="career_choice_alr_t3_b_p4">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.14" />
+        <PassiveEffect type="PartySize" magnitude="6" operation="Add" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -3111,7 +3111,7 @@
             description="{=taom_wh_t3_a_p3_desc}Every hunter in Dunland answers your call. +4 party size."
             icon_sprite="career_choice_wh_t3_a_p3">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.10" />
+        <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
       </PassiveEffects>
     </Choice>
     <Choice id="wolfskin_hunter_t3_a_p4" type="Passive"
@@ -3162,10 +3162,10 @@
     </Choice>
     <Choice id="wolfskin_hunter_t3_b_p4" type="Passive"
             display_name="{=taom_wh_t3_b_p4}Great Pack"
-            description="{=taom_wh_t3_b_p4_desc}Every wolfskin hunter in Dunland rides with you. +14% party size."
+            description="{=taom_wh_t3_b_p4_desc}Every wolfskin hunter in Dunland rides with you. +6 party size."
             icon_sprite="career_choice_wh_t3_b_p4">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.14" />
+        <PassiveEffect type="PartySize" magnitude="6" operation="Add" />
       </PassiveEffects>
     </Choice>
   </ChoiceGroup>
@@ -3396,10 +3396,10 @@
     </Choice>
     <Choice id="clanguard_rider_t3_a_p3" type="Passive"
             display_name="{=taom_cr_t3_a_p3}Great Warpack"
-            description="{=taom_cr_t3_a_p3_desc}Hundreds of riders follow at your signal. +12% party size."
+            description="{=taom_cr_t3_a_p3_desc}Hundreds of riders follow at your signal. +5 party size."
             icon_sprite="career_choice_cr_t3_a_p3">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.12" />
+        <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t3_a_p4" type="Passive"
@@ -3434,10 +3434,10 @@
     </Choice>
     <Choice id="clanguard_rider_t3_b_p2" type="Passive"
             display_name="{=taom_cr_t3_b_p2}Endless Riders"
-            description="{=taom_cr_t3_b_p2_desc}The warpack covers the land from horizon to horizon. +14% party size."
+            description="{=taom_cr_t3_b_p2_desc}The warpack covers the land from horizon to horizon. +6 party size."
             icon_sprite="career_choice_cr_t3_b_p2">
       <PassiveEffects>
-        <PassiveEffect type="PartySize" value="0.14" />
+        <PassiveEffect type="PartySize" magnitude="6" operation="Add" />
       </PassiveEffects>
     </Choice>
     <Choice id="clanguard_rider_t3_b_p3" type="Passive"

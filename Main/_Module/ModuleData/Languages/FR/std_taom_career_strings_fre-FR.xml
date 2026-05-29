@@ -359,7 +359,7 @@
     <string id="taom_buc_t3_b_p3" text="Renommée Ténébreuse" />
     <string id="taom_buc_t3_b_p3_desc" text="La victoire apporte une réputation terrifiante. +12% de gain de renommée au combat." />
     <string id="taom_buc_t3_b_p4" text="Seigneur du Siège" />
-    <string id="taom_buc_t3_b_p4_desc" text="Votre armée est vaste et terrible. +12% de taille de groupe." />
+    <string id="taom_buc_t3_b_p4_desc" text="Votre armée est vaste et terrible. +5 à la taille du groupe." />
     <string id="taom_mc_root_desc" text="Voix de l'Unique accorde +5% de dégâts à distance et canalise les murmures ténébreux de Sauron." />
     <string id="taom_mc_t1_a_key" text="Dard Empoisonné" />
     <string id="taom_mc_t1_a_key_desc" text="Vos flèches portent de viles toxines. Rayon de Voix de l'Unique +3." />
@@ -420,7 +420,7 @@
     <string id="taom_mc_t3_b_p3" text="Récompense du Martyre" />
     <string id="taom_mc_t3_b_p3_desc" text="La mort au nom de Sauron apporte grande renommée. +12% de gain de renommée au combat." />
     <string id="taom_mc_t3_b_p4" text="Armée du Prophète" />
-    <string id="taom_mc_t3_b_p4_desc" text="Des milliers répondent à l'appel du prophète. +12% de taille du groupe." />
+    <string id="taom_mc_t3_b_p4_desc" text="Des milliers répondent à l'appel du prophète. +5 à la taille du groupe." />
     <string id="taom_sr_root_desc" text="Rampement Furtif accorde +5% de vitesse de déplacement et permet au cavalier de disparaître dans l'ombre du Mordor." />
     <string id="taom_sr_t1_a_key" text="Galop d'Ombre" />
     <string id="taom_sr_t1_a_key_desc" text="Vous disparaissez dans les ténèbres du Mordor. Rayon de Rampement Furtif +3." />
@@ -479,7 +479,7 @@
     <string id="taom_sr_t3_b_p2" text="Marche Ténébreuse Sans Fin" />
     <string id="taom_sr_t3_b_p2_desc" text="L'armée du Mordor couvre la distance sans repos. +8% de vitesse de déplacement du groupe." />
     <string id="taom_sr_t3_b_p3" text="Légions d'Ombre" />
-    <string id="taom_sr_t3_b_p3_desc" text="Votre horde croît sans mesure. +12% de taille de groupe." />
+    <string id="taom_sr_t3_b_p3_desc" text="Votre horde s'accroît au-delà de tout calcul. +5 à la taille du groupe." />
     <string id="taom_sr_t3_b_p4" text="Renommée du Cavalier" />
     <string id="taom_sr_t3_b_p4_desc" text="Les exploits de la cavalerie des ténèbres sont légendaires. +14% de gain de renommée au combat." />
     <string id="taom_ohw_root_desc" text="Marteau Écrasant confère +8% de points de vie. La masse pure de l'Olog disperse l'infanterie." />
@@ -530,7 +530,7 @@
     <string id="taom_ohw_t3_a_p2" text="La Mort Ne Peut Retenir" />
     <string id="taom_ohw_t3_a_p2_desc" text="Même une blessure grave ne peut arrêter l'Olog. +75 points de vie." />
     <string id="taom_ohw_t3_a_p3" text="Horde du Chef de Guerre" />
-    <string id="taom_ohw_t3_a_p3_desc" text="Des dizaines de milliers marchent sous votre bannière. +12% de taille du groupe." />
+    <string id="taom_ohw_t3_a_p3_desc" text="Des dizaines de milliers marchent sous votre étendard. +5 à la taille du groupe." />
     <string id="taom_ohw_t3_a_p4" text="Marteau du Mordor" />
     <string id="taom_ohw_t3_a_p4_desc" text="Votre armée brise tous ceux qui se dressent devant elle. +12% de dégâts des troupes." />
     <string id="taom_ohw_t3_b_key" text="Rage Éternelle" />
@@ -542,7 +542,7 @@
     <string id="taom_ohw_t3_b_p3" text="Légende de l'Olog" />
     <string id="taom_ohw_t3_b_p3_desc" text="Vos exploits sont chantés dans les salles obscures du Mordor. +14% au gain de renommée au combat." />
     <string id="taom_ohw_t3_b_p4" text="Armée Noire" />
-    <string id="taom_ohw_t3_b_p4_desc" text="L'armée des ténèbres grossit sans mesure. +14% à la taille du groupe." />
+    <string id="taom_ohw_t3_b_p4_desc" text="L'armée des ténèbres enfle au-delà de toute mesure. +6 à la taille du groupe." />
     <string id="taom_moa_root_desc" text="Empennage Léger accorde +5% aux dégâts à distance, rendant chaque flèche décisive." />
     <string id="taom_moa_t1_a_key" text="Œil d'Aigle" />
     <string id="taom_moa_t1_a_key_desc" text="Votre vue est plus perçante que celle d'un faucon. Rayon d'Empennage Léger +3." />
@@ -603,7 +603,7 @@
     <string id="taom_moa_t3_b_p3" text="Renommée de la Marche" />
     <string id="taom_moa_t3_b_p3_desc" text="Vos exploits apportent la gloire à Aldburg. +12% de gain de renommée au combat." />
     <string id="taom_moa_t3_b_p4" text="Armée de la Marche" />
-    <string id="taom_moa_t3_b_p4_desc" text="Les meilleurs archers du Rohan se rallient à votre bannière. +12% de taille du groupe." />
+    <string id="taom_moa_t3_b_p4_desc" text="Les meilleurs archers du Rohan se rallient à votre bannière. +5 à la taille du groupe." />
     <string id="taom_ew_root_desc" text="Le Cri de Guerre d'Eorl accorde +5% de dégâts de charge à cheval, invoquant le tonnerre des ancêtres." />
     <string id="taom_ew_t1_a_key" text="Tonnerre des Ancêtres" />
     <string id="taom_ew_t1_a_key_desc" text="Le cri de guerre résonne à travers la plaine. Rayon du Cri de Guerre d'Eorl +3." />
@@ -652,7 +652,7 @@
     <string id="taom_ew_t3_a_p2" text="Seigneur de la Marche" />
     <string id="taom_ew_t3_a_p2_desc" text="Les plus grands cavaliers vous suivent. +75 points de vie." />
     <string id="taom_ew_t3_a_p3" text="Commandant d'Éored" />
-    <string id="taom_ew_t3_a_p3_desc" text="Un grand éored chevauche derrière vous. +12% taille de groupe." />
+    <string id="taom_ew_t3_a_p3_desc" text="Un grand éored chevauche à vos côtés. +5 à la taille du groupe." />
     <string id="taom_ew_t3_a_p4" text="Gloire du Rohan" />
     <string id="taom_ew_t3_a_p4_desc" text="Vos exploits apportent la gloire à la Marche. +12% gain de renommée de bataille." />
     <string id="taom_ew_t3_b_key" text="Toujours Prêt" />
@@ -664,7 +664,7 @@
     <string id="taom_ew_t3_b_p3" text="Chants du Riddermark" />
     <string id="taom_ew_t3_b_p3_desc" text="Les exploits des Eotheod sont chantés pendant des siècles. +14% de gain de renommée au combat." />
     <string id="taom_ew_t3_b_p4" text="La Grande Armée" />
-    <string id="taom_ew_t3_b_p4_desc" text="Toute l'armée des Eotheod chevauche vers la guerre. +14% de taille du groupe." />
+    <string id="taom_ew_t3_b_p4_desc" text="Toute l'armée des Éothéod part en guerre. +6 à la taille du groupe." />
     <string id="taom_ws_root_desc" text="Navigateur Fluvial accorde +5% de résistance et canalise la vigilance des guetteurs frontaliers de Stangarde." />
     <string id="taom_ws_t1_a_key" text="Maîtrise du Gué" />
     <string id="taom_ws_t1_a_key_desc" text="Vous connaissez chaque passage. Rayon de Navigateur Fluvial +3." />
@@ -725,7 +725,7 @@
     <string id="taom_ws_t3_b_p3" text="Gardien de la Marche" />
     <string id="taom_ws_t3_b_p3_desc" text="Le plus grand gardien de la Marche. +12% gain de renommée au combat." />
     <string id="taom_ws_t3_b_p4" text="Armée de Stangard" />
-    <string id="taom_ws_t3_b_p4_desc" text="Toute la force de Stangard chevauche derrière vous. +12% taille de groupe." />
+    <string id="taom_ws_t3_b_p4_desc" text="Toute la force de Stangard chevauche derrière vous. +5 à la taille du groupe." />
     <string id="taom_alr_root_desc" text="Ruée Sauvage accorde +5% dégâts de mêlée et canalise la fureur des clans Dunlending." />
     <string id="taom_alr_t1_a_key" text="Rage de Combat du Clan" />
     <string id="taom_alr_t1_a_key_desc" text="La rage de vos ancêtres coule en vous. Rayon de Ruée Sauvage +3." />
@@ -786,7 +786,7 @@
     <string id="taom_alr_t3_b_p3" text="Légende des Collines" />
     <string id="taom_alr_t3_b_p3_desc" text="Votre nom résonne dans chaque salle dunlendaise. +14% de gain de renommée au combat." />
     <string id="taom_alr_t3_b_p4" text="Clans Unis" />
-    <string id="taom_alr_t3_b_p4_desc" text="Chaque clan du Pays de Dun envoie des guerriers sous votre bannière. +14% de taille de groupe." />
+    <string id="taom_alr_t3_b_p4_desc" text="Chaque clan du Pays de Dun envoie des guerriers à votre bannière. +6 à la taille du groupe." />
     <string id="taom_wh_root_desc" text="Proie Marquée accorde +5% de dégâts à distance et marque une cible pour une poursuite implacable." />
     <string id="taom_wh_t1_a_key" text="Marque du Chef de Meute" />
     <string id="taom_wh_t1_a_key_desc" text="Votre marque attire toute la meute vers la mise à mort. Rayon de Proie Marquée +3." />
@@ -847,7 +847,7 @@
     <string id="taom_wh_t3_b_p3" text="Preneur de Trophées" />
     <string id="taom_wh_t3_b_p3_desc" text="Chaque trophée ajoute à votre légende redoutable. +14% gain de renommée au combat." />
     <string id="taom_wh_t3_b_p4" text="Grande Meute" />
-    <string id="taom_wh_t3_b_p4_desc" text="Chaque chasseur peau-de-loup du Pays de Dun chevauche avec vous. +14% taille de groupe." />
+    <string id="taom_wh_t3_b_p4_desc" text="Tous les chasseurs en peau de loup du Pays de Dun chevauchent avec vous. +6 à la taille du groupe." />
     <string id="taom_cr_root_desc" text="Charge de Meute de Guerre accorde +5% dégâts de charge à cheval et sème le chaos dans les lignes ennemies." />
     <string id="taom_cr_t1_a_key" text="Tonnerre de Clan" />
     <string id="taom_cr_t1_a_key_desc" text="Le sol tremble lorsque les cavaliers descendent. Rayon de Charge de Meute de Guerre +3." />
@@ -896,7 +896,7 @@
     <string id="taom_cr_t3_a_p2" text="Né de la Montagne" />
     <string id="taom_cr_t3_a_p2_desc" text="Vous êtes né pour cette selle. +75 points de vie." />
     <string id="taom_cr_t3_a_p3" text="Grande Meute de Guerre" />
-    <string id="taom_cr_t3_a_p3_desc" text="Des centaines de cavaliers suivent à votre signal. +12% à la taille de groupe." />
+    <string id="taom_cr_t3_a_p3_desc" text="Des centaines de cavaliers suivent à votre signal. +5 à la taille du groupe." />
     <string id="taom_cr_t3_a_p4" text="Légende Dunlendaise" />
     <string id="taom_cr_t3_a_p4_desc" text="Les chants de votre charge résonnent depuis les Monts Brumeux. +12% au gain de renommée de bataille." />
     <string id="taom_cr_t3_b_key" text="Toujours Chargeant" />
@@ -904,7 +904,7 @@
     <string id="taom_cr_t3_b_p1" text="Fureur du Clan" />
     <string id="taom_cr_t3_b_p1_desc" text="Les clans chevauchent comme une force imparable. +12% aux dégâts de troupe." />
     <string id="taom_cr_t3_b_p2" text="Cavaliers Sans Fin" />
-    <string id="taom_cr_t3_b_p2_desc" text="La meute de guerre couvre la terre d'horizon en horizon. +14% à la taille de groupe." />
+    <string id="taom_cr_t3_b_p2_desc" text="La meute guerrière couvre la terre d'un horizon à l'autre. +6 à la taille du groupe." />
     <string id="taom_cr_t3_b_p3" text="Renommée du Pillard" />
     <string id="taom_cr_t3_b_p3_desc" text="Vos raids sont craints d'Edoras à Orthanc. +14% au gain de renommée de bataille." />
     <string id="taom_cr_t3_b_p4" text="Meute de Guerre Inébranlable" />

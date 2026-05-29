@@ -359,7 +359,7 @@
     <string id="taom_buc_t3_b_p3" text="Renome Sombrio" />
     <string id="taom_buc_t3_b_p3_desc" text="A vitória traz reputação temível. +12% ganho de renome em batalha." />
     <string id="taom_buc_t3_b_p4" text="Senhor do Cerco" />
-    <string id="taom_buc_t3_b_p4_desc" text="Sua hoste de guerra é vasta e terrível. +12% tamanho do grupo." />
+    <string id="taom_buc_t3_b_p4_desc" text="Seu exército de guerra é vasto e terrível. +5 tamanho do grupo." />
     <string id="taom_mc_root_desc" text="Voz do Único concede +5% dano à distância e canaliza os sussurros sombrios de Sauron." />
     <string id="taom_mc_t1_a_key" text="Farpa Envenenada" />
     <string id="taom_mc_t1_a_key_desc" text="Suas flechas carregam toxinas vis. Raio da Voz do Único +3." />
@@ -420,7 +420,7 @@
     <string id="taom_mc_t3_b_p3" text="Recompensa do Martírio" />
     <string id="taom_mc_t3_b_p3_desc" text="Morrer em nome de Sauron traz grande renome. +12% de ganho de renome em batalha." />
     <string id="taom_mc_t3_b_p4" text="Hoste do Profeta" />
-    <string id="taom_mc_t3_b_p4_desc" text="Milhares atendem ao chamado do profeta. +12% de tamanho do grupo." />
+    <string id="taom_mc_t3_b_p4_desc" text="Milhares atendem ao chamado do profeta. +5 tamanho do grupo." />
     <string id="taom_sr_root_desc" text="Rastejar Furtivo concede +5% de velocidade de movimento e permite ao cavaleiro desaparecer na sombra de Mordor." />
     <string id="taom_sr_t1_a_key" text="Galope Sombrio" />
     <string id="taom_sr_t1_a_key_desc" text="Você desaparece na escuridão de Mordor. Raio de Rastejar Furtivo +3." />
@@ -479,7 +479,7 @@
     <string id="taom_sr_t3_b_p2" text="Marcha Sombria Infinita" />
     <string id="taom_sr_t3_b_p2_desc" text="A hoste de Mordor cobre terreno sem descanso. +8% de velocidade de movimento do grupo." />
     <string id="taom_sr_t3_b_p3" text="Legiões das Sombras" />
-    <string id="taom_sr_t3_b_p3_desc" text="Sua horda cresce além de qualquer conta. +12% de tamanho do grupo." />
+    <string id="taom_sr_t3_b_p3_desc" text="Sua horda cresce além da conta. +5 tamanho do grupo." />
     <string id="taom_sr_t3_b_p4" text="Renome do Cavaleiro" />
     <string id="taom_sr_t3_b_p4_desc" text="Os feitos da cavalaria das sombras são lendários. +14% de ganho de renome em batalha." />
     <string id="taom_ohw_root_desc" text="Martelada concede +8% de vida. A massa pura do Olog dispersa a infantaria." />
@@ -530,7 +530,7 @@
     <string id="taom_ohw_t3_a_p2" text="A Morte Não Pode Deter" />
     <string id="taom_ohw_t3_a_p2_desc" text="Mesmo ferimentos graves não podem parar o Olog. +75 de vida." />
     <string id="taom_ohw_t3_a_p3" text="Horda do Chefe de Guerra" />
-    <string id="taom_ohw_t3_a_p3_desc" text="Dezenas de milhares marcham sob seu estandarte. +12% de tamanho do grupo." />
+    <string id="taom_ohw_t3_a_p3_desc" text="Dezenas de milhares marcham sob seu estandarte. +5 tamanho do grupo." />
     <string id="taom_ohw_t3_a_p4" text="Martelo de Mordor" />
     <string id="taom_ohw_t3_a_p4_desc" text="Sua hoste de guerra esmaga todos que se opõem. +12% de dano das tropas." />
     <string id="taom_ohw_t3_b_key" text="Sempre Enfurecido" />
@@ -542,7 +542,7 @@
     <string id="taom_ohw_t3_b_p3" text="Lenda do Olog" />
     <string id="taom_ohw_t3_b_p3_desc" text="Seus feitos são cantados nos salões sombrios de Mordor. +14% ganho de renome em batalha." />
     <string id="taom_ohw_t3_b_p4" text="Exército Negro" />
-    <string id="taom_ohw_t3_b_p4_desc" text="A hoste sombria cresce além da medida. +14% tamanho do grupo." />
+    <string id="taom_ohw_t3_b_p4_desc" text="A hoste sombria incha além da medida. +6 tamanho do grupo." />
     <string id="taom_moa_root_desc" text="Empena Leve concede +5% de dano à distância, fazendo cada flecha valer." />
     <string id="taom_moa_t1_a_key" text="Olho de Águia" />
     <string id="taom_moa_t1_a_key_desc" text="Sua visão é mais aguçada que a de qualquer falcão. Raio de Empena Leve +3." />
@@ -603,7 +603,7 @@
     <string id="taom_moa_t3_b_p3" text="Fama da Marca" />
     <string id="taom_moa_t3_b_p3_desc" text="Seus feitos trazem glória para Aldburg. +12% de ganho de renome em batalha." />
     <string id="taom_moa_t3_b_p4" text="Exército da Marca" />
-    <string id="taom_moa_t3_b_p4_desc" text="Os melhores arqueiros de Rohan se juntam à sua bandeira. +12% de tamanho do grupo." />
+    <string id="taom_moa_t3_b_p4_desc" text="Os melhores arqueiros de Rohan se reúnem à sua bandeira. +5 tamanho do grupo." />
     <string id="taom_ew_root_desc" text="Grito de Guerra de Eorl concede +5% de dano de carga de cavalos, invocando o trovão dos ancestrais." />
     <string id="taom_ew_t1_a_key" text="Trovão Ancestral" />
     <string id="taom_ew_t1_a_key_desc" text="O grito de guerra ecoa pela planície. Raio do Grito de Guerra de Eorl +3." />
@@ -652,7 +652,7 @@
     <string id="taom_ew_t3_a_p2" text="Senhor da Marca" />
     <string id="taom_ew_t3_a_p2_desc" text="Os maiores cavaleiros seguem você. +75 saúde." />
     <string id="taom_ew_t3_a_p3" text="Comandante de Éored" />
-    <string id="taom_ew_t3_a_p3_desc" text="Uma grande éored cavalga às suas costas. +12% tamanho do grupo." />
+    <string id="taom_ew_t3_a_p3_desc" text="Um grande éored cavalga às suas costas. +5 tamanho do grupo." />
     <string id="taom_ew_t3_a_p4" text="Glória de Rohan" />
     <string id="taom_ew_t3_a_p4_desc" text="Seus feitos trazem glória à Marca. +12% ganho de renome em batalha." />
     <string id="taom_ew_t3_b_key" text="Sempre Pronto" />
@@ -664,7 +664,7 @@
     <string id="taom_ew_t3_b_p3" text="Canções da Marca dos Cavaleiros" />
     <string id="taom_ew_t3_b_p3_desc" text="Os feitos dos Eotheod são cantados por eras. +14% de ganho de renome em batalha." />
     <string id="taom_ew_t3_b_p4" text="A Grande Hoste" />
-    <string id="taom_ew_t3_b_p4_desc" text="A hoste completa dos Eotheod cavalga para a guerra. +14% de tamanho do grupo." />
+    <string id="taom_ew_t3_b_p4_desc" text="A hoste completa dos Éothéod cavalga para a guerra. +6 tamanho do grupo." />
     <string id="taom_ws_root_desc" text="Navegador Fluvial concede +5% de resistência e canaliza a vigilância dos vigias da fronteira de Stangard." />
     <string id="taom_ws_t1_a_key" text="Maestria dos Vaus do Rio" />
     <string id="taom_ws_t1_a_key_desc" text="Você conhece cada travessia. Raio do Navegador Fluvial +3." />
@@ -725,7 +725,7 @@
     <string id="taom_ws_t3_b_p3" text="Guardião da Marca" />
     <string id="taom_ws_t3_b_p3_desc" text="O melhor guardião da Marca. +12% de ganho de renome em batalha." />
     <string id="taom_ws_t3_b_p4" text="Hostes de Stangard" />
-    <string id="taom_ws_t3_b_p4_desc" text="Toda a força de Stangard cavalga atrás de você. +12% de tamanho do grupo." />
+    <string id="taom_ws_t3_b_p4_desc" text="Toda a força de Stangard cavalga atrás de você. +5 tamanho do grupo." />
     <string id="taom_alr_root_desc" text="Investida Selvagem concede +5% de dano corpo a corpo e canaliza a fúria dos clãs Dunlendinos." />
     <string id="taom_alr_t1_a_key" text="Fúria de Batalha do Clã" />
     <string id="taom_alr_t1_a_key_desc" text="A fúria de seus ancestrais corre por você. Raio de Investida Selvagem +3." />
@@ -786,7 +786,7 @@
     <string id="taom_alr_t3_b_p3" text="Lenda das Colinas" />
     <string id="taom_alr_t3_b_p3_desc" text="Seu nome ecoa por todos os salões dunlendianos. +14% de ganho de renome em batalha." />
     <string id="taom_alr_t3_b_p4" text="Clãs Unidos" />
-    <string id="taom_alr_t3_b_p4_desc" text="Cada clã de Dunland envia guerreiros para seu estandarte. +14% de tamanho do grupo." />
+    <string id="taom_alr_t3_b_p4_desc" text="Cada clã de Dunland envia guerreiros à sua bandeira. +6 tamanho do grupo." />
     <string id="taom_wh_root_desc" text="Presa Marcada concede +5% de dano à distância e marca um alvo para perseguição implacável." />
     <string id="taom_wh_t1_a_key" text="Marca do Líder da Alcateia" />
     <string id="taom_wh_t1_a_key_desc" text="Sua marca atrai toda a alcateia para a caçada. Raio de Presa Marcada +3." />
@@ -847,7 +847,7 @@
     <string id="taom_wh_t3_b_p3" text="Coletor de Troféus" />
     <string id="taom_wh_t3_b_p3_desc" text="Cada troféu adiciona à sua temível lenda. +14% ganho de renome em batalha." />
     <string id="taom_wh_t3_b_p4" text="Grande Alcateia" />
-    <string id="taom_wh_t3_b_p4_desc" text="Todo caçador pele de lobo em Dunland cavalga com você. +14% tamanho do grupo." />
+    <string id="taom_wh_t3_b_p4_desc" text="Cada caçador de pele de lobo em Dunland cavalga com você. +6 tamanho do grupo." />
     <string id="taom_cr_root_desc" text="Carga da Matilha de Guerra concede +5% dano de carga de cavalaria e lança as linhas inimigas em caos." />
     <string id="taom_cr_t1_a_key" text="Trovão do Clã" />
     <string id="taom_cr_t1_a_key_desc" text="O chão treme quando os cavaleiros descem. Raio da Carga da Matilha de Guerra +3." />
@@ -896,7 +896,7 @@
     <string id="taom_cr_t3_a_p2" text="Nascido das Montanhas" />
     <string id="taom_cr_t3_a_p2_desc" text="Você nasceu para esta sela. +75 de vida." />
     <string id="taom_cr_t3_a_p3" text="Grande Matilha" />
-    <string id="taom_cr_t3_a_p3_desc" text="Centenas de cavaleiros seguem ao seu sinal. +12% no tamanho do grupo." />
+    <string id="taom_cr_t3_a_p3_desc" text="Centenas de cavaleiros seguem ao seu sinal. +5 tamanho do grupo." />
     <string id="taom_cr_t3_a_p4" text="Lenda Dunlendiana" />
     <string id="taom_cr_t3_a_p4_desc" text="Canções de sua investida ecoam das Montanhas Sombrias. +12% de ganho de renome em batalha." />
     <string id="taom_cr_t3_b_key" text="Sempre em Investida" />
@@ -904,7 +904,7 @@
     <string id="taom_cr_t3_b_p1" text="Fúria do Clã" />
     <string id="taom_cr_t3_b_p1_desc" text="Os clãs cavalgam como uma força imparável. +12% de dano das tropas." />
     <string id="taom_cr_t3_b_p2" text="Cavaleiros Infinitos" />
-    <string id="taom_cr_t3_b_p2_desc" text="A alcateia de guerra cobre a terra de horizonte a horizonte. +14% no tamanho do grupo." />
+    <string id="taom_cr_t3_b_p2_desc" text="A alcateia de guerra cobre a terra de horizonte a horizonte. +6 tamanho do grupo." />
     <string id="taom_cr_t3_b_p3" text="Renome do Saqueador" />
     <string id="taom_cr_t3_b_p3_desc" text="Seus saques são temidos de Edoras até Orthanc. +14% de ganho de renome em batalha." />
     <string id="taom_cr_t3_b_p4" text="Alcateia Inquebrável" />

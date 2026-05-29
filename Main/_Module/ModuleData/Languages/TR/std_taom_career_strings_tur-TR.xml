@@ -359,7 +359,7 @@
     <string id="taom_buc_t3_b_p3" text="Karanlık Ün" />
     <string id="taom_buc_t3_b_p3_desc" text="Zafer korkunç bir itibar getirir. +%12 savaş ün kazanımı." />
     <string id="taom_buc_t3_b_p4" text="Kuşatma Lordu" />
-    <string id="taom_buc_t3_b_p4_desc" text="Savaş ordunuz uçsuz bucaksız ve dehşet verici. +%12 takım boyutu." />
+    <string id="taom_buc_t3_b_p4_desc" text="Savaş ordun uçsuz bucaksız ve korkunç. +5 grup büyüklüğü." />
     <string id="taom_mc_root_desc" text="Tekinin Sesi +%5 menzilli hasar verir ve Sauron'un karanlık fısıltılarını yönlendirir." />
     <string id="taom_mc_t1_a_key" text="Zehirli Diken" />
     <string id="taom_mc_t1_a_key_desc" text="Oklarınız alçakça zehirler taşır. Tekinin Sesi yarıçapı +3." />
@@ -420,7 +420,7 @@
     <string id="taom_mc_t3_b_p3" text="Şehitliğin Mükafatı" />
     <string id="taom_mc_t3_b_p3_desc" text="Sauron adına ölüm büyük şöhret getirir. +12% savaş şöhreti kazanımı." />
     <string id="taom_mc_t3_b_p4" text="Peygamberin Kitlesi" />
-    <string id="taom_mc_t3_b_p4_desc" text="Binlerce kişi peygamberin çağrısına yanıt verir. +12% grup büyüklüğü." />
+    <string id="taom_mc_t3_b_p4_desc" text="Binlerce kişi peygamberin çağrısına yanıt veriyor. +5 grup büyüklüğü." />
     <string id="taom_sr_root_desc" text="Gizli Sürünme +5% hareket hızı sağlar ve binicinin Mordor'un gölgesinde kaybolmasına olanak tanır." />
     <string id="taom_sr_t1_a_key" text="Gölge Dörtnalı" />
     <string id="taom_sr_t1_a_key_desc" text="Mordor'un karanlığında kaybolursun. Gizli Sürünme yarıçapı +3." />
@@ -479,7 +479,7 @@
     <string id="taom_sr_t3_b_p2" text="Sonsuz Karanlık Yürüyüşü" />
     <string id="taom_sr_t3_b_p2_desc" text="Mordor'un ordusu dinlenmeden mesafe kat eder. +8% grup hareket hızı." />
     <string id="taom_sr_t3_b_p3" text="Gölge Lejyonları" />
-    <string id="taom_sr_t3_b_p3_desc" text="Orduların sayılamayacak kadar çoğalır. +12% grup boyutu." />
+    <string id="taom_sr_t3_b_p3_desc" text="Ordun hesapsız kitapsız büyüyor. +5 grup büyüklüğü." />
     <string id="taom_sr_t3_b_p4" text="Binicinin Şöhreti" />
     <string id="taom_sr_t3_b_p4_desc" text="Gölge süvarisinin işleri efsanevi. +14% savaş şöhreti kazancı." />
     <string id="taom_ohw_root_desc" text="Çekiç İnişi +8% can verir. Olog'un devasa kütlesi piyadeleri dağıtır." />
@@ -530,7 +530,7 @@
     <string id="taom_ohw_t3_a_p2" text="Ölüm Tutamaz" />
     <string id="taom_ohw_t3_a_p2_desc" text="Ağır yaralar bile Olog'u durduramaz. +75 sağlık." />
     <string id="taom_ohw_t3_a_p3" text="Savaş Şefi'nin Hordası" />
-    <string id="taom_ohw_t3_a_p3_desc" text="On binlerce asker senin sancağın altında yürüyor. +12% grup boyutu." />
+    <string id="taom_ohw_t3_a_p3_desc" text="On binlerce kişi senin sancağın altında yürüyor. +5 grup büyüklüğü." />
     <string id="taom_ohw_t3_a_p4" text="Mordor'un Çekici" />
     <string id="taom_ohw_t3_a_p4_desc" text="Savaş ordun önünde duran herkesi kırar. +12% birlik hasarı." />
     <string id="taom_ohw_t3_b_key" text="Sürekli Öfkeli" />
@@ -542,7 +542,7 @@
     <string id="taom_ohw_t3_b_p3" text="Olog Efsanesi" />
     <string id="taom_ohw_t3_b_p3_desc" text="Kahramanlıkların Mordor'un karanlık salonlarında anlatılıyor. +14% savaş şöhret kazancı." />
     <string id="taom_ohw_t3_b_p4" text="Kara Ordu" />
-    <string id="taom_ohw_t3_b_p4_desc" text="Karanlık ordu ölçülemez derecede büyüyor. +14% grup boyutu." />
+    <string id="taom_ohw_t3_b_p4_desc" text="Kara ordu ölçülemez boyutlarda kabarıyor. +6 grup büyüklüğü." />
     <string id="taom_moa_root_desc" text="Light Fletching +5% menzilli hasar verir, her okun sayılmasını sağlar." />
     <string id="taom_moa_t1_a_key" text="Kartal Gözü" />
     <string id="taom_moa_t1_a_key_desc" text="Görüşün her şahinden daha keskindir. Light Fletching yarıçapı +3." />
@@ -603,7 +603,7 @@
     <string id="taom_moa_t3_b_p3" text="Mark'ın Şöhreti" />
     <string id="taom_moa_t3_b_p3_desc" text="Kahramanlıkların Aldburg'a şan getirir. +%12 savaş şöhret kazanımı." />
     <string id="taom_moa_t3_b_p4" text="Mark'ın Ordusu" />
-    <string id="taom_moa_t3_b_p4_desc" text="Rohan'ın en iyi okçuları sancağına toplanır. +%12 grup boyutu." />
+    <string id="taom_moa_t3_b_p4_desc" text="Rohan'ın en seçkin okçuları sancağına toplanıyor. +5 grup büyüklüğü." />
     <string id="taom_ew_root_desc" text="Eorl'un Savaş Çığlığı +%5 at hücum hasarı verir, ataların gök gürültüsünü çağırır." />
     <string id="taom_ew_t1_a_key" text="Ataların Gök Gürültüsü" />
     <string id="taom_ew_t1_a_key_desc" text="Savaş çığlığı ovada yankılanıyor. Eorl'un Savaş Çığlığı menzili +3." />
@@ -652,7 +652,7 @@
     <string id="taom_ew_t3_a_p2" text="Mark Lordu" />
     <string id="taom_ew_t3_a_p2_desc" text="En büyük atlılar size tabi. +75 sağlık." />
     <string id="taom_ew_t3_a_p3" text="Eored Komutanı" />
-    <string id="taom_ew_t3_a_p3_desc" text="Arkanızda büyük bir eored. +12% grup büyüklüğü." />
+    <string id="taom_ew_t3_a_p3_desc" text="Büyük bir eored arkanda sürüyor. +5 grup büyüklüğü." />
     <string id="taom_ew_t3_a_p4" text="Rohan'ın Şanı" />
     <string id="taom_ew_t3_a_p4_desc" text="Kahramanlıklarınız Mark'a şan getirir. +12% savaş şöhret kazanımı." />
     <string id="taom_ew_t3_b_key" text="Her Zaman Hazır" />
@@ -664,7 +664,7 @@
     <string id="taom_ew_t3_b_p3" text="Riddermark Türküleri" />
     <string id="taom_ew_t3_b_p3_desc" text="Eotheod'un kahramanlıkları çağlar boyu söylenir. +14% savaş şöhret kazanımı." />
     <string id="taom_ew_t3_b_p4" text="Büyük Ordu" />
-    <string id="taom_ew_t3_b_p4_desc" text="Eotheod'un tüm ordusu savaşa gider. +14% grup büyüklüğü." />
+    <string id="taom_ew_t3_b_p4_desc" text="Eotheod'un tüm ordusu savaşa sürüyor. +6 grup büyüklüğü." />
     <string id="taom_ws_root_desc" text="Nehir Seyircisi +5% direnç verir ve Stangard'ın sınır bekçilerinin uyanıklığını yansıtır." />
     <string id="taom_ws_t1_a_key" text="Nehir Geçidi Ustalığı" />
     <string id="taom_ws_t1_a_key_desc" text="Her geçidi bilirsiniz. Nehir Seyircisi yarıçapı +3." />
@@ -725,7 +725,7 @@
     <string id="taom_ws_t3_b_p3" text="Mark'ın Muhafızı" />
     <string id="taom_ws_t3_b_p3_desc" text="Mark'ın en seçkin savunucusu. +12% savaş şöhreti kazanımı." />
     <string id="taom_ws_t3_b_p4" text="Stangard Ordusu" />
-    <string id="taom_ws_t3_b_p4_desc" text="Stangard'ın tüm gücü arkanızda ilerliyor. +12% birlik boyutu." />
+    <string id="taom_ws_t3_b_p4_desc" text="Stangard'ın tüm gücü arkanda sürüyor. +5 grup büyüklüğü." />
     <string id="taom_alr_root_desc" text="Vahşi돌진, +%5 yakın dövüş hasarı sağlar ve Dunlending klanlarının öfkesini kanalize eder." />
     <string id="taom_alr_t1_a_key" text="Klan Savaş Öfkesi" />
     <string id="taom_alr_t1_a_key_desc" text="Atalarının öfkesi içinden akıyor. Vahşi돌진yarıçapı +3." />
@@ -786,7 +786,7 @@
     <string id="taom_alr_t3_b_p3" text="Tepelerin Efsanesi" />
     <string id="taom_alr_t3_b_p3_desc" text="Adın her Dunlending salonunda yankılanır. +14% savaş şöhret kazancı." />
     <string id="taom_alr_t3_b_p4" text="Birleşik Klanlar" />
-    <string id="taom_alr_t3_b_p4_desc" text="Dunland'dan her klan sancağına savaşçı gönderir. +14% grup büyüklüğü." />
+    <string id="taom_alr_t3_b_p4_desc" text="Dunland'deki her klan sancağına savaşçı gönderiyor. +6 grup büyüklüğü." />
     <string id="taom_wh_root_desc" text="İşaretli Av +5% menzilli hasar verir ve hedefi amansız takip için işaretler." />
     <string id="taom_wh_t1_a_key" text="Sürü Liderinin İşareti" />
     <string id="taom_wh_t1_a_key_desc" text="İşaretin tüm sürüyü avın başına çeker. İşaretli Av yarıçapı +3." />
@@ -847,7 +847,7 @@
     <string id="taom_wh_t3_b_p3" text="Ganimet Toplayıcı" />
     <string id="taom_wh_t3_b_p3_desc" text="Her ganimet korkunç efsanene eklenir. +14% savaş şöhret kazancı." />
     <string id="taom_wh_t3_b_p4" text="Büyük Sürü" />
-    <string id="taom_wh_t3_b_p4_desc" text="Dunland'daki her kurt derisi avcısı seninle birlikte sürer. +14% grup boyutu." />
+    <string id="taom_wh_t3_b_p4_desc" text="Dunland'deki her kurt derisi avcısı seninle sürüyor. +6 grup büyüklüğü." />
     <string id="taom_cr_root_desc" text="Savaş Sürüsü Hücumu +5% at hücum hasarı verir ve düşman hatlarını kaosa sürükler." />
     <string id="taom_cr_t1_a_key" text="Klan Gök Gürültüsü" />
     <string id="taom_cr_t1_a_key_desc" text="Atlılar inerken yer sarsılır. Savaş Sürüsü Hücumu yarıçapı +3." />
@@ -896,7 +896,7 @@
     <string id="taom_cr_t3_a_p2" text="Dağlardan Doğan" />
     <string id="taom_cr_t3_a_p2_desc" text="Bu eyer için doğdun. +75 sağlık." />
     <string id="taom_cr_t3_a_p3" text="Büyük Savaş Sürüsü" />
-    <string id="taom_cr_t3_a_p3_desc" text="Yüzlerce atlı işaretinle peşinden gelir. Birlik büyüklüğü +%12." />
+    <string id="taom_cr_t3_a_p3_desc" text="Yüzlerce atlı işaretinde arkandan geliyor. +5 grup büyüklüğü." />
     <string id="taom_cr_t3_a_p4" text="Dunlending Efsanesi" />
     <string id="taom_cr_t3_a_p4_desc" text="Hücumunun şarkıları Sisli Dağlar'dan yankılanır. Savaş şöhreti kazanımı +%12." />
     <string id="taom_cr_t3_b_key" text="Durmak Bilmeyen Hücum" />
@@ -904,7 +904,7 @@
     <string id="taom_cr_t3_b_p1" text="Klanın Öfkesi" />
     <string id="taom_cr_t3_b_p1_desc" text="Klanlar tek bir durdurulamaz güç olarak sürer. Asker hasarı +%12." />
     <string id="taom_cr_t3_b_p2" text="Sonsuz Atlılar" />
-    <string id="taom_cr_t3_b_p2_desc" text="Savaş sürüsü ufuktan ufka toprağı kaplar. Birlik büyüklüğü +%14." />
+    <string id="taom_cr_t3_b_p2_desc" text="Savaş sürüsü ufuktan ufuğa kadar araziyi kaplıyor. +6 grup büyüklüğü." />
     <string id="taom_cr_t3_b_p3" text="Akıncının Şöhreti" />
     <string id="taom_cr_t3_b_p3_desc" text="Baskınlarından Edoras'tan Orthanc'a kadar korkulur. Savaş şöhreti kazanımı +%14." />
     <string id="taom_cr_t3_b_p4" text="Kırılmaz Savaş Sürüsü" />

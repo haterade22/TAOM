@@ -359,7 +359,7 @@
     <string id="taom_buc_t3_b_p3" text="黑暗聲望" />
     <string id="taom_buc_t3_b_p3_desc" text="勝利帶來令人畏懼的名聲。戰鬥聲望獲得 +12%。" />
     <string id="taom_buc_t3_b_p4" text="攻城領主" />
-    <string id="taom_buc_t3_b_p4_desc" text="你的戰爭軍團龐大而可怕。隊伍規模 +12%。" />
+    <string id="taom_buc_t3_b_p4_desc" text="你的戰軍浩大而可怖。隊伍規模+5。" />
     <string id="taom_mc_root_desc" text="至尊之聲賦予 +5% 遠程傷害並傳遞索倫的黑暗低語。" />
     <string id="taom_mc_t1_a_key" text="毒刺箭矢" />
     <string id="taom_mc_t1_a_key_desc" text="你的箭矢攜帶邪惡毒素。至尊之聲半徑 +3。" />
@@ -420,7 +420,7 @@
     <string id="taom_mc_t3_b_p3" text="殉道者的獎賞" />
     <string id="taom_mc_t3_b_p3_desc" text="以索倫之名而死將帶來巨大聲望。戰鬥聲望獲得+12%。" />
     <string id="taom_mc_t3_b_p4" text="先知的大軍" />
-    <string id="taom_mc_t3_b_p4_desc" text="成千上萬的人響應先知的號召。隊伍規模+12%。" />
+    <string id="taom_mc_t3_b_p4_desc" text="數以千計的人響應先知的召喚。隊伍規模+5。" />
     <string id="taom_sr_root_desc" text="潛行爬行賦予+5%移動速度,並讓騎手消失於魔多的陰影之中。" />
     <string id="taom_sr_t1_a_key" text="暗影疾馳" />
     <string id="taom_sr_t1_a_key_desc" text="你消失於魔多的黑暗之中。潛行爬行範圍+3。" />
@@ -479,7 +479,7 @@
     <string id="taom_sr_t3_b_p2" text="無盡黑暗行軍" />
     <string id="taom_sr_t3_b_p2_desc" text="魔多的大軍不眠不休地行進。+8% 隊伍移動速度。" />
     <string id="taom_sr_t3_b_p3" text="暗影軍團" />
-    <string id="taom_sr_t3_b_p3_desc" text="你的部落龐大到難以計數。+12% 隊伍規模。" />
+    <string id="taom_sr_t3_b_p3_desc" text="你的部落已成長至難以估量。隊伍規模+5。" />
     <string id="taom_sr_t3_b_p4" text="騎士的威名" />
     <string id="taom_sr_t3_b_p4_desc" text="暗影騎兵的事蹟已成傳奇。+14% 戰鬥聲望獲取。" />
     <string id="taom_ohw_root_desc" text="重錘砸擊賦予 +8% 生命值。歐祿巨大的體型能擊潰步兵。" />
@@ -530,7 +530,7 @@
     <string id="taom_ohw_t3_a_p2" text="死亡無法阻擋" />
     <string id="taom_ohw_t3_a_p2_desc" text="即使重傷也無法阻止歐魯克海。生命值+75。" />
     <string id="taom_ohw_t3_a_p3" text="戰酋部落" />
-    <string id="taom_ohw_t3_a_p3_desc" text="數萬大軍在你的旗幟下行軍。隊伍規模+12%。" />
+    <string id="taom_ohw_t3_a_p3_desc" text="數以萬計的戰士在你的旗幟下行軍。隊伍規模+5。" />
     <string id="taom_ohw_t3_a_p4" text="魔多之錘" />
     <string id="taom_ohw_t3_a_p4_desc" text="你的大軍粉碎一切擋路者。部隊傷害+12%。" />
     <string id="taom_ohw_t3_b_key" text="永恆狂怒" />
@@ -542,7 +542,7 @@
     <string id="taom_ohw_t3_b_p3" text="食人妖傳說" />
     <string id="taom_ohw_t3_b_p3_desc" text="你的事蹟在魔多的黑暗大廳中被傳唱。戰鬥聲望獲取+14%。" />
     <string id="taom_ohw_t3_b_p4" text="黑暗軍團" />
-    <string id="taom_ohw_t3_b_p4_desc" text="黑暗大軍膨脹至難以計數。隊伍規模+14%。" />
+    <string id="taom_ohw_t3_b_p4_desc" text="黑暗大軍膨脹至難以估量。隊伍規模+6。" />
     <string id="taom_moa_root_desc" text="輕羽箭給予+5%遠程傷害,讓每一支箭都更加致命。" />
     <string id="taom_moa_t1_a_key" text="鷹眼" />
     <string id="taom_moa_t1_a_key_desc" text="你的視力比任何鷹隼都要敏銳。輕羽箭範圍+3。" />
@@ -603,7 +603,7 @@
     <string id="taom_moa_t3_b_p3" text="洛汗聲望" />
     <string id="taom_moa_t3_b_p3_desc" text="你的事蹟為奧德堡帶來榮耀。戰鬥聲望獲得 +12%。" />
     <string id="taom_moa_t3_b_p4" text="洛汗大軍" />
-    <string id="taom_moa_t3_b_p4_desc" text="洛汗最優秀的弓手聚集在你的旗幟之下。隊伍規模 +12%。" />
+    <string id="taom_moa_t3_b_p4_desc" text="洛汗最精銳的弓箭手聚集在你的旗幟下。隊伍規模+5。" />
     <string id="taom_ew_root_desc" text="伊歐的戰吼賦予 +5% 騎兵衝鋒傷害,召喚先祖的雷鳴。" />
     <string id="taom_ew_t1_a_key" text="先祖之雷" />
     <string id="taom_ew_t1_a_key_desc" text="戰吼回盪於平原之上。伊歐的戰吼範圍 +3。" />
@@ -652,7 +652,7 @@
     <string id="taom_ew_t3_a_p2" text="驃騎國之主" />
     <string id="taom_ew_t3_a_p2_desc" text="最偉大的騎士追隨你。+75生命值。" />
     <string id="taom_ew_t3_a_p3" text="伊歐瑞德指揮官" />
-    <string id="taom_ew_t3_a_p3_desc" text="一支強大的伊歐瑞德追隨在你身後。+12%隊伍規模。" />
+    <string id="taom_ew_t3_a_p3_desc" text="一支龐大的騎兵團跟隨在你身後。隊伍規模+5。" />
     <string id="taom_ew_t3_a_p4" text="洛汗的榮耀" />
     <string id="taom_ew_t3_a_p4_desc" text="你的功績為驃騎國帶來榮耀。+12%戰鬥聲望獲得。" />
     <string id="taom_ew_t3_b_key" text="時刻備戰" />
@@ -664,7 +664,7 @@
     <string id="taom_ew_t3_b_p3" text="驃騎國之歌" />
     <string id="taom_ew_t3_b_p3_desc" text="伊歐西歐德人的事蹟將被傳唱千古。+14% 戰鬥聲望獲得。" />
     <string id="taom_ew_t3_b_p4" text="偉大軍團" />
-    <string id="taom_ew_t3_b_p4_desc" text="伊歐西歐德人的全軍出征。+14% 隊伍規模。" />
+    <string id="taom_ew_t3_b_p4_desc" text="伊歐西歐德的全軍奔赴戰場。隊伍規模+6。" />
     <string id="taom_ws_root_desc" text="河流領航者賦予 +5% 抗性,並引導斯坦加德邊境守望者的警覺。" />
     <string id="taom_ws_t1_a_key" text="河渡精通" />
     <string id="taom_ws_t1_a_key_desc" text="你熟知每一個渡口。河流領航者範圍 +3。" />
@@ -725,7 +725,7 @@
     <string id="taom_ws_t3_b_p3" text="國境守護者" />
     <string id="taom_ws_t3_b_p3_desc" text="國境最優秀的守衛者。戰鬥聲望獲得+12%。" />
     <string id="taom_ws_t3_b_p4" text="斯坦加德大軍" />
-    <string id="taom_ws_t3_b_p4_desc" text="斯坦加德的全部力量隨你而行。隊伍規模+12%。" />
+    <string id="taom_ws_t3_b_p4_desc" text="史坦加德的全部力量都在你身後騎行。隊伍規模+5。" />
     <string id="taom_alr_root_desc" text="野蠻衝鋒賦予+5%近戰傷害並引導登蘭德氏族的狂怒。" />
     <string id="taom_alr_t1_a_key" text="氏族戰怒" />
     <string id="taom_alr_t1_a_key_desc" text="你祖先的怒火在你體內奔流。野蠻衝鋒半徑+3。" />
@@ -786,7 +786,7 @@
     <string id="taom_alr_t3_b_p3" text="群山傳奇" />
     <string id="taom_alr_t3_b_p3_desc" text="你的名字在每個登蘭德大廳中迴響。+14% 戰鬥名望獲得。" />
     <string id="taom_alr_t3_b_p4" text="聯合部族" />
-    <string id="taom_alr_t3_b_p4_desc" text="登蘭德的每個部族都派遣戰士加入你的旗幟。+14% 隊伍規模。" />
+    <string id="taom_alr_t3_b_p4_desc" text="登蘭德的每個部族都派遣戰士加入你的旗幟。隊伍規模+6。" />
     <string id="taom_wh_root_desc" text="標記獵物給予 +5% 遠程傷害並標記目標以進行無情追擊。" />
     <string id="taom_wh_t1_a_key" text="群狼首領的標記" />
     <string id="taom_wh_t1_a_key_desc" text="你的標記將整個狼群吸引至獵物。標記獵物範圍 +3。" />
@@ -847,7 +847,7 @@
     <string id="taom_wh_t3_b_p3" text="戰利品收集者" />
     <string id="taom_wh_t3_b_p3_desc" text="每件戰利品都為你的可怕傳說增色。+14%戰鬥聲望獲取。" />
     <string id="taom_wh_t3_b_p4" text="偉大狼群" />
-    <string id="taom_wh_t3_b_p4_desc" text="登蘭德的每位狼皮獵人都與你並肩作戰。+14%隊伍規模。" />
+    <string id="taom_wh_t3_b_p4_desc" text="登蘭德的每個狼皮獵人都與你一同騎行。隊伍規模+6。" />
     <string id="taom_cr_root_desc" text="戰群衝鋒賦予+5%馬匹衝鋒傷害,並使敵方陣線陷入混亂。" />
     <string id="taom_cr_t1_a_key" text="氏族雷鳴" />
     <string id="taom_cr_t1_a_key_desc" text="騎兵降臨時大地震動。戰群衝鋒範圍+3。" />
@@ -896,7 +896,7 @@
     <string id="taom_cr_t3_a_p2" text="山脈之子" />
     <string id="taom_cr_t3_a_p2_desc" text="你為馬鞍而生。+75 生命值。" />
     <string id="taom_cr_t3_a_p3" text="偉大戰群" />
-    <string id="taom_cr_t3_a_p3_desc" text="數百名騎士聽從你的號令。隊伍規模 +12%。" />
+    <string id="taom_cr_t3_a_p3_desc" text="數以百計的騎士聽從你的號令。隊伍規模+5。" />
     <string id="taom_cr_t3_a_p4" text="登蘭德傳奇" />
     <string id="taom_cr_t3_a_p4_desc" text="你衝鋒的歌謠在迷霧山脈迴盪。戰鬥聲望獲取 +12%。" />
     <string id="taom_cr_t3_b_key" text="永恆衝鋒" />
@@ -904,7 +904,7 @@
     <string id="taom_cr_t3_b_p1" text="氏族之怒" />
     <string id="taom_cr_t3_b_p1_desc" text="氏族如同不可阻擋的力量一同騎行。部隊傷害 +12%。" />
     <string id="taom_cr_t3_b_p2" text="無盡騎士" />
-    <string id="taom_cr_t3_b_p2_desc" text="戰群從地平線的一端覆蓋到另一端。隊伍規模 +14%。" />
+    <string id="taom_cr_t3_b_p2_desc" text="戰群覆蓋大地,從地平線的一端延伸至另一端。隊伍規模+6。" />
     <string id="taom_cr_t3_b_p3" text="掠奪者聲望" />
     <string id="taom_cr_t3_b_p3_desc" text="從伊多拉斯到歐散克都畏懼你的掠奪。戰鬥聲望獲取 +14%。" />
     <string id="taom_cr_t3_b_p4" text="不朽戰群" />

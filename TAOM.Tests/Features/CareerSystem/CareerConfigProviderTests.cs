@@ -266,6 +266,99 @@ public class CareerConfigProviderTests
         Assert.AreEqual(30f, tuning.Global.CooldownSeconds, 0.001f);
     }
 
+    // ── Issue B: <PassiveEffects> wrapper + value= alias (310 wrapped choices were dead) ──
+
+    [TestMethod]
+    public void LoadChoices_PassiveEffectsWrapper_ParsesNestedPassive()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""c1"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffects>
+      <PassiveEffect type=""TroopDamage"" value=""0.10"" />
+    </PassiveEffects>
+  </Choice>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+
+        Assert.AreEqual(1, choices.Count);
+        Assert.IsNotNull(choices[0].Passive, "Nested <PassiveEffects><PassiveEffect/> must be read");
+        Assert.AreEqual(PassiveEffectType.TroopDamage, choices[0].Passive.EffectType);
+        Assert.AreEqual(0.10f, choices[0].Passive.Magnitude, 0.001f);
+    }
+
+    [TestMethod]
+    public void LoadChoices_PassiveEffectValueAttribute_ParsedAsMagnitude()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""c1"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""PartySize"" value=""0.10"" />
+  </Choice>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+        Assert.AreEqual(0.10f, choices[0].Passive.Magnitude, 0.001f, "value= must alias magnitude=");
+    }
+
+    [TestMethod]
+    public void LoadChoices_MagnitudeWinsOverValueWhenBothPresent()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""c1"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""PartySize"" magnitude=""4"" value=""0.10"" />
+  </Choice>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+        Assert.AreEqual(4f, choices[0].Passive.Magnitude, 0.001f, "magnitude= takes precedence over value=");
+    }
+
+    [TestMethod]
+    public void LoadChoices_DirectPassiveWithMagnitude_StillParses()
+    {
+        // Regression: the direct (singular, magnitude=) schema must be unaffected by the
+        // wrapper/value fallback.
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""c1"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""PartySize"" magnitude=""2"" operation=""Add"" />
+  </Choice>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+        Assert.AreEqual(PassiveEffectType.PartySize, choices[0].Passive.EffectType);
+        Assert.AreEqual(2f, choices[0].Passive.Magnitude, 0.001f);
+    }
+
+    [TestMethod]
+    public void LoadChoices_EmptyPassiveEffectsWrapper_YieldsNullPassiveNoThrow()
+    {
+        // Defensive: a wrapper with no <PassiveEffect> child (or a foreign child) must parse to a
+        // null passive without throwing — the choice is still valid, it just grants no passive.
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""c1"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffects></PassiveEffects>
+  </Choice>
+  <Choice id=""c2"" type=""Passive"" description=""test2"" icon_sprite=""icon"">
+    <PassiveEffects><Unrelated foo=""bar"" /></PassiveEffects>
+  </Choice>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+        Assert.AreEqual(2, choices.Count);
+        Assert.IsNull(choices[0].Passive);
+        Assert.IsNull(choices[1].Passive);
+    }
+
     private void WriteCareersXml(string content)
     {
         File.WriteAllText(Path.Combine(_tempDir, "career_system", "taom_careers.xml"), content);

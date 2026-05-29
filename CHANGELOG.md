@@ -1,5 +1,19 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-29
+
+### fix(career): party-size passive applied flat, not as a ×N factor
+
+User-reported: Gondor infantry career (Captain of Osgiliath) "+2 party size" choice granted ~+150. Root cause: `TaomPartySizeModel` applied the career `PartySize` passive via `ICareerPassiveService.ApplyFactor` (`ExplainedNumber.AddFactor` — multiplicative), but PartySize magnitudes are authored as whole counts (2–6, per "+N party size" descriptions). `AddFactor(2)` = ×(1+2) = triple the base (~75 → ~225). Switched to `ApplyFlat` (`result.Add`) so +2 means flat +2. The change is type-isolated — the other 9 campaign-layer passive types keep `ApplyFactor` (their magnitudes are fractional). Fixes every direct-schema flat PartySize entry across all careers, not just Gondor. Regression test contrasts flat (+2 → 102) vs factor (×3 → 300). See [RCA](docs/reviews/rca-career-partysize-2026-05-29.md). (#249)
+
+Not-tested: GameModel override invocation (entry point — verified in-game per ADR-008).
+
+### fix(career): activate 310 dead wrapped-schema career passives
+
+`CareerConfigProvider.ParseChoice` read only a direct `<PassiveEffect>` child and only the `magnitude=` attribute, so 310 choices authored in the `<PassiveEffects>` (plural) wrapper with a `value=` attribute were **completely unparsed** — whole careers across all 16 cultures had dead passives. The parser now falls back to the wrapper (first child; all wrappers are single-child — verified) and accepts `value=` as an alias for `magnitude=` (`magnitude=` wins when both present). Reconciled the 20 wrapped PartySize entries (`value="0.10/0.12/0.14"`, descriptions mixing flat + percentage) to flat counts 4/5/6 in `taom_career_choices.xml` + `taom_career_strings.xml`, and propagated the number change to all 12 language files + 11 translation caches via `tools/fix_wrapped_partysize_translations.py` (numeral-only, BOM-faithful; handles Turkish `+%N`). 5 new parser/service tests. Deep-review (6 agents) confirmed no ×N regression from activation. (#250)
+
+The 13 reworded descriptions were re-translated into the 11 AI languages via the Claude API translation tool (scoped to exactly those keys — a broad run would have swept ~1000 unrelated untranslated entries per language); PL (community-hand-translated) keeps the English-source wording. Known limitation: 5 `PassiveEffectType` values (`Ammo`, `HorseChargeDamage`, `HorseHealth`, `TroopResistance`, `StealthBonus`) have no consumer — pre-existing; choices advertising them are no-ops pending per-type consumer implementation. Deferred: make the passive cache `IsPercentage`-aware so flat-vs-factor is data-driven.
+
 ## 2026-05-28
 
 ### chore(tools): harden scene/bandit Python tools — byte-faithful BOM I/O

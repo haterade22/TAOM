@@ -359,7 +359,7 @@
     <string id="taom_buc_t3_b_p3" text="暗黒の名声" />
     <string id="taom_buc_t3_b_p3_desc" text="勝利は恐るべき評判をもたらす。戦闘での名声獲得+12%。" />
     <string id="taom_buc_t3_b_p4" text="包囲の王" />
-    <string id="taom_buc_t3_b_p4_desc" text="お前の戦軍は広大で恐ろしい。部隊サイズ+12%。" />
+    <string id="taom_buc_t3_b_p4_desc" text="汝の軍勢は広大にして恐るべきものなり。部隊規模+5。" />
     <string id="taom_mc_root_desc" text="唯一なる者の声は遠隔ダメージ+5%を与え、サウロンの暗黒の囁きを伝える。" />
     <string id="taom_mc_t1_a_key" text="毒の矢じり" />
     <string id="taom_mc_t1_a_key_desc" text="お前の矢は邪悪な毒を帯びる。唯一なる者の声の範囲+3。" />
@@ -420,7 +420,7 @@
     <string id="taom_mc_t3_b_p3" text="殉教者の報い" />
     <string id="taom_mc_t3_b_p3_desc" text="サウロンの名において死すことは大いなる名声をもたらす。戦闘名声獲得+12%。" />
     <string id="taom_mc_t3_b_p4" text="預言者の軍勢" />
-    <string id="taom_mc_t3_b_p4_desc" text="何千もの者が預言者の呼びかけに応える。部隊人数+12%。" />
+    <string id="taom_mc_t3_b_p4_desc" text="数千の者が預言者の呼びかけに応えり。部隊規模+5。" />
     <string id="taom_sr_root_desc" text="忍び歩きは移動速度+5%を与え、騎乗者をモルドールの影に消し去る。" />
     <string id="taom_sr_t1_a_key" text="影の疾走" />
     <string id="taom_sr_t1_a_key_desc" text="モルドールの闇に消え去る。忍び歩き範囲+3。" />
@@ -479,7 +479,7 @@
     <string id="taom_sr_t3_b_p2" text="終わりなき暗黒行軍" />
     <string id="taom_sr_t3_b_p2_desc" text="モルドールの軍勢は休むことなく地を覆う。部隊移動速度+8%。" />
     <string id="taom_sr_t3_b_p3" text="影の軍団" />
-    <string id="taom_sr_t3_b_p3_desc" text="大群は数え切れぬほどに膨れ上がる。部隊規模+12%。" />
+    <string id="taom_sr_t3_b_p3_desc" text="汝の大軍は数え切れぬほどに膨れ上がる。部隊規模+5。" />
     <string id="taom_sr_t3_b_p4" text="騎兵の名声" />
     <string id="taom_sr_t3_b_p4_desc" text="影の騎兵隊の武勲は伝説となる。戦闘名声獲得+14%。" />
     <string id="taom_ohw_root_desc" text="ハンマーダウンは体力+8%を付与する。オログの巨体が歩兵を蹴散らす。" />
@@ -530,7 +530,7 @@
     <string id="taom_ohw_t3_a_p2" text="死すら縛れぬ" />
     <string id="taom_ohw_t3_a_p2_desc" text="重傷すらオログを止められぬ。体力+75。" />
     <string id="taom_ohw_t3_a_p3" text="戦長の大軍" />
-    <string id="taom_ohw_t3_a_p3_desc" text="数万がお前の旗の下に進軍する。部隊サイズ+12%。" />
+    <string id="taom_ohw_t3_a_p3_desc" text="数万がお前の旗の下に進軍する。部隊サイズ+5。" />
     <string id="taom_ohw_t3_a_p4" text="モルドールの鉄槌" />
     <string id="taom_ohw_t3_a_p4_desc" text="お前の軍団は立ち塞がる全てを砕く。部隊のダメージ+12%。" />
     <string id="taom_ohw_t3_b_key" text="永久に荒れ狂う者" />
@@ -542,7 +542,7 @@
     <string id="taom_ohw_t3_b_p3" text="オログの伝説" />
     <string id="taom_ohw_t3_b_p3_desc" text="あなたの武勇はモルドールの暗き広間で謳われる。戦闘名声獲得+14%。" />
     <string id="taom_ohw_t3_b_p4" text="黒き軍勢" />
-    <string id="taom_ohw_t3_b_p4_desc" text="闇の軍勢は計り知れぬほど膨れ上がる。パーティサイズ+14%。" />
+    <string id="taom_ohw_t3_b_p4_desc" text="闇の軍勢は計り知れぬほどに膨張す。部隊規模+6。" />
     <string id="taom_moa_root_desc" text="軽矢羽根は射撃ダメージ+5%を付与し、すべての矢を有効にする。" />
     <string id="taom_moa_t1_a_key" text="鷹の目" />
     <string id="taom_moa_t1_a_key_desc" text="あなたの視力はどんな鷹よりも鋭い。軽矢羽根範囲+3。" />
@@ -603,7 +603,7 @@
     <string id="taom_moa_t3_b_p3" text="辺境領の名声" />
     <string id="taom_moa_t3_b_p3_desc" text="汝の功績がアルドブルグに栄光をもたらす。戦闘名声獲得+12%。" />
     <string id="taom_moa_t3_b_p4" text="辺境領の軍" />
-    <string id="taom_moa_t3_b_p4_desc" text="ローハン最高の弓兵たちが汝の旗に集う。部隊規模+12%。" />
+    <string id="taom_moa_t3_b_p4_desc" text="ローハンの最精鋭の弓兵たちが汝の旗の下に集いし。部隊規模+5。" />
     <string id="taom_ew_root_desc" text="エオルの雄叫びは騎馬突撃ダメージ+5%を付与し、祖先の雷鳴を呼び覚ます。" />
     <string id="taom_ew_t1_a_key" text="祖先の雷鳴" />
     <string id="taom_ew_t1_a_key_desc" text="雄叫びが平原に響き渡る。エオルの雄叫び範囲+3。" />
@@ -652,7 +652,7 @@
     <string id="taom_ew_t3_a_p2" text="辺境の王" />
     <string id="taom_ew_t3_a_p2_desc" text="最も優れた騎手たちがあなたに従う。体力+75。" />
     <string id="taom_ew_t3_a_p3" text="エオレド指揮官" />
-    <string id="taom_ew_t3_a_p3_desc" text="偉大なエオレドがあなたの背後を固める。部隊規模+12%。" />
+    <string id="taom_ew_t3_a_p3_desc" text="偉大なるエオレドが汝の背後を騎行す。部隊規模+5。" />
     <string id="taom_ew_t3_a_p4" text="ローハンの栄光" />
     <string id="taom_ew_t3_a_p4_desc" text="あなたの功績は辺境に栄光をもたらす。戦闘名声獲得+12%。" />
     <string id="taom_ew_t3_b_key" text="常なる備え" />
@@ -664,7 +664,7 @@
     <string id="taom_ew_t3_b_p3" text="馬の国の歌" />
     <string id="taom_ew_t3_b_p3_desc" text="エオセオドの功績は何世代にもわたって歌われる。戦闘名声獲得+14%。" />
     <string id="taom_ew_t3_b_p4" text="大軍勢" />
-    <string id="taom_ew_t3_b_p4_desc" text="エオセオドの全軍が戦いに駆ける。パーティサイズ+14%。" />
+    <string id="taom_ew_t3_b_p4_desc" text="エオセオドの全軍勢が戦へと騎行す。部隊規模+6。" />
     <string id="taom_ws_root_desc" text="河川航行者は+5%の抵抗力を付与し、スタンガルドの国境監視者の警戒心を伝える。" />
     <string id="taom_ws_t1_a_key" text="浅瀬の熟達" />
     <string id="taom_ws_t1_a_key_desc" text="あなたはすべての渡河点を知っている。河川航行者範囲+3。" />
@@ -725,7 +725,7 @@
     <string id="taom_ws_t3_b_p3" text="辺境の守護者" />
     <string id="taom_ws_t3_b_p3_desc" text="辺境における最高の守護者。戦闘名声獲得+12%。" />
     <string id="taom_ws_t3_b_p4" text="スタンガルドの軍勢" />
-    <string id="taom_ws_t3_b_p4_desc" text="スタンガルドの全戦力が汝の背後に従う。部隊規模+12%。" />
+    <string id="taom_ws_t3_b_p4_desc" text="スタンガルドの全兵力が汝の後方を騎行す。部隊規模+5。" />
     <string id="taom_alr_root_desc" text="野蛮な突撃は近接ダメージ+5%を与え、ドゥンレンドの氏族の激怒を呼び起こす。" />
     <string id="taom_alr_t1_a_key" text="氏族の戦闘狂気" />
     <string id="taom_alr_t1_a_key_desc" text="先祖の怒りが汝の中を流れる。野蛮な突撃の範囲+3。" />
@@ -786,7 +786,7 @@
     <string id="taom_alr_t3_b_p3" text="丘陵の伝説" />
     <string id="taom_alr_t3_b_p3_desc" text="汝の名はあらゆるドゥンランドの館に響き渡る。戦闘名声獲得+14%。" />
     <string id="taom_alr_t3_b_p4" text="統一氏族" />
-    <string id="taom_alr_t3_b_p4_desc" text="ドゥンランドのあらゆる氏族が汝の旗印の下に戦士を送る。部隊規模+14%。" />
+    <string id="taom_alr_t3_b_p4_desc" text="ダンランドの全ての氏族が汝の旗の下に戦士を送る。部隊規模+6。" />
     <string id="taom_wh_root_desc" text="標的獲物は遠距離ダメージ+5%を付与し、執拗な追跡の目標を定める。" />
     <string id="taom_wh_t1_a_key" text="群れの長の印" />
     <string id="taom_wh_t1_a_key_desc" text="汝の印は群れ全体を獲物の元へと導く。標的獲物の範囲+3。" />
@@ -847,7 +847,7 @@
     <string id="taom_wh_t3_b_p3" text="戦利品収集者" />
     <string id="taom_wh_t3_b_p3_desc" text="すべての戦利品があなたの恐るべき伝説に加わる。戦闘名声獲得+14%。" />
     <string id="taom_wh_t3_b_p4" text="大いなる群れ" />
-    <string id="taom_wh_t3_b_p4_desc" text="ドゥンランドのすべての狼皮狩人があなたと共に騎行する。部隊サイズ+14%。" />
+    <string id="taom_wh_t3_b_p4_desc" text="ダンランドの全ての狼皮の狩人が汝と共に騎行す。部隊規模+6。" />
     <string id="taom_cr_root_desc" text="戦群突撃は騎馬突撃ダメージに+5%を与え、敵陣を混乱に陥れる。" />
     <string id="taom_cr_t1_a_key" text="一族の雷鳴" />
     <string id="taom_cr_t1_a_key_desc" text="騎手が降下すると大地が震える。戦群突撃の範囲+3。" />
@@ -896,7 +896,7 @@
     <string id="taom_cr_t3_a_p2" text="山岳生まれ" />
     <string id="taom_cr_t3_a_p2_desc" text="汝はこの鞍に生まれついた。HP+75。" />
     <string id="taom_cr_t3_a_p3" text="大戦群" />
-    <string id="taom_cr_t3_a_p3_desc" text="あなたの合図で数百の騎手が従う。部隊規模+12%。" />
+    <string id="taom_cr_t3_a_p3_desc" text="数百の騎兵が汝の号令に従いて進む。部隊規模+5。" />
     <string id="taom_cr_t3_a_p4" text="ドゥンランドの伝説" />
     <string id="taom_cr_t3_a_p4_desc" text="あなたの突撃の歌は霧ふり山脈に響き渡る。戦闘名声獲得+12%。" />
     <string id="taom_cr_t3_b_key" text="絶え間なき突撃" />
@@ -904,7 +904,7 @@
     <string id="taom_cr_t3_b_p1" text="氏族の激情" />
     <string id="taom_cr_t3_b_p1_desc" text="氏族は一つの止められぬ力として駆ける。部隊ダメージ+12%。" />
     <string id="taom_cr_t3_b_p2" text="無限の騎手" />
-    <string id="taom_cr_t3_b_p2_desc" text="戦団は地平線から地平線まで大地を覆う。部隊規模+14%。" />
+    <string id="taom_cr_t3_b_p2_desc" text="戦の群れが地平から地平まで大地を覆う。部隊規模+6。" />
     <string id="taom_cr_t3_b_p3" text="略奪者の名声" />
     <string id="taom_cr_t3_b_p3_desc" text="あなたの略奪はエドラスからオルサンクまで恐れられる。戦闘名声獲得+14%。" />
     <string id="taom_cr_t3_b_p4" text="不屈の戦団" />

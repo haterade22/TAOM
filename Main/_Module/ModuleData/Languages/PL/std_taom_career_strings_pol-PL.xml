@@ -359,7 +359,7 @@
     <string id="taom_buc_t3_b_p3" text="Dark Renown" />
     <string id="taom_buc_t3_b_p3_desc" text="Victory brings fearsome reputation. +12% battle renown gain." />
     <string id="taom_buc_t3_b_p4" text="Siege Lord" />
-    <string id="taom_buc_t3_b_p4_desc" text="Your warhost is vast and terrible. +12% party size." />
+    <string id="taom_buc_t3_b_p4_desc" text="Your warhost is vast and terrible. +5 party size." />
     <string id="taom_mc_root_desc" text="Voice of the One grants +5% ranged damage and channels Sauron's dark whispers." />
     <string id="taom_mc_t1_a_key" text="Poisoned Barb" />
     <string id="taom_mc_t1_a_key_desc" text="Your arrows carry vile toxins. Voice of the One radius +3." />
@@ -420,7 +420,7 @@
     <string id="taom_mc_t3_b_p3" text="Martyrdom's Reward" />
     <string id="taom_mc_t3_b_p3_desc" text="Death in Sauron's name brings great renown. +12% battle renown gain." />
     <string id="taom_mc_t3_b_p4" text="Prophet's Host" />
-    <string id="taom_mc_t3_b_p4_desc" text="Thousands answer the prophet's call. +12% party size." />
+    <string id="taom_mc_t3_b_p4_desc" text="Thousands answer the prophet's call. +5 party size." />
     <string id="taom_sr_root_desc" text="Sneak-Creeping grants +5% movement speed and lets the rider vanish into Mordor's shadow." />
     <string id="taom_sr_t1_a_key" text="Shadow Gallop" />
     <string id="taom_sr_t1_a_key_desc" text="You vanish into Mordor's dark. Sneak-Creeping radius +3." />
@@ -479,7 +479,7 @@
     <string id="taom_sr_t3_b_p2" text="Endless Dark March" />
     <string id="taom_sr_t3_b_p2_desc" text="Mordor's host covers ground without rest. +8% party movement speed." />
     <string id="taom_sr_t3_b_p3" text="Shadow Legions" />
-    <string id="taom_sr_t3_b_p3_desc" text="Your horde grows beyond reckoning. +12% party size." />
+    <string id="taom_sr_t3_b_p3_desc" text="Your horde grows beyond reckoning. +5 party size." />
     <string id="taom_sr_t3_b_p4" text="Rider's Renown" />
     <string id="taom_sr_t3_b_p4_desc" text="The shadow cavalry's deeds are legendary. +14% battle renown gain." />
     <string id="taom_ohw_root_desc" text="Hammer Down grants +8% health. The Olog's sheer mass scatters infantry." />
@@ -530,7 +530,7 @@
     <string id="taom_ohw_t3_a_p2" text="Death Cannot Hold" />
     <string id="taom_ohw_t3_a_p2_desc" text="Even grievous injury cannot stop the Olog. +75 health." />
     <string id="taom_ohw_t3_a_p3" text="Warchief's Horde" />
-    <string id="taom_ohw_t3_a_p3_desc" text="Tens of thousands march under your standard. +12% party size." />
+    <string id="taom_ohw_t3_a_p3_desc" text="Tens of thousands march under your standard. +5 party size." />
     <string id="taom_ohw_t3_a_p4" text="Mordor's Hammer" />
     <string id="taom_ohw_t3_a_p4_desc" text="Your warhost breaks all who stand before it. +12% troop damage." />
     <string id="taom_ohw_t3_b_key" text="Ever-Raging" />
@@ -542,7 +542,7 @@
     <string id="taom_ohw_t3_b_p3" text="Legend of the Olog" />
     <string id="taom_ohw_t3_b_p3_desc" text="Your deeds are sung in the dark halls of Mordor. +14% battle renown gain." />
     <string id="taom_ohw_t3_b_p4" text="Black Army" />
-    <string id="taom_ohw_t3_b_p4_desc" text="The dark host swells beyond measure. +14% party size." />
+    <string id="taom_ohw_t3_b_p4_desc" text="The dark host swells beyond measure. +6 party size." />
     <string id="taom_moa_root_desc" text="Light Fletching grants +5% ranged damage, making every shaft count." />
     <string id="taom_moa_t1_a_key" text="Eagle Eye" />
     <string id="taom_moa_t1_a_key_desc" text="Your sight is keener than any hawk. Light Fletching radius +3." />
@@ -603,7 +603,7 @@
     <string id="taom_moa_t3_b_p3" text="Fame of the Mark" />
     <string id="taom_moa_t3_b_p3_desc" text="Your deeds bring glory to Aldburg. +12% battle renown gain." />
     <string id="taom_moa_t3_b_p4" text="Army of the Mark" />
-    <string id="taom_moa_t3_b_p4_desc" text="The finest bowmen of Rohan rally to your banner. +12% party size." />
+    <string id="taom_moa_t3_b_p4_desc" text="The finest bowmen of Rohan rally to your banner. +5 party size." />
     <string id="taom_ew_root_desc" text="Warcry of Eorl grants +5% horse charge damage, summoning the thunder of the ancestors." />
     <string id="taom_ew_t1_a_key" text="Ancestor's Thunder" />
     <string id="taom_ew_t1_a_key_desc" text="The warcry echoes across the plain. Warcry of Eorl radius +3." />
@@ -652,7 +652,7 @@
     <string id="taom_ew_t3_a_p2" text="Lord of the Mark" />
     <string id="taom_ew_t3_a_p2_desc" text="The greatest riders follow you. +75 health." />
     <string id="taom_ew_t3_a_p3" text="Eored Commander" />
-    <string id="taom_ew_t3_a_p3_desc" text="A great eored rides at your back. +12% party size." />
+    <string id="taom_ew_t3_a_p3_desc" text="A great eored rides at your back. +5 party size." />
     <string id="taom_ew_t3_a_p4" text="Rohan's Glory" />
     <string id="taom_ew_t3_a_p4_desc" text="Your deeds bring glory to the Mark. +12% battle renown gain." />
     <string id="taom_ew_t3_b_key" text="Ever Ready" />
@@ -664,7 +664,7 @@
     <string id="taom_ew_t3_b_p3" text="Songs of the Riddermark" />
     <string id="taom_ew_t3_b_p3_desc" text="The deeds of the Eotheod are sung for ages. +14% battle renown gain." />
     <string id="taom_ew_t3_b_p4" text="The Great Host" />
-    <string id="taom_ew_t3_b_p4_desc" text="The full host of the Eotheod rides to war. +14% party size." />
+    <string id="taom_ew_t3_b_p4_desc" text="The full host of the Eotheod rides to war. +6 party size." />
     <string id="taom_ws_root_desc" text="River Navigator grants +5% resistance and channels the vigilance of Stangard's border watchers." />
     <string id="taom_ws_t1_a_key" text="River Ford Mastery" />
     <string id="taom_ws_t1_a_key_desc" text="You know every crossing. River Navigator radius +3." />
@@ -725,7 +725,7 @@
     <string id="taom_ws_t3_b_p3" text="Warden of the Mark" />
     <string id="taom_ws_t3_b_p3_desc" text="The Mark's finest guardian. +12% battle renown gain." />
     <string id="taom_ws_t3_b_p4" text="Host of Stangard" />
-    <string id="taom_ws_t3_b_p4_desc" text="All of Stangard's strength rides behind you. +12% party size." />
+    <string id="taom_ws_t3_b_p4_desc" text="All of Stangard's strength rides behind you. +5 party size." />
     <string id="taom_alr_root_desc" text="Savage Rush grants +5% melee damage and channels the fury of the Dunlending clans." />
     <string id="taom_alr_t1_a_key" text="Clan Battle-Rage" />
     <string id="taom_alr_t1_a_key_desc" text="The rage of your ancestors flows through you. Savage Rush radius +3." />
@@ -786,7 +786,7 @@
     <string id="taom_alr_t3_b_p3" text="Legend of the Hills" />
     <string id="taom_alr_t3_b_p3_desc" text="Your name echoes through every Dunlending hall. +14% battle renown gain." />
     <string id="taom_alr_t3_b_p4" text="United Clans" />
-    <string id="taom_alr_t3_b_p4_desc" text="Every clan from Dunland sends warriors to your banner. +14% party size." />
+    <string id="taom_alr_t3_b_p4_desc" text="Every clan from Dunland sends warriors to your banner. +6 party size." />
     <string id="taom_wh_root_desc" text="Marked Prey grants +5% ranged damage and marks a target for relentless pursuit." />
     <string id="taom_wh_t1_a_key" text="Pack Leader's Mark" />
     <string id="taom_wh_t1_a_key_desc" text="Your mark draws the whole pack to the kill. Marked Prey radius +3." />
@@ -847,7 +847,7 @@
     <string id="taom_wh_t3_b_p3" text="Trophy Taker" />
     <string id="taom_wh_t3_b_p3_desc" text="Every trophy adds to your fearsome legend. +14% battle renown gain." />
     <string id="taom_wh_t3_b_p4" text="Great Pack" />
-    <string id="taom_wh_t3_b_p4_desc" text="Every wolfskin hunter in Dunland rides with you. +14% party size." />
+    <string id="taom_wh_t3_b_p4_desc" text="Every wolfskin hunter in Dunland rides with you. +6 party size." />
     <string id="taom_cr_root_desc" text="Warpack Charge grants +5% horse charge damage and drives enemy lines into chaos." />
     <string id="taom_cr_t1_a_key" text="Clan Thunder" />
     <string id="taom_cr_t1_a_key_desc" text="The ground shakes as the riders descend. Warpack Charge radius +3." />
@@ -896,7 +896,7 @@
     <string id="taom_cr_t3_a_p2" text="Mountain Born" />
     <string id="taom_cr_t3_a_p2_desc" text="You were born to this saddle. +75 health." />
     <string id="taom_cr_t3_a_p3" text="Great Warpack" />
-    <string id="taom_cr_t3_a_p3_desc" text="Hundreds of riders follow at your signal. +12% party size." />
+    <string id="taom_cr_t3_a_p3_desc" text="Hundreds of riders follow at your signal. +5 party size." />
     <string id="taom_cr_t3_a_p4" text="Dunlending Legend" />
     <string id="taom_cr_t3_a_p4_desc" text="Songs of your charge echo from the Misty Mountains. +12% battle renown gain." />
     <string id="taom_cr_t3_b_key" text="Ever Charging" />
@@ -904,7 +904,7 @@
     <string id="taom_cr_t3_b_p1" text="Clan's Fury" />
     <string id="taom_cr_t3_b_p1_desc" text="The clans ride as one unstoppable force. +12% troop damage." />
     <string id="taom_cr_t3_b_p2" text="Endless Riders" />
-    <string id="taom_cr_t3_b_p2_desc" text="The warpack covers the land from horizon to horizon. +14% party size." />
+    <string id="taom_cr_t3_b_p2_desc" text="The warpack covers the land from horizon to horizon. +6 party size." />
     <string id="taom_cr_t3_b_p3" text="Raider's Renown" />
     <string id="taom_cr_t3_b_p3_desc" text="Your raids are feared from Edoras to Orthanc. +14% battle renown gain." />
     <string id="taom_cr_t3_b_p4" text="Unbreakable Warpack" />
