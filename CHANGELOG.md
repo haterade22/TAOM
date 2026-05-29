@@ -2,6 +2,18 @@
 
 ## 2026-05-29
 
+### fix(troop-progression): restore buyer-hero recruitment-cost perk discounts (GameModel audit MED)
+
+Resolves the one genuine finding from the GameModel base-delegation audit (below). `TaomPartyWageModel.GetTroopRecruitmentCost` fully replaces vanilla's cost computation (extended T0–T10 table + LOTR cultural feats) but silently dropped vanilla's `if (buyerHero != null)` personal skill-perk discount block — so a player's HeadHunter / ChinkInTheArmor / ShowOfStrength / HardyFrontline / RenownedArcher / Piercer / Frugal / SwordForBarter / SlickNegotiator perks did nothing toward recruitment cost.
+
+- **New `RecruitmentPerkInputs` primitive struct** (in `IWageModifierService.cs`) — pre-resolved perk bonuses + troop/hero facts, mirroring the existing `WageFeatInputs` / `MountedCostFeatInputs` pattern; keeps `WageModifierService` free of TaleWorlds sealed types (ADR-007).
+- **Boundary** `TaomPartyWageModel.ResolveBuyerRecruitmentPerks` resolves each `buyerHero.GetPerkValue(perk) ? perk.{Secondary|Primary}Bonus : 0f`; **service** `WageModifierService.SumBuyerPerkFactors` owns the troop-type/tier/leader/mercenary gating (unit-testable) + applies the summed factor with vanilla's `LimitMin(1f)`.
+- **Vanilla parity verified via ilspy on the installed v1.4.5 DLL** (`/deep-review` Agent 2): all 9 perks, Primary-vs-Secondary bonus selection, infantry-vs-ranged else-if, and tier≥2 HeadHunter gate match `DefaultPartyWageModel.GetTroopRecruitmentCost` exactly. `KhuzaitRecruitUpgradeFeat` intentionally **not** restored — TAOM replaces the mounted-recruit cultural feat with the Isengard/Rohan mounted-cost feats. Summed-then-single-`AddFactor` is numerically identical to vanilla's sequential calls (confirmed against the `ExplainedNumber` decompile: `AddFactor` accumulates `SumOfFactors += value`).
+- **Tests:** 14 new gate tests (skip-guard exhaustion). Full suite 2650 passed / 0 failed. `/deep-review` (5 agents) clean — zero parity drift, zero dead struct fields.
+- **Audit false-positive recorded:** `TaomPregnancyModel.GetDailyChanceOfPregnancyForHero` already applies the Virile (Charm) perk identically to vanilla — verified, no change. RCA: `docs/reviews/rca-gamemodel-base-delegation-audit-2026-05-29.md`.
+
+Research: `DefaultPartyWageModel.GetTroopRecruitmentCost`, `ExplainedNumber.AddFactor` (installed v1.4.5). Save-compat: behavior-only (cost calc), no serialized state. Not-tested: GameModel override invocation (requires live game) — service logic fully covered.
+
 ### docs(reference): external-resources index + GameModel base-delegation audit
 
 Two follow-ups from the open-web research session:

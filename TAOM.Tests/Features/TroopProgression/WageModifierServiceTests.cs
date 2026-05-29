@@ -302,6 +302,234 @@ public class WageModifierServiceTests
         Assert.AreEqual(400, cost);
     }
 
+    // --- CalculateRecruitmentCost: buyer-hero perk discounts ---
+    // Mirrors the vanilla `if (buyerHero != null)` block in DefaultPartyWageModel.GetTroopRecruitmentCost.
+    // The model resolves each `buyerHero.GetPerkValue(perk) ? bonus : 0f` at the boundary; the service
+    // applies the troop-type / tier / leader / mercenary gating. One test per gate (skip-guard exhaustion).
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_NoBuyer_NoPerkFactorApplied()
+    {
+        _costService.GetTroopRecruitmentCost(20, false).Returns(400);
+
+        // Pre-gated bonuses present but HasBuyer=false → nothing applies (matches vanilla null buyerHero).
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: false, isInfantry: true, chinkInTheArmorBonus: -0.1f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(400, cost);
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_InfantryBuyerWithChinkInTheArmor_AppliesReduction()
+    {
+        _costService.GetTroopRecruitmentCost(20, false).Returns(1000);
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, isInfantry: true, chinkInTheArmorBonus: -0.1f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(900, cost); // 1000 * (1 - 0.10)
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_InfantryBuyer_AppliesAllThreeInfantryPerks()
+    {
+        _costService.GetTroopRecruitmentCost(20, false).Returns(1000);
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, isInfantry: true,
+            chinkInTheArmorBonus: -0.1f, showOfStrengthBonus: -0.1f, hardyFrontlineBonus: -0.1f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(700, cost); // 1000 * (1 - 0.30)
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_RangedBuyer_AppliesArcherAndPiercer()
+    {
+        _costService.GetTroopRecruitmentCost(20, false).Returns(1000);
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, isRanged: true,
+            renownedArcherBonus: -0.1f, piercerBonus: -0.05f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(850, cost); // 1000 * (1 - 0.15)
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_RangedBuyer_DoesNotApplyInfantryPerks()
+    {
+        _costService.GetTroopRecruitmentCost(20, false).Returns(1000);
+        // IsRanged path — the else-if means infantry bonuses are ignored even if non-zero.
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, isInfantry: false, isRanged: true,
+            chinkInTheArmorBonus: -0.5f, renownedArcherBonus: -0.1f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(900, cost); // only the archer -0.10 applies, not the -0.50 infantry perk
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_InfantryBuyer_DoesNotApplyRangedPerks()
+    {
+        _costService.GetTroopRecruitmentCost(20, false).Returns(1000);
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, isInfantry: true, isRanged: false,
+            chinkInTheArmorBonus: -0.1f, renownedArcherBonus: -0.5f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(900, cost); // only the infantry -0.10 applies, not the -0.50 ranged perk
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_HeadHunterTierBelow2_NotApplied()
+    {
+        _costService.GetTroopRecruitmentCost(1, false).Returns(1000);
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, tierAtLeast2: false, headHunterBonus: -0.2f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 1, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(1000, cost); // tier < 2 gate blocks HeadHunter
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_HeadHunterTier2OrAbove_Applied()
+    {
+        _costService.GetTroopRecruitmentCost(10, false).Returns(1000);
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, tierAtLeast2: true, headHunterBonus: -0.2f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 10, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(800, cost); // 1000 * (1 - 0.20)
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_PartyLeaderWithFrugal_Applied()
+    {
+        _costService.GetTroopRecruitmentCost(20, false).Returns(1000);
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, isPartyLeader: true, frugalBonus: -0.1f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(900, cost);
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_NotPartyLeader_FrugalIgnored()
+    {
+        _costService.GetTroopRecruitmentCost(20, false).Returns(1000);
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, isPartyLeader: false, frugalBonus: -0.1f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(1000, cost);
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_MercenaryWithTradePerks_Applied()
+    {
+        _costService.GetTroopRecruitmentCost(20, true).Returns(1000);
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, isMercenary: true,
+            swordForBarterBonus: -0.1f, slickNegotiatorBonus: -0.1f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: true, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(800, cost); // 1000 * (1 - 0.20)
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_NotMercenary_TradePerksIgnored()
+    {
+        _costService.GetTroopRecruitmentCost(20, false).Returns(1000);
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, isMercenary: false,
+            swordForBarterBonus: -0.1f, slickNegotiatorBonus: -0.1f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(1000, cost);
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_DeepDiscount_ClampedToMinimumOne()
+    {
+        _costService.GetTroopRecruitmentCost(1, false).Returns(10);
+        // Pathological stacked discount drives the raw result negative; vanilla LimitMin(1f) floors it.
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, isInfantry: true,
+            chinkInTheArmorBonus: -1.0f, showOfStrengthBonus: -1.0f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 1, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(1, cost);
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_BuyerPerksComposeWithMountedFeats()
+    {
+        _costService.GetTroopRecruitmentCost(30, false).Returns(1000);
+        var feats = new MountedCostFeatInputs(isengardMountedCostBonus: -0.15f, rohanMountedCostBonus: 0f);
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, isPartyLeader: true, frugalBonus: -0.1f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 30, isMounted: true, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: feats, buyerPerks: perks, cultureText: null);
+
+        // base 1000 + horse 500 = 1500; factors (-0.15 Isengard) + (-0.10 Frugal) = -0.25 → 1125
+        Assert.AreEqual(1125, cost);
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_BuyerWithNoActivePerks_LeavesCostUnchanged()
+    {
+        _costService.GetTroopRecruitmentCost(20, false).Returns(400);
+        // HasBuyer but every bonus is zero (hero has none of the perks). LimitMin(1f) is a no-op here.
+        var perks = new RecruitmentPerkInputs(hasBuyer: true, isInfantry: true);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(400, cost);
+    }
+
     // --- CalculateHorseCost: tier lookup ---
 
     [TestMethod]

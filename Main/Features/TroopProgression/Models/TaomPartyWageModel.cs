@@ -62,13 +62,15 @@ public class TaomPartyWageModel : DefaultPartyWageModel
         CharacterObject troop, Hero buyerHero, bool withoutItemCost = false)
     {
         var feats = ResolveMountedCostFeats(buyerHero?.Culture, troop.IsMounted);
+        var buyerPerks = ResolveBuyerRecruitmentPerks(buyerHero, troop);
         int cost = _wageModifiers.CalculateRecruitmentCost(
             troop.Level,
             troop.IsMounted,
             IsMercenaryOccupation(troop.Occupation),
             withoutItemCost,
             feats,
-            CultureText);
+            CultureText,
+            buyerPerks);
         return new ExplainedNumber(cost, includeDescriptions: false);
     }
 
@@ -127,6 +129,39 @@ public class TaomPartyWageModel : DefaultPartyWageModel
             isengardMountedCostBonus: BonusIfHas(buyerCulture, TaomCulturalFeats.IsengardCheaperRecruitsFeat),
             rohanMountedCostBonus: BonusIfHas(buyerCulture, TaomCulturalFeats.RohanMountedCostFeat));
     }
+
+    // Vanilla DefaultPartyWageModel.GetTroopRecruitmentCost applies the buyer hero's personal
+    // skill-perk recruitment discounts (orthogonal to TAOM's extended cost table + cultural feats).
+    // The full-replacement override dropped them; this restores them. KhuzaitRecruitUpgradeFeat is
+    // intentionally NOT resolved here — TAOM replaces it with the Isengard/Rohan mounted-cost feats.
+    private static RecruitmentPerkInputs ResolveBuyerRecruitmentPerks(Hero? buyerHero, CharacterObject troop)
+    {
+        if (buyerHero == null)
+            return RecruitmentPerkInputs.None;
+
+        return new RecruitmentPerkInputs(
+            hasBuyer: true,
+            tierAtLeast2: troop.Tier >= 2,
+            isInfantry: troop.IsInfantry,
+            isRanged: troop.IsRanged,
+            isPartyLeader: buyerHero.IsPartyLeader,
+            isMercenary: IsMercenaryOccupation(troop.Occupation),
+            headHunterBonus: SecondaryPerkBonus(buyerHero, DefaultPerks.Throwing.HeadHunter),
+            chinkInTheArmorBonus: SecondaryPerkBonus(buyerHero, DefaultPerks.OneHanded.ChinkInTheArmor),
+            showOfStrengthBonus: SecondaryPerkBonus(buyerHero, DefaultPerks.TwoHanded.ShowOfStrength),
+            hardyFrontlineBonus: SecondaryPerkBonus(buyerHero, DefaultPerks.Polearm.HardyFrontline),
+            renownedArcherBonus: SecondaryPerkBonus(buyerHero, DefaultPerks.Bow.RenownedArcher),
+            piercerBonus: SecondaryPerkBonus(buyerHero, DefaultPerks.Crossbow.Piercer),
+            frugalBonus: SecondaryPerkBonus(buyerHero, DefaultPerks.Steward.Frugal),
+            swordForBarterBonus: PrimaryPerkBonus(buyerHero, DefaultPerks.Trade.SwordForBarter),
+            slickNegotiatorBonus: PrimaryPerkBonus(buyerHero, DefaultPerks.Charm.SlickNegotiator));
+    }
+
+    private static float SecondaryPerkBonus(Hero hero, PerkObject perk)
+        => hero.GetPerkValue(perk) ? perk.SecondaryBonus : 0f;
+
+    private static float PrimaryPerkBonus(Hero hero, PerkObject perk)
+        => hero.GetPerkValue(perk) ? perk.PrimaryBonus : 0f;
 
     private static float BonusIfHas(CultureObject? culture, FeatObject feat)
         => culture?.HasFeat(feat) == true ? feat.EffectBonus : 0f;

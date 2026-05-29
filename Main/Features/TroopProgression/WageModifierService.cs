@@ -56,7 +56,8 @@ public class WageModifierService : IWageModifierService
         bool isMercenary,
         bool withoutItemCost,
         in MountedCostFeatInputs mountedCostFeats,
-        TextObject? cultureText)
+        TextObject? cultureText,
+        in RecruitmentPerkInputs buyerPerks = default)
     {
         int baseCost = _costService.GetTroopRecruitmentCost(level, isMercenary);
         var result = new ExplainedNumber(baseCost, includeDescriptions: false);
@@ -70,7 +71,47 @@ public class WageModifierService : IWageModifierService
             AddNonZero(ref result, mountedCostFeats.RohanMountedCostBonus, cultureText);
         }
 
+        // Vanilla buyer-hero recruitment-cost perk discounts. AddFactor accumulates linearly
+        // (SumOfFactors += value), so a single summed apply is identical to vanilla's sequential
+        // AddFactor calls. LimitMin(1f) mirrors vanilla's clamp inside the buyerHero != null block.
+        if (buyerPerks.HasBuyer)
+        {
+            result.AddFactor(SumBuyerPerkFactors(in buyerPerks));
+            result.LimitMin(1f);
+        }
+
         return (int)result.ResultNumber;
+    }
+
+    private static float SumBuyerPerkFactors(in RecruitmentPerkInputs p)
+    {
+        float sum = 0f;
+
+        if (p.TierAtLeast2)
+            sum += p.HeadHunterBonus;
+
+        if (p.IsInfantry)
+        {
+            sum += p.ChinkInTheArmorBonus;
+            sum += p.ShowOfStrengthBonus;
+            sum += p.HardyFrontlineBonus;
+        }
+        else if (p.IsRanged)
+        {
+            sum += p.RenownedArcherBonus;
+            sum += p.PiercerBonus;
+        }
+
+        if (p.IsPartyLeader)
+            sum += p.FrugalBonus;
+
+        if (p.IsMercenary)
+        {
+            sum += p.SwordForBarterBonus;
+            sum += p.SlickNegotiatorBonus;
+        }
+
+        return sum;
     }
 
     public int CalculateHorseCost(int troopLevel)
