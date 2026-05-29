@@ -299,7 +299,7 @@
     <string id="taom_kob_t3b_p2" text="最大体力+75。" />
     <string id="taom_kob_t3b_p3" text="馬の突撃ダメージ+20%。" />
     <string id="taom_kob_t3b_p4" text="部隊の耐性+12%。" />
-    <string id="taom_buc_root_desc" text="暗黒の堅牢は体力+6%を付与し、黒ウルクの戦闘狂気を奮い立たせる。" />
+    <string id="taom_buc_root_desc" text="暗黒の堅牢は体力+30を付与し、黒ウルクの戦闘狂気を奮い立たせる。" />
     <string id="taom_buc_t1_a_key" text="鉄の皮膚" />
     <string id="taom_buc_t1_a_key_desc" text="鍛冶場と戦争で鍛えられた皮膚が刃を弾く。血の狂気の範囲+3。" />
     <string id="taom_buc_t1_a_p1" text="残虐な突撃" />
@@ -482,7 +482,7 @@
     <string id="taom_sr_t3_b_p3_desc" text="汝の大軍は数え切れぬほどに膨れ上がる。部隊規模+5。" />
     <string id="taom_sr_t3_b_p4" text="騎兵の名声" />
     <string id="taom_sr_t3_b_p4_desc" text="影の騎兵隊の武勲は伝説となる。戦闘名声獲得+14%。" />
-    <string id="taom_ohw_root_desc" text="ハンマーダウンは体力+8%を付与する。オログの巨体が歩兵を蹴散らす。" />
+    <string id="taom_ohw_root_desc" text="ハンマーダウンは体力+35を付与する。オログの巨体が歩兵を蹴散らす。" />
     <string id="taom_ohw_t1_a_key" text="地を震わせる者" />
     <string id="taom_ohw_t1_a_key_desc" text="踏みつけが大地を揺るがす。ハンマーダウン半径+3。" />
     <string id="taom_ohw_t1_a_p1" text="骨砕き" />

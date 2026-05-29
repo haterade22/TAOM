@@ -299,7 +299,7 @@
     <string id="taom_kob_t3b_p2" text="+75 de vida máxima." />
     <string id="taom_kob_t3b_p3" text="+20% de dano de carga de cavalo." />
     <string id="taom_kob_t3b_p4" text="+12% de resistência das tropas." />
-    <string id="taom_buc_root_desc" text="Fortitude Sombria concede +6% de vida e encoraja a fúria de batalha dos Uruk Negros." />
+    <string id="taom_buc_root_desc" text="Fortitude Sombria concede +30 de vida e encoraja a fúria de batalha dos Uruk Negros." />
     <string id="taom_buc_t1_a_key" text="Couro de Ferro" />
     <string id="taom_buc_t1_a_key_desc" text="Temperado pela forja e pela guerra, seu couro desvia lâminas. Raio de Fúria Sangrenta +3." />
     <string id="taom_buc_t1_a_p1" text="Carga Brutal" />
@@ -482,7 +482,7 @@
     <string id="taom_sr_t3_b_p3_desc" text="Sua horda cresce além da conta. +5 tamanho do grupo." />
     <string id="taom_sr_t3_b_p4" text="Renome do Cavaleiro" />
     <string id="taom_sr_t3_b_p4_desc" text="Os feitos da cavalaria das sombras são lendários. +14% de ganho de renome em batalha." />
-    <string id="taom_ohw_root_desc" text="Martelada concede +8% de vida. A massa pura do Olog dispersa a infantaria." />
+    <string id="taom_ohw_root_desc" text="Martelada concede +35 de vida. A massa pura do Olog dispersa a infantaria." />
     <string id="taom_ohw_t1_a_key" text="Tremedor de Terra" />
     <string id="taom_ohw_t1_a_key_desc" text="Sua pisada sacode a terra. Raio de Martelada +3." />
     <string id="taom_ohw_t1_a_p1" text="Quebra-Ossos" />

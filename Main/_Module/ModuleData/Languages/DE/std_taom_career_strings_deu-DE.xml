@@ -299,7 +299,7 @@
     <string id="taom_kob_t3b_p2" text="+75 max. Gesundheit." />
     <string id="taom_kob_t3b_p3" text="+20% Schaden durch Pferdeangriff." />
     <string id="taom_kob_t3b_p4" text="+12% Truppenwiderstand." />
-    <string id="taom_buc_root_desc" text="Dunkle Standhaftigkeit gewährt +6% Gesundheit und stärkt die Kampfwut der Schwarzen Uruks." />
+    <string id="taom_buc_root_desc" text="Dunkle Standhaftigkeit gewährt +30 Gesundheit und stärkt die Kampfwut der Schwarzen Uruks." />
     <string id="taom_buc_t1_a_key" text="Eisenhaut" />
     <string id="taom_buc_t1_a_key_desc" text="Gehärtet durch Esse und Krieg wendet deine Haut Klingen ab. Blutrausch-Radius +3." />
     <string id="taom_buc_t1_a_p1" text="Brutaler Ansturm" />
@@ -482,7 +482,7 @@
     <string id="taom_sr_t3_b_p3_desc" text="Eure Horde wächst ins Unermessliche. +5 Truppengröße." />
     <string id="taom_sr_t3_b_p4" text="Ruhm des Reiters" />
     <string id="taom_sr_t3_b_p4_desc" text="Die Taten der Schattenkavallerie sind legendär. +14% Schlachtruhm." />
-    <string id="taom_ohw_root_desc" text="Hammer Nieder gewährt +8% Gesundheit. Die schiere Masse des Olog zerstreut die Infanterie." />
+    <string id="taom_ohw_root_desc" text="Hammer Nieder gewährt +35 Gesundheit. Die schiere Masse des Olog zerstreut die Infanterie." />
     <string id="taom_ohw_t1_a_key" text="Erderzitterer" />
     <string id="taom_ohw_t1_a_key_desc" text="Euer Stampfen erschüttert die Erde. Hammer Nieder Radius +3." />
     <string id="taom_ohw_t1_a_p1" text="Knochenbrecher" />

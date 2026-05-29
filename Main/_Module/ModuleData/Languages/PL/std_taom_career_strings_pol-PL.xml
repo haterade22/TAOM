@@ -299,7 +299,7 @@
     <string id="taom_kob_t3b_p2" text="+75 max health." />
     <string id="taom_kob_t3b_p3" text="+20% horse charge damage." />
     <string id="taom_kob_t3b_p4" text="+12% troop resistance." />
-    <string id="taom_buc_root_desc" text="Dark Fortitude grants +6% health and emboldens Black Uruk battle-rage." />
+    <string id="taom_buc_root_desc" text="Dark Fortitude grants +30 health and emboldens Black Uruk battle-rage." />
     <string id="taom_buc_t1_a_key" text="Iron Hide" />
     <string id="taom_buc_t1_a_key_desc" text="Tempered by forge and war, your hide turns blades. Bloodrage radius +3." />
     <string id="taom_buc_t1_a_p1" text="Brutal Charge" />
@@ -482,7 +482,7 @@
     <string id="taom_sr_t3_b_p3_desc" text="Your horde grows beyond reckoning. +5 party size." />
     <string id="taom_sr_t3_b_p4" text="Rider's Renown" />
     <string id="taom_sr_t3_b_p4_desc" text="The shadow cavalry's deeds are legendary. +14% battle renown gain." />
-    <string id="taom_ohw_root_desc" text="Hammer Down grants +8% health. The Olog's sheer mass scatters infantry." />
+    <string id="taom_ohw_root_desc" text="Hammer Down grants +35 health. The Olog's sheer mass scatters infantry." />
     <string id="taom_ohw_t1_a_key" text="Ground Trembler" />
     <string id="taom_ohw_t1_a_key_desc" text="Your stomp shakes the earth. Hammer Down radius +3." />
     <string id="taom_ohw_t1_a_p1" text="Bone-Crusher" />

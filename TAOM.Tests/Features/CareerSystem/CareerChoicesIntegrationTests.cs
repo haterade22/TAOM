@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
@@ -73,5 +74,40 @@ public class CareerChoicesIntegrationTests
         Assert.AreEqual(0, special.Count,
             "No PassiveEffect should fall back to type=Special (unrecognized type=). Offenders: "
             + string.Join(", ", special));
+    }
+
+    [TestMethod]
+    public void RealChoicesXml_EveryPassiveEffectsWrapper_HasExactlyOneChild()
+    {
+        // Codex review 2026-05-29 hardening: the parser reads only the FIRST <PassiveEffect> inside
+        // a <PassiveEffects> wrapper. A multi-child wrapper would silently drop child 2+. Assert the
+        // single-child invariant on the real file so future multi-child authoring fails CI.
+        var xml = XDocument.Load(Path.Combine(ModuleDataPath, "career_system", "taom_career_choices.xml"));
+        var multiChild = xml.Descendants("PassiveEffects")
+            .Where(w => w.Elements("PassiveEffect").Count() != 1)
+            .Select(w => (string?)w.Parent?.Attribute("id") ?? "(unknown)")
+            .ToList();
+
+        Assert.AreEqual(0, multiChild.Count,
+            "Every <PassiveEffects> wrapper must hold exactly one <PassiveEffect> (parser drops extras). "
+            + "Offending choices: " + string.Join(", ", multiChild));
+    }
+
+    [TestMethod]
+    public void RealChoicesXml_EveryParsedPassive_HasFiniteNonZeroMagnitude()
+    {
+        // Codex review 2026-05-29 hardening: a malformed value=/magnitude= parses to 0 (ParseFloat
+        // default), which still passes the non-null + recognized-type checks but is an inert passive.
+        // Assert every parsed magnitude is finite and non-zero against the real file.
+        var bad = _provider.LoadChoices()
+            .Where(c => c.Passive != null
+                && (float.IsNaN(c.Passive.Magnitude) || float.IsInfinity(c.Passive.Magnitude)
+                    || c.Passive.Magnitude == 0f))
+            .Select(c => c.Id)
+            .ToList();
+
+        Assert.AreEqual(0, bad.Count,
+            "Every parsed PassiveEffect must have a finite, non-zero magnitude. Offenders: "
+            + string.Join(", ", bad));
     }
 }

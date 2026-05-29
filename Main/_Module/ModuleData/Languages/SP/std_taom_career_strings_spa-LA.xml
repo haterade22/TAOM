@@ -299,7 +299,7 @@
     <string id="taom_kob_t3b_p2" text="+75 de salud máxima." />
     <string id="taom_kob_t3b_p3" text="+20% de daño de carga a caballo." />
     <string id="taom_kob_t3b_p4" text="+12% de resistencia de tropas." />
-    <string id="taom_buc_root_desc" text="Fortaleza Oscura otorga +6% de salud y envalentona la furia de batalla de los Uruk Negros." />
+    <string id="taom_buc_root_desc" text="Fortaleza Oscura otorga +30 de salud y envalentona la furia de batalla de los Uruk Negros." />
     <string id="taom_buc_t1_a_key" text="Piel de Hierro" />
     <string id="taom_buc_t1_a_key_desc" text="Templado por la forja y la guerra, tu piel rechaza las espadas. Radio de Sed de Sangre +3." />
     <string id="taom_buc_t1_a_p1" text="Carga Brutal" />
@@ -482,7 +482,7 @@
     <string id="taom_sr_t3_b_p3_desc" text="Tu horda crece más allá de toda cuenta. +5 al tamaño del grupo." />
     <string id="taom_sr_t3_b_p4" text="Renombre del Jinete" />
     <string id="taom_sr_t3_b_p4_desc" text="Las hazañas de la caballería de la sombra son legendarias. +14% ganancia de renombre en batalla." />
-    <string id="taom_ohw_root_desc" text="Martillo Demoledor otorga +8% salud. La mole del Olog dispersa a la infantería." />
+    <string id="taom_ohw_root_desc" text="Martillo Demoledor otorga +35 salud. La mole del Olog dispersa a la infantería." />
     <string id="taom_ohw_t1_a_key" text="Estremecedor de Tierra" />
     <string id="taom_ohw_t1_a_key_desc" text="Tu pisotón sacude la tierra. Radio de Martillo Demoledor +3." />
     <string id="taom_ohw_t1_a_p1" text="Quebrantahuesos" />

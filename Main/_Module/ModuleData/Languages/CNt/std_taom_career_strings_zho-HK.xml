@@ -299,7 +299,7 @@
     <string id="taom_kob_t3b_p2" text="+75 最大生命值。" />
     <string id="taom_kob_t3b_p3" text="+20% 戰馬衝鋒傷害。" />
     <string id="taom_kob_t3b_p4" text="+12% 部隊抗性。" />
-    <string id="taom_buc_root_desc" text="黑暗剛毅賦予 +6% 生命值並激發黑色烏魯克的戰鬥狂怒。" />
+    <string id="taom_buc_root_desc" text="黑暗剛毅賦予 +30 生命值並激發黑色烏魯克的戰鬥狂怒。" />
     <string id="taom_buc_t1_a_key" text="鐵皮" />
     <string id="taom_buc_t1_a_key_desc" text="經鍛爐與戰爭錘鍊,你的皮膚能擋下刀刃。血怒範圍 +3。" />
     <string id="taom_buc_t1_a_p1" text="殘暴衝鋒" />
@@ -482,7 +482,7 @@
     <string id="taom_sr_t3_b_p3_desc" text="你的部落已成長至難以估量。隊伍規模+5。" />
     <string id="taom_sr_t3_b_p4" text="騎士的威名" />
     <string id="taom_sr_t3_b_p4_desc" text="暗影騎兵的事蹟已成傳奇。+14% 戰鬥聲望獲取。" />
-    <string id="taom_ohw_root_desc" text="重錘砸擊賦予 +8% 生命值。歐祿巨大的體型能擊潰步兵。" />
+    <string id="taom_ohw_root_desc" text="重錘砸擊賦予 +35 生命值。歐祿巨大的體型能擊潰步兵。" />
     <string id="taom_ohw_t1_a_key" text="震地者" />
     <string id="taom_ohw_t1_a_key_desc" text="你的踐踏震動大地。重錘砸擊半徑 +3。" />
     <string id="taom_ohw_t1_a_p1" text="碎骨者" />

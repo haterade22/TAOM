@@ -299,7 +299,7 @@
     <string id="taom_kob_t3b_p2" text="+75 к максимальному здоровью." />
     <string id="taom_kob_t3b_p3" text="+20% к урону конной атаки." />
     <string id="taom_kob_t3b_p4" text="+12% к сопротивлению войск." />
-    <string id="taom_buc_root_desc" text="Тёмная Стойкость даёт +6% к здоровью и усиливает боевую ярость Чёрных Uruков." />
+    <string id="taom_buc_root_desc" text="Тёмная Стойкость даёт +30 к здоровью и усиливает боевую ярость Чёрных Uruков." />
     <string id="taom_buc_t1_a_key" text="Железная Шкура" />
     <string id="taom_buc_t1_a_key_desc" text="Закалённая в кузне и войне, твоя шкура отражает клинки. Радиус Кровавой Ярости +3." />
     <string id="taom_buc_t1_a_p1" text="Безжалостная Атака" />
@@ -482,7 +482,7 @@
     <string id="taom_sr_t3_b_p3_desc" text="Ваша орда растёт без счёта. +5 к размеру отряда." />
     <string id="taom_sr_t3_b_p4" text="Слава всадника" />
     <string id="taom_sr_t3_b_p4_desc" text="Деяния теневой конницы легендарны. +14% к приросту славы в бою." />
-    <string id="taom_ohw_root_desc" text="Удар молота даёт +8% к здоровью. Огромная масса олога рассеивает пехоту." />
+    <string id="taom_ohw_root_desc" text="Удар молота даёт +35 к здоровью. Огромная масса олога рассеивает пехоту." />
     <string id="taom_ohw_t1_a_key" text="Сотрясатель земли" />
     <string id="taom_ohw_t1_a_key_desc" text="Твоя поступь сотрясает землю. Радиус удара молота +3." />
     <string id="taom_ohw_t1_a_p1" text="Костолом" />

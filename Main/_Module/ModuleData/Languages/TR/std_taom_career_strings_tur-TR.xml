@@ -299,7 +299,7 @@
     <string id="taom_kob_t3b_p2" text="+75 maksimum sağlık." />
     <string id="taom_kob_t3b_p3" text="+%20 at hücum hasarı." />
     <string id="taom_kob_t3b_p4" text="+%12 birlik direnci." />
-    <string id="taom_buc_root_desc" text="Karanlık Metanet +%6 sağlık verir ve Kara Uruk savaş öfkesini güçlendirir." />
+    <string id="taom_buc_root_desc" text="Karanlık Metanet +30 sağlık verir ve Kara Uruk savaş öfkesini güçlendirir." />
     <string id="taom_buc_t1_a_key" text="Demir Deri" />
     <string id="taom_buc_t1_a_key_desc" text="Demirhanede ve savaşta pişmiş, derin kılıçları geri çevirir. Kan Öfkesi yarıçapı +3." />
     <string id="taom_buc_t1_a_p1" text="Acımasız Hücum" />
@@ -482,7 +482,7 @@
     <string id="taom_sr_t3_b_p3_desc" text="Ordun hesapsız kitapsız büyüyor. +5 grup büyüklüğü." />
     <string id="taom_sr_t3_b_p4" text="Binicinin Şöhreti" />
     <string id="taom_sr_t3_b_p4_desc" text="Gölge süvarisinin işleri efsanevi. +14% savaş şöhreti kazancı." />
-    <string id="taom_ohw_root_desc" text="Çekiç İnişi +8% can verir. Olog'un devasa kütlesi piyadeleri dağıtır." />
+    <string id="taom_ohw_root_desc" text="Çekiç İnişi +35 can verir. Olog'un devasa kütlesi piyadeleri dağıtır." />
     <string id="taom_ohw_t1_a_key" text="Yer Sarsıcı" />
     <string id="taom_ohw_t1_a_key_desc" text="Ayak vuruşun dünyayı sarsar. Çekiç İnişi yarıçapı +3." />
     <string id="taom_ohw_t1_a_p1" text="Kemik Kırıcı" />

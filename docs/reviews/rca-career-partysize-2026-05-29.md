@@ -25,6 +25,7 @@ reachable.
 | 3 | LOW | New tooling script wrote BOM as a U+FEFF string literal instead of `b"\xef\xbb\xbf"` | Convention drift (tools/README.md XML I/O) | Moot for the current no-BOM corpus, so it never manifested; the dedicated tooling agent (not the 5 C# agents) caught it. | Fixed in-session. The Step-2c tooling-correctness agent is the right net; it fired correctly. |
 | 4 | INFO | 5 `PassiveEffectType` values (`Ammo`, `HorseChargeDamage`, `HorseHealth`, `TroopResistance`, `StealthBonus`) have no consumer; ~56 wrapped choices advertising them are no-ops | Enum coverage / user-facing-promise | Pre-existing — these types had no consumer before this PR (their direct-schema entries were equally dead). Activating the wrapper makes more instances *reachable* but introduces no ×N risk and no regression (no consumer = benign silence). | Documented as a CHANGELOG known-limitation + GitHub issue. Implementing consumers is a separate balance/feature decision, out of scope. |
 | 5 | LOW | No negative test for an empty/foreign `<PassiveEffects>` wrapper | Test completeness | The happy-path wrapper test was added but the defensive case wasn't. | Added `LoadChoices_EmptyPassiveEffectsWrapper_YieldsNullPassiveNoThrow`. |
+| 6 | MED | 2 root `Health` passives (`black_uruk_captain_root`, `olog_hai_warchief_root`) describe "+6%/+8% health" but `Health` is flat-consumed (`value=30/35` → +30/+35) | User-facing-promise / same flat-vs-% class as #1, different effect type | **Caught by Codex, not the 6-agent deep-review.** Activating the wrapped root passives (Issue B) made the percentage wording a live mismatch. Deep-review's data-flow agent noted `Health` is flat-consumed but cross-checked only the *PartySize* descriptions against magnitudes — it did not extend the description↔magnitude check to *other* flat-consumed types (Health) whose roots were newly activated. | Fixed descriptions → "+30/+35 health" across all layers. Generalisable lesson: when activating dormant config, the description↔value consistency check must cover **every** flat-consumed effect type, not just the one being reconciled. |
 
 ## Root-cause pattern
 
@@ -37,8 +38,18 @@ parser/consumer's assumptions — it never round-tripped the actual shipped `tao
 **Preventive enforcement implemented:** [`CareerChoicesIntegrationTests`](../../TAOM.Tests/Features/CareerSystem/CareerChoicesIntegrationTests.cs)
 loads the REAL `taom_career_choices.xml` and asserts (a) it loads >100 choices, (b) every
 `type="Passive"` choice parses to a non-null `PassiveEffect`, (c) no passive falls back to
-`PassiveEffectType.Special` (unrecognized `type=`). Test (b) would have failed immediately on the 310
-dead wrapped choices — this makes the structural-schema-drift class impossible to ship undetected.
+`PassiveEffectType.Special` (unrecognized `type=`), (d) every `<PassiveEffects>` wrapper has exactly
+one child (no silent multi-child drop), (e) every parsed magnitude is finite and non-zero (catches a
+malformed `value=` parsing to 0). Test (b) would have failed immediately on the 310 dead wrapped
+choices; (d)/(e) were added from the Codex adversarial pass. This makes the structural-schema-drift
+class impossible to ship undetected.
+
+**Codex adversarial pass (Finding #6):** the heavyweight Codex review verified all 6 suspects against
+source (0 false positives) and caught the Health root description mismatch the 6-agent deep-review
+missed — see [codex-adversarial-career-partysize-2026-05-29.md](codex-adversarial-career-partysize-2026-05-29.md).
+This is the value of the independent adversarial pass: the deep-review checked description↔magnitude
+consistency for the type it was reconciling (PartySize) but not for a *sibling* flat-consumed type
+(Health) activated by the same change.
 The dead-consumer gap (#4) remains documented (not test-enforced) because 5 types legitimately lack
 consumers today; enforcing consumer-coverage would require either implementing them or an allowlist.
 

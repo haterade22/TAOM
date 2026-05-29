@@ -585,7 +585,7 @@
   <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
   <Choice id="black_uruk_captain_root" group_id="" type="Passive"
-          description="{=taom_buc_root_desc}Dark Fortitude grants +6% health and emboldens Black Uruk battle-rage."
+          description="{=taom_buc_root_desc}Dark Fortitude grants +30 health and emboldens Black Uruk battle-rage."
           icon_sprite="career_choice_black_uruk_captain_root">
     <PassiveEffects>
       <PassiveEffect type="Health" value="30" />
@@ -1449,7 +1449,7 @@
   <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
   <Choice id="olog_hai_warchief_root" group_id="" type="Passive"
-          description="{=taom_ohw_root_desc}Hammer Down grants +8% health. The Olog's sheer mass scatters infantry."
+          description="{=taom_ohw_root_desc}Hammer Down grants +35 health. The Olog's sheer mass scatters infantry."
           icon_sprite="career_choice_olog_hai_warchief_root">
     <PassiveEffects>
       <PassiveEffect type="Health" value="35" />

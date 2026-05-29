@@ -299,7 +299,7 @@
     <string id="taom_kob_t3b_p2" text="최대 체력 +75." />
     <string id="taom_kob_t3b_p3" text="말 돌격 피해 +20%." />
     <string id="taom_kob_t3b_p4" text="병력 저항력 +12%." />
-    <string id="taom_buc_root_desc" text="어둠의 불굴은 체력 +6%를 부여하고 검은 우룩의 전투 분노를 고취시킨다." />
+    <string id="taom_buc_root_desc" text="어둠의 불굴은 체력 +30를 부여하고 검은 우룩의 전투 분노를 고취시킨다." />
     <string id="taom_buc_t1_a_key" text="강철 가죽" />
     <string id="taom_buc_t1_a_key_desc" text="대장간과 전쟁으로 단련되어, 당신의 가죽은 칼날을 막아냅니다. 피의 격노 범위 +3." />
     <string id="taom_buc_t1_a_p1" text="잔혹한 돌격" />
@@ -482,7 +482,7 @@
     <string id="taom_sr_t3_b_p3_desc" text="당신의 무리는 헤아릴 수 없을 만큼 커집니다. +5 부대 규모." />
     <string id="taom_sr_t3_b_p4" text="기수의 명성" />
     <string id="taom_sr_t3_b_p4_desc" text="그림자 기병대의 업적은 전설이 됩니다. +14% 전투 명성 획득." />
-    <string id="taom_ohw_root_desc" text="해머 다운은 +8% 생명력을 부여합니다. 올로그의 거대한 덩치가 보병을 흩어버립니다." />
+    <string id="taom_ohw_root_desc" text="해머 다운은 +35 생명력을 부여합니다. 올로그의 거대한 덩치가 보병을 흩어버립니다." />
     <string id="taom_ohw_t1_a_key" text="대지를 흔드는 자" />
     <string id="taom_ohw_t1_a_key_desc" text="당신의 발 구름이 땅을 흔듭니다. 해머 다운 범위 +3." />
     <string id="taom_ohw_t1_a_p1" text="뼈 분쇄자" />

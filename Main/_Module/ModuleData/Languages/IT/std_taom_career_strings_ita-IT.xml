@@ -299,7 +299,7 @@
     <string id="taom_kob_t3b_p2" text="+75 salute massima." />
     <string id="taom_kob_t3b_p3" text="+20% danno da carica a cavallo." />
     <string id="taom_kob_t3b_p4" text="+12% resistenza delle truppe." />
-    <string id="taom_buc_root_desc" text="Vigore Oscuro conferisce +6% salute e rinvigorisce la furia da battaglia degli Uruk Neri." />
+    <string id="taom_buc_root_desc" text="Vigore Oscuro conferisce +30 salute e rinvigorisce la furia da battaglia degli Uruk Neri." />
     <string id="taom_buc_t1_a_key" text="Pelle di Ferro" />
     <string id="taom_buc_t1_a_key_desc" text="Temprata dalla forgia e dalla guerra, la tua pelle devia le lame. Raggio Furia Sanguinaria +3." />
     <string id="taom_buc_t1_a_p1" text="Carica Brutale" />
@@ -482,7 +482,7 @@
     <string id="taom_sr_t3_b_p3_desc" text="La tua orda cresce oltre ogni stima. +5 alla dimensione del gruppo." />
     <string id="taom_sr_t3_b_p4" text="Fama del Cavaliere" />
     <string id="taom_sr_t3_b_p4_desc" text="Le imprese della cavalleria oscura sono leggendarie. +14% guadagno fama da battaglia." />
-    <string id="taom_ohw_root_desc" text="Colpo di Martello concede +8% salute. La mole pura dell'Olog disperde la fanteria." />
+    <string id="taom_ohw_root_desc" text="Colpo di Martello concede +35 salute. La mole pura dell'Olog disperde la fanteria." />
     <string id="taom_ohw_t1_a_key" text="Scuotiterra" />
     <string id="taom_ohw_t1_a_key_desc" text="Il tuo passo fa tremare la terra. Raggio Colpo di Martello +3." />
     <string id="taom_ohw_t1_a_p1" text="Frantuma-Ossa" />

@@ -299,7 +299,7 @@
     <string id="taom_kob_t3b_p2" text="+75 points de vie maximum." />
     <string id="taom_kob_t3b_p3" text="+20% de dégâts de charge à cheval." />
     <string id="taom_kob_t3b_p4" text="+12% de résistance des troupes." />
-    <string id="taom_buc_root_desc" text="Force Ténébreuse confère +6% de points de vie et encourage la rage au combat des Uruks Noirs." />
+    <string id="taom_buc_root_desc" text="Force Ténébreuse confère +30 de points de vie et encourage la rage au combat des Uruks Noirs." />
     <string id="taom_buc_t1_a_key" text="Peau de Fer" />
     <string id="taom_buc_t1_a_key_desc" text="Trempé par la forge et la guerre, votre cuir détourne les lames. Rayon de Furie Sanguinaire +3." />
     <string id="taom_buc_t1_a_p1" text="Charge Brutale" />
@@ -482,7 +482,7 @@
     <string id="taom_sr_t3_b_p3_desc" text="Votre horde s'accroît au-delà de tout calcul. +5 à la taille du groupe." />
     <string id="taom_sr_t3_b_p4" text="Renommée du Cavalier" />
     <string id="taom_sr_t3_b_p4_desc" text="Les exploits de la cavalerie des ténèbres sont légendaires. +14% de gain de renommée au combat." />
-    <string id="taom_ohw_root_desc" text="Marteau Écrasant confère +8% de points de vie. La masse pure de l'Olog disperse l'infanterie." />
+    <string id="taom_ohw_root_desc" text="Marteau Écrasant confère +35 de points de vie. La masse pure de l'Olog disperse l'infanterie." />
     <string id="taom_ohw_t1_a_key" text="Piétinement Sismique" />
     <string id="taom_ohw_t1_a_key_desc" text="Votre piétinement fait trembler la terre. Rayon de Marteau Écrasant +3." />
     <string id="taom_ohw_t1_a_p1" text="Brise-Os" />
