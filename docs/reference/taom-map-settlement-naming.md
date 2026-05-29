@@ -126,6 +126,19 @@ Always, for any live-impact display-name change:
 
 Out of scope for this doc. See `tools/Generate-Settlements.ps1` (operates on the TAOM repo snapshot — you'd need to manually mirror the result to the external module).
 
+## Reassigning Settlement Ownership (distinct from renaming)
+
+Ownership is the `owner="Faction.clan_<culture>_N"` attribute on each `<Settlement>` opening tag of a **town or castle**. It is the **initial** owner at campaign start (applies to new games; existing saves keep their world state).
+
+- **Villages have no `owner` attribute.** They `bound="Settlement.<parent>"` to a town/castle and inherit its owner automatically — never edit village ownership directly.
+- "Rank" in distribution requests = the clan's `tier` attribute (vanilla `SandBox/ModuleData/spclans.xml` for clans 1–9; TAOM `Main/_Module/ModuleData/characters/clans.xml` for the extension clans). Higher tier = more prestigious; tier 6 = ruling clan.
+- Confirm the target clan has a valid leader hero (`owner="Hero.lord_*"` on the clan in `clans.xml`) or the settlement can end up ownerless.
+- **Tooling pattern** — see [`tools/Assign-RhunSettlementOwners.py`](../../tools/Assign-RhunSettlementOwners.py) (Rhûn/`RU` region, 2026-05-29). It mirrors `Apply-MapVillageNames.py`: an `id → owner` dict, regex anchored on the unique Settlement `id` (the trailing `"` after the id prevents `castle_RU1` matching `castle_RU10`), exactly-once match assertion, `.bak` backup, byte-level UTF-8 round-trip (BOM + CRLF preserved), `--apply` gate (dry-run by default).
+- **Generalized multi-region engine** — [`tools/Assign-SettlementOwners.py`](../../tools/Assign-SettlementOwners.py) (Dale, Isengard, Dunland, Harad, Umbar, Khand, Dol Guldur, Gundabad — 2026-05-29). Same safe apply path, but rules-driven from a per-region SPEC `{ruling_clan, capital, clans:{id:tier}, towns:[(id,prosperity)], castles:[(id,prosperity)]}`. Policy: ruling clan keeps its lore `capital`; towns → tier≥4 clans; castles → tier≤3 clans; **conflict resolution = "land every high clan"** (when a kingdom has more tier≥4 clans than towns — true for 7 of these 8 — the surplus high clans each take one castle so every tier≥4 clan is guaranteed ≥1 holding). To add a region, append to `SPEC` from verified discover/verify data.
+- **Select region membership by owner-clan's kingdom, NOT by id-prefix or `culture=`.** A culture can span regions (Rhûn `RU` and Khand `K` are both `Culture.khuzait`; Khand `K` settlements are `Culture.khuzait` but owned by `Kingdom.battania` clans). The two prefix tables in the repo (`xml-data.md` vs the one above) disagree — trust the live `owner=` → clan → `super_faction=Kingdom.X` chain.
+
+This is **save-safe** for the same reason renames are: only the `owner=` text attribute changes; IDs and `bound=` relationships are untouched.
+
 ## Validation Checks
 
 Always run these after a bulk rename. They take seconds and catch the entire class of "I forgot a file" bugs.
@@ -196,6 +209,8 @@ Bannerlord's default font (LiberationSans-derived) supports:
 | File | Purpose |
 |---|---|
 | [`tools/Apply-MapVillageNames.py`](../../tools/Apply-MapVillageNames.py) | The bulk-rename script (live external module) |
+| [`tools/Assign-RhunSettlementOwners.py`](../../tools/Assign-RhunSettlementOwners.py) | Distribute RU-region settlement ownership across clans (live external module) |
+| [`tools/Assign-SettlementOwners.py`](../../tools/Assign-SettlementOwners.py) | Generalized multi-region ownership distributor (SPEC-driven; Dale/Isengard/Dunland/Harad/Umbar/Khand/Dol Guldur/Gundabad) |
 | [`tools/Apply-SettlementNames.ps1`](../../tools/Apply-SettlementNames.ps1) | Older PowerShell tool — targets the STALE TAOM-repo snapshot |
 | [`tools/Generate-Settlements.ps1`](../../tools/Generate-Settlements.ps1) | Regenerates settlements.xml from scene data (TAOM-repo snapshot only) |
 | [`tools/Settlement-Breakdown.ps1`](../../tools/Settlement-Breakdown.ps1) | Reports settlement counts by region |

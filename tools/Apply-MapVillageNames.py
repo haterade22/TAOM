@@ -306,6 +306,7 @@ NAMES = {
     "village_A9_4": "Pôta-Bahr",
 
     # RU - Rhûn (Easterling/Wainrider)
+    "castle_RU9": "Carndûr",  # castle renamed from placeholder "Castle RU9" (Carnen/Redwater corridor)
     "castle_village_RU1_1": "Mûrdûn-Krish",
     "castle_village_RU1_2": "Mûrdûn-Lub",
     "castle_village_RU1_3": "Mûrdûn-Sîr",
