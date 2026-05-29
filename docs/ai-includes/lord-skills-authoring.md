@@ -17,6 +17,8 @@ If you're authoring a **net-new culture** (armor + troops + recruitment), read [
 4. **Verify**: XML well-formed (3 files), then in-game Encyclopedia spot-check (Boromir OneHanded=295 + level growth = ~302).
 5. **Ship**: commit-split (data + tool separate), one GitHub issue per culture via [`tools/generate_culture_issue_drafts.py`](../../tools/generate_culture_issue_drafts.py).
 
+> **Canonical authenticity**: when assigning a canonical character's identity/skills (Boromir, Théoden, etc.), verify the figure against Tolkien Gateway and pick lore-appropriate names — see [reference/external-resources.md](../reference/external-resources.md) § LOTR/Tolkien.
+
 ---
 
 ## Architecture — the 3-layer load chain

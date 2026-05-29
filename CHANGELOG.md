@@ -2,6 +2,12 @@
 
 ## 2026-05-29
 
+### docs(reference): external-resources index + GameModel base-delegation audit
+
+Two follow-ups from the open-web research session:
+- **`docs/reference/external-resources.md`** — curated, verified external resources to improve TAOM (official-vs-community Bannerlord docs hierarchy — corrected a research mislabel: `moddocs.bannerlord.com` is the official TaleWorlds site, `docs.bannerlordmodding.com` is community; BUTR deps + Harmony + dnSpy; LOTR/Tolkien canon + RealElvish naming generators + Atlas of Middle-earth; comparable total-conversion mods; save-compat semver). Linked from `docs/INDEX.md`. Lore-resource pointers added to `new-culture-authoring.md` + `lord-skills-authoring.md`.
+- **GameModel base-delegation audit** (37 `Taom*Model : Default*Model`, 68 overrides via a 4-agent sweep): **85 classified OK, 6 flagged RISK — but on verification against the actual vanilla decompile, 5 were false positives** (the agents speculated vanilla safety-gates that don't exist — e.g. `DefaultKingdomDecisionPermissionModel.IsStartAllianceDecisionAllowedBetweenKingdoms` is literally `return true`; the wage model is a plain tier-table TAOM intentionally extends to T0–T10; MilitaryPower delegates to base when its toggle is off; Siege replicates vanilla perk-gating + adds Trebuchet by design). **One genuine MED candidate**: `TaomPartyWageModel.GetTroopRecruitmentCost` doesn't pass `buyerHero` to its cost service, so vanilla recruitment-cost perk discounts (HeadHunter etc.) are likely not applied — confirm whether intentional before any fix. Reinforces `evidence-over-claims.md` A.4: subagent code-audit claims about vanilla MUST be verified against the decompile before relaying. No code changed.
+
 ### docs(claude-md): register block-dangerous-git in the Hooks + Hook-Response-Contracts tables
 
 Final CLAUDE.md row for the `block-dangerous-git` guard shipped in the prior commit — documents the hook in the "## Hooks" table and adds its "## Hook Response Contracts" entry (when it prompts, approve only if you intend to discard work). Closes the shared-config doc batch; the earlier series rows (evidence-over-claims, mark-verification-run, check-verification-evidence, /adopt-external + /security-scan skills & routing) were already committed.

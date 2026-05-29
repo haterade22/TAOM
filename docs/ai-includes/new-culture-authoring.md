@@ -27,6 +27,7 @@ Before starting, confirm all of these. Skipping any forces a rework later.
   - XSLT passthrough culture (vanilla `vlandia`, `sturgia`, `empire`, `aserai`, `khuzait`, `battania`) — rename via `spcultures.xslt`. Dale uses `sturgia`; Rohan uses `vlandia`; Khand uses `battania`; etc.
 - [ ] **Tier cap decision**. Dale caps at T7 (no T8 elites). Gondor goes to T8. Pick before authoring skill curves.
 - [ ] **Lore brief**. Pick 3–4 Tolkien primary-source citations (Hobbit, LOTR appendices, Unfinished Tales) for the culture's military identity. These inform troop naming and weapon-family choices.
+  - For canonical naming + geography, see [reference/external-resources.md](../reference/external-resources.md) § LOTR/Tolkien — esp. the **RealElvish naming generators** (Sindarin/Gondor vs Old-English/Rohirrim patterns) and the **Atlas of Middle-earth** (settlement placement / travel-days). Cross-check any name against Tolkien Gateway before committing.
 
 ---
 
