@@ -2,6 +2,22 @@
 
 ## 2026-05-29
 
+### docs(process): institutionalize 2 self-review lessons into the /adopt-external cycle
+
+A self-review of the open-design verdict (reading the primary sources directly instead of trusting the subagent summaries) caught two process faults, now codified so the next iteration applies them automatically:
+1. **Verify load-bearing security claims yourself before relaying a subagent's read.** A security subagent had reported open-design's telemetry "content off by default"; reading `apps/daemon/src/app-config.ts` directly showed `telemetry: { metrics: true, content: true }` — both default ON pre-disclosure. The wrong claim rode into the user-facing summary until an independent check caught it. Added as `evidence-over-claims.md` A.4 (relaying a subagent report = a claim to spot-verify, like an agent's "done"), reinforced in `external-repo-adoption.md` Phase 2 + the `/adopt-external` gotchas.
+2. **Right-size the fan-out.** open-design's domain-orthogonality was decisive from the README alone, yet a 2–3 agent workflow was run to "confirm the obvious" (and still got the telemetry detail wrong). New principle in `external-repo-adoption.md` + `/adopt-external`: scout inline first; for clearly out-of-domain repos do a light inline pass and verify load-bearing claims yourself; reserve multi-agent fan-out for genuinely adjacent/large repos. Memory: `project_external_repo_adoption.md`.
+
+### feat(map): distribute Rhûn (RU) settlement ownership across the Khuzait/Rhûn clans
+
+All 20 Rhûn-region holdings (8 towns + 12 castles, `RU` prefix) in the **live** TAOM_Map module were owned by the single ruling clan `Faction.clan_khuzait_1`, making the region a one-clan monopoly at campaign start. Redistributed by rank (clan `tier`; Rhûn == `Kingdom.khuzait`):
+
+- **Towns → tier ≥ 4 clans** (only clans 1/2/3/6 qualify), 2 each. **Lest** (`town_RU2`) + **Mistrand** (`town_RU1`) stay with Clan 1 (Hûz) per request; the other 6 towns split between Salurian (clan_2), Nikathian (clan_3), Khundolar (clan_6). Every tier-≥4 clan ends with ≥1 holding.
+- **Castles → tier ≤ 3 clans**, spread one-each across 12 distinct low clans (clans 4,5,7,8,9,10,11,12,13,14,15,17). Clans 16/18/19 left landless in RU (all tier 3 — acceptable; the rule only guarantees holdings for tier ≥ 4).
+- **`castle_RU9` renamed** from placeholder "Castle RU9" → **"Carndûr"** (Carnen/Redwater corridor, south of the Iron Hills, north of the Sea of Rhûn) and given to **Mithruntai** (clan_17) as its sole holding.
+
+New tool **`tools/Assign-RhunSettlementOwners.py`** (dry-run by default, `--apply` to write): byte-level UTF-8 round-trip (BOM + CRLF preserved), regex anchored on the unique Settlement `id`, asserts each id matches exactly once, writes a `.bak`. The rename reused **`tools/Apply-MapVillageNames.py`** (added one `castle_RU9` entry) to update the master + all 12 `loc_settlements.xml`. Villages need no edits — they `bound` to their parent and inherit the new owner. Verified: file still parses as XML, owner counts match the plan, clan_1 retains exactly the 2 named towns. **Only the external live `TAOM_Map/ModuleData/settlements.xml` was touched** (the repo shadow is stale/unregistered). No C# changed; applies to new campaigns.
+
 ### chore(items): remove clo_* cloth-sim overlay items from the game
 
 Cloth-simulation mesh overlays (ids prefixed `clo_*`) had leaked into the item pool and were appearing as purchasable shop items (e.g. "[Dale] Cloth Archer Armour A01..A04"). They are duplicates of real armor's cloth-sim mesh and were never meant to be standalone, equippable items. `CultureMarketplace` auto-derives town pools from every culture-tagged `ItemObject` with no type filter, so any `clo_*` item with `culture="Culture.sturgia"` got injected into Dale markets daily — removing the item definitions removes them from `MBObjectManager` and stops the injection.

@@ -23,6 +23,8 @@ See **[external-repo-adoption.md § The cycle](../../../docs/ai-includes/externa
 - **Never install the external plugin** — it's prompt-injection-by-design (SessionStart injects high-authority context) + context tax + conflicts with our curated setup. Port text instead.
 - **Calibrate, don't blind-port** — a rule correct upstream can be wrong here (e.g. TAOM mandates fail-open hooks).
 - **Most of a general operator repo is irrelevant or duplicative** for a C#/.NET Bannerlord mod. Be honest and critical.
+- **Right-size the fan-out** — if the README makes the verdict obvious (clearly out-of-domain → skip), do a light inline pass; don't spin up a multi-agent workflow to confirm the obvious.
+- **Verify load-bearing security claims yourself** before relaying a subagent's read — a subagent verdict is a hypothesis (`evidence-over-claims.md` A.4).
 - After porting config/hooks, run **`/security-scan`** on our own result.
 - When DESCRIBING security patterns in the skill/docs you author, avoid embedding literal trigger strings (they can self-flag `/security-scan`) — describe the category or use `audit-allow:`.
 

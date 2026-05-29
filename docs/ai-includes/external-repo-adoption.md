@@ -12,6 +12,8 @@ The user shares a repo or article "to see what we can adopt into our own project
 - **Most of any general "Claude operator" repo is irrelevant or duplicative for TAOM.** Wrong languages/domains (we're C#/.NET Bannerlord modding), or we've independently built the meta-tooling (context-budget, skill-stocktake, agent-introspection-debugging all exist on both sides). Be honest and critical — "some of it won't be useful for us" is the expected outcome.
 - **Calibrate, don't blind-port.** A rule that's correct upstream can be wrong here. Example: TAOM *mandates* fail-open hooks, so the upstream "fail-open is a smell" rule would be all false-positives. Tune every ported rule to TAOM's conventions first.
 - **Apply [simplicity-criterion.md](../../.claude/rules/simplicity-criterion.md):** tiny gain + added complexity = reject.
+- **Right-size the fan-out.** Scout inline first. If the README + structure make the verdict obvious (clearly out-of-domain → skip), do a LIGHT inline pass and verify the few load-bearing claims yourself — don't spin up a 3-agent workflow to confirm the obvious. Reserve multi-agent fan-out for genuinely adjacent/large repos that don't fit one context. (2026-05-29: open-design's domain-orthogonality was decisive from the README alone; the full workflow was over-machined — and still got a security detail wrong that had to be redone by hand.)
+- **Verify load-bearing security claims yourself before relaying them.** A subagent's security verdict is a hypothesis (`evidence-over-claims.md` A.4) — spot-check its key claims (telemetry defaults, install-time exec, exfil) against the actual file before reporting to the user.
 
 ## The cycle
 
