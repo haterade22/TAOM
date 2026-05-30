@@ -371,7 +371,7 @@ The full workflow (animator's 5-step pipeline + this tooling):
 
 ## Origin / credits
 
-- Built for **TAOM** (Tales From The Age of Men), a LOTR total-conversion mod for Mount & Blade II: Bannerlord 1.3.15.
+- Built for **TAOM** (Tales From The Age of Men), a LOTR total-conversion mod for Mount & Blade II: Bannerlord 1.4.5.
 - Source repo: [github.com/haterade22/TAOM](https://github.com/haterade22/TAOM) (`bannerlord-1.4.5` branch)
 - TPAC binary format reverse-engineered from [szszss/TpacTool](https://github.com/szszss/TpacTool) decompilation (MIT-licensed C# source).
 - Tools developed in collaboration with Claude Code during iterative spider-skeleton debugging sessions in April–May 2026.

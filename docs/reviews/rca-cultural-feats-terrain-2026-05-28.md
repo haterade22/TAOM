@@ -23,7 +23,7 @@ Three confirmed bugs were fixed; two findings were declined with recorded reason
 
 Bugs #2 and #3 share one root cause: **when mirroring or offsetting a vanilla modifier, I extracted only the piece I needed from the vanilla method and dropped the surrounding conditions.** #2 dropped the `!IsCurrentlyAtSea` guard around the night penalty; #3 used an ad-hoc culture accessor instead of vanilla's feat-culture precedence. Both came from reading `DefaultPartySpeedCalculatingModel.CalculateFinalSpeed` / `PartyBaseHelper.HasFeat` for the *value* I wanted without replicating the *conditions* under which vanilla applies it.
 
-This is the same family as [`feedback_replicate_vanilla_safety_gates_in_prefix.md`](../../C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_replicate_vanilla_safety_gates_in_prefix.md) — originally scoped to Harmony **Prefix** returns-false. It needs generalizing to **GameModel overrides that add to a vanilla `ExplainedNumber`**: replicate the full guard/precedence that vanilla uses for the modifier you are stacking on or offsetting.
+This is the same family as memory `feedback_replicate_vanilla_safety_gates_in_prefix` — originally scoped to Harmony **Prefix** returns-false. It needs generalizing to **GameModel overrides that add to a vanilla `ExplainedNumber`**: replicate the full guard/precedence that vanilla uses for the modifier you are stacking on or offsetting.
 
 ## Why each deep-review agent missed #2 and #3
 

@@ -72,7 +72,7 @@ container.Register<IOnAgentApplyDamageModelCalculateDamage, CultureBonusDamageHo
 
 #### Transpiler Implementation Note
 
-TAOM uses manual `List<CodeInstruction>` iteration for transpilers (see `RefreshCharacterEntityAuxPatch.cs`). Harmony 2.4.2 (shipped with Bannerlord 1.3) includes an expanded **CodeMatcher** API with methods like `RemoveSearchForward`, `InsertAfter`, and `Do` that can simplify transpiler code. When writing new transpilers, evaluate whether CodeMatcher provides a cleaner approach than manual list iteration. For simple insertion-after-match scenarios, manual iteration remains acceptable.
+TAOM uses manual `List<CodeInstruction>` iteration for transpilers (see `RefreshCharacterEntityAuxPatch.cs`). Harmony 2.4.2's expanded **CodeMatcher** API includes methods like `RemoveSearchForward`, `InsertAfter`, and `Do` that can simplify transpiler code. When writing new transpilers, evaluate whether CodeMatcher provides a cleaner approach than manual list iteration. For simple insertion-after-match scenarios, manual iteration remains acceptable.
 
 ### 2. Strategy Pattern
 
