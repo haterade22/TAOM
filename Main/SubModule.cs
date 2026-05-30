@@ -121,6 +121,15 @@ public class SubModule : MBSubModuleBase
         _uiExtender.Register(typeof(SubModule).Assembly);
         _uiExtender.Enable();
 
+        // Patch41_McmLayoutFix — flip MCM's embedded options-screen prefabs from VerticalBottomToTop
+        // to VerticalTopToBottom (v1.4.0 layout regression). MCM's prefabs are embedded in
+        // Bannerlord.MBOptionScreen and load via WidgetFactoryManager.CreateAndRegister, which bypasses
+        // UIExtenderEx's [PrefabExtension] hook — so this is a Harmony Postfix, not a PrefabExtension.
+        // MUST be applied here in OnSubModuleLoad: MCM's ResourceInjector.Inject() runs at
+        // OnBeforeInitialModuleScreenSetAsRoot (after every module's OnSubModuleLoad), so the Postfix
+        // must already be attached when MCM calls CreateAndRegister.
+        _harmony.PatchCategory("Patch41_McmLayoutFix");
+
         _timeAccelerationService = IoC.Resolve<ITimeAccelerationService>();
 
         // Must be first — intercepts GetLocalizedText before any game texts are resolved.
