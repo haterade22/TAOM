@@ -949,4 +949,15 @@
 	<string id="taom_bandit_mirkwood_f4" text="{=taom_bandit_mirkwood_f4}Faelivrin" />
 	<string id="taom_bandit_mirkwood_f5" text="{=taom_bandit_mirkwood_f5}Míriel" />
 
+	<!-- ============================================== -->
+	<!-- Bandit Hideout Encounter Descriptions          -->
+	<!-- (replace vanilla "(Undefined hideout type)" -    -->
+	<!--  consumed by HideoutDescriptionService/Patch40) -->
+	<!-- ============================================== -->
+	<string id="taom_hideout_desc_dunland" text="{=taom_hideout_desc_dunland}Among the wooded hills of Dunland you spy a rough camp of hide tents and a crude palisade, half-hidden in a clearing." />
+	<string id="taom_hideout_desc_gundabad" text="{=taom_hideout_desc_gundabad}Beneath the crags of the Misty Mountains you find a foul warren of Gundabad orcs burrowed into the bare rock." />
+	<string id="taom_hideout_desc_harad" text="{=taom_hideout_desc_harad}Out among the dunes of Harad you come upon a camouflaged Southron camp gathered about a hidden desert well." />
+	<string id="taom_hideout_desc_rhun" text="{=taom_hideout_desc_rhun}On the wide grasslands of Rhûn you make out the wagons and hide-tents of an Easterling raiding band camped in a gully." />
+	<string id="taom_hideout_desc_umbar" text="{=taom_hideout_desc_umbar}Along the southern shore you find a sheltered cove where the black ships of the Corsairs of Umbar lie at anchor." />
+
 </strings>

@@ -1,645 +1,1295 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Russian" />
-  </tags>
-  <strings>
-    <string id="taom_str_faction_official.empire" text="клансмен из Дунланда" />
-    <string id="taom_str_faction_official.empire_f" text="клансвумен из Дунланда" />
-    <string id="taom_str_faction_ruler.empire" text="Вождь" />
-    <string id="taom_str_faction_ruler.empire_f" text="Вождь" />
-    <string id="taom_str_faction_ruler_term_in_speech.empire" text="Вождь {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.empire" text="Вождь {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.empire" text="Дунландский" />
-    <string id="taom_str_short_term_for_faction.empire" text="Дунланд" />
-    <string id="taom_str_faction_formal_name_for_culture.empire" text="Кланы Дунланда" />
-    <string id="taom_str_faction_informal_name_for_culture.empire" text="Дунланд" />
-    <string id="taom_str_neutral_term_for_culture.empire" text="Дунлендинги" />
-    <string id="taom_str_faction_official.vlandia" text="благородный из Рохана" />
-    <string id="taom_str_faction_official.vlandia_f" text="леди из Рохана" />
-    <string id="taom_str_faction_ruler.vlandia" text="Король" />
-    <string id="taom_str_faction_ruler.vlandia_f" text="Королева" />
-    <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="Король {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.vlandia" text="Король {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.vlandia" text="Рохиррим" />
-    <string id="taom_str_short_term_for_faction.vlandia" text="Всадник" />
-    <string id="taom_str_faction_formal_name_for_culture.vlandia" text="Ристания" />
-    <string id="taom_str_faction_informal_name_for_culture.vlandia" text="Рохан" />
-    <string id="taom_str_neutral_term_for_culture.vlandia" text="Рохиррим" />
-    <string id="taom_str_faction_official.battania" text="благородный из Кханда" />
-    <string id="taom_str_faction_official.battania_f" text="леди из Кханда" />
-    <string id="taom_str_faction_ruler.battania" text="Лорд Кханда" />
-    <string id="taom_str_faction_ruler.battania_f" text="Леди Кханда" />
-    <string id="taom_str_faction_ruler_term_in_speech.battania" text="Лорд {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.battania" text="Лорд {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.battania" text="Варягский" />
-    <string id="taom_str_short_term_for_faction.battania" text="Варяг" />
-    <string id="taom_str_faction_formal_name_for_culture.battania" text="Варяги Кханда" />
-    <string id="taom_str_faction_informal_name_for_culture.battania" text="Кханд" />
-    <string id="taom_str_neutral_term_for_culture.battania" text="Варяги" />
-    <string id="taom_str_faction_official.khuzait" text="дворянин Руна" />
-    <string id="taom_str_faction_official.khuzait_f" text="дворянка Руна" />
-    <string id="taom_str_faction_ruler.khuzait" text="Военачальник" />
-    <string id="taom_str_faction_ruler.khuzait_f" text="Леди-военачальник" />
-    <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="Военачальник {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.khuzait" text="Военачальник {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.khuzait" text="Восточный" />
-    <string id="taom_str_short_term_for_faction.khuzait" text="Рун" />
-    <string id="taom_str_faction_formal_name_for_culture.khuzait" text="Люди Востока из Руна" />
-    <string id="taom_str_faction_informal_name_for_culture.khuzait" text="Рун" />
-    <string id="taom_str_neutral_term_for_culture.khuzait" text="Люди Востока" />
-    <string id="taom_str_faction_official.aserai" text="дворянин Харада" />
-    <string id="taom_str_faction_official.aserai_f" text="дворянка Харада" />
-    <string id="taom_str_faction_ruler.aserai" text="Вождь" />
-    <string id="taom_str_faction_ruler.aserai_f" text="Вождиха" />
-    <string id="taom_str_faction_ruler_term_in_speech.aserai" text="Вождь {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.aserai" text="Вождь {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.aserai" text="Харадрим" />
-    <string id="taom_str_short_term_for_faction.aserai" text="Харад" />
-    <string id="taom_str_faction_formal_name_for_culture.aserai" text="Королевство Харад" />
-    <string id="taom_str_faction_informal_name_for_culture.aserai" text="Харад" />
-    <string id="taom_str_neutral_term_for_culture.aserai" text="Харадрим" />
-    <string id="taom_str_faction_official.sturgia" text="дворянин Дейла" />
-    <string id="taom_str_faction_official.sturgia_f" text="дворянка Дейла" />
-    <string id="taom_str_faction_ruler.sturgia" text="Король" />
-    <string id="taom_str_faction_ruler.sturgia_f" text="Королева" />
-    <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="Король {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.sturgia" text="Король {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.sturgia" text="Бардингский" />
-    <string id="taom_str_short_term_for_faction.sturgia" text="Дейл" />
-    <string id="taom_str_faction_formal_name_for_culture.sturgia" text="Королевство Дейл" />
-    <string id="taom_str_faction_informal_name_for_culture.sturgia" text="Дейл" />
-    <string id="taom_str_neutral_term_for_culture.sturgia" text="Бардинги" />
-    <string id="taom_str_faction_official.dolguldur" text="слуга Дол Гулдура" />
-    <string id="taom_str_faction_official.dolguldur_f" text="служанка Дол Гулдура" />
-    <string id="taom_str_faction_ruler.dolguldur" text="Надзиратель" />
-    <string id="taom_str_faction_ruler.dolguldur_f" text="Надзирательница" />
-    <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="Надзиратель, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="Надзиратель" />
-    <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.dolguldur" text="Гулдурский" />
-    <string id="taom_str_short_term_for_faction.dolguldur" text="Дол Гулдур" />
-    <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="Силы Дол Гулдура" />
-    <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="Дол Гулдур" />
-    <string id="taom_str_neutral_term_for_culture.dolguldur" text="Слуги Дол Гулдура" />
-    <string id="taom_str_faction_official.isengard" text="капитан Изенгарда" />
-    <string id="taom_str_faction_official.isengard_f" text="капитанша Изенгарда" />
-    <string id="taom_str_faction_ruler.isengard" text="Белая Рука" />
-    <string id="taom_str_faction_ruler.isengard_f" text="Белая Леди" />
-    <string id="taom_str_faction_ruler_term_in_speech.isengard" text="Белая Рука, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.isengard" text="Белая Рука {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.isengard" text="Изенгардский" />
-    <string id="taom_str_short_term_for_faction.isengard" text="Изенгард" />
-    <string id="taom_str_faction_formal_name_for_culture.isengard" text="Силы Изенгарда" />
-    <string id="taom_str_faction_informal_name_for_culture.isengard" text="Изенгард" />
-    <string id="taom_str_neutral_term_for_culture.isengard" text="Войска Изенгарда" />
-    <string id="taom_str_faction_official.gundabad" text="вождь Гундабада" />
-    <string id="taom_str_faction_official.gundabad_f" text="вождиня Гундабада" />
-    <string id="taom_str_faction_ruler.gundabad" text="Военачальник" />
-    <string id="taom_str_faction_ruler.gundabad_f" text="Леди-Военачальник" />
-    <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="Военачальник, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.gundabad" text="Военачальник {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gundabad" text="Гундабадский" />
-    <string id="taom_str_short_term_for_faction.gundabad" text="Гундабад" />
-    <string id="taom_str_faction_formal_name_for_culture.gundabad" text="Орки Гундабада" />
-    <string id="taom_str_faction_informal_name_for_culture.gundabad" text="Гундабад" />
-    <string id="taom_str_neutral_term_for_culture.gundabad" text="Орки Гундабада" />
-    <string id="taom_str_faction_official.umbar" text="корсар Умбара" />
-    <string id="taom_str_faction_official.umbar_f" text="корсарка Умбара" />
-    <string id="taom_str_faction_ruler.umbar" text="Капитан Корсаров" />
-    <string id="taom_str_faction_ruler.umbar_f" text="Капитанша Корсаров" />
-    <string id="taom_str_faction_ruler_term_in_speech.umbar" text="Капитан, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.umbar" text="Капитан {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.umbar" text="Корсарский" />
-    <string id="taom_str_short_term_for_faction.umbar" text="Умбар" />
-    <string id="taom_str_faction_formal_name_for_culture.umbar" text="Корсары Умбара" />
-    <string id="taom_str_faction_informal_name_for_culture.umbar" text="Умбар" />
-    <string id="taom_str_neutral_term_for_culture.umbar" text="Корсары" />
-    <string id="taom_str_faction_official.gondor" text="благородный лорд" />
-    <string id="taom_str_faction_official.gondor_f" text="благородная леди" />
-    <string id="taom_str_faction_ruler.gondor" text="Наместник" />
-    <string id="taom_str_faction_ruler.gondor_f" text="Леди-Наместник" />
-    <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}Леди-Наместник{?}Наместник{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}Леди-Наместник{?}Наместник{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gondor" text="Гондорский" />
-    <string id="taom_str_short_term_for_faction.gondor" text="Гондорец" />
-    <string id="taom_str_faction_formal_name_for_culture.gondor" text="Гондорский" />
-    <string id="taom_str_faction_informal_name_for_culture.gondor" text="Гондорцы" />
-    <string id="taom_str_neutral_term_for_culture.gondor" text="Гондорцы" />
-    <string id="taom_str_faction_official.mordor" text="капитан Саурона" />
-    <string id="taom_str_faction_official.mordor_f" text="служанка Темного Властелина" />
-    <string id="taom_str_faction_ruler.mordor" text="Темный Властелин" />
-    <string id="taom_str_faction_ruler.mordor_f" text="Темная Владычица" />
-    <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}Темная Владычица{?}Темный Властелин{\?}, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}Темная Владычица{?}Темный Властелин{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}Надзирательница{?}Надсмотрщик{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mordor" text="Мордорский" />
-    <string id="taom_str_short_term_for_faction.mordor" text="Мордор" />
-    <string id="taom_str_faction_formal_name_for_culture.mordor" text="Мордор" />
-    <string id="taom_str_faction_informal_name_for_culture.mordor" text="слуги Саурона" />
-    <string id="taom_str_neutral_term_for_culture.mordor" text="Мордор" />
-    <string id="taom_str_faction_official.mirkwood" text="лесной защитник" />
-    <string id="taom_str_faction_official.mirkwood_f" text="лесная стражница" />
-    <string id="taom_str_faction_ruler.mirkwood" text="Король" />
-    <string id="taom_str_faction_ruler.mirkwood_f" text="Королева" />
-    <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}Королева{?}Король{\?}, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}Королева{?}Король{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}Стражница{?}Хранитель{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mirkwood" text="Лесных эльфов" />
-    <string id="taom_str_short_term_for_faction.mirkwood" text="Лесной эльф" />
-    <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="Королевство Лихолесья" />
-    <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="Лесное королевство" />
-    <string id="taom_str_neutral_term_for_culture.mirkwood" text="Лесные эльфы" />
-    <string id="taom_str_faction_official.lothlorien" text="хранитель Лотлориэна" />
-    <string id="taom_str_faction_official.lothlorien_f" text="страж Лотлориэна" />
-    <string id="taom_str_faction_ruler.lothlorien" text="Владыка" />
-    <string id="taom_str_faction_ruler.lothlorien_f" text="Владычица" />
-    <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lothlorien" text="Галадрим" />
-    <string id="taom_str_short_term_for_faction.lothlorien" text="эльф" />
-    <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="Золотой Лес" />
-    <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="Лотлориэн" />
-    <string id="taom_str_neutral_term_for_culture.lothlorien" text="эльфы Золотого Леса" />
-    <string id="taom_str_faction_official.rivendell" text="хранитель знаний Ривенделла" />
-    <string id="taom_str_faction_official.rivendell_f" text="целительница Ривенделла" />
-    <string id="taom_str_faction_ruler.rivendell" text="Владыка" />
-    <string id="taom_str_faction_ruler.rivendell_f" text="Владычица" />
-    <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.rivendell" text="ривендельский" />
-    <string id="taom_str_short_term_for_faction.rivendell" text="эльф" />
-    <string id="taom_str_faction_formal_name_for_culture.rivendell" text="Последний Приютный Дом" />
-    <string id="taom_str_faction_informal_name_for_culture.rivendell" text="Ривенделл" />
-    <string id="taom_str_neutral_term_for_culture.rivendell" text="эльфы Ривенделла" />
-    <string id="taom_str_culture_description.empire" text="Дунландцы, свирепые горцы западных нагорий, — гордый и древний народ. Затаившие обиду на рохиррим, они известны своей партизанской тактикой и упорством в бою. Объединённые под властью сильных вождей, они сражаются за своё выживание и за возвращение земель, которые считают по праву своими." />
-    <string id="taom_str_culture_description.vlandia" text="Рохиррим, известные как Конные Владыки, — гордый и благородный народ Рохана, королевства широких равнин и холмистых просторов. Они прославились как искусные наездники и обладатели непревзойдённой конницы, составляющей основу их военной мощи. Живя в тесно сплочённом феодальном обществе, рохиррим ведомы королём и верной знатью, которые связаны честью и традициями в защите своей земли и народа. Они яростно независимы, ценя свободу превыше всего, а их воины обучены сражаться копьями, мечами и луками верхом на своих могучих скакунах." />
-    <string id="taom_str_culture_description.battania" text="Вариаги Кханда — безжалостный и воинственный народ из восточных степей. Известные своим мастерством в обращении с лошадьми и смертоносными колесницами, они привносят уникальный и жестокий стиль ведения войны. Союзники Саурона, вариаги сражаются за власть и добычу, сея страх по всему Средиземью." />
-    <string id="taom_str_culture_description.khuzait" text="Истерлинги — гордый и дисциплинированный народ, пришедший из обширных восточных земель за пределами Мордора. Известные своей стойкостью и мастерством в военном деле, они одновременно земледельцы и воины, сочетающие аграрные традиции со свирепой воинской культурой. Их армии славятся грозной конницей, облачённой в украшенные доспехи и вооружённой смертоносными копьями и луками. Обладая богатым наследием ремесленничества и преданности своему роду, истерлинги идут на войну под яркими знамёнами золота и багрянца, вселяя страх в сердца врагов. Их верность Саурону сделала их грозной силой, объединившейся под его тенью для расширения господства над Средиземьем." />
-    <string id="taom_str_culture_description.aserai" text="Харадрим, воины южных пустынь, — свирепый и стойкий народ, союзники Саурона. Известные своими экзотическими боевыми зверями и искусной конницей, они идут на войну под багряными знамёнами. Гордые и глубоко укоренённые в своих традициях, они приносят дикость пустыни на поля сражений Средиземья." />
-    <string id="taom_str_culture_description.sturgia" text="Бардингы Дейла, потомки Барда Лучника, — гордый и трудолюбивый народ, живущий в тени Эребора. Известные своими искусными лучниками и дисциплинированными воинами, они охраняют свой процветающий город и торговые пути севера. Объединённые сильным чувством общности и чести, бардинги твёрдо стоят против тьмы, угрожающей их землям." />
-    <string id="taom_str_culture_description.erebor" text="Благородные гномы Эребора прославлены своим мастерством, стойкостью и гордостью. Из своих залов в Одинокой Горе они куют могучее оружие и сокровища несравненной красоты. Облачённые в кольчуги и вооружённые топорами, они защищают свой род с непоколебимым мужеством, стремясь вернуть своё наследие и сохранить свою культуру против всех, кто угрожает ей." />
-    <string id="taom_str_culture_description.rivendell" text="Ривенделл, Последний Приютный Дом, — убежище мудрости и красоты, возглавляемое владыкой Элрондом. Расположенный в Мглистых горах, его народ — хранители знаний и защитники древней мудрости Средиземья. Эльфы Ривенделла предлагают совет и помощь тем, кто противостоит тьме, сохраняя свет надежды и единства." />
-    <string id="taom_str_culture_description.mirkwood" text="Лесные эльфы Лихолесья, ведомые королём Трандуилом, — хранители обширного и таинственного леса. Известные своей ловкостью и мастерством в стрельбе из лука, они сливаются с тенями, нанося удары с точностью и грацией. Их королевство — край красоты и опасности, защищённый решимостью воинов и вечной мудростью их короля. Яростно независимые, эльфы Лихолесья сражаются, чтобы сохранить свой лес от наступающей тьмы." />
-    <string id="taom_str_culture_description.lothlorien" text="Галадрим Лотлориэна, жители Золотого Леса, — эфирный и благородный народ, ведомый владычицей Галадриэль и владыкой Келеборном. Мастера стрельбы из лука и лесной войны, они охраняют своё зачарованное королевство с непревзойдённым искусством. Их преданность роду и родине непоколебима, а их тонкая магия сохраняет Лотлориэн как святилище надежды и света среди растущей тени." />
-    <string id="taom_str_culture_description.isengard" text="Армии Изенгарда, ведомые Саруманом Белым, — грозная сила урук-хаев и наёмников. Выкованные в огне промышленности, их оружие и доспехи созданы для разрушения. Силы Изенгарда идут на войну с безжалостной эффективностью, стремясь к завоеванию и господству." />
-    <string id="taom_str_culture_description.gundabad" text="Орки Гундабада, обитающие в окутанных туманом горах, — жестокая и дикая сила. Ведомые своими вождями, они совершают бесконечные набеги на соседние земли. Движимые ненавистью и жестокостью, они неустанны в своём стремлении подчинить север." />
-    <string id="taom_str_culture_description.umbar" text="Корсары Умбара, морские разбойники и искусные мореходы, — безжалостный и хитрый народ, союзники Саурона. Известные своими быстрыми кораблями и неустанной морской войной, они вселяют страх в прибрежные земли Средиземья. Гордясь своим морским наследием, они приносят хаос морей на сушу, совершая набеги и грабежи во имя своих тёмных союзов." />
-    <string id="taom_str_culture_description.dolguldur" text="Прислужники Дол Гулдура, под командованием Некроманта, — тёмная и зловещая сила. Скрытые в поражённом тьмой лесу Лихолесья, они используют предательство и тени, чтобы ослабить врагов. Орки, варги и другие мерзкие твари выступают в поход, чтобы сеять страх и разложение по всему Средиземью." />
-    <string id="taom_str_culture_description.gondor" text="Гондорцы, потомки изгнанников Нуменора, — гордые наместники величайшего королевства людей в Средиземье. Известные своими высокими каменными крепостями и непоколебимым мужеством, Гондор — оплот надежды против надвигающейся тени Мордора. Его дисциплинированные армии, состоящие из доблестной пехоты, искусных лучников и конных рыцарей, стоят щитом для всех свободных народов. Ведомые благородными наместниками и военачальниками, гондорцы твёрдо хранят свои традиции, непреклонные в своём долге защищать королевство и его наследие." />
-    <string id="taom_str_culture_description.mordor" text="Армии Мордора, выкованные в тени Ородруина, — неустанная сила тьмы, подчинённая Саурону, Тёмному Властелину. Состоящие из орков, троллей и злых людей, они идут на войну под пылающим Оком, сея страх и разрушение. Эти легионы движимы жестокостью и рабством, вооружены зазубренными клинками и грубыми доспехами. Скованные железной волей Саурона, силы Мордора — смертоносная волна, стремящаяся поглотить всё Средиземье во тьму." />
-    <string id="taom_str_culture_rich_name.empire" text="дунландец" />
-    <string id="taom_str_culture_rich_name.vlandia" text="Рохиррим" />
-    <string id="taom_str_culture_rich_name.battania" text="Вариаги" />
-    <string id="taom_str_culture_rich_name.khuzait" text="Истерлинги" />
-    <string id="taom_str_culture_rich_name.aserai" text="Харадрим" />
-    <string id="taom_str_culture_rich_name.sturgia" text="Беорнинги" />
-    <string id="taom_str_culture_rich_name.erebor" text="Гномы" />
-    <string id="taom_str_culture_rich_name.rivendell" text="Нолдор" />
-    <string id="taom_str_culture_rich_name.mirkwood" text="Лесные эльфы" />
-    <string id="taom_str_culture_rich_name.lothlorien" text="Галадрим" />
-    <string id="taom_str_culture_rich_name.isengard" text="Урук-хай" />
-    <string id="taom_str_culture_rich_name.gundabad" text="Орки Гундабада" />
-    <string id="taom_str_culture_rich_name.umbar" text="Умбар" />
-    <string id="taom_str_culture_rich_name.dolguldur" text="Дол Гулдур" />
-    <string id="taom_str_culture_rich_name.gondor" text="Гондорцы" />
-    <string id="taom_str_culture_rich_name.mordor" text="Мордор" />
-    <string id="taom_str_adjective_for_culture.empire" text="Дунландский" />
-    <string id="taom_str_adjective_for_culture.vlandia" text="Рохиррский" />
-    <string id="taom_str_adjective_for_culture.battania" text="Вариагский" />
-    <string id="taom_str_adjective_for_culture.khuzait" text="Истерлингский" />
-    <string id="taom_str_adjective_for_culture.aserai" text="Харадримский" />
-    <string id="taom_str_adjective_for_culture.sturgia" text="Беорнингский" />
-    <string id="taom_str_adjective_for_culture.erebor" text="Гномий" />
-    <string id="taom_str_adjective_for_culture.rivendell" text="Ривендельский" />
-    <string id="taom_str_adjective_for_culture.mirkwood" text="Лихолесский" />
-    <string id="taom_str_adjective_for_culture.lothlorien" text="Лориэнский" />
-    <string id="taom_str_adjective_for_culture.isengard" text="Изенгардский" />
-    <string id="taom_str_adjective_for_culture.gundabad" text="Гундабадский" />
-    <string id="taom_str_adjective_for_culture.umbar" text="Умбарский" />
-    <string id="taom_str_adjective_for_culture.dolguldur" text="Дол Гулдурский" />
-    <string id="taom_str_adjective_for_culture.gondor" text="Гондорский" />
-    <string id="taom_str_adjective_for_culture.mordor" text="Мордорский" />
-    <string id="taom_str_player_father_name.empire" text="Вульфгар" />
-    <string id="taom_str_player_mother_name.empire" text="Фрека" />
-    <string id="taom_str_player_father_name.vlandia" text="Балдред" />
-    <string id="taom_str_player_mother_name.vlandia" text="Морвен" />
-    <string id="taom_str_player_father_name.battania" text="Вариаг" />
-    <string id="taom_str_player_mother_name.battania" text="Хара" />
-    <string id="taom_str_player_father_name.khuzait" text="Хамул" />
-    <string id="taom_str_player_mother_name.khuzait" text="Адунафель" />
-    <string id="taom_str_player_father_name.aserai" text="Суладан" />
-    <string id="taom_str_player_mother_name.aserai" text="Халет" />
-    <string id="taom_str_player_father_name.sturgia" text="Бард" />
-    <string id="taom_str_player_mother_name.sturgia" text="Сигрид" />
-    <string id="taom_str_player_father_name.erebor" text="Друлин" />
-    <string id="taom_str_player_mother_name.erebor" text="Оррина" />
-    <string id="taom_str_player_father_name.rivendell" text="Келефорн" />
-    <string id="taom_str_player_mother_name.rivendell" text="Гилриэн" />
-    <string id="taom_str_player_father_name.mirkwood" text="Галион" />
-    <string id="taom_str_player_mother_name.mirkwood" text="Лютиэн" />
-    <string id="taom_str_player_father_name.lothlorien" text="Ирофин" />
-    <string id="taom_str_player_mother_name.lothlorien" text="Оймродель" />
-    <string id="taom_str_player_father_name.isengard" text="Грима" />
-    <string id="taom_str_player_mother_name.isengard" text="Лурка" />
-    <string id="taom_str_player_father_name.gundabad" text="Нарзук" />
-    <string id="taom_str_player_mother_name.gundabad" text="Борлия" />
-    <string id="taom_str_player_father_name.umbar" text="Кастамир" />
-    <string id="taom_str_player_mother_name.umbar" text="Берутиэль" />
-    <string id="taom_str_player_father_name.dolguldur" text="Гришмак" />
-    <string id="taom_str_player_mother_name.dolguldur" text="Дургаш" />
-    <string id="taom_str_player_father_name.gondor" text="Коромир" />
-    <string id="taom_str_player_mother_name.gondor" text="Финдуилас" />
-    <string id="taom_str_player_father_name.mordor" text="Горбаг" />
-    <string id="taom_str_player_mother_name.mordor" text="Шелоб" />
-    <string id="taom_peace_news" text="{FACTION1} и {FACTION2} заключили мир." />
-    <string id="taom_war_news" text="{RULER_NAME} из {FACTION1_NAME} объявляет войну {FACTION2_NAME}." />
-    <string id="taom_war_news_direct" text="{FACTION1_NAME} объявляет войну {FACTION2_NAME}." />
-    <string id="taom_siege_party_link" text="{TOWN_NAME} осаждён силами под предводительством {LORD.LINK} из {FACTION_NAME}!" />
-    <string id="taom_siege_party" text="{TOWN_NAME} осаждён силами под предводительством {LORD.LINK} из {FACTION_NAME}!" />
-    <string id="taom_siege_army_link" text="{TOWN_NAME} осаждён армией под предводительством {LORD.LINK} из {FACTION_NAME}!" />
-    <string id="taom_siege_army" text="{TOWN_NAME} осаждён армией под предводительством {LORD.LINK} из {FACTION_NAME}!" />
-    <string id="taom_raid_army" text="{SETTLEMENT} разорено армией под предводительством {LORD.LINK} из {FACTION_NAME}" />
-    <string id="taom_raid_party" text="{SETTLEMENT} разорено {LORD.LINK} из {FACTION_NAME}" />
-    <string id="taom_destroy_party" text="{VICTOR_PARTY} из {VICTOR_FACTION} побеждает {DEFEATED_PARTY} из {DEFEATED_FACTION}." />
-    <string id="taom_secondary_peace" text="{FACTION1} и {FACTION2} заключили мир." />
-    <string id="taom_change_faction" text="Клан {CLAN_NAME} присоединился к {FACTION}." />
-    <string id="taom_merc_contract" text="{CLAN} заключил контракт на службу {KINGDOM}." />
-    <string id="taom_merc_end" text="{CLAN} больше не служит {KINGDOM}." />
-    <string id="taom_minor_intro" text="Я {CONVERSATION_CHARACTER.LINK}, из {FACTION}." />
-    <string id="taom_alliance_desc" text="Заключить союз с {FACTION}" />
-    <string id="taom_vassal_rank" text="Вассал {FACTION_INFORMAL_NAME}" />
-    <string id="taom_ruler_rank" text="Правитель {FACTION_INFORMAL_NAME}" />
-    <string id="taom_noble_rank" text="Дворянин {FACTION_INFORMAL_NAME}" />
-    <string id="taom_merc_rank" text="Наемник, сражающийся за {FACTION_INFORMAL_NAME}" />
-    <string id="taom_answer_call" text="Ответить на призыв {CALLING_KINGDOM} объявить войну {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
-    <string id="taom_propose_call" text="Призвать {CALLED_KINGDOM} объявить войну {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
-    <string id="taom_raid_resist_peace" text="Вы прибыли в {SETTLEMENT}, чтобы разграбить его. Некоторые жители собрались, чтобы дать вам отпор. Разграбление этой деревни приведет к войне с {KINGDOM}." />
-    <string id="taom_force_supply_peace" text="Когда вы пытаетесь заставить жителей отдать вам товары, некоторые из них собираются, чтобы дать вам отпор. Сражение с ними приведет к войне с {KINGDOM}." />
-    <string id="taom_force_vol_peace" text="Когда вы пытаетесь заставить знать отдать вам рекрутов, некоторые жители собираются, чтобы дать вам отпор. Сражение с ними приведет к войне с {KINGDOM}." />
-    <string id="taom_raid_noresist_peace" text="Вы прибыли в {SETTLEMENT}, чтобы разграбить его. Вы не встречаете сопротивления. Разграбление этой деревни приведет к войне с {KINGDOM}." />
-    <string id="taom_encounter_peace" text="Вы встретили {PARTY}. Сражение с ними приведет к войне с {KINGDOM}." />
-    <string id="0cdXddA9" text="{KINGDOM1_LINK} заключило союз с {KINGDOM2_LINK}." />
-    <string id="1rbg3Hz2" text="{FACTION_1} и {FACTION_2} больше не враги." />
-    <string id="2BVDp7Tg" text="{KINGDOM} прекратит {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="Lbs2bNlg" text="{KINGDOM} начнет {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="jnYwiCAz" text="{KINGDOM} продолжит {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="faUooB7V" text="{KINGDOM} не будет {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="TauRjAud" text="{NAME} из {FACTION}" />
-    <string id="2mVZORaE" text="слуга {FACTION_NAME}" />
-    <string id="6d4ZTvGv" text="{LORD.NAME} — {TITLE} {FACTION_NAME} и глава {CLAN_NAME}, {CLAN_DESCRIPTION} королевства. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
-    <string id="o5AUljbW" text="{LORD.NAME} — член {CLAN_NAME}, {CLAN_DESCRIPTION} {FACTION_NAME}. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
-    <string id="9Obe3S6L" text="{LORD.FIRSTNAME} — член {CLAN_NAME}, {CLAN_DESCRIPTION} из земель {FACTION_NAME}. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
-    <string id="hRfXSdlP" text="{LORD.FIRSTNAME} — глава {CLAN_NAME}, {CLAN_DESCRIPTION} из земель {FACTION_NAME}. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
-    <string id="0bPb5btR" text="{LORD.NAME} — член {CLAN_NAME}, {CLAN_DESCRIPTION} {FACTION_NAME}, поддерживающего {RULER} в гражданской войне. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
-    <string id="JuPUG5wX" text="{LORD.NAME} — {TITLE} {FACTION_NAME} и глава {CLAN_NAME}, {CLAN_DESCRIPTION}, поддерживающего {RULER} в гражданской войне. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
-    <string id="4pmvrnmN" text="Замок {SETTLEMENT_LINK} принадлежит {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {KEEP_INFO}" />
-    <string id="q3wD0rbq" text="{SETTLEMENT_LINK} управляется {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {KEEP_INFO}" />
-    <string id="RVDojUOM" text="Земли вокруг {SETTLEMENT_LINK} в основном принадлежат {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {PROSPERITY_INFO}" />
-    <string id="UWzQsHA2" text="{SETTLEMENT_LINK} управляется {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {PROSPERITY_INFO} {MORALE_INFO}" />
-    <string id="yAOQnMVw" text="Вы из {FACTION}, верно? Это означает, что вы мой пленник." />
-    <string id="YT4OvaAG" text="Хорошо. Можете считать себя под защитой {FACTION_NAME}. У вас есть время до завтрашнего дня, чтобы завершить ваше путешествие, или нам придется попросить у вас еще одну плату." />
-    <string id="taom_str_faction_official.erebor" text="благородный гном" />
-    <string id="taom_str_faction_official.erebor_f" text="благородная гномка" />
-    <string id="taom_str_faction_ruler.erebor" text="Король Под Горой" />
-    <string id="taom_str_faction_ruler.erebor_f" text="Королева Под Горой" />
-    <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}Королева Под Горой{?}Король Под Горой{\?}, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}Королева Под Горой{?}Король Под Горой{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.erebor" text="Эреборский" />
-    <string id="taom_str_short_term_for_faction.erebor" text="Гном" />
-    <string id="taom_str_faction_formal_name_for_culture.erebor" text="Королевство Под Горой" />
-    <string id="taom_str_faction_informal_name_for_culture.erebor" text="Эребор" />
-    <string id="taom_str_neutral_term_for_culture.erebor" text="Гномы Эребора" />
-    <string id="0aXG8dvJ" text="Заключить мир с {KINGDOM_NAME}. Дань выплачиваться не будет." />
-    <string id="0CsbbwtN" text="Призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
-    <string id="0nhqJewP" text="{RULER.NAME} из {KINGDOM} передает {SETTLEMENT} {LEADER.NAME} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="17A2DDgD" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM} при поддержке {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME} могут быть сильны, но их земли богаты и созрели для захвата." />
-    <string id="1o8vgwTf" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM}, несмотря на возражения {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="1V8f9vRM" text="Курьер с предложением о союзе от {PROPOSER_KINGDOM} прибыл ко двору вашего королевства." />
-    <string id="21yUheIy" text="{KINGDOM_NAME} было создано в {CREATION_YEAR} году {RULER.NAME}, восходящим {CULTURE_ADJECTIVE} военачальником." />
-    <string id="22LCyCoA" text="Я могу предложить вашему королевству {GOLD}{GOLD_ICON} за объявление войны {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="2b1xZGaQ" text="Заключить мир с {KINGDOM_NAME}. Наше королевство будет платить дань {TRIBUTE_AMOUNT} ежедневно в течение {TRIBUTE_DURATION} дней." />
-    <string id="2KaXj3Qa" text="Разорения от {NEARBY_ENEMY_FACTION} вынудили многих крестьян покинуть свои дома. Те, у кого есть земля, обычно возвращаются к ней, но многие из бедняков ищут новое место для жизни. Вы говорите с несколькими, расположившимися лагерем на окраине вашей деревни. Для них нет земли. Они кажутся готовыми работать арендаторами, но всегда есть возможность напряженности с более устоявшимися деревенскими семьями." />
-    <string id="4fXpOe4N" text="Прибывает курьер от {CLAN_NAME}. Они держат {CAPTIVE_HERO.NAME} и требуют {GOLD_AMOUNT}{GOLD_ICON} в качестве выкупа." />
-    <string id="4GgfFDWG" text="Заключение мира с {KINGDOM_NAME}" />
-    <string id="4JSzHkpt" text="Как {?IS_FEMALE}королева{?}король{\?}, вы должны решить, будет ли объявлена война {KINGDOM_NAME}" />
-    <string id="4z1t75be" text="{FIRSTNAME} из {CLAN_NAME}" />
-    <string id="5bBAOHmC" text="{RULER.NAME} из {KINGDOM} берет {SETTLEMENT} в качестве {?RULER.GENDER}её{?}его{\?} феода, при том что {?RULER.GENDER}её{?}его{\?} совет разделился поровну." />
-    <string id="5bza9sDs" text="Мне очень жаль это слышать. Вы не найдете лучших нанимателей, чем {FACTION_NAME}, будьте в этом уверены." />
-    <string id="5DdbkWLu" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="5L0wDGhR" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} решил не начинать войну с {KINGDOM}, при том что {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совет разделился поровну." />
-    <string id="5pOKmHsf" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение получило поддержку половины {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} оккупировали наши исконные земли и угнетают наших соплеменников." />
-    <string id="7ouzFASf" text="Прибывает курьер с посланием от {OFFERED_KINGDOM_LEADER.NAME}. {?OFFERED_KINGDOM_LEADER.GENDER}Она{?}Он{\?} отмечает вашу растущую репутацию и спрашивает, не рассмотрите ли вы возможность присягнуть на верность {OFFERED_KINGDOM_NAME} в качестве вассала. Вам следует поговорить лично, если вы заинтересованы." />
-    <string id="8RBZaQKk" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} решил не начинать войну с {KINGDOM} при поддержке {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="940TwBPs" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM}, несмотря на возражения {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="9WDK03GW" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} решил не начинать войну с {KINGDOM}." />
-    <string id="aE7OQDMS" text="Заключить союз с {KINGDOM_NAME}." />
-    <string id="aEt1kqxm" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM}, при том что {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совет был поровну разделен по этому вопросу." />
-    <string id="AGdmoIUc" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было принято вопреки совету {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="amdgO9Hr" text="Я — {CONVERSATION_HERO.FIRSTNAME}. Я скромный последователь братства, известного как {FACTION_NAME}, которое {DIVINITY} избрали нести их послание в эту Эпоху." />
-    <string id="aQAI99d4" text="Объявление войны {KINGDOM_NAME}" />
-    <string id="AThZtg7U" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM}, при том что {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совет был поровну разделен по этому вопросу." />
-    <string id="AwCnrOan" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, будет ли {CALLED_KINGDOM} призван к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="AWm7Kb9Y" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение получило поддержку половины {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="awoeb3br" text="{FACTION_LEADER} решит, заключит ли {KINGDOM_CONSIDERING_PEACE_NAME} мир с {KINGDOM_NAME}. Вы можете выбрать свою позицию относительно этого решения." />
-    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK} заключил мир с {ENEMYFACTION_INFORMALNAME}. Ваше соглашение с {QUEST_GIVER.LINK} было отменено." />
-    <string id="az3K3j4C" text="Сейчас мы сильнее, чем {ENEMY_KINGDOM_INFORMAL_NAME}. Мы должны нанести удар, пока можем." />
-    <string id="B818zx3W" text="Ваш клан находится в состоянии войны с фракциями, с которыми {KINGDOM} живет в мире." />
-    <string id="bjEN2OzZ" text="В результате ваших враждебных намерений по отношению к нейтральной деревне {KINGDOM} объявляет вам войну." />
-    <string id="Bk3Wqy5j" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="BlVjIlZF" text="{FACTION_LEADER} решит, заключит ли {KINGDOM_CONSIDERING_PEACE_NAME} мир с {KINGDOM_NAME}, заплатив {TRIBUTE_AMOUNT} в качестве дани на {TRIBUTE_DURATION} дней. Вы можете выбрать свою позицию относительно этого решения." />
-    <string id="bMCZ5rWQ" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано {?RULER.GENDER}её{?}его{\?} советом." />
-    <string id="bR7MIkFi" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="bXN2fbcv" text="Ваши люди обращаются с жителями {SETTLEMENT_NAME} как с заблудшими подданными {SETTLEMENT_CULTURE_NAME}, а не как с врагами, и относятся к ним довольно хорошо." />
-    <string id="bYmc9fi3" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="Cf0amFBD" text="Принять призыв {CALLING_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}" />
-    <string id="cRpsjvOM" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM} при поддержке {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="CrzFdo2H" text="Да. Речь о войне с {ENEMYFACTION_INFORMALNAME}. [ib:hip][if:convo_excited]Нам нужно сковать часть их сил. Относительно небольшой отряд, быстро перемещающийся по их землям и успешно разоряющий их деревни, должен стать хорошей отвлекающей манёвром. Их лордам придётся преследовать налётчиков, и они не смогут угрожать нам в других местах. Вы кажетесь подходящ{?PLAYER.GENDER}ей воительницей{?}им воином{\?} для этой работы. Что скажете? Вы заслужите мою благодарность и будете щедро вознаграждены в случае успеха." />
-    <string id="CswzBb02" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM}." />
-    <string id="d6KbdIWg" text=" В результате ваших враждебных действий по отношению к нейтральной деревне {MERCENARY_KINGDOM} разрывает контракт с вами, а {KINGDOM} объявляет вам войну." />
-    <string id="dCDBqYsh" text="{RULER.NAME} из {KINGDOM} решил не подписывать торговое соглашение с {OTHER_KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="dDsJyerw" text="Призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="dEsIQDo3" text="Пришло время призвать нашего союзника {CALLED_KINGDOM} к войне!" />
-    <string id="dov3iRlt" text="{ENEMY_RULER.NAME} из {ENEMY_KINGDOM_INFORMAL_NAME} подл и опасен. Мы должны разобраться с {?ENEMY_RULER.GENDER}ней{?}ним{\?}, пока не стало слишком поздно." />
-    <string id="DphlPaF9" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM} вопреки возражениям {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="dPOOmYGQ" text="Вы думаете, лорды и воины {KINGDOM} просто будут стоять в стороне, когда их людей похищают? Вам лучше отпустить нас!" />
-    <string id="drZC1Frp" text="{KINGDOM_NAME} было создано в {CREATION_YEAR} году {RULER.NAME}, лидером группы {CULTURE_ADJECTIVE} повстанцев." />
-    <string id="eAhgrwkZ" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, будет ли заключён союз с {KINGDOM_NAME}." />
-    <string id="eEmFbQet" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано {?RULER.GENDER}её{?}его{\?} советом." />
-    <string id="efTah9rk" text="У меня нет полномочий заключать мир от имени {ENEMY_INFORMAL_NAME}. Наш совет должен решить, предлагать ли мир и каковы будут условия." />
-    <string id="eiGl6XBr" text="Голосование о том, отвечать ли на призыв {CALLING_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
-    <string id="EqevKYZD" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, будет ли {CALLED_KINGDOM} призвано к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}" />
-    <string id="eTylgLCc" text="Прибыл курьер из {KINGDOM_NAME}. Они предлагают вам союз. Ваше королевство проголосует, принять ли это предложение." />
-    <string id="eUWYqwE6" text="{CALLING_KINGDOM} больше не находится в состоянии войны с {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="F7CMsDyG" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="fcuUcjYV" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать с {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано {?RULER.GENDER}её{?}его{\?} советом." />
-    <string id="FNCq25P1" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="FuNbouTu" text="Прибыл курьер из {KINGDOM_NAME}. Они призывают ваше королевство к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Ваше королевство проголосует, принять ли это предложение." />
-    <string id="G3qGLAeQ" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM} вопреки желаниям {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="gf2Lje7o" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}, командующий армией {QUEST_GIVER_FACTION}, сообщил вам, что им нужны запасы провианта для предстоящей военной кампании. {?QUEST_GIVER.GENDER}Она{?}Он{\?} попросил вас доставить {GRAIN_AMOUNT} мешков зерна, и хотя это не обязательно, предоставить {LIVESTOCK_AMOUNT} голов скота и {WINE_AMOUNT} бочек вина {?QUEST_GIVER.GENDER}она{?}он{\?} был бы признателен." />
-    <string id="Gj5d9y2g" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM}." />
-    <string id="gNf0ALKw" text="Прибыл курьер из {MAP_FACTION_NAME}. Они предлагают вам белый мир. Ваше королевство проголосует, принять ли это предложение." />
-    <string id="h5eTEYON" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM}." />
-    <string id="h9bWTLgK" text="Пришло время присоединиться к нашим союзникам, {KINGDOM_NAME}, в их войне." />
-    <string id="IB1xsVEr" text="Прибыл курьер из {MAP_FACTION_NAME}. Они предлагают вам белый мир. Ваши вассалы оставили решение за вами." />
-    <string id="INfHUqxT" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME}." />
-    <string id="Ing5gFbO" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM} вопреки возражениям {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="iOmgCFDI" text="Голосование о заключении союза с {KINGDOM_NAME}." />
-    <string id="ItueKmqd" text="Ваш клан теперь в состоянии войны с {QUEST_GIVER_SETTLEMENT_FACTION}. Ваш контракт с {QUEST_GIVER.LINK} расторгнут." />
-    <string id="izwKmH2I" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME} при поддержке половины {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="jaioXYDc" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME} при поддержке половины {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM} вопреки возражениям {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="JJQ0Hp4m" text="Прибыл гонец из {MAP_FACTION_NAME}. {MAP_FACTION_NAME} будет платить {GOLD_AMOUNT} {GOLD_ICON} дани ежедневно, чтобы прекратить войну между вашими королевствами. Ваши вассалы оставили решение за вами." />
-    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} в настоящее время сильнее нас. Нам нужно время, чтобы укрепить свою мощь." />
-    <string id="JQligd8z" text="Совет {KINGDOM} избрал {KING.NAME} новым правителем." />
-    <string id="JY717hPW" text="У меня нет полномочий заключать мир от имени {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} и {?ENEMY_RULER.GENDER}её{?}его{\?} совет должны решить, предлагать ли мир и каковы будут условия." />
-    <string id="K5w135N9" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать с {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было принято вопреки совету {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="KFHj7ckm" text="Как правитель, вы должны решить, будет ли заключён мир с {KINGDOM_NAME}" />
-    <string id="KlATZEbb" text="Заключение союза с {KINGDOM_NAME}." />
-    <string id="KSrNutEO" text="{FACTION_LEADER} решит, будет ли объявлена война {KINGDOM_NAME}. Вы можете выбрать свою позицию относительно этого решения." />
-    <string id="Ktpia7Pa" text="{RULER.NAME} из {KINGDOM} дарует {SETTLEMENT} {LEADER.NAME} вопреки противодействию {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="l5H9x7Lo" text="{RULER.NAME} из {KINGDOM} дарует {SETTLEMENT} {LEADER.NAME}, при этом {?RULER.GENDER}её{?}его{\?} совет разделился поровну." />
-    <string id="L802I9W2" text="Да, я присоединюсь к {FACTION_NAME}." />
-    <string id="L81DPSom" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, ответит ли ваше королевство на призыв {CALLING_KINGDOM} и объявит ли войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="Lalj0T1i" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="lseJ70y0" text="Ваше королевство в состоянии войны с {KINGDOM_NAME}." />
-    <string id="LVX2x6Jf" text="Я хотел бы расторгнуть контракт с {SERVED_FACTION}." />
-    <string id="m69pvful" text="{KINGDOM_LEADER} решит, ответит ли ваше королевство на призыв {CALLING_KINGDOM} и объявит ли войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}. Вы можете выбрать свою позицию относительно этого решения." />
-    <string id="m6OVl6Dg" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM}, при этом {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
-    <string id="mfYzCeGR" text="{CHARACTER.NAME} был {TITLE} {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
-    <string id="mRrYn2qm" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM} при поддержке {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="MSr3HRa1" text="{QUEST_GIVER.NAME}, {?QUEST_GIVER.GENDER}госпожа{?}лорд{\?} из {CLAN}, желает, чтобы молодой член клана был обучен военному искусству." />
-    <string id="mvkKP6OE" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM}." />
-    <string id="MYIgSsfk" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было принято вопреки совету {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="n4I3pWOn" text="Как правитель, вы должны решить, будет ли заключён мир с {KINGDOM_NAME} путём выплаты {TRIBUTE_AMOUNT} дани в течение {TRIBUTE_DURATION} дней." />
-    <string id="Nd0Vhkxn" text="Прибыл гонец из {MAP_FACTION_NAME}. Они предлагают вам мир, если вы согласитесь платить {GOLD_AMOUNT} {GOLD_ICON} ежедневной дани. Ваши вассалы оставили решение за вами." />
-    <string id="NFuezpbG" text="{CALLED_KINGDOM} уже в состоянии войны с {KINGDOM_NAME}." />
-    <string id="NjPMRWbW" text="Заключить мир с {KINGDOM_NAME}. Наше королевство будет получать {TRIBUTE_AMOUNT} дани ежедневно в течение {TRIBUTE_DURATION} дней." />
-    <string id="nkvT88r2" text="У вас недостаточно денег, чтобы призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="NuYzgBZB" text="Вы заходите слишком далеко. {KINGDOM} не потерпит уничтожения своих караванов." />
-    <string id="o4IxXHnB" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME}." />
-    <string id="o69PZuce" text="{OLD_LEADER.LINK} больше не является главой {CLAN_NAME}. {NEW_LEADER.LINK} стал новым правителем клана." />
-    <string id="O9XpB5Ah" text="Как правитель, вы должны решить, будет ли заключено торговое соглашение с {KINGDOM}" />
-    <string id="oAw74q3r" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, ответит ли ваше королевство на призыв {CALLING_KINGDOM} и объявит ли войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
-    <string id="Oe1NdVLe" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM}, при этом {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
-    <string id="Oi20UrO2" text="Наша война с {TARGET_SETTLEMENT_FACTION_INFORMAL_NAME} идёт достаточно хорошо. Но некоторые говорят, что у нас недостаточно результатов за всю кровь и серебро, что мы потратили. Явная победа на этом этапе принесла бы много пользы. Я думаю, мне хотелось бы увидеть наше знамя над башнями {TARGET_SETTLEMENT}.[ib:normal2][if:convo_thinking]" />
-    <string id="OlIWwLbP" text="Да. Это касается войны с {ENEMYFACTION_INFORMALNAME}. [ib:closed][if:convo_pondering]Нам нужно связать часть их войск, и самый простой способ — разорить их деревни. Это жестокое дело и тяжело отразится на простом народе, но их лорды будут вынуждены преследовать разорителей, и это не позволит им сделать то же самое с нами. Если вы возьмётесь за это, я награжу вас в случае успеха." />
-    <string id="Ouj6eSWC" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать с {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано половиной {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="PneX4Ayw" text="Курьер с призывом к войне от {KINGDOM_NAME} против {KINGDOM_TO_CALL_TO_WAR_AGAINST} прибыл ко двору вашего королевства." />
-    <string id="PP7KD7OC" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM}, при том что {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
-    <string id="PutoRsWp" text="Прибыл курьер от {CLAN_NAME}. Они предлагают вам {GOLD_AMOUNT}{GOLD_ICON} выкупа, если вы освободите {CAPTIVE_HERO.NAME}." />
-    <string id="q9DnHVcZ" text="Не в наших интересах присоединяться к {KINGDOM_NAME} в их войне." />
-    <string id="qa4FlTWS" text="{RULER.NAME} из {KINGDOM} берёт {SETTLEMENT} в качестве {?RULER.GENDER}её{?}его{\?} лена вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="qgN9o2ip" text="Пришло время призвать нашего союзника {KINGDOM_NAME} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}! Ваше королевство будет голосовать, предложить ли им соглашение о призыве к войне." />
-    <string id="qN3x2usk" text="Голосование о том, призвать ли {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="R0bJS0pn" text="Заключить мир с {OTHER_FACTION}" />
-    <string id="r0Kq0aeB" text="{FACTION_LEADER} будет решать, призвать ли {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}. Вы можете выбрать свою позицию по этому решению." />
-    <string id="rd229FYG" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="RH8mgLEk" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM} при поддержке половины {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="rJIuQ0hc" text="{RULER.NAME} из {KINGDOM} решил не подписывать торговое соглашение с {OTHER_KINGDOM} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="rtfoywJl" text="Объявить войну {KINGDOM_NAME}" />
-    <string id="sbFboHmV" text="Прибыл курьер от {MAP_FACTION_NAME}. Они предлагают вам мир, если вы согласитесь платить дань в размере {GOLD_AMOUNT} {GOLD_ICON} ежедневно. Ваше королевство будет голосовать, принять ли это предложение." />
-    <string id="Shk9QCDg" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM}." />
-    <string id="SR9FC5jH" text="Прибыл курьер от {MAP_FACTION_NAME} с мирным предложением. {MAP_FACTION_NAME} будет платить {GOLD_AMOUNT} {GOLD_ICON} дани каждый день, чтобы прекратить войну между вашими королевствами. Ваше королевство будет голосовать, принять ли это предложение." />
-    <string id="syGyjjKE" text="Ответить на призыв {CALLING_KINGDOM} и объявить войну {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} предлагает вам работу наёмника, выплачивая {GOLD_AMOUNT}{GOLD_ICON} за каждое очко влияния, которое вы получите, сражаясь от их имени. Вы принимаете?" />
-    <string id="uc4M4bhG" text="Что ж, есть кое-что, чего я хочу. Есть {?TARGET_HERO.GENDER}одна леди{?}один лорд{\?} из {TARGET_FACTION}, с которой у меня давние, очень давние отношения. И далеко не дружеские. Теперь, когда мы в состоянии войны, пока {?TARGET_HERO.GENDER}она свободна{?}он свободен{\?}, я знаю, что моя жизнь и земли в опасности. Как я уже сказал, это будет совсем не просто. Но тот, кто сумеет это сделать, доставить {?TARGET_HERO.GENDER}её{?}его{\?} ко мне живым, помимо моей благодарности, станет поистине богатым человеком.[if:convo_grave][ib:closed2]" />
-    <string id="uiY3ds0Z" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} при поддержке половины {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="UQq4ekeu" text="{RULER.NAME} из {KINGDOM} решил не подписывать торговое соглашение с {OTHER_KINGDOM}." />
-    <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK} призвало {CALLED_KINGDOM_LINK} объявить войну {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}." />
-    <string id="uWdj1X2c" text="{CHARACTER.NAME} был членом {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
-    <string id="V097rA1v" text="{LORD.FIRSTNAME} — глава {CLAN_NAME}, нового восходящего клана. {?LORD.GENDER}Она{?}Он{\?} всё ещё создаёт {?LORD.GENDER}свою{?}свою{\?} репутацию." />
-    <string id="vf2pb7Ts" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="Vg5RmOqL" text="{FACTION_LEADER} будет решать, подпишет ли {KINGDOM} торговое соглашение с {OTHER_KINGDOM}. Вы можете выбрать свою позицию по этому решению." />
-    <string id="VWoHoUin" text="Не будет мира между нами и {ENEMY_INFORMAL_NAME}, как не может волк заключить мир с овцой." />
-    <string id="wijL0mTy" text="{FACTION_LEADER} будет решать, заключить ли союз с {KINGDOM_NAME}. Вы можете выбрать свою позицию по этому решению." />
-    <string id="wsDNxArW" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM}." />
-    <string id="xAuejv91" text="{RULER.NAME} из {KINGDOM} решил не заключать мир с {OTHER_KINGDOM}, при том что {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
-    <string id="XaZyU3Cn" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} решил не начинать войну с {KINGDOM} вопреки желанию {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
-    <string id="XbYCVCbR" text="Мы против призыва нашего союзника {CALLED_KINGDOM} к войне." />
-    <string id="xhK4zMec" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="xKev8i5B" text="Призыв, который {CALLING_KINGDOM_LINK} направило {CALLED_KINGDOM_LINK} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}, завершён." />
-    <string id="xM97H0oR" text="Голосовать за объявление войны {KINGDOM_NAME}." />
-    <string id="yBL3TzXw" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="yUYNlQhU" text="Отлично, я прикажу своим людям составить простой контракт. От имени {KINGDOM_FORMAL_NAME} приветствую вас. Пусть ваш меч послужит нам добрую службу против наших врагов." />
-    <string id="Zckbdm4Z" text="{RULER.NAME} из {KINGDOM} берёт {SETTLEMENT} в качестве {?RULER.GENDER}её{?}его{\?} лена при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="zd9sawl9" text="Вы уже в союзе с {KINGDOM_NAME}." />
-    <string id="zXuo0Wbj" text="Подписание торгового соглашения с {KINGDOM}" />
-    <string id="ZZ1oLfEq" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
-    <string id="taom_shaghana_name" text="Шагана" />
-    <string id="taom_shaghana_short_name" text="Шагана" />
-    <string id="taom_shaghana_title" text="Таскралан Шаганы" />
-    <string id="taom_shaghana_ruler_title" text="Таскрал" />
-    <string id="taom_shaghana_desc" text="Шагана — восточные пределы Харада, земля выжженных солнцем степей и древних крепостей. Девять племенных кланов — свирепые воины, связанные клятвой и кровью, вселяющие страх в тех, кто осмеливается им противостоять." />
-    <string id="aom_shaghana_name" text="Шагана" />
-    <string id="aom_shaghana_desc" text="Шагана — свирепый племенной народ восточных степей Харада, известный как неумолимые налётчики и искусные всадники. Связанные клятвой и кланом, они подчиняются своему Таскралу и служат тёмным замыслам Саурона из своих выжженных солнцем крепостей." />
-    <string id="aom_lord_SH1_1_name" text="Заркан" />
-    <string id="aom_lord_SH2_1_name" text="Рахим" />
-    <string id="aom_lord_SH3_1_name" text="Тадин" />
-    <string id="aom_lord_SH4_1_name" text="Нахел" />
-    <string id="aom_lord_SH5_1_name" text="Язур" />
-    <string id="aom_lord_SH6_1_name" text="Казан" />
-    <string id="aom_lord_SH7_1_name" text="Халуз" />
-    <string id="aom_lord_SH8_1_name" text="Фарун" />
-    <string id="aom_lord_SH9_1_name" text="Салуз" />
-    <string id="aom_clan_shaghana_1_name" text="Эзаркия" />
-    <string id="aom_clan_shaghana_2_name" text="Кумаракнис" />
-    <string id="aom_clan_shaghana_3_name" text="Тайимака" />
-    <string id="aom_clan_shaghana_4_name" text="Заякнури" />
-    <string id="aom_clan_shaghana_5_name" text="Селаркес" />
-    <string id="aom_clan_shaghana_6_name" text="Ужарес" />
-    <string id="aom_clan_shaghana_7_name" text="Аларанин" />
-    <string id="aom_clan_shaghana_8_name" text="Бануганд" />
-    <string id="aom_clan_shaghana_9_name" text="Акаммес" />
-    <string id="aom_sh_notable_0" text="Проницательный торговец Шаганы" />
-    <string id="aom_sh_notable_0b" text="Торговец пряностями Шаганы" />
-    <string id="aom_sh_notable_1" text="Владелец каравана Шаганы" />
-    <string id="aom_sh_notable_1b" text="Купец восточных степей" />
-    <string id="aom_sh_notable_2" text="Торговец шёлком Шаганы" />
-    <string id="aom_sh_notable_2b" text="Торговец степей Харада" />
-    <string id="aom_sh_notable_3" text="Менялa Шаганы" />
-    <string id="aom_sh_notable_3b" text="Торговец восточными товарами" />
-    <string id="aom_sh_notable_4" text="Хозяин базара Шаганы" />
-    <string id="aom_sh_notable_4b" text="Хитрый купец Шаганы" />
-    <string id="aom_sh_notable_5" text="Солнечный жрец Шаганы" />
-    <string id="aom_sh_notable_6" text="Племенной старейшина Шаганы" />
-    <string id="aom_sh_notable_7" text="Хранитель традиций Шаганы" />
-    <string id="aom_sh_notable_8" text="Мастер по металлу Шаганы" />
-    <string id="aom_sh_notable_9" text="Шагана оружейный мастер" />
-    <string id="aom_sh_notable_gl1" text="Шагана головорез" />
-    <string id="aom_sh_notable_10" text="Шагана криминальный авторитет" />
-    <string id="aom_sh_notable_11" text="Шагана главарь налётчиков" />
-    <string id="aom_sh_notable_gl4" text="Шагана главарь банды" />
-    <string id="aom_sh_notable_12" text="Шагана уличный босс" />
-    <string id="aom_sh_notable_13" text="Шагана торговец с чёрного рынка" />
-    <string id="aom_sh_notable_21" text="Шагана землевладелец" />
-    <string id="aom_sh_notable_22" text="Шагана главный пастух" />
-    <string id="aom_sh_headman_1" text="Шагана деревенский староста" />
-    <string id="aom_sh_headman_2" text="Шагана старший староста" />
-    <string id="aom_sh_headman_3" text="Шагана деревенский старейшина" />
-    <string id="taom_abanissa_name" text="Абанисса" />
-    <string id="taom_abanissa_short_name" text="Абанисса" />
-    <string id="taom_abanissa_title" text="Чаджафан Абаниссы" />
-    <string id="taom_abanissa_ruler_title" text="Чаджафан" />
-    <string id="taom_abanissa_desc" text="Абанисса лежит на глубоком юге Харада — царство влажных джунглей и древних каменных династий. Великие Дома Абаниссы командуют грозными боевыми зверями и армиями дисциплинированных воинов, их власть не подчиняется никому, кроме самого Саурона." />
-    <string id="aom_abanissa_name" text="Абанисса" />
-    <string id="aom_abanissa_desc" text="Великие Дома Абаниссы правят на глубоком юге Харада — земле влажных джунглей, древних каменных дворцов и высоких боевых зверей. Их армии маршируют под знамёнами династий, внушая уважение и ужас по всем южным землям." />
-    <string id="aom_lord_AB1_1_name" text="Факсар" />
-    <string id="aom_lord_AB2_1_name" text="Хошед" />
-    <string id="aom_lord_AB3_1_name" text="Васнар" />
-    <string id="aom_lord_AB4_1_name" text="Горазе" />
-    <string id="aom_lord_AB5_1_name" text="Азадан" />
-    <string id="aom_lord_AB6_1_name" text="Арташ" />
-    <string id="aom_lord_AB7_1_name" text="Ардач" />
-    <string id="aom_lord_AB8_1_name" text="Тирда" />
-    <string id="aom_clan_abanissa_1_name" text="Дом Факшарана" />
-    <string id="aom_clan_abanissa_2_name" text="Дом Хошедхармы" />
-    <string id="aom_clan_abanissa_3_name" text="Дом Васнарада" />
-    <string id="aom_clan_abanissa_4_name" text="Дом Горазехана" />
-    <string id="aom_clan_abanissa_5_name" text="Дом Азадафрозана" />
-    <string id="aom_clan_abanissa_6_name" text="Дом Артакшасана" />
-    <string id="aom_clan_abanissa_7_name" text="Дом Ардачерана" />
-    <string id="aom_clan_abanissa_8_name" text="Дом Тирдаханы" />
-    <string id="aom_ab_notable_0" text="Посредник династии Дальнего Харада" />
-    <string id="aom_ab_notable_0b" text="Абанисса торговец слоновой костью" />
-    <string id="aom_ab_notable_1" text="Абанисса глава каравана" />
-    <string id="aom_ab_notable_1b" text="Торговец пряностями Дальнего Харада" />
-    <string id="aom_ab_notable_2" text="Абанисса торговец золотом" />
-    <string id="aom_ab_notable_2b" text="Управляющий-купец дома" />
-    <string id="aom_ab_notable_3" text="Абаниссский брокер-огранщик самоцветов" />
-    <string id="aom_ab_notable_3b" text="Торговец шелками из Дальнего Харада" />
-    <string id="aom_ab_notable_4" text="Абаниссский надзиратель рынка" />
-    <string id="aom_ab_notable_4b" text="Хитрый абаниссский приказчик" />
-    <string id="aom_ab_notable_5" text="Абаниссский верховный жрец" />
-    <string id="aom_ab_notable_6" text="Абаниссский хранитель храма" />
-    <string id="aom_ab_notable_7" text="Мастер обрядов Дальнего Харада" />
-    <string id="aom_ab_notable_8" text="Абаниссский мастер-ремесленник" />
-    <string id="aom_ab_notable_9" text="Оружейник Дальнего Харада" />
-    <string id="aom_ab_notable_gl1" text="Абаниссский страж дома" />
-    <string id="aom_ab_notable_10" text="Абаниссский владыка теней" />
-    <string id="aom_ab_notable_11" text="Предводитель боевого отряда Дальнего Харада" />
-    <string id="aom_ab_notable_gl4" text="Абаниссский патриарх банды" />
-    <string id="aom_ab_notable_12" text="Абаниссский хозяин квартала" />
-    <string id="aom_ab_notable_13" text="Король контрабанды Дальнего Харада" />
-    <string id="aom_ab_notable_21" text="Абаниссский владетель поместья" />
-    <string id="aom_ab_notable_22" text="Абаниссский хозяин плантации" />
-    <string id="aom_ab_headman_1" text="Абаниссский сельский староста" />
-    <string id="aom_ab_headman_2" text="Абаниссский старейший староста" />
-    <string id="aom_ab_headman_3" text="Абаниссский деревенский старейшина" />
-    <string id="TAOM_ghilman_name" text="Змеиная Стража" />
-    <string id="TAOM_ghilman_short" text="Змеиная Стража" />
-    <string id="TAOM_ghilman_text" text="Змеиная Стража — конные воины на службе у Змеиного Владыки Ближнего Харада. Выросшие в седле на холмистых равнинах к югу от Эфель Дуата, они не имеют равных среди конных лучников всех южных земель Средиземья. Во времена мира между Харадом и Мордором Стража предлагает свои услуги харадримским владыкам и любой другой державе, достаточно богатой, чтобы заплатить их золотую цену." />
-    <string id="TAOM_legion_name" text="Серая Дружина" />
-    <string id="TAOM_legion_short" text="Серая Дружина" />
-    <string id="TAOM_legion_text" text="Серая Дружина — последнее организованное братство следопытов-дунэдайн, потомков королей Арнора, потерявших свое королевство много веков назад. Они скачут по Северу, не имея собственного дома, и хранят мир в землях, забывших их имена. Хотя их первая верность принадлежит роду Элендиля, они берут подряды от владык по всему Средиземью, когда их странствия приводят их в цивилизованные края." />
-    <string id="TAOM_skolderbrotva_name" text="Секироносцы Эребора" />
-    <string id="TAOM_skolderbrotva_short" text="Секироносцы" />
-    <string id="TAOM_skolderbrotva_text" text="Секироносцы Эребора — ветераны битв короля Торина, которым мирное время пришлось не по нраву. Обученные ближнему бою в гномьих чертогах — щитовая стена, короткая секира, кирка — они грозны на любой местности, но особенно искусны в горных перевалах, соединяющих Эребор с королевствами людей. Они берут подряды от всех, кто может заплатить их цену, но не поднимут секиру против Эребора или Ривенделла." />
-    <string id="TAOM_company_name" text="Клинки Корсаров" />
-    <string id="TAOM_company_short" text="Корсары" />
-    <string id="TAOM_company_text" text="Клинки Корсаров — ветераны морских сражений из гаваней Умбара, перешедшие к продаже своих навыков на суше. Они сражаются как арбалетчики — излюбленное оружие корабельной войны — и чувствуют себя так же уверенно в осаде, как на качающейся палубе. Их капитан, изрубцованный нуменорский изгнанник, держит их в рамках контрактов железной дисциплиной, зная, что их репутация — самый ценный груз." />
-    <string id="TAOM_beni_zilal_name" text="Слепое Око" />
-    <string id="TAOM_beni_zilal_short" text="Слепое Око" />
-    <string id="TAOM_beni_zilal_text" text="Слепое Око — братство контрабандистов, скупщиков краденого и наемных убийц, действующих на побережьях Харада и в глубинах пустыни. Говорят, что они происходят от культа ассасинов, служивших забытому харадримскому королю, и их методы — яд, тень и использование тайн — остались неизменными. Владыки, желающие тихо убрать соперника, или купцы, которым нужно провезти груз без таможенного досмотра, знают, куда оставить золотую монету и запечатанное письмо." />
-    <string id="TAOM_wolfskins_name" text="Вариагские Разорители" />
-    <string id="TAOM_wolfskins_short" text="Разорители" />
-    <string id="TAOM_wolfskins_text" text="Вариагские Разорители — боевые отряды молодых вариагских воинов из степей Кханда, проводящих свою раннюю зрелость в состоянии ритуальной войны: они не могут владеть приготовленной пищей, спать под постоянной крышей и не знают пощады. Хотя большинство в конце концов возвращается к оседлой жизни своих кланов, некоторые никогда не делают этого, и они образуют Разорителей — изгоев, охотящихся на дорогах Кханда и совершающих набеги через его границы в Харад и Гондор." />
-    <string id="TAOM_brotherhood_name" text="Дунландские Грабители" />
-    <string id="TAOM_brotherhood_short" text="Разорители" />
-    <string id="TAOM_brotherhood_text" text="Дунландские Разорители — разбитый остаток горного племени, что некогда обитало в долинах, ныне подвластных рохиррим. Их дедов изгнали с плодородных земель в скалистые высоты, и они взрастили ту горечь в философию налётчика: всё, что взято у южанина или королевского человека — лишь возврат украденного. На деле они разбойники, но опасные, знающие каждую козью тропу в горах." />
-    <string id="TAOM_hidden_hand_name" text="Слуги Уст" />
-    <string id="TAOM_hidden_hand_short" text="Слуги" />
-    <string id="TAOM_hidden_hand_text" text="Слуги Уст — это Очи Барад-дура, действующие за пределами Чёрных Врат: осведомители, каратели и шпионы, внедрённые среди народов, граничащих с Мордором. Там, куда армии Саурона ещё не дотянулись, эти агенты собирают дань и заглушают инакомыслие. Они действуют через подкуп, шантаж и тихие убийства, не давая ни одному заговору против Тёмного Властелина пустить корни, прежде чем он будет искоренён и раздавлен." />
-    <string id="TAOM_lakepike_name" text="Разрушители Долгого Озера" />
-    <string id="TAOM_lakepike_short" text="Разрушители" />
-    <string id="TAOM_lakepike_text" text="Разрушители Долгого Озера живут в камышовых зарослях и гниющих старых причалах на тёмных берегах Долгого Озера, вдали от почтенных огней Эсгарота. Они зарабатывают тем, что заманивают баржи на скрытые отмели ложными фонарями, затем обирают груз и сбывают его через скупщиков в самом городе. Несмотря на усилия Главы Озёрного города и купцов Дейла, у Разрушителей слишком много друзей в прибрежных тавернах, чтобы их можно было легко изгнать." />
-    <string id="TAOM_embers_name" text="Культ Недремлющего Ока" />
-    <string id="TAOM_embers_short" text="Культ Ока" />
-    <string id="TAOM_embers_text" text="Культ Недремлющего Ока — тайное общество, уходящее корнями в традиции Чёрных нуменорцев, почитающее Саурона как бога-короля, который вернёт своим верным былую славу, когда восстанет вновь. Они вербуют среди обездоленных Дунланда и забытых уголков королевства, обещая божественную милость и земную власть. На деле их главари подчиняются агентам Барад-дура, а их ячеистая структура делает их почти неуязвимыми для правосудия любого лорда." />
-    <string id="TAOM_jawwal_name" text="Песчаные всадники" />
-    <string id="TAOM_jawwal_short" text="Песчаные всадники" />
-    <string id="TAOM_jawwal_text" text="Песчаные Всадники — кочевые пустынные кланы глубинных земель Харада, властители безводных пустошей между Эфель Дуат и далёким южным морем. Они скитаются по путям, известным лишь им самим, требуя дань с любого каравана, дерзнувшего пересечь их территорию. Оседлые лорды Ближнего Харада считают их досадой; Песчаные Всадники считают оседлых лордов ворами, укравшими то, что пустыня уже отдала добровольно." />
-    <string id="TAOM_karakhuzaits_name" text="Дикие истерлинги" />
-    <string id="TAOM_karakhuzaits_short" text="Дикари" />
-    <string id="TAOM_karakhuzaits_text" text="Дикие истерлинги — непокорённые степные кланы Моря Рун, что противостояли власти каждого властителя, пытавшегося их усмирить — будь то вождь Руна, лейтенант Мордора или Король Дейла. Они кочуют по пастбищам к востоку от Келдуина, сгоняя коней, совершая набеги на стада и собирая дорожную дань с любого каравана, настолько глупого, чтобы пересечь их степь без вооружённой охраны." />
-    <string id="TAOM_forest_people_name" text="Друэдайн" />
-    <string id="TAOM_forest_people_short" text="Дикари" />
-    <string id="TAOM_forest_people_text" text="Друэдайн, известные людям как вóзы или Дикие Люди Леса — древний народ, обитающий в глубоких лесах Друадана и скрытых долинах Белых гор. Они выжигают землю огнём, выращивают всё необходимое на богатой золой почве и переходят дальше, когда земля истощается — образ жизни, который оседлые народы Средиземья никогда не понимали и не пытались понять. Друэдайн не хотят лорда, не платят податей и просят лишь одного — чтобы их оставили в лесной тишине." />
-    <string id="TAOM_eleftheroi_name" text="Беорнинги" />
-    <string id="TAOM_eleftheroi_short" text="Беорнинги" />
-    <string id="TAOM_eleftheroi_text" text="Беорнинги — великие лесовики, обитающие в долине Андуина меж Мглистых гор и Лихолесьем, ведомые оборотнями рода Беорна. Они не пропускают ни одного орка через свои земли, взимают пошлину у Брода Каррок на содержание дозора и не отвечают ни перед одним королём Средиземья. Хотя они торгуют и говорят с эльфами и гномами, любое войско, что пройдёт через их лес без позволения, обнаружит, что у беорнингов очень большие зубы." />
-    <string id="taom_career" text="Служба" />
-    <string id="taom_alliance_lore" text="Соответствие истории" />
-    <string id="taom_alliance_blocked" text="Эти королевства никогда не могут быть союзниками." />
-    <string id="taom_war_blocked" text="Эти королевства связаны нерушимым союзом." />
-    <string id="taom_wotr_no_peace" text="Бушует Война Кольца. Мира быть не может." />
-    <string id="taom_precompile_shaders" text="Предкомпиляция шейдеров" />
-    <string id="taom_precompile_hint" text="Предкомпилирует шейдеры для устранения подвисаний в игре. Запустите один раз после установки TAOM." />
-    <string id="taom_main_menu_new_game" text="Войти в Эпоху Людей" />
-    <string id="taom_career_screen_title" text="Карьера" />
-    <string id="taom_career_done" text="Готово" />
-    <string id="taom_career_ability_label" text="Карьерная способность" />
-    <string id="taom_career_tier1" text="Уровень 1" />
-    <string id="taom_career_tier2" text="Уровень 2" />
-    <string id="taom_career_tier3" text="Уровень 3" />
-    <string id="taom_career_free_points" text="Свободных очков: {COUNT}" />
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+
+      type="string">
+
+  <tags>
+
+    <tag language="Russian" />
+
+  </tags>
+
+  <strings>
+
+    <string id="taom_str_faction_official.empire" text="клансмен из Дунланда" />
+
+    <string id="taom_str_faction_official.empire_f" text="клансвумен из Дунланда" />
+
+    <string id="taom_str_faction_ruler.empire" text="Вождь" />
+
+    <string id="taom_str_faction_ruler.empire_f" text="Вождь" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.empire" text="Вождь {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.empire" text="Вождь {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.empire" text="Дунландский" />
+
+    <string id="taom_str_short_term_for_faction.empire" text="Дунланд" />
+
+    <string id="taom_str_faction_formal_name_for_culture.empire" text="Кланы Дунланда" />
+
+    <string id="taom_str_faction_informal_name_for_culture.empire" text="Дунланд" />
+
+    <string id="taom_str_neutral_term_for_culture.empire" text="Дунлендинги" />
+
+    <string id="taom_str_faction_official.vlandia" text="благородный из Рохана" />
+
+    <string id="taom_str_faction_official.vlandia_f" text="леди из Рохана" />
+
+    <string id="taom_str_faction_ruler.vlandia" text="Король" />
+
+    <string id="taom_str_faction_ruler.vlandia_f" text="Королева" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="Король {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.vlandia" text="Король {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.vlandia" text="Рохиррим" />
+
+    <string id="taom_str_short_term_for_faction.vlandia" text="Всадник" />
+
+    <string id="taom_str_faction_formal_name_for_culture.vlandia" text="Ристания" />
+
+    <string id="taom_str_faction_informal_name_for_culture.vlandia" text="Рохан" />
+
+    <string id="taom_str_neutral_term_for_culture.vlandia" text="Рохиррим" />
+
+    <string id="taom_str_faction_official.battania" text="благородный из Кханда" />
+
+    <string id="taom_str_faction_official.battania_f" text="леди из Кханда" />
+
+    <string id="taom_str_faction_ruler.battania" text="Лорд Кханда" />
+
+    <string id="taom_str_faction_ruler.battania_f" text="Леди Кханда" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.battania" text="Лорд {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.battania" text="Лорд {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.battania" text="Варягский" />
+
+    <string id="taom_str_short_term_for_faction.battania" text="Варяг" />
+
+    <string id="taom_str_faction_formal_name_for_culture.battania" text="Варяги Кханда" />
+
+    <string id="taom_str_faction_informal_name_for_culture.battania" text="Кханд" />
+
+    <string id="taom_str_neutral_term_for_culture.battania" text="Варяги" />
+
+    <string id="taom_str_faction_official.khuzait" text="дворянин Руна" />
+
+    <string id="taom_str_faction_official.khuzait_f" text="дворянка Руна" />
+
+    <string id="taom_str_faction_ruler.khuzait" text="Военачальник" />
+
+    <string id="taom_str_faction_ruler.khuzait_f" text="Леди-военачальник" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="Военачальник {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.khuzait" text="Военачальник {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.khuzait" text="Восточный" />
+
+    <string id="taom_str_short_term_for_faction.khuzait" text="Рун" />
+
+    <string id="taom_str_faction_formal_name_for_culture.khuzait" text="Люди Востока из Руна" />
+
+    <string id="taom_str_faction_informal_name_for_culture.khuzait" text="Рун" />
+
+    <string id="taom_str_neutral_term_for_culture.khuzait" text="Люди Востока" />
+
+    <string id="taom_str_faction_official.aserai" text="дворянин Харада" />
+
+    <string id="taom_str_faction_official.aserai_f" text="дворянка Харада" />
+
+    <string id="taom_str_faction_ruler.aserai" text="Вождь" />
+
+    <string id="taom_str_faction_ruler.aserai_f" text="Вождиха" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.aserai" text="Вождь {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.aserai" text="Вождь {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.aserai" text="Харадрим" />
+
+    <string id="taom_str_short_term_for_faction.aserai" text="Харад" />
+
+    <string id="taom_str_faction_formal_name_for_culture.aserai" text="Королевство Харад" />
+
+    <string id="taom_str_faction_informal_name_for_culture.aserai" text="Харад" />
+
+    <string id="taom_str_neutral_term_for_culture.aserai" text="Харадрим" />
+
+    <string id="taom_str_faction_official.sturgia" text="дворянин Дейла" />
+
+    <string id="taom_str_faction_official.sturgia_f" text="дворянка Дейла" />
+
+    <string id="taom_str_faction_ruler.sturgia" text="Король" />
+
+    <string id="taom_str_faction_ruler.sturgia_f" text="Королева" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="Король {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.sturgia" text="Король {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.sturgia" text="Бардингский" />
+
+    <string id="taom_str_short_term_for_faction.sturgia" text="Дейл" />
+
+    <string id="taom_str_faction_formal_name_for_culture.sturgia" text="Королевство Дейл" />
+
+    <string id="taom_str_faction_informal_name_for_culture.sturgia" text="Дейл" />
+
+    <string id="taom_str_neutral_term_for_culture.sturgia" text="Бардинги" />
+
+    <string id="taom_str_faction_official.dolguldur" text="слуга Дол Гулдура" />
+
+    <string id="taom_str_faction_official.dolguldur_f" text="служанка Дол Гулдура" />
+
+    <string id="taom_str_faction_ruler.dolguldur" text="Надзиратель" />
+
+    <string id="taom_str_faction_ruler.dolguldur_f" text="Надзирательница" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="Надзиратель, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="Надзиратель" />
+
+    <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.dolguldur" text="Гулдурский" />
+
+    <string id="taom_str_short_term_for_faction.dolguldur" text="Дол Гулдур" />
+
+    <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="Силы Дол Гулдура" />
+
+    <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="Дол Гулдур" />
+
+    <string id="taom_str_neutral_term_for_culture.dolguldur" text="Слуги Дол Гулдура" />
+
+    <string id="taom_str_faction_official.isengard" text="капитан Изенгарда" />
+
+    <string id="taom_str_faction_official.isengard_f" text="капитанша Изенгарда" />
+
+    <string id="taom_str_faction_ruler.isengard" text="Белая Рука" />
+
+    <string id="taom_str_faction_ruler.isengard_f" text="Белая Леди" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.isengard" text="Белая Рука, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.isengard" text="Белая Рука {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.isengard" text="Изенгардский" />
+
+    <string id="taom_str_short_term_for_faction.isengard" text="Изенгард" />
+
+    <string id="taom_str_faction_formal_name_for_culture.isengard" text="Силы Изенгарда" />
+
+    <string id="taom_str_faction_informal_name_for_culture.isengard" text="Изенгард" />
+
+    <string id="taom_str_neutral_term_for_culture.isengard" text="Войска Изенгарда" />
+
+    <string id="taom_str_faction_official.gundabad" text="вождь Гундабада" />
+
+    <string id="taom_str_faction_official.gundabad_f" text="вождиня Гундабада" />
+
+    <string id="taom_str_faction_ruler.gundabad" text="Военачальник" />
+
+    <string id="taom_str_faction_ruler.gundabad_f" text="Леди-Военачальник" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="Военачальник, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.gundabad" text="Военачальник {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.gundabad" text="Гундабадский" />
+
+    <string id="taom_str_short_term_for_faction.gundabad" text="Гундабад" />
+
+    <string id="taom_str_faction_formal_name_for_culture.gundabad" text="Орки Гундабада" />
+
+    <string id="taom_str_faction_informal_name_for_culture.gundabad" text="Гундабад" />
+
+    <string id="taom_str_neutral_term_for_culture.gundabad" text="Орки Гундабада" />
+
+    <string id="taom_str_faction_official.umbar" text="корсар Умбара" />
+
+    <string id="taom_str_faction_official.umbar_f" text="корсарка Умбара" />
+
+    <string id="taom_str_faction_ruler.umbar" text="Капитан Корсаров" />
+
+    <string id="taom_str_faction_ruler.umbar_f" text="Капитанша Корсаров" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.umbar" text="Капитан, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.umbar" text="Капитан {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.umbar" text="Корсарский" />
+
+    <string id="taom_str_short_term_for_faction.umbar" text="Умбар" />
+
+    <string id="taom_str_faction_formal_name_for_culture.umbar" text="Корсары Умбара" />
+
+    <string id="taom_str_faction_informal_name_for_culture.umbar" text="Умбар" />
+
+    <string id="taom_str_neutral_term_for_culture.umbar" text="Корсары" />
+
+    <string id="taom_str_faction_official.gondor" text="благородный лорд" />
+
+    <string id="taom_str_faction_official.gondor_f" text="благородная леди" />
+
+    <string id="taom_str_faction_ruler.gondor" text="Наместник" />
+
+    <string id="taom_str_faction_ruler.gondor_f" text="Леди-Наместник" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}Леди-Наместник{?}Наместник{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}Леди-Наместник{?}Наместник{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.gondor" text="Гондорский" />
+
+    <string id="taom_str_short_term_for_faction.gondor" text="Гондорец" />
+
+    <string id="taom_str_faction_formal_name_for_culture.gondor" text="Гондорский" />
+
+    <string id="taom_str_faction_informal_name_for_culture.gondor" text="Гондорцы" />
+
+    <string id="taom_str_neutral_term_for_culture.gondor" text="Гондорцы" />
+
+    <string id="taom_str_faction_official.mordor" text="капитан Саурона" />
+
+    <string id="taom_str_faction_official.mordor_f" text="служанка Темного Властелина" />
+
+    <string id="taom_str_faction_ruler.mordor" text="Темный Властелин" />
+
+    <string id="taom_str_faction_ruler.mordor_f" text="Темная Владычица" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}Темная Владычица{?}Темный Властелин{\?}, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}Темная Владычица{?}Темный Властелин{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}Надзирательница{?}Надсмотрщик{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.mordor" text="Мордорский" />
+
+    <string id="taom_str_short_term_for_faction.mordor" text="Мордор" />
+
+    <string id="taom_str_faction_formal_name_for_culture.mordor" text="Мордор" />
+
+    <string id="taom_str_faction_informal_name_for_culture.mordor" text="слуги Саурона" />
+
+    <string id="taom_str_neutral_term_for_culture.mordor" text="Мордор" />
+
+    <string id="taom_str_faction_official.mirkwood" text="лесной защитник" />
+
+    <string id="taom_str_faction_official.mirkwood_f" text="лесная стражница" />
+
+    <string id="taom_str_faction_ruler.mirkwood" text="Король" />
+
+    <string id="taom_str_faction_ruler.mirkwood_f" text="Королева" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}Королева{?}Король{\?}, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}Королева{?}Король{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}Стражница{?}Хранитель{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.mirkwood" text="Лесных эльфов" />
+
+    <string id="taom_str_short_term_for_faction.mirkwood" text="Лесной эльф" />
+
+    <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="Королевство Лихолесья" />
+
+    <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="Лесное королевство" />
+
+    <string id="taom_str_neutral_term_for_culture.mirkwood" text="Лесные эльфы" />
+
+    <string id="taom_str_faction_official.lothlorien" text="хранитель Лотлориэна" />
+
+    <string id="taom_str_faction_official.lothlorien_f" text="страж Лотлориэна" />
+
+    <string id="taom_str_faction_ruler.lothlorien" text="Владыка" />
+
+    <string id="taom_str_faction_ruler.lothlorien_f" text="Владычица" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.lothlorien" text="Галадрим" />
+
+    <string id="taom_str_short_term_for_faction.lothlorien" text="эльф" />
+
+    <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="Золотой Лес" />
+
+    <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="Лотлориэн" />
+
+    <string id="taom_str_neutral_term_for_culture.lothlorien" text="эльфы Золотого Леса" />
+
+    <string id="taom_str_faction_official.rivendell" text="хранитель знаний Ривенделла" />
+
+    <string id="taom_str_faction_official.rivendell_f" text="целительница Ривенделла" />
+
+    <string id="taom_str_faction_ruler.rivendell" text="Владыка" />
+
+    <string id="taom_str_faction_ruler.rivendell_f" text="Владычица" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}Владычица{?}Владыка{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.rivendell" text="ривендельский" />
+
+    <string id="taom_str_short_term_for_faction.rivendell" text="эльф" />
+
+    <string id="taom_str_faction_formal_name_for_culture.rivendell" text="Последний Приютный Дом" />
+
+    <string id="taom_str_faction_informal_name_for_culture.rivendell" text="Ривенделл" />
+
+    <string id="taom_str_neutral_term_for_culture.rivendell" text="эльфы Ривенделла" />
+
+    <string id="taom_str_culture_description.empire" text="Дунландцы, свирепые горцы западных нагорий, — гордый и древний народ. Затаившие обиду на рохиррим, они известны своей партизанской тактикой и упорством в бою. Объединённые под властью сильных вождей, они сражаются за своё выживание и за возвращение земель, которые считают по праву своими." />
+
+    <string id="taom_str_culture_description.vlandia" text="Рохиррим, известные как Конные Владыки, — гордый и благородный народ Рохана, королевства широких равнин и холмистых просторов. Они прославились как искусные наездники и обладатели непревзойдённой конницы, составляющей основу их военной мощи. Живя в тесно сплочённом феодальном обществе, рохиррим ведомы королём и верной знатью, которые связаны честью и традициями в защите своей земли и народа. Они яростно независимы, ценя свободу превыше всего, а их воины обучены сражаться копьями, мечами и луками верхом на своих могучих скакунах." />
+
+    <string id="taom_str_culture_description.battania" text="Вариаги Кханда — безжалостный и воинственный народ из восточных степей. Известные своим мастерством в обращении с лошадьми и смертоносными колесницами, они привносят уникальный и жестокий стиль ведения войны. Союзники Саурона, вариаги сражаются за власть и добычу, сея страх по всему Средиземью." />
+
+    <string id="taom_str_culture_description.khuzait" text="Истерлинги — гордый и дисциплинированный народ, пришедший из обширных восточных земель за пределами Мордора. Известные своей стойкостью и мастерством в военном деле, они одновременно земледельцы и воины, сочетающие аграрные традиции со свирепой воинской культурой. Их армии славятся грозной конницей, облачённой в украшенные доспехи и вооружённой смертоносными копьями и луками. Обладая богатым наследием ремесленничества и преданности своему роду, истерлинги идут на войну под яркими знамёнами золота и багрянца, вселяя страх в сердца врагов. Их верность Саурону сделала их грозной силой, объединившейся под его тенью для расширения господства над Средиземьем." />
+
+    <string id="taom_str_culture_description.aserai" text="Харадрим, воины южных пустынь, — свирепый и стойкий народ, союзники Саурона. Известные своими экзотическими боевыми зверями и искусной конницей, они идут на войну под багряными знамёнами. Гордые и глубоко укоренённые в своих традициях, они приносят дикость пустыни на поля сражений Средиземья." />
+
+    <string id="taom_str_culture_description.sturgia" text="Бардингы Дейла, потомки Барда Лучника, — гордый и трудолюбивый народ, живущий в тени Эребора. Известные своими искусными лучниками и дисциплинированными воинами, они охраняют свой процветающий город и торговые пути севера. Объединённые сильным чувством общности и чести, бардинги твёрдо стоят против тьмы, угрожающей их землям." />
+
+    <string id="taom_str_culture_description.erebor" text="Благородные гномы Эребора прославлены своим мастерством, стойкостью и гордостью. Из своих залов в Одинокой Горе они куют могучее оружие и сокровища несравненной красоты. Облачённые в кольчуги и вооружённые топорами, они защищают свой род с непоколебимым мужеством, стремясь вернуть своё наследие и сохранить свою культуру против всех, кто угрожает ей." />
+
+    <string id="taom_str_culture_description.rivendell" text="Ривенделл, Последний Приютный Дом, — убежище мудрости и красоты, возглавляемое владыкой Элрондом. Расположенный в Мглистых горах, его народ — хранители знаний и защитники древней мудрости Средиземья. Эльфы Ривенделла предлагают совет и помощь тем, кто противостоит тьме, сохраняя свет надежды и единства." />
+
+    <string id="taom_str_culture_description.mirkwood" text="Лесные эльфы Лихолесья, ведомые королём Трандуилом, — хранители обширного и таинственного леса. Известные своей ловкостью и мастерством в стрельбе из лука, они сливаются с тенями, нанося удары с точностью и грацией. Их королевство — край красоты и опасности, защищённый решимостью воинов и вечной мудростью их короля. Яростно независимые, эльфы Лихолесья сражаются, чтобы сохранить свой лес от наступающей тьмы." />
+
+    <string id="taom_str_culture_description.lothlorien" text="Галадрим Лотлориэна, жители Золотого Леса, — эфирный и благородный народ, ведомый владычицей Галадриэль и владыкой Келеборном. Мастера стрельбы из лука и лесной войны, они охраняют своё зачарованное королевство с непревзойдённым искусством. Их преданность роду и родине непоколебима, а их тонкая магия сохраняет Лотлориэн как святилище надежды и света среди растущей тени." />
+
+    <string id="taom_str_culture_description.isengard" text="Армии Изенгарда, ведомые Саруманом Белым, — грозная сила урук-хаев и наёмников. Выкованные в огне промышленности, их оружие и доспехи созданы для разрушения. Силы Изенгарда идут на войну с безжалостной эффективностью, стремясь к завоеванию и господству." />
+
+    <string id="taom_str_culture_description.gundabad" text="Орки Гундабада, обитающие в окутанных туманом горах, — жестокая и дикая сила. Ведомые своими вождями, они совершают бесконечные набеги на соседние земли. Движимые ненавистью и жестокостью, они неустанны в своём стремлении подчинить север." />
+
+    <string id="taom_str_culture_description.umbar" text="Корсары Умбара, морские разбойники и искусные мореходы, — безжалостный и хитрый народ, союзники Саурона. Известные своими быстрыми кораблями и неустанной морской войной, они вселяют страх в прибрежные земли Средиземья. Гордясь своим морским наследием, они приносят хаос морей на сушу, совершая набеги и грабежи во имя своих тёмных союзов." />
+
+    <string id="taom_str_culture_description.dolguldur" text="Прислужники Дол Гулдура, под командованием Некроманта, — тёмная и зловещая сила. Скрытые в поражённом тьмой лесу Лихолесья, они используют предательство и тени, чтобы ослабить врагов. Орки, варги и другие мерзкие твари выступают в поход, чтобы сеять страх и разложение по всему Средиземью." />
+
+    <string id="taom_str_culture_description.gondor" text="Гондорцы, потомки изгнанников Нуменора, — гордые наместники величайшего королевства людей в Средиземье. Известные своими высокими каменными крепостями и непоколебимым мужеством, Гондор — оплот надежды против надвигающейся тени Мордора. Его дисциплинированные армии, состоящие из доблестной пехоты, искусных лучников и конных рыцарей, стоят щитом для всех свободных народов. Ведомые благородными наместниками и военачальниками, гондорцы твёрдо хранят свои традиции, непреклонные в своём долге защищать королевство и его наследие." />
+
+    <string id="taom_str_culture_description.mordor" text="Армии Мордора, выкованные в тени Ородруина, — неустанная сила тьмы, подчинённая Саурону, Тёмному Властелину. Состоящие из орков, троллей и злых людей, они идут на войну под пылающим Оком, сея страх и разрушение. Эти легионы движимы жестокостью и рабством, вооружены зазубренными клинками и грубыми доспехами. Скованные железной волей Саурона, силы Мордора — смертоносная волна, стремящаяся поглотить всё Средиземье во тьму." />
+
+    <string id="taom_str_culture_rich_name.empire" text="дунландец" />
+
+    <string id="taom_str_culture_rich_name.vlandia" text="Рохиррим" />
+
+    <string id="taom_str_culture_rich_name.battania" text="Вариаги" />
+
+    <string id="taom_str_culture_rich_name.khuzait" text="Истерлинги" />
+
+    <string id="taom_str_culture_rich_name.aserai" text="Харадрим" />
+
+    <string id="taom_str_culture_rich_name.sturgia" text="Беорнинги" />
+
+    <string id="taom_str_culture_rich_name.erebor" text="Гномы" />
+
+    <string id="taom_str_culture_rich_name.rivendell" text="Нолдор" />
+
+    <string id="taom_str_culture_rich_name.mirkwood" text="Лесные эльфы" />
+
+    <string id="taom_str_culture_rich_name.lothlorien" text="Галадрим" />
+
+    <string id="taom_str_culture_rich_name.isengard" text="Урук-хай" />
+
+    <string id="taom_str_culture_rich_name.gundabad" text="Орки Гундабада" />
+
+    <string id="taom_str_culture_rich_name.umbar" text="Умбар" />
+
+    <string id="taom_str_culture_rich_name.dolguldur" text="Дол Гулдур" />
+
+    <string id="taom_str_culture_rich_name.gondor" text="Гондорцы" />
+
+    <string id="taom_str_culture_rich_name.mordor" text="Мордор" />
+
+    <string id="taom_str_adjective_for_culture.empire" text="Дунландский" />
+
+    <string id="taom_str_adjective_for_culture.vlandia" text="Рохиррский" />
+
+    <string id="taom_str_adjective_for_culture.battania" text="Вариагский" />
+
+    <string id="taom_str_adjective_for_culture.khuzait" text="Истерлингский" />
+
+    <string id="taom_str_adjective_for_culture.aserai" text="Харадримский" />
+
+    <string id="taom_str_adjective_for_culture.sturgia" text="Беорнингский" />
+
+    <string id="taom_str_adjective_for_culture.erebor" text="Гномий" />
+
+    <string id="taom_str_adjective_for_culture.rivendell" text="Ривендельский" />
+
+    <string id="taom_str_adjective_for_culture.mirkwood" text="Лихолесский" />
+
+    <string id="taom_str_adjective_for_culture.lothlorien" text="Лориэнский" />
+
+    <string id="taom_str_adjective_for_culture.isengard" text="Изенгардский" />
+
+    <string id="taom_str_adjective_for_culture.gundabad" text="Гундабадский" />
+
+    <string id="taom_str_adjective_for_culture.umbar" text="Умбарский" />
+
+    <string id="taom_str_adjective_for_culture.dolguldur" text="Дол Гулдурский" />
+
+    <string id="taom_str_adjective_for_culture.gondor" text="Гондорский" />
+
+    <string id="taom_str_adjective_for_culture.mordor" text="Мордорский" />
+
+    <string id="taom_str_player_father_name.empire" text="Вульфгар" />
+
+    <string id="taom_str_player_mother_name.empire" text="Фрека" />
+
+    <string id="taom_str_player_father_name.vlandia" text="Балдред" />
+
+    <string id="taom_str_player_mother_name.vlandia" text="Морвен" />
+
+    <string id="taom_str_player_father_name.battania" text="Вариаг" />
+
+    <string id="taom_str_player_mother_name.battania" text="Хара" />
+
+    <string id="taom_str_player_father_name.khuzait" text="Хамул" />
+
+    <string id="taom_str_player_mother_name.khuzait" text="Адунафель" />
+
+    <string id="taom_str_player_father_name.aserai" text="Суладан" />
+
+    <string id="taom_str_player_mother_name.aserai" text="Халет" />
+
+    <string id="taom_str_player_father_name.sturgia" text="Бард" />
+
+    <string id="taom_str_player_mother_name.sturgia" text="Сигрид" />
+
+    <string id="taom_str_player_father_name.erebor" text="Друлин" />
+
+    <string id="taom_str_player_mother_name.erebor" text="Оррина" />
+
+    <string id="taom_str_player_father_name.rivendell" text="Келефорн" />
+
+    <string id="taom_str_player_mother_name.rivendell" text="Гилриэн" />
+
+    <string id="taom_str_player_father_name.mirkwood" text="Галион" />
+
+    <string id="taom_str_player_mother_name.mirkwood" text="Лютиэн" />
+
+    <string id="taom_str_player_father_name.lothlorien" text="Ирофин" />
+
+    <string id="taom_str_player_mother_name.lothlorien" text="Оймродель" />
+
+    <string id="taom_str_player_father_name.isengard" text="Грима" />
+
+    <string id="taom_str_player_mother_name.isengard" text="Лурка" />
+
+    <string id="taom_str_player_father_name.gundabad" text="Нарзук" />
+
+    <string id="taom_str_player_mother_name.gundabad" text="Борлия" />
+
+    <string id="taom_str_player_father_name.umbar" text="Кастамир" />
+
+    <string id="taom_str_player_mother_name.umbar" text="Берутиэль" />
+
+    <string id="taom_str_player_father_name.dolguldur" text="Гришмак" />
+
+    <string id="taom_str_player_mother_name.dolguldur" text="Дургаш" />
+
+    <string id="taom_str_player_father_name.gondor" text="Коромир" />
+
+    <string id="taom_str_player_mother_name.gondor" text="Финдуилас" />
+
+    <string id="taom_str_player_father_name.mordor" text="Горбаг" />
+
+    <string id="taom_str_player_mother_name.mordor" text="Шелоб" />
+
+    <string id="taom_peace_news" text="{FACTION1} и {FACTION2} заключили мир." />
+
+    <string id="taom_war_news" text="{RULER_NAME} из {FACTION1_NAME} объявляет войну {FACTION2_NAME}." />
+
+    <string id="taom_war_news_direct" text="{FACTION1_NAME} объявляет войну {FACTION2_NAME}." />
+
+    <string id="taom_siege_party_link" text="{TOWN_NAME} осаждён силами под предводительством {LORD.LINK} из {FACTION_NAME}!" />
+
+    <string id="taom_siege_party" text="{TOWN_NAME} осаждён силами под предводительством {LORD.LINK} из {FACTION_NAME}!" />
+
+    <string id="taom_siege_army_link" text="{TOWN_NAME} осаждён армией под предводительством {LORD.LINK} из {FACTION_NAME}!" />
+
+    <string id="taom_siege_army" text="{TOWN_NAME} осаждён армией под предводительством {LORD.LINK} из {FACTION_NAME}!" />
+
+    <string id="taom_raid_army" text="{SETTLEMENT} разорено армией под предводительством {LORD.LINK} из {FACTION_NAME}" />
+
+    <string id="taom_raid_party" text="{SETTLEMENT} разорено {LORD.LINK} из {FACTION_NAME}" />
+
+    <string id="taom_destroy_party" text="{VICTOR_PARTY} из {VICTOR_FACTION} побеждает {DEFEATED_PARTY} из {DEFEATED_FACTION}." />
+
+    <string id="taom_secondary_peace" text="{FACTION1} и {FACTION2} заключили мир." />
+
+    <string id="taom_change_faction" text="Клан {CLAN_NAME} присоединился к {FACTION}." />
+
+    <string id="taom_merc_contract" text="{CLAN} заключил контракт на службу {KINGDOM}." />
+
+    <string id="taom_merc_end" text="{CLAN} больше не служит {KINGDOM}." />
+
+    <string id="taom_minor_intro" text="Я {CONVERSATION_CHARACTER.LINK}, из {FACTION}." />
+
+    <string id="taom_alliance_desc" text="Заключить союз с {FACTION}" />
+
+    <string id="taom_vassal_rank" text="Вассал {FACTION_INFORMAL_NAME}" />
+
+    <string id="taom_ruler_rank" text="Правитель {FACTION_INFORMAL_NAME}" />
+
+    <string id="taom_noble_rank" text="Дворянин {FACTION_INFORMAL_NAME}" />
+
+    <string id="taom_merc_rank" text="Наемник, сражающийся за {FACTION_INFORMAL_NAME}" />
+
+    <string id="taom_answer_call" text="Ответить на призыв {CALLING_KINGDOM} объявить войну {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
+
+    <string id="taom_propose_call" text="Призвать {CALLED_KINGDOM} объявить войну {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
+
+    <string id="taom_raid_resist_peace" text="Вы прибыли в {SETTLEMENT}, чтобы разграбить его. Некоторые жители собрались, чтобы дать вам отпор. Разграбление этой деревни приведет к войне с {KINGDOM}." />
+
+    <string id="taom_force_supply_peace" text="Когда вы пытаетесь заставить жителей отдать вам товары, некоторые из них собираются, чтобы дать вам отпор. Сражение с ними приведет к войне с {KINGDOM}." />
+
+    <string id="taom_force_vol_peace" text="Когда вы пытаетесь заставить знать отдать вам рекрутов, некоторые жители собираются, чтобы дать вам отпор. Сражение с ними приведет к войне с {KINGDOM}." />
+
+    <string id="taom_raid_noresist_peace" text="Вы прибыли в {SETTLEMENT}, чтобы разграбить его. Вы не встречаете сопротивления. Разграбление этой деревни приведет к войне с {KINGDOM}." />
+
+    <string id="taom_encounter_peace" text="Вы встретили {PARTY}. Сражение с ними приведет к войне с {KINGDOM}." />
+
+    <string id="0cdXddA9" text="{KINGDOM1_LINK} заключило союз с {KINGDOM2_LINK}." />
+
+    <string id="1rbg3Hz2" text="{FACTION_1} и {FACTION_2} больше не враги." />
+
+    <string id="2BVDp7Tg" text="{KINGDOM} прекратит {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+
+    <string id="Lbs2bNlg" text="{KINGDOM} начнет {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+
+    <string id="jnYwiCAz" text="{KINGDOM} продолжит {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+
+    <string id="faUooB7V" text="{KINGDOM} не будет {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+
+    <string id="TauRjAud" text="{NAME} из {FACTION}" />
+
+    <string id="2mVZORaE" text="слуга {FACTION_NAME}" />
+
+    <string id="6d4ZTvGv" text="{LORD.NAME} — {TITLE} {FACTION_NAME} и глава {CLAN_NAME}, {CLAN_DESCRIPTION} королевства. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
+
+    <string id="o5AUljbW" text="{LORD.NAME} — член {CLAN_NAME}, {CLAN_DESCRIPTION} {FACTION_NAME}. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
+
+    <string id="9Obe3S6L" text="{LORD.FIRSTNAME} — член {CLAN_NAME}, {CLAN_DESCRIPTION} из земель {FACTION_NAME}. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
+
+    <string id="hRfXSdlP" text="{LORD.FIRSTNAME} — глава {CLAN_NAME}, {CLAN_DESCRIPTION} из земель {FACTION_NAME}. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
+
+    <string id="0bPb5btR" text="{LORD.NAME} — член {CLAN_NAME}, {CLAN_DESCRIPTION} {FACTION_NAME}, поддерживающего {RULER} в гражданской войне. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
+
+    <string id="JuPUG5wX" text="{LORD.NAME} — {TITLE} {FACTION_NAME} и глава {CLAN_NAME}, {CLAN_DESCRIPTION}, поддерживающего {RULER} в гражданской войне. {?LORD.GENDER}Она имеет{?}Он имеет{\?} репутацию {REPUTATION}." />
+
+    <string id="4pmvrnmN" text="Замок {SETTLEMENT_LINK} принадлежит {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {KEEP_INFO}" />
+
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK} управляется {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {KEEP_INFO}" />
+
+    <string id="RVDojUOM" text="Земли вокруг {SETTLEMENT_LINK} в основном принадлежат {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {PROSPERITY_INFO}" />
+
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK} управляется {LORD.LINK}, {FACTION_OFFICIAL} {FACTION_TERM}. {PROSPERITY_INFO} {MORALE_INFO}" />
+
+    <string id="yAOQnMVw" text="Вы из {FACTION}, верно? Это означает, что вы мой пленник." />
+
+    <string id="YT4OvaAG" text="Хорошо. Можете считать себя под защитой {FACTION_NAME}. У вас есть время до завтрашнего дня, чтобы завершить ваше путешествие, или нам придется попросить у вас еще одну плату." />
+
+    <string id="taom_str_faction_official.erebor" text="благородный гном" />
+
+    <string id="taom_str_faction_official.erebor_f" text="благородная гномка" />
+
+    <string id="taom_str_faction_ruler.erebor" text="Король Под Горой" />
+
+    <string id="taom_str_faction_ruler.erebor_f" text="Королева Под Горой" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}Королева Под Горой{?}Король Под Горой{\?}, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}Королева Под Горой{?}Король Под Горой{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.erebor" text="Эреборский" />
+
+    <string id="taom_str_short_term_for_faction.erebor" text="Гном" />
+
+    <string id="taom_str_faction_formal_name_for_culture.erebor" text="Королевство Под Горой" />
+
+    <string id="taom_str_faction_informal_name_for_culture.erebor" text="Эребор" />
+
+    <string id="taom_str_neutral_term_for_culture.erebor" text="Гномы Эребора" />
+
+    <string id="0aXG8dvJ" text="Заключить мир с {KINGDOM_NAME}. Дань выплачиваться не будет." />
+
+    <string id="0CsbbwtN" text="Призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
+
+    <string id="0nhqJewP" text="{RULER.NAME} из {KINGDOM} передает {SETTLEMENT} {LEADER.NAME} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="17A2DDgD" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM} при поддержке {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME} могут быть сильны, но их земли богаты и созрели для захвата." />
+
+    <string id="1o8vgwTf" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM}, несмотря на возражения {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="1V8f9vRM" text="Курьер с предложением о союзе от {PROPOSER_KINGDOM} прибыл ко двору вашего королевства." />
+
+    <string id="21yUheIy" text="{KINGDOM_NAME} было создано в {CREATION_YEAR} году {RULER.NAME}, восходящим {CULTURE_ADJECTIVE} военачальником." />
+
+    <string id="22LCyCoA" text="Я могу предложить вашему королевству {GOLD}{GOLD_ICON} за объявление войны {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="2b1xZGaQ" text="Заключить мир с {KINGDOM_NAME}. Наше королевство будет платить дань {TRIBUTE_AMOUNT} ежедневно в течение {TRIBUTE_DURATION} дней." />
+
+    <string id="2KaXj3Qa" text="Разорения от {NEARBY_ENEMY_FACTION} вынудили многих крестьян покинуть свои дома. Те, у кого есть земля, обычно возвращаются к ней, но многие из бедняков ищут новое место для жизни. Вы говорите с несколькими, расположившимися лагерем на окраине вашей деревни. Для них нет земли. Они кажутся готовыми работать арендаторами, но всегда есть возможность напряженности с более устоявшимися деревенскими семьями." />
+
+    <string id="4fXpOe4N" text="Прибывает курьер от {CLAN_NAME}. Они держат {CAPTIVE_HERO.NAME} и требуют {GOLD_AMOUNT}{GOLD_ICON} в качестве выкупа." />
+
+    <string id="4GgfFDWG" text="Заключение мира с {KINGDOM_NAME}" />
+
+    <string id="4JSzHkpt" text="Как {?IS_FEMALE}королева{?}король{\?}, вы должны решить, будет ли объявлена война {KINGDOM_NAME}" />
+
+    <string id="4z1t75be" text="{FIRSTNAME} из {CLAN_NAME}" />
+
+    <string id="5bBAOHmC" text="{RULER.NAME} из {KINGDOM} берет {SETTLEMENT} в качестве {?RULER.GENDER}её{?}его{\?} феода, при том что {?RULER.GENDER}её{?}его{\?} совет разделился поровну." />
+
+    <string id="5bza9sDs" text="Мне очень жаль это слышать. Вы не найдете лучших нанимателей, чем {FACTION_NAME}, будьте в этом уверены." />
+
+    <string id="5DdbkWLu" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="5L0wDGhR" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} решил не начинать войну с {KINGDOM}, при том что {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совет разделился поровну." />
+
+    <string id="5pOKmHsf" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение получило поддержку половины {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} оккупировали наши исконные земли и угнетают наших соплеменников." />
+
+    <string id="7ouzFASf" text="Прибывает курьер с посланием от {OFFERED_KINGDOM_LEADER.NAME}. {?OFFERED_KINGDOM_LEADER.GENDER}Она{?}Он{\?} отмечает вашу растущую репутацию и спрашивает, не рассмотрите ли вы возможность присягнуть на верность {OFFERED_KINGDOM_NAME} в качестве вассала. Вам следует поговорить лично, если вы заинтересованы." />
+
+    <string id="8RBZaQKk" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} решил не начинать войну с {KINGDOM} при поддержке {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="940TwBPs" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM}, несмотря на возражения {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="9WDK03GW" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} решил не начинать войну с {KINGDOM}." />
+
+    <string id="aE7OQDMS" text="Заключить союз с {KINGDOM_NAME}." />
+
+    <string id="aEt1kqxm" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM}, при том что {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совет был поровну разделен по этому вопросу." />
+
+    <string id="AGdmoIUc" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было принято вопреки совету {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="amdgO9Hr" text="Я — {CONVERSATION_HERO.FIRSTNAME}. Я скромный последователь братства, известного как {FACTION_NAME}, которое {DIVINITY} избрали нести их послание в эту Эпоху." />
+
+    <string id="aQAI99d4" text="Объявление войны {KINGDOM_NAME}" />
+
+    <string id="AThZtg7U" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM}, при том что {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совет был поровну разделен по этому вопросу." />
+
+    <string id="AwCnrOan" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, будет ли {CALLED_KINGDOM} призван к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}." />
+
+    <string id="AWm7Kb9Y" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение получило поддержку половины {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="awoeb3br" text="{FACTION_LEADER} решит, заключит ли {KINGDOM_CONSIDERING_PEACE_NAME} мир с {KINGDOM_NAME}. Вы можете выбрать свою позицию относительно этого решения." />
+
+    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK} заключил мир с {ENEMYFACTION_INFORMALNAME}. Ваше соглашение с {QUEST_GIVER.LINK} было отменено." />
+
+    <string id="az3K3j4C" text="Сейчас мы сильнее, чем {ENEMY_KINGDOM_INFORMAL_NAME}. Мы должны нанести удар, пока можем." />
+
+    <string id="B818zx3W" text="Ваш клан находится в состоянии войны с фракциями, с которыми {KINGDOM} живет в мире." />
+
+    <string id="bjEN2OzZ" text="В результате ваших враждебных намерений по отношению к нейтральной деревне {KINGDOM} объявляет вам войну." />
+
+    <string id="Bk3Wqy5j" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="BlVjIlZF" text="{FACTION_LEADER} решит, заключит ли {KINGDOM_CONSIDERING_PEACE_NAME} мир с {KINGDOM_NAME}, заплатив {TRIBUTE_AMOUNT} в качестве дани на {TRIBUTE_DURATION} дней. Вы можете выбрать свою позицию относительно этого решения." />
+
+    <string id="bMCZ5rWQ" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано {?RULER.GENDER}её{?}его{\?} советом." />
+
+    <string id="bR7MIkFi" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="bXN2fbcv" text="Ваши люди обращаются с жителями {SETTLEMENT_NAME} как с заблудшими подданными {SETTLEMENT_CULTURE_NAME}, а не как с врагами, и относятся к ним довольно хорошо." />
+
+    <string id="bYmc9fi3" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="Cf0amFBD" text="Принять призыв {CALLING_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}" />
+
+    <string id="cRpsjvOM" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM} при поддержке {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="CrzFdo2H" text="Да. Речь о войне с {ENEMYFACTION_INFORMALNAME}. [ib:hip][if:convo_excited]Нам нужно сковать часть их сил. Относительно небольшой отряд, быстро перемещающийся по их землям и успешно разоряющий их деревни, должен стать хорошей отвлекающей манёвром. Их лордам придётся преследовать налётчиков, и они не смогут угрожать нам в других местах. Вы кажетесь подходящ{?PLAYER.GENDER}ей воительницей{?}им воином{\?} для этой работы. Что скажете? Вы заслужите мою благодарность и будете щедро вознаграждены в случае успеха." />
+
+    <string id="CswzBb02" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM}." />
+
+    <string id="d6KbdIWg" text=" В результате ваших враждебных действий по отношению к нейтральной деревне {MERCENARY_KINGDOM} разрывает контракт с вами, а {KINGDOM} объявляет вам войну." />
+
+    <string id="dCDBqYsh" text="{RULER.NAME} из {KINGDOM} решил не подписывать торговое соглашение с {OTHER_KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="dDsJyerw" text="Призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="dEsIQDo3" text="Пришло время призвать нашего союзника {CALLED_KINGDOM} к войне!" />
+
+    <string id="dov3iRlt" text="{ENEMY_RULER.NAME} из {ENEMY_KINGDOM_INFORMAL_NAME} подл и опасен. Мы должны разобраться с {?ENEMY_RULER.GENDER}ней{?}ним{\?}, пока не стало слишком поздно." />
+
+    <string id="DphlPaF9" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM} вопреки возражениям {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="dPOOmYGQ" text="Вы думаете, лорды и воины {KINGDOM} просто будут стоять в стороне, когда их людей похищают? Вам лучше отпустить нас!" />
+
+    <string id="drZC1Frp" text="{KINGDOM_NAME} было создано в {CREATION_YEAR} году {RULER.NAME}, лидером группы {CULTURE_ADJECTIVE} повстанцев." />
+
+    <string id="eAhgrwkZ" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, будет ли заключён союз с {KINGDOM_NAME}." />
+
+    <string id="eEmFbQet" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано {?RULER.GENDER}её{?}его{\?} советом." />
+
+    <string id="efTah9rk" text="У меня нет полномочий заключать мир от имени {ENEMY_INFORMAL_NAME}. Наш совет должен решить, предлагать ли мир и каковы будут условия." />
+
+    <string id="eiGl6XBr" text="Голосование о том, отвечать ли на призыв {CALLING_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
+
+    <string id="EqevKYZD" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, будет ли {CALLED_KINGDOM} призвано к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}" />
+
+    <string id="eTylgLCc" text="Прибыл курьер из {KINGDOM_NAME}. Они предлагают вам союз. Ваше королевство проголосует, принять ли это предложение." />
+
+    <string id="eUWYqwE6" text="{CALLING_KINGDOM} больше не находится в состоянии войны с {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="F7CMsDyG" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="fcuUcjYV" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать с {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано {?RULER.GENDER}её{?}его{\?} советом." />
+
+    <string id="FNCq25P1" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="FuNbouTu" text="Прибыл курьер из {KINGDOM_NAME}. Они призывают ваше королевство к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Ваше королевство проголосует, принять ли это предложение." />
+
+    <string id="G3qGLAeQ" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM} вопреки желаниям {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="gf2Lje7o" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}, командующий армией {QUEST_GIVER_FACTION}, сообщил вам, что им нужны запасы провианта для предстоящей военной кампании. {?QUEST_GIVER.GENDER}Она{?}Он{\?} попросил вас доставить {GRAIN_AMOUNT} мешков зерна, и хотя это не обязательно, предоставить {LIVESTOCK_AMOUNT} голов скота и {WINE_AMOUNT} бочек вина {?QUEST_GIVER.GENDER}она{?}он{\?} был бы признателен." />
+
+    <string id="Gj5d9y2g" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM}." />
+
+    <string id="gNf0ALKw" text="Прибыл курьер из {MAP_FACTION_NAME}. Они предлагают вам белый мир. Ваше королевство проголосует, принять ли это предложение." />
+
+    <string id="h5eTEYON" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM}." />
+
+    <string id="h9bWTLgK" text="Пришло время присоединиться к нашим союзникам, {KINGDOM_NAME}, в их войне." />
+
+    <string id="IB1xsVEr" text="Прибыл курьер из {MAP_FACTION_NAME}. Они предлагают вам белый мир. Ваши вассалы оставили решение за вами." />
+
+    <string id="INfHUqxT" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME}." />
+
+    <string id="Ing5gFbO" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM} вопреки возражениям {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="iOmgCFDI" text="Голосование о заключении союза с {KINGDOM_NAME}." />
+
+    <string id="ItueKmqd" text="Ваш клан теперь в состоянии войны с {QUEST_GIVER_SETTLEMENT_FACTION}. Ваш контракт с {QUEST_GIVER.LINK} расторгнут." />
+
+    <string id="izwKmH2I" text="{RULER.NAME} решил заключить союз с {KINGDOM_NAME} при поддержке половины {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="jaioXYDc" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME} при поддержке половины {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил заключить мир с {KINGDOM} вопреки возражениям {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="JJQ0Hp4m" text="Прибыл гонец из {MAP_FACTION_NAME}. {MAP_FACTION_NAME} будет платить {GOLD_AMOUNT} {GOLD_ICON} дани ежедневно, чтобы прекратить войну между вашими королевствами. Ваши вассалы оставили решение за вами." />
+
+    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} в настоящее время сильнее нас. Нам нужно время, чтобы укрепить свою мощь." />
+
+    <string id="JQligd8z" text="Совет {KINGDOM} избрал {KING.NAME} новым правителем." />
+
+    <string id="JY717hPW" text="У меня нет полномочий заключать мир от имени {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} и {?ENEMY_RULER.GENDER}её{?}его{\?} совет должны решить, предлагать ли мир и каковы будут условия." />
+
+    <string id="K5w135N9" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать с {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было принято вопреки совету {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="KFHj7ckm" text="Как правитель, вы должны решить, будет ли заключён мир с {KINGDOM_NAME}" />
+
+    <string id="KlATZEbb" text="Заключение союза с {KINGDOM_NAME}." />
+
+    <string id="KSrNutEO" text="{FACTION_LEADER} решит, будет ли объявлена война {KINGDOM_NAME}. Вы можете выбрать свою позицию относительно этого решения." />
+
+    <string id="Ktpia7Pa" text="{RULER.NAME} из {KINGDOM} дарует {SETTLEMENT} {LEADER.NAME} вопреки противодействию {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="l5H9x7Lo" text="{RULER.NAME} из {KINGDOM} дарует {SETTLEMENT} {LEADER.NAME}, при этом {?RULER.GENDER}её{?}его{\?} совет разделился поровну." />
+
+    <string id="L802I9W2" text="Да, я присоединюсь к {FACTION_NAME}." />
+
+    <string id="L81DPSom" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, ответит ли ваше королевство на призыв {CALLING_KINGDOM} и объявит ли войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}." />
+
+    <string id="Lalj0T1i" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="lseJ70y0" text="Ваше королевство в состоянии войны с {KINGDOM_NAME}." />
+
+    <string id="LVX2x6Jf" text="Я хотел бы расторгнуть контракт с {SERVED_FACTION}." />
+
+    <string id="m69pvful" text="{KINGDOM_LEADER} решит, ответит ли ваше королевство на призыв {CALLING_KINGDOM} и объявит ли войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}. Вы можете выбрать свою позицию относительно этого решения." />
+
+    <string id="m6OVl6Dg" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM}, при этом {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
+
+    <string id="mfYzCeGR" text="{CHARACTER.NAME} был {TITLE} {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
+
+    <string id="mRrYn2qm" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM} при поддержке {?PEACEMAKER_RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="MSr3HRa1" text="{QUEST_GIVER.NAME}, {?QUEST_GIVER.GENDER}госпожа{?}лорд{\?} из {CLAN}, желает, чтобы молодой член клана был обучен военному искусству." />
+
+    <string id="mvkKP6OE" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM}." />
+
+    <string id="MYIgSsfk" text="{RULER.NAME} решил не призывать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было принято вопреки совету {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="n4I3pWOn" text="Как правитель, вы должны решить, будет ли заключён мир с {KINGDOM_NAME} путём выплаты {TRIBUTE_AMOUNT} дани в течение {TRIBUTE_DURATION} дней." />
+
+    <string id="Nd0Vhkxn" text="Прибыл гонец из {MAP_FACTION_NAME}. Они предлагают вам мир, если вы согласитесь платить {GOLD_AMOUNT} {GOLD_ICON} ежедневной дани. Ваши вассалы оставили решение за вами." />
+
+    <string id="NFuezpbG" text="{CALLED_KINGDOM} уже в состоянии войны с {KINGDOM_NAME}." />
+
+    <string id="NjPMRWbW" text="Заключить мир с {KINGDOM_NAME}. Наше королевство будет получать {TRIBUTE_AMOUNT} дани ежедневно в течение {TRIBUTE_DURATION} дней." />
+
+    <string id="nkvT88r2" text="У вас недостаточно денег, чтобы призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="NuYzgBZB" text="Вы заходите слишком далеко. {KINGDOM} не потерпит уничтожения своих караванов." />
+
+    <string id="o4IxXHnB" text="{RULER.NAME} решил не заключать союз с {KINGDOM_NAME}." />
+
+    <string id="o69PZuce" text="{OLD_LEADER.LINK} больше не является главой {CLAN_NAME}. {NEW_LEADER.LINK} стал новым правителем клана." />
+
+    <string id="O9XpB5Ah" text="Как правитель, вы должны решить, будет ли заключено торговое соглашение с {KINGDOM}" />
+
+    <string id="oAw74q3r" text="Как {RULER_NAME_AND_TITLE}, вы должны решить, ответит ли ваше королевство на призыв {CALLING_KINGDOM} и объявит ли войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
+
+    <string id="Oe1NdVLe" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM}, при этом {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
+
+    <string id="Oi20UrO2" text="Наша война с {TARGET_SETTLEMENT_FACTION_INFORMAL_NAME} идёт достаточно хорошо. Но некоторые говорят, что у нас недостаточно результатов за всю кровь и серебро, что мы потратили. Явная победа на этом этапе принесла бы много пользы. Я думаю, мне хотелось бы увидеть наше знамя над башнями {TARGET_SETTLEMENT}.[ib:normal2][if:convo_thinking]" />
+
+    <string id="OlIWwLbP" text="Да. Это касается войны с {ENEMYFACTION_INFORMALNAME}. [ib:closed][if:convo_pondering]Нам нужно связать часть их войск, и самый простой способ — разорить их деревни. Это жестокое дело и тяжело отразится на простом народе, но их лорды будут вынуждены преследовать разорителей, и это не позволит им сделать то же самое с нами. Если вы возьмётесь за это, я награжу вас в случае успеха." />
+
+    <string id="Ouj6eSWC" text="{RULER.NAME} решил не отвечать на призыв {CALLING_KINGDOM} и не будет воевать с {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Решение было поддержано половиной {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="PneX4Ayw" text="Курьер с призывом к войне от {KINGDOM_NAME} против {KINGDOM_TO_CALL_TO_WAR_AGAINST} прибыл ко двору вашего королевства." />
+
+    <string id="PP7KD7OC" text="{RULER.NAME} из {KINGDOM} решил подписать торговое соглашение с {OTHER_KINGDOM}, при том что {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
+
+    <string id="PutoRsWp" text="Прибыл курьер от {CLAN_NAME}. Они предлагают вам {GOLD_AMOUNT}{GOLD_ICON} выкупа, если вы освободите {CAPTIVE_HERO.NAME}." />
+
+    <string id="q9DnHVcZ" text="Не в наших интересах присоединяться к {KINGDOM_NAME} в их войне." />
+
+    <string id="qa4FlTWS" text="{RULER.NAME} из {KINGDOM} берёт {SETTLEMENT} в качестве {?RULER.GENDER}её{?}его{\?} лена вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="qgN9o2ip" text="Пришло время призвать нашего союзника {KINGDOM_NAME} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}! Ваше королевство будет голосовать, предложить ли им соглашение о призыве к войне." />
+
+    <string id="qN3x2usk" text="Голосование о том, призвать ли {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}." />
+
+    <string id="R0bJS0pn" text="Заключить мир с {OTHER_FACTION}" />
+
+    <string id="r0Kq0aeB" text="{FACTION_LEADER} будет решать, призвать ли {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST} за {CALL_TO_WAR_COST}{GOLD_ICON}. Вы можете выбрать свою позицию по этому решению." />
+
+    <string id="rd229FYG" text="{RULER.NAME} изгнал клан {CLAN} из {KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="RH8mgLEk" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM} при поддержке половины {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="rJIuQ0hc" text="{RULER.NAME} из {KINGDOM} решил не подписывать торговое соглашение с {OTHER_KINGDOM} вопреки возражениям {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="rtfoywJl" text="Объявить войну {KINGDOM_NAME}" />
+
+    <string id="sbFboHmV" text="Прибыл курьер от {MAP_FACTION_NAME}. Они предлагают вам мир, если вы согласитесь платить дань в размере {GOLD_AMOUNT} {GOLD_ICON} ежедневно. Ваше королевство будет голосовать, принять ли это предложение." />
+
+    <string id="Shk9QCDg" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} объявил войну {KINGDOM}." />
+
+    <string id="SR9FC5jH" text="Прибыл курьер от {MAP_FACTION_NAME} с мирным предложением. {MAP_FACTION_NAME} будет платить {GOLD_AMOUNT} {GOLD_ICON} дани каждый день, чтобы прекратить войну между вашими королевствами. Ваше королевство будет голосовать, принять ли это предложение." />
+
+    <string id="syGyjjKE" text="Ответить на призыв {CALLING_KINGDOM} и объявить войну {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} предлагает вам работу наёмника, выплачивая {GOLD_AMOUNT}{GOLD_ICON} за каждое очко влияния, которое вы получите, сражаясь от их имени. Вы принимаете?" />
+
+    <string id="uc4M4bhG" text="Что ж, есть кое-что, чего я хочу. Есть {?TARGET_HERO.GENDER}одна леди{?}один лорд{\?} из {TARGET_FACTION}, с которой у меня давние, очень давние отношения. И далеко не дружеские. Теперь, когда мы в состоянии войны, пока {?TARGET_HERO.GENDER}она свободна{?}он свободен{\?}, я знаю, что моя жизнь и земли в опасности. Как я уже сказал, это будет совсем не просто. Но тот, кто сумеет это сделать, доставить {?TARGET_HERO.GENDER}её{?}его{\?} ко мне живым, помимо моей благодарности, станет поистине богатым человеком.[if:convo_grave][ib:closed2]" />
+
+    <string id="uiY3ds0Z" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} при поддержке половины {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="UQq4ekeu" text="{RULER.NAME} из {KINGDOM} решил не подписывать торговое соглашение с {OTHER_KINGDOM}." />
+
+    <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK} призвало {CALLED_KINGDOM_LINK} объявить войну {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}." />
+
+    <string id="uWdj1X2c" text="{CHARACTER.NAME} был членом {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
+
+    <string id="V097rA1v" text="{LORD.FIRSTNAME} — глава {CLAN_NAME}, нового восходящего клана. {?LORD.GENDER}Она{?}Он{\?} всё ещё создаёт {?LORD.GENDER}свою{?}свою{\?} репутацию." />
+
+    <string id="vf2pb7Ts" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="Vg5RmOqL" text="{FACTION_LEADER} будет решать, подпишет ли {KINGDOM} торговое соглашение с {OTHER_KINGDOM}. Вы можете выбрать свою позицию по этому решению." />
+
+    <string id="VWoHoUin" text="Не будет мира между нами и {ENEMY_INFORMAL_NAME}, как не может волк заключить мир с овцой." />
+
+    <string id="wijL0mTy" text="{FACTION_LEADER} будет решать, заключить ли союз с {KINGDOM_NAME}. Вы можете выбрать свою позицию по этому решению." />
+
+    <string id="wsDNxArW" text="{PEACEMAKER_RULER.NAME} из {KINGDOM_CONSIDERING_PEACE} решил не заключать мир с {KINGDOM}." />
+
+    <string id="xAuejv91" text="{RULER.NAME} из {KINGDOM} решил не заключать мир с {OTHER_KINGDOM}, при том что {?RULER.GENDER}её{?}его{\?} совет разделился поровну по этому вопросу." />
+
+    <string id="XaZyU3Cn" text="{AGGRESSOR_RULER.NAME} из {AGGRESSOR_KINGDOM} решил не начинать войну с {KINGDOM} вопреки желанию {?AGGRESSOR_RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="XbYCVCbR" text="Мы против призыва нашего союзника {CALLED_KINGDOM} к войне." />
+
+    <string id="xhK4zMec" text="{RULER.NAME} решил призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="xKev8i5B" text="Призыв, который {CALLING_KINGDOM_LINK} направило {CALLED_KINGDOM_LINK} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}, завершён." />
+
+    <string id="xM97H0oR" text="Голосовать за объявление войны {KINGDOM_NAME}." />
+
+    <string id="yBL3TzXw" text="{RULER.NAME} решил не изгонять клан {CLAN} из {KINGDOM} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="yUYNlQhU" text="Отлично, я прикажу своим людям составить простой контракт. От имени {KINGDOM_FORMAL_NAME} приветствую вас. Пусть ваш меч послужит нам добрую службу против наших врагов." />
+
+    <string id="Zckbdm4Z" text="{RULER.NAME} из {KINGDOM} берёт {SETTLEMENT} в качестве {?RULER.GENDER}её{?}его{\?} лена при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="zd9sawl9" text="Вы уже в союзе с {KINGDOM_NAME}." />
+
+    <string id="zXuo0Wbj" text="Подписание торгового соглашения с {KINGDOM}" />
+
+    <string id="ZZ1oLfEq" text="{RULER.NAME} ответил на призыв {CALLING_KINGDOM} и объявил войну {KINGDOM_TO_CALL_TO_WAR_AGAINST} при поддержке {?RULER.GENDER}её{?}его{\?} совета." />
+
+    <string id="taom_shaghana_name" text="Шагана" />
+
+    <string id="taom_shaghana_short_name" text="Шагана" />
+
+    <string id="taom_shaghana_title" text="Таскралан Шаганы" />
+
+    <string id="taom_shaghana_ruler_title" text="Таскрал" />
+
+    <string id="taom_shaghana_desc" text="Шагана — восточные пределы Харада, земля выжженных солнцем степей и древних крепостей. Девять племенных кланов — свирепые воины, связанные клятвой и кровью, вселяющие страх в тех, кто осмеливается им противостоять." />
+
+    <string id="aom_shaghana_name" text="Шагана" />
+
+    <string id="aom_shaghana_desc" text="Шагана — свирепый племенной народ восточных степей Харада, известный как неумолимые налётчики и искусные всадники. Связанные клятвой и кланом, они подчиняются своему Таскралу и служат тёмным замыслам Саурона из своих выжженных солнцем крепостей." />
+
+    <string id="aom_lord_SH1_1_name" text="Заркан" />
+
+    <string id="aom_lord_SH2_1_name" text="Рахим" />
+
+    <string id="aom_lord_SH3_1_name" text="Тадин" />
+
+    <string id="aom_lord_SH4_1_name" text="Нахел" />
+
+    <string id="aom_lord_SH5_1_name" text="Язур" />
+
+    <string id="aom_lord_SH6_1_name" text="Казан" />
+
+    <string id="aom_lord_SH7_1_name" text="Халуз" />
+
+    <string id="aom_lord_SH8_1_name" text="Фарун" />
+
+    <string id="aom_lord_SH9_1_name" text="Салуз" />
+
+    <string id="aom_clan_shaghana_1_name" text="Эзаркия" />
+
+    <string id="aom_clan_shaghana_2_name" text="Кумаракнис" />
+
+    <string id="aom_clan_shaghana_3_name" text="Тайимака" />
+
+    <string id="aom_clan_shaghana_4_name" text="Заякнури" />
+
+    <string id="aom_clan_shaghana_5_name" text="Селаркес" />
+
+    <string id="aom_clan_shaghana_6_name" text="Ужарес" />
+
+    <string id="aom_clan_shaghana_7_name" text="Аларанин" />
+
+    <string id="aom_clan_shaghana_8_name" text="Бануганд" />
+
+    <string id="aom_clan_shaghana_9_name" text="Акаммес" />
+
+    <string id="aom_sh_notable_0" text="Проницательный торговец Шаганы" />
+
+    <string id="aom_sh_notable_0b" text="Торговец пряностями Шаганы" />
+
+    <string id="aom_sh_notable_1" text="Владелец каравана Шаганы" />
+
+    <string id="aom_sh_notable_1b" text="Купец восточных степей" />
+
+    <string id="aom_sh_notable_2" text="Торговец шёлком Шаганы" />
+
+    <string id="aom_sh_notable_2b" text="Торговец степей Харада" />
+
+    <string id="aom_sh_notable_3" text="Менялa Шаганы" />
+
+    <string id="aom_sh_notable_3b" text="Торговец восточными товарами" />
+
+    <string id="aom_sh_notable_4" text="Хозяин базара Шаганы" />
+
+    <string id="aom_sh_notable_4b" text="Хитрый купец Шаганы" />
+
+    <string id="aom_sh_notable_5" text="Солнечный жрец Шаганы" />
+
+    <string id="aom_sh_notable_6" text="Племенной старейшина Шаганы" />
+
+    <string id="aom_sh_notable_7" text="Хранитель традиций Шаганы" />
+
+    <string id="aom_sh_notable_8" text="Мастер по металлу Шаганы" />
+
+    <string id="aom_sh_notable_9" text="Шагана оружейный мастер" />
+
+    <string id="aom_sh_notable_gl1" text="Шагана головорез" />
+
+    <string id="aom_sh_notable_10" text="Шагана криминальный авторитет" />
+
+    <string id="aom_sh_notable_11" text="Шагана главарь налётчиков" />
+
+    <string id="aom_sh_notable_gl4" text="Шагана главарь банды" />
+
+    <string id="aom_sh_notable_12" text="Шагана уличный босс" />
+
+    <string id="aom_sh_notable_13" text="Шагана торговец с чёрного рынка" />
+
+    <string id="aom_sh_notable_21" text="Шагана землевладелец" />
+
+    <string id="aom_sh_notable_22" text="Шагана главный пастух" />
+
+    <string id="aom_sh_headman_1" text="Шагана деревенский староста" />
+
+    <string id="aom_sh_headman_2" text="Шагана старший староста" />
+
+    <string id="aom_sh_headman_3" text="Шагана деревенский старейшина" />
+
+    <string id="taom_abanissa_name" text="Абанисса" />
+
+    <string id="taom_abanissa_short_name" text="Абанисса" />
+
+    <string id="taom_abanissa_title" text="Чаджафан Абаниссы" />
+
+    <string id="taom_abanissa_ruler_title" text="Чаджафан" />
+
+    <string id="taom_abanissa_desc" text="Абанисса лежит на глубоком юге Харада — царство влажных джунглей и древних каменных династий. Великие Дома Абаниссы командуют грозными боевыми зверями и армиями дисциплинированных воинов, их власть не подчиняется никому, кроме самого Саурона." />
+
+    <string id="aom_abanissa_name" text="Абанисса" />
+
+    <string id="aom_abanissa_desc" text="Великие Дома Абаниссы правят на глубоком юге Харада — земле влажных джунглей, древних каменных дворцов и высоких боевых зверей. Их армии маршируют под знамёнами династий, внушая уважение и ужас по всем южным землям." />
+
+    <string id="aom_lord_AB1_1_name" text="Факсар" />
+
+    <string id="aom_lord_AB2_1_name" text="Хошед" />
+
+    <string id="aom_lord_AB3_1_name" text="Васнар" />
+
+    <string id="aom_lord_AB4_1_name" text="Горазе" />
+
+    <string id="aom_lord_AB5_1_name" text="Азадан" />
+
+    <string id="aom_lord_AB6_1_name" text="Арташ" />
+
+    <string id="aom_lord_AB7_1_name" text="Ардач" />
+
+    <string id="aom_lord_AB8_1_name" text="Тирда" />
+
+    <string id="aom_clan_abanissa_1_name" text="Дом Факшарана" />
+
+    <string id="aom_clan_abanissa_2_name" text="Дом Хошедхармы" />
+
+    <string id="aom_clan_abanissa_3_name" text="Дом Васнарада" />
+
+    <string id="aom_clan_abanissa_4_name" text="Дом Горазехана" />
+
+    <string id="aom_clan_abanissa_5_name" text="Дом Азадафрозана" />
+
+    <string id="aom_clan_abanissa_6_name" text="Дом Артакшасана" />
+
+    <string id="aom_clan_abanissa_7_name" text="Дом Ардачерана" />
+
+    <string id="aom_clan_abanissa_8_name" text="Дом Тирдаханы" />
+
+    <string id="aom_ab_notable_0" text="Посредник династии Дальнего Харада" />
+
+    <string id="aom_ab_notable_0b" text="Абанисса торговец слоновой костью" />
+
+    <string id="aom_ab_notable_1" text="Абанисса глава каравана" />
+
+    <string id="aom_ab_notable_1b" text="Торговец пряностями Дальнего Харада" />
+
+    <string id="aom_ab_notable_2" text="Абанисса торговец золотом" />
+
+    <string id="aom_ab_notable_2b" text="Управляющий-купец дома" />
+
+    <string id="aom_ab_notable_3" text="Абаниссский брокер-огранщик самоцветов" />
+
+    <string id="aom_ab_notable_3b" text="Торговец шелками из Дальнего Харада" />
+
+    <string id="aom_ab_notable_4" text="Абаниссский надзиратель рынка" />
+
+    <string id="aom_ab_notable_4b" text="Хитрый абаниссский приказчик" />
+
+    <string id="aom_ab_notable_5" text="Абаниссский верховный жрец" />
+
+    <string id="aom_ab_notable_6" text="Абаниссский хранитель храма" />
+
+    <string id="aom_ab_notable_7" text="Мастер обрядов Дальнего Харада" />
+
+    <string id="aom_ab_notable_8" text="Абаниссский мастер-ремесленник" />
+
+    <string id="aom_ab_notable_9" text="Оружейник Дальнего Харада" />
+
+    <string id="aom_ab_notable_gl1" text="Абаниссский страж дома" />
+
+    <string id="aom_ab_notable_10" text="Абаниссский владыка теней" />
+
+    <string id="aom_ab_notable_11" text="Предводитель боевого отряда Дальнего Харада" />
+
+    <string id="aom_ab_notable_gl4" text="Абаниссский патриарх банды" />
+
+    <string id="aom_ab_notable_12" text="Абаниссский хозяин квартала" />
+
+    <string id="aom_ab_notable_13" text="Король контрабанды Дальнего Харада" />
+
+    <string id="aom_ab_notable_21" text="Абаниссский владетель поместья" />
+
+    <string id="aom_ab_notable_22" text="Абаниссский хозяин плантации" />
+
+    <string id="aom_ab_headman_1" text="Абаниссский сельский староста" />
+
+    <string id="aom_ab_headman_2" text="Абаниссский старейший староста" />
+
+    <string id="aom_ab_headman_3" text="Абаниссский деревенский старейшина" />
+
+    <string id="TAOM_ghilman_name" text="Змеиная Стража" />
+
+    <string id="TAOM_ghilman_short" text="Змеиная Стража" />
+
+    <string id="TAOM_ghilman_text" text="Змеиная Стража — конные воины на службе у Змеиного Владыки Ближнего Харада. Выросшие в седле на холмистых равнинах к югу от Эфель Дуата, они не имеют равных среди конных лучников всех южных земель Средиземья. Во времена мира между Харадом и Мордором Стража предлагает свои услуги харадримским владыкам и любой другой державе, достаточно богатой, чтобы заплатить их золотую цену." />
+
+    <string id="TAOM_legion_name" text="Серая Дружина" />
+
+    <string id="TAOM_legion_short" text="Серая Дружина" />
+
+    <string id="TAOM_legion_text" text="Серая Дружина — последнее организованное братство следопытов-дунэдайн, потомков королей Арнора, потерявших свое королевство много веков назад. Они скачут по Северу, не имея собственного дома, и хранят мир в землях, забывших их имена. Хотя их первая верность принадлежит роду Элендиля, они берут подряды от владык по всему Средиземью, когда их странствия приводят их в цивилизованные края." />
+
+    <string id="TAOM_skolderbrotva_name" text="Секироносцы Эребора" />
+
+    <string id="TAOM_skolderbrotva_short" text="Секироносцы" />
+
+    <string id="TAOM_skolderbrotva_text" text="Секироносцы Эребора — ветераны битв короля Торина, которым мирное время пришлось не по нраву. Обученные ближнему бою в гномьих чертогах — щитовая стена, короткая секира, кирка — они грозны на любой местности, но особенно искусны в горных перевалах, соединяющих Эребор с королевствами людей. Они берут подряды от всех, кто может заплатить их цену, но не поднимут секиру против Эребора или Ривенделла." />
+
+    <string id="TAOM_company_name" text="Клинки Корсаров" />
+
+    <string id="TAOM_company_short" text="Корсары" />
+
+    <string id="TAOM_company_text" text="Клинки Корсаров — ветераны морских сражений из гаваней Умбара, перешедшие к продаже своих навыков на суше. Они сражаются как арбалетчики — излюбленное оружие корабельной войны — и чувствуют себя так же уверенно в осаде, как на качающейся палубе. Их капитан, изрубцованный нуменорский изгнанник, держит их в рамках контрактов железной дисциплиной, зная, что их репутация — самый ценный груз." />
+
+    <string id="TAOM_beni_zilal_name" text="Слепое Око" />
+
+    <string id="TAOM_beni_zilal_short" text="Слепое Око" />
+
+    <string id="TAOM_beni_zilal_text" text="Слепое Око — братство контрабандистов, скупщиков краденого и наемных убийц, действующих на побережьях Харада и в глубинах пустыни. Говорят, что они происходят от культа ассасинов, служивших забытому харадримскому королю, и их методы — яд, тень и использование тайн — остались неизменными. Владыки, желающие тихо убрать соперника, или купцы, которым нужно провезти груз без таможенного досмотра, знают, куда оставить золотую монету и запечатанное письмо." />
+
+    <string id="TAOM_wolfskins_name" text="Вариагские Разорители" />
+
+    <string id="TAOM_wolfskins_short" text="Разорители" />
+
+    <string id="TAOM_wolfskins_text" text="Вариагские Разорители — боевые отряды молодых вариагских воинов из степей Кханда, проводящих свою раннюю зрелость в состоянии ритуальной войны: они не могут владеть приготовленной пищей, спать под постоянной крышей и не знают пощады. Хотя большинство в конце концов возвращается к оседлой жизни своих кланов, некоторые никогда не делают этого, и они образуют Разорителей — изгоев, охотящихся на дорогах Кханда и совершающих набеги через его границы в Харад и Гондор." />
+
+    <string id="TAOM_brotherhood_name" text="Дунландские Грабители" />
+
+    <string id="TAOM_brotherhood_short" text="Разорители" />
+
+    <string id="TAOM_brotherhood_text" text="Дунландские Разорители — разбитый остаток горного племени, что некогда обитало в долинах, ныне подвластных рохиррим. Их дедов изгнали с плодородных земель в скалистые высоты, и они взрастили ту горечь в философию налётчика: всё, что взято у южанина или королевского человека — лишь возврат украденного. На деле они разбойники, но опасные, знающие каждую козью тропу в горах." />
+
+    <string id="TAOM_hidden_hand_name" text="Слуги Уст" />
+
+    <string id="TAOM_hidden_hand_short" text="Слуги" />
+
+    <string id="TAOM_hidden_hand_text" text="Слуги Уст — это Очи Барад-дура, действующие за пределами Чёрных Врат: осведомители, каратели и шпионы, внедрённые среди народов, граничащих с Мордором. Там, куда армии Саурона ещё не дотянулись, эти агенты собирают дань и заглушают инакомыслие. Они действуют через подкуп, шантаж и тихие убийства, не давая ни одному заговору против Тёмного Властелина пустить корни, прежде чем он будет искоренён и раздавлен." />
+
+    <string id="TAOM_lakepike_name" text="Разрушители Долгого Озера" />
+
+    <string id="TAOM_lakepike_short" text="Разрушители" />
+
+    <string id="TAOM_lakepike_text" text="Разрушители Долгого Озера живут в камышовых зарослях и гниющих старых причалах на тёмных берегах Долгого Озера, вдали от почтенных огней Эсгарота. Они зарабатывают тем, что заманивают баржи на скрытые отмели ложными фонарями, затем обирают груз и сбывают его через скупщиков в самом городе. Несмотря на усилия Главы Озёрного города и купцов Дейла, у Разрушителей слишком много друзей в прибрежных тавернах, чтобы их можно было легко изгнать." />
+
+    <string id="TAOM_embers_name" text="Культ Недремлющего Ока" />
+
+    <string id="TAOM_embers_short" text="Культ Ока" />
+
+    <string id="TAOM_embers_text" text="Культ Недремлющего Ока — тайное общество, уходящее корнями в традиции Чёрных нуменорцев, почитающее Саурона как бога-короля, который вернёт своим верным былую славу, когда восстанет вновь. Они вербуют среди обездоленных Дунланда и забытых уголков королевства, обещая божественную милость и земную власть. На деле их главари подчиняются агентам Барад-дура, а их ячеистая структура делает их почти неуязвимыми для правосудия любого лорда." />
+
+    <string id="TAOM_jawwal_name" text="Песчаные всадники" />
+
+    <string id="TAOM_jawwal_short" text="Песчаные всадники" />
+
+    <string id="TAOM_jawwal_text" text="Песчаные Всадники — кочевые пустынные кланы глубинных земель Харада, властители безводных пустошей между Эфель Дуат и далёким южным морем. Они скитаются по путям, известным лишь им самим, требуя дань с любого каравана, дерзнувшего пересечь их территорию. Оседлые лорды Ближнего Харада считают их досадой; Песчаные Всадники считают оседлых лордов ворами, укравшими то, что пустыня уже отдала добровольно." />
+
+    <string id="TAOM_karakhuzaits_name" text="Дикие истерлинги" />
+
+    <string id="TAOM_karakhuzaits_short" text="Дикари" />
+
+    <string id="TAOM_karakhuzaits_text" text="Дикие истерлинги — непокорённые степные кланы Моря Рун, что противостояли власти каждого властителя, пытавшегося их усмирить — будь то вождь Руна, лейтенант Мордора или Король Дейла. Они кочуют по пастбищам к востоку от Келдуина, сгоняя коней, совершая набеги на стада и собирая дорожную дань с любого каравана, настолько глупого, чтобы пересечь их степь без вооружённой охраны." />
+
+    <string id="TAOM_forest_people_name" text="Друэдайн" />
+
+    <string id="TAOM_forest_people_short" text="Дикари" />
+
+    <string id="TAOM_forest_people_text" text="Друэдайн, известные людям как вóзы или Дикие Люди Леса — древний народ, обитающий в глубоких лесах Друадана и скрытых долинах Белых гор. Они выжигают землю огнём, выращивают всё необходимое на богатой золой почве и переходят дальше, когда земля истощается — образ жизни, который оседлые народы Средиземья никогда не понимали и не пытались понять. Друэдайн не хотят лорда, не платят податей и просят лишь одного — чтобы их оставили в лесной тишине." />
+
+    <string id="TAOM_eleftheroi_name" text="Беорнинги" />
+
+    <string id="TAOM_eleftheroi_short" text="Беорнинги" />
+
+    <string id="TAOM_eleftheroi_text" text="Беорнинги — великие лесовики, обитающие в долине Андуина меж Мглистых гор и Лихолесьем, ведомые оборотнями рода Беорна. Они не пропускают ни одного орка через свои земли, взимают пошлину у Брода Каррок на содержание дозора и не отвечают ни перед одним королём Средиземья. Хотя они торгуют и говорят с эльфами и гномами, любое войско, что пройдёт через их лес без позволения, обнаружит, что у беорнингов очень большие зубы." />
+
+    <string id="taom_career" text="Служба" />
+
+    <string id="taom_alliance_lore" text="Соответствие истории" />
+
+    <string id="taom_alliance_blocked" text="Эти королевства никогда не могут быть союзниками." />
+
+    <string id="taom_war_blocked" text="Эти королевства связаны нерушимым союзом." />
+
+    <string id="taom_wotr_no_peace" text="Бушует Война Кольца. Мира быть не может." />
+
+    <string id="taom_precompile_shaders" text="Предкомпиляция шейдеров" />
+
+    <string id="taom_precompile_hint" text="Предкомпилирует шейдеры для устранения подвисаний в игре. Запустите один раз после установки TAOM." />
+
+    <string id="taom_main_menu_new_game" text="Войти в Эпоху Людей" />
+
+    <string id="taom_career_screen_title" text="Карьера" />
+
+    <string id="taom_career_done" text="Готово" />
+
+    <string id="taom_career_ability_label" text="Карьерная способность" />
+
+    <string id="taom_career_tier1" text="Уровень 1" />
+
+    <string id="taom_career_tier2" text="Уровень 2" />
+
+    <string id="taom_career_tier3" text="Уровень 3" />
+
+    <string id="taom_career_free_points" text="Свободных очков: {COUNT}" />
+
+    <string id="taom_hideout_desc_dunland" text="Среди лесистых холмов Дунланда вы замечаете грубый лагерь из кожаных шатров и примитивный частокол, наполовину скрытый на поляне." />
+    <string id="taom_hideout_desc_gundabad" text="Под скалами Мглистых гор вы обнаруживаете зловонное логово орков Гундабада, вырытое в голой скале." />
+    <string id="taom_hideout_desc_harad" text="Среди дюн Харада вы натыкаетесь на замаскированный лагерь южан, расположившийся вокруг скрытого пустынного колодца." />
+    <string id="taom_hideout_desc_rhun" text="На бескрайних степях Руна вы замечаете повозки и кожаные шатры отряда восточных налётчиков, расположившихся в овраге." />
+    <string id="taom_hideout_desc_umbar" text="Вдоль южного берега вы находите укрытую бухту, где стоят на якоре чёрные корабли корсаров Умбара." />
+  </strings>
+
+</base>
+

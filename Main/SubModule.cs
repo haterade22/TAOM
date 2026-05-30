@@ -481,6 +481,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch23_BannerColorPersistence");
         _harmony.PatchCategory("Patch24_BannerDriftGuard");
         _harmony.PatchCategory("Patch39_BanditPartySize");
+        _harmony.PatchCategory("Patch40_HideoutDescription");
 
         var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();
         var specResLogger = IoC.Resolve<IModLogger>();

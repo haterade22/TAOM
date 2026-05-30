@@ -1,645 +1,1295 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Spanish (LA)" />
-  </tags>
-  <strings>
-    <string id="taom_str_faction_official.empire" text="un miembro del clan de Dunland" />
-    <string id="taom_str_faction_official.empire_f" text="una mujer del clan de Dunland" />
-    <string id="taom_str_faction_ruler.empire" text="Jefe" />
-    <string id="taom_str_faction_ruler.empire_f" text="Jefa" />
-    <string id="taom_str_faction_ruler_term_in_speech.empire" text="el Jefe, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.empire" text="Jefe {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.empire" text="Dunlendino" />
-    <string id="taom_str_short_term_for_faction.empire" text="Dunland" />
-    <string id="taom_str_faction_formal_name_for_culture.empire" text="Clanes de Dunland" />
-    <string id="taom_str_faction_informal_name_for_culture.empire" text="Dunland" />
-    <string id="taom_str_neutral_term_for_culture.empire" text="Dunlendinos" />
-    <string id="taom_str_faction_official.vlandia" text="un noble de Rohan" />
-    <string id="taom_str_faction_official.vlandia_f" text="una dama de Rohan" />
-    <string id="taom_str_faction_ruler.vlandia" text="Rey" />
-    <string id="taom_str_faction_ruler.vlandia_f" text="Reina" />
-    <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="el Rey, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.vlandia" text="Rey {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.vlandia" text="Rohírrico" />
-    <string id="taom_str_short_term_for_faction.vlandia" text="Jinete" />
-    <string id="taom_str_faction_formal_name_for_culture.vlandia" text="Marca de los Jinetes" />
-    <string id="taom_str_faction_informal_name_for_culture.vlandia" text="Rohan" />
-    <string id="taom_str_neutral_term_for_culture.vlandia" text="Rohirrim" />
-    <string id="taom_str_faction_official.battania" text="un noble de Khand" />
-    <string id="taom_str_faction_official.battania_f" text="una dama de Khand" />
-    <string id="taom_str_faction_ruler.battania" text="Señor de Khand" />
-    <string id="taom_str_faction_ruler.battania_f" text="Señora de Khand" />
-    <string id="taom_str_faction_ruler_term_in_speech.battania" text="el Señor, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.battania" text="Señor {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.battania" text="Variag" />
-    <string id="taom_str_short_term_for_faction.battania" text="Variag" />
-    <string id="taom_str_faction_formal_name_for_culture.battania" text="Variags de Khand" />
-    <string id="taom_str_faction_informal_name_for_culture.battania" text="Khand" />
-    <string id="taom_str_neutral_term_for_culture.battania" text="Variags" />
-    <string id="taom_str_faction_official.khuzait" text="un noble de Rhûn" />
-    <string id="taom_str_faction_official.khuzait_f" text="una dama de Rhûn" />
-    <string id="taom_str_faction_ruler.khuzait" text="Señor de la Guerra" />
-    <string id="taom_str_faction_ruler.khuzait_f" text="Señora de la Guerra" />
-    <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="el Señor de la Guerra, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.khuzait" text="Señor de la Guerra {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.khuzait" text="Orientales" />
-    <string id="taom_str_short_term_for_faction.khuzait" text="Rhun" />
-    <string id="taom_str_faction_formal_name_for_culture.khuzait" text="Orientales de Rhûn" />
-    <string id="taom_str_faction_informal_name_for_culture.khuzait" text="Rhûn" />
-    <string id="taom_str_neutral_term_for_culture.khuzait" text="Orientales" />
-    <string id="taom_str_faction_official.aserai" text="un noble de Harad" />
-    <string id="taom_str_faction_official.aserai_f" text="una dama de Harad" />
-    <string id="taom_str_faction_ruler.aserai" text="Jefe" />
-    <string id="taom_str_faction_ruler.aserai_f" text="Jefa" />
-    <string id="taom_str_faction_ruler_term_in_speech.aserai" text="el Jefe, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.aserai" text="Jefe {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.aserai" text="Haradrim" />
-    <string id="taom_str_short_term_for_faction.aserai" text="Harad" />
-    <string id="taom_str_faction_formal_name_for_culture.aserai" text="Reino de Harad" />
-    <string id="taom_str_faction_informal_name_for_culture.aserai" text="Harad" />
-    <string id="taom_str_neutral_term_for_culture.aserai" text="Haradrim" />
-    <string id="taom_str_faction_official.sturgia" text="un noble de Dale" />
-    <string id="taom_str_faction_official.sturgia_f" text="una dama de Dale" />
-    <string id="taom_str_faction_ruler.sturgia" text="Rey" />
-    <string id="taom_str_faction_ruler.sturgia_f" text="Reina" />
-    <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="el Rey, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.sturgia" text="Rey {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.sturgia" text="Bárdido" />
-    <string id="taom_str_short_term_for_faction.sturgia" text="Dale" />
-    <string id="taom_str_faction_formal_name_for_culture.sturgia" text="Reino de Dale" />
-    <string id="taom_str_faction_informal_name_for_culture.sturgia" text="Dale" />
-    <string id="taom_str_neutral_term_for_culture.sturgia" text="Bárdidos" />
-    <string id="taom_str_faction_official.dolguldur" text="un servidor de Dol Guldur" />
-    <string id="taom_str_faction_official.dolguldur_f" text="una servidora de Dol Guldur" />
-    <string id="taom_str_faction_ruler.dolguldur" text="El Supervisor" />
-    <string id="taom_str_faction_ruler.dolguldur_f" text="La Supervisora" />
-    <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="el Supervisor, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="Supervisor" />
-    <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.dolguldur" text="Gulduriano" />
-    <string id="taom_str_short_term_for_faction.dolguldur" text="Dol Guldur" />
-    <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="Fuerzas de Dol Guldur" />
-    <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="Dol Guldur" />
-    <string id="taom_str_neutral_term_for_culture.dolguldur" text="Sirvientes de Dol Guldur" />
-    <string id="taom_str_faction_official.isengard" text="un capitán de Isengard" />
-    <string id="taom_str_faction_official.isengard_f" text="una capitana de Isengard" />
-    <string id="taom_str_faction_ruler.isengard" text="La Mano Blanca" />
-    <string id="taom_str_faction_ruler.isengard_f" text="La Dama Blanca" />
-    <string id="taom_str_faction_ruler_term_in_speech.isengard" text="la Mano Blanca, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.isengard" text="La Mano Blanca {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.isengard" text="Isengard" />
-    <string id="taom_str_short_term_for_faction.isengard" text="Isengard" />
-    <string id="taom_str_faction_formal_name_for_culture.isengard" text="Fuerzas de Isengard" />
-    <string id="taom_str_faction_informal_name_for_culture.isengard" text="Isengard" />
-    <string id="taom_str_neutral_term_for_culture.isengard" text="Fuerzas de Isengard" />
-    <string id="taom_str_faction_official.gundabad" text="un cacique de Gundabad" />
-    <string id="taom_str_faction_official.gundabad_f" text="una cacique de Gundabad" />
-    <string id="taom_str_faction_ruler.gundabad" text="Señor de la Guerra" />
-    <string id="taom_str_faction_ruler.gundabad_f" text="Señora de la Guerra" />
-    <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="el Señor de la Guerra, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.gundabad" text="Señor de la Guerra {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gundabad" text="Gundabad" />
-    <string id="taom_str_short_term_for_faction.gundabad" text="Gundabad" />
-    <string id="taom_str_faction_formal_name_for_culture.gundabad" text="Orcos de Gundabad" />
-    <string id="taom_str_faction_informal_name_for_culture.gundabad" text="Gundabad" />
-    <string id="taom_str_neutral_term_for_culture.gundabad" text="Orcos de Gundabad" />
-    <string id="taom_str_faction_official.umbar" text="un corsario de Umbar" />
-    <string id="taom_str_faction_official.umbar_f" text="una corsaria de Umbar" />
-    <string id="taom_str_faction_ruler.umbar" text="Capitán de los Corsarios" />
-    <string id="taom_str_faction_ruler.umbar_f" text="Capitana de los Corsarios" />
-    <string id="taom_str_faction_ruler_term_in_speech.umbar" text="el Capitán, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.umbar" text="Capitán {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.umbar" text="Corsario" />
-    <string id="taom_str_short_term_for_faction.umbar" text="Umbar" />
-    <string id="taom_str_faction_formal_name_for_culture.umbar" text="Corsarios de Umbar" />
-    <string id="taom_str_faction_informal_name_for_culture.umbar" text="Umbar" />
-    <string id="taom_str_neutral_term_for_culture.umbar" text="Corsarios" />
-    <string id="taom_str_faction_official.gondor" text="un señor noble" />
-    <string id="taom_str_faction_official.gondor_f" text="una dama noble" />
-    <string id="taom_str_faction_ruler.gondor" text="Senescal" />
-    <string id="taom_str_faction_ruler.gondor_f" text="Dama Senescal" />
-    <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}la Dama Senescal{?}el Senescal{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}Dama Senescal{?}Senescal{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gondor" text="Gondoriano" />
-    <string id="taom_str_short_term_for_faction.gondor" text="Gondoriano" />
-    <string id="taom_str_faction_formal_name_for_culture.gondor" text="Gondoriano" />
-    <string id="taom_str_faction_informal_name_for_culture.gondor" text="los Gondorianos" />
-    <string id="taom_str_neutral_term_for_culture.gondor" text="Gondorianos" />
-    <string id="taom_str_faction_official.mordor" text="un capitán de Sauron" />
-    <string id="taom_str_faction_official.mordor_f" text="una sierva del Señor Oscuro" />
-    <string id="taom_str_faction_ruler.mordor" text="el Señor Oscuro" />
-    <string id="taom_str_faction_ruler.mordor_f" text="la Dama Oscura" />
-    <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}la Dama Oscura{?}el Señor Oscuro{\?}, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}Dama Oscura{?}Señor Oscuro{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}Guardiana{?}Supervisor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mordor" text="Mordor" />
-    <string id="taom_str_short_term_for_faction.mordor" text="Mordor" />
-    <string id="taom_str_faction_formal_name_for_culture.mordor" text="Mordor" />
-    <string id="taom_str_faction_informal_name_for_culture.mordor" text="los siervos de Sauron" />
-    <string id="taom_str_neutral_term_for_culture.mordor" text="Mordor" />
-    <string id="taom_str_faction_official.mirkwood" text="un protector del bosque" />
-    <string id="taom_str_faction_official.mirkwood_f" text="una guardiana del bosque" />
-    <string id="taom_str_faction_ruler.mirkwood" text="Rey" />
-    <string id="taom_str_faction_ruler.mirkwood_f" text="Reina" />
-    <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}la Reina{?}el Rey{\?}, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}Reina{?}Rey{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}Guardiana{?}Guardián{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mirkwood" text="Elfo del Bosque" />
-    <string id="taom_str_short_term_for_faction.mirkwood" text="Elfo del Bosque" />
-    <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="Reino del Bosque Negro" />
-    <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="el Reino del Bosque" />
-    <string id="taom_str_neutral_term_for_culture.mirkwood" text="Elfos del Bosque" />
-    <string id="taom_str_faction_official.lothlorien" text="un guardián de Lothlórien" />
-    <string id="taom_str_faction_official.lothlorien_f" text="una guardiana de Lothlórien" />
-    <string id="taom_str_faction_ruler.lothlorien" text="Señor" />
-    <string id="taom_str_faction_ruler.lothlorien_f" text="Dama" />
-    <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}la Dama{?}el Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lothlorien" text="Galadhrim" />
-    <string id="taom_str_short_term_for_faction.lothlorien" text="Elfo" />
-    <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="Bosque Dorado" />
-    <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="Lothlórien" />
-    <string id="taom_str_neutral_term_for_culture.lothlorien" text="Elfos del Bosque Dorado" />
-    <string id="taom_str_faction_official.rivendell" text="un maestro de la sabiduría de Rivendel" />
-    <string id="taom_str_faction_official.rivendell_f" text="una sanadora de Rivendel" />
-    <string id="taom_str_faction_ruler.rivendell" text="Señor" />
-    <string id="taom_str_faction_ruler.rivendell_f" text="Dama" />
-    <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}la Dama{?}el Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.rivendell" text="Rivendeliano" />
-    <string id="taom_str_short_term_for_faction.rivendell" text="Elfo" />
-    <string id="taom_str_faction_formal_name_for_culture.rivendell" text="Última Casa Acogedora" />
-    <string id="taom_str_faction_informal_name_for_culture.rivendell" text="Rivendel" />
-    <string id="taom_str_neutral_term_for_culture.rivendell" text="Elfos de Rivendel" />
-    <string id="taom_str_culture_description.empire" text="Los Dunlendinos, fieros hombres de las colinas de las tierras altas occidentales, son un pueblo orgulloso y antiguo. Resentidos con los Rohirrim, son conocidos por sus tácticas de guerrilla y su tenacidad en batalla. Unidos bajo líderes fuertes, luchan por su supervivencia y por reclamar las tierras que creen que les pertenecen por derecho." />
-    <string id="taom_str_culture_description.vlandia" text="Los Rohirrim, conocidos como los Señores de los Caballos, son el pueblo orgulloso y noble de Rohan, un reino de amplias llanuras abiertas y colinas ondulantes. Son reconocidos por su habilidad como jinetes y su inigualable caballería, que forma la columna vertebral de su fuerza militar. Viviendo en una sociedad feudal muy unida, los Rohirrim son liderados por un rey y una nobleza leal que están vinculados por el honor y la tradición para proteger su tierra y su gente. Son ferozmente independientes, valorando la libertad por sobre todo, y sus guerreros están entrenados para luchar con lanzas, espadas y arcos, todo mientras montan sus poderosos corceles." />
-    <string id="taom_str_culture_description.battania" text="Los Variag de Khand son un pueblo despiadado y belicoso de las estepas orientales. Conocidos por su dominio de los caballos y sus mortíferos carros de guerra, traen un estilo de guerra único y brutal. Alineados con Sauron, los Variag luchan por poder y botín, sembrando el miedo por toda la Tierra Media." />
-    <string id="taom_str_culture_description.khuzait" text="Los Orientales son un pueblo orgulloso y disciplinado, proveniente de las vastas tierras del este más allá de Mordor. Reconocidos por su resistencia y dominio de la guerra, son tanto agricultores como guerreros, mezclando tradiciones agrarias con una feroz cultura marcial. Sus ejércitos son conocidos por su temible caballería, adornada con armaduras ornamentadas y portando mortales lanzas y arcos. Con una rica herencia de artesanía y lealtad a los suyos, los Orientales marchan a la guerra bajo vibrantes estandartes de oro y carmesí, sembrando el miedo en los corazones de sus enemigos. Su lealtad a Sauron los ha convertido en una fuerza formidable, uniéndose bajo su sombra para expandir su dominio por toda la Tierra Media." />
-    <string id="taom_str_culture_description.aserai" text="Los Haradrim, guerreros de los desiertos del sur, son un pueblo feroz y resistente aliado con Sauron. Conocidos por sus exóticas bestias de guerra y su hábil caballería, marchan a la guerra bajo estandartes carmesí. Orgullosos y profundamente arraigados en sus tradiciones, traen la ferocidad del desierto a los campos de batalla de la Tierra Media." />
-    <string id="taom_str_culture_description.sturgia" text="Los Bárdidas de Valle, descendientes de Bardo el Arquero, son un pueblo orgulloso e industrioso que vive a la sombra de Erebor. Reconocidos por sus hábiles arqueros y guerreros disciplinados, salvaguardan su próspera ciudad y las rutas comerciales del norte. Unidos por un fuerte sentido de comunidad y honor, los Bárdidas se mantienen firmes contra la oscuridad que amenaza sus tierras." />
-    <string id="taom_str_culture_description.erebor" text="Los nobles Enanos de Erebor, son reconocidos por su artesanía, resistencia y orgullo. Desde sus salones en la Montaña Solitaria, forjan armas poderosas y tesoros de belleza incomparable. Vestidos con cota de malla y armados con hachas, defienden a los suyos con valor inquebrantable, buscando reclamar su legado y preservar su herencia contra todos los que la amenacen." />
-    <string id="taom_str_culture_description.rivendell" text="Rivendel, la Última Casa Acogedora, es un refugio de sabiduría y belleza liderado por el Señor Elrond. Ubicado en las Montañas Nubladas, su gente son maestros de la sabiduría y guardianes del conocimiento antiguo de la Tierra Media. Los Elfos de Rivendel ofrecen consejo y ayuda a quienes se oponen a la oscuridad, preservando la luz de la esperanza y la unidad." />
-    <string id="taom_str_culture_description.mirkwood" text="Los Elfos del Bosque de Bosque Negro, liderados por el Rey Thranduil, son guardianes del vasto y misterioso bosque. Conocidos por su agilidad y dominio del arco, se funden con las sombras, atacando con precisión y gracia. Su reino es uno de belleza y peligro, protegido por la determinación de sus guerreros y la sabiduría eterna de su rey. Ferozmente independientes, los Elfos de Bosque Negro luchan para preservar su bosque contra la oscuridad invasora." />
-    <string id="taom_str_culture_description.lothlorien" text="Los Galadhrim de Lothlórien, habitantes del Bosque Dorado, son un pueblo etéreo y noble liderado por la Dama Galadriel y el Señor Celeborn. Maestros del tiro con arco y la guerra en el bosque, protegen su reino encantado con habilidad incomparable. Su lealtad hacia su linaje y su tierra natal es inquebrantable, y su sutil magia preserva a Lothlórien como un santuario de esperanza y luz en medio de la creciente sombra." />
-    <string id="taom_str_culture_description.isengard" text="Los ejércitos de Isengard, liderados por Saruman el Blanco, son una fuerza formidable de Uruk-hai y mercenarios. Forjados en los fuegos de la industria, sus armas y armaduras están creadas para la destrucción. Las fuerzas de Isengard marchan a la guerra con eficiencia despiadada, decididas a la conquista y la dominación." />
-    <string id="taom_str_culture_description.gundabad" text="Los Orcos de Gundabad, que residen en las montañas envueltas en niebla, son una fuerza brutal y salvaje. Liderados por sus señores de la guerra, libran interminables incursiones en las tierras vecinas. Impulsados por el odio y la crueldad, son implacables en su búsqueda de dominar el norte." />
-    <string id="taom_str_culture_description.umbar" text="Los Corsarios de Umbar, saqueadores marítimos y maestros navegantes, son un pueblo despiadado y astuto aliado con Sauron. Conocidos por sus rápidas naves y su implacable guerra naval, siembran el miedo en las costas de la Tierra Media. Orgullosos de su herencia marítima, traen el caos de los mares a tierra firme, saqueando y pillando en nombre de sus oscuras alianzas." />
-    <string id="taom_str_culture_description.dolguldur" text="Los sirvientes de Dol Guldur, bajo el mando del Nigromante, son una fuerza oscura y siniestra. Ocultos dentro del bosque corrupto de Bosque Negro, emplean la traición y las sombras para debilitar a sus enemigos. Orcos, huargos y otras criaturas inmundas marchan para sembrar el miedo y la decadencia por toda la Tierra Media." />
-    <string id="taom_str_culture_description.gondor" text="Los Gondorianos, descendientes de los exiliados Númenóreanos, son los orgullosos senescales del mayor reino de los Hombres en la Tierra Media. Conocidos por sus imponentes fortalezas de piedra y su valor inquebrantable, Gondor es un bastión de esperanza contra la sombra amenazante de Mordor. Sus disciplinados ejércitos, compuestos por valientes infantes, hábiles arqueros y caballeros montados, se erigen como un escudo para todos los pueblos libres. Guiados por nobles senescales y capitanes, los Gondorianos se aferran a sus tradiciones, inflexibles en su deber de proteger el reino y su legado." />
-    <string id="taom_str_culture_description.mordor" text="Los ejércitos de Mordor, forjados en la sombra del Monte Doom, son una fuerza implacable de oscuridad comandada por Sauron, el Señor Oscuro. Compuestos por orcos, trolls y hombres malvados, marchan a la guerra bajo el Ojo ardiente, sembrando el miedo y la destrucción. Estas legiones están impulsadas por la crueldad y la servidumbre, blandiendo espadas dentadas y armaduras toscas. Atados por la voluntad de hierro de Sauron, las fuerzas de Mordor son una marea mortal que busca envolver a toda la Tierra Media en la sombra." />
-    <string id="taom_str_culture_rich_name.empire" text="Dunlendino" />
-    <string id="taom_str_culture_rich_name.vlandia" text="Rohirrim" />
-    <string id="taom_str_culture_rich_name.battania" text="Variag" />
-    <string id="taom_str_culture_rich_name.khuzait" text="Oriental" />
-    <string id="taom_str_culture_rich_name.aserai" text="Haradrim" />
-    <string id="taom_str_culture_rich_name.sturgia" text="Bardos" />
-    <string id="taom_str_culture_rich_name.erebor" text="Enanos" />
-    <string id="taom_str_culture_rich_name.rivendell" text="Ñoldor" />
-    <string id="taom_str_culture_rich_name.mirkwood" text="Silvanos" />
-    <string id="taom_str_culture_rich_name.lothlorien" text="Galadhrim" />
-    <string id="taom_str_culture_rich_name.isengard" text="Uruk-hai" />
-    <string id="taom_str_culture_rich_name.gundabad" text="Orcos de Gundabad" />
-    <string id="taom_str_culture_rich_name.umbar" text="Umbar" />
-    <string id="taom_str_culture_rich_name.dolguldur" text="Dol Guldur" />
-    <string id="taom_str_culture_rich_name.gondor" text="Gondorianos" />
-    <string id="taom_str_culture_rich_name.mordor" text="Mordor" />
-    <string id="taom_str_adjective_for_culture.empire" text="Dunlendino" />
-    <string id="taom_str_adjective_for_culture.vlandia" text="Rohírrico" />
-    <string id="taom_str_adjective_for_culture.battania" text="Variag" />
-    <string id="taom_str_adjective_for_culture.khuzait" text="Orientalino" />
-    <string id="taom_str_adjective_for_culture.aserai" text="Haradrim" />
-    <string id="taom_str_adjective_for_culture.sturgia" text="Bardo" />
-    <string id="taom_str_adjective_for_culture.erebor" text="Enano" />
-    <string id="taom_str_adjective_for_culture.rivendell" text="Rivendel" />
-    <string id="taom_str_adjective_for_culture.mirkwood" text="Bosque Negro" />
-    <string id="taom_str_adjective_for_culture.lothlorien" text="Lothlórien" />
-    <string id="taom_str_adjective_for_culture.isengard" text="Isengardiano" />
-    <string id="taom_str_adjective_for_culture.gundabad" text="Gundabad" />
-    <string id="taom_str_adjective_for_culture.umbar" text="Umbariano" />
-    <string id="taom_str_adjective_for_culture.dolguldur" text="Dol Guldur" />
-    <string id="taom_str_adjective_for_culture.gondor" text="Gondoriano" />
-    <string id="taom_str_adjective_for_culture.mordor" text="Mordoriano" />
-    <string id="taom_str_player_father_name.empire" text="Wulfgar" />
-    <string id="taom_str_player_mother_name.empire" text="Freca" />
-    <string id="taom_str_player_father_name.vlandia" text="Baldred" />
-    <string id="taom_str_player_mother_name.vlandia" text="Morwen" />
-    <string id="taom_str_player_father_name.battania" text="Variag" />
-    <string id="taom_str_player_mother_name.battania" text="Khara" />
-    <string id="taom_str_player_father_name.khuzait" text="Khamûl" />
-    <string id="taom_str_player_mother_name.khuzait" text="Adûnaphel" />
-    <string id="taom_str_player_father_name.aserai" text="Suladan" />
-    <string id="taom_str_player_mother_name.aserai" text="Haleth" />
-    <string id="taom_str_player_father_name.sturgia" text="Bardo" />
-    <string id="taom_str_player_mother_name.sturgia" text="Sigrid" />
-    <string id="taom_str_player_father_name.erebor" text="Drúlin" />
-    <string id="taom_str_player_mother_name.erebor" text="Orrina" />
-    <string id="taom_str_player_father_name.rivendell" text="Celeforn" />
-    <string id="taom_str_player_mother_name.rivendell" text="Gilrien" />
-    <string id="taom_str_player_father_name.mirkwood" text="Galion" />
-    <string id="taom_str_player_mother_name.mirkwood" text="Lúthien" />
-    <string id="taom_str_player_father_name.lothlorien" text="Irophin" />
-    <string id="taom_str_player_mother_name.lothlorien" text="Oimrodel" />
-    <string id="taom_str_player_father_name.isengard" text="Grima" />
-    <string id="taom_str_player_mother_name.isengard" text="Lurka" />
-    <string id="taom_str_player_father_name.gundabad" text="Narzuk" />
-    <string id="taom_str_player_mother_name.gundabad" text="Borlia" />
-    <string id="taom_str_player_father_name.umbar" text="Castamir" />
-    <string id="taom_str_player_mother_name.umbar" text="Berúthiel" />
-    <string id="taom_str_player_father_name.dolguldur" text="Grishmak" />
-    <string id="taom_str_player_mother_name.dolguldur" text="Durgash" />
-    <string id="taom_str_player_father_name.gondor" text="Coromir" />
-    <string id="taom_str_player_mother_name.gondor" text="Finduilas" />
-    <string id="taom_str_player_father_name.mordor" text="Gorbag" />
-    <string id="taom_str_player_mother_name.mordor" text="Zhelob" />
-    <string id="taom_peace_news" text="{FACTION1} y {FACTION2} han hecho las paces." />
-    <string id="taom_war_news" text="{RULER_NAME} de {FACTION1_NAME} declara la guerra a {FACTION2_NAME}." />
-    <string id="taom_war_news_direct" text="{FACTION1_NAME} declara la guerra a {FACTION2_NAME}." />
-    <string id="taom_siege_party_link" text="¡{TOWN_NAME} ha sido asediada por fuerzas lideradas por {LORD.LINK} de {FACTION_NAME}!" />
-    <string id="taom_siege_party" text="¡{TOWN_NAME} ha sido asediada por fuerzas lideradas por {LORD.LINK} de {FACTION_NAME}!" />
-    <string id="taom_siege_army_link" text="¡{TOWN_NAME} ha sido asediada por el ejército liderado por {LORD.LINK} de {FACTION_NAME}!" />
-    <string id="taom_siege_army" text="¡{TOWN_NAME} ha sido asediada por el ejército liderado por {LORD.LINK} de {FACTION_NAME}!" />
-    <string id="taom_raid_army" text="{SETTLEMENT} es saqueada por el ejército liderado por {LORD.LINK} de {FACTION_NAME}" />
-    <string id="taom_raid_party" text="{SETTLEMENT} es saqueada por {LORD.LINK} de {FACTION_NAME}" />
-    <string id="taom_destroy_party" text="{VICTOR_PARTY} de {VICTOR_FACTION} derrota a {DEFEATED_PARTY} de {DEFEATED_FACTION}." />
-    <string id="taom_secondary_peace" text="{FACTION1} y {FACTION2} han hecho las paces." />
-    <string id="taom_change_faction" text="El clan {CLAN_NAME} se ha unido a {FACTION}." />
-    <string id="taom_merc_contract" text="{CLAN} ha contratado para luchar junto a {KINGDOM}." />
-    <string id="taom_merc_end" text="{CLAN} ya no sirve a {KINGDOM}." />
-    <string id="taom_minor_intro" text="Soy {CONVERSATION_CHARACTER.LINK}, de {FACTION}." />
-    <string id="taom_alliance_desc" text="Formar una alianza con {FACTION}" />
-    <string id="taom_vassal_rank" text="Vasallo de {FACTION_INFORMAL_NAME}" />
-    <string id="taom_ruler_rank" text="Gobernante de {FACTION_INFORMAL_NAME}" />
-    <string id="taom_noble_rank" text="Noble de {FACTION_INFORMAL_NAME}" />
-    <string id="taom_merc_rank" text="Mercenario luchando por {FACTION_INFORMAL_NAME}" />
-    <string id="taom_answer_call" text="Responder al Llamado de {CALLING_KINGDOM} para Declarar la Guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
-    <string id="taom_propose_call" text="Llamar a {CALLED_KINGDOM} para Declarar la Guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
-    <string id="taom_raid_resist_peace" text="Has llegado a {SETTLEMENT} para saquearla. Algunos residentes se han reunido para resistirse. Saquear esta aldea causará una guerra con {KINGDOM}." />
-    <string id="taom_force_supply_peace" text="Mientras intentas forzar a los aldeanos a darte bienes, algunos residentes se reúnen para resistirse. Luchar contra ellos causará una guerra con {KINGDOM}." />
-    <string id="taom_force_vol_peace" text="Mientras intentas forzar a los notables a darte reclutas, algunos residentes se reúnen para resistirse. Luchar contra ellos causará una guerra con {KINGDOM}." />
-    <string id="taom_raid_noresist_peace" text="Has llegado a {SETTLEMENT} para saquearla. No encuentras resistencia. Saquear esta aldea causará una guerra con {KINGDOM}." />
-    <string id="taom_encounter_peace" text="Te has encontrado con {PARTY}. Luchar contra ellos causará una guerra con {KINGDOM}." />
-    <string id="0cdXddA9" text="{KINGDOM1_LINK} ha formado una alianza con {KINGDOM2_LINK}." />
-    <string id="1rbg3Hz2" text="{FACTION_1} y {FACTION_2} ya no son enemigos." />
-    <string id="2BVDp7Tg" text="{KINGDOM} dejará de {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="Lbs2bNlg" text="{KINGDOM} comenzará a {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="jnYwiCAz" text="{KINGDOM} continuará {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="faUooB7V" text="{KINGDOM} no estará {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
-    <string id="TauRjAud" text="{NAME} de {FACTION}" />
-    <string id="2mVZORaE" text="un servidor de {FACTION_NAME}" />
-    <string id="6d4ZTvGv" text="{LORD.NAME} es {TITLE} de {FACTION_NAME} y cabeza de {CLAN_NAME}, {CLAN_DESCRIPTION} del reino. {?LORD.GENDER}Ella{?}Él{\?} tiene la reputación de ser {REPUTATION}." />
-    <string id="o5AUljbW" text="{LORD.NAME} es un miembro de {CLAN_NAME}, {CLAN_DESCRIPTION} de {FACTION_NAME}. {?LORD.GENDER}Ella{?}Él{\?} tiene la reputación de ser {REPUTATION}." />
-    <string id="9Obe3S6L" text="{LORD.FIRSTNAME} es un miembro de {CLAN_NAME}, {CLAN_DESCRIPTION} de las tierras de {FACTION_NAME}. {?LORD.GENDER}Ella{?}Él{\?} tiene la reputación de ser {REPUTATION}." />
-    <string id="hRfXSdlP" text="{LORD.FIRSTNAME} es cabeza de {CLAN_NAME}, {CLAN_DESCRIPTION} de las tierras de {FACTION_NAME}. {?LORD.GENDER}Ella{?}Él{\?} tiene la reputación de ser {REPUTATION}." />
-    <string id="0bPb5btR" text="{LORD.NAME} es un miembro de {CLAN_NAME}, {CLAN_DESCRIPTION} de {FACTION_NAME} que apoya a {RULER} en la guerra civil. {?LORD.GENDER}Ella{?}Él{\?} tiene la reputación de ser {REPUTATION}." />
-    <string id="JuPUG5wX" text="{LORD.NAME} es {TITLE} de {FACTION_NAME} y cabeza de {CLAN_NAME}, {CLAN_DESCRIPTION} que apoya a {RULER} en la guerra civil. {?LORD.GENDER}Ella{?}Él{\?} tiene la reputación de ser {REPUTATION}." />
-    <string id="4pmvrnmN" text="El castillo de {SETTLEMENT_LINK} es propiedad de {LORD.LINK}, {FACTION_OFFICIAL} de {FACTION_TERM}. {KEEP_INFO}" />
-    <string id="q3wD0rbq" text="{SETTLEMENT_LINK} es gobernado por {LORD.LINK}, {FACTION_OFFICIAL} de {FACTION_TERM}. {KEEP_INFO}" />
-    <string id="RVDojUOM" text="Las tierras alrededor de {SETTLEMENT_LINK} son en su mayoría propiedad de {LORD.LINK}, {FACTION_OFFICIAL} de {FACTION_TERM}. {PROSPERITY_INFO}" />
-    <string id="UWzQsHA2" text="{SETTLEMENT_LINK} es gobernado por {LORD.LINK}, {FACTION_OFFICIAL} de {FACTION_TERM}. {PROSPERITY_INFO} {MORALE_INFO}" />
-    <string id="yAOQnMVw" text="Eres de {FACTION}, ¿verdad? Eso significa que eres mi prisionero." />
-    <string id="YT4OvaAG" text="Muy bien. Puedes considerarte bajo la protección de {FACTION_NAME}. Tienes hasta mañana a esta hora para completar tu viaje, o podríamos pedirte otro pago." />
-    <string id="taom_str_faction_official.erebor" text="un noble enano" />
-    <string id="taom_str_faction_official.erebor_f" text="una dama enana" />
-    <string id="taom_str_faction_ruler.erebor" text="Rey Bajo la Montaña" />
-    <string id="taom_str_faction_ruler.erebor_f" text="Reina Bajo la Montaña" />
-    <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}la Reina Bajo la Montaña{?}el Rey Bajo la Montaña{\?}, {RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}Reina Bajo la Montaña{?}Rey Bajo la Montaña{\?} {RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.erebor" text="Ereboriano" />
-    <string id="taom_str_short_term_for_faction.erebor" text="Enano" />
-    <string id="taom_str_faction_formal_name_for_culture.erebor" text="Reino Bajo la Montaña" />
-    <string id="taom_str_faction_informal_name_for_culture.erebor" text="Erebor" />
-    <string id="taom_str_neutral_term_for_culture.erebor" text="Enanos de Erebor" />
-    <string id="0aXG8dvJ" text="Hacer la paz con {KINGDOM_NAME}. No se pagará tributo." />
-    <string id="0CsbbwtN" text="Llamar a {CALLED_KINGDOM} a la Guerra Contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
-    <string id="0nhqJewP" text="{RULER.NAME} de {KINGDOM} otorga {SETTLEMENT} a {LEADER.NAME} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="17A2DDgD" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido hacer la paz con {KINGDOM} con el apoyo de {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME} puede ser fuerte, pero sus tierras son ricas y maduras para la conquista." />
-    <string id="1o8vgwTf" text="{RULER.NAME} de {KINGDOM} ha decidido firmar un acuerdo comercial con {OTHER_KINGDOM} a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="1V8f9vRM" text="Un mensajero portando una oferta de alianza de {PROPOSER_KINGDOM} ha llegado a la corte de tu reino." />
-    <string id="21yUheIy" text="{KINGDOM_NAME} fue creado en {CREATION_YEAR} por {RULER.NAME}, un {CULTURE_ADJECTIVE} señor de la guerra en ascenso." />
-    <string id="22LCyCoA" text="Puedo ofrecer a tu reino {GOLD}{GOLD_ICON} para declarar la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="2b1xZGaQ" text="Hacer la paz con {KINGDOM_NAME}. Nuestro reino pagará {TRIBUTE_AMOUNT} de tributo diario durante {TRIBUTE_DURATION} días." />
-    <string id="2KaXj3Qa" text="Las depredaciones de {NEARBY_ENEMY_FACTION} han expulsado a muchos granjeros de sus hogares. Aquellos que tienen tierra usualmente regresan a ella, pero muchos de los más pobres buscan un nuevo lugar para vivir. Hablas con algunos acampados en las afueras de tu aldea. No hay tierra para ellos. Parecen ansiosos por trabajar como arrendatarios, pero siempre existe la posibilidad de tensiones con las familias más establecidas de la aldea." />
-    <string id="4fXpOe4N" text="Un mensajero llega de {CLAN_NAME}. Retienen a {CAPTIVE_HERO.NAME} y están exigiendo {GOLD_AMOUNT}{GOLD_ICON} como rescate." />
-    <string id="4GgfFDWG" text="Haciendo la paz con {KINGDOM_NAME}" />
-    <string id="4JSzHkpt" text="Como {?IS_FEMALE}reina{?}rey{\?}, debes decidir si se declarará la guerra a {KINGDOM_NAME}" />
-    <string id="4z1t75be" text="{FIRSTNAME} de {CLAN_NAME}" />
-    <string id="5bBAOHmC" text="{RULER.NAME} de {KINGDOM} toma {SETTLEMENT} como {?RULER.GENDER}su{?}su{\?} feudo, con {?RULER.GENDER}su{?}su{\?} consejo dividido por igual." />
-    <string id="5bza9sDs" text="Lamento mucho escuchar eso. No encontrarás mejores empleadores que {FACTION_NAME}, ten eso por seguro." />
-    <string id="5DdbkWLu" text="{RULER.NAME} de {KINGDOM} ha decidido firmar un acuerdo comercial con {OTHER_KINGDOM} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="5L0wDGhR" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} eligió no ir a la guerra con {KINGDOM}, con {?AGGRESSOR_RULER.GENDER}su{?}su{\?} consejo dividido por igual." />
-    <string id="5pOKmHsf" text="{RULER.NAME} ha decidido llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión tuvo el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} ha ocupado nuestras tierras ancestrales y oprimen a nuestros parientes." />
-    <string id="7ouzFASf" text="Llega un mensajero portando un mensaje de {OFFERED_KINGDOM_LEADER.NAME}. {?OFFERED_KINGDOM_LEADER.GENDER}Ella{?}Él{\?} comenta sobre tu creciente reputación y pregunta si considerarías jurarte como vasallo de {OFFERED_KINGDOM_NAME}. Deberías hablar en persona si estás interesado." />
-    <string id="8RBZaQKk" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} eligió no ir a la guerra con {KINGDOM} con el apoyo de {?AGGRESSOR_RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="940TwBPs" text="{RULER.NAME} eligió no expulsar al clan {CLAN} de {KINGDOM} a pesar de las objeciones de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="9WDK03GW" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} eligió no ir a la guerra con {KINGDOM}." />
-    <string id="aE7OQDMS" text="Formar alianza con {KINGDOM_NAME}." />
-    <string id="aEt1kqxm" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido hacer la paz con {KINGDOM}, con {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo dividido equitativamente sobre el asunto." />
-    <string id="AGdmoIUc" text="{RULER.NAME} ha decidido llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión fue en contra del consejo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="amdgO9Hr" text="Soy {CONVERSATION_HERO.FIRSTNAME}. Soy un humilde seguidor de la comunidad conocida como {FACTION_NAME}, a quienes {DIVINITY} ha elegido para portar su mensaje en esta Era presente." />
-    <string id="aQAI99d4" text="Declarando la Guerra a {KINGDOM_NAME}" />
-    <string id="AThZtg7U" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido no hacer la paz con {KINGDOM}, con {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo dividido equitativamente sobre el asunto." />
-    <string id="AwCnrOan" text="Como {RULER_NAME_AND_TITLE}, debes decidir si {CALLED_KINGDOM} será llamado a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="AWm7Kb9Y" text="{RULER.NAME} ha decidido no llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión tuvo el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="awoeb3br" text="{FACTION_LEADER} decidirá si {KINGDOM_CONSIDERING_PEACE_NAME} hará la paz con {KINGDOM_NAME}. Puedes elegir tu postura respecto a esta decisión." />
-    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK} ha hecho la paz con {ENEMYFACTION_INFORMALNAME}. Tu acuerdo con {QUEST_GIVER.LINK} ha sido cancelado." />
-    <string id="az3K3j4C" text="Ahora mismo somos más fuertes que {ENEMY_KINGDOM_INFORMAL_NAME}. Deberíamos atacar mientras podamos." />
-    <string id="B818zx3W" text="Tu clan está en guerra con fracciones con las que {KINGDOM} está en paz." />
-    <string id="bjEN2OzZ" text="Como resultado de tu intención hostil hacia una aldea neutral, {KINGDOM} te declara la guerra." />
-    <string id="Bk3Wqy5j" text="{RULER.NAME} ha decidido no responder al llamado de {CALLING_KINGDOM} y no hará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="BlVjIlZF" text="{FACTION_LEADER} decidirá si {KINGDOM_CONSIDERING_PEACE_NAME} hará la paz con {KINGDOM_NAME} pagando {TRIBUTE_AMOUNT} como tributo durante {TRIBUTE_DURATION} días. Puedes elegir tu postura respecto a esta decisión." />
-    <string id="bMCZ5rWQ" text="{RULER.NAME} ha decidido no llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión tuvo el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="bR7MIkFi" text="{RULER.NAME} ha decidido no formar una alianza con {KINGDOM_NAME} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="bXN2fbcv" text="Tus hombres tratan a los residentes de {SETTLEMENT_NAME} como súbditos descarriados de {SETTLEMENT_CULTURE_NAME} en lugar de enemigos, y los tratan relativamente bien." />
-    <string id="bYmc9fi3" text="{RULER.NAME} ha decidido formar una alianza con {KINGDOM_NAME} a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="Cf0amFBD" text="Aceptar el Llamado a la Guerra de {CALLING_KINGDOM} Contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_PAYMENT}{GOLD_ICON}" />
-    <string id="cRpsjvOM" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} ha declarado la guerra a {KINGDOM} con el apoyo de {?AGGRESSOR_RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="CrzFdo2H" text="Sí. Se trata de la guerra con {ENEMYFACTION_INFORMALNAME}. [ib:hip][if:convo_excited]Necesitamos inmovilizar algunas de sus fuerzas. Una fuerza relativamente pequeña moviéndose rápidamente por sus tierras y saqueando sus aldeas con éxito debería ser una buena distracción. Sus señores tendrán que perseguir a los asaltantes y no podrán amenazarnos en otras partes. Pareces ser {?PLAYER.GENDER}la guerrera{?}el hombre{\?} indicado para el trabajo. ¿Qué dices? Tendrás mi gratitud y serás bien recompensado si tienes éxito." />
-    <string id="CswzBb02" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido hacer la paz con {KINGDOM}." />
-    <string id="d6KbdIWg" text=" Como resultado de tu intención hostil hacia una aldea neutral, {MERCENARY_KINGDOM} termina su contrato contigo, y {KINGDOM} te declara la guerra." />
-    <string id="dCDBqYsh" text="{RULER.NAME} de {KINGDOM} ha elegido no firmar un acuerdo comercial con {OTHER_KINGDOM} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="dDsJyerw" text="Llamar a {CALLED_KINGDOM} a la Guerra Contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="dEsIQDo3" text="¡Es hora de llamar a nuestro aliado {CALLED_KINGDOM} a la guerra!" />
-    <string id="dov3iRlt" text="{ENEMY_RULER.NAME} de {ENEMY_KINGDOM_INFORMAL_NAME} es vil y peligroso. Debemos lidiar con {?ENEMY_RULER.GENDER}ella{?}él{\?} antes de que sea demasiado tarde." />
-    <string id="DphlPaF9" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} ha declarado la guerra a {KINGDOM} a pesar de la oposición de {?AGGRESSOR_RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="dPOOmYGQ" text="¿Crees que los señores y guerreros de {KINGDOM} se quedarán de brazos cruzados cuando su gente sea secuestrada? ¡Será mejor que nos dejes ir!" />
-    <string id="drZC1Frp" text="{KINGDOM_NAME} fue creado en {CREATION_YEAR} por {RULER.NAME}, líder de un grupo de rebeldes {CULTURE_ADJECTIVE}." />
-    <string id="eAhgrwkZ" text="Como {RULER_NAME_AND_TITLE}, debes decidir si se formará una alianza con {KINGDOM_NAME}." />
-    <string id="eEmFbQet" text="{RULER.NAME} ha decidido llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión contó con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="efTah9rk" text="No tengo la autoridad para hacer la paz en nombre de {ENEMY_INFORMAL_NAME}. Nuestro consejo debería decidir si ofrecer la paz, y cuáles serán los términos." />
-    <string id="eiGl6XBr" text="Votar sobre si responder al llamado de {CALLING_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
-    <string id="EqevKYZD" text="Como {RULER_NAME_AND_TITLE}, debes decidir si {CALLED_KINGDOM} será llamado a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_COST}{GOLD_ICON}" />
-    <string id="eTylgLCc" text="Ha llegado un mensajero de {KINGDOM_NAME}. Te ofrecen una alianza. Tu reino votará si acepta la oferta." />
-    <string id="eUWYqwE6" text="{CALLING_KINGDOM} ya no está en guerra con {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="F7CMsDyG" text="{RULER.NAME} ha decidido no formar una alianza con {KINGDOM_NAME} a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="fcuUcjYV" text="{RULER.NAME} ha decidido no responder al llamado de {CALLING_KINGDOM} y no hará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión contó con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="FNCq25P1" text="{RULER.NAME} ha decidido formar una alianza con {KINGDOM_NAME} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="FuNbouTu" text="Ha llegado un mensajero de {KINGDOM_NAME}. Llaman a tu reino a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Tu reino votará si acepta la oferta." />
-    <string id="G3qGLAeQ" text="{RULER.NAME} ha expulsado al clan {CLAN} de {KINGDOM} en contra de los deseos de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="gf2Lje7o" text="{RULER.NAME} ha decidido no llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}, comandando un ejército de {QUEST_GIVER_FACTION}, te ha dicho que necesitan suministros de comida para su próxima campaña militar. {?QUEST_GIVER.GENDER}Ella{?}Él{\?} quería que entregues {GRAIN_AMOUNT} sacos de grano y aunque no es necesario, si proporcionas {LIVESTOCK_AMOUNT} ganado vivo y {WINE_AMOUNT} barriles de vino {?QUEST_GIVER.GENDER}ella{?}él{\?} lo apreciaría." />
-    <string id="Gj5d9y2g" text="{RULER.NAME} de {KINGDOM} ha decidido firmar un acuerdo comercial con {OTHER_KINGDOM}." />
-    <string id="gNf0ALKw" text="Ha llegado un mensajero de {MAP_FACTION_NAME}. Te ofrecen una paz blanca. Tu reino votará si acepta la oferta." />
-    <string id="h5eTEYON" text="{RULER.NAME} ha expulsado al clan {CLAN} de {KINGDOM}." />
-    <string id="h9bWTLgK" text="Es hora de unirnos a nuestros aliados, {KINGDOM_NAME}, en su guerra." />
-    <string id="IB1xsVEr" text="Ha llegado un mensajero de {MAP_FACTION_NAME}. Te ofrecen una paz blanca. Tus vasallos han dejado la decisión en tus manos." />
-    <string id="INfHUqxT" text="{RULER.NAME} ha decidido formar una alianza con {KINGDOM_NAME}." />
-    <string id="Ing5gFbO" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha elegido no hacer la paz con {KINGDOM} por encima de las objeciones de {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="iOmgCFDI" text="Votar para formar una alianza con {KINGDOM_NAME}." />
-    <string id="ItueKmqd" text="Tu clan ahora está en guerra con {QUEST_GIVER_SETTLEMENT_FACTION}. Tu contrato con {QUEST_GIVER.LINK} está cancelado." />
-    <string id="izwKmH2I" text="{RULER.NAME} ha decidido formar una alianza con {KINGDOM_NAME} con el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="jaioXYDc" text="{RULER.NAME} ha decidido no formar una alianza con {KINGDOM_NAME} con el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido hacer la paz con {KINGDOM} a pesar de la oposición de {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="JJQ0Hp4m" text="Un mensajero ha llegado de {MAP_FACTION_NAME}. {MAP_FACTION_NAME} pagará {GOLD_AMOUNT} {GOLD_ICON} en tributo cada día para terminar la guerra entre vuestros reinos. Tus vasallos han dejado la decisión contigo." />
-    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} es actualmente más poderoso que nosotros. Necesitamos tiempo para fortalecer nuestras fuerzas." />
-    <string id="JQligd8z" text="El consejo de {KINGDOM} ha elegido a {KING.NAME} como el nuevo gobernante." />
-    <string id="JY717hPW" text="No tengo la autoridad para hacer la paz en nombre de {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} y {?ENEMY_RULER.GENDER}su{?}su{\?} consejo deberían decidir si ofrecer la paz y cuáles serán los términos." />
-    <string id="K5w135N9" text="{RULER.NAME} ha decidido no responder al llamado de {CALLING_KINGDOM} y no hará la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión fue tomada en contra del consejo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="KFHj7ckm" text="Como gobernante, debes decidir si se hará la paz con {KINGDOM_NAME}" />
-    <string id="KlATZEbb" text="Formando una Alianza con {KINGDOM_NAME}." />
-    <string id="KSrNutEO" text="{FACTION_LEADER} decidirá si se declarará la guerra a {KINGDOM_NAME}. Puedes elegir tu postura respecto a esta decisión." />
-    <string id="Ktpia7Pa" text="{RULER.NAME} de {KINGDOM} otorga {SETTLEMENT} a {LEADER.NAME} a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="l5H9x7Lo" text="{RULER.NAME} de {KINGDOM} otorga {SETTLEMENT} a {LEADER.NAME}, con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente." />
-    <string id="L802I9W2" text="Sí, me uniré a {FACTION_NAME}." />
-    <string id="L81DPSom" text="Como {RULER_NAME_AND_TITLE}, debes decidir si tu reino responderá al llamado de {CALLING_KINGDOM} y declarará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="Lalj0T1i" text="{RULER.NAME} ha respondido al llamado de {CALLING_KINGDOM} y declarado la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="lseJ70y0" text="Tu reino está en guerra con {KINGDOM_NAME}." />
-    <string id="LVX2x6Jf" text="Quisiera terminar mi contrato con {SERVED_FACTION}." />
-    <string id="m69pvful" text="{KINGDOM_LEADER} decidirá si tu reino responderá al llamado de {CALLING_KINGDOM} y declarará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_PAYMENT}{GOLD_ICON}. Puedes elegir tu postura respecto a esta decisión." />
-    <string id="m6OVl6Dg" text="{RULER.NAME} ha expulsado al clan {CLAN} de {KINGDOM}, con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente en el asunto." />
-    <string id="mfYzCeGR" text="{CHARACTER.NAME} fue {TITLE} de {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
-    <string id="mRrYn2qm" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha elegido no hacer la paz con {KINGDOM} con el apoyo de {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="MSr3HRa1" text="{QUEST_GIVER.NAME}, {?QUEST_GIVER.GENDER}una dama{?}un señor{\?} de {CLAN}, quiere que un miembro joven del clan sea entrenado en las artes de la guerra." />
-    <string id="mvkKP6OE" text="{RULER.NAME} decidió no expulsar al clan {CLAN} de {KINGDOM}." />
-    <string id="MYIgSsfk" text="{RULER.NAME} ha decidido no llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión fue en contra del consejo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="n4I3pWOn" text="Como gobernante, debes decidir si se hará la paz con {KINGDOM_NAME} pagando {TRIBUTE_AMOUNT} como tributo durante {TRIBUTE_DURATION} días." />
-    <string id="Nd0Vhkxn" text="Un mensajero ha llegado de {MAP_FACTION_NAME}. Te ofrecen la paz si aceptas pagar un tributo diario de {GOLD_AMOUNT} {GOLD_ICON}. Tus vasallos han dejado la decisión contigo." />
-    <string id="NFuezpbG" text="{CALLED_KINGDOM} ya está en guerra con {KINGDOM_NAME}." />
-    <string id="NjPMRWbW" text="Hacer la paz con {KINGDOM_NAME}. Nuestro reino recibirá {TRIBUTE_AMOUNT} de tributo diario durante {TRIBUTE_DURATION} días." />
-    <string id="nkvT88r2" text="No tienes suficiente dinero para llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="NuYzgBZB" text="Estás yendo demasiado lejos. {KINGDOM} no tolerará la destrucción de sus caravanas." />
-    <string id="o4IxXHnB" text="{RULER.NAME} ha decidido no formar una alianza con {KINGDOM_NAME}." />
-    <string id="o69PZuce" text="{OLD_LEADER.LINK} ya no es el líder de {CLAN_NAME}. {NEW_LEADER.LINK} ha asumido como gobernante del clan." />
-    <string id="O9XpB5Ah" text="Como gobernante, debes decidir si se hará un acuerdo comercial con {KINGDOM}" />
-    <string id="oAw74q3r" text="Como {RULER_NAME_AND_TITLE}, debes decidir si tu reino responderá al llamado de {CALLING_KINGDOM} y declarará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
-    <string id="Oe1NdVLe" text="{RULER.NAME} eligió no expulsar al clan {CLAN} de {KINGDOM} con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente en el asunto." />
-    <string id="Oi20UrO2" text="Nuestra guerra con {TARGET_SETTLEMENT_FACTION_INFORMAL_NAME} va bastante bien. Pero hay quienes dicen que no tenemos suficiente que mostrar por toda la sangre y plata que hemos gastado. Una victoria clara en esta etapa haría mucho bien. Creo que me gustaría ver nuestra bandera ondeando desde las torres de {TARGET_SETTLEMENT}.[ib:normal2][if:convo_thinking]" />
-    <string id="OlIWwLbP" text="Sí. Se trata de la guerra con {ENEMYFACTION_INFORMALNAME}. [ib:closed][if:convo_pondering]Necesitamos ocupar algunas de sus fuerzas, y la manera más fácil sería asaltar sus aldeas. Es un negocio cruel y será duro para la gente común, pero sus señores tendrán que perseguir a los asaltantes y les impedirá hacer lo mismo con nosotros. Si asumes esto, te recompensaré si tienes éxito." />
-    <string id="Ouj6eSWC" text="{RULER.NAME} ha decidido no responder al llamado de {CALLING_KINGDOM} y no hará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión tuvo el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="PneX4Ayw" text="Un mensajero portando una oferta de llamado a la guerra de {KINGDOM_NAME} contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} ha llegado a la corte de tu reino." />
-    <string id="PP7KD7OC" text="{RULER.NAME} de {KINGDOM} ha decidido firmar un acuerdo comercial con {OTHER_KINGDOM}, con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente en el asunto." />
-    <string id="PutoRsWp" text="Un mensajero llega de {CLAN_NAME}. Te ofrecen {GOLD_AMOUNT}{GOLD_ICON} como rescate si liberas a {CAPTIVE_HERO.NAME}." />
-    <string id="q9DnHVcZ" text="No es de nuestro interés unirnos a {KINGDOM_NAME} en su guerra." />
-    <string id="qa4FlTWS" text="{RULER.NAME} de {KINGDOM} toma {SETTLEMENT} como {?RULER.GENDER}su{?}su{\?} feudo a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="qgN9o2ip" text="¡Es hora de llamar a nuestro aliado {KINGDOM_NAME} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}! Tu reino votará si proponer un acuerdo de llamado a la guerra con ellos." />
-    <string id="qN3x2usk" text="Vota sobre si llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_COST}{GOLD_ICON}." />
-    <string id="R0bJS0pn" text="Hacer la paz con {OTHER_FACTION}" />
-    <string id="r0Kq0aeB" text="{FACTION_LEADER} decidirá si {CALLED_KINGDOM} será llamado a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_COST}{GOLD_ICON}. Puedes elegir tu postura sobre esta decisión." />
-    <string id="rd229FYG" text="{RULER.NAME} ha expulsado al clan {CLAN} de {KINGDOM} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="RH8mgLEk" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} ha declarado la guerra a {KINGDOM} con el apoyo de la mitad de {?AGGRESSOR_RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="rJIuQ0hc" text="{RULER.NAME} de {KINGDOM} ha decidido no firmar un acuerdo comercial con {OTHER_KINGDOM} sobre las objeciones de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="rtfoywJl" text="Declarar la guerra a {KINGDOM_NAME}" />
-    <string id="sbFboHmV" text="Un mensajero ha llegado de {MAP_FACTION_NAME}. Te ofrecen la paz si aceptas pagar un tributo diario de {GOLD_AMOUNT} {GOLD_ICON}. Tu reino votará si aceptar la oferta." />
-    <string id="Shk9QCDg" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} ha declarado la guerra a {KINGDOM}." />
-    <string id="SR9FC5jH" text="Un mensajero ha llegado de {MAP_FACTION_NAME} con una oferta de paz. {MAP_FACTION_NAME} pagará {GOLD_AMOUNT} {GOLD_ICON} de tributo cada día para terminar la guerra entre tus reinos. Tu reino votará si aceptar la oferta." />
-    <string id="syGyjjKE" text="Responde al llamado de {CALLING_KINGDOM}, y declara la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} te está ofreciendo trabajo como mercenario, pagando {GOLD_AMOUNT}{GOLD_ICON} por cada punto de influencia que ganarías al luchar en su nombre. ¿Aceptas?" />
-    <string id="uc4M4bhG" text="Bueno, hay algo que quiero. Hay {?TARGET_HERO.GENDER}una dama{?}un señor{\?} de {TARGET_FACTION} con quien tengo una larga, larga relación. Y no amistosa. Ahora que estamos en guerra, mientras {?TARGET_HERO.GENDER}ella{?}él{\?} esté libre, sé que mi vida y mis tierras no están a salvo. Como digo, no será nada fácil. Pero quien logre hacerlo, traer{?TARGET_HERO.GENDER}la{?}lo{\?} de vuelta vivo ante mí, además de tener mi gratitud, será un hombre muy rico.[if:convo_grave][ib:closed2]" />
-    <string id="uiY3ds0Z" text="{RULER.NAME} ha respondido al llamado de {CALLING_KINGDOM} y declaró la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} con el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="UQq4ekeu" text="{RULER.NAME} de {KINGDOM} ha decidido no firmar un acuerdo comercial con {OTHER_KINGDOM}." />
-    <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK} ha llamado a {CALLED_KINGDOM_LINK} a declarar la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}." />
-    <string id="uWdj1X2c" text="{CHARACTER.NAME} era miembro de {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
-    <string id="V097rA1v" text="{LORD.FIRSTNAME} es el líder de {CLAN_NAME}, un nuevo clan en ascenso. {?LORD.GENDER}Ella{?}Él{\?} todavía está forjando {?LORD.GENDER}su{?}su{\?} reputación." />
-    <string id="vf2pb7Ts" text="{RULER.NAME} ha respondido al llamado de {CALLING_KINGDOM} y declaró la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="Vg5RmOqL" text="{FACTION_LEADER} decidirá si {KINGDOM} firmará un acuerdo comercial con {OTHER_KINGDOM}. Puedes elegir tu postura sobre esta decisión." />
-    <string id="VWoHoUin" text="No habrá paz entre nosotros y {ENEMY_INFORMAL_NAME}, así como el lobo no hace la paz con las ovejas." />
-    <string id="wijL0mTy" text="{FACTION_LEADER} decidirá si se formará una alianza con {KINGDOM_NAME}. Puedes elegir tu postura sobre esta decisión." />
-    <string id="wsDNxArW" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido no hacer la paz con {KINGDOM}." />
-    <string id="xAuejv91" text="{RULER.NAME} de {KINGDOM} ha decidido no hacer la paz con {OTHER_KINGDOM}, con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente en el asunto." />
-    <string id="XaZyU3Cn" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} decidió no ir a la guerra con {KINGDOM} a pesar de los deseos de {?AGGRESSOR_RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="XbYCVCbR" text="Nos oponemos a llamar a nuestro aliado {CALLED_KINGDOM} a la guerra." />
-    <string id="xhK4zMec" text="{RULER.NAME} ha decidido llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
-    <string id="xKev8i5B" text="El llamado que {CALLING_KINGDOM_LINK} emitió a {CALLED_KINGDOM_LINK}, para ir a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}, ha terminado." />
-    <string id="xM97H0oR" text="Vota por declarar la guerra a {KINGDOM_NAME}." />
-    <string id="yBL3TzXw" text="{RULER.NAME} decidió no expulsar al clan {CLAN} de {KINGDOM} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="yUYNlQhU" text="Bien, haré que mis hombres redacten un contrato simple. En nombre de {KINGDOM_FORMAL_NAME}, te doy la bienvenida. Que hagas buen uso de tu espada contra nuestros enemigos." />
-    <string id="Zckbdm4Z" text="{RULER.NAME} de {KINGDOM} toma {SETTLEMENT} como {?RULER.GENDER}su{?}su{\?} feudo con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="zd9sawl9" text="Ya eres aliado de {KINGDOM_NAME}." />
-    <string id="zXuo0Wbj" text="Firmar un acuerdo comercial con {KINGDOM}" />
-    <string id="ZZ1oLfEq" text="{RULER.NAME} ha respondido al llamado de {CALLING_KINGDOM} y declaró la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
-    <string id="taom_shaghana_name" text="Shaghâna" />
-    <string id="taom_shaghana_short_name" text="Shaghâna" />
-    <string id="taom_shaghana_title" text="Taskralan de Shaghâna" />
-    <string id="taom_shaghana_ruler_title" text="Taskral" />
-    <string id="taom_shaghana_desc" text="Shaghâna es la región oriental de Harad, una tierra de estepas abrasadas por el sol y fortalezas antiguas. Sus nueve clanes tribales son guerreros feroces, unidos por juramentos y sangre, que infunden temor en aquellos que se atreven a oponerse a ellos." />
-    <string id="aom_shaghana_name" text="Shaghâna" />
-    <string id="aom_shaghana_desc" text="Los Shaghâna son un pueblo tribal feroz de las estepas orientales de Harad, reconocidos como saqueadores implacables y jinetes hábiles. Unidos por juramentos y clanes, responden a su Taskral y sirven a los designios oscuros de Sauron desde sus fortalezas abrasadas por el sol." />
-    <string id="aom_lord_SH1_1_name" text="Zarkan" />
-    <string id="aom_lord_SH2_1_name" text="Rakhim" />
-    <string id="aom_lord_SH3_1_name" text="Tadeen" />
-    <string id="aom_lord_SH4_1_name" text="Nakhel" />
-    <string id="aom_lord_SH5_1_name" text="Yazur" />
-    <string id="aom_lord_SH6_1_name" text="Kazan" />
-    <string id="aom_lord_SH7_1_name" text="Haluz" />
-    <string id="aom_lord_SH8_1_name" text="Farun" />
-    <string id="aom_lord_SH9_1_name" text="Saluz" />
-    <string id="aom_clan_shaghana_1_name" text="Ezarkia" />
-    <string id="aom_clan_shaghana_2_name" text="Kûmaraknis" />
-    <string id="aom_clan_shaghana_3_name" text="Taiymâkä" />
-    <string id="aom_clan_shaghana_4_name" text="Zayaknûri" />
-    <string id="aom_clan_shaghana_5_name" text="Selarkes" />
-    <string id="aom_clan_shaghana_6_name" text="Uzharês" />
-    <string id="aom_clan_shaghana_7_name" text="Alâranin" />
-    <string id="aom_clan_shaghana_8_name" text="Banûgand" />
-    <string id="aom_clan_shaghana_9_name" text="Acammes" />
-    <string id="aom_sh_notable_0" text="Astuto comerciante Shaghâna" />
-    <string id="aom_sh_notable_0b" text="Comerciante de especias Shaghâna" />
-    <string id="aom_sh_notable_1" text="Dueño de caravana Shaghâna" />
-    <string id="aom_sh_notable_1b" text="Mercader de las estepas orientales" />
-    <string id="aom_sh_notable_2" text="Comerciante de seda Shaghâna" />
-    <string id="aom_sh_notable_2b" text="Comerciante de las estepas de Harad" />
-    <string id="aom_sh_notable_3" text="Cambista de Shaghâna" />
-    <string id="aom_sh_notable_3b" text="Corredor de bienes orientales" />
-    <string id="aom_sh_notable_4" text="Maestro del bazar de Shaghâna" />
-    <string id="aom_sh_notable_4b" text="Mercader astuto de Shaghâna" />
-    <string id="aom_sh_notable_5" text="Sacerdote del sol de Shaghâna" />
-    <string id="aom_sh_notable_6" text="Anciano tribal de Shaghâna" />
-    <string id="aom_sh_notable_7" text="Guardián de las tradiciones de Shaghâna" />
-    <string id="aom_sh_notable_8" text="Herrero de Shaghâna" />
-    <string id="aom_sh_notable_9" text="Forjador de armas de Shaghâna" />
-    <string id="aom_sh_notable_gl1" text="Ejecutor de Shaghâna" />
-    <string id="aom_sh_notable_10" text="Señor del crimen de Shaghâna" />
-    <string id="aom_sh_notable_11" text="Jefe de los asaltantes Shaghâna" />
-    <string id="aom_sh_notable_gl4" text="Cacique de la banda Shaghâna" />
-    <string id="aom_sh_notable_12" text="Jefe callejero Shaghâna" />
-    <string id="aom_sh_notable_13" text="Traficante del mercado negro Shaghâna" />
-    <string id="aom_sh_notable_21" text="Terrateniente Shaghâna" />
-    <string id="aom_sh_notable_22" text="Maestro de rebaños Shaghâna" />
-    <string id="aom_sh_headman_1" text="Jefe de aldea Shaghâna" />
-    <string id="aom_sh_headman_2" text="Jefe anciano Shaghâna" />
-    <string id="aom_sh_headman_3" text="Anciano de aldea Shaghâna" />
-    <string id="taom_abanissa_name" text="Âbanissa" />
-    <string id="taom_abanissa_short_name" text="Âbanissa" />
-    <string id="taom_abanissa_title" text="Châjaphân de Âbanissa" />
-    <string id="taom_abanissa_ruler_title" text="Châjaphân" />
-    <string id="taom_abanissa_desc" text="Âbanissa yace en el profundo sur de Harad, un reino de selvas húmedas y antiguas dinastías de piedra. Las grandes Casas de Âbanissa comandan temibles bestias de guerra y ejércitos de guerreros disciplinados, su poder no responde ante nadie sino Sauron mismo." />
-    <string id="aom_abanissa_name" text="Âbanissa" />
-    <string id="aom_abanissa_desc" text="Las grandes Casas de Âbanissa gobiernan el profundo sur de Harad, una tierra de selvas húmedas, antiguos palacios de piedra y enormes bestias de guerra. Sus ejércitos marchan bajo estandartes de dinastía, comandando respeto y terror a través de las tierras del sur." />
-    <string id="aom_lord_AB1_1_name" text="Phaxar" />
-    <string id="aom_lord_AB2_1_name" text="Hoshed" />
-    <string id="aom_lord_AB3_1_name" text="Vasnar" />
-    <string id="aom_lord_AB4_1_name" text="Goraze" />
-    <string id="aom_lord_AB5_1_name" text="Azadan" />
-    <string id="aom_lord_AB6_1_name" text="Artash" />
-    <string id="aom_lord_AB7_1_name" text="Ardach" />
-    <string id="aom_lord_AB8_1_name" text="Tirdah" />
-    <string id="aom_clan_abanissa_1_name" text="Casa de Phaxsharân" />
-    <string id="aom_clan_abanissa_2_name" text="Casa de Hoshêdharma" />
-    <string id="aom_clan_abanissa_3_name" text="Casa de Vasnârad" />
-    <string id="aom_clan_abanissa_4_name" text="Casa de Gorazehan" />
-    <string id="aom_clan_abanissa_5_name" text="Casa de Azadafrozan" />
-    <string id="aom_clan_abanissa_6_name" text="Casa de Artaxshâsan" />
-    <string id="aom_clan_abanissa_7_name" text="Casa de Ardâcheran" />
-    <string id="aom_clan_abanissa_8_name" text="Casa de Tîrdahanâ" />
-    <string id="aom_ab_notable_0" text="Intermediario de dinastía de Harad Lejano" />
-    <string id="aom_ab_notable_0b" text="Comerciante de marfil de Âbanissa" />
-    <string id="aom_ab_notable_1" text="Señor de caravana de Âbanissa" />
-    <string id="aom_ab_notable_1b" text="Mercader de especias de Harad Lejano" />
-    <string id="aom_ab_notable_2" text="Comerciante de oro de Âbanissa" />
-    <string id="aom_ab_notable_2b" text="Mercader-mayordomo de Casa" />
-    <string id="aom_ab_notable_3" text="Intermediario lapidario de Âbanissa" />
-    <string id="aom_ab_notable_3b" text="Tratante de seda de Harad Lejano" />
-    <string id="aom_ab_notable_4" text="Supervisor del mercado de Âbanissa" />
-    <string id="aom_ab_notable_4b" text="Astuto factor de Âbanissa" />
-    <string id="aom_ab_notable_5" text="Sumo sacerdote de Âbanissa" />
-    <string id="aom_ab_notable_6" text="Guardián del templo de Âbanissa" />
-    <string id="aom_ab_notable_7" text="Maestro de ritos del Harad Lejano" />
-    <string id="aom_ab_notable_8" text="Maestro artesano de Âbanissa" />
-    <string id="aom_ab_notable_9" text="Armero del Harad Lejano" />
-    <string id="aom_ab_notable_gl1" text="Ejecutor de la casa de Âbanissa" />
-    <string id="aom_ab_notable_10" text="Señor de las sombras de Âbanissa" />
-    <string id="aom_ab_notable_11" text="Líder de banda de guerra del Harad Lejano" />
-    <string id="aom_ab_notable_gl4" text="Patriarca de la banda de Âbanissa" />
-    <string id="aom_ab_notable_12" text="Jefe de distrito de Âbanissa" />
-    <string id="aom_ab_notable_13" text="Rey del contrabando del Harad Lejano" />
-    <string id="aom_ab_notable_21" text="Señor de la hacienda de Âbanissa" />
-    <string id="aom_ab_notable_22" text="Amo de plantación de Âbanissa" />
-    <string id="aom_ab_headman_1" text="Jefe de aldea de Âbanissa" />
-    <string id="aom_ab_headman_2" text="Jefe anciano de Âbanissa" />
-    <string id="aom_ab_headman_3" text="Anciano de aldea de Âbanissa" />
-    <string id="TAOM_ghilman_name" text="Guardia Serpiente" />
-    <string id="TAOM_ghilman_short" text="Guardia Serpiente" />
-    <string id="TAOM_ghilman_text" text="La Guardia Serpiente son soldados montados al servicio del Señor Serpiente del Harad Cercano. Criados en la silla de montar en las llanuras ondulantes al sur de las Ephel Dúath, son incomparables como arqueros a caballo en todas las tierras del sur de la Tierra Media. En tiempos de paz entre Harad y Mordor, la Guardia alquila sus servicios a señores haradrim y a cualquier otro poder lo suficientemente rico como para pagar su tarifa de oro." />
-    <string id="TAOM_legion_name" text="La Compañía Gris" />
-    <string id="TAOM_legion_short" text="Compañía Gris" />
-    <string id="TAOM_legion_text" text="La Compañía Gris es la última hermandad organizada de los Montaraces Dúnedain, descendientes de los reyes de Arnor que perdieron su reino hace mucho tiempo. Cabalgan por el Norte sin un hogar propio, manteniendo la paz en tierras que han olvidado sus nombres. Aunque su primera lealtad es para el linaje de Elendil, aceptan contratos de señores de toda la Tierra Media cuando su vagabundeo los lleva a través de tierras civilizadas." />
-    <string id="TAOM_skolderbrotva_name" text="Hacheros de Erebor" />
-    <string id="TAOM_skolderbrotva_short" text="Hacheros" />
-    <string id="TAOM_skolderbrotva_text" text="Los Hacheros de Erebor son veteranos de las batallas del Rey Thorin que encontraron los tiempos de paz poco adecuados para su temperamento. Entrenados en el combate cerrado de los salones enanos —muro de escudos, hacha corta, pico— son formidables en cualquier terreno pero sobresalen en los pasos de montaña que conectan Erebor con los reinos de los hombres. Aceptan contratos de cualquiera que pueda pagar su tarifa, pero no alzarán un hacha contra Erebor o Rivendel." />
-    <string id="TAOM_company_name" text="Espadas Corsarias" />
-    <string id="TAOM_company_short" text="Corsarios" />
-    <string id="TAOM_company_text" text="Las Espadas Corsarias son veteranos combatientes marítimos de los puertos de Umbar que han comenzado a vender sus habilidades en tierra. Luchan como ballesteros —el arma preferida de la guerra a bordo— y se sienten tan cómodos en un asedio como en una cubierta tambaleante. Su capitán, un númenóreano exiliado con cicatrices, los mantiene fieles a sus contratos con disciplina férrea, sabiendo que su reputación es su carga más valiosa." />
-    <string id="TAOM_beni_zilal_name" text="El Ojo Ciego" />
-    <string id="TAOM_beni_zilal_short" text="Ojo Ciego" />
-    <string id="TAOM_beni_zilal_text" text="El Ojo Ciego es una hermandad de contrabandistas, receptadores y asesinos a sueldo que operan por las costas de Harad y el desierto profundo. Se dice que descienden de un culto de asesinos que sirvió a un olvidado rey haradrim, y sus métodos —veneno, sombra y el uso de secretos— permanecen inalterados. Los señores que desean eliminar discretamente a un rival, o comerciantes que necesitan mover carga sin inspección aduanera, saben dónde dejar una moneda de oro y una carta sellada." />
-    <string id="TAOM_wolfskins_name" text="Devastadores Variag" />
-    <string id="TAOM_wolfskins_short" text="Devastadores" />
-    <string id="TAOM_wolfskins_text" text="Los Devastadores Variag son bandas de guerra de jóvenes guerreros variag de las estepas de Khand que pasan su juventud temprana en un estado de guerra ritual: no pueden poseer comida cocinada, dormir bajo ningún techo permanente ni mostrar misericordia. Aunque la mayoría finalmente regresa a la vida asentada de sus clanes, algunos nunca lo hacen, y estos forman los Devastadores —forajidos que acechan los caminos de Khand y realizan incursiones a través de sus fronteras hacia Harad y Gondor." />
-    <string id="TAOM_brotherhood_name" text="Saqueadores Dunlendinos" />
-    <string id="TAOM_brotherhood_short" text="Saqueadores" />
-    <string id="TAOM_brotherhood_text" text="Los Saqueadores Dunlendinos son el remanente roto de un clan de las colinas que alguna vez habitó en los valles ahora gobernados por los rohirrim. Sus abuelos fueron expulsados de tierras fértiles hacia las alturas rocosas, y han alimentado esa amargura convirtiéndola en la filosofía de un saqueador: todo lo que se toma de un sureño o de un hombre del rey es simplemente la restauración de lo que fue robado. En la práctica son bandidos, pero peligrosos que conocen cada sendero de cabras a través de las colinas." />
-    <string id="TAOM_hidden_hand_name" text="Los Sirvientes de la Boca" />
-    <string id="TAOM_hidden_hand_short" text="Sirvientes" />
-    <string id="TAOM_hidden_hand_text" text="Los Sirvientes de la Boca son los Ojos de Barad-dûr operando más allá de la Puerta Negra — informantes, ejecutores y espías infiltrados entre los pueblos que bordean Mordor. Donde los ejércitos de Sauron aún no pueden alcanzar, estos agentes recogen tributo y silencian la disidencia. Trabajan mediante sobornos, chantajes y asesinatos silenciosos, asegurando que ninguna conspiración contra el Señor Oscuro eche raíces antes de ser arrancada y aplastada." />
-    <string id="TAOM_lakepike_name" text="Saqueadores del Lago Largo" />
-    <string id="TAOM_lakepike_short" text="Saqueadores" />
-    <string id="TAOM_lakepike_text" text="Los Saqueadores del Lago Largo viven en los cañaverales y viejos muelles podridos de las sombrías orillas del Lago Largo, lejos de las respetables luces de Esgaroth. Se ganan la vida atrayendo barcazas hacia bajíos ocultos con faroles falsos, luego despojándolas de su carga y vendiéndola a través de receptadores en la propia ciudad. A pesar de los esfuerzos del Maese de la Ciudad del Lago y los mercaderes de Dale, los Saqueadores tienen demasiados amigos en las tabernas del muelle como para ser expulsados fácilmente." />
-    <string id="TAOM_embers_name" text="Culto del Ojo sin Párpado" />
-    <string id="TAOM_embers_short" text="Culto del Ojo" />
-    <string id="TAOM_embers_text" text="El Culto del Ojo sin Párpado es una sociedad secreta arraigada en la tradición Númenóreana Negra, que venera a Sauron como un dios-rey que restaurará a sus fieles a la gloria cuando se alce nuevamente. Reclutan entre los desposeídos de Dunland y los rincones olvidados del reino, prometiendo favor divino y poder terrenal. En verdad, sus líderes responden a agentes de Barad-dûr, y su estructura celular los hace casi imposibles de erradicar por la justicia de cualquier señor." />
-    <string id="TAOM_jawwal_name" text="Los Jinetes de Arena" />
-    <string id="TAOM_jawwal_short" text="Jinetes de Arena" />
-    <string id="TAOM_jawwal_text" text="Los Jinetes de Arena son los clanes nómadas del desierto del interior profundo de Harad, maestros de los páramos sin agua entre el Ephel Dúath y el distante mar del sur. Recorren rutas conocidas sólo por ellos mismos, exigiendo tributo a cualquier caravana lo suficientemente audaz como para cruzar su territorio. Los señores asentados del Harad Cercano los tratan como una molestia; los Jinetes de Arena consideran a los señores asentados ladrones que robaron lo que el desierto ya había dado libremente." />
-    <string id="TAOM_karakhuzaits_name" text="Los Orientales Salvajes" />
-    <string id="TAOM_karakhuzaits_short" text="Salvajes" />
-    <string id="TAOM_karakhuzaits_text" text="Los Orientales Salvajes son los clanes inconquistados de la estepa del Mar de Rhûn, que han resistido la autoridad de cada señor que ha intentado someterlos — caudillo de Rhûn, lugarteniente de Mordor y Rey de Dale por igual. Recorren las praderas al este del Celduin, reuniendo caballos, asaltando rebaños y cobrando tributo de camino a cualquier caravana lo suficientemente imprudente como para cruzar su estepa sin escolta armada." />
-    <string id="TAOM_forest_people_name" text="Los Drúedain" />
-    <string id="TAOM_forest_people_short" text="Woses" />
-    <string id="TAOM_forest_people_text" text="Los Drúedain, conocidos por los Hombres como Woses u Hombres Salvajes de los Bosques, son un pueblo antiguo que habita en el bosque profundo de Drúadan y los valles ocultos de las Montañas Blancas. Limpian terreno con fuego, cultivan lo que necesitan en el suelo rico en cenizas y se mudan cuando la tierra se agota — una forma de vida que los pueblos asentados de la Tierra Media nunca han comprendido ni se han molestado en hacerlo. Los Drúedain no quieren señor alguno, no pagan tributo y sólo piden que se les deje en el silencio del bosque." />
-    <string id="TAOM_eleftheroi_name" text="Los Beórnidas" />
-    <string id="TAOM_eleftheroi_short" text="Beórnidas" />
-    <string id="TAOM_eleftheroi_text" text="Los Beórnidas son los grandes hombres del bosque que habitan en el valle del Anduin entre las Montañas Nubladas y el Bosque Negro, liderados por los cambia-pieles del linaje de Beorn. No permiten que ningún Orco cruce su territorio, cobran un peaje en el Vado de Carrock para financiar su vigilancia y no responden a ningún rey en la Tierra Media. Aunque comercian y hablan con Elfos y Enanos, cualquier ejército que marche a través de su bosque sin permiso descubrirá que los Beórnidas tienen dientes muy grandes." />
-    <string id="taom_career" text="Carrera" />
-    <string id="taom_alliance_lore" text="Alineación de la Tradición" />
-    <string id="taom_alliance_blocked" text="Estos reinos nunca pueden ser aliados." />
-    <string id="taom_war_blocked" text="Estos reinos están unidos por una alianza inquebrantable." />
-    <string id="taom_wotr_no_peace" text="La Guerra del Anillo arde. No puede haber paz." />
-    <string id="taom_precompile_shaders" text="Precompilar Shaders" />
-    <string id="taom_precompile_hint" text="Precompila shaders para eliminar tartamudeos en el juego. Ejecutar una vez después de instalar TAOM." />
-    <string id="taom_main_menu_new_game" text="Entrar a La Edad de los Hombres" />
-    <string id="taom_career_screen_title" text="Carrera" />
-    <string id="taom_career_done" text="Hecho" />
-    <string id="taom_career_ability_label" text="Habilidad de Carrera" />
-    <string id="taom_career_tier1" text="Nivel 1" />
-    <string id="taom_career_tier2" text="Nivel 2" />
-    <string id="taom_career_tier3" text="Nivel 3" />
-    <string id="taom_career_free_points" text="Puntos Libres: {COUNT}" />
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+
+      type="string">
+
+  <tags>
+
+    <tag language="Spanish (LA)" />
+
+  </tags>
+
+  <strings>
+
+    <string id="taom_str_faction_official.empire" text="un miembro del clan de Dunland" />
+
+    <string id="taom_str_faction_official.empire_f" text="una mujer del clan de Dunland" />
+
+    <string id="taom_str_faction_ruler.empire" text="Jefe" />
+
+    <string id="taom_str_faction_ruler.empire_f" text="Jefa" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.empire" text="el Jefe, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.empire" text="Jefe {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.empire" text="Dunlendino" />
+
+    <string id="taom_str_short_term_for_faction.empire" text="Dunland" />
+
+    <string id="taom_str_faction_formal_name_for_culture.empire" text="Clanes de Dunland" />
+
+    <string id="taom_str_faction_informal_name_for_culture.empire" text="Dunland" />
+
+    <string id="taom_str_neutral_term_for_culture.empire" text="Dunlendinos" />
+
+    <string id="taom_str_faction_official.vlandia" text="un noble de Rohan" />
+
+    <string id="taom_str_faction_official.vlandia_f" text="una dama de Rohan" />
+
+    <string id="taom_str_faction_ruler.vlandia" text="Rey" />
+
+    <string id="taom_str_faction_ruler.vlandia_f" text="Reina" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="el Rey, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.vlandia" text="Rey {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.vlandia" text="Rohírrico" />
+
+    <string id="taom_str_short_term_for_faction.vlandia" text="Jinete" />
+
+    <string id="taom_str_faction_formal_name_for_culture.vlandia" text="Marca de los Jinetes" />
+
+    <string id="taom_str_faction_informal_name_for_culture.vlandia" text="Rohan" />
+
+    <string id="taom_str_neutral_term_for_culture.vlandia" text="Rohirrim" />
+
+    <string id="taom_str_faction_official.battania" text="un noble de Khand" />
+
+    <string id="taom_str_faction_official.battania_f" text="una dama de Khand" />
+
+    <string id="taom_str_faction_ruler.battania" text="Señor de Khand" />
+
+    <string id="taom_str_faction_ruler.battania_f" text="Señora de Khand" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.battania" text="el Señor, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.battania" text="Señor {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.battania" text="Variag" />
+
+    <string id="taom_str_short_term_for_faction.battania" text="Variag" />
+
+    <string id="taom_str_faction_formal_name_for_culture.battania" text="Variags de Khand" />
+
+    <string id="taom_str_faction_informal_name_for_culture.battania" text="Khand" />
+
+    <string id="taom_str_neutral_term_for_culture.battania" text="Variags" />
+
+    <string id="taom_str_faction_official.khuzait" text="un noble de Rhûn" />
+
+    <string id="taom_str_faction_official.khuzait_f" text="una dama de Rhûn" />
+
+    <string id="taom_str_faction_ruler.khuzait" text="Señor de la Guerra" />
+
+    <string id="taom_str_faction_ruler.khuzait_f" text="Señora de la Guerra" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="el Señor de la Guerra, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.khuzait" text="Señor de la Guerra {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.khuzait" text="Orientales" />
+
+    <string id="taom_str_short_term_for_faction.khuzait" text="Rhun" />
+
+    <string id="taom_str_faction_formal_name_for_culture.khuzait" text="Orientales de Rhûn" />
+
+    <string id="taom_str_faction_informal_name_for_culture.khuzait" text="Rhûn" />
+
+    <string id="taom_str_neutral_term_for_culture.khuzait" text="Orientales" />
+
+    <string id="taom_str_faction_official.aserai" text="un noble de Harad" />
+
+    <string id="taom_str_faction_official.aserai_f" text="una dama de Harad" />
+
+    <string id="taom_str_faction_ruler.aserai" text="Jefe" />
+
+    <string id="taom_str_faction_ruler.aserai_f" text="Jefa" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.aserai" text="el Jefe, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.aserai" text="Jefe {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.aserai" text="Haradrim" />
+
+    <string id="taom_str_short_term_for_faction.aserai" text="Harad" />
+
+    <string id="taom_str_faction_formal_name_for_culture.aserai" text="Reino de Harad" />
+
+    <string id="taom_str_faction_informal_name_for_culture.aserai" text="Harad" />
+
+    <string id="taom_str_neutral_term_for_culture.aserai" text="Haradrim" />
+
+    <string id="taom_str_faction_official.sturgia" text="un noble de Dale" />
+
+    <string id="taom_str_faction_official.sturgia_f" text="una dama de Dale" />
+
+    <string id="taom_str_faction_ruler.sturgia" text="Rey" />
+
+    <string id="taom_str_faction_ruler.sturgia_f" text="Reina" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="el Rey, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.sturgia" text="Rey {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.sturgia" text="Bárdido" />
+
+    <string id="taom_str_short_term_for_faction.sturgia" text="Dale" />
+
+    <string id="taom_str_faction_formal_name_for_culture.sturgia" text="Reino de Dale" />
+
+    <string id="taom_str_faction_informal_name_for_culture.sturgia" text="Dale" />
+
+    <string id="taom_str_neutral_term_for_culture.sturgia" text="Bárdidos" />
+
+    <string id="taom_str_faction_official.dolguldur" text="un servidor de Dol Guldur" />
+
+    <string id="taom_str_faction_official.dolguldur_f" text="una servidora de Dol Guldur" />
+
+    <string id="taom_str_faction_ruler.dolguldur" text="El Supervisor" />
+
+    <string id="taom_str_faction_ruler.dolguldur_f" text="La Supervisora" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="el Supervisor, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="Supervisor" />
+
+    <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.dolguldur" text="Gulduriano" />
+
+    <string id="taom_str_short_term_for_faction.dolguldur" text="Dol Guldur" />
+
+    <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="Fuerzas de Dol Guldur" />
+
+    <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="Dol Guldur" />
+
+    <string id="taom_str_neutral_term_for_culture.dolguldur" text="Sirvientes de Dol Guldur" />
+
+    <string id="taom_str_faction_official.isengard" text="un capitán de Isengard" />
+
+    <string id="taom_str_faction_official.isengard_f" text="una capitana de Isengard" />
+
+    <string id="taom_str_faction_ruler.isengard" text="La Mano Blanca" />
+
+    <string id="taom_str_faction_ruler.isengard_f" text="La Dama Blanca" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.isengard" text="la Mano Blanca, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.isengard" text="La Mano Blanca {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.isengard" text="Isengard" />
+
+    <string id="taom_str_short_term_for_faction.isengard" text="Isengard" />
+
+    <string id="taom_str_faction_formal_name_for_culture.isengard" text="Fuerzas de Isengard" />
+
+    <string id="taom_str_faction_informal_name_for_culture.isengard" text="Isengard" />
+
+    <string id="taom_str_neutral_term_for_culture.isengard" text="Fuerzas de Isengard" />
+
+    <string id="taom_str_faction_official.gundabad" text="un cacique de Gundabad" />
+
+    <string id="taom_str_faction_official.gundabad_f" text="una cacique de Gundabad" />
+
+    <string id="taom_str_faction_ruler.gundabad" text="Señor de la Guerra" />
+
+    <string id="taom_str_faction_ruler.gundabad_f" text="Señora de la Guerra" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="el Señor de la Guerra, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.gundabad" text="Señor de la Guerra {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.gundabad" text="Gundabad" />
+
+    <string id="taom_str_short_term_for_faction.gundabad" text="Gundabad" />
+
+    <string id="taom_str_faction_formal_name_for_culture.gundabad" text="Orcos de Gundabad" />
+
+    <string id="taom_str_faction_informal_name_for_culture.gundabad" text="Gundabad" />
+
+    <string id="taom_str_neutral_term_for_culture.gundabad" text="Orcos de Gundabad" />
+
+    <string id="taom_str_faction_official.umbar" text="un corsario de Umbar" />
+
+    <string id="taom_str_faction_official.umbar_f" text="una corsaria de Umbar" />
+
+    <string id="taom_str_faction_ruler.umbar" text="Capitán de los Corsarios" />
+
+    <string id="taom_str_faction_ruler.umbar_f" text="Capitana de los Corsarios" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.umbar" text="el Capitán, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.umbar" text="Capitán {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.umbar" text="Corsario" />
+
+    <string id="taom_str_short_term_for_faction.umbar" text="Umbar" />
+
+    <string id="taom_str_faction_formal_name_for_culture.umbar" text="Corsarios de Umbar" />
+
+    <string id="taom_str_faction_informal_name_for_culture.umbar" text="Umbar" />
+
+    <string id="taom_str_neutral_term_for_culture.umbar" text="Corsarios" />
+
+    <string id="taom_str_faction_official.gondor" text="un señor noble" />
+
+    <string id="taom_str_faction_official.gondor_f" text="una dama noble" />
+
+    <string id="taom_str_faction_ruler.gondor" text="Senescal" />
+
+    <string id="taom_str_faction_ruler.gondor_f" text="Dama Senescal" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}la Dama Senescal{?}el Senescal{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}Dama Senescal{?}Senescal{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.gondor" text="Gondoriano" />
+
+    <string id="taom_str_short_term_for_faction.gondor" text="Gondoriano" />
+
+    <string id="taom_str_faction_formal_name_for_culture.gondor" text="Gondoriano" />
+
+    <string id="taom_str_faction_informal_name_for_culture.gondor" text="los Gondorianos" />
+
+    <string id="taom_str_neutral_term_for_culture.gondor" text="Gondorianos" />
+
+    <string id="taom_str_faction_official.mordor" text="un capitán de Sauron" />
+
+    <string id="taom_str_faction_official.mordor_f" text="una sierva del Señor Oscuro" />
+
+    <string id="taom_str_faction_ruler.mordor" text="el Señor Oscuro" />
+
+    <string id="taom_str_faction_ruler.mordor_f" text="la Dama Oscura" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}la Dama Oscura{?}el Señor Oscuro{\?}, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}Dama Oscura{?}Señor Oscuro{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}Guardiana{?}Supervisor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.mordor" text="Mordor" />
+
+    <string id="taom_str_short_term_for_faction.mordor" text="Mordor" />
+
+    <string id="taom_str_faction_formal_name_for_culture.mordor" text="Mordor" />
+
+    <string id="taom_str_faction_informal_name_for_culture.mordor" text="los siervos de Sauron" />
+
+    <string id="taom_str_neutral_term_for_culture.mordor" text="Mordor" />
+
+    <string id="taom_str_faction_official.mirkwood" text="un protector del bosque" />
+
+    <string id="taom_str_faction_official.mirkwood_f" text="una guardiana del bosque" />
+
+    <string id="taom_str_faction_ruler.mirkwood" text="Rey" />
+
+    <string id="taom_str_faction_ruler.mirkwood_f" text="Reina" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}la Reina{?}el Rey{\?}, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}Reina{?}Rey{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}Guardiana{?}Guardián{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.mirkwood" text="Elfo del Bosque" />
+
+    <string id="taom_str_short_term_for_faction.mirkwood" text="Elfo del Bosque" />
+
+    <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="Reino del Bosque Negro" />
+
+    <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="el Reino del Bosque" />
+
+    <string id="taom_str_neutral_term_for_culture.mirkwood" text="Elfos del Bosque" />
+
+    <string id="taom_str_faction_official.lothlorien" text="un guardián de Lothlórien" />
+
+    <string id="taom_str_faction_official.lothlorien_f" text="una guardiana de Lothlórien" />
+
+    <string id="taom_str_faction_ruler.lothlorien" text="Señor" />
+
+    <string id="taom_str_faction_ruler.lothlorien_f" text="Dama" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}la Dama{?}el Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.lothlorien" text="Galadhrim" />
+
+    <string id="taom_str_short_term_for_faction.lothlorien" text="Elfo" />
+
+    <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="Bosque Dorado" />
+
+    <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="Lothlórien" />
+
+    <string id="taom_str_neutral_term_for_culture.lothlorien" text="Elfos del Bosque Dorado" />
+
+    <string id="taom_str_faction_official.rivendell" text="un maestro de la sabiduría de Rivendel" />
+
+    <string id="taom_str_faction_official.rivendell_f" text="una sanadora de Rivendel" />
+
+    <string id="taom_str_faction_ruler.rivendell" text="Señor" />
+
+    <string id="taom_str_faction_ruler.rivendell_f" text="Dama" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}la Dama{?}el Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.rivendell" text="Rivendeliano" />
+
+    <string id="taom_str_short_term_for_faction.rivendell" text="Elfo" />
+
+    <string id="taom_str_faction_formal_name_for_culture.rivendell" text="Última Casa Acogedora" />
+
+    <string id="taom_str_faction_informal_name_for_culture.rivendell" text="Rivendel" />
+
+    <string id="taom_str_neutral_term_for_culture.rivendell" text="Elfos de Rivendel" />
+
+    <string id="taom_str_culture_description.empire" text="Los Dunlendinos, fieros hombres de las colinas de las tierras altas occidentales, son un pueblo orgulloso y antiguo. Resentidos con los Rohirrim, son conocidos por sus tácticas de guerrilla y su tenacidad en batalla. Unidos bajo líderes fuertes, luchan por su supervivencia y por reclamar las tierras que creen que les pertenecen por derecho." />
+
+    <string id="taom_str_culture_description.vlandia" text="Los Rohirrim, conocidos como los Señores de los Caballos, son el pueblo orgulloso y noble de Rohan, un reino de amplias llanuras abiertas y colinas ondulantes. Son reconocidos por su habilidad como jinetes y su inigualable caballería, que forma la columna vertebral de su fuerza militar. Viviendo en una sociedad feudal muy unida, los Rohirrim son liderados por un rey y una nobleza leal que están vinculados por el honor y la tradición para proteger su tierra y su gente. Son ferozmente independientes, valorando la libertad por sobre todo, y sus guerreros están entrenados para luchar con lanzas, espadas y arcos, todo mientras montan sus poderosos corceles." />
+
+    <string id="taom_str_culture_description.battania" text="Los Variag de Khand son un pueblo despiadado y belicoso de las estepas orientales. Conocidos por su dominio de los caballos y sus mortíferos carros de guerra, traen un estilo de guerra único y brutal. Alineados con Sauron, los Variag luchan por poder y botín, sembrando el miedo por toda la Tierra Media." />
+
+    <string id="taom_str_culture_description.khuzait" text="Los Orientales son un pueblo orgulloso y disciplinado, proveniente de las vastas tierras del este más allá de Mordor. Reconocidos por su resistencia y dominio de la guerra, son tanto agricultores como guerreros, mezclando tradiciones agrarias con una feroz cultura marcial. Sus ejércitos son conocidos por su temible caballería, adornada con armaduras ornamentadas y portando mortales lanzas y arcos. Con una rica herencia de artesanía y lealtad a los suyos, los Orientales marchan a la guerra bajo vibrantes estandartes de oro y carmesí, sembrando el miedo en los corazones de sus enemigos. Su lealtad a Sauron los ha convertido en una fuerza formidable, uniéndose bajo su sombra para expandir su dominio por toda la Tierra Media." />
+
+    <string id="taom_str_culture_description.aserai" text="Los Haradrim, guerreros de los desiertos del sur, son un pueblo feroz y resistente aliado con Sauron. Conocidos por sus exóticas bestias de guerra y su hábil caballería, marchan a la guerra bajo estandartes carmesí. Orgullosos y profundamente arraigados en sus tradiciones, traen la ferocidad del desierto a los campos de batalla de la Tierra Media." />
+
+    <string id="taom_str_culture_description.sturgia" text="Los Bárdidas de Valle, descendientes de Bardo el Arquero, son un pueblo orgulloso e industrioso que vive a la sombra de Erebor. Reconocidos por sus hábiles arqueros y guerreros disciplinados, salvaguardan su próspera ciudad y las rutas comerciales del norte. Unidos por un fuerte sentido de comunidad y honor, los Bárdidas se mantienen firmes contra la oscuridad que amenaza sus tierras." />
+
+    <string id="taom_str_culture_description.erebor" text="Los nobles Enanos de Erebor, son reconocidos por su artesanía, resistencia y orgullo. Desde sus salones en la Montaña Solitaria, forjan armas poderosas y tesoros de belleza incomparable. Vestidos con cota de malla y armados con hachas, defienden a los suyos con valor inquebrantable, buscando reclamar su legado y preservar su herencia contra todos los que la amenacen." />
+
+    <string id="taom_str_culture_description.rivendell" text="Rivendel, la Última Casa Acogedora, es un refugio de sabiduría y belleza liderado por el Señor Elrond. Ubicado en las Montañas Nubladas, su gente son maestros de la sabiduría y guardianes del conocimiento antiguo de la Tierra Media. Los Elfos de Rivendel ofrecen consejo y ayuda a quienes se oponen a la oscuridad, preservando la luz de la esperanza y la unidad." />
+
+    <string id="taom_str_culture_description.mirkwood" text="Los Elfos del Bosque de Bosque Negro, liderados por el Rey Thranduil, son guardianes del vasto y misterioso bosque. Conocidos por su agilidad y dominio del arco, se funden con las sombras, atacando con precisión y gracia. Su reino es uno de belleza y peligro, protegido por la determinación de sus guerreros y la sabiduría eterna de su rey. Ferozmente independientes, los Elfos de Bosque Negro luchan para preservar su bosque contra la oscuridad invasora." />
+
+    <string id="taom_str_culture_description.lothlorien" text="Los Galadhrim de Lothlórien, habitantes del Bosque Dorado, son un pueblo etéreo y noble liderado por la Dama Galadriel y el Señor Celeborn. Maestros del tiro con arco y la guerra en el bosque, protegen su reino encantado con habilidad incomparable. Su lealtad hacia su linaje y su tierra natal es inquebrantable, y su sutil magia preserva a Lothlórien como un santuario de esperanza y luz en medio de la creciente sombra." />
+
+    <string id="taom_str_culture_description.isengard" text="Los ejércitos de Isengard, liderados por Saruman el Blanco, son una fuerza formidable de Uruk-hai y mercenarios. Forjados en los fuegos de la industria, sus armas y armaduras están creadas para la destrucción. Las fuerzas de Isengard marchan a la guerra con eficiencia despiadada, decididas a la conquista y la dominación." />
+
+    <string id="taom_str_culture_description.gundabad" text="Los Orcos de Gundabad, que residen en las montañas envueltas en niebla, son una fuerza brutal y salvaje. Liderados por sus señores de la guerra, libran interminables incursiones en las tierras vecinas. Impulsados por el odio y la crueldad, son implacables en su búsqueda de dominar el norte." />
+
+    <string id="taom_str_culture_description.umbar" text="Los Corsarios de Umbar, saqueadores marítimos y maestros navegantes, son un pueblo despiadado y astuto aliado con Sauron. Conocidos por sus rápidas naves y su implacable guerra naval, siembran el miedo en las costas de la Tierra Media. Orgullosos de su herencia marítima, traen el caos de los mares a tierra firme, saqueando y pillando en nombre de sus oscuras alianzas." />
+
+    <string id="taom_str_culture_description.dolguldur" text="Los sirvientes de Dol Guldur, bajo el mando del Nigromante, son una fuerza oscura y siniestra. Ocultos dentro del bosque corrupto de Bosque Negro, emplean la traición y las sombras para debilitar a sus enemigos. Orcos, huargos y otras criaturas inmundas marchan para sembrar el miedo y la decadencia por toda la Tierra Media." />
+
+    <string id="taom_str_culture_description.gondor" text="Los Gondorianos, descendientes de los exiliados Númenóreanos, son los orgullosos senescales del mayor reino de los Hombres en la Tierra Media. Conocidos por sus imponentes fortalezas de piedra y su valor inquebrantable, Gondor es un bastión de esperanza contra la sombra amenazante de Mordor. Sus disciplinados ejércitos, compuestos por valientes infantes, hábiles arqueros y caballeros montados, se erigen como un escudo para todos los pueblos libres. Guiados por nobles senescales y capitanes, los Gondorianos se aferran a sus tradiciones, inflexibles en su deber de proteger el reino y su legado." />
+
+    <string id="taom_str_culture_description.mordor" text="Los ejércitos de Mordor, forjados en la sombra del Monte Doom, son una fuerza implacable de oscuridad comandada por Sauron, el Señor Oscuro. Compuestos por orcos, trolls y hombres malvados, marchan a la guerra bajo el Ojo ardiente, sembrando el miedo y la destrucción. Estas legiones están impulsadas por la crueldad y la servidumbre, blandiendo espadas dentadas y armaduras toscas. Atados por la voluntad de hierro de Sauron, las fuerzas de Mordor son una marea mortal que busca envolver a toda la Tierra Media en la sombra." />
+
+    <string id="taom_str_culture_rich_name.empire" text="Dunlendino" />
+
+    <string id="taom_str_culture_rich_name.vlandia" text="Rohirrim" />
+
+    <string id="taom_str_culture_rich_name.battania" text="Variag" />
+
+    <string id="taom_str_culture_rich_name.khuzait" text="Oriental" />
+
+    <string id="taom_str_culture_rich_name.aserai" text="Haradrim" />
+
+    <string id="taom_str_culture_rich_name.sturgia" text="Bardos" />
+
+    <string id="taom_str_culture_rich_name.erebor" text="Enanos" />
+
+    <string id="taom_str_culture_rich_name.rivendell" text="Ñoldor" />
+
+    <string id="taom_str_culture_rich_name.mirkwood" text="Silvanos" />
+
+    <string id="taom_str_culture_rich_name.lothlorien" text="Galadhrim" />
+
+    <string id="taom_str_culture_rich_name.isengard" text="Uruk-hai" />
+
+    <string id="taom_str_culture_rich_name.gundabad" text="Orcos de Gundabad" />
+
+    <string id="taom_str_culture_rich_name.umbar" text="Umbar" />
+
+    <string id="taom_str_culture_rich_name.dolguldur" text="Dol Guldur" />
+
+    <string id="taom_str_culture_rich_name.gondor" text="Gondorianos" />
+
+    <string id="taom_str_culture_rich_name.mordor" text="Mordor" />
+
+    <string id="taom_str_adjective_for_culture.empire" text="Dunlendino" />
+
+    <string id="taom_str_adjective_for_culture.vlandia" text="Rohírrico" />
+
+    <string id="taom_str_adjective_for_culture.battania" text="Variag" />
+
+    <string id="taom_str_adjective_for_culture.khuzait" text="Orientalino" />
+
+    <string id="taom_str_adjective_for_culture.aserai" text="Haradrim" />
+
+    <string id="taom_str_adjective_for_culture.sturgia" text="Bardo" />
+
+    <string id="taom_str_adjective_for_culture.erebor" text="Enano" />
+
+    <string id="taom_str_adjective_for_culture.rivendell" text="Rivendel" />
+
+    <string id="taom_str_adjective_for_culture.mirkwood" text="Bosque Negro" />
+
+    <string id="taom_str_adjective_for_culture.lothlorien" text="Lothlórien" />
+
+    <string id="taom_str_adjective_for_culture.isengard" text="Isengardiano" />
+
+    <string id="taom_str_adjective_for_culture.gundabad" text="Gundabad" />
+
+    <string id="taom_str_adjective_for_culture.umbar" text="Umbariano" />
+
+    <string id="taom_str_adjective_for_culture.dolguldur" text="Dol Guldur" />
+
+    <string id="taom_str_adjective_for_culture.gondor" text="Gondoriano" />
+
+    <string id="taom_str_adjective_for_culture.mordor" text="Mordoriano" />
+
+    <string id="taom_str_player_father_name.empire" text="Wulfgar" />
+
+    <string id="taom_str_player_mother_name.empire" text="Freca" />
+
+    <string id="taom_str_player_father_name.vlandia" text="Baldred" />
+
+    <string id="taom_str_player_mother_name.vlandia" text="Morwen" />
+
+    <string id="taom_str_player_father_name.battania" text="Variag" />
+
+    <string id="taom_str_player_mother_name.battania" text="Khara" />
+
+    <string id="taom_str_player_father_name.khuzait" text="Khamûl" />
+
+    <string id="taom_str_player_mother_name.khuzait" text="Adûnaphel" />
+
+    <string id="taom_str_player_father_name.aserai" text="Suladan" />
+
+    <string id="taom_str_player_mother_name.aserai" text="Haleth" />
+
+    <string id="taom_str_player_father_name.sturgia" text="Bardo" />
+
+    <string id="taom_str_player_mother_name.sturgia" text="Sigrid" />
+
+    <string id="taom_str_player_father_name.erebor" text="Drúlin" />
+
+    <string id="taom_str_player_mother_name.erebor" text="Orrina" />
+
+    <string id="taom_str_player_father_name.rivendell" text="Celeforn" />
+
+    <string id="taom_str_player_mother_name.rivendell" text="Gilrien" />
+
+    <string id="taom_str_player_father_name.mirkwood" text="Galion" />
+
+    <string id="taom_str_player_mother_name.mirkwood" text="Lúthien" />
+
+    <string id="taom_str_player_father_name.lothlorien" text="Irophin" />
+
+    <string id="taom_str_player_mother_name.lothlorien" text="Oimrodel" />
+
+    <string id="taom_str_player_father_name.isengard" text="Grima" />
+
+    <string id="taom_str_player_mother_name.isengard" text="Lurka" />
+
+    <string id="taom_str_player_father_name.gundabad" text="Narzuk" />
+
+    <string id="taom_str_player_mother_name.gundabad" text="Borlia" />
+
+    <string id="taom_str_player_father_name.umbar" text="Castamir" />
+
+    <string id="taom_str_player_mother_name.umbar" text="Berúthiel" />
+
+    <string id="taom_str_player_father_name.dolguldur" text="Grishmak" />
+
+    <string id="taom_str_player_mother_name.dolguldur" text="Durgash" />
+
+    <string id="taom_str_player_father_name.gondor" text="Coromir" />
+
+    <string id="taom_str_player_mother_name.gondor" text="Finduilas" />
+
+    <string id="taom_str_player_father_name.mordor" text="Gorbag" />
+
+    <string id="taom_str_player_mother_name.mordor" text="Zhelob" />
+
+    <string id="taom_peace_news" text="{FACTION1} y {FACTION2} han hecho las paces." />
+
+    <string id="taom_war_news" text="{RULER_NAME} de {FACTION1_NAME} declara la guerra a {FACTION2_NAME}." />
+
+    <string id="taom_war_news_direct" text="{FACTION1_NAME} declara la guerra a {FACTION2_NAME}." />
+
+    <string id="taom_siege_party_link" text="¡{TOWN_NAME} ha sido asediada por fuerzas lideradas por {LORD.LINK} de {FACTION_NAME}!" />
+
+    <string id="taom_siege_party" text="¡{TOWN_NAME} ha sido asediada por fuerzas lideradas por {LORD.LINK} de {FACTION_NAME}!" />
+
+    <string id="taom_siege_army_link" text="¡{TOWN_NAME} ha sido asediada por el ejército liderado por {LORD.LINK} de {FACTION_NAME}!" />
+
+    <string id="taom_siege_army" text="¡{TOWN_NAME} ha sido asediada por el ejército liderado por {LORD.LINK} de {FACTION_NAME}!" />
+
+    <string id="taom_raid_army" text="{SETTLEMENT} es saqueada por el ejército liderado por {LORD.LINK} de {FACTION_NAME}" />
+
+    <string id="taom_raid_party" text="{SETTLEMENT} es saqueada por {LORD.LINK} de {FACTION_NAME}" />
+
+    <string id="taom_destroy_party" text="{VICTOR_PARTY} de {VICTOR_FACTION} derrota a {DEFEATED_PARTY} de {DEFEATED_FACTION}." />
+
+    <string id="taom_secondary_peace" text="{FACTION1} y {FACTION2} han hecho las paces." />
+
+    <string id="taom_change_faction" text="El clan {CLAN_NAME} se ha unido a {FACTION}." />
+
+    <string id="taom_merc_contract" text="{CLAN} ha contratado para luchar junto a {KINGDOM}." />
+
+    <string id="taom_merc_end" text="{CLAN} ya no sirve a {KINGDOM}." />
+
+    <string id="taom_minor_intro" text="Soy {CONVERSATION_CHARACTER.LINK}, de {FACTION}." />
+
+    <string id="taom_alliance_desc" text="Formar una alianza con {FACTION}" />
+
+    <string id="taom_vassal_rank" text="Vasallo de {FACTION_INFORMAL_NAME}" />
+
+    <string id="taom_ruler_rank" text="Gobernante de {FACTION_INFORMAL_NAME}" />
+
+    <string id="taom_noble_rank" text="Noble de {FACTION_INFORMAL_NAME}" />
+
+    <string id="taom_merc_rank" text="Mercenario luchando por {FACTION_INFORMAL_NAME}" />
+
+    <string id="taom_answer_call" text="Responder al Llamado de {CALLING_KINGDOM} para Declarar la Guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
+
+    <string id="taom_propose_call" text="Llamar a {CALLED_KINGDOM} para Declarar la Guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
+
+    <string id="taom_raid_resist_peace" text="Has llegado a {SETTLEMENT} para saquearla. Algunos residentes se han reunido para resistirse. Saquear esta aldea causará una guerra con {KINGDOM}." />
+
+    <string id="taom_force_supply_peace" text="Mientras intentas forzar a los aldeanos a darte bienes, algunos residentes se reúnen para resistirse. Luchar contra ellos causará una guerra con {KINGDOM}." />
+
+    <string id="taom_force_vol_peace" text="Mientras intentas forzar a los notables a darte reclutas, algunos residentes se reúnen para resistirse. Luchar contra ellos causará una guerra con {KINGDOM}." />
+
+    <string id="taom_raid_noresist_peace" text="Has llegado a {SETTLEMENT} para saquearla. No encuentras resistencia. Saquear esta aldea causará una guerra con {KINGDOM}." />
+
+    <string id="taom_encounter_peace" text="Te has encontrado con {PARTY}. Luchar contra ellos causará una guerra con {KINGDOM}." />
+
+    <string id="0cdXddA9" text="{KINGDOM1_LINK} ha formado una alianza con {KINGDOM2_LINK}." />
+
+    <string id="1rbg3Hz2" text="{FACTION_1} y {FACTION_2} ya no son enemigos." />
+
+    <string id="2BVDp7Tg" text="{KINGDOM} dejará de {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+
+    <string id="Lbs2bNlg" text="{KINGDOM} comenzará a {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+
+    <string id="jnYwiCAz" text="{KINGDOM} continuará {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+
+    <string id="faUooB7V" text="{KINGDOM} no estará {POLICY_DESCRIPTION} ({POLICY}). {POLICY_SUPPORT}" />
+
+    <string id="TauRjAud" text="{NAME} de {FACTION}" />
+
+    <string id="2mVZORaE" text="un servidor de {FACTION_NAME}" />
+
+    <string id="6d4ZTvGv" text="{LORD.NAME} es {TITLE} de {FACTION_NAME} y cabeza de {CLAN_NAME}, {CLAN_DESCRIPTION} del reino. {?LORD.GENDER}Ella{?}Él{\?} tiene la reputación de ser {REPUTATION}." />
+
+    <string id="o5AUljbW" text="{LORD.NAME} es un miembro de {CLAN_NAME}, {CLAN_DESCRIPTION} de {FACTION_NAME}. {?LORD.GENDER}Ella{?}Él{\?} tiene la reputación de ser {REPUTATION}." />
+
+    <string id="9Obe3S6L" text="{LORD.FIRSTNAME} es un miembro de {CLAN_NAME}, {CLAN_DESCRIPTION} de las tierras de {FACTION_NAME}. {?LORD.GENDER}Ella{?}Él{\?} tiene la reputación de ser {REPUTATION}." />
+
+    <string id="hRfXSdlP" text="{LORD.FIRSTNAME} es cabeza de {CLAN_NAME}, {CLAN_DESCRIPTION} de las tierras de {FACTION_NAME}. {?LORD.GENDER}Ella{?}Él{\?} tiene la reputación de ser {REPUTATION}." />
+
+    <string id="0bPb5btR" text="{LORD.NAME} es un miembro de {CLAN_NAME}, {CLAN_DESCRIPTION} de {FACTION_NAME} que apoya a {RULER} en la guerra civil. {?LORD.GENDER}Ella{?}Él{\?} tiene la reputación de ser {REPUTATION}." />
+
+    <string id="JuPUG5wX" text="{LORD.NAME} es {TITLE} de {FACTION_NAME} y cabeza de {CLAN_NAME}, {CLAN_DESCRIPTION} que apoya a {RULER} en la guerra civil. {?LORD.GENDER}Ella{?}Él{\?} tiene la reputación de ser {REPUTATION}." />
+
+    <string id="4pmvrnmN" text="El castillo de {SETTLEMENT_LINK} es propiedad de {LORD.LINK}, {FACTION_OFFICIAL} de {FACTION_TERM}. {KEEP_INFO}" />
+
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK} es gobernado por {LORD.LINK}, {FACTION_OFFICIAL} de {FACTION_TERM}. {KEEP_INFO}" />
+
+    <string id="RVDojUOM" text="Las tierras alrededor de {SETTLEMENT_LINK} son en su mayoría propiedad de {LORD.LINK}, {FACTION_OFFICIAL} de {FACTION_TERM}. {PROSPERITY_INFO}" />
+
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK} es gobernado por {LORD.LINK}, {FACTION_OFFICIAL} de {FACTION_TERM}. {PROSPERITY_INFO} {MORALE_INFO}" />
+
+    <string id="yAOQnMVw" text="Eres de {FACTION}, ¿verdad? Eso significa que eres mi prisionero." />
+
+    <string id="YT4OvaAG" text="Muy bien. Puedes considerarte bajo la protección de {FACTION_NAME}. Tienes hasta mañana a esta hora para completar tu viaje, o podríamos pedirte otro pago." />
+
+    <string id="taom_str_faction_official.erebor" text="un noble enano" />
+
+    <string id="taom_str_faction_official.erebor_f" text="una dama enana" />
+
+    <string id="taom_str_faction_ruler.erebor" text="Rey Bajo la Montaña" />
+
+    <string id="taom_str_faction_ruler.erebor_f" text="Reina Bajo la Montaña" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}la Reina Bajo la Montaña{?}el Rey Bajo la Montaña{\?}, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}Reina Bajo la Montaña{?}Rey Bajo la Montaña{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}Dama{?}Señor{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.erebor" text="Ereboriano" />
+
+    <string id="taom_str_short_term_for_faction.erebor" text="Enano" />
+
+    <string id="taom_str_faction_formal_name_for_culture.erebor" text="Reino Bajo la Montaña" />
+
+    <string id="taom_str_faction_informal_name_for_culture.erebor" text="Erebor" />
+
+    <string id="taom_str_neutral_term_for_culture.erebor" text="Enanos de Erebor" />
+
+    <string id="0aXG8dvJ" text="Hacer la paz con {KINGDOM_NAME}. No se pagará tributo." />
+
+    <string id="0CsbbwtN" text="Llamar a {CALLED_KINGDOM} a la Guerra Contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
+
+    <string id="0nhqJewP" text="{RULER.NAME} de {KINGDOM} otorga {SETTLEMENT} a {LEADER.NAME} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="17A2DDgD" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido hacer la paz con {KINGDOM} con el apoyo de {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME} puede ser fuerte, pero sus tierras son ricas y maduras para la conquista." />
+
+    <string id="1o8vgwTf" text="{RULER.NAME} de {KINGDOM} ha decidido firmar un acuerdo comercial con {OTHER_KINGDOM} a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="1V8f9vRM" text="Un mensajero portando una oferta de alianza de {PROPOSER_KINGDOM} ha llegado a la corte de tu reino." />
+
+    <string id="21yUheIy" text="{KINGDOM_NAME} fue creado en {CREATION_YEAR} por {RULER.NAME}, un {CULTURE_ADJECTIVE} señor de la guerra en ascenso." />
+
+    <string id="22LCyCoA" text="Puedo ofrecer a tu reino {GOLD}{GOLD_ICON} para declarar la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="2b1xZGaQ" text="Hacer la paz con {KINGDOM_NAME}. Nuestro reino pagará {TRIBUTE_AMOUNT} de tributo diario durante {TRIBUTE_DURATION} días." />
+
+    <string id="2KaXj3Qa" text="Las depredaciones de {NEARBY_ENEMY_FACTION} han expulsado a muchos granjeros de sus hogares. Aquellos que tienen tierra usualmente regresan a ella, pero muchos de los más pobres buscan un nuevo lugar para vivir. Hablas con algunos acampados en las afueras de tu aldea. No hay tierra para ellos. Parecen ansiosos por trabajar como arrendatarios, pero siempre existe la posibilidad de tensiones con las familias más establecidas de la aldea." />
+
+    <string id="4fXpOe4N" text="Un mensajero llega de {CLAN_NAME}. Retienen a {CAPTIVE_HERO.NAME} y están exigiendo {GOLD_AMOUNT}{GOLD_ICON} como rescate." />
+
+    <string id="4GgfFDWG" text="Haciendo la paz con {KINGDOM_NAME}" />
+
+    <string id="4JSzHkpt" text="Como {?IS_FEMALE}reina{?}rey{\?}, debes decidir si se declarará la guerra a {KINGDOM_NAME}" />
+
+    <string id="4z1t75be" text="{FIRSTNAME} de {CLAN_NAME}" />
+
+    <string id="5bBAOHmC" text="{RULER.NAME} de {KINGDOM} toma {SETTLEMENT} como {?RULER.GENDER}su{?}su{\?} feudo, con {?RULER.GENDER}su{?}su{\?} consejo dividido por igual." />
+
+    <string id="5bza9sDs" text="Lamento mucho escuchar eso. No encontrarás mejores empleadores que {FACTION_NAME}, ten eso por seguro." />
+
+    <string id="5DdbkWLu" text="{RULER.NAME} de {KINGDOM} ha decidido firmar un acuerdo comercial con {OTHER_KINGDOM} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="5L0wDGhR" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} eligió no ir a la guerra con {KINGDOM}, con {?AGGRESSOR_RULER.GENDER}su{?}su{\?} consejo dividido por igual." />
+
+    <string id="5pOKmHsf" text="{RULER.NAME} ha decidido llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión tuvo el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME} ha ocupado nuestras tierras ancestrales y oprimen a nuestros parientes." />
+
+    <string id="7ouzFASf" text="Llega un mensajero portando un mensaje de {OFFERED_KINGDOM_LEADER.NAME}. {?OFFERED_KINGDOM_LEADER.GENDER}Ella{?}Él{\?} comenta sobre tu creciente reputación y pregunta si considerarías jurarte como vasallo de {OFFERED_KINGDOM_NAME}. Deberías hablar en persona si estás interesado." />
+
+    <string id="8RBZaQKk" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} eligió no ir a la guerra con {KINGDOM} con el apoyo de {?AGGRESSOR_RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="940TwBPs" text="{RULER.NAME} eligió no expulsar al clan {CLAN} de {KINGDOM} a pesar de las objeciones de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="9WDK03GW" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} eligió no ir a la guerra con {KINGDOM}." />
+
+    <string id="aE7OQDMS" text="Formar alianza con {KINGDOM_NAME}." />
+
+    <string id="aEt1kqxm" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido hacer la paz con {KINGDOM}, con {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo dividido equitativamente sobre el asunto." />
+
+    <string id="AGdmoIUc" text="{RULER.NAME} ha decidido llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión fue en contra del consejo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="amdgO9Hr" text="Soy {CONVERSATION_HERO.FIRSTNAME}. Soy un humilde seguidor de la comunidad conocida como {FACTION_NAME}, a quienes {DIVINITY} ha elegido para portar su mensaje en esta Era presente." />
+
+    <string id="aQAI99d4" text="Declarando la Guerra a {KINGDOM_NAME}" />
+
+    <string id="AThZtg7U" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido no hacer la paz con {KINGDOM}, con {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo dividido equitativamente sobre el asunto." />
+
+    <string id="AwCnrOan" text="Como {RULER_NAME_AND_TITLE}, debes decidir si {CALLED_KINGDOM} será llamado a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_COST}{GOLD_ICON}." />
+
+    <string id="AWm7Kb9Y" text="{RULER.NAME} ha decidido no llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión tuvo el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="awoeb3br" text="{FACTION_LEADER} decidirá si {KINGDOM_CONSIDERING_PEACE_NAME} hará la paz con {KINGDOM_NAME}. Puedes elegir tu postura respecto a esta decisión." />
+
+    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK} ha hecho la paz con {ENEMYFACTION_INFORMALNAME}. Tu acuerdo con {QUEST_GIVER.LINK} ha sido cancelado." />
+
+    <string id="az3K3j4C" text="Ahora mismo somos más fuertes que {ENEMY_KINGDOM_INFORMAL_NAME}. Deberíamos atacar mientras podamos." />
+
+    <string id="B818zx3W" text="Tu clan está en guerra con fracciones con las que {KINGDOM} está en paz." />
+
+    <string id="bjEN2OzZ" text="Como resultado de tu intención hostil hacia una aldea neutral, {KINGDOM} te declara la guerra." />
+
+    <string id="Bk3Wqy5j" text="{RULER.NAME} ha decidido no responder al llamado de {CALLING_KINGDOM} y no hará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="BlVjIlZF" text="{FACTION_LEADER} decidirá si {KINGDOM_CONSIDERING_PEACE_NAME} hará la paz con {KINGDOM_NAME} pagando {TRIBUTE_AMOUNT} como tributo durante {TRIBUTE_DURATION} días. Puedes elegir tu postura respecto a esta decisión." />
+
+    <string id="bMCZ5rWQ" text="{RULER.NAME} ha decidido no llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión tuvo el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="bR7MIkFi" text="{RULER.NAME} ha decidido no formar una alianza con {KINGDOM_NAME} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="bXN2fbcv" text="Tus hombres tratan a los residentes de {SETTLEMENT_NAME} como súbditos descarriados de {SETTLEMENT_CULTURE_NAME} en lugar de enemigos, y los tratan relativamente bien." />
+
+    <string id="bYmc9fi3" text="{RULER.NAME} ha decidido formar una alianza con {KINGDOM_NAME} a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="Cf0amFBD" text="Aceptar el Llamado a la Guerra de {CALLING_KINGDOM} Contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_PAYMENT}{GOLD_ICON}" />
+
+    <string id="cRpsjvOM" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} ha declarado la guerra a {KINGDOM} con el apoyo de {?AGGRESSOR_RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="CrzFdo2H" text="Sí. Se trata de la guerra con {ENEMYFACTION_INFORMALNAME}. [ib:hip][if:convo_excited]Necesitamos inmovilizar algunas de sus fuerzas. Una fuerza relativamente pequeña moviéndose rápidamente por sus tierras y saqueando sus aldeas con éxito debería ser una buena distracción. Sus señores tendrán que perseguir a los asaltantes y no podrán amenazarnos en otras partes. Pareces ser {?PLAYER.GENDER}la guerrera{?}el hombre{\?} indicado para el trabajo. ¿Qué dices? Tendrás mi gratitud y serás bien recompensado si tienes éxito." />
+
+    <string id="CswzBb02" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido hacer la paz con {KINGDOM}." />
+
+    <string id="d6KbdIWg" text=" Como resultado de tu intención hostil hacia una aldea neutral, {MERCENARY_KINGDOM} termina su contrato contigo, y {KINGDOM} te declara la guerra." />
+
+    <string id="dCDBqYsh" text="{RULER.NAME} de {KINGDOM} ha elegido no firmar un acuerdo comercial con {OTHER_KINGDOM} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="dDsJyerw" text="Llamar a {CALLED_KINGDOM} a la Guerra Contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="dEsIQDo3" text="¡Es hora de llamar a nuestro aliado {CALLED_KINGDOM} a la guerra!" />
+
+    <string id="dov3iRlt" text="{ENEMY_RULER.NAME} de {ENEMY_KINGDOM_INFORMAL_NAME} es vil y peligroso. Debemos lidiar con {?ENEMY_RULER.GENDER}ella{?}él{\?} antes de que sea demasiado tarde." />
+
+    <string id="DphlPaF9" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} ha declarado la guerra a {KINGDOM} a pesar de la oposición de {?AGGRESSOR_RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="dPOOmYGQ" text="¿Crees que los señores y guerreros de {KINGDOM} se quedarán de brazos cruzados cuando su gente sea secuestrada? ¡Será mejor que nos dejes ir!" />
+
+    <string id="drZC1Frp" text="{KINGDOM_NAME} fue creado en {CREATION_YEAR} por {RULER.NAME}, líder de un grupo de rebeldes {CULTURE_ADJECTIVE}." />
+
+    <string id="eAhgrwkZ" text="Como {RULER_NAME_AND_TITLE}, debes decidir si se formará una alianza con {KINGDOM_NAME}." />
+
+    <string id="eEmFbQet" text="{RULER.NAME} ha decidido llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión contó con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="efTah9rk" text="No tengo la autoridad para hacer la paz en nombre de {ENEMY_INFORMAL_NAME}. Nuestro consejo debería decidir si ofrecer la paz, y cuáles serán los términos." />
+
+    <string id="eiGl6XBr" text="Votar sobre si responder al llamado de {CALLING_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
+
+    <string id="EqevKYZD" text="Como {RULER_NAME_AND_TITLE}, debes decidir si {CALLED_KINGDOM} será llamado a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_COST}{GOLD_ICON}" />
+
+    <string id="eTylgLCc" text="Ha llegado un mensajero de {KINGDOM_NAME}. Te ofrecen una alianza. Tu reino votará si acepta la oferta." />
+
+    <string id="eUWYqwE6" text="{CALLING_KINGDOM} ya no está en guerra con {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="F7CMsDyG" text="{RULER.NAME} ha decidido no formar una alianza con {KINGDOM_NAME} a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="fcuUcjYV" text="{RULER.NAME} ha decidido no responder al llamado de {CALLING_KINGDOM} y no hará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión contó con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="FNCq25P1" text="{RULER.NAME} ha decidido formar una alianza con {KINGDOM_NAME} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="FuNbouTu" text="Ha llegado un mensajero de {KINGDOM_NAME}. Llaman a tu reino a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. Tu reino votará si acepta la oferta." />
+
+    <string id="G3qGLAeQ" text="{RULER.NAME} ha expulsado al clan {CLAN} de {KINGDOM} en contra de los deseos de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="gf2Lje7o" text="{RULER.NAME} ha decidido no llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}, comandando un ejército de {QUEST_GIVER_FACTION}, te ha dicho que necesitan suministros de comida para su próxima campaña militar. {?QUEST_GIVER.GENDER}Ella{?}Él{\?} quería que entregues {GRAIN_AMOUNT} sacos de grano y aunque no es necesario, si proporcionas {LIVESTOCK_AMOUNT} ganado vivo y {WINE_AMOUNT} barriles de vino {?QUEST_GIVER.GENDER}ella{?}él{\?} lo apreciaría." />
+
+    <string id="Gj5d9y2g" text="{RULER.NAME} de {KINGDOM} ha decidido firmar un acuerdo comercial con {OTHER_KINGDOM}." />
+
+    <string id="gNf0ALKw" text="Ha llegado un mensajero de {MAP_FACTION_NAME}. Te ofrecen una paz blanca. Tu reino votará si acepta la oferta." />
+
+    <string id="h5eTEYON" text="{RULER.NAME} ha expulsado al clan {CLAN} de {KINGDOM}." />
+
+    <string id="h9bWTLgK" text="Es hora de unirnos a nuestros aliados, {KINGDOM_NAME}, en su guerra." />
+
+    <string id="IB1xsVEr" text="Ha llegado un mensajero de {MAP_FACTION_NAME}. Te ofrecen una paz blanca. Tus vasallos han dejado la decisión en tus manos." />
+
+    <string id="INfHUqxT" text="{RULER.NAME} ha decidido formar una alianza con {KINGDOM_NAME}." />
+
+    <string id="Ing5gFbO" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha elegido no hacer la paz con {KINGDOM} por encima de las objeciones de {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="iOmgCFDI" text="Votar para formar una alianza con {KINGDOM_NAME}." />
+
+    <string id="ItueKmqd" text="Tu clan ahora está en guerra con {QUEST_GIVER_SETTLEMENT_FACTION}. Tu contrato con {QUEST_GIVER.LINK} está cancelado." />
+
+    <string id="izwKmH2I" text="{RULER.NAME} ha decidido formar una alianza con {KINGDOM_NAME} con el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="jaioXYDc" text="{RULER.NAME} ha decidido no formar una alianza con {KINGDOM_NAME} con el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="JDfnPFsW" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido hacer la paz con {KINGDOM} a pesar de la oposición de {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="JJQ0Hp4m" text="Un mensajero ha llegado de {MAP_FACTION_NAME}. {MAP_FACTION_NAME} pagará {GOLD_AMOUNT} {GOLD_ICON} en tributo cada día para terminar la guerra entre vuestros reinos. Tus vasallos han dejado la decisión contigo." />
+
+    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME} es actualmente más poderoso que nosotros. Necesitamos tiempo para fortalecer nuestras fuerzas." />
+
+    <string id="JQligd8z" text="El consejo de {KINGDOM} ha elegido a {KING.NAME} como el nuevo gobernante." />
+
+    <string id="JY717hPW" text="No tengo la autoridad para hacer la paz en nombre de {ENEMY_INFORMAL_NAME}. {ENEMY_RULER.NAME} y {?ENEMY_RULER.GENDER}su{?}su{\?} consejo deberían decidir si ofrecer la paz y cuáles serán los términos." />
+
+    <string id="K5w135N9" text="{RULER.NAME} ha decidido no responder al llamado de {CALLING_KINGDOM} y no hará la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión fue tomada en contra del consejo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="KFHj7ckm" text="Como gobernante, debes decidir si se hará la paz con {KINGDOM_NAME}" />
+
+    <string id="KlATZEbb" text="Formando una Alianza con {KINGDOM_NAME}." />
+
+    <string id="KSrNutEO" text="{FACTION_LEADER} decidirá si se declarará la guerra a {KINGDOM_NAME}. Puedes elegir tu postura respecto a esta decisión." />
+
+    <string id="Ktpia7Pa" text="{RULER.NAME} de {KINGDOM} otorga {SETTLEMENT} a {LEADER.NAME} a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="l5H9x7Lo" text="{RULER.NAME} de {KINGDOM} otorga {SETTLEMENT} a {LEADER.NAME}, con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente." />
+
+    <string id="L802I9W2" text="Sí, me uniré a {FACTION_NAME}." />
+
+    <string id="L81DPSom" text="Como {RULER_NAME_AND_TITLE}, debes decidir si tu reino responderá al llamado de {CALLING_KINGDOM} y declarará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_COST}{GOLD_ICON}." />
+
+    <string id="Lalj0T1i" text="{RULER.NAME} ha respondido al llamado de {CALLING_KINGDOM} y declarado la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="lseJ70y0" text="Tu reino está en guerra con {KINGDOM_NAME}." />
+
+    <string id="LVX2x6Jf" text="Quisiera terminar mi contrato con {SERVED_FACTION}." />
+
+    <string id="m69pvful" text="{KINGDOM_LEADER} decidirá si tu reino responderá al llamado de {CALLING_KINGDOM} y declarará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_PAYMENT}{GOLD_ICON}. Puedes elegir tu postura respecto a esta decisión." />
+
+    <string id="m6OVl6Dg" text="{RULER.NAME} ha expulsado al clan {CLAN} de {KINGDOM}, con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente en el asunto." />
+
+    <string id="mfYzCeGR" text="{CHARACTER.NAME} fue {TITLE} de {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
+
+    <string id="mRrYn2qm" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha elegido no hacer la paz con {KINGDOM} con el apoyo de {?PEACEMAKER_RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="MSr3HRa1" text="{QUEST_GIVER.NAME}, {?QUEST_GIVER.GENDER}una dama{?}un señor{\?} de {CLAN}, quiere que un miembro joven del clan sea entrenado en las artes de la guerra." />
+
+    <string id="mvkKP6OE" text="{RULER.NAME} decidió no expulsar al clan {CLAN} de {KINGDOM}." />
+
+    <string id="MYIgSsfk" text="{RULER.NAME} ha decidido no llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión fue en contra del consejo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="n4I3pWOn" text="Como gobernante, debes decidir si se hará la paz con {KINGDOM_NAME} pagando {TRIBUTE_AMOUNT} como tributo durante {TRIBUTE_DURATION} días." />
+
+    <string id="Nd0Vhkxn" text="Un mensajero ha llegado de {MAP_FACTION_NAME}. Te ofrecen la paz si aceptas pagar un tributo diario de {GOLD_AMOUNT} {GOLD_ICON}. Tus vasallos han dejado la decisión contigo." />
+
+    <string id="NFuezpbG" text="{CALLED_KINGDOM} ya está en guerra con {KINGDOM_NAME}." />
+
+    <string id="NjPMRWbW" text="Hacer la paz con {KINGDOM_NAME}. Nuestro reino recibirá {TRIBUTE_AMOUNT} de tributo diario durante {TRIBUTE_DURATION} días." />
+
+    <string id="nkvT88r2" text="No tienes suficiente dinero para llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="NuYzgBZB" text="Estás yendo demasiado lejos. {KINGDOM} no tolerará la destrucción de sus caravanas." />
+
+    <string id="o4IxXHnB" text="{RULER.NAME} ha decidido no formar una alianza con {KINGDOM_NAME}." />
+
+    <string id="o69PZuce" text="{OLD_LEADER.LINK} ya no es el líder de {CLAN_NAME}. {NEW_LEADER.LINK} ha asumido como gobernante del clan." />
+
+    <string id="O9XpB5Ah" text="Como gobernante, debes decidir si se hará un acuerdo comercial con {KINGDOM}" />
+
+    <string id="oAw74q3r" text="Como {RULER_NAME_AND_TITLE}, debes decidir si tu reino responderá al llamado de {CALLING_KINGDOM} y declarará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_PAYMENT}{GOLD_ICON}." />
+
+    <string id="Oe1NdVLe" text="{RULER.NAME} eligió no expulsar al clan {CLAN} de {KINGDOM} con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente en el asunto." />
+
+    <string id="Oi20UrO2" text="Nuestra guerra con {TARGET_SETTLEMENT_FACTION_INFORMAL_NAME} va bastante bien. Pero hay quienes dicen que no tenemos suficiente que mostrar por toda la sangre y plata que hemos gastado. Una victoria clara en esta etapa haría mucho bien. Creo que me gustaría ver nuestra bandera ondeando desde las torres de {TARGET_SETTLEMENT}.[ib:normal2][if:convo_thinking]" />
+
+    <string id="OlIWwLbP" text="Sí. Se trata de la guerra con {ENEMYFACTION_INFORMALNAME}. [ib:closed][if:convo_pondering]Necesitamos ocupar algunas de sus fuerzas, y la manera más fácil sería asaltar sus aldeas. Es un negocio cruel y será duro para la gente común, pero sus señores tendrán que perseguir a los asaltantes y les impedirá hacer lo mismo con nosotros. Si asumes esto, te recompensaré si tienes éxito." />
+
+    <string id="Ouj6eSWC" text="{RULER.NAME} ha decidido no responder al llamado de {CALLING_KINGDOM} y no hará la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}. La decisión tuvo el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="PneX4Ayw" text="Un mensajero portando una oferta de llamado a la guerra de {KINGDOM_NAME} contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} ha llegado a la corte de tu reino." />
+
+    <string id="PP7KD7OC" text="{RULER.NAME} de {KINGDOM} ha decidido firmar un acuerdo comercial con {OTHER_KINGDOM}, con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente en el asunto." />
+
+    <string id="PutoRsWp" text="Un mensajero llega de {CLAN_NAME}. Te ofrecen {GOLD_AMOUNT}{GOLD_ICON} como rescate si liberas a {CAPTIVE_HERO.NAME}." />
+
+    <string id="q9DnHVcZ" text="No es de nuestro interés unirnos a {KINGDOM_NAME} en su guerra." />
+
+    <string id="qa4FlTWS" text="{RULER.NAME} de {KINGDOM} toma {SETTLEMENT} como {?RULER.GENDER}su{?}su{\?} feudo a pesar de la oposición de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="qgN9o2ip" text="¡Es hora de llamar a nuestro aliado {KINGDOM_NAME} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}! Tu reino votará si proponer un acuerdo de llamado a la guerra con ellos." />
+
+    <string id="qN3x2usk" text="Vota sobre si llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_COST}{GOLD_ICON}." />
+
+    <string id="R0bJS0pn" text="Hacer la paz con {OTHER_FACTION}" />
+
+    <string id="r0Kq0aeB" text="{FACTION_LEADER} decidirá si {CALLED_KINGDOM} será llamado a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST} por {CALL_TO_WAR_COST}{GOLD_ICON}. Puedes elegir tu postura sobre esta decisión." />
+
+    <string id="rd229FYG" text="{RULER.NAME} ha expulsado al clan {CLAN} de {KINGDOM} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="RH8mgLEk" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} ha declarado la guerra a {KINGDOM} con el apoyo de la mitad de {?AGGRESSOR_RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="rJIuQ0hc" text="{RULER.NAME} de {KINGDOM} ha decidido no firmar un acuerdo comercial con {OTHER_KINGDOM} sobre las objeciones de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="rtfoywJl" text="Declarar la guerra a {KINGDOM_NAME}" />
+
+    <string id="sbFboHmV" text="Un mensajero ha llegado de {MAP_FACTION_NAME}. Te ofrecen la paz si aceptas pagar un tributo diario de {GOLD_AMOUNT} {GOLD_ICON}. Tu reino votará si aceptar la oferta." />
+
+    <string id="Shk9QCDg" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} ha declarado la guerra a {KINGDOM}." />
+
+    <string id="SR9FC5jH" text="Un mensajero ha llegado de {MAP_FACTION_NAME} con una oferta de paz. {MAP_FACTION_NAME} pagará {GOLD_AMOUNT} {GOLD_ICON} de tributo cada día para terminar la guerra entre tus reinos. Tu reino votará si aceptar la oferta." />
+
+    <string id="syGyjjKE" text="Responde al llamado de {CALLING_KINGDOM}, y declara la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME} te está ofreciendo trabajo como mercenario, pagando {GOLD_AMOUNT}{GOLD_ICON} por cada punto de influencia que ganarías al luchar en su nombre. ¿Aceptas?" />
+
+    <string id="uc4M4bhG" text="Bueno, hay algo que quiero. Hay {?TARGET_HERO.GENDER}una dama{?}un señor{\?} de {TARGET_FACTION} con quien tengo una larga, larga relación. Y no amistosa. Ahora que estamos en guerra, mientras {?TARGET_HERO.GENDER}ella{?}él{\?} esté libre, sé que mi vida y mis tierras no están a salvo. Como digo, no será nada fácil. Pero quien logre hacerlo, traer{?TARGET_HERO.GENDER}la{?}lo{\?} de vuelta vivo ante mí, además de tener mi gratitud, será un hombre muy rico.[if:convo_grave][ib:closed2]" />
+
+    <string id="uiY3ds0Z" text="{RULER.NAME} ha respondido al llamado de {CALLING_KINGDOM} y declaró la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} con el apoyo de la mitad de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="UQq4ekeu" text="{RULER.NAME} de {KINGDOM} ha decidido no firmar un acuerdo comercial con {OTHER_KINGDOM}." />
+
+    <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK} ha llamado a {CALLED_KINGDOM_LINK} a declarar la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}." />
+
+    <string id="uWdj1X2c" text="{CHARACTER.NAME} era miembro de {CHARACTER_FACTION_SHORT}. {FURTHER_DETAILS}." />
+
+    <string id="V097rA1v" text="{LORD.FIRSTNAME} es el líder de {CLAN_NAME}, un nuevo clan en ascenso. {?LORD.GENDER}Ella{?}Él{\?} todavía está forjando {?LORD.GENDER}su{?}su{\?} reputación." />
+
+    <string id="vf2pb7Ts" text="{RULER.NAME} ha respondido al llamado de {CALLING_KINGDOM} y declaró la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="Vg5RmOqL" text="{FACTION_LEADER} decidirá si {KINGDOM} firmará un acuerdo comercial con {OTHER_KINGDOM}. Puedes elegir tu postura sobre esta decisión." />
+
+    <string id="VWoHoUin" text="No habrá paz entre nosotros y {ENEMY_INFORMAL_NAME}, así como el lobo no hace la paz con las ovejas." />
+
+    <string id="wijL0mTy" text="{FACTION_LEADER} decidirá si se formará una alianza con {KINGDOM_NAME}. Puedes elegir tu postura sobre esta decisión." />
+
+    <string id="wsDNxArW" text="{PEACEMAKER_RULER.NAME} de {KINGDOM_CONSIDERING_PEACE} ha decidido no hacer la paz con {KINGDOM}." />
+
+    <string id="xAuejv91" text="{RULER.NAME} de {KINGDOM} ha decidido no hacer la paz con {OTHER_KINGDOM}, con {?RULER.GENDER}su{?}su{\?} consejo dividido equitativamente en el asunto." />
+
+    <string id="XaZyU3Cn" text="{AGGRESSOR_RULER.NAME} de {AGGRESSOR_KINGDOM} decidió no ir a la guerra con {KINGDOM} a pesar de los deseos de {?AGGRESSOR_RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="XbYCVCbR" text="Nos oponemos a llamar a nuestro aliado {CALLED_KINGDOM} a la guerra." />
+
+    <string id="xhK4zMec" text="{RULER.NAME} ha decidido llamar a {CALLED_KINGDOM} a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST}." />
+
+    <string id="xKev8i5B" text="El llamado que {CALLING_KINGDOM_LINK} emitió a {CALLED_KINGDOM_LINK}, para ir a la guerra contra {KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}, ha terminado." />
+
+    <string id="xM97H0oR" text="Vota por declarar la guerra a {KINGDOM_NAME}." />
+
+    <string id="yBL3TzXw" text="{RULER.NAME} decidió no expulsar al clan {CLAN} de {KINGDOM} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="yUYNlQhU" text="Bien, haré que mis hombres redacten un contrato simple. En nombre de {KINGDOM_FORMAL_NAME}, te doy la bienvenida. Que hagas buen uso de tu espada contra nuestros enemigos." />
+
+    <string id="Zckbdm4Z" text="{RULER.NAME} de {KINGDOM} toma {SETTLEMENT} como {?RULER.GENDER}su{?}su{\?} feudo con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="zd9sawl9" text="Ya eres aliado de {KINGDOM_NAME}." />
+
+    <string id="zXuo0Wbj" text="Firmar un acuerdo comercial con {KINGDOM}" />
+
+    <string id="ZZ1oLfEq" text="{RULER.NAME} ha respondido al llamado de {CALLING_KINGDOM} y declaró la guerra a {KINGDOM_TO_CALL_TO_WAR_AGAINST} con el apoyo de {?RULER.GENDER}su{?}su{\?} consejo." />
+
+    <string id="taom_shaghana_name" text="Shaghâna" />
+
+    <string id="taom_shaghana_short_name" text="Shaghâna" />
+
+    <string id="taom_shaghana_title" text="Taskralan de Shaghâna" />
+
+    <string id="taom_shaghana_ruler_title" text="Taskral" />
+
+    <string id="taom_shaghana_desc" text="Shaghâna es la región oriental de Harad, una tierra de estepas abrasadas por el sol y fortalezas antiguas. Sus nueve clanes tribales son guerreros feroces, unidos por juramentos y sangre, que infunden temor en aquellos que se atreven a oponerse a ellos." />
+
+    <string id="aom_shaghana_name" text="Shaghâna" />
+
+    <string id="aom_shaghana_desc" text="Los Shaghâna son un pueblo tribal feroz de las estepas orientales de Harad, reconocidos como saqueadores implacables y jinetes hábiles. Unidos por juramentos y clanes, responden a su Taskral y sirven a los designios oscuros de Sauron desde sus fortalezas abrasadas por el sol." />
+
+    <string id="aom_lord_SH1_1_name" text="Zarkan" />
+
+    <string id="aom_lord_SH2_1_name" text="Rakhim" />
+
+    <string id="aom_lord_SH3_1_name" text="Tadeen" />
+
+    <string id="aom_lord_SH4_1_name" text="Nakhel" />
+
+    <string id="aom_lord_SH5_1_name" text="Yazur" />
+
+    <string id="aom_lord_SH6_1_name" text="Kazan" />
+
+    <string id="aom_lord_SH7_1_name" text="Haluz" />
+
+    <string id="aom_lord_SH8_1_name" text="Farun" />
+
+    <string id="aom_lord_SH9_1_name" text="Saluz" />
+
+    <string id="aom_clan_shaghana_1_name" text="Ezarkia" />
+
+    <string id="aom_clan_shaghana_2_name" text="Kûmaraknis" />
+
+    <string id="aom_clan_shaghana_3_name" text="Taiymâkä" />
+
+    <string id="aom_clan_shaghana_4_name" text="Zayaknûri" />
+
+    <string id="aom_clan_shaghana_5_name" text="Selarkes" />
+
+    <string id="aom_clan_shaghana_6_name" text="Uzharês" />
+
+    <string id="aom_clan_shaghana_7_name" text="Alâranin" />
+
+    <string id="aom_clan_shaghana_8_name" text="Banûgand" />
+
+    <string id="aom_clan_shaghana_9_name" text="Acammes" />
+
+    <string id="aom_sh_notable_0" text="Astuto comerciante Shaghâna" />
+
+    <string id="aom_sh_notable_0b" text="Comerciante de especias Shaghâna" />
+
+    <string id="aom_sh_notable_1" text="Dueño de caravana Shaghâna" />
+
+    <string id="aom_sh_notable_1b" text="Mercader de las estepas orientales" />
+
+    <string id="aom_sh_notable_2" text="Comerciante de seda Shaghâna" />
+
+    <string id="aom_sh_notable_2b" text="Comerciante de las estepas de Harad" />
+
+    <string id="aom_sh_notable_3" text="Cambista de Shaghâna" />
+
+    <string id="aom_sh_notable_3b" text="Corredor de bienes orientales" />
+
+    <string id="aom_sh_notable_4" text="Maestro del bazar de Shaghâna" />
+
+    <string id="aom_sh_notable_4b" text="Mercader astuto de Shaghâna" />
+
+    <string id="aom_sh_notable_5" text="Sacerdote del sol de Shaghâna" />
+
+    <string id="aom_sh_notable_6" text="Anciano tribal de Shaghâna" />
+
+    <string id="aom_sh_notable_7" text="Guardián de las tradiciones de Shaghâna" />
+
+    <string id="aom_sh_notable_8" text="Herrero de Shaghâna" />
+
+    <string id="aom_sh_notable_9" text="Forjador de armas de Shaghâna" />
+
+    <string id="aom_sh_notable_gl1" text="Ejecutor de Shaghâna" />
+
+    <string id="aom_sh_notable_10" text="Señor del crimen de Shaghâna" />
+
+    <string id="aom_sh_notable_11" text="Jefe de los asaltantes Shaghâna" />
+
+    <string id="aom_sh_notable_gl4" text="Cacique de la banda Shaghâna" />
+
+    <string id="aom_sh_notable_12" text="Jefe callejero Shaghâna" />
+
+    <string id="aom_sh_notable_13" text="Traficante del mercado negro Shaghâna" />
+
+    <string id="aom_sh_notable_21" text="Terrateniente Shaghâna" />
+
+    <string id="aom_sh_notable_22" text="Maestro de rebaños Shaghâna" />
+
+    <string id="aom_sh_headman_1" text="Jefe de aldea Shaghâna" />
+
+    <string id="aom_sh_headman_2" text="Jefe anciano Shaghâna" />
+
+    <string id="aom_sh_headman_3" text="Anciano de aldea Shaghâna" />
+
+    <string id="taom_abanissa_name" text="Âbanissa" />
+
+    <string id="taom_abanissa_short_name" text="Âbanissa" />
+
+    <string id="taom_abanissa_title" text="Châjaphân de Âbanissa" />
+
+    <string id="taom_abanissa_ruler_title" text="Châjaphân" />
+
+    <string id="taom_abanissa_desc" text="Âbanissa yace en el profundo sur de Harad, un reino de selvas húmedas y antiguas dinastías de piedra. Las grandes Casas de Âbanissa comandan temibles bestias de guerra y ejércitos de guerreros disciplinados, su poder no responde ante nadie sino Sauron mismo." />
+
+    <string id="aom_abanissa_name" text="Âbanissa" />
+
+    <string id="aom_abanissa_desc" text="Las grandes Casas de Âbanissa gobiernan el profundo sur de Harad, una tierra de selvas húmedas, antiguos palacios de piedra y enormes bestias de guerra. Sus ejércitos marchan bajo estandartes de dinastía, comandando respeto y terror a través de las tierras del sur." />
+
+    <string id="aom_lord_AB1_1_name" text="Phaxar" />
+
+    <string id="aom_lord_AB2_1_name" text="Hoshed" />
+
+    <string id="aom_lord_AB3_1_name" text="Vasnar" />
+
+    <string id="aom_lord_AB4_1_name" text="Goraze" />
+
+    <string id="aom_lord_AB5_1_name" text="Azadan" />
+
+    <string id="aom_lord_AB6_1_name" text="Artash" />
+
+    <string id="aom_lord_AB7_1_name" text="Ardach" />
+
+    <string id="aom_lord_AB8_1_name" text="Tirdah" />
+
+    <string id="aom_clan_abanissa_1_name" text="Casa de Phaxsharân" />
+
+    <string id="aom_clan_abanissa_2_name" text="Casa de Hoshêdharma" />
+
+    <string id="aom_clan_abanissa_3_name" text="Casa de Vasnârad" />
+
+    <string id="aom_clan_abanissa_4_name" text="Casa de Gorazehan" />
+
+    <string id="aom_clan_abanissa_5_name" text="Casa de Azadafrozan" />
+
+    <string id="aom_clan_abanissa_6_name" text="Casa de Artaxshâsan" />
+
+    <string id="aom_clan_abanissa_7_name" text="Casa de Ardâcheran" />
+
+    <string id="aom_clan_abanissa_8_name" text="Casa de Tîrdahanâ" />
+
+    <string id="aom_ab_notable_0" text="Intermediario de dinastía de Harad Lejano" />
+
+    <string id="aom_ab_notable_0b" text="Comerciante de marfil de Âbanissa" />
+
+    <string id="aom_ab_notable_1" text="Señor de caravana de Âbanissa" />
+
+    <string id="aom_ab_notable_1b" text="Mercader de especias de Harad Lejano" />
+
+    <string id="aom_ab_notable_2" text="Comerciante de oro de Âbanissa" />
+
+    <string id="aom_ab_notable_2b" text="Mercader-mayordomo de Casa" />
+
+    <string id="aom_ab_notable_3" text="Intermediario lapidario de Âbanissa" />
+
+    <string id="aom_ab_notable_3b" text="Tratante de seda de Harad Lejano" />
+
+    <string id="aom_ab_notable_4" text="Supervisor del mercado de Âbanissa" />
+
+    <string id="aom_ab_notable_4b" text="Astuto factor de Âbanissa" />
+
+    <string id="aom_ab_notable_5" text="Sumo sacerdote de Âbanissa" />
+
+    <string id="aom_ab_notable_6" text="Guardián del templo de Âbanissa" />
+
+    <string id="aom_ab_notable_7" text="Maestro de ritos del Harad Lejano" />
+
+    <string id="aom_ab_notable_8" text="Maestro artesano de Âbanissa" />
+
+    <string id="aom_ab_notable_9" text="Armero del Harad Lejano" />
+
+    <string id="aom_ab_notable_gl1" text="Ejecutor de la casa de Âbanissa" />
+
+    <string id="aom_ab_notable_10" text="Señor de las sombras de Âbanissa" />
+
+    <string id="aom_ab_notable_11" text="Líder de banda de guerra del Harad Lejano" />
+
+    <string id="aom_ab_notable_gl4" text="Patriarca de la banda de Âbanissa" />
+
+    <string id="aom_ab_notable_12" text="Jefe de distrito de Âbanissa" />
+
+    <string id="aom_ab_notable_13" text="Rey del contrabando del Harad Lejano" />
+
+    <string id="aom_ab_notable_21" text="Señor de la hacienda de Âbanissa" />
+
+    <string id="aom_ab_notable_22" text="Amo de plantación de Âbanissa" />
+
+    <string id="aom_ab_headman_1" text="Jefe de aldea de Âbanissa" />
+
+    <string id="aom_ab_headman_2" text="Jefe anciano de Âbanissa" />
+
+    <string id="aom_ab_headman_3" text="Anciano de aldea de Âbanissa" />
+
+    <string id="TAOM_ghilman_name" text="Guardia Serpiente" />
+
+    <string id="TAOM_ghilman_short" text="Guardia Serpiente" />
+
+    <string id="TAOM_ghilman_text" text="La Guardia Serpiente son soldados montados al servicio del Señor Serpiente del Harad Cercano. Criados en la silla de montar en las llanuras ondulantes al sur de las Ephel Dúath, son incomparables como arqueros a caballo en todas las tierras del sur de la Tierra Media. En tiempos de paz entre Harad y Mordor, la Guardia alquila sus servicios a señores haradrim y a cualquier otro poder lo suficientemente rico como para pagar su tarifa de oro." />
+
+    <string id="TAOM_legion_name" text="La Compañía Gris" />
+
+    <string id="TAOM_legion_short" text="Compañía Gris" />
+
+    <string id="TAOM_legion_text" text="La Compañía Gris es la última hermandad organizada de los Montaraces Dúnedain, descendientes de los reyes de Arnor que perdieron su reino hace mucho tiempo. Cabalgan por el Norte sin un hogar propio, manteniendo la paz en tierras que han olvidado sus nombres. Aunque su primera lealtad es para el linaje de Elendil, aceptan contratos de señores de toda la Tierra Media cuando su vagabundeo los lleva a través de tierras civilizadas." />
+
+    <string id="TAOM_skolderbrotva_name" text="Hacheros de Erebor" />
+
+    <string id="TAOM_skolderbrotva_short" text="Hacheros" />
+
+    <string id="TAOM_skolderbrotva_text" text="Los Hacheros de Erebor son veteranos de las batallas del Rey Thorin que encontraron los tiempos de paz poco adecuados para su temperamento. Entrenados en el combate cerrado de los salones enanos —muro de escudos, hacha corta, pico— son formidables en cualquier terreno pero sobresalen en los pasos de montaña que conectan Erebor con los reinos de los hombres. Aceptan contratos de cualquiera que pueda pagar su tarifa, pero no alzarán un hacha contra Erebor o Rivendel." />
+
+    <string id="TAOM_company_name" text="Espadas Corsarias" />
+
+    <string id="TAOM_company_short" text="Corsarios" />
+
+    <string id="TAOM_company_text" text="Las Espadas Corsarias son veteranos combatientes marítimos de los puertos de Umbar que han comenzado a vender sus habilidades en tierra. Luchan como ballesteros —el arma preferida de la guerra a bordo— y se sienten tan cómodos en un asedio como en una cubierta tambaleante. Su capitán, un númenóreano exiliado con cicatrices, los mantiene fieles a sus contratos con disciplina férrea, sabiendo que su reputación es su carga más valiosa." />
+
+    <string id="TAOM_beni_zilal_name" text="El Ojo Ciego" />
+
+    <string id="TAOM_beni_zilal_short" text="Ojo Ciego" />
+
+    <string id="TAOM_beni_zilal_text" text="El Ojo Ciego es una hermandad de contrabandistas, receptadores y asesinos a sueldo que operan por las costas de Harad y el desierto profundo. Se dice que descienden de un culto de asesinos que sirvió a un olvidado rey haradrim, y sus métodos —veneno, sombra y el uso de secretos— permanecen inalterados. Los señores que desean eliminar discretamente a un rival, o comerciantes que necesitan mover carga sin inspección aduanera, saben dónde dejar una moneda de oro y una carta sellada." />
+
+    <string id="TAOM_wolfskins_name" text="Devastadores Variag" />
+
+    <string id="TAOM_wolfskins_short" text="Devastadores" />
+
+    <string id="TAOM_wolfskins_text" text="Los Devastadores Variag son bandas de guerra de jóvenes guerreros variag de las estepas de Khand que pasan su juventud temprana en un estado de guerra ritual: no pueden poseer comida cocinada, dormir bajo ningún techo permanente ni mostrar misericordia. Aunque la mayoría finalmente regresa a la vida asentada de sus clanes, algunos nunca lo hacen, y estos forman los Devastadores —forajidos que acechan los caminos de Khand y realizan incursiones a través de sus fronteras hacia Harad y Gondor." />
+
+    <string id="TAOM_brotherhood_name" text="Saqueadores Dunlendinos" />
+
+    <string id="TAOM_brotherhood_short" text="Saqueadores" />
+
+    <string id="TAOM_brotherhood_text" text="Los Saqueadores Dunlendinos son el remanente roto de un clan de las colinas que alguna vez habitó en los valles ahora gobernados por los rohirrim. Sus abuelos fueron expulsados de tierras fértiles hacia las alturas rocosas, y han alimentado esa amargura convirtiéndola en la filosofía de un saqueador: todo lo que se toma de un sureño o de un hombre del rey es simplemente la restauración de lo que fue robado. En la práctica son bandidos, pero peligrosos que conocen cada sendero de cabras a través de las colinas." />
+
+    <string id="TAOM_hidden_hand_name" text="Los Sirvientes de la Boca" />
+
+    <string id="TAOM_hidden_hand_short" text="Sirvientes" />
+
+    <string id="TAOM_hidden_hand_text" text="Los Sirvientes de la Boca son los Ojos de Barad-dûr operando más allá de la Puerta Negra — informantes, ejecutores y espías infiltrados entre los pueblos que bordean Mordor. Donde los ejércitos de Sauron aún no pueden alcanzar, estos agentes recogen tributo y silencian la disidencia. Trabajan mediante sobornos, chantajes y asesinatos silenciosos, asegurando que ninguna conspiración contra el Señor Oscuro eche raíces antes de ser arrancada y aplastada." />
+
+    <string id="TAOM_lakepike_name" text="Saqueadores del Lago Largo" />
+
+    <string id="TAOM_lakepike_short" text="Saqueadores" />
+
+    <string id="TAOM_lakepike_text" text="Los Saqueadores del Lago Largo viven en los cañaverales y viejos muelles podridos de las sombrías orillas del Lago Largo, lejos de las respetables luces de Esgaroth. Se ganan la vida atrayendo barcazas hacia bajíos ocultos con faroles falsos, luego despojándolas de su carga y vendiéndola a través de receptadores en la propia ciudad. A pesar de los esfuerzos del Maese de la Ciudad del Lago y los mercaderes de Dale, los Saqueadores tienen demasiados amigos en las tabernas del muelle como para ser expulsados fácilmente." />
+
+    <string id="TAOM_embers_name" text="Culto del Ojo sin Párpado" />
+
+    <string id="TAOM_embers_short" text="Culto del Ojo" />
+
+    <string id="TAOM_embers_text" text="El Culto del Ojo sin Párpado es una sociedad secreta arraigada en la tradición Númenóreana Negra, que venera a Sauron como un dios-rey que restaurará a sus fieles a la gloria cuando se alce nuevamente. Reclutan entre los desposeídos de Dunland y los rincones olvidados del reino, prometiendo favor divino y poder terrenal. En verdad, sus líderes responden a agentes de Barad-dûr, y su estructura celular los hace casi imposibles de erradicar por la justicia de cualquier señor." />
+
+    <string id="TAOM_jawwal_name" text="Los Jinetes de Arena" />
+
+    <string id="TAOM_jawwal_short" text="Jinetes de Arena" />
+
+    <string id="TAOM_jawwal_text" text="Los Jinetes de Arena son los clanes nómadas del desierto del interior profundo de Harad, maestros de los páramos sin agua entre el Ephel Dúath y el distante mar del sur. Recorren rutas conocidas sólo por ellos mismos, exigiendo tributo a cualquier caravana lo suficientemente audaz como para cruzar su territorio. Los señores asentados del Harad Cercano los tratan como una molestia; los Jinetes de Arena consideran a los señores asentados ladrones que robaron lo que el desierto ya había dado libremente." />
+
+    <string id="TAOM_karakhuzaits_name" text="Los Orientales Salvajes" />
+
+    <string id="TAOM_karakhuzaits_short" text="Salvajes" />
+
+    <string id="TAOM_karakhuzaits_text" text="Los Orientales Salvajes son los clanes inconquistados de la estepa del Mar de Rhûn, que han resistido la autoridad de cada señor que ha intentado someterlos — caudillo de Rhûn, lugarteniente de Mordor y Rey de Dale por igual. Recorren las praderas al este del Celduin, reuniendo caballos, asaltando rebaños y cobrando tributo de camino a cualquier caravana lo suficientemente imprudente como para cruzar su estepa sin escolta armada." />
+
+    <string id="TAOM_forest_people_name" text="Los Drúedain" />
+
+    <string id="TAOM_forest_people_short" text="Woses" />
+
+    <string id="TAOM_forest_people_text" text="Los Drúedain, conocidos por los Hombres como Woses u Hombres Salvajes de los Bosques, son un pueblo antiguo que habita en el bosque profundo de Drúadan y los valles ocultos de las Montañas Blancas. Limpian terreno con fuego, cultivan lo que necesitan en el suelo rico en cenizas y se mudan cuando la tierra se agota — una forma de vida que los pueblos asentados de la Tierra Media nunca han comprendido ni se han molestado en hacerlo. Los Drúedain no quieren señor alguno, no pagan tributo y sólo piden que se les deje en el silencio del bosque." />
+
+    <string id="TAOM_eleftheroi_name" text="Los Beórnidas" />
+
+    <string id="TAOM_eleftheroi_short" text="Beórnidas" />
+
+    <string id="TAOM_eleftheroi_text" text="Los Beórnidas son los grandes hombres del bosque que habitan en el valle del Anduin entre las Montañas Nubladas y el Bosque Negro, liderados por los cambia-pieles del linaje de Beorn. No permiten que ningún Orco cruce su territorio, cobran un peaje en el Vado de Carrock para financiar su vigilancia y no responden a ningún rey en la Tierra Media. Aunque comercian y hablan con Elfos y Enanos, cualquier ejército que marche a través de su bosque sin permiso descubrirá que los Beórnidas tienen dientes muy grandes." />
+
+    <string id="taom_career" text="Carrera" />
+
+    <string id="taom_alliance_lore" text="Alineación de la Tradición" />
+
+    <string id="taom_alliance_blocked" text="Estos reinos nunca pueden ser aliados." />
+
+    <string id="taom_war_blocked" text="Estos reinos están unidos por una alianza inquebrantable." />
+
+    <string id="taom_wotr_no_peace" text="La Guerra del Anillo arde. No puede haber paz." />
+
+    <string id="taom_precompile_shaders" text="Precompilar Shaders" />
+
+    <string id="taom_precompile_hint" text="Precompila shaders para eliminar tartamudeos en el juego. Ejecutar una vez después de instalar TAOM." />
+
+    <string id="taom_main_menu_new_game" text="Entrar a La Edad de los Hombres" />
+
+    <string id="taom_career_screen_title" text="Carrera" />
+
+    <string id="taom_career_done" text="Hecho" />
+
+    <string id="taom_career_ability_label" text="Habilidad de Carrera" />
+
+    <string id="taom_career_tier1" text="Nivel 1" />
+
+    <string id="taom_career_tier2" text="Nivel 2" />
+
+    <string id="taom_career_tier3" text="Nivel 3" />
+
+    <string id="taom_career_free_points" text="Puntos Libres: {COUNT}" />
+
+    <string id="taom_hideout_desc_dunland" text="Entre las colinas boscosas de Dunland divisas un campamento tosco de tiendas de cuero y una empalizada rudimentaria, medio oculto en un claro." />
+    <string id="taom_hideout_desc_gundabad" text="Bajo los peñascos de las Montañas Nubladas encuentras una madriguera inmunda de orcos de Gundabad excavada en la roca desnuda." />
+    <string id="taom_hideout_desc_harad" text="Entre las dunas de Harad te topas con un campamento sureño camuflado reunido alrededor de un pozo desértico oculto." />
+    <string id="taom_hideout_desc_rhun" text="En las vastas praderas de Rhûn distingues las carretas y tiendas de cuero de una banda saqueadora oriental acampada en una hondonada." />
+    <string id="taom_hideout_desc_umbar" text="A lo largo de la costa sur encuentras una cala resguardada donde los barcos negros de los Corsarios de Umbar están anclados." />
+  </strings>
+
+</base>
+

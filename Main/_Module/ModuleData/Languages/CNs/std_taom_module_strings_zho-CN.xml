@@ -1,645 +1,1295 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Simplified Chinese" />
-  </tags>
-  <strings>
-    <string id="taom_str_faction_official.empire" text="登兰德的族人" />
-    <string id="taom_str_faction_official.empire_f" text="登兰德的族人" />
-    <string id="taom_str_faction_ruler.empire" text="酋长" />
-    <string id="taom_str_faction_ruler.empire_f" text="女酋长" />
-    <string id="taom_str_faction_ruler_term_in_speech.empire" text="酋长{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.empire" text="酋长{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.empire" text="登兰德的" />
-    <string id="taom_str_short_term_for_faction.empire" text="登兰德" />
-    <string id="taom_str_faction_formal_name_for_culture.empire" text="登兰德诸部族" />
-    <string id="taom_str_faction_informal_name_for_culture.empire" text="登兰德" />
-    <string id="taom_str_neutral_term_for_culture.empire" text="登兰德人" />
-    <string id="taom_str_faction_official.vlandia" text="洛汗的贵族" />
-    <string id="taom_str_faction_official.vlandia_f" text="洛汗的贵妇" />
-    <string id="taom_str_faction_ruler.vlandia" text="国王" />
-    <string id="taom_str_faction_ruler.vlandia_f" text="女王" />
-    <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="国王{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.vlandia" text="国王{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.vlandia" text="洛汗的" />
-    <string id="taom_str_short_term_for_faction.vlandia" text="骠骑" />
-    <string id="taom_str_faction_formal_name_for_culture.vlandia" text="骠骑王国" />
-    <string id="taom_str_faction_informal_name_for_culture.vlandia" text="洛汗" />
-    <string id="taom_str_neutral_term_for_culture.vlandia" text="洛汗骠骑" />
-    <string id="taom_str_faction_official.battania" text="坎德的贵族" />
-    <string id="taom_str_faction_official.battania_f" text="坎德的贵妇" />
-    <string id="taom_str_faction_ruler.battania" text="坎德领主" />
-    <string id="taom_str_faction_ruler.battania_f" text="坎德女领主" />
-    <string id="taom_str_faction_ruler_term_in_speech.battania" text="领主{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.battania" text="领主{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.battania" text="瓦瑞亚格的" />
-    <string id="taom_str_short_term_for_faction.battania" text="瓦瑞亚格" />
-    <string id="taom_str_faction_formal_name_for_culture.battania" text="坎德瓦瑞亚格人" />
-    <string id="taom_str_faction_informal_name_for_culture.battania" text="坎德" />
-    <string id="taom_str_neutral_term_for_culture.battania" text="瓦瑞亚格人" />
-    <string id="taom_str_faction_official.khuzait" text="鲁恩的贵族" />
-    <string id="taom_str_faction_official.khuzait_f" text="鲁恩的贵妇" />
-    <string id="taom_str_faction_ruler.khuzait" text="军阀" />
-    <string id="taom_str_faction_ruler.khuzait_f" text="女军阀" />
-    <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="军阀,{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.khuzait" text="军阀{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.khuzait" text="东夷" />
-    <string id="taom_str_short_term_for_faction.khuzait" text="鲁恩" />
-    <string id="taom_str_faction_formal_name_for_culture.khuzait" text="鲁恩东夷" />
-    <string id="taom_str_faction_informal_name_for_culture.khuzait" text="鲁恩" />
-    <string id="taom_str_neutral_term_for_culture.khuzait" text="东夷人" />
-    <string id="taom_str_faction_official.aserai" text="哈拉德贵族" />
-    <string id="taom_str_faction_official.aserai_f" text="哈拉德女贵族" />
-    <string id="taom_str_faction_ruler.aserai" text="酋长" />
-    <string id="taom_str_faction_ruler.aserai_f" text="女酋长" />
-    <string id="taom_str_faction_ruler_term_in_speech.aserai" text="酋长,{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.aserai" text="酋长{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.aserai" text="哈拉德林" />
-    <string id="taom_str_short_term_for_faction.aserai" text="哈拉德" />
-    <string id="taom_str_faction_formal_name_for_culture.aserai" text="哈拉德王国" />
-    <string id="taom_str_faction_informal_name_for_culture.aserai" text="哈拉德" />
-    <string id="taom_str_neutral_term_for_culture.aserai" text="哈拉德林人" />
-    <string id="taom_str_faction_official.sturgia" text="河谷镇贵族" />
-    <string id="taom_str_faction_official.sturgia_f" text="河谷镇女贵族" />
-    <string id="taom_str_faction_ruler.sturgia" text="国王" />
-    <string id="taom_str_faction_ruler.sturgia_f" text="女王" />
-    <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="国王,{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.sturgia" text="国王{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.sturgia" text="巴丁" />
-    <string id="taom_str_short_term_for_faction.sturgia" text="河谷镇" />
-    <string id="taom_str_faction_formal_name_for_culture.sturgia" text="河谷镇王国" />
-    <string id="taom_str_faction_informal_name_for_culture.sturgia" text="河谷镇" />
-    <string id="taom_str_neutral_term_for_culture.sturgia" text="巴丁人" />
-    <string id="taom_str_faction_official.dolguldur" text="多尔哥多的仆从" />
-    <string id="taom_str_faction_official.dolguldur_f" text="多尔哥多的仆从" />
-    <string id="taom_str_faction_ruler.dolguldur" text="监察官" />
-    <string id="taom_str_faction_ruler.dolguldur_f" text="监察官" />
-    <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="监察官,{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="监察官" />
-    <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.dolguldur" text="哥多利亚" />
-    <string id="taom_str_short_term_for_faction.dolguldur" text="多尔哥多" />
-    <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="多尔哥多军队" />
-    <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="多尔哥多" />
-    <string id="taom_str_neutral_term_for_culture.dolguldur" text="多尔哥多的仆从" />
-    <string id="taom_str_faction_official.isengard" text="艾辛格的一名队长" />
-    <string id="taom_str_faction_official.isengard_f" text="艾辛格的一名女队长" />
-    <string id="taom_str_faction_ruler.isengard" text="白手" />
-    <string id="taom_str_faction_ruler.isengard_f" text="白夫人" />
-    <string id="taom_str_faction_ruler_term_in_speech.isengard" text="白手，{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.isengard" text="白手{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.isengard" text="艾辛格" />
-    <string id="taom_str_short_term_for_faction.isengard" text="艾辛格" />
-    <string id="taom_str_faction_formal_name_for_culture.isengard" text="艾辛格军队" />
-    <string id="taom_str_faction_informal_name_for_culture.isengard" text="艾辛格" />
-    <string id="taom_str_neutral_term_for_culture.isengard" text="艾辛格部队" />
-    <string id="taom_str_faction_official.gundabad" text="刚达巴的一名酋长" />
-    <string id="taom_str_faction_official.gundabad_f" text="刚达巴的一名女酋长" />
-    <string id="taom_str_faction_ruler.gundabad" text="军阀" />
-    <string id="taom_str_faction_ruler.gundabad_f" text="女军阀" />
-    <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="军阀，{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.gundabad" text="军阀{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gundabad" text="刚达巴" />
-    <string id="taom_str_short_term_for_faction.gundabad" text="刚达巴" />
-    <string id="taom_str_faction_formal_name_for_culture.gundabad" text="刚达巴兽人" />
-    <string id="taom_str_faction_informal_name_for_culture.gundabad" text="刚达巴" />
-    <string id="taom_str_neutral_term_for_culture.gundabad" text="刚达巴兽人" />
-    <string id="taom_str_faction_official.umbar" text="昂巴的一名海盗" />
-    <string id="taom_str_faction_official.umbar_f" text="昂巴的一名女海盗" />
-    <string id="taom_str_faction_ruler.umbar" text="海盗首领" />
-    <string id="taom_str_faction_ruler.umbar_f" text="女海盗首领" />
-    <string id="taom_str_faction_ruler_term_in_speech.umbar" text="首领，{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.umbar" text="首领{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.umbar" text="海盗" />
-    <string id="taom_str_short_term_for_faction.umbar" text="昂巴" />
-    <string id="taom_str_faction_formal_name_for_culture.umbar" text="昂巴海盗" />
-    <string id="taom_str_faction_informal_name_for_culture.umbar" text="昂巴" />
-    <string id="taom_str_neutral_term_for_culture.umbar" text="海盗" />
-    <string id="taom_str_faction_official.gondor" text="一位贵族领主" />
-    <string id="taom_str_faction_official.gondor_f" text="一位贵族夫人" />
-    <string id="taom_str_faction_ruler.gondor" text="摄政王" />
-    <string id="taom_str_faction_ruler.gondor_f" text="摄政夫人" />
-    <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}摄政夫人{?}摄政王{\?}{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}摄政夫人{?}摄政王{\?}{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.gondor" text="刚铎的" />
-    <string id="taom_str_short_term_for_faction.gondor" text="刚铎人" />
-    <string id="taom_str_faction_formal_name_for_culture.gondor" text="刚铎" />
-    <string id="taom_str_faction_informal_name_for_culture.gondor" text="刚铎人" />
-    <string id="taom_str_neutral_term_for_culture.gondor" text="刚铎人" />
-    <string id="taom_str_faction_official.mordor" text="索伦的一名上尉" />
-    <string id="taom_str_faction_official.mordor_f" text="黑暗魔君的一名仆从" />
-    <string id="taom_str_faction_ruler.mordor" text="黑暗魔君" />
-    <string id="taom_str_faction_ruler.mordor_f" text="黑暗女王" />
-    <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}黑暗女王{?}黑暗魔君{\?}{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}黑暗女王{?}黑暗魔君{\?}{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}典狱长{?}督军{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mordor" text="魔多的" />
-    <string id="taom_str_short_term_for_faction.mordor" text="魔多" />
-    <string id="taom_str_faction_formal_name_for_culture.mordor" text="魔多" />
-    <string id="taom_str_faction_informal_name_for_culture.mordor" text="索伦的仆从" />
-    <string id="taom_str_neutral_term_for_culture.mordor" text="魔多" />
-    <string id="taom_str_faction_official.mirkwood" text="一位森林守护者" />
-    <string id="taom_str_faction_official.mirkwood_f" text="一位森林守卫" />
-    <string id="taom_str_faction_ruler.mirkwood" text="国王" />
-    <string id="taom_str_faction_ruler.mirkwood_f" text="女王" />
-    <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}女王{?}国王{\?}{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}女王{?}国王{\?}{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}守卫{?}守护者{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.mirkwood" text="森林精灵的" />
-    <string id="taom_str_short_term_for_faction.mirkwood" text="森林精灵" />
-    <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="幽暗密林王国" />
-    <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="林地王国" />
-    <string id="taom_str_neutral_term_for_culture.mirkwood" text="森林精灵" />
-    <string id="taom_str_faction_official.lothlorien" text="罗斯洛立安的一位守护者" />
-    <string id="taom_str_faction_official.lothlorien_f" text="罗斯洛立安的一位守卫" />
-    <string id="taom_str_faction_ruler.lothlorien" text="领主" />
-    <string id="taom_str_faction_ruler.lothlorien_f" text="夫人" />
-    <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.lothlorien" text="加拉德林" />
-    <string id="taom_str_short_term_for_faction.lothlorien" text="精灵" />
-    <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="金色森林" />
-    <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="罗斯洛立安" />
-    <string id="taom_str_neutral_term_for_culture.lothlorien" text="金色森林的精灵" />
-    <string id="taom_str_faction_official.rivendell" text="瑞文戴尔的学者" />
-    <string id="taom_str_faction_official.rivendell_f" text="瑞文戴尔的治疗师" />
-    <string id="taom_str_faction_ruler.rivendell" text="领主" />
-    <string id="taom_str_faction_ruler.rivendell_f" text="夫人" />
-    <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.rivendell" text="瑞文戴尔的" />
-    <string id="taom_str_short_term_for_faction.rivendell" text="精灵" />
-    <string id="taom_str_faction_formal_name_for_culture.rivendell" text="最后的安乐窝" />
-    <string id="taom_str_faction_informal_name_for_culture.rivendell" text="瑞文戴尔" />
-    <string id="taom_str_neutral_term_for_culture.rivendell" text="瑞文戴尔的精灵" />
-    <string id="taom_str_culture_description.empire" text="登兰德人是西部高地的凶悍山民,他们是一个骄傲而古老的民族。他们对洛汗人怀有怨恨,以游击战术和顽强的战斗精神而闻名。在强大领袖的统一下,他们为生存而战,为夺回他们认为理应属于自己的土地而战。" />
-    <string id="taom_str_culture_description.vlandia" text="洛汗人被称为骠骑之王,是洛汗王国的骄傲而高贵的民族,这片土地拥有广阔的平原和起伏的丘陵。他们以骑术高超和无与伦比的骑兵而闻名,这些骑兵构成了他们军事力量的脊梁。洛汗人生活在一个紧密团结的封建社会中,由国王和忠诚的贵族领导,他们受荣誉和传统的束缚,保护自己的土地和人民。他们极为独立,将自由视为至高无上,他们的战士接受训练,手持长矛、利剑和弓箭,全都骑在强大的战马上作战。" />
-    <string id="taom_str_culture_description.battania" text="坎德的瓦瑞格人是来自东方草原的残酷好战民族。他们以精通马术和致命的战车而闻名,带来了独特而残暴的战争方式。瓦瑞格人与索伦结盟,为权力和掠夺而战,在中土世界散播恐惧。" />
-    <string id="taom_str_culture_description.khuzait" text="东方人是一个骄傲而纪律严明的民族,来自魔多以外的广阔东方大地。他们以坚韧和战争技艺而闻名,既是农民也是战士,将农耕传统与凶猛的军事文化融为一体。他们的军队以可怕的骑兵而闻名,身披华丽的盔甲,手持致命的长矛和弓箭。凭借丰富的工艺传统和对同胞的忠诚,东方人在金红相间的鲜艳旗帜下进军,令敌人心生恐惧。他们对索伦的效忠使他们成为一支强大的力量,在他的阴影下团结起来,将自己的统治扩展到整个中土世界。" />
-    <string id="taom_str_culture_description.aserai" text="哈拉德林人是南方沙漠的战士,是一个凶猛而坚韧的民族,与索伦结盟。他们以异域战兽和精湛的骑兵而闻名,在深红色的旗帜下进军。他们骄傲且深深扎根于自己的传统,将沙漠的野蛮带到中土世界的战场。" />
-    <string id="taom_str_culture_description.sturgia" text="河谷城的巴德人是神射手巴德的后裔,是一个骄傲而勤劳的民族,生活在孤山的阴影下。他们以技艺高超的弓箭手和纪律严明的战士而闻名,守卫着他们繁荣的城市和北方的贸易路线。巴德人以强烈的集体意识和荣誉感团结在一起,坚定地对抗威胁他们土地的黑暗。" />
-    <string id="taom_str_culture_description.erebor" text="孤山的高贵矮人以其精湛的工艺、坚韧不拔和骄傲而闻名。从孤山的大厅中,他们锻造出强大的武器和无与伦比的美丽宝藏。他们身披锁甲,手持战斧,以坚定的勇气保卫同胞,寻求重拾他们的遗产,并在一切威胁面前保护他们的传承。" />
-    <string id="taom_str_culture_description.rivendell" text="瑞文戴尔,最后的安乐窝,是由埃尔隆德领主领导的智慧与美丽的避难所。它坐落在迷雾山脉中,这里的人民是中土世界古老知识的学者和守护者。瑞文戴尔的精灵为那些对抗黑暗的人提供建议和帮助,保存着希望和团结之光。" />
-    <string id="taom_str_culture_description.mirkwood" text="幽暗密林的木精灵由瑟兰督伊尔王领导,是这片广阔而神秘森林的守护者。他们以敏捷和精湛的弓术而闻名,融入阴影之中,以精准和优雅的方式出击。他们的领地既美丽又危险,受到战士们的决心和国王永恒智慧的保护。幽暗密林的精灵极为独立,为保护他们的森林免受不断逼近的黑暗而战。" />
-    <string id="taom_str_culture_description.lothlorien" text="罗斯洛立安的加拉德林精灵是金色森林的居民,是由凯兰崔尔夫人和凯勒博恩领主领导的空灵而高贵的民族。他们是弓术和林地战争的大师,以无与伦比的技艺守卫着他们的魔法领地。他们对同胞和家园的忠诚坚定不移,他们微妙的魔法将罗斯洛立安保存为希望与光明的圣所,在不断增长的阴影中屹立不倒。" />
-    <string id="taom_str_culture_description.isengard" text="艾辛格的军队由白袍萨鲁曼领导,是一支由强兽人和雇佣兵组成的强大力量。在工业之火中锻造,他们的武器和盔甲都是为毁灭而制造。艾辛格的军队以无情的效率进军,一心征服和统治。" />
-    <string id="taom_str_culture_description.gundabad" text="刚达巴的兽人居住在雾气笼罩的山脉中,是一支残暴而野蛮的力量。在军阀的领导下,他们对邻近土地发动无休止的袭击。在仇恨和残忍的驱使下,他们在征服北方的征途中毫不留情。" />
-    <string id="taom_str_culture_description.umbar" text="昂巴的海盗是航海劫掠者和航海大师,是一个与索伦结盟的残酷而狡猾的民族。他们以快速的船只和无情的海战而闻名,令中土世界的海岸线充满恐惧。他们为自己的航海传统感到骄傲,将海洋的混乱带到陆地上,以黑暗联盟的名义进行劫掠和掠夺。" />
-    <string id="taom_str_culture_description.dolguldur" text="多尔哥多的爪牙在死灵法师的指挥下,是一支黑暗而险恶的力量。他们隐藏在幽暗密林的腐化森林中,利用背叛和阴影削弱敌人。兽人、座狼和其他邪恶生物向前进军,在中土世界传播恐惧和腐朽。" />
-    <string id="taom_str_culture_description.gondor" text="刚铎人是努门诺尔流亡者的后裔,是中土世界最伟大的人类王国的骄傲管家。刚铎以其高耸的石质堡垒和坚定不移的勇气而闻名,是对抗魔多阴影的希望堡垒。其纪律严明的军队由英勇的步兵、技艺精湛的弓箭手和骑兵组成,是所有自由民族的盾牌。在高贵的宰相和将军的引导下,刚铎人坚守传统,在保护王国及其遗产的职责中毫不动摇。" />
-    <string id="taom_str_culture_description.mordor" text="魔多的军队在末日火山的阴影下锻造,是由黑暗魔君索伦指挥的无情黑暗力量。由兽人、巨魔和邪恶的人类组成,他们在燃烧之眼的注视下进军,播种恐惧和毁灭。这些军团被残忍和奴役驱使,挥舞着参差不齐的利刃和粗糙的盔甲。受索伦铁腕意志的束缚,魔多的军队是一股致命的浪潮,试图将整个中土世界吞没在阴影之中。" />
-    <string id="taom_str_culture_rich_name.empire" text="登兰德" />
-    <string id="taom_str_culture_rich_name.vlandia" text="洛汗" />
-    <string id="taom_str_culture_rich_name.battania" text="瓦瑞格" />
-    <string id="taom_str_culture_rich_name.khuzait" text="东方人" />
-    <string id="taom_str_culture_rich_name.aserai" text="哈拉德人" />
-    <string id="taom_str_culture_rich_name.sturgia" text="巴丁人" />
-    <string id="taom_str_culture_rich_name.erebor" text="矮人" />
-    <string id="taom_str_culture_rich_name.rivendell" text="诺多精灵" />
-    <string id="taom_str_culture_rich_name.mirkwood" text="西尔凡精灵" />
-    <string id="taom_str_culture_rich_name.lothlorien" text="加拉德林精灵" />
-    <string id="taom_str_culture_rich_name.isengard" text="强兽人" />
-    <string id="taom_str_culture_rich_name.gundabad" text="刚达巴德兽人" />
-    <string id="taom_str_culture_rich_name.umbar" text="昂巴人" />
-    <string id="taom_str_culture_rich_name.dolguldur" text="多尔哥多" />
-    <string id="taom_str_culture_rich_name.gondor" text="刚铎人" />
-    <string id="taom_str_culture_rich_name.mordor" text="魔多" />
-    <string id="taom_str_adjective_for_culture.empire" text="登兰德" />
-    <string id="taom_str_adjective_for_culture.vlandia" text="洛汗" />
-    <string id="taom_str_adjective_for_culture.battania" text="瓦瑞亚格" />
-    <string id="taom_str_adjective_for_culture.khuzait" text="东方人" />
-    <string id="taom_str_adjective_for_culture.aserai" text="哈拉德" />
-    <string id="taom_str_adjective_for_culture.sturgia" text="巴丁" />
-    <string id="taom_str_adjective_for_culture.erebor" text="矮人" />
-    <string id="taom_str_adjective_for_culture.rivendell" text="瑞文戴尔" />
-    <string id="taom_str_adjective_for_culture.mirkwood" text="幽暗密林" />
-    <string id="taom_str_adjective_for_culture.lothlorien" text="洛丝萝林" />
-    <string id="taom_str_adjective_for_culture.isengard" text="艾辛格" />
-    <string id="taom_str_adjective_for_culture.gundabad" text="刚达巴德" />
-    <string id="taom_str_adjective_for_culture.umbar" text="昂巴" />
-    <string id="taom_str_adjective_for_culture.dolguldur" text="多尔哥多" />
-    <string id="taom_str_adjective_for_culture.gondor" text="刚铎" />
-    <string id="taom_str_adjective_for_culture.mordor" text="魔多" />
-    <string id="taom_str_player_father_name.empire" text="伍尔夫加" />
-    <string id="taom_str_player_mother_name.empire" text="弗雷卡" />
-    <string id="taom_str_player_father_name.vlandia" text="鲍德雷德" />
-    <string id="taom_str_player_mother_name.vlandia" text="莫玟" />
-    <string id="taom_str_player_father_name.battania" text="瓦瑞亚格" />
-    <string id="taom_str_player_mother_name.battania" text="卡拉" />
-    <string id="taom_str_player_father_name.khuzait" text="卡穆尔" />
-    <string id="taom_str_player_mother_name.khuzait" text="阿督娜费尔" />
-    <string id="taom_str_player_father_name.aserai" text="苏拉丹" />
-    <string id="taom_str_player_mother_name.aserai" text="哈莉丝" />
-    <string id="taom_str_player_father_name.sturgia" text="巴德" />
-    <string id="taom_str_player_mother_name.sturgia" text="西格蕾" />
-    <string id="taom_str_player_father_name.erebor" text="德鲁林" />
-    <string id="taom_str_player_mother_name.erebor" text="奥瑞娜" />
-    <string id="taom_str_player_father_name.rivendell" text="凯勒方" />
-    <string id="taom_str_player_mother_name.rivendell" text="吉尔瑞安" />
-    <string id="taom_str_player_father_name.mirkwood" text="加利安" />
-    <string id="taom_str_player_mother_name.mirkwood" text="露西恩" />
-    <string id="taom_str_player_father_name.lothlorien" text="伊洛芬" />
-    <string id="taom_str_player_mother_name.lothlorien" text="奥姆罗戴尔" />
-    <string id="taom_str_player_father_name.isengard" text="葛力马" />
-    <string id="taom_str_player_mother_name.isengard" text="卢尔卡" />
-    <string id="taom_str_player_father_name.gundabad" text="纳祖克" />
-    <string id="taom_str_player_mother_name.gundabad" text="波利亚" />
-    <string id="taom_str_player_father_name.umbar" text="卡斯塔米尔" />
-    <string id="taom_str_player_mother_name.umbar" text="贝露希尔" />
-    <string id="taom_str_player_father_name.dolguldur" text="格里什马克" />
-    <string id="taom_str_player_mother_name.dolguldur" text="杜尔加什" />
-    <string id="taom_str_player_father_name.gondor" text="科罗米尔" />
-    <string id="taom_str_player_mother_name.gondor" text="芬朵依拉丝" />
-    <string id="taom_str_player_father_name.mordor" text="戈巴格" />
-    <string id="taom_str_player_mother_name.mordor" text="泽洛布" />
-    <string id="taom_peace_news" text="{FACTION1}与{FACTION2}已缔结和平。" />
-    <string id="taom_war_news" text="{FACTION1_NAME}的{RULER_NAME}向{FACTION2_NAME}宣战。" />
-    <string id="taom_war_news_direct" text="{FACTION1_NAME}向{FACTION2_NAME}宣战。" />
-    <string id="taom_siege_party_link" text="{TOWN_NAME}遭到由{FACTION_NAME}的{LORD.LINK}率领的部队围攻!" />
-    <string id="taom_siege_party" text="{TOWN_NAME}遭到由{FACTION_NAME}的{LORD.LINK}率领的部队围攻!" />
-    <string id="taom_siege_army_link" text="{TOWN_NAME}遭到由{FACTION_NAME}的{LORD.LINK}率领的军队围攻!" />
-    <string id="taom_siege_army" text="{TOWN_NAME}遭到由{FACTION_NAME}的{LORD.LINK}率领的军队围攻!" />
-    <string id="taom_raid_army" text="{SETTLEMENT}遭到由{FACTION_NAME}的{LORD.LINK}率领的军队劫掠" />
-    <string id="taom_raid_party" text="{SETTLEMENT}遭到{FACTION_NAME}的{LORD.LINK}劫掠" />
-    <string id="taom_destroy_party" text="{VICTOR_FACTION}的{VICTOR_PARTY}击败了{DEFEATED_FACTION}的{DEFEATED_PARTY}。" />
-    <string id="taom_secondary_peace" text="{FACTION1}与{FACTION2}已缔结和平。" />
-    <string id="taom_change_faction" text="{CLAN_NAME}氏族已加入{FACTION}。" />
-    <string id="taom_merc_contract" text="{CLAN}已签约与{KINGDOM}并肩作战。" />
-    <string id="taom_merc_end" text="{CLAN}不再为{KINGDOM}效力。" />
-    <string id="taom_minor_intro" text="我是{CONVERSATION_CHARACTER.LINK},来自{FACTION}。" />
-    <string id="taom_alliance_desc" text="与{FACTION}结盟" />
-    <string id="taom_vassal_rank" text="{FACTION_INFORMAL_NAME}的封臣" />
-    <string id="taom_ruler_rank" text="{FACTION_INFORMAL_NAME}的统治者" />
-    <string id="taom_noble_rank" text="{FACTION_INFORMAL_NAME}的贵族" />
-    <string id="taom_merc_rank" text="为{FACTION_INFORMAL_NAME}作战的佣兵" />
-    <string id="taom_answer_call" text="响应{CALLING_KINGDOM}的号召，向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战" />
-    <string id="taom_propose_call" text="呼吁{CALLED_KINGDOM}向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战" />
-    <string id="taom_raid_resist_peace" text="你已抵达{SETTLEMENT}准备掠夺。一些居民聚集起来抵抗你。掠夺这个村庄将导致与{KINGDOM}开战。" />
-    <string id="taom_force_supply_peace" text="当你试图强迫村民交出货物时，一些居民聚集起来抵抗你。与他们战斗将导致与{KINGDOM}开战。" />
-    <string id="taom_force_vol_peace" text="当你试图强迫名士交出新兵时，一些居民聚集起来抵抗你。与他们战斗将导致与{KINGDOM}开战。" />
-    <string id="taom_raid_noresist_peace" text="你已抵达{SETTLEMENT}准备掠夺。你没有遇到任何抵抗。掠夺这个村庄将导致与{KINGDOM}开战。" />
-    <string id="taom_encounter_peace" text="你遭遇了{PARTY}。与他们战斗将导致与{KINGDOM}开战。" />
-    <string id="0cdXddA9" text="{KINGDOM1_LINK}与{KINGDOM2_LINK}结成了同盟。" />
-    <string id="1rbg3Hz2" text="{FACTION_1}和{FACTION_2}不再是敌人。" />
-    <string id="2BVDp7Tg" text="{KINGDOM}将停止{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
-    <string id="Lbs2bNlg" text="{KINGDOM}将开始{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
-    <string id="jnYwiCAz" text="{KINGDOM}将继续{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
-    <string id="faUooB7V" text="{KINGDOM}将不会{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
-    <string id="TauRjAud" text="{FACTION}的{NAME}" />
-    <string id="2mVZORaE" text="{FACTION_NAME}的仆从" />
-    <string id="6d4ZTvGv" text="{LORD.NAME}是{FACTION_NAME}的{TITLE}，{CLAN_NAME}家族的族长，该家族是王国的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
-    <string id="o5AUljbW" text="{LORD.NAME}是{CLAN_NAME}家族的成员，该家族是{FACTION_NAME}的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
-    <string id="9Obe3S6L" text="{LORD.FIRSTNAME}是{CLAN_NAME}家族的成员，该家族是来自{FACTION_NAME}领地的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
-    <string id="hRfXSdlP" text="{LORD.FIRSTNAME}是{CLAN_NAME}家族的族长，该家族是来自{FACTION_NAME}领地的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
-    <string id="0bPb5btR" text="{LORD.NAME}是{CLAN_NAME}家族的成员，该家族是{FACTION_NAME}的{CLAN_DESCRIPTION}，在内战中支持{RULER}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
-    <string id="JuPUG5wX" text="{LORD.NAME}是{FACTION_NAME}的{TITLE},同时也是{CLAN_NAME}的首领,{CLAN_DESCRIPTION},在内战中支持{RULER}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}而闻名。" />
-    <string id="4pmvrnmN" text="{SETTLEMENT_LINK}城堡由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}拥有。{KEEP_INFO}" />
-    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}统治。{KEEP_INFO}" />
-    <string id="RVDojUOM" text="{SETTLEMENT_LINK}周围的土地主要由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}拥有。{PROSPERITY_INFO}" />
-    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}统治。{PROSPERITY_INFO}{MORALE_INFO}" />
-    <string id="yAOQnMVw" text="你是{FACTION}的人，对吧？这意味着你是我的俘虏。" />
-    <string id="YT4OvaAG" text="很好。你可以认为自己处于{FACTION_NAME}的保护之下。你有到明天这个时候完成旅程的时间，否则我们可能会向你索取另一笔费用。" />
-    <string id="taom_str_faction_official.erebor" text="矮人贵族" />
-    <string id="taom_str_faction_official.erebor_f" text="矮人女贵族" />
-    <string id="taom_str_faction_ruler.erebor" text="山下国王" />
-    <string id="taom_str_faction_ruler.erebor_f" text="山下女王" />
-    <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}山下女王{?}山下国王{\?}，{RULER.NAME}" />
-    <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}山下女王{?}山下国王{\?}{RULER.NAME}" />
-    <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
-    <string id="taom_str_adjective_for_faction.erebor" text="埃尔波尔" />
-    <string id="taom_str_short_term_for_faction.erebor" text="矮人" />
-    <string id="taom_str_faction_formal_name_for_culture.erebor" text="山下王国" />
-    <string id="taom_str_faction_informal_name_for_culture.erebor" text="埃尔波尔" />
-    <string id="taom_str_neutral_term_for_culture.erebor" text="埃尔波尔的矮人" />
-    <string id="0aXG8dvJ" text="与{KINGDOM_NAME}议和。不支付任何贡品。" />
-    <string id="0CsbbwtN" text="召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战" />
-    <string id="0nhqJewP" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下,将{SETTLEMENT}授予{LEADER.NAME}。" />
-    <string id="17A2DDgD" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}在{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会支持下,决定与{KINGDOM}议和。" />
-    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME}或许强大,但他们的土地富饶,正等待我们夺取。" />
-    <string id="1o8vgwTf" text="{KINGDOM}的{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,决定与{OTHER_KINGDOM}签署贸易协定。" />
-    <string id="1V8f9vRM" text="一名信使带着来自{PROPOSER_KINGDOM}的结盟提议抵达了你王国的宫廷。" />
-    <string id="21yUheIy" text="{KINGDOM_NAME}由崛起的{CULTURE_ADJECTIVE}军阀{RULER.NAME}于{CREATION_YEAR}年建立。" />
-    <string id="22LCyCoA" text="我可以向你的王国提供{GOLD}{GOLD_ICON},以对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="2b1xZGaQ" text="与{KINGDOM_NAME}议和。我们的王国将每日支付{TRIBUTE_AMOUNT}贡金,持续{TRIBUTE_DURATION}天。" />
-    <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}的掠夺迫使许多农民离开家园。拥有土地的人通常会返回,但许多贫困者正在寻找新的定居地。你在村庄外围与几个扎营的人交谈。这里没有土地给他们。他们似乎渴望作为佃农工作,但这总是有可能与村里更老的家族产生矛盾。" />
-    <string id="4fXpOe4N" text="一名信使从{CLAN_NAME}前来。他们扣押了{CAPTIVE_HERO.NAME},要求{GOLD_AMOUNT}{GOLD_ICON}的赎金。" />
-    <string id="4GgfFDWG" text="与{KINGDOM_NAME}议和" />
-    <string id="4JSzHkpt" text="作为{?IS_FEMALE}女王{?}国王{\?},你必须决定是否对{KINGDOM_NAME}宣战" />
-    <string id="4z1t75be" text="{CLAN_NAME}的{FIRSTNAME}" />
-    <string id="5bBAOHmC" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,将{SETTLEMENT}作为{?RULER.GENDER}她的{?}他的{\?}封地。" />
-    <string id="5bza9sDs" text="很遗憾听到这个消息。要知道你找不到比{FACTION_NAME}更好的雇主了。" />
-    <string id="5DdbkWLu" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下,决定与{OTHER_KINGDOM}签署贸易协定。" />
-    <string id="5L0wDGhR" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,选择不与{KINGDOM}开战。" />
-    <string id="5pOKmHsf" text="{RULER.NAME}决定召集{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。这个决定得到了{?RULER.GENDER}她{?}他{\?}半数议会的支持。" />
-    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME}占据了我们的祖传土地,并压迫我们的同胞。" />
-    <string id="7ouzFASf" text="一名信使送来了{OFFERED_KINGDOM_LEADER.NAME}的信函。{?OFFERED_KINGDOM_LEADER.GENDER}她{?}他{\?}提到你日益增长的声望,并询问你是否愿意考虑成为{OFFERED_KINGDOM_NAME}的封臣。如果你有兴趣,应该亲自去谈。" />
-    <string id="8RBZaQKk" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会支持下,选择不与{KINGDOM}开战。" />
-    <string id="940TwBPs" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,选择不将{CLAN}家族从{KINGDOM}驱逐。" />
-    <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}选择不与{KINGDOM}开战。" />
-    <string id="aE7OQDMS" text="与{KINGDOM_NAME}结盟。" />
-    <string id="aEt1kqxm" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}在{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,决定与{KINGDOM}议和。" />
-    <string id="AGdmoIUc" text="{RULER.NAME}违背{?RULER.GENDER}她的{?}他的{\?}议会建议,决定召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
-    <string id="amdgO9Hr" text="我是{CONVERSATION_HERO.FIRSTNAME}。我是名为{FACTION_NAME}的远征队的一名谦卑追随者,{DIVINITY}选择了我们在这个时代传达他们的旨意。" />
-    <string id="aQAI99d4" text="对{KINGDOM_NAME}宣战" />
-    <string id="AThZtg7U" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}在{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,决定不与{KINGDOM}议和。" />
-    <string id="AwCnrOan" text="作为{RULER_NAME_AND_TITLE},你必须决定是否花费{CALL_TO_WAR_COST}{GOLD_ICON}召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
-    <string id="AWm7Kb9Y" text="{RULER.NAME}决定不召集{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。这个决定得到了{?RULER.GENDER}她{?}他{\?}半数议会的支持。" />
-    <string id="awoeb3br" text="{FACTION_LEADER}将决定{KINGDOM_CONSIDERING_PEACE_NAME}是否与{KINGDOM_NAME}议和。你可以选择对此决定的立场。" />
-    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK}已与{ENEMYFACTION_INFORMALNAME}议和。你与{QUEST_GIVER.LINK}的协议已被取消。" />
-    <string id="az3K3j4C" text="目前我们比{ENEMY_KINGDOM_INFORMAL_NAME}更强大。我们应该趁现在出击。" />
-    <string id="B818zx3W" text="你的家族正在与{KINGDOM}和平共处的势力交战。" />
-    <string id="bjEN2OzZ" text="由于你对中立村庄的敌意行为,{KINGDOM}向你宣战。" />
-    <string id="Bk3Wqy5j" text="{RULER.NAME}决定不响应{CALLING_KINGDOM}的召唤,不会对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
-    <string id="BlVjIlZF" text="{FACTION_LEADER}将决定{KINGDOM_CONSIDERING_PEACE_NAME}是否通过支付{TRIBUTE_AMOUNT}贡金(持续{TRIBUTE_DURATION}天)与{KINGDOM_NAME}议和。你可以选择对此决定的立场。" />
-    <string id="bMCZ5rWQ" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下,决定不召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
-    <string id="bR7MIkFi" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下决定不与{KINGDOM_NAME}结盟。" />
-    <string id="bXN2fbcv" text="你的部下将{SETTLEMENT_NAME}的居民视为{SETTLEMENT_CULTURE_NAME}误入歧途的子民而非敌人,因此对他们相对友善。" />
-    <string id="bYmc9fi3" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,决定与{KINGDOM_NAME}结盟。" />
-    <string id="Cf0amFBD" text="接受{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战" />
-    <string id="cRpsjvOM" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会支持下向{KINGDOM}宣战。" />
-    <string id="CrzFdo2H" text="是的。是关于与{ENEMYFACTION_INFORMALNAME}的战争。[ib:hip][if:convo_excited]我们需要牵制他们的一些兵力。一支相对较小的部队快速穿过他们的领地并成功袭击他们的村庄应该是个不错的牵制手段。他们的领主将不得不追击袭击者,就无法在其他地方威胁我们了。你似乎是适合这项任务的{?PLAYER.GENDER}勇士{?}人选{\?}。你觉得如何?如果你成功了,你会得到我的感激和丰厚的报酬。" />
-    <string id="CswzBb02" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}决定与{KINGDOM}议和。" />
-    <string id="d6KbdIWg" text="由于你对中立村庄的敌意行为,{MERCENARY_KINGDOM}终止了与你的契约,{KINGDOM}向你宣战。" />
-    <string id="dCDBqYsh" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下选择不与{OTHER_KINGDOM}签订贸易协定。" />
-    <string id="dDsJyerw" text="号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="dEsIQDo3" text="是时候号召我们的盟友{CALLED_KINGDOM}参战了!" />
-    <string id="dov3iRlt" text="{ENEMY_KINGDOM_INFORMAL_NAME}的{ENEMY_RULER.NAME}邪恶而危险。我们必须在为时已晚之前对付{?ENEMY_RULER.GENDER}她{?}他{\?}。" />
-    <string id="DphlPaF9" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}不顾{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会反对向{KINGDOM}宣战。" />
-    <string id="dPOOmYGQ" text="你以为{KINGDOM}的领主和战士们会在他们的人民被绑架时袖手旁观吗?你最好放我们走!" />
-    <string id="drZC1Frp" text="{KINGDOM_NAME}由{CULTURE_ADJECTIVE}叛军首领{RULER.NAME}于{CREATION_YEAR}年建立。" />
-    <string id="eAhgrwkZ" text="作为{RULER_NAME_AND_TITLE},你必须决定是否与{KINGDOM_NAME}结盟。" />
-    <string id="eEmFbQet" text="{RULER.NAME}决定号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。该决定得到了{?RULER.GENDER}她的{?}他的{\?}议会的支持。" />
-    <string id="efTah9rk" text="我没有代表{ENEMY_INFORMAL_NAME}议和的权力。我们的议会应该决定是否提议和平,以及条件是什么。" />
-    <string id="eiGl6XBr" text="投票决定是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="EqevKYZD" text="作为{RULER_NAME_AND_TITLE},你必须决定是否以{CALL_TO_WAR_COST}{GOLD_ICON}的代价号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战" />
-    <string id="eTylgLCc" text="一位信使从{KINGDOM_NAME}赶来。他们向你提议结盟。你的王国将投票决定是否接受该提议。" />
-    <string id="eUWYqwE6" text="{CALLING_KINGDOM}已不再与{KINGDOM_TO_CALL_TO_WAR_AGAINST}交战。" />
-    <string id="F7CMsDyG" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,决定不与{KINGDOM_NAME}结盟。" />
-    <string id="fcuUcjYV" text="{RULER.NAME}决定不响应{CALLING_KINGDOM}的号召,不对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。该决定得到了{?RULER.GENDER}她的{?}他的{\?}议会的支持。" />
-    <string id="FNCq25P1" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下决定与{KINGDOM_NAME}结盟。" />
-    <string id="FuNbouTu" text="一位信使从{KINGDOM_NAME}赶来。他们号召你的王国对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。你的王国将投票决定是否接受该提议。" />
-    <string id="G3qGLAeQ" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会的意愿,将{CLAN}家族逐出{KINGDOM}。" />
-    <string id="gf2Lje7o" text="{RULER.NAME}决定不号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}率领着{QUEST_GIVER_FACTION}的军队,告诉你他们即将进行的军事行动需要粮食补给。{?QUEST_GIVER.GENDER}她{?}他{\?}希望你运送{GRAIN_AMOUNT}袋粮食,虽然不是必须的,但如果你能提供{LIVESTOCK_AMOUNT}头牲畜和{WINE_AMOUNT}桶葡萄酒,{?QUEST_GIVER.GENDER}她{?}他{\?}会非常感激。" />
-    <string id="Gj5d9y2g" text="{KINGDOM}的{RULER.NAME}决定与{OTHER_KINGDOM}签订贸易协定。" />
-    <string id="gNf0ALKw" text="一位信使从{MAP_FACTION_NAME}赶来。他们向你提议白色和平。你的王国将投票决定是否接受该提议。" />
-    <string id="h5eTEYON" text="{RULER.NAME}将{CLAN}家族逐出{KINGDOM}。" />
-    <string id="h9bWTLgK" text="是时候加入我们的盟友{KINGDOM_NAME}的战争了。" />
-    <string id="IB1xsVEr" text="一位信使从{MAP_FACTION_NAME}赶来。他们向你提议白色和平。你的封臣将决定权留给了你。" />
-    <string id="INfHUqxT" text="{RULER.NAME}决定与{KINGDOM_NAME}结盟。" />
-    <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}不顾{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会的反对,选择不与{KINGDOM}议和。" />
-    <string id="iOmgCFDI" text="投票决定是否与{KINGDOM_NAME}结盟。" />
-    <string id="ItueKmqd" text="你的家族现在与{QUEST_GIVER_SETTLEMENT_FACTION}处于战争状态。你与{QUEST_GIVER.LINK}的契约被取消。" />
-    <string id="izwKmH2I" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}半数议会成员支持下决定与{KINGDOM_NAME}结盟。" />
-    <string id="jaioXYDc" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}半数议会成员支持下决定不与{KINGDOM_NAME}结盟。" />
-    <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}决定与{KINGDOM}议和,尽管{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会表示反对。" />
-    <string id="JJQ0Hp4m" text="一名信使从{MAP_FACTION_NAME}前来。{MAP_FACTION_NAME}愿意每日支付{GOLD_AMOUNT}{GOLD_ICON}作为贡金以结束你们领地间的战争。你的封臣将决定权交给了你。" />
-    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}目前比我们更强大。我们需要时间来增强实力。" />
-    <string id="JQligd8z" text="{KINGDOM}的议会选择{KING.NAME}为新的统治者。" />
-    <string id="JY717hPW" text="我没有权力代表{ENEMY_INFORMAL_NAME}议和。应当由{ENEMY_RULER.NAME}和{?ENEMY_RULER.GENDER}她的{?}他的{\?}议会决定是否提议和平,以及条件如何。" />
-    <string id="K5w135N9" text="{RULER.NAME}决定不响应{CALLING_KINGDOM}的号召,不会对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。此决定违背了{?RULER.GENDER}她的{?}他的{\?}议会的建议。" />
-    <string id="KFHj7ckm" text="作为统治者,你必须决定是否与{KINGDOM_NAME}议和" />
-    <string id="KlATZEbb" text="与{KINGDOM_NAME}结成同盟。" />
-    <string id="KSrNutEO" text="{FACTION_LEADER}将决定是否对{KINGDOM_NAME}宣战。你可以选择你对此决定的立场。" />
-    <string id="Ktpia7Pa" text="{KINGDOM}的{RULER.NAME}将{SETTLEMENT}授予{LEADER.NAME},尽管{?RULER.GENDER}她的{?}他的{\?}议会表示反对。" />
-    <string id="l5H9x7Lo" text="{KINGDOM}的{RULER.NAME}将{SETTLEMENT}授予{LEADER.NAME},{?RULER.GENDER}她的{?}他的{\?}议会对此意见均分。" />
-    <string id="L802I9W2" text="好,我会加入{FACTION_NAME}。" />
-    <string id="L81DPSom" text="作为{RULER_NAME_AND_TITLE},你必须决定你的领地是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_COST}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="Lalj0T1i" text="{RULER.NAME}响应了{CALLING_KINGDOM}的号召,对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战,尽管{?RULER.GENDER}她的{?}他的{\?}议会表示反对。" />
-    <string id="lseJ70y0" text="你的领地正与{KINGDOM_NAME}交战。" />
-    <string id="LVX2x6Jf" text="我想终止与{SERVED_FACTION}的契约。" />
-    <string id="m69pvful" text="{KINGDOM_LEADER}将决定你的领地是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。你可以选择你对此决定的立场。" />
-    <string id="m6OVl6Dg" text="{RULER.NAME}将{CLAN}氏族逐出{KINGDOM},{?RULER.GENDER}她的{?}他的{\?}议会对此事意见均分。" />
-    <string id="mfYzCeGR" text="{CHARACTER.NAME}曾是{CHARACTER_FACTION_SHORT}的{TITLE}。{FURTHER_DETAILS}。" />
-    <string id="mRrYn2qm" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}选择不与{KINGDOM}议和,得到了{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会的支持。" />
-    <string id="MSr3HRa1" text="{QUEST_GIVER.NAME},一位{CLAN}的{?QUEST_GIVER.GENDER}女领主{?}领主{\?},希望氏族的年轻成员接受战争艺术的训练。" />
-    <string id="mvkKP6OE" text="{RULER.NAME}选择不将{CLAN}氏族逐出{KINGDOM}。" />
-    <string id="MYIgSsfk" text="{RULER.NAME}决定不号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。此决定违背了{?RULER.GENDER}她的{?}他的{\?}议会的建议。" />
-    <string id="n4I3pWOn" text="作为统治者,你必须决定是否通过支付{TRIBUTE_AMOUNT}作为贡金持续{TRIBUTE_DURATION}天来与{KINGDOM_NAME}议和。" />
-    <string id="Nd0Vhkxn" text="一名信使从{MAP_FACTION_NAME}前来。如果你同意每日支付{GOLD_AMOUNT}{GOLD_ICON}的贡金,他们愿意与你和平。你的封臣将决定权交给了你。" />
-    <string id="NFuezpbG" text="{CALLED_KINGDOM}已经在与{KINGDOM_NAME}交战了。" />
-    <string id="NjPMRWbW" text="与{KINGDOM_NAME}议和。我们的王国将每日获得{TRIBUTE_AMOUNT}贡金,持续{TRIBUTE_DURATION}天。" />
-    <string id="nkvT88r2" text="你没有足够的金钱来号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="NuYzgBZB" text="你做得太过分了。{KINGDOM}不会容忍其商队遭到破坏。" />
-    <string id="o4IxXHnB" text="{RULER.NAME}决定不与{KINGDOM_NAME}结成同盟。" />
-    <string id="o69PZuce" text="{OLD_LEADER.LINK}不再是{CLAN_NAME}的首领。{NEW_LEADER.LINK}已接任为氏族的统治者。" />
-    <string id="O9XpB5Ah" text="作为统治者,你必须决定是否与{KINGDOM}签订贸易协定" />
-    <string id="oAw74q3r" text="作为{RULER_NAME_AND_TITLE},你必须决定你的领地是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="Oe1NdVLe" text="{RULER.NAME}选择不将{CLAN}氏族逐出{KINGDOM},{?RULER.GENDER}她的{?}他的{\?}议会对此事意见均分。" />
-    <string id="Oi20UrO2" text="我们与{TARGET_SETTLEMENT_FACTION_INFORMAL_NAME}的战争进展尚可。但有人说,相对于我们付出的鲜血和金银,我们所得甚少。在这个阶段取得一场明确的胜利会大有裨益。我想看到我们的旗帜在{TARGET_SETTLEMENT}的塔楼上飘扬。[ib:normal2][if:convo_thinking]" />
-    <string id="OlIWwLbP" text="是的。是关于与{ENEMYFACTION_INFORMALNAME}的战争。[ib:closed][if:convo_pondering]我们需要牵制他们的一部分兵力,最简单的方法就是袭击他们的村庄。这是残酷的事业,会让平民百姓陷入困境,但他们的领主必须追击袭击者,这样就能阻止他们对我们做同样的事。如果你接下这个任务,成功后我会奖赏你。" />
-    <string id="Ouj6eSWC" text="{RULER.NAME}决定不响应{CALLING_KINGDOM}的号召,不会对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。此决定得到了{?RULER.GENDER}她的{?}他的{\?}半数议会的支持。" />
-    <string id="PneX4Ayw" text="一名信使带着来自{KINGDOM_NAME}的宣战号召抵达你领地的朝廷,号召对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="PP7KD7OC" text="{KINGDOM}的{RULER.NAME}决定与{OTHER_KINGDOM}签订贸易协定,{?RULER.GENDER}她的{?}他的{\?}议会对此意见均分。" />
-    <string id="PutoRsWp" text="一名信使从{CLAN_NAME}前来。如果你愿意释放{CAPTIVE_HERO.NAME},他们愿意支付{GOLD_AMOUNT}{GOLD_ICON}作为赎金。" />
-    <string id="q9DnHVcZ" text="加入{KINGDOM_NAME}的战争不符合我们的利益。" />
-    <string id="qa4FlTWS" text="{KINGDOM}的{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,将{SETTLEMENT}作为{?RULER.GENDER}她的{?}他的{\?}封地。" />
-    <string id="qgN9o2ip" text="是时候召唤我们的盟友{KINGDOM_NAME}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战了!你的王国将投票决定是否向他们提议参战协议。" />
-    <string id="qN3x2usk" text="投票决定是否以{CALL_TO_WAR_COST}{GOLD_ICON}的代价召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
-    <string id="R0bJS0pn" text="与{OTHER_FACTION}议和" />
-    <string id="r0Kq0aeB" text="{FACTION_LEADER}将决定是否以{CALL_TO_WAR_COST}{GOLD_ICON}的代价召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。你可以选择你对此决定的立场。" />
-    <string id="rd229FYG" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下将{CLAN}氏族驱逐出{KINGDOM}。" />
-    <string id="RH8mgLEk" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会半数支持下向{KINGDOM}宣战。" />
-    <string id="rJIuQ0hc" text="{KINGDOM}的{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,选择不与{OTHER_KINGDOM}签署贸易协定。" />
-    <string id="rtfoywJl" text="向{KINGDOM_NAME}宣战" />
-    <string id="sbFboHmV" text="一名信使从{MAP_FACTION_NAME}送来消息。如果你同意每日支付{GOLD_AMOUNT}{GOLD_ICON}贡金,他们愿意与你议和。你的王国将投票决定是否接受这一提议。" />
-    <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}向{KINGDOM}宣战。" />
-    <string id="SR9FC5jH" text="一名信使从{MAP_FACTION_NAME}带来和平提议。{MAP_FACTION_NAME}将每日支付{GOLD_AMOUNT}{GOLD_ICON}贡金以结束双方的战争。你的王国将投票决定是否接受这一提议。" />
-    <string id="syGyjjKE" text="响应{CALLING_KINGDOM}的召唤,向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}正向你提供雇佣工作,为你代表他们作战所获得的每点影响力支付{GOLD_AMOUNT}{GOLD_ICON}。你接受吗?" />
-    <string id="uc4M4bhG" text="Well, there is something I want. There is one {?TARGET_HERO.GENDER}lady{?}lord{\?} of {TARGET_FACTION} with whom I have a long, long relationship. And not a friendly one. Now that we are at war, as long as {?TARGET_HERO.GENDER}she{?}he{\?} is free, I know my life and lands are not safe. As I say, it won't be easy at all. But whoever manages to do that, bring {?TARGET_HERO.GENDER}her{?}him{\?} back alive to me, having my gratitude aside, will be a very rich man indeed.[if:convo_grave][ib:closed2]" />
-    <string id="uiY3ds0Z" text="{RULER.NAME}响应了{CALLING_KINGDOM}的召唤,在{?RULER.GENDER}她的{?}他的{\?}议会半数支持下向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="UQq4ekeu" text="{KINGDOM}的{RULER.NAME}选择不与{OTHER_KINGDOM}签署贸易协定。" />
-    <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}召唤{CALLED_KINGDOM_LINK}向{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}宣战。" />
-    <string id="uWdj1X2c" text="{CHARACTER.NAME}曾是{CHARACTER_FACTION_SHORT}的成员。{FURTHER_DETAILS}。" />
-    <string id="V097rA1v" text="{LORD.FIRSTNAME}是{CLAN_NAME}的首领,这是一个新兴氏族。{?LORD.GENDER}她{?}他{\?}仍在建立{?LORD.GENDER}她的{?}他的{\?}声望。" />
-    <string id="vf2pb7Ts" text="{RULER.NAME}响应了{CALLING_KINGDOM}的召唤,向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="Vg5RmOqL" text="{FACTION_LEADER}将决定{KINGDOM}是否与{OTHER_KINGDOM}签署贸易协定。你可以选择你对此决定的立场。" />
-    <string id="VWoHoUin" text="我们与{ENEMY_INFORMAL_NAME}之间不会有和平,就像狼不会与羊议和一样。" />
-    <string id="wijL0mTy" text="{FACTION_LEADER}将决定是否与{KINGDOM_NAME}结成同盟。你可以选择你对此决定的立场。" />
-    <string id="wsDNxArW" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}选择不与{KINGDOM}议和。" />
-    <string id="xAuejv91" text="{KINGDOM}的{RULER.NAME}决定不与{OTHER_KINGDOM}议和,{?RULER.GENDER}她的{?}他的{\?}议会在此事上意见均分。" />
-    <string id="XaZyU3Cn" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}不顾{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会意愿,选择不与{KINGDOM}开战。" />
-    <string id="XbYCVCbR" text="我们反对召唤盟友{CALLED_KINGDOM}参战。" />
-    <string id="xhK4zMec" text="{RULER.NAME}决定召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
-    <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}向{CALLED_KINGDOM_LINK}发出的对{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}开战的召唤已结束。" />
-    <string id="xM97H0oR" text="投票决定是否向{KINGDOM_NAME}宣战。" />
-    <string id="yBL3TzXw" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下选择不将{CLAN}氏族驱逐出{KINGDOM}。" />
-    <string id="yUYNlQhU" text="很好,我会让手下起草一份简单的契约。我代表{KINGDOM_FORMAL_NAME}欢迎你。愿你的剑能很好地对付我们的敌人。" />
-    <string id="Zckbdm4Z" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下将{SETTLEMENT}作为{?RULER.GENDER}她的{?}他的{\?}封地。" />
-    <string id="zd9sawl9" text="你已经与{KINGDOM_NAME}结盟了。" />
-    <string id="zXuo0Wbj" text="与{KINGDOM}签署贸易协定" />
-    <string id="ZZ1oLfEq" text="{RULER.NAME}响应了{CALLING_KINGDOM}的召唤,在{?RULER.GENDER}她的{?}他的{\?}议会支持下向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
-    <string id="taom_shaghana_name" text="沙加纳" />
-    <string id="taom_shaghana_short_name" text="沙加纳" />
-    <string id="taom_shaghana_title" text="沙格哈纳的塔斯克拉兰" />
-    <string id="taom_shaghana_ruler_title" text="塔斯克拉尔" />
-    <string id="taom_shaghana_desc" text="沙格哈纳是哈拉德的东部领地,那里是烈日灼烧的草原和古老堡垒之地。其九个部落氏族都是凶猛的战士,以誓言和血脉相连,令敢于反抗他们的人胆寒。" />
-    <string id="aom_shaghana_name" text="沙格哈纳" />
-    <string id="aom_shaghana_desc" text="沙格哈纳人是哈拉德东部草原上凶猛的部落民族,以无情的劫掠者和熟练的骑手而闻名。他们以誓言和氏族相系,效忠于他们的塔斯克拉尔,并从他们烈日炙烤的堡垒中为索伦的黑暗计划效力。" />
-    <string id="aom_lord_SH1_1_name" text="扎尔坎" />
-    <string id="aom_lord_SH2_1_name" text="拉希姆" />
-    <string id="aom_lord_SH3_1_name" text="塔丁" />
-    <string id="aom_lord_SH4_1_name" text="纳赫尔" />
-    <string id="aom_lord_SH5_1_name" text="亚祖尔" />
-    <string id="aom_lord_SH6_1_name" text="卡赞" />
-    <string id="aom_lord_SH7_1_name" text="哈鲁兹" />
-    <string id="aom_lord_SH8_1_name" text="法伦" />
-    <string id="aom_lord_SH9_1_name" text="萨鲁兹" />
-    <string id="aom_clan_shaghana_1_name" text="埃扎尔基亚" />
-    <string id="aom_clan_shaghana_2_name" text="库玛拉克尼斯" />
-    <string id="aom_clan_shaghana_3_name" text="泰伊玛卡" />
-    <string id="aom_clan_shaghana_4_name" text="扎亚克努里" />
-    <string id="aom_clan_shaghana_5_name" text="塞拉尔克斯" />
-    <string id="aom_clan_shaghana_6_name" text="乌扎雷斯" />
-    <string id="aom_clan_shaghana_7_name" text="阿拉拉宁" />
-    <string id="aom_clan_shaghana_8_name" text="巴努甘德" />
-    <string id="aom_clan_shaghana_9_name" text="阿卡梅斯" />
-    <string id="aom_sh_notable_0" text="精明的沙格哈纳商人" />
-    <string id="aom_sh_notable_0b" text="沙格哈纳香料商" />
-    <string id="aom_sh_notable_1" text="沙格哈纳商队主人" />
-    <string id="aom_sh_notable_1b" text="东部草原商人" />
-    <string id="aom_sh_notable_2" text="沙格哈纳丝绸商人" />
-    <string id="aom_sh_notable_2b" text="哈拉德草原商人" />
-    <string id="aom_sh_notable_3" text="沙格哈纳兑换商" />
-    <string id="aom_sh_notable_3b" text="东方货物经纪人" />
-    <string id="aom_sh_notable_4" text="沙格哈纳集市管理者" />
-    <string id="aom_sh_notable_4b" text="狡诈的沙格哈纳商人" />
-    <string id="aom_sh_notable_5" text="沙格哈纳太阳祭司" />
-    <string id="aom_sh_notable_6" text="沙格哈纳部落长老" />
-    <string id="aom_sh_notable_7" text="沙格哈纳传统守护者" />
-    <string id="aom_sh_notable_8" text="沙格哈纳金属工匠" />
-    <string id="aom_sh_notable_9" text="沙格哈纳武器工匠" />
-    <string id="aom_sh_notable_gl1" text="沙格哈纳执行者" />
-    <string id="aom_sh_notable_10" text="沙格哈纳黑帮头目" />
-    <string id="aom_sh_notable_11" text="沙格哈那掠夺者头目" />
-    <string id="aom_sh_notable_gl4" text="沙格哈那帮派酋长" />
-    <string id="aom_sh_notable_12" text="沙格哈那街头老大" />
-    <string id="aom_sh_notable_13" text="沙格哈那黑市商人" />
-    <string id="aom_sh_notable_21" text="沙格哈那地主" />
-    <string id="aom_sh_notable_22" text="沙格哈那牧群主人" />
-    <string id="aom_sh_headman_1" text="沙格哈那村长" />
-    <string id="aom_sh_headman_2" text="沙格哈那长老村长" />
-    <string id="aom_sh_headman_3" text="沙格哈那村庄长老" />
-    <string id="taom_abanissa_name" text="阿巴尼萨" />
-    <string id="taom_abanissa_short_name" text="阿巴尼萨" />
-    <string id="taom_abanissa_title" text="阿巴尼萨的查贾潘" />
-    <string id="taom_abanissa_ruler_title" text="查贾潘" />
-    <string id="taom_abanissa_desc" text="阿巴尼萨位于哈拉德的最南方,是一个充满潮湿丛林和古老石造王朝的国度。阿巴尼萨的伟大家族统领着可怕的战兽和训练有素的战士军队,他们的权力只服从于索伦本人。" />
-    <string id="aom_abanissa_name" text="阿巴尼萨" />
-    <string id="aom_abanissa_desc" text="阿巴尼萨的伟大家族统治着哈拉德的最南方,这是一片拥有潮湿丛林、古老石造宫殿和高耸战兽的土地。他们的军队在家族旗帜下行军,在南方诸地赢得尊敬与恐惧。" />
-    <string id="aom_lord_AB1_1_name" text="法克萨尔" />
-    <string id="aom_lord_AB2_1_name" text="霍谢德" />
-    <string id="aom_lord_AB3_1_name" text="瓦斯纳尔" />
-    <string id="aom_lord_AB4_1_name" text="戈拉泽" />
-    <string id="aom_lord_AB5_1_name" text="阿扎丹" />
-    <string id="aom_lord_AB6_1_name" text="阿尔塔什" />
-    <string id="aom_lord_AB7_1_name" text="阿尔达赫" />
-    <string id="aom_lord_AB8_1_name" text="提尔达" />
-    <string id="aom_clan_abanissa_1_name" text="法克沙兰家族" />
-    <string id="aom_clan_abanissa_2_name" text="霍谢德哈玛家族" />
-    <string id="aom_clan_abanissa_3_name" text="瓦斯纳拉德家族" />
-    <string id="aom_clan_abanissa_4_name" text="戈拉泽汉家族" />
-    <string id="aom_clan_abanissa_5_name" text="阿扎达弗罗赞家族" />
-    <string id="aom_clan_abanissa_6_name" text="阿尔塔克沙萨家族" />
-    <string id="aom_clan_abanissa_7_name" text="阿尔达切兰家族" />
-    <string id="aom_clan_abanissa_8_name" text="提尔达哈纳家族" />
-    <string id="aom_ab_notable_0" text="极南哈拉德王朝掮客" />
-    <string id="aom_ab_notable_0b" text="阿巴尼萨象牙商人" />
-    <string id="aom_ab_notable_1" text="阿巴尼萨商队领主" />
-    <string id="aom_ab_notable_1b" text="极南哈拉德香料商人" />
-    <string id="aom_ab_notable_2" text="阿巴尼萨黄金商人" />
-    <string id="aom_ab_notable_2b" text="家族总管商人" />
-    <string id="aom_ab_notable_3" text="阿巴尼萨宝石切割掮客" />
-    <string id="aom_ab_notable_3b" text="极南哈拉德丝绸商人" />
-    <string id="aom_ab_notable_4" text="阿巴尼萨市场监督官" />
-    <string id="aom_ab_notable_4b" text="狡猾的阿巴尼萨代理人" />
-    <string id="aom_ab_notable_5" text="阿巴尼萨大祭司" />
-    <string id="aom_ab_notable_6" text="阿巴尼萨神殿守护者" />
-    <string id="aom_ab_notable_7" text="远哈拉德仪式大师" />
-    <string id="aom_ab_notable_8" text="阿巴尼萨工艺大师" />
-    <string id="aom_ab_notable_9" text="远哈拉德盔甲匠" />
-    <string id="aom_ab_notable_gl1" text="阿巴尼萨家族执行者" />
-    <string id="aom_ab_notable_10" text="阿巴尼萨暗影领主" />
-    <string id="aom_ab_notable_11" text="远哈拉德战帮首领" />
-    <string id="aom_ab_notable_gl4" text="阿巴尼萨帮派族长" />
-    <string id="aom_ab_notable_12" text="阿巴尼萨区域头目" />
-    <string id="aom_ab_notable_13" text="远哈拉德走私之王" />
-    <string id="aom_ab_notable_21" text="阿巴尼萨庄园领主" />
-    <string id="aom_ab_notable_22" text="阿巴尼萨种植园主" />
-    <string id="aom_ab_headman_1" text="阿巴尼萨村长" />
-    <string id="aom_ab_headman_2" text="阿巴尼萨资深村长" />
-    <string id="aom_ab_headman_3" text="阿巴尼萨村中长老" />
-    <string id="TAOM_ghilman_name" text="蛇卫" />
-    <string id="TAOM_ghilman_short" text="蛇卫" />
-    <string id="TAOM_ghilman_text" text="蛇卫是效忠于近哈拉德蛇王的骑兵部队。他们在埃菲尔督阿斯南部的起伏平原上生于马鞍,成长于马背,作为弓骑兵在中土大陆南部诸地无可匹敌。在哈拉德与魔多和平共处的年代里,蛇卫会将其服务出售给哈拉德诸领主以及任何富得起支付黄金酬劳的势力。" />
-    <string id="TAOM_legion_name" text="灰衣团" />
-    <string id="TAOM_legion_short" text="灰衣团" />
-    <string id="TAOM_legion_text" text="灰衣团是登丹人游侠最后的有组织兄弟会,他们是很久以前失去王国的阿尔诺诸王的后裔。他们驰骋于北方各地而无固定家园,在那些已遗忘他们名字的土地上维持和平。虽然他们首先效忠于埃兰迪尔的血脉,但当他们的游历将他们带到文明之地时,也会接受中土大陆各地领主的雇佣。" />
-    <string id="TAOM_skolderbrotva_name" text="埃尔波尔斧兵" />
-    <string id="TAOM_skolderbrotva_short" text="斧兵" />
-    <string id="TAOM_skolderbrotva_text" text="埃尔波尔斧兵是索林国王麾下战役的老兵,他们发现和平时代不适合自己的性情。他们精通矮人大厅的近战技艺——盾墙、短斧、鹤嘴锄——在任何地形上都十分强悍,但在连接埃尔波尔与人类诸国的山隘中尤为出色。他们会接受任何付得起酬劳者的雇佣,但绝不会对埃尔波尔或瑞文戴尔举起斧头。" />
-    <string id="TAOM_company_name" text="海盗之刃" />
-    <string id="TAOM_company_short" text="海盗" />
-    <string id="TAOM_company_text" text="海盗之刃是来自昂巴港口的资深海战士,他们已转向在陆地上出售自己的技能。他们以弩兵身份作战——这是船上战斗的首选武器——在攻城战中如同在颠簸的甲板上一样自如。他们的首领是一位满脸伤疤的努门诺尔流亡者,他以铁血纪律约束着他们遵守契约,深知他们的声誉是最宝贵的财富。" />
-    <string id="TAOM_beni_zilal_name" text="盲眼会" />
-    <string id="TAOM_beni_zilal_short" text="盲眼会" />
-    <string id="TAOM_beni_zilal_text" text="盲眼会是一个在哈拉德海岸与深沙漠地带活动的走私者、销赃者和雇佣杀手兄弟会。据说他们是曾服务于一位被遗忘的哈拉德国王的刺客教派的后裔,他们的手段——毒药、阴影以及秘密的利用——至今未变。希望悄悄除掉对手的领主,或需要在不经海关检查的情况下运送货物的商人,都知道该在何处留下一枚金币和一封密信。" />
-    <string id="TAOM_wolfskins_name" text="瓦里亚格劫掠者" />
-    <string id="TAOM_wolfskins_short" text="劫掠者" />
-    <string id="TAOM_wolfskins_text" text="瓦里亚格劫掠者是来自康德草原的年轻瓦里亚格战士战帮,他们在成年初期处于一种仪式性战争状态:不得拥有熟食,不得睡在永久性屋顶之下,不得施以仁慈。虽然大多数人最终会回归氏族的定居生活,但有些人永远不会,这些人组成了劫掠者——在康德道路上作恶并越境劫掠哈拉德和刚多的亡命之徒。" />
-    <string id="TAOM_brotherhood_name" text="登兰德掠夺者" />
-    <string id="TAOM_brotherhood_short" text="掠夺者" />
-    <string id="TAOM_brotherhood_text" text="登兰德掠夺者是一个山地氏族的破碎残余,该氏族曾居住在如今由洛汗人统治的山谷中。他们的祖父辈被从肥沃的土地驱赶到岩石高地,他们将这种怨恨培养成了掠夺者的哲学:从南方人或国王手下那里夺取的一切,不过是夺回被偷走之物的恢复。实际上他们是强盗,但却是危险的强盗,熟知穿越山地的每一条羊肠小道。" />
-    <string id="TAOM_hidden_hand_name" text="魔口的仆从" />
-    <string id="TAOM_hidden_hand_short" text="仆从" />
-    <string id="TAOM_hidden_hand_text" text="魔口的仆从是巴拉多之眼在黑门之外的触手——渗透在魔多边境各族中的线人、打手和间谍。在索隆的军队尚未抵达之处,这些特工负责收取贡品、镇压异议。他们通过贿赂、勒索和悄无声息的谋杀手段,确保任何反抗黑魔王的阴谋在萌芽之际就被连根拔起、彻底碾碎。" />
-    <string id="TAOM_lakepike_name" text="长湖破坏者" />
-    <string id="TAOM_lakepike_short" text="破坏者" />
-    <string id="TAOM_lakepike_text" text="长湖破坏者栖身于长湖阴暗岸边的芦苇丛和朽烂的旧码头中,远离埃斯加洛斯体面的灯火。他们以假灯笼诱使驳船触礁暗滩为生,然后劫掠货物,通过镇上的销赃渠道出手。尽管湖镇镇长和河谷城商人竭力打击,破坏者在码头区酒馆中有太多朋友,难以被轻易铲除。" />
-    <string id="TAOM_embers_name" text="无睑之眼教派" />
-    <string id="TAOM_embers_short" text="魔眼教派" />
-    <string id="TAOM_embers_text" text="无睑之眼教派是一个根植于黑努门诺尔传统的秘密组织,将索隆尊为神王,相信他再度崛起时将让忠诚者重获荣耀。他们在登兰德的失意者和王国被遗忘的角落中招募成员,许诺神恩和尘世权力。实际上,他们的领袖听命于巴拉多的特工,其单元化结构使任何领主的正义都几乎无法将其根除。" />
-    <string id="TAOM_jawwal_name" text="沙漠骑手" />
-    <string id="TAOM_jawwal_short" text="沙漠骑手" />
-    <string id="TAOM_jawwal_text" text="沙漠骑手是哈拉德腹地深处的游牧沙漠部族,是埃菲尔督阿斯山脉与遥远南方海洋之间无水荒原的主宰。他们沿着只有自己知晓的路线游走,向任何胆敢穿越其领地的商队索取贡品。近哈拉德的定居领主视他们为麻烦;而沙漠骑手则认为这些定居领主是窃贼,偷走了沙漠早已自由赐予的东西。" />
-    <string id="TAOM_karakhuzaits_name" text="野蛮东夷" />
-    <string id="TAOM_karakhuzaits_short" text="野蛮者" />
-    <string id="TAOM_karakhuzaits_text" text="野蛮东夷是鲁恩内海未被征服的草原部族,他们抵抗过每一位试图制服他们的领主——无论是鲁恩酋长、魔多副官,还是河谷城国王。他们在凯尔督因河以东的草原上驰骋,收拢野马、劫掠牲畜,向任何愚蠢到未带武装护卫就试图穿越其草原的商队收取过路费。" />
-    <string id="TAOM_forest_people_name" text="督伊甸人" />
-    <string id="TAOM_forest_people_short" text="野人" />
-    <string id="TAOM_forest_people_text" text="督伊甸人,被人类称为野人或林中野人,是居住在督伊甸森林深处和白色山脉隐秘山谷中的古老民族。他们用火清理土地,在富含灰烬的土壤上种植所需之物,待土地贫瘠后便迁移——这种生活方式是中土世界的定居民族从未理解也从未费心去理解的。督伊甸人不要领主,不纳税赋,只求在森林的寂静中不被打扰。" />
-    <string id="TAOM_eleftheroi_name" text="比翁一族" />
-    <string id="TAOM_eleftheroi_short" text="比翁人" />
-    <string id="TAOM_eleftheroi_text" text="比翁一族是居住在迷雾山脉与幽暗密林之间安都因河谷的伟大林中居民,由比翁血脉的换皮者领导。他们不允许任何半兽人穿越其领地,在卡洛克浅滩收取通行费以资助守卫,不向中土世界的任何国王效忠。虽然他们会与精灵和矮人交易交谈,但任何未经许可穿越其森林的军队都会发现,比翁人的牙齿非常大。" />
-    <string id="taom_career" text="职业" />
-    <string id="taom_alliance_lore" text="传说阵营" />
-    <string id="taom_alliance_blocked" text="这些王国永远无法结盟。" />
-    <string id="taom_war_blocked" text="这些王国被牢不可破的盟约束缚。" />
-    <string id="taom_wotr_no_peace" text="魔戒圣战正在肆虐。此时不可能有和平。" />
-    <string id="taom_precompile_shaders" text="预编译着色器" />
-    <string id="taom_precompile_hint" text="预编译着色器以消除游戏内卡顿。安装TAOM后运行一次。" />
-    <string id="taom_main_menu_new_game" text="进入人类纪元" />
-    <string id="taom_career_screen_title" text="职业" />
-    <string id="taom_career_done" text="完成" />
-    <string id="taom_career_ability_label" text="职业能力" />
-    <string id="taom_career_tier1" text="第一阶" />
-    <string id="taom_career_tier2" text="第二阶" />
-    <string id="taom_career_tier3" text="第三阶" />
-    <string id="taom_career_free_points" text="可用点数:{COUNT}" />
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+
+      type="string">
+
+  <tags>
+
+    <tag language="Simplified Chinese" />
+
+  </tags>
+
+  <strings>
+
+    <string id="taom_str_faction_official.empire" text="登兰德的族人" />
+
+    <string id="taom_str_faction_official.empire_f" text="登兰德的族人" />
+
+    <string id="taom_str_faction_ruler.empire" text="酋长" />
+
+    <string id="taom_str_faction_ruler.empire_f" text="女酋长" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.empire" text="酋长{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.empire" text="酋长{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.empire" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.empire" text="登兰德的" />
+
+    <string id="taom_str_short_term_for_faction.empire" text="登兰德" />
+
+    <string id="taom_str_faction_formal_name_for_culture.empire" text="登兰德诸部族" />
+
+    <string id="taom_str_faction_informal_name_for_culture.empire" text="登兰德" />
+
+    <string id="taom_str_neutral_term_for_culture.empire" text="登兰德人" />
+
+    <string id="taom_str_faction_official.vlandia" text="洛汗的贵族" />
+
+    <string id="taom_str_faction_official.vlandia_f" text="洛汗的贵妇" />
+
+    <string id="taom_str_faction_ruler.vlandia" text="国王" />
+
+    <string id="taom_str_faction_ruler.vlandia_f" text="女王" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.vlandia" text="国王{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.vlandia" text="国王{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.vlandia" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.vlandia" text="洛汗的" />
+
+    <string id="taom_str_short_term_for_faction.vlandia" text="骠骑" />
+
+    <string id="taom_str_faction_formal_name_for_culture.vlandia" text="骠骑王国" />
+
+    <string id="taom_str_faction_informal_name_for_culture.vlandia" text="洛汗" />
+
+    <string id="taom_str_neutral_term_for_culture.vlandia" text="洛汗骠骑" />
+
+    <string id="taom_str_faction_official.battania" text="坎德的贵族" />
+
+    <string id="taom_str_faction_official.battania_f" text="坎德的贵妇" />
+
+    <string id="taom_str_faction_ruler.battania" text="坎德领主" />
+
+    <string id="taom_str_faction_ruler.battania_f" text="坎德女领主" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.battania" text="领主{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.battania" text="领主{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.battania" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.battania" text="瓦瑞亚格的" />
+
+    <string id="taom_str_short_term_for_faction.battania" text="瓦瑞亚格" />
+
+    <string id="taom_str_faction_formal_name_for_culture.battania" text="坎德瓦瑞亚格人" />
+
+    <string id="taom_str_faction_informal_name_for_culture.battania" text="坎德" />
+
+    <string id="taom_str_neutral_term_for_culture.battania" text="瓦瑞亚格人" />
+
+    <string id="taom_str_faction_official.khuzait" text="鲁恩的贵族" />
+
+    <string id="taom_str_faction_official.khuzait_f" text="鲁恩的贵妇" />
+
+    <string id="taom_str_faction_ruler.khuzait" text="军阀" />
+
+    <string id="taom_str_faction_ruler.khuzait_f" text="女军阀" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.khuzait" text="军阀,{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.khuzait" text="军阀{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.khuzait" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.khuzait" text="东夷" />
+
+    <string id="taom_str_short_term_for_faction.khuzait" text="鲁恩" />
+
+    <string id="taom_str_faction_formal_name_for_culture.khuzait" text="鲁恩东夷" />
+
+    <string id="taom_str_faction_informal_name_for_culture.khuzait" text="鲁恩" />
+
+    <string id="taom_str_neutral_term_for_culture.khuzait" text="东夷人" />
+
+    <string id="taom_str_faction_official.aserai" text="哈拉德贵族" />
+
+    <string id="taom_str_faction_official.aserai_f" text="哈拉德女贵族" />
+
+    <string id="taom_str_faction_ruler.aserai" text="酋长" />
+
+    <string id="taom_str_faction_ruler.aserai_f" text="女酋长" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.aserai" text="酋长,{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.aserai" text="酋长{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.aserai" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.aserai" text="哈拉德林" />
+
+    <string id="taom_str_short_term_for_faction.aserai" text="哈拉德" />
+
+    <string id="taom_str_faction_formal_name_for_culture.aserai" text="哈拉德王国" />
+
+    <string id="taom_str_faction_informal_name_for_culture.aserai" text="哈拉德" />
+
+    <string id="taom_str_neutral_term_for_culture.aserai" text="哈拉德林人" />
+
+    <string id="taom_str_faction_official.sturgia" text="河谷镇贵族" />
+
+    <string id="taom_str_faction_official.sturgia_f" text="河谷镇女贵族" />
+
+    <string id="taom_str_faction_ruler.sturgia" text="国王" />
+
+    <string id="taom_str_faction_ruler.sturgia_f" text="女王" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.sturgia" text="国王,{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.sturgia" text="国王{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.sturgia" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.sturgia" text="巴丁" />
+
+    <string id="taom_str_short_term_for_faction.sturgia" text="河谷镇" />
+
+    <string id="taom_str_faction_formal_name_for_culture.sturgia" text="河谷镇王国" />
+
+    <string id="taom_str_faction_informal_name_for_culture.sturgia" text="河谷镇" />
+
+    <string id="taom_str_neutral_term_for_culture.sturgia" text="巴丁人" />
+
+    <string id="taom_str_faction_official.dolguldur" text="多尔哥多的仆从" />
+
+    <string id="taom_str_faction_official.dolguldur_f" text="多尔哥多的仆从" />
+
+    <string id="taom_str_faction_ruler.dolguldur" text="监察官" />
+
+    <string id="taom_str_faction_ruler.dolguldur_f" text="监察官" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.dolguldur" text="监察官,{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.dolguldur" text="监察官" />
+
+    <string id="taom_str_faction_noble_name_with_title.dolguldur" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.dolguldur" text="哥多利亚" />
+
+    <string id="taom_str_short_term_for_faction.dolguldur" text="多尔哥多" />
+
+    <string id="taom_str_faction_formal_name_for_culture.dolguldur" text="多尔哥多军队" />
+
+    <string id="taom_str_faction_informal_name_for_culture.dolguldur" text="多尔哥多" />
+
+    <string id="taom_str_neutral_term_for_culture.dolguldur" text="多尔哥多的仆从" />
+
+    <string id="taom_str_faction_official.isengard" text="艾辛格的一名队长" />
+
+    <string id="taom_str_faction_official.isengard_f" text="艾辛格的一名女队长" />
+
+    <string id="taom_str_faction_ruler.isengard" text="白手" />
+
+    <string id="taom_str_faction_ruler.isengard_f" text="白夫人" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.isengard" text="白手，{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.isengard" text="白手{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.isengard" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.isengard" text="艾辛格" />
+
+    <string id="taom_str_short_term_for_faction.isengard" text="艾辛格" />
+
+    <string id="taom_str_faction_formal_name_for_culture.isengard" text="艾辛格军队" />
+
+    <string id="taom_str_faction_informal_name_for_culture.isengard" text="艾辛格" />
+
+    <string id="taom_str_neutral_term_for_culture.isengard" text="艾辛格部队" />
+
+    <string id="taom_str_faction_official.gundabad" text="刚达巴的一名酋长" />
+
+    <string id="taom_str_faction_official.gundabad_f" text="刚达巴的一名女酋长" />
+
+    <string id="taom_str_faction_ruler.gundabad" text="军阀" />
+
+    <string id="taom_str_faction_ruler.gundabad_f" text="女军阀" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.gundabad" text="军阀，{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.gundabad" text="军阀{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.gundabad" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.gundabad" text="刚达巴" />
+
+    <string id="taom_str_short_term_for_faction.gundabad" text="刚达巴" />
+
+    <string id="taom_str_faction_formal_name_for_culture.gundabad" text="刚达巴兽人" />
+
+    <string id="taom_str_faction_informal_name_for_culture.gundabad" text="刚达巴" />
+
+    <string id="taom_str_neutral_term_for_culture.gundabad" text="刚达巴兽人" />
+
+    <string id="taom_str_faction_official.umbar" text="昂巴的一名海盗" />
+
+    <string id="taom_str_faction_official.umbar_f" text="昂巴的一名女海盗" />
+
+    <string id="taom_str_faction_ruler.umbar" text="海盗首领" />
+
+    <string id="taom_str_faction_ruler.umbar_f" text="女海盗首领" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.umbar" text="首领，{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.umbar" text="首领{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.umbar" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.umbar" text="海盗" />
+
+    <string id="taom_str_short_term_for_faction.umbar" text="昂巴" />
+
+    <string id="taom_str_faction_formal_name_for_culture.umbar" text="昂巴海盗" />
+
+    <string id="taom_str_faction_informal_name_for_culture.umbar" text="昂巴" />
+
+    <string id="taom_str_neutral_term_for_culture.umbar" text="海盗" />
+
+    <string id="taom_str_faction_official.gondor" text="一位贵族领主" />
+
+    <string id="taom_str_faction_official.gondor_f" text="一位贵族夫人" />
+
+    <string id="taom_str_faction_ruler.gondor" text="摄政王" />
+
+    <string id="taom_str_faction_ruler.gondor_f" text="摄政夫人" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.gondor" text="{?RULER.GENDER}摄政夫人{?}摄政王{\?}{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.gondor" text="{?RULER.GENDER}摄政夫人{?}摄政王{\?}{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.gondor" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.gondor" text="刚铎的" />
+
+    <string id="taom_str_short_term_for_faction.gondor" text="刚铎人" />
+
+    <string id="taom_str_faction_formal_name_for_culture.gondor" text="刚铎" />
+
+    <string id="taom_str_faction_informal_name_for_culture.gondor" text="刚铎人" />
+
+    <string id="taom_str_neutral_term_for_culture.gondor" text="刚铎人" />
+
+    <string id="taom_str_faction_official.mordor" text="索伦的一名上尉" />
+
+    <string id="taom_str_faction_official.mordor_f" text="黑暗魔君的一名仆从" />
+
+    <string id="taom_str_faction_ruler.mordor" text="黑暗魔君" />
+
+    <string id="taom_str_faction_ruler.mordor_f" text="黑暗女王" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.mordor" text="{?RULER.GENDER}黑暗女王{?}黑暗魔君{\?}{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.mordor" text="{?RULER.GENDER}黑暗女王{?}黑暗魔君{\?}{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.mordor" text="{?RULER.GENDER}典狱长{?}督军{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.mordor" text="魔多的" />
+
+    <string id="taom_str_short_term_for_faction.mordor" text="魔多" />
+
+    <string id="taom_str_faction_formal_name_for_culture.mordor" text="魔多" />
+
+    <string id="taom_str_faction_informal_name_for_culture.mordor" text="索伦的仆从" />
+
+    <string id="taom_str_neutral_term_for_culture.mordor" text="魔多" />
+
+    <string id="taom_str_faction_official.mirkwood" text="一位森林守护者" />
+
+    <string id="taom_str_faction_official.mirkwood_f" text="一位森林守卫" />
+
+    <string id="taom_str_faction_ruler.mirkwood" text="国王" />
+
+    <string id="taom_str_faction_ruler.mirkwood_f" text="女王" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.mirkwood" text="{?RULER.GENDER}女王{?}国王{\?}{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.mirkwood" text="{?RULER.GENDER}女王{?}国王{\?}{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.mirkwood" text="{?RULER.GENDER}守卫{?}守护者{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.mirkwood" text="森林精灵的" />
+
+    <string id="taom_str_short_term_for_faction.mirkwood" text="森林精灵" />
+
+    <string id="taom_str_faction_formal_name_for_culture.mirkwood" text="幽暗密林王国" />
+
+    <string id="taom_str_faction_informal_name_for_culture.mirkwood" text="林地王国" />
+
+    <string id="taom_str_neutral_term_for_culture.mirkwood" text="森林精灵" />
+
+    <string id="taom_str_faction_official.lothlorien" text="罗斯洛立安的一位守护者" />
+
+    <string id="taom_str_faction_official.lothlorien_f" text="罗斯洛立安的一位守卫" />
+
+    <string id="taom_str_faction_ruler.lothlorien" text="领主" />
+
+    <string id="taom_str_faction_ruler.lothlorien_f" text="夫人" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.lothlorien" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.lothlorien" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.lothlorien" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.lothlorien" text="加拉德林" />
+
+    <string id="taom_str_short_term_for_faction.lothlorien" text="精灵" />
+
+    <string id="taom_str_faction_formal_name_for_culture.lothlorien" text="金色森林" />
+
+    <string id="taom_str_faction_informal_name_for_culture.lothlorien" text="罗斯洛立安" />
+
+    <string id="taom_str_neutral_term_for_culture.lothlorien" text="金色森林的精灵" />
+
+    <string id="taom_str_faction_official.rivendell" text="瑞文戴尔的学者" />
+
+    <string id="taom_str_faction_official.rivendell_f" text="瑞文戴尔的治疗师" />
+
+    <string id="taom_str_faction_ruler.rivendell" text="领主" />
+
+    <string id="taom_str_faction_ruler.rivendell_f" text="夫人" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.rivendell" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.rivendell" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.rivendell" text="{?RULER.GENDER}夫人{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.rivendell" text="瑞文戴尔的" />
+
+    <string id="taom_str_short_term_for_faction.rivendell" text="精灵" />
+
+    <string id="taom_str_faction_formal_name_for_culture.rivendell" text="最后的安乐窝" />
+
+    <string id="taom_str_faction_informal_name_for_culture.rivendell" text="瑞文戴尔" />
+
+    <string id="taom_str_neutral_term_for_culture.rivendell" text="瑞文戴尔的精灵" />
+
+    <string id="taom_str_culture_description.empire" text="登兰德人是西部高地的凶悍山民,他们是一个骄傲而古老的民族。他们对洛汗人怀有怨恨,以游击战术和顽强的战斗精神而闻名。在强大领袖的统一下,他们为生存而战,为夺回他们认为理应属于自己的土地而战。" />
+
+    <string id="taom_str_culture_description.vlandia" text="洛汗人被称为骠骑之王,是洛汗王国的骄傲而高贵的民族,这片土地拥有广阔的平原和起伏的丘陵。他们以骑术高超和无与伦比的骑兵而闻名,这些骑兵构成了他们军事力量的脊梁。洛汗人生活在一个紧密团结的封建社会中,由国王和忠诚的贵族领导,他们受荣誉和传统的束缚,保护自己的土地和人民。他们极为独立,将自由视为至高无上,他们的战士接受训练,手持长矛、利剑和弓箭,全都骑在强大的战马上作战。" />
+
+    <string id="taom_str_culture_description.battania" text="坎德的瓦瑞格人是来自东方草原的残酷好战民族。他们以精通马术和致命的战车而闻名,带来了独特而残暴的战争方式。瓦瑞格人与索伦结盟,为权力和掠夺而战,在中土世界散播恐惧。" />
+
+    <string id="taom_str_culture_description.khuzait" text="东方人是一个骄傲而纪律严明的民族,来自魔多以外的广阔东方大地。他们以坚韧和战争技艺而闻名,既是农民也是战士,将农耕传统与凶猛的军事文化融为一体。他们的军队以可怕的骑兵而闻名,身披华丽的盔甲,手持致命的长矛和弓箭。凭借丰富的工艺传统和对同胞的忠诚,东方人在金红相间的鲜艳旗帜下进军,令敌人心生恐惧。他们对索伦的效忠使他们成为一支强大的力量,在他的阴影下团结起来,将自己的统治扩展到整个中土世界。" />
+
+    <string id="taom_str_culture_description.aserai" text="哈拉德林人是南方沙漠的战士,是一个凶猛而坚韧的民族,与索伦结盟。他们以异域战兽和精湛的骑兵而闻名,在深红色的旗帜下进军。他们骄傲且深深扎根于自己的传统,将沙漠的野蛮带到中土世界的战场。" />
+
+    <string id="taom_str_culture_description.sturgia" text="河谷城的巴德人是神射手巴德的后裔,是一个骄傲而勤劳的民族,生活在孤山的阴影下。他们以技艺高超的弓箭手和纪律严明的战士而闻名,守卫着他们繁荣的城市和北方的贸易路线。巴德人以强烈的集体意识和荣誉感团结在一起,坚定地对抗威胁他们土地的黑暗。" />
+
+    <string id="taom_str_culture_description.erebor" text="孤山的高贵矮人以其精湛的工艺、坚韧不拔和骄傲而闻名。从孤山的大厅中,他们锻造出强大的武器和无与伦比的美丽宝藏。他们身披锁甲,手持战斧,以坚定的勇气保卫同胞,寻求重拾他们的遗产,并在一切威胁面前保护他们的传承。" />
+
+    <string id="taom_str_culture_description.rivendell" text="瑞文戴尔,最后的安乐窝,是由埃尔隆德领主领导的智慧与美丽的避难所。它坐落在迷雾山脉中,这里的人民是中土世界古老知识的学者和守护者。瑞文戴尔的精灵为那些对抗黑暗的人提供建议和帮助,保存着希望和团结之光。" />
+
+    <string id="taom_str_culture_description.mirkwood" text="幽暗密林的木精灵由瑟兰督伊尔王领导,是这片广阔而神秘森林的守护者。他们以敏捷和精湛的弓术而闻名,融入阴影之中,以精准和优雅的方式出击。他们的领地既美丽又危险,受到战士们的决心和国王永恒智慧的保护。幽暗密林的精灵极为独立,为保护他们的森林免受不断逼近的黑暗而战。" />
+
+    <string id="taom_str_culture_description.lothlorien" text="罗斯洛立安的加拉德林精灵是金色森林的居民,是由凯兰崔尔夫人和凯勒博恩领主领导的空灵而高贵的民族。他们是弓术和林地战争的大师,以无与伦比的技艺守卫着他们的魔法领地。他们对同胞和家园的忠诚坚定不移,他们微妙的魔法将罗斯洛立安保存为希望与光明的圣所,在不断增长的阴影中屹立不倒。" />
+
+    <string id="taom_str_culture_description.isengard" text="艾辛格的军队由白袍萨鲁曼领导,是一支由强兽人和雇佣兵组成的强大力量。在工业之火中锻造,他们的武器和盔甲都是为毁灭而制造。艾辛格的军队以无情的效率进军,一心征服和统治。" />
+
+    <string id="taom_str_culture_description.gundabad" text="刚达巴的兽人居住在雾气笼罩的山脉中,是一支残暴而野蛮的力量。在军阀的领导下,他们对邻近土地发动无休止的袭击。在仇恨和残忍的驱使下,他们在征服北方的征途中毫不留情。" />
+
+    <string id="taom_str_culture_description.umbar" text="昂巴的海盗是航海劫掠者和航海大师,是一个与索伦结盟的残酷而狡猾的民族。他们以快速的船只和无情的海战而闻名,令中土世界的海岸线充满恐惧。他们为自己的航海传统感到骄傲,将海洋的混乱带到陆地上,以黑暗联盟的名义进行劫掠和掠夺。" />
+
+    <string id="taom_str_culture_description.dolguldur" text="多尔哥多的爪牙在死灵法师的指挥下,是一支黑暗而险恶的力量。他们隐藏在幽暗密林的腐化森林中,利用背叛和阴影削弱敌人。兽人、座狼和其他邪恶生物向前进军,在中土世界传播恐惧和腐朽。" />
+
+    <string id="taom_str_culture_description.gondor" text="刚铎人是努门诺尔流亡者的后裔,是中土世界最伟大的人类王国的骄傲管家。刚铎以其高耸的石质堡垒和坚定不移的勇气而闻名,是对抗魔多阴影的希望堡垒。其纪律严明的军队由英勇的步兵、技艺精湛的弓箭手和骑兵组成,是所有自由民族的盾牌。在高贵的宰相和将军的引导下,刚铎人坚守传统,在保护王国及其遗产的职责中毫不动摇。" />
+
+    <string id="taom_str_culture_description.mordor" text="魔多的军队在末日火山的阴影下锻造,是由黑暗魔君索伦指挥的无情黑暗力量。由兽人、巨魔和邪恶的人类组成,他们在燃烧之眼的注视下进军,播种恐惧和毁灭。这些军团被残忍和奴役驱使,挥舞着参差不齐的利刃和粗糙的盔甲。受索伦铁腕意志的束缚,魔多的军队是一股致命的浪潮,试图将整个中土世界吞没在阴影之中。" />
+
+    <string id="taom_str_culture_rich_name.empire" text="登兰德" />
+
+    <string id="taom_str_culture_rich_name.vlandia" text="洛汗" />
+
+    <string id="taom_str_culture_rich_name.battania" text="瓦瑞格" />
+
+    <string id="taom_str_culture_rich_name.khuzait" text="东方人" />
+
+    <string id="taom_str_culture_rich_name.aserai" text="哈拉德人" />
+
+    <string id="taom_str_culture_rich_name.sturgia" text="巴丁人" />
+
+    <string id="taom_str_culture_rich_name.erebor" text="矮人" />
+
+    <string id="taom_str_culture_rich_name.rivendell" text="诺多精灵" />
+
+    <string id="taom_str_culture_rich_name.mirkwood" text="西尔凡精灵" />
+
+    <string id="taom_str_culture_rich_name.lothlorien" text="加拉德林精灵" />
+
+    <string id="taom_str_culture_rich_name.isengard" text="强兽人" />
+
+    <string id="taom_str_culture_rich_name.gundabad" text="刚达巴德兽人" />
+
+    <string id="taom_str_culture_rich_name.umbar" text="昂巴人" />
+
+    <string id="taom_str_culture_rich_name.dolguldur" text="多尔哥多" />
+
+    <string id="taom_str_culture_rich_name.gondor" text="刚铎人" />
+
+    <string id="taom_str_culture_rich_name.mordor" text="魔多" />
+
+    <string id="taom_str_adjective_for_culture.empire" text="登兰德" />
+
+    <string id="taom_str_adjective_for_culture.vlandia" text="洛汗" />
+
+    <string id="taom_str_adjective_for_culture.battania" text="瓦瑞亚格" />
+
+    <string id="taom_str_adjective_for_culture.khuzait" text="东方人" />
+
+    <string id="taom_str_adjective_for_culture.aserai" text="哈拉德" />
+
+    <string id="taom_str_adjective_for_culture.sturgia" text="巴丁" />
+
+    <string id="taom_str_adjective_for_culture.erebor" text="矮人" />
+
+    <string id="taom_str_adjective_for_culture.rivendell" text="瑞文戴尔" />
+
+    <string id="taom_str_adjective_for_culture.mirkwood" text="幽暗密林" />
+
+    <string id="taom_str_adjective_for_culture.lothlorien" text="洛丝萝林" />
+
+    <string id="taom_str_adjective_for_culture.isengard" text="艾辛格" />
+
+    <string id="taom_str_adjective_for_culture.gundabad" text="刚达巴德" />
+
+    <string id="taom_str_adjective_for_culture.umbar" text="昂巴" />
+
+    <string id="taom_str_adjective_for_culture.dolguldur" text="多尔哥多" />
+
+    <string id="taom_str_adjective_for_culture.gondor" text="刚铎" />
+
+    <string id="taom_str_adjective_for_culture.mordor" text="魔多" />
+
+    <string id="taom_str_player_father_name.empire" text="伍尔夫加" />
+
+    <string id="taom_str_player_mother_name.empire" text="弗雷卡" />
+
+    <string id="taom_str_player_father_name.vlandia" text="鲍德雷德" />
+
+    <string id="taom_str_player_mother_name.vlandia" text="莫玟" />
+
+    <string id="taom_str_player_father_name.battania" text="瓦瑞亚格" />
+
+    <string id="taom_str_player_mother_name.battania" text="卡拉" />
+
+    <string id="taom_str_player_father_name.khuzait" text="卡穆尔" />
+
+    <string id="taom_str_player_mother_name.khuzait" text="阿督娜费尔" />
+
+    <string id="taom_str_player_father_name.aserai" text="苏拉丹" />
+
+    <string id="taom_str_player_mother_name.aserai" text="哈莉丝" />
+
+    <string id="taom_str_player_father_name.sturgia" text="巴德" />
+
+    <string id="taom_str_player_mother_name.sturgia" text="西格蕾" />
+
+    <string id="taom_str_player_father_name.erebor" text="德鲁林" />
+
+    <string id="taom_str_player_mother_name.erebor" text="奥瑞娜" />
+
+    <string id="taom_str_player_father_name.rivendell" text="凯勒方" />
+
+    <string id="taom_str_player_mother_name.rivendell" text="吉尔瑞安" />
+
+    <string id="taom_str_player_father_name.mirkwood" text="加利安" />
+
+    <string id="taom_str_player_mother_name.mirkwood" text="露西恩" />
+
+    <string id="taom_str_player_father_name.lothlorien" text="伊洛芬" />
+
+    <string id="taom_str_player_mother_name.lothlorien" text="奥姆罗戴尔" />
+
+    <string id="taom_str_player_father_name.isengard" text="葛力马" />
+
+    <string id="taom_str_player_mother_name.isengard" text="卢尔卡" />
+
+    <string id="taom_str_player_father_name.gundabad" text="纳祖克" />
+
+    <string id="taom_str_player_mother_name.gundabad" text="波利亚" />
+
+    <string id="taom_str_player_father_name.umbar" text="卡斯塔米尔" />
+
+    <string id="taom_str_player_mother_name.umbar" text="贝露希尔" />
+
+    <string id="taom_str_player_father_name.dolguldur" text="格里什马克" />
+
+    <string id="taom_str_player_mother_name.dolguldur" text="杜尔加什" />
+
+    <string id="taom_str_player_father_name.gondor" text="科罗米尔" />
+
+    <string id="taom_str_player_mother_name.gondor" text="芬朵依拉丝" />
+
+    <string id="taom_str_player_father_name.mordor" text="戈巴格" />
+
+    <string id="taom_str_player_mother_name.mordor" text="泽洛布" />
+
+    <string id="taom_peace_news" text="{FACTION1}与{FACTION2}已缔结和平。" />
+
+    <string id="taom_war_news" text="{FACTION1_NAME}的{RULER_NAME}向{FACTION2_NAME}宣战。" />
+
+    <string id="taom_war_news_direct" text="{FACTION1_NAME}向{FACTION2_NAME}宣战。" />
+
+    <string id="taom_siege_party_link" text="{TOWN_NAME}遭到由{FACTION_NAME}的{LORD.LINK}率领的部队围攻!" />
+
+    <string id="taom_siege_party" text="{TOWN_NAME}遭到由{FACTION_NAME}的{LORD.LINK}率领的部队围攻!" />
+
+    <string id="taom_siege_army_link" text="{TOWN_NAME}遭到由{FACTION_NAME}的{LORD.LINK}率领的军队围攻!" />
+
+    <string id="taom_siege_army" text="{TOWN_NAME}遭到由{FACTION_NAME}的{LORD.LINK}率领的军队围攻!" />
+
+    <string id="taom_raid_army" text="{SETTLEMENT}遭到由{FACTION_NAME}的{LORD.LINK}率领的军队劫掠" />
+
+    <string id="taom_raid_party" text="{SETTLEMENT}遭到{FACTION_NAME}的{LORD.LINK}劫掠" />
+
+    <string id="taom_destroy_party" text="{VICTOR_FACTION}的{VICTOR_PARTY}击败了{DEFEATED_FACTION}的{DEFEATED_PARTY}。" />
+
+    <string id="taom_secondary_peace" text="{FACTION1}与{FACTION2}已缔结和平。" />
+
+    <string id="taom_change_faction" text="{CLAN_NAME}氏族已加入{FACTION}。" />
+
+    <string id="taom_merc_contract" text="{CLAN}已签约与{KINGDOM}并肩作战。" />
+
+    <string id="taom_merc_end" text="{CLAN}不再为{KINGDOM}效力。" />
+
+    <string id="taom_minor_intro" text="我是{CONVERSATION_CHARACTER.LINK},来自{FACTION}。" />
+
+    <string id="taom_alliance_desc" text="与{FACTION}结盟" />
+
+    <string id="taom_vassal_rank" text="{FACTION_INFORMAL_NAME}的封臣" />
+
+    <string id="taom_ruler_rank" text="{FACTION_INFORMAL_NAME}的统治者" />
+
+    <string id="taom_noble_rank" text="{FACTION_INFORMAL_NAME}的贵族" />
+
+    <string id="taom_merc_rank" text="为{FACTION_INFORMAL_NAME}作战的佣兵" />
+
+    <string id="taom_answer_call" text="响应{CALLING_KINGDOM}的号召，向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战" />
+
+    <string id="taom_propose_call" text="呼吁{CALLED_KINGDOM}向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战" />
+
+    <string id="taom_raid_resist_peace" text="你已抵达{SETTLEMENT}准备掠夺。一些居民聚集起来抵抗你。掠夺这个村庄将导致与{KINGDOM}开战。" />
+
+    <string id="taom_force_supply_peace" text="当你试图强迫村民交出货物时，一些居民聚集起来抵抗你。与他们战斗将导致与{KINGDOM}开战。" />
+
+    <string id="taom_force_vol_peace" text="当你试图强迫名士交出新兵时，一些居民聚集起来抵抗你。与他们战斗将导致与{KINGDOM}开战。" />
+
+    <string id="taom_raid_noresist_peace" text="你已抵达{SETTLEMENT}准备掠夺。你没有遇到任何抵抗。掠夺这个村庄将导致与{KINGDOM}开战。" />
+
+    <string id="taom_encounter_peace" text="你遭遇了{PARTY}。与他们战斗将导致与{KINGDOM}开战。" />
+
+    <string id="0cdXddA9" text="{KINGDOM1_LINK}与{KINGDOM2_LINK}结成了同盟。" />
+
+    <string id="1rbg3Hz2" text="{FACTION_1}和{FACTION_2}不再是敌人。" />
+
+    <string id="2BVDp7Tg" text="{KINGDOM}将停止{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
+
+    <string id="Lbs2bNlg" text="{KINGDOM}将开始{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
+
+    <string id="jnYwiCAz" text="{KINGDOM}将继续{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
+
+    <string id="faUooB7V" text="{KINGDOM}将不会{POLICY_DESCRIPTION}（{POLICY}）。{POLICY_SUPPORT}" />
+
+    <string id="TauRjAud" text="{FACTION}的{NAME}" />
+
+    <string id="2mVZORaE" text="{FACTION_NAME}的仆从" />
+
+    <string id="6d4ZTvGv" text="{LORD.NAME}是{FACTION_NAME}的{TITLE}，{CLAN_NAME}家族的族长，该家族是王国的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
+
+    <string id="o5AUljbW" text="{LORD.NAME}是{CLAN_NAME}家族的成员，该家族是{FACTION_NAME}的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
+
+    <string id="9Obe3S6L" text="{LORD.FIRSTNAME}是{CLAN_NAME}家族的成员，该家族是来自{FACTION_NAME}领地的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
+
+    <string id="hRfXSdlP" text="{LORD.FIRSTNAME}是{CLAN_NAME}家族的族长，该家族是来自{FACTION_NAME}领地的{CLAN_DESCRIPTION}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
+
+    <string id="0bPb5btR" text="{LORD.NAME}是{CLAN_NAME}家族的成员，该家族是{FACTION_NAME}的{CLAN_DESCRIPTION}，在内战中支持{RULER}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}闻名。" />
+
+    <string id="JuPUG5wX" text="{LORD.NAME}是{FACTION_NAME}的{TITLE},同时也是{CLAN_NAME}的首领,{CLAN_DESCRIPTION},在内战中支持{RULER}。{?LORD.GENDER}她{?}他{\?}以{REPUTATION}而闻名。" />
+
+    <string id="4pmvrnmN" text="{SETTLEMENT_LINK}城堡由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}拥有。{KEEP_INFO}" />
+
+    <string id="q3wD0rbq" text="{SETTLEMENT_LINK}由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}统治。{KEEP_INFO}" />
+
+    <string id="RVDojUOM" text="{SETTLEMENT_LINK}周围的土地主要由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}拥有。{PROSPERITY_INFO}" />
+
+    <string id="UWzQsHA2" text="{SETTLEMENT_LINK}由{FACTION_TERM}的{FACTION_OFFICIAL}{LORD.LINK}统治。{PROSPERITY_INFO}{MORALE_INFO}" />
+
+    <string id="yAOQnMVw" text="你是{FACTION}的人，对吧？这意味着你是我的俘虏。" />
+
+    <string id="YT4OvaAG" text="很好。你可以认为自己处于{FACTION_NAME}的保护之下。你有到明天这个时候完成旅程的时间，否则我们可能会向你索取另一笔费用。" />
+
+    <string id="taom_str_faction_official.erebor" text="矮人贵族" />
+
+    <string id="taom_str_faction_official.erebor_f" text="矮人女贵族" />
+
+    <string id="taom_str_faction_ruler.erebor" text="山下国王" />
+
+    <string id="taom_str_faction_ruler.erebor_f" text="山下女王" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.erebor" text="{?RULER.GENDER}山下女王{?}山下国王{\?}，{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.erebor" text="{?RULER.GENDER}山下女王{?}山下国王{\?}{RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.erebor" text="{?RULER.GENDER}女领主{?}领主{\?}{RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.erebor" text="埃尔波尔" />
+
+    <string id="taom_str_short_term_for_faction.erebor" text="矮人" />
+
+    <string id="taom_str_faction_formal_name_for_culture.erebor" text="山下王国" />
+
+    <string id="taom_str_faction_informal_name_for_culture.erebor" text="埃尔波尔" />
+
+    <string id="taom_str_neutral_term_for_culture.erebor" text="埃尔波尔的矮人" />
+
+    <string id="0aXG8dvJ" text="与{KINGDOM_NAME}议和。不支付任何贡品。" />
+
+    <string id="0CsbbwtN" text="召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战" />
+
+    <string id="0nhqJewP" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下,将{SETTLEMENT}授予{LEADER.NAME}。" />
+
+    <string id="17A2DDgD" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}在{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会支持下,决定与{KINGDOM}议和。" />
+
+    <string id="1aQAmENB" text="{ENEMY_KINGDOM_INFORMAL_NAME}或许强大,但他们的土地富饶,正等待我们夺取。" />
+
+    <string id="1o8vgwTf" text="{KINGDOM}的{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,决定与{OTHER_KINGDOM}签署贸易协定。" />
+
+    <string id="1V8f9vRM" text="一名信使带着来自{PROPOSER_KINGDOM}的结盟提议抵达了你王国的宫廷。" />
+
+    <string id="21yUheIy" text="{KINGDOM_NAME}由崛起的{CULTURE_ADJECTIVE}军阀{RULER.NAME}于{CREATION_YEAR}年建立。" />
+
+    <string id="22LCyCoA" text="我可以向你的王国提供{GOLD}{GOLD_ICON},以对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+
+    <string id="2b1xZGaQ" text="与{KINGDOM_NAME}议和。我们的王国将每日支付{TRIBUTE_AMOUNT}贡金,持续{TRIBUTE_DURATION}天。" />
+
+    <string id="2KaXj3Qa" text="{NEARBY_ENEMY_FACTION}的掠夺迫使许多农民离开家园。拥有土地的人通常会返回,但许多贫困者正在寻找新的定居地。你在村庄外围与几个扎营的人交谈。这里没有土地给他们。他们似乎渴望作为佃农工作,但这总是有可能与村里更老的家族产生矛盾。" />
+
+    <string id="4fXpOe4N" text="一名信使从{CLAN_NAME}前来。他们扣押了{CAPTIVE_HERO.NAME},要求{GOLD_AMOUNT}{GOLD_ICON}的赎金。" />
+
+    <string id="4GgfFDWG" text="与{KINGDOM_NAME}议和" />
+
+    <string id="4JSzHkpt" text="作为{?IS_FEMALE}女王{?}国王{\?},你必须决定是否对{KINGDOM_NAME}宣战" />
+
+    <string id="4z1t75be" text="{CLAN_NAME}的{FIRSTNAME}" />
+
+    <string id="5bBAOHmC" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,将{SETTLEMENT}作为{?RULER.GENDER}她的{?}他的{\?}封地。" />
+
+    <string id="5bza9sDs" text="很遗憾听到这个消息。要知道你找不到比{FACTION_NAME}更好的雇主了。" />
+
+    <string id="5DdbkWLu" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下,决定与{OTHER_KINGDOM}签署贸易协定。" />
+
+    <string id="5L0wDGhR" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,选择不与{KINGDOM}开战。" />
+
+    <string id="5pOKmHsf" text="{RULER.NAME}决定召集{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。这个决定得到了{?RULER.GENDER}她{?}他{\?}半数议会的支持。" />
+
+    <string id="79lEPn1u" text="{ENEMY_KINGDOM_INFORMAL_NAME}占据了我们的祖传土地,并压迫我们的同胞。" />
+
+    <string id="7ouzFASf" text="一名信使送来了{OFFERED_KINGDOM_LEADER.NAME}的信函。{?OFFERED_KINGDOM_LEADER.GENDER}她{?}他{\?}提到你日益增长的声望,并询问你是否愿意考虑成为{OFFERED_KINGDOM_NAME}的封臣。如果你有兴趣,应该亲自去谈。" />
+
+    <string id="8RBZaQKk" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会支持下,选择不与{KINGDOM}开战。" />
+
+    <string id="940TwBPs" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,选择不将{CLAN}家族从{KINGDOM}驱逐。" />
+
+    <string id="9WDK03GW" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}选择不与{KINGDOM}开战。" />
+
+    <string id="aE7OQDMS" text="与{KINGDOM_NAME}结盟。" />
+
+    <string id="aEt1kqxm" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}在{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,决定与{KINGDOM}议和。" />
+
+    <string id="AGdmoIUc" text="{RULER.NAME}违背{?RULER.GENDER}她的{?}他的{\?}议会建议,决定召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
+
+    <string id="amdgO9Hr" text="我是{CONVERSATION_HERO.FIRSTNAME}。我是名为{FACTION_NAME}的远征队的一名谦卑追随者,{DIVINITY}选择了我们在这个时代传达他们的旨意。" />
+
+    <string id="aQAI99d4" text="对{KINGDOM_NAME}宣战" />
+
+    <string id="AThZtg7U" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}在{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会意见均分的情况下,决定不与{KINGDOM}议和。" />
+
+    <string id="AwCnrOan" text="作为{RULER_NAME_AND_TITLE},你必须决定是否花费{CALL_TO_WAR_COST}{GOLD_ICON}召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
+
+    <string id="AWm7Kb9Y" text="{RULER.NAME}决定不召集{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。这个决定得到了{?RULER.GENDER}她{?}他{\?}半数议会的支持。" />
+
+    <string id="awoeb3br" text="{FACTION_LEADER}将决定{KINGDOM_CONSIDERING_PEACE_NAME}是否与{KINGDOM_NAME}议和。你可以选择对此决定的立场。" />
+
+    <string id="AXsbnTBb" text="{QUEST_GIVER.LINK}已与{ENEMYFACTION_INFORMALNAME}议和。你与{QUEST_GIVER.LINK}的协议已被取消。" />
+
+    <string id="az3K3j4C" text="目前我们比{ENEMY_KINGDOM_INFORMAL_NAME}更强大。我们应该趁现在出击。" />
+
+    <string id="B818zx3W" text="你的家族正在与{KINGDOM}和平共处的势力交战。" />
+
+    <string id="bjEN2OzZ" text="由于你对中立村庄的敌意行为,{KINGDOM}向你宣战。" />
+
+    <string id="Bk3Wqy5j" text="{RULER.NAME}决定不响应{CALLING_KINGDOM}的召唤,不会对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
+
+    <string id="BlVjIlZF" text="{FACTION_LEADER}将决定{KINGDOM_CONSIDERING_PEACE_NAME}是否通过支付{TRIBUTE_AMOUNT}贡金(持续{TRIBUTE_DURATION}天)与{KINGDOM_NAME}议和。你可以选择对此决定的立场。" />
+
+    <string id="bMCZ5rWQ" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下,决定不召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
+
+    <string id="bR7MIkFi" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下决定不与{KINGDOM_NAME}结盟。" />
+
+    <string id="bXN2fbcv" text="你的部下将{SETTLEMENT_NAME}的居民视为{SETTLEMENT_CULTURE_NAME}误入歧途的子民而非敌人,因此对他们相对友善。" />
+
+    <string id="bYmc9fi3" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,决定与{KINGDOM_NAME}结盟。" />
+
+    <string id="Cf0amFBD" text="接受{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战" />
+
+    <string id="cRpsjvOM" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会支持下向{KINGDOM}宣战。" />
+
+    <string id="CrzFdo2H" text="是的。是关于与{ENEMYFACTION_INFORMALNAME}的战争。[ib:hip][if:convo_excited]我们需要牵制他们的一些兵力。一支相对较小的部队快速穿过他们的领地并成功袭击他们的村庄应该是个不错的牵制手段。他们的领主将不得不追击袭击者,就无法在其他地方威胁我们了。你似乎是适合这项任务的{?PLAYER.GENDER}勇士{?}人选{\?}。你觉得如何?如果你成功了,你会得到我的感激和丰厚的报酬。" />
+
+    <string id="CswzBb02" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}决定与{KINGDOM}议和。" />
+
+    <string id="d6KbdIWg" text="由于你对中立村庄的敌意行为,{MERCENARY_KINGDOM}终止了与你的契约,{KINGDOM}向你宣战。" />
+
+    <string id="dCDBqYsh" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下选择不与{OTHER_KINGDOM}签订贸易协定。" />
+
+    <string id="dDsJyerw" text="号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+
+    <string id="dEsIQDo3" text="是时候号召我们的盟友{CALLED_KINGDOM}参战了!" />
+
+    <string id="dov3iRlt" text="{ENEMY_KINGDOM_INFORMAL_NAME}的{ENEMY_RULER.NAME}邪恶而危险。我们必须在为时已晚之前对付{?ENEMY_RULER.GENDER}她{?}他{\?}。" />
+
+    <string id="DphlPaF9" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}不顾{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会反对向{KINGDOM}宣战。" />
+
+    <string id="dPOOmYGQ" text="你以为{KINGDOM}的领主和战士们会在他们的人民被绑架时袖手旁观吗?你最好放我们走!" />
+
+    <string id="drZC1Frp" text="{KINGDOM_NAME}由{CULTURE_ADJECTIVE}叛军首领{RULER.NAME}于{CREATION_YEAR}年建立。" />
+
+    <string id="eAhgrwkZ" text="作为{RULER_NAME_AND_TITLE},你必须决定是否与{KINGDOM_NAME}结盟。" />
+
+    <string id="eEmFbQet" text="{RULER.NAME}决定号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。该决定得到了{?RULER.GENDER}她的{?}他的{\?}议会的支持。" />
+
+    <string id="efTah9rk" text="我没有代表{ENEMY_INFORMAL_NAME}议和的权力。我们的议会应该决定是否提议和平,以及条件是什么。" />
+
+    <string id="eiGl6XBr" text="投票决定是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+
+    <string id="EqevKYZD" text="作为{RULER_NAME_AND_TITLE},你必须决定是否以{CALL_TO_WAR_COST}{GOLD_ICON}的代价号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战" />
+
+    <string id="eTylgLCc" text="一位信使从{KINGDOM_NAME}赶来。他们向你提议结盟。你的王国将投票决定是否接受该提议。" />
+
+    <string id="eUWYqwE6" text="{CALLING_KINGDOM}已不再与{KINGDOM_TO_CALL_TO_WAR_AGAINST}交战。" />
+
+    <string id="F7CMsDyG" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,决定不与{KINGDOM_NAME}结盟。" />
+
+    <string id="fcuUcjYV" text="{RULER.NAME}决定不响应{CALLING_KINGDOM}的号召,不对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。该决定得到了{?RULER.GENDER}她的{?}他的{\?}议会的支持。" />
+
+    <string id="FNCq25P1" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下决定与{KINGDOM_NAME}结盟。" />
+
+    <string id="FuNbouTu" text="一位信使从{KINGDOM_NAME}赶来。他们号召你的王国对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。你的王国将投票决定是否接受该提议。" />
+
+    <string id="G3qGLAeQ" text="{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会的意愿,将{CLAN}家族逐出{KINGDOM}。" />
+
+    <string id="gf2Lje7o" text="{RULER.NAME}决定不号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+
+    <string id="GiaTh92Q" text="{QUEST_GIVER.LINK}率领着{QUEST_GIVER_FACTION}的军队,告诉你他们即将进行的军事行动需要粮食补给。{?QUEST_GIVER.GENDER}她{?}他{\?}希望你运送{GRAIN_AMOUNT}袋粮食,虽然不是必须的,但如果你能提供{LIVESTOCK_AMOUNT}头牲畜和{WINE_AMOUNT}桶葡萄酒,{?QUEST_GIVER.GENDER}她{?}他{\?}会非常感激。" />
+
+    <string id="Gj5d9y2g" text="{KINGDOM}的{RULER.NAME}决定与{OTHER_KINGDOM}签订贸易协定。" />
+
+    <string id="gNf0ALKw" text="一位信使从{MAP_FACTION_NAME}赶来。他们向你提议白色和平。你的王国将投票决定是否接受该提议。" />
+
+    <string id="h5eTEYON" text="{RULER.NAME}将{CLAN}家族逐出{KINGDOM}。" />
+
+    <string id="h9bWTLgK" text="是时候加入我们的盟友{KINGDOM_NAME}的战争了。" />
+
+    <string id="IB1xsVEr" text="一位信使从{MAP_FACTION_NAME}赶来。他们向你提议白色和平。你的封臣将决定权留给了你。" />
+
+    <string id="INfHUqxT" text="{RULER.NAME}决定与{KINGDOM_NAME}结盟。" />
+
+    <string id="Ing5gFbO" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}不顾{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会的反对,选择不与{KINGDOM}议和。" />
+
+    <string id="iOmgCFDI" text="投票决定是否与{KINGDOM_NAME}结盟。" />
+
+    <string id="ItueKmqd" text="你的家族现在与{QUEST_GIVER_SETTLEMENT_FACTION}处于战争状态。你与{QUEST_GIVER.LINK}的契约被取消。" />
+
+    <string id="izwKmH2I" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}半数议会成员支持下决定与{KINGDOM_NAME}结盟。" />
+
+    <string id="jaioXYDc" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}半数议会成员支持下决定不与{KINGDOM_NAME}结盟。" />
+
+    <string id="JDfnPFsW" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}决定与{KINGDOM}议和,尽管{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会表示反对。" />
+
+    <string id="JJQ0Hp4m" text="一名信使从{MAP_FACTION_NAME}前来。{MAP_FACTION_NAME}愿意每日支付{GOLD_AMOUNT}{GOLD_ICON}作为贡金以结束你们领地间的战争。你的封臣将决定权交给了你。" />
+
+    <string id="JOe3BC41" text="{ENEMY_KINGDOM_INFORMAL_NAME}目前比我们更强大。我们需要时间来增强实力。" />
+
+    <string id="JQligd8z" text="{KINGDOM}的议会选择{KING.NAME}为新的统治者。" />
+
+    <string id="JY717hPW" text="我没有权力代表{ENEMY_INFORMAL_NAME}议和。应当由{ENEMY_RULER.NAME}和{?ENEMY_RULER.GENDER}她的{?}他的{\?}议会决定是否提议和平,以及条件如何。" />
+
+    <string id="K5w135N9" text="{RULER.NAME}决定不响应{CALLING_KINGDOM}的号召,不会对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。此决定违背了{?RULER.GENDER}她的{?}他的{\?}议会的建议。" />
+
+    <string id="KFHj7ckm" text="作为统治者,你必须决定是否与{KINGDOM_NAME}议和" />
+
+    <string id="KlATZEbb" text="与{KINGDOM_NAME}结成同盟。" />
+
+    <string id="KSrNutEO" text="{FACTION_LEADER}将决定是否对{KINGDOM_NAME}宣战。你可以选择你对此决定的立场。" />
+
+    <string id="Ktpia7Pa" text="{KINGDOM}的{RULER.NAME}将{SETTLEMENT}授予{LEADER.NAME},尽管{?RULER.GENDER}她的{?}他的{\?}议会表示反对。" />
+
+    <string id="l5H9x7Lo" text="{KINGDOM}的{RULER.NAME}将{SETTLEMENT}授予{LEADER.NAME},{?RULER.GENDER}她的{?}他的{\?}议会对此意见均分。" />
+
+    <string id="L802I9W2" text="好,我会加入{FACTION_NAME}。" />
+
+    <string id="L81DPSom" text="作为{RULER_NAME_AND_TITLE},你必须决定你的领地是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_COST}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+
+    <string id="Lalj0T1i" text="{RULER.NAME}响应了{CALLING_KINGDOM}的号召,对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战,尽管{?RULER.GENDER}她的{?}他的{\?}议会表示反对。" />
+
+    <string id="lseJ70y0" text="你的领地正与{KINGDOM_NAME}交战。" />
+
+    <string id="LVX2x6Jf" text="我想终止与{SERVED_FACTION}的契约。" />
+
+    <string id="m69pvful" text="{KINGDOM_LEADER}将决定你的领地是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。你可以选择你对此决定的立场。" />
+
+    <string id="m6OVl6Dg" text="{RULER.NAME}将{CLAN}氏族逐出{KINGDOM},{?RULER.GENDER}她的{?}他的{\?}议会对此事意见均分。" />
+
+    <string id="mfYzCeGR" text="{CHARACTER.NAME}曾是{CHARACTER_FACTION_SHORT}的{TITLE}。{FURTHER_DETAILS}。" />
+
+    <string id="mRrYn2qm" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}选择不与{KINGDOM}议和,得到了{?PEACEMAKER_RULER.GENDER}她的{?}他的{\?}议会的支持。" />
+
+    <string id="MSr3HRa1" text="{QUEST_GIVER.NAME},一位{CLAN}的{?QUEST_GIVER.GENDER}女领主{?}领主{\?},希望氏族的年轻成员接受战争艺术的训练。" />
+
+    <string id="mvkKP6OE" text="{RULER.NAME}选择不将{CLAN}氏族逐出{KINGDOM}。" />
+
+    <string id="MYIgSsfk" text="{RULER.NAME}决定不号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。此决定违背了{?RULER.GENDER}她的{?}他的{\?}议会的建议。" />
+
+    <string id="n4I3pWOn" text="作为统治者,你必须决定是否通过支付{TRIBUTE_AMOUNT}作为贡金持续{TRIBUTE_DURATION}天来与{KINGDOM_NAME}议和。" />
+
+    <string id="Nd0Vhkxn" text="一名信使从{MAP_FACTION_NAME}前来。如果你同意每日支付{GOLD_AMOUNT}{GOLD_ICON}的贡金,他们愿意与你和平。你的封臣将决定权交给了你。" />
+
+    <string id="NFuezpbG" text="{CALLED_KINGDOM}已经在与{KINGDOM_NAME}交战了。" />
+
+    <string id="NjPMRWbW" text="与{KINGDOM_NAME}议和。我们的王国将每日获得{TRIBUTE_AMOUNT}贡金,持续{TRIBUTE_DURATION}天。" />
+
+    <string id="nkvT88r2" text="你没有足够的金钱来号召{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+
+    <string id="NuYzgBZB" text="你做得太过分了。{KINGDOM}不会容忍其商队遭到破坏。" />
+
+    <string id="o4IxXHnB" text="{RULER.NAME}决定不与{KINGDOM_NAME}结成同盟。" />
+
+    <string id="o69PZuce" text="{OLD_LEADER.LINK}不再是{CLAN_NAME}的首领。{NEW_LEADER.LINK}已接任为氏族的统治者。" />
+
+    <string id="O9XpB5Ah" text="作为统治者,你必须决定是否与{KINGDOM}签订贸易协定" />
+
+    <string id="oAw74q3r" text="作为{RULER_NAME_AND_TITLE},你必须决定你的领地是否响应{CALLING_KINGDOM}的号召,以{CALL_TO_WAR_PAYMENT}{GOLD_ICON}的代价对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+
+    <string id="Oe1NdVLe" text="{RULER.NAME}选择不将{CLAN}氏族逐出{KINGDOM},{?RULER.GENDER}她的{?}他的{\?}议会对此事意见均分。" />
+
+    <string id="Oi20UrO2" text="我们与{TARGET_SETTLEMENT_FACTION_INFORMAL_NAME}的战争进展尚可。但有人说,相对于我们付出的鲜血和金银,我们所得甚少。在这个阶段取得一场明确的胜利会大有裨益。我想看到我们的旗帜在{TARGET_SETTLEMENT}的塔楼上飘扬。[ib:normal2][if:convo_thinking]" />
+
+    <string id="OlIWwLbP" text="是的。是关于与{ENEMYFACTION_INFORMALNAME}的战争。[ib:closed][if:convo_pondering]我们需要牵制他们的一部分兵力,最简单的方法就是袭击他们的村庄。这是残酷的事业,会让平民百姓陷入困境,但他们的领主必须追击袭击者,这样就能阻止他们对我们做同样的事。如果你接下这个任务,成功后我会奖赏你。" />
+
+    <string id="Ouj6eSWC" text="{RULER.NAME}决定不响应{CALLING_KINGDOM}的号召,不会对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。此决定得到了{?RULER.GENDER}她的{?}他的{\?}半数议会的支持。" />
+
+    <string id="PneX4Ayw" text="一名信使带着来自{KINGDOM_NAME}的宣战号召抵达你领地的朝廷,号召对{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+
+    <string id="PP7KD7OC" text="{KINGDOM}的{RULER.NAME}决定与{OTHER_KINGDOM}签订贸易协定,{?RULER.GENDER}她的{?}他的{\?}议会对此意见均分。" />
+
+    <string id="PutoRsWp" text="一名信使从{CLAN_NAME}前来。如果你愿意释放{CAPTIVE_HERO.NAME},他们愿意支付{GOLD_AMOUNT}{GOLD_ICON}作为赎金。" />
+
+    <string id="q9DnHVcZ" text="加入{KINGDOM_NAME}的战争不符合我们的利益。" />
+
+    <string id="qa4FlTWS" text="{KINGDOM}的{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,将{SETTLEMENT}作为{?RULER.GENDER}她的{?}他的{\?}封地。" />
+
+    <string id="qgN9o2ip" text="是时候召唤我们的盟友{KINGDOM_NAME}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战了!你的王国将投票决定是否向他们提议参战协议。" />
+
+    <string id="qN3x2usk" text="投票决定是否以{CALL_TO_WAR_COST}{GOLD_ICON}的代价召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
+
+    <string id="R0bJS0pn" text="与{OTHER_FACTION}议和" />
+
+    <string id="r0Kq0aeB" text="{FACTION_LEADER}将决定是否以{CALL_TO_WAR_COST}{GOLD_ICON}的代价召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。你可以选择你对此决定的立场。" />
+
+    <string id="rd229FYG" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下将{CLAN}氏族驱逐出{KINGDOM}。" />
+
+    <string id="RH8mgLEk" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}在{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会半数支持下向{KINGDOM}宣战。" />
+
+    <string id="rJIuQ0hc" text="{KINGDOM}的{RULER.NAME}不顾{?RULER.GENDER}她的{?}他的{\?}议会反对,选择不与{OTHER_KINGDOM}签署贸易协定。" />
+
+    <string id="rtfoywJl" text="向{KINGDOM_NAME}宣战" />
+
+    <string id="sbFboHmV" text="一名信使从{MAP_FACTION_NAME}送来消息。如果你同意每日支付{GOLD_AMOUNT}{GOLD_ICON}贡金,他们愿意与你议和。你的王国将投票决定是否接受这一提议。" />
+
+    <string id="Shk9QCDg" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}向{KINGDOM}宣战。" />
+
+    <string id="SR9FC5jH" text="一名信使从{MAP_FACTION_NAME}带来和平提议。{MAP_FACTION_NAME}将每日支付{GOLD_AMOUNT}{GOLD_ICON}贡金以结束双方的战争。你的王国将投票决定是否接受这一提议。" />
+
+    <string id="syGyjjKE" text="响应{CALLING_KINGDOM}的召唤,向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+
+    <string id="TENbJKpP" text="{OFFERED_KINGDOM_NAME}正向你提供雇佣工作,为你代表他们作战所获得的每点影响力支付{GOLD_AMOUNT}{GOLD_ICON}。你接受吗?" />
+
+    <string id="uc4M4bhG" text="Well, there is something I want. There is one {?TARGET_HERO.GENDER}lady{?}lord{\?} of {TARGET_FACTION} with whom I have a long, long relationship. And not a friendly one. Now that we are at war, as long as {?TARGET_HERO.GENDER}she{?}he{\?} is free, I know my life and lands are not safe. As I say, it won't be easy at all. But whoever manages to do that, bring {?TARGET_HERO.GENDER}her{?}him{\?} back alive to me, having my gratitude aside, will be a very rich man indeed.[if:convo_grave][ib:closed2]" />
+
+    <string id="uiY3ds0Z" text="{RULER.NAME}响应了{CALLING_KINGDOM}的召唤,在{?RULER.GENDER}她的{?}他的{\?}议会半数支持下向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+
+    <string id="UQq4ekeu" text="{KINGDOM}的{RULER.NAME}选择不与{OTHER_KINGDOM}签署贸易协定。" />
+
+    <string id="UtnItjeJ" text="{CALLING_KINGDOM_LINK}召唤{CALLED_KINGDOM_LINK}向{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}宣战。" />
+
+    <string id="uWdj1X2c" text="{CHARACTER.NAME}曾是{CHARACTER_FACTION_SHORT}的成员。{FURTHER_DETAILS}。" />
+
+    <string id="V097rA1v" text="{LORD.FIRSTNAME}是{CLAN_NAME}的首领,这是一个新兴氏族。{?LORD.GENDER}她{?}他{\?}仍在建立{?LORD.GENDER}她的{?}他的{\?}声望。" />
+
+    <string id="vf2pb7Ts" text="{RULER.NAME}响应了{CALLING_KINGDOM}的召唤,向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+
+    <string id="Vg5RmOqL" text="{FACTION_LEADER}将决定{KINGDOM}是否与{OTHER_KINGDOM}签署贸易协定。你可以选择你对此决定的立场。" />
+
+    <string id="VWoHoUin" text="我们与{ENEMY_INFORMAL_NAME}之间不会有和平,就像狼不会与羊议和一样。" />
+
+    <string id="wijL0mTy" text="{FACTION_LEADER}将决定是否与{KINGDOM_NAME}结成同盟。你可以选择你对此决定的立场。" />
+
+    <string id="wsDNxArW" text="{KINGDOM_CONSIDERING_PEACE}的{PEACEMAKER_RULER.NAME}选择不与{KINGDOM}议和。" />
+
+    <string id="xAuejv91" text="{KINGDOM}的{RULER.NAME}决定不与{OTHER_KINGDOM}议和,{?RULER.GENDER}她的{?}他的{\?}议会在此事上意见均分。" />
+
+    <string id="XaZyU3Cn" text="{AGGRESSOR_KINGDOM}的{AGGRESSOR_RULER.NAME}不顾{?AGGRESSOR_RULER.GENDER}她的{?}他的{\?}议会意愿,选择不与{KINGDOM}开战。" />
+
+    <string id="XbYCVCbR" text="我们反对召唤盟友{CALLED_KINGDOM}参战。" />
+
+    <string id="xhK4zMec" text="{RULER.NAME}决定召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战。" />
+
+    <string id="xKev8i5B" text="{CALLING_KINGDOM_LINK}向{CALLED_KINGDOM_LINK}发出的对{KINGDOM_TO_CALL_TO_WAR_AGAINST_LINK}开战的召唤已结束。" />
+
+    <string id="xM97H0oR" text="投票决定是否向{KINGDOM_NAME}宣战。" />
+
+    <string id="yBL3TzXw" text="{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下选择不将{CLAN}氏族驱逐出{KINGDOM}。" />
+
+    <string id="yUYNlQhU" text="很好,我会让手下起草一份简单的契约。我代表{KINGDOM_FORMAL_NAME}欢迎你。愿你的剑能很好地对付我们的敌人。" />
+
+    <string id="Zckbdm4Z" text="{KINGDOM}的{RULER.NAME}在{?RULER.GENDER}她的{?}他的{\?}议会支持下将{SETTLEMENT}作为{?RULER.GENDER}她的{?}他的{\?}封地。" />
+
+    <string id="zd9sawl9" text="你已经与{KINGDOM_NAME}结盟了。" />
+
+    <string id="zXuo0Wbj" text="与{KINGDOM}签署贸易协定" />
+
+    <string id="ZZ1oLfEq" text="{RULER.NAME}响应了{CALLING_KINGDOM}的召唤,在{?RULER.GENDER}她的{?}他的{\?}议会支持下向{KINGDOM_TO_CALL_TO_WAR_AGAINST}宣战。" />
+
+    <string id="taom_shaghana_name" text="沙加纳" />
+
+    <string id="taom_shaghana_short_name" text="沙加纳" />
+
+    <string id="taom_shaghana_title" text="沙格哈纳的塔斯克拉兰" />
+
+    <string id="taom_shaghana_ruler_title" text="塔斯克拉尔" />
+
+    <string id="taom_shaghana_desc" text="沙格哈纳是哈拉德的东部领地,那里是烈日灼烧的草原和古老堡垒之地。其九个部落氏族都是凶猛的战士,以誓言和血脉相连,令敢于反抗他们的人胆寒。" />
+
+    <string id="aom_shaghana_name" text="沙格哈纳" />
+
+    <string id="aom_shaghana_desc" text="沙格哈纳人是哈拉德东部草原上凶猛的部落民族,以无情的劫掠者和熟练的骑手而闻名。他们以誓言和氏族相系,效忠于他们的塔斯克拉尔,并从他们烈日炙烤的堡垒中为索伦的黑暗计划效力。" />
+
+    <string id="aom_lord_SH1_1_name" text="扎尔坎" />
+
+    <string id="aom_lord_SH2_1_name" text="拉希姆" />
+
+    <string id="aom_lord_SH3_1_name" text="塔丁" />
+
+    <string id="aom_lord_SH4_1_name" text="纳赫尔" />
+
+    <string id="aom_lord_SH5_1_name" text="亚祖尔" />
+
+    <string id="aom_lord_SH6_1_name" text="卡赞" />
+
+    <string id="aom_lord_SH7_1_name" text="哈鲁兹" />
+
+    <string id="aom_lord_SH8_1_name" text="法伦" />
+
+    <string id="aom_lord_SH9_1_name" text="萨鲁兹" />
+
+    <string id="aom_clan_shaghana_1_name" text="埃扎尔基亚" />
+
+    <string id="aom_clan_shaghana_2_name" text="库玛拉克尼斯" />
+
+    <string id="aom_clan_shaghana_3_name" text="泰伊玛卡" />
+
+    <string id="aom_clan_shaghana_4_name" text="扎亚克努里" />
+
+    <string id="aom_clan_shaghana_5_name" text="塞拉尔克斯" />
+
+    <string id="aom_clan_shaghana_6_name" text="乌扎雷斯" />
+
+    <string id="aom_clan_shaghana_7_name" text="阿拉拉宁" />
+
+    <string id="aom_clan_shaghana_8_name" text="巴努甘德" />
+
+    <string id="aom_clan_shaghana_9_name" text="阿卡梅斯" />
+
+    <string id="aom_sh_notable_0" text="精明的沙格哈纳商人" />
+
+    <string id="aom_sh_notable_0b" text="沙格哈纳香料商" />
+
+    <string id="aom_sh_notable_1" text="沙格哈纳商队主人" />
+
+    <string id="aom_sh_notable_1b" text="东部草原商人" />
+
+    <string id="aom_sh_notable_2" text="沙格哈纳丝绸商人" />
+
+    <string id="aom_sh_notable_2b" text="哈拉德草原商人" />
+
+    <string id="aom_sh_notable_3" text="沙格哈纳兑换商" />
+
+    <string id="aom_sh_notable_3b" text="东方货物经纪人" />
+
+    <string id="aom_sh_notable_4" text="沙格哈纳集市管理者" />
+
+    <string id="aom_sh_notable_4b" text="狡诈的沙格哈纳商人" />
+
+    <string id="aom_sh_notable_5" text="沙格哈纳太阳祭司" />
+
+    <string id="aom_sh_notable_6" text="沙格哈纳部落长老" />
+
+    <string id="aom_sh_notable_7" text="沙格哈纳传统守护者" />
+
+    <string id="aom_sh_notable_8" text="沙格哈纳金属工匠" />
+
+    <string id="aom_sh_notable_9" text="沙格哈纳武器工匠" />
+
+    <string id="aom_sh_notable_gl1" text="沙格哈纳执行者" />
+
+    <string id="aom_sh_notable_10" text="沙格哈纳黑帮头目" />
+
+    <string id="aom_sh_notable_11" text="沙格哈那掠夺者头目" />
+
+    <string id="aom_sh_notable_gl4" text="沙格哈那帮派酋长" />
+
+    <string id="aom_sh_notable_12" text="沙格哈那街头老大" />
+
+    <string id="aom_sh_notable_13" text="沙格哈那黑市商人" />
+
+    <string id="aom_sh_notable_21" text="沙格哈那地主" />
+
+    <string id="aom_sh_notable_22" text="沙格哈那牧群主人" />
+
+    <string id="aom_sh_headman_1" text="沙格哈那村长" />
+
+    <string id="aom_sh_headman_2" text="沙格哈那长老村长" />
+
+    <string id="aom_sh_headman_3" text="沙格哈那村庄长老" />
+
+    <string id="taom_abanissa_name" text="阿巴尼萨" />
+
+    <string id="taom_abanissa_short_name" text="阿巴尼萨" />
+
+    <string id="taom_abanissa_title" text="阿巴尼萨的查贾潘" />
+
+    <string id="taom_abanissa_ruler_title" text="查贾潘" />
+
+    <string id="taom_abanissa_desc" text="阿巴尼萨位于哈拉德的最南方,是一个充满潮湿丛林和古老石造王朝的国度。阿巴尼萨的伟大家族统领着可怕的战兽和训练有素的战士军队,他们的权力只服从于索伦本人。" />
+
+    <string id="aom_abanissa_name" text="阿巴尼萨" />
+
+    <string id="aom_abanissa_desc" text="阿巴尼萨的伟大家族统治着哈拉德的最南方,这是一片拥有潮湿丛林、古老石造宫殿和高耸战兽的土地。他们的军队在家族旗帜下行军,在南方诸地赢得尊敬与恐惧。" />
+
+    <string id="aom_lord_AB1_1_name" text="法克萨尔" />
+
+    <string id="aom_lord_AB2_1_name" text="霍谢德" />
+
+    <string id="aom_lord_AB3_1_name" text="瓦斯纳尔" />
+
+    <string id="aom_lord_AB4_1_name" text="戈拉泽" />
+
+    <string id="aom_lord_AB5_1_name" text="阿扎丹" />
+
+    <string id="aom_lord_AB6_1_name" text="阿尔塔什" />
+
+    <string id="aom_lord_AB7_1_name" text="阿尔达赫" />
+
+    <string id="aom_lord_AB8_1_name" text="提尔达" />
+
+    <string id="aom_clan_abanissa_1_name" text="法克沙兰家族" />
+
+    <string id="aom_clan_abanissa_2_name" text="霍谢德哈玛家族" />
+
+    <string id="aom_clan_abanissa_3_name" text="瓦斯纳拉德家族" />
+
+    <string id="aom_clan_abanissa_4_name" text="戈拉泽汉家族" />
+
+    <string id="aom_clan_abanissa_5_name" text="阿扎达弗罗赞家族" />
+
+    <string id="aom_clan_abanissa_6_name" text="阿尔塔克沙萨家族" />
+
+    <string id="aom_clan_abanissa_7_name" text="阿尔达切兰家族" />
+
+    <string id="aom_clan_abanissa_8_name" text="提尔达哈纳家族" />
+
+    <string id="aom_ab_notable_0" text="极南哈拉德王朝掮客" />
+
+    <string id="aom_ab_notable_0b" text="阿巴尼萨象牙商人" />
+
+    <string id="aom_ab_notable_1" text="阿巴尼萨商队领主" />
+
+    <string id="aom_ab_notable_1b" text="极南哈拉德香料商人" />
+
+    <string id="aom_ab_notable_2" text="阿巴尼萨黄金商人" />
+
+    <string id="aom_ab_notable_2b" text="家族总管商人" />
+
+    <string id="aom_ab_notable_3" text="阿巴尼萨宝石切割掮客" />
+
+    <string id="aom_ab_notable_3b" text="极南哈拉德丝绸商人" />
+
+    <string id="aom_ab_notable_4" text="阿巴尼萨市场监督官" />
+
+    <string id="aom_ab_notable_4b" text="狡猾的阿巴尼萨代理人" />
+
+    <string id="aom_ab_notable_5" text="阿巴尼萨大祭司" />
+
+    <string id="aom_ab_notable_6" text="阿巴尼萨神殿守护者" />
+
+    <string id="aom_ab_notable_7" text="远哈拉德仪式大师" />
+
+    <string id="aom_ab_notable_8" text="阿巴尼萨工艺大师" />
+
+    <string id="aom_ab_notable_9" text="远哈拉德盔甲匠" />
+
+    <string id="aom_ab_notable_gl1" text="阿巴尼萨家族执行者" />
+
+    <string id="aom_ab_notable_10" text="阿巴尼萨暗影领主" />
+
+    <string id="aom_ab_notable_11" text="远哈拉德战帮首领" />
+
+    <string id="aom_ab_notable_gl4" text="阿巴尼萨帮派族长" />
+
+    <string id="aom_ab_notable_12" text="阿巴尼萨区域头目" />
+
+    <string id="aom_ab_notable_13" text="远哈拉德走私之王" />
+
+    <string id="aom_ab_notable_21" text="阿巴尼萨庄园领主" />
+
+    <string id="aom_ab_notable_22" text="阿巴尼萨种植园主" />
+
+    <string id="aom_ab_headman_1" text="阿巴尼萨村长" />
+
+    <string id="aom_ab_headman_2" text="阿巴尼萨资深村长" />
+
+    <string id="aom_ab_headman_3" text="阿巴尼萨村中长老" />
+
+    <string id="TAOM_ghilman_name" text="蛇卫" />
+
+    <string id="TAOM_ghilman_short" text="蛇卫" />
+
+    <string id="TAOM_ghilman_text" text="蛇卫是效忠于近哈拉德蛇王的骑兵部队。他们在埃菲尔督阿斯南部的起伏平原上生于马鞍,成长于马背,作为弓骑兵在中土大陆南部诸地无可匹敌。在哈拉德与魔多和平共处的年代里,蛇卫会将其服务出售给哈拉德诸领主以及任何富得起支付黄金酬劳的势力。" />
+
+    <string id="TAOM_legion_name" text="灰衣团" />
+
+    <string id="TAOM_legion_short" text="灰衣团" />
+
+    <string id="TAOM_legion_text" text="灰衣团是登丹人游侠最后的有组织兄弟会,他们是很久以前失去王国的阿尔诺诸王的后裔。他们驰骋于北方各地而无固定家园,在那些已遗忘他们名字的土地上维持和平。虽然他们首先效忠于埃兰迪尔的血脉,但当他们的游历将他们带到文明之地时,也会接受中土大陆各地领主的雇佣。" />
+
+    <string id="TAOM_skolderbrotva_name" text="埃尔波尔斧兵" />
+
+    <string id="TAOM_skolderbrotva_short" text="斧兵" />
+
+    <string id="TAOM_skolderbrotva_text" text="埃尔波尔斧兵是索林国王麾下战役的老兵,他们发现和平时代不适合自己的性情。他们精通矮人大厅的近战技艺——盾墙、短斧、鹤嘴锄——在任何地形上都十分强悍,但在连接埃尔波尔与人类诸国的山隘中尤为出色。他们会接受任何付得起酬劳者的雇佣,但绝不会对埃尔波尔或瑞文戴尔举起斧头。" />
+
+    <string id="TAOM_company_name" text="海盗之刃" />
+
+    <string id="TAOM_company_short" text="海盗" />
+
+    <string id="TAOM_company_text" text="海盗之刃是来自昂巴港口的资深海战士,他们已转向在陆地上出售自己的技能。他们以弩兵身份作战——这是船上战斗的首选武器——在攻城战中如同在颠簸的甲板上一样自如。他们的首领是一位满脸伤疤的努门诺尔流亡者,他以铁血纪律约束着他们遵守契约,深知他们的声誉是最宝贵的财富。" />
+
+    <string id="TAOM_beni_zilal_name" text="盲眼会" />
+
+    <string id="TAOM_beni_zilal_short" text="盲眼会" />
+
+    <string id="TAOM_beni_zilal_text" text="盲眼会是一个在哈拉德海岸与深沙漠地带活动的走私者、销赃者和雇佣杀手兄弟会。据说他们是曾服务于一位被遗忘的哈拉德国王的刺客教派的后裔,他们的手段——毒药、阴影以及秘密的利用——至今未变。希望悄悄除掉对手的领主,或需要在不经海关检查的情况下运送货物的商人,都知道该在何处留下一枚金币和一封密信。" />
+
+    <string id="TAOM_wolfskins_name" text="瓦里亚格劫掠者" />
+
+    <string id="TAOM_wolfskins_short" text="劫掠者" />
+
+    <string id="TAOM_wolfskins_text" text="瓦里亚格劫掠者是来自康德草原的年轻瓦里亚格战士战帮,他们在成年初期处于一种仪式性战争状态:不得拥有熟食,不得睡在永久性屋顶之下,不得施以仁慈。虽然大多数人最终会回归氏族的定居生活,但有些人永远不会,这些人组成了劫掠者——在康德道路上作恶并越境劫掠哈拉德和刚多的亡命之徒。" />
+
+    <string id="TAOM_brotherhood_name" text="登兰德掠夺者" />
+
+    <string id="TAOM_brotherhood_short" text="掠夺者" />
+
+    <string id="TAOM_brotherhood_text" text="登兰德掠夺者是一个山地氏族的破碎残余,该氏族曾居住在如今由洛汗人统治的山谷中。他们的祖父辈被从肥沃的土地驱赶到岩石高地,他们将这种怨恨培养成了掠夺者的哲学:从南方人或国王手下那里夺取的一切,不过是夺回被偷走之物的恢复。实际上他们是强盗,但却是危险的强盗,熟知穿越山地的每一条羊肠小道。" />
+
+    <string id="TAOM_hidden_hand_name" text="魔口的仆从" />
+
+    <string id="TAOM_hidden_hand_short" text="仆从" />
+
+    <string id="TAOM_hidden_hand_text" text="魔口的仆从是巴拉多之眼在黑门之外的触手——渗透在魔多边境各族中的线人、打手和间谍。在索隆的军队尚未抵达之处,这些特工负责收取贡品、镇压异议。他们通过贿赂、勒索和悄无声息的谋杀手段,确保任何反抗黑魔王的阴谋在萌芽之际就被连根拔起、彻底碾碎。" />
+
+    <string id="TAOM_lakepike_name" text="长湖破坏者" />
+
+    <string id="TAOM_lakepike_short" text="破坏者" />
+
+    <string id="TAOM_lakepike_text" text="长湖破坏者栖身于长湖阴暗岸边的芦苇丛和朽烂的旧码头中,远离埃斯加洛斯体面的灯火。他们以假灯笼诱使驳船触礁暗滩为生,然后劫掠货物,通过镇上的销赃渠道出手。尽管湖镇镇长和河谷城商人竭力打击,破坏者在码头区酒馆中有太多朋友,难以被轻易铲除。" />
+
+    <string id="TAOM_embers_name" text="无睑之眼教派" />
+
+    <string id="TAOM_embers_short" text="魔眼教派" />
+
+    <string id="TAOM_embers_text" text="无睑之眼教派是一个根植于黑努门诺尔传统的秘密组织,将索隆尊为神王,相信他再度崛起时将让忠诚者重获荣耀。他们在登兰德的失意者和王国被遗忘的角落中招募成员,许诺神恩和尘世权力。实际上,他们的领袖听命于巴拉多的特工,其单元化结构使任何领主的正义都几乎无法将其根除。" />
+
+    <string id="TAOM_jawwal_name" text="沙漠骑手" />
+
+    <string id="TAOM_jawwal_short" text="沙漠骑手" />
+
+    <string id="TAOM_jawwal_text" text="沙漠骑手是哈拉德腹地深处的游牧沙漠部族,是埃菲尔督阿斯山脉与遥远南方海洋之间无水荒原的主宰。他们沿着只有自己知晓的路线游走,向任何胆敢穿越其领地的商队索取贡品。近哈拉德的定居领主视他们为麻烦;而沙漠骑手则认为这些定居领主是窃贼,偷走了沙漠早已自由赐予的东西。" />
+
+    <string id="TAOM_karakhuzaits_name" text="野蛮东夷" />
+
+    <string id="TAOM_karakhuzaits_short" text="野蛮者" />
+
+    <string id="TAOM_karakhuzaits_text" text="野蛮东夷是鲁恩内海未被征服的草原部族,他们抵抗过每一位试图制服他们的领主——无论是鲁恩酋长、魔多副官,还是河谷城国王。他们在凯尔督因河以东的草原上驰骋,收拢野马、劫掠牲畜,向任何愚蠢到未带武装护卫就试图穿越其草原的商队收取过路费。" />
+
+    <string id="TAOM_forest_people_name" text="督伊甸人" />
+
+    <string id="TAOM_forest_people_short" text="野人" />
+
+    <string id="TAOM_forest_people_text" text="督伊甸人,被人类称为野人或林中野人,是居住在督伊甸森林深处和白色山脉隐秘山谷中的古老民族。他们用火清理土地,在富含灰烬的土壤上种植所需之物,待土地贫瘠后便迁移——这种生活方式是中土世界的定居民族从未理解也从未费心去理解的。督伊甸人不要领主,不纳税赋,只求在森林的寂静中不被打扰。" />
+
+    <string id="TAOM_eleftheroi_name" text="比翁一族" />
+
+    <string id="TAOM_eleftheroi_short" text="比翁人" />
+
+    <string id="TAOM_eleftheroi_text" text="比翁一族是居住在迷雾山脉与幽暗密林之间安都因河谷的伟大林中居民,由比翁血脉的换皮者领导。他们不允许任何半兽人穿越其领地,在卡洛克浅滩收取通行费以资助守卫,不向中土世界的任何国王效忠。虽然他们会与精灵和矮人交易交谈,但任何未经许可穿越其森林的军队都会发现,比翁人的牙齿非常大。" />
+
+    <string id="taom_career" text="职业" />
+
+    <string id="taom_alliance_lore" text="传说阵营" />
+
+    <string id="taom_alliance_blocked" text="这些王国永远无法结盟。" />
+
+    <string id="taom_war_blocked" text="这些王国被牢不可破的盟约束缚。" />
+
+    <string id="taom_wotr_no_peace" text="魔戒圣战正在肆虐。此时不可能有和平。" />
+
+    <string id="taom_precompile_shaders" text="预编译着色器" />
+
+    <string id="taom_precompile_hint" text="预编译着色器以消除游戏内卡顿。安装TAOM后运行一次。" />
+
+    <string id="taom_main_menu_new_game" text="进入人类纪元" />
+
+    <string id="taom_career_screen_title" text="职业" />
+
+    <string id="taom_career_done" text="完成" />
+
+    <string id="taom_career_ability_label" text="职业能力" />
+
+    <string id="taom_career_tier1" text="第一阶" />
+
+    <string id="taom_career_tier2" text="第二阶" />
+
+    <string id="taom_career_tier3" text="第三阶" />
+
+    <string id="taom_career_free_points" text="可用点数:{COUNT}" />
+
+    <string id="taom_hideout_desc_dunland" text="在登兰德的林木丘陵之间,你发现了一处简陋的营地,兽皮帐篷和粗糙的栅栏半隐藏在一片空地中。" />
+    <string id="taom_hideout_desc_gundabad" text="在迷雾山脉的峭壁之下,你发现了一个肮脏的巢穴,贡达巴德半兽人在裸露的岩石中挖出洞窟盘踞于此。" />
+    <string id="taom_hideout_desc_harad" text="在哈拉德的沙丘之间,你遇到了一处伪装的南方人营地,聚集在一口隐蔽的沙漠水井周围。" />
+    <string id="taom_hideout_desc_rhun" text="在洛汗广阔的草原上,你辨认出东夷掠袭者的篷车和兽皮帐篷,他们在一处沟壑中扎营。" />
+    <string id="taom_hideout_desc_umbar" text="沿着南方海岸,你发现了一处隐蔽的海湾,昂巴海盗的黑船正停泊于此。" />
+  </strings>
+
+</base>
+
