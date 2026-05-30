@@ -1,5 +1,19 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-05-30
+
+### chore(engine): v1.4.5 hotfix review — re-decompile, diff, impact analysis (zero TAOM impact)
+
+Bannerlord shipped a **same-version-string hotfix** (every TaleWorlds DLL rebuilt 2026-05-30 06:52; `Version.xml` still reads `v1.4.5`). Re-decompiled the installed client and diffed against the pre-hotfix baseline (preserved at `E:\Decompiled_Bannerlord_pre_hotfix_20260529`).
+
+- **Engine delta: 10 managed types changed, all body-only** (`ExplainedNumber`, `Clan`, `MobileParty`, `Hero`, `MBSaveLoad`, `Utilities`×2, `Mission`, `MissionState`, `Agent`) — `decl_changes=0` on every file (no signature/member add/remove). **Zero TAOM impact:** TAOM builds clean against the new DLLs; all 3 transpiler targets + `NavigationCacheAdapter`/`MapConversationTableau` unchanged; the `ExplainedNumber` change is in the `StatExplainer` display path only, so the `74e31ee` recruitment-cost fix (`AddFactor`/`LimitMin`/`includeDescriptions:false`) is unaffected. Scene/XML audits clean (0 missing scene refs, all map_indices covered). Full write-up: [docs/migration/api-diff-v1.4.5-hotfix-2026-05-30.md](docs/migration/api-diff-v1.4.5-hotfix-2026-05-30.md).
+- **Refreshed** `docs/reference/taleworlds-api-snapshot/patch-targets.md` against the new DLLs (`snapshot_api_surface.ps1 -Check` reproduces, exit 0). One-line change: alliance-permission target attribution `DefaultKingdomDecisionPermissionModel` → abstract base `KingdomDecisionPermissionModel` — an attribution correction, not a hotfix change.
+- **Caveat:** `TaleWorlds.Native.dll` (native) also rebuilt; NativeSkinFixes byte-pattern scans it at install time — managed-clean ≠ native-clean. Flagged for the next in-game smoke test (watch for the NativeSkinFixes degraded-state banner).
+
+### fix(tests): binding-gate base-method lookup walks the inheritance chain (pre-existing false-positive)
+
+Found while running `/verify-bindings` for the hotfix review (NOT hotfix-caused). `GameModelOverrideBindingTests` resolved the *base* method on `DefaultKingdomDecisionPermissionModel` with `BindingFlags.DeclaredOnly`, but `IsStartAllianceDecisionAllowedBetweenKingdoms` is declared on the abstract base `KingdomDecisionPermissionModel` (Default inherits it without re-declaring). The override is valid — TAOM compiles + dispatches correctly — so the 2 gate failures were false positives (verified version-independent: the method is on the abstract base in both pre- and post-hotfix decompiles). Added a `BaseLookup` flag set without `DeclaredOnly` for base-method resolution; a genuinely removed base virtual still resolves to null, so real drift is still caught. Binding gate now 35/35 green. The `BindingVerification` category is excluded from the default `dotnet test` run, which is why the full suite never surfaced it.
+
 ## 2026-05-29
 
 ### feat(bandit): themed LOTR hideout descriptions — replace vanilla "(Undefined hideout type)"
@@ -23,15 +37,18 @@ The bandit world felt sparse at campaign start because `TaomBanditDensityModel` 
 `Research: DefaultBanditDensityModel, BanditSpawnCampaignBehavior.SpawnHideoutsAndBanditsPartiallyOnNewGame/AddNewHideouts/SpawnBanditsAroundHideout`
 `Save-compat: new MCM property + JSON field, read with ?? default; no save-state change`
 
-### fix(ui): MCM mod-options screen rendered bottom-to-top — UIExtenderEx flip to VerticalTopToBottom
+### fix(ui): MCM mod-options screen rendered bottom-to-top — Patch41 Harmony flip on MCM's loader
 
-The in-game MCM (Mod Configuration Menu) options screen rendered TAOM's settings inverted: group headers appeared *below* their members, members in reverse `Order`, and groups in reverse `GroupOrder` (Fief Management `GroupOrder=26` above Messengers `GroupOrder=25`). Decoding the panel bottom-to-top reproduced the correct declared order — a wholesale vertical flip.
+The in-game MCM (Mod Configuration Menu) options screen rendered every mod's settings inverted: group headers appeared *below* their members, members in reverse `Order`, and groups in reverse `GroupOrder` (Fief Management `GroupOrder=26` above Messengers `GroupOrder=25`). Decoding the panel bottom-to-top reproduced the correct declared order — a wholesale vertical flip.
 
-**Root cause:** the same v1.4.0 engine regression fixed for TAOM's own prefabs in `ad836d1` (`VerticalBottomToTop` now renders bottom-to-top), but this time inside the **MCM library's embedded prefabs** — `SettingsView.xml` + `SettingsPropertyGroupView.xml`, embedded as resources in `Bannerlord.MBOptionScreen.v1.4.x.dll` (MCM v5.11.4). The `ad836d1` mass-flip never saw them because it grepped only TAOM's loose `Main/_Module/GUI/Prefabs/` XML. The C# `[SettingProperty(Order=…)]` / `[SettingPropertyGroup(GroupOrder=…)]` values in `TaomSettings.cs` were correct and were **not** changed.
+**Root cause:** the same v1.4.0 engine regression fixed for TAOM's own prefabs in `ad836d1` (`VerticalBottomToTop` now renders bottom-to-top), but inside the **MCM library's embedded prefabs** — `SettingsView.xml`, `SettingsPropertyGroupView.xml`, `ModOptionsView.xml`, `ModOptionsPageView.xml`, embedded as resources in `Bannerlord.MBOptionScreen.v1.4.x.dll` (MCM v5.11.4). The `ad836d1` mass-flip never saw them (it grepped only TAOM's loose `Main/_Module/GUI/Prefabs/` XML). The C# `Order`/`GroupOrder` values in `TaomSettings.cs` were correct and were **not** changed.
 
-**Fix:** new `Main/Features/Mcm/UI/McmSettingsLayoutPrefab.cs` — 4 `PrefabExtensionSetAttributePatch` classes (mirroring `TimeAcceleration/UI/TimeAccelerationPrefab.cs`) that rewrite `LayoutImp.LayoutMethod` → `VerticalTopToBottom` on the 4 offending ListPanels: `SettingsView` group stack (`@Id='SettingPropertiesList'`), and `SettingsPropertyGroupView`'s outer container (`@IsVisible='@IsGroupVisible'`), members list (`@DataSource='{SettingProperties}'`), and subgroups list (`@DataSource='{SettingPropertyGroups}'`). Auto-registered via the existing `_uiExtender.Register(...)` assembly scan in `SubModule.cs` — no IoC/SubModule/csproj change. Idempotent and fail-safe (no-ops if a future MCM corrects its prefab or restructures it). Global to the MCM screen, so every TAOM settings group benefits.
+**Why an earlier UIExtenderEx `PrefabExtensionSetAttributePatch` attempt failed (verified by decompiling MCM + UIExtenderEx + the engine prefab system):** MCM does not load these prefabs through the engine's disk-file `WidgetPrefab.LoadFrom` — it reads the embedded XML and registers it via `WidgetFactoryManager.CreateAndRegister(name, XmlDocument)`, which builds the prefab through UIExtenderEx's `LoadFromDocument` **reverse-patch**. That path omits the `ProcessMovie` step where `[PrefabExtension]` patches are applied, so a PrefabExtension on these movies is a structural no-op (only disk-file prefabs like vanilla `MapBar` get patched). No movie-name or registration-order change can route an embedded prefab through the patched loader.
 
-`Not-tested: UIExtenderEx prefab patch (requires live game)` — needs in-game confirmation that UIExtenderEx intercepts MCM-owned movie loads (well-established BUTR pattern; fallback is a loose shadow-prefab override if it doesn't take). Build clean.
+**Fix:** `Patch41_McmLayoutFix` — a thin Harmony **Postfix** on `Bannerlord.UIExtenderEx.ResourceManager.WidgetFactoryManager.CreateAndRegister(string, XmlDocument)` that mutates the `XmlDocument` in place before its lazy parse, flipping every `LayoutImp.LayoutMethod`/`StackLayout.LayoutMethod` `VerticalBottomToTop`→`VerticalTopToBottom`. Pure XML logic in `Main/Features/Mcm/McmLayoutRewriter.cs` (17 unit tests); thin entry in `Main/Features/Mcm/Hooks/Patch41_McmLayoutFix.cs`; registered in `SubModule.OnSubModuleLoad` (before MCM's `Inject()` at `OnBeforeInitialModuleScreenSetAsRoot`). Scoped to MCM's option-prefab names; idempotent and fail-safe (try/catch-swallowed so a cosmetic fix can never block MCM screen registration). The dead UIExtenderEx attempt (`Mcm/UI/McmSettingsLayoutPrefab.cs`) was deleted. Self-scoping: vanilla + TAOM loose prefabs use a different loader entirely and are untouched.
+
+`Not-tested: Harmony Postfix on MCM's loader (requires live game restart — MCM's Inject() runs once per process at startup)`. Build clean; full suite 2686 passed.
+`Research: WidgetFactoryManager.CreateAndRegister, WidgetPrefabPatch.LoadFromDocument, MCM ResourceInjector.Load/DefaultResourceInjector.Inject, TaleWorlds.GauntletUI.PrefabSystem.WidgetPrefab.LoadFrom`
 
 ### docs(rot): fix 1 dead link + 3 genuinely-stale version refs (lint_docs.py)
 
