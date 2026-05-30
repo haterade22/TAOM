@@ -57,6 +57,7 @@ public class BanditScalingConfigProvider : IBanditScalingConfigProvider
             MaxHideoutsPerFactionCap = parsed.MaxHideoutsPerFactionCap,
             MaxPartiesPerHideoutCap = parsed.MaxPartiesPerHideoutCap,
             MinPartiesToInfest = parsed.MinPartiesToInfest,
+            InitialHideoutsPerFaction = parsed.InitialHideoutsPerFaction,
         };
 
         var defaults = new BanditScalingConfig();
@@ -101,6 +102,13 @@ public class BanditScalingConfigProvider : IBanditScalingConfigProvider
         {
             _logger.LogWarning($"BanditScalingConfigProvider: minPartiesToInfest={sanitized.MinPartiesToInfest} outside [1,{sanitized.MaxPartiesPerHideoutCap}], reverting to default {defaults.MinPartiesToInfest}");
             sanitized.MinPartiesToInfest = defaults.MinPartiesToInfest;
+            rejected = true;
+        }
+
+        if (sanitized.InitialHideoutsPerFaction < 1 || sanitized.InitialHideoutsPerFaction > 30)
+        {
+            _logger.LogWarning($"BanditScalingConfigProvider: initialHideoutsPerFaction={sanitized.InitialHideoutsPerFaction} outside [1,30], reverting to default {defaults.InitialHideoutsPerFaction}");
+            sanitized.InitialHideoutsPerFaction = defaults.InitialHideoutsPerFaction;
             rejected = true;
         }
 

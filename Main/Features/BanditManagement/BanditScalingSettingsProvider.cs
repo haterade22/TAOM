@@ -28,6 +28,9 @@ public sealed class BanditScalingSettingsProvider : IBanditScalingSettingsProvid
     public int MaxPartiesPerHideoutCap =>
         SafeClampInt(TaomSettings.Instance?.BanditMaxPartiesPerHideout, _defaults.MaxPartiesPerHideoutCap, 1, 20);
 
+    public int InitialHideoutsPerFaction =>
+        SafeClampInt(TaomSettings.Instance?.BanditInitialHideoutsPerFaction, _defaults.InitialHideoutsPerFaction, 1, 30);
+
     // No MCM knob for MinPartiesToInfest -- it's a JSON-only advanced tuning value with a strict
     // upper bound derived from the live MCM cap (not the JSON default), so the invariant
     // min <= max holds at runtime even if the user lowers BanditMaxPartiesPerHideout in MCM.

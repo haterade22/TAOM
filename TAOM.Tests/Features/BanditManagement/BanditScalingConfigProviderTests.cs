@@ -49,7 +49,8 @@ public class BanditScalingConfigProviderTests
   ""BossFightCurve"": 2.2,
   ""MaxHideoutsPerFactionCap"": 20,
   ""MaxPartiesPerHideoutCap"": 6,
-  ""MinPartiesToInfest"": 3
+  ""MinPartiesToInfest"": 3,
+  ""InitialHideoutsPerFaction"": 12
 }");
 
         var config = _sut.GetConfig();
@@ -60,6 +61,7 @@ public class BanditScalingConfigProviderTests
         Assert.AreEqual(20, config.MaxHideoutsPerFactionCap);
         Assert.AreEqual(6, config.MaxPartiesPerHideoutCap);
         Assert.AreEqual(3, config.MinPartiesToInfest);
+        Assert.AreEqual(12, config.InitialHideoutsPerFaction);
     }
 
     [TestMethod]
@@ -70,9 +72,10 @@ public class BanditScalingConfigProviderTests
         Assert.AreEqual(1.5f, config.DensityCurve, 0.001f);
         Assert.AreEqual(1.5f, config.PartySizeCurve, 0.001f);
         Assert.AreEqual(1.5f, config.BossFightCurve, 0.001f);
-        Assert.AreEqual(15, config.MaxHideoutsPerFactionCap);
-        Assert.AreEqual(5, config.MaxPartiesPerHideoutCap);
-        Assert.AreEqual(2, config.MinPartiesToInfest);
+        Assert.AreEqual(100, config.MaxHideoutsPerFactionCap);
+        Assert.AreEqual(3, config.MaxPartiesPerHideoutCap);
+        Assert.AreEqual(1, config.MinPartiesToInfest);
+        Assert.AreEqual(14, config.InitialHideoutsPerFaction);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("not found")));
     }
 
@@ -160,7 +163,7 @@ public class BanditScalingConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(15, config.MaxHideoutsPerFactionCap);
+        Assert.AreEqual(100, config.MaxHideoutsPerFactionCap);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("maxHideoutsPerFactionCap")));
     }
 
@@ -171,7 +174,7 @@ public class BanditScalingConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(5, config.MaxPartiesPerHideoutCap);
+        Assert.AreEqual(3, config.MaxPartiesPerHideoutCap);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("maxPartiesPerHideoutCap")));
     }
 
@@ -185,8 +188,30 @@ public class BanditScalingConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.AreEqual(2, config.MinPartiesToInfest, "Min must revert when it exceeds max");
+        Assert.AreEqual(1, config.MinPartiesToInfest, "Min must revert when it exceeds max");
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("minPartiesToInfest")));
+    }
+
+    [TestMethod]
+    public void GetConfig_InitialHideoutsZero_RevertsToDefault()
+    {
+        WriteConfig(@"{ ""InitialHideoutsPerFaction"": 0 }");
+
+        var config = _sut.GetConfig();
+
+        Assert.AreEqual(14, config.InitialHideoutsPerFaction);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("initialHideoutsPerFaction")));
+    }
+
+    [TestMethod]
+    public void GetConfig_InitialHideoutsTooHigh_RevertsToDefault()
+    {
+        WriteConfig(@"{ ""InitialHideoutsPerFaction"": 99 }");
+
+        var config = _sut.GetConfig();
+
+        Assert.AreEqual(14, config.InitialHideoutsPerFaction);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("initialHideoutsPerFaction")));
     }
 
     [TestMethod]
@@ -215,7 +240,8 @@ public class BanditScalingConfigProviderTests
         var config = _sut.GetConfig();
 
         Assert.AreEqual(1.5f, config.DensityCurve, 0.001f);
-        Assert.AreEqual(15, config.MaxHideoutsPerFactionCap);
+        Assert.AreEqual(100, config.MaxHideoutsPerFactionCap);
+        Assert.AreEqual(14, config.InitialHideoutsPerFaction);
         _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("Loaded")));
     }
 }

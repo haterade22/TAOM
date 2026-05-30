@@ -21,6 +21,7 @@ public class BanditScalingServiceTests
         _settings.MaxHideoutsPerFactionCap.Returns(15);
         _settings.MaxPartiesPerHideoutCap.Returns(5);
         _settings.MinPartiesToInfest.Returns(2);
+        _settings.InitialHideoutsPerFaction.Returns(14);
 
         _sut = new BanditScalingService(_settings);
     }
@@ -141,6 +142,13 @@ public class BanditScalingServiceTests
     {
         _settings.MinPartiesToInfest.Returns(3);
         Assert.AreEqual(3, _sut.MinPartiesToInfest);
+    }
+
+    [TestMethod]
+    public void InitialHideoutsPerFaction_DelegatesToSettings()
+    {
+        _settings.InitialHideoutsPerFaction.Returns(18);
+        Assert.AreEqual(18, _sut.InitialHideoutsPerFaction);
     }
 
     [TestMethod]

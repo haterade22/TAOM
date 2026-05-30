@@ -50,11 +50,17 @@ A negative or NaN curve floors the multiplier at 1.0 — bandits **cannot** beco
 
 | Surface | Vanilla | TAOM scaling target |
 |---|---|---|
-| Hideouts per bandit faction | 9 max | Up to `BanditMaxHideoutsPerFaction` (default 15) |
-| Bandit parties per hideout | 3 max | Up to `BanditMaxPartiesPerHideout` (default 5) |
+| Hideouts per bandit faction (max) | 9 max | Up to `BanditMaxHideoutsPerFaction` (default 100 → physical hideout count binds first) |
+| **Initial hideouts per faction (new game)** | 7 | `BanditInitialHideoutsPerFaction` (default 14) — the early-game density lever |
+| Bandit parties per hideout | 3 max | Up to `BanditMaxPartiesPerHideout` (default 3 = pinned at vanilla) |
+| Min parties to infest a hideout | 2 | `MinPartiesToInfest` (default 1 — hideouts go active/visible sooner) |
 | Troops in hideout first fight | `11 × (2 + PlayerProgress)` | × `BossFightCurve` |
 | Troops in hideout boss fight | `1 + 5 × (1 + PlayerProgress)` | × `BossFightCurve` |
 | Bandit party troops on map | `min + (max-min) × (0.4 + 0.8 × PlayerProgress)` × random(0.2..0.8) | × `PartySizeCurve`, capped at stack `MaxValue` |
+
+### Early-game density ("early burst then settle", 2026-05-29)
+
+`NumberOfInitialHideoutsAtEachBanditFaction` (vanilla 7) is the actual early-game lever — `BanditSpawnCampaignBehavior.SpawnHideoutsAndBanditsPartiallyOnNewGame` fills this many hideouts per faction at new-game init, and each infested hideout drives the hourly roaming-bandit spawn (`SpawnBanditsAroundHideout` scales with infested-hideout count). Raising the *max* cap alone does **not** add early bandits — at `PlayerProgress = 0` the multiplier is `1.0`, so the max stays at vanilla 9. The override raises the *initial* count to 14, so a fresh campaign opens dense and then settles toward the steady-state max as the player clears hideouts (`AddNewHideouts` only grows a faction while its infested count is below the max — with 14 initial > 9 max, it simply doesn't add more until attrition drops below 9, then refills, and the max itself grows with `PlayerProgress` toward the 100 cap). Combined with `MinPartiesToInfest = 1`, hideouts become active/visible with a single party, so more show on the map sooner. Default 14 is safe for all five factions (the smallest physical pool, Gundabad, has ~15 hideouts; `FillANewHideoutWithBandits` no-ops harmlessly if a faction runs out of non-infested hideouts).
 
 ## Configuration
 
@@ -68,8 +74,13 @@ Settings live under **TAOM → World / Bandit Scaling** (`GroupOrder = 35`):
 | Density Curve | 0.0 – 5.0 | 1.5 | Multiplier on hideout count + parties/hideout at PlayerProgress=1.0 |
 | Party Size Curve | 0.0 – 5.0 | 1.5 | Multiplier on bandit party troop counts at PlayerProgress=1.0 |
 | Boss Fight Curve | 0.0 – 5.0 | 1.5 | Multiplier on hideout first-fight + boss-fight troop counts |
-| Max Hideouts Per Faction Cap | 1 – 100 | 15 | Hard ceiling regardless of curve |
-| Max Parties Per Hideout Cap | 1 – 20 | 5 | Hard ceiling regardless of curve |
+| Max Hideouts Per Faction Cap | 1 – 100 | 100 | Hard ceiling regardless of curve (physical hideout count binds first) |
+| Max Parties Per Hideout Cap | 1 – 20 | 3 | Hard ceiling regardless of curve (= vanilla, so pinned at 3) |
+| Initial Hideouts Per Faction | 1 – 30 | 14 | Hideouts each faction starts with on a new campaign (vanilla 7) — the early-game density lever |
+
+> **Upgrade caveat (MCM persists per-property).** MCM stores every setting in `Configs/ModSettings/Global/TAOM/TAOM.json` and, on load, overrides the C# default for any property already present. A player who launched a build *before* the 2026-05-29 default change keeps their persisted `Max Hideouts Per Faction Cap = 15` / `Max Parties Per Hideout Cap = 5`; only the brand-new `Initial Hideouts Per Faction` picks up its default (14). To get the new "early burst then settle" tuning on an upgraded install, reset the **World / Bandit Scaling** group to defaults in MCM (or edit `TAOM.json`). Fresh installs get the new defaults automatically. This is inherent MCM behaviour, not a bug — there is no per-property migration hook.
+
+`MinPartiesToInfest` (default 1, vanilla 2) is **JSON-only** (no MCM knob) — it's an advanced tuning value bounded at runtime by `[1, live MaxPartiesPerHideoutCap]`.
 
 ### JSON — Defaults & Advanced Tuning
 
@@ -127,11 +138,32 @@ Migration is driven by [`tools/migrate_hideouts_to_lotr.py`](../../tools/migrate
 
 A hideout's `<Location id="hideout_center" scene_name="X">` must resolve to a `Modules/*/SceneObj/X/` folder or **raiding it crashes**. The 99 vanilla-derived hideouts use stock scenes that exist (`bandit_forest_sv`, `desert_hideout_002/004_sv`, `hideout_steppe_001/002_sv`, `mountain_hideout_002/004_sv`, `sea_bandit_a-d_sv`). The 30 wave-2 hideouts (`hideout_gondor/erebor/mirkwood_*`) reference editor scenes not yet exported to `SceneObj/`, so they are **interim-repointed to vanilla hideout scenes** (gondor/mirkwood → `forest_hideout_004_sv`, erebor → `mountain_hideout_002_sv`) to prevent raid crashes; revert each `scene_name` to its settlement id once the custom scenes are compiled. Verify scene refs with [`tools/audit_scene_names.py`](../../tools/audit_scene_names.py) — see [`docs/reference/scene-reference-audit.md`](../reference/scene-reference-audit.md). Vanilla renames scenes between versions, so re-run the audit after any Bannerlord bump.
 
+## Hideout Encounter Descriptions (Patch40, 2026-05-29)
+
+When the player visits a hideout, the encounter menu prose led with the literal placeholder **"(Undefined hideout type)"** for every TAOM bandit hideout. Root cause (decompile-verified, v1.4.5): vanilla `HideoutCampaignBehavior.game_menu_hideout_place_on_init` sets the `HIDEOUT_DESCRIPTION` GameText variable to `{=DOmb81Mu}(Undefined hideout type)` and then overrides it **only** for the five hardcoded vanilla bandit culture StringIds. TAOM renamed those cultures, so none match and the placeholder leaks through. The hideout *name* renders correctly because it comes from the settlement `name=` attribute (a different code path); only the description prose is keyed on culture StringId in C#.
+
+**Fix:** `Patch40_HideoutDescription` — a Postfix on the private `game_menu_hideout_place_on_init`. It runs after vanilla's body (still inside `on_init`, before the menu renders its `{=!}{HIDEOUT_TEXT}` text, whose value embeds `{HIDEOUT_DESCRIPTION}`). GameText variables resolve lazily at render — `MBTextManager.SetTextVariable` stores `new TextObject(value)` and nested `{HIDEOUT_DESCRIPTION}` is substituted from the global context when the menu draws — so re-setting `HIDEOUT_DESCRIPTION` in the Postfix propagates to the displayed prose. Only the `hideout_place` menu shows `{HIDEOUT_DESCRIPTION}`; `hideout_after_wait` uses its own culture-agnostic text, so a single patch is complete.
+
+`IHideoutDescriptionService.GetDescription(cultureStringId)` returns the `{=key}default` template for the five TAOM bandit cultures and `null` for any other culture (vanilla / other-mod hideouts keep their own engine description untouched). The service takes a `string` and returns a `string` — no TaleWorlds types cross the boundary (ADR-007).
+
+| Bandit culture | Description key | Biome flavor |
+|---|---|---|
+| `dunland_raiders` | `taom_hideout_desc_dunland` | Wooded hills of Dunland |
+| `gundabad_raiders` | `taom_hideout_desc_gundabad` | Crags of the Misty Mountains |
+| `harad_raiders` | `taom_hideout_desc_harad` | Dunes of Harad |
+| `rhun_raiders` | `taom_hideout_desc_rhun` | Grasslands of Rhûn |
+| `umbar_corsairs` | `taom_hideout_desc_umbar` | Sheltered southern cove |
+
+The five strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). The C# default text in `HideoutDescriptionService` matches the XML default verbatim (so the compiled fallback equals the loaded string).
+
 ## Key Files
 
 | File | Purpose |
 |---|---|
 | [`Main/Features/BanditManagement/BanditScalingConfig.cs`](../../Main/Features/BanditManagement/BanditScalingConfig.cs) | POCO with curve + cap defaults |
+| [`Main/Features/BanditManagement/IHideoutDescriptionService.cs`](../../Main/Features/BanditManagement/IHideoutDescriptionService.cs) | Interface for themed hideout descriptions |
+| [`Main/Features/BanditManagement/HideoutDescriptionService.cs`](../../Main/Features/BanditManagement/HideoutDescriptionService.cs) | Culture StringId → `{=key}default` template (null for non-TAOM cultures) |
+| [`Main/Features/BanditManagement/Hooks/Patch40_HideoutDescription.cs`](../../Main/Features/BanditManagement/Hooks/Patch40_HideoutDescription.cs) | Postfix on private `game_menu_hideout_place_on_init`; re-sets `HIDEOUT_DESCRIPTION` |
 | [`Main/Features/BanditManagement/IBanditScalingConfigProvider.cs`](../../Main/Features/BanditManagement/IBanditScalingConfigProvider.cs) | Interface for JSON loader |
 | [`Main/Features/BanditManagement/BanditScalingConfigProvider.cs`](../../Main/Features/BanditManagement/BanditScalingConfigProvider.cs) | Loads + validates `bandit_scaling_config.json` |
 | [`Main/Features/BanditManagement/IBanditScalingSettingsProvider.cs`](../../Main/Features/BanditManagement/IBanditScalingSettingsProvider.cs) | Interface for live MCM read |
@@ -146,13 +178,13 @@ A hideout's `<Location id="hideout_center" scene_name="X">` must resolve to a `M
 | [`Main/_Module/ModuleData/taom_partyTemplates.xml`](../../Main/_Module/ModuleData/taom_partyTemplates.xml) | 10 raider + boss party templates (appended) |
 | [`Main/_Module/ModuleData/taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml) | Culture display names + male/female names (~80 keys) |
 | [`tools/migrate_hideouts_to_lotr.py`](../../tools/migrate_hideouts_to_lotr.py) | TAOM_Map hideout culture + name swap |
-| [`TAOM.Tests/Features/BanditManagement/`](../../TAOM.Tests/Features/BanditManagement/) | 30 unit tests (service + config provider) |
+| [`TAOM.Tests/Features/BanditManagement/`](../../TAOM.Tests/Features/BanditManagement/) | 50 unit tests (service, config provider, density-model helpers, hideout descriptions) |
 
 ## Dependencies
 
 - `DefaultBanditDensityModel` — overridden via `campaignStarter.AddModel` in [SubModule.cs](../../Main/SubModule.cs).
 - `DefaultPartySizeLimitModel.FindAppropriateInitialRosterForMobileParty` — Harmony Postfix. Coexists peacefully with [TaomPartySizeModel](../../Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs) (which overrides `GetPartyMemberSizeLimit` only).
-- `TaomSettings` (MCM) — 6 new properties in the `World/Bandit Scaling` group.
+- `TaomSettings` (MCM) — 7 properties in the `World/Bandit Scaling` group (added `BanditInitialHideoutsPerFaction`).
 - Existing TAOM culture troop XMLs — pulls raider-tier T1–T4 troops by ID; no new troop authoring.
 - `taom_partyTemplates.xml` — 10 new templates (5 raider + 5 boss).
 
@@ -167,16 +199,20 @@ A hideout's `<Location id="hideout_center" scene_name="X">` must resolve to a `M
 - Per-curve isolation (DensityCurve doesn't bleed into PartySizeCurve)
 - IsEnabled + cap delegation
 
-[`TAOM.Tests/Features/BanditManagement/BanditScalingConfigProviderTests.cs`](../../TAOM.Tests/Features/BanditManagement/BanditScalingConfigProviderTests.cs) — 14 tests covering:
-- Valid JSON parsing
+[`TAOM.Tests/Features/BanditManagement/BanditScalingConfigProviderTests.cs`](../../TAOM.Tests/Features/BanditManagement/BanditScalingConfigProviderTests.cs) covering:
+- Valid JSON parsing (incl. `InitialHideoutsPerFaction`)
 - Missing file → defaults + warning log
 - Malformed JSON → defaults + error log
 - NaN/Infinity → revert + warning (per `feedback_clamp_nan_infinity_propagates.md`)
-- Out-of-range → revert + warning
+- Out-of-range → revert + warning (incl. `InitialHideoutsPerFaction` zero / too-high → revert)
 - `MinPartiesToInfest > MaxPartiesPerHideoutCap` → revert ordering invariant
 - Lazy caching (same instance across calls)
 
-**30/30 tests pass** in baseline build.
+[`TAOM.Tests/Features/BanditManagement/TaomBanditDensityModelTests.cs`](../../TAOM.Tests/Features/BanditManagement/TaomBanditDensityModelTests.cs) — 7 tests on the `internal static` `Cap`/`Scale` helpers (the model's only computation), including the regression for the "vanilla is the floor" invariant: `Cap(base, mult, hardCap)` with `hardCap < base` returns `base`, never `hardCap`.
+
+[`TAOM.Tests/Features/BanditManagement/HideoutDescriptionServiceTests.cs`](../../TAOM.Tests/Features/BanditManagement/HideoutDescriptionServiceTests.cs) — 9 tests: each of the 5 cultures returns its expected `{=key}`, and unknown / vanilla-bandit / empty / null culture IDs return `null`.
+
+**50/50 BanditManagement tests pass** (2669 total suite, 0 failures).
 
 ## How-To
 
@@ -218,7 +254,7 @@ The GameModel properties (`NumberOfMaximumHideoutsAtEachBanditFaction` etc.) are
 
 ## Localization
 
-Culture display names and male/female names live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). English defaults are baked into the `name="{=KEY}default"` attribute pattern, so non-English players see English LOTR names until translations are produced. To localize, run `python tools/translate_with_claude.py` after authoring; the new keys are picked up automatically.
+Culture display names, male/female names, and the 5 hideout encounter descriptions (`taom_hideout_desc_*`) live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). English defaults are baked into the `text="{=KEY}default"` attribute pattern, so non-English players see English text until translations are produced. To localize, run `python tools/translate_with_claude.py` after authoring; the new keys are picked up automatically.
 
 The 99 hideout name strings in `TAOM_Map/Languages/<LANG>/loc_settlements.xml` were set to the English LOTR camp names by [`tools/migrate_hideouts_to_lotr.py`](../../tools/migrate_hideouts_to_lotr.py). Future hand-translation per language is straightforward (each language file has 99 entries with consistent text patterns).
 

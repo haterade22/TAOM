@@ -34,4 +34,8 @@ public interface IBanditScalingService
     /// <summary>Minimum bandit parties at a hideout for it to count as "infested" (vanilla = 2).
     /// Clamped to <c>[1, MaxPartiesPerHideoutCap]</c>. Lower values make hideouts visible sooner.</summary>
     int MinPartiesToInfest { get; }
+
+    /// <summary>Hideouts each bandit faction starts with on a new campaign (vanilla = 7).
+    /// MCM-clamped to <c>[1, 30]</c>. The early-game density lever.</summary>
+    int InitialHideoutsPerFaction { get; }
 }

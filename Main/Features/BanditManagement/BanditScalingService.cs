@@ -17,6 +17,8 @@ public sealed class BanditScalingService : IBanditScalingService
 
     public int MinPartiesToInfest => _settings.MinPartiesToInfest;
 
+    public int InitialHideoutsPerFaction => _settings.InitialHideoutsPerFaction;
+
     public float GetDensityMultiplier(float playerProgress) =>
         ComputeMultiplier(playerProgress, _settings.DensityCurve);
 

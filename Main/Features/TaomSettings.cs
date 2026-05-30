@@ -454,13 +454,18 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Bandit Scaling")]
     [SettingPropertyInteger("Max Hideouts Per Faction Cap", 1, 100, Order = 4,
-        HintText = "Hard cap on hideouts per bandit faction regardless of scaling curve. Vanilla = 9. Default: 15.")]
-    public int BanditMaxHideoutsPerFaction { get; set; } = 15;
+        HintText = "Hard cap on hideouts per bandit faction regardless of scaling curve. Vanilla = 9. Default: 100 (effectively the physical hideout count per faction).")]
+    public int BanditMaxHideoutsPerFaction { get; set; } = 100;
 
     [SettingPropertyGroup("World/Bandit Scaling")]
     [SettingPropertyInteger("Max Parties Per Hideout Cap", 1, 20, Order = 5,
-        HintText = "Hard cap on bandit parties per hideout regardless of scaling curve. Vanilla = 3. Default: 5.")]
-    public int BanditMaxPartiesPerHideout { get; set; } = 5;
+        HintText = "Hard cap on bandit parties per hideout regardless of scaling curve. Vanilla = 3. Default: 3.")]
+    public int BanditMaxPartiesPerHideout { get; set; } = 3;
+
+    [SettingPropertyGroup("World/Bandit Scaling")]
+    [SettingPropertyInteger("Initial Hideouts Per Faction", 1, 30, Order = 6,
+        HintText = "Hideouts each bandit faction starts with on a new campaign. Vanilla = 7. Default: 14. Higher = denser early game (the world settles toward the steady-state max as you clear them).")]
+    public int BanditInitialHideoutsPerFaction { get; set; } = 14;
 
     // --- Map UI / Settlement Nameplates ---
 

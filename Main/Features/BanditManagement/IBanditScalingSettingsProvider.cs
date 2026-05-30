@@ -9,4 +9,5 @@ public interface IBanditScalingSettingsProvider
     int MaxHideoutsPerFactionCap { get; }
     int MaxPartiesPerHideoutCap { get; }
     int MinPartiesToInfest { get; }
+    int InitialHideoutsPerFaction { get; }
 }
