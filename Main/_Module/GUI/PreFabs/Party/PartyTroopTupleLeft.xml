@@ -63,7 +63,7 @@
     </VisualDefinition>
   </VisualDefinitions>
   <Window>
-    <PartyTroopTupleButtonWidget Id="PartyTroopTuple" VisualDefinition="Container" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="!Toggle.Width" HorizontalAlignment="Center" MarginTop="2" Brush="Party.TroopTuple.SoundBrush" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused" AcceptDrag="true" CharacterID="@TroopID" Command.AlternateClick="ExecuteOpenTroopEncyclopedia" Command.Click="ExecuteSetSelected" DragWidget="DragWidget" ExtendedControlsContainer="Extension" IsPrisoner="@IsPrisoner" IsTransferable="@IsTroopTransferrable" IsTupleLeftSide="true" Main="Main" TransferAmount="@TransferAmount" TransferSlider="Extension\ExtensionCarrier\SliderParent\TransferSlider" HoveredCursorState="RightClickLink">
+    <PartyTroopTupleButtonWidget Id="PartyTroopTuple" VisualDefinition="Container" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="!Toggle.Width" HorizontalAlignment="Center" MarginTop="2" Brush="Party.TroopTuple.SoundBrush" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused" AcceptDrag="true" CharacterID="@TroopID" Command.AlternateClick="ExecuteOpenTroopEncyclopedia" Command.Click="ExecuteSetSelected" DragWidget="DragWidget" ExtendedControlsContainer="Extension" IsPrisoner="@IsPrisoner" IsTransferable="@IsTroopTransferrable" IsTupleLeftSide="true" Main="Main" TransferAmount="@TransferAmount" TransferSlider="Extension\ExtensionCarrier\SliderParent\TransferSlider" HoveredCursorState="RightClickLink" IsSelected="@IsSelected">
       <Children>
 
 				<InventoryTupleExtensionControlsWidget Id="Extension" VisualDefinition="Extension" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Toggle.Width" SuggestedHeight="!Extension.Hidden.Height" HorizontalAlignment="Center" MarginTop="!Extension.Hidden.MarginTop" ClipContents="true" IsDisabled="true" DoNotAcceptNavigation="true" TransferSlider="ExtensionCarrier\SliderParent\TransferSlider" IncreaseDecreaseButtonsParent="ExtensionCarrier\SliderParent\LeftBottomStack" NavigationParent="..\Main">
@@ -80,19 +80,27 @@
                     <ListPanel Id="LeftBottomStack" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight" PositionXOffset="-10" MarginTop="50" >
                       <Children>
 
-                        <NavigationAutoScrollWidget TrackedWidget="..\DecreaseStockButtonWidget" ScrollYOffset="160" />
-                        <ButtonWidget Id="DecreaseStockButtonWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35" SuggestedHeight="35" Brush="Inventory.Tuple.Extension.MinusButton" VerticalAlignment="Center" Command.Click="ExecuteIncreaseOtherStock" IsEnabled="@IsTransfarable" GamepadNavigationIndex="0"/>
+                        <NavigationAutoScrollWidget TrackedWidget="..\DecreaseStockButtonWidget" AutoScrollTopOffset="160" AutoScrollBottomOffset="160" />
+						  <ButtonWidget Id="DecreaseStockButtonWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35" SuggestedHeight="35" Brush="Inventory.Tuple.Extension.MinusButton" VerticalAlignment="Center" Command.Click="ExecuteIncreaseOtherStock" IsEnabled="@IsTransfarable" GamepadNavigationIndex="0">
+							  <Children>
+								  <HintWidget DataSource="{TakeHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false"/>
+							  </Children>
+						  </ButtonWidget>
                         <Widget IsEnabled="false" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="40" HorizontalAlignment="Center" VerticalAlignment="Center" MarginLeft="10" MarginRight="8" >
                           <Children>
                             <TextWidget IntText="@ThisStock" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"  Brush="Inventory.Tuple.Extension.StockButtonText" Brush.FontSize="42" ClipContents="false"/>
                           </Children>
                         </Widget>
-                        <NavigationAutoScrollWidget TrackedWidget="..\IncreaseStockButtonWidget" ScrollYOffset="160" />
-                        <ButtonWidget Id="IncreaseStockButtonWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35" SuggestedHeight="35" Brush="Inventory.Tuple.Extension.PlusButton" VerticalAlignment="Center" Command.Click="ExecuteIncreasePlayerStock" IsEnabled="@IsTransfarable" GamepadNavigationIndex="1"/>
+                        <NavigationAutoScrollWidget TrackedWidget="..\IncreaseStockButtonWidget" AutoScrollTopOffset="160" AutoScrollBottomOffset="160" />
+						  <ButtonWidget Id="IncreaseStockButtonWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35" SuggestedHeight="35" Brush="Inventory.Tuple.Extension.PlusButton" VerticalAlignment="Center" Command.Click="ExecuteIncreasePlayerStock" IsEnabled="@IsTransfarable" GamepadNavigationIndex="1">
+							  <Children>
+								  <HintWidget DataSource="{GiveHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false"/>
+							  </Children>
+						  </ButtonWidget>
                       </Children>
                     </ListPanel>
 
-                    <NavigationAutoScrollWidget TrackedWidget="..\TransferSlider\SliderHandle" ScrollYOffset="160" />
+                    <NavigationAutoScrollWidget TrackedWidget="..\TransferSlider\SliderHandle" AutoScrollTopOffset="160" AutoScrollBottomOffset="160" />
                     <InventoryTwoWaySliderWidget Id="TransferSlider" DoNotUpdateHandleSize="true" IsDiscrete="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" MarginTop="15" SuggestedHeight = "21" HorizontalAlignment = "Center" VerticalAlignment="Center" MarginBottom="80" BaseValueInt="@InitialThisStock" ChangeFillWidget="ChangeFill" MinValueInt ="0" MaxValueInt="@TotalStock" ValueInt="@ThisStock" Handle="SliderHandle" Filler="Filler" Command.OnValueChange="ExecuteApplyTransaction" IncreaseStockButtonWidget="..\LeftBottomStack\IncreaseStockButtonWidget" DecreaseStockButtonWidget="..\LeftBottomStack\DecreaseStockButtonWidget" UpdateValueOnScroll="False" IsEnabled="@IsTransfarable" Command.RemoveZeroCounts="ExecuteRemoveZeroCounts" >
                       <Children>
                         <Widget DoNotAcceptEvents="true" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "Fixed" SuggestedHeight="21" VerticalAlignment="Center" Sprite="slider_fill_white_9" Color="#1D1D1BFF" />
@@ -136,7 +144,7 @@
 
             <BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Image.Width" SuggestedHeight="!Image.Height" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="!Image.MarginLeft" MarginTop="!Image.MarginTop" Brush="Party.TroopBack">
               <Children>
-                <ImageIdentifierWidget DataSource="{Code}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="!Image.Padding" MarginRight="!Image.Padding" MarginTop="!Image.Padding" MarginBottom="!Image.Padding" AdditionalArgs="@AdditionalArgs" ImageId="@Id" ImageTypeCode="@ImageTypeCode" IsBig="true" LoadingIconWidget="LoadingIconWidget">
+                <ImageIdentifierWidget DataSource="{Code}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="!Image.Padding" MarginRight="!Image.Padding" MarginTop="!Image.Padding" MarginBottom="!Image.Padding" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" IsBig="true" LoadingIconWidget="LoadingIconWidget">
                   <Children>
                     <Standard.CircleLoadingWidget HorizontalAlignment="Center" VerticalAlignment="Center" Id="LoadingIconWidget"/>
                   </Children>
@@ -176,7 +184,7 @@
 
         <Widget Id="DragWidget" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Image.Width" SuggestedHeight="!Image.Height" HorizontalAlignment="Left" VerticalAlignment="Top" Sprite="PartyScreen\portrait" IsDisabled="true" IsVisible="false">
           <Children>
-            <ImageIdentifierWidget DataSource="{Code}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="!Image.Padding" MarginRight="!Image.Padding" MarginTop="!Image.Padding" MarginBottom="!Image.Padding" AdditionalArgs="@AdditionalArgs" ImageId="@Id" ImageTypeCode="@ImageTypeCode" IsBig="true" />
+            <ImageIdentifierWidget DataSource="{Code}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="!Image.Padding" MarginRight="!Image.Padding" MarginTop="!Image.Padding" MarginBottom="!Image.Padding" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" IsBig="true" />
           </Children>
         </Widget>
 

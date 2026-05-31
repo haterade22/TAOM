@@ -2,6 +2,55 @@
 
 ## 2026-05-31
 
+### fix(gui): troop thumbnails stuck on loading spinner — stale 1.4.5 prefab clones
+
+The Party screen rendered every troop row's character thumbnail as a perpetual
+loading spinner (the rotating circle of dots) — no troop image ever appeared.
+Reported on a Dale party, but the cause was **global** (all cultures).
+
+**Root cause.** Bannerlord **1.4.5 renamed** the image-source binding on both
+`ImageIdentifierWidget` and `MaskedTextureWidget` from `ImageTypeCode` →
+`TextureProviderName` (the backing `ImageIdentifierVM` now exposes
+`TextureProviderName`). TAOM ships full `<Prefab>` **clones** of several vanilla
+GUI prefabs, and these clones were stale from a pre-1.4.5 version — the troop
+thumbnail still bound `ImageTypeCode="@ImageTypeCode"`, which in 1.4.5 resolves to
+nothing, so the widget never learned which texture provider renders the character
+`{Code}` and the `LoadingIconWidget` spun forever. Exactly the stale-clone-across-
+versions failure `.claude/rules/vanilla-data-comparison.md` warns about. (Ruled out
+during investigation: a missing `fighter_sturgia` body property — it's defined in
+vanilla `sandboxcore_bodyproperties.xml` and a body-template mismatch renders a
+wrong-looking troop, never a hang; and the `CharacterTableau.SetRace` patch — that
+drives the big 3D center preview, not the row thumbnails.)
+
+**Blast radius — 9 prefabs with the stale binding**, fixed in one pass:
+- **Re-synced to vanilla 1.4.5** (clones of still-shipped vanilla prefabs; replaced
+  verbatim, no TAOM-custom content existed in them): `Party/PartyTroopTuple.xml`,
+  `Party/PartyTroopTupleLeft.xml`, `Party/PartyTroopManagerPopUp/PartyTroopRecruitItem.xml`,
+  `Party/PartyTroopManagerPopUp/PartyTroopUpgradeItem.xml`,
+  `CustomBattle/CompositionSlider.xml`, `CustomBattle/TroopTypeSelectionPopUp.xml`.
+  This also picked up other 1.4.5 redesigns the stale clones had missed (restructured
+  upgrade popup, percentage slider input, gamepad-nav scopes).
+- **`Party/PartyScreen.xml`** re-synced too (it had other stale bindings — missing
+  `ScrollToCharacter`/`IsScrollTargetPrisoner`/`ScrollCharacterId`, `TextWidget`→
+  `RichTextWidget`, old easing), **re-applying** TAOM's 2 intentional tweaks
+  (`PartyNameLabel.Height=55`; wage widget 80 / icon 40 / margin 40 for T10 wages).
+  Verified the file now diffs against vanilla 1.4.5 by exactly those 4 lines.
+- **Surgical binding rename** (TAOM-original prefabs, no vanilla counterpart; the
+  datasource is the vanilla `ImageIdentifierVM`, so XML-only, no VM change):
+  `MomentumView/MomentumView.xml` (×2), `MomentumView/KingdomIcon.xml`,
+  `MomentumView/Relationship.xml`.
+
+Static-verified: 0 `ImageTypeCode` remaining in `Main/_Module/GUI/`; all 10 touched
+files well-formed XML; the 6 verbatim re-syncs are byte-identical to vanilla 1.4.5.
+
+`Not-tested: in-game render (GUI prefab XML isn't unit-testable; requires the live game) — confirm troop thumbnails load on the Party screen, the Custom Battle troop-selection screen, and the MomentumView. No C# changed.`
+
+A blast-radius audit (adversarially verified) inventoried all TAOM GUI prefabs: **48 total, 32 are vanilla clones, 16 TAOM-original, only 4 byte-identical to vanilla.** Beyond the `ImageTypeCode` bug fixed here, the same 1.4.5-rename failure class still affects, as a documented **follow-up (out of scope)**: `CustomBattle/SimpleDropdown.xml` (`RichTextWidget=`→`TextWidget=` on `DropdownWidget` — selected-text won't bind), `LayoutImp.LayoutMethod`→`StackLayout.LayoutMethod` in **7** prefabs (layout ignored), and `EaseIn`→`EaseType/EaseFunction` in `CustomBattleScreen`/`PartyScreen` (easing regression). Deliberate TAOM redesigns (Encyclopedia banner-widget swaps, `SettlementNameplateItem` diamond layout, `CharacterCreation*Stage` theming) are NOT drift and must be left alone.
+
+Documented: RCA [docs/reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md](docs/reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md); `.claude/rules/vanilla-data-comparison.md` extended with a "GUI prefab clones" section + `GUI/PreFabs` auto-load globs + the v1.4.5 rename table; `.claude/rules/gui-ui.md` pointer; memory `feedback_gui_prefab_clones_stale_across_versions.md`.
+
+`Root-cause: the v1.3.15→v1.4.5 migration scoped to C# API drift + equipment XML; GUI prefab clones (added 2026-03 in c31570f) were outside the audit boundary and shipped stale. Static review can't catch this — only the live game confirms a prefab renders.`
+
 ### fix(career): in-game review pass on the career-screen revamp
 
 In-game testing of the 2026-05-30 career-screen revamp surfaced several issues across a few iteration passes; **all are fixed below and confirmed working in-game** (user screenshots, 2026-05-31): singular titles, flush-left tier labels, consistent tier spacing, the One Ring pip rendering, centered "Requires Level N" labels, and hover descriptions aligned row-by-row with the pips.

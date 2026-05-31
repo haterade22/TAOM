@@ -43,8 +43,10 @@
 
     <PartyTroopManagementItemButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Party.UpgradePopup.TroopTupple" IsEnabled="@IsTroopRecruitable" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused" Command.AlternateClick="ExecuteOpenTroopEncyclopedia" HoveredCursorState="RightClickLink" ActionButtonsContainer="Character\Contents">
       <Children>
+		  <NavigationScopeTargeter ScopeID="TroopRecruitPopupScope" ScopeParent="..\." ScopeMovements="Horizontal" />
+		  <NavigationTargetSwitcher FromTarget="..\." ToTarget="..\Character\Contents\ActionButton"/>
 
-        <NavigationAutoScrollWidget  TrackedWidget="..\." WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" />
+		  <NavigationAutoScrollWidget  TrackedWidget="..\." WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" />
 
         <Widget Id="Character" DataSource="{PartyCharacter}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="75" MarginLeft="5" MarginRight="22" HorizontalAlignment="Center">
           <Children>
@@ -52,11 +54,11 @@
             <ListPanel Id="Contents" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight">
               <Children>
 
-                <!--Avatar-->
+				  <!--Avatar-->
                 <BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="135" SuggestedHeight="68" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="!Image.MarginLeft" MarginTop="!Image.MarginTop" Brush="Party.TroopBack">
                   <Children>
 
-                    <ImageIdentifierWidget DataSource="{Code}" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="!Image.Padding" MarginRight="!Image.Padding" MarginTop="!Image.Padding" MarginBottom="!Image.Padding" AdditionalArgs="@AdditionalArgs" ImageId="@Id" ImageTypeCode="@ImageTypeCode" IsBig="true" LoadingIconWidget="LoadingIconWidget">
+                    <ImageIdentifierWidget DataSource="{Code}" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="!Image.Padding" MarginRight="!Image.Padding" MarginTop="!Image.Padding" MarginBottom="!Image.Padding" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" IsBig="true" LoadingIconWidget="LoadingIconWidget">
                       <Children>
                         <Standard.CircleLoadingWidget HorizontalAlignment="Center" VerticalAlignment="Center" Id="LoadingIconWidget"/>
                       </Children>
@@ -92,7 +94,7 @@
                   </Children>
                 </Widget>
 
-                <!--Recruit Button-->
+				  <!--Recruit Button-->
                 <ButtonWidget Id="ActionButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70" SuggestedHeight="56" MarginLeft="72" VerticalAlignment="Center" Brush="Party.RecruitPopUp.RecruitButton" Command.Click="ExecuteRecruitTroop" IsEnabled="@IsTroopRecruitable">
                   <Children>
                     <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="2" PositionYOffset="-2" Sprite="PartyScreen\recruit_prisoner" HueFactor="10" SaturationFactor="60" ValueFactor="20" />

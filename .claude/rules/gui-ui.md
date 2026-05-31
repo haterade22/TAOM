@@ -31,6 +31,12 @@ The 4 steps above are for *referencing* a sprite that's already baked. **Adding 
 
 Memory: `feedback_sprite_atlas_baked_regen_required` (the career-pip case — baked correctly yet blank because the prefab drew it too small/faint).
 
+## GUI Prefab Clones Go Stale Across Engine Versions (MANDATORY)
+
+TAOM ships full `<Prefab>` **clones** of many vanilla prefabs (party screen, custom-battle, encyclopedia, nameplates — ~32 of 48 TAOM GUI prefabs). Vanilla **renames widget attributes between versions**; a clone frozen at an older version keeps the obsolete attribute, the engine silently ignores it, and the widget mis-renders or never renders — **no log, no crash, only visible in-game.**
+
+Before editing a clone (or after a Bannerlord version bump), **diff it against installed vanilla** and consult the v1.4.5 rename table + fix procedure in [`.claude/rules/vanilla-data-comparison.md`](./vanilla-data-comparison.md) ("GUI prefab clones" section). The canonical example: v1.4.5 renamed `ImageTypeCode` → `TextureProviderName` on `ImageIdentifierWidget`/`MaskedTextureWidget`; TAOM's stale clones left every Party-screen troop thumbnail stuck on the loading spinner (RCA `docs/reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md`, memory `feedback_gui_prefab_clones_stale_across_versions.md`). **Rendering ≠ live** — only the running game confirms a prefab renders.
+
 ## UIExtenderEx PrefabExtension Safety (MANDATORY)
 
 Before injecting into ANY vanilla prefab container:

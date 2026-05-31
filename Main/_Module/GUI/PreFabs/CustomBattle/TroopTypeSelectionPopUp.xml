@@ -29,21 +29,20 @@
                             <!--Troop Card-->
                             <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="220" SuggestedHeight="140" HorizontalAlignment="Center" Brush="TroopSelection.Card" IsSelected="@IsSelected" Command.Click="ExecuteToggleSelection">
                               <Children>
-                                <ImageIdentifierWidget DataSource= "{Visual}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="67" SuggestedWidth="100" AdditionalArgs="@AdditionalArgs" ImageId="@Id" ImageTypeCode="@ImageTypeCode" MarginLeft="20" MarginTop="10" DoNotAcceptEvents="true">
-                                  <Children>
-                                    <Widget DataSource="{..\TierIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Right" VerticalAlignment="Top" PositionXOffset="0" PositionYOffset="2" Sprite="@Text">
-                                      <Children>
-                                        <HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
-                                      </Children>
-                                    </Widget>
-                                    <Widget DataSource="{..\TypeIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Left" VerticalAlignment="Top" PositionXOffset="0" PositionYOffset="2" Sprite="@Text">
-                                      <Children>
-                                        <HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "StretchToParent"/>
-                                      </Children>
-                                    </Widget>
-                                  </Children>
-                                </ImageIdentifierWidget>
+                                <ImageIdentifierWidget DataSource= "{Visual}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="67" SuggestedWidth="100" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" MarginLeft="40" MarginTop="10" DoNotAcceptEvents="true"/>
 
+								<Widget DataSource="{TierIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="25" SuggestedHeight="25" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="140" MarginTop="10" Sprite="@Text">
+									<Children>
+										<HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+									</Children>
+								</Widget>
+								  
+								<Widget DataSource="{TypeIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="25" SuggestedHeight="25" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="20" MarginTop="10" Sprite="@Text">
+									<Children>
+										<HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "StretchToParent"/>
+									</Children>
+								</Widget>
+									  
                                 <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="175" SuggestedHeight="55" Brush="GameMenu.ManageHideoutTroops.NameText" Text="@Name" MarginLeft="20" MarginTop="80" DoNotAcceptEvents="true" />
 
                                 <Widget Id="CheckmarkVisualWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="47" SuggestedHeight="38" HorizontalAlignment="Right" MarginTop="20" MarginRight="20" Sprite="SPGeneral\GameMenu\companion_selected_check" Color="#F4E1C4FF" DoNotAcceptEvents="true" IsVisible="@IsSelected"/>

@@ -1,237 +1,165 @@
 <Prefab>
 
-  <Constants>
-    <Constant Name="Tuple.Height.Additive" Value="0" />
+	<Constants>
+		<Constant Name="Tuple.Height.Additive" Value="0" />
 
-    <Constant Name="Toggle.Width" BrushLayer="Default" BrushName="Party.TroopTupple.Left" BrushValueType="Width" />
-    <Constant Name="Toggle.Height" Additive="!Tuple.Height.Additive" BrushLayer="Default" BrushName="Party.TroopTupple.Left" BrushValueType="Height" />
-    <Constant Name="Toggle.Pressed.Width" BrushLayer="PressedLayer" BrushName="Party.TroopTupple.Left" BrushValueType="Width" />
+		<Constant Name="Toggle.Width" BrushLayer="Default" BrushName="Party.TroopTupple.Left" BrushValueType="Width" />
+		<Constant Name="Toggle.Height" Additive="!Tuple.Height.Additive" BrushLayer="Default" BrushName="Party.TroopTupple.Left" BrushValueType="Height" />
+		<Constant Name="Toggle.Pressed.Width" BrushLayer="PressedLayer" BrushName="Party.TroopTupple.Left" BrushValueType="Width" />
 
-    <Constant Name="Extension.Width" BrushLayer="Default" BrushName="Party.TroopTupple.Extension.Left" BrushValueType="Width" />
-    <Constant Name="Extension.Height" Additive="!Tuple.Height.Additive" BrushLayer="Default" BrushName="Party.TroopTupple.Extension.Left" BrushValueType="Height" />
+		<Constant Name="Extension.Width" BrushLayer="Default" BrushName="Party.TroopTupple.Extension.Left" BrushValueType="Width" />
+		<Constant Name="Extension.Height" Additive="!Tuple.Height.Additive" BrushLayer="Default" BrushName="Party.TroopTupple.Extension.Left" BrushValueType="Height" />
 
-    <Constant Name="Extension.Hidden.MarginTop" Value="5" />
-    <Constant Name="Extension.Hidden.Height" Additive="!Tuple.Height.Additive" Value="58" />
-    <Constant Name="Extension.Selected.MarginTop" Value="58" />
+		<Constant Name="Extension.Hidden.MarginTop" Value="5" />
+		<Constant Name="Extension.Hidden.Height" Additive="!Tuple.Height.Additive" Value="58" />
+		<Constant Name="Extension.Selected.MarginTop" Value="58" />
 
-    <Constant Name="Extension.DropShadowOverlay.Height" SpriteName="PartyScreen\selected_button_extension_dropshadow_overlay" SpriteValueType="Height" />
+		<Constant Name="Extension.DropShadowOverlay.Height" SpriteName="PartyScreen\selected_button_extension_dropshadow_overlay" SpriteValueType="Height" />
 
-    <Constant Name="Party.TroopTuple.Extension.StockButton.Width" BrushLayer="Default" BrushName="Party.TroopTuple.Extension.StockButton" BrushValueType="Width" />
-    <Constant Name="Party.TroopTuple.Extension.StockButton.Height" BrushLayer="Default" BrushName="Party.TroopTuple.Extension.StockButton" BrushValueType="Height" />
+		<Constant Name="Party.TroopTuple.Extension.StockButton.Width" BrushLayer="Default" BrushName="Party.TroopTuple.Extension.StockButton" BrushValueType="Width" />
+		<Constant Name="Party.TroopTuple.Extension.StockButton.Height" BrushLayer="Default" BrushName="Party.TroopTuple.Extension.StockButton" BrushValueType="Height" />
 
-    <Constant Name="Party.Slot.Width" BrushLayer="Default" BrushName="Party.UpgradeSlot.Button" BrushValueType="Width" />
-    <Constant Name="Party.Slot.Height" BrushLayer="Default" BrushName="Party.UpgradeSlot.Button" BrushValueType="Height" />
+		<Constant Name="Party.Slot.Width" BrushLayer="Default" BrushName="Party.UpgradeSlot.Button" BrushValueType="Width" />
+		<Constant Name="Party.Slot.Height" BrushLayer="Default" BrushName="Party.UpgradeSlot.Button" BrushValueType="Height" />
 
-    <Constant Name="Button.Transfer.Width" BrushLayer="Default" BrushName="Party.TroopTuple.Extension.TransferButton" BrushValueType="Width" />
-    <Constant Name="Button.Transfer.Height" BrushLayer="Default" BrushName="Party.TroopTuple.Extension.TransferButton" BrushValueType="Height" />
+		<Constant Name="Button.Transfer.Width" BrushLayer="Default" BrushName="Party.TroopTuple.Extension.TransferButton" BrushValueType="Width" />
+		<Constant Name="Button.Transfer.Height" BrushLayer="Default" BrushName="Party.TroopTuple.Extension.TransferButton" BrushValueType="Height" />
 
-    <Constant Name="Button.TransferAll.Width" BrushLayer="Default" BrushName="ButtonLeftArrowBrush1" BrushValueType="Width" />
-    <Constant Name="Button.TransferAll.Height" BrushLayer="Default" BrushName="ButtonLeftArrowBrush1" BrushValueType="Width" />
+		<Constant Name="Button.TransferAll.Width" BrushLayer="Default" BrushName="ButtonLeftArrowBrush1" BrushValueType="Width" />
+		<Constant Name="Button.TransferAll.Height" BrushLayer="Default" BrushName="ButtonLeftArrowBrush1" BrushValueType="Width" />
 
-    <Constant Name="Image.Width" Value="130" />
-    <Constant Name="Image.Height" Additive="!Tuple.Height.Additive" Value="63" />
-    <Constant Name="Image.MarginLeft" Value="10" />
-    <Constant Name="Image.MarginTop" Value="0" />
-    <Constant Name="Image.Padding" Value="2" />
+		<Constant Name="Image.Width" Value="130" />
+		<Constant Name="Image.Height" Additive="!Tuple.Height.Additive" Value="63" />
+		<Constant Name="Image.MarginLeft" Value="10" />
+		<Constant Name="Image.MarginTop" Value="0" />
+		<Constant Name="Image.Padding" Value="2" />
 
-    <Constant Name="NameLeft" Value="145" />
+		<Constant Name="NameLeft" Value="145" />
 
-    <Constant Name="IconAlpha" Value="0.7" />
-  </Constants>
-  
-  <Window>
+		<Constant Name="IconAlpha" Value="0.7" />
+	</Constants>
 
-    <PartyTroopManagementItemButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Party.UpgradePopup.TroopTupple" IsEnabled="@IsTroopUpgradable" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused" Command.AlternateClick="ExecuteOpenTroopEncyclopedia" HoveredCursorState="RightClickLink" ActionButtonsContainer="Character\Contents\UpgradesContainer\Upgrades">
-      <Children>
+	<Window>
 
-        <NavigationAutoScrollWidget TrackedWidget="..\." WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" />
+		<PartyTroopManagementItemButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Party.UpgradePopup.TroopTupple" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused" Command.AlternateClick="ExecuteOpenTroopEncyclopedia" HoveredCursorState="RightClickLink" ActionButtonsContainer="Character\Contents\ScrollablePanel\ClipRect\Upgrades">
+			<Children>
+				<NavigationScopeTargeter ScopeID="TroopUpgradesPopupScope" ScopeParent="..\." ScopeMovements="Horizontal" />
 
-        <Widget Id="Character" DataSource="{PartyCharacter}"  DoNotAcceptEvents="true" UpdateChildrenStates="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="75" MarginLeft="5" MarginRight="22" HorizontalAlignment="Center">
-          <Children>
+				<NavigationAutoScrollWidget TrackedWidget="..\." WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" />
 
-            <ListPanel Id="Contents" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight">
-              <Children>
+				<Widget Id="Character" DataSource="{PartyCharacter}"  DoNotAcceptEvents="true" UpdateChildrenStates="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="75" MarginLeft="5" MarginRight="22" HorizontalAlignment="Center">
+					<Children>
 
-                <!--Avatar-->
-                <BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="135" SuggestedHeight="68" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="!Image.MarginLeft" MarginTop="!Image.MarginTop" Brush="Party.TroopBack">
-                  <Children>
+						<ListPanel Id="Contents" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight">
+							<Children>
 
-                    <ImageIdentifierWidget DoNotAcceptEvents="true" DataSource="{Code}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="!Image.Padding" MarginRight="!Image.Padding" MarginTop="!Image.Padding" MarginBottom="!Image.Padding" AdditionalArgs="@AdditionalArgs" ImageId="@Id" ImageTypeCode="@ImageTypeCode" IsBig="true" LoadingIconWidget="LoadingIconWidget">
-                      <Children>
-                        <Standard.CircleLoadingWidget HorizontalAlignment="Center" VerticalAlignment="Center" Id="LoadingIconWidget"/>
-                      </Children>
-                    </ImageIdentifierWidget>
-                    <Widget DataSource="{TierIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Right" VerticalAlignment="Top" PositionXOffset="0" PositionYOffset="2" Sprite="@Text">
-                      <Children>
-                        <HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
-                      </Children>
-                    </Widget>
-                    <Widget DataSource="{TypeIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Left" VerticalAlignment="Top" PositionXOffset="6" PositionYOffset="2" Sprite="@Text">
-                      <Children>
-                        <HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint"/>
-                      </Children>
-                    </Widget>
+								<!--Avatar-->
+								<BrushWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="135" SuggestedHeight="68" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="!Image.MarginLeft" MarginTop="!Image.MarginTop" Brush="Party.TroopBack">
+									<Children>
 
-                  </Children>
-                </BrushWidget>
+										<ImageIdentifierWidget DoNotAcceptEvents="true" DataSource="{Code}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="!Image.Padding" MarginRight="!Image.Padding" MarginTop="!Image.Padding" MarginBottom="!Image.Padding" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" IsBig="true" LoadingIconWidget="LoadingIconWidget">
+											<Children>
+												<Standard.CircleLoadingWidget HorizontalAlignment="Center" VerticalAlignment="Center" Id="LoadingIconWidget"/>
+											</Children>
+										</ImageIdentifierWidget>
+										<Widget DataSource="{TierIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Right" VerticalAlignment="Top" PositionXOffset="0" PositionYOffset="2" Sprite="@Text">
+											<Children>
+												<HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+											</Children>
+										</Widget>
+										<Widget DataSource="{TypeIconData}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Left" VerticalAlignment="Top" PositionXOffset="6" PositionYOffset="2" Sprite="@Text">
+											<Children>
+												<HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" WidthSizePolicy = "StretchToParent" HeightSizePolicy = "StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint"/>
+											</Children>
+										</Widget>
 
-                <!--Troop Name-->
-                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="170" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10" MarginTop="10" MarginBottom="10" Brush="Party.UpgradePopup.Tuple.Text" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Center" IsDisabled="true" Text="@Name"/>
+									</Children>
+								</BrushWidget>
 
-                <!--Troop Count-->
-                <TextWidget DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="75" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10" MarginTop="15" MarginBottom="10" Brush="Party.UpgradePopup.Tuple.Text" Brush.TextVerticalAlignment="Center" IsDisabled="true" Text="@StrNumOfUpgradableTroop">
-                  <Children>
-                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="27" PositionYOffset="-12" HorizontalAlignment="Center" Sprite="PartyScreen\upgrade_icon" />
-                  </Children>
-                </TextWidget>
+								<!--Troop Name-->
+								<TextWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="170" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10" MarginTop="10" MarginBottom="10" Brush="Party.UpgradePopup.Tuple.Text" Brush.TextHorizontalAlignment="Left" Brush.TextVerticalAlignment="Center" IsDisabled="true" Text="@Name"/>
 
-                <!--Upgrade Cost-->
-                <Widget DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="90" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10" MarginTop="10" MarginBottom="10">
-                  <Children>
-                    <PartyUpgradeCostRichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="-12" Brush="Party.UpgradePopup.Tuple.Text" Brush.TextVerticalAlignment="Center" IsDisabled="true" IsSufficient="@HasEnoughGold" NormalColor="#F9EDD9FF" InsufficientColor="#C01219FF" Text="@UpgradeCostText">
-                      <Children>
-                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="-30" Sprite="General\Icons\Coin@2x"/>
-                      </Children>
-                    </PartyUpgradeCostRichTextWidget>
-                  </Children>
-                </Widget>
+								<!--Troop Count-->
+								<TextWidget DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="75" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10" MarginTop="15" MarginBottom="10" Brush="Party.UpgradePopup.Tuple.Text" Brush.TextVerticalAlignment="Center" IsDisabled="true" Text="@StrNumOfUpgradableTroop">
+									<Children>
+										<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="27" PositionYOffset="-12" HorizontalAlignment="Center" Sprite="PartyScreen\upgrade_icon" />
+									</Children>
+								</TextWidget>
 
-                <!--At Most Two Upgrades-->
-                <Widget Id="UpgradesContainer" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" IsHidden="@HasMoreThanTwoUpgrades" MarginLeft="5">
-                  <Children>
+								<!--Upgrade Cost-->
+								<Widget DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="90" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10" MarginTop="10" MarginBottom="10">
+									<Children>
+										<PartyUpgradeCostRichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="-12" Brush="Party.UpgradePopup.Tuple.Text" Brush.TextVerticalAlignment="Center" IsDisabled="true" IsSufficient="@HasEnoughGold" NormalColor="#F9EDD9FF" InsufficientColor="#C01219FF" Text="@UpgradeCostText">
+											<Children>
+												<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="30" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="-30" Sprite="General\Icons\Coin@2x"/>
+											</Children>
+										</PartyUpgradeCostRichTextWidget>
+									</Children>
+								</Widget>
 
-                    <ListPanel Id="Upgrades" DataSource="{Upgrades}" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center">
-                      <ItemTemplate>
-                        <ListPanel DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center">
-                          <Children>
-                            <!--Requirement For The First Upgrade-->
-                            <SiblingIndexVisibilityWidget DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="55" VerticalAlignment="Center" WatchType="Even" WidgetToWatch="..\.">
-                              <Children>
-                                <ListPanel DoNotAcceptEvents="true" DataSource="{Requirements}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
-                                  <Children>
-                                    <!--Item Requirement-->
-                                    <PartyUpgradeRequirementWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="25" SuggestedHeight="25" HorizontalAlignment="Center" MarginBottom="2" IsSufficient="@IsItemRequirementMet" NormalColor="#F4E1C4FF" InsufficientColor="#C01219FF" RequirementId="@ItemRequirement" IsPerkRequirement="false" IsVisible="@HasItemRequirement">
-                                      <Children>
-                                        <HintWidget DataSource="{ItemRequirementHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
-                                      </Children>
-                                    </PartyUpgradeRequirementWidget>
-                                    <!--Perk Requirement-->
-                                    <PartyUpgradeRequirementWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="25" SuggestedHeight="25" HorizontalAlignment="Center" MarginTop="2" IsSufficient="@IsPerkRequirementMet" RequirementId="@PerkRequirement" IsPerkRequirement="true" NormalColor="#FFFFFFFF" InsufficientColor="#C01219FF" IsVisible="@HasPerkRequirement">
-                                      <Children>
-                                        <HintWidget DataSource="{PerkRequirementHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
-                                      </Children>
-                                    </PartyUpgradeRequirementWidget>
-                                  </Children>
-                                </ListPanel>
-                              </Children>
-                            </SiblingIndexVisibilityWidget>
+								<ScrollablePanel Id="ScrollablePanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="230" SuggestedHeight="112" MarginLeft="25" HorizontalAlignment="Center" ClipRect="ClipRect" InnerPanel="ClipRect\Upgrades" HorizontalScrollbar="HorizontalScrollbar" AutoHideScrollBars="true" OnlyAcceptScrollEventIfCanScroll="true">
+									<Children>
+										<PartyUpgradesContainerWidget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" AnyUpgradeHasRequirement="@AnyUpgradeHasRequirement">
+											<Children>
+												<NavigatableListPanel Id="Upgrades" DataSource="{Upgrades}" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="5" StackLayout.LayoutMethod="HorizontalCentered">
+													<ItemTemplate>
+														<ListPanel Id="TroopUpgrade" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+															<Children>
+																<NavigationTargetSwitcher FromTarget="..\." ToTarget="..\ActionButton"/>
+																<PartyUpgradeButtonWidget Id="ActionButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="64" SuggestedHeight="50" VerticalAlignment="Center" Command.AlternateClick="ExecuteUpgradeEncyclopediaLink" Command.Click="ExecuteUpgrade" DefaultBrush="Party.UpgradeSlot.Button" ImageIdentifierWidget="ImageIdentifier" InsufficientBrush="Party.UpgradeSlot.ButtonInsufficient" MarinerTroopBrush="MarinerTroopIcon" IsAvailable="@IsAvailable" IsInsufficient="@IsInsufficient" UnavailableBrush="Party.UpgradeSlot.ButtonUnavailable" HoveredCursorState="RightClickLink" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused" UpdateChildrenStates="true">
+																	<Children>
+																		<HintWidget DataSource="{Hint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+																		<ImageIdentifierWidget Id="ImageIdentifier" DataSource="{TroopImage}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="7" MarginRight="7" MarginTop="6" MarginBottom="8" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" />
+																		<TutorialHighlightItemBrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TutorialHighlightBrush" IsHighlightEnabled="@IsHighlighted" IsVisible="false" />
+																		<BrushWidget Id="MarinerTroopIcon" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="8" MarginRight="6" SuggestedWidth="17" SuggestedHeight="9.8" IsVisible="@IsMarinerTroop" Brush="Party.TroopTuple.Extension.MarinerTroopDifferentiatorIcon" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused"/>
+																	</Children>
+																</PartyUpgradeButtonWidget>
+																<Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="55" MarginLeft="2" PositionYOffset="-4" VerticalAlignment="Bottom">
+																	<Children>
+																		<ListPanel DoNotAcceptEvents="true" DataSource="{Requirements}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalCentered">
+																			<Children>
+																				<!--Item Requirement-->
+																				<PartyUpgradeRequirementWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Center" MarginLeft="10" IsSufficient="@IsItemRequirementMet" NormalColor="#F4E1C4FF" InsufficientColor="#C01219FF" RequirementId="@ItemRequirement" IsPerkRequirement="false" IsVisible="@HasItemRequirement">
+																					<Children>
+																						<HintWidget DataSource="{ItemRequirementHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+																					</Children>
+																				</PartyUpgradeRequirementWidget>
+																				<!--Perk Requirement-->
+																				<PartyUpgradeRequirementWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Center" MarginLeft="10" IsSufficient="@IsPerkRequirementMet" RequirementId="@PerkRequirement" IsPerkRequirement="true" NormalColor="#FFFFFFFF" InsufficientColor="#C01219FF" IsVisible="@HasPerkRequirement">
+																					<Children>
+																						<HintWidget DataSource="{PerkRequirementHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+																					</Children>
+																				</PartyUpgradeRequirementWidget>
+																			</Children>
+																		</ListPanel>
+																	</Children>
+																</Widget>
+															</Children>
+														</ListPanel>
+													</ItemTemplate>
+												</NavigatableListPanel>
+											</Children>
+										</PartyUpgradesContainerWidget>
 
-                            <!--Upgrade Button-->
-                            <PartyUpgradeButtonWidget Id="ActionButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70" SuggestedHeight="56" VerticalAlignment="Center" Command.AlternateClick="ExecuteUpgradeEncyclopediaLink" Command.Click="ExecuteUpgrade" DefaultBrush="Party.UpgradeSlot.Button" ImageIdentifierWidget="ImageIdentifier" InsufficientBrush="Party.UpgradeSlot.ButtonInsufficient" MarinerTroopBrush="MarinerTroopIcon" IsAvailable="@IsAvailable" IsInsufficient="@IsInsufficient" IsVisible="true" UnavailableBrush="Party.UpgradeSlot.ButtonUnavailable" InputItemParentWidget="InputItemParentWidget" ManagementItemWidget="..\..\..\..\..\..\." HoveredCursorState="RightClickLink" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused" UpdateChildrenStates="true">
-                              <Children>
+										<!-- Scrollbar -->
+										<ScrollbarWidget Id="HorizontalScrollbar" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="7" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="40" AlignmentAxis="Horizontal" Handle="HorizontalScrollbarHandle" MaxValue="100" MinValue="0">
+											<Children>
+												<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="3" Sprite="BlankWhiteSquare" AlphaFactor="0.5" Color="#3C2A20FF" ColorFactor="1.8" PositionYOffset="2"/>
+												<ImageWidget Id="HorizontalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="10" MarginTop="1" MarginBottom="1" HorizontalAlignment="Center" Brush="Party.Scrollbar.Handle" />
+											</Children>
+										</ScrollbarWidget>
 
-                                <HintWidget DataSource="{Hint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
-                                <ImageIdentifierWidget Id="ImageIdentifier" DataSource="{TroopImage}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="7" MarginRight="7" MarginTop="6" MarginBottom="8" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" />
-                                <TutorialHighlightItemBrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TutorialHighlightBrush" IsHighlightEnabled="@IsHighlighted" IsVisible="false" />
-                                <BrushWidget Id="MarinerTroopIcon" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="8" MarginRight="6" SuggestedWidth="17" SuggestedHeight="9.8" IsVisible="@IsMarinerTroop" Brush="Party.TroopTuple.Extension.MarinerTroopDifferentiatorIcon" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused"/>
+									</Children>
+								</ScrollablePanel>
 
-                              </Children>
-                            </PartyUpgradeButtonWidget>
+							</Children>
+						</ListPanel>
 
-                            <!--Requirement For The Second Upgrade-->
-                            <SiblingIndexVisibilityWidget DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="55" VerticalAlignment="Center" WatchType="Odd" WidgetToWatch="..\.">
-                              <Children>
-                                <ListPanel DoNotAcceptEvents="true" DataSource="{Requirements}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
-                                  <Children>
-                                    <!--Item Requirement-->
-                                    <PartyUpgradeRequirementWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="25" SuggestedHeight="25" HorizontalAlignment="Center" MarginBottom="2" IsSufficient="@IsItemRequirementMet" NormalColor="#F4E1C4FF" InsufficientColor="#C01219FF" RequirementId="@ItemRequirement" IsPerkRequirement="false" IsVisible="@HasItemRequirement">
-                                      <Children>
-                                        <HintWidget DataSource="{ItemRequirementHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
-                                      </Children>
-                                    </PartyUpgradeRequirementWidget>
-                                    <!--Perk Requirement-->
-                                    <PartyUpgradeRequirementWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="25" SuggestedHeight="25" HorizontalAlignment="Center" MarginTop="2" IsSufficient="@IsPerkRequirementMet" RequirementId="@PerkRequirement" IsPerkRequirement="true" NormalColor="#FFFFFFFF" InsufficientColor="#C01219FF" IsVisible="@HasPerkRequirement">
-                                      <Children>
-                                        <HintWidget DataSource="{PerkRequirementHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
-                                      </Children>
-                                    </PartyUpgradeRequirementWidget>
-                                  </Children>
-                                </ListPanel>
-                              </Children>
-                            </SiblingIndexVisibilityWidget>
+					</Children>
+				</Widget>
 
-                          </Children>
-                        </ListPanel>
+			</Children>
+		</PartyTroopManagementItemButtonWidget>
 
-                      </ItemTemplate>
-                    </ListPanel>
-
-                  </Children>
-                </Widget>
-
-                <!--More Than Two Upgrades-->
-                <ScrollablePanel WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="230" SuggestedHeight="112" MarginLeft="25" HorizontalAlignment="Center" ClipRect="ClipRect" InnerPanel="ClipRect\Upgrades" HorizontalScrollbar="HorizontalScrollbar" AutoHideScrollBars="true" OnlyAcceptScrollEventIfCanScroll="true" IsVisible="@HasMoreThanTwoUpgrades">
-                  <Children>
-                    <PartyUpgradesContainerWidget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" AnyUpgradeHasRequirement="@AnyUpgradeHasRequirement">
-                      <Children>
-                        <ListPanel Id="Upgrades" DataSource="{Upgrades}" DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="5" StackLayout.LayoutMethod="HorizontalCentered">
-                          <ItemTemplate>
-                            <ListPanel DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
-                              <Children>
-                                <PartyUpgradeButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="64" SuggestedHeight="50" VerticalAlignment="Center" Command.AlternateClick="ExecuteUpgradeEncyclopediaLink" Command.Click="ExecuteUpgrade" DefaultBrush="Party.UpgradeSlot.Button" ImageIdentifierWidget="ImageIdentifier" InsufficientBrush="Party.UpgradeSlot.ButtonInsufficient" MarinerTroopBrush="MarinerTroopIcon" IsAvailable="@IsAvailable" IsInsufficient="@IsInsufficient" UnavailableBrush="Party.UpgradeSlot.ButtonUnavailable" HoveredCursorState="RightClickLink" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused" UpdateChildrenStates="true">
-                                  <Children>
-                                    <HintWidget DataSource="{Hint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
-                                    <ImageIdentifierWidget Id="ImageIdentifier" DataSource="{TroopImage}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="7" MarginRight="7" MarginTop="6" MarginBottom="8" AdditionalArgs="@AdditionalArgs" ImageId="@Id" TextureProviderName="@TextureProviderName" />
-                                    <TutorialHighlightItemBrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="TutorialHighlightBrush" IsHighlightEnabled="@IsHighlighted" IsVisible="false" />
-                                    <BrushWidget Id="MarinerTroopIcon" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="8" MarginRight="6" SuggestedWidth="17" SuggestedHeight="9.8" IsVisible="@IsMarinerTroop" Brush="Party.TroopTuple.Extension.MarinerTroopDifferentiatorIcon" Command.HoverBegin="ExecuteSetFocused" Command.HoverEnd="ExecuteSetUnfocused"/>
-                                  </Children>
-                                </PartyUpgradeButtonWidget>
-                                <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="55" MarginLeft="2" PositionYOffset="-4" VerticalAlignment="Bottom">
-                                  <Children>
-                                    <ListPanel DoNotAcceptEvents="true" DataSource="{Requirements}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalCentered">
-                                      <Children>
-                                        <!--Item Requirement-->
-                                        <PartyUpgradeRequirementWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Center" MarginLeft="10" IsSufficient="@IsItemRequirementMet" NormalColor="#F4E1C4FF" InsufficientColor="#C01219FF" RequirementId="@ItemRequirement" IsPerkRequirement="false" IsVisible="@HasItemRequirement">
-                                          <Children>
-                                            <HintWidget DataSource="{ItemRequirementHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
-                                          </Children>
-                                        </PartyUpgradeRequirementWidget>
-                                        <!--Perk Requirement-->
-                                        <PartyUpgradeRequirementWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="20" SuggestedHeight="20" HorizontalAlignment="Center" MarginLeft="10" IsSufficient="@IsPerkRequirementMet" RequirementId="@PerkRequirement" IsPerkRequirement="true" NormalColor="#FFFFFFFF" InsufficientColor="#C01219FF" IsVisible="@HasPerkRequirement">
-                                          <Children>
-                                            <HintWidget DataSource="{PerkRequirementHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
-                                          </Children>
-                                        </PartyUpgradeRequirementWidget>
-                                      </Children>
-                                    </ListPanel>
-                                  </Children>
-                                </Widget>
-                              </Children>
-                            </ListPanel>
-                          </ItemTemplate>
-                        </ListPanel>
-                      </Children>
-                    </PartyUpgradesContainerWidget>
-
-                    <!-- Scrollbar -->
-                    <ScrollbarWidget Id="HorizontalScrollbar" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="7" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="40" AlignmentAxis="Horizontal" Handle="HorizontalScrollbarHandle" MaxValue="100" MinValue="0">
-                      <Children>
-                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="3" Sprite="BlankWhiteSquare" AlphaFactor="0.5" Color="#3C2A20FF" ColorFactor="1.8" PositionYOffset="2"/>
-                        <ImageWidget Id="HorizontalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="10" MarginTop="1" MarginBottom="1" HorizontalAlignment="Center" Brush="Party.Scrollbar.Handle" />
-                      </Children>
-                    </ScrollbarWidget>
-
-                  </Children>
-                </ScrollablePanel>
-
-              </Children>
-            </ListPanel>
-
-          </Children>
-        </Widget>
-
-      </Children>
-    </PartyTroopManagementItemButtonWidget>
-    
-  </Window>
+	</Window>
 </Prefab>
