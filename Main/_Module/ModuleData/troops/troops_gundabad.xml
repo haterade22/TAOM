@@ -11,7 +11,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -193,7 +193,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -476,7 +476,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -687,7 +687,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -874,7 +874,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -1062,7 +1062,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -1271,7 +1271,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -1489,7 +1489,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -1745,7 +1745,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -1881,7 +1881,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -1959,7 +1959,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -2121,7 +2121,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -2179,7 +2179,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -2235,7 +2235,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -2292,7 +2292,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_uruk_berserker" />
         </face>
         <skills>
             <skill
@@ -2349,7 +2349,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_uruk_berserker" />
         </face>
         <skills>
             <skill
@@ -2520,7 +2520,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -2576,7 +2576,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -2679,7 +2679,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -2736,7 +2736,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -2793,7 +2793,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -2901,7 +2901,7 @@
         culture="Culture.gundabad">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_gundabad" />
         </face>
         <skills>
             <skill
@@ -3427,7 +3427,7 @@
       occupation="Soldier"
       culture="Culture.gundabad">
     <face>
-      <face_key_template value="BodyProperty.fighter_empire" />
+      <face_key_template value="BodyProperty.fighter_gundabad" />
     </face>
     <skills>
       <skill id="Athletics" value="150" />

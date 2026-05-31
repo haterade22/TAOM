@@ -13,7 +13,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill
@@ -93,7 +93,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill
@@ -162,7 +162,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill
@@ -234,7 +234,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill
@@ -306,7 +306,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill
@@ -384,7 +384,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill
@@ -465,7 +465,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill
@@ -543,7 +543,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill
@@ -621,7 +621,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill
@@ -693,7 +693,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill
@@ -759,7 +759,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill
@@ -828,7 +828,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill
@@ -897,7 +897,7 @@
         culture="Culture.mirkwood">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
             <skill

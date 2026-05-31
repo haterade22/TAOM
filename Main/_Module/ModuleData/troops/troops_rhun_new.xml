@@ -10,7 +10,7 @@
         is_basic_troop="true"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="53" />
@@ -45,7 +45,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="85" />
@@ -82,7 +82,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -118,7 +118,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -168,7 +168,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="110" />
@@ -208,7 +208,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -246,7 +246,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -281,7 +281,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="110" />
@@ -319,7 +319,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -357,7 +357,7 @@
         is_basic_troop="true"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="53" />
@@ -394,7 +394,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="85" />
@@ -430,7 +430,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="90" />
@@ -469,7 +469,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -505,7 +505,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -545,7 +545,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -583,7 +583,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -620,7 +620,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -659,7 +659,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="125" />
@@ -694,7 +694,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="135" />
@@ -733,7 +733,7 @@
         is_basic_troop="true"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="65" />
@@ -770,7 +770,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="90" />
@@ -810,7 +810,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -850,7 +850,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="115" />
@@ -889,7 +889,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="130" />
@@ -929,7 +929,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="135" />
@@ -968,7 +968,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="150" />
@@ -1008,7 +1008,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="155" />
@@ -1045,7 +1045,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="165" />
@@ -1085,7 +1085,7 @@
         is_basic_troop="true"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="53" />
@@ -1126,7 +1126,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="85" />
@@ -1168,7 +1168,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="110" />
@@ -1217,7 +1217,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="110" />
@@ -1263,7 +1263,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="125" />
@@ -1310,7 +1310,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -1357,7 +1357,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -1406,7 +1406,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="145" />
@@ -1451,7 +1451,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="135" />
@@ -1496,7 +1496,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="135" />
@@ -1545,7 +1545,7 @@
         is_basic_troop="false"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="38" />
@@ -1580,7 +1580,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="53" />
@@ -1615,7 +1615,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="55" />
@@ -1651,7 +1651,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="85" />
@@ -1689,7 +1689,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="90" />
@@ -1726,7 +1726,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -1762,7 +1762,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -1799,7 +1799,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -1839,7 +1839,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -1877,7 +1877,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -1912,7 +1912,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -1947,7 +1947,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -1984,7 +1984,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="110" />
@@ -2022,7 +2022,7 @@
         is_basic_troop="true"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="85" />
@@ -2059,7 +2059,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -2107,7 +2107,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -2156,7 +2156,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -2215,7 +2215,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -2263,7 +2263,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="110" />
@@ -2312,7 +2312,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="135" />
@@ -2371,7 +2371,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="125" />
@@ -2428,7 +2428,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="125" />
@@ -2479,7 +2479,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -2539,7 +2539,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="155" />
@@ -2596,7 +2596,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="145" />
@@ -2651,7 +2651,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="145" />
@@ -2700,7 +2700,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="135" />
@@ -2749,7 +2749,7 @@
         is_basic_troop="true"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -2786,7 +2786,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="125" />
@@ -2834,7 +2834,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -2883,7 +2883,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="155" />
@@ -2932,7 +2932,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="145" />
@@ -2980,7 +2980,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="135" />
@@ -3029,7 +3029,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="175" />
@@ -3088,7 +3088,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="165" />
@@ -3145,7 +3145,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="165" />
@@ -3188,7 +3188,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="155" />
@@ -3237,7 +3237,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="190" />
@@ -3294,7 +3294,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="180" />
@@ -3349,7 +3349,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="180" />
@@ -3390,7 +3390,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="170" />
@@ -3446,7 +3446,7 @@
         is_basic_troop="true"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="85" />
@@ -3481,7 +3481,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -3519,7 +3519,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -3556,7 +3556,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -3595,7 +3595,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="125" />
@@ -3632,7 +3632,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="135" />
@@ -3672,7 +3672,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="145" />
@@ -3708,7 +3708,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="175" />
@@ -3745,7 +3745,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="175" />
@@ -3785,7 +3785,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="190" />
@@ -3987,7 +3987,7 @@
         is_basic_troop="true"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="53" />
@@ -4021,7 +4021,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="85" />
@@ -4058,7 +4058,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -4094,7 +4094,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -4132,7 +4132,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -4168,7 +4168,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="110" />
@@ -4206,7 +4206,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="125" />
@@ -4242,7 +4242,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -4281,7 +4281,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="145" />
@@ -4315,7 +4315,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="135" />
@@ -4354,7 +4354,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="155" />
@@ -4395,7 +4395,7 @@
         is_basic_troop="true"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="53" />
@@ -4429,7 +4429,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="85" />
@@ -4466,7 +4466,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -4504,7 +4504,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -4542,7 +4542,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="105" />
@@ -4580,7 +4580,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -4620,7 +4620,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="125" />
@@ -4658,7 +4658,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="135" />
@@ -4698,7 +4698,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="145" />
@@ -4734,7 +4734,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="155" />
@@ -4774,7 +4774,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="175" />
@@ -4812,7 +4812,7 @@
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>
-            <face_key_template value="BodyProperty.fighter_khuzait" />
+            <face_key_template value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />

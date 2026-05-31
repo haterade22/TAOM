@@ -13,7 +13,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -324,7 +324,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -651,7 +651,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -932,7 +932,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -1510,7 +1510,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -1996,7 +1996,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -2275,7 +2275,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -2567,7 +2567,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -2870,7 +2870,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -3354,7 +3354,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -3713,7 +3713,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -4141,7 +4141,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -4405,7 +4405,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -4679,7 +4679,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -4936,7 +4936,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -5136,7 +5136,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -5416,7 +5416,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -6263,7 +6263,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -6566,7 +6566,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -6805,7 +6805,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -7073,7 +7073,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -7949,7 +7949,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -8367,7 +8367,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill
@@ -9434,7 +9434,7 @@
         culture="Culture.rivendell">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_rivendell" />
         </face>
         <skills>
             <skill

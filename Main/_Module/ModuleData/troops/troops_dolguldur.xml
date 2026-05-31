@@ -15,7 +15,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_goblin" />
         </face>
         <skills>
             <skill
@@ -74,7 +74,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_goblin" />
         </face>
         <skills>
             <skill
@@ -167,7 +167,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_goblin" />
         </face>
         <skills>
             <skill
@@ -308,7 +308,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_goblin" />
         </face>
         <skills>
             <skill
@@ -471,7 +471,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_goblin" />
         </face>
         <skills>
             <skill
@@ -694,7 +694,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_goblin" />
         </face>
         <skills>
             <skill
@@ -787,7 +787,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_goblin" />
         </face>
         <skills>
             <skill
@@ -925,7 +925,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_goblin" />
         </face>
         <skills>
             <skill
@@ -1061,7 +1061,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -1156,7 +1156,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -1261,7 +1261,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -1410,7 +1410,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -1571,7 +1571,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -1765,7 +1765,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2075,7 +2075,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2127,7 +2127,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2179,7 +2179,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2235,7 +2235,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2291,7 +2291,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2346,7 +2346,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2399,7 +2399,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2453,7 +2453,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2505,7 +2505,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2560,7 +2560,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2617,7 +2617,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2674,7 +2674,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2733,7 +2733,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2788,7 +2788,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2846,7 +2846,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2904,7 +2904,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -2962,7 +2962,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_dolguldur" />
         </face>
         <skills>
             <skill
@@ -3024,7 +3024,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="95" />
@@ -3077,7 +3077,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="100" />
@@ -3138,7 +3138,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="120" />
@@ -3197,7 +3197,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="115" />
@@ -3262,7 +3262,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="140" />
@@ -3325,7 +3325,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="130" />
@@ -3390,7 +3390,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="170" />
@@ -3458,7 +3458,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="185" />
@@ -3523,7 +3523,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="160" />
@@ -3582,7 +3582,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="175" />
@@ -3638,7 +3638,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="160" />
@@ -3694,7 +3694,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="175" />
@@ -3747,7 +3747,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="150" />
@@ -3812,7 +3812,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_rhun" />
         </face>
         <skills>
             <skill id="Athletics" value="165" />
@@ -4338,7 +4338,7 @@
         culture="Culture.dolguldur">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_dolguldur" />
+                value="BodyProperty.fighter_goblin" />
         </face>
         <skills>
             <skill

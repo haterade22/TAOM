@@ -477,7 +477,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill id="Athletics" value="35" />
@@ -548,7 +548,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill id="Athletics" value="55" />
@@ -623,7 +623,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill id="Athletics" value="65" />
@@ -709,7 +709,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill id="Athletics" value="80" />
@@ -792,7 +792,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill id="Athletics" value="75" />
@@ -872,7 +872,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill id="Athletics" value="95" />
@@ -956,7 +956,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill id="Athletics" value="115" />
@@ -1033,7 +1033,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill id="Athletics" value="115" />
@@ -1118,7 +1118,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -1239,7 +1239,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -1382,7 +1382,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -1504,7 +1504,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -1671,7 +1671,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -1828,7 +1828,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -1983,7 +1983,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -2147,7 +2147,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -2278,7 +2278,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -2445,7 +2445,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -2588,7 +2588,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -2755,7 +2755,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -2895,7 +2895,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -3064,7 +3064,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -3219,7 +3219,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -3386,7 +3386,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -3553,7 +3553,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -3676,7 +3676,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -3803,7 +3803,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -3941,7 +3941,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -4098,7 +4098,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -4224,7 +4224,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -4373,7 +4373,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -4507,7 +4507,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -4655,7 +4655,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -4781,7 +4781,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -4914,7 +4914,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -5061,7 +5061,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -5220,7 +5220,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -5379,7 +5379,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -5536,7 +5536,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -5695,7 +5695,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -5854,7 +5854,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6011,7 +6011,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6082,7 +6082,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6154,7 +6154,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6226,7 +6226,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6295,7 +6295,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6364,7 +6364,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6438,7 +6438,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6510,7 +6510,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6582,7 +6582,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6654,7 +6654,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6723,7 +6723,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6789,7 +6789,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
@@ -6855,7 +6855,7 @@
         culture="Culture.erebor">
         <face>
             <face_key_template
-                value="BodyProperty.fighter_empire" />
+                value="BodyProperty.fighter_erebor" />
         </face>
         <skills>
             <skill
