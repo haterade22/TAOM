@@ -15,7 +15,7 @@
 	<Window>
 		<Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
 			<Children>
-				<BrushWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" LayoutImp.LayoutMethod="VerticalTopToBottom" Brush="Frame1Canvas">
+				<BrushWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom" Brush="Frame1Canvas">
 					<Children>
 
 						<BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1100" SuggestedHeight="900" Brush="Frame1.Border" IsEnabled="true">
@@ -48,16 +48,16 @@
 										</Widget>
 
 
-										<ListPanel VerticalAlignment="Top" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="HorizontalLeftToRight" >
+										<ListPanel VerticalAlignment="Top" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" >
 											<Children>
-												<ListPanel MarginRight="20" DataSource="{GoodFactionLeader}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="HorizontalRightToLeft">
+												<ListPanel MarginRight="20" DataSource="{GoodFactionLeader}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalRightToLeft">
 													<ItemTemplate>
 														<!--Member-->
 														<Relationship/>
 													</ItemTemplate>
 												</ListPanel>
 												<Widget VerticalAlignment="Center" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="2" SuggestedHeight="85" Sprite="Encyclopedia\divider_vertical"/>
-												<ListPanel VerticalAlignment="Top" MarginLeft="20" DataSource="{EvilFactionLeader}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="HorizontalLeftToRight">
+												<ListPanel VerticalAlignment="Top" MarginLeft="20" DataSource="{EvilFactionLeader}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight">
 													<ItemTemplate>
 														<!--Member-->
 														<Relationship/>
@@ -72,16 +72,16 @@
 												<TextWidget ClipContents="false" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Text="Allies" />
 											</Children>
 										</Widget>
-										<ListPanel VerticalAlignment="Top" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="HorizontalLeftToRight" >
+										<ListPanel VerticalAlignment="Top" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" >
 											<Children>
-												<ListPanel MarginRight="20" DataSource="{GoodFactionParticipants}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="HorizontalRightToLeft">
+												<ListPanel MarginRight="20" DataSource="{GoodFactionParticipants}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalRightToLeft">
 													<ItemTemplate>
 														<!--Member-->
 														<Relationship/>
 													</ItemTemplate>
 												</ListPanel>
 												<Widget VerticalAlignment="Center" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="2" SuggestedHeight="85" Sprite="Encyclopedia\divider_vertical"/>
-												<ListPanel VerticalAlignment="Top" MarginLeft="20" DataSource="{EvilFactionParticipants}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="HorizontalLeftToRight">
+												<ListPanel VerticalAlignment="Top" MarginLeft="20" DataSource="{EvilFactionParticipants}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight">
 													<ItemTemplate>
 														<!--Member-->
 														<Relationship/>
@@ -90,16 +90,16 @@
 											</Children>
 										</ListPanel>
 
-										<ListPanel VerticalAlignment="Top" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="HorizontalLeftToRight" >
+										<ListPanel VerticalAlignment="Top" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" >
 											<Children>
-												<ListPanel MarginRight="20" DataSource="{GoodFactionParticipants2}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="HorizontalRightToLeft">
+												<ListPanel MarginRight="20" DataSource="{GoodFactionParticipants2}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalRightToLeft">
 													<ItemTemplate>
 														<!--Member-->
 														<Relationship/>
 													</ItemTemplate>
 												</ListPanel>
 												<Widget VerticalAlignment="Center" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="2" SuggestedHeight="85" Sprite="Encyclopedia\divider_vertical"/>
-												<ListPanel VerticalAlignment="Top" MarginLeft="20" DataSource="{EvilFactionParticipants2}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="HorizontalLeftToRight">
+												<ListPanel VerticalAlignment="Top" MarginLeft="20" DataSource="{EvilFactionParticipants2}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight">
 													<ItemTemplate>
 														<!--Member-->
 														<Relationship/>

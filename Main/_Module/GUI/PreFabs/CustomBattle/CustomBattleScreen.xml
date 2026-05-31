@@ -52,7 +52,7 @@
     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
       <Children>
         <Standard.Background />
-        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" LayoutImp.LayoutMethod="HorizontalLeftToRight">
+        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight">
           <Children>
 
             <!--Left Side Panel-->
@@ -69,7 +69,7 @@
                     <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="650" SuggestedHeight="7" HorizontalAlignment="Center" VerticalAlignment="Top" PositionYOffset="75" Sprite="SPGeneral\TownManagement\title_divider" />
 
 										<NavigationScopeTargeter ScopeID="CenterSelectionsScope" ScopeParent="..\CenterSelections" ScopeMovements="Vertical" />
-                    <ListPanel Id="CenterSelections" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="100" LayoutImp.LayoutMethod="VerticalTopToBottom">
+                    <ListPanel Id="CenterSelections" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="100" StackLayout.LayoutMethod="VerticalTopToBottom">
                       <Children>
 
                         <!--_____Map Selection_________-->
@@ -147,7 +147,7 @@
                             <!--<Standard.DropdownWithHorizontalControl DataSource="{..\AttackerSiegePrioritySelection}" HorizontalAlignment="Right" />-->
 
                             <!--Attacker Machines-->
-                            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Center" LayoutImp.LayoutMethod="VerticalTopToBottom" MarginRight="!SiegeMachines.MarginRight">
+                            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom" MarginRight="!SiegeMachines.MarginRight">
                               <Children>
 
                                 <!--Attacker Melee Machines-->
@@ -191,7 +191,7 @@
                             <!--Defender Machines-->
                             <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="!SiegeMachines.MarginRight" >
                               <Children>
-                                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="VerticalTopToBottom">
+                                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
                                   <Children>
                                     <NavigationScopeTargeter ScopeID="DefenderMachinesSelectionScope" ScopeParent="..\DefenderMachines" ScopeMovements="Horizontal" />
                                     <NavigatableListPanel Id="DefenderMachines" DataSource="{..\DefenderMachines}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
@@ -256,7 +256,7 @@
                         <Widget Id="SearchResultListRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="17" MarginRight="10" MarginTop="8" MarginBottom="17" ClipContents="true">
                           <Children>
 
-                            <ListPanel Id="SearchResultList" DataSource="{MapSearchResults}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="5" LayoutImp.LayoutMethod="VerticalTopToBottom">
+                            <ListPanel Id="SearchResultList" DataSource="{MapSearchResults}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="5" StackLayout.LayoutMethod="VerticalTopToBottom">
                               <ItemTemplate>
 
                                 <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="25" MarginBottom="5" Brush="Standard.DropdownItem" Command.Click="ExecuteSelection">

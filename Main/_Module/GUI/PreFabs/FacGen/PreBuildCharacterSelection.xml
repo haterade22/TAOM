@@ -35,9 +35,9 @@
   <Window >
     <Widget HeightSizePolicy="StretchToParent"  WidthSizePolicy="Fixed" SuggestedWidth="!Clan.Header.Width" MarginTop="10" MarginLeft="10" MarginBottom="30"  UpdateChildrenStates="true" >
       <Children>
-        <ListPanel MarginTop="10" MarginLeft="10" MarginBottom="10" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" LayoutImp.LayoutMethod="VerticalTopToBottom">
+        <ListPanel MarginTop="10" MarginLeft="10" MarginBottom="10" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
           <Children>
-            <BrushListPanel Id="CompanionsList" IsVisible="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"  HorizontalAlignment="Left" LayoutImp.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true"  RenderLate="true" Brush="Frame1Brush" >
+            <BrushListPanel Id="CompanionsList" IsVisible="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"  HorizontalAlignment="Left" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true"  RenderLate="true" Brush="Frame1Brush" >
               <Children>
                 <!--List and Scrollbar horizontal list-->
                 <ListPanel WidthSizePolicy="StretchToParent"  HeightSizePolicy="StretchToParent ">
