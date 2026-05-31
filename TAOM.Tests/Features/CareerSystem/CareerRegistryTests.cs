@@ -164,4 +164,33 @@ public class CareerRegistryTests
         Assert.IsFalse(_registry.IsTierAvailable(19, 3));
         Assert.IsTrue(_registry.IsTierAvailable(20, 3));
     }
+
+    [TestMethod]
+    public void GetTierUnlockLevel_Tier1_Returns1()
+    {
+        Assert.AreEqual(1, _registry.GetTierUnlockLevel(1));
+    }
+
+    [TestMethod]
+    public void GetTierUnlockLevel_Tier2_Returns10()
+    {
+        Assert.AreEqual(10, _registry.GetTierUnlockLevel(2));
+    }
+
+    [TestMethod]
+    public void GetTierUnlockLevel_Tier3_Returns20()
+    {
+        Assert.AreEqual(20, _registry.GetTierUnlockLevel(3));
+    }
+
+    [TestMethod]
+    public void IsTierAvailable_ConsistentWithUnlockLevel()
+    {
+        for (int tier = 1; tier <= 3; tier++)
+        {
+            var lvl = _registry.GetTierUnlockLevel(tier);
+            Assert.IsFalse(_registry.IsTierAvailable(lvl - 1, tier), $"tier {tier} should be locked below its unlock level");
+            Assert.IsTrue(_registry.IsTierAvailable(lvl, tier), $"tier {tier} should unlock at its unlock level");
+        }
+    }
 }

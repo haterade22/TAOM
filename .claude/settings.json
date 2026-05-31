@@ -45,6 +45,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/block-dangerous-git.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-moduledata-validation.sh"
           }
         ]
       },

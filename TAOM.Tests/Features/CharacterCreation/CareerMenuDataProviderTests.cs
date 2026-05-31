@@ -90,17 +90,20 @@ public class CareerMenuDataProviderTests
     }
 
     [TestMethod]
-    public void LoadCareerMenuOptions_DefaultBonusValues_WhenNotSpecified()
+    public void LoadCareerMenuOptions_MissingBonusFields_DefaultToZero()
     {
+        // Career is flavor-only as of 2026-05-30: a missing bonus key means "no bonus",
+        // not the old 1/10/1. This guards the landmine where deleting (not zeroing) the
+        // keys would silently restore the pre-cut budget.
         WriteCareerMenuJson(@"[
             { ""career_string_id"": ""knight_of_belfalas"", ""skills"": [""Riding""], ""attribute"": ""Vigor"" }
         ]");
 
         var result = _sut.LoadCareerMenuOptions();
 
-        Assert.AreEqual(1, result[0].FocusToAdd);
-        Assert.AreEqual(10, result[0].SkillLevelToAdd);
-        Assert.AreEqual(1, result[0].AttributeLevelToAdd);
+        Assert.AreEqual(0, result[0].FocusToAdd);
+        Assert.AreEqual(0, result[0].SkillLevelToAdd);
+        Assert.AreEqual(0, result[0].AttributeLevelToAdd);
     }
 
     [TestMethod]

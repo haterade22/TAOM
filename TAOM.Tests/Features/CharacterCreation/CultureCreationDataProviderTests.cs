@@ -110,8 +110,9 @@ public class CultureCreationDataProviderTests
         Assert.AreEqual(30f, result[0].DefaultAge, 0.01f);
         Assert.AreEqual(0.5f, result[0].DefaultWeight, 0.01f);
         Assert.AreEqual(0.5f, result[0].DefaultBuild, 0.01f);
-        Assert.AreEqual(1, result[0].FocusToAdd);
-        Assert.AreEqual(10, result[0].SkillLevelToAdd);
+        // Culture-base bonus removed 2026-05-30: a missing key means "no culture base" (0), not 1/10.
+        Assert.AreEqual(0, result[0].FocusToAdd);
+        Assert.AreEqual(0, result[0].SkillLevelToAdd);
         Assert.AreEqual(0, result[0].Races.Length);
         Assert.AreEqual("", result[0].StartingSettlement);
     }

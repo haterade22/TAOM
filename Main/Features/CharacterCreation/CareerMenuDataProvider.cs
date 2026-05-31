@@ -71,9 +71,12 @@ public class CareerMenuDataProvider : ICareerMenuDataProvider
             CareerStringId = item.Value<string>("career_string_id") ?? "",
             Skills = item["skills"]?.ToObject<string[]>() ?? Array.Empty<string>(),
             Attribute = item.Value<string>("attribute") ?? "",
-            FocusToAdd = item.Value<int?>("focus_to_add") ?? 1,
-            SkillLevelToAdd = item.Value<int?>("skill_level_to_add") ?? 10,
-            AttributeLevelToAdd = item.Value<int?>("attribute_level_to_add") ?? 1
+            // Career is flavor-only (no CC stat bonus) as of 2026-05-30 — see
+            // docs/features/character-creation.md "Bonus budget". Default is 0 so a missing
+            // key means "no bonus" (matching the zeroed data), NOT the old 1/10/1.
+            FocusToAdd = item.Value<int?>("focus_to_add") ?? 0,
+            SkillLevelToAdd = item.Value<int?>("skill_level_to_add") ?? 0,
+            AttributeLevelToAdd = item.Value<int?>("attribute_level_to_add") ?? 0
         };
     }
 

@@ -29,12 +29,10 @@ public class CareerScreenVM : ViewModel
     private string _tier1Label;
     private string _tier2Label;
     private string _tier3Label;
-    private bool _tier1Locked;
     private bool _tier2Locked;
     private bool _tier3Locked;
-    private bool _tier2GateBottomHalf;
-    private bool _tier3GateTopHalf;
-    private bool _tier3GateFull;
+    private string _tier2RequirementText;
+    private string _tier3RequirementText;
     private int _freeCareerPoints;
     private bool _hasCareer;
     private bool _hasAbilitySprite;
@@ -100,6 +98,18 @@ public class CareerScreenVM : ViewModel
         CareerDescription = new TextObject(career.Description).ToString();
         CareerPortraitSprite = $"CareerSystem\\Portraits\\{career.PortraitSprite}";
 
+        // Tier headers show the career's per-tier RANK title (e.g. "Captain of Ithilien") when
+        // authored, falling back to the generic "Tier N" label. (Adopted from TOR_Core.)
+        Tier1Label = !string.IsNullOrEmpty(career.Rank1Name)
+            ? new TextObject(career.Rank1Name).ToString()
+            : new TextObject("{=taom_career_tier1}Tier 1").ToString();
+        Tier2Label = !string.IsNullOrEmpty(career.Rank2Name)
+            ? new TextObject(career.Rank2Name).ToString()
+            : new TextObject("{=taom_career_tier2}Tier 2").ToString();
+        Tier3Label = !string.IsNullOrEmpty(career.Rank3Name)
+            ? new TextObject(career.Rank3Name).ToString()
+            : new TextObject("{=taom_career_tier3}Tier 3").ToString();
+
         var abilityTemplate = _configProvider?.GetAbilityTemplate(career.AbilityTemplateId);
         AbilityName = abilityTemplate != null
             ? new TextObject(abilityTemplate.DisplayName).ToString()
@@ -113,16 +123,15 @@ public class CareerScreenVM : ViewModel
         FreeCareerPointsText = new TextObject("{=taom_career_free_points}Free Points: {COUNT}")
             .SetTextVariable("COUNT", FreeCareerPoints).ToString();
 
-        Tier1Locked = !_registry.IsTierAvailable(_heroLevel, 1);
         Tier2Locked = !_registry.IsTierAvailable(_heroLevel, 2);
         Tier3Locked = !_registry.IsTierAvailable(_heroLevel, 3);
 
-        // Gate composition: spikes sit at the top of the highest unlocked tier.
-        // Tier2 locked + Tier3 locked = gate spans Tier2 (bottom half) + Tier3 (top half).
-        // Tier3 locked + Tier2 unlocked = gate fits entirely on Tier3 (full gate sprite).
-        Tier2GateBottomHalf = Tier2Locked;
-        Tier3GateTopHalf = Tier3Locked && Tier2Locked;
-        Tier3GateFull = Tier3Locked && !Tier2Locked;
+        // Locked tiers show a "Requires Level N" label (level sourced from the registry, the single
+        // source of truth) in place of the old stretched gate art.
+        Tier2RequirementText = new TextObject("{=taom_career_tier_requirement}Requires Level {LEVEL}")
+            .SetTextVariable("LEVEL", _registry.GetTierUnlockLevel(2)).ToString();
+        Tier3RequirementText = new TextObject("{=taom_career_tier_requirement}Requires Level {LEVEL}")
+            .SetTextVariable("LEVEL", _registry.GetTierUnlockLevel(3)).ToString();
 
         RebuildAbilityEffects(career);
         RebuildChoiceGroups(career);
@@ -386,13 +395,6 @@ public class CareerScreenVM : ViewModel
     }
 
     [DataSourceProperty]
-    public bool Tier1Locked
-    {
-        get => _tier1Locked;
-        set { if (_tier1Locked != value) { _tier1Locked = value; OnPropertyChangedWithValue(value, nameof(Tier1Locked)); } }
-    }
-
-    [DataSourceProperty]
     public bool Tier2Locked
     {
         get => _tier2Locked;
@@ -407,24 +409,17 @@ public class CareerScreenVM : ViewModel
     }
 
     [DataSourceProperty]
-    public bool Tier2GateBottomHalf
+    public string Tier2RequirementText
     {
-        get => _tier2GateBottomHalf;
-        set { if (_tier2GateBottomHalf != value) { _tier2GateBottomHalf = value; OnPropertyChangedWithValue(value, nameof(Tier2GateBottomHalf)); } }
+        get => _tier2RequirementText;
+        set { if (_tier2RequirementText != value) { _tier2RequirementText = value; OnPropertyChangedWithValue(value, nameof(Tier2RequirementText)); } }
     }
 
     [DataSourceProperty]
-    public bool Tier3GateTopHalf
+    public string Tier3RequirementText
     {
-        get => _tier3GateTopHalf;
-        set { if (_tier3GateTopHalf != value) { _tier3GateTopHalf = value; OnPropertyChangedWithValue(value, nameof(Tier3GateTopHalf)); } }
-    }
-
-    [DataSourceProperty]
-    public bool Tier3GateFull
-    {
-        get => _tier3GateFull;
-        set { if (_tier3GateFull != value) { _tier3GateFull = value; OnPropertyChangedWithValue(value, nameof(Tier3GateFull)); } }
+        get => _tier3RequirementText;
+        set { if (_tier3RequirementText != value) { _tier3RequirementText = value; OnPropertyChangedWithValue(value, nameof(Tier3RequirementText)); } }
     }
 
     [DataSourceProperty]

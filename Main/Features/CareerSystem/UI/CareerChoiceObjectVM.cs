@@ -51,6 +51,12 @@ public class CareerChoiceObjectVM : ViewModel
     [DataSourceProperty]
     public bool IsKeystone => _choice.Type == ChoiceType.Keystone;
 
+    // Empty/locked pip state: shown dim when a slot is neither taken nor currently takeable.
+    // The prefab renders three tinted copies of the point-pip gated on IsTaken / IsFreeToTake /
+    // IsUnavailable so every slot always shows a pip (gold / brown / dim) instead of a blank gap.
+    [DataSourceProperty]
+    public bool IsUnavailable => !_isTaken && !_isFreeToTake;
+
     [DataSourceProperty]
     public bool IsTaken
     {
@@ -61,6 +67,7 @@ public class CareerChoiceObjectVM : ViewModel
             {
                 _isTaken = value;
                 OnPropertyChangedWithValue(value, nameof(IsTaken));
+                OnPropertyChanged(nameof(IsUnavailable));
             }
         }
     }
@@ -75,6 +82,7 @@ public class CareerChoiceObjectVM : ViewModel
             {
                 _isFreeToTake = value;
                 OnPropertyChangedWithValue(value, nameof(IsFreeToTake));
+                OnPropertyChanged(nameof(IsUnavailable));
             }
         }
     }

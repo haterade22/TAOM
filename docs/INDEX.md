@@ -20,7 +20,7 @@
 ## By major system
 
 ### Character, race, body, & character creation
-- [character-creation](features/character-creation.md) — race-restricted CC dropdown, action_set requirements, narrative-stage flow
+- [character-creation](features/character-creation.md) — race-restricted CC dropdown, action_set requirements, narrative-stage flow, vanilla-aligned bonus budget (skill/attribute/focus per stage)
 - [character-creation-body-properties](features/character-creation-body-properties.md) — per-culture default body properties on CC screen (Patch29)
 - [character-selection](features/character-selection.md) — transpiler-driven race fallback in CC
 - [race-age-system](features/race-age-system.md) — race-appropriate lifespans (elven immortality, dwarf/hobbit aging) via TaomAgeModel + TaomPregnancyModel
@@ -29,7 +29,7 @@
 - [initial-child-generation](features/initial-child-generation.md) — campaign-start child rolls
 - [no-mount-cultures](features/no-mount-cultures.md) — suppress narrative horse crash on no-mount cultures (Patch20)
 - [native-skin-fixes](features/native-skin-fixes.md) — managed wrapper for `TAOM.NativeSkinFixes.dll` (covers_head morph + hair/beard cloth sim)
-- [gui-sprite-system](features/gui-sprite-system.md) — sprite atlas conventions, verification before reference
+- [gui-sprite-system](features/gui-sprite-system.md) — sprite atlas conventions, verification before reference, the **decompile-verified sprite-bake pipeline** (no `pack0.tpac`; per-category `AssetSources` PNG + `Assets/_tex.tpac` + manifest) + end-to-end **Adding / Verifying a sprite** workflow (a new sprite needs the generator AND a render check — **baked ≠ visible**)
 
 ### Combat, AI, & battle
 - [advanced-combat](features/advanced-combat.md) — SpatialGrid, BoneCollision, CustomAttacks subsystems
@@ -128,6 +128,7 @@ Other standards: [ADR-001 XML config](adrs/001-xml-config.md), [ADR-003 No `#reg
 - [reviews/REVIEW-PLAN.md](reviews/REVIEW-PLAN.md) — multi-feature review planning
 - Per-feature RCAs live as `reviews/rca-<feature>-<date>.md` — read these BEFORE re-implementing related behaviour. Filename convention is grep-friendly.
 - Auto-detected reviews: `reviews/codex-adversarial-<feature>-<date>.md` (prompt + output pairs).
+- Balance/data audits (machine-generated, distinct from RCAs): `reviews/<topic>-audit-<date>.md`. Current: [reviews/cc-bonus-audit-2026-05-30.md](reviews/cc-bonus-audit-2026-05-30.md) — per-culture character-creation skill/attribute/focus totals vs vanilla budget; regenerate with `tools/audit_cc_bonuses.py`.
 
 ## Migration history (v1.2 → v1.3 → v1.4.5)
 

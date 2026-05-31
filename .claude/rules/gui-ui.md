@@ -21,6 +21,16 @@ Before writing ANY `Sprite="X"` in XML or `GetSprite("X")` in C#:
 
 **Why:** Sprite="TAOM\CareerSystem\career_button_placeholder" failed silently (blank button, no crash, no log) because the registered name was "CareerSystem\career_button_placeholder". This class of bug is invisible without in-game testing.
 
+### Adding a NEW sprite (not just referencing an existing one)
+
+The 4 steps above are for *referencing* a sprite that's already baked. **Adding a new sprite PNG is a different, multi-step process** — a loose PNG + a hand-added `TAOMSpriteData.xml` entry alone renders **BLANK** in the player client (no error, no log). Follow the canonical workflow in [docs/features/gui-sprite-system.md](../../docs/features/gui-sprite-system.md) ("The sprite-bake pipeline" + "Adding a New Sprite" + "Verifying a sprite"):
+
+1. Drop the PNG at a sane size (`feedback_sprite_dimensions`). Do NOT hand-edit the manifest — the generator overwrites it.
+2. **Run the sprite generator** (`bin/Win64_Shipping_wEditor/TaleWorlds.TwoDimension.SpriteSheetGenerator.exe`). It writes `AssetSources/GauntletUI/<cat>_<n>.png` + rewrites `GUI/<Module>SpriteData.xml`; the editor's downstream texture-compile pass then builds `Assets/GauntletUI/<cat>_<n>_tex.tpac` (the generator binary does not write the `.tpac` itself). **There is NO `pack0.tpac` for UI sprites.**
+3. **Verify BOTH** (they fail independently): the **bake** (crop the sprite's `SheetX/Y` rect out of the regenerated sheet — pixels present?) AND the **render** (in-game — widget big enough + `Color` alpha high enough; **baked ≠ visible** — a thin sprite at ~22px / 27% alpha is invisible). Static review (incl. `/deep-review` + Codex) cannot certify a sprite renders — say so in the CHANGELOG `Not-tested:` line.
+
+Memory: `feedback_sprite_atlas_baked_regen_required` (the career-pip case — baked correctly yet blank because the prefab drew it too small/faint).
+
 ## UIExtenderEx PrefabExtension Safety (MANDATORY)
 
 Before injecting into ANY vanilla prefab container:

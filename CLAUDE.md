@@ -212,6 +212,7 @@ Treat the SKILL.md as executable instructions, not reference. Follow the phases 
 | `think-before-coding.md` | _(no `paths:` — always-load)_ | Surface load-bearing assumptions before the first Edit; ask if uncertain. Don't ask on trivial/mechanical work. Lightweight design pass (one question at a time, propose 2-3 approaches) for open-ended work. |
 | `evidence-over-claims.md` | _(no `paths:` — always-load)_ | Verify a review finding before implementing it; never sycophantically agree; no "done" claim without fresh verification output (subagent self-reports don't count). |
 | `external-skill-ports.md` | `.claude/skills/**/SKILL.md` | Authoring a skill from scratch + per-field checklist for porting from external suites (gstack, etc.). |
+| `moduledata-validation.md` | `troops/troops_*.xml`, `characters/*.xml`, `equipmentsets/*.xml`, `taom_spcultures.xml`, `taom_partyTemplates.xml`, `named_companions/*.xml`, `taom_wanderers.xml`, `taom_education_character_templates.xml`, `tools/schemas/*.json` | Run `python tools/validate_moduledata.py` before committing ModuleData edits; schemas are source-of-truth; add new NPCCharacter-def files to `taom_npccharacter.json` applies_to. |
 | `vanilla-data-comparison.md` | `**/settlements.xml`, `**/sp_battle_scenes.xml`, `**/spcultures.xml`, `**/taom_spcultures.xml`, `**/spclans.xml`, `**/spkingdoms.xml`, `**/*.xslt` | Compare against current installed vanilla before modifying mirrored data. Vanilla renames/removes scenes & re-schemas XML between versions → stale TAOM refs crash. Scene-ref audit tools + post-bump checklist. |
 
 ## Custom Agents
@@ -268,6 +269,7 @@ When you dispatch a subagent to **implement then review** work, follow the two-s
 | Check migration status | [migration/TRACKING.md](./docs/migration/TRACKING.md) |
 | Audit/fix scene refs after a version bump (battle-near-place crashes) | [scene-reference-audit.md](./docs/reference/scene-reference-audit.md) — `audit_scene_names.py` + `audit_battle_scenes.py` + `remap_stale_scene_names.py`; vanilla renames/removes scenes between versions |
 | Compare TAOM data against current vanilla before editing mirrored XML | [.claude/rules/vanilla-data-comparison.md](./.claude/rules/vanilla-data-comparison.md) — settlements/sp_battle_scenes/spcultures/xslt; auto-loads when those files are edited |
+| Validate ModuleData cross-refs/ids before committing (broken item/troop refs, unknown culture, dup ids, civilian type) | [moduledata-validation.md](./docs/features/moduledata-validation.md) — run `python tools/validate_moduledata.py`; schema-driven, supersedes the per-culture ref validators; auto-loaded rule + pre-commit hook wire it in |
 | Update BUTR/MCM/ButterLib dependencies | [migration/dr3-maintenance.md](./docs/migration/dr3-maintenance.md) — version pinning, Steam Workshop fallback, smoke test, risk scenarios |
 | Use agent teams | [agent-teams.md](./docs/ai-includes/agent-teams.md) |
 | Brief/spawn a subagent correctly | [agent-operating-manual.md](./docs/ai-includes/agent-operating-manual.md) — execution model (can't invoke skills), tool catalog, what to recommend |
@@ -607,6 +609,7 @@ Phase 4: CLOSE OUT
 | **filesystem** | Project | File operations across TAOM, Bannerlord Modules, LOTRAOM assets | `.mcp.json` |
 | **git** | Project | Rich git operations (diff, blame, log, branch management) | `.mcp.json` |
 | **ilspy** | Project | Decompile TaleWorlds DLLs — fallback when `E:\Decompiled_Bannerlord\` doesn't have what you need | `.mcp.json` |
+| **taom-moduledata** | Project | Query TAOM ModuleData integrity (validate, item/troop/culture exists, find-references, list cultures/schemas) — wraps `tools/taom_query.py`. Needs the `mcp` SDK; restart Claude to load. See `docs/features/moduledata-validation.md`. | `.mcp.json` |
 | **sequential-thinking** | User | Extended reasoning for complex design decisions | `~/.claude/.mcp/user.json` |
 | **context7** | User | Library documentation lookup | `~/.claude/.mcp/user.json` |
 
@@ -619,6 +622,7 @@ Phase 4: CLOSE OUT
 | Read files across Bannerlord modules | **filesystem** (`read_file`, `search_files`) | Bash `cat` on long paths |
 | Git blame, diff analysis | **git** (`git_blame`, `git_diff`) | `git` via Bash |
 | Create/close GitHub issues | **GitHub** | `gh` via Bash |
+| Validate/query TAOM ModuleData (does item/troop/culture id exist? what references id X? are there broken refs?) | **taom-moduledata** MCP (`validate_moduledata`, `item_exists`, `troop_exists`, `culture_exists`, `find_references`, `list_cultures`) — or `python tools/validate_moduledata.py` if the MCP isn't loaded | Grep ModuleData / hand-rolling a one-off ref validator |
 | Research before implementing | **`taom-src path <Type>`** for signatures, **Read/Grep** decompiled source for browsing patterns, **Serena** for symbol nav, **ilspy** MCP as fallback | Manual decompilation workflow |
 
 ### TaleWorlds Research — Lookup Order
@@ -655,7 +659,7 @@ rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.G
 
 ### Configuration
 
-Project-level MCP servers (Serena, GitHub, filesystem, git, ilspy) are configured in `.mcp.json` at the project root and must be listed in `.claude/settings.local.json → enabledMcpjsonServers` to be trusted. User-level servers (sequential-thinking, context7) are configured in `~/.claude/.mcp/user.json` and enabled globally.
+Project-level MCP servers (Serena, GitHub, filesystem, git, ilspy, taom-moduledata) are configured in `.mcp.json` at the project root and must be listed in `.claude/settings.local.json → enabledMcpjsonServers` to be trusted. (`taom-moduledata` is TAOM-authored — `tools/taom_mcp_server.py` — and requires the `mcp` Python SDK; a Claude restart is needed to pick up a newly-added server.) User-level servers (sequential-thinking, context7) are configured in `~/.claude/.mcp/user.json` and enabled globally.
 
 ## Hooks
 
@@ -681,6 +685,7 @@ Project-level MCP servers (Serena, GitHub, filesystem, git, ilspy) are configure
 | `session-stop.sh` | Stop | Appends commits + modified files to `.claude/logs/session-log.md` |
 | `mark-verification-run.sh` | PostToolUse (Bash) | Touches `.claude/logs/.verification-ran` when `dotnet build`/`dotnet test`/`build.ps1` runs. Feeds the verification Stop hook. |
 | `check-verification-evidence.sh` | Stop | Reminds to build/test when a `.cs` file changed but no verification ran since the last edit. Enforces `.claude/rules/evidence-over-claims.md`. |
+| `check-moduledata-validation.sh` | PreToolUse (Bash) | Hard-blocks `git commit` when staged `Main/_Module/ModuleData/**/*.xml` fails the ERROR-severity checks of `tools/validate_moduledata.py` (broken Item/NPCCharacter ref, unknown culture, duplicate id). Fail-open: missing python / game install / validator crash never blocks. Warnings don't block — run the tool to see them. |
 
 ## Hook Response Contracts
 
@@ -775,6 +780,9 @@ Opt-in preview (requires v2.1.78+). Runs PowerShell natively instead of routing 
 | `tools/generate_erebor_armor.py` | Erebor Iron Hills `sk_dwarf_iron_*` author — parses spec at runtime; **defaults to `iron_hills/` folder** (NOT `erebor/`; issue #211) | `--dry-run`, `--apply`, `--armory-path` |
 | `tools/generate_rhun_armor.py` | Rhun final Loke-Rim elite helmets — closes the 22-item gap (issue #211) | `--dry-run`, `--apply`, `--armory-path` |
 | `tools/validate_all_troop_refs.py` | **Generic multi-culture validator** (preferred over `validate_gondor_refs.py`) — cross-checks `sk_*/ar_*/clo_urukscout_*/urukscout_*` refs across all 7 culture troop XMLs (issue #211) | (no flags) |
+| `tools/validate_moduledata.py` | **Unified schema-driven cross-reference + validation engine** (read-only; preferred over the two per-task validators above). Driven by `tools/schemas/*.json` (source of truth) + `tools/taom_schema.py`. Catches broken Item/NPCCharacter/Culture/PartyTemplate refs, duplicate NPC/culture/roster/Armory-item ids, missing civilian `equipmentType`, invalid `default_group`. Adopted from `TheOldRealms/TOR_Tools` (MIT). Unit-tested (`tools/tests/test_validate_moduledata.py`). See `docs/features/moduledata-validation.md` + `.claude/rules/moduledata-validation.md`. | `--game-modules`, `--moduledata`, `--json`, `--code`, `--warnings-as-errors` |
+| `tools/taom_query.py` | Query API over the validation engine (`item_exists` / `troop_exists` / `culture_exists` / `find_references` / `validate` / `list_cultures`). Pure stdlib; backs the MCP server. Unit-tested (`tools/tests/test_taom_query.py`). | (library) |
+| `tools/taom_mcp_server.py` | **MCP stdio server** (`taom-moduledata` in `.mcp.json`) exposing the query API as 9 tools for interactive agent use. FastMCP; needs the `mcp` SDK; restart Claude to load. | `python tools/taom_mcp_server.py` (smoke-test) |
 | `tools/rollback_erebor_iron_misfile.py` | One-off cleanup script: removes mis-filed `sk_dwarf_iron_*` items from `erebor/` (used once during #211 deep-review RCA) | `--dry-run`, `--apply` |
 | `tools/apply_mordor_troop_revamp.py` | Mechanical EquipmentRoster swap + 21 new orc/Nurn Warg/Black Uruk troops + 14 deletes (issue #212) | `--dry-run`, `--apply` |
 | `tools/apply_isengard_troop_revamp.py` | EquipmentRoster swap + 13 new `isengard_orc_*` troops (Section 1 of spec); `orthanc_*` line preserved (issue #212) | `--dry-run`, `--apply` |
@@ -784,3 +792,4 @@ Opt-in preview (requires v2.1.78+). Runs PowerShell natively instead of routing 
 | `tools/cleanup_deleted_troops_212.py` | Sweep deleted-troop refs from `taom_partyTemplates.xml`, `troop_weights.xml`, `troop_resource_costs.xml` (issue #212) | `--dry-run`, `--apply` |
 | `tools/expand_party_templates_212.py` | Insert new troops into `kingdom_hero_party_<culture>_template` blocks via positional splice (issue #212) | `--dry-run`, `--apply` |
 | `tools/apply_gondor_polish_224.py` | **Delta-style** Gondor equipment polish: per-slot `set`/`clear`/`replace` ops + 2 new PG cavalry NPCs + upgrade-target patch (issue #224, distinct from full-roster swap pattern) | `--dry-run`, `--apply` |
+| `tools/audit_cc_bonuses.py` | Audit + rebalance character-creation skill/attribute/focus bonuses per culture. Report mode: per-stage uniformity, per-culture worst-case concentration (value-aware), vanilla-budget comparison, full menu dump. Reads the 6 `charactercreation/*_menu.json` + `cultures.json` + career eligibility from `taom_careers.xml`. `--apply` zeroes the career-stage payload + culture-base bonus to match vanilla's 5-stage budget (formatting-preserving line edits, writes `.bak`). | `--report` (default), `--out`, `--export-csv`, `--dry-run`, `--apply` |

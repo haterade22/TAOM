@@ -71,13 +71,80 @@ Declares the `ui_taom` sprite category with `AlwaysLoad` — all PNGs in `Sprite
 
 If adding many new sprites, increase `SpriteSheetCount` or sheet dimensions.
 
+### The sprite-bake pipeline
+
+*(Decompile-verified 2026-05-31 — `TaleWorlds.TwoDimension.SpriteSheetGenerator.exe` + `.Library.dll`.)*
+
+**A new loose PNG renders blank until it is packed** (observed with `career_point_pip` this session — see the worked example below). Each category's sprite-sheet textures are **baked offline**: `TaleWorlds.TwoDimension.SpriteSheetGenerator.exe` packs the loose `SpriteParts/**.png` into atlas sheet PNGs + a manifest, and the editor's downstream **texture-compile pass** turns those into the loadable `_tex.tpac`. The loose PNGs are the **source**, not what the shipping client loads directly. *(The generator decompile confirms the offline pack flow; the exact editor-vs-shipping launch-time behavior was not independently decompiled — but empirically a loose-only PNG does not render.)*
+
+What the generator reads and writes (verified by decompiling `...SpriteSheetGenerator.Library.dll` → `SpriteEditorDomain.Tick()` + `SpriteDataEditor.Save*`, and by inspecting the live output):
+
+| Stage | Path (per module, **Engine** output mode) |
+|-------|-------------------------------------------|
+| **Input — sprites** | `<Module>/GUI/SpriteParts/<category>/**.png` (recursive; **max folder depth 8**) |
+| **Input — pack config** | `<Module>/GUI/SpriteParts/Config.xml` (per-category: `AlwaysLoad`, `EdgeSize`, `PackAllSpritesToUniqueTextures`, `SingleChannel`, `NoAlphaChannel`) |
+| **Output — manifest** | `<Module>/GUI/<ModuleName>SpriteData.xml` (e.g. `TAOMSpriteData.xml`) — `<SpriteCategory>` (Name, AlwaysLoad, SpriteSheetCount, per-sheet `SpriteSheetSize`), `<SpritePart>` (SheetID, Name, Width, Height, **SheetX/SheetY**, CategoryName), `<GenericSprite>` (Name → SpritePartName) |
+| **Output — packed source sheet** | `<Module>/AssetSources/GauntletUI/<category>_<n>.png` (the bin-packed atlas PNG; this dir is **emptied then rewritten** every run) |
+| **Downstream — compiled texture** *(NOT written by the generator)* | `<Module>/Assets/GauntletUI/<category>_<n>_tex.tpac` — a small (~500-byte) descriptor compiled by the editor's **texture-compile pass** that runs *after* the generator (live timestamps: manifest + `AssetSources` PNG at T, `_tex.tpac` ~1–2 min later). |
+
+There is **NO `pack0.tpac`** for UI sprites — UI atlases are per-category `<category>_<n>` pairs (`AssetSources/...png` + `Assets/..._tex.tpac`). (`pack0.tpac` does not exist in the TAOM module at all; an earlier version of this doc was wrong.) The `SpriteSheetGenerator` binary itself writes **only** the manifest + the `AssetSources` PNG (every `SaveSheet` path calls `ImageWriter.WritePng`; it `CreateDirectory`s `Assets/GauntletUI/` but never writes a `.tpac` there) — the `_tex.tpac` is the separate downstream texture-compile. In the editor's normal sprite-generation flow both get produced (which is why running it "just works"); if you ever invoke only the bare generator, the texture compile must also run for the sprite to load.
+
+**Invocation** (CLI; the exe is at `bin/Win64_Shipping_wEditor/TaleWorlds.TwoDimension.SpriteSheetGenerator.exe`):
+- No args → packs **all** modules under `Modules/` (default `SourceDirectory=<exe>/../../Modules/`, `OutputType=Engine`, `CollectionType=AllAvailableModules`).
+- `SourceDirectory=<full path>` — a `Modules/` folder or a single module dir.
+- `OutputType=Engine` (Bannerlord) | `Standalone` (launcher — writes `SpriteSheets/<category>/` instead).
+- `CollectionType=SingleModule | AllAvailableModules`.
+
 ### Adding a New Sprite
 
-1. Place PNG in `GUI/SpriteParts/ui_taom/<subfolder>/your_sprite_name.png`
-2. Launch the game — sprite compiler picks it up automatically
-3. Reference in XML: `Sprite="your_sprite_name"`
-4. Reference in C#: `Context.SpriteData.GetSprite("your_sprite_name")`
-5. No `TAOMSpriteData.xml` changes needed unless you exceed sheet capacity
+1. Place the PNG in `GUI/SpriteParts/<category>/<subfolder>/your_sprite_name.png` (resize to a sane size first — oversized PNGs corrupt the atlas; see `feedback_sprite_dimensions`). Do NOT hand-edit `TAOMSpriteData.xml` to add the sprite — the generator overwrites the whole manifest, so a hand-added entry (e.g. inventing a new sheet ID) is pointless and can mislead.
+2. **Run the sprite generator** (`SpriteSheetGenerator.exe`) — REQUIRED, not optional. It re-packs the loose PNGs and rewrites `<ModuleName>SpriteData.xml` + `AssetSources/GauntletUI/*.png`; the editor's downstream **texture-compile pass** then (re)builds `Assets/GauntletUI/*_tex.tpac` from the new PNG (the generator binary itself does not write the `.tpac` — see the pipeline table). A loose PNG that is never packed renders **blank** in the player client.
+3. Reference in XML: `Sprite="<category-path>\your_sprite_name"` (verify the exact registered `<Name>` in `TAOMSpriteData.xml` after regen — see `.claude/rules/gui-ui.md`).
+4. Reference in C#: `Context.SpriteData.GetSprite("...")`.
+5. **Baked ≠ visible.** A correctly-baked sprite can still render invisibly if the prefab sizes or tints it badly. After regen, verify in-game: widget size large enough to read, `Color` alpha high enough against the background, and a sprite-capable widget (`Widget`/`ImageWidget`/`ButtonWidget` all render `Sprite=`).
+
+**Worked example — `career_point_pip` (career screen, 2026-05-31, TWO distinct causes):**
+- **Cause 1 (bake):** the One Ring pip first rendered blank because it was a *new* loose PNG that had never been packed — `Assets/GauntletUI/ui_taom_career_system_1_tex.tpac` + the `AssetSources` sheet had no pip pixels. Running `SpriteSheetGenerator.exe` fixed the bake: the pip landed on sheet 1 at `SheetX=2428 SheetY=1670` (256×256), confirmed by cropping that rect out of the regenerated `AssetSources/GauntletUI/ui_taom_career_system_1.png` and seeing the ring.
+- **Cause 2 (render) — the one that survived the regen:** after a correct bake the pip was *still* invisible in-game. Root cause was the **prefab**, not the asset: the pip was drawn at `22×28px` with `Color="#FFFFFF45"` (27% alpha) for the empty state — a thin gold line-art ring at that size/opacity on a near-black node reads as faint embossing. Fix: bump the pip to `38×38` and raise the state opacities (`#FFFFFFFF` taken / `#FFFFFFE0` available / `#FFFFFF78` empty). No regen needed for this — it's prefab-only.
+- **Review lesson:** the earlier `/deep-review` + Codex passes verified the manifest *shape* and (wrongly) assumed a runtime-build model + `pack0.tpac`; and the first RCA wrongly concluded "regen will fix the blank pip." Both the asset bake AND the prefab render must be verified, and **only the live game confirms a sprite is visible** — a CLEAN review cannot. Memory: `feedback_sprite_atlas_baked_regen_required`.
+
+### Verifying a sprite (bake + render) — BOTH are required
+
+A sprite has two independent failure modes. Check both; they are diagnosed differently.
+
+**1. Bake — "is the sprite in the compiled sheet?"** (static, scriptable):
+- Read the `<SpritePart>` for your sprite in `GUI/<Module>SpriteData.xml`; note `SheetID` + `SheetX`/`SheetY` + `Width`/`Height`.
+- Crop that exact rect out of `AssetSources/GauntletUI/<category>_<SheetID>.png` and confirm non-transparent pixels are present:
+  ```python
+  from PIL import Image
+  im = Image.open(r"<game>/Modules/TAOM/AssetSources/GauntletUI/<category>_<SheetID>.png")
+  crop = im.crop((X, Y, X+W, Y+H)); crop.save("crop.png")        # then look at crop.png
+  print(crop.split()[-1].getextrema())                            # alpha extrema; (0,0) == empty/unbaked
+  ```
+  If the rect is empty/transparent, the generator has not packed it — re-run the generator.
+- Confirm `Assets/GauntletUI/<category>_<SheetID>_tex.tpac` exists. **~500 bytes is normal** — it's a descriptor, not the texture payload, so size is NOT a bake indicator.
+
+**2. Render — "does the prefab actually show it?"** (in-game ONLY):
+- Widget large enough to read — a thin line-art sprite at ~22px is effectively invisible.
+- `Color` alpha high enough vs. the background — e.g. `#FFFFFF45` (27%) on a near-black node ≈ invisible.
+- A sprite-capable widget — `Widget`, `ImageWidget`, and `ButtonWidget` all render `Sprite=`.
+- Prefab `Sprite="..."` name exactly matches the registered `<Name>` (case + backslashes, no module prefix) — see `.claude/rules/gui-ui.md`.
+
+Static review (including `/deep-review` + Codex) can confirm bake *shape* but **cannot confirm a sprite renders**. Always flag new-sprite rendering as in-game-only in the CHANGELOG `Not-tested:` line; never let a CLEAN review imply a sprite will display.
+
+### Deploying a prefab/sprite change for in-game testing
+
+- **Prefab XML** is loaded at runtime (not baked). A normal `./build.ps1` copies `Main/_Module/**` to the game install, or — for a fast prefab-only iteration — copy the single file to `<game>/Modules/TAOM/GUI/Prefabs/<Feature>/<Screen>.xml`. No regen needed for a prefab-only change.
+- **A new/changed sprite PNG** must be deployed to the game install AND the generator re-run there (it rewrites the install's `GUI/<Module>SpriteData.xml` + `AssetSources/` + `Assets/`). **Then sync the regenerated manifest + `AssetSources/` + `Assets/` back into the repo** so a later `./build.ps1` doesn't clobber the bake with the stale repo manifest. Verify the sync with `diff` — repo and install `<Module>SpriteData.xml` should be byte-identical.
+
+### Sprite gotchas (consolidated — each links a memory)
+
+| Gotcha | Rule | Memory |
+|--------|------|--------|
+| Oversized source PNG corrupts the atlas | Resize to the target display size (or a sane power-of-two) before packing | `feedback_sprite_dimensions` |
+| Baked ≠ visible | A correctly-baked sprite still renders blank if the prefab sizes/tints it badly — verify in-game (render failure mode above) | `feedback_sprite_atlas_baked_regen_required` |
+| Moving a sprite between categories leaves a ghost | Delete the old loose PNG from BOTH repo and game install, then regen — else the old atlas keeps the stale copy | `feedback_sprite_atlas_cleanup` |
+| Wrong sprite name renders blank silently | Sprite id = path under the category folder with backslashes, NO module prefix; verify against `<Module>SpriteData.xml` after regen | `.claude/rules/gui-ui.md` |
 
 ## Gauntlet UI Architecture
 
@@ -266,16 +333,19 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 
 ## How-To
 
+> Both recipes below are instances of the canonical [Adding a New Sprite](#adding-a-new-sprite) workflow — the same bake (run the generator) + verify (bake-then-render) steps apply. "Launch game — it's automatic" is true ONLY in editor/dev mode, never the player client.
+
 ### Add a sprite for a new resource
-1. Create PNG icon (recommended 45x45 or higher)
+1. Create PNG icon (recommended 45x45 or higher; resize first — `feedback_sprite_dimensions`)
 2. Place at `GUI/SpriteParts/ui_taom/SpecialResources/taom_{resource_id}_icon.png`
 3. Set `icon_sprite="taom_{resource_id}_icon"` in `special_resources_config.xml`
-4. Launch game — sprite compiler picks it up
+4. **Run the sprite generator** (`SpriteSheetGenerator.exe` — see [the bake pipeline](#the-sprite-bake-pipeline)); a loose PNG alone renders blank in the player client. Then [verify bake + render](#verifying-a-sprite-bake--render--both-are-required).
 
 ### Add a career portrait
-1. Create PNG (400x200)
+1. Create PNG (400x200; resize first)
 2. Place at `GUI/SpriteParts/ui_taom/CareerSystem/career_{career_id}_portrait.png`
 3. Set `portrait_sprite="career_{career_id}_portrait"` in `taom_careers.xml`
+4. **Run the sprite generator** and [verify](#verifying-a-sprite-bake--render--both-are-required) — same as above.
 
 ### Inject a widget into a vanilla screen
 1. Create a `PrefabExtensionInsertPatch` class with `[PrefabExtension("TargetPrefab", "xpath")]`

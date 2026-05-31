@@ -117,12 +117,18 @@ public class CareerRegistry : ICareerRegistry
 
     public bool IsTierAvailable(int heroLevel, int tier)
     {
+        if (tier < 1 || tier > 3) return false;
+        return heroLevel >= GetTierUnlockLevel(tier);
+    }
+
+    public int GetTierUnlockLevel(int tier)
+    {
         switch (tier)
         {
-            case 1: return true;
-            case 2: return heroLevel >= 10;
-            case 3: return heroLevel >= 20;
-            default: return false;
+            case 1: return 1;
+            case 2: return 10;
+            case 3: return 20;
+            default: return int.MaxValue;
         }
     }
 

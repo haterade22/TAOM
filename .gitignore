@@ -5,6 +5,10 @@ _Module/bin/
 TestResults/
 out/
 
+# Tool backups: rebalance/audit scripts write <file>.bak before destructive edits
+# (see tools/README.md "XML I/O convention"). Git is the real backup — never commit these.
+*.bak
+
 # DR3 (2026-05-22): exceptions for bundled BUTR runtime DLLs in
 # TAOM.Dependencies module. These are MAINTAINED-VENDOR — manually copied
 # from Steam Workshop downloads (see docs/migration/dr3-maintenance.md) so

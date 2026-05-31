@@ -61,6 +61,44 @@ public class CareerConfigProviderTests
     }
 
     [TestMethod]
+    public void LoadCareers_WithRankNames_ParsesPerTierRankNames()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?>
+<Careers max_perk_points=""30"">
+  <Career id=""warboss"" display_name=""Warboss"" description=""A brute.""
+          portrait_sprite=""wb_sprite"" ability_template_id=""rally_horde""
+          min_clan_tier=""0"" root_choice_id=""wb_root""
+          rank1_name=""{=k1}Boy"" rank2_name=""{=k2}Boss"" rank3_name=""{=k3}Warlord"">
+    <EligibleCultures><Culture id=""mordor"" /></EligibleCultures>
+    <ChoiceGroups><Group id=""wb_brutality"" /></ChoiceGroups>
+  </Career>
+</Careers>");
+
+        var careers = _provider.LoadCareers();
+
+        Assert.AreEqual(1, careers.Count);
+        Assert.AreEqual("{=k1}Boy", careers[0].Rank1Name);
+        Assert.AreEqual("{=k2}Boss", careers[0].Rank2Name);
+        Assert.AreEqual("{=k3}Warlord", careers[0].Rank3Name);
+    }
+
+    [TestMethod]
+    public void LoadCareers_WithoutRankNames_DefaultsToEmpty()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?>
+<Careers max_perk_points=""30"">
+  <Career id=""warboss"" display_name=""Warboss"" description=""A brute.""
+          portrait_sprite=""wb_sprite"" ability_template_id=""rally_horde""
+          min_clan_tier=""0"" root_choice_id=""wb_root"" />
+</Careers>");
+
+        var careers = _provider.LoadCareers();
+        Assert.AreEqual("", careers[0].Rank1Name);
+        Assert.AreEqual("", careers[0].Rank2Name);
+        Assert.AreEqual("", careers[0].Rank3Name);
+    }
+
+    [TestMethod]
     public void GetMaxPerkPoints_FromXml_ReturnsConfiguredValue()
     {
         WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""25""></Careers>");
@@ -116,6 +154,38 @@ public class CareerConfigProviderTests
         Assert.AreEqual("warboss", groups[0].CareerId);
         Assert.AreEqual(1, groups[0].Tier);
         Assert.AreEqual(2, groups[0].ChoiceIds.Count);
+    }
+
+    [TestMethod]
+    public void LoadChoices_GroupWithDisplayName_ParsesDisplayName()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <ChoiceGroup id=""wb_brutality"" career_id=""warboss"" tier=""1"" display_name=""{=k}Path of Brutality"">
+    <Choice id=""wb_brut_key"" type=""Keystone"" description=""Keystone"" icon_sprite=""icon"" />
+  </ChoiceGroup>
+</CareerChoices>");
+
+        var groups = _provider.LoadChoiceGroups();
+        Assert.AreEqual(1, groups.Count);
+        Assert.AreEqual("{=k}Path of Brutality", groups[0].DisplayName);
+    }
+
+    [TestMethod]
+    public void LoadChoices_GroupWithoutDisplayName_DefaultsToEmpty()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <ChoiceGroup id=""wb_brutality"" career_id=""warboss"" tier=""1"">
+    <Choice id=""wb_brut_key"" type=""Keystone"" description=""Keystone"" icon_sprite=""icon"" />
+  </ChoiceGroup>
+</CareerChoices>");
+
+        var groups = _provider.LoadChoiceGroups();
+        Assert.AreEqual(1, groups.Count);
+        Assert.AreEqual("", groups[0].DisplayName);
     }
 
     [TestMethod]

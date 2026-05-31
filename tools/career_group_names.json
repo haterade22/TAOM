@@ -1,0 +1,1479 @@
+{
+  "_meta": {
+    "purpose": "Reviewed web-researched Middle-earth lore names for career choice-group sub-paths (TAOM career screen revamp, Phase B).",
+    "format": "<group_id>: { name, attested, note }. attested=true means the term/figure/place is canonical Tolkien lore; attested=false is an honest original coined in-keeping (or derived from a TAOM-original id).",
+    "applied_by": "tools/apply_career_group_names.py (writes display_name=\"{=taom_career_grp_<id>}<name>\" onto each <ChoiceGroup>)",
+    "sources": "Per-faction research via tolkiengateway.net, lotr.fandom.com, encyclopedia-of-arda.com",
+    "count": 294
+  },
+  "ranger_of_ithilien_t1_a": {
+    "name": "Hunter of the Ithilien Road",
+    "attested": false,
+    "note": "Rangers ambushed enemy columns on the Ithilien roads"
+  },
+  "ranger_of_ithilien_t1_b": {
+    "name": "Watcher of Henneth Annûn",
+    "attested": true,
+    "note": "Henneth Annûn = Faramir's hidden refuge behind the waterfall"
+  },
+  "ranger_of_ithilien_t2_a": {
+    "name": "Scout of North Ithilien",
+    "attested": false,
+    "note": "Rangers ranged/scouted across North Ithilien"
+  },
+  "ranger_of_ithilien_t2_b": {
+    "name": "Bowman of Faramir",
+    "attested": false,
+    "note": "Faramir was Captain of the bow-armed Rangers"
+  },
+  "ranger_of_ithilien_t3_a": {
+    "name": "Arrow of the Forbidden Pool",
+    "attested": false,
+    "note": "Forbidden Pool below Henneth Annûn"
+  },
+  "ranger_of_ithilien_t3_b": {
+    "name": "Shadow of Emyn Arnen",
+    "attested": false,
+    "note": "Emyn Arnen = hills of Ithilien, Faramir's princedom"
+  },
+  "captain_of_osgiliath_t1_a": {
+    "name": "Warden of the East Bank",
+    "attested": false,
+    "note": "Gondor contested the eastern shore of the Anduin at Osgiliath"
+  },
+  "captain_of_osgiliath_t1_b": {
+    "name": "Keeper of the Anduin Crossing",
+    "attested": false,
+    "note": "Osgiliath's garrison held the river crossing"
+  },
+  "captain_of_osgiliath_t2_a": {
+    "name": "Vanguard of the Rammas",
+    "attested": false,
+    "note": "Rammas Echor = Gondor's outer wall about the Pelennor"
+  },
+  "captain_of_osgiliath_t2_b": {
+    "name": "Sword of the Last Bridge",
+    "attested": false,
+    "note": "Boromir & Faramir held Osgiliath's great bridge until its fall"
+  },
+  "captain_of_osgiliath_t3_a": {
+    "name": "Host of Faramir",
+    "attested": false,
+    "note": "Faramir commanded the defence of Osgiliath"
+  },
+  "captain_of_osgiliath_t3_b": {
+    "name": "Lord of the Dome of Stars",
+    "attested": false,
+    "note": "Dome of Stars housed Osgiliath's chief palantír"
+  },
+  "knight_of_belfalas_t1_a": {
+    "name": "Lancer of Dol Amroth",
+    "attested": false,
+    "note": "Dol Amroth, chief city of Belfalas, fielded mounted knights"
+  },
+  "knight_of_belfalas_t1_b": {
+    "name": "Warden of the Bay",
+    "attested": false,
+    "note": "Dol Amroth guarded the Bay of Belfalas"
+  },
+  "knight_of_belfalas_t2_a": {
+    "name": "Rider of the Silver Swan",
+    "attested": false,
+    "note": "Swan-knights bore a silver swan-ship banner"
+  },
+  "knight_of_belfalas_t2_b": {
+    "name": "Shieldwall of Imrahil",
+    "attested": false,
+    "note": "Imrahil led the swan-knights; sortie saved Faramir"
+  },
+  "knight_of_belfalas_t3_a": {
+    "name": "Knight of the Swan-Prow",
+    "attested": true,
+    "note": "Swan-Knights of Dol Amroth (House of Dol Amroth)"
+  },
+  "knight_of_belfalas_t3_b": {
+    "name": "Charge of Dol Amroth",
+    "attested": false,
+    "note": "Imrahil's charge at the Pelennor; matches keystone text"
+  },
+  "black_uruk_captain_t1_a": {
+    "name": "Forge-Tempered Hide",
+    "attested": false,
+    "note": "Black Uruks bred by Sauron; durability theme"
+  },
+  "black_uruk_captain_t1_b": {
+    "name": "First Blood-Frenzy",
+    "attested": false,
+    "note": "tracks 'Blood Frenzy' rage-duration keystone"
+  },
+  "black_uruk_captain_t2_a": {
+    "name": "Berserker of Lugbúrz",
+    "attested": false,
+    "note": "Lugbúrz = Black Speech for Barad-dûr (attested term)"
+  },
+  "black_uruk_captain_t2_b": {
+    "name": "Unending Wrath",
+    "attested": false,
+    "note": "sustain path; coined"
+  },
+  "black_uruk_captain_t3_a": {
+    "name": "Wrath of the Lidless Eye",
+    "attested": false,
+    "note": "'Lidless Eye' attested imagery; keystone 'Eye of Sauron'"
+  },
+  "black_uruk_captain_t3_b": {
+    "name": "Captain of the Black Gate",
+    "attested": false,
+    "note": "Black Gate (Morannon) attested; leadership phrasing coined"
+  },
+  "mulkerhili_cultist_t1_a": {
+    "name": "Venomed Litany",
+    "attested": false,
+    "note": "coined for TAOM-original cult; poisoned-archery theme"
+  },
+  "mulkerhili_cultist_t1_b": {
+    "name": "Sauron's Whispered Word",
+    "attested": false,
+    "note": "Ring's whispers attested theme; phrasing coined"
+  },
+  "mulkerhili_cultist_t2_a": {
+    "name": "Congregation of Dread",
+    "attested": false,
+    "note": "matches keystone name"
+  },
+  "mulkerhili_cultist_t2_b": {
+    "name": "Sermon of the Eye",
+    "attested": false,
+    "note": "the Eye attested; ritual phrasing coined"
+  },
+  "mulkerhili_cultist_t3_a": {
+    "name": "Gaze of the Dark Lord",
+    "attested": false,
+    "note": "'Dark Lord' attested for Sauron; phrasing coined"
+  },
+  "mulkerhili_cultist_t3_b": {
+    "name": "The Ring's Dark Covenant",
+    "attested": false,
+    "note": "One Ring's binding power attested; covenant coined"
+  },
+  "snaga_rider_t1_a": {
+    "name": "Shadow Gallop",
+    "attested": false,
+    "note": "matches keystone; Snaga = attested Black Speech 'slave/lesser orc'"
+  },
+  "snaga_rider_t1_b": {
+    "name": "Rider of the Dark",
+    "attested": false,
+    "note": "coined; shadow-cloaked raiders"
+  },
+  "snaga_rider_t2_a": {
+    "name": "Strike from Shadow",
+    "attested": false,
+    "note": "tracks 'Ambush Surge' keystone"
+  },
+  "snaga_rider_t2_b": {
+    "name": "Ghost of Cirith Ungol",
+    "attested": false,
+    "note": "Cirith Ungol attested (garrisoned by Snaga); ghost phrasing coined"
+  },
+  "snaga_rider_t3_a": {
+    "name": "Stampede of Nurn",
+    "attested": false,
+    "note": "Nurn attested (southern Mordor); stampede coined"
+  },
+  "snaga_rider_t3_b": {
+    "name": "Vanguard of Mordor",
+    "attested": false,
+    "note": "Mordor attested; vanguard coined"
+  },
+  "olog_hai_warchief_t1_a": {
+    "name": "Earth-Render",
+    "attested": false,
+    "note": "coined; ground-stomp AoE"
+  },
+  "olog_hai_warchief_t1_b": {
+    "name": "Tireless Hammer",
+    "attested": false,
+    "note": "coined; relentless smasher"
+  },
+  "olog_hai_warchief_t2_a": {
+    "name": "Rampaging Colossus",
+    "attested": false,
+    "note": "matches keystone; Olog-hai surpassed Uruk-hai in size"
+  },
+  "olog_hai_warchief_t2_b": {
+    "name": "Sunlit Onslaught",
+    "attested": false,
+    "note": "Olog-hai's attested trait: enduring sunlight; phrasing coined"
+  },
+  "olog_hai_warchief_t3_a": {
+    "name": "Hammer of the Morannon",
+    "attested": false,
+    "note": "Morannon attested; Olog-hai shock troops there; hammer coined"
+  },
+  "olog_hai_warchief_t3_b": {
+    "name": "Troll-folk of Sauron",
+    "attested": false,
+    "note": "'Olog-hai'=troll-folk bred by Sauron (attested terms arranged)"
+  },
+  "marksman_of_aldburg_t1_a": {
+    "name": "Hawk of the Eastfold",
+    "attested": false,
+    "note": "Aldburg = seat of the Eastfold (attested); 'Hawks' coined"
+  },
+  "marksman_of_aldburg_t1_b": {
+    "name": "Warden of the Folde",
+    "attested": false,
+    "note": "the Folde = central Eastfold (attested); epithet coined"
+  },
+  "marksman_of_aldburg_t2_a": {
+    "name": "Captain of the Muster",
+    "attested": false,
+    "note": "Muster of Edoras attested; phrasing coined"
+  },
+  "marksman_of_aldburg_t2_b": {
+    "name": "Shadow of Fangorn",
+    "attested": false,
+    "note": "from the career's own 'Forged in Fangorn's Shadow'; Fangorn attested"
+  },
+  "marksman_of_aldburg_t3_a": {
+    "name": "Bowman of the Mark",
+    "attested": false,
+    "note": "'the Mark' attested (Rohan); descriptor coined"
+  },
+  "marksman_of_aldburg_t3_b": {
+    "name": "Host of the Riddermark",
+    "attested": false,
+    "note": "Riddermark attested; phrasing coined"
+  },
+  "eotheod_windrider_t1_a": {
+    "name": "Heir of Eorl",
+    "attested": false,
+    "note": "Eorl the Young attested; title coined in Rohirric style"
+  },
+  "eotheod_windrider_t1_b": {
+    "name": "Rider of the Wold",
+    "attested": false,
+    "note": "the Wold = N. Rohan plain (attested); phrasing coined"
+  },
+  "eotheod_windrider_t2_a": {
+    "name": "Oath of Eorl",
+    "attested": true,
+    "note": "Oath of Eorl/Cirion = the eternal Rohan-Gondor alliance (attested)"
+  },
+  "eotheod_windrider_t2_b": {
+    "name": "Lord of the Mearas",
+    "attested": false,
+    "note": "Mearas = noble horse-line (attested); from 'Mearas-Bred' passive"
+  },
+  "eotheod_windrider_t3_a": {
+    "name": "Charge of the Pelennor",
+    "attested": true,
+    "note": "Charge of the Rohirrim at the Pelennor (attested battle)"
+  },
+  "eotheod_windrider_t3_b": {
+    "name": "Song of the Riddermark",
+    "attested": false,
+    "note": "Riddermark attested; from 'Songs of the Riddermark' passive"
+  },
+  "watchman_of_stangard_t1_a": {
+    "name": "Ford of the Limlight",
+    "attested": false,
+    "note": "Limlight attested (N. border river); phrasing coined"
+  },
+  "watchman_of_stangard_t1_b": {
+    "name": "Watch of the Wold",
+    "attested": false,
+    "note": "the Wold attested; phrasing coined"
+  },
+  "watchman_of_stangard_t2_a": {
+    "name": "Shieldman of the Entwash",
+    "attested": false,
+    "note": "Entwash attested; from career's 'Entwash Hold' passives"
+  },
+  "watchman_of_stangard_t2_b": {
+    "name": "Warden of the Anduin",
+    "attested": false,
+    "note": "Anduin attested; career patrols its crossings"
+  },
+  "watchman_of_stangard_t3_a": {
+    "name": "Bastion of the Mark",
+    "attested": false,
+    "note": "'the Mark' attested; from keystone 'Stangard's Bastion'"
+  },
+  "watchman_of_stangard_t3_b": {
+    "name": "Warden of the Riddermark",
+    "attested": false,
+    "note": "Riddermark attested; from 'Warden of the Mark' passive"
+  },
+  "avanc_luth_raider_t1_a": {
+    "name": "Hill-Clan Berserker",
+    "attested": false,
+    "note": "Dunlendings = hill-clans (attested lore); berserker coined"
+  },
+  "avanc_luth_raider_t1_b": {
+    "name": "Sworn Axe-Thrower",
+    "attested": false,
+    "note": "from the Axe Thrower passive; Celtic-flavored"
+  },
+  "avanc_luth_raider_t2_a": {
+    "name": "Blood-Debt Reaver",
+    "attested": false,
+    "note": "keystone 'Blood Debt'; Dunlending feuds attested"
+  },
+  "avanc_luth_raider_t2_b": {
+    "name": "Warchant Hillman",
+    "attested": false,
+    "note": "from Warchant-of-the-Hills passive; 'Wild Men of the hills'"
+  },
+  "avanc_luth_raider_t3_a": {
+    "name": "Avanc-lúth War-Chieftain",
+    "attested": false,
+    "note": "Avanc-lúth = TAOM-coined clan (avanc = Welsh water-monster)"
+  },
+  "avanc_luth_raider_t3_b": {
+    "name": "Lord of the Warhost",
+    "attested": false,
+    "note": "Wulf marshalled a Dunlending host (attested); title coined"
+  },
+  "wolfskin_hunter_t1_a": {
+    "name": "Pack-Marked Stalker",
+    "attested": false,
+    "note": "from Pack Leader's Mark; wolf-pack motif is TAOM theme"
+  },
+  "wolfskin_hunter_t1_b": {
+    "name": "Wolfskin Skulker",
+    "attested": false,
+    "note": "from Wolfskin Cloak passive"
+  },
+  "wolfskin_hunter_t2_a": {
+    "name": "Throat-Shot Hunter",
+    "attested": false,
+    "note": "from the Throat Shot armour-pen passive"
+  },
+  "wolfskin_hunter_t2_b": {
+    "name": "Ghost of the Hills",
+    "attested": false,
+    "note": "career moves 'like a ghost' through the foothills"
+  },
+  "wolfskin_hunter_t3_a": {
+    "name": "Apex Wolfskin",
+    "attested": false,
+    "note": "from keystone 'Apex Predator'"
+  },
+  "wolfskin_hunter_t3_b": {
+    "name": "Master of the Great Pack",
+    "attested": false,
+    "note": "from 'Great Pack' +party-size; wolf-pack motif TAOM-coined"
+  },
+  "clanguard_rider_t1_a": {
+    "name": "Clan Thunder-Rider",
+    "attested": false,
+    "note": "from keystone 'Clan Thunder'"
+  },
+  "clanguard_rider_t1_b": {
+    "name": "Sworn Clan-Escort",
+    "attested": false,
+    "note": "from Clan Escort passive; 'clanguard' identity"
+  },
+  "clanguard_rider_t2_a": {
+    "name": "Warpack Vanguard",
+    "attested": false,
+    "note": "from 'Warpack Unleashed' keystone"
+  },
+  "clanguard_rider_t2_b": {
+    "name": "Banner of the Hills",
+    "attested": false,
+    "note": "rallying support line; no canon Dunland heraldry"
+  },
+  "clanguard_rider_t3_a": {
+    "name": "Lord of All Riders",
+    "attested": false,
+    "note": "from keystone 'Clan of Riders'"
+  },
+  "clanguard_rider_t3_b": {
+    "name": "Everlasting Warpack",
+    "attested": false,
+    "note": "from keystone 'Ever Charging'/'Endless Warpack'"
+  },
+  "blademaster_of_ren_t1_a": {
+    "name": "Court Duelist",
+    "attested": false,
+    "note": "Rên = TAOM-original Khand place; warrior-court duelists"
+  },
+  "blademaster_of_ren_t1_b": {
+    "name": "Steadfast Blade",
+    "attested": false,
+    "note": "original; defensive dueling"
+  },
+  "blademaster_of_ren_t2_a": {
+    "name": "Relentless Edge",
+    "attested": false,
+    "note": "original; aggressive precision"
+  },
+  "blademaster_of_ren_t2_b": {
+    "name": "Warden of Rên",
+    "attested": false,
+    "note": "Rên = TAOM-original place"
+  },
+  "blademaster_of_ren_t3_a": {
+    "name": "Whirlwind Slayer",
+    "attested": false,
+    "note": "original; expanded Twin Strike radius"
+  },
+  "blademaster_of_ren_t3_b": {
+    "name": "Unbroken Swordlord",
+    "attested": false,
+    "note": "original; peak durability"
+  },
+  "steppe_bowmaster_t1_a": {
+    "name": "Plains Skirmisher",
+    "attested": false,
+    "note": "Khand = steppe land (attested); descriptor"
+  },
+  "steppe_bowmaster_t1_b": {
+    "name": "Steady Volley",
+    "attested": false,
+    "note": "original; sustained fire"
+  },
+  "steppe_bowmaster_t2_a": {
+    "name": "Endless Quiver",
+    "attested": false,
+    "note": "mirrors 'neverending quiver' keystone"
+  },
+  "steppe_bowmaster_t2_b": {
+    "name": "Volley Warden",
+    "attested": false,
+    "note": "original; troop fire support"
+  },
+  "steppe_bowmaster_t3_a": {
+    "name": "Stormcaller of Khand",
+    "attested": false,
+    "note": "Khand attested; 'Stormcaller' coined"
+  },
+  "steppe_bowmaster_t3_b": {
+    "name": "Unceasing Hail",
+    "attested": false,
+    "note": "original; sustained suppression"
+  },
+  "chariot_warlord_t1_a": {
+    "name": "Scythe-Rider",
+    "attested": false,
+    "note": "Variags' scythed chariots; descriptor coined"
+  },
+  "chariot_warlord_t1_b": {
+    "name": "Iron Wheel",
+    "attested": false,
+    "note": "original; chariot momentum"
+  },
+  "chariot_warlord_t2_a": {
+    "name": "Reaping Charge",
+    "attested": false,
+    "note": "mirrors 'wheels never stop' keystone"
+  },
+  "chariot_warlord_t2_b": {
+    "name": "Warded Team",
+    "attested": false,
+    "note": "chariot draft-team resilience; coined"
+  },
+  "chariot_warlord_t3_a": {
+    "name": "Pelennor Reaper",
+    "attested": false,
+    "note": "Variags fought at the Pelennor (attested battle); 'Reapers' coined"
+  },
+  "chariot_warlord_t3_b": {
+    "name": "Wheel of Khand",
+    "attested": false,
+    "note": "Khand attested; sustained momentum"
+  },
+  "tribesman_of_jelut_t1_a": {
+    "name": "Dune Raider",
+    "attested": false,
+    "note": "Haradrim desert dwellers; Jelut = TAOM-coined place"
+  },
+  "tribesman_of_jelut_t1_b": {
+    "name": "Desert Survivor",
+    "attested": false,
+    "note": "Haradwaith survival; generic imagery"
+  },
+  "tribesman_of_jelut_t2_a": {
+    "name": "Serpent-Fang Striker",
+    "attested": false,
+    "note": "serpent/venom echoes Harad's black-serpent banner"
+  },
+  "tribesman_of_jelut_t2_b": {
+    "name": "Wearer of the Sands",
+    "attested": false,
+    "note": "desert-tribe endurance; coined"
+  },
+  "tribesman_of_jelut_t3_a": {
+    "name": "Venom of Haradwaith",
+    "attested": false,
+    "note": "Haradwaith attested; poison theme"
+  },
+  "tribesman_of_jelut_t3_b": {
+    "name": "Scourge of the Southrons",
+    "attested": false,
+    "note": "'Southrons' attested Westron name; title coined"
+  },
+  "pezarsani_javelineer_t1_a": {
+    "name": "Sun-Spear Skirmisher",
+    "attested": false,
+    "note": "sun/desert imagery; Pezarsan = TAOM-coined place"
+  },
+  "pezarsani_javelineer_t1_b": {
+    "name": "Roving Outrider",
+    "attested": false,
+    "note": "fast screening skirmishers; coined"
+  },
+  "pezarsani_javelineer_t2_a": {
+    "name": "Sunfire Slinger",
+    "attested": false,
+    "note": "from 'Sunfire Volley' ability + scarlet/gold motif"
+  },
+  "pezarsani_javelineer_t2_b": {
+    "name": "Scarlet Screen",
+    "attested": false,
+    "note": "scarlet = attested Haradrim colour"
+  },
+  "pezarsani_javelineer_t3_a": {
+    "name": "Rain of Far Harad",
+    "attested": false,
+    "note": "Far Harad attested; 'Rain' = javelin barrage"
+  },
+  "pezarsani_javelineer_t3_b": {
+    "name": "Shadow of the Dunes",
+    "attested": false,
+    "note": "elusive desert harriers; coined"
+  },
+  "mahud_beast_rider_t1_a": {
+    "name": "Tusk Vanguard",
+    "attested": false,
+    "note": "mûmakil tusks; 'Mahûd' is a GW term used by TAOM, not Tolkien"
+  },
+  "mahud_beast_rider_t1_b": {
+    "name": "Beast-Warden",
+    "attested": false,
+    "note": "Far Harad beast-tamers"
+  },
+  "mahud_beast_rider_t2_a": {
+    "name": "Trampling Charge",
+    "attested": false,
+    "note": "enraged mûmak trampling (Pelennor) attested; title coined"
+  },
+  "mahud_beast_rider_t2_b": {
+    "name": "Howdah Guardian",
+    "attested": false,
+    "note": "'howdah' = the war-tower on the mûmak's back"
+  },
+  "mahud_beast_rider_t3_a": {
+    "name": "Wrath of Mûmakan",
+    "attested": false,
+    "note": "'mûmak' attested; 'Mûmakan' coined homeland; from the ability"
+  },
+  "mahud_beast_rider_t3_b": {
+    "name": "Lord of the Oliphaunts",
+    "attested": false,
+    "note": "'oliphaunt' = Hobbits' attested name for the mûmak"
+  },
+  "codyan_legionaire_t1_a": {
+    "name": "Côdyan Vanguard",
+    "attested": false,
+    "note": "Côdya/Côdyan = TAOM-coined Easterling formation"
+  },
+  "codyan_legionaire_t1_b": {
+    "name": "Steadfast Shieldman",
+    "attested": false,
+    "note": "generic Easterling shieldwall; defensive duration"
+  },
+  "codyan_legionaire_t2_a": {
+    "name": "Wall of Rhûn",
+    "attested": true,
+    "note": "Rhûn attested (East-lands); shieldwall imagery TAOM's"
+  },
+  "codyan_legionaire_t2_b": {
+    "name": "Ironclad Phalanx",
+    "attested": false,
+    "note": "TAOM-flavored; not canon terminology"
+  },
+  "codyan_legionaire_t3_a": {
+    "name": "The Unbroken Line",
+    "attested": false,
+    "note": "elite offensive; coined"
+  },
+  "codyan_legionaire_t3_b": {
+    "name": "The Wall That Never Falls",
+    "attested": false,
+    "note": "elite defensive; coined"
+  },
+  "lokhas_drus_marksman_t1_a": {
+    "name": "Volley of Rhûn",
+    "attested": true,
+    "note": "Rhûn attested"
+  },
+  "lokhas_drus_marksman_t1_b": {
+    "name": "Steady Bowman",
+    "attested": false,
+    "note": "generic Easterling archers"
+  },
+  "lokhas_drus_marksman_t2_a": {
+    "name": "Stormbow Marksman",
+    "attested": false,
+    "note": "TAOM-coined"
+  },
+  "lokhas_drus_marksman_t2_b": {
+    "name": "Plate-Piercer",
+    "attested": false,
+    "note": "Lôkhas Drûs = TAOM-coined armour-piercing corps"
+  },
+  "lokhas_drus_marksman_t3_a": {
+    "name": "The Arrow-Storm",
+    "attested": false,
+    "note": "elite offensive; coined"
+  },
+  "lokhas_drus_marksman_t3_b": {
+    "name": "The Unceasing Hail",
+    "attested": false,
+    "note": "elite sustained; coined"
+  },
+  "balchoth_kan_t1_a": {
+    "name": "Balchoth Rider",
+    "attested": true,
+    "note": "Balchoth = attested fierce Easterlings who overran Calenardhon"
+  },
+  "balchoth_kan_t1_b": {
+    "name": "Fearless Outrider",
+    "attested": false,
+    "note": "generic Easterling light cavalry"
+  },
+  "balchoth_kan_t2_a": {
+    "name": "Wainrider of Rhûn",
+    "attested": true,
+    "note": "Wainriders = attested Easterling chariot/wagon confederation"
+  },
+  "balchoth_kan_t2_b": {
+    "name": "Iron Horseman",
+    "attested": false,
+    "note": "TAOM-flavored heavy cavalry"
+  },
+  "balchoth_kan_t3_a": {
+    "name": "The Unstoppable Tide",
+    "attested": false,
+    "note": "echoes the Balchoth horde; phrasing coined"
+  },
+  "balchoth_kan_t3_b": {
+    "name": "The Dread Horde",
+    "attested": true,
+    "note": "'Balchoth' canonically means 'cruel/horrible horde'"
+  },
+  "dale_guardsman_t1_a": {
+    "name": "Gate Warden of Dale",
+    "attested": false,
+    "note": "gate defense canonical to the Battle of Dale; coined"
+  },
+  "dale_guardsman_t1_b": {
+    "name": "Shieldwall of Esgaroth",
+    "attested": false,
+    "note": "Esgaroth attested; Northman shieldwall"
+  },
+  "dale_guardsman_t2_a": {
+    "name": "Spear of Girion",
+    "attested": false,
+    "note": "Girion = last Lord of Dale before Smaug (attested)"
+  },
+  "dale_guardsman_t2_b": {
+    "name": "Bulwark of the Running",
+    "attested": false,
+    "note": "River Running/Celduin attested; bulwark coined"
+  },
+  "dale_guardsman_t3_a": {
+    "name": "Vanguard of King Brand",
+    "attested": true,
+    "note": "King Brand fell leading Dale at the Battle of Dale (attested)"
+  },
+  "dale_guardsman_t3_b": {
+    "name": "The Last Stand at Erebor",
+    "attested": true,
+    "note": "Dale's allies besieged in Erebor until Sauron's fall (attested)"
+  },
+  "dale_marksman_t1_a": {
+    "name": "Bowman of Esgaroth",
+    "attested": true,
+    "note": "Bard was captain of the archers of Esgaroth (attested)"
+  },
+  "dale_marksman_t1_b": {
+    "name": "Watch of the Long Lake",
+    "attested": false,
+    "note": "Long Lake attested; watch coined"
+  },
+  "dale_marksman_t2_a": {
+    "name": "Heir of the Black Arrow",
+    "attested": true,
+    "note": "Black Arrow = heirloom that slew Smaug (attested)"
+  },
+  "dale_marksman_t2_b": {
+    "name": "Thrush-Sighted Archer",
+    "attested": false,
+    "note": "thrush revealed Smaug's weak spot to Bard (attested); title coined"
+  },
+  "dale_marksman_t3_a": {
+    "name": "Dragonslayer of Dale",
+    "attested": true,
+    "note": "Bard slew Smaug, founding the kingly line (attested)"
+  },
+  "dale_marksman_t3_b": {
+    "name": "The Bow of Girion's Line",
+    "attested": true,
+    "note": "Bard descended from Girion (attested)"
+  },
+  "dale_outrider_t1_a": {
+    "name": "Rider of the Running",
+    "attested": false,
+    "note": "River Running road attested; mounted patrols coined"
+  },
+  "dale_outrider_t1_b": {
+    "name": "Warden of the Caravan Road",
+    "attested": false,
+    "note": "Dale flourished on Erebor trade (attested)"
+  },
+  "dale_outrider_t2_a": {
+    "name": "Lance of the Long Valley",
+    "attested": false,
+    "note": "Dale lay in the valley by Erebor; coined"
+  },
+  "dale_outrider_t2_b": {
+    "name": "Outrider of Erebor's Friendship",
+    "attested": false,
+    "note": "Bardings' attested friendship with Erebor"
+  },
+  "dale_outrider_t3_a": {
+    "name": "The Northman Charge",
+    "attested": false,
+    "note": "Bardings were Northmen, kin to Rohirrim (attested); coined"
+  },
+  "dale_outrider_t3_b": {
+    "name": "Courier of the Two Kings",
+    "attested": true,
+    "note": "Dale & Erebor under Bard II and Thorin III after the siege (attested)"
+  },
+  "ironguard_t1_a": {
+    "name": "Hammer of the Deeps",
+    "attested": false,
+    "note": "Erebor's 'deeps' attested; hammer coined"
+  },
+  "ironguard_t1_b": {
+    "name": "Gatewall Warden",
+    "attested": false,
+    "note": "stone wall across Erebor's Front Gate (attested); coined"
+  },
+  "ironguard_t2_a": {
+    "name": "Wrath of Durin's Folk",
+    "attested": true,
+    "note": "Durin's Folk = attested name of Erebor's dwarves"
+  },
+  "ironguard_t2_b": {
+    "name": "Shieldwall of Erebor",
+    "attested": false,
+    "note": "Erebor attested; shieldwall coined"
+  },
+  "ironguard_t3_a": {
+    "name": "Mithril Bulwark",
+    "attested": true,
+    "note": "mithril attested; matches 'Mithril Bastion' ability"
+  },
+  "ironguard_t3_b": {
+    "name": "Guard of the Arkenstone",
+    "attested": true,
+    "note": "Arkenstone = attested Heart of the Mountain"
+  },
+  "crossbow_master_t1_a": {
+    "name": "Iron Hills Volley",
+    "attested": true,
+    "note": "Iron Hills = attested realm of Dáin"
+  },
+  "crossbow_master_t1_b": {
+    "name": "Watcher of Dale",
+    "attested": true,
+    "note": "Dale attested; defended with the dwarves"
+  },
+  "crossbow_master_t2_a": {
+    "name": "Relentless Bolt",
+    "attested": false,
+    "note": "coined; constant crossbow pressure"
+  },
+  "crossbow_master_t2_b": {
+    "name": "Ballista of the Mountain",
+    "attested": false,
+    "note": "Iron Hills ballistae (adaptation/companion lore)"
+  },
+  "crossbow_master_t3_a": {
+    "name": "Storm of Steel",
+    "attested": false,
+    "note": "coined; dwarven steel-craft"
+  },
+  "crossbow_master_t3_b": {
+    "name": "Engine of Erebor",
+    "attested": false,
+    "note": "Erebor attested; 'engines' = war-engines"
+  },
+  "ram_rider_t1_a": {
+    "name": "Goatherd of the Hills",
+    "attested": false,
+    "note": "Iron Hills war-rams (films/adaptation)"
+  },
+  "ram_rider_t1_b": {
+    "name": "Outrider of Erebor",
+    "attested": false,
+    "note": "Erebor attested; outriders coined"
+  },
+  "ram_rider_t2_a": {
+    "name": "Charge of the Iron Hills",
+    "attested": true,
+    "note": "Iron Hills = attested source of Dáin's mounted host"
+  },
+  "ram_rider_t2_b": {
+    "name": "Stout War-Ram",
+    "attested": false,
+    "note": "'war rams' term for the Iron Hills mounts"
+  },
+  "ram_rider_t3_a": {
+    "name": "Ironfoot's Vanguard",
+    "attested": true,
+    "note": "Dáin II Ironfoot = attested King under the Mountain"
+  },
+  "ram_rider_t3_b": {
+    "name": "Rider of the Lonely Mountain",
+    "attested": true,
+    "note": "Lonely Mountain (Erebor) attested"
+  },
+  "blade_dancer_t1_a": {
+    "name": "Starlit Steel",
+    "attested": false,
+    "note": "First Age Noldor blades + starlight motif (canonical); phrasing coined"
+  },
+  "blade_dancer_t1_b": {
+    "name": "Guard of Imladris",
+    "attested": true,
+    "note": "Imladris (Rivendell) attested"
+  },
+  "blade_dancer_t2_a": {
+    "name": "Dance of Gondolin",
+    "attested": true,
+    "note": "Gondolin attested; lore passed to Rivendell via Glorfindel"
+  },
+  "blade_dancer_t2_b": {
+    "name": "Ward of the Hidden Valley",
+    "attested": true,
+    "note": "'Hidden Valley' = canonical epithet for Imladris"
+  },
+  "blade_dancer_t3_a": {
+    "name": "Sword of the First Age",
+    "attested": false,
+    "note": "First Age canonical; career cites First Age blades"
+  },
+  "blade_dancer_t3_b": {
+    "name": "Light of Eärendil",
+    "attested": true,
+    "note": "Eärendil's star (Silmaril light) canonical"
+  },
+  "elven_archer_t1_a": {
+    "name": "Keen-Eyed Watcher",
+    "attested": false,
+    "note": "from 'Ñoldor Sentinel' + Elven Sight; descriptor"
+  },
+  "elven_archer_t1_b": {
+    "name": "Watch of Rivendell",
+    "attested": true,
+    "note": "Rivendell attested"
+  },
+  "elven_archer_t2_a": {
+    "name": "Unceasing Volley",
+    "attested": false,
+    "note": "descriptor; constant-pressure keystone"
+  },
+  "elven_archer_t2_b": {
+    "name": "Bow of Eregion",
+    "attested": true,
+    "note": "Eregion (Ost-in-Edhil) attested; survivors fled to Rivendell"
+  },
+  "elven_archer_t3_a": {
+    "name": "Storm of Gil-galad",
+    "attested": true,
+    "note": "Gil-galad = attested last High King of the Noldor"
+  },
+  "elven_archer_t3_b": {
+    "name": "Vigil of Vilya",
+    "attested": true,
+    "note": "Vilya = attested Ring of Air borne by Elrond"
+  },
+  "rivendell_knight_t1_a": {
+    "name": "Charge of Imladris",
+    "attested": true,
+    "note": "Imladris attested"
+  },
+  "rivendell_knight_t1_b": {
+    "name": "Rider of the Ford",
+    "attested": true,
+    "note": "Ford of Bruinen attested (Glorfindel routed the Nazgûl)"
+  },
+  "rivendell_knight_t2_a": {
+    "name": "Gallop of Asfaloth",
+    "attested": true,
+    "note": "Asfaloth = Glorfindel's attested horse"
+  },
+  "rivendell_knight_t2_b": {
+    "name": "Aegis of the Valar",
+    "attested": false,
+    "note": "Valar attested (re-embodied Glorfindel); 'aegis' is English coinage"
+  },
+  "rivendell_knight_t3_a": {
+    "name": "Wrath of Glorfindel",
+    "attested": true,
+    "note": "Glorfindel = attested Balrog-slayer & Elf-lord of Rivendell"
+  },
+  "rivendell_knight_t3_b": {
+    "name": "Host of the Last Alliance",
+    "attested": true,
+    "note": "Last Alliance of Elves and Men (named in the ability)"
+  },
+  "warden_t1_a": {
+    "name": "Border Strider",
+    "attested": true,
+    "note": "march-wardens patrolled Lórien's borders/Northern Fences"
+  },
+  "warden_t1_b": {
+    "name": "Warden of Nimrodel",
+    "attested": true,
+    "note": "Nimrodel = attested river & elf-maiden; ties to the ability"
+  },
+  "warden_t2_a": {
+    "name": "Blade of the Naith",
+    "attested": false,
+    "note": "Naith = attested spearhead-heart of Lórien; martial title coined"
+  },
+  "warden_t2_b": {
+    "name": "Shieldwall of Caras Galadhon",
+    "attested": false,
+    "note": "Caras Galadhon = attested chief city; title coined"
+  },
+  "warden_t3_a": {
+    "name": "Warden of the Golden Wood",
+    "attested": true,
+    "note": "'Golden Wood' = attested epithet for Lothlórien"
+  },
+  "warden_t3_b": {
+    "name": "Guard of Cerin Amroth",
+    "attested": false,
+    "note": "Cerin Amroth = attested hallowed mound; guard coined"
+  },
+  "galadhrim_archer_t1_a": {
+    "name": "Silver Bowman",
+    "attested": false,
+    "note": "celeb='silver' (Celebrant) + Silver Rain ability"
+  },
+  "galadhrim_archer_t1_b": {
+    "name": "Eye of the Fences",
+    "attested": false,
+    "note": "Northern Fences watched by hidden marchwardens (attested); title coined"
+  },
+  "galadhrim_archer_t2_a": {
+    "name": "Mallorn Marksman",
+    "attested": false,
+    "note": "mallorn = attested golden trees/flets; unit title coined"
+  },
+  "galadhrim_archer_t2_b": {
+    "name": "Watcher of the Flets",
+    "attested": false,
+    "note": "flet/talan = attested mallorn platforms; title coined"
+  },
+  "galadhrim_archer_t3_a": {
+    "name": "Arrow of Caras Galadhon",
+    "attested": false,
+    "note": "Caras Galadhon attested; title coined"
+  },
+  "galadhrim_archer_t3_b": {
+    "name": "Warden of the Silverlode",
+    "attested": false,
+    "note": "Silverlode (Celebrant) attested; title coined"
+  },
+  "sentinel_t1_a": {
+    "name": "Outrider of Egladil",
+    "attested": false,
+    "note": "Egladil = attested 'Elven-point' of the Naith; title coined"
+  },
+  "sentinel_t1_b": {
+    "name": "Warden of Elanor",
+    "attested": true,
+    "note": "elanor = attested golden flower of Cerin Amroth; ties to ability"
+  },
+  "sentinel_t2_a": {
+    "name": "Rider of the Naith",
+    "attested": false,
+    "note": "Naith attested; mounted-warrior title coined"
+  },
+  "sentinel_t2_b": {
+    "name": "Guardian of Celebrant",
+    "attested": true,
+    "note": "Celebrant (Silverlode) attested"
+  },
+  "sentinel_t3_a": {
+    "name": "Lance of Laurelindórenan",
+    "attested": true,
+    "note": "Laurelindórenan = attested ancient name of Lórien"
+  },
+  "sentinel_t3_b": {
+    "name": "Sentinel of Nenya",
+    "attested": true,
+    "note": "Nenya = Galadriel's attested Ring of Water"
+  },
+  "shadow_walker_t1_a": {
+    "name": "Shadow of the Path",
+    "attested": false,
+    "note": "hidden forest paths of Mirkwood; coined"
+  },
+  "shadow_walker_t1_b": {
+    "name": "Cloak of Leaves",
+    "attested": false,
+    "note": "elven concealment under the canopy; coined"
+  },
+  "shadow_walker_t2_a": {
+    "name": "Hunter in the Dark",
+    "attested": false,
+    "note": "Thranduil's folk hunted spiders/orcs; coined"
+  },
+  "shadow_walker_t2_b": {
+    "name": "Veil of the Wood",
+    "attested": false,
+    "note": "Greenwood's shadow; coined"
+  },
+  "shadow_walker_t3_a": {
+    "name": "Bane of the Spiders",
+    "attested": true,
+    "note": "Great Spiders = attested chief foe of the Wood-elves"
+  },
+  "shadow_walker_t3_b": {
+    "name": "Unseen of Eryn Lasgalen",
+    "attested": true,
+    "note": "Eryn Lasgalen = attested 'Wood of Greenleaves' (post-Shadow name)"
+  },
+  "silvan_archer_t1_a": {
+    "name": "Greenwood Marksman",
+    "attested": true,
+    "note": "Greenwood the Great = Mirkwood's attested original name"
+  },
+  "silvan_archer_t1_b": {
+    "name": "Watch of the Canopy",
+    "attested": false,
+    "note": "treetop strikes; from Canopy Strike"
+  },
+  "silvan_archer_t2_a": {
+    "name": "Hunter of the Glades",
+    "attested": false,
+    "note": "Silvan glade-hunters; coined"
+  },
+  "silvan_archer_t2_b": {
+    "name": "Warden of the River",
+    "attested": false,
+    "note": "Forest/Enchanted River crossings (attested); title coined"
+  },
+  "silvan_archer_t3_a": {
+    "name": "Storm of Arrows",
+    "attested": false,
+    "note": "matches 'inescapable volleys' keystone"
+  },
+  "silvan_archer_t3_b": {
+    "name": "Bowman of the Elvenking",
+    "attested": true,
+    "note": "archers of Thranduil the Elvenking (attested)"
+  },
+  "elk_rider_t1_a": {
+    "name": "Antlered Charge",
+    "attested": true,
+    "note": "Thranduil's great-elk mount + Antler Crash ability"
+  },
+  "elk_rider_t1_b": {
+    "name": "Rider of the Reaches",
+    "attested": false,
+    "note": "woodland-reaches patrol; coined"
+  },
+  "elk_rider_t2_a": {
+    "name": "Thunder of the Forest",
+    "attested": false,
+    "note": "elk crashing through the wood; coined"
+  },
+  "elk_rider_t2_b": {
+    "name": "Guard of Thranduil",
+    "attested": true,
+    "note": "career = warrior of Thranduil's guard (attested king)"
+  },
+  "elk_rider_t3_a": {
+    "name": "Wrath under the Trees",
+    "attested": true,
+    "note": "Battle under the Trees (T.A. 3019) attested"
+  },
+  "elk_rider_t3_b": {
+    "name": "Lord of the Elvenking's Halls",
+    "attested": true,
+    "note": "Elvenking's Halls = Thranduil's attested stronghold"
+  },
+  "uruk_berserker_t1_a": {
+    "name": "Blood-Maddened",
+    "attested": false,
+    "note": "berserker rage of the fighting Uruk-hai; coined"
+  },
+  "uruk_berserker_t1_b": {
+    "name": "Pit-Hardened",
+    "attested": false,
+    "note": "Uruk-hai 'bred in the pits of Isengard' (attested)"
+  },
+  "uruk_berserker_t2_a": {
+    "name": "White Hand Reaver",
+    "attested": true,
+    "note": "White Hand = Saruman's attested emblem"
+  },
+  "uruk_berserker_t2_b": {
+    "name": "Shieldwall of Orthanc",
+    "attested": true,
+    "note": "Orthanc = attested tower of Isengard"
+  },
+  "uruk_berserker_t3_a": {
+    "name": "Scourge of Nan Curunír",
+    "attested": true,
+    "note": "Nan Curunír = attested 'Wizard's Vale'"
+  },
+  "uruk_berserker_t3_b": {
+    "name": "Unbroken of the Tower",
+    "attested": false,
+    "note": "Tower=Orthanc (attested); 'unbroken' coined"
+  },
+  "uruk_crossbow_t1_a": {
+    "name": "Iron Volley",
+    "attested": false,
+    "note": "Isengard's cast-iron crossbows; coined"
+  },
+  "uruk_crossbow_t1_b": {
+    "name": "Forge-Forged",
+    "attested": false,
+    "note": "weapons cast in Orthanc's foundries (attested); coined"
+  },
+  "uruk_crossbow_t2_a": {
+    "name": "Bolt of the White Hand",
+    "attested": true,
+    "note": "White Hand = Saruman's attested emblem"
+  },
+  "uruk_crossbow_t2_b": {
+    "name": "Warden of the Ring-wall",
+    "attested": true,
+    "note": "Isengard's great ring-wall attested"
+  },
+  "uruk_crossbow_t3_a": {
+    "name": "Stormcrow of Orthanc",
+    "attested": false,
+    "note": "'Stormcrow' attested (Gandalf's epithet) re-cast; coined application"
+  },
+  "uruk_crossbow_t3_b": {
+    "name": "Iron Rain Unending",
+    "attested": false,
+    "note": "names the in-game 'Iron Rain' ability"
+  },
+  "warg_scout_t1_a": {
+    "name": "Fang-Runner",
+    "attested": false,
+    "note": "Wargs as Orc mounts (attested); 'Fang' coined"
+  },
+  "warg_scout_t1_b": {
+    "name": "Grey Pack",
+    "attested": true,
+    "note": "Wargs answered a 'grey chief' & hunted in packs (attested)"
+  },
+  "warg_scout_t2_a": {
+    "name": "Misty Mountain Hunter",
+    "attested": true,
+    "note": "Wargs dwelt in the Misty Mountains (attested)"
+  },
+  "warg_scout_t2_b": {
+    "name": "Wolf-Warden",
+    "attested": false,
+    "note": "'warg' < Old Norse vargr 'wolf' (attested etymology); coined"
+  },
+  "warg_scout_t3_a": {
+    "name": "Outrider of Isengard",
+    "attested": true,
+    "note": "Saruman gathered Wargs at Isengard (attested); 'outriders' coined"
+  },
+  "warg_scout_t3_b": {
+    "name": "The Tireless Hunt",
+    "attested": false,
+    "note": "endless-pursuit tier; coined"
+  },
+  "cave_troll_master_t1_a": {
+    "name": "Pit-Whip Driver",
+    "attested": false,
+    "note": "Gundabad chieftains drove trolls/beasts; coined"
+  },
+  "cave_troll_master_t1_b": {
+    "name": "Cave-Mouth Warden",
+    "attested": false,
+    "note": "goblins held the deep cave-mouths; coined"
+  },
+  "cave_troll_master_t2_a": {
+    "name": "Goblin-town Tyrant",
+    "attested": true,
+    "note": "Goblin-town under the High Pass attested (The Hobbit)"
+  },
+  "cave_troll_master_t2_b": {
+    "name": "Deep-Hold Breaker",
+    "attested": false,
+    "note": "orcs seized the Dwarves' deep holds; coined"
+  },
+  "cave_troll_master_t3_a": {
+    "name": "Scourge of Gundabad",
+    "attested": true,
+    "note": "Mount Gundabad = attested orc stronghold"
+  },
+  "cave_troll_master_t3_b": {
+    "name": "Dread of the Northern Halls",
+    "attested": false,
+    "note": "seized northern Dwarf-halls; coined"
+  },
+  "goblin_sniper_t1_a": {
+    "name": "Crag-Stalker",
+    "attested": false,
+    "note": "goblins lurked in the crags near the High Pass; coined"
+  },
+  "goblin_sniper_t1_b": {
+    "name": "Tunnel Skulker",
+    "attested": false,
+    "note": "Goblin-town tunnels (attested); coined"
+  },
+  "goblin_sniper_t2_a": {
+    "name": "High Pass Ambusher",
+    "attested": true,
+    "note": "High Pass goblin ambushes attested (The Hobbit)"
+  },
+  "goblin_sniper_t2_b": {
+    "name": "Poison-Fletcher",
+    "attested": false,
+    "note": "career's poisoned-dart theme; Tolkien doesn't attest goblin poison"
+  },
+  "goblin_sniper_t3_a": {
+    "name": "Front Porch Reaver",
+    "attested": true,
+    "note": "'Front Porch' = attested Goblin-town gate at the High Pass"
+  },
+  "goblin_sniper_t3_b": {
+    "name": "Shadow of the High Pass",
+    "attested": false,
+    "note": "High Pass attested; 'Shadow' coined"
+  },
+  "warg_pack_leader_t1_a": {
+    "name": "Warg-Rider",
+    "attested": true,
+    "note": "warg-riders of Gundabad attested"
+  },
+  "warg_pack_leader_t1_b": {
+    "name": "Pack-Keeper",
+    "attested": false,
+    "note": "Gundabad orcs bred Wargs (attested); coined"
+  },
+  "warg_pack_leader_t2_a": {
+    "name": "Grey Pack Outrider",
+    "attested": true,
+    "note": "'great grey chief wolf' & pack attested (The Hobbit)"
+  },
+  "warg_pack_leader_t2_b": {
+    "name": "Fell Wolf-Master",
+    "attested": false,
+    "note": "Wargs = 'fell' monstrous wolves (attested); coined"
+  },
+  "warg_pack_leader_t3_a": {
+    "name": "Alpha of Gundabad",
+    "attested": false,
+    "note": "Gundabad attested; matches Alpha Howl ability"
+  },
+  "warg_pack_leader_t3_b": {
+    "name": "Bolg's Wolf-Captain",
+    "attested": true,
+    "note": "Bolg led Wargs at the Battle of Five Armies (attested)"
+  },
+  "shadow_warrior_t1_a": {
+    "name": "Shade of Amon Lanc",
+    "attested": false,
+    "note": "Amon Lanc = attested hill on which Dol Guldur was built"
+  },
+  "shadow_warrior_t1_b": {
+    "name": "Warden of the Pits",
+    "attested": false,
+    "note": "Dol Guldur's pits/dungeons attested"
+  },
+  "shadow_warrior_t2_a": {
+    "name": "Reaver of Mirkwood",
+    "attested": false,
+    "note": "Mirkwood attested; 'reaver' coined"
+  },
+  "shadow_warrior_t2_b": {
+    "name": "Bulwark of Dol Guldur",
+    "attested": false,
+    "note": "Dol Guldur = attested 'Hill of Sorcery'; bulwark coined"
+  },
+  "shadow_warrior_t3_a": {
+    "name": "Scourge of the Necromancer",
+    "attested": false,
+    "note": "Necromancer (Sauron at Dol Guldur) attested; title coined"
+  },
+  "shadow_warrior_t3_b": {
+    "name": "Deathless Shadow",
+    "attested": false,
+    "note": "Nazgûl wraith-existence attested theme; coined"
+  },
+  "necromancer_acolyte_t1_a": {
+    "name": "Caster of Dark Bolts",
+    "attested": false,
+    "note": "names the 'Dark Bolt' ability"
+  },
+  "necromancer_acolyte_t1_b": {
+    "name": "Whisperer of Decay",
+    "attested": false,
+    "note": "decay/shadow over Mirkwood attested theme; coined"
+  },
+  "necromancer_acolyte_t2_a": {
+    "name": "Weaver of Black Arts",
+    "attested": false,
+    "note": "'Guldur' = 'black arts/sorcery' (attested Sindarin)"
+  },
+  "necromancer_acolyte_t2_b": {
+    "name": "Breather of Shadow",
+    "attested": false,
+    "note": "evokes the attested Black Breath; coined"
+  },
+  "necromancer_acolyte_t3_a": {
+    "name": "Lord of the Hill of Sorcery",
+    "attested": false,
+    "note": "'Hill of Sorcery' = attested meaning of Dol Guldur"
+  },
+  "necromancer_acolyte_t3_b": {
+    "name": "Voice of the Necromancer",
+    "attested": false,
+    "note": "Necromancer attested; title coined"
+  },
+  "fell_rider_t1_a": {
+    "name": "Rider of the Shadow Host",
+    "attested": false,
+    "note": "from career's 'shadow host'; Mirkwood shadow attested"
+  },
+  "fell_rider_t1_b": {
+    "name": "Keeper of Fell Steeds",
+    "attested": false,
+    "note": "fell beasts near Dol Guldur as Nazgûl steeds (attested); coined"
+  },
+  "fell_rider_t2_a": {
+    "name": "Herald of Dread",
+    "attested": false,
+    "note": "Nazgûl spread attested fear/dread; coined"
+  },
+  "fell_rider_t2_b": {
+    "name": "Rider of the Black Breath",
+    "attested": false,
+    "note": "Black Breath = attested Nazgûl weapon; title coined"
+  },
+  "fell_rider_t3_a": {
+    "name": "Black Rider of Dol Guldur",
+    "attested": false,
+    "note": "'Black Riders' = attested Nazgûl name; Dol Guldur garrison attested"
+  },
+  "fell_rider_t3_b": {
+    "name": "Shadow of the East",
+    "attested": true,
+    "note": "'Shadow of the East' = Khamûl's attested title, lord of Dol Guldur"
+  },
+  "corsair_boarder_t1_a": {
+    "name": "Deck Reaver",
+    "attested": false,
+    "note": "corsair boarders stormed decks; coined"
+  },
+  "corsair_boarder_t1_b": {
+    "name": "Sea-hardened",
+    "attested": false,
+    "note": "toughened raiding crews; coined"
+  },
+  "corsair_boarder_t2_a": {
+    "name": "Ravager of Pelargir",
+    "attested": true,
+    "note": "Corsairs sacked Pelargir (T.A. 1634), slaying King Minardil"
+  },
+  "corsair_boarder_t2_b": {
+    "name": "Bulwark of the Haven",
+    "attested": false,
+    "note": "Haven of Umbar attested; bulwark coined"
+  },
+  "corsair_boarder_t3_a": {
+    "name": "Scourge of the Coasts",
+    "attested": true,
+    "note": "Corsairs ravaged Gondor's coasts for centuries (Corsair Wars)"
+  },
+  "corsair_boarder_t3_b": {
+    "name": "Black Númenórean Warlord",
+    "attested": true,
+    "note": "Umbar = realm of the Black Númenóreans (attested)"
+  },
+  "corsair_crossbow_t1_a": {
+    "name": "Rigging Marksman",
+    "attested": false,
+    "note": "career: shooters in the rigging; coined"
+  },
+  "corsair_crossbow_t1_b": {
+    "name": "Crow's-nest Watch",
+    "attested": false,
+    "note": "lookout/fire perch; coined nautical term"
+  },
+  "corsair_crossbow_t2_a": {
+    "name": "Hunter of Helmsmen",
+    "attested": false,
+    "note": "career: pick off helmsmen/officers; coined"
+  },
+  "corsair_crossbow_t2_b": {
+    "name": "Pike of the Black Sails",
+    "attested": false,
+    "note": "Corsairs' attested black sails; phrase coined"
+  },
+  "corsair_crossbow_t3_a": {
+    "name": "Quarrel of the Black Star",
+    "attested": false,
+    "note": "Corsair red sails bore an attested black star/eye; phrasing coined"
+  },
+  "corsair_crossbow_t3_b": {
+    "name": "Unceasing Volley",
+    "attested": false,
+    "note": "relentless-fire tier; coined"
+  },
+  "corsair_captain_t1_a": {
+    "name": "Raid-leader of Umbar",
+    "attested": true,
+    "note": "corsair captains led raiding fleets from Umbar (attested)"
+  },
+  "corsair_captain_t1_b": {
+    "name": "Master of the Crew",
+    "attested": false,
+    "note": "captains commanded crews/rowers (attested role); title coined"
+  },
+  "corsair_captain_t2_a": {
+    "name": "Heir of Castamir",
+    "attested": true,
+    "note": "Corsairs led by descendants of Castamir the Usurper (attested)"
+  },
+  "corsair_captain_t2_b": {
+    "name": "Helm of the Black Fleet",
+    "attested": false,
+    "note": "Black Fleet attested (captured by Aragorn); 'helm' coined"
+  },
+  "corsair_captain_t3_a": {
+    "name": "Lord of the Corsairs",
+    "attested": true,
+    "note": "sons of Castamir made Umbar a corsair lordship (attested)"
+  },
+  "corsair_captain_t3_b": {
+    "name": "Lord of the Great Haven",
+    "attested": false,
+    "note": "Umbar's Haven/great cape attested; title coined"
+  }
+}

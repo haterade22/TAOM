@@ -101,6 +101,48 @@ JSON arrays of narrative option entries:
 ```
 Options without `string_id` prefixed with `taom_` are treated as vanilla and removed.
 
+### Bonus budget (skill / attribute / focus) — vanilla-aligned
+
+Each option carries `(focus_to_add, skill_level_to_add, attribute_level_to_add)`. The engine
+applies these at menu-selection time via `NarrativeMenuOptionArgs` — the **narrative stages**
+through [NarrativeMenuBuilder.BuildOption](../../Main/Features/CharacterCreation/NarrativeMenuBuilder.cs#L61),
+and the **career stage** through [CareerMenuService.BuildOptionForCareer](../../Main/Features/CharacterCreation/CareerMenuService.cs#L260)
+— so by `OnCharacterCreationFinalize` the Hero already has the points. The per-pick value is
+identical to vanilla's defaults `(1, 10, 1)`.
+
+**Total budget = 5 bonus stages (matches vanilla).** TAOM has five bonus-granting narrative
+stages — parents, childhood, youth, education, adulthood — each granting the vanilla `(1,10,1)`
+bundle. Two additional bonus sources that vanilla lacks were **zeroed (2026-05-30)** to keep the
+starting character on vanilla's budget:
+
+| Source | Payload now | Why |
+|--------|-------------|-----|
+| **Career stage** (`career_menu.json`, 49 entries) | `focus/skill/attr = 0`, `skills`/`attribute` **cleared** | A 6th stage vanilla doesn't have. Career still picks specialization + starting equipment; it just grants no stat bonus. Clearing `skills`/`attribute` (not just zeroing the magnitudes) makes a selected career render the same line as "No specialization" (`0 unspent Focus/Attribute Point`) — without it the engine's `GetPositiveEffectText` shows a confusing `0 Skill Level … to <skills>` on the career menu **and** the final review screen. |
+| **Culture base** (`cultures.json` `focus_to_add` / `skill_level_to_add`, 18 entries) | `0 / 0` | An on-top add vanilla doesn't have. |
+
+Result: 5 total focus, 5 total attribute points — matching vanilla. **Concentration is
+deliberately left as-is:** because the per-culture themes repeat across stages and aren't gated
+on earlier picks, a min-max build can still pour all 5 narrative stages into one skill (`+50`)
+or one attribute (`+5`). Vanilla spreads via gating; diversifying TAOM's themes to do the same
+is the documented next lever but was out of scope for the 2026-05-30 budget cut.
+
+**Deserialization defaults match the data (no "delete-the-keys" landmine).** The Career +
+Culture providers/models (`CareerMenuDataProvider`, `CareerMenuOptionDefinition`,
+`CultureCreationDataProvider`, `CultureCreationData`) default these bonus fields to **`0`**, so a
+future entry that *omits* the keys gets "no bonus" — matching the zeroed data, not the old
+1/10/1. `NarrativeDataProvider`/`NarrativeOptionDefinition` deliberately keep the **`1/10/1`**
+default: that *is* the intended per-stage bonus, so a narrative option that omits a key correctly
+self-heals to the vanilla bundle. (Editing the JSON to retune: zero the value or omit the key —
+both yield 0 for career/culture; for narrative, omitting a key restores 1/10/1.)
+
+**Audit / re-apply:** [`tools/audit_cc_bonuses.py`](../../tools/audit_cc_bonuses.py) reports
+per-culture worst-case concentration vs the vanilla budget (deterministic — ties broken
+alphabetically), and `--apply` re-runs the zeroing + skills/attribute clear (formatting-preserving,
+writes `.bak`). Latest report:
+[`docs/reviews/cc-bonus-audit-2026-05-30.md`](../reviews/cc-bonus-audit-2026-05-30.md). Note the
+providers are `Reuse.Singleton` — edits to these JSONs require a full Bannerlord restart, not
+just a new campaign.
+
 ## Key Files
 | File | Purpose |
 |------|---------|

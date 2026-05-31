@@ -52,8 +52,11 @@ public class CultureCreationDataProvider : ICultureCreationDataProvider
                     DefaultAge = obj.Value<float?>("default_age") ?? 30f,
                     DefaultWeight = obj.Value<float?>("default_weight") ?? 0.5f,
                     DefaultBuild = obj.Value<float?>("default_build") ?? 0.5f,
-                    FocusToAdd = obj.Value<int?>("focus_to_add") ?? 1,
-                    SkillLevelToAdd = obj.Value<int?>("skill_level_to_add") ?? 10,
+                    // Culture-base bonus removed 2026-05-30 (matched vanilla budget) — see
+                    // docs/features/character-creation.md "Bonus budget". Default 0 so a missing
+                    // key means "no culture base", NOT the old 1/10.
+                    FocusToAdd = obj.Value<int?>("focus_to_add") ?? 0,
+                    SkillLevelToAdd = obj.Value<int?>("skill_level_to_add") ?? 0,
                 });
             }
 

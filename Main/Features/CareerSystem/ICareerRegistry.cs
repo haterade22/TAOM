@@ -14,4 +14,7 @@ public interface ICareerRegistry
     bool IsEligible(string careerStringId, ICareerHeroAdapter hero);
     int GetMaxChoicesForHero(int heroLevel);
     bool IsTierAvailable(int heroLevel, int tier);
+
+    /// <summary>Hero level at which the given tier (1-3) unlocks. Returns int.MaxValue for unknown tiers.</summary>
+    int GetTierUnlockLevel(int tier);
 }

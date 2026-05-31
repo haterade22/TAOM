@@ -1,0 +1,694 @@
+{
+  "_meta": {
+    "purpose": "Reviewed web-researched per-tier RANK titles for careers (tier headers on the career screen). Adopted from TOR_Core's tor_career_rank{1,2,3}_name convention, authored clean for TAOM/LOTR.",
+    "format": "<careerId>: { rank1:{name,attested}, rank2:{...}, rank3:{...} }. attested=true = canonical Tolkien term/title.",
+    "applied_by": "tools/apply_career_rank_names.py (writes rank{1,2,3}_name=\"{=taom_career_rank{N}_<id>}<name>\" onto each <Career>)",
+    "count": 147
+  },
+  "ranger_of_ithilien": {
+    "rank1": {
+      "name": "Ithilien Scout",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Ranger of Ithilien",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Captain of the White Company",
+      "attested": true
+    }
+  },
+  "captain_of_osgiliath": {
+    "rank1": {
+      "name": "Ohtar of the Crossing",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Warden of Osgiliath",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Captain of Osgiliath",
+      "attested": true
+    }
+  },
+  "knight_of_belfalas": {
+    "rank1": {
+      "name": "Squire of Dol Amroth",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Swan-Knight",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Knight of the Silver Swan",
+      "attested": false
+    }
+  },
+  "black_uruk_captain": {
+    "rank1": {
+      "name": "Uruk Soldier",
+      "attested": true
+    },
+    "rank2": {
+      "name": "Black Uruk",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Captain of the Red Eye",
+      "attested": false
+    }
+  },
+  "mulkerhili_cultist": {
+    "rank1": {
+      "name": "Whisper-Sworn",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Voice of Lugbúrz",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Herald of the Lidless Eye",
+      "attested": false
+    }
+  },
+  "snaga_rider": {
+    "rank1": {
+      "name": "Snaga",
+      "attested": true
+    },
+    "rank2": {
+      "name": "Smoke-Raider",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Shadow of Lugbúrz",
+      "attested": false
+    }
+  },
+  "olog_hai_warchief": {
+    "rank1": {
+      "name": "War-Troll",
+      "attested": true
+    },
+    "rank2": {
+      "name": "Olog-hai",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Warchief of Lugbúrz",
+      "attested": false
+    }
+  },
+  "marksman_of_aldburg": {
+    "rank1": {
+      "name": "Bowman of the Eastfold",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Marksman of Aldburg",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Arrow-warden of the Mark",
+      "attested": false
+    }
+  },
+  "eotheod_windrider": {
+    "rank1": {
+      "name": "Rider of the Mark",
+      "attested": true
+    },
+    "rank2": {
+      "name": "Captain of the Éored",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Marshal of the Riddermark",
+      "attested": true
+    }
+  },
+  "watchman_of_stangard": {
+    "rank1": {
+      "name": "Watchman of Stangard",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Ford-warden of the Limlight",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Warden of the East-marches",
+      "attested": false
+    }
+  },
+  "avanc_luth_raider": {
+    "rank1": {
+      "name": "Painted Reaver",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Clan Berserker",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Avanc-lúth War-Chief",
+      "attested": false
+    }
+  },
+  "wolfskin_hunter": {
+    "rank1": {
+      "name": "Wolf-Pelt Stalker",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Shadow-Marksman",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Grey Huntsman of the Hills",
+      "attested": false
+    }
+  },
+  "clanguard_rider": {
+    "rank1": {
+      "name": "Clan Outrider",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Boar-Banner Horseman",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Master of the Wild Hunt",
+      "attested": false
+    }
+  },
+  "blademaster_of_ren": {
+    "rank1": {
+      "name": "Blade of Rên",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Sworn Blademaster",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Kân of the Crimson Edge",
+      "attested": false
+    }
+  },
+  "steppe_bowmaster": {
+    "rank1": {
+      "name": "Plains Outrider",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Steppe Bowmaster",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Stormbow Kân",
+      "attested": false
+    }
+  },
+  "chariot_warlord": {
+    "rank1": {
+      "name": "Scythe-Driver",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Chariot Warlord",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Wainkân of Khand",
+      "attested": false
+    }
+  },
+  "tribesman_of_jelut": {
+    "rank1": {
+      "name": "Jelut Tribesman",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Sandstorm Raider",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Serpent-Banner Chieftain",
+      "attested": true
+    }
+  },
+  "pezarsani_javelineer": {
+    "rank1": {
+      "name": "Pezarsan Javelineer",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Throwing-Spear Skirmisher",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Scarlet Spear-Master",
+      "attested": false
+    }
+  },
+  "mahud_beast_rider": {
+    "rank1": {
+      "name": "Mahûd Beast-Tamer",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Mûmak Driver",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Mûmak War-Leader",
+      "attested": false
+    }
+  },
+  "codyan_legionaire": {
+    "rank1": {
+      "name": "Côdyan Shieldman",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Côdyan Lamellar Veteran",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Ironwall of Rhûn",
+      "attested": false
+    }
+  },
+  "lokhas_drus_marksman": {
+    "rank1": {
+      "name": "Lôkhas Drûs Bowman",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Lôkhas Drûs Plate-Piercer",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Sunfletched Death of the East",
+      "attested": false
+    }
+  },
+  "balchoth_kan": {
+    "rank1": {
+      "name": "Balchoth Horseman",
+      "attested": true
+    },
+    "rank2": {
+      "name": "Balchoth Charioteer-Captain",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Balchoth Warlord-Kân",
+      "attested": false
+    }
+  },
+  "dale_guardsman": {
+    "rank1": {
+      "name": "Gate-Warden of Dale",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Shieldman of Girion",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Knight of Dale",
+      "attested": false
+    }
+  },
+  "dale_marksman": {
+    "rank1": {
+      "name": "Bowman of Esgaroth",
+      "attested": true
+    },
+    "rank2": {
+      "name": "Dragon-Shooter",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Bearer of the Black Arrow",
+      "attested": true
+    }
+  },
+  "dale_outrider": {
+    "rank1": {
+      "name": "Road-Rider of Dale",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Warden of the North-Road",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Marshal of the Bardings",
+      "attested": false
+    }
+  },
+  "ironguard": {
+    "rank1": {
+      "name": "Deep Warden",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Ironguard of Erebor",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Shieldwall of Durin",
+      "attested": false
+    }
+  },
+  "crossbow_master": {
+    "rank1": {
+      "name": "Bolt-Smith",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Master Quarreler",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Engine-Lord of the Iron Hills",
+      "attested": false
+    }
+  },
+  "ram_rider": {
+    "rank1": {
+      "name": "Ram-Breaker",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Goatback Charger",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Vanguard of Dáin",
+      "attested": false
+    }
+  },
+  "blade_dancer": {
+    "rank1": {
+      "name": "Ñoldor Bladesman",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Blade of the Golden Flower",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Blademaster of Imladris",
+      "attested": false
+    }
+  },
+  "elven_archer": {
+    "rank1": {
+      "name": "Ñoldor Bowman",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Sentinel of the Heavenly Arch",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Warden of Imladris",
+      "attested": false
+    }
+  },
+  "rivendell_knight": {
+    "rank1": {
+      "name": "Ohtar of Imladris",
+      "attested": true
+    },
+    "rank2": {
+      "name": "Roquen of Imladris",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Knight of the Golden Flower",
+      "attested": false
+    }
+  },
+  "warden": {
+    "rank1": {
+      "name": "Warden of the Eaves",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Marchwarden of Lórien",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Captain of the Marchwardens",
+      "attested": false
+    }
+  },
+  "galadhrim_archer": {
+    "rank1": {
+      "name": "Bowman of the Galadhrim",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Archer of the Mallorn-Eaves",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Bowmaster of the Golden Wood",
+      "attested": false
+    }
+  },
+  "sentinel": {
+    "rank1": {
+      "name": "Rider of the Egladil",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Tirith of the Golden Wood",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Thalion of Caras Galadhon",
+      "attested": false
+    }
+  },
+  "shadow_walker": {
+    "rank1": {
+      "name": "Forest Stalker",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Shadow of Taur-nu-Fuin",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Bane of Spiders",
+      "attested": false
+    }
+  },
+  "silvan_archer": {
+    "rank1": {
+      "name": "Greenwood Bowman",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Silvan Marksman",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Archer of the Elvenking",
+      "attested": false
+    }
+  },
+  "elk_rider": {
+    "rank1": {
+      "name": "Woodland Outrider",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Elk-Warden of Mirkwood",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Antlered Lord of Eryn Lasgalen",
+      "attested": false
+    }
+  },
+  "uruk_berserker": {
+    "rank1": {
+      "name": "Pit-Spawned Uruk",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Fighting Uruk-hai",
+      "attested": true
+    },
+    "rank3": {
+      "name": "White Hand Reaver",
+      "attested": false
+    }
+  },
+  "uruk_crossbow": {
+    "rank1": {
+      "name": "Forge-Armed Uruk",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Orthanc Marksman",
+      "attested": false
+    },
+    "rank3": {
+      "name": "White Hand Sharpshooter",
+      "attested": false
+    }
+  },
+  "warg_scout": {
+    "rank1": {
+      "name": "Wolf-Rider",
+      "attested": true
+    },
+    "rank2": {
+      "name": "Warg-Scout of Isengard",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Hunter of the White Hand",
+      "attested": false
+    }
+  },
+  "cave_troll_master": {
+    "rank1": {
+      "name": "Pit-Driver",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Troll-Goad of Gundabad",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Maker of Broken Trolls",
+      "attested": false
+    }
+  },
+  "goblin_sniper": {
+    "rank1": {
+      "name": "Crag-Lurker",
+      "attested": false
+    },
+    "rank2": {
+      "name": "High Pass Stalker",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Eye of Gundabad",
+      "attested": false
+    }
+  },
+  "warg_pack_leader": {
+    "rank1": {
+      "name": "Warg-Rider of the Pack",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Fell Wolf-Captain",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Wolf-Lord of the Wild Hunt",
+      "attested": false
+    }
+  },
+  "shadow_warrior": {
+    "rank1": {
+      "name": "Thrall of the Shadow",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Servant of Dol Guldur",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Black Hand of the Necromancer",
+      "attested": false
+    }
+  },
+  "necromancer_acolyte": {
+    "rank1": {
+      "name": "Acolyte of Sorcery",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Weaver of the Black Breath",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Master of Dol Guldur",
+      "attested": true
+    }
+  },
+  "fell_rider": {
+    "rank1": {
+      "name": "Black Rider",
+      "attested": true
+    },
+    "rank2": {
+      "name": "Fell Rider",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Shadow of the East",
+      "attested": true
+    }
+  },
+  "corsair_boarder": {
+    "rank1": {
+      "name": "Deck Reaver",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Corsair of the Haven",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Black Reaver of Umbar",
+      "attested": false
+    }
+  },
+  "corsair_crossbow": {
+    "rank1": {
+      "name": "Rigging Marksman",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Corsair Sharpshooter",
+      "attested": false
+    },
+    "rank3": {
+      "name": "Throng-cleaver of the Fleet",
+      "attested": true
+    }
+  },
+  "corsair_captain": {
+    "rank1": {
+      "name": "Master of the Black Fleet",
+      "attested": false
+    },
+    "rank2": {
+      "name": "Captain of Ships",
+      "attested": true
+    },
+    "rank3": {
+      "name": "Lord of Umbar",
+      "attested": true
+    }
+  }
+}

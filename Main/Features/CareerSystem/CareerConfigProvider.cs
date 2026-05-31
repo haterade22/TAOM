@@ -138,7 +138,10 @@ public class CareerConfigProvider : ICareerConfigProvider
                         minClanTier: ParseInt(el, "min_clan_tier", 0),
                         rootChoiceId: el.Attribute("root_choice_id")?.Value ?? "",
                         eligibleCultureIds: cultureIds,
-                        choiceGroupIds: groupIds);
+                        choiceGroupIds: groupIds,
+                        rank1Name: el.Attribute("rank1_name")?.Value ?? "",
+                        rank2Name: el.Attribute("rank2_name")?.Value ?? "",
+                        rank3Name: el.Attribute("rank3_name")?.Value ?? "");
 
                     _careers.Add(career);
                     _logger.LogDebug($"CareerSystem: Parsed career '{career.Id}' — cultures=[{string.Join(", ", cultureIds)}], groups=[{string.Join(", ", groupIds)}], rootChoice='{career.RootChoiceId}'");
@@ -199,7 +202,8 @@ public class CareerConfigProvider : ICareerConfigProvider
                         id: groupEl.Attribute("id")?.Value ?? "",
                         careerId: groupEl.Attribute("career_id")?.Value ?? "",
                         tier: ParseInt(groupEl, "tier", 1),
-                        choiceIds: choiceIds);
+                        choiceIds: choiceIds,
+                        displayName: groupEl.Attribute("display_name")?.Value ?? "");
 
                     _groups.Add(group);
                 }

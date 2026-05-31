@@ -24,6 +24,21 @@ Reference: `docs/reviews/rca-scene-tooling-2026-05-28.md` (why this convention e
 
 ---
 
+## Validation
+
+| Script | Purpose | CLI Flags |
+|--------|---------|-----------|
+| `validate_moduledata.py` | **Unified schema-driven cross-reference validator** (read-only). Consolidates the per-task validators below into one engine driven by `tools/schemas/*.json`. Catches broken item/troop/culture/party-template refs, duplicate ids (NPC/culture/roster/Armory-item), missing civilian `equipmentType`, invalid `default_group`. Built by adopting the schema/validation/cross-ref architecture of TheOldRealms/TOR_Tools (MIT). See `docs/features/moduledata-validation.md`. | `--game-modules`, `--moduledata`, `--json`, `--code`, `--warnings-as-errors` |
+| `taom_schema.py` | Engine behind the validator (registries + schema model + `Validator` + `build_registries`). Importable; unit-tested (`tools/tests/test_validate_moduledata.py`). | (library) |
+| `taom_query.py` | Query API over the engine — `item_exists` / `troop_exists` / `culture_exists` / `find_references` / `validate` / listings. Pure stdlib; backs the MCP server; unit-tested (`tools/tests/test_taom_query.py`). | (library) |
+| `taom_mcp_server.py` | **MCP stdio server** exposing the query API as 9 tools so Claude agents query mod-data integrity interactively (registered in `.mcp.json` as `taom-moduledata`; needs the `mcp` SDK; restart Claude to load). See `docs/features/moduledata-validation.md` "MCP server". | `python tools/taom_mcp_server.py` (smoke-test) |
+| `validate_all_troop_refs.py` | Per-task: armor refs across troop files vs LOTRLOME_Armory (superseded by `validate_moduledata.py`'s `BROKEN_ITEM_REF`; kept for now). | (none) |
+| `audit_item_refs.py` | Per-task: every `Item.X` ref vs the multi-module item registry (superseded by `validate_moduledata.py`'s `BROKEN_ITEM_REF`). | `--show-locations`, `--limit` |
+
+`validate_moduledata.py` schemas live in `tools/schemas/`. The declarative JSON is the source of truth — add fields/enums/rules there, not in Python.
+
+---
+
 ## Content Generation
 
 | Script | Purpose | Output |
@@ -44,6 +59,7 @@ Reference: `docs/reviews/rca-scene-tooling-2026-05-28.md` (why this convention e
 | `rebalance_armor.py` | Baseline + cultural modifier formula for all armor items | `--dry-run`, `--apply`, `--export-csv` |
 | `rebalance_weapons.py` | Points-based weapon damage with per-culture multipliers | `--dry-run`, `--apply`, `--export-csv` |
 | `rebalance_lords.py` | Baseline + cultural modifier + age scaling for all lords | `--dry-run`, `--apply`, `--export-csv`, `--skills-only` |
+| `audit_cc_bonuses.py` | Audit character-creation skill/attribute/focus bonuses per culture (per-stage uniformity, value-aware worst-case concentration, vanilla-budget comparison, full menu dump). `--apply` zeroes the career-stage payload + culture-base bonus via formatting-preserving line edits (CRLF + inline arrays preserved, writes `.bak`). Reads the 6 `charactercreation/*_menu.json` + `cultures.json` + career eligibility from `career_system/taom_careers.xml`. | `--report` (default), `--out`, `--export-csv`, `--dry-run`, `--apply` |
 
 ## Lords & Equipment Assignment
 
