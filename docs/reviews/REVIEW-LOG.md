@@ -1085,6 +1085,27 @@ RCA: `docs/reviews/rca-cultural-feats-3pack-2026-05-31.md` (now has "Codex follo
 
 Build & test: `dotnet test TAOM.Tests` (deploy-skip flags, game running) → **2760 passed / 0 failed / 2 skipped** (up from 2735 — new auto-discovered tests for the shared helper paths). ModuleData validator clean. Model fixes are boundary-only — verified by build + in-game per gamemodels rule.
 
+### Review 45 — Cultural-Feats Per-Occupation Town Notable Counts (2026-05-31)
+
+Follow-up refactor on commit `582275f`. In-game testing showed Isengard town had only ~8 notables and uniform AddFactor multipliers collapsed all 4 cultures to the same count due to ceiling rounding on small int targets. Refactor: TAOM-owned `NotableOccupationKind` enum, 9 per-(culture, occupation) `Add` feats replace 4 uniform `AddFactor` feats, 17 new GL NPCs (8 Isengard + 9 Dol Guldur), two-layer registration in both `npcs_*.xml` and `taom_spcultures.xml` `<notable_templates>`.
+
+Pipeline: `/verify` → `/deep-review` (5 agents, all PASS) → `/review-codex` (gpt-5.5 xhigh) → 1 HIGH + 1 MED → fixed → final `/verify`.
+
+Codex findings: **0 CRITICAL / 1 HIGH / 1 MEDIUM / 0 LOW.** 8 Known Suspects: 1 CONFIRMED-NUANCE, 7 DISPUTED-WITH-EVIDENCE.
+
+| # | Sev | Finding | Verdict | Resolution |
+|---|-----|---------|---------|------------|
+| C1 | HIGH | `ApplyNotableCountFeat_DolGuldurArtisan_AddsOne` missing — the service branch at `CulturalFeatsService.cs:295-296` is reachable, the feat is declared, registered, XML-bound, and in the reflection-init table, but no direct dispatch test exists. | Confirmed | Fixed — added the test between `_DolGuldurGangLeader_AddsThirteen` and `_MordorGangLeader_AddsTwo`. |
+| C2 | MED | Template pool size = target (Isengard 14/14, Dol Guldur 15/15). Vanilla `GetRandomTemplateByOccupation` samples with replacement → expected `~0.632 N` distinct archetypes (~9 of 14, ~9.5 of 15), with the remaining ~5 slots being duplicates. | Confirmed (design trade-off, not code bug) | Documented in `docs/features/cultural-feats.md` "Known characteristic — duplicate archetype selection at target = pool size." User can request pool headroom or a no-replacement Harmony patch after in-game observation. Per `simplicity-criterion.md`: tiny cosmetic gain + significant authoring/patching cost = reject as default fix. |
+
+Disputed-as-bug (Codex confirmed no-bug): S2 (`baseCount <= 0` guard is safe for the 5 spawn-pool occupations vanilla returns >0 for), S3 (`MapOccupation` maps exactly the 5 occupations vanilla asks the notable spawn model about; everything else → `Other` → vanilla unchanged), S4 (all 9 `Initialize(...)` bonuses match the target table), S5 (9 C# `Register(...)` IDs match 9 XML `<feat id=...>` lines), S6 (4 deleted uniform IDs absent from live production/config/test/feature-doc surfaces), S7 (17/17 NPCs pass two-layer audit), S8 (village isolation intact — RuralNotable/Headman branch only reads village feats).
+
+Root-cause pattern: **per-axis test count masks cross-product cell gap.** `CulturalFeatsService.ApplyNotableCountFeat` is a switch on `NotableOccupationKind` with per-culture HasFeat branches inside each arm. Tests existed for each occupation axis (5 covered) AND each culture axis (4 covered), and the deep-review Completeness agent confirmed "tests exist for each occupation dispatching to its correct feat" — but `(Dol Guldur × Artisan)` had no dedicated cell test. Codex enumerated the cross-product and caught it. New `feedback_per_branch_dispatch_test_enumeration.md` memory codifies the per-cell rule. AGENTS.md updated (review 45, 2 new "What Codex does well" bullets: per-cell dispatch test gaps in cross-product switches + tracing template-selection / sampling semantics downstream of count-target overrides).
+
+RCA: [`docs/reviews/rca-cultural-feats-per-occupation-2026-05-31.md`](rca-cultural-feats-per-occupation-2026-05-31.md).
+
+Build & test (deploy-skip flags, game running): **2772 passed / 0 failed / 2 skipped** (up from 2771 — +1 confirms the new dispatch test ran). ModuleData validator clean.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

@@ -666,7 +666,7 @@ public class CulturalFeatsServiceTests
     [TestMethod]
     public void ApplyNotableCountFeat_NullCulture_ReturnsBaseCount()
     {
-        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(null, isTown: true, baseCount: 2));
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(null, NotableOccupationKind.GangLeader, baseCount: 2));
     }
 
     [TestMethod]
@@ -674,8 +674,8 @@ public class CulturalFeatsServiceTests
     {
         // Vanilla returns 0 for unsupported (settlement, occupation) pairs (e.g. Preacher in towns).
         // We must NOT inflate 0 → 1 even with a positive feat.
-        var culture = AdapterWith(TaomCulturalFeats.MordorNotableCountTownFeat);
-        Assert.AreEqual(0, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 0));
+        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountTownGangLeaderFeat);
+        Assert.AreEqual(0, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.GangLeader, baseCount: 0));
     }
 
     [TestMethod]
@@ -683,70 +683,129 @@ public class CulturalFeatsServiceTests
     {
         var culture = Substitute.For<ICultureFeatAdapter>();
         culture.HasFeat(Arg.Any<FeatObject>()).Returns(false);
-        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 2));
-        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, isTown: false, baseCount: 2));
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.GangLeader, baseCount: 2));
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.RuralNotable, baseCount: 2));
     }
 
     [TestMethod]
-    public void ApplyNotableCountFeat_IsengardTownFiftyPercent_CeilingsTwoToThree()
+    public void ApplyNotableCountFeat_OtherOccupation_ReturnsBaseCount()
     {
-        // 2 × 1.50 = 3.0 exact → 3
-        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountTownFeat);
-        Assert.AreEqual(3, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 2));
+        // Preacher / Soldier / Lord and anything else outside the spawn pool map to Other → no-op.
+        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountTownGangLeaderFeat);
+        Assert.AreEqual(3, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.Other, baseCount: 3));
+    }
+
+    // ── Per-occupation town Add semantics ──
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_IsengardMerchant_AddsTwo()
+    {
+        // Vanilla town Merchant = 2; Isengard merchant feat adds +2 = 4.
+        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountTownMerchantFeat);
+        Assert.AreEqual(4, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.Merchant, baseCount: 2));
     }
 
     [TestMethod]
-    public void ApplyNotableCountFeat_IsengardTownFiftyPercent_CeilingsOneToTwo()
+    public void ApplyNotableCountFeat_IsengardArtisan_AddsOne()
     {
-        // 1 × 1.50 = 1.5 → ceil → 2 (Artisan slot)
-        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountTownFeat);
-        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 1));
+        // Vanilla town Artisan = 1; Isengard artisan feat adds +1 = 2.
+        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountTownArtisanFeat);
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.Artisan, baseCount: 1));
     }
 
     [TestMethod]
-    public void ApplyNotableCountFeat_DolGuldurTown_AppliesFiftyPercent()
+    public void ApplyNotableCountFeat_IsengardGangLeader_AddsTwelve()
     {
-        var culture = AdapterWith(TaomCulturalFeats.DolGuldurNotableCountTownFeat);
-        Assert.AreEqual(3, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 2));
+        // Vanilla town Gang Leader = 2; Isengard adds +12 → 14 (key target for Isengard's single town).
+        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountTownGangLeaderFeat);
+        Assert.AreEqual(14, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.GangLeader, baseCount: 2));
     }
 
     [TestMethod]
-    public void ApplyNotableCountFeat_GundabadTownTenPercent_CeilingsTwoToThree()
+    public void ApplyNotableCountFeat_DolGuldurMerchant_AddsOne()
     {
-        // 2 × 1.10 = 2.2 → ceil → 3
-        var culture = AdapterWith(TaomCulturalFeats.GundabadNotableCountTownFeat);
-        Assert.AreEqual(3, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 2));
+        var culture = AdapterWith(TaomCulturalFeats.DolGuldurNotableCountTownMerchantFeat);
+        Assert.AreEqual(3, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.Merchant, baseCount: 2));
     }
 
     [TestMethod]
-    public void ApplyNotableCountFeat_MordorTownFivePercent_CeilingsOneToTwo()
+    public void ApplyNotableCountFeat_DolGuldurGangLeader_AddsThirteen()
     {
-        // The "+5% on a base of 1" edge case the user signed off on (Mordor Artisan 1 → 2).
-        var culture = AdapterWith(TaomCulturalFeats.MordorNotableCountTownFeat);
-        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 1));
+        // Vanilla 2 + 13 = 15 (Dol Guldur's shadow command center scale).
+        var culture = AdapterWith(TaomCulturalFeats.DolGuldurNotableCountTownGangLeaderFeat);
+        Assert.AreEqual(15, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.GangLeader, baseCount: 2));
     }
 
     [TestMethod]
-    public void ApplyNotableCountFeat_MordorTown_DoesNotApplyVillageFeat()
+    public void ApplyNotableCountFeat_DolGuldurArtisan_AddsOne()
     {
-        // Town-only feat must NOT fire when isTown=false even if culture has it.
-        var culture = AdapterWith(TaomCulturalFeats.MordorNotableCountTownFeat);
-        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, isTown: false, baseCount: 2));
+        var culture = AdapterWith(TaomCulturalFeats.DolGuldurNotableCountTownArtisanFeat);
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.Artisan, baseCount: 1));
     }
 
     [TestMethod]
-    public void ApplyNotableCountFeat_IsengardVillageTenPercent_CeilingsTwoToThree()
+    public void ApplyNotableCountFeat_MordorGangLeader_AddsTwo()
     {
+        var culture = AdapterWith(TaomCulturalFeats.MordorNotableCountTownGangLeaderFeat);
+        Assert.AreEqual(4, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.GangLeader, baseCount: 2));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_MordorOnlyGangLeader_DoesNotAffectMerchantSlot()
+    {
+        // Mordor only registers a Gang Leader feat — Merchant slot must stay vanilla.
+        var culture = AdapterWith(TaomCulturalFeats.MordorNotableCountTownGangLeaderFeat);
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.Merchant, baseCount: 2));
+        Assert.AreEqual(1, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.Artisan, baseCount: 1));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_GundabadGangLeader_AddsThree()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.GundabadNotableCountTownGangLeaderFeat);
+        Assert.AreEqual(5, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.GangLeader, baseCount: 2));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_GundabadArtisan_AddsOne()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.GundabadNotableCountTownArtisanFeat);
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.Artisan, baseCount: 1));
+    }
+
+    // ── Village (legacy AddFactor + ceiling) ──
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_IsengardVillage_RuralNotable_CeilingsTwoToThree()
+    {
+        // Vanilla village RuralNotable = 2; +10% → ceil(2.2) = 3.
         var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountVillageFeat);
-        Assert.AreEqual(3, _sut.ApplyNotableCountFeat(culture, isTown: false, baseCount: 2));
+        Assert.AreEqual(3, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.RuralNotable, baseCount: 2));
     }
 
     [TestMethod]
-    public void ApplyNotableCountFeat_IsengardVillage_DoesNotApplyTownFeat()
+    public void ApplyNotableCountFeat_IsengardVillage_Headman_CeilingsOneToTwo()
     {
-        // Village-only feat must NOT fire when isTown=true.
+        // Vanilla village Headman = 1; +10% → ceil(1.1) = 2.
         var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountVillageFeat);
-        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 2));
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.Headman, baseCount: 1));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_VillageFeat_DoesNotFireOnTownOccupation()
+    {
+        // Village-only feat must NOT fire on a town occupation even if the culture has it.
+        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountVillageFeat);
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.GangLeader, baseCount: 2));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_TownFeat_DoesNotFireOnVillageOccupation()
+    {
+        // Town gang-leader feat must NOT fire on RuralNotable / Headman slots.
+        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountTownGangLeaderFeat);
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.RuralNotable, baseCount: 2));
+        Assert.AreEqual(1, _sut.ApplyNotableCountFeat(culture, NotableOccupationKind.Headman, baseCount: 1));
     }
 
     // ── FoodConsumption ────────────────────────────────────────────────
@@ -1078,14 +1137,20 @@ public class CulturalFeatsServiceTests
                 ("_dolguldurVolunteerRate", "taom_dolguldur_volunteer_rate", 0.2f),
                 ("_mordorVolunteerRate", "taom_mordor_volunteer_rate", 0.2f),
 
-                // Notable count per settlement type (8 — 2 per culture × 4 cultures)
-                ("_isengardNotableCountTown", "taom_isengard_notable_count_town", 0.5f),
+                // Notable count: per-occupation town (Add semantics) + per-(culture, village)
+                // (AddFactor semantics, unchanged). 9 town + 4 village = 13 feats.
+                ("_isengardNotableCountTownMerchant", "taom_isengard_notable_count_town_merchant", 2f),
+                ("_isengardNotableCountTownArtisan", "taom_isengard_notable_count_town_artisan", 1f),
+                ("_isengardNotableCountTownGangLeader", "taom_isengard_notable_count_town_gang_leader", 12f),
                 ("_isengardNotableCountVillage", "taom_isengard_notable_count_village", 0.1f),
-                ("_dolguldurNotableCountTown", "taom_dolguldur_notable_count_town", 0.5f),
+                ("_dolguldurNotableCountTownMerchant", "taom_dolguldur_notable_count_town_merchant", 1f),
+                ("_dolguldurNotableCountTownArtisan", "taom_dolguldur_notable_count_town_artisan", 1f),
+                ("_dolguldurNotableCountTownGangLeader", "taom_dolguldur_notable_count_town_gang_leader", 13f),
                 ("_dolguldurNotableCountVillage", "taom_dolguldur_notable_count_village", 0.1f),
-                ("_mordorNotableCountTown", "taom_mordor_notable_count_town", 0.05f),
+                ("_mordorNotableCountTownGangLeader", "taom_mordor_notable_count_town_gang_leader", 2f),
                 ("_mordorNotableCountVillage", "taom_mordor_notable_count_village", 0.05f),
-                ("_gundabadNotableCountTown", "taom_gundabad_notable_count_town", 0.1f),
+                ("_gundabadNotableCountTownArtisan", "taom_gundabad_notable_count_town_artisan", 1f),
+                ("_gundabadNotableCountTownGangLeader", "taom_gundabad_notable_count_town_gang_leader", 3f),
                 ("_gundabadNotableCountVillage", "taom_gundabad_notable_count_village", 0.1f),
             };
 

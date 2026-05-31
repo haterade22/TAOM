@@ -268,40 +268,72 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
 
     // ── NotableSpawn ──────────────────────────────────────────────────
 
-    public int ApplyNotableCountFeat(ICultureFeatAdapter? culture, bool isTown, int baseCount)
+    public int ApplyNotableCountFeat(ICultureFeatAdapter? culture, NotableOccupationKind occupation, int baseCount)
     {
         if (culture == null || baseCount <= 0)
             return baseCount;
 
-        float multiplier = 0f;
-        if (isTown)
+        // Town occupations use per-(culture, occupation) AdditionType.Add feats — supports the
+        // asymmetric Isengard/Dol Guldur gang-leader-heavy distributions a uniform multiplier
+        // couldn't express ("a few Merchants, many Gang Leaders").
+        switch (occupation)
         {
-            if (culture.HasFeat(TaomCulturalFeats.IsengardNotableCountTownFeat))
-                multiplier += TaomCulturalFeats.IsengardNotableCountTownFeat.EffectBonus;
-            if (culture.HasFeat(TaomCulturalFeats.DolGuldurNotableCountTownFeat))
-                multiplier += TaomCulturalFeats.DolGuldurNotableCountTownFeat.EffectBonus;
-            if (culture.HasFeat(TaomCulturalFeats.MordorNotableCountTownFeat))
-                multiplier += TaomCulturalFeats.MordorNotableCountTownFeat.EffectBonus;
-            if (culture.HasFeat(TaomCulturalFeats.GundabadNotableCountTownFeat))
-                multiplier += TaomCulturalFeats.GundabadNotableCountTownFeat.EffectBonus;
+            case NotableOccupationKind.Merchant:
+            {
+                int add = 0;
+                if (culture.HasFeat(TaomCulturalFeats.IsengardNotableCountTownMerchantFeat))
+                    add += (int)TaomCulturalFeats.IsengardNotableCountTownMerchantFeat.EffectBonus;
+                if (culture.HasFeat(TaomCulturalFeats.DolGuldurNotableCountTownMerchantFeat))
+                    add += (int)TaomCulturalFeats.DolGuldurNotableCountTownMerchantFeat.EffectBonus;
+                return baseCount + add;
+            }
+            case NotableOccupationKind.Artisan:
+            {
+                int add = 0;
+                if (culture.HasFeat(TaomCulturalFeats.IsengardNotableCountTownArtisanFeat))
+                    add += (int)TaomCulturalFeats.IsengardNotableCountTownArtisanFeat.EffectBonus;
+                if (culture.HasFeat(TaomCulturalFeats.DolGuldurNotableCountTownArtisanFeat))
+                    add += (int)TaomCulturalFeats.DolGuldurNotableCountTownArtisanFeat.EffectBonus;
+                if (culture.HasFeat(TaomCulturalFeats.GundabadNotableCountTownArtisanFeat))
+                    add += (int)TaomCulturalFeats.GundabadNotableCountTownArtisanFeat.EffectBonus;
+                return baseCount + add;
+            }
+            case NotableOccupationKind.GangLeader:
+            {
+                int add = 0;
+                if (culture.HasFeat(TaomCulturalFeats.IsengardNotableCountTownGangLeaderFeat))
+                    add += (int)TaomCulturalFeats.IsengardNotableCountTownGangLeaderFeat.EffectBonus;
+                if (culture.HasFeat(TaomCulturalFeats.DolGuldurNotableCountTownGangLeaderFeat))
+                    add += (int)TaomCulturalFeats.DolGuldurNotableCountTownGangLeaderFeat.EffectBonus;
+                if (culture.HasFeat(TaomCulturalFeats.MordorNotableCountTownGangLeaderFeat))
+                    add += (int)TaomCulturalFeats.MordorNotableCountTownGangLeaderFeat.EffectBonus;
+                if (culture.HasFeat(TaomCulturalFeats.GundabadNotableCountTownGangLeaderFeat))
+                    add += (int)TaomCulturalFeats.GundabadNotableCountTownGangLeaderFeat.EffectBonus;
+                return baseCount + add;
+            }
+            case NotableOccupationKind.RuralNotable:
+            case NotableOccupationKind.Headman:
+            {
+                // Village: legacy uniform per-(culture, village) AddFactor + ceiling. The 4 village
+                // feats deliver the same +1/+1 distribution for all 4 cultures (the user's spec didn't
+                // call for asymmetric village counts), so keeping the AddFactor shape is cleaner than
+                // splitting them into per-occupation Add feats with identical values.
+                float multiplier = 0f;
+                if (culture.HasFeat(TaomCulturalFeats.IsengardNotableCountVillageFeat))
+                    multiplier += TaomCulturalFeats.IsengardNotableCountVillageFeat.EffectBonus;
+                if (culture.HasFeat(TaomCulturalFeats.DolGuldurNotableCountVillageFeat))
+                    multiplier += TaomCulturalFeats.DolGuldurNotableCountVillageFeat.EffectBonus;
+                if (culture.HasFeat(TaomCulturalFeats.MordorNotableCountVillageFeat))
+                    multiplier += TaomCulturalFeats.MordorNotableCountVillageFeat.EffectBonus;
+                if (culture.HasFeat(TaomCulturalFeats.GundabadNotableCountVillageFeat))
+                    multiplier += TaomCulturalFeats.GundabadNotableCountVillageFeat.EffectBonus;
+                if (multiplier <= 0f)
+                    return baseCount;
+                return (int)Math.Ceiling((double)baseCount * (1.0 + multiplier));
+            }
+            default:
+                return baseCount;
         }
-        else
-        {
-            if (culture.HasFeat(TaomCulturalFeats.IsengardNotableCountVillageFeat))
-                multiplier += TaomCulturalFeats.IsengardNotableCountVillageFeat.EffectBonus;
-            if (culture.HasFeat(TaomCulturalFeats.DolGuldurNotableCountVillageFeat))
-                multiplier += TaomCulturalFeats.DolGuldurNotableCountVillageFeat.EffectBonus;
-            if (culture.HasFeat(TaomCulturalFeats.MordorNotableCountVillageFeat))
-                multiplier += TaomCulturalFeats.MordorNotableCountVillageFeat.EffectBonus;
-            if (culture.HasFeat(TaomCulturalFeats.GundabadNotableCountVillageFeat))
-                multiplier += TaomCulturalFeats.GundabadNotableCountVillageFeat.EffectBonus;
-        }
-
-        if (multiplier <= 0f)
-            return baseCount;
-        // Ceiling so any positive bonus on any base > 0 advances by ≥1 — the user's stated +5% targets
-        // (Mordor) are deliberately meaningful, not no-ops on the small int targets vanilla returns.
-        return (int)Math.Ceiling((double)baseCount * (1.0 + multiplier));
     }
 
     // ── FoodConsumption ────────────────────────────────────────────────

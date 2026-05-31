@@ -835,6 +835,108 @@
 		</Equipments>
 	</NPCCharacter>
 
+	<!-- GangLeader 7-14: added 2026-05-31 to support taom_isengard_notable_count_town_gang_leader feat -->
+	<NPCCharacter id="spc_notable_isengard_gl5" name="{=aom_ig_notable_gl5}Vicious Uruk slaver" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="spc_notable_isengard_gl6" name="{=aom_ig_notable_gl6}Sadistic Uruk overseer" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="spc_notable_isengard_gl7" name="{=aom_ig_notable_gl7}Cold-blooded Uruk lieutenant" race="uruk_hai" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="spc_notable_isengard_gl8" name="{=aom_ig_notable_gl8}Ruthless Uruk pit master" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="spc_notable_isengard_gl9" name="{=aom_ig_notable_gl9}Cunning Uruk warlord" race="uruk_hai" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="spc_notable_isengard_gl10" name="{=aom_ig_notable_gl10}Brutal Uruk overlord" race="uruk_hai" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="spc_notable_isengard_gl11" name="{=aom_ig_notable_gl11}Calculating Uruk strategist" race="uruk_hai" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_plate_light_b2" />
+				<equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_light_a2" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="spc_notable_isengard_gl12" name="{=aom_ig_notable_gl12}Iron-fisted Uruk captain" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_empire" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_hai_chainmail_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
 	<!-- RuralNotable 1: Gruff Uruk overseer -->
 	<NPCCharacter id="spc_notable_isengard_21" name="{=aom_ig_notable_21}Gruff Uruk overseer" race="uruk_hai" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.isengard" occupation="RuralNotable">
 		<face><face_key_template value="BodyProperty.fighter_empire" /></face>

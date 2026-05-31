@@ -51,6 +51,35 @@ Constraint: castle's `Settlement.Village` is null → vanilla `GetDailyVolunteer
 Not-tested: Harmony transpilers + postfix + menu (require live game).
 Save-compat: additive — castle notables are engine-persisted Heroes; no new SyncData.
 
+### feat(cultural-feats): per-occupation town notable counts + Isengard/Dol Guldur Gang-Leader hubs
+
+Refactors the per-settlement notable-count feat dispatch from per-(culture, settlement-type) uniform multipliers to per-(culture, occupation) flat-add semantics for towns, so asymmetric distributions like "few Merchants, many Gang Leaders" become expressible. Feat total **92 → 97** (+5 net: −4 uniform town feats, +9 per-occupation town feats; village feats unchanged).
+
+**Why:** the shipped uniform multipliers couldn't differentiate per slot at small bases. `ceil(2 × 1.05) = ceil(2 × 1.50) = 3` for both Merchants and Gang Leaders, so Mordor's intended +5% and Dol Guldur's intended +50% both produced 3 / 3 / 2 = 8 in town — the differentiation vanished into ceiling rounding. Also, Isengard's single town capped at 8 notables even at +50%, which isn't enough to seed AI recruitment competitive with Rohan's distributed town/village/castle map. The per-occupation Add design gives direct slot-level control (`+12 Gang Leaders` reads as "+12 Gang Leaders," not "+650% Gang Leaders").
+
+**New town target distributions** (Merchant / Artisan / Gang Leader / Total):
+
+| Culture | Vanilla | New | Change |
+|---------|---------|-----|--------|
+| Mordor | 2/1/2 = 5 | 2/1/4 = **7** | +2 Gang Leaders only |
+| Gundabad | 2/1/2 = 5 | 2/2/5 = **9** | +1 Artisan, +3 Gang Leaders |
+| **Isengard** | 2/1/2 = 5 | 4/2/14 = **20** | +2 Merchant, +1 Artisan, +12 Gang Leaders (Isengard has 1 town; this is the recruitment hub) |
+| **Dol Guldur** | 2/1/2 = 5 | 3/2/15 = **20** | +1 Merchant, +1 Artisan, +13 Gang Leaders (shadow command center) |
+
+Villages unchanged: 3 RuralNotable + 2 Headman = 5 across all 4 cultures.
+
+**New `NotableOccupationKind` enum** (TAOM-owned) — `TaomNotableSpawnModel` maps the sealed TaleWorlds `Occupation` to this kind at the boundary so the service stays free of engine types (ADR-007). Service signature: `int ApplyNotableCountFeat(culture, NotableOccupationKind occupation, int baseCount)`. Town occupations sum flat `Add` feats; village occupations keep the legacy uniform per-(culture, village) `AddFactor` with ceiling.
+
+**Removed** 4 old per-(culture, town) feats: `taom_{isengard,dolguldur,mordor,gundabad}_notable_count_town`. **Added** 9 per-(culture, occupation) town feats with `AddType.Add` semantics: 3 for Isengard, 3 for Dol Guldur, 2 for Gundabad, 1 for Mordor. Skip-zero — feats with no boost for a given (culture, occupation) pair aren't registered.
+
+**17 new Gang Leader NPCs** to give the engine enough distinct templates for the new targets without clone-spawning. Isengard gets `spc_notable_isengard_gl5` through `_gl12` (8 new), Dol Guldur gets `spc_notable_dolguldur_gl5` through `_gl13` (9 new). Each is BOTH defined in `characters/npcs_{culture}.xml` AND registered in the culture's `<notable_templates>` block — the two-layer registration rule we codified in the previous commit's RCA. Equipment cycles between light/medium variants; trait blocks cycle Calculating/Valor + Mercy/Generosity penalties to keep generated heroes from feeling identical.
+
+**Tests:** the 8 old uniform-multiplier notable-count tests are replaced by 13 per-occupation tests covering: each new Add feat applied on the right occupation, isolation (town feats don't fire on village occupations and vice versa), `NotableOccupationKind.Other` is a no-op, Mordor's gang-leader-only registration doesn't affect Merchant/Artisan slots. Reflection table updated (−4 +9). EachCulture dict: Isengard 11→13, Gundabad 9→10, DolGuldur 8→10, Mordor 11 unchanged (net feat count same, different slots).
+
+Build + test: **2772 passed / 0 failed / 2 skipped** (up from 2760 — +12 new dispatch tests, including the `_DolGuldurArtisan_AddsOne` cell added per Codex review #45). ModuleData validator clean. Save-compat safe (FeatObjects are init-time; new notables spawn on the weekly tick as new Hero objects).
+
+**Codex review #45 (2026-05-31)** — 0 CRITICAL / 1 HIGH / 1 MED. HIGH: missing `(Dol Guldur × Artisan)` dispatch test, even though the feat was declared, registered, XML-bound, and in the reflection-init table — Codex enumerated the (culture × occupation) cross-product cells and caught the gap that all 5 deep-review agents missed. Fixed: added `ApplyNotableCountFeat_DolGuldurArtisan_AddsOne`. MED: vanilla `DefaultHeroCreationModel.GetRandomTemplateByOccupation` samples templates with replacement, so pool size = target (Isengard 14/14 GL, Dol Guldur 15/15 GL) yields expected `~0.632 × N` distinct archetypes (~9 of 14, ~9.5 of 15) with the rest as duplicates. **Known characteristic, documented in `docs/features/cultural-feats.md`** — the user can request pool headroom or a no-replacement Harmony patch after in-game observation; the chosen target was AI-recruitment density, not encyclopedia name diversity. New systemic memory: `feedback_per_branch_dispatch_test_enumeration.md` (per-cell coverage, not per-axis test count). RCA: [`docs/reviews/rca-cultural-feats-per-occupation-2026-05-31.md`](docs/reviews/rca-cultural-feats-per-occupation-2026-05-31.md). REVIEW-LOG entry 45.
+
 ### feat(cultural-feats): party-size retune + Dunland/Rhun/Harad party-size feats + village volunteer respawn-rate feats + per-settlement notable-count feats
 
 Three new cultural-feat dimensions plus a retune of the existing party-size set. Feat total **77 → 92** (+15 new, 4 retuned). All apply through the existing `CulturalFeats` `FeatObject` pipeline.

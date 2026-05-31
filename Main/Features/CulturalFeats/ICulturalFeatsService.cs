@@ -76,8 +76,18 @@ public interface ICulturalFeatsService
     void ApplyVolunteerRespawnFeats(ICultureFeatAdapter? culture, ref ExplainedNumber result);
 
     // ── NotableSpawn ──────────────────────────────────────────────────
-    /// <summary>Returns the per-occupation notable target for the settlement, ceiling-rounded so any positive bonus advances by ≥1. Applies Isengard/Dol Guldur/Mordor/Gundabad town/village notable-count factors based on <paramref name="isTown"/>. Returns <paramref name="baseCount"/> when the culture has no matching feat or when <paramref name="baseCount"/> is ≤0.</summary>
-    int ApplyNotableCountFeat(ICultureFeatAdapter? culture, bool isTown, int baseCount);
+    /// <summary>
+    /// Returns the notable target for the settlement, applied per-occupation. Town
+    /// occupations (Merchant / Artisan / GangLeader) sum flat <c>Add</c> values from
+    /// per-(culture, occupation) feats — supports the asymmetric Isengard/Dol Guldur
+    /// gang-leader-heavy distributions where a single uniform multiplier can't express
+    /// "small Merchants, huge Gang Leaders." Village occupations (RuralNotable /
+    /// Headman) keep the legacy uniform per-(culture, village) <c>AddFactor</c> with
+    /// ceiling rounding. Returns <paramref name="baseCount"/> when the culture has no
+    /// matching feat, <paramref name="baseCount"/> &lt;= 0, or
+    /// <paramref name="occupation"/> is <see cref="NotableOccupationKind.Other"/>.
+    /// </summary>
+    int ApplyNotableCountFeat(ICultureFeatAdapter? culture, NotableOccupationKind occupation, int baseCount);
 
     // ── FoodConsumption ────────────────────────────────────────────────
     /// <summary>Applies Rivendell/Mirkwood/Lothlorien/Dol Guldur food-consumption factors.</summary>

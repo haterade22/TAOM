@@ -55,7 +55,11 @@ public class TaomCulturalFeats
     private FeatObject _isengardRaidDamage;
     private FeatObject _isengardPlainSpeed;
     private FeatObject _isengardSwampSpeed;
-    private FeatObject _isengardNotableCountTown;
+    // Per-occupation town notable feats (AdditionType.Add); enables asymmetric distributions
+    // that a uniform per-(culture, town) multiplier can't express ("3 Merchants, 14 Gang Leaders").
+    private FeatObject _isengardNotableCountTownMerchant;
+    private FeatObject _isengardNotableCountTownArtisan;
+    private FeatObject _isengardNotableCountTownGangLeader;
     private FeatObject _isengardNotableCountVillage;
 
     // Gundabad
@@ -66,7 +70,9 @@ public class TaomCulturalFeats
     private FeatObject _gundabadRaidDamage;
     private FeatObject _gundabadSnowSpeed;
     private FeatObject _gundabadVolunteerRate;
-    private FeatObject _gundabadNotableCountTown;
+    // Per-occupation town notable feats (AdditionType.Add); only Artisan and GangLeader for Gundabad.
+    private FeatObject _gundabadNotableCountTownArtisan;
+    private FeatObject _gundabadNotableCountTownGangLeader;
     private FeatObject _gundabadNotableCountVillage;
 
     // Umbar
@@ -83,7 +89,11 @@ public class TaomCulturalFeats
     private FeatObject _dolguldurPartySize;
     private FeatObject _dolguldurFoodConsumption;
     private FeatObject _dolguldurVolunteerRate;
-    private FeatObject _dolguldurNotableCountTown;
+    // Per-occupation town notable feats (AdditionType.Add); Dol Guldur targets ~20 total town
+    // notables, Gang-Leader-heavy to match Isengard's recruitment competitiveness vs Rohan.
+    private FeatObject _dolguldurNotableCountTownMerchant;
+    private FeatObject _dolguldurNotableCountTownArtisan;
+    private FeatObject _dolguldurNotableCountTownGangLeader;
     private FeatObject _dolguldurNotableCountVillage;
 
     // Gondor
@@ -105,7 +115,8 @@ public class TaomCulturalFeats
     private FeatObject _mordorSwampSpeed;
     private FeatObject _mordorNightSpeed;
     private FeatObject _mordorVolunteerRate;
-    private FeatObject _mordorNotableCountTown;
+    // Per-occupation town notable feats (AdditionType.Add); Mordor only boosts Gang Leaders.
+    private FeatObject _mordorNotableCountTownGangLeader;
     private FeatObject _mordorNotableCountVillage;
 
     // Rohan (XSLT culture — custom C# feats)
@@ -183,7 +194,9 @@ public class TaomCulturalFeats
     public static FeatObject IsengardRaidDamageFeat => Instance._isengardRaidDamage;
     public static FeatObject IsengardPlainSpeedFeat => Instance._isengardPlainSpeed;
     public static FeatObject IsengardSwampSpeedFeat => Instance._isengardSwampSpeed;
-    public static FeatObject IsengardNotableCountTownFeat => Instance._isengardNotableCountTown;
+    public static FeatObject IsengardNotableCountTownMerchantFeat => Instance._isengardNotableCountTownMerchant;
+    public static FeatObject IsengardNotableCountTownArtisanFeat => Instance._isengardNotableCountTownArtisan;
+    public static FeatObject IsengardNotableCountTownGangLeaderFeat => Instance._isengardNotableCountTownGangLeader;
     public static FeatObject IsengardNotableCountVillageFeat => Instance._isengardNotableCountVillage;
 
     // Gundabad
@@ -194,7 +207,8 @@ public class TaomCulturalFeats
     public static FeatObject GundabadRaidDamageFeat => Instance._gundabadRaidDamage;
     public static FeatObject GundabadSnowSpeedFeat => Instance._gundabadSnowSpeed;
     public static FeatObject GundabadVolunteerRateFeat => Instance._gundabadVolunteerRate;
-    public static FeatObject GundabadNotableCountTownFeat => Instance._gundabadNotableCountTown;
+    public static FeatObject GundabadNotableCountTownArtisanFeat => Instance._gundabadNotableCountTownArtisan;
+    public static FeatObject GundabadNotableCountTownGangLeaderFeat => Instance._gundabadNotableCountTownGangLeader;
     public static FeatObject GundabadNotableCountVillageFeat => Instance._gundabadNotableCountVillage;
 
     // Umbar
@@ -211,7 +225,9 @@ public class TaomCulturalFeats
     public static FeatObject DolGuldurPartySizeFeat => Instance._dolguldurPartySize;
     public static FeatObject DolGuldurFoodConsumptionFeat => Instance._dolguldurFoodConsumption;
     public static FeatObject DolGuldurVolunteerRateFeat => Instance._dolguldurVolunteerRate;
-    public static FeatObject DolGuldurNotableCountTownFeat => Instance._dolguldurNotableCountTown;
+    public static FeatObject DolGuldurNotableCountTownMerchantFeat => Instance._dolguldurNotableCountTownMerchant;
+    public static FeatObject DolGuldurNotableCountTownArtisanFeat => Instance._dolguldurNotableCountTownArtisan;
+    public static FeatObject DolGuldurNotableCountTownGangLeaderFeat => Instance._dolguldurNotableCountTownGangLeader;
     public static FeatObject DolGuldurNotableCountVillageFeat => Instance._dolguldurNotableCountVillage;
 
     // Gondor
@@ -233,7 +249,7 @@ public class TaomCulturalFeats
     public static FeatObject MordorSwampSpeedFeat => Instance._mordorSwampSpeed;
     public static FeatObject MordorNightSpeedFeat => Instance._mordorNightSpeed;
     public static FeatObject MordorVolunteerRateFeat => Instance._mordorVolunteerRate;
-    public static FeatObject MordorNotableCountTownFeat => Instance._mordorNotableCountTown;
+    public static FeatObject MordorNotableCountTownGangLeaderFeat => Instance._mordorNotableCountTownGangLeader;
     public static FeatObject MordorNotableCountVillageFeat => Instance._mordorNotableCountVillage;
 
     // Rohan
@@ -317,7 +333,9 @@ public class TaomCulturalFeats
         _isengardRaidDamage = Register("taom_isengard_raid_damage");
         _isengardPlainSpeed = Register("taom_isengard_plain_speed");
         _isengardSwampSpeed = Register("taom_isengard_swamp_speed");
-        _isengardNotableCountTown = Register("taom_isengard_notable_count_town");
+        _isengardNotableCountTownMerchant = Register("taom_isengard_notable_count_town_merchant");
+        _isengardNotableCountTownArtisan = Register("taom_isengard_notable_count_town_artisan");
+        _isengardNotableCountTownGangLeader = Register("taom_isengard_notable_count_town_gang_leader");
         _isengardNotableCountVillage = Register("taom_isengard_notable_count_village");
 
         _gundabadArmyInfluenceCost = Register("taom_gundabad_army_influence_cost");
@@ -327,7 +345,8 @@ public class TaomCulturalFeats
         _gundabadRaidDamage = Register("taom_gundabad_raid_damage");
         _gundabadSnowSpeed = Register("taom_gundabad_snow_speed");
         _gundabadVolunteerRate = Register("taom_gundabad_volunteer_rate");
-        _gundabadNotableCountTown = Register("taom_gundabad_notable_count_town");
+        _gundabadNotableCountTownArtisan = Register("taom_gundabad_notable_count_town_artisan");
+        _gundabadNotableCountTownGangLeader = Register("taom_gundabad_notable_count_town_gang_leader");
         _gundabadNotableCountVillage = Register("taom_gundabad_notable_count_village");
 
         _umbarCheaperCaravans = Register("taom_umbar_cheaper_caravans");
@@ -342,7 +361,9 @@ public class TaomCulturalFeats
         _dolguldurPartySize = Register("taom_dolguldur_party_size");
         _dolguldurFoodConsumption = Register("taom_dolguldur_food_consumption");
         _dolguldurVolunteerRate = Register("taom_dolguldur_volunteer_rate");
-        _dolguldurNotableCountTown = Register("taom_dolguldur_notable_count_town");
+        _dolguldurNotableCountTownMerchant = Register("taom_dolguldur_notable_count_town_merchant");
+        _dolguldurNotableCountTownArtisan = Register("taom_dolguldur_notable_count_town_artisan");
+        _dolguldurNotableCountTownGangLeader = Register("taom_dolguldur_notable_count_town_gang_leader");
         _dolguldurNotableCountVillage = Register("taom_dolguldur_notable_count_village");
 
         _gondorGarrisonWage = Register("taom_gondor_garrison_wage");
@@ -362,7 +383,7 @@ public class TaomCulturalFeats
         _mordorSwampSpeed = Register("taom_mordor_swamp_speed");
         _mordorNightSpeed = Register("taom_mordor_night_speed");
         _mordorVolunteerRate = Register("taom_mordor_volunteer_rate");
-        _mordorNotableCountTown = Register("taom_mordor_notable_count_town");
+        _mordorNotableCountTownGangLeader = Register("taom_mordor_notable_count_town_gang_leader");
         _mordorNotableCountVillage = Register("taom_mordor_notable_count_village");
 
         _rohanMountedCost = Register("taom_rohan_mounted_cost");
@@ -528,10 +549,20 @@ public class TaomCulturalFeats
             "{=taom_feat_isen_sws}Fenland Drillmasters",
             "{=taom_feat_isen_sws_desc}Party movement speed increased by 10% in swamps.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
-        _isengardNotableCountTown.Initialize(
-            "{=taom_feat_isen_nct}Orthanc Industry",
-            "{=taom_feat_isen_nct_desc}Notable count in towns increased by 50%.",
-            0.5f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        // Per-occupation town notable counts (AdditionType.Add — flat extras above vanilla base).
+        // Vanilla town target: 2 Merchant + 1 Artisan + 2 Gang Leader = 5. Isengard target: 4/2/14 = 20.
+        _isengardNotableCountTownMerchant.Initialize(
+            "{=taom_feat_isen_nctm}Orthanc Quartermasters",
+            "{=taom_feat_isen_nctm_desc}+2 merchant notables in towns.",
+            2f, isPositiveEffect: true, FeatObject.AdditionType.Add);
+        _isengardNotableCountTownArtisan.Initialize(
+            "{=taom_feat_isen_ncta}Industrial Forges",
+            "{=taom_feat_isen_ncta_desc}+1 artisan notable in towns.",
+            1f, isPositiveEffect: true, FeatObject.AdditionType.Add);
+        _isengardNotableCountTownGangLeader.Initialize(
+            "{=taom_feat_isen_nctg}Uruk-hai Captains",
+            "{=taom_feat_isen_nctg_desc}+12 gang-leader notables in towns (Isengard's single town becomes a major recruitment hub).",
+            12f, isPositiveEffect: true, FeatObject.AdditionType.Add);
         _isengardNotableCountVillage.Initialize(
             "{=taom_feat_isen_ncv}Iron Press",
             "{=taom_feat_isen_ncv_desc}Notable count in villages increased by 10%.",
@@ -566,10 +597,15 @@ public class TaomCulturalFeats
             "{=taom_feat_gun_vr}Mountain Levies",
             "{=taom_feat_gun_vr_desc}Village volunteer respawn rate increased by 20%.",
             0.2f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
-        _gundabadNotableCountTown.Initialize(
-            "{=taom_feat_gun_nct}Goblin Warrens",
-            "{=taom_feat_gun_nct_desc}Notable count in towns increased by 10%.",
-            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        // Per-occupation town notable counts. Gundabad target: 2 Merchant + 2 Artisan + 5 Gang Leader = 9.
+        _gundabadNotableCountTownArtisan.Initialize(
+            "{=taom_feat_gun_ncta}Bone-Smiths",
+            "{=taom_feat_gun_ncta_desc}+1 artisan notable in towns.",
+            1f, isPositiveEffect: true, FeatObject.AdditionType.Add);
+        _gundabadNotableCountTownGangLeader.Initialize(
+            "{=taom_feat_gun_nctg}Pale Warband Chieftains",
+            "{=taom_feat_gun_nctg_desc}+3 gang-leader notables in towns.",
+            3f, isPositiveEffect: true, FeatObject.AdditionType.Add);
         _gundabadNotableCountVillage.Initialize(
             "{=taom_feat_gun_ncv}Bone Camps",
             "{=taom_feat_gun_ncv_desc}Notable count in villages increased by 10%.",
@@ -622,10 +658,19 @@ public class TaomCulturalFeats
             "{=taom_feat_dg_vr}Dark Conscripts",
             "{=taom_feat_dg_vr_desc}Village volunteer respawn rate increased by 20%.",
             0.2f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
-        _dolguldurNotableCountTown.Initialize(
-            "{=taom_feat_dg_nct}Shadow Brokers",
-            "{=taom_feat_dg_nct_desc}Notable count in towns increased by 50%.",
-            0.5f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        // Per-occupation town notable counts. Dol Guldur target: 3 Merchant + 2 Artisan + 15 Gang Leader = 20.
+        _dolguldurNotableCountTownMerchant.Initialize(
+            "{=taom_feat_dg_nctm}Shadow Brokers",
+            "{=taom_feat_dg_nctm_desc}+1 merchant notable in towns.",
+            1f, isPositiveEffect: true, FeatObject.AdditionType.Add);
+        _dolguldurNotableCountTownArtisan.Initialize(
+            "{=taom_feat_dg_ncta}Dark Smithies",
+            "{=taom_feat_dg_ncta_desc}+1 artisan notable in towns.",
+            1f, isPositiveEffect: true, FeatObject.AdditionType.Add);
+        _dolguldurNotableCountTownGangLeader.Initialize(
+            "{=taom_feat_dg_nctg}Shadow Captains",
+            "{=taom_feat_dg_nctg_desc}+13 gang-leader notables in towns (Dol Guldur's shadow command center).",
+            13f, isPositiveEffect: true, FeatObject.AdditionType.Add);
         _dolguldurNotableCountVillage.Initialize(
             "{=taom_feat_dg_ncv}Hidden Hovels",
             "{=taom_feat_dg_ncv_desc}Notable count in villages increased by 10%.",
@@ -698,10 +743,11 @@ public class TaomCulturalFeats
             "{=taom_feat_mor_vr}Sauron's Levy",
             "{=taom_feat_mor_vr_desc}Village volunteer respawn rate increased by 20%.",
             0.2f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
-        _mordorNotableCountTown.Initialize(
-            "{=taom_feat_mor_nct}Black Speech Heralds",
-            "{=taom_feat_mor_nct_desc}Notable count in towns increased by 5%.",
-            0.05f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        // Per-occupation town notable counts. Mordor target: 2 Merchant + 1 Artisan + 4 Gang Leader = 7.
+        _mordorNotableCountTownGangLeader.Initialize(
+            "{=taom_feat_mor_nctg}Black Speech Heralds",
+            "{=taom_feat_mor_nctg_desc}+2 gang-leader notables in towns.",
+            2f, isPositiveEffect: true, FeatObject.AdditionType.Add);
         _mordorNotableCountVillage.Initialize(
             "{=taom_feat_mor_ncv}Slave Drivers",
             "{=taom_feat_mor_ncv_desc}Notable count in villages increased by 5%.",
@@ -833,7 +879,9 @@ public class TaomCulturalFeats
         yield return _instance._isengardRaidDamage;
         yield return _instance._isengardPlainSpeed;
         yield return _instance._isengardSwampSpeed;
-        yield return _instance._isengardNotableCountTown;
+        yield return _instance._isengardNotableCountTownMerchant;
+        yield return _instance._isengardNotableCountTownArtisan;
+        yield return _instance._isengardNotableCountTownGangLeader;
         yield return _instance._isengardNotableCountVillage;
         yield return _instance._gundabadArmyInfluenceCost;
         yield return _instance._gundabadGrainProduction;
@@ -842,7 +890,8 @@ public class TaomCulturalFeats
         yield return _instance._gundabadRaidDamage;
         yield return _instance._gundabadSnowSpeed;
         yield return _instance._gundabadVolunteerRate;
-        yield return _instance._gundabadNotableCountTown;
+        yield return _instance._gundabadNotableCountTownArtisan;
+        yield return _instance._gundabadNotableCountTownGangLeader;
         yield return _instance._gundabadNotableCountVillage;
         yield return _instance._umbarCheaperCaravans;
         yield return _instance._umbarRenown;
@@ -855,7 +904,9 @@ public class TaomCulturalFeats
         yield return _instance._dolguldurPartySize;
         yield return _instance._dolguldurFoodConsumption;
         yield return _instance._dolguldurVolunteerRate;
-        yield return _instance._dolguldurNotableCountTown;
+        yield return _instance._dolguldurNotableCountTownMerchant;
+        yield return _instance._dolguldurNotableCountTownArtisan;
+        yield return _instance._dolguldurNotableCountTownGangLeader;
         yield return _instance._dolguldurNotableCountVillage;
         yield return _instance._gondorGarrisonWage;
         yield return _instance._gondorArmyInfluence;
@@ -873,7 +924,7 @@ public class TaomCulturalFeats
         yield return _instance._mordorSwampSpeed;
         yield return _instance._mordorNightSpeed;
         yield return _instance._mordorVolunteerRate;
-        yield return _instance._mordorNotableCountTown;
+        yield return _instance._mordorNotableCountTownGangLeader;
         yield return _instance._mordorNotableCountVillage;
         yield return _instance._rohanMountedCost;
         yield return _instance._rohanMountedWage;

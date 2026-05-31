@@ -4,7 +4,7 @@
 
 Each of TAOM's 10 custom cultures now has 3 unique cultural feats (2 bonuses + 1 penalty) that provide gameplay differentiation. This replaces the placeholder Empire feats that all cultures previously shared. Additionally, Dunland (XSLT culture) was reassigned from Empire feats to Battanian feats for better lore fit.
 
-On top of the base feats, **terrain movement-speed feats** give 18 cultures a flat party-speed bonus on their "home" terrain (forest / snow / steppe / desert / plain / swamp) plus a night bonus for Mordor — see the [Terrain Movement-Speed Feats](#terrain-movement-speed-feats) section. **Village volunteer respawn-rate feats** (4 cultures) and **per-settlement notable-count feats** (4 cultures × 2 settlement types) layer on top — see [Village Volunteer Respawn-Rate Feats](#village-volunteer-respawn-rate-feats) and [Per-Settlement Notable-Count Feats](#per-settlement-notable-count-feats). The feat total is now **92** (59 base + 18 terrain + 3 new party-size + 4 volunteer-respawn + 8 notable-count).
+On top of the base feats, **terrain movement-speed feats** give 18 cultures a flat party-speed bonus on their "home" terrain (forest / snow / steppe / desert / plain / swamp) plus a night bonus for Mordor — see the [Terrain Movement-Speed Feats](#terrain-movement-speed-feats) section. **Village volunteer respawn-rate feats** (4 cultures) and **per-settlement notable-count feats** layer on top — see [Village Volunteer Respawn-Rate Feats](#village-volunteer-respawn-rate-feats) and [Per-Settlement Notable-Count Feats](#per-settlement-notable-count-feats). The feat total is now **97** (59 base + 18 terrain + 3 party-size + 4 volunteer-respawn + 4 village notable + 9 per-occupation town notable).
 
 ## Why This Exists
 
@@ -152,20 +152,38 @@ No vanilla culture has a volunteer-rate feat to mirror, so this is a brand-new h
 
 ### Per-Settlement Notable-Count Feats
 
-`TaomNotableSpawnModel : DefaultNotableSpawnModel` overrides `GetTargetNotableCountForSettlement(Settlement, Occupation)`. Returns `(int)Math.Ceiling(base × (1 + bonus))` so any positive bonus on any non-zero base advances by ≥1 — the +5% Mordor targets nudge by 1 reliably, not no-op on the small ints vanilla returns. Keyed on `settlement.Culture` (settlement identity, NOT `OwnerClan.Culture` — an Isengard town stays Isengard-flavored even when conquered).
+`TaomNotableSpawnModel : DefaultNotableSpawnModel` overrides `GetTargetNotableCountForSettlement(Settlement, Occupation)`. Maps the sealed TaleWorlds `Occupation` to TAOM-owned `NotableOccupationKind` at the boundary (ADR-007). Keyed on `settlement.Culture` (settlement identity, NOT `OwnerClan.Culture` — an Isengard town stays Isengard-flavored even when conquered).
 
-Vanilla totals: **town = 5 notables** (2 Merchant + 2 GangLeader + 1 Artisan), **village = 3** (2 RuralNotable + 1 Headman). The feat applies uniformly to each occupation slot in the matching settlement type.
+Vanilla totals: **town = 5 notables** (2 Merchant + 1 Artisan + 2 Gang Leader), **village = 3** (2 RuralNotable + 1 Headman).
 
-| Culture | Feat (Town) | Town % | Feat (Village) | Village % |
-|---------|-------------|--------|----------------|-----------|
-| Isengard | `taom_isengard_notable_count_town` | **+50%** | `taom_isengard_notable_count_village` | +10% |
-| Dol Guldur | `taom_dolguldur_notable_count_town` | **+50%** | `taom_dolguldur_notable_count_village` | +10% |
-| Mordor | `taom_mordor_notable_count_town` | +5% | `taom_mordor_notable_count_village` | +5% |
-| Gundabad | `taom_gundabad_notable_count_town` | +10% | `taom_gundabad_notable_count_village` | +10% |
+**Town uses per-occupation `AddType.Add` feats** (flat extras above vanilla base) so each culture can tune Merchant / Artisan / Gang Leader independently. A uniform per-(culture, town) multiplier could only ever scale all three together, which collapsed at small bases (`ceil(2 × 1.05)` = `ceil(2 × 1.50)` = 3 for both Merchants and Gang Leaders) and prevented asymmetric distributions like Isengard's "few Merchants, many Gang Leaders." Village stays on the per-(culture, village) `AddFactor` model since the user spec doesn't differentiate village occupations.
 
-**Why Isengard gets +50% town:** Isengard has only one town in the campaign. Without the boost the AI's recruitment pool from notables there is thin; +50% (5 → 8 per town) gives Isengard armies a viable Uruk-hai recruitment source.
+**Town target distributions:**
 
-**Why these four cultures needed a 3rd RuralNotable template** (`spc_notable_{isengard,mordor,dolguldur,gundabad}_23`): with +10% village notable count the RuralNotable target ceils from 2 → 3, but each culture had only 2 RuralNotable templates. Without the 3rd, the engine reuses one of the existing two — same name, same archetype, twice. Each new template duplicates `_22`'s structure with a distinct LOTR-flavored name (equipment unchanged). This extends the `.claude/rules/xml-data.md` convention ("Rural Notables (2)") to **3 for these four cultures only** — every other culture still has 2.
+| Culture | Merchant | Artisan | Gang Leader | Total | Rationale |
+|---------|----------|---------|-------------|-------|-----------|
+| Vanilla | 2 | 1 | 2 | **5** | baseline |
+| Mordor | 2 | 1 | 4 (+2) | **7** | modest, evil-but-coordinated |
+| Gundabad | 2 | 2 (+1) | 5 (+3) | **9** | growing horde |
+| **Isengard** | 4 (+2) | 2 (+1) | **14 (+12)** | **20** | Isengard has only 1 town; recruitment hub vs Rohan's distributed map |
+| **Dol Guldur** | 3 (+1) | 2 (+1) | **15 (+13)** | **20** | shadow command center |
+
+**Town feats (Add semantics)** — only registered when non-zero:
+
+| Culture | Merchant | Artisan | Gang Leader |
+|---------|----------|---------|-------------|
+| Isengard | `taom_isengard_notable_count_town_merchant` (+2) | `..._artisan` (+1) | `..._gang_leader` (+12) |
+| Dol Guldur | `taom_dolguldur_notable_count_town_merchant` (+1) | `..._artisan` (+1) | `..._gang_leader` (+13) |
+| Mordor | — | — | `taom_mordor_notable_count_town_gang_leader` (+2) |
+| Gundabad | — | `taom_gundabad_notable_count_town_artisan` (+1) | `taom_gundabad_notable_count_town_gang_leader` (+3) |
+
+**Village feats (legacy AddFactor + ceiling)** — `taom_{culture}_notable_count_village` at 10% (Isengard/DolGuldur/Gundabad) or 5% (Mordor); all currently produce **3 RuralNotable + 2 Headman = 5** since `ceil(2 × 1.05)` = `ceil(2 × 1.10)` = 3 and `ceil(1 × 1.05)` = `ceil(1 × 1.10)` = 2.
+
+**Template-count expansion for Gang Leaders:** the 14-Isengard and 15-Dol Guldur targets exceed each culture's vanilla 6 Gang Leader templates; without more, the engine clones the same archetype multiple times. Authored 8 new Isengard Gang Leaders (`spc_notable_isengard_gl5` … `gl12`) and 9 new Dol Guldur Gang Leaders (`spc_notable_dolguldur_gl5` … `gl13`), all defined in `characters/npcs_*.xml` AND registered in the culture's `<notable_templates>` block in `taom_spcultures.xml` (the two-layer registration rule). Mordor and Gundabad targets stay within their existing 6 GL templates.
+
+**Known characteristic — duplicate archetype selection at target = pool size.** Vanilla `DefaultHeroCreationModel.GetRandomTemplateByOccupation` samples templates from `culture.NotableTemplates` *with replacement* (it filters by occupation, then weighted-random picks without removing the selected template from the pool). For Isengard (14 GL templates, target 14) and Dol Guldur (15 GL templates, target 15), this means each town's authored GL roster will have expected `≈ N × (1 − (1 − 1/N)^N) ≈ 0.632 N` distinct archetypes — roughly 9 distinct of 14 (Isengard) and 9.5 distinct of 15 (Dol Guldur), with the remaining slots being duplicate names/portraits. This is intentional: the design goal was AI-recruitment density (Rohan-tier town hubs), not encyclopedia name diversity. Adding pool headroom (e.g., 20 templates for 14 targets) or patching vanilla to a no-replacement selector would mitigate, but each costs authoring effort or a Harmony patch on a hot path. Codex flagged this MEDIUM on 2026-05-31 (see `docs/reviews/codex-adversarial-cultural-feats-per-occupation-2026-05-31.md`).
+
+**Why these four cultures also needed a 3rd RuralNotable template** (`spc_notable_{isengard,mordor,dolguldur,gundabad}_23`): with +10% village notable count the RuralNotable target ceils from 2 → 3, but each culture had only 2 RuralNotable templates. Without the 3rd, the engine reuses one — same name, same archetype, twice. The new template duplicates `_22`'s structure with a distinct LOTR-flavored name. This extends the `.claude/rules/xml-data.md` convention ("Rural Notables (2)") to **3 for these four cultures only** — every other culture still has 2.
 
 ### XSLT Cultures
 
@@ -218,7 +236,7 @@ The six vanilla-wrapped cultures get their terrain feat appended to their `<cult
 
 | File | Coverage |
 |------|----------|
-| `TAOM.Tests/Features/CulturalFeats/TaomCulturalFeatsDefinitionTests.cs` | Feat property count (92), uniqueness, culture distribution, field structure |
+| `TAOM.Tests/Features/CulturalFeats/TaomCulturalFeatsDefinitionTests.cs` | Feat property count (97), uniqueness, culture distribution, field structure |
 | `TAOM.Tests/Features/CulturalFeats/CulturalFeatsServiceTests.cs` | Per-feat dispatch incl. terrain-speed (per-terrain match, Mordor 5% vs 10%, night, null/wrong-terrain no-ops) |
 
 GameModel overrides are thin entry points (delegate to `base` + apply feat modifier via the service) and are verified via in-game testing. The `TaomPartySpeedModel.MapTerrain` boundary mapping is verified in-game (it consumes the sealed `TerrainType`).

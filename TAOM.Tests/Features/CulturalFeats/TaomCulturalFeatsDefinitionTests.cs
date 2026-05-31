@@ -16,15 +16,15 @@ public class TaomCulturalFeatsDefinitionTests
     /// without the game framework, we verify the code structure via reflection.
     /// </summary>
     [TestMethod]
-    public void AllFeatProperties_ReturnFeatObject_CountIs92()
+    public void AllFeatProperties_ReturnFeatObject_CountIs97()
     {
         var properties = typeof(TaomCulturalFeats)
             .GetProperties(BindingFlags.Public | BindingFlags.Static)
             .Where(p => p.PropertyType == typeof(FeatObject))
             .ToList();
 
-        Assert.AreEqual(92, properties.Count,
-            "Expected 92 culture feat properties (59 base + 18 terrain + 3 new party-size + 4 volunteer-respawn + 8 notable-count)");
+        Assert.AreEqual(97, properties.Count,
+            "Expected 97 culture feat properties (59 base + 18 terrain + 3 party-size + 4 volunteer-respawn + 4 village notable + 9 per-occupation town notable)");
     }
 
     [TestMethod]
@@ -48,8 +48,8 @@ public class TaomCulturalFeatsDefinitionTests
         // (e.g. CulturalFeatsServiceTests) reflection-initialised the singleton.
         // Both states are valid in a test process; assert one or the other.
         var feats = TaomCulturalFeats.GetAllFeats().ToList();
-        Assert.IsTrue(feats.Count == 0 || feats.Count == 92,
-            $"GetAllFeats expected 0 (uninitialised) or 92 (full set), got {feats.Count}");
+        Assert.IsTrue(feats.Count == 0 || feats.Count == 97,
+            $"GetAllFeats expected 0 (uninitialised) or 97 (full set), got {feats.Count}");
     }
 
     [TestMethod]
@@ -139,15 +139,20 @@ public class TaomCulturalFeatsDefinitionTests
     [DataRow("GundabadVolunteerRateFeat")]
     [DataRow("DolGuldurVolunteerRateFeat")]
     [DataRow("MordorVolunteerRateFeat")]
-    // Notable count (8)
-    [DataRow("IsengardNotableCountTownFeat")]
+    // Notable count: 4 villages (AddFactor) + 9 per-occupation town (Add)
     [DataRow("IsengardNotableCountVillageFeat")]
-    [DataRow("DolGuldurNotableCountTownFeat")]
     [DataRow("DolGuldurNotableCountVillageFeat")]
-    [DataRow("MordorNotableCountTownFeat")]
     [DataRow("MordorNotableCountVillageFeat")]
-    [DataRow("GundabadNotableCountTownFeat")]
     [DataRow("GundabadNotableCountVillageFeat")]
+    [DataRow("IsengardNotableCountTownMerchantFeat")]
+    [DataRow("IsengardNotableCountTownArtisanFeat")]
+    [DataRow("IsengardNotableCountTownGangLeaderFeat")]
+    [DataRow("DolGuldurNotableCountTownMerchantFeat")]
+    [DataRow("DolGuldurNotableCountTownArtisanFeat")]
+    [DataRow("DolGuldurNotableCountTownGangLeaderFeat")]
+    [DataRow("MordorNotableCountTownGangLeaderFeat")]
+    [DataRow("GundabadNotableCountTownArtisanFeat")]
+    [DataRow("GundabadNotableCountTownGangLeaderFeat")]
     public void FeatProperty_Exists_IsPublicStatic(string propertyName)
     {
         var prop = typeof(TaomCulturalFeats).GetProperty(
@@ -173,12 +178,12 @@ public class TaomCulturalFeatsDefinitionTests
             { "Rivendell", 6 },
             { "Mirkwood", 5 },
             { "Lothlorien", 6 },
-            { "Isengard", 11 },   // +2 notable count (town/village)
-            { "Gundabad", 9 },    // +1 volunteer rate, +2 notable count
+            { "Isengard", 13 },   // +3 per-occupation town notable + 1 village (was +2 → now +4 over base)
+            { "Gundabad", 10 },   // +1 volunteer rate, +2 per-occ town notable + 1 village (was +3 → now +4 over base)
             { "Umbar", 5 },
-            { "DolGuldur", 8 },   // +1 volunteer rate, +2 notable count
-            { "Gondor", 7 },      // unchanged (party-size retune only)
-            { "Mordor", 11 },     // +1 volunteer rate, +2 notable count
+            { "DolGuldur", 10 },  // +1 volunteer rate, +3 per-occ town notable + 1 village
+            { "Gondor", 7 },      // unchanged
+            { "Mordor", 11 },     // +1 volunteer rate, +1 per-occ town notable + 1 village (was +3 → still +3 over base)
             { "Rohan", 6 },
             { "Dale", 1 },
             { "Khand", 1 },
@@ -206,8 +211,8 @@ public class TaomCulturalFeatsDefinitionTests
             .Where(f => f.FieldType == typeof(FeatObject))
             .ToList();
 
-        Assert.AreEqual(92, fields.Count,
-            "Expected 92 private FeatObject fields (59 base + 18 terrain + 3 new party-size + 4 volunteer-respawn + 8 notable-count)");
+        Assert.AreEqual(97, fields.Count,
+            "Expected 97 private FeatObject fields (59 base + 18 terrain + 3 party-size + 4 volunteer + 4 village notable + 9 per-occupation town notable)");
     }
 
     [TestMethod]

@@ -1681,7 +1681,9 @@
       <feat id="taom_isengard_raid_damage" />
       <feat id="taom_isengard_plain_speed" />
       <feat id="taom_isengard_swamp_speed" />
-      <feat id="taom_isengard_notable_count_town" />
+      <feat id="taom_isengard_notable_count_town_merchant" />
+      <feat id="taom_isengard_notable_count_town_artisan" />
+      <feat id="taom_isengard_notable_count_town_gang_leader" />
       <feat id="taom_isengard_notable_count_village" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
@@ -1758,6 +1760,14 @@
       <template name="NPCCharacter.spc_notable_isengard_gl4" />
       <template name="NPCCharacter.spc_notable_isengard_12" />
       <template name="NPCCharacter.spc_notable_isengard_13" />
+      <template name="NPCCharacter.spc_notable_isengard_gl5" />
+      <template name="NPCCharacter.spc_notable_isengard_gl6" />
+      <template name="NPCCharacter.spc_notable_isengard_gl7" />
+      <template name="NPCCharacter.spc_notable_isengard_gl8" />
+      <template name="NPCCharacter.spc_notable_isengard_gl9" />
+      <template name="NPCCharacter.spc_notable_isengard_gl10" />
+      <template name="NPCCharacter.spc_notable_isengard_gl11" />
+      <template name="NPCCharacter.spc_notable_isengard_gl12" />
       <template name="NPCCharacter.spc_notable_isengard_21" />
       <template name="NPCCharacter.spc_notable_isengard_22" />
       <template name="NPCCharacter.spc_notable_isengard_23" />
@@ -2046,7 +2056,8 @@
       <feat id="taom_gundabad_raid_damage" />
       <feat id="taom_gundabad_snow_speed" />
       <feat id="taom_gundabad_volunteer_rate" />
-      <feat id="taom_gundabad_notable_count_town" />
+      <feat id="taom_gundabad_notable_count_town_artisan" />
+      <feat id="taom_gundabad_notable_count_town_gang_leader" />
       <feat id="taom_gundabad_notable_count_village" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
@@ -2770,7 +2781,9 @@
       <feat id="taom_dolguldur_party_size" />
       <feat id="taom_dolguldur_food_consumption" />
       <feat id="taom_dolguldur_volunteer_rate" />
-      <feat id="taom_dolguldur_notable_count_town" />
+      <feat id="taom_dolguldur_notable_count_town_merchant" />
+      <feat id="taom_dolguldur_notable_count_town_artisan" />
+      <feat id="taom_dolguldur_notable_count_town_gang_leader" />
       <feat id="taom_dolguldur_notable_count_village" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
@@ -2847,6 +2860,15 @@
       <template name="NPCCharacter.spc_notable_dolguldur_gl4" />
       <template name="NPCCharacter.spc_notable_dolguldur_12" />
       <template name="NPCCharacter.spc_notable_dolguldur_13" />
+      <template name="NPCCharacter.spc_notable_dolguldur_gl5" />
+      <template name="NPCCharacter.spc_notable_dolguldur_gl6" />
+      <template name="NPCCharacter.spc_notable_dolguldur_gl7" />
+      <template name="NPCCharacter.spc_notable_dolguldur_gl8" />
+      <template name="NPCCharacter.spc_notable_dolguldur_gl9" />
+      <template name="NPCCharacter.spc_notable_dolguldur_gl10" />
+      <template name="NPCCharacter.spc_notable_dolguldur_gl11" />
+      <template name="NPCCharacter.spc_notable_dolguldur_gl12" />
+      <template name="NPCCharacter.spc_notable_dolguldur_gl13" />
       <template name="NPCCharacter.spc_notable_dolguldur_21" />
       <template name="NPCCharacter.spc_notable_dolguldur_22" />
       <template name="NPCCharacter.spc_notable_dolguldur_23" />
@@ -3512,7 +3534,7 @@
       <feat id="taom_mordor_swamp_speed" />
       <feat id="taom_mordor_night_speed" />
       <feat id="taom_mordor_volunteer_rate" />
-      <feat id="taom_mordor_notable_count_town" />
+      <feat id="taom_mordor_notable_count_town_gang_leader" />
       <feat id="taom_mordor_notable_count_village" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
