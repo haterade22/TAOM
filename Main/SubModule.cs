@@ -64,6 +64,8 @@ using TAOM.Features.SettlementGuards.Hooks;
 using TAOM.Features.RevoltTuning;
 using TAOM.Features.BanditManagement;
 using TAOM.Features.BanditManagement.Models;
+using TAOM.Features.CastleRecruitment;
+using TAOM.Features.CastleRecruitment.Hooks;
 using TAOM.Features.SiegeDismount.Hooks;
 using TAOM.Features.MixedFormations.Hooks;
 using TAOM.Features.SmartCavalryAI.Hooks;
@@ -222,6 +224,17 @@ public class SubModule : MBSubModuleBase
         OrderOfBattleHeroItemVM_RefreshInformation_Patch.Initialize(bannerColorService, bannerHeroAdapter);
 
         Mission_Initialize_Patch.Initialize(logger);
+
+        // Patch42_CastleRecruitment — castle notable recruitment. Targets RecruitmentCampaignBehavior
+        // + AiVisitSettlementBehavior (both in TaleWorlds.CampaignSystem, no View/Mission.cctor
+        // dependency, safe in OnSubModuleLoad). The transpilers swap the AI IsCastle gate to a runtime
+        // toggle; the postfix invokes the private CheckRecruiting for castles. All fail-safe.
+        var castleRecruitmentSettings = IoC.Resolve<ICastleRecruitmentSettingsProvider>();
+        CastleAiToggle.Initialize(castleRecruitmentSettings);
+        Patch42_AiHourlyTick_Transpiler.Initialize(logger);
+        Patch42_FillSettlements_Transpiler.Initialize(logger);
+        Patch42_HourlyTickParty_Postfix.Initialize(castleRecruitmentSettings, logger);
+        _harmony.PatchCategory("Patch42_CastleRecruitment");
 
         InformationManager.DisplayMessage(new InformationMessage("TAOM loaded successfully!", Colors.Green));
     }
@@ -464,6 +477,13 @@ public class SubModule : MBSubModuleBase
                 IoC.Resolve<Features.CultureMarketplace.ICultureMarketplaceMaintenanceService>(),
                 IoC.Resolve<ITownRosterAdapter>(),
                 IoC.Resolve<Features.CultureMarketplace.Domain.MarketplaceTuning>(),
+                IoC.Resolve<IModLogger>()));
+
+            // CastleRecruitment (Patch42) — castle notable population + maintenance + volunteer fill +
+            // player "Recruit troops" castle menu + issue/quest suppression for castle notables.
+            // Registered unconditionally so the MCM master toggle takes effect at runtime.
+            campaignStarter.AddBehavior(new CastleRecruitmentBehavior(
+                IoC.Resolve<ICastleRecruitmentService>(),
                 IoC.Resolve<IModLogger>()));
         }
     }

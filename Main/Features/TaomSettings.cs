@@ -28,6 +28,23 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Weighted party size — elite units consume more party capacity. Cave trolls (4x), elves (2x), warg riders (2x).")]
     public bool EnableTroopWeight { get; set; } = true;
 
+    // --- Castle Recruitment ---
+
+    [SettingPropertyGroup("Castle Recruitment")]
+    [SettingPropertyBool("Enable Castle Recruitment", Order = 0,
+        HintText = "When enabled, castles gain notables with recruitable volunteers — the player can 'Recruit troops' at any accessible castle. Existing notables remain in the save if you later disable this.")]
+    public bool EnableCastleRecruitment { get; set; } = true;
+
+    [SettingPropertyGroup("Castle Recruitment")]
+    [SettingPropertyBool("AI Recruits From Castles", Order = 1,
+        HintText = "When enabled, AI lord parties also score, travel to, and recruit volunteers from castles like they do from towns. Requires Enable Castle Recruitment.")]
+    public bool EnableCastleRecruitmentAi { get; set; } = true;
+
+    [SettingPropertyGroup("Castle Recruitment")]
+    [SettingPropertyInteger("Notables Per Castle", 1, 5, Order = 2,
+        HintText = "How many recruiters each castle is populated with (vanilla towns = 5, villages = 3). Higher = more recruitment volume per castle. Default: 3.")]
+    public int CastleNotablesPerCastle { get; set; } = 3;
+
     // --- War of the Ring ---
 
     [SettingPropertyGroup("War of the Ring")]

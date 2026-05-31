@@ -35,6 +35,7 @@ using TAOM.Features.SettlementGuards;
 using TAOM.Features.NamedCompanions;
 using TAOM.Features.RevoltTuning;
 using TAOM.Features.BanditManagement;
+using TAOM.Features.CastleRecruitment;
 using TAOM.Features.SiegeDismount;
 using TAOM.Features.MixedFormations;
 using TAOM.Features.SmartCavalryAI;
@@ -95,6 +96,7 @@ public static class IoC
         NamedCompanionIoC.RegisterNamedCompanionsFeature(container);
         RevoltTuningIoC.RegisterRevoltTuningFeature(container);
         BanditManagementIoC.RegisterBanditManagementFeature(container);
+        CastleRecruitmentIoC.RegisterCastleRecruitmentFeature(container);
         SiegeDismountIoC.RegisterSiegeDismountFeature(container);
         MixedFormationsIoC.RegisterMixedFormationsFeature(container);
         SmartCavalryAIIoC.RegisterSmartCavalryAIFeature(container);
