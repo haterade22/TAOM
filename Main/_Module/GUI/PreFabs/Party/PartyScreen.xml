@@ -50,7 +50,7 @@
     <Constant Name="TransferAllButton.Width" BrushLayer="Default" BrushName="ButtonLeftDoubleArrowBrush1" BrushValueType="Width" />
     <Constant Name="TransferAllButton.Height" BrushLayer="Default" BrushName="ButtonLeftDoubleArrowBrush1" BrushValueType="Height" />
 
-    <Constant Name="PartyNameLabel.Height" Value="50" />
+    <Constant Name="PartyNameLabel.Height" Value="55" />
     <Constant Name="PartyToggle.LabelContainer.Margin" Value="10" />
 
     <Constant Name="Prisoners.MarginTop" Value="4" />
@@ -139,10 +139,10 @@
 								</Widget>
 
                 <!--Troop Cost Icon-->
-                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70" SuggestedHeight="40" VerticalAlignment="Center" IsVisible="@IsCurrentCharacterWageEnabled">
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="80" SuggestedHeight="40" VerticalAlignment="Center" IsVisible="@IsCurrentCharacterWageEnabled">
                   <Children>
-                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="40" HorizontalAlignment="Left" VerticalAlignment="Center" Sprite="General\Icons\TroopCost@2x" />
-                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="40" PositionYOffset="3" MarginLeft="30" Brush="Party.Text.TroopInfo" Text="@CurrentCharacterWageLbl" />
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="40" HorizontalAlignment="Left" VerticalAlignment="Center" Sprite="General\Icons\TroopCost@2x" />
+                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="40" PositionYOffset="3" MarginLeft="40" Brush="Party.Text.TroopInfo" Text="@CurrentCharacterWageLbl" />
                     <HintWidget DataSource="{WageHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
                   </Children>
                 </Widget>
@@ -254,7 +254,7 @@
 
             <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!TopBackground.Width" SuggestedHeight="!TopBackground.Height" HorizontalAlignment="Left" VerticalAlignment="Top" Sprite="PartyScreen\header_left" ExtendBottom="40"/>
 
-            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="!PartyNameLabel.Height" SuggestedWidth="380" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="25" MarginRight="210" MarginTop="7" Brush="Party.Text.Name" Brush.FontSize="28" Text="@OtherPartyNameLbl" />
+            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="!PartyNameLabel.Height" SuggestedWidth="380" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="25" MarginRight="210" MarginTop="2" Brush="Party.Text.Name" Brush.FontSize="28" Text="@OtherPartyNameLbl" />
 
             <Standard.VerticalScrollbar Id="OtherPartyScrollbar" HeightSizePolicy="StretchToParent" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginRight="!Scrollbar.Margin" MarginTop="!SidePanel.ScrollablePanel.MarginTop" MarginBottom="!SidePanel.ScrollablePanel.MarginBottom" />
 
@@ -502,7 +502,7 @@
 
             <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!TopBackground.Width" SuggestedHeight="!TopBackground.Height" HorizontalAlignment="Right" VerticalAlignment="Top" Sprite="PartyScreen\header_right" ExtendBottom="40"/>
 
-            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="!PartyNameLabel.Height" SuggestedWidth="380" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="25" MarginRight="210" MarginTop="7" Brush="Party.Text.Name" Brush.FontSize="28" Text="@MainPartyNameLbl"/>
+            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="!PartyNameLabel.Height" SuggestedWidth="380" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="25" MarginRight="210" MarginTop="2" Brush="Party.Text.Name" Brush.FontSize="28" Text="@MainPartyNameLbl"/>
 
             <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Top" HorizontalAlignment="Right" MarginTop="10" StackLayout.LayoutImp="HorizontalLeftToRight" MarginRight="65">
               <Children>
