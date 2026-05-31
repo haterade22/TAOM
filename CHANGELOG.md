@@ -2,6 +2,10 @@
 
 ## 2026-05-31
 
+### docs(castle-recruitment): record Patch42 + Key Paths in CLAUDE.md
+
+Added the Patch42_CastleRecruitment Harmony-table row and the CastleRecruitment Key Paths entry to CLAUDE.md so future sessions don't reuse Patch42 and can locate the module. Castle Recruitment shipped in cf31624.
+
 ### feat(castle-recruitment): recruit troops from castles (player + AI)
 
 Castles become a recruitment source for the first time — previously the player and AI could only recruit volunteers at towns and villages. New feature module `Main/Features/CastleRecruitment/` (Patch42).
