@@ -1,0 +1,116 @@
+#!/usr/bin/env python3
+"""Schema-driven validator for TAOM ModuleData — one reusable pass that
+consolidates the recurring per-task validators (validate_all_troop_refs.py,
+audit_item_refs.py, the equipmentType civilian PowerShell snippet, the
+duplicate-id-across-Armory-folders checks) into a single cross-reference +
+schema engine.
+
+Adopted from TheOldRealms/TOR_Tools (MIT) — its schema/validation/cross-ref
+architecture, ported to Python. The declarative schemas under tools/schemas/
+are the source of truth; this CLI just wires registries to the engine and
+prints a severity-classified report. See tools/taom_schema.py for the engine
+and docs/features/moduledata-validation.md for the full design.
+
+Checks (each maps to a recurring TAOM bug class):
+  BROKEN_ITEM_REF            missing equipment item  -> "underwear bug"
+  BROKEN_TROOP_REF           upgrade_target/culture points at a deleted troop
+  UNKNOWN_CULTURE            stale culture rename / "rohan" instead of "vlandia"
+  DUPLICATE_NPC_ID           same NPCCharacter id defined twice in TAOM
+  MISSING_CIVILIAN_TYPE      civilian roster missing equipmentType="Civilian"
+  DUPLICATE_ITEM_DEF         same Armory item id defined in >1 LOTRLOME_items folder
+  DUPLICATE_CULTURE_ID       same Culture id defined twice in taom_spcultures.xml
+  DUPLICATE_ROSTER_ID        same EquipmentRoster id defined twice
+  INVALID_ENUM               default_group not Infantry/Ranged/Cavalry/HorseArcher
+  BROKEN_PARTY_TEMPLATE_REF  PartyTemplate.* points at an undefined template (warning)
+
+Usage:
+  python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]
+  python tools/validate_moduledata.py --game-modules "E:/.../Modules"
+
+Exit code: 1 if any ERROR (or any WARNING with --warnings-as-errors), else 0.
+"""
+import argparse
+import json
+import os
+import sys
+from pathlib import Path
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+import taom_schema as ts
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
+SCHEMA_DIR = Path(__file__).resolve().parent / "schemas"
+
+DEFAULT_GAME_MODULES = Path(
+    r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules"
+)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--game-modules", default=str(DEFAULT_GAME_MODULES),
+                    help="Path to the Bannerlord Modules folder (for the item/culture/troop registry)")
+    ap.add_argument("--moduledata", default=str(MODULEDATA),
+                    help="Path to TAOM Main/_Module/ModuleData")
+    ap.add_argument("--json", dest="json_out", default=None,
+                    help="Write the full issue list to this JSON file")
+    ap.add_argument("--warnings-as-errors", action="store_true",
+                    help="Exit non-zero if any WARNING is found, not just ERROR")
+    ap.add_argument("--code", action="append", default=None,
+                    help="Only report this issue code (repeatable)")
+    args = ap.parse_args()
+
+    moduledata = Path(args.moduledata)
+    game_modules = Path(args.game_modules)
+
+    if not moduledata.exists():
+        print(f"ERROR: ModuleData not found: {moduledata}", file=sys.stderr)
+        return 2
+    if not game_modules.exists():
+        # Per environment-failures.md: report, don't guess. The item/culture
+        # registry will be TAOM-only, so external refs will look broken.
+        print(f"WARNING: Bannerlord Modules folder not found: {game_modules}\n"
+              f"         item / troop / party-template ref checks will be SKIPPED (need the\n"
+              f"         game install for a complete registry). Culture-validity, duplicate-id,\n"
+              f"         civilian-type and enum checks still run. Pass --game-modules <path> to\n"
+              f"         enable the skipped checks.", file=sys.stderr)
+
+    schemas = ts.load_schemas(SCHEMA_DIR)
+    print(f"Loaded {len(schemas)} schemas:", file=sys.stderr)
+    for s in schemas:
+        print(f"  - {s.name}: {s.description}", file=sys.stderr)
+
+    registries = ts.build_registries(moduledata, game_modules if game_modules.exists() else None)
+    print(f"Registry: {len(registries.items):,} items, "
+          f"{len(registries.npccharacters):,} NPCCharacters, "
+          f"{len(registries.cultures)} cultures, "
+          f"{len(registries.party_templates):,} party templates", file=sys.stderr)
+
+    issues = ts.Validator(moduledata, schemas, registries).run()
+
+    if args.code:
+        wanted = set(args.code)
+        issues = [i for i in issues if i.code in wanted]
+
+    print(ts.format_report(issues))
+
+    if args.json_out:
+        payload = [{
+            "severity": i.severity.value, "code": i.code, "file": i.file,
+            "line": i.line, "entry_id": i.entry_id, "message": i.message,
+        } for i in issues]
+        Path(args.json_out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        print(f"\nWrote {len(payload)} issues to {args.json_out}", file=sys.stderr)
+
+    n_err = sum(1 for i in issues if i.severity is ts.Severity.ERROR)
+    n_warn = sum(1 for i in issues if i.severity is ts.Severity.WARNING)
+    if n_err or (args.warnings_as_errors and n_warn):
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

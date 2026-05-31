@@ -1,0 +1,19 @@
+{
+  "name": "taom_npccharacter",
+  "description": "All NPCCharacter definitions (troops, notables, lords, heroes, wanderers, companions, education templates). applies_to MUST list every file that defines <NPCCharacter> so duplicate-id + enum checks are complete -- add new NPC-def files here (Codex review 2026-05-30 found wanderers/companions/education uncovered). Field knowledge here replaces hardcoded lists in ad-hoc validators (schemas-as-truth).",
+  "applies_to": [
+    "troops/troops_*.xml",
+    "characters/*.xml",
+    "named_companions/*.xml",
+    "taom_wanderers.xml",
+    "taom_education_character_templates.xml"
+  ],
+  "entry_element": "NPCCharacter",
+  "id_attribute": "id",
+  "duplicate_code": "DUPLICATE_NPC_ID",
+  "enums": {
+    "default_group": ["Infantry", "Ranged", "Cavalry", "HorseArcher"]
+  },
+  "special_rules": [],
+  "_refs_note": "Item. / NPCCharacter. / Culture. refs in these files are checked by the global cross-reference sweep in taom_schema.py (REF_KINDS). upgrade_target ids use the NPCCharacter. prefix; equipment ids use Item.; the culture attribute uses Culture."
+}

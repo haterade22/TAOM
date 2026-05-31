@@ -1,0 +1,12 @@
+{
+  "name": "taom_equipmentsets",
+  "description": "Standalone EquipmentRoster sets (equipmentsets/taom_equipment_sets_*.xml). Equipment ids (Item.*) and the culture attribute (Culture.*) are checked by the global sweep. The civilian_equipment_type special rule enforces .claude/rules/xml-data.md: any roster whose id contains '_civ' must tag its <EquipmentSet> with equipmentType=\"Civilian\" or the engine misclassifies it as battle gear (Faramir/Boromir wrong-outfit bug).",
+  "applies_to": [
+    "equipmentsets/*.xml"
+  ],
+  "entry_element": "EquipmentRoster",
+  "id_attribute": "id",
+  "duplicate_code": "DUPLICATE_ROSTER_ID",
+  "enums": {},
+  "special_rules": ["civilian_equipment_type"]
+}

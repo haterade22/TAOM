@@ -44,6 +44,12 @@
       "env": {
         "ILSPY_PATH": "ilspycmd"
       }
+    },
+    "taom-moduledata": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["c:/Users/mikew/source/repos/TAOM/tools/taom_mcp_server.py"],
+      "env": {}
     }
   }
 }
