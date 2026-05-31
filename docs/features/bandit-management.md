@@ -120,13 +120,24 @@ Two existing ranges were also expanded via `tools/add_bandit_hideouts.py`: `hide
 
 T1–T4 troops only (vanilla bandits never field elite kingdom troops):
 
-| Bandit Culture | bandit_bandit (T1) | bandit_raider (T2-3) | bandit_chief (T3) | bandit_boss (T4) |
+| Bandit Culture | bandit_bandit (T1) | bandit_raider (T2-3) | bandit_chief (T3) | bandit_boss (dedicated) |
 |---|---|---|---|---|
-| `dunland_raiders` | `dunland_peasant` (L6) | `dunland_raider`, `dunland_hunter` (L11) | `dunland_clan_warrior` (L16) | `dunland_wolf_raider` (L21) |
-| `rhun_raiders` | `balcoth_volunteer` (L11) | `balcoth_footman`, `kharaghul_rider` (L16) | `balcoth_archer` (L21) | `kharaghul_raider` (L21) |
-| `harad_raiders` | `harad_levy` (L6) | `harad_archer`, `harad_camelscout` (L16) | `harad_footman` (L21) | `harad_camelrider` (L21) |
-| `gundabad_raiders` | `gundabad_snaga`, `gundabad_hunter` (L11) | `gundabad_grunt`, `gundabad_lurker` (L16) | `gundabad_scout` (L21) | `gundabad_despoiler_of_the_vale` (L26) |
-| `umbar_corsairs` | `aux_basic` (L6) | `umbar_elite`, `umbar_elite_root1` (L11-16) | `umbar_elite_root0` (L16) | `umbar_elite_root00` (L21) |
+| `dunland_raiders` | `dunland_peasant` (L6) | `dunland_raider`, `dunland_hunter` (L11) | `dunland_clan_warrior` (L16) | `dunland_raiders_boss` (L21) |
+| `rhun_raiders` | `balcoth_volunteer` (L11) | `balcoth_footman`, `kharaghul_rider` (L16) | `balcoth_archer` (L21) | `rhun_raiders_boss` (L21) |
+| `harad_raiders` | `harad_levy` (L6) | `harad_archer`, `harad_camelscout` (L16) | `harad_footman` (L21) | `harad_raiders_boss` (L21) |
+| `gundabad_raiders` | `gundabad_snaga`, `gundabad_hunter` (L11) | `gundabad_grunt`, `gundabad_lurker` (L16) | `gundabad_scout` (L21) | `gundabad_raiders_boss` (L26) |
+| `umbar_corsairs` | `aux_basic` (L6) | `umbar_elite`, `umbar_elite_root1` (L11-16) | `umbar_elite_root0` (L16) | `umbar_corsairs_boss` (L21) |
+
+The three Wave-2 offshoot cultures use the same pattern: `gondor_soldiers_boss`, `erebor_warriors_boss`, `mirkwood_stalkers_boss`.
+
+### Dedicated hideout-boss troops (`occupation="Bandit"` is load-bearing)
+
+Each bandit culture's `bandit_boss` points at a **dedicated** `{culture}_boss` NPCCharacter (defined in that culture's troop XML), mirroring vanilla (`sea_raiders_boss` etc.) — **not** a shared regular-roster troop. Two attributes MUST match the vanilla bandit-boss template:
+
+- **`occupation="Bandit"`** — the hideout boss fight opens with a forced boss conversation. `HideoutMissionController.OnInitialFadeOutOver` first sets the player/bandit teams **non-enemy** (`SetIsEnemyOf(_enemyTeam, false)`) for the walk-up, and enmity is only restored by the `StartBossFightDuelMode`/`StartBossFightBattleMode` consequence of the vanilla `bandit_hideout_start_defender` dialog. But `GuardsCampaignBehavior.conversation_guard_start_on_condition` matches *any* conversation NPC with `Occupation == Soldier` (enum value **7**) inside a settlement and shows *"Can't talk right now. Got to keep my eye on things around here."* If the boss is `occupation="Soldier"`, that **guard dialog hijacks the boss conversation**, the taunt never fires, enmity is never restored, and **all bandits stay friendly → the player is forced to retreat.**
+- **`culture="Culture.{bandit_culture}"`** — `HideoutMissionController.SelectBossAgent` preferentially picks the boss only when `character.Culture.IsBandit && Culture.BanditBoss == character`; a non-bandit culture silently falls back to "highest-level agent on the enemy team."
+
+These are dedicated troops (not edited in place) because the original `bandit_boss` referenced **shared** regular-roster troops — e.g. `dunland_wolf_raider` is mid-upgrade-chain, `harad_camelrider` is in regular Harad party templates — so changing their `occupation`/`culture` would corrupt the normal rosters. (Fix: CHANGELOG 2026-05-31.)
 
 ### Hideout migration (one-time)
 

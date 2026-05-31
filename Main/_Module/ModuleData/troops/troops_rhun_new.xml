@@ -803,6 +803,42 @@
         </Equipments>
     </NPCCharacter>
     <NPCCharacter
+        id="rhun_raiders_boss"
+        default_group="Cavalry"
+        level="21"
+        name="{=taom_rhun_raiders_boss_name}[Rhûn] Kharaghûl Warlord"
+        occupation="Bandit"
+        culture="Culture.rhun_raiders">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="138" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="60" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.studded_adarga" />
+                <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
+                <equipment slot="Item3" id="Item.aserai_sword_5_t4" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_chest_med_c" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_med_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
+                <equipment slot="Horse" id="Item.t3_aserai_horse" />
+                <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter
         id="kharaghul_raider"
         default_group="Cavalry"
         level="21"

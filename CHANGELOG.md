@@ -2,9 +2,38 @@
 
 ## 2026-05-31
 
-### docs(castle-recruitment): record Patch42 + Key Paths in CLAUDE.md
+### fix(bandit-management): hideout boss fight spawned all units friendly (forced retreat)
 
-Added the Patch42_CastleRecruitment Harmony-table row and the CastleRecruitment Key Paths entry to CLAUDE.md so future sessions don't reuse Patch42 and can locate the module. Castle Recruitment shipped in cf31624.
+Raiding any LOTR bandit hideout and reaching the boss fight left **every bandit friendly** — the boss gave the generic guard line *"Can't talk right now. Got to keep my eye on things around here."* and the player was forced to retreat instead of fighting. Earlier waves were correctly hostile; only the boss phase broke. (Reported at a Dunlending raider camp.)
+
+**Root cause:** the vanilla hideout boss fight opens by setting the player/bandit teams non-enemy (`HideoutMissionController.OnInitialFadeOutOver` → `SetIsEnemyOf(_enemyTeam, false)`) for the boss walk-up, and only restores enmity as the consequence of the `bandit_hideout_start_defender` boss dialog (`StartBossFightDuelMode`/`StartBossFightBattleMode`). TAOM's 8 bandit cultures pointed `bandit_boss` at **shared regular-roster troops** carrying `occupation="Soldier"`. `GuardsCampaignBehavior.conversation_guard_start_on_condition` fires for any conversation NPC whose `Occupation == Soldier` (enum value **7**) inside a settlement — so the **guard dialog hijacked the boss conversation**, the taunt-and-fight options never appeared, enmity was never restored, and all units stayed friendly. (Vanilla bandit bosses use `occupation="Bandit"`, value 15, which the guard condition ignores.)
+
+**Fix:** added 8 **dedicated** `{culture}_boss` NPCCharacters (`occupation="Bandit"` + the matching bandit culture, mirroring vanilla `sea_raiders_boss`) — faithful copies of the prior boss troops' stats/gear, minus upgrade chains/civilian sets — and repointed each culture's `bandit_boss` (`taom_spcultures.xml`) and `{culture}_boss_party_template` 1× stack (`taom_partyTemplates.xml`) at them. The shared regular troops are untouched (they're mid-upgrade-chain / in regular party templates, so editing them in place would corrupt the normal rosters). The correct bandit culture also restores `HideoutMissionController.SelectBossAgent`'s `Culture.BanditBoss` match (the intended boss, not a highest-level fallback).
+
+Covers all 8 hideout-spawning bandit cultures: `dunland_raiders`, `rhun_raiders`, `harad_raiders`, `gundabad_raiders`, `umbar_corsairs` (the 5 raiders) + `gondor_soldiers`, `erebor_warriors`, `mirkwood_stalkers` (the 3 Wave-2 offshoots — confirmed hideout-homed bandit clans with the same `occupation="Soldier"` collision).
+
+Files: `troops/troops_{dunland,umbar,rhun_new,harad,gundabad,gondor,erebor,mirkwood}.xml` (+8 troops), `taom_spcultures.xml` (8 `bandit_boss` repoints), `taom_partyTemplates.xml` (8 boss-stack repoints). Feature doc updated (`docs/features/bandit-management.md`).
+
+**Verification:** `python tools/validate_moduledata.py` → PASS (4,161 NPCCharacters, no broken refs / dup ids); all 10 edited XML files parse well-formed; `dotnet test TAOM.Tests` → 2760 passed / 0 failed / 2 skipped. In-game confirmation (raid a hideout → boss now taunts + offers duel/battle, units hostile) pending.
+
+Not-tested: live hideout boss fight (requires the running game).
+Save-compat: additive — 8 new troop ids; `bandit_boss` + party-template refs resolve at load. No existing troop id changed; safe on existing saves.
+Research: `HideoutMissionController.{OnInitialFadeOutOver,SelectBossAgent,StartBossFightDuelModeInternal,StartBossFightBattleModeInternal}`, `HideoutConversationsCampaignBehavior.bandit_hideout_start_defender_on_condition`, `GuardsCampaignBehavior.conversation_guard_start_on_condition`, `Occupation` enum.
+Follow-up: 8 new boss-name `{=taom_*_boss_name}` keys carry inline English defaults; propagate via `/localize` later. Boss stats mirror the prior shared troop (no balance change); a boss-difficulty pass is deferred.
+
+### fix(cultures): add missing wanderer conversation + faction strings for Âbanissa & Shaghâna
+
+The two new custom cultures `abanissa` (Âbanissa) and `shaghana` (Shaghâna) — added in `09a9c2d` with full structure (culture/kingdom/clan defs, notables, lords, and 10 wanderer NPCCharacter templates each) — were never given the *content strings* their wanderer templates require. In-game, recruiting/talking to one of their tavern wanderers showed hard errors like `ERROR: Text with id backstory_c doesn't exist! Variation: spc_wanderer_abanissa_6`. Vanilla `LordConversationsCampaignBehavior` calls `GameTexts.FindText("backstory_c", "spc_wanderer_abanissa_6")` and `GameTextManager.FindText` has **no culture fallback** — a missing variation renders the literal error string. (Wanderer *names* rendered fine because those are inline-default `TextObject`s on the `name=` attribute, not GameText-collection lookups.)
+
+**Gap 1 — wanderer conversation strings (`taom_wanderer_strings.xml`):** authored the full 8-string arc (`prebackstory`, `backstory_a/b/c/d`, `response_1`, `response_2`, `generic_backstory`) for all 20 wanderers — 10 per culture × 8 = **160 entries**. Each backstory is unique, lore-consistent prose written to the NPC's existing traits/voice/age and the culture's flavor (Âbanissa: deep-south jungle stone-dynasty Houses, war-mûmakil, ruler styled *Châjaphân*; Shaghâna: eastern-steppe tribal raiders/horsemen, nine clans, ruler styled *Taskral*).
+
+**Gap 2 — culture/faction encyclopedia strings (`taom_module_strings.xml`):** comparing against a complete culture (Erebor) surfaced that abanissa/shaghana lacked the 17-key `str_culture_*` / `str_faction_*` set every one of the 10 sibling custom cultures defines (faction official/ruler/term-in-speech/name-with-title/adjective/short-term/formal+informal/neutral-term + culture description/rich-name/adjective/player-parent-names). Added the full **17-key set × 2 = 34 entries**, mirroring Erebor's exact `{?RULER.GENDER}…{?}…{\?}` / `{RULER.NAME}` token format and the cultures' established lore (kingdom owners Phaxar/Zarkan, ruler titles Châjaphân/Taskral). (XSLT-repurposed cultures harad/rhun/dunland don't need these — they key off the vanilla engine id aserai/khuzait/empire — but abanissa/shaghana are brand-new `is_main_culture` cultures, so they do.)
+
+**Verification:** both XML files parse well-formed; exact counts confirmed (160 + 34 = 194 new strings, every wanderer has all 8); 0 duplicate `<string>` ids in either file; `python tools/validate_moduledata.py` → PASS. In-game confirmation (tavern conversation shows prose with zero error lines; encyclopedia culture page) pending — XML/content-only change, no C# touched.
+
+Not-tested: live tavern wanderer conversation + encyclopedia rendering (require the running game).
+Save-compat: additive GameText only — no SyncData, no save impact.
+Follow-up: the 194 new `{=…}` keys carry inline English defaults (errors gone now); propagate to the 11 AI-translated languages later via `/localize` → `tools/translate_with_claude.py`.
 
 ### feat(castle-recruitment): recruit troops from castles (player + AI)
 

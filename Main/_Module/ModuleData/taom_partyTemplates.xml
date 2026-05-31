@@ -1497,7 +1497,7 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="dunland_raiders_boss_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dunland_wolf_raider" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dunland_raiders_boss" />
 			<PartyTemplateStack min_value="6" max_value="12" troop="NPCCharacter.dunland_clan_warrior" />
 			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.dunland_raider" />
 			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.dunland_hunter" />
@@ -1515,7 +1515,7 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="rhun_raiders_boss_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.kharaghul_raider" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.rhun_raiders_boss" />
 			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.balcoth_archer" />
 			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.balcoth_footman" />
 			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.kharaghul_rider" />
@@ -1533,7 +1533,7 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="harad_raiders_boss_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.harad_camelrider" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.harad_raiders_boss" />
 			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.harad_footman" />
 			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.harad_archer" />
 			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.harad_camelscout" />
@@ -1551,7 +1551,7 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="gundabad_raiders_boss_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gundabad_despoiler_of_the_vale" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gundabad_raiders_boss" />
 			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.gundabad_scout" />
 			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.gundabad_grunt" />
 			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.gundabad_lurker" />
@@ -1570,7 +1570,7 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="umbar_corsairs_boss_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.umbar_elite_root00" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.umbar_corsairs_boss" />
 			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.umbar_elite_root0" />
 			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.umbar_elite" />
 			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.umbar_elite_root1" />
@@ -1592,7 +1592,7 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="gondor_soldiers_boss_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gondor_ano_skirmisher" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.gondor_soldiers_boss" />
 			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.gondor_ano_footman" />
 			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.gondor_ano_militia" />
 			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.gondor_ano_archer_militia" />
@@ -1610,7 +1610,7 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="erebor_warriors_boss_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_reg_bowman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.erebor_warriors_boss" />
 			<PartyTemplateStack min_value="5" max_value="10" troop="NPCCharacter.erebor_reg_company" />
 			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.erebor_reg_militia" />
 			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.erebor_reg_skirmisher" />
@@ -1627,7 +1627,7 @@
 	</MBPartyTemplate>
 	<MBPartyTemplate id="mirkwood_stalkers_boss_party_template">
 		<stacks>
-			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mirkwood_militia_veteran_archer" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.mirkwood_stalkers_boss" />
 			<PartyTemplateStack min_value="6" max_value="12" troop="NPCCharacter.mirkwood_militia_veteran_spearman" />
 			<PartyTemplateStack min_value="6" max_value="14" troop="NPCCharacter.mirkwood_militia_archer" />
 			<PartyTemplateStack min_value="4" max_value="10" troop="NPCCharacter.mirkwood_militia_spearman" />

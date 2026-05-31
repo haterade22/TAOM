@@ -1480,6 +1480,44 @@
     </NPCCharacter>
 
     <NPCCharacter
+        id="gundabad_raiders_boss"
+        race="pale_uruk"
+        default_group="HorseArcher"
+        level="26"
+        name="{=taom_gundabad_raiders_boss_name}[Gundabad] Warlord of the Vale"
+        occupation="Bandit"
+        culture="Culture.gundabad_raiders">
+        <face>
+            <face_key_template value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="130" />
+            <skill id="Riding" value="195" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="85" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="185" />
+            <skill id="Crossbow" value="15" />
+            <skill id="Throwing" value="60" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.composite_steppe_bow" />
+                <equipment slot="Item1" id="Item.steppe_arrows" />
+                <equipment slot="Item2" id="Item.steppe_arrows" />
+                <equipment slot="Item3" id="Item.wm_gundabad_mace_a02" />
+                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_b" />
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_heavy_c" />
+                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_heavy_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_b" />
+                <equipment slot="Horse" id="Item.warg_dark" />
+                <equipment slot="HorseHarness" id="Item.warg_saddle" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
         id="gundabad_despoiler_of_the_vale"
         race="pale_uruk"
         default_group="HorseArcher"

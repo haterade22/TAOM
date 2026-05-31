@@ -755,6 +755,42 @@
     </NPCCharacter>
 
     <NPCCharacter
+        id="harad_raiders_boss"
+        default_group="Cavalry"
+        level="21"
+        name="{=taom_harad_raiders_boss_name}[Harad] Haradrim Warlord"
+        occupation="Bandit"
+        culture="Culture.harad_raiders">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="135" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="140" />
+            <skill id="Bow" value="35" />
+            <skill id="Crossbow" value="15" />
+            <skill id="Throwing" value="30" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.studded_adarga" />
+                <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
+                <equipment slot="Item3" id="Item.aserai_sword_5_t4" />
+                <equipment slot="Head" id="Item.brass_aserai_helmet_b_open" />
+                <equipment slot="Body" id="Item.aserai_scale_armor_on_chain" />
+                <equipment slot="Leg" id="Item.strapped_mail_chausses" />
+                <equipment slot="Gloves" id="Item.rough_tied_bracers" />
+                <equipment slot="Horse" id="Item.war_camel" />
+                <equipment slot="HorseHarness" id="Item.camel_saddle" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
         id="harad_camelrider"
         default_group="Cavalry"
         level="21"

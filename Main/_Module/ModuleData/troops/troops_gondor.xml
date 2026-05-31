@@ -7019,6 +7019,41 @@
   </NPCCharacter>
 
   <NPCCharacter
+      id="gondor_soldiers_boss"
+      default_group="Ranged"
+      level="16"
+      name="{=taom_gondor_soldiers_boss_name}[Gondor] Soldier Captain"
+      occupation="Bandit"
+      culture="Culture.gondor_soldiers">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gondor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="90" />
+      <skill id="Riding" value="20" />
+      <skill id="OneHanded" value="80" />
+      <skill id="TwoHanded" value="50" />
+      <skill id="Polearm" value="50" />
+      <skill id="Bow" value="85" />
+      <skill id="Crossbow" value="25" />
+      <skill id="Throwing" value="20" />
+    </skills>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_bow" />
+        <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item2" id="Item.bodkin_arrows_a" />
+        <equipment slot="Item3" id="Item.wm_gondor_sword_a03" />
+        <equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+        <equipment slot="Body" id="Item.sk_gd_ano_chainmail_full_a" />
+        <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter
       id="gondor_ano_skirmisher"
       default_group="Ranged"
       level="16"

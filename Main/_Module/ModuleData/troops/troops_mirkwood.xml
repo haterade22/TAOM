@@ -1313,6 +1313,40 @@
     </NPCCharacter>
 
     <NPCCharacter
+        id="mirkwood_stalkers_boss"
+        race="elf"
+        default_group="Ranged"
+        level="16"
+        name="{=taom_mirkwood_stalkers_boss_name}[Mirkwood] Stalker Captain"
+        occupation="Bandit"
+        culture="Culture.mirkwood_stalkers">
+        <face>
+            <face_key_template value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="140" />
+            <skill id="Riding" value="20" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="95" />
+            <skill id="Polearm" value="100" />
+            <skill id="Bow" value="180" />
+            <skill id="Crossbow" value="80" />
+            <skill id="Throwing" value="90" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_mirkwood_bow_a02" />
+                <equipment slot="Item1" id="Item.wm_mirkwood_arrow_a02" />
+                <equipment slot="Item3" id="Item.mirkwood_sword_a01" />
+                <equipment slot="Head" id="Item.mkwd_inf1_t2_helmet_gold_hc" />
+                <equipment slot="Body" id="Item.mkwd_inf3_chest" />
+                <equipment slot="Gloves" id="Item.mkwd_inf3_vambraces" />
+                <equipment slot="Leg" id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
         id="mirkwood_militia_veteran_archer"
         race="elf"
         default_group="Ranged"

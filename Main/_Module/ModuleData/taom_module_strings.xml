@@ -405,6 +405,44 @@
 	<string id="str_faction_informal_name_for_culture.erebor" text="{=taom_str_faction_informal_name_for_culture.erebor}Erebor" />
 	<string id="str_neutral_term_for_culture.erebor" text="{=taom_str_neutral_term_for_culture.erebor}Dwarves of Erebor" />
 
+	<!-- Âbanissa (deep-south Harad jungle dynasties; ruler styled Châjaphân) -->
+	<string id="str_faction_official.abanissa" text="{=taom_str_faction_official.abanissa}a House lord" />
+	<string id="str_faction_official.abanissa_f" text="{=taom_str_faction_official.abanissa_f}a House lady" />
+	<string id="str_faction_ruler.abanissa" text="{=taom_str_faction_ruler.abanissa}Châjaphân" />
+	<string id="str_faction_ruler.abanissa_f" text="{=taom_str_faction_ruler.abanissa_f}Châjaphân" />
+	<string id="str_faction_ruler_term_in_speech.abanissa" text="{=taom_str_faction_ruler_term_in_speech.abanissa}the Châjaphân, {RULER.NAME}" />
+	<string id="str_faction_ruler_name_with_title.abanissa" text="{=taom_str_faction_ruler_name_with_title.abanissa}Châjaphân {RULER.NAME}" />
+	<string id="str_faction_noble_name_with_title.abanissa" text="{=taom_str_faction_noble_name_with_title.abanissa}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+	<string id="str_adjective_for_faction.abanissa" text="{=taom_str_adjective_for_faction.abanissa}Âbanissan" />
+	<string id="str_short_term_for_faction.abanissa" text="{=taom_str_short_term_for_faction.abanissa}Âbanissan" />
+	<string id="str_faction_formal_name_for_culture.abanissa" text="{=taom_str_faction_formal_name_for_culture.abanissa}Dominion of Âbanissa" />
+	<string id="str_faction_informal_name_for_culture.abanissa" text="{=taom_str_faction_informal_name_for_culture.abanissa}Âbanissa" />
+	<string id="str_neutral_term_for_culture.abanissa" text="{=taom_str_neutral_term_for_culture.abanissa}Haradrim of Âbanissa" />
+	<string id="str_culture_description.abanissa" text="{=taom_str_culture_description.abanissa}Âbanissa lies in the deep south of Harad, a realm of humid jungles and ancient stone dynasties. The great Houses of Âbanissa command fearsome war-beasts and disciplined armies of spearmen, their power answerable to none but Sauron himself. Beneath banners of dynasty they march, commanding both respect and terror across the southern lands." />
+	<string id="str_culture_rich_name.abanissa" text="{=taom_str_culture_rich_name.abanissa}Âbanissan" />
+	<string id="str_adjective_for_culture.abanissa" text="{=taom_str_adjective_for_culture.abanissa}Âbanissan" />
+	<string id="str_player_father_name.abanissa" text="{=taom_str_player_father_name.abanissa}Sohrab" />
+	<string id="str_player_mother_name.abanissa" text="{=taom_str_player_mother_name.abanissa}Nilûphar" />
+
+	<!-- Shaghâna (eastern Harad steppe tribes; ruler styled Taskral) -->
+	<string id="str_faction_official.shaghana" text="{=taom_str_faction_official.shaghana}a clan chieftain" />
+	<string id="str_faction_official.shaghana_f" text="{=taom_str_faction_official.shaghana_f}a clan lady" />
+	<string id="str_faction_ruler.shaghana" text="{=taom_str_faction_ruler.shaghana}Taskral" />
+	<string id="str_faction_ruler.shaghana_f" text="{=taom_str_faction_ruler.shaghana_f}Taskral" />
+	<string id="str_faction_ruler_term_in_speech.shaghana" text="{=taom_str_faction_ruler_term_in_speech.shaghana}the Taskral, {RULER.NAME}" />
+	<string id="str_faction_ruler_name_with_title.shaghana" text="{=taom_str_faction_ruler_name_with_title.shaghana}Taskral {RULER.NAME}" />
+	<string id="str_faction_noble_name_with_title.shaghana" text="{=taom_str_faction_noble_name_with_title.shaghana}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+	<string id="str_adjective_for_faction.shaghana" text="{=taom_str_adjective_for_faction.shaghana}Shaghâni" />
+	<string id="str_short_term_for_faction.shaghana" text="{=taom_str_short_term_for_faction.shaghana}Shaghâni" />
+	<string id="str_faction_formal_name_for_culture.shaghana" text="{=taom_str_faction_formal_name_for_culture.shaghana}Tribes of Shaghâna" />
+	<string id="str_faction_informal_name_for_culture.shaghana" text="{=taom_str_faction_informal_name_for_culture.shaghana}Shaghâna" />
+	<string id="str_neutral_term_for_culture.shaghana" text="{=taom_str_neutral_term_for_culture.shaghana}Haradrim of Shaghâna" />
+	<string id="str_culture_description.shaghana" text="{=taom_str_culture_description.shaghana}Shaghâna is the eastern reach of Harad, a land of sun-scorched steppes and ancient fortresses. Its nine tribal clans are fierce riders and raiders, bound together by oath and blood, who strike fear into all who dare oppose them. They answer to their Taskral, and through him to the will of Sauron." />
+	<string id="str_culture_rich_name.shaghana" text="{=taom_str_culture_rich_name.shaghana}Shaghâni" />
+	<string id="str_adjective_for_culture.shaghana" text="{=taom_str_adjective_for_culture.shaghana}Shaghâni" />
+	<string id="str_player_father_name.shaghana" text="{=taom_str_player_father_name.shaghana}Zarkan" />
+	<string id="str_player_mother_name.shaghana" text="{=taom_str_player_mother_name.shaghana}Khansa" />
+
 	<!-- ============================================================ -->
 	<!-- Remove "the" before faction/kingdom/clan names               -->
 	<!-- Vanilla uses "of the {KINGDOM}" which works for names like   -->

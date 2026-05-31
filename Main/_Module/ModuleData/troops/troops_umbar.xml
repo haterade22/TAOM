@@ -704,6 +704,39 @@
     </NPCCharacter>
 
     <NPCCharacter
+        id="umbar_corsairs_boss"
+        default_group="Infantry"
+        level="21"
+        name="{=taom_umbar_corsairs_boss_name}[Umbar] Corsair Captain"
+        occupation="Bandit"
+        culture="Culture.umbar_corsairs">
+        <face>
+            <face_key_template value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="0" />
+            <skill id="OneHanded" value="135" />
+            <skill id="TwoHanded" value="115" />
+            <skill id="Polearm" value="130" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="10" />
+            <skill id="Throwing" value="50" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_gondor_spear" />
+                <equipment slot="Item1" id="Item.desert_round_shield" />
+                <equipment slot="Head" id="Item.sk_gd_ano_noble_helmet_med_a" />
+                <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_med_a" />
+                <equipment slot="Body" id="Item.ar_ardunian_elite_armour" />
+                <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_noble_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
         id="umbar_elite_root00"
         default_group="Infantry"
         level="21"
