@@ -91,139 +91,184 @@
                   </Children>
                 </Widget>
 
-                <!-- RIGHT PANEL: Choice Groups -->
+                <!-- RIGHT PANEL: Choice Groups (Tier 3 top -> Tier 1 bottom) -->
                 <Widget WidthSizePolicy="Fixed" SuggestedWidth="1420" HeightSizePolicy="StretchToParent" HorizontalAlignment="Right">
                   <Children>
 
                     <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom">
                       <Children>
 
-                        <!-- TIER 1 -->
-                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="300" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <!-- TIER 3 (top) -->
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="300" HorizontalAlignment="Center" VerticalAlignment="Center">
                           <Children>
                             <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="4" HorizontalAlignment="Center" Sprite="Clan\divider_mid" />
-                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="200" Text="@Tier1Label" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="24" />
-                            <ListPanel DataSource="{ChoiceGroupsTier1}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalCentered">
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Left" MarginLeft="20" Text="@Tier3Label" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="24" />
+                            <ListPanel DataSource="{ChoiceGroupsTier3}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalCentered">
                               <ItemTemplate>
-                                <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginTop="35" MarginLeft="50" MarginRight="50">
+                                <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginTop="35" MarginLeft="40" MarginRight="40">
                                   <Children>
                                     <ImageWidget VisualDefinition="ExtendablePanel" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" VerticalAlignment="Center" MarginTop="5" Sprite="StdAssets\Popup\canvas" Command.HoverBegin="ExecuteBeginHover" Command.HoverEnd="ExecuteEndHover">
                                       <Children>
-                                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="400" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="-35" Text="@GroupName" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="18" />
-                                        <ListPanel DataSource="{Choices}" ClipContents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="10" StackLayout.LayoutMethod="VerticalTopToBottom">
-                                          <ItemTemplate>
-                                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="40" StackLayout.LayoutMethod="HorizontalLeftToRight">
-                                              <Children>
-                                                <!-- Available icon (brown) -->
-                                                <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="25" SuggestedWidth="20" HorizontalAlignment="Left" MarginLeft="30" MarginTop="5" MarginBottom="5" Sprite="@IconSprite" Color="#7f695cFF" IsVisible="@IsFreeToTake" />
-                                                <!-- Taken icon (gold) -->
-                                                <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="25" SuggestedWidth="20" HorizontalAlignment="Left" MarginLeft="30" MarginTop="5" MarginBottom="5" Sprite="@IconSprite" Color="#dfc395FF" IsVisible="@IsTaken" />
-                                                <!-- Choice description -->
-                                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="20" SuggestedWidth="500" HorizontalAlignment="Left" MarginLeft="25" MarginTop="5" MarginBottom="5" Text="@Description" Brush="CharacterDeveloper.DescriptionText" />
-                                              </Children>
+                                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="220" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="-35" Text="@GroupName" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="18" />
+                                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="10" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                          <Children>
+                                            <!-- Pip strip (always visible): one pip per choice, tinted by state -->
+                                            <ListPanel DataSource="{Choices}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                              <ItemTemplate>
+                                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="40" SuggestedWidth="44" MarginLeft="20">
+                                                  <Children>
+                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="28" SuggestedWidth="22" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFFFF" IsVisible="@IsTaken" />
+                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="28" SuggestedWidth="22" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFFA0" IsVisible="@IsFreeToTake" />
+                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="28" SuggestedWidth="22" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFF45" IsVisible="@IsUnavailable" />
+                                                  </Children>
+                                                </Widget>
+                                              </ItemTemplate>
                                             </ListPanel>
-                                          </ItemTemplate>
+                                            <!-- Description column (revealed on hover) -->
+                                            <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" IsVisible="@ButtonsVisible">
+                                              <Children>
+                                                <ListPanel DataSource="{Choices}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                                  <ItemTemplate>
+                                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="40" SuggestedWidth="500">
+                                                      <Children>
+                                                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="15" Text="@Description" Brush="CharacterDeveloper.DescriptionText" />
+                                                      </Children>
+                                                    </Widget>
+                                                  </ItemTemplate>
+                                                </ListPanel>
+                                              </Children>
+                                            </Widget>
+                                          </Children>
                                         </ListPanel>
                                         <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
                                       </Children>
                                     </ImageWidget>
                                     <!-- +/- buttons -->
-                                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" IsVisible="@IsActive">
+                                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="Fixed" SuggestedWidth="70" StackLayout.LayoutMethod="VerticalTopToBottom">
                                       <Children>
-                                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\plus_sign_icon" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickIncrease" />
-                                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\minus_sign_icon" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickDecrease" />
+                                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\plus_sign_icon" MarginLeft="10" IsVisible="@IsActive" Command.Click="ExecuteClickIncrease" />
+                                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\minus_sign_icon" MarginLeft="10" IsVisible="@IsActive" Command.Click="ExecuteClickDecrease" />
                                       </Children>
                                     </ListPanel>
                                   </Children>
                                 </ListPanel>
                               </ItemTemplate>
                             </ListPanel>
-                            <!-- Locked tier overlay: dark tint + chains (chains PNG optional — tint always shows when locked) -->
-                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#000000CC" IsVisible="@Tier1Locked" />
-                            <!-- Tier 1 is always unlocked at level 1+; no gate needed here -->
+                            <!-- Locked: "Requires Level N" label -->
+                            <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Text="@Tier3RequirementText" IsVisible="@Tier3Locked" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="28" />
                           </Children>
                         </Widget>
 
-                        <!-- TIER 2 -->
+                        <!-- TIER 2 (middle) -->
                         <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="300" HorizontalAlignment="Center" VerticalAlignment="Center">
                           <Children>
                             <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="4" HorizontalAlignment="Center" Sprite="Clan\divider_mid" />
-                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="200" Text="@Tier2Label" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="24" />
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Left" MarginLeft="20" Text="@Tier2Label" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="24" />
                             <ListPanel DataSource="{ChoiceGroupsTier2}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalCentered">
                               <ItemTemplate>
-                                <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginTop="35" MarginLeft="50" MarginRight="50">
+                                <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginTop="35" MarginLeft="40" MarginRight="40">
                                   <Children>
                                     <ImageWidget VisualDefinition="ExtendablePanel" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" VerticalAlignment="Center" MarginTop="5" Sprite="StdAssets\Popup\canvas" Command.HoverBegin="ExecuteBeginHover" Command.HoverEnd="ExecuteEndHover">
                                       <Children>
-                                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="400" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="-35" Text="@GroupName" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="18" />
-                                        <ListPanel DataSource="{Choices}" ClipContents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="10" StackLayout.LayoutMethod="VerticalTopToBottom">
-                                          <ItemTemplate>
-                                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="40" StackLayout.LayoutMethod="HorizontalLeftToRight">
-                                              <Children>
-                                                <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="25" SuggestedWidth="20" HorizontalAlignment="Left" MarginLeft="30" MarginTop="5" MarginBottom="5" Sprite="@IconSprite" Color="#7f695cFF" IsVisible="@IsFreeToTake" />
-                                                <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="25" SuggestedWidth="20" HorizontalAlignment="Left" MarginLeft="30" MarginTop="5" MarginBottom="5" Sprite="@IconSprite" Color="#dfc395FF" IsVisible="@IsTaken" />
-                                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="20" SuggestedWidth="500" HorizontalAlignment="Left" MarginLeft="25" MarginTop="5" MarginBottom="5" Text="@Description" Brush="CharacterDeveloper.DescriptionText" />
-                                              </Children>
+                                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="220" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="-35" Text="@GroupName" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="18" />
+                                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="10" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                          <Children>
+                                            <ListPanel DataSource="{Choices}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                              <ItemTemplate>
+                                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="40" SuggestedWidth="44" MarginLeft="20">
+                                                  <Children>
+                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="28" SuggestedWidth="22" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFFFF" IsVisible="@IsTaken" />
+                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="28" SuggestedWidth="22" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFFA0" IsVisible="@IsFreeToTake" />
+                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="28" SuggestedWidth="22" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFF45" IsVisible="@IsUnavailable" />
+                                                  </Children>
+                                                </Widget>
+                                              </ItemTemplate>
                                             </ListPanel>
-                                          </ItemTemplate>
+                                            <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" IsVisible="@ButtonsVisible">
+                                              <Children>
+                                                <ListPanel DataSource="{Choices}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                                  <ItemTemplate>
+                                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="40" SuggestedWidth="500">
+                                                      <Children>
+                                                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="15" Text="@Description" Brush="CharacterDeveloper.DescriptionText" />
+                                                      </Children>
+                                                    </Widget>
+                                                  </ItemTemplate>
+                                                </ListPanel>
+                                              </Children>
+                                            </Widget>
+                                          </Children>
                                         </ListPanel>
                                         <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
                                       </Children>
                                     </ImageWidget>
-                                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" IsVisible="@IsActive">
+                                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="Fixed" SuggestedWidth="70" StackLayout.LayoutMethod="VerticalTopToBottom">
                                       <Children>
-                                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\plus_sign_icon" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickIncrease" />
-                                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\minus_sign_icon" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickDecrease" />
+                                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\plus_sign_icon" MarginLeft="10" IsVisible="@IsActive" Command.Click="ExecuteClickIncrease" />
+                                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\minus_sign_icon" MarginLeft="10" IsVisible="@IsActive" Command.Click="ExecuteClickDecrease" />
                                       </Children>
                                     </ListPanel>
                                   </Children>
                                 </ListPanel>
                               </ItemTemplate>
                             </ListPanel>
-                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#000000CC" IsVisible="@Tier2Locked" />
-                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="CareerSystem\locked_gate_bottom" IsVisible="@Tier2GateBottomHalf" />
+                            <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Text="@Tier2RequirementText" IsVisible="@Tier2Locked" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="28" />
                           </Children>
                         </Widget>
 
-                        <!-- TIER 3 -->
-                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="300" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <!-- TIER 1 (bottom) -->
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="300" HorizontalAlignment="Center" VerticalAlignment="Center">
                           <Children>
                             <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="4" HorizontalAlignment="Center" Sprite="Clan\divider_mid" />
-                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="200" Text="@Tier3Label" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="24" />
-                            <ListPanel DataSource="{ChoiceGroupsTier3}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalCentered">
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Left" MarginLeft="20" Text="@Tier1Label" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="24" />
+                            <ListPanel DataSource="{ChoiceGroupsTier1}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalCentered">
                               <ItemTemplate>
-                                <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginTop="35" MarginLeft="50" MarginRight="50">
+                                <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginTop="35" MarginLeft="40" MarginRight="40">
                                   <Children>
                                     <ImageWidget VisualDefinition="ExtendablePanel" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" VerticalAlignment="Center" MarginTop="5" Sprite="StdAssets\Popup\canvas" Command.HoverBegin="ExecuteBeginHover" Command.HoverEnd="ExecuteEndHover">
                                       <Children>
-                                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="400" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="-35" Text="@GroupName" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="18" />
-                                        <ListPanel DataSource="{Choices}" ClipContents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="10" StackLayout.LayoutMethod="VerticalTopToBottom">
-                                          <ItemTemplate>
-                                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="40" StackLayout.LayoutMethod="HorizontalLeftToRight">
-                                              <Children>
-                                                <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="25" SuggestedWidth="20" HorizontalAlignment="Left" MarginLeft="30" MarginTop="5" MarginBottom="5" Sprite="@IconSprite" Color="#7f695cFF" IsVisible="@IsFreeToTake" />
-                                                <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="25" SuggestedWidth="20" HorizontalAlignment="Left" MarginLeft="30" MarginTop="5" MarginBottom="5" Sprite="@IconSprite" Color="#dfc395FF" IsVisible="@IsTaken" />
-                                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="20" SuggestedWidth="500" HorizontalAlignment="Left" MarginLeft="25" MarginTop="5" MarginBottom="5" Text="@Description" Brush="CharacterDeveloper.DescriptionText" />
-                                              </Children>
+                                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="30" SuggestedWidth="220" VerticalAlignment="Top" HorizontalAlignment="Center" PositionYOffset="-35" Text="@GroupName" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="18" />
+                                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="10" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                          <Children>
+                                            <ListPanel DataSource="{Choices}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                              <ItemTemplate>
+                                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="40" SuggestedWidth="44" MarginLeft="20">
+                                                  <Children>
+                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="28" SuggestedWidth="22" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFFFF" IsVisible="@IsTaken" />
+                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="28" SuggestedWidth="22" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFFA0" IsVisible="@IsFreeToTake" />
+                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="28" SuggestedWidth="22" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFF45" IsVisible="@IsUnavailable" />
+                                                  </Children>
+                                                </Widget>
+                                              </ItemTemplate>
                                             </ListPanel>
-                                          </ItemTemplate>
+                                            <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" IsVisible="@ButtonsVisible">
+                                              <Children>
+                                                <ListPanel DataSource="{Choices}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                                  <ItemTemplate>
+                                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="40" SuggestedWidth="500">
+                                                      <Children>
+                                                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="15" Text="@Description" Brush="CharacterDeveloper.DescriptionText" />
+                                                      </Children>
+                                                    </Widget>
+                                                  </ItemTemplate>
+                                                </ListPanel>
+                                              </Children>
+                                            </Widget>
+                                          </Children>
                                         </ListPanel>
                                         <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
                                       </Children>
                                     </ImageWidget>
-                                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" IsVisible="@IsActive">
+                                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="Fixed" SuggestedWidth="70" StackLayout.LayoutMethod="VerticalTopToBottom">
                                       <Children>
-                                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\plus_sign_icon" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickIncrease" />
-                                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\minus_sign_icon" IsVisible="@IsActive" MarginLeft="10" Command.Click="ExecuteClickDecrease" />
+                                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\plus_sign_icon" MarginLeft="10" IsVisible="@IsActive" Command.Click="ExecuteClickIncrease" />
+                                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="50" SuggestedWidth="50" HorizontalAlignment="Left" Sprite="CareerSystem\minus_sign_icon" MarginLeft="10" IsVisible="@IsActive" Command.Click="ExecuteClickDecrease" />
                                       </Children>
                                     </ListPanel>
                                   </Children>
                                 </ListPanel>
                               </ItemTemplate>
                             </ListPanel>
-                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#000000CC" IsVisible="@Tier3Locked" />
-                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="CareerSystem\locked_gate_top" IsVisible="@Tier3GateTopHalf" />
-                            <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="CareerSystem\locked_gate_full" IsVisible="@Tier3GateFull" />
                           </Children>
                         </Widget>
 

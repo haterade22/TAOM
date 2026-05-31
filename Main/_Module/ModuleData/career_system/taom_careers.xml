@@ -5,7 +5,7 @@
   <!-- GONDOR (gondor / empire_w)                                 -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="ranger_of_ithilien"
+  <Career id="ranger_of_ithilien" rank1_name="{=taom_career_rank1_ranger_of_ithilien}Ithilien Scout" rank2_name="{=taom_career_rank2_ranger_of_ithilien}Ranger of Ithilien" rank3_name="{=taom_career_rank3_ranger_of_ithilien}Captain of the White Company"
           display_name="{=taom_career_ranger_of_ithilien}Ranger of Ithilien"
           description="{=taom_career_ranger_of_ithilien_desc}An elite scout who strikes from the shadows of Ithilien, ambushing enemies of Gondor with deadly precision."
           portrait_sprite="career_ranger_of_ithilien_portrait"
@@ -26,7 +26,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="captain_of_osgiliath"
+  <Career id="captain_of_osgiliath" rank1_name="{=taom_career_rank1_captain_of_osgiliath}Ohtar of the Crossing" rank2_name="{=taom_career_rank2_captain_of_osgiliath}Warden of Osgiliath" rank3_name="{=taom_career_rank3_captain_of_osgiliath}Captain of Osgiliath"
           display_name="{=taom_career_captain_of_osgiliath}Captain of Osgiliath"
           description="{=taom_career_captain_of_osgiliath_desc}A battle-hardened infantry officer who commands Gondor's frontline defense at the ruins of Osgiliath, forging order from chaos in brutal urban combat. The Captain holds the line where others would break, rallying soldiers through sheer force of will."
           portrait_sprite="career_captain_of_osgiliath_portrait"
@@ -47,7 +47,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="knight_of_belfalas"
+  <Career id="knight_of_belfalas" rank1_name="{=taom_career_rank1_knight_of_belfalas}Squire of Dol Amroth" rank2_name="{=taom_career_rank2_knight_of_belfalas}Swan-Knight" rank3_name="{=taom_career_rank3_knight_of_belfalas}Knight of the Silver Swan"
           display_name="{=taom_career_knight_of_belfalas}Knight of Belfalas"
           description="{=taom_career_knight_of_belfalas_desc}An armored champion of the coastal fiefdom of Belfalas, whose thundering charge has broken countless enemy formations. The Knight of Belfalas combines Gondorian discipline with Dol Amroth's proud cavalry tradition, becoming an immovable wall of steel."
           portrait_sprite="career_knight_of_belfalas_portrait"
@@ -72,7 +72,7 @@
   <!-- MORDOR (mordor / empire_s)                                 -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="black_uruk_captain"
+  <Career id="black_uruk_captain" rank1_name="{=taom_career_rank1_black_uruk_captain}Uruk Soldier" rank2_name="{=taom_career_rank2_black_uruk_captain}Black Uruk" rank3_name="{=taom_career_rank3_black_uruk_captain}Captain of the Red Eye"
           display_name="{=taom_career_black_uruk_captain}Black Uruk Captain"
           description="{=taom_career_black_uruk_captain_desc}An iron-muscled champion of Mordor who leads Black Uruk warbands into the breach, absorbing punishment that would fell lesser warriors and turning the tide through sheer brutish dominance."
           portrait_sprite="career_black_uruk_captain_portrait"
@@ -93,7 +93,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="mulkerhili_cultist"
+  <Career id="mulkerhili_cultist" rank1_name="{=taom_career_rank1_mulkerhili_cultist}Whisper-Sworn" rank2_name="{=taom_career_rank2_mulkerhili_cultist}Voice of Lugbúrz" rank3_name="{=taom_career_rank3_mulkerhili_cultist}Herald of the Lidless Eye"
           display_name="{=taom_career_mulkerhili_cultist}Mulkerhílí Cultist"
           description="{=taom_career_mulkerhili_cultist_desc}A fanatical devotee of the One Ring's whispered promises who channels the terror of Sauron's voice to shatter enemy resolve, blending cursed archery with a maddening presence that erodes the will to fight."
           portrait_sprite="career_mulkerhili_cultist_portrait"
@@ -114,7 +114,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="snaga_rider"
+  <Career id="snaga_rider" rank1_name="{=taom_career_rank1_snaga_rider}Snaga" rank2_name="{=taom_career_rank2_snaga_rider}Smoke-Raider" rank3_name="{=taom_career_rank3_snaga_rider}Shadow of Lugbúrz"
           display_name="{=taom_career_snaga_rider}Snaga Rider"
           description="{=taom_career_snaga_rider_desc}A wiry Snaga cavalry raider who slips behind enemy lines with unnerving silence, striking supply columns and isolated units before vanishing into the smoke of Mordor."
           portrait_sprite="career_snaga_rider_portrait"
@@ -135,7 +135,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="olog_hai_warchief"
+  <Career id="olog_hai_warchief" rank1_name="{=taom_career_rank1_olog_hai_warchief}War-Troll" rank2_name="{=taom_career_rank2_olog_hai_warchief}Olog-hai" rank3_name="{=taom_career_rank3_olog_hai_warchief}Warchief of Lugbúrz"
           display_name="{=taom_career_olog_hai_warchief}Olog-Hai Warchief"
           description="{=taom_career_olog_hai_warchief_desc}A towering Olog-Hai war-troll who wades into the thickest fighting as a living battering ram, soaking up tremendous punishment and hammering foes into the ground with devastating overhead blows."
           portrait_sprite="career_olog_hai_warchief_portrait"
@@ -160,7 +160,7 @@
   <!-- ROHAN (vlandia)                                            -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="marksman_of_aldburg"
+  <Career id="marksman_of_aldburg" rank1_name="{=taom_career_rank1_marksman_of_aldburg}Bowman of the Eastfold" rank2_name="{=taom_career_rank2_marksman_of_aldburg}Marksman of Aldburg" rank3_name="{=taom_career_rank3_marksman_of_aldburg}Arrow-warden of the Mark"
           display_name="{=taom_career_marksman_of_aldburg}Marksman of Aldburg"
           description="{=taom_career_marksman_of_aldburg_desc}A heavy archer of the Aldburg garrison who has mastered the art of loosing light, high-velocity arrows with lethal precision, capable of penetrating armour at distances that leave enemies no safe quarter."
           portrait_sprite="career_marksman_of_aldburg_portrait"
@@ -180,7 +180,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="eotheod_windrider"
+  <Career id="eotheod_windrider" rank1_name="{=taom_career_rank1_eotheod_windrider}Rider of the Mark" rank2_name="{=taom_career_rank2_eotheod_windrider}Captain of the Éored" rank3_name="{=taom_career_rank3_eotheod_windrider}Marshal of the Riddermark"
           display_name="{=taom_career_eotheod_windrider}Eothéod Windrider"
           description="{=taom_career_eotheod_windrider_desc}A descendant of the ancient Eothéod horsemasters who rides with the thunder of generations of legend, inspiring allies with a warcry that echoes Eorl the Young and scattering enemies under hooves of unstoppable heavy cavalry."
           portrait_sprite="career_eotheod_windrider_portrait"
@@ -200,7 +200,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="watchman_of_stangard"
+  <Career id="watchman_of_stangard" rank1_name="{=taom_career_rank1_watchman_of_stangard}Watchman of Stangard" rank2_name="{=taom_career_rank2_watchman_of_stangard}Ford-warden of the Limlight" rank3_name="{=taom_career_rank3_watchman_of_stangard}Warden of the East-marches"
           display_name="{=taom_career_watchman_of_stangard}Watchman of Stangard"
           description="{=taom_career_watchman_of_stangard_desc}A grizzled river-warden of Stangard who patrols the Anduin crossings by flatboat and on foot, guarding Rohan's eastern flank through endurance, local knowledge, and a boatswain's tenacious grip on contested ground."
           portrait_sprite="career_watchman_of_stangard_portrait"
@@ -224,7 +224,7 @@
   <!-- DUNLAND (empire)                                           -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="avanc_luth_raider"
+  <Career id="avanc_luth_raider" rank1_name="{=taom_career_rank1_avanc_luth_raider}Painted Reaver" rank2_name="{=taom_career_rank2_avanc_luth_raider}Clan Berserker" rank3_name="{=taom_career_rank3_avanc_luth_raider}Avanc-lúth War-Chief"
           display_name="{=taom_career_avanc_luth_raider}Dunlending Champion"
           description="{=taom_career_avanc_luth_raider_desc}A blood-painted skirmisher of the Avanc-lúth clan who charges into melee with reckless aggression, trading surgical precision for raw savage force that overwhelms opponents through sheer relentless pressure."
           portrait_sprite="career_avanc_luth_raider_portrait"
@@ -244,7 +244,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="wolfskin_hunter"
+  <Career id="wolfskin_hunter" rank1_name="{=taom_career_rank1_wolfskin_hunter}Wolf-Pelt Stalker" rank2_name="{=taom_career_rank2_wolfskin_hunter}Shadow-Marksman" rank3_name="{=taom_career_rank3_wolfskin_hunter}Grey Huntsman of the Hills"
           display_name="{=taom_career_wolfskin_hunter}Dunlending Archer"
           description="{=taom_career_wolfskin_hunter_desc}A patient stalker who dresses in wolf-pelts and moves through the Misty Mountain foothills like a ghost, marking prey from concealment before unleashing a precisely aimed shaft that the victim never hears coming."
           portrait_sprite="career_wolfskin_hunter_portrait"
@@ -264,7 +264,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="clanguard_rider"
+  <Career id="clanguard_rider" rank1_name="{=taom_career_rank1_clanguard_rider}Clan Outrider" rank2_name="{=taom_career_rank2_clanguard_rider}Boar-Banner Horseman" rank3_name="{=taom_career_rank3_clanguard_rider}Master of the Wild Hunt"
           display_name="{=taom_career_clanguard_rider}Dunlending Outrider"
           description="{=taom_career_clanguard_rider_desc}A fast-raiding clan cavalryman who harasses enemy flanks with swift hit-and-run assaults, using superior speed and pack coordination to disrupt formations before the clan's infantry close in for the kill."
           portrait_sprite="career_clanguard_rider_portrait"
@@ -288,7 +288,7 @@
   <!-- KHAND (battania)                                           -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="blademaster_of_ren"
+  <Career id="blademaster_of_ren" rank1_name="{=taom_career_rank1_blademaster_of_ren}Blade of Rên" rank2_name="{=taom_career_rank2_blademaster_of_ren}Sworn Blademaster" rank3_name="{=taom_career_rank3_blademaster_of_ren}Kân of the Crimson Edge"
           display_name="{=taom_career_blademaster_of_ren}Blademaster of Rên"
           description="{=taom_career_blademaster_of_ren_desc}A precision duelist from the warrior-courts of Rên who dispatches enemies with calculated, lethal blade work."
           portrait_sprite="career_blademaster_of_ren_portrait"
@@ -308,7 +308,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="steppe_bowmaster"
+  <Career id="steppe_bowmaster" rank1_name="{=taom_career_rank1_steppe_bowmaster}Plains Outrider" rank2_name="{=taom_career_rank2_steppe_bowmaster}Steppe Bowmaster" rank3_name="{=taom_career_rank3_steppe_bowmaster}Stormbow Kân"
           display_name="{=taom_career_steppe_bowmaster}Steppe Bowmaster"
           description="{=taom_career_steppe_bowmaster_desc}A mobile archer of the Khand plains who harasses enemy lines with relentless volleys, never standing still long enough to be caught."
           portrait_sprite="career_steppe_bowmaster_portrait"
@@ -328,7 +328,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="chariot_warlord"
+  <Career id="chariot_warlord" rank1_name="{=taom_career_rank1_chariot_warlord}Scythe-Driver" rank2_name="{=taom_career_rank2_chariot_warlord}Chariot Warlord" rank3_name="{=taom_career_rank3_chariot_warlord}Wainkân of Khand"
           display_name="{=taom_career_chariot_warlord}Chariot Warlord"
           description="{=taom_career_chariot_warlord_desc}A scythe-chariot commander of Khand whose brutal shock charges shatter formations and scatter survivors to the winds."
           portrait_sprite="career_chariot_warlord_portrait"
@@ -352,7 +352,7 @@
   <!-- HARAD (aserai)                                             -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="tribesman_of_jelut"
+  <Career id="tribesman_of_jelut" rank1_name="{=taom_career_rank1_tribesman_of_jelut}Jelut Tribesman" rank2_name="{=taom_career_rank2_tribesman_of_jelut}Sandstorm Raider" rank3_name="{=taom_career_rank3_tribesman_of_jelut}Serpent-Banner Chieftain"
           display_name="{=taom_career_tribesman_of_jelut}Tribesman of Jelut"
           description="{=taom_career_tribesman_of_jelut_desc}A warrior of the Jelut desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades."
           portrait_sprite="career_tribesman_of_jelut_portrait"
@@ -372,7 +372,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="pezarsani_javelineer"
+  <Career id="pezarsani_javelineer" rank1_name="{=taom_career_rank1_pezarsani_javelineer}Pezarsan Javelineer" rank2_name="{=taom_career_rank2_pezarsani_javelineer}Throwing-Spear Skirmisher" rank3_name="{=taom_career_rank3_pezarsani_javelineer}Scarlet Spear-Master"
           display_name="{=taom_career_pezarsani_javelineer}Pezarsani Javelineer"
           description="{=taom_career_pezarsani_javelineer_desc}A fast-moving skirmisher of Pezarsan who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation."
           portrait_sprite="career_pezarsani_javelineer_portrait"
@@ -392,7 +392,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="mahud_beast_rider"
+  <Career id="mahud_beast_rider" rank1_name="{=taom_career_rank1_mahud_beast_rider}Mahûd Beast-Tamer" rank2_name="{=taom_career_rank2_mahud_beast_rider}Mûmak Driver" rank3_name="{=taom_career_rank3_mahud_beast_rider}Mûmak War-Leader"
           display_name="{=taom_career_mahud_beast_rider}Mahûd Beast Rider"
           description="{=taom_career_mahud_beast_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror."
           portrait_sprite="career_mahud_beast_rider_portrait"
@@ -438,7 +438,7 @@
   <!-- EASTERLINGS / RHÛN (khuzait)                               -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="codyan_legionaire"
+  <Career id="codyan_legionaire" rank1_name="{=taom_career_rank1_codyan_legionaire}Côdyan Shieldman" rank2_name="{=taom_career_rank2_codyan_legionaire}Côdyan Lamellar Veteran" rank3_name="{=taom_career_rank3_codyan_legionaire}Ironwall of Rhûn"
           display_name="{=taom_career_codyan_legionaire}Côdyan Legionaire"
           description="{=taom_career_codyan_legionaire_desc}A disciplined shieldwall soldier of the Côdya formations who excels in defensive cohesion, soaking punishment while the line holds firm."
           portrait_sprite="career_codyan_legionaire_portrait"
@@ -458,7 +458,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="lokhas_drus_marksman"
+  <Career id="lokhas_drus_marksman" rank1_name="{=taom_career_rank1_lokhas_drus_marksman}Lôkhas Drûs Bowman" rank2_name="{=taom_career_rank2_lokhas_drus_marksman}Lôkhas Drûs Plate-Piercer" rank3_name="{=taom_career_rank3_lokhas_drus_marksman}Sunfletched Death of the East"
           display_name="{=taom_career_lokhas_drus_marksman}Lôkhas Drûs Marksman"
           description="{=taom_career_lokhas_drus_marksman_desc}An armor-piercing specialist of the Lôkhas Drûs corps who trains to drive arrows through the heaviest plate at range."
           portrait_sprite="career_lokhas_drus_marksman_portrait"
@@ -478,7 +478,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="balchoth_kan"
+  <Career id="balchoth_kan" rank1_name="{=taom_career_rank1_balchoth_kan}Balchoth Horseman" rank2_name="{=taom_career_rank2_balchoth_kan}Balchoth Charioteer-Captain" rank3_name="{=taom_career_rank3_balchoth_kan}Balchoth Warlord-Kân"
           display_name="{=taom_career_balchoth_kan}Balchoth Kân"
           description="{=taom_career_balchoth_kan_desc}A heavy cavalry commander of the Balchoth who leads unstoppable mounted charges, maintaining iron morale no matter the odds."
           portrait_sprite="career_balchoth_kan_portrait"
@@ -502,7 +502,7 @@
   <!-- DALE (sturgia)                                             -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="dale_guardsman"
+  <Career id="dale_guardsman" rank1_name="{=taom_career_rank1_dale_guardsman}Gate-Warden of Dale" rank2_name="{=taom_career_rank2_dale_guardsman}Shieldman of Girion" rank3_name="{=taom_career_rank3_dale_guardsman}Knight of Dale"
           display_name="{=taom_career_dale_guardsman}Dalian Master Swordsman"
           description="{=taom_career_dale_guardsman_desc}A stalwart protector of the rebuilt city of Dale who holds the gate against all comers with shield and spear."
           portrait_sprite="career_dale_guardsman_portrait"
@@ -522,7 +522,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="dale_marksman"
+  <Career id="dale_marksman" rank1_name="{=taom_career_rank1_dale_marksman}Bowman of Esgaroth" rank2_name="{=taom_career_rank2_dale_marksman}Dragon-Shooter" rank3_name="{=taom_career_rank3_dale_marksman}Bearer of the Black Arrow"
           display_name="{=taom_career_dale_marksman}Barding Marksman"
           description="{=taom_career_dale_marksman_desc}A legendary bowman of Dale whose ancestors slew Smaug, carrying on the tradition of unerring marksmanship."
           portrait_sprite="career_dale_marksman_portrait"
@@ -542,7 +542,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="dale_outrider"
+  <Career id="dale_outrider" rank1_name="{=taom_career_rank1_dale_outrider}Road-Rider of Dale" rank2_name="{=taom_career_rank2_dale_outrider}Warden of the North-Road" rank3_name="{=taom_career_rank3_dale_outrider}Marshal of the Bardings"
           display_name="{=taom_career_dale_outrider}Dalian Cavalier"
           description="{=taom_career_dale_outrider_desc}A mounted patrol of the northern trade roads who safeguards caravans between Dale and the Lonely Mountain."
           portrait_sprite="career_dale_outrider_portrait"
@@ -566,7 +566,7 @@
   <!-- EREBOR (erebor)                                            -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="ironguard"
+  <Career id="ironguard" rank1_name="{=taom_career_rank1_ironguard}Deep Warden" rank2_name="{=taom_career_rank2_ironguard}Ironguard of Erebor" rank3_name="{=taom_career_rank3_ironguard}Shieldwall of Durin"
           display_name="{=taom_career_ironguard}Ironguard"
           description="{=taom_career_ironguard_desc}An elite dwarven warrior clad in mithril-forged plate who holds the deeps of Erebor against orc and dragon alike."
           portrait_sprite="career_ironguard_portrait"
@@ -586,7 +586,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="crossbow_master"
+  <Career id="crossbow_master" rank1_name="{=taom_career_rank1_crossbow_master}Bolt-Smith" rank2_name="{=taom_career_rank2_crossbow_master}Master Quarreler" rank3_name="{=taom_career_rank3_crossbow_master}Engine-Lord of the Iron Hills"
           display_name="{=taom_career_crossbow_master}Crossbow Master"
           description="{=taom_career_crossbow_master_desc}A dwarven engineer-warrior who wields masterwork crossbows of incredible stopping power, each bolt precision-crafted."
           portrait_sprite="career_crossbow_master_portrait"
@@ -606,7 +606,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="ram_rider"
+  <Career id="ram_rider" rank1_name="{=taom_career_rank1_ram_rider}Ram-Breaker" rank2_name="{=taom_career_rank2_ram_rider}Goatback Charger" rank3_name="{=taom_career_rank3_ram_rider}Vanguard of Dáin"
           display_name="{=taom_career_ram_rider}Ram Rider"
           description="{=taom_career_ram_rider_desc}A dwarven cavalry warrior mounted on a great war-ram, charging through tight mountain passes where horses cannot tread."
           portrait_sprite="career_ram_rider_portrait"
@@ -630,7 +630,7 @@
   <!-- RIVENDELL (rivendell)                                      -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="blade_dancer"
+  <Career id="blade_dancer" rank1_name="{=taom_career_rank1_blade_dancer}Ñoldor Bladesman" rank2_name="{=taom_career_rank2_blade_dancer}Blade of the Golden Flower" rank3_name="{=taom_career_rank3_blade_dancer}Blademaster of Imladris"
           display_name="{=taom_career_blade_dancer}Ñoldor Blademaster"
           description="{=taom_career_blade_dancer_desc}A graceful elven warrior who weaves through battle like flowing water, striking with ancient blades forged in the First Age."
           portrait_sprite="career_blade_dancer_portrait"
@@ -650,7 +650,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="elven_archer"
+  <Career id="elven_archer" rank1_name="{=taom_career_rank1_elven_archer}Ñoldor Bowman" rank2_name="{=taom_career_rank2_elven_archer}Sentinel of the Heavenly Arch" rank3_name="{=taom_career_rank3_elven_archer}Warden of Imladris"
           display_name="{=taom_career_elven_archer}Ñoldor Sentinel"
           description="{=taom_career_elven_archer_desc}A peerless marksman of Imladris whose arrows fly true across vast distances, guided by centuries of practice."
           portrait_sprite="career_elven_archer_portrait"
@@ -670,7 +670,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="rivendell_knight"
+  <Career id="rivendell_knight" rank1_name="{=taom_career_rank1_rivendell_knight}Ohtar of Imladris" rank2_name="{=taom_career_rank2_rivendell_knight}Roquen of Imladris" rank3_name="{=taom_career_rank3_rivendell_knight}Knight of the Golden Flower"
           display_name="{=taom_career_rivendell_knight}Ñoldor Knight"
           description="{=taom_career_rivendell_knight_desc}A mounted warrior of Elrond's household who rides to war on swift elven steeds, a beacon of hope against the shadow."
           portrait_sprite="career_rivendell_knight_portrait"
@@ -694,7 +694,7 @@
   <!-- LOTHLORIEN (lothlorien)                                    -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="warden"
+  <Career id="warden" rank1_name="{=taom_career_rank1_warden}Warden of the Eaves" rank2_name="{=taom_career_rank2_warden}Marchwarden of Lórien" rank3_name="{=taom_career_rank3_warden}Captain of the Marchwardens"
           display_name="{=taom_career_warden}Warden of Lorien"
           description="{=taom_career_warden_desc}A silent guardian of the Golden Wood who strikes without warning, defending the borders of Lothlorien with ancient resolve."
           portrait_sprite="career_warden_portrait"
@@ -714,7 +714,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="galadhrim_archer"
+  <Career id="galadhrim_archer" rank1_name="{=taom_career_rank1_galadhrim_archer}Bowman of the Galadhrim" rank2_name="{=taom_career_rank2_galadhrim_archer}Archer of the Mallorn-Eaves" rank3_name="{=taom_career_rank3_galadhrim_archer}Bowmaster of the Golden Wood"
           display_name="{=taom_career_galadhrim_archer}Galadhrim Archer"
           description="{=taom_career_galadhrim_archer_desc}An elite bowman of Lothlorien who rains silver arrows from the mallorn canopy, each shot guided by the light of Galadriel."
           portrait_sprite="career_galadhrim_archer_portrait"
@@ -734,7 +734,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="sentinel"
+  <Career id="sentinel" rank1_name="{=taom_career_rank1_sentinel}Rider of the Egladil" rank2_name="{=taom_career_rank2_sentinel}Tirith of the Golden Wood" rank3_name="{=taom_career_rank3_sentinel}Thalion of Caras Galadhon"
           display_name="{=taom_career_sentinel}Sentinel of the Golden Wood"
           description="{=taom_career_sentinel_desc}A mounted guardian who patrols the borders of Lorien, riding swift and silent under the golden eaves."
           portrait_sprite="career_sentinel_portrait"
@@ -758,7 +758,7 @@
   <!-- MIRKWOOD (mirkwood)                                        -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="shadow_walker"
+  <Career id="shadow_walker" rank1_name="{=taom_career_rank1_shadow_walker}Forest Stalker" rank2_name="{=taom_career_rank2_shadow_walker}Shadow of Taur-nu-Fuin" rank3_name="{=taom_career_rank3_shadow_walker}Bane of Spiders"
           display_name="{=taom_career_shadow_walker}Shadow Walker"
           description="{=taom_career_shadow_walker_desc}A woodland elf who moves unseen through the darkened paths of Mirkwood, dispatching spiders and orcs in silence."
           portrait_sprite="career_shadow_walker_portrait"
@@ -778,7 +778,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="silvan_archer"
+  <Career id="silvan_archer" rank1_name="{=taom_career_rank1_silvan_archer}Greenwood Bowman" rank2_name="{=taom_career_rank2_silvan_archer}Silvan Marksman" rank3_name="{=taom_career_rank3_silvan_archer}Archer of the Elvenking"
           display_name="{=taom_career_silvan_archer}Silvan Archer"
           description="{=taom_career_silvan_archer_desc}A keen-eyed hunter of the Woodland Realm who strikes from the treetops with lethal precision."
           portrait_sprite="career_silvan_archer_portrait"
@@ -798,7 +798,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="elk_rider"
+  <Career id="elk_rider" rank1_name="{=taom_career_rank1_elk_rider}Woodland Outrider" rank2_name="{=taom_career_rank2_elk_rider}Elk-Warden of Mirkwood" rank3_name="{=taom_career_rank3_elk_rider}Antlered Lord of Eryn Lasgalen"
           display_name="{=taom_career_elk_rider}Elk Rider"
           description="{=taom_career_elk_rider_desc}A mounted warrior of Thranduil's guard who rides great forest elk into battle, crashing through underbrush and foe alike."
           portrait_sprite="career_elk_rider_portrait"
@@ -822,7 +822,7 @@
   <!-- ISENGARD (isengard)                                        -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="uruk_berserker"
+  <Career id="uruk_berserker" rank1_name="{=taom_career_rank1_uruk_berserker}Pit-Spawned Uruk" rank2_name="{=taom_career_rank2_uruk_berserker}Fighting Uruk-hai" rank3_name="{=taom_career_rank3_uruk_berserker}White Hand Reaver"
           display_name="{=taom_career_uruk_berserker}Uruk-Hai Berserker"
           description="{=taom_career_uruk_berserker_desc}A frenzied Uruk-hai who charges headlong into battle, growing stronger as wounds fuel an unstoppable rage."
           portrait_sprite="career_uruk_berserker_portrait"
@@ -842,7 +842,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="uruk_crossbow"
+  <Career id="uruk_crossbow" rank1_name="{=taom_career_rank1_uruk_crossbow}Forge-Armed Uruk" rank2_name="{=taom_career_rank2_uruk_crossbow}Orthanc Marksman" rank3_name="{=taom_career_rank3_uruk_crossbow}White Hand Sharpshooter"
           display_name="{=taom_career_uruk_crossbow}Uruk-Hai Crossbowman"
           description="{=taom_career_uruk_crossbow_desc}A disciplined Uruk marksman wielding Saruman's iron crossbows, delivering devastating volleys from Orthanc's forges."
           portrait_sprite="career_uruk_crossbow_portrait"
@@ -862,7 +862,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="warg_scout"
+  <Career id="warg_scout" rank1_name="{=taom_career_rank1_warg_scout}Wolf-Rider" rank2_name="{=taom_career_rank2_warg_scout}Warg-Scout of Isengard" rank3_name="{=taom_career_rank3_warg_scout}Hunter of the White Hand"
           display_name="{=taom_career_warg_scout}Warg Rider"
           description="{=taom_career_warg_scout_desc}A cunning Uruk rider mounted on a swift warg, scouting ahead of the armies of Isengard and running down fleeing prey."
           portrait_sprite="career_warg_scout_portrait"
@@ -886,7 +886,7 @@
   <!-- GUNDABAD (gundabad)                                        -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="cave_troll_master"
+  <Career id="cave_troll_master" rank1_name="{=taom_career_rank1_cave_troll_master}Pit-Driver" rank2_name="{=taom_career_rank2_cave_troll_master}Troll-Goad of Gundabad" rank3_name="{=taom_career_rank3_cave_troll_master}Maker of Broken Trolls"
           display_name="{=taom_career_cave_troll_master}Gundabad Berserker"
           description="{=taom_career_cave_troll_master_desc}A brutal orc chieftain of Gundabad who commands cave trolls in battle, driving them forward with whip and cunning."
           portrait_sprite="career_cave_troll_master_portrait"
@@ -906,7 +906,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="goblin_sniper"
+  <Career id="goblin_sniper" rank1_name="{=taom_career_rank1_goblin_sniper}Crag-Lurker" rank2_name="{=taom_career_rank2_goblin_sniper}High Pass Stalker" rank3_name="{=taom_career_rank3_goblin_sniper}Eye of Gundabad"
           display_name="{=taom_career_goblin_sniper}Gundabad Orc Hunter"
           description="{=taom_career_goblin_sniper_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows."
           portrait_sprite="career_goblin_sniper_portrait"
@@ -926,7 +926,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="warg_pack_leader"
+  <Career id="warg_pack_leader" rank1_name="{=taom_career_rank1_warg_pack_leader}Warg-Rider of the Pack" rank2_name="{=taom_career_rank2_warg_pack_leader}Fell Wolf-Captain" rank3_name="{=taom_career_rank3_warg_pack_leader}Wolf-Lord of the Wild Hunt"
           display_name="{=taom_career_warg_pack_leader}Gundabad Fell Warg Pack Leader"
           description="{=taom_career_warg_pack_leader_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains."
           portrait_sprite="career_warg_pack_leader_portrait"
@@ -950,7 +950,7 @@
   <!-- DOL GULDUR (dolguldur)                                     -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="shadow_warrior"
+  <Career id="shadow_warrior" rank1_name="{=taom_career_rank1_shadow_warrior}Thrall of the Shadow" rank2_name="{=taom_career_rank2_shadow_warrior}Servant of Dol Guldur" rank3_name="{=taom_career_rank3_shadow_warrior}Black Hand of the Necromancer"
           display_name="{=taom_career_shadow_warrior}Shadow Warrior"
           description="{=taom_career_shadow_warrior_desc}A dark champion of Dol Guldur empowered by the Necromancer's sorcery, draining the life of all who stand before them."
           portrait_sprite="career_shadow_warrior_portrait"
@@ -970,7 +970,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="necromancer_acolyte"
+  <Career id="necromancer_acolyte" rank1_name="{=taom_career_rank1_necromancer_acolyte}Acolyte of Sorcery" rank2_name="{=taom_career_rank2_necromancer_acolyte}Weaver of the Black Breath" rank3_name="{=taom_career_rank3_necromancer_acolyte}Master of Dol Guldur"
           display_name="{=taom_career_necromancer_acolyte}Necromancer Acolyte"
           description="{=taom_career_necromancer_acolyte_desc}A fell sorcerer who channels dark energies to weaken enemies from afar, sowing terror and decay across the battlefield."
           portrait_sprite="career_necromancer_acolyte_portrait"
@@ -990,7 +990,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="fell_rider"
+  <Career id="fell_rider" rank1_name="{=taom_career_rank1_fell_rider}Black Rider" rank2_name="{=taom_career_rank2_fell_rider}Fell Rider" rank3_name="{=taom_career_rank3_fell_rider}Shadow of the East"
           display_name="{=taom_career_fell_rider}Fell Rider"
           description="{=taom_career_fell_rider_desc}A dread horseman of the shadow host who spreads fear with every charge, their mount wreathed in dark mist."
           portrait_sprite="career_fell_rider_portrait"
@@ -1014,7 +1014,7 @@
   <!-- UMBAR (umbar)                                              -->
   <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <Career id="corsair_boarder"
+  <Career id="corsair_boarder" rank1_name="{=taom_career_rank1_corsair_boarder}Deck Reaver" rank2_name="{=taom_career_rank2_corsair_boarder}Corsair of the Haven" rank3_name="{=taom_career_rank3_corsair_boarder}Black Reaver of Umbar"
           display_name="{=taom_career_corsair_boarder}Corsair Boarder"
           description="{=taom_career_corsair_boarder_desc}A cutlass-wielding sea reaver who storms enemy decks with ruthless ferocity, taking what the Corsairs desire."
           portrait_sprite="career_corsair_boarder_portrait"
@@ -1034,7 +1034,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="corsair_crossbow"
+  <Career id="corsair_crossbow" rank1_name="{=taom_career_rank1_corsair_crossbow}Rigging Marksman" rank2_name="{=taom_career_rank2_corsair_crossbow}Corsair Sharpshooter" rank3_name="{=taom_career_rank3_corsair_crossbow}Throng-cleaver of the Fleet"
           display_name="{=taom_career_corsair_crossbow}Corsair Crossbow"
           description="{=taom_career_corsair_crossbow_desc}A sharpshooter of the Corsair fleet who picks off helmsmen and officers from the rigging with deadly accuracy."
           portrait_sprite="career_corsair_crossbow_portrait"
@@ -1054,7 +1054,7 @@
     </ChoiceGroups>
   </Career>
 
-  <Career id="corsair_captain"
+  <Career id="corsair_captain" rank1_name="{=taom_career_rank1_corsair_captain}Master of the Black Fleet" rank2_name="{=taom_career_rank2_corsair_captain}Captain of Ships" rank3_name="{=taom_career_rank3_corsair_captain}Lord of Umbar"
           display_name="{=taom_career_corsair_captain}Corsair Captain"
           description="{=taom_career_corsair_captain_desc}A seasoned fleet commander who leads from the prow, inspiring crews with promises of plunder and glory on the high seas."
           portrait_sprite="career_corsair_captain_portrait"

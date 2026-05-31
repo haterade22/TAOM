@@ -1,394 +1,394 @@
 [
     {
         "career_string_id": "ranger_of_ithilien",
-        "skills": ["Bow", "Scouting"],
-        "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "captain_of_osgiliath",
-        "skills": ["OneHanded", "Leadership"],
-        "attribute": "Social",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "knight_of_belfalas",
-        "skills": ["Riding", "Polearm"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "black_uruk_captain",
-        "skills": ["TwoHanded", "Athletics"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "mulkerhili_cultist",
-        "skills": ["Bow", "Roguery"],
-        "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "snaga_rider",
-        "skills": ["Riding", "Throwing"],
-        "attribute": "Control",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "olog_hai_warchief",
-        "skills": ["TwoHanded", "Leadership"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "marksman_of_aldburg",
-        "skills": ["Bow", "Tactics"],
-        "attribute": "Control",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "eotheod_windrider",
-        "skills": ["Riding", "Polearm"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "watchman_of_stangard",
-        "skills": ["OneHanded", "Scouting"],
-        "attribute": "Endurance",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "avanc_luth_raider",
-        "skills": ["TwoHanded", "Athletics"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "wolfskin_hunter",
-        "skills": ["Bow", "Scouting"],
-        "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "clanguard_rider",
-        "skills": ["Riding", "OneHanded"],
-        "attribute": "Control",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "blademaster_of_ren",
-        "skills": ["OneHanded", "Athletics"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "steppe_bowmaster",
-        "skills": ["Bow", "Riding"],
-        "attribute": "Control",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "chariot_warlord",
-        "skills": ["Polearm", "Leadership"],
-        "attribute": "Social",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "tribesman_of_jelut",
-        "skills": ["Throwing", "Athletics"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "pezarsani_javelineer",
-        "skills": ["Throwing", "Scouting"],
-        "attribute": "Control",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "mahud_beast_rider",
-        "skills": ["Riding", "Polearm"],
-        "attribute": "Endurance",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "codyan_legionaire",
-        "skills": ["OneHanded", "Tactics"],
-        "attribute": "Endurance",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "lokhas_drus_marksman",
-        "skills": ["Bow", "Scouting"],
-        "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "balchoth_kan",
-        "skills": ["Riding", "Leadership"],
-        "attribute": "Social",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "dale_guardsman",
-        "skills": ["OneHanded", "Tactics"],
-        "attribute": "Endurance",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "dale_marksman",
-        "skills": ["Crossbow", "Engineering"],
-        "attribute": "Intelligence",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "dale_outrider",
-        "skills": ["Riding", "Scouting"],
-        "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "ironguard",
-        "skills": ["TwoHanded", "Athletics"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "crossbow_master",
-        "skills": ["Crossbow", "Engineering"],
-        "attribute": "Intelligence",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "ram_rider",
-        "skills": ["Riding", "Polearm"],
-        "attribute": "Endurance",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "blade_dancer",
-        "skills": ["OneHanded", "Athletics"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "elven_archer",
-        "skills": ["Bow", "Medicine"],
-        "attribute": "Control",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "rivendell_knight",
-        "skills": ["Riding", "Polearm"],
-        "attribute": "Endurance",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "warden",
-        "skills": ["Polearm", "Tactics"],
-        "attribute": "Endurance",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "galadhrim_archer",
-        "skills": ["Bow", "Scouting"],
-        "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "sentinel",
-        "skills": ["OneHanded", "Medicine"],
-        "attribute": "Intelligence",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "shadow_walker",
-        "skills": ["Roguery", "Scouting"],
-        "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "silvan_archer",
-        "skills": ["Bow", "Athletics"],
-        "attribute": "Control",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "elk_rider",
-        "skills": ["Riding", "Polearm"],
-        "attribute": "Endurance",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "uruk_berserker",
-        "skills": ["TwoHanded", "Athletics"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "uruk_crossbow",
-        "skills": ["Crossbow", "Engineering"],
-        "attribute": "Intelligence",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "warg_scout",
-        "skills": ["Riding", "Scouting"],
-        "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "goblin_sniper",
-        "skills": ["Bow", "Roguery"],
-        "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "cave_troll_master",
-        "skills": ["TwoHanded", "Leadership"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "warg_pack_leader",
-        "skills": ["Riding", "Tactics"],
-        "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "shadow_warrior",
-        "skills": ["OneHanded", "Roguery"],
-        "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "necromancer_acolyte",
-        "skills": ["Medicine", "Charm"],
-        "attribute": "Intelligence",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "fell_rider",
-        "skills": ["Riding", "Scouting"],
-        "attribute": "Cunning",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "corsair_boarder",
-        "skills": ["OneHanded", "Athletics"],
-        "attribute": "Vigor",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "corsair_crossbow",
-        "skills": ["Crossbow", "Trade"],
-        "attribute": "Control",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     },
     {
         "career_string_id": "corsair_captain",
-        "skills": ["Leadership", "Charm"],
-        "attribute": "Social",
-        "focus_to_add": 1,
-        "skill_level_to_add": 10,
-        "attribute_level_to_add": 1
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     }
 ]

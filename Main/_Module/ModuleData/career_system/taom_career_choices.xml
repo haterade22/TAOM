@@ -12,7 +12,7 @@
   </Choice>
 
   <!-- T1-A: Offensive (ranged damage) -->
-  <ChoiceGroup id="ranger_of_ithilien_t1_a" career_id="ranger_of_ithilien" tier="1">
+  <ChoiceGroup id="ranger_of_ithilien_t1_a" display_name="{=taom_career_grp_ranger_of_ithilien_t1_a}Hunter of the Ithilien Road" career_id="ranger_of_ithilien" tier="1">
     <Choice id="ranger_of_ithilien_t1_a_key" type="Keystone"
             description="{=taom_roi_t1a_key}Ambush radius increased, arrows deal bonus damage from stealth."
             icon_sprite="career_choice_roi_t1a_key">
@@ -43,7 +43,7 @@
   </ChoiceGroup>
 
   <!-- T1-B: Defensive (stealth/evasion) -->
-  <ChoiceGroup id="ranger_of_ithilien_t1_b" career_id="ranger_of_ithilien" tier="1">
+  <ChoiceGroup id="ranger_of_ithilien_t1_b" display_name="{=taom_career_grp_ranger_of_ithilien_t1_b}Watcher of Henneth Annûn" career_id="ranger_of_ithilien" tier="1">
     <Choice id="ranger_of_ithilien_t1_b_key" type="Keystone"
             description="{=taom_roi_t1b_key}Ambush duration extended, granting additional evasion."
             icon_sprite="career_choice_roi_t1b_key">
@@ -74,7 +74,7 @@
   </ChoiceGroup>
 
   <!-- T2-A: Utility (scouting/movement) -->
-  <ChoiceGroup id="ranger_of_ithilien_t2_a" career_id="ranger_of_ithilien" tier="2">
+  <ChoiceGroup id="ranger_of_ithilien_t2_a" display_name="{=taom_career_grp_ranger_of_ithilien_t2_a}Scout of North Ithilien" career_id="ranger_of_ithilien" tier="2">
     <Choice id="ranger_of_ithilien_t2_a_key" type="Keystone"
             description="{=taom_roi_t2a_key}Ambush charge requirement reduced, activating more frequently."
             icon_sprite="career_choice_roi_t2a_key">
@@ -105,7 +105,7 @@
   </ChoiceGroup>
 
   <!-- T2-B: Specialization (archery mastery) -->
-  <ChoiceGroup id="ranger_of_ithilien_t2_b" career_id="ranger_of_ithilien" tier="2">
+  <ChoiceGroup id="ranger_of_ithilien_t2_b" display_name="{=taom_career_grp_ranger_of_ithilien_t2_b}Bowman of Faramir" career_id="ranger_of_ithilien" tier="2">
     <Choice id="ranger_of_ithilien_t2_b_key" type="Keystone"
             description="{=taom_roi_t2b_key}Ambush also increases troop ranged damage while active."
             icon_sprite="career_choice_roi_t2b_key">
@@ -136,7 +136,7 @@
   </ChoiceGroup>
 
   <!-- T3-A: Capstone offensive -->
-  <ChoiceGroup id="ranger_of_ithilien_t3_a" career_id="ranger_of_ithilien" tier="3">
+  <ChoiceGroup id="ranger_of_ithilien_t3_a" display_name="{=taom_career_grp_ranger_of_ithilien_t3_a}Arrow of the Forbidden Pool" career_id="ranger_of_ithilien" tier="3">
     <Choice id="ranger_of_ithilien_t3_a_key" type="Keystone"
             description="{=taom_roi_t3a_key}Ambush radius greatly increased, devastating arrow volleys."
             icon_sprite="career_choice_roi_t3a_key">
@@ -167,7 +167,7 @@
   </ChoiceGroup>
 
   <!-- T3-B: Capstone defensive -->
-  <ChoiceGroup id="ranger_of_ithilien_t3_b" career_id="ranger_of_ithilien" tier="3">
+  <ChoiceGroup id="ranger_of_ithilien_t3_b" display_name="{=taom_career_grp_ranger_of_ithilien_t3_b}Shadow of Emyn Arnen" career_id="ranger_of_ithilien" tier="3">
     <Choice id="ranger_of_ithilien_t3_b_key" type="Keystone"
             description="{=taom_roi_t3b_key}Ambush charge greatly reduced, becoming nearly always available."
             icon_sprite="career_choice_roi_t3b_key">
@@ -207,7 +207,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="captain_of_osgiliath_t1_a" career_id="captain_of_osgiliath" tier="1">
+  <ChoiceGroup id="captain_of_osgiliath_t1_a" display_name="{=taom_career_grp_captain_of_osgiliath_t1_a}Warden of the East Bank" career_id="captain_of_osgiliath" tier="1">
     <Choice id="captain_of_osgiliath_t1_a_key" type="Keystone"
             description="{=taom_cop_t1a_key}Career Ability radius increased, commanding wider river approaches."
             icon_sprite="career_choice_cop_t1a_key">
@@ -237,7 +237,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="captain_of_osgiliath_t1_b" career_id="captain_of_osgiliath" tier="1">
+  <ChoiceGroup id="captain_of_osgiliath_t1_b" display_name="{=taom_career_grp_captain_of_osgiliath_t1_b}Keeper of the Anduin Crossing" career_id="captain_of_osgiliath" tier="1">
     <Choice id="captain_of_osgiliath_t1_b_key" type="Keystone"
             description="{=taom_cop_t1b_key}Career Ability duration extended, holding the harbor line longer."
             icon_sprite="career_choice_cop_t1b_key">
@@ -267,7 +267,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="captain_of_osgiliath_t2_a" career_id="captain_of_osgiliath" tier="2">
+  <ChoiceGroup id="captain_of_osgiliath_t2_a" display_name="{=taom_career_grp_captain_of_osgiliath_t2_a}Vanguard of the Rammas" career_id="captain_of_osgiliath" tier="2">
     <Choice id="captain_of_osgiliath_t2_a_key" type="Keystone"
             description="{=taom_cop_t2a_key}Career Ability charge requirement reduced, allowing more frequent activation."
             icon_sprite="career_choice_cop_t2a_key">
@@ -297,7 +297,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="captain_of_osgiliath_t2_b" career_id="captain_of_osgiliath" tier="2">
+  <ChoiceGroup id="captain_of_osgiliath_t2_b" display_name="{=taom_career_grp_captain_of_osgiliath_t2_b}Sword of the Last Bridge" career_id="captain_of_osgiliath" tier="2">
     <Choice id="captain_of_osgiliath_t2_b_key" type="Keystone"
             description="{=taom_cop_t2b_key}Career Ability also boosts troop melee damage while active."
             icon_sprite="career_choice_cop_t2b_key">
@@ -327,7 +327,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="captain_of_osgiliath_t3_a" career_id="captain_of_osgiliath" tier="3">
+  <ChoiceGroup id="captain_of_osgiliath_t3_a" display_name="{=taom_career_grp_captain_of_osgiliath_t3_a}Host of Faramir" career_id="captain_of_osgiliath" tier="3">
     <Choice id="captain_of_osgiliath_t3_a_key" type="Keystone"
             description="{=taom_cop_t3a_key}Career Ability grants troop resistance while active, fortifying the fleet."
             icon_sprite="career_choice_cop_t3a_key">
@@ -357,7 +357,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="captain_of_osgiliath_t3_b" career_id="captain_of_osgiliath" tier="3">
+  <ChoiceGroup id="captain_of_osgiliath_t3_b" display_name="{=taom_career_grp_captain_of_osgiliath_t3_b}Lord of the Dome of Stars" career_id="captain_of_osgiliath" tier="3">
     <Choice id="captain_of_osgiliath_t3_b_key" type="Keystone"
             description="{=taom_cop_t3b_key}Career Ability radius and duration maximized, dominating every waterway."
             icon_sprite="career_choice_cop_t3b_key">
@@ -398,7 +398,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="knight_of_belfalas_t1_a" career_id="knight_of_belfalas" tier="1">
+  <ChoiceGroup id="knight_of_belfalas_t1_a" display_name="{=taom_career_grp_knight_of_belfalas_t1_a}Lancer of Dol Amroth" career_id="knight_of_belfalas" tier="1">
     <Choice id="knight_of_belfalas_t1_a_key" type="Keystone"
             description="{=taom_kob_t1a_key}Stampede ability radius increased, sweeping through wider enemy formations."
             icon_sprite="career_choice_kob_t1a_key">
@@ -428,7 +428,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="knight_of_belfalas_t1_b" career_id="knight_of_belfalas" tier="1">
+  <ChoiceGroup id="knight_of_belfalas_t1_b" display_name="{=taom_career_grp_knight_of_belfalas_t1_b}Warden of the Bay" career_id="knight_of_belfalas" tier="1">
     <Choice id="knight_of_belfalas_t1_b_key" type="Keystone"
             description="{=taom_kob_t1b_key}Stampede duration extended, maintaining the charge longer."
             icon_sprite="career_choice_kob_t1b_key">
@@ -458,7 +458,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="knight_of_belfalas_t2_a" career_id="knight_of_belfalas" tier="2">
+  <ChoiceGroup id="knight_of_belfalas_t2_a" display_name="{=taom_career_grp_knight_of_belfalas_t2_a}Rider of the Silver Swan" career_id="knight_of_belfalas" tier="2">
     <Choice id="knight_of_belfalas_t2_a_key" type="Keystone"
             description="{=taom_kob_t2a_key}Stampede charge requirement reduced for more frequent thundering charges."
             icon_sprite="career_choice_kob_t2a_key">
@@ -488,7 +488,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="knight_of_belfalas_t2_b" career_id="knight_of_belfalas" tier="2">
+  <ChoiceGroup id="knight_of_belfalas_t2_b" display_name="{=taom_career_grp_knight_of_belfalas_t2_b}Shieldwall of Imrahil" career_id="knight_of_belfalas" tier="2">
     <Choice id="knight_of_belfalas_t2_b_key" type="Keystone"
             description="{=taom_kob_t2b_key}Stampede also boosts troop resistance while active."
             icon_sprite="career_choice_kob_t2b_key">
@@ -518,7 +518,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="knight_of_belfalas_t3_a" career_id="knight_of_belfalas" tier="3">
+  <ChoiceGroup id="knight_of_belfalas_t3_a" display_name="{=taom_career_grp_knight_of_belfalas_t3_a}Knight of the Swan-Prow" career_id="knight_of_belfalas" tier="3">
     <Choice id="knight_of_belfalas_t3_a_key" type="Keystone"
             description="{=taom_kob_t3a_key}Stampede grants troop morale while active, inspiring the host of Belfalas."
             icon_sprite="career_choice_kob_t3a_key">
@@ -548,7 +548,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="knight_of_belfalas_t3_b" career_id="knight_of_belfalas" tier="3">
+  <ChoiceGroup id="knight_of_belfalas_t3_b" display_name="{=taom_career_grp_knight_of_belfalas_t3_b}Charge of Dol Amroth" career_id="knight_of_belfalas" tier="3">
     <Choice id="knight_of_belfalas_t3_b_key" type="Keystone"
             description="{=taom_kob_t3b_key}Stampede radius and duration maximized — the charge of Dol Amroth is unstoppable."
             icon_sprite="career_choice_kob_t3b_key">
@@ -592,7 +592,7 @@
     </PassiveEffects>
   </Choice>
 
-  <ChoiceGroup id="black_uruk_captain_t1_a" career_id="black_uruk_captain" tier="1">
+  <ChoiceGroup id="black_uruk_captain_t1_a" display_name="{=taom_career_grp_black_uruk_captain_t1_a}Forge-Tempered Hide" career_id="black_uruk_captain" tier="1">
     <Choice id="black_uruk_captain_t1_a_key" type="Keystone"
             display_name="{=taom_buc_t1_a_key}Iron Hide"
             description="{=taom_buc_t1_a_key_desc}Tempered by forge and war, your hide turns blades. Bloodrage radius +3."
@@ -638,7 +638,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="black_uruk_captain_t1_b" career_id="black_uruk_captain" tier="1">
+  <ChoiceGroup id="black_uruk_captain_t1_b" display_name="{=taom_career_grp_black_uruk_captain_t1_b}First Blood-Frenzy" career_id="black_uruk_captain" tier="1">
     <Choice id="black_uruk_captain_t1_b_key" type="Keystone"
             display_name="{=taom_buc_t1_b_key}Blood Frenzy"
             description="{=taom_buc_t1_b_key_desc}Pain only sharpens your hunger. Bloodrage duration +4s."
@@ -684,7 +684,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="black_uruk_captain_t2_a" career_id="black_uruk_captain" tier="2">
+  <ChoiceGroup id="black_uruk_captain_t2_a" display_name="{=taom_career_grp_black_uruk_captain_t2_a}Berserker of Lugbúrz" career_id="black_uruk_captain" tier="2">
     <Choice id="black_uruk_captain_t2_a_key" type="Keystone"
             display_name="{=taom_buc_t2_a_key}Berserker's Pact"
             description="{=taom_buc_t2_a_key_desc}You need less charge to unleash destruction. Bloodrage charge cost -20."
@@ -730,7 +730,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="black_uruk_captain_t2_b" career_id="black_uruk_captain" tier="2">
+  <ChoiceGroup id="black_uruk_captain_t2_b" display_name="{=taom_career_grp_black_uruk_captain_t2_b}Unending Wrath" career_id="black_uruk_captain" tier="2">
     <Choice id="black_uruk_captain_t2_b_key" type="Keystone"
             display_name="{=taom_buc_t2_b_key}Extended Rage"
             description="{=taom_buc_t2_b_key_desc}The blood-frenzy holds longer. Bloodrage duration +2s."
@@ -776,7 +776,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="black_uruk_captain_t3_a" career_id="black_uruk_captain" tier="3">
+  <ChoiceGroup id="black_uruk_captain_t3_a" display_name="{=taom_career_grp_black_uruk_captain_t3_a}Wrath of the Lidless Eye" career_id="black_uruk_captain" tier="3">
     <Choice id="black_uruk_captain_t3_a_key" type="Keystone"
             display_name="{=taom_buc_t3_a_key}Eye of Sauron"
             description="{=taom_buc_t3_a_key_desc}Sauron's dark will empowers the rage to envelop all nearby. Bloodrage radius +5."
@@ -822,7 +822,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="black_uruk_captain_t3_b" career_id="black_uruk_captain" tier="3">
+  <ChoiceGroup id="black_uruk_captain_t3_b" display_name="{=taom_career_grp_black_uruk_captain_t3_b}Captain of the Black Gate" career_id="black_uruk_captain" tier="3">
     <Choice id="black_uruk_captain_t3_b_key" type="Keystone"
             display_name="{=taom_buc_t3_b_key}Indomitable"
             description="{=taom_buc_t3_b_key_desc}You barely need to unleash the rage -- it is ever-present. Bloodrage charge cost -30."
@@ -880,7 +880,7 @@
     </PassiveEffects>
   </Choice>
 
-  <ChoiceGroup id="mulkerhili_cultist_t1_a" career_id="mulkerhili_cultist" tier="1">
+  <ChoiceGroup id="mulkerhili_cultist_t1_a" display_name="{=taom_career_grp_mulkerhili_cultist_t1_a}Venomed Litany" career_id="mulkerhili_cultist" tier="1">
     <Choice id="mulkerhili_cultist_t1_a_key" type="Keystone"
             display_name="{=taom_mc_t1_a_key}Poisoned Barb"
             description="{=taom_mc_t1_a_key_desc}Your arrows carry vile toxins. Voice of the One radius +3."
@@ -926,7 +926,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="mulkerhili_cultist_t1_b" career_id="mulkerhili_cultist" tier="1">
+  <ChoiceGroup id="mulkerhili_cultist_t1_b" display_name="{=taom_career_grp_mulkerhili_cultist_t1_b}Sauron's Whispered Word" career_id="mulkerhili_cultist" tier="1">
     <Choice id="mulkerhili_cultist_t1_b_key" type="Keystone"
             display_name="{=taom_mc_t1_b_key}Sauron's Whisper"
             description="{=taom_mc_t1_b_key_desc}The voice carries further. Voice of the One duration +4s."
@@ -972,7 +972,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="mulkerhili_cultist_t2_a" career_id="mulkerhili_cultist" tier="2">
+  <ChoiceGroup id="mulkerhili_cultist_t2_a" display_name="{=taom_career_grp_mulkerhili_cultist_t2_a}Congregation of Dread" career_id="mulkerhili_cultist" tier="2">
     <Choice id="mulkerhili_cultist_t2_a_key" type="Keystone"
             display_name="{=taom_mc_t2_a_key}Congregation of Dread"
             description="{=taom_mc_t2_a_key_desc}More of the faithful answer your call. Voice of the One charge cost -20."
@@ -1018,7 +1018,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="mulkerhili_cultist_t2_b" career_id="mulkerhili_cultist" tier="2">
+  <ChoiceGroup id="mulkerhili_cultist_t2_b" display_name="{=taom_career_grp_mulkerhili_cultist_t2_b}Sermon of the Eye" career_id="mulkerhili_cultist" tier="2">
     <Choice id="mulkerhili_cultist_t2_b_key" type="Keystone"
             display_name="{=taom_mc_t2_b_key}Dark Sermon"
             description="{=taom_mc_t2_b_key_desc}Your prayer extends over the battlefield. Voice of the One duration +2s."
@@ -1064,7 +1064,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="mulkerhili_cultist_t3_a" career_id="mulkerhili_cultist" tier="3">
+  <ChoiceGroup id="mulkerhili_cultist_t3_a" display_name="{=taom_career_grp_mulkerhili_cultist_t3_a}Gaze of the Dark Lord" career_id="mulkerhili_cultist" tier="3">
     <Choice id="mulkerhili_cultist_t3_a_key" type="Keystone"
             display_name="{=taom_mc_t3_a_key}Sauron's Gaze"
             description="{=taom_mc_t3_a_key_desc}The Dark Lord's eye sweeps the field. Voice radius +5."
@@ -1110,7 +1110,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="mulkerhili_cultist_t3_b" career_id="mulkerhili_cultist" tier="3">
+  <ChoiceGroup id="mulkerhili_cultist_t3_b" display_name="{=taom_career_grp_mulkerhili_cultist_t3_b}The Ring's Dark Covenant" career_id="mulkerhili_cultist" tier="3">
     <Choice id="mulkerhili_cultist_t3_b_key" type="Keystone"
             display_name="{=taom_mc_t3_b_key}Dark Covenant"
             description="{=taom_mc_t3_b_key_desc}The voice requires less sacrifice to invoke. Voice charge cost -30."
@@ -1168,7 +1168,7 @@
     </PassiveEffects>
   </Choice>
 
-  <ChoiceGroup id="snaga_rider_t1_a" career_id="snaga_rider" tier="1">
+  <ChoiceGroup id="snaga_rider_t1_a" display_name="{=taom_career_grp_snaga_rider_t1_a}Shadow Gallop" career_id="snaga_rider" tier="1">
     <Choice id="snaga_rider_t1_a_key" type="Keystone"
             display_name="{=taom_sr_t1_a_key}Shadow Gallop"
             description="{=taom_sr_t1_a_key_desc}You vanish into Mordor's dark. Sneak-Creeping radius +3."
@@ -1214,7 +1214,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="snaga_rider_t1_b" career_id="snaga_rider" tier="1">
+  <ChoiceGroup id="snaga_rider_t1_b" display_name="{=taom_career_grp_snaga_rider_t1_b}Rider of the Dark" career_id="snaga_rider" tier="1">
     <Choice id="snaga_rider_t1_b_key" type="Keystone"
             display_name="{=taom_sr_t1_b_key}Night Rider"
             description="{=taom_sr_t1_b_key_desc}The dark protects you longer. Sneak-Creeping duration +4s."
@@ -1260,7 +1260,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="snaga_rider_t2_a" career_id="snaga_rider" tier="2">
+  <ChoiceGroup id="snaga_rider_t2_a" display_name="{=taom_career_grp_snaga_rider_t2_a}Strike from Shadow" career_id="snaga_rider" tier="2">
     <Choice id="snaga_rider_t2_a_key" type="Keystone"
             display_name="{=taom_sr_t2_a_key}Ambush Surge"
             description="{=taom_sr_t2_a_key_desc}You strike before the enemy knows you're there. Sneak-Creeping charge cost -20."
@@ -1306,7 +1306,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="snaga_rider_t2_b" career_id="snaga_rider" tier="2">
+  <ChoiceGroup id="snaga_rider_t2_b" display_name="{=taom_career_grp_snaga_rider_t2_b}Ghost of Cirith Ungol" career_id="snaga_rider" tier="2">
     <Choice id="snaga_rider_t2_b_key" type="Keystone"
             display_name="{=taom_sr_t2_b_key}Ghost Rider"
             description="{=taom_sr_t2_b_key_desc}The shadow clings to you longer. Sneak-Creeping duration +2s."
@@ -1352,7 +1352,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="snaga_rider_t3_a" career_id="snaga_rider" tier="3">
+  <ChoiceGroup id="snaga_rider_t3_a" display_name="{=taom_career_grp_snaga_rider_t3_a}Stampede of Nurn" career_id="snaga_rider" tier="3">
     <Choice id="snaga_rider_t3_a_key" type="Keystone"
             display_name="{=taom_sr_t3_a_key}Shadow Stampede"
             description="{=taom_sr_t3_a_key_desc}An army of riders materialises from the dark. Sneak-Creeping radius +5."
@@ -1398,7 +1398,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="snaga_rider_t3_b" career_id="snaga_rider" tier="3">
+  <ChoiceGroup id="snaga_rider_t3_b" display_name="{=taom_career_grp_snaga_rider_t3_b}Vanguard of Mordor" career_id="snaga_rider" tier="3">
     <Choice id="snaga_rider_t3_b_key" type="Keystone"
             display_name="{=taom_sr_t3_b_key}Mordor's Vanguard"
             description="{=taom_sr_t3_b_key_desc}You strike first, always. Sneak-Creeping charge cost -30."
@@ -1456,7 +1456,7 @@
     </PassiveEffects>
   </Choice>
 
-  <ChoiceGroup id="olog_hai_warchief_t1_a" career_id="olog_hai_warchief" tier="1">
+  <ChoiceGroup id="olog_hai_warchief_t1_a" display_name="{=taom_career_grp_olog_hai_warchief_t1_a}Earth-Render" career_id="olog_hai_warchief" tier="1">
     <Choice id="olog_hai_warchief_t1_a_key" type="Keystone"
             display_name="{=taom_ohw_t1_a_key}Ground Trembler"
             description="{=taom_ohw_t1_a_key_desc}Your stomp shakes the earth. Hammer Down radius +3."
@@ -1502,7 +1502,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="olog_hai_warchief_t1_b" career_id="olog_hai_warchief" tier="1">
+  <ChoiceGroup id="olog_hai_warchief_t1_b" display_name="{=taom_career_grp_olog_hai_warchief_t1_b}Tireless Hammer" career_id="olog_hai_warchief" tier="1">
     <Choice id="olog_hai_warchief_t1_b_key" type="Keystone"
             display_name="{=taom_ohw_t1_b_key}Sustained Smash"
             description="{=taom_ohw_t1_b_key_desc}The hammering does not let up. Hammer Down duration +4s."
@@ -1548,7 +1548,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="olog_hai_warchief_t2_a" career_id="olog_hai_warchief" tier="2">
+  <ChoiceGroup id="olog_hai_warchief_t2_a" display_name="{=taom_career_grp_olog_hai_warchief_t2_a}Rampaging Colossus" career_id="olog_hai_warchief" tier="2">
     <Choice id="olog_hai_warchief_t2_a_key" type="Keystone"
             display_name="{=taom_ohw_t2_a_key}Rampaging Colossus"
             description="{=taom_ohw_t2_a_key_desc}You need no great cause to rampage. Hammer Down charge cost -20."
@@ -1594,7 +1594,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="olog_hai_warchief_t2_b" career_id="olog_hai_warchief" tier="2">
+  <ChoiceGroup id="olog_hai_warchief_t2_b" display_name="{=taom_career_grp_olog_hai_warchief_t2_b}Sunlit Onslaught" career_id="olog_hai_warchief" tier="2">
     <Choice id="olog_hai_warchief_t2_b_key" type="Keystone"
             display_name="{=taom_ohw_t2_b_key}Extended Rampage"
             description="{=taom_ohw_t2_b_key_desc}The smashing continues. Hammer Down duration +2s."
@@ -1640,7 +1640,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="olog_hai_warchief_t3_a" career_id="olog_hai_warchief" tier="3">
+  <ChoiceGroup id="olog_hai_warchief_t3_a" display_name="{=taom_career_grp_olog_hai_warchief_t3_a}Hammer of the Morannon" career_id="olog_hai_warchief" tier="3">
     <Choice id="olog_hai_warchief_t3_a_key" type="Keystone"
             display_name="{=taom_ohw_t3_a_key}World Shaker"
             description="{=taom_ohw_t3_a_key_desc}Your hammer blow is felt across the entire battlefield. Hammer Down radius +5."
@@ -1686,7 +1686,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="olog_hai_warchief_t3_b" career_id="olog_hai_warchief" tier="3">
+  <ChoiceGroup id="olog_hai_warchief_t3_b" display_name="{=taom_career_grp_olog_hai_warchief_t3_b}Troll-folk of Sauron" career_id="olog_hai_warchief" tier="3">
     <Choice id="olog_hai_warchief_t3_b_key" type="Keystone"
             display_name="{=taom_ohw_t3_b_key}Ever-Raging"
             description="{=taom_ohw_t3_b_key_desc}You barely need a reason to smash. Hammer Down charge cost -30."
@@ -1743,7 +1743,7 @@
     </PassiveEffects>
   </Choice>
 
-  <ChoiceGroup id="marksman_of_aldburg_t1_a" career_id="marksman_of_aldburg" tier="1">
+  <ChoiceGroup id="marksman_of_aldburg_t1_a" display_name="{=taom_career_grp_marksman_of_aldburg_t1_a}Hawk of the Eastfold" career_id="marksman_of_aldburg" tier="1">
     <Choice id="marksman_of_aldburg_t1_a_key" type="Keystone"
             display_name="{=taom_moa_t1_a_key}Eagle Eye"
             description="{=taom_moa_t1_a_key_desc}Your sight is keener than any hawk. Light Fletching radius +3."
@@ -1789,7 +1789,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="marksman_of_aldburg_t1_b" career_id="marksman_of_aldburg" tier="1">
+  <ChoiceGroup id="marksman_of_aldburg_t1_b" display_name="{=taom_career_grp_marksman_of_aldburg_t1_b}Warden of the Folde" career_id="marksman_of_aldburg" tier="1">
     <Choice id="marksman_of_aldburg_t1_b_key" type="Keystone"
             display_name="{=taom_moa_t1_b_key}Steadfast Draw"
             description="{=taom_moa_t1_b_key_desc}You hold your draw longer for the perfect shot. Light Fletching duration +4s."
@@ -1835,7 +1835,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="marksman_of_aldburg_t2_a" career_id="marksman_of_aldburg" tier="2">
+  <ChoiceGroup id="marksman_of_aldburg_t2_a" display_name="{=taom_career_grp_marksman_of_aldburg_t2_a}Captain of the Muster" career_id="marksman_of_aldburg" tier="2">
     <Choice id="marksman_of_aldburg_t2_a_key" type="Keystone"
             display_name="{=taom_moa_t2_a_key}Volley Captain"
             description="{=taom_moa_t2_a_key_desc}You coordinate devastating mass fire. Light Fletching charge cost -20."
@@ -1881,7 +1881,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="marksman_of_aldburg_t2_b" career_id="marksman_of_aldburg" tier="2">
+  <ChoiceGroup id="marksman_of_aldburg_t2_b" display_name="{=taom_career_grp_marksman_of_aldburg_t2_b}Shadow of Fangorn" career_id="marksman_of_aldburg" tier="2">
     <Choice id="marksman_of_aldburg_t2_b_key" type="Keystone"
             display_name="{=taom_moa_t2_b_key}Sustained Barrage"
             description="{=taom_moa_t2_b_key_desc}The rain of arrows does not abate. Light Fletching duration +2s."
@@ -1927,7 +1927,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="marksman_of_aldburg_t3_a" career_id="marksman_of_aldburg" tier="3">
+  <ChoiceGroup id="marksman_of_aldburg_t3_a" display_name="{=taom_career_grp_marksman_of_aldburg_t3_a}Bowman of the Mark" career_id="marksman_of_aldburg" tier="3">
     <Choice id="marksman_of_aldburg_t3_a_key" type="Keystone"
             display_name="{=taom_moa_t3_a_key}Legendary Shot"
             description="{=taom_moa_t3_a_key_desc}Songs will be sung of your skill. Light Fletching radius +5."
@@ -1973,7 +1973,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="marksman_of_aldburg_t3_b" career_id="marksman_of_aldburg" tier="3">
+  <ChoiceGroup id="marksman_of_aldburg_t3_b" display_name="{=taom_career_grp_marksman_of_aldburg_t3_b}Host of the Riddermark" career_id="marksman_of_aldburg" tier="3">
     <Choice id="marksman_of_aldburg_t3_b_key" type="Keystone"
             display_name="{=taom_moa_t3_b_key}Reflexive Loose"
             description="{=taom_moa_t3_b_key_desc}The nock and release is pure muscle memory. Light Fletching charge cost -30."
@@ -2031,7 +2031,7 @@
     </PassiveEffects>
   </Choice>
 
-  <ChoiceGroup id="eotheod_windrider_t1_a" career_id="eotheod_windrider" tier="1">
+  <ChoiceGroup id="eotheod_windrider_t1_a" display_name="{=taom_career_grp_eotheod_windrider_t1_a}Heir of Eorl" career_id="eotheod_windrider" tier="1">
     <Choice id="eotheod_windrider_t1_a_key" type="Keystone"
             display_name="{=taom_ew_t1_a_key}Ancestor's Thunder"
             description="{=taom_ew_t1_a_key_desc}The warcry echoes across the plain. Warcry of Eorl radius +3."
@@ -2077,7 +2077,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="eotheod_windrider_t1_b" career_id="eotheod_windrider" tier="1">
+  <ChoiceGroup id="eotheod_windrider_t1_b" display_name="{=taom_career_grp_eotheod_windrider_t1_b}Rider of the Wold" career_id="eotheod_windrider" tier="1">
     <Choice id="eotheod_windrider_t1_b_key" type="Keystone"
             display_name="{=taom_ew_t1_b_key}Sustained Warcry"
             description="{=taom_ew_t1_b_key_desc}The thunder rolls on. Warcry of Eorl duration +4s."
@@ -2123,7 +2123,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="eotheod_windrider_t2_a" career_id="eotheod_windrider" tier="2">
+  <ChoiceGroup id="eotheod_windrider_t2_a" display_name="{=taom_career_grp_eotheod_windrider_t2_a}Oath of Eorl" career_id="eotheod_windrider" tier="2">
     <Choice id="eotheod_windrider_t2_a_key" type="Keystone"
             display_name="{=taom_ew_t2_a_key}Eorl's Legacy"
             description="{=taom_ew_t2_a_key_desc}The ancestors ride with you always. Warcry charge cost -20."
@@ -2169,7 +2169,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="eotheod_windrider_t2_b" career_id="eotheod_windrider" tier="2">
+  <ChoiceGroup id="eotheod_windrider_t2_b" display_name="{=taom_career_grp_eotheod_windrider_t2_b}Lord of the Mearas" career_id="eotheod_windrider" tier="2">
     <Choice id="eotheod_windrider_t2_b_key" type="Keystone"
             display_name="{=taom_ew_t2_b_key}Riding Song"
             description="{=taom_ew_t2_b_key_desc}The song of the Eotheod carries the riders onward. Warcry duration +2s."
@@ -2215,7 +2215,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="eotheod_windrider_t3_a" career_id="eotheod_windrider" tier="3">
+  <ChoiceGroup id="eotheod_windrider_t3_a" display_name="{=taom_career_grp_eotheod_windrider_t3_a}Charge of the Pelennor" career_id="eotheod_windrider" tier="3">
     <Choice id="eotheod_windrider_t3_a_key" type="Keystone"
             display_name="{=taom_ew_t3_a_key}Charge of the Rohirrim"
             description="{=taom_ew_t3_a_key_desc}The greatest charge in the age of men. Warcry radius +5."
@@ -2261,7 +2261,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="eotheod_windrider_t3_b" career_id="eotheod_windrider" tier="3">
+  <ChoiceGroup id="eotheod_windrider_t3_b" display_name="{=taom_career_grp_eotheod_windrider_t3_b}Song of the Riddermark" career_id="eotheod_windrider" tier="3">
     <Choice id="eotheod_windrider_t3_b_key" type="Keystone"
             display_name="{=taom_ew_t3_b_key}Ever Ready"
             description="{=taom_ew_t3_b_key_desc}The warcry is always on your lips. Warcry charge cost -30."
@@ -2319,7 +2319,7 @@
     </PassiveEffects>
   </Choice>
 
-  <ChoiceGroup id="watchman_of_stangard_t1_a" career_id="watchman_of_stangard" tier="1">
+  <ChoiceGroup id="watchman_of_stangard_t1_a" display_name="{=taom_career_grp_watchman_of_stangard_t1_a}Ford of the Limlight" career_id="watchman_of_stangard" tier="1">
     <Choice id="watchman_of_stangard_t1_a_key" type="Keystone"
             display_name="{=taom_ws_t1_a_key}River Ford Mastery"
             description="{=taom_ws_t1_a_key_desc}You know every crossing. River Navigator radius +3."
@@ -2365,7 +2365,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="watchman_of_stangard_t1_b" career_id="watchman_of_stangard" tier="1">
+  <ChoiceGroup id="watchman_of_stangard_t1_b" display_name="{=taom_career_grp_watchman_of_stangard_t1_b}Watch of the Wold" career_id="watchman_of_stangard" tier="1">
     <Choice id="watchman_of_stangard_t1_b_key" type="Keystone"
             display_name="{=taom_ws_t1_b_key}Sustained Watch"
             description="{=taom_ws_t1_b_key_desc}The watch is maintained through all trials. River Navigator duration +4s."
@@ -2411,7 +2411,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="watchman_of_stangard_t2_a" career_id="watchman_of_stangard" tier="2">
+  <ChoiceGroup id="watchman_of_stangard_t2_a" display_name="{=taom_career_grp_watchman_of_stangard_t2_a}Shieldman of the Entwash" career_id="watchman_of_stangard" tier="2">
     <Choice id="watchman_of_stangard_t2_a_key" type="Keystone"
             display_name="{=taom_ws_t2_a_key}Prepared Crossing"
             description="{=taom_ws_t2_a_key_desc}You have scouted this ground for years. River Navigator charge cost -20."
@@ -2457,7 +2457,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="watchman_of_stangard_t2_b" career_id="watchman_of_stangard" tier="2">
+  <ChoiceGroup id="watchman_of_stangard_t2_b" display_name="{=taom_career_grp_watchman_of_stangard_t2_b}Warden of the Anduin" career_id="watchman_of_stangard" tier="2">
     <Choice id="watchman_of_stangard_t2_b_key" type="Keystone"
             display_name="{=taom_ws_t2_b_key}Tireless Patrol"
             description="{=taom_ws_t2_b_key_desc}You patrol without pause or rest. River Navigator duration +2s."
@@ -2503,7 +2503,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="watchman_of_stangard_t3_a" career_id="watchman_of_stangard" tier="3">
+  <ChoiceGroup id="watchman_of_stangard_t3_a" display_name="{=taom_career_grp_watchman_of_stangard_t3_a}Bastion of the Mark" career_id="watchman_of_stangard" tier="3">
     <Choice id="watchman_of_stangard_t3_a_key" type="Keystone"
             display_name="{=taom_ws_t3_a_key}Stangard's Bastion"
             description="{=taom_ws_t3_a_key_desc}You are the last line between civilisation and darkness. River Navigator radius +5."
@@ -2549,7 +2549,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="watchman_of_stangard_t3_b" career_id="watchman_of_stangard" tier="3">
+  <ChoiceGroup id="watchman_of_stangard_t3_b" display_name="{=taom_career_grp_watchman_of_stangard_t3_b}Warden of the Riddermark" career_id="watchman_of_stangard" tier="3">
     <Choice id="watchman_of_stangard_t3_b_key" type="Keystone"
             display_name="{=taom_ws_t3_b_key}Ever Vigilant"
             description="{=taom_ws_t3_b_key_desc}The watch is always maintained. River Navigator charge cost -30."
@@ -2606,7 +2606,7 @@
     </PassiveEffects>
   </Choice>
 
-  <ChoiceGroup id="avanc_luth_raider_t1_a" career_id="avanc_luth_raider" tier="1">
+  <ChoiceGroup id="avanc_luth_raider_t1_a" display_name="{=taom_career_grp_avanc_luth_raider_t1_a}Hill-Clan Berserker" career_id="avanc_luth_raider" tier="1">
     <Choice id="avanc_luth_raider_t1_a_key" type="Keystone"
             display_name="{=taom_alr_t1_a_key}Clan Battle-Rage"
             description="{=taom_alr_t1_a_key_desc}The rage of your ancestors flows through you. Savage Rush radius +3."
@@ -2652,7 +2652,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="avanc_luth_raider_t1_b" career_id="avanc_luth_raider" tier="1">
+  <ChoiceGroup id="avanc_luth_raider_t1_b" display_name="{=taom_career_grp_avanc_luth_raider_t1_b}Sworn Axe-Thrower" career_id="avanc_luth_raider" tier="1">
     <Choice id="avanc_luth_raider_t1_b_key" type="Keystone"
             display_name="{=taom_alr_t1_b_key}Sustained Fury"
             description="{=taom_alr_t1_b_key_desc}The rage burns longer in your breast. Savage Rush duration +4s."
@@ -2698,7 +2698,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="avanc_luth_raider_t2_a" career_id="avanc_luth_raider" tier="2">
+  <ChoiceGroup id="avanc_luth_raider_t2_a" display_name="{=taom_career_grp_avanc_luth_raider_t2_a}Blood-Debt Reaver" career_id="avanc_luth_raider" tier="2">
     <Choice id="avanc_luth_raider_t2_a_key" type="Keystone"
             display_name="{=taom_alr_t2_a_key}Blood Debt"
             description="{=taom_alr_t2_a_key_desc}The clans have old scores to settle. Savage Rush charge cost -20."
@@ -2744,7 +2744,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="avanc_luth_raider_t2_b" career_id="avanc_luth_raider" tier="2">
+  <ChoiceGroup id="avanc_luth_raider_t2_b" display_name="{=taom_career_grp_avanc_luth_raider_t2_b}Warchant Hillman" career_id="avanc_luth_raider" tier="2">
     <Choice id="avanc_luth_raider_t2_b_key" type="Keystone"
             display_name="{=taom_alr_t2_b_key}Extended Rampage"
             description="{=taom_alr_t2_b_key_desc}The fury does not abate. Savage Rush duration +2s."
@@ -2790,7 +2790,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="avanc_luth_raider_t3_a" career_id="avanc_luth_raider" tier="3">
+  <ChoiceGroup id="avanc_luth_raider_t3_a" display_name="{=taom_career_grp_avanc_luth_raider_t3_a}Avanc-lúth War-Chieftain" career_id="avanc_luth_raider" tier="3">
     <Choice id="avanc_luth_raider_t3_a_key" type="Keystone"
             display_name="{=taom_alr_t3_a_key}Blood of Avanc-luth"
             description="{=taom_alr_t3_a_key_desc}The ancient clan's fury envelops the entire battlefield. Savage Rush radius +5."
@@ -2836,7 +2836,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="avanc_luth_raider_t3_b" career_id="avanc_luth_raider" tier="3">
+  <ChoiceGroup id="avanc_luth_raider_t3_b" display_name="{=taom_career_grp_avanc_luth_raider_t3_b}Lord of the Warhost" career_id="avanc_luth_raider" tier="3">
     <Choice id="avanc_luth_raider_t3_b_key" type="Keystone"
             display_name="{=taom_alr_t3_b_key}Perpetual Rage"
             description="{=taom_alr_t3_b_key_desc}The rage needs little provocation. Savage Rush charge cost -30."
@@ -2894,7 +2894,7 @@
     </PassiveEffects>
   </Choice>
 
-  <ChoiceGroup id="wolfskin_hunter_t1_a" career_id="wolfskin_hunter" tier="1">
+  <ChoiceGroup id="wolfskin_hunter_t1_a" display_name="{=taom_career_grp_wolfskin_hunter_t1_a}Pack-Marked Stalker" career_id="wolfskin_hunter" tier="1">
     <Choice id="wolfskin_hunter_t1_a_key" type="Keystone"
             display_name="{=taom_wh_t1_a_key}Pack Leader's Mark"
             description="{=taom_wh_t1_a_key_desc}Your mark draws the whole pack to the kill. Marked Prey radius +3."
@@ -2940,7 +2940,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="wolfskin_hunter_t1_b" career_id="wolfskin_hunter" tier="1">
+  <ChoiceGroup id="wolfskin_hunter_t1_b" display_name="{=taom_career_grp_wolfskin_hunter_t1_b}Wolfskin Skulker" career_id="wolfskin_hunter" tier="1">
     <Choice id="wolfskin_hunter_t1_b_key" type="Keystone"
             display_name="{=taom_wh_t1_b_key}Extended Hunt"
             description="{=taom_wh_t1_b_key_desc}The mark persists through the chaos of battle. Marked Prey duration +4s."
@@ -2986,7 +2986,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="wolfskin_hunter_t2_a" career_id="wolfskin_hunter" tier="2">
+  <ChoiceGroup id="wolfskin_hunter_t2_a" display_name="{=taom_career_grp_wolfskin_hunter_t2_a}Throat-Shot Hunter" career_id="wolfskin_hunter" tier="2">
     <Choice id="wolfskin_hunter_t2_a_key" type="Keystone"
             display_name="{=taom_wh_t2_a_key}Pack Hunt"
             description="{=taom_wh_t2_a_key_desc}The whole pack descends without warning. Marked Prey charge cost -20."
@@ -3032,7 +3032,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="wolfskin_hunter_t2_b" career_id="wolfskin_hunter" tier="2">
+  <ChoiceGroup id="wolfskin_hunter_t2_b" display_name="{=taom_career_grp_wolfskin_hunter_t2_b}Ghost of the Hills" career_id="wolfskin_hunter" tier="2">
     <Choice id="wolfskin_hunter_t2_b_key" type="Keystone"
             display_name="{=taom_wh_t2_b_key}Sustained Mark"
             description="{=taom_wh_t2_b_key_desc}The mark is set deep and does not fade. Marked Prey duration +2s."
@@ -3078,7 +3078,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="wolfskin_hunter_t3_a" career_id="wolfskin_hunter" tier="3">
+  <ChoiceGroup id="wolfskin_hunter_t3_a" display_name="{=taom_career_grp_wolfskin_hunter_t3_a}Apex Wolfskin" career_id="wolfskin_hunter" tier="3">
     <Choice id="wolfskin_hunter_t3_a_key" type="Keystone"
             display_name="{=taom_wh_t3_a_key}Apex Predator"
             description="{=taom_wh_t3_a_key_desc}The mark of the Wolfskin leaves no survivors. Marked Prey radius +5."
@@ -3124,7 +3124,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="wolfskin_hunter_t3_b" career_id="wolfskin_hunter" tier="3">
+  <ChoiceGroup id="wolfskin_hunter_t3_b" display_name="{=taom_career_grp_wolfskin_hunter_t3_b}Master of the Great Pack" career_id="wolfskin_hunter" tier="3">
     <Choice id="wolfskin_hunter_t3_b_key" type="Keystone"
             display_name="{=taom_wh_t3_b_key}Endless Chase"
             description="{=taom_wh_t3_b_key_desc}The prey can never escape your mark. Marked Prey charge cost -30."
@@ -3182,7 +3182,7 @@
     </PassiveEffects>
   </Choice>
 
-  <ChoiceGroup id="clanguard_rider_t1_a" career_id="clanguard_rider" tier="1">
+  <ChoiceGroup id="clanguard_rider_t1_a" display_name="{=taom_career_grp_clanguard_rider_t1_a}Clan Thunder-Rider" career_id="clanguard_rider" tier="1">
     <Choice id="clanguard_rider_t1_a_key" type="Keystone"
             display_name="{=taom_cr_t1_a_key}Clan Thunder"
             description="{=taom_cr_t1_a_key_desc}The ground shakes as the riders descend. Warpack Charge radius +3."
@@ -3228,7 +3228,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="clanguard_rider_t1_b" career_id="clanguard_rider" tier="1">
+  <ChoiceGroup id="clanguard_rider_t1_b" display_name="{=taom_career_grp_clanguard_rider_t1_b}Sworn Clan-Escort" career_id="clanguard_rider" tier="1">
     <Choice id="clanguard_rider_t1_b_key" type="Keystone"
             display_name="{=taom_cr_t1_b_key}Sustained Charge"
             description="{=taom_cr_t1_b_key_desc}The warpack does not tire. Warpack Charge duration +4s."
@@ -3274,7 +3274,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="clanguard_rider_t2_a" career_id="clanguard_rider" tier="2">
+  <ChoiceGroup id="clanguard_rider_t2_a" display_name="{=taom_career_grp_clanguard_rider_t2_a}Warpack Vanguard" career_id="clanguard_rider" tier="2">
     <Choice id="clanguard_rider_t2_a_key" type="Keystone"
             display_name="{=taom_cr_t2_a_key}Warpack Unleashed"
             description="{=taom_cr_t2_a_key_desc}The pack is always ready to charge. Warpack Charge cost -20."
@@ -3320,7 +3320,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="clanguard_rider_t2_b" career_id="clanguard_rider" tier="2">
+  <ChoiceGroup id="clanguard_rider_t2_b" display_name="{=taom_career_grp_clanguard_rider_t2_b}Banner of the Hills" career_id="clanguard_rider" tier="2">
     <Choice id="clanguard_rider_t2_b_key" type="Keystone"
             display_name="{=taom_cr_t2_b_key}Endless Warpack"
             description="{=taom_cr_t2_b_key_desc}More riders join the charge each time. Warpack Charge duration +2s."
@@ -3366,7 +3366,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="clanguard_rider_t3_a" career_id="clanguard_rider" tier="3">
+  <ChoiceGroup id="clanguard_rider_t3_a" display_name="{=taom_career_grp_clanguard_rider_t3_a}Lord of All Riders" career_id="clanguard_rider" tier="3">
     <Choice id="clanguard_rider_t3_a_key" type="Keystone"
             display_name="{=taom_cr_t3_a_key}Clan of Riders"
             description="{=taom_cr_t3_a_key_desc}Every rider in Dunland rides under your banner. Warpack Charge radius +5."
@@ -3412,7 +3412,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="clanguard_rider_t3_b" career_id="clanguard_rider" tier="3">
+  <ChoiceGroup id="clanguard_rider_t3_b" display_name="{=taom_career_grp_clanguard_rider_t3_b}Everlasting Warpack" career_id="clanguard_rider" tier="3">
     <Choice id="clanguard_rider_t3_b_key" type="Keystone"
             display_name="{=taom_cr_t3_b_key}Ever Charging"
             description="{=taom_cr_t3_b_key_desc}The warpack is always at full fury. Warpack Charge cost -30."
@@ -3466,7 +3466,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="blademaster_of_ren_t1_a" career_id="blademaster_of_ren" tier="1">
+  <ChoiceGroup id="blademaster_of_ren_t1_a" display_name="{=taom_career_grp_blademaster_of_ren_t1_a}Court Duelist" career_id="blademaster_of_ren" tier="1">
     <Choice id="blademaster_of_ren_t1_a_key" type="Keystone" description="{=taom_bor_t1a_key}Twin Strike radius increased, blades reach further." icon_sprite="career_choice_bor_t1a_key">
       <Mutations><Mutation target_id="blademaster_of_ren_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -3484,7 +3484,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="blademaster_of_ren_t1_b" career_id="blademaster_of_ren" tier="1">
+  <ChoiceGroup id="blademaster_of_ren_t1_b" display_name="{=taom_career_grp_blademaster_of_ren_t1_b}Steadfast Blade" career_id="blademaster_of_ren" tier="1">
     <Choice id="blademaster_of_ren_t1_b_key" type="Keystone" description="{=taom_bor_t1b_key}Twin Strike duration extended, sustained dueling flurry." icon_sprite="career_choice_bor_t1b_key">
       <Mutations><Mutation target_id="blademaster_of_ren_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -3502,7 +3502,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="blademaster_of_ren_t2_a" career_id="blademaster_of_ren" tier="2">
+  <ChoiceGroup id="blademaster_of_ren_t2_a" display_name="{=taom_career_grp_blademaster_of_ren_t2_a}Relentless Edge" career_id="blademaster_of_ren" tier="2">
     <Choice id="blademaster_of_ren_t2_a_key" type="Keystone" description="{=taom_bor_t2a_key}Twin Strike charge reduced, relentless precision strikes." icon_sprite="career_choice_bor_t2a_key">
       <Mutations><Mutation target_id="blademaster_of_ren_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -3520,7 +3520,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="blademaster_of_ren_t2_b" career_id="blademaster_of_ren" tier="2">
+  <ChoiceGroup id="blademaster_of_ren_t2_b" display_name="{=taom_career_grp_blademaster_of_ren_t2_b}Warden of Rên" career_id="blademaster_of_ren" tier="2">
     <Choice id="blademaster_of_ren_t2_b_key" type="Keystone" description="{=taom_bor_t2b_key}Twin Strike boosts precision window, maximum damage on first strike." icon_sprite="career_choice_bor_t2b_key">
       <Mutations><Mutation target_id="blademaster_of_ren_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -3538,7 +3538,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="blademaster_of_ren_t3_a" career_id="blademaster_of_ren" tier="3">
+  <ChoiceGroup id="blademaster_of_ren_t3_a" display_name="{=taom_career_grp_blademaster_of_ren_t3_a}Whirlwind Slayer" career_id="blademaster_of_ren" tier="3">
     <Choice id="blademaster_of_ren_t3_a_key" type="Keystone" description="{=taom_bor_t3a_key}Twin Strike radius greatly expanded, death on all sides." icon_sprite="career_choice_bor_t3a_key">
       <Mutations><Mutation target_id="blademaster_of_ren_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -3556,7 +3556,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="blademaster_of_ren_t3_b" career_id="blademaster_of_ren" tier="3">
+  <ChoiceGroup id="blademaster_of_ren_t3_b" display_name="{=taom_career_grp_blademaster_of_ren_t3_b}Unbroken Swordlord" career_id="blademaster_of_ren" tier="3">
     <Choice id="blademaster_of_ren_t3_b_key" type="Keystone" description="{=taom_bor_t3b_key}Twin Strike charge greatly reduced, the blade is always ready." icon_sprite="career_choice_bor_t3b_key">
       <Mutations><Mutation target_id="blademaster_of_ren_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -3584,7 +3584,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
   </Choice>
 
-  <ChoiceGroup id="steppe_bowmaster_t1_a" career_id="steppe_bowmaster" tier="1">
+  <ChoiceGroup id="steppe_bowmaster_t1_a" display_name="{=taom_career_grp_steppe_bowmaster_t1_a}Plains Skirmisher" career_id="steppe_bowmaster" tier="1">
     <Choice id="steppe_bowmaster_t1_a_key" type="Keystone" description="{=taom_sb_t1a_key}Storm of Arrows radius increased, volleys cover more ground." icon_sprite="career_choice_sb_t1a_key">
       <Mutations><Mutation target_id="steppe_bowmaster_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -3602,7 +3602,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="steppe_bowmaster_t1_b" career_id="steppe_bowmaster" tier="1">
+  <ChoiceGroup id="steppe_bowmaster_t1_b" display_name="{=taom_career_grp_steppe_bowmaster_t1_b}Steady Volley" career_id="steppe_bowmaster" tier="1">
     <Choice id="steppe_bowmaster_t1_b_key" type="Keystone" description="{=taom_sb_t1b_key}Storm of Arrows duration extended, a relentless hail." icon_sprite="career_choice_sb_t1b_key">
       <Mutations><Mutation target_id="steppe_bowmaster_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -3620,7 +3620,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="steppe_bowmaster_t2_a" career_id="steppe_bowmaster" tier="2">
+  <ChoiceGroup id="steppe_bowmaster_t2_a" display_name="{=taom_career_grp_steppe_bowmaster_t2_a}Endless Quiver" career_id="steppe_bowmaster" tier="2">
     <Choice id="steppe_bowmaster_t2_a_key" type="Keystone" description="{=taom_sb_t2a_key}Storm of Arrows charge reduced, neverending quiver." icon_sprite="career_choice_sb_t2a_key">
       <Mutations><Mutation target_id="steppe_bowmaster_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -3638,7 +3638,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="steppe_bowmaster_t2_b" career_id="steppe_bowmaster" tier="2">
+  <ChoiceGroup id="steppe_bowmaster_t2_b" display_name="{=taom_career_grp_steppe_bowmaster_t2_b}Volley Warden" career_id="steppe_bowmaster" tier="2">
     <Choice id="steppe_bowmaster_t2_b_key" type="Keystone" description="{=taom_sb_t2b_key}Storm of Arrows boosts troop fire support while active." icon_sprite="career_choice_sb_t2b_key">
       <Mutations><Mutation target_id="steppe_bowmaster_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -3656,7 +3656,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="steppe_bowmaster_t3_a" career_id="steppe_bowmaster" tier="3">
+  <ChoiceGroup id="steppe_bowmaster_t3_a" display_name="{=taom_career_grp_steppe_bowmaster_t3_a}Stormcaller of Khand" career_id="steppe_bowmaster" tier="3">
     <Choice id="steppe_bowmaster_t3_a_key" type="Keystone" description="{=taom_sb_t3a_key}Storm of Arrows radius greatly expanded, an inescapable rain." icon_sprite="career_choice_sb_t3a_key">
       <Mutations><Mutation target_id="steppe_bowmaster_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -3674,7 +3674,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="steppe_bowmaster_t3_b" career_id="steppe_bowmaster" tier="3">
+  <ChoiceGroup id="steppe_bowmaster_t3_b" display_name="{=taom_career_grp_steppe_bowmaster_t3_b}Unceasing Hail" career_id="steppe_bowmaster" tier="3">
     <Choice id="steppe_bowmaster_t3_b_key" type="Keystone" description="{=taom_sb_t3b_key}Storm of Arrows charge greatly reduced, unceasing volleys." icon_sprite="career_choice_sb_t3b_key">
       <Mutations><Mutation target_id="steppe_bowmaster_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -3702,7 +3702,7 @@
     <PassiveEffect type="HorseChargeDamage" magnitude="0.05" operation="Add" is_percentage="true" />
   </Choice>
 
-  <ChoiceGroup id="chariot_warlord_t1_a" career_id="chariot_warlord" tier="1">
+  <ChoiceGroup id="chariot_warlord_t1_a" display_name="{=taom_career_grp_chariot_warlord_t1_a}Scythe-Rider" career_id="chariot_warlord" tier="1">
     <Choice id="chariot_warlord_t1_a_key" type="Keystone" description="{=taom_cw_t1a_key}Scything Charge radius expanded, blades cut a wider swathe." icon_sprite="career_choice_cw_t1a_key">
       <Mutations><Mutation target_id="chariot_warlord_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -3720,7 +3720,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="chariot_warlord_t1_b" career_id="chariot_warlord" tier="1">
+  <ChoiceGroup id="chariot_warlord_t1_b" display_name="{=taom_career_grp_chariot_warlord_t1_b}Iron Wheel" career_id="chariot_warlord" tier="1">
     <Choice id="chariot_warlord_t1_b_key" type="Keystone" description="{=taom_cw_t1b_key}Scything Charge duration extended, momentum sustained." icon_sprite="career_choice_cw_t1b_key">
       <Mutations><Mutation target_id="chariot_warlord_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -3738,7 +3738,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="chariot_warlord_t2_a" career_id="chariot_warlord" tier="2">
+  <ChoiceGroup id="chariot_warlord_t2_a" display_name="{=taom_career_grp_chariot_warlord_t2_a}Reaping Charge" career_id="chariot_warlord" tier="2">
     <Choice id="chariot_warlord_t2_a_key" type="Keystone" description="{=taom_cw_t2a_key}Scything Charge charge reduced, wheels never stop turning." icon_sprite="career_choice_cw_t2a_key">
       <Mutations><Mutation target_id="chariot_warlord_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -3756,7 +3756,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="chariot_warlord_t2_b" career_id="chariot_warlord" tier="2">
+  <ChoiceGroup id="chariot_warlord_t2_b" display_name="{=taom_career_grp_chariot_warlord_t2_b}Warded Team" career_id="chariot_warlord" tier="2">
     <Choice id="chariot_warlord_t2_b_key" type="Keystone" description="{=taom_cw_t2b_key}Scything Charge boosts mount resilience during the charge." icon_sprite="career_choice_cw_t2b_key">
       <Mutations><Mutation target_id="chariot_warlord_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -3774,7 +3774,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="chariot_warlord_t3_a" career_id="chariot_warlord" tier="3">
+  <ChoiceGroup id="chariot_warlord_t3_a" display_name="{=taom_career_grp_chariot_warlord_t3_a}Pelennor Reaper" career_id="chariot_warlord" tier="3">
     <Choice id="chariot_warlord_t3_a_key" type="Keystone" description="{=taom_cw_t3a_key}Scything Charge radius greatly expanded, an unstoppable AoE sweep." icon_sprite="career_choice_cw_t3a_key">
       <Mutations><Mutation target_id="chariot_warlord_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -3792,7 +3792,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="chariot_warlord_t3_b" career_id="chariot_warlord" tier="3">
+  <ChoiceGroup id="chariot_warlord_t3_b" display_name="{=taom_career_grp_chariot_warlord_t3_b}Wheel of Khand" career_id="chariot_warlord" tier="3">
     <Choice id="chariot_warlord_t3_b_key" type="Keystone" description="{=taom_cw_t3b_key}Scything Charge charge greatly reduced, the wheels grind ceaselessly." icon_sprite="career_choice_cw_t3b_key">
       <Mutations><Mutation target_id="chariot_warlord_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -3820,7 +3820,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="tribesman_of_jelut_t1_a" career_id="tribesman_of_jelut" tier="1">
+  <ChoiceGroup id="tribesman_of_jelut_t1_a" display_name="{=taom_career_grp_tribesman_of_jelut_t1_a}Dune Raider" career_id="tribesman_of_jelut" tier="1">
     <Choice id="tribesman_of_jelut_t1_a_key" type="Keystone" description="{=taom_toj_t1a_key}Poisoned Blades radius increased, the toxin spreads wider." icon_sprite="career_choice_toj_t1a_key">
       <Mutations><Mutation target_id="tribesman_of_jelut_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -3838,7 +3838,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="tribesman_of_jelut_t1_b" career_id="tribesman_of_jelut" tier="1">
+  <ChoiceGroup id="tribesman_of_jelut_t1_b" display_name="{=taom_career_grp_tribesman_of_jelut_t1_b}Desert Survivor" career_id="tribesman_of_jelut" tier="1">
     <Choice id="tribesman_of_jelut_t1_b_key" type="Keystone" description="{=taom_toj_t1b_key}Poisoned Blades duration extended, the toxin lingers." icon_sprite="career_choice_toj_t1b_key">
       <Mutations><Mutation target_id="tribesman_of_jelut_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -3856,7 +3856,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="tribesman_of_jelut_t2_a" career_id="tribesman_of_jelut" tier="2">
+  <ChoiceGroup id="tribesman_of_jelut_t2_a" display_name="{=taom_career_grp_tribesman_of_jelut_t2_a}Serpent-Fang Striker" career_id="tribesman_of_jelut" tier="2">
     <Choice id="tribesman_of_jelut_t2_a_key" type="Keystone" description="{=taom_toj_t2a_key}Poisoned Blades charge reduced, strike more frequently." icon_sprite="career_choice_toj_t2a_key">
       <Mutations><Mutation target_id="tribesman_of_jelut_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -3874,7 +3874,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="tribesman_of_jelut_t2_b" career_id="tribesman_of_jelut" tier="2">
+  <ChoiceGroup id="tribesman_of_jelut_t2_b" display_name="{=taom_career_grp_tribesman_of_jelut_t2_b}Wearer of the Sands" career_id="tribesman_of_jelut" tier="2">
     <Choice id="tribesman_of_jelut_t2_b_key" type="Keystone" description="{=taom_toj_t2b_key}Poisoned Blades boosts attrition, sapping enemy will to fight." icon_sprite="career_choice_toj_t2b_key">
       <Mutations><Mutation target_id="tribesman_of_jelut_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -3892,7 +3892,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="tribesman_of_jelut_t3_a" career_id="tribesman_of_jelut" tier="3">
+  <ChoiceGroup id="tribesman_of_jelut_t3_a" display_name="{=taom_career_grp_tribesman_of_jelut_t3_a}Venom of Haradwaith" career_id="tribesman_of_jelut" tier="3">
     <Choice id="tribesman_of_jelut_t3_a_key" type="Keystone" description="{=taom_toj_t3a_key}Poisoned Blades radius greatly expanded, a cloud of toxin." icon_sprite="career_choice_toj_t3a_key">
       <Mutations><Mutation target_id="tribesman_of_jelut_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -3910,7 +3910,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="tribesman_of_jelut_t3_b" career_id="tribesman_of_jelut" tier="3">
+  <ChoiceGroup id="tribesman_of_jelut_t3_b" display_name="{=taom_career_grp_tribesman_of_jelut_t3_b}Scourge of the Southrons" career_id="tribesman_of_jelut" tier="3">
     <Choice id="tribesman_of_jelut_t3_b_key" type="Keystone" description="{=taom_toj_t3b_key}Poisoned Blades charge greatly reduced, constant attrition." icon_sprite="career_choice_toj_t3b_key">
       <Mutations><Mutation target_id="tribesman_of_jelut_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -3938,7 +3938,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
   </Choice>
 
-  <ChoiceGroup id="pezarsani_javelineer_t1_a" career_id="pezarsani_javelineer" tier="1">
+  <ChoiceGroup id="pezarsani_javelineer_t1_a" display_name="{=taom_career_grp_pezarsani_javelineer_t1_a}Sun-Spear Skirmisher" career_id="pezarsani_javelineer" tier="1">
     <Choice id="pezarsani_javelineer_t1_a_key" type="Keystone" description="{=taom_pj_t1a_key}Sunfire Volley radius increased, javelins cover wider ground." icon_sprite="career_choice_pj_t1a_key">
       <Mutations><Mutation target_id="pezarsani_javelineer_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -3956,7 +3956,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="pezarsani_javelineer_t1_b" career_id="pezarsani_javelineer" tier="1">
+  <ChoiceGroup id="pezarsani_javelineer_t1_b" display_name="{=taom_career_grp_pezarsani_javelineer_t1_b}Roving Outrider" career_id="pezarsani_javelineer" tier="1">
     <Choice id="pezarsani_javelineer_t1_b_key" type="Keystone" description="{=taom_pj_t1b_key}Sunfire Volley duration extended, sustained harassing fire." icon_sprite="career_choice_pj_t1b_key">
       <Mutations><Mutation target_id="pezarsani_javelineer_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -3974,7 +3974,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="pezarsani_javelineer_t2_a" career_id="pezarsani_javelineer" tier="2">
+  <ChoiceGroup id="pezarsani_javelineer_t2_a" display_name="{=taom_career_grp_pezarsani_javelineer_t2_a}Sunfire Slinger" career_id="pezarsani_javelineer" tier="2">
     <Choice id="pezarsani_javelineer_t2_a_key" type="Keystone" description="{=taom_pj_t2a_key}Sunfire Volley charge reduced, never out of javelins." icon_sprite="career_choice_pj_t2a_key">
       <Mutations><Mutation target_id="pezarsani_javelineer_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -3992,7 +3992,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="pezarsani_javelineer_t2_b" career_id="pezarsani_javelineer" tier="2">
+  <ChoiceGroup id="pezarsani_javelineer_t2_b" display_name="{=taom_career_grp_pezarsani_javelineer_t2_b}Scarlet Screen" career_id="pezarsani_javelineer" tier="2">
     <Choice id="pezarsani_javelineer_t2_b_key" type="Keystone" description="{=taom_pj_t2b_key}Sunfire Volley boosts screening effectiveness while active." icon_sprite="career_choice_pj_t2b_key">
       <Mutations><Mutation target_id="pezarsani_javelineer_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -4010,7 +4010,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="pezarsani_javelineer_t3_a" career_id="pezarsani_javelineer" tier="3">
+  <ChoiceGroup id="pezarsani_javelineer_t3_a" display_name="{=taom_career_grp_pezarsani_javelineer_t3_a}Rain of Far Harad" career_id="pezarsani_javelineer" tier="3">
     <Choice id="pezarsani_javelineer_t3_a_key" type="Keystone" description="{=taom_pj_t3a_key}Sunfire Volley radius greatly expanded, an inescapable barrage." icon_sprite="career_choice_pj_t3a_key">
       <Mutations><Mutation target_id="pezarsani_javelineer_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -4028,7 +4028,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="pezarsani_javelineer_t3_b" career_id="pezarsani_javelineer" tier="3">
+  <ChoiceGroup id="pezarsani_javelineer_t3_b" display_name="{=taom_career_grp_pezarsani_javelineer_t3_b}Shadow of the Dunes" career_id="pezarsani_javelineer" tier="3">
     <Choice id="pezarsani_javelineer_t3_b_key" type="Keystone" description="{=taom_pj_t3b_key}Sunfire Volley charge greatly reduced, unrelenting harassment." icon_sprite="career_choice_pj_t3b_key">
       <Mutations><Mutation target_id="pezarsani_javelineer_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -4056,7 +4056,7 @@
     <PassiveEffect type="HorseChargeDamage" magnitude="0.05" operation="Add" is_percentage="true" />
   </Choice>
 
-  <ChoiceGroup id="mahud_beast_rider_t1_a" career_id="mahud_beast_rider" tier="1">
+  <ChoiceGroup id="mahud_beast_rider_t1_a" display_name="{=taom_career_grp_mahud_beast_rider_t1_a}Tusk Vanguard" career_id="mahud_beast_rider" tier="1">
     <Choice id="mahud_beast_rider_t1_a_key" type="Keystone" description="{=taom_mbr_t1a_key}Echoes of Mûmakan radius expanded, fear spreads further." icon_sprite="career_choice_mbr_t1a_key">
       <Mutations><Mutation target_id="mahud_beast_rider_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -4074,7 +4074,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="mahud_beast_rider_t1_b" career_id="mahud_beast_rider" tier="1">
+  <ChoiceGroup id="mahud_beast_rider_t1_b" display_name="{=taom_career_grp_mahud_beast_rider_t1_b}Beast-Warden" career_id="mahud_beast_rider" tier="1">
     <Choice id="mahud_beast_rider_t1_b_key" type="Keystone" description="{=taom_mbr_t1b_key}Echoes of Mûmakan duration extended, fear lingers." icon_sprite="career_choice_mbr_t1b_key">
       <Mutations><Mutation target_id="mahud_beast_rider_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -4092,7 +4092,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="mahud_beast_rider_t2_a" career_id="mahud_beast_rider" tier="2">
+  <ChoiceGroup id="mahud_beast_rider_t2_a" display_name="{=taom_career_grp_mahud_beast_rider_t2_a}Trampling Charge" career_id="mahud_beast_rider" tier="2">
     <Choice id="mahud_beast_rider_t2_a_key" type="Keystone" description="{=taom_mbr_t2a_key}Echoes of Mûmakan charge reduced, terror always imminent." icon_sprite="career_choice_mbr_t2a_key">
       <Mutations><Mutation target_id="mahud_beast_rider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -4110,7 +4110,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="mahud_beast_rider_t2_b" career_id="mahud_beast_rider" tier="2">
+  <ChoiceGroup id="mahud_beast_rider_t2_b" display_name="{=taom_career_grp_mahud_beast_rider_t2_b}Howdah Guardian" career_id="mahud_beast_rider" tier="2">
     <Choice id="mahud_beast_rider_t2_b_key" type="Keystone" description="{=taom_mbr_t2b_key}Echoes of Mûmakan boosts beast resilience during the charge." icon_sprite="career_choice_mbr_t2b_key">
       <Mutations><Mutation target_id="mahud_beast_rider_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -4128,7 +4128,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="mahud_beast_rider_t3_a" career_id="mahud_beast_rider" tier="3">
+  <ChoiceGroup id="mahud_beast_rider_t3_a" display_name="{=taom_career_grp_mahud_beast_rider_t3_a}Wrath of Mûmakan" career_id="mahud_beast_rider" tier="3">
     <Choice id="mahud_beast_rider_t3_a_key" type="Keystone" description="{=taom_mbr_t3a_key}Echoes of Mûmakan radius greatly expanded, the very earth shakes." icon_sprite="career_choice_mbr_t3a_key">
       <Mutations><Mutation target_id="mahud_beast_rider_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -4146,7 +4146,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="mahud_beast_rider_t3_b" career_id="mahud_beast_rider" tier="3">
+  <ChoiceGroup id="mahud_beast_rider_t3_b" display_name="{=taom_career_grp_mahud_beast_rider_t3_b}Lord of the Oliphaunts" career_id="mahud_beast_rider" tier="3">
     <Choice id="mahud_beast_rider_t3_b_key" type="Keystone" description="{=taom_mbr_t3b_key}Echoes of Mûmakan charge greatly reduced, unending dread." icon_sprite="career_choice_mbr_t3b_key">
       <Mutations><Mutation target_id="mahud_beast_rider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -4295,7 +4295,7 @@
     <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
   </Choice>
 
-  <ChoiceGroup id="codyan_legionaire_t1_a" career_id="codyan_legionaire" tier="1">
+  <ChoiceGroup id="codyan_legionaire_t1_a" display_name="{=taom_career_grp_codyan_legionaire_t1_a}Côdyan Vanguard" career_id="codyan_legionaire" tier="1">
     <Choice id="codyan_legionaire_t1_a_key" type="Keystone" description="{=taom_cl_t1_a_key}Shieldwall radius expanded, protecting a wider formation." icon_sprite="career_choice_cl_t1_a_key">
       <Mutations><Mutation target_id="codyan_legionaire_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -4313,7 +4313,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="codyan_legionaire_t1_b" career_id="codyan_legionaire" tier="1">
+  <ChoiceGroup id="codyan_legionaire_t1_b" display_name="{=taom_career_grp_codyan_legionaire_t1_b}Steadfast Shieldman" career_id="codyan_legionaire" tier="1">
     <Choice id="codyan_legionaire_t1_b_key" type="Keystone" description="{=taom_cl_t1_b_key}Shieldwall duration extended, enduring the longest assaults." icon_sprite="career_choice_cl_t1_b_key">
       <Mutations><Mutation target_id="codyan_legionaire_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -4331,7 +4331,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="codyan_legionaire_t2_a" career_id="codyan_legionaire" tier="2">
+  <ChoiceGroup id="codyan_legionaire_t2_a" display_name="{=taom_career_grp_codyan_legionaire_t2_a}Wall of Rhûn" career_id="codyan_legionaire" tier="2">
     <Choice id="codyan_legionaire_t2_a_key" type="Keystone" description="{=taom_cl_t2_a_key}Shieldwall charge reduced, rallying the wall more often." icon_sprite="career_choice_cl_t2_a_key">
       <Mutations><Mutation target_id="codyan_legionaire_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -4349,7 +4349,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="codyan_legionaire_t2_b" career_id="codyan_legionaire" tier="2">
+  <ChoiceGroup id="codyan_legionaire_t2_b" display_name="{=taom_career_grp_codyan_legionaire_t2_b}Ironclad Phalanx" career_id="codyan_legionaire" tier="2">
     <Choice id="codyan_legionaire_t2_b_key" type="Keystone" description="{=taom_cl_t2_b_key}Shieldwall fortifies troop armor while the wall holds." icon_sprite="career_choice_cl_t2_b_key">
       <Mutations><Mutation target_id="codyan_legionaire_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -4367,7 +4367,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="codyan_legionaire_t3_a" career_id="codyan_legionaire" tier="3">
+  <ChoiceGroup id="codyan_legionaire_t3_a" display_name="{=taom_career_grp_codyan_legionaire_t3_a}The Unbroken Line" career_id="codyan_legionaire" tier="3">
     <Choice id="codyan_legionaire_t3_a_key" type="Keystone" description="{=taom_cl_t3_a_key}Shieldwall radius greatly expanded, an impenetrable line." icon_sprite="career_choice_cl_t3_a_key">
       <Mutations><Mutation target_id="codyan_legionaire_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -4385,7 +4385,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="codyan_legionaire_t3_b" career_id="codyan_legionaire" tier="3">
+  <ChoiceGroup id="codyan_legionaire_t3_b" display_name="{=taom_career_grp_codyan_legionaire_t3_b}The Wall That Never Falls" career_id="codyan_legionaire" tier="3">
     <Choice id="codyan_legionaire_t3_b_key" type="Keystone" description="{=taom_cl_t3_b_key}Shieldwall charge greatly reduced, the legion never yields." icon_sprite="career_choice_cl_t3_b_key">
       <Mutations><Mutation target_id="codyan_legionaire_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -4413,7 +4413,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
   </Choice>
 
-  <ChoiceGroup id="lokhas_drus_marksman_t1_a" career_id="lokhas_drus_marksman" tier="1">
+  <ChoiceGroup id="lokhas_drus_marksman_t1_a" display_name="{=taom_career_grp_lokhas_drus_marksman_t1_a}Volley of Rhûn" career_id="lokhas_drus_marksman" tier="1">
     <Choice id="lokhas_drus_marksman_t1_a_key" type="Keystone" description="{=taom_ldm_t1_a_key}Piercing Volley radius expanded, blanketing wider targets." icon_sprite="career_choice_ldm_t1_a_key">
       <Mutations><Mutation target_id="lokhas_drus_marksman_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -4431,7 +4431,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="lokhas_drus_marksman_t1_b" career_id="lokhas_drus_marksman" tier="1">
+  <ChoiceGroup id="lokhas_drus_marksman_t1_b" display_name="{=taom_career_grp_lokhas_drus_marksman_t1_b}Steady Bowman" career_id="lokhas_drus_marksman" tier="1">
     <Choice id="lokhas_drus_marksman_t1_b_key" type="Keystone" description="{=taom_ldm_t1_b_key}Piercing Volley duration extended, relentless volleys." icon_sprite="career_choice_ldm_t1_b_key">
       <Mutations><Mutation target_id="lokhas_drus_marksman_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -4449,7 +4449,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="lokhas_drus_marksman_t2_a" career_id="lokhas_drus_marksman" tier="2">
+  <ChoiceGroup id="lokhas_drus_marksman_t2_a" display_name="{=taom_career_grp_lokhas_drus_marksman_t2_a}Stormbow Marksman" career_id="lokhas_drus_marksman" tier="2">
     <Choice id="lokhas_drus_marksman_t2_a_key" type="Keystone" description="{=taom_ldm_t2_a_key}Piercing Volley charge reduced, unceasing hail of bolts." icon_sprite="career_choice_ldm_t2_a_key">
       <Mutations><Mutation target_id="lokhas_drus_marksman_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -4467,7 +4467,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="lokhas_drus_marksman_t2_b" career_id="lokhas_drus_marksman" tier="2">
+  <ChoiceGroup id="lokhas_drus_marksman_t2_b" display_name="{=taom_career_grp_lokhas_drus_marksman_t2_b}Plate-Piercer" career_id="lokhas_drus_marksman" tier="2">
     <Choice id="lokhas_drus_marksman_t2_b_key" type="Keystone" description="{=taom_ldm_t2_b_key}Piercing Volley shreds armor with penetrating force." icon_sprite="career_choice_ldm_t2_b_key">
       <Mutations><Mutation target_id="lokhas_drus_marksman_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -4485,7 +4485,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="lokhas_drus_marksman_t3_a" career_id="lokhas_drus_marksman" tier="3">
+  <ChoiceGroup id="lokhas_drus_marksman_t3_a" display_name="{=taom_career_grp_lokhas_drus_marksman_t3_a}The Arrow-Storm" career_id="lokhas_drus_marksman" tier="3">
     <Choice id="lokhas_drus_marksman_t3_a_key" type="Keystone" description="{=taom_ldm_t3_a_key}Piercing Volley radius greatly expanded, no escape from the storm." icon_sprite="career_choice_ldm_t3_a_key">
       <Mutations><Mutation target_id="lokhas_drus_marksman_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -4503,7 +4503,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="lokhas_drus_marksman_t3_b" career_id="lokhas_drus_marksman" tier="3">
+  <ChoiceGroup id="lokhas_drus_marksman_t3_b" display_name="{=taom_career_grp_lokhas_drus_marksman_t3_b}The Unceasing Hail" career_id="lokhas_drus_marksman" tier="3">
     <Choice id="lokhas_drus_marksman_t3_b_key" type="Keystone" description="{=taom_ldm_t3_b_key}Piercing Volley charge greatly reduced, the volleys never cease." icon_sprite="career_choice_ldm_t3_b_key">
       <Mutations><Mutation target_id="lokhas_drus_marksman_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -4531,7 +4531,7 @@
     <PassiveEffect type="HorseChargeDamage" magnitude="0.05" operation="Add" is_percentage="true" />
   </Choice>
 
-  <ChoiceGroup id="balchoth_kan_t1_a" career_id="balchoth_kan" tier="1">
+  <ChoiceGroup id="balchoth_kan_t1_a" display_name="{=taom_career_grp_balchoth_kan_t1_a}Balchoth Rider" career_id="balchoth_kan" tier="1">
     <Choice id="balchoth_kan_t1_a_key" type="Keystone" description="{=taom_bk_t1_a_key}Unyielding radius expanded, rallying a broader tide of riders." icon_sprite="career_choice_bk_t1_a_key">
       <Mutations><Mutation target_id="balchoth_kan_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -4549,7 +4549,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="balchoth_kan_t1_b" career_id="balchoth_kan" tier="1">
+  <ChoiceGroup id="balchoth_kan_t1_b" display_name="{=taom_career_grp_balchoth_kan_t1_b}Fearless Outrider" career_id="balchoth_kan" tier="1">
     <Choice id="balchoth_kan_t1_b_key" type="Keystone" description="{=taom_bk_t1_b_key}Unyielding duration extended, sustaining the fearless charge." icon_sprite="career_choice_bk_t1_b_key">
       <Mutations><Mutation target_id="balchoth_kan_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -4567,7 +4567,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="balchoth_kan_t2_a" career_id="balchoth_kan" tier="2">
+  <ChoiceGroup id="balchoth_kan_t2_a" display_name="{=taom_career_grp_balchoth_kan_t2_a}Wainrider of Rhûn" career_id="balchoth_kan" tier="2">
     <Choice id="balchoth_kan_t2_a_key" type="Keystone" description="{=taom_bk_t2_a_key}Unyielding charge reduced, the warband never slows." icon_sprite="career_choice_bk_t2_a_key">
       <Mutations><Mutation target_id="balchoth_kan_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -4585,7 +4585,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="balchoth_kan_t2_b" career_id="balchoth_kan" tier="2">
+  <ChoiceGroup id="balchoth_kan_t2_b" display_name="{=taom_career_grp_balchoth_kan_t2_b}Iron Horseman" career_id="balchoth_kan" tier="2">
     <Choice id="balchoth_kan_t2_b_key" type="Keystone" description="{=taom_bk_t2_b_key}Unyielding fortifies mounts during the charge." icon_sprite="career_choice_bk_t2_b_key">
       <Mutations><Mutation target_id="balchoth_kan_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -4603,7 +4603,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="balchoth_kan_t3_a" career_id="balchoth_kan" tier="3">
+  <ChoiceGroup id="balchoth_kan_t3_a" display_name="{=taom_career_grp_balchoth_kan_t3_a}The Unstoppable Tide" career_id="balchoth_kan" tier="3">
     <Choice id="balchoth_kan_t3_a_key" type="Keystone" description="{=taom_bk_t3_a_key}Unyielding radius greatly expanded, the stampede is unstoppable." icon_sprite="career_choice_bk_t3_a_key">
       <Mutations><Mutation target_id="balchoth_kan_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -4621,7 +4621,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="balchoth_kan_t3_b" career_id="balchoth_kan" tier="3">
+  <ChoiceGroup id="balchoth_kan_t3_b" display_name="{=taom_career_grp_balchoth_kan_t3_b}The Dread Horde" career_id="balchoth_kan" tier="3">
     <Choice id="balchoth_kan_t3_b_key" type="Keystone" description="{=taom_bk_t3_b_key}Unyielding charge greatly reduced, ever-present and relentless." icon_sprite="career_choice_bk_t3_b_key">
       <Mutations><Mutation target_id="balchoth_kan_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -4649,7 +4649,7 @@
     <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
   </Choice>
 
-  <ChoiceGroup id="dale_guardsman_t1_a" career_id="dale_guardsman" tier="1">
+  <ChoiceGroup id="dale_guardsman_t1_a" display_name="{=taom_career_grp_dale_guardsman_t1_a}Gate Warden of Dale" career_id="dale_guardsman" tier="1">
     <Choice id="dale_guardsman_t1_a_key" type="Keystone" description="{=taom_dg2_t1_a_key}Gate Hold radius increased, empowering more warriors." icon_sprite="career_choice_dg2_t1_a_key">
       <Mutations><Mutation target_id="dale_guardsman_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -4667,7 +4667,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_guardsman_t1_b" career_id="dale_guardsman" tier="1">
+  <ChoiceGroup id="dale_guardsman_t1_b" display_name="{=taom_career_grp_dale_guardsman_t1_b}Shieldwall of Esgaroth" career_id="dale_guardsman" tier="1">
     <Choice id="dale_guardsman_t1_b_key" type="Keystone" description="{=taom_dg2_t1_b_key}Gate Hold duration extended, fortifying the defense." icon_sprite="career_choice_dg2_t1_b_key">
       <Mutations><Mutation target_id="dale_guardsman_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -4685,7 +4685,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_guardsman_t2_a" career_id="dale_guardsman" tier="2">
+  <ChoiceGroup id="dale_guardsman_t2_a" display_name="{=taom_career_grp_dale_guardsman_t2_a}Spear of Girion" career_id="dale_guardsman" tier="2">
     <Choice id="dale_guardsman_t2_a_key" type="Keystone" description="{=taom_dg2_t2_a_key}Gate Hold charge reduced, activating more frequently." icon_sprite="career_choice_dg2_t2_a_key">
       <Mutations><Mutation target_id="dale_guardsman_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -4703,7 +4703,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_guardsman_t2_b" career_id="dale_guardsman" tier="2">
+  <ChoiceGroup id="dale_guardsman_t2_b" display_name="{=taom_career_grp_dale_guardsman_t2_b}Bulwark of the Running" career_id="dale_guardsman" tier="2">
     <Choice id="dale_guardsman_t2_b_key" type="Keystone" description="{=taom_dg2_t2_b_key}Gate Hold grants additional defensive buffs while active." icon_sprite="career_choice_dg2_t2_b_key">
       <Mutations><Mutation target_id="dale_guardsman_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -4721,7 +4721,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_guardsman_t3_a" career_id="dale_guardsman" tier="3">
+  <ChoiceGroup id="dale_guardsman_t3_a" display_name="{=taom_career_grp_dale_guardsman_t3_a}Vanguard of King Brand" career_id="dale_guardsman" tier="3">
     <Choice id="dale_guardsman_t3_a_key" type="Keystone" description="{=taom_dg2_t3_a_key}Gate Hold radius greatly expanded, devastating power." icon_sprite="career_choice_dg2_t3_a_key">
       <Mutations><Mutation target_id="dale_guardsman_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -4739,7 +4739,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_guardsman_t3_b" career_id="dale_guardsman" tier="3">
+  <ChoiceGroup id="dale_guardsman_t3_b" display_name="{=taom_career_grp_dale_guardsman_t3_b}The Last Stand at Erebor" career_id="dale_guardsman" tier="3">
     <Choice id="dale_guardsman_t3_b_key" type="Keystone" description="{=taom_dg2_t3_b_key}Gate Hold charge greatly reduced, nearly always available." icon_sprite="career_choice_dg2_t3_b_key">
       <Mutations><Mutation target_id="dale_guardsman_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -4767,7 +4767,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
   </Choice>
 
-  <ChoiceGroup id="dale_marksman_t1_a" career_id="dale_marksman" tier="1">
+  <ChoiceGroup id="dale_marksman_t1_a" display_name="{=taom_career_grp_dale_marksman_t1_a}Bowman of Esgaroth" career_id="dale_marksman" tier="1">
     <Choice id="dale_marksman_t1_a_key" type="Keystone" description="{=taom_dm_t1_a_key}Black Arrow radius increased, covering wider kill zones." icon_sprite="career_choice_dm_t1_a_key">
       <Mutations><Mutation target_id="dale_marksman_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -4785,7 +4785,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_marksman_t1_b" career_id="dale_marksman" tier="1">
+  <ChoiceGroup id="dale_marksman_t1_b" display_name="{=taom_career_grp_dale_marksman_t1_b}Watch of the Long Lake" career_id="dale_marksman" tier="1">
     <Choice id="dale_marksman_t1_b_key" type="Keystone" description="{=taom_dm_t1_b_key}Black Arrow duration extended, sustained barrage." icon_sprite="career_choice_dm_t1_b_key">
       <Mutations><Mutation target_id="dale_marksman_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -4803,7 +4803,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_marksman_t2_a" career_id="dale_marksman" tier="2">
+  <ChoiceGroup id="dale_marksman_t2_a" display_name="{=taom_career_grp_dale_marksman_t2_a}Heir of the Black Arrow" career_id="dale_marksman" tier="2">
     <Choice id="dale_marksman_t2_a_key" type="Keystone" description="{=taom_dm_t2_a_key}Black Arrow charge reduced, maintaining constant pressure." icon_sprite="career_choice_dm_t2_a_key">
       <Mutations><Mutation target_id="dale_marksman_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -4821,7 +4821,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_marksman_t2_b" career_id="dale_marksman" tier="2">
+  <ChoiceGroup id="dale_marksman_t2_b" display_name="{=taom_career_grp_dale_marksman_t2_b}Thrush-Sighted Archer" career_id="dale_marksman" tier="2">
     <Choice id="dale_marksman_t2_b_key" type="Keystone" description="{=taom_dm_t2_b_key}Black Arrow gains additional penetration while active." icon_sprite="career_choice_dm_t2_b_key">
       <Mutations><Mutation target_id="dale_marksman_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -4839,7 +4839,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_marksman_t3_a" career_id="dale_marksman" tier="3">
+  <ChoiceGroup id="dale_marksman_t3_a" display_name="{=taom_career_grp_dale_marksman_t3_a}Dragonslayer of Dale" career_id="dale_marksman" tier="3">
     <Choice id="dale_marksman_t3_a_key" type="Keystone" description="{=taom_dm_t3_a_key}Black Arrow radius greatly expanded, inescapable volleys." icon_sprite="career_choice_dm_t3_a_key">
       <Mutations><Mutation target_id="dale_marksman_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -4857,7 +4857,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_marksman_t3_b" career_id="dale_marksman" tier="3">
+  <ChoiceGroup id="dale_marksman_t3_b" display_name="{=taom_career_grp_dale_marksman_t3_b}The Bow of Girion's Line" career_id="dale_marksman" tier="3">
     <Choice id="dale_marksman_t3_b_key" type="Keystone" description="{=taom_dm_t3_b_key}Black Arrow charge greatly reduced, relentless fire." icon_sprite="career_choice_dm_t3_b_key">
       <Mutations><Mutation target_id="dale_marksman_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -4885,7 +4885,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="dale_outrider_t1_a" career_id="dale_outrider" tier="1">
+  <ChoiceGroup id="dale_outrider_t1_a" display_name="{=taom_career_grp_dale_outrider_t1_a}Rider of the Running" career_id="dale_outrider" tier="1">
     <Choice id="dale_outrider_t1_a_key" type="Keystone" description="{=taom_dor_t1_a_key}Trade Road Sprint radius expanded, sweeping wider formations." icon_sprite="career_choice_dor_t1_a_key">
       <Mutations><Mutation target_id="dale_outrider_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -4903,7 +4903,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_outrider_t1_b" career_id="dale_outrider" tier="1">
+  <ChoiceGroup id="dale_outrider_t1_b" display_name="{=taom_career_grp_dale_outrider_t1_b}Warden of the Caravan Road" career_id="dale_outrider" tier="1">
     <Choice id="dale_outrider_t1_b_key" type="Keystone" description="{=taom_dor_t1_b_key}Trade Road Sprint duration extended, maintaining momentum." icon_sprite="career_choice_dor_t1_b_key">
       <Mutations><Mutation target_id="dale_outrider_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -4921,7 +4921,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_outrider_t2_a" career_id="dale_outrider" tier="2">
+  <ChoiceGroup id="dale_outrider_t2_a" display_name="{=taom_career_grp_dale_outrider_t2_a}Lance of the Long Valley" career_id="dale_outrider" tier="2">
     <Choice id="dale_outrider_t2_a_key" type="Keystone" description="{=taom_dor_t2_a_key}Trade Road Sprint charge reduced, swifter activation." icon_sprite="career_choice_dor_t2_a_key">
       <Mutations><Mutation target_id="dale_outrider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -4939,7 +4939,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_outrider_t2_b" career_id="dale_outrider" tier="2">
+  <ChoiceGroup id="dale_outrider_t2_b" display_name="{=taom_career_grp_dale_outrider_t2_b}Outrider of Erebor's Friendship" career_id="dale_outrider" tier="2">
     <Choice id="dale_outrider_t2_b_key" type="Keystone" description="{=taom_dor_t2_b_key}Trade Road Sprint boosts mount resilience while active." icon_sprite="career_choice_dor_t2_b_key">
       <Mutations><Mutation target_id="dale_outrider_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -4957,7 +4957,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_outrider_t3_a" career_id="dale_outrider" tier="3">
+  <ChoiceGroup id="dale_outrider_t3_a" display_name="{=taom_career_grp_dale_outrider_t3_a}The Northman Charge" career_id="dale_outrider" tier="3">
     <Choice id="dale_outrider_t3_a_key" type="Keystone" description="{=taom_dor_t3_a_key}Trade Road Sprint radius greatly expanded, unstoppable impact." icon_sprite="career_choice_dor_t3_a_key">
       <Mutations><Mutation target_id="dale_outrider_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -4975,7 +4975,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="dale_outrider_t3_b" career_id="dale_outrider" tier="3">
+  <ChoiceGroup id="dale_outrider_t3_b" display_name="{=taom_career_grp_dale_outrider_t3_b}Courier of the Two Kings" career_id="dale_outrider" tier="3">
     <Choice id="dale_outrider_t3_b_key" type="Keystone" description="{=taom_dor_t3_b_key}Trade Road Sprint charge greatly reduced, ride without ceasing." icon_sprite="career_choice_dor_t3_b_key">
       <Mutations><Mutation target_id="dale_outrider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -5003,7 +5003,7 @@
     <PassiveEffect type="Health" magnitude="25" operation="Add" />
   </Choice>
 
-  <ChoiceGroup id="ironguard_t1_a" career_id="ironguard" tier="1">
+  <ChoiceGroup id="ironguard_t1_a" display_name="{=taom_career_grp_ironguard_t1_a}Hammer of the Deeps" career_id="ironguard" tier="1">
     <Choice id="ironguard_t1_a_key" type="Keystone" description="{=taom_ig_t1_a_key}Mithril Bastion radius increased, empowering more warriors." icon_sprite="career_choice_ig_t1_a_key">
       <Mutations><Mutation target_id="ironguard_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -5021,7 +5021,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="ironguard_t1_b" career_id="ironguard" tier="1">
+  <ChoiceGroup id="ironguard_t1_b" display_name="{=taom_career_grp_ironguard_t1_b}Gatewall Warden" career_id="ironguard" tier="1">
     <Choice id="ironguard_t1_b_key" type="Keystone" description="{=taom_ig_t1_b_key}Mithril Bastion duration extended, fortifying the defense." icon_sprite="career_choice_ig_t1_b_key">
       <Mutations><Mutation target_id="ironguard_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -5039,7 +5039,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="ironguard_t2_a" career_id="ironguard" tier="2">
+  <ChoiceGroup id="ironguard_t2_a" display_name="{=taom_career_grp_ironguard_t2_a}Wrath of Durin's Folk" career_id="ironguard" tier="2">
     <Choice id="ironguard_t2_a_key" type="Keystone" description="{=taom_ig_t2_a_key}Mithril Bastion charge reduced, activating more frequently." icon_sprite="career_choice_ig_t2_a_key">
       <Mutations><Mutation target_id="ironguard_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -5057,7 +5057,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="ironguard_t2_b" career_id="ironguard" tier="2">
+  <ChoiceGroup id="ironguard_t2_b" display_name="{=taom_career_grp_ironguard_t2_b}Shieldwall of Erebor" career_id="ironguard" tier="2">
     <Choice id="ironguard_t2_b_key" type="Keystone" description="{=taom_ig_t2_b_key}Mithril Bastion grants additional defensive buffs while active." icon_sprite="career_choice_ig_t2_b_key">
       <Mutations><Mutation target_id="ironguard_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -5075,7 +5075,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="ironguard_t3_a" career_id="ironguard" tier="3">
+  <ChoiceGroup id="ironguard_t3_a" display_name="{=taom_career_grp_ironguard_t3_a}Mithril Bulwark" career_id="ironguard" tier="3">
     <Choice id="ironguard_t3_a_key" type="Keystone" description="{=taom_ig_t3_a_key}Mithril Bastion radius greatly expanded, devastating power." icon_sprite="career_choice_ig_t3_a_key">
       <Mutations><Mutation target_id="ironguard_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -5093,7 +5093,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="ironguard_t3_b" career_id="ironguard" tier="3">
+  <ChoiceGroup id="ironguard_t3_b" display_name="{=taom_career_grp_ironguard_t3_b}Guard of the Arkenstone" career_id="ironguard" tier="3">
     <Choice id="ironguard_t3_b_key" type="Keystone" description="{=taom_ig_t3_b_key}Mithril Bastion charge greatly reduced, nearly always available." icon_sprite="career_choice_ig_t3_b_key">
       <Mutations><Mutation target_id="ironguard_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -5121,7 +5121,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
   </Choice>
 
-  <ChoiceGroup id="crossbow_master_t1_a" career_id="crossbow_master" tier="1">
+  <ChoiceGroup id="crossbow_master_t1_a" display_name="{=taom_career_grp_crossbow_master_t1_a}Iron Hills Volley" career_id="crossbow_master" tier="1">
     <Choice id="crossbow_master_t1_a_key" type="Keystone" description="{=taom_cbm_t1_a_key}Precision Barrage radius increased, covering wider kill zones." icon_sprite="career_choice_cbm_t1_a_key">
       <Mutations><Mutation target_id="crossbow_master_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -5139,7 +5139,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="crossbow_master_t1_b" career_id="crossbow_master" tier="1">
+  <ChoiceGroup id="crossbow_master_t1_b" display_name="{=taom_career_grp_crossbow_master_t1_b}Watcher of Dale" career_id="crossbow_master" tier="1">
     <Choice id="crossbow_master_t1_b_key" type="Keystone" description="{=taom_cbm_t1_b_key}Precision Barrage duration extended, sustained barrage." icon_sprite="career_choice_cbm_t1_b_key">
       <Mutations><Mutation target_id="crossbow_master_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -5157,7 +5157,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="crossbow_master_t2_a" career_id="crossbow_master" tier="2">
+  <ChoiceGroup id="crossbow_master_t2_a" display_name="{=taom_career_grp_crossbow_master_t2_a}Relentless Bolt" career_id="crossbow_master" tier="2">
     <Choice id="crossbow_master_t2_a_key" type="Keystone" description="{=taom_cbm_t2_a_key}Precision Barrage charge reduced, maintaining constant pressure." icon_sprite="career_choice_cbm_t2_a_key">
       <Mutations><Mutation target_id="crossbow_master_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -5175,7 +5175,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="crossbow_master_t2_b" career_id="crossbow_master" tier="2">
+  <ChoiceGroup id="crossbow_master_t2_b" display_name="{=taom_career_grp_crossbow_master_t2_b}Ballista of the Mountain" career_id="crossbow_master" tier="2">
     <Choice id="crossbow_master_t2_b_key" type="Keystone" description="{=taom_cbm_t2_b_key}Precision Barrage gains additional penetration while active." icon_sprite="career_choice_cbm_t2_b_key">
       <Mutations><Mutation target_id="crossbow_master_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -5193,7 +5193,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="crossbow_master_t3_a" career_id="crossbow_master" tier="3">
+  <ChoiceGroup id="crossbow_master_t3_a" display_name="{=taom_career_grp_crossbow_master_t3_a}Storm of Steel" career_id="crossbow_master" tier="3">
     <Choice id="crossbow_master_t3_a_key" type="Keystone" description="{=taom_cbm_t3_a_key}Precision Barrage radius greatly expanded, inescapable volleys." icon_sprite="career_choice_cbm_t3_a_key">
       <Mutations><Mutation target_id="crossbow_master_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -5211,7 +5211,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="crossbow_master_t3_b" career_id="crossbow_master" tier="3">
+  <ChoiceGroup id="crossbow_master_t3_b" display_name="{=taom_career_grp_crossbow_master_t3_b}Engine of Erebor" career_id="crossbow_master" tier="3">
     <Choice id="crossbow_master_t3_b_key" type="Keystone" description="{=taom_cbm_t3_b_key}Precision Barrage charge greatly reduced, relentless fire." icon_sprite="career_choice_cbm_t3_b_key">
       <Mutations><Mutation target_id="crossbow_master_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -5239,7 +5239,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="ram_rider_t1_a" career_id="ram_rider" tier="1">
+  <ChoiceGroup id="ram_rider_t1_a" display_name="{=taom_career_grp_ram_rider_t1_a}Goatherd of the Hills" career_id="ram_rider" tier="1">
     <Choice id="ram_rider_t1_a_key" type="Keystone" description="{=taom_rr_t1_a_key}Mountain Charge radius expanded, sweeping wider formations." icon_sprite="career_choice_rr_t1_a_key">
       <Mutations><Mutation target_id="ram_rider_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -5257,7 +5257,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="ram_rider_t1_b" career_id="ram_rider" tier="1">
+  <ChoiceGroup id="ram_rider_t1_b" display_name="{=taom_career_grp_ram_rider_t1_b}Outrider of Erebor" career_id="ram_rider" tier="1">
     <Choice id="ram_rider_t1_b_key" type="Keystone" description="{=taom_rr_t1_b_key}Mountain Charge duration extended, maintaining momentum." icon_sprite="career_choice_rr_t1_b_key">
       <Mutations><Mutation target_id="ram_rider_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -5275,7 +5275,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="ram_rider_t2_a" career_id="ram_rider" tier="2">
+  <ChoiceGroup id="ram_rider_t2_a" display_name="{=taom_career_grp_ram_rider_t2_a}Charge of the Iron Hills" career_id="ram_rider" tier="2">
     <Choice id="ram_rider_t2_a_key" type="Keystone" description="{=taom_rr_t2_a_key}Mountain Charge charge reduced, swifter activation." icon_sprite="career_choice_rr_t2_a_key">
       <Mutations><Mutation target_id="ram_rider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -5293,7 +5293,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="ram_rider_t2_b" career_id="ram_rider" tier="2">
+  <ChoiceGroup id="ram_rider_t2_b" display_name="{=taom_career_grp_ram_rider_t2_b}Stout War-Ram" career_id="ram_rider" tier="2">
     <Choice id="ram_rider_t2_b_key" type="Keystone" description="{=taom_rr_t2_b_key}Mountain Charge boosts mount resilience while active." icon_sprite="career_choice_rr_t2_b_key">
       <Mutations><Mutation target_id="ram_rider_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -5311,7 +5311,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="ram_rider_t3_a" career_id="ram_rider" tier="3">
+  <ChoiceGroup id="ram_rider_t3_a" display_name="{=taom_career_grp_ram_rider_t3_a}Ironfoot's Vanguard" career_id="ram_rider" tier="3">
     <Choice id="ram_rider_t3_a_key" type="Keystone" description="{=taom_rr_t3_a_key}Mountain Charge radius greatly expanded, unstoppable impact." icon_sprite="career_choice_rr_t3_a_key">
       <Mutations><Mutation target_id="ram_rider_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -5329,7 +5329,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="ram_rider_t3_b" career_id="ram_rider" tier="3">
+  <ChoiceGroup id="ram_rider_t3_b" display_name="{=taom_career_grp_ram_rider_t3_b}Rider of the Lonely Mountain" career_id="ram_rider" tier="3">
     <Choice id="ram_rider_t3_b_key" type="Keystone" description="{=taom_rr_t3_b_key}Mountain Charge charge greatly reduced, ride without ceasing." icon_sprite="career_choice_rr_t3_b_key">
       <Mutations><Mutation target_id="ram_rider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -5357,7 +5357,7 @@
     <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
   </Choice>
 
-  <ChoiceGroup id="blade_dancer_t1_a" career_id="blade_dancer" tier="1">
+  <ChoiceGroup id="blade_dancer_t1_a" display_name="{=taom_career_grp_blade_dancer_t1_a}Starlit Steel" career_id="blade_dancer" tier="1">
     <Choice id="blade_dancer_t1_a_key" type="Keystone" description="{=taom_bd_t1_a_key}Starlight Weave radius increased, empowering more warriors." icon_sprite="career_choice_bd_t1_a_key">
       <Mutations><Mutation target_id="blade_dancer_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -5375,7 +5375,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="blade_dancer_t1_b" career_id="blade_dancer" tier="1">
+  <ChoiceGroup id="blade_dancer_t1_b" display_name="{=taom_career_grp_blade_dancer_t1_b}Guard of Imladris" career_id="blade_dancer" tier="1">
     <Choice id="blade_dancer_t1_b_key" type="Keystone" description="{=taom_bd_t1_b_key}Starlight Weave duration extended, fortifying the defense." icon_sprite="career_choice_bd_t1_b_key">
       <Mutations><Mutation target_id="blade_dancer_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -5393,7 +5393,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="blade_dancer_t2_a" career_id="blade_dancer" tier="2">
+  <ChoiceGroup id="blade_dancer_t2_a" display_name="{=taom_career_grp_blade_dancer_t2_a}Dance of Gondolin" career_id="blade_dancer" tier="2">
     <Choice id="blade_dancer_t2_a_key" type="Keystone" description="{=taom_bd_t2_a_key}Starlight Weave charge reduced, activating more frequently." icon_sprite="career_choice_bd_t2_a_key">
       <Mutations><Mutation target_id="blade_dancer_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -5411,7 +5411,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="blade_dancer_t2_b" career_id="blade_dancer" tier="2">
+  <ChoiceGroup id="blade_dancer_t2_b" display_name="{=taom_career_grp_blade_dancer_t2_b}Ward of the Hidden Valley" career_id="blade_dancer" tier="2">
     <Choice id="blade_dancer_t2_b_key" type="Keystone" description="{=taom_bd_t2_b_key}Starlight Weave grants additional defensive buffs while active." icon_sprite="career_choice_bd_t2_b_key">
       <Mutations><Mutation target_id="blade_dancer_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -5429,7 +5429,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="blade_dancer_t3_a" career_id="blade_dancer" tier="3">
+  <ChoiceGroup id="blade_dancer_t3_a" display_name="{=taom_career_grp_blade_dancer_t3_a}Sword of the First Age" career_id="blade_dancer" tier="3">
     <Choice id="blade_dancer_t3_a_key" type="Keystone" description="{=taom_bd_t3_a_key}Starlight Weave radius greatly expanded, devastating power." icon_sprite="career_choice_bd_t3_a_key">
       <Mutations><Mutation target_id="blade_dancer_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -5447,7 +5447,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="blade_dancer_t3_b" career_id="blade_dancer" tier="3">
+  <ChoiceGroup id="blade_dancer_t3_b" display_name="{=taom_career_grp_blade_dancer_t3_b}Light of Eärendil" career_id="blade_dancer" tier="3">
     <Choice id="blade_dancer_t3_b_key" type="Keystone" description="{=taom_bd_t3_b_key}Starlight Weave charge greatly reduced, nearly always available." icon_sprite="career_choice_bd_t3_b_key">
       <Mutations><Mutation target_id="blade_dancer_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -5475,7 +5475,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
   </Choice>
 
-  <ChoiceGroup id="elven_archer_t1_a" career_id="elven_archer" tier="1">
+  <ChoiceGroup id="elven_archer_t1_a" display_name="{=taom_career_grp_elven_archer_t1_a}Keen-Eyed Watcher" career_id="elven_archer" tier="1">
     <Choice id="elven_archer_t1_a_key" type="Keystone" description="{=taom_elar_t1_a_key}Elven Sight radius increased, covering wider kill zones." icon_sprite="career_choice_elar_t1_a_key">
       <Mutations><Mutation target_id="elven_archer_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -5493,7 +5493,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="elven_archer_t1_b" career_id="elven_archer" tier="1">
+  <ChoiceGroup id="elven_archer_t1_b" display_name="{=taom_career_grp_elven_archer_t1_b}Watch of Rivendell" career_id="elven_archer" tier="1">
     <Choice id="elven_archer_t1_b_key" type="Keystone" description="{=taom_elar_t1_b_key}Elven Sight duration extended, sustained barrage." icon_sprite="career_choice_elar_t1_b_key">
       <Mutations><Mutation target_id="elven_archer_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -5511,7 +5511,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="elven_archer_t2_a" career_id="elven_archer" tier="2">
+  <ChoiceGroup id="elven_archer_t2_a" display_name="{=taom_career_grp_elven_archer_t2_a}Unceasing Volley" career_id="elven_archer" tier="2">
     <Choice id="elven_archer_t2_a_key" type="Keystone" description="{=taom_elar_t2_a_key}Elven Sight charge reduced, maintaining constant pressure." icon_sprite="career_choice_elar_t2_a_key">
       <Mutations><Mutation target_id="elven_archer_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -5529,7 +5529,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="elven_archer_t2_b" career_id="elven_archer" tier="2">
+  <ChoiceGroup id="elven_archer_t2_b" display_name="{=taom_career_grp_elven_archer_t2_b}Bow of Eregion" career_id="elven_archer" tier="2">
     <Choice id="elven_archer_t2_b_key" type="Keystone" description="{=taom_elar_t2_b_key}Elven Sight gains additional penetration while active." icon_sprite="career_choice_elar_t2_b_key">
       <Mutations><Mutation target_id="elven_archer_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -5547,7 +5547,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="elven_archer_t3_a" career_id="elven_archer" tier="3">
+  <ChoiceGroup id="elven_archer_t3_a" display_name="{=taom_career_grp_elven_archer_t3_a}Storm of Gil-galad" career_id="elven_archer" tier="3">
     <Choice id="elven_archer_t3_a_key" type="Keystone" description="{=taom_elar_t3_a_key}Elven Sight radius greatly expanded, inescapable volleys." icon_sprite="career_choice_elar_t3_a_key">
       <Mutations><Mutation target_id="elven_archer_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -5565,7 +5565,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="elven_archer_t3_b" career_id="elven_archer" tier="3">
+  <ChoiceGroup id="elven_archer_t3_b" display_name="{=taom_career_grp_elven_archer_t3_b}Vigil of Vilya" career_id="elven_archer" tier="3">
     <Choice id="elven_archer_t3_b_key" type="Keystone" description="{=taom_elar_t3_b_key}Elven Sight charge greatly reduced, relentless fire." icon_sprite="career_choice_elar_t3_b_key">
       <Mutations><Mutation target_id="elven_archer_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -5593,7 +5593,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="rivendell_knight_t1_a" career_id="rivendell_knight" tier="1">
+  <ChoiceGroup id="rivendell_knight_t1_a" display_name="{=taom_career_grp_rivendell_knight_t1_a}Charge of Imladris" career_id="rivendell_knight" tier="1">
     <Choice id="rivendell_knight_t1_a_key" type="Keystone" description="{=taom_rvk_t1_a_key}Last Alliance radius expanded, sweeping wider formations." icon_sprite="career_choice_rvk_t1_a_key">
       <Mutations><Mutation target_id="rivendell_knight_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -5611,7 +5611,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="rivendell_knight_t1_b" career_id="rivendell_knight" tier="1">
+  <ChoiceGroup id="rivendell_knight_t1_b" display_name="{=taom_career_grp_rivendell_knight_t1_b}Rider of the Ford" career_id="rivendell_knight" tier="1">
     <Choice id="rivendell_knight_t1_b_key" type="Keystone" description="{=taom_rvk_t1_b_key}Last Alliance duration extended, maintaining momentum." icon_sprite="career_choice_rvk_t1_b_key">
       <Mutations><Mutation target_id="rivendell_knight_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -5629,7 +5629,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="rivendell_knight_t2_a" career_id="rivendell_knight" tier="2">
+  <ChoiceGroup id="rivendell_knight_t2_a" display_name="{=taom_career_grp_rivendell_knight_t2_a}Gallop of Asfaloth" career_id="rivendell_knight" tier="2">
     <Choice id="rivendell_knight_t2_a_key" type="Keystone" description="{=taom_rvk_t2_a_key}Last Alliance charge reduced, swifter activation." icon_sprite="career_choice_rvk_t2_a_key">
       <Mutations><Mutation target_id="rivendell_knight_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -5647,7 +5647,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="rivendell_knight_t2_b" career_id="rivendell_knight" tier="2">
+  <ChoiceGroup id="rivendell_knight_t2_b" display_name="{=taom_career_grp_rivendell_knight_t2_b}Aegis of the Valar" career_id="rivendell_knight" tier="2">
     <Choice id="rivendell_knight_t2_b_key" type="Keystone" description="{=taom_rvk_t2_b_key}Last Alliance boosts mount resilience while active." icon_sprite="career_choice_rvk_t2_b_key">
       <Mutations><Mutation target_id="rivendell_knight_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -5665,7 +5665,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="rivendell_knight_t3_a" career_id="rivendell_knight" tier="3">
+  <ChoiceGroup id="rivendell_knight_t3_a" display_name="{=taom_career_grp_rivendell_knight_t3_a}Wrath of Glorfindel" career_id="rivendell_knight" tier="3">
     <Choice id="rivendell_knight_t3_a_key" type="Keystone" description="{=taom_rvk_t3_a_key}Last Alliance radius greatly expanded, unstoppable impact." icon_sprite="career_choice_rvk_t3_a_key">
       <Mutations><Mutation target_id="rivendell_knight_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -5683,7 +5683,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="rivendell_knight_t3_b" career_id="rivendell_knight" tier="3">
+  <ChoiceGroup id="rivendell_knight_t3_b" display_name="{=taom_career_grp_rivendell_knight_t3_b}Host of the Last Alliance" career_id="rivendell_knight" tier="3">
     <Choice id="rivendell_knight_t3_b_key" type="Keystone" description="{=taom_rvk_t3_b_key}Last Alliance charge greatly reduced, ride without ceasing." icon_sprite="career_choice_rvk_t3_b_key">
       <Mutations><Mutation target_id="rivendell_knight_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -5711,7 +5711,7 @@
     <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
   </Choice>
 
-  <ChoiceGroup id="warden_t1_a" career_id="warden" tier="1">
+  <ChoiceGroup id="warden_t1_a" display_name="{=taom_career_grp_warden_t1_a}Border Strider" career_id="warden" tier="1">
     <Choice id="warden_t1_a_key" type="Keystone" description="{=taom_wdn_t1_a_key}Nimrodel Blessing radius increased, empowering more warriors." icon_sprite="career_choice_wdn_t1_a_key">
       <Mutations><Mutation target_id="warden_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -5729,7 +5729,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warden_t1_b" career_id="warden" tier="1">
+  <ChoiceGroup id="warden_t1_b" display_name="{=taom_career_grp_warden_t1_b}Warden of Nimrodel" career_id="warden" tier="1">
     <Choice id="warden_t1_b_key" type="Keystone" description="{=taom_wdn_t1_b_key}Nimrodel Blessing duration extended, fortifying the defense." icon_sprite="career_choice_wdn_t1_b_key">
       <Mutations><Mutation target_id="warden_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -5747,7 +5747,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warden_t2_a" career_id="warden" tier="2">
+  <ChoiceGroup id="warden_t2_a" display_name="{=taom_career_grp_warden_t2_a}Blade of the Naith" career_id="warden" tier="2">
     <Choice id="warden_t2_a_key" type="Keystone" description="{=taom_wdn_t2_a_key}Nimrodel Blessing charge reduced, activating more frequently." icon_sprite="career_choice_wdn_t2_a_key">
       <Mutations><Mutation target_id="warden_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -5765,7 +5765,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warden_t2_b" career_id="warden" tier="2">
+  <ChoiceGroup id="warden_t2_b" display_name="{=taom_career_grp_warden_t2_b}Shieldwall of Caras Galadhon" career_id="warden" tier="2">
     <Choice id="warden_t2_b_key" type="Keystone" description="{=taom_wdn_t2_b_key}Nimrodel Blessing grants additional defensive buffs while active." icon_sprite="career_choice_wdn_t2_b_key">
       <Mutations><Mutation target_id="warden_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -5783,7 +5783,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warden_t3_a" career_id="warden" tier="3">
+  <ChoiceGroup id="warden_t3_a" display_name="{=taom_career_grp_warden_t3_a}Warden of the Golden Wood" career_id="warden" tier="3">
     <Choice id="warden_t3_a_key" type="Keystone" description="{=taom_wdn_t3_a_key}Nimrodel Blessing radius greatly expanded, devastating power." icon_sprite="career_choice_wdn_t3_a_key">
       <Mutations><Mutation target_id="warden_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -5801,7 +5801,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warden_t3_b" career_id="warden" tier="3">
+  <ChoiceGroup id="warden_t3_b" display_name="{=taom_career_grp_warden_t3_b}Guard of Cerin Amroth" career_id="warden" tier="3">
     <Choice id="warden_t3_b_key" type="Keystone" description="{=taom_wdn_t3_b_key}Nimrodel Blessing charge greatly reduced, nearly always available." icon_sprite="career_choice_wdn_t3_b_key">
       <Mutations><Mutation target_id="warden_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -5829,7 +5829,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
   </Choice>
 
-  <ChoiceGroup id="galadhrim_archer_t1_a" career_id="galadhrim_archer" tier="1">
+  <ChoiceGroup id="galadhrim_archer_t1_a" display_name="{=taom_career_grp_galadhrim_archer_t1_a}Silver Bowman" career_id="galadhrim_archer" tier="1">
     <Choice id="galadhrim_archer_t1_a_key" type="Keystone" description="{=taom_gar_t1_a_key}Silver Rain radius increased, covering wider kill zones." icon_sprite="career_choice_gar_t1_a_key">
       <Mutations><Mutation target_id="galadhrim_archer_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -5847,7 +5847,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="galadhrim_archer_t1_b" career_id="galadhrim_archer" tier="1">
+  <ChoiceGroup id="galadhrim_archer_t1_b" display_name="{=taom_career_grp_galadhrim_archer_t1_b}Eye of the Fences" career_id="galadhrim_archer" tier="1">
     <Choice id="galadhrim_archer_t1_b_key" type="Keystone" description="{=taom_gar_t1_b_key}Silver Rain duration extended, sustained barrage." icon_sprite="career_choice_gar_t1_b_key">
       <Mutations><Mutation target_id="galadhrim_archer_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -5865,7 +5865,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="galadhrim_archer_t2_a" career_id="galadhrim_archer" tier="2">
+  <ChoiceGroup id="galadhrim_archer_t2_a" display_name="{=taom_career_grp_galadhrim_archer_t2_a}Mallorn Marksman" career_id="galadhrim_archer" tier="2">
     <Choice id="galadhrim_archer_t2_a_key" type="Keystone" description="{=taom_gar_t2_a_key}Silver Rain charge reduced, maintaining constant pressure." icon_sprite="career_choice_gar_t2_a_key">
       <Mutations><Mutation target_id="galadhrim_archer_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -5883,7 +5883,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="galadhrim_archer_t2_b" career_id="galadhrim_archer" tier="2">
+  <ChoiceGroup id="galadhrim_archer_t2_b" display_name="{=taom_career_grp_galadhrim_archer_t2_b}Watcher of the Flets" career_id="galadhrim_archer" tier="2">
     <Choice id="galadhrim_archer_t2_b_key" type="Keystone" description="{=taom_gar_t2_b_key}Silver Rain gains additional penetration while active." icon_sprite="career_choice_gar_t2_b_key">
       <Mutations><Mutation target_id="galadhrim_archer_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -5901,7 +5901,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="galadhrim_archer_t3_a" career_id="galadhrim_archer" tier="3">
+  <ChoiceGroup id="galadhrim_archer_t3_a" display_name="{=taom_career_grp_galadhrim_archer_t3_a}Arrow of Caras Galadhon" career_id="galadhrim_archer" tier="3">
     <Choice id="galadhrim_archer_t3_a_key" type="Keystone" description="{=taom_gar_t3_a_key}Silver Rain radius greatly expanded, inescapable volleys." icon_sprite="career_choice_gar_t3_a_key">
       <Mutations><Mutation target_id="galadhrim_archer_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -5919,7 +5919,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="galadhrim_archer_t3_b" career_id="galadhrim_archer" tier="3">
+  <ChoiceGroup id="galadhrim_archer_t3_b" display_name="{=taom_career_grp_galadhrim_archer_t3_b}Warden of the Silverlode" career_id="galadhrim_archer" tier="3">
     <Choice id="galadhrim_archer_t3_b_key" type="Keystone" description="{=taom_gar_t3_b_key}Silver Rain charge greatly reduced, relentless fire." icon_sprite="career_choice_gar_t3_b_key">
       <Mutations><Mutation target_id="galadhrim_archer_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -5947,7 +5947,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="sentinel_t1_a" career_id="sentinel" tier="1">
+  <ChoiceGroup id="sentinel_t1_a" display_name="{=taom_career_grp_sentinel_t1_a}Outrider of Egladil" career_id="sentinel" tier="1">
     <Choice id="sentinel_t1_a_key" type="Keystone" description="{=taom_snt_t1_a_key}Elanor Swiftness radius expanded, sweeping wider formations." icon_sprite="career_choice_snt_t1_a_key">
       <Mutations><Mutation target_id="sentinel_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -5965,7 +5965,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="sentinel_t1_b" career_id="sentinel" tier="1">
+  <ChoiceGroup id="sentinel_t1_b" display_name="{=taom_career_grp_sentinel_t1_b}Warden of Elanor" career_id="sentinel" tier="1">
     <Choice id="sentinel_t1_b_key" type="Keystone" description="{=taom_snt_t1_b_key}Elanor Swiftness duration extended, maintaining momentum." icon_sprite="career_choice_snt_t1_b_key">
       <Mutations><Mutation target_id="sentinel_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -5983,7 +5983,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="sentinel_t2_a" career_id="sentinel" tier="2">
+  <ChoiceGroup id="sentinel_t2_a" display_name="{=taom_career_grp_sentinel_t2_a}Rider of the Naith" career_id="sentinel" tier="2">
     <Choice id="sentinel_t2_a_key" type="Keystone" description="{=taom_snt_t2_a_key}Elanor Swiftness charge reduced, swifter activation." icon_sprite="career_choice_snt_t2_a_key">
       <Mutations><Mutation target_id="sentinel_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -6001,7 +6001,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="sentinel_t2_b" career_id="sentinel" tier="2">
+  <ChoiceGroup id="sentinel_t2_b" display_name="{=taom_career_grp_sentinel_t2_b}Guardian of Celebrant" career_id="sentinel" tier="2">
     <Choice id="sentinel_t2_b_key" type="Keystone" description="{=taom_snt_t2_b_key}Elanor Swiftness boosts mount resilience while active." icon_sprite="career_choice_snt_t2_b_key">
       <Mutations><Mutation target_id="sentinel_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -6019,7 +6019,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="sentinel_t3_a" career_id="sentinel" tier="3">
+  <ChoiceGroup id="sentinel_t3_a" display_name="{=taom_career_grp_sentinel_t3_a}Lance of Laurelindórenan" career_id="sentinel" tier="3">
     <Choice id="sentinel_t3_a_key" type="Keystone" description="{=taom_snt_t3_a_key}Elanor Swiftness radius greatly expanded, unstoppable impact." icon_sprite="career_choice_snt_t3_a_key">
       <Mutations><Mutation target_id="sentinel_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -6037,7 +6037,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="sentinel_t3_b" career_id="sentinel" tier="3">
+  <ChoiceGroup id="sentinel_t3_b" display_name="{=taom_career_grp_sentinel_t3_b}Sentinel of Nenya" career_id="sentinel" tier="3">
     <Choice id="sentinel_t3_b_key" type="Keystone" description="{=taom_snt_t3_b_key}Elanor Swiftness charge greatly reduced, ride without ceasing." icon_sprite="career_choice_snt_t3_b_key">
       <Mutations><Mutation target_id="sentinel_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -6065,7 +6065,7 @@
     <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
   </Choice>
 
-  <ChoiceGroup id="shadow_walker_t1_a" career_id="shadow_walker" tier="1">
+  <ChoiceGroup id="shadow_walker_t1_a" display_name="{=taom_career_grp_shadow_walker_t1_a}Shadow of the Path" career_id="shadow_walker" tier="1">
     <Choice id="shadow_walker_t1_a_key" type="Keystone" description="{=taom_shw_t1_a_key}Forest Cloak radius increased, empowering more warriors." icon_sprite="career_choice_shw_t1_a_key">
       <Mutations><Mutation target_id="shadow_walker_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -6083,7 +6083,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="shadow_walker_t1_b" career_id="shadow_walker" tier="1">
+  <ChoiceGroup id="shadow_walker_t1_b" display_name="{=taom_career_grp_shadow_walker_t1_b}Cloak of Leaves" career_id="shadow_walker" tier="1">
     <Choice id="shadow_walker_t1_b_key" type="Keystone" description="{=taom_shw_t1_b_key}Forest Cloak duration extended, fortifying the defense." icon_sprite="career_choice_shw_t1_b_key">
       <Mutations><Mutation target_id="shadow_walker_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -6101,7 +6101,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="shadow_walker_t2_a" career_id="shadow_walker" tier="2">
+  <ChoiceGroup id="shadow_walker_t2_a" display_name="{=taom_career_grp_shadow_walker_t2_a}Hunter in the Dark" career_id="shadow_walker" tier="2">
     <Choice id="shadow_walker_t2_a_key" type="Keystone" description="{=taom_shw_t2_a_key}Forest Cloak charge reduced, activating more frequently." icon_sprite="career_choice_shw_t2_a_key">
       <Mutations><Mutation target_id="shadow_walker_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -6119,7 +6119,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="shadow_walker_t2_b" career_id="shadow_walker" tier="2">
+  <ChoiceGroup id="shadow_walker_t2_b" display_name="{=taom_career_grp_shadow_walker_t2_b}Veil of the Wood" career_id="shadow_walker" tier="2">
     <Choice id="shadow_walker_t2_b_key" type="Keystone" description="{=taom_shw_t2_b_key}Forest Cloak grants additional defensive buffs while active." icon_sprite="career_choice_shw_t2_b_key">
       <Mutations><Mutation target_id="shadow_walker_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -6137,7 +6137,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="shadow_walker_t3_a" career_id="shadow_walker" tier="3">
+  <ChoiceGroup id="shadow_walker_t3_a" display_name="{=taom_career_grp_shadow_walker_t3_a}Bane of the Spiders" career_id="shadow_walker" tier="3">
     <Choice id="shadow_walker_t3_a_key" type="Keystone" description="{=taom_shw_t3_a_key}Forest Cloak radius greatly expanded, devastating power." icon_sprite="career_choice_shw_t3_a_key">
       <Mutations><Mutation target_id="shadow_walker_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -6155,7 +6155,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="shadow_walker_t3_b" career_id="shadow_walker" tier="3">
+  <ChoiceGroup id="shadow_walker_t3_b" display_name="{=taom_career_grp_shadow_walker_t3_b}Unseen of Eryn Lasgalen" career_id="shadow_walker" tier="3">
     <Choice id="shadow_walker_t3_b_key" type="Keystone" description="{=taom_shw_t3_b_key}Forest Cloak charge greatly reduced, nearly always available." icon_sprite="career_choice_shw_t3_b_key">
       <Mutations><Mutation target_id="shadow_walker_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -6183,7 +6183,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
   </Choice>
 
-  <ChoiceGroup id="silvan_archer_t1_a" career_id="silvan_archer" tier="1">
+  <ChoiceGroup id="silvan_archer_t1_a" display_name="{=taom_career_grp_silvan_archer_t1_a}Greenwood Marksman" career_id="silvan_archer" tier="1">
     <Choice id="silvan_archer_t1_a_key" type="Keystone" description="{=taom_sva_t1_a_key}Canopy Strike radius increased, covering wider kill zones." icon_sprite="career_choice_sva_t1_a_key">
       <Mutations><Mutation target_id="silvan_archer_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -6201,7 +6201,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="silvan_archer_t1_b" career_id="silvan_archer" tier="1">
+  <ChoiceGroup id="silvan_archer_t1_b" display_name="{=taom_career_grp_silvan_archer_t1_b}Watch of the Canopy" career_id="silvan_archer" tier="1">
     <Choice id="silvan_archer_t1_b_key" type="Keystone" description="{=taom_sva_t1_b_key}Canopy Strike duration extended, sustained barrage." icon_sprite="career_choice_sva_t1_b_key">
       <Mutations><Mutation target_id="silvan_archer_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -6219,7 +6219,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="silvan_archer_t2_a" career_id="silvan_archer" tier="2">
+  <ChoiceGroup id="silvan_archer_t2_a" display_name="{=taom_career_grp_silvan_archer_t2_a}Hunter of the Glades" career_id="silvan_archer" tier="2">
     <Choice id="silvan_archer_t2_a_key" type="Keystone" description="{=taom_sva_t2_a_key}Canopy Strike charge reduced, maintaining constant pressure." icon_sprite="career_choice_sva_t2_a_key">
       <Mutations><Mutation target_id="silvan_archer_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -6237,7 +6237,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="silvan_archer_t2_b" career_id="silvan_archer" tier="2">
+  <ChoiceGroup id="silvan_archer_t2_b" display_name="{=taom_career_grp_silvan_archer_t2_b}Warden of the River" career_id="silvan_archer" tier="2">
     <Choice id="silvan_archer_t2_b_key" type="Keystone" description="{=taom_sva_t2_b_key}Canopy Strike gains additional penetration while active." icon_sprite="career_choice_sva_t2_b_key">
       <Mutations><Mutation target_id="silvan_archer_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -6255,7 +6255,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="silvan_archer_t3_a" career_id="silvan_archer" tier="3">
+  <ChoiceGroup id="silvan_archer_t3_a" display_name="{=taom_career_grp_silvan_archer_t3_a}Storm of Arrows" career_id="silvan_archer" tier="3">
     <Choice id="silvan_archer_t3_a_key" type="Keystone" description="{=taom_sva_t3_a_key}Canopy Strike radius greatly expanded, inescapable volleys." icon_sprite="career_choice_sva_t3_a_key">
       <Mutations><Mutation target_id="silvan_archer_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -6273,7 +6273,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="silvan_archer_t3_b" career_id="silvan_archer" tier="3">
+  <ChoiceGroup id="silvan_archer_t3_b" display_name="{=taom_career_grp_silvan_archer_t3_b}Bowman of the Elvenking" career_id="silvan_archer" tier="3">
     <Choice id="silvan_archer_t3_b_key" type="Keystone" description="{=taom_sva_t3_b_key}Canopy Strike charge greatly reduced, relentless fire." icon_sprite="career_choice_sva_t3_b_key">
       <Mutations><Mutation target_id="silvan_archer_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -6301,7 +6301,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="elk_rider_t1_a" career_id="elk_rider" tier="1">
+  <ChoiceGroup id="elk_rider_t1_a" display_name="{=taom_career_grp_elk_rider_t1_a}Antlered Charge" career_id="elk_rider" tier="1">
     <Choice id="elk_rider_t1_a_key" type="Keystone" description="{=taom_elk_t1_a_key}Antler Crash radius expanded, sweeping wider formations." icon_sprite="career_choice_elk_t1_a_key">
       <Mutations><Mutation target_id="elk_rider_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -6319,7 +6319,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="elk_rider_t1_b" career_id="elk_rider" tier="1">
+  <ChoiceGroup id="elk_rider_t1_b" display_name="{=taom_career_grp_elk_rider_t1_b}Rider of the Reaches" career_id="elk_rider" tier="1">
     <Choice id="elk_rider_t1_b_key" type="Keystone" description="{=taom_elk_t1_b_key}Antler Crash duration extended, maintaining momentum." icon_sprite="career_choice_elk_t1_b_key">
       <Mutations><Mutation target_id="elk_rider_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -6337,7 +6337,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="elk_rider_t2_a" career_id="elk_rider" tier="2">
+  <ChoiceGroup id="elk_rider_t2_a" display_name="{=taom_career_grp_elk_rider_t2_a}Thunder of the Forest" career_id="elk_rider" tier="2">
     <Choice id="elk_rider_t2_a_key" type="Keystone" description="{=taom_elk_t2_a_key}Antler Crash charge reduced, swifter activation." icon_sprite="career_choice_elk_t2_a_key">
       <Mutations><Mutation target_id="elk_rider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -6355,7 +6355,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="elk_rider_t2_b" career_id="elk_rider" tier="2">
+  <ChoiceGroup id="elk_rider_t2_b" display_name="{=taom_career_grp_elk_rider_t2_b}Guard of Thranduil" career_id="elk_rider" tier="2">
     <Choice id="elk_rider_t2_b_key" type="Keystone" description="{=taom_elk_t2_b_key}Antler Crash boosts mount resilience while active." icon_sprite="career_choice_elk_t2_b_key">
       <Mutations><Mutation target_id="elk_rider_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -6373,7 +6373,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="elk_rider_t3_a" career_id="elk_rider" tier="3">
+  <ChoiceGroup id="elk_rider_t3_a" display_name="{=taom_career_grp_elk_rider_t3_a}Wrath under the Trees" career_id="elk_rider" tier="3">
     <Choice id="elk_rider_t3_a_key" type="Keystone" description="{=taom_elk_t3_a_key}Antler Crash radius greatly expanded, unstoppable impact." icon_sprite="career_choice_elk_t3_a_key">
       <Mutations><Mutation target_id="elk_rider_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -6391,7 +6391,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="elk_rider_t3_b" career_id="elk_rider" tier="3">
+  <ChoiceGroup id="elk_rider_t3_b" display_name="{=taom_career_grp_elk_rider_t3_b}Lord of the Elvenking's Halls" career_id="elk_rider" tier="3">
     <Choice id="elk_rider_t3_b_key" type="Keystone" description="{=taom_elk_t3_b_key}Antler Crash charge greatly reduced, ride without ceasing." icon_sprite="career_choice_elk_t3_b_key">
       <Mutations><Mutation target_id="elk_rider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -6419,7 +6419,7 @@
     <PassiveEffect type="Health" magnitude="25" operation="Add" />
   </Choice>
 
-  <ChoiceGroup id="uruk_berserker_t1_a" career_id="uruk_berserker" tier="1">
+  <ChoiceGroup id="uruk_berserker_t1_a" display_name="{=taom_career_grp_uruk_berserker_t1_a}Blood-Maddened" career_id="uruk_berserker" tier="1">
     <Choice id="uruk_berserker_t1_a_key" type="Keystone" description="{=taom_ub_t1_a_key}Blood Rage radius increased, empowering more warriors." icon_sprite="career_choice_ub_t1_a_key">
       <Mutations><Mutation target_id="uruk_berserker_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -6437,7 +6437,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="uruk_berserker_t1_b" career_id="uruk_berserker" tier="1">
+  <ChoiceGroup id="uruk_berserker_t1_b" display_name="{=taom_career_grp_uruk_berserker_t1_b}Pit-Hardened" career_id="uruk_berserker" tier="1">
     <Choice id="uruk_berserker_t1_b_key" type="Keystone" description="{=taom_ub_t1_b_key}Blood Rage duration extended, fortifying the defense." icon_sprite="career_choice_ub_t1_b_key">
       <Mutations><Mutation target_id="uruk_berserker_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -6455,7 +6455,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="uruk_berserker_t2_a" career_id="uruk_berserker" tier="2">
+  <ChoiceGroup id="uruk_berserker_t2_a" display_name="{=taom_career_grp_uruk_berserker_t2_a}White Hand Reaver" career_id="uruk_berserker" tier="2">
     <Choice id="uruk_berserker_t2_a_key" type="Keystone" description="{=taom_ub_t2_a_key}Blood Rage charge reduced, activating more frequently." icon_sprite="career_choice_ub_t2_a_key">
       <Mutations><Mutation target_id="uruk_berserker_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -6473,7 +6473,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="uruk_berserker_t2_b" career_id="uruk_berserker" tier="2">
+  <ChoiceGroup id="uruk_berserker_t2_b" display_name="{=taom_career_grp_uruk_berserker_t2_b}Shieldwall of Orthanc" career_id="uruk_berserker" tier="2">
     <Choice id="uruk_berserker_t2_b_key" type="Keystone" description="{=taom_ub_t2_b_key}Blood Rage grants additional defensive buffs while active." icon_sprite="career_choice_ub_t2_b_key">
       <Mutations><Mutation target_id="uruk_berserker_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -6491,7 +6491,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="uruk_berserker_t3_a" career_id="uruk_berserker" tier="3">
+  <ChoiceGroup id="uruk_berserker_t3_a" display_name="{=taom_career_grp_uruk_berserker_t3_a}Scourge of Nan Curunír" career_id="uruk_berserker" tier="3">
     <Choice id="uruk_berserker_t3_a_key" type="Keystone" description="{=taom_ub_t3_a_key}Blood Rage radius greatly expanded, devastating power." icon_sprite="career_choice_ub_t3_a_key">
       <Mutations><Mutation target_id="uruk_berserker_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -6509,7 +6509,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="uruk_berserker_t3_b" career_id="uruk_berserker" tier="3">
+  <ChoiceGroup id="uruk_berserker_t3_b" display_name="{=taom_career_grp_uruk_berserker_t3_b}Unbroken of the Tower" career_id="uruk_berserker" tier="3">
     <Choice id="uruk_berserker_t3_b_key" type="Keystone" description="{=taom_ub_t3_b_key}Blood Rage charge greatly reduced, nearly always available." icon_sprite="career_choice_ub_t3_b_key">
       <Mutations><Mutation target_id="uruk_berserker_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -6537,7 +6537,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
   </Choice>
 
-  <ChoiceGroup id="uruk_crossbow_t1_a" career_id="uruk_crossbow" tier="1">
+  <ChoiceGroup id="uruk_crossbow_t1_a" display_name="{=taom_career_grp_uruk_crossbow_t1_a}Iron Volley" career_id="uruk_crossbow" tier="1">
     <Choice id="uruk_crossbow_t1_a_key" type="Keystone" description="{=taom_ucb_t1_a_key}Iron Rain radius increased, covering wider kill zones." icon_sprite="career_choice_ucb_t1_a_key">
       <Mutations><Mutation target_id="uruk_crossbow_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -6555,7 +6555,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="uruk_crossbow_t1_b" career_id="uruk_crossbow" tier="1">
+  <ChoiceGroup id="uruk_crossbow_t1_b" display_name="{=taom_career_grp_uruk_crossbow_t1_b}Forge-Forged" career_id="uruk_crossbow" tier="1">
     <Choice id="uruk_crossbow_t1_b_key" type="Keystone" description="{=taom_ucb_t1_b_key}Iron Rain duration extended, sustained barrage." icon_sprite="career_choice_ucb_t1_b_key">
       <Mutations><Mutation target_id="uruk_crossbow_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -6573,7 +6573,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="uruk_crossbow_t2_a" career_id="uruk_crossbow" tier="2">
+  <ChoiceGroup id="uruk_crossbow_t2_a" display_name="{=taom_career_grp_uruk_crossbow_t2_a}Bolt of the White Hand" career_id="uruk_crossbow" tier="2">
     <Choice id="uruk_crossbow_t2_a_key" type="Keystone" description="{=taom_ucb_t2_a_key}Iron Rain charge reduced, maintaining constant pressure." icon_sprite="career_choice_ucb_t2_a_key">
       <Mutations><Mutation target_id="uruk_crossbow_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -6591,7 +6591,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="uruk_crossbow_t2_b" career_id="uruk_crossbow" tier="2">
+  <ChoiceGroup id="uruk_crossbow_t2_b" display_name="{=taom_career_grp_uruk_crossbow_t2_b}Warden of the Ring-wall" career_id="uruk_crossbow" tier="2">
     <Choice id="uruk_crossbow_t2_b_key" type="Keystone" description="{=taom_ucb_t2_b_key}Iron Rain gains additional penetration while active." icon_sprite="career_choice_ucb_t2_b_key">
       <Mutations><Mutation target_id="uruk_crossbow_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -6609,7 +6609,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="uruk_crossbow_t3_a" career_id="uruk_crossbow" tier="3">
+  <ChoiceGroup id="uruk_crossbow_t3_a" display_name="{=taom_career_grp_uruk_crossbow_t3_a}Stormcrow of Orthanc" career_id="uruk_crossbow" tier="3">
     <Choice id="uruk_crossbow_t3_a_key" type="Keystone" description="{=taom_ucb_t3_a_key}Iron Rain radius greatly expanded, inescapable volleys." icon_sprite="career_choice_ucb_t3_a_key">
       <Mutations><Mutation target_id="uruk_crossbow_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -6627,7 +6627,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="uruk_crossbow_t3_b" career_id="uruk_crossbow" tier="3">
+  <ChoiceGroup id="uruk_crossbow_t3_b" display_name="{=taom_career_grp_uruk_crossbow_t3_b}Iron Rain Unending" career_id="uruk_crossbow" tier="3">
     <Choice id="uruk_crossbow_t3_b_key" type="Keystone" description="{=taom_ucb_t3_b_key}Iron Rain charge greatly reduced, relentless fire." icon_sprite="career_choice_ucb_t3_b_key">
       <Mutations><Mutation target_id="uruk_crossbow_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -6655,7 +6655,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="warg_scout_t1_a" career_id="warg_scout" tier="1">
+  <ChoiceGroup id="warg_scout_t1_a" display_name="{=taom_career_grp_warg_scout_t1_a}Fang-Runner" career_id="warg_scout" tier="1">
     <Choice id="warg_scout_t1_a_key" type="Keystone" description="{=taom_wsc_t1_a_key}Pack Howl radius expanded, sweeping wider formations." icon_sprite="career_choice_wsc_t1_a_key">
       <Mutations><Mutation target_id="warg_scout_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -6673,7 +6673,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warg_scout_t1_b" career_id="warg_scout" tier="1">
+  <ChoiceGroup id="warg_scout_t1_b" display_name="{=taom_career_grp_warg_scout_t1_b}Grey Pack" career_id="warg_scout" tier="1">
     <Choice id="warg_scout_t1_b_key" type="Keystone" description="{=taom_wsc_t1_b_key}Pack Howl duration extended, maintaining momentum." icon_sprite="career_choice_wsc_t1_b_key">
       <Mutations><Mutation target_id="warg_scout_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -6691,7 +6691,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warg_scout_t2_a" career_id="warg_scout" tier="2">
+  <ChoiceGroup id="warg_scout_t2_a" display_name="{=taom_career_grp_warg_scout_t2_a}Misty Mountain Hunter" career_id="warg_scout" tier="2">
     <Choice id="warg_scout_t2_a_key" type="Keystone" description="{=taom_wsc_t2_a_key}Pack Howl charge reduced, swifter activation." icon_sprite="career_choice_wsc_t2_a_key">
       <Mutations><Mutation target_id="warg_scout_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -6709,7 +6709,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warg_scout_t2_b" career_id="warg_scout" tier="2">
+  <ChoiceGroup id="warg_scout_t2_b" display_name="{=taom_career_grp_warg_scout_t2_b}Wolf-Warden" career_id="warg_scout" tier="2">
     <Choice id="warg_scout_t2_b_key" type="Keystone" description="{=taom_wsc_t2_b_key}Pack Howl boosts mount resilience while active." icon_sprite="career_choice_wsc_t2_b_key">
       <Mutations><Mutation target_id="warg_scout_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -6727,7 +6727,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warg_scout_t3_a" career_id="warg_scout" tier="3">
+  <ChoiceGroup id="warg_scout_t3_a" display_name="{=taom_career_grp_warg_scout_t3_a}Outrider of Isengard" career_id="warg_scout" tier="3">
     <Choice id="warg_scout_t3_a_key" type="Keystone" description="{=taom_wsc_t3_a_key}Pack Howl radius greatly expanded, unstoppable impact." icon_sprite="career_choice_wsc_t3_a_key">
       <Mutations><Mutation target_id="warg_scout_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -6745,7 +6745,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warg_scout_t3_b" career_id="warg_scout" tier="3">
+  <ChoiceGroup id="warg_scout_t3_b" display_name="{=taom_career_grp_warg_scout_t3_b}The Tireless Hunt" career_id="warg_scout" tier="3">
     <Choice id="warg_scout_t3_b_key" type="Keystone" description="{=taom_wsc_t3_b_key}Pack Howl charge greatly reduced, ride without ceasing." icon_sprite="career_choice_wsc_t3_b_key">
       <Mutations><Mutation target_id="warg_scout_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -6774,7 +6774,7 @@
     <PassiveEffect type="Health" magnitude="25" operation="Add" />
   </Choice>
 
-  <ChoiceGroup id="cave_troll_master_t1_a" career_id="cave_troll_master" tier="1">
+  <ChoiceGroup id="cave_troll_master_t1_a" display_name="{=taom_career_grp_cave_troll_master_t1_a}Pit-Whip Driver" career_id="cave_troll_master" tier="1">
     <Choice id="cave_troll_master_t1_a_key" type="Keystone" description="{=taom_ctm_t1_a_key}Troll Frenzy radius increased, empowering more warriors." icon_sprite="career_choice_ctm_t1_a_key">
       <Mutations><Mutation target_id="cave_troll_master_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -6792,7 +6792,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="cave_troll_master_t1_b" career_id="cave_troll_master" tier="1">
+  <ChoiceGroup id="cave_troll_master_t1_b" display_name="{=taom_career_grp_cave_troll_master_t1_b}Cave-Mouth Warden" career_id="cave_troll_master" tier="1">
     <Choice id="cave_troll_master_t1_b_key" type="Keystone" description="{=taom_ctm_t1_b_key}Troll Frenzy duration extended, fortifying the defense." icon_sprite="career_choice_ctm_t1_b_key">
       <Mutations><Mutation target_id="cave_troll_master_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -6810,7 +6810,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="cave_troll_master_t2_a" career_id="cave_troll_master" tier="2">
+  <ChoiceGroup id="cave_troll_master_t2_a" display_name="{=taom_career_grp_cave_troll_master_t2_a}Goblin-town Tyrant" career_id="cave_troll_master" tier="2">
     <Choice id="cave_troll_master_t2_a_key" type="Keystone" description="{=taom_ctm_t2_a_key}Troll Frenzy charge reduced, activating more frequently." icon_sprite="career_choice_ctm_t2_a_key">
       <Mutations><Mutation target_id="cave_troll_master_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -6828,7 +6828,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="cave_troll_master_t2_b" career_id="cave_troll_master" tier="2">
+  <ChoiceGroup id="cave_troll_master_t2_b" display_name="{=taom_career_grp_cave_troll_master_t2_b}Deep-Hold Breaker" career_id="cave_troll_master" tier="2">
     <Choice id="cave_troll_master_t2_b_key" type="Keystone" description="{=taom_ctm_t2_b_key}Troll Frenzy grants additional defensive buffs while active." icon_sprite="career_choice_ctm_t2_b_key">
       <Mutations><Mutation target_id="cave_troll_master_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -6846,7 +6846,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="cave_troll_master_t3_a" career_id="cave_troll_master" tier="3">
+  <ChoiceGroup id="cave_troll_master_t3_a" display_name="{=taom_career_grp_cave_troll_master_t3_a}Scourge of Gundabad" career_id="cave_troll_master" tier="3">
     <Choice id="cave_troll_master_t3_a_key" type="Keystone" description="{=taom_ctm_t3_a_key}Troll Frenzy radius greatly expanded, devastating power." icon_sprite="career_choice_ctm_t3_a_key">
       <Mutations><Mutation target_id="cave_troll_master_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -6864,7 +6864,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="cave_troll_master_t3_b" career_id="cave_troll_master" tier="3">
+  <ChoiceGroup id="cave_troll_master_t3_b" display_name="{=taom_career_grp_cave_troll_master_t3_b}Dread of the Northern Halls" career_id="cave_troll_master" tier="3">
     <Choice id="cave_troll_master_t3_b_key" type="Keystone" description="{=taom_ctm_t3_b_key}Troll Frenzy charge greatly reduced, nearly always available." icon_sprite="career_choice_ctm_t3_b_key">
       <Mutations><Mutation target_id="cave_troll_master_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -6893,7 +6893,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
   </Choice>
 
-  <ChoiceGroup id="goblin_sniper_t1_a" career_id="goblin_sniper" tier="1">
+  <ChoiceGroup id="goblin_sniper_t1_a" display_name="{=taom_career_grp_goblin_sniper_t1_a}Crag-Stalker" career_id="goblin_sniper" tier="1">
     <Choice id="goblin_sniper_t1_a_key" type="Keystone" description="{=taom_gbs_t1_a_key}Poison Dart radius increased, covering wider kill zones." icon_sprite="career_choice_gbs_t1_a_key">
       <Mutations><Mutation target_id="goblin_sniper_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -6911,7 +6911,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="goblin_sniper_t1_b" career_id="goblin_sniper" tier="1">
+  <ChoiceGroup id="goblin_sniper_t1_b" display_name="{=taom_career_grp_goblin_sniper_t1_b}Tunnel Skulker" career_id="goblin_sniper" tier="1">
     <Choice id="goblin_sniper_t1_b_key" type="Keystone" description="{=taom_gbs_t1_b_key}Poison Dart duration extended, sustained barrage." icon_sprite="career_choice_gbs_t1_b_key">
       <Mutations><Mutation target_id="goblin_sniper_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -6929,7 +6929,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="goblin_sniper_t2_a" career_id="goblin_sniper" tier="2">
+  <ChoiceGroup id="goblin_sniper_t2_a" display_name="{=taom_career_grp_goblin_sniper_t2_a}High Pass Ambusher" career_id="goblin_sniper" tier="2">
     <Choice id="goblin_sniper_t2_a_key" type="Keystone" description="{=taom_gbs_t2_a_key}Poison Dart charge reduced, maintaining constant pressure." icon_sprite="career_choice_gbs_t2_a_key">
       <Mutations><Mutation target_id="goblin_sniper_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -6947,7 +6947,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="goblin_sniper_t2_b" career_id="goblin_sniper" tier="2">
+  <ChoiceGroup id="goblin_sniper_t2_b" display_name="{=taom_career_grp_goblin_sniper_t2_b}Poison-Fletcher" career_id="goblin_sniper" tier="2">
     <Choice id="goblin_sniper_t2_b_key" type="Keystone" description="{=taom_gbs_t2_b_key}Poison Dart gains additional penetration while active." icon_sprite="career_choice_gbs_t2_b_key">
       <Mutations><Mutation target_id="goblin_sniper_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -6965,7 +6965,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="goblin_sniper_t3_a" career_id="goblin_sniper" tier="3">
+  <ChoiceGroup id="goblin_sniper_t3_a" display_name="{=taom_career_grp_goblin_sniper_t3_a}Front Porch Reaver" career_id="goblin_sniper" tier="3">
     <Choice id="goblin_sniper_t3_a_key" type="Keystone" description="{=taom_gbs_t3_a_key}Poison Dart radius greatly expanded, inescapable volleys." icon_sprite="career_choice_gbs_t3_a_key">
       <Mutations><Mutation target_id="goblin_sniper_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -6983,7 +6983,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="goblin_sniper_t3_b" career_id="goblin_sniper" tier="3">
+  <ChoiceGroup id="goblin_sniper_t3_b" display_name="{=taom_career_grp_goblin_sniper_t3_b}Shadow of the High Pass" career_id="goblin_sniper" tier="3">
     <Choice id="goblin_sniper_t3_b_key" type="Keystone" description="{=taom_gbs_t3_b_key}Poison Dart charge greatly reduced, relentless fire." icon_sprite="career_choice_gbs_t3_b_key">
       <Mutations><Mutation target_id="goblin_sniper_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -7011,7 +7011,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="warg_pack_leader_t1_a" career_id="warg_pack_leader" tier="1">
+  <ChoiceGroup id="warg_pack_leader_t1_a" display_name="{=taom_career_grp_warg_pack_leader_t1_a}Warg-Rider" career_id="warg_pack_leader" tier="1">
     <Choice id="warg_pack_leader_t1_a_key" type="Keystone" description="{=taom_wpl_t1_a_key}Alpha Howl radius expanded, sweeping wider formations." icon_sprite="career_choice_wpl_t1_a_key">
       <Mutations><Mutation target_id="warg_pack_leader_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -7029,7 +7029,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warg_pack_leader_t1_b" career_id="warg_pack_leader" tier="1">
+  <ChoiceGroup id="warg_pack_leader_t1_b" display_name="{=taom_career_grp_warg_pack_leader_t1_b}Pack-Keeper" career_id="warg_pack_leader" tier="1">
     <Choice id="warg_pack_leader_t1_b_key" type="Keystone" description="{=taom_wpl_t1_b_key}Alpha Howl duration extended, maintaining momentum." icon_sprite="career_choice_wpl_t1_b_key">
       <Mutations><Mutation target_id="warg_pack_leader_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -7047,7 +7047,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warg_pack_leader_t2_a" career_id="warg_pack_leader" tier="2">
+  <ChoiceGroup id="warg_pack_leader_t2_a" display_name="{=taom_career_grp_warg_pack_leader_t2_a}Grey Pack Outrider" career_id="warg_pack_leader" tier="2">
     <Choice id="warg_pack_leader_t2_a_key" type="Keystone" description="{=taom_wpl_t2_a_key}Alpha Howl charge reduced, swifter activation." icon_sprite="career_choice_wpl_t2_a_key">
       <Mutations><Mutation target_id="warg_pack_leader_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -7065,7 +7065,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warg_pack_leader_t2_b" career_id="warg_pack_leader" tier="2">
+  <ChoiceGroup id="warg_pack_leader_t2_b" display_name="{=taom_career_grp_warg_pack_leader_t2_b}Fell Wolf-Master" career_id="warg_pack_leader" tier="2">
     <Choice id="warg_pack_leader_t2_b_key" type="Keystone" description="{=taom_wpl_t2_b_key}Alpha Howl boosts mount resilience while active." icon_sprite="career_choice_wpl_t2_b_key">
       <Mutations><Mutation target_id="warg_pack_leader_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -7083,7 +7083,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warg_pack_leader_t3_a" career_id="warg_pack_leader" tier="3">
+  <ChoiceGroup id="warg_pack_leader_t3_a" display_name="{=taom_career_grp_warg_pack_leader_t3_a}Alpha of Gundabad" career_id="warg_pack_leader" tier="3">
     <Choice id="warg_pack_leader_t3_a_key" type="Keystone" description="{=taom_wpl_t3_a_key}Alpha Howl radius greatly expanded, unstoppable impact." icon_sprite="career_choice_wpl_t3_a_key">
       <Mutations><Mutation target_id="warg_pack_leader_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -7101,7 +7101,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="warg_pack_leader_t3_b" career_id="warg_pack_leader" tier="3">
+  <ChoiceGroup id="warg_pack_leader_t3_b" display_name="{=taom_career_grp_warg_pack_leader_t3_b}Bolg's Wolf-Captain" career_id="warg_pack_leader" tier="3">
     <Choice id="warg_pack_leader_t3_b_key" type="Keystone" description="{=taom_wpl_t3_b_key}Alpha Howl charge greatly reduced, ride without ceasing." icon_sprite="career_choice_wpl_t3_b_key">
       <Mutations><Mutation target_id="warg_pack_leader_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -7129,7 +7129,7 @@
     <PassiveEffect type="Health" magnitude="25" operation="Add" />
   </Choice>
 
-  <ChoiceGroup id="shadow_warrior_t1_a" career_id="shadow_warrior" tier="1">
+  <ChoiceGroup id="shadow_warrior_t1_a" display_name="{=taom_career_grp_shadow_warrior_t1_a}Shade of Amon Lanc" career_id="shadow_warrior" tier="1">
     <Choice id="shadow_warrior_t1_a_key" type="Keystone" description="{=taom_swr_t1_a_key}Soul Drain radius increased, empowering more warriors." icon_sprite="career_choice_swr_t1_a_key">
       <Mutations><Mutation target_id="shadow_warrior_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -7147,7 +7147,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="shadow_warrior_t1_b" career_id="shadow_warrior" tier="1">
+  <ChoiceGroup id="shadow_warrior_t1_b" display_name="{=taom_career_grp_shadow_warrior_t1_b}Warden of the Pits" career_id="shadow_warrior" tier="1">
     <Choice id="shadow_warrior_t1_b_key" type="Keystone" description="{=taom_swr_t1_b_key}Soul Drain duration extended, fortifying the defense." icon_sprite="career_choice_swr_t1_b_key">
       <Mutations><Mutation target_id="shadow_warrior_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -7165,7 +7165,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="shadow_warrior_t2_a" career_id="shadow_warrior" tier="2">
+  <ChoiceGroup id="shadow_warrior_t2_a" display_name="{=taom_career_grp_shadow_warrior_t2_a}Reaver of Mirkwood" career_id="shadow_warrior" tier="2">
     <Choice id="shadow_warrior_t2_a_key" type="Keystone" description="{=taom_swr_t2_a_key}Soul Drain charge reduced, activating more frequently." icon_sprite="career_choice_swr_t2_a_key">
       <Mutations><Mutation target_id="shadow_warrior_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -7183,7 +7183,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="shadow_warrior_t2_b" career_id="shadow_warrior" tier="2">
+  <ChoiceGroup id="shadow_warrior_t2_b" display_name="{=taom_career_grp_shadow_warrior_t2_b}Bulwark of Dol Guldur" career_id="shadow_warrior" tier="2">
     <Choice id="shadow_warrior_t2_b_key" type="Keystone" description="{=taom_swr_t2_b_key}Soul Drain grants additional defensive buffs while active." icon_sprite="career_choice_swr_t2_b_key">
       <Mutations><Mutation target_id="shadow_warrior_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -7201,7 +7201,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="shadow_warrior_t3_a" career_id="shadow_warrior" tier="3">
+  <ChoiceGroup id="shadow_warrior_t3_a" display_name="{=taom_career_grp_shadow_warrior_t3_a}Scourge of the Necromancer" career_id="shadow_warrior" tier="3">
     <Choice id="shadow_warrior_t3_a_key" type="Keystone" description="{=taom_swr_t3_a_key}Soul Drain radius greatly expanded, devastating power." icon_sprite="career_choice_swr_t3_a_key">
       <Mutations><Mutation target_id="shadow_warrior_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -7219,7 +7219,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="shadow_warrior_t3_b" career_id="shadow_warrior" tier="3">
+  <ChoiceGroup id="shadow_warrior_t3_b" display_name="{=taom_career_grp_shadow_warrior_t3_b}Deathless Shadow" career_id="shadow_warrior" tier="3">
     <Choice id="shadow_warrior_t3_b_key" type="Keystone" description="{=taom_swr_t3_b_key}Soul Drain charge greatly reduced, nearly always available." icon_sprite="career_choice_swr_t3_b_key">
       <Mutations><Mutation target_id="shadow_warrior_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -7247,7 +7247,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
   </Choice>
 
-  <ChoiceGroup id="necromancer_acolyte_t1_a" career_id="necromancer_acolyte" tier="1">
+  <ChoiceGroup id="necromancer_acolyte_t1_a" display_name="{=taom_career_grp_necromancer_acolyte_t1_a}Caster of Dark Bolts" career_id="necromancer_acolyte" tier="1">
     <Choice id="necromancer_acolyte_t1_a_key" type="Keystone" description="{=taom_nca_t1_a_key}Dark Bolt radius increased, covering wider kill zones." icon_sprite="career_choice_nca_t1_a_key">
       <Mutations><Mutation target_id="necromancer_acolyte_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -7265,7 +7265,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="necromancer_acolyte_t1_b" career_id="necromancer_acolyte" tier="1">
+  <ChoiceGroup id="necromancer_acolyte_t1_b" display_name="{=taom_career_grp_necromancer_acolyte_t1_b}Whisperer of Decay" career_id="necromancer_acolyte" tier="1">
     <Choice id="necromancer_acolyte_t1_b_key" type="Keystone" description="{=taom_nca_t1_b_key}Dark Bolt duration extended, sustained barrage." icon_sprite="career_choice_nca_t1_b_key">
       <Mutations><Mutation target_id="necromancer_acolyte_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -7283,7 +7283,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="necromancer_acolyte_t2_a" career_id="necromancer_acolyte" tier="2">
+  <ChoiceGroup id="necromancer_acolyte_t2_a" display_name="{=taom_career_grp_necromancer_acolyte_t2_a}Weaver of Black Arts" career_id="necromancer_acolyte" tier="2">
     <Choice id="necromancer_acolyte_t2_a_key" type="Keystone" description="{=taom_nca_t2_a_key}Dark Bolt charge reduced, maintaining constant pressure." icon_sprite="career_choice_nca_t2_a_key">
       <Mutations><Mutation target_id="necromancer_acolyte_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -7301,7 +7301,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="necromancer_acolyte_t2_b" career_id="necromancer_acolyte" tier="2">
+  <ChoiceGroup id="necromancer_acolyte_t2_b" display_name="{=taom_career_grp_necromancer_acolyte_t2_b}Breather of Shadow" career_id="necromancer_acolyte" tier="2">
     <Choice id="necromancer_acolyte_t2_b_key" type="Keystone" description="{=taom_nca_t2_b_key}Dark Bolt gains additional penetration while active." icon_sprite="career_choice_nca_t2_b_key">
       <Mutations><Mutation target_id="necromancer_acolyte_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -7319,7 +7319,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="necromancer_acolyte_t3_a" career_id="necromancer_acolyte" tier="3">
+  <ChoiceGroup id="necromancer_acolyte_t3_a" display_name="{=taom_career_grp_necromancer_acolyte_t3_a}Lord of the Hill of Sorcery" career_id="necromancer_acolyte" tier="3">
     <Choice id="necromancer_acolyte_t3_a_key" type="Keystone" description="{=taom_nca_t3_a_key}Dark Bolt radius greatly expanded, inescapable volleys." icon_sprite="career_choice_nca_t3_a_key">
       <Mutations><Mutation target_id="necromancer_acolyte_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -7337,7 +7337,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="necromancer_acolyte_t3_b" career_id="necromancer_acolyte" tier="3">
+  <ChoiceGroup id="necromancer_acolyte_t3_b" display_name="{=taom_career_grp_necromancer_acolyte_t3_b}Voice of the Necromancer" career_id="necromancer_acolyte" tier="3">
     <Choice id="necromancer_acolyte_t3_b_key" type="Keystone" description="{=taom_nca_t3_b_key}Dark Bolt charge greatly reduced, relentless fire." icon_sprite="career_choice_nca_t3_b_key">
       <Mutations><Mutation target_id="necromancer_acolyte_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -7365,7 +7365,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="fell_rider_t1_a" career_id="fell_rider" tier="1">
+  <ChoiceGroup id="fell_rider_t1_a" display_name="{=taom_career_grp_fell_rider_t1_a}Rider of the Shadow Host" career_id="fell_rider" tier="1">
     <Choice id="fell_rider_t1_a_key" type="Keystone" description="{=taom_flr_t1_a_key}Dread Charge radius expanded, sweeping wider formations." icon_sprite="career_choice_flr_t1_a_key">
       <Mutations><Mutation target_id="fell_rider_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -7383,7 +7383,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="fell_rider_t1_b" career_id="fell_rider" tier="1">
+  <ChoiceGroup id="fell_rider_t1_b" display_name="{=taom_career_grp_fell_rider_t1_b}Keeper of Fell Steeds" career_id="fell_rider" tier="1">
     <Choice id="fell_rider_t1_b_key" type="Keystone" description="{=taom_flr_t1_b_key}Dread Charge duration extended, maintaining momentum." icon_sprite="career_choice_flr_t1_b_key">
       <Mutations><Mutation target_id="fell_rider_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -7401,7 +7401,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="fell_rider_t2_a" career_id="fell_rider" tier="2">
+  <ChoiceGroup id="fell_rider_t2_a" display_name="{=taom_career_grp_fell_rider_t2_a}Herald of Dread" career_id="fell_rider" tier="2">
     <Choice id="fell_rider_t2_a_key" type="Keystone" description="{=taom_flr_t2_a_key}Dread Charge charge reduced, swifter activation." icon_sprite="career_choice_flr_t2_a_key">
       <Mutations><Mutation target_id="fell_rider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -7419,7 +7419,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="fell_rider_t2_b" career_id="fell_rider" tier="2">
+  <ChoiceGroup id="fell_rider_t2_b" display_name="{=taom_career_grp_fell_rider_t2_b}Rider of the Black Breath" career_id="fell_rider" tier="2">
     <Choice id="fell_rider_t2_b_key" type="Keystone" description="{=taom_flr_t2_b_key}Dread Charge boosts mount resilience while active." icon_sprite="career_choice_flr_t2_b_key">
       <Mutations><Mutation target_id="fell_rider_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -7437,7 +7437,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="fell_rider_t3_a" career_id="fell_rider" tier="3">
+  <ChoiceGroup id="fell_rider_t3_a" display_name="{=taom_career_grp_fell_rider_t3_a}Black Rider of Dol Guldur" career_id="fell_rider" tier="3">
     <Choice id="fell_rider_t3_a_key" type="Keystone" description="{=taom_flr_t3_a_key}Dread Charge radius greatly expanded, unstoppable impact." icon_sprite="career_choice_flr_t3_a_key">
       <Mutations><Mutation target_id="fell_rider_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -7455,7 +7455,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="fell_rider_t3_b" career_id="fell_rider" tier="3">
+  <ChoiceGroup id="fell_rider_t3_b" display_name="{=taom_career_grp_fell_rider_t3_b}Shadow of the East" career_id="fell_rider" tier="3">
     <Choice id="fell_rider_t3_b_key" type="Keystone" description="{=taom_flr_t3_b_key}Dread Charge charge greatly reduced, ride without ceasing." icon_sprite="career_choice_flr_t3_b_key">
       <Mutations><Mutation target_id="fell_rider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -7483,7 +7483,7 @@
     <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
   </Choice>
 
-  <ChoiceGroup id="corsair_boarder_t1_a" career_id="corsair_boarder" tier="1">
+  <ChoiceGroup id="corsair_boarder_t1_a" display_name="{=taom_career_grp_corsair_boarder_t1_a}Deck Reaver" career_id="corsair_boarder" tier="1">
     <Choice id="corsair_boarder_t1_a_key" type="Keystone" description="{=taom_crb_t1_a_key}Boarding Action radius increased, empowering more warriors." icon_sprite="career_choice_crb_t1_a_key">
       <Mutations><Mutation target_id="corsair_boarder_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -7501,7 +7501,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_boarder_t1_b" career_id="corsair_boarder" tier="1">
+  <ChoiceGroup id="corsair_boarder_t1_b" display_name="{=taom_career_grp_corsair_boarder_t1_b}Sea-hardened" career_id="corsair_boarder" tier="1">
     <Choice id="corsair_boarder_t1_b_key" type="Keystone" description="{=taom_crb_t1_b_key}Boarding Action duration extended, fortifying the defense." icon_sprite="career_choice_crb_t1_b_key">
       <Mutations><Mutation target_id="corsair_boarder_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -7519,7 +7519,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_boarder_t2_a" career_id="corsair_boarder" tier="2">
+  <ChoiceGroup id="corsair_boarder_t2_a" display_name="{=taom_career_grp_corsair_boarder_t2_a}Ravager of Pelargir" career_id="corsair_boarder" tier="2">
     <Choice id="corsair_boarder_t2_a_key" type="Keystone" description="{=taom_crb_t2_a_key}Boarding Action charge reduced, activating more frequently." icon_sprite="career_choice_crb_t2_a_key">
       <Mutations><Mutation target_id="corsair_boarder_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -7537,7 +7537,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_boarder_t2_b" career_id="corsair_boarder" tier="2">
+  <ChoiceGroup id="corsair_boarder_t2_b" display_name="{=taom_career_grp_corsair_boarder_t2_b}Bulwark of the Haven" career_id="corsair_boarder" tier="2">
     <Choice id="corsair_boarder_t2_b_key" type="Keystone" description="{=taom_crb_t2_b_key}Boarding Action grants additional defensive buffs while active." icon_sprite="career_choice_crb_t2_b_key">
       <Mutations><Mutation target_id="corsair_boarder_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -7555,7 +7555,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_boarder_t3_a" career_id="corsair_boarder" tier="3">
+  <ChoiceGroup id="corsair_boarder_t3_a" display_name="{=taom_career_grp_corsair_boarder_t3_a}Scourge of the Coasts" career_id="corsair_boarder" tier="3">
     <Choice id="corsair_boarder_t3_a_key" type="Keystone" description="{=taom_crb_t3_a_key}Boarding Action radius greatly expanded, devastating power." icon_sprite="career_choice_crb_t3_a_key">
       <Mutations><Mutation target_id="corsair_boarder_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -7573,7 +7573,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_boarder_t3_b" career_id="corsair_boarder" tier="3">
+  <ChoiceGroup id="corsair_boarder_t3_b" display_name="{=taom_career_grp_corsair_boarder_t3_b}Black Númenórean Warlord" career_id="corsair_boarder" tier="3">
     <Choice id="corsair_boarder_t3_b_key" type="Keystone" description="{=taom_crb_t3_b_key}Boarding Action charge greatly reduced, nearly always available." icon_sprite="career_choice_crb_t3_b_key">
       <Mutations><Mutation target_id="corsair_boarder_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -7601,7 +7601,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
   </Choice>
 
-  <ChoiceGroup id="corsair_crossbow_t1_a" career_id="corsair_crossbow" tier="1">
+  <ChoiceGroup id="corsair_crossbow_t1_a" display_name="{=taom_career_grp_corsair_crossbow_t1_a}Rigging Marksman" career_id="corsair_crossbow" tier="1">
     <Choice id="corsair_crossbow_t1_a_key" type="Keystone" description="{=taom_crc_t1_a_key}Rigging Shot radius increased, covering wider kill zones." icon_sprite="career_choice_crc_t1_a_key">
       <Mutations><Mutation target_id="corsair_crossbow_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -7619,7 +7619,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_crossbow_t1_b" career_id="corsair_crossbow" tier="1">
+  <ChoiceGroup id="corsair_crossbow_t1_b" display_name="{=taom_career_grp_corsair_crossbow_t1_b}Crow's-nest Watch" career_id="corsair_crossbow" tier="1">
     <Choice id="corsair_crossbow_t1_b_key" type="Keystone" description="{=taom_crc_t1_b_key}Rigging Shot duration extended, sustained barrage." icon_sprite="career_choice_crc_t1_b_key">
       <Mutations><Mutation target_id="corsair_crossbow_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -7637,7 +7637,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_crossbow_t2_a" career_id="corsair_crossbow" tier="2">
+  <ChoiceGroup id="corsair_crossbow_t2_a" display_name="{=taom_career_grp_corsair_crossbow_t2_a}Hunter of Helmsmen" career_id="corsair_crossbow" tier="2">
     <Choice id="corsair_crossbow_t2_a_key" type="Keystone" description="{=taom_crc_t2_a_key}Rigging Shot charge reduced, maintaining constant pressure." icon_sprite="career_choice_crc_t2_a_key">
       <Mutations><Mutation target_id="corsair_crossbow_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -7655,7 +7655,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_crossbow_t2_b" career_id="corsair_crossbow" tier="2">
+  <ChoiceGroup id="corsair_crossbow_t2_b" display_name="{=taom_career_grp_corsair_crossbow_t2_b}Pike of the Black Sails" career_id="corsair_crossbow" tier="2">
     <Choice id="corsair_crossbow_t2_b_key" type="Keystone" description="{=taom_crc_t2_b_key}Rigging Shot gains additional penetration while active." icon_sprite="career_choice_crc_t2_b_key">
       <Mutations><Mutation target_id="corsair_crossbow_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -7673,7 +7673,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_crossbow_t3_a" career_id="corsair_crossbow" tier="3">
+  <ChoiceGroup id="corsair_crossbow_t3_a" display_name="{=taom_career_grp_corsair_crossbow_t3_a}Quarrel of the Black Star" career_id="corsair_crossbow" tier="3">
     <Choice id="corsair_crossbow_t3_a_key" type="Keystone" description="{=taom_crc_t3_a_key}Rigging Shot radius greatly expanded, inescapable volleys." icon_sprite="career_choice_crc_t3_a_key">
       <Mutations><Mutation target_id="corsair_crossbow_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -7691,7 +7691,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_crossbow_t3_b" career_id="corsair_crossbow" tier="3">
+  <ChoiceGroup id="corsair_crossbow_t3_b" display_name="{=taom_career_grp_corsair_crossbow_t3_b}Unceasing Volley" career_id="corsair_crossbow" tier="3">
     <Choice id="corsair_crossbow_t3_b_key" type="Keystone" description="{=taom_crc_t3_b_key}Rigging Shot charge greatly reduced, relentless fire." icon_sprite="career_choice_crc_t3_b_key">
       <Mutations><Mutation target_id="corsair_crossbow_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>
@@ -7719,7 +7719,7 @@
     <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="corsair_captain_t1_a" career_id="corsair_captain" tier="1">
+  <ChoiceGroup id="corsair_captain_t1_a" display_name="{=taom_career_grp_corsair_captain_t1_a}Raid-leader of Umbar" career_id="corsair_captain" tier="1">
     <Choice id="corsair_captain_t1_a_key" type="Keystone" description="{=taom_crca_t1_a_key}Plunder radius expanded, sweeping wider formations." icon_sprite="career_choice_crca_t1_a_key">
       <Mutations><Mutation target_id="corsair_captain_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
     </Choice>
@@ -7737,7 +7737,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_captain_t1_b" career_id="corsair_captain" tier="1">
+  <ChoiceGroup id="corsair_captain_t1_b" display_name="{=taom_career_grp_corsair_captain_t1_b}Master of the Crew" career_id="corsair_captain" tier="1">
     <Choice id="corsair_captain_t1_b_key" type="Keystone" description="{=taom_crca_t1_b_key}Plunder duration extended, maintaining momentum." icon_sprite="career_choice_crca_t1_b_key">
       <Mutations><Mutation target_id="corsair_captain_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
     </Choice>
@@ -7755,7 +7755,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_captain_t2_a" career_id="corsair_captain" tier="2">
+  <ChoiceGroup id="corsair_captain_t2_a" display_name="{=taom_career_grp_corsair_captain_t2_a}Heir of Castamir" career_id="corsair_captain" tier="2">
     <Choice id="corsair_captain_t2_a_key" type="Keystone" description="{=taom_crca_t2_a_key}Plunder charge reduced, swifter activation." icon_sprite="career_choice_crca_t2_a_key">
       <Mutations><Mutation target_id="corsair_captain_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
     </Choice>
@@ -7773,7 +7773,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_captain_t2_b" career_id="corsair_captain" tier="2">
+  <ChoiceGroup id="corsair_captain_t2_b" display_name="{=taom_career_grp_corsair_captain_t2_b}Helm of the Black Fleet" career_id="corsair_captain" tier="2">
     <Choice id="corsair_captain_t2_b_key" type="Keystone" description="{=taom_crca_t2_b_key}Plunder boosts mount resilience while active." icon_sprite="career_choice_crca_t2_b_key">
       <Mutations><Mutation target_id="corsair_captain_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
     </Choice>
@@ -7791,7 +7791,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_captain_t3_a" career_id="corsair_captain" tier="3">
+  <ChoiceGroup id="corsair_captain_t3_a" display_name="{=taom_career_grp_corsair_captain_t3_a}Lord of the Corsairs" career_id="corsair_captain" tier="3">
     <Choice id="corsair_captain_t3_a_key" type="Keystone" description="{=taom_crca_t3_a_key}Plunder radius greatly expanded, unstoppable impact." icon_sprite="career_choice_crca_t3_a_key">
       <Mutations><Mutation target_id="corsair_captain_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
     </Choice>
@@ -7809,7 +7809,7 @@
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="corsair_captain_t3_b" career_id="corsair_captain" tier="3">
+  <ChoiceGroup id="corsair_captain_t3_b" display_name="{=taom_career_grp_corsair_captain_t3_b}Lord of the Great Haven" career_id="corsair_captain" tier="3">
     <Choice id="corsair_captain_t3_b_key" type="Keystone" description="{=taom_crca_t3_b_key}Plunder charge greatly reduced, ride without ceasing." icon_sprite="career_choice_crca_t3_b_key">
       <Mutations><Mutation target_id="corsair_captain_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
     </Choice>

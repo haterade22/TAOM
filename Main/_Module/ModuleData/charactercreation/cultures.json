@@ -6,8 +6,8 @@
     "default_age": 20.0,
     "default_weight": 0.0,
     "default_build": 0.7222,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "mordor",
@@ -16,8 +16,8 @@
     "default_age": 20.0,
     "default_weight": 0.5417,
     "default_build": 0.5231,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "erebor",
@@ -26,8 +26,8 @@
     "default_age": 20.0,
     "default_weight": 0.5648,
     "default_build": 0.5347,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "rivendell",
@@ -36,8 +36,8 @@
     "default_age": 20.0,
     "default_weight": 0.0232,
     "default_build": 0.5347,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "mirkwood",
@@ -46,8 +46,8 @@
     "default_age": 20.0,
     "default_weight": 0.0232,
     "default_build": 0.5347,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "lothlorien",
@@ -56,8 +56,8 @@
     "default_age": 20.0,
     "default_weight": 0.0232,
     "default_build": 0.5347,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "isengard",
@@ -66,8 +66,8 @@
     "default_age": 20.0,
     "default_weight": 0.5417,
     "default_build": 0.5231,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "gundabad",
@@ -76,8 +76,8 @@
     "default_age": 30.0,
     "default_weight": 0.5417,
     "default_build": 0.543,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "dolguldur",
@@ -86,8 +86,8 @@
     "default_age": 20.0,
     "default_weight": 0.5417,
     "default_build": 0.3125,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "umbar",
@@ -96,8 +96,8 @@
     "default_age": 20.0,
     "default_weight": 0.5417,
     "default_build": 0.5231,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "empire",
@@ -106,8 +106,8 @@
     "default_age": 20.0,
     "default_weight": 0.0,
     "default_build": 0.7222,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "vlandia",
@@ -116,8 +116,8 @@
     "default_age": 20.0,
     "default_weight": 0.0,
     "default_build": 0.7222,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "sturgia",
@@ -126,8 +126,8 @@
     "default_age": 20.0,
     "default_weight": 0.0,
     "default_build": 0.7222,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "aserai",
@@ -136,8 +136,8 @@
     "default_age": 20.0,
     "default_weight": 0.0,
     "default_build": 0.7222,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "shaghana",
@@ -146,8 +146,8 @@
     "default_age": 20.0,
     "default_weight": 0.5417,
     "default_build": 0.5231,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "abanissa",
@@ -156,8 +156,8 @@
     "default_age": 20.0,
     "default_weight": 0.5417,
     "default_build": 0.5231,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "battania",
@@ -166,8 +166,8 @@
     "default_age": 20.0,
     "default_weight": 0.0,
     "default_build": 0.7222,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   },
   {
     "culture_id": "khuzait",
@@ -176,7 +176,7 @@
     "default_age": 20.0,
     "default_weight": 0.0,
     "default_build": 0.7222,
-    "focus_to_add": 1,
-    "skill_level_to_add": 10
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
   }
 ]

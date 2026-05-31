@@ -793,6 +793,450 @@
 	<string id="taom_career_tier2" text="{=taom_career_tier2}Tier 2" />
 	<string id="taom_career_tier3" text="{=taom_career_tier3}Tier 3" />
 	<string id="taom_career_free_points" text="{=taom_career_free_points}Free Points: {COUNT}" />
+	<string id="taom_career_tier_requirement" text="{=taom_career_tier_requirement}Requires Level {LEVEL}" />
+	<!-- Career per-tier rank titles (Phase C; web-researched, adopted from TOR) -->
+	<string id="taom_career_rank1_avanc_luth_raider" text="{=taom_career_rank1_avanc_luth_raider}Painted Reaver" />
+	<string id="taom_career_rank2_avanc_luth_raider" text="{=taom_career_rank2_avanc_luth_raider}Clan Berserker" />
+	<string id="taom_career_rank3_avanc_luth_raider" text="{=taom_career_rank3_avanc_luth_raider}Avanc-lúth War-Chief" />
+	<string id="taom_career_rank1_balchoth_kan" text="{=taom_career_rank1_balchoth_kan}Balchoth Horseman" />
+	<string id="taom_career_rank2_balchoth_kan" text="{=taom_career_rank2_balchoth_kan}Balchoth Charioteer-Captain" />
+	<string id="taom_career_rank3_balchoth_kan" text="{=taom_career_rank3_balchoth_kan}Balchoth Warlord-Kân" />
+	<string id="taom_career_rank1_black_uruk_captain" text="{=taom_career_rank1_black_uruk_captain}Uruk Soldier" />
+	<string id="taom_career_rank2_black_uruk_captain" text="{=taom_career_rank2_black_uruk_captain}Black Uruk" />
+	<string id="taom_career_rank3_black_uruk_captain" text="{=taom_career_rank3_black_uruk_captain}Captain of the Red Eye" />
+	<string id="taom_career_rank1_blade_dancer" text="{=taom_career_rank1_blade_dancer}Ñoldor Bladesman" />
+	<string id="taom_career_rank2_blade_dancer" text="{=taom_career_rank2_blade_dancer}Blade of the Golden Flower" />
+	<string id="taom_career_rank3_blade_dancer" text="{=taom_career_rank3_blade_dancer}Blademaster of Imladris" />
+	<string id="taom_career_rank1_blademaster_of_ren" text="{=taom_career_rank1_blademaster_of_ren}Blade of Rên" />
+	<string id="taom_career_rank2_blademaster_of_ren" text="{=taom_career_rank2_blademaster_of_ren}Sworn Blademaster" />
+	<string id="taom_career_rank3_blademaster_of_ren" text="{=taom_career_rank3_blademaster_of_ren}Kân of the Crimson Edge" />
+	<string id="taom_career_rank1_captain_of_osgiliath" text="{=taom_career_rank1_captain_of_osgiliath}Ohtar of the Crossing" />
+	<string id="taom_career_rank2_captain_of_osgiliath" text="{=taom_career_rank2_captain_of_osgiliath}Warden of Osgiliath" />
+	<string id="taom_career_rank3_captain_of_osgiliath" text="{=taom_career_rank3_captain_of_osgiliath}Captain of Osgiliath" />
+	<string id="taom_career_rank1_cave_troll_master" text="{=taom_career_rank1_cave_troll_master}Pit-Driver" />
+	<string id="taom_career_rank2_cave_troll_master" text="{=taom_career_rank2_cave_troll_master}Troll-Goad of Gundabad" />
+	<string id="taom_career_rank3_cave_troll_master" text="{=taom_career_rank3_cave_troll_master}Maker of Broken Trolls" />
+	<string id="taom_career_rank1_chariot_warlord" text="{=taom_career_rank1_chariot_warlord}Scythe-Driver" />
+	<string id="taom_career_rank2_chariot_warlord" text="{=taom_career_rank2_chariot_warlord}Chariot Warlord" />
+	<string id="taom_career_rank3_chariot_warlord" text="{=taom_career_rank3_chariot_warlord}Wainkân of Khand" />
+	<string id="taom_career_rank1_clanguard_rider" text="{=taom_career_rank1_clanguard_rider}Clan Outrider" />
+	<string id="taom_career_rank2_clanguard_rider" text="{=taom_career_rank2_clanguard_rider}Boar-Banner Horseman" />
+	<string id="taom_career_rank3_clanguard_rider" text="{=taom_career_rank3_clanguard_rider}Master of the Wild Hunt" />
+	<string id="taom_career_rank1_codyan_legionaire" text="{=taom_career_rank1_codyan_legionaire}Côdyan Shieldman" />
+	<string id="taom_career_rank2_codyan_legionaire" text="{=taom_career_rank2_codyan_legionaire}Côdyan Lamellar Veteran" />
+	<string id="taom_career_rank3_codyan_legionaire" text="{=taom_career_rank3_codyan_legionaire}Ironwall of Rhûn" />
+	<string id="taom_career_rank1_corsair_boarder" text="{=taom_career_rank1_corsair_boarder}Deck Reaver" />
+	<string id="taom_career_rank2_corsair_boarder" text="{=taom_career_rank2_corsair_boarder}Corsair of the Haven" />
+	<string id="taom_career_rank3_corsair_boarder" text="{=taom_career_rank3_corsair_boarder}Black Reaver of Umbar" />
+	<string id="taom_career_rank1_corsair_captain" text="{=taom_career_rank1_corsair_captain}Master of the Black Fleet" />
+	<string id="taom_career_rank2_corsair_captain" text="{=taom_career_rank2_corsair_captain}Captain of Ships" />
+	<string id="taom_career_rank3_corsair_captain" text="{=taom_career_rank3_corsair_captain}Lord of Umbar" />
+	<string id="taom_career_rank1_corsair_crossbow" text="{=taom_career_rank1_corsair_crossbow}Rigging Marksman" />
+	<string id="taom_career_rank2_corsair_crossbow" text="{=taom_career_rank2_corsair_crossbow}Corsair Sharpshooter" />
+	<string id="taom_career_rank3_corsair_crossbow" text="{=taom_career_rank3_corsair_crossbow}Throng-cleaver of the Fleet" />
+	<string id="taom_career_rank1_crossbow_master" text="{=taom_career_rank1_crossbow_master}Bolt-Smith" />
+	<string id="taom_career_rank2_crossbow_master" text="{=taom_career_rank2_crossbow_master}Master Quarreler" />
+	<string id="taom_career_rank3_crossbow_master" text="{=taom_career_rank3_crossbow_master}Engine-Lord of the Iron Hills" />
+	<string id="taom_career_rank1_dale_guardsman" text="{=taom_career_rank1_dale_guardsman}Gate-Warden of Dale" />
+	<string id="taom_career_rank2_dale_guardsman" text="{=taom_career_rank2_dale_guardsman}Shieldman of Girion" />
+	<string id="taom_career_rank3_dale_guardsman" text="{=taom_career_rank3_dale_guardsman}Knight of Dale" />
+	<string id="taom_career_rank1_dale_marksman" text="{=taom_career_rank1_dale_marksman}Bowman of Esgaroth" />
+	<string id="taom_career_rank2_dale_marksman" text="{=taom_career_rank2_dale_marksman}Dragon-Shooter" />
+	<string id="taom_career_rank3_dale_marksman" text="{=taom_career_rank3_dale_marksman}Bearer of the Black Arrow" />
+	<string id="taom_career_rank1_dale_outrider" text="{=taom_career_rank1_dale_outrider}Road-Rider of Dale" />
+	<string id="taom_career_rank2_dale_outrider" text="{=taom_career_rank2_dale_outrider}Warden of the North-Road" />
+	<string id="taom_career_rank3_dale_outrider" text="{=taom_career_rank3_dale_outrider}Marshal of the Bardings" />
+	<string id="taom_career_rank1_elk_rider" text="{=taom_career_rank1_elk_rider}Woodland Outrider" />
+	<string id="taom_career_rank2_elk_rider" text="{=taom_career_rank2_elk_rider}Elk-Warden of Mirkwood" />
+	<string id="taom_career_rank3_elk_rider" text="{=taom_career_rank3_elk_rider}Antlered Lord of Eryn Lasgalen" />
+	<string id="taom_career_rank1_elven_archer" text="{=taom_career_rank1_elven_archer}Ñoldor Bowman" />
+	<string id="taom_career_rank2_elven_archer" text="{=taom_career_rank2_elven_archer}Sentinel of the Heavenly Arch" />
+	<string id="taom_career_rank3_elven_archer" text="{=taom_career_rank3_elven_archer}Warden of Imladris" />
+	<string id="taom_career_rank1_eotheod_windrider" text="{=taom_career_rank1_eotheod_windrider}Rider of the Mark" />
+	<string id="taom_career_rank2_eotheod_windrider" text="{=taom_career_rank2_eotheod_windrider}Captain of the Éored" />
+	<string id="taom_career_rank3_eotheod_windrider" text="{=taom_career_rank3_eotheod_windrider}Marshal of the Riddermark" />
+	<string id="taom_career_rank1_fell_rider" text="{=taom_career_rank1_fell_rider}Black Rider" />
+	<string id="taom_career_rank2_fell_rider" text="{=taom_career_rank2_fell_rider}Fell Rider" />
+	<string id="taom_career_rank3_fell_rider" text="{=taom_career_rank3_fell_rider}Shadow of the East" />
+	<string id="taom_career_rank1_galadhrim_archer" text="{=taom_career_rank1_galadhrim_archer}Bowman of the Galadhrim" />
+	<string id="taom_career_rank2_galadhrim_archer" text="{=taom_career_rank2_galadhrim_archer}Archer of the Mallorn-Eaves" />
+	<string id="taom_career_rank3_galadhrim_archer" text="{=taom_career_rank3_galadhrim_archer}Bowmaster of the Golden Wood" />
+	<string id="taom_career_rank1_goblin_sniper" text="{=taom_career_rank1_goblin_sniper}Crag-Lurker" />
+	<string id="taom_career_rank2_goblin_sniper" text="{=taom_career_rank2_goblin_sniper}High Pass Stalker" />
+	<string id="taom_career_rank3_goblin_sniper" text="{=taom_career_rank3_goblin_sniper}Eye of Gundabad" />
+	<string id="taom_career_rank1_ironguard" text="{=taom_career_rank1_ironguard}Deep Warden" />
+	<string id="taom_career_rank2_ironguard" text="{=taom_career_rank2_ironguard}Ironguard of Erebor" />
+	<string id="taom_career_rank3_ironguard" text="{=taom_career_rank3_ironguard}Shieldwall of Durin" />
+	<string id="taom_career_rank1_knight_of_belfalas" text="{=taom_career_rank1_knight_of_belfalas}Squire of Dol Amroth" />
+	<string id="taom_career_rank2_knight_of_belfalas" text="{=taom_career_rank2_knight_of_belfalas}Swan-Knight" />
+	<string id="taom_career_rank3_knight_of_belfalas" text="{=taom_career_rank3_knight_of_belfalas}Knight of the Silver Swan" />
+	<string id="taom_career_rank1_lokhas_drus_marksman" text="{=taom_career_rank1_lokhas_drus_marksman}Lôkhas Drûs Bowman" />
+	<string id="taom_career_rank2_lokhas_drus_marksman" text="{=taom_career_rank2_lokhas_drus_marksman}Lôkhas Drûs Plate-Piercer" />
+	<string id="taom_career_rank3_lokhas_drus_marksman" text="{=taom_career_rank3_lokhas_drus_marksman}Sunfletched Death of the East" />
+	<string id="taom_career_rank1_mahud_beast_rider" text="{=taom_career_rank1_mahud_beast_rider}Mahûd Beast-Tamer" />
+	<string id="taom_career_rank2_mahud_beast_rider" text="{=taom_career_rank2_mahud_beast_rider}Mûmak Driver" />
+	<string id="taom_career_rank3_mahud_beast_rider" text="{=taom_career_rank3_mahud_beast_rider}Mûmak War-Leader" />
+	<string id="taom_career_rank1_marksman_of_aldburg" text="{=taom_career_rank1_marksman_of_aldburg}Bowman of the Eastfold" />
+	<string id="taom_career_rank2_marksman_of_aldburg" text="{=taom_career_rank2_marksman_of_aldburg}Marksman of Aldburg" />
+	<string id="taom_career_rank3_marksman_of_aldburg" text="{=taom_career_rank3_marksman_of_aldburg}Arrow-warden of the Mark" />
+	<string id="taom_career_rank1_mulkerhili_cultist" text="{=taom_career_rank1_mulkerhili_cultist}Whisper-Sworn" />
+	<string id="taom_career_rank2_mulkerhili_cultist" text="{=taom_career_rank2_mulkerhili_cultist}Voice of Lugbúrz" />
+	<string id="taom_career_rank3_mulkerhili_cultist" text="{=taom_career_rank3_mulkerhili_cultist}Herald of the Lidless Eye" />
+	<string id="taom_career_rank1_necromancer_acolyte" text="{=taom_career_rank1_necromancer_acolyte}Acolyte of Sorcery" />
+	<string id="taom_career_rank2_necromancer_acolyte" text="{=taom_career_rank2_necromancer_acolyte}Weaver of the Black Breath" />
+	<string id="taom_career_rank3_necromancer_acolyte" text="{=taom_career_rank3_necromancer_acolyte}Master of Dol Guldur" />
+	<string id="taom_career_rank1_olog_hai_warchief" text="{=taom_career_rank1_olog_hai_warchief}War-Troll" />
+	<string id="taom_career_rank2_olog_hai_warchief" text="{=taom_career_rank2_olog_hai_warchief}Olog-hai" />
+	<string id="taom_career_rank3_olog_hai_warchief" text="{=taom_career_rank3_olog_hai_warchief}Warchief of Lugbúrz" />
+	<string id="taom_career_rank1_pezarsani_javelineer" text="{=taom_career_rank1_pezarsani_javelineer}Pezarsan Javelineer" />
+	<string id="taom_career_rank2_pezarsani_javelineer" text="{=taom_career_rank2_pezarsani_javelineer}Throwing-Spear Skirmisher" />
+	<string id="taom_career_rank3_pezarsani_javelineer" text="{=taom_career_rank3_pezarsani_javelineer}Scarlet Spear-Master" />
+	<string id="taom_career_rank1_ram_rider" text="{=taom_career_rank1_ram_rider}Ram-Breaker" />
+	<string id="taom_career_rank2_ram_rider" text="{=taom_career_rank2_ram_rider}Goatback Charger" />
+	<string id="taom_career_rank3_ram_rider" text="{=taom_career_rank3_ram_rider}Vanguard of Dáin" />
+	<string id="taom_career_rank1_ranger_of_ithilien" text="{=taom_career_rank1_ranger_of_ithilien}Ithilien Scout" />
+	<string id="taom_career_rank2_ranger_of_ithilien" text="{=taom_career_rank2_ranger_of_ithilien}Ranger of Ithilien" />
+	<string id="taom_career_rank3_ranger_of_ithilien" text="{=taom_career_rank3_ranger_of_ithilien}Captain of the White Company" />
+	<string id="taom_career_rank1_rivendell_knight" text="{=taom_career_rank1_rivendell_knight}Ohtar of Imladris" />
+	<string id="taom_career_rank2_rivendell_knight" text="{=taom_career_rank2_rivendell_knight}Roquen of Imladris" />
+	<string id="taom_career_rank3_rivendell_knight" text="{=taom_career_rank3_rivendell_knight}Knight of the Golden Flower" />
+	<string id="taom_career_rank1_sentinel" text="{=taom_career_rank1_sentinel}Rider of the Egladil" />
+	<string id="taom_career_rank2_sentinel" text="{=taom_career_rank2_sentinel}Tirith of the Golden Wood" />
+	<string id="taom_career_rank3_sentinel" text="{=taom_career_rank3_sentinel}Thalion of Caras Galadhon" />
+	<string id="taom_career_rank1_shadow_walker" text="{=taom_career_rank1_shadow_walker}Forest Stalker" />
+	<string id="taom_career_rank2_shadow_walker" text="{=taom_career_rank2_shadow_walker}Shadow of Taur-nu-Fuin" />
+	<string id="taom_career_rank3_shadow_walker" text="{=taom_career_rank3_shadow_walker}Bane of Spiders" />
+	<string id="taom_career_rank1_shadow_warrior" text="{=taom_career_rank1_shadow_warrior}Thrall of the Shadow" />
+	<string id="taom_career_rank2_shadow_warrior" text="{=taom_career_rank2_shadow_warrior}Servant of Dol Guldur" />
+	<string id="taom_career_rank3_shadow_warrior" text="{=taom_career_rank3_shadow_warrior}Black Hand of the Necromancer" />
+	<string id="taom_career_rank1_silvan_archer" text="{=taom_career_rank1_silvan_archer}Greenwood Bowman" />
+	<string id="taom_career_rank2_silvan_archer" text="{=taom_career_rank2_silvan_archer}Silvan Marksman" />
+	<string id="taom_career_rank3_silvan_archer" text="{=taom_career_rank3_silvan_archer}Archer of the Elvenking" />
+	<string id="taom_career_rank1_snaga_rider" text="{=taom_career_rank1_snaga_rider}Snaga" />
+	<string id="taom_career_rank2_snaga_rider" text="{=taom_career_rank2_snaga_rider}Smoke-Raider" />
+	<string id="taom_career_rank3_snaga_rider" text="{=taom_career_rank3_snaga_rider}Shadow of Lugbúrz" />
+	<string id="taom_career_rank1_steppe_bowmaster" text="{=taom_career_rank1_steppe_bowmaster}Plains Outrider" />
+	<string id="taom_career_rank2_steppe_bowmaster" text="{=taom_career_rank2_steppe_bowmaster}Steppe Bowmaster" />
+	<string id="taom_career_rank3_steppe_bowmaster" text="{=taom_career_rank3_steppe_bowmaster}Stormbow Kân" />
+	<string id="taom_career_rank1_tribesman_of_jelut" text="{=taom_career_rank1_tribesman_of_jelut}Jelut Tribesman" />
+	<string id="taom_career_rank2_tribesman_of_jelut" text="{=taom_career_rank2_tribesman_of_jelut}Sandstorm Raider" />
+	<string id="taom_career_rank3_tribesman_of_jelut" text="{=taom_career_rank3_tribesman_of_jelut}Serpent-Banner Chieftain" />
+	<string id="taom_career_rank1_uruk_berserker" text="{=taom_career_rank1_uruk_berserker}Pit-Spawned Uruk" />
+	<string id="taom_career_rank2_uruk_berserker" text="{=taom_career_rank2_uruk_berserker}Fighting Uruk-hai" />
+	<string id="taom_career_rank3_uruk_berserker" text="{=taom_career_rank3_uruk_berserker}White Hand Reaver" />
+	<string id="taom_career_rank1_uruk_crossbow" text="{=taom_career_rank1_uruk_crossbow}Forge-Armed Uruk" />
+	<string id="taom_career_rank2_uruk_crossbow" text="{=taom_career_rank2_uruk_crossbow}Orthanc Marksman" />
+	<string id="taom_career_rank3_uruk_crossbow" text="{=taom_career_rank3_uruk_crossbow}White Hand Sharpshooter" />
+	<string id="taom_career_rank1_warden" text="{=taom_career_rank1_warden}Warden of the Eaves" />
+	<string id="taom_career_rank2_warden" text="{=taom_career_rank2_warden}Marchwarden of Lórien" />
+	<string id="taom_career_rank3_warden" text="{=taom_career_rank3_warden}Captain of the Marchwardens" />
+	<string id="taom_career_rank1_warg_pack_leader" text="{=taom_career_rank1_warg_pack_leader}Warg-Rider of the Pack" />
+	<string id="taom_career_rank2_warg_pack_leader" text="{=taom_career_rank2_warg_pack_leader}Fell Wolf-Captain" />
+	<string id="taom_career_rank3_warg_pack_leader" text="{=taom_career_rank3_warg_pack_leader}Wolf-Lord of the Wild Hunt" />
+	<string id="taom_career_rank1_warg_scout" text="{=taom_career_rank1_warg_scout}Wolf-Rider" />
+	<string id="taom_career_rank2_warg_scout" text="{=taom_career_rank2_warg_scout}Warg-Scout of Isengard" />
+	<string id="taom_career_rank3_warg_scout" text="{=taom_career_rank3_warg_scout}Hunter of the White Hand" />
+	<string id="taom_career_rank1_watchman_of_stangard" text="{=taom_career_rank1_watchman_of_stangard}Watchman of Stangard" />
+	<string id="taom_career_rank2_watchman_of_stangard" text="{=taom_career_rank2_watchman_of_stangard}Ford-warden of the Limlight" />
+	<string id="taom_career_rank3_watchman_of_stangard" text="{=taom_career_rank3_watchman_of_stangard}Warden of the East-marches" />
+	<string id="taom_career_rank1_wolfskin_hunter" text="{=taom_career_rank1_wolfskin_hunter}Wolf-Pelt Stalker" />
+	<string id="taom_career_rank2_wolfskin_hunter" text="{=taom_career_rank2_wolfskin_hunter}Shadow-Marksman" />
+	<string id="taom_career_rank3_wolfskin_hunter" text="{=taom_career_rank3_wolfskin_hunter}Grey Huntsman of the Hills" />
+	<!-- Career choice-group path names (Phase B; web-researched lore) -->
+	<string id="taom_career_grp_avanc_luth_raider_t1_a" text="{=taom_career_grp_avanc_luth_raider_t1_a}Hill-Clan Berserker" />
+	<string id="taom_career_grp_avanc_luth_raider_t1_b" text="{=taom_career_grp_avanc_luth_raider_t1_b}Sworn Axe-Thrower" />
+	<string id="taom_career_grp_avanc_luth_raider_t2_a" text="{=taom_career_grp_avanc_luth_raider_t2_a}Blood-Debt Reaver" />
+	<string id="taom_career_grp_avanc_luth_raider_t2_b" text="{=taom_career_grp_avanc_luth_raider_t2_b}Warchant Hillman" />
+	<string id="taom_career_grp_avanc_luth_raider_t3_a" text="{=taom_career_grp_avanc_luth_raider_t3_a}Avanc-lúth War-Chieftain" />
+	<string id="taom_career_grp_avanc_luth_raider_t3_b" text="{=taom_career_grp_avanc_luth_raider_t3_b}Lord of the Warhost" />
+	<string id="taom_career_grp_balchoth_kan_t1_a" text="{=taom_career_grp_balchoth_kan_t1_a}Balchoth Rider" />
+	<string id="taom_career_grp_balchoth_kan_t1_b" text="{=taom_career_grp_balchoth_kan_t1_b}Fearless Outrider" />
+	<string id="taom_career_grp_balchoth_kan_t2_a" text="{=taom_career_grp_balchoth_kan_t2_a}Wainrider of Rhûn" />
+	<string id="taom_career_grp_balchoth_kan_t2_b" text="{=taom_career_grp_balchoth_kan_t2_b}Iron Horseman" />
+	<string id="taom_career_grp_balchoth_kan_t3_a" text="{=taom_career_grp_balchoth_kan_t3_a}The Unstoppable Tide" />
+	<string id="taom_career_grp_balchoth_kan_t3_b" text="{=taom_career_grp_balchoth_kan_t3_b}The Dread Horde" />
+	<string id="taom_career_grp_black_uruk_captain_t1_a" text="{=taom_career_grp_black_uruk_captain_t1_a}Forge-Tempered Hide" />
+	<string id="taom_career_grp_black_uruk_captain_t1_b" text="{=taom_career_grp_black_uruk_captain_t1_b}First Blood-Frenzy" />
+	<string id="taom_career_grp_black_uruk_captain_t2_a" text="{=taom_career_grp_black_uruk_captain_t2_a}Berserker of Lugbúrz" />
+	<string id="taom_career_grp_black_uruk_captain_t2_b" text="{=taom_career_grp_black_uruk_captain_t2_b}Unending Wrath" />
+	<string id="taom_career_grp_black_uruk_captain_t3_a" text="{=taom_career_grp_black_uruk_captain_t3_a}Wrath of the Lidless Eye" />
+	<string id="taom_career_grp_black_uruk_captain_t3_b" text="{=taom_career_grp_black_uruk_captain_t3_b}Captain of the Black Gate" />
+	<string id="taom_career_grp_blade_dancer_t1_a" text="{=taom_career_grp_blade_dancer_t1_a}Starlit Steel" />
+	<string id="taom_career_grp_blade_dancer_t1_b" text="{=taom_career_grp_blade_dancer_t1_b}Guard of Imladris" />
+	<string id="taom_career_grp_blade_dancer_t2_a" text="{=taom_career_grp_blade_dancer_t2_a}Dance of Gondolin" />
+	<string id="taom_career_grp_blade_dancer_t2_b" text="{=taom_career_grp_blade_dancer_t2_b}Ward of the Hidden Valley" />
+	<string id="taom_career_grp_blade_dancer_t3_a" text="{=taom_career_grp_blade_dancer_t3_a}Sword of the First Age" />
+	<string id="taom_career_grp_blade_dancer_t3_b" text="{=taom_career_grp_blade_dancer_t3_b}Light of Eärendil" />
+	<string id="taom_career_grp_blademaster_of_ren_t1_a" text="{=taom_career_grp_blademaster_of_ren_t1_a}Court Duelist" />
+	<string id="taom_career_grp_blademaster_of_ren_t1_b" text="{=taom_career_grp_blademaster_of_ren_t1_b}Steadfast Blade" />
+	<string id="taom_career_grp_blademaster_of_ren_t2_a" text="{=taom_career_grp_blademaster_of_ren_t2_a}Relentless Edge" />
+	<string id="taom_career_grp_blademaster_of_ren_t2_b" text="{=taom_career_grp_blademaster_of_ren_t2_b}Warden of Rên" />
+	<string id="taom_career_grp_blademaster_of_ren_t3_a" text="{=taom_career_grp_blademaster_of_ren_t3_a}Whirlwind Slayer" />
+	<string id="taom_career_grp_blademaster_of_ren_t3_b" text="{=taom_career_grp_blademaster_of_ren_t3_b}Unbroken Swordlord" />
+	<string id="taom_career_grp_captain_of_osgiliath_t1_a" text="{=taom_career_grp_captain_of_osgiliath_t1_a}Warden of the East Bank" />
+	<string id="taom_career_grp_captain_of_osgiliath_t1_b" text="{=taom_career_grp_captain_of_osgiliath_t1_b}Keeper of the Anduin Crossing" />
+	<string id="taom_career_grp_captain_of_osgiliath_t2_a" text="{=taom_career_grp_captain_of_osgiliath_t2_a}Vanguard of the Rammas" />
+	<string id="taom_career_grp_captain_of_osgiliath_t2_b" text="{=taom_career_grp_captain_of_osgiliath_t2_b}Sword of the Last Bridge" />
+	<string id="taom_career_grp_captain_of_osgiliath_t3_a" text="{=taom_career_grp_captain_of_osgiliath_t3_a}Host of Faramir" />
+	<string id="taom_career_grp_captain_of_osgiliath_t3_b" text="{=taom_career_grp_captain_of_osgiliath_t3_b}Lord of the Dome of Stars" />
+	<string id="taom_career_grp_cave_troll_master_t1_a" text="{=taom_career_grp_cave_troll_master_t1_a}Pit-Whip Driver" />
+	<string id="taom_career_grp_cave_troll_master_t1_b" text="{=taom_career_grp_cave_troll_master_t1_b}Cave-Mouth Warden" />
+	<string id="taom_career_grp_cave_troll_master_t2_a" text="{=taom_career_grp_cave_troll_master_t2_a}Goblin-town Tyrant" />
+	<string id="taom_career_grp_cave_troll_master_t2_b" text="{=taom_career_grp_cave_troll_master_t2_b}Deep-Hold Breaker" />
+	<string id="taom_career_grp_cave_troll_master_t3_a" text="{=taom_career_grp_cave_troll_master_t3_a}Scourge of Gundabad" />
+	<string id="taom_career_grp_cave_troll_master_t3_b" text="{=taom_career_grp_cave_troll_master_t3_b}Dread of the Northern Halls" />
+	<string id="taom_career_grp_chariot_warlord_t1_a" text="{=taom_career_grp_chariot_warlord_t1_a}Scythe-Rider" />
+	<string id="taom_career_grp_chariot_warlord_t1_b" text="{=taom_career_grp_chariot_warlord_t1_b}Iron Wheel" />
+	<string id="taom_career_grp_chariot_warlord_t2_a" text="{=taom_career_grp_chariot_warlord_t2_a}Reaping Charge" />
+	<string id="taom_career_grp_chariot_warlord_t2_b" text="{=taom_career_grp_chariot_warlord_t2_b}Warded Team" />
+	<string id="taom_career_grp_chariot_warlord_t3_a" text="{=taom_career_grp_chariot_warlord_t3_a}Pelennor Reaper" />
+	<string id="taom_career_grp_chariot_warlord_t3_b" text="{=taom_career_grp_chariot_warlord_t3_b}Wheel of Khand" />
+	<string id="taom_career_grp_clanguard_rider_t1_a" text="{=taom_career_grp_clanguard_rider_t1_a}Clan Thunder-Rider" />
+	<string id="taom_career_grp_clanguard_rider_t1_b" text="{=taom_career_grp_clanguard_rider_t1_b}Sworn Clan-Escort" />
+	<string id="taom_career_grp_clanguard_rider_t2_a" text="{=taom_career_grp_clanguard_rider_t2_a}Warpack Vanguard" />
+	<string id="taom_career_grp_clanguard_rider_t2_b" text="{=taom_career_grp_clanguard_rider_t2_b}Banner of the Hills" />
+	<string id="taom_career_grp_clanguard_rider_t3_a" text="{=taom_career_grp_clanguard_rider_t3_a}Lord of All Riders" />
+	<string id="taom_career_grp_clanguard_rider_t3_b" text="{=taom_career_grp_clanguard_rider_t3_b}Everlasting Warpack" />
+	<string id="taom_career_grp_codyan_legionaire_t1_a" text="{=taom_career_grp_codyan_legionaire_t1_a}Côdyan Vanguard" />
+	<string id="taom_career_grp_codyan_legionaire_t1_b" text="{=taom_career_grp_codyan_legionaire_t1_b}Steadfast Shieldman" />
+	<string id="taom_career_grp_codyan_legionaire_t2_a" text="{=taom_career_grp_codyan_legionaire_t2_a}Wall of Rhûn" />
+	<string id="taom_career_grp_codyan_legionaire_t2_b" text="{=taom_career_grp_codyan_legionaire_t2_b}Ironclad Phalanx" />
+	<string id="taom_career_grp_codyan_legionaire_t3_a" text="{=taom_career_grp_codyan_legionaire_t3_a}The Unbroken Line" />
+	<string id="taom_career_grp_codyan_legionaire_t3_b" text="{=taom_career_grp_codyan_legionaire_t3_b}The Wall That Never Falls" />
+	<string id="taom_career_grp_corsair_boarder_t1_a" text="{=taom_career_grp_corsair_boarder_t1_a}Deck Reaver" />
+	<string id="taom_career_grp_corsair_boarder_t1_b" text="{=taom_career_grp_corsair_boarder_t1_b}Sea-hardened" />
+	<string id="taom_career_grp_corsair_boarder_t2_a" text="{=taom_career_grp_corsair_boarder_t2_a}Ravager of Pelargir" />
+	<string id="taom_career_grp_corsair_boarder_t2_b" text="{=taom_career_grp_corsair_boarder_t2_b}Bulwark of the Haven" />
+	<string id="taom_career_grp_corsair_boarder_t3_a" text="{=taom_career_grp_corsair_boarder_t3_a}Scourge of the Coasts" />
+	<string id="taom_career_grp_corsair_boarder_t3_b" text="{=taom_career_grp_corsair_boarder_t3_b}Black Númenórean Warlord" />
+	<string id="taom_career_grp_corsair_captain_t1_a" text="{=taom_career_grp_corsair_captain_t1_a}Raid-leader of Umbar" />
+	<string id="taom_career_grp_corsair_captain_t1_b" text="{=taom_career_grp_corsair_captain_t1_b}Master of the Crew" />
+	<string id="taom_career_grp_corsair_captain_t2_a" text="{=taom_career_grp_corsair_captain_t2_a}Heir of Castamir" />
+	<string id="taom_career_grp_corsair_captain_t2_b" text="{=taom_career_grp_corsair_captain_t2_b}Helm of the Black Fleet" />
+	<string id="taom_career_grp_corsair_captain_t3_a" text="{=taom_career_grp_corsair_captain_t3_a}Lord of the Corsairs" />
+	<string id="taom_career_grp_corsair_captain_t3_b" text="{=taom_career_grp_corsair_captain_t3_b}Lord of the Great Haven" />
+	<string id="taom_career_grp_corsair_crossbow_t1_a" text="{=taom_career_grp_corsair_crossbow_t1_a}Rigging Marksman" />
+	<string id="taom_career_grp_corsair_crossbow_t1_b" text="{=taom_career_grp_corsair_crossbow_t1_b}Crow's-nest Watch" />
+	<string id="taom_career_grp_corsair_crossbow_t2_a" text="{=taom_career_grp_corsair_crossbow_t2_a}Hunter of Helmsmen" />
+	<string id="taom_career_grp_corsair_crossbow_t2_b" text="{=taom_career_grp_corsair_crossbow_t2_b}Pike of the Black Sails" />
+	<string id="taom_career_grp_corsair_crossbow_t3_a" text="{=taom_career_grp_corsair_crossbow_t3_a}Quarrel of the Black Star" />
+	<string id="taom_career_grp_corsair_crossbow_t3_b" text="{=taom_career_grp_corsair_crossbow_t3_b}Unceasing Volley" />
+	<string id="taom_career_grp_crossbow_master_t1_a" text="{=taom_career_grp_crossbow_master_t1_a}Iron Hills Volley" />
+	<string id="taom_career_grp_crossbow_master_t1_b" text="{=taom_career_grp_crossbow_master_t1_b}Watcher of Dale" />
+	<string id="taom_career_grp_crossbow_master_t2_a" text="{=taom_career_grp_crossbow_master_t2_a}Relentless Bolt" />
+	<string id="taom_career_grp_crossbow_master_t2_b" text="{=taom_career_grp_crossbow_master_t2_b}Ballista of the Mountain" />
+	<string id="taom_career_grp_crossbow_master_t3_a" text="{=taom_career_grp_crossbow_master_t3_a}Storm of Steel" />
+	<string id="taom_career_grp_crossbow_master_t3_b" text="{=taom_career_grp_crossbow_master_t3_b}Engine of Erebor" />
+	<string id="taom_career_grp_dale_guardsman_t1_a" text="{=taom_career_grp_dale_guardsman_t1_a}Gate Warden of Dale" />
+	<string id="taom_career_grp_dale_guardsman_t1_b" text="{=taom_career_grp_dale_guardsman_t1_b}Shieldwall of Esgaroth" />
+	<string id="taom_career_grp_dale_guardsman_t2_a" text="{=taom_career_grp_dale_guardsman_t2_a}Spear of Girion" />
+	<string id="taom_career_grp_dale_guardsman_t2_b" text="{=taom_career_grp_dale_guardsman_t2_b}Bulwark of the Running" />
+	<string id="taom_career_grp_dale_guardsman_t3_a" text="{=taom_career_grp_dale_guardsman_t3_a}Vanguard of King Brand" />
+	<string id="taom_career_grp_dale_guardsman_t3_b" text="{=taom_career_grp_dale_guardsman_t3_b}The Last Stand at Erebor" />
+	<string id="taom_career_grp_dale_marksman_t1_a" text="{=taom_career_grp_dale_marksman_t1_a}Bowman of Esgaroth" />
+	<string id="taom_career_grp_dale_marksman_t1_b" text="{=taom_career_grp_dale_marksman_t1_b}Watch of the Long Lake" />
+	<string id="taom_career_grp_dale_marksman_t2_a" text="{=taom_career_grp_dale_marksman_t2_a}Heir of the Black Arrow" />
+	<string id="taom_career_grp_dale_marksman_t2_b" text="{=taom_career_grp_dale_marksman_t2_b}Thrush-Sighted Archer" />
+	<string id="taom_career_grp_dale_marksman_t3_a" text="{=taom_career_grp_dale_marksman_t3_a}Dragonslayer of Dale" />
+	<string id="taom_career_grp_dale_marksman_t3_b" text="{=taom_career_grp_dale_marksman_t3_b}The Bow of Girion's Line" />
+	<string id="taom_career_grp_dale_outrider_t1_a" text="{=taom_career_grp_dale_outrider_t1_a}Rider of the Running" />
+	<string id="taom_career_grp_dale_outrider_t1_b" text="{=taom_career_grp_dale_outrider_t1_b}Warden of the Caravan Road" />
+	<string id="taom_career_grp_dale_outrider_t2_a" text="{=taom_career_grp_dale_outrider_t2_a}Lance of the Long Valley" />
+	<string id="taom_career_grp_dale_outrider_t2_b" text="{=taom_career_grp_dale_outrider_t2_b}Outrider of Erebor's Friendship" />
+	<string id="taom_career_grp_dale_outrider_t3_a" text="{=taom_career_grp_dale_outrider_t3_a}The Northman Charge" />
+	<string id="taom_career_grp_dale_outrider_t3_b" text="{=taom_career_grp_dale_outrider_t3_b}Courier of the Two Kings" />
+	<string id="taom_career_grp_elk_rider_t1_a" text="{=taom_career_grp_elk_rider_t1_a}Antlered Charge" />
+	<string id="taom_career_grp_elk_rider_t1_b" text="{=taom_career_grp_elk_rider_t1_b}Rider of the Reaches" />
+	<string id="taom_career_grp_elk_rider_t2_a" text="{=taom_career_grp_elk_rider_t2_a}Thunder of the Forest" />
+	<string id="taom_career_grp_elk_rider_t2_b" text="{=taom_career_grp_elk_rider_t2_b}Guard of Thranduil" />
+	<string id="taom_career_grp_elk_rider_t3_a" text="{=taom_career_grp_elk_rider_t3_a}Wrath under the Trees" />
+	<string id="taom_career_grp_elk_rider_t3_b" text="{=taom_career_grp_elk_rider_t3_b}Lord of the Elvenking's Halls" />
+	<string id="taom_career_grp_elven_archer_t1_a" text="{=taom_career_grp_elven_archer_t1_a}Keen-Eyed Watcher" />
+	<string id="taom_career_grp_elven_archer_t1_b" text="{=taom_career_grp_elven_archer_t1_b}Watch of Rivendell" />
+	<string id="taom_career_grp_elven_archer_t2_a" text="{=taom_career_grp_elven_archer_t2_a}Unceasing Volley" />
+	<string id="taom_career_grp_elven_archer_t2_b" text="{=taom_career_grp_elven_archer_t2_b}Bow of Eregion" />
+	<string id="taom_career_grp_elven_archer_t3_a" text="{=taom_career_grp_elven_archer_t3_a}Storm of Gil-galad" />
+	<string id="taom_career_grp_elven_archer_t3_b" text="{=taom_career_grp_elven_archer_t3_b}Vigil of Vilya" />
+	<string id="taom_career_grp_eotheod_windrider_t1_a" text="{=taom_career_grp_eotheod_windrider_t1_a}Heir of Eorl" />
+	<string id="taom_career_grp_eotheod_windrider_t1_b" text="{=taom_career_grp_eotheod_windrider_t1_b}Rider of the Wold" />
+	<string id="taom_career_grp_eotheod_windrider_t2_a" text="{=taom_career_grp_eotheod_windrider_t2_a}Oath of Eorl" />
+	<string id="taom_career_grp_eotheod_windrider_t2_b" text="{=taom_career_grp_eotheod_windrider_t2_b}Lord of the Mearas" />
+	<string id="taom_career_grp_eotheod_windrider_t3_a" text="{=taom_career_grp_eotheod_windrider_t3_a}Charge of the Pelennor" />
+	<string id="taom_career_grp_eotheod_windrider_t3_b" text="{=taom_career_grp_eotheod_windrider_t3_b}Song of the Riddermark" />
+	<string id="taom_career_grp_fell_rider_t1_a" text="{=taom_career_grp_fell_rider_t1_a}Rider of the Shadow Host" />
+	<string id="taom_career_grp_fell_rider_t1_b" text="{=taom_career_grp_fell_rider_t1_b}Keeper of Fell Steeds" />
+	<string id="taom_career_grp_fell_rider_t2_a" text="{=taom_career_grp_fell_rider_t2_a}Herald of Dread" />
+	<string id="taom_career_grp_fell_rider_t2_b" text="{=taom_career_grp_fell_rider_t2_b}Rider of the Black Breath" />
+	<string id="taom_career_grp_fell_rider_t3_a" text="{=taom_career_grp_fell_rider_t3_a}Black Rider of Dol Guldur" />
+	<string id="taom_career_grp_fell_rider_t3_b" text="{=taom_career_grp_fell_rider_t3_b}Shadow of the East" />
+	<string id="taom_career_grp_galadhrim_archer_t1_a" text="{=taom_career_grp_galadhrim_archer_t1_a}Silver Bowman" />
+	<string id="taom_career_grp_galadhrim_archer_t1_b" text="{=taom_career_grp_galadhrim_archer_t1_b}Eye of the Fences" />
+	<string id="taom_career_grp_galadhrim_archer_t2_a" text="{=taom_career_grp_galadhrim_archer_t2_a}Mallorn Marksman" />
+	<string id="taom_career_grp_galadhrim_archer_t2_b" text="{=taom_career_grp_galadhrim_archer_t2_b}Watcher of the Flets" />
+	<string id="taom_career_grp_galadhrim_archer_t3_a" text="{=taom_career_grp_galadhrim_archer_t3_a}Arrow of Caras Galadhon" />
+	<string id="taom_career_grp_galadhrim_archer_t3_b" text="{=taom_career_grp_galadhrim_archer_t3_b}Warden of the Silverlode" />
+	<string id="taom_career_grp_goblin_sniper_t1_a" text="{=taom_career_grp_goblin_sniper_t1_a}Crag-Stalker" />
+	<string id="taom_career_grp_goblin_sniper_t1_b" text="{=taom_career_grp_goblin_sniper_t1_b}Tunnel Skulker" />
+	<string id="taom_career_grp_goblin_sniper_t2_a" text="{=taom_career_grp_goblin_sniper_t2_a}High Pass Ambusher" />
+	<string id="taom_career_grp_goblin_sniper_t2_b" text="{=taom_career_grp_goblin_sniper_t2_b}Poison-Fletcher" />
+	<string id="taom_career_grp_goblin_sniper_t3_a" text="{=taom_career_grp_goblin_sniper_t3_a}Front Porch Reaver" />
+	<string id="taom_career_grp_goblin_sniper_t3_b" text="{=taom_career_grp_goblin_sniper_t3_b}Shadow of the High Pass" />
+	<string id="taom_career_grp_ironguard_t1_a" text="{=taom_career_grp_ironguard_t1_a}Hammer of the Deeps" />
+	<string id="taom_career_grp_ironguard_t1_b" text="{=taom_career_grp_ironguard_t1_b}Gatewall Warden" />
+	<string id="taom_career_grp_ironguard_t2_a" text="{=taom_career_grp_ironguard_t2_a}Wrath of Durin's Folk" />
+	<string id="taom_career_grp_ironguard_t2_b" text="{=taom_career_grp_ironguard_t2_b}Shieldwall of Erebor" />
+	<string id="taom_career_grp_ironguard_t3_a" text="{=taom_career_grp_ironguard_t3_a}Mithril Bulwark" />
+	<string id="taom_career_grp_ironguard_t3_b" text="{=taom_career_grp_ironguard_t3_b}Guard of the Arkenstone" />
+	<string id="taom_career_grp_knight_of_belfalas_t1_a" text="{=taom_career_grp_knight_of_belfalas_t1_a}Lancer of Dol Amroth" />
+	<string id="taom_career_grp_knight_of_belfalas_t1_b" text="{=taom_career_grp_knight_of_belfalas_t1_b}Warden of the Bay" />
+	<string id="taom_career_grp_knight_of_belfalas_t2_a" text="{=taom_career_grp_knight_of_belfalas_t2_a}Rider of the Silver Swan" />
+	<string id="taom_career_grp_knight_of_belfalas_t2_b" text="{=taom_career_grp_knight_of_belfalas_t2_b}Shieldwall of Imrahil" />
+	<string id="taom_career_grp_knight_of_belfalas_t3_a" text="{=taom_career_grp_knight_of_belfalas_t3_a}Knight of the Swan-Prow" />
+	<string id="taom_career_grp_knight_of_belfalas_t3_b" text="{=taom_career_grp_knight_of_belfalas_t3_b}Charge of Dol Amroth" />
+	<string id="taom_career_grp_lokhas_drus_marksman_t1_a" text="{=taom_career_grp_lokhas_drus_marksman_t1_a}Volley of Rhûn" />
+	<string id="taom_career_grp_lokhas_drus_marksman_t1_b" text="{=taom_career_grp_lokhas_drus_marksman_t1_b}Steady Bowman" />
+	<string id="taom_career_grp_lokhas_drus_marksman_t2_a" text="{=taom_career_grp_lokhas_drus_marksman_t2_a}Stormbow Marksman" />
+	<string id="taom_career_grp_lokhas_drus_marksman_t2_b" text="{=taom_career_grp_lokhas_drus_marksman_t2_b}Plate-Piercer" />
+	<string id="taom_career_grp_lokhas_drus_marksman_t3_a" text="{=taom_career_grp_lokhas_drus_marksman_t3_a}The Arrow-Storm" />
+	<string id="taom_career_grp_lokhas_drus_marksman_t3_b" text="{=taom_career_grp_lokhas_drus_marksman_t3_b}The Unceasing Hail" />
+	<string id="taom_career_grp_mahud_beast_rider_t1_a" text="{=taom_career_grp_mahud_beast_rider_t1_a}Tusk Vanguard" />
+	<string id="taom_career_grp_mahud_beast_rider_t1_b" text="{=taom_career_grp_mahud_beast_rider_t1_b}Beast-Warden" />
+	<string id="taom_career_grp_mahud_beast_rider_t2_a" text="{=taom_career_grp_mahud_beast_rider_t2_a}Trampling Charge" />
+	<string id="taom_career_grp_mahud_beast_rider_t2_b" text="{=taom_career_grp_mahud_beast_rider_t2_b}Howdah Guardian" />
+	<string id="taom_career_grp_mahud_beast_rider_t3_a" text="{=taom_career_grp_mahud_beast_rider_t3_a}Wrath of Mûmakan" />
+	<string id="taom_career_grp_mahud_beast_rider_t3_b" text="{=taom_career_grp_mahud_beast_rider_t3_b}Lord of the Oliphaunts" />
+	<string id="taom_career_grp_marksman_of_aldburg_t1_a" text="{=taom_career_grp_marksman_of_aldburg_t1_a}Hawk of the Eastfold" />
+	<string id="taom_career_grp_marksman_of_aldburg_t1_b" text="{=taom_career_grp_marksman_of_aldburg_t1_b}Warden of the Folde" />
+	<string id="taom_career_grp_marksman_of_aldburg_t2_a" text="{=taom_career_grp_marksman_of_aldburg_t2_a}Captain of the Muster" />
+	<string id="taom_career_grp_marksman_of_aldburg_t2_b" text="{=taom_career_grp_marksman_of_aldburg_t2_b}Shadow of Fangorn" />
+	<string id="taom_career_grp_marksman_of_aldburg_t3_a" text="{=taom_career_grp_marksman_of_aldburg_t3_a}Bowman of the Mark" />
+	<string id="taom_career_grp_marksman_of_aldburg_t3_b" text="{=taom_career_grp_marksman_of_aldburg_t3_b}Host of the Riddermark" />
+	<string id="taom_career_grp_mulkerhili_cultist_t1_a" text="{=taom_career_grp_mulkerhili_cultist_t1_a}Venomed Litany" />
+	<string id="taom_career_grp_mulkerhili_cultist_t1_b" text="{=taom_career_grp_mulkerhili_cultist_t1_b}Sauron's Whispered Word" />
+	<string id="taom_career_grp_mulkerhili_cultist_t2_a" text="{=taom_career_grp_mulkerhili_cultist_t2_a}Congregation of Dread" />
+	<string id="taom_career_grp_mulkerhili_cultist_t2_b" text="{=taom_career_grp_mulkerhili_cultist_t2_b}Sermon of the Eye" />
+	<string id="taom_career_grp_mulkerhili_cultist_t3_a" text="{=taom_career_grp_mulkerhili_cultist_t3_a}Gaze of the Dark Lord" />
+	<string id="taom_career_grp_mulkerhili_cultist_t3_b" text="{=taom_career_grp_mulkerhili_cultist_t3_b}The Ring's Dark Covenant" />
+	<string id="taom_career_grp_necromancer_acolyte_t1_a" text="{=taom_career_grp_necromancer_acolyte_t1_a}Caster of Dark Bolts" />
+	<string id="taom_career_grp_necromancer_acolyte_t1_b" text="{=taom_career_grp_necromancer_acolyte_t1_b}Whisperer of Decay" />
+	<string id="taom_career_grp_necromancer_acolyte_t2_a" text="{=taom_career_grp_necromancer_acolyte_t2_a}Weaver of Black Arts" />
+	<string id="taom_career_grp_necromancer_acolyte_t2_b" text="{=taom_career_grp_necromancer_acolyte_t2_b}Breather of Shadow" />
+	<string id="taom_career_grp_necromancer_acolyte_t3_a" text="{=taom_career_grp_necromancer_acolyte_t3_a}Lord of the Hill of Sorcery" />
+	<string id="taom_career_grp_necromancer_acolyte_t3_b" text="{=taom_career_grp_necromancer_acolyte_t3_b}Voice of the Necromancer" />
+	<string id="taom_career_grp_olog_hai_warchief_t1_a" text="{=taom_career_grp_olog_hai_warchief_t1_a}Earth-Render" />
+	<string id="taom_career_grp_olog_hai_warchief_t1_b" text="{=taom_career_grp_olog_hai_warchief_t1_b}Tireless Hammer" />
+	<string id="taom_career_grp_olog_hai_warchief_t2_a" text="{=taom_career_grp_olog_hai_warchief_t2_a}Rampaging Colossus" />
+	<string id="taom_career_grp_olog_hai_warchief_t2_b" text="{=taom_career_grp_olog_hai_warchief_t2_b}Sunlit Onslaught" />
+	<string id="taom_career_grp_olog_hai_warchief_t3_a" text="{=taom_career_grp_olog_hai_warchief_t3_a}Hammer of the Morannon" />
+	<string id="taom_career_grp_olog_hai_warchief_t3_b" text="{=taom_career_grp_olog_hai_warchief_t3_b}Troll-folk of Sauron" />
+	<string id="taom_career_grp_pezarsani_javelineer_t1_a" text="{=taom_career_grp_pezarsani_javelineer_t1_a}Sun-Spear Skirmisher" />
+	<string id="taom_career_grp_pezarsani_javelineer_t1_b" text="{=taom_career_grp_pezarsani_javelineer_t1_b}Roving Outrider" />
+	<string id="taom_career_grp_pezarsani_javelineer_t2_a" text="{=taom_career_grp_pezarsani_javelineer_t2_a}Sunfire Slinger" />
+	<string id="taom_career_grp_pezarsani_javelineer_t2_b" text="{=taom_career_grp_pezarsani_javelineer_t2_b}Scarlet Screen" />
+	<string id="taom_career_grp_pezarsani_javelineer_t3_a" text="{=taom_career_grp_pezarsani_javelineer_t3_a}Rain of Far Harad" />
+	<string id="taom_career_grp_pezarsani_javelineer_t3_b" text="{=taom_career_grp_pezarsani_javelineer_t3_b}Shadow of the Dunes" />
+	<string id="taom_career_grp_ram_rider_t1_a" text="{=taom_career_grp_ram_rider_t1_a}Goatherd of the Hills" />
+	<string id="taom_career_grp_ram_rider_t1_b" text="{=taom_career_grp_ram_rider_t1_b}Outrider of Erebor" />
+	<string id="taom_career_grp_ram_rider_t2_a" text="{=taom_career_grp_ram_rider_t2_a}Charge of the Iron Hills" />
+	<string id="taom_career_grp_ram_rider_t2_b" text="{=taom_career_grp_ram_rider_t2_b}Stout War-Ram" />
+	<string id="taom_career_grp_ram_rider_t3_a" text="{=taom_career_grp_ram_rider_t3_a}Ironfoot's Vanguard" />
+	<string id="taom_career_grp_ram_rider_t3_b" text="{=taom_career_grp_ram_rider_t3_b}Rider of the Lonely Mountain" />
+	<string id="taom_career_grp_ranger_of_ithilien_t1_a" text="{=taom_career_grp_ranger_of_ithilien_t1_a}Hunter of the Ithilien Road" />
+	<string id="taom_career_grp_ranger_of_ithilien_t1_b" text="{=taom_career_grp_ranger_of_ithilien_t1_b}Watcher of Henneth Annûn" />
+	<string id="taom_career_grp_ranger_of_ithilien_t2_a" text="{=taom_career_grp_ranger_of_ithilien_t2_a}Scout of North Ithilien" />
+	<string id="taom_career_grp_ranger_of_ithilien_t2_b" text="{=taom_career_grp_ranger_of_ithilien_t2_b}Bowman of Faramir" />
+	<string id="taom_career_grp_ranger_of_ithilien_t3_a" text="{=taom_career_grp_ranger_of_ithilien_t3_a}Arrow of the Forbidden Pool" />
+	<string id="taom_career_grp_ranger_of_ithilien_t3_b" text="{=taom_career_grp_ranger_of_ithilien_t3_b}Shadow of Emyn Arnen" />
+	<string id="taom_career_grp_rivendell_knight_t1_a" text="{=taom_career_grp_rivendell_knight_t1_a}Charge of Imladris" />
+	<string id="taom_career_grp_rivendell_knight_t1_b" text="{=taom_career_grp_rivendell_knight_t1_b}Rider of the Ford" />
+	<string id="taom_career_grp_rivendell_knight_t2_a" text="{=taom_career_grp_rivendell_knight_t2_a}Gallop of Asfaloth" />
+	<string id="taom_career_grp_rivendell_knight_t2_b" text="{=taom_career_grp_rivendell_knight_t2_b}Aegis of the Valar" />
+	<string id="taom_career_grp_rivendell_knight_t3_a" text="{=taom_career_grp_rivendell_knight_t3_a}Wrath of Glorfindel" />
+	<string id="taom_career_grp_rivendell_knight_t3_b" text="{=taom_career_grp_rivendell_knight_t3_b}Host of the Last Alliance" />
+	<string id="taom_career_grp_sentinel_t1_a" text="{=taom_career_grp_sentinel_t1_a}Outrider of Egladil" />
+	<string id="taom_career_grp_sentinel_t1_b" text="{=taom_career_grp_sentinel_t1_b}Warden of Elanor" />
+	<string id="taom_career_grp_sentinel_t2_a" text="{=taom_career_grp_sentinel_t2_a}Rider of the Naith" />
+	<string id="taom_career_grp_sentinel_t2_b" text="{=taom_career_grp_sentinel_t2_b}Guardian of Celebrant" />
+	<string id="taom_career_grp_sentinel_t3_a" text="{=taom_career_grp_sentinel_t3_a}Lance of Laurelindórenan" />
+	<string id="taom_career_grp_sentinel_t3_b" text="{=taom_career_grp_sentinel_t3_b}Sentinel of Nenya" />
+	<string id="taom_career_grp_shadow_walker_t1_a" text="{=taom_career_grp_shadow_walker_t1_a}Shadow of the Path" />
+	<string id="taom_career_grp_shadow_walker_t1_b" text="{=taom_career_grp_shadow_walker_t1_b}Cloak of Leaves" />
+	<string id="taom_career_grp_shadow_walker_t2_a" text="{=taom_career_grp_shadow_walker_t2_a}Hunter in the Dark" />
+	<string id="taom_career_grp_shadow_walker_t2_b" text="{=taom_career_grp_shadow_walker_t2_b}Veil of the Wood" />
+	<string id="taom_career_grp_shadow_walker_t3_a" text="{=taom_career_grp_shadow_walker_t3_a}Bane of the Spiders" />
+	<string id="taom_career_grp_shadow_walker_t3_b" text="{=taom_career_grp_shadow_walker_t3_b}Unseen of Eryn Lasgalen" />
+	<string id="taom_career_grp_shadow_warrior_t1_a" text="{=taom_career_grp_shadow_warrior_t1_a}Shade of Amon Lanc" />
+	<string id="taom_career_grp_shadow_warrior_t1_b" text="{=taom_career_grp_shadow_warrior_t1_b}Warden of the Pits" />
+	<string id="taom_career_grp_shadow_warrior_t2_a" text="{=taom_career_grp_shadow_warrior_t2_a}Reaver of Mirkwood" />
+	<string id="taom_career_grp_shadow_warrior_t2_b" text="{=taom_career_grp_shadow_warrior_t2_b}Bulwark of Dol Guldur" />
+	<string id="taom_career_grp_shadow_warrior_t3_a" text="{=taom_career_grp_shadow_warrior_t3_a}Scourge of the Necromancer" />
+	<string id="taom_career_grp_shadow_warrior_t3_b" text="{=taom_career_grp_shadow_warrior_t3_b}Deathless Shadow" />
+	<string id="taom_career_grp_silvan_archer_t1_a" text="{=taom_career_grp_silvan_archer_t1_a}Greenwood Marksman" />
+	<string id="taom_career_grp_silvan_archer_t1_b" text="{=taom_career_grp_silvan_archer_t1_b}Watch of the Canopy" />
+	<string id="taom_career_grp_silvan_archer_t2_a" text="{=taom_career_grp_silvan_archer_t2_a}Hunter of the Glades" />
+	<string id="taom_career_grp_silvan_archer_t2_b" text="{=taom_career_grp_silvan_archer_t2_b}Warden of the River" />
+	<string id="taom_career_grp_silvan_archer_t3_a" text="{=taom_career_grp_silvan_archer_t3_a}Storm of Arrows" />
+	<string id="taom_career_grp_silvan_archer_t3_b" text="{=taom_career_grp_silvan_archer_t3_b}Bowman of the Elvenking" />
+	<string id="taom_career_grp_snaga_rider_t1_a" text="{=taom_career_grp_snaga_rider_t1_a}Shadow Gallop" />
+	<string id="taom_career_grp_snaga_rider_t1_b" text="{=taom_career_grp_snaga_rider_t1_b}Rider of the Dark" />
+	<string id="taom_career_grp_snaga_rider_t2_a" text="{=taom_career_grp_snaga_rider_t2_a}Strike from Shadow" />
+	<string id="taom_career_grp_snaga_rider_t2_b" text="{=taom_career_grp_snaga_rider_t2_b}Ghost of Cirith Ungol" />
+	<string id="taom_career_grp_snaga_rider_t3_a" text="{=taom_career_grp_snaga_rider_t3_a}Stampede of Nurn" />
+	<string id="taom_career_grp_snaga_rider_t3_b" text="{=taom_career_grp_snaga_rider_t3_b}Vanguard of Mordor" />
+	<string id="taom_career_grp_steppe_bowmaster_t1_a" text="{=taom_career_grp_steppe_bowmaster_t1_a}Plains Skirmisher" />
+	<string id="taom_career_grp_steppe_bowmaster_t1_b" text="{=taom_career_grp_steppe_bowmaster_t1_b}Steady Volley" />
+	<string id="taom_career_grp_steppe_bowmaster_t2_a" text="{=taom_career_grp_steppe_bowmaster_t2_a}Endless Quiver" />
+	<string id="taom_career_grp_steppe_bowmaster_t2_b" text="{=taom_career_grp_steppe_bowmaster_t2_b}Volley Warden" />
+	<string id="taom_career_grp_steppe_bowmaster_t3_a" text="{=taom_career_grp_steppe_bowmaster_t3_a}Stormcaller of Khand" />
+	<string id="taom_career_grp_steppe_bowmaster_t3_b" text="{=taom_career_grp_steppe_bowmaster_t3_b}Unceasing Hail" />
+	<string id="taom_career_grp_tribesman_of_jelut_t1_a" text="{=taom_career_grp_tribesman_of_jelut_t1_a}Dune Raider" />
+	<string id="taom_career_grp_tribesman_of_jelut_t1_b" text="{=taom_career_grp_tribesman_of_jelut_t1_b}Desert Survivor" />
+	<string id="taom_career_grp_tribesman_of_jelut_t2_a" text="{=taom_career_grp_tribesman_of_jelut_t2_a}Serpent-Fang Striker" />
+	<string id="taom_career_grp_tribesman_of_jelut_t2_b" text="{=taom_career_grp_tribesman_of_jelut_t2_b}Wearer of the Sands" />
+	<string id="taom_career_grp_tribesman_of_jelut_t3_a" text="{=taom_career_grp_tribesman_of_jelut_t3_a}Venom of Haradwaith" />
+	<string id="taom_career_grp_tribesman_of_jelut_t3_b" text="{=taom_career_grp_tribesman_of_jelut_t3_b}Scourge of the Southrons" />
+	<string id="taom_career_grp_uruk_berserker_t1_a" text="{=taom_career_grp_uruk_berserker_t1_a}Blood-Maddened" />
+	<string id="taom_career_grp_uruk_berserker_t1_b" text="{=taom_career_grp_uruk_berserker_t1_b}Pit-Hardened" />
+	<string id="taom_career_grp_uruk_berserker_t2_a" text="{=taom_career_grp_uruk_berserker_t2_a}White Hand Reaver" />
+	<string id="taom_career_grp_uruk_berserker_t2_b" text="{=taom_career_grp_uruk_berserker_t2_b}Shieldwall of Orthanc" />
+	<string id="taom_career_grp_uruk_berserker_t3_a" text="{=taom_career_grp_uruk_berserker_t3_a}Scourge of Nan Curunír" />
+	<string id="taom_career_grp_uruk_berserker_t3_b" text="{=taom_career_grp_uruk_berserker_t3_b}Unbroken of the Tower" />
+	<string id="taom_career_grp_uruk_crossbow_t1_a" text="{=taom_career_grp_uruk_crossbow_t1_a}Iron Volley" />
+	<string id="taom_career_grp_uruk_crossbow_t1_b" text="{=taom_career_grp_uruk_crossbow_t1_b}Forge-Forged" />
+	<string id="taom_career_grp_uruk_crossbow_t2_a" text="{=taom_career_grp_uruk_crossbow_t2_a}Bolt of the White Hand" />
+	<string id="taom_career_grp_uruk_crossbow_t2_b" text="{=taom_career_grp_uruk_crossbow_t2_b}Warden of the Ring-wall" />
+	<string id="taom_career_grp_uruk_crossbow_t3_a" text="{=taom_career_grp_uruk_crossbow_t3_a}Stormcrow of Orthanc" />
+	<string id="taom_career_grp_uruk_crossbow_t3_b" text="{=taom_career_grp_uruk_crossbow_t3_b}Iron Rain Unending" />
+	<string id="taom_career_grp_warden_t1_a" text="{=taom_career_grp_warden_t1_a}Border Strider" />
+	<string id="taom_career_grp_warden_t1_b" text="{=taom_career_grp_warden_t1_b}Warden of Nimrodel" />
+	<string id="taom_career_grp_warden_t2_a" text="{=taom_career_grp_warden_t2_a}Blade of the Naith" />
+	<string id="taom_career_grp_warden_t2_b" text="{=taom_career_grp_warden_t2_b}Shieldwall of Caras Galadhon" />
+	<string id="taom_career_grp_warden_t3_a" text="{=taom_career_grp_warden_t3_a}Warden of the Golden Wood" />
+	<string id="taom_career_grp_warden_t3_b" text="{=taom_career_grp_warden_t3_b}Guard of Cerin Amroth" />
+	<string id="taom_career_grp_warg_pack_leader_t1_a" text="{=taom_career_grp_warg_pack_leader_t1_a}Warg-Rider" />
+	<string id="taom_career_grp_warg_pack_leader_t1_b" text="{=taom_career_grp_warg_pack_leader_t1_b}Pack-Keeper" />
+	<string id="taom_career_grp_warg_pack_leader_t2_a" text="{=taom_career_grp_warg_pack_leader_t2_a}Grey Pack Outrider" />
+	<string id="taom_career_grp_warg_pack_leader_t2_b" text="{=taom_career_grp_warg_pack_leader_t2_b}Fell Wolf-Master" />
+	<string id="taom_career_grp_warg_pack_leader_t3_a" text="{=taom_career_grp_warg_pack_leader_t3_a}Alpha of Gundabad" />
+	<string id="taom_career_grp_warg_pack_leader_t3_b" text="{=taom_career_grp_warg_pack_leader_t3_b}Bolg's Wolf-Captain" />
+	<string id="taom_career_grp_warg_scout_t1_a" text="{=taom_career_grp_warg_scout_t1_a}Fang-Runner" />
+	<string id="taom_career_grp_warg_scout_t1_b" text="{=taom_career_grp_warg_scout_t1_b}Grey Pack" />
+	<string id="taom_career_grp_warg_scout_t2_a" text="{=taom_career_grp_warg_scout_t2_a}Misty Mountain Hunter" />
+	<string id="taom_career_grp_warg_scout_t2_b" text="{=taom_career_grp_warg_scout_t2_b}Wolf-Warden" />
+	<string id="taom_career_grp_warg_scout_t3_a" text="{=taom_career_grp_warg_scout_t3_a}Outrider of Isengard" />
+	<string id="taom_career_grp_warg_scout_t3_b" text="{=taom_career_grp_warg_scout_t3_b}The Tireless Hunt" />
+	<string id="taom_career_grp_watchman_of_stangard_t1_a" text="{=taom_career_grp_watchman_of_stangard_t1_a}Ford of the Limlight" />
+	<string id="taom_career_grp_watchman_of_stangard_t1_b" text="{=taom_career_grp_watchman_of_stangard_t1_b}Watch of the Wold" />
+	<string id="taom_career_grp_watchman_of_stangard_t2_a" text="{=taom_career_grp_watchman_of_stangard_t2_a}Shieldman of the Entwash" />
+	<string id="taom_career_grp_watchman_of_stangard_t2_b" text="{=taom_career_grp_watchman_of_stangard_t2_b}Warden of the Anduin" />
+	<string id="taom_career_grp_watchman_of_stangard_t3_a" text="{=taom_career_grp_watchman_of_stangard_t3_a}Bastion of the Mark" />
+	<string id="taom_career_grp_watchman_of_stangard_t3_b" text="{=taom_career_grp_watchman_of_stangard_t3_b}Warden of the Riddermark" />
+	<string id="taom_career_grp_wolfskin_hunter_t1_a" text="{=taom_career_grp_wolfskin_hunter_t1_a}Pack-Marked Stalker" />
+	<string id="taom_career_grp_wolfskin_hunter_t1_b" text="{=taom_career_grp_wolfskin_hunter_t1_b}Wolfskin Skulker" />
+	<string id="taom_career_grp_wolfskin_hunter_t2_a" text="{=taom_career_grp_wolfskin_hunter_t2_a}Throat-Shot Hunter" />
+	<string id="taom_career_grp_wolfskin_hunter_t2_b" text="{=taom_career_grp_wolfskin_hunter_t2_b}Ghost of the Hills" />
+	<string id="taom_career_grp_wolfskin_hunter_t3_a" text="{=taom_career_grp_wolfskin_hunter_t3_a}Apex Wolfskin" />
+	<string id="taom_career_grp_wolfskin_hunter_t3_b" text="{=taom_career_grp_wolfskin_hunter_t3_b}Master of the Great Pack" />
 
 	<!-- NativeSkinFixes boot banner -->
 	<string id="taom_nativeskinfixes_loaded" text="{=taom_nativeskinfixes_loaded}NativeSkinFixes active — covers_head morph fix + hair/beard cloth simulation" />
