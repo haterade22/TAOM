@@ -55,6 +55,8 @@ public class TaomCulturalFeats
     private FeatObject _isengardRaidDamage;
     private FeatObject _isengardPlainSpeed;
     private FeatObject _isengardSwampSpeed;
+    private FeatObject _isengardNotableCountTown;
+    private FeatObject _isengardNotableCountVillage;
 
     // Gundabad
     private FeatObject _gundabadArmyInfluenceCost;
@@ -63,6 +65,9 @@ public class TaomCulturalFeats
     private FeatObject _gundabadPartySize;
     private FeatObject _gundabadRaidDamage;
     private FeatObject _gundabadSnowSpeed;
+    private FeatObject _gundabadVolunteerRate;
+    private FeatObject _gundabadNotableCountTown;
+    private FeatObject _gundabadNotableCountVillage;
 
     // Umbar
     private FeatObject _umbarCheaperCaravans;
@@ -77,6 +82,9 @@ public class TaomCulturalFeats
     private FeatObject _dolguldurConstructionSpeed;
     private FeatObject _dolguldurPartySize;
     private FeatObject _dolguldurFoodConsumption;
+    private FeatObject _dolguldurVolunteerRate;
+    private FeatObject _dolguldurNotableCountTown;
+    private FeatObject _dolguldurNotableCountVillage;
 
     // Gondor
     private FeatObject _gondorGarrisonWage;
@@ -96,6 +104,9 @@ public class TaomCulturalFeats
     private FeatObject _mordorPlainSpeed;
     private FeatObject _mordorSwampSpeed;
     private FeatObject _mordorNightSpeed;
+    private FeatObject _mordorVolunteerRate;
+    private FeatObject _mordorNotableCountTown;
+    private FeatObject _mordorNotableCountVillage;
 
     // Rohan (XSLT culture — custom C# feats)
     private FeatObject _rohanMountedCost;
@@ -113,12 +124,16 @@ public class TaomCulturalFeats
 
     // Rhun (XSLT culture — custom C# feats)
     private FeatObject _rhunSteppeSpeed;
+    private FeatObject _rhunPartySize;
 
     // Harad (XSLT culture — custom C# feats)
     private FeatObject _haradDesertSpeed;
+    private FeatObject _haradPartySize;
 
     // Dunland (XSLT culture — custom C# feats)
     private FeatObject _dunlandPlainSpeed;
+    private FeatObject _dunlandPartySize;
+    private FeatObject _dunlandVolunteerRate;
 
     // Shaghana
     private FeatObject _shaghanaDesertSpeed;
@@ -168,6 +183,8 @@ public class TaomCulturalFeats
     public static FeatObject IsengardRaidDamageFeat => Instance._isengardRaidDamage;
     public static FeatObject IsengardPlainSpeedFeat => Instance._isengardPlainSpeed;
     public static FeatObject IsengardSwampSpeedFeat => Instance._isengardSwampSpeed;
+    public static FeatObject IsengardNotableCountTownFeat => Instance._isengardNotableCountTown;
+    public static FeatObject IsengardNotableCountVillageFeat => Instance._isengardNotableCountVillage;
 
     // Gundabad
     public static FeatObject GundabadArmyInfluenceCostFeat => Instance._gundabadArmyInfluenceCost;
@@ -176,6 +193,9 @@ public class TaomCulturalFeats
     public static FeatObject GundabadPartySizeFeat => Instance._gundabadPartySize;
     public static FeatObject GundabadRaidDamageFeat => Instance._gundabadRaidDamage;
     public static FeatObject GundabadSnowSpeedFeat => Instance._gundabadSnowSpeed;
+    public static FeatObject GundabadVolunteerRateFeat => Instance._gundabadVolunteerRate;
+    public static FeatObject GundabadNotableCountTownFeat => Instance._gundabadNotableCountTown;
+    public static FeatObject GundabadNotableCountVillageFeat => Instance._gundabadNotableCountVillage;
 
     // Umbar
     public static FeatObject UmbarCheaperCaravansFeat => Instance._umbarCheaperCaravans;
@@ -190,6 +210,9 @@ public class TaomCulturalFeats
     public static FeatObject DolGuldurConstructionSpeedFeat => Instance._dolguldurConstructionSpeed;
     public static FeatObject DolGuldurPartySizeFeat => Instance._dolguldurPartySize;
     public static FeatObject DolGuldurFoodConsumptionFeat => Instance._dolguldurFoodConsumption;
+    public static FeatObject DolGuldurVolunteerRateFeat => Instance._dolguldurVolunteerRate;
+    public static FeatObject DolGuldurNotableCountTownFeat => Instance._dolguldurNotableCountTown;
+    public static FeatObject DolGuldurNotableCountVillageFeat => Instance._dolguldurNotableCountVillage;
 
     // Gondor
     public static FeatObject GondorGarrisonWageFeat => Instance._gondorGarrisonWage;
@@ -209,6 +232,9 @@ public class TaomCulturalFeats
     public static FeatObject MordorPlainSpeedFeat => Instance._mordorPlainSpeed;
     public static FeatObject MordorSwampSpeedFeat => Instance._mordorSwampSpeed;
     public static FeatObject MordorNightSpeedFeat => Instance._mordorNightSpeed;
+    public static FeatObject MordorVolunteerRateFeat => Instance._mordorVolunteerRate;
+    public static FeatObject MordorNotableCountTownFeat => Instance._mordorNotableCountTown;
+    public static FeatObject MordorNotableCountVillageFeat => Instance._mordorNotableCountVillage;
 
     // Rohan
     public static FeatObject RohanMountedCostFeat => Instance._rohanMountedCost;
@@ -226,12 +252,16 @@ public class TaomCulturalFeats
 
     // Rhun
     public static FeatObject RhunSteppeSpeedFeat => Instance._rhunSteppeSpeed;
+    public static FeatObject RhunPartySizeFeat => Instance._rhunPartySize;
 
     // Harad
     public static FeatObject HaradDesertSpeedFeat => Instance._haradDesertSpeed;
+    public static FeatObject HaradPartySizeFeat => Instance._haradPartySize;
 
     // Dunland
     public static FeatObject DunlandPlainSpeedFeat => Instance._dunlandPlainSpeed;
+    public static FeatObject DunlandPartySizeFeat => Instance._dunlandPartySize;
+    public static FeatObject DunlandVolunteerRateFeat => Instance._dunlandVolunteerRate;
 
     // Shaghana
     public static FeatObject ShaghanaDesertSpeedFeat => Instance._shaghanaDesertSpeed;
@@ -287,6 +317,8 @@ public class TaomCulturalFeats
         _isengardRaidDamage = Register("taom_isengard_raid_damage");
         _isengardPlainSpeed = Register("taom_isengard_plain_speed");
         _isengardSwampSpeed = Register("taom_isengard_swamp_speed");
+        _isengardNotableCountTown = Register("taom_isengard_notable_count_town");
+        _isengardNotableCountVillage = Register("taom_isengard_notable_count_village");
 
         _gundabadArmyInfluenceCost = Register("taom_gundabad_army_influence_cost");
         _gundabadGrainProduction = Register("taom_gundabad_grain_production");
@@ -294,6 +326,9 @@ public class TaomCulturalFeats
         _gundabadPartySize = Register("taom_gundabad_party_size");
         _gundabadRaidDamage = Register("taom_gundabad_raid_damage");
         _gundabadSnowSpeed = Register("taom_gundabad_snow_speed");
+        _gundabadVolunteerRate = Register("taom_gundabad_volunteer_rate");
+        _gundabadNotableCountTown = Register("taom_gundabad_notable_count_town");
+        _gundabadNotableCountVillage = Register("taom_gundabad_notable_count_village");
 
         _umbarCheaperCaravans = Register("taom_umbar_cheaper_caravans");
         _umbarRenown = Register("taom_umbar_renown");
@@ -306,6 +341,9 @@ public class TaomCulturalFeats
         _dolguldurConstructionSpeed = Register("taom_dolguldur_construction_speed");
         _dolguldurPartySize = Register("taom_dolguldur_party_size");
         _dolguldurFoodConsumption = Register("taom_dolguldur_food_consumption");
+        _dolguldurVolunteerRate = Register("taom_dolguldur_volunteer_rate");
+        _dolguldurNotableCountTown = Register("taom_dolguldur_notable_count_town");
+        _dolguldurNotableCountVillage = Register("taom_dolguldur_notable_count_village");
 
         _gondorGarrisonWage = Register("taom_gondor_garrison_wage");
         _gondorArmyInfluence = Register("taom_gondor_army_influence");
@@ -323,6 +361,9 @@ public class TaomCulturalFeats
         _mordorPlainSpeed = Register("taom_mordor_plain_speed");
         _mordorSwampSpeed = Register("taom_mordor_swamp_speed");
         _mordorNightSpeed = Register("taom_mordor_night_speed");
+        _mordorVolunteerRate = Register("taom_mordor_volunteer_rate");
+        _mordorNotableCountTown = Register("taom_mordor_notable_count_town");
+        _mordorNotableCountVillage = Register("taom_mordor_notable_count_village");
 
         _rohanMountedCost = Register("taom_rohan_mounted_cost");
         _rohanMountedWage = Register("taom_rohan_mounted_wage");
@@ -336,6 +377,10 @@ public class TaomCulturalFeats
         _rhunSteppeSpeed = Register("taom_rhun_steppe_speed");
         _haradDesertSpeed = Register("taom_harad_desert_speed");
         _dunlandPlainSpeed = Register("taom_dunland_plain_speed");
+        _rhunPartySize = Register("taom_rhun_party_size");
+        _haradPartySize = Register("taom_harad_party_size");
+        _dunlandPartySize = Register("taom_dunland_party_size");
+        _dunlandVolunteerRate = Register("taom_dunland_volunteer_rate");
         _shaghanaDesertSpeed = Register("taom_shaghana_desert_speed");
         _abanissaDesertSpeed = Register("taom_abanissa_desert_speed");
     }
@@ -483,6 +528,14 @@ public class TaomCulturalFeats
             "{=taom_feat_isen_sws}Fenland Drillmasters",
             "{=taom_feat_isen_sws_desc}Party movement speed increased by 10% in swamps.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _isengardNotableCountTown.Initialize(
+            "{=taom_feat_isen_nct}Orthanc Industry",
+            "{=taom_feat_isen_nct_desc}Notable count in towns increased by 50%.",
+            0.5f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _isengardNotableCountVillage.Initialize(
+            "{=taom_feat_isen_ncv}Iron Press",
+            "{=taom_feat_isen_ncv_desc}Notable count in villages increased by 10%.",
+            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
 
         // Gundabad — Orcs: cheap armies, grain production, expensive wages
         _gundabadArmyInfluenceCost.Initialize(
@@ -499,8 +552,8 @@ public class TaomCulturalFeats
             0.1f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
         _gundabadPartySize.Initialize(
             "{=taom_feat_gun_ps}Mountain Swarm",
-            "{=taom_feat_gun_ps_desc}Party size limit increased by 30%.",
-            0.3f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+            "{=taom_feat_gun_ps_desc}Party size limit increased by 20%.",
+            0.2f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
         _gundabadRaidDamage.Initialize(
             "{=taom_feat_gun_rd}Orc Pillagers",
             "{=taom_feat_gun_rd_desc}Raid damage increased by 25%.",
@@ -508,6 +561,18 @@ public class TaomCulturalFeats
         _gundabadSnowSpeed.Initialize(
             "{=taom_feat_gun_ss}Mountain Marauders",
             "{=taom_feat_gun_ss_desc}Party movement speed increased by 10% in snow.",
+            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _gundabadVolunteerRate.Initialize(
+            "{=taom_feat_gun_vr}Mountain Levies",
+            "{=taom_feat_gun_vr_desc}Village volunteer respawn rate increased by 20%.",
+            0.2f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _gundabadNotableCountTown.Initialize(
+            "{=taom_feat_gun_nct}Goblin Warrens",
+            "{=taom_feat_gun_nct_desc}Notable count in towns increased by 10%.",
+            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _gundabadNotableCountVillage.Initialize(
+            "{=taom_feat_gun_ncv}Bone Camps",
+            "{=taom_feat_gun_ncv_desc}Notable count in villages increased by 10%.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
 
         // Umbar — Corsairs: cheap caravans, battle renown, expensive wages
@@ -547,12 +612,24 @@ public class TaomCulturalFeats
             -0.2f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
         _dolguldurPartySize.Initialize(
             "{=taom_feat_dg_ps}Dark Legions",
-            "{=taom_feat_dg_ps_desc}Party size limit increased by 25%.",
-            0.25f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+            "{=taom_feat_dg_ps_desc}Party size limit increased by 20%.",
+            0.2f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
         _dolguldurFoodConsumption.Initialize(
             "{=taom_feat_dg_fc}Voracious Hordes",
             "{=taom_feat_dg_fc_desc}Party food consumption increased by 10%.",
             0.1f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
+        _dolguldurVolunteerRate.Initialize(
+            "{=taom_feat_dg_vr}Dark Conscripts",
+            "{=taom_feat_dg_vr_desc}Village volunteer respawn rate increased by 20%.",
+            0.2f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _dolguldurNotableCountTown.Initialize(
+            "{=taom_feat_dg_nct}Shadow Brokers",
+            "{=taom_feat_dg_nct_desc}Notable count in towns increased by 50%.",
+            0.5f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _dolguldurNotableCountVillage.Initialize(
+            "{=taom_feat_dg_ncv}Hidden Hovels",
+            "{=taom_feat_dg_ncv_desc}Notable count in villages increased by 10%.",
+            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
 
         // Gondor — Men of the West: cheap garrisons, army influence, depleted hearths
         _gondorGarrisonWage.Initialize(
@@ -569,8 +646,8 @@ public class TaomCulturalFeats
             -0.15f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
         _gondorPartySize.Initialize(
             "{=taom_feat_gon_ps}Standing Armies",
-            "{=taom_feat_gon_ps_desc}Party size limit increased by 10%.",
-            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+            "{=taom_feat_gon_ps_desc}Party size limit increased by 2.5%.",
+            0.025f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
         _gondorLoyalty.Initialize(
             "{=taom_feat_gon_loy}Tower Guard Discipline",
             "{=taom_feat_gon_loy_desc}Settlement loyalty increased by 1 per day.",
@@ -599,8 +676,8 @@ public class TaomCulturalFeats
             0.2f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
         _mordorPartySize.Initialize(
             "{=taom_feat_mor_ps}Sauron's Hordes",
-            "{=taom_feat_mor_ps_desc}Party size limit increased by 30%.",
-            0.3f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+            "{=taom_feat_mor_ps_desc}Party size limit increased by 10%.",
+            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
         _mordorRaidDamage.Initialize(
             "{=taom_feat_mor_rd}Sauron's Wrath",
             "{=taom_feat_mor_rd_desc}Raid damage increased by 25%.",
@@ -617,6 +694,18 @@ public class TaomCulturalFeats
             "{=taom_feat_mor_ns}Creatures of the Dark",
             "{=taom_feat_mor_ns_desc}Party movement speed increased by 10% at night.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _mordorVolunteerRate.Initialize(
+            "{=taom_feat_mor_vr}Sauron's Levy",
+            "{=taom_feat_mor_vr_desc}Village volunteer respawn rate increased by 20%.",
+            0.2f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _mordorNotableCountTown.Initialize(
+            "{=taom_feat_mor_nct}Black Speech Heralds",
+            "{=taom_feat_mor_nct_desc}Notable count in towns increased by 5%.",
+            0.05f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _mordorNotableCountVillage.Initialize(
+            "{=taom_feat_mor_ncv}Slave Drivers",
+            "{=taom_feat_mor_ncv_desc}Notable count in villages increased by 5%.",
+            0.05f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
 
         // Rohan — Horse-lords: cheap mounted troops, slow without cavalry
         _rohanMountedCost.Initialize(
@@ -661,17 +750,33 @@ public class TaomCulturalFeats
             "{=taom_feat_rhun_sts}Easterling Outriders",
             "{=taom_feat_rhun_sts_desc}Party movement speed increased by 10% on steppes.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _rhunPartySize.Initialize(
+            "{=taom_feat_rhun_ps}Easterling Host",
+            "{=taom_feat_rhun_ps_desc}Party size limit increased by 5%.",
+            0.05f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
 
         // Harad — Haradrim: sons of the sun
         _haradDesertSpeed.Initialize(
             "{=taom_feat_har_ds}Sons of the Sun",
             "{=taom_feat_har_ds_desc}Party movement speed increased by 10% in deserts.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _haradPartySize.Initialize(
+            "{=taom_feat_har_ps}Haradrim Warbands",
+            "{=taom_feat_har_ps_desc}Party size limit increased by 5%.",
+            0.05f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
 
         // Dunland — Hill-men: hill marchers
         _dunlandPlainSpeed.Initialize(
             "{=taom_feat_dun_pls}Hill Marchers",
             "{=taom_feat_dun_pls_desc}Party movement speed increased by 10% on plains.",
+            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _dunlandPartySize.Initialize(
+            "{=taom_feat_dun_ps}Hill-Tribe Levy",
+            "{=taom_feat_dun_ps_desc}Party size limit increased by 5%.",
+            0.05f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _dunlandVolunteerRate.Initialize(
+            "{=taom_feat_dun_vr}Hill-Tribe Recruitment",
+            "{=taom_feat_dun_vr_desc}Village volunteer respawn rate increased by 10%.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
 
         // Shaghana — southern Haradrim: dune wanderers
@@ -728,12 +833,17 @@ public class TaomCulturalFeats
         yield return _instance._isengardRaidDamage;
         yield return _instance._isengardPlainSpeed;
         yield return _instance._isengardSwampSpeed;
+        yield return _instance._isengardNotableCountTown;
+        yield return _instance._isengardNotableCountVillage;
         yield return _instance._gundabadArmyInfluenceCost;
         yield return _instance._gundabadGrainProduction;
         yield return _instance._gundabadWage;
         yield return _instance._gundabadPartySize;
         yield return _instance._gundabadRaidDamage;
         yield return _instance._gundabadSnowSpeed;
+        yield return _instance._gundabadVolunteerRate;
+        yield return _instance._gundabadNotableCountTown;
+        yield return _instance._gundabadNotableCountVillage;
         yield return _instance._umbarCheaperCaravans;
         yield return _instance._umbarRenown;
         yield return _instance._umbarWage;
@@ -744,6 +854,9 @@ public class TaomCulturalFeats
         yield return _instance._dolguldurConstructionSpeed;
         yield return _instance._dolguldurPartySize;
         yield return _instance._dolguldurFoodConsumption;
+        yield return _instance._dolguldurVolunteerRate;
+        yield return _instance._dolguldurNotableCountTown;
+        yield return _instance._dolguldurNotableCountVillage;
         yield return _instance._gondorGarrisonWage;
         yield return _instance._gondorArmyInfluence;
         yield return _instance._gondorHearthGrowth;
@@ -759,6 +872,9 @@ public class TaomCulturalFeats
         yield return _instance._mordorPlainSpeed;
         yield return _instance._mordorSwampSpeed;
         yield return _instance._mordorNightSpeed;
+        yield return _instance._mordorVolunteerRate;
+        yield return _instance._mordorNotableCountTown;
+        yield return _instance._mordorNotableCountVillage;
         yield return _instance._rohanMountedCost;
         yield return _instance._rohanMountedWage;
         yield return _instance._rohanInfantrySpeed;
@@ -768,8 +884,12 @@ public class TaomCulturalFeats
         yield return _instance._dalePlainSpeed;
         yield return _instance._khandSteppeSpeed;
         yield return _instance._rhunSteppeSpeed;
+        yield return _instance._rhunPartySize;
         yield return _instance._haradDesertSpeed;
+        yield return _instance._haradPartySize;
         yield return _instance._dunlandPlainSpeed;
+        yield return _instance._dunlandPartySize;
+        yield return _instance._dunlandVolunteerRate;
         yield return _instance._shaghanaDesertSpeed;
         yield return _instance._abanissaDesertSpeed;
     }

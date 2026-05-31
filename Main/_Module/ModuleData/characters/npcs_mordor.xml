@@ -768,6 +768,17 @@
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
+	<NPCCharacter id="spc_notable_mordor_23" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_23}Brooding Mordor reaver" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_uruk_mordor" /></face>
+		<Traits><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
 
 	<!-- Notables: Headmen (3) -->
 	<NPCCharacter id="spc_mordor_headman_1" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mordor" name="{=aom_mr_headman_1}Rebellious Mordor headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">

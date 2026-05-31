@@ -36,7 +36,10 @@ public class TaomPartyHealingModel : DefaultPartyHealingModel
             var config = _configProvider.GetConfig();
             if (config.CasualtyRatios.EnableCulturalSurvivalBonuses)
             {
-                var culture = party.Owner?.Culture ?? party.Culture;
+                // Vanilla PartyBaseHelper.HasFeat precedence — same fix family Codex 43 + 46
+                // applied to feat-keyed models. Per-culture survival bonus is a culture-keyed
+                // config lookup; should use the same leader→party→owner→settlement walk.
+                var culture = TAOM.Features.CulturalFeats.CultureFeatAdapter.ResolvePartyCulture(party);
                 if (culture != null)
                 {
                     float bonus = config.CasualtyRatios.GetCulturalSurvivalBonus(culture.StringId);

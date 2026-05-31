@@ -22,7 +22,10 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         PartyBase party, bool includeDescriptions = false)
     {
         var result = base.GetPartyMemberSizeLimit(party, includeDescriptions);
-        _feats.ApplyPartySizeFeats(CultureFeatAdapter.FromOrNull(party.Owner?.Culture ?? party.Culture), ref result);
+        // Vanilla PartyBaseHelper.HasFeat precedence — see CultureFeatAdapter.FromOrNull(PartyBase).
+        // Replaces the prior `party.Owner?.Culture ?? party.Culture` which skipped LeaderHero.Culture
+        // (Codex review 43 caught the same systemic gap in TaomPartySpeedModel).
+        _feats.ApplyPartySizeFeats(CultureFeatAdapter.FromOrNull(party), ref result);
         // PartySize passives are authored as flat counts ("+2 party size"), so apply via ApplyFlat
         // (result.Add). ApplyFactor would treat magnitude=2 as +200% (x3 the base) — the "+2 -> +150"
         // bug. Culture party-size feats above remain factor-based (ApplyPartySizeFeats uses AddFactor).

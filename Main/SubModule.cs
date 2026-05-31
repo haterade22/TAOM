@@ -315,9 +315,13 @@ public class SubModule : MBSubModuleBase
             var volunteerService = IoC.Resolve<IVolunteerTierService>();
             var recruitmentService = IoC.Resolve<IVolunteerRecruitmentService>();
             var volunteerContextAdapter = IoC.Resolve<IVolunteerContextAdapter>();
+            // Hoisted: TaomVolunteerModel now consumes ICulturalFeatsService for the village
+            // volunteer-respawn-rate feats (Dunland/Gundabad/Dol Guldur/Mordor). The later
+            // "Cultural feat models" block reuses this same `culturalFeats` reference.
+            var culturalFeats = IoC.Resolve<TAOM.Features.CulturalFeats.ICulturalFeatsService>();
             campaignStarter.AddModel(new TaomCharacterStatsModel());
             campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers));
-            campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter));
+            campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats));
 
             var raceAgeService = IoC.Resolve<IRaceAgeService>();
             var heroAgeAdapter = IoC.Resolve<IHeroAgeAdapter>();
@@ -350,7 +354,7 @@ public class SubModule : MBSubModuleBase
             // Cultural feat models — Phase 9b #144/#176: dispatch logic extracted to
             // ICulturalFeatsService. Each model is now a thin boundary that converts
             // CultureObject → ICultureFeatAdapter and delegates (gamemodels.md rule 4).
-            var culturalFeats = IoC.Resolve<TAOM.Features.CulturalFeats.ICulturalFeatsService>();
+            // `culturalFeats` is resolved above (hoisted for TaomVolunteerModel).
             campaignStarter.AddModel(new TaomArmyManagementModel(culturalFeats));
             campaignStarter.AddModel(new TaomPartySpeedModel(culturalFeats, careerPassives));
             campaignStarter.AddModel(new TaomSettlementProsperityModel(culturalFeats));
@@ -369,6 +373,7 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomSmithingModel(culturalFeats, careerPassives));
             campaignStarter.AddModel(new TaomClanFinanceModel(culturalFeats));
             campaignStarter.AddModel(new TaomRaidModel(culturalFeats, careerPassives));
+            campaignStarter.AddModel(new TaomNotableSpawnModel(culturalFeats));
 
             // Battle balance models
             var battleBalanceSettings = IoC.Resolve<IBattleBalanceSettingsProvider>();

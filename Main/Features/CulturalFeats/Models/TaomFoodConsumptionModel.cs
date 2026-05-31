@@ -18,7 +18,8 @@ public class TaomFoodConsumptionModel : DefaultMobilePartyFoodConsumptionModel
         MobileParty party, ExplainedNumber baseConsumption)
     {
         var result = base.CalculateDailyFoodConsumptionf(party, baseConsumption);
-        _feats.ApplyFoodConsumptionFeats(CultureFeatAdapter.FromOrNull(party.Party?.Owner?.Culture), ref result);
+        // Vanilla PartyBaseHelper.HasFeat precedence via the shared helper.
+        _feats.ApplyFoodConsumptionFeats(CultureFeatAdapter.FromOrNull(party.Party), ref result);
         return result;
     }
 }

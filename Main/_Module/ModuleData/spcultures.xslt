@@ -291,6 +291,8 @@
 				<feat id="battanian_militia_production" />
 				<feat id="battanian_slower_construction" />
 				<feat id="taom_dunland_plain_speed" />
+				<feat id="taom_dunland_party_size" />
+				<feat id="taom_dunland_volunteer_rate" />
 			</cultural_feats>
 
 			<!-- Pass through vanilla child elements we don't override -->
@@ -1346,6 +1348,7 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()"/>
 			<feat id="taom_harad_desert_speed" />
+			<feat id="taom_harad_party_size" />
 		</xsl:copy>
 	</xsl:template>
 
@@ -1353,6 +1356,7 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()"/>
 			<feat id="taom_rhun_steppe_speed" />
+			<feat id="taom_rhun_party_size" />
 		</xsl:copy>
 	</xsl:template>
 

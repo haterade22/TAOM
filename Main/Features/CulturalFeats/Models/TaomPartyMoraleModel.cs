@@ -22,7 +22,8 @@ public class TaomPartyMoraleModel : DefaultPartyMoraleModel
         MobileParty party, bool includeDescription = false)
     {
         var result = base.GetEffectivePartyMorale(party, includeDescription);
-        _feats.ApplyMoraleFeats(CultureFeatAdapter.FromOrNull(party.Party?.Owner?.Culture), ref result);
+        // Vanilla PartyBaseHelper.HasFeat precedence via the shared helper.
+        _feats.ApplyMoraleFeats(CultureFeatAdapter.FromOrNull(party.Party), ref result);
         _careerPassives.ApplyFactor(party.LeaderHero?.StringId, ref result, PassiveEffectType.TroopMorale);
         return result;
     }

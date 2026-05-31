@@ -27,7 +27,7 @@ public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
         // Phase 9b #135 P1 — `Campaign.Current` and `MapSceneWrapper` can both be null during
         // scene transitions; `?.` short-circuit yields a null TerrainType which MapTerrain maps
         // to TerrainKind.None so no terrain feat is applied.
-        var culture = CultureFeatAdapter.FromOrNull(ResolvePartyCulture(mobileParty.Party));
+        var culture = CultureFeatAdapter.FromOrNull(mobileParty.Party);
         var terrain = MapTerrain(
             Campaign.Current?.MapSceneWrapper?.GetFaceTerrainType(mobileParty.CurrentNavigationFace));
         // Match vanilla: the night movement penalty (which the Mordor night feat offsets) is
@@ -61,28 +61,6 @@ public class TaomPartySpeedModel : DefaultPartySpeedCalculatingModel
         TerrainType.Snow => TerrainKind.Snow,
         _ => TerrainKind.None,
     };
-
-    /// <summary>
-    /// Boundary helper — resolves the culture used for cultural-feat checks with the same
-    /// precedence as vanilla <c>PartyBaseHelper.HasFeat</c> (leader hero → party → owner →
-    /// settlement). Resolving only <c>Owner.Culture</c> missed ownerless parties (garrison,
-    /// militia, caravan) and leader-driven culture; this mirrors the engine. Returns null
-    /// when no culture can be resolved.
-    /// </summary>
-    private static CultureObject? ResolvePartyCulture(PartyBase? party)
-    {
-        if (party == null)
-            return null;
-        if (party.LeaderHero != null)
-            return party.LeaderHero.Culture;
-        if (party.Culture != null)
-            return party.Culture;
-        if (party.Owner != null)
-            return party.Owner.Culture;
-        if (party.Settlement != null)
-            return party.Settlement.Culture;
-        return null;
-    }
 
     /// <summary>
     /// Boundary helper — collapses a sealed <see cref="TroopRoster"/> down to the

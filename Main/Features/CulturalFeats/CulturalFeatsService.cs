@@ -1,3 +1,4 @@
+using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.Core;
@@ -241,6 +242,66 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.AddFactor(TaomCulturalFeats.IsengardPartySizeFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.GondorPartySizeFeat))
             result.AddFactor(TaomCulturalFeats.GondorPartySizeFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.DunlandPartySizeFeat))
+            result.AddFactor(TaomCulturalFeats.DunlandPartySizeFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.RhunPartySizeFeat))
+            result.AddFactor(TaomCulturalFeats.RhunPartySizeFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.HaradPartySizeFeat))
+            result.AddFactor(TaomCulturalFeats.HaradPartySizeFeat.EffectBonus, CultureText);
+    }
+
+    // ── VolunteerRespawn ──────────────────────────────────────────────
+
+    public void ApplyVolunteerRespawnFeats(ICultureFeatAdapter? culture, ref ExplainedNumber result)
+    {
+        if (culture == null)
+            return;
+        if (culture.HasFeat(TaomCulturalFeats.DunlandVolunteerRateFeat))
+            result.AddFactor(TaomCulturalFeats.DunlandVolunteerRateFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.GundabadVolunteerRateFeat))
+            result.AddFactor(TaomCulturalFeats.GundabadVolunteerRateFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.DolGuldurVolunteerRateFeat))
+            result.AddFactor(TaomCulturalFeats.DolGuldurVolunteerRateFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.MordorVolunteerRateFeat))
+            result.AddFactor(TaomCulturalFeats.MordorVolunteerRateFeat.EffectBonus, CultureText);
+    }
+
+    // ── NotableSpawn ──────────────────────────────────────────────────
+
+    public int ApplyNotableCountFeat(ICultureFeatAdapter? culture, bool isTown, int baseCount)
+    {
+        if (culture == null || baseCount <= 0)
+            return baseCount;
+
+        float multiplier = 0f;
+        if (isTown)
+        {
+            if (culture.HasFeat(TaomCulturalFeats.IsengardNotableCountTownFeat))
+                multiplier += TaomCulturalFeats.IsengardNotableCountTownFeat.EffectBonus;
+            if (culture.HasFeat(TaomCulturalFeats.DolGuldurNotableCountTownFeat))
+                multiplier += TaomCulturalFeats.DolGuldurNotableCountTownFeat.EffectBonus;
+            if (culture.HasFeat(TaomCulturalFeats.MordorNotableCountTownFeat))
+                multiplier += TaomCulturalFeats.MordorNotableCountTownFeat.EffectBonus;
+            if (culture.HasFeat(TaomCulturalFeats.GundabadNotableCountTownFeat))
+                multiplier += TaomCulturalFeats.GundabadNotableCountTownFeat.EffectBonus;
+        }
+        else
+        {
+            if (culture.HasFeat(TaomCulturalFeats.IsengardNotableCountVillageFeat))
+                multiplier += TaomCulturalFeats.IsengardNotableCountVillageFeat.EffectBonus;
+            if (culture.HasFeat(TaomCulturalFeats.DolGuldurNotableCountVillageFeat))
+                multiplier += TaomCulturalFeats.DolGuldurNotableCountVillageFeat.EffectBonus;
+            if (culture.HasFeat(TaomCulturalFeats.MordorNotableCountVillageFeat))
+                multiplier += TaomCulturalFeats.MordorNotableCountVillageFeat.EffectBonus;
+            if (culture.HasFeat(TaomCulturalFeats.GundabadNotableCountVillageFeat))
+                multiplier += TaomCulturalFeats.GundabadNotableCountVillageFeat.EffectBonus;
+        }
+
+        if (multiplier <= 0f)
+            return baseCount;
+        // Ceiling so any positive bonus on any base > 0 advances by ≥1 — the user's stated +5% targets
+        // (Mordor) are deliberately meaningful, not no-ops on the small int targets vanilla returns.
+        return (int)Math.Ceiling((double)baseCount * (1.0 + multiplier));
     }
 
     // ── FoodConsumption ────────────────────────────────────────────────

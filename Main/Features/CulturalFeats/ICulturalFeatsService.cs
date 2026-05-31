@@ -68,8 +68,16 @@ public interface ICulturalFeatsService
     void ApplyTroopUpgradeFeats(ICultureFeatAdapter? culture, bool isMounted, ref ExplainedNumber result);
 
     // ── PartySize ──────────────────────────────────────────────────────
-    /// <summary>Applies Mordor/Gundabad/Dol Guldur/Isengard/Gondor party-size factors.</summary>
+    /// <summary>Applies Mordor/Gundabad/Dol Guldur/Isengard/Gondor + Dunland/Rhun/Harad party-size factors.</summary>
     void ApplyPartySizeFeats(ICultureFeatAdapter? culture, ref ExplainedNumber result);
+
+    // ── VolunteerRespawn ──────────────────────────────────────────────
+    /// <summary>Applies Dunland/Gundabad/Dol Guldur/Mordor village volunteer-respawn-rate factors. Called once per notable per daily tick — caller must clamp to [0,1] (probability semantics).</summary>
+    void ApplyVolunteerRespawnFeats(ICultureFeatAdapter? culture, ref ExplainedNumber result);
+
+    // ── NotableSpawn ──────────────────────────────────────────────────
+    /// <summary>Returns the per-occupation notable target for the settlement, ceiling-rounded so any positive bonus advances by ≥1. Applies Isengard/Dol Guldur/Mordor/Gundabad town/village notable-count factors based on <paramref name="isTown"/>. Returns <paramref name="baseCount"/> when the culture has no matching feat or when <paramref name="baseCount"/> is ≤0.</summary>
+    int ApplyNotableCountFeat(ICultureFeatAdapter? culture, bool isTown, int baseCount);
 
     // ── FoodConsumption ────────────────────────────────────────────────
     /// <summary>Applies Rivendell/Mirkwood/Lothlorien/Dol Guldur food-consumption factors.</summary>

@@ -694,6 +694,21 @@
 		</Equipments>
 	</NPCCharacter>
 
+	<!-- RuralNotable 3: Sullen Dol Guldur enforcer (added 2026-05-31 for notable-count feat) -->
+	<NPCCharacter id="spc_notable_dolguldur_23" name="{=aom_dg_notable_23}Sullen Dol Guldur enforcer" race="dg_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_dg_uruk_chest_light_c" />
+				<equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
 	<!-- Headman 1: Rebellious Dol Guldur captain -->
 	<NPCCharacter id="spc_dolguldur_headman_1" name="{=aom_dg_headman_1}Rebellious Dol Guldur captain" race="dg_uruk" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.dolguldur" occupation="Headman">
 		<face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>

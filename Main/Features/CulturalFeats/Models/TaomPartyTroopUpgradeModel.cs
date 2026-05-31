@@ -22,8 +22,10 @@ public class TaomPartyTroopUpgradeModel : DefaultPartyTroopUpgradeModel
         PartyBase party, CharacterObject characterObject, CharacterObject upgradeTarget)
     {
         var result = base.GetGoldCostForUpgrade(party, characterObject, upgradeTarget);
+        // Vanilla PartyBaseHelper.HasFeat precedence via the shared CultureFeatAdapter helper —
+        // same fix Codex 43 made to speed model and the 3-pack RCA applied to size model.
         _feats.ApplyTroopUpgradeFeats(
-            CultureFeatAdapter.FromOrNull(party.Owner?.Culture ?? party.Culture),
+            CultureFeatAdapter.FromOrNull(party),
             characterObject.IsMounted,
             ref result);
         _careerPassives.ApplyFactor((party.Owner ?? party.LeaderHero)?.StringId, ref result, PassiveEffectType.TroopUpgradeCost);

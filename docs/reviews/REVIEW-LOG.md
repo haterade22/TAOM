@@ -1064,6 +1064,27 @@ Root-cause pattern (bugs #2, #3): additive GameModel override read vanilla for t
 
 Build & test: `dotnet test TAOM.Tests` (deploy-skip flags, game running) → **2624 passed / 0 failed / 2 skipped.** Model fixes are thin-entry-point boundary logic — verified by build + in-game per gamemodels rule.
 
+### Review 44 — Cultural-Feats 3-Pack: party-size retune + volunteer respawn + notable count (issue #255, post-`/deep-review` Codex follow-up)
+
+Pipeline: `/deep-review` (5 agents) → 1 HIGH gap caught (new `_23` RuralNotable NPCs added to `npcs_*.xml` but UNREGISTERED in the culture's `<notable_templates>` spawn pool — engine would have reused `_21`/`_22` and spawned clone notables) → fixed → `/review-codex` (gpt-5.5 xhigh).
+
+Codex findings: **0 CRITICAL / 0 HIGH / 1 MEDIUM / 1 LOW.** All 10 Known Suspects no-bug or disputed.
+
+| # | Sev | Finding | Verdict | Resolution |
+|---|-----|---------|---------|------------|
+| C1 | MED | `TaomPartyTroopUpgradeModel.cs:26` still used `Owner?.Culture ?? party.Culture` — same systemic pattern Codex 43 fixed for speed model | Confirmed | Fixed — adopted `CultureFeatAdapter.FromOrNull(party)` |
+| C2 | LOW | `docs/features/cultural-feats.md` party-size table still showed pre-retune values (Gundabad +30%, Dol Guldur +25%, Gondor +10%, Mordor +30%) | Confirmed | Fixed — table updated with "retuned 2026-05-31" annotation |
+
+**Broader audit triggered by C1.** Author's grep of `Main/Features/**/Models/Taom*Model.cs` for the same culture-resolver pattern found **3 additional sibling models** Codex didn't enumerate: `TaomFoodConsumptionModel`, `TaomPartyMoraleModel`, `TaomPartyHealingModel`. All 4 fixed in one batch. `CultureFeatAdapter` gained a public static `ResolvePartyCulture(PartyBase?)` returning raw `CultureObject?` so the healing model (config-StringId lookup, not feat check) can use the same precedence walk.
+
+Disputed-as-bug (Codex confirmed no-bug): S1 (`_23` two-layer registration complete after deep-review fix), S2 (vanilla `hero.CurrentSettlement` NRE — DISPUTED cleanly: invariant holds since sole vanilla caller passes settlement-staying notables), S3 (`Settlement.OwnerClan` correctly resolves through `Village.Bound.OwnerClan` for villages), S4 (ceiling rounding behaves as expected for all bases × bonuses), S5 (CultureFeatAdapter mirrors vanilla precedence exactly), S6 (SubModule hoist clean, no duplicate `culturalFeats` decl), S7 (test reflection table + descriptions match production), S8 (per-culture sum = 92), S9 (XSLT transform has exactly one `<cultural_feats>` per culture, no duplicates), S10 (no Mordor/Gondor party-size references outside the feat layer).
+
+Root-cause pattern (3 consecutive reviews now): the *partial replication of a multi-layer convention* family in `feedback_replicate_vanilla_safety_gates_in_prefix` has a new sub-pattern — **when fixing a per-model boundary convention in one GameModel, audit ALL sibling `Default*Model` overrides for the same pattern.** Codex 43 fixed the resolver in speed model; the natural follow-up "do other models do the same lookup?" wasn't asked at design time. Codex 44 caught the gap. Memory updated to require sibling-audit step.
+
+RCA: `docs/reviews/rca-cultural-feats-3pack-2026-05-31.md` (now has "Codex follow-up" section). AGENTS.md updated (review 44, 2 new "What Codex does well" bullets: sibling-pattern audits + calibrated dispute on plausible vanilla NREs).
+
+Build & test: `dotnet test TAOM.Tests` (deploy-skip flags, game running) → **2760 passed / 0 failed / 2 skipped** (up from 2735 — new auto-discovered tests for the shared helper paths). ModuleData validator clean. Model fixes are boundary-only — verified by build + in-game per gamemodels rule.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

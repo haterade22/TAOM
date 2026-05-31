@@ -694,6 +694,21 @@
 		</Equipments>
 	</NPCCharacter>
 
+	<!-- RuralNotable 3: Vicious Gundabad slave-driver (added 2026-05-31 for notable-count feat) -->
+	<NPCCharacter id="spc_notable_gundabad_23" name="{=aom_gb_notable_23}Vicious Gundabad slave-driver" race="pale_uruk" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_gb_uruk_chest_light_c" />
+				<equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
 	<!-- Headman 1: Rebellious Gundabad captain -->
 	<NPCCharacter id="spc_gundabad_headman_1" name="{=aom_gb_headman_1}Rebellious Gundabad captain" race="pale_uruk" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.gundabad" occupation="Headman">
 		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>

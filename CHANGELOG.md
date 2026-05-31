@@ -2,6 +2,22 @@
 
 ## 2026-05-31
 
+### feat(castle-recruitment): recruit troops from castles (player + AI)
+
+Castles become a recruitment source for the first time — previously the player and AI could only recruit volunteers at towns and villages. New feature module `Main/Features/CastleRecruitment/` (Patch42).
+
+**Player:** a "Recruit troops" option on the castle menu opens the vanilla recruit screen against castle notables (reuses loc key `{=E31IJyqs}`). **AI:** lord parties now score, travel to, and drain castle volunteers like towns — two Harmony transpilers swap the `!settlement.IsCastle` AI-scoring gates (`AiVisitSettlementBehavior.AiHourlyTick` + `FillSettlementsToVisitWithDistancesAsDays`) for a runtime toggle, plus a postfix on `HourlyTickParty` invokes the private `CheckRecruiting` for castles.
+
+**Notables:** spawned via `HeroCreator.CreateNotable` on new game + save-load (retrofits existing saves) and maintained daily; vanilla's `OnHeroCreated` places them. Castle-safe occupations only (GangLeader/Headman/Merchant/Artisan — never RuralNotable, which NREs for castles). Volunteers generated daily via a castle-safe probability (vanilla's production model NREs on a castle's null `.Village`); castle notables draw culture-correct LOTR troops from the existing `VolunteerRecruitmentService` `castle_*` pools. Issues/quests suppressed for castle notables via `CanHaveCampaignIssuesEvent` (relations untouched).
+
+**Config:** MCM group "Castle Recruitment" + `castle_recruitment_config.json` — master toggle, AI toggle, notables-per-castle (1-5, default 3). Disabling leaves existing castle notables inert in the save.
+
+**Review:** `/deep-review` (5 agents) — 30/30 APIs verified, 0 incompatibilities; 5 findings fixed in-session (hot-path open-delegate instead of `MethodInfo.Invoke`; transpiler hardened to first-`get_IsCastle` + anchor fail-safe; wider anchor window; `default: throw` on the occupation map; behavior split to `CastleNotableMaintainer` for ADR-002). 2762 tests pass (24 new). RCA: `docs/reviews/rca-castle-recruitment-2026-05-31.md`. Feature doc: `docs/features/castle-recruitment.md`.
+
+Constraint: castle's `Settlement.Village` is null → vanilla `GetDailyVolunteerProductionProbability` / `GetBasicVolunteer` (rural path) NRE for castles; volunteer fill is a castle-safe reimplementation rather than a gate-widen.
+Not-tested: Harmony transpilers + postfix + menu (require live game).
+Save-compat: additive — castle notables are engine-persisted Heroes; no new SyncData.
+
 ### feat(cultural-feats): party-size retune + Dunland/Rhun/Harad party-size feats + village volunteer respawn-rate feats + per-settlement notable-count feats
 
 Three new cultural-feat dimensions plus a retune of the existing party-size set. Feat total **77 → 92** (+15 new, 4 retuned). All apply through the existing `CulturalFeats` `FeatObject` pipeline.

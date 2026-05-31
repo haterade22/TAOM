@@ -555,6 +555,200 @@ public class CulturalFeatsServiceTests
         Assert.AreEqual(100f, en.ResultNumber);
     }
 
+    [TestMethod]
+    public void ApplyPartySizeFeats_DunlandOnly_AppliesFivePercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.DunlandPartySizeFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplyPartySizeFeats(culture, ref en);
+        Assert.AreEqual(100f * (1f + 0.05f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyPartySizeFeats_RhunOnly_AppliesFivePercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.RhunPartySizeFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplyPartySizeFeats(culture, ref en);
+        Assert.AreEqual(100f * (1f + 0.05f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyPartySizeFeats_HaradOnly_AppliesFivePercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.HaradPartySizeFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplyPartySizeFeats(culture, ref en);
+        Assert.AreEqual(100f * (1f + 0.05f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyPartySizeFeats_GondorOnly_AppliesRetunedTwoPointFivePercent()
+    {
+        // Verifies Gondor retune from 0.10 → 0.025. EnsureFeatsInitialised stores the new
+        // reflected value, and the test reads it dynamically — so this guards both the
+        // reflection-table update and the production InitializeAll value.
+        var culture = AdapterWith(TaomCulturalFeats.GondorPartySizeFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplyPartySizeFeats(culture, ref en);
+        Assert.AreEqual(100f * (1f + 0.025f), en.ResultNumber, 0.0001f);
+        Assert.AreEqual(0.025f, TaomCulturalFeats.GondorPartySizeFeat.EffectBonus, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyPartySizeFeats_RetunedValues_MatchTargets()
+    {
+        // Defensive: confirm the 4 retuned EffectBonus values.
+        Assert.AreEqual(0.10f, TaomCulturalFeats.MordorPartySizeFeat.EffectBonus, 0.0001f);
+        Assert.AreEqual(0.20f, TaomCulturalFeats.GundabadPartySizeFeat.EffectBonus, 0.0001f);
+        Assert.AreEqual(0.20f, TaomCulturalFeats.DolGuldurPartySizeFeat.EffectBonus, 0.0001f);
+        Assert.AreEqual(0.025f, TaomCulturalFeats.GondorPartySizeFeat.EffectBonus, 0.0001f);
+    }
+
+    // ── VolunteerRespawn ──────────────────────────────────────────────
+
+    [TestMethod]
+    public void ApplyVolunteerRespawnFeats_NullCulture_DoesNothing()
+    {
+        var en = new ExplainedNumber(0.7f);
+        _sut.ApplyVolunteerRespawnFeats(null, ref en);
+        Assert.AreEqual(0.7f, en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyVolunteerRespawnFeats_NonMatchingCulture_DoesNothing()
+    {
+        var culture = Substitute.For<ICultureFeatAdapter>();
+        culture.HasFeat(Arg.Any<FeatObject>()).Returns(false);
+        var en = new ExplainedNumber(0.7f);
+        _sut.ApplyVolunteerRespawnFeats(culture, ref en);
+        Assert.AreEqual(0.7f, en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyVolunteerRespawnFeats_DunlandCulture_AddsTenPercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.DunlandVolunteerRateFeat);
+        var en = new ExplainedNumber(0.7f);
+        _sut.ApplyVolunteerRespawnFeats(culture, ref en);
+        Assert.AreEqual(0.7f * (1f + 0.1f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyVolunteerRespawnFeats_MordorCulture_AddsTwentyPercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.MordorVolunteerRateFeat);
+        var en = new ExplainedNumber(0.7f);
+        _sut.ApplyVolunteerRespawnFeats(culture, ref en);
+        Assert.AreEqual(0.7f * (1f + 0.2f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyVolunteerRespawnFeats_GundabadCulture_AddsTwentyPercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.GundabadVolunteerRateFeat);
+        var en = new ExplainedNumber(0.7f);
+        _sut.ApplyVolunteerRespawnFeats(culture, ref en);
+        Assert.AreEqual(0.7f * (1f + 0.2f), en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyVolunteerRespawnFeats_DolGuldurCulture_AddsTwentyPercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.DolGuldurVolunteerRateFeat);
+        var en = new ExplainedNumber(0.7f);
+        _sut.ApplyVolunteerRespawnFeats(culture, ref en);
+        Assert.AreEqual(0.7f * (1f + 0.2f), en.ResultNumber, 0.0001f);
+    }
+
+    // ── NotableSpawn ──────────────────────────────────────────────────
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_NullCulture_ReturnsBaseCount()
+    {
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(null, isTown: true, baseCount: 2));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_ZeroBase_ReturnsZero()
+    {
+        // Vanilla returns 0 for unsupported (settlement, occupation) pairs (e.g. Preacher in towns).
+        // We must NOT inflate 0 → 1 even with a positive feat.
+        var culture = AdapterWith(TaomCulturalFeats.MordorNotableCountTownFeat);
+        Assert.AreEqual(0, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 0));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_NonMatchingCulture_ReturnsBaseCount()
+    {
+        var culture = Substitute.For<ICultureFeatAdapter>();
+        culture.HasFeat(Arg.Any<FeatObject>()).Returns(false);
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 2));
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, isTown: false, baseCount: 2));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_IsengardTownFiftyPercent_CeilingsTwoToThree()
+    {
+        // 2 × 1.50 = 3.0 exact → 3
+        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountTownFeat);
+        Assert.AreEqual(3, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 2));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_IsengardTownFiftyPercent_CeilingsOneToTwo()
+    {
+        // 1 × 1.50 = 1.5 → ceil → 2 (Artisan slot)
+        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountTownFeat);
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 1));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_DolGuldurTown_AppliesFiftyPercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.DolGuldurNotableCountTownFeat);
+        Assert.AreEqual(3, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 2));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_GundabadTownTenPercent_CeilingsTwoToThree()
+    {
+        // 2 × 1.10 = 2.2 → ceil → 3
+        var culture = AdapterWith(TaomCulturalFeats.GundabadNotableCountTownFeat);
+        Assert.AreEqual(3, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 2));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_MordorTownFivePercent_CeilingsOneToTwo()
+    {
+        // The "+5% on a base of 1" edge case the user signed off on (Mordor Artisan 1 → 2).
+        var culture = AdapterWith(TaomCulturalFeats.MordorNotableCountTownFeat);
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 1));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_MordorTown_DoesNotApplyVillageFeat()
+    {
+        // Town-only feat must NOT fire when isTown=false even if culture has it.
+        var culture = AdapterWith(TaomCulturalFeats.MordorNotableCountTownFeat);
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, isTown: false, baseCount: 2));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_IsengardVillageTenPercent_CeilingsTwoToThree()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountVillageFeat);
+        Assert.AreEqual(3, _sut.ApplyNotableCountFeat(culture, isTown: false, baseCount: 2));
+    }
+
+    [TestMethod]
+    public void ApplyNotableCountFeat_IsengardVillage_DoesNotApplyTownFeat()
+    {
+        // Village-only feat must NOT fire when isTown=true.
+        var culture = AdapterWith(TaomCulturalFeats.IsengardNotableCountVillageFeat);
+        Assert.AreEqual(2, _sut.ApplyNotableCountFeat(culture, isTown: true, baseCount: 2));
+    }
+
     // ── FoodConsumption ────────────────────────────────────────────────
 
     [TestMethod]
@@ -820,7 +1014,7 @@ public class CulturalFeatsServiceTests
                 ("_gundabadArmyInfluenceCost", "taom_gundabad_army_influence_cost", -0.4f),
                 ("_gundabadGrainProduction", "taom_gundabad_grain_production", 0.15f),
                 ("_gundabadWage", "taom_gundabad_wage", 0.1f),
-                ("_gundabadPartySize", "taom_gundabad_party_size", 0.3f),
+                ("_gundabadPartySize", "taom_gundabad_party_size", 0.2f),
                 ("_gundabadRaidDamage", "taom_gundabad_raid_damage", 0.25f),
 
                 ("_umbarCheaperCaravans", "taom_umbar_cheaper_caravans", -0.25f),
@@ -831,20 +1025,20 @@ public class CulturalFeatsServiceTests
                 ("_dolguldurArmyInfluenceCost", "taom_dolguldur_army_influence_cost", -0.5f),
                 ("_dolguldurMilitiaProduction", "taom_dolguldur_militia_production", 0.2f),
                 ("_dolguldurConstructionSpeed", "taom_dolguldur_construction_speed", -0.2f),
-                ("_dolguldurPartySize", "taom_dolguldur_party_size", 0.25f),
+                ("_dolguldurPartySize", "taom_dolguldur_party_size", 0.2f),
                 ("_dolguldurFoodConsumption", "taom_dolguldur_food_consumption", 0.1f),
 
                 ("_gondorGarrisonWage", "taom_gondor_garrison_wage", -0.2f),
                 ("_gondorArmyInfluence", "taom_gondor_army_influence", 0.3f),
                 ("_gondorHearthGrowth", "taom_gondor_hearth_growth", -0.15f),
-                ("_gondorPartySize", "taom_gondor_party_size", 0.1f),
+                ("_gondorPartySize", "taom_gondor_party_size", 0.025f),
                 ("_gondorLoyalty", "taom_gondor_loyalty", 1f),
                 ("_gondorMorale", "taom_gondor_morale", 5f),
 
                 ("_mordorArmyInfluenceCost", "taom_mordor_army_influence_cost", -0.6f),
                 ("_mordorGrainProduction", "taom_mordor_grain_production", 0.2f),
                 ("_mordorWage", "taom_mordor_wage", 0.2f),
-                ("_mordorPartySize", "taom_mordor_party_size", 0.3f),
+                ("_mordorPartySize", "taom_mordor_party_size", 0.1f),
                 ("_mordorRaidDamage", "taom_mordor_raid_damage", 0.25f),
 
                 ("_rohanMountedCost", "taom_rohan_mounted_cost", -0.15f),
@@ -872,6 +1066,27 @@ public class CulturalFeatsServiceTests
                 ("_dunlandPlainSpeed", "taom_dunland_plain_speed", 0.1f),
                 ("_shaghanaDesertSpeed", "taom_shaghana_desert_speed", 0.1f),
                 ("_abanissaDesertSpeed", "taom_abanissa_desert_speed", 0.1f),
+
+                // New party-size feats (3) — Dunland/Rhun/Harad +5%
+                ("_dunlandPartySize", "taom_dunland_party_size", 0.05f),
+                ("_rhunPartySize", "taom_rhun_party_size", 0.05f),
+                ("_haradPartySize", "taom_harad_party_size", 0.05f),
+
+                // Volunteer respawn rate (4)
+                ("_dunlandVolunteerRate", "taom_dunland_volunteer_rate", 0.1f),
+                ("_gundabadVolunteerRate", "taom_gundabad_volunteer_rate", 0.2f),
+                ("_dolguldurVolunteerRate", "taom_dolguldur_volunteer_rate", 0.2f),
+                ("_mordorVolunteerRate", "taom_mordor_volunteer_rate", 0.2f),
+
+                // Notable count per settlement type (8 — 2 per culture × 4 cultures)
+                ("_isengardNotableCountTown", "taom_isengard_notable_count_town", 0.5f),
+                ("_isengardNotableCountVillage", "taom_isengard_notable_count_village", 0.1f),
+                ("_dolguldurNotableCountTown", "taom_dolguldur_notable_count_town", 0.5f),
+                ("_dolguldurNotableCountVillage", "taom_dolguldur_notable_count_village", 0.1f),
+                ("_mordorNotableCountTown", "taom_mordor_notable_count_town", 0.05f),
+                ("_mordorNotableCountVillage", "taom_mordor_notable_count_village", 0.05f),
+                ("_gundabadNotableCountTown", "taom_gundabad_notable_count_town", 0.1f),
+                ("_gundabadNotableCountVillage", "taom_gundabad_notable_count_village", 0.1f),
             };
 
             var effectBonusProp = typeof(FeatObject).GetProperty(
