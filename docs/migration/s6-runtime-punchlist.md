@@ -54,3 +54,14 @@ These reflection sites resolve their *type* from a live instance (`instance.GetT
 ## Closing the punch-list
 
 When all boxes are checked, note completion in [`TRACKING.md`](./TRACKING.md) and close any remaining migration tracking issue. The offline gate stays green-on-every-build going forward; this human list only needs re-running after a Bannerlord version bump that the offline gate flags.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/migration/TRACKING.md](./TRACKING.md)
+- [docs/reference/taleworlds-api-snapshot/reflection-sites.md](../reference/taleworlds-api-snapshot/reflection-sites.md)
+
+<!-- backlinks-end -->

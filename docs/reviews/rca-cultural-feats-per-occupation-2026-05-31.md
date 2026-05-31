@@ -87,3 +87,13 @@ python tools/validate_moduledata.py                -> CLEAN
 - [`docs/reviews/rca-cultural-feats-3pack-2026-05-31.md`](rca-cultural-feats-3pack-2026-05-31.md) — yesterday's RCA on commit `582275f` that codified the two-layer NPC registration rule (preceding context for this refactor).
 - `feedback_notable_template_two_layer_registration` — applied successfully in this refactor (17 new GLs all two-layer-registered, verified by Codex).
 - `feedback_audit_findings_not_always_correct` — applied to MEDIUM (Codex's math is correct but the "fix" is a design trade-off, not a code bug; documenting is the correct response, not patching vanilla).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

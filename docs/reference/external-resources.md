@@ -42,4 +42,11 @@ Curated, verified external references for improving TAOM (Bannerlord 1.4.5 LOTR 
 - **No LOTR-mod-authoring resource library** — TAOM's own domain docs (`docs/ai-includes/new-culture-authoring.md`, etc.) are the asset; nothing external matches.
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/lord-skills-authoring.md](../ai-includes/lord-skills-authoring.md)
+- [docs/ai-includes/new-culture-authoring.md](../ai-includes/new-culture-authoring.md)
+- [docs/INDEX.md](../INDEX.md)
+
 <!-- backlinks-end -->

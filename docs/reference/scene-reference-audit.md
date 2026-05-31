@@ -50,6 +50,18 @@ Full machine output: [`docs/reviews/scene-name-audit-2026-05-28.txt`](../reviews
 
 ## Related
 
+- [`worldmap-battle-scene-grid.md`](worldmap-battle-scene-grid.md) — how the `map_indices` get *chosen*: the baked `worldmap_battle_scene_grid` texture that maps map cells → `sceneIndex`. This audit validates the `sp_battle_scenes.xml` side; that doc covers the texture side.
 - Rule: [`.claude/rules/vanilla-data-comparison.md`](../../.claude/rules/vanilla-data-comparison.md) (fires when editing the relevant XML)
 - Memory: `feedback_scene_name_refs_break_on_version_bump.md`
 - Post-bump checklist: [`docs/migration/v1.4.x-changes.md`](../migration/v1.4.x-changes.md)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/bandit-management.md](../features/bandit-management.md)
+- [docs/reference/worldmap-battle-scene-grid.md](./worldmap-battle-scene-grid.md)
+
+<!-- backlinks-end -->

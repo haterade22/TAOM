@@ -147,3 +147,13 @@ One pass over `Main/_Module/ModuleData/**/*.xml` (regex, line-numbered) + a regi
 Out of scope for v1 (documented as coverage gaps, not bugs): armor `covers_legs`/`covers_hands` (Armory-side schema), `BodyProperty.` refs, weapon-craft piece refs, scene refs (covered by `audit_scene_names.py`), and inline `EquipmentSet`-by-id refs to vanilla rosters.
 
 NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companions/`, `taom_wanderers.xml`, and `taom_education_character_templates.xml` (the `taom_npccharacter.json` `applies_to` set — **add any new `<NPCCharacter>`-defining file there** or its dup/enum checks won't run; Codex review 2026-05-30 caught three uncovered files). The civilian-type rule treats `_civ*` and `child_template_*` rosters as civilian and checks every `<EquipmentSet>`, but **deliberately excludes** `child_education_*` education templates (0/784 are `Civilian`-tagged in real data — an unconfirmed convention; flagging them would be 784 false positives — confirm the convention before extending the rule).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/tor-tools-adoption-review-2026-05-30.md](../reviews/tor-tools-adoption-review-2026-05-30.md)
+
+<!-- backlinks-end -->

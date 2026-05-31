@@ -230,3 +230,12 @@ Models: 39. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface.p
 - `Int32 get_MaxVolunteerTier()`
 - `CharacterObject GetBasicVolunteer(Hero hero)`
 
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/taleworlds-api-snapshot/README.md](./README.md)
+
+<!-- backlinks-end -->

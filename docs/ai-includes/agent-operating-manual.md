@@ -64,3 +64,13 @@ Don't assume these reached you — read the relevant one when your task touches 
 - Adapter pattern (ADR-007), thin entry points (ADR-002), no #region/[Obsolete]/#if DEBUG (ADR-003/004/005): [`docs/adrs/`](../adrs/README.md)
 - TaleWorlds research workflow: [`taleworlds-research-guide.md`](./taleworlds-research-guide.md)
 - The `.claude/rules/*.md` (csharp-architecture, harmony-patches, gamemodels, adapters, tests, xslt, gui-ui, troops, xml-data) — read the one matching the files you're editing.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/agent-teams.md](./agent-teams.md)
+
+<!-- backlinks-end -->

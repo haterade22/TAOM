@@ -96,3 +96,14 @@ Reflection whose target is a TAOM-owned type or a dynamic member name. Not affec
 - `TAOM.Tests/Migration/ReflectionSiteBindingTests.cs` (Category B is its data source)
 - [`README.md`](./README.md) (snapshot overview)
 - [`docs/migration/TRACKING.md`](../../migration/TRACKING.md) (S6 binding-verification)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/migration/s6-runtime-punchlist.md](../../migration/s6-runtime-punchlist.md)
+- [docs/reference/taleworlds-api-snapshot/README.md](./README.md)
+
+<!-- backlinks-end -->

@@ -681,3 +681,14 @@ Every selectable option's `skills` + `attribute`, per stage. Childhood (global) 
 - `taom_childhood_convince` — ['Engineering', 'Trade'] | attr=Social | (f1/s10/a1)
 - `taom_childhood_charge` — ['Charm', 'Leadership'] | attr=Social | (f1/s10/a1)
 - `taom_childhood_horses` — ['Riding', 'Polearm'] | attr=Endurance | (f1/s10/a1)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/character-creation.md](../features/character-creation.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -129,3 +129,13 @@ Nothing material this round. The "verification note" at the end noted that Codex
 
 1. **New systemic rule** added to AGENTS.md "What Codex does well" / "Bugs Codex catches": *sibling-pattern audits across GameModels.*
 2. **Updated memory** `feedback_replicate_vanilla_safety_gates_in_prefix.md` (already broadened twice) — added a fourth note: when fixing a culture-resolution or feat-precedence pattern in one model, **grep `Main/Features/**/Models/Taom*Model.cs` for sibling instances** before declaring done. The pattern repeats more than the author thinks.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/rca-cultural-feats-per-occupation-2026-05-31.md](./rca-cultural-feats-per-occupation-2026-05-31.md)
+
+<!-- backlinks-end -->

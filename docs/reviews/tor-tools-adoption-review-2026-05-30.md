@@ -97,3 +97,13 @@ Checks: `BROKEN_ITEM_REF`, `BROKEN_TROOP_REF`, `UNKNOWN_CULTURE`, `DUPLICATE_NPC
 ## Appendix: full agent findings
 
 The complete 7-subsystem structured findings (schemas, validation-crossref, translation, core-io-workspace-git, app-ui-3d, process-config-data) + synthesis are preserved in the workflow result. Key per-subsystem adoptables and risks fed directly into the tier map above. The MCP tool catalog (read directly after the agent gap) is in §1.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/moduledata-validation.md](../features/moduledata-validation.md)
+
+<!-- backlinks-end -->

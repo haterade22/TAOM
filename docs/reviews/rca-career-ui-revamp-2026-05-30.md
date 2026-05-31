@@ -57,3 +57,13 @@ In-game testing after the reviews surfaced 4 issues — confirming that some cla
 **Iteration note (finding A, 2026-05-31):** the *first* RCA for finding A was itself wrong — it concluded "regenerate the sheets and the pip will render," citing a non-existent `pack0.tpac`. The user ran the generator; the pip stayed blank. Only then did decompiling `SpriteSheetGenerator.Library.dll` + cropping the regenerated sheet reveal the bake was fine and the prefab (size/opacity) was the real blocker. Lesson-on-the-lesson: after a fix you *claimed* would work is tested and fails, re-verify from ground truth before re-asserting — don't iterate on the original wrong model. (`evidence-over-claims.md` §C.)
 
 **Systemic lesson (finding A):** the recurring trap is concluding a rendering/asset fact from static evidence. "Manifest valid" ≠ "sprite renders." Reviews verify structure; only the game verifies pixels. The preventive rule (`feedback_sprite_atlas_baked_regen_required`) generalizes: any change whose payoff is *visual rendering of a new asset* must be flagged in-game-only, and a CLEAN review must not imply it will display. Findings B–D are inherently in-game-only (voice + layout) and not review-catchable; no rule change warranted beyond noting that live UI review remains mandatory after a prefab/naming change. Findings E–F reinforce this for layout specifically: a *plausible* fix (the `CoverChildren`+`Center` centering) was a **no-op** until the live game exposed the real cause (the 70px button-reserve asymmetry; and a parallel-list row-height mismatch for the descriptions). Gauntlet layout must be confirmed by rendering, not reasoned about from the prefab alone — the same "verify, don't conclude from static evidence" discipline as finding A, applied to geometry.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/career-system.md](../features/career-system.md)
+
+<!-- backlinks-end -->

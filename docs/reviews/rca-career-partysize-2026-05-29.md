@@ -78,3 +78,13 @@ parser doesn't.** See `feedback_parse_real_config_in_tests.md`.
 The magnitude-scale convention (flat types use `Add`, fractional types use `AddFactor`) is documented
 inline in `TaomPartySizeModel` and in the feature doc; the deferred fix (data-driven routing via
 `IsPercentage`) is recorded there too.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/career-system.md](../features/career-system.md)
+
+<!-- backlinks-end -->

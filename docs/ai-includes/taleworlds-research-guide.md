@@ -784,6 +784,7 @@ Before implementing ANY TaleWorlds-related code, verify:
 
 ## Referenced by
 
+- [docs/ai-includes/agent-operating-manual.md](./agent-operating-manual.md)
 - [docs/ai-includes/agent-teams.md](./agent-teams.md)
 - [docs/ai-includes/architecture.md](./architecture.md)
 - [docs/ai-includes/decompiled-code-analysis.md](./decompiled-code-analysis.md)

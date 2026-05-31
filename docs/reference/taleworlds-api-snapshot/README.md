@@ -59,3 +59,13 @@ In short: the analyzer is compile-time existence checking against referenced met
 - HarmonyLib — patching overloaded methods requires an argument-type array: `[HarmonyPatch(typeof(String), "IndexOf", new Type[] { typeof(char), typeof(int) })]`. See <https://harmony.pardeike.net/articles/annotations.html> (`/pardeike/harmony` docs).
 - HarmonyLib `TargetMethod()` / `TargetMethods()` — return `MethodBase` / `IEnumerable<MethodBase>` for computed targets. See <https://harmony.pardeike.net/articles/patching-auxiliary.html>.
 - BUTR.Harmony.Analyzer — compile-time `AccessTools` member validation. See <https://github.com/BUTR/BUTR.Harmony.Analyzer>.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/taleworlds-api-snapshot/reflection-sites.md](./reflection-sites.md)
+
+<!-- backlinks-end -->

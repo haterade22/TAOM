@@ -46,3 +46,13 @@ TOR_Core is **GPL v3**. TAOM's career system shares TOR's exact file structure (
 - Renown/condition gating + chains overlay — TAOM uses level gating + "Requires Level N" text by design.
 - Battle-Prayers button — Warhammer-specific.
 - TOR's 2-state pip + `Hero.MainHero` coupling — TAOM's 3-state + service split is strictly better.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/career-system.md](../features/career-system.md)
+
+<!-- backlinks-end -->

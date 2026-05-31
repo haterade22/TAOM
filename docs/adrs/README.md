@@ -47,6 +47,7 @@ Quick reference index for TAOM ADRs. See individual files for complete details w
 
 ## Referenced by
 
+- [docs/ai-includes/agent-operating-manual.md](../ai-includes/agent-operating-manual.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
