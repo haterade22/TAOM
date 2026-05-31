@@ -41,12 +41,13 @@ The decisive evidence was a `diff` of TAOM's `PartyTroopTuple.xml` against vanil
 A follow-up audit inventoried **every** TAOM GUI prefab against vanilla 1.4.5 (an independent verify agent corrected the first pass — occurrence count 12 not 24; one missed clone; a legend stat):
 
 - **48** TAOM GUI prefab XML files; **32** are clones of vanilla 1.4.5 (by filename); **16** are TAOM-original. Only **4** clones are byte/whitespace-identical to vanilla.
-- **Same bug class, NOT in this fix (actionable follow-up):**
-  - `CustomBattle/SimpleDropdown.xml` — `DropdownWidget` binds `RichTextWidget="…\SelectedTextWidget"` but vanilla 1.4.5 uses `TextWidget=` (9/9 vanilla `DropdownWidget`s); the selected-faction text reference will not bind. **Likely-breaks-binding.**
-  - `LayoutImp.LayoutMethod` → `StackLayout.LayoutMethod` rename: **7 TAOM prefabs** retain the obsolete attribute, so their list layout method (`VerticalTopToBottom`/`HorizontalLeftToRight`) is ignored.
-  - `EaseIn="true"` → `EaseType="EaseOut" EaseFunction="Quint"`: `CustomBattle/CustomBattleScreen.xml` and `Party/PartyScreen.xml` (menu-transition easing regression).
-  - `AutoScrollTopOffset`/`AutoScrollBottomOffset` → `ScrollYOffset` on `NavigationAutoScrollWidget` (gamepad/keyboard auto-scroll). *(Note: `NavigatableGridWidget` still uses the paired attrs in 1.4.5 — only `NavigationAutoScrollWidget` was renamed.)*
-- **Intentional TAOM redesigns — LEAVE ALONE (not rename casualties):** the Encyclopedia banner-widget swaps (`EncyclopediaClanListElement` replacing vanilla's `EncyclopediaClanSubPageElement` across Clan/Faction/Settlement/Hero pages), the `SettlementNameplateItem{Large,Medium,Small}` diamond-layout redesign, and the `CharacterCreationCultureStage`/`CharacterCreationNarrativeStage` theming. These diverge from vanilla by design; re-syncing them would erase TAOM customization.
+- **Same bug class, FIXED as a follow-up** (commit `a5d7914`, after verifying each against vanilla):
+  - `CustomBattle/SimpleDropdown.xml` — `DropdownWidget` bound `RichTextWidget="…\SelectedTextWidget"` but vanilla 1.4.5 uses `TextWidget=` (4/4 vanilla `DropdownWidget`s); fixed so the selected-faction text binds. *(Verified-broken.)*
+  - `LayoutImp.LayoutMethod` → `StackLayout.LayoutMethod`: renamed across **6** prefabs (`CustomBattle/{ArmyComposition,CustomBattleScreen,SimpleDropdown}`, `FacGen/PreBuildCharacterSelection`, `MomentumView/{MomentumView,Relationship}`). Verified obsolete (0 vanilla `LayoutImp.LayoutMethod` vs 926 `StackLayout.LayoutMethod`); value-preserving. The valid `LayoutImp.Horizontal/VerticalLayoutMethod` attributes were left intact.
+- **Two audit "follow-up" items were FALSE POSITIVES — verified against vanilla and NOT changed:**
+  - `EaseIn="true"` is **not** obsolete: vanilla 1.4.5 uses `EaseIn` 18× (it coexists with `EaseType`). Changing it (esp. `EaseIn`→`EaseOut`, opposite directions) on working TAOM-original screens (`CareerScreen`) would have been wrong.
+  - The `AutoScroll*Offset` ↔ `ScrollYOffset` rename was stated **backwards**: `ScrollYOffset` is the stale form (0 in vanilla), `AutoScrollTopOffset/BottomOffset` is current (137× in vanilla). The original stale TAOM clones had `ScrollYOffset`; the re-sync in `098ede9` already adopted vanilla's `AutoScroll*Offset`, so there is no remaining drift.
+- **Intentional TAOM redesigns — LEFT ALONE (not rename casualties):** the Encyclopedia banner-widget swaps (`EncyclopediaClanListElement` replacing vanilla's `EncyclopediaClanSubPageElement` across Clan/Faction/Settlement/Hero pages), the `SettlementNameplateItem{Large,Medium,Small}` diamond-layout redesign, and the `CharacterCreationCultureStage`/`CharacterCreationNarrativeStage` theming. These diverge from vanilla by design; re-syncing them would erase TAOM customization. The CustomBattle clones were fixed **surgically** (not re-synced) for the same reason — their other divergences are vanilla *additions* TAOM lacks, not breaks.
 
 ## Why this shipped — the 1.4.5 migration boundary
 
@@ -56,7 +57,7 @@ This is why neither `/deep-review` nor `/review-codex` caught it: both are **sta
 
 ## Prevention codified
 
-1. **`.claude/rules/vanilla-data-comparison.md`** extended: new "GUI prefab clones go stale across engine versions" section + GUI-prefab globs added to its `paths:` (so it auto-loads on prefab edits) + a 1.4.5 rename reference table (`ImageTypeCode`→`TextureProviderName`, `LayoutImp.LayoutMethod`→`StackLayout.LayoutMethod`, `EaseIn`→`EaseType/EaseFunction`, `AutoScroll*Offset`→`ScrollYOffset`, `TextWidget`→`RichTextWidget` on `DropdownWidget`).
+1. **`.claude/rules/vanilla-data-comparison.md`** extended: new "GUI prefab clones go stale across engine versions" section + GUI-prefab globs added to its `paths:` (so it auto-loads on prefab edits) + a **verified** 1.4.5 attribute-change table (`ImageTypeCode`→`TextureProviderName`; `LayoutImp.LayoutMethod`→`StackLayout.LayoutMethod`; `ScrollYOffset`→`AutoScrollTopOffset/BottomOffset`; `RichTextWidget=`→`TextWidget=` on `DropdownWidget`) plus a "verify each suspected rename against vanilla — do not trust a list" caution.
 2. **`.claude/rules/gui-ui.md`** (auto-loads for `Main/_Module/GUI/**`) gains a "GUI prefab clones" caution pointing at the rule above.
 3. **Memory** `feedback_gui_prefab_clones_stale_across_versions.md`.
 4. **Recommended audit tool (offered, not yet built):** `tools/audit_gui_prefab_clones.py` — diff every TAOM `GUI/PreFabs/**` clone against its installed-vanilla counterpart and report drift (the manual method the audit workflow used: enumerate clones by filename, `diff -w --strip-trailing-cr`, classify rename-casualty vs intentional redesign). Belongs in the post-version-bump checklist.

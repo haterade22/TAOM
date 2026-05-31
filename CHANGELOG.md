@@ -2,6 +2,47 @@
 
 ## 2026-05-31
 
+### feat(cultural-feats): party-size retune + Dunland/Rhun/Harad party-size feats + village volunteer respawn-rate feats + per-settlement notable-count feats
+
+Three new cultural-feat dimensions plus a retune of the existing party-size set. Feat total **77 → 92** (+15 new, 4 retuned). All apply through the existing `CulturalFeats` `FeatObject` pipeline.
+
+**Party size** — 4 retunes + 3 new XSLT-culture feats:
+| Culture | Old | New |
+|---------|-----|-----|
+| Mordor | +30% | **+10%** |
+| Gundabad | +30% | **+20%** |
+| Dol Guldur | +25% | **+20%** |
+| Gondor | +10% | **+2.5%** |
+| Isengard | +20% | +20% (unchanged) |
+| Dunland (empire) | — | **+5%** (new) |
+| Rhûn (khuzait) | — | **+5%** (new) |
+| Harad (aserai) | — | **+5%** (new) |
+
+**Village volunteer respawn rate** (new) — `TaomVolunteerModel.GetDailyVolunteerProductionProbability` override wraps the vanilla `float` in an `ExplainedNumber`, applies feats via `ICulturalFeatsService.ApplyVolunteerRespawnFeats`, and clamps to `[0,1]`. Keyed on `settlement.OwnerClan.Culture` (matches `TaomSettlementMilitiaModel` — a Mordor village produces +20% volunteers while Mordor owns it; conquest flips the bonus on the next daily tick). No vanilla culture has a volunteer-rate feat to mirror, so this is a brand-new hook site — the `ExplainedNumber + AddFactor` pattern matches how vanilla `DefaultVolunteerModel` already applies the Cantons policy and CavalryTactics perk.
+- Dunland (empire) **+10%**, Gundabad / Dol Guldur / Mordor **+20%**
+
+**Notable count per settlement** (new) — new `TaomNotableSpawnModel : DefaultNotableSpawnModel` overrides `GetTargetNotableCountForSettlement(Settlement, Occupation)`. Keyed on `settlement.Culture` (settlement identity, NOT ownership — an Isengard town stays Isengard-flavored even when conquered). Returns `(int)Math.Ceiling(base × (1 + bonus))` so any positive bonus on any non-zero base advances by at least 1 — the user's stated +5% Mordor targets are deliberately meaningful, not no-ops on the small ints vanilla returns. Vanilla totals are town = 5 notables (2 Merchant + 2 GangLeader + 1 Artisan), village = 3 (2 RuralNotable + 1 Headman). With feats:
+- Isengard / Dol Guldur: town **+50%**, village **+10%** (Isengard has only 1 town — this is the biggest motivator)
+- Mordor: town **+5%**, village **+5%**
+- Gundabad: town **+10%**, village **+10%**
+
+**Supporting XML work** — 4 new `RuralNotable` templates (`spc_notable_{isengard,mordor,dolguldur,gundabad}_23`) so the new village target of 3 doesn't make the engine reuse one of the existing 2 templates and spawn clone notables. Each new template duplicates `_22`'s structure with a distinct LOTR-flavored name (no equipment changes).
+
+**Consistency fix (carries over from Codex review 43):** `TaomPartySizeModel` was using `party.Owner?.Culture ?? party.Culture` — even narrower than the speed model's old `Owner.Culture` pattern. Extracted `ResolvePartyCulture` to `CultureFeatAdapter.FromOrNull(PartyBase?)` so all models share one vanilla-`PartyBaseHelper.HasFeat`-precedence resolver (`LeaderHero.Culture → party.Culture → Owner.Culture → Settlement.Culture`). `TaomPartySpeedModel` switched over; its private `ResolvePartyCulture` helper was removed.
+
+**Architecture:**
+- `CultureFeatAdapter.FromOrNull(PartyBase?)` — shared boundary helper (new overload).
+- `ICulturalFeatsService.ApplyVolunteerRespawnFeats` — new `void` method matching the existing `Apply…Feats` shape.
+- `ICulturalFeatsService.ApplyNotableCountFeat(culture, isTown, baseCount) → int` — new int-returning method (notable target is `int`, not `ExplainedNumber`).
+- `TaomVolunteerModel` constructor gains `ICulturalFeatsService`; `SubModule.cs` hoists `culturalFeats = IoC.Resolve<…>()` above the volunteer registration so both blocks reuse the same reference.
+- `TaomNotableSpawnModel` registered alongside other cultural-feat models in `SubModule.cs`.
+
+Tests: 20 new dispatch tests (3 new party-size cultures + retune defensive + 6 volunteer respawn + 11 notable-count incl. ceiling edge cases, town/village isolation, zero-base no-inflate). `EachCulture_HasExpectedFeatCount` updated for Isengard/Gundabad/Dol Guldur/Mordor (+3 each) + Dunland (+2), Rhûn/Harad (+1). Full suite **2735 passed / 0 failed / 2 skipped**. ModuleData validator clean.
+
+Save-compat: safe — `FeatObject`s are init-time campaign objects; new notables spawn on the weekly tick as `CampaignObjectManager` Hero objects (vanilla does the same when a notable dies and is replaced); volunteer probability is consumed inline each daily tick with no SyncData.
+
+Files: `Main/Features/CulturalFeats/{CultureFeatAdapter.cs, TaomCulturalFeats.cs, ICulturalFeatsService.cs, CulturalFeatsService.cs, Models/TaomPartySpeedModel.cs, Models/TaomPartySizeModel.cs, Models/TaomNotableSpawnModel.cs (new)}`, `Main/Features/TroopProgression/Models/TaomVolunteerModel.cs`, `Main/SubModule.cs`, `Main/_Module/ModuleData/{taom_spcultures.xml, spcultures.xslt, characters/npcs_{isengard,mordor,dolguldur,gundabad}.xml}`, both CulturalFeats test files.
+
 ### fix(gui): troop thumbnails stuck on loading spinner — stale 1.4.5 prefab clones
 
 The Party screen rendered every troop row's character thumbnail as a perpetual
@@ -47,7 +88,7 @@ files well-formed XML; the 6 verbatim re-syncs are byte-identical to vanilla 1.4
 
 A blast-radius audit (adversarially verified) inventoried all TAOM GUI prefabs: **48 total, 32 are vanilla clones, 16 TAOM-original, only 4 byte-identical to vanilla.** The same 1.4.5-rename failure class beyond `ImageTypeCode` was then **also fixed** (follow-up, this CHANGELOG covers both passes): `CustomBattle/SimpleDropdown.xml` `DropdownWidget` binding `RichTextWidget=`→`TextWidget=` (verified: 4/4 vanilla DropdownWidgets use `TextWidget=`; selected-faction text now binds), and the obsolete `LayoutImp.LayoutMethod`→`StackLayout.LayoutMethod` rename (verified obsolete: 0 vanilla uses vs 926 `StackLayout.LayoutMethod`; value-preserving) across 6 prefabs — `CustomBattle/{ArmyComposition,CustomBattleScreen,SimpleDropdown}.xml`, `FacGen/PreBuildCharacterSelection.xml`, `MomentumView/{MomentumView,Relationship}.xml`. The valid `LayoutImp.Horizontal/VerticalLayoutMethod` attributes (still used by vanilla 1.4.5) were left intact. **`EaseIn` was a false alarm and left untouched** — verifying against vanilla showed it is NOT obsolete (vanilla 1.4.5 uses `EaseIn` 18×; it coexists with `EaseType`), so changing it (esp. `EaseIn`→`EaseOut`, opposite directions) on working TAOM-original screens like `CareerScreen` would have been wrong churn. CustomBattle clones were fixed **surgically** rather than re-synced — their other divergences are vanilla *additions* TAOM lacks, not breaks, and re-syncing risks the custom-battle feature. Deliberate TAOM redesigns (Encyclopedia banner-widget swaps, `SettlementNameplateItem` diamond layout, `CharacterCreation*Stage` theming) are NOT drift and were left alone.
 
-Documented: RCA [docs/reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md](docs/reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md); `.claude/rules/vanilla-data-comparison.md` extended with a "GUI prefab clones" section + `GUI/PreFabs` auto-load globs + the v1.4.5 rename table; `.claude/rules/gui-ui.md` pointer; memory `feedback_gui_prefab_clones_stale_across_versions.md`.
+Documented: RCA [docs/reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md](docs/reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md); `.claude/rules/vanilla-data-comparison.md` extended with a "GUI prefab clones" section + `GUI/PreFabs` auto-load globs + a v1.4.5 attribute-change table; `.claude/rules/gui-ui.md` pointer; memory `feedback_gui_prefab_clones_stale_across_versions.md`. The rename table lists only **vanilla-verified** changes plus a "verify each against vanilla — don't trust a list" caution: the audit had flagged two FALSE renames (`EaseIn`, which vanilla 1.4.5 still uses 18×; and the `AutoScroll*Offset`↔`ScrollYOffset` direction, which was inverted — `ScrollYOffset` is the stale one), both caught and excluded by checking vanilla.
 
 `Root-cause: the v1.3.15→v1.4.5 migration scoped to C# API drift + equipment XML; GUI prefab clones (added 2026-03 in c31570f) were outside the audit boundary and shipped stale. Static review can't catch this — only the live game confirms a prefab renders.`
 

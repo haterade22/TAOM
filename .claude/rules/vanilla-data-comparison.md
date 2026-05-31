@@ -42,15 +42,16 @@ TAOM ships many XML files that **mirror, extend, or transform vanilla Bannerlord
 
 TAOM ships full `<Prefab>` **clones** of many vanilla GUI prefabs (party screen, custom-battle, encyclopedia, nameplates, game-menu — ~32 of TAOM's 48 prefabs are clones). A clone overrides the vanilla prefab of the same filename by load order. Vanilla **renames widget attributes and re-schemas prefabs between versions**; a clone frozen at an older version keeps the obsolete attribute, the engine silently ignores it, and the widget mis-renders or **never renders** — with no log, no crash. This is the same stale-vs-vanilla failure as the data XML above, applied to UI.
 
-**Known v1.4.5 attribute renames** (a clone still using the LEFT column is stale):
+**Verified v1.4.5 attribute changes** (LEFT is the stale form a clone may still carry; every row below was confirmed against installed vanilla 1.4.5 — usage counts in the symptom column):
 
-| Obsolete (pre-1.4.5) | v1.4.5 | Symptom if left stale |
+| Stale form | v1.4.5 form | Symptom if left stale |
 |---|---|---|
-| `ImageTypeCode="@ImageTypeCode"` | `TextureProviderName="@TextureProviderName"` | `ImageIdentifierWidget`/`MaskedTextureWidget` thumbnail never resolves a provider → **perpetual loading spinner** |
-| `LayoutImp.LayoutMethod="…"` | `StackLayout.LayoutMethod="…"` | `ListPanel` layout method ignored → stacking not applied |
-| `EaseIn="true"` | `EaseType="EaseOut" EaseFunction="Quint"` | `VisualDefinition` menu-transition easing lost |
-| `AutoScrollTopOffset`/`AutoScrollBottomOffset` | `ScrollYOffset` (on `NavigationAutoScrollWidget` only — `NavigatableGridWidget` kept the pair) | auto-scroll-to-focused lost under gamepad/keyboard nav |
-| `RichTextWidget="…\SelectedTextWidget"` (on `DropdownWidget`) | `TextWidget="…\SelectedTextWidget"` | dropdown selected-text reference doesn't bind |
+| `ImageTypeCode="@ImageTypeCode"` | `TextureProviderName="@TextureProviderName"` | `ImageIdentifierWidget`/`MaskedTextureWidget` thumbnail never resolves a provider → **perpetual loading spinner** (0 vanilla `ImageTypeCode`) |
+| `LayoutImp.LayoutMethod="…"` | `StackLayout.LayoutMethod="…"` | layout method ignored → stacking not applied (0 vanilla `LayoutImp.LayoutMethod` vs 926 `StackLayout.LayoutMethod`). **`LayoutImp.HorizontalLayoutMethod` / `LayoutImp.VerticalLayoutMethod` are STILL valid in 1.4.5 — do NOT touch those.** |
+| `ScrollYOffset` (on `NavigationAutoScrollWidget`) | `AutoScrollTopOffset` / `AutoScrollBottomOffset` | auto-scroll-to-focused lost under gamepad/keyboard nav (0 vanilla `ScrollYOffset` vs 137 `AutoScroll*Offset`) |
+| `RichTextWidget="…\SelectedTextWidget"` (on `DropdownWidget`) | `TextWidget="…\SelectedTextWidget"` | dropdown selected-text reference doesn't bind (4/4 vanilla `DropdownWidget` use `TextWidget=`). **Widget-specific** — other widgets legitimately use `RichTextWidget=`, so check the widget, not just the attribute |
+
+> **VERIFY each suspected rename against installed vanilla before treating it as obsolete — do NOT trust a list (this one included).** Grep vanilla for the exact attribute on the exact widget; if vanilla still uses it, it is not drift. On 2026-05-31 an audit flagged two FALSE "renames": `EaseIn="true"` is **not** obsolete (vanilla 1.4.5 uses it 18×, alongside `EaseType`), and the `AutoScroll*Offset` ↔ `ScrollYOffset` direction was **inverted** (`ScrollYOffset` is the stale one). Both were caught only by checking vanilla — the same evidence-over-claims discipline this rule exists to enforce.
 
 **How to fix a stale clone:**
 1. `diff -w --strip-trailing-cr <vanilla-1.4.5> <taom-clone>` and classify each delta: **rename-casualty / stale-attribute** vs **intentional TAOM customization**.
