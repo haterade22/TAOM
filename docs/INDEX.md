@@ -41,6 +41,7 @@
 - [troop-weight-system](features/troop-weight-system.md) — TroopWeightSettings, PartyBase / TroopRoster patches (Patch17)
 - [battle-balance](features/battle-balance.md) — TaomMilitaryPowerModel, TaomCombatSimulationModel
 - [battle-scenes](features/battle-scenes.md) — battle scene system (Patch0, currently DISABLED)
+- [worldmap-battle-scene-grid](reference/worldmap-battle-scene-grid.md) — how field-battle terrain is chosen; the `worldmap_battle_scene_grid` texture is **baked into `Main_map`**, not loaded by filename; re-author + bake workflow
 - [custom-battles](features/custom-battles.md) — TAOM factions/commanders/troops in custom battles (Patch19)
 
 ### Career & progression

@@ -2,6 +2,14 @@
 
 ## 2026-05-31
 
+### docs(battle-scenes): deep-dive on the worldmap battle-scene grid + LOTR re-author plan
+
+Investigated how Bannerlord 1.4.5 chooses **field-battle terrain** from the `worldmap_battle_scene_grid` texture, prompted by the editor reporting *"Source file is missing"* for the TAOM map's grid. New reference doc [`docs/reference/worldmap-battle-scene-grid.md`](docs/reference/worldmap-battle-scene-grid.md) captures the verified data flow (`MapScene.GetMapPatchAtPosition` → 2-byte index map → `DefaultSceneModel.GetBattleSceneForMapPatch` → `sp_battle_scenes.xml` `map_indices`), the **key fact that the grid is baked into the `Main_map` scene and read natively (`get_battle_scene_index_map`), not loaded by filename**, the two-grids distinction (battle-scene vs `worldmap_colorgrade_grid`), and a phased re-author + bake workflow with a proposed Middle-earth region→terrain mapping.
+
+**Verified state (2026-05-31):** `Patch0_BattleScenes` is disabled (`Main/SubModule.cs:158` commented) → the **active** table is vanilla `SandBox/sp_battle_scenes.xml`; TAOM's extended 0–255 copy is inert until Patch0 is re-enabled (it's loaded only by `Campaign_InitializeScenes_Patch`, not via SubModule.xml). Proof the grid is **baked, not bound**: neither vanilla nor TAOM `Main_map/references.txt` references `battle_scene_grid` (only colorgrade), and vanilla ships no loose grid asset. The user's grid reimport produced a compiled `tex.tpac` (resolving "Source file is missing") but **`Main_map` was not re-baked** (still the 05-28 bake) — so battle selection won't change until the scene is re-baked in the editor.
+
+Cross-linked from `docs/INDEX.md`, `docs/features/battle-scenes.md`, `docs/reference/scene-reference-audit.md`. Memory: `feedback_battle_scene_grid_baked_not_runtime_swap`. No code/data changes — investigation + docs only.
+
 ### fix(bandit-management): hideout boss fight spawned all units friendly (forced retreat)
 
 Raiding any LOTR bandit hideout and reaching the boss fight left **every bandit friendly** — the boss gave the generic guard line *"Can't talk right now. Got to keep my eye on things around here."* and the player was forced to retreat instead of fighting. Earlier waves were correctly hostile; only the boss phase broke. (Reported at a Dunlending raider camp.)

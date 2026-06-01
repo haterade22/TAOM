@@ -13,6 +13,8 @@
 
 When enabled, this feature would intercept three Bannerlord scene-loading entry points to redirect them at TAOM-authored XML files (`sp_battle_scenes.xml`, `conversation_scenes.xml`, `meeting_scenes.xml`) and would harden battle-scene index map loading against an `AccessViolationException` race that has historically appeared on cold-cache map loads.
 
+> For **how the battle-terrain index map / `worldmap_battle_scene_grid` texture actually works** (it's baked into `Main_map`, not loaded by filename) and the **LOTR grid re-author + bake workflow**, see [reference/worldmap-battle-scene-grid.md](../reference/worldmap-battle-scene-grid.md).
+
 ## Why This Exists
 
 - **Vanilla behavior:** `Campaign.InitializeScenes` reads scene XMLs only from the `SandBox` module's `ModuleData/`. There is no extension point for a child mod to substitute or augment those files. `MBMapScene.GetBattleSceneIndexMap` reads the binary index map from disk, can throw `AccessViolationException` if the GPU/IO path is contended, and offers no retry.
@@ -114,5 +116,6 @@ The `MapScene_Load_DiagnosticPatch` prints to the engine log every time `MapScen
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/worldmap-battle-scene-grid.md](../reference/worldmap-battle-scene-grid.md)
 
 <!-- backlinks-end -->
