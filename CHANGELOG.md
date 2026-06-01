@@ -2,6 +2,36 @@
 
 ## 2026-06-01
 
+### feat(faction-map): rewrite all 16 playable factions + key for localization (Phase 2 of #260)
+
+Full content rewrite of the CC faction-map page for all 16 playable factions (`stewardship_of_gondor`, `dominion_of_mordor`, `dominion_of_isengard`, `overlordship_of_dol_guldur`, `overlordship_of_gundabad`, `havens_of_umbar`, `kingdom_of_erebor`, `kingdom_of_imladris`, `kingdom_of_lasgalen`, `kingdom_of_lothlorien`, `kingdom_of_rohan`, `clans_of_dunland`, `kingdom_of_dale`, `khudorom_of_khand`, `taskralan_of_harwan`, `golden_realm_of_rhun`). Each faction's perks/bonuses/special_units/strengths/weaknesses now reflect the **97 cultural feats currently shipping** (post-commit `fd11414`) — terrain speed, party size, garrison wage, smithing, raid damage, food consumption, the per-occupation notable hubs for Isengard / Dol Guldur, plus honest negatives (Rohan Cavalry Dependent, Isengard Saruman's Grip, Mordor Dark Tribute, Dol Guldur Voracious Hordes, etc.).
+
+Concurrently: **every player-facing string** in `factions.json` is now wrapped in `{=KEY}default` format using the `taom_faction_<json_key>_<section>_<index>` convention. **599 new localization keys** added to `taom_module_strings.xml`. Phase 1's `FactionDisplayHelper.Localize` resolution path makes the keyed strings display as their English fallback until Phase 3 propagates translations.
+
+Non-playable factions (29 stubs) get name + description + traits keyed in place — no content rewrite (their CC page is never shown).
+
+New tooling: [`tools/harvest_factionmap_strings.py`](tools/harvest_factionmap_strings.py) (one-off harvester — walks `factions.json`, extracts every `{=key}default` pair, writes matching `<string>` entries into a marked block in `taom_module_strings.xml`. Idempotent re-runs.).
+
+New tests: [`TAOM.Tests/Features/FactionMap/FactionMapDataTests.cs`](TAOM.Tests/Features/FactionMap/FactionMapDataTests.cs) — 20 assertions including (a) JSON parses, (b) ≥16 playable factions, (c) per-playable-faction (DataRow ×16): ≥2 perks, ≥3 bonuses, ≥1 special_units, ≥3 strengths, ≥2 weaknesses, ≥3 traits, (d) every string field starts with `{=KEY}`, (e) every `taom_faction_*` key referenced in JSON has a matching `<string>` entry in `taom_module_strings.xml`.
+
+**Verification:** `dotnet build TAOM.Tests` → 0 errors. `dotnet test TAOM.Tests` → **2798 / 0 / 2** (up from 2778). FactionMap filter → **89 / 0 / 0** (up from 69). `python tools/validate_moduledata.py` → PASS. `taom_module_strings.xml` parses (1863 entries, up from 1264).
+
+Save-compat: safe. Performance: safe.
+
+Not-tested: in-game render of each faction's new page (requires the running game — verified per Phase 3 in-game smoke). Special-units names use lore-appropriate generic forms (Citadel Guard, Swan Knight, Black Uruk, Cave Troll, Mumakil War Tower, etc.); exact troop-tree alignment confirmed during Phase 3 in-game pass.
+
+### fix(wanderers): dwarf wanderers wore vanilla cloth that clips the dwarf skeleton
+
+The 12 Erebor wanderers (`spc_wanderer_erebor_0`…`_11`, `race="dwarf"`, `Culture.erebor`) render on a **custom dwarf skeleton** that vanilla Bannerlord clothing meshes don't fit — the Encyclopedia showed them in a vanilla green tunic (`Item.tunic_with_shoulder_pads`) floating/clipping on the body. All 12 share one roster, `npc_companion_equipment_template_erebor`, which was populated entirely with vanilla items (`vlandia_sword_1_t2`, `leather_cap`, `padded_leather_shirt`, `scarf`, `leather_gloves`, `strapped_shoes`, `fortified_kite_shield`, …).
+
+Swapped that roster (battle + civilian) to **low-end dwarven** equipment authored for the dwarf skeleton — `sk_dwarf_erebor_*` / `sk_dwarf_iron_*` armour + `sm_dwarf_erebor_*` weapons/shields, mirroring the lowest Erebor troop (`erebor_militia_spearman`). 6 battle sets (leather chest + light helmet + light pauldron + gloves + boots, varied 1h-axe/spear + leather shield) and 3 civilian sets (unisex dwarven tunic `sk_dwarf_tunic_*` + light boots + low dwarf sidearm; bare head shows the dwarf's beard). Template **structure** was already correct vs vanilla `npc_companion_equipment_template_khuzait` (right `equipmentType="Civilian"` tagging, slot vocabulary, no horse for an infantry culture) — this is a pure item-ID swap.
+
+Scope: one roster edit fixes all 12 wanderers; the roster id is referenced only by `taom_wanderers.xml`. Dwarf named companions (Gimli et al.) and dwarf troops already use dwarf gear. Dwarf town notables (`characters/npcs_erebor.xml`) may have the same clip — a possible separate follow-up, not included here.
+
+File: `Main/_Module/ModuleData/equipmentsets/taom_wanderer_equipment.xml`.
+
+**Verification:** `python tools/validate_moduledata.py` → PASS (no `BROKEN_ITEM_REF`, civilian sets stay tagged). ModuleData-only change — no build/test impact. In-game Encyclopedia/battle check pending.
+
 ### feat(faction-map): resolve TextObject keys in CC faction display (Phase 1 of #260)
 
 Phase 1 of the CC faction-map rewrite (issue [#260](https://github.com/haterade22/TAOM/issues/260)) — adds the localization resolution path. `FactionDisplayHelper.ApplyResult` now wraps every player-facing string flowing from `factions.json` to a VM property in `new TextObject(s).ToString()`. Plain English strings pass through unchanged (`TextObject("Stewardship of Gondor").ToString() == "Stewardship of Gondor"` for tokenless input), so this commit is a no-op for the current shipped content — but unlocks Phase 2's `{=KEY}default` keyed strings for translation propagation.
