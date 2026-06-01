@@ -2,6 +2,21 @@
 
 ## 2026-06-01
 
+### fix(special-resources): warn only when the next tick goes into deficit
+
+The low-resource warning previously fired on a static "balance below 10% of cap" threshold, nagging the player whenever a balance was low in absolute terms — even when town income comfortably covered upkeep. It now fires **only when the player is heading into a deficit**: the warning projects the next daily tick (steady-state — same towns/party as this tick) and alerts only if the resulting balance would fall to ≤ 0, which is exactly the threshold that triggers troop desertion. The warning thus becomes a precise "your elite troops will desert tomorrow" heads-up; a low-but-stable balance is silent.
+
+- `SpecialResourceService.cs` — extracted the daily earning(+`CustomResourceGain`) − upkeep(+`CustomResourceUpkeepModifier`) math into a private `ComputeDailyNet` (single source of truth); `ApplyDailyTick` now delegates to it. Added public `GetProjectedDailyNet(heroId, kingdomId, cultureId, ownedTownCount, troops)` → resolves the resource (0 if none), returns `ComputeDailyNet`. The shared helper guarantees the projection can never drift from the real tick math.
+- `SpecialResourcesBehavior.cs` (`OnDailyTickHero`) — replaced the `balance < Cap * 0.1f` branch with `balance + GetProjectedDailyNet(...) <= 0f`. Message changed from "running low: N/Cap" to "running out: N left, losing M/day".
+- `ISpecialResourceService.cs` — declared `GetProjectedDailyNet`.
+- 4 new service tests (`GetProjectedDailyNet_*`: positive net, deficit, no-resource, career-modifier parity). The prior static-threshold warning had zero test coverage; the projection math is now fully covered.
+
+Reviewed via two adversarial multi-agent passes (logic, data-flow, tests, standards lenses + independent per-finding verification): 4 findings raised, 0 confirmed.
+
+Verification: `dotnet test --filter ~SpecialResource` → 98/0; `./build.ps1 -RunTests` → build succeeded, 2894/0 (2 pre-existing skips).
+
+Save-compat: safe — additive interface method, no serialized-state change. Not-tested: in-game info-bar render (entry-point behavior, ADR-008-exempt). Follow-up: the warning string remains non-localized (parity with the prior warning; whole SpecialResources message surface is localization-debt, deferred).
+
 ### feat(faction-map): Phase 3 — 11 AI-language translation propagation + U+2212 minus-glyph fix (#260)
 
 Phase 3 of the CC faction-map rewrite (issue #260). Ran `tools/translate_with_claude.py` against all 11 AI-translated languages (BR, CNs, CNt, DE, FR, IT, JP, KO, RU, SP, TR; Polish hand-translated per convention) for the 617 new `taom_faction_*` keys from Phase 1+2 + Phase 2 fix. Each language file at `Main/_Module/ModuleData/Languages/<LANG>/std_taom_module_strings_<lang-code>.xml` updated via `rebuild_translation_files.py` then translated via Claude Sonnet 4.5 batched API.

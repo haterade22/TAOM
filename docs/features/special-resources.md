@@ -44,7 +44,7 @@ Bannerlord has no concept of per-faction resources beyond gold and influence. Th
 - **Harmony Patch26:** 3 patches — InitializeUpgrades (grey out + hint), AddCommand prefix (clamp count), UpgradeTroop postfix (queue spend)
 - **Pending transaction:** Upgrades queue during party screen, commit on close, revert on cancel
 - **Desertion:** At 0 balance, 10% of each upkeep-troop type deserts daily (min 1 per type)
-- **Notifications:** Green chat for earnings, yellow warning at <10% cap, center-screen desertion alert
+- **Notifications:** Green chat for earnings, yellow deficit warning (only when the next daily tick's projected balance would fall to ≤ 0 — i.e. one day before desertion; a low-but-stable balance is silent), center-screen desertion alert
 - **SyncData persistence:** Composite `heroId:resourceId` keys, cap enforcement on load
 - **Career passive integration:** `CustomResourceGain` scales daily earning, `CustomResourceUpkeepModifier` reduces upkeep, `CustomResourceUpgradeCostModifier` reduces upgrade cost — all wired through `ICareerPassiveService`
 - **Resource tiers:** Optional `<Tiers>` XML element defines threshold-based progression (pilot: Gems with 3 tiers). `GetCurrentTier()` resolves highest tier where balance >= threshold. Map bar shows tier name when active.
@@ -155,7 +155,7 @@ Multiple `<Kingdom>` and `<Culture>` child elements map to the same resource (ma
 
 ## Tests
 
-- `SpecialResourceServiceTests.cs` — 36 tests (resolve, earn, spend, validate, daily tick, pending transaction, desertion, edge cases)
+- `SpecialResourceServiceTests.cs` — 60 tests (resolve, earn, spend, validate, daily tick, projected-net deficit warning, pending transaction, desertion, edge cases)
 - `SpecialResourceStorageServiceTests.cs` — 11 tests (get/set/add, clamp, multi-hero, multi-resource, restore-null)
 
 ## How to Add a New Kingdom's Resource

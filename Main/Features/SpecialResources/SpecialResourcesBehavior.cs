@@ -193,12 +193,19 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         {
             _logger.LogInfo($"[SpecRes] DailyTick: desertion grace active (first tick after load) — {troopUpkeep.Count} upkeep troop types spared this tick");
         }
-        else if (balance > 0f && balance < resource.Cap * 0.1f)
+        else if (balance > 0f)
         {
-            // Low resource warning (below 10% of cap)
-            InformationManager.DisplayMessage(new InformationMessage(
-                $"{resource.DisplayName} running low: {balance:F0}/{resource.Cap:F0}",
-                Colors.Yellow));
+            // Warn only when heading into a deficit: project the next daily tick (steady-state — same
+            // towns/party as this tick) and alert if it would push the balance to zero or below, which
+            // is exactly the threshold that triggers troop desertion. A low-but-stable balance (income
+            // covers upkeep) needs no warning.
+            var projectedNet = _service.GetProjectedDailyNet(hero.StringId, kingdomId, cultureId, ownedTowns, troopUpkeep);
+            if (balance + projectedNet <= 0f)
+            {
+                InformationManager.DisplayMessage(new InformationMessage(
+                    $"{resource.DisplayName} running out: {balance:F0} left, losing {-projectedNet:F0}/day",
+                    Colors.Yellow));
+            }
         }
 
         _isFirstTickAfterLoad = false;

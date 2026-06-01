@@ -25,6 +25,14 @@ public interface ISpecialResourceService
     void InitializeHero(string heroId, string kingdomId, string cultureId);
     float GetDailyEarning(string kingdomId, string cultureId, int ownedTownCount);
     float GetDailyUpkeep(IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep, string heroId = null);
+
+    /// <summary>
+    /// Projected net resource change (earning − upkeep) for one daily tick, including career
+    /// passive modifiers — same math as <see cref="ApplyDailyTick"/>. Returns 0 when the hero's
+    /// kingdom/culture maps to no resource. Used to warn the player one tick before a deficit
+    /// (and the troop desertion it triggers).
+    /// </summary>
+    float GetProjectedDailyNet(string heroId, string kingdomId, string cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
     IReadOnlyList<TroopDesertionEntry> CalculateDesertion(string heroId, string kingdomId, string cultureId, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
 
     /// <summary>

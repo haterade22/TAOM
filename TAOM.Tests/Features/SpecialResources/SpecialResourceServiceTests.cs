@@ -283,6 +283,52 @@ public class SpecialResourceServiceTests
         Assert.AreEqual(1.5f, _service.GetDailyEarning("empire_s", null, 3));
     }
 
+    // ── Projected Daily Net (deficit warning) ──
+
+    [TestMethod]
+    public void GetProjectedDailyNet_EarningExceedsUpkeep_ReturnsPositive()
+    {
+        // 4 towns * 0.5 = 2.0 earning, no upkeep troops → net +2.0
+        var net = _service.GetProjectedDailyNet("hero1", "empire_s", null, 4, new List<TroopUpkeepInfo>());
+        Assert.AreEqual(2.0f, net, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetProjectedDailyNet_UpkeepExceedsEarning_ReturnsNegative()
+    {
+        // 0 towns → 0 earning; 20 troops * 0.3 = 6.0 upkeep → net -6.0
+        var upkeepCost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "war_spoils", 5, 0.3f);
+        _config.GetTroopCost("mordor_uruk_deathwarden").Returns(upkeepCost);
+        var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_deathwarden", 20) };
+
+        var net = _service.GetProjectedDailyNet("hero1", "empire_s", null, 0, troops);
+
+        Assert.AreEqual(-6.0f, net, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetProjectedDailyNet_NoResource_ReturnsZero()
+    {
+        var net = _service.GetProjectedDailyNet("hero1", "nonexistent_kingdom", null, 4, new List<TroopUpkeepInfo>());
+        Assert.AreEqual(0f, net, 0.001f);
+    }
+
+    [TestMethod]
+    public void GetProjectedDailyNet_AppliesCareerGainAndUpkeepModifiers()
+    {
+        // Mirrors ApplyDailyTick math: earning gets +CustomResourceGain, upkeep gets CustomResourceUpkeepModifier.
+        // Earning: 4 * 0.5 = 2.0, +20% = 2.4. Upkeep: 10 * 0.3 = 3.0, -50% = 1.5. Net = 2.4 - 1.5 = 0.9.
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceGain).Returns(0.2f);
+        _passiveService.GetPassiveMagnitude("hero1", PassiveEffectType.CustomResourceUpkeepModifier).Returns(-0.5f);
+        var upkeepCost = new TroopResourceCostEntry("mordor_uruk_deathwarden", "war_spoils", 5, 0.3f);
+        _config.GetTroopCost("mordor_uruk_deathwarden").Returns(upkeepCost);
+        var troops = new List<TroopUpkeepInfo> { new("mordor_uruk_deathwarden", 10) };
+
+        var net = _service.GetProjectedDailyNet("hero1", "empire_s", null, 4, troops);
+
+        Assert.AreEqual(0.9f, net, 0.001f);
+    }
+
     // ── Pending Transaction ──
 
     [TestMethod]

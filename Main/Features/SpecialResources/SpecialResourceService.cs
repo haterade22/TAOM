@@ -139,13 +139,7 @@ public class SpecialResourceService : ISpecialResourceService
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
-        var earning = resource.DailyPerTown * ownedTownCount;
-        var gainModifier = GetPassiveMagnitude(heroId, PassiveEffectType.CustomResourceGain);
-        if (gainModifier != 0f)
-            earning *= (1f + gainModifier);
-
-        var upkeep = GetDailyUpkeep(troopsWithUpkeep, heroId);
-        var net = earning - upkeep;
+        var net = ComputeDailyNet(heroId, resource, ownedTownCount, troopsWithUpkeep);
         var before = _storage.Get(heroId, resource.Id);
 
         if (net >= 0)
@@ -154,7 +148,27 @@ public class SpecialResourceService : ISpecialResourceService
             _storage.Add(heroId, resource.Id, net);
 
         var after = _storage.Get(heroId, resource.Id);
-        _logger.LogDebug($"[SpecRes] DAILY: earn={earning:F1} ({ownedTownCount} towns) upkeep={upkeep:F1} net={net:+0.0;-0.0} | {before:F0}→{after:F0}");
+        _logger.LogDebug($"[SpecRes] DAILY: net={net:+0.0;-0.0} ({ownedTownCount} towns) | {before:F0}→{after:F0}");
+    }
+
+    public float GetProjectedDailyNet(string heroId, string kingdomId, string cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
+    {
+        var resource = ResolveResource(kingdomId, cultureId);
+        if (resource == null) return 0f;
+        return ComputeDailyNet(heroId, resource, ownedTownCount, troopsWithUpkeep);
+    }
+
+    // Single source of truth for the daily earning(+CustomResourceGain) − upkeep(+CustomResourceUpkeepModifier)
+    // math, shared by ApplyDailyTick (which applies it) and GetProjectedDailyNet (which projects the next tick).
+    private float ComputeDailyNet(string heroId, SpecialResource resource, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
+    {
+        var earning = resource.DailyPerTown * ownedTownCount;
+        var gainModifier = GetPassiveMagnitude(heroId, PassiveEffectType.CustomResourceGain);
+        if (gainModifier != 0f)
+            earning *= (1f + gainModifier);
+
+        var upkeep = GetDailyUpkeep(troopsWithUpkeep, heroId);
+        return earning - upkeep;
     }
 
     public bool CanAffordUpgrade(string heroId, string kingdomId, string cultureId, string troopId, int count)
