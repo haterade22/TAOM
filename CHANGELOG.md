@@ -2,6 +2,27 @@
 
 ## 2026-06-01
 
+### fix(character-creation): culture-appropriate family name + auto-filled character name in CC
+
+The faction-map character-creation flow generated the player **family/clan name from the stale default culture** — a Gondorian player got the Battanian default "fen Leduin" instead of a Gondorian house. Root cause: `FactionMap.CultureSettingService.SetCultureOnCharacterCreation` invoked vanilla `CharacterCreationContent.SetSelectedCulture` — which generates the clan name via `FactionHelper.GenerateClanNameforPlayer()` reading `CharacterObject.PlayerCharacter.Culture` (== `Hero.MainHero.Culture`) — **before** `ExecuteSelectCulture()` assigned the chosen culture to the hero. Pure-vanilla CC does the reverse (assign culture on click in `OnCultureSelection`, generate name on Next in `SetSelectedCulture`); the faction-map rewrite inverted the order, so the name was always generated from the default culture's `<clan_names>`. Gondor's own `<clan_names>` were correctly defined in `taom_spcultures.xml` — just never consulted.
+
+- **Fix:** `CultureSettingService` now assigns `Hero.MainHero.Culture = culture` *before* the `SetSelectedCulture` invoke (mirrors vanilla `CharacterCreationCultureStageVM.InitializePlayersFaceKeyAccordingToCultureSelection`, verified `CharacterObject.Culture` defers to `HeroObject.Culture`). The family name now draws from the selected culture's `<clan_names>` (House of Húrin, House of Dol Amroth, …) and stays editable on the clan-name screen.
+- **Enhancement — `Patch44_CCNameAutofill`:** the Review-stage "Enter your name" field (empty in vanilla until the player types or rolls the dice) is now pre-filled with a culture-appropriate first name. Postfix on `CharacterCreationReviewStageVM`'s 6-arg constructor calls the VM's own public `ExecuteRandomizeName()` only when `Name` is blank — never clobbers a typed name, field stays editable. Done at the Review stage so the generated name matches the finalized gender.
+- **Files:** `Main/Features/FactionMap/CultureSettingService.cs`; new `Main/Features/CharacterCreation/Hooks/CharacterCreationReviewStageVM_AutoFillName_Patch.cs`; `Main/SubModule.cs` (register `Patch44_CCNameAutofill`).
+- **Verified:** compile clean (0 warnings/0 errors); `TAOM.Tests` 2877 passed / 0 failed / 2 skipped. In-game CC verification still pending (the game was holding the module DLLs locked during this session, blocking the game-folder deploy).
+- **Known follow-up (out of scope):** `FactionHelper.GenerateClanNameforPlayer` hardcodes `"{=Uk3qRuCS}dey Corvand"` for any culture whose `StringId == "vlandia"` — if Rohan reuses that id, Rohan players always get "dey Corvand" regardless of this fix.
+
+Research: `CharacterCreationContent.SetSelectedCulture`, `FactionHelper.GenerateClanNameforPlayer`, `CharacterCreationCultureStageVM.OnCultureSelection`, `CharacterCreationReviewStageVM`, `CharacterObject.Culture`
+Save-compat: None — character-creation-only, no persisted state.
+
+### fix(taom_map)+docs(battle-scenes): root-caused a campaign-load crash from a loose battle-scene-grid import
+
+A campaign-load crash (`AccessViolationException` in native `get_battle_scene_index_map` → `MapScene.Load` → `Campaign.LoadMapScene`; game booted to menu fine, crashed only on map load) was **root-caused to a loose `worldmap_battle_scene_grid` texture import** in the external `TAOM_Map` module. The grid is **baked into `Main_map`** and read natively — importing it as a standalone asset (creating `Assets/Battle Map/…_tex.tpac` + a `RuntimeDataCache/<guid>.rdc`) without re-baking `Main_map` **desyncs the native battle-index sampler** from the baked scene data → AV. **Confirmed by reversible delete-test:** removing the loose artifacts restored loading on the unchanged 05-28 scene (which had loaded fine before the import).
+
+- **No code change** — the fix is deleting the loose import artifacts (done) and never importing the grid as a loose texture again. `Patch0_BattleScenes` was disabled throughout (no TAOM frames in the stack); its AV retry guard would not have helped (the AV is deterministic, not the transient cold-cache case it was built for).
+- **Docs/prevention:** new RCA [rca-worldmap-grid-loose-import-crash-2026-06-01.md](docs/reviews/rca-worldmap-grid-loose-import-crash-2026-06-01.md); a ⛔ DANGER box + corrected re-bake procedure (confidence-graded — channel/import-settings are single-sourced to one modding wiki, the exact native binding is C++-internal) in [worldmap-battle-scene-grid.md](docs/reference/worldmap-battle-scene-grid.md); memory `feedback_battle_scene_grid_baked_not_runtime_swap` updated.
+- **Method:** decisive root cause from the live revert experiment; mechanism depth from a 5-agent research workflow whose load-bearing local claims were spot-verified (`Scene.cs:1069` passthrough, the no-texture-name `GetBattleSceneIndexMap` API from the user's pasted 1.4.5 source, the `.zip` artifact, vanilla's no-loose-grid layout).
+
 ### feat(career-quests): career-tied quest framework (TOR adoption, 1.4.5-verified) + Gondor proof-of-life
 
 New **Career Quest System** — completing a career's tier quest unlocks that tier of the choice tree (**hybrid** with the level gate) and grants a unique reward. Data-driven adaptation of TheOldRealms' career-quest pattern (GPLv3, with permission), rebuilt on TAOM's adapter/service architecture and **verified against Bannerlord 1.4.5** (TOR is 1.3.15). Phase 1 = framework + one Gondor proof-of-life quest; other careers/tiers fall through to the level gate unchanged. Doc: [career-quest-system.md](docs/features/career-quest-system.md).
@@ -21,6 +42,17 @@ Verified: build 0 errors (deploy OK with game closed); `dotnet test TAOM.Tests` 
 `Not-tested: in-game offer/track/complete + save-load of the QuestBase shell (entry points — live-game only). MCM toggle + remaining-career quests + 11-language translation are Phase 2.`
 `Research: TheOldRealms/TOR_Core Quests/Careers + CharacterDevelopment/CareerSystem (1.3.15); TaleWorlds 1.4.5 QuestBase/CampaignEvents/GainRenownAction/ChangeClanInfluenceAction/InquiryData/SaveableTypeDefiner (decompile-verified).`
 `Save-compat: new — _taom_careerFlags + _taom_cq_declined dicts default empty; CareerQuest registered via SaveableTypeDefiner 726900701; existing saves unaffected (careers without a quest = level gate).`
+
+### feat(battle-load-diagnostics): phase-stamped battle-load lifecycle log + stall watchdog
+
+New `BattleLoadDiagnostics` feature (`Patch43`) to localize the intermittent infinite-battle-load hang (no crash, no stack trace, on user machines, not reproducible locally). Phase-stamps the full attack→battle-playable lifecycle to `Logs/taom_debug_*.log` across 6 markers (`EncounterStart → MissionOpenNew → BattleSceneSelected → MissionInitialize → AgentEquip{Begin,Ok} → BattlePlayable`). The last line before a freeze names the stuck phase; the per-agent equip dump — captured (and flushed) BEFORE the engine equips, incl. `bo=`/`shieldBo=` collision-mesh names — names the suspect item when an `AgentEquipBegin` has no matching `AgentEquipOk`. Background-thread stall watchdog (runs off the frozen main thread) writes a `STILL LOADING` marker after a 45s default and auto-triggers the CrashReport bundle so users return it in one action. ADR-007 `IEquipmentSnapshotAdapter`, thin exception-swallowing hooks, dedicated MCM page (default ON). 26 new tests; full suite 2872 pass / 0 fail. Doc: `docs/features/battle-load-diagnostics.md`.
+
+Research: PlayerEncounter.Start, MissionState.OpenNew, DefaultSceneModel.GetBattleSceneForMapPatch, Mission.Initialize, Agent.EquipItemsFromSpawnEquipment, ItemObject.{BodyName,CollisionBodyName} (all `taom-src` v1.4.5)
+Not-tested: the 6 Harmony hooks + BattleLoadPhaseBehavior (game-only); DryIoc graph resolves at runtime (no container test in suite)
+
+### feat(tools): validate_mesh_refs.py — mesh / collision-body existence validator
+
+Pure-stdlib tool to confirm or eliminate the missing-`bo_`-collision-mesh hypothesis behind the hang. Three tiers: **A** (authoritative `rgl_log` cross-ref — `get_object failed for body`), **B** (offline `.tpac` TOC for visual `mesh=`), **C** (offline coarse byte-scan for `bo_` bodies, which aren't in the TOC). First real run (159 `.tpac`, 0 unparsed, 16,068 Metameshes) found **3 real Armory data bugs**, independently verified against source XML: `MISSING_BODY bo_cap_wm_boromir_shield` (`wm_boromir_shield` *pickup*-collision — the *equipped* `bo_wm_boromir_shield` IS present, so a weak spawn-hang suspect), `MISSING_MESH sk_dg_uruk_pauldron_med_c` + `ar_ardunian_elite_hand` (invisible-armor visual meshes, not hang suspects). Tier A on the captured session: 0 item-referenced runtime-missing bodies → the bo-mesh-at-spawn hypothesis is **not yet confirmed**; the Track-1 runtime log will settle the next live hang. 30 new tests (tools suite 93 pass). Doc: `docs/features/mesh-ref-validation.md`.
 
 ### fix(faction-map): Codex review reconcile XSLT inheritance + hover Localize bypass (#260 Phase 2)
 

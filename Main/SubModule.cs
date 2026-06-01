@@ -538,6 +538,20 @@ public class SubModule : MBSubModuleBase
         SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.Initialize(IoC.Resolve<INameplateFadeService>());
         _harmony.PatchCategory("Patch38_SettlementNameplateFade");
 
+        // BattleLoadDiagnostics — phase-stamp the attack->battle-playable lifecycle so an
+        // intermittent battle-load hang leaves a log whose last line names the stuck phase
+        // (and, for the equipment phase, the agent + the item whose bo_ collision mesh is
+        // missing). The background stall watchdog auto-triggers a crash bundle on a freeze.
+        var battleLoadSvc = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsService>();
+        var equipSnapshotAdapter = IoC.Resolve<IEquipmentSnapshotAdapter>();
+        Features.BattleLoadDiagnostics.Hooks.PlayerEncounter_Start_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.MissionState_OpenNew_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.BattleSceneSelection_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.Mission_Initialize_BattleLoad_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch.Initialize(battleLoadSvc, equipSnapshotAdapter);
+        _harmony.PatchCategory("Patch43_BattleLoadDiagnostics");
+        IoC.Resolve<Features.BattleLoadDiagnostics.BattleLoadStallWatchdog>().Start();
+
         // CompanionTactics — manual patch for the PRIVATE method
         // OrderOfBattleHeroItemVM.GetCaptainTooltip (private in v1.3.15, can't use
         // [HarmonyPatch] attribute binding).
@@ -645,6 +659,12 @@ public class SubModule : MBSubModuleBase
         var diagLogger = IoC.Resolve<IModLogger>();
         if (diagSvc != null && raceMgr != null && diagLogger != null)
             mission.AddMissionBehavior(new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(diagSvc, raceMgr, diagLogger));
+
+        // BattleLoadDiagnostics phase-6: "battle playable" marker on first tick + closes
+        // the loading window so the stall watchdog stands down and phase-5 stops logging.
+        var battleLoadDiagSvc = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsService>();
+        if (battleLoadDiagSvc != null && battleLoadDiagSvc.IsEnabled)
+            mission.AddMissionBehavior(new Features.BattleLoadDiagnostics.Hooks.BattleLoadPhaseBehavior(battleLoadDiagSvc));
 
         // Dev-trigger behavior watches the CrashReport MCM toggle and throws a tagged
         // TaomDevTriggerException on the next OnMissionTick when the player flips
