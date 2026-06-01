@@ -2,6 +2,18 @@
 
 ## 2026-06-01
 
+### fix(faction-map): localize FormatDifficultyText (#260 Phase 2 deep-review fix)
+
+Deep-review (6 agents) on Phase 2 (commit `cbbcc41`) returned 1 HIGH (Tooling, FALSE POSITIVE), 2 MED (Tooling, REJECTED per `simplicity-criterion.md`), 1 GAP (Data Flow, CONFIRMED). 4 of 6 agents PASS-clean.
+
+Real fix: `FactionSelectionService.FormatDifficultyText` returned 7 hard-coded English strings ("Difficulty: Hard", etc.) with no `{=KEY}` token — pre-existing Phase 1 holdover, in scope for the full localization sweep. Wrapped each branch in `{=taom_faction_difficulty_N}default` and added 7 hand-authored `<string>` entries to `taom_module_strings.xml` (above the auto-harvested block; these keys come from C# code, not factions.json).
+
+False positive verified empirically: re-ran `python tools/harvest_factionmap_strings.py` and git diff showed zero changes (file remains 2049 CRLF / 0 LF). Python's universal-newline mode handles this correctly on Windows.
+
+Tests: `FactionSelectionServiceTests.FormatDifficultyText_ValidDifficulty_ReturnsKeyedString` updated to assert the new prefixed form. Build green, 2798/0/2 (no regression).
+
+RCA: [`docs/reviews/rca-faction-map-phase2-2026-06-01.md`](docs/reviews/rca-faction-map-phase2-2026-06-01.md).
+
 ### feat(faction-map): rewrite all 16 playable factions + key for localization (Phase 2 of #260)
 
 Full content rewrite of the CC faction-map page for all 16 playable factions (`stewardship_of_gondor`, `dominion_of_mordor`, `dominion_of_isengard`, `overlordship_of_dol_guldur`, `overlordship_of_gundabad`, `havens_of_umbar`, `kingdom_of_erebor`, `kingdom_of_imladris`, `kingdom_of_lasgalen`, `kingdom_of_lothlorien`, `kingdom_of_rohan`, `clans_of_dunland`, `kingdom_of_dale`, `khudorom_of_khand`, `taskralan_of_harwan`, `golden_realm_of_rhun`). Each faction's perks/bonuses/special_units/strengths/weaknesses now reflect the **97 cultural feats currently shipping** (post-commit `fd11414`) — terrain speed, party size, garrison wage, smithing, raid damage, food consumption, the per-occupation notable hubs for Isengard / Dol Guldur, plus honest negatives (Rohan Cavalry Dependent, Isengard Saruman's Grip, Mordor Dark Tribute, Dol Guldur Voracious Hordes, etc.).

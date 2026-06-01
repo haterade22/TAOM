@@ -68,13 +68,13 @@ public class FactionSelectionService : IFactionSelectionService
     {
         return difficulty switch
         {
-            1 => "Difficulty: Very Easy",
-            2 => "Difficulty: Easy",
-            3 => "Difficulty: Medium",
-            4 => "Difficulty: Medium-Hard",
-            5 => "Difficulty: Hard",
-            6 => "Difficulty: Very Hard",
-            7 => "Difficulty: Extreme",
+            1 => "{=taom_faction_difficulty_1}Difficulty: Very Easy",
+            2 => "{=taom_faction_difficulty_2}Difficulty: Easy",
+            3 => "{=taom_faction_difficulty_3}Difficulty: Medium",
+            4 => "{=taom_faction_difficulty_4}Difficulty: Medium-Hard",
+            5 => "{=taom_faction_difficulty_5}Difficulty: Hard",
+            6 => "{=taom_faction_difficulty_6}Difficulty: Very Hard",
+            7 => "{=taom_faction_difficulty_7}Difficulty: Extreme",
             _ => "",
         };
     }

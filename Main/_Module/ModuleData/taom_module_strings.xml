@@ -1442,6 +1442,15 @@
 	<string id="taom_hideout_desc_rhun" text="{=taom_hideout_desc_rhun}On the wide grasslands of Rhûn you make out the wagons and hide-tents of an Easterling raiding band camped in a gully." />
 	<string id="taom_hideout_desc_umbar" text="{=taom_hideout_desc_umbar}Along the southern shore you find a sheltered cove where the black ships of the Corsairs of Umbar lie at anchor." />
 
+	<!-- ===== FactionMap (CC) — Difficulty labels (hand-authored; consumed by FactionSelectionService.FormatDifficultyText) ===== -->
+	<string id="taom_faction_difficulty_1" text="{=taom_faction_difficulty_1}Difficulty: Very Easy" />
+	<string id="taom_faction_difficulty_2" text="{=taom_faction_difficulty_2}Difficulty: Easy" />
+	<string id="taom_faction_difficulty_3" text="{=taom_faction_difficulty_3}Difficulty: Medium" />
+	<string id="taom_faction_difficulty_4" text="{=taom_faction_difficulty_4}Difficulty: Medium-Hard" />
+	<string id="taom_faction_difficulty_5" text="{=taom_faction_difficulty_5}Difficulty: Hard" />
+	<string id="taom_faction_difficulty_6" text="{=taom_faction_difficulty_6}Difficulty: Very Hard" />
+	<string id="taom_faction_difficulty_7" text="{=taom_faction_difficulty_7}Difficulty: Extreme" />
+
 	<!-- ===== FactionMap (CC) — auto-harvested by tools/harvest_factionmap_strings.py ===== -->
 
 	<string id="taom_faction_anduin_vale_desc" text="{=taom_faction_anduin_vale_desc}The fertile valley of the Great River Anduin, home to the Beornings and Woodmen. Simple folk who live between the Misty Mountains and Mirkwood." />

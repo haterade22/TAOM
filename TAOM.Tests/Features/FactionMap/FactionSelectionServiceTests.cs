@@ -176,15 +176,18 @@ public class FactionSelectionServiceTests
     }
 
     [TestMethod]
-    public void FormatDifficultyText_ValidDifficulty_ReturnsFormattedString()
+    public void FormatDifficultyText_ValidDifficulty_ReturnsKeyedString()
     {
-        Assert.AreEqual("Difficulty: Very Easy", _sut.FormatDifficultyText(1));
-        Assert.AreEqual("Difficulty: Easy", _sut.FormatDifficultyText(2));
-        Assert.AreEqual("Difficulty: Medium", _sut.FormatDifficultyText(3));
-        Assert.AreEqual("Difficulty: Medium-Hard", _sut.FormatDifficultyText(4));
-        Assert.AreEqual("Difficulty: Hard", _sut.FormatDifficultyText(5));
-        Assert.AreEqual("Difficulty: Very Hard", _sut.FormatDifficultyText(6));
-        Assert.AreEqual("Difficulty: Extreme", _sut.FormatDifficultyText(7));
+        // Strings are wrapped in {=KEY}default so FactionDisplayHelper.Localize
+        // can resolve them via TextObject — matches the localization sweep for
+        // the rest of the CC faction-map page (#260 Phase 2).
+        Assert.AreEqual("{=taom_faction_difficulty_1}Difficulty: Very Easy", _sut.FormatDifficultyText(1));
+        Assert.AreEqual("{=taom_faction_difficulty_2}Difficulty: Easy", _sut.FormatDifficultyText(2));
+        Assert.AreEqual("{=taom_faction_difficulty_3}Difficulty: Medium", _sut.FormatDifficultyText(3));
+        Assert.AreEqual("{=taom_faction_difficulty_4}Difficulty: Medium-Hard", _sut.FormatDifficultyText(4));
+        Assert.AreEqual("{=taom_faction_difficulty_5}Difficulty: Hard", _sut.FormatDifficultyText(5));
+        Assert.AreEqual("{=taom_faction_difficulty_6}Difficulty: Very Hard", _sut.FormatDifficultyText(6));
+        Assert.AreEqual("{=taom_faction_difficulty_7}Difficulty: Extreme", _sut.FormatDifficultyText(7));
     }
 
     [TestMethod]
