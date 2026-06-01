@@ -2,6 +2,32 @@
 
 ## 2026-06-01
 
+### fix(faction-map): Codex review reconcile XSLT inheritance + hover Localize bypass (#260 Phase 2)
+
+Codex adversarial review on Phase 2 (`cbbcc41` + `7f0de78`) returned **0 CRITICAL / 3 HIGH / 3 MED / 1 LOW**. After verification (decompiled `DefaultCulturalFeats` v1.4.5 + traced `spcultures.xslt`), 7 fixes shipped, 2 rejected per `simplicity-criterion.md`.
+
+**HIGH 1 — Dale fabricated inheritance.** The CC page claimed Dale inherits "Sturgian forest speed" and "Sturgian winter resilience" — vanilla Sturgia ships `Grain +10%`, `Army Influence Cost −50%`, `Decision Penalty +20% (neg)`. Fixed: replaced Dale's bonuses + perk text + 1 weakness.
+
+**HIGH 2 — Dunland/Khand Battanian descriptions wrong.** Said "+15% party speed in forest" (vanilla: `50% less forest speed penalty + 15% sight range`) and "−15% construction" (vanilla: `−10%`). Fixed both factions.
+
+**HIGH 3 — Harad/Rhûn omitted concrete inheritance + negatives.** Harad now lists `−30% caravan, −10% trade penalty (Aserai Trader)`, `no desert speed penalty (Aserai Desert)`, `+5% wages (Aserai Wages, neg)`. Rhûn now lists `−10% mounted recruit/upgrade`, `+25% animal village production`, `−20% town tax (neg)`. Removed incorrect "militia" mention from Rhûn.
+
+**HIGH 4 — Hover tooltip Localize bypass.** `FactionDisplayHelper.ShowHoverTooltip` passed `change.FactionName` raw to `TooltipProperty` — would have displayed literal `{=taom_faction_...}Stewardship of Gondor` text on hover. One-line wrap: `Localize(change.FactionName)`. The trace (`PolygonWidget.HoveredFactionName` → `FactionHoverService.UpdateHover` → `HoverStateChange.FactionName` → `ShowHoverTooltip`) bypassed Phase 1's helper.
+
+**MED 5 — 4 village notable feats absent from CC pages.** Mordor `Slave Drivers` +5%, Isengard `Iron Press` +10%, Gundabad `Bone Camps` +10%, Dol Guldur `Hidden Hovels` +10%. Added a positive bonus line to each faction.
+
+**MED 6 — Erebor description math.** "Master Smiths halve forge costs" → "Master Smiths cut smithing energy by 30%" (matches feat `EffectBonus = -0.3f`).
+
+**REJECTED MED 7** (41/48 special-units names not in troop XMLs): names are iconic LOTR archetypes (Citadel Guard, Black Uruk, Mumakil War Tower); renaming to exact troop display names is high authoring cost for low player benefit. Documented as known archetype framing; revisit specific entries during Phase 3 in-game smoke if any read as fabrications.
+
+**REJECTED LOW** (`_su_` abbreviation): runtime key coverage clean (610/610 keys match); renaming for cosmetic consistency is scope creep.
+
+8 of 9 Codex Known Suspects came back DISPUTED-with-evidence; the JSON↔XML alignment, XML escape safety, token double-prefix, and old-content removal all pass.
+
+Verification: `tools/harvest_factionmap_strings.py` → 610 keys (was 599, +11 new bonus/weakness lines). `dotnet test` → **2872 / 0 / 2** (no regression). `tools/validate_moduledata.py` → PASS.
+
+RCA: [`docs/reviews/rca-faction-map-phase2-codex-2026-06-01.md`](docs/reviews/rca-faction-map-phase2-codex-2026-06-01.md). Memory updated: extend `feedback_faction_map_update_with_cultural_feats` with the inherited-feat audit step (XSLT trace + vanilla decompile).
+
 ### fix(faction-map): localize FormatDifficultyText (#260 Phase 2 deep-review fix)
 
 Deep-review (6 agents) on Phase 2 (commit `cbbcc41`) returned 1 HIGH (Tooling, FALSE POSITIVE), 2 MED (Tooling, REJECTED per `simplicity-criterion.md`), 1 GAP (Data Flow, CONFIRMED). 4 of 6 agents PASS-clean.

@@ -155,7 +155,8 @@
       {"text": "{=taom_faction_overlordship_of_gundabad_bonus_4}+20% village volunteer respawn rate", "positive": true},
       {"text": "{=taom_faction_overlordship_of_gundabad_bonus_5}+15% village grain (Plundered Stores)", "positive": true},
       {"text": "{=taom_faction_overlordship_of_gundabad_bonus_6}+1 Artisan + 3 Gang Leader notables per town (Bone-Smiths, Pale Warband Chieftains)", "positive": true},
-      {"text": "{=taom_faction_overlordship_of_gundabad_bonus_7}+10% party wages (Plunder Demands)", "positive": false}
+      {"text": "{=taom_faction_overlordship_of_gundabad_bonus_7}+10% village notable count (Bone Camps)", "positive": true},
+      {"text": "{=taom_faction_overlordship_of_gundabad_bonus_8}+10% party wages (Plunder Demands)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_overlordship_of_gundabad_su_0_name}Pale Orc Champion", "description": "{=taom_faction_overlordship_of_gundabad_su_0_desc}Bolg's elite heavy line."},
@@ -323,12 +324,12 @@
       "{=taom_faction_clans_of_dunland_trait_3}Saruman's Pawns"
     ],
     "bonuses": [
-      {"text": "{=taom_faction_clans_of_dunland_bonus_0}+15% party speed in forest (Battanian, inherited)", "positive": true},
+      {"text": "{=taom_faction_clans_of_dunland_bonus_0}50% less forest speed penalty + 15% sight range (Battanian-borrowed)", "positive": true},
       {"text": "{=taom_faction_clans_of_dunland_bonus_1}+10% party speed on plains (Hill Marchers)", "positive": true},
       {"text": "{=taom_faction_clans_of_dunland_bonus_2}+5% party size limit (Hill-Tribe Levy)", "positive": true},
       {"text": "{=taom_faction_clans_of_dunland_bonus_3}+10% village volunteer respawn rate (Hill-Tribe Recruitment)", "positive": true},
-      {"text": "{=taom_faction_clans_of_dunland_bonus_4}+20% village militia production (Battanian, inherited)", "positive": true},
-      {"text": "{=taom_faction_clans_of_dunland_bonus_5}−15% building construction speed (Battanian, inherited)", "positive": false}
+      {"text": "{=taom_faction_clans_of_dunland_bonus_4}+20% chance for veteran militia in towns (Battanian-borrowed)", "positive": true},
+      {"text": "{=taom_faction_clans_of_dunland_bonus_5}−10% building construction speed (Battanian-borrowed)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_clans_of_dunland_su_0_name}Dunlending Berserker", "description": "{=taom_faction_clans_of_dunland_su_0_desc}Fearless melee warrior."},
@@ -338,16 +339,16 @@
     "perks": [
       {"name": "{=taom_faction_clans_of_dunland_perk_0_name}Hill Marchers", "description": "{=taom_faction_clans_of_dunland_perk_0_desc}+10% party speed on plains and +5% party size — Dunlending warbands cover ground fast."},
       {"name": "{=taom_faction_clans_of_dunland_perk_1_name}Hill-Tribe Recruitment", "description": "{=taom_faction_clans_of_dunland_perk_1_desc}+10% village volunteer respawn rate — villages refill with cousins fast."},
-      {"name": "{=taom_faction_clans_of_dunland_perk_2_name}Battanian Forest Lineage", "description": "{=taom_faction_clans_of_dunland_perk_2_desc}Inherited +15% forest speed and +20% militia production from Battanian roots."}
+      {"name": "{=taom_faction_clans_of_dunland_perk_2_name}Battanian Forest Lineage", "description": "{=taom_faction_clans_of_dunland_perk_2_desc}Borrowed 50% less forest speed penalty + 15% sight, and +20% chance for veteran militia in towns; −10% construction speed."}
     ],
     "strengths": [
       "{=taom_faction_clans_of_dunland_strength_0}Cheap fast warbands",
       "{=taom_faction_clans_of_dunland_strength_1}Forest and plain mobility",
       "{=taom_faction_clans_of_dunland_strength_2}Steady village recruitment",
-      "{=taom_faction_clans_of_dunland_strength_3}Strong militia tradition"
+      "{=taom_faction_clans_of_dunland_strength_3}Veteran militia chance"
     ],
     "weaknesses": [
-      "{=taom_faction_clans_of_dunland_weakness_0}Slow walls and forges (Battanian)",
+      "{=taom_faction_clans_of_dunland_weakness_0}Battanian-borrowed slow construction",
       "{=taom_faction_clans_of_dunland_weakness_1}Saruman's pawns — poor diplomacy",
       "{=taom_faction_clans_of_dunland_weakness_2}Wedged between Rohan and Isengard"
     ],
@@ -376,7 +377,8 @@
       {"text": "{=taom_faction_dominion_of_isengard_bonus_5}+20% raid damage (War Machine Raids)", "positive": true},
       {"text": "{=taom_faction_dominion_of_isengard_bonus_6}+10% party speed on plains and swamps (Forced March, Fenland Drillmasters)", "positive": true},
       {"text": "{=taom_faction_dominion_of_isengard_bonus_7}+2 Merchant + 1 Artisan + 12 Gang Leader notables in Isengard town (20 total)", "positive": true},
-      {"text": "{=taom_faction_dominion_of_isengard_bonus_8}+25% relationship penalties (Saruman's Grip)", "positive": false}
+      {"text": "{=taom_faction_dominion_of_isengard_bonus_8}+10% village notable count (Iron Press)", "positive": true},
+      {"text": "{=taom_faction_dominion_of_isengard_bonus_9}+25% relationship penalties (Saruman's Grip)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_dominion_of_isengard_su_0_name}Uruk-hai Berserker", "description": "{=taom_faction_dominion_of_isengard_su_0_desc}Devastating shock infantry."},
@@ -451,7 +453,7 @@
     "playable": true,
     "game_faction": "erebor",
     "side": "free",
-    "description": "{=taom_faction_kingdom_of_erebor_desc}The Lonely Mountain reclaimed. Master Smiths halve forge costs; Dwarven Honor adds loyalty every day; Dwarven Stubbornness keeps morale unshakable. Slow to build a wall — but the wall holds until the mountain itself falls.",
+    "description": "{=taom_faction_kingdom_of_erebor_desc}The Lonely Mountain reclaimed. Master Smiths cut smithing energy by 30%; Dwarven Honor adds loyalty every day; Dwarven Stubbornness keeps morale unshakable. Slow to build a wall — but the wall holds until the mountain itself falls.",
     "image": "faction_kingdom_of_erebor",
     "traits": [
       "{=taom_faction_kingdom_of_erebor_trait_0}Kingdom Under the Mountain",
@@ -497,7 +499,7 @@
     "playable": true,
     "game_faction": "sturgia",
     "side": "free",
-    "description": "{=taom_faction_kingdom_of_dale_desc}Bard's rebuilt city beneath Erebor. Sturgian forest militia traditions paired with TAOM's Vale Traders plain-speed bonus. Cold winters resilient (Sturgian inheritance), thriving trade alliance with the Dwarves keeps Dale rich and ready.",
+    "description": "{=taom_faction_kingdom_of_dale_desc}Bard's rebuilt city beneath Erebor. Inherited Sturgian grain abundance and Sturgian cheap-army tradition pair with TAOM's Vale Traders plain-speed bonus — but Sturgian kingdom-decision penalties cut both ways. A thriving trade alliance with the Dwarves keeps Dale rich and ready.",
     "image": "faction_kingdom_of_dale",
     "traits": [
       "{=taom_faction_kingdom_of_dale_trait_0}Bard's Legacy",
@@ -507,8 +509,9 @@
     ],
     "bonuses": [
       {"text": "{=taom_faction_kingdom_of_dale_bonus_0}+10% party speed on plains (Vale Traders)", "positive": true},
-      {"text": "{=taom_faction_kingdom_of_dale_bonus_1}Sturgian forest speed (inherited)", "positive": true},
-      {"text": "{=taom_faction_kingdom_of_dale_bonus_2}Sturgian winter resilience (inherited)", "positive": true}
+      {"text": "{=taom_faction_kingdom_of_dale_bonus_1}+10% village grain production (Sturgian, inherited)", "positive": true},
+      {"text": "{=taom_faction_kingdom_of_dale_bonus_2}−50% army influence cost (Sturgian, inherited)", "positive": true},
+      {"text": "{=taom_faction_kingdom_of_dale_bonus_3}+20% relationship penalty from kingdom decisions (Sturgian, inherited)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_kingdom_of_dale_su_0_name}Black Arrow Ranger", "description": "{=taom_faction_kingdom_of_dale_su_0_desc}Bard's legacy archer."},
@@ -518,18 +521,18 @@
     "perks": [
       {"name": "{=taom_faction_kingdom_of_dale_perk_0_name}Vale Traders", "description": "{=taom_faction_kingdom_of_dale_perk_0_desc}+10% party speed on plains — caravans of Lake-town move fast."},
       {"name": "{=taom_faction_kingdom_of_dale_perk_1_name}Dwarven Alliance", "description": "{=taom_faction_kingdom_of_dale_perk_1_desc}Trade with Erebor provides bonus income and arms-supply."},
-      {"name": "{=taom_faction_kingdom_of_dale_perk_2_name}Sturgian Forest Lineage", "description": "{=taom_faction_kingdom_of_dale_perk_2_desc}Inherited Sturgian forest mobility and winter resilience."}
+      {"name": "{=taom_faction_kingdom_of_dale_perk_2_name}Sturgian Grain & Army Lineage", "description": "{=taom_faction_kingdom_of_dale_perk_2_desc}Inherited Sturgian +10% village grain and −50% army influence cost; relationship penalty +20% on kingdom decisions."}
     ],
     "strengths": [
-      "{=taom_faction_kingdom_of_dale_strength_0}Trade and tariff income with Erebor",
+      "{=taom_faction_kingdom_of_dale_strength_0}Trade with Erebor",
       "{=taom_faction_kingdom_of_dale_strength_1}Strong archery tradition",
-      "{=taom_faction_kingdom_of_dale_strength_2}Plain and forest mobility",
-      "{=taom_faction_kingdom_of_dale_strength_3}Resilient in cold climates"
+      "{=taom_faction_kingdom_of_dale_strength_2}Cheap army gathering (Sturgian)",
+      "{=taom_faction_kingdom_of_dale_strength_3}Grain-rich villages"
     ],
     "weaknesses": [
       "{=taom_faction_kingdom_of_dale_weakness_0}Small territory",
       "{=taom_faction_kingdom_of_dale_weakness_1}Pressured by Easterlings",
-      "{=taom_faction_kingdom_of_dale_weakness_2}Weak heavy melee"
+      "{=taom_faction_kingdom_of_dale_weakness_2}Sturgian kingdom-decision penalty"
     ],
     "difficulty": 3
   },
@@ -577,8 +580,9 @@
       {"text": "{=taom_faction_overlordship_of_dol_guldur_bonus_2}+20% village volunteer respawn rate (Dark Conscripts)", "positive": true},
       {"text": "{=taom_faction_overlordship_of_dol_guldur_bonus_3}+20% militia veteran chance (Dark Conscription)", "positive": true},
       {"text": "{=taom_faction_overlordship_of_dol_guldur_bonus_4}+1 Merchant + 1 Artisan + 13 Gang Leader notables in Dol Guldur town (20 total)", "positive": true},
-      {"text": "{=taom_faction_overlordship_of_dol_guldur_bonus_5}+10% party food consumption (Voracious Hordes)", "positive": false},
-      {"text": "{=taom_faction_overlordship_of_dol_guldur_bonus_6}−20% building construction speed (Ruinous Works)", "positive": false}
+      {"text": "{=taom_faction_overlordship_of_dol_guldur_bonus_5}+10% village notable count (Hidden Hovels)", "positive": true},
+      {"text": "{=taom_faction_overlordship_of_dol_guldur_bonus_6}+10% party food consumption (Voracious Hordes)", "positive": false},
+      {"text": "{=taom_faction_overlordship_of_dol_guldur_bonus_7}−20% building construction speed (Ruinous Works)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_overlordship_of_dol_guldur_su_0_name}Dol Guldur Uruk", "description": "{=taom_faction_overlordship_of_dol_guldur_su_0_desc}Shadow-twisted heavy infantry."},
@@ -762,7 +766,8 @@
       {"text": "{=taom_faction_dominion_of_mordor_bonus_5}+5% party speed on plains and swamps (Shadow March, Dead Marshes)", "positive": true},
       {"text": "{=taom_faction_dominion_of_mordor_bonus_6}+20% village volunteer respawn rate (Sauron's Levy)", "positive": true},
       {"text": "{=taom_faction_dominion_of_mordor_bonus_7}+2 Gang Leader notables per town (Black Speech Heralds)", "positive": true},
-      {"text": "{=taom_faction_dominion_of_mordor_bonus_8}+20% party wages (Dark Tribute)", "positive": false}
+      {"text": "{=taom_faction_dominion_of_mordor_bonus_8}+5% village notable count (Slave Drivers)", "positive": true},
+      {"text": "{=taom_faction_dominion_of_mordor_bonus_9}+20% party wages (Dark Tribute)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_dominion_of_mordor_su_0_name}Black Uruk", "description": "{=taom_faction_dominion_of_mordor_su_0_desc}Elite shock infantry from Barad-dur."},
@@ -805,7 +810,9 @@
     "bonuses": [
       {"text": "{=taom_faction_golden_realm_of_rhun_bonus_0}+10% party speed on steppe (Easterling Outriders)", "positive": true},
       {"text": "{=taom_faction_golden_realm_of_rhun_bonus_1}+5% party size limit (Easterling Host)", "positive": true},
-      {"text": "{=taom_faction_golden_realm_of_rhun_bonus_2}Khuzait cavalry economy and militia traditions (inherited)", "positive": true}
+      {"text": "{=taom_faction_golden_realm_of_rhun_bonus_2}−10% mounted recruit and upgrade cost (Khuzait, inherited)", "positive": true},
+      {"text": "{=taom_faction_golden_realm_of_rhun_bonus_3}+25% horse, mule, cow, and sheep village production (Khuzait, inherited)", "positive": true},
+      {"text": "{=taom_faction_golden_realm_of_rhun_bonus_4}−20% town tax income (Khuzait, inherited)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_golden_realm_of_rhun_su_0_name}Easterling Kataphract", "description": "{=taom_faction_golden_realm_of_rhun_su_0_desc}Elite armored cavalry."},
@@ -815,7 +822,7 @@
     "perks": [
       {"name": "{=taom_faction_golden_realm_of_rhun_perk_0_name}Easterling Outriders", "description": "{=taom_faction_golden_realm_of_rhun_perk_0_desc}+10% party speed on steppe — riders of the Sea of Rhun cross the plain fast."},
       {"name": "{=taom_faction_golden_realm_of_rhun_perk_1_name}Easterling Host", "description": "{=taom_faction_golden_realm_of_rhun_perk_1_desc}+5% party size limit — hordes muster in answer to Mordor's call."},
-      {"name": "{=taom_faction_golden_realm_of_rhun_perk_2_name}Khuzait Steppe Lineage", "description": "{=taom_faction_golden_realm_of_rhun_perk_2_desc}Inherited Khuzait cavalry economy on top of the TAOM bonuses."}
+      {"name": "{=taom_faction_golden_realm_of_rhun_perk_2_name}Khuzait Steppe Lineage", "description": "{=taom_faction_golden_realm_of_rhun_perk_2_desc}Inherited Khuzait −10% mounted cost, +25% animal village production; −20% town tax income."}
     ],
     "strengths": [
       "{=taom_faction_golden_realm_of_rhun_strength_0}Heavy cavalry hordes",
@@ -826,7 +833,8 @@
     "weaknesses": [
       "{=taom_faction_golden_realm_of_rhun_weakness_0}Weak infantry",
       "{=taom_faction_golden_realm_of_rhun_weakness_1}Divided clans",
-      "{=taom_faction_golden_realm_of_rhun_weakness_2}Long supply lines to Mordor"
+      "{=taom_faction_golden_realm_of_rhun_weakness_2}Long supply lines to Mordor",
+      "{=taom_faction_golden_realm_of_rhun_weakness_3}Khuzait-borrowed −20% town tax"
     ],
     "difficulty": 2
   },
@@ -869,9 +877,9 @@
     ],
     "bonuses": [
       {"text": "{=taom_faction_khudorom_of_khand_bonus_0}+10% party speed on steppe (Steppe Charioteers)", "positive": true},
-      {"text": "{=taom_faction_khudorom_of_khand_bonus_1}+15% party speed in forest (Battanian, inherited)", "positive": true},
-      {"text": "{=taom_faction_khudorom_of_khand_bonus_2}+20% village militia production (Battanian, inherited)", "positive": true},
-      {"text": "{=taom_faction_khudorom_of_khand_bonus_3}−15% building construction speed (Battanian, inherited)", "positive": false}
+      {"text": "{=taom_faction_khudorom_of_khand_bonus_1}50% less forest speed penalty + 15% sight range (Battanian, inherited)", "positive": true},
+      {"text": "{=taom_faction_khudorom_of_khand_bonus_2}+20% chance for veteran militia in towns (Battanian, inherited)", "positive": true},
+      {"text": "{=taom_faction_khudorom_of_khand_bonus_3}−10% building construction speed (Battanian, inherited)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_khudorom_of_khand_su_0_name}Variag Horse Archer", "description": "{=taom_faction_khudorom_of_khand_su_0_desc}Elite mounted skirmisher."},
@@ -881,7 +889,7 @@
     "perks": [
       {"name": "{=taom_faction_khudorom_of_khand_perk_0_name}Steppe Charioteers", "description": "{=taom_faction_khudorom_of_khand_perk_0_desc}+10% party speed on steppe — Variag chariots roll fast."},
       {"name": "{=taom_faction_khudorom_of_khand_perk_1_name}Mercenary Tradition", "description": "{=taom_faction_khudorom_of_khand_perk_1_desc}Mercenary captains ride for whoever pays — but they keep their cut."},
-      {"name": "{=taom_faction_khudorom_of_khand_perk_2_name}Battanian Forest Lineage", "description": "{=taom_faction_khudorom_of_khand_perk_2_desc}Inherited +15% forest speed and +20% militia production from Battanian roots."}
+      {"name": "{=taom_faction_khudorom_of_khand_perk_2_name}Battanian Forest Lineage", "description": "{=taom_faction_khudorom_of_khand_perk_2_desc}Inherited 50% less forest speed penalty + 15% sight range and +20% chance for veteran militia in towns; −10% construction speed."}
     ],
     "strengths": [
       "{=taom_faction_khudorom_of_khand_strength_0}Steppe and forest mobility",
@@ -926,7 +934,9 @@
     "bonuses": [
       {"text": "{=taom_faction_taskralan_of_harwan_bonus_0}+10% party speed on desert (Sons of the Sun)", "positive": true},
       {"text": "{=taom_faction_taskralan_of_harwan_bonus_1}+5% party size limit (Haradrim Warbands)", "positive": true},
-      {"text": "{=taom_faction_taskralan_of_harwan_bonus_2}Aserai desert caravan and hardiness (inherited)", "positive": true}
+      {"text": "{=taom_faction_taskralan_of_harwan_bonus_2}−30% caravan build cost + −10% trade penalty (Aserai Trader, inherited)", "positive": true},
+      {"text": "{=taom_faction_taskralan_of_harwan_bonus_3}No speed penalty on desert (Aserai Desert, inherited)", "positive": true},
+      {"text": "{=taom_faction_taskralan_of_harwan_bonus_4}+5% daily troop wages (Aserai Wages, inherited)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_taskralan_of_harwan_su_0_name}Mumakil War Tower", "description": "{=taom_faction_taskralan_of_harwan_su_0_desc}Devastating war beast."},
@@ -936,7 +946,7 @@
     "perks": [
       {"name": "{=taom_faction_taskralan_of_harwan_perk_0_name}Sons of the Sun", "description": "{=taom_faction_taskralan_of_harwan_perk_0_desc}+10% party speed on desert — born to burning sands."},
       {"name": "{=taom_faction_taskralan_of_harwan_perk_1_name}Haradrim Warbands", "description": "{=taom_faction_taskralan_of_harwan_perk_1_desc}+5% party size limit — tribal warbands ride together to Mordor's call."},
-      {"name": "{=taom_faction_taskralan_of_harwan_perk_2_name}Aserai Desert Lineage", "description": "{=taom_faction_taskralan_of_harwan_perk_2_desc}Inherited Aserai caravan economy and desert hardiness."}
+      {"name": "{=taom_faction_taskralan_of_harwan_perk_2_name}Aserai Desert Lineage", "description": "{=taom_faction_taskralan_of_harwan_perk_2_desc}Inherited Aserai Trader (−30% caravans, −10% trade penalty) and Aserai Desert (no desert speed penalty); +5% daily wages."}
     ],
     "strengths": [
       "{=taom_faction_taskralan_of_harwan_strength_0}Mumakil war beasts",
@@ -947,7 +957,8 @@
     "weaknesses": [
       "{=taom_faction_taskralan_of_harwan_weakness_0}Cold climate penalty",
       "{=taom_faction_taskralan_of_harwan_weakness_1}Tribal infighting",
-      "{=taom_faction_taskralan_of_harwan_weakness_2}Few smiths and walls"
+      "{=taom_faction_taskralan_of_harwan_weakness_2}Few smiths and walls",
+      "{=taom_faction_taskralan_of_harwan_weakness_3}Aserai-borrowed +5% troop wages"
     ],
     "difficulty": 3
   },

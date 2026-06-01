@@ -89,7 +89,7 @@ public static class FactionDisplayHelper
             var color = ParseColor(change.ColorHex);
             var props = new List<TooltipProperty>
             {
-                new TooltipProperty(change.FactionName, "", 0, color, false, TooltipProperty.TooltipPropertyFlags.Title)
+                new TooltipProperty(Localize(change.FactionName), "", 0, color, false, TooltipProperty.TooltipPropertyFlags.Title)
             };
             InformationManager.ShowTooltip(typeof(List<TooltipProperty>), props);
         }
