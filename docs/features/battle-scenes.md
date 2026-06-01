@@ -1,13 +1,17 @@
-# Battle Scenes (DISABLED)
+# Battle Scenes (ENABLED 2026-06-01)
 
-> **Status: DISABLED.** Code is in the tree, Harmony patches are written, but the `Patch0_BattleScenes` category is **not applied** at module load. The relevant line in [Main/SubModule.cs:115-116](../../Main/SubModule.cs) is commented out with a deliberate explanation:
+> **Status: ENABLED (2026-06-01).** `_harmony.PatchCategory("Patch0_BattleScenes");` is applied at module load
+> ([Main/SubModule.cs:159](../../Main/SubModule.cs)). The original "parked until TAOM_Map is integrated" reason is
+> resolved: `TAOM_Map` ships a `Main_map` scene and `Main/_Module/ModuleData/sp_battle_scenes.xml` covers all
+> 0–255 `map_indices` (0 crash suspects, every Scene id on disk). All 3 patch targets were verified against the
+> installed 1.4.5 DLLs before re-enabling (`Campaign.InitializeScenes`, `GameSceneDataManager.{LoadSPBattleScenes,
+> LoadConversationScenes,LoadMeetingScenes}`, `MBMapScene.GetBattleSceneIndexMap`, `SandBox.MapScene.Load`).
+> Build + `dotnet test TAOM.Tests` (2877 passed) clean.
 >
-> ```csharp
-> // Battle scenes disabled — custom map not yet ready, will re-enable when TAOM_Map is integrated
-> // _harmony.PatchCategory("Patch0_BattleScenes");
-> ```
->
-> **Do not investigate "why isn't this loading?" or "why doesn't sp_battle_scenes.xml take effect?"** — the answer is "the patch category is intentionally inactive." See [Re-enable](#re-enable) below.
+> **In-game validation pending** the `worldmap_battle_scene_grid` re-author (see
+> [reference/worldmap-battle-scene-grid.md](../reference/worldmap-battle-scene-grid.md)). Why this matters: with
+> Patch0 active, the grid's extended indices (158–255) resolve to real terrains (`battle_terrain_r` catch-all)
+> instead of `FailedAssert`-ing against vanilla's 1–157 table.
 
 ## Overview
 

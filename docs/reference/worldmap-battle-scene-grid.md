@@ -5,11 +5,34 @@ map**, what the `worldmap_battle_scene_grid` texture actually is, and how to **r
 Middle-earth map**. Companion to [scene-reference-audit.md](scene-reference-audit.md) (which validates the
 `sp_battle_scenes.xml` *data*) — this doc explains the *texture* that drives it.
 
-> **TL;DR — the one fact that changes everything:** `worldmap_battle_scene_grid` is **never loaded by filename
-> at runtime.** It is a *source asset the Bannerlord editor bakes into the `Main_map` scene*; at runtime the
-> engine reads the baked index map **natively** out of the loaded scene. "Replacing the texture" is an **editor
-> bake operation**, not a file swap. The editor's *"Source file is missing"* is a content-pipeline condition,
-> not a code bug.
+> **TL;DR (CONFIRMED on 1.4.5, 2026-06-01):** the battle-scene grid is set by placing a **lossless**
+> `worldmap_battle_scene_grid` texture at the **`Assets/world_map/`** resource path (R = scene index → matches
+> `sp_battle_scenes.xml` `map_indices`; G = entry orientation; 1024×1024). The engine reads it as a **runtime
+> resource by name** — **no `Main_map` re-bake is needed.** Verified: a lossless import to `Assets/world_map/`
+> with `Main_map`'s `terrain.bin`/`scene.xscene` **unchanged** loads correctly.
+>
+> Two things must both be right or campaign-load crashes (native `AccessViolationException` in
+> `get_battle_scene_index_map`): the **resource path** must be `world_map/worldmap_battle_scene_grid` (not e.g.
+> `Battle Map/`), and the texture must be **lossless** — Texture Inspector → **Do Not Compress** + **Dont Degrade**
+> (DXT/compression mangles the exact R-channel index bytes; the crashed import's `.rdc` was 699 KB *compressed*,
+> the working one is 4.19 MB = 1024×1024×4 *uncompressed*).
+>
+> **History of this doc's wrong turns (kept as a caution):** earlier revisions said (1) "re-import the texture"
+> alone changes the grid — wrong, *and* (2) "never import a loose texture; it must be **baked into `Main_map`**" —
+> also wrong (over-inferred from a crash). The grid is **not** baked into `Main_map`/`terrain.bin`; it is a
+> runtime `Assets/world_map/` texture. The authoritative source is
+> [BannerlordModding.LT › Battle Scene Grid](https://docs.bannerlordmodding.lt/editor/battle_scene_grid/) (1.2.12,
+> now confirmed to still apply on 1.4.5).
+
+> ## ⚠️ A mis-imported grid CRASHES campaign load
+>
+> If a campaign crashes on load with a native `AccessViolationException` in `get_battle_scene_index_map` (boots to
+> menu fine, dies loading a campaign), the `worldmap_battle_scene_grid` texture is mis-imported. **Both** of these
+> must hold: (1) resource path = **`world_map/worldmap_battle_scene_grid`** (a wrong path like `Battle Map/` leaves
+> a conflicting/orphaned resource); (2) **lossless** — Texture Inspector → **Do Not Compress** + **Dont Degrade**
+> (DXT mangles the R-channel index bytes; a `~700 KB` compressed `.rdc` vs the correct `~4.19 MB` uncompressed one
+> is the tell). Recovery during the 2026-06-01 incident was to **delete the bad import**; the definitive fix was
+> re-importing lossless at `world_map/`. Patch0's AV retry guard does **not** rescue a deterministic mis-import.
 
 ## Data flow (verified against installed v1.4.5 + decompiled SandBox)
 
@@ -54,20 +77,25 @@ Because the read is native and the texture name lives in native scene data, the 
 **does not appear anywhere in managed code** — grepping the entire decompiled tree returns nothing. That's
 expected, not a sign anything is broken.
 
-### Baked, not bound (proof) — so importing the texture is not enough
+### A global resource by hardcoded name — NOT baked into the scene (corrected 2026-06-01)
 
-The index map is **baked into the `Main_map` scene data**, *not* bound as a named runtime texture the engine
-samples at load. Evidence (verified 2026-05-31):
+> ⚠️ An earlier version of this section claimed the grid is "baked into the `Main_map` scene data, not bound." The
+> 2026-06-01 disk evidence **disproves** that: a lossless grid at `Assets/world_map/` loads with `Main_map`'s
+> `terrain.bin`/`scene.xscene` **unchanged**. The grid is a **runtime texture resource**, not baked scene data.
 
-- **Neither** vanilla `SandBox/SceneObj/Main_map/references.txt` **nor** TAOM_Map's references `battle_scene_grid`
-  (both reference only `worldmap_colorgrade_*`). A texture read at runtime by name would appear here.
-- Vanilla SandBox ships **no** loose `worldmap_battle_scene_grid` asset and **no** `world_map/` Assets folder —
-  the grid exists only as data baked into its `Main_map`.
+The engine loads `world_map/worldmap_battle_scene_grid` as a **global resource by (hardcoded) name** when reading
+the map, and samples it for the index map — `MBMapScene.GetBattleSceneIndexMap` takes **no** texture-name argument
+because the name is fixed in native code. Evidence:
 
-**Consequence:** importing/compiling `worldmap_battle_scene_grid_tex.tpac` makes the source available **to the
-editor's bake tool** — it does **not** change battle-terrain selection by itself. Selection only changes after the
-`Main_map` scene is **re-baked** (the bake reads the grid texture and writes the index data into the scene). A
-`Main_map` whose `scene.xscene`/`terrain.bin` timestamp hasn't moved is still serving the *old* index map.
+- The grid name appears in **no** scene file (`scene.xscene`/`terrain.bin`/`terrain_ed.bin`) — it lives in the
+  module's `Assets/world_map/` (compiled `…_tex.tpac` + a `RuntimeDataCache/<guid>.rdc`) + the source `.zip`. It is
+  absent from `references.txt` because that lists scene-local entities, **not** global resources like this one.
+- **Confirmed:** importing a lossless grid to `Assets/world_map/` **without** re-baking `Main_map` (timestamps
+  unchanged at 2026-05-28) makes the campaign load with that grid. No bake step exists/needs to run.
+
+**Consequence:** to change the grid, replace the `Assets/world_map/worldmap_battle_scene_grid` texture (lossless) —
+that's it, no `Main_map` re-bake. (The earlier "must re-bake `Main_map`" guidance below in older revisions was
+wrong; this section supersedes it.)
 
 ### Two grids, do not confuse them
 
@@ -97,18 +125,16 @@ red-channel data strongly implies red = scene index).
 | 3 active modules own `Main_map`: SandBox, NavalDLC, **TAOM_Map** → TAOM_Map's map is used only if it loads **last** | filesystem scan |
 | Grid **source** PNG (113 KB) at `AssetSources/Battle Map/worldmap_battle_scene_grid/` (16:36); **reimported 2026-05-31** → compiled `Assets/Battle Map/worldmap_battle_scene_grid/worldmap_battle_scene_grid_tex.tpac` (16:47) now present, so *"Source file is missing"* is **resolved** | filesystem scan |
 | **`Main_map` still baked 2026-05-28** (`scene.xscene`/`terrain.bin` timestamps unchanged after the reimport) → the new grid is **NOT yet baked into the scene**; battles still use the old index map until `Main_map` is re-baked | filesystem scan |
-| TAOM imported the grid to `Assets/Battle Map/…`, **not** vanilla's `world_map/…` resource path → **verify in-editor** the bake tool finds the grid where it expects it | filesystem scan |
-| `Patch0_BattleScenes` is **DISABLED** — `Main/SubModule.cs:158` has `// _harmony.PatchCategory("Patch0_BattleScenes");` commented out | grep |
+| Grid resolved (2026-06-01): re-imported **lossless** at `Assets/world_map/` (4.19 MB uncompressed `.rdc`) → campaign loads with `Main_map` unchanged | filesystem scan |
+| `Patch0_BattleScenes` is **ENABLED** (re-enabled 2026-06-01, `Main/SubModule.cs:159`) → loads TAOM's `sp_battle_scenes.xml` | grep |
 | `sp_battle_scenes.xml` is **not** an XmlNode in `Main/_Module/SubModule.xml` (only `CustomBattleScenes`→`custom_battle_scenes`, a different file) → it is loaded **only** by Patch0's `Campaign_InitializeScenes_Patch.cs:19` | grep |
 
 ### The coupling that matters
 
-The baked grid's pixel **index values must all be covered by the *active* `sp_battle_scenes.xml`.**
+The grid's pixel **index values must all be covered by the *active* `sp_battle_scenes.xml`.**
 
-- **Patch0 disabled (current):** the **active** file is **vanilla `SandBox/ModuleData/sp_battle_scenes.xml`**.
-  TAOM's extended copy (deployed at `Modules/TAOM/ModuleData/sp_battle_scenes.xml`, covers all 0–255) is **inert**.
-- A custom LOTR grid that paints indices the *active* XML doesn't cover → `Debug.FailedAssert` + terrain-type
-  fallback (often the wrong terrain), not necessarily a crash but wrong/asserting.
+- **Patch0 enabled (current, since 2026-06-01):** the **active** file is **TAOM's `Modules/TAOM/ModuleData/sp_battle_scenes.xml`** (covers all 0–255, 0 crash suspects). Indices 158–255 resolve to `battle_terrain_r`.
+- *(Before re-enabling, vanilla `SandBox/sp_battle_scenes.xml` was active — 1–157 only — so the grid's extended indices `Debug.FailedAssert`ed + fell back to terrain-type. That's the gap Patch0 closes.)*
 
 > Verify index coverage any time the grid or XML changes: `python tools/audit_battle_scenes.py`
 > (as of 2026-05-31 the *deployed TAOM* file covers all 256 indices with 0 crash suspects — but that file is
@@ -152,20 +178,34 @@ vanilla scene ids exist today; the editor author picks the specific index that m
 Refine the table above against the **active** XML; run `python tools/audit_battle_scenes.py`. Any desired terrain
 with no vanilla index is the trigger to use Approach B for those cells.
 
-### Phase 2 — author + bake (Bannerlord editor — your domain)
-1. ~~Resolve *"Source file is missing"*~~ — **done 2026-05-31** (grid reimported; compiled `tex.tpac` present).
-   Open question to confirm in-editor: the grid imported to `Assets/Battle Map/…`, but the inspector showed
-   vanilla's resource path as `world_map/worldmap_battle_scene_grid.png` — **verify the bake tool resolves the
-   grid where it expects it** (it may need to sit at the `world_map/` resource name, not `Battle Map/`).
-2. Paint the grid per the Phase 1 table (scene index in the channel the bake reads — **confirm which channel**;
-   raw data implies red).
-3. **Re-bake `Main_map`** so the scene carries the new index map — **this is the step that actually changes
-   battles** (importing the texture does not; see "Baked, not bound" above). Confirm the `SceneObj/Main_map`
-   `scene.xscene`/`terrain.bin` timestamp **moves off 2026-05-28** — if it doesn't, the bake didn't take.
-4. Confirm TAOM_Map loads **after** SandBox/NavalDLC so its `Main_map` wins.
+### Phase 2 — author + import the grid (Bannerlord editor — your domain)
 
-### Phase 3 — (Approach B only) re-enable Patch0 (repo)
-- Uncomment `_harmony.PatchCategory("Patch0_BattleScenes");` in `Main/SubModule.cs:158`.
+Per the authoritative [BannerlordModding.LT › Battle Scene Grid](https://docs.bannerlordmodding.lt/editor/battle_scene_grid/)
+(a **1.2.12-era** source — see the 1.4.5 caveat). The `map_indices`↔R-byte mapping is corroborated against installed v1.4.5:
+
+1. Author the grid texture **externally** at **1024×1024** ("native's size; not sure if other sizes work").
+   **R channel = scene index** 0–255 — the value that must appear in a `<Scene map_indices="…">` of
+   `sp_battle_scenes.xml` (corroborated by the decompiled 2-byte texel format, `MapScene.cs:456-459`; the docs'
+   `battle_terrain_020` example list is verbatim TAOM's xml). **G channel = party entry orientation** (which side
+   parties enter from).
+2. **Import it at the `Assets/world_map/` resource path**, **LOSSLESS**: Texture Inspector → check **Do Not
+   Compress** + **Dont Degrade**. **Both** matter (CONFIRMED 2026-06-01): the resource name must be
+   `world_map/worldmap_battle_scene_grid` (a wrong path like `Battle Map/` orphans/conflicts the resource → crash),
+   and compression mangles the R-channel index bytes (the correct import is ~4.19 MB = 1024×1024×4 uncompressed;
+   a ~700 KB compressed `.rdc` is the bad-import tell).
+3. **That's it — no `Main_map` re-bake.** CONFIRMED on 1.4.5 (2026-06-01): a lossless import to `Assets/world_map/`
+   with `SceneObj/Main_map` **unchanged** loads correctly. Launch a campaign to verify (Patch0's diagnostic patch
+   logs the selected map module; the retry guard wraps `GetBattleSceneIndexMap`).
+4. Ensure `sp_battle_scenes.xml` covers every R-byte value the grid uses, and confirm `TAOM_Map` loads **after**
+   SandBox/NavalDLC so its `Main_map` wins. Run `python tools/audit_battle_scenes.py`.
+
+**Source archive:** keep `AssetSources/world_map/worldmap_battle_scene_grid.png` (and/or the `.zip`) as your
+editable grid **source** — `AssetSources/` is editor-only, never loaded at runtime.
+
+### Phase 3 — Patch0 (repo) — DONE
+`_harmony.PatchCategory("Patch0_BattleScenes");` was **re-enabled 2026-06-01** at `Main/SubModule.cs:159` (loads
+TAOM's `sp_battle_scenes.xml` so extended indices 158–255 resolve). The historical disabled-state notes below are
+kept for context.
 - Ensure `Main/_Module/ModuleData/sp_battle_scenes.xml` covers every painted index and every Scene id resolves to
   a real `SceneObj/<id>/` (run `audit_battle_scenes.py`).
 - Follow the in-game smoke test in [features/battle-scenes.md](../features/battle-scenes.md#re-enable) (watch

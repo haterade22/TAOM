@@ -126,6 +126,20 @@ The existing `RacePersistenceService` automatically handles wanderer race persis
 
 **Save compatibility:** Pre-existing wanderer heroes keep race=0 until they die and are replaced by new wanderers from updated templates. Natural wanderer turnover handles migration.
 
+## Wanderer Equipment Must Fit the Custom Skeleton (2026-06-01)
+
+Setting `race="dwarf"` (above) gives a wanderer the correct monster skeleton — but it does **not** change their equipment. The two are independent: an NPC can have the right skeleton and still wear human-rigged cloth, which clips/floats on the custom skeleton.
+
+The 12 Erebor wanderers (`spc_wanderer_erebor_0` … `_11`) share one equipment roster, `npc_companion_equipment_template_erebor`, defined in `Main/_Module/ModuleData/equipmentsets/taom_wanderer_equipment.xml` (the wanderer XML only *references* it via `<EquipmentSet id="…" />`). That roster was still populated with **vanilla Bannerlord items** (`tunic_with_shoulder_pads`, `leather_cap`, `vlandia_sword_1_t2`, `scarf`, `strapped_shoes`, …) — so the Encyclopedia showed dwarf wanderers in a vanilla green tunic sitting wrong on the dwarf body.
+
+**Rule:** any NPC with `race="dwarf"` must be equipped only with LOTRLOME_Armory items authored for the dwarf skeleton — `sk_dwarf_erebor_*` / `sk_dwarf_iron_*` armour and `sm_dwarf_erebor_*` weapons/shields. The same principle applies to every custom-skeleton race (elf, orc, goblin, …): the `race=` attribute and the equipment meshes must match, or the mesh renders wrong.
+
+**Fix (issue [#261](https://github.com/haterade22/TAOM/issues/261)):** swapped `npc_companion_equipment_template_erebor` (6 battle + 3 civilian sets) to low-end dwarf gear, mirroring the lowest Erebor troop (`erebor_militia_spearman`). The roster's *structure* was already vanilla-correct (verified against vanilla `npc_companion_equipment_template_khuzait` in `SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml` — right `equipmentType="Civilian"` tagging, slot vocabulary, no `Horse` for an infantry culture), so this was a pure item-ID swap. The roster id is referenced only by `taom_wanderers.xml`, so the edit is scoped to the 12 wanderers.
+
+**Already correct (checked, not changed):** dwarf town notables (`characters/npcs_erebor.xml`), dwarf named companions (Gimli et al., `named_companions/named_companions.xml`), and dwarf troops (`troops/troops_erebor.xml`) were already on `sk_dwarf_*` / `sm_dwarf_*` gear (audited with `grep 'id="Item\.(?!sk_dwarf_|sm_dwarf_)'` → zero matches). Dwarf lords carry no inline equipment (template-driven path). The generic wanderers were the only gap.
+
+**Audit recipe for the next dwarf NPC:** `python tools/validate_moduledata.py` confirms refs resolve and civilian sets stay tagged; the negative-lookahead grep above flags any non-dwarf item that slipped into a dwarf NPC's roster.
+
 ## GitHub Issue
 - **Issue:** Unknown
 - **Status:** Unknown

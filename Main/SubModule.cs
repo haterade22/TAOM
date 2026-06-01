@@ -154,8 +154,12 @@ public class SubModule : MBSubModuleBase
 
         _harmony.PatchCategory("Patch18_CulturalFeats");
         _harmony.PatchCategory("Patch19_CustomBattles");
-        // Battle scenes disabled — custom map not yet ready, will re-enable when TAOM_Map is integrated
-        // _harmony.PatchCategory("Patch0_BattleScenes");
+        // Patch0_BattleScenes: loads TAOM's sp_battle_scenes.xml (full 0-255 map_indices coverage) so the
+        // TAOM_Map Main_map grid's extended indices (158-255) resolve to real battle terrains instead of
+        // FailedAsserting against vanilla's 1-157 table. Re-enabled 2026-06-01 (TAOM_Map ships Main_map +
+        // the extended XML exists; 3 patch targets verified against installed 1.4.5). In-game grid validation
+        // pending the worldmap_battle_scene_grid re-author. See docs/reference/worldmap-battle-scene-grid.md.
+        _harmony.PatchCategory("Patch0_BattleScenes");
         // Remaining patches applied in OnGameInitializationFinished — View assembly must be initialized first
 
         var pathService = IoC.Resolve<IPathService>();
