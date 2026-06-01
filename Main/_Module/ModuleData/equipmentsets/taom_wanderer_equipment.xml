@@ -263,70 +263,74 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
-	<!-- EREBOR companion equipment -->
+	<!-- EREBOR companion equipment — dwarf-skeleton armour only (sk_dwarf_*/sm_dwarf_*); vanilla cloth clips the dwarf custom skeleton. Low-end of the dwarven range. -->
 	<EquipmentRoster id="npc_companion_equipment_template_erebor" culture="Culture.erebor">
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
-			<Equipment slot="Item1" id="Item.fortified_kite_shield" />
-			<Equipment slot="Head" id="Item.leather_cap" />
-			<Equipment slot="Body" id="Item.padded_leather_shirt" />
-			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.strapped_shoes" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_a" />
+			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_a" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Item1" id="Item.fortified_kite_shield" />
-			<Equipment slot="Head" id="Item.leather_cap" />
-			<Equipment slot="Body" id="Item.padded_leather_shirt" />
-			<Equipment slot="Cape" id="Item.scarf" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.strapped_shoes" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_b" />
+			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
+			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_b" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
-			<Equipment slot="Head" id="Item.northern_fur_cap" />
-			<Equipment slot="Body" id="Item.footmans_tunic" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.wrapped_leather_boots" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_c" />
+			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_c" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_iron_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Head" id="Item.northern_fur_cap" />
-			<Equipment slot="Body" id="Item.footmans_tunic" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.wrapped_leather_boots" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_a" />
+			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
+			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_a" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
-			<Equipment slot="Item1" id="Item.fortified_kite_shield" />
-			<Equipment slot="Head" id="Item.leather_cap" />
-			<Equipment slot="Body" id="Item.tunic_with_shoulder_pads" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.strapped_shoes" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_c" />
+			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_b" />
+			<Equipment slot="Cape" id="Item.sk_dwarf_iron_pauldron_light_b" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet>
-			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-			<Equipment slot="Item1" id="Item.fortified_kite_shield" />
-			<Equipment slot="Head" id="Item.leather_cap" />
-			<Equipment slot="Body" id="Item.tunic_with_shoulder_pads" />
-			<Equipment slot="Gloves" id="Item.leather_gloves" />
-			<Equipment slot="Leg" id="Item.strapped_shoes" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+			<Equipment slot="Item1" id="Item.sm_dwarf_erebor_shield_leather_b" />
+			<Equipment slot="Head" id="Item.sk_dwarf_erebor_helmet_leather_light_b" />
+			<Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_c" />
+			<Equipment slot="Gloves" id="Item.sk_dwarf_erebor_gloves_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_iron_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
-			<Equipment slot="Body" id="Item.tunic_with_shoulder_pads" />
-			<Equipment slot="Leg" id="Item.strapped_shoes" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_tunic_normal_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
-			<Equipment slot="Body" id="Item.padded_leather_shirt" />
-			<Equipment slot="Leg" id="Item.wrapped_leather_boots" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
+			<Equipment slot="Body" id="Item.sk_dwarf_tunic_normal_b" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_b" />
 		</EquipmentSet>
 		<EquipmentSet equipmentType="Civilian">
-			<Equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
-			<Equipment slot="Body" id="Item.footmans_tunic" />
-			<Equipment slot="Leg" id="Item.strapped_shoes" />
+			<Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_b" />
+			<Equipment slot="Body" id="Item.sk_dwarf_tunic_noble_a" />
+			<Equipment slot="Leg" id="Item.sk_dwarf_iron_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
