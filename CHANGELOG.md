@@ -1,5 +1,23 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-01
+
+### feat(faction-map): resolve TextObject keys in CC faction display (Phase 1 of #260)
+
+Phase 1 of the CC faction-map rewrite (issue [#260](https://github.com/haterade22/TAOM/issues/260)) — adds the localization resolution path. `FactionDisplayHelper.ApplyResult` now wraps every player-facing string flowing from `factions.json` to a VM property in `new TextObject(s).ToString()`. Plain English strings pass through unchanged (`TextObject("Stewardship of Gondor").ToString() == "Stewardship of Gondor"` for tokenless input), so this commit is a no-op for the current shipped content — but unlocks Phase 2's `{=KEY}default` keyed strings for translation propagation.
+
+Wrap points: `SelectedFactionName`, `SelectedFactionDesc`, `DifficultyText`, each `traits[]` / `bonuses[].text` / `perks[].name+description` / `special_units[].name+description` / `strengths[]` / `weaknesses[]` entry. Non-display fields (`Side`, `ImageId`, `*ColorHex`, `BannerImage`, numeric `Difficulty`) stay raw.
+
+**Standing instruction codified (2026-06-01).** Any TAOM work touching cultural identity — CulturalFeats code, `taom_spcultures.xml <cultural_feats>`, `spcultures.xslt`, party-size / volunteer respawn / notable counts / terrain speed / garrison/militia/smithing/raid/morale/loyalty per-culture variants — MUST also update the matching faction's content in `Main/_Module/ModuleData/factionmap/factions.json`. The CC sidebar is the player's primary input for picking a starting culture; the in-game effect shipping without a matching UI update means the page lies. Codified in `feedback_faction_map_update_with_cultural_feats.md` (memory) + step 7 of the "How-To: Add a new feat" section in [`docs/features/cultural-feats.md`](docs/features/cultural-feats.md).
+
+Files:
+- `Main/Features/FactionMap/FactionDisplayHelper.cs` — `Localize(string?)` helper + 9 wrap points in `ApplyResult`.
+- `TAOM.Tests/Features/FactionMap/FactionDisplayHelperTests.cs` (new) — 6 unit tests: null/empty/plain/keyed-with-default/keyed-without-default/no-token cases.
+
+**Verification:** `dotnet build TAOM.Tests` → 0 errors. `dotnet test TAOM.Tests` → 2778 / 0 / 2 (up from 2772 — +6 new helper tests). FactionMap filter → 69 passed (up from 63).
+
+Save-compat: safe. Performance: safe (helper runs once per faction-click in CC, not per-frame).
+
 ## 2026-05-31
 
 ### docs(battle-scenes): deep-dive on the worldmap battle-scene grid + LOTR re-author plan

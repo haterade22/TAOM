@@ -251,6 +251,7 @@ GameModel overrides are thin entry points (delegate to `base` + apply feat modif
 4. Add the feat ID to the culture's `<cultural_feats>` block in `taom_spcultures.xml` (custom cultures) or `spcultures.xslt` (vanilla-wrapped cultures)
 5. Add the `HasFeat()` check in the appropriate GameModel override / service method
 6. Update the feat count in `AllFeatProperties_ReturnFeatObject_CountIs77`, `RegisterAll_UsesCorrectStringIds`, and `GetAllFeats_YieldsZeroOrFullSet`; add a `[DataRow]` to `FeatProperty_Exists_IsPublicStatic`; bump the culture entry in `EachCulture_HasExpectedFeatCount`. If the feat sets an `EffectBonus` read in a service test, add it to the reflection table in `CulturalFeatsServiceTests.EnsureFeatsInitialised`.
+7. **Update the CC faction-map page.** Edit the matching faction's entry in [`Main/_Module/ModuleData/factionmap/factions.json`](../../Main/_Module/ModuleData/factionmap/factions.json) — add the feat to `perks[]` (lore-named flagship positives), `bonuses[]` (concrete game-effect line with the correct `positive: true|false` flag), and `weaknesses[]` (if it's a real negative — Rohan infantry penalty, Isengard relationship +25%, Mordor wages +20%, etc.). Without this, the player's starting-culture page in CC silently lies about what shipped. Standing instruction per `feedback_faction_map_update_with_cultural_feats.md`. The JSON ↔ culture-StringId mapping is in that memory file (e.g., `stewardship_of_gondor` → `gondor`, `kingdom_of_rohan` → `vlandia`).
 
 ### Add a new terrain movement-speed feat
 

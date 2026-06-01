@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TAOM.Features.FactionMap.Models;
 using TAOM.Features.FactionMap.ViewModels;
 
@@ -9,28 +10,31 @@ namespace TAOM.Features.FactionMap;
 
 public static class FactionDisplayHelper
 {
+    internal static string Localize(string? raw)
+        => string.IsNullOrEmpty(raw) ? string.Empty : new TextObject(raw).ToString();
+
     public static void ApplyResult(FactionSelectionVM vm, FactionSelectionResult result)
     {
         ClearLists(vm);
 
         if (!result.Found) return;
 
-        vm.SelectedFactionName = result.FactionName;
-        vm.SelectedFactionDesc = result.Description;
+        vm.SelectedFactionName = Localize(result.FactionName);
+        vm.SelectedFactionDesc = Localize(result.Description);
         vm.SelectedFactionPlayable = result.Playable;
         vm.SelectedHasCulture = result.HasCulture;
         vm.HasSelection = true;
 
         foreach (var trait in result.Traits)
-            vm.FactionTraits.Add(new FactionTraitItemVM(trait));
+            vm.FactionTraits.Add(new FactionTraitItemVM(Localize(trait)));
         foreach (var bonus in result.Bonuses)
-            vm.FactionBonuses.Add(new FactionBonusItemVM(bonus.Text, bonus.Positive));
+            vm.FactionBonuses.Add(new FactionBonusItemVM(Localize(bonus.Text), bonus.Positive));
         foreach (var perk in result.Perks)
-            vm.FactionPerks.Add(new FactionPerkItemVM(perk.Name, perk.Description));
+            vm.FactionPerks.Add(new FactionPerkItemVM(Localize(perk.Name), Localize(perk.Description)));
         foreach (var s in result.Strengths)
-            vm.FactionStrengths.Add(new FactionBonusItemVM("+ " + s, true));
+            vm.FactionStrengths.Add(new FactionBonusItemVM("+ " + Localize(s), true));
         foreach (var w in result.Weaknesses)
-            vm.FactionWeaknesses.Add(new FactionBonusItemVM("- " + w, false));
+            vm.FactionWeaknesses.Add(new FactionBonusItemVM("- " + Localize(w), false));
 
         vm.OnPropertyChanged(nameof(FactionSelectionVM.HasStrengths));
         vm.OnPropertyChanged(nameof(FactionSelectionVM.HasWeaknesses));
@@ -38,13 +42,13 @@ public static class FactionDisplayHelper
         foreach (var unit in result.SpecialUnits)
         {
             if (string.IsNullOrEmpty(unit.Name)) continue;
-            vm.FactionSpecialUnits.Add(new FactionSpecialUnitItemVM(unit.Name, unit.Description));
+            vm.FactionSpecialUnits.Add(new FactionSpecialUnitItemVM(Localize(unit.Name), Localize(unit.Description)));
         }
         vm.HasSpecialUnit = vm.FactionSpecialUnits.Count > 0;
 
         vm.SelectedFactionSide = result.Side;
         vm.Difficulty = result.Difficulty;
-        vm.DifficultyText = result.DifficultyText;
+        vm.DifficultyText = Localize(result.DifficultyText);
         vm.FactionImageId = result.ImageId;
         vm.FactionColorHex = result.DarkPanelHex;
         vm.FactionAccentColorHex = result.AccentColorHex;
