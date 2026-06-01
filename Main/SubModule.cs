@@ -531,6 +531,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch26_SpecialResources");
         _harmony.PatchCategory("Patch27_CareerSystem");
         _harmony.PatchCategory("Patch29_CCBodyProperties");
+        _harmony.PatchCategory("Patch44_CCNameAutofill");
         _harmony.PatchCategory("Patch33_EquipPresets");
         _harmony.PatchCategory("Patch34_QuickActions");
         _harmony.PatchCategory("Patch35_CompanionTactics");

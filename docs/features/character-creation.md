@@ -167,6 +167,7 @@ just a new campaign.
 | `Main/Features/CharacterCreation/ICCBodyPropertiesService.cs` | CC body-properties application interface |
 | `Main/Features/CharacterCreation/CCBodyPropertiesService.cs` | Resolves XML for a culture and delegates to adapter; logs reject reasons |
 | `Main/Features/CharacterCreation/Hooks/CharacterCreationContent_SetSelectedCulture_Patch.cs` | Patch29_CCBodyProperties — Postfix on `CharacterCreationContent.SetSelectedCulture` triggers per-culture body-properties application |
+| `Main/Features/CharacterCreation/Hooks/CharacterCreationReviewStageVM_AutoFillName_Patch.cs` | Patch44_CCNameAutofill — Postfix on `CharacterCreationReviewStageVM`'s constructor; pre-fills the "Enter your name" field with a culture-appropriate first name (via the VM's `ExecuteRandomizeName()`) when blank |
 | `Main/Adapters/IPlayerBodyPropertiesAdapter.cs` + `PlayerBodyPropertiesAdapter.cs` | Wraps `BodyProperties.FromString` + `CharacterObject.PlayerCharacter.UpdatePlayerCharacterBodyProperties`; preserves Race + IsFemale |
 | `Main/_Module/ModuleData/charactercreation/cultures.json` | Culture metadata + race-filter allow-lists |
 | `Main/_Module/ModuleData/charactercreation/cc_body_properties.xml` | Per-culture default `BodyProperties` (key=128 hex chars) for the CC preview |
@@ -345,6 +346,14 @@ Patching the FaceGen open instead would miss the case where the body should upda
 3. Paste into `cc_body_properties.xml` under a new `<Culture id="...">` block
 4. Restart Bannerlord (Singleton lifetime — save-load won't re-read)
 
+## Review-Stage Name Autofill (Patch44_CCNameAutofill)
+
+Vanilla leaves the Review-stage "Enter your name" field blank until the player types a name or clicks the randomize dice — `CharacterCreationReviewStageVM` seeds its `Name` from `CharacterCreationContent.MainCharacterName`, which nothing populates by default.
+
+`Patch44_CCNameAutofill` is a Postfix on the review-stage VM's 6-arg constructor: when `Name` is blank it calls the VM's own public `ExecuteRandomizeName()`, which draws a first name from `SelectedCulture` + `Hero.MainHero.IsFemale`. Running at the **Review** stage is deliberate — gender is finalized there, so the generated name matches the chosen sex. The empty-guard means a name the player already typed is never overwritten, and the field stays fully editable (typing or the dice still override it).
+
+This pairs with the family/clan-name fix in [`FactionMap.CultureSettingService`](faction-map.md) (which makes the *clan* name culture-appropriate). Both shipped under issue [#264](https://github.com/haterade22/TAOM/issues/264).
+
 ## How to Add a New TAOM Culture to Character Creation
 
 1. Add an entry to `Main/_Module/ModuleData/charactercreation/cultures.json` with `culture_id`, `races`, `starting_settlement`, body defaults, and skill/focus bonuses.
@@ -397,6 +406,7 @@ The Postfix's scope is deliberately limited to the age-30 code path. Vanilla ref
 - **Race filter (Patch9_RaceFilter re-implementation):** [#107](https://github.com/haterade22/TAOM/issues/107) — closed 2026-05-06
 - **Per-culture default BodyProperties (Patch29_CCBodyProperties):** added in same session, not separately ticketed
 - **Elf CC rendering + vanilla age-30 animation override (3-iteration fix chain):** [#227](https://github.com/haterade22/TAOM/issues/227) — closed 2026-05-26 (retroactive ticket; v1 ed1131a + v2 0f3a7c0 + v3 b1c70db shipped 2026-05-22). Full RCA at [`docs/reviews/rca-elf-cc-facegen-2026-05-22.md`](../reviews/rca-elf-cc-facegen-2026-05-22.md).
+- **Review-stage name autofill (Patch44_CCNameAutofill) + culture-appropriate family name:** [#264](https://github.com/haterade22/TAOM/issues/264) — 2026-06-01. Companion fix in `FactionMap.CultureSettingService` (clan name from selected culture; `vlandia`/Rohan "dey Corvand" override).
 
 ---
 

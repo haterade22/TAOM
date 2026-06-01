@@ -35,6 +35,15 @@ public class CultureSettingService : ICultureSettingService
 
             if (content != null)
             {
+                // Vanilla generates the player clan name inside SetSelectedCulture from
+                // CharacterObject.PlayerCharacter.Culture (== Hero.MainHero.Culture). Assign the chosen
+                // culture first so the generated family name comes from the selected culture's
+                // <clan_names>, not the stale default culture. Vanilla's culture stage sets this on
+                // click (before name gen); our faction-map flow calls SetSelectedCulture first, so we
+                // must do it explicitly here.
+                if (Hero.MainHero != null)
+                    Hero.MainHero.Culture = culture;
+
                 var setCultureMethod = AccessTools.Method(content.GetType(), "SetSelectedCulture");
                 if (setCultureMethod != null)
                 {
@@ -43,6 +52,22 @@ public class CultureSettingService : ICultureSettingService
                         setCultureMethod.Invoke(content, new object[] { culture, charCreation });
                     else if (parameters.Length == 1)
                         setCultureMethod.Invoke(content, new object[] { culture });
+
+                    // Vanilla Helpers.FactionHelper.GenerateClanNameforPlayer() (invoked inside
+                    // SetSelectedCulture) hardcodes the family name "dey Corvand" for the vlandia
+                    // culture id. TAOM repurposes vlandia as Rohan, so replace that placeholder with a
+                    // name generated from the culture's own <clan_names> (Harolding, Earfening, …).
+                    // Only vlandia needs this — it is the sole culture vanilla special-cases; every
+                    // other reused vanilla id already generates from its clan list. Guarded so an empty
+                    // clan list keeps the vanilla fallback rather than throwing (GenerateClanName
+                    // iterates a null array when the list is empty).
+                    if (culture.StringId == "vlandia" && Hero.MainHero != null && Clan.PlayerClan != null
+                        && culture.ClanNameList != null && culture.ClanNameList.Count > 0)
+                    {
+                        var clanName = NameGenerator.Current.GenerateClanName(culture, null);
+                        if (clanName != null)
+                            Clan.PlayerClan.ChangeClanName(clanName, clanName);
+                    }
                 }
                 else
                 {

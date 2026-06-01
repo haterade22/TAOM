@@ -23,6 +23,8 @@ Three Harmony patches intercept `CultureStageView`'s lifecycle:
 
 When a player confirms a faction, the `onCultureConfirmed` callback calls `ICultureSettingService.SetCultureOnCharacterCreation`, then replicates the vanilla `NextStage()` flow by: calling `SetMainCharacterName` on the character creation content, then invoking the `_affirmativeAction` delegate.
 
+`SetCultureOnCharacterCreation` assigns `Hero.MainHero.Culture` **before** invoking vanilla `SetSelectedCulture`, so the auto-generated family name is drawn from the selected culture's `<clan_names>` rather than the stale default culture. (Vanilla's culture stage sets the culture on click, *before* name generation; the faction map calls `SetSelectedCulture` first, so it must assign the culture explicitly.) For the `vlandia` id — TAOM's Rohan — it then regenerates the clan name to bypass vanilla `FactionHelper.GenerateClanNameforPlayer`'s hardcoded `"dey Corvand"`, guarded on a non-empty `ClanNameList`. See issue [#264](https://github.com/haterade22/TAOM/issues/264).
+
 A separate `TrySwitchToNextMenu_Patch` guards the vanilla next-menu transition to prevent double-advance when TAOM has already advanced the stage.
 
 Data flow:
@@ -125,7 +127,7 @@ One entry per region id (matching faction id). Fields:
 | `Main/Features/FactionMap/FactionSelectionService.cs` | Translates region click to `FactionSelectionResult`; computes derived colors |
 | `Main/Features/FactionMap/FactionHoverService.cs` | Hover state tracking with change detection |
 | `Main/Features/FactionMap/CultureResolverService.cs` | Resolves faction game_faction id to live `CultureObject` |
-| `Main/Features/FactionMap/CultureSettingService.cs` | Sets the selected culture on the character creation data source |
+| `Main/Features/FactionMap/CultureSettingService.cs` | Sets the selected culture on the character creation data source. Assigns `Hero.MainHero.Culture` before vanilla `SetSelectedCulture` so the family name uses the selected culture's `<clan_names>`; overrides the vanilla "dey Corvand" hardcode for the `vlandia` (Rohan) id (#264) |
 | `Main/Features/FactionMap/LandmarkService.cs` | Provides landmark definitions for map display |
 | `Main/Features/FactionMap/FactionDataParser.cs` | Parses bonuses, perks, and special unit from JSON |
 | `Main/Features/FactionMap/FactionDisplayHelper.cs` | UI display utilities |
@@ -172,6 +174,7 @@ One entry per region id (matching faction id). Fields:
 ## GitHub Issue
 - **Issue:** [#260](https://github.com/haterade22/TAOM/issues/260) — `feat(faction-map): rewrite CC pages + full localization sweep` (2026-06-01)
 - **Status:** Shipped — Phase 1 (helper) `53ce308`, Phase 2 main (16-faction content + 599 keys) `cbbcc41`, Phase 2 deep-review fix `7f0de78`, Phase 2 Codex fix `0577363`, Phase 3 (11-language translation) — see CHANGELOG for the Phase 3 commit.
+- **Follow-up:** [#264](https://github.com/haterade22/TAOM/issues/264) — `fix(character-creation): family/clan name uses default culture instead of selected; review-stage name field empty` (2026-06-01). `CultureSettingService` culture-before-name ordering + `vlandia`/Rohan clan-name override.
 
 ---
 
