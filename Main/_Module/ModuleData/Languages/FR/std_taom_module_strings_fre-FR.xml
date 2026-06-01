@@ -652,6 +652,74 @@
 
     <string id="taom_str_neutral_term_for_culture.erebor" text="Nains d'Erebor" />
 
+    <string id="taom_str_faction_official.abanissa" text="un seigneur de Maison" />
+
+    <string id="taom_str_faction_official.abanissa_f" text="une dame de Maison" />
+
+    <string id="taom_str_faction_ruler.abanissa" text="Châjaphân" />
+
+    <string id="taom_str_faction_ruler.abanissa_f" text="Châjaphân" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.abanissa" text="le Châjaphân, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.abanissa" text="Châjaphân {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.abanissa" text="{?RULER.GENDER}Dame{?}Seigneur{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.abanissa" text="Âbanissan" />
+
+    <string id="taom_str_short_term_for_faction.abanissa" text="Âbanissan" />
+
+    <string id="taom_str_faction_formal_name_for_culture.abanissa" text="Dominion d'Âbanissa" />
+
+    <string id="taom_str_faction_informal_name_for_culture.abanissa" text="Âbanissa" />
+
+    <string id="taom_str_neutral_term_for_culture.abanissa" text="Haradrim d'Âbanissa" />
+
+    <string id="taom_str_culture_description.abanissa" text="Âbanissa se trouve au sud profond du Harad, royaume de jungle humide et d'anciennes dynasties de pierre. Les grandes Maisons d'Âbanissa commandent de redoutables bêtes de guerre et des armées disciplinées de lanciers, leur pouvoir ne répondant à nul autre que Sauron lui-même. Sous les bannières dynastiques elles marchent, inspirant à la fois respect et terreur à travers les terres du sud." />
+
+    <string id="taom_str_culture_rich_name.abanissa" text="Âbanissan" />
+
+    <string id="taom_str_adjective_for_culture.abanissa" text="Âbanissan" />
+
+    <string id="taom_str_player_father_name.abanissa" text="Sohrab" />
+
+    <string id="taom_str_player_mother_name.abanissa" text="Nilûphar" />
+
+    <string id="taom_str_faction_official.shaghana" text="un chef de clan" />
+
+    <string id="taom_str_faction_official.shaghana_f" text="une dame de clan" />
+
+    <string id="taom_str_faction_ruler.shaghana" text="Taskral" />
+
+    <string id="taom_str_faction_ruler.shaghana_f" text="Taskral" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.shaghana" text="le Taskral, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.shaghana" text="Taskral {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.shaghana" text="{?RULER.GENDER}Dame{?}Seigneur{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.shaghana" text="Shaghâni" />
+
+    <string id="taom_str_short_term_for_faction.shaghana" text="Shaghâni" />
+
+    <string id="taom_str_faction_formal_name_for_culture.shaghana" text="Tribus de Shaghâna" />
+
+    <string id="taom_str_faction_informal_name_for_culture.shaghana" text="Shaghâna" />
+
+    <string id="taom_str_neutral_term_for_culture.shaghana" text="Haradrim de Shaghâna" />
+
+    <string id="taom_str_culture_description.shaghana" text="Shaghâna est l'étendue orientale du Harad, terre de steppes brûlées par le soleil et de forteresses antiques. Ses neuf clans tribaux sont de féroces cavaliers et pillards, liés par le serment et le sang, qui inspirent la terreur à tous ceux qui osent s'opposer à eux. Ils répondent à leur Taskral, et à travers lui à la volonté de Sauron." />
+
+    <string id="taom_str_culture_rich_name.shaghana" text="Shaghâni" />
+
+    <string id="taom_str_adjective_for_culture.shaghana" text="Shaghâni" />
+
+    <string id="taom_str_player_father_name.shaghana" text="Zarkan" />
+
+    <string id="taom_str_player_mother_name.shaghana" text="Khansa" />
+
     <string id="0aXG8dvJ" text="Faire la paix avec {KINGDOM_NAME}. Aucun tribut ne sera payé." />
 
     <string id="0CsbbwtN" text="Appeler {CALLED_KINGDOM} à la guerre contre {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
@@ -1284,11 +1352,2394 @@
 
     <string id="taom_career_free_points" text="Points Libres : {COUNT}" />
 
+    <string id="taom_career_tier_requirement" text="Nécessite le niveau {LEVEL}" />
+
+    <string id="taom_career_rank1_avanc_luth_raider" text="Pillard Peint" />
+
+    <string id="taom_career_rank2_avanc_luth_raider" text="Berserker de Clan" />
+
+    <string id="taom_career_rank3_avanc_luth_raider" text="Chef de Guerre Avanc-lúth" />
+
+    <string id="taom_career_rank1_balchoth_kan" text="Cavalier Balchoth" />
+
+    <string id="taom_career_rank2_balchoth_kan" text="Capitaine-Aurige Balchoth" />
+
+    <string id="taom_career_rank3_balchoth_kan" text="Seigneur de Guerre-Kân Balchoth" />
+
+    <string id="taom_career_rank1_black_uruk_captain" text="Soldat Uruk" />
+
+    <string id="taom_career_rank2_black_uruk_captain" text="Uruk Noir" />
+
+    <string id="taom_career_rank3_black_uruk_captain" text="Capitaine de l'Œil Rouge" />
+
+    <string id="taom_career_rank1_blade_dancer" text="Bretteur Ñoldor" />
+
+    <string id="taom_career_rank2_blade_dancer" text="Lame de la Fleur Dorée" />
+
+    <string id="taom_career_rank3_blade_dancer" text="Maître-Lame de Fondcombe" />
+
+    <string id="taom_career_rank1_blademaster_of_ren" text="Lame de Rên" />
+
+    <string id="taom_career_rank2_blademaster_of_ren" text="Maître-Lame Assermenté" />
+
+    <string id="taom_career_rank3_blademaster_of_ren" text="Kân de la Lame Écarlate" />
+
+    <string id="taom_career_rank1_captain_of_osgiliath" text="Ohtar du Passage" />
+
+    <string id="taom_career_rank2_captain_of_osgiliath" text="Gardien d'Osgiliath" />
+
+    <string id="taom_career_rank3_captain_of_osgiliath" text="Capitaine d'Osgiliath" />
+
+    <string id="taom_career_rank1_cave_troll_master" text="Meneur de Fosse" />
+
+    <string id="taom_career_rank2_cave_troll_master" text="Aiguillon-à-Trolls de Gundabad" />
+
+    <string id="taom_career_rank3_cave_troll_master" text="Dompteur de Trolls Brisés" />
+
+    <string id="taom_career_rank1_chariot_warlord" text="Conducteur de Faux" />
+
+    <string id="taom_career_rank2_chariot_warlord" text="Seigneur de Guerre sur Char" />
+
+    <string id="taom_career_rank3_chariot_warlord" text="Wainkân du Khand" />
+
+    <string id="taom_career_rank1_clanguard_rider" text="Éclaireur de Clan" />
+
+    <string id="taom_career_rank2_clanguard_rider" text="Cavalier de la Bannière du Sanglier" />
+
+    <string id="taom_career_rank3_clanguard_rider" text="Maître de la Chasse Sauvage" />
+
+    <string id="taom_career_rank1_codyan_legionaire" text="Porteur de Bouclier Côdyan" />
+
+    <string id="taom_career_rank2_codyan_legionaire" text="Vétéran Lamellaire Côdyan" />
+
+    <string id="taom_career_rank3_codyan_legionaire" text="Mur de Fer du Rhûn" />
+
+    <string id="taom_career_rank1_corsair_boarder" text="Pillard de Pont" />
+
+    <string id="taom_career_rank2_corsair_boarder" text="Corsaire du Havre" />
+
+    <string id="taom_career_rank3_corsair_boarder" text="Pillard Noir d'Umbar" />
+
+    <string id="taom_career_rank1_corsair_captain" text="Maître de la Flotte Noire" />
+
+    <string id="taom_career_rank2_corsair_captain" text="Capitaine des Navires" />
+
+    <string id="taom_career_rank3_corsair_captain" text="Seigneur d'Umbar" />
+
+    <string id="taom_career_rank1_corsair_crossbow" text="Tireur du Gréement" />
+
+    <string id="taom_career_rank2_corsair_crossbow" text="Tireur d'Élite Corsaire" />
+
+    <string id="taom_career_rank3_corsair_crossbow" text="Pourfendeur de Foules de la Flotte" />
+
+    <string id="taom_career_rank1_crossbow_master" text="Forgeron de Carreaux" />
+
+    <string id="taom_career_rank2_crossbow_master" text="Maître Arbalétrier" />
+
+    <string id="taom_career_rank3_crossbow_master" text="Seigneur des Engins des Monts du Fer" />
+
+    <string id="taom_career_rank1_dale_guardsman" text="Gardien des Portes de Dale" />
+
+    <string id="taom_career_rank2_dale_guardsman" text="Homme-Bouclier de Girion" />
+
+    <string id="taom_career_rank3_dale_guardsman" text="Chevalier de Dale" />
+
+    <string id="taom_career_rank1_dale_marksman" text="Archer d'Esgaroth" />
+
+    <string id="taom_career_rank2_dale_marksman" text="Tueur de Dragons" />
+
+    <string id="taom_career_rank3_dale_marksman" text="Porteur de la Flèche Noire" />
+
+    <string id="taom_career_rank1_dale_outrider" text="Cavalier des Routes de Dale" />
+
+    <string id="taom_career_rank2_dale_outrider" text="Gardien de la Route du Nord" />
+
+    <string id="taom_career_rank3_dale_outrider" text="Maréchal des Beornides" />
+
+    <string id="taom_career_rank1_elk_rider" text="Éclaireur des Bois" />
+
+    <string id="taom_career_rank2_elk_rider" text="Gardien des Élans de Mirkwood" />
+
+    <string id="taom_career_rank3_elk_rider" text="Seigneur aux Bois d'Eryn Lasgalen" />
+
+    <string id="taom_career_rank1_elven_archer" text="Archer Ñoldor" />
+
+    <string id="taom_career_rank2_elven_archer" text="Sentinelle de l'Arc Céleste" />
+
+    <string id="taom_career_rank3_elven_archer" text="Gardien d'Imladris" />
+
+    <string id="taom_career_rank1_eotheod_windrider" text="Cavalier de la Marche" />
+
+    <string id="taom_career_rank2_eotheod_windrider" text="Capitaine de l'Éored" />
+
+    <string id="taom_career_rank3_eotheod_windrider" text="Maréchal du Riddermark" />
+
+    <string id="taom_career_rank1_fell_rider" text="Cavalier Noir" />
+
+    <string id="taom_career_rank2_fell_rider" text="Cavalier Sinistre" />
+
+    <string id="taom_career_rank3_fell_rider" text="Ombre de l'Est" />
+
+    <string id="taom_career_rank1_galadhrim_archer" text="Archer des Galadhrim" />
+
+    <string id="taom_career_rank2_galadhrim_archer" text="Archer des Frondaisons de Mellyrn" />
+
+    <string id="taom_career_rank3_galadhrim_archer" text="Maître Archer du Bois d'Or" />
+
+    <string id="taom_career_rank1_goblin_sniper" text="Rôdeur des Rochers" />
+
+    <string id="taom_career_rank2_goblin_sniper" text="Traqueur du Haut Col" />
+
+    <string id="taom_career_rank3_goblin_sniper" text="Œil de Gundabad" />
+
+    <string id="taom_career_rank1_ironguard" text="Gardien des Profondeurs" />
+
+    <string id="taom_career_rank2_ironguard" text="Garde-Fer d'Erebor" />
+
+    <string id="taom_career_rank3_ironguard" text="Mur de Boucliers de Durin" />
+
+    <string id="taom_career_rank1_knight_of_belfalas" text="Écuyer de Dol Amroth" />
+
+    <string id="taom_career_rank2_knight_of_belfalas" text="Chevalier du Cygne" />
+
+    <string id="taom_career_rank3_knight_of_belfalas" text="Chevalier du Cygne d'Argent" />
+
+    <string id="taom_career_rank1_lokhas_drus_marksman" text="Archer de Lôkhas Drûs" />
+
+    <string id="taom_career_rank2_lokhas_drus_marksman" text="Perce-Plate de Lôkhas Drûs" />
+
+    <string id="taom_career_rank3_lokhas_drus_marksman" text="Mort Empennée du Soleil de l'Est" />
+
+    <string id="taom_career_rank1_mahud_beast_rider" text="Dompteur de Bêtes Mahûd" />
+
+    <string id="taom_career_rank2_mahud_beast_rider" text="Meneur de Mûmak" />
+
+    <string id="taom_career_rank3_mahud_beast_rider" text="Chef de Guerre des Mûmakil" />
+
+    <string id="taom_career_rank1_marksman_of_aldburg" text="Archer de l'Estfolde" />
+
+    <string id="taom_career_rank2_marksman_of_aldburg" text="Tireur d'Aldburg" />
+
+    <string id="taom_career_rank3_marksman_of_aldburg" text="Gardien des Flèches de la Marche" />
+
+    <string id="taom_career_rank1_mulkerhili_cultist" text="Assermenté du Murmure" />
+
+    <string id="taom_career_rank2_mulkerhili_cultist" text="Voix de Lugbúrz" />
+
+    <string id="taom_career_rank3_mulkerhili_cultist" text="Héraut de l'Œil sans Paupière" />
+
+    <string id="taom_career_rank1_necromancer_acolyte" text="Acolyte de la Sorcellerie" />
+
+    <string id="taom_career_rank2_necromancer_acolyte" text="Tisseur du Souffle Noir" />
+
+    <string id="taom_career_rank3_necromancer_acolyte" text="Maître de Dol Guldur" />
+
+    <string id="taom_career_rank1_olog_hai_warchief" text="Troll de Guerre" />
+
+    <string id="taom_career_rank2_olog_hai_warchief" text="Olog-hai" />
+
+    <string id="taom_career_rank3_olog_hai_warchief" text="Chef de Guerre de Lugbúrz" />
+
+    <string id="taom_career_rank1_pezarsani_javelineer" text="Javelinier Pezarsan" />
+
+    <string id="taom_career_rank2_pezarsani_javelineer" text="Escarmoucheur au Javelot" />
+
+    <string id="taom_career_rank3_pezarsani_javelineer" text="Maître de Lance Écarlate" />
+
+    <string id="taom_career_rank1_ram_rider" text="Briseur de Béliers" />
+
+    <string id="taom_career_rank2_ram_rider" text="Chargeur sur Bouc" />
+
+    <string id="taom_career_rank3_ram_rider" text="Avant-Garde de Dáin" />
+
+    <string id="taom_career_rank1_ranger_of_ithilien" text="Éclaireur d'Ithilien" />
+
+    <string id="taom_career_rank2_ranger_of_ithilien" text="Rôdeur d'Ithilien" />
+
+    <string id="taom_career_rank3_ranger_of_ithilien" text="Capitaine de la Compagnie Blanche" />
+
+    <string id="taom_career_rank1_rivendell_knight" text="Ohtar d'Imladris" />
+
+    <string id="taom_career_rank2_rivendell_knight" text="Roquen d'Imladris" />
+
+    <string id="taom_career_rank3_rivendell_knight" text="Chevalier de la Fleur d'Or" />
+
+    <string id="taom_career_rank1_sentinel" text="Cavalier de l'Egladil" />
+
+    <string id="taom_career_rank2_sentinel" text="Tirith du Bois d'Or" />
+
+    <string id="taom_career_rank3_sentinel" text="Thalion de Caras Galadhon" />
+
+    <string id="taom_career_rank1_shadow_walker" text="Traqueur des Forêts" />
+
+    <string id="taom_career_rank2_shadow_walker" text="Ombre de Taur-nu-Fuin" />
+
+    <string id="taom_career_rank3_shadow_walker" text="Fléau des Araignées" />
+
+    <string id="taom_career_rank1_shadow_warrior" text="Esclave de l'Ombre" />
+
+    <string id="taom_career_rank2_shadow_warrior" text="Serviteur de Dol Guldur" />
+
+    <string id="taom_career_rank3_shadow_warrior" text="Main Noire du Nécromancien" />
+
+    <string id="taom_career_rank1_silvan_archer" text="Archer de la Forêt Verte" />
+
+    <string id="taom_career_rank2_silvan_archer" text="Tireur d'Élite Sylvain" />
+
+    <string id="taom_career_rank3_silvan_archer" text="Archer du Roi Elfe" />
+
+    <string id="taom_career_rank1_snaga_rider" text="Snaga" />
+
+    <string id="taom_career_rank2_snaga_rider" text="Pillard de la Fumée" />
+
+    <string id="taom_career_rank3_snaga_rider" text="Ombre de Lugbúrz" />
+
+    <string id="taom_career_rank1_steppe_bowmaster" text="Éclaireur des Plaines" />
+
+    <string id="taom_career_rank2_steppe_bowmaster" text="Maître Archer des Steppes" />
+
+    <string id="taom_career_rank3_steppe_bowmaster" text="Kân de l'Arc-Tempête" />
+
+    <string id="taom_career_rank1_tribesman_of_jelut" text="Homme de Tribu de Jelut" />
+
+    <string id="taom_career_rank2_tribesman_of_jelut" text="Pillard de la Tempête de Sable" />
+
+    <string id="taom_career_rank3_tribesman_of_jelut" text="Chef à la Bannière du Serpent" />
+
+    <string id="taom_career_rank1_uruk_berserker" text="Uruk Engendré des Fosses" />
+
+    <string id="taom_career_rank2_uruk_berserker" text="Uruk-hai Combattant" />
+
+    <string id="taom_career_rank3_uruk_berserker" text="Ravageur de la Main Blanche" />
+
+    <string id="taom_career_rank1_uruk_crossbow" text="Uruk Armé de la Forge" />
+
+    <string id="taom_career_rank2_uruk_crossbow" text="Tireur d'Orthanc" />
+
+    <string id="taom_career_rank3_uruk_crossbow" text="Tireur d'Élite de la Main Blanche" />
+
+    <string id="taom_career_rank1_warden" text="Gardien des Lisières" />
+
+    <string id="taom_career_rank2_warden" text="Gardien des Marches de la Lórien" />
+
+    <string id="taom_career_rank3_warden" text="Capitaine des Gardiens des Marches" />
+
+    <string id="taom_career_rank1_warg_pack_leader" text="Chevaucheur de Warg de la Meute" />
+
+    <string id="taom_career_rank2_warg_pack_leader" text="Sinistre Capitaine-Loup" />
+
+    <string id="taom_career_rank3_warg_pack_leader" text="Seigneur-Loup de la Chasse Sauvage" />
+
+    <string id="taom_career_rank1_warg_scout" text="Chevaucheur de Loup" />
+
+    <string id="taom_career_rank2_warg_scout" text="Éclaireur sur Warg d'Isengard" />
+
+    <string id="taom_career_rank3_warg_scout" text="Chasseur de la Main Blanche" />
+
+    <string id="taom_career_rank1_watchman_of_stangard" text="Guetteur de Stangard" />
+
+    <string id="taom_career_rank2_watchman_of_stangard" text="Gardien du Gué de la Limlight" />
+
+    <string id="taom_career_rank3_watchman_of_stangard" text="Gardien des Marches Orientales" />
+
+    <string id="taom_career_rank1_wolfskin_hunter" text="Traqueur en Peau de Loup" />
+
+    <string id="taom_career_rank2_wolfskin_hunter" text="Tireur de l'Ombre" />
+
+    <string id="taom_career_rank3_wolfskin_hunter" text="Chasseur Gris des Collines" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t1_a" text="Berserk du Clan des Collines" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t1_b" text="Lanceur de Hache Assermenté" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t2_a" text="Pillard de la Dette de Sang" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t2_b" text="Montagnard du Chant de Guerre" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t3_a" text="Chef de Guerre Avanc-lúth" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t3_b" text="Seigneur de l'Armée de Guerre" />
+
+    <string id="taom_career_grp_balchoth_kan_t1_a" text="Cavalier Balchoth" />
+
+    <string id="taom_career_grp_balchoth_kan_t1_b" text="Cavalier Intrépide" />
+
+    <string id="taom_career_grp_balchoth_kan_t2_a" text="Charriote du Rhûn" />
+
+    <string id="taom_career_grp_balchoth_kan_t2_b" text="Cavalier de Fer" />
+
+    <string id="taom_career_grp_balchoth_kan_t3_a" text="La Marée Implacable" />
+
+    <string id="taom_career_grp_balchoth_kan_t3_b" text="La Horde Redoutable" />
+
+    <string id="taom_career_grp_black_uruk_captain_t1_a" text="Peau Trempée à la Forge" />
+
+    <string id="taom_career_grp_black_uruk_captain_t1_b" text="Première Frénésie Sanguinaire" />
+
+    <string id="taom_career_grp_black_uruk_captain_t2_a" text="Berserker de Lugbúrz" />
+
+    <string id="taom_career_grp_black_uruk_captain_t2_b" text="Courroux Incessant" />
+
+    <string id="taom_career_grp_black_uruk_captain_t3_a" text="Courroux de l'Œil sans Paupière" />
+
+    <string id="taom_career_grp_black_uruk_captain_t3_b" text="Capitaine de la Porte Noire" />
+
+    <string id="taom_career_grp_blade_dancer_t1_a" text="Acier Étoilé" />
+
+    <string id="taom_career_grp_blade_dancer_t1_b" text="Garde d'Imladris" />
+
+    <string id="taom_career_grp_blade_dancer_t2_a" text="Danse de Gondolin" />
+
+    <string id="taom_career_grp_blade_dancer_t2_b" text="Gardien de la Vallée Cachée" />
+
+    <string id="taom_career_grp_blade_dancer_t3_a" text="Épée du Premier Âge" />
+
+    <string id="taom_career_grp_blade_dancer_t3_b" text="Lumière d'Eärendil" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t1_a" text="Duelliste de la Cour" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t1_b" text="Lame Inébranlable" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t2_a" text="Tranchant Implacable" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t2_b" text="Gardien de Rên" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t3_a" text="Tueur Tourbillon" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t3_b" text="Seigneur d'Épée Indomptable" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t1_a" text="Gardien de la Rive Est" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t1_b" text="Gardien du Gué de l'Anduin" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t2_a" text="Avant-garde du Rammas" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t2_b" text="Épée du Dernier Pont" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t3_a" text="Hôte de Faramir" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t3_b" text="Seigneur du Dôme des Étoiles" />
+
+    <string id="taom_career_grp_cave_troll_master_t1_a" text="Meneur au Fouet des Fosses" />
+
+    <string id="taom_career_grp_cave_troll_master_t1_b" text="Gardien de l'Entrée des Cavernes" />
+
+    <string id="taom_career_grp_cave_troll_master_t2_a" text="Tyran de la Ville-Gobelins" />
+
+    <string id="taom_career_grp_cave_troll_master_t2_b" text="Briseur de Forteresses Profondes" />
+
+    <string id="taom_career_grp_cave_troll_master_t3_a" text="Fléau de Gundabad" />
+
+    <string id="taom_career_grp_cave_troll_master_t3_b" text="Terreur des Salles du Nord" />
+
+    <string id="taom_career_grp_chariot_warlord_t1_a" text="Cavalier à la Faux" />
+
+    <string id="taom_career_grp_chariot_warlord_t1_b" text="Roue de Fer" />
+
+    <string id="taom_career_grp_chariot_warlord_t2_a" text="Charge Moissonneuse" />
+
+    <string id="taom_career_grp_chariot_warlord_t2_b" text="Attelage Protégé" />
+
+    <string id="taom_career_grp_chariot_warlord_t3_a" text="Moissonneur du Pelennor" />
+
+    <string id="taom_career_grp_chariot_warlord_t3_b" text="Roue du Khand" />
+
+    <string id="taom_career_grp_clanguard_rider_t1_a" text="Cavalier-Tonnerre du Clan" />
+
+    <string id="taom_career_grp_clanguard_rider_t1_b" text="Escorte Assermentée du Clan" />
+
+    <string id="taom_career_grp_clanguard_rider_t2_a" text="Avant-garde de la Meute de Guerre" />
+
+    <string id="taom_career_grp_clanguard_rider_t2_b" text="Bannière des Collines" />
+
+    <string id="taom_career_grp_clanguard_rider_t3_a" text="Seigneur de Tous les Cavaliers" />
+
+    <string id="taom_career_grp_clanguard_rider_t3_b" text="Meute de Guerre Éternelle" />
+
+    <string id="taom_career_grp_codyan_legionaire_t1_a" text="Avant-garde Côdyan" />
+
+    <string id="taom_career_grp_codyan_legionaire_t1_b" text="Porteur de Bouclier Inébranlable" />
+
+    <string id="taom_career_grp_codyan_legionaire_t2_a" text="Muraille du Rhûn" />
+
+    <string id="taom_career_grp_codyan_legionaire_t2_b" text="Phalange Cuirassée" />
+
+    <string id="taom_career_grp_codyan_legionaire_t3_a" text="La Ligne Ininterrompue" />
+
+    <string id="taom_career_grp_codyan_legionaire_t3_b" text="La Muraille qui Ne Tombe Jamais" />
+
+    <string id="taom_career_grp_corsair_boarder_t1_a" text="Pillard de Pont" />
+
+    <string id="taom_career_grp_corsair_boarder_t1_b" text="Endurci par la Mer" />
+
+    <string id="taom_career_grp_corsair_boarder_t2_a" text="Ravageur de Pelargir" />
+
+    <string id="taom_career_grp_corsair_boarder_t2_b" text="Rempart du Havre" />
+
+    <string id="taom_career_grp_corsair_boarder_t3_a" text="Fléau des Côtes" />
+
+    <string id="taom_career_grp_corsair_boarder_t3_b" text="Seigneur de Guerre Númenóréen Noir" />
+
+    <string id="taom_career_grp_corsair_captain_t1_a" text="Meneur de Raid d'Umbar" />
+
+    <string id="taom_career_grp_corsair_captain_t1_b" text="Maître de l'Équipage" />
+
+    <string id="taom_career_grp_corsair_captain_t2_a" text="Héritier de Castamir" />
+
+    <string id="taom_career_grp_corsair_captain_t2_b" text="Gouvernail de la Flotte Noire" />
+
+    <string id="taom_career_grp_corsair_captain_t3_a" text="Seigneur des Corsaires" />
+
+    <string id="taom_career_grp_corsair_captain_t3_b" text="Seigneur du Grand Havre" />
+
+    <string id="taom_career_grp_corsair_crossbow_t1_a" text="Tireur d'Élite du Gréement" />
+
+    <string id="taom_career_grp_corsair_crossbow_t1_b" text="Guetteur du Nid-de-Corbeau" />
+
+    <string id="taom_career_grp_corsair_crossbow_t2_a" text="Chasseur de Timoniers" />
+
+    <string id="taom_career_grp_corsair_crossbow_t2_b" text="Pique des Voiles Noires" />
+
+    <string id="taom_career_grp_corsair_crossbow_t3_a" text="Carreau de l'Étoile Noire" />
+
+    <string id="taom_career_grp_corsair_crossbow_t3_b" text="Volée Incessante" />
+
+    <string id="taom_career_grp_crossbow_master_t1_a" text="Volée des Monts du Fer" />
+
+    <string id="taom_career_grp_crossbow_master_t1_b" text="Guetteur de Dale" />
+
+    <string id="taom_career_grp_crossbow_master_t2_a" text="Carreau Implacable" />
+
+    <string id="taom_career_grp_crossbow_master_t2_b" text="Baliste de la Montagne" />
+
+    <string id="taom_career_grp_crossbow_master_t3_a" text="Tempête d'Acier" />
+
+    <string id="taom_career_grp_crossbow_master_t3_b" text="Machine d'Erebor" />
+
+    <string id="taom_career_grp_dale_guardsman_t1_a" text="Gardien des Portes de Dale" />
+
+    <string id="taom_career_grp_dale_guardsman_t1_b" text="Mur de Boucliers d'Esgaroth" />
+
+    <string id="taom_career_grp_dale_guardsman_t2_a" text="Lance de Girion" />
+
+    <string id="taom_career_grp_dale_guardsman_t2_b" text="Rempart du Courant" />
+
+    <string id="taom_career_grp_dale_guardsman_t3_a" text="Avant-garde du Roi Brand" />
+
+    <string id="taom_career_grp_dale_guardsman_t3_b" text="Le Dernier Rempart à Erebor" />
+
+    <string id="taom_career_grp_dale_marksman_t1_a" text="Archer d'Esgaroth" />
+
+    <string id="taom_career_grp_dale_marksman_t1_b" text="Guet du Long Lac" />
+
+    <string id="taom_career_grp_dale_marksman_t2_a" text="Héritier de la Flèche Noire" />
+
+    <string id="taom_career_grp_dale_marksman_t2_b" text="Archer à l'Œil de Grive" />
+
+    <string id="taom_career_grp_dale_marksman_t3_a" text="Tueur de Dragon de Dale" />
+
+    <string id="taom_career_grp_dale_marksman_t3_b" text="L'Arc de la Lignée de Girion" />
+
+    <string id="taom_career_grp_dale_outrider_t1_a" text="Cavalier du Courant" />
+
+    <string id="taom_career_grp_dale_outrider_t1_b" text="Gardien de la Route des Caravanes" />
+
+    <string id="taom_career_grp_dale_outrider_t2_a" text="Lance de la Longue Vallée" />
+
+    <string id="taom_career_grp_dale_outrider_t2_b" text="Éclaireur de l'Amitié d'Erebor" />
+
+    <string id="taom_career_grp_dale_outrider_t3_a" text="La Charge des Hommes du Nord" />
+
+    <string id="taom_career_grp_dale_outrider_t3_b" text="Messager des Deux Rois" />
+
+    <string id="taom_career_grp_elk_rider_t1_a" text="Charge Ramifiée" />
+
+    <string id="taom_career_grp_elk_rider_t1_b" text="Cavalier des Étendues" />
+
+    <string id="taom_career_grp_elk_rider_t2_a" text="Tonnerre de la Forêt" />
+
+    <string id="taom_career_grp_elk_rider_t2_b" text="Garde de Thranduil" />
+
+    <string id="taom_career_grp_elk_rider_t3_a" text="Courroux sous les Arbres" />
+
+    <string id="taom_career_grp_elk_rider_t3_b" text="Seigneur des Salles du Roi Elfe" />
+
+    <string id="taom_career_grp_elven_archer_t1_a" text="Guetteur à l'Œil Perçant" />
+
+    <string id="taom_career_grp_elven_archer_t1_b" text="Guet de Fondcombe" />
+
+    <string id="taom_career_grp_elven_archer_t2_a" text="Volée Incessante" />
+
+    <string id="taom_career_grp_elven_archer_t2_b" text="Arc d'Eregion" />
+
+    <string id="taom_career_grp_elven_archer_t3_a" text="Tempête de Gil-galad" />
+
+    <string id="taom_career_grp_elven_archer_t3_b" text="Vigile de Vilya" />
+
+    <string id="taom_career_grp_eotheod_windrider_t1_a" text="Héritier d'Eorl" />
+
+    <string id="taom_career_grp_eotheod_windrider_t1_b" text="Cavalier du Wold" />
+
+    <string id="taom_career_grp_eotheod_windrider_t2_a" text="Serment d'Eorl" />
+
+    <string id="taom_career_grp_eotheod_windrider_t2_b" text="Seigneur des Mearas" />
+
+    <string id="taom_career_grp_eotheod_windrider_t3_a" text="Charge du Pelennor" />
+
+    <string id="taom_career_grp_eotheod_windrider_t3_b" text="Chant du Riddermark" />
+
+    <string id="taom_career_grp_fell_rider_t1_a" text="Cavalier de l'Armée des Ombres" />
+
+    <string id="taom_career_grp_fell_rider_t1_b" text="Gardien des Montures Sinistres" />
+
+    <string id="taom_career_grp_fell_rider_t2_a" text="Héraut de l'Épouvante" />
+
+    <string id="taom_career_grp_fell_rider_t2_b" text="Cavalier du Souffle Noir" />
+
+    <string id="taom_career_grp_fell_rider_t3_a" text="Cavalier Noir de Dol Guldur" />
+
+    <string id="taom_career_grp_fell_rider_t3_b" text="Ombre de l'Est" />
+
+    <string id="taom_career_grp_galadhrim_archer_t1_a" text="Archer d'Argent" />
+
+    <string id="taom_career_grp_galadhrim_archer_t1_b" text="Œil des Palissades" />
+
+    <string id="taom_career_grp_galadhrim_archer_t2_a" text="Tireur d'Élite des Mallorn" />
+
+    <string id="taom_career_grp_galadhrim_archer_t2_b" text="Veilleur des Flets" />
+
+    <string id="taom_career_grp_galadhrim_archer_t3_a" text="Flèche de Caras Galadhon" />
+
+    <string id="taom_career_grp_galadhrim_archer_t3_b" text="Gardien du Cours-d'Argent" />
+
+    <string id="taom_career_grp_goblin_sniper_t1_a" text="Rôdeur des Roches" />
+
+    <string id="taom_career_grp_goblin_sniper_t1_b" text="Furtif des Tunnels" />
+
+    <string id="taom_career_grp_goblin_sniper_t2_a" text="Embusqué du Haut Col" />
+
+    <string id="taom_career_grp_goblin_sniper_t2_b" text="Empoisonneur de Flèches" />
+
+    <string id="taom_career_grp_goblin_sniper_t3_a" text="Pillard du Perron" />
+
+    <string id="taom_career_grp_goblin_sniper_t3_b" text="Ombre du Haut Col" />
+
+    <string id="taom_career_grp_ironguard_t1_a" text="Marteau des Profondeurs" />
+
+    <string id="taom_career_grp_ironguard_t1_b" text="Gardien des Murailles" />
+
+    <string id="taom_career_grp_ironguard_t2_a" text="Courroux du Peuple de Durin" />
+
+    <string id="taom_career_grp_ironguard_t2_b" text="Mur de Boucliers d'Erebor" />
+
+    <string id="taom_career_grp_ironguard_t3_a" text="Rempart de Mithril" />
+
+    <string id="taom_career_grp_ironguard_t3_b" text="Garde de la Pierre Arcane" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t1_a" text="Lancier de Dol Amroth" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t1_b" text="Gardien de la Baie" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t2_a" text="Cavalier du Cygne d'Argent" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t2_b" text="Mur de Boucliers d'Imrahil" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t3_a" text="Chevalier de la Proue au Cygne" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t3_b" text="Charge de Dol Amroth" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t1_a" text="Volée du Rhûn" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t1_b" text="Archer Ferme" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t2_a" text="Tireur d'Élite Arc-Tempête" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t2_b" text="Perce-Armure" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t3_a" text="La Tempête de Flèches" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t3_b" text="La Grêle Incessante" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t1_a" text="Avant-Garde à Défenses" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t1_b" text="Gardien de Bêtes" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t2_a" text="Charge Piétinante" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t2_b" text="Gardien du Howdah" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t3_a" text="Courroux du Mûmakan" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t3_b" text="Seigneur des Oliphants" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t1_a" text="Faucon de l'Estfolde" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t1_b" text="Gardien de la Folde" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t2_a" text="Capitaine de la Levée" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t2_b" text="Ombre de Fangorn" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t3_a" text="Archer de la Marche" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t3_b" text="Armée du Riddermark" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t1_a" text="Litanie Venimeuse" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t1_b" text="Parole Murmurée de Sauron" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t2_a" text="Congrégation de l'Effroi" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t2_b" text="Sermon de l'Œil" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t3_a" text="Regard du Seigneur des Ténèbres" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t3_b" text="L'Alliance Sombre de l'Anneau" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t1_a" text="Lanceur de Traits Obscurs" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t1_b" text="Murmureur de Décrépitude" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t2_a" text="Tisseur des Arts Noirs" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t2_b" text="Souffle de l'Ombre" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t3_a" text="Seigneur de la Colline de Sorcellerie" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t3_b" text="Voix du Nécromancien" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t1_a" text="Déchireur de Terre" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t1_b" text="Marteau Infatigable" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t2_a" text="Colosse Déchaîné" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t2_b" text="Assaut au Soleil" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t3_a" text="Marteau du Morannon" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t3_b" text="Peuple Troll de Sauron" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t1_a" text="Escarmoucheur Lance-Soleil" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t1_b" text="Cavalier Errant" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t2_a" text="Lanceur de Feu Solaire" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t2_b" text="Écran Écarlate" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t3_a" text="Pluie du Harad Lointain" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t3_b" text="Ombre des Dunes" />
+
+    <string id="taom_career_grp_ram_rider_t1_a" text="Chevrier des Collines" />
+
+    <string id="taom_career_grp_ram_rider_t1_b" text="Éclaireur d'Erebor" />
+
+    <string id="taom_career_grp_ram_rider_t2_a" text="Charge des Monts du Fer" />
+
+    <string id="taom_career_grp_ram_rider_t2_b" text="Vaillant Bélier de Guerre" />
+
+    <string id="taom_career_grp_ram_rider_t3_a" text="Avant-Garde de Piédacier" />
+
+    <string id="taom_career_grp_ram_rider_t3_b" text="Cavalier de la Montagne Solitaire" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t1_a" text="Chasseur de la Route d'Ithilien" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t1_b" text="Guetteur de Henneth Annûn" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t2_a" text="Éclaireur d'Ithilien du Nord" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t2_b" text="Archer de Faramir" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t3_a" text="Flèche de l'Étang Interdit" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t3_b" text="Ombre d'Emyn Arnen" />
+
+    <string id="taom_career_grp_rivendell_knight_t1_a" text="Charge d'Imladris" />
+
+    <string id="taom_career_grp_rivendell_knight_t1_b" text="Cavalier du Gué" />
+
+    <string id="taom_career_grp_rivendell_knight_t2_a" text="Galop d'Asfaloth" />
+
+    <string id="taom_career_grp_rivendell_knight_t2_b" text="Égide des Valar" />
+
+    <string id="taom_career_grp_rivendell_knight_t3_a" text="Courroux de Glorfindel" />
+
+    <string id="taom_career_grp_rivendell_knight_t3_b" text="Hôte de la Dernière Alliance" />
+
+    <string id="taom_career_grp_sentinel_t1_a" text="Éclaireur d'Egladil" />
+
+    <string id="taom_career_grp_sentinel_t1_b" text="Gardien d'Elanor" />
+
+    <string id="taom_career_grp_sentinel_t2_a" text="Cavalier du Naith" />
+
+    <string id="taom_career_grp_sentinel_t2_b" text="Gardien du Celebrant" />
+
+    <string id="taom_career_grp_sentinel_t3_a" text="Lance de Laurelindórenan" />
+
+    <string id="taom_career_grp_sentinel_t3_b" text="Sentinelle de Nenya" />
+
+    <string id="taom_career_grp_shadow_walker_t1_a" text="Ombre du Sentier" />
+
+    <string id="taom_career_grp_shadow_walker_t1_b" text="Cape de Feuilles" />
+
+    <string id="taom_career_grp_shadow_walker_t2_a" text="Chasseur dans les Ténèbres" />
+
+    <string id="taom_career_grp_shadow_walker_t2_b" text="Voile du Bois" />
+
+    <string id="taom_career_grp_shadow_walker_t3_a" text="Fléau des Araignées" />
+
+    <string id="taom_career_grp_shadow_walker_t3_b" text="Invisible d'Eryn Lasgalen" />
+
+    <string id="taom_career_grp_shadow_warrior_t1_a" text="Ombre d'Amon Lanc" />
+
+    <string id="taom_career_grp_shadow_warrior_t1_b" text="Gardien des Fosses" />
+
+    <string id="taom_career_grp_shadow_warrior_t2_a" text="Pillard de la Forêt Noire" />
+
+    <string id="taom_career_grp_shadow_warrior_t2_b" text="Rempart de Dol Guldur" />
+
+    <string id="taom_career_grp_shadow_warrior_t3_a" text="Fléau du Nécromancien" />
+
+    <string id="taom_career_grp_shadow_warrior_t3_b" text="Ombre Immortelle" />
+
+    <string id="taom_career_grp_silvan_archer_t1_a" text="Tireur de la Forêt Verte" />
+
+    <string id="taom_career_grp_silvan_archer_t1_b" text="Guet de la Canopée" />
+
+    <string id="taom_career_grp_silvan_archer_t2_a" text="Chasseur des Clairières" />
+
+    <string id="taom_career_grp_silvan_archer_t2_b" text="Gardien de la Rivière" />
+
+    <string id="taom_career_grp_silvan_archer_t3_a" text="Tempête de Flèches" />
+
+    <string id="taom_career_grp_silvan_archer_t3_b" text="Archer du Roi Elfe" />
+
+    <string id="taom_career_grp_snaga_rider_t1_a" text="Galop d'Ombre" />
+
+    <string id="taom_career_grp_snaga_rider_t1_b" text="Cavalier des Ténèbres" />
+
+    <string id="taom_career_grp_snaga_rider_t2_a" text="Frappe depuis l'Ombre" />
+
+    <string id="taom_career_grp_snaga_rider_t2_b" text="Fantôme de Cirith Ungol" />
+
+    <string id="taom_career_grp_snaga_rider_t3_a" text="Cavalcade de Nurn" />
+
+    <string id="taom_career_grp_snaga_rider_t3_b" text="Avant-garde du Mordor" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t1_a" text="Escarmoucheur des Plaines" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t1_b" text="Volée Régulière" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t2_a" text="Carquois Infini" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t2_b" text="Gardien des Volées" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t3_a" text="Invocateur de Tempête du Khand" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t3_b" text="Grêle Incessante" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t1_a" text="Pillard des Dunes" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t1_b" text="Survivant du Désert" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t2_a" text="Frappeur Croc-de-Serpent" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t2_b" text="Porteur des Sables" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t3_a" text="Venin du Haradwaith" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t3_b" text="Fléau des Suderons" />
+
+    <string id="taom_career_grp_uruk_berserker_t1_a" text="Rendu Fou par le Sang" />
+
+    <string id="taom_career_grp_uruk_berserker_t1_b" text="Endurci par la Fosse" />
+
+    <string id="taom_career_grp_uruk_berserker_t2_a" text="Pillard de la Main Blanche" />
+
+    <string id="taom_career_grp_uruk_berserker_t2_b" text="Mur de Boucliers d'Orthanc" />
+
+    <string id="taom_career_grp_uruk_berserker_t3_a" text="Fléau de Nan Curunír" />
+
+    <string id="taom_career_grp_uruk_berserker_t3_b" text="Indomptable de la Tour" />
+
+    <string id="taom_career_grp_uruk_crossbow_t1_a" text="Volée de Fer" />
+
+    <string id="taom_career_grp_uruk_crossbow_t1_b" text="Forgé dans la Forge" />
+
+    <string id="taom_career_grp_uruk_crossbow_t2_a" text="Carreau de la Main Blanche" />
+
+    <string id="taom_career_grp_uruk_crossbow_t2_b" text="Gardien de la Muraille-Anneau" />
+
+    <string id="taom_career_grp_uruk_crossbow_t3_a" text="Corbeau de Tempête d'Orthanc" />
+
+    <string id="taom_career_grp_uruk_crossbow_t3_b" text="Pluie de Fer Incessante" />
+
+    <string id="taom_career_grp_warden_t1_a" text="Marcheur des Frontières" />
+
+    <string id="taom_career_grp_warden_t1_b" text="Gardien de Nimrodel" />
+
+    <string id="taom_career_grp_warden_t2_a" text="Lame du Naith" />
+
+    <string id="taom_career_grp_warden_t2_b" text="Mur de Boucliers de Caras Galadhon" />
+
+    <string id="taom_career_grp_warden_t3_a" text="Gardien du Bois d'Or" />
+
+    <string id="taom_career_grp_warden_t3_b" text="Garde de Cerin Amroth" />
+
+    <string id="taom_career_grp_warg_pack_leader_t1_a" text="Chevaucheur de Warg" />
+
+    <string id="taom_career_grp_warg_pack_leader_t1_b" text="Gardien de Meute" />
+
+    <string id="taom_career_grp_warg_pack_leader_t2_a" text="Éclaireur de la Meute Grise" />
+
+    <string id="taom_career_grp_warg_pack_leader_t2_b" text="Maître-Loup Terrible" />
+
+    <string id="taom_career_grp_warg_pack_leader_t3_a" text="Alpha de Gundabad" />
+
+    <string id="taom_career_grp_warg_pack_leader_t3_b" text="Capitaine-Loup de Bolg" />
+
+    <string id="taom_career_grp_warg_scout_t1_a" text="Coureur-Croc" />
+
+    <string id="taom_career_grp_warg_scout_t1_b" text="Meute Grise" />
+
+    <string id="taom_career_grp_warg_scout_t2_a" text="Chasseur des Monts Brumeux" />
+
+    <string id="taom_career_grp_warg_scout_t2_b" text="Gardien-Loup" />
+
+    <string id="taom_career_grp_warg_scout_t3_a" text="Éclaireur d'Isengard" />
+
+    <string id="taom_career_grp_warg_scout_t3_b" text="La Chasse Infatigable" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t1_a" text="Gué du Limlight" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t1_b" text="Veille du Wold" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t2_a" text="Homme-Bouclier de l'Entwash" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t2_b" text="Gardien de l'Anduin" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t3_a" text="Bastion de la Marche" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t3_b" text="Gardien du Riddermark" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t1_a" text="Traqueur Marqué par la Meute" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t1_b" text="Rôdeur en Peau de Loup" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t2_a" text="Chasseur Tire-Gorge" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t2_b" text="Fantôme des Collines" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t3_a" text="Peau de Loup Suprême" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t3_b" text="Maître de la Grande Meute" />
+
+    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes actif — correction morphologique covers_head + simulation tissu cheveux/barbe" />
+
+    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes dégradé — signatures de motifs non définies pour cette version de Bannerlord ; rendu vanilla" />
+
+    <string id="taom_bandit_dunland_name" text="Pillards du Pays de Dun" />
+
+    <string id="taom_bandit_dunland_m1" text="Caradoc" />
+
+    <string id="taom_bandit_dunland_m2" text="Gwidion" />
+
+    <string id="taom_bandit_dunland_m3" text="Brennor" />
+
+    <string id="taom_bandit_dunland_m4" text="Targal" />
+
+    <string id="taom_bandit_dunland_m5" text="Maedrun" />
+
+    <string id="taom_bandit_dunland_m6" text="Drûghu" />
+
+    <string id="taom_bandit_dunland_m7" text="Olfan" />
+
+    <string id="taom_bandit_dunland_m8" text="Cethrin" />
+
+    <string id="taom_bandit_dunland_m9" text="Hwalbor" />
+
+    <string id="taom_bandit_dunland_m10" text="Idris" />
+
+    <string id="taom_bandit_dunland_f1" text="Branwen" />
+
+    <string id="taom_bandit_dunland_f2" text="Aelis" />
+
+    <string id="taom_bandit_dunland_f3" text="Maerwen" />
+
+    <string id="taom_bandit_dunland_f4" text="Gwyneth" />
+
+    <string id="taom_bandit_dunland_f5" text="Olwen" />
+
+    <string id="taom_bandit_rhun_name" text="Pillards du Rhûn" />
+
+    <string id="taom_bandit_rhun_m1" text="Khamûl" />
+
+    <string id="taom_bandit_rhun_m2" text="Targon" />
+
+    <string id="taom_bandit_rhun_m3" text="Bûrzakh" />
+
+    <string id="taom_bandit_rhun_m4" text="Sangar" />
+
+    <string id="taom_bandit_rhun_m5" text="Hazgrim" />
+
+    <string id="taom_bandit_rhun_m6" text="Vorzul" />
+
+    <string id="taom_bandit_rhun_m7" text="Daghir" />
+
+    <string id="taom_bandit_rhun_m8" text="Olmec" />
+
+    <string id="taom_bandit_rhun_m9" text="Tarvon" />
+
+    <string id="taom_bandit_rhun_m10" text="Kharzul" />
+
+    <string id="taom_bandit_rhun_f1" text="Sarila" />
+
+    <string id="taom_bandit_rhun_f2" text="Khazna" />
+
+    <string id="taom_bandit_rhun_f3" text="Vorina" />
+
+    <string id="taom_bandit_rhun_f4" text="Tahjia" />
+
+    <string id="taom_bandit_rhun_f5" text="Sangela" />
+
+    <string id="taom_bandit_harad_name" text="Pillards Haradrim" />
+
+    <string id="taom_bandit_harad_m1" text="Suladân" />
+
+    <string id="taom_bandit_harad_m2" text="Azaghal" />
+
+    <string id="taom_bandit_harad_m3" text="Khaled" />
+
+    <string id="taom_bandit_harad_m4" text="Variag" />
+
+    <string id="taom_bandit_harad_m5" text="Dath" />
+
+    <string id="taom_bandit_harad_m6" text="Tarkil" />
+
+    <string id="taom_bandit_harad_m7" text="Mûzan" />
+
+    <string id="taom_bandit_harad_m8" text="Akhôr" />
+
+    <string id="taom_bandit_harad_m9" text="Sahir" />
+
+    <string id="taom_bandit_harad_m10" text="Zûran" />
+
+    <string id="taom_bandit_harad_f1" text="Nilhuna" />
+
+    <string id="taom_bandit_harad_f2" text="Saharia" />
+
+    <string id="taom_bandit_harad_f3" text="Aklira" />
+
+    <string id="taom_bandit_harad_f4" text="Bezara" />
+
+    <string id="taom_bandit_harad_f5" text="Mûzana" />
+
+    <string id="taom_bandit_gundabad_name" text="Pillards Orques de Gundabad" />
+
+    <string id="taom_bandit_gundabad_m1" text="Bolg" />
+
+    <string id="taom_bandit_gundabad_m2" text="Yazneg" />
+
+    <string id="taom_bandit_gundabad_m3" text="Fimbul" />
+
+    <string id="taom_bandit_gundabad_m4" text="Narzug" />
+
+    <string id="taom_bandit_gundabad_m5" text="Gorbag" />
+
+    <string id="taom_bandit_gundabad_m6" text="Mauhûr" />
+
+    <string id="taom_bandit_gundabad_m7" text="Snaga" />
+
+    <string id="taom_bandit_gundabad_m8" text="Ufthak" />
+
+    <string id="taom_bandit_gundabad_m9" text="Radbug" />
+
+    <string id="taom_bandit_gundabad_m10" text="Lugdush" />
+
+    <string id="taom_bandit_gundabad_f1" text="Skarra" />
+
+    <string id="taom_bandit_gundabad_f2" text="Vorga" />
+
+    <string id="taom_bandit_gundabad_f3" text="Mazra" />
+
+    <string id="taom_bandit_gundabad_f4" text="Grishta" />
+
+    <string id="taom_bandit_gundabad_f5" text="Narzga" />
+
+    <string id="taom_bandit_umbar_name" text="Corsaires d'Umbar" />
+
+    <string id="taom_bandit_umbar_m1" text="Castamir" />
+
+    <string id="taom_bandit_umbar_m2" text="Sangahyandion" />
+
+    <string id="taom_bandit_umbar_m3" text="Angamaitë" />
+
+    <string id="taom_bandit_umbar_m4" text="Herumor" />
+
+    <string id="taom_bandit_umbar_m5" text="Fuinur" />
+
+    <string id="taom_bandit_umbar_m6" text="Adûnaphel" />
+
+    <string id="taom_bandit_umbar_m7" text="Aragôl" />
+
+    <string id="taom_bandit_umbar_m8" text="Calemir" />
+
+    <string id="taom_bandit_umbar_m9" text="Vorondil" />
+
+    <string id="taom_bandit_umbar_m10" text="Karazîr" />
+
+    <string id="taom_bandit_umbar_f1" text="Berúthiel" />
+
+    <string id="taom_bandit_umbar_f2" text="Nimreth" />
+
+    <string id="taom_bandit_umbar_f3" text="Adûniel" />
+
+    <string id="taom_bandit_umbar_f4" text="Tarmiriel" />
+
+    <string id="taom_bandit_umbar_f5" text="Inzilbêth" />
+
+    <string id="taom_bandit_gondor_name" text="Soldats du Gondor" />
+
+    <string id="taom_bandit_gondor_m1" text="Bergil" />
+
+    <string id="taom_bandit_gondor_m2" text="Targon" />
+
+    <string id="taom_bandit_gondor_m3" text="Forlong" />
+
+    <string id="taom_bandit_gondor_m4" text="Duilas" />
+
+    <string id="taom_bandit_gondor_m5" text="Hirgon" />
+
+    <string id="taom_bandit_gondor_m6" text="Beregond" />
+
+    <string id="taom_bandit_gondor_m7" text="Mardil" />
+
+    <string id="taom_bandit_gondor_m8" text="Orodreth" />
+
+    <string id="taom_bandit_gondor_m9" text="Cirion" />
+
+    <string id="taom_bandit_gondor_m10" text="Halmir" />
+
+    <string id="taom_bandit_gondor_f1" text="Ioreth" />
+
+    <string id="taom_bandit_gondor_f2" text="Lothíriel" />
+
+    <string id="taom_bandit_gondor_f3" text="Morwen" />
+
+    <string id="taom_bandit_gondor_f4" text="Gilraen" />
+
+    <string id="taom_bandit_gondor_f5" text="Anwen" />
+
+    <string id="taom_bandit_erebor_name" text="Guerriers d'Erebor" />
+
+    <string id="taom_bandit_erebor_m1" text="Nargûm" />
+
+    <string id="taom_bandit_erebor_m2" text="Borin" />
+
+    <string id="taom_bandit_erebor_m3" text="Frar" />
+
+    <string id="taom_bandit_erebor_m4" text="Lofar" />
+
+    <string id="taom_bandit_erebor_m5" text="Grimbeard" />
+
+    <string id="taom_bandit_erebor_m6" text="Thrar" />
+
+    <string id="taom_bandit_erebor_m7" text="Dwalgin" />
+
+    <string id="taom_bandit_erebor_m8" text="Náladr" />
+
+    <string id="taom_bandit_erebor_m9" text="Vidri" />
+
+    <string id="taom_bandit_erebor_m10" text="Hagri" />
+
+    <string id="taom_bandit_erebor_f1" text="Dís" />
+
+    <string id="taom_bandit_erebor_f2" text="Brila" />
+
+    <string id="taom_bandit_erebor_f3" text="Vagna" />
+
+    <string id="taom_bandit_erebor_f4" text="Thora" />
+
+    <string id="taom_bandit_erebor_f5" text="Frida" />
+
+    <string id="taom_bandit_mirkwood_name" text="Traqueurs de la Forêt Noire" />
+
+    <string id="taom_bandit_mirkwood_m1" text="Faeglir" />
+
+    <string id="taom_bandit_mirkwood_m2" text="Thranduil" />
+
+    <string id="taom_bandit_mirkwood_m3" text="Galion" />
+
+    <string id="taom_bandit_mirkwood_m4" text="Belegorn" />
+
+    <string id="taom_bandit_mirkwood_m5" text="Nimloth" />
+
+    <string id="taom_bandit_mirkwood_m6" text="Orophin" />
+
+    <string id="taom_bandit_mirkwood_m7" text="Rúmil" />
+
+    <string id="taom_bandit_mirkwood_m8" text="Haldamir" />
+
+    <string id="taom_bandit_mirkwood_m9" text="Tauron" />
+
+    <string id="taom_bandit_mirkwood_m10" text="Lindir" />
+
+    <string id="taom_bandit_mirkwood_f1" text="Tauriel" />
+
+    <string id="taom_bandit_mirkwood_f2" text="Nethloriel" />
+
+    <string id="taom_bandit_mirkwood_f3" text="Eowen" />
+
+    <string id="taom_bandit_mirkwood_f4" text="Faelivrin" />
+
+    <string id="taom_bandit_mirkwood_f5" text="Míriel" />
+
     <string id="taom_hideout_desc_dunland" text="Parmi les collines boisées du Pays de Dun, vous apercevez un campement rudimentaire de tentes en peaux et une palissade grossière, à moitié cachés dans une clairière." />
+
     <string id="taom_hideout_desc_gundabad" text="Sous les escarpements des Monts Brumeux, vous découvrez un ignoble terrier d'orques de Gundabad creusé dans la roche nue." />
+
     <string id="taom_hideout_desc_harad" text="Au milieu des dunes du Harad, vous tombez sur un campement camouflé de Suderons rassemblés autour d'un puits désertique dissimulé." />
+
     <string id="taom_hideout_desc_rhun" text="Sur les vastes prairies du Rhûn, vous distinguez les chariots et les tentes en peaux d'une bande de pillards Orientaux campés dans un ravin." />
+
     <string id="taom_hideout_desc_umbar" text="Le long de la côte méridionale, vous trouvez une crique abritée où les navires noirs des Corsaires d'Umbar sont ancrés." />
+
+    <string id="taom_faction_difficulty_1" text="Difficulté : Très facile" />
+
+    <string id="taom_faction_difficulty_2" text="Difficulté : Facile" />
+
+    <string id="taom_faction_difficulty_3" text="Difficulté : Moyenne" />
+
+    <string id="taom_faction_difficulty_4" text="Difficulté : Moyenne-Difficile" />
+
+    <string id="taom_faction_difficulty_5" text="Difficulté : Difficile" />
+
+    <string id="taom_faction_difficulty_6" text="Difficulté : Très difficile" />
+
+    <string id="taom_faction_difficulty_7" text="Difficulté : Extrême" />
+
+    <string id="taom_faction_anduin_vale_desc" text="La fertile vallée du Grand Fleuve Anduin, demeure des Beornides et des Hommes des Bois. Un peuple simple qui vit entre les Monts Brumeux et la Forêt Noire." />
+
+    <string id="taom_faction_anduin_vale_name" text="Val d'Anduin" />
+
+    <string id="taom_faction_anduin_vale_trait_0" text="Beornides" />
+
+    <string id="taom_faction_anduin_vale_trait_1" text="Hommes des Bois des Vals" />
+
+    <string id="taom_faction_anduin_vale_trait_2" text="Commerce du Grand Fleuve" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_desc" text="Le royaume côtier de Bellakar, colonisé par les Fidèles de Númenor restés loyaux aux Valar. Un bastion de civilisation sur les rivages méridionaux." />
+
+    <string id="taom_faction_aru_thani_of_bellakar_name" text="Aru-Thani de Bellakar" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_0" text="Héritage Númenóréen" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_1" text="Royaume Côtier" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_2" text="Fidèles aux Valar" />
+
+    <string id="taom_faction_browlands_desc" text="Les Browlands." />
+
+    <string id="taom_faction_browlands_name" text="Browlands" />
+
+    <string id="taom_faction_chajaphan_of_abanissa_desc" text="Le Chajaphan d'Abanissa." />
+
+    <string id="taom_faction_chajaphan_of_abanissa_name" text="Chajaphan d'Abanissa" />
+
+    <string id="taom_faction_clans_of_andrast_desc" text="Les Clans d'Andrast." />
+
+    <string id="taom_faction_clans_of_andrast_name" text="Clans d'Andrast" />
+
+    <string id="taom_faction_clans_of_druwaith_iaur_desc" text="Les Clans de Drúwaith Iaur." />
+
+    <string id="taom_faction_clans_of_druwaith_iaur_name" text="Clans de Drúwaith Iaur" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_0" text="50 % de pénalité de vitesse en forêt en moins + 15 % de portée de vision (emprunté aux Battaniens)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_1" text="+10 % de vitesse de groupe dans les plaines (Marcheurs des Collines)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_2" text="+5 % de limite de taille de groupe (Levée des Tribus des Collines)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_3" text="+10 % de taux de réapparition des volontaires de village (Recrutement des Tribus des Collines)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_4" text="+20 % de chance d'avoir des milices vétérans dans les villes (emprunté aux Battaniens)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_5" text="-10 % de vitesse de construction de bâtiments (emprunté aux Battaniens)" />
+
+    <string id="taom_faction_clans_of_dunland_desc" text="Les Hommes des Collines du Pays de Dun, ennemis ancestraux des Rohirrim. Les traditions forestières battaniennes se mêlent aux Marcheurs des Collines et aux Levées des Tribus des Collines de TAOM — des bandes de guerre bon marché, rapides et enragées qui marchent sur plaines et forêts. Les forgerons battaniens sont lents, mais pas les bandes de guerre." />
+
+    <string id="taom_faction_clans_of_dunland_name" text="Clans du Pays de Dun" />
+
+    <string id="taom_faction_clans_of_dunland_perk_0_desc" text="+10 % de vitesse de groupe dans les plaines et +5 % de taille de groupe — les bandes de guerre dunlendings couvrent le terrain rapidement." />
+
+    <string id="taom_faction_clans_of_dunland_perk_0_name" text="Marcheurs des Collines" />
+
+    <string id="taom_faction_clans_of_dunland_perk_1_desc" text="+10% de taux de réapparition des volontaires de village — les villages se remplissent rapidement de cousins." />
+
+    <string id="taom_faction_clans_of_dunland_perk_1_name" text="Recrutement des Tribus des Collines" />
+
+    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="Pénalité de vitesse en forêt réduite de 50% + 15% de vision, et +20% de chance d'avoir de la milice vétéran dans les villes ; -10% de vitesse de construction." />
+
+    <string id="taom_faction_clans_of_dunland_perk_2_name" text="Lignée Forestière Battanienne" />
+
+    <string id="taom_faction_clans_of_dunland_strength_0" text="Bandes de guerre rapides et bon marché" />
+
+    <string id="taom_faction_clans_of_dunland_strength_1" text="Mobilité en forêt et en plaine" />
+
+    <string id="taom_faction_clans_of_dunland_strength_2" text="Recrutement de village régulier" />
+
+    <string id="taom_faction_clans_of_dunland_strength_3" text="Chance de milice vétéran" />
+
+    <string id="taom_faction_clans_of_dunland_su_0_desc" text="Guerrier de mêlée intrépide." />
+
+    <string id="taom_faction_clans_of_dunland_su_0_name" text="Berserker Dunlendais" />
+
+    <string id="taom_faction_clans_of_dunland_su_1_desc" text="Infanterie de bande de guerre bon marché." />
+
+    <string id="taom_faction_clans_of_dunland_su_1_name" text="Lancier des Tribus des Collines" />
+
+    <string id="taom_faction_clans_of_dunland_su_2_desc" text="Éclaireur forestier ultra-rapide." />
+
+    <string id="taom_faction_clans_of_dunland_su_2_name" text="Éclaireur Crebain" />
+
+    <string id="taom_faction_clans_of_dunland_trait_0" text="Rancune contre le Rohan" />
+
+    <string id="taom_faction_clans_of_dunland_trait_1" text="Combattants Sauvages des Collines" />
+
+    <string id="taom_faction_clans_of_dunland_trait_2" text="Levées des Tribus des Collines" />
+
+    <string id="taom_faction_clans_of_dunland_trait_3" text="Pions de Saruman" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_0" text="Construction lente héritée des Battaniens" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_1" text="Pions de Saruman — diplomatie médiocre" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_2" text="Coincés entre le Rohan et l'Isengard" />
+
+    <string id="taom_faction_clans_of_forochel_desc" text="Tribus orques dispersées dans les étendues gelées du nord près de la Baie des Glaces de Forochel. Des pillards sauvages qui s'en prennent aux Lossoth et à quiconque s'aventure au nord." />
+
+    <string id="taom_faction_clans_of_forochel_name" text="Clans de Forochel" />
+
+    <string id="taom_faction_clans_of_forochel_trait_0" text="Pillards de la Baie des Glaces" />
+
+    <string id="taom_faction_clans_of_forochel_trait_1" text="Orques du Nord Gelé" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_0" text="+20% de limite de taille de groupe (Légions Uruk-hai)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_1" text="+15% de vitesse de construction de bâtiments (Puissance Industrielle)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_2" text="-20% de coût en énergie de forge (Forges Industrielles)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_3" text="-15% de coût de recrutement et d'amélioration de troupes montées (Wargs de Guerre)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_4" text="-20% de salaire de garnison d'Orthanc" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_5" text="+20% de dégâts de pillage (Raids de la Machine de Guerre)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_6" text="+10% de vitesse de groupe dans les plaines et marais (Marche Forcée, Maîtres d'Entraînement des Marécages)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_7" text="+2 Marchand + 1 Artisan + 12 Chef de Bande notables dans la ville d'Isengard (20 au total)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_8" text="+10% de nombre de notables de village (Presse de Fer)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_9" text="+25% de pénalités relationnelles (Emprise de Saruman)" />
+
+    <string id="taom_faction_dominion_of_isengard_desc" text="La forteresse industrielle de Saruman à Orthanc. L'Anneau de l'Isengard fonctionne jour et nuit — légions d'Uruk-hai, arbalètes de forge, wargs de guerre. L'unique ville d'Isengard gonfle jusqu'à vingt notables : un centre de recrutement égal à plusieurs cités du Rohan. L'Emprise de Saruman aliène tous les voisins." />
+
+    <string id="taom_faction_dominion_of_isengard_name" text="Domaine de l'Isengard" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_0_desc" text="+20% de limite de taille de groupe et +10% de vitesse de marche dans les plaines et marais." />
+
+    <string id="taom_faction_dominion_of_isengard_perk_0_name" text="Légions Uruk-hai" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_1_desc" text="+15% construction, -20% énergie de forge, -15% coût de recrutement monté." />
+
+    <string id="taom_faction_dominion_of_isengard_perk_1_name" text="Puissance Industrielle" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_2_desc" text="L'unique ville d'Isengard accueille 20 notables — 4 Marchands, 2 Artisans, 14 Chefs de Bande." />
+
+    <string id="taom_faction_dominion_of_isengard_perk_2_name" text="Intendants d'Orthanc" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_0" text="Échelle industrielle de production" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_1" text="Qualité d'élite des Uruk-hai" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_2" text="Un centre de recrutement massif" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_3" text="À la fois rapidité et puissance au corps à corps" />
+
+    <string id="taom_faction_dominion_of_isengard_su_0_desc" text="Infanterie de choc dévastatrice." />
+
+    <string id="taom_faction_dominion_of_isengard_su_0_name" text="Berserker Uruk-hai" />
+
+    <string id="taom_faction_dominion_of_isengard_su_1_desc" text="Ligne d'arbalétriers lourds des fosses de forge." />
+
+    <string id="taom_faction_dominion_of_isengard_su_1_name" text="Arbalétrier Uruk-hai" />
+
+    <string id="taom_faction_dominion_of_isengard_su_2_desc" text="Cavalerie rapide en harcèlement de la Main Blanche." />
+
+    <string id="taom_faction_dominion_of_isengard_su_2_name" text="Cavalier Warg" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_0" text="Domaine de Saruman" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_1" text="Armées Uruk-hai" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_2" text="Tour d'Orthanc" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_3" text="La Main Blanche" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_0" text="L'emprise de Saruman aliène la diplomatie" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_1" text="Un seul point de passage fortifié" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_2" text="Encerclé par le Rohan et Fangorn" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60% coût d'influence d'armée (La Volonté du Seigneur Ténébreux)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+10% limite de taille d'armée (Les Hordes de Sauron)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_2" text="+20% production de grain de Nurn (Terres Agricoles de Nurn)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_3" text="+25% dégâts de raid (Colère de Sauron)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_4" text="+10% vitesse d'armée la nuit (Créatures des Ténèbres)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_5" text="+5% vitesse d'armée dans les plaines et marais (Marche de l'Ombre, Marais des Morts)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_6" text="+20% taux de réapparition des volontaires de village (Levée de Sauron)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_7" text="+2 notables Chefs de Bande par ville (Hérauts de la Langue Noire)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_8" text="+5% nombre de notables de village (Maîtres d'Esclaves)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_9" text="+20% soldes d'armée (Tribut Sombre)" />
+
+    <string id="taom_faction_dominion_of_mordor_desc" text="La Terre Noire de Sauron. La Volonté du Seigneur Ténébreux permet de rassembler des armées avec un coût d'influence minimal ; les Terres Agricoles de Nurn nourrissent les hordes ; la Colère de Sauron transforme les raids en massacres ; les Créatures des Ténèbres marchent plus vite la nuit que n'importe quel Peuple Libre en plein jour. Le Tribut Sombre vide le trésor." />
+
+    <string id="taom_faction_dominion_of_mordor_name" text="Dominion du Mordor" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_0_desc" text="Coût d'influence d'armée réduit de 60% — les hordes de Sauron n'ont besoin d'aucun consensus." />
+
+    <string id="taom_faction_dominion_of_mordor_perk_0_name" text="La Volonté du Seigneur Ténébreux" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_1_desc" text="+25% dégâts de raid et +5% vitesse d'armée dans les plaines et marais." />
+
+    <string id="taom_faction_dominion_of_mordor_perk_1_name" text="Colère de Sauron" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_2_desc" text="+10% vitesse d'armée la nuit — les yeux du Mordor ne dorment jamais." />
+
+    <string id="taom_faction_dominion_of_mordor_perk_2_name" text="Créatures des Ténèbres" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_0" text="Armées massives et bon marché" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_1" text="Presque aucune influence requise pour marcher" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_2" text="Maîtrise du combat nocturne" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_3" text="Autosuffisance via pillage et Nurn" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_4" text="Trolls et Uruks Noirs" />
+
+    <string id="taom_faction_dominion_of_mordor_su_0_desc" text="Infanterie de choc d'élite de Barad-dûr." />
+
+    <string id="taom_faction_dominion_of_mordor_su_0_name" text="Uruk Noir" />
+
+    <string id="taom_faction_dominion_of_mordor_su_1_desc" text="Bête de siège élevée dans les fosses." />
+
+    <string id="taom_faction_dominion_of_mordor_su_1_name" text="Troll des Cavernes" />
+
+    <string id="taom_faction_dominion_of_mordor_su_2_desc" text="Archers aux flèches empoisonnées de Minas Morgul." />
+
+    <string id="taom_faction_dominion_of_mordor_su_2_name" text="Archer de Morgul" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_0" text="Le Domaine du Seigneur des Ténèbres" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_1" text="Légions Orques" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_2" text="Mont Doom" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_3" text="Barad-dûr" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_0" text="Le Tribut Sombre réduit les soldes" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_1" text="Universellement détesté" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_2" text="Remplacement lent des unités spéciales" />
+
+    <string id="taom_faction_eregion_desc" text="L'Eregion." />
+
+    <string id="taom_faction_eregion_name" text="Eregion" />
+
+    <string id="taom_faction_fangorn_forest_desc" text="La Forêt de Fangorn." />
+
+    <string id="taom_faction_fangorn_forest_name" text="Forêt de Fangorn" />
+
+    <string id="taom_faction_goblins_of_blue_craig_desc" text="Les Gobelins de Blue Craig." />
+
+    <string id="taom_faction_goblins_of_blue_craig_name" text="Gobelins de Blue Craig" />
+
+    <string id="taom_faction_goblins_of_goblin_town_desc" text="Les tunnels et cavernes infestés de gobelins des Monts Brumeux. Ces Orques contrôlent les hauts cols et menacent tous ceux qui osent traverser les montagnes." />
+
+    <string id="taom_faction_goblins_of_goblin_town_name" text="Gobelins de la Ville Gobeline" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="Tunnels Gobelins" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="Cols de Montagne" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="Cavaliers sur Wargs" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_0" text="+10% vitesse de groupe en steppe (Éclaireurs Orientaux)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_1" text="+5% limite de taille de groupe (Horde Orientale)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="-10% coût de recrutement et d'amélioration montée (Khuzait, hérité)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="+25% production de chevaux, mules, vaches et moutons dans les villages (Khuzait, hérité)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="-20% revenu fiscal des villes (Khuzait, hérité)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_desc" text="Les Orientaux des plaines orientales. Traditions de cavalerie Khuzait héritées combinées aux Éclaireurs Orientaux de TAOM pour la vitesse en steppe et à la Horde Orientale pour la taille de groupe. Cavalerie lourde qui arrive en nombre et en tribut." />
+
+    <string id="taom_faction_golden_realm_of_rhun_name" text="Royaume Doré de Rhûn" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_0_desc" text="+10% vitesse de groupe en steppe — les cavaliers de la Mer de Rhûn traversent la plaine rapidement." />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_0_name" text="Éclaireurs Orientaux" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_1_desc" text="+5% limite de taille de groupe — des hordes se rassemblent en réponse à l'appel du Mordor." />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_1_name" text="Horde Orientale" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="Héritage Khuzait -10% coût monté, +25% production animale villageoise ; -20% revenu fiscal des villes." />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="Lignée des Steppes Khuzaïtes" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_0" text="Hordes de cavalerie lourde" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_1" text="Grandes armées" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_2" text="Réseaux de tribut et de commerce" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="Héritage des steppes khuzaïtes" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_0_desc" text="Cavalerie blindée d'élite." />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_0_name" text="Kataphracte Oriental" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_1_desc" text="Infanterie lourde d'élite de l'Est." />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_1_name" text="Seigneur de Lame Oriental" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_2_desc" text="Archer-éclaireur vétéran." />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_2_name" text="Garde-Chevaux du Rhûn" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_0" text="Guerriers Orientaux" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_1" text="Hordes de Cavalerie" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_2" text="Tribut au Mordor" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_3" text="Héritage des Steppes" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_0" text="Infanterie faible" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_1" text="Clans divisés" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_2" text="Longues lignes d'approvisionnement vers le Mordor" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="Héritage khuzaït -20% taxe urbaine" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_0" text="-25% coût des caravanes (Commerce Corsaire)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_1" text="+15% revenus tarifaires (Réseaux Commerciaux Corsaires)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_2" text="+8% renommée au combat (Gloire Corsaire)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_3" text="+10% vitesse de groupe dans le désert (Corsaires du Désert)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_4" text="+8% salaires du groupe (Cupidité Corsaire)" />
+
+    <string id="taom_faction_havens_of_umbar_desc" text="Le refuge corsaire et la cité portuaire des Númenóréens Noirs sur les baies du sud. Le Commerce Corsaire réduit drastiquement les coûts des caravanes, la Gloire Corsaire augmente la renommée, les Corsaires du Désert marchent rapidement sur les sables — mais la Cupidité Corsaire gonfle toutes les soldes." />
+
+    <string id="taom_faction_havens_of_umbar_name" text="Havres d'Umbar" />
+
+    <string id="taom_faction_havens_of_umbar_perk_0_desc" text="-25% coût des caravanes et +15% revenus tarifaires — Umbar prospère sur chaque navire qui passe." />
+
+    <string id="taom_faction_havens_of_umbar_perk_0_name" text="Commerce Corsaire" />
+
+    <string id="taom_faction_havens_of_umbar_perk_1_desc" text="+8% renommée par bataille — le nom des corsaires est chanté dans tous les ports." />
+
+    <string id="taom_faction_havens_of_umbar_perk_1_name" text="Gloire Corsaire" />
+
+    <string id="taom_faction_havens_of_umbar_perk_2_desc" text="+10% vitesse de groupe dans le désert — les marches d'Umbar traversent le sable aussi facilement que la mer." />
+
+    <string id="taom_faction_havens_of_umbar_perk_2_name" text="Corsaires du Désert" />
+
+    <string id="taom_faction_havens_of_umbar_strength_0" text="Richesse via commerce et tarifs" />
+
+    <string id="taom_faction_havens_of_umbar_strength_1" text="Renommés au combat" />
+
+    <string id="taom_faction_havens_of_umbar_strength_2" text="Mobilité dans le désert" />
+
+    <string id="taom_faction_havens_of_umbar_strength_3" text="Statistiques de seigneur númenóréen" />
+
+    <string id="taom_faction_havens_of_umbar_su_0_desc" text="Seigneur imposant de sang ancien." />
+
+    <string id="taom_faction_havens_of_umbar_su_0_name" text="Capitaine Númenóréen Noir" />
+
+    <string id="taom_faction_havens_of_umbar_su_1_desc" text="Marin entraîné à l'escarmouche." />
+
+    <string id="taom_faction_havens_of_umbar_su_1_name" text="Pillard Corsaire" />
+
+    <string id="taom_faction_havens_of_umbar_su_2_desc" text="Recrue d'infanterie légère brûlée par le soleil." />
+
+    <string id="taom_faction_havens_of_umbar_su_2_name" text="Auxiliaire Haradrim" />
+
+    <string id="taom_faction_havens_of_umbar_trait_0" text="Flottes Corsaires" />
+
+    <string id="taom_faction_havens_of_umbar_trait_1" text="Seigneurs Numénoréens Noirs" />
+
+    <string id="taom_faction_havens_of_umbar_trait_2" text="Havre de Pirates" />
+
+    <string id="taom_faction_havens_of_umbar_trait_3" text="Marches du Désert" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_0" text="Les capitaines corsaires empochent les profits (salaires élevés)" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_1" text="Haï par le Gondor" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_2" text="Armée terrestre plus faible que la marine" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="L'antique royaume elfique du Lindon sur les côtes occidentales de la Terre du Milieu. Gouverné par les successeurs de Gil-galad, c'est une terre de gloire elfique déclinante et des Havres Gris." />
+
+    <string id="taom_faction_high_kingdom_of_lindon_name" text="Haut Royaume du Lindon" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="Havres Gris" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="Royaume Elfique Ancien" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="Navires vers Valinor" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="Círdan le Charpentier de Navires" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10% vitesse de groupe dans la steppe (Auriges des Steppes)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_1" text="50% de pénalité de vitesse en forêt en moins + 15% de portée de vue (Battanien, hérité)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_2" text="+20% de chance d'avoir une milice vétéran dans les villes (Battanien, hérité)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_3" text="-10% vitesse de construction de bâtiments (Battanien, hérité)" />
+
+    <string id="taom_faction_khudorom_of_khand_desc" text="Les Variags du Khand. Traditions de milice forestière battanienne héritées ; les Auriges des Steppes de TAOM ajoutent +10% de vitesse de groupe dans la steppe en plus. Les bandes de mercenaires chevauchent pour qui paie le plus." />
+
+    <string id="taom_faction_khudorom_of_khand_name" text="Khudorom du Khand" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_0_desc" text="+10% vitesse de groupe dans la steppe — les chars variags roulent vite." />
+
+    <string id="taom_faction_khudorom_of_khand_perk_0_name" text="Auriges des Steppes" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_1_desc" text="Les capitaines mercenaires chevauchent pour qui paie — mais ils gardent leur part." />
+
+    <string id="taom_faction_khudorom_of_khand_perk_1_name" text="Tradition Mercenaire" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="Hérité : 50% de pénalité de vitesse en forêt en moins + 15% de portée de vue et +20% de chance d'avoir une milice vétéran dans les villes ; -10% vitesse de construction." />
+
+    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="Lignée Forestière Battanienne" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_0" text="Mobilité en steppe et forêt" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_1" text="Villages vétérans" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_2" text="Tradition mercenaire" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_3" text="Doctrine d'auriges" />
+
+    <string id="taom_faction_khudorom_of_khand_su_0_desc" text="Éclaireur monté d'élite." />
+
+    <string id="taom_faction_khudorom_of_khand_su_0_name" text="Archer à Cheval Variag" />
+
+    <string id="taom_faction_khudorom_of_khand_su_1_desc" text="Commandant d'antique machine des steppes." />
+
+    <string id="taom_faction_khudorom_of_khand_su_1_name" text="Aurige du Khand" />
+
+    <string id="taom_faction_khudorom_of_khand_su_2_desc" text="Cavalerie lourde lancière." />
+
+    <string id="taom_faction_khudorom_of_khand_su_2_name" text="Lancier Variag" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_0" text="Cavalerie des Steppes" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_1" text="Guerriers Variags" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_2" text="Bandes Mercenaires" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_3" text="Tradition de Charrier" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_0" text="Construction lente battanienne" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_1" text="Colonies faibles" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_2" text="Les capitaines mercenaires sont loyaux à l'or, pas au seigneur" />
+
+    <string id="taom_faction_kingdom_of_angaladh_desc" text="Le Royaume d'Angaladh." />
+
+    <string id="taom_faction_kingdom_of_angaladh_name" text="Royaume d'Angaladh" />
+
+    <string id="taom_faction_kingdom_of_arthedain_desc" text="Le dernier et le plus grand des royaumes successeurs de l'Arnor. L'Arthedain résista le plus longtemps contre le Roi-Sorcier d'Angmar avant sa chute finale." />
+
+    <string id="taom_faction_kingdom_of_arthedain_name" text="Royaume d'Arthedain" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_0" text="Dernier de l'Arnor" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_1" text="Palantír d'Annúminas" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_2" text="Dúnedain du Nord" />
+
+    <string id="taom_faction_kingdom_of_cardolan_desc" text="Le royaume successeur du Cardolan, autrefois partie du grand royaume de l'Arnor. Désormais une terre de colonies éparses et d'anciens tumulus hantés par des êtres des galgals." />
+
+    <string id="taom_faction_kingdom_of_cardolan_name" text="Royaume du Cardolan" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_0" text="Successeur de l'Arnor" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_1" text="Hauts des Galgals" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_2" text="Rôdeurs du Nord" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_0" text="+10% de vitesse de groupe dans les plaines (Commerçants du Val)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_1" text="+10% de production de grain dans les villages (Sturgien, hérité)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_2" text="-50% de coût d'influence pour les armées (Sturgien, hérité)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_3" text="+20% de pénalité de relations avec les décisions du royaume (Sturgien, hérité)" />
+
+    <string id="taom_faction_kingdom_of_dale_desc" text="La cité reconstruite par Bard sous Erebor. L'abondance de grain sturgienne héritée et la tradition sturgienne d'armées bon marché s'associent au bonus de vitesse dans les plaines des Commerçants du Val de TAOM — mais les pénalités sturgiennes sur les décisions du royaume coupent dans les deux sens. Une alliance commerciale florissante avec les Nains garde Dale riche et prête." />
+
+    <string id="taom_faction_kingdom_of_dale_name" text="Royaume de Dale" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_0_desc" text="+10% de vitesse de groupe dans les plaines — les caravanes d'Esgaroth se déplacent rapidement." />
+
+    <string id="taom_faction_kingdom_of_dale_perk_0_name" text="Commerçants du Val" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_1_desc" text="Le commerce avec Erebor fournit un revenu bonus et un approvisionnement en armes." />
+
+    <string id="taom_faction_kingdom_of_dale_perk_1_name" text="Alliance Naine" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="Héritage sturgien : +10% de grain dans les villages et -50% de coût d'influence pour les armées ; pénalité de relations +20% sur les décisions du royaume." />
+
+    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="Lignée du Grain et des Armées Sturgiennes" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_0" text="Commerce avec Erebor" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_1" text="Forte tradition de tir à l'arc" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_2" text="Rassemblement d'armée peu coûteux (Sturgien)" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_3" text="Villages riches en grain" />
+
+    <string id="taom_faction_kingdom_of_dale_su_0_desc" text="Archer héritier de Bard." />
+
+    <string id="taom_faction_kingdom_of_dale_su_0_name" text="Rôdeur de la Flèche Noire" />
+
+    <string id="taom_faction_kingdom_of_dale_su_1_desc" text="Lancier d'Esgaroth." />
+
+    <string id="taom_faction_kingdom_of_dale_su_1_name" text="Garde-Lac de Dale" />
+
+    <string id="taom_faction_kingdom_of_dale_su_2_desc" text="Ligne dalienne armurée par les Nains." />
+
+    <string id="taom_faction_kingdom_of_dale_su_2_name" text="Guerrier-Forgeron Formé à Erebor" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_0" text="Héritage de Bard" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_1" text="Commerce avec Erebor" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_2" text="Alliance d'Esgaroth" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_3" text="Marchands de la Vallée" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_0" text="Petit territoire" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_1" text="Pression des Orientaux" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_2" text="Pénalité de décision de royaume sturgien" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_desc" text="Le royaume viticole de Dorwinion sur les rives nord-ouest de la Mer de Rhûn. Un royaume marchand prospère pris entre les Peuples Libres et l'Orient." />
+
+    <string id="taom_faction_kingdom_of_dorwinion_name" text="Royaume de Dorwinion" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_0" text="Vignobles Renommés" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_1" text="Centre Commercial" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_2" text="Royaume Frontalier" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_0" text="-25% salaire de garnison (Garnison Naine)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_1" text="-30% coût d'énergie de forge (Maîtres Forgerons)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_2" text="+10% vitesse de groupe sur neige (Peuple des Montagnes)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_3" text="+10% production villageoise (Industrie Naine)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_4" text="+5 moral de groupe (Obstination Naine)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_5" text="+1 loyauté de colonie par jour (Honneur Nain)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_6" text="-15% vitesse de construction de bâtiments (Perfectionnisme Nain)" />
+
+    <string id="taom_faction_kingdom_of_erebor_desc" text="La Montagne Solitaire reconquise. Les Maîtres Forgerons réduisent le coût d'énergie de forge de 30% ; l'Honneur Nain ajoute de la loyauté chaque jour ; l'Obstination Naine maintient un moral inébranlable. Lents à bâtir un mur — mais le mur tient jusqu'à ce que la montagne elle-même s'effondre." />
+
+    <string id="taom_faction_kingdom_of_erebor_name" text="Royaume d'Erebor" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_0_desc" text="-30% coût d'énergie de forge — Les forges naines travaillent deux fois plus vite." />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_0_name" text="Maîtres Forgerons" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_1_desc" text="-25% salaire de garnison et +1 loyauté de colonie par jour." />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_1_name" text="Garnison Naine" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_2_desc" text="+5 moral de groupe et +10% production villageoise — Les Nains ne plient pas." />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_2_name" text="Obstination Naine" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_0" text="Armures et armes supérieures" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_1" text="Riche et autosuffisant" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_2" text="Garnisons loyales et disciplinées" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_3" text="Économie de forge magistrale" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_0_desc" text="Infanterie lourde naine d'élite." />
+
+    <string id="taom_faction_kingdom_of_erebor_su_0_name" text="Garde de Fer d'Erebor" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_1_desc" text="Ligne d'arbalétriers à ressort d'acier." />
+
+    <string id="taom_faction_kingdom_of_erebor_su_1_name" text="Arbalétrier des Monts du Fer" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_2_desc" text="Maître de hache aguerri au combat." />
+
+    <string id="taom_faction_kingdom_of_erebor_su_2_name" text="Vétéran d'Azanulbizar" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_0" text="Royaume sous la Montagne" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_1" text="Maîtres Artisans" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_2" text="Haches Naines" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_3" text="Cousins des Monts du Fer" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_0" text="Le Perfectionnisme Nain ralentit les murs" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_1" text="Cavalerie indisponible" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_2" text="Peu d'alliés en temps de guerre" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_desc" text="Les demeures naines des Montagnes Bleues, halls ancestraux du Peuple de Durin. Après la perte d'Erebor, de nombreux Nains y trouvèrent refuge avant la quête de Thorin." />
+
+    <string id="taom_faction_kingdom_of_ered_duin_name" text="Royaume d'Ered Duin" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_0" text="Halls des Montagnes Bleues" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_1" text="Peuple de Durin" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_2" text="Nains Exilés" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_3" text="Minage et Forge" />
+
+    <string id="taom_faction_kingdom_of_ered_mithrin_desc" text="Le Royaume d'Ered Mithrin." />
+
+    <string id="taom_faction_kingdom_of_ered_mithrin_name" text="Royaume d'Ered Mithrin" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_0" text="+35% de récompense d'influence d'armée (Sagesse Elfique)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_1" text="+20% de croissance de foyer de village (La Dernière Maison Accueillante)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_2" text="+10% de vitesse de groupe en forêt (Grâce Sylvestre)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_3" text="-15% de consommation de nourriture de groupe (Frugalité Elfique)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_4" text="+0,5 de loyauté de colonie par jour" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_5" text="+25% de coût d'influence d'armée (Fierté Elfique)" />
+
+    <string id="taom_faction_kingdom_of_imladris_desc" text="La vallée cachée d'Elrond, sanctuaire des Sages. La Sagesse Elfique unifie les armées à faible coût d'influence ; la Dernière Maison Accueillante fait croître les foyers dans chaque village. La Fierté Elfique anime encore chaque conseil — chaque lame Noldor est irremplaçable." />
+
+    <string id="taom_faction_kingdom_of_imladris_name" text="Royaume d'Imladris" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_0_desc" text="+35% d'influence accordée sur le succès d'une armée — les Sages savent mener." />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_0_name" text="Sagesse Elfique" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_1_desc" text="+20% de croissance de foyer de village et -15% de consommation de nourriture de groupe." />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_1_name" text="La Dernière Maison Accueillante" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_2_desc" text="+10% de vitesse de groupe en forêt — les arbres d'Imladris s'écartent pour leurs semblables." />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_2_name" text="Grâce Sylvestre" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_0" text="Guerriers d'élite légendaires" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_1" text="Villages riches en foyers" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_2" text="Maîtrise des forêts" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_3" text="Le conseil sage unifie les armées" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_0_desc" text="Vétéran légendaire du Premier Âge." />
+
+    <string id="taom_faction_kingdom_of_imladris_su_0_name" text="Maître-lame Noldor" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_1_desc" text="Gardien elfique lourd." />
+
+    <string id="taom_faction_kingdom_of_imladris_su_1_name" text="Sentinelle de Fondcombe" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_2_desc" text="Cavalerie lourde Noldor montée." />
+
+    <string id="taom_faction_kingdom_of_imladris_su_2_name" text="Lancier d'Imladris" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_0" text="Refuge du Seigneur Elrond" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_1" text="Conseil des Sages" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_2" text="Héritage Semi-elfe" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_3" text="Vallée Cachée" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_0" text="La Fierté Elfique augmente les coûts d'influence" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_1" text="Peuple qui décline — peu de remplaçants" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_2" text="Ne peut s'étendre loin de la vallée" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="+10% vitesse de groupe en forêt (Royaume Sylvestre)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_1" text="+25% chance de milicien vétéran (Gardiens Sylvestres)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_2" text="+3 moral de groupe (Liens Sylvestres)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_3" text="-15% consommation de nourriture du groupe (Subsistance Sylvestre)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_4" text="-20% croissance du foyer villageois (Isolement Forestier)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_desc" text="Le Royaume Sylvestre de Thranduil au nord de la Forêt Noire. Archers sylvains et milices vétéranes défendent la grande forêt contre araignées, orques et ténèbres. La Subsistance Sylvestre allège les vivres ; les Liens Sylvestres maintiennent le moral élevé. L'isolement forestier ralentit la croissance." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_name" text="Royaume de Lasgalen" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_0_desc" text="+10% vitesse de groupe en forêt et -15% consommation de nourriture." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_0_name" text="Royaume Sylvestre" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_1_desc" text="+25% de chance que les recrues miliciennes arrivent en tant que vétérans." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_1_name" text="Gardiens Sylvestres" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_2_desc" text="+3 moral de groupe — les elfes sylvains marchent en chantant." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_2_name" text="Liens Sylvestres" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_0" text="Tir à l'arc forestier suprême" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_1" text="Milice vétérane tient sa position" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_2" text="Armées frugales et autosuffisantes" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_3" text="Les combats en forêt appartiennent à la Forêt Noire" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_0_desc" text="Archer forestier d'élite." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_0_name" text="Sentinelle de la Forêt Noire" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_1_desc" text="Infanterie forestière à longue lance." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_1_name" text="Lance-Gardien Sylvestre" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_2_desc" text="Éclaireur d'une rapidité fulgurante." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_2_name" text="Éclaireur Elfe-des-Bois" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_0" text="Royaume du Roi Thranduil" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_1" text="Archers Sylvestres" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_2" text="Gardiens Sylvestres" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_3" text="Bastion Forestier" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_0" text="Isolement Forestier ralentit les foyers" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_1" text="Peu nombreux — chaque guerrier compte" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_2" text="Diplomatie isolationniste" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_0" text="+10% vitesse de groupe en forêt (Bois d'Or)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_1" text="-20% salaire de garnison (Gardiens de Lorien)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_2" text="-15% consommation de nourriture du groupe (Pain de Lembas)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_3" text="+3 moral de groupe (Harmonie Elfique)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_4" text="+0.5 loyauté de colonie par jour (Grâce Elfique)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_5" text="-10% vitesse de construction des bâtiments (Artisanat Intemporel)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_desc" text="Le Bois d'Or, royaume de Dame Galadriel et Seigneur Celeborn. Les Gardiens de Lorien défendent les forêts de mallorn à moindre coût ; le Pain de Lembas soutient chaque marche ; l'Harmonie Elfique maintient un moral inébranlable. L'Artisanat Intemporel signifie que chaque changement est lent." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_name" text="Royaume de Lothlorien" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_0_desc" text="+10% vitesse de groupe en forêt et -20% salaire de garnison." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_0_name" text="Pouvoir de Nenya" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_1_desc" text="-15% de consommation de nourriture pour le groupe — une bouchée suffit à un elfe en marche pour un jour." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_1_name" text="Pain de Lembas" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_2_desc" text="+3 au moral du groupe et +0,5 de loyauté par jour dans chaque établissement." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_2_name" text="Harmonie Elfique" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_0" text="Protection magique de Nenya" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_1" text="Armées d'élite en longue marche" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_2" text="Chaînes d'approvisionnement économes" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_3" text="Garnisons loyales et peu coûteuses" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_0_desc" text="Défenseur elfe d'élite." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_0_name" text="Garde Galadhrim" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_1_desc" text="Archer légendaire du Naith." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_1_name" text="Maître-Archer de Lorien" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_2_desc" text="Gardien elfe lourdement armé du Bois Doré." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_2_name" text="Sentinelle d'Argent" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_0" text="Dame Galadriel" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_1" text="Anneau de Nenya" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_2" text="Arbres Mallorn Dorés" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_3" text="Gardiens de Lorien" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_0" text="L'Artisanat Intemporel ralentit l'expansion" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_1" text="Armée permanente minuscule" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_2" text="Pouvoir déclinant — aucune croissance" />
+
+    <string id="taom_faction_kingdom_of_moria_desc" text="Le Royaume de la Moria." />
+
+    <string id="taom_faction_kingdom_of_moria_name" text="Royaume de la Moria" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_desc" text="Un royaume elfe dans les contrées septentrionales de la Forêt Noire, où les Elfes sylvains maintiennent leurs antiques forêts contre les ténèbres rampantes du sud." />
+
+    <string id="taom_faction_kingdom_of_neldoreth_name" text="Royaume de Neldoreth" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_0" text="Elfes Sylvains" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_1" text="Gardiens de la Forêt" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_2" text="Lignée de Thranduil" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_desc" text="Les sauvages contrées collinaires du Rhudaur, le plus oriental des royaumes successeurs de l'Arnor. Tombé sous l'influence de l'Angmar, ses hommes des collines servent le Roi-Sorcier." />
+
+    <string id="taom_faction_kingdom_of_rhudaur_name" text="Royaume du Rhudaur" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_0" text="Serviteurs de l'Angmar" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_1" text="Hommes Sauvages des Collines" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_2" text="Royaume Déchu" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_0" text="-15% de coût de recrutement de cavalerie (Héritage des Seigneurs des Chevaux)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_1" text="-15% de coût d'amélioration de cavalerie (Héritage des Seigneurs des Chevaux)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_2" text="-15% de salaire des troupes montées (Cavaliers de la Marche)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_3" text="+10% de vitesse du groupe dans les plaines (Cavaliers des Plaines)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_4" text="+5 au moral du groupe (Esprit des Cavaliers)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_5" text="+0,5 de loyauté des établissements par jour (Fraternité des Seigneurs des Chevaux)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_6" text="-10% de vitesse de groupe au-delà de 50% d'infanterie (Dépendance à la Cavalerie)" />
+
+    <string id="taom_faction_kingdom_of_rohan_desc" text="Le Riddermark des Seigneurs des Chevaux. L'Héritage des Seigneurs des Chevaux réduit le coût de toute recrue et amélioration montée ; les Cavaliers de la Marche réduisent les soldes des montés ; la Fraternité des Seigneurs des Chevaux lie la Marche dans la loyauté. Dépendance à la Cavalerie — les groupes chargés d'infanterie ralentissent considérablement." />
+
+    <string id="taom_faction_kingdom_of_rohan_name" text="Royaume de Rohan" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_0_desc" text="-15% de coût pour recruter ET améliorer les troupes montées — la Marche entraîne des cavaliers à moindre coût." />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_0_name" text="Héritage des Seigneurs des Chevaux" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_1_desc" text="-15% de soldes pour les troupes montées et +10% de vitesse de groupe dans les plaines." />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_1_name" text="Cavaliers de la Marche" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_2_desc" text="+5 de moral de groupe et +0,5 de loyauté de colonie par jour." />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_2_name" text="Fraternité des Seigneurs des Chevaux" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_0" text="Cavalerie la moins chère de la Terre du Milieu" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_1" text="Armées de plaine les plus rapides" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_2" text="Marche loyale et moral élevé" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_3" text="Alliance forte avec le Gondor" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_0_desc" text="Cavalerie lourde d'élite du Roi." />
+
+    <string id="taom_faction_kingdom_of_rohan_su_0_name" text="Garde Royale des Rohirrim" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_1_desc" text="Cavalerie de lance de ligne moyenne." />
+
+    <string id="taom_faction_kingdom_of_rohan_su_1_name" text="Chevalier Rohirrim" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_2_desc" text="Archer à pied discipliné des plaines." />
+
+    <string id="taom_faction_kingdom_of_rohan_su_2_name" text="Archer à Pied du Ouestfolde" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_0" text="Seigneurs des Chevaux" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_1" text="Cavaliers de la Marche" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_2" text="Gouffre de Helm" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_3" text="Alliance avec le Gondor" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_0" text="Dépendance à la Cavalerie — les groupes chargés d'infanterie ralentissent" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_1" text="Tradition d'infanterie faible" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_2" text="Le Gouffre de Helm est exposé quand la Marche chevauche" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_desc" text="Le Royaume du Rhovanion du Sud." />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_name" text="Royaume du Rhovanion du Sud" />
+
+    <string id="taom_faction_kingdom_of_zigalnara_desc" text="Le Royaume de Zigalnara." />
+
+    <string id="taom_faction_kingdom_of_zigalnara_name" text="Royaume de Zigalnara" />
+
+    <string id="taom_faction_nurunkhizdin_desc" text="Les Nurunkhizdin." />
+
+    <string id="taom_faction_nurunkhizdin_name" text="Nurunkhizdin" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_0" text="-50% de coût d'influence d'armée (Commandement de l'Ombre)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_1" text="+20% de limite de taille de groupe (Légions des Ténèbres)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_2" text="+20% de taux de réapparition des volontaires de village (Conscrits des Ténèbres)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_3" text="+20% de chance de milice vétéran (Conscription des Ténèbres)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_4" text="+1 Marchand + 1 Artisan + 13 Chefs de Bande notables dans la ville de Dol Guldur (20 au total)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_5" text="+10% de nombre de notables de village (Taudis Cachés)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_6" text="+10% de consommation de nourriture de groupe (Hordes Voraces)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_7" text="-20% de vitesse de construction de bâtiments (Ouvrages Ruineux)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_desc" text="La forteresse méridionale du Nécromancien en Forêt Noire. Commandement des Ombres lève des hordes pour presque rien ; Conscription Obscure entraîne des miliciens vétérans ; Capitaines de l'Ombre portent l'unique ville à vingt notables. Hordes Voraces dévorent autant qu'elles tuent." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_name" text="Suzeraineté de Dol Guldur" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_0_desc" text="Coût en influence d'armée réduit de 50% — la terreur contraint l'obéissance." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_0_name" text="Commandement des Ombres" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_1_desc" text="+20% taille de groupe et +20% taux de réapparition des volontaires." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_1_name" text="Légions Obscures" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_2_desc" text="L'unique ville de Dol Guldur dispose de 20 notables — un centre de recrutement de 15 Chefs de Bande." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_2_name" text="Capitaines de l'Ombre" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_0" text="Vastes armées bon marché" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_1" text="Centre de recrutement massif" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_2" text="Conscription de milice vétérane" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_3" text="Guerre forestière et terreur" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_0_desc" text="Infanterie lourde corrompue par l'Ombre." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_0_name" text="Uruk de Dol Guldur" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_1_desc" text="Cavalerie cauchemardesque rapide." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_1_name" text="Cavalier Warg de l'Ombre" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_2_desc" text="Lieutenant touché par la sorcellerie." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_2_name" text="Capitaine Númenóréen Noir" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_0" text="Le Repaire du Nécromancien" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_1" text="Forêt Corrompue" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_2" text="Légions Obscures" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_3" text="Commandement des Ombres" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_0" text="Hordes affamées épuisent les provisions" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_1" text="Décadence industrielle ralentit les murailles" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_2" text="Entouré de forêts hostiles" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_0" text="-40% coût en influence d'armée (Horde Orque)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_1" text="+20% limite de taille de groupe (Essaim des Montagnes)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_2" text="+25% dégâts de raid (Pillards Orques)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_3" text="+10% vitesse de groupe sur neige (Maraudeurs des Montagnes)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_4" text="+20% taux de réapparition des volontaires de village" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_5" text="+15% grain de village (Réserves Pillées)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_6" text="+1 Artisan + 3 Chefs de Bande notables par ville (Forgerons d'Os, Chefs de Guerre Pâles)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_7" text="+10% nombre de notables de village (Camps d'Os)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_8" text="+10% salaires de groupe (Exigences de Pillage)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_desc" text="Mont Gundabad, sacré pour les Orques Pâles de la lignée de Bolg. De vastes bandes guerrières marchent depuis les hauts cols — la discipline de Horde Orque lève des armées pour presque rien, Maraudeurs des Montagnes règnent sur les neiges, et Exigences de Pillage maintiennent chaque seigneur de guerre payé." />
+
+    <string id="taom_faction_overlordship_of_gundabad_name" text="Suzeraineté de Gundabad" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_0_desc" text="Coût en influence d'armée réduit de 40% — la terreur contraint l'obéissance." />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_0_name" text="Horde Orque" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_1_desc" text="+20% limite de taille de groupe et +10% vitesse de groupe sur neige." />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_1_name" text="Essaim des Montagnes" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_2_desc" text="+3 Chef de bande et +1 notable Artisan par ville — le recrutement gonfle avec les pillards." />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_2_name" text="Chefs de Guerre des Bandes Pâles" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_0" text="Hordes montagnardes bon marché" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_1" text="Mobilité dans la neige" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_2" text="L'économie de pillage garde le garde-manger plein" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_3" text="Nombreux seigneurs de guerre prêts à marcher" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_0_desc" text="La ligne lourde d'élite de Bolg." />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_0_name" text="Champion Orque Pâle" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_1_desc" text="Bête de siège dévastatrice." />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_1_name" text="Troll de Guerre de Gundabad" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_2_desc" text="Cavalerie d'escarmouche rapide." />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_2_name" text="Éclaireur Warg" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_0" text="Mont Gundabad" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_1" text="Capitale Orque du Nord" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_2" text="Orques Pâles de Bolg" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_3" text="Site Sacré Nain Perdu" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_0" text="Les Exigences de Pillage épuisent le trésor" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_1" text="Universellement hostile aux Peuples Libres" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_2" text="Les Nains et les Elfes haïssent les Orques Pâles" />
+
+    <string id="taom_faction_remnants_of_angmar_desc" text="Le royaume redouté du Roi-Sorcier d'Angmar dans l'extrême nord. Depuis sa forteresse de Carn Dûm, le Roi-Sorcier fait la guerre aux vestiges de l'Arnor." />
+
+    <string id="taom_faction_remnants_of_angmar_name" text="Vestiges d'Angmar" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_0" text="Le Roi-Sorcier" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_1" text="Forteresse de Carn Dûm" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_2" text="Sorcellerie et Terreur" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_3" text="Destructeur de l'Arnor" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_0" text="+10% vitesse de groupe dans les plaines (Hommes des Champs)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_1" text="+2,5% limite de taille de groupe (Armées Permanentes)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_2" text="-20% salaire de garnison (Garde de la Tour)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_3" text="+30% récompense d'influence d'armée (Discipline Gondorienne)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_4" text="+5 moral de groupe (Détermination Gondorienne)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_5" text="+1 loyauté de colonie par jour (Discipline de la Garde de la Tour)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_6" text="-15% croissance de foyer de village (Terres Épuisées par la Guerre)" />
+
+    <string id="taom_faction_stewardship_of_gondor_desc" text="Le dernier bastion des Dúnedain au sud. La Garde de la Tour tient la ligne, la Discipline Gondorienne rallie les armées à moindre coût, et les Hommes des Champs marchent dans les plaines. Les Terres Épuisées par la Guerre se développent lentement — mais le Gondor tient bon." />
+
+    <string id="taom_faction_stewardship_of_gondor_name" text="Intendance du Gondor" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_0_desc" text="-20% salaire de garnison et +1 loyauté de colonie par jour." />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_0_name" text="Discipline de la Garde de la Tour" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_1_desc" text="+5 moral de groupe et +30% influence d'armée accordée en cas de succès." />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_1_name" text="Détermination Gondorienne" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_2_desc" text="+10% vitesse de groupe dans les plaines et +2,5% taille de groupe — le Pelennor est un terrain dégagé." />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_2_name" text="Hommes des Champs" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_0" text="Variété équilibrée de troupes" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_1" text="Moral et loyauté élevés" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_2" text="Garnisons disciplinées" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_3" text="Commandement riche en influence" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_0_desc" text="Infanterie blindée d'élite de Minas Tirith." />
+
+    <string id="taom_faction_stewardship_of_gondor_su_0_name" text="Garde de la Citadelle" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_1_desc" text="Cavalerie lourde de Dol Amroth." />
+
+    <string id="taom_faction_stewardship_of_gondor_su_1_name" text="Chevalier du Cygne" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_2_desc" text="Éclaireurs-archers Dúnedain." />
+
+    <string id="taom_faction_stewardship_of_gondor_su_2_name" text="Rôdeur d'Ithilien" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_0" text="Héritage Dúnedain" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_1" text="Garde de la Tour" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_2" text="Arbre Blanc du Gondor" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_3" text="Règne de l'Intendant" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_0" text="Terres épuisées par la guerre croissent lentement" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_1" text="Nombreuses frontières à défendre" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_2" text="Unités d'élite liées à des régions spécifiques" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_desc" text="Une région dominée par de sauvages tribus orques des montagnes orientales. Pillards féroces qui terrorisent les marches entre le Khand et le Harad." />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_name" text="Forteresse d'Ered Gwaer" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_trait_0" text="Bandes de Guerre Orques" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_trait_1" text="Pillards des Montagnes" />
+
+    <string id="taom_faction_stronghold_of_narager_desc" text="Une région orientale désolée infestée de tribus orques. Ces bandes sauvages pillent les marches et servent d'éclaireurs aux forces des ténèbres." />
+
+    <string id="taom_faction_stronghold_of_narager_name" text="Forteresse de Narager" />
+
+    <string id="taom_faction_stronghold_of_narager_trait_0" text="Raids Orques" />
+
+    <string id="taom_faction_stronghold_of_narager_trait_1" text="Étendues Orientales" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_0" text="+10% vitesse de groupe dans le désert (Fils du Soleil)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_1" text="+5% limite de taille de groupe (Bandes de Guerre Haradrim)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="-30% coût de construction de caravane + -10% pénalité commerciale (Commerçant Aserai, hérité)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="Aucune pénalité de vitesse dans le désert (Désert Aserai, hérité)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="+5% salaires quotidiens des troupes (Salaires Aserai, hérité)" />
+
+    <string id="taom_faction_taskralan_of_harwan_desc" text="Les Haradrim de Harwan, fils du soleil. Résilience du désert Aserai héritée ; les Fils du Soleil de TAOM ajoutent +10% de vitesse de groupe dans le désert ; les Bandes de Guerre Haradrim ajoutent de la taille de groupe en plus de l'économie caravanière héritée. Les Mûmakil règnent sur les plaines du sud." />
+
+    <string id="taom_faction_taskralan_of_harwan_name" text="Taskralan de Harwan" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_0_desc" text="+10% vitesse de groupe dans le désert — nés pour les sables brûlants." />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_0_name" text="Fils du Soleil" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_1_desc" text="+5% limite de taille de groupe — les bandes de guerre tribales chevauchent ensemble à l'appel du Mordor." />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_1_name" text="Bandes de Guerre Haradrim" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="Commerçant Aserai hérité (-30% caravanes, -10% pénalité commerciale) et Désert Aserai (aucune pénalité de vitesse dans le désert) ; +5% salaires quotidiens." />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="Lignée du Désert Aserai" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_0" text="Bêtes de guerre Mûmakil" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_1" text="Mobilité dans le désert" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_2" text="Bandes de guerre plus importantes" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_3" text="Tradition caravanière aséraï" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_0_desc" text="Bête de guerre dévastatrice." />
+
+    <string id="taom_faction_taskralan_of_harwan_su_0_name" text="Tour de guerre de Mûmak" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_1_desc" text="Élite à l'arc long du grand sud." />
+
+    <string id="taom_faction_taskralan_of_harwan_su_1_name" text="Archer Mahûd du Harad" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_2_desc" text="Cavalerie d'escarmouche légère." />
+
+    <string id="taom_faction_taskralan_of_harwan_su_2_name" text="Cavalier bruni par le soleil" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_0" text="Bêtes de guerre Mûmakil" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_1" text="Guerriers du désert" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_2" text="Peau bronze-soleil" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_3" text="Alliance méridionale" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_0" text="Pénalité de climat froid" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_1" text="Luttes tribales internes" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_2" text="Peu de forgerons et de murailles" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="+5% de salaires des troupes empruntés aux Aséraïs" />
+
+    <string id="taom_faction_taskralan_of_shaghana_desc" text="Le Taskralan de Shaghâna." />
+
+    <string id="taom_faction_taskralan_of_shaghana_name" text="Taskralan de Shaghâna" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_desc" text="Les terres sauvages d'Enedwaith entre l'Arnor et le Gondor. Foyer de clans dispersés d'Hommes qui ne répondent à aucun roi, vivant comme chasseurs et bergers." />
+
+    <string id="taom_faction_wildmen_of_enedwaith_name" text="Sauvages d'Enedwaith" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_0" text="Clans dispersés" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_1" text="Chasseurs sauvages" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_2" text="Aucune autorité centrale" />
+
   </strings>
 
 </base>

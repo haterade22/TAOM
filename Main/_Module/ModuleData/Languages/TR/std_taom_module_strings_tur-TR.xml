@@ -652,6 +652,74 @@
 
     <string id="taom_str_neutral_term_for_culture.erebor" text="Erebor Cüceleri" />
 
+    <string id="taom_str_faction_official.abanissa" text="bir Hane lordu" />
+
+    <string id="taom_str_faction_official.abanissa_f" text="bir Hane leydi" />
+
+    <string id="taom_str_faction_ruler.abanissa" text="Châjaphân" />
+
+    <string id="taom_str_faction_ruler.abanissa_f" text="Châjaphân" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.abanissa" text="Châjaphân {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.abanissa" text="Châjaphân {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.abanissa" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.abanissa" text="Âbanissalı" />
+
+    <string id="taom_str_short_term_for_faction.abanissa" text="Âbanissalı" />
+
+    <string id="taom_str_faction_formal_name_for_culture.abanissa" text="Âbanissa Hâkimiyeti" />
+
+    <string id="taom_str_faction_informal_name_for_culture.abanissa" text="Âbanissa" />
+
+    <string id="taom_str_neutral_term_for_culture.abanissa" text="Âbanissa Haradrimleri" />
+
+    <string id="taom_str_culture_description.abanissa" text="Âbanissa, Harad'ın derin güneyinde, nemli ormanlar ve kadim taş hanedanların diyarıdır. Âbanissa'nın büyük Haneleri korkunç savaş canavarlarına ve disiplinli mızrakçı ordularına kumanda eder; güçleri Sauron'dan başkasına hesap vermez. Hanedan sancakları altında yürürler ve güney topraklarında hem saygı hem de dehşet uyandırırlar." />
+
+    <string id="taom_str_culture_rich_name.abanissa" text="Âbanissalı" />
+
+    <string id="taom_str_adjective_for_culture.abanissa" text="Âbanissalı" />
+
+    <string id="taom_str_player_father_name.abanissa" text="Sohrab" />
+
+    <string id="taom_str_player_mother_name.abanissa" text="Nilûphar" />
+
+    <string id="taom_str_faction_official.shaghana" text="bir klan reisi" />
+
+    <string id="taom_str_faction_official.shaghana_f" text="bir klan leydi" />
+
+    <string id="taom_str_faction_ruler.shaghana" text="Taskral" />
+
+    <string id="taom_str_faction_ruler.shaghana_f" text="Taskral" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.shaghana" text="Taskral {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.shaghana" text="Taskral {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.shaghana" text="{?RULER.GENDER}Leydi{?}Lord{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.shaghana" text="Shaghânalı" />
+
+    <string id="taom_str_short_term_for_faction.shaghana" text="Shaghânalı" />
+
+    <string id="taom_str_faction_formal_name_for_culture.shaghana" text="Shaghâna Kabileleri" />
+
+    <string id="taom_str_faction_informal_name_for_culture.shaghana" text="Shaghâna" />
+
+    <string id="taom_str_neutral_term_for_culture.shaghana" text="Shaghâna Haradrimleri" />
+
+    <string id="taom_str_culture_description.shaghana" text="Shaghâna, Harad'ın doğu ucu olup güneşin kavurduğu bozkırlar ve kadim kalelerin diyarıdır. Dokuz kabile klanı, yemin ve kan bağıyla birbirine bağlı vahşi biniciler ve akıncılardır; karşı çıkmaya cesaret edenlerin kalbine korku salarlar. Taskral'larına ve onun aracılığıyla Sauron'un iradesine cevap verirler." />
+
+    <string id="taom_str_culture_rich_name.shaghana" text="Shaghânalı" />
+
+    <string id="taom_str_adjective_for_culture.shaghana" text="Shaghânalı" />
+
+    <string id="taom_str_player_father_name.shaghana" text="Zarkan" />
+
+    <string id="taom_str_player_mother_name.shaghana" text="Khansa" />
+
     <string id="0aXG8dvJ" text="{KINGDOM_NAME} ile barış yap. Haraç ödenmeyecek." />
 
     <string id="0CsbbwtN" text="{CALLED_KINGDOM}'i {KINGDOM_TO_CALL_TO_WAR_AGAINST}'e Karşı Savaşa Çağır" />
@@ -1284,11 +1352,2394 @@
 
     <string id="taom_career_free_points" text="Serbest Puan: {COUNT}" />
 
+    <string id="taom_career_tier_requirement" text="{LEVEL}. Seviye Gerektirir" />
+
+    <string id="taom_career_rank1_avanc_luth_raider" text="Boyalı Yağmacı" />
+
+    <string id="taom_career_rank2_avanc_luth_raider" text="Klan Çılgın Savaşçısı" />
+
+    <string id="taom_career_rank3_avanc_luth_raider" text="Avanc-lúth Savaş Başkanı" />
+
+    <string id="taom_career_rank1_balchoth_kan" text="Balchoth Atlısı" />
+
+    <string id="taom_career_rank2_balchoth_kan" text="Balchoth Savaş Arabası Kaptanı" />
+
+    <string id="taom_career_rank3_balchoth_kan" text="Balchoth Savaş Lordu Kân" />
+
+    <string id="taom_career_rank1_black_uruk_captain" text="Uruk Askeri" />
+
+    <string id="taom_career_rank2_black_uruk_captain" text="Kara Uruk" />
+
+    <string id="taom_career_rank3_black_uruk_captain" text="Kızıl Göz Kaptanı" />
+
+    <string id="taom_career_rank1_blade_dancer" text="Ñoldor Kılıç Ustası" />
+
+    <string id="taom_career_rank2_blade_dancer" text="Altın Çiçek Kılıcı" />
+
+    <string id="taom_career_rank3_blade_dancer" text="Imladris Kılıç Ustası" />
+
+    <string id="taom_career_rank1_blademaster_of_ren" text="Rên Kılıcı" />
+
+    <string id="taom_career_rank2_blademaster_of_ren" text="Yeminli Kılıç Ustası" />
+
+    <string id="taom_career_rank3_blademaster_of_ren" text="Kızıl Ağız Kânı" />
+
+    <string id="taom_career_rank1_captain_of_osgiliath" text="Geçit Ohtarı" />
+
+    <string id="taom_career_rank2_captain_of_osgiliath" text="Osgiliath Muhafızı" />
+
+    <string id="taom_career_rank3_captain_of_osgiliath" text="Osgiliath Kaptanı" />
+
+    <string id="taom_career_rank1_cave_troll_master" text="Çukur Sürücüsü" />
+
+    <string id="taom_career_rank2_cave_troll_master" text="Gundabad Trol Dürtücüsü" />
+
+    <string id="taom_career_rank3_cave_troll_master" text="Kırık Troller Yapıcısı" />
+
+    <string id="taom_career_rank1_chariot_warlord" text="Tırpan Sürücüsü" />
+
+    <string id="taom_career_rank2_chariot_warlord" text="Savaş Arabası Savaş Lordu" />
+
+    <string id="taom_career_rank3_chariot_warlord" text="Khand Wainkânı" />
+
+    <string id="taom_career_rank1_clanguard_rider" text="Klan Keşif Atlısı" />
+
+    <string id="taom_career_rank2_clanguard_rider" text="Yaban Domuzu Sancaklı Atlı" />
+
+    <string id="taom_career_rank3_clanguard_rider" text="Vahşi Av Ustası" />
+
+    <string id="taom_career_rank1_codyan_legionaire" text="Côdyan Kalkancısı" />
+
+    <string id="taom_career_rank2_codyan_legionaire" text="Côdyan Zırh Veteranı" />
+
+    <string id="taom_career_rank3_codyan_legionaire" text="Rhûn Demir Duvarı" />
+
+    <string id="taom_career_rank1_corsair_boarder" text="Güverte Yağmacısı" />
+
+    <string id="taom_career_rank2_corsair_boarder" text="Liman Korsanı" />
+
+    <string id="taom_career_rank3_corsair_boarder" text="Umbar Kara Yağmacısı" />
+
+    <string id="taom_career_rank1_corsair_captain" text="Kara Filo'nun Efendisi" />
+
+    <string id="taom_career_rank2_corsair_captain" text="Gemilerin Kaptanı" />
+
+    <string id="taom_career_rank3_corsair_captain" text="Umbar Lordu" />
+
+    <string id="taom_career_rank1_corsair_crossbow" text="Arma Nişancısı" />
+
+    <string id="taom_career_rank2_corsair_crossbow" text="Korsan Keskin Nişancı" />
+
+    <string id="taom_career_rank3_corsair_crossbow" text="Filonun Kitle Kıranı" />
+
+    <string id="taom_career_rank1_crossbow_master" text="Cıvata Ustası" />
+
+    <string id="taom_career_rank2_crossbow_master" text="Usta Arbalet Savaşçısı" />
+
+    <string id="taom_career_rank3_crossbow_master" text="Demir Tepeler'in Motor Lordu" />
+
+    <string id="taom_career_rank1_dale_guardsman" text="Dale Kapı Bekçisi" />
+
+    <string id="taom_career_rank2_dale_guardsman" text="Girion'un Kalkan Askeri" />
+
+    <string id="taom_career_rank3_dale_guardsman" text="Dale Şövalyesi" />
+
+    <string id="taom_career_rank1_dale_marksman" text="Esgaroth Okçusu" />
+
+    <string id="taom_career_rank2_dale_marksman" text="Ejderha Avcısı" />
+
+    <string id="taom_career_rank3_dale_marksman" text="Kara Ok'un Taşıyıcısı" />
+
+    <string id="taom_career_rank1_dale_outrider" text="Dale Yol Atlısı" />
+
+    <string id="taom_career_rank2_dale_outrider" text="Kuzey Yolu Muhafızı" />
+
+    <string id="taom_career_rank3_dale_outrider" text="Barding'lerin Mareşali" />
+
+    <string id="taom_career_rank1_elk_rider" text="Ormanlık Öncü Atlısı" />
+
+    <string id="taom_career_rank2_elk_rider" text="Mirkwood Geyik Muhafızı" />
+
+    <string id="taom_career_rank3_elk_rider" text="Eryn Lasgalen'in Boynuzlu Lordu" />
+
+    <string id="taom_career_rank1_elven_archer" text="Ñoldor Okçusu" />
+
+    <string id="taom_career_rank2_elven_archer" text="Göksel Yay'ın Nöbetçisi" />
+
+    <string id="taom_career_rank3_elven_archer" text="Imladris Muhafızı" />
+
+    <string id="taom_career_rank1_eotheod_windrider" text="Mark Atlısı" />
+
+    <string id="taom_career_rank2_eotheod_windrider" text="Éored Kaptanı" />
+
+    <string id="taom_career_rank3_eotheod_windrider" text="Riddermark Mareşali" />
+
+    <string id="taom_career_rank1_fell_rider" text="Kara Atlı" />
+
+    <string id="taom_career_rank2_fell_rider" text="Uğursuz Atlı" />
+
+    <string id="taom_career_rank3_fell_rider" text="Doğu'nun Gölgesi" />
+
+    <string id="taom_career_rank1_galadhrim_archer" text="Galadhrim Okçusu" />
+
+    <string id="taom_career_rank2_galadhrim_archer" text="Mallorn Dallarının Okçusu" />
+
+    <string id="taom_career_rank3_galadhrim_archer" text="Altın Orman'ın Baş Okçusu" />
+
+    <string id="taom_career_rank1_goblin_sniper" text="Kaya Pusucusu" />
+
+    <string id="taom_career_rank2_goblin_sniper" text="Yüksek Geçit Takipçisi" />
+
+    <string id="taom_career_rank3_goblin_sniper" text="Gundabad'ın Gözü" />
+
+    <string id="taom_career_rank1_ironguard" text="Derin Muhafız" />
+
+    <string id="taom_career_rank2_ironguard" text="Erebor Demir Muhafızı" />
+
+    <string id="taom_career_rank3_ironguard" text="Durin'in Kalkan Duvarı" />
+
+    <string id="taom_career_rank1_knight_of_belfalas" text="Dol Amroth Çırağı" />
+
+    <string id="taom_career_rank2_knight_of_belfalas" text="Kuğu-Şövalyesi" />
+
+    <string id="taom_career_rank3_knight_of_belfalas" text="Gümüş Kuğu Şövalyesi" />
+
+    <string id="taom_career_rank1_lokhas_drus_marksman" text="Lôkhas Drûs Okçusu" />
+
+    <string id="taom_career_rank2_lokhas_drus_marksman" text="Lôkhas Drûs Zırh-Delicisi" />
+
+    <string id="taom_career_rank3_lokhas_drus_marksman" text="Doğu'nun Güneş Tüylü Ölümü" />
+
+    <string id="taom_career_rank1_mahud_beast_rider" text="Mahûd Canavar-Ehlileştiricisi" />
+
+    <string id="taom_career_rank2_mahud_beast_rider" text="Mûmak Sürücüsü" />
+
+    <string id="taom_career_rank3_mahud_beast_rider" text="Mûmak Savaş-Önderi" />
+
+    <string id="taom_career_rank1_marksman_of_aldburg" text="Eastfold Okçusu" />
+
+    <string id="taom_career_rank2_marksman_of_aldburg" text="Aldburg Nişancısı" />
+
+    <string id="taom_career_rank3_marksman_of_aldburg" text="Mark'ın Ok-Muhafızı" />
+
+    <string id="taom_career_rank1_mulkerhili_cultist" text="Fısıltı-Yeminlisi" />
+
+    <string id="taom_career_rank2_mulkerhili_cultist" text="Lugbúrz'un Sesi" />
+
+    <string id="taom_career_rank3_mulkerhili_cultist" text="Kapaksız Göz'ün Habercisi" />
+
+    <string id="taom_career_rank1_necromancer_acolyte" text="Büyücülük Çırağı" />
+
+    <string id="taom_career_rank2_necromancer_acolyte" text="Kara Nefes'in Dokuyucusu" />
+
+    <string id="taom_career_rank3_necromancer_acolyte" text="Dol Guldur Üstadı" />
+
+    <string id="taom_career_rank1_olog_hai_warchief" text="Savaş-Trollü" />
+
+    <string id="taom_career_rank2_olog_hai_warchief" text="Olog-hai" />
+
+    <string id="taom_career_rank3_olog_hai_warchief" text="Lugbúrz Savaş Reisi" />
+
+    <string id="taom_career_rank1_pezarsani_javelineer" text="Pezarsan Cirit Atıcısı" />
+
+    <string id="taom_career_rank2_pezarsani_javelineer" text="Fırlatma-Mızraklı Çevik Savaşçı" />
+
+    <string id="taom_career_rank3_pezarsani_javelineer" text="Kızıl Mızrak Ustası" />
+
+    <string id="taom_career_rank1_ram_rider" text="Koç-Kırıcı" />
+
+    <string id="taom_career_rank2_ram_rider" text="Keçi Sırtı Hücumcusu" />
+
+    <string id="taom_career_rank3_ram_rider" text="Dáin'in Öncüsü" />
+
+    <string id="taom_career_rank1_ranger_of_ithilien" text="Ithilien İzcisi" />
+
+    <string id="taom_career_rank2_ranger_of_ithilien" text="Ithilien Korucu'su" />
+
+    <string id="taom_career_rank3_ranger_of_ithilien" text="Beyaz Bölük Yüzbaşısı" />
+
+    <string id="taom_career_rank1_rivendell_knight" text="Imladris Ohtarı" />
+
+    <string id="taom_career_rank2_rivendell_knight" text="Imladris Roqueni" />
+
+    <string id="taom_career_rank3_rivendell_knight" text="Altın Çiçek Şövalyesi" />
+
+    <string id="taom_career_rank1_sentinel" text="Egladil Atlısı" />
+
+    <string id="taom_career_rank2_sentinel" text="Altın Orman Tirith'i" />
+
+    <string id="taom_career_rank3_sentinel" text="Caras Galadhon Thalion'u" />
+
+    <string id="taom_career_rank1_shadow_walker" text="Orman Avcısı" />
+
+    <string id="taom_career_rank2_shadow_walker" text="Taur-nu-Fuin Gölgesi" />
+
+    <string id="taom_career_rank3_shadow_walker" text="Örümceklerin Laneti" />
+
+    <string id="taom_career_rank1_shadow_warrior" text="Gölge'nin Kölesi" />
+
+    <string id="taom_career_rank2_shadow_warrior" text="Dol Guldur Hizmetkârı" />
+
+    <string id="taom_career_rank3_shadow_warrior" text="Ölüçağıranın Kara Eli" />
+
+    <string id="taom_career_rank1_silvan_archer" text="Yeşilorman Yayçısı" />
+
+    <string id="taom_career_rank2_silvan_archer" text="Silvan Nişancısı" />
+
+    <string id="taom_career_rank3_silvan_archer" text="Elf Kralının Okçusu" />
+
+    <string id="taom_career_rank1_snaga_rider" text="Snaga" />
+
+    <string id="taom_career_rank2_snaga_rider" text="Duman-Akıncısı" />
+
+    <string id="taom_career_rank3_snaga_rider" text="Lugbúrz'un Gölgesi" />
+
+    <string id="taom_career_rank1_steppe_bowmaster" text="Ova Keşifçisi" />
+
+    <string id="taom_career_rank2_steppe_bowmaster" text="Bozkır Yay Ustası" />
+
+    <string id="taom_career_rank3_steppe_bowmaster" text="Fırtınayay Kân'ı" />
+
+    <string id="taom_career_rank1_tribesman_of_jelut" text="Jelut Kabile Savaşçısı" />
+
+    <string id="taom_career_rank2_tribesman_of_jelut" text="Kumfırtınası Akıncısı" />
+
+    <string id="taom_career_rank3_tribesman_of_jelut" text="Yılan-Sancak Reisi" />
+
+    <string id="taom_career_rank1_uruk_berserker" text="Çukur-Doğan Uruk" />
+
+    <string id="taom_career_rank2_uruk_berserker" text="Savaşçı Uruk-hai" />
+
+    <string id="taom_career_rank3_uruk_berserker" text="Beyaz El Yağmacısı" />
+
+    <string id="taom_career_rank1_uruk_crossbow" text="Ocak-Silahlı Uruk" />
+
+    <string id="taom_career_rank2_uruk_crossbow" text="Orthanc Nişancısı" />
+
+    <string id="taom_career_rank3_uruk_crossbow" text="Beyaz El Keskin Nişancısı" />
+
+    <string id="taom_career_rank1_warden" text="Orman Kenarı Muhafızı" />
+
+    <string id="taom_career_rank2_warden" text="Lórien'in Sınır Muhafızı" />
+
+    <string id="taom_career_rank3_warden" text="Sınır Muhafızları Kaptanı" />
+
+    <string id="taom_career_rank1_warg_pack_leader" text="Sürünün Warg-Binicisi" />
+
+    <string id="taom_career_rank2_warg_pack_leader" text="Korkunç Kurt-Kaptanı" />
+
+    <string id="taom_career_rank3_warg_pack_leader" text="Vahşi Avın Kurt-Lordu" />
+
+    <string id="taom_career_rank1_warg_scout" text="Kurt-Binici" />
+
+    <string id="taom_career_rank2_warg_scout" text="Isengard'ın Warg-Gözcüsü" />
+
+    <string id="taom_career_rank3_warg_scout" text="Beyaz El Avcısı" />
+
+    <string id="taom_career_rank1_watchman_of_stangard" text="Stangard Bekçisi" />
+
+    <string id="taom_career_rank2_watchman_of_stangard" text="Limlight Geçidi Muhafızı" />
+
+    <string id="taom_career_rank3_watchman_of_stangard" text="Doğu Sınırları Muhafızı" />
+
+    <string id="taom_career_rank1_wolfskin_hunter" text="Kurt-Postu Takipçisi" />
+
+    <string id="taom_career_rank2_wolfskin_hunter" text="Gölge-Nişancı" />
+
+    <string id="taom_career_rank3_wolfskin_hunter" text="Tepelerin Boz Avcısı" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t1_a" text="Tepe-Klanı Çılgını" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t1_b" text="Yeminli Balta-Atıcı" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t2_a" text="Kan-Borcu Yağmacısı" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t2_b" text="Savaş-ilahisi Tepelisi" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t3_a" text="Avanc-lúth Savaş-Reisi" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t3_b" text="Savaş Ordusu Lordu" />
+
+    <string id="taom_career_grp_balchoth_kan_t1_a" text="Balchoth Atlısı" />
+
+    <string id="taom_career_grp_balchoth_kan_t1_b" text="Korkusuz Öncü" />
+
+    <string id="taom_career_grp_balchoth_kan_t2_a" text="Rhûn Savaş Arabacısı" />
+
+    <string id="taom_career_grp_balchoth_kan_t2_b" text="Demir Süvari" />
+
+    <string id="taom_career_grp_balchoth_kan_t3_a" text="Durdurulamaz Dalga" />
+
+    <string id="taom_career_grp_balchoth_kan_t3_b" text="Korku Ordusu" />
+
+    <string id="taom_career_grp_black_uruk_captain_t1_a" text="Ocakta Sertleşmiş Deri" />
+
+    <string id="taom_career_grp_black_uruk_captain_t1_b" text="İlk Kan Çılgınlığı" />
+
+    <string id="taom_career_grp_black_uruk_captain_t2_a" text="Lugbúrz'un Çılgın Savaşçısı" />
+
+    <string id="taom_career_grp_black_uruk_captain_t2_b" text="Sonsuz Öfke" />
+
+    <string id="taom_career_grp_black_uruk_captain_t3_a" text="Kapaksız Göz'ün Gazabı" />
+
+    <string id="taom_career_grp_black_uruk_captain_t3_b" text="Kara Kapı Kaptanı" />
+
+    <string id="taom_career_grp_blade_dancer_t1_a" text="Yıldız Işıltılı Çelik" />
+
+    <string id="taom_career_grp_blade_dancer_t1_b" text="Imladris Muhafızı" />
+
+    <string id="taom_career_grp_blade_dancer_t2_a" text="Gondolin Dansı" />
+
+    <string id="taom_career_grp_blade_dancer_t2_b" text="Gizli Vadi'nin Koruyucusu" />
+
+    <string id="taom_career_grp_blade_dancer_t3_a" text="Birinci Çağ'ın Kılıcı" />
+
+    <string id="taom_career_grp_blade_dancer_t3_b" text="Eärendil'in Işığı" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t1_a" text="Saray Düellocusu" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t1_b" text="Sarsılmaz Kılıç" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t2_a" text="Amansız Ağız" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t2_b" text="Rên Muhafızı" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t3_a" text="Kasırga Katili" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t3_b" text="Yenilmez Kılıç Lordu" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t1_a" text="Doğu Kıyısı Muhafızı" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t1_b" text="Anduin Geçidi Bekçisi" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t2_a" text="Rammas Öncüsü" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t2_b" text="Son Köprü'nün Kılıcı" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t3_a" text="Faramir'in Ordusu" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t3_b" text="Yıldızlar Kubbesi'nin Lordu" />
+
+    <string id="taom_career_grp_cave_troll_master_t1_a" text="Çukur Kırbaç Sürücüsü" />
+
+    <string id="taom_career_grp_cave_troll_master_t1_b" text="Mağara Ağzı Muhafızı" />
+
+    <string id="taom_career_grp_cave_troll_master_t2_a" text="Goblin-kasabası Tiranı" />
+
+    <string id="taom_career_grp_cave_troll_master_t2_b" text="Derin Kale Kırıcısı" />
+
+    <string id="taom_career_grp_cave_troll_master_t3_a" text="Gundabad'ın Belası" />
+
+    <string id="taom_career_grp_cave_troll_master_t3_b" text="Kuzey Salonları'nın Dehşeti" />
+
+    <string id="taom_career_grp_chariot_warlord_t1_a" text="Tırpan Sürücüsü" />
+
+    <string id="taom_career_grp_chariot_warlord_t1_b" text="Demir Tekerlek" />
+
+    <string id="taom_career_grp_chariot_warlord_t2_a" text="Hasat Hücumu" />
+
+    <string id="taom_career_grp_chariot_warlord_t2_b" text="Korumalı Takım" />
+
+    <string id="taom_career_grp_chariot_warlord_t3_a" text="Pelennor Biçicisi" />
+
+    <string id="taom_career_grp_chariot_warlord_t3_b" text="Khand'ın Tekerleği" />
+
+    <string id="taom_career_grp_clanguard_rider_t1_a" text="Klan Gök-Gürültüsü Atlısı" />
+
+    <string id="taom_career_grp_clanguard_rider_t1_b" text="Yeminli Klan Muhafızı" />
+
+    <string id="taom_career_grp_clanguard_rider_t2_a" text="Savaş Sürüsü Öncüsü" />
+
+    <string id="taom_career_grp_clanguard_rider_t2_b" text="Tepelerin Sancağı" />
+
+    <string id="taom_career_grp_clanguard_rider_t3_a" text="Tüm Atlıların Lordu" />
+
+    <string id="taom_career_grp_clanguard_rider_t3_b" text="Sonsuz Savaş Sürüsü" />
+
+    <string id="taom_career_grp_codyan_legionaire_t1_a" text="Côdyan Öncüsü" />
+
+    <string id="taom_career_grp_codyan_legionaire_t1_b" text="Sadık Kalkancı" />
+
+    <string id="taom_career_grp_codyan_legionaire_t2_a" text="Rhûn Duvarı" />
+
+    <string id="taom_career_grp_codyan_legionaire_t2_b" text="Demir Zırhlı Falanj" />
+
+    <string id="taom_career_grp_codyan_legionaire_t3_a" text="Kırılmaz Hat" />
+
+    <string id="taom_career_grp_codyan_legionaire_t3_b" text="Asla Düşmeyen Duvar" />
+
+    <string id="taom_career_grp_corsair_boarder_t1_a" text="Güverte Yağmacısı" />
+
+    <string id="taom_career_grp_corsair_boarder_t1_b" text="Deniz Sertleşmişi" />
+
+    <string id="taom_career_grp_corsair_boarder_t2_a" text="Pelargir Yıkıcısı" />
+
+    <string id="taom_career_grp_corsair_boarder_t2_b" text="Limanın Kalkanı" />
+
+    <string id="taom_career_grp_corsair_boarder_t3_a" text="Kıyıların Belası" />
+
+    <string id="taom_career_grp_corsair_boarder_t3_b" text="Kara Númenórlu Savaş Lordu" />
+
+    <string id="taom_career_grp_corsair_captain_t1_a" text="Umbar Baskın Lideri" />
+
+    <string id="taom_career_grp_corsair_captain_t1_b" text="Mürettebat Ustası" />
+
+    <string id="taom_career_grp_corsair_captain_t2_a" text="Castamir'in Varisi" />
+
+    <string id="taom_career_grp_corsair_captain_t2_b" text="Kara Filo Dümeni" />
+
+    <string id="taom_career_grp_corsair_captain_t3_a" text="Korsanların Lordu" />
+
+    <string id="taom_career_grp_corsair_captain_t3_b" text="Büyük Limanın Lordu" />
+
+    <string id="taom_career_grp_corsair_crossbow_t1_a" text="Halat Nişancısı" />
+
+    <string id="taom_career_grp_corsair_crossbow_t1_b" text="Karga Yuvası Nöbetçisi" />
+
+    <string id="taom_career_grp_corsair_crossbow_t2_a" text="Dümencilerin Avcısı" />
+
+    <string id="taom_career_grp_corsair_crossbow_t2_b" text="Kara Yelkenlerin Mızrağı" />
+
+    <string id="taom_career_grp_corsair_crossbow_t3_a" text="Kara Yıldız Oku" />
+
+    <string id="taom_career_grp_corsair_crossbow_t3_b" text="Durmayan Yağmur" />
+
+    <string id="taom_career_grp_crossbow_master_t1_a" text="Demir Tepeleri Yağmuru" />
+
+    <string id="taom_career_grp_crossbow_master_t1_b" text="Dale Gözcüsü" />
+
+    <string id="taom_career_grp_crossbow_master_t2_a" text="Amansız Cıvata" />
+
+    <string id="taom_career_grp_crossbow_master_t2_b" text="Dağın Mancınığı" />
+
+    <string id="taom_career_grp_crossbow_master_t3_a" text="Çelik Fırtınası" />
+
+    <string id="taom_career_grp_crossbow_master_t3_b" text="Erebor'un Motoru" />
+
+    <string id="taom_career_grp_dale_guardsman_t1_a" text="Dale Kapı Muhafızı" />
+
+    <string id="taom_career_grp_dale_guardsman_t1_b" text="Esgaroth Kalkan Duvarı" />
+
+    <string id="taom_career_grp_dale_guardsman_t2_a" text="Girion'un Mızrağı" />
+
+    <string id="taom_career_grp_dale_guardsman_t2_b" text="Koşan Nehir'in Kalkanı" />
+
+    <string id="taom_career_grp_dale_guardsman_t3_a" text="Kral Brand'ın Öncüsü" />
+
+    <string id="taom_career_grp_dale_guardsman_t3_b" text="Erebor'daki Son Direniş" />
+
+    <string id="taom_career_grp_dale_marksman_t1_a" text="Esgaroth Okçusu" />
+
+    <string id="taom_career_grp_dale_marksman_t1_b" text="Uzun Göl'ün Nöbetçisi" />
+
+    <string id="taom_career_grp_dale_marksman_t2_a" text="Kara Ok'un Varisi" />
+
+    <string id="taom_career_grp_dale_marksman_t2_b" text="Ardıçkuşu Gözlü Okçu" />
+
+    <string id="taom_career_grp_dale_marksman_t3_a" text="Dale'in Ejderha Avcısı" />
+
+    <string id="taom_career_grp_dale_marksman_t3_b" text="Girion Soyunun Yayı" />
+
+    <string id="taom_career_grp_dale_outrider_t1_a" text="Koşan Nehir'in Atlısı" />
+
+    <string id="taom_career_grp_dale_outrider_t1_b" text="Kervan Yolu'nun Bekçisi" />
+
+    <string id="taom_career_grp_dale_outrider_t2_a" text="Uzun Vadi'nin Mızrağı" />
+
+    <string id="taom_career_grp_dale_outrider_t2_b" text="Erebor Dostluğu'nun Süvarisi" />
+
+    <string id="taom_career_grp_dale_outrider_t3_a" text="Kuzeyli Hücum" />
+
+    <string id="taom_career_grp_dale_outrider_t3_b" text="İki Kral'ın Habercisi" />
+
+    <string id="taom_career_grp_elk_rider_t1_a" text="Boynuzlu Hücum" />
+
+    <string id="taom_career_grp_elk_rider_t1_b" text="Toprakların Atlısı" />
+
+    <string id="taom_career_grp_elk_rider_t2_a" text="Orman Gürültüsü" />
+
+    <string id="taom_career_grp_elk_rider_t2_b" text="Thranduil'in Muhafızı" />
+
+    <string id="taom_career_grp_elk_rider_t3_a" text="Ağaçlar Altındaki Gazap" />
+
+    <string id="taom_career_grp_elk_rider_t3_b" text="Elf Kralı Salonu'nun Lordu" />
+
+    <string id="taom_career_grp_elven_archer_t1_a" text="Keskin Gözlü Gözcü" />
+
+    <string id="taom_career_grp_elven_archer_t1_b" text="Rivendell'in Nöbeti" />
+
+    <string id="taom_career_grp_elven_archer_t2_a" text="Durmak Bilmeyen Yaylım Ateşi" />
+
+    <string id="taom_career_grp_elven_archer_t2_b" text="Eregion Yayı" />
+
+    <string id="taom_career_grp_elven_archer_t3_a" text="Gil-galad'ın Fırtınası" />
+
+    <string id="taom_career_grp_elven_archer_t3_b" text="Vilya'nın Nöbeti" />
+
+    <string id="taom_career_grp_eotheod_windrider_t1_a" text="Eorl'un Varisi" />
+
+    <string id="taom_career_grp_eotheod_windrider_t1_b" text="Kır'ın Atlısı" />
+
+    <string id="taom_career_grp_eotheod_windrider_t2_a" text="Eorl'un Yemini" />
+
+    <string id="taom_career_grp_eotheod_windrider_t2_b" text="Mearas'ın Lordu" />
+
+    <string id="taom_career_grp_eotheod_windrider_t3_a" text="Pelennor Hücumu" />
+
+    <string id="taom_career_grp_eotheod_windrider_t3_b" text="Riddermark'ın Şarkısı" />
+
+    <string id="taom_career_grp_fell_rider_t1_a" text="Gölge Ordusu'nun Atlısı" />
+
+    <string id="taom_career_grp_fell_rider_t1_b" text="Kara Atların Bekçisi" />
+
+    <string id="taom_career_grp_fell_rider_t2_a" text="Dehşet Habercisi" />
+
+    <string id="taom_career_grp_fell_rider_t2_b" text="Kara Nefes'in Atlısı" />
+
+    <string id="taom_career_grp_fell_rider_t3_a" text="Dol Guldur'un Kara Atlısı" />
+
+    <string id="taom_career_grp_fell_rider_t3_b" text="Doğu'nun Gölgesi" />
+
+    <string id="taom_career_grp_galadhrim_archer_t1_a" text="Gümüş Okçu" />
+
+    <string id="taom_career_grp_galadhrim_archer_t1_b" text="Çitlerin Gözü" />
+
+    <string id="taom_career_grp_galadhrim_archer_t2_a" text="Mallorn Nişancısı" />
+
+    <string id="taom_career_grp_galadhrim_archer_t2_b" text="Flet'lerin Gözcüsü" />
+
+    <string id="taom_career_grp_galadhrim_archer_t3_a" text="Caras Galadhon'un Oku" />
+
+    <string id="taom_career_grp_galadhrim_archer_t3_b" text="Gümüşırmak'ın Bekçisi" />
+
+    <string id="taom_career_grp_goblin_sniper_t1_a" text="Kaya Avcısı" />
+
+    <string id="taom_career_grp_goblin_sniper_t1_b" text="Tünel Sinsi" />
+
+    <string id="taom_career_grp_goblin_sniper_t2_a" text="Yüksek Geçit Pusucusu" />
+
+    <string id="taom_career_grp_goblin_sniper_t2_b" text="Zehir Okçusu" />
+
+    <string id="taom_career_grp_goblin_sniper_t3_a" text="Ön Sundurma Yağmacısı" />
+
+    <string id="taom_career_grp_goblin_sniper_t3_b" text="Yüksek Geçit'in Gölgesi" />
+
+    <string id="taom_career_grp_ironguard_t1_a" text="Derinliklerin Çekici" />
+
+    <string id="taom_career_grp_ironguard_t1_b" text="Kapı Duvarı Bekçisi" />
+
+    <string id="taom_career_grp_ironguard_t2_a" text="Durin Halkının Gazabı" />
+
+    <string id="taom_career_grp_ironguard_t2_b" text="Erebor'un Kalkan Duvarı" />
+
+    <string id="taom_career_grp_ironguard_t3_a" text="Mithril Kalkanı" />
+
+    <string id="taom_career_grp_ironguard_t3_b" text="Arkenstone'un Muhafızı" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t1_a" text="Dol Amroth Mızraklısı" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t1_b" text="Körfez Bekçisi" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t2_a" text="Gümüş Kuğu'nun Atlısı" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t2_b" text="Imrahil'in Kalkan Duvarı" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t3_a" text="Kuğu Başlı Gemi Şövalyesi" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t3_b" text="Dol Amroth'un Hücumu" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t1_a" text="Rhûn'un Yaylım Ateşi" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t1_b" text="Sabit Okçu" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t2_a" text="Fırtına Yayı Nişancısı" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t2_b" text="Zırh Delici" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t3_a" text="Ok Fırtınası" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t3_b" text="Dinmeyen Dolu" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t1_a" text="Diş Öncüsü" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t1_b" text="Canavar Bekçisi" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t2_a" text="Çiğneyen Hücum" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t2_b" text="Howdah Koruyucusu" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t3_a" text="Mûmakan'ın Gazabı" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t3_b" text="Oliphant'ların Efendisi" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t1_a" text="Doğu Kıyısının Şahini" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t1_b" text="Folde'nin Bekçisi" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t2_a" text="Topluluk Kaptanı" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t2_b" text="Fangorn'un Gölgesi" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t3_a" text="Mark'ın Okçusu" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t3_b" text="Riddermark'ın Ordusu" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t1_a" text="Zehirli İlahi" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t1_b" text="Sauron'un Fısıldanan Sözü" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t2_a" text="Dehşet Cemaati" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t2_b" text="Göz'ün Vaazı" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t3_a" text="Kara Lord'un Bakışı" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t3_b" text="Yüzük'ün Karanlık Ahdi" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t1_a" text="Kara Oklar Fırlatan" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t1_b" text="Çürüme Fısıldayanı" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t2_a" text="Kara Sanatlar Örücüsü" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t2_b" text="Gölge Soluyanı" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t3_a" text="Büyücülük Tepesi'nin Lordu" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t3_b" text="Ölüçağıran'ın Sesi" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t1_a" text="Yer-Parçalayan" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t1_b" text="Yorulmaz Çekiç" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t2_a" text="Kükreyen Dev" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t2_b" text="Güneş Işığında Saldırı" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t3_a" text="Morannon'un Çekici" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t3_b" text="Sauron'un Troll Halkı" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t1_a" text="Güneş-Mızrağı Çatışmacısı" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t1_b" text="Gezgin Öncu Atlısı" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t2_a" text="Güneşateşi Sapancısı" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t2_b" text="Kızıl Perde" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t3_a" text="Uzak Harad'ın Yağmuru" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t3_b" text="Kumların Gölgesi" />
+
+    <string id="taom_career_grp_ram_rider_t1_a" text="Tepelerin Keçi Çobanı" />
+
+    <string id="taom_career_grp_ram_rider_t1_b" text="Erebor'un Öncu Atlısı" />
+
+    <string id="taom_career_grp_ram_rider_t2_a" text="Demir Tepeler'in Hücumu" />
+
+    <string id="taom_career_grp_ram_rider_t2_b" text="Cesur Savaş-Koçu" />
+
+    <string id="taom_career_grp_ram_rider_t3_a" text="Demirdiş'in Öncüsü" />
+
+    <string id="taom_career_grp_ram_rider_t3_b" text="Yalnız Dağ'ın Atlısı" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t1_a" text="İthilien Yolu'nun Avcısı" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t1_b" text="Henneth Annûn'un Gözcüsü" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t2_a" text="Kuzey İthilien'in İzcisi" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t2_b" text="Faramir'in Okçusu" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t3_a" text="Yasak Göl'ün Oku" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t3_b" text="Emyn Arnen'in Gölgesi" />
+
+    <string id="taom_career_grp_rivendell_knight_t1_a" text="İmladris'in Hücumu" />
+
+    <string id="taom_career_grp_rivendell_knight_t1_b" text="Geçit'in Atlısı" />
+
+    <string id="taom_career_grp_rivendell_knight_t2_a" text="Asfaloth'un Dörtnalı" />
+
+    <string id="taom_career_grp_rivendell_knight_t2_b" text="Valar'ın Kalkanı" />
+
+    <string id="taom_career_grp_rivendell_knight_t3_a" text="Glorfindel'in Gazabı" />
+
+    <string id="taom_career_grp_rivendell_knight_t3_b" text="Son İttifak Ordusu" />
+
+    <string id="taom_career_grp_sentinel_t1_a" text="Egladil Öncüsü" />
+
+    <string id="taom_career_grp_sentinel_t1_b" text="Elanor Muhafızı" />
+
+    <string id="taom_career_grp_sentinel_t2_a" text="Naith Atlısı" />
+
+    <string id="taom_career_grp_sentinel_t2_b" text="Celebrant Bekçisi" />
+
+    <string id="taom_career_grp_sentinel_t3_a" text="Laurelindórenan Mızrağı" />
+
+    <string id="taom_career_grp_sentinel_t3_b" text="Nenya'nın Nöbetçisi" />
+
+    <string id="taom_career_grp_shadow_walker_t1_a" text="Yolun Gölgesi" />
+
+    <string id="taom_career_grp_shadow_walker_t1_b" text="Yaprak Pelerini" />
+
+    <string id="taom_career_grp_shadow_walker_t2_a" text="Karanlıkta Avcı" />
+
+    <string id="taom_career_grp_shadow_walker_t2_b" text="Orman Peçesi" />
+
+    <string id="taom_career_grp_shadow_walker_t3_a" text="Örümceklerin Laneti" />
+
+    <string id="taom_career_grp_shadow_walker_t3_b" text="Eryn Lasgalen Görünmezi" />
+
+    <string id="taom_career_grp_shadow_warrior_t1_a" text="Amon Lanc Gölgesi" />
+
+    <string id="taom_career_grp_shadow_warrior_t1_b" text="Çukurlar Muhafızı" />
+
+    <string id="taom_career_grp_shadow_warrior_t2_a" text="Mirkwood Yağmacısı" />
+
+    <string id="taom_career_grp_shadow_warrior_t2_b" text="Dol Guldur Kalesi" />
+
+    <string id="taom_career_grp_shadow_warrior_t3_a" text="Ölümsüzlük Büyücüsü'nün Belası" />
+
+    <string id="taom_career_grp_shadow_warrior_t3_b" text="Ölümsüz Gölge" />
+
+    <string id="taom_career_grp_silvan_archer_t1_a" text="Yeşilorman Nişancısı" />
+
+    <string id="taom_career_grp_silvan_archer_t1_b" text="Gölgelik Nöbeti" />
+
+    <string id="taom_career_grp_silvan_archer_t2_a" text="Açıklık Avcısı" />
+
+    <string id="taom_career_grp_silvan_archer_t2_b" text="Nehir Bekçisi" />
+
+    <string id="taom_career_grp_silvan_archer_t3_a" text="Ok Fırtınası" />
+
+    <string id="taom_career_grp_silvan_archer_t3_b" text="Elf Kralı'nın Okçusu" />
+
+    <string id="taom_career_grp_snaga_rider_t1_a" text="Gölge Dörtnalı" />
+
+    <string id="taom_career_grp_snaga_rider_t1_b" text="Karanlık Atlısı" />
+
+    <string id="taom_career_grp_snaga_rider_t2_a" text="Gölgeden Vuruş" />
+
+    <string id="taom_career_grp_snaga_rider_t2_b" text="Cirith Ungol Hayaleti" />
+
+    <string id="taom_career_grp_snaga_rider_t3_a" text="Nurn Çiğnemesi" />
+
+    <string id="taom_career_grp_snaga_rider_t3_b" text="Mordor Öncüsü" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t1_a" text="Ova Hafif Süvarisi" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t1_b" text="Kararlı Yaylım" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t2_a" text="Tükenmez Sadak" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t2_b" text="Yaylım Bekçisi" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t3_a" text="Khand Fırtına Çağıranı" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t3_b" text="Durmak Bilmez Dolu" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t1_a" text="Kum Tepesi Akıncısı" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t1_b" text="Çöl Kurtulanı" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t2_a" text="Yılan-Dişi Vurucu" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t2_b" text="Kumların Taşıyıcısı" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t3_a" text="Haradwaith'in Zehri" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t3_b" text="Güneylilerin Belası" />
+
+    <string id="taom_career_grp_uruk_berserker_t1_a" text="Kan-Çılgını" />
+
+    <string id="taom_career_grp_uruk_berserker_t1_b" text="Çukur-Pekiştirilmiş" />
+
+    <string id="taom_career_grp_uruk_berserker_t2_a" text="Beyaz El Yağmacısı" />
+
+    <string id="taom_career_grp_uruk_berserker_t2_b" text="Orthanc Kalkan Duvarı" />
+
+    <string id="taom_career_grp_uruk_berserker_t3_a" text="Nan Curunír'in Belası" />
+
+    <string id="taom_career_grp_uruk_berserker_t3_b" text="Kulenin Kırılmazı" />
+
+    <string id="taom_career_grp_uruk_crossbow_t1_a" text="Demir Yağmuru" />
+
+    <string id="taom_career_grp_uruk_crossbow_t1_b" text="Demirhanede Dövülmüş" />
+
+    <string id="taom_career_grp_uruk_crossbow_t2_a" text="Beyaz El'in Sürgüsü" />
+
+    <string id="taom_career_grp_uruk_crossbow_t2_b" text="Halka-Duvarın Bekçisi" />
+
+    <string id="taom_career_grp_uruk_crossbow_t3_a" text="Orthanc'ın Fırtına Kargası" />
+
+    <string id="taom_career_grp_uruk_crossbow_t3_b" text="Bitmez Demir Yağmuru" />
+
+    <string id="taom_career_grp_warden_t1_a" text="Sınır Yürüyücüsü" />
+
+    <string id="taom_career_grp_warden_t1_b" text="Nimrodel Bekçisi" />
+
+    <string id="taom_career_grp_warden_t2_a" text="Naith'in Kılıcı" />
+
+    <string id="taom_career_grp_warden_t2_b" text="Caras Galadhon Kalkan Duvarı" />
+
+    <string id="taom_career_grp_warden_t3_a" text="Altın Orman'ın Bekçisi" />
+
+    <string id="taom_career_grp_warden_t3_b" text="Cerin Amroth Muhafızı" />
+
+    <string id="taom_career_grp_warg_pack_leader_t1_a" text="Warg-Binici" />
+
+    <string id="taom_career_grp_warg_pack_leader_t1_b" text="Sürü-Bekçisi" />
+
+    <string id="taom_career_grp_warg_pack_leader_t2_a" text="Boz Sürü Keşifçisi" />
+
+    <string id="taom_career_grp_warg_pack_leader_t2_b" text="Korkunç Kurt-Efendisi" />
+
+    <string id="taom_career_grp_warg_pack_leader_t3_a" text="Gundabad'ın Alfası" />
+
+    <string id="taom_career_grp_warg_pack_leader_t3_b" text="Bolg'un Kurt-Kaptanı" />
+
+    <string id="taom_career_grp_warg_scout_t1_a" text="Diş-Koşucusu" />
+
+    <string id="taom_career_grp_warg_scout_t1_b" text="Boz Sürü" />
+
+    <string id="taom_career_grp_warg_scout_t2_a" text="Sisli Dağlar Avcısı" />
+
+    <string id="taom_career_grp_warg_scout_t2_b" text="Kurt-Muhafızı" />
+
+    <string id="taom_career_grp_warg_scout_t3_a" text="Isengard Keşifçisi" />
+
+    <string id="taom_career_grp_warg_scout_t3_b" text="Yorulmaz Av" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t1_a" text="Limlight Geçidi" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t1_b" text="Wold Nöbeti" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t2_a" text="Entwash Kalkancısı" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t2_b" text="Anduin Bekçisi" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t3_a" text="Mark'ın Kalesi" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t3_b" text="Riddermark Muhafızı" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t1_a" text="Sürü-İzli Takipçi" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t1_b" text="Kurt Derili Gizlenen" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t2_a" text="Boğaz-Atışı Avcısı" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t2_b" text="Tepelerin Hayaleti" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t3_a" text="Başat Kurt Derili" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t3_b" text="Büyük Sürünün Efendisi" />
+
+    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes aktif — covers_head morph düzeltmesi + saç/sakal bez simülasyonu" />
+
+    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes düşürülmüş — desen imzaları bu Bannerlord derlemesi için yazılmamış; vanilla rendering" />
+
+    <string id="taom_bandit_dunland_name" text="Dunlending Akıncıları" />
+
+    <string id="taom_bandit_dunland_m1" text="Caradoc" />
+
+    <string id="taom_bandit_dunland_m2" text="Gwidion" />
+
+    <string id="taom_bandit_dunland_m3" text="Brennor" />
+
+    <string id="taom_bandit_dunland_m4" text="Targal" />
+
+    <string id="taom_bandit_dunland_m5" text="Maedrun" />
+
+    <string id="taom_bandit_dunland_m6" text="Drûghu" />
+
+    <string id="taom_bandit_dunland_m7" text="Olfan" />
+
+    <string id="taom_bandit_dunland_m8" text="Cethrin" />
+
+    <string id="taom_bandit_dunland_m9" text="Hwalbor" />
+
+    <string id="taom_bandit_dunland_m10" text="Idris" />
+
+    <string id="taom_bandit_dunland_f1" text="Branwen" />
+
+    <string id="taom_bandit_dunland_f2" text="Aelis" />
+
+    <string id="taom_bandit_dunland_f3" text="Maerwen" />
+
+    <string id="taom_bandit_dunland_f4" text="Gwyneth" />
+
+    <string id="taom_bandit_dunland_f5" text="Olwen" />
+
+    <string id="taom_bandit_rhun_name" text="Rhûn Akıncıları" />
+
+    <string id="taom_bandit_rhun_m1" text="Khamûl" />
+
+    <string id="taom_bandit_rhun_m2" text="Targon" />
+
+    <string id="taom_bandit_rhun_m3" text="Bûrzakh" />
+
+    <string id="taom_bandit_rhun_m4" text="Sangar" />
+
+    <string id="taom_bandit_rhun_m5" text="Hazgrim" />
+
+    <string id="taom_bandit_rhun_m6" text="Vorzul" />
+
+    <string id="taom_bandit_rhun_m7" text="Daghir" />
+
+    <string id="taom_bandit_rhun_m8" text="Olmec" />
+
+    <string id="taom_bandit_rhun_m9" text="Tarvon" />
+
+    <string id="taom_bandit_rhun_m10" text="Kharzul" />
+
+    <string id="taom_bandit_rhun_f1" text="Sarila" />
+
+    <string id="taom_bandit_rhun_f2" text="Khazna" />
+
+    <string id="taom_bandit_rhun_f3" text="Vorina" />
+
+    <string id="taom_bandit_rhun_f4" text="Tahjia" />
+
+    <string id="taom_bandit_rhun_f5" text="Sangela" />
+
+    <string id="taom_bandit_harad_name" text="Harad Akıncıları" />
+
+    <string id="taom_bandit_harad_m1" text="Suladân" />
+
+    <string id="taom_bandit_harad_m2" text="Azaghal" />
+
+    <string id="taom_bandit_harad_m3" text="Khaled" />
+
+    <string id="taom_bandit_harad_m4" text="Variag" />
+
+    <string id="taom_bandit_harad_m5" text="Dath" />
+
+    <string id="taom_bandit_harad_m6" text="Tarkil" />
+
+    <string id="taom_bandit_harad_m7" text="Mûzan" />
+
+    <string id="taom_bandit_harad_m8" text="Akhôr" />
+
+    <string id="taom_bandit_harad_m9" text="Sahir" />
+
+    <string id="taom_bandit_harad_m10" text="Zûran" />
+
+    <string id="taom_bandit_harad_f1" text="Nilhuna" />
+
+    <string id="taom_bandit_harad_f2" text="Saharia" />
+
+    <string id="taom_bandit_harad_f3" text="Aklira" />
+
+    <string id="taom_bandit_harad_f4" text="Bezara" />
+
+    <string id="taom_bandit_harad_f5" text="Mûzana" />
+
+    <string id="taom_bandit_gundabad_name" text="Gundabad Ork Akıncıları" />
+
+    <string id="taom_bandit_gundabad_m1" text="Bolg" />
+
+    <string id="taom_bandit_gundabad_m2" text="Yazneg" />
+
+    <string id="taom_bandit_gundabad_m3" text="Fimbul" />
+
+    <string id="taom_bandit_gundabad_m4" text="Narzug" />
+
+    <string id="taom_bandit_gundabad_m5" text="Gorbag" />
+
+    <string id="taom_bandit_gundabad_m6" text="Mauhûr" />
+
+    <string id="taom_bandit_gundabad_m7" text="Snaga" />
+
+    <string id="taom_bandit_gundabad_m8" text="Ufthak" />
+
+    <string id="taom_bandit_gundabad_m9" text="Radbug" />
+
+    <string id="taom_bandit_gundabad_m10" text="Lugdush" />
+
+    <string id="taom_bandit_gundabad_f1" text="Skarra" />
+
+    <string id="taom_bandit_gundabad_f2" text="Vorga" />
+
+    <string id="taom_bandit_gundabad_f3" text="Mazra" />
+
+    <string id="taom_bandit_gundabad_f4" text="Grishta" />
+
+    <string id="taom_bandit_gundabad_f5" text="Narzga" />
+
+    <string id="taom_bandit_umbar_name" text="Umbar Korsanları" />
+
+    <string id="taom_bandit_umbar_m1" text="Castamir" />
+
+    <string id="taom_bandit_umbar_m2" text="Sangahyandion" />
+
+    <string id="taom_bandit_umbar_m3" text="Angamaitë" />
+
+    <string id="taom_bandit_umbar_m4" text="Herumor" />
+
+    <string id="taom_bandit_umbar_m5" text="Fuinur" />
+
+    <string id="taom_bandit_umbar_m6" text="Adûnaphel" />
+
+    <string id="taom_bandit_umbar_m7" text="Aragôl" />
+
+    <string id="taom_bandit_umbar_m8" text="Calemir" />
+
+    <string id="taom_bandit_umbar_m9" text="Vorondil" />
+
+    <string id="taom_bandit_umbar_m10" text="Karazîr" />
+
+    <string id="taom_bandit_umbar_f1" text="Berúthiel" />
+
+    <string id="taom_bandit_umbar_f2" text="Nimreth" />
+
+    <string id="taom_bandit_umbar_f3" text="Adûniel" />
+
+    <string id="taom_bandit_umbar_f4" text="Tarmiriel" />
+
+    <string id="taom_bandit_umbar_f5" text="Inzilbêth" />
+
+    <string id="taom_bandit_gondor_name" text="Gondor Askerleri" />
+
+    <string id="taom_bandit_gondor_m1" text="Bergil" />
+
+    <string id="taom_bandit_gondor_m2" text="Targon" />
+
+    <string id="taom_bandit_gondor_m3" text="Forlong" />
+
+    <string id="taom_bandit_gondor_m4" text="Duilas" />
+
+    <string id="taom_bandit_gondor_m5" text="Hirgon" />
+
+    <string id="taom_bandit_gondor_m6" text="Beregond" />
+
+    <string id="taom_bandit_gondor_m7" text="Mardil" />
+
+    <string id="taom_bandit_gondor_m8" text="Orodreth" />
+
+    <string id="taom_bandit_gondor_m9" text="Cirion" />
+
+    <string id="taom_bandit_gondor_m10" text="Halmir" />
+
+    <string id="taom_bandit_gondor_f1" text="Ioreth" />
+
+    <string id="taom_bandit_gondor_f2" text="Lothíriel" />
+
+    <string id="taom_bandit_gondor_f3" text="Morwen" />
+
+    <string id="taom_bandit_gondor_f4" text="Gilraen" />
+
+    <string id="taom_bandit_gondor_f5" text="Anwen" />
+
+    <string id="taom_bandit_erebor_name" text="Erebor Savaşçıları" />
+
+    <string id="taom_bandit_erebor_m1" text="Nargûm" />
+
+    <string id="taom_bandit_erebor_m2" text="Borin" />
+
+    <string id="taom_bandit_erebor_m3" text="Frar" />
+
+    <string id="taom_bandit_erebor_m4" text="Lofar" />
+
+    <string id="taom_bandit_erebor_m5" text="Grimbeard" />
+
+    <string id="taom_bandit_erebor_m6" text="Thrar" />
+
+    <string id="taom_bandit_erebor_m7" text="Dwalgin" />
+
+    <string id="taom_bandit_erebor_m8" text="Náladr" />
+
+    <string id="taom_bandit_erebor_m9" text="Vidri" />
+
+    <string id="taom_bandit_erebor_m10" text="Hagri" />
+
+    <string id="taom_bandit_erebor_f1" text="Dís" />
+
+    <string id="taom_bandit_erebor_f2" text="Brila" />
+
+    <string id="taom_bandit_erebor_f3" text="Vagna" />
+
+    <string id="taom_bandit_erebor_f4" text="Thora" />
+
+    <string id="taom_bandit_erebor_f5" text="Frida" />
+
+    <string id="taom_bandit_mirkwood_name" text="Mirkwood Avcıları" />
+
+    <string id="taom_bandit_mirkwood_m1" text="Faeglir" />
+
+    <string id="taom_bandit_mirkwood_m2" text="Thranduil" />
+
+    <string id="taom_bandit_mirkwood_m3" text="Galion" />
+
+    <string id="taom_bandit_mirkwood_m4" text="Belegorn" />
+
+    <string id="taom_bandit_mirkwood_m5" text="Nimloth" />
+
+    <string id="taom_bandit_mirkwood_m6" text="Orophin" />
+
+    <string id="taom_bandit_mirkwood_m7" text="Rúmil" />
+
+    <string id="taom_bandit_mirkwood_m8" text="Haldamir" />
+
+    <string id="taom_bandit_mirkwood_m9" text="Tauron" />
+
+    <string id="taom_bandit_mirkwood_m10" text="Lindir" />
+
+    <string id="taom_bandit_mirkwood_f1" text="Tauriel" />
+
+    <string id="taom_bandit_mirkwood_f2" text="Nethloriel" />
+
+    <string id="taom_bandit_mirkwood_f3" text="Eowen" />
+
+    <string id="taom_bandit_mirkwood_f4" text="Faelivrin" />
+
+    <string id="taom_bandit_mirkwood_f5" text="Míriel" />
+
     <string id="taom_hideout_desc_dunland" text="Dunland'ın ormanlık tepeleri arasında, bir açıklıkta yarı gizlenmiş, deri çadırlardan oluşan harap bir kamp ve kaba bir palizat görüyorsun." />
+
     <string id="taom_hideout_desc_gundabad" text="Sisli Dağlar'ın kayalıklarının altında, çıplak kayaya oyulmuş iğrenç bir Gundabad ork ini buluyorsun." />
+
     <string id="taom_hideout_desc_harad" text="Harad'ın kumları arasında, gizli bir çöl kuyusu etrafında toplanmış kamufle edilmiş bir Güneyli kampına rastlıyorsun." />
+
     <string id="taom_hideout_desc_rhun" text="Rhûn'un geniş otlaklarında, bir vadiyle çukurda kamp kurmuş bir Doğulu akıncı grubunun vagonlarını ve deri çadırlarını seçiyorsun." />
+
     <string id="taom_hideout_desc_umbar" text="Güney kıyısı boyunca, Umbar Korsanları'nın kara gemilerinin demir attığı korunaklı bir koy buluyorsun." />
+
+    <string id="taom_faction_difficulty_1" text="Zorluk: Çok Kolay" />
+
+    <string id="taom_faction_difficulty_2" text="Zorluk: Kolay" />
+
+    <string id="taom_faction_difficulty_3" text="Zorluk: Orta" />
+
+    <string id="taom_faction_difficulty_4" text="Zorluk: Orta-Zor" />
+
+    <string id="taom_faction_difficulty_5" text="Zorluk: Zor" />
+
+    <string id="taom_faction_difficulty_6" text="Zorluk: Çok Zor" />
+
+    <string id="taom_faction_difficulty_7" text="Zorluk: Aşırı" />
+
+    <string id="taom_faction_anduin_vale_desc" text="Büyük Anduin Irmağı'nın verimli vadisi, Beorningler ve Orman Adamları'nın yurdu. Sisli Dağlar ile Mirkwood arasında yaşayan sade insanlar." />
+
+    <string id="taom_faction_anduin_vale_name" text="Anduin Vadisi" />
+
+    <string id="taom_faction_anduin_vale_trait_0" text="Beorningler" />
+
+    <string id="taom_faction_anduin_vale_trait_1" text="Vadilerin Orman Adamları" />
+
+    <string id="taom_faction_anduin_vale_trait_2" text="Büyük Irmak Ticareti" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_desc" text="Valar'a sadık kalan Numenorlu Sadıklar tarafından kurulan Bellakar'ın kıyı krallığı. Güney kıyılarında bir medeniyet kalesi." />
+
+    <string id="taom_faction_aru_thani_of_bellakar_name" text="Bellakar'ın Aru-Thani'si" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_0" text="Numenor Mirası" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_1" text="Kıyı Krallığı" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_2" text="Valar'a Sadık" />
+
+    <string id="taom_faction_browlands_desc" text="Browlands." />
+
+    <string id="taom_faction_browlands_name" text="Browlands" />
+
+    <string id="taom_faction_chajaphan_of_abanissa_desc" text="Abanissa'nın Chajaphan'ı." />
+
+    <string id="taom_faction_chajaphan_of_abanissa_name" text="Abanissa'nın Chajaphan'ı" />
+
+    <string id="taom_faction_clans_of_andrast_desc" text="Andrast Klanları." />
+
+    <string id="taom_faction_clans_of_andrast_name" text="Andrast Klanları" />
+
+    <string id="taom_faction_clans_of_druwaith_iaur_desc" text="Druwaith Iaur Klanları." />
+
+    <string id="taom_faction_clans_of_druwaith_iaur_name" text="Druwaith Iaur Klanları" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_0" text="%50 daha az orman hız cezası + %15 görüş menzili (Battanian'dan ödünç)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_1" text="Ovalarda %10 grup hızı (Tepe Yürüyüşçüleri)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_2" text="%5 grup boyutu sınırı (Tepe-Kabilesi Askeri)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_3" text="%10 köy gönüllü yeniden doğuş oranı (Tepe-Kabilesi İstihdam)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_4" text="Şehirlerde veteran milis için %20 şans (Battanian'dan ödünç)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_5" text="-10% bina inşaat hızı (Battania'dan ödünç alınmış)" />
+
+    <string id="taom_faction_clans_of_dunland_desc" text="Dunland'ın Tepe Adamları, Rohirrim'in kadim düşmanları. Battania orman gelenekleri, TAOM'un Tepe Yürüyüşçüleri ve Tepe-Kabilesi Levhaları ile harmanlanır — ucuz, hızlı, öfkeli savaş çeteleri hem ova hem de ormanda yürür. Battania demircileri yavaş olsa da, savaş çeteleri değildir." />
+
+    <string id="taom_faction_clans_of_dunland_name" text="Dunland Kabileleri" />
+
+    <string id="taom_faction_clans_of_dunland_perk_0_desc" text="Ovalarda +10% grup hızı ve +5% grup boyutu — Dunland savaş çeteleri hızla yol alır." />
+
+    <string id="taom_faction_clans_of_dunland_perk_0_name" text="Tepe Yürüyüşçüleri" />
+
+    <string id="taom_faction_clans_of_dunland_perk_1_desc" text="+10% köy gönüllüsü yeniden ortaya çıkma oranı — köyler hızla kuzenlerle dolar." />
+
+    <string id="taom_faction_clans_of_dunland_perk_1_name" text="Tepe-Kabilesi İstihdamı" />
+
+    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="Ödünç alınmış 50% daha az orman hız cezası + 15% görüş, ve kasabalarda +20% kıdemli milis şansı; -10% inşaat hızı." />
+
+    <string id="taom_faction_clans_of_dunland_perk_2_name" text="Battania Orman Soyu" />
+
+    <string id="taom_faction_clans_of_dunland_strength_0" text="Ucuz hızlı savaş çeteleri" />
+
+    <string id="taom_faction_clans_of_dunland_strength_1" text="Orman ve ova hareketliliği" />
+
+    <string id="taom_faction_clans_of_dunland_strength_2" text="İstikrarlı köy istihdamı" />
+
+    <string id="taom_faction_clans_of_dunland_strength_3" text="Kıdemli milis şansı" />
+
+    <string id="taom_faction_clans_of_dunland_su_0_desc" text="Korkusuz yakın dövüş savaşçısı." />
+
+    <string id="taom_faction_clans_of_dunland_su_0_name" text="Dunland Çılgını" />
+
+    <string id="taom_faction_clans_of_dunland_su_1_desc" text="Ucuz savaş çetesi piyade." />
+
+    <string id="taom_faction_clans_of_dunland_su_1_name" text="Tepe-Kabilesi Mızrakçısı" />
+
+    <string id="taom_faction_clans_of_dunland_su_2_desc" text="Şimşek hızında orman çatışmacısı." />
+
+    <string id="taom_faction_clans_of_dunland_su_2_name" text="Crebain İzcisi" />
+
+    <string id="taom_faction_clans_of_dunland_trait_0" text="Rohan'a karşı kin" />
+
+    <string id="taom_faction_clans_of_dunland_trait_1" text="Vahşi Tepe Savaşçıları" />
+
+    <string id="taom_faction_clans_of_dunland_trait_2" text="Tepe-Kabilesi Levhaları" />
+
+    <string id="taom_faction_clans_of_dunland_trait_3" text="Saruman'ın Piyonları" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_0" text="Battania'dan ödünç alınmış yavaş inşaat" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_1" text="Saruman'ın piyonları — zayıf diplomasi" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_2" text="Rohan ve Isengard arasında sıkışmış" />
+
+    <string id="taom_faction_clans_of_forochel_desc" text="Forochel Buz Körfezi yakınlarındaki donmuş kuzey çorak arazilerinde dağınık Ork kabileleri. Lossoth'a ve kuzeye giden herkese saldıran vahşi akıncılar." />
+
+    <string id="taom_faction_clans_of_forochel_name" text="Forochel Kabileleri" />
+
+    <string id="taom_faction_clans_of_forochel_trait_0" text="Buz Körfezi Akıncıları" />
+
+    <string id="taom_faction_clans_of_forochel_trait_1" text="Donmuş Kuzey Orkları" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_0" text="+20% grup boyutu limiti (Uruk-hai Lejyonları)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_1" text="+15% bina inşaat hızı (Endüstriyel Kudret)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_2" text="-20% demircilik enerji maliyeti (Endüstriyel Demirhaneler)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_3" text="-15% atlı asker istihdamı ve yükseltme maliyeti (Savaş Warg'ları)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_4" text="-20% Orthanc garnizon ücreti" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_5" text="+20% baskın hasarı (Savaş Makinesi Baskınları)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_6" text="Ovalarda ve bataklıklarda +10% grup hızı (Zoraki Yürüyüş, Fenland Talim Ustaları)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_7" text="Isengard kasabasında +2 Tüccar + 1 Zanaatkâr + 12 Çete Lideri soylusu (toplam 20)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_8" text="+10% köy ileri gelen sayısı (Demir Baskı)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_9" text="+25% ilişki cezaları (Saruman'ın Tutuşu)" />
+
+    <string id="taom_faction_dominion_of_isengard_desc" text="Saruman'ın Orthanc'taki endüstriyel kalesi. Isengard Halkası gece gündüz çalışır — Uruk-hai lejyonları, seri üretim tatar yayları, savaş vargları. Isengard'ın tek kasabası yirmi ileri gelene ulaşır: Rohan'ın birçok şehrine denk bir asker toplama merkezi. Saruman'ın Tutuşu her komşuyu yabancılaştırır." />
+
+    <string id="taom_faction_dominion_of_isengard_name" text="Isengard Egemenliği" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_0_desc" text="+20% birlik boyutu sınırı ve ova ile bataklıkta +10% yürüyüş hızı." />
+
+    <string id="taom_faction_dominion_of_isengard_perk_0_name" text="Uruk-hai Lejyonları" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_1_desc" text="+15% inşaat, -20% demircilik enerjisi, -15% atlı asker toplama maliyeti." />
+
+    <string id="taom_faction_dominion_of_isengard_perk_1_name" text="Endüstriyel Güç" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_2_desc" text="Isengard'ın tek şehri 20 üstada ulaşır — 4 Tüccar, 2 Zanaatkâr, 14 Çete Lideri." />
+
+    <string id="taom_faction_dominion_of_isengard_perk_2_name" text="Orthanc İkmal Görevlileri" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_0" text="Endüstriyel ölçekte üretim" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_1" text="Uruk-hai seçkin kalitesi" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_2" text="Tek devasa asker toplama merkezi" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_3" text="Yakın dövüşte hem hız hem ağırlık" />
+
+    <string id="taom_faction_dominion_of_isengard_su_0_desc" text="Yıkıcı saldırı piyadeleri." />
+
+    <string id="taom_faction_dominion_of_isengard_su_0_name" text="Uruk-hai Çılgın Savaşçı" />
+
+    <string id="taom_faction_dominion_of_isengard_su_1_desc" text="Demirhanelerin çukurlarından çıkan ağır tatar hattı." />
+
+    <string id="taom_faction_dominion_of_isengard_su_1_name" text="Uruk-hai Tatarcı" />
+
+    <string id="taom_faction_dominion_of_isengard_su_2_desc" text="Beyaz El'in hızlı vur-kaç süvarileri." />
+
+    <string id="taom_faction_dominion_of_isengard_su_2_name" text="Warg Binicisi" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_0" text="Saruman'ın Hâkimiyeti" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_1" text="Uruk-hai Orduları" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_2" text="Orthanc Kulesi" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_3" text="Beyaz El" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_0" text="Saruman'ın Pençesi diplomasiyi yabancılaştırır" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_1" text="Tek dar geçit yerleşimi" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_2" text="Rohan ve Fangorn tarafından kuşatılmış" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60% ordu etki maliyeti (Kara Efendi'nin İradesi)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+%10 birlik boyutu sınırı (Sauron'un Orduları)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_2" text="+%20 Nurn tahıl üretimi (Nurn Tarlaları)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_3" text="+%25 baskın hasarı (Sauron'un Gazabı)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_4" text="+%10 gece birlik hızı (Karanlığın Yaratıkları)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_5" text="+%5 ovalarda ve bataklıklarda birlik hızı (Gölge Yürüyüşü, Ölü Bataklıklar)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_6" text="+%20 köy gönüllü yenileme hızı (Sauron'un Toplanması)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_7" text="Şehir başına +2 Çete Lideri üstad (Kara Dil Tellalları)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_8" text="+%5 köy üstad sayısı (Köle Kırbaççıları)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_9" text="+%20 birlik maaşları (Karanlık Haraç)" />
+
+    <string id="taom_faction_dominion_of_mordor_desc" text="Sauron'un Kara Diyarı. Kara Lord'un İradesi, orduların minimum etki maliyetiyle toplanmasına izin verir; Nurn Tarlaları orduları besler; Sauron'un Gazabı baskınları katliam haline getirir; Karanlığın Yaratıkları gece, herhangi bir özgür halkın gün ışığında yürüyüşünden daha hızlı ilerler. Karanlık Haraç hazineyi tüketir." />
+
+    <string id="taom_faction_dominion_of_mordor_name" text="Mordor Egemenliği" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_0_desc" text="Ordu etki maliyeti %60 azalır — Sauron'un ordularının mutabakata ihtiyacı yoktur." />
+
+    <string id="taom_faction_dominion_of_mordor_perk_0_name" text="Kara Lord'un İradesi" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_1_desc" text="+%25 baskın hasarı ve ovalarda ve bataklıklarda +%5 birlik hızı." />
+
+    <string id="taom_faction_dominion_of_mordor_perk_1_name" text="Sauron'un Gazabı" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_2_desc" text="Gece +%10 birlik hızı — Mordor'un gözleri asla uyumaz." />
+
+    <string id="taom_faction_dominion_of_mordor_perk_2_name" text="Karanlığın Yaratıkları" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_0" text="Geniş ucuz ordular" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_1" text="Yürüyüş için neredeyse hiç etki gerekmez" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_2" text="Gece savaşı ustalığı" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_3" text="Baskın ve Nurn sayesinde kendi kendine yeterli" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_4" text="Troller ve Kara Uruklar" />
+
+    <string id="taom_faction_dominion_of_mordor_su_0_desc" text="Barad-dûr'dan seçkin şok piyadeleri." />
+
+    <string id="taom_faction_dominion_of_mordor_su_0_name" text="Kara Uruk" />
+
+    <string id="taom_faction_dominion_of_mordor_su_1_desc" text="Çukurlarda yetiştirilmiş kuşatma canavarı." />
+
+    <string id="taom_faction_dominion_of_mordor_su_1_name" text="Mağara Trolü" />
+
+    <string id="taom_faction_dominion_of_mordor_su_2_desc" text="Minas Morgul'un zehirli oklu okçuları." />
+
+    <string id="taom_faction_dominion_of_mordor_su_2_name" text="Morgul Okçusu" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_0" text="Kara Lord'un Diyarı" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_1" text="Ork Lejyonları" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_2" text="Kaderköy Dağı" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_3" text="Barad-dûr" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_0" text="Karanlık Haraç maaşları tüketir" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_1" text="Evrensel olarak nefret edilir" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_2" text="Yavaş özel-birim yenileme" />
+
+    <string id="taom_faction_eregion_desc" text="Eregion." />
+
+    <string id="taom_faction_eregion_name" text="Eregion" />
+
+    <string id="taom_faction_fangorn_forest_desc" text="Fangorn Ormanı." />
+
+    <string id="taom_faction_fangorn_forest_name" text="Fangorn Ormanı" />
+
+    <string id="taom_faction_goblins_of_blue_craig_desc" text="Mavi Kaya Goblinleri." />
+
+    <string id="taom_faction_goblins_of_blue_craig_name" text="Mavi Kaya Goblinleri" />
+
+    <string id="taom_faction_goblins_of_goblin_town_desc" text="Sisli Dağlar'ın goblin istilasına uğramış tünelleri ve mağaraları. Bu Orklar yüksek geçitleri kontrol eder ve dağları geçmeye cesaret edenleri tehdit eder." />
+
+    <string id="taom_faction_goblins_of_goblin_town_name" text="Goblin Kasabası Goblinleri" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="Goblin Tünelleri" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="Dağ Geçitleri" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="Warg Binicileri" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_0" text="Bozkırda +%10 birlik hızı (Doğulu Öncüler)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_1" text="+%5 birlik boyutu limiti (Doğulu Ordusu)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="-10% atlı asker toplama ve geliştirme maliyeti (Khuzait, miras)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="+%25 at, katır, inek ve koyun köy üretimi (Khuzait, miras)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="-20% kasaba vergi geliri (Khuzait, miras)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_desc" text="Doğu ovalarının Doğululları. Miras Khuzait süvari gelenekleri, TAOM'un Doğulu Öncüler bozkır hızı ve Doğulu Ordusu birlik boyutuyla eşleştirilmiştir. Sayıca çok gelen ve haraç ödeyen ağır süvari." />
+
+    <string id="taom_faction_golden_realm_of_rhun_name" text="Rhûn'un Altın Diyarı" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_0_desc" text="Bozkırda +%10 birlik hızı — Rhûn Denizi'nin binicileri ovayı hızla geçer." />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_0_name" text="Doğulu Öncüler" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_1_desc" text="+%5 birlik boyutu limiti — ordular Mordor'un çağrısına yanıt olarak toplanır." />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_1_name" text="Doğulu Ordusu" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="Miras alınan Khuzait -10% atlı maliyeti, +25% hayvan köyü üretimi; -20% kasaba vergi geliri." />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="Khuzait Bozkır Soyu" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_0" text="Ağır süvari orduları" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_1" text="Büyük ordular" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_2" text="Haraç ve ticaret ağları" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="Khuzait bozkır mirası" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_0_desc" text="Seçkin zırhlı süvari." />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_0_name" text="Doğulu Kataphrakt" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_1_desc" text="Seçkin doğulu ağır piyade." />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_1_name" text="Doğulu Kılıç Lordu" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_2_desc" text="Kıdemli keşif okçusu." />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_2_name" text="Rhun At Nöbetçisi" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_0" text="Doğulu Savaşçılar" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_1" text="Süvari Orduları" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_2" text="Mordor'a Haraç" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_3" text="Bozkır Mirası" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_0" text="Zayıf piyade" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_1" text="Bölünmüş klanlar" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_2" text="Mordor'a uzun ikmal hatları" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="Khuzait'ten ödünç -20% kasaba vergisi" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_0" text="-25% kervan maliyeti (Korsan Ticareti)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_1" text="+%15 gümrük geliri (Korsan Ticaret Ağları)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_2" text="+%8 savaş şöhreti (Korsan Şanı)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_3" text="+%10 çöldeki birlik hızı (Çöl Korsanları)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_4" text="+%8 birlik ücreti (Korsan Açgözlülüğü)" />
+
+    <string id="taom_faction_havens_of_umbar_desc" text="Güney koylarındaki korsan limanı ve Kara Númenórlular'ın liman şehri. Korsan Ticareti kervan maliyetlerini düşürür, Korsan Şanı şöhret kazandırır, Çöl Korsanları kumlar üzerinde hızlı ilerler — ancak Korsan Açgözlülüğü her ücret faturasını şişirir." />
+
+    <string id="taom_faction_havens_of_umbar_name" text="Umbar Limanları" />
+
+    <string id="taom_faction_havens_of_umbar_perk_0_desc" text="-25% kervan maliyeti ve +15% tarife geliri — Umbar her geçen gemiden zenginleşir." />
+
+    <string id="taom_faction_havens_of_umbar_perk_0_name" text="Korsan Ticareti" />
+
+    <string id="taom_faction_havens_of_umbar_perk_1_desc" text="Savaş başına +%8 şöhret — korsan adı her limanda türkülerle anılır." />
+
+    <string id="taom_faction_havens_of_umbar_perk_1_name" text="Korsan Şanı" />
+
+    <string id="taom_faction_havens_of_umbar_perk_2_desc" text="Çölde +%10 birlik hızı — Umbar'ın yürüyüşleri kumu deniz kadar kolay aşar." />
+
+    <string id="taom_faction_havens_of_umbar_perk_2_name" text="Çöl Korsanları" />
+
+    <string id="taom_faction_havens_of_umbar_strength_0" text="Ticaret ve gümrük sayesinde zengin" />
+
+    <string id="taom_faction_havens_of_umbar_strength_1" text="Savaşta şöhretli" />
+
+    <string id="taom_faction_havens_of_umbar_strength_2" text="Çöl hareketliliği" />
+
+    <string id="taom_faction_havens_of_umbar_strength_3" text="Númenórlular lord istatistikleri" />
+
+    <string id="taom_faction_havens_of_umbar_su_0_desc" text="Uzun soylu, görkemli lord." />
+
+    <string id="taom_faction_havens_of_umbar_su_0_name" text="Kara Númenórlular Kaptanı" />
+
+    <string id="taom_faction_havens_of_umbar_su_1_desc" text="Çatışma eğitimli deniz askeri." />
+
+    <string id="taom_faction_havens_of_umbar_su_1_name" text="Korsan Akıncısı" />
+
+    <string id="taom_faction_havens_of_umbar_su_2_desc" text="Güneşte kavrulmuş hafif piyade paralı." />
+
+    <string id="taom_faction_havens_of_umbar_su_2_name" text="Haradrim Yardımcısı" />
+
+    <string id="taom_faction_havens_of_umbar_trait_0" text="Korsan Filoları" />
+
+    <string id="taom_faction_havens_of_umbar_trait_1" text="Kara Númenórlular Lordları" />
+
+    <string id="taom_faction_havens_of_umbar_trait_2" text="Korsan Limanı" />
+
+    <string id="taom_faction_havens_of_umbar_trait_3" text="Çöl Yürüyüşleri" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_0" text="Korsan kaptanlar karı cebe atar (yüksek ücretler)" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_1" text="Gondor tarafından nefret ediliyor" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_2" text="Kara ordusu donanmadan daha zayıf" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="Orta Dünya'nın batı kıyılarındaki kadim Elf diyarı Lindon. Gil-galad'ın halefleri tarafından yönetilen bu topraklar, solan Elf ihtişamının ve Gri Limanların evidir." />
+
+    <string id="taom_faction_high_kingdom_of_lindon_name" text="Lindon Yüce Krallığı" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="Gri Limanlar" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="Kadim Elf Diyarı" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="Valinor'a Gemiler" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="Gemiyapımcı Cirdan" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_0" text="Bozkırda +%10 grup hızı (Bozkır Savaş Arabacıları)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_1" text="Orman hız cezası %50 daha az + %15 görüş menzili (Battanian, miras)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_2" text="Kasabalarda kıdemli milis için +%20 şans (Battanian, miras)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_3" text="-10% bina inşaat hızı (Battanian, miras)" />
+
+    <string id="taom_faction_khudorom_of_khand_desc" text="Khand Variag'ları. Battanian orman milisi gelenekleri miras alınmış; TAOM'un Bozkır Savaş Arabacıları üzerine bozkırda +%10 grup hızı ekler. Paralı asker birlikleri en çok parayı verene hizmet eder." />
+
+    <string id="taom_faction_khudorom_of_khand_name" text="Khand Khudorom'u" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_0_desc" text="Bozkırda +%10 grup hızı — Variag savaş arabaları hızlı gider." />
+
+    <string id="taom_faction_khudorom_of_khand_perk_0_name" text="Bozkır Savaş Arabacıları" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_1_desc" text="Paralı asker kaptanları parayı verene hizmet eder — ama paylarını alırlar." />
+
+    <string id="taom_faction_khudorom_of_khand_perk_1_name" text="Paralı Asker Geleneği" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="Miras alınan 50% daha az orman hız cezası + 15% görüş menzili ve kasabalarda +20% kıdemli milis şansı; -10% inşaat hızı." />
+
+    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="Battanian Orman Soyu" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_0" text="Bozkır ve orman hareketliliği" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_1" text="Kıdemli köyler" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_2" text="Paralı asker geleneği" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_3" text="Savaş arabacısı doktrini" />
+
+    <string id="taom_faction_khudorom_of_khand_su_0_desc" text="Seçkin atlı çarpışmacı." />
+
+    <string id="taom_faction_khudorom_of_khand_su_0_name" text="Variag Atlı Okçu" />
+
+    <string id="taom_faction_khudorom_of_khand_su_1_desc" text="Kadim bozkır-makinesi komutanı." />
+
+    <string id="taom_faction_khudorom_of_khand_su_1_name" text="Khand Savaş Arabacısı" />
+
+    <string id="taom_faction_khudorom_of_khand_su_2_desc" text="Ağır mızraklı süvari." />
+
+    <string id="taom_faction_khudorom_of_khand_su_2_name" text="Variag Mızraklısı" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_0" text="Bozkır Süvarisi" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_1" text="Variag Savaşçıları" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_2" text="Paralı Asker Birlikleri" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_3" text="Savaş Arabacısı Geleneği" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_0" text="Battanian yavaş inşaat" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_1" text="Zayıf yerleşimler" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_2" text="Paralı asker kaptanları paraya sadıktır, beye değil" />
+
+    <string id="taom_faction_kingdom_of_angaladh_desc" text="Angaladh Krallığı." />
+
+    <string id="taom_faction_kingdom_of_angaladh_name" text="Angaladh Krallığı" />
+
+    <string id="taom_faction_kingdom_of_arthedain_desc" text="Arnor'un halef krallıklarının en sonuncusu ve en büyüğü. Arthedain, son düşüşünden önce Angmar Cadı Kralı'na karşı en uzun süre direndi." />
+
+    <string id="taom_faction_kingdom_of_arthedain_name" text="Arthedain Krallığı" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_0" text="Arnor'un Sonuncusu" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_1" text="Annuminas Palantiri" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_2" text="Kuzey Dunedain'leri" />
+
+    <string id="taom_faction_kingdom_of_cardolan_desc" text="Bir zamanlar büyük Arnor krallığının parçası olan Cardolan'ın halefi krallık. Şimdi dağınık yerleşimler ve wight'lar tarafından perili antik höyüklerle dolu bir diyar." />
+
+    <string id="taom_faction_kingdom_of_cardolan_name" text="Cardolan Krallığı" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_0" text="Arnor'un Halefi" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_1" text="Höyük-inişleri" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_2" text="Kuzey Korucuları" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_0" text="Ovalarda +%10 birlik hızı (Vadi Tüccarları)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_1" text="Köylerde +%10 tahıl üretimi (Sturgian, miras)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_2" text="-50% ordu etki maliyeti (Sturgian, miras)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_3" text="Krallık kararlarından +%20 ilişki cezası (Sturgian, miras)" />
+
+    <string id="taom_faction_kingdom_of_dale_desc" text="Bard'ın Erebor'un altında yeniden inşa ettiği şehir. Miras alınan Sturgian tahıl bolluğu ve Sturgian ucuz-ordu geleneği, TAOM'un Vadi Tüccarları ova-hızı bonusuyla birleşir — ancak Sturgian krallık-kararı cezaları iki taraflı keser. Cücelerle gelişen ticaret ittifakı Dale'i zengin ve hazır tutar." />
+
+    <string id="taom_faction_kingdom_of_dale_name" text="Dale Krallığı" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_0_desc" text="Ovalarda +%10 birlik hızı — Göl-kasabası kervanları hızlı hareket eder." />
+
+    <string id="taom_faction_kingdom_of_dale_perk_0_name" text="Vadi Tüccarları" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_1_desc" text="Erebor ile ticaret bonus gelir ve silah temini sağlar." />
+
+    <string id="taom_faction_kingdom_of_dale_perk_1_name" text="Cüce İttifakı" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="Miras alınan Sturgian +10% köy tahılı ve -50% ordu etki maliyeti; krallık kararlarında ilişki cezası +20%." />
+
+    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="Sturgian Tahıl ve Ordu Soyu" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_0" text="Erebor ile ticaret" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_1" text="Güçlü okçuluk geleneği" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_2" text="Ucuz ordu toplama (Sturgian)" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_3" text="Tahıl zengini köyler" />
+
+    <string id="taom_faction_kingdom_of_dale_su_0_desc" text="Bard'ın mirası okçu." />
+
+    <string id="taom_faction_kingdom_of_dale_su_0_name" text="Kara Ok Korucu" />
+
+    <string id="taom_faction_kingdom_of_dale_su_1_desc" text="Göl-kasabası mızrakçısı." />
+
+    <string id="taom_faction_kingdom_of_dale_su_1_name" text="Dale Göl-muhafızı" />
+
+    <string id="taom_faction_kingdom_of_dale_su_2_desc" text="Cüce-zırhlı Dale hattı." />
+
+    <string id="taom_faction_kingdom_of_dale_su_2_name" text="Erebor-eğitimli Demirci-savaşçı" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_0" text="Bard'ın Mirası" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_1" text="Erebor ile Ticaret" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_2" text="Göl-kasabası İttifakı" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_3" text="Vadi Tüccarları" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_0" text="Küçük toprak" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_1" text="Doğulular tarafından baskı altında" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_2" text="Sturgian krallık-kararı cezası" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_desc" text="Rhun Denizi'nin kuzeybatı kıyılarında bulunan şarap üreticisi Dorwinion krallığı. Özgür Halklar ile Doğu arasında sıkışmış müreffeh bir ticaret krallığı." />
+
+    <string id="taom_faction_kingdom_of_dorwinion_name" text="Dorwinion Krallığı" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_0" text="Ünlü Bağlar" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_1" text="Ticaret Merkezi" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_2" text="Sınır Krallığı" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_0" text="-25% garnizon maaşı (Cüce Garnizonu)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_1" text="-30% demircilik enerji maliyeti (Usta Demirciler)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_2" text="Karda +%10 birlik hızı (Dağ Halkı)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_3" text="+%10 köy üretimi (Cüce Endüstrisi)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_4" text="+5 birlik morali (Cüce İnatçılığı)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_5" text="Günlük +1 yerleşim sadakati (Cüce Onuru)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_6" text="-15% bina inşaat hızı (Cüce Mükemmeliyetçiliği)" />
+
+    <string id="taom_faction_kingdom_of_erebor_desc" text="Yeniden ele geçirilmiş Yalnız Dağ. Usta Demirciler demircilik enerjisini %30 azaltır; Cüce Onuru her gün sadakat ekler; Cüce İnatçılığı morali sarsılmaz tutar. Duvar inşa etmesi yavaştır — ama dağın kendisi düşene kadar duvar ayakta kalır." />
+
+    <string id="taom_faction_kingdom_of_erebor_name" text="Erebor Krallığı" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_0_desc" text="-30% demircilik enerji maliyeti — Cüce ocakları iki kat hızlı çalışır." />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_0_name" text="Usta Demirciler" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_1_desc" text="-25% garnizon maaşı ve günde +1 yerleşim bağlılığı." />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_1_name" text="Cüce Garnizonu" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_2_desc" text="+5 birlik morali ve %10 köy üretimi — Cüceler eğilmez." />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_2_name" text="Cüce İnatçılığı" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_0" text="Üstün zırh ve silahlar" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_1" text="Zengin ve kendi kendine yeterli" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_2" text="Sadık ve disiplinli garnizonlar" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_3" text="Usta demircilik ekonomisi" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_0_desc" text="Seçkin Cüce ağır piyadesi." />
+
+    <string id="taom_faction_kingdom_of_erebor_su_0_name" text="Erebor Demir Muhafızları" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_1_desc" text="Çelik yaylı tatar hattı." />
+
+    <string id="taom_faction_kingdom_of_erebor_su_1_name" text="Demir Tepeleri Tatarcısı" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_2_desc" text="Savaşta yıpranmış balta ustası." />
+
+    <string id="taom_faction_kingdom_of_erebor_su_2_name" text="Azanulbizar Gazisi" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_0" text="Dağın Altındaki Krallık" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_1" text="Usta Zanaatkârlar" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_2" text="Cüce Baltaları" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_3" text="Demir Tepeleri Kuzenleri" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_0" text="Cüce Mükemmeliyetçiliği duvar inşasını yavaşlatır" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_1" text="Süvari mevcut değil" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_2" text="Az sayıda savaş müttefiki" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_desc" text="Mavi Dağlar'ın Cüce malikâneleri, Durin Halkı'nın atalarından kalma salonları. Erebor'un kaybından sonra, birçok Cüce Thorin'in görevinden önce burada sığınak buldu." />
+
+    <string id="taom_faction_kingdom_of_ered_duin_name" text="Ered Duin Krallığı" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_0" text="Mavi Dağ Salonları" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_1" text="Durin'in Halkı" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_2" text="Sürgün Cüceler" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_3" text="Madencilik ve Demircilik" />
+
+    <string id="taom_faction_kingdom_of_ered_mithrin_desc" text="Ered Mithrin Krallığı." />
+
+    <string id="taom_faction_kingdom_of_ered_mithrin_name" text="Ered Mithrin Krallığı" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_0" text="%35 ordu nüfuz ödülü (Elf Bilgeliği)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_1" text="%20 köy ocak büyümesi (Son Konuksever Ev)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_2" text="Ormanda %10 birlik hızı (Ağaç Diyarı Zarafeti)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_3" text="-15% birlik yiyecek tüketimi (Elf Tutumluluk)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_4" text="Günlük +0.5 yerleşim sadakati" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_5" text="%25 ordu nüfuz maliyeti (Elf Gururu)" />
+
+    <string id="taom_faction_kingdom_of_imladris_desc" text="Elrond'un gizli vadisi, Bilgelerin sığınağı. Elf Bilgeliği orduları az nüfuz maliyetiyle birleştirir; Son Konuksever Ev her köyde ocak büyütür. Elf Gururu hâlâ her meclisi yönetir — her Noldor kılıcı yeri doldurulamazdır." />
+
+    <string id="taom_faction_kingdom_of_imladris_name" text="Imladris Krallığı" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_0_desc" text="Ordu başarısında %35 nüfuz ödülü — Bilgeler nasıl liderlik edileceğini bilir." />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_0_name" text="Elf Bilgeliği" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_1_desc" text="+20% köy ocak artışı ve -15% birlik yiyecek tüketimi." />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_1_name" text="Son Konuksever Ev" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_2_desc" text="Ormanda +%10 grup hızı — Imladris'in ağaçları soydaşları için yol açar." />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_2_name" text="Orman Zarafeti" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_0" text="Efsanevi seçkin savaşçılar" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_1" text="Ocak zenginliği köyler" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_2" text="Orman ustalığı" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_3" text="Bilge konsey orduları birleştirir" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_0_desc" text="Efsanevi birinci çağ veteranı." />
+
+    <string id="taom_faction_kingdom_of_imladris_su_0_name" text="Noldor Kılıç Ustası" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_1_desc" text="Ağır Elf muhafızı." />
+
+    <string id="taom_faction_kingdom_of_imladris_su_1_name" text="Rivendell Nöbetçisi" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_2_desc" text="Atlı Noldor ağır süvarisi." />
+
+    <string id="taom_faction_kingdom_of_imladris_su_2_name" text="Imladris Mızrakçısı" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_0" text="Lord Elrond'un Sığınağı" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_1" text="Bilgelerin Meclisi" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_2" text="Yarı-elf Mirası" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_3" text="Gizli Vadi" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_0" text="Elf Gururu nüfuz maliyetlerini artırır" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_1" text="Solan halk — az takviye" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_2" text="Vadiden uzağa genişleyemez" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="Ormanda +%10 grup hızı (Orman Diyarı)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_1" text="+%25 milis veteran şansı (Silvan Muhafızları)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_2" text="+3 grup morali (Orman Bağları)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_3" text="-15% birlik yiyecek tüketimi (Orman Geçimi)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_4" text="-20% köy ocak artışı (Orman Yalıtımı)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_desc" text="Thranduil'in kuzey Mirkwood'daki Orman Diyarı. Silvan okçuları ve veteran milisler büyük ormanı örümcek, ork ve gölgeye karşı korur. Orman Rızkı erzakı hafif tutar; Orman Bağları morali yüksek tutar. Orman tecridiyeti büyümeyi yavaşlatır." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_name" text="Lasgalen Krallığı" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_0_desc" text="Ormanda +10% birlik hızı ve -15% yiyecek tüketimi." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_0_name" text="Orman Diyarı" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_1_desc" text="Milis askerlerin veteran olarak gelmesi için +%25 şans." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_1_name" text="Silvan Muhafızları" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_2_desc" text="+3 grup morali — Silvan elfleri şarkılarla yürür." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_2_name" text="Orman Bağları" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_0" text="Üstün orman okçuluğu" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_1" text="Veteran milis mevzisini korur" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_2" text="Kendi kendine yeten tutumlu ordular" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_3" text="Orman savaşları Mirkwood'a aittir" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_0_desc" text="Seçkin orman okçusu." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_0_name" text="Mirkwood Nöbetçisi" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_1_desc" text="Uzun mızraklı orman piyadesi." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_1_name" text="Silvan Mızrak Muhafızı" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_2_desc" text="Şimşek hızında çatışmacı." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_2_name" text="Orman-elf İzcisi" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_0" text="Kral Thranduil'in Diyarı" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_1" text="Orman Okçuları" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_2" text="Silvan Muhafızları" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_3" text="Orman Kalesi" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_0" text="Orman Tecridiliği ocakları yavaşlatır" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_1" text="Az sayıda — her savaşçı önemlidir" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_2" text="Yalnızlaştırıcı diplomasi" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_0" text="Ormanda +%10 grup hızı (Altın Orman)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_1" text="-20% garnizon maaşı (Lorien Bekçileri)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_2" text="-15% birlik yiyecek tüketimi (Lembas Ekmeği)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_3" text="+3 grup morali (Elf Uyumu)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_4" text="Günde +0.5 yerleşim sadakati (Elf Zarafeti)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_5" text="-10% bina inşaat hızı (Zamansız Zanaat)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_desc" text="Altın Orman, Leydi Galadriel ve Lord Celeborn'un diyarı. Lórien Muhafızları mallorn ormanlarını ucuza savunur; Lembas Ekmeği her yürüyüşü destekler; Elf Uyumu morali sarsılmaz tutar. Zamansız Ustalık her değişimin yavaş olduğu anlamına gelir." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_name" text="Lothlórien Krallığı" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_0_desc" text="Ormanda +10% birlik hızı ve -20% garnizon maaşı." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_0_name" text="Nenya'nın Gücü" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_1_desc" text="-15% birlik yiyecek tüketimi — tek bir ısırık yürüyen bir elfi bir gün taşır." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_1_name" text="Lembas Ekmeği" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_2_desc" text="Her yerleşimde +3 grup morali ve günde +0.5 sadakat." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_2_name" text="Elf Uyumu" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_0" text="Nenya'nın büyülü koruması" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_1" text="Seçkin uzun yürüyüş orduları" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_2" text="Tutumlu ikmal zincirleri" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_3" text="Ucuz, sadık garnizonlar" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_0_desc" text="Seçkin Elf savunucusu." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_0_name" text="Galadhrim Muhafızı" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_1_desc" text="Naith'in efsanevi nişancısı." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_1_name" text="Lórien Yay Ustası" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_2_desc" text="Altın Orman'ın ağır zırhlı Elf koruyucusu." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_2_name" text="Gümüş Muhafız" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_0" text="Leydi Galadriel" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_1" text="Nenya Yüzüğü" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_2" text="Altın Mallorn Ağaçları" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_3" text="Lórien Muhafızları" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_0" text="Zamansız Ustalık genişlemeyi yavaşlatır" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_1" text="Minik daimi ordu" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_2" text="Sönen güç — büyüme yok" />
+
+    <string id="taom_faction_kingdom_of_moria_desc" text="Moria Krallığı." />
+
+    <string id="taom_faction_kingdom_of_moria_name" text="Moria Krallığı" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_desc" text="Mirkwood'un kuzey bölgelerinde, Orman-elflerin güneyden gelen sürünen karanlığa karşı kadim ormanlarını koruduğu bir Elf diyarı." />
+
+    <string id="taom_faction_kingdom_of_neldoreth_name" text="Neldoreth Krallığı" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_0" text="Orman-elfler" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_1" text="Orman Koruyucuları" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_2" text="Thranduil'un Soyu" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_desc" text="Arnor'un halef krallıklarının en doğusunda yer alan vahşi tepelik ülkesi Rhudaur. Angmar'ın etkisi altına girmiş ve tepe adamları Cadı-kral'a hizmet etmektedir." />
+
+    <string id="taom_faction_kingdom_of_rhudaur_name" text="Rhudaur Krallığı" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_0" text="Angmar'ın Hizmetkârları" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_1" text="Vahşi Tepe Adamları" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_2" text="Düşmüş Krallık" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_0" text="-15% atlı asker toplama maliyeti (At-beyliği Mirası)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_1" text="-15% atlı asker geliştirme maliyeti (At-beyliği Mirası)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_2" text="-15% atlı asker maaşları (Mark Süvarileri)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_3" text="+10% ovada grup hızı (Ovaların Atlıları)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_4" text="+5 grup morali (Atlıların Ruhu)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_5" text="+0.5 günlük yerleşim sadakati (At-lord Kardeşliği)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_6" text="%50'den fazla piyade olunca -10% birlik hızı (Süvariye Bağımlı)" />
+
+    <string id="taom_faction_kingdom_of_rohan_desc" text="At-lordların Riddermark'ı. At-lord Mirası her atlı askerin alım ve yükseltme maliyetini düşürür; Mark Atlıları atlı ücretlerini azaltır; At-lord Kardeşliği Mark'ı sadakatle bağlar. Süvariye Bağımlı — piyade ağırlıklı gruplar sürünme hızına düşer." />
+
+    <string id="taom_faction_kingdom_of_rohan_name" text="Rohan Krallığı" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_0_desc" text="Atlı asker toplamak VE geliştirmekte -15% maliyet — Mark ucuza süvari yetiştirir." />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_0_name" text="At-lord Mirası" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_1_desc" text="-15% atlı asker maaşları ve ovalarda +10% birlik hızı." />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_1_name" text="Mark Atlıları" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_2_desc" text="+5 grup morali ve günde +0.5 yerleşim sadakati." />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_2_name" text="At-lord Kardeşliği" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_0" text="Orta Dünya'nın en ucuz süvarisi" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_1" text="Ovalarda en hızlı ordular" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_2" text="Sadık Mark ve yüksek moral" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_3" text="Gondor ile güçlü ittifak" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_0_desc" text="Kral'ın seçkin ağır süvarileri." />
+
+    <string id="taom_faction_kingdom_of_rohan_su_0_name" text="Rohirrim Kraliyet Muhafızı" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_1_desc" text="Orta seviye mızraklı süvari." />
+
+    <string id="taom_faction_kingdom_of_rohan_su_1_name" text="Rohirrim Şövalyesi" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_2_desc" text="Disiplinli ova okçusu." />
+
+    <string id="taom_faction_kingdom_of_rohan_su_2_name" text="Westfold Yaya Okçusu" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_0" text="At-lordlar" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_1" text="Mark Atlıları" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_2" text="Miğfer Deresi" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_3" text="Gondor ile İttifak" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_0" text="Süvariye Bağımlı — piyade ağırlıklı gruplar yavaşlar" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_1" text="Zayıf piyade geleneği" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_2" text="Mark dışarı çıktığında Miğfer Deresi savunmasız kalır" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_desc" text="Güney Rhovanion Krallığı." />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_name" text="Güney Rhovanion Krallığı" />
+
+    <string id="taom_faction_kingdom_of_zigalnara_desc" text="Zigalnara Krallığı." />
+
+    <string id="taom_faction_kingdom_of_zigalnara_name" text="Zigalnara Krallığı" />
+
+    <string id="taom_faction_nurunkhizdin_desc" text="Nurunkhizdin." />
+
+    <string id="taom_faction_nurunkhizdin_name" text="Nurunkhizdin" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_0" text="-50% ordu nüfuz maliyeti (Gölge Komutası)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_1" text="+20% grup boyutu sınırı (Karanlık Lejyonlar)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_2" text="+20% köy gönüllü yeniden doğma hızı (Karanlık Mükellefler)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_3" text="+%20 milis veteran şansı (Karanlık Zorunlu Askerlik)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_4" text="Dol Guldur kasabasında +1 Tüccar + 1 Zanaatkar + 13 Çete Lideri eşrafı (toplam 20)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_5" text="+%10 köy eşrafı sayısı (Gizli Kulübeler)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_6" text="+%10 birlik yiyecek tüketimi (Obur Ordular)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_7" text="-20% bina inşaat hızı (Harap Edici İşler)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_desc" text="Ölümsüzün Mirkwood'daki güney kalesi. Gölge Komutası neredeyse hiç etki harcamadan ordular toplar; Karanlık Zorunlu Askerlik veteran milisler yetiştirir; Gölge Kaptanları tek kasabayı yirmi eşrafa şişirir. Obur Ordular öldürdükleri kadar yerler." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_name" text="Dol Guldur Üst Yönetimi" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_0_desc" text="Ordu etki maliyeti %50 azaltıldı — korku itaati zorlar." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_0_name" text="Gölge Komutası" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_1_desc" text="+%20 birlik boyutu ve +%20 gönüllü yeniden doğuş hızı." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_1_name" text="Karanlık Lejyonlar" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_2_desc" text="Dol Guldur'un tek kasabası 20 eşraf barındırır — 15 Çete Lideri toplanma merkezi." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_2_name" text="Gölge Kaptanları" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_0" text="Devasa ucuz ordular" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_1" text="Muazzam asker toplama merkezi" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_2" text="Veteran milis zorunlu askerliği" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_3" text="Orman savaşı ve korku" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_0_desc" text="Gölge tarafından çarpıtılmış ağır piyade." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_0_name" text="Dol Guldur Uruk'u" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_1_desc" text="Hızlı kabus süvarisi." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_1_name" text="Gölge Warg Atlısı" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_2_desc" text="Büyüyle dokunulmuş yüzbaşı." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_2_name" text="Kara Numenorlu Kaptan" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_0" text="Ölümsüzün İni" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_1" text="Bozulmuş Orman" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_2" text="Karanlık Lejyonlar" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_3" text="Gölge Komutası" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_0" text="Aç ordular erzakı tüketir" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_1" text="Endüstriyel çöküş surları yavaşlatır" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_2" text="Düşman ormanlarla çevrili" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_0" text="-40% ordu nüfuz maliyeti (Ork Ordusu)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_1" text="+%20 birlik boyutu limiti (Dağ Sürüsü)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_2" text="+%25 baskın hasarı (Ork Yağmacıları)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_3" text="+%10 birlik hızı karda (Dağ Akıncıları)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_4" text="+%20 köy gönüllü yeniden doğuş hızı" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_5" text="+%15 köy tahılı (Yağmalanmış Depolar)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_6" text="Kasaba başına +1 Zanaatkar + 3 Çete Lideri eşrafı (Kemik-Demirciler, Solgun Savaş Çetesi Reisleri)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_7" text="+%10 köy eşrafı sayısı (Kemik Kampları)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_8" text="+%10 birlik maaşları (Yağma Talepleri)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_desc" text="Gundabad Dağı, Bolg'un soyunun Solgun Orklarına kutsal. Yüksek geçitlerden muazzam savaş çeteleri yürür — Ork Ordusunun disiplini neredeyse hiç etki harcamadan ordular toplar, Dağ Akıncıları karlara hükmeder ve Yağma Talepleri her savaş lordunun ücretini öder." />
+
+    <string id="taom_faction_overlordship_of_gundabad_name" text="Gundabad Üst Yönetimi" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_0_desc" text="Ordu etki maliyeti %40 azaltıldı — korku itaati zorlar." />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_0_name" text="Ork Hordası" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_1_desc" text="Karda +%20 grup boyutu sınırı ve +%10 grup hızı." />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_1_name" text="Dağ Sürüsü" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_2_desc" text="Kasaba başına +3 Çete Lideri ve +1 Zanaatkar soylusu — akıncılarla birlikte asker toplama artar." />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_2_name" text="Soluk Savaş Çetesi Beyleri" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_0" text="Ucuz dağ hordaları" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_1" text="Karda yürüyüş hareketliliği" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_2" text="Yağma ekonomisi kileri dolu tutar" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_3" text="Yürüyüşe hazır sayısız savaş lordu" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_0_desc" text="Bolg'un seçkin ağır hattı." />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_0_name" text="Soluk Ork Şampiyonu" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_1_desc" text="Yıkıcı kuşatma canavarı." />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_1_name" text="Gundabad Savaş Trolü" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_2_desc" text="Hızlı çatışmacı süvari." />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_2_name" text="Warg Keşifçisi" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_0" text="Gundabad Dağı" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_1" text="Kuzeyin Ork Başkenti" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_2" text="Bolg'un Soluk Orkları" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_3" text="Kutsal Cüce Bölgesi Kayıp" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_0" text="Yağma Talepleri hazineyi zorlar" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_1" text="Hür Halklara evrensel düşmanlık" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_2" text="Cüceler ve Elfler Soluk Orklardan nefret eder" />
+
+    <string id="taom_faction_remnants_of_angmar_desc" text="Uzak kuzeydeki Angmar Cadı Kralı'nın korkunç krallığı. Carn Dûm kalesinden Cadı Kral, Arnor kalıntılarına karşı savaş yürütür." />
+
+    <string id="taom_faction_remnants_of_angmar_name" text="Angmar Kalıntıları" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_0" text="Cadı Kral" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_1" text="Carn Dûm Kalesi" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_2" text="Büyücülük ve Dehşet" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_3" text="Arnor'un Yok Edicisi" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_0" text="Ovalarda +%10 grup hızı (Tarlaların İnsanları)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_1" text="+%2.5 grup boyutu sınırı (Daimi Ordular)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_2" text="-20% garnizon ücreti (Kule Muhafızı)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_3" text="+%30 ordu nüfuz ödülü (Gondor Disiplini)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_4" text="+5 grup morali (Gondor Kararlılığı)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_5" text="Günlük +1 yerleşim sadakati (Kule Muhafızı Disiplini)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_6" text="-15% köy ocak büyümesi (Savaştan Tükenmiş Topraklar)" />
+
+    <string id="taom_faction_stewardship_of_gondor_desc" text="Güneydeki Dúnedain'in son kalesi. Kule Muhafızları cepheyi tutar, Gondor Disiplini orduları ucuza toplar ve Tarlaların İnsanları ovalarda yürür. Savaşla Tükenmiş Topraklar yavaş büyür — ama Gondor ayaktadır." />
+
+    <string id="taom_faction_stewardship_of_gondor_name" text="Gondor Nâipliği" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_0_desc" text="-20% garnizon ücreti ve günde +1 yerleşim bağlılığı." />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_0_name" text="Kule Muhafızı Disiplini" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_1_desc" text="+5 grup morali ve başarıda +%30 ordu nüfuz ödülü." />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_1_name" text="Gondor Kararlılığı" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_2_desc" text="Ovalarda +%10 grup hızı ve +%2.5 grup boyutu — Pelennor açık arazidedir." />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_2_name" text="Tarlaların İnsanları" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_0" text="Dengeli birlik çeşitliliği" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_1" text="Güçlü moral ve sadakat" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_2" text="Disiplinli garnizonlar" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_3" text="Nüfuz bakımından zengin komuta" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_0_desc" text="Minas Tirith'in seçkin zırhlı piyadeleri." />
+
+    <string id="taom_faction_stewardship_of_gondor_su_0_name" text="Kale Muhafızı" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_1_desc" text="Dol Amroth'un ağır süvarileri." />
+
+    <string id="taom_faction_stewardship_of_gondor_su_1_name" text="Kuğu Şövalyesi" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_2_desc" text="Dúnedain izci-okçuları." />
+
+    <string id="taom_faction_stewardship_of_gondor_su_2_name" text="İthilien Korucu" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_0" text="Dúnedain Mirası" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_1" text="Kule Muhafızları" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_2" text="Gondor'un Beyaz Ağacı" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_3" text="Kâhya Yönetimi" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_0" text="Savaştan yıpranmış topraklar yavaş büyür" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_1" text="Savunulacak çok sayıda sınır" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_2" text="Seçkin birlikler belirli bölgelere bağlı" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_desc" text="Doğu dağlarından gelen vahşi Ork kabilelerinin hâkim olduğu bir bölge. Khand ve Harad arasındaki sınır topraklarını terörize eden acımasız akıncılar." />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_name" text="Ered Gwaer Kalesi" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_trait_0" text="Ork Savaş Çeteleri" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_trait_1" text="Dağ Akıncıları" />
+
+    <string id="taom_faction_stronghold_of_narager_desc" text="Ork kabileleri tarafından istila edilmiş ıssız bir doğu bölgesi. Bu vahşi gruplar sınır topraklarına baskın yapar ve karanlık güçleri için izci görevi görür." />
+
+    <string id="taom_faction_stronghold_of_narager_name" text="Narager Kalesi" />
+
+    <string id="taom_faction_stronghold_of_narager_trait_0" text="Ork Akın Birlikleri" />
+
+    <string id="taom_faction_stronghold_of_narager_trait_1" text="Doğu Çöllükleri" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_0" text="+10% çölde grup hızı (Güneşin Oğulları)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_1" text="+5% grup boyutu sınırı (Haradrim Savaş Çeteleri)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="-30% kervan inşa maliyeti + -10% ticaret cezası (Aserai Tüccarı, miras)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="Çölde hız cezası yok (Aserai Çölü, miras)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="+5% günlük birlik maaşı (Aserai Maaşları, miras)" />
+
+    <string id="taom_faction_taskralan_of_harwan_desc" text="Harwan Haradrimleri, güneşin oğulları. Miras Aserai çöl dayanıklılığı; TAOM'un Güneşin Oğulları çölde +10% grup hızı ekler; Haradrim Savaş Çeteleri miras kervan ekonomisinin üzerine grup boyutu ekler. Mûmakiller güney ovalarına hükmeder." />
+
+    <string id="taom_faction_taskralan_of_harwan_name" text="Harwan Taskralanı" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_0_desc" text="+10% çölde grup hızı — yanan kumlara doğmuşlar." />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_0_name" text="Güneşin Oğulları" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_1_desc" text="+5% grup boyutu sınırı — kabile savaş çeteleri Mordor'un çağrısına birlikte gider." />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_1_name" text="Haradrim Savaş Çeteleri" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="Miras Aserai Tüccarı (-30% kervanlar, -10% ticaret cezası) ve Aserai Çölü (çöl hız cezası yok); +5% günlük ücretler." />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="Aserai Çöl Soyu" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_0" text="Mûmakil savaş canavarları" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_1" text="Çöl manevra kabiliyeti" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_2" text="Daha büyük savaş çeteleri" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_3" text="Aserai kervan geleneği" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_0_desc" text="Yıkıcı savaş canavarı." />
+
+    <string id="taom_faction_taskralan_of_harwan_su_0_name" text="Mûmakil Savaş Kulesi" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_1_desc" text="Derin güneyin uzun yay seçkinleri." />
+
+    <string id="taom_faction_taskralan_of_harwan_su_1_name" text="Harad Mahûd Okçusu" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_2_desc" text="Hafif çatışmacı süvari." />
+
+    <string id="taom_faction_taskralan_of_harwan_su_2_name" text="Güneş-Cilalı Atlı" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_0" text="Mûmakil Savaş Canavarları" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_1" text="Çöl Savaşçıları" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_2" text="Güneş-Bronz Deri" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_3" text="Güney İttifakı" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_0" text="Soğuk iklim cezası" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_1" text="Kabile içi çatışmalar" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_2" text="Az demirci ve duvar" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="Aserai-ödünç +%5 asker ücreti" />
+
+    <string id="taom_faction_taskralan_of_shaghana_desc" text="Shaghâna'nın Taskralı." />
+
+    <string id="taom_faction_taskralan_of_shaghana_name" text="Shaghâna Taskralı" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_desc" text="Arnor ve Gondor arasındaki Enedwaith'in vahşi toprakları. Hiçbir krala boyun eğmeyen, avcı ve çoban olarak yaşayan dağınık İnsan kabilelerine ev sahipliği yapar." />
+
+    <string id="taom_faction_wildmen_of_enedwaith_name" text="Enedwaith Yaban İnsanları" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_0" text="Dağınık Kabileler" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_1" text="Vahşi Avcılar" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_2" text="Merkezi Otorite Yok" />
+
   </strings>
 
 </base>

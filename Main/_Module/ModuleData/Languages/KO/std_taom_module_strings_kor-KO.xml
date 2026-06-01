@@ -652,6 +652,74 @@
 
     <string id="taom_str_neutral_term_for_culture.erebor" text="에레보르의 드워프들" />
 
+    <string id="taom_str_faction_official.abanissa" text="가문의 영주" />
+
+    <string id="taom_str_faction_official.abanissa_f" text="가문의 귀부인" />
+
+    <string id="taom_str_faction_ruler.abanissa" text="차자판" />
+
+    <string id="taom_str_faction_ruler.abanissa_f" text="차자판" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.abanissa" text="차자판, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.abanissa" text="차자판 {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.abanissa" text="{?RULER.GENDER}귀부인{?}영주{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.abanissa" text="아바니사" />
+
+    <string id="taom_str_short_term_for_faction.abanissa" text="아바니사" />
+
+    <string id="taom_str_faction_formal_name_for_culture.abanissa" text="아바니사 자치령" />
+
+    <string id="taom_str_faction_informal_name_for_culture.abanissa" text="아바니사" />
+
+    <string id="taom_str_neutral_term_for_culture.abanissa" text="아바니사의 하라드림" />
+
+    <string id="taom_str_culture_description.abanissa" text="아바니사는 하라드 남쪽 깊은 곳에 위치한 영역으로, 습한 밀림과 고대 석조 왕조의 땅이다. 아바니사의 위대한 가문들은 무시무시한 전쟁 야수들과 훈련된 창병 군대를 지휘하며, 그들의 권력은 사우론 외에는 누구에게도 책임지지 않는다. 왕조의 깃발 아래 그들은 진군하며, 남쪽 땅 전역에서 존경과 공포를 동시에 받는다." />
+
+    <string id="taom_str_culture_rich_name.abanissa" text="아바니사" />
+
+    <string id="taom_str_adjective_for_culture.abanissa" text="아바니사" />
+
+    <string id="taom_str_player_father_name.abanissa" text="소흐라브" />
+
+    <string id="taom_str_player_mother_name.abanissa" text="닐루파르" />
+
+    <string id="taom_str_faction_official.shaghana" text="부족 족장" />
+
+    <string id="taom_str_faction_official.shaghana_f" text="부족 귀부인" />
+
+    <string id="taom_str_faction_ruler.shaghana" text="타스크랄" />
+
+    <string id="taom_str_faction_ruler.shaghana_f" text="타스크랄" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.shaghana" text="타스크랄, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.shaghana" text="타스크랄 {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.shaghana" text="{?RULER.GENDER}귀부인{?}영주{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.shaghana" text="샤가니" />
+
+    <string id="taom_str_short_term_for_faction.shaghana" text="샤가니" />
+
+    <string id="taom_str_faction_formal_name_for_culture.shaghana" text="샤가나 부족 연합" />
+
+    <string id="taom_str_faction_informal_name_for_culture.shaghana" text="샤가나" />
+
+    <string id="taom_str_neutral_term_for_culture.shaghana" text="샤가나의 하라드림" />
+
+    <string id="taom_str_culture_description.shaghana" text="샤가나는 하라드의 동쪽 영역으로, 태양에 그을린 초원과 고대 요새의 땅이다. 아홉 부족은 맹렬한 기병이자 약탈자들로, 맹세와 혈연으로 결속되어 있으며, 감히 그들에게 대항하는 모든 이들에게 공포를 안겨준다. 그들은 타스크랄에게 복종하며, 그를 통해 사우론의 뜻에 따른다." />
+
+    <string id="taom_str_culture_rich_name.shaghana" text="샤가니" />
+
+    <string id="taom_str_adjective_for_culture.shaghana" text="샤가니" />
+
+    <string id="taom_str_player_father_name.shaghana" text="자르칸" />
+
+    <string id="taom_str_player_mother_name.shaghana" text="칸사" />
+
     <string id="0aXG8dvJ" text="{KINGDOM_NAME}와 평화를 맺습니다. 조공은 지불되지 않습니다." />
 
     <string id="0CsbbwtN" text="{CALLED_KINGDOM}에게 {KINGDOM_TO_CALL_TO_WAR_AGAINST}와의 전쟁 참전 요청" />
@@ -1284,11 +1352,2394 @@
 
     <string id="taom_career_free_points" text="사용 가능 포인트: {COUNT}" />
 
+    <string id="taom_career_tier_requirement" text="레벨 {LEVEL} 필요" />
+
+    <string id="taom_career_rank1_avanc_luth_raider" text="채색된 약탈자" />
+
+    <string id="taom_career_rank2_avanc_luth_raider" text="부족 광전사" />
+
+    <string id="taom_career_rank3_avanc_luth_raider" text="아방크-루스 전쟁 족장" />
+
+    <string id="taom_career_rank1_balchoth_kan" text="발코스 기마병" />
+
+    <string id="taom_career_rank2_balchoth_kan" text="발코스 전차병 대장" />
+
+    <string id="taom_career_rank3_balchoth_kan" text="발코스 군주-칸" />
+
+    <string id="taom_career_rank1_black_uruk_captain" text="우루크 병사" />
+
+    <string id="taom_career_rank2_black_uruk_captain" text="흑색 우루크" />
+
+    <string id="taom_career_rank3_black_uruk_captain" text="붉은 눈의 대장" />
+
+    <string id="taom_career_rank1_blade_dancer" text="놀도르 검사" />
+
+    <string id="taom_career_rank2_blade_dancer" text="황금꽃의 검" />
+
+    <string id="taom_career_rank3_blade_dancer" text="임라드리스의 검술 명인" />
+
+    <string id="taom_career_rank1_blademaster_of_ren" text="렌의 검" />
+
+    <string id="taom_career_rank2_blademaster_of_ren" text="맹세한 검술 명인" />
+
+    <string id="taom_career_rank3_blademaster_of_ren" text="진홍칼날의 칸" />
+
+    <string id="taom_career_rank1_captain_of_osgiliath" text="도하지의 오흐타르" />
+
+    <string id="taom_career_rank2_captain_of_osgiliath" text="오스길리아스의 수호자" />
+
+    <string id="taom_career_rank3_captain_of_osgiliath" text="오스길리아스의 대위" />
+
+    <string id="taom_career_rank1_cave_troll_master" text="구덩이 몰이꾼" />
+
+    <string id="taom_career_rank2_cave_troll_master" text="군다바드의 트롤 몰이꾼" />
+
+    <string id="taom_career_rank3_cave_troll_master" text="트롤을 부수는 자" />
+
+    <string id="taom_career_rank1_chariot_warlord" text="낫 전차병" />
+
+    <string id="taom_career_rank2_chariot_warlord" text="전차 군주" />
+
+    <string id="taom_career_rank3_chariot_warlord" text="칸드의 와인칸" />
+
+    <string id="taom_career_rank1_clanguard_rider" text="부족 선봉 기병" />
+
+    <string id="taom_career_rank2_clanguard_rider" text="멧돼지 기치 기마병" />
+
+    <string id="taom_career_rank3_clanguard_rider" text="야생 사냥의 주인" />
+
+    <string id="taom_career_rank1_codyan_legionaire" text="코디안 방패병" />
+
+    <string id="taom_career_rank2_codyan_legionaire" text="코디안 판갑 노병" />
+
+    <string id="taom_career_rank3_codyan_legionaire" text="룬의 철벽" />
+
+    <string id="taom_career_rank1_corsair_boarder" text="갑판 약탈자" />
+
+    <string id="taom_career_rank2_corsair_boarder" text="항구의 해적" />
+
+    <string id="taom_career_rank3_corsair_boarder" text="움바르의 흑색 약탈자" />
+
+    <string id="taom_career_rank1_corsair_captain" text="흑색 함대의 주인" />
+
+    <string id="taom_career_rank2_corsair_captain" text="함선의 선장" />
+
+    <string id="taom_career_rank3_corsair_captain" text="움바르의 군주" />
+
+    <string id="taom_career_rank1_corsair_crossbow" text="삭구 명사수" />
+
+    <string id="taom_career_rank2_corsair_crossbow" text="해적 저격수" />
+
+    <string id="taom_career_rank3_corsair_crossbow" text="함대의 무리-절단자" />
+
+    <string id="taom_career_rank1_crossbow_master" text="쇠뇌살 대장장이" />
+
+    <string id="taom_career_rank2_crossbow_master" text="쇠뇌 명인" />
+
+    <string id="taom_career_rank3_crossbow_master" text="철의 구릉의 기관-군주" />
+
+    <string id="taom_career_rank1_dale_guardsman" text="골짜기 마을의 문지기" />
+
+    <string id="taom_career_rank2_dale_guardsman" text="기리온의 방패병" />
+
+    <string id="taom_career_rank3_dale_guardsman" text="골짜기 마을의 기사" />
+
+    <string id="taom_career_rank1_dale_marksman" text="에스가로스의 궁수" />
+
+    <string id="taom_career_rank2_dale_marksman" text="용 사냥꾼" />
+
+    <string id="taom_career_rank3_dale_marksman" text="검은 화살의 소지자" />
+
+    <string id="taom_career_rank1_dale_outrider" text="골짜기 마을의 길-기수" />
+
+    <string id="taom_career_rank2_dale_outrider" text="북쪽 대로의 수호자" />
+
+    <string id="taom_career_rank3_dale_outrider" text="바르딩 가문의 사령관" />
+
+    <string id="taom_career_rank1_elk_rider" text="숲속 전위기병" />
+
+    <string id="taom_career_rank2_elk_rider" text="어둠숲의 엘크 수호자" />
+
+    <string id="taom_career_rank3_elk_rider" text="에린 라스갈렌의 뿔 달린 군주" />
+
+    <string id="taom_career_rank1_elven_archer" text="놀도르 궁수" />
+
+    <string id="taom_career_rank2_elven_archer" text="천상의 활의 파수꾼" />
+
+    <string id="taom_career_rank3_elven_archer" text="이므라드리스의 수호자" />
+
+    <string id="taom_career_rank1_eotheod_windrider" text="기사단의 기병" />
+
+    <string id="taom_career_rank2_eotheod_windrider" text="에오레드의 대장" />
+
+    <string id="taom_career_rank3_eotheod_windrider" text="리더마크의 사령관" />
+
+    <string id="taom_career_rank1_fell_rider" text="검은 기수" />
+
+    <string id="taom_career_rank2_fell_rider" text="흉포한 기수" />
+
+    <string id="taom_career_rank3_fell_rider" text="동방의 그림자" />
+
+    <string id="taom_career_rank1_galadhrim_archer" text="갈라드림의 궁수" />
+
+    <string id="taom_career_rank2_galadhrim_archer" text="말로른 처마의 궁수" />
+
+    <string id="taom_career_rank3_galadhrim_archer" text="황금숲의 궁술 대가" />
+
+    <string id="taom_career_rank1_goblin_sniper" text="바위틈 잠복자" />
+
+    <string id="taom_career_rank2_goblin_sniper" text="높은 고갯길 추적자" />
+
+    <string id="taom_career_rank3_goblin_sniper" text="군다바드의 눈" />
+
+    <string id="taom_career_rank1_ironguard" text="깊은 곳의 수호자" />
+
+    <string id="taom_career_rank2_ironguard" text="에레보르의 철위병" />
+
+    <string id="taom_career_rank3_ironguard" text="두린의 방패벽" />
+
+    <string id="taom_career_rank1_knight_of_belfalas" text="돌 암로스의 시종" />
+
+    <string id="taom_career_rank2_knight_of_belfalas" text="백조 기사" />
+
+    <string id="taom_career_rank3_knight_of_belfalas" text="은빛 백조의 기사" />
+
+    <string id="taom_career_rank1_lokhas_drus_marksman" text="로카스 드루스 궁수" />
+
+    <string id="taom_career_rank2_lokhas_drus_marksman" text="로카스 드루스 갑옷파쇄자" />
+
+    <string id="taom_career_rank3_lokhas_drus_marksman" text="태양깃의 동방의 죽음" />
+
+    <string id="taom_career_rank1_mahud_beast_rider" text="마후드 야수조련사" />
+
+    <string id="taom_career_rank2_mahud_beast_rider" text="무마킬 조종사" />
+
+    <string id="taom_career_rank3_mahud_beast_rider" text="무마킬 전쟁지휘관" />
+
+    <string id="taom_career_rank1_marksman_of_aldburg" text="동부지구의 궁수" />
+
+    <string id="taom_career_rank2_marksman_of_aldburg" text="알드부르그의 명궁" />
+
+    <string id="taom_career_rank3_marksman_of_aldburg" text="로한의 화살수호자" />
+
+    <string id="taom_career_rank1_mulkerhili_cultist" text="속삭임에 맹세한 자" />
+
+    <string id="taom_career_rank2_mulkerhili_cultist" text="루그부르즈의 목소리" />
+
+    <string id="taom_career_rank3_mulkerhili_cultist" text="눈꺼풀 없는 눈의 전령" />
+
+    <string id="taom_career_rank1_necromancer_acolyte" text="사술의 수습자" />
+
+    <string id="taom_career_rank2_necromancer_acolyte" text="검은 숨결의 직조자" />
+
+    <string id="taom_career_rank3_necromancer_acolyte" text="돌 굴두르의 대가" />
+
+    <string id="taom_career_rank1_olog_hai_warchief" text="전쟁트롤" />
+
+    <string id="taom_career_rank2_olog_hai_warchief" text="올로그하이" />
+
+    <string id="taom_career_rank3_olog_hai_warchief" text="루그부르즈의 전쟁족장" />
+
+    <string id="taom_career_rank1_pezarsani_javelineer" text="페자르산 투창병" />
+
+    <string id="taom_career_rank2_pezarsani_javelineer" text="투척창 경보병" />
+
+    <string id="taom_career_rank3_pezarsani_javelineer" text="진홍 창술의 대가" />
+
+    <string id="taom_career_rank1_ram_rider" text="숫양파괴자" />
+
+    <string id="taom_career_rank2_ram_rider" text="염소등 돌격병" />
+
+    <string id="taom_career_rank3_ram_rider" text="다인의 선봉대" />
+
+    <string id="taom_career_rank1_ranger_of_ithilien" text="이실리엔 정찰병" />
+
+    <string id="taom_career_rank2_ranger_of_ithilien" text="이실리엔의 야전특무병" />
+
+    <string id="taom_career_rank3_ranger_of_ithilien" text="백색중대의 대장" />
+
+    <string id="taom_career_rank1_rivendell_knight" text="임라드리스의 오타르" />
+
+    <string id="taom_career_rank2_rivendell_knight" text="임라드리스의 로퀸" />
+
+    <string id="taom_career_rank3_rivendell_knight" text="황금꽃의 기사" />
+
+    <string id="taom_career_rank1_sentinel" text="에글라딜의 기수" />
+
+    <string id="taom_career_rank2_sentinel" text="황금숲의 티리스" />
+
+    <string id="taom_career_rank3_sentinel" text="카라스 갈라돈의 탈리온" />
+
+    <string id="taom_career_rank1_shadow_walker" text="숲의 추적자" />
+
+    <string id="taom_career_rank2_shadow_walker" text="타우르누푸인의 그림자" />
+
+    <string id="taom_career_rank3_shadow_walker" text="거미의 파멸자" />
+
+    <string id="taom_career_rank1_shadow_warrior" text="어둠의 노예" />
+
+    <string id="taom_career_rank2_shadow_warrior" text="돌 굴두르의 하인" />
+
+    <string id="taom_career_rank3_shadow_warrior" text="사령술사의 검은 손" />
+
+    <string id="taom_career_rank1_silvan_archer" text="녹림 궁수" />
+
+    <string id="taom_career_rank2_silvan_archer" text="실반 명사수" />
+
+    <string id="taom_career_rank3_silvan_archer" text="요정왕의 궁수" />
+
+    <string id="taom_career_rank1_snaga_rider" text="스나가" />
+
+    <string id="taom_career_rank2_snaga_rider" text="연기-약탈자" />
+
+    <string id="taom_career_rank3_snaga_rider" text="루그부르즈의 그림자" />
+
+    <string id="taom_career_rank1_steppe_bowmaster" text="평원 전위대" />
+
+    <string id="taom_career_rank2_steppe_bowmaster" text="초원 궁술명인" />
+
+    <string id="taom_career_rank3_steppe_bowmaster" text="폭풍활 칸" />
+
+    <string id="taom_career_rank1_tribesman_of_jelut" text="젤루트 부족민" />
+
+    <string id="taom_career_rank2_tribesman_of_jelut" text="모래폭풍 약탈자" />
+
+    <string id="taom_career_rank3_tribesman_of_jelut" text="뱀-깃발 추장" />
+
+    <string id="taom_career_rank1_uruk_berserker" text="구덩이에서 태어난 우루크" />
+
+    <string id="taom_career_rank2_uruk_berserker" text="싸우는 우루크하이" />
+
+    <string id="taom_career_rank3_uruk_berserker" text="백색 손 약탈자" />
+
+    <string id="taom_career_rank1_uruk_crossbow" text="대장간 무장 우루크" />
+
+    <string id="taom_career_rank2_uruk_crossbow" text="오르상크 명사수" />
+
+    <string id="taom_career_rank3_uruk_crossbow" text="백색 손 저격수" />
+
+    <string id="taom_career_rank1_warden" text="숲가의 수호자" />
+
+    <string id="taom_career_rank2_warden" text="로리엔의 변경수호자" />
+
+    <string id="taom_career_rank3_warden" text="변경수호자 대장" />
+
+    <string id="taom_career_rank1_warg_pack_leader" text="무리의 와르그 기수" />
+
+    <string id="taom_career_rank2_warg_pack_leader" text="사나운 늑대-대장" />
+
+    <string id="taom_career_rank3_warg_pack_leader" text="야생 사냥단의 늑대-군주" />
+
+    <string id="taom_career_rank1_warg_scout" text="늑대-기수" />
+
+    <string id="taom_career_rank2_warg_scout" text="아이센가드의 와르그-정찰병" />
+
+    <string id="taom_career_rank3_warg_scout" text="백색 손의 사냥꾼" />
+
+    <string id="taom_career_rank1_watchman_of_stangard" text="스탕가르드의 감시병" />
+
+    <string id="taom_career_rank2_watchman_of_stangard" text="림라이트 여울의 수호자" />
+
+    <string id="taom_career_rank3_watchman_of_stangard" text="동부 변경의 수호자" />
+
+    <string id="taom_career_rank1_wolfskin_hunter" text="늑대가죽 추적자" />
+
+    <string id="taom_career_rank2_wolfskin_hunter" text="그림자-명사수" />
+
+    <string id="taom_career_rank3_wolfskin_hunter" text="언덕의 회색 사냥꾼" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t1_a" text="언덕-부족 광전사" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t1_b" text="맹세한 도끼-투척자" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t2_a" text="혈채-약탈자" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t2_b" text="전쟁함성 산악민" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t3_a" text="아방크-루스 전쟁-추장" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t3_b" text="전쟁무리의 군주" />
+
+    <string id="taom_career_grp_balchoth_kan_t1_a" text="발초스 기수" />
+
+    <string id="taom_career_grp_balchoth_kan_t1_b" text="두려움 없는 선봉기병" />
+
+    <string id="taom_career_grp_balchoth_kan_t2_a" text="룬의 전차기병" />
+
+    <string id="taom_career_grp_balchoth_kan_t2_b" text="강철 기마병" />
+
+    <string id="taom_career_grp_balchoth_kan_t3_a" text="막을 수 없는 물결" />
+
+    <string id="taom_career_grp_balchoth_kan_t3_b" text="공포의 군단" />
+
+    <string id="taom_career_grp_black_uruk_captain_t1_a" text="대장간에서 단련된 가죽" />
+
+    <string id="taom_career_grp_black_uruk_captain_t1_b" text="첫 피의 광란" />
+
+    <string id="taom_career_grp_black_uruk_captain_t2_a" text="루그부르즈의 광전사" />
+
+    <string id="taom_career_grp_black_uruk_captain_t2_b" text="끝없는 분노" />
+
+    <string id="taom_career_grp_black_uruk_captain_t3_a" text="눈꺼풀 없는 눈의 분노" />
+
+    <string id="taom_career_grp_black_uruk_captain_t3_b" text="검은 문의 대장" />
+
+    <string id="taom_career_grp_blade_dancer_t1_a" text="별빛의 강철" />
+
+    <string id="taom_career_grp_blade_dancer_t1_b" text="이ム라드리스의 수호자" />
+
+    <string id="taom_career_grp_blade_dancer_t2_a" text="곤돌린의 춤" />
+
+    <string id="taom_career_grp_blade_dancer_t2_b" text="숨겨진 골짜기의 수호자" />
+
+    <string id="taom_career_grp_blade_dancer_t3_a" text="제1시대의 검" />
+
+    <string id="taom_career_grp_blade_dancer_t3_b" text="에아렌딜의 빛" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t1_a" text="궁정 결투사" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t1_b" text="확고한 칼날" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t2_a" text="가차없는 날" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t2_b" text="렌의 수호자" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t3_a" text="회오리 살육자" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t3_b" text="불굴의 검의 군주" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t1_a" text="동쪽 둑의 수호자" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t1_b" text="안두인 도하지의 수호자" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t2_a" text="람마스의 선봉" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t2_b" text="마지막 다리의 검" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t3_a" text="파라미르의 군대" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t3_b" text="별들의 돔의 군주" />
+
+    <string id="taom_career_grp_cave_troll_master_t1_a" text="구덩이 채찍잡이" />
+
+    <string id="taom_career_grp_cave_troll_master_t1_b" text="동굴 입구 감시자" />
+
+    <string id="taom_career_grp_cave_troll_master_t2_a" text="고블린 마을의 폭군" />
+
+    <string id="taom_career_grp_cave_troll_master_t2_b" text="깊은 요새 파괴자" />
+
+    <string id="taom_career_grp_cave_troll_master_t3_a" text="군다바드의 재앙" />
+
+    <string id="taom_career_grp_cave_troll_master_t3_b" text="북쪽 전당의 공포" />
+
+    <string id="taom_career_grp_chariot_warlord_t1_a" text="낫 기수" />
+
+    <string id="taom_career_grp_chariot_warlord_t1_b" text="강철 바퀴" />
+
+    <string id="taom_career_grp_chariot_warlord_t2_a" text="수확의 돌격" />
+
+    <string id="taom_career_grp_chariot_warlord_t2_b" text="보호받는 전차팀" />
+
+    <string id="taom_career_grp_chariot_warlord_t3_a" text="펠렌노르의 수확자" />
+
+    <string id="taom_career_grp_chariot_warlord_t3_b" text="칸드의 수레바퀴" />
+
+    <string id="taom_career_grp_clanguard_rider_t1_a" text="클랜 천둥기수" />
+
+    <string id="taom_career_grp_clanguard_rider_t1_b" text="맹세한 클랜 호위대" />
+
+    <string id="taom_career_grp_clanguard_rider_t2_a" text="전쟁무리 선봉대" />
+
+    <string id="taom_career_grp_clanguard_rider_t2_b" text="언덕의 깃발" />
+
+    <string id="taom_career_grp_clanguard_rider_t3_a" text="모든 기수의 군주" />
+
+    <string id="taom_career_grp_clanguard_rider_t3_b" text="영원한 전쟁무리" />
+
+    <string id="taom_career_grp_codyan_legionaire_t1_a" text="코디안 선봉대" />
+
+    <string id="taom_career_grp_codyan_legionaire_t1_b" text="확고한 방패병" />
+
+    <string id="taom_career_grp_codyan_legionaire_t2_a" text="룬의 장벽" />
+
+    <string id="taom_career_grp_codyan_legionaire_t2_b" text="철갑 팔랑크스" />
+
+    <string id="taom_career_grp_codyan_legionaire_t3_a" text="깨지지 않는 전선" />
+
+    <string id="taom_career_grp_codyan_legionaire_t3_b" text="절대 무너지지 않는 장벽" />
+
+    <string id="taom_career_grp_corsair_boarder_t1_a" text="갑판 약탈자" />
+
+    <string id="taom_career_grp_corsair_boarder_t1_b" text="바다에 단련된 자" />
+
+    <string id="taom_career_grp_corsair_boarder_t2_a" text="펠라르기르의 유린자" />
+
+    <string id="taom_career_grp_corsair_boarder_t2_b" text="항구의 방벽" />
+
+    <string id="taom_career_grp_corsair_boarder_t3_a" text="해안의 재앙" />
+
+    <string id="taom_career_grp_corsair_boarder_t3_b" text="흑(黑) 누메노르 군주" />
+
+    <string id="taom_career_grp_corsair_captain_t1_a" text="움바르의 약탈대장" />
+
+    <string id="taom_career_grp_corsair_captain_t1_b" text="선원들의 지배자" />
+
+    <string id="taom_career_grp_corsair_captain_t2_a" text="카스타미르의 후계자" />
+
+    <string id="taom_career_grp_corsair_captain_t2_b" text="흑색 함대의 키잡이" />
+
+    <string id="taom_career_grp_corsair_captain_t3_a" text="해적들의 군주" />
+
+    <string id="taom_career_grp_corsair_captain_t3_b" text="대항구의 군주" />
+
+    <string id="taom_career_grp_corsair_crossbow_t1_a" text="삭구 명사수" />
+
+    <string id="taom_career_grp_corsair_crossbow_t1_b" text="망루 감시병" />
+
+    <string id="taom_career_grp_corsair_crossbow_t2_a" text="키잡이 사냥꾼" />
+
+    <string id="taom_career_grp_corsair_crossbow_t2_b" text="흑돛의 창" />
+
+    <string id="taom_career_grp_corsair_crossbow_t3_a" text="흑성(黑星)의 화살" />
+
+    <string id="taom_career_grp_corsair_crossbow_t3_b" text="끝없는 일제사격" />
+
+    <string id="taom_career_grp_crossbow_master_t1_a" text="쇠뿔산맥 일제사격" />
+
+    <string id="taom_career_grp_crossbow_master_t1_b" text="골짜기마을의 감시자" />
+
+    <string id="taom_career_grp_crossbow_master_t2_a" text="무자비한 쇠뇌살" />
+
+    <string id="taom_career_grp_crossbow_master_t2_b" text="산의 발리스타" />
+
+    <string id="taom_career_grp_crossbow_master_t3_a" text="강철의 폭풍" />
+
+    <string id="taom_career_grp_crossbow_master_t3_b" text="에레보르의 공성병기" />
+
+    <string id="taom_career_grp_dale_guardsman_t1_a" text="골짜기마을의 문지기" />
+
+    <string id="taom_career_grp_dale_guardsman_t1_b" text="에스가로스의 방패벽" />
+
+    <string id="taom_career_grp_dale_guardsman_t2_a" text="기리온의 창" />
+
+    <string id="taom_career_grp_dale_guardsman_t2_b" text="급류강의 방벽" />
+
+    <string id="taom_career_grp_dale_guardsman_t3_a" text="브란드 왕의 선봉대" />
+
+    <string id="taom_career_grp_dale_guardsman_t3_b" text="에레보르의 최후의 저항" />
+
+    <string id="taom_career_grp_dale_marksman_t1_a" text="에스가로스의 궁수" />
+
+    <string id="taom_career_grp_dale_marksman_t1_b" text="긴호수의 파수꾼" />
+
+    <string id="taom_career_grp_dale_marksman_t2_a" text="검은 화살의 후예" />
+
+    <string id="taom_career_grp_dale_marksman_t2_b" text="지빠귀의 눈을 가진 궁수" />
+
+    <string id="taom_career_grp_dale_marksman_t3_a" text="데일의 용 사냥꾼" />
+
+    <string id="taom_career_grp_dale_marksman_t3_b" text="기리온 혈통의 활" />
+
+    <string id="taom_career_grp_dale_outrider_t1_a" text="급류강의 기수" />
+
+    <string id="taom_career_grp_dale_outrider_t1_b" text="대상로의 수호자" />
+
+    <string id="taom_career_grp_dale_outrider_t2_a" text="긴 골짜기의 창기병" />
+
+    <string id="taom_career_grp_dale_outrider_t2_b" text="에레보르 우호의 정찰기병" />
+
+    <string id="taom_career_grp_dale_outrider_t3_a" text="북방인의 돌격" />
+
+    <string id="taom_career_grp_dale_outrider_t3_b" text="두 왕의 전령" />
+
+    <string id="taom_career_grp_elk_rider_t1_a" text="뿔 달린 돌격" />
+
+    <string id="taom_career_grp_elk_rider_t1_b" text="영지의 기수" />
+
+    <string id="taom_career_grp_elk_rider_t2_a" text="숲의 천둥" />
+
+    <string id="taom_career_grp_elk_rider_t2_b" text="스란두일의 근위대" />
+
+    <string id="taom_career_grp_elk_rider_t3_a" text="나무 아래의 분노" />
+
+    <string id="taom_career_grp_elk_rider_t3_b" text="요정왕의 전당의 군주" />
+
+    <string id="taom_career_grp_elven_archer_t1_a" text="예리한 눈의 감시자" />
+
+    <string id="taom_career_grp_elven_archer_t1_b" text="리븐델의 파수꾼" />
+
+    <string id="taom_career_grp_elven_archer_t2_a" text="끊임없는 일제 사격" />
+
+    <string id="taom_career_grp_elven_archer_t2_b" text="에레기온의 활" />
+
+    <string id="taom_career_grp_elven_archer_t3_a" text="길갈라드의 폭풍" />
+
+    <string id="taom_career_grp_elven_archer_t3_b" text="빌야의 수호" />
+
+    <string id="taom_career_grp_eotheod_windrider_t1_a" text="에오를의 후예" />
+
+    <string id="taom_career_grp_eotheod_windrider_t1_b" text="황야의 기수" />
+
+    <string id="taom_career_grp_eotheod_windrider_t2_a" text="에오를의 맹세" />
+
+    <string id="taom_career_grp_eotheod_windrider_t2_b" text="메아라스의 군주" />
+
+    <string id="taom_career_grp_eotheod_windrider_t3_a" text="펠렌노르의 돌격" />
+
+    <string id="taom_career_grp_eotheod_windrider_t3_b" text="리더마크의 노래" />
+
+    <string id="taom_career_grp_fell_rider_t1_a" text="그림자 군단의 기수" />
+
+    <string id="taom_career_grp_fell_rider_t1_b" text="사악한 말의 관리자" />
+
+    <string id="taom_career_grp_fell_rider_t2_a" text="공포의 전령" />
+
+    <string id="taom_career_grp_fell_rider_t2_b" text="검은 숨결의 기수" />
+
+    <string id="taom_career_grp_fell_rider_t3_a" text="돌 굴두르의 검은 기수" />
+
+    <string id="taom_career_grp_fell_rider_t3_b" text="동방의 그림자" />
+
+    <string id="taom_career_grp_galadhrim_archer_t1_a" text="은빛 궁수" />
+
+    <string id="taom_career_grp_galadhrim_archer_t1_b" text="울타리의 눈" />
+
+    <string id="taom_career_grp_galadhrim_archer_t2_a" text="말로른 명사수" />
+
+    <string id="taom_career_grp_galadhrim_archer_t2_b" text="플렛의 감시자" />
+
+    <string id="taom_career_grp_galadhrim_archer_t3_a" text="카라스 갈라돈의 화살" />
+
+    <string id="taom_career_grp_galadhrim_archer_t3_b" text="은색 강의 수호자" />
+
+    <string id="taom_career_grp_goblin_sniper_t1_a" text="바위 추적자" />
+
+    <string id="taom_career_grp_goblin_sniper_t1_b" text="굴 잠복자" />
+
+    <string id="taom_career_grp_goblin_sniper_t2_a" text="높은 고개 매복자" />
+
+    <string id="taom_career_grp_goblin_sniper_t2_b" text="독화살 제작자" />
+
+    <string id="taom_career_grp_goblin_sniper_t3_a" text="현관 약탈자" />
+
+    <string id="taom_career_grp_goblin_sniper_t3_b" text="높은 고개의 그림자" />
+
+    <string id="taom_career_grp_ironguard_t1_a" text="깊은 곳의 망치" />
+
+    <string id="taom_career_grp_ironguard_t1_b" text="성벽 수호자" />
+
+    <string id="taom_career_grp_ironguard_t2_a" text="두린 일족의 분노" />
+
+    <string id="taom_career_grp_ironguard_t2_b" text="에레보르의 방패벽" />
+
+    <string id="taom_career_grp_ironguard_t3_a" text="미스릴 방벽" />
+
+    <string id="taom_career_grp_ironguard_t3_b" text="아르켄스톤의 호위병" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t1_a" text="돌 아므로스의 창기병" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t1_b" text="만의 수호자" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t2_a" text="은빛 백조의 기사" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t2_b" text="임라힐의 방패벽" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t3_a" text="백조 뱃머리의 기사" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t3_b" text="돌 아므로스의 돌격" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t1_a" text="룬의 일제사격" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t1_b" text="견고한 궁수" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t2_a" text="폭풍활 명사수" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t2_b" text="갑옷 관통자" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t3_a" text="화살의 폭풍" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t3_b" text="끊임없는 우박" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t1_a" text="엄니 선봉대" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t1_b" text="야수 관리인" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t2_a" text="짓밟는 돌격" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t2_b" text="호다 수호자" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t3_a" text="무마칸의 분노" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t3_b" text="올리판트의 군주" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t1_a" text="동부 지역의 매" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t1_b" text="폴데의 수호자" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t2_a" text="소집의 대장" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t2_b" text="판고른의 그림자" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t3_a" text="마크의 궁수" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t3_b" text="리더마크의 군세" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t1_a" text="독기 서린 기도문" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t1_b" text="사우론의 속삭이는 말씀" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t2_a" text="공포의 회중" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t2_b" text="눈의 설교" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t3_a" text="암흑군주의 시선" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t3_b" text="반지의 어둠 계약" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t1_a" text="암흑 화살의 시전자" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t1_b" text="부패의 속삭이는 자" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t2_a" text="흑마술의 직조자" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t2_b" text="그림자의 숨결" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t3_a" text="마술 언덕의 군주" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t3_b" text="사령술사의 목소리" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t1_a" text="대지를 찢는 자" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t1_b" text="지칠 줄 모르는 망치" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t2_a" text="난폭한 거인" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t2_b" text="햇빛 속 맹공" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t3_a" text="모란논의 망치" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t3_b" text="사우론의 트롤 무리" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t1_a" text="태양창 척후병" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t1_b" text="방랑하는 기마 전위" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t2_a" text="태양불꽃 투척병" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t2_b" text="진홍의 방패막" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t3_a" text="먼 하라드의 비" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t3_b" text="모래언덕의 그림자" />
+
+    <string id="taom_career_grp_ram_rider_t1_a" text="언덕의 염소 치는 자" />
+
+    <string id="taom_career_grp_ram_rider_t1_b" text="에레보르의 외곽 기병" />
+
+    <string id="taom_career_grp_ram_rider_t2_a" text="철 언덕의 돌격" />
+
+    <string id="taom_career_grp_ram_rider_t2_b" text="강인한 전투 숫양" />
+
+    <string id="taom_career_grp_ram_rider_t3_a" text="아이언풋의 선봉" />
+
+    <string id="taom_career_grp_ram_rider_t3_b" text="외로운 산의 기수" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t1_a" text="이실리엔 길의 사냥꾼" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t1_b" text="헨네스 안눈의 감시자" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t2_a" text="북부 이실리엔의 정찰병" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t2_b" text="파라미르의 궁수" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t3_a" text="금지된 못의 화살" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t3_b" text="에민 아르넨의 그림자" />
+
+    <string id="taom_career_grp_rivendell_knight_t1_a" text="이므라드리스의 돌격" />
+
+    <string id="taom_career_grp_rivendell_knight_t1_b" text="여울의 기수" />
+
+    <string id="taom_career_grp_rivendell_knight_t2_a" text="아스팔로스의 질주" />
+
+    <string id="taom_career_grp_rivendell_knight_t2_b" text="발라의 방패" />
+
+    <string id="taom_career_grp_rivendell_knight_t3_a" text="글로르핀델의 분노" />
+
+    <string id="taom_career_grp_rivendell_knight_t3_b" text="최후 동맹의 군세" />
+
+    <string id="taom_career_grp_sentinel_t1_a" text="에글라딜의 선발대" />
+
+    <string id="taom_career_grp_sentinel_t1_b" text="엘라노르의 수호자" />
+
+    <string id="taom_career_grp_sentinel_t2_a" text="나이스의 기병" />
+
+    <string id="taom_career_grp_sentinel_t2_b" text="켈레브란트의 수호자" />
+
+    <string id="taom_career_grp_sentinel_t3_a" text="라우렐린도레난의 창" />
+
+    <string id="taom_career_grp_sentinel_t3_b" text="네냐의 파수꾼" />
+
+    <string id="taom_career_grp_shadow_walker_t1_a" text="길의 그림자" />
+
+    <string id="taom_career_grp_shadow_walker_t1_b" text="나뭇잎 망토" />
+
+    <string id="taom_career_grp_shadow_walker_t2_a" text="어둠 속의 사냥꾼" />
+
+    <string id="taom_career_grp_shadow_walker_t2_b" text="숲의 장막" />
+
+    <string id="taom_career_grp_shadow_walker_t3_a" text="거미의 파멸자" />
+
+    <string id="taom_career_grp_shadow_walker_t3_b" text="에린 라스갈렌의 은신자" />
+
+    <string id="taom_career_grp_shadow_warrior_t1_a" text="아몬 란크의 그림자" />
+
+    <string id="taom_career_grp_shadow_warrior_t1_b" text="구덩이의 수호자" />
+
+    <string id="taom_career_grp_shadow_warrior_t2_a" text="어둠숲의 약탈자" />
+
+    <string id="taom_career_grp_shadow_warrior_t2_b" text="돌 굴두르의 방벽" />
+
+    <string id="taom_career_grp_shadow_warrior_t3_a" text="사령술사의 재앙" />
+
+    <string id="taom_career_grp_shadow_warrior_t3_b" text="불사의 그림자" />
+
+    <string id="taom_career_grp_silvan_archer_t1_a" text="녹림 명사수" />
+
+    <string id="taom_career_grp_silvan_archer_t1_b" text="수관의 감시대" />
+
+    <string id="taom_career_grp_silvan_archer_t2_a" text="숲터의 사냥꾼" />
+
+    <string id="taom_career_grp_silvan_archer_t2_b" text="강의 수호자" />
+
+    <string id="taom_career_grp_silvan_archer_t3_a" text="화살의 폭풍" />
+
+    <string id="taom_career_grp_silvan_archer_t3_b" text="요정왕의 궁수" />
+
+    <string id="taom_career_grp_snaga_rider_t1_a" text="그림자 질주" />
+
+    <string id="taom_career_grp_snaga_rider_t1_b" text="어둠의 기수" />
+
+    <string id="taom_career_grp_snaga_rider_t2_a" text="그림자로부터의 습격" />
+
+    <string id="taom_career_grp_snaga_rider_t2_b" text="키리스 운골의 유령" />
+
+    <string id="taom_career_grp_snaga_rider_t3_a" text="누른의 맹습" />
+
+    <string id="taom_career_grp_snaga_rider_t3_b" text="모르도르의 선봉" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t1_a" text="평원 척후병" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t1_b" text="안정된 일제사격" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t2_a" text="끝없는 화살통" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t2_b" text="일제사격 수호자" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t3_a" text="칸드의 폭풍소환자" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t3_b" text="끊임없는 우박" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t1_a" text="사구 약탈자" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t1_b" text="사막 생존자" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t2_a" text="뱀이빨 타격수" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t2_b" text="모래의 착용자" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t3_a" text="하라드와이스의 독" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t3_b" text="남방인의 재앙" />
+
+    <string id="taom_career_grp_uruk_berserker_t1_a" text="피에 미친 자" />
+
+    <string id="taom_career_grp_uruk_berserker_t1_b" text="투기장의 강철" />
+
+    <string id="taom_career_grp_uruk_berserker_t2_a" text="백색 손의 약탈자" />
+
+    <string id="taom_career_grp_uruk_berserker_t2_b" text="오르상크의 방패벽" />
+
+    <string id="taom_career_grp_uruk_berserker_t3_a" text="난 쿠루니르의 재앙" />
+
+    <string id="taom_career_grp_uruk_berserker_t3_b" text="탑의 불굴자" />
+
+    <string id="taom_career_grp_uruk_crossbow_t1_a" text="강철 일제사격" />
+
+    <string id="taom_career_grp_uruk_crossbow_t1_b" text="대장간 단조자" />
+
+    <string id="taom_career_grp_uruk_crossbow_t2_a" text="백색 손의 화살" />
+
+    <string id="taom_career_grp_uruk_crossbow_t2_b" text="성벽의 파수꾼" />
+
+    <string id="taom_career_grp_uruk_crossbow_t3_a" text="오르상크의 폭풍까마귀" />
+
+    <string id="taom_career_grp_uruk_crossbow_t3_b" text="끝없는 강철 비" />
+
+    <string id="taom_career_grp_warden_t1_a" text="국경 보행자" />
+
+    <string id="taom_career_grp_warden_t1_b" text="님로델의 파수꾼" />
+
+    <string id="taom_career_grp_warden_t2_a" text="나이스의 검" />
+
+    <string id="taom_career_grp_warden_t2_b" text="카라스 갈라돈의 방패벽" />
+
+    <string id="taom_career_grp_warden_t3_a" text="황금 숲의 파수꾼" />
+
+    <string id="taom_career_grp_warden_t3_b" text="케린 암로스의 수호자" />
+
+    <string id="taom_career_grp_warg_pack_leader_t1_a" text="와르그 기수" />
+
+    <string id="taom_career_grp_warg_pack_leader_t1_b" text="무리 지킴이" />
+
+    <string id="taom_career_grp_warg_pack_leader_t2_a" text="회색 무리 외곽 기병" />
+
+    <string id="taom_career_grp_warg_pack_leader_t2_b" text="사악한 늑대 조련사" />
+
+    <string id="taom_career_grp_warg_pack_leader_t3_a" text="군다바드의 우두머리" />
+
+    <string id="taom_career_grp_warg_pack_leader_t3_b" text="볼그의 늑대 대장" />
+
+    <string id="taom_career_grp_warg_scout_t1_a" text="송곳니 주자" />
+
+    <string id="taom_career_grp_warg_scout_t1_b" text="회색 무리" />
+
+    <string id="taom_career_grp_warg_scout_t2_a" text="안개 산맥의 사냥꾼" />
+
+    <string id="taom_career_grp_warg_scout_t2_b" text="늑대 파수꾼" />
+
+    <string id="taom_career_grp_warg_scout_t3_a" text="아이센가드의 외곽 기병" />
+
+    <string id="taom_career_grp_warg_scout_t3_b" text="지칠 줄 모르는 사냥" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t1_a" text="림라이트의 여울" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t1_b" text="황무지의 감시" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t2_a" text="엔트워시의 방패병" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t2_b" text="안두인의 파수꾼" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t3_a" text="기사단의 보루" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t3_b" text="리더마크의 수호자" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t1_a" text="무리에 표식된 추적자" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t1_b" text="늑대가죽 잠행자" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t2_a" text="목을 꿰뚫는 사냥꾼" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t2_b" text="언덕의 유령" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t3_a" text="최상위 늑대가죽" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t3_b" text="대무리의 주인" />
+
+    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes 활성화 — covers_head 모프 수정 + 머리카락/수염 천 시뮬레이션" />
+
+    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes 저하됨 — 이 배너로드 빌드에 대한 패턴 서명이 승인되지 않음; 바닐라 렌더링" />
+
+    <string id="taom_bandit_dunland_name" text="던랜드 약탈자" />
+
+    <string id="taom_bandit_dunland_m1" text="카라독" />
+
+    <string id="taom_bandit_dunland_m2" text="그위디온" />
+
+    <string id="taom_bandit_dunland_m3" text="브레노르" />
+
+    <string id="taom_bandit_dunland_m4" text="타르갈" />
+
+    <string id="taom_bandit_dunland_m5" text="매드런" />
+
+    <string id="taom_bandit_dunland_m6" text="드루구" />
+
+    <string id="taom_bandit_dunland_m7" text="올판" />
+
+    <string id="taom_bandit_dunland_m8" text="케스린" />
+
+    <string id="taom_bandit_dunland_m9" text="흘보르" />
+
+    <string id="taom_bandit_dunland_m10" text="이드리스" />
+
+    <string id="taom_bandit_dunland_f1" text="브란웬" />
+
+    <string id="taom_bandit_dunland_f2" text="아엘리스" />
+
+    <string id="taom_bandit_dunland_f3" text="마에르웬" />
+
+    <string id="taom_bandit_dunland_f4" text="귀네스" />
+
+    <string id="taom_bandit_dunland_f5" text="올웬" />
+
+    <string id="taom_bandit_rhun_name" text="룬 약탈자" />
+
+    <string id="taom_bandit_rhun_m1" text="카물" />
+
+    <string id="taom_bandit_rhun_m2" text="타르곤" />
+
+    <string id="taom_bandit_rhun_m3" text="부르자크" />
+
+    <string id="taom_bandit_rhun_m4" text="상가르" />
+
+    <string id="taom_bandit_rhun_m5" text="하즈그림" />
+
+    <string id="taom_bandit_rhun_m6" text="보르줄" />
+
+    <string id="taom_bandit_rhun_m7" text="다기르" />
+
+    <string id="taom_bandit_rhun_m8" text="올멕" />
+
+    <string id="taom_bandit_rhun_m9" text="타르본" />
+
+    <string id="taom_bandit_rhun_m10" text="카르줄" />
+
+    <string id="taom_bandit_rhun_f1" text="사릴라" />
+
+    <string id="taom_bandit_rhun_f2" text="카즈나" />
+
+    <string id="taom_bandit_rhun_f3" text="보리나" />
+
+    <string id="taom_bandit_rhun_f4" text="타지아" />
+
+    <string id="taom_bandit_rhun_f5" text="상겔라" />
+
+    <string id="taom_bandit_harad_name" text="하라드림 약탈자" />
+
+    <string id="taom_bandit_harad_m1" text="술라단" />
+
+    <string id="taom_bandit_harad_m2" text="아자갈" />
+
+    <string id="taom_bandit_harad_m3" text="칼레드" />
+
+    <string id="taom_bandit_harad_m4" text="바리아그" />
+
+    <string id="taom_bandit_harad_m5" text="다스" />
+
+    <string id="taom_bandit_harad_m6" text="타르킬" />
+
+    <string id="taom_bandit_harad_m7" text="무잔" />
+
+    <string id="taom_bandit_harad_m8" text="아코르" />
+
+    <string id="taom_bandit_harad_m9" text="사히르" />
+
+    <string id="taom_bandit_harad_m10" text="주란" />
+
+    <string id="taom_bandit_harad_f1" text="닐후나" />
+
+    <string id="taom_bandit_harad_f2" text="사하리아" />
+
+    <string id="taom_bandit_harad_f3" text="아클리라" />
+
+    <string id="taom_bandit_harad_f4" text="베자라" />
+
+    <string id="taom_bandit_harad_f5" text="무자나" />
+
+    <string id="taom_bandit_gundabad_name" text="군다바드 오크 약탈자" />
+
+    <string id="taom_bandit_gundabad_m1" text="볼그" />
+
+    <string id="taom_bandit_gundabad_m2" text="야즈네그" />
+
+    <string id="taom_bandit_gundabad_m3" text="핌불" />
+
+    <string id="taom_bandit_gundabad_m4" text="나르주그" />
+
+    <string id="taom_bandit_gundabad_m5" text="고르바그" />
+
+    <string id="taom_bandit_gundabad_m6" text="마우후르" />
+
+    <string id="taom_bandit_gundabad_m7" text="스나가" />
+
+    <string id="taom_bandit_gundabad_m8" text="우프타크" />
+
+    <string id="taom_bandit_gundabad_m9" text="라드부그" />
+
+    <string id="taom_bandit_gundabad_m10" text="루그두시" />
+
+    <string id="taom_bandit_gundabad_f1" text="스카라" />
+
+    <string id="taom_bandit_gundabad_f2" text="보르가" />
+
+    <string id="taom_bandit_gundabad_f3" text="마즈라" />
+
+    <string id="taom_bandit_gundabad_f4" text="그리시타" />
+
+    <string id="taom_bandit_gundabad_f5" text="나르즈가" />
+
+    <string id="taom_bandit_umbar_name" text="움바르의 해적" />
+
+    <string id="taom_bandit_umbar_m1" text="카스타미르" />
+
+    <string id="taom_bandit_umbar_m2" text="상가한디온" />
+
+    <string id="taom_bandit_umbar_m3" text="앙가마이테" />
+
+    <string id="taom_bandit_umbar_m4" text="헤루모르" />
+
+    <string id="taom_bandit_umbar_m5" text="푸이누르" />
+
+    <string id="taom_bandit_umbar_m6" text="아두나펠" />
+
+    <string id="taom_bandit_umbar_m7" text="아라골" />
+
+    <string id="taom_bandit_umbar_m8" text="칼레미르" />
+
+    <string id="taom_bandit_umbar_m9" text="보론딜" />
+
+    <string id="taom_bandit_umbar_m10" text="카라지르" />
+
+    <string id="taom_bandit_umbar_f1" text="베루시엘" />
+
+    <string id="taom_bandit_umbar_f2" text="님레스" />
+
+    <string id="taom_bandit_umbar_f3" text="아두니엘" />
+
+    <string id="taom_bandit_umbar_f4" text="타르미리엘" />
+
+    <string id="taom_bandit_umbar_f5" text="인질베스" />
+
+    <string id="taom_bandit_gondor_name" text="곤도르 병사들" />
+
+    <string id="taom_bandit_gondor_m1" text="베르길" />
+
+    <string id="taom_bandit_gondor_m2" text="타르곤" />
+
+    <string id="taom_bandit_gondor_m3" text="포를롱" />
+
+    <string id="taom_bandit_gondor_m4" text="두일라스" />
+
+    <string id="taom_bandit_gondor_m5" text="히르곤" />
+
+    <string id="taom_bandit_gondor_m6" text="베레곤드" />
+
+    <string id="taom_bandit_gondor_m7" text="마르딜" />
+
+    <string id="taom_bandit_gondor_m8" text="오로드레스" />
+
+    <string id="taom_bandit_gondor_m9" text="키리온" />
+
+    <string id="taom_bandit_gondor_m10" text="할미르" />
+
+    <string id="taom_bandit_gondor_f1" text="이오레스" />
+
+    <string id="taom_bandit_gondor_f2" text="로시리엘" />
+
+    <string id="taom_bandit_gondor_f3" text="모르웬" />
+
+    <string id="taom_bandit_gondor_f4" text="길라엔" />
+
+    <string id="taom_bandit_gondor_f5" text="안웬" />
+
+    <string id="taom_bandit_erebor_name" text="에레보르 전사들" />
+
+    <string id="taom_bandit_erebor_m1" text="나르굼" />
+
+    <string id="taom_bandit_erebor_m2" text="보린" />
+
+    <string id="taom_bandit_erebor_m3" text="프라르" />
+
+    <string id="taom_bandit_erebor_m4" text="로파르" />
+
+    <string id="taom_bandit_erebor_m5" text="그림비어드" />
+
+    <string id="taom_bandit_erebor_m6" text="스라르" />
+
+    <string id="taom_bandit_erebor_m7" text="드왈긴" />
+
+    <string id="taom_bandit_erebor_m8" text="날라드르" />
+
+    <string id="taom_bandit_erebor_m9" text="비드리" />
+
+    <string id="taom_bandit_erebor_m10" text="하그리" />
+
+    <string id="taom_bandit_erebor_f1" text="디스" />
+
+    <string id="taom_bandit_erebor_f2" text="브릴라" />
+
+    <string id="taom_bandit_erebor_f3" text="바그나" />
+
+    <string id="taom_bandit_erebor_f4" text="소라" />
+
+    <string id="taom_bandit_erebor_f5" text="프리다" />
+
+    <string id="taom_bandit_mirkwood_name" text="어둠숲 추적자들" />
+
+    <string id="taom_bandit_mirkwood_m1" text="파에글리르" />
+
+    <string id="taom_bandit_mirkwood_m2" text="스란두일" />
+
+    <string id="taom_bandit_mirkwood_m3" text="갈리온" />
+
+    <string id="taom_bandit_mirkwood_m4" text="벨레고른" />
+
+    <string id="taom_bandit_mirkwood_m5" text="님로스" />
+
+    <string id="taom_bandit_mirkwood_m6" text="오로핀" />
+
+    <string id="taom_bandit_mirkwood_m7" text="루밀" />
+
+    <string id="taom_bandit_mirkwood_m8" text="할다미르" />
+
+    <string id="taom_bandit_mirkwood_m9" text="타우론" />
+
+    <string id="taom_bandit_mirkwood_m10" text="린디르" />
+
+    <string id="taom_bandit_mirkwood_f1" text="타우리엘" />
+
+    <string id="taom_bandit_mirkwood_f2" text="네스로리엘" />
+
+    <string id="taom_bandit_mirkwood_f3" text="에오웬" />
+
+    <string id="taom_bandit_mirkwood_f4" text="파엘리브린" />
+
+    <string id="taom_bandit_mirkwood_f5" text="미리엘" />
+
     <string id="taom_hideout_desc_dunland" text="던랜드의 숲이 우거진 언덕 사이에서 공터에 반쯤 숨겨진 가죽 천막과 조잡한 방책으로 이루어진 거친 야영지를 발견했습니다." />
+
     <string id="taom_hideout_desc_gundabad" text="안개산맥의 바위 절벽 아래에서 민둥바위 속에 굴을 판 군다바드 오크들의 더러운 소굴을 발견했습니다." />
+
     <string id="taom_hideout_desc_harad" text="하라드의 모래언덕 사이에서 숨겨진 사막 우물 주변에 모여 있는 위장된 남방인 야영지를 발견했습니다." />
+
     <string id="taom_hideout_desc_rhun" text="룬의 광활한 초원에서 계곡에 야영한 동방인 약탈단의 마차와 가죽 천막을 발견했습니다." />
+
     <string id="taom_hideout_desc_umbar" text="남쪽 해안을 따라가다 움바르 해적들의 검은 배들이 정박해 있는 은폐된 만을 발견했습니다." />
+
+    <string id="taom_faction_difficulty_1" text="난이도: 매우 쉬움" />
+
+    <string id="taom_faction_difficulty_2" text="난이도: 쉬움" />
+
+    <string id="taom_faction_difficulty_3" text="난이도: 보통" />
+
+    <string id="taom_faction_difficulty_4" text="난이도: 중간-어려움" />
+
+    <string id="taom_faction_difficulty_5" text="난이도: 어려움" />
+
+    <string id="taom_faction_difficulty_6" text="난이도: 매우 어려움" />
+
+    <string id="taom_faction_difficulty_7" text="난이도: 극한" />
+
+    <string id="taom_faction_anduin_vale_desc" text="안두인 대하의 비옥한 계곡으로, 베오르닝족과 숲사람들의 고향입니다. 안개산맥과 어둠숲 사이에 사는 소박한 사람들입니다." />
+
+    <string id="taom_faction_anduin_vale_name" text="안두인 계곡" />
+
+    <string id="taom_faction_anduin_vale_trait_0" text="베오르닝족" />
+
+    <string id="taom_faction_anduin_vale_trait_1" text="계곡의 숲사람들" />
+
+    <string id="taom_faction_anduin_vale_trait_2" text="대하 무역" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_desc" text="발라에게 충실했던 누메노르의 신의파가 정착한 벨라카르의 해안 왕국입니다. 남부 해안의 문명 요새입니다." />
+
+    <string id="taom_faction_aru_thani_of_bellakar_name" text="벨라카르의 아루-타니" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_0" text="누메노르의 유산" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_1" text="해안 왕국" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_2" text="발라에 대한 신의" />
+
+    <string id="taom_faction_browlands_desc" text="브라우랜드." />
+
+    <string id="taom_faction_browlands_name" text="브라우랜드" />
+
+    <string id="taom_faction_chajaphan_of_abanissa_desc" text="아바니사의 차자판." />
+
+    <string id="taom_faction_chajaphan_of_abanissa_name" text="아바니사의 차자판" />
+
+    <string id="taom_faction_clans_of_andrast_desc" text="안드라스트의 부족들." />
+
+    <string id="taom_faction_clans_of_andrast_name" text="안드라스트의 부족들" />
+
+    <string id="taom_faction_clans_of_druwaith_iaur_desc" text="드루와이스 이아우르의 부족들." />
+
+    <string id="taom_faction_clans_of_druwaith_iaur_name" text="드루와이스 이아우르의 부족들" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_0" text="숲 속도 패널티 50% 감소 + 시야 범위 15% 증가 (바타니아 차용)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_1" text="평원에서 부대 속도 +10% (언덕 행군자)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_2" text="부대 규모 한계 +5% (언덕부족 징집병)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_3" text="마을 지원병 재생성률 +10% (언덕부족 징집)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_4" text="도시에서 정예 민병대 출현 확률 +20% (바타니아 차용)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_5" text="건물 건설 속도 -10% (바타니아 차용)" />
+
+    <string id="taom_faction_clans_of_dunland_desc" text="로히림의 숙적인 던랜드의 언덕사람들. 바타니아의 숲 전통과 TAOM의 언덕 행군자 및 언덕부족 징집병이 결합됩니다 — 저렴하고, 빠르며, 분노한 전사단이 평원과 숲을 가리지 않고 행군합니다. 바타니아의 대장장이는 느리지만, 전사단은 그렇지 않습니다." />
+
+    <string id="taom_faction_clans_of_dunland_name" text="던랜드의 부족들" />
+
+    <string id="taom_faction_clans_of_dunland_perk_0_desc" text="평원에서 부대 속도 +10% 및 부대 규모 +5% — 던랜드 전사단은 빠르게 이동합니다." />
+
+    <string id="taom_faction_clans_of_dunland_perk_0_name" text="언덕 행군자" />
+
+    <string id="taom_faction_clans_of_dunland_perk_1_desc" text="마을 자원병 재생성률 +10% — 마을에 친척들이 빠르게 충원됩니다." />
+
+    <string id="taom_faction_clans_of_dunland_perk_1_name" text="언덕 부족 징집" />
+
+    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="숲 속도 페널티 50% 감소 + 시야 15% 증가, 도시 정예 민병대 확률 +20%; 건설 속도 -10%." />
+
+    <string id="taom_faction_clans_of_dunland_perk_2_name" text="바타니아 숲 혈통" />
+
+    <string id="taom_faction_clans_of_dunland_strength_0" text="저렴하고 빠른 전사단" />
+
+    <string id="taom_faction_clans_of_dunland_strength_1" text="숲과 평원 기동성" />
+
+    <string id="taom_faction_clans_of_dunland_strength_2" text="안정적인 마을 징집" />
+
+    <string id="taom_faction_clans_of_dunland_strength_3" text="정예 민병대 확률" />
+
+    <string id="taom_faction_clans_of_dunland_su_0_desc" text="두려움을 모르는 근접 전사." />
+
+    <string id="taom_faction_clans_of_dunland_su_0_name" text="던랜드 광전사" />
+
+    <string id="taom_faction_clans_of_dunland_su_1_desc" text="저렴한 전사단 보병." />
+
+    <string id="taom_faction_clans_of_dunland_su_1_name" text="언덕 부족 창병" />
+
+    <string id="taom_faction_clans_of_dunland_su_2_desc" text="번개처럼 빠른 숲 척후병." />
+
+    <string id="taom_faction_clans_of_dunland_su_2_name" text="크레바인 정찰병" />
+
+    <string id="taom_faction_clans_of_dunland_trait_0" text="로한에 대한 원한" />
+
+    <string id="taom_faction_clans_of_dunland_trait_1" text="야생 언덕 전사" />
+
+    <string id="taom_faction_clans_of_dunland_trait_2" text="언덕 부족 징집병" />
+
+    <string id="taom_faction_clans_of_dunland_trait_3" text="사루만의 졸개" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_0" text="바타니아식 느린 건설" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_1" text="사루만의 졸개 — 열악한 외교" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_2" text="로한과 아이센가드 사이에 끼임" />
+
+    <string id="taom_faction_clans_of_forochel_desc" text="포로켈의 얼음 만 근처 얼어붙은 북쪽 황무지에 흩어진 오크 부족. 로소스와 북쪽으로 향하는 자들을 약탈하는 야만적인 약탈자들." />
+
+    <string id="taom_faction_clans_of_forochel_name" text="포로켈의 씨족들" />
+
+    <string id="taom_faction_clans_of_forochel_trait_0" text="얼음 만 약탈자" />
+
+    <string id="taom_faction_clans_of_forochel_trait_1" text="얼어붙은 북쪽 오크" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_0" text="부대 규모 제한 +20% (우르크하이 군단)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_1" text="건물 건설 속도 +15% (산업적 힘)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_2" text="대장장이 에너지 비용 -20% (산업 용광로)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_3" text="기마 징집 및 승급 비용 -15% (전투 와르그)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_4" text="오르상크 수비대 급여 -20%" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_5" text="약탈 피해 +20% (전쟁 기계 약탈)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_6" text="평원과 늪에서 부대 속도 +10% (강행군, 늪지 훈련교관)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_7" text="아이센가드 도시에 상인 +2, 장인 +1, 갱단 두목 +12 명사 (총 20명)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_8" text="마을 명사 수 +10% (강철 압제)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_9" text="관계 페널티 +25% (사루만의 지배)" />
+
+    <string id="taom_faction_dominion_of_isengard_desc" text="오르상크의 사루만 산업 요새. 아이센가드의 고리는 밤낮으로 가동됩니다 — 우르크하이 군단, 용광로 석궁, 전투 와르그. 아이센가드의 단 하나의 도시는 20명의 명사로 팽창합니다: 로한의 많은 도시들과 맞먹는 징집 거점. 사루만의 지배는 모든 이웃을 소외시킵니다." />
+
+    <string id="taom_faction_dominion_of_isengard_name" text="아이센가드 영지" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_0_desc" text="부대 규모 제한 +20% 및 평원과 늪에서 행군 속도 +10%." />
+
+    <string id="taom_faction_dominion_of_isengard_perk_0_name" text="우루크-하이 군단" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_1_desc" text="+15% 건설, -20% 대장간 에너지, -15% 기병 모집 비용." />
+
+    <string id="taom_faction_dominion_of_isengard_perk_1_name" text="산업의 힘" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_2_desc" text="이센가르드의 단일 도시는 20명의 유력자로 확장됨 — 상인 4명, 장인 2명, 갱단 우두머리 14명." />
+
+    <string id="taom_faction_dominion_of_isengard_perk_2_name" text="오르상크 병참관" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_0" text="산업 규모의 생산" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_1" text="우루크-하이 정예 품질" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_2" text="하나의 거대한 모집 중심지" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_3" text="근접전에서의 속도와 무게" />
+
+    <string id="taom_faction_dominion_of_isengard_su_0_desc" text="파괴적인 충격 보병." />
+
+    <string id="taom_faction_dominion_of_isengard_su_0_name" text="우루크-하이 광전사" />
+
+    <string id="taom_faction_dominion_of_isengard_su_1_desc" text="대장간 구덩이에서 나온 중장 석궁 부대." />
+
+    <string id="taom_faction_dominion_of_isengard_su_1_name" text="우루크-하이 석궁병" />
+
+    <string id="taom_faction_dominion_of_isengard_su_2_desc" text="하얀 손의 빠른 기습 기병." />
+
+    <string id="taom_faction_dominion_of_isengard_su_2_name" text="와르그 기수" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_0" text="사루만의 영역" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_1" text="우루크-하이 군대" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_2" text="오르상크의 탑" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_3" text="하얀 손" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_0" text="사루만의 지배가 외교를 소외시킴" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_1" text="단일 요충지 정착지" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_2" text="로한과 팡고른에 둘러싸여 있음" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60% 군대 영향력 비용 (암흑의 군주의 의지)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+10% 부대 규모 한도 (사우론의 대군)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_2" text="+20% 누른 곡물 생산 (누른 농경지)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_3" text="+25% 약탈 피해 (사우론의 분노)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_4" text="+10% 야간 부대 속도 (어둠의 피조물)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_5" text="+5% 평원과 늪지에서 부대 속도 (그림자 행군, 죽음의 늪)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_6" text="+20% 마을 지원병 재생성 속도 (사우론의 징집)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_7" text="+2 도시당 갱단 우두머리 유력자 (흑어 전령)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_8" text="+5% 마을 유력자 수 (노예 감독관)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_9" text="+20% 부대 급료 (암흑의 공물)" />
+
+    <string id="taom_faction_dominion_of_mordor_desc" text="사우론의 검은 땅. 암흑의 군주의 의지는 최소한의 영향력 비용으로 군대 소집을 허용하고; 누른 농경지는 대군을 먹이며; 사우론의 분노는 약탈을 학살로 바꾸고; 어둠의 피조물은 자유 민족이 낮에 이동하는 것보다 밤에 더 빠르게 행군한다. 암흑의 공물은 금고를 고갈시킨다." />
+
+    <string id="taom_faction_dominion_of_mordor_name" text="모르도르 지배령" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_0_desc" text="군대 영향력 비용 60% 감소 — 사우론의 대군은 합의가 필요 없다." />
+
+    <string id="taom_faction_dominion_of_mordor_perk_0_name" text="암흑의 군주의 의지" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_1_desc" text="+25% 약탈 피해 및 +5% 평원과 늪지에서 부대 속도." />
+
+    <string id="taom_faction_dominion_of_mordor_perk_1_name" text="사우론의 분노" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_2_desc" text="+10% 야간 부대 속도 — 모르도르의 눈은 잠들지 않는다." />
+
+    <string id="taom_faction_dominion_of_mordor_perk_2_name" text="어둠의 피조물" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_0" text="방대하고 저렴한 군대" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_1" text="진군에 거의 영향력이 필요하지 않음" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_2" text="야간 전투 숙련" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_3" text="약탈과 누른을 통한 자급자족" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_4" text="트롤과 검은 우루크" />
+
+    <string id="taom_faction_dominion_of_mordor_su_0_desc" text="바라드두르의 정예 돌격 보병." />
+
+    <string id="taom_faction_dominion_of_mordor_su_0_name" text="검은 우루크" />
+
+    <string id="taom_faction_dominion_of_mordor_su_1_desc" text="구덩이에서 사육된 공성 야수." />
+
+    <string id="taom_faction_dominion_of_mordor_su_1_name" text="동굴 트롤" />
+
+    <string id="taom_faction_dominion_of_mordor_su_2_desc" text="미나스 모르굴의 독화살 궁수." />
+
+    <string id="taom_faction_dominion_of_mordor_su_2_name" text="모르굴 궁수" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_0" text="암흑군주의 영역" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_1" text="오크 군단" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_2" text="멸망의 산" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_3" text="바라드두르" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_0" text="암흑 공물이 임금을 소모함" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_1" text="보편적으로 증오받음" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_2" text="특수 유닛 보충 느림" />
+
+    <string id="taom_faction_eregion_desc" text="에레기온." />
+
+    <string id="taom_faction_eregion_name" text="에레기온" />
+
+    <string id="taom_faction_fangorn_forest_desc" text="팡고른 숲." />
+
+    <string id="taom_faction_fangorn_forest_name" text="팡고른 숲" />
+
+    <string id="taom_faction_goblins_of_blue_craig_desc" text="블루 크레이그의 고블린." />
+
+    <string id="taom_faction_goblins_of_blue_craig_name" text="블루 크레이그의 고블린" />
+
+    <string id="taom_faction_goblins_of_goblin_town_desc" text="안개산맥의 고블린이 들끓는 터널과 동굴. 이 오크들은 높은 고갯길을 장악하고 산맥을 넘으려는 모든 이들을 위협한다." />
+
+    <string id="taom_faction_goblins_of_goblin_town_name" text="고블린 타운의 고블린" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="고블린 터널" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="산맥 고갯길" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="와르그 기수" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_0" text="초원에서 부대 속도 +10% (동방인 선봉기병)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_1" text="부대 규모 한계 +5% (동방인 군세)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="기마 병력 모집 및 승급 비용 -10% (쿠자이트, 계승됨)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="말, 노새, 소, 양 마을 생산량 +25% (쿠자이트, 계승됨)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="도시 세금 수입 -20% (쿠자이트, 계승됨)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_desc" text="동방 평원의 동방인. 쿠자이트의 기병 전통을 계승하고 TAOM의 동방인 선봉기병 초원 속도와 동방인 군세 부대 규모를 결합했다. 대규모로 도착하며 공물을 바치는 중기병." />
+
+    <string id="taom_faction_golden_realm_of_rhun_name" text="룬의 황금 왕국" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_0_desc" text="초원에서 부대 속도 +10% — 룬의 바다 기수들이 평원을 빠르게 횡단한다." />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_0_name" text="동방인 선봉기병" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_1_desc" text="부대 규모 한계 +5% — 모르도르의 부름에 응답하여 대군이 소집된다." />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_1_name" text="동방인 군세" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="쿠자이트 계승 효과: 기마 비용 -10%, 동물 마을 생산 +25%; 도시 세금 수입 -20%." />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="쿠자이트 초원 혈통" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_0" text="중기병 대군" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_1" text="대규모 군대" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_2" text="조공 및 교역망" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="쿠자이트 초원 계승" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_0_desc" text="정예 중장 기병." />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_0_name" text="동방인 카타프락트" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_1_desc" text="정예 동방 중보병." />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_1_name" text="동방인 검술대가" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_2_desc" text="숙련된 정찰 궁수." />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_2_name" text="룬 호스워치" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_0" text="동방인 전사" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_1" text="기병 대군" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_2" text="모르도르에 대한 조공" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_3" text="초원 유산" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_0" text="약한 보병" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_1" text="분열된 씨족들" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_2" text="모르도르까지의 긴 보급선" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="쿠자이트 차용 효과: 도시 세금 -20%" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_0" text="-25% 대상 비용 (해적 무역)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_1" text="+15% 관세 수입 (해적 무역망)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_2" text="+8% 전투 명성 (해적의 영광)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_3" text="+10% 사막 행군 속도 (사막 해적)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_4" text="+8% 부대 임금 (해적의 탐욕)" />
+
+    <string id="taom_faction_havens_of_umbar_desc" text="남쪽 만의 해적 항구이자 검은 누메노르인의 항구 도시. 해적 무역은 대상 비용을 대폭 낮추고, 해적의 영광은 명성을 더하며, 사막 해적은 모래 위를 빠르게 행군한다 — 그러나 해적의 탐욕은 모든 임금 지출을 증가시킨다." />
+
+    <string id="taom_faction_havens_of_umbar_name" text="움바르 항구" />
+
+    <string id="taom_faction_havens_of_umbar_perk_0_desc" text="-25% 대상 비용 및 +15% 관세 수입 — 움바르는 지나가는 모든 배로 번영한다." />
+
+    <string id="taom_faction_havens_of_umbar_perk_0_name" text="해적 무역" />
+
+    <string id="taom_faction_havens_of_umbar_perk_1_desc" text="+8% 전투당 명성 — 해적의 이름은 모든 항구에서 노래된다." />
+
+    <string id="taom_faction_havens_of_umbar_perk_1_name" text="해적의 영광" />
+
+    <string id="taom_faction_havens_of_umbar_perk_2_desc" text="+10% 사막 행군 속도 — 움바르의 행군은 바다처럼 모래를 쉽게 건넌다." />
+
+    <string id="taom_faction_havens_of_umbar_perk_2_name" text="사막 해적" />
+
+    <string id="taom_faction_havens_of_umbar_strength_0" text="무역과 관세로 부유함" />
+
+    <string id="taom_faction_havens_of_umbar_strength_1" text="전투에서 명성이 높음" />
+
+    <string id="taom_faction_havens_of_umbar_strength_2" text="사막 기동성" />
+
+    <string id="taom_faction_havens_of_umbar_strength_3" text="누메노르인 귀족 능력치" />
+
+    <string id="taom_faction_havens_of_umbar_su_0_desc" text="우뚝 선 장수 혈통의 귀족." />
+
+    <string id="taom_faction_havens_of_umbar_su_0_name" text="검은 누메노르인 대장" />
+
+    <string id="taom_faction_havens_of_umbar_su_1_desc" text="교전 훈련을 받은 해병." />
+
+    <string id="taom_faction_havens_of_umbar_su_1_name" text="해적 습격자" />
+
+    <string id="taom_faction_havens_of_umbar_su_2_desc" text="태양에 그을린 경보병 용병." />
+
+    <string id="taom_faction_havens_of_umbar_su_2_name" text="하라드림 보조병" />
+
+    <string id="taom_faction_havens_of_umbar_trait_0" text="해적 함대" />
+
+    <string id="taom_faction_havens_of_umbar_trait_1" text="흑(黑)누메노르 군주" />
+
+    <string id="taom_faction_havens_of_umbar_trait_2" text="해적의 은신처" />
+
+    <string id="taom_faction_havens_of_umbar_trait_3" text="사막 행군" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_0" text="해적 선장들이 이익을 챙김 (높은 임금)" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_1" text="곤도르의 증오를 받음" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_2" text="육군이 해군보다 약함" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="가운데땅 서쪽 해안의 고대 엘프 왕국 린돈. 길갈라드의 후계자들이 다스리며, 쇠퇴하는 엘프의 영광과 회색 항구가 있는 땅이다." />
+
+    <string id="taom_faction_high_kingdom_of_lindon_name" text="린돈 고등 왕국" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="회색 항구" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="고대 엘프 왕국" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="발리노르행 배" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="조선공 키르단" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_0" text="초원에서 부대 속도 +10% (초원 전차병)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_1" text="숲 속도 감소 50% 완화 + 시야 범위 15% (바타니아, 계승)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_2" text="도시에서 정예 민병대 출현 확률 +20% (바타니아, 계승)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_3" text="건물 건설 속도 -10% (바타니아, 계승)" />
+
+    <string id="taom_faction_khudorom_of_khand_desc" text="칸드의 바리아그. 바타니아 숲 민병대 전통을 계승했으며, TAOM의 초원 전차병이 초원에서 부대 속도 +10%를 추가 제공. 용병 부대는 가장 많은 돈을 주는 자를 위해 싸운다." />
+
+    <string id="taom_faction_khudorom_of_khand_name" text="칸드의 쿠도롬" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_0_desc" text="초원에서 부대 속도 +10% — 바리아그 전차는 빠르게 달린다." />
+
+    <string id="taom_faction_khudorom_of_khand_perk_0_name" text="초원 전차병" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_1_desc" text="용병 대장들은 돈을 주는 자를 위해 싸우지만 — 그들의 몫은 챙긴다." />
+
+    <string id="taom_faction_khudorom_of_khand_perk_1_name" text="용병 전통" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="계승된 숲 속도 감소 50% 완화 + 시야 범위 15%, 도시 정예 민병대 확률 +20%; 건설 속도 -10%." />
+
+    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="바타니아 숲 혈통" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_0" text="초원과 숲 기동력" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_1" text="정예 마을" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_2" text="용병 전통" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_3" text="전차병 교리" />
+
+    <string id="taom_faction_khudorom_of_khand_su_0_desc" text="정예 기마 척후병." />
+
+    <string id="taom_faction_khudorom_of_khand_su_0_name" text="바리아그 기마 궁수" />
+
+    <string id="taom_faction_khudorom_of_khand_su_1_desc" text="고대 초원 전쟁기계 지휘관." />
+
+    <string id="taom_faction_khudorom_of_khand_su_1_name" text="칸드 전차병" />
+
+    <string id="taom_faction_khudorom_of_khand_su_2_desc" text="중장 창기병." />
+
+    <string id="taom_faction_khudorom_of_khand_su_2_name" text="바리아그 창기병" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_0" text="초원 기병" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_1" text="바리아그 전사" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_2" text="용병단" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_3" text="전차병 전통" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_0" text="바타니아식 느린 건설" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_1" text="취약한 정착지" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_2" text="용병 대장들은 영주가 아닌 금화에 충성한다" />
+
+    <string id="taom_faction_kingdom_of_angaladh_desc" text="앙갈라드 왕국." />
+
+    <string id="taom_faction_kingdom_of_angaladh_name" text="앙갈라드 왕국" />
+
+    <string id="taom_faction_kingdom_of_arthedain_desc" text="아르노르의 후계 왕국 중 마지막이자 가장 위대한 왕국. 아르세다인은 최종 몰락 전까지 앙그마르의 마술사 왕에 맞서 가장 오래 버텨냈다." />
+
+    <string id="taom_faction_kingdom_of_arthedain_name" text="아르세다인 왕국" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_0" text="아르노르의 마지막" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_1" text="안누미나스의 팔란티르" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_2" text="북부의 두네다인" />
+
+    <string id="taom_faction_kingdom_of_cardolan_desc" text="카르돌란의 후계 왕국으로, 한때 위대한 아르노르 왕국의 일부였다. 이제는 흩어진 정착지와 망령이 출몰하는 고대 고분이 있는 땅이다." />
+
+    <string id="taom_faction_kingdom_of_cardolan_name" text="카르돌란 왕국" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_0" text="아르노르의 후계자" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_1" text="고분구릉" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_2" text="북부의 순찰자들" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_0" text="평원에서 부대 속도 +10% (골짜기 상인)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_1" text="마을 곡물 생산량 +10% (스투르기아식, 계승됨)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_2" text="군대 영향력 비용 -50% (스투르기아식, 계승됨)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_3" text="왕국 결정으로 인한 관계 감소 +20% (스투르기아식, 계승됨)" />
+
+    <string id="taom_faction_kingdom_of_dale_desc" text="에레보르 아래 재건된 바르드의 도시. 스투르기아식 곡물 풍요와 스투르기아식 저렴한 군대 전통을 계승하였고, TAOM의 골짜기 상인 평원 속도 보너스와 결합되었다. 하지만 스투르기아의 왕국 결정 페널티는 양날의 검이다. 난쟁이들과의 번영하는 무역 동맹이 데일을 부유하고 강하게 유지한다." />
+
+    <string id="taom_faction_kingdom_of_dale_name" text="데일 왕국" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_0_desc" text="평원에서 부대 속도 +10% — 호수마을의 대상들은 빠르게 이동한다." />
+
+    <string id="taom_faction_kingdom_of_dale_perk_0_name" text="골짜기 상인" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_1_desc" text="에레보르와의 무역이 추가 수입과 무기 공급을 제공한다." />
+
+    <string id="taom_faction_kingdom_of_dale_perk_1_name" text="난쟁이 동맹" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="스투르기아식 마을 곡물 +10% 및 군대 영향력 비용 -50% 계승; 왕국 결정 시 관계 감소 +20%." />
+
+    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="스투르기아 곡물 &amp; 군대 혈통" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_0" text="에레보르와의 무역" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_1" text="강력한 궁술 전통" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_2" text="저렴한 군대 소집 (스투르기아식)" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_3" text="곡물이 풍부한 마을" />
+
+    <string id="taom_faction_kingdom_of_dale_su_0_desc" text="바르드의 유산 궁수." />
+
+    <string id="taom_faction_kingdom_of_dale_su_0_name" text="흑화살 순찰자" />
+
+    <string id="taom_faction_kingdom_of_dale_su_1_desc" text="호수마을 창병." />
+
+    <string id="taom_faction_kingdom_of_dale_su_1_name" text="데일 호수 경비병" />
+
+    <string id="taom_faction_kingdom_of_dale_su_2_desc" text="난쟁이 갑옷으로 무장한 데일 전선." />
+
+    <string id="taom_faction_kingdom_of_dale_su_2_name" text="에레보르 훈련 대장장이 전사" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_0" text="바르드의 유산" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_1" text="에레보르와의 교역" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_2" text="호수마을 동맹" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_3" text="골짜기 상인" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_0" text="좁은 영토" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_1" text="동방인의 압박" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_2" text="스투르기아 왕국 결정 페널티" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_desc" text="룬 해의 북서 해안에 위치한 포도 재배 왕국 도르위니온. 자유 민족과 동방 사이에 낀 번영하는 무역 왕국이다." />
+
+    <string id="taom_faction_kingdom_of_dorwinion_name" text="도르위니온 왕국" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_0" text="명성 높은 포도밭" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_1" text="무역 중심지" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_2" text="변경 왕국" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_0" text="수비대 임금 -25% (드워프 수비대)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_1" text="대장 기력 소모 -30% (장인 대장장이)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_2" text="눈 지형에서 부대 속도 +10% (산악 민족)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_3" text="마을 생산량 +10% (드워프 산업)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_4" text="부대 사기 +5 (드워프의 완고함)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_5" text="정착지 충성도 하루당 +1 (드워프의 명예)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_6" text="건물 건설 속도 -15% (드워프 완벽주의)" />
+
+    <string id="taom_faction_kingdom_of_erebor_desc" text="되찾은 외로운 산. 장인 대장장이는 대장 기력 소모를 30% 줄이고, 드워프의 명예는 매일 충성도를 추가하며, 드워프의 완고함은 사기를 흔들리지 않게 유지한다. 성벽을 쌓는 데는 느리지만 — 산 자체가 무너질 때까지 그 성벽은 버틴다." />
+
+    <string id="taom_faction_kingdom_of_erebor_name" text="에레보르 왕국" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_0_desc" text="대장 기력 소모 -30% — 드워프 대장간은 두 배로 빠르게 작동한다." />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_0_name" text="장인 대장장이" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_1_desc" text="수비대 임금 -25%, 정착지 충성도 하루당 +1." />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_1_name" text="드워프 수비대" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_2_desc" text="부대 사기 +5, 마을 생산량 +10% — 드워프는 굽히지 않는다." />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_2_name" text="드워프의 완고함" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_0" text="우수한 갑옷과 무기" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_1" text="부유하고 자급자족" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_2" text="충성스럽고 규율 잡힌 수비대" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_3" text="대장장이 경제 숙련" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_0_desc" text="정예 드워프 중보병." />
+
+    <string id="taom_faction_kingdom_of_erebor_su_0_name" text="에레보르 철갑 근위대" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_1_desc" text="강철 스프링 석궁 부대." />
+
+    <string id="taom_faction_kingdom_of_erebor_su_1_name" text="철 언덕 석궁수" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_2_desc" text="전투로 단련된 도끼 달인." />
+
+    <string id="taom_faction_kingdom_of_erebor_su_2_name" text="아잔울비자르 참전 용사" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_0" text="산 아래 왕국" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_1" text="장인 기술자" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_2" text="드워프 도끼" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_3" text="철 언덕 동족" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_0" text="드워프의 완벽주의로 성벽 건설 지연" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_1" text="기병 사용 불가" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_2" text="전시 동맹 부족" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_desc" text="푸른 산맥의 드워프 저택, 두린 일족의 선조 전당. 에레보르를 잃은 후, 많은 드워프들이 소린의 탐험 전까지 이곳에서 피난처를 찾았다." />
+
+    <string id="taom_faction_kingdom_of_ered_duin_name" text="에레드 두인 왕국" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_0" text="푸른 산맥의 전당" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_1" text="두린 일족" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_2" text="망명 드워프" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_3" text="채광과 대장장이" />
+
+    <string id="taom_faction_kingdom_of_ered_mithrin_desc" text="에레드 미스린 왕국." />
+
+    <string id="taom_faction_kingdom_of_ered_mithrin_name" text="에레드 미스린 왕국" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_0" text="+35% 군대 영향력 보상 (엘프의 지혜)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_1" text="+20% 마을 화로 성장 (마지막 아늑한 집)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_2" text="+10% 숲에서 부대 속도 (숲의 우아함)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_3" text="-15% 부대 식량 소비 (엘프의 검소함)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_4" text="+0.5 정착지 충성도 (매일)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_5" text="+25% 군대 영향력 비용 (엘프의 자존심)" />
+
+    <string id="taom_faction_kingdom_of_imladris_desc" text="엘론드의 숨겨진 계곡, 현자들의 성역. 엘프의 지혜는 적은 영향력으로 군대를 통합하고, 마지막 아늑한 집은 모든 마을의 화로를 키운다. 엘프의 자존심은 여전히 모든 평의회를 지배한다 — 모든 놀도르의 검은 대체 불가능하다." />
+
+    <string id="taom_faction_kingdom_of_imladris_name" text="이므라드리스 왕국" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_0_desc" text="군대 성공 시 +35% 영향력 보상 — 현자들은 지휘하는 법을 안다." />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_0_name" text="엘프의 지혜" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_1_desc" text="+20% 마을 화로 성장, -15% 부대 식량 소비." />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_1_name" text="마지막 아늑한 집" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_2_desc" text="+10% 숲에서 부대 속도 — 이므라드리스의 나무들은 동족을 위해 길을 열어준다." />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_2_name" text="숲의 우아함" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_0" text="전설적인 정예 전사" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_1" text="화로가 풍부한 마을" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_2" text="숲의 지배력" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_3" text="현명한 평의회가 군대 통합" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_0_desc" text="전설적인 제1시대 베테랑." />
+
+    <string id="taom_faction_kingdom_of_imladris_su_0_name" text="놀도르 검술 대가" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_1_desc" text="중장 엘프 수호자." />
+
+    <string id="taom_faction_kingdom_of_imladris_su_1_name" text="리븐델 보초병" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_2_desc" text="기마 놀도르 중기병." />
+
+    <string id="taom_faction_kingdom_of_imladris_su_2_name" text="이므라드리스 창기병" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_0" text="엘론드 영주의 안식처" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_1" text="현자들의 평의회" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_2" text="반요정의 유산" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_3" text="숨겨진 계곡" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_0" text="엘프의 자존심으로 영향력 비용 증가" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_1" text="쇠퇴하는 민족 — 보충 인력 부족" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_2" text="계곡에서 멀리 확장할 수 없음" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="숲에서 부대 이동 속도 +10% (숲속 왕국)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_1" text="민병대 정예 확률 +25% (실반 수호자)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_2" text="부대 사기 +3 (숲속의 유대)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_3" text="부대 식량 소비 -15% (숲속의 자급)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_4" text="마을 화로 성장 -20% (숲의 고립)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_desc" text="북부 미르크우드의 스란두일 숲속 왕국. 실반 궁수들과 정예 민병대가 거미, 오크, 그림자에 맞서 대숲을 지킨다. 숲속의 자급으로 보급을 가볍게 유지하고, 숲속의 유대로 사기를 높게 유지한다. 숲의 고립은 성장을 늦춘다." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_name" text="라스갈렌 왕국" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_0_desc" text="숲에서 부대 이동 속도 +10%, 식량 소비 -15%." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_0_name" text="숲속 왕국" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_1_desc" text="민병대 신병이 정예로 도착할 확률 +25%." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_1_name" text="실반 수호자" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_2_desc" text="부대 사기 +3 — 실반 엘프들은 노래하며 행군한다." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_2_name" text="숲속의 유대" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_0" text="최고의 숲속 궁술" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_1" text="정예 민병대가 진지를 사수함" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_2" text="자급자족하는 검소한 군대" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_3" text="숲속 전투는 미르크우드의 것" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_0_desc" text="정예 숲속 궁수." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_0_name" text="미르크우드 파수꾼" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_1_desc" text="장창 숲속 보병." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_1_name" text="실반 창수호자" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_2_desc" text="번개같이 빠른 척후병." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_2_name" text="숲 엘프 정찰병" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_0" text="스란두일 왕의 영역" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_1" text="숲속 궁수" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_2" text="실반 수호자" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_3" text="숲의 요새" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_0" text="숲의 고립이 화로를 늦춤" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_1" text="소수 인원 — 모든 전사가 중요함" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_2" text="고립주의 외교" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_0" text="숲에서 부대 이동 속도 +10% (황금 숲)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_1" text="수비대 급료 -20% (로리엔의 수호자)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_2" text="부대 식량 소비 -15% (렘바스)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_3" text="부대 사기 +3 (엘프의 조화)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_4" text="하루당 정착지 충성도 +0.5 (엘프의 우아함)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_5" text="건물 건설 속도 -10% (불멸의 기술)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_desc" text="갈라드리엘 여군주와 켈레보른 군주의 영역인 황금 숲. 로리엔의 수호자들이 말로른 숲을 저렴하게 방어하고, 렘바스가 모든 행군을 지탱하며, 엘프의 조화가 사기를 흔들림 없게 유지한다. 불멸의 기술은 모든 변화가 느리다는 뜻이다." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_name" text="로스로리엔 왕국" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_0_desc" text="숲에서 부대 이동 속도 +10%, 주둔군 임금 -20%." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_0_name" text="네냐의 힘" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_1_desc" text="부대 식량 소비 -15% — 한 입이면 엘프는 하루를 행군할 수 있다." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_1_name" text="렘바스 빵" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_2_desc" text="부대 사기 +3, 모든 정착지에서 하루당 충성도 +0.5." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_2_name" text="엘프의 조화" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_0" text="네냐의 마법적 보호" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_1" text="정예 장거리 행군 군대" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_2" text="검소한 보급망" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_3" text="저렴하고 충성스러운 주둔군" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_0_desc" text="정예 엘프 수비병." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_0_name" text="갈라드림 근위대" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_1_desc" text="나이스의 전설적인 명궁." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_1_name" text="로리엔 궁술의 대가" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_2_desc" text="황금 숲의 중장 엘프 수호자." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_2_name" text="은빛 파수꾼" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_0" text="갈라드리엘 여왕" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_1" text="네냐의 반지" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_2" text="황금 멜론 나무" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_3" text="로리엔의 수호자들" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_0" text="시간을 초월한 기술이 확장을 지연" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_1" text="극소수의 상비군" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_2" text="쇠퇴하는 힘 — 성장 없음" />
+
+    <string id="taom_faction_kingdom_of_moria_desc" text="모리아 왕국." />
+
+    <string id="taom_faction_kingdom_of_moria_name" text="모리아 왕국" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_desc" text="미르크우드 북부의 엘프 왕국으로, 숲의 엘프들이 남쪽에서 기어오는 어둠에 맞서 고대 숲을 지키고 있다." />
+
+    <string id="taom_faction_kingdom_of_neldoreth_name" text="넬도레스 왕국" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_0" text="숲의 엘프들" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_1" text="숲의 수호자들" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_2" text="스란두일의 일족" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_desc" text="아르노르의 후계 왕국들 중 가장 동쪽에 있는 루다우르의 거친 구릉 지대. 앙그마르의 영향 아래 들어갔으며 그곳의 언덕 사람들은 마술사 왕을 섬긴다." />
+
+    <string id="taom_faction_kingdom_of_rhudaur_name" text="루다우르 왕국" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_0" text="앙그마르의 하인들" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_1" text="거친 언덕 사람들" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_2" text="몰락한 왕국" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_0" text="기병 모집 비용 -15% (기마 군주의 유산)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_1" text="기병 승급 비용 -15% (기마 군주의 유산)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_2" text="기병 병력 임금 -15% (기사단의 기수들)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_3" text="평원에서 부대 이동 속도 +10% (평원의 기수들)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_4" text="부대 사기 +5 (기수들의 정신)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_5" text="하루당 정착지 충성도 +0.5 (기마 영주의 동료애)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_6" text="보병이 50% 이상일 때 부대 속도 -10% (기병 의존)" />
+
+    <string id="taom_faction_kingdom_of_rohan_desc" text="기마 영주들의 리더마크. 기마 영주의 유산은 모든 기마 신병 모집과 승급 비용을 낮추고, 마크의 기수들은 기마병 임금을 줄이며, 기마 영주의 동료애는 마크를 충성으로 결속시킨다. 기병 의존 — 보병이 많은 부대는 느린 속도로 기어간다." />
+
+    <string id="taom_faction_kingdom_of_rohan_name" text="로한 왕국" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_0_desc" text="기마병 모집 및 승급 비용 -15% — 마크는 기수들을 저렴하게 훈련한다." />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_0_name" text="기마 영주의 유산" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_1_desc" text="기마병 임금 -15%, 평원에서 부대 속도 +10%." />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_1_name" text="마크의 기수들" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_2_desc" text="부대 사기 +5, 하루당 정착지 충성도 +0.5." />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_2_name" text="기마 영주의 동료애" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_0" text="가운데땅에서 가장 저렴한 기병" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_1" text="가장 빠른 평원 군대" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_2" text="충성스러운 마크와 높은 사기" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_3" text="곤도르와의 강력한 동맹" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_0_desc" text="왕의 정예 중기병." />
+
+    <string id="taom_faction_kingdom_of_rohan_su_0_name" text="로히림 왕실 근위대" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_1_desc" text="중급 창기병." />
+
+    <string id="taom_faction_kingdom_of_rohan_su_1_name" text="로히림 기사" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_2_desc" text="훈련된 평원 궁수." />
+
+    <string id="taom_faction_kingdom_of_rohan_su_2_name" text="웨스트폴드 보궁수" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_0" text="기마 영주들" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_1" text="마크의 기수들" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_2" text="헬름 협곡" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_3" text="곤도르와의 동맹" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_0" text="기병 의존 — 보병이 많은 부대는 속도가 느려짐" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_1" text="약한 보병 전통" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_2" text="마크가 출정할 때 헬름 협곡이 노출됨" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_desc" text="남부 로바니온 왕국." />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_name" text="남부 로바니온 왕국" />
+
+    <string id="taom_faction_kingdom_of_zigalnara_desc" text="지갈나라 왕국." />
+
+    <string id="taom_faction_kingdom_of_zigalnara_name" text="지갈나라 왕국" />
+
+    <string id="taom_faction_nurunkhizdin_desc" text="누룬키즈딘." />
+
+    <string id="taom_faction_nurunkhizdin_name" text="누룬키즈딘" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_0" text="군대 영향력 비용 -50% (어둠의 명령)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_1" text="부대 규모 한계 +20% (어둠의 군단)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_2" text="마을 지원병 재생성 속도 +20% (어둠의 징집병)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_3" text="민병대 정예 확률 +20% (어둠의 징집)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_4" text="돌 굴두르 마을에 상인 +1, 장인 +1, 갱단 두목 +13 명사 (총 20명)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_5" text="마을 명사 수 +10% (숨겨진 오두막)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_6" text="부대 식량 소비 +10% (탐욕스러운 무리)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_7" text="-20% 건물 건설 속도 (파멸의 공사)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_desc" text="어둠숲에 위치한 강령술사의 남부 거점. 어둠의 명령으로 거의 영향력 없이 대군을 소집하고, 어둠의 징집으로 민병 베테랑을 훈련하며, 그림자 대장들이 단 하나의 마을에 20명의 유력자를 채운다. 탐욕스러운 대군은 학살만큼이나 많이 먹어치운다." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_name" text="돌 굴두르 패권국" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_0_desc" text="군대 영향력 비용 50% 감소 — 공포가 복종을 강요한다." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_0_name" text="어둠의 명령" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_1_desc" text="+20% 부대 규모 및 +20% 지원병 재생 속도." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_1_name" text="어둠의 군단" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_2_desc" text="돌 굴두르의 유일한 마을에 20명의 유력자 — 15명의 갱단 두목 모집 거점." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_2_name" text="그림자 대장" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_0" text="거대한 저비용 군대" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_1" text="대규모 모집 거점" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_2" text="베테랑 민병 징집" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_3" text="숲 전투와 공포" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_0_desc" text="그림자에 뒤틀린 중보병." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_0_name" text="돌 굴두르 우르크" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_1_desc" text="빠른 악몽 기병대." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_1_name" text="그림자 와르그 기수" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_2_desc" text="마법의 힘을 받은 부관." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_2_name" text="검은 누메노르인 대장" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_0" text="강령술사의 소굴" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_1" text="타락한 숲" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_2" text="어둠의 군단" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_3" text="어둠의 명령" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_0" text="굶주린 대군이 식량을 소진" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_1" text="산업 쇠퇴로 성벽 건설 지연" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_2" text="적대적인 숲에 포위됨" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_0" text="-40% 군대 영향력 비용 (오크 대군)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_1" text="+20% 부대 규모 제한 (산악 군단)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_2" text="+25% 약탈 피해 (오크 약탈자)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_3" text="+10% 눈 지형에서 부대 속도 (산악 약탈자)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_4" text="+20% 마을 지원병 재생 속도" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_5" text="+15% 마을 곡물 (약탈한 저장고)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_6" text="마을당 장인 +1, 갱단 두목 +3 유력자 (뼈-대장장이, 창백한 전단 족장)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_7" text="+10% 마을 유력자 수 (뼈 야영지)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_8" text="+10% 부대 급료 (약탈 요구)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_desc" text="볼그의 혈통인 창백한 오크들에게 신성한 군다바드 산. 거대한 전단이 높은 고개에서 진군한다 — 오크 대군 기강으로 거의 영향력 없이 군대를 소집하고, 산악 약탈자들이 설원을 지배하며, 약탈 요구로 모든 전쟁군주의 급료를 보장한다." />
+
+    <string id="taom_faction_overlordship_of_gundabad_name" text="군다바드 패권국" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_0_desc" text="군대 영향력 비용 40% 감소 — 공포가 복종을 강요한다." />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_0_name" text="오크 대군" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_1_desc" text="+20% 부대 규모 제한 및 눈 지형에서 +10% 부대 속도." />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_1_name" text="산악 군단" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_2_desc" text="마을당 갱 지도자 +3, 장인 유명인사 +1 — 약탈자들로 징집이 급증합니다." />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_2_name" text="창백한 전단 족장들" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_0" text="저렴한 산악 무리" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_1" text="눈길 행군 기동성" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_2" text="약탈 경제가 식량 저장고를 가득 채움" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_3" text="출정 준비가 된 수많은 전쟁군주" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_0_desc" text="볼그의 정예 중장 전선." />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_0_name" text="창백한 오크 용사" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_1_desc" text="파괴적인 공성 야수." />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_1_name" text="군다바드 전투 트롤" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_2_desc" text="빠른 척후 기병." />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_2_name" text="와르그 선발대" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_0" text="군다바드 산" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_1" text="북부의 오크 수도" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_2" text="볼그의 창백한 오크" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_3" text="잃어버린 신성한 드워프 성지" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_0" text="약탈 요구가 재정을 압박함" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_1" text="자유민족에게 보편적으로 적대적" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_2" text="드워프와 엘프가 창백한 오크를 증오함" />
+
+    <string id="taom_faction_remnants_of_angmar_desc" text="북쪽 먼 곳에 위치한 앙마르 마술사왕의 공포스러운 왕국. 마술사왕은 카른둠 요새에서 아르노르의 잔존 세력에 전쟁을 벌입니다." />
+
+    <string id="taom_faction_remnants_of_angmar_name" text="앙마르의 잔존 세력" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_0" text="마술사왕" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_1" text="카른둠 요새" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_2" text="마법과 공포" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_3" text="아르노르의 파괴자" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_0" text="평원에서 부대 속도 +10% (들판의 사람들)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_1" text="부대 규모 한계 +2.5% (상비군)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_2" text="수비대 임금 -20% (탑 근위대)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_3" text="군대 영향력 보상 +30% (곤도르의 규율)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_4" text="부대 사기 +5 (곤도르의 결의)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_5" text="하루당 정착지 충성도 +1 (탑 근위대의 규율)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_6" text="마을 생산력 성장 -15% (전쟁으로 황폐해진 땅)" />
+
+    <string id="taom_faction_stewardship_of_gondor_desc" text="남부에 남은 두네다인의 마지막 보루. 탑 근위대가 전선을 지키고, 곤도르의 규율이 군대를 저렴하게 소집하며, 들판의 사람들이 평원을 행군합니다. 전쟁으로 황폐해진 땅은 느리게 성장하지만 — 곤도르는 버팁니다." />
+
+    <string id="taom_faction_stewardship_of_gondor_name" text="곤도르 집정국" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_0_desc" text="수비대 임금 -20%, 하루당 정착지 충성도 +1." />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_0_name" text="탑 근위대의 규율" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_1_desc" text="부대 사기 +5, 성공 시 군대 영향력 보상 +30%." />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_1_name" text="곤도르의 결의" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_2_desc" text="평원에서 부대 속도 +10%, 부대 규모 +2.5% — 펠렌노르는 개활지입니다." />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_2_name" text="들판의 사람들" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_0" text="균형 잡힌 병력 구성" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_1" text="강한 사기와 충성심" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_2" text="규율 잡힌 수비대" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_3" text="영향력이 풍부한 지휘 체계" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_0_desc" text="미나스 티리스의 정예 중장 보병." />
+
+    <string id="taom_faction_stewardship_of_gondor_su_0_name" text="성채 수비대" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_1_desc" text="돌 아므로스의 중기병." />
+
+    <string id="taom_faction_stewardship_of_gondor_su_1_name" text="백조 기사" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_2_desc" text="두네다인 정찰 궁수." />
+
+    <string id="taom_faction_stewardship_of_gondor_su_2_name" text="이실리엔의 순찰대" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_0" text="두네다인의 유산" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_1" text="탑의 수비대" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_2" text="곤도르의 하얀 나무" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_3" text="집정관의 통치" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_0" text="전쟁으로 황폐해진 땅은 느리게 성장함" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_1" text="방어해야 할 국경이 많음" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_2" text="정예 부대는 특정 지역에 제한됨" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_desc" text="동쪽 산맥에서 온 야만적인 오크 부족들이 지배하는 지역. 칸드와 하라드 사이의 국경 지대를 공포에 떨게 하는 맹렬한 약탈자들." />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_name" text="에레드 그와에르 요새" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_trait_0" text="오크 전단" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_trait_1" text="산악 약탈자" />
+
+    <string id="taom_faction_stronghold_of_narager_desc" text="오크 부족들에게 유린당한 황량한 동쪽 지역. 이 야만적인 무리들은 국경 지대를 약탈하고 어둠의 세력을 위한 정찰병 역할을 한다." />
+
+    <string id="taom_faction_stronghold_of_narager_name" text="나라게르 요새" />
+
+    <string id="taom_faction_stronghold_of_narager_trait_0" text="오크 약탈 집단" />
+
+    <string id="taom_faction_stronghold_of_narager_trait_1" text="동쪽 황무지" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_0" text="사막에서 부대 속도 +10% (태양의 아들들)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_1" text="부대 규모 한계 +5% (하라드림 전단)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="대상 건설 비용 -30% + 거래 불이익 -10% (아세라이 상인, 계승됨)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="사막에서 속도 불이익 없음 (아세라이 사막, 계승됨)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="일일 병력 급여 +5% (아세라이 급여, 계승됨)" />
+
+    <string id="taom_faction_taskralan_of_harwan_desc" text="하르완의 하라드림, 태양의 아들들. 아세라이 사막 회복력을 계승; TAOM의 태양의 아들들은 사막에서 부대 속도 +10% 추가; 하라드림 전단은 계승된 대상 경제 위에 부대 규모 추가. 무마킬이 남부 평원을 지배한다." />
+
+    <string id="taom_faction_taskralan_of_harwan_name" text="하르완의 타스크랄란" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_0_desc" text="사막에서 부대 속도 +10% — 타오르는 모래에서 태어난 자들." />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_0_name" text="태양의 아들들" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_1_desc" text="부대 규모 한계 +5% — 부족 전단들이 모르도르의 부름에 함께 달려간다." />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_1_name" text="하라드림 전단" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="아세라이 상인 계승 (대상 -30%, 거래 불이익 -10%)과 아세라이 사막 계승 (사막 속도 불이익 없음); 일일 급여 +5%." />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="아세라이 사막의 혈통" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_0" text="무마킬 전쟁 야수" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_1" text="사막 기동성" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_2" text="대규모 전투 집단" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_3" text="아세라이 대상 전통" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_0_desc" text="파괴적인 전쟁 야수." />
+
+    <string id="taom_faction_taskralan_of_harwan_su_0_name" text="무마킬 전쟁 탑" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_1_desc" text="먼 남쪽의 장궁 정예." />
+
+    <string id="taom_faction_taskralan_of_harwan_su_1_name" text="하라드 마후드 궁수" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_2_desc" text="경기병 척후병." />
+
+    <string id="taom_faction_taskralan_of_harwan_su_2_name" text="태양빛 기병" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_0" text="무마킬 전쟁 야수" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_1" text="사막 전사" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_2" text="태양에 그을린 청동 피부" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_3" text="남부 동맹" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_0" text="한랭 기후 불이익" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_1" text="부족 내분" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_2" text="대장장이와 성벽 부족" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="아세라이 차용으로 인한 병력 유지비 +5%" />
+
+    <string id="taom_faction_taskralan_of_shaghana_desc" text="샤가나의 타스크랄란." />
+
+    <string id="taom_faction_taskralan_of_shaghana_name" text="샤가나의 타스크랄란" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_desc" text="아르노르와 곤도르 사이의 야생 땅 에네드와이스. 어떤 왕에게도 복종하지 않고 사냥꾼과 목동으로 살아가는 흩어진 인간 부족들의 고향." />
+
+    <string id="taom_faction_wildmen_of_enedwaith_name" text="에네드와이스의 야생인" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_0" text="흩어진 부족" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_1" text="야생 사냥꾼" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_2" text="중앙 권력 부재" />
+
   </strings>
 
 </base>

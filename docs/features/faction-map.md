@@ -71,20 +71,37 @@ One entry per faction id. Fields:
 
 | Field | Type | Purpose |
 |-------|------|---------|
-| `name` | string | Display name |
+| `name` | string | Display name. **Wrap in `{=KEY}default` format** (see Localization below). |
 | `color` | string | Hex color with alpha (`#RRGGBBAA`) used for map highlight and UI panels |
 | `playable` | bool | Whether the faction appears as selectable for the player |
-| `game_faction` | string | TAOM culture id to set on confirmation (empty = no culture) |
-| `side` | string | `"free"`, `"evil"`, or `"neutral"` |
-| `description` | string | Lore text |
-| `image` | string | Sprite id for faction art |
-| `traits` | string[] | Short trait strings shown in the info panel |
-| `bonuses` | array | `{ "text": "...", "positive": true/false }` gameplay bonus notes |
-| `perks` | array | `{ "name": "...", "description": "..." }` |
-| `special_units` | array | `[ { "name": "...", "description": "..." }, ... ]`. Supports >1 entry for factions with multiple iconic units (e.g. Mordor: Black Uruks + Trolls). |
+| `game_faction` | string | TAOM culture id to set on confirmation (empty = no culture). Non-text — leave raw. |
+| `side` | string | `"free"`, `"evil"`, or `"neutral"`. Non-text — leave raw. |
+| `description` | string | Lore text. Wrap in `{=KEY}default`. |
+| `image` | string | Sprite id for faction art. Non-text — leave raw. |
+| `traits` | string[] | Short trait strings shown in the info panel. Wrap each in `{=KEY}default`. |
+| `bonuses` | array | `{ "text": "...", "positive": true/false }` gameplay bonus notes. Wrap `text` in `{=KEY}default`; `positive` is a bool. |
+| `perks` | array | `{ "name": "...", "description": "..." }`. Wrap both fields. |
+| `special_units` | array | `[ { "name": "...", "description": "..." }, ... ]`. Wrap both fields. Supports >1 entry for factions with multiple iconic units. |
 | `special_unit` | object | **DEPRECATED but still accepted** for backward-compat. Legacy single-object form is coerced into a 1-entry array by `FactionDataParser.ParseSpecialUnits`. Prefer `special_units` in new content. |
-| `strengths` / `weaknesses` | string[] | Displayed in info panel |
-| `difficulty` | int | 1–7 scale; 0 omits difficulty line. `1=Very Easy`, `2=Easy`, `3=Medium`, `4=Medium-Hard`, `5=Hard`, `6=Very Hard`, `7=Extreme`. |
+| `strengths` / `weaknesses` | string[] | Displayed in info panel. Wrap each in `{=KEY}default`. |
+| `difficulty` | int | 1–7 scale; 0 omits difficulty line. `1=Very Easy`, `2=Easy`, `3=Medium`, `4=Medium-Hard`, `5=Hard`, `6=Very Hard`, `7=Extreme`. The label text comes from `FactionSelectionService.FormatDifficultyText` which returns `{=taom_faction_difficulty_N}default`. |
+
+### Localization
+
+Every player-facing string in `factions.json` is wrapped in `{=KEY}default` format using the convention `taom_faction_<faction_json_key>_<section>_<index>` (e.g. `taom_faction_stewardship_of_gondor_perk_0_name`). At runtime, `FactionDisplayHelper.Localize(string)` wraps each VM-bound string in `new TextObject(s).ToString()`, which resolves `{=KEY}` against the GameTextManager. Plain English strings pass through unchanged.
+
+Workflow when editing content:
+1. Edit `factions.json` content (preserve `{=KEY}` prefix or add new keys per the convention).
+2. Run `python tools/harvest_factionmap_strings.py` to update the auto-harvested block in `taom_module_strings.xml`. Idempotent — re-runs replace the marked block without duplication.
+3. For difficulty strings or any C# code that returns keyed strings (`FactionSelectionService.FormatDifficultyText`), hand-author the matching `<string>` entry in `taom_module_strings.xml` above the auto-harvested block.
+4. Run `python tools/translate_with_claude.py --lang <LANG> --module TAOM --apply` per language to propagate to 11 AI languages (Polish is hand-translated). Cache deduplicates already-translated strings.
+5. Validate: `dotnet test TAOM.Tests --filter FactionMap` covers JSON parse, key coverage, per-playable-faction shape; `LanguageDataXmlTests` covers per-language file parse.
+
+Cross-references:
+- Standing instruction: when adding/changing a cultural feat, also update factions.json — see [`feedback_faction_map_update_with_cultural_feats`](../../memory) memory.
+- Helper resolution: `Main/Features/FactionMap/FactionDisplayHelper.cs::Localize`.
+- Harvester: `tools/harvest_factionmap_strings.py`.
+- XSLT inheritance audit (mandatory for vlandia/empire/sturgia/battania/aserai/khuzait factions): see [`docs/reviews/rca-faction-map-phase2-codex-2026-06-01.md`](../reviews/rca-faction-map-phase2-codex-2026-06-01.md) — paraphrasing an inventory summary instead of decompiling `DefaultCulturalFeats` was the root cause of 3 HIGH findings (Dale fabricated "forest speed", Khand/Dunland wrong Battanian numbers, Harad/Rhûn vague + missed negatives).
 
 ### `regions.json`
 One entry per region id (matching faction id). Fields:
@@ -153,8 +170,8 @@ One entry per region id (matching faction id). Fields:
 4. Rebuild and test in character creation — the new region polygon should appear and clicking it should show the faction info panel.
 
 ## GitHub Issue
-- **Issue:** Unknown (commit `e32d313`)
-- **Status:** Unknown
+- **Issue:** [#260](https://github.com/haterade22/TAOM/issues/260) — `feat(faction-map): rewrite CC pages + full localization sweep` (2026-06-01)
+- **Status:** Shipped — Phase 1 (helper) `53ce308`, Phase 2 main (16-faction content + 599 keys) `cbbcc41`, Phase 2 deep-review fix `7f0de78`, Phase 2 Codex fix `0577363`, Phase 3 (11-language translation) — see CHANGELOG for the Phase 3 commit.
 
 ---
 

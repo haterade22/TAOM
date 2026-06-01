@@ -652,6 +652,74 @@
 
     <string id="taom_str_neutral_term_for_culture.erebor" text="埃尔波尔的矮人" />
 
+    <string id="taom_str_faction_official.abanissa" text="家族领主" />
+
+    <string id="taom_str_faction_official.abanissa_f" text="家族女领主" />
+
+    <string id="taom_str_faction_ruler.abanissa" text="Châjaphân" />
+
+    <string id="taom_str_faction_ruler.abanissa_f" text="Châjaphân" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.abanissa" text="Châjaphân，{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.abanissa" text="Châjaphân {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.abanissa" text="{?RULER.GENDER}女领主{?}领主{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.abanissa" text="阿巴尼萨" />
+
+    <string id="taom_str_short_term_for_faction.abanissa" text="阿巴尼萨" />
+
+    <string id="taom_str_faction_formal_name_for_culture.abanissa" text="阿巴尼萨领地" />
+
+    <string id="taom_str_faction_informal_name_for_culture.abanissa" text="阿巴尼萨" />
+
+    <string id="taom_str_neutral_term_for_culture.abanissa" text="阿巴尼萨哈拉德人" />
+
+    <string id="taom_str_culture_description.abanissa" text="阿巴尼萨位于哈拉德深南，是一片湿润丛林与古老石砌王朝的土地。阿巴尼萨的伟大家族指挥着可怕的战兽和训练有素的长矛军队，他们的权力除了索伦本人之外无人可令。在王朝旗帜之下，他们行军征战，在南方诸地赢得敬畏与恐惧。" />
+
+    <string id="taom_str_culture_rich_name.abanissa" text="阿巴尼萨" />
+
+    <string id="taom_str_adjective_for_culture.abanissa" text="阿巴尼萨" />
+
+    <string id="taom_str_player_father_name.abanissa" text="索赫拉布" />
+
+    <string id="taom_str_player_mother_name.abanissa" text="尼卢法尔" />
+
+    <string id="taom_str_faction_official.shaghana" text="氏族酋长" />
+
+    <string id="taom_str_faction_official.shaghana_f" text="氏族女首领" />
+
+    <string id="taom_str_faction_ruler.shaghana" text="Taskral" />
+
+    <string id="taom_str_faction_ruler.shaghana_f" text="Taskral" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.shaghana" text="Taskral，{RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.shaghana" text="Taskral {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.shaghana" text="{?RULER.GENDER}女领主{?}领主{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.shaghana" text="沙加纳" />
+
+    <string id="taom_str_short_term_for_faction.shaghana" text="沙加纳" />
+
+    <string id="taom_str_faction_formal_name_for_culture.shaghana" text="沙加纳部落" />
+
+    <string id="taom_str_faction_informal_name_for_culture.shaghana" text="沙加纳" />
+
+    <string id="taom_str_neutral_term_for_culture.shaghana" text="沙加纳哈拉德人" />
+
+    <string id="taom_str_culture_description.shaghana" text="沙加纳是哈拉德的东部地区，一片烈日灼烧的草原与古老堡垒的土地。它的九大部落氏族是凶猛的骑士和掠袭者，以誓约与血脉相连，令所有敢于反抗他们的人心生恐惧。他们效忠于他们的Taskral，并通过他服从索伦的意志。" />
+
+    <string id="taom_str_culture_rich_name.shaghana" text="沙加纳" />
+
+    <string id="taom_str_adjective_for_culture.shaghana" text="沙加纳" />
+
+    <string id="taom_str_player_father_name.shaghana" text="扎尔坎" />
+
+    <string id="taom_str_player_mother_name.shaghana" text="汉萨" />
+
     <string id="0aXG8dvJ" text="与{KINGDOM_NAME}议和。不支付任何贡品。" />
 
     <string id="0CsbbwtN" text="召唤{CALLED_KINGDOM}对{KINGDOM_TO_CALL_TO_WAR_AGAINST}开战" />
@@ -1284,11 +1352,2394 @@
 
     <string id="taom_career_free_points" text="可用点数:{COUNT}" />
 
+    <string id="taom_career_tier_requirement" text="需要等级 {LEVEL}" />
+
+    <string id="taom_career_rank1_avanc_luth_raider" text="彩绘掠夺者" />
+
+    <string id="taom_career_rank2_avanc_luth_raider" text="氏族狂战士" />
+
+    <string id="taom_career_rank3_avanc_luth_raider" text="阿凡克-路斯战争酋长" />
+
+    <string id="taom_career_rank1_balchoth_kan" text="巴尔霍斯骑手" />
+
+    <string id="taom_career_rank2_balchoth_kan" text="巴尔赫斯战车队长" />
+
+    <string id="taom_career_rank3_balchoth_kan" text="巴尔赫斯军阀可汗" />
+
+    <string id="taom_career_rank1_black_uruk_captain" text="乌鲁克战士" />
+
+    <string id="taom_career_rank2_black_uruk_captain" text="黑乌鲁克" />
+
+    <string id="taom_career_rank3_black_uruk_captain" text="红眼队长" />
+
+    <string id="taom_career_rank1_blade_dancer" text="诺多剑士" />
+
+    <string id="taom_career_rank2_blade_dancer" text="金花之刃" />
+
+    <string id="taom_career_rank3_blade_dancer" text="伊姆拉崔斯剑术大师" />
+
+    <string id="taom_career_rank1_blademaster_of_ren" text="仁恩之刃" />
+
+    <string id="taom_career_rank2_blademaster_of_ren" text="誓约剑术大师" />
+
+    <string id="taom_career_rank3_blademaster_of_ren" text="血刃可汗" />
+
+    <string id="taom_career_rank1_captain_of_osgiliath" text="渡口战士" />
+
+    <string id="taom_career_rank2_captain_of_osgiliath" text="奥斯吉力亚斯守卫" />
+
+    <string id="taom_career_rank3_captain_of_osgiliath" text="奥斯吉力亚斯队长" />
+
+    <string id="taom_career_rank1_cave_troll_master" text="坑洞驱使者" />
+
+    <string id="taom_career_rank2_cave_troll_master" text="刚达巴德食人妖驱使者" />
+
+    <string id="taom_career_rank3_cave_troll_master" text="断骨食人妖制造者" />
+
+    <string id="taom_career_rank1_chariot_warlord" text="镰刀驾驭者" />
+
+    <string id="taom_career_rank2_chariot_warlord" text="战车军阀" />
+
+    <string id="taom_career_rank3_chariot_warlord" text="侃德战车可汗" />
+
+    <string id="taom_career_rank1_clanguard_rider" text="氏族外围骑兵" />
+
+    <string id="taom_career_rank2_clanguard_rider" text="野猪旗骑兵" />
+
+    <string id="taom_career_rank3_clanguard_rider" text="狂猎统领" />
+
+    <string id="taom_career_rank1_codyan_legionaire" text="柯迪安盾兵" />
+
+    <string id="taom_career_rank2_codyan_legionaire" text="柯迪安札甲老兵" />
+
+    <string id="taom_career_rank3_codyan_legionaire" text="鲁恩铁壁" />
+
+    <string id="taom_career_rank1_corsair_boarder" text="甲板掠夺者" />
+
+    <string id="taom_career_rank2_corsair_boarder" text="海港海盗" />
+
+    <string id="taom_career_rank3_corsair_boarder" text="昂巴黑色掠夺者" />
+
+    <string id="taom_career_rank1_corsair_captain" text="黑舰队统领" />
+
+    <string id="taom_career_rank2_corsair_captain" text="舰船船长" />
+
+    <string id="taom_career_rank3_corsair_captain" text="昂巴领主" />
+
+    <string id="taom_career_rank1_corsair_crossbow" text="索具射手" />
+
+    <string id="taom_career_rank2_corsair_crossbow" text="海盗神射手" />
+
+    <string id="taom_career_rank3_corsair_crossbow" text="舰队众敌屠戮者" />
+
+    <string id="taom_career_rank1_crossbow_master" text="弩箭工匠" />
+
+    <string id="taom_career_rank2_crossbow_master" text="弩兵大师" />
+
+    <string id="taom_career_rank3_crossbow_master" text="铁丘陵器械领主" />
+
+    <string id="taom_career_rank1_dale_guardsman" text="河谷城门卫" />
+
+    <string id="taom_career_rank2_dale_guardsman" text="吉瑞安盾兵" />
+
+    <string id="taom_career_rank3_dale_guardsman" text="河谷国骑士" />
+
+    <string id="taom_career_rank1_dale_marksman" text="长湖镇弓手" />
+
+    <string id="taom_career_rank2_dale_marksman" text="屠龙射手" />
+
+    <string id="taom_career_rank3_dale_marksman" text="黑箭持有者" />
+
+    <string id="taom_career_rank1_dale_outrider" text="河谷国道路骑士" />
+
+    <string id="taom_career_rank2_dale_outrider" text="北道守卫" />
+
+    <string id="taom_career_rank3_dale_outrider" text="巴丁家族元帅" />
+
+    <string id="taom_career_rank1_elk_rider" text="林地前哨骑兵" />
+
+    <string id="taom_career_rank2_elk_rider" text="幽暗密林麋鹿守卫" />
+
+    <string id="taom_career_rank3_elk_rider" text="绿叶森林鹿角领主" />
+
+    <string id="taom_career_rank1_elven_archer" text="诺多族弓手" />
+
+    <string id="taom_career_rank2_elven_archer" text="天穹之弓哨兵" />
+
+    <string id="taom_career_rank3_elven_archer" text="伊姆拉崔斯守卫" />
+
+    <string id="taom_career_rank1_eotheod_windrider" text="洛汗骠骑" />
+
+    <string id="taom_career_rank2_eotheod_windrider" text="骠骑队队长" />
+
+    <string id="taom_career_rank3_eotheod_windrider" text="骠骑国元帅" />
+
+    <string id="taom_career_rank1_fell_rider" text="黑骑士" />
+
+    <string id="taom_career_rank2_fell_rider" text="恐兽骑士" />
+
+    <string id="taom_career_rank3_fell_rider" text="东方之影" />
+
+    <string id="taom_career_rank1_galadhrim_archer" text="加拉赫林弓手" />
+
+    <string id="taom_career_rank2_galadhrim_archer" text="梅隆树檐射手" />
+
+    <string id="taom_career_rank3_galadhrim_archer" text="金色森林弓箭大师" />
+
+    <string id="taom_career_rank1_goblin_sniper" text="悬崖潜伏者" />
+
+    <string id="taom_career_rank2_goblin_sniper" text="高山隘口追踪者" />
+
+    <string id="taom_career_rank3_goblin_sniper" text="刚达巴之眼" />
+
+    <string id="taom_career_rank1_ironguard" text="深渊守卫" />
+
+    <string id="taom_career_rank2_ironguard" text="埃尔波尔铁卫" />
+
+    <string id="taom_career_rank3_ironguard" text="都灵之盾墙" />
+
+    <string id="taom_career_rank1_knight_of_belfalas" text="多尔安罗斯侍从" />
+
+    <string id="taom_career_rank2_knight_of_belfalas" text="天鹅骑士" />
+
+    <string id="taom_career_rank3_knight_of_belfalas" text="银天鹅骑士" />
+
+    <string id="taom_career_rank1_lokhas_drus_marksman" text="洛卡斯·德鲁斯弓手" />
+
+    <string id="taom_career_rank2_lokhas_drus_marksman" text="洛卡斯·德鲁斯破甲射手" />
+
+    <string id="taom_career_rank3_lokhas_drus_marksman" text="东方的日羽死神" />
+
+    <string id="taom_career_rank1_mahud_beast_rider" text="玛胡德驯兽师" />
+
+    <string id="taom_career_rank2_mahud_beast_rider" text="穆玛克驾驭者" />
+
+    <string id="taom_career_rank3_mahud_beast_rider" text="穆玛克战争领袖" />
+
+    <string id="taom_career_rank1_marksman_of_aldburg" text="东谷地弓手" />
+
+    <string id="taom_career_rank2_marksman_of_aldburg" text="奥德堡神射手" />
+
+    <string id="taom_career_rank3_marksman_of_aldburg" text="洛汗国箭术守卫" />
+
+    <string id="taom_career_rank1_mulkerhili_cultist" text="Whisper-Sworn" />
+
+    <string id="taom_career_rank2_mulkerhili_cultist" text="Voice of Lugbúrz" />
+
+    <string id="taom_career_rank3_mulkerhili_cultist" text="Herald of the Lidless Eye" />
+
+    <string id="taom_career_rank1_necromancer_acolyte" text="Acolyte of Sorcery" />
+
+    <string id="taom_career_rank2_necromancer_acolyte" text="Weaver of the Black Breath" />
+
+    <string id="taom_career_rank3_necromancer_acolyte" text="Master of Dol Guldur" />
+
+    <string id="taom_career_rank1_olog_hai_warchief" text="War-Troll" />
+
+    <string id="taom_career_rank2_olog_hai_warchief" text="Olog-hai" />
+
+    <string id="taom_career_rank3_olog_hai_warchief" text="Warchief of Lugbúrz" />
+
+    <string id="taom_career_rank1_pezarsani_javelineer" text="Pezarsan Javelineer" />
+
+    <string id="taom_career_rank2_pezarsani_javelineer" text="Throwing-Spear Skirmisher" />
+
+    <string id="taom_career_rank3_pezarsani_javelineer" text="Scarlet Spear-Master" />
+
+    <string id="taom_career_rank1_ram_rider" text="Ram-Breaker" />
+
+    <string id="taom_career_rank2_ram_rider" text="Goatback Charger" />
+
+    <string id="taom_career_rank3_ram_rider" text="Vanguard of Dáin" />
+
+    <string id="taom_career_rank1_ranger_of_ithilien" text="Ithilien Scout" />
+
+    <string id="taom_career_rank2_ranger_of_ithilien" text="Ranger of Ithilien" />
+
+    <string id="taom_career_rank3_ranger_of_ithilien" text="Captain of the White Company" />
+
+    <string id="taom_career_rank1_rivendell_knight" text="Ohtar of Imladris" />
+
+    <string id="taom_career_rank2_rivendell_knight" text="Roquen of Imladris" />
+
+    <string id="taom_career_rank3_rivendell_knight" text="Knight of the Golden Flower" />
+
+    <string id="taom_career_rank1_sentinel" text="Rider of the Egladil" />
+
+    <string id="taom_career_rank2_sentinel" text="Tirith of the Golden Wood" />
+
+    <string id="taom_career_rank3_sentinel" text="Thalion of Caras Galadhon" />
+
+    <string id="taom_career_rank1_shadow_walker" text="Forest Stalker" />
+
+    <string id="taom_career_rank2_shadow_walker" text="Shadow of Taur-nu-Fuin" />
+
+    <string id="taom_career_rank3_shadow_walker" text="Bane of Spiders" />
+
+    <string id="taom_career_rank1_shadow_warrior" text="Thrall of the Shadow" />
+
+    <string id="taom_career_rank2_shadow_warrior" text="Servant of Dol Guldur" />
+
+    <string id="taom_career_rank3_shadow_warrior" text="Black Hand of the Necromancer" />
+
+    <string id="taom_career_rank1_silvan_archer" text="Greenwood Bowman" />
+
+    <string id="taom_career_rank2_silvan_archer" text="Silvan Marksman" />
+
+    <string id="taom_career_rank3_silvan_archer" text="Archer of the Elvenking" />
+
+    <string id="taom_career_rank1_snaga_rider" text="Snaga" />
+
+    <string id="taom_career_rank2_snaga_rider" text="Smoke-Raider" />
+
+    <string id="taom_career_rank3_snaga_rider" text="Shadow of Lugbúrz" />
+
+    <string id="taom_career_rank1_steppe_bowmaster" text="Plains Outrider" />
+
+    <string id="taom_career_rank2_steppe_bowmaster" text="Steppe Bowmaster" />
+
+    <string id="taom_career_rank3_steppe_bowmaster" text="Stormbow Kân" />
+
+    <string id="taom_career_rank1_tribesman_of_jelut" text="Jelut Tribesman" />
+
+    <string id="taom_career_rank2_tribesman_of_jelut" text="沙暴掠袭者" />
+
+    <string id="taom_career_rank3_tribesman_of_jelut" text="蛇旗酋长" />
+
+    <string id="taom_career_rank1_uruk_berserker" text="深坑孕育的强兽人" />
+
+    <string id="taom_career_rank2_uruk_berserker" text="战斗强兽人" />
+
+    <string id="taom_career_rank3_uruk_berserker" text="白手掠夺者" />
+
+    <string id="taom_career_rank1_uruk_crossbow" text="铸炉武装强兽人" />
+
+    <string id="taom_career_rank2_uruk_crossbow" text="欧散克射手" />
+
+    <string id="taom_career_rank3_uruk_crossbow" text="白手神射手" />
+
+    <string id="taom_career_rank1_warden" text="林缘守卫" />
+
+    <string id="taom_career_rank2_warden" text="洛丝萝林边境守卫" />
+
+    <string id="taom_career_rank3_warden" text="边境守卫队长" />
+
+    <string id="taom_career_rank1_warg_pack_leader" text="狼群座狼骑士" />
+
+    <string id="taom_career_rank2_warg_pack_leader" text="凶恶狼队长" />
+
+    <string id="taom_career_rank3_warg_pack_leader" text="狂猎狼王" />
+
+    <string id="taom_career_rank1_warg_scout" text="座狼骑士" />
+
+    <string id="taom_career_rank2_warg_scout" text="艾辛格座狼斥候" />
+
+    <string id="taom_career_rank3_warg_scout" text="白手猎手" />
+
+    <string id="taom_career_rank1_watchman_of_stangard" text="斯坦加德哨兵" />
+
+    <string id="taom_career_rank2_watchman_of_stangard" text="林光河渡口守卫" />
+
+    <string id="taom_career_rank3_watchman_of_stangard" text="东境守望者" />
+
+    <string id="taom_career_rank1_wolfskin_hunter" text="狼皮追猎者" />
+
+    <string id="taom_career_rank2_wolfskin_hunter" text="暗影射手" />
+
+    <string id="taom_career_rank3_wolfskin_hunter" text="灰色山地猎人" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t1_a" text="山地氏族狂战士" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t1_b" text="宣誓投斧手" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t2_a" text="血债掠夺者" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t2_b" text="战歌山民" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t3_a" text="阿凡克鲁斯战争酋长" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t3_b" text="战争大军领主" />
+
+    <string id="taom_career_grp_balchoth_kan_t1_a" text="巴尔寇斯骑士" />
+
+    <string id="taom_career_grp_balchoth_kan_t1_b" text="无畏先锋骑士" />
+
+    <string id="taom_career_grp_balchoth_kan_t2_a" text="洛汗战车骑士" />
+
+    <string id="taom_career_grp_balchoth_kan_t2_b" text="铁骑兵" />
+
+    <string id="taom_career_grp_balchoth_kan_t3_a" text="不可阻挡之潮" />
+
+    <string id="taom_career_grp_balchoth_kan_t3_b" text="恐怖部落" />
+
+    <string id="taom_career_grp_black_uruk_captain_t1_a" text="炉火锤炼之躯" />
+
+    <string id="taom_career_grp_black_uruk_captain_t1_b" text="初尝血怒" />
+
+    <string id="taom_career_grp_black_uruk_captain_t2_a" text="鲁格布兹狂战士" />
+
+    <string id="taom_career_grp_black_uruk_captain_t2_b" text="无尽之怒" />
+
+    <string id="taom_career_grp_black_uruk_captain_t3_a" text="无睑之眼的怒火" />
+
+    <string id="taom_career_grp_black_uruk_captain_t3_b" text="黑门统帅" />
+
+    <string id="taom_career_grp_blade_dancer_t1_a" text="星光之刃" />
+
+    <string id="taom_career_grp_blade_dancer_t1_b" text="伊姆拉崔斯守卫" />
+
+    <string id="taom_career_grp_blade_dancer_t2_a" text="贡多林之舞" />
+
+    <string id="taom_career_grp_blade_dancer_t2_b" text="隐秘谷守护者" />
+
+    <string id="taom_career_grp_blade_dancer_t3_a" text="第一纪元之剑" />
+
+    <string id="taom_career_grp_blade_dancer_t3_b" text="埃兰迪尔之光" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t1_a" text="宫廷决斗者" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t1_b" text="坚定之刃" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t2_a" text="无情锋刃" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t2_b" text="瑞恩守卫" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t3_a" text="旋风杀手" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t3_b" text="不屈剑主" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t1_a" text="东岸守卫" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t1_b" text="安都因渡口守护者" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t2_a" text="拉马斯先锋" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t2_b" text="最后之桥之剑" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t3_a" text="法拉墨军团" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t3_b" text="群星之穹领主" />
+
+    <string id="taom_career_grp_cave_troll_master_t1_a" text="深坑鞭笞者" />
+
+    <string id="taom_career_grp_cave_troll_master_t1_b" text="洞口守卫" />
+
+    <string id="taom_career_grp_cave_troll_master_t2_a" text="哥布林镇暴君" />
+
+    <string id="taom_career_grp_cave_troll_master_t2_b" text="深堡破坏者" />
+
+    <string id="taom_career_grp_cave_troll_master_t3_a" text="刚达巴德天罚" />
+
+    <string id="taom_career_grp_cave_troll_master_t3_b" text="北方大厅恐惧" />
+
+    <string id="taom_career_grp_chariot_warlord_t1_a" text="镰刀骑士" />
+
+    <string id="taom_career_grp_chariot_warlord_t1_b" text="铁轮" />
+
+    <string id="taom_career_grp_chariot_warlord_t2_a" text="收割冲锋" />
+
+    <string id="taom_career_grp_chariot_warlord_t2_b" text="守卫战队" />
+
+    <string id="taom_career_grp_chariot_warlord_t3_a" text="帕兰诺收割者" />
+
+    <string id="taom_career_grp_chariot_warlord_t3_b" text="侃德之轮" />
+
+    <string id="taom_career_grp_clanguard_rider_t1_a" text="氏族雷骑兵" />
+
+    <string id="taom_career_grp_clanguard_rider_t1_b" text="誓约氏族护卫" />
+
+    <string id="taom_career_grp_clanguard_rider_t2_a" text="战群先锋" />
+
+    <string id="taom_career_grp_clanguard_rider_t2_b" text="丘陵旗帜" />
+
+    <string id="taom_career_grp_clanguard_rider_t3_a" text="众骑士之主" />
+
+    <string id="taom_career_grp_clanguard_rider_t3_b" text="永恒战群" />
+
+    <string id="taom_career_grp_codyan_legionaire_t1_a" text="科迪安先锋" />
+
+    <string id="taom_career_grp_codyan_legionaire_t1_b" text="坚定盾卫" />
+
+    <string id="taom_career_grp_codyan_legionaire_t2_a" text="鲁恩之墙" />
+
+    <string id="taom_career_grp_codyan_legionaire_t2_b" text="铁甲方阵" />
+
+    <string id="taom_career_grp_codyan_legionaire_t3_a" text="不屈战线" />
+
+    <string id="taom_career_grp_codyan_legionaire_t3_b" text="永不倒塌之墙" />
+
+    <string id="taom_career_grp_corsair_boarder_t1_a" text="甲板掠夺者" />
+
+    <string id="taom_career_grp_corsair_boarder_t1_b" text="海之淬炼" />
+
+    <string id="taom_career_grp_corsair_boarder_t2_a" text="佩拉格蹂躏者" />
+
+    <string id="taom_career_grp_corsair_boarder_t2_b" text="大港壁垒" />
+
+    <string id="taom_career_grp_corsair_boarder_t3_a" text="海岸天灾" />
+
+    <string id="taom_career_grp_corsair_boarder_t3_b" text="黑色努门诺尔军阀" />
+
+    <string id="taom_career_grp_corsair_captain_t1_a" text="昂巴袭击首领" />
+
+    <string id="taom_career_grp_corsair_captain_t1_b" text="船员统领" />
+
+    <string id="taom_career_grp_corsair_captain_t2_a" text="卡斯塔米尔的继承人" />
+
+    <string id="taom_career_grp_corsair_captain_t2_b" text="黑色舰队掌舵者" />
+
+    <string id="taom_career_grp_corsair_captain_t3_a" text="海盗领主" />
+
+    <string id="taom_career_grp_corsair_captain_t3_b" text="大港之主" />
+
+    <string id="taom_career_grp_corsair_crossbow_t1_a" text="索具神射手" />
+
+    <string id="taom_career_grp_corsair_crossbow_t1_b" text="桅顶守望者" />
+
+    <string id="taom_career_grp_corsair_crossbow_t2_a" text="舵手猎杀者" />
+
+    <string id="taom_career_grp_corsair_crossbow_t2_b" text="黑帆长矛" />
+
+    <string id="taom_career_grp_corsair_crossbow_t3_a" text="黑星弩箭" />
+
+    <string id="taom_career_grp_corsair_crossbow_t3_b" text="无尽齐射" />
+
+    <string id="taom_career_grp_crossbow_master_t1_a" text="铁丘陵齐射手" />
+
+    <string id="taom_career_grp_crossbow_master_t1_b" text="河谷城守望者" />
+
+    <string id="taom_career_grp_crossbow_master_t2_a" text="无情弩箭" />
+
+    <string id="taom_career_grp_crossbow_master_t2_b" text="山岳弩炮" />
+
+    <string id="taom_career_grp_crossbow_master_t3_a" text="钢铁风暴" />
+
+    <string id="taom_career_grp_crossbow_master_t3_b" text="埃尔波尔战争机器" />
+
+    <string id="taom_career_grp_dale_guardsman_t1_a" text="河谷城门卫" />
+
+    <string id="taom_career_grp_dale_guardsman_t1_b" text="长湖镇盾墙" />
+
+    <string id="taom_career_grp_dale_guardsman_t2_a" text="吉瑞安之矛" />
+
+    <string id="taom_career_grp_dale_guardsman_t2_b" text="奔流河壁垒" />
+
+    <string id="taom_career_grp_dale_guardsman_t3_a" text="布兰德国王先锋" />
+
+    <string id="taom_career_grp_dale_guardsman_t3_b" text="埃尔波尔最后防线" />
+
+    <string id="taom_career_grp_dale_marksman_t1_a" text="长湖镇弓手" />
+
+    <string id="taom_career_grp_dale_marksman_t1_b" text="长湖守望" />
+
+    <string id="taom_career_grp_dale_marksman_t2_a" text="黑箭传人" />
+
+    <string id="taom_career_grp_dale_marksman_t2_b" text="画眉鸟之眼弓手" />
+
+    <string id="taom_career_grp_dale_marksman_t3_a" text="河谷城屠龙者" />
+
+    <string id="taom_career_grp_dale_marksman_t3_b" text="吉瑞安血脉之弓" />
+
+    <string id="taom_career_grp_dale_outrider_t1_a" text="奔流河骑士" />
+
+    <string id="taom_career_grp_dale_outrider_t1_b" text="商道守卫" />
+
+    <string id="taom_career_grp_dale_outrider_t2_a" text="长谷之矛" />
+
+    <string id="taom_career_grp_dale_outrider_t2_b" text="埃尔波尔友谊的外围骑手" />
+
+    <string id="taom_career_grp_dale_outrider_t3_a" text="北方人冲锋" />
+
+    <string id="taom_career_grp_dale_outrider_t3_b" text="双王信使" />
+
+    <string id="taom_career_grp_elk_rider_t1_a" text="鹿角冲锋" />
+
+    <string id="taom_career_grp_elk_rider_t1_b" text="边境骑士" />
+
+    <string id="taom_career_grp_elk_rider_t2_a" text="森林惊雷" />
+
+    <string id="taom_career_grp_elk_rider_t2_b" text="瑟兰迪尔卫士" />
+
+    <string id="taom_career_grp_elk_rider_t3_a" text="树下之怒" />
+
+    <string id="taom_career_grp_elk_rider_t3_b" text="精灵王宫殿之主" />
+
+    <string id="taom_career_grp_elven_archer_t1_a" text="锐眼哨兵" />
+
+    <string id="taom_career_grp_elven_archer_t1_b" text="瑞文戴尔守望者" />
+
+    <string id="taom_career_grp_elven_archer_t2_a" text="不息齐射" />
+
+    <string id="taom_career_grp_elven_archer_t2_b" text="伊瑞詹之弓" />
+
+    <string id="taom_career_grp_elven_archer_t3_a" text="吉尔加拉德之风暴" />
+
+    <string id="taom_career_grp_elven_archer_t3_b" text="维雅守夜人" />
+
+    <string id="taom_career_grp_eotheod_windrider_t1_a" text="伊欧尔的继承人" />
+
+    <string id="taom_career_grp_eotheod_windrider_t1_b" text="荒原骑士" />
+
+    <string id="taom_career_grp_eotheod_windrider_t2_a" text="伊欧尔的誓言" />
+
+    <string id="taom_career_grp_eotheod_windrider_t2_b" text="骡马之主" />
+
+    <string id="taom_career_grp_eotheod_windrider_t3_a" text="帕兰诺冲锋" />
+
+    <string id="taom_career_grp_eotheod_windrider_t3_b" text="骠骑国之歌" />
+
+    <string id="taom_career_grp_fell_rider_t1_a" text="幽影军团骑士" />
+
+    <string id="taom_career_grp_fell_rider_t1_b" text="恶兽坐骑守护者" />
+
+    <string id="taom_career_grp_fell_rider_t2_a" text="恐惧传令官" />
+
+    <string id="taom_career_grp_fell_rider_t2_b" text="黑息骑士" />
+
+    <string id="taom_career_grp_fell_rider_t3_a" text="多尔哥多黑骑士" />
+
+    <string id="taom_career_grp_fell_rider_t3_b" text="东方暗影" />
+
+    <string id="taom_career_grp_galadhrim_archer_t1_a" text="银弓手" />
+
+    <string id="taom_career_grp_galadhrim_archer_t1_b" text="边界之眼" />
+
+    <string id="taom_career_grp_galadhrim_archer_t2_a" text="巨树神射手" />
+
+    <string id="taom_career_grp_galadhrim_archer_t2_b" text="树台守望者" />
+
+    <string id="taom_career_grp_galadhrim_archer_t3_a" text="卡拉斯加拉顿之箭" />
+
+    <string id="taom_career_grp_galadhrim_archer_t3_b" text="银脉河守卫" />
+
+    <string id="taom_career_grp_goblin_sniper_t1_a" text="峭壁潜行者" />
+
+    <string id="taom_career_grp_goblin_sniper_t1_b" text="隧道伏击者" />
+
+    <string id="taom_career_grp_goblin_sniper_t2_a" text="高山隘口伏兵" />
+
+    <string id="taom_career_grp_goblin_sniper_t2_b" text="毒箭制作者" />
+
+    <string id="taom_career_grp_goblin_sniper_t3_a" text="前廊掠夺者" />
+
+    <string id="taom_career_grp_goblin_sniper_t3_b" text="高山隘口之影" />
+
+    <string id="taom_career_grp_ironguard_t1_a" text="深渊之锤" />
+
+    <string id="taom_career_grp_ironguard_t1_b" text="关墙守卫" />
+
+    <string id="taom_career_grp_ironguard_t2_a" text="都灵族裔之怒" />
+
+    <string id="taom_career_grp_ironguard_t2_b" text="埃瑞博尔盾墙" />
+
+    <string id="taom_career_grp_ironguard_t3_a" text="秘银壁垒" />
+
+    <string id="taom_career_grp_ironguard_t3_b" text="阿肯宝石守卫" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t1_a" text="多尔安罗斯枪骑兵" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t1_b" text="海湾守望者" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t2_a" text="银天鹅骑士" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t2_b" text="伊姆拉希尔盾墙" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t3_a" text="天鹅船首骑士" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t3_b" text="多尔安罗斯冲锋" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t1_a" text="洛汗齐射" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t1_b" text="稳健弓手" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t2_a" text="风暴弓射手" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t2_b" text="破甲射手" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t3_a" text="箭雨风暴" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t3_b" text="不息冰雹" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t1_a" text="獠牙先锋" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t1_b" text="巨兽看守" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t2_a" text="践踏冲锋" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t2_b" text="塔楼守护者" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t3_a" text="穆玛克之怒" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t3_b" text="奥利芬特领主" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t1_a" text="东谷之鹰" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t1_b" text="谷地守望者" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t2_a" text="征召队长" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t2_b" text="法贡森林之影" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t3_a" text="骠骑国弓手" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t3_b" text="洛汗大军" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t1_a" text="毒液祷文" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t1_b" text="索伦的低语之言" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t2_a" text="恐惧集会" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t2_b" text="魔眼布道" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t3_a" text="黑暗魔君凝视" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t3_b" text="至尊魔戒黑暗盟约" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t1_a" text="黑暗箭矢施法者" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t1_b" text="腐朽低语者" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t2_a" text="黑暗法术编织者" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t2_b" text="阴影呼吸者" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t3_a" text="巫术之丘领主" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t3_b" text="死灵法师之声" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t1_a" text="裂地者" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t1_b" text="不倦之锤" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t2_a" text="狂暴巨像" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t2_b" text="阳光猛击" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t3_a" text="魔拉农之锤" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t3_b" text="索隆的巨魔族" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t1_a" text="日矛游击兵" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t1_b" text="游荡外围骑兵" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t2_a" text="阳火投掷手" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t2_b" text="猩红掩护" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t3_a" text="远哈拉德之雨" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t3_b" text="沙丘之影" />
+
+    <string id="taom_career_grp_ram_rider_t1_a" text="山地牧羊人" />
+
+    <string id="taom_career_grp_ram_rider_t1_b" text="埃雷博外围骑兵" />
+
+    <string id="taom_career_grp_ram_rider_t2_a" text="铁丘陵冲锋" />
+
+    <string id="taom_career_grp_ram_rider_t2_b" text="强壮战羊" />
+
+    <string id="taom_career_grp_ram_rider_t3_a" text="铁足的先锋" />
+
+    <string id="taom_career_grp_ram_rider_t3_b" text="孤山骑士" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t1_a" text="伊西利恩大道猎人" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t1_b" text="西力斯昂恩守望者" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t2_a" text="北伊西利恩斥候" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t2_b" text="法拉米尔的弓箭手" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t3_a" text="禁池之箭" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t3_b" text="埃明亚南之影" />
+
+    <string id="taom_career_grp_rivendell_knight_t1_a" text="伊姆拉崔斯冲锋" />
+
+    <string id="taom_career_grp_rivendell_knight_t1_b" text="渡口骑士" />
+
+    <string id="taom_career_grp_rivendell_knight_t2_a" text="阿斯法洛斯奔驰" />
+
+    <string id="taom_career_grp_rivendell_knight_t2_b" text="维拉庇护" />
+
+    <string id="taom_career_grp_rivendell_knight_t3_a" text="格罗芬戴尔之怒" />
+
+    <string id="taom_career_grp_rivendell_knight_t3_b" text="最后同盟军队" />
+
+    <string id="taom_career_grp_sentinel_t1_a" text="艾格拉迪尔外围骑兵" />
+
+    <string id="taom_career_grp_sentinel_t1_b" text="伊拉诺守卫" />
+
+    <string id="taom_career_grp_sentinel_t2_a" text="那依斯骑士" />
+
+    <string id="taom_career_grp_sentinel_t2_b" text="凯勒布兰特守护者" />
+
+    <string id="taom_career_grp_sentinel_t3_a" text="罗瑞林朵雷南之矛" />
+
+    <string id="taom_career_grp_sentinel_t3_b" text="南雅哨兵" />
+
+    <string id="taom_career_grp_shadow_walker_t1_a" text="幽径之影" />
+
+    <string id="taom_career_grp_shadow_walker_t1_b" text="树叶斗篷" />
+
+    <string id="taom_career_grp_shadow_walker_t2_a" text="暗中猎手" />
+
+    <string id="taom_career_grp_shadow_walker_t2_b" text="林木面纱" />
+
+    <string id="taom_career_grp_shadow_walker_t3_a" text="蜘蛛克星" />
+
+    <string id="taom_career_grp_shadow_walker_t3_b" text="幽暗密林的隐形者" />
+
+    <string id="taom_career_grp_shadow_warrior_t1_a" text="阿蒙兰克之影" />
+
+    <string id="taom_career_grp_shadow_warrior_t1_b" text="深坑守卫" />
+
+    <string id="taom_career_grp_shadow_warrior_t2_a" text="幽暗密林掠夺者" />
+
+    <string id="taom_career_grp_shadow_warrior_t2_b" text="多尔哥多堡垒" />
+
+    <string id="taom_career_grp_shadow_warrior_t3_a" text="死灵法师天罚" />
+
+    <string id="taom_career_grp_shadow_warrior_t3_b" text="不死之影" />
+
+    <string id="taom_career_grp_silvan_archer_t1_a" text="绿林神射手" />
+
+    <string id="taom_career_grp_silvan_archer_t1_b" text="林冠守望" />
+
+    <string id="taom_career_grp_silvan_archer_t2_a" text="林间空地猎手" />
+
+    <string id="taom_career_grp_silvan_archer_t2_b" text="河流守卫" />
+
+    <string id="taom_career_grp_silvan_archer_t3_a" text="箭雨风暴" />
+
+    <string id="taom_career_grp_silvan_archer_t3_b" text="精灵王弓箭手" />
+
+    <string id="taom_career_grp_snaga_rider_t1_a" text="暗影疾驰" />
+
+    <string id="taom_career_grp_snaga_rider_t1_b" text="黑暗骑手" />
+
+    <string id="taom_career_grp_snaga_rider_t2_a" text="影中突袭" />
+
+    <string id="taom_career_grp_snaga_rider_t2_b" text="西力斯昂哥幽灵" />
+
+    <string id="taom_career_grp_snaga_rider_t3_a" text="努恩践踏者" />
+
+    <string id="taom_career_grp_snaga_rider_t3_b" text="魔多先锋" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t1_a" text="平原游击手" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t1_b" text="稳定齐射" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t2_a" text="无尽箭袋" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t2_b" text="齐射守卫" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t3_a" text="侃德唤风者" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t3_b" text="不息冰雹" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t1_a" text="沙丘袭击者" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t1_b" text="沙漠幸存者" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t2_a" text="蛇牙突击者" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t2_b" text="黄沙披戴者" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t3_a" text="哈拉德威治毒液" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t3_b" text="南方人天罚" />
+
+    <string id="taom_career_grp_uruk_berserker_t1_a" text="鲜血狂热者" />
+
+    <string id="taom_career_grp_uruk_berserker_t1_b" text="深坑磨砺者" />
+
+    <string id="taom_career_grp_uruk_berserker_t2_a" text="白手掠夺者" />
+
+    <string id="taom_career_grp_uruk_berserker_t2_b" text="欧散克盾墙" />
+
+    <string id="taom_career_grp_uruk_berserker_t3_a" text="南库鲁尼尔天罚" />
+
+    <string id="taom_career_grp_uruk_berserker_t3_b" text="塔楼不屈者" />
+
+    <string id="taom_career_grp_uruk_crossbow_t1_a" text="钢铁齐射" />
+
+    <string id="taom_career_grp_uruk_crossbow_t1_b" text="熔炉锻造" />
+
+    <string id="taom_career_grp_uruk_crossbow_t2_a" text="白手弩箭" />
+
+    <string id="taom_career_grp_uruk_crossbow_t2_b" text="环墙守卫" />
+
+    <string id="taom_career_grp_uruk_crossbow_t3_a" text="欧散克风暴鸦" />
+
+    <string id="taom_career_grp_uruk_crossbow_t3_b" text="无尽铁雨" />
+
+    <string id="taom_career_grp_warden_t1_a" text="边境游侠" />
+
+    <string id="taom_career_grp_warden_t1_b" text="宁若戴尔守卫" />
+
+    <string id="taom_career_grp_warden_t2_a" text="奈斯之刃" />
+
+    <string id="taom_career_grp_warden_t2_b" text="卡拉斯加拉顿盾墙" />
+
+    <string id="taom_career_grp_warden_t3_a" text="金森守卫" />
+
+    <string id="taom_career_grp_warden_t3_b" text="凯林安罗斯卫士" />
+
+    <string id="taom_career_grp_warg_pack_leader_t1_a" text="座狼骑手" />
+
+    <string id="taom_career_grp_warg_pack_leader_t1_b" text="狼群看守" />
+
+    <string id="taom_career_grp_warg_pack_leader_t2_a" text="灰狼群外围骑兵" />
+
+    <string id="taom_career_grp_warg_pack_leader_t2_b" text="凶狼统领" />
+
+    <string id="taom_career_grp_warg_pack_leader_t3_a" text="刚达巴首领" />
+
+    <string id="taom_career_grp_warg_pack_leader_t3_b" text="波格的狼骑队长" />
+
+    <string id="taom_career_grp_warg_scout_t1_a" text="利齿奔袭者" />
+
+    <string id="taom_career_grp_warg_scout_t1_b" text="灰狼群" />
+
+    <string id="taom_career_grp_warg_scout_t2_a" text="迷雾山脉猎手" />
+
+    <string id="taom_career_grp_warg_scout_t2_b" text="狼群守望者" />
+
+    <string id="taom_career_grp_warg_scout_t3_a" text="艾辛格外围骑兵" />
+
+    <string id="taom_career_grp_warg_scout_t3_b" text="不息狩猎" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t1_a" text="林光渡口" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t1_b" text="荒原哨兵" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t2_a" text="恩特河盾兵" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t2_b" text="安都因守卫" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t3_a" text="洛汗堡垒" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t3_b" text="骠骑国守卫" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t1_a" text="狼群印记追踪者" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t1_b" text="狼皮潜行者" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t2_a" text="喉咙射手" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t2_b" text="山丘幽灵" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t3_a" text="顶级狼皮战士" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t3_b" text="巨狼群统领" />
+
+    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes已激活 — covers_head变形修复 + 头发/胡须布料模拟" />
+
+    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes已降级 — 此霸主版本的模式签名未授权;使用原版渲染" />
+
+    <string id="taom_bandit_dunland_name" text="登兰德掠袭者" />
+
+    <string id="taom_bandit_dunland_m1" text="卡拉多克" />
+
+    <string id="taom_bandit_dunland_m2" text="格威迪昂" />
+
+    <string id="taom_bandit_dunland_m3" text="布伦诺" />
+
+    <string id="taom_bandit_dunland_m4" text="塔加尔" />
+
+    <string id="taom_bandit_dunland_m5" text="梅德伦" />
+
+    <string id="taom_bandit_dunland_m6" text="德鲁古" />
+
+    <string id="taom_bandit_dunland_m7" text="奥尔凡" />
+
+    <string id="taom_bandit_dunland_m8" text="凯思林" />
+
+    <string id="taom_bandit_dunland_m9" text="赫瓦尔博" />
+
+    <string id="taom_bandit_dunland_m10" text="伊德里斯" />
+
+    <string id="taom_bandit_dunland_f1" text="布兰雯" />
+
+    <string id="taom_bandit_dunland_f2" text="艾莉丝" />
+
+    <string id="taom_bandit_dunland_f3" text="梅尔雯" />
+
+    <string id="taom_bandit_dunland_f4" text="格温妮丝" />
+
+    <string id="taom_bandit_dunland_f5" text="奥尔雯" />
+
+    <string id="taom_bandit_rhun_name" text="洛汗掠袭者" />
+
+    <string id="taom_bandit_rhun_m1" text="卡穆尔" />
+
+    <string id="taom_bandit_rhun_m2" text="塔尔贡" />
+
+    <string id="taom_bandit_rhun_m3" text="布尔扎克" />
+
+    <string id="taom_bandit_rhun_m4" text="桑加尔" />
+
+    <string id="taom_bandit_rhun_m5" text="哈兹格林" />
+
+    <string id="taom_bandit_rhun_m6" text="沃尔祖尔" />
+
+    <string id="taom_bandit_rhun_m7" text="达吉尔" />
+
+    <string id="taom_bandit_rhun_m8" text="奥尔梅克" />
+
+    <string id="taom_bandit_rhun_m9" text="塔尔冯" />
+
+    <string id="taom_bandit_rhun_m10" text="卡尔祖尔" />
+
+    <string id="taom_bandit_rhun_f1" text="萨里拉" />
+
+    <string id="taom_bandit_rhun_f2" text="卡兹娜" />
+
+    <string id="taom_bandit_rhun_f3" text="沃里娜" />
+
+    <string id="taom_bandit_rhun_f4" text="塔希娅" />
+
+    <string id="taom_bandit_rhun_f5" text="桑吉拉" />
+
+    <string id="taom_bandit_harad_name" text="哈拉德林掠袭者" />
+
+    <string id="taom_bandit_harad_m1" text="苏拉丹" />
+
+    <string id="taom_bandit_harad_m2" text="阿扎格哈尔" />
+
+    <string id="taom_bandit_harad_m3" text="哈立德" />
+
+    <string id="taom_bandit_harad_m4" text="瓦里亚格" />
+
+    <string id="taom_bandit_harad_m5" text="达斯" />
+
+    <string id="taom_bandit_harad_m6" text="塔基尔" />
+
+    <string id="taom_bandit_harad_m7" text="穆赞" />
+
+    <string id="taom_bandit_harad_m8" text="阿科尔" />
+
+    <string id="taom_bandit_harad_m9" text="萨希尔" />
+
+    <string id="taom_bandit_harad_m10" text="祖兰" />
+
+    <string id="taom_bandit_harad_f1" text="尼尔胡娜" />
+
+    <string id="taom_bandit_harad_f2" text="萨哈莉娅" />
+
+    <string id="taom_bandit_harad_f3" text="阿克丽拉" />
+
+    <string id="taom_bandit_harad_f4" text="贝扎拉" />
+
+    <string id="taom_bandit_harad_f5" text="穆扎娜" />
+
+    <string id="taom_bandit_gundabad_name" text="刚达巴德半兽人劫掠者" />
+
+    <string id="taom_bandit_gundabad_m1" text="波格" />
+
+    <string id="taom_bandit_gundabad_m2" text="亚兹尼格" />
+
+    <string id="taom_bandit_gundabad_m3" text="芬布尔" />
+
+    <string id="taom_bandit_gundabad_m4" text="纳尔祖格" />
+
+    <string id="taom_bandit_gundabad_m5" text="戈尔巴格" />
+
+    <string id="taom_bandit_gundabad_m6" text="毛胡尔" />
+
+    <string id="taom_bandit_gundabad_m7" text="斯纳加" />
+
+    <string id="taom_bandit_gundabad_m8" text="乌夫萨克" />
+
+    <string id="taom_bandit_gundabad_m9" text="拉德布格" />
+
+    <string id="taom_bandit_gundabad_m10" text="卢格杜什" />
+
+    <string id="taom_bandit_gundabad_f1" text="斯卡拉" />
+
+    <string id="taom_bandit_gundabad_f2" text="沃尔加" />
+
+    <string id="taom_bandit_gundabad_f3" text="玛兹拉" />
+
+    <string id="taom_bandit_gundabad_f4" text="格里什塔" />
+
+    <string id="taom_bandit_gundabad_f5" text="纳尔兹加" />
+
+    <string id="taom_bandit_umbar_name" text="昂巴海盗" />
+
+    <string id="taom_bandit_umbar_m1" text="卡斯塔米尔" />
+
+    <string id="taom_bandit_umbar_m2" text="桑加希安迪昂" />
+
+    <string id="taom_bandit_umbar_m3" text="安加麦特" />
+
+    <string id="taom_bandit_umbar_m4" text="赫鲁莫" />
+
+    <string id="taom_bandit_umbar_m5" text="富伊努尔" />
+
+    <string id="taom_bandit_umbar_m6" text="阿督纳斐尔" />
+
+    <string id="taom_bandit_umbar_m7" text="阿拉戈尔" />
+
+    <string id="taom_bandit_umbar_m8" text="卡勒米尔" />
+
+    <string id="taom_bandit_umbar_m9" text="沃隆迪尔" />
+
+    <string id="taom_bandit_umbar_m10" text="卡拉齐尔" />
+
+    <string id="taom_bandit_umbar_f1" text="贝露西尔" />
+
+    <string id="taom_bandit_umbar_f2" text="宁瑞丝" />
+
+    <string id="taom_bandit_umbar_f3" text="阿督妮尔" />
+
+    <string id="taom_bandit_umbar_f4" text="塔米瑞尔" />
+
+    <string id="taom_bandit_umbar_f5" text="因齐尔贝丝" />
+
+    <string id="taom_bandit_gondor_name" text="刚铎士兵" />
+
+    <string id="taom_bandit_gondor_m1" text="贝吉尔" />
+
+    <string id="taom_bandit_gondor_m2" text="塔刚" />
+
+    <string id="taom_bandit_gondor_m3" text="佛龙" />
+
+    <string id="taom_bandit_gondor_m4" text="杜伊拉斯" />
+
+    <string id="taom_bandit_gondor_m5" text="希尔刚" />
+
+    <string id="taom_bandit_gondor_m6" text="贝瑞刚" />
+
+    <string id="taom_bandit_gondor_m7" text="马迪尔" />
+
+    <string id="taom_bandit_gondor_m8" text="欧洛隹斯" />
+
+    <string id="taom_bandit_gondor_m9" text="奇里安" />
+
+    <string id="taom_bandit_gondor_m10" text="哈尔米尔" />
+
+    <string id="taom_bandit_gondor_f1" text="伊欧蕾丝" />
+
+    <string id="taom_bandit_gondor_f2" text="洛丝瑞尔" />
+
+    <string id="taom_bandit_gondor_f3" text="魔玟" />
+
+    <string id="taom_bandit_gondor_f4" text="吉尔蕾恩" />
+
+    <string id="taom_bandit_gondor_f5" text="安雯" />
+
+    <string id="taom_bandit_erebor_name" text="伊鲁柏战士" />
+
+    <string id="taom_bandit_erebor_m1" text="纳尔古姆" />
+
+    <string id="taom_bandit_erebor_m2" text="波林" />
+
+    <string id="taom_bandit_erebor_m3" text="弗拉尔" />
+
+    <string id="taom_bandit_erebor_m4" text="洛法尔" />
+
+    <string id="taom_bandit_erebor_m5" text="灰须" />
+
+    <string id="taom_bandit_erebor_m6" text="斯拉尔" />
+
+    <string id="taom_bandit_erebor_m7" text="德瓦尔金" />
+
+    <string id="taom_bandit_erebor_m8" text="纳拉德尔" />
+
+    <string id="taom_bandit_erebor_m9" text="维德里" />
+
+    <string id="taom_bandit_erebor_m10" text="哈格里" />
+
+    <string id="taom_bandit_erebor_f1" text="迪丝" />
+
+    <string id="taom_bandit_erebor_f2" text="布里拉" />
+
+    <string id="taom_bandit_erebor_f3" text="瓦格娜" />
+
+    <string id="taom_bandit_erebor_f4" text="索拉" />
+
+    <string id="taom_bandit_erebor_f5" text="弗丽达" />
+
+    <string id="taom_bandit_mirkwood_name" text="幽暗密林潜行者" />
+
+    <string id="taom_bandit_mirkwood_m1" text="法格利尔" />
+
+    <string id="taom_bandit_mirkwood_m2" text="瑟兰督伊" />
+
+    <string id="taom_bandit_mirkwood_m3" text="加利安" />
+
+    <string id="taom_bandit_mirkwood_m4" text="贝勒刚" />
+
+    <string id="taom_bandit_mirkwood_m5" text="尼姆洛斯" />
+
+    <string id="taom_bandit_mirkwood_m6" text="欧洛芬" />
+
+    <string id="taom_bandit_mirkwood_m7" text="鲁米尔" />
+
+    <string id="taom_bandit_mirkwood_m8" text="哈尔达米尔" />
+
+    <string id="taom_bandit_mirkwood_m9" text="陶隆" />
+
+    <string id="taom_bandit_mirkwood_m10" text="林迪尔" />
+
+    <string id="taom_bandit_mirkwood_f1" text="陶瑞尔" />
+
+    <string id="taom_bandit_mirkwood_f2" text="奈斯洛瑞尔" />
+
+    <string id="taom_bandit_mirkwood_f3" text="伊欧雯" />
+
+    <string id="taom_bandit_mirkwood_f4" text="费利芙琳" />
+
+    <string id="taom_bandit_mirkwood_f5" text="米瑞尔" />
+
     <string id="taom_hideout_desc_dunland" text="在登兰德的林木丘陵之间,你发现了一处简陋的营地,兽皮帐篷和粗糙的栅栏半隐藏在一片空地中。" />
+
     <string id="taom_hideout_desc_gundabad" text="在迷雾山脉的峭壁之下,你发现了一个肮脏的巢穴,贡达巴德半兽人在裸露的岩石中挖出洞窟盘踞于此。" />
+
     <string id="taom_hideout_desc_harad" text="在哈拉德的沙丘之间,你遇到了一处伪装的南方人营地,聚集在一口隐蔽的沙漠水井周围。" />
+
     <string id="taom_hideout_desc_rhun" text="在洛汗广阔的草原上,你辨认出东夷掠袭者的篷车和兽皮帐篷,他们在一处沟壑中扎营。" />
+
     <string id="taom_hideout_desc_umbar" text="沿着南方海岸,你发现了一处隐蔽的海湾,昂巴海盗的黑船正停泊于此。" />
+
+    <string id="taom_faction_difficulty_1" text="难度:非常简单" />
+
+    <string id="taom_faction_difficulty_2" text="难度:简单" />
+
+    <string id="taom_faction_difficulty_3" text="难度:中等" />
+
+    <string id="taom_faction_difficulty_4" text="难度:中等偏难" />
+
+    <string id="taom_faction_difficulty_5" text="难度:困难" />
+
+    <string id="taom_faction_difficulty_6" text="难度:非常困难" />
+
+    <string id="taom_faction_difficulty_7" text="难度:极限" />
+
+    <string id="taom_faction_anduin_vale_desc" text="安都因大河的肥沃河谷,比翁一族和森林人的家园。生活在迷雾山脉与幽暗密林之间的淳朴民族。" />
+
+    <string id="taom_faction_anduin_vale_name" text="安都因河谷" />
+
+    <string id="taom_faction_anduin_vale_trait_0" text="比翁一族" />
+
+    <string id="taom_faction_anduin_vale_trait_1" text="河谷森林人" />
+
+    <string id="taom_faction_anduin_vale_trait_2" text="大河贸易" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_desc" text="贝拉卡尔沿海王国,由忠于维拉的忠贞努曼诺尔人建立。南方海岸上的文明堡垒。" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_name" text="贝拉卡尔的阿鲁萨尼" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_0" text="努曼诺尔血统" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_1" text="沿海王国" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_2" text="忠于维拉" />
+
+    <string id="taom_faction_browlands_desc" text="褐土地。" />
+
+    <string id="taom_faction_browlands_name" text="褐土地" />
+
+    <string id="taom_faction_chajaphan_of_abanissa_desc" text="阿巴尼萨的查贾潘。" />
+
+    <string id="taom_faction_chajaphan_of_abanissa_name" text="阿巴尼萨的查贾潘" />
+
+    <string id="taom_faction_clans_of_andrast_desc" text="安德拉斯特部族。" />
+
+    <string id="taom_faction_clans_of_andrast_name" text="安德拉斯特部族" />
+
+    <string id="taom_faction_clans_of_druwaith_iaur_desc" text="德鲁怀斯伊奥尔部族。" />
+
+    <string id="taom_faction_clans_of_druwaith_iaur_name" text="德鲁怀斯伊奥尔部族" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_0" text="森林速度惩罚减少50% + 视野范围+15%(借用自巴旦尼亚)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_1" text="平原上队伍速度+10%(丘陵行军者)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_2" text="队伍规模上限+5%(丘陵部落征召)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_3" text="村庄志愿兵重生速度+10%(丘陵部落募兵)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_4" text="城镇中老兵民兵概率+20%(借用自巴旦尼亚)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_5" text="建筑建造速度-10%(借用自巴旦尼亚)" />
+
+    <string id="taom_faction_clans_of_dunland_desc" text="登兰德的丘陵人,洛汗骑士的宿敌。巴旦尼亚森林传统与TAOM的丘陵行军者和丘陵部落征召相结合——廉价、快速、怒火中烧的战帮,在平原与森林中同样迅捷。巴旦尼亚铁匠虽慢,但战帮可不慢。" />
+
+    <string id="taom_faction_clans_of_dunland_name" text="登兰德部族" />
+
+    <string id="taom_faction_clans_of_dunland_perk_0_desc" text="平原上队伍速度+10%,队伍规模+5%——登兰德战帮行军迅速。" />
+
+    <string id="taom_faction_clans_of_dunland_perk_0_name" text="丘陵行军者" />
+
+    <string id="taom_faction_clans_of_dunland_perk_1_desc" text="村庄志愿兵重生速度+10%——村庄迅速补充族人。" />
+
+    <string id="taom_faction_clans_of_dunland_perk_1_name" text="丘陵部落募兵" />
+
+    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="借用:森林速度惩罚减少50% + 视野+15%,城镇老兵民兵概率+20%;建造速度-10%。" />
+
+    <string id="taom_faction_clans_of_dunland_perk_2_name" text="巴旦尼亚森林血统" />
+
+    <string id="taom_faction_clans_of_dunland_strength_0" text="廉价快速战帮" />
+
+    <string id="taom_faction_clans_of_dunland_strength_1" text="森林与平原机动性" />
+
+    <string id="taom_faction_clans_of_dunland_strength_2" text="稳定的村庄募兵" />
+
+    <string id="taom_faction_clans_of_dunland_strength_3" text="老兵民兵概率" />
+
+    <string id="taom_faction_clans_of_dunland_su_0_desc" text="无畏的近战战士。" />
+
+    <string id="taom_faction_clans_of_dunland_su_0_name" text="登兰德狂战士" />
+
+    <string id="taom_faction_clans_of_dunland_su_1_desc" text="廉价的战帮步兵。" />
+
+    <string id="taom_faction_clans_of_dunland_su_1_name" text="山地部落矛兵" />
+
+    <string id="taom_faction_clans_of_dunland_su_2_desc" text="闪电般迅捷的森林游击兵。" />
+
+    <string id="taom_faction_clans_of_dunland_su_2_name" text="克瑞班斥候" />
+
+    <string id="taom_faction_clans_of_dunland_trait_0" text="对洛汗的宿怨" />
+
+    <string id="taom_faction_clans_of_dunland_trait_1" text="狂野的山地战士" />
+
+    <string id="taom_faction_clans_of_dunland_trait_2" text="山地部落征召兵" />
+
+    <string id="taom_faction_clans_of_dunland_trait_3" text="萨鲁曼的棋子" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_0" text="借鉴巴旦尼亚的缓慢建设" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_1" text="萨鲁曼的棋子——外交拙劣" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_2" text="被夹在洛汗和艾辛格之间" />
+
+    <string id="taom_faction_clans_of_forochel_desc" text="散布在佛洛契尔冰湾附近冰冻北方荒原的兽人部落。掠夺洛索斯人和任何胆敢北上者的野蛮劫掠者。" />
+
+    <string id="taom_faction_clans_of_forochel_name" text="佛洛契尔氏族" />
+
+    <string id="taom_faction_clans_of_forochel_trait_0" text="冰湾劫掠者" />
+
+    <string id="taom_faction_clans_of_forochel_trait_1" text="极北冰原兽人" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_0" text="+20%队伍规模上限(强兽人军团)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_1" text="+15%建筑建造速度(工业力量)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_2" text="-20%锻造能量消耗(工业熔炉)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_3" text="-15%骑乘单位招募和升级费用(战座狼)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_4" text="-20%欧散克塔守备军薪资" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_5" text="+20%劫掠伤害(战争机器劫掠)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_6" text="+10%队伍在平原和沼泽的速度(强行军,沼地教官)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_7" text="艾辛格城镇+2商人+1工匠+12帮派首领显贵(总计20个)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_8" text="+10%村庄显贵数量(铁腕统治)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_9" text="+25%关系惩罚(萨鲁曼的掌控)" />
+
+    <string id="taom_faction_dominion_of_isengard_desc" text="萨鲁曼位于欧散克塔的工业堡垒。艾辛格之环日夜运转——强兽人军团、流水线弩炮、战座狼。艾辛格唯一的城镇膨胀至20名显贵:一个相当于洛汗许多城市的招募中心。萨鲁曼的掌控疏远了所有邻国。" />
+
+    <string id="taom_faction_dominion_of_isengard_name" text="艾辛格领地" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_0_desc" text="+20%队伍规模上限,在平原和沼泽+10%行军速度。" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_0_name" text="强兽人军团" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_1_desc" text="+15%建造速度,-20%锻造能量,-15%骑乘单位招募费用。" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_1_name" text="工业力量" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_2_desc" text="艾辛格的单一城镇膨胀至20名显贵——4商人、2工匠、14帮派首领。" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_2_name" text="欧散克军需官" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_0" text="工业规模的生产" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_1" text="强兽人精锐品质" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_2" text="一个大规模招募中心" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_3" text="近战兼具速度与重量" />
+
+    <string id="taom_faction_dominion_of_isengard_su_0_desc" text="毁灭性的冲击步兵。" />
+
+    <string id="taom_faction_dominion_of_isengard_su_0_name" text="强兽人狂战士" />
+
+    <string id="taom_faction_dominion_of_isengard_su_1_desc" text="来自锻炉深坑的重型十字弩兵种。" />
+
+    <string id="taom_faction_dominion_of_isengard_su_1_name" text="强兽人十字弩手" />
+
+    <string id="taom_faction_dominion_of_isengard_su_2_desc" text="白手标记的快速袭扰骑兵。" />
+
+    <string id="taom_faction_dominion_of_isengard_su_2_name" text="座狼骑士" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_0" text="萨鲁曼的领地" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_1" text="强兽人军团" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_2" text="欧尔桑克塔" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_3" text="白手" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_0" text="萨鲁曼的控制疏远外交" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_1" text="单一咽喉要道定居点" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_2" text="被洛汗和法贡森林包围" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60%军队影响力消耗(黑暗魔君的意志)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+10%队伍规模上限(索伦的部落)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_2" text="+20%努恩粮食产量(努恩农田)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_3" text="+25%劫掠伤害(索伦的怒火)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_4" text="+10%夜间队伍速度(黑暗生物)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_5" text="+5%平原和沼泽队伍速度(暗影行军,死亡沼泽)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_6" text="+20%村庄志愿兵重生速度(索伦的征召)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_7" text="每座城镇+2名帮派首领名流(黑暗语传令官)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_8" text="+5%村庄名流数量(奴隶监工)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_9" text="+20%队伍薪饷(黑暗贡赋)" />
+
+    <string id="taom_faction_dominion_of_mordor_desc" text="索伦的黑暗之地。黑暗魔君的意志使军队能以极低影响力成本集结;努恩农田喂养部落;索伦的怒火将劫掠化作屠戮;黑暗生物夜间行军比任何自由民族在日光下更快。黑暗贡赋消耗国库。" />
+
+    <string id="taom_faction_dominion_of_mordor_name" text="魔多领地" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_0_desc" text="军队影响力消耗减少60% — 索伦的部落无需共识。" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_0_name" text="黑暗魔君的意志" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_1_desc" text="+25%劫掠伤害和+5%平原及沼泽队伍速度。" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_1_name" text="索伦的怒火" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_2_desc" text="+10%夜间队伍速度 — 魔多之眼永不眠。" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_2_name" text="黑暗生物" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_0" text="庞大廉价的军队" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_1" text="进军几乎不需要影响力" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_2" text="夜战精通" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_3" text="通过劫掠和努恩自给自足" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_4" text="巨魔和黑强兽人" />
+
+    <string id="taom_faction_dominion_of_mordor_su_0_desc" text="来自巴拉多的精锐突击步兵。" />
+
+    <string id="taom_faction_dominion_of_mordor_su_0_name" text="黑强兽人" />
+
+    <string id="taom_faction_dominion_of_mordor_su_1_desc" text="深坑繁育的攻城巨兽。" />
+
+    <string id="taom_faction_dominion_of_mordor_su_1_name" text="洞穴巨魔" />
+
+    <string id="taom_faction_dominion_of_mordor_su_2_desc" text="来自米那斯魔窟的毒箭弓箭手。" />
+
+    <string id="taom_faction_dominion_of_mordor_su_2_name" text="魔窟弓手" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_0" text="黑暗魔君的领域" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_1" text="半兽人军团" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_2" text="末日火山" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_3" text="巴拉多" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_0" text="黑暗贡赋消耗薪饷" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_1" text="举世憎恶" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_2" text="特殊单位补充缓慢" />
+
+    <string id="taom_faction_eregion_desc" text="伊瑞詹。" />
+
+    <string id="taom_faction_eregion_name" text="伊瑞詹" />
+
+    <string id="taom_faction_fangorn_forest_desc" text="法贡森林。" />
+
+    <string id="taom_faction_fangorn_forest_name" text="法贡森林" />
+
+    <string id="taom_faction_goblins_of_blue_craig_desc" text="蓝峰的哥布林。" />
+
+    <string id="taom_faction_goblins_of_blue_craig_name" text="蓝峰哥布林" />
+
+    <string id="taom_faction_goblins_of_goblin_town_desc" text="迷雾山脉中哥布林出没的隧道与洞穴。这些半兽人控制着高山隘口,威胁所有胆敢穿越山脉的人。" />
+
+    <string id="taom_faction_goblins_of_goblin_town_name" text="哥布林镇哥布林" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="哥布林隧道" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="山地隘口" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="座狼骑士" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_0" text="草原上队伍速度+10%(东方人前锋)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_1" text="队伍规模上限+5%(东方人大军)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="骑兵招募与升级成本-10%(库赛特继承)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="村庄马匹、骡子、牛和羊产量+25%(库赛特继承)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="城镇税收收入-20%(库赛特继承)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_desc" text="东方平原的东方人。继承库赛特骑兵传统,结合TAOM的东方人前锋草原速度和东方人大军队伍规模。以数量和贡赋而来的重骑兵。" />
+
+    <string id="taom_faction_golden_realm_of_rhun_name" text="鲁恩金色王国" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_0_desc" text="草原上队伍速度+10% — 鲁恩之海的骑手快速穿越平原。" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_0_name" text="东方人前锋" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_1_desc" text="队伍规模上限+5% — 大军响应魔多的召唤而集结。" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_1_name" text="东方人大军" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="继承库赛特骑兵成本-10%,村庄动物产量+25%;城镇税收收入-20%。" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="库赛特草原血统" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_0" text="重骑兵大军" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_1" text="庞大军队" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_2" text="贡赋与贸易网络" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="库赛特草原传承" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_0_desc" text="精锐重甲骑兵。" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_0_name" text="东方人铁甲骑兵" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_1_desc" text="精锐东方重装步兵。" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_1_name" text="东方人剑主" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_2_desc" text="经验丰富的侦察弓骑兵。" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_2_name" text="Rhun Horsewatch" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_0" text="东夷战士" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_1" text="骑兵群" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_2" text="向魔多进贡" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_3" text="草原传承" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_0" text="步兵薄弱" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_1" text="氏族分裂" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_2" text="通往魔多的补给线过长" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="库赛特借用的-20%城镇税收" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_0" text="-25%商队成本(海盗贸易)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_1" text="+15%关税收入(海盗贸易网络)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_2" text="+8%战斗声望(海盗荣耀)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_3" text="+10%沙漠行军速度(沙漠海盗)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_4" text="+8%队伍工资(海盗贪婪)" />
+
+    <string id="taom_faction_havens_of_umbar_desc" text="南方海湾的海盗港和黑努门诺尔人港口城市。海盗贸易大幅降低商队成本,海盗荣耀增加声望,沙漠海盗在沙地上快速行军——但海盗贪婪使每笔工资开支膨胀。" />
+
+    <string id="taom_faction_havens_of_umbar_name" text="昂巴海港" />
+
+    <string id="taom_faction_havens_of_umbar_perk_0_desc" text="-25%商队成本和+15%关税收入——昂巴因每艘过往船只而繁荣。" />
+
+    <string id="taom_faction_havens_of_umbar_perk_0_name" text="海盗贸易" />
+
+    <string id="taom_faction_havens_of_umbar_perk_1_desc" text="每场战斗+8%声望——海盗之名传唱于每个港口。" />
+
+    <string id="taom_faction_havens_of_umbar_perk_1_name" text="海盗荣耀" />
+
+    <string id="taom_faction_havens_of_umbar_perk_2_desc" text="沙漠上+10%队伍速度——昂巴的行军穿越沙漠如同航海一般轻松。" />
+
+    <string id="taom_faction_havens_of_umbar_perk_2_name" text="沙漠海盗" />
+
+    <string id="taom_faction_havens_of_umbar_strength_0" text="通过贸易和关税致富" />
+
+    <string id="taom_faction_havens_of_umbar_strength_1" text="战斗声名显赫" />
+
+    <string id="taom_faction_havens_of_umbar_strength_2" text="沙漠机动性" />
+
+    <string id="taom_faction_havens_of_umbar_strength_3" text="努门诺尔领主属性" />
+
+    <string id="taom_faction_havens_of_umbar_su_0_desc" text="高大威严的长血统领主。" />
+
+    <string id="taom_faction_havens_of_umbar_su_0_name" text="黑努门诺尔人队长" />
+
+    <string id="taom_faction_havens_of_umbar_su_1_desc" text="受过游击训练的海上战士。" />
+
+    <string id="taom_faction_havens_of_umbar_su_1_name" text="海盗掠夺者" />
+
+    <string id="taom_faction_havens_of_umbar_su_2_desc" text="日晒肤色的轻步兵雇佣兵。" />
+
+    <string id="taom_faction_havens_of_umbar_su_2_name" text="哈拉德林辅兵" />
+
+    <string id="taom_faction_havens_of_umbar_trait_0" text="海盗舰队" />
+
+    <string id="taom_faction_havens_of_umbar_trait_1" text="黑努门诺尔人领主" />
+
+    <string id="taom_faction_havens_of_umbar_trait_2" text="海盗港" />
+
+    <string id="taom_faction_havens_of_umbar_trait_3" text="沙漠行军" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_0" text="海盗船长中饱私囊(高工资)" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_1" text="被刚铎仇视" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_2" text="陆军弱于海军" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="中洲西岸的古老精灵王国林顿。由吉尔-加拉德的继承者统治,这是一片精灵荣光渐逝之地,也是灰港岸的所在。" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_name" text="林顿至高王国" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="灰港岸" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="古老精灵王国" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="驶向瓦林诺的船只" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="造船者瑟丹" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10%草原队伍速度(草原战车兵)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_1" text="森林速度惩罚减少50% + 15%视野范围(巴旦尼亚,继承)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_2" text="城镇老兵民兵几率+20%(巴旦尼亚,继承)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_3" text="-10%建筑建造速度(巴旦尼亚,继承)" />
+
+    <string id="taom_faction_khudorom_of_khand_desc" text="肯德的瓦瑞亚格人。继承了巴旦尼亚森林民兵传统;TAOM的草原战车兵在此基础上额外增加+10%草原队伍速度。雇佣军团为出价最高者效力。" />
+
+    <string id="taom_faction_khudorom_of_khand_name" text="肯德的库多罗姆" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_0_desc" text="+10%草原队伍速度——瓦瑞亚格战车疾驰如风。" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_0_name" text="草原战车兵" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_1_desc" text="雇佣军首领为出价者效力——但他们会留下自己的那份。" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_1_name" text="雇佣军传统" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="继承森林速度惩罚减少50% + 15%视野范围以及城镇老兵民兵几率+20%;-10%建造速度。" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="巴旦尼亚森林血统" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_0" text="草原和森林机动性" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_1" text="老兵村庄" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_2" text="雇佣军传统" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_3" text="战车兵战术" />
+
+    <string id="taom_faction_khudorom_of_khand_su_0_desc" text="精英骑马游骑兵。" />
+
+    <string id="taom_faction_khudorom_of_khand_su_0_name" text="瓦瑞亚格弓骑兵" />
+
+    <string id="taom_faction_khudorom_of_khand_su_1_desc" text="古老草原战争机器指挥者。" />
+
+    <string id="taom_faction_khudorom_of_khand_su_1_name" text="肯德战车兵" />
+
+    <string id="taom_faction_khudorom_of_khand_su_2_desc" text="重型长矛骑兵。" />
+
+    <string id="taom_faction_khudorom_of_khand_su_2_name" text="瓦瑞亚格枪骑兵" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_0" text="草原骑兵" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_1" text="瓦瑞亚格战士" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_2" text="雇佣军团" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_3" text="战车兵传统" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_0" text="巴旦尼亚缓慢建造" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_1" text="脆弱定居点" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_2" text="雇佣军首领忠于金币,而非领主" />
+
+    <string id="taom_faction_kingdom_of_angaladh_desc" text="安加拉德王国。" />
+
+    <string id="taom_faction_kingdom_of_angaladh_name" text="安加拉德王国" />
+
+    <string id="taom_faction_kingdom_of_arthedain_desc" text="阿尔诺继承王国中最后也是最伟大的一个。雅西顿在最终覆灭前,在对抗安格玛巫王的战斗中坚持得最久。" />
+
+    <string id="taom_faction_kingdom_of_arthedain_name" text="雅西顿王国" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_0" text="阿尔诺遗裔" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_1" text="安努米那斯真知晶石" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_2" text="北方登丹人" />
+
+    <string id="taom_faction_kingdom_of_cardolan_desc" text="卡多兰的继承国度,曾是伟大的阿尔诺王国的一部分。如今是一片散落定居点和被尸妖haunted的古老墓丘之地。" />
+
+    <string id="taom_faction_kingdom_of_cardolan_name" text="卡多兰王国" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_0" text="阿尔诺的继承者" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_1" text="古墓岗" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_2" text="北方游侠" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_0" text="在平原上队伍速度+10%(谷地商人)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_1" text="村庄粮食产量+10%(斯特吉亚传承)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_2" text="军队影响力消耗-50%(斯特吉亚传承)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_3" text="王国决策导致的关系惩罚+20%(斯特吉亚传承)" />
+
+    <string id="taom_faction_kingdom_of_dale_desc" text="巴德在孤山脚下重建的城市。继承了斯特吉亚丰富的粮食产量和廉价军队传统,配合TAOM的谷地商人平原速度加成——但斯特吉亚王国决策惩罚是把双刃剑。与矮人的繁荣贸易联盟使河谷国富裕而强盛。" />
+
+    <string id="taom_faction_kingdom_of_dale_name" text="河谷国" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_0_desc" text="在平原上队伍速度+10%——长湖镇的商队快速移动。" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_0_name" text="谷地商人" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_1_desc" text="与孤山的贸易提供额外收入和武器供应。" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_1_name" text="矮人联盟" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="继承斯特吉亚村庄粮食产量+10%和军队影响力消耗-50%;王国决策关系惩罚+20%。" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="斯特吉亚粮食与军队传承" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_0" text="与孤山贸易" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_1" text="强大的弓箭传统" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_2" text="廉价的军队集结(斯特吉亚)" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_3" text="粮食丰富的村庄" />
+
+    <string id="taom_faction_kingdom_of_dale_su_0_desc" text="巴德传承的弓箭手。" />
+
+    <string id="taom_faction_kingdom_of_dale_su_0_name" text="黑箭游侠" />
+
+    <string id="taom_faction_kingdom_of_dale_su_1_desc" text="长湖镇矛兵。" />
+
+    <string id="taom_faction_kingdom_of_dale_su_1_name" text="河谷湖卫" />
+
+    <string id="taom_faction_kingdom_of_dale_su_2_desc" text="装备矮人盔甲的河谷战线。" />
+
+    <string id="taom_faction_kingdom_of_dale_su_2_name" text="孤山训练的铁匠战士" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_0" text="巴德的传承" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_1" text="与孤山贸易" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_2" text="长湖镇联盟" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_3" text="谷地商人" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_0" text="领土狭小" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_1" text="受东方人威胁" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_2" text="斯特吉亚王国决策惩罚" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_desc" text="位于罗温尼安海西北岸的葡萄酒种植王国多温尼安。一个繁荣的贸易王国,夹在自由民族和东方之间。" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_name" text="多温尼安王国" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_0" text="著名的葡萄园" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_1" text="贸易枢纽" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_2" text="边境王国" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_0" text="守备军薪资-25%(矮人守备军)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_1" text="锻造能量消耗-30%(大师铁匠)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_2" text="雪地行军速度+10%(山地子民)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_3" text="村庄产出+10%(矮人工业)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_4" text="队伍士气+5(矮人顽强)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_5" text="每日定居点忠诚度+1(矮人荣誉)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_6" text="建筑建造速度-15%(矮人完美主义)" />
+
+    <string id="taom_faction_kingdom_of_erebor_desc" text="孤山已被收复。大师铁匠将锻造能量消耗降低30%;矮人荣誉每日增加忠诚度;矮人顽强使士气坚不可摧。筑墙虽缓——但此墙必将屹立至山崩地裂之时。" />
+
+    <string id="taom_faction_kingdom_of_erebor_name" text="埃雷博王国" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_0_desc" text="锻造能量消耗-30%——矮人熔炉的效率加倍。" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_0_name" text="大师铁匠" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_1_desc" text="守备军薪资-25%,每日定居点忠诚度+1。" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_1_name" text="矮人守备军" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_2_desc" text="队伍士气+5,村庄产出+10%——矮人永不屈服。" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_2_name" text="矮人顽强" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_0" text="卓越的护甲与武器" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_1" text="富庶且自给自足" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_2" text="忠诚而纪律严明的守备军" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_3" text="大师级锻造经济" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_0_desc" text="精锐矮人重装步兵。" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_0_name" text="埃雷博铁卫" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_1_desc" text="钢弩射手阵列。" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_1_name" text="铁丘陵弩手" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_2_desc" text="身经百战的斧术大师。" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_2_name" text="阿扎努比扎尔老兵" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_0" text="山下王国" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_1" text="大师工匠" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_2" text="矮人战斧" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_3" text="铁丘陵同族" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_0" text="矮人完美主义使建墙速度减慢" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_1" text="无骑兵可用" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_2" text="战时盟友稀少" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_desc" text="蓝山的矮人宅邸,都灵子民的祖传大厅。在埃雷博沦陷后,许多矮人在索林远征之前曾在此避难。" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_name" text="伊瑞德隆王国" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_0" text="蓝山大厅" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_1" text="都灵子民" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_2" text="流亡矮人" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_3" text="采矿与锻造" />
+
+    <string id="taom_faction_kingdom_of_ered_mithrin_desc" text="伊瑞德米斯林王国。" />
+
+    <string id="taom_faction_kingdom_of_ered_mithrin_name" text="伊瑞德米斯林王国" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_0" text="+35% 军队影响力奖励(精灵智慧)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_1" text="+20% 村庄人口增长(最后的安居之所)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_2" text="+10% 森林中队伍速度(林地优雅)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_3" text="-15% 队伍食物消耗(精灵节俭)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_4" text="每天 +0.5 定居点忠诚度" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_5" text="+25% 军队影响力消耗(精灵骄傲)" />
+
+    <string id="taom_faction_kingdom_of_imladris_desc" text="埃尔隆德的隐秘山谷,智者的庇护所。精灵智慧以极少的影响力成本团结军队;最后的安居之所促进每个村庄的人口增长。精灵骄傲仍主宰着每次议会——每一把诺多剑刃都无可替代。" />
+
+    <string id="taom_faction_kingdom_of_imladris_name" text="瑞文戴尔王国" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_0_desc" text="军队成功时获得 +35% 影响力——智者知晓如何领导。" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_0_name" text="精灵智慧" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_1_desc" text="+20% 村庄人口增长以及 -15% 队伍食物消耗。" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_1_name" text="最后的安居之所" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_2_desc" text="+10% 森林中队伍速度——瑞文戴尔的树木为其族人让路。" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_2_name" text="林地优雅" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_0" text="传奇的精锐战士" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_1" text="人口丰富的村庄" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_2" text="森林掌控" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_3" text="智慧议会团结军队" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_0_desc" text="传奇的第一纪元老兵。" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_0_name" text="诺多剑术大师" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_1_desc" text="重装精灵守卫。" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_1_name" text="瑞文戴尔哨兵" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_2_desc" text="诺多重骑兵。" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_2_name" text="瑞文戴尔枪骑兵" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_0" text="埃尔隆德领主的庇护所" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_1" text="智者议会" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_2" text="半精灵遗产" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_3" text="隐秘山谷" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_0" text="精灵骄傲提高影响力消耗" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_1" text="逝去的民族——补充稀少" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_2" text="无法远离山谷扩张" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="+10% 森林中队伍速度(林地王国)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_1" text="+25% 民兵老兵几率(西尔凡守卫)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_2" text="+3 队伍士气(林地联结)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_3" text="-15% 队伍食物消耗(林地供给)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_4" text="-20% 村庄人口增长(森林隔绝)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_desc" text="瑟兰督伊在幽暗密林北部的林地王国。西尔凡弓箭手和老兵民兵守卫着大森林,抵御蜘蛛、兽人和阴影。林地供给保持补给轻便;林地联结保持士气高昂。森林隔绝减缓增长。" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_name" text="密林王国" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_0_desc" text="+10% 森林中队伍速度以及 -15% 食物消耗。" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_0_name" text="林地王国" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_1_desc" text="民兵新兵有+25%几率以老兵身份抵达。" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_1_name" text="西尔凡守卫" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_2_desc" text="+3队伍士气——西尔凡精灵伴着歌声行军。" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_2_name" text="林地纽带" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_0" text="至高无上的森林箭术" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_1" text="老练的民兵坚守阵地" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_2" text="自给自足的节俭军队" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_3" text="森林战斗属于幽暗密林" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_0_desc" text="精英森林弓箭手。" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_0_name" text="幽暗密林哨兵" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_1_desc" text="长矛森林步兵。" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_1_name" text="西尔凡矛卫" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_2_desc" text="迅如闪电的轻装步兵。" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_2_name" text="木精灵斥候" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_0" text="瑟兰迪尔国王的领地" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_1" text="林地弓箭手" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_2" text="西尔凡守卫" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_3" text="森林要塞" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_0" text="森林孤立减缓繁衍速度" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_1" text="人数稀少——每个战士都至关重要" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_2" text="孤立主义外交" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_0" text="森林中队伍速度+10%(金色森林)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_1" text="守军工资-20%(罗瑞安守卫)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_2" text="队伍食物消耗-15%(兰巴斯面包)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_3" text="队伍士气+3(精灵和谐)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_4" text="每日定居点忠诚度+0.5(精灵恩典)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_5" text="建筑建造速度-10%(永恒工艺)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_desc" text="金色森林,凯兰崔尔夫人与凯勒鹏领主的领地。罗瑞安守卫以低成本守护梅隆树林;兰巴斯面包维持每次行军;精灵和谐保持士气不可动摇。永恒工艺意味着每次变革都很缓慢。" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_name" text="罗斯洛立安王国" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_0_desc" text="森林中队伍速度+10%,守军工资-20%。" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_0_name" text="南雅之力" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_1_desc" text="队伍食物消耗-15%——一口就能支撑一个精灵行军一天。" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_1_name" text="兰巴斯面包" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_2_desc" text="队伍士气+3,每个定居点每日忠诚度+0.5。" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_2_name" text="精灵和谐" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_0" text="南雅的魔法保护" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_1" text="精英长途行军军队" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_2" text="节俭的补给线" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_3" text="廉价且忠诚的守军" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_0_desc" text="精锐精灵守卫者。" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_0_name" text="加拉德林护卫" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_1_desc" text="奈斯的传奇射手。" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_1_name" text="罗瑞恩弓箭大师" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_2_desc" text="金色森林的重装精灵守护者。" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_2_name" text="银色哨兵" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_0" text="凯兰崔尔夫人" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_1" text="南雅之戒" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_2" text="金色马隆树" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_3" text="罗瑞恩守望者" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_0" text="永恒工艺减缓扩张" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_1" text="微小的常备军" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_2" text="衰退之力——无法增长" />
+
+    <string id="taom_faction_kingdom_of_moria_desc" text="摩瑞亚王国。" />
+
+    <string id="taom_faction_kingdom_of_moria_name" text="摩瑞亚王国" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_desc" text="幽暗密林北部地区的精灵王国,木精灵在此守护着他们古老的森林,抵御着从南方蔓延而来的黑暗。" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_name" text="奈尔多瑞斯王国" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_0" text="木精灵" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_1" text="森林守护者" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_2" text="瑟兰督伊的族人" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_desc" text="鲁道尔的荒野丘陵地区,阿诺尔继承王国中最东边的一个。曾受到安格玛的影响,其山地民为巫王效力。" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_name" text="鲁道尔王国" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_0" text="安格玛的仆从" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_1" text="野蛮山地民" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_2" text="陷落王国" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_0" text="骑兵招募成本-15%(马王传承)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_1" text="骑兵升级成本-15%(马王传承)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_2" text="骑兵部队薪资-15%(骠骑兵团)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_3" text="在平原上队伍速度+10%(平原骑士)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_4" text="队伍士气+5(骑士精神)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_5" text="定居点忠诚度每日+0.5(马王情谊)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_6" text="步兵超过50%时队伍速度-10%(依赖骑兵)" />
+
+    <string id="taom_faction_kingdom_of_rohan_desc" text="马王的骠骑国。马王传承使每个骑兵招募和升级都更便宜;骠骑兵团削减骑兵薪资;马王情谊以忠诚凝聚骠骑国。依赖骑兵——步兵过多的队伍会减速至爬行。" />
+
+    <string id="taom_faction_kingdom_of_rohan_name" text="洛汗王国" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_0_desc" text="招募和升级骑兵部队成本-15%——骠骑国训练骑士成本低廉。" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_0_name" text="马王传承" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_1_desc" text="骑兵部队薪资-15%,在平原上队伍速度+10%。" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_1_name" text="骠骑兵团" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_2_desc" text="队伍士气+5,定居点忠诚度每日+0.5。" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_2_name" text="马王情谊" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_0" text="中土世界最廉价的骑兵" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_1" text="平原上最快的军队" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_2" text="忠诚的骠骑国与高昂的士气" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_3" text="与刚铎的强大同盟" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_0_desc" text="国王的精锐重装骑兵。" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_0_name" text="洛汗皇家卫队" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_1_desc" text="中线长矛骑兵。" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_1_name" text="洛汗骑士" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_2_desc" text="训练有素的平原弓手。" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_2_name" text="西谷徒步弓箭手" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_0" text="马之王者" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_1" text="骠骑国的骑士" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_2" text="圣盔谷" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_3" text="与刚铎的同盟" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_0" text="依赖骑兵——步兵众多的部队会减速" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_1" text="步兵传统薄弱" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_2" text="当骠骑国出征时,圣盔谷暴露无遗" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_desc" text="南罗瓦尼安王国。" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_name" text="南罗瓦尼安王国" />
+
+    <string id="taom_faction_kingdom_of_zigalnara_desc" text="齐加尔纳拉王国。" />
+
+    <string id="taom_faction_kingdom_of_zigalnara_name" text="齐加尔纳拉王国" />
+
+    <string id="taom_faction_nurunkhizdin_desc" text="努伦基兹丁。" />
+
+    <string id="taom_faction_nurunkhizdin_name" text="努伦基兹丁" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_0" text="-50%军队影响力消耗(暗影指挥)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_1" text="+20%队伍规模上限(黑暗军团)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_2" text="+20%村庄志愿兵刷新速率(黑暗征召)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_3" text="+20%民兵老兵几率(黑暗征兵)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_4" text="多尔哥多城镇+1商人+1工匠+13帮派首领名士(共20名)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_5" text="+10%村庄名士数量(隐秘陋屋)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_6" text="+10%队伍食物消耗(贪食部落)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_7" text="-20%建筑建造速度(毁灭工事)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_desc" text="死灵法师在幽暗密林南部的据点。暗影指挥几乎不消耗影响力即可集结大军;黑暗征兵训练民兵老兵;暗影首领将唯一城镇的名士扩充至二十名。贪食部落如同杀戮般疯狂进食。" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_name" text="多尔哥多统治地" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_0_desc" text="军队影响力消耗降低50%——恐惧迫使服从。" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_0_name" text="暗影指挥" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_1_desc" text="+20%队伍规模和+20%志愿兵刷新速率。" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_1_name" text="黑暗军团" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_2_desc" text="多尔哥多唯一的城镇拥有20名名士——一个拥有15名帮派首领的招募中心。" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_2_name" text="暗影首领" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_0" text="庞大而廉价的军队" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_1" text="大规模招募中心" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_2" text="老兵民兵征召" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_3" text="森林战争与恐惧" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_0_desc" text="被暗影扭曲的重装步兵。" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_0_name" text="多尔哥多强兽人" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_1_desc" text="快速的梦魇骑兵。" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_1_name" text="暗影座狼骑士" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_2_desc" text="受巫术影响的副官。" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_2_name" text="黑色努门诺尔队长" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_0" text="死灵法师的巢穴" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_1" text="堕落森林" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_2" text="黑暗军团" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_3" text="暗影统帅" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_0" text="饥饿的部落消耗补给" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_1" text="工业衰败减缓城墙建设" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_2" text="被敌对森林包围" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_0" text="-40% 军队影响力消耗(兽人部落)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_1" text="+20% 队伍规模上限(山地蜂群)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_2" text="+25% 劫掠伤害(兽人掠夺者)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_3" text="+10% 雪地队伍速度(山地掠夺者)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_4" text="+20% 村庄志愿兵恢复速度" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_5" text="+15% 村庄粮食(掠夺储备)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_6" text="每城镇 +1 工匠 + 3 帮派首领名人(骨匠、苍白战帮酋长)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_7" text="+10% 村庄名人数量(骨营地)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_8" text="+10% 队伍工资(掠夺需求)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_desc" text="刚达巴德山,对波格血脉的苍白兽人而言神圣不可侵犯。庞大的战帮从高地隘口行进——兽人部落的纪律能以几乎零影响力集结大军,山地掠夺者统治雪原,掠夺需求确保每个军阀都有俸禄。" />
+
+    <string id="taom_faction_overlordship_of_gundabad_name" text="刚达巴德霸权" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_0_desc" text="军队影响力消耗减少40%——恐惧迫使服从。" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_0_name" text="兽人部落" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_1_desc" text="+20% 队伍规模上限,雪地上 +10% 队伍速度。" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_1_name" text="山地蜂群" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_2_desc" text="每城镇 +3 帮派首领和 +1 工匠名人——招募因掠夺者而激增。" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_2_name" text="苍白战帮酋长" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_0" text="廉价山地部落" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_1" text="雪地行军机动性" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_2" text="劫掠经济保持粮仓充足" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_3" text="大量军阀随时准备出征" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_0_desc" text="波格的精锐重装战线。" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_0_name" text="苍白兽人勇士" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_1_desc" text="毁灭性的攻城巨兽。" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_1_name" text="刚达巴德战争巨魔" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_2_desc" text="快速骚扰骑兵。" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_2_name" text="座狼游骑兵" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_0" text="刚达巴德山" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_1" text="北方兽人之都" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_2" text="波格的苍白兽人" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_3" text="失落的矮人圣地" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_0" text="掠夺需求使国库紧张" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_1" text="与自由民族普遍敌对" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_2" text="矮人和精灵憎恨苍白兽人" />
+
+    <string id="taom_faction_remnants_of_angmar_desc" text="极北方的巫王安格马的恐怖王国。巫王从他的卡恩督姆要塞出发,对阿尔诺的残余势力发动战争。" />
+
+    <string id="taom_faction_remnants_of_angmar_name" text="安格马残余势力" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_0" text="巫王" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_1" text="卡恩督姆要塞" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_2" text="巫术与恐惧" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_3" text="阿尔诺的毁灭者" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_0" text="在平原上队伍速度+10%(原野之民)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_1" text="队伍规模上限+2.5%(常备军)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_2" text="守备军薪资-20%(塔楼卫队)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_3" text="军队影响力奖励+30%(刚铎纪律)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_4" text="队伍士气+5(刚铎决心)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_5" text="每日定居点忠诚度+1(塔楼卫队纪律)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_6" text="村庄炉边增长-15%(战争耗竭之地)" />
+
+    <string id="taom_faction_stewardship_of_gondor_desc" text="南方登丹人的最后堡垒。塔楼卫队坚守阵线,刚铎纪律以低成本集结军队,原野之民在平原上行军。战争耗竭之地发展缓慢——但刚铎屹立不倒。" />
+
+    <string id="taom_faction_stewardship_of_gondor_name" text="刚铎摄政王国" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_0_desc" text="守备军薪资-20%,每日定居点忠诚度+1。" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_0_name" text="塔楼卫队纪律" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_1_desc" text="队伍士气+5,成功时军队影响力奖励+30%。" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_1_name" text="刚铎决心" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_2_desc" text="在平原上队伍速度+10%,队伍规模+2.5%——帕兰诺平原是开阔地带。" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_2_name" text="原野之民" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_0" text="兵种多样化均衡" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_1" text="高士气和忠诚度" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_2" text="纪律严明的守备军" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_3" text="影响力丰富的指挥" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_0_desc" text="米那斯提力斯的精锐重装步兵。" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_0_name" text="城堡卫队" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_1_desc" text="多尔安罗斯的重骑兵。" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_1_name" text="天鹅骑士" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_2_desc" text="登丹人侦察弓手。" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_2_name" text="伊西力安游侠" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_0" text="登丹人血统" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_1" text="塔楼卫队" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_2" text="刚铎白树" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_3" text="宰相统治" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_0" text="战火消耗的土地发展缓慢" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_1" text="需要防御的边境众多" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_2" text="精英部队受限于特定地区" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_desc" text="一个由来自东部山脉的野蛮半兽人部落统治的地区。他们是凶猛的掠夺者,在坎德和哈拉德之间的边境地带制造恐怖。" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_name" text="埃雷德·格瓦尔要塞" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_trait_0" text="半兽人战帮" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_trait_1" text="山地掠夺者" />
+
+    <string id="taom_faction_stronghold_of_narager_desc" text="一个被半兽人部落占领的荒凉东部地区。这些野蛮的帮派袭击边境地带,并充当黑暗势力的斥候。" />
+
+    <string id="taom_faction_stronghold_of_narager_name" text="纳拉格要塞" />
+
+    <string id="taom_faction_stronghold_of_narager_trait_0" text="半兽人掠夺队" />
+
+    <string id="taom_faction_stronghold_of_narager_trait_1" text="东方荒原" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_0" text="沙漠中队伍速度+10%(太阳之子)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_1" text="队伍规模上限+5%(哈拉德林战帮)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="商队建造成本-30%,贸易惩罚-10%(阿塞莱商人,继承)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="沙漠中无速度惩罚(阿塞莱沙漠,继承)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="每日部队工资+5%(阿塞莱工资,继承)" />
+
+    <string id="taom_faction_taskralan_of_harwan_desc" text="哈尔万的哈拉德林人,太阳之子。继承了阿塞莱的沙漠适应力;TAOM的太阳之子在沙漠中增加+10%队伍速度;哈拉德林战帮在继承的商队经济基础上增加队伍规模。穆马基尔统治着南方平原。" />
+
+    <string id="taom_faction_taskralan_of_harwan_name" text="哈尔万塔斯克拉兰" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_0_desc" text="沙漠中队伍速度+10% —— 生于炙热沙漠。" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_0_name" text="太阳之子" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_1_desc" text="队伍规模上限+5% —— 部落战帮响应魔多的召唤,集结在一起。" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_1_name" text="哈拉德林战帮" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="继承阿塞莱商人(商队-30%,贸易惩罚-10%)和阿塞莱沙漠(沙漠中无速度惩罚);每日工资+5%。" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="阿塞莱沙漠血统" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_0" text="穆马基尔战兽" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_1" text="沙漠机动性" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_2" text="更大的战帮" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_3" text="阿塞莱商队传统" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_0_desc" text="毁灭性的战兽。" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_0_name" text="穆马基尔战塔" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_1_desc" text="南方深处的长弓精锐。" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_1_name" text="哈拉德马胡德弓手" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_2_desc" text="轻型游击骑兵。" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_2_name" text="烈日骑兵" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_0" text="穆马基尔战兽" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_1" text="沙漠战士" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_2" text="日晒古铜肤色" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_3" text="南方联盟" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_0" text="寒冷气候惩罚" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_1" text="部落内斗" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_2" text="铁匠和城墙稀少" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="阿塞莱借用+5%军队工资" />
+
+    <string id="taom_faction_taskralan_of_shaghana_desc" text="沙加纳的塔斯克兰。" />
+
+    <string id="taom_faction_taskralan_of_shaghana_name" text="沙加纳的塔斯克兰" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_desc" text="位于阿尔诺和刚铎之间的伊内德威斯荒野。这里是散居氏族的家园,他们不服从任何国王,以狩猎和放牧为生。" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_name" text="伊内德威斯野人" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_0" text="散居氏族" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_1" text="野性猎人" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_2" text="无中央权威" />
+
   </strings>
 
 </base>

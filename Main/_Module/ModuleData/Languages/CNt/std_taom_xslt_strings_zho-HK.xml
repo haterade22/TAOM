@@ -28,7 +28,7 @@
     <string id="TAOM_dale_desc" text="在奔流河的水域與孤山的陰影交會之處,坐落著河谷鎮。這座人類之城在五軍之戰後從廢墟中重建。河谷鎮曾是音樂與歡樂之地,貿易繁榮,市場大廳金碧輝煌,在伊魯伯的庇護下繁榮昌盛。其商人駕駛快船順著凱爾督因河而下,街道上迴盪著笑聲,人民享受著和平。但當惡龍降臨時,和平被粉碎。來自北方的飛翼死神史矛革降臨伊魯伯,帶來火焰與憤怒,河谷鎮首當其衝。城市燃燒,人民逃亡,近兩個世紀以來,那些驕傲的圓頂塔樓靜默而破碎,成為悲傷的紀念碑。然而毀滅並非河谷鎮故事的終結。隨著惡龍之死,弓箭手巴德再次舉起旗幟,召喚他的人民回家。河谷鎮從灰燼與石塊中再次崛起,不僅恢復了往昔,更加偉大。在國王巴德及其子貝恩的統治下,城市再次繁榮,城牆堅固,人民驕傲,目光永遠警惕。河谷鎮的人民數量不多,也不具備古老的魔法,但他們堅定而忠誠。" />
     <string id="TAOM_harad" text="哈拉德" />
     <string id="TAOM_harad_short" text="哈拉德" />
-    <string id="TAOM_harad_title" text="Taskralan of Harwan" />
+    <string id="TAOM_harad_title" text="哈爾萬的塔斯克拉蘭" />
     <string id="TAOM_harad_ruler" text="塔斯克拉爾" />
     <string id="TAOM_harad_desc" text="哈拉德是剛鐸以南的一個廣闊而多樣的地區,涵蓋了乾旱的沙漠、茂密的叢林和肥沃的綠洲。其地理環境與人民一樣多樣,廣袤的沙丘讓位於濃密的森林和生機勃勃的河流。哈拉德的歷史深深植根於古老的傳說中,宏偉的城市和堡壘點綴著這片土地,由那些遺產迴響於時代的統治者們建造。哈拉德威斯大沙漠將其北部邊境與心臟地帶分隔開來,而其南部海岸則充滿貿易和海盜活動。在索倫的旗幟下團結起來,哈拉德的眾多部落和王國將其根深蒂固的傳統投入戰爭努力,將這片充滿活力的土地轉變為文化與衝突的強大力量。" />
     <string id="TAOM_rohan" text="洛汗" />
@@ -1409,7 +1409,7 @@
     <string id="TAOM_hero_6_19" text="瓦克赫拉爾坦·庫恩多拉是盧斯坎的兄弟,統領騎兵斥候。" />
     <string id="TAOM_hero_6_19_1" text="索哈泰是瓦克赫拉爾坦的妻子。" />
     <string id="TAOM_hero_6_19_2" text="科爾特是瓦克拉爾坦斥候隊的繼承人。" />
-    <string id="TAOM_hero_6_20" text="Khurubra Mashakian commands the northern tribes of Rhun." />
+    <string id="TAOM_hero_6_20" text="庫魯布拉·瑪沙基安統率著魯恩北方的部族。" />
     <string id="TAOM_hero_6_20_1" text="吉古爾是庫魯布拉的妻子。" />
     <string id="TAOM_hero_K8_u" text="一位經驗豐富的戰士,為北方酋長提供建議。" />
     <string id="TAOM_hero_6_21" text="莫盧克·伊諾里亞統領著一個強大的騎兵氏族。" />

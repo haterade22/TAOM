@@ -1282,20 +1282,20 @@
     <string id="taom_dm_t3_b_p3" text="+75 de vida máxima." />
     <string id="taom_dm_t3_b_p4" text="+15% de alcance de detecção do grupo." />
     <string id="taom_dale_outrider_root_desc" text="Corrida da Estrada Comercial concede +5% de dano corpo a corpo e seu cavalo acelera." />
-    <string id="taom_dor_t1_a_key" text="Trade Road Sprint radius expanded, sweeping wider formations." />
-    <string id="taom_dor_t1_a_p1" text="+8% melee damage." />
-    <string id="taom_dor_t1_a_p2" text="+7% horse charge damage." />
-    <string id="taom_dor_t1_a_p3" text="+7% swing speed." />
-    <string id="taom_dor_t1_a_p4" text="+5% party movement speed." />
-    <string id="taom_dor_t1_b_key" text="Trade Road Sprint duration extended, maintaining momentum." />
-    <string id="taom_dor_t1_b_p1" text="+30 horse health." />
-    <string id="taom_dor_t1_b_p2" text="+25 max health." />
-    <string id="taom_dor_t1_b_p3" text="-5% troop wages." />
-    <string id="taom_dor_t1_b_p4" text="+5% resistance." />
-    <string id="taom_dor_t2_a_key" text="Trade Road Sprint charge reduced, swifter activation." />
-    <string id="taom_dor_t2_a_p1" text="+10% party movement speed." />
-    <string id="taom_dor_t2_a_p2" text="-10% troop wages." />
-    <string id="taom_dor_t2_a_p3" text="+10% troop morale." />
+    <string id="taom_dor_t1_a_key" text="Raio do Arranco da Estrada Comercial expandido, varrendo formações mais amplas." />
+    <string id="taom_dor_t1_a_p1" text="+8% de dano corpo a corpo." />
+    <string id="taom_dor_t1_a_p2" text="+7% de dano de carga de cavalo." />
+    <string id="taom_dor_t1_a_p3" text="+7% de velocidade de golpe." />
+    <string id="taom_dor_t1_a_p4" text="+5% de velocidade de movimento do grupo." />
+    <string id="taom_dor_t1_b_key" text="Duração do Arranco da Estrada Comercial estendida, mantendo o ímpeto." />
+    <string id="taom_dor_t1_b_p1" text="+30 de vida do cavalo." />
+    <string id="taom_dor_t1_b_p2" text="+25 de vida máxima." />
+    <string id="taom_dor_t1_b_p3" text="-5% de salários das tropas." />
+    <string id="taom_dor_t1_b_p4" text="+5% de resistência." />
+    <string id="taom_dor_t2_a_key" text="Recarga do Arranco da Estrada Comercial reduzida, ativação mais rápida." />
+    <string id="taom_dor_t2_a_p1" text="+10% de velocidade de movimento do grupo." />
+    <string id="taom_dor_t2_a_p2" text="-10% de salários das tropas." />
+    <string id="taom_dor_t2_a_p3" text="+10% de moral das tropas." />
     <string id="taom_dor_t2_a_p4" text="+10% de ganho de renome em batalha." />
     <string id="taom_dor_t2_b_key" text="Corrida da Estrada Comercial aumenta a resiliência da montaria enquanto ativa." />
     <string id="taom_dor_t2_b_p1" text="+12% de dano corpo a corpo." />
@@ -1416,32 +1416,32 @@
     <string id="taom_bd_t1_b_p2" text="+5% de moral das tropas." />
     <string id="taom_bd_t1_b_p3" text="+5% de resistência das tropas." />
     <string id="taom_bd_t1_b_p4" text="+5% de regeneração das tropas." />
-    <string id="taom_bd_t2_a_key" text="Starlight Weave charge reduced, activating more frequently." />
-    <string id="taom_bd_t2_a_p1" text="+10% troop morale." />
-    <string id="taom_bd_t2_a_p2" text="+2 party size." />
-    <string id="taom_bd_t2_a_p3" text="+10% battle renown gain." />
-    <string id="taom_bd_t2_a_p4" text="-10% troop wages." />
-    <string id="taom_bd_t2_b_key" text="Starlight Weave grants additional defensive buffs while active." />
-    <string id="taom_bd_t2_b_p1" text="+12% resistance." />
-    <string id="taom_bd_t2_b_p2" text="+60 max health." />
-    <string id="taom_bd_t2_b_p3" text="+10% troop resistance." />
-    <string id="taom_bd_t2_b_p4" text="+10% troop damage." />
-    <string id="taom_bd_t3_a_key" text="Starlight Weave radius greatly expanded, devastating power." />
-    <string id="taom_bd_t3_a_p1" text="+15% melee damage." />
-    <string id="taom_bd_t3_a_p2" text="+100 max health." />
-    <string id="taom_bd_t3_a_p3" text="+15% troop damage." />
-    <string id="taom_bd_t3_a_p4" text="+4 party size." />
-    <string id="taom_bd_t3_b_key" text="Starlight Weave charge greatly reduced, nearly always available." />
-    <string id="taom_bd_t3_b_p1" text="+18% resistance." />
-    <string id="taom_bd_t3_b_p2" text="+15% health regeneration." />
-    <string id="taom_bd_t3_b_p3" text="+20% troop morale." />
-    <string id="taom_bd_t3_b_p4" text="+15% troop regeneration." />
-    <string id="taom_elven_archer_root_desc" text="Elven Sight grants +5% ranged damage with centuries of practice." />
-    <string id="taom_elar_t1_a_key" text="Elven Sight radius increased, covering wider kill zones." />
-    <string id="taom_elar_t1_a_p1" text="+8% ranged damage." />
-    <string id="taom_elar_t1_a_p2" text="+5% armor penetration." />
-    <string id="taom_elar_t1_a_p3" text="+7% movement speed." />
-    <string id="taom_elar_t1_a_p4" text="+5% battle renown gain." />
+    <string id="taom_bd_t2_a_key" text="Recarga do Tecer da Luz Estelar reduzida, ativando com mais frequência." />
+    <string id="taom_bd_t2_a_p1" text="+10% de moral das tropas." />
+    <string id="taom_bd_t2_a_p2" text="+2 de tamanho do grupo." />
+    <string id="taom_bd_t2_a_p3" text="+10% de ganho de renome em batalha." />
+    <string id="taom_bd_t2_a_p4" text="-10% de salários das tropas." />
+    <string id="taom_bd_t2_b_key" text="Tecer da Luz Estelar concede bônus defensivos adicionais enquanto ativo." />
+    <string id="taom_bd_t2_b_p1" text="+12% de resistência." />
+    <string id="taom_bd_t2_b_p2" text="+60 de vida máxima." />
+    <string id="taom_bd_t2_b_p3" text="+10% de resistência das tropas." />
+    <string id="taom_bd_t2_b_p4" text="+10% de dano das tropas." />
+    <string id="taom_bd_t3_a_key" text="Raio do Tecer da Luz Estelar bastante expandido, poder devastador." />
+    <string id="taom_bd_t3_a_p1" text="+15% de dano corpo a corpo." />
+    <string id="taom_bd_t3_a_p2" text="+100 de vida máxima." />
+    <string id="taom_bd_t3_a_p3" text="+15% de dano das tropas." />
+    <string id="taom_bd_t3_a_p4" text="+4 de tamanho do grupo." />
+    <string id="taom_bd_t3_b_key" text="Recarga de Trama da Luz Estelar extremamente reduzida, quase sempre disponível." />
+    <string id="taom_bd_t3_b_p1" text="+18% de resistência." />
+    <string id="taom_bd_t3_b_p2" text="+15% de regeneração de vida." />
+    <string id="taom_bd_t3_b_p3" text="+20% de moral das tropas." />
+    <string id="taom_bd_t3_b_p4" text="+15% de regeneração das tropas." />
+    <string id="taom_elven_archer_root_desc" text="Visão Élfica concede +5% de dano à distância com séculos de prática." />
+    <string id="taom_elar_t1_a_key" text="Raio da Visão Élfica aumentado, cobrindo zonas de abate mais amplas." />
+    <string id="taom_elar_t1_a_p1" text="+8% de dano à distância." />
+    <string id="taom_elar_t1_a_p2" text="+5% de penetração de armadura." />
+    <string id="taom_elar_t1_a_p3" text="+7% de velocidade de movimento." />
+    <string id="taom_elar_t1_a_p4" text="+5% de ganho de renome em batalha." />
     <string id="taom_elar_t1_b_key" text="Duração da Visão Élfica estendida, barragem sustentada." />
     <string id="taom_elar_t1_b_p1" text="+5% de resistência." />
     <string id="taom_elar_t1_b_p2" text="+25 de vida máxima." />

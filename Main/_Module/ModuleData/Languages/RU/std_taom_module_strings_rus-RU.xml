@@ -652,6 +652,74 @@
 
     <string id="taom_str_neutral_term_for_culture.erebor" text="Гномы Эребора" />
 
+    <string id="taom_str_faction_official.abanissa" text="лорд Дома" />
+
+    <string id="taom_str_faction_official.abanissa_f" text="леди Дома" />
+
+    <string id="taom_str_faction_ruler.abanissa" text="Чаджафан" />
+
+    <string id="taom_str_faction_ruler.abanissa_f" text="Чаджафан" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.abanissa" text="Чаджафан, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.abanissa" text="Чаджафан {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.abanissa" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.abanissa" text="абаниссанский" />
+
+    <string id="taom_str_short_term_for_faction.abanissa" text="абаниссанец" />
+
+    <string id="taom_str_faction_formal_name_for_culture.abanissa" text="Владычество Абаниссы" />
+
+    <string id="taom_str_faction_informal_name_for_culture.abanissa" text="Абанисса" />
+
+    <string id="taom_str_neutral_term_for_culture.abanissa" text="харадрим Абаниссы" />
+
+    <string id="taom_str_culture_description.abanissa" text="Абанисса лежит в глубоком южном Хараде, в краю влажных джунглей и древних каменных династий. Великие Дома Абаниссы командуют грозными боевыми тварями и дисциплинированными армиями копейщиков, их власть не подчиняется никому, кроме самого Саурона. Под знаменами династий они выступают в поход, внушая одновременно уважение и ужас по всем южным землям." />
+
+    <string id="taom_str_culture_rich_name.abanissa" text="абаниссанец" />
+
+    <string id="taom_str_adjective_for_culture.abanissa" text="абаниссанский" />
+
+    <string id="taom_str_player_father_name.abanissa" text="Сохраб" />
+
+    <string id="taom_str_player_mother_name.abanissa" text="Нилюфар" />
+
+    <string id="taom_str_faction_official.shaghana" text="вождь клана" />
+
+    <string id="taom_str_faction_official.shaghana_f" text="леди клана" />
+
+    <string id="taom_str_faction_ruler.shaghana" text="Таскрал" />
+
+    <string id="taom_str_faction_ruler.shaghana_f" text="Таскрал" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.shaghana" text="Таскрал, {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.shaghana" text="Таскрал {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.shaghana" text="{?RULER.GENDER}Леди{?}Лорд{\?} {RULER.NAME}" />
+
+    <string id="taom_str_adjective_for_faction.shaghana" text="шаганский" />
+
+    <string id="taom_str_short_term_for_faction.shaghana" text="шаганец" />
+
+    <string id="taom_str_faction_formal_name_for_culture.shaghana" text="Племена Шаганы" />
+
+    <string id="taom_str_faction_informal_name_for_culture.shaghana" text="Шагана" />
+
+    <string id="taom_str_neutral_term_for_culture.shaghana" text="харадрим Шаганы" />
+
+    <string id="taom_str_culture_description.shaghana" text="Шагана — это восточная окраина Харада, земля выжженных солнцем степей и древних крепостей. Девять её племенных кланов — свирепые наездники и налётчики, связанные клятвой и кровью, внушающие страх всем, кто осмеливается им противостоять. Они подчиняются своему Таскралу, а через него — воле Саурона." />
+
+    <string id="taom_str_culture_rich_name.shaghana" text="шаганец" />
+
+    <string id="taom_str_adjective_for_culture.shaghana" text="шаганский" />
+
+    <string id="taom_str_player_father_name.shaghana" text="Заркан" />
+
+    <string id="taom_str_player_mother_name.shaghana" text="Ханса" />
+
     <string id="0aXG8dvJ" text="Заключить мир с {KINGDOM_NAME}. Дань выплачиваться не будет." />
 
     <string id="0CsbbwtN" text="Призвать {CALLED_KINGDOM} к войне против {KINGDOM_TO_CALL_TO_WAR_AGAINST}" />
@@ -1284,11 +1352,2394 @@
 
     <string id="taom_career_free_points" text="Свободных очков: {COUNT}" />
 
+    <string id="taom_career_tier_requirement" text="Требуется уровень {LEVEL}" />
+
+    <string id="taom_career_rank1_avanc_luth_raider" text="Раскрашенный Разоритель" />
+
+    <string id="taom_career_rank2_avanc_luth_raider" text="Клановый Берсерк" />
+
+    <string id="taom_career_rank3_avanc_luth_raider" text="Военный Вождь Аванк-лут" />
+
+    <string id="taom_career_rank1_balchoth_kan" text="Балхотский Всадник" />
+
+    <string id="taom_career_rank2_balchoth_kan" text="Балхотский Капитан-Колесничий" />
+
+    <string id="taom_career_rank3_balchoth_kan" text="Балхотский Военачальник-Кан" />
+
+    <string id="taom_career_rank1_black_uruk_captain" text="Урук-Воин" />
+
+    <string id="taom_career_rank2_black_uruk_captain" text="Чёрный Урук" />
+
+    <string id="taom_career_rank3_black_uruk_captain" text="Капитан Красного Ока" />
+
+    <string id="taom_career_rank1_blade_dancer" text="Ñолдорский Мечник" />
+
+    <string id="taom_career_rank2_blade_dancer" text="Клинок Золотого Цветка" />
+
+    <string id="taom_career_rank3_blade_dancer" text="Мастер Клинка Имладриса" />
+
+    <string id="taom_career_rank1_blademaster_of_ren" text="Клинок Рена" />
+
+    <string id="taom_career_rank2_blademaster_of_ren" text="Присягнувший Мастер Клинка" />
+
+    <string id="taom_career_rank3_blademaster_of_ren" text="Кан Багрового Лезвия" />
+
+    <string id="taom_career_rank1_captain_of_osgiliath" text="Охтар Переправы" />
+
+    <string id="taom_career_rank2_captain_of_osgiliath" text="Страж Осгилиата" />
+
+    <string id="taom_career_rank3_captain_of_osgiliath" text="Капитан Осгилиата" />
+
+    <string id="taom_career_rank1_cave_troll_master" text="Погонщик Ям" />
+
+    <string id="taom_career_rank2_cave_troll_master" text="Троллегон Гундабада" />
+
+    <string id="taom_career_rank3_cave_troll_master" text="Повелитель Сломленных Троллей" />
+
+    <string id="taom_career_rank1_chariot_warlord" text="Возничий Кос" />
+
+    <string id="taom_career_rank2_chariot_warlord" text="Колесничий Военачальник" />
+
+    <string id="taom_career_rank3_chariot_warlord" text="Вайнкан Кханда" />
+
+    <string id="taom_career_rank1_clanguard_rider" text="Клановый Дозорный" />
+
+    <string id="taom_career_rank2_clanguard_rider" text="Всадник под Знаменем Вепря" />
+
+    <string id="taom_career_rank3_clanguard_rider" text="Владыка Дикой Охоты" />
+
+    <string id="taom_career_rank1_codyan_legionaire" text="Кодианский Щитоносец" />
+
+    <string id="taom_career_rank2_codyan_legionaire" text="Кодианский Ламеллярный Ветеран" />
+
+    <string id="taom_career_rank3_codyan_legionaire" text="Железная Стена Руна" />
+
+    <string id="taom_career_rank1_corsair_boarder" text="Палубный Разоритель" />
+
+    <string id="taom_career_rank2_corsair_boarder" text="Корсар Гавани" />
+
+    <string id="taom_career_rank3_corsair_boarder" text="Чёрный Разоритель Умбара" />
+
+    <string id="taom_career_rank1_corsair_captain" text="Владыка Чёрного Флота" />
+
+    <string id="taom_career_rank2_corsair_captain" text="Капитан Кораблей" />
+
+    <string id="taom_career_rank3_corsair_captain" text="Лорд Умбара" />
+
+    <string id="taom_career_rank1_corsair_crossbow" text="Стрелок с Такелажа" />
+
+    <string id="taom_career_rank2_corsair_crossbow" text="Корсарский Снайпер" />
+
+    <string id="taom_career_rank3_corsair_crossbow" text="Разящий Толпы Флота" />
+
+    <string id="taom_career_rank1_crossbow_master" text="Кузнец Болтов" />
+
+    <string id="taom_career_rank2_crossbow_master" text="Мастер-Арбалетчик" />
+
+    <string id="taom_career_rank3_crossbow_master" text="Владыка Машин Железных Холмов" />
+
+    <string id="taom_career_rank1_dale_guardsman" text="Страж Врат Дэйла" />
+
+    <string id="taom_career_rank2_dale_guardsman" text="Щитоносец Гириона" />
+
+    <string id="taom_career_rank3_dale_guardsman" text="Рыцарь Дэйла" />
+
+    <string id="taom_career_rank1_dale_marksman" text="Лучник Эсгарота" />
+
+    <string id="taom_career_rank2_dale_marksman" text="Драконобоец" />
+
+    <string id="taom_career_rank3_dale_marksman" text="Носитель Чёрной Стрелы" />
+
+    <string id="taom_career_rank1_dale_outrider" text="Дорожный Всадник Дэйла" />
+
+    <string id="taom_career_rank2_dale_outrider" text="Страж Северного Тракта" />
+
+    <string id="taom_career_rank3_dale_outrider" text="Маршал Бардингов" />
+
+    <string id="taom_career_rank1_elk_rider" text="Лесной Конник" />
+
+    <string id="taom_career_rank2_elk_rider" text="Страж Лосей Лихолесья" />
+
+    <string id="taom_career_rank3_elk_rider" text="Рогатый Лорд Эрин Ласгален" />
+
+    <string id="taom_career_rank1_elven_archer" text="Лучник Нолдор" />
+
+    <string id="taom_career_rank2_elven_archer" text="Страж Небесной Дуги" />
+
+    <string id="taom_career_rank3_elven_archer" text="Хранитель Имладриса" />
+
+    <string id="taom_career_rank1_eotheod_windrider" text="Всадник Рохана" />
+
+    <string id="taom_career_rank2_eotheod_windrider" text="Капитан Эореда" />
+
+    <string id="taom_career_rank3_eotheod_windrider" text="Маршал Риддермарка" />
+
+    <string id="taom_career_rank1_fell_rider" text="Чёрный Всадник" />
+
+    <string id="taom_career_rank2_fell_rider" text="Всадник на Твари" />
+
+    <string id="taom_career_rank3_fell_rider" text="Тень Востока" />
+
+    <string id="taom_career_rank1_galadhrim_archer" text="Лучник Галадрим" />
+
+    <string id="taom_career_rank2_galadhrim_archer" text="Стрелок с Ветвей Меллорна" />
+
+    <string id="taom_career_rank3_galadhrim_archer" text="Мастер Лука Золотого Леса" />
+
+    <string id="taom_career_rank1_goblin_sniper" text="Скальный Лазутчик" />
+
+    <string id="taom_career_rank2_goblin_sniper" text="Преследователь Высокого Перевала" />
+
+    <string id="taom_career_rank3_goblin_sniper" text="Око Гундабада" />
+
+    <string id="taom_career_rank1_ironguard" text="Страж Глубин" />
+
+    <string id="taom_career_rank2_ironguard" text="Железный Страж Эребора" />
+
+    <string id="taom_career_rank3_ironguard" text="Стена Щитов Дьюрина" />
+
+    <string id="taom_career_rank1_knight_of_belfalas" text="Оруженосец Дол Амрота" />
+
+    <string id="taom_career_rank2_knight_of_belfalas" text="Рыцарь-Лебедь" />
+
+    <string id="taom_career_rank3_knight_of_belfalas" text="Рыцарь Серебряного Лебедя" />
+
+    <string id="taom_career_rank1_lokhas_drus_marksman" text="Лучник Лôкхас Дрûс" />
+
+    <string id="taom_career_rank2_lokhas_drus_marksman" text="Пробиватель Доспехов Лôкхас Дрûс" />
+
+    <string id="taom_career_rank3_lokhas_drus_marksman" text="Солнечнооперённая Смерть Востока" />
+
+    <string id="taom_career_rank1_mahud_beast_rider" text="Укротитель Зверей Махûд" />
+
+    <string id="taom_career_rank2_mahud_beast_rider" text="Погонщик Мûмака" />
+
+    <string id="taom_career_rank3_mahud_beast_rider" text="Военачальник Мûмаков" />
+
+    <string id="taom_career_rank1_marksman_of_aldburg" text="Лучник Восточной Марки" />
+
+    <string id="taom_career_rank2_marksman_of_aldburg" text="Стрелок Альдбурга" />
+
+    <string id="taom_career_rank3_marksman_of_aldburg" text="Стражник Стрел Марки" />
+
+    <string id="taom_career_rank1_mulkerhili_cultist" text="Поклявшийся Шёпоту" />
+
+    <string id="taom_career_rank2_mulkerhili_cultist" text="Голос Лугбûрза" />
+
+    <string id="taom_career_rank3_mulkerhili_cultist" text="Глашатай Недремлющего Ока" />
+
+    <string id="taom_career_rank1_necromancer_acolyte" text="Послушник Колдовства" />
+
+    <string id="taom_career_rank2_necromancer_acolyte" text="Ткач Чёрного Дыхания" />
+
+    <string id="taom_career_rank3_necromancer_acolyte" text="Владыка Дол Гулдура" />
+
+    <string id="taom_career_rank1_olog_hai_warchief" text="Боевой Тролль" />
+
+    <string id="taom_career_rank2_olog_hai_warchief" text="Олог-хай" />
+
+    <string id="taom_career_rank3_olog_hai_warchief" text="Военачальник Лугбûрза" />
+
+    <string id="taom_career_rank1_pezarsani_javelineer" text="Дротикометатель Пезарсани" />
+
+    <string id="taom_career_rank2_pezarsani_javelineer" text="Застрельщик с Метательными Копьями" />
+
+    <string id="taom_career_rank3_pezarsani_javelineer" text="Алый Мастер Копья" />
+
+    <string id="taom_career_rank1_ram_rider" text="Баранобоец" />
+
+    <string id="taom_career_rank2_ram_rider" text="Всадник на Козле" />
+
+    <string id="taom_career_rank3_ram_rider" text="Авангард Даина" />
+
+    <string id="taom_career_rank1_ranger_of_ithilien" text="Следопыт Итилиэна" />
+
+    <string id="taom_career_rank2_ranger_of_ithilien" text="Следопыт Итилиэна" />
+
+    <string id="taom_career_rank3_ranger_of_ithilien" text="Капитан Белого Отряда" />
+
+    <string id="taom_career_rank1_rivendell_knight" text="Охтар Имладриса" />
+
+    <string id="taom_career_rank2_rivendell_knight" text="Роквен Имладриса" />
+
+    <string id="taom_career_rank3_rivendell_knight" text="Рыцарь Золотого Цветка" />
+
+    <string id="taom_career_rank1_sentinel" text="Всадник Эгладила" />
+
+    <string id="taom_career_rank2_sentinel" text="Тирит Золотого Леса" />
+
+    <string id="taom_career_rank3_sentinel" text="Талион Карас Галадона" />
+
+    <string id="taom_career_rank1_shadow_walker" text="Лесной Охотник" />
+
+    <string id="taom_career_rank2_shadow_walker" text="Тень Таур-ну-Фуин" />
+
+    <string id="taom_career_rank3_shadow_walker" text="Гибель Пауков" />
+
+    <string id="taom_career_rank1_shadow_warrior" text="Раб Тьмы" />
+
+    <string id="taom_career_rank2_shadow_warrior" text="Слуга Дол Гулдура" />
+
+    <string id="taom_career_rank3_shadow_warrior" text="Чёрная Длань Некроманта" />
+
+    <string id="taom_career_rank1_silvan_archer" text="Лучник Зеленолесья" />
+
+    <string id="taom_career_rank2_silvan_archer" text="Лесной Стрелок" />
+
+    <string id="taom_career_rank3_silvan_archer" text="Лучник Лесного Короля" />
+
+    <string id="taom_career_rank1_snaga_rider" text="Снага" />
+
+    <string id="taom_career_rank2_snaga_rider" text="Дымный Налётчик" />
+
+    <string id="taom_career_rank3_snaga_rider" text="Тень Лугбурза" />
+
+    <string id="taom_career_rank1_steppe_bowmaster" text="Степной Разъездной" />
+
+    <string id="taom_career_rank2_steppe_bowmaster" text="Степной Мастер Лука" />
+
+    <string id="taom_career_rank3_steppe_bowmaster" text="Грозовой Лук Кан" />
+
+    <string id="taom_career_rank1_tribesman_of_jelut" text="Соплеменник Джелута" />
+
+    <string id="taom_career_rank2_tribesman_of_jelut" text="Налётчик Песчаной Бури" />
+
+    <string id="taom_career_rank3_tribesman_of_jelut" text="Вождь под Знаменем Змея" />
+
+    <string id="taom_career_rank1_uruk_berserker" text="Урук из Ямы" />
+
+    <string id="taom_career_rank2_uruk_berserker" text="Боевой Урук-хай" />
+
+    <string id="taom_career_rank3_uruk_berserker" text="Разоритель Белой Руки" />
+
+    <string id="taom_career_rank1_uruk_crossbow" text="Урук из Кузни" />
+
+    <string id="taom_career_rank2_uruk_crossbow" text="Стрелок Ортханка" />
+
+    <string id="taom_career_rank3_uruk_crossbow" text="Снайпер Белой Руки" />
+
+    <string id="taom_career_rank1_warden" text="Страж Опушки" />
+
+    <string id="taom_career_rank2_warden" text="Пограничный Страж Лориэна" />
+
+    <string id="taom_career_rank3_warden" text="Капитан Пограничных Стражей" />
+
+    <string id="taom_career_rank1_warg_pack_leader" text="Варгоездец Стаи" />
+
+    <string id="taom_career_rank2_warg_pack_leader" text="Свирепый Волчий Предводитель" />
+
+    <string id="taom_career_rank3_warg_pack_leader" text="Волчий Лорд Дикой Охоты" />
+
+    <string id="taom_career_rank1_warg_scout" text="Волчий Всадник" />
+
+    <string id="taom_career_rank2_warg_scout" text="Варг-разведчик Изенгарда" />
+
+    <string id="taom_career_rank3_warg_scout" text="Охотник Белой Руки" />
+
+    <string id="taom_career_rank1_watchman_of_stangard" text="Дозорный Стангарда" />
+
+    <string id="taom_career_rank2_watchman_of_stangard" text="Страж Брода Лимлайта" />
+
+    <string id="taom_career_rank3_watchman_of_stangard" text="Страж Восточной Марки" />
+
+    <string id="taom_career_rank1_wolfskin_hunter" text="Следопыт в Волчьей Шкуре" />
+
+    <string id="taom_career_rank2_wolfskin_hunter" text="Теневой Стрелок" />
+
+    <string id="taom_career_rank3_wolfskin_hunter" text="Серый Охотник Холмов" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t1_a" text="Берсерк Горного Клана" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t1_b" text="Клятвенный Метатель Топоров" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t2_a" text="Разоритель Кровного Долга" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t2_b" text="Горец Боевой Песни" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t3_a" text="Военный Вождь Аванк-лут" />
+
+    <string id="taom_career_grp_avanc_luth_raider_t3_b" text="Лорд Военного Войска" />
+
+    <string id="taom_career_grp_balchoth_kan_t1_a" text="Балхотский Всадник" />
+
+    <string id="taom_career_grp_balchoth_kan_t1_b" text="Бесстрашный Разъездной" />
+
+    <string id="taom_career_grp_balchoth_kan_t2_a" text="Возничий Рун" />
+
+    <string id="taom_career_grp_balchoth_kan_t2_b" text="Железный Всадник" />
+
+    <string id="taom_career_grp_balchoth_kan_t3_a" text="Неостановимый Поток" />
+
+    <string id="taom_career_grp_balchoth_kan_t3_b" text="Ужасная Орда" />
+
+    <string id="taom_career_grp_black_uruk_captain_t1_a" text="Закалённая в Горне Шкура" />
+
+    <string id="taom_career_grp_black_uruk_captain_t1_b" text="Первое Кровавое Безумие" />
+
+    <string id="taom_career_grp_black_uruk_captain_t2_a" text="Берсерк Лугбурза" />
+
+    <string id="taom_career_grp_black_uruk_captain_t2_b" text="Нескончаемая Ярость" />
+
+    <string id="taom_career_grp_black_uruk_captain_t3_a" text="Гнев Недремлющего Ока" />
+
+    <string id="taom_career_grp_black_uruk_captain_t3_b" text="Капитан Чёрных Врат" />
+
+    <string id="taom_career_grp_blade_dancer_t1_a" text="Звёздная Сталь" />
+
+    <string id="taom_career_grp_blade_dancer_t1_b" text="Страж Имладриса" />
+
+    <string id="taom_career_grp_blade_dancer_t2_a" text="Танец Гондолина" />
+
+    <string id="taom_career_grp_blade_dancer_t2_b" text="Хранитель Сокрытой Долины" />
+
+    <string id="taom_career_grp_blade_dancer_t3_a" text="Меч Первой Эпохи" />
+
+    <string id="taom_career_grp_blade_dancer_t3_b" text="Свет Эарендиля" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t1_a" text="Придворный Дуэлянт" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t1_b" text="Стойкий Клинок" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t2_a" text="Неумолимое Лезвие" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t2_b" text="Страж Рен" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t3_a" text="Вихревой Истребитель" />
+
+    <string id="taom_career_grp_blademaster_of_ren_t3_b" text="Несломленный Мечелорд" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t1_a" text="Страж Восточного Берега" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t1_b" text="Хранитель Переправы через Андуин" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t2_a" text="Авангард Раммаса" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t2_b" text="Меч Последнего Моста" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t3_a" text="Воинство Фарамира" />
+
+    <string id="taom_career_grp_captain_of_osgiliath_t3_b" text="Владыка Купола Звёзд" />
+
+    <string id="taom_career_grp_cave_troll_master_t1_a" text="Погонщик с Кнутом" />
+
+    <string id="taom_career_grp_cave_troll_master_t1_b" text="Страж Входа в Пещеру" />
+
+    <string id="taom_career_grp_cave_troll_master_t2_a" text="Тиран Гоблинграда" />
+
+    <string id="taom_career_grp_cave_troll_master_t2_b" text="Разрушитель Глубинных Твердынь" />
+
+    <string id="taom_career_grp_cave_troll_master_t3_a" text="Бич Гундабада" />
+
+    <string id="taom_career_grp_cave_troll_master_t3_b" text="Ужас Северных Чертогов" />
+
+    <string id="taom_career_grp_chariot_warlord_t1_a" text="Косоносец" />
+
+    <string id="taom_career_grp_chariot_warlord_t1_b" text="Железное Колесо" />
+
+    <string id="taom_career_grp_chariot_warlord_t2_a" text="Жнущая Атака" />
+
+    <string id="taom_career_grp_chariot_warlord_t2_b" text="Защищённая Упряжка" />
+
+    <string id="taom_career_grp_chariot_warlord_t3_a" text="Жнец Пеленнора" />
+
+    <string id="taom_career_grp_chariot_warlord_t3_b" text="Колесо Кханда" />
+
+    <string id="taom_career_grp_clanguard_rider_t1_a" text="Клановый Всадник Грома" />
+
+    <string id="taom_career_grp_clanguard_rider_t1_b" text="Присягнувший Клановый Эскорт" />
+
+    <string id="taom_career_grp_clanguard_rider_t2_a" text="Авангард Боевой Стаи" />
+
+    <string id="taom_career_grp_clanguard_rider_t2_b" text="Знамя Холмов" />
+
+    <string id="taom_career_grp_clanguard_rider_t3_a" text="Владыка Всех Всадников" />
+
+    <string id="taom_career_grp_clanguard_rider_t3_b" text="Вечная Боевая Стая" />
+
+    <string id="taom_career_grp_codyan_legionaire_t1_a" text="Авангард Кодиан" />
+
+    <string id="taom_career_grp_codyan_legionaire_t1_b" text="Стойкий Щитоносец" />
+
+    <string id="taom_career_grp_codyan_legionaire_t2_a" text="Стена Руна" />
+
+    <string id="taom_career_grp_codyan_legionaire_t2_b" text="Закованная в Броню Фаланга" />
+
+    <string id="taom_career_grp_codyan_legionaire_t3_a" text="Несокрушимая Линия" />
+
+    <string id="taom_career_grp_codyan_legionaire_t3_b" text="Стена, Что Никогда Не Падёт" />
+
+    <string id="taom_career_grp_corsair_boarder_t1_a" text="Палубный Разбойник" />
+
+    <string id="taom_career_grp_corsair_boarder_t1_b" text="Закалённый Морем" />
+
+    <string id="taom_career_grp_corsair_boarder_t2_a" text="Разоритель Пеларгира" />
+
+    <string id="taom_career_grp_corsair_boarder_t2_b" text="Оплот Гавани" />
+
+    <string id="taom_career_grp_corsair_boarder_t3_a" text="Бич Побережий" />
+
+    <string id="taom_career_grp_corsair_boarder_t3_b" text="Военачальник Чёрных Нуменорцев" />
+
+    <string id="taom_career_grp_corsair_captain_t1_a" text="Предводитель Рейдов Умбара" />
+
+    <string id="taom_career_grp_corsair_captain_t1_b" text="Мастер Команды" />
+
+    <string id="taom_career_grp_corsair_captain_t2_a" text="Наследник Кастамира" />
+
+    <string id="taom_career_grp_corsair_captain_t2_b" text="Кормчий Чёрного Флота" />
+
+    <string id="taom_career_grp_corsair_captain_t3_a" text="Владыка Корсаров" />
+
+    <string id="taom_career_grp_corsair_captain_t3_b" text="Владыка Великой Гавани" />
+
+    <string id="taom_career_grp_corsair_crossbow_t1_a" text="Стрелок с Такелажа" />
+
+    <string id="taom_career_grp_corsair_crossbow_t1_b" text="Дозорный Воронова Гнезда" />
+
+    <string id="taom_career_grp_corsair_crossbow_t2_a" text="Охотник на Рулевых" />
+
+    <string id="taom_career_grp_corsair_crossbow_t2_b" text="Пика Чёрных Парусов" />
+
+    <string id="taom_career_grp_corsair_crossbow_t3_a" text="Болт Чёрной Звезды" />
+
+    <string id="taom_career_grp_corsair_crossbow_t3_b" text="Непрекращающийся Залп" />
+
+    <string id="taom_career_grp_crossbow_master_t1_a" text="Залп Железных Холмов" />
+
+    <string id="taom_career_grp_crossbow_master_t1_b" text="Страж Дейла" />
+
+    <string id="taom_career_grp_crossbow_master_t2_a" text="Неумолимый Болт" />
+
+    <string id="taom_career_grp_crossbow_master_t2_b" text="Баллиста Горы" />
+
+    <string id="taom_career_grp_crossbow_master_t3_a" text="Буря Стали" />
+
+    <string id="taom_career_grp_crossbow_master_t3_b" text="Орудие Эребора" />
+
+    <string id="taom_career_grp_dale_guardsman_t1_a" text="Привратный Страж Дейла" />
+
+    <string id="taom_career_grp_dale_guardsman_t1_b" text="Стена Щитов Эсгарота" />
+
+    <string id="taom_career_grp_dale_guardsman_t2_a" text="Копьё Гириона" />
+
+    <string id="taom_career_grp_dale_guardsman_t2_b" text="Оплот Бегущей" />
+
+    <string id="taom_career_grp_dale_guardsman_t3_a" text="Авангард Короля Брэнда" />
+
+    <string id="taom_career_grp_dale_guardsman_t3_b" text="Последняя Битва у Эребора" />
+
+    <string id="taom_career_grp_dale_marksman_t1_a" text="Лучник Эсгарота" />
+
+    <string id="taom_career_grp_dale_marksman_t1_b" text="Дозор Долгого Озера" />
+
+    <string id="taom_career_grp_dale_marksman_t2_a" text="Наследник Чёрной Стрелы" />
+
+    <string id="taom_career_grp_dale_marksman_t2_b" text="Стрелок с Дроздиным Глазом" />
+
+    <string id="taom_career_grp_dale_marksman_t3_a" text="Драконобоец Дейла" />
+
+    <string id="taom_career_grp_dale_marksman_t3_b" text="Лук Рода Гириона" />
+
+    <string id="taom_career_grp_dale_outrider_t1_a" text="Всадник Бегущей" />
+
+    <string id="taom_career_grp_dale_outrider_t1_b" text="Страж Караванной Дороги" />
+
+    <string id="taom_career_grp_dale_outrider_t2_a" text="Копьё Длинной Долины" />
+
+    <string id="taom_career_grp_dale_outrider_t2_b" text="Аутрайдер Дружбы Эребора" />
+
+    <string id="taom_career_grp_dale_outrider_t3_a" text="Атака Северян" />
+
+    <string id="taom_career_grp_dale_outrider_t3_b" text="Курьер Двух Королей" />
+
+    <string id="taom_career_grp_elk_rider_t1_a" text="Рогатая Атака" />
+
+    <string id="taom_career_grp_elk_rider_t1_b" text="Всадник Пределов" />
+
+    <string id="taom_career_grp_elk_rider_t2_a" text="Гром Леса" />
+
+    <string id="taom_career_grp_elk_rider_t2_b" text="Стража Трандуила" />
+
+    <string id="taom_career_grp_elk_rider_t3_a" text="Гнев под Деревьями" />
+
+    <string id="taom_career_grp_elk_rider_t3_b" text="Владыка Чертогов Лесного Короля" />
+
+    <string id="taom_career_grp_elven_archer_t1_a" text="Зоркий Страж" />
+
+    <string id="taom_career_grp_elven_archer_t1_b" text="Дозор Ривенделла" />
+
+    <string id="taom_career_grp_elven_archer_t2_a" text="Непрекращающийся Залп" />
+
+    <string id="taom_career_grp_elven_archer_t2_b" text="Лук Эрегиона" />
+
+    <string id="taom_career_grp_elven_archer_t3_a" text="Буря Гил-Галада" />
+
+    <string id="taom_career_grp_elven_archer_t3_b" text="Бдение Вилии" />
+
+    <string id="taom_career_grp_eotheod_windrider_t1_a" text="Наследник Эорла" />
+
+    <string id="taom_career_grp_eotheod_windrider_t1_b" text="Всадник Вольда" />
+
+    <string id="taom_career_grp_eotheod_windrider_t2_a" text="Клятва Эорла" />
+
+    <string id="taom_career_grp_eotheod_windrider_t2_b" text="Владыка Меарас" />
+
+    <string id="taom_career_grp_eotheod_windrider_t3_a" text="Атака на Пеленнорских Полях" />
+
+    <string id="taom_career_grp_eotheod_windrider_t3_b" text="Песнь Ристании" />
+
+    <string id="taom_career_grp_fell_rider_t1_a" text="Всадник Сонма Теней" />
+
+    <string id="taom_career_grp_fell_rider_t1_b" text="Хранитель Жутких Скакунов" />
+
+    <string id="taom_career_grp_fell_rider_t2_a" text="Глашатай Ужаса" />
+
+    <string id="taom_career_grp_fell_rider_t2_b" text="Всадник Чёрного Дыхания" />
+
+    <string id="taom_career_grp_fell_rider_t3_a" text="Чёрный Всадник Дол Гулдура" />
+
+    <string id="taom_career_grp_fell_rider_t3_b" text="Тень Востока" />
+
+    <string id="taom_career_grp_galadhrim_archer_t1_a" text="Серебряный Лучник" />
+
+    <string id="taom_career_grp_galadhrim_archer_t1_b" text="Око Оград" />
+
+    <string id="taom_career_grp_galadhrim_archer_t2_a" text="Маллорнский Стрелок" />
+
+    <string id="taom_career_grp_galadhrim_archer_t2_b" text="Страж Флетов" />
+
+    <string id="taom_career_grp_galadhrim_archer_t3_a" text="Стрела Карас Галадона" />
+
+    <string id="taom_career_grp_galadhrim_archer_t3_b" text="Страж Сребролома" />
+
+    <string id="taom_career_grp_goblin_sniper_t1_a" text="Скалолаз" />
+
+    <string id="taom_career_grp_goblin_sniper_t1_b" text="Туннельный Крадун" />
+
+    <string id="taom_career_grp_goblin_sniper_t2_a" text="Засадчик Высокого Перевала" />
+
+    <string id="taom_career_grp_goblin_sniper_t2_b" text="Отравитель Стрел" />
+
+    <string id="taom_career_grp_goblin_sniper_t3_a" text="Разоритель с Переднего Крыльца" />
+
+    <string id="taom_career_grp_goblin_sniper_t3_b" text="Тень Высокого Перевала" />
+
+    <string id="taom_career_grp_ironguard_t1_a" text="Молот Глубин" />
+
+    <string id="taom_career_grp_ironguard_t1_b" text="Страж Вратной Стены" />
+
+    <string id="taom_career_grp_ironguard_t2_a" text="Гнев Народа Дурина" />
+
+    <string id="taom_career_grp_ironguard_t2_b" text="Щитовая Стена Эребора" />
+
+    <string id="taom_career_grp_ironguard_t3_a" text="Мифрильный Бастион" />
+
+    <string id="taom_career_grp_ironguard_t3_b" text="Страж Аркенстона" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t1_a" text="Копейщик Дол Амрота" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t1_b" text="Страж Залива" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t2_a" text="Всадник Серебряного Лебедя" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t2_b" text="Щитовая Стена Имрахиля" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t3_a" text="Рыцарь Лебединого Носа" />
+
+    <string id="taom_career_grp_knight_of_belfalas_t3_b" text="Натиск Дол Амрота" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t1_a" text="Залп Руна" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t1_b" text="Стойкий Лучник" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t2_a" text="Стрелок Грозового Лука" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t2_b" text="Пронзатель Лат" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t3_a" text="Стрельная Буря" />
+
+    <string id="taom_career_grp_lokhas_drus_marksman_t3_b" text="Непрестанный Град" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t1_a" text="Бивневый Авангард" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t1_b" text="Повелитель Зверей" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t2_a" text="Топчущая Атака" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t2_b" text="Страж Хауды" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t3_a" text="Гнев Мумакана" />
+
+    <string id="taom_career_grp_mahud_beast_rider_t3_b" text="Повелитель Олифантов" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t1_a" text="Ястреб Восточной Марки" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t1_b" text="Страж Фолда" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t2_a" text="Капитан Сбора" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t2_b" text="Тень Фангорна" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t3_a" text="Лучник Марки" />
+
+    <string id="taom_career_grp_marksman_of_aldburg_t3_b" text="Войско Риддермарка" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t1_a" text="Ядовитая Литания" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t1_b" text="Шёпот Саурона" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t2_a" text="Паства Ужаса" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t2_b" text="Проповедь Ока" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t3_a" text="Взор Тёмного Властелина" />
+
+    <string id="taom_career_grp_mulkerhili_cultist_t3_b" text="Тёмный Завет Кольца" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t1_a" text="Метатель Тёмных Стрел" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t1_b" text="Шепчущий Тление" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t2_a" text="Ткач Чёрных Искусств" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t2_b" text="Дышащий Тенью" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t3_a" text="Владыка Холма Колдовства" />
+
+    <string id="taom_career_grp_necromancer_acolyte_t3_b" text="Глас Некроманта" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t1_a" text="Разрыватель Земли" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t1_b" text="Неутомимый Молот" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t2_a" text="Буйствующий Колосс" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t2_b" text="Натиск под Солнцем" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t3_a" text="Молот Мораннона" />
+
+    <string id="taom_career_grp_olog_hai_warchief_t3_b" text="Троллье Племя Саурона" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t1_a" text="Застрельщик Солнечного Копья" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t1_b" text="Странствующий Всадник" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t2_a" text="Метатель Солнечного Огня" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t2_b" text="Алая Завеса" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t3_a" text="Ливень Дальнего Харада" />
+
+    <string id="taom_career_grp_pezarsani_javelineer_t3_b" text="Тень Дюн" />
+
+    <string id="taom_career_grp_ram_rider_t1_a" text="Козопас Холмов" />
+
+    <string id="taom_career_grp_ram_rider_t1_b" text="Разъездной Эребора" />
+
+    <string id="taom_career_grp_ram_rider_t2_a" text="Атака Железных Холмов" />
+
+    <string id="taom_career_grp_ram_rider_t2_b" text="Могучий Боевой Баран" />
+
+    <string id="taom_career_grp_ram_rider_t3_a" text="Авангард Железностопа" />
+
+    <string id="taom_career_grp_ram_rider_t3_b" text="Всадник Одинокой Горы" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t1_a" text="Охотник Итилиэнской Дороги" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t1_b" text="Дозорный Хеннет Аннуна" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t2_a" text="Разведчик Северного Итилиэна" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t2_b" text="Лучник Фарамира" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t3_a" text="Стрела Заповедного Озера" />
+
+    <string id="taom_career_grp_ranger_of_ithilien_t3_b" text="Тень Эмин Арнен" />
+
+    <string id="taom_career_grp_rivendell_knight_t1_a" text="Атака Имладриса" />
+
+    <string id="taom_career_grp_rivendell_knight_t1_b" text="Всадник Брода" />
+
+    <string id="taom_career_grp_rivendell_knight_t2_a" text="Галоп Асфалота" />
+
+    <string id="taom_career_grp_rivendell_knight_t2_b" text="Эгида Валар" />
+
+    <string id="taom_career_grp_rivendell_knight_t3_a" text="Гнев Глорфиндела" />
+
+    <string id="taom_career_grp_rivendell_knight_t3_b" text="Воинство Последнего Союза" />
+
+    <string id="taom_career_grp_sentinel_t1_a" text="Дозорный Эгладила" />
+
+    <string id="taom_career_grp_sentinel_t1_b" text="Страж Эланора" />
+
+    <string id="taom_career_grp_sentinel_t2_a" text="Всадник Найта" />
+
+    <string id="taom_career_grp_sentinel_t2_b" text="Страж Келебранта" />
+
+    <string id="taom_career_grp_sentinel_t3_a" text="Копье Лаурелиндоренана" />
+
+    <string id="taom_career_grp_sentinel_t3_b" text="Страж Нэньи" />
+
+    <string id="taom_career_grp_shadow_walker_t1_a" text="Тень Тропы" />
+
+    <string id="taom_career_grp_shadow_walker_t1_b" text="Плащ из Листьев" />
+
+    <string id="taom_career_grp_shadow_walker_t2_a" text="Охотник во Тьме" />
+
+    <string id="taom_career_grp_shadow_walker_t2_b" text="Покров Леса" />
+
+    <string id="taom_career_grp_shadow_walker_t3_a" text="Гибель Пауков" />
+
+    <string id="taom_career_grp_shadow_walker_t3_b" text="Невидимый из Эрин Ласгалена" />
+
+    <string id="taom_career_grp_shadow_warrior_t1_a" text="Тень Амон Ланка" />
+
+    <string id="taom_career_grp_shadow_warrior_t1_b" text="Страж Ям" />
+
+    <string id="taom_career_grp_shadow_warrior_t2_a" text="Разоритель Лихолесья" />
+
+    <string id="taom_career_grp_shadow_warrior_t2_b" text="Оплот Дол Гулдура" />
+
+    <string id="taom_career_grp_shadow_warrior_t3_a" text="Бич Некроманта" />
+
+    <string id="taom_career_grp_shadow_warrior_t3_b" text="Бессмертная Тень" />
+
+    <string id="taom_career_grp_silvan_archer_t1_a" text="Стрелок Зеленолесья" />
+
+    <string id="taom_career_grp_silvan_archer_t1_b" text="Дозор Крон" />
+
+    <string id="taom_career_grp_silvan_archer_t2_a" text="Охотник Полян" />
+
+    <string id="taom_career_grp_silvan_archer_t2_b" text="Страж Реки" />
+
+    <string id="taom_career_grp_silvan_archer_t3_a" text="Буря Стрел" />
+
+    <string id="taom_career_grp_silvan_archer_t3_b" text="Лучник Эльфийского Короля" />
+
+    <string id="taom_career_grp_snaga_rider_t1_a" text="Теневой Галоп" />
+
+    <string id="taom_career_grp_snaga_rider_t1_b" text="Всадник Тьмы" />
+
+    <string id="taom_career_grp_snaga_rider_t2_a" text="Удар из Тени" />
+
+    <string id="taom_career_grp_snaga_rider_t2_b" text="Призрак Кирит Унгола" />
+
+    <string id="taom_career_grp_snaga_rider_t3_a" text="Натиск Нурна" />
+
+    <string id="taom_career_grp_snaga_rider_t3_b" text="Авангард Мордора" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t1_a" text="Степной Застрельщик" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t1_b" text="Меткий Залп" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t2_a" text="Бесконечный Колчан" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t2_b" text="Страж Залпа" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t3_a" text="Вестник Бури Ханда" />
+
+    <string id="taom_career_grp_steppe_bowmaster_t3_b" text="Непрестанный Град" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t1_a" text="Налётчик Дюн" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t1_b" text="Выживший в Пустыне" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t2_a" text="Змеиный Клык" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t2_b" text="Носящий Пески" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t3_a" text="Яд Харадвайта" />
+
+    <string id="taom_career_grp_tribesman_of_jelut_t3_b" text="Бич Харадрим" />
+
+    <string id="taom_career_grp_uruk_berserker_t1_a" text="Обезумевший от Крови" />
+
+    <string id="taom_career_grp_uruk_berserker_t1_b" text="Закалённый в Яме" />
+
+    <string id="taom_career_grp_uruk_berserker_t2_a" text="Разоритель Белой Руки" />
+
+    <string id="taom_career_grp_uruk_berserker_t2_b" text="Стена Щитов Ортханка" />
+
+    <string id="taom_career_grp_uruk_berserker_t3_a" text="Бич Нан Кунурир" />
+
+    <string id="taom_career_grp_uruk_berserker_t3_b" text="Несломленный Башни" />
+
+    <string id="taom_career_grp_uruk_crossbow_t1_a" text="Железный Залп" />
+
+    <string id="taom_career_grp_uruk_crossbow_t1_b" text="Кованный в Кузне" />
+
+    <string id="taom_career_grp_uruk_crossbow_t2_a" text="Болт Белой Руки" />
+
+    <string id="taom_career_grp_uruk_crossbow_t2_b" text="Страж Кольцевой Стены" />
+
+    <string id="taom_career_grp_uruk_crossbow_t3_a" text="Вестник Бури Ортханка" />
+
+    <string id="taom_career_grp_uruk_crossbow_t3_b" text="Нескончаемый Железный Дождь" />
+
+    <string id="taom_career_grp_warden_t1_a" text="Пограничный Странник" />
+
+    <string id="taom_career_grp_warden_t1_b" text="Страж Нимродели" />
+
+    <string id="taom_career_grp_warden_t2_a" text="Клинок Найта" />
+
+    <string id="taom_career_grp_warden_t2_b" text="Стена Щитов Карас Галадона" />
+
+    <string id="taom_career_grp_warden_t3_a" text="Страж Золотого Леса" />
+
+    <string id="taom_career_grp_warden_t3_b" text="Стража Керин Амрота" />
+
+    <string id="taom_career_grp_warg_pack_leader_t1_a" text="Варгоездец" />
+
+    <string id="taom_career_grp_warg_pack_leader_t1_b" text="Хранитель Стаи" />
+
+    <string id="taom_career_grp_warg_pack_leader_t2_a" text="Наездник Серой Стаи" />
+
+    <string id="taom_career_grp_warg_pack_leader_t2_b" text="Повелитель Лютых Волков" />
+
+    <string id="taom_career_grp_warg_pack_leader_t3_a" text="Вожак Гундабада" />
+
+    <string id="taom_career_grp_warg_pack_leader_t3_b" text="Волчий Капитан Больга" />
+
+    <string id="taom_career_grp_warg_scout_t1_a" text="Бегущий с Клыками" />
+
+    <string id="taom_career_grp_warg_scout_t1_b" text="Серая Стая" />
+
+    <string id="taom_career_grp_warg_scout_t2_a" text="Охотник Мглистых Гор" />
+
+    <string id="taom_career_grp_warg_scout_t2_b" text="Волчий Страж" />
+
+    <string id="taom_career_grp_warg_scout_t3_a" text="Наездник Айзенгарда" />
+
+    <string id="taom_career_grp_warg_scout_t3_b" text="Неустанная Охота" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t1_a" text="Брод Лимлайта" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t1_b" text="Дозор Вольда" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t2_a" text="Щитоносец Энтваша" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t2_b" text="Страж Андуина" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t3_a" text="Бастион Марки" />
+
+    <string id="taom_career_grp_watchman_of_stangard_t3_b" text="Страж Риддермарка" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t1_a" text="Помеченный Стаей Следопыт" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t1_b" text="Волчьешкурый Скрытень" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t2_a" text="Охотник Горлового Выстрела" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t2_b" text="Призрак Холмов" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t3_a" text="Высший Волчьешкурый" />
+
+    <string id="taom_career_grp_wolfskin_hunter_t3_b" text="Повелитель Великой Стаи" />
+
+    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes активен — исправление морфинга covers_head + симуляция ткани волос/бороды" />
+
+    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes ограничен — сигнатуры шаблонов не авторизованы для этой сборки Bannerlord; стандартный рендеринг" />
+
+    <string id="taom_bandit_dunland_name" text="Налётчики Дунланда" />
+
+    <string id="taom_bandit_dunland_m1" text="Карадок" />
+
+    <string id="taom_bandit_dunland_m2" text="Гвидион" />
+
+    <string id="taom_bandit_dunland_m3" text="Бреннор" />
+
+    <string id="taom_bandit_dunland_m4" text="Таргал" />
+
+    <string id="taom_bandit_dunland_m5" text="Мэдрун" />
+
+    <string id="taom_bandit_dunland_m6" text="Другу" />
+
+    <string id="taom_bandit_dunland_m7" text="Олфан" />
+
+    <string id="taom_bandit_dunland_m8" text="Кетрин" />
+
+    <string id="taom_bandit_dunland_m9" text="Хвалбор" />
+
+    <string id="taom_bandit_dunland_m10" text="Идрис" />
+
+    <string id="taom_bandit_dunland_f1" text="Бранвен" />
+
+    <string id="taom_bandit_dunland_f2" text="Аэлис" />
+
+    <string id="taom_bandit_dunland_f3" text="Мэрвен" />
+
+    <string id="taom_bandit_dunland_f4" text="Гвинет" />
+
+    <string id="taom_bandit_dunland_f5" text="Олвен" />
+
+    <string id="taom_bandit_rhun_name" text="Налётчики Руна" />
+
+    <string id="taom_bandit_rhun_m1" text="Хамул" />
+
+    <string id="taom_bandit_rhun_m2" text="Таргон" />
+
+    <string id="taom_bandit_rhun_m3" text="Бурзах" />
+
+    <string id="taom_bandit_rhun_m4" text="Сангар" />
+
+    <string id="taom_bandit_rhun_m5" text="Хазгрим" />
+
+    <string id="taom_bandit_rhun_m6" text="Ворзул" />
+
+    <string id="taom_bandit_rhun_m7" text="Дагир" />
+
+    <string id="taom_bandit_rhun_m8" text="Олмек" />
+
+    <string id="taom_bandit_rhun_m9" text="Тарвон" />
+
+    <string id="taom_bandit_rhun_m10" text="Харзул" />
+
+    <string id="taom_bandit_rhun_f1" text="Сарила" />
+
+    <string id="taom_bandit_rhun_f2" text="Хазна" />
+
+    <string id="taom_bandit_rhun_f3" text="Ворина" />
+
+    <string id="taom_bandit_rhun_f4" text="Тахджия" />
+
+    <string id="taom_bandit_rhun_f5" text="Сангела" />
+
+    <string id="taom_bandit_harad_name" text="Налётчики Харада" />
+
+    <string id="taom_bandit_harad_m1" text="Суладан" />
+
+    <string id="taom_bandit_harad_m2" text="Азагал" />
+
+    <string id="taom_bandit_harad_m3" text="Халед" />
+
+    <string id="taom_bandit_harad_m4" text="Вариаг" />
+
+    <string id="taom_bandit_harad_m5" text="Дат" />
+
+    <string id="taom_bandit_harad_m6" text="Таркил" />
+
+    <string id="taom_bandit_harad_m7" text="Музан" />
+
+    <string id="taom_bandit_harad_m8" text="Акхор" />
+
+    <string id="taom_bandit_harad_m9" text="Сахир" />
+
+    <string id="taom_bandit_harad_m10" text="Зуран" />
+
+    <string id="taom_bandit_harad_f1" text="Нилхуна" />
+
+    <string id="taom_bandit_harad_f2" text="Сахария" />
+
+    <string id="taom_bandit_harad_f3" text="Аклира" />
+
+    <string id="taom_bandit_harad_f4" text="Безара" />
+
+    <string id="taom_bandit_harad_f5" text="Музана" />
+
+    <string id="taom_bandit_gundabad_name" text="Орки-налётчики Гундабада" />
+
+    <string id="taom_bandit_gundabad_m1" text="Больг" />
+
+    <string id="taom_bandit_gundabad_m2" text="Язнег" />
+
+    <string id="taom_bandit_gundabad_m3" text="Фимбул" />
+
+    <string id="taom_bandit_gundabad_m4" text="Нарзуг" />
+
+    <string id="taom_bandit_gundabad_m5" text="Горбаг" />
+
+    <string id="taom_bandit_gundabad_m6" text="Маухур" />
+
+    <string id="taom_bandit_gundabad_m7" text="Снага" />
+
+    <string id="taom_bandit_gundabad_m8" text="Уфтак" />
+
+    <string id="taom_bandit_gundabad_m9" text="Радбуг" />
+
+    <string id="taom_bandit_gundabad_m10" text="Лугдуш" />
+
+    <string id="taom_bandit_gundabad_f1" text="Скарра" />
+
+    <string id="taom_bandit_gundabad_f2" text="Ворга" />
+
+    <string id="taom_bandit_gundabad_f3" text="Мазра" />
+
+    <string id="taom_bandit_gundabad_f4" text="Гришта" />
+
+    <string id="taom_bandit_gundabad_f5" text="Нарзга" />
+
+    <string id="taom_bandit_umbar_name" text="Корсары Умбара" />
+
+    <string id="taom_bandit_umbar_m1" text="Кастамир" />
+
+    <string id="taom_bandit_umbar_m2" text="Сангахьяндион" />
+
+    <string id="taom_bandit_umbar_m3" text="Ангамайтэ" />
+
+    <string id="taom_bandit_umbar_m4" text="Херумор" />
+
+    <string id="taom_bandit_umbar_m5" text="Фуинур" />
+
+    <string id="taom_bandit_umbar_m6" text="Адунафел" />
+
+    <string id="taom_bandit_umbar_m7" text="Арагол" />
+
+    <string id="taom_bandit_umbar_m8" text="Калемир" />
+
+    <string id="taom_bandit_umbar_m9" text="Ворондил" />
+
+    <string id="taom_bandit_umbar_m10" text="Каразир" />
+
+    <string id="taom_bandit_umbar_f1" text="Берутиэль" />
+
+    <string id="taom_bandit_umbar_f2" text="Нимрет" />
+
+    <string id="taom_bandit_umbar_f3" text="Адуниэль" />
+
+    <string id="taom_bandit_umbar_f4" text="Тармириэль" />
+
+    <string id="taom_bandit_umbar_f5" text="Инзильбет" />
+
+    <string id="taom_bandit_gondor_name" text="Воины Гондора" />
+
+    <string id="taom_bandit_gondor_m1" text="Бергил" />
+
+    <string id="taom_bandit_gondor_m2" text="Таргон" />
+
+    <string id="taom_bandit_gondor_m3" text="Форлонг" />
+
+    <string id="taom_bandit_gondor_m4" text="Дуилас" />
+
+    <string id="taom_bandit_gondor_m5" text="Хиргон" />
+
+    <string id="taom_bandit_gondor_m6" text="Берегонд" />
+
+    <string id="taom_bandit_gondor_m7" text="Мардил" />
+
+    <string id="taom_bandit_gondor_m8" text="Ородрет" />
+
+    <string id="taom_bandit_gondor_m9" text="Кирион" />
+
+    <string id="taom_bandit_gondor_m10" text="Халмир" />
+
+    <string id="taom_bandit_gondor_f1" text="Иорет" />
+
+    <string id="taom_bandit_gondor_f2" text="Лотириэль" />
+
+    <string id="taom_bandit_gondor_f3" text="Морвен" />
+
+    <string id="taom_bandit_gondor_f4" text="Гилраэн" />
+
+    <string id="taom_bandit_gondor_f5" text="Анвен" />
+
+    <string id="taom_bandit_erebor_name" text="Воины Эребора" />
+
+    <string id="taom_bandit_erebor_m1" text="Наргум" />
+
+    <string id="taom_bandit_erebor_m2" text="Борин" />
+
+    <string id="taom_bandit_erebor_m3" text="Фрар" />
+
+    <string id="taom_bandit_erebor_m4" text="Лофар" />
+
+    <string id="taom_bandit_erebor_m5" text="Мрачнобород" />
+
+    <string id="taom_bandit_erebor_m6" text="Трар" />
+
+    <string id="taom_bandit_erebor_m7" text="Двалгин" />
+
+    <string id="taom_bandit_erebor_m8" text="Наладр" />
+
+    <string id="taom_bandit_erebor_m9" text="Видри" />
+
+    <string id="taom_bandit_erebor_m10" text="Хагри" />
+
+    <string id="taom_bandit_erebor_f1" text="Дис" />
+
+    <string id="taom_bandit_erebor_f2" text="Брила" />
+
+    <string id="taom_bandit_erebor_f3" text="Вагна" />
+
+    <string id="taom_bandit_erebor_f4" text="Тора" />
+
+    <string id="taom_bandit_erebor_f5" text="Фрида" />
+
+    <string id="taom_bandit_mirkwood_name" text="Следопыты Лихолесья" />
+
+    <string id="taom_bandit_mirkwood_m1" text="Фаэглир" />
+
+    <string id="taom_bandit_mirkwood_m2" text="Трандуил" />
+
+    <string id="taom_bandit_mirkwood_m3" text="Галион" />
+
+    <string id="taom_bandit_mirkwood_m4" text="Белегорн" />
+
+    <string id="taom_bandit_mirkwood_m5" text="Нимлот" />
+
+    <string id="taom_bandit_mirkwood_m6" text="Орофин" />
+
+    <string id="taom_bandit_mirkwood_m7" text="Румил" />
+
+    <string id="taom_bandit_mirkwood_m8" text="Халдамир" />
+
+    <string id="taom_bandit_mirkwood_m9" text="Таурон" />
+
+    <string id="taom_bandit_mirkwood_m10" text="Линдир" />
+
+    <string id="taom_bandit_mirkwood_f1" text="Тауриэль" />
+
+    <string id="taom_bandit_mirkwood_f2" text="Нетлориэль" />
+
+    <string id="taom_bandit_mirkwood_f3" text="Эовен" />
+
+    <string id="taom_bandit_mirkwood_f4" text="Фаэливрин" />
+
+    <string id="taom_bandit_mirkwood_f5" text="Мириэль" />
+
     <string id="taom_hideout_desc_dunland" text="Среди лесистых холмов Дунланда вы замечаете грубый лагерь из кожаных шатров и примитивный частокол, наполовину скрытый на поляне." />
+
     <string id="taom_hideout_desc_gundabad" text="Под скалами Мглистых гор вы обнаруживаете зловонное логово орков Гундабада, вырытое в голой скале." />
+
     <string id="taom_hideout_desc_harad" text="Среди дюн Харада вы натыкаетесь на замаскированный лагерь южан, расположившийся вокруг скрытого пустынного колодца." />
+
     <string id="taom_hideout_desc_rhun" text="На бескрайних степях Руна вы замечаете повозки и кожаные шатры отряда восточных налётчиков, расположившихся в овраге." />
+
     <string id="taom_hideout_desc_umbar" text="Вдоль южного берега вы находите укрытую бухту, где стоят на якоре чёрные корабли корсаров Умбара." />
+
+    <string id="taom_faction_difficulty_1" text="Сложность: Очень лёгкая" />
+
+    <string id="taom_faction_difficulty_2" text="Сложность: Лёгкая" />
+
+    <string id="taom_faction_difficulty_3" text="Сложность: Средняя" />
+
+    <string id="taom_faction_difficulty_4" text="Сложность: Выше средней" />
+
+    <string id="taom_faction_difficulty_5" text="Сложность: Высокая" />
+
+    <string id="taom_faction_difficulty_6" text="Сложность: Очень высокая" />
+
+    <string id="taom_faction_difficulty_7" text="Сложность: Экстремальная" />
+
+    <string id="taom_faction_anduin_vale_desc" text="Плодородная долина Великой Реки Андуин, дом беорнингов и лесовиков. Простой народ, живущий меж Мглистых Гор и Лихолесья." />
+
+    <string id="taom_faction_anduin_vale_name" text="Долина Андуина" />
+
+    <string id="taom_faction_anduin_vale_trait_0" text="Беорнинги" />
+
+    <string id="taom_faction_anduin_vale_trait_1" text="Лесовики Долин" />
+
+    <string id="taom_faction_anduin_vale_trait_2" text="Торговля по Великой Реке" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_desc" text="Прибрежное королевство Беллакар, основанное нуменорскими Верными, сохранившими преданность Валар. Оплот цивилизации на южных берегах." />
+
+    <string id="taom_faction_aru_thani_of_bellakar_name" text="Ару-Тани Беллакара" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_0" text="Нуменорское Наследие" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_1" text="Прибрежное Королевство" />
+
+    <string id="taom_faction_aru_thani_of_bellakar_trait_2" text="Верные Валар" />
+
+    <string id="taom_faction_browlands_desc" text="Браулэнды." />
+
+    <string id="taom_faction_browlands_name" text="Браулэнды" />
+
+    <string id="taom_faction_chajaphan_of_abanissa_desc" text="Чаджафан Абаниссы." />
+
+    <string id="taom_faction_chajaphan_of_abanissa_name" text="Чаджафан Абаниссы" />
+
+    <string id="taom_faction_clans_of_andrast_desc" text="Кланы Андраста." />
+
+    <string id="taom_faction_clans_of_andrast_name" text="Кланы Андраста" />
+
+    <string id="taom_faction_clans_of_druwaith_iaur_desc" text="Кланы Друвайт Иаур." />
+
+    <string id="taom_faction_clans_of_druwaith_iaur_name" text="Кланы Друвайт Иаур" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_0" text="Штраф скорости в лесу снижен на 50% + 15% к дальности обзора (заимствовано у баттанийцев)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_1" text="+10% к скорости отряда на равнинах (Холмовые Марши)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_2" text="+5% к лимиту размера отряда (Племенное Ополчение Холмов)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_3" text="+10% к скорости восстановления добровольцев в деревнях (Племенной Набор Холмов)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_4" text="+20% к шансу на ветеранов ополчения в городах (заимствовано у баттанийцев)" />
+
+    <string id="taom_faction_clans_of_dunland_bonus_5" text="-10% building construction speed (Battanian-borrowed)" />
+
+    <string id="taom_faction_clans_of_dunland_desc" text="Холмовики Дунланда, древние враги рохиррим. Баттанийские лесные традиции сочетаются с Холмовыми Марширующими и Племенными Ополчениями Холмов TAOM — дешёвые, быстрые, яростные отряды, что одинаково стремительны на равнинах и в лесах. Баттанийские кузнецы медлительны, но отряды — нет." />
+
+    <string id="taom_faction_clans_of_dunland_name" text="Кланы Дунланда" />
+
+    <string id="taom_faction_clans_of_dunland_perk_0_desc" text="+10% к скорости отряда на равнинах и +5% к размеру отряда — дунландские военные отряды покрывают расстояния быстро." />
+
+    <string id="taom_faction_clans_of_dunland_perk_0_name" text="Холмовые Марши" />
+
+    <string id="taom_faction_clans_of_dunland_perk_1_desc" text="+10% к скорости восполнения добровольцев в деревнях — родичи прибывают быстро." />
+
+    <string id="taom_faction_clans_of_dunland_perk_1_name" text="Набор горных племён" />
+
+    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="Borrowed 50% less forest speed penalty + 15% sight, and +20% chance for veteran militia in towns; -10% construction speed." />
+
+    <string id="taom_faction_clans_of_dunland_perk_2_name" text="Баттанийское лесное наследие" />
+
+    <string id="taom_faction_clans_of_dunland_strength_0" text="Дешёвые быстрые военные отряды" />
+
+    <string id="taom_faction_clans_of_dunland_strength_1" text="Подвижность в лесах и на равнинах" />
+
+    <string id="taom_faction_clans_of_dunland_strength_2" text="Стабильный набор в деревнях" />
+
+    <string id="taom_faction_clans_of_dunland_strength_3" text="Шанс ветеранов ополчения" />
+
+    <string id="taom_faction_clans_of_dunland_su_0_desc" text="Бесстрашный воин ближнего боя." />
+
+    <string id="taom_faction_clans_of_dunland_su_0_name" text="Дунландский берсерк" />
+
+    <string id="taom_faction_clans_of_dunland_su_1_desc" text="Дешёвая пехота военных отрядов." />
+
+    <string id="taom_faction_clans_of_dunland_su_1_name" text="Копейщик горных племён" />
+
+    <string id="taom_faction_clans_of_dunland_su_2_desc" text="Молниеносный лесной застрельщик." />
+
+    <string id="taom_faction_clans_of_dunland_su_2_name" text="Разведчик Кребайн" />
+
+    <string id="taom_faction_clans_of_dunland_trait_0" text="Вражда с Роханом" />
+
+    <string id="taom_faction_clans_of_dunland_trait_1" text="Дикие горные воины" />
+
+    <string id="taom_faction_clans_of_dunland_trait_2" text="Ополчение горных племён" />
+
+    <string id="taom_faction_clans_of_dunland_trait_3" text="Пешки Сарумана" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_0" text="Заимствованное у баттанийцев медленное строительство" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_1" text="Пешки Сарумана — слабая дипломатия" />
+
+    <string id="taom_faction_clans_of_dunland_weakness_2" text="Зажаты между Роханом и Изенгардом" />
+
+    <string id="taom_faction_clans_of_forochel_desc" text="Разрозненные племена орков в замёрзших северных пустошах близ Ледяного залива Форохель. Дикие налётчики, охотящиеся на лоссот и всех, кто осмелится зайти на север." />
+
+    <string id="taom_faction_clans_of_forochel_name" text="Кланы Форохеля" />
+
+    <string id="taom_faction_clans_of_forochel_trait_0" text="Налётчики Ледяного залива" />
+
+    <string id="taom_faction_clans_of_forochel_trait_1" text="Орки замёрзшего севера" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_0" text="+20% к пределу размера отряда (Легионы урук-хай)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_1" text="+15% к скорости строительства зданий (Промышленная мощь)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_2" text="-20% smithing energy cost (Industrial Forges)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_3" text="-15% mounted recruit and upgrade cost (War Wargs)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_4" text="-20% Orthanc garrison wage" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_5" text="+20% к урону от грабежей (Рейды военной машины)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_6" text="+10% к скорости отряда на равнинах и болотах (Форсированный марш, топкие инструкторы)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_7" text="+2 торговца + 1 ремесленник + 12 главарей банд в городе Изенгард (всего 20)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_8" text="+10% к количеству знати в деревнях (Железный пресс)" />
+
+    <string id="taom_faction_dominion_of_isengard_bonus_9" text="+25% к штрафам отношений (Власть Сарумана)" />
+
+    <string id="taom_faction_dominion_of_isengard_desc" text="Промышленная крепость Сарумана у Ортханка. Кольцо Изенгарда работает днём и ночью — легионы урук-хай, конвейерные арбалеты, боевые варги. Единственный город Изенгарда разрастается до двадцати знатных особ: центр набора, равный многим городам Рохана. Власть Сарумана настраивает против него всех соседей." />
+
+    <string id="taom_faction_dominion_of_isengard_name" text="Владычество Изенгарда" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_0_desc" text="+20% к пределу размера отряда и +10% к скорости марша на равнинах и болотах." />
+
+    <string id="taom_faction_dominion_of_isengard_perk_0_name" text="Легионы урук-хай" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_1_desc" text="+15% construction, -20% smithing energy, -15% mounted recruitment cost." />
+
+    <string id="taom_faction_dominion_of_isengard_perk_1_name" text="Промышленная мощь" />
+
+    <string id="taom_faction_dominion_of_isengard_perk_2_desc" text="Единственный город Изенгарда разрастается до 20 знатных особ — 4 торговца, 2 ремесленника, 14 главарей банд." />
+
+    <string id="taom_faction_dominion_of_isengard_perk_2_name" text="Квартирмейстеры Ортханка" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_0" text="Промышленный масштаб производства" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_1" text="Элитное качество урук-хай" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_2" text="Один массивный центр рекрутирования" />
+
+    <string id="taom_faction_dominion_of_isengard_strength_3" text="Скорость и мощь в ближнем бою" />
+
+    <string id="taom_faction_dominion_of_isengard_su_0_desc" text="Разрушительная ударная пехота." />
+
+    <string id="taom_faction_dominion_of_isengard_su_0_name" text="Берсерк урук-хай" />
+
+    <string id="taom_faction_dominion_of_isengard_su_1_desc" text="Тяжелые арбалетчики из кузнечных ям." />
+
+    <string id="taom_faction_dominion_of_isengard_su_1_name" text="Арбалетчик урук-хай" />
+
+    <string id="taom_faction_dominion_of_isengard_su_2_desc" text="Быстрая кавалерия Белой Руки, бьющая и отступающая." />
+
+    <string id="taom_faction_dominion_of_isengard_su_2_name" text="Всадник на варге" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_0" text="Владения Сарумана" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_1" text="Армии урук-хай" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_2" text="Башня Ортханк" />
+
+    <string id="taom_faction_dominion_of_isengard_trait_3" text="Белая Рука" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_0" text="Хватка Сарумана отталкивает союзников" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_1" text="Единственное поселение в узком месте" />
+
+    <string id="taom_faction_dominion_of_isengard_weakness_2" text="Окружен Роханом и Фангорном" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_0" text="-60% army influence cost (The Dark Lord's Will)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_1" text="+10% к лимиту размера отряда (Орды Саурона)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_2" text="+20% к производству зерна в Нурне (Нурнские фермы)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_3" text="+25% к урону от набегов (Гнев Саурона)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_4" text="+10% к скорости отряда ночью (Порождения Тьмы)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_5" text="+5% к скорости отряда на равнинах и болотах (Теневой Поход, Мёртвые Топи)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_6" text="+20% к скорости восстановления добровольцев в деревнях (Призыв Саурона)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_7" text="+2 главаря банды в каждом городе (Глашатаи Чёрного Наречия)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_8" text="+5% к количеству знати в деревнях (Надсмотрщики над рабами)" />
+
+    <string id="taom_faction_dominion_of_mordor_bonus_9" text="+20% к жалованию отряда (Тёмная Дань)" />
+
+    <string id="taom_faction_dominion_of_mordor_desc" text="Чёрная Земля Саурона. Воля Тёмного Владыки позволяет собирать армии почти без затрат влияния; Нурнские фермы кормят орды; Гнев Саурона превращает набеги в резню; Порождения Тьмы маршируют ночью быстрее, чем любой свободный народ днём. Тёмная Дань истощает казну." />
+
+    <string id="taom_faction_dominion_of_mordor_name" text="Мордор" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_0_desc" text="Стоимость армии по влиянию снижена на 60% — ордам Саурона не нужен консенсус." />
+
+    <string id="taom_faction_dominion_of_mordor_perk_0_name" text="Воля Тёмного Владыки" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_1_desc" text="+25% к урону от набегов и +5% к скорости отряда на равнинах и болотах." />
+
+    <string id="taom_faction_dominion_of_mordor_perk_1_name" text="Гнев Саурона" />
+
+    <string id="taom_faction_dominion_of_mordor_perk_2_desc" text="+10% к скорости отряда ночью — очи Мордора никогда не спят." />
+
+    <string id="taom_faction_dominion_of_mordor_perk_2_name" text="Порождения Тьмы" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_0" text="Огромные дешёвые армии" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_1" text="Почти не требуется влияния для похода" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_2" text="Мастерство ночных боёв" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_3" text="Самообеспечение через набеги и Нурн" />
+
+    <string id="taom_faction_dominion_of_mordor_strength_4" text="Тролли и чёрные uruки" />
+
+    <string id="taom_faction_dominion_of_mordor_su_0_desc" text="Элитная ударная пехота из Барад-дура." />
+
+    <string id="taom_faction_dominion_of_mordor_su_0_name" text="Чёрный урук" />
+
+    <string id="taom_faction_dominion_of_mordor_su_1_desc" text="Осадный зверь, выращенный в ямах." />
+
+    <string id="taom_faction_dominion_of_mordor_su_1_name" text="Пещерный тролль" />
+
+    <string id="taom_faction_dominion_of_mordor_su_2_desc" text="Лучники Минас-Моргула с отравленными стрелами." />
+
+    <string id="taom_faction_dominion_of_mordor_su_2_name" text="Моргульский стрелок" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_0" text="Владения Темного Властелина" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_1" text="Орочьи легионы" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_2" text="Ородруин" />
+
+    <string id="taom_faction_dominion_of_mordor_trait_3" text="Барад-дур" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_0" text="Темная дань снижает жалованье" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_1" text="Всеобщая ненависть" />
+
+    <string id="taom_faction_dominion_of_mordor_weakness_2" text="Медленное пополнение специальных отрядов" />
+
+    <string id="taom_faction_eregion_desc" text="Эрегион." />
+
+    <string id="taom_faction_eregion_name" text="Эрегион" />
+
+    <string id="taom_faction_fangorn_forest_desc" text="Лес Фангорн." />
+
+    <string id="taom_faction_fangorn_forest_name" text="Лес Фангорн" />
+
+    <string id="taom_faction_goblins_of_blue_craig_desc" text="Гоблины Синих Скал." />
+
+    <string id="taom_faction_goblins_of_blue_craig_name" text="Гоблины Синих Скал" />
+
+    <string id="taom_faction_goblins_of_goblin_town_desc" text="Кишащие гоблинами туннели и пещеры Мглистых гор. Эти орки контролируют горные перевалы и угрожают всем, кто осмеливается пересечь горы." />
+
+    <string id="taom_faction_goblins_of_goblin_town_name" text="Гоблины Гоблинграда" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_0" text="Гоблинские туннели" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_1" text="Горные перевалы" />
+
+    <string id="taom_faction_goblins_of_goblin_town_trait_2" text="Наездники на варгах" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_0" text="+10% к скорости отряда в степи (Истерлингские разъездные)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_1" text="+5% к лимиту размера отряда (Истерлингское войско)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="-10% mounted recruit and upgrade cost (Khuzait, inherited)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="+25% к производству лошадей, мулов, коров и овец в деревнях (кузаитское, унаследованное)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="-20% town tax income (Khuzait, inherited)" />
+
+    <string id="taom_faction_golden_realm_of_rhun_desc" text="Истерлинги восточных равнин. Унаследованные кузаитские кавалерийские традиции в сочетании с преимуществами истерлингских разъездных в степи и размером отряда истерлингского войска из TAOM. Тяжелая кавалерия, которая прибывает в большом количестве и с данью." />
+
+    <string id="taom_faction_golden_realm_of_rhun_name" text="Золотое царство Рун" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_0_desc" text="+10% к скорости отряда в степи — всадники моря Рун быстро пересекают равнину." />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_0_name" text="Истерлингские разъездные" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_1_desc" text="+5% к лимиту размера отряда — орды собираются по зову Мордора." />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_1_name" text="Истерлингское войско" />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="Inherited Khuzait -10% mounted cost, +25% animal village production; -20% town tax income." />
+
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="Кузаитское степное наследие" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_0" text="Орды тяжелой кавалерии" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_1" text="Большие армии" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_2" text="Сети дани и торговли" />
+
+    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="Кузаитское степное наследие" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_0_desc" text="Элитная бронированная кавалерия." />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_0_name" text="Истерлингский катафракт" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_1_desc" text="Элитная восточная тяжелая пехота." />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_1_name" text="Истерлингский повелитель клинков" />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_2_desc" text="Опытный разведчик-лучник." />
+
+    <string id="taom_faction_golden_realm_of_rhun_su_2_name" text="Конный Дозор Рун" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_0" text="Воины-Истерлинги" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_1" text="Конные Орды" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_2" text="Дань Мордору" />
+
+    <string id="taom_faction_golden_realm_of_rhun_trait_3" text="Степное Наследие" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_0" text="Слабая пехота" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_1" text="Разобщённые кланы" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_2" text="Длинные линии снабжения до Мордора" />
+
+    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="Khuzait-borrowed -20% town tax" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_0" text="-25% caravan cost (Corsair Trade)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_1" text="+15% дохода от тарифов (Торговые Сети Корсаров)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_2" text="+8% славы в битвах (Слава Корсаров)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_3" text="+10% скорости отряда в пустыне (Пустынные Корсары)" />
+
+    <string id="taom_faction_havens_of_umbar_bonus_4" text="+8% жалованья отряда (Алчность Корсаров)" />
+
+    <string id="taom_faction_havens_of_umbar_desc" text="Пристанище корсаров и портовый город Чёрных Нуменорцев в южных заливах. Торговля Корсаров снижает стоимость караванов, Слава Корсаров добавляет славу, Пустынные Корсары быстро маршируют по пескам — но Алчность Корсаров раздувает каждую статью расходов на жалованье." />
+
+    <string id="taom_faction_havens_of_umbar_name" text="Гавани Умбара" />
+
+    <string id="taom_faction_havens_of_umbar_perk_0_desc" text="-25% caravan cost and +15% tariff income — Umbar prospers on every passing ship." />
+
+    <string id="taom_faction_havens_of_umbar_perk_0_name" text="Торговля Корсаров" />
+
+    <string id="taom_faction_havens_of_umbar_perk_1_desc" text="+8% славы за битву — имя корсаров поют в каждом порту." />
+
+    <string id="taom_faction_havens_of_umbar_perk_1_name" text="Слава Корсаров" />
+
+    <string id="taom_faction_havens_of_umbar_perk_2_desc" text="+10% скорости отряда в пустыне — походы Умбара пересекают песок так же легко, как море." />
+
+    <string id="taom_faction_havens_of_umbar_perk_2_name" text="Пустынные Корсары" />
+
+    <string id="taom_faction_havens_of_umbar_strength_0" text="Богатство благодаря торговле и тарифам" />
+
+    <string id="taom_faction_havens_of_umbar_strength_1" text="Прославленные в битвах" />
+
+    <string id="taom_faction_havens_of_umbar_strength_2" text="Подвижность в пустыне" />
+
+    <string id="taom_faction_havens_of_umbar_strength_3" text="Характеристики нуменорских лордов" />
+
+    <string id="taom_faction_havens_of_umbar_su_0_desc" text="Высокий лорд древнего рода." />
+
+    <string id="taom_faction_havens_of_umbar_su_0_name" text="Чёрный Нуменорский Капитан" />
+
+    <string id="taom_faction_havens_of_umbar_su_1_desc" text="Морской пехотинец, обученный лёгким боям." />
+
+    <string id="taom_faction_havens_of_umbar_su_1_name" text="Корсар-Налётчик" />
+
+    <string id="taom_faction_havens_of_umbar_su_2_desc" text="Обожжённая солнцем лёгкая пехота-наёмник." />
+
+    <string id="taom_faction_havens_of_umbar_su_2_name" text="Харадримский Вспомогательный Боец" />
+
+    <string id="taom_faction_havens_of_umbar_trait_0" text="Флоты Корсаров" />
+
+    <string id="taom_faction_havens_of_umbar_trait_1" text="Чёрные Нуменорские Лорды" />
+
+    <string id="taom_faction_havens_of_umbar_trait_2" text="Пиратское Пристанище" />
+
+    <string id="taom_faction_havens_of_umbar_trait_3" text="Пустынные Походы" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_0" text="Капитаны-корсары присваивают прибыль (высокое жалованье)" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_1" text="Ненавистны Гондору" />
+
+    <string id="taom_faction_havens_of_umbar_weakness_2" text="Сухопутная армия слабее флота" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_desc" text="Древнее эльфийское королевство Линдон на западных берегах Средиземья. Управляемое наследниками Гиль-галада, это земля угасающей эльфийской славы и Серых Гаваней." />
+
+    <string id="taom_faction_high_kingdom_of_lindon_name" text="Высшее Королевство Линдон" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_0" text="Серые Гавани" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_1" text="Древнее Эльфийское Королевство" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_2" text="Корабли в Валинор" />
+
+    <string id="taom_faction_high_kingdom_of_lindon_trait_3" text="Кирдан Корабел" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10% к скорости отряда в степи (Степные колесничие)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_1" text="На 50% меньше штрафа к скорости в лесу + 15% к дальности обзора (Баттанийское, унаследовано)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_2" text="+20% шанс ветеранского ополчения в городах (Баттанийское, унаследовано)" />
+
+    <string id="taom_faction_khudorom_of_khand_bonus_3" text="-10% building construction speed (Battanian, inherited)" />
+
+    <string id="taom_faction_khudorom_of_khand_desc" text="Вариаги Канда. Унаследованы баттанийские традиции лесного ополчения; степные колесничие TAOM добавляют +10% к скорости отряда в степи. Наёмные банды служат тому, кто больше заплатит." />
+
+    <string id="taom_faction_khudorom_of_khand_name" text="Худором Канда" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_0_desc" text="+10% к скорости отряда в степи — колесницы вариагов мчатся быстро." />
+
+    <string id="taom_faction_khudorom_of_khand_perk_0_name" text="Степные колесничие" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_1_desc" text="Наёмные капитаны служат тому, кто платит — но они берут свою долю." />
+
+    <string id="taom_faction_khudorom_of_khand_perk_1_name" text="Наёмная традиция" />
+
+    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="Inherited 50% less forest speed penalty + 15% sight range and +20% chance for veteran militia in towns; -10% construction speed." />
+
+    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="Баттанийское лесное происхождение" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_0" text="Мобильность в степи и лесу" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_1" text="Ветеранские деревни" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_2" text="Наёмная традиция" />
+
+    <string id="taom_faction_khudorom_of_khand_strength_3" text="Доктрина колесничих" />
+
+    <string id="taom_faction_khudorom_of_khand_su_0_desc" text="Элитный конный застрельщик." />
+
+    <string id="taom_faction_khudorom_of_khand_su_0_name" text="Конный лучник вариагов" />
+
+    <string id="taom_faction_khudorom_of_khand_su_1_desc" text="Командир древней степной машины." />
+
+    <string id="taom_faction_khudorom_of_khand_su_1_name" text="Колесничий Канда" />
+
+    <string id="taom_faction_khudorom_of_khand_su_2_desc" text="Тяжёлая копейная кавалерия." />
+
+    <string id="taom_faction_khudorom_of_khand_su_2_name" text="Копейщик вариагов" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_0" text="Степная кавалерия" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_1" text="Воины вариагов" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_2" text="Наёмные банды" />
+
+    <string id="taom_faction_khudorom_of_khand_trait_3" text="Традиция колесничих" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_0" text="Баттанийское медленное строительство" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_1" text="Слабые поселения" />
+
+    <string id="taom_faction_khudorom_of_khand_weakness_2" text="Наёмные капитаны верны монете, а не лорду" />
+
+    <string id="taom_faction_kingdom_of_angaladh_desc" text="Королевство Ангаладх." />
+
+    <string id="taom_faction_kingdom_of_angaladh_name" text="Королевство Ангаладх" />
+
+    <string id="taom_faction_kingdom_of_arthedain_desc" text="Последнее и величайшее из королевств-наследников Арнора. Артэдайн дольше всех противостоял Королю-чародею Ангмара до своего окончательного падения." />
+
+    <string id="taom_faction_kingdom_of_arthedain_name" text="Королевство Артэдайн" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_0" text="Последний из Арнора" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_1" text="Палантир Аннуминаса" />
+
+    <string id="taom_faction_kingdom_of_arthedain_trait_2" text="Дунэдайн Севера" />
+
+    <string id="taom_faction_kingdom_of_cardolan_desc" text="Королевство-наследник Кардолана, некогда части великого королевства Арнор. Ныне земля разрозненных поселений и древних курганов, населённых могильниками." />
+
+    <string id="taom_faction_kingdom_of_cardolan_name" text="Королевство Кардолан" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_0" text="Наследник Арнора" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_1" text="Курганы" />
+
+    <string id="taom_faction_kingdom_of_cardolan_trait_2" text="Следопыты Севера" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_0" text="+10% к скорости отряда на равнинах (Торговцы Долины)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_1" text="+10% к производству зерна в деревнях (Стургийское, унаследованное)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_2" text="-50% army influence cost (Sturgian, inherited)" />
+
+    <string id="taom_faction_kingdom_of_dale_bonus_3" text="+20% штраф к отношениям от решений королевства (Стургийское, унаследованное)" />
+
+    <string id="taom_faction_kingdom_of_dale_desc" text="Восстановленный Бардом город у подножия Эребора. Унаследованное стургийское изобилие зерна и традиция дешёвой армии сочетаются с бонусом TAOM «Торговцы Долины» к скорости на равнинах — но стургийские штрафы к решениям королевства режут в обе стороны. Процветающий торговый союз с гномами держит Дейл богатым и готовым." />
+
+    <string id="taom_faction_kingdom_of_dale_name" text="Королевство Дейл" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_0_desc" text="+10% к скорости отряда на равнинах — караваны Озёрного города движутся быстро." />
+
+    <string id="taom_faction_kingdom_of_dale_perk_0_name" text="Торговцы Долины" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_1_desc" text="Торговля с Эребором обеспечивает дополнительный доход и поставки оружия." />
+
+    <string id="taom_faction_kingdom_of_dale_perk_1_name" text="Союз с гномами" />
+
+    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="Inherited Sturgian +10% village grain and -50% army influence cost; relationship penalty +20% on kingdom decisions." />
+
+    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="Стургийское наследие зерна и армии" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_0" text="Торговля с Эребором" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_1" text="Сильная традиция стрельбы из лука" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_2" text="Дешёвый сбор войск (стургийское)" />
+
+    <string id="taom_faction_kingdom_of_dale_strength_3" text="Богатые зерном деревни" />
+
+    <string id="taom_faction_kingdom_of_dale_su_0_desc" text="Лучник наследия Барда." />
+
+    <string id="taom_faction_kingdom_of_dale_su_0_name" text="Следопыт Чёрной Стрелы" />
+
+    <string id="taom_faction_kingdom_of_dale_su_1_desc" text="Копейщик Озёрного города." />
+
+    <string id="taom_faction_kingdom_of_dale_su_1_name" text="Озёрная стража Дейла" />
+
+    <string id="taom_faction_kingdom_of_dale_su_2_desc" text="Дейлская линия в гномьих доспехах." />
+
+    <string id="taom_faction_kingdom_of_dale_su_2_name" text="Воин-кузнец, обученный в Эреборе" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_0" text="Наследие Барда" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_1" text="Торговля с Эребором" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_2" text="Союз с Озёрным городом" />
+
+    <string id="taom_faction_kingdom_of_dale_trait_3" text="Торговцы Долины" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_0" text="Малая территория" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_1" text="Давление со стороны истерлингов" />
+
+    <string id="taom_faction_kingdom_of_dale_weakness_2" text="Стургийский штраф к решениям королевства" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_desc" text="Винодельческое королевство Дорвинион на северо-западных берегах моря Рун. Процветающее торговое королевство, зажатое между Свободными Народами и Востоком." />
+
+    <string id="taom_faction_kingdom_of_dorwinion_name" text="Королевство Дорвинион" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_0" text="Знаменитые виноградники" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_1" text="Торговый узел" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_trait_2" text="Пограничное королевство" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_0" text="-25% garrison wage (Dwarven Garrison)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_1" text="-30% smithing energy cost (Master Smiths)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_2" text="+10% к скорости отряда на снегу (Горный народ)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_3" text="+10% к производству в деревнях (Гномья промышленность)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_4" text="+5 к боевому духу отряда (Гномье упрямство)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_5" text="+1 к лояльности поселения в день (Гномья честь)" />
+
+    <string id="taom_faction_kingdom_of_erebor_bonus_6" text="-15% building construction speed (Dwarven Perfectionism)" />
+
+    <string id="taom_faction_kingdom_of_erebor_desc" text="Одинокая Гора возвращена. Мастера-кузнецы снижают затраты энергии на ковку на 30%; Гномья честь добавляет лояльность каждый день; Гномье упрямство держит боевой дух непоколебимым. Медленно возводят стену — но стена держится, пока не падёт сама гора." />
+
+    <string id="taom_faction_kingdom_of_erebor_name" text="Королевство Эребор" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_0_desc" text="-30% smithing energy cost — Dwarven forges work twice as fast." />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_0_name" text="Мастера-кузнецы" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_1_desc" text="-25% garrison wage and +1 settlement loyalty per day." />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_1_name" text="Гномий гарнизон" />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_2_desc" text="+5 к боевому духу отряда и +10% к производству деревни — Гномы не сгибаются." />
+
+    <string id="taom_faction_kingdom_of_erebor_perk_2_name" text="Гномье упрямство" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_0" text="Превосходная броня и оружие" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_1" text="Богатые и самодостаточные" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_2" text="Верные дисциплинированные гарнизоны" />
+
+    <string id="taom_faction_kingdom_of_erebor_strength_3" text="Мастерская экономика кузнечного дела" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_0_desc" text="Элитная гномья тяжёлая пехота." />
+
+    <string id="taom_faction_kingdom_of_erebor_su_0_name" text="Железная стража Эребора" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_1_desc" text="Арбалетчики со стальными пружинами." />
+
+    <string id="taom_faction_kingdom_of_erebor_su_1_name" text="Арбалетчик Железных Холмов" />
+
+    <string id="taom_faction_kingdom_of_erebor_su_2_desc" text="Закалённый в битвах мастер топора." />
+
+    <string id="taom_faction_kingdom_of_erebor_su_2_name" text="Ветеран Азанулбизара" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_0" text="Подгорное Королевство" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_1" text="Мастера-ремесленники" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_2" text="Гномьи топоры" />
+
+    <string id="taom_faction_kingdom_of_erebor_trait_3" text="Кузены Железных Холмов" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_0" text="Гномий перфекционизм замедляет строительство стен" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_1" text="Кавалерия недоступна" />
+
+    <string id="taom_faction_kingdom_of_erebor_weakness_2" text="Мало военных союзников" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_desc" text="Гномьи чертоги Синих гор, родовые залы народа Дурина. После потери Эребора многие гномы нашли здесь убежище перед походом Торина." />
+
+    <string id="taom_faction_kingdom_of_ered_duin_name" text="Королевство Эред Дуин" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_0" text="Залы Синих гор" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_1" text="Народ Дурина" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_2" text="Изгнанные гномы" />
+
+    <string id="taom_faction_kingdom_of_ered_duin_trait_3" text="Горное дело и кузнечное мастерство" />
+
+    <string id="taom_faction_kingdom_of_ered_mithrin_desc" text="Королевство Эред Митрин." />
+
+    <string id="taom_faction_kingdom_of_ered_mithrin_name" text="Королевство Эред Митрин" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_0" text="+35% к награде влияния армии (Эльфийская мудрость)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_1" text="+20% к росту очагов деревни (Последний Уютный Дом)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_2" text="+10% к скорости отряда в лесу (Лесная грация)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_3" text="-15% party food consumption (Elven Frugality)" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_4" text="+0.5 к верности поселения в день" />
+
+    <string id="taom_faction_kingdom_of_imladris_bonus_5" text="+25% к стоимости влияния армии (Эльфийская гордость)" />
+
+    <string id="taom_faction_kingdom_of_imladris_desc" text="Скрытая долина Элронда, убежище Мудрых. Эльфийская мудрость объединяет армии с малой ценой влияния; Последний Уютный Дом увеличивает очаги в каждой деревне. Эльфийская гордость всё ещё направляет каждый совет — каждый нолдорский клинок незаменим." />
+
+    <string id="taom_faction_kingdom_of_imladris_name" text="Королевство Имладрис" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_0_desc" text="+35% к присуждаемому влиянию при успехе армии — Мудрые знают, как вести за собой." />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_0_name" text="Эльфийская мудрость" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_1_desc" text="+20% village hearth growth and -15% party food consumption." />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_1_name" text="Последний Уютный Дом" />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_2_desc" text="+10% к скорости отряда в лесу — деревья Имладриса расступаются перед своими." />
+
+    <string id="taom_faction_kingdom_of_imladris_perk_2_name" text="Лесная грация" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_0" text="Элитные воины легенд" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_1" text="Деревни с богатыми очагами" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_2" text="Мастерство леса" />
+
+    <string id="taom_faction_kingdom_of_imladris_strength_3" text="Мудрый совет объединяет армии" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_0_desc" text="Легендарный ветеран Первой Эпохи." />
+
+    <string id="taom_faction_kingdom_of_imladris_su_0_name" text="Мастер клинка нолдор" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_1_desc" text="Тяжёлый эльфийский страж." />
+
+    <string id="taom_faction_kingdom_of_imladris_su_1_name" text="Страж Ривенделла" />
+
+    <string id="taom_faction_kingdom_of_imladris_su_2_desc" text="Конная тяжёлая кавалерия нолдор." />
+
+    <string id="taom_faction_kingdom_of_imladris_su_2_name" text="Копейщик Имладриса" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_0" text="Прибежище Владыки Элронда" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_1" text="Совет Мудрых" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_2" text="Наследие полуэльфов" />
+
+    <string id="taom_faction_kingdom_of_imladris_trait_3" text="Скрытая Долина" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_0" text="Эльфийская гордость повышает стоимость влияния" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_1" text="Угасающий народ — мало пополнений" />
+
+    <string id="taom_faction_kingdom_of_imladris_weakness_2" text="Невозможно расширяться далеко от долины" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="+10% скорости отряда в лесу (Лесное Королевство)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_1" text="+25% шанс ветерана ополчения (Сильванские Стражи)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_2" text="+3 боевой дух отряда (Лесные Узы)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_3" text="-15% party food consumption (Woodland Sustenance)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_bonus_4" text="-20% village hearth growth (Forest Isolation)" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_desc" text="Лесное Королевство Трандуила в северном Лихолесье. Сильванские лучники и ветераны ополчения защищают великий лес от пауков, орков и тени. Лесное Пропитание снижает нужду в припасах; Лесные Узы поддерживают высокий боевой дух. Лесная изоляция замедляет рост." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_name" text="Королевство Ласгален" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_0_desc" text="+10% party speed in forest and -15% food consumption." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_0_name" text="Лесное Королевство" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_1_desc" text="+25% шанс, что новобранцы ополчения прибудут как ветераны." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_1_name" text="Сильванские Стражи" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_2_desc" text="+3 боевой дух отряда — сильванские эльфы маршируют с песнями." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_perk_2_name" text="Лесные Узы" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_0" text="Превосходная лесная стрельба из лука" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_1" text="Ополчение ветеранов стойко держит позиции" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_2" text="Самодостаточные экономные армии" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_strength_3" text="Лесные битвы принадлежат Лихолесью" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_0_desc" text="Элитный лесной лучник." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_0_name" text="Страж Лихолесья" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_1_desc" text="Лесная пехота с длинными копьями." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_1_name" text="Сильванский копейный страж" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_2_desc" text="Молниеносно быстрый застрельщик." />
+
+    <string id="taom_faction_kingdom_of_lasgalen_su_2_name" text="Лесной эльф-разведчик" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_0" text="Королевство Короля Трандуила" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_1" text="Лесные Лучники" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_2" text="Сильванские Стражи" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_trait_3" text="Лесная Твердыня" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_0" text="Лесная изоляция замедляет очаги" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_1" text="Малочисленность — каждый воин на счету" />
+
+    <string id="taom_faction_kingdom_of_lasgalen_weakness_2" text="Изоляционистская дипломатия" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_0" text="+10% к скорости отряда в лесу (Золотой Лес)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_1" text="-20% garrison wage (Wardens of Lorien)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_2" text="-15% party food consumption (Lembas Bread)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_3" text="+3 к моральному духу отряда (Эльфийская Гармония)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_4" text="+0.5 к лояльности поселения в день (Эльфийская Благодать)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_bonus_5" text="-10% building construction speed (Timeless Craft)" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_desc" text="Золотой Лес, королевство Владычицы Галадриэли и Владыки Келеборна. Стражи Лориэна защищают мэллорновые леса малыми силами; Лембас поддерживает каждый поход; Эльфийская Гармония сохраняет боевой дух непоколебимым. Вечное Ремесло означает, что всякая перемена медленна." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_name" text="Королевство Лориэн" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_0_desc" text="+10% party speed in forest and -20% garrison wage." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_0_name" text="Сила Нэньи" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_1_desc" text="-15% party food consumption — one bite carries a marching elf a day." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_1_name" text="Лембас" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_2_desc" text="+3 к моральному духу отряда и +0.5 к лояльности в день в каждом поселении." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_perk_2_name" text="Эльфийская Гармония" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_0" text="Магическая защита Нэньи" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_1" text="Элитные армии дальних походов" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_2" text="Бережливые цепи снабжения" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_strength_3" text="Дешёвые, верные гарнизоны" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_0_desc" text="Элитный эльфийский защитник." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_0_name" text="Страж Галадрима" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_1_desc" text="Легендарный стрелок Наита." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_1_name" text="Мастер-лучник Лориэна" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_2_desc" text="Тяжёлый эльфийский страж Золотого Леса." />
+
+    <string id="taom_faction_kingdom_of_lothlorien_su_2_name" text="Серебряный Страж" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_0" text="Владычица Галадриэль" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_1" text="Кольцо Нэнья" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_2" text="Золотые Мэллорны" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_trait_3" text="Стражи Лориэна" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_0" text="Вечное Ремесло замедляет экспансию" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_1" text="Крошечная постоянная армия" />
+
+    <string id="taom_faction_kingdom_of_lothlorien_weakness_2" text="Угасающая сила — нет роста" />
+
+    <string id="taom_faction_kingdom_of_moria_desc" text="Королевство Мория." />
+
+    <string id="taom_faction_kingdom_of_moria_name" text="Королевство Мория" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_desc" text="Эльфийское королевство в северных пределах Лихолесья, где лесные эльфы оберегают свои древние леса от надвигающейся тьмы с юга." />
+
+    <string id="taom_faction_kingdom_of_neldoreth_name" text="Королевство Нелдорет" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_0" text="Лесные эльфы" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_1" text="Стражи Леса" />
+
+    <string id="taom_faction_kingdom_of_neldoreth_trait_2" text="Род Трандуила" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_desc" text="Дикая холмистая страна Рудаур, самое восточное из королевств-наследников Арнора. Попала под влияние Ангмара, и её горцы служат Королю-Чародею." />
+
+    <string id="taom_faction_kingdom_of_rhudaur_name" text="Королевство Рудаур" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_0" text="Слуги Ангмара" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_1" text="Дикие Горцы" />
+
+    <string id="taom_faction_kingdom_of_rhudaur_trait_2" text="Павшее Королевство" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_0" text="-15% mounted recruitment cost (Horse-lord Heritage)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_1" text="-15% mounted upgrade cost (Horse-lord Heritage)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_2" text="-15% mounted troop wages (Riders of the Mark)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_3" text="+10% к скорости отряда на равнинах (Всадники Равнин)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_4" text="+5 к боевому духу отряда (Дух Всадников)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_5" text="+0.5 к лояльности поселения в день (Братство Конунгов)" />
+
+    <string id="taom_faction_kingdom_of_rohan_bonus_6" text="-10% party speed when over 50% infantry (Cavalry Dependent)" />
+
+    <string id="taom_faction_kingdom_of_rohan_desc" text="Ристания конунгов. Наследие Конунгов удешевляет каждый набор и улучшение конных воинов; Всадники Рохана снижают жалованье конницы; Братство Конунгов укрепляет лояльность Рохана. Зависимость от Конницы — отряды с большим количеством пехоты замедляются до черепашьего шага." />
+
+    <string id="taom_faction_kingdom_of_rohan_name" text="Королевство Рохан" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_0_desc" text="-15% cost to recruit AND upgrade mounted troops — the Mark trains riders cheaply." />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_0_name" text="Наследие Конунгов" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_1_desc" text="-15% mounted troop wages and +10% party speed on plains." />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_1_name" text="Всадники Рохана" />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_2_desc" text="+5 к боевому духу отряда и +0.5 к лояльности поселения в день." />
+
+    <string id="taom_faction_kingdom_of_rohan_perk_2_name" text="Братство Конунгов" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_0" text="Самая дешёвая конница в Средиземье" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_1" text="Самые быстрые армии на равнинах" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_2" text="Преданный Рохан и высокий боевой дух" />
+
+    <string id="taom_faction_kingdom_of_rohan_strength_3" text="Крепкий союз с Гондором" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_0_desc" text="Элитная тяжёлая кавалерия короля." />
+
+    <string id="taom_faction_kingdom_of_rohan_su_0_name" text="Королевская Стража Рохиррим" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_1_desc" text="Средняя кавалерия с копьями." />
+
+    <string id="taom_faction_kingdom_of_rohan_su_1_name" text="Рыцарь Рохиррим" />
+
+    <string id="taom_faction_kingdom_of_rohan_su_2_desc" text="Дисциплинированный пеший лучник равнин." />
+
+    <string id="taom_faction_kingdom_of_rohan_su_2_name" text="Пеший Лучник Вестфолда" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_0" text="Конунги" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_1" text="Всадники Рохана" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_2" text="Хельмова Падь" />
+
+    <string id="taom_faction_kingdom_of_rohan_trait_3" text="Союз с Гондором" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_0" text="Зависимость от Конницы — отряды с большим количеством пехоты замедляются" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_1" text="Слабые традиции пехоты" />
+
+    <string id="taom_faction_kingdom_of_rohan_weakness_2" text="Хельмова Падь остаётся незащищённой, когда Рохан выступает в поход" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_desc" text="Королевство Южного Рованиона." />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_name" text="Королевство Южного Рованиона" />
+
+    <string id="taom_faction_kingdom_of_zigalnara_desc" text="Королевство Зигалнара." />
+
+    <string id="taom_faction_kingdom_of_zigalnara_name" text="Королевство Зигалнара" />
+
+    <string id="taom_faction_nurunkhizdin_desc" text="Нурунхиздин." />
+
+    <string id="taom_faction_nurunkhizdin_name" text="Нурунхиздин" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_0" text="-50% army influence cost (Shadow Command)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_1" text="+20% к лимиту размера отряда (Тёмные Легионы)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_2" text="+20% к скорости появления добровольцев в деревнях (Тёмные Призывники)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_3" text="+20% к шансу ополченцев стать ветеранами (Тёмный Призыв)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_4" text="+1 Торговец + 1 Ремесленник + 13 Главарей банд в городе Дол Гулдур (всего 20)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_5" text="+10% к количеству знати в деревнях (Скрытые Лачуги)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_6" text="+10% к потреблению пищи отрядом (Прожорливые Орды)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_bonus_7" text="-20% building construction speed (Ruinous Works)" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_desc" text="Южная твердыня Некроманта в Лихолесье. Теневое Командование собирает орды почти без влияния; Темная Повинность обучает ветеранов ополчения; Теневые Капитаны расширяют единственный город до двадцати знатных. Ненасытные Орды пожирают столько же, сколько убивают." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_name" text="Владычество Дол Гулдура" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_0_desc" text="Стоимость влияния для армии снижена на 50% — страх принуждает к повиновению." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_0_name" text="Теневое Командование" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_1_desc" text="+20% к размеру отряда и +20% к скорости восполнения добровольцев." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_1_name" text="Темные Легионы" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_2_desc" text="Единственный город Дол Гулдура имеет 20 знатных — центр найма 15 главарей банд." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_perk_2_name" text="Теневые Капитаны" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_0" text="Огромные дешёвые армии" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_1" text="Массивный центр рекрутинга" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_2" text="Призыв ветеранов ополчения" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_strength_3" text="Лесная война и страх" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_0_desc" text="Искажённая тенью тяжёлая пехота." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_0_name" text="Урук Дол Гулдура" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_1_desc" text="Быстрая кавалерия на кошмарных варгах." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_1_name" text="Теневой Всадник на Варге" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_2_desc" text="Лейтенант, тронутый колдовством." />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_su_2_name" text="Капитан Чёрных Нуменорцев" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_0" text="Логово Некроманта" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_1" text="Искажённый Лес" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_2" text="Темные Легионы" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_trait_3" text="Теневое Командование" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_0" text="Голодные орды истощают припасы" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_1" text="Промышленный упадок замедляет строительство стен" />
+
+    <string id="taom_faction_overlordship_of_dol_guldur_weakness_2" text="Окружены враждебными лесами" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_0" text="-40% army influence cost (Orc Horde)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_1" text="+20% к лимиту размера отряда (Горный Рой)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_2" text="+25% к урону от набегов (Орки-Мародёры)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_3" text="+10% к скорости отряда на снегу (Горные Мародёры)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_4" text="+20% к скорости восполнения добровольцев в деревнях" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_5" text="+15% зерна в деревнях (Разграбленные Запасы)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_6" text="+1 Ремесленник + 3 Главаря банд на город (Кузнецы Костей, Вожди Бледных Военных Отрядов)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_7" text="+10% к количеству знатных в деревнях (Костяные Лагеря)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_bonus_8" text="+10% к жалованию отряда (Требования Добычи)" />
+
+    <string id="taom_faction_overlordship_of_gundabad_desc" text="Гора Гундабад, священная для Бледных Орков из рода Больга. Огромные военные банды идут из высоких перевалов — дисциплина Орочьей Орды собирает воинства почти без влияния, Горные Мародёры правят снегами, а Требования Добычи обеспечивают каждого вождя жалованьем." />
+
+    <string id="taom_faction_overlordship_of_gundabad_name" text="Владычество Гундабада" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_0_desc" text="Стоимость влияния для армии снижена на 40% — страх принуждает к повиновению." />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_0_name" text="Орочья Орда" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_1_desc" text="+20% к лимиту размера отряда и +10% к скорости отряда на снегу." />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_1_name" text="Горный Рой" />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_2_desc" text="+3 Главаря банд и +1 Ремесленник на город — рекрутинг растёт с налётчиками." />
+
+    <string id="taom_faction_overlordship_of_gundabad_perk_2_name" text="Вожди бледных отрядов" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_0" text="Дешёвые горные орды" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_1" text="Мобильность снежных походов" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_2" text="Экономика набегов держит закрома полными" />
+
+    <string id="taom_faction_overlordship_of_gundabad_strength_3" text="Множество военачальников готовых выступить" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_0_desc" text="Элитная тяжёлая линия Больга." />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_0_name" text="Чемпион бледных орков" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_1_desc" text="Разрушительный осадный зверь." />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_1_name" text="Боевой тролль Гундабада" />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_2_desc" text="Быстрая кавалерия застрельщиков." />
+
+    <string id="taom_faction_overlordship_of_gundabad_su_2_name" text="Варговый аванпостовый" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_0" text="Гора Гундабад" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_1" text="Столица орков Севера" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_2" text="Бледные орки Больга" />
+
+    <string id="taom_faction_overlordship_of_gundabad_trait_3" text="Утраченная священная гномья святыня" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_0" text="Требования добычи истощают казну" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_1" text="Всеобщая враждебность к Свободным Народам" />
+
+    <string id="taom_faction_overlordship_of_gundabad_weakness_2" text="Гномы и эльфы ненавидят бледных орков" />
+
+    <string id="taom_faction_remnants_of_angmar_desc" text="Ужасное царство Короля-Чародея Ангмара на дальнем севере. Из своей крепости Карн Дум Король-Чародей ведёт войну против остатков Арнора." />
+
+    <string id="taom_faction_remnants_of_angmar_name" text="Остатки Ангмара" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_0" text="Король-Чародей" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_1" text="Крепость Карн Дум" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_2" text="Колдовство и ужас" />
+
+    <string id="taom_faction_remnants_of_angmar_trait_3" text="Разрушитель Арнора" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_0" text="+10% к скорости отряда на равнинах (Люди полей)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_1" text="+2,5% к лимиту размера отряда (Постоянные армии)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_2" text="-20% garrison wage (Tower Guard)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_3" text="+30% к награде влияния армии (Гондорская дисциплина)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_4" text="+5 к боевому духу отряда (Гондорская стойкость)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_5" text="+1 к лояльности поселения в день (Дисциплина башенной стражи)" />
+
+    <string id="taom_faction_stewardship_of_gondor_bonus_6" text="-15% village hearth growth (War-Depleted Lands)" />
+
+    <string id="taom_faction_stewardship_of_gondor_desc" text="Последний бастион дунэдайн на юге. Башенная стража держит линию, Гондорская дисциплина дёшево собирает армии, а Люди полей маршируют по равнинам. Истощённые войной земли растут медленно — но Гондор стоит." />
+
+    <string id="taom_faction_stewardship_of_gondor_name" text="Наместничество Гондора" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_0_desc" text="-20% garrison wage and +1 settlement loyalty per day." />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_0_name" text="Дисциплина башенной стражи" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_1_desc" text="+5 к боевому духу отряда и +30% к влиянию армии за успех." />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_1_name" text="Гондорская стойкость" />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_2_desc" text="+10% к скорости отряда на равнинах и +2,5% к размеру отряда — Пеленнор открытая местность." />
+
+    <string id="taom_faction_stewardship_of_gondor_perk_2_name" text="Люди полей" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_0" text="Сбалансированное разнообразие войск" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_1" text="Сильный боевой дух и лояльность" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_2" text="Дисциплинированные гарнизоны" />
+
+    <string id="taom_faction_stewardship_of_gondor_strength_3" text="Командование богатое влиянием" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_0_desc" text="Элитная бронированная пехота Минас Тирита." />
+
+    <string id="taom_faction_stewardship_of_gondor_su_0_name" text="Стража Цитадели" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_1_desc" text="Тяжёлая кавалерия Дол Амрота." />
+
+    <string id="taom_faction_stewardship_of_gondor_su_1_name" text="Рыцарь-Лебедь" />
+
+    <string id="taom_faction_stewardship_of_gondor_su_2_desc" text="Дунэдайн разведчики-лучники." />
+
+    <string id="taom_faction_stewardship_of_gondor_su_2_name" text="Следопыт Итилиэна" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_0" text="Наследие Дунэдайн" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_1" text="Стража Башни" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_2" text="Белое Древо Гондора" />
+
+    <string id="taom_faction_stewardship_of_gondor_trait_3" text="Правление Наместника" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_0" text="Истощённые войной земли растут медленно" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_1" text="Множество границ для защиты" />
+
+    <string id="taom_faction_stewardship_of_gondor_weakness_2" text="Элитные отряды привязаны к определённым регионам" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_desc" text="Регион, где господствуют дикие племена орков из восточных гор. Свирепые налётчики, терроризирующие пограничные земли между Кхандом и Харадом." />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_name" text="Твердыня Эред Гваэр" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_trait_0" text="Орочьи Банды" />
+
+    <string id="taom_faction_stronghold_of_ered_gwaer_trait_1" text="Горные Налётчики" />
+
+    <string id="taom_faction_stronghold_of_narager_desc" text="Пустынный восточный регион, захваченный племенами орков. Эти дикие банды совершают набеги на пограничные земли и служат разведчиками для сил тьмы." />
+
+    <string id="taom_faction_stronghold_of_narager_name" text="Твердыня Нарагер" />
+
+    <string id="taom_faction_stronghold_of_narager_trait_0" text="Орочьи Налётчики" />
+
+    <string id="taom_faction_stronghold_of_narager_trait_1" text="Восточные Пустоши" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_0" text="+10% к скорости отряда в пустыне (Сыны Солнца)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_1" text="+5% к лимиту размера отряда (Харадримские Банды)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="-30% caravan build cost + -10% trade penalty (Aserai Trader, inherited)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="Нет штрафа к скорости в пустыне (Пустыня Асераи, унаследовано)" />
+
+    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="+5% к ежедневному жалованию войск (Жалованье Асераи, унаследовано)" />
+
+    <string id="taom_faction_taskralan_of_harwan_desc" text="Харадримы Харвана, сыны солнца. Унаследована стойкость Асераи к пустыне; черта TAOM «Сыны Солнца» добавляет +10% к скорости отряда в пустыне; Харадримские Банды увеличивают размер отряда поверх унаследованной караванной экономики. Мумакили правят южными равнинами." />
+
+    <string id="taom_faction_taskralan_of_harwan_name" text="Таскралан Харвана" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_0_desc" text="+10% к скорости отряда в пустыне — рождённые под жгучими песками." />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_0_name" text="Сыны Солнца" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_1_desc" text="+5% к лимиту размера отряда — племенные банды едут вместе на зов Мордора." />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_1_name" text="Харадримские Банды" />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="Inherited Aserai Trader (-30% caravans, -10% trade penalty) and Aserai Desert (no desert speed penalty); +5% daily wages." />
+
+    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="Пустынное Наследие Асераи" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_0" text="Боевые звери мумакили" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_1" text="Мобильность в пустыне" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_2" text="Более крупные банды" />
+
+    <string id="taom_faction_taskralan_of_harwan_strength_3" text="Караванная традиция Асераи" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_0_desc" text="Сокрушительный боевой зверь." />
+
+    <string id="taom_faction_taskralan_of_harwan_su_0_name" text="Боевая Башня Мумакиль" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_1_desc" text="Элитные длиннолучники далёкого юга." />
+
+    <string id="taom_faction_taskralan_of_harwan_su_1_name" text="Лучник Харад Махуд" />
+
+    <string id="taom_faction_taskralan_of_harwan_su_2_desc" text="Легкая кавалерия застрельщиков." />
+
+    <string id="taom_faction_taskralan_of_harwan_su_2_name" text="Всадник, Закаленный Солнцем" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_0" text="Боевые звери мумакиль" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_1" text="Воины пустыни" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_2" text="Солнечно-бронзовая кожа" />
+
+    <string id="taom_faction_taskralan_of_harwan_trait_3" text="Южный союз" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_0" text="Штраф холодного климата" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_1" text="Племенная вражда" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_2" text="Мало кузнецов и стен" />
+
+    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="Заимствованные у асераев +5% к жалованию войск" />
+
+    <string id="taom_faction_taskralan_of_shaghana_desc" text="Таскралан Шаганы." />
+
+    <string id="taom_faction_taskralan_of_shaghana_name" text="Таскралан Шаганы" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_desc" text="Дикие земли Энедвайта между Арнором и Гондором. Дом разрозненных кланов людей, не подчиняющихся никакому королю, живущих охотниками и скотоводами." />
+
+    <string id="taom_faction_wildmen_of_enedwaith_name" text="Дикари Энедвайта" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_0" text="Разрозненные кланы" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_1" text="Дикие охотники" />
+
+    <string id="taom_faction_wildmen_of_enedwaith_trait_2" text="Отсутствие центральной власти" />
+
   </strings>
 
 </base>

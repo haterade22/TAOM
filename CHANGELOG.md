@@ -2,6 +2,31 @@
 
 ## 2026-06-01
 
+### feat(faction-map): Phase 3 — 11 AI-language translation propagation + U+2212 minus-glyph fix (#260)
+
+Phase 3 of the CC faction-map rewrite (issue #260). Ran `tools/translate_with_claude.py` against all 11 AI-translated languages (BR, CNs, CNt, DE, FR, IT, JP, KO, RU, SP, TR; Polish hand-translated per convention) for the 617 new `taom_faction_*` keys from Phase 1+2 + Phase 2 fix. Each language file at `Main/_Module/ModuleData/Languages/<LANG>/std_taom_module_strings_<lang-code>.xml` updated via `rebuild_translation_files.py` then translated via Claude Sonnet 4.5 batched API.
+
+**Coverage:** Out of ~13,000 total entries across 11 languages, ~99.9% successfully translated. ~40 pre-existing `taom_career_rank_*` entries (CareerSystem, not faction-map) consistently fail across languages due to multi-variable string complexity — unrelated to this work. Within Phase 2's 617 new faction-map keys, all 11 languages have 100% coverage after two batch-failure retries (CNt + SP recovered Dol Guldur content; TR recovered Gondor/Gundabad/Harad bonuses).
+
+**In-game bug fix — U+2212 mathematical minus.** In-game verification revealed that the Unicode mathematical minus (U+2212, `−`) used in 50 places like "−20% garrison wage" rendered as an underscore-like low glyph in Bannerlord's font. Replaced ALL 50 occurrences with ASCII hyphen-minus (U+002D, `-`) across:
+
+- `Main/_Module/ModuleData/factionmap/factions.json` (50 → 0)
+- `Main/_Module/ModuleData/taom_module_strings.xml` (50 → 0)
+- 11 × `Languages/<LANG>/std_taom_module_strings_*.xml` (555 → 0 across all)
+- 11 × `tools/translation_cache/*.json` (354 → 0)
+
+Codex review #260 had flagged "37 U+2212 minus signs each" but marked it benign — the in-game render disproved that. Lesson: typographic Unicode characters that "look the same" in a code editor can render very differently in the target font. ASCII is safer for player-facing text.
+
+**Verification:**
+- `python tools/validate_moduledata.py` → PASS (5,648 items / 4,178 NPCs / 36 cultures / 262 party templates).
+- All 12 `Languages/<LANG>/std_taom_module_strings_*.xml` files parse as well-formed XML.
+- `dotnet test TAOM.Tests --filter "FactionMap|LanguageDataXml"` → 109 / 0 / 0.
+- Zero U+2212 occurrences anywhere in the localization chain (source + harvest + translations + cache).
+
+**Cost:** ~$16 total API spend across the 11-language initial sweep + 2 retry passes for CNt/SP/TR.
+
+Save-compat: safe (additive only). Not-tested: in-game verification of 1 non-English language (recommend French or Russian for the next CC smoke test).
+
 ### fix(character-creation): culture-appropriate family name + auto-filled character name in CC
 
 The faction-map character-creation flow generated the player **family/clan name from the stale default culture** — a Gondorian player got the Battanian default "fen Leduin" instead of a Gondorian house. Root cause: `FactionMap.CultureSettingService.SetCultureOnCharacterCreation` invoked vanilla `CharacterCreationContent.SetSelectedCulture` — which generates the clan name via `FactionHelper.GenerateClanNameforPlayer()` reading `CharacterObject.PlayerCharacter.Culture` (== `Hero.MainHero.Culture`) — **before** `ExecuteSelectCulture()` assigned the chosen culture to the hero. Pure-vanilla CC does the reverse (assign culture on click in `OnCultureSelection`, generate name on Next in `SetSelectedCulture`); the faction-map rewrite inverted the order, so the name was always generated from the default culture's `<clan_names>`. Gondor's own `<clan_names>` were correctly defined in `taom_spcultures.xml` — just never consulted.
@@ -10,7 +35,7 @@ The faction-map character-creation flow generated the player **family/clan name 
 - **Enhancement — `Patch44_CCNameAutofill`:** the Review-stage "Enter your name" field (empty in vanilla until the player types or rolls the dice) is now pre-filled with a culture-appropriate first name. Postfix on `CharacterCreationReviewStageVM`'s 6-arg constructor calls the VM's own public `ExecuteRandomizeName()` only when `Name` is blank — never clobbers a typed name, field stays editable. Done at the Review stage so the generated name matches the finalized gender.
 - **Files:** `Main/Features/FactionMap/CultureSettingService.cs`; new `Main/Features/CharacterCreation/Hooks/CharacterCreationReviewStageVM_AutoFillName_Patch.cs`; `Main/SubModule.cs` (register `Patch44_CCNameAutofill`).
 - **Verified:** compile clean (0 warnings/0 errors); `TAOM.Tests` 2877 passed / 0 failed / 2 skipped. In-game CC verification still pending (the game was holding the module DLLs locked during this session, blocking the game-folder deploy).
-- **Known follow-up (out of scope):** `FactionHelper.GenerateClanNameforPlayer` hardcodes `"{=Uk3qRuCS}dey Corvand"` for any culture whose `StringId == "vlandia"` — if Rohan reuses that id, Rohan players always get "dey Corvand" regardless of this fix.
+- **Rohan (`vlandia` id) special-case:** vanilla `FactionHelper.GenerateClanNameforPlayer` hardcodes `"{=Uk3qRuCS}dey Corvand"` for the `vlandia` culture id, which TAOM repurposes as Rohan — so the ordering fix above alone would still leave Rohan players with "dey Corvand". `CultureSettingService` now overrides that placeholder immediately after `SetSelectedCulture`, regenerating from Rohan's own `<clan_names>` (Harolding, Earfening, …); guarded on a non-empty `ClanNameList` so it falls back to the vanilla value rather than throwing. `vlandia` is the only culture vanilla hardcodes — the other reused vanilla ids (empire/aserai/battania/sturgia/khuzait → Dunland/Harad/Khand/…) already generate correctly via the ordering fix.
 
 Research: `CharacterCreationContent.SetSelectedCulture`, `FactionHelper.GenerateClanNameforPlayer`, `CharacterCreationCultureStageVM.OnCultureSelection`, `CharacterCreationReviewStageVM`, `CharacterObject.Culture`
 Save-compat: None — character-creation-only, no persisted state.
