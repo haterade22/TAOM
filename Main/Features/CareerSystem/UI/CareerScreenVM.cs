@@ -12,6 +12,9 @@ public class CareerScreenVM : ViewModel
     private readonly ICareerRegistry _registry;
     private readonly ICareerPassiveService _passiveService;
     private readonly ICareerConfigProvider _configProvider;
+    // Optional: when supplied, tier availability becomes hybrid (level OR completed quest). Null in
+    // unit tests / legacy callers → falls back to the registry's level-only gate.
+    private readonly ICareerQuestService _questService;
     private readonly IModLogger _logger;
     private readonly string _heroStringId;
     private readonly int _heroLevel;
@@ -49,12 +52,14 @@ public class CareerScreenVM : ViewModel
         IModLogger logger,
         string heroStringId,
         int heroLevel,
-        Action onClose)
+        Action onClose,
+        ICareerQuestService questService = null)
     {
         _dataService = dataService;
         _registry = registry;
         _passiveService = passiveService;
         _configProvider = configProvider;
+        _questService = questService;
         _logger = logger;
         _heroStringId = heroStringId;
         _heroLevel = heroLevel;
@@ -123,8 +128,8 @@ public class CareerScreenVM : ViewModel
         FreeCareerPointsText = new TextObject("{=taom_career_free_points}Free Points: {COUNT}")
             .SetTextVariable("COUNT", FreeCareerPoints).ToString();
 
-        Tier2Locked = !_registry.IsTierAvailable(_heroLevel, 2);
-        Tier3Locked = !_registry.IsTierAvailable(_heroLevel, 3);
+        Tier2Locked = !IsTierAvail(2);
+        Tier3Locked = !IsTierAvail(3);
 
         // Locked tiers show a "Requires Level N" label (level sourced from the registry, the single
         // source of truth) in place of the old stretched gate art.
@@ -149,6 +154,14 @@ public class CareerScreenVM : ViewModel
         }
     }
 
+    // Hybrid tier gate: a tier is available when the hero meets the level threshold OR has completed
+    // that tier's career quest. Falls back to the registry's level-only gate when no quest service
+    // was supplied (unit tests / legacy callers).
+    private bool IsTierAvail(int tier)
+        => _questService != null
+            ? _questService.IsTierUnlocked(_heroLevel, tier, _heroStringId)
+            : _registry.IsTierAvailable(_heroLevel, tier);
+
     private void RebuildChoiceGroups(CareerDefinition career)
     {
         _choiceGroupsTier1.Clear();
@@ -160,7 +173,7 @@ public class CareerScreenVM : ViewModel
             var group = _registry.GetGroup(groupId);
             if (group == null) continue;
 
-            var isLocked = !_registry.IsTierAvailable(_heroLevel, group.Tier);
+            var isLocked = !IsTierAvail(group.Tier);
             var groupVM = new CareerChoiceGroupObjectVM(group, isLocked, () => RefreshValues());
 
             var choices = _registry.GetChoicesForGroup(groupId);
@@ -191,7 +204,7 @@ public class CareerScreenVM : ViewModel
         if (!string.IsNullOrEmpty(choice.GroupId))
         {
             var group = _registry.GetGroup(choice.GroupId);
-            if (group != null && !_registry.IsTierAvailable(_heroLevel, group.Tier))
+            if (group != null && !IsTierAvail(group.Tier))
                 return;
 
             if (choice.Type == Domain.ChoiceType.Keystone && group != null)
@@ -235,7 +248,7 @@ public class CareerScreenVM : ViewModel
         if (!string.IsNullOrEmpty(choice.GroupId))
         {
             var group = _registry.GetGroup(choice.GroupId);
-            if (group != null && !_registry.IsTierAvailable(_heroLevel, group.Tier))
+            if (group != null && !IsTierAvail(group.Tier))
                 return false;
 
             // Enforce one Keystone per tier

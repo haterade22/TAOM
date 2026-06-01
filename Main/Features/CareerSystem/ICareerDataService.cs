@@ -15,6 +15,8 @@ public interface ICareerDataService
     int GetChoiceCount(string heroStringId);
     void UnlockTier(string heroStringId, int tier);
     bool IsTierUnlocked(string heroStringId, int tier);
+    void SetFlag(string heroStringId, string flag);
+    bool HasFlag(string heroStringId, string flag);
     void ClearCareer(string heroStringId);
     Dictionary<string, HeroCareerData> GetAllData();
     void RestoreData(Dictionary<string, HeroCareerData> data);

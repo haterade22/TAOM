@@ -28,6 +28,7 @@ public class CareerPersistenceBehavior : CampaignBehaviorBase
         var careerIds = new Dictionary<string, string>();
         var choiceLists = new Dictionary<string, string>();
         var tierLists = new Dictionary<string, string>();
+        var flagLists = new Dictionary<string, string>();
 
         // Save path: flatten HeroCareerData into primitive dicts
         var allData = _dataService.GetAllData();
@@ -41,11 +42,14 @@ public class CareerPersistenceBehavior : CampaignBehaviorBase
                 choiceLists[heroId] = string.Join(",", data.ChoiceIds);
             if (data.TierUnlocks.Count > 0)
                 tierLists[heroId] = string.Join(",", data.TierUnlocks);
+            if (data.Flags.Count > 0)
+                flagLists[heroId] = string.Join(",", data.Flags);
         }
 
         dataStore.SyncData("_taom_careerIds", ref careerIds);
         dataStore.SyncData("_taom_careerChoices", ref choiceLists);
         dataStore.SyncData("_taom_careerTiers", ref tierLists);
+        dataStore.SyncData("_taom_careerFlags", ref flagLists);
 
         // Phase 9b #128 P1 — gate the reconstruct block on IsLoading. Pre-fix this ran on EVERY
         // SyncData call including saves: RestoreData(restored) called `_heroData = data`,
@@ -95,6 +99,19 @@ public class CareerPersistenceBehavior : CampaignBehaviorBase
                     if (int.TryParse(tierStr, out var tier))
                         heroData.TierUnlocks.Add(tier);
                 }
+            }
+        }
+        if (flagLists != null)
+        {
+            foreach (var kvp in flagLists)
+            {
+                if (!restored.TryGetValue(kvp.Key, out var heroData))
+                {
+                    heroData = new HeroCareerData(kvp.Key);
+                    restored[kvp.Key] = heroData;
+                }
+                foreach (var flag in kvp.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    heroData.AddFlag(flag);
             }
         }
 

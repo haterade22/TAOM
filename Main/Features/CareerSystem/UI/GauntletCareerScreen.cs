@@ -22,6 +22,7 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
     private readonly ICareerRegistry _registry;
     private readonly ICareerPassiveService _passiveService;
     private readonly ICareerConfigProvider _configProvider;
+    private readonly ICareerQuestService _questService;
     private readonly IModLogger _logger;
     private readonly string _heroStringId;
     private readonly int _heroLevel;
@@ -33,6 +34,7 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
         _registry = IoC.Resolve<ICareerRegistry>();
         _passiveService = IoC.Resolve<ICareerPassiveService>();
         _configProvider = IoC.Resolve<ICareerConfigProvider>();
+        _questService = IoC.Resolve<ICareerQuestService>();
         _logger = IoC.Resolve<IModLogger>();
         _heroStringId = hero?.StringId ?? "";
         _heroLevel = hero?.Level ?? 0;
@@ -61,7 +63,7 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
 
         _gauntletLayer = new GauntletLayer("CareerScreen", 1);
         _gauntletLayer.IsFocusLayer = true;
-        _viewModel = new CareerScreenVM(_dataService, _registry, _passiveService, _configProvider, _logger, _heroStringId, _heroLevel, CloseScreen);
+        _viewModel = new CareerScreenVM(_dataService, _registry, _passiveService, _configProvider, _logger, _heroStringId, _heroLevel, CloseScreen, _questService);
         _movie = _gauntletLayer.LoadMovie("CareerScreen", _viewModel);
         _gauntletLayer.InputRestrictions.SetInputRestrictions();
         AddLayer(_gauntletLayer);

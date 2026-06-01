@@ -1106,6 +1106,10 @@ RCA: [`docs/reviews/rca-cultural-feats-per-occupation-2026-05-31.md`](rca-cultur
 
 Build & test (deploy-skip flags, game running): **2772 passed / 0 failed / 2 skipped** (up from 2771 — +1 confirms the new dispatch test ran). ModuleData validator clean.
 
+### 2026-06-01 — CareerQuestSystem (new feature, full ship workflow)
+
+Codex (gpt-5.5 xhigh) adversarial pass after a 5-agent `/deep-review`. **Deep-review found the 1 HIGH** (`CareerQuest` missing `SpecialQuestType` → `QuestManager.OnGameLoaded` silently cancels the quest on the first save-load); Codex **independently confirmed** that fix + the `List<JournalLog>` save-graph identity assumption + the 4th-persistence-dict correctness by decompiling the installed 1.4.5 save system, then found **5 more (all real, 0 false positives):** `KillEnemyLords` no at-war check (MED), `VisitSettlementType`/`UnlockTier` config-validation gaps (MED/LOW), `GrantItem` silent no-op on a bad id (LOW), `_offerPending` stuck-on-throw (LOW). All fixed in-session + tested. Division of labor: deep-review caught the engine-lifecycle HIGH (it decompiled `QuestManager.OnGameLoaded`); Codex caught game-semantics + config-completeness gaps the plumbing-correct code still had. RCA: [rca-career-quest-system-2026-06-01.md](rca-career-quest-system-2026-06-01.md). Build 0 err, suite **2877 pass**. Codex accuracy this review: 5/5 confirmed, 0 false positives.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

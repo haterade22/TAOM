@@ -75,12 +75,24 @@ public class CareerDataService : ICareerDataService
             && data.TierUnlocks.Contains(tier);
     }
 
+    public void SetFlag(string heroStringId, string flag)
+    {
+        var data = GetOrCreateData(heroStringId);
+        data.AddFlag(flag);
+    }
+
+    public bool HasFlag(string heroStringId, string flag)
+    {
+        return _heroData.TryGetValue(heroStringId, out var data) && data.HasFlag(flag);
+    }
+
     public void ClearCareer(string heroStringId)
     {
         if (!_heroData.TryGetValue(heroStringId, out var data)) return;
         data.CareerStringId = null;
         data.ChoiceIds.Clear();
         data.TierUnlocks.Clear();
+        data.Flags.Clear();
     }
 
     public Dictionary<string, HeroCareerData> GetAllData()

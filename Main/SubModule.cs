@@ -424,6 +424,12 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddBehavior(new CareerSwitchDialogueBehavior(
                 careerDataService, careerRegistry, careerSwitchService, careerAdapterFactory, careerLogger));
 
+            // Career-tied quest system (Phase 6) — offers/starts tier quests; CareerQuest : QuestBase
+            // is registered for saving by the auto-discovered CareerQuestSaveableTypeDefiner.
+            var careerQuestService = IoC.Resolve<Features.CareerSystem.ICareerQuestService>();
+            campaignStarter.AddBehavior(new Features.CareerSystem.Quests.CareerQuestCampaignBehavior(
+                careerDataService, careerQuestService, careerLogger));
+
             // Career system GameModels — reuse careerPassiveService resolved above (line 334).
             // Phase 9b #142 — agent-stat extraction: TaomAgentStatCalculateModel /
             // TaomAgentApplyDamageModel now delegate UpdateAgentStats + damage-amp/red +

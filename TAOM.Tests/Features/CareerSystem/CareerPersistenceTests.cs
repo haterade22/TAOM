@@ -47,9 +47,9 @@ public class CareerPersistenceTests
 
         _behavior.SyncData(dataStore);
 
-        // Assert: exactly 3 calls, all primitive dictionaries
-        Assert.AreEqual(3, capturedTypes.Count,
-            "SyncData should be called exactly 3 times (careerIds, choices, tiers)");
+        // Assert: exactly 4 calls, all primitive dictionaries
+        Assert.AreEqual(4, capturedTypes.Count,
+            "SyncData should be called exactly 4 times (careerIds, choices, tiers, flags)");
     }
 
     [TestMethod]
@@ -161,6 +161,30 @@ public class CareerPersistenceTests
             "Saving must not replace the service's data dictionary (RestoreData side-effect)");
         Assert.AreEqual(preCareer, _dataService.GetCareerStringId("hero1"));
         Assert.AreEqual(preChoiceCount, _dataService.GetChoiceCount("hero1"));
+    }
+
+    [TestMethod]
+    public void SyncData_RoundTrip_PreservesFlags()
+    {
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.SetFlag("hero1", "captain_proven");
+        _dataService.SetFlag("hero1", "ithilien_oath");
+
+        var store = new FakeDataStore();
+        _behavior.SyncData(store);
+
+        var savedFlags = store.GetSaved<Dictionary<string, string>>("_taom_careerFlags");
+        Assert.AreEqual("captain_proven,ithilien_oath", savedFlags["hero1"]);
+
+        var freshService = new CareerDataService();
+        var loadBehavior = new CareerPersistenceBehavior(freshService, Substitute.For<IModLogger>());
+        var loadStore = new FakeDataStore { Mode = FakeDataStore.StoreMode.Loading };
+        loadStore.SetData("_taom_careerIds", store.GetSaved<Dictionary<string, string>>("_taom_careerIds"));
+        loadStore.SetData("_taom_careerFlags", savedFlags);
+        loadBehavior.SyncData(loadStore);
+
+        Assert.IsTrue(freshService.HasFlag("hero1", "captain_proven"));
+        Assert.IsTrue(freshService.HasFlag("hero1", "ithilien_oath"));
     }
 
     /// <summary>

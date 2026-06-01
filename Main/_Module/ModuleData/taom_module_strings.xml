@@ -832,6 +832,17 @@
 	<string id="taom_career_tier3" text="{=taom_career_tier3}Tier 3" />
 	<string id="taom_career_free_points" text="{=taom_career_free_points}Free Points: {COUNT}" />
 	<string id="taom_career_tier_requirement" text="{=taom_career_tier_requirement}Requires Level {LEVEL}" />
+	<!-- Career-tied quest system (Phase 6) -->
+	<string id="taom_cq_title" text="{=taom_cq_title}Career Quest" />
+	<string id="taom_cq_body" text="{=taom_cq_body}Prove yourself." />
+	<string id="taom_cq_task" text="{=taom_cq_task}Objective" />
+	<string id="taom_cq_accept" text="{=taom_cq_accept}Accept" />
+	<string id="taom_cq_decline" text="{=taom_cq_decline}Not now" />
+	<string id="taom_cq_capt_osg_t2_title" text="{=taom_cq_capt_osg_t2_title}The Defense of the East Bank" />
+	<string id="taom_cq_capt_osg_t2_desc" text="{=taom_cq_capt_osg_t2_desc}Osgiliath's ruins must hold against the Shadow. Prove yourself worthy of the rank of Captain — win Gondor's battles, master the blade, and let your renown spread along the Anduin." />
+	<string id="taom_cq_capt_osg_t2_obj_battles" text="{=taom_cq_capt_osg_t2_obj_battles}Win battles for Gondor" />
+	<string id="taom_cq_capt_osg_t2_obj_skill" text="{=taom_cq_capt_osg_t2_obj_skill}Master the One Handed blade" />
+	<string id="taom_cq_capt_osg_t2_obj_renown" text="{=taom_cq_capt_osg_t2_obj_renown}Win renown along the Anduin" />
 	<!-- Career per-tier rank titles (Phase C; web-researched, adopted from TOR) -->
 	<string id="taom_career_rank1_avanc_luth_raider" text="{=taom_career_rank1_avanc_luth_raider}Painted Reaver" />
 	<string id="taom_career_rank2_avanc_luth_raider" text="{=taom_career_rank2_avanc_luth_raider}Clan Berserker" />

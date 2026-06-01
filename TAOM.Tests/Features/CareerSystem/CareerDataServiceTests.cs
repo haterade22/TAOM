@@ -218,4 +218,37 @@ public class CareerDataServiceTests
         Assert.IsFalse(_service.HasCareer("hero1"));
         Assert.AreEqual("ranger", _service.GetCareerStringId("hero2"));
     }
+
+    // ── Flags (career-quest attribute flags) ──
+
+    [TestMethod]
+    public void HasFlag_NeverSet_ReturnsFalse()
+    {
+        _service.GetOrCreateData("hero1");
+        Assert.IsFalse(_service.HasFlag("hero1", "captain_proven"));
+    }
+
+    [TestMethod]
+    public void SetFlag_ThenHasFlag_ReturnsTrue()
+    {
+        _service.SetFlag("hero1", "captain_proven");
+        Assert.IsTrue(_service.HasFlag("hero1", "captain_proven"));
+    }
+
+    [TestMethod]
+    public void SetFlag_Duplicate_StoresOnlyOnce()
+    {
+        _service.SetFlag("hero1", "captain_proven");
+        _service.SetFlag("hero1", "captain_proven");
+        Assert.AreEqual(1, _service.GetOrCreateData("hero1").Flags.Count);
+    }
+
+    [TestMethod]
+    public void ClearCareer_ClearsFlags()
+    {
+        _service.SetCareer("hero1", "warboss");
+        _service.SetFlag("hero1", "captain_proven");
+        _service.ClearCareer("hero1");
+        Assert.IsFalse(_service.HasFlag("hero1", "captain_proven"));
+    }
 }
