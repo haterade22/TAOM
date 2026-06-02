@@ -682,12 +682,10 @@ public class SubModule : MBSubModuleBase
         {
             mission.AddMissionBehavior(new Features.CareerSystem.CareerPerkMissionBehavior(
                 IoC.Resolve<ICareerDataService>(),
-                IoC.Resolve<ICareerRegistry>(),
                 careerAbilityService,
-                IoC.Resolve<ICareerConfigProvider>(),
-                IoC.Resolve<Features.CareerSystem.Abilities.CareerAbilityEffectRegistry>(),
-                IoC.Resolve<Features.CareerSystem.Mutations.IMutationService>(),
-                IoC.Resolve<ICareerHeroAdapterFactory>(),
+                IoC.Resolve<Features.CareerSystem.Abilities.IAbilityActivationController>(),
+                IoC.Resolve<Features.CareerSystem.UI.IAbilityHudController>(),
+                IoC.Resolve<Features.CareerSystem.Abilities.IAbilityEffectExecutor>(),
                 IoC.Resolve<IModLogger>()));
         }
     }

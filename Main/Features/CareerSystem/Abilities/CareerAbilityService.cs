@@ -77,6 +77,18 @@ public class CareerAbilityService : ICareerAbilityService
         }
     }
 
+    public void ApplyCooldownAdjustment(string heroStringId, float reductionSeconds, float minCooldownSeconds)
+    {
+        if (_abilities.TryGetValue(heroStringId, out var ability))
+        {
+            ability.AdjustCooldown(reductionSeconds, minCooldownSeconds);
+        }
+        else
+        {
+            _logger.LogWarning($"CareerSystem: ApplyCooldownAdjustment — no ability found for hero '{heroStringId}'");
+        }
+    }
+
     public void ClearAll()
     {
         _abilities.Clear();

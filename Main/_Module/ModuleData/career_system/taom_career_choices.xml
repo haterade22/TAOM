@@ -79,7 +79,7 @@
             description="{=taom_roi_t2a_key}Ambush charge requirement reduced, activating more frequently."
             icon_sprite="career_choice_roi_t2a_key">
       <Mutations>
-        <Mutation target_id="ranger_of_ithilien_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="ranger_of_ithilien_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
     </Choice>
     <Choice id="ranger_of_ithilien_t2_a_p1" type="Passive"
@@ -172,7 +172,7 @@
             description="{=taom_roi_t3b_key}Ambush charge greatly reduced, becoming nearly always available."
             icon_sprite="career_choice_roi_t3b_key">
       <Mutations>
-        <Mutation target_id="ranger_of_ithilien_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" />
+        <Mutation target_id="ranger_of_ithilien_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
     </Choice>
     <Choice id="ranger_of_ithilien_t3_b_p1" type="Passive"
@@ -272,7 +272,7 @@
             description="{=taom_cop_t2a_key}Career Ability charge requirement reduced, allowing more frequent activation."
             icon_sprite="career_choice_cop_t2a_key">
       <Mutations>
-        <Mutation target_id="captain_of_osgiliath_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="captain_of_osgiliath_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
     </Choice>
     <Choice id="captain_of_osgiliath_t2_a_p1" type="Passive"
@@ -463,7 +463,7 @@
             description="{=taom_kob_t2a_key}Stampede charge requirement reduced for more frequent thundering charges."
             icon_sprite="career_choice_kob_t2a_key">
       <Mutations>
-        <Mutation target_id="knight_of_belfalas_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="knight_of_belfalas_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
     </Choice>
     <Choice id="knight_of_belfalas_t2_a_p1" type="Passive"
@@ -690,7 +690,7 @@
             description="{=taom_buc_t2_a_key_desc}You need less charge to unleash destruction. Bloodrage charge cost -20."
             icon_sprite="career_choice_buc_t2_a_key">
       <Mutations>
-        <Mutation target_id="black_uruk_captain_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="black_uruk_captain_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.08" />
@@ -828,7 +828,7 @@
             description="{=taom_buc_t3_b_key_desc}You barely need to unleash the rage -- it is ever-present. Bloodrage charge cost -30."
             icon_sprite="career_choice_buc_t3_b_key">
       <Mutations>
-        <Mutation target_id="black_uruk_captain_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" />
+        <Mutation target_id="black_uruk_captain_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.12" />
@@ -978,7 +978,7 @@
             description="{=taom_mc_t2_a_key_desc}More of the faithful answer your call. Voice of the One charge cost -20."
             icon_sprite="career_choice_mc_t2_a_key">
       <Mutations>
-        <Mutation target_id="mulkerhili_cultist_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="mulkerhili_cultist_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.08" />
@@ -1116,7 +1116,7 @@
             description="{=taom_mc_t3_b_key_desc}The voice requires less sacrifice to invoke. Voice charge cost -30."
             icon_sprite="career_choice_mc_t3_b_key">
       <Mutations>
-        <Mutation target_id="mulkerhili_cultist_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" />
+        <Mutation target_id="mulkerhili_cultist_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.10" />
@@ -1266,7 +1266,7 @@
             description="{=taom_sr_t2_a_key_desc}You strike before the enemy knows you're there. Sneak-Creeping charge cost -20."
             icon_sprite="career_choice_sr_t2_a_key">
       <Mutations>
-        <Mutation target_id="snaga_rider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="snaga_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="HorseChargeDamage" value="0.08" />
@@ -1404,7 +1404,7 @@
             description="{=taom_sr_t3_b_key_desc}You strike first, always. Sneak-Creeping charge cost -30."
             icon_sprite="career_choice_sr_t3_b_key">
       <Mutations>
-        <Mutation target_id="snaga_rider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" />
+        <Mutation target_id="snaga_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="HorseChargeDamage" value="0.12" />
@@ -1554,7 +1554,7 @@
             description="{=taom_ohw_t2_a_key_desc}You need no great cause to rampage. Hammer Down charge cost -20."
             icon_sprite="career_choice_ohw_t2_a_key">
       <Mutations>
-        <Mutation target_id="olog_hai_warchief_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="olog_hai_warchief_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.08" />
@@ -1692,7 +1692,7 @@
             description="{=taom_ohw_t3_b_key_desc}You barely need a reason to smash. Hammer Down charge cost -30."
             icon_sprite="career_choice_ohw_t3_b_key">
       <Mutations>
-        <Mutation target_id="olog_hai_warchief_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" />
+        <Mutation target_id="olog_hai_warchief_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.14" />
@@ -1841,7 +1841,7 @@
             description="{=taom_moa_t2_a_key_desc}You coordinate devastating mass fire. Light Fletching charge cost -20."
             icon_sprite="career_choice_moa_t2_a_key">
       <Mutations>
-        <Mutation target_id="marksman_of_aldburg_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="marksman_of_aldburg_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.08" />
@@ -1979,7 +1979,7 @@
             description="{=taom_moa_t3_b_key_desc}The nock and release is pure muscle memory. Light Fletching charge cost -30."
             icon_sprite="career_choice_moa_t3_b_key">
       <Mutations>
-        <Mutation target_id="marksman_of_aldburg_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" />
+        <Mutation target_id="marksman_of_aldburg_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.10" />
@@ -2129,7 +2129,7 @@
             description="{=taom_ew_t2_a_key_desc}The ancestors ride with you always. Warcry charge cost -20."
             icon_sprite="career_choice_ew_t2_a_key">
       <Mutations>
-        <Mutation target_id="eotheod_windrider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="eotheod_windrider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="HorseChargeDamage" value="0.08" />
@@ -2267,7 +2267,7 @@
             description="{=taom_ew_t3_b_key_desc}The warcry is always on your lips. Warcry charge cost -30."
             icon_sprite="career_choice_ew_t3_b_key">
       <Mutations>
-        <Mutation target_id="eotheod_windrider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" />
+        <Mutation target_id="eotheod_windrider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="HorseChargeDamage" value="0.12" />
@@ -2417,7 +2417,7 @@
             description="{=taom_ws_t2_a_key_desc}You have scouted this ground for years. River Navigator charge cost -20."
             icon_sprite="career_choice_ws_t2_a_key">
       <Mutations>
-        <Mutation target_id="watchman_of_stangard_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="watchman_of_stangard_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.08" />
@@ -2555,7 +2555,7 @@
             description="{=taom_ws_t3_b_key_desc}The watch is always maintained. River Navigator charge cost -30."
             icon_sprite="career_choice_ws_t3_b_key">
       <Mutations>
-        <Mutation target_id="watchman_of_stangard_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" />
+        <Mutation target_id="watchman_of_stangard_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.12" />
@@ -2704,7 +2704,7 @@
             description="{=taom_alr_t2_a_key_desc}The clans have old scores to settle. Savage Rush charge cost -20."
             icon_sprite="career_choice_alr_t2_a_key">
       <Mutations>
-        <Mutation target_id="avanc_luth_raider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="avanc_luth_raider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Damage" attack_type_mask="Melee" value="0.08" />
@@ -2842,7 +2842,7 @@
             description="{=taom_alr_t3_b_key_desc}The rage needs little provocation. Savage Rush charge cost -30."
             icon_sprite="career_choice_alr_t3_b_key">
       <Mutations>
-        <Mutation target_id="avanc_luth_raider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" />
+        <Mutation target_id="avanc_luth_raider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Damage" attack_type_mask="Melee" value="0.12" />
@@ -2992,7 +2992,7 @@
             description="{=taom_wh_t2_a_key_desc}The whole pack descends without warning. Marked Prey charge cost -20."
             icon_sprite="career_choice_wh_t2_a_key">
       <Mutations>
-        <Mutation target_id="wolfskin_hunter_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="wolfskin_hunter_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.08" />
@@ -3130,7 +3130,7 @@
             description="{=taom_wh_t3_b_key_desc}The prey can never escape your mark. Marked Prey charge cost -30."
             icon_sprite="career_choice_wh_t3_b_key">
       <Mutations>
-        <Mutation target_id="wolfskin_hunter_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" />
+        <Mutation target_id="wolfskin_hunter_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.12" />
@@ -3280,7 +3280,7 @@
             description="{=taom_cr_t2_a_key_desc}The pack is always ready to charge. Warpack Charge cost -20."
             icon_sprite="career_choice_cr_t2_a_key">
       <Mutations>
-        <Mutation target_id="clanguard_rider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" />
+        <Mutation target_id="clanguard_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="HorseChargeDamage" value="0.08" />
@@ -3418,7 +3418,7 @@
             description="{=taom_cr_t3_b_key_desc}The warpack is always at full fury. Warpack Charge cost -30."
             icon_sprite="career_choice_cr_t3_b_key">
       <Mutations>
-        <Mutation target_id="clanguard_rider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" />
+        <Mutation target_id="clanguard_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
       </Mutations>
       <PassiveEffects>
         <PassiveEffect type="HorseChargeDamage" value="0.12" />
@@ -3504,7 +3504,7 @@
 
   <ChoiceGroup id="blademaster_of_ren_t2_a" display_name="{=taom_career_grp_blademaster_of_ren_t2_a}Relentless Edge" career_id="blademaster_of_ren" tier="2">
     <Choice id="blademaster_of_ren_t2_a_key" type="Keystone" description="{=taom_bor_t2a_key}Twin Strike charge reduced, relentless precision strikes." icon_sprite="career_choice_bor_t2a_key">
-      <Mutations><Mutation target_id="blademaster_of_ren_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="blademaster_of_ren_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="blademaster_of_ren_t2_a_p1" type="Passive" description="{=taom_bor_t2a_p1}+12% swing speed." icon_sprite="career_choice_bor_t2a_p1">
       <PassiveEffect type="SwingSpeed" magnitude="0.12" operation="Add" is_percentage="true" />
@@ -3558,7 +3558,7 @@
 
   <ChoiceGroup id="blademaster_of_ren_t3_b" display_name="{=taom_career_grp_blademaster_of_ren_t3_b}Unbroken Swordlord" career_id="blademaster_of_ren" tier="3">
     <Choice id="blademaster_of_ren_t3_b_key" type="Keystone" description="{=taom_bor_t3b_key}Twin Strike charge greatly reduced, the blade is always ready." icon_sprite="career_choice_bor_t3b_key">
-      <Mutations><Mutation target_id="blademaster_of_ren_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="blademaster_of_ren_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="blademaster_of_ren_t3_b_p1" type="Passive" description="{=taom_bor_t3b_p1}+15% resistance." icon_sprite="career_choice_bor_t3b_p1">
       <PassiveEffect type="Resistance" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -3622,7 +3622,7 @@
 
   <ChoiceGroup id="steppe_bowmaster_t2_a" display_name="{=taom_career_grp_steppe_bowmaster_t2_a}Endless Quiver" career_id="steppe_bowmaster" tier="2">
     <Choice id="steppe_bowmaster_t2_a_key" type="Keystone" description="{=taom_sb_t2a_key}Storm of Arrows charge reduced, neverending quiver." icon_sprite="career_choice_sb_t2a_key">
-      <Mutations><Mutation target_id="steppe_bowmaster_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="steppe_bowmaster_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="steppe_bowmaster_t2_a_p1" type="Passive" description="{=taom_sb_t2a_p1}+4 ammo." icon_sprite="career_choice_sb_t2a_p1">
       <PassiveEffect type="Ammo" magnitude="4" operation="Add" />
@@ -3676,7 +3676,7 @@
 
   <ChoiceGroup id="steppe_bowmaster_t3_b" display_name="{=taom_career_grp_steppe_bowmaster_t3_b}Unceasing Hail" career_id="steppe_bowmaster" tier="3">
     <Choice id="steppe_bowmaster_t3_b_key" type="Keystone" description="{=taom_sb_t3b_key}Storm of Arrows charge greatly reduced, unceasing volleys." icon_sprite="career_choice_sb_t3b_key">
-      <Mutations><Mutation target_id="steppe_bowmaster_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="steppe_bowmaster_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="steppe_bowmaster_t3_b_p1" type="Passive" description="{=taom_sb_t3b_p1}+15% movement speed." icon_sprite="career_choice_sb_t3b_p1">
       <PassiveEffect type="MovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -3740,7 +3740,7 @@
 
   <ChoiceGroup id="chariot_warlord_t2_a" display_name="{=taom_career_grp_chariot_warlord_t2_a}Reaping Charge" career_id="chariot_warlord" tier="2">
     <Choice id="chariot_warlord_t2_a_key" type="Keystone" description="{=taom_cw_t2a_key}Scything Charge charge reduced, wheels never stop turning." icon_sprite="career_choice_cw_t2a_key">
-      <Mutations><Mutation target_id="chariot_warlord_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="chariot_warlord_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="chariot_warlord_t2_a_p1" type="Passive" description="{=taom_cw_t2a_p1}+12% horse charge damage." icon_sprite="career_choice_cw_t2a_p1">
       <PassiveEffect type="HorseChargeDamage" magnitude="0.12" operation="Add" is_percentage="true" />
@@ -3794,7 +3794,7 @@
 
   <ChoiceGroup id="chariot_warlord_t3_b" display_name="{=taom_career_grp_chariot_warlord_t3_b}Wheel of Khand" career_id="chariot_warlord" tier="3">
     <Choice id="chariot_warlord_t3_b_key" type="Keystone" description="{=taom_cw_t3b_key}Scything Charge charge greatly reduced, the wheels grind ceaselessly." icon_sprite="career_choice_cw_t3b_key">
-      <Mutations><Mutation target_id="chariot_warlord_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="chariot_warlord_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="chariot_warlord_t3_b_p1" type="Passive" description="{=taom_cw_t3b_p1}+100 horse health." icon_sprite="career_choice_cw_t3b_p1">
       <PassiveEffect type="HorseHealth" magnitude="100" operation="Add" />
@@ -3858,7 +3858,7 @@
 
   <ChoiceGroup id="tribesman_of_jelut_t2_a" display_name="{=taom_career_grp_tribesman_of_jelut_t2_a}Serpent-Fang Striker" career_id="tribesman_of_jelut" tier="2">
     <Choice id="tribesman_of_jelut_t2_a_key" type="Keystone" description="{=taom_toj_t2a_key}Poisoned Blades charge reduced, strike more frequently." icon_sprite="career_choice_toj_t2a_key">
-      <Mutations><Mutation target_id="tribesman_of_jelut_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="tribesman_of_jelut_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="tribesman_of_jelut_t2_a_p1" type="Passive" description="{=taom_toj_t2a_p1}+10% troop damage." icon_sprite="career_choice_toj_t2a_p1">
       <PassiveEffect type="TroopDamage" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -3912,7 +3912,7 @@
 
   <ChoiceGroup id="tribesman_of_jelut_t3_b" display_name="{=taom_career_grp_tribesman_of_jelut_t3_b}Scourge of the Southrons" career_id="tribesman_of_jelut" tier="3">
     <Choice id="tribesman_of_jelut_t3_b_key" type="Keystone" description="{=taom_toj_t3b_key}Poisoned Blades charge greatly reduced, constant attrition." icon_sprite="career_choice_toj_t3b_key">
-      <Mutations><Mutation target_id="tribesman_of_jelut_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="tribesman_of_jelut_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="tribesman_of_jelut_t3_b_p1" type="Passive" description="{=taom_toj_t3b_p1}+15% resistance." icon_sprite="career_choice_toj_t3b_p1">
       <PassiveEffect type="Resistance" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -3976,7 +3976,7 @@
 
   <ChoiceGroup id="pezarsani_javelineer_t2_a" display_name="{=taom_career_grp_pezarsani_javelineer_t2_a}Sunfire Slinger" career_id="pezarsani_javelineer" tier="2">
     <Choice id="pezarsani_javelineer_t2_a_key" type="Keystone" description="{=taom_pj_t2a_key}Sunfire Volley charge reduced, never out of javelins." icon_sprite="career_choice_pj_t2a_key">
-      <Mutations><Mutation target_id="pezarsani_javelineer_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="pezarsani_javelineer_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="pezarsani_javelineer_t2_a_p1" type="Passive" description="{=taom_pj_t2a_p1}+4 ammo." icon_sprite="career_choice_pj_t2a_p1">
       <PassiveEffect type="Ammo" magnitude="4" operation="Add" />
@@ -4030,7 +4030,7 @@
 
   <ChoiceGroup id="pezarsani_javelineer_t3_b" display_name="{=taom_career_grp_pezarsani_javelineer_t3_b}Shadow of the Dunes" career_id="pezarsani_javelineer" tier="3">
     <Choice id="pezarsani_javelineer_t3_b_key" type="Keystone" description="{=taom_pj_t3b_key}Sunfire Volley charge greatly reduced, unrelenting harassment." icon_sprite="career_choice_pj_t3b_key">
-      <Mutations><Mutation target_id="pezarsani_javelineer_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="pezarsani_javelineer_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="pezarsani_javelineer_t3_b_p1" type="Passive" description="{=taom_pj_t3b_p1}+15% ranged damage." icon_sprite="career_choice_pj_t3b_p1">
       <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
@@ -4094,7 +4094,7 @@
 
   <ChoiceGroup id="mahud_beast_rider_t2_a" display_name="{=taom_career_grp_mahud_beast_rider_t2_a}Trampling Charge" career_id="mahud_beast_rider" tier="2">
     <Choice id="mahud_beast_rider_t2_a_key" type="Keystone" description="{=taom_mbr_t2a_key}Echoes of Mûmakan charge reduced, terror always imminent." icon_sprite="career_choice_mbr_t2a_key">
-      <Mutations><Mutation target_id="mahud_beast_rider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="mahud_beast_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="mahud_beast_rider_t2_a_p1" type="Passive" description="{=taom_mbr_t2a_p1}+12% horse charge damage." icon_sprite="career_choice_mbr_t2a_p1">
       <PassiveEffect type="HorseChargeDamage" magnitude="0.12" operation="Add" is_percentage="true" />
@@ -4148,7 +4148,7 @@
 
   <ChoiceGroup id="mahud_beast_rider_t3_b" display_name="{=taom_career_grp_mahud_beast_rider_t3_b}Lord of the Oliphaunts" career_id="mahud_beast_rider" tier="3">
     <Choice id="mahud_beast_rider_t3_b_key" type="Keystone" description="{=taom_mbr_t3b_key}Echoes of Mûmakan charge greatly reduced, unending dread." icon_sprite="career_choice_mbr_t3b_key">
-      <Mutations><Mutation target_id="mahud_beast_rider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="mahud_beast_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="mahud_beast_rider_t3_b_p1" type="Passive" description="{=taom_mbr_t3b_p1}+100 horse health." icon_sprite="career_choice_mbr_t3b_p1">
       <PassiveEffect type="HorseHealth" magnitude="100" operation="Add" />
@@ -4213,7 +4213,7 @@
 
   <ChoiceGroup id="far_harad_halftroll_t2_a" career_id="far_harad_halftroll" tier="2">
     <Choice id="far_harad_halftroll_t2_a_key" type="Keystone" description="{=taom_fhh_t2a_key}Vile Brutality charge reduced, rage ignites faster." icon_sprite="career_choice_fhh_t2a_key">
-      <Mutations><Mutation target_id="far_harad_halftroll_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="far_harad_halftroll_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="far_harad_halftroll_t2_a_p1" type="Passive" description="{=taom_fhh_t2a_p1}+12% resistance." icon_sprite="career_choice_fhh_t2a_p1">
       <PassiveEffect type="Resistance" magnitude="0.12" operation="Add" is_percentage="true" />
@@ -4267,7 +4267,7 @@
 
   <ChoiceGroup id="far_harad_halftroll_t3_b" career_id="far_harad_halftroll" tier="3">
     <Choice id="far_harad_halftroll_t3_b_key" type="Keystone" description="{=taom_fhh_t3b_key}Vile Brutality charge greatly reduced, the rage never fades." icon_sprite="career_choice_fhh_t3b_key">
-      <Mutations><Mutation target_id="far_harad_halftroll_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="far_harad_halftroll_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="far_harad_halftroll_t3_b_p1" type="Passive" description="{=taom_fhh_t3b_p1}+15% melee damage." icon_sprite="career_choice_fhh_t3b_p1">
       <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
@@ -4333,7 +4333,7 @@
 
   <ChoiceGroup id="codyan_legionaire_t2_a" display_name="{=taom_career_grp_codyan_legionaire_t2_a}Wall of Rhûn" career_id="codyan_legionaire" tier="2">
     <Choice id="codyan_legionaire_t2_a_key" type="Keystone" description="{=taom_cl_t2_a_key}Shieldwall charge reduced, rallying the wall more often." icon_sprite="career_choice_cl_t2_a_key">
-      <Mutations><Mutation target_id="codyan_legionaire_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="codyan_legionaire_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="codyan_legionaire_t2_a_p1" type="Passive" description="{=taom_cl_t2_a_p1}+10% troop resistance." icon_sprite="career_choice_cl_t2_a_p1">
       <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -4387,7 +4387,7 @@
 
   <ChoiceGroup id="codyan_legionaire_t3_b" display_name="{=taom_career_grp_codyan_legionaire_t3_b}The Wall That Never Falls" career_id="codyan_legionaire" tier="3">
     <Choice id="codyan_legionaire_t3_b_key" type="Keystone" description="{=taom_cl_t3_b_key}Shieldwall charge greatly reduced, the legion never yields." icon_sprite="career_choice_cl_t3_b_key">
-      <Mutations><Mutation target_id="codyan_legionaire_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="codyan_legionaire_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="codyan_legionaire_t3_b_p1" type="Passive" description="{=taom_cl_t3_b_p1}+18% resistance." icon_sprite="career_choice_cl_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
@@ -4451,7 +4451,7 @@
 
   <ChoiceGroup id="lokhas_drus_marksman_t2_a" display_name="{=taom_career_grp_lokhas_drus_marksman_t2_a}Stormbow Marksman" career_id="lokhas_drus_marksman" tier="2">
     <Choice id="lokhas_drus_marksman_t2_a_key" type="Keystone" description="{=taom_ldm_t2_a_key}Piercing Volley charge reduced, unceasing hail of bolts." icon_sprite="career_choice_ldm_t2_a_key">
-      <Mutations><Mutation target_id="lokhas_drus_marksman_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="lokhas_drus_marksman_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="lokhas_drus_marksman_t2_a_p1" type="Passive" description="{=taom_ldm_t2_a_p1}+10% armor penetration." icon_sprite="career_choice_ldm_t2_a_p1">
       <PassiveEffect type="ArmorPenetration" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -4505,7 +4505,7 @@
 
   <ChoiceGroup id="lokhas_drus_marksman_t3_b" display_name="{=taom_career_grp_lokhas_drus_marksman_t3_b}The Unceasing Hail" career_id="lokhas_drus_marksman" tier="3">
     <Choice id="lokhas_drus_marksman_t3_b_key" type="Keystone" description="{=taom_ldm_t3_b_key}Piercing Volley charge greatly reduced, the volleys never cease." icon_sprite="career_choice_ldm_t3_b_key">
-      <Mutations><Mutation target_id="lokhas_drus_marksman_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="lokhas_drus_marksman_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="lokhas_drus_marksman_t3_b_p1" type="Passive" description="{=taom_ldm_t3_b_p1}+20% armor penetration." icon_sprite="career_choice_ldm_t3_b_p1">
       <PassiveEffect type="ArmorPenetration" magnitude="0.20" operation="Add" is_percentage="true" />
@@ -4569,7 +4569,7 @@
 
   <ChoiceGroup id="balchoth_kan_t2_a" display_name="{=taom_career_grp_balchoth_kan_t2_a}Wainrider of Rhûn" career_id="balchoth_kan" tier="2">
     <Choice id="balchoth_kan_t2_a_key" type="Keystone" description="{=taom_bk_t2_a_key}Unyielding charge reduced, the warband never slows." icon_sprite="career_choice_bk_t2_a_key">
-      <Mutations><Mutation target_id="balchoth_kan_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="balchoth_kan_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="balchoth_kan_t2_a_p1" type="Passive" description="{=taom_bk_t2_a_p1}+10% troop morale." icon_sprite="career_choice_bk_t2_a_p1">
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -4623,7 +4623,7 @@
 
   <ChoiceGroup id="balchoth_kan_t3_b" display_name="{=taom_career_grp_balchoth_kan_t3_b}The Dread Horde" career_id="balchoth_kan" tier="3">
     <Choice id="balchoth_kan_t3_b_key" type="Keystone" description="{=taom_bk_t3_b_key}Unyielding charge greatly reduced, ever-present and relentless." icon_sprite="career_choice_bk_t3_b_key">
-      <Mutations><Mutation target_id="balchoth_kan_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="balchoth_kan_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="balchoth_kan_t3_b_p1" type="Passive" description="{=taom_bk_t3_b_p1}+15% horse charge damage." icon_sprite="career_choice_bk_t3_b_p1">
       <PassiveEffect type="HorseChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -4687,7 +4687,7 @@
 
   <ChoiceGroup id="dale_guardsman_t2_a" display_name="{=taom_career_grp_dale_guardsman_t2_a}Spear of Girion" career_id="dale_guardsman" tier="2">
     <Choice id="dale_guardsman_t2_a_key" type="Keystone" description="{=taom_dg2_t2_a_key}Gate Hold charge reduced, activating more frequently." icon_sprite="career_choice_dg2_t2_a_key">
-      <Mutations><Mutation target_id="dale_guardsman_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="dale_guardsman_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="dale_guardsman_t2_a_p1" type="Passive" description="{=taom_dg2_t2_a_p1}+10% troop morale." icon_sprite="career_choice_dg2_t2_a_p1">
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -4741,7 +4741,7 @@
 
   <ChoiceGroup id="dale_guardsman_t3_b" display_name="{=taom_career_grp_dale_guardsman_t3_b}The Last Stand at Erebor" career_id="dale_guardsman" tier="3">
     <Choice id="dale_guardsman_t3_b_key" type="Keystone" description="{=taom_dg2_t3_b_key}Gate Hold charge greatly reduced, nearly always available." icon_sprite="career_choice_dg2_t3_b_key">
-      <Mutations><Mutation target_id="dale_guardsman_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="dale_guardsman_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="dale_guardsman_t3_b_p1" type="Passive" description="{=taom_dg2_t3_b_p1}+18% resistance." icon_sprite="career_choice_dg2_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
@@ -4805,7 +4805,7 @@
 
   <ChoiceGroup id="dale_marksman_t2_a" display_name="{=taom_career_grp_dale_marksman_t2_a}Heir of the Black Arrow" career_id="dale_marksman" tier="2">
     <Choice id="dale_marksman_t2_a_key" type="Keystone" description="{=taom_dm_t2_a_key}Black Arrow charge reduced, maintaining constant pressure." icon_sprite="career_choice_dm_t2_a_key">
-      <Mutations><Mutation target_id="dale_marksman_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="dale_marksman_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="dale_marksman_t2_a_p1" type="Passive" description="{=taom_dm_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_dm_t2_a_p1">
       <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -4859,7 +4859,7 @@
 
   <ChoiceGroup id="dale_marksman_t3_b" display_name="{=taom_career_grp_dale_marksman_t3_b}The Bow of Girion's Line" career_id="dale_marksman" tier="3">
     <Choice id="dale_marksman_t3_b_key" type="Keystone" description="{=taom_dm_t3_b_key}Black Arrow charge greatly reduced, relentless fire." icon_sprite="career_choice_dm_t3_b_key">
-      <Mutations><Mutation target_id="dale_marksman_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="dale_marksman_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="dale_marksman_t3_b_p1" type="Passive" description="{=taom_dm_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_dm_t3_b_p1">
       <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -4923,7 +4923,7 @@
 
   <ChoiceGroup id="dale_outrider_t2_a" display_name="{=taom_career_grp_dale_outrider_t2_a}Lance of the Long Valley" career_id="dale_outrider" tier="2">
     <Choice id="dale_outrider_t2_a_key" type="Keystone" description="{=taom_dor_t2_a_key}Trade Road Sprint charge reduced, swifter activation." icon_sprite="career_choice_dor_t2_a_key">
-      <Mutations><Mutation target_id="dale_outrider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="dale_outrider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="dale_outrider_t2_a_p1" type="Passive" description="{=taom_dor_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_dor_t2_a_p1">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -4977,7 +4977,7 @@
 
   <ChoiceGroup id="dale_outrider_t3_b" display_name="{=taom_career_grp_dale_outrider_t3_b}Courier of the Two Kings" career_id="dale_outrider" tier="3">
     <Choice id="dale_outrider_t3_b_key" type="Keystone" description="{=taom_dor_t3_b_key}Trade Road Sprint charge greatly reduced, ride without ceasing." icon_sprite="career_choice_dor_t3_b_key">
-      <Mutations><Mutation target_id="dale_outrider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="dale_outrider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="dale_outrider_t3_b_p1" type="Passive" description="{=taom_dor_t3_b_p1}+100 horse health." icon_sprite="career_choice_dor_t3_b_p1">
       <PassiveEffect type="HorseHealth" magnitude="100" operation="Add" />
@@ -5041,7 +5041,7 @@
 
   <ChoiceGroup id="ironguard_t2_a" display_name="{=taom_career_grp_ironguard_t2_a}Wrath of Durin's Folk" career_id="ironguard" tier="2">
     <Choice id="ironguard_t2_a_key" type="Keystone" description="{=taom_ig_t2_a_key}Mithril Bastion charge reduced, activating more frequently." icon_sprite="career_choice_ig_t2_a_key">
-      <Mutations><Mutation target_id="ironguard_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="ironguard_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="ironguard_t2_a_p1" type="Passive" description="{=taom_ig_t2_a_p1}+10% troop morale." icon_sprite="career_choice_ig_t2_a_p1">
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5095,7 +5095,7 @@
 
   <ChoiceGroup id="ironguard_t3_b" display_name="{=taom_career_grp_ironguard_t3_b}Guard of the Arkenstone" career_id="ironguard" tier="3">
     <Choice id="ironguard_t3_b_key" type="Keystone" description="{=taom_ig_t3_b_key}Mithril Bastion charge greatly reduced, nearly always available." icon_sprite="career_choice_ig_t3_b_key">
-      <Mutations><Mutation target_id="ironguard_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="ironguard_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="ironguard_t3_b_p1" type="Passive" description="{=taom_ig_t3_b_p1}+18% resistance." icon_sprite="career_choice_ig_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
@@ -5159,7 +5159,7 @@
 
   <ChoiceGroup id="crossbow_master_t2_a" display_name="{=taom_career_grp_crossbow_master_t2_a}Relentless Bolt" career_id="crossbow_master" tier="2">
     <Choice id="crossbow_master_t2_a_key" type="Keystone" description="{=taom_cbm_t2_a_key}Precision Barrage charge reduced, maintaining constant pressure." icon_sprite="career_choice_cbm_t2_a_key">
-      <Mutations><Mutation target_id="crossbow_master_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="crossbow_master_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="crossbow_master_t2_a_p1" type="Passive" description="{=taom_cbm_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_cbm_t2_a_p1">
       <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5213,7 +5213,7 @@
 
   <ChoiceGroup id="crossbow_master_t3_b" display_name="{=taom_career_grp_crossbow_master_t3_b}Engine of Erebor" career_id="crossbow_master" tier="3">
     <Choice id="crossbow_master_t3_b_key" type="Keystone" description="{=taom_cbm_t3_b_key}Precision Barrage charge greatly reduced, relentless fire." icon_sprite="career_choice_cbm_t3_b_key">
-      <Mutations><Mutation target_id="crossbow_master_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="crossbow_master_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="crossbow_master_t3_b_p1" type="Passive" description="{=taom_cbm_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_cbm_t3_b_p1">
       <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -5277,7 +5277,7 @@
 
   <ChoiceGroup id="ram_rider_t2_a" display_name="{=taom_career_grp_ram_rider_t2_a}Charge of the Iron Hills" career_id="ram_rider" tier="2">
     <Choice id="ram_rider_t2_a_key" type="Keystone" description="{=taom_rr_t2_a_key}Mountain Charge charge reduced, swifter activation." icon_sprite="career_choice_rr_t2_a_key">
-      <Mutations><Mutation target_id="ram_rider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="ram_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="ram_rider_t2_a_p1" type="Passive" description="{=taom_rr_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_rr_t2_a_p1">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5331,7 +5331,7 @@
 
   <ChoiceGroup id="ram_rider_t3_b" display_name="{=taom_career_grp_ram_rider_t3_b}Rider of the Lonely Mountain" career_id="ram_rider" tier="3">
     <Choice id="ram_rider_t3_b_key" type="Keystone" description="{=taom_rr_t3_b_key}Mountain Charge charge greatly reduced, ride without ceasing." icon_sprite="career_choice_rr_t3_b_key">
-      <Mutations><Mutation target_id="ram_rider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="ram_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="ram_rider_t3_b_p1" type="Passive" description="{=taom_rr_t3_b_p1}+100 horse health." icon_sprite="career_choice_rr_t3_b_p1">
       <PassiveEffect type="HorseHealth" magnitude="100" operation="Add" />
@@ -5395,7 +5395,7 @@
 
   <ChoiceGroup id="blade_dancer_t2_a" display_name="{=taom_career_grp_blade_dancer_t2_a}Dance of Gondolin" career_id="blade_dancer" tier="2">
     <Choice id="blade_dancer_t2_a_key" type="Keystone" description="{=taom_bd_t2_a_key}Starlight Weave charge reduced, activating more frequently." icon_sprite="career_choice_bd_t2_a_key">
-      <Mutations><Mutation target_id="blade_dancer_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="blade_dancer_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="blade_dancer_t2_a_p1" type="Passive" description="{=taom_bd_t2_a_p1}+10% troop morale." icon_sprite="career_choice_bd_t2_a_p1">
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5449,7 +5449,7 @@
 
   <ChoiceGroup id="blade_dancer_t3_b" display_name="{=taom_career_grp_blade_dancer_t3_b}Light of Eärendil" career_id="blade_dancer" tier="3">
     <Choice id="blade_dancer_t3_b_key" type="Keystone" description="{=taom_bd_t3_b_key}Starlight Weave charge greatly reduced, nearly always available." icon_sprite="career_choice_bd_t3_b_key">
-      <Mutations><Mutation target_id="blade_dancer_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="blade_dancer_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="blade_dancer_t3_b_p1" type="Passive" description="{=taom_bd_t3_b_p1}+18% resistance." icon_sprite="career_choice_bd_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
@@ -5513,7 +5513,7 @@
 
   <ChoiceGroup id="elven_archer_t2_a" display_name="{=taom_career_grp_elven_archer_t2_a}Unceasing Volley" career_id="elven_archer" tier="2">
     <Choice id="elven_archer_t2_a_key" type="Keystone" description="{=taom_elar_t2_a_key}Elven Sight charge reduced, maintaining constant pressure." icon_sprite="career_choice_elar_t2_a_key">
-      <Mutations><Mutation target_id="elven_archer_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="elven_archer_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="elven_archer_t2_a_p1" type="Passive" description="{=taom_elar_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_elar_t2_a_p1">
       <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5567,7 +5567,7 @@
 
   <ChoiceGroup id="elven_archer_t3_b" display_name="{=taom_career_grp_elven_archer_t3_b}Vigil of Vilya" career_id="elven_archer" tier="3">
     <Choice id="elven_archer_t3_b_key" type="Keystone" description="{=taom_elar_t3_b_key}Elven Sight charge greatly reduced, relentless fire." icon_sprite="career_choice_elar_t3_b_key">
-      <Mutations><Mutation target_id="elven_archer_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="elven_archer_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="elven_archer_t3_b_p1" type="Passive" description="{=taom_elar_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_elar_t3_b_p1">
       <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -5631,7 +5631,7 @@
 
   <ChoiceGroup id="rivendell_knight_t2_a" display_name="{=taom_career_grp_rivendell_knight_t2_a}Gallop of Asfaloth" career_id="rivendell_knight" tier="2">
     <Choice id="rivendell_knight_t2_a_key" type="Keystone" description="{=taom_rvk_t2_a_key}Last Alliance charge reduced, swifter activation." icon_sprite="career_choice_rvk_t2_a_key">
-      <Mutations><Mutation target_id="rivendell_knight_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="rivendell_knight_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="rivendell_knight_t2_a_p1" type="Passive" description="{=taom_rvk_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_rvk_t2_a_p1">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5685,7 +5685,7 @@
 
   <ChoiceGroup id="rivendell_knight_t3_b" display_name="{=taom_career_grp_rivendell_knight_t3_b}Host of the Last Alliance" career_id="rivendell_knight" tier="3">
     <Choice id="rivendell_knight_t3_b_key" type="Keystone" description="{=taom_rvk_t3_b_key}Last Alliance charge greatly reduced, ride without ceasing." icon_sprite="career_choice_rvk_t3_b_key">
-      <Mutations><Mutation target_id="rivendell_knight_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="rivendell_knight_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="rivendell_knight_t3_b_p1" type="Passive" description="{=taom_rvk_t3_b_p1}+100 horse health." icon_sprite="career_choice_rvk_t3_b_p1">
       <PassiveEffect type="HorseHealth" magnitude="100" operation="Add" />
@@ -5749,7 +5749,7 @@
 
   <ChoiceGroup id="warden_t2_a" display_name="{=taom_career_grp_warden_t2_a}Blade of the Naith" career_id="warden" tier="2">
     <Choice id="warden_t2_a_key" type="Keystone" description="{=taom_wdn_t2_a_key}Nimrodel Blessing charge reduced, activating more frequently." icon_sprite="career_choice_wdn_t2_a_key">
-      <Mutations><Mutation target_id="warden_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="warden_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="warden_t2_a_p1" type="Passive" description="{=taom_wdn_t2_a_p1}+10% troop morale." icon_sprite="career_choice_wdn_t2_a_p1">
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5803,7 +5803,7 @@
 
   <ChoiceGroup id="warden_t3_b" display_name="{=taom_career_grp_warden_t3_b}Guard of Cerin Amroth" career_id="warden" tier="3">
     <Choice id="warden_t3_b_key" type="Keystone" description="{=taom_wdn_t3_b_key}Nimrodel Blessing charge greatly reduced, nearly always available." icon_sprite="career_choice_wdn_t3_b_key">
-      <Mutations><Mutation target_id="warden_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="warden_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="warden_t3_b_p1" type="Passive" description="{=taom_wdn_t3_b_p1}+18% resistance." icon_sprite="career_choice_wdn_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
@@ -5867,7 +5867,7 @@
 
   <ChoiceGroup id="galadhrim_archer_t2_a" display_name="{=taom_career_grp_galadhrim_archer_t2_a}Mallorn Marksman" career_id="galadhrim_archer" tier="2">
     <Choice id="galadhrim_archer_t2_a_key" type="Keystone" description="{=taom_gar_t2_a_key}Silver Rain charge reduced, maintaining constant pressure." icon_sprite="career_choice_gar_t2_a_key">
-      <Mutations><Mutation target_id="galadhrim_archer_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="galadhrim_archer_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="galadhrim_archer_t2_a_p1" type="Passive" description="{=taom_gar_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_gar_t2_a_p1">
       <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -5921,7 +5921,7 @@
 
   <ChoiceGroup id="galadhrim_archer_t3_b" display_name="{=taom_career_grp_galadhrim_archer_t3_b}Warden of the Silverlode" career_id="galadhrim_archer" tier="3">
     <Choice id="galadhrim_archer_t3_b_key" type="Keystone" description="{=taom_gar_t3_b_key}Silver Rain charge greatly reduced, relentless fire." icon_sprite="career_choice_gar_t3_b_key">
-      <Mutations><Mutation target_id="galadhrim_archer_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="galadhrim_archer_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="galadhrim_archer_t3_b_p1" type="Passive" description="{=taom_gar_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_gar_t3_b_p1">
       <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -5985,7 +5985,7 @@
 
   <ChoiceGroup id="sentinel_t2_a" display_name="{=taom_career_grp_sentinel_t2_a}Rider of the Naith" career_id="sentinel" tier="2">
     <Choice id="sentinel_t2_a_key" type="Keystone" description="{=taom_snt_t2_a_key}Elanor Swiftness charge reduced, swifter activation." icon_sprite="career_choice_snt_t2_a_key">
-      <Mutations><Mutation target_id="sentinel_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="sentinel_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="sentinel_t2_a_p1" type="Passive" description="{=taom_snt_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_snt_t2_a_p1">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6039,7 +6039,7 @@
 
   <ChoiceGroup id="sentinel_t3_b" display_name="{=taom_career_grp_sentinel_t3_b}Sentinel of Nenya" career_id="sentinel" tier="3">
     <Choice id="sentinel_t3_b_key" type="Keystone" description="{=taom_snt_t3_b_key}Elanor Swiftness charge greatly reduced, ride without ceasing." icon_sprite="career_choice_snt_t3_b_key">
-      <Mutations><Mutation target_id="sentinel_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="sentinel_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="sentinel_t3_b_p1" type="Passive" description="{=taom_snt_t3_b_p1}+100 horse health." icon_sprite="career_choice_snt_t3_b_p1">
       <PassiveEffect type="HorseHealth" magnitude="100" operation="Add" />
@@ -6103,7 +6103,7 @@
 
   <ChoiceGroup id="shadow_walker_t2_a" display_name="{=taom_career_grp_shadow_walker_t2_a}Hunter in the Dark" career_id="shadow_walker" tier="2">
     <Choice id="shadow_walker_t2_a_key" type="Keystone" description="{=taom_shw_t2_a_key}Forest Cloak charge reduced, activating more frequently." icon_sprite="career_choice_shw_t2_a_key">
-      <Mutations><Mutation target_id="shadow_walker_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="shadow_walker_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="shadow_walker_t2_a_p1" type="Passive" description="{=taom_shw_t2_a_p1}+10% troop morale." icon_sprite="career_choice_shw_t2_a_p1">
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6157,7 +6157,7 @@
 
   <ChoiceGroup id="shadow_walker_t3_b" display_name="{=taom_career_grp_shadow_walker_t3_b}Unseen of Eryn Lasgalen" career_id="shadow_walker" tier="3">
     <Choice id="shadow_walker_t3_b_key" type="Keystone" description="{=taom_shw_t3_b_key}Forest Cloak charge greatly reduced, nearly always available." icon_sprite="career_choice_shw_t3_b_key">
-      <Mutations><Mutation target_id="shadow_walker_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="shadow_walker_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="shadow_walker_t3_b_p1" type="Passive" description="{=taom_shw_t3_b_p1}+18% resistance." icon_sprite="career_choice_shw_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
@@ -6221,7 +6221,7 @@
 
   <ChoiceGroup id="silvan_archer_t2_a" display_name="{=taom_career_grp_silvan_archer_t2_a}Hunter of the Glades" career_id="silvan_archer" tier="2">
     <Choice id="silvan_archer_t2_a_key" type="Keystone" description="{=taom_sva_t2_a_key}Canopy Strike charge reduced, maintaining constant pressure." icon_sprite="career_choice_sva_t2_a_key">
-      <Mutations><Mutation target_id="silvan_archer_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="silvan_archer_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="silvan_archer_t2_a_p1" type="Passive" description="{=taom_sva_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_sva_t2_a_p1">
       <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6275,7 +6275,7 @@
 
   <ChoiceGroup id="silvan_archer_t3_b" display_name="{=taom_career_grp_silvan_archer_t3_b}Bowman of the Elvenking" career_id="silvan_archer" tier="3">
     <Choice id="silvan_archer_t3_b_key" type="Keystone" description="{=taom_sva_t3_b_key}Canopy Strike charge greatly reduced, relentless fire." icon_sprite="career_choice_sva_t3_b_key">
-      <Mutations><Mutation target_id="silvan_archer_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="silvan_archer_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="silvan_archer_t3_b_p1" type="Passive" description="{=taom_sva_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_sva_t3_b_p1">
       <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -6339,7 +6339,7 @@
 
   <ChoiceGroup id="elk_rider_t2_a" display_name="{=taom_career_grp_elk_rider_t2_a}Thunder of the Forest" career_id="elk_rider" tier="2">
     <Choice id="elk_rider_t2_a_key" type="Keystone" description="{=taom_elk_t2_a_key}Antler Crash charge reduced, swifter activation." icon_sprite="career_choice_elk_t2_a_key">
-      <Mutations><Mutation target_id="elk_rider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="elk_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="elk_rider_t2_a_p1" type="Passive" description="{=taom_elk_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_elk_t2_a_p1">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6393,7 +6393,7 @@
 
   <ChoiceGroup id="elk_rider_t3_b" display_name="{=taom_career_grp_elk_rider_t3_b}Lord of the Elvenking's Halls" career_id="elk_rider" tier="3">
     <Choice id="elk_rider_t3_b_key" type="Keystone" description="{=taom_elk_t3_b_key}Antler Crash charge greatly reduced, ride without ceasing." icon_sprite="career_choice_elk_t3_b_key">
-      <Mutations><Mutation target_id="elk_rider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="elk_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="elk_rider_t3_b_p1" type="Passive" description="{=taom_elk_t3_b_p1}+100 horse health." icon_sprite="career_choice_elk_t3_b_p1">
       <PassiveEffect type="HorseHealth" magnitude="100" operation="Add" />
@@ -6457,7 +6457,7 @@
 
   <ChoiceGroup id="uruk_berserker_t2_a" display_name="{=taom_career_grp_uruk_berserker_t2_a}White Hand Reaver" career_id="uruk_berserker" tier="2">
     <Choice id="uruk_berserker_t2_a_key" type="Keystone" description="{=taom_ub_t2_a_key}Blood Rage charge reduced, activating more frequently." icon_sprite="career_choice_ub_t2_a_key">
-      <Mutations><Mutation target_id="uruk_berserker_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="uruk_berserker_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="uruk_berserker_t2_a_p1" type="Passive" description="{=taom_ub_t2_a_p1}+10% troop morale." icon_sprite="career_choice_ub_t2_a_p1">
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6511,7 +6511,7 @@
 
   <ChoiceGroup id="uruk_berserker_t3_b" display_name="{=taom_career_grp_uruk_berserker_t3_b}Unbroken of the Tower" career_id="uruk_berserker" tier="3">
     <Choice id="uruk_berserker_t3_b_key" type="Keystone" description="{=taom_ub_t3_b_key}Blood Rage charge greatly reduced, nearly always available." icon_sprite="career_choice_ub_t3_b_key">
-      <Mutations><Mutation target_id="uruk_berserker_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="uruk_berserker_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="uruk_berserker_t3_b_p1" type="Passive" description="{=taom_ub_t3_b_p1}+18% resistance." icon_sprite="career_choice_ub_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
@@ -6575,7 +6575,7 @@
 
   <ChoiceGroup id="uruk_crossbow_t2_a" display_name="{=taom_career_grp_uruk_crossbow_t2_a}Bolt of the White Hand" career_id="uruk_crossbow" tier="2">
     <Choice id="uruk_crossbow_t2_a_key" type="Keystone" description="{=taom_ucb_t2_a_key}Iron Rain charge reduced, maintaining constant pressure." icon_sprite="career_choice_ucb_t2_a_key">
-      <Mutations><Mutation target_id="uruk_crossbow_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="uruk_crossbow_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="uruk_crossbow_t2_a_p1" type="Passive" description="{=taom_ucb_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_ucb_t2_a_p1">
       <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6629,7 +6629,7 @@
 
   <ChoiceGroup id="uruk_crossbow_t3_b" display_name="{=taom_career_grp_uruk_crossbow_t3_b}Iron Rain Unending" career_id="uruk_crossbow" tier="3">
     <Choice id="uruk_crossbow_t3_b_key" type="Keystone" description="{=taom_ucb_t3_b_key}Iron Rain charge greatly reduced, relentless fire." icon_sprite="career_choice_ucb_t3_b_key">
-      <Mutations><Mutation target_id="uruk_crossbow_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="uruk_crossbow_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="uruk_crossbow_t3_b_p1" type="Passive" description="{=taom_ucb_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_ucb_t3_b_p1">
       <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -6693,7 +6693,7 @@
 
   <ChoiceGroup id="warg_scout_t2_a" display_name="{=taom_career_grp_warg_scout_t2_a}Misty Mountain Hunter" career_id="warg_scout" tier="2">
     <Choice id="warg_scout_t2_a_key" type="Keystone" description="{=taom_wsc_t2_a_key}Pack Howl charge reduced, swifter activation." icon_sprite="career_choice_wsc_t2_a_key">
-      <Mutations><Mutation target_id="warg_scout_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="warg_scout_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="warg_scout_t2_a_p1" type="Passive" description="{=taom_wsc_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_wsc_t2_a_p1">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6747,7 +6747,7 @@
 
   <ChoiceGroup id="warg_scout_t3_b" display_name="{=taom_career_grp_warg_scout_t3_b}The Tireless Hunt" career_id="warg_scout" tier="3">
     <Choice id="warg_scout_t3_b_key" type="Keystone" description="{=taom_wsc_t3_b_key}Pack Howl charge greatly reduced, ride without ceasing." icon_sprite="career_choice_wsc_t3_b_key">
-      <Mutations><Mutation target_id="warg_scout_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="warg_scout_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="warg_scout_t3_b_p1" type="Passive" description="{=taom_wsc_t3_b_p1}+100 horse health." icon_sprite="career_choice_wsc_t3_b_p1">
       <PassiveEffect type="HorseHealth" magnitude="100" operation="Add" />
@@ -6812,7 +6812,7 @@
 
   <ChoiceGroup id="cave_troll_master_t2_a" display_name="{=taom_career_grp_cave_troll_master_t2_a}Goblin-town Tyrant" career_id="cave_troll_master" tier="2">
     <Choice id="cave_troll_master_t2_a_key" type="Keystone" description="{=taom_ctm_t2_a_key}Troll Frenzy charge reduced, activating more frequently." icon_sprite="career_choice_ctm_t2_a_key">
-      <Mutations><Mutation target_id="cave_troll_master_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="cave_troll_master_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="cave_troll_master_t2_a_p1" type="Passive" description="{=taom_ctm_t2_a_p1}+10% troop morale." icon_sprite="career_choice_ctm_t2_a_p1">
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6866,7 +6866,7 @@
 
   <ChoiceGroup id="cave_troll_master_t3_b" display_name="{=taom_career_grp_cave_troll_master_t3_b}Dread of the Northern Halls" career_id="cave_troll_master" tier="3">
     <Choice id="cave_troll_master_t3_b_key" type="Keystone" description="{=taom_ctm_t3_b_key}Troll Frenzy charge greatly reduced, nearly always available." icon_sprite="career_choice_ctm_t3_b_key">
-      <Mutations><Mutation target_id="cave_troll_master_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="cave_troll_master_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="cave_troll_master_t3_b_p1" type="Passive" description="{=taom_ctm_t3_b_p1}+18% resistance." icon_sprite="career_choice_ctm_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
@@ -6931,7 +6931,7 @@
 
   <ChoiceGroup id="goblin_sniper_t2_a" display_name="{=taom_career_grp_goblin_sniper_t2_a}High Pass Ambusher" career_id="goblin_sniper" tier="2">
     <Choice id="goblin_sniper_t2_a_key" type="Keystone" description="{=taom_gbs_t2_a_key}Poison Dart charge reduced, maintaining constant pressure." icon_sprite="career_choice_gbs_t2_a_key">
-      <Mutations><Mutation target_id="goblin_sniper_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="goblin_sniper_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="goblin_sniper_t2_a_p1" type="Passive" description="{=taom_gbs_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_gbs_t2_a_p1">
       <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -6985,7 +6985,7 @@
 
   <ChoiceGroup id="goblin_sniper_t3_b" display_name="{=taom_career_grp_goblin_sniper_t3_b}Shadow of the High Pass" career_id="goblin_sniper" tier="3">
     <Choice id="goblin_sniper_t3_b_key" type="Keystone" description="{=taom_gbs_t3_b_key}Poison Dart charge greatly reduced, relentless fire." icon_sprite="career_choice_gbs_t3_b_key">
-      <Mutations><Mutation target_id="goblin_sniper_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="goblin_sniper_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="goblin_sniper_t3_b_p1" type="Passive" description="{=taom_gbs_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_gbs_t3_b_p1">
       <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -7049,7 +7049,7 @@
 
   <ChoiceGroup id="warg_pack_leader_t2_a" display_name="{=taom_career_grp_warg_pack_leader_t2_a}Grey Pack Outrider" career_id="warg_pack_leader" tier="2">
     <Choice id="warg_pack_leader_t2_a_key" type="Keystone" description="{=taom_wpl_t2_a_key}Alpha Howl charge reduced, swifter activation." icon_sprite="career_choice_wpl_t2_a_key">
-      <Mutations><Mutation target_id="warg_pack_leader_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="warg_pack_leader_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="warg_pack_leader_t2_a_p1" type="Passive" description="{=taom_wpl_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_wpl_t2_a_p1">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7103,7 +7103,7 @@
 
   <ChoiceGroup id="warg_pack_leader_t3_b" display_name="{=taom_career_grp_warg_pack_leader_t3_b}Bolg's Wolf-Captain" career_id="warg_pack_leader" tier="3">
     <Choice id="warg_pack_leader_t3_b_key" type="Keystone" description="{=taom_wpl_t3_b_key}Alpha Howl charge greatly reduced, ride without ceasing." icon_sprite="career_choice_wpl_t3_b_key">
-      <Mutations><Mutation target_id="warg_pack_leader_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="warg_pack_leader_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="warg_pack_leader_t3_b_p1" type="Passive" description="{=taom_wpl_t3_b_p1}+100 horse health." icon_sprite="career_choice_wpl_t3_b_p1">
       <PassiveEffect type="HorseHealth" magnitude="100" operation="Add" />
@@ -7167,7 +7167,7 @@
 
   <ChoiceGroup id="shadow_warrior_t2_a" display_name="{=taom_career_grp_shadow_warrior_t2_a}Reaver of Mirkwood" career_id="shadow_warrior" tier="2">
     <Choice id="shadow_warrior_t2_a_key" type="Keystone" description="{=taom_swr_t2_a_key}Soul Drain charge reduced, activating more frequently." icon_sprite="career_choice_swr_t2_a_key">
-      <Mutations><Mutation target_id="shadow_warrior_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="shadow_warrior_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="shadow_warrior_t2_a_p1" type="Passive" description="{=taom_swr_t2_a_p1}+10% troop morale." icon_sprite="career_choice_swr_t2_a_p1">
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7221,7 +7221,7 @@
 
   <ChoiceGroup id="shadow_warrior_t3_b" display_name="{=taom_career_grp_shadow_warrior_t3_b}Deathless Shadow" career_id="shadow_warrior" tier="3">
     <Choice id="shadow_warrior_t3_b_key" type="Keystone" description="{=taom_swr_t3_b_key}Soul Drain charge greatly reduced, nearly always available." icon_sprite="career_choice_swr_t3_b_key">
-      <Mutations><Mutation target_id="shadow_warrior_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="shadow_warrior_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="shadow_warrior_t3_b_p1" type="Passive" description="{=taom_swr_t3_b_p1}+18% resistance." icon_sprite="career_choice_swr_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
@@ -7285,7 +7285,7 @@
 
   <ChoiceGroup id="necromancer_acolyte_t2_a" display_name="{=taom_career_grp_necromancer_acolyte_t2_a}Weaver of Black Arts" career_id="necromancer_acolyte" tier="2">
     <Choice id="necromancer_acolyte_t2_a_key" type="Keystone" description="{=taom_nca_t2_a_key}Dark Bolt charge reduced, maintaining constant pressure." icon_sprite="career_choice_nca_t2_a_key">
-      <Mutations><Mutation target_id="necromancer_acolyte_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="necromancer_acolyte_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="necromancer_acolyte_t2_a_p1" type="Passive" description="{=taom_nca_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_nca_t2_a_p1">
       <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7339,7 +7339,7 @@
 
   <ChoiceGroup id="necromancer_acolyte_t3_b" display_name="{=taom_career_grp_necromancer_acolyte_t3_b}Voice of the Necromancer" career_id="necromancer_acolyte" tier="3">
     <Choice id="necromancer_acolyte_t3_b_key" type="Keystone" description="{=taom_nca_t3_b_key}Dark Bolt charge greatly reduced, relentless fire." icon_sprite="career_choice_nca_t3_b_key">
-      <Mutations><Mutation target_id="necromancer_acolyte_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="necromancer_acolyte_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="necromancer_acolyte_t3_b_p1" type="Passive" description="{=taom_nca_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_nca_t3_b_p1">
       <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -7403,7 +7403,7 @@
 
   <ChoiceGroup id="fell_rider_t2_a" display_name="{=taom_career_grp_fell_rider_t2_a}Herald of Dread" career_id="fell_rider" tier="2">
     <Choice id="fell_rider_t2_a_key" type="Keystone" description="{=taom_flr_t2_a_key}Dread Charge charge reduced, swifter activation." icon_sprite="career_choice_flr_t2_a_key">
-      <Mutations><Mutation target_id="fell_rider_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="fell_rider_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="fell_rider_t2_a_p1" type="Passive" description="{=taom_flr_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_flr_t2_a_p1">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7457,7 +7457,7 @@
 
   <ChoiceGroup id="fell_rider_t3_b" display_name="{=taom_career_grp_fell_rider_t3_b}Shadow of the East" career_id="fell_rider" tier="3">
     <Choice id="fell_rider_t3_b_key" type="Keystone" description="{=taom_flr_t3_b_key}Dread Charge charge greatly reduced, ride without ceasing." icon_sprite="career_choice_flr_t3_b_key">
-      <Mutations><Mutation target_id="fell_rider_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="fell_rider_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="fell_rider_t3_b_p1" type="Passive" description="{=taom_flr_t3_b_p1}+100 horse health." icon_sprite="career_choice_flr_t3_b_p1">
       <PassiveEffect type="HorseHealth" magnitude="100" operation="Add" />
@@ -7521,7 +7521,7 @@
 
   <ChoiceGroup id="corsair_boarder_t2_a" display_name="{=taom_career_grp_corsair_boarder_t2_a}Ravager of Pelargir" career_id="corsair_boarder" tier="2">
     <Choice id="corsair_boarder_t2_a_key" type="Keystone" description="{=taom_crb_t2_a_key}Boarding Action charge reduced, activating more frequently." icon_sprite="career_choice_crb_t2_a_key">
-      <Mutations><Mutation target_id="corsair_boarder_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="corsair_boarder_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="corsair_boarder_t2_a_p1" type="Passive" description="{=taom_crb_t2_a_p1}+10% troop morale." icon_sprite="career_choice_crb_t2_a_p1">
       <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7575,7 +7575,7 @@
 
   <ChoiceGroup id="corsair_boarder_t3_b" display_name="{=taom_career_grp_corsair_boarder_t3_b}Black Númenórean Warlord" career_id="corsair_boarder" tier="3">
     <Choice id="corsair_boarder_t3_b_key" type="Keystone" description="{=taom_crb_t3_b_key}Boarding Action charge greatly reduced, nearly always available." icon_sprite="career_choice_crb_t3_b_key">
-      <Mutations><Mutation target_id="corsair_boarder_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="corsair_boarder_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="corsair_boarder_t3_b_p1" type="Passive" description="{=taom_crb_t3_b_p1}+18% resistance." icon_sprite="career_choice_crb_t3_b_p1">
       <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
@@ -7639,7 +7639,7 @@
 
   <ChoiceGroup id="corsair_crossbow_t2_a" display_name="{=taom_career_grp_corsair_crossbow_t2_a}Hunter of Helmsmen" career_id="corsair_crossbow" tier="2">
     <Choice id="corsair_crossbow_t2_a_key" type="Keystone" description="{=taom_crc_t2_a_key}Rigging Shot charge reduced, maintaining constant pressure." icon_sprite="career_choice_crc_t2_a_key">
-      <Mutations><Mutation target_id="corsair_crossbow_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="corsair_crossbow_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="corsair_crossbow_t2_a_p1" type="Passive" description="{=taom_crc_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_crc_t2_a_p1">
       <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7693,7 +7693,7 @@
 
   <ChoiceGroup id="corsair_crossbow_t3_b" display_name="{=taom_career_grp_corsair_crossbow_t3_b}Unceasing Volley" career_id="corsair_crossbow" tier="3">
     <Choice id="corsair_crossbow_t3_b_key" type="Keystone" description="{=taom_crc_t3_b_key}Rigging Shot charge greatly reduced, relentless fire." icon_sprite="career_choice_crc_t3_b_key">
-      <Mutations><Mutation target_id="corsair_crossbow_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="corsair_crossbow_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="corsair_crossbow_t3_b_p1" type="Passive" description="{=taom_crc_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_crc_t3_b_p1">
       <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
@@ -7757,7 +7757,7 @@
 
   <ChoiceGroup id="corsair_captain_t2_a" display_name="{=taom_career_grp_corsair_captain_t2_a}Heir of Castamir" career_id="corsair_captain" tier="2">
     <Choice id="corsair_captain_t2_a_key" type="Keystone" description="{=taom_crca_t2_a_key}Plunder charge reduced, swifter activation." icon_sprite="career_choice_crca_t2_a_key">
-      <Mutations><Mutation target_id="corsair_captain_ability" property="MaxCharge" calculator="flat" value="-20" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="corsair_captain_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
     </Choice>
     <Choice id="corsair_captain_t2_a_p1" type="Passive" description="{=taom_crca_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_crca_t2_a_p1">
       <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
@@ -7811,7 +7811,7 @@
 
   <ChoiceGroup id="corsair_captain_t3_b" display_name="{=taom_career_grp_corsair_captain_t3_b}Lord of the Great Haven" career_id="corsair_captain" tier="3">
     <Choice id="corsair_captain_t3_b_key" type="Keystone" description="{=taom_crca_t3_b_key}Plunder charge greatly reduced, ride without ceasing." icon_sprite="career_choice_crca_t3_b_key">
-      <Mutations><Mutation target_id="corsair_captain_ability" property="MaxCharge" calculator="flat" value="-30" operation="Add" /></Mutations>
+      <Mutations><Mutation target_id="corsair_captain_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
     </Choice>
     <Choice id="corsair_captain_t3_b_p1" type="Passive" description="{=taom_crca_t3_b_p1}+100 horse health." icon_sprite="career_choice_crca_t3_b_p1">
       <PassiveEffect type="HorseHealth" magnitude="100" operation="Add" />

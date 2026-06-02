@@ -423,7 +423,27 @@ public class CareerConfigProvider : ICareerConfigProvider
             return GlobalTuning.Default;
         }
 
-        return new GlobalTuning(seconds);
+        // Issue #104 Option B — min_cooldown_seconds is optional; floor for designer CooldownReduction
+        // mutations. Default 5s. Same NaN/Infinity/range guards as cooldown_seconds (see
+        // .claude/rules/csharp-architecture.md "Config Providers MUST Validate" + memory
+        // feedback_clamp_nan_infinity_propagates.md — the rule has shipped three times now).
+        var minRaw = globalEl.Attribute("min_cooldown_seconds")?.Value;
+        var minSeconds = GlobalTuning.Default.MinCooldownSeconds;
+        if (minRaw != null)
+        {
+            if (!float.TryParse(minRaw, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsedMin))
+                _logger.LogWarning($"CareerConfig: <Global min_cooldown_seconds=\"{minRaw}\"> is not a number — falling back to {minSeconds}s");
+            else if (float.IsNaN(parsedMin) || float.IsInfinity(parsedMin))
+                _logger.LogWarning($"CareerConfig: <Global min_cooldown_seconds=\"{minRaw}\"> is not finite — falling back to {minSeconds}s");
+            else if (parsedMin < 0f)
+                _logger.LogWarning($"CareerConfig: <Global min_cooldown_seconds=\"{parsedMin}\"> must be >= 0 — falling back to {minSeconds}s");
+            else if (parsedMin > seconds)
+                _logger.LogWarning($"CareerConfig: <Global min_cooldown_seconds=\"{parsedMin}\"> exceeds cooldown_seconds={seconds} — falling back to {minSeconds}s");
+            else
+                minSeconds = parsedMin;
+        }
+
+        return new GlobalTuning(seconds, minSeconds);
     }
 
     private static int ParseInt(XElement el, string attrName, int defaultValue)

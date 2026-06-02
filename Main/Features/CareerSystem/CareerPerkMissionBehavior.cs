@@ -2,67 +2,46 @@ using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-using TaleWorlds.Engine.GauntletUI;
-using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.ScreenSystem;
-using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Abilities;
-using TAOM.Features.CareerSystem.Domain;
-using TAOM.Features.CareerSystem.Mutations;
 using TAOM.Features.CareerSystem.UI;
 
 namespace TAOM.Features.CareerSystem;
 
+// Thin mission-scoped boundary that wires sealed TaleWorlds APIs (Mission, InformationManager,
+// CharacterObject) to the testable controllers. Per ADR-002 / issue #102 the state machines
+// live in IAbilityActivationController + IAbilityHudController + IAbilityEffectExecutor;
+// this class only owns the mission-scoped _activeContexts expiration list + the OnEndMission
+// teardown sequencing.
 public class CareerPerkMissionBehavior : MissionBehavior
 {
     private readonly ICareerDataService _dataService;
-    private readonly ICareerRegistry _registry;
     private readonly ICareerAbilityService _abilityService;
-    private readonly ICareerConfigProvider _configProvider;
-    private readonly CareerAbilityEffectRegistry _effectRegistry;
-    private readonly IMutationService _mutationService;
-    private readonly ICareerHeroAdapterFactory _adapterFactory;
+    private readonly IAbilityActivationController _activationController;
+    private readonly IAbilityHudController _hudController;
+    private readonly IAbilityEffectExecutor _effectExecutor;
     private readonly IModLogger _logger;
 
-    private const float ChargingMessageThrottleSeconds = 2f;
     private bool _loggedMissionStart;
-    private bool _abilityReadyNotified;
-    private float _lastChargingMessageTime = -ChargingMessageThrottleSeconds;
-
-    private GauntletLayer _hudLayer;
-    private CareerAbilityHudVM _hudVM;
-    private GauntletMovieIdentifier _hudMovie;
-    private bool _hudInitialized;
-
-    // HUD metadata cache (avoid per-frame TextObject + string interpolation in UpdateHud).
-    private string _cachedHudHeroId;
-    private string _cachedHudAbilityName;
-    private string _cachedHudAbilitySprite;
-
     private readonly List<MissionAbilityExecutionContext> _activeContexts = new List<MissionAbilityExecutionContext>();
 
     public override MissionBehaviorType BehaviorType => MissionBehaviorType.Other;
 
     public CareerPerkMissionBehavior(
         ICareerDataService dataService,
-        ICareerRegistry registry,
         ICareerAbilityService abilityService,
-        ICareerConfigProvider configProvider,
-        CareerAbilityEffectRegistry effectRegistry,
-        IMutationService mutationService,
-        ICareerHeroAdapterFactory adapterFactory,
+        IAbilityActivationController activationController,
+        IAbilityHudController hudController,
+        IAbilityEffectExecutor effectExecutor,
         IModLogger logger)
     {
         _dataService = dataService;
-        _registry = registry;
         _abilityService = abilityService;
-        _configProvider = configProvider;
-        _effectRegistry = effectRegistry;
-        _mutationService = mutationService;
-        _adapterFactory = adapterFactory;
+        _activationController = activationController;
+        _hudController = hudController;
+        _effectExecutor = effectExecutor;
         _logger = logger;
     }
 
@@ -73,166 +52,44 @@ public class CareerPerkMissionBehavior : MissionBehavior
         if (hero == null) return;
 
         var heroId = hero.StringId;
+        var hasCareer = _dataService.HasCareer(heroId);
 
         if (!_loggedMissionStart)
         {
             _loggedMissionStart = true;
-            var hasCareer = _dataService.HasCareer(heroId);
             var careerId = _dataService.GetCareerStringId(heroId);
-            _logger.LogInfo($"CareerSystem: Mission started — hero='{heroId}' hasCareer={hasCareer} career='{careerId ?? "none"}'");
+            _logger?.LogInfo($"CareerSystem: Mission started — hero='{heroId}' hasCareer={hasCareer} career='{careerId ?? "none"}'");
         }
 
-        TryInitializeHud();
-        UpdateHud(heroId);
+        _hudController.TryInitialize();
+        _hudController.Refresh(heroId);
 
-        if (!_dataService.HasCareer(heroId)) return;
-
-        // Tick the ability cooldown with the actual frame dt. Any batching pattern (e.g.
-        // `if (_acc >= 1f) Tick(1f)`) drops elapsed time on long frames -- a 2.5s frame would
-        // drain only 1s of cooldown. CareerAbility.Tick handles fractional dt correctly.
-        _abilityService.Tick(heroId, dt);
-
-        // Check ability ready notification (every frame, not gated by tick interval)
-        if (_abilityService.IsAbilityReady(heroId) && !_abilityReadyNotified)
+        var result = _activationController.Tick(dt, heroId, hasCareer);
+        if (result.JustBecameReady)
         {
-            _abilityReadyNotified = true;
             InformationManager.DisplayMessage(new InformationMessage(
                 "Career ability is ready! Press V to activate.", Colors.Green));
         }
+        if (result.Activated)
+        {
+            _logger?.LogInfo($"CareerSystem: Ability activated for hero '{heroId}' via V key");
+            _effectExecutor.Execute(heroId, _activeContexts.Add);
+        }
+        else if (result.Charging)
+        {
+            var remaining = (int)Math.Ceiling(_abilityService.GetCooldownRemaining(heroId));
+            if (remaining < 1) remaining = 1;
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"Career ability still charging — {remaining}s remaining.", Colors.Gray));
+        }
 
-        // Tick all active execution contexts to expire timed buffs; remove finished ones.
         var currentTime = Mission.Current?.CurrentTime ?? 0f;
-        for (int i = _activeContexts.Count - 1; i >= 0; i--)
+        for (var i = _activeContexts.Count - 1; i >= 0; i--)
         {
             _activeContexts[i].Tick(currentTime);
             if (_activeContexts[i].IsExpired)
                 _activeContexts.RemoveAt(i);
         }
-
-        // Check ability activation input (every frame, once per key press)
-        if (Input.IsKeyPressed(InputKey.V))
-        {
-            if (_abilityService.IsAbilityReady(heroId))
-            {
-                _abilityService.ActivateAbility(heroId);
-                _abilityReadyNotified = false;
-                _logger.LogInfo($"CareerSystem: Ability activated for hero '{heroId}' via V key");
-                ExecuteAbilityEffect(heroId);
-            }
-            else
-            {
-                NotifyStillCharging(heroId);
-            }
-        }
-    }
-
-    private void NotifyStillCharging(string heroId)
-    {
-        var now = Mission.Current?.CurrentTime ?? 0f;
-        if (now - _lastChargingMessageTime < ChargingMessageThrottleSeconds) return;
-
-        _lastChargingMessageTime = now;
-        var remaining = (int)System.Math.Ceiling(_abilityService.GetCooldownRemaining(heroId));
-        if (remaining < 1) remaining = 1;
-        InformationManager.DisplayMessage(new InformationMessage(
-            $"Career ability still charging — {remaining}s remaining.", Colors.Gray));
-    }
-
-    private void ExecuteAbilityEffect(string heroId)
-    {
-        var careerId = _dataService.GetCareerStringId(heroId);
-        if (string.IsNullOrEmpty(careerId)) return;
-
-        var career = _registry.GetCareer(careerId);
-        if (career == null) return;
-
-        // Apply hero mutations to the raw template so Duration/Radius/etc reflect choice-tree choices.
-        var rawTemplate = _configProvider.GetAbilityTemplate(career.AbilityTemplateId);
-        var template = MutateTemplate(rawTemplate, heroId);
-
-        var duration = template?.Duration ?? 8f;
-        var radius = template?.Radius ?? 10f;
-
-        var mainAgent = Mission.Current?.MainAgent;
-        var context = new MissionAbilityExecutionContext(
-            heroId, duration, radius, mainAgent, Mission.Current, _logger);
-
-        _activeContexts.Add(context);
-
-        var executor = _effectRegistry.GetExecutor(careerId);
-        executor.Execute(context);
-
-        var abilityName = new TaleWorlds.Localization.TextObject(career.DisplayName).ToString();
-        InformationManager.DisplayMessage(new InformationMessage(
-            $"{abilityName} activated!", Colors.Yellow));
-
-        if (!string.IsNullOrEmpty(template?.SoundEffect))
-            context.PlaySound(template.SoundEffect);
-        if (!string.IsNullOrEmpty(template?.ParticleEffect))
-            context.PlayParticle(template.ParticleEffect);
-    }
-
-    private AbilityTemplateData MutateTemplate(AbilityTemplateData rawTemplate, string heroId)
-    {
-        if (rawTemplate == null) return null;
-        if (Campaign.Current == null) return rawTemplate;
-
-        var hero = CharacterObject.PlayerCharacter?.HeroObject;
-        if (hero == null || hero.StringId != heroId) return rawTemplate;
-
-        var heroAdapter = _adapterFactory.Create(hero);
-        return _mutationService.MutateAbility(rawTemplate, heroAdapter, _dataService, _registry);
-    }
-
-    private void TryInitializeHud()
-    {
-        if (_hudInitialized) return;
-
-        var topScreen = ScreenManager.TopScreen;
-        if (topScreen == null) return;
-
-        _hudVM = new CareerAbilityHudVM();
-        _hudLayer = new GauntletLayer("CareerAbilityHUD", 50);
-        _hudMovie = _hudLayer.LoadMovie("AbilityHUD", _hudVM);
-        topScreen.AddLayer(_hudLayer);
-        _hudInitialized = true;
-        _logger.LogInfo("CareerSystem: HUD layer initialized");
-    }
-
-    private void UpdateHud(string heroId)
-    {
-        if (_hudVM == null) return;
-
-        if (!_dataService.HasCareer(heroId))
-        {
-            _hudVM.Update(false, null, null, 0f, false);
-            return;
-        }
-
-        var ability = _abilityService.GetOrCreateAbility(heroId, _registry, _dataService);
-        if (ability == null)
-        {
-            _hudVM.Update(false, null, null, 0f, false);
-            return;
-        }
-
-        if (!string.Equals(heroId, _cachedHudHeroId, StringComparison.Ordinal))
-            RefreshHudCache(heroId, ability);
-
-        _hudVM.Update(true, _cachedHudAbilityName, _cachedHudAbilitySprite, ability.ReadyProgress01, ability.IsReady);
-    }
-
-    private void RefreshHudCache(string heroId, CareerAbility ability)
-    {
-        var careerId = _dataService.GetCareerStringId(heroId);
-        var career = careerId != null ? _registry.GetCareer(careerId) : null;
-        var rawName = career?.DisplayName ?? ability.TemplateId;
-
-        _cachedHudHeroId = heroId;
-        _cachedHudAbilityName = new TaleWorlds.Localization.TextObject(rawName).ToString();
-        _cachedHudAbilitySprite = career != null
-            ? $"CareerSystem\\Abilities\\{career.AbilityTemplateId}"
-            : null;
     }
 
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
@@ -244,8 +101,6 @@ public class CareerPerkMissionBehavior : MissionBehavior
         if (hero == null) return;
 
         var mainAgent = Mission.Current?.MainAgent;
-
-        // Death cleanup: main agent died while buffs were active
         if (affectedAgent == mainAgent)
         {
             CareerAbilityBuffTracker.ClearBuff(hero.StringId);
@@ -256,42 +111,29 @@ public class CareerPerkMissionBehavior : MissionBehavior
 
     protected override void OnEndMission()
     {
-        CleanupHud();
-        _logger.LogInfo("CareerSystem: Mission ended — clearing abilities");
+        // Deep-review #102 MED — singleton-controller-per-mission-behavior lifetime asymmetry.
+        // Each cleanup op runs in its own try/catch so a throw from one (the HUD layer's
+        // RemoveLayer is the most plausible per the screen-mismatch RCA) does not abort the
+        // others, which would leave singleton state stuck across mission boundaries.
+        try { _hudController.Cleanup(); }
+        catch (Exception ex) { _logger?.LogWarning($"CareerSystem: OnEndMission _hudController.Cleanup() threw — {ex.Message}"); }
+
+        try { _activationController.Reset(); }
+        catch (Exception ex) { _logger?.LogWarning($"CareerSystem: OnEndMission _activationController.Reset() threw — {ex.Message}"); }
+
+        try { _abilityService.ClearAll(); }
+        catch (Exception ex) { _logger?.LogWarning($"CareerSystem: OnEndMission _abilityService.ClearAll() threw — {ex.Message}"); }
+
+        try { CareerAbilityBuffTracker.ClearAll(); }
+        catch (Exception ex) { _logger?.LogWarning($"CareerSystem: OnEndMission CareerAbilityBuffTracker.ClearAll() threw — {ex.Message}"); }
+
+        _logger?.LogInfo("CareerSystem: Mission ended — clearing abilities");
         _loggedMissionStart = false;
-        _abilityReadyNotified = false;
-        _lastChargingMessageTime = -ChargingMessageThrottleSeconds;
-        _cachedHudHeroId = null;
-        _cachedHudAbilityName = null;
-        _cachedHudAbilitySprite = null;
         _activeContexts.Clear();
-        CareerAbilityBuffTracker.ClearAll();
-        _abilityService.ClearAll();
     }
 
     public override void OnAgentDeleted(Agent affectedAgent)
     {
-        // Clean up ally buff entry when any agent is removed from the mission
         CareerAbilityBuffTracker.ClearAllyBuff(affectedAgent.Index);
-    }
-
-    private void CleanupHud()
-    {
-        if (!_hudInitialized) return;
-
-        var topScreen = ScreenManager.TopScreen;
-        if (topScreen != null && _hudLayer != null)
-        {
-            topScreen.RemoveLayer(_hudLayer);
-        }
-
-        if (_hudMovie != null && _hudLayer != null)
-            _hudLayer.ReleaseMovie(_hudMovie);
-
-        _hudVM?.OnFinalize();
-        _hudLayer = null;
-        _hudVM = null;
-        _hudMovie = null;
-        _hudInitialized = false;
     }
 }

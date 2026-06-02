@@ -4,6 +4,8 @@
 
 **2026-05-04 update.** Ability activation rebuilt as a uniform 30-second cooldown timer. The original charge-based readiness model (DamageDone / Kills / DamageTaken accumulators) was replaced because per-archetype charge types produced confusing UX — defensive careers like Captain of Osgiliath only charged when the player took damage, so back-line players never saw the ability ready. See [Cooldown System](#cooldown-system) and `CHANGELOG.md` (issue #103).
 
+**2026-06-02 update — issues #102 + #104.** `CareerPerkMissionBehavior` refactored from 302 → 139 LOC by extracting three Singleton-lifetime controllers (`IAbilityActivationController` + `IAbilityHudController` + `IAbilityEffectExecutor`) and two adapters (`IAbilityInputAdapter` + `IMissionTimeProvider`); the V-key state machine is now unit-testable end-to-end. The 98 dead `MaxCharge` mutations in `taom_career_choices.xml` were repurposed as `CooldownReduction` (50× -6, 48× -9) targeting a new property on `AbilityTemplateData`; effective cooldown is `max(MinCooldownSeconds=5, 30 - reduction)`. Two Codex adversarial reviews + a 5-dimension Claude deep-review fan-out were applied; all 17 actionable findings triaged.
+
 ## Overview
 
 Career/class progression system where each hero can have a career that provides passive bonuses, an active ability, and a 3-tier choice tree. 50 LOTR-themed careers across 16 factions, fully XML-driven. Each career has 31 choices (1 root + 6 groups x 5 choices) with keystones, passives, and ability mutations.
@@ -27,7 +29,11 @@ TOR_Core's career system uses hardcoded C# classes, static singletons, and 6 Har
 - **Passive application:** `ICareerPassiveService` caches per-hero effect magnitudes, `CareerPassiveHelper` wires into 8 existing GameModels
 - **Mutations:** Hybrid XML + C# calculator registry — XML defines target/params, C# provides calculator functions by ID
 - **UI:** `GauntletCareerScreen` with `CareerScreenVM` hierarchy (TOR-pattern expandable panels, portraits, ability icons), `CharacterDeveloperCareerMixin` (UIExtenderEx) for career button with sprite. See [gui-sprite-system.md](gui-sprite-system.md) for full UI details. **Screen revamp 2026-05-30** ([RCA](../reviews/rca-career-ui-revamp-2026-05-30.md), [TOR comparison](../reviews/tor-career-ui-comparison-2026-05-30.md)): tiers ordered Tier 3 (top) → Tier 1 (bottom); locked tiers show a **"Requires Level N"** label (level from `CareerRegistry.GetTierUnlockLevel` — T1/1, T2/10, T3/20) instead of the old gate art; each node is an always-visible **point-pip strip** (3 brightness states — taken / available / empty — via `CareerChoiceObjectVM.IsUnavailable`) with perk descriptions on hover, using the shared `CareerSystem\career_point_pip` One Ring sprite; tier headers show per-career **rank titles** (`CareerDefinition.Rank1/2/3Name`, fallback "Tier N"); node headers show per-group **lore names** (`CareerChoiceGroupDefinition.DisplayName`, humanized-id fallback). 294 group names + 147 rank titles are web-researched Tolkien-grounded (`tools/career_group_names.json`, `tools/career_rank_names.json`); rank-title convention adopted from TOR_Core (GPLv3, with permission). **In-game pass 2026-05-31:** names singularized (single-player career → singular titles, e.g. "Warden of the East Bank" not "Wardens"; via `tools/singularize_career_names.py`); tier rank labels set flush-left (`CoverChildren`+Left, no wrap-indent); locked-tier node spacing matched to Tier 1 by reserving the `+`/`−` button column (fixed 70px, buttons gated on `@IsActive`). **Pip sprite — two fixes (bake + render):** the pip first needed the offline sprite generator to bake it into the `ui_taom_career_system` atlas (`AssetSources/GauntletUI/...png` + `Assets/GauntletUI/..._tex.tpac` — **not** a `pack0.tpac`), and then a prefab fix because even baked it rendered invisibly at 22×28px/27% alpha (bumped to 38×38 + brighter opacities); the "Requires Level N" label was re-centered into the gap between the two node columns (`CoverChildren`+Center alone was insufficient — the 70px button reserve shifts the boxes left of row-center, so a `PositionXOffset="-40"` was needed); and the hover perk descriptions were made **inline with the pips** (the parallel pip + description `{Choices}` lists were given matching 46px rows and the description text switched to `CoverChildren`+left, so each description sits on its pip's row). **All confirmed working in-game (user screenshots, 2026-05-31).** See [gui-sprite-system.md](gui-sprite-system.md) "The sprite-bake pipeline" (decompile-verified) + "Verifying a sprite (bake + render)", and [RCA post-review in-game findings](../reviews/rca-career-ui-revamp-2026-05-30.md#post-review-in-game-findings-2026-05-31).
-- **Battle:** `CareerPerkMissionBehavior` for per-second cooldown tick + `V`-key activation handling. `CareerAbilityService` injects `ICareerConfigProvider` and forces `ChargeType.CooldownOnly` for all 50 careers — readiness is purely cooldown-timer based (see [Cooldown System](#cooldown-system)).
+- **Battle:** `CareerPerkMissionBehavior` (a 139-line thin entry point per ADR-002) delegates per-frame work to three Singleton-lifetime controllers:
+  - [`IAbilityActivationController`](../../Main/Features/CareerSystem/Abilities/IAbilityActivationController.cs) — V-key + ready-state notification + charging-message throttle state machine. Returns an `AbilityActivationResult { JustBecameReady, Activated, Charging }` flags struct so the host can emit BOTH the green "ready" toast and the yellow "activated" toast on the same frame (legacy UX). Fully unit-testable via `IAbilityInputAdapter` + `IMissionTimeProvider` injection — no TaleWorlds statics.
+  - [`IAbilityHudController`](../../Main/Features/CareerSystem/UI/IAbilityHudController.cs) — `GauntletLayer` lifecycle (`TryInitialize` / `Refresh` / `Cleanup`). Captures `_attachedScreen` at attach time so `Cleanup` removes from the same screen it attached to (vanilla `ScreenBase.RemoveLayer` calls `HandleFinalize` unconditionally — removing from the wrong screen corrupts both screens). `Cleanup` engine calls are wrapped in `try / catch / finally` so a throw from `RemoveLayer` / `ReleaseMovie` / `OnFinalize` cannot leave the Singleton with `_hudInitialized=true` (which would silently kill the HUD for every subsequent mission this session).
+  - [`IAbilityEffectExecutor`](../../Main/Features/CareerSystem/Abilities/IAbilityEffectExecutor.cs) — per-activation pipeline: mutate template, apply CooldownReduction adjustment, allocate `MissionAbilityExecutionContext`, register with host's `_activeContexts` list, dispatch per-archetype effect executor, emit toast + sound + particles.
+- **Singleton lifetime + per-step OnEndMission try/catch.** All three controllers are `Reuse.Singleton`; the host `CareerPerkMissionBehavior` is constructed fresh per mission. Cross-mission state (`_abilityReadyNotified`, `_hudInitialized` etc.) lives on the singletons and is cleared by explicit `Reset()` / `Cleanup()` calls in `OnEndMission`. Per the deep-review systemic finding, each cleanup op runs in its own `try/catch` so a throw in one (most plausibly `_hudController.Cleanup`) cannot abort the others. `CareerAbilityService` forces `ChargeType.CooldownOnly` for all 50 careers — readiness is purely cooldown-timer based (see [Cooldown System](#cooldown-system)).
 - **Ability effects:** `CareerAbilityEffectRegistry` dispatches to per-career `ICareerAbilityEffectExecutor` implementations. 3 role-based archetypes (Infantry/Ranged/Cavalry) serve all 50 careers with XML-tunable values via `taom_ability_tuning.xml`. All three archetypes apply AoE friendly-troop buffs within a 50-unit radius (standardized in templates): Infantry (damage + damage reduction), Ranged (speed + ranged damage + draw speed), Cavalry (mount speed + charge damage + damage). Buffs applied via `CareerAbilityBuffTracker` with separate hero and ally buff dictionaries (read by `TaomAgentStatCalculateModel` — survives stat recalc).
 
 ### Component Diagram
@@ -83,31 +89,51 @@ Defines standalone root choices and choice groups. Each group has a tier (1/2/3)
 
 ### Ability Templates (`Main/_Module/ModuleData/career_system/taom_ability_templates.xml`)
 
-Defines per-ability tunables: id, display name, duration (effect window), radius (AoE), max charge (used by mutation system to scale charge thresholds — internal value, not consumed by readiness logic), particle/sound effects, tooltip. Cooldown is *not* per-template; see [Cooldown System](#cooldown-system).
+Defines per-ability tunables: id, display name, duration (effect window), radius (AoE), `max_charge` (dead since #103 cooldown rework — present on the model for back-compat but unread by activation logic; designer mutations targeting it were repurposed as `CooldownReduction` in #104), `cooldown_reduction` (per-activation cooldown shortening in seconds, applied AFTER mutations have run; floored at `MinCooldownSeconds`), particle/sound effects, tooltip. Cooldown is *not* per-template; see [Cooldown System](#cooldown-system).
 
 ### Cooldown System
 
-`Main/_Module/ModuleData/career_system/taom_ability_tuning.xml` declares a single `<Global cooldown_seconds="30" />` element shared by all 50 careers. Edit to retune.
+`Main/_Module/ModuleData/career_system/taom_ability_tuning.xml` declares a `<Global>` element shared by all 50 careers. Two tunables:
 
 ```xml
 <AbilityTuning>
-  <Global cooldown_seconds="30" />
+  <Global cooldown_seconds="30" min_cooldown_seconds="5" />
   <Infantry .../>
   <Ranged .../>
   <Cavalry .../>
 </AbilityTuning>
 ```
 
-- **Default:** 30 seconds.
-- **Validation:** Must be in `(0, 3600]`. Out-of-range, malformed, or missing values fall back to 30s with a `LogWarning` (`CareerConfigProvider.ParseGlobalTuning`).
+- **`cooldown_seconds` — Default 30s.** Validation: must be in `(0, 3600]`. Non-finite (`NaN`/`±Infinity`), out-of-range, malformed, or missing values fall back to 30s with a `LogWarning` (`CareerConfigProvider.ParseGlobalTuning`). NaN guard precedes the range check because IEEE-754 NaN comparisons always yield false (see `feedback_clamp_nan_infinity_propagates.md` — bug has shipped three times).
+- **`min_cooldown_seconds` — Default 5s (#104).** Validation: must be ≥ 0 AND ≤ `cooldown_seconds`. Floor for designer `CooldownReduction` mutations — prevents stack-up cheese where 4+ keystones with `-9` reductions would zero the cooldown. Same NaN/Infinity guards as the cooldown itself.
 - **Reload scope:** `CareerConfigProvider` is a `Reuse.Singleton` and caches the parsed config. Changes require a full Bannerlord application restart — not a save-load.
-- **Per-career override:** Not supported. Readiness is uniform across all 50 careers by design (UX simplification — see #103 motivation).
+- **Per-career override:** Not supported at the tuning-config layer. **Per-keystone CooldownReduction is supported** — see CooldownReduction Mutations below.
 
-In-battle UX:
+#### CooldownReduction Mutations (#104, Option B)
+
+A keystone choice can shorten the global cooldown for the next activation via a `<Mutation>` targeting the new `CooldownReduction` property on `AbilityTemplateData`:
+
+```xml
+<ChoiceGroup id="...">
+  <Choice id="..._keystone_t1" type="Keystone">
+    <Mutations>
+      <Mutation target="cooldown_reduction" property="CooldownReduction" calculator="flat" value="6"/>
+    </Mutations>
+  </Choice>
+</ChoiceGroup>
+```
+
+- **`6` for tier-1 keystones, `9` for tier-2/3 keystones** is the convention. Effective cooldown = `max(min_cooldown_seconds, cooldown_seconds - reduction)`. With defaults: tier-1 = `max(5, 30-6) = 24s`; tier-2/3 = `max(5, 30-9) = 21s`. Stacks of 4 tier-2/3 keystones (which would sum to 36) floor at 5s.
+- **Application order in `AbilityEffectExecutor.Execute`:** the per-activation pipeline calls `MutateTemplate` to apply all choice mutations to a cloned template, runs the per-archetype effect executor, THEN calls `_abilityService.ApplyCooldownAdjustment(heroId, template.CooldownReduction, min)`. The adjustment runs AFTER `executor.Execute` so a throw from the effect executor (e.g., `ApplyAoeBuff` mid-iteration) does not shorten the cooldown for an activation whose effect did not fully apply. The HUD pip on the next frame still sees the adjusted cooldown.
+- **Designer convention — POSITIVE values only.** `<Mutation property="CooldownReduction" ... value="6"/>` means "shorten the next cooldown by 6 seconds." The `flat` calculator is `baseValue + value` (`BuiltInCalculators.cs:7-8`), so the mutated template's `CooldownReduction` is positive 6. `AbilityEffectExecutor` guards on `template.CooldownReduction > 0f` before calling `ApplyCooldownAdjustment`. A negative value would be silently rejected by that guard. Codex pass-2 (2026-06-02) caught a HIGH where the first XML rewrite emitted `-6`/`-9` and the entire feature was a no-op; fixed by re-running the script with the positive-value variant.
+- **History.** 98 mutations originally targeted `MaxCharge` (-20 / -30) under the charge-based system. After the #103 cooldown rework `MaxCharge` became unread; #104 Option B rewrote them via `tools/rename_maxcharge_to_cooldownreduction.py` (50 × 6, 48 × 9) preserving the 1.5× tier ratio. The `MaxCharge` property itself remains on `AbilityTemplateData` for back-compat — harmless dead but reflective-mutation pipeline (`MutationService`) would still write to it if a future XML re-introduces a mutation. Removing it is deferred (see Codex pass-2 LOW#2; tracked as future cleanup).
+
+#### In-battle UX
+
 - Abilities start ready at battle open.
 - Pressing `V` while ready: yellow *"<Ability> activated!"* message + buff/sound/particle effect.
 - Pressing `V` while on cooldown: throttled gray *"Career ability still charging — Ns remaining"* (one message per 2s).
-- One-shot green *"Career ability is ready! Press V to activate"* when the cooldown elapses.
+- One-shot green *"Career ability is ready! Press V to activate"* when the cooldown elapses. On the frame the ability becomes ready AND V is pressed simultaneously, BOTH the green ready toast and the yellow activated toast emit (preserving legacy UX — see `AbilityActivationResult` flags struct).
 
 ### Starting Equipment Override (per-archetype)
 
@@ -167,9 +193,10 @@ The empty `id=""` resolves to a null `ItemObject`, which `Equipment.DeserializeN
 | `Main/Features/CareerSystem/CareerPassiveService.cs` | Session-scoped passive effect cache |
 | `Main/Features/CareerSystem/CareerPassiveHelper.cs` | Static helper wiring passives into GameModels |
 | `Main/Features/CareerSystem/Mutations/` (6 files) | Calculator registry + built-in calculators + mutation service |
-| `Main/Features/CareerSystem/Abilities/` (10 files) | CareerAbility, ability service, effect registry, 3 executors, buff tracker, execution context |
+| `Main/Features/CareerSystem/Abilities/` (16 files) | CareerAbility (now with `AdjustCooldown`), ability service (now with `ApplyCooldownAdjustment`), effect registry, 3 executors, buff tracker, execution context, + 6 new files for #102: `IAbilityActivationController` / `AbilityActivationController` / `IAbilityHudController` deps `IAbilityInputAdapter` + `IMissionTimeProvider` + impls, `IAbilityEffectExecutor` / `AbilityEffectExecutor` |
+| `Main/Features/CareerSystem/UI/AbilityHudController.cs` | HUD lifecycle controller (boundary class — verified in-battle) |
 | `Main/Features/CareerSystem/CareerCampaignBehavior.cs` | Campaign lifecycle events |
-| `Main/Features/CareerSystem/CareerPerkMissionBehavior.cs` | Battle tick + V-key activation + HUD lifecycle (302 LOC; refactor tracked in #102) |
+| `Main/Features/CareerSystem/CareerPerkMissionBehavior.cs` | Thin entry point (139 LOC, ADR-002 compliant — refactored #102) — delegates to the three controllers + owns `_activeContexts` expiration list + `OnEndMission` per-step try/catch teardown |
 | `Main/Features/CareerSystem/CareerCreationHandler.cs` | Character creation integration |
 | `Main/Features/CareerSystem/CareerSwitchService.cs` | Career switching with validation |
 | `Main/Features/CareerSystem/UI/` (7 files) | Career screen + VM hierarchy + UIExtenderEx mixin + ability HUD + prefab. See [gui-sprite-system.md](gui-sprite-system.md) |
@@ -203,6 +230,8 @@ The empty `id=""` resolves to a null `ItemObject`, which `Equipment.DeserializeN
 | MutationServiceTests | 5 | Template cloning + mutation application |
 | CareerAbilityTests | 20 | Charge types + cooldown + activation + ReadyProgress01 |
 | CareerAbilityServiceTests | 10 | Force-CooldownOnly + configured cooldown duration + GetCooldownRemaining (hero present/absent) + IsAbilityReady transitions |
+| AbilityActivationControllerTests | 13 | V-key state machine — NoCareer no-op, JustBecameReady one-shot, simultaneous-flag emit, charging throttle window, Reset clears both flags |
+| CooldownReductionTests | 15 | AbilityTemplateData copy-ctor, GlobalTuning ctor, AdjustCooldown happy/floor/zero/negative/NaN/Infinity/charge-based no-op, service ApplyCooldownAdjustment unknown-hero + floor |
 | CareerCreationHandlerTests | 4 | CC flow + root choice |
 | CareerSwitchServiceTests | 5 | Switch validation + choice reset |
 | CareerScreenVMTests | 5 | VM state + choice selection |

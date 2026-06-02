@@ -23,12 +23,18 @@ public sealed class GlobalTuning
 {
     public float CooldownSeconds { get; }
 
-    public GlobalTuning(float cooldownSeconds)
+    // Issue #104 Option B — minimum effective cooldown after CooldownReduction mutations.
+    // Floor prevents designer-stack-up cheese (50 careers × multiple keystones could in theory
+    // sum to a 30s+ reduction; clamp ensures the global cooldown is still observed at minimum 5s).
+    public float MinCooldownSeconds { get; }
+
+    public GlobalTuning(float cooldownSeconds, float minCooldownSeconds = 5f)
     {
         CooldownSeconds = cooldownSeconds;
+        MinCooldownSeconds = minCooldownSeconds;
     }
 
-    public static GlobalTuning Default => new GlobalTuning(30f);
+    public static GlobalTuning Default => new GlobalTuning(30f, 5f);
 }
 
 public sealed class InfantryTuning

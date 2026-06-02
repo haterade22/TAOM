@@ -29,6 +29,15 @@ public static class CareerSystemIoC
         container.Register<Abilities.ICareerAbilityService, Abilities.CareerAbilityService>(Reuse.Singleton);
         container.Register<IMutationService, MutationService>(Reuse.Singleton);
 
+        // Issue #102 — CareerPerkMissionBehavior decomposition. Three controllers extracted
+        // from the legacy 302-line mission behavior so the V-key + HUD + effect-execution
+        // state machines are independently unit-testable.
+        container.Register<Abilities.IAbilityInputAdapter, Abilities.AbilityInputAdapter>(Reuse.Singleton);
+        container.Register<Abilities.IMissionTimeProvider, Abilities.MissionTimeProvider>(Reuse.Singleton);
+        container.Register<Abilities.IAbilityActivationController, Abilities.AbilityActivationController>(Reuse.Singleton);
+        container.Register<UI.IAbilityHudController, UI.AbilityHudController>(Reuse.Singleton);
+        container.Register<Abilities.IAbilityEffectExecutor, Abilities.AbilityEffectExecutor>(Reuse.Singleton);
+
         // Phase 9b #142 — agent-stat service extracted out of TaomAgentStatCalculateModel /
         // TaomAgentApplyDamageModel bodies (gamemodels.md rule 4 — no inline branching in
         // override bodies). Reads ICareerPassiveService + the static CareerAbilityBuffTracker.

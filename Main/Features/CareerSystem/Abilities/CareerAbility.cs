@@ -57,4 +57,20 @@ public class CareerAbility
         if (CurrentCharge > MaxCharge)
             CurrentCharge = MaxCharge;
     }
+
+    // Issue #104 Option B — shorten the active CooldownRemaining by reductionSeconds (clamped
+    // to floor minCooldownSeconds). No-op for charge-based abilities (the cooldown machinery
+    // doesn't run). NaN/Infinity/negative inputs are rejected so a bad XML mutation cannot
+    // produce a frozen state machine or a 0s cooldown bypass (see feedback_clamp_nan_infinity_propagates.md).
+    public void AdjustCooldown(float reductionSeconds, float minCooldownSeconds)
+    {
+        if (ChargeType != ChargeType.CooldownOnly) return;
+        if (float.IsNaN(reductionSeconds) || float.IsNaN(minCooldownSeconds)) return;
+        if (float.IsInfinity(reductionSeconds) || float.IsInfinity(minCooldownSeconds)) return;
+        if (reductionSeconds <= 0f) return;
+        if (minCooldownSeconds < 0f) minCooldownSeconds = 0f;
+
+        var effective = Math.Max(minCooldownSeconds, CooldownRemaining - reductionSeconds);
+        CooldownRemaining = effective;
+    }
 }
