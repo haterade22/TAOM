@@ -29,6 +29,22 @@ public class CareerSwitchService : ICareerSwitchService
             _logger.LogDebug($"CareerSystem: CanSwitch — null hero or empty careerId '{newCareerStringId}'");
             return false;
         }
+
+        // Reject switching to the hero's current career. The picker filters this out via
+        // GetEligibleSwitchTargets, but this is the boundary defense -- a future caller invoking
+        // SwitchCareer directly must not silently "succeed" into a no-op cache refresh.
+        var heroId = hero.StringId;
+        if (!string.IsNullOrEmpty(heroId))
+        {
+            var currentCareerId = _dataService.GetCareerStringId(heroId);
+            if (!string.IsNullOrEmpty(currentCareerId) &&
+                string.Equals(currentCareerId, newCareerStringId, System.StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogDebug($"CareerSystem: CanSwitch — rejecting same-career switch '{newCareerStringId}' for hero '{heroId}'");
+                return false;
+            }
+        }
+
         var eligible = _registry.IsEligible(newCareerStringId, hero);
         _logger.LogDebug($"CareerSystem: CanSwitch — hero culture='{hero.CultureStringId}' career='{newCareerStringId}' result={eligible}");
         return eligible;

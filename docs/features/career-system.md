@@ -231,6 +231,20 @@ The empty `id=""` resolves to a null `ItemObject`, which `Equipment.DeserializeN
 ### Add a new ability icon
 See #101 — currently 41 of 50 careers have no PNG. Drop a 256x256 PNG into `Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/Abilities/<career_id>_ability.png` and add the corresponding `<Name>CareerSystem\Abilities\<career_id>_ability</Name>` registration in `Main/_Module/GUI/TAOMSpriteData.xml`.
 
+## Effect-Scope Badges in Choice Tree (UX)
+
+`CareerChoiceObjectVM.EffectScopeBadge` renders a small "While active" text next to keystone (mutation) bullets in the choice tree. The prefab gates the badge widget on `@IsKeystone` so passives render with no badge (the always-active default is the convention). The distinction matches the runtime: `PassiveEffect` choices flow through `CareerPassiveService.GetPassiveMagnitude` and are read by GameModel overrides on every relevant calculation (always active); `Mutation` (Keystone) choices are applied to a cloned `AbilityTemplateData` inside `ExecuteAbilityEffect` on V-press only — the clone is discarded once the buff window expires.
+
+## Career-Switch Picker (dialogue → switch-mode screen)
+
+When the player picks "I wish to discuss my career path" on any companion (under vanilla's `hero_main_options` dialogue token), the dialogue gate uses `ICareerRegistry.GetEligibleSwitchTargets(currentCareerId, hero)` to decide whether to show the option. The consequence opens `GauntletCareerScreen` in switch mode (via `CareerScreenGameState.IsSwitchMode = true`). The same screen renders normal-mode (perk tree) or switch-mode (picker) based on the flag; gates in `CareerScreen.xml` use `@IsNormalMode` and `@IsSwitchMode` to swap the middle area.
+
+**Lifecycle gotcha (Codex Review #46):** Vanilla `GameStateManager.CreateState<T>()` invokes the screen ctor synchronously via `HandleCreateState → OnCreateState → CreateScreen → Activator.CreateInstance(type, state)` BEFORE `OpenCareerScreen` can set `state.IsSwitchMode = true`. Any new feature flag plumbed through `CareerScreenGameState` MUST be read in `OnInitialize`, not in the screen ctor. See [`GauntletCareerScreen.cs:OnInitialize`](../../Main/Features/CareerSystem/UI/GauntletCareerScreen.cs).
+
+**Empty-state UX.** The picker's `ScrollablePanel` is gated on `@IsBrowsingTargets` (= `_isSwitchMode && targets.Count > 0`); the empty-state `TextWidget` bound to `@NoTargetsMessage` is gated on `@HasNoSwitchTargets` (= `_isSwitchMode && targets.Count == 0`). The dialogue gate prevents the empty-list state being reached via normal flow, but a static-entry-point or `_heroAdapter == null` reaches it; `RebuildEligibleSwitchTargets` logs a warning so a player report of "blank picker" is triagable. `IsBrowsingTargets` and `HasNoSwitchTargets` are computed expression-body properties; the VM fires `OnPropertyChanged` for both after `_eligibleSwitchTargets.Clear() + Add()` mutations (Gauntlet does not re-evaluate computed bools on collection mutation).
+
+**Switch contract:** `ICareerSwitchService.SwitchCareer(heroStringId, hero, newCareerId)` clears old career + choices + tier unlocks + flags, sets the new career, adds the new root choice, refreshes the passive cache. `CanSwitch` rejects same-career switches at the boundary (`hero.StringId → _dataService.GetCareerStringId → ordinal-ignore-case == newCareerStringId`).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

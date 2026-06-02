@@ -26,8 +26,8 @@
           </Children>
         </Widget>
 
-        <!--Middle Area-->
-        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="920" HorizontalAlignment="Center" VerticalAlignment="Center" MarginTop="60">
+        <!--Middle Area (Normal mode: perk tree)-->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="920" HorizontalAlignment="Center" VerticalAlignment="Center" MarginTop="60" IsVisible="@IsNormalMode">
           <Children>
 
             <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight">
@@ -131,7 +131,16 @@
                                                   <ItemTemplate>
                                                     <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="46" SuggestedWidth="620">
                                                       <Children>
-                                                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="12" Text="@Description" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="18" />
+                                                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="12" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                                          <Children>
+                                                            <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Text="@Description" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="18" />
+                                                            <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="10" IsVisible="@IsKeystone">
+                                                              <Children>
+                                                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Text="@EffectScopeBadge" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="14" />
+                                                              </Children>
+                                                            </Widget>
+                                                          </Children>
+                                                        </ListPanel>
                                                       </Children>
                                                     </Widget>
                                                   </ItemTemplate>
@@ -190,7 +199,16 @@
                                                   <ItemTemplate>
                                                     <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="46" SuggestedWidth="620">
                                                       <Children>
-                                                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="12" Text="@Description" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="18" />
+                                                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="12" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                                          <Children>
+                                                            <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Text="@Description" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="18" />
+                                                            <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="10" IsVisible="@IsKeystone">
+                                                              <Children>
+                                                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Text="@EffectScopeBadge" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="14" />
+                                                              </Children>
+                                                            </Widget>
+                                                          </Children>
+                                                        </ListPanel>
                                                       </Children>
                                                     </Widget>
                                                   </ItemTemplate>
@@ -247,7 +265,16 @@
                                                   <ItemTemplate>
                                                     <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="46" SuggestedWidth="620">
                                                       <Children>
-                                                        <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="12" Text="@Description" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="18" />
+                                                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="12" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                                          <Children>
+                                                            <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Text="@Description" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="18" />
+                                                            <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="10" IsVisible="@IsKeystone">
+                                                              <Children>
+                                                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Text="@EffectScopeBadge" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="14" />
+                                                              </Children>
+                                                            </Widget>
+                                                          </Children>
+                                                        </ListPanel>
                                                       </Children>
                                                     </Widget>
                                                   </ItemTemplate>
@@ -284,6 +311,83 @@
               </Children>
             </ListPanel>
 
+          </Children>
+        </Widget>
+
+        <!--Middle Area (Switch mode: career picker invoked from "I wish to discuss my career path" dialogue)-->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="920" HorizontalAlignment="Center" VerticalAlignment="Center" MarginTop="60" IsVisible="@IsSwitchMode">
+          <Children>
+            <Widget WidthSizePolicy="Fixed" SuggestedWidth="1400" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" Sprite="StdAssets\Popup\canvas">
+              <Children>
+                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalTopToBottom" MarginTop="30" MarginLeft="40" MarginRight="40">
+                  <Children>
+                    <!-- Picker header -->
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Text="@SwitchModeSubtitle" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="20" />
+                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="4" MarginTop="15" Sprite="Clan\divider_mid" />
+
+                    <!-- Empty-state message: shown when switch mode is active but the eligible-targets list is empty -->
+                    <!-- (forced static-entry-point, stale eligibility, or _heroAdapter == null) -->
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="60" Text="@NoTargetsMessage" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="20" IsVisible="@HasNoSwitchTargets" />
+
+                    <!-- Eligible target list (scrollable). Hidden when EligibleSwitchTargets is empty -->
+                    <!-- so the prior render doesn't leave a 760px tall blank scroll canvas (Codex Review #32). -->
+                    <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="760" MarginTop="20" ClipRect="SwitchPickerClip" InnerPanel="SwitchPickerInner" AutoHideScrollBars="true" IsVisible="@IsBrowsingTargets">
+                      <Children>
+                        <Widget Id="SwitchPickerClip" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                          <Children>
+                            <Widget Id="SwitchPickerInner" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren">
+                              <Children>
+                                <ListPanel DataSource="{EligibleSwitchTargets}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                  <ItemTemplate>
+                                    <!-- Per-target card: portrait | name + description + ability | Choose button -->
+                                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="180" MarginTop="10" MarginBottom="10" Sprite="StdAssets\Popup\canvas">
+                                      <Children>
+                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginLeft="20" MarginRight="20" MarginTop="10" MarginBottom="10">
+                                          <Children>
+                                            <!-- Portrait -->
+                                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="220" SuggestedHeight="150" VerticalAlignment="Center" Sprite="@PortraitSprite">
+                                              <Children>
+                                                <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
+                                              </Children>
+                                            </Widget>
+
+                                            <!-- Name + description + ability label -->
+                                            <Widget WidthSizePolicy="Fixed" SuggestedWidth="780" HeightSizePolicy="StretchToParent" MarginLeft="20">
+                                              <Children>
+                                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                                  <Children>
+                                                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@Name" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="24" />
+                                                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@Description" Brush="CharacterDeveloper.DescriptionText" Brush.FontSize="16" MarginTop="6" />
+                                                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Text="@AbilityName" Brush="CharacterDeveloper.SkillNameText" Brush.FontSize="14" MarginTop="10" />
+                                                  </Children>
+                                                </ListPanel>
+                                              </Children>
+                                            </Widget>
+
+                                            <!-- Choose button -->
+                                            <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="180" SuggestedHeight="60" VerticalAlignment="Center" MarginLeft="20" Brush="Popup.Done.Button.NineGrid" Command.Click="ExecuteChoose">
+                                              <Children>
+                                                <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" VerticalAlignment="Center" HorizontalAlignment="Center" Text="@ChooseLabel" Brush="Popup.Button.Text" Brush.FontSize="20" />
+                                              </Children>
+                                            </ButtonWidget>
+                                          </Children>
+                                        </ListPanel>
+                                        <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
+                                      </Children>
+                                    </Widget>
+                                  </ItemTemplate>
+                                </ListPanel>
+                              </Children>
+                            </Widget>
+                          </Children>
+                        </Widget>
+                      </Children>
+                    </ScrollablePanel>
+                  </Children>
+                </ListPanel>
+                <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Frame" IsEnabled="false" />
+              </Children>
+            </Widget>
           </Children>
         </Widget>
 

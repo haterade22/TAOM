@@ -1,2882 +1,1441 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-
-      type="string">
-
-  <tags>
-
-    <tag language="Korean" />
-
-  </tags>
-
-  <strings>
-
-    <string id="TAOM_dunland" text="던랜드" />
-
-    <string id="TAOM_dunland_short" text="던랜드" />
-
-    <string id="TAOM_dunland_title" text="던랜드 부족연합" />
-
-    <string id="TAOM_dunland_ruler" text="브레닌" />
-
-    <string id="TAOM_dunland_desc" text="구릉과 울창한 숲으로 이루어진 거칠고 황량한 땅 던랜드는 사나우며 독립적인 던랜드인들의 고향이다. 이웃들과 자주 마찰을 빚으며 소외당해 온 던랜드 사람들은 수세기에 걸친 투쟁과 생존으로 단련되었다. 그들의 족장들은 힘과 교활함으로 부족들을 이끌며, 복수와 자유라는 공통의 깃발 아래 하나가 된다. 맹렬한 전사들과 숙련된 사냥꾼들로 알려진 던랜드인들은 도끼, 창, 활을 선호하며, 선조의 땅과의 깊은 유대에서 비롯된 집요함으로 싸운다. 그들의 방식이 다른 이들에게는 원시적으로 보일지 모르나, 던랜드인들은 자랑스럽고 지략이 풍부하며, 가운데땅에서 정당한 자리를 되찾을 준비가 되어 있다." />
-
-    <string id="TAOM_gondor" text="곤도르" />
-
-    <string id="TAOM_gondor_short" text="곤도르" />
-
-    <string id="TAOM_gondor_title" text="곤도르 집정관국" />
-
-    <string id="TAOM_gondor_ruler" text="집정관" />
-
-    <string id="TAOM_gondor_desc" text="곤도르는 가운데땅에서 자랑스러운 힘과 회복력의 보루로 우뚝 서 있으며, 우뚝 솟은 백색 석조 도시들과 고대의 혈통, 숙련된 군대로 유명하다. 누메노르의 몰락 이후 엘렌딜과 그의 아들들에 의해 건국된 곤도르는 오랫동안 동쪽에서 커져가는 어둠에 맞서 인간의 왕국들을 지켜왔다. 수도 미나스 티리스를 중심으로, 이 왕국은 용맹, 규율, 그리고 자유민족에 대한 충성심으로 명성이 높다. 모르도르와의 오랜 분쟁에 시달렸지만, 곤도르의 전사들과 집정관들은 희망을 지켜왔으며, 왕의 귀환으로 옛 영광을 되찾기를 기다리고 있다." />
-
-    <string id="TAOM_mordor" text="모르도르" />
-
-    <string id="TAOM_mordor_short" text="모르도르" />
-
-    <string id="TAOM_mordor_title" text="모르도르 지배령" />
-
-    <string id="TAOM_mordor_ruler" text="암흑군주" />
-
-    <string id="TAOM_mordor_desc" text="모르도르는 그림자 속에서 만들어지고 암흑군주 사우론의 지배를 받는 어둡고 황량한 영역이다. 우뚝 솟은 검은 산맥 뒤에 자리한 이 왕국은 오크 군대, 무자비한 트롤들, 그리고 전쟁 무기를 만드는 불타는 대장간으로 가득 차 있다. 바라드두르의 요새에서 사우론은 가운데땅 전역에 자신의 지배를 확장할 막강한 군세를 지휘한다. 모르도르의 하늘은 재로 뒤덮여 있고, 그 땅은 황폐하니, 사우론의 뒤틀린 야망과 어둠의 마법에 어울리는 영토이다." />
-
-    <string id="TAOM_dale" text="데일" />
-
-    <string id="TAOM_dale_short" text="데일" />
-
-    <string id="TAOM_dale_title" text="데일 왕국" />
-
-    <string id="TAOM_dale_ruler" text="왕" />
-
-    <string id="TAOM_dale_desc" text="달리는 강의 물이 외로운 산의 그림자와 만나는 곳에 데일이 서 있다. 인간의 도시는 다섯 군대 전투의 여파로 폐허에서 재건되었다. 한때 음악과 환희의 장소였으며, 무역과 황금 시장의 전당이었던 데일은 에레보르의 보호 아래 번영했다. 그 상인들은 켈두인 강을 따라 빠른 배를 저어 내려갔고, 거리에는 웃음소리가 울려 퍼졌으며, 그 백성들은 평화를 누렸다. 그러나 용이 왔을 때 평화는 산산이 부서졌다. 북쪽에서 온 날개 달린 죽음 스마우그가 화염과 분노 속에 에레보르로 내려왔고, 데일은 가장 먼저 고통받았다. 도시는 불탔고, 백성들은 도망쳤으며, 거의 2세기 동안 자랑스러운 돔형 탑들은 고요하고 부서진 채 서 있었으니, 슬픔의 기념비였다. 그러나 폐허가 데일 이야기의 끝은 아니다. 용의 죽음과 함께, 활잡이 바르드는 다시 깃발을 들어올리고 그의 백성을 집으로 불렀다. 재와 돌에서 데일은 다시 일어났으니, 예전 모습이 아니라 더 위대한 모습으로. 바르드 왕과 그의 아들 베인 치하에서 도시는 다시 번영하며, 그 성벽은 견고하고, 백성은 자랑스러우며, 시선은 언제나 경계를 늦추지 않는다. 데일의 사람들은 수에서 강대하지도, 마법에서 고대하지도 않지만, 확고부동하고 진실하다." />
-
-    <string id="TAOM_harad" text="하라드" />
-
-    <string id="TAOM_harad_short" text="하라드" />
-
-    <string id="TAOM_harad_title" text="하르완의 타스크랄란" />
-
-    <string id="TAOM_harad_ruler" text="타스크랄" />
-
-    <string id="TAOM_harad_desc" text="곤도르 남쪽의 광대하고 다채로운 지역 하라드는 건조한 사막, 무성한 정글, 비옥한 오아시스를 아우른다. 그 지형은 백성만큼이나 다양하며, 광활한 모래언덕이 울창한 숲과 생명이 넘치는 강으로 이어진다. 하라드의 역사는 고대 전설로 물들어 있으며, 웅장한 도시들과 요새들이 풍경을 점점이 수놓고 있으니, 그 유산이 시대를 통해 메아리치는 통치자들이 세운 것이다. 하라드와이스의 대사막은 북쪽 변경과 중심부를 가르며, 남쪽 해안은 무역과 해적 활동으로 붐빈다. 사우론의 깃발 아래 통합된 하라드의 수많은 부족과 왕국들은 깊이 뿌리박힌 전통을 전쟁 노력에 쏟아부으며, 이 활기찬 땅을 문화와 분쟁의 강대국으로 변모시킨다." />
-
-    <string id="TAOM_rohan" text="로한" />
-
-    <string id="TAOM_rohan_short" text="로한" />
-
-    <string id="TAOM_rohan_title" text="로한 왕국" />
-
-    <string id="TAOM_rohan_ruler" text="왕" />
-
-    <string id="TAOM_rohan_desc" text="리더마크로 알려진 로한은 광활한 평원과 구릉이 펼쳐진 거대한 왕국이며, 숙련된 기병이자 용맹한 전사인 로히림이 거주한다. 곤도르를 돕기 위한 전설적인 진군 이후 젊은 에오를에 의해 건국된 로한은 오랫동안 모르도르의 어둠에 맞서 곤도르의 확고한 동맹으로 서 왔다. 에도라스의 황금 전당 메두셀드에서 왕들은 말과 기수의 유대로 사는 자랑스럽고 회복력 있는 백성을 다스린다. 로히림은 기병 돌격, 용맹의 노래, 그리고 흔들리지 않는 용기로 유명하다. 사루만의 그림자가 변경을 위협했지만, 로한의 아들딸들은 언제나 무기를 들 준비가 되어 있으며, 고향과 가운데땅의 자유민족을 지킨다." />
-
-    <string id="TAOM_khand" text="칸드" />
-
-    <string id="TAOM_khand_short" text="칸드" />
-
-    <string id="TAOM_khand_title" text="칸드의 바람기수" />
-
-    <string id="TAOM_khand_ruler" text="쿠드리아그" />
-
-    <string id="TAOM_khand_desc" text="구릉 초원과 건조한 평원으로 이루어진 험준한 땅 칸드는 모르도르 남동쪽에 위치하며 동서를 잇는 중요한 통로 역할을 한다. 그 백성인 바리아그족은 사나우며 유목민적이고, 빠른 말과 치명적인 곡도로 유명하다. 가혹한 환경 속에서 살아가며, 그들은 약탈자이자 전사로서의 기량을 연마했으며, 종종 이웃들과 충돌하고 가장 높은 값을 부르는 자를 위해 용병으로 일한다. 칸드의 충성은 오랫동안 암흑군주의 구애를 받아왔으며, 많은 전사들이 모르도르의 그림자 아래 전쟁에 참전했다. 그러나 바리아그족은 자랑스럽고 독립적인 백성이며, 바람 부는 평원에 흩어진 요새화된 야영지에서 통치하는 자신들의 부족과 족장들에게 먼저 충성한다." />
-
-    <string id="TAOM_rhun" text="룬" />
-
-    <string id="TAOM_rhun_short" text="룬" />
-
-    <string id="TAOM_rhun_title" text="룬의 황금 왕국" />
-
-    <string id="TAOM_rhun_ruler" text="로케-칸" />
-
-    <string id="TAOM_rhun_desc" text="룬 해 너머 먼 곳, 시든 초원과 잊혀진 제국들의 붉은 먼지를 지나면, 광활하고 베일에 싸인 동방이 펼쳐진다. 이곳에는 곤도르의 부상보다도 앞선 역사를 지닌 자랑스럽고 고대의 민족, 동방인들이 살고 있다. 그들의 땅은 내해의 해안에서부터 알려진 세계의 끝을 나타내는 그림자 드리운 산맥까지, 넓은 하늘 아래 끝없이 뻗어 있다. 동방인들은 단일 국가가 아니라, 힘에 대한 숭배와 서방에 대한 오랜 원한의 기억으로만 결속된 부족들과 왕국들의 태피스트리이다. 어떤 이들은 권력과 복수의 약속에 이끌려 암흑군주를 기꺼이 섬겼고, 다른 이들은 옛 방식과 더 오래된 신들을 고수하며 저항한다. 그들의 전사들은 규율과 전차 및 활 숙련도로 두려움의 대상이며, 그들의 황금 갑옷은 동방의 태양 아래 불처럼 빛난다." />
-
-    <string id="aom_dunland_male_name_1" text="브로다르" />
-
-    <string id="aom_dunland_male_name_2" text="던릭" />
-
-    <string id="aom_dunland_male_name_3" text="에오간" />
-
-    <string id="aom_dunland_male_name_4" text="그림달" />
-
-    <string id="aom_dunland_male_name_5" text="타른" />
-
-    <string id="aom_dunland_male_name_6" text="카독" />
-
-    <string id="aom_dunland_male_name_7" text="모르드란" />
-
-    <string id="aom_dunland_male_name_8" text="핀릭" />
-
-    <string id="aom_dunland_male_name_9" text="카에독" />
-
-    <string id="aom_dunland_male_name_10" text="토를란" />
-
-    <string id="aom_dunland_male_name_11" text="라그노르" />
-
-    <string id="aom_dunland_male_name_12" text="엘드릭" />
-
-    <string id="aom_dunland_male_name_13" text="할릭" />
-
-    <string id="aom_dunland_male_name_14" text="울릭" />
-
-    <string id="aom_dunland_male_name_15" text="케르녹" />
-
-    <string id="aom_dunland_male_name_16" text="브리노르" />
-
-    <string id="aom_dunland_male_name_17" text="고란" />
-
-    <string id="aom_dunland_male_name_18" text="토르독" />
-
-    <string id="aom_dunland_male_name_19" text="핀릭" />
-
-    <string id="aom_dunland_male_name_20" text="하록" />
-
-    <string id="aom_dunland_male_name_21" text="카엘란" />
-
-    <string id="aom_dunland_male_name_22" text="울다르" />
-
-    <string id="aom_dunland_male_name_23" text="토란" />
-
-    <string id="aom_dunland_male_name_24" text="그렐릭" />
-
-    <string id="aom_dunland_male_name_25" text="브라도르" />
-
-    <string id="aom_dunland_male_name_26" text="모를란" />
-
-    <string id="aom_dunland_male_name_27" text="아드릭" />
-
-    <string id="aom_dunland_male_name_28" text="카드록" />
-
-    <string id="aom_dunland_male_name_29" text="그랄도르" />
-
-    <string id="aom_dunland_male_name_30" text="파르녹" />
-
-    <string id="aom_dunland_male_name_31" text="울릭" />
-
-    <string id="aom_dunland_male_name_32" text="브렌독" />
-
-    <string id="aom_dunland_male_name_33" text="에아드릭" />
-
-    <string id="aom_dunland_male_name_34" text="트랄도르" />
-
-    <string id="aom_dunland_male_name_35" text="울간" />
-
-    <string id="aom_dunland_male_name_36" text="고란" />
-
-    <string id="aom_dunland_male_name_37" text="라그날드" />
-
-    <string id="aom_dunland_male_name_38" text="던모르" />
-
-    <string id="aom_dunland_male_name_39" text="소를리크" />
-
-    <string id="aom_dunland_male_name_40" text="핀왈드" />
-
-    <string id="aom_dunland_male_name_41" text="브릴단" />
-
-    <string id="aom_dunland_male_name_42" text="그란타르" />
-
-    <string id="aom_dunland_male_name_43" text="할모드" />
-
-    <string id="aom_dunland_male_name_44" text="스리단" />
-
-    <string id="aom_dunland_male_name_45" text="에오를룬드" />
-
-    <string id="aom_dunland_male_name_46" text="가레스" />
-
-    <string id="aom_dunland_male_name_47" text="하르윅" />
-
-    <string id="aom_dunland_male_name_48" text="길단" />
-
-    <string id="aom_dunland_male_name_49" text="울프람" />
-
-    <string id="aom_dunland_male_name_50" text="소라그" />
-
-    <string id="aom_dunland_female_name_1" text="브린디스" />
-
-    <string id="aom_dunland_female_name_2" text="에이디스" />
-
-    <string id="aom_dunland_female_name_3" text="모르윈" />
-
-    <string id="aom_dunland_female_name_4" text="그리슬라" />
-
-    <string id="aom_dunland_female_name_5" text="할다" />
-
-    <string id="aom_dunland_female_name_6" text="티라" />
-
-    <string id="aom_dunland_female_name_7" text="카에드윈" />
-
-    <string id="aom_dunland_female_name_8" text="엘린" />
-
-    <string id="aom_dunland_female_name_9" text="핀윈" />
-
-    <string id="aom_dunland_female_name_10" text="탈다" />
-
-    <string id="aom_dunland_female_name_11" text="그렐윈" />
-
-    <string id="aom_dunland_female_name_12" text="하르윈" />
-
-    <string id="aom_dunland_female_name_13" text="알디스" />
-
-    <string id="aom_dunland_female_name_14" text="윈라" />
-
-    <string id="aom_dunland_female_name_15" text="브리테아" />
-
-    <string id="aom_dunland_female_name_16" text="에오라" />
-
-    <string id="aom_dunland_female_name_17" text="틸다" />
-
-    <string id="aom_dunland_female_name_18" text="그란나" />
-
-    <string id="aom_dunland_female_name_19" text="엘윈" />
-
-    <string id="aom_dunland_female_name_20" text="모를라" />
-
-    <string id="aom_dunland_female_name_21" text="하를라" />
-
-    <string id="aom_dunland_female_name_22" text="핀라" />
-
-    <string id="aom_dunland_female_name_23" text="그리사" />
-
-    <string id="aom_dunland_female_name_24" text="스리사" />
-
-    <string id="aom_dunland_female_name_25" text="할윈" />
-
-    <string id="aom_dunland_female_name_26" text="카엘린" />
-
-    <string id="aom_dunland_female_name_27" text="그렐윈" />
-
-    <string id="aom_dunland_female_name_28" text="타라" />
-
-    <string id="aom_dunland_female_name_29" text="모라" />
-
-    <string id="aom_dunland_female_name_30" text="브리나" />
-
-    <string id="aom_dunland_female_name_31" text="틸다" />
-
-    <string id="aom_dunland_female_name_32" text="엘리스" />
-
-    <string id="aom_dunland_female_name_33" text="카엘윈" />
-
-    <string id="aom_dunland_female_name_34" text="알드라" />
-
-    <string id="aom_dunland_female_name_35" text="하라" />
-
-    <string id="aom_dunland_female_name_36" text="윈라" />
-
-    <string id="aom_dunland_female_name_37" text="틸다" />
-
-    <string id="aom_dunland_female_name_38" text="그레슬라" />
-
-    <string id="aom_dunland_female_name_39" text="핀윈" />
-
-    <string id="aom_dunland_female_name_40" text="엘라" />
-
-    <string id="aom_dunland_female_name_41" text="모르윈" />
-
-    <string id="aom_dunland_female_name_42" text="할다" />
-
-    <string id="aom_dunland_female_name_43" text="카에들라" />
-
-    <string id="aom_dunland_female_name_44" text="타나" />
-
-    <string id="aom_dunland_female_name_45" text="브린델" />
-
-    <string id="aom_dunland_female_name_46" text="그리스윈" />
-
-    <string id="aom_dunland_female_name_47" text="에이디스" />
-
-    <string id="aom_dunland_female_name_48" text="핀라" />
-
-    <string id="aom_dunland_female_name_49" text="하르윈" />
-
-    <string id="aom_dunland_female_name_50" text="위나" />
-
-    <string id="aom_dunland_clan_name_01" text="붉은 늑대 부족" />
-
-    <string id="aom_dunland_clan_name_02" text="무쇠 송곳니 부족" />
-
-    <string id="aom_dunland_clan_name_03" text="바위파괴자 부족" />
-
-    <string id="aom_dunland_clan_name_04" text="그림자 사냥꾼 부족" />
-
-    <string id="aom_dunland_clan_name_05" text="언덕 약탈자 부족" />
-
-    <string id="aom_dunland_clan_name_06" text="야생의 칼날 부족" />
-
-    <string id="aom_dunland_clan_name_07" text="폭풍소환자 부족" />
-
-    <string id="aom_dunland_clan_name_08" text="피의 까마귀 부족" />
-
-    <string id="aom_dunland_clan_name_09" text="뼈 창 부족" />
-
-    <string id="aom_dunland_clan_name_10" text="대지진동자 부족" />
-
-    <string id="aom_dunland_clan_name_11" text="가시방패 부족" />
-
-    <string id="aom_dunland_clan_name_12" text="그림자 늑대 부족" />
-
-    <string id="aom_dunland_clan_name_13" text="부러진 도끼 부족" />
-
-    <string id="aom_dunland_clan_name_14" text="까마귀 눈 부족" />
-
-    <string id="aom_dunland_clan_name_15" text="서리울음 부족" />
-
-    <string id="aom_dunland_clan_name_16" text="쇠사슬에 묶인 자 부족" />
-
-    <string id="aom_dunland_clan_name_17" text="돌주먹 부족" />
-
-    <string id="aom_dunland_clan_name_18" text="울부짖는 질풍 부족" />
-
-    <string id="aom_dunland_clan_name_19" text="산그림자 부족" />
-
-    <string id="aom_harad_male_name_1" text="아자란" />
-
-    <string id="aom_harad_male_name_2" text="자미르" />
-
-    <string id="aom_harad_male_name_3" text="칼리드" />
-
-    <string id="aom_harad_male_name_4" text="라시드" />
-
-    <string id="aom_harad_male_name_5" text="나지르" />
-
-    <string id="aom_harad_male_name_6" text="자밀" />
-
-    <string id="aom_harad_male_name_7" text="하심" />
-
-    <string id="aom_harad_male_name_8" text="파라즈" />
-
-    <string id="aom_harad_male_name_9" text="사힘" />
-
-    <string id="aom_harad_male_name_10" text="타리크" />
-
-    <string id="aom_harad_male_name_11" text="바심" />
-
-    <string id="aom_harad_male_name_12" text="카림" />
-
-    <string id="aom_harad_male_name_13" text="살림" />
-
-    <string id="aom_harad_male_name_14" text="라얀" />
-
-    <string id="aom_harad_male_name_15" text="자파르" />
-
-    <string id="aom_harad_male_name_16" text="야시르" />
-
-    <string id="aom_harad_male_name_17" text="하킴" />
-
-    <string id="aom_harad_male_name_18" text="이브라힘" />
-
-    <string id="aom_harad_male_name_19" text="파이살" />
-
-    <string id="aom_harad_male_name_20" text="나집" />
-
-    <string id="aom_harad_male_name_21" text="무니르" />
-
-    <string id="aom_harad_male_name_22" text="아슈라프" />
-
-    <string id="aom_harad_male_name_23" text="자크완" />
-
-    <string id="aom_harad_male_name_24" text="아짐" />
-
-    <string id="aom_harad_male_name_25" text="술레이만" />
-
-    <string id="aom_harad_male_name_26" text="하킴" />
-
-    <string id="aom_harad_male_name_27" text="지브릴" />
-
-    <string id="aom_harad_male_name_28" text="타히르" />
-
-    <string id="aom_harad_male_name_29" text="라피크" />
-
-    <string id="aom_harad_male_name_30" text="말리크" />
-
-    <string id="aom_harad_male_name_31" text="자히르" />
-
-    <string id="aom_harad_male_name_32" text="아심" />
-
-    <string id="aom_harad_male_name_33" text="나빌" />
-
-    <string id="aom_harad_male_name_34" text="오마르" />
-
-    <string id="aom_harad_male_name_35" text="카심" />
-
-    <string id="aom_harad_male_name_36" text="할림" />
-
-    <string id="aom_harad_male_name_37" text="만수르" />
-
-    <string id="aom_harad_male_name_38" text="야흐야" />
-
-    <string id="aom_harad_male_name_39" text="샤키르" />
-
-    <string id="aom_harad_male_name_40" text="아딜" />
-
-    <string id="aom_harad_male_name_41" text="마흐디" />
-
-    <string id="aom_harad_male_name_42" text="파힘" />
-
-    <string id="aom_harad_male_name_43" text="라티프" />
-
-    <string id="aom_harad_male_name_44" text="라미즈" />
-
-    <string id="aom_harad_male_name_45" text="타밈" />
-
-    <string id="aom_harad_male_name_46" text="야지드" />
-
-    <string id="aom_harad_male_name_47" text="카마르" />
-
-    <string id="aom_harad_male_name_48" text="하산" />
-
-    <string id="aom_harad_male_name_49" text="아짐" />
-
-    <string id="aom_harad_male_name_50" text="주바이드" />
-
-    <string id="aom_harad_female_name_1" text="자히라" />
-
-    <string id="aom_harad_female_name_2" text="나디아" />
-
-    <string id="aom_harad_female_name_3" text="야스민" />
-
-    <string id="aom_harad_female_name_4" text="아미라" />
-
-    <string id="aom_harad_female_name_5" text="레일라" />
-
-    <string id="aom_harad_female_name_6" text="라니아" />
-
-    <string id="aom_harad_female_name_7" text="자밀라" />
-
-    <string id="aom_harad_female_name_8" text="하프사" />
-
-    <string id="aom_harad_female_name_9" text="줄레이카" />
-
-    <string id="aom_harad_female_name_10" text="아미나" />
-
-    <string id="aom_harad_female_name_11" text="살리마" />
-
-    <string id="aom_harad_female_name_12" text="라미아" />
-
-    <string id="aom_harad_female_name_13" text="사미라" />
-
-    <string id="aom_harad_female_name_14" text="나지라" />
-
-    <string id="aom_harad_female_name_15" text="루카야" />
-
-    <string id="aom_harad_female_name_16" text="할리마" />
-
-    <string id="aom_harad_female_name_17" text="아지자" />
-
-    <string id="aom_harad_female_name_18" text="카디자" />
-
-    <string id="aom_harad_female_name_19" text="파드와" />
-
-    <string id="aom_harad_female_name_20" text="사피야" />
-
-    <string id="aom_harad_female_name_21" text="알리아" />
-
-    <string id="aom_harad_female_name_22" text="나왈" />
-
-    <string id="aom_harad_female_name_23" text="부슈라" />
-
-    <string id="aom_harad_female_name_24" text="자흐라" />
-
-    <string id="aom_harad_female_name_25" text="리하나" />
-
-    <string id="aom_harad_female_name_26" text="수마야" />
-
-    <string id="aom_harad_female_name_27" text="나이마" />
-
-    <string id="aom_harad_female_name_28" text="라시다" />
-
-    <string id="aom_harad_female_name_29" text="자이나브" />
-
-    <string id="aom_harad_female_name_30" text="샤이마" />
-
-    <string id="aom_harad_female_name_31" text="무니라" />
-
-    <string id="aom_harad_female_name_32" text="파티마" />
-
-    <string id="aom_harad_female_name_33" text="시린" />
-
-    <string id="aom_harad_female_name_34" text="사니야" />
-
-    <string id="aom_harad_female_name_35" text="말리카" />
-
-    <string id="aom_harad_female_name_36" text="아피야" />
-
-    <string id="aom_harad_female_name_37" text="자인" />
-
-    <string id="aom_harad_female_name_38" text="파리다" />
-
-    <string id="aom_harad_female_name_39" text="아마니" />
-
-    <string id="aom_harad_female_name_40" text="나지라" />
-
-    <string id="aom_harad_female_name_41" text="후다" />
-
-    <string id="aom_harad_female_name_42" text="라흐마" />
-
-    <string id="aom_harad_female_name_43" text="야밀라" />
-
-    <string id="aom_harad_female_name_44" text="샤마" />
-
-    <string id="aom_harad_female_name_45" text="타미나" />
-
-    <string id="aom_harad_female_name_46" text="주바이다" />
-
-    <string id="aom_harad_female_name_47" text="라비야" />
-
-    <string id="aom_harad_female_name_48" text="아스마" />
-
-    <string id="aom_harad_female_name_49" text="라티파" />
-
-    <string id="aom_harad_female_name_50" text="사이다" />
-
-    <string id="aom_harad_clan_name_01" text="타오르는 모래" />
-
-    <string id="aom_harad_clan_name_02" text="황금 검" />
-
-    <string id="aom_harad_clan_name_03" text="사막의 태양" />
-
-    <string id="aom_harad_clan_name_04" text="붉은 창" />
-
-    <string id="aom_harad_clan_name_05" text="사구 기병" />
-
-    <string id="aom_harad_clan_name_06" text="작열하는 바람" />
-
-    <string id="aom_harad_clan_name_07" text="모래폭풍 전사" />
-
-    <string id="aom_harad_clan_name_08" text="뱀의 송곳니" />
-
-    <string id="aom_harad_clan_name_09" text="검은 전갈" />
-
-    <string id="aom_harad_clan_name_10" text="무마킬 수호자" />
-
-    <string id="aom_harad_clan_name_11" text="오아시스 수호자" />
-
-    <string id="aom_harad_clan_name_12" text="횃불의 전사" />
-
-    <string id="aom_harad_clan_name_13" text="진홍 방패" />
-
-    <string id="aom_harad_clan_name_14" text="황금 초승달" />
-
-    <string id="aom_harad_clan_name_15" text="고요한 그림자" />
-
-    <string id="aom_harad_clan_name_16" text="태양 타격자" />
-
-    <string id="aom_harad_clan_name_17" text="사구 수호병" />
-
-    <string id="aom_harad_clan_name_18" text="뱀 기수단" />
-
-    <string id="aom_harad_clan_name_19" text="타오르는 발굽단" />
-
-    <string id="aom_harad_clan_name_20" text="황혼의 모래단" />
-
-    <string id="aom_rohan_male_name_1" text="에아드레드" />
-
-    <string id="aom_rohan_male_name_2" text="에오문드" />
-
-    <string id="aom_rohan_male_name_3" text="케오를" />
-
-    <string id="aom_rohan_male_name_4" text="아에텔릭" />
-
-    <string id="aom_rohan_male_name_5" text="베오르트헬름" />
-
-    <string id="aom_rohan_male_name_6" text="에알드울프" />
-
-    <string id="aom_rohan_male_name_7" text="울프가르" />
-
-    <string id="aom_rohan_male_name_8" text="테오드릭" />
-
-    <string id="aom_rohan_male_name_9" text="에알릭" />
-
-    <string id="aom_rohan_male_name_10" text="브리흐트울프" />
-
-    <string id="aom_rohan_male_name_11" text="테오드윈" />
-
-    <string id="aom_rohan_male_name_12" text="퀸릭" />
-
-    <string id="aom_rohan_male_name_13" text="에오르멘릭" />
-
-    <string id="aom_rohan_male_name_14" text="에아드헬름" />
-
-    <string id="aom_rohan_male_name_15" text="알드울프" />
-
-    <string id="aom_rohan_male_name_16" text="프리스가르" />
-
-    <string id="aom_rohan_male_name_17" text="오스윈" />
-
-    <string id="aom_rohan_male_name_18" text="레오프윈" />
-
-    <string id="aom_rohan_male_name_19" text="테오발드" />
-
-    <string id="aom_rohan_male_name_20" text="윈프리스" />
-
-    <string id="aom_rohan_male_name_21" text="헤레워드" />
-
-    <string id="aom_rohan_male_name_22" text="에오세인" />
-
-    <string id="aom_rohan_male_name_23" text="구스릭" />
-
-    <string id="aom_rohan_male_name_24" text="테오울프" />
-
-    <string id="aom_rohan_male_name_25" text="프람릭" />
-
-    <string id="aom_rohan_male_name_26" text="에아드가르" />
-
-    <string id="aom_rohan_male_name_27" text="헤레모드" />
-
-    <string id="aom_rohan_male_name_28" text="베오른헬름" />
-
-    <string id="aom_rohan_male_name_29" text="시게프레드" />
-
-    <string id="aom_rohan_male_name_30" text="테오덴릭" />
-
-    <string id="aom_rohan_male_name_31" text="에알울프" />
-
-    <string id="aom_rohan_male_name_32" text="가르문드" />
-
-    <string id="aom_rohan_male_name_33" text="흐로스가르" />
-
-    <string id="aom_rohan_male_name_34" text="에오발드" />
-
-    <string id="aom_rohan_male_name_35" text="케오울프" />
-
-    <string id="aom_rohan_male_name_36" text="파라문드" />
-
-    <string id="aom_rohan_male_name_37" text="아에텔헬름" />
-
-    <string id="aom_rohan_male_name_38" text="에오포르" />
-
-    <string id="aom_rohan_male_name_39" text="윈스탄" />
-
-    <string id="aom_rohan_male_name_40" text="헤레위네" />
-
-    <string id="aom_rohan_male_name_41" text="구스위네" />
-
-    <string id="aom_rohan_male_name_42" text="퀸위네" />
-
-    <string id="aom_rohan_male_name_43" text="엘프릭" />
-
-    <string id="aom_rohan_male_name_44" text="울프스탄" />
-
-    <string id="aom_rohan_male_name_45" text="베오르흐트위네" />
-
-    <string id="aom_rohan_male_name_46" text="데오문드" />
-
-    <string id="aom_rohan_male_name_47" text="케오위네" />
-
-    <string id="aom_rohan_male_name_48" text="데오드헬름" />
-
-    <string id="aom_rohan_male_name_49" text="레오프헬름" />
-
-    <string id="aom_rohan_male_name_50" text="엘프위네" />
-
-    <string id="aom_rohan_male_name_51" text="울프노스" />
-
-    <string id="aom_rohan_male_name_52" text="델워드" />
-
-    <string id="aom_rohan_male_name_53" text="델메" />
-
-    <string id="aom_rohan_male_name_54" text="에오름레드" />
-
-    <string id="aom_rohan_male_name_55" text="엘윈" />
-
-    <string id="aom_rohan_male_name_56" text="일프가르" />
-
-    <string id="aom_rohan_male_name_57" text="알프가르" />
-
-    <string id="aom_rohan_male_name_58" text="울파르" />
-
-    <string id="aom_rohan_male_name_59" text="레오파르" />
-
-    <string id="aom_rohan_male_name_60" text="레오프릭" />
-
-    <string id="aom_rohan_female_name_1" text="에아드기푸" />
-
-    <string id="aom_rohan_female_name_2" text="데오드윈" />
-
-    <string id="aom_rohan_female_name_3" text="에델힐드" />
-
-    <string id="aom_rohan_female_name_4" text="퀴네스리스" />
-
-    <string id="aom_rohan_female_name_5" text="베오르힐드" />
-
-    <string id="aom_rohan_female_name_6" text="프리스윈" />
-
-    <string id="aom_rohan_female_name_7" text="윈프리스" />
-
-    <string id="aom_rohan_female_name_8" text="에오르멘힐드" />
-
-    <string id="aom_rohan_female_name_9" text="힐디스" />
-
-    <string id="aom_rohan_female_name_10" text="에오윈네" />
-
-    <string id="aom_rohan_female_name_11" text="레오프윈" />
-
-    <string id="aom_rohan_female_name_12" text="에알힐드" />
-
-    <string id="aom_rohan_female_name_13" text="데오윈" />
-
-    <string id="aom_rohan_female_name_14" text="윈프리다" />
-
-    <string id="aom_rohan_female_name_15" text="알드기푸" />
-
-    <string id="aom_rohan_female_name_16" text="헤렐린드" />
-
-    <string id="aom_rohan_female_name_17" text="브륀힐드" />
-
-    <string id="aom_rohan_female_name_18" text="시게윈" />
-
-    <string id="aom_rohan_female_name_19" text="에아드윈" />
-
-    <string id="aom_rohan_female_name_20" text="퀸윈" />
-
-    <string id="aom_rohan_female_name_21" text="힐드레드" />
-
-    <string id="aom_rohan_female_name_22" text="에델윈" />
-
-    <string id="aom_rohan_female_name_23" text="케올윈" />
-
-    <string id="aom_rohan_female_name_24" text="프리슬린드" />
-
-    <string id="aom_rohan_female_name_25" text="테오디스" />
-
-    <string id="aom_rohan_female_name_26" text="에델프리다" />
-
-    <string id="aom_rohan_female_name_27" text="베오르힐드" />
-
-    <string id="aom_rohan_female_name_28" text="에오름힐드" />
-
-    <string id="aom_rohan_female_name_29" text="레오프힐드" />
-
-    <string id="aom_rohan_female_name_30" text="알드윈" />
-
-    <string id="aom_rohan_female_name_31" text="윈힐드" />
-
-    <string id="aom_rohan_female_name_32" text="힐드윈" />
-
-    <string id="aom_rohan_female_name_33" text="에아드프리다" />
-
-    <string id="aom_rohan_female_name_34" text="테오들린" />
-
-    <string id="aom_rohan_female_name_35" text="퀸프리스" />
-
-    <string id="aom_rohan_female_name_36" text="구스윈" />
-
-    <string id="aom_rohan_female_name_37" text="힐드윈네" />
-
-    <string id="aom_rohan_female_name_38" text="에알흐프리다" />
-
-    <string id="aom_rohan_female_name_39" text="시기스" />
-
-    <string id="aom_rohan_female_name_40" text="윈프리시아" />
-
-    <string id="aom_rohan_female_name_41" text="에아드기사" />
-
-    <string id="aom_rohan_female_name_42" text="애설레다" />
-
-    <string id="aom_rohan_female_name_43" text="베오르스윈" />
-
-    <string id="aom_rohan_female_name_44" text="프리스기푸" />
-
-    <string id="aom_rohan_female_name_45" text="테오드프리스" />
-
-    <string id="aom_rohan_female_name_46" text="윈힐다" />
-
-    <string id="aom_rohan_female_name_47" text="에알흐프리스" />
-
-    <string id="aom_rohan_female_name_48" text="퀴네실드" />
-
-    <string id="aom_rohan_female_name_49" text="에알흐윈" />
-
-    <string id="aom_rohan_female_name_50" text="에아드윈네" />
-
-    <string id="aom_rohan_clan_name_01" text="하롤딩" />
-
-    <string id="aom_rohan_clan_name_02" text="에아르페닝" />
-
-    <string id="aom_rohan_clan_name_03" text="알도링가스" />
-
-    <string id="aom_rohan_clan_name_04" text="하마잉가스" />
-
-    <string id="aom_rohan_clan_name_05" text="아른그리밍" />
-
-    <string id="aom_rohan_clan_name_06" text="스웨오르드보라" />
-
-    <string id="aom_rohan_clan_name_07" text="분데밍" />
-
-    <string id="aom_rohan_clan_name_08" text="마로반딩" />
-
-    <string id="aom_rohan_clan_name_09" text="칼문다스" />
-
-    <string id="aom_rohan_clan_name_10" text="에아르민딩" />
-
-    <string id="aom_rhun_male_name_1" text="칼루드" />
-
-    <string id="aom_rhun_male_name_2" text="토르가쉬" />
-
-    <string id="aom_rhun_male_name_3" text="바스키르" />
-
-    <string id="aom_rhun_male_name_4" text="라지르" />
-
-    <string id="aom_rhun_male_name_5" text="나즈룩" />
-
-    <string id="aom_rhun_male_name_6" text="타룬" />
-
-    <string id="aom_rhun_male_name_7" text="다그림" />
-
-    <string id="aom_rhun_male_name_8" text="자르나쉬" />
-
-    <string id="aom_rhun_male_name_9" text="바를렉" />
-
-    <string id="aom_rhun_male_name_10" text="파즈릭" />
-
-    <string id="aom_rhun_male_name_11" text="오르준" />
-
-    <string id="aom_rhun_male_name_12" text="쿨가르" />
-
-    <string id="aom_rhun_male_name_13" text="두르자그" />
-
-    <string id="aom_rhun_male_name_14" text="마록" />
-
-    <string id="aom_rhun_male_name_15" text="자그림" />
-
-    <string id="aom_rhun_male_name_16" text="나라쉬" />
-
-    <string id="aom_rhun_male_name_17" text="타릭" />
-
-    <string id="aom_rhun_male_name_18" text="바즈릭" />
-
-    <string id="aom_rhun_male_name_19" text="우즈라드" />
-
-    <string id="aom_rhun_male_name_20" text="조람" />
-
-    <string id="aom_rhun_male_name_21" text="라샤드" />
-
-    <string id="aom_rhun_male_name_22" text="바르칸" />
-
-    <string id="aom_rhun_male_name_23" text="사르굴" />
-
-    <string id="aom_rhun_male_name_24" text="투르간" />
-
-    <string id="aom_rhun_male_name_25" text="바림" />
-
-    <string id="aom_rhun_male_name_26" text="마즈릭" />
-
-    <string id="aom_rhun_male_name_27" text="칼자르" />
-
-    <string id="aom_rhun_male_name_28" text="나쇼르" />
-
-    <string id="aom_rhun_male_name_29" text="구라쉬" />
-
-    <string id="aom_rhun_male_name_30" text="두르자그" />
-
-    <string id="aom_rhun_male_name_31" text="자르칼" />
-
-    <string id="aom_rhun_male_name_32" text="토라크" />
-
-    <string id="aom_rhun_male_name_33" text="파르눌" />
-
-    <string id="aom_rhun_male_name_34" text="마르죽" />
-
-    <string id="aom_rhun_male_name_35" text="자룬" />
-
-    <string id="aom_rhun_male_name_36" text="나룩" />
-
-    <string id="aom_rhun_male_name_37" text="사르간" />
-
-    <string id="aom_rhun_male_name_38" text="투르미크" />
-
-    <string id="aom_rhun_male_name_39" text="다즈리크" />
-
-    <string id="aom_rhun_male_name_40" text="카르눌" />
-
-    <string id="aom_rhun_male_name_41" text="바쉬키르" />
-
-    <string id="aom_rhun_male_name_42" text="로단" />
-
-    <string id="aom_rhun_male_name_43" text="타즈룩" />
-
-    <string id="aom_rhun_male_name_44" text="고라쉬" />
-
-    <string id="aom_rhun_male_name_45" text="나즈린" />
-
-    <string id="aom_rhun_male_name_46" text="타르칼" />
-
-    <string id="aom_rhun_male_name_47" text="마자드" />
-
-    <string id="aom_rhun_male_name_48" text="오르즈리크" />
-
-    <string id="aom_rhun_male_name_49" text="자르나크" />
-
-    <string id="aom_rhun_male_name_50" text="파르주크" />
-
-    <string id="aom_rhun_female_name_1" text="라지라" />
-
-    <string id="aom_rhun_female_name_2" text="타즈미나" />
-
-    <string id="aom_rhun_female_name_3" text="바지라" />
-
-    <string id="aom_rhun_female_name_4" text="마즈리카" />
-
-    <string id="aom_rhun_female_name_5" text="자리나" />
-
-    <string id="aom_rhun_female_name_6" text="칼리라" />
-
-    <string id="aom_rhun_female_name_7" text="오르질라" />
-
-    <string id="aom_rhun_female_name_8" text="두르잔나" />
-
-    <string id="aom_rhun_female_name_9" text="나리마" />
-
-    <string id="aom_rhun_female_name_10" text="타릴라" />
-
-    <string id="aom_rhun_female_name_11" text="바릴라" />
-
-    <string id="aom_rhun_female_name_12" text="다지라" />
-
-    <string id="aom_rhun_female_name_13" text="라미라" />
-
-    <string id="aom_rhun_female_name_14" text="파지라" />
-
-    <string id="aom_rhun_female_name_15" text="우즈릴라" />
-
-    <string id="aom_rhun_female_name_16" text="잘리나" />
-
-    <string id="aom_rhun_female_name_17" text="쿨리사" />
-
-    <string id="aom_rhun_female_name_18" text="바르키라" />
-
-    <string id="aom_rhun_female_name_19" text="나리자" />
-
-    <string id="aom_rhun_female_name_20" text="타르닐라" />
-
-    <string id="aom_rhun_female_name_21" text="라쉬라" />
-
-    <string id="aom_rhun_female_name_22" text="마자라" />
-
-    <string id="aom_rhun_female_name_23" text="바르쉬라" />
-
-    <string id="aom_rhun_female_name_24" text="자르니라" />
-
-    <string id="aom_rhun_female_name_25" text="사르키라" />
-
-    <string id="aom_rhun_female_name_26" text="파르니자" />
-
-    <string id="aom_rhun_female_name_27" text="고리자" />
-
-    <string id="aom_rhun_female_name_28" text="나지라" />
-
-    <string id="aom_rhun_female_name_29" text="카르닐라" />
-
-    <string id="aom_rhun_female_name_30" text="토릴라" />
-
-    <string id="aom_rhun_female_name_31" text="두리나" />
-
-    <string id="aom_rhun_female_name_32" text="바실라" />
-
-    <string id="aom_rhun_female_name_33" text="나리자" />
-
-    <string id="aom_rhun_female_name_34" text="파즈림" />
-
-    <string id="aom_rhun_female_name_35" text="마지라" />
-
-    <string id="aom_rhun_female_name_36" text="칼리아" />
-
-    <string id="aom_rhun_female_name_37" text="사르니자" />
-
-    <string id="aom_rhun_female_name_38" text="오를리나" />
-
-    <string id="aom_rhun_female_name_39" text="루하나" />
-
-    <string id="aom_rhun_female_name_40" text="타르니자" />
-
-    <string id="aom_rhun_female_name_41" text="잘리라" />
-
-    <string id="aom_rhun_female_name_42" text="라지나" />
-
-    <string id="aom_rhun_female_name_43" text="두르시라" />
-
-    <string id="aom_rhun_female_name_44" text="바르키라" />
-
-    <string id="aom_rhun_female_name_45" text="타리자" />
-
-    <string id="aom_rhun_female_name_46" text="마지나" />
-
-    <string id="aom_rhun_female_name_47" text="나릴리아" />
-
-    <string id="aom_rhun_female_name_48" text="파르니나" />
-
-    <string id="aom_rhun_female_name_49" text="잘리마" />
-
-    <string id="aom_rhun_female_name_50" text="오르지나" />
-
-    <string id="aom_rhun_clan_name_01" text="철창 부족" />
-
-    <string id="aom_rhun_clan_name_02" text="황금 초승도 부족" />
-
-    <string id="aom_rhun_clan_name_03" text="붉은 깃발 부족" />
-
-    <string id="aom_rhun_clan_name_04" text="불타는 칼날 부족" />
-
-    <string id="aom_rhun_clan_name_05" text="룬의 혈통" />
-
-    <string id="aom_rhun_clan_name_06" text="진홍 전사 부족" />
-
-    <string id="aom_rhun_clan_name_07" text="흑방패 부족" />
-
-    <string id="aom_rhun_clan_name_08" text="폭풍 소환자 부족" />
-
-    <string id="aom_rhun_clan_name_09" text="주홍 수호자 부족" />
-
-    <string id="aom_rhun_clan_name_10" text="황금 무리" />
-
-    <string id="aom_empire_name" text="던랜드인" />
-
-    <string id="aom_empire_desc" text="던랜드인은 로한 서쪽의 거친 구릉과 야생의 땅에 거주하는 강인하고 사나운 민족입니다. 그들은 자신들의 선조 땅을 침략한 자로 여기는 로히림에 대해 오랜 원한을 품고 있으며, 공유된 혈통과 강렬한 독립심으로 단결되어 있습니다. 게릴라전과 생존술에 능숙한 던랜드인은 교활함과 사나움으로 적을 압도합니다. 비록 단순한 산악민으로 무시당하곤 하지만, 던랜드인은 자랑스럽고 불굴의 민족으로 자신들의 땅과 삶의 방식을 맹렬히 지킵니다. 로한에 대한 깊은 원한에 이끌려 그들은 어둠의 세력과 동맹을 맺고 복수와 잃어버린 땅의 회복을 추구합니다." />
-
-    <string id="aom_aserai_name" text="하라드림" />
-
-    <string id="aom_aserai_desc" text="하라드림은 먼 남쪽의 사막과 사바나에서 온 자랑스럽고 사나운 민족입니다. 무마킬과 같은 이국적인 짐승을 다루는 솜씨로 유명하며, 그들의 전사들은 전투에서 기술과 회복력, 치명적인 정확성을 결합합니다. 하라드는 작열하는 태양, 황금빛 모래, 생기 넘치는 오아시스가 공존하는 극단의 땅입니다. 그 백성들은 고대의 전통과 부족에 대한 충성, 그리고 추장과 왕들의 부름으로 단결되어 있습니다. 종종 어둠의 세력과 동맹을 맺는 하라드림은 곤도르에 대한 복수심과 사우론이 약속한 힘과 지배권에 이끌립니다." />
-
-    <string id="aom_vlandia_name" text="로히림" />
-
-    <string id="aom_vlandia_desc" text="로한의 기마 영주인 로히림은 타의 추종을 불허하는 기병대와 말들과의 깊은 유대로 유명합니다. 자랑스럽고 자유로운 영혼을 지닌 그들은 리더마크의 구릉 평원에 거주하며 에도라스와 같은 마을과 요새에서 생활합니다. 왕의 지도를 받고 백성에게 충성하는 로히림은 명예와 충성, 용기를 중시합니다. 그들의 전사들은 두려움 없이 전투에 나서며, 어둠에 맞서는 중간계 저항의 중추를 형성합니다. 전통을 굳건히 지키면서도 로히림은 언제나 자신들의 땅과 동맹을 지킬 준비가 되어 있으며, 창과 검, 방패를 정확하게 휘두릅니다." />
-
-    <string id="aom_khuzait_name" text="동방인" />
-
-    <string id="aom_khuzait_desc" text="동방인들은 먼 룬의 땅에서 온 다양하고 두려운 민족입니다. 사우론에 대한 충성으로 알려진 그들은 정밀함과 규율로 전쟁에 나아가며, 휘어진 칼날과 창, 그리고 전장을 가로질러 울려 퍼지는 거대한 전쟁 북을 휘두릅니다. 그들의 황금 갑옷과 진홍색 깃발은 맹렬한 자부심과 무예의 기량을 반영합니다. 씨족과 부족으로 나뉜 동방인들은 강력한 족장들 아래 단결하여 가운데땅의 자유 민족들에 맞서 룬의 힘을 가져옵니다." />
-
-    <string id="TAOM_sturgia_culture" text="바르딩" />
-
-    <string id="TAOM_sturgia_desc" text="바르드 궁수의 이름을 딴 골짜기 마을의 바르딩족은 스마우그의 그림자로부터 고향을 되찾은 후 두각을 나타낸 자랑스럽고 부지런한 민족입니다. 외로운 산과 긴 호수 사이에 자리 잡은 골짜기 마을은 무역과 문화의 중심지로 번영합니다. 회복력과 장인 정신으로 알려진 바르딩족은 무기와 갑옷 제작에 뛰어나며, 심지어 에레보르의 난쟁이들과도 견줄 만합니다. 훈련된 궁수, 굳건한 검사, 그리고 민첩한 경보병으로 구성된 그들의 군대는 맹렬한 결의로 영토를 방어합니다. 고귀한 지도자들 아래 단결한 바르딩족은 항상 경계하며, 다가오는 어둠에 맞서고 풍부한 유산을 보존합니다." />
-
-    <string id="TAOM_battania_culture" text="바리아그" />
-
-    <string id="TAOM_battania_desc" text="칸드의 바리아그족은 모르도르 동쪽의 건조하고 험준한 땅에서 온 사납고 호전적인 민족입니다. 용병으로서의 기량과 사우론에 대한 충성으로 알려진 바리아그족은 비할 데 없는 맹렬함으로 싸웁니다. 그들은 빠른 전마를 타고 전투에 나아가 휘어진 칼날과 긴 창을 치명적인 정확도로 휘두릅니다. 정교한 디자인으로 장식된 청동과 진홍색 갑옷은 그들의 자랑스럽고 무예적인 유산을 반영합니다. 부족과 씨족으로 나뉜 바리아그족은 강력한 전쟁 군주들 아래 단결하여 암흑군주의 적들에게 공포와 혼돈을 가져옵니다." />
-
-    <string id="TAOM_clan_empire_north_1" text="블라이드-루스" />
-
-    <string id="TAOM_clan_empire_north_2" text="투르흐-루스" />
-
-    <string id="TAOM_clan_empire_north_3" text="우흐-루스" />
-
-    <string id="TAOM_clan_empire_north_4" text="아르스-루스" />
-
-    <string id="TAOM_clan_empire_north_5" text="키그프란-루스" />
-
-    <string id="TAOM_clan_empire_north_6" text="헤보그-루스" />
-
-    <string id="TAOM_clan_empire_north_7" text="드라이그-루스" />
-
-    <string id="TAOM_clan_empire_north_8" text="카루-루스" />
-
-    <string id="TAOM_clan_empire_north_9" text="아반크-루스" />
-
-    <string id="TAOM_clan_empire_west_1" text="후리니오나스 가문" />
-
-    <string id="TAOM_clan_empire_west_2" text="임라조리오나스 가문" />
-
-    <string id="TAOM_clan_empire_west_3" text="에아르누리오나스 가문" />
-
-    <string id="TAOM_clan_empire_west_4" text="바라히리오나스 가문" />
-
-    <string id="TAOM_clan_empire_west_5" text="아우시리오나스 가문" />
-
-    <string id="TAOM_clan_empire_west_6" text="할보로니오나스 가문" />
-
-    <string id="TAOM_clan_empire_west_7" text="말란딜리오나스 가문" />
-
-    <string id="TAOM_clan_empire_west_8" text="올린두리오나스 가문" />
-
-    <string id="TAOM_clan_empire_west_9" text="다누히리오나스 가문" />
-
-    <string id="TAOM_clan_empire_south_1" text="돌구베스" />
-
-    <string id="TAOM_clan_empire_south_2" text="고에아르네디아드" />
-
-    <string id="TAOM_clan_empire_south_3" text="멜콘딜리" />
-
-    <string id="TAOM_clan_empire_south_4" text="모르구카르" />
-
-    <string id="TAOM_clan_empire_south_5" text="볼그루키그" />
-
-    <string id="TAOM_clan_empire_south_6" text="캄 라구르즈" />
-
-    <string id="TAOM_clan_empire_south_7" text="브라그주키쉬" />
-
-    <string id="TAOM_clan_empire_south_8" text="코라힘" />
-
-    <string id="TAOM_clan_empire_south_9" text="와우림" />
-
-    <string id="TAOM_clan_sturgia_1" text="기리온 가문" />
-
-    <string id="TAOM_clan_sturgia_2" text="바르드 가문" />
-
-    <string id="TAOM_clan_sturgia_3" text="브란드 가문" />
-
-    <string id="TAOM_clan_sturgia_4" text="베인 가문" />
-
-    <string id="TAOM_clan_sturgia_5" text="에스가로스 가문" />
-
-    <string id="TAOM_clan_sturgia_6" text="강의 가문" />
-
-    <string id="TAOM_clan_sturgia_7" text="궁수의 가문" />
-
-    <string id="TAOM_clan_sturgia_8" text="긴 호수의 가문" />
-
-    <string id="TAOM_clan_sturgia_9" text="용 사냥꾼의 가문" />
-
-    <string id="TAOM_clan_aserai_1" text="아예릭카" />
-
-    <string id="TAOM_clan_aserai_2" text="카드노마" />
-
-    <string id="TAOM_clan_aserai_3" text="카말라카" />
-
-    <string id="TAOM_clan_aserai_4" text="칼마킬리오니" />
-
-    <string id="TAOM_clan_aserai_5" text="타크피민" />
-
-    <string id="TAOM_clan_aserai_6" text="메드자노마" />
-
-    <string id="TAOM_clan_aserai_7" text="지야로카" />
-
-    <string id="TAOM_clan_aserai_8" text="아우잘리카" />
-
-    <string id="TAOM_clan_aserai_9" text="이켄다카" />
-
-    <string id="TAOM_clan_vlandia_1" text="에오를링 가문" />
-
-    <string id="TAOM_clan_vlandia_2" text="케르디칭 가문" />
-
-    <string id="TAOM_clan_vlandia_3" text="그리밍가스 가문" />
-
-    <string id="TAOM_clan_vlandia_4" text="펠란딩 가문" />
-
-    <string id="TAOM_clan_vlandia_5" text="오스키텔링 가문" />
-
-    <string id="TAOM_clan_vlandia_6" text="오르들라칭 가문" />
-
-    <string id="TAOM_clan_vlandia_7" text="애셀라핑 가문" />
-
-    <string id="TAOM_clan_vlandia_8" text="그림모딩 가문" />
-
-    <string id="TAOM_clan_vlandia_9" text="두닝 가문" />
-
-    <string id="TAOM_clan_vlandia_10" text="에오포링 가문" />
-
-    <string id="TAOM_clan_vlandia_11" text="토르다깅 가문" />
-
-    <string id="TAOM_clan_battania_1" text="방가리스" />
-
-    <string id="TAOM_clan_battania_2" text="아라즈" />
-
-    <string id="TAOM_clan_battania_3" text="토라바이" />
-
-    <string id="TAOM_clan_battania_4" text="코르바시" />
-
-    <string id="TAOM_clan_battania_5" text="쿠르단" />
-
-    <string id="TAOM_clan_battania_6" text="우르다시" />
-
-    <string id="TAOM_clan_battania_7" text="카르하타이" />
-
-    <string id="TAOM_clan_battania_8" text="바랴시" />
-
-    <string id="TAOM_ghilman_name" text="뱀 근위대" />
-
-    <string id="TAOM_ghilman_short" text="뱀 근위대" />
-
-    <string id="TAOM_ghilman_text" text="뱀 근위대는 근하라드의 뱀군주를 섬기는 기마병들이다. 에펠두아스 남쪽의 광활한 평원에서 말 위에서 자란 이들은 중간계 남부 전역에서 타의 추종을 불허하는 기마 궁수들이다. 하라드와 모르도르 사이에 평화가 지속되는 시기에 근위대는 그들의 용병술을 하라드림 영주들과 황금 대가를 지불할 여유가 있는 다른 세력들에게 제공한다." />
-
-    <string id="TAOM_legion_name" text="회색 중대" />
-
-    <string id="TAOM_legion_short" text="회색 중대" />
-
-    <string id="TAOM_legion_text" text="회색 중대는 오래 전에 왕국을 잃어버린 아르노르 왕들의 후손인 두네다인 야경대의 마지막 조직화된 형제단이다. 그들은 자신들의 이름을 잊어버린 땅에서 평화를 지키며 북부를 가로질러 집 없이 떠돈다. 그들의 첫 번째 충성심은 엘렌딜의 혈통에 있지만, 그들의 방랑이 문명화된 땅으로 이어질 때 중간계 전역의 영주들로부터 계약을 받기도 한다." />
-
-    <string id="TAOM_skolderbrotva_name" text="에레보르의 도끼병" />
-
-    <string id="TAOM_skolderbrotva_short" text="도끼병" />
-
-    <string id="TAOM_skolderbrotva_text" text="에레보르의 도끼병은 소린 왕의 전투를 겪은 참전용사들로, 평화시대가 그들의 기질에 맞지 않음을 깨달은 자들이다. 난쟁이 전당의 근접전투 - 방패벽, 단도끼, 곡괭이 - 에 훈련된 이들은 어떤 지형에서든 무시무시하지만 에레보르를 인간의 왕국들과 연결하는 산길에서 특히 뛰어나다. 그들은 대가를 지불할 수 있는 누구의 계약이든 받지만, 에레보르나 리븐델에 대항하여 도끼를 들지는 않는다." />
-
-    <string id="TAOM_company_name" text="해적단의 검" />
-
-    <string id="TAOM_company_short" text="해적단" />
-
-    <string id="TAOM_company_text" text="해적단의 검은 움바르 항구 출신의 베테랑 해상 전사들로, 육지에서 그들의 기술을 파는 일에 나섰다. 그들은 함선 전투의 선호 무기인 쇠뇌를 사용하며, 흔들리는 갑판 위에서만큼이나 공성전에서도 편안하다. 흉터투성이인 누메노르 망명자 선장은 그들의 명성이 가장 값진 화물임을 알고 철저한 규율로 계약을 지키게 한다." />
-
-    <string id="TAOM_beni_zilal_name" text="눈먼 눈" />
-
-    <string id="TAOM_beni_zilal_short" text="눈먼 눈" />
-
-    <string id="TAOM_beni_zilal_text" text="눈먼 눈은 하라드의 해안과 깊은 사막을 가로질러 활동하는 밀수꾼, 장물아비, 고용 살인자들의 형제단이다. 그들은 잊혀진 하라드림 왕을 섬겼던 암살자 집단의 후손이라고 전해지며, 그들의 방식 - 독, 그림자, 비밀의 활용 - 은 변하지 않았다. 조용히 경쟁자를 제거하고 싶거나 세관 검사 없이 화물을 옮겨야 하는 상인들은 금화 한 닢과 봉인된 편지를 어디에 남겨야 하는지 안다." />
-
-    <string id="TAOM_wolfskins_name" text="바리아그 약탈자" />
-
-    <string id="TAOM_wolfskins_short" text="약탈자" />
-
-    <string id="TAOM_wolfskins_text" text="바리아그 약탈자는 칸드의 초원 출신 젊은 바리아그 전사들의 전쟁단으로, 그들의 청년기를 의례적 전쟁 상태로 보낸다: 그들은 조리된 음식을 소유할 수 없고, 영구적인 지붕 아래 잠잘 수 없으며, 자비를 베풀 수 없다. 대부분은 결국 부족의 정착 생활로 돌아가지만, 일부는 결코 그렇게 하지 않으며, 이들이 약탈자를 형성한다 - 칸드의 길을 습격하고 하라드와 곤도르로 국경을 넘어 약탈하는 무법자들이다." />
-
-    <string id="TAOM_brotherhood_name" text="던랜드 약탈자" />
-
-    <string id="TAOM_brotherhood_short" text="약탈자" />
-
-    <string id="TAOM_brotherhood_text" text="던랜드 약탈자는 지금은 로히림이 다스리는 계곡에 살았던 산악 부족의 파괴된 잔재이다. 그들의 할아버지들은 비옥한 땅에서 바위투성이 고지로 쫓겨났고, 그들은 그 원한을 약탈자의 철학으로 키워왔다: 남부인이나 왕의 부하로부터 빼앗은 모든 것은 단지 빼앗긴 것의 복원일 뿐이다. 실제로 그들은 산적이지만, 언덕을 통과하는 모든 염소길을 아는 위험한 자들이다." />
-
-    <string id="TAOM_hidden_hand_name" text="입의 하인들" />
-
-    <string id="TAOM_hidden_hand_short" text="하인들" />
-
-    <string id="TAOM_hidden_hand_text" text="입의 하인들은 검은 문 너머에서 활동하는 바라드두르의 눈들이다 — 모르도르 국경 지역 민족들 사이에 잠입한 정보원, 집행자, 첩자들. 사우론의 군대가 아직 도달할 수 없는 곳에서, 이 요원들은 공물을 수거하고 반대 의견을 침묵시킨다. 그들은 뇌물, 협박, 은밀한 살인을 통해 일하며, 암흑군주에 대한 어떠한 음모도 뿌리내리기 전에 뿌리째 뽑아 분쇄한다." />
-
-    <string id="TAOM_lakepike_name" text="긴 호수의 난파업자들" />
-
-    <string id="TAOM_lakepike_short" text="난파업자" />
-
-    <string id="TAOM_lakepike_text" text="긴 호수의 난파업자들은 에스가로스의 위엄 있는 불빛에서 멀리 떨어진, 긴 호수의 그늘진 해안에 있는 갈대밭과 썩어가는 낡은 부두에서 산다. 그들은 거짓 등불로 바지선을 숨겨진 얕은 여울로 유인한 뒤 화물을 약탈하고 마을 내부의 장물아비를 통해 팔아 생계를 꾸린다. 호수마을 촌장과 데일 상인들의 노력에도 불구하고, 난파업자들은 부두가 선술집에 너무 많은 친구들을 두고 있어 쉽게 쫓아낼 수 없다." />
-
-    <string id="TAOM_embers_name" text="눈꺼풀 없는 눈의 숭배" />
-
-    <string id="TAOM_embers_short" text="눈 숭배" />
-
-    <string id="TAOM_embers_text" text="눈꺼풀 없는 눈의 숭배는 검은 누메노르 전통에 뿌리를 둔 비밀 결사로, 사우론이 다시 일어날 때 충실한 자들을 영광으로 회복시킬 신왕으로 숭배한다. 그들은 던랜드의 빈곤층과 왕국의 잊혀진 구석에서 신자를 모집하며, 신의 은총과 지상의 권력을 약속한다. 사실 그들의 지도자들은 바라드두르의 요원들에게 복종하며, 그들의 세포 기반 구조는 어떤 영주의 정의로도 근절하기가 거의 불가능하다." />
-
-    <string id="TAOM_jawwal_name" text="모래 기수들" />
-
-    <string id="TAOM_jawwal_short" text="모래 기수" />
-
-    <string id="TAOM_jawwal_text" text="모래 기수들은 에펠 두아스와 먼 남쪽 바다 사이의 물 없는 황무지의 지배자인, 깊은 하라드 내륙의 유목 사막 부족들이다. 그들은 자신들만이 아는 길을 따라 이동하며, 그들의 영토를 가로지르려는 대담한 대상에게 공물을 요구한다. 가까운 하라드의 정착 영주들은 그들을 골칫거리로 여기지만, 모래 기수들은 정착 영주들을 사막이 이미 자유롭게 준 것을 훔친 도둑으로 여긴다." />
-
-    <string id="TAOM_karakhuzaits_name" text="야생 동방인들" />
-
-    <string id="TAOM_karakhuzaits_short" text="야생인" />
-
-    <string id="TAOM_karakhuzaits_text" text="야생 동방인들은 룬 해의 정복되지 않은 초원 부족들로, 자신들을 통제하려 한 모든 영주의 권위를 저항해왔다 — 룬의 족장, 모르도르의 부관, 데일의 왕 모두를. 그들은 켈두인 동쪽의 초원을 가로질러 이동하며, 말을 모으고, 가축 떼를 약탈하며, 무장 호위 없이 그들의 초원을 가로지르려는 어리석은 대상에게 통행료를 징수한다." />
-
-    <string id="TAOM_forest_people_name" text="드루에다인" />
-
-    <string id="TAOM_forest_people_short" text="와세스" />
-
-    <string id="TAOM_forest_people_text" text="드루에다인은 인간들에게 와세스 또는 숲의 야생인으로 알려진 고대 민족으로, 드루아단의 깊은 숲과 하얀 산�맥의 숨겨진 계곡에 거주한다. 그들은 불로 땅을 개간하고, 재가 풍부한 토양에서 필요한 것을 재배하며, 땅이 소진되면 이동한다 — 가운데땅의 정착 민족들이 결코 이해하지 못했고 신경 쓰지도 않았던 삶의 방식이다. 드루에다인은 영주를 원하지 않고, 세금을 내지 않으며, 단지 숲의 고요 속에 남겨지기만을 바란다." />
-
-    <string id="TAOM_eleftheroi_name" text="베오르닝족" />
-
-    <string id="TAOM_eleftheroi_short" text="베오르닝" />
-
-    <string id="TAOM_eleftheroi_text" text="베오르닝족은 안개산맥과 어둠숲 사이의 안두인 계곡에 사는 위대한 숲 사람들로, 베오른 혈통의 피부 변환자들이 이끈다. 그들은 어떤 오크도 자신들의 영토를 가로지르게 허락하지 않으며, 경비 자금을 마련하기 위해 카록 여울에서 통행료를 징수하고, 가운데땅의 어떤 왕에게도 복종하지 않는다. 그들은 엘프와 드워프와 거래하고 대화하지만, 허가 없이 그들의 숲을 통과하는 군대는 베오르닝족이 매우 큰 이빨을 가지고 있음을 알게 될 것이다." />
-
-    <string id="TAOM_clan_khuzait_1" text="후즈" />
-
-    <string id="TAOM_clan_khuzait_2" text="살루리안" />
-
-    <string id="TAOM_clan_khuzait_3" text="니카티안" />
-
-    <string id="TAOM_clan_khuzait_4" text="카르미안" />
-
-    <string id="TAOM_clan_khuzait_5" text="암두리드" />
-
-    <string id="TAOM_clan_khuzait_6" text="쿤돌라르" />
-
-    <string id="TAOM_clan_khuzait_7" text="쿠자이티안" />
-
-    <string id="TAOM_clan_khuzait_8" text="마샤키안" />
-
-    <string id="TAOM_clan_khuzait_9" text="보조르가니스" />
-
-    <string id="aom_lord_1_1_name" text="브레닌 울프, 강철손" />
-
-    <string id="aom_lord_1_2_name" text="프레야 울프하트" />
-
-    <string id="aom_lord_1_3_name" text="고르울프, 멧돼지" />
-
-    <string id="aom_lord_1_4_name" text="브룬힐드 아이언클로" />
-
-    <string id="aom_lord_1_5_name" text="오스릭 더 와일드" />
-
-    <string id="aom_lord_1_6_name" text="토르발드 옥스혼" />
-
-    <string id="aom_lord_1_7_name" text="데네소르 2세, 곤도르의 집정관" />
-
-    <string id="aom_lord_1_8_name" text="후리오네스" />
-
-    <string id="aom_lord_1_9_name" text="임라힐, 돌 아므로스의 공" />
-
-    <string id="aom_lord_1_10_name" text="아라넬" />
-
-    <string id="aom_lord_1_25_name" text="엘피르" />
-
-    <string id="aom_lord_1_35_name" text="에르키리온" />
-
-    <string id="aom_lord_1_11_name" text="키랸두르" />
-
-    <string id="aom_lord_1_111_name" text="엘라르웬" />
-
-    <string id="aom_lord_1_12_name" text="핀다리엘" />
-
-    <string id="aom_lord_1_14_name" text="사우론의 입" />
-
-    <string id="aom_lord_1_15_name" text="앙그마르의 마술사왕" />
-
-    <string id="aom_lord_1_155_name" text="나즈굴, 어둠의 원수" />
-
-    <string id="aom_lord_1_16_name" text="나즈굴, 움바르의 기사" />
-
-    <string id="aom_lord_1_17_name" text="사우론" />
-
-    <string id="aom_lord_1_177_name" text="호노라투스" />
-
-    <string id="aom_lord_1_18_name" text="자테아" />
-
-    <string id="aom_lord_1_21_name" text="펜릭 붉은늑대" />
-
-    <string id="aom_lord_1_22_name" text="비욘릭 스트롱암" />
-
-    <string id="aom_lord_1_23_name" text="칼라드웬" />
-
-    <string id="aom_lord_1_24_name" text="암로소스" />
-
-    <string id="aom_lord_1_75_name" text="보로미르" />
-
-    <string id="aom_lord_1_26_name" text="히르곤" />
-
-    <string id="aom_lord_1_27_name" text="마우그라쉬" />
-
-    <string id="aom_lord_1_28_name" text="나즈굴, 배신자" />
-
-    <string id="aom_lord_1_29_name" text="사니온" />
-
-    <string id="aom_lord_1_31_name" text="즈르사 블랙팽" />
-
-    <string id="aom_lord_1_32_name" text="엘드라 보어송" />
-
-    <string id="aom_lord_1_33_name" text="브리기드 더 하울링" />
-
-    <string id="aom_lord_1_422_name" text="드렌굴프 아이언터스크" />
-
-    <string id="aom_lord_1_34_name" text="파라미르" />
-
-    <string id="aom_lord_1_36_name" text="이브리니엘" />
-
-    <string id="aom_lord_1_37_name" text="고샹크" />
-
-    <string id="aom_lord_1_38_name" text="나즈굴, 불사자" />
-
-    <string id="aom_lord_1_39_name" text="데바나" />
-
-    <string id="aom_lord_1_41_name" text="베레군드 울프본" />
-
-    <string id="aom_lord_1_411_name" text="그림울프 아이언팽" />
-
-    <string id="aom_lord_1_42_name" text="흐로드가르 철갑피" />
-
-    <string id="aom_lord_1_43_name" text="고르문드 황소옆구리" />
-
-    <string id="aom_lord_1_44_name" text="네모스" />
-
-    <string id="aom_lord_1_47_name" text="울보스" />
-
-    <string id="aom_lord_1_49_name" text="오브론" />
-
-    <string id="aom_lord_1_20_name" text="아스트리드 곰발톱" />
-
-    <string id="aom_lord_1_64_name" text="토르문드 회색곰도끼" />
-
-    <string id="aom_lord_1_50_name" text="코르윈 까마귀눈" />
-
-    <string id="aom_lord_1_66_name" text="탈릭 까마귀울음" />
-
-    <string id="aom_lord_1_51_name" text="할드릭 발톱일격" />
-
-    <string id="aom_lord_1_58_name" text="고르빈 흉한자" />
-
-    <string id="aom_lord_1_70_name" text="베이라 그림자" />
-
-    <string id="aom_lord_1_67_name" text="에오르윈 깃살" />
-
-    <string id="aom_lord_1_40_name" text="보르하도르" />
-
-    <string id="aom_lord_1_46_name" text="말리오르" />
-
-    <string id="aom_lord_1_45_name" text="포를롱, 로사르나흐의 영주" />
-
-    <string id="aom_lord_1_57_name" text="바라노르" />
-
-    <string id="aom_lord_1_52_name" text="히를루인, 피나스 겔린의 영주" />
-
-    <string id="aom_lord_1_53_name" text="앙보르, 라메돈의 영주" />
-
-    <string id="aom_lord_1_71_name" text="골라스길, 안팔라스의 영주" />
-
-    <string id="aom_lord_1_73_name" text="나르미르" />
-
-    <string id="aom_lord_1_62_name" text="오로마르" />
-
-    <string id="aom_lord_1_30_name" text="고스모그, 모르굴의 부관" />
-
-    <string id="aom_lord_1_48_name" text="카물, 동방인" />
-
-    <string id="aom_lord_1_54_name" text="샤그라트, 키리스 운골의 대장" />
-
-    <string id="aom_lord_1_55_name" text="마스모그" />
-
-    <string id="aom_lord_1_63_name" text="고르바그, 미나스 모르굴의 대장" />
-
-    <string id="aom_lord_1_56_name" text="토르문드, 망치" />
-
-    <string id="aom_lord_1_68_name" text="타로스" />
-
-    <string id="aom_lord_1_69_name" text="니폰" />
-
-    <string id="aom_lord_1_72_name" text="볼그" />
-
-    <string id="aom_lord_1_74_name" text="자카니스" />
-
-    <string id="aom_lord_1_1_1_name" text="엘디스 회색발톱" />
-
-    <string id="aom_lord_1_1_2_name" text="시가 용살해자" />
-
-    <string id="aom_lord_1_1_3_name" text="시그룬 멧돼지엄니" />
-
-    <string id="aom_lord_1_1_4_name" text="티라 핏빛엄니" />
-
-    <string id="aom_lord_1_1_5_name" text="힐다 뼈분쇄자" />
-
-    <string id="aom_lord_1_1_6_name" text="위르사, 겨울 멧돼지" />
-
-    <string id="aom_lord_1_1_7_name" text="프레이디스 황소갈기" />
-
-    <string id="aom_lord_1_1_8_name" text="에이라 그림자발톱" />
-
-    <string id="aom_lord_1_1_9_name" text="시프라 본워커" />
-
-    <string id="aom_lord_1_1_10_name" text="할디스 레드미스트" />
-
-    <string id="aom_lord_1_1_11_name" text="이를라 고스트펠트" />
-
-    <string id="aom_lord_1_1_15_name" text="아엘윈 호크아이" />
-
-    <string id="aom_lord_1_1_16_name" text="브리아나 윙다트" />
-
-    <string id="aom_lord_1_27_1_name" text="베리나" />
-
-    <string id="aom_lord_1_27_2_name" text="스로즈나크" />
-
-    <string id="aom_lord_1_27_3_name" text="바실리아" />
-
-    <string id="aom_lord_1_47_1_name" text="미나" />
-
-    <string id="aom_lord_1_47_2_name" text="카시레아" />
-
-    <string id="aom_lord_1_47_3_name" text="콜람베아" />
-
-    <string id="aom_lord_1_49_1_name" text="트리스타니아" />
-
-    <string id="aom_lord_1_49_2_name" text="고르디아나" />
-
-    <string id="aom_lord_1_1_12_name" text="프레야 클로렌드" />
-
-    <string id="aom_lord_1_1_13_name" text="군드룬 아이언포" />
-
-    <string id="aom_lord_1_1_14_name" text="모르기스" />
-
-    <string id="aom_lord_1_1_17_name" text="브라녹 페더샤프트" />
-
-    <string id="aom_lord_1_40_1_name" text="린다리엘" />
-
-    <string id="aom_lord_1_46_1_name" text="소르웬" />
-
-    <string id="aom_lord_1_45_1_name" text="베레시엘" />
-
-    <string id="aom_lord_1_45_2_name" text="칼다미르" />
-
-    <string id="aom_lord_1_45_3_name" text="루밀" />
-
-    <string id="aom_lord_1_57_1_name" text="칼라시엘" />
-
-    <string id="aom_lord_1_57_2_name" text="임로스" />
-
-    <string id="aom_lord_1_52_1_name" text="아나리엘" />
-
-    <string id="aom_lord_1_52_2_name" text="바란도르" />
-
-    <string id="aom_lord_1_73_1_name" text="벨웬" />
-
-    <string id="aom_lord_1_62_1_name" text="아리사" />
-
-    <string id="aom_lord_1_30_1_name" text="스발라 레드팽" />
-
-    <string id="aom_lord_1_30_2_name" text="칼리니아" />
-
-    <string id="aom_lord_1_30_3_name" text="시네시오스" />
-
-    <string id="aom_lord_1_48_1_name" text="나즈굴, 오염된 자" />
-
-    <string id="aom_lord_1_48_2_name" text="나즈굴, 북방인의 그림자" />
-
-    <string id="aom_lord_1_48_3_name" text="나즈굴, 움바르의 그림자" />
-
-    <string id="aom_lord_1_54_1_name" text="콘스탈리아" />
-
-    <string id="aom_lord_1_55_1_name" text="메게시아" />
-
-    <string id="aom_lord_1_63_1_name" text="발라리아" />
-
-    <string id="aom_lord_1_63_2_name" text="코마타사" />
-
-    <string id="aom_lord_1_63_3_name" text="엘리딜레아" />
-
-    <string id="aom_lord_1_56_1_name" text="그웬나" />
-
-    <string id="aom_lord_1_56_2_name" text="루스티카" />
-
-    <string id="aom_lord_1_68_1_name" text="실비나" />
-
-    <string id="aom_lord_1_69_1_name" text="아렐리아나" />
-
-    <string id="aom_lord_1_69_2_name" text="도라틸라" />
-
-    <string id="aom_lord_1_72_1_name" text="비비아나" />
-
-    <string id="aom_lord_1_74_1_name" text="제나" />
-
-    <string id="aom_lord_2_1_name" text="바르드 2세" />
-
-    <string id="aom_lord_2_2_name" text="아스타" />
-
-    <string id="aom_lord_2_3_name" text="소린 3세 스톤헬름" />
-
-    <string id="aom_lord_2_4_name" text="시가" />
-
-    <string id="aom_lord_2_5_name" text="오리" />
-
-    <string id="aom_lord_2_6_name" text="에르타" />
-
-    <string id="aom_lord_2_7_name" text="시미르" />
-
-    <string id="aom_lord_2_8_name" text="우리크" />
-
-    <string id="aom_lord_2_9_name" text="레크" />
-
-    <string id="aom_lord_2_10_name" text="발라" />
-
-    <string id="aom_lord_2_11_name" text="이드룬" />
-
-    <string id="aom_lord_2_111_name" text="로지볼" />
-
-    <string id="aom_lord_2_12_name" text="스바나" />
-
-    <string id="aom_lord_2_121_name" text="오스벤" />
-
-    <string id="aom_lord_2_13_name" text="비다르" />
-
-    <string id="aom_lord_2_14_name" text="이스반" />
-
-    <string id="aom_lord_2_15_name" text="라타고스트" />
-
-    <string id="aom_lord_2_16_name" text="보푸르" />
-
-    <string id="aom_lord_2_17_name" text="소린 2세 오컨쉴드" />
-
-    <string id="aom_lord_2_18_name" text="글로인" />
-
-    <string id="aom_lord_2_19_name" text="드왈린" />
-
-    <string id="aom_lord_2_20_name" text="오인" />
-
-    <string id="aom_lord_2_21_name" text="스베도른" />
-
-    <string id="aom_lord_2_22_name" text="라쇼넥" />
-
-    <string id="aom_lord_2_23_name" text="갈덴" />
-
-    <string id="aom_lord_2_24_name" text="알바르" />
-
-    <string id="aom_lord_2_4_1_name" text="아폴라네아" />
-
-    <string id="aom_lord_2_7_1_name" text="미미르" />
-
-    <string id="aom_lord_2_13_1_name" text="릴리자" />
-
-    <string id="aom_lord_2_13_2_name" text="안드루타" />
-
-    <string id="aom_lord_2_13_3_name" text="루다" />
-
-    <string id="aom_lord_2_13_4_name" text="테타" />
-
-    <string id="aom_lord_2_14_1_name" text="발카바" />
-
-    <string id="aom_lord_2_14_2_name" text="자베레나" />
-
-    <string id="aom_lord_2_14_3_name" text="비즈두나" />
-
-    <string id="aom_lord_2_15_1_name" text="야차나" />
-
-    <string id="aom_lord_2_15_2_name" text="밀란카" />
-
-    <string id="aom_lord_2_15_3_name" text="벨리나" />
-
-    <string id="aom_lord_2_15_4_name" text="보반" />
-
-    <string id="aom_lord_2_16_1_name" text="티야스카" />
-
-    <string id="aom_lord_2_17_1_name" text="드라차" />
-
-    <string id="aom_lord_2_18_1_name" text="조리카" />
-
-    <string id="aom_lord_2_19_1_name" text="비토미라" />
-
-    <string id="aom_lord_2_20_1_name" text="키샤" />
-
-    <string id="aom_lord_2_21_1_name" text="이즈덴카" />
-
-    <string id="aom_lord_2_22_1_name" text="제네바" />
-
-    <string id="aom_lord_2_23_1_name" text="즐라트카" />
-
-    <string id="aom_lord_2_24_1_name" text="조리나" />
-
-    <string id="aom_dead_lord_2_1_name" text="늙은이 올레크" />
-
-    <string id="aom_dead_lord_2_2_name" text="바라" />
-
-    <string id="aom_lord_3_1_name" text="카두라크" />
-
-    <string id="aom_lord_3_2_name" text="하라드 자리 표시자" />
-
-    <string id="aom_lord_3_3_name" text="칼레미르" />
-
-    <string id="aom_lord_3_4_name" text="마라" />
-
-    <string id="aom_lord_3_5_name" text="할디르" />
-
-    <string id="aom_lord_3_51_name" text="하칸" />
-
-    <string id="aom_lord_3_6_name" text="루마" />
-
-    <string id="aom_lord_3_7_name" text="디율" />
-
-    <string id="aom_lord_3_8_name" text="아다스" />
-
-    <string id="aom_lord_3_9_name" text="우사이르" />
-
-    <string id="aom_lord_3_10_name" text="아니다" />
-
-    <string id="aom_lord_3_11_name" text="아르와" />
-
-    <string id="aom_lord_3_12_name" text="마난" />
-
-    <string id="aom_lord_3_13_name" text="누카르" />
-
-    <string id="aom_lord_3_14_name" text="탐자" />
-
-    <string id="aom_lord_3_15_name" text="구지드" />
-
-    <string id="aom_lord_3_16_name" text="루밀" />
-
-    <string id="aom_lord_3_17_name" text="오로핀" />
-
-    <string id="aom_lord_3_18_name" text="아란손" />
-
-    <string id="aom_lord_3_19_name" text="아에티리온" />
-
-    <string id="aom_lord_3_20_name" text="카리스" />
-
-    <string id="aom_lord_3_21_name" text="우카이" />
-
-    <string id="aom_lord_3_22_name" text="두일린" />
-
-    <string id="aom_lord_3_23_name" text="카힌" />
-
-    <string id="aom_lord_3_3_1_name" text="타리크" />
-
-    <string id="aom_lord_3_13_1_name" text="시라" />
-
-    <string id="aom_lord_3_13_2_name" text="라자나" />
-
-    <string id="aom_lord_3_14_1_name" text="사사이타" />
-
-    <string id="aom_lord_3_15_1_name" text="심라" />
-
-    <string id="aom_lord_3_15_2_name" text="부실라" />
-
-    <string id="aom_lord_3_16_1_name" text="파리나" />
-
-    <string id="aom_lord_3_17_1_name" text="샤이마" />
-
-    <string id="aom_lord_3_17_2_name" text="사니트" />
-
-    <string id="aom_lord_3_18_1_name" text="파르자나" />
-
-    <string id="aom_lord_3_18_2_name" text="하피사" />
-
-    <string id="aom_lord_3_18_3_name" text="주아드" />
-
-    <string id="aom_lord_3_18_4_name" text="잘파르" />
-
-    <string id="aom_lord_3_19_1_name" text="살마" />
-
-    <string id="aom_lord_3_19_2_name" text="줄라이카" />
-
-    <string id="aom_lord_3_19_3_name" text="술하나" />
-
-    <string id="aom_lord_3_20_1_name" text="주디라" />
-
-    <string id="aom_lord_3_20_2_name" text="아지나" />
-
-    <string id="aom_lord_3_21_1_name" text="아시사" />
-
-    <string id="aom_lord_3_22_1_name" text="야미나" />
-
-    <string id="aom_lord_3_22_2_name" text="수나" />
-
-    <string id="aom_lord_3_22_3_name" text="자누와" />
-
-    <string id="aom_lord_3_22_4_name" text="하자라" />
-
-    <string id="aom_lord_3_23_1_name" text="수카이나" />
-
-    <string id="aom_dead_lord_3_1_name" text="님르" />
-
-    <string id="aom_lord_4_1_name" text="세오덴" />
-
-    <string id="aom_lord_4_2_name" text="엘프힐드" />
-
-    <string id="aom_lord_4_4_name" text="엘실드" />
-
-    <string id="aom_lord_4_5_name" text="운테리" />
-
-    <string id="aom_lord_4_6_name" text="그림볼드 그리밍가스" />
-
-    <string id="aom_lord_4_7_name" text="세오드레드 에오를링" />
-
-    <string id="aom_lord_4_8_name" text="푸른하르드" />
-
-    <string id="aom_lord_4_9_name" text="토문드" />
-
-    <string id="aom_lord_4_10_name" text="엘리스" />
-
-    <string id="aom_lord_4_11_name" text="리에나" />
-
-    <string id="aom_lord_4_12_name" text="실빈드" />
-
-    <string id="aom_lord_4_121_name" text="라산드" />
-
-    <string id="aom_lord_4_13_name" text="로문드" />
-
-    <string id="aom_lord_4_14_name" text="모르콘" />
-
-    <string id="aom_lord_4_141_name" text="아모르콘" />
-
-    <string id="aom_lord_4_15_name" text="에르두란드" />
-
-    <string id="aom_lord_4_16_name" text="에르켄브란드 펠란딩" />
-
-    <string id="aom_lord_4_17_name" text="엘베트" />
-
-    <string id="aom_lord_4_18_name" text="아말군" />
-
-    <string id="aom_lord_4_181_name" text="아르타문드" />
-
-    <string id="aom_lord_4_19_name" text="아셀라" />
-
-    <string id="aom_lord_4_20_name" text="바르문드" />
-
-    <string id="aom_lord_4_21_name" text="쿠스래드 오르들라킹" />
-
-    <string id="aom_lord_4_22_name" text="울프 켈문딩" />
-
-    <string id="aom_lord_4_23_name" text="마르하스 마르하드" />
-
-    <string id="aom_lord_4_24_name" text="그리마 그림모딩" />
-
-    <string id="aom_lord_4_25_name" text="루칸드" />
-
-    <string id="aom_lord_4_26_name" text="페릭" />
-
-    <string id="aom_lord_4_27_name" text="엘레 에셀라핑" />
-
-    <string id="aom_lord_4_28_name" text="파스트헬름 모르카르가스" />
-
-    <string id="aom_lord_4_3_1_name" text="에오메르 에오포링" />
-
-    <string id="aom_lord_4_6_1_name" text="데오르윈 그리밍가스" />
-
-    <string id="aom_lord_4_16_1_name" text="메르수 펠란딩" />
-
-    <string id="aom_lord_4_20_1_name" text="잉겔트루드" />
-
-    <string id="aom_lord_4_22_1_name" text="순니파 켈문딩" />
-
-    <string id="aom_lord_4_23_1_name" text="울프윈 마르하드" />
-
-    <string id="aom_lord_4_23_2_name" text="엘레두란 마르하드" />
-
-    <string id="aom_lord_4_23_3_name" text="엘레두란" />
-
-    <string id="aom_lord_4_25_1_name" text="베르틀리아나" />
-
-    <string id="aom_lord_4_27_1_name" text="베르부르그 에셀라핑" />
-
-    <string id="aom_lord_4_28_1_name" text="모르카르" />
-
-    <string id="aom_lord_4_28_2_name" text="헤레스위스" />
-
-    <string id="aom_lord_V11_l_name" text="레오문드 데아프링가스" />
-
-    <string id="aom_lord_4_26_1_name" text="라인가르다" />
-
-    <string id="aom_lord_4_24_1_name" text="아달트루드" />
-
-    <string id="aom_lord_4_24_2_name" text="구돈헬다" />
-
-    <string id="aom_lord_4_24_3_name" text="잉군데" />
-
-    <string id="aom_lord_4_24_4_name" text="이름가르트" />
-
-    <string id="aom_lord_4_3_name" text="알드릭" />
-
-    <string id="aom_lord_V11_c1_name" text="엘렌다라" />
-
-    <string id="aom_lord_V11_c2_name" text="다구닉" />
-
-    <string id="aom_lord_V11_u_name" text="볼레릭" />
-
-    <string id="aom_lord_V9_u_name" text="우룬둘프" />
-
-    <string id="aom_lord_5_1_name" text="바르굴, 칸드의 대장군" />
-
-    <string id="aom_lord_5_7_name" text="칸드 플레이스홀더" />
-
-    <string id="aom_lord_5_3_name" text="에르게온" />
-
-    <string id="aom_lord_5_4_name" text="니윈" />
-
-    <string id="aom_lord_5_5_name" text="멜리디르" />
-
-    <string id="aom_lord_5_6_name" text="알카에아" />
-
-    <string id="aom_lord_5_8_name" text="세인" />
-
-    <string id="aom_lord_5_9_name" text="쿨하른" />
-
-    <string id="aom_lord_5_91_name" text="테간" />
-
-    <string id="aom_lord_5_10_name" text="코레인" />
-
-    <string id="aom_lord_5_11_name" text="알린네스" />
-
-    <string id="aom_lord_5_12_name" text="위투인" />
-
-    <string id="aom_lord_5_13_name" text="뮌서" />
-
-    <string id="aom_lord_5_131_name" text="라스" />
-
-    <string id="aom_lord_5_15_name" text="프린도르" />
-
-    <string id="aom_lord_5_14_name" text="루이한" />
-
-    <string id="aom_lord_5_16_name" text="아에론" />
-
-    <string id="aom_lord_5_17_name" text="아라드위르" />
-
-    <string id="aom_lord_5_18_name" text="브라녹" />
-
-    <string id="aom_lord_5_19_name" text="페나간" />
-
-    <string id="aom_lord_5_20_name" text="시아라무스" />
-
-    <string id="aom_lord_5_21_name" text="카르피드" />
-
-    <string id="aom_lord_5_22_name" text="피아라드" />
-
-    <string id="aom_lord_5_1_1_name" text="RandomDude" />
-
-    <string id="aom_lord_5_3_1_name" text="라나온" />
-
-    <string id="aom_lord_5_3_2_name" text="라도구알" />
-
-    <string id="aom_lord_5_5_1_name" text="에일리" />
-
-    <string id="aom_lord_5_13_1_name" text="베아사그" />
-
-    <string id="aom_lord_5_15_1_name" text="플로라이" />
-
-    <string id="aom_lord_5_15_2_name" text="베이트린" />
-
-    <string id="aom_lord_5_15_3_name" text="디아르베인" />
-
-    <string id="aom_lord_5_14_1_name" text="에아비르" />
-
-    <string id="aom_lord_5_16_1_name" text="리아신" />
-
-    <string id="aom_lord_5_16_2_name" text="가웬" />
-
-    <string id="aom_lord_5_17_1_name" text="브리간" />
-
-    <string id="aom_lord_5_18_1_name" text="쇼나그" />
-
-    <string id="aom_lord_5_21_1_name" text="베아타그" />
-
-    <string id="aom_lord_5_21_2_name" text="타오르세" />
-
-    <string id="aom_lord_6_1_name" text="자믹 자미안" />
-
-    <string id="aom_lord_6_2_name" text="마라이아" />
-
-    <string id="aom_lord_6_3_name" text="바가이" />
-
-    <string id="aom_lord_6_4_name" text="구르틸름 살루리안" />
-
-    <string id="aom_lord_6_5_name" text="이르보 니카시안" />
-
-    <string id="aom_lord_6_51_name" text="카다" />
-
-    <string id="aom_lord_6_6_name" text="수란" />
-
-    <string id="aom_lord_6_7_name" text="차간" />
-
-    <string id="aom_lord_6_8_name" text="에수르" />
-
-    <string id="aom_lord_6_81_name" text="나얀타이" />
-
-    <string id="aom_lord_6_9_name" text="테문" />
-
-    <string id="aom_lord_6_10_name" text="알리진" />
-
-    <string id="aom_lord_6_101_name" text="볼라트" />
-
-    <string id="aom_lord_6_11_name" text="야나" />
-
-    <string id="aom_lord_6_12_name" text="아바가이" />
-
-    <string id="aom_lord_6_13_name" text="보르투" />
-
-    <string id="aom_lord_6_15_name" text="오라구르" />
-
-    <string id="aom_lord_6_16_name" text="아크보스 카르미안" />
-
-    <string id="aom_lord_6_17_name" text="암두르 암두리드" />
-
-    <string id="aom_lord_6_18_name" text="루스칸 쿤돌라르" />
-
-    <string id="aom_lord_6_19_name" text="바케랄탄 쿤돌라르" />
-
-    <string id="aom_lord_6_20_name" text="쿠루브라 마샤키안" />
-
-    <string id="aom_lord_6_21_name" text="몰룩 일노리아" />
-
-    <string id="aom_lord_6_22_name" text="샤칼 2세 샤칼리안" />
-
-    <string id="aom_lord_6_23_name" text="후즈-마르고즈 후즈" />
-
-    <string id="aom_lord_6_24_name" text="니카스 아데키그" />
-
-    <string id="aom_lord_6_15_1_name" text="코리진" />
-
-    <string id="aom_lord_6_15_2_name" text="세첸" />
-
-    <string id="aom_lord_6_16_1_name" text="참부이" />
-
-    <string id="aom_lord_6_16_2_name" text="우나겐" />
-
-    <string id="aom_lord_6_17_1_name" text="에르게네" />
-
-    <string id="aom_lord_6_17_2_name" text="예숨" />
-
-    <string id="aom_lord_6_18_1_name" text="틸룬" />
-
-    <string id="aom_lord_6_18_2_name" text="차군" />
-
-    <string id="aom_lord_6_19_1_name" text="소카타이" />
-
-    <string id="aom_lord_6_19_2_name" text="코르테" />
-
-    <string id="aom_lord_6_20_1_name" text="지구르" />
-
-    <string id="aom_lord_K8_u_name" text="보론차르" />
-
-    <string id="aom_lord_6_21_1_name" text="에사체이" />
-
-    <string id="aom_lord_6_22_1_name" text="에셀렌" />
-
-    <string id="aom_lord_K9_l_name" text="발라스미르 마샤키안" />
-
-    <string id="aom_lord_K9_s_name" text="세빈" />
-
-    <string id="aom_lord_K9_c1_name" text="알투" />
-
-    <string id="aom_lord_K9_c2_name" text="멜라" />
-
-    <string id="aom_dead_lord_6_1_name" text="우르쿤" />
-
-    <string id="aom_dead_lord_6_2_name" text="솔룬" />
-
-    <string id="aom_dead_lord_6_3_name" text="쿠유그" />
-
-    <string id="aom_dead_lord_6_4_name" text="운둘" />
-
-    <string id="aom_lord_A9_c_name" text="딜라" />
-
-    <string id="aom_lord_A9_l_name" text="카라단" />
-
-    <string id="aom_lord_A9_s_name" text="티카" />
-
-    <string id="aom_lord_A9_u_name" text="카반" />
-
-    <string id="aom_lord_B8_c_name" text="구아란" />
-
-    <string id="aom_lord_B8_l_name" text="마이레아스" />
-
-    <string id="aom_lord_B8_s_name" text="로다락" />
-
-    <string id="aom_lord_NE7_u_name" text="검은 송곳니 할드릭" />
-
-    <string id="aom_lord_NE8_c1_name" text="모루 케르딕" />
-
-    <string id="aom_lord_NE8_c2_name" text="모르웬" />
-
-    <string id="aom_lord_NE8_l_name" text="신속한 에아드릭" />
-
-    <string id="aom_lord_NE8_s_name" text="아엘로리아" />
-
-    <string id="aom_lord_NE9_d_name" text="뱀-일격 실바" />
-
-    <string id="aom_lord_NE9_l_name" text="비늘절단자 발토르" />
-
-    <string id="aom_lord_NE9_s_name" text="송곳니절단자 루릭" />
-
-    <string id="aom_lord_S8_u_name" text="갈릭" />
-
-    <string id="aom_lord_S9_c_name" text="포림" />
-
-    <string id="aom_lord_S9_l_name" text="봄부르" />
-
-    <string id="aom_lord_S9_m_name" text="다킬라" />
-
-    <string id="aom_lord_S9_u_name" text="차스티미르" />
-
-    <string id="aom_lord_SE8_c_name" text="이타리아" />
-
-    <string id="aom_lord_SE9_c1_name" text="파가리오스" />
-
-    <string id="aom_lord_SE9_c2_name" text="디아스카" />
-
-    <string id="aom_lord_SE9_l_name" text="우루크 대장 그리슈나크" />
-
-    <string id="aom_lord_SE9_s_name" text="존나" />
-
-    <string id="aom_lord_WE8_c_name" text="펠렌두르" />
-
-    <string id="aom_lord_WE8_u_name" text="바란딜" />
-
-    <string id="aom_lord_WE9_l_name" text="두인히르" />
-
-    <string id="aom_lord_WE9_u_name" text="두일린" />
-
-    <string id="aom_lord_WE9_u2_name" text="로스핀" />
-
-    <string id="TAOM_hero_dead_2_1" text="연로한 바르딩 영주는 동방인 약탈자들에 맞서 데일을 방어하다 전사했다. 그의 희생은 산맥 고개를 지켜냈으며 왕국 전역의 노래로 기억되고 있다." />
-
-    <string id="TAOM_hero_dead_2_2" text="전쟁 후 닥친 겨울 역병으로 세상을 떠난 데일의 귀부인. 그녀는 평민들에 대한 자선으로 유명했다." />
-
-    <string id="TAOM_hero_dead_3_1" text="검은 문 전투에서 사막 기병대를 이끈 하라드림 전쟁군주. 그는 곤도르의 화살에 쓰러졌지만 남부에서는 순교자로 숭배받고 있다." />
-
-    <string id="TAOM_hero_dead_6_1" text="룬의 깃발 아래 동방인 부족들을 최초로 통합한 위대한 칸. 그의 정복은 황금 왕국의 경계를 룬 바다의 해안까지 확장시켰다." />
-
-    <string id="TAOM_hero_dead_6_2" text="자유 민족들과의 전투에서 전사한 존경받는 노얀. 그의 미망인 구르틸름은 이제 강철 같은 결단력으로 그들의 씨족을 이끌고 있다." />
-
-    <string id="TAOM_hero_dead_6_3" text="아르킷 씨족의 수석 노얀. 기마 궁술 전술에서의 그의 전술적 명석함은 동방인 전사들의 전 세대에 영향을 끼쳤다." />
-
-    <string id="TAOM_hero_dead_6_4" text="아르킷 씨족의 귀족이자 위대한 노얀의 아들. 그는 젊은 나이에 죽었지만 전사로서의 가능성을 보여주었다." />
-
-    <string id="TAOM_hero_1_1" text="브레닌 울프는 철권으로 던랜드의 야생 씨족들을 통치한다. 아이언핸드로 알려진 그는 정복과 교활함으로 흩어진 언덕 부족들을 통합했다. 그는 로한의 말-영주들에게 빼앗긴 땅을 되찾는 꿈을 꾼다." />
-
-    <string id="TAOM_hero_1_2" text="프레야 울프하트는 브레닌 울프의 용맹한 아내이다. 그녀는 도끼와 방패를 다루는 솜씨로 전사들 사이에서 존경받는다." />
-
-    <string id="TAOM_hero_1_41" text="베레군드 울프본은 던랜드의 신뢰받는 대장으로, 로히림 정착지를 습격하는 기술로 유명하다." />
-
-    <string id="TAOM_hero_1_411" text="그림울프 아이언팽은 로한에 대한 습격과 전쟁의 아버지의 유산을 이어간다." />
-
-    <string id="TAOM_hero_1_31" text="즈르사 블랙팽은 아이언핸드의 후계자로, 아버지의 유산에 합당함을 증명하고자 열망한다." />
-
-    <string id="TAOM_hero_1_1_1" text="엘디스 그레이클로는 던랜드의 용맹한 여전사로, 전투에서의 사나움으로 유명하다." />
-
-    <string id="TAOM_hero_1_1_2" text="시가 윔베인은 산맥의 고갯길에서 거대한 뱀을 죽이며 그 이름을 얻었다." />
-
-    <string id="TAOM_hero_1_21" text="펜릭 레드 울프는 적진 깊숙이 습격대를 이끈다." />
-
-    <string id="TAOM_hero_1_3" text="고르울프 보어는 국경 정착지에 대한 잔혹한 습격으로 알려진 야만적인 족장이다." />
-
-    <string id="TAOM_hero_1_4" text="브룬힐드 아이언클로는 고르울프의 강력한 아내로, 남편만큼이나 전투에 능숙하다." />
-
-    <string id="TAOM_hero_1_22" text="비욘릭 스트롱암은 전투에서 거대한 전투 도끼를 휘두르는 강력한 전사이다." />
-
-    <string id="TAOM_hero_1_42" text="흐로드가르 아이언하이드는 씨족의 용사로 봉사하며, 그의 갑옷은 수많은 전투로 상처투성이다." />
-
-    <string id="TAOM_hero_1_32" text="엘드라 보어송은 부모의 사나운 전통을 이어간다." />
-
-    <string id="TAOM_hero_1_422" text="드렌굴프 아이언터스크는 전투에서 자신의 가치를 증명하고자 하는 젊은 전사이다." />
-
-    <string id="TAOM_hero_1_1_3" text="시그룬 보어팽은 적진으로의 두려움 없는 돌격으로 유명하다." />
-
-    <string id="TAOM_hero_1_1_4" text="티라 블러드터스크는 수많은 승리를 통해 그 별명을 얻었다." />
-
-    <string id="TAOM_hero_1_1_5" text="힐다 본크러셔는 전투에서의 파괴적인 힘으로 두려움의 대상이다." />
-
-    <string id="TAOM_hero_1_1_6" text="위르사 윈터 보어는 적들이 가장 예상하지 못하는 가혹한 계절에 습격을 이끈다." />
-
-    <string id="TAOM_hero_1_5" text="오스릭 와일드는 예측 불가능한 전술로 많은 승리를 거둔 족장이다. 그의 씨족은 고대 던랜딩 왕들의 후손이라 주장한다." />
-
-    <string id="TAOM_hero_1_1_7" text="프레이디스 옥스메인은 오스릭의 아내이자 숙련된 치료사이자 전사이다." />
-
-    <string id="TAOM_hero_1_1_8" text="에이라 섀도클로는 적진 야영지를 조용히 이동하며 경고 없이 공격한다." />
-
-    <string id="TAOM_hero_1_6" text="토르발드 옥스혼은 오스릭의 후계자로, 이미 아버지의 거친 기질을 보여준다." />
-
-    <string id="TAOM_hero_1_33" text="브리지드 하울링은 산맥 고갯길을 통해 전투 무리를 이끈다." />
-
-    <string id="TAOM_hero_1_43" text="고르문드 옥스플랭크는 씨족장의 신뢰받는 부관으로 봉사한다." />
-
-    <string id="TAOM_hero_1_1_9" text="시프라 본워커는 전투 후 전사자들 사이를 걸으며 죽은 자들로부터 전리품을 수집한다." />
-
-    <string id="TAOM_hero_1_1_10" text="할디스 레드미스트는 전투에 참전하는 곳마다 피의 흔적을 남긴다." />
-
-    <string id="TAOM_hero_1_1_11" text="위를라 고스트펠트는 흰 늑대의 가죽을 입으며, 전투에서 그녀를 보호한다고 전해진다." />
-
-    <string id="TAOM_hero_1_1_12" text="프레야 클로렌드는 사나운 방패 여전사들의 전투 무리를 이끈다. 그녀는 어린 시절부터 전사로 훈련받았으며 패배를 모른다." />
-
-    <string id="TAOM_hero_1_1_13" text="군드룬 아이언포는 수많은 검 손잡이로 흉터진 손을 가진 노련한 전사이다." />
-
-    <string id="TAOM_hero_1_20" text="아스트리드 베어클로는 사나운 전투 스타일과 곰 가죽 망토로 유명하다." />
-
-    <string id="TAOM_hero_1_64" text="소르문드 그리즐리휴는 거대한 양손 도끼로 적진을 베어낸다." />
-
-    <string id="TAOM_hero_1_1_14" text="모르기스는 고대 언덕의 영혼들과 교감하는 신비로운 인물이다." />
-
-    <string id="TAOM_hero_1_1_17" text="브라녹 페더샤프트는 던랜딩들 중 가장 뛰어난 궁수로, 백 보 거리에서 까마귀의 눈을 쏠 수 있다." />
-
-    <string id="TAOM_hero_1_50" text="코르윈 레이븐아이는 새들의 비행에서 징조를 보고 전쟁 문제에 대해 씨족에 조언한다." />
-
-    <string id="TAOM_hero_1_66" text="탈릭 크로콜은 어떤 새의 울음소리도 흉내낼 수 있으며, 전투에서 신호로 사용한다." />
-
-    <string id="TAOM_hero_1_1_15" text="아엘윈 호크아이는 국경을 순찰하는 언덕 정찰대를 지휘한다." />
-
-    <string id="TAOM_hero_1_1_16" text="브리아나 윙다트는 어머니로부터 궁술을 배웠고 이제는 그녀를 능가한다." />
-
-    <string id="TAOM_hero_1_51" text="할드릭 탈론스트라이크는 높은 바위에서 매복을 이끈다." />
-
-    <string id="TAOM_hero_1_67" text="에오르윈 페더볼트는 칼보다 활을 선호하며, 그림자에서 공격한다." />
-
-    <string id="TAOM_hero_1_58" text="잔혹한 고르빈은 던렌딩들 사이에서도 그 잔인함이 전설적인 무시무시한 족장이다." />
-
-    <string id="TAOM_hero_1_70" text="그림자의 베이라는 적의 진영에 몰래 침투하여 밤에 목을 베는 자다." />
-
-    <string id="TAOM_hero_NE7_u" text="부족의 족장을 보좌하는 노련한 전사." />
-
-    <string id="TAOM_hero_NE8_l" text="산악 부족의 족장으로, 수년간의 국경 전쟁으로 단련되었다." />
-
-    <string id="TAOM_hero_NE8_s" text="족장의 아내로, 치유술과 약초 지식에 능하다." />
-
-    <string id="TAOM_hero_NE8_c1" text="부족의 장자로, 어린 시절부터 전쟁 훈련을 받았다." />
-
-    <string id="TAOM_hero_NE8_c2" text="부족 지도자의 둘째 자녀로, 교활함과 야망으로 알려져 있다." />
-
-    <string id="TAOM_hero_1_56" text="망치의 토르문드는 전쟁 망치를 휘두르는 파괴적인 돌격으로 그 이름을 얻었다." />
-
-    <string id="TAOM_hero_1_56_1" text="그웬나는 토르문드의 아내로, 그가 전쟁터에 있는 동안 부족의 영지를 관리한다." />
-
-    <string id="TAOM_hero_NE9_l" text="모든 던렌딩 부족들이 그의 지혜를 구하는 노령의 족장." />
-
-    <string id="TAOM_hero_NE9_s" text="늙은 족장의 아들로, 전투에서 자신을 증명하고자 열망한다." />
-
-    <string id="TAOM_hero_NE9_d" text="부족의 딸로, 전투와 외교 모두에 훈련받았다." />
-
-    <string id="TAOM_hero_1_7" text="곤도르의 집정 데네소르 2세는 미나스 티리스의 백색 탑에서 통치한다. 한때 위대한 지혜를 가진 사람이었으나, 그는 오만하고 완고해졌다. 그는 왕의 귀환을 거부하며, 오직 자신만이 곤도르를 모르도르의 그림자로부터 구할 수 있다고 믿는다." />
-
-    <string id="TAOM_hero_1_75" text="데네소르의 장남 보로미르는 곤도르의 장군이다. 명성 높은 위대한 전사로, 그는 어둠에 맞서 자신의 백성을 지키기 위한 어떤 무기든 찾고 있다." />
-
-    <string id="TAOM_hero_1_8" text="후리오네스는 후리니오나스 가문을 섬기며, 곤도르 집정들의 전승을 지키는 확고한 수호자이다." />
-
-    <string id="TAOM_hero_1_34" text="데네소르의 차남 파라미르는 이실리엔의 야전대 대장이다. 아버지에게 외면받았지만, 그는 지혜와 자비, 그리고 조용한 강인함으로 부하들의 사랑을 받는다." />
-
-    <string id="TAOM_hero_1_24" text="임라힐의 막내 아들 암로소스는 아직 젊지만 이미 가문의 무예 정신과 고귀한 품성을 보여준다." />
-
-    <string id="TAOM_hero_1_44" text="네모스는 탑 근위대의 대장으로, 집정을 수호하기로 맹세했다." />
-
-    <string id="TAOM_hero_1_9" text="돌 암로스의 공작 임라힐 2세는 곤도르 최고의 기사다. 그의 혈통은 엘프의 피를 이어받았으며, 왕국 전체에서 가장 훌륭한 영주라고 전해진다. 그의 백조 기사단은 중간계 전역에서 전설적이다." />
-
-    <string id="TAOM_hero_1_9_5" text="돌 암로스의 공작부인 로스웬은 수십 년간 임라힐 곁에서 곤도르를 섬겨왔다. 그녀는 우아함과 조용한 지혜로 알려져 있다." />
-
-    <string id="TAOM_hero_1_10" text="엘피르의 아내 아라넬은 품위와 예리한 지성으로 알려진 곤도르의 귀부인이다." />
-
-    <string id="TAOM_hero_1_35" text="임라힐의 차남 에르키리온은 돌 암로스의 기사로 복무한다. 전투에서 대담하고 가문에 충성스러우며, 아버지의 백조 기사단과 함께 말을 탄다." />
-
-    <string id="TAOM_hero_1_25" text="임라힐의 장남 엘피르는 돌 암로스의 후계자다. 그는 무예적 정확함으로 백조 기사단을 지휘하며 아버지의 고귀한 품격을 지니고 있다." />
-
-    <string id="TAOM_hero_1_23" text="에르키리온의 아내 칼라드웬은 그들의 결합을 통해 임라조리오나스 가문에 합류했다. 그녀는 조용한 용기를 가진 여인이다." />
-
-    <string id="TAOM_hero_1_11" text="키랸두르는 곤도르의 북부 방어를 지휘하며, 수많은 오크 습격의 노련한 베테랑이다. 그는 왕국의 국경을 지키는 데 있어 체계적이고 끈질기다." />
-
-    <string id="TAOM_hero_1_111" text="히르곤의 아내 엘라르웬은 회복력과 실용적 지혜로 알려진 변경 지역의 여인이다." />
-
-    <string id="TAOM_hero_1_12" text="키랸두르의 아내 핀다리엘은 가문의 일을 주의 깊고 지적으로 관리한다." />
-
-    <string id="TAOM_hero_1_36" text="키랸두르의 딸 이브리니엘은 곤도르의 북부 변경 지대에서 성장했으며 아버지의 회복력과 어머니의 지혜를 모두 보여준다." />
-
-    <string id="TAOM_hero_1_26" text="키랸두르의 형제 히르곤은 곤도르의 전령 기수로 복무한다. 신속하고 신뢰할 수 있으며, 왕국의 영주들 사이에서 전갈을 전한다." />
-
-    <string id="TAOM_hero_1_40" text="바라히리오나스의 영주 보르하도르는 곤도르의 가장 나이 많은 영주들 중 한 명이다. 그의 오랜 세월은 그에게 지혜를 주었지만, 나이가 들어 육체는 약해졌다. 그의 조언은 모두에게 존중받는다." />
-
-    <string id="TAOM_hero_1_40_1" text="보르하도르의 아내 린다리엘은 오랜 세월 동안 가문의 힘이 되어왔다. 그녀는 곤도르 귀족 사회에서 우아하고 불굴의 존재다." />
-
-    <string id="TAOM_hero_1_46" text="보르하도르의 아들 말리오르는 늙은 영주가 나이 들면서 아버지의 의무를 이어받고 있다. 그는 착실하고 믿음직스러우며, 그의 가문에게 존경받는다." />
-
-    <string id="TAOM_hero_1_46_1" text="말리오르의 아내 소르웬은 조용한 결단력으로 가문을 관리하는 유능한 여인이다." />
-
-    <string id="TAOM_hero_1_45" text="뚱보 포를롱, 로사르나크의 영주는 미나스 티리스 방어를 위해 영지들 중 가장 큰 부대를 이끈다. 그의 비대한 몸에도 불구하고, 그는 맹렬하고 경험 많은 전사다." />
-
-    <string id="TAOM_hero_1_45_1" text="포를롱의 아내 베레시엘은 로사르나크의 영주부인이다. 남편이 전쟁에 나가는 동안 비옥한 계곡들을 감독한다." />
-
-    <string id="TAOM_hero_1_45_2" text="포를롱의 젊은 아들 칼다미르는 최근 성인이 되어 자신을 증명하려는 열망으로 전쟁에 나선다." />
-
-    <string id="TAOM_hero_1_45_3" text="포를롱의 형 루밀은 아우시리오나스 가문에서 든든한 존재다. 그의 오랜 복무는 일족의 존경을 얻었다." />
-
-    <string id="TAOM_hero_1_57" text="바라노르는 로사르나크 부대의 대장으로, 포를롱 경의 신뢰받는 장교다." />
-
-    <string id="TAOM_hero_1_57_1" text="칼다미르의 아내 칼라시엘은 로사르나크의 젊은 귀부인이다." />
-
-    <string id="TAOM_hero_1_57_2" text="임로스는 바라노르의 딸로, 로사르나크 계곡에서 곤도르 귀족의 방식을 배우고 있다." />
-
-    <string id="TAOM_hero_1_52" text="아름다운 히를루인, 피나스 겔린의 영주는 곤도르의 언덕에서 녹색 옷을 입은 전사들을 이끈다. 그는 집정관에 대한 용맹과 충성으로 알려져 있다." />
-
-    <string id="TAOM_hero_1_52_4" text="히를루인의 아내 나우리엘은 피나스 겔린의 영주 부인으로, 녹색 언덕 사람들에 대한 확고함과 보살핌으로 알려져 있다." />
-
-    <string id="TAOM_hero_1_52_1" text="히를루인의 딸 아나리엘은 피나스 겔린의 전사들 사이에서 자랐으며 전투에서 자신의 몫을 다할 수 있다." />
-
-    <string id="TAOM_hero_1_52_2" text="히를루인의 아들 바란도르는 언젠가 피나스 겔린의 전사들을 이끌기 위해 훈련한다. 그는 아버지의 녹색 옷을 입은 부대와 함께 달린다." />
-
-    <string id="TAOM_hero_1_62" text="아나리엘의 남편 오로마르는 그들의 결혼을 통해 할보로니오나스 가문에 합류했다. 그는 피나스 겔린의 영주를 충실히 섬긴다." />
-
-    <string id="TAOM_hero_1_62_1" text="바란도르의 아내 이스핀은 우아함으로 알려진 녹색 언덕의 여인이다." />
-
-    <string id="TAOM_hero_1_53" text="두려움 없는 앙보르, 라메돈의 영주는 죽은 자들이 그의 땅을 행진할 때도 부하들을 결집시켰다. 그는 대담하고 행동이 빠르다." />
-
-    <string id="TAOM_hero_1_73" text="앙보르의 남동생 나르미르는 라메돈의 방어에 복무한다. 그는 형만큼의 경험은 아직 없지만 형의 용기를 공유한다." />
-
-    <string id="TAOM_hero_1_73_1" text="앙보르의 아내 벨웬은 라메돈의 방어에서 남편 곁에 확고히 서 있다." />
-
-    <string id="TAOM_hero_1_71" text="골라스길, 안팔라스의 영주는 해적 습격에 맞서 긴 해안선을 지휘한다. 그는 수십 년간 곤도르의 해안을 방어해 온 노련한 해상 영주이다." />
-
-    <string id="TAOM_hero_1_71_1" text="골라스길의 아내 라스웬은 남편이 해로를 지키는 동안 안팔라스의 해안 정착지들을 관리한다." />
-
-    <string id="TAOM_hero_WE8_c" text="골라스길의 아들 펠렌두르는 언젠가 아버지가 해온 것처럼 안팔라스의 해안을 방어하도록 훈련받고 있다." />
-
-    <string id="TAOM_hero_WE8_u" text="골라스길의 형제 바란딜은 안팔라스의 해안 경비대 대장으로 복무한다." />
-
-    <string id="TAOM_hero_WE9_l" text="두인히르, 모르손드의 영주는 검은뿌리 골짜기에서 곤도르 방어를 위해 궁수들을 이끈다. 그는 엄격하고 유능한 지휘관이다." />
-
-    <string id="TAOM_hero_WE9_u" text="두인히르의 장남 두일린은 자신의 궁수 부대를 이끌고 곤도르 방어에서 아버지와 함께 싸운다." />
-
-    <string id="TAOM_hero_WE9_u2" text="두인히르의 아내 로스핀은 남편이 없는 동안 검은뿌리 골짜기의 일들을 관리한다." />
-
-    <string id="TAOM_hero_1_14" text="사우론의 입은 암흑 군주의 권위로 말한다. 한때 검은 누메노르인이었던 그는 오랜 세월 악에 복무한 후 자신의 이름조차 잊었다. 그는 검은 문의 수비대를 지휘한다." />
-
-    <string id="TAOM_hero_1_27" text="마우그라쉬는 순전한 잔인함과 교활함으로 올라온 오크 대장이다." />
-
-    <string id="TAOM_hero_1_27_1" text="베리나는 어둠의 탑을 섬기는 검은 누메노르 마법사이다." />
-
-    <string id="TAOM_hero_1_27_2" text="스로즈나크는 서부 땅으로의 약탈대를 이끈다." />
-
-    <string id="TAOM_hero_1_27_3" text="바실리아는 그림자 속에서 암흑 군주를 섬긴다." />
-
-    <string id="TAOM_hero_1_37" text="고샹크는 잔인한 효율성으로 모르도르 오크 연대를 지휘한다." />
-
-    <string id="TAOM_hero_1_47" text="울보스는 오크 감독관으로, 파멸의 산 대장간에서 노예들을 몰아친다." />
-
-    <string id="TAOM_hero_1_47_1" text="미나는 모르도르의 어둠의 힘을 섬긴다." />
-
-    <string id="TAOM_hero_1_47_2" text="카시레아는 그림자의 하인이다." />
-
-    <string id="TAOM_hero_1_47_3" text="콜람베아는 모르도르의 어둠 속에 산다." />
-
-    <string id="TAOM_hero_1_15" text="앙마르의 마술사 왕, 나즈굴의 군주는 사우론의 가장 무서운 하인이다. 그는 한때 인간의 위대한 왕이었으나, 힘의 반지로 인해 불멸의 망령으로 타락했다." />
-
-    <string id="TAOM_hero_1_155" text="어둠의 원수는 전투에서 나즈굴을 지휘하며, 마술사 왕 다음가는 자이다." />
-
-    <string id="TAOM_hero_1_16" text="움바르의 기사는 반지를 받기 전 한때 해적의 영주였다." />
-
-    <string id="TAOM_hero_1_28" text="배신자는 타락하기 전 한때 동부의 왕이었다." />
-
-    <string id="TAOM_hero_1_38" text="불멸자는 불멸을 추구했으나 영원한 예속만을 발견한 마법사 왕이었다." />
-
-    <string id="TAOM_hero_1_48" text="동부인 카무르, 아홉 중 둘째는 힘의 반지를 받기 전 룬에서 위대한 왕국을 통치했다." />
-
-    <string id="TAOM_hero_1_48_1" text="오염된 자는 그가 달리는 곳마다 타락을 퍼뜨린다." />
-
-    <string id="TAOM_hero_1_48_2" text="북부인의 그림자는 추운 땅에서 사냥한다." />
-
-    <string id="TAOM_hero_1_48_3" text="움바르의 그림자는 남부 해안을 배회한다." />
-
-    <string id="TAOM_hero_1_177" text="호노라투스는 모르도르 군대의 장교로 복무한다." />
-
-    <string id="TAOM_hero_1_29" text="사니온은 요새를 지휘하는 검은 누메노르 대장이다." />
-
-    <string id="TAOM_hero_1_17" text="위대한 사우론, 모르도르의 암흑 군주. 이 항목은 그의 무서운 갑옷을 표시하기 위해서만 존재한다." />
-
-    <string id="TAOM_hero_1_18" text="자테아는 모르도르의 어둠의 계층에서 복무한다." />
-
-    <string id="TAOM_hero_1_39" text="데바나는 그림자의 하인으로, 어둠의 기술에 능숙하다." />
-
-    <string id="TAOM_hero_1_30" text="모르굴의 부관 고스모그는 펠레노르 평원에서 모르도르의 군대를 지휘한다. 잔혹하고 교활한 오크인 그는 선두에서 군대를 이끈다." />
-
-    <string id="TAOM_hero_1_30_1" text="스발라 레드팽은 고스모그 휘하의 오크 대장이다." />
-
-    <string id="TAOM_hero_1_49" text="오브론은 모르도르 오크 부대를 이끈다." />
-
-    <string id="TAOM_hero_1_49_1" text="트리스타니아는 어둠의 세력에 복무한다." />
-
-    <string id="TAOM_hero_1_49_2" text="고르디아나는 어둠의 탑 그림자 속에 거한다." />
-
-    <string id="TAOM_hero_1_30_2" text="칼리니아는 모르도르의 어둠의 힘을 섬긴다." />
-
-    <string id="TAOM_hero_1_30_3" text="시네시오스는 그림자의 하인이다." />
-
-    <string id="TAOM_hero_1_56_2" text="루스티카는 어둠의 군대에 복무한다." />
-
-    <string id="TAOM_hero_1_63_2" text="코마타사는 전쟁을 위해 사육된 오크다." />
-
-    <string id="TAOM_hero_1_63_3" text="엘리딜레아는 어둠의 계급에 복무한다." />
-
-    <string id="TAOM_hero_1_63" text="미나스 모르굴의 대장 고르바그는 죽은 도시의 수비대를 이끈다. 그는 오크 기준으로도 교활하다." />
-
-    <string id="TAOM_hero_1_63_1" text="발라리아는 죽은 자의 요새에 복무한다." />
-
-    <string id="TAOM_hero_1_74" text="자카니스는 오크 연대를 지휘한다." />
-
-    <string id="TAOM_hero_1_74_1" text="제나는 모르도르의 어둠의 주인들을 섬긴다." />
-
-    <string id="TAOM_hero_1_54" text="키리스 웅골의 대장 샤그라트는 모르도르로 통하는 고갯길을 지킨다. 그는 오크들 사이에서도 잔혹함으로 알려져 있다." />
-
-    <string id="TAOM_hero_1_54_1" text="콘스탈리아는 키리스 웅골의 탑에 복무한다." />
-
-    <string id="TAOM_hero_1_68" text="타로스는 고갯길에서 복무하는 오크 대장이다." />
-
-    <string id="TAOM_hero_1_68_1" text="실비나는 거미의 고갯길 수비대에 복무한다." />
-
-    <string id="TAOM_hero_1_69_2" text="도라틸라는 어둠의 군대에 복무한다." />
-
-    <string id="TAOM_hero_1_69" text="니폰은 모르도르 국경의 요새를 지휘한다." />
-
-    <string id="TAOM_hero_1_69_1" text="아렐리아나는 변경지대에 복무한다." />
-
-    <string id="TAOM_hero_1_55" text="마스모그는 강력한 우루크하이 전쟁 족장이다." />
-
-    <string id="TAOM_hero_1_55_1" text="메게티아는 어둠의 힘을 섬긴다." />
-
-    <string id="TAOM_hero_1_72" text="볼그는 더러운 자 아조그의 후손인 강력한 오크 족장이다." />
-
-    <string id="TAOM_hero_1_72_1" text="비비아나는 어둠의 계급에 복무한다." />
-
-    <string id="TAOM_hero_SE8_c" text="모르도르의 구덩이에서 사육된 오크." />
-
-    <string id="TAOM_hero_SE9_l" text="모르도르의 요새를 지휘하는 검은 누메노르인 영주." />
-
-    <string id="TAOM_hero_SE9_s" text="어둠의 힘을 지닌 검은 누메노르인 마녀." />
-
-    <string id="TAOM_hero_SE9_c1" text="어둠의 기술을 훈련받은 검은 누메노르인 가문의 후계자." />
-
-    <string id="TAOM_hero_SE9_c2" text="검은 누메노르인 영주의 둘째 자녀." />
-
-    <string id="TAOM_hero_2_1" text="골짜기나라의 왕 바르드 2세는 스마우그를 쓰러뜨린 전설적인 궁수 바르드의 손자다. 그는 에레보르 산기슭의 번영하는 왕국을 다스리며, 외로운 산의 난쟁이들과 동맹을 맺고 있다." />
-
-    <string id="TAOM_hero_2_2" text="아스타는 골짜기나라의 여왕으로, 지혜와 우아함으로 사랑받는다." />
-
-    <string id="TAOM_hero_2_13_1" text="릴리자는 바르딩 귀족 가문의 딸이다." />
-
-    <string id="TAOM_hero_2_13_2" text="안드루타는 왕의 가문에 복무한다." />
-
-    <string id="TAOM_hero_2_13_3" text="루다는 골짜기나라의 젊은 귀족 여성이다." />
-
-    <string id="TAOM_hero_2_13_4" text="테타는 골짜기나라의 귀족 딸이다." />
-
-    <string id="TAOM_hero_2_7" text="시미르는 골짜기나라의 왕자이자 아버지의 왕좌의 후계자다." />
-
-    <string id="TAOM_hero_2_7_1" text="미미르는 골짜기나라 왕가의 왕자다." />
-
-    <string id="TAOM_hero_2_10" text="발라는 골짜기나라의 공주로, 외교와 정치 기술을 훈련받았다." />
-
-    <string id="TAOM_hero_2_13" text="비다르는 북부 변경지대의 영주로, 동방인의 침입에 대비해 경비를 선다." />
-
-    <string id="TAOM_hero_2_3" text="토린 3세 스톤헬름, 산 아래의 왕은 에레보르의 드워프들을 통치한다. 그는 데일과의 고대 동맹을 유지하며 어둠에 맞서 방어할 준비를 하고 있다." />
-
-    <string id="TAOM_hero_2_4" text="시가는 두린 가문의 드워프 귀족 여성이다." />
-
-    <string id="TAOM_hero_2_4_1" text="아폴라네아는 귀족 출신의 드워프 처녀이다." />
-
-    <string id="TAOM_hero_2_8" text="우릭은 에레보르의 드워프 왕자로, 대장간 기술과 전투에 능숙하다." />
-
-    <string id="TAOM_hero_2_11" text="이드룬은 왕실 근위대의 드워프 전사이다." />
-
-    <string id="TAOM_hero_2_111" text="로지볼은 산의 문을 지키는 드워프 전사이다." />
-
-    <string id="TAOM_hero_2_5" text="오리는 소린 오켄쉴드의 동료 중 한 명의 후손인 드워프 군주이다. 그는 에레보르와 데일 사이의 무역로를 관리한다." />
-
-    <string id="TAOM_hero_2_6" text="에르타는 오리의 아내로, 보석 세공 기술로 유명하다." />
-
-    <string id="TAOM_hero_2_9" text="렉은 오리의 영지를 물려받을 후계자로, 무역과 전투 모두에서 훈련받았다." />
-
-    <string id="TAOM_hero_2_12" text="스바나는 무역 가문의 딸이다." />
-
-    <string id="TAOM_hero_2_121" text="오스벤은 산과 도시 사이의 대상을 관리한다." />
-
-    <string id="TAOM_hero_2_14" text="이스반은 동쪽 변경 지대의 군주로, 긴 호수를 지키고 있다." />
-
-    <string id="TAOM_hero_2_14_1" text="발카바는 이스반 군주의 아내이다." />
-
-    <string id="TAOM_hero_2_14_2" text="자베레나는 동쪽 영지의 후계자이다." />
-
-    <string id="TAOM_hero_2_14_3" text="비즈두나는 동쪽 변경 지대의 젊은 귀족이다." />
-
-    <string id="TAOM_hero_2_16" text="보푸르는 에레보르의 드워프 군주로, 전설적인 원정대의 후손이다." />
-
-    <string id="TAOM_hero_2_16_1" text="티야스카는 보푸르의 아내로, 치유 기술에 능숙하다." />
-
-    <string id="TAOM_hero_2_21" text="스베도른은 호수마을의 수비대를 지휘한다." />
-
-    <string id="TAOM_hero_2_21_1" text="이즈덴카는 호수마을의 업무를 관리한다." />
-
-    <string id="TAOM_hero_2_17" text="소린 2세 오켄쉴드는 스마우그로부터 에레보르를 되찾은 영웅으로 기억된다. 그의 영혼은 후손들에게 영감을 준다." />
-
-    <string id="TAOM_hero_2_17_1" text="드라차는 옛 왕의 기억을 살아있게 한다." />
-
-    <string id="TAOM_hero_2_22" text="라쇼넥은 데일의 전사들을 지휘한다." />
-
-    <string id="TAOM_hero_2_22_1" text="제네바는 라쇼넥의 아내이다." />
-
-    <string id="TAOM_hero_2_24" text="알바르는 데일 근위대의 대장이다." />
-
-    <string id="TAOM_hero_2_24_1" text="조리나는 데일의 귀족 부인이다." />
-
-    <string id="TAOM_hero_2_18" text="글로인은 에레보르의 드워프 군주로, 원정대의 김리의 아버지이다." />
-
-    <string id="TAOM_hero_2_18_1" text="조리카는 글로인의 아내이자, 유명한 김리의 어머니이다." />
-
-    <string id="TAOM_hero_2_23" text="갈덴은 데일의 남부 수비대를 지휘한다." />
-
-    <string id="TAOM_hero_2_23_1" text="즐라트카는 갈덴의 딸이다." />
-
-    <string id="TAOM_hero_2_15" text="라타고스트는 국정 문제에 대해 왕에게 조언하는 현명한 고문이다." />
-
-    <string id="TAOM_hero_2_15_1" text="야차나는 왕실 궁정에서 봉사한다." />
-
-    <string id="TAOM_hero_2_15_2" text="밀란카는 궁정의 귀족 여성이다." />
-
-    <string id="TAOM_hero_2_15_3" text="벨리나는 왕실 가문을 섬긴다." />
-
-    <string id="TAOM_hero_2_15_4" text="보반은 데일의 젊은 귀족이다." />
-
-    <string id="TAOM_hero_2_19" text="드왈린은 대단한 명성을 지닌 드워프 전사로, 최초 원정대의 마지막 생존자이다." />
-
-    <string id="TAOM_hero_2_19_1" text="비토미라는 드왈린과 함께 봉사한다." />
-
-    <string id="TAOM_hero_2_20" text="오인은 드워프 장로로, 고대 전승과 치유 기술의 수호자이다." />
-
-    <string id="TAOM_hero_2_20_1" text="키샤는 오인의 아내로, 약초 지식에 능숙하다." />
-
-    <string id="TAOM_hero_S8_u" text="산의 홀을 지키는 노련한 베테랑이다." />
-
-    <string id="TAOM_hero_3_1" text="카두라크는 하라드의 타스크랄로, 남부 군대의 최고 사령관이다. 그는 곤도르에 맞서 모르도르와 동맹을 맺고 자신의 민족의 적들에 맞서 무마킬 전쟁 코끼리를 이끈다." />
-
-    <string id="TAOM_hero_3_2" text="높은 지위의 하라드림 귀족 여성." />
-
-    <string id="TAOM_hero_3_7" text="디율은 타스크랄의 후계자로, 무마킬 기수의 방식으로 훈련받았다." />
-
-    <string id="TAOM_hero_3_10" text="아니다는 타스크랄의 딸로, 궁정 정치에 정통하다." />
-
-    <string id="TAOM_hero_3_13" text="누카르는 하라드의 정예 뱀 근위대를 지휘한다." />
-
-    <string id="TAOM_hero_3_13_1" text="시라는 누카르의 아내이다." />
-
-    <string id="TAOM_hero_3_13_2" text="라자나는 뱀 근위대 사령관의 딸이다." />
-
-    <string id="TAOM_hero_3_8" text="아다스는 하라드림의 전사 왕자이다." />
-
-    <string id="TAOM_hero_3_11" text="아르와는 사막 부족의 공주이다." />
-
-    <string id="TAOM_hero_3_3" text="칼레미르는 동부 하라드림의 족장으로, 오아시스 정착지의 영주이다." />
-
-    <string id="TAOM_hero_3_3_1" text="타리크는 동부 오아시스 영주들의 후계자이다." />
-
-    <string id="TAOM_hero_3_4" text="마라아는 칼레미르의 아내로, 지혜로 알려져 있다." />
-
-    <string id="TAOM_hero_3_5" text="할디르는 해안 하라드림을 지휘하며, 움바르의 해적들과 동맹을 맺고 있다." />
-
-    <string id="TAOM_hero_3_51" text="하칸은 해안 부족의 선장이다." />
-
-    <string id="TAOM_hero_3_12" text="마난은 곤도르의 해안 정착지를 습격한다." />
-
-    <string id="TAOM_hero_3_20" text="카리스는 적국으로 향하는 약탈대를 지휘한다." />
-
-    <string id="TAOM_hero_3_20_1" text="주디라는 카리스의 아내이다." />
-
-    <string id="TAOM_hero_3_20_2" text="아지나는 약탈대 대장의 딸이다." />
-
-    <string id="TAOM_hero_3_6" text="루마는 할디르의 아내로, 그들의 해안 영지를 관리한다." />
-
-    <string id="TAOM_hero_3_9" text="우사이르는 해안 영지의 후계자이다." />
-
-    <string id="TAOM_hero_3_14" text="담자는 사막 황무지를 가로지르는 대상을 이끈다." />
-
-    <string id="TAOM_hero_3_14_1" text="사사이타는 사막 무역로를 관리한다." />
-
-    <string id="TAOM_hero_3_15" text="구지드는 깊은 남쪽의 무마킬 기수들을 지휘한다." />
-
-    <string id="TAOM_hero_3_15_1" text="심라는 무마킬 영주의 아내이다." />
-
-    <string id="TAOM_hero_3_15_2" text="부실라는 젊은 무마킬 기수들을 훈련시킨다." />
-
-    <string id="TAOM_hero_3_16" text="루밀은 황금 깃발 부족의 족장이다." />
-
-    <string id="TAOM_hero_3_16_1" text="파리나는 황금 깃발 족장의 아내이다." />
-
-    <string id="TAOM_hero_3_17" text="오로핀은 극남쪽의 뱀 기수들을 지휘한다." />
-
-    <string id="TAOM_hero_3_17_1" text="샤이마는 오로핀의 아내이다." />
-
-    <string id="TAOM_hero_3_17_2" text="사니트는 뱀 기수들의 후계자이다." />
-
-    <string id="TAOM_hero_3_21" text="우카이는 북부 대상을 상대로 사막 약탈자들을 이끈다." />
-
-    <string id="TAOM_hero_3_21_1" text="아시사는 약탈대 대장의 아내이다." />
-
-    <string id="TAOM_hero_3_18" text="아란톤은 남쪽의 부유한 상인 왕자이다." />
-
-    <string id="TAOM_hero_3_18_1" text="파르자나는 상인 왕자의 딸이다." />
-
-    <string id="TAOM_hero_3_18_2" text="하피사는 무역 관계를 관리한다." />
-
-    <string id="TAOM_hero_3_18_3" text="주아드는 수련 중인 젊은 상인이다." />
-
-    <string id="TAOM_hero_3_18_4" text="잘파르는 무역 대상을 호위한다." />
-
-    <string id="TAOM_hero_3_19" text="아에티리온은 북부 변경의 요새를 지휘한다." />
-
-    <string id="TAOM_hero_3_19_1" text="살마는 변경 사령관의 아내이다." />
-
-    <string id="TAOM_hero_3_19_2" text="줄라이카는 변경 수비대와 함께 훈련한다." />
-
-    <string id="TAOM_hero_3_19_3" text="술하나는 변경의 귀족이다." />
-
-    <string id="TAOM_hero_3_23" text="Qahin은 적의 영토로 정찰병들을 이끈다." />
-
-    <string id="TAOM_hero_3_23_1" text="Sukayna는 정찰대장의 아내이다." />
-
-    <string id="TAOM_hero_3_22" text="Duilin은 사막 부족의 궁수들을 지휘한다." />
-
-    <string id="TAOM_hero_3_22_1" text="Yamina는 궁수 지휘관의 아내이다." />
-
-    <string id="TAOM_hero_3_22_2" text="Suna는 젊은 궁수들을 훈련시킨다." />
-
-    <string id="TAOM_hero_3_22_3" text="Zanuwa는 부족의 숙련된 궁수이다." />
-
-    <string id="TAOM_hero_3_22_4" text="Hajara는 사막의 감시탑을 지킨다." />
-
-    <string id="TAOM_hero_4_1" text="로한의 왕 세오덴은 에도라스의 메두셀드에서 통치한다. 한때 사루만의 하인 그리마에게 현혹되었으나, 간달프에 의해 해방되어 헬름 협곡과 펠렌노르 평원에서 그의 백성을 영광으로 이끌었다." />
-
-    <string id="TAOM_hero_4_2" text="엘프힐드는 로한의 왕비였으며, 세오드레드의 어머니였다. 그녀는 출산 중 사망했으며, 이는 세오덴의 치세에 그림자를 드리운 슬픔이었다." />
-
-    <string id="TAOM_hero_4_7" text="세오드레드는 세오덴 왕의 외아들이자 로한의 왕자였다. 그는 사루만의 우루크-하이에 맞서 이센 여울을 방어하다 전사했다." />
-
-    <string id="TAOM_hero_4_10" text="Elys는 로히림 궁정의 귀족 부인이다." />
-
-    <string id="TAOM_hero_4_13" text="Romund는 왕실 근위대의 대장으로 복무한다." />
-
-    <string id="TAOM_hero_4_14" text="Morcon은 왕의 가신단에서 신뢰받는 대장이다." />
-
-    <string id="TAOM_hero_4_141" text="Amorcon은 근위대에서 그의 친족과 함께 복무한다." />
-
-    <string id="TAOM_hero_4_15" text="Erdurand는 세오덴의 가신단 기병이다." />
-
-    <string id="TAOM_hero_4_3" text="세오드윈은 세오덴 왕의 누이이자 에오메르와 에오윈의 어머니였다. 그녀는 남편 에오문드가 오크에게 살해된 후 슬픔으로 사망했다." />
-
-    <string id="TAOM_hero_4_3_1" text="에오메르 에아디그는 제3원수이자 세오덴의 조카이며 왕위 계승자이다. 그는 동부 평원의 기병들을 맹렬한 충성심으로 이끈다." />
-
-    <string id="TAOM_hero_4_4" text="Elthild는 에오포링 가문의 귀족 부인이다." />
-
-    <string id="TAOM_hero_4_8" text="Furnhard는 에오메르의 휘하에서 신뢰받는 기병으로 복무한다." />
-
-    <string id="TAOM_hero_4_11" text="Liena는 왕실 가신단을 섬긴다." />
-
-    <string id="TAOM_hero_4_6" text="그림슬라드의 그림볼드는 서부 평원의 기병들을 지휘한다. 맹렬한 전사로서 이센 여울을 지켰으며, 후에 펠렌노르에서 영웅적으로 전사했다." />
-
-    <string id="TAOM_hero_4_6_1" text="Deorwyn은 그림볼드의 지휘권을 계승할 후계자이다." />
-
-    <string id="TAOM_hero_4_5" text="Unthery는 서부 평원 기병대의 대장으로 복무한다." />
-
-    <string id="TAOM_hero_4_9" text="Thomund는 서부 평원 기병 중대를 지휘한다." />
-
-    <string id="TAOM_hero_4_12" text="Silvind는 서부 평원의 방패 여전사이다." />
-
-    <string id="TAOM_hero_4_121" text="Lasand는 서부 평원 수비대에서 복무한다." />
-
-    <string id="TAOM_hero_4_16" text="서부 평원의 영주 에르켄브란드는 뿔성의 요새를 지휘한다. 그는 간달프와 함께 헬름 협곡에 도착하여 전투의 흐름을 역전시켰다." />
-
-    <string id="TAOM_hero_4_16_1" text="Merthu는 에르켄브란드의 아내이자 뿔성의 영주 부인이다." />
-
-    <string id="TAOM_hero_4_17" text="Elbet는 에르켄브란드의 가신단에서 복무한다." />
-
-    <string id="TAOM_hero_4_18" text="Amalgun은 에르켄브란드의 후계자이다." />
-
-    <string id="TAOM_hero_4_181" text="Arthamund는 뿔성 수비대의 대장으로 복무한다." />
-
-    <string id="TAOM_hero_4_19" text="Asela는 디핑 협곡을 지키는 방패 여전사이다." />
-
-    <string id="TAOM_hero_4_25" text="Lucand는 동부 목초지의 기병들을 지휘한다." />
-
-    <string id="TAOM_hero_4_25_1" text="Bertliana는 Lucand의 아내이다." />
-
-    <string id="TAOM_hero_4_21" text="오르들라싱 가문의 Cuthraed는 동부 국경을 순찰한다." />
-
-    <string id="TAOM_hero_4_20" text="Varmund는 알드부르크 수비대를 지휘한다." />
-
-    <string id="TAOM_hero_4_20_1" text="Ingeltrud는 Varmund의 아내이자 알드부르크의 영주 부인이다." />
-
-    <string id="TAOM_hero_4_22" text="첼문딩 가문의 Wulf는 북부 계곡의 기병들을 이끈다." />
-
-    <string id="TAOM_hero_4_22_1" text="Sunnifa는 Wulf의 아내이다." />
-
-    <string id="TAOM_hero_4_23" text="Marhath는 남부 초원의 말 사육자들을 이끈다." />
-
-    <string id="TAOM_hero_4_23_1" text="울프윈은 마르하스의 딸로, 숙련된 기병이다." />
-
-    <string id="TAOM_hero_4_23_2" text="엘레두란은 왕의 군대를 위해 군마를 훈련한다." />
-
-    <string id="TAOM_hero_4_23_3" text="엘레두란 2세는 말 관리인으로 복무한다." />
-
-    <string id="TAOM_hero_4_24" text="그리마 벌레혀는 세오덴의 조언자였지만, 실제로는 사루만의 간첩이었다. 그의 속삭이는 거짓말은 왕의 마음을 오염시켰으나 간달프가 그 마법을 깨뜨렸다." />
-
-    <string id="TAOM_hero_4_24_1" text="로한의 귀부인 에오윈은 에오메르의 여동생이자 세오덴의 조카이다. 그녀는 펠렌노르 전투에서 마술사왕을 쓰러뜨려 시대의 공포를 물리쳤다." />
-
-    <string id="TAOM_hero_4_24_2" text="엘프그림은 왕실 기병대의 기병으로 복무한다." />
-
-    <string id="TAOM_hero_4_24_3" text="헤루브란드는 왕의 전당을 수호한다." />
-
-    <string id="TAOM_hero_4_24_4" text="시게베르트는 로한의 국경을 순찰한다." />
-
-    <string id="TAOM_hero_4_26" text="페릭은 로한의 협곡 일대의 기병들을 지휘한다." />
-
-    <string id="TAOM_hero_4_26_1" text="라인가르다는 협곡의 방패전사 여인이다." />
-
-    <string id="TAOM_hero_4_27" text="에텔라핑의 아엘레는 던랜드의 습격으로부터 골짜기를 수호한다." />
-
-    <string id="TAOM_hero_4_27_1" text="바에르부르크는 아엘레의 아내이다." />
-
-    <string id="TAOM_hero_V9_u" text="지역 영주에게 조언을 하는 노련한 기병." />
-
-    <string id="TAOM_hero_4_28" text="모르카르가스의 파스트헬름은 남부 초소를 지휘한다." />
-
-    <string id="TAOM_hero_4_28_1" text="모르카르는 파스트헬름의 아들이다." />
-
-    <string id="TAOM_hero_4_28_2" text="헤레스위스는 남부 초소 사령관의 딸이다." />
-
-    <string id="TAOM_hero_5_1" text="칸드의 대장군 바르굴은 용맹한 바리아그 기병들을 이끈다. 모르도르와의 동맹으로 그의 전사들은 중간계의 전쟁에서 곤도르에 맞서 싸운다." />
-
-    <string id="TAOM_hero_5_1_1" text="대장군의 수행부대 전사." />
-
-    <string id="TAOM_hero_5_3" text="에르게온은 신속한 기병 전술로 유명한 동부 바리아그 부족들을 이끄는 족장이다." />
-
-    <string id="TAOM_hero_5_3_1" text="라나온은 에르게온의 전단의 후계자이다." />
-
-    <string id="TAOM_hero_5_3_2" text="라도구알은 에르게온의 군대에서 대장으로 복무한다." />
-
-    <string id="TAOM_hero_5_4" text="니윈은 에르게온의 아내로, 치유술에 능하다." />
-
-    <string id="TAOM_hero_5_5" text="멜리디르는 곤도르 땅으로 약탈대를 이끈다." />
-
-    <string id="TAOM_hero_5_5_1" text="에일리는 부족의 말 떼를 관리한다." />
-
-    <string id="TAOM_hero_5_6" text="알카에아는 멜리디르의 아내이다." />
-
-    <string id="TAOM_hero_5_7" text="칸드의 바리아그 전사 족장." />
-
-    <string id="TAOM_hero_5_8" text="세인은 바리아그 기병 중대를 지휘한다." />
-
-    <string id="TAOM_hero_5_9" text="컬하른은 명성이 높아지는 바리아그 전사이다." />
-
-    <string id="TAOM_hero_5_91" text="테간은 컬하른과 함께 복무한다." />
-
-    <string id="TAOM_hero_5_10" text="코레인은 대장군의 궁정 바리아그 귀족이다." />
-
-    <string id="TAOM_hero_5_11" text="알린네스는 바리아그 귀족 여인이다." />
-
-    <string id="TAOM_hero_5_12" text="위수인은 젊은 바리아그 기병들을 훈련한다." />
-
-    <string id="TAOM_hero_5_13" text="무인세르는 북부 지역의 약탈대를 지휘한다." />
-
-    <string id="TAOM_hero_5_131" text="라스는 무인세르의 지휘 하에 복무한다." />
-
-    <string id="TAOM_hero_5_13_1" text="베아사그는 북부 부족의 바리아그 전사이다." />
-
-    <string id="TAOM_hero_5_15" text="프린도르는 칸드로 들어가는 산맥 협로를 수호한다." />
-
-    <string id="TAOM_hero_5_15_1" text="플로라이는 산맥 수호자의 딸이다." />
-
-    <string id="TAOM_hero_5_15_2" text="베이트린은 산맥 길을 순찰한다." />
-
-    <string id="TAOM_hero_5_15_3" text="디아르바인은 높은 협로를 수호한다." />
-
-    <string id="TAOM_hero_5_14" text="루이한은 서부 평원의 바리아그 기병들을 지휘한다." />
-
-    <string id="TAOM_hero_5_14_1" text="에아비르는 루이찬의 아내이다." />
-
-    <string id="TAOM_hero_5_16" text="아에론은 중앙 초원의 전사들을 이끈다." />
-
-    <string id="TAOM_hero_5_16_1" text="리아신은 아에론의 아내이다." />
-
-    <string id="TAOM_hero_5_16_2" text="가웬은 아에론의 전단의 후계자이다." />
-
-    <string id="TAOM_hero_5_17" text="아라드위르는 동부 변경 부대를 지휘한다." />
-
-    <string id="TAOM_hero_5_17_1" text="브리간은 아라드위르의 아내이다." />
-
-    <string id="TAOM_hero_5_18" text="브라녹은 적 영토로 정찰병들을 이끈다." />
-
-    <string id="TAOM_hero_5_18_1" text="세오나그는 브라녹의 아내이다." />
-
-    <string id="TAOM_hero_5_19" text="페나간은 결투 실력으로 유명한 바리아그 투사이다." />
-
-    <string id="TAOM_hero_5_20" text="시아라무스는 칸드의 전차 전사들을 지휘한다." />
-
-    <string id="TAOM_hero_5_21" text="카르피드는 국경을 따라 바리아그 약탈자들을 이끈다." />
-
-    <string id="TAOM_hero_5_21_1" text="베아타그는 카르피드의 아내이다." />
-
-    <string id="TAOM_hero_5_21_2" text="타오르세는 카르피드의 약탈단의 후계자이다." />
-
-    <string id="TAOM_hero_5_22" text="피아라드는 남부 교역로를 지킨다." />
-
-    <string id="TAOM_hero_6_1" text="룬의 로케-칸 자믹 자미안은 동방인들의 황금 왕국을 통치한다. 그의 조상들은 사우론을 섬겼으며, 그는 그 어두운 동맹을 이어가며 서방의 땅을 정복하는 꿈을 꾼다." />
-
-    <string id="TAOM_hero_6_2" text="마라이아는 로케-칸의 아내이자 황금 왕국의 여왕이다." />
-
-    <string id="TAOM_hero_6_3" text="바가이는 왕실 근위대의 대장으로 복무한다." />
-
-    <string id="TAOM_hero_6_4" text="구르틸름 살루리안은 룬의 서부 군대를 지휘한다. 남편이 죽은 후, 그녀는 강철 같은 결의로 지휘권을 잡았다." />
-
-    <string id="TAOM_hero_6_5" text="이르보 니카티안은 동부 초원의 유명한 기마 궁수인 아르키트 씨족을 이끈다." />
-
-    <string id="TAOM_hero_6_51" text="카다는 아르키트 씨족의 후계자이다." />
-
-    <string id="TAOM_hero_6_6" text="수란은 남부 부족의 전사들을 지휘한다." />
-
-    <string id="TAOM_hero_6_7" text="차간은 룬의 왕자이자 황금 왕국의 후계자이다." />
-
-    <string id="TAOM_hero_6_8" text="에수르는 구르틸름의 군대의 전사이다." />
-
-    <string id="TAOM_hero_6_81" text="나얀타이는 구르틸름의 군대에서 대장으로 복무한다." />
-
-    <string id="TAOM_hero_6_9" text="테문은 아르키트 씨족의 전사이다." />
-
-    <string id="TAOM_hero_6_10" text="알리진은 왕실 가문의 왕자이다." />
-
-    <string id="TAOM_hero_6_101" text="볼라트는 왕실에서 복무한다." />
-
-    <string id="TAOM_hero_6_11" text="야나는 구르틸름의 군대의 귀족이다." />
-
-    <string id="TAOM_hero_6_12" text="아바가이는 아르키트 영지의 후계자이다." />
-
-    <string id="TAOM_hero_6_13" text="보르투는 왕실 가문의 귀족이다." />
-
-    <string id="TAOM_hero_6_15" text="오라구르는 아르키트 기마 궁수들을 이끈다." />
-
-    <string id="TAOM_hero_6_15_1" text="코리진은 오라구르의 아내이다." />
-
-    <string id="TAOM_hero_6_15_2" text="세첸은 오라구르의 지휘권의 후계자이다." />
-
-    <string id="TAOM_hero_6_16" text="아크보스 카르미안은 룬의 남부 국경을 지휘한다." />
-
-    <string id="TAOM_hero_6_16_1" text="참부이는 아크보스의 아내이다." />
-
-    <string id="TAOM_hero_6_16_2" text="우나겐은 아크보스의 지휘권의 후계자이다." />
-
-    <string id="TAOM_hero_6_17" text="암두르 암두리드는 동부 초원의 강력한 씨족을 이끈다." />
-
-    <string id="TAOM_hero_6_17_1" text="에르게네는 암두르의 아내이다." />
-
-    <string id="TAOM_hero_6_17_2" text="예숨은 암두리드 영지의 후계자이다." />
-
-    <string id="TAOM_hero_6_18" text="루스칸 쿤돌라르는 서부 지방의 전사들을 지휘한다." />
-
-    <string id="TAOM_hero_6_18_1" text="틸룬은 루스칸의 아내이다." />
-
-    <string id="TAOM_hero_6_18_2" text="차군은 쿤돌라르의 후계자이다." />
-
-    <string id="TAOM_hero_6_19" text="바케랄탄 쿤돌라르는 루스칸의 형제로, 기병 정찰대를 지휘한다." />
-
-    <string id="TAOM_hero_6_19_1" text="소카타이는 바케랄탄의 아내이다." />
-
-    <string id="TAOM_hero_6_19_2" text="코르테는 바케랄탄의 정찰대 후계자이다." />
-
-    <string id="TAOM_hero_6_20" text="쿠루브라 마샤키안은 룬의 북부 부족들을 지휘한다." />
-
-    <string id="TAOM_hero_6_20_1" text="지구르는 쿠루브라의 아내이다." />
-
-    <string id="TAOM_hero_K8_u" text="북부 족장에게 조언하는 노련한 전사." />
-
-    <string id="TAOM_hero_6_21" text="몰룩 일노리아는 강력한 기마 전사 일족을 지휘한다." />
-
-    <string id="TAOM_hero_6_21_1" text="에사체이는 몰룩의 아내이다." />
-
-    <string id="TAOM_hero_6_22" text="샤칼 2세 샤칼리안은 룬 해의 부유한 교역 일족을 다스린다." />
-
-    <string id="TAOM_hero_6_22_1" text="에셀렌은 샤칼의 아내이다." />
-
-    <string id="TAOM_hero_6_23" text="후즈-마르고즈 후즈는 서부 변경의 요새 수비대를 지휘한다." />
-
-    <string id="TAOM_hero_6_24" text="니카스 아데키그는 룬으로 들어오는 남부 고갯길을 지킨다." />
-
-    <string id="TAOM_hero_A9_l" text="남부 황무지의 하라드림 족장." />
-
-    <string id="TAOM_hero_A9_s" text="남부 황무지 족장의 아내." />
-
-    <string id="TAOM_hero_A9_c" text="남부 황무지 족장의 후계자." />
-
-    <string id="TAOM_hero_A9_u" text="남부 부족의 전사." />
-
-    <string id="TAOM_hero_V11_l" text="서부 계곡의 로히림 영주." />
-
-    <string id="TAOM_hero_V11_u" text="영주에게 조언하는 노련한 기병." />
-
-    <string id="TAOM_hero_V11_c1" text="서부 계곡 영지의 후계자." />
-
-    <string id="TAOM_hero_V11_c2" text="서부 계곡 영주의 둘째 자녀." />
-
-    <string id="TAOM_hero_S9_l" text="북부 진입로를 지키는 데일의 귀족." />
-
-    <string id="TAOM_hero_S9_m" text="북부 바르딩 일족의 여족장." />
-
-    <string id="TAOM_hero_S9_c" text="북부 영지의 젊은 후계자." />
-
-    <string id="TAOM_hero_S9_u" text="북부 수비대의 노련한 전사." />
-
-    <string id="TAOM_hero_K9_l" text="먼 동방인 부족의 족장." />
-
-    <string id="TAOM_hero_K9_s" text="먼 족장의 아내." />
-
-    <string id="TAOM_hero_K9_c1" text="먼 부족 영지의 후계자." />
-
-    <string id="TAOM_hero_K9_c2" text="먼 족장의 둘째 자녀." />
-
-    <string id="TAOM_hero_B8_l" text="동부 언덕의 바리아그 전쟁군주." />
-
-    <string id="TAOM_hero_B8_s" text="바리아그 전쟁군주의 아내." />
-
-    <string id="TAOM_hero_B8_c" text="바리아그 전쟁군주의 후계자." />
-
-  </strings>
-
-</base>
-
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="TAOM_dunland" text="던랜드" />
+    <string id="TAOM_dunland_short" text="던랜드" />
+    <string id="TAOM_dunland_title" text="던랜드 부족연합" />
+    <string id="TAOM_dunland_ruler" text="브레닌" />
+    <string id="TAOM_dunland_desc" text="구릉과 울창한 숲으로 이루어진 거칠고 황량한 땅 던랜드는 사나우며 독립적인 던랜드인들의 고향이다. 이웃들과 자주 마찰을 빚으며 소외당해 온 던랜드 사람들은 수세기에 걸친 투쟁과 생존으로 단련되었다. 그들의 족장들은 힘과 교활함으로 부족들을 이끌며, 복수와 자유라는 공통의 깃발 아래 하나가 된다. 맹렬한 전사들과 숙련된 사냥꾼들로 알려진 던랜드인들은 도끼, 창, 활을 선호하며, 선조의 땅과의 깊은 유대에서 비롯된 집요함으로 싸운다. 그들의 방식이 다른 이들에게는 원시적으로 보일지 모르나, 던랜드인들은 자랑스럽고 지략이 풍부하며, 가운데땅에서 정당한 자리를 되찾을 준비가 되어 있다." />
+    <string id="TAOM_gondor" text="곤도르" />
+    <string id="TAOM_gondor_short" text="곤도르" />
+    <string id="TAOM_gondor_title" text="곤도르 집정관국" />
+    <string id="TAOM_gondor_ruler" text="집정관" />
+    <string id="TAOM_gondor_desc" text="곤도르는 가운데땅에서 자랑스러운 힘과 회복력의 보루로 우뚝 서 있으며, 우뚝 솟은 백색 석조 도시들과 고대의 혈통, 숙련된 군대로 유명하다. 누메노르의 몰락 이후 엘렌딜과 그의 아들들에 의해 건국된 곤도르는 오랫동안 동쪽에서 커져가는 어둠에 맞서 인간의 왕국들을 지켜왔다. 수도 미나스 티리스를 중심으로, 이 왕국은 용맹, 규율, 그리고 자유민족에 대한 충성심으로 명성이 높다. 모르도르와의 오랜 분쟁에 시달렸지만, 곤도르의 전사들과 집정관들은 희망을 지켜왔으며, 왕의 귀환으로 옛 영광을 되찾기를 기다리고 있다." />
+    <string id="TAOM_mordor" text="모르도르" />
+    <string id="TAOM_mordor_short" text="모르도르" />
+    <string id="TAOM_mordor_title" text="모르도르 지배령" />
+    <string id="TAOM_mordor_ruler" text="암흑군주" />
+    <string id="TAOM_mordor_desc" text="모르도르는 그림자 속에서 만들어지고 암흑군주 사우론의 지배를 받는 어둡고 황량한 영역이다. 우뚝 솟은 검은 산맥 뒤에 자리한 이 왕국은 오크 군대, 무자비한 트롤들, 그리고 전쟁 무기를 만드는 불타는 대장간으로 가득 차 있다. 바라드두르의 요새에서 사우론은 가운데땅 전역에 자신의 지배를 확장할 막강한 군세를 지휘한다. 모르도르의 하늘은 재로 뒤덮여 있고, 그 땅은 황폐하니, 사우론의 뒤틀린 야망과 어둠의 마법에 어울리는 영토이다." />
+    <string id="TAOM_dale" text="데일" />
+    <string id="TAOM_dale_short" text="데일" />
+    <string id="TAOM_dale_title" text="데일 왕국" />
+    <string id="TAOM_dale_ruler" text="왕" />
+    <string id="TAOM_dale_desc" text="달리는 강의 물이 외로운 산의 그림자와 만나는 곳에 데일이 서 있다. 인간의 도시는 다섯 군대 전투의 여파로 폐허에서 재건되었다. 한때 음악과 환희의 장소였으며, 무역과 황금 시장의 전당이었던 데일은 에레보르의 보호 아래 번영했다. 그 상인들은 켈두인 강을 따라 빠른 배를 저어 내려갔고, 거리에는 웃음소리가 울려 퍼졌으며, 그 백성들은 평화를 누렸다. 그러나 용이 왔을 때 평화는 산산이 부서졌다. 북쪽에서 온 날개 달린 죽음 스마우그가 화염과 분노 속에 에레보르로 내려왔고, 데일은 가장 먼저 고통받았다. 도시는 불탔고, 백성들은 도망쳤으며, 거의 2세기 동안 자랑스러운 돔형 탑들은 고요하고 부서진 채 서 있었으니, 슬픔의 기념비였다. 그러나 폐허가 데일 이야기의 끝은 아니다. 용의 죽음과 함께, 활잡이 바르드는 다시 깃발을 들어올리고 그의 백성을 집으로 불렀다. 재와 돌에서 데일은 다시 일어났으니, 예전 모습이 아니라 더 위대한 모습으로. 바르드 왕과 그의 아들 베인 치하에서 도시는 다시 번영하며, 그 성벽은 견고하고, 백성은 자랑스러우며, 시선은 언제나 경계를 늦추지 않는다. 데일의 사람들은 수에서 강대하지도, 마법에서 고대하지도 않지만, 확고부동하고 진실하다." />
+    <string id="TAOM_harad" text="하라드" />
+    <string id="TAOM_harad_short" text="하라드" />
+    <string id="TAOM_harad_title" text="하르완의 타스크랄란" />
+    <string id="TAOM_harad_ruler" text="타스크랄" />
+    <string id="TAOM_harad_desc" text="곤도르 남쪽의 광대하고 다채로운 지역 하라드는 건조한 사막, 무성한 정글, 비옥한 오아시스를 아우른다. 그 지형은 백성만큼이나 다양하며, 광활한 모래언덕이 울창한 숲과 생명이 넘치는 강으로 이어진다. 하라드의 역사는 고대 전설로 물들어 있으며, 웅장한 도시들과 요새들이 풍경을 점점이 수놓고 있으니, 그 유산이 시대를 통해 메아리치는 통치자들이 세운 것이다. 하라드와이스의 대사막은 북쪽 변경과 중심부를 가르며, 남쪽 해안은 무역과 해적 활동으로 붐빈다. 사우론의 깃발 아래 통합된 하라드의 수많은 부족과 왕국들은 깊이 뿌리박힌 전통을 전쟁 노력에 쏟아부으며, 이 활기찬 땅을 문화와 분쟁의 강대국으로 변모시킨다." />
+    <string id="TAOM_rohan" text="로한" />
+    <string id="TAOM_rohan_short" text="로한" />
+    <string id="TAOM_rohan_title" text="로한 왕국" />
+    <string id="TAOM_rohan_ruler" text="왕" />
+    <string id="TAOM_rohan_desc" text="리더마크로 알려진 로한은 광활한 평원과 구릉이 펼쳐진 거대한 왕국이며, 숙련된 기병이자 용맹한 전사인 로히림이 거주한다. 곤도르를 돕기 위한 전설적인 진군 이후 젊은 에오를에 의해 건국된 로한은 오랫동안 모르도르의 어둠에 맞서 곤도르의 확고한 동맹으로 서 왔다. 에도라스의 황금 전당 메두셀드에서 왕들은 말과 기수의 유대로 사는 자랑스럽고 회복력 있는 백성을 다스린다. 로히림은 기병 돌격, 용맹의 노래, 그리고 흔들리지 않는 용기로 유명하다. 사루만의 그림자가 변경을 위협했지만, 로한의 아들딸들은 언제나 무기를 들 준비가 되어 있으며, 고향과 가운데땅의 자유민족을 지킨다." />
+    <string id="TAOM_khand" text="칸드" />
+    <string id="TAOM_khand_short" text="칸드" />
+    <string id="TAOM_khand_title" text="칸드의 바람기수" />
+    <string id="TAOM_khand_ruler" text="쿠드리아그" />
+    <string id="TAOM_khand_desc" text="구릉 초원과 건조한 평원으로 이루어진 험준한 땅 칸드는 모르도르 남동쪽에 위치하며 동서를 잇는 중요한 통로 역할을 한다. 그 백성인 바리아그족은 사나우며 유목민적이고, 빠른 말과 치명적인 곡도로 유명하다. 가혹한 환경 속에서 살아가며, 그들은 약탈자이자 전사로서의 기량을 연마했으며, 종종 이웃들과 충돌하고 가장 높은 값을 부르는 자를 위해 용병으로 일한다. 칸드의 충성은 오랫동안 암흑군주의 구애를 받아왔으며, 많은 전사들이 모르도르의 그림자 아래 전쟁에 참전했다. 그러나 바리아그족은 자랑스럽고 독립적인 백성이며, 바람 부는 평원에 흩어진 요새화된 야영지에서 통치하는 자신들의 부족과 족장들에게 먼저 충성한다." />
+    <string id="TAOM_rhun" text="룬" />
+    <string id="TAOM_rhun_short" text="룬" />
+    <string id="TAOM_rhun_title" text="룬의 황금 왕국" />
+    <string id="TAOM_rhun_ruler" text="로케-칸" />
+    <string id="TAOM_rhun_desc" text="룬 해 너머 먼 곳, 시든 초원과 잊혀진 제국들의 붉은 먼지를 지나면, 광활하고 베일에 싸인 동방이 펼쳐진다. 이곳에는 곤도르의 부상보다도 앞선 역사를 지닌 자랑스럽고 고대의 민족, 동방인들이 살고 있다. 그들의 땅은 내해의 해안에서부터 알려진 세계의 끝을 나타내는 그림자 드리운 산맥까지, 넓은 하늘 아래 끝없이 뻗어 있다. 동방인들은 단일 국가가 아니라, 힘에 대한 숭배와 서방에 대한 오랜 원한의 기억으로만 결속된 부족들과 왕국들의 태피스트리이다. 어떤 이들은 권력과 복수의 약속에 이끌려 암흑군주를 기꺼이 섬겼고, 다른 이들은 옛 방식과 더 오래된 신들을 고수하며 저항한다. 그들의 전사들은 규율과 전차 및 활 숙련도로 두려움의 대상이며, 그들의 황금 갑옷은 동방의 태양 아래 불처럼 빛난다." />
+    <string id="aom_dunland_male_name_1" text="브로다르" />
+    <string id="aom_dunland_male_name_2" text="던릭" />
+    <string id="aom_dunland_male_name_3" text="에오간" />
+    <string id="aom_dunland_male_name_4" text="그림달" />
+    <string id="aom_dunland_male_name_5" text="타른" />
+    <string id="aom_dunland_male_name_6" text="카독" />
+    <string id="aom_dunland_male_name_7" text="모르드란" />
+    <string id="aom_dunland_male_name_8" text="핀릭" />
+    <string id="aom_dunland_male_name_9" text="카에독" />
+    <string id="aom_dunland_male_name_10" text="토를란" />
+    <string id="aom_dunland_male_name_11" text="라그노르" />
+    <string id="aom_dunland_male_name_12" text="엘드릭" />
+    <string id="aom_dunland_male_name_13" text="할릭" />
+    <string id="aom_dunland_male_name_14" text="울릭" />
+    <string id="aom_dunland_male_name_15" text="케르녹" />
+    <string id="aom_dunland_male_name_16" text="브리노르" />
+    <string id="aom_dunland_male_name_17" text="고란" />
+    <string id="aom_dunland_male_name_18" text="토르독" />
+    <string id="aom_dunland_male_name_19" text="핀릭" />
+    <string id="aom_dunland_male_name_20" text="하록" />
+    <string id="aom_dunland_male_name_21" text="카엘란" />
+    <string id="aom_dunland_male_name_22" text="울다르" />
+    <string id="aom_dunland_male_name_23" text="토란" />
+    <string id="aom_dunland_male_name_24" text="그렐릭" />
+    <string id="aom_dunland_male_name_25" text="브라도르" />
+    <string id="aom_dunland_male_name_26" text="모를란" />
+    <string id="aom_dunland_male_name_27" text="아드릭" />
+    <string id="aom_dunland_male_name_28" text="카드록" />
+    <string id="aom_dunland_male_name_29" text="그랄도르" />
+    <string id="aom_dunland_male_name_30" text="파르녹" />
+    <string id="aom_dunland_male_name_31" text="울릭" />
+    <string id="aom_dunland_male_name_32" text="브렌독" />
+    <string id="aom_dunland_male_name_33" text="에아드릭" />
+    <string id="aom_dunland_male_name_34" text="트랄도르" />
+    <string id="aom_dunland_male_name_35" text="울간" />
+    <string id="aom_dunland_male_name_36" text="고란" />
+    <string id="aom_dunland_male_name_37" text="라그날드" />
+    <string id="aom_dunland_male_name_38" text="던모르" />
+    <string id="aom_dunland_male_name_39" text="소를리크" />
+    <string id="aom_dunland_male_name_40" text="핀왈드" />
+    <string id="aom_dunland_male_name_41" text="브릴단" />
+    <string id="aom_dunland_male_name_42" text="그란타르" />
+    <string id="aom_dunland_male_name_43" text="할모드" />
+    <string id="aom_dunland_male_name_44" text="스리단" />
+    <string id="aom_dunland_male_name_45" text="에오를룬드" />
+    <string id="aom_dunland_male_name_46" text="가레스" />
+    <string id="aom_dunland_male_name_47" text="하르윅" />
+    <string id="aom_dunland_male_name_48" text="길단" />
+    <string id="aom_dunland_male_name_49" text="울프람" />
+    <string id="aom_dunland_male_name_50" text="소라그" />
+    <string id="aom_dunland_female_name_1" text="브린디스" />
+    <string id="aom_dunland_female_name_2" text="에이디스" />
+    <string id="aom_dunland_female_name_3" text="모르윈" />
+    <string id="aom_dunland_female_name_4" text="그리슬라" />
+    <string id="aom_dunland_female_name_5" text="할다" />
+    <string id="aom_dunland_female_name_6" text="티라" />
+    <string id="aom_dunland_female_name_7" text="카에드윈" />
+    <string id="aom_dunland_female_name_8" text="엘린" />
+    <string id="aom_dunland_female_name_9" text="핀윈" />
+    <string id="aom_dunland_female_name_10" text="탈다" />
+    <string id="aom_dunland_female_name_11" text="그렐윈" />
+    <string id="aom_dunland_female_name_12" text="하르윈" />
+    <string id="aom_dunland_female_name_13" text="알디스" />
+    <string id="aom_dunland_female_name_14" text="윈라" />
+    <string id="aom_dunland_female_name_15" text="브리테아" />
+    <string id="aom_dunland_female_name_16" text="에오라" />
+    <string id="aom_dunland_female_name_17" text="틸다" />
+    <string id="aom_dunland_female_name_18" text="그란나" />
+    <string id="aom_dunland_female_name_19" text="엘윈" />
+    <string id="aom_dunland_female_name_20" text="모를라" />
+    <string id="aom_dunland_female_name_21" text="하를라" />
+    <string id="aom_dunland_female_name_22" text="핀라" />
+    <string id="aom_dunland_female_name_23" text="그리사" />
+    <string id="aom_dunland_female_name_24" text="스리사" />
+    <string id="aom_dunland_female_name_25" text="할윈" />
+    <string id="aom_dunland_female_name_26" text="카엘린" />
+    <string id="aom_dunland_female_name_27" text="그렐윈" />
+    <string id="aom_dunland_female_name_28" text="타라" />
+    <string id="aom_dunland_female_name_29" text="모라" />
+    <string id="aom_dunland_female_name_30" text="브리나" />
+    <string id="aom_dunland_female_name_31" text="틸다" />
+    <string id="aom_dunland_female_name_32" text="엘리스" />
+    <string id="aom_dunland_female_name_33" text="카엘윈" />
+    <string id="aom_dunland_female_name_34" text="알드라" />
+    <string id="aom_dunland_female_name_35" text="하라" />
+    <string id="aom_dunland_female_name_36" text="윈라" />
+    <string id="aom_dunland_female_name_37" text="틸다" />
+    <string id="aom_dunland_female_name_38" text="그레슬라" />
+    <string id="aom_dunland_female_name_39" text="핀윈" />
+    <string id="aom_dunland_female_name_40" text="엘라" />
+    <string id="aom_dunland_female_name_41" text="모르윈" />
+    <string id="aom_dunland_female_name_42" text="할다" />
+    <string id="aom_dunland_female_name_43" text="카에들라" />
+    <string id="aom_dunland_female_name_44" text="타나" />
+    <string id="aom_dunland_female_name_45" text="브린델" />
+    <string id="aom_dunland_female_name_46" text="그리스윈" />
+    <string id="aom_dunland_female_name_47" text="에이디스" />
+    <string id="aom_dunland_female_name_48" text="핀라" />
+    <string id="aom_dunland_female_name_49" text="하르윈" />
+    <string id="aom_dunland_female_name_50" text="위나" />
+    <string id="aom_dunland_clan_name_01" text="붉은 늑대 부족" />
+    <string id="aom_dunland_clan_name_02" text="무쇠 송곳니 부족" />
+    <string id="aom_dunland_clan_name_03" text="바위파괴자 부족" />
+    <string id="aom_dunland_clan_name_04" text="그림자 사냥꾼 부족" />
+    <string id="aom_dunland_clan_name_05" text="언덕 약탈자 부족" />
+    <string id="aom_dunland_clan_name_06" text="야생의 칼날 부족" />
+    <string id="aom_dunland_clan_name_07" text="폭풍소환자 부족" />
+    <string id="aom_dunland_clan_name_08" text="피의 까마귀 부족" />
+    <string id="aom_dunland_clan_name_09" text="뼈 창 부족" />
+    <string id="aom_dunland_clan_name_10" text="대지진동자 부족" />
+    <string id="aom_dunland_clan_name_11" text="가시방패 부족" />
+    <string id="aom_dunland_clan_name_12" text="그림자 늑대 부족" />
+    <string id="aom_dunland_clan_name_13" text="부러진 도끼 부족" />
+    <string id="aom_dunland_clan_name_14" text="까마귀 눈 부족" />
+    <string id="aom_dunland_clan_name_15" text="서리울음 부족" />
+    <string id="aom_dunland_clan_name_16" text="쇠사슬에 묶인 자 부족" />
+    <string id="aom_dunland_clan_name_17" text="돌주먹 부족" />
+    <string id="aom_dunland_clan_name_18" text="울부짖는 질풍 부족" />
+    <string id="aom_dunland_clan_name_19" text="산그림자 부족" />
+    <string id="aom_harad_male_name_1" text="아자란" />
+    <string id="aom_harad_male_name_2" text="자미르" />
+    <string id="aom_harad_male_name_3" text="칼리드" />
+    <string id="aom_harad_male_name_4" text="라시드" />
+    <string id="aom_harad_male_name_5" text="나지르" />
+    <string id="aom_harad_male_name_6" text="자밀" />
+    <string id="aom_harad_male_name_7" text="하심" />
+    <string id="aom_harad_male_name_8" text="파라즈" />
+    <string id="aom_harad_male_name_9" text="사힘" />
+    <string id="aom_harad_male_name_10" text="타리크" />
+    <string id="aom_harad_male_name_11" text="바심" />
+    <string id="aom_harad_male_name_12" text="카림" />
+    <string id="aom_harad_male_name_13" text="살림" />
+    <string id="aom_harad_male_name_14" text="라얀" />
+    <string id="aom_harad_male_name_15" text="자파르" />
+    <string id="aom_harad_male_name_16" text="야시르" />
+    <string id="aom_harad_male_name_17" text="하킴" />
+    <string id="aom_harad_male_name_18" text="이브라힘" />
+    <string id="aom_harad_male_name_19" text="파이살" />
+    <string id="aom_harad_male_name_20" text="나집" />
+    <string id="aom_harad_male_name_21" text="무니르" />
+    <string id="aom_harad_male_name_22" text="아슈라프" />
+    <string id="aom_harad_male_name_23" text="자크완" />
+    <string id="aom_harad_male_name_24" text="아짐" />
+    <string id="aom_harad_male_name_25" text="술레이만" />
+    <string id="aom_harad_male_name_26" text="하킴" />
+    <string id="aom_harad_male_name_27" text="지브릴" />
+    <string id="aom_harad_male_name_28" text="타히르" />
+    <string id="aom_harad_male_name_29" text="라피크" />
+    <string id="aom_harad_male_name_30" text="말리크" />
+    <string id="aom_harad_male_name_31" text="자히르" />
+    <string id="aom_harad_male_name_32" text="아심" />
+    <string id="aom_harad_male_name_33" text="나빌" />
+    <string id="aom_harad_male_name_34" text="오마르" />
+    <string id="aom_harad_male_name_35" text="카심" />
+    <string id="aom_harad_male_name_36" text="할림" />
+    <string id="aom_harad_male_name_37" text="만수르" />
+    <string id="aom_harad_male_name_38" text="야흐야" />
+    <string id="aom_harad_male_name_39" text="샤키르" />
+    <string id="aom_harad_male_name_40" text="아딜" />
+    <string id="aom_harad_male_name_41" text="마흐디" />
+    <string id="aom_harad_male_name_42" text="파힘" />
+    <string id="aom_harad_male_name_43" text="라티프" />
+    <string id="aom_harad_male_name_44" text="라미즈" />
+    <string id="aom_harad_male_name_45" text="타밈" />
+    <string id="aom_harad_male_name_46" text="야지드" />
+    <string id="aom_harad_male_name_47" text="카마르" />
+    <string id="aom_harad_male_name_48" text="하산" />
+    <string id="aom_harad_male_name_49" text="아짐" />
+    <string id="aom_harad_male_name_50" text="주바이드" />
+    <string id="aom_harad_female_name_1" text="자히라" />
+    <string id="aom_harad_female_name_2" text="나디아" />
+    <string id="aom_harad_female_name_3" text="야스민" />
+    <string id="aom_harad_female_name_4" text="아미라" />
+    <string id="aom_harad_female_name_5" text="레일라" />
+    <string id="aom_harad_female_name_6" text="라니아" />
+    <string id="aom_harad_female_name_7" text="자밀라" />
+    <string id="aom_harad_female_name_8" text="하프사" />
+    <string id="aom_harad_female_name_9" text="줄레이카" />
+    <string id="aom_harad_female_name_10" text="아미나" />
+    <string id="aom_harad_female_name_11" text="살리마" />
+    <string id="aom_harad_female_name_12" text="라미아" />
+    <string id="aom_harad_female_name_13" text="사미라" />
+    <string id="aom_harad_female_name_14" text="나지라" />
+    <string id="aom_harad_female_name_15" text="루카야" />
+    <string id="aom_harad_female_name_16" text="할리마" />
+    <string id="aom_harad_female_name_17" text="아지자" />
+    <string id="aom_harad_female_name_18" text="카디자" />
+    <string id="aom_harad_female_name_19" text="파드와" />
+    <string id="aom_harad_female_name_20" text="사피야" />
+    <string id="aom_harad_female_name_21" text="알리아" />
+    <string id="aom_harad_female_name_22" text="나왈" />
+    <string id="aom_harad_female_name_23" text="부슈라" />
+    <string id="aom_harad_female_name_24" text="자흐라" />
+    <string id="aom_harad_female_name_25" text="리하나" />
+    <string id="aom_harad_female_name_26" text="수마야" />
+    <string id="aom_harad_female_name_27" text="나이마" />
+    <string id="aom_harad_female_name_28" text="라시다" />
+    <string id="aom_harad_female_name_29" text="자이나브" />
+    <string id="aom_harad_female_name_30" text="샤이마" />
+    <string id="aom_harad_female_name_31" text="무니라" />
+    <string id="aom_harad_female_name_32" text="파티마" />
+    <string id="aom_harad_female_name_33" text="시린" />
+    <string id="aom_harad_female_name_34" text="사니야" />
+    <string id="aom_harad_female_name_35" text="말리카" />
+    <string id="aom_harad_female_name_36" text="아피야" />
+    <string id="aom_harad_female_name_37" text="자인" />
+    <string id="aom_harad_female_name_38" text="파리다" />
+    <string id="aom_harad_female_name_39" text="아마니" />
+    <string id="aom_harad_female_name_40" text="나지라" />
+    <string id="aom_harad_female_name_41" text="후다" />
+    <string id="aom_harad_female_name_42" text="라흐마" />
+    <string id="aom_harad_female_name_43" text="야밀라" />
+    <string id="aom_harad_female_name_44" text="샤마" />
+    <string id="aom_harad_female_name_45" text="타미나" />
+    <string id="aom_harad_female_name_46" text="주바이다" />
+    <string id="aom_harad_female_name_47" text="라비야" />
+    <string id="aom_harad_female_name_48" text="아스마" />
+    <string id="aom_harad_female_name_49" text="라티파" />
+    <string id="aom_harad_female_name_50" text="사이다" />
+    <string id="aom_harad_clan_name_01" text="타오르는 모래" />
+    <string id="aom_harad_clan_name_02" text="황금 검" />
+    <string id="aom_harad_clan_name_03" text="사막의 태양" />
+    <string id="aom_harad_clan_name_04" text="붉은 창" />
+    <string id="aom_harad_clan_name_05" text="사구 기병" />
+    <string id="aom_harad_clan_name_06" text="작열하는 바람" />
+    <string id="aom_harad_clan_name_07" text="모래폭풍 전사" />
+    <string id="aom_harad_clan_name_08" text="뱀의 송곳니" />
+    <string id="aom_harad_clan_name_09" text="검은 전갈" />
+    <string id="aom_harad_clan_name_10" text="무마킬 수호자" />
+    <string id="aom_harad_clan_name_11" text="오아시스 수호자" />
+    <string id="aom_harad_clan_name_12" text="횃불의 전사" />
+    <string id="aom_harad_clan_name_13" text="진홍 방패" />
+    <string id="aom_harad_clan_name_14" text="황금 초승달" />
+    <string id="aom_harad_clan_name_15" text="고요한 그림자" />
+    <string id="aom_harad_clan_name_16" text="태양 타격자" />
+    <string id="aom_harad_clan_name_17" text="사구 수호병" />
+    <string id="aom_harad_clan_name_18" text="뱀 기수단" />
+    <string id="aom_harad_clan_name_19" text="타오르는 발굽단" />
+    <string id="aom_harad_clan_name_20" text="황혼의 모래단" />
+    <string id="aom_rohan_male_name_1" text="에아드레드" />
+    <string id="aom_rohan_male_name_2" text="에오문드" />
+    <string id="aom_rohan_male_name_3" text="케오를" />
+    <string id="aom_rohan_male_name_4" text="아에텔릭" />
+    <string id="aom_rohan_male_name_5" text="베오르트헬름" />
+    <string id="aom_rohan_male_name_6" text="에알드울프" />
+    <string id="aom_rohan_male_name_7" text="울프가르" />
+    <string id="aom_rohan_male_name_8" text="테오드릭" />
+    <string id="aom_rohan_male_name_9" text="에알릭" />
+    <string id="aom_rohan_male_name_10" text="브리흐트울프" />
+    <string id="aom_rohan_male_name_11" text="테오드윈" />
+    <string id="aom_rohan_male_name_12" text="퀸릭" />
+    <string id="aom_rohan_male_name_13" text="에오르멘릭" />
+    <string id="aom_rohan_male_name_14" text="에아드헬름" />
+    <string id="aom_rohan_male_name_15" text="알드울프" />
+    <string id="aom_rohan_male_name_16" text="프리스가르" />
+    <string id="aom_rohan_male_name_17" text="오스윈" />
+    <string id="aom_rohan_male_name_18" text="레오프윈" />
+    <string id="aom_rohan_male_name_19" text="테오발드" />
+    <string id="aom_rohan_male_name_20" text="윈프리스" />
+    <string id="aom_rohan_male_name_21" text="헤레워드" />
+    <string id="aom_rohan_male_name_22" text="에오세인" />
+    <string id="aom_rohan_male_name_23" text="구스릭" />
+    <string id="aom_rohan_male_name_24" text="테오울프" />
+    <string id="aom_rohan_male_name_25" text="프람릭" />
+    <string id="aom_rohan_male_name_26" text="에아드가르" />
+    <string id="aom_rohan_male_name_27" text="헤레모드" />
+    <string id="aom_rohan_male_name_28" text="베오른헬름" />
+    <string id="aom_rohan_male_name_29" text="시게프레드" />
+    <string id="aom_rohan_male_name_30" text="테오덴릭" />
+    <string id="aom_rohan_male_name_31" text="에알울프" />
+    <string id="aom_rohan_male_name_32" text="가르문드" />
+    <string id="aom_rohan_male_name_33" text="흐로스가르" />
+    <string id="aom_rohan_male_name_34" text="에오발드" />
+    <string id="aom_rohan_male_name_35" text="케오울프" />
+    <string id="aom_rohan_male_name_36" text="파라문드" />
+    <string id="aom_rohan_male_name_37" text="아에텔헬름" />
+    <string id="aom_rohan_male_name_38" text="에오포르" />
+    <string id="aom_rohan_male_name_39" text="윈스탄" />
+    <string id="aom_rohan_male_name_40" text="헤레위네" />
+    <string id="aom_rohan_male_name_41" text="구스위네" />
+    <string id="aom_rohan_male_name_42" text="퀸위네" />
+    <string id="aom_rohan_male_name_43" text="엘프릭" />
+    <string id="aom_rohan_male_name_44" text="울프스탄" />
+    <string id="aom_rohan_male_name_45" text="베오르흐트위네" />
+    <string id="aom_rohan_male_name_46" text="데오문드" />
+    <string id="aom_rohan_male_name_47" text="케오위네" />
+    <string id="aom_rohan_male_name_48" text="데오드헬름" />
+    <string id="aom_rohan_male_name_49" text="레오프헬름" />
+    <string id="aom_rohan_male_name_50" text="엘프위네" />
+    <string id="aom_rohan_male_name_51" text="울프노스" />
+    <string id="aom_rohan_male_name_52" text="델워드" />
+    <string id="aom_rohan_male_name_53" text="델메" />
+    <string id="aom_rohan_male_name_54" text="에오름레드" />
+    <string id="aom_rohan_male_name_55" text="엘윈" />
+    <string id="aom_rohan_male_name_56" text="일프가르" />
+    <string id="aom_rohan_male_name_57" text="알프가르" />
+    <string id="aom_rohan_male_name_58" text="울파르" />
+    <string id="aom_rohan_male_name_59" text="레오파르" />
+    <string id="aom_rohan_male_name_60" text="레오프릭" />
+    <string id="aom_rohan_female_name_1" text="에아드기푸" />
+    <string id="aom_rohan_female_name_2" text="데오드윈" />
+    <string id="aom_rohan_female_name_3" text="에델힐드" />
+    <string id="aom_rohan_female_name_4" text="퀴네스리스" />
+    <string id="aom_rohan_female_name_5" text="베오르힐드" />
+    <string id="aom_rohan_female_name_6" text="프리스윈" />
+    <string id="aom_rohan_female_name_7" text="윈프리스" />
+    <string id="aom_rohan_female_name_8" text="에오르멘힐드" />
+    <string id="aom_rohan_female_name_9" text="힐디스" />
+    <string id="aom_rohan_female_name_10" text="에오윈네" />
+    <string id="aom_rohan_female_name_11" text="레오프윈" />
+    <string id="aom_rohan_female_name_12" text="에알힐드" />
+    <string id="aom_rohan_female_name_13" text="데오윈" />
+    <string id="aom_rohan_female_name_14" text="윈프리다" />
+    <string id="aom_rohan_female_name_15" text="알드기푸" />
+    <string id="aom_rohan_female_name_16" text="헤렐린드" />
+    <string id="aom_rohan_female_name_17" text="브륀힐드" />
+    <string id="aom_rohan_female_name_18" text="시게윈" />
+    <string id="aom_rohan_female_name_19" text="에아드윈" />
+    <string id="aom_rohan_female_name_20" text="퀸윈" />
+    <string id="aom_rohan_female_name_21" text="힐드레드" />
+    <string id="aom_rohan_female_name_22" text="에델윈" />
+    <string id="aom_rohan_female_name_23" text="케올윈" />
+    <string id="aom_rohan_female_name_24" text="프리슬린드" />
+    <string id="aom_rohan_female_name_25" text="테오디스" />
+    <string id="aom_rohan_female_name_26" text="에델프리다" />
+    <string id="aom_rohan_female_name_27" text="베오르힐드" />
+    <string id="aom_rohan_female_name_28" text="에오름힐드" />
+    <string id="aom_rohan_female_name_29" text="레오프힐드" />
+    <string id="aom_rohan_female_name_30" text="알드윈" />
+    <string id="aom_rohan_female_name_31" text="윈힐드" />
+    <string id="aom_rohan_female_name_32" text="힐드윈" />
+    <string id="aom_rohan_female_name_33" text="에아드프리다" />
+    <string id="aom_rohan_female_name_34" text="테오들린" />
+    <string id="aom_rohan_female_name_35" text="퀸프리스" />
+    <string id="aom_rohan_female_name_36" text="구스윈" />
+    <string id="aom_rohan_female_name_37" text="힐드윈네" />
+    <string id="aom_rohan_female_name_38" text="에알흐프리다" />
+    <string id="aom_rohan_female_name_39" text="시기스" />
+    <string id="aom_rohan_female_name_40" text="윈프리시아" />
+    <string id="aom_rohan_female_name_41" text="에아드기사" />
+    <string id="aom_rohan_female_name_42" text="애설레다" />
+    <string id="aom_rohan_female_name_43" text="베오르스윈" />
+    <string id="aom_rohan_female_name_44" text="프리스기푸" />
+    <string id="aom_rohan_female_name_45" text="테오드프리스" />
+    <string id="aom_rohan_female_name_46" text="윈힐다" />
+    <string id="aom_rohan_female_name_47" text="에알흐프리스" />
+    <string id="aom_rohan_female_name_48" text="퀴네실드" />
+    <string id="aom_rohan_female_name_49" text="에알흐윈" />
+    <string id="aom_rohan_female_name_50" text="에아드윈네" />
+    <string id="aom_rohan_clan_name_01" text="하롤딩" />
+    <string id="aom_rohan_clan_name_02" text="에아르페닝" />
+    <string id="aom_rohan_clan_name_03" text="알도링가스" />
+    <string id="aom_rohan_clan_name_04" text="하마잉가스" />
+    <string id="aom_rohan_clan_name_05" text="아른그리밍" />
+    <string id="aom_rohan_clan_name_06" text="스웨오르드보라" />
+    <string id="aom_rohan_clan_name_07" text="분데밍" />
+    <string id="aom_rohan_clan_name_08" text="마로반딩" />
+    <string id="aom_rohan_clan_name_09" text="칼문다스" />
+    <string id="aom_rohan_clan_name_10" text="에아르민딩" />
+    <string id="aom_rhun_male_name_1" text="칼루드" />
+    <string id="aom_rhun_male_name_2" text="토르가쉬" />
+    <string id="aom_rhun_male_name_3" text="바스키르" />
+    <string id="aom_rhun_male_name_4" text="라지르" />
+    <string id="aom_rhun_male_name_5" text="나즈룩" />
+    <string id="aom_rhun_male_name_6" text="타룬" />
+    <string id="aom_rhun_male_name_7" text="다그림" />
+    <string id="aom_rhun_male_name_8" text="자르나쉬" />
+    <string id="aom_rhun_male_name_9" text="바를렉" />
+    <string id="aom_rhun_male_name_10" text="파즈릭" />
+    <string id="aom_rhun_male_name_11" text="오르준" />
+    <string id="aom_rhun_male_name_12" text="쿨가르" />
+    <string id="aom_rhun_male_name_13" text="두르자그" />
+    <string id="aom_rhun_male_name_14" text="마록" />
+    <string id="aom_rhun_male_name_15" text="자그림" />
+    <string id="aom_rhun_male_name_16" text="나라쉬" />
+    <string id="aom_rhun_male_name_17" text="타릭" />
+    <string id="aom_rhun_male_name_18" text="바즈릭" />
+    <string id="aom_rhun_male_name_19" text="우즈라드" />
+    <string id="aom_rhun_male_name_20" text="조람" />
+    <string id="aom_rhun_male_name_21" text="라샤드" />
+    <string id="aom_rhun_male_name_22" text="바르칸" />
+    <string id="aom_rhun_male_name_23" text="사르굴" />
+    <string id="aom_rhun_male_name_24" text="투르간" />
+    <string id="aom_rhun_male_name_25" text="바림" />
+    <string id="aom_rhun_male_name_26" text="마즈릭" />
+    <string id="aom_rhun_male_name_27" text="칼자르" />
+    <string id="aom_rhun_male_name_28" text="나쇼르" />
+    <string id="aom_rhun_male_name_29" text="구라쉬" />
+    <string id="aom_rhun_male_name_30" text="두르자그" />
+    <string id="aom_rhun_male_name_31" text="자르칼" />
+    <string id="aom_rhun_male_name_32" text="토라크" />
+    <string id="aom_rhun_male_name_33" text="파르눌" />
+    <string id="aom_rhun_male_name_34" text="마르죽" />
+    <string id="aom_rhun_male_name_35" text="자룬" />
+    <string id="aom_rhun_male_name_36" text="나룩" />
+    <string id="aom_rhun_male_name_37" text="사르간" />
+    <string id="aom_rhun_male_name_38" text="투르미크" />
+    <string id="aom_rhun_male_name_39" text="다즈리크" />
+    <string id="aom_rhun_male_name_40" text="카르눌" />
+    <string id="aom_rhun_male_name_41" text="바쉬키르" />
+    <string id="aom_rhun_male_name_42" text="로단" />
+    <string id="aom_rhun_male_name_43" text="타즈룩" />
+    <string id="aom_rhun_male_name_44" text="고라쉬" />
+    <string id="aom_rhun_male_name_45" text="나즈린" />
+    <string id="aom_rhun_male_name_46" text="타르칼" />
+    <string id="aom_rhun_male_name_47" text="마자드" />
+    <string id="aom_rhun_male_name_48" text="오르즈리크" />
+    <string id="aom_rhun_male_name_49" text="자르나크" />
+    <string id="aom_rhun_male_name_50" text="파르주크" />
+    <string id="aom_rhun_female_name_1" text="라지라" />
+    <string id="aom_rhun_female_name_2" text="타즈미나" />
+    <string id="aom_rhun_female_name_3" text="바지라" />
+    <string id="aom_rhun_female_name_4" text="마즈리카" />
+    <string id="aom_rhun_female_name_5" text="자리나" />
+    <string id="aom_rhun_female_name_6" text="칼리라" />
+    <string id="aom_rhun_female_name_7" text="오르질라" />
+    <string id="aom_rhun_female_name_8" text="두르잔나" />
+    <string id="aom_rhun_female_name_9" text="나리마" />
+    <string id="aom_rhun_female_name_10" text="타릴라" />
+    <string id="aom_rhun_female_name_11" text="바릴라" />
+    <string id="aom_rhun_female_name_12" text="다지라" />
+    <string id="aom_rhun_female_name_13" text="라미라" />
+    <string id="aom_rhun_female_name_14" text="파지라" />
+    <string id="aom_rhun_female_name_15" text="우즈릴라" />
+    <string id="aom_rhun_female_name_16" text="잘리나" />
+    <string id="aom_rhun_female_name_17" text="쿨리사" />
+    <string id="aom_rhun_female_name_18" text="바르키라" />
+    <string id="aom_rhun_female_name_19" text="나리자" />
+    <string id="aom_rhun_female_name_20" text="타르닐라" />
+    <string id="aom_rhun_female_name_21" text="라쉬라" />
+    <string id="aom_rhun_female_name_22" text="마자라" />
+    <string id="aom_rhun_female_name_23" text="바르쉬라" />
+    <string id="aom_rhun_female_name_24" text="자르니라" />
+    <string id="aom_rhun_female_name_25" text="사르키라" />
+    <string id="aom_rhun_female_name_26" text="파르니자" />
+    <string id="aom_rhun_female_name_27" text="고리자" />
+    <string id="aom_rhun_female_name_28" text="나지라" />
+    <string id="aom_rhun_female_name_29" text="카르닐라" />
+    <string id="aom_rhun_female_name_30" text="토릴라" />
+    <string id="aom_rhun_female_name_31" text="두리나" />
+    <string id="aom_rhun_female_name_32" text="바실라" />
+    <string id="aom_rhun_female_name_33" text="나리자" />
+    <string id="aom_rhun_female_name_34" text="파즈림" />
+    <string id="aom_rhun_female_name_35" text="마지라" />
+    <string id="aom_rhun_female_name_36" text="칼리아" />
+    <string id="aom_rhun_female_name_37" text="사르니자" />
+    <string id="aom_rhun_female_name_38" text="오를리나" />
+    <string id="aom_rhun_female_name_39" text="루하나" />
+    <string id="aom_rhun_female_name_40" text="타르니자" />
+    <string id="aom_rhun_female_name_41" text="잘리라" />
+    <string id="aom_rhun_female_name_42" text="라지나" />
+    <string id="aom_rhun_female_name_43" text="두르시라" />
+    <string id="aom_rhun_female_name_44" text="바르키라" />
+    <string id="aom_rhun_female_name_45" text="타리자" />
+    <string id="aom_rhun_female_name_46" text="마지나" />
+    <string id="aom_rhun_female_name_47" text="나릴리아" />
+    <string id="aom_rhun_female_name_48" text="파르니나" />
+    <string id="aom_rhun_female_name_49" text="잘리마" />
+    <string id="aom_rhun_female_name_50" text="오르지나" />
+    <string id="aom_rhun_clan_name_01" text="철창 부족" />
+    <string id="aom_rhun_clan_name_02" text="황금 초승도 부족" />
+    <string id="aom_rhun_clan_name_03" text="붉은 깃발 부족" />
+    <string id="aom_rhun_clan_name_04" text="불타는 칼날 부족" />
+    <string id="aom_rhun_clan_name_05" text="룬의 혈통" />
+    <string id="aom_rhun_clan_name_06" text="진홍 전사 부족" />
+    <string id="aom_rhun_clan_name_07" text="흑방패 부족" />
+    <string id="aom_rhun_clan_name_08" text="폭풍 소환자 부족" />
+    <string id="aom_rhun_clan_name_09" text="주홍 수호자 부족" />
+    <string id="aom_rhun_clan_name_10" text="황금 무리" />
+    <string id="aom_empire_name" text="던랜드인" />
+    <string id="aom_empire_desc" text="던랜드인은 로한 서쪽의 거친 구릉과 야생의 땅에 거주하는 강인하고 사나운 민족입니다. 그들은 자신들의 선조 땅을 침략한 자로 여기는 로히림에 대해 오랜 원한을 품고 있으며, 공유된 혈통과 강렬한 독립심으로 단결되어 있습니다. 게릴라전과 생존술에 능숙한 던랜드인은 교활함과 사나움으로 적을 압도합니다. 비록 단순한 산악민으로 무시당하곤 하지만, 던랜드인은 자랑스럽고 불굴의 민족으로 자신들의 땅과 삶의 방식을 맹렬히 지킵니다. 로한에 대한 깊은 원한에 이끌려 그들은 어둠의 세력과 동맹을 맺고 복수와 잃어버린 땅의 회복을 추구합니다." />
+    <string id="aom_aserai_name" text="하라드림" />
+    <string id="aom_aserai_desc" text="하라드림은 먼 남쪽의 사막과 사바나에서 온 자랑스럽고 사나운 민족입니다. 무마킬과 같은 이국적인 짐승을 다루는 솜씨로 유명하며, 그들의 전사들은 전투에서 기술과 회복력, 치명적인 정확성을 결합합니다. 하라드는 작열하는 태양, 황금빛 모래, 생기 넘치는 오아시스가 공존하는 극단의 땅입니다. 그 백성들은 고대의 전통과 부족에 대한 충성, 그리고 추장과 왕들의 부름으로 단결되어 있습니다. 종종 어둠의 세력과 동맹을 맺는 하라드림은 곤도르에 대한 복수심과 사우론이 약속한 힘과 지배권에 이끌립니다." />
+    <string id="aom_vlandia_name" text="로히림" />
+    <string id="aom_vlandia_desc" text="로한의 기마 영주인 로히림은 타의 추종을 불허하는 기병대와 말들과의 깊은 유대로 유명합니다. 자랑스럽고 자유로운 영혼을 지닌 그들은 리더마크의 구릉 평원에 거주하며 에도라스와 같은 마을과 요새에서 생활합니다. 왕의 지도를 받고 백성에게 충성하는 로히림은 명예와 충성, 용기를 중시합니다. 그들의 전사들은 두려움 없이 전투에 나서며, 어둠에 맞서는 중간계 저항의 중추를 형성합니다. 전통을 굳건히 지키면서도 로히림은 언제나 자신들의 땅과 동맹을 지킬 준비가 되어 있으며, 창과 검, 방패를 정확하게 휘두릅니다." />
+    <string id="aom_khuzait_name" text="동방인" />
+    <string id="aom_khuzait_desc" text="동방인들은 먼 룬의 땅에서 온 다양하고 두려운 민족입니다. 사우론에 대한 충성으로 알려진 그들은 정밀함과 규율로 전쟁에 나아가며, 휘어진 칼날과 창, 그리고 전장을 가로질러 울려 퍼지는 거대한 전쟁 북을 휘두릅니다. 그들의 황금 갑옷과 진홍색 깃발은 맹렬한 자부심과 무예의 기량을 반영합니다. 씨족과 부족으로 나뉜 동방인들은 강력한 족장들 아래 단결하여 가운데땅의 자유 민족들에 맞서 룬의 힘을 가져옵니다." />
+    <string id="TAOM_sturgia_culture" text="바르딩" />
+    <string id="TAOM_sturgia_desc" text="바르드 궁수의 이름을 딴 골짜기 마을의 바르딩족은 스마우그의 그림자로부터 고향을 되찾은 후 두각을 나타낸 자랑스럽고 부지런한 민족입니다. 외로운 산과 긴 호수 사이에 자리 잡은 골짜기 마을은 무역과 문화의 중심지로 번영합니다. 회복력과 장인 정신으로 알려진 바르딩족은 무기와 갑옷 제작에 뛰어나며, 심지어 에레보르의 난쟁이들과도 견줄 만합니다. 훈련된 궁수, 굳건한 검사, 그리고 민첩한 경보병으로 구성된 그들의 군대는 맹렬한 결의로 영토를 방어합니다. 고귀한 지도자들 아래 단결한 바르딩족은 항상 경계하며, 다가오는 어둠에 맞서고 풍부한 유산을 보존합니다." />
+    <string id="TAOM_battania_culture" text="바리아그" />
+    <string id="TAOM_battania_desc" text="칸드의 바리아그족은 모르도르 동쪽의 건조하고 험준한 땅에서 온 사납고 호전적인 민족입니다. 용병으로서의 기량과 사우론에 대한 충성으로 알려진 바리아그족은 비할 데 없는 맹렬함으로 싸웁니다. 그들은 빠른 전마를 타고 전투에 나아가 휘어진 칼날과 긴 창을 치명적인 정확도로 휘두릅니다. 정교한 디자인으로 장식된 청동과 진홍색 갑옷은 그들의 자랑스럽고 무예적인 유산을 반영합니다. 부족과 씨족으로 나뉜 바리아그족은 강력한 전쟁 군주들 아래 단결하여 암흑군주의 적들에게 공포와 혼돈을 가져옵니다." />
+    <string id="TAOM_clan_empire_north_1" text="블라이드-루스" />
+    <string id="TAOM_clan_empire_north_2" text="투르흐-루스" />
+    <string id="TAOM_clan_empire_north_3" text="우흐-루스" />
+    <string id="TAOM_clan_empire_north_4" text="아르스-루스" />
+    <string id="TAOM_clan_empire_north_5" text="키그프란-루스" />
+    <string id="TAOM_clan_empire_north_6" text="헤보그-루스" />
+    <string id="TAOM_clan_empire_north_7" text="드라이그-루스" />
+    <string id="TAOM_clan_empire_north_8" text="카루-루스" />
+    <string id="TAOM_clan_empire_north_9" text="아반크-루스" />
+    <string id="TAOM_clan_empire_west_1" text="후리니오나스 가문" />
+    <string id="TAOM_clan_empire_west_2" text="임라조리오나스 가문" />
+    <string id="TAOM_clan_empire_west_3" text="에아르누리오나스 가문" />
+    <string id="TAOM_clan_empire_west_4" text="바라히리오나스 가문" />
+    <string id="TAOM_clan_empire_west_5" text="아우시리오나스 가문" />
+    <string id="TAOM_clan_empire_west_6" text="할보로니오나스 가문" />
+    <string id="TAOM_clan_empire_west_7" text="말란딜리오나스 가문" />
+    <string id="TAOM_clan_empire_west_8" text="올린두리오나스 가문" />
+    <string id="TAOM_clan_empire_west_9" text="다누히리오나스 가문" />
+    <string id="TAOM_clan_empire_south_1" text="돌구베스" />
+    <string id="TAOM_clan_empire_south_2" text="고에아르네디아드" />
+    <string id="TAOM_clan_empire_south_3" text="멜콘딜리" />
+    <string id="TAOM_clan_empire_south_4" text="모르구카르" />
+    <string id="TAOM_clan_empire_south_5" text="볼그루키그" />
+    <string id="TAOM_clan_empire_south_6" text="캄 라구르즈" />
+    <string id="TAOM_clan_empire_south_7" text="브라그주키쉬" />
+    <string id="TAOM_clan_empire_south_8" text="코라힘" />
+    <string id="TAOM_clan_empire_south_9" text="와우림" />
+    <string id="TAOM_clan_sturgia_1" text="기리온 가문" />
+    <string id="TAOM_clan_sturgia_2" text="바르드 가문" />
+    <string id="TAOM_clan_sturgia_3" text="브란드 가문" />
+    <string id="TAOM_clan_sturgia_4" text="베인 가문" />
+    <string id="TAOM_clan_sturgia_5" text="에스가로스 가문" />
+    <string id="TAOM_clan_sturgia_6" text="강의 가문" />
+    <string id="TAOM_clan_sturgia_7" text="궁수의 가문" />
+    <string id="TAOM_clan_sturgia_8" text="긴 호수의 가문" />
+    <string id="TAOM_clan_sturgia_9" text="용 사냥꾼의 가문" />
+    <string id="TAOM_clan_aserai_1" text="아예릭카" />
+    <string id="TAOM_clan_aserai_2" text="카드노마" />
+    <string id="TAOM_clan_aserai_3" text="카말라카" />
+    <string id="TAOM_clan_aserai_4" text="칼마킬리오니" />
+    <string id="TAOM_clan_aserai_5" text="타크피민" />
+    <string id="TAOM_clan_aserai_6" text="메드자노마" />
+    <string id="TAOM_clan_aserai_7" text="지야로카" />
+    <string id="TAOM_clan_aserai_8" text="아우잘리카" />
+    <string id="TAOM_clan_aserai_9" text="이켄다카" />
+    <string id="TAOM_clan_vlandia_1" text="에오를링 가문" />
+    <string id="TAOM_clan_vlandia_2" text="케르디칭 가문" />
+    <string id="TAOM_clan_vlandia_3" text="그리밍가스 가문" />
+    <string id="TAOM_clan_vlandia_4" text="펠란딩 가문" />
+    <string id="TAOM_clan_vlandia_5" text="오스키텔링 가문" />
+    <string id="TAOM_clan_vlandia_6" text="오르들라칭 가문" />
+    <string id="TAOM_clan_vlandia_7" text="애셀라핑 가문" />
+    <string id="TAOM_clan_vlandia_8" text="그림모딩 가문" />
+    <string id="TAOM_clan_vlandia_9" text="두닝 가문" />
+    <string id="TAOM_clan_vlandia_10" text="에오포링 가문" />
+    <string id="TAOM_clan_vlandia_11" text="토르다깅 가문" />
+    <string id="TAOM_clan_battania_1" text="방가리스" />
+    <string id="TAOM_clan_battania_2" text="아라즈" />
+    <string id="TAOM_clan_battania_3" text="토라바이" />
+    <string id="TAOM_clan_battania_4" text="코르바시" />
+    <string id="TAOM_clan_battania_5" text="쿠르단" />
+    <string id="TAOM_clan_battania_6" text="우르다시" />
+    <string id="TAOM_clan_battania_7" text="카르하타이" />
+    <string id="TAOM_clan_battania_8" text="바랴시" />
+    <string id="TAOM_ghilman_name" text="뱀 근위대" />
+    <string id="TAOM_ghilman_short" text="뱀 근위대" />
+    <string id="TAOM_ghilman_text" text="뱀 근위대는 근하라드의 뱀군주를 섬기는 기마병들이다. 에펠두아스 남쪽의 광활한 평원에서 말 위에서 자란 이들은 중간계 남부 전역에서 타의 추종을 불허하는 기마 궁수들이다. 하라드와 모르도르 사이에 평화가 지속되는 시기에 근위대는 그들의 용병술을 하라드림 영주들과 황금 대가를 지불할 여유가 있는 다른 세력들에게 제공한다." />
+    <string id="TAOM_legion_name" text="회색 중대" />
+    <string id="TAOM_legion_short" text="회색 중대" />
+    <string id="TAOM_legion_text" text="회색 중대는 오래 전에 왕국을 잃어버린 아르노르 왕들의 후손인 두네다인 야경대의 마지막 조직화된 형제단이다. 그들은 자신들의 이름을 잊어버린 땅에서 평화를 지키며 북부를 가로질러 집 없이 떠돈다. 그들의 첫 번째 충성심은 엘렌딜의 혈통에 있지만, 그들의 방랑이 문명화된 땅으로 이어질 때 중간계 전역의 영주들로부터 계약을 받기도 한다." />
+    <string id="TAOM_skolderbrotva_name" text="에레보르의 도끼병" />
+    <string id="TAOM_skolderbrotva_short" text="도끼병" />
+    <string id="TAOM_skolderbrotva_text" text="에레보르의 도끼병은 소린 왕의 전투를 겪은 참전용사들로, 평화시대가 그들의 기질에 맞지 않음을 깨달은 자들이다. 난쟁이 전당의 근접전투 - 방패벽, 단도끼, 곡괭이 - 에 훈련된 이들은 어떤 지형에서든 무시무시하지만 에레보르를 인간의 왕국들과 연결하는 산길에서 특히 뛰어나다. 그들은 대가를 지불할 수 있는 누구의 계약이든 받지만, 에레보르나 리븐델에 대항하여 도끼를 들지는 않는다." />
+    <string id="TAOM_company_name" text="해적단의 검" />
+    <string id="TAOM_company_short" text="해적단" />
+    <string id="TAOM_company_text" text="해적단의 검은 움바르 항구 출신의 베테랑 해상 전사들로, 육지에서 그들의 기술을 파는 일에 나섰다. 그들은 함선 전투의 선호 무기인 쇠뇌를 사용하며, 흔들리는 갑판 위에서만큼이나 공성전에서도 편안하다. 흉터투성이인 누메노르 망명자 선장은 그들의 명성이 가장 값진 화물임을 알고 철저한 규율로 계약을 지키게 한다." />
+    <string id="TAOM_beni_zilal_name" text="눈먼 눈" />
+    <string id="TAOM_beni_zilal_short" text="눈먼 눈" />
+    <string id="TAOM_beni_zilal_text" text="눈먼 눈은 하라드의 해안과 깊은 사막을 가로질러 활동하는 밀수꾼, 장물아비, 고용 살인자들의 형제단이다. 그들은 잊혀진 하라드림 왕을 섬겼던 암살자 집단의 후손이라고 전해지며, 그들의 방식 - 독, 그림자, 비밀의 활용 - 은 변하지 않았다. 조용히 경쟁자를 제거하고 싶거나 세관 검사 없이 화물을 옮겨야 하는 상인들은 금화 한 닢과 봉인된 편지를 어디에 남겨야 하는지 안다." />
+    <string id="TAOM_wolfskins_name" text="바리아그 약탈자" />
+    <string id="TAOM_wolfskins_short" text="약탈자" />
+    <string id="TAOM_wolfskins_text" text="바리아그 약탈자는 칸드의 초원 출신 젊은 바리아그 전사들의 전쟁단으로, 그들의 청년기를 의례적 전쟁 상태로 보낸다: 그들은 조리된 음식을 소유할 수 없고, 영구적인 지붕 아래 잠잘 수 없으며, 자비를 베풀 수 없다. 대부분은 결국 부족의 정착 생활로 돌아가지만, 일부는 결코 그렇게 하지 않으며, 이들이 약탈자를 형성한다 - 칸드의 길을 습격하고 하라드와 곤도르로 국경을 넘어 약탈하는 무법자들이다." />
+    <string id="TAOM_brotherhood_name" text="던랜드 약탈자" />
+    <string id="TAOM_brotherhood_short" text="약탈자" />
+    <string id="TAOM_brotherhood_text" text="던랜드 약탈자는 지금은 로히림이 다스리는 계곡에 살았던 산악 부족의 파괴된 잔재이다. 그들의 할아버지들은 비옥한 땅에서 바위투성이 고지로 쫓겨났고, 그들은 그 원한을 약탈자의 철학으로 키워왔다: 남부인이나 왕의 부하로부터 빼앗은 모든 것은 단지 빼앗긴 것의 복원일 뿐이다. 실제로 그들은 산적이지만, 언덕을 통과하는 모든 염소길을 아는 위험한 자들이다." />
+    <string id="TAOM_hidden_hand_name" text="입의 하인들" />
+    <string id="TAOM_hidden_hand_short" text="하인들" />
+    <string id="TAOM_hidden_hand_text" text="입의 하인들은 검은 문 너머에서 활동하는 바라드두르의 눈들이다 — 모르도르 국경 지역 민족들 사이에 잠입한 정보원, 집행자, 첩자들. 사우론의 군대가 아직 도달할 수 없는 곳에서, 이 요원들은 공물을 수거하고 반대 의견을 침묵시킨다. 그들은 뇌물, 협박, 은밀한 살인을 통해 일하며, 암흑군주에 대한 어떠한 음모도 뿌리내리기 전에 뿌리째 뽑아 분쇄한다." />
+    <string id="TAOM_lakepike_name" text="긴 호수의 난파업자들" />
+    <string id="TAOM_lakepike_short" text="난파업자" />
+    <string id="TAOM_lakepike_text" text="긴 호수의 난파업자들은 에스가로스의 위엄 있는 불빛에서 멀리 떨어진, 긴 호수의 그늘진 해안에 있는 갈대밭과 썩어가는 낡은 부두에서 산다. 그들은 거짓 등불로 바지선을 숨겨진 얕은 여울로 유인한 뒤 화물을 약탈하고 마을 내부의 장물아비를 통해 팔아 생계를 꾸린다. 호수마을 촌장과 데일 상인들의 노력에도 불구하고, 난파업자들은 부두가 선술집에 너무 많은 친구들을 두고 있어 쉽게 쫓아낼 수 없다." />
+    <string id="TAOM_embers_name" text="눈꺼풀 없는 눈의 숭배" />
+    <string id="TAOM_embers_short" text="눈 숭배" />
+    <string id="TAOM_embers_text" text="눈꺼풀 없는 눈의 숭배는 검은 누메노르 전통에 뿌리를 둔 비밀 결사로, 사우론이 다시 일어날 때 충실한 자들을 영광으로 회복시킬 신왕으로 숭배한다. 그들은 던랜드의 빈곤층과 왕국의 잊혀진 구석에서 신자를 모집하며, 신의 은총과 지상의 권력을 약속한다. 사실 그들의 지도자들은 바라드두르의 요원들에게 복종하며, 그들의 세포 기반 구조는 어떤 영주의 정의로도 근절하기가 거의 불가능하다." />
+    <string id="TAOM_jawwal_name" text="모래 기수들" />
+    <string id="TAOM_jawwal_short" text="모래 기수" />
+    <string id="TAOM_jawwal_text" text="모래 기수들은 에펠 두아스와 먼 남쪽 바다 사이의 물 없는 황무지의 지배자인, 깊은 하라드 내륙의 유목 사막 부족들이다. 그들은 자신들만이 아는 길을 따라 이동하며, 그들의 영토를 가로지르려는 대담한 대상에게 공물을 요구한다. 가까운 하라드의 정착 영주들은 그들을 골칫거리로 여기지만, 모래 기수들은 정착 영주들을 사막이 이미 자유롭게 준 것을 훔친 도둑으로 여긴다." />
+    <string id="TAOM_karakhuzaits_name" text="야생 동방인들" />
+    <string id="TAOM_karakhuzaits_short" text="야생인" />
+    <string id="TAOM_karakhuzaits_text" text="야생 동방인들은 룬 해의 정복되지 않은 초원 부족들로, 자신들을 통제하려 한 모든 영주의 권위를 저항해왔다 — 룬의 족장, 모르도르의 부관, 데일의 왕 모두를. 그들은 켈두인 동쪽의 초원을 가로질러 이동하며, 말을 모으고, 가축 떼를 약탈하며, 무장 호위 없이 그들의 초원을 가로지르려는 어리석은 대상에게 통행료를 징수한다." />
+    <string id="TAOM_forest_people_name" text="드루에다인" />
+    <string id="TAOM_forest_people_short" text="와세스" />
+    <string id="TAOM_forest_people_text" text="드루에다인은 인간들에게 와세스 또는 숲의 야생인으로 알려진 고대 민족으로, 드루아단의 깊은 숲과 하얀 산�맥의 숨겨진 계곡에 거주한다. 그들은 불로 땅을 개간하고, 재가 풍부한 토양에서 필요한 것을 재배하며, 땅이 소진되면 이동한다 — 가운데땅의 정착 민족들이 결코 이해하지 못했고 신경 쓰지도 않았던 삶의 방식이다. 드루에다인은 영주를 원하지 않고, 세금을 내지 않으며, 단지 숲의 고요 속에 남겨지기만을 바란다." />
+    <string id="TAOM_eleftheroi_name" text="베오르닝족" />
+    <string id="TAOM_eleftheroi_short" text="베오르닝" />
+    <string id="TAOM_eleftheroi_text" text="베오르닝족은 안개산맥과 어둠숲 사이의 안두인 계곡에 사는 위대한 숲 사람들로, 베오른 혈통의 피부 변환자들이 이끈다. 그들은 어떤 오크도 자신들의 영토를 가로지르게 허락하지 않으며, 경비 자금을 마련하기 위해 카록 여울에서 통행료를 징수하고, 가운데땅의 어떤 왕에게도 복종하지 않는다. 그들은 엘프와 드워프와 거래하고 대화하지만, 허가 없이 그들의 숲을 통과하는 군대는 베오르닝족이 매우 큰 이빨을 가지고 있음을 알게 될 것이다." />
+    <string id="TAOM_clan_khuzait_1" text="후즈" />
+    <string id="TAOM_clan_khuzait_2" text="살루리안" />
+    <string id="TAOM_clan_khuzait_3" text="니카티안" />
+    <string id="TAOM_clan_khuzait_4" text="카르미안" />
+    <string id="TAOM_clan_khuzait_5" text="암두리드" />
+    <string id="TAOM_clan_khuzait_6" text="쿤돌라르" />
+    <string id="TAOM_clan_khuzait_7" text="쿠자이티안" />
+    <string id="TAOM_clan_khuzait_8" text="마샤키안" />
+    <string id="TAOM_clan_khuzait_9" text="보조르가니스" />
+    <string id="aom_lord_1_1_name" text="브레닌 울프, 강철손" />
+    <string id="aom_lord_1_2_name" text="프레야 울프하트" />
+    <string id="aom_lord_1_3_name" text="고르울프, 멧돼지" />
+    <string id="aom_lord_1_4_name" text="브룬힐드 아이언클로" />
+    <string id="aom_lord_1_5_name" text="오스릭 더 와일드" />
+    <string id="aom_lord_1_6_name" text="토르발드 옥스혼" />
+    <string id="aom_lord_1_7_name" text="데네소르 2세, 곤도르의 집정관" />
+    <string id="aom_lord_1_8_name" text="후리오네스" />
+    <string id="aom_lord_1_9_name" text="임라힐, 돌 아므로스의 공" />
+    <string id="aom_lord_1_10_name" text="아라넬" />
+    <string id="aom_lord_1_25_name" text="엘피르" />
+    <string id="aom_lord_1_35_name" text="에르키리온" />
+    <string id="aom_lord_1_11_name" text="키랸두르" />
+    <string id="aom_lord_1_111_name" text="엘라르웬" />
+    <string id="aom_lord_1_12_name" text="핀다리엘" />
+    <string id="aom_lord_1_14_name" text="사우론의 입" />
+    <string id="aom_lord_1_15_name" text="앙그마르의 마술사왕" />
+    <string id="aom_lord_1_155_name" text="나즈굴, 어둠의 원수" />
+    <string id="aom_lord_1_16_name" text="나즈굴, 움바르의 기사" />
+    <string id="aom_lord_1_17_name" text="사우론" />
+    <string id="aom_lord_1_177_name" text="호노라투스" />
+    <string id="aom_lord_1_18_name" text="자테아" />
+    <string id="aom_lord_1_21_name" text="펜릭 붉은늑대" />
+    <string id="aom_lord_1_22_name" text="비욘릭 스트롱암" />
+    <string id="aom_lord_1_23_name" text="칼라드웬" />
+    <string id="aom_lord_1_24_name" text="암로소스" />
+    <string id="aom_lord_1_75_name" text="보로미르" />
+    <string id="aom_lord_1_26_name" text="히르곤" />
+    <string id="aom_lord_1_27_name" text="마우그라쉬" />
+    <string id="aom_lord_1_28_name" text="나즈굴, 배신자" />
+    <string id="aom_lord_1_29_name" text="사니온" />
+    <string id="aom_lord_1_31_name" text="즈르사 블랙팽" />
+    <string id="aom_lord_1_32_name" text="엘드라 보어송" />
+    <string id="aom_lord_1_33_name" text="브리기드 더 하울링" />
+    <string id="aom_lord_1_422_name" text="드렌굴프 아이언터스크" />
+    <string id="aom_lord_1_34_name" text="파라미르" />
+    <string id="aom_lord_1_36_name" text="이브리니엘" />
+    <string id="aom_lord_1_37_name" text="고샹크" />
+    <string id="aom_lord_1_38_name" text="나즈굴, 불사자" />
+    <string id="aom_lord_1_39_name" text="데바나" />
+    <string id="aom_lord_1_41_name" text="베레군드 울프본" />
+    <string id="aom_lord_1_411_name" text="그림울프 아이언팽" />
+    <string id="aom_lord_1_42_name" text="흐로드가르 철갑피" />
+    <string id="aom_lord_1_43_name" text="고르문드 황소옆구리" />
+    <string id="aom_lord_1_44_name" text="네모스" />
+    <string id="aom_lord_1_47_name" text="울보스" />
+    <string id="aom_lord_1_49_name" text="오브론" />
+    <string id="aom_lord_1_20_name" text="아스트리드 곰발톱" />
+    <string id="aom_lord_1_64_name" text="토르문드 회색곰도끼" />
+    <string id="aom_lord_1_50_name" text="코르윈 까마귀눈" />
+    <string id="aom_lord_1_66_name" text="탈릭 까마귀울음" />
+    <string id="aom_lord_1_51_name" text="할드릭 발톱일격" />
+    <string id="aom_lord_1_58_name" text="고르빈 흉한자" />
+    <string id="aom_lord_1_70_name" text="베이라 그림자" />
+    <string id="aom_lord_1_67_name" text="에오르윈 깃살" />
+    <string id="aom_lord_1_40_name" text="보르하도르" />
+    <string id="aom_lord_1_46_name" text="말리오르" />
+    <string id="aom_lord_1_45_name" text="포를롱, 로사르나흐의 영주" />
+    <string id="aom_lord_1_57_name" text="바라노르" />
+    <string id="aom_lord_1_52_name" text="히를루인, 피나스 겔린의 영주" />
+    <string id="aom_lord_1_53_name" text="앙보르, 라메돈의 영주" />
+    <string id="aom_lord_1_71_name" text="골라스길, 안팔라스의 영주" />
+    <string id="aom_lord_1_73_name" text="나르미르" />
+    <string id="aom_lord_1_62_name" text="오로마르" />
+    <string id="aom_lord_1_30_name" text="고스모그, 모르굴의 부관" />
+    <string id="aom_lord_1_48_name" text="카물, 동방인" />
+    <string id="aom_lord_1_54_name" text="샤그라트, 키리스 운골의 대장" />
+    <string id="aom_lord_1_55_name" text="마스모그" />
+    <string id="aom_lord_1_63_name" text="고르바그, 미나스 모르굴의 대장" />
+    <string id="aom_lord_1_56_name" text="토르문드, 망치" />
+    <string id="aom_lord_1_68_name" text="타로스" />
+    <string id="aom_lord_1_69_name" text="니폰" />
+    <string id="aom_lord_1_72_name" text="볼그" />
+    <string id="aom_lord_1_74_name" text="자카니스" />
+    <string id="aom_lord_1_1_1_name" text="엘디스 회색발톱" />
+    <string id="aom_lord_1_1_2_name" text="시가 용살해자" />
+    <string id="aom_lord_1_1_3_name" text="시그룬 멧돼지엄니" />
+    <string id="aom_lord_1_1_4_name" text="티라 핏빛엄니" />
+    <string id="aom_lord_1_1_5_name" text="힐다 뼈분쇄자" />
+    <string id="aom_lord_1_1_6_name" text="위르사, 겨울 멧돼지" />
+    <string id="aom_lord_1_1_7_name" text="프레이디스 황소갈기" />
+    <string id="aom_lord_1_1_8_name" text="에이라 그림자발톱" />
+    <string id="aom_lord_1_1_9_name" text="시프라 본워커" />
+    <string id="aom_lord_1_1_10_name" text="할디스 레드미스트" />
+    <string id="aom_lord_1_1_11_name" text="이를라 고스트펠트" />
+    <string id="aom_lord_1_1_15_name" text="아엘윈 호크아이" />
+    <string id="aom_lord_1_1_16_name" text="브리아나 윙다트" />
+    <string id="aom_lord_1_27_1_name" text="베리나" />
+    <string id="aom_lord_1_27_2_name" text="스로즈나크" />
+    <string id="aom_lord_1_27_3_name" text="바실리아" />
+    <string id="aom_lord_1_47_1_name" text="미나" />
+    <string id="aom_lord_1_47_2_name" text="카시레아" />
+    <string id="aom_lord_1_47_3_name" text="콜람베아" />
+    <string id="aom_lord_1_49_1_name" text="트리스타니아" />
+    <string id="aom_lord_1_49_2_name" text="고르디아나" />
+    <string id="aom_lord_1_1_12_name" text="프레야 클로렌드" />
+    <string id="aom_lord_1_1_13_name" text="군드룬 아이언포" />
+    <string id="aom_lord_1_1_14_name" text="모르기스" />
+    <string id="aom_lord_1_1_17_name" text="브라녹 페더샤프트" />
+    <string id="aom_lord_1_40_1_name" text="린다리엘" />
+    <string id="aom_lord_1_46_1_name" text="소르웬" />
+    <string id="aom_lord_1_45_1_name" text="베레시엘" />
+    <string id="aom_lord_1_45_2_name" text="칼다미르" />
+    <string id="aom_lord_1_45_3_name" text="루밀" />
+    <string id="aom_lord_1_57_1_name" text="칼라시엘" />
+    <string id="aom_lord_1_57_2_name" text="임로스" />
+    <string id="aom_lord_1_52_1_name" text="아나리엘" />
+    <string id="aom_lord_1_52_2_name" text="바란도르" />
+    <string id="aom_lord_1_73_1_name" text="벨웬" />
+    <string id="aom_lord_1_62_1_name" text="아리사" />
+    <string id="aom_lord_1_30_1_name" text="스발라 레드팽" />
+    <string id="aom_lord_1_30_2_name" text="칼리니아" />
+    <string id="aom_lord_1_30_3_name" text="시네시오스" />
+    <string id="aom_lord_1_48_1_name" text="나즈굴, 오염된 자" />
+    <string id="aom_lord_1_48_2_name" text="나즈굴, 북방인의 그림자" />
+    <string id="aom_lord_1_48_3_name" text="나즈굴, 움바르의 그림자" />
+    <string id="aom_lord_1_54_1_name" text="콘스탈리아" />
+    <string id="aom_lord_1_55_1_name" text="메게시아" />
+    <string id="aom_lord_1_63_1_name" text="발라리아" />
+    <string id="aom_lord_1_63_2_name" text="코마타사" />
+    <string id="aom_lord_1_63_3_name" text="엘리딜레아" />
+    <string id="aom_lord_1_56_1_name" text="그웬나" />
+    <string id="aom_lord_1_56_2_name" text="루스티카" />
+    <string id="aom_lord_1_68_1_name" text="실비나" />
+    <string id="aom_lord_1_69_1_name" text="아렐리아나" />
+    <string id="aom_lord_1_69_2_name" text="도라틸라" />
+    <string id="aom_lord_1_72_1_name" text="비비아나" />
+    <string id="aom_lord_1_74_1_name" text="제나" />
+    <string id="aom_lord_2_1_name" text="바르드 2세" />
+    <string id="aom_lord_2_2_name" text="아스타" />
+    <string id="aom_lord_2_3_name" text="소린 3세 스톤헬름" />
+    <string id="aom_lord_2_4_name" text="시가" />
+    <string id="aom_lord_2_5_name" text="오리" />
+    <string id="aom_lord_2_6_name" text="에르타" />
+    <string id="aom_lord_2_7_name" text="시미르" />
+    <string id="aom_lord_2_8_name" text="우리크" />
+    <string id="aom_lord_2_9_name" text="레크" />
+    <string id="aom_lord_2_10_name" text="발라" />
+    <string id="aom_lord_2_11_name" text="이드룬" />
+    <string id="aom_lord_2_111_name" text="로지볼" />
+    <string id="aom_lord_2_12_name" text="스바나" />
+    <string id="aom_lord_2_121_name" text="오스벤" />
+    <string id="aom_lord_2_13_name" text="비다르" />
+    <string id="aom_lord_2_14_name" text="이스반" />
+    <string id="aom_lord_2_15_name" text="라타고스트" />
+    <string id="aom_lord_2_16_name" text="보푸르" />
+    <string id="aom_lord_2_17_name" text="소린 2세 오컨쉴드" />
+    <string id="aom_lord_2_18_name" text="글로인" />
+    <string id="aom_lord_2_19_name" text="드왈린" />
+    <string id="aom_lord_2_20_name" text="오인" />
+    <string id="aom_lord_2_21_name" text="스베도른" />
+    <string id="aom_lord_2_22_name" text="라쇼넥" />
+    <string id="aom_lord_2_23_name" text="갈덴" />
+    <string id="aom_lord_2_24_name" text="알바르" />
+    <string id="aom_lord_2_4_1_name" text="아폴라네아" />
+    <string id="aom_lord_2_7_1_name" text="미미르" />
+    <string id="aom_lord_2_13_1_name" text="릴리자" />
+    <string id="aom_lord_2_13_2_name" text="안드루타" />
+    <string id="aom_lord_2_13_3_name" text="루다" />
+    <string id="aom_lord_2_13_4_name" text="테타" />
+    <string id="aom_lord_2_14_1_name" text="발카바" />
+    <string id="aom_lord_2_14_2_name" text="자베레나" />
+    <string id="aom_lord_2_14_3_name" text="비즈두나" />
+    <string id="aom_lord_2_15_1_name" text="야차나" />
+    <string id="aom_lord_2_15_2_name" text="밀란카" />
+    <string id="aom_lord_2_15_3_name" text="벨리나" />
+    <string id="aom_lord_2_15_4_name" text="보반" />
+    <string id="aom_lord_2_16_1_name" text="티야스카" />
+    <string id="aom_lord_2_17_1_name" text="드라차" />
+    <string id="aom_lord_2_18_1_name" text="조리카" />
+    <string id="aom_lord_2_19_1_name" text="비토미라" />
+    <string id="aom_lord_2_20_1_name" text="키샤" />
+    <string id="aom_lord_2_21_1_name" text="이즈덴카" />
+    <string id="aom_lord_2_22_1_name" text="제네바" />
+    <string id="aom_lord_2_23_1_name" text="즐라트카" />
+    <string id="aom_lord_2_24_1_name" text="조리나" />
+    <string id="aom_dead_lord_2_1_name" text="늙은이 올레크" />
+    <string id="aom_dead_lord_2_2_name" text="바라" />
+    <string id="aom_lord_3_1_name" text="카두라크" />
+    <string id="aom_lord_3_2_name" text="하라드 자리 표시자" />
+    <string id="aom_lord_3_3_name" text="칼레미르" />
+    <string id="aom_lord_3_4_name" text="마라" />
+    <string id="aom_lord_3_5_name" text="할디르" />
+    <string id="aom_lord_3_51_name" text="하칸" />
+    <string id="aom_lord_3_6_name" text="루마" />
+    <string id="aom_lord_3_7_name" text="디율" />
+    <string id="aom_lord_3_8_name" text="아다스" />
+    <string id="aom_lord_3_9_name" text="우사이르" />
+    <string id="aom_lord_3_10_name" text="아니다" />
+    <string id="aom_lord_3_11_name" text="아르와" />
+    <string id="aom_lord_3_12_name" text="마난" />
+    <string id="aom_lord_3_13_name" text="누카르" />
+    <string id="aom_lord_3_14_name" text="탐자" />
+    <string id="aom_lord_3_15_name" text="구지드" />
+    <string id="aom_lord_3_16_name" text="루밀" />
+    <string id="aom_lord_3_17_name" text="오로핀" />
+    <string id="aom_lord_3_18_name" text="아란손" />
+    <string id="aom_lord_3_19_name" text="아에티리온" />
+    <string id="aom_lord_3_20_name" text="카리스" />
+    <string id="aom_lord_3_21_name" text="우카이" />
+    <string id="aom_lord_3_22_name" text="두일린" />
+    <string id="aom_lord_3_23_name" text="카힌" />
+    <string id="aom_lord_3_3_1_name" text="타리크" />
+    <string id="aom_lord_3_13_1_name" text="시라" />
+    <string id="aom_lord_3_13_2_name" text="라자나" />
+    <string id="aom_lord_3_14_1_name" text="사사이타" />
+    <string id="aom_lord_3_15_1_name" text="심라" />
+    <string id="aom_lord_3_15_2_name" text="부실라" />
+    <string id="aom_lord_3_16_1_name" text="파리나" />
+    <string id="aom_lord_3_17_1_name" text="샤이마" />
+    <string id="aom_lord_3_17_2_name" text="사니트" />
+    <string id="aom_lord_3_18_1_name" text="파르자나" />
+    <string id="aom_lord_3_18_2_name" text="하피사" />
+    <string id="aom_lord_3_18_3_name" text="주아드" />
+    <string id="aom_lord_3_18_4_name" text="잘파르" />
+    <string id="aom_lord_3_19_1_name" text="살마" />
+    <string id="aom_lord_3_19_2_name" text="줄라이카" />
+    <string id="aom_lord_3_19_3_name" text="술하나" />
+    <string id="aom_lord_3_20_1_name" text="주디라" />
+    <string id="aom_lord_3_20_2_name" text="아지나" />
+    <string id="aom_lord_3_21_1_name" text="아시사" />
+    <string id="aom_lord_3_22_1_name" text="야미나" />
+    <string id="aom_lord_3_22_2_name" text="수나" />
+    <string id="aom_lord_3_22_3_name" text="자누와" />
+    <string id="aom_lord_3_22_4_name" text="하자라" />
+    <string id="aom_lord_3_23_1_name" text="수카이나" />
+    <string id="aom_dead_lord_3_1_name" text="님르" />
+    <string id="aom_lord_4_1_name" text="세오덴" />
+    <string id="aom_lord_4_2_name" text="엘프힐드" />
+    <string id="aom_lord_4_4_name" text="엘실드" />
+    <string id="aom_lord_4_5_name" text="운테리" />
+    <string id="aom_lord_4_6_name" text="그림볼드 그리밍가스" />
+    <string id="aom_lord_4_7_name" text="세오드레드 에오를링" />
+    <string id="aom_lord_4_8_name" text="푸른하르드" />
+    <string id="aom_lord_4_9_name" text="토문드" />
+    <string id="aom_lord_4_10_name" text="엘리스" />
+    <string id="aom_lord_4_11_name" text="리에나" />
+    <string id="aom_lord_4_12_name" text="실빈드" />
+    <string id="aom_lord_4_121_name" text="라산드" />
+    <string id="aom_lord_4_13_name" text="로문드" />
+    <string id="aom_lord_4_14_name" text="모르콘" />
+    <string id="aom_lord_4_141_name" text="아모르콘" />
+    <string id="aom_lord_4_15_name" text="에르두란드" />
+    <string id="aom_lord_4_16_name" text="에르켄브란드 펠란딩" />
+    <string id="aom_lord_4_17_name" text="엘베트" />
+    <string id="aom_lord_4_18_name" text="아말군" />
+    <string id="aom_lord_4_181_name" text="아르타문드" />
+    <string id="aom_lord_4_19_name" text="아셀라" />
+    <string id="aom_lord_4_20_name" text="바르문드" />
+    <string id="aom_lord_4_21_name" text="쿠스래드 오르들라킹" />
+    <string id="aom_lord_4_22_name" text="울프 켈문딩" />
+    <string id="aom_lord_4_23_name" text="마르하스 마르하드" />
+    <string id="aom_lord_4_24_name" text="그리마 그림모딩" />
+    <string id="aom_lord_4_25_name" text="루칸드" />
+    <string id="aom_lord_4_26_name" text="페릭" />
+    <string id="aom_lord_4_27_name" text="엘레 에셀라핑" />
+    <string id="aom_lord_4_28_name" text="파스트헬름 모르카르가스" />
+    <string id="aom_lord_4_3_1_name" text="에오메르 에오포링" />
+    <string id="aom_lord_4_6_1_name" text="데오르윈 그리밍가스" />
+    <string id="aom_lord_4_16_1_name" text="메르수 펠란딩" />
+    <string id="aom_lord_4_20_1_name" text="잉겔트루드" />
+    <string id="aom_lord_4_22_1_name" text="순니파 켈문딩" />
+    <string id="aom_lord_4_23_1_name" text="울프윈 마르하드" />
+    <string id="aom_lord_4_23_2_name" text="엘레두란 마르하드" />
+    <string id="aom_lord_4_23_3_name" text="엘레두란" />
+    <string id="aom_lord_4_25_1_name" text="베르틀리아나" />
+    <string id="aom_lord_4_27_1_name" text="베르부르그 에셀라핑" />
+    <string id="aom_lord_4_28_1_name" text="모르카르" />
+    <string id="aom_lord_4_28_2_name" text="헤레스위스" />
+    <string id="aom_lord_V11_l_name" text="레오문드 데아프링가스" />
+    <string id="aom_lord_4_26_1_name" text="라인가르다" />
+    <string id="aom_lord_4_24_1_name" text="아달트루드" />
+    <string id="aom_lord_4_24_2_name" text="구돈헬다" />
+    <string id="aom_lord_4_24_3_name" text="잉군데" />
+    <string id="aom_lord_4_24_4_name" text="이름가르트" />
+    <string id="aom_lord_4_3_name" text="알드릭" />
+    <string id="aom_lord_V11_c1_name" text="엘렌다라" />
+    <string id="aom_lord_V11_c2_name" text="다구닉" />
+    <string id="aom_lord_V11_u_name" text="볼레릭" />
+    <string id="aom_lord_V9_u_name" text="우룬둘프" />
+    <string id="aom_lord_5_1_name" text="바르굴, 칸드의 대장군" />
+    <string id="aom_lord_5_7_name" text="칸드 플레이스홀더" />
+    <string id="aom_lord_5_3_name" text="에르게온" />
+    <string id="aom_lord_5_4_name" text="니윈" />
+    <string id="aom_lord_5_5_name" text="멜리디르" />
+    <string id="aom_lord_5_6_name" text="알카에아" />
+    <string id="aom_lord_5_8_name" text="세인" />
+    <string id="aom_lord_5_9_name" text="쿨하른" />
+    <string id="aom_lord_5_91_name" text="테간" />
+    <string id="aom_lord_5_10_name" text="코레인" />
+    <string id="aom_lord_5_11_name" text="알린네스" />
+    <string id="aom_lord_5_12_name" text="위투인" />
+    <string id="aom_lord_5_13_name" text="뮌서" />
+    <string id="aom_lord_5_131_name" text="라스" />
+    <string id="aom_lord_5_15_name" text="프린도르" />
+    <string id="aom_lord_5_14_name" text="루이한" />
+    <string id="aom_lord_5_16_name" text="아에론" />
+    <string id="aom_lord_5_17_name" text="아라드위르" />
+    <string id="aom_lord_5_18_name" text="브라녹" />
+    <string id="aom_lord_5_19_name" text="페나간" />
+    <string id="aom_lord_5_20_name" text="시아라무스" />
+    <string id="aom_lord_5_21_name" text="카르피드" />
+    <string id="aom_lord_5_22_name" text="피아라드" />
+    <string id="aom_lord_5_1_1_name" text="RandomDude" />
+    <string id="aom_lord_5_3_1_name" text="라나온" />
+    <string id="aom_lord_5_3_2_name" text="라도구알" />
+    <string id="aom_lord_5_5_1_name" text="에일리" />
+    <string id="aom_lord_5_13_1_name" text="베아사그" />
+    <string id="aom_lord_5_15_1_name" text="플로라이" />
+    <string id="aom_lord_5_15_2_name" text="베이트린" />
+    <string id="aom_lord_5_15_3_name" text="디아르베인" />
+    <string id="aom_lord_5_14_1_name" text="에아비르" />
+    <string id="aom_lord_5_16_1_name" text="리아신" />
+    <string id="aom_lord_5_16_2_name" text="가웬" />
+    <string id="aom_lord_5_17_1_name" text="브리간" />
+    <string id="aom_lord_5_18_1_name" text="쇼나그" />
+    <string id="aom_lord_5_21_1_name" text="베아타그" />
+    <string id="aom_lord_5_21_2_name" text="타오르세" />
+    <string id="aom_lord_6_1_name" text="자믹 자미안" />
+    <string id="aom_lord_6_2_name" text="마라이아" />
+    <string id="aom_lord_6_3_name" text="바가이" />
+    <string id="aom_lord_6_4_name" text="구르틸름 살루리안" />
+    <string id="aom_lord_6_5_name" text="이르보 니카시안" />
+    <string id="aom_lord_6_51_name" text="카다" />
+    <string id="aom_lord_6_6_name" text="수란" />
+    <string id="aom_lord_6_7_name" text="차간" />
+    <string id="aom_lord_6_8_name" text="에수르" />
+    <string id="aom_lord_6_81_name" text="나얀타이" />
+    <string id="aom_lord_6_9_name" text="테문" />
+    <string id="aom_lord_6_10_name" text="알리진" />
+    <string id="aom_lord_6_101_name" text="볼라트" />
+    <string id="aom_lord_6_11_name" text="야나" />
+    <string id="aom_lord_6_12_name" text="아바가이" />
+    <string id="aom_lord_6_13_name" text="보르투" />
+    <string id="aom_lord_6_15_name" text="오라구르" />
+    <string id="aom_lord_6_16_name" text="아크보스 카르미안" />
+    <string id="aom_lord_6_17_name" text="암두르 암두리드" />
+    <string id="aom_lord_6_18_name" text="루스칸 쿤돌라르" />
+    <string id="aom_lord_6_19_name" text="바케랄탄 쿤돌라르" />
+    <string id="aom_lord_6_20_name" text="쿠루브라 마샤키안" />
+    <string id="aom_lord_6_21_name" text="몰룩 일노리아" />
+    <string id="aom_lord_6_22_name" text="샤칼 2세 샤칼리안" />
+    <string id="aom_lord_6_23_name" text="후즈-마르고즈 후즈" />
+    <string id="aom_lord_6_24_name" text="니카스 아데키그" />
+    <string id="aom_lord_6_15_1_name" text="코리진" />
+    <string id="aom_lord_6_15_2_name" text="세첸" />
+    <string id="aom_lord_6_16_1_name" text="참부이" />
+    <string id="aom_lord_6_16_2_name" text="우나겐" />
+    <string id="aom_lord_6_17_1_name" text="에르게네" />
+    <string id="aom_lord_6_17_2_name" text="예숨" />
+    <string id="aom_lord_6_18_1_name" text="틸룬" />
+    <string id="aom_lord_6_18_2_name" text="차군" />
+    <string id="aom_lord_6_19_1_name" text="소카타이" />
+    <string id="aom_lord_6_19_2_name" text="코르테" />
+    <string id="aom_lord_6_20_1_name" text="지구르" />
+    <string id="aom_lord_K8_u_name" text="보론차르" />
+    <string id="aom_lord_6_21_1_name" text="에사체이" />
+    <string id="aom_lord_6_22_1_name" text="에셀렌" />
+    <string id="aom_lord_K9_l_name" text="발라스미르 마샤키안" />
+    <string id="aom_lord_K9_s_name" text="세빈" />
+    <string id="aom_lord_K9_c1_name" text="알투" />
+    <string id="aom_lord_K9_c2_name" text="멜라" />
+    <string id="aom_dead_lord_6_1_name" text="우르쿤" />
+    <string id="aom_dead_lord_6_2_name" text="솔룬" />
+    <string id="aom_dead_lord_6_3_name" text="쿠유그" />
+    <string id="aom_dead_lord_6_4_name" text="운둘" />
+    <string id="aom_lord_A9_c_name" text="딜라" />
+    <string id="aom_lord_A9_l_name" text="카라단" />
+    <string id="aom_lord_A9_s_name" text="티카" />
+    <string id="aom_lord_A9_u_name" text="카반" />
+    <string id="aom_lord_B8_c_name" text="구아란" />
+    <string id="aom_lord_B8_l_name" text="마이레아스" />
+    <string id="aom_lord_B8_s_name" text="로다락" />
+    <string id="aom_lord_NE7_u_name" text="검은 송곳니 할드릭" />
+    <string id="aom_lord_NE8_c1_name" text="모루 케르딕" />
+    <string id="aom_lord_NE8_c2_name" text="모르웬" />
+    <string id="aom_lord_NE8_l_name" text="신속한 에아드릭" />
+    <string id="aom_lord_NE8_s_name" text="아엘로리아" />
+    <string id="aom_lord_NE9_d_name" text="뱀-일격 실바" />
+    <string id="aom_lord_NE9_l_name" text="비늘절단자 발토르" />
+    <string id="aom_lord_NE9_s_name" text="송곳니절단자 루릭" />
+    <string id="aom_lord_S8_u_name" text="갈릭" />
+    <string id="aom_lord_S9_c_name" text="포림" />
+    <string id="aom_lord_S9_l_name" text="봄부르" />
+    <string id="aom_lord_S9_m_name" text="다킬라" />
+    <string id="aom_lord_S9_u_name" text="차스티미르" />
+    <string id="aom_lord_SE8_c_name" text="이타리아" />
+    <string id="aom_lord_SE9_c1_name" text="파가리오스" />
+    <string id="aom_lord_SE9_c2_name" text="디아스카" />
+    <string id="aom_lord_SE9_l_name" text="우루크 대장 그리슈나크" />
+    <string id="aom_lord_SE9_s_name" text="존나" />
+    <string id="aom_lord_WE8_c_name" text="펠렌두르" />
+    <string id="aom_lord_WE8_u_name" text="바란딜" />
+    <string id="aom_lord_WE9_l_name" text="두인히르" />
+    <string id="aom_lord_WE9_u_name" text="두일린" />
+    <string id="aom_lord_WE9_u2_name" text="로스핀" />
+    <string id="TAOM_hero_dead_2_1" text="연로한 바르딩 영주는 동방인 약탈자들에 맞서 데일을 방어하다 전사했다. 그의 희생은 산맥 고개를 지켜냈으며 왕국 전역의 노래로 기억되고 있다." />
+    <string id="TAOM_hero_dead_2_2" text="전쟁 후 닥친 겨울 역병으로 세상을 떠난 데일의 귀부인. 그녀는 평민들에 대한 자선으로 유명했다." />
+    <string id="TAOM_hero_dead_3_1" text="검은 문 전투에서 사막 기병대를 이끈 하라드림 전쟁군주. 그는 곤도르의 화살에 쓰러졌지만 남부에서는 순교자로 숭배받고 있다." />
+    <string id="TAOM_hero_dead_6_1" text="룬의 깃발 아래 동방인 부족들을 최초로 통합한 위대한 칸. 그의 정복은 황금 왕국의 경계를 룬 바다의 해안까지 확장시켰다." />
+    <string id="TAOM_hero_dead_6_2" text="자유 민족들과의 전투에서 전사한 존경받는 노얀. 그의 미망인 구르틸름은 이제 강철 같은 결단력으로 그들의 씨족을 이끌고 있다." />
+    <string id="TAOM_hero_dead_6_3" text="아르킷 씨족의 수석 노얀. 기마 궁술 전술에서의 그의 전술적 명석함은 동방인 전사들의 전 세대에 영향을 끼쳤다." />
+    <string id="TAOM_hero_dead_6_4" text="아르킷 씨족의 귀족이자 위대한 노얀의 아들. 그는 젊은 나이에 죽었지만 전사로서의 가능성을 보여주었다." />
+    <string id="TAOM_hero_1_1" text="브레닌 울프는 철권으로 던랜드의 야생 씨족들을 통치한다. 아이언핸드로 알려진 그는 정복과 교활함으로 흩어진 언덕 부족들을 통합했다. 그는 로한의 말-영주들에게 빼앗긴 땅을 되찾는 꿈을 꾼다." />
+    <string id="TAOM_hero_1_2" text="프레야 울프하트는 브레닌 울프의 용맹한 아내이다. 그녀는 도끼와 방패를 다루는 솜씨로 전사들 사이에서 존경받는다." />
+    <string id="TAOM_hero_1_41" text="베레군드 울프본은 던랜드의 신뢰받는 대장으로, 로히림 정착지를 습격하는 기술로 유명하다." />
+    <string id="TAOM_hero_1_411" text="그림울프 아이언팽은 로한에 대한 습격과 전쟁의 아버지의 유산을 이어간다." />
+    <string id="TAOM_hero_1_31" text="즈르사 블랙팽은 아이언핸드의 후계자로, 아버지의 유산에 합당함을 증명하고자 열망한다." />
+    <string id="TAOM_hero_1_1_1" text="엘디스 그레이클로는 던랜드의 용맹한 여전사로, 전투에서의 사나움으로 유명하다." />
+    <string id="TAOM_hero_1_1_2" text="시가 윔베인은 산맥의 고갯길에서 거대한 뱀을 죽이며 그 이름을 얻었다." />
+    <string id="TAOM_hero_1_21" text="펜릭 레드 울프는 적진 깊숙이 습격대를 이끈다." />
+    <string id="TAOM_hero_1_3" text="고르울프 보어는 국경 정착지에 대한 잔혹한 습격으로 알려진 야만적인 족장이다." />
+    <string id="TAOM_hero_1_4" text="브룬힐드 아이언클로는 고르울프의 강력한 아내로, 남편만큼이나 전투에 능숙하다." />
+    <string id="TAOM_hero_1_22" text="비욘릭 스트롱암은 전투에서 거대한 전투 도끼를 휘두르는 강력한 전사이다." />
+    <string id="TAOM_hero_1_42" text="흐로드가르 아이언하이드는 씨족의 용사로 봉사하며, 그의 갑옷은 수많은 전투로 상처투성이다." />
+    <string id="TAOM_hero_1_32" text="엘드라 보어송은 부모의 사나운 전통을 이어간다." />
+    <string id="TAOM_hero_1_422" text="드렌굴프 아이언터스크는 전투에서 자신의 가치를 증명하고자 하는 젊은 전사이다." />
+    <string id="TAOM_hero_1_1_3" text="시그룬 보어팽은 적진으로의 두려움 없는 돌격으로 유명하다." />
+    <string id="TAOM_hero_1_1_4" text="티라 블러드터스크는 수많은 승리를 통해 그 별명을 얻었다." />
+    <string id="TAOM_hero_1_1_5" text="힐다 본크러셔는 전투에서의 파괴적인 힘으로 두려움의 대상이다." />
+    <string id="TAOM_hero_1_1_6" text="위르사 윈터 보어는 적들이 가장 예상하지 못하는 가혹한 계절에 습격을 이끈다." />
+    <string id="TAOM_hero_1_5" text="오스릭 와일드는 예측 불가능한 전술로 많은 승리를 거둔 족장이다. 그의 씨족은 고대 던랜딩 왕들의 후손이라 주장한다." />
+    <string id="TAOM_hero_1_1_7" text="프레이디스 옥스메인은 오스릭의 아내이자 숙련된 치료사이자 전사이다." />
+    <string id="TAOM_hero_1_1_8" text="에이라 섀도클로는 적진 야영지를 조용히 이동하며 경고 없이 공격한다." />
+    <string id="TAOM_hero_1_6" text="토르발드 옥스혼은 오스릭의 후계자로, 이미 아버지의 거친 기질을 보여준다." />
+    <string id="TAOM_hero_1_33" text="브리지드 하울링은 산맥 고갯길을 통해 전투 무리를 이끈다." />
+    <string id="TAOM_hero_1_43" text="고르문드 옥스플랭크는 씨족장의 신뢰받는 부관으로 봉사한다." />
+    <string id="TAOM_hero_1_1_9" text="시프라 본워커는 전투 후 전사자들 사이를 걸으며 죽은 자들로부터 전리품을 수집한다." />
+    <string id="TAOM_hero_1_1_10" text="할디스 레드미스트는 전투에 참전하는 곳마다 피의 흔적을 남긴다." />
+    <string id="TAOM_hero_1_1_11" text="위를라 고스트펠트는 흰 늑대의 가죽을 입으며, 전투에서 그녀를 보호한다고 전해진다." />
+    <string id="TAOM_hero_1_1_12" text="프레야 클로렌드는 사나운 방패 여전사들의 전투 무리를 이끈다. 그녀는 어린 시절부터 전사로 훈련받았으며 패배를 모른다." />
+    <string id="TAOM_hero_1_1_13" text="군드룬 아이언포는 수많은 검 손잡이로 흉터진 손을 가진 노련한 전사이다." />
+    <string id="TAOM_hero_1_20" text="아스트리드 베어클로는 사나운 전투 스타일과 곰 가죽 망토로 유명하다." />
+    <string id="TAOM_hero_1_64" text="소르문드 그리즐리휴는 거대한 양손 도끼로 적진을 베어낸다." />
+    <string id="TAOM_hero_1_1_14" text="모르기스는 고대 언덕의 영혼들과 교감하는 신비로운 인물이다." />
+    <string id="TAOM_hero_1_1_17" text="브라녹 페더샤프트는 던랜딩들 중 가장 뛰어난 궁수로, 백 보 거리에서 까마귀의 눈을 쏠 수 있다." />
+    <string id="TAOM_hero_1_50" text="코르윈 레이븐아이는 새들의 비행에서 징조를 보고 전쟁 문제에 대해 씨족에 조언한다." />
+    <string id="TAOM_hero_1_66" text="탈릭 크로콜은 어떤 새의 울음소리도 흉내낼 수 있으며, 전투에서 신호로 사용한다." />
+    <string id="TAOM_hero_1_1_15" text="아엘윈 호크아이는 국경을 순찰하는 언덕 정찰대를 지휘한다." />
+    <string id="TAOM_hero_1_1_16" text="브리아나 윙다트는 어머니로부터 궁술을 배웠고 이제는 그녀를 능가한다." />
+    <string id="TAOM_hero_1_51" text="할드릭 탈론스트라이크는 높은 바위에서 매복을 이끈다." />
+    <string id="TAOM_hero_1_67" text="에오르윈 페더볼트는 칼보다 활을 선호하며, 그림자에서 공격한다." />
+    <string id="TAOM_hero_1_58" text="잔혹한 고르빈은 던렌딩들 사이에서도 그 잔인함이 전설적인 무시무시한 족장이다." />
+    <string id="TAOM_hero_1_70" text="그림자의 베이라는 적의 진영에 몰래 침투하여 밤에 목을 베는 자다." />
+    <string id="TAOM_hero_NE7_u" text="부족의 족장을 보좌하는 노련한 전사." />
+    <string id="TAOM_hero_NE8_l" text="산악 부족의 족장으로, 수년간의 국경 전쟁으로 단련되었다." />
+    <string id="TAOM_hero_NE8_s" text="족장의 아내로, 치유술과 약초 지식에 능하다." />
+    <string id="TAOM_hero_NE8_c1" text="부족의 장자로, 어린 시절부터 전쟁 훈련을 받았다." />
+    <string id="TAOM_hero_NE8_c2" text="부족 지도자의 둘째 자녀로, 교활함과 야망으로 알려져 있다." />
+    <string id="TAOM_hero_1_56" text="망치의 토르문드는 전쟁 망치를 휘두르는 파괴적인 돌격으로 그 이름을 얻었다." />
+    <string id="TAOM_hero_1_56_1" text="그웬나는 토르문드의 아내로, 그가 전쟁터에 있는 동안 부족의 영지를 관리한다." />
+    <string id="TAOM_hero_NE9_l" text="모든 던렌딩 부족들이 그의 지혜를 구하는 노령의 족장." />
+    <string id="TAOM_hero_NE9_s" text="늙은 족장의 아들로, 전투에서 자신을 증명하고자 열망한다." />
+    <string id="TAOM_hero_NE9_d" text="부족의 딸로, 전투와 외교 모두에 훈련받았다." />
+    <string id="TAOM_hero_1_7" text="곤도르의 집정 데네소르 2세는 미나스 티리스의 백색 탑에서 통치한다. 한때 위대한 지혜를 가진 사람이었으나, 그는 오만하고 완고해졌다. 그는 왕의 귀환을 거부하며, 오직 자신만이 곤도르를 모르도르의 그림자로부터 구할 수 있다고 믿는다." />
+    <string id="TAOM_hero_1_75" text="데네소르의 장남 보로미르는 곤도르의 장군이다. 명성 높은 위대한 전사로, 그는 어둠에 맞서 자신의 백성을 지키기 위한 어떤 무기든 찾고 있다." />
+    <string id="TAOM_hero_1_8" text="후리오네스는 후리니오나스 가문을 섬기며, 곤도르 집정들의 전승을 지키는 확고한 수호자이다." />
+    <string id="TAOM_hero_1_34" text="데네소르의 차남 파라미르는 이실리엔의 야전대 대장이다. 아버지에게 외면받았지만, 그는 지혜와 자비, 그리고 조용한 강인함으로 부하들의 사랑을 받는다." />
+    <string id="TAOM_hero_1_24" text="임라힐의 막내 아들 암로소스는 아직 젊지만 이미 가문의 무예 정신과 고귀한 품성을 보여준다." />
+    <string id="TAOM_hero_1_44" text="네모스는 탑 근위대의 대장으로, 집정을 수호하기로 맹세했다." />
+    <string id="TAOM_hero_1_9" text="돌 암로스의 공작 임라힐 2세는 곤도르 최고의 기사다. 그의 혈통은 엘프의 피를 이어받았으며, 왕국 전체에서 가장 훌륭한 영주라고 전해진다. 그의 백조 기사단은 중간계 전역에서 전설적이다." />
+    <string id="TAOM_hero_1_9_5" text="돌 암로스의 공작부인 로스웬은 수십 년간 임라힐 곁에서 곤도르를 섬겨왔다. 그녀는 우아함과 조용한 지혜로 알려져 있다." />
+    <string id="TAOM_hero_1_10" text="엘피르의 아내 아라넬은 품위와 예리한 지성으로 알려진 곤도르의 귀부인이다." />
+    <string id="TAOM_hero_1_35" text="임라힐의 차남 에르키리온은 돌 암로스의 기사로 복무한다. 전투에서 대담하고 가문에 충성스러우며, 아버지의 백조 기사단과 함께 말을 탄다." />
+    <string id="TAOM_hero_1_25" text="임라힐의 장남 엘피르는 돌 암로스의 후계자다. 그는 무예적 정확함으로 백조 기사단을 지휘하며 아버지의 고귀한 품격을 지니고 있다." />
+    <string id="TAOM_hero_1_23" text="에르키리온의 아내 칼라드웬은 그들의 결합을 통해 임라조리오나스 가문에 합류했다. 그녀는 조용한 용기를 가진 여인이다." />
+    <string id="TAOM_hero_1_11" text="키랸두르는 곤도르의 북부 방어를 지휘하며, 수많은 오크 습격의 노련한 베테랑이다. 그는 왕국의 국경을 지키는 데 있어 체계적이고 끈질기다." />
+    <string id="TAOM_hero_1_111" text="히르곤의 아내 엘라르웬은 회복력과 실용적 지혜로 알려진 변경 지역의 여인이다." />
+    <string id="TAOM_hero_1_12" text="키랸두르의 아내 핀다리엘은 가문의 일을 주의 깊고 지적으로 관리한다." />
+    <string id="TAOM_hero_1_36" text="키랸두르의 딸 이브리니엘은 곤도르의 북부 변경 지대에서 성장했으며 아버지의 회복력과 어머니의 지혜를 모두 보여준다." />
+    <string id="TAOM_hero_1_26" text="키랸두르의 형제 히르곤은 곤도르의 전령 기수로 복무한다. 신속하고 신뢰할 수 있으며, 왕국의 영주들 사이에서 전갈을 전한다." />
+    <string id="TAOM_hero_1_40" text="바라히리오나스의 영주 보르하도르는 곤도르의 가장 나이 많은 영주들 중 한 명이다. 그의 오랜 세월은 그에게 지혜를 주었지만, 나이가 들어 육체는 약해졌다. 그의 조언은 모두에게 존중받는다." />
+    <string id="TAOM_hero_1_40_1" text="보르하도르의 아내 린다리엘은 오랜 세월 동안 가문의 힘이 되어왔다. 그녀는 곤도르 귀족 사회에서 우아하고 불굴의 존재다." />
+    <string id="TAOM_hero_1_46" text="보르하도르의 아들 말리오르는 늙은 영주가 나이 들면서 아버지의 의무를 이어받고 있다. 그는 착실하고 믿음직스러우며, 그의 가문에게 존경받는다." />
+    <string id="TAOM_hero_1_46_1" text="말리오르의 아내 소르웬은 조용한 결단력으로 가문을 관리하는 유능한 여인이다." />
+    <string id="TAOM_hero_1_45" text="뚱보 포를롱, 로사르나크의 영주는 미나스 티리스 방어를 위해 영지들 중 가장 큰 부대를 이끈다. 그의 비대한 몸에도 불구하고, 그는 맹렬하고 경험 많은 전사다." />
+    <string id="TAOM_hero_1_45_1" text="포를롱의 아내 베레시엘은 로사르나크의 영주부인이다. 남편이 전쟁에 나가는 동안 비옥한 계곡들을 감독한다." />
+    <string id="TAOM_hero_1_45_2" text="포를롱의 젊은 아들 칼다미르는 최근 성인이 되어 자신을 증명하려는 열망으로 전쟁에 나선다." />
+    <string id="TAOM_hero_1_45_3" text="포를롱의 형 루밀은 아우시리오나스 가문에서 든든한 존재다. 그의 오랜 복무는 일족의 존경을 얻었다." />
+    <string id="TAOM_hero_1_57" text="바라노르는 로사르나크 부대의 대장으로, 포를롱 경의 신뢰받는 장교다." />
+    <string id="TAOM_hero_1_57_1" text="칼다미르의 아내 칼라시엘은 로사르나크의 젊은 귀부인이다." />
+    <string id="TAOM_hero_1_57_2" text="임로스는 바라노르의 딸로, 로사르나크 계곡에서 곤도르 귀족의 방식을 배우고 있다." />
+    <string id="TAOM_hero_1_52" text="아름다운 히를루인, 피나스 겔린의 영주는 곤도르의 언덕에서 녹색 옷을 입은 전사들을 이끈다. 그는 집정관에 대한 용맹과 충성으로 알려져 있다." />
+    <string id="TAOM_hero_1_52_4" text="히를루인의 아내 나우리엘은 피나스 겔린의 영주 부인으로, 녹색 언덕 사람들에 대한 확고함과 보살핌으로 알려져 있다." />
+    <string id="TAOM_hero_1_52_1" text="히를루인의 딸 아나리엘은 피나스 겔린의 전사들 사이에서 자랐으며 전투에서 자신의 몫을 다할 수 있다." />
+    <string id="TAOM_hero_1_52_2" text="히를루인의 아들 바란도르는 언젠가 피나스 겔린의 전사들을 이끌기 위해 훈련한다. 그는 아버지의 녹색 옷을 입은 부대와 함께 달린다." />
+    <string id="TAOM_hero_1_62" text="아나리엘의 남편 오로마르는 그들의 결혼을 통해 할보로니오나스 가문에 합류했다. 그는 피나스 겔린의 영주를 충실히 섬긴다." />
+    <string id="TAOM_hero_1_62_1" text="바란도르의 아내 이스핀은 우아함으로 알려진 녹색 언덕의 여인이다." />
+    <string id="TAOM_hero_1_53" text="두려움 없는 앙보르, 라메돈의 영주는 죽은 자들이 그의 땅을 행진할 때도 부하들을 결집시켰다. 그는 대담하고 행동이 빠르다." />
+    <string id="TAOM_hero_1_73" text="앙보르의 남동생 나르미르는 라메돈의 방어에 복무한다. 그는 형만큼의 경험은 아직 없지만 형의 용기를 공유한다." />
+    <string id="TAOM_hero_1_73_1" text="앙보르의 아내 벨웬은 라메돈의 방어에서 남편 곁에 확고히 서 있다." />
+    <string id="TAOM_hero_1_71" text="골라스길, 안팔라스의 영주는 해적 습격에 맞서 긴 해안선을 지휘한다. 그는 수십 년간 곤도르의 해안을 방어해 온 노련한 해상 영주이다." />
+    <string id="TAOM_hero_1_71_1" text="골라스길의 아내 라스웬은 남편이 해로를 지키는 동안 안팔라스의 해안 정착지들을 관리한다." />
+    <string id="TAOM_hero_WE8_c" text="골라스길의 아들 펠렌두르는 언젠가 아버지가 해온 것처럼 안팔라스의 해안을 방어하도록 훈련받고 있다." />
+    <string id="TAOM_hero_WE8_u" text="골라스길의 형제 바란딜은 안팔라스의 해안 경비대 대장으로 복무한다." />
+    <string id="TAOM_hero_WE9_l" text="두인히르, 모르손드의 영주는 검은뿌리 골짜기에서 곤도르 방어를 위해 궁수들을 이끈다. 그는 엄격하고 유능한 지휘관이다." />
+    <string id="TAOM_hero_WE9_u" text="두인히르의 장남 두일린은 자신의 궁수 부대를 이끌고 곤도르 방어에서 아버지와 함께 싸운다." />
+    <string id="TAOM_hero_WE9_u2" text="두인히르의 아내 로스핀은 남편이 없는 동안 검은뿌리 골짜기의 일들을 관리한다." />
+    <string id="TAOM_hero_1_14" text="사우론의 입은 암흑 군주의 권위로 말한다. 한때 검은 누메노르인이었던 그는 오랜 세월 악에 복무한 후 자신의 이름조차 잊었다. 그는 검은 문의 수비대를 지휘한다." />
+    <string id="TAOM_hero_1_27" text="마우그라쉬는 순전한 잔인함과 교활함으로 올라온 오크 대장이다." />
+    <string id="TAOM_hero_1_27_1" text="베리나는 어둠의 탑을 섬기는 검은 누메노르 마법사이다." />
+    <string id="TAOM_hero_1_27_2" text="스로즈나크는 서부 땅으로의 약탈대를 이끈다." />
+    <string id="TAOM_hero_1_27_3" text="바실리아는 그림자 속에서 암흑 군주를 섬긴다." />
+    <string id="TAOM_hero_1_37" text="고샹크는 잔인한 효율성으로 모르도르 오크 연대를 지휘한다." />
+    <string id="TAOM_hero_1_47" text="울보스는 오크 감독관으로, 파멸의 산 대장간에서 노예들을 몰아친다." />
+    <string id="TAOM_hero_1_47_1" text="미나는 모르도르의 어둠의 힘을 섬긴다." />
+    <string id="TAOM_hero_1_47_2" text="카시레아는 그림자의 하인이다." />
+    <string id="TAOM_hero_1_47_3" text="콜람베아는 모르도르의 어둠 속에 산다." />
+    <string id="TAOM_hero_1_15" text="앙마르의 마술사 왕, 나즈굴의 군주는 사우론의 가장 무서운 하인이다. 그는 한때 인간의 위대한 왕이었으나, 힘의 반지로 인해 불멸의 망령으로 타락했다." />
+    <string id="TAOM_hero_1_155" text="어둠의 원수는 전투에서 나즈굴을 지휘하며, 마술사 왕 다음가는 자이다." />
+    <string id="TAOM_hero_1_16" text="움바르의 기사는 반지를 받기 전 한때 해적의 영주였다." />
+    <string id="TAOM_hero_1_28" text="배신자는 타락하기 전 한때 동부의 왕이었다." />
+    <string id="TAOM_hero_1_38" text="불멸자는 불멸을 추구했으나 영원한 예속만을 발견한 마법사 왕이었다." />
+    <string id="TAOM_hero_1_48" text="동부인 카무르, 아홉 중 둘째는 힘의 반지를 받기 전 룬에서 위대한 왕국을 통치했다." />
+    <string id="TAOM_hero_1_48_1" text="오염된 자는 그가 달리는 곳마다 타락을 퍼뜨린다." />
+    <string id="TAOM_hero_1_48_2" text="북부인의 그림자는 추운 땅에서 사냥한다." />
+    <string id="TAOM_hero_1_48_3" text="움바르의 그림자는 남부 해안을 배회한다." />
+    <string id="TAOM_hero_1_177" text="호노라투스는 모르도르 군대의 장교로 복무한다." />
+    <string id="TAOM_hero_1_29" text="사니온은 요새를 지휘하는 검은 누메노르 대장이다." />
+    <string id="TAOM_hero_1_17" text="위대한 사우론, 모르도르의 암흑 군주. 이 항목은 그의 무서운 갑옷을 표시하기 위해서만 존재한다." />
+    <string id="TAOM_hero_1_18" text="자테아는 모르도르의 어둠의 계층에서 복무한다." />
+    <string id="TAOM_hero_1_39" text="데바나는 그림자의 하인으로, 어둠의 기술에 능숙하다." />
+    <string id="TAOM_hero_1_30" text="모르굴의 부관 고스모그는 펠레노르 평원에서 모르도르의 군대를 지휘한다. 잔혹하고 교활한 오크인 그는 선두에서 군대를 이끈다." />
+    <string id="TAOM_hero_1_30_1" text="스발라 레드팽은 고스모그 휘하의 오크 대장이다." />
+    <string id="TAOM_hero_1_49" text="오브론은 모르도르 오크 부대를 이끈다." />
+    <string id="TAOM_hero_1_49_1" text="트리스타니아는 어둠의 세력에 복무한다." />
+    <string id="TAOM_hero_1_49_2" text="고르디아나는 어둠의 탑 그림자 속에 거한다." />
+    <string id="TAOM_hero_1_30_2" text="칼리니아는 모르도르의 어둠의 힘을 섬긴다." />
+    <string id="TAOM_hero_1_30_3" text="시네시오스는 그림자의 하인이다." />
+    <string id="TAOM_hero_1_56_2" text="루스티카는 어둠의 군대에 복무한다." />
+    <string id="TAOM_hero_1_63_2" text="코마타사는 전쟁을 위해 사육된 오크다." />
+    <string id="TAOM_hero_1_63_3" text="엘리딜레아는 어둠의 계급에 복무한다." />
+    <string id="TAOM_hero_1_63" text="미나스 모르굴의 대장 고르바그는 죽은 도시의 수비대를 이끈다. 그는 오크 기준으로도 교활하다." />
+    <string id="TAOM_hero_1_63_1" text="발라리아는 죽은 자의 요새에 복무한다." />
+    <string id="TAOM_hero_1_74" text="자카니스는 오크 연대를 지휘한다." />
+    <string id="TAOM_hero_1_74_1" text="제나는 모르도르의 어둠의 주인들을 섬긴다." />
+    <string id="TAOM_hero_1_54" text="키리스 웅골의 대장 샤그라트는 모르도르로 통하는 고갯길을 지킨다. 그는 오크들 사이에서도 잔혹함으로 알려져 있다." />
+    <string id="TAOM_hero_1_54_1" text="콘스탈리아는 키리스 웅골의 탑에 복무한다." />
+    <string id="TAOM_hero_1_68" text="타로스는 고갯길에서 복무하는 오크 대장이다." />
+    <string id="TAOM_hero_1_68_1" text="실비나는 거미의 고갯길 수비대에 복무한다." />
+    <string id="TAOM_hero_1_69_2" text="도라틸라는 어둠의 군대에 복무한다." />
+    <string id="TAOM_hero_1_69" text="니폰은 모르도르 국경의 요새를 지휘한다." />
+    <string id="TAOM_hero_1_69_1" text="아렐리아나는 변경지대에 복무한다." />
+    <string id="TAOM_hero_1_55" text="마스모그는 강력한 우루크하이 전쟁 족장이다." />
+    <string id="TAOM_hero_1_55_1" text="메게티아는 어둠의 힘을 섬긴다." />
+    <string id="TAOM_hero_1_72" text="볼그는 더러운 자 아조그의 후손인 강력한 오크 족장이다." />
+    <string id="TAOM_hero_1_72_1" text="비비아나는 어둠의 계급에 복무한다." />
+    <string id="TAOM_hero_SE8_c" text="모르도르의 구덩이에서 사육된 오크." />
+    <string id="TAOM_hero_SE9_l" text="모르도르의 요새를 지휘하는 검은 누메노르인 영주." />
+    <string id="TAOM_hero_SE9_s" text="어둠의 힘을 지닌 검은 누메노르인 마녀." />
+    <string id="TAOM_hero_SE9_c1" text="어둠의 기술을 훈련받은 검은 누메노르인 가문의 후계자." />
+    <string id="TAOM_hero_SE9_c2" text="검은 누메노르인 영주의 둘째 자녀." />
+    <string id="TAOM_hero_2_1" text="골짜기나라의 왕 바르드 2세는 스마우그를 쓰러뜨린 전설적인 궁수 바르드의 손자다. 그는 에레보르 산기슭의 번영하는 왕국을 다스리며, 외로운 산의 난쟁이들과 동맹을 맺고 있다." />
+    <string id="TAOM_hero_2_2" text="아스타는 골짜기나라의 여왕으로, 지혜와 우아함으로 사랑받는다." />
+    <string id="TAOM_hero_2_13_1" text="릴리자는 바르딩 귀족 가문의 딸이다." />
+    <string id="TAOM_hero_2_13_2" text="안드루타는 왕의 가문에 복무한다." />
+    <string id="TAOM_hero_2_13_3" text="루다는 골짜기나라의 젊은 귀족 여성이다." />
+    <string id="TAOM_hero_2_13_4" text="테타는 골짜기나라의 귀족 딸이다." />
+    <string id="TAOM_hero_2_7" text="시미르는 골짜기나라의 왕자이자 아버지의 왕좌의 후계자다." />
+    <string id="TAOM_hero_2_7_1" text="미미르는 골짜기나라 왕가의 왕자다." />
+    <string id="TAOM_hero_2_10" text="발라는 골짜기나라의 공주로, 외교와 정치 기술을 훈련받았다." />
+    <string id="TAOM_hero_2_13" text="비다르는 북부 변경지대의 영주로, 동방인의 침입에 대비해 경비를 선다." />
+    <string id="TAOM_hero_2_3" text="토린 3세 스톤헬름, 산 아래의 왕은 에레보르의 드워프들을 통치한다. 그는 데일과의 고대 동맹을 유지하며 어둠에 맞서 방어할 준비를 하고 있다." />
+    <string id="TAOM_hero_2_4" text="시가는 두린 가문의 드워프 귀족 여성이다." />
+    <string id="TAOM_hero_2_4_1" text="아폴라네아는 귀족 출신의 드워프 처녀이다." />
+    <string id="TAOM_hero_2_8" text="우릭은 에레보르의 드워프 왕자로, 대장간 기술과 전투에 능숙하다." />
+    <string id="TAOM_hero_2_11" text="이드룬은 왕실 근위대의 드워프 전사이다." />
+    <string id="TAOM_hero_2_111" text="로지볼은 산의 문을 지키는 드워프 전사이다." />
+    <string id="TAOM_hero_2_5" text="오리는 소린 오켄쉴드의 동료 중 한 명의 후손인 드워프 군주이다. 그는 에레보르와 데일 사이의 무역로를 관리한다." />
+    <string id="TAOM_hero_2_6" text="에르타는 오리의 아내로, 보석 세공 기술로 유명하다." />
+    <string id="TAOM_hero_2_9" text="렉은 오리의 영지를 물려받을 후계자로, 무역과 전투 모두에서 훈련받았다." />
+    <string id="TAOM_hero_2_12" text="스바나는 무역 가문의 딸이다." />
+    <string id="TAOM_hero_2_121" text="오스벤은 산과 도시 사이의 대상을 관리한다." />
+    <string id="TAOM_hero_2_14" text="이스반은 동쪽 변경 지대의 군주로, 긴 호수를 지키고 있다." />
+    <string id="TAOM_hero_2_14_1" text="발카바는 이스반 군주의 아내이다." />
+    <string id="TAOM_hero_2_14_2" text="자베레나는 동쪽 영지의 후계자이다." />
+    <string id="TAOM_hero_2_14_3" text="비즈두나는 동쪽 변경 지대의 젊은 귀족이다." />
+    <string id="TAOM_hero_2_16" text="보푸르는 에레보르의 드워프 군주로, 전설적인 원정대의 후손이다." />
+    <string id="TAOM_hero_2_16_1" text="티야스카는 보푸르의 아내로, 치유 기술에 능숙하다." />
+    <string id="TAOM_hero_2_21" text="스베도른은 호수마을의 수비대를 지휘한다." />
+    <string id="TAOM_hero_2_21_1" text="이즈덴카는 호수마을의 업무를 관리한다." />
+    <string id="TAOM_hero_2_17" text="소린 2세 오켄쉴드는 스마우그로부터 에레보르를 되찾은 영웅으로 기억된다. 그의 영혼은 후손들에게 영감을 준다." />
+    <string id="TAOM_hero_2_17_1" text="드라차는 옛 왕의 기억을 살아있게 한다." />
+    <string id="TAOM_hero_2_22" text="라쇼넥은 데일의 전사들을 지휘한다." />
+    <string id="TAOM_hero_2_22_1" text="제네바는 라쇼넥의 아내이다." />
+    <string id="TAOM_hero_2_24" text="알바르는 데일 근위대의 대장이다." />
+    <string id="TAOM_hero_2_24_1" text="조리나는 데일의 귀족 부인이다." />
+    <string id="TAOM_hero_2_18" text="글로인은 에레보르의 드워프 군주로, 원정대의 김리의 아버지이다." />
+    <string id="TAOM_hero_2_18_1" text="조리카는 글로인의 아내이자, 유명한 김리의 어머니이다." />
+    <string id="TAOM_hero_2_23" text="갈덴은 데일의 남부 수비대를 지휘한다." />
+    <string id="TAOM_hero_2_23_1" text="즐라트카는 갈덴의 딸이다." />
+    <string id="TAOM_hero_2_15" text="라타고스트는 국정 문제에 대해 왕에게 조언하는 현명한 고문이다." />
+    <string id="TAOM_hero_2_15_1" text="야차나는 왕실 궁정에서 봉사한다." />
+    <string id="TAOM_hero_2_15_2" text="밀란카는 궁정의 귀족 여성이다." />
+    <string id="TAOM_hero_2_15_3" text="벨리나는 왕실 가문을 섬긴다." />
+    <string id="TAOM_hero_2_15_4" text="보반은 데일의 젊은 귀족이다." />
+    <string id="TAOM_hero_2_19" text="드왈린은 대단한 명성을 지닌 드워프 전사로, 최초 원정대의 마지막 생존자이다." />
+    <string id="TAOM_hero_2_19_1" text="비토미라는 드왈린과 함께 봉사한다." />
+    <string id="TAOM_hero_2_20" text="오인은 드워프 장로로, 고대 전승과 치유 기술의 수호자이다." />
+    <string id="TAOM_hero_2_20_1" text="키샤는 오인의 아내로, 약초 지식에 능숙하다." />
+    <string id="TAOM_hero_S8_u" text="산의 홀을 지키는 노련한 베테랑이다." />
+    <string id="TAOM_hero_3_1" text="카두라크는 하라드의 타스크랄로, 남부 군대의 최고 사령관이다. 그는 곤도르에 맞서 모르도르와 동맹을 맺고 자신의 민족의 적들에 맞서 무마킬 전쟁 코끼리를 이끈다." />
+    <string id="TAOM_hero_3_2" text="높은 지위의 하라드림 귀족 여성." />
+    <string id="TAOM_hero_3_7" text="디율은 타스크랄의 후계자로, 무마킬 기수의 방식으로 훈련받았다." />
+    <string id="TAOM_hero_3_10" text="아니다는 타스크랄의 딸로, 궁정 정치에 정통하다." />
+    <string id="TAOM_hero_3_13" text="누카르는 하라드의 정예 뱀 근위대를 지휘한다." />
+    <string id="TAOM_hero_3_13_1" text="시라는 누카르의 아내이다." />
+    <string id="TAOM_hero_3_13_2" text="라자나는 뱀 근위대 사령관의 딸이다." />
+    <string id="TAOM_hero_3_8" text="아다스는 하라드림의 전사 왕자이다." />
+    <string id="TAOM_hero_3_11" text="아르와는 사막 부족의 공주이다." />
+    <string id="TAOM_hero_3_3" text="칼레미르는 동부 하라드림의 족장으로, 오아시스 정착지의 영주이다." />
+    <string id="TAOM_hero_3_3_1" text="타리크는 동부 오아시스 영주들의 후계자이다." />
+    <string id="TAOM_hero_3_4" text="마라아는 칼레미르의 아내로, 지혜로 알려져 있다." />
+    <string id="TAOM_hero_3_5" text="할디르는 해안 하라드림을 지휘하며, 움바르의 해적들과 동맹을 맺고 있다." />
+    <string id="TAOM_hero_3_51" text="하칸은 해안 부족의 선장이다." />
+    <string id="TAOM_hero_3_12" text="마난은 곤도르의 해안 정착지를 습격한다." />
+    <string id="TAOM_hero_3_20" text="카리스는 적국으로 향하는 약탈대를 지휘한다." />
+    <string id="TAOM_hero_3_20_1" text="주디라는 카리스의 아내이다." />
+    <string id="TAOM_hero_3_20_2" text="아지나는 약탈대 대장의 딸이다." />
+    <string id="TAOM_hero_3_6" text="루마는 할디르의 아내로, 그들의 해안 영지를 관리한다." />
+    <string id="TAOM_hero_3_9" text="우사이르는 해안 영지의 후계자이다." />
+    <string id="TAOM_hero_3_14" text="담자는 사막 황무지를 가로지르는 대상을 이끈다." />
+    <string id="TAOM_hero_3_14_1" text="사사이타는 사막 무역로를 관리한다." />
+    <string id="TAOM_hero_3_15" text="구지드는 깊은 남쪽의 무마킬 기수들을 지휘한다." />
+    <string id="TAOM_hero_3_15_1" text="심라는 무마킬 영주의 아내이다." />
+    <string id="TAOM_hero_3_15_2" text="부실라는 젊은 무마킬 기수들을 훈련시킨다." />
+    <string id="TAOM_hero_3_16" text="루밀은 황금 깃발 부족의 족장이다." />
+    <string id="TAOM_hero_3_16_1" text="파리나는 황금 깃발 족장의 아내이다." />
+    <string id="TAOM_hero_3_17" text="오로핀은 극남쪽의 뱀 기수들을 지휘한다." />
+    <string id="TAOM_hero_3_17_1" text="샤이마는 오로핀의 아내이다." />
+    <string id="TAOM_hero_3_17_2" text="사니트는 뱀 기수들의 후계자이다." />
+    <string id="TAOM_hero_3_21" text="우카이는 북부 대상을 상대로 사막 약탈자들을 이끈다." />
+    <string id="TAOM_hero_3_21_1" text="아시사는 약탈대 대장의 아내이다." />
+    <string id="TAOM_hero_3_18" text="아란톤은 남쪽의 부유한 상인 왕자이다." />
+    <string id="TAOM_hero_3_18_1" text="파르자나는 상인 왕자의 딸이다." />
+    <string id="TAOM_hero_3_18_2" text="하피사는 무역 관계를 관리한다." />
+    <string id="TAOM_hero_3_18_3" text="주아드는 수련 중인 젊은 상인이다." />
+    <string id="TAOM_hero_3_18_4" text="잘파르는 무역 대상을 호위한다." />
+    <string id="TAOM_hero_3_19" text="아에티리온은 북부 변경의 요새를 지휘한다." />
+    <string id="TAOM_hero_3_19_1" text="살마는 변경 사령관의 아내이다." />
+    <string id="TAOM_hero_3_19_2" text="줄라이카는 변경 수비대와 함께 훈련한다." />
+    <string id="TAOM_hero_3_19_3" text="술하나는 변경의 귀족이다." />
+    <string id="TAOM_hero_3_23" text="Qahin은 적의 영토로 정찰병들을 이끈다." />
+    <string id="TAOM_hero_3_23_1" text="Sukayna는 정찰대장의 아내이다." />
+    <string id="TAOM_hero_3_22" text="Duilin은 사막 부족의 궁수들을 지휘한다." />
+    <string id="TAOM_hero_3_22_1" text="Yamina는 궁수 지휘관의 아내이다." />
+    <string id="TAOM_hero_3_22_2" text="Suna는 젊은 궁수들을 훈련시킨다." />
+    <string id="TAOM_hero_3_22_3" text="Zanuwa는 부족의 숙련된 궁수이다." />
+    <string id="TAOM_hero_3_22_4" text="Hajara는 사막의 감시탑을 지킨다." />
+    <string id="TAOM_hero_4_1" text="로한의 왕 세오덴은 에도라스의 메두셀드에서 통치한다. 한때 사루만의 하인 그리마에게 현혹되었으나, 간달프에 의해 해방되어 헬름 협곡과 펠렌노르 평원에서 그의 백성을 영광으로 이끌었다." />
+    <string id="TAOM_hero_4_2" text="엘프힐드는 로한의 왕비였으며, 세오드레드의 어머니였다. 그녀는 출산 중 사망했으며, 이는 세오덴의 치세에 그림자를 드리운 슬픔이었다." />
+    <string id="TAOM_hero_4_7" text="세오드레드는 세오덴 왕의 외아들이자 로한의 왕자였다. 그는 사루만의 우루크-하이에 맞서 이센 여울을 방어하다 전사했다." />
+    <string id="TAOM_hero_4_10" text="Elys는 로히림 궁정의 귀족 부인이다." />
+    <string id="TAOM_hero_4_13" text="Romund는 왕실 근위대의 대장으로 복무한다." />
+    <string id="TAOM_hero_4_14" text="Morcon은 왕의 가신단에서 신뢰받는 대장이다." />
+    <string id="TAOM_hero_4_141" text="Amorcon은 근위대에서 그의 친족과 함께 복무한다." />
+    <string id="TAOM_hero_4_15" text="Erdurand는 세오덴의 가신단 기병이다." />
+    <string id="TAOM_hero_4_3" text="세오드윈은 세오덴 왕의 누이이자 에오메르와 에오윈의 어머니였다. 그녀는 남편 에오문드가 오크에게 살해된 후 슬픔으로 사망했다." />
+    <string id="TAOM_hero_4_3_1" text="에오메르 에아디그는 제3원수이자 세오덴의 조카이며 왕위 계승자이다. 그는 동부 평원의 기병들을 맹렬한 충성심으로 이끈다." />
+    <string id="TAOM_hero_4_4" text="Elthild는 에오포링 가문의 귀족 부인이다." />
+    <string id="TAOM_hero_4_8" text="Furnhard는 에오메르의 휘하에서 신뢰받는 기병으로 복무한다." />
+    <string id="TAOM_hero_4_11" text="Liena는 왕실 가신단을 섬긴다." />
+    <string id="TAOM_hero_4_6" text="그림슬라드의 그림볼드는 서부 평원의 기병들을 지휘한다. 맹렬한 전사로서 이센 여울을 지켰으며, 후에 펠렌노르에서 영웅적으로 전사했다." />
+    <string id="TAOM_hero_4_6_1" text="Deorwyn은 그림볼드의 지휘권을 계승할 후계자이다." />
+    <string id="TAOM_hero_4_5" text="Unthery는 서부 평원 기병대의 대장으로 복무한다." />
+    <string id="TAOM_hero_4_9" text="Thomund는 서부 평원 기병 중대를 지휘한다." />
+    <string id="TAOM_hero_4_12" text="Silvind는 서부 평원의 방패 여전사이다." />
+    <string id="TAOM_hero_4_121" text="Lasand는 서부 평원 수비대에서 복무한다." />
+    <string id="TAOM_hero_4_16" text="서부 평원의 영주 에르켄브란드는 뿔성의 요새를 지휘한다. 그는 간달프와 함께 헬름 협곡에 도착하여 전투의 흐름을 역전시켰다." />
+    <string id="TAOM_hero_4_16_1" text="Merthu는 에르켄브란드의 아내이자 뿔성의 영주 부인이다." />
+    <string id="TAOM_hero_4_17" text="Elbet는 에르켄브란드의 가신단에서 복무한다." />
+    <string id="TAOM_hero_4_18" text="Amalgun은 에르켄브란드의 후계자이다." />
+    <string id="TAOM_hero_4_181" text="Arthamund는 뿔성 수비대의 대장으로 복무한다." />
+    <string id="TAOM_hero_4_19" text="Asela는 디핑 협곡을 지키는 방패 여전사이다." />
+    <string id="TAOM_hero_4_25" text="Lucand는 동부 목초지의 기병들을 지휘한다." />
+    <string id="TAOM_hero_4_25_1" text="Bertliana는 Lucand의 아내이다." />
+    <string id="TAOM_hero_4_21" text="오르들라싱 가문의 Cuthraed는 동부 국경을 순찰한다." />
+    <string id="TAOM_hero_4_20" text="Varmund는 알드부르크 수비대를 지휘한다." />
+    <string id="TAOM_hero_4_20_1" text="Ingeltrud는 Varmund의 아내이자 알드부르크의 영주 부인이다." />
+    <string id="TAOM_hero_4_22" text="첼문딩 가문의 Wulf는 북부 계곡의 기병들을 이끈다." />
+    <string id="TAOM_hero_4_22_1" text="Sunnifa는 Wulf의 아내이다." />
+    <string id="TAOM_hero_4_23" text="Marhath는 남부 초원의 말 사육자들을 이끈다." />
+    <string id="TAOM_hero_4_23_1" text="울프윈은 마르하스의 딸로, 숙련된 기병이다." />
+    <string id="TAOM_hero_4_23_2" text="엘레두란은 왕의 군대를 위해 군마를 훈련한다." />
+    <string id="TAOM_hero_4_23_3" text="엘레두란 2세는 말 관리인으로 복무한다." />
+    <string id="TAOM_hero_4_24" text="그리마 벌레혀는 세오덴의 조언자였지만, 실제로는 사루만의 간첩이었다. 그의 속삭이는 거짓말은 왕의 마음을 오염시켰으나 간달프가 그 마법을 깨뜨렸다." />
+    <string id="TAOM_hero_4_24_1" text="로한의 귀부인 에오윈은 에오메르의 여동생이자 세오덴의 조카이다. 그녀는 펠렌노르 전투에서 마술사왕을 쓰러뜨려 시대의 공포를 물리쳤다." />
+    <string id="TAOM_hero_4_24_2" text="엘프그림은 왕실 기병대의 기병으로 복무한다." />
+    <string id="TAOM_hero_4_24_3" text="헤루브란드는 왕의 전당을 수호한다." />
+    <string id="TAOM_hero_4_24_4" text="시게베르트는 로한의 국경을 순찰한다." />
+    <string id="TAOM_hero_4_26" text="페릭은 로한의 협곡 일대의 기병들을 지휘한다." />
+    <string id="TAOM_hero_4_26_1" text="라인가르다는 협곡의 방패전사 여인이다." />
+    <string id="TAOM_hero_4_27" text="에텔라핑의 아엘레는 던랜드의 습격으로부터 골짜기를 수호한다." />
+    <string id="TAOM_hero_4_27_1" text="바에르부르크는 아엘레의 아내이다." />
+    <string id="TAOM_hero_V9_u" text="지역 영주에게 조언을 하는 노련한 기병." />
+    <string id="TAOM_hero_4_28" text="모르카르가스의 파스트헬름은 남부 초소를 지휘한다." />
+    <string id="TAOM_hero_4_28_1" text="모르카르는 파스트헬름의 아들이다." />
+    <string id="TAOM_hero_4_28_2" text="헤레스위스는 남부 초소 사령관의 딸이다." />
+    <string id="TAOM_hero_5_1" text="칸드의 대장군 바르굴은 용맹한 바리아그 기병들을 이끈다. 모르도르와의 동맹으로 그의 전사들은 중간계의 전쟁에서 곤도르에 맞서 싸운다." />
+    <string id="TAOM_hero_5_1_1" text="대장군의 수행부대 전사." />
+    <string id="TAOM_hero_5_3" text="에르게온은 신속한 기병 전술로 유명한 동부 바리아그 부족들을 이끄는 족장이다." />
+    <string id="TAOM_hero_5_3_1" text="라나온은 에르게온의 전단의 후계자이다." />
+    <string id="TAOM_hero_5_3_2" text="라도구알은 에르게온의 군대에서 대장으로 복무한다." />
+    <string id="TAOM_hero_5_4" text="니윈은 에르게온의 아내로, 치유술에 능하다." />
+    <string id="TAOM_hero_5_5" text="멜리디르는 곤도르 땅으로 약탈대를 이끈다." />
+    <string id="TAOM_hero_5_5_1" text="에일리는 부족의 말 떼를 관리한다." />
+    <string id="TAOM_hero_5_6" text="알카에아는 멜리디르의 아내이다." />
+    <string id="TAOM_hero_5_7" text="칸드의 바리아그 전사 족장." />
+    <string id="TAOM_hero_5_8" text="세인은 바리아그 기병 중대를 지휘한다." />
+    <string id="TAOM_hero_5_9" text="컬하른은 명성이 높아지는 바리아그 전사이다." />
+    <string id="TAOM_hero_5_91" text="테간은 컬하른과 함께 복무한다." />
+    <string id="TAOM_hero_5_10" text="코레인은 대장군의 궁정 바리아그 귀족이다." />
+    <string id="TAOM_hero_5_11" text="알린네스는 바리아그 귀족 여인이다." />
+    <string id="TAOM_hero_5_12" text="위수인은 젊은 바리아그 기병들을 훈련한다." />
+    <string id="TAOM_hero_5_13" text="무인세르는 북부 지역의 약탈대를 지휘한다." />
+    <string id="TAOM_hero_5_131" text="라스는 무인세르의 지휘 하에 복무한다." />
+    <string id="TAOM_hero_5_13_1" text="베아사그는 북부 부족의 바리아그 전사이다." />
+    <string id="TAOM_hero_5_15" text="프린도르는 칸드로 들어가는 산맥 협로를 수호한다." />
+    <string id="TAOM_hero_5_15_1" text="플로라이는 산맥 수호자의 딸이다." />
+    <string id="TAOM_hero_5_15_2" text="베이트린은 산맥 길을 순찰한다." />
+    <string id="TAOM_hero_5_15_3" text="디아르바인은 높은 협로를 수호한다." />
+    <string id="TAOM_hero_5_14" text="루이한은 서부 평원의 바리아그 기병들을 지휘한다." />
+    <string id="TAOM_hero_5_14_1" text="에아비르는 루이찬의 아내이다." />
+    <string id="TAOM_hero_5_16" text="아에론은 중앙 초원의 전사들을 이끈다." />
+    <string id="TAOM_hero_5_16_1" text="리아신은 아에론의 아내이다." />
+    <string id="TAOM_hero_5_16_2" text="가웬은 아에론의 전단의 후계자이다." />
+    <string id="TAOM_hero_5_17" text="아라드위르는 동부 변경 부대를 지휘한다." />
+    <string id="TAOM_hero_5_17_1" text="브리간은 아라드위르의 아내이다." />
+    <string id="TAOM_hero_5_18" text="브라녹은 적 영토로 정찰병들을 이끈다." />
+    <string id="TAOM_hero_5_18_1" text="세오나그는 브라녹의 아내이다." />
+    <string id="TAOM_hero_5_19" text="페나간은 결투 실력으로 유명한 바리아그 투사이다." />
+    <string id="TAOM_hero_5_20" text="시아라무스는 칸드의 전차 전사들을 지휘한다." />
+    <string id="TAOM_hero_5_21" text="카르피드는 국경을 따라 바리아그 약탈자들을 이끈다." />
+    <string id="TAOM_hero_5_21_1" text="베아타그는 카르피드의 아내이다." />
+    <string id="TAOM_hero_5_21_2" text="타오르세는 카르피드의 약탈단의 후계자이다." />
+    <string id="TAOM_hero_5_22" text="피아라드는 남부 교역로를 지킨다." />
+    <string id="TAOM_hero_6_1" text="룬의 로케-칸 자믹 자미안은 동방인들의 황금 왕국을 통치한다. 그의 조상들은 사우론을 섬겼으며, 그는 그 어두운 동맹을 이어가며 서방의 땅을 정복하는 꿈을 꾼다." />
+    <string id="TAOM_hero_6_2" text="마라이아는 로케-칸의 아내이자 황금 왕국의 여왕이다." />
+    <string id="TAOM_hero_6_3" text="바가이는 왕실 근위대의 대장으로 복무한다." />
+    <string id="TAOM_hero_6_4" text="구르틸름 살루리안은 룬의 서부 군대를 지휘한다. 남편이 죽은 후, 그녀는 강철 같은 결의로 지휘권을 잡았다." />
+    <string id="TAOM_hero_6_5" text="이르보 니카티안은 동부 초원의 유명한 기마 궁수인 아르키트 씨족을 이끈다." />
+    <string id="TAOM_hero_6_51" text="카다는 아르키트 씨족의 후계자이다." />
+    <string id="TAOM_hero_6_6" text="수란은 남부 부족의 전사들을 지휘한다." />
+    <string id="TAOM_hero_6_7" text="차간은 룬의 왕자이자 황금 왕국의 후계자이다." />
+    <string id="TAOM_hero_6_8" text="에수르는 구르틸름의 군대의 전사이다." />
+    <string id="TAOM_hero_6_81" text="나얀타이는 구르틸름의 군대에서 대장으로 복무한다." />
+    <string id="TAOM_hero_6_9" text="테문은 아르키트 씨족의 전사이다." />
+    <string id="TAOM_hero_6_10" text="알리진은 왕실 가문의 왕자이다." />
+    <string id="TAOM_hero_6_101" text="볼라트는 왕실에서 복무한다." />
+    <string id="TAOM_hero_6_11" text="야나는 구르틸름의 군대의 귀족이다." />
+    <string id="TAOM_hero_6_12" text="아바가이는 아르키트 영지의 후계자이다." />
+    <string id="TAOM_hero_6_13" text="보르투는 왕실 가문의 귀족이다." />
+    <string id="TAOM_hero_6_15" text="오라구르는 아르키트 기마 궁수들을 이끈다." />
+    <string id="TAOM_hero_6_15_1" text="코리진은 오라구르의 아내이다." />
+    <string id="TAOM_hero_6_15_2" text="세첸은 오라구르의 지휘권의 후계자이다." />
+    <string id="TAOM_hero_6_16" text="아크보스 카르미안은 룬의 남부 국경을 지휘한다." />
+    <string id="TAOM_hero_6_16_1" text="참부이는 아크보스의 아내이다." />
+    <string id="TAOM_hero_6_16_2" text="우나겐은 아크보스의 지휘권의 후계자이다." />
+    <string id="TAOM_hero_6_17" text="암두르 암두리드는 동부 초원의 강력한 씨족을 이끈다." />
+    <string id="TAOM_hero_6_17_1" text="에르게네는 암두르의 아내이다." />
+    <string id="TAOM_hero_6_17_2" text="예숨은 암두리드 영지의 후계자이다." />
+    <string id="TAOM_hero_6_18" text="루스칸 쿤돌라르는 서부 지방의 전사들을 지휘한다." />
+    <string id="TAOM_hero_6_18_1" text="틸룬은 루스칸의 아내이다." />
+    <string id="TAOM_hero_6_18_2" text="차군은 쿤돌라르의 후계자이다." />
+    <string id="TAOM_hero_6_19" text="바케랄탄 쿤돌라르는 루스칸의 형제로, 기병 정찰대를 지휘한다." />
+    <string id="TAOM_hero_6_19_1" text="소카타이는 바케랄탄의 아내이다." />
+    <string id="TAOM_hero_6_19_2" text="코르테는 바케랄탄의 정찰대 후계자이다." />
+    <string id="TAOM_hero_6_20" text="쿠루브라 마샤키안은 룬의 북부 부족들을 지휘한다." />
+    <string id="TAOM_hero_6_20_1" text="지구르는 쿠루브라의 아내이다." />
+    <string id="TAOM_hero_K8_u" text="북부 족장에게 조언하는 노련한 전사." />
+    <string id="TAOM_hero_6_21" text="몰룩 일노리아는 강력한 기마 전사 일족을 지휘한다." />
+    <string id="TAOM_hero_6_21_1" text="에사체이는 몰룩의 아내이다." />
+    <string id="TAOM_hero_6_22" text="샤칼 2세 샤칼리안은 룬 해의 부유한 교역 일족을 다스린다." />
+    <string id="TAOM_hero_6_22_1" text="에셀렌은 샤칼의 아내이다." />
+    <string id="TAOM_hero_6_23" text="후즈-마르고즈 후즈는 서부 변경의 요새 수비대를 지휘한다." />
+    <string id="TAOM_hero_6_24" text="니카스 아데키그는 룬으로 들어오는 남부 고갯길을 지킨다." />
+    <string id="TAOM_hero_A9_l" text="남부 황무지의 하라드림 족장." />
+    <string id="TAOM_hero_A9_s" text="남부 황무지 족장의 아내." />
+    <string id="TAOM_hero_A9_c" text="남부 황무지 족장의 후계자." />
+    <string id="TAOM_hero_A9_u" text="남부 부족의 전사." />
+    <string id="TAOM_hero_V11_l" text="서부 계곡의 로히림 영주." />
+    <string id="TAOM_hero_V11_u" text="영주에게 조언하는 노련한 기병." />
+    <string id="TAOM_hero_V11_c1" text="서부 계곡 영지의 후계자." />
+    <string id="TAOM_hero_V11_c2" text="서부 계곡 영주의 둘째 자녀." />
+    <string id="TAOM_hero_S9_l" text="북부 진입로를 지키는 데일의 귀족." />
+    <string id="TAOM_hero_S9_m" text="북부 바르딩 일족의 여족장." />
+    <string id="TAOM_hero_S9_c" text="북부 영지의 젊은 후계자." />
+    <string id="TAOM_hero_S9_u" text="북부 수비대의 노련한 전사." />
+    <string id="TAOM_hero_K9_l" text="먼 동방인 부족의 족장." />
+    <string id="TAOM_hero_K9_s" text="먼 족장의 아내." />
+    <string id="TAOM_hero_K9_c1" text="먼 부족 영지의 후계자." />
+    <string id="TAOM_hero_K9_c2" text="먼 족장의 둘째 자녀." />
+    <string id="TAOM_hero_B8_l" text="동부 언덕의 바리아그 전쟁군주." />
+    <string id="TAOM_hero_B8_s" text="바리아그 전쟁군주의 아내." />
+    <string id="TAOM_hero_B8_c" text="바리아그 전쟁군주의 후계자." />
+  </strings>
+</base>

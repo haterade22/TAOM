@@ -1,6 +1,7 @@
 using System;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Domain;
 
@@ -44,6 +45,17 @@ public class CareerScreenVM : ViewModel
     private MBBindingList<CareerChoiceGroupObjectVM> _choiceGroupsTier3;
     private MBBindingList<CareerAbilityEffectVM> _abilityEffects;
 
+    // Switch-mode wiring -- when isSwitchMode is true the screen renders a list of eligible
+    // alternative careers (current career excluded) instead of the normal-mode choice tree.
+    // Selecting one invokes _onChooseSwitchTarget, which the screen wires to
+    // ICareerSwitchService.SwitchCareer + CloseScreen.
+    private readonly bool _isSwitchMode;
+    private readonly ICareerHeroAdapter _heroAdapter;
+    private readonly Action<string> _onChooseSwitchTarget;
+    private MBBindingList<CareerSwitchTargetVM> _eligibleSwitchTargets;
+    private string _switchModeSubtitle;
+    private string _noTargetsMessage;
+
     public CareerScreenVM(
         ICareerDataService dataService,
         ICareerRegistry registry,
@@ -53,7 +65,10 @@ public class CareerScreenVM : ViewModel
         string heroStringId,
         int heroLevel,
         Action onClose,
-        ICareerQuestService questService = null)
+        ICareerQuestService questService = null,
+        bool isSwitchMode = false,
+        ICareerHeroAdapter heroAdapter = null,
+        Action<string> onChooseSwitchTarget = null)
     {
         _dataService = dataService;
         _registry = registry;
@@ -64,18 +79,26 @@ public class CareerScreenVM : ViewModel
         _heroStringId = heroStringId;
         _heroLevel = heroLevel;
         _onClose = onClose;
+        _isSwitchMode = isSwitchMode;
+        _heroAdapter = heroAdapter;
+        _onChooseSwitchTarget = onChooseSwitchTarget;
 
-        _screenTitle = new TextObject("{=taom_career_screen_title}Career").ToString();
+        _screenTitle = isSwitchMode
+            ? new TextObject("{=taom_career_switch_title}Choose Your Path").ToString()
+            : new TextObject("{=taom_career_screen_title}Career").ToString();
         _doneLbl = new TextObject("{=taom_career_done}Done").ToString();
         _abilityLabel = new TextObject("{=taom_career_ability_label}Career Ability").ToString();
         _tier1Label = new TextObject("{=taom_career_tier1}Tier 1").ToString();
         _tier2Label = new TextObject("{=taom_career_tier2}Tier 2").ToString();
         _tier3Label = new TextObject("{=taom_career_tier3}Tier 3").ToString();
+        _switchModeSubtitle = new TextObject("{=taom_career_switch_subtitle}Eligible careers for your culture and standing.").ToString();
+        _noTargetsMessage = new TextObject("{=taom_career_switch_no_targets}No eligible careers available for your culture and standing.").ToString();
 
         _choiceGroupsTier1 = new MBBindingList<CareerChoiceGroupObjectVM>();
         _choiceGroupsTier2 = new MBBindingList<CareerChoiceGroupObjectVM>();
         _choiceGroupsTier3 = new MBBindingList<CareerChoiceGroupObjectVM>();
         _abilityEffects = new MBBindingList<CareerAbilityEffectVM>();
+        _eligibleSwitchTargets = new MBBindingList<CareerSwitchTargetVM>();
 
         RefreshValues();
     }
@@ -83,6 +106,15 @@ public class CareerScreenVM : ViewModel
     public override void RefreshValues()
     {
         base.RefreshValues();
+
+        if (_isSwitchMode)
+        {
+            RebuildEligibleSwitchTargets();
+            // HasCareer stays false in switch mode -- the normal-mode panels (portrait, perk
+            // tree, ability rollup) gate on @IsNormalMode in the prefab, not @HasCareer.
+            HasCareer = false;
+            return;
+        }
 
         var careerId = _dataService.GetCareerStringId(_heroStringId);
         if (string.IsNullOrEmpty(careerId))
@@ -140,6 +172,45 @@ public class CareerScreenVM : ViewModel
 
         RebuildAbilityEffects(career);
         RebuildChoiceGroups(career);
+    }
+
+    private void RebuildEligibleSwitchTargets()
+    {
+        _eligibleSwitchTargets.Clear();
+        if (_heroAdapter == null)
+        {
+            _logger?.LogWarning($"CareerSystem: RebuildEligibleSwitchTargets — heroAdapter is null for hero '{_heroStringId}'; rendering empty picker");
+            NotifySwitchTargetsChanged();
+            return;
+        }
+
+        var currentCareerId = _dataService.GetCareerStringId(_heroStringId);
+        var targets = _registry.GetEligibleSwitchTargets(currentCareerId, _heroAdapter);
+        foreach (var career in targets)
+        {
+            var abilityTemplate = _configProvider?.GetAbilityTemplate(career.AbilityTemplateId);
+            _eligibleSwitchTargets.Add(new CareerSwitchTargetVM(career, abilityTemplate, OnChooseSwitchTarget));
+        }
+
+        if (_eligibleSwitchTargets.Count == 0)
+            _logger?.LogWarning($"CareerSystem: RebuildEligibleSwitchTargets — no eligible targets for hero '{_heroStringId}' currentCareer='{currentCareerId}' (dialogue gate should have hidden this; possible static-entry-point or stale eligibility)");
+
+        // IsBrowsingTargets and HasNoSwitchTargets are computed bools that depend on the
+        // collection count. Gauntlet doesn't re-evaluate computed properties on collection
+        // mutation -- it only listens to OnPropertyChanged events. Without these notifies the
+        // prefab's @IsBrowsingTargets / @HasNoSwitchTargets gates stay stale.
+        NotifySwitchTargetsChanged();
+    }
+
+    private void NotifySwitchTargetsChanged()
+    {
+        OnPropertyChanged(nameof(IsBrowsingTargets));
+        OnPropertyChanged(nameof(HasNoSwitchTargets));
+    }
+
+    private void OnChooseSwitchTarget(string careerId)
+    {
+        _onChooseSwitchTarget?.Invoke(careerId);
     }
 
     private void RebuildAbilityEffects(CareerDefinition career)
@@ -461,5 +532,47 @@ public class CareerScreenVM : ViewModel
     {
         get => _abilityEffects;
         set { if (_abilityEffects != value) { _abilityEffects = value; OnPropertyChangedWithValue(value, nameof(AbilityEffects)); } }
+    }
+
+    // ── Switch-mode bindings ──
+    //
+    // The prefab gates the normal-mode (perk tree, ability rollup, portrait) panels with
+    // @IsNormalMode and the picker panel with @IsBrowsingTargets. The two are derived from
+    // _isSwitchMode so it stays a single source of truth.
+
+    [DataSourceProperty]
+    public bool IsSwitchMode => _isSwitchMode;
+
+    [DataSourceProperty]
+    public bool IsNormalMode => !_isSwitchMode;
+
+    [DataSourceProperty]
+    public bool IsBrowsingTargets => _isSwitchMode && _eligibleSwitchTargets != null && _eligibleSwitchTargets.Count > 0;
+
+    // Inverse of IsBrowsingTargets while in switch mode -- drives the empty-state TextWidget
+    // in the prefab (shown when the dialogue gate is bypassed, the heroAdapter is null, or
+    // GetEligibleSwitchTargets returns no rows). Codex Review #32.
+    [DataSourceProperty]
+    public bool HasNoSwitchTargets => _isSwitchMode && (_eligibleSwitchTargets == null || _eligibleSwitchTargets.Count == 0);
+
+    [DataSourceProperty]
+    public MBBindingList<CareerSwitchTargetVM> EligibleSwitchTargets
+    {
+        get => _eligibleSwitchTargets;
+        set { if (_eligibleSwitchTargets != value) { _eligibleSwitchTargets = value; OnPropertyChangedWithValue(value, nameof(EligibleSwitchTargets)); } }
+    }
+
+    [DataSourceProperty]
+    public string SwitchModeSubtitle
+    {
+        get => _switchModeSubtitle;
+        set { if (_switchModeSubtitle != value) { _switchModeSubtitle = value; OnPropertyChangedWithValue(value, nameof(SwitchModeSubtitle)); } }
+    }
+
+    [DataSourceProperty]
+    public string NoTargetsMessage
+    {
+        get => _noTargetsMessage;
+        set { if (_noTargetsMessage != value) { _noTargetsMessage = value; OnPropertyChangedWithValue(value, nameof(NoTargetsMessage)); } }
     }
 }

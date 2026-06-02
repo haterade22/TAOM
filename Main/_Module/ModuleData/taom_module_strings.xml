@@ -832,6 +832,15 @@
 	<string id="taom_career_tier3" text="{=taom_career_tier3}Tier 3" />
 	<string id="taom_career_free_points" text="{=taom_career_free_points}Free Points: {COUNT}" />
 	<string id="taom_career_tier_requirement" text="{=taom_career_tier_requirement}Requires Level {LEVEL}" />
+	<!-- Choice tree effect-scope badges (passive vs ability-bound) -->
+	<string id="taom_career_choice_while_active" text="{=taom_career_choice_while_active}While active" />
+	<!-- Career-switch screen (opened from "I wish to discuss my career path" dialogue) -->
+	<string id="taom_career_switch_title" text="{=taom_career_switch_title}Choose Your Path" />
+	<string id="taom_career_switch_choose" text="{=taom_career_switch_choose}Choose" />
+	<string id="taom_career_switch_subtitle" text="{=taom_career_switch_subtitle}Eligible careers for your culture and standing." />
+	<string id="taom_career_switch" text="{=taom_career_switch}I wish to discuss my career path." />
+	<string id="taom_career_switched_open_screen" text="{=taom_career_switched_open_screen}Very well -- let us discuss what paths lie before you." />
+	<string id="taom_career_switch_no_targets" text="{=taom_career_switch_no_targets}No eligible careers available for your culture and standing." />
 	<!-- Career-tied quest system (Phase 6) -->
 	<string id="taom_cq_title" text="{=taom_cq_title}Career Quest" />
 	<string id="taom_cq_body" text="{=taom_cq_body}Prove yourself." />

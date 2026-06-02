@@ -1,30 +1,32 @@
-using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CareerSystem.UI;
 
 namespace TAOM.Features.CareerSystem;
 
+// Hooks the "I wish to discuss my career path." player line under hero_main_options. The
+// consequence opens GauntletCareerScreen in switch mode (the screen renders a picker of
+// eligible alternatives); previously this auto-switched to whatever the registry returned
+// first in iteration order, giving the player no choice.
 public class CareerSwitchDialogueBehavior : CampaignBehaviorBase
 {
+    // Note: ICareerSwitchService is NOT injected here -- the switch action is invoked from
+    // GauntletCareerScreen.OnChooseSwitchTarget instead. This behavior only registers the
+    // dialogue lines + visibility gate. SubModule.cs must call the 4-arg ctor.
     private readonly ICareerDataService _dataService;
     private readonly ICareerRegistry _registry;
-    private readonly ICareerSwitchService _switchService;
     private readonly ICareerHeroAdapterFactory _adapterFactory;
     private readonly IModLogger _logger;
-
-    private string _pendingNewCareerId;
 
     public CareerSwitchDialogueBehavior(
         ICareerDataService dataService,
         ICareerRegistry registry,
-        ICareerSwitchService switchService,
         ICareerHeroAdapterFactory adapterFactory,
         IModLogger logger)
     {
         _dataService = dataService;
         _registry = registry;
-        _switchService = switchService;
         _adapterFactory = adapterFactory;
         _logger = logger;
     }
@@ -53,54 +55,32 @@ public class CareerSwitchDialogueBehavior : CampaignBehaviorBase
             "career_switch_response",
             "career_switch_response",
             "close_window",
-            "{=taom_career_switched}Your path has been altered. May it serve you well.",
+            "{=taom_career_switched_open_screen}Very well -- let us discuss what paths lie before you.",
             null,
-            CareerSwitchConsequence,
+            OpenCareerSwitchScreen,
             200);
     }
 
+    // Dialogue option only appears if the player has a career AND at least one eligible
+    // alternative -- a culture with a single career path produces no targets and we don't
+    // want a dead-end click.
     private bool CareerSwitchCondition()
     {
         var hero = Hero.MainHero;
         if (hero == null) return false;
-
         if (!_dataService.HasCareer(hero.StringId)) return false;
 
         var adapter = _adapterFactory.Create(hero);
         if (adapter == null) return false;
 
         var currentCareerId = _dataService.GetCareerStringId(hero.StringId);
-        var allCareers = _registry.GetAllCareers();
-
-        foreach (var career in allCareers)
-        {
-            if (career.Id == currentCareerId) continue;
-            if (_switchService.CanSwitch(adapter, career.Id))
-            {
-                _pendingNewCareerId = career.Id;
-                return true;
-            }
-        }
-
-        return false;
+        var targets = _registry.GetEligibleSwitchTargets(currentCareerId, adapter);
+        return targets.Count > 0;
     }
 
-    private void CareerSwitchConsequence()
+    private void OpenCareerSwitchScreen()
     {
-        var hero = Hero.MainHero;
-        if (hero == null || string.IsNullOrEmpty(_pendingNewCareerId)) return;
-
-        var adapter = _adapterFactory.Create(hero);
-        if (adapter == null) return;
-
-        var oldCareerId = _dataService.GetCareerStringId(hero.StringId);
-        var success = _switchService.SwitchCareer(hero.StringId, adapter, _pendingNewCareerId);
-
-        if (success)
-            _logger.LogInfo($"CareerSystem: Dialogue career switch — '{oldCareerId}' -> '{_pendingNewCareerId}' for {hero.Name}");
-        else
-            _logger.LogWarning($"CareerSystem: Dialogue career switch failed — '{_pendingNewCareerId}' for {hero.Name}");
-
-        _pendingNewCareerId = null;
+        _logger?.LogInfo("CareerSystem: Opening career-switch screen from dialogue");
+        GauntletCareerScreen.OpenCareerScreen(switchMode: true);
     }
 }

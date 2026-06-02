@@ -51,6 +51,22 @@ public class CareerChoiceObjectVM : ViewModel
     [DataSourceProperty]
     public bool IsKeystone => _choice.Type == ChoiceType.Keystone;
 
+    // Effect-scope badge shown next to each keystone bullet so the player can distinguish
+    // always-active passives from effects that fire only while the career ability is active.
+    //
+    // PassiveEffect choices flow through CareerPassiveService and are read by GameModel overrides
+    // on every relevant calculation -- always active. Mutation (Keystone) choices are applied to
+    // a cloned AbilityTemplateData inside ExecuteAbilityEffect on V-press; the clone is discarded
+    // once the buff window expires. See docs/features/career-system.md.
+    //
+    // The companion EffectScopeTooltip property was removed (Codex Review #32 + deep-review):
+    // it was authored but never bound by the prefab. The "While active" badge alone is enough
+    // UX signal -- passives need no explicit label.
+    [DataSourceProperty]
+    public string EffectScopeBadge => IsKeystone
+        ? new TextObject("{=taom_career_choice_while_active}While active").ToString()
+        : string.Empty;
+
     // Empty/locked pip state: shown dim when a slot is neither taken nor currently takeable.
     // The prefab renders three tinted copies of the point-pip gated on IsTaken / IsFreeToTake /
     // IsUnavailable so every slot always shows a pip (gold / brown / dim) instead of a blank gap.

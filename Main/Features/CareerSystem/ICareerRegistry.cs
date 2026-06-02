@@ -17,4 +17,12 @@ public interface ICareerRegistry
 
     /// <summary>Hero level at which the given tier (1-3) unlocks. Returns int.MaxValue for unknown tiers.</summary>
     int GetTierUnlockLevel(int tier);
+
+    /// <summary>
+    /// Eligible careers a hero could switch INTO -- filtered by `IsEligible` AND excluding
+    /// `currentCareerId`. Used by the "I wish to discuss my career path" dialogue option and the
+    /// career-switch screen picker. Returns empty when no alternative exists (the dialogue option
+    /// hides itself in that case).
+    /// </summary>
+    IReadOnlyList<CareerDefinition> GetEligibleSwitchTargets(string currentCareerId, ICareerHeroAdapter hero);
 }

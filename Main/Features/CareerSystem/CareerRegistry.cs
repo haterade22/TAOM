@@ -132,6 +132,21 @@ public class CareerRegistry : ICareerRegistry
         }
     }
 
+    public IReadOnlyList<CareerDefinition> GetEligibleSwitchTargets(string currentCareerId, ICareerHeroAdapter hero)
+    {
+        EnsureLoaded();
+        if (hero == null) return new List<CareerDefinition>();
+
+        var targets = new List<CareerDefinition>();
+        foreach (var career in _allCareers)
+        {
+            if (string.Equals(career.Id, currentCareerId, StringComparison.OrdinalIgnoreCase)) continue;
+            if (!IsEligible(career.Id, hero)) continue;
+            targets.Add(career);
+        }
+        return targets;
+    }
+
     private void EnsureLoaded()
     {
         if (_careers != null) return;

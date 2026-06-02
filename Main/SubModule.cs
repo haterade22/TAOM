@@ -423,10 +423,11 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddBehavior(new CareerCampaignBehavior(
                 careerDataService, careerRegistry, careerPassiveService, careerCreationHandler, careerAbilityServiceForBehavior, careerLogger));
 
-            var careerSwitchService = IoC.Resolve<ICareerSwitchService>();
             var careerAdapterFactory = IoC.Resolve<ICareerHeroAdapterFactory>();
+            // CareerSwitchDialogueBehavior used to take ICareerSwitchService too; that dependency
+            // moved to GauntletCareerScreen.OnChooseSwitchTarget (Codex Review #32 cleanup).
             campaignStarter.AddBehavior(new CareerSwitchDialogueBehavior(
-                careerDataService, careerRegistry, careerSwitchService, careerAdapterFactory, careerLogger));
+                careerDataService, careerRegistry, careerAdapterFactory, careerLogger));
 
             // Career-tied quest system (Phase 6) — offers/starts tier quests; CareerQuest : QuestBase
             // is registered for saving by the auto-discovered CareerQuestSaveableTypeDefiner.

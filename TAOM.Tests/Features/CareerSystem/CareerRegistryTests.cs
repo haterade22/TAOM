@@ -193,4 +193,99 @@ public class CareerRegistryTests
             Assert.IsTrue(_registry.IsTierAvailable(lvl, tier), $"tier {tier} should unlock at its unlock level");
         }
     }
+
+    // ── GetEligibleSwitchTargets ──
+    //
+    // Used by the "I wish to discuss my career path" dialogue + the career-switch screen. Must
+    // return only the careers a hero could legally switch INTO -- which means eligible by culture
+    // and clan tier, AND distinct from the hero's current career.
+
+    [TestMethod]
+    public void GetEligibleSwitchTargets_ExcludesCurrentCareer()
+    {
+        // Two Mordor careers; hero is currently in "warboss" -- target list must contain only the other.
+        var skirmisher = new CareerDefinition(
+            id: "skirmisher", displayName: "Skirmisher", description: "", portraitSprite: "",
+            abilityTemplateId: "harry", minClanTier: 0, rootChoiceId: "sk_root",
+            eligibleCultureIds: new List<string> { "mordor" },
+            choiceGroupIds: new List<string>());
+        _config.LoadCareers().Returns(new List<CareerDefinition> { WarbossCareer, skirmisher });
+        _registry = new CareerRegistry(_config, Substitute.For<IModLogger>());
+
+        var targets = _registry.GetEligibleSwitchTargets(currentCareerId: "warboss", hero: _hero);
+
+        Assert.AreEqual(1, targets.Count);
+        Assert.AreEqual("skirmisher", targets[0].Id);
+    }
+
+    [TestMethod]
+    public void GetEligibleSwitchTargets_NoEligible_ReturnsEmpty()
+    {
+        // Only career in the registry is "warboss" and the hero is already in it -- no alternatives.
+        var targets = _registry.GetEligibleSwitchTargets(currentCareerId: "warboss", hero: _hero);
+
+        Assert.AreEqual(0, targets.Count);
+    }
+
+    [TestMethod]
+    public void GetEligibleSwitchTargets_IneligibleByTier_Excluded()
+    {
+        // A career requiring clan tier 5 must not appear for a tier-2 hero.
+        var hightier = new CareerDefinition(
+            id: "hightier", displayName: "Lord", description: "", portraitSprite: "",
+            abilityTemplateId: "h_ab", minClanTier: 5, rootChoiceId: "h_root",
+            eligibleCultureIds: new List<string> { "mordor" },
+            choiceGroupIds: new List<string>());
+        _config.LoadCareers().Returns(new List<CareerDefinition> { WarbossCareer, hightier });
+        _registry = new CareerRegistry(_config, Substitute.For<IModLogger>());
+
+        // Hero is currently "warboss" (excluded) and tier 2 < 5 (excludes hightier).
+        var targets = _registry.GetEligibleSwitchTargets(currentCareerId: "warboss", hero: _hero);
+
+        Assert.AreEqual(0, targets.Count);
+    }
+
+    [TestMethod]
+    public void GetEligibleSwitchTargets_IneligibleByCulture_Excluded()
+    {
+        // A career eligible only for Gondor must not appear for a Mordor hero.
+        var gondorCareer = new CareerDefinition(
+            id: "knight", displayName: "Knight", description: "", portraitSprite: "",
+            abilityTemplateId: "charge", minClanTier: 0, rootChoiceId: "k_root",
+            eligibleCultureIds: new List<string> { "gondor" },
+            choiceGroupIds: new List<string>());
+        _config.LoadCareers().Returns(new List<CareerDefinition> { WarbossCareer, gondorCareer });
+        _registry = new CareerRegistry(_config, Substitute.For<IModLogger>());
+
+        var targets = _registry.GetEligibleSwitchTargets(currentCareerId: "warboss", hero: _hero);
+
+        Assert.AreEqual(0, targets.Count);
+    }
+
+    [TestMethod]
+    public void GetEligibleSwitchTargets_NullHero_ReturnsEmpty()
+    {
+        var targets = _registry.GetEligibleSwitchTargets(currentCareerId: "warboss", hero: null);
+
+        Assert.AreEqual(0, targets.Count);
+    }
+
+    [TestMethod]
+    public void GetEligibleSwitchTargets_NullCurrentCareerId_ReturnsAllEligible()
+    {
+        // Hero in valid state but with no current career (corrupted save, freshly-cleared career,
+        // or static-screen entry point that bypasses the dialogue gate). The picker should still
+        // show every eligible career rather than silently failing.
+        var skirmisher = new CareerDefinition(
+            id: "skirmisher", displayName: "Skirmisher", description: "", portraitSprite: "",
+            abilityTemplateId: "harry", minClanTier: 0, rootChoiceId: "sk_root",
+            eligibleCultureIds: new List<string> { "mordor" },
+            choiceGroupIds: new List<string>());
+        _config.LoadCareers().Returns(new List<CareerDefinition> { WarbossCareer, skirmisher });
+        _registry = new CareerRegistry(_config, Substitute.For<IModLogger>());
+
+        var targets = _registry.GetEligibleSwitchTargets(currentCareerId: null, hero: _hero);
+
+        Assert.AreEqual(2, targets.Count);
+    }
 }

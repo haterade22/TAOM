@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
@@ -206,6 +207,111 @@ public class CareerScreenVMTests
     // ── Preventive: Serialization Safety (root cause: vanilla API not researched) ──
     // These tests are in CareerPersistenceTests below.
 
+    // ── Switch mode (career-switch picker from "I wish to discuss my career path" dialogue) ──
+
+    [TestMethod]
+    public void SwitchMode_PopulatesEligibleSwitchTargets()
+    {
+        // Two eligible alternative careers; the picker must list both.
+        var ranger = new CareerDefinition(
+            id: "ranger", displayName: "Ranger", description: "scout",
+            portraitSprite: "r_sprite", abilityTemplateId: "ambush",
+            minClanTier: 0, rootChoiceId: "ranger_root",
+            eligibleCultureIds: new List<string> { "mordor" },
+            choiceGroupIds: new List<string>());
+        var skirmisher = new CareerDefinition(
+            id: "skirmisher", displayName: "Skirmisher", description: "flank",
+            portraitSprite: "sk_sprite", abilityTemplateId: "harry",
+            minClanTier: 0, rootChoiceId: "sk_root",
+            eligibleCultureIds: new List<string> { "mordor" },
+            choiceGroupIds: new List<string>());
+        var hero = Substitute.For<ICareerHeroAdapter>();
+        _registry.GetEligibleSwitchTargets("warboss", hero)
+            .Returns(new List<CareerDefinition> { ranger, skirmisher });
+        SetupHeroWithCareer();
+
+        var vm = CreateSwitchModeVM(hero, _ => { });
+
+        Assert.AreEqual(2, vm.EligibleSwitchTargets.Count);
+        Assert.AreEqual("ranger", vm.EligibleSwitchTargets[0].CareerId);
+        Assert.AreEqual("skirmisher", vm.EligibleSwitchTargets[1].CareerId);
+    }
+
+    [TestMethod]
+    public void SwitchMode_DoesNotLoadChoiceGroups()
+    {
+        // Switch mode must NOT also render the normal-mode tier panels.
+        SetupHeroWithCareer();
+        var hero = Substitute.For<ICareerHeroAdapter>();
+        _registry.GetEligibleSwitchTargets("warboss", hero).Returns(new List<CareerDefinition>());
+
+        var vm = CreateSwitchModeVM(hero, _ => { });
+
+        Assert.AreEqual(0, vm.ChoiceGroupsTier1.Count);
+        Assert.AreEqual(0, vm.ChoiceGroupsTier2.Count);
+        Assert.AreEqual(0, vm.ChoiceGroupsTier3.Count);
+    }
+
+    [TestMethod]
+    public void SwitchMode_IsSwitchModeTrue_IsNormalModeFalse()
+    {
+        SetupHeroWithCareer();
+        var hero = Substitute.For<ICareerHeroAdapter>();
+        _registry.GetEligibleSwitchTargets("warboss", hero).Returns(new List<CareerDefinition>());
+
+        var vm = CreateSwitchModeVM(hero, _ => { });
+
+        Assert.IsTrue(vm.IsSwitchMode);
+        Assert.IsFalse(vm.IsNormalMode);
+    }
+
+    [TestMethod]
+    public void SwitchMode_NoEligibleTargets_IsBrowsingTargetsFalse()
+    {
+        // Empty target list -- the picker panel should hide via @IsBrowsingTargets.
+        SetupHeroWithCareer();
+        var hero = Substitute.For<ICareerHeroAdapter>();
+        _registry.GetEligibleSwitchTargets("warboss", hero).Returns(new List<CareerDefinition>());
+
+        var vm = CreateSwitchModeVM(hero, _ => { });
+
+        Assert.IsFalse(vm.IsBrowsingTargets);
+    }
+
+    [TestMethod]
+    public void SwitchMode_TargetVMExecuteChoose_InvokesSwitchCallback()
+    {
+        // Selecting a target must invoke the screen's switch callback with the target career id.
+        var ranger = new CareerDefinition(
+            id: "ranger", displayName: "Ranger", description: "",
+            portraitSprite: "", abilityTemplateId: "ambush",
+            minClanTier: 0, rootChoiceId: "ranger_root",
+            eligibleCultureIds: new List<string> { "mordor" },
+            choiceGroupIds: new List<string>());
+        var hero = Substitute.For<ICareerHeroAdapter>();
+        _registry.GetEligibleSwitchTargets("warboss", hero).Returns(new List<CareerDefinition> { ranger });
+        SetupHeroWithCareer();
+
+        string chosenCareerId = null;
+        var vm = CreateSwitchModeVM(hero, id => chosenCareerId = id);
+
+        vm.EligibleSwitchTargets[0].ExecuteChoose();
+
+        Assert.AreEqual("ranger", chosenCareerId);
+    }
+
+    [TestMethod]
+    public void NormalMode_IsSwitchModeFalse_IsNormalModeTrue()
+    {
+        // Confirm the default (existing) ctor path still produces normal mode.
+        SetupHeroWithCareer();
+
+        var vm = CreateVM();
+
+        Assert.IsFalse(vm.IsSwitchMode);
+        Assert.IsTrue(vm.IsNormalMode);
+    }
+
     private void SetupHeroWithCareer()
     {
         _dataService.SetCareer("hero1", "warboss");
@@ -214,5 +320,17 @@ public class CareerScreenVMTests
     private CareerScreenVM CreateVM()
     {
         return new CareerScreenVM(_dataService, _registry, _passiveService, _configProvider, _logger, "hero1", 5, () => _closeCalled = true);
+    }
+
+    private CareerScreenVM CreateSwitchModeVM(ICareerHeroAdapter hero, Action<string> onChoose)
+    {
+        return new CareerScreenVM(
+            _dataService, _registry, _passiveService, _configProvider, _logger,
+            "hero1", 5,
+            () => _closeCalled = true,
+            questService: null,
+            isSwitchMode: true,
+            heroAdapter: hero,
+            onChooseSwitchTarget: onChoose);
     }
 }

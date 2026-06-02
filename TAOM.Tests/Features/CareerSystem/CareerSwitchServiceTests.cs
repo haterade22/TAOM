@@ -99,4 +99,40 @@ public class CareerSwitchServiceTests
     {
         Assert.IsTrue(_service.CanSwitch(_hero, "warboss"));
     }
+
+    [TestMethod]
+    public void CanSwitch_SameCareer_ReturnsFalse()
+    {
+        // Switching to your own current career is a no-op; the service must reject it so the
+        // dialogue path doesn't waste a player click + the screen doesn't list the current career.
+        // Uses hero.StringId to look up the current career via the data service.
+        _dataService.SetCareer("hero1", "warboss");
+
+        Assert.IsFalse(_service.CanSwitch(_hero, "warboss"));
+    }
+
+    [TestMethod]
+    public void SwitchCareer_SameCareer_ReturnsFalse()
+    {
+        _dataService.SetCareer("hero1", "warboss");
+
+        var result = _service.SwitchCareer("hero1", _hero, "warboss");
+
+        Assert.IsFalse(result);
+        Assert.AreEqual("warboss", _dataService.GetCareerStringId("hero1"));
+        // Cache refresh must NOT fire on a rejected switch.
+        _passiveService.DidNotReceive().RefreshCache(Arg.Any<ICareerDataService>(), Arg.Any<ICareerRegistry>());
+    }
+
+    [TestMethod]
+    public void CanSwitch_EmptyHeroStringId_FallsThroughToEligibility()
+    {
+        // If a hero adapter returns empty StringId (mock state or test fixture mistake), the
+        // same-career guard should silently skip and the call should fall through to IsEligible.
+        // This guards the intent of the guard (defensive same-career rejection) from breaking
+        // unrelated eligibility checks.
+        _hero.StringId.Returns("");
+
+        Assert.IsTrue(_service.CanSwitch(_hero, "warboss"));
+    }
 }
