@@ -2097,4 +2097,58 @@ public class VolunteerRecruitmentServiceTests
 
         Assert.AreEqual("dunland_raven_noble_son", result);
     }
+
+    // --- New factions: Goblins, Misty Mountain Orcs, Lindon (rivendell culture) ---
+    // Pools mirror the Gundabad hostile-faction shape: snaga(7)/grunt(2)/fighter(1) = total 10.
+    // Cumulative: snaga rolls 0..6, grunt 7..8, fighter 9.
+
+    [TestMethod]
+    public void GetVolunteerTroopId_GoblinCulture_LowRoll_ReturnsSnaga()
+    {
+        _random.Next(10).Returns(0);
+        var context = new VolunteerContext(null, null, null, "goblin");
+        Assert.AreEqual("goblin_snaga", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_GoblinCulture_HighRoll_ReturnsFighter()
+    {
+        _random.Next(10).Returns(9);
+        var context = new VolunteerContext(null, null, null, "goblin");
+        Assert.AreEqual("goblin_fighter", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_MistyMountainOrcsCulture_LowRoll_ReturnsSnaga()
+    {
+        _random.Next(10).Returns(0);
+        var context = new VolunteerContext(null, null, null, "mistymountainorcs");
+        Assert.AreEqual("mistymountainorcs_snaga", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_MistyMountainOrcsCulture_HighRoll_ReturnsFighter()
+    {
+        _random.Next(10).Returns(9);
+        var context = new VolunteerContext(null, null, null, "mistymountainorcs");
+        Assert.AreEqual("mistymountainorcs_fighter", _sut.GetVolunteerTroopId(context));
+    }
+
+    // rivendell pool: imladris_recruit(5)/imladris_infantry(3)/imladris_bowman(2) = total 10.
+    // Serves both the Rivendell kingdom and the new Lindon kingdom (both Culture.rivendell).
+    [TestMethod]
+    public void GetVolunteerTroopId_RivendellCulture_LowRoll_ReturnsRecruit()
+    {
+        _random.Next(10).Returns(0);
+        var context = new VolunteerContext(null, null, null, "rivendell");
+        Assert.AreEqual("imladris_recruit", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_RivendellCulture_HighRoll_ReturnsBowman()
+    {
+        _random.Next(10).Returns(9);
+        var context = new VolunteerContext(null, null, null, "rivendell");
+        Assert.AreEqual("imladris_bowman", _sut.GetVolunteerTroopId(context));
+    }
 }

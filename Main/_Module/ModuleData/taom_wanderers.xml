@@ -4086,4 +4086,508 @@
 		</Equipments>
 	</NPCCharacter>
 
+  <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
+	<NPCCharacter
+		id="spc_wanderer_goblin_0"
+		race="goblin"
+		name="{=aom_spc_wanderer_goblin_0_name}{FIRSTNAME} Bonechewer"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.goblin"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_goblin" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_goblin" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_goblin_1"
+		race="goblin"
+		name="{=aom_spc_wanderer_goblin_1_name}{FIRSTNAME} Skullsplitter"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.goblin"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_goblin" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_goblin" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_goblin_2"
+		race="goblin"
+		name="{=aom_spc_wanderer_goblin_2_name}{FIRSTNAME} Bloodfang"
+		voice="earnest"
+		age="21"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.goblin"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_goblin" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_goblin" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_goblin_3"
+		race="goblin"
+		name="{=aom_spc_wanderer_goblin_3_name}{FIRSTNAME} Ironscar"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.goblin"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_goblin" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_goblin" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_goblin_4"
+		race="goblin"
+		name="{=aom_spc_wanderer_goblin_4_name}{FIRSTNAME} Rageclaw"
+		voice="softspoken"
+		age="23"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.goblin"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Honor" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_goblin" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_goblin" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_goblin_5"
+		race="goblin"
+		name="{=aom_spc_wanderer_goblin_5_name}{FIRSTNAME} Fleshripper"
+		voice="curt"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.goblin"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_goblin" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_goblin" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_goblin_6"
+		race="goblin"
+		name="{=aom_spc_wanderer_goblin_6_name}{FIRSTNAME} Shadowlurker"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.goblin"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_goblin" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_goblin" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_goblin_7"
+		race="goblin"
+		name="{=aom_spc_wanderer_goblin_7_name}{FIRSTNAME} Doommarked"
+		voice="ironic"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.goblin"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_goblin" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_goblin" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_goblin_8"
+		race="goblin"
+		name="{=aom_spc_wanderer_goblin_8_name}{FIRSTNAME} Goremaiden"
+		voice="curt"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.goblin"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_goblin" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_goblin" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_goblin_9"
+		race="goblin"
+		name="{=aom_spc_wanderer_goblin_9_name}{FIRSTNAME} Cruelblade"
+		voice="ironic"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.goblin"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-2" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_goblin" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_goblin" />
+		</Equipments>
+	</NPCCharacter>
+
+  <!-- TAOM-NEWFACTIONS:goblin:END -->
+  <!-- TAOM-NEWFACTIONS:mistymountainorcs:BEGIN -->
+	<NPCCharacter
+		id="spc_wanderer_mistymountainorcs_0"
+		race="orc"
+		name="{=aom_spc_wanderer_mistymountainorcs_0_name}{FIRSTNAME} Bonechewer"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mistymountainorcs"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mistymountainorcs_1"
+		race="orc"
+		name="{=aom_spc_wanderer_mistymountainorcs_1_name}{FIRSTNAME} Skullsplitter"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mistymountainorcs"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mistymountainorcs_2"
+		race="orc"
+		name="{=aom_spc_wanderer_mistymountainorcs_2_name}{FIRSTNAME} Bloodfang"
+		voice="earnest"
+		age="21"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mistymountainorcs"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mistymountainorcs_3"
+		race="orc"
+		name="{=aom_spc_wanderer_mistymountainorcs_3_name}{FIRSTNAME} Ironscar"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mistymountainorcs"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mistymountainorcs_4"
+		race="orc"
+		name="{=aom_spc_wanderer_mistymountainorcs_4_name}{FIRSTNAME} Rageclaw"
+		voice="softspoken"
+		age="23"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mistymountainorcs"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Honor" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mistymountainorcs_5"
+		race="orc"
+		name="{=aom_spc_wanderer_mistymountainorcs_5_name}{FIRSTNAME} Fleshripper"
+		voice="curt"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mistymountainorcs"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mistymountainorcs_6"
+		race="orc"
+		name="{=aom_spc_wanderer_mistymountainorcs_6_name}{FIRSTNAME} Shadowlurker"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mistymountainorcs"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mistymountainorcs_7"
+		race="orc"
+		name="{=aom_spc_wanderer_mistymountainorcs_7_name}{FIRSTNAME} Doommarked"
+		voice="ironic"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mistymountainorcs"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mistymountainorcs_8"
+		race="orc"
+		name="{=aom_spc_wanderer_mistymountainorcs_8_name}{FIRSTNAME} Goremaiden"
+		voice="curt"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mistymountainorcs"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_mistymountainorcs_9"
+		race="orc"
+		name="{=aom_spc_wanderer_mistymountainorcs_9_name}{FIRSTNAME} Cruelblade"
+		voice="ironic"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.mistymountainorcs"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gundabad_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gundabad" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-2" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_mistymountainorcs" />
+		</Equipments>
+	</NPCCharacter>
+
+  <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
 </NPCCharacters>

@@ -14,6 +14,8 @@ public class ConfigIdValidationTests
         // Custom cultures (LOTR names as StringIds)
         "gondor", "mordor", "erebor", "rivendell", "lothlorien",
         "mirkwood", "isengard", "gundabad", "dolguldur", "umbar",
+        // New orc cultures (Misty Mountains expansion)
+        "goblin", "mistymountainorcs",
         // XSLT cultures (vanilla engine StringIds)
         "vlandia", "empire", "aserai", "khuzait", "sturgia", "battania"
     };
@@ -23,7 +25,10 @@ public class ConfigIdValidationTests
         "empire_w", "empire_s", "empire", "vlandia", "battania",
         "aserai", "khuzait", "sturgia", "erebor", "rivendell",
         "lothlorien", "mirkwood", "isengard", "gundabad", "dolguldur",
-        "umbar", "shaghana", "abanissa"
+        "umbar", "shaghana", "abanissa",
+        // New kingdoms (Misty Mountains expansion): goblin + mistymountainorcs = new cultures;
+        // lindon reuses Culture.rivendell; bluecraig reuses Culture.goblin.
+        "goblin", "mistymountainorcs", "lindon", "bluecraig"
     };
 
     private static string FindModuleDataPath()
@@ -119,16 +124,16 @@ public class ConfigIdValidationTests
     // --- ValidCultureIds set is complete ---
 
     [TestMethod]
-    public void ValidCultureIds_Contains16Cultures()
+    public void ValidCultureIds_Contains18Cultures()
     {
-        Assert.AreEqual(16, ValidCultureIds.Count,
-            "Expected 16 valid culture IDs (10 custom + 6 XSLT)");
+        Assert.AreEqual(18, ValidCultureIds.Count,
+            "Expected 18 valid culture IDs (12 custom incl. goblin + mistymountainorcs, + 6 XSLT)");
     }
 
     [TestMethod]
-    public void ValidKingdomIds_Contains18Kingdoms()
+    public void ValidKingdomIds_Contains22Kingdoms()
     {
-        Assert.AreEqual(18, ValidKingdomIds.Count,
-            "Expected 18 valid kingdom IDs");
+        Assert.AreEqual(22, ValidKingdomIds.Count,
+            "Expected 22 valid kingdom IDs (incl. goblin, mistymountainorcs, lindon, bluecraig)");
     }
 }

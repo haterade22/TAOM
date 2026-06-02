@@ -1,7 +1,9 @@
 [
   {
     "culture_id": "gondor",
-    "races": ["human"],
+    "races": [
+      "human"
+    ],
     "starting_settlement": "town_EW1",
     "default_age": 20.0,
     "default_weight": 0.0,
@@ -11,7 +13,11 @@
   },
   {
     "culture_id": "mordor",
-    "races": ["uruk", "orc", "human"],
+    "races": [
+      "uruk",
+      "orc",
+      "human"
+    ],
     "starting_settlement": "town_ES1",
     "default_age": 20.0,
     "default_weight": 0.5417,
@@ -21,7 +27,9 @@
   },
   {
     "culture_id": "erebor",
-    "races": ["dwarf"],
+    "races": [
+      "dwarf"
+    ],
     "starting_settlement": "town_E1",
     "default_age": 20.0,
     "default_weight": 0.5648,
@@ -31,7 +39,10 @@
   },
   {
     "culture_id": "rivendell",
-    "races": ["elf", "human"],
+    "races": [
+      "elf",
+      "human"
+    ],
     "starting_settlement": "town_R1",
     "default_age": 20.0,
     "default_weight": 0.0232,
@@ -41,7 +52,10 @@
   },
   {
     "culture_id": "mirkwood",
-    "races": ["elf", "human"],
+    "races": [
+      "elf",
+      "human"
+    ],
     "starting_settlement": "town_M1",
     "default_age": 20.0,
     "default_weight": 0.0232,
@@ -51,7 +65,10 @@
   },
   {
     "culture_id": "lothlorien",
-    "races": ["elf", "human"],
+    "races": [
+      "elf",
+      "human"
+    ],
     "starting_settlement": "town_L1",
     "default_age": 20.0,
     "default_weight": 0.0232,
@@ -61,7 +78,11 @@
   },
   {
     "culture_id": "isengard",
-    "races": ["uruk_hai", "berserker", "human"],
+    "races": [
+      "uruk_hai",
+      "berserker",
+      "human"
+    ],
     "starting_settlement": "town_isengard",
     "default_age": 20.0,
     "default_weight": 0.5417,
@@ -71,7 +92,12 @@
   },
   {
     "culture_id": "gundabad",
-    "races": ["pale_uruk", "goblin", "orc", "human"],
+    "races": [
+      "pale_uruk",
+      "goblin",
+      "orc",
+      "human"
+    ],
     "starting_settlement": "town_G1",
     "default_age": 30.0,
     "default_weight": 0.5417,
@@ -81,7 +107,12 @@
   },
   {
     "culture_id": "dolguldur",
-    "races": ["dg_uruk", "goblin", "orc", "human"],
+    "races": [
+      "dg_uruk",
+      "goblin",
+      "orc",
+      "human"
+    ],
     "starting_settlement": "town_DG1",
     "default_age": 20.0,
     "default_weight": 0.5417,
@@ -91,7 +122,9 @@
   },
   {
     "culture_id": "umbar",
-    "races": ["human"],
+    "races": [
+      "human"
+    ],
     "starting_settlement": "town_U1",
     "default_age": 20.0,
     "default_weight": 0.5417,
@@ -101,7 +134,9 @@
   },
   {
     "culture_id": "empire",
-    "races": ["human"],
+    "races": [
+      "human"
+    ],
     "starting_settlement": "town_EN2",
     "default_age": 20.0,
     "default_weight": 0.0,
@@ -111,7 +146,9 @@
   },
   {
     "culture_id": "vlandia",
-    "races": ["human"],
+    "races": [
+      "human"
+    ],
     "starting_settlement": "town_V1",
     "default_age": 20.0,
     "default_weight": 0.0,
@@ -121,7 +158,9 @@
   },
   {
     "culture_id": "sturgia",
-    "races": ["human"],
+    "races": [
+      "human"
+    ],
     "starting_settlement": "town_S1",
     "default_age": 20.0,
     "default_weight": 0.0,
@@ -131,7 +170,9 @@
   },
   {
     "culture_id": "aserai",
-    "races": ["human"],
+    "races": [
+      "human"
+    ],
     "starting_settlement": "town_A1",
     "default_age": 20.0,
     "default_weight": 0.0,
@@ -141,7 +182,9 @@
   },
   {
     "culture_id": "shaghana",
-    "races": ["human"],
+    "races": [
+      "human"
+    ],
     "starting_settlement": "town_A6",
     "default_age": 20.0,
     "default_weight": 0.5417,
@@ -151,7 +194,9 @@
   },
   {
     "culture_id": "abanissa",
-    "races": ["human"],
+    "races": [
+      "human"
+    ],
     "starting_settlement": "town_A14",
     "default_age": 20.0,
     "default_weight": 0.5417,
@@ -161,7 +206,9 @@
   },
   {
     "culture_id": "battania",
-    "races": ["human"],
+    "races": [
+      "human"
+    ],
     "starting_settlement": "town_K1",
     "default_age": 20.0,
     "default_weight": 0.0,
@@ -171,11 +218,41 @@
   },
   {
     "culture_id": "khuzait",
-    "races": ["human"],
+    "races": [
+      "human"
+    ],
     "starting_settlement": "town_RU1",
     "default_age": 20.0,
     "default_weight": 0.0,
     "default_build": 0.7222,
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
+  },
+  {
+    "culture_id": "goblin",
+    "races": [
+      "goblin",
+      "orc",
+      "human"
+    ],
+    "starting_settlement": "town_GT1",
+    "default_age": 30.0,
+    "default_weight": 0.5417,
+    "default_build": 0.543,
+    "focus_to_add": 0,
+    "skill_level_to_add": 0
+  },
+  {
+    "culture_id": "mistymountainorcs",
+    "races": [
+      "orc",
+      "goblin",
+      "human"
+    ],
+    "starting_settlement": "town_MM1",
+    "default_age": 30.0,
+    "default_weight": 0.5417,
+    "default_build": 0.543,
     "focus_to_add": 0,
     "skill_level_to_add": 0
   }

@@ -1,0 +1,2394 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+    <NPCCharacter
+        id="mistymountainorcs_snaga"
+        race="orc"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_mistymountainorcs_snaga_name}[Misty Mountains] Orc Warrior"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="38" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="28" />
+            <skill
+                id="TwoHanded"
+                value="28" />
+            <skill
+                id="Polearm"
+                value="33" />
+            <skill
+                id="Bow"
+                value="0" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="15" />
+        </skills>
+        <upgrade_targets>
+      <upgrade_target id="NPCCharacter.mistymountainorcs_grunt" />
+    </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+              <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_hunter"
+        race="orc"
+        default_group="Ranged"
+        level="11"
+        name="{=aom_mistymountainorcs_hunter_name}[Misty Mountains] Hunter"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="55" />
+            <skill
+                id="Riding"
+                value="5" />
+            <skill
+                id="OneHanded"
+                value="30" />
+            <skill
+                id="TwoHanded"
+                value="35" />
+            <skill
+                id="Polearm"
+                value="35" />
+            <skill
+                id="Bow"
+                value="45" />
+            <skill
+                id="Crossbow"
+                value="5" />
+            <skill
+                id="Throwing"
+                value="25" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.mistymountainorcs_lurker" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_grunt"
+        race="orc"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_mistymountainorcs_grunt_name}[Misty Mountains] Orc Brawler"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="53" />
+            <skill
+                id="Riding"
+                value="5" />
+            <skill
+                id="OneHanded"
+                value="60" />
+            <skill
+                id="TwoHanded"
+                value="65" />
+            <skill
+                id="Polearm"
+                value="75" />
+            <skill
+                id="Bow"
+                value="0" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="25" />
+        </skills>
+        <upgrade_targets>
+      <upgrade_target id="NPCCharacter.mistymountainorcs_fighter" />
+      <upgrade_target id="NPCCharacter.mistymountainorcs_guard" />
+    </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+              <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_rdr_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_rdr_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_rdr_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_rdr_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_rdr_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_rdr_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_rdr_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_rdr_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_lurker"
+        race="orc"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_mistymountainorcs_lurker_name}[Misty Mountains] Lurker"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="90" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="70" />
+            <skill
+                id="TwoHanded"
+                value="55" />
+            <skill
+                id="Polearm"
+                value="50" />
+            <skill
+                id="Bow"
+                value="75" />
+            <skill
+                id="Crossbow"
+                value="15" />
+            <skill
+                id="Throwing"
+                value="35" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.mistymountainorcs_sentry" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_rdr_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_rdr_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_uruk_bow_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_rdr_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_med_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_sentry"
+        race="orc"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_mistymountainorcs_sentry_name}[Misty Mountains] Sentry"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="100" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="100" />
+            <skill
+                id="TwoHanded"
+                value="75" />
+            <skill
+                id="Polearm"
+                value="75" />
+            <skill
+                id="Bow"
+                value="120" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="45" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target
+                id="NPCCharacter.mistymountainorcs_archer" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_inf_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chainmail_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_archer"
+        race="orc"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_mistymountainorcs_archer_name}[Misty Mountains] Archer"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="110" />
+            <skill
+                id="Riding"
+                value="15" />
+            <skill
+                id="OneHanded"
+                value="140" />
+            <skill
+                id="TwoHanded"
+                value="95" />
+            <skill
+                id="Polearm"
+                value="95" />
+            <skill
+                id="Bow"
+                value="160" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="55" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_vgd_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_inf_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_vgd_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_isengard_bow_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.piercing_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_brt_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_fighter"
+        race="orc"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_mistymountainorcs_fighter_name}[Misty Mountains] Orc Raider"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="85" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="90" />
+            <skill
+                id="TwoHanded"
+                value="95" />
+            <skill
+                id="Polearm"
+                value="100" />
+            <skill
+                id="Bow"
+                value="5" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="35" />
+        </skills>
+        <upgrade_targets>
+      <upgrade_target id="NPCCharacter.mistymountainorcs_brute" />
+      <upgrade_target id="NPCCharacter.mistymountainorcs_sword_warrior" />
+    </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+              <equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_guard"
+        race="orc"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_mistymountainorcs_guard_name}[Misty Mountains] Orc Impaler"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="85" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="90" />
+            <skill
+                id="TwoHanded"
+                value="95" />
+            <skill
+                id="Polearm"
+                value="100" />
+            <skill
+                id="Bow"
+                value="5" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="35" />
+        </skills>
+        <upgrade_targets>
+      <upgrade_target id="NPCCharacter.mistymountainorcs_spear_warrior" />
+    </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a03" />
+              <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_light_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_b" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_brute"
+        race="orc"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_mistymountainorcs_brute_name}[Misty Mountains] Orc Ravager"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="100" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="125" />
+            <skill
+                id="TwoHanded"
+                value="120" />
+            <skill
+                id="Polearm"
+                value="135" />
+            <skill
+                id="Bow"
+                value="5" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="55" />
+        </skills>
+        <upgrade_targets>
+      <upgrade_target id="NPCCharacter.mistymountainorcs_veteran_sword_warrior" />
+    </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+              <equipment slot="Head" id="Item.sk_md_orc_inf_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_berserker"
+        race="orc"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_mistymountainorcs_berserker_name}[Misty Mountains] Orc Bone Breaker"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_uruk_berserker" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="15" />
+            <skill
+                id="OneHanded"
+                value="175" />
+            <skill
+                id="TwoHanded"
+                value="165" />
+            <skill
+                id="Polearm"
+                value="175" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="5" />
+            <skill
+                id="Throwing"
+                value="75" />
+        </skills>
+        <upgrade_targets>
+      <upgrade_target id="NPCCharacter.mistymountainorcs_veteran_berserker" />
+    </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_mace_a02" />
+              <equipment slot="Item1" id="Item.wm_gundabad_javelin_a01" />
+              <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_veteran_berserker"
+        race="orc"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_mistymountainorcs_veteran_berserker_name}[Misty Mountains] Orc Skull Crusher"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_uruk_berserker" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="125" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="230" />
+            <skill
+                id="TwoHanded"
+                value="220" />
+            <skill
+                id="Polearm"
+                value="240" />
+            <skill
+                id="Bow"
+                value="15" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="85" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_mace_a02" />
+              <equipment slot="Item1" id="Item.wm_gundabad_javelin_a02" />
+              <equipment slot="Item2" id="Item.wm_gundabad_javelin_a02" />
+              <equipment slot="Head" id="Item.sk_md_orc_brt_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_mace_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_javelin_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_vgd_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_mace_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_javelin_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_inf_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_mace_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_javelin_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_vgd_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_mace_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_javelin_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_brt_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_mace_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_javelin_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_brt_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+      <NPCCharacter
+        id="mistymountainorcs_sword_warrior"
+        race="orc"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_mistymountainorcs_sword_warrior_name}[Misty Mountains] Orc Mauler"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="100" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="140" />
+            <skill
+                id="TwoHanded"
+                value="120" />
+            <skill
+                id="Polearm"
+                value="120" />
+            <skill
+                id="Bow"
+                value="5" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="55" />
+        </skills>
+        <upgrade_targets>
+      <upgrade_target id="NPCCharacter.mistymountainorcs_berserker" />
+    </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_mace_a02" />
+              <equipment slot="Head" id="Item.sk_md_orc_rdr_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_veteran_sword_warrior"
+        race="orc"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_mistymountainorcs_veteran_sword_warrior_name}[Misty Mountains] Orc Infantry"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="15" />
+            <skill
+                id="OneHanded"
+                value="190" />
+            <skill
+                id="TwoHanded"
+                value="165" />
+            <skill
+                id="Polearm"
+                value="160" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="5" />
+            <skill
+                id="Throwing"
+                value="75" />
+        </skills>
+        <upgrade_targets>
+      <upgrade_target id="NPCCharacter.mistymountainorcs_chosen_of_tharzog" />
+    </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+              <equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_sword_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_brt_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mordor_set1_sword_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_brt_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_chosen_of_tharzog"
+        race="orc"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_mistymountainorcs_chosen_of_tharzog_name}[Misty Mountains] Orc Mountain Guard"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="125" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="230" />
+            <skill
+                id="TwoHanded"
+                value="220" />
+            <skill
+                id="Polearm"
+                value="240" />
+            <skill
+                id="Bow"
+                value="15" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="85" />
+        </skills>
+        <upgrade_targets>
+      <upgrade_target id="NPCCharacter.mistymountainorcs_bolgs_ironfang" />
+    </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a02" />
+              <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+              <equipment slot="Head" id="Item.sk_md_orc_inf_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_spear_warrior"
+        race="orc"
+        default_group="Infantry"
+        level="26"
+        name="{=aom_mistymountainorcs_spear_warrior_name}[Misty Mountains] Orc Spearman"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="100" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="110" />
+            <skill
+                id="TwoHanded"
+                value="120" />
+            <skill
+                id="Polearm"
+                value="150" />
+            <skill
+                id="Bow"
+                value="5" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="55" />
+        </skills>
+        <upgrade_targets>
+      <upgrade_target id="NPCCharacter.mistymountainorcs_veteran_spear_warrior" />
+    </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+              <equipment slot="Head" id="Item.sk_gn_orc_arc_helmet_med_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_veteran_spear_warrior"
+        race="orc"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_mistymountainorcs_veteran_spear_warrior_name}[Misty Mountains] Orc Pike-Reaver"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="15" />
+            <skill
+                id="OneHanded"
+                value="160" />
+            <skill
+                id="TwoHanded"
+                value="165" />
+            <skill
+                id="Polearm"
+                value="190" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="5" />
+            <skill
+                id="Throwing"
+                value="75" />
+        </skills>
+        <upgrade_targets>
+      <upgrade_target id="NPCCharacter.mistymountainorcs_guardian_of_the_tower" />
+    </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.isengard_pike_a" />
+              <equipment slot="Head" id="Item.sk_md_orc_brt_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_arc_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_arc_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_guardian_of_the_tower"
+        race="orc"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_mistymountainorcs_guardian_of_the_tower_name}[Misty Mountains] Orc War-Pike"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="125" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="230" />
+            <skill
+                id="TwoHanded"
+                value="220" />
+            <skill
+                id="Polearm"
+                value="240" />
+            <skill
+                id="Bow"
+                value="15" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="85" />
+        </skills>
+        <upgrade_targets />
+        <Equipments>
+            <EquipmentRoster>
+              <equipment slot="Item0" id="Item.isengard_pike_b" />
+              <equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
+              <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+              <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+              <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+              <equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+        <!-- ==================== MILITIA TROOPS ==================== -->
+
+    <NPCCharacter
+        id="mistymountainorcs_militia_spearman"
+        race="orc"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_mmo_militia_spear}[Misty Mountains] Militia Spearman"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs"
+        skill_template="SkillSet.infantry_heavyinfantry_level11_template_skills">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="100" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="110" />
+            <skill
+                id="TwoHanded"
+                value="120" />
+            <skill
+                id="Polearm"
+                value="150" />
+            <skill
+                id="Bow"
+                value="5" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="55" />
+        </skills>
+        <upgrade_targets></upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_militia_archer"
+        race="orc"
+        default_group="Ranged"
+        level="11"
+        name="{=aom_mmo_militia_archer}[Misty Mountains] Militia Archer"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs"
+        skill_template="SkillSet.ranged_skirmisher_level11_template_skills">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="100" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="100" />
+            <skill
+                id="TwoHanded"
+                value="75" />
+            <skill
+                id="Polearm"
+                value="75" />
+            <skill
+                id="Bow"
+                value="120" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="45" />
+        </skills>
+        <upgrade_targets></upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_axe_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_arc_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_militia_veteran_spearman"
+        race="orc"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_mmo_militia_vet_spear}[Misty Mountains] Militia Veteran Spearman"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs"
+        skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="100" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="110" />
+            <skill
+                id="TwoHanded"
+                value="120" />
+            <skill
+                id="Polearm"
+                value="150" />
+            <skill
+                id="Bow"
+                value="5" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="55" />
+        </skills>
+        <upgrade_targets></upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a02" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gundabad_axe_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_inf_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_dol_goldur_1h_mace_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_inf_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_med_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_arc_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chainmail_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gundabad_spear_a02" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="mistymountainorcs_militia_veteran_archer"
+        race="orc"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_mmo_militia_vet_archer}[Misty Mountains] Militia Veteran Archer"
+        occupation="Soldier"
+        culture="Culture.mistymountainorcs"
+        skill_template="SkillSet.ranged_skirmisher_level16_template_skills">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="100" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="100" />
+            <skill
+                id="TwoHanded"
+                value="75" />
+            <skill
+                id="Polearm"
+                value="75" />
+            <skill
+                id="Bow"
+                value="120" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="45" />
+        </skills>
+        <upgrade_targets></upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_gn_orc_inf_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_axe_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_orc_inf_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_med_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gundabad_mace_a02" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chainmail_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_orc_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.hunting_bow" />
+                <equipment
+                    slot="Item1"
+                    id="Item.default_arrows" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_md_orc_inf_chest_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+
+  <NPCCharacter
+      id="mistymountainorcs_bolgs_ironfang"
+      race="orc"
+      default_group="Infantry"
+      level="36"
+      name="{=aom_mistymountainorcs_bolgs_ironfang_name}[Misty Mountains] Bolg's Ironfang"
+      occupation="Soldier"
+      culture="Culture.mistymountainorcs">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gundabad" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="150" />
+      <skill id="Riding" value="25" />
+      <skill id="OneHanded" value="280" />
+      <skill id="TwoHanded" value="240" />
+      <skill id="Polearm" value="240" />
+      <skill id="Bow" value="20" />
+      <skill id="Crossbow" value="15" />
+      <skill id="Throwing" value="95" />
+    </skills>
+    <upgrade_targets />
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a02" />
+        <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+        <equipment slot="Head" id="Item.sk_md_orc_vgd_helmet_heavy_a" />
+        <equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+        <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+        <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+        <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+</NPCCharacters>

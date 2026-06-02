@@ -1,6 +1,77 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-02
+
+### fix(factions): Codex adversarial review + completeness-audit fixes — clone-leftover display text, faction-map cavalry, alignment.json
+
+Codex review (`/review-codex`, gpt-5.5 xhigh: 0 CRITICAL / 0 HIGH / 2 MED / 2 LOW) + a 5-agent adversarial completeness-audit workflow on top. All findings verified against source and fixed at the **generator source AND live files**, then regenerated + re-validated. Codex independently confirmed the proactive clone-leftover fix below and DISPUTED (cleared) the diplomacy, feat-wiring, recruitment, and troop-structure suspects. RCA: [docs/reviews/rca-new-factions-2026-06-02.md](docs/reviews/rca-new-factions-2026-06-02.md).
+
+- **Proactive (pre-Codex) — Gundabad clone-leftover DISPLAY TEXT (root class):** both clone scripts only remapped the bracketed `[Gundabad]` tag, so player-facing strings cloned from the gundabad source still said "Gundabad"/"Pale Uruk"/"pale orc". Fixed the full extent: 2 culture display names ("Gundabad Orcs" → "Goblins"/"Misty Mountain Orcs"), 2 culture descriptions (rewritten lore-correct), 2 clan-name-pool entries ("Mount Gundabad Tribe" → "Goblin-town Horde"/"Misty Mountain Host"), ~24 faction/culture localization strings, and 36 notable NPC names. Durable: `generate_new_factions.py` + `insert_new_factions.py` now remap free-text race/faction words (bespoke per-culture subs + bare-word catch-all), and `generate_new_factions.py` has a **post-generation assertion** that fails the build on any surviving source-culture phrase.
+- **MED (Codex) — faction-map advertised stripped cavalry:** Goblin Town + Moria CC cards listed Warg-riders / wolf-cavalry, but cavalry was stripped (infantry + archer only). Reworked to surviving units ("Goblin-town Spearman", "Moria Pit-archer", trait "Mountain-pass Ambushers") in `make_new_factions_playable.py` → regenerated `factions.json` → harvested to `taom_module_strings.xml`.
+- **MED (completeness-audit) — `execution/alignment.json` missing the 4 new kingdoms:** `AlignmentService.GetKingdomSide` fell back to `Neutral`, which mis-scored `TaomExecutionRelationModel` execution-relation penalties and disabled the `DiplomacyService.IsWarAllowed` same-alignment war-block backstop for goblin/mistymountainorcs/bluecraig/lindon. Added `goblin`/`mistymountainorcs`/`bluecraig` = `evil`, `lindon` = `free`. (Both `/deep-review` and Codex missed this; the completeness workflow caught it.)
+- **MED (Codex) — "pale orc" notable names:** 14×2 notable names/comments still said "pale orc" (the clone sibling the "Pale Uruk"→raceword rule missed). Added "pale orc"/"Pale Orc" remap; regenerated.
+- **LOW (Codex) — Lindon strength text contradiction:** strength_1 "unifies armies cheaply" contradicted its own +25% army-influence-cost penalty (Elven Pride). Reworded to "Wise leadership reaps greater influence from victory" (the +35% influence *award*); propagated to both files.
+- **LOW (Codex) — layout drift:** added `clan_bluecraig_3..5` to `taom_new_factions_layout.json` (sibling of the earlier goblin-clan sync).
+- **LOW (completeness-audit) — orc-named goblin notables:** 6 goblin-culture notables read "orc" not "goblin" (inconsistent with siblings); added a culture-aware " orc "→raceword remap (no-op for the orc culture, "orc"→"goblin" for the goblin culture).
+- Re-validated: build ✓, `validate_moduledata` PASS, full suite **2914 pass / 0 fail**, zero residual source-culture display text in any new-faction block, zero cavalry terms in the 4 new faction-map cards.
+
+### fix(factions): deep-review fixes (3 HIGH + 2 MED) — VillageType, module dependency, Blue Craig economy
+
+`/deep-review` (7 agents + adversarial HIGH verification) findings, all fixed in-session. RCA: [docs/reviews/rca-new-factions-2026-06-02.md](docs/reviews/rca-new-factions-2026-06-02.md).
+- **HIGH — invalid VillageType:** 7 new villages used `VillageType.cattle_range`, which is not a registered v1.4.5 VillageType (it's `cattle_farm`) → null VillageType → NRE in `Village.UpdateTotalProduction`. Changed all orc/goblin cattle villages to `cattle_farm`; added a `VALID_VILLAGE_TYPES` guard to `tools/assign_orc_village_types.py` so an unregistered id now fails at generation, not in-game.
+- **HIGH — cross-module load order:** `TAOM_Map/SubModule.xml` referenced `Culture.goblin/mistymountainorcs/rivendell` + `Faction.clan_*` (defined in TAOM Main) without declaring the dependency. Added `<DependedModule Id="TAOM"/>` + `<DependedModuleMetadata id="TAOM" order="LoadBeforeThis"/>`. (Repeat of the Bandit Management 2026-05-27 rule.)
+- **HIGH — Blue Craig had no villages:** `town_GBC1` was a lone town (no economy / no volunteer pool; its Endless Spawn feat was dead). Added 4 placeholder villages `village_GBC1_1..4` (goblin village-type rule; user places scene entities later, like the Lindon villages).
+- **MED:** synced `taom_new_factions_layout.json` to the generator's `GB` goblin region code + 5 goblin clans; added `--apply` dry-run guard to `make_new_factions_playable.py`.
+- **LOW:** test comment 92→105. (`RohanLoyaltyFeat` un-dispatched is pre-existing/out-of-scope; `village_GT1_4` gap matches the placed scene.)
+- Re-validated: build ✓, validate_moduledata PASS, full suite 2914 pass / 0 fail, generator reproduces the live settlements (0 mismatch).
+
+### chore(factions): review editor-saved settlements + assign orc/goblin village economies
+
+- Reviewed the live `TAOM_Map/settlements.xml` after the map author saved the worldmap in the editor (which placed the 4 Lindon villages + `town_GBC1`/Blue Craig and updated their positions). Confirmed all new-kingdom settlements are assigned correctly: culture (mistymountainorcs / goblin / rivendell), owner clan, and village `bound` — all intact through the editor save.
+- **Orc/goblin village economies** (`tools/assign_orc_village_types.py`, targeted in-place edit — 27 village_type changes, positions/owner/culture/bound preserved): per-fief rule = mostly animal food (swine/cattle) + ~1 iron/silver mine; fiefs with 4+ villages add a lumberjack. Result: 12 swine + 7 cattle + 5 iron + 3 silver + 2 lumberjack. Lindon keeps its elven economy.
+- Synced `tools/taom_new_factions_layout.json` to the editor's live positions and updated `generate_new_faction_settlements.py` to apply the same per-fief village rule — verified the generator now reproduces the live file exactly (0 mismatches across 46 positions + 33 village types), so a future re-run won't clobber the editor's placements. validate_moduledata PASS.
+
+### fix/feat(factions): Blue Craig = separate western goblin kingdom by Lindon, expanded to ~40 lords
+
+- **Two distinct goblin kingdoms** confirmed: Goblin Town (`goblin`, central Misty Mountains) and **Blue Craig** (`bluecraig`) — a separate realm relocated to the **far west by Lindon** (Blue Mountains / Ered Luin; capital `town_GBC1` placeholder moved from ≈765,1180 to ≈375,1145, beside Mithlond at 300,1113). Lore updated (kingdom desc, leader blurb, faction-map card) from "Misty Mountains" to "Blue Mountains, hard by the Grey Havens, separate from Goblin Town."
+- Blue Craig's clans are fully separate from Goblin Town's: `clan_bluecraig_*` in `Kingdom.bluecraig` with `lord_BC*` — zero overlap with `clan_goblin_*`/`Kingdom.goblin` (verified).
+- **Blue Craig expanded to ~40 lords** (2 clans → 5 clans × 8; 6 male + 2 female each, spouse-paired). All three orc/goblin kingdoms now field ~40 lords; ~130 new lords/heroes total across the 4 kingdoms. Build ✓, validate_moduledata PASS, full suite 2914 pass / 0 fail, all cross-refs + 66 spouse refs resolved.
+
+### feat(factions): expand Goblin + Misty Mountain Orc lord rosters (~40 each) with breeding pairs
+
+- **Goblins** and **Misty Mountain Orcs** now field **~40 lords each** (5 clans × 8 — numerous, to fight off many enemies). Goblin kingdom expanded from 2 to 5 clans (clan_goblin_3/4/5 landless warbands). Each clan is **male-dominant with 2 females**, and the females are paired as **spouses** to clan males at childbearing age (within-clan, per the Gundabad precedent) so the clans reproduce. bluecraig/lindon stay at 10 lords each. Total new lords/heroes across the 4 kingdoms: 100. All spouse refs reciprocal + opposite-gender + resolved; build ✓, validate_moduledata PASS, full suite 2914 pass / 0 fail.
+
+### feat(factions): Goblins of Blue Craig kingdom + forever-alliance diplomacy
+
+- **Blue Craig** — a 4th new kingdom (`bluecraig`) sharing the `goblin` culture (like Lindon shares rivendell). Kingdom + 2 clans + 10 lords/heroes (region code `BC`, leader Morgrub) via the kingdom generator; capital `town_GBC1` ("Blue Craig") added to the live `settlements.xml` at a placeholder position (scene entity + castles/villages to be placed by the map author). Playable faction-map card `goblins_of_blue_craig` (`game_faction=goblin`, mirrors the Goblin card). `ConfigIdValidationTests` kingdoms 21→22; `FactionMapDataTests` DataRow added.
+- **Forever-alliance diplomacy** (`diplomacy/diplomacy.json`, +55 relationships): Goblins + Misty Mountain Orcs + Blue Craig are `Permanent`-allied (war forbidden, force-started at launch) with each other and the Sauron bloc (empire_s/isengard/gundabad/dolguldur/aserai/khuzait), `Natural` with umbar/shaghana/abanissa/empire, and `Hostile` to the Free Peoples. **Lindon** is `Permanent`-allied with Rivendell and Neutral to everyone else (isolationist Grey Havens).
+- Validation: build ✓, `validate_moduledata` PASS, full suite **2914 pass / 0 fail**, cross-ref chain consistent for all 4 kingdoms, diplomacy refs verified against existing kingdom ids.
+
+### feat(factions): Misty Mountains + Lindon — cultural feats, playable, Mordor armor, Third-Age names
+
+Follow-up to the 2026-06-01 new-factions work, per user direction.
+
+- **Cultural feats (8 new, 105 total):** Goblins — +40% party size (Goblin Swarm), +25% volunteer respawn, +10% snow speed, **+20% food consumption** (penalty); Misty Mountain Orcs — −40% army influence cost (Orc Horde), +30% party size, +10% snow speed, **+15% food consumption** (penalty). Big hordes of weak troops with a food penalty, snow-speed for their snow-navmesh home. Wired across `TaomCulturalFeats.cs` (field/property/Register/Initialize/GetAllFeats), `CulturalFeatsService.cs` dispatch (party-size, snow-terrain, volunteer, army-influence, food-consumption), `<cultural_feats>` in `taom_spcultures.xml`; feat string-ids verified to match C# `Register()` ids. `TaomCulturalFeatsDefinitionTests` 97→105 + 8 DataRows + per-culture map. Lindon inherits Rivendell's feats (shared culture).
+- **Playable:** all 3 faction-map cards set `playable=true` with bonuses/perks matching the feats (Lindon mirrors Imladris). Strings via `harvest_factionmap_strings.py`; added to `cultures.json` + `CareerCultureCoverageTests` documentedExceptions + `FactionMapDataTests` DataRows.
+- **Orc armor + weapons + no cavalry:** Goblin + Misty Mountain troops/lords/NPCs/wanderers remapped from Gundabad armor → **orc-only** armor (`sk_md_orc_*` / `sk_gn_orc_*`; **no** `sk_uruk_mordor_*` Black-Uruk gear — too big), weapons mixed across Gundabad + Mordor + Dol Guldur (1h sword/axe/mace), and **all Cavalry/HorseArcher troops stripped** (infantry + archer lines only — 23 troops each, 16 Infantry / 6 Ranged + militia). Done via `tools/mordor_armor_remap.py` (armor/weapon remap + cavalry strip); 0 `sk_gb_uruk_*` / 0 `sk_uruk_mordor_*` remaining, all refs validated.
+- **Settlement names:** town_GT1 = Goblin Town; town_MM1/MM2 = Western/Eastern Moria; town_MM3 = Nanduhirion; castles = Misty Mountains peaks/gates (Caradhras, Celebdil, Fanuidhol, Redhorn Gate, Methedras, Hollin Gate, Sirannon). Re-applied to live `settlements.xml`.
+- **Third-Age (FotR) lord names:** Lindon ruler corrected **Gil-galad → Círdan the Shipwright** (Gil-galad died in the Second Age); ruling clan "Nos Gil-galad" → "Falathrim"; elf name pool de-anachronized (Galdor/Gildor + generic Sindarin). Per-kingdom name seeds so orc leaders differ (Goblin=Muzgash, Misty Mtn=Bûrzum).
+- Validation: build ✓, `validate_moduledata.py` PASS, full suite **2913 pass / 0 fail**, feat-id + cross-ref consistency verified.
+
 ## 2026-06-01
+
+### feat(factions): three new kingdoms + two new cultures — Misty Mountain Orcs, Goblins, Lindon
+
+Adds the **Misty Mountain Orcs** (`mistymountainorcs`, race `orc`) and **Goblins** (`goblin`, race `goblin`) cultures and the **Lindon** High-Elf kingdom (reuses culture `rivendell`). All three are full AI map-factions backed by the worldmap scene entities the map author placed in `TAOM_Map`.
+
+- **Settlements (live `TAOM_Map/settlements.xml`, +45 → 968 total):** Misty Mountain Orcs = 3 towns + 7 castles + 23 villages (33 fiefs across 5 clans); Goblins = town_GT1 (Goblin-town) + 6 villages (2 clans); Lindon = town_LN1 (Mithlond) + 4 villages (2 clans). Villages bind to their town/castle. Orc settlements reuse sturgia interior scenes, Lindon reuses battania (rivendell) scenes. Timestamped backup written.
+- **Cultures:** orc cultures cloned from `gundabad` (closest orc template) with ids/culture/race/loc-keys renamed and equipment item-ids preserved (reuse Gundabad's valid `sk_gb_uruk_*`/`wm_gundabad_*`/`warg_*` gear + `BodyProperty.fighter_gundabad` as placeholders). 28 troops, 69 NPCs, 10 equipment rosters, 10 wanderers, 12 party templates each. No `<cultural_feats>` (graceful; follow-up). Lindon adds no culture — reuses rivendell.
+- **Kingdoms/clans/lords/heroes:** 3 kingdoms (+ sibling relationships), 9 clans, 42 lords, 42 heroes — generated by parametrizing gundabad/rivendell templates. Lindon lords use rivendell rosters + `taom_elf_*_skills`.
+- **Recruitment:** added `InitializeGoblinCulture` / `InitializeMistyMountainOrcsCulture` / `InitializeRivendellCulture` to `VolunteerRecruitmentService` (+6 tests). The rivendell pool was previously absent — adding it also fixes recruitment for the existing Rivendell kingdom.
+- **Faction map:** `game_faction` set on `goblins_of_goblin_town`→goblin and `kingdom_of_moria`→mistymountainorcs (lindon already →rivendell). Kept `playable=false` (AI factions; CC-playability deferred — see feature doc).
+- **Tests:** `ConfigIdValidationTests` culture set 16→18, kingdom set 18→21. Full suite **2902 pass / 0 fail**; `validate_moduledata.py` PASS; all kingdom→clan→lord→hero→settlement cross-refs verified consistent.
+- Re-runnable generators: `tools/generate_new_factions.py`, `tools/insert_new_factions.py`, `tools/generate_new_faction_kingdoms.py`, `tools/generate_new_faction_settlements.py`; layout in `tools/taom_new_factions_layout.json`. Feature doc: `docs/features/new-factions-misty-mountains-lindon.md`.
+- **Follow-ups (placeholder by design):** cultural feats, CC-playability + full faction cards, Lindon village scene placement, battle-scene-grid coverage, dedicated orc armor/troop trees. NOTE: kingdom id implemented as `goblin` (user typed `golbin` — treated as typo).
 
 ### feat(career-system): "While active" effect-scope badge in choice tree + dialogue-driven career-switch picker (#265)
 

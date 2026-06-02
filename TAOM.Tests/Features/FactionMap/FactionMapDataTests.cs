@@ -57,6 +57,10 @@ public class FactionMapDataTests
     [DataRow("khudorom_of_khand")]
     [DataRow("taskralan_of_harwan")]
     [DataRow("golden_realm_of_rhun")]
+    [DataRow("goblins_of_goblin_town")]
+    [DataRow("kingdom_of_moria")]
+    [DataRow("high_kingdom_of_lindon")]
+    [DataRow("goblins_of_blue_craig")]
     public void PlayableFaction_HasMinimumContentSections(string factionKey)
     {
         var root = LoadFactions();

@@ -1601,13 +1601,64 @@
 	<string id="taom_faction_eregion_name" text="{=taom_faction_eregion_name}Eregion" />
 	<string id="taom_faction_fangorn_forest_desc" text="{=taom_faction_fangorn_forest_desc}The Fangorn Forest." />
 	<string id="taom_faction_fangorn_forest_name" text="{=taom_faction_fangorn_forest_name}Fangorn Forest" />
-	<string id="taom_faction_goblins_of_blue_craig_desc" text="{=taom_faction_goblins_of_blue_craig_desc}The Goblins of Blue Craig." />
+	<string id="taom_faction_goblins_of_blue_craig_bonus_0" text="{=taom_faction_goblins_of_blue_craig_bonus_0}+40% party size limit (Goblin Swarm)" />
+	<string id="taom_faction_goblins_of_blue_craig_bonus_1" text="{=taom_faction_goblins_of_blue_craig_bonus_1}+25% village volunteer respawn rate (Endless Spawn)" />
+	<string id="taom_faction_goblins_of_blue_craig_bonus_2" text="{=taom_faction_goblins_of_blue_craig_bonus_2}+10% party speed on snow (Tunnel-Runners)" />
+	<string id="taom_faction_goblins_of_blue_craig_bonus_3" text="{=taom_faction_goblins_of_blue_craig_bonus_3}+20% party food consumption (Ravenous Swarm)" />
+	<string id="taom_faction_goblins_of_blue_craig_desc" text="{=taom_faction_goblins_of_blue_craig_desc}A distinct goblin host of the Blue Mountains (Ered Luin) in the far west, hard by the Grey Havens of Lindon — a realm apart from their Misty Mountains cousins of Goblin Town. Same numberless, ill-armed swarms: weak alone, overwhelming in the mass, and ravenous on the march. They trouble the Elves of the western shore." />
 	<string id="taom_faction_goblins_of_blue_craig_name" text="{=taom_faction_goblins_of_blue_craig_name}Goblins of Blue Craig" />
-	<string id="taom_faction_goblins_of_goblin_town_desc" text="{=taom_faction_goblins_of_goblin_town_desc}The goblin-infested tunnels and caves of the Misty Mountains. These Orcs control the high passes and threaten all who dare cross the mountains." />
+	<string id="taom_faction_goblins_of_blue_craig_perk_0_desc" text="{=taom_faction_goblins_of_blue_craig_perk_0_desc}+40% party size and +25% village volunteer respawn — weak but numberless." />
+	<string id="taom_faction_goblins_of_blue_craig_perk_0_name" text="{=taom_faction_goblins_of_blue_craig_perk_0_name}Goblin Swarm" />
+	<string id="taom_faction_goblins_of_blue_craig_perk_1_desc" text="{=taom_faction_goblins_of_blue_craig_perk_1_desc}+10% party speed on snow — goblins know every crag and tunnel." />
+	<string id="taom_faction_goblins_of_blue_craig_perk_1_name" text="{=taom_faction_goblins_of_blue_craig_perk_1_name}Tunnel-Runners" />
+	<string id="taom_faction_goblins_of_blue_craig_perk_2_desc" text="{=taom_faction_goblins_of_blue_craig_perk_2_desc}The horde devours everything — +20% party food consumption." />
+	<string id="taom_faction_goblins_of_blue_craig_perk_2_name" text="{=taom_faction_goblins_of_blue_craig_perk_2_name}Ravenous Swarm" />
+	<string id="taom_faction_goblins_of_blue_craig_strength_0" text="{=taom_faction_goblins_of_blue_craig_strength_0}Overwhelming numbers" />
+	<string id="taom_faction_goblins_of_blue_craig_strength_1" text="{=taom_faction_goblins_of_blue_craig_strength_1}Cheap, endlessly-respawning hordes" />
+	<string id="taom_faction_goblins_of_blue_craig_strength_2" text="{=taom_faction_goblins_of_blue_craig_strength_2}Fast over snow and crag" />
+	<string id="taom_faction_goblins_of_blue_craig_strength_3" text="{=taom_faction_goblins_of_blue_craig_strength_3}Swarm tactics bury stronger foes" />
+	<string id="taom_faction_goblins_of_blue_craig_su_0_desc" text="{=taom_faction_goblins_of_blue_craig_su_0_desc}Numberless bow-armed rabble of the high crags." />
+	<string id="taom_faction_goblins_of_blue_craig_su_0_name" text="{=taom_faction_goblins_of_blue_craig_su_0_name}Crag Goblin Skirmisher" />
+	<string id="taom_faction_goblins_of_blue_craig_su_1_desc" text="{=taom_faction_goblins_of_blue_craig_su_1_desc}Heavier shock-goblin of the warrens." />
+	<string id="taom_faction_goblins_of_blue_craig_su_1_name" text="{=taom_faction_goblins_of_blue_craig_su_1_name}Blue Craig Brute" />
+	<string id="taom_faction_goblins_of_blue_craig_su_2_desc" text="{=taom_faction_goblins_of_blue_craig_su_2_desc}Cheap massed spear-fodder." />
+	<string id="taom_faction_goblins_of_blue_craig_su_2_name" text="{=taom_faction_goblins_of_blue_craig_su_2_name}Goblin Spear-thrall" />
+	<string id="taom_faction_goblins_of_blue_craig_trait_0" text="{=taom_faction_goblins_of_blue_craig_trait_0}Crags of Blue Craig" />
+	<string id="taom_faction_goblins_of_blue_craig_trait_1" text="{=taom_faction_goblins_of_blue_craig_trait_1}Goblins of the Blue Mountains" />
+	<string id="taom_faction_goblins_of_blue_craig_trait_2" text="{=taom_faction_goblins_of_blue_craig_trait_2}Bane of the Grey Havens" />
+	<string id="taom_faction_goblins_of_blue_craig_trait_3" text="{=taom_faction_goblins_of_blue_craig_trait_3}Numberless Swarms" />
+	<string id="taom_faction_goblins_of_blue_craig_weakness_0" text="{=taom_faction_goblins_of_blue_craig_weakness_0}Individually weak troops" />
+	<string id="taom_faction_goblins_of_blue_craig_weakness_1" text="{=taom_faction_goblins_of_blue_craig_weakness_1}Ravenous — strains every supply line" />
+	<string id="taom_faction_goblins_of_blue_craig_weakness_2" text="{=taom_faction_goblins_of_blue_craig_weakness_2}Hated by all Free Peoples" />
+	<string id="taom_faction_goblins_of_goblin_town_bonus_0" text="{=taom_faction_goblins_of_goblin_town_bonus_0}+40% party size limit (Goblin Swarm)" />
+	<string id="taom_faction_goblins_of_goblin_town_bonus_1" text="{=taom_faction_goblins_of_goblin_town_bonus_1}+25% village volunteer respawn rate (Endless Spawn)" />
+	<string id="taom_faction_goblins_of_goblin_town_bonus_2" text="{=taom_faction_goblins_of_goblin_town_bonus_2}+10% party speed on snow (Tunnel-Runners)" />
+	<string id="taom_faction_goblins_of_goblin_town_bonus_3" text="{=taom_faction_goblins_of_goblin_town_bonus_3}+20% party food consumption (Ravenous Swarm)" />
+	<string id="taom_faction_goblins_of_goblin_town_desc" text="{=taom_faction_goblins_of_goblin_town_desc}The teeming goblin-warrens beneath the High Pass of the Misty Mountains. Since the fall of the Great Goblin the tribes have multiplied without number — vast, ill-armed swarms that win by sheer weight and breed faster than any foe can cull them. They run swiftest over the snows of their mountain home, but such hordes are ever ravenous." />
 	<string id="taom_faction_goblins_of_goblin_town_name" text="{=taom_faction_goblins_of_goblin_town_name}Goblins of Goblin Town" />
-	<string id="taom_faction_goblins_of_goblin_town_trait_0" text="{=taom_faction_goblins_of_goblin_town_trait_0}Goblin Tunnels" />
-	<string id="taom_faction_goblins_of_goblin_town_trait_1" text="{=taom_faction_goblins_of_goblin_town_trait_1}Mountain Passes" />
-	<string id="taom_faction_goblins_of_goblin_town_trait_2" text="{=taom_faction_goblins_of_goblin_town_trait_2}Warg Riders" />
+	<string id="taom_faction_goblins_of_goblin_town_perk_0_desc" text="{=taom_faction_goblins_of_goblin_town_perk_0_desc}+40% party size and +25% village volunteer respawn — goblins are weak but numberless." />
+	<string id="taom_faction_goblins_of_goblin_town_perk_0_name" text="{=taom_faction_goblins_of_goblin_town_perk_0_name}Goblin Swarm" />
+	<string id="taom_faction_goblins_of_goblin_town_perk_1_desc" text="{=taom_faction_goblins_of_goblin_town_perk_1_desc}+10% party speed on snow — goblins know every pass and tunnel of the Misty Mountains." />
+	<string id="taom_faction_goblins_of_goblin_town_perk_1_name" text="{=taom_faction_goblins_of_goblin_town_perk_1_name}Tunnel-Runners" />
+	<string id="taom_faction_goblins_of_goblin_town_perk_2_desc" text="{=taom_faction_goblins_of_goblin_town_perk_2_desc}Such a horde devours everything — +20% party food consumption." />
+	<string id="taom_faction_goblins_of_goblin_town_perk_2_name" text="{=taom_faction_goblins_of_goblin_town_perk_2_name}Ravenous Swarm" />
+	<string id="taom_faction_goblins_of_goblin_town_strength_0" text="{=taom_faction_goblins_of_goblin_town_strength_0}Overwhelming numbers" />
+	<string id="taom_faction_goblins_of_goblin_town_strength_1" text="{=taom_faction_goblins_of_goblin_town_strength_1}Cheap, endlessly-respawning hordes" />
+	<string id="taom_faction_goblins_of_goblin_town_strength_2" text="{=taom_faction_goblins_of_goblin_town_strength_2}Fast over snow and mountain" />
+	<string id="taom_faction_goblins_of_goblin_town_strength_3" text="{=taom_faction_goblins_of_goblin_town_strength_3}Swarm tactics bury stronger foes" />
+	<string id="taom_faction_goblins_of_goblin_town_su_0_desc" text="{=taom_faction_goblins_of_goblin_town_su_0_desc}Massed spear-fodder of the High Pass warrens." />
+	<string id="taom_faction_goblins_of_goblin_town_su_0_name" text="{=taom_faction_goblins_of_goblin_town_su_0_name}Goblin-town Spearman" />
+	<string id="taom_faction_goblins_of_goblin_town_su_1_desc" text="{=taom_faction_goblins_of_goblin_town_su_1_desc}Numberless bow-armed rabble of the tunnels." />
+	<string id="taom_faction_goblins_of_goblin_town_su_1_name" text="{=taom_faction_goblins_of_goblin_town_su_1_name}Cave-goblin Skirmisher" />
+	<string id="taom_faction_goblins_of_goblin_town_su_2_desc" text="{=taom_faction_goblins_of_goblin_town_su_2_desc}Heavier shock-goblin of the deep warrens." />
+	<string id="taom_faction_goblins_of_goblin_town_su_2_name" text="{=taom_faction_goblins_of_goblin_town_su_2_name}Goblin Brute" />
+	<string id="taom_faction_goblins_of_goblin_town_trait_0" text="{=taom_faction_goblins_of_goblin_town_trait_0}Goblin-town Warrens" />
+	<string id="taom_faction_goblins_of_goblin_town_trait_1" text="{=taom_faction_goblins_of_goblin_town_trait_1}Spawn of the High Pass" />
+	<string id="taom_faction_goblins_of_goblin_town_trait_2" text="{=taom_faction_goblins_of_goblin_town_trait_2}Mountain-pass Ambushers" />
+	<string id="taom_faction_goblins_of_goblin_town_trait_3" text="{=taom_faction_goblins_of_goblin_town_trait_3}Numberless Swarms" />
+	<string id="taom_faction_goblins_of_goblin_town_weakness_0" text="{=taom_faction_goblins_of_goblin_town_weakness_0}Individually weak troops" />
+	<string id="taom_faction_goblins_of_goblin_town_weakness_1" text="{=taom_faction_goblins_of_goblin_town_weakness_1}Ravenous — strains every supply line" />
+	<string id="taom_faction_goblins_of_goblin_town_weakness_2" text="{=taom_faction_goblins_of_goblin_town_weakness_2}Hated by all Free Peoples" />
 	<string id="taom_faction_golden_realm_of_rhun_bonus_0" text="{=taom_faction_golden_realm_of_rhun_bonus_0}+10% party speed on steppe (Easterling Outriders)" />
 	<string id="taom_faction_golden_realm_of_rhun_bonus_1" text="{=taom_faction_golden_realm_of_rhun_bonus_1}+5% party size limit (Easterling Host)" />
 	<string id="taom_faction_golden_realm_of_rhun_bonus_2" text="{=taom_faction_golden_realm_of_rhun_bonus_2}-10% mounted recruit and upgrade cost (Khuzait, inherited)" />
@@ -1669,12 +1720,37 @@
 	<string id="taom_faction_havens_of_umbar_weakness_0" text="{=taom_faction_havens_of_umbar_weakness_0}Corsair captains pocket profits (high wages)" />
 	<string id="taom_faction_havens_of_umbar_weakness_1" text="{=taom_faction_havens_of_umbar_weakness_1}Hated by Gondor" />
 	<string id="taom_faction_havens_of_umbar_weakness_2" text="{=taom_faction_havens_of_umbar_weakness_2}Land army weaker than navy" />
-	<string id="taom_faction_high_kingdom_of_lindon_desc" text="{=taom_faction_high_kingdom_of_lindon_desc}The ancient Elven realm of Lindon on the western shores of Middle-earth. Ruled by Gil-galad's successors, it is a land of fading Elven glory and the Grey Havens." />
+	<string id="taom_faction_high_kingdom_of_lindon_bonus_0" text="{=taom_faction_high_kingdom_of_lindon_bonus_0}+35% army influence award (Elven Wisdom)" />
+	<string id="taom_faction_high_kingdom_of_lindon_bonus_1" text="{=taom_faction_high_kingdom_of_lindon_bonus_1}+20% village hearth growth (The Last Homely House)" />
+	<string id="taom_faction_high_kingdom_of_lindon_bonus_2" text="{=taom_faction_high_kingdom_of_lindon_bonus_2}+10% party speed in forest (Woodland Grace)" />
+	<string id="taom_faction_high_kingdom_of_lindon_bonus_3" text="{=taom_faction_high_kingdom_of_lindon_bonus_3}-15% party food consumption (Elven Frugality)" />
+	<string id="taom_faction_high_kingdom_of_lindon_bonus_4" text="{=taom_faction_high_kingdom_of_lindon_bonus_4}+0.5 settlement loyalty per day" />
+	<string id="taom_faction_high_kingdom_of_lindon_bonus_5" text="{=taom_faction_high_kingdom_of_lindon_bonus_5}+25% army influence cost (Elven Pride)" />
+	<string id="taom_faction_high_kingdom_of_lindon_desc" text="{=taom_faction_high_kingdom_of_lindon_desc}The green land west of the Blue Mountains, last realm of the High Elves on the shores of Middle-earth. From the Grey Havens of Mithlond the white ships sail into the West. Círdan the Shipwright, eldest of the Eldar, keeps the fading light of the Noldor — wise, few, and each blade irreplaceable. Lindon shares the Noldor strength of Imladris." />
 	<string id="taom_faction_high_kingdom_of_lindon_name" text="{=taom_faction_high_kingdom_of_lindon_name}High Kingdom of Lindon" />
-	<string id="taom_faction_high_kingdom_of_lindon_trait_0" text="{=taom_faction_high_kingdom_of_lindon_trait_0}Grey Havens" />
-	<string id="taom_faction_high_kingdom_of_lindon_trait_1" text="{=taom_faction_high_kingdom_of_lindon_trait_1}Ancient Elven Realm" />
-	<string id="taom_faction_high_kingdom_of_lindon_trait_2" text="{=taom_faction_high_kingdom_of_lindon_trait_2}Ships to Valinor" />
-	<string id="taom_faction_high_kingdom_of_lindon_trait_3" text="{=taom_faction_high_kingdom_of_lindon_trait_3}Cirdan the Shipwright" />
+	<string id="taom_faction_high_kingdom_of_lindon_perk_0_desc" text="{=taom_faction_high_kingdom_of_lindon_perk_0_desc}+35% influence awarded on army success — the Wise know how to lead." />
+	<string id="taom_faction_high_kingdom_of_lindon_perk_0_name" text="{=taom_faction_high_kingdom_of_lindon_perk_0_name}Elven Wisdom" />
+	<string id="taom_faction_high_kingdom_of_lindon_perk_1_desc" text="{=taom_faction_high_kingdom_of_lindon_perk_1_desc}+20% village hearth growth and -15% party food consumption." />
+	<string id="taom_faction_high_kingdom_of_lindon_perk_1_name" text="{=taom_faction_high_kingdom_of_lindon_perk_1_name}The Last Homely House" />
+	<string id="taom_faction_high_kingdom_of_lindon_perk_2_desc" text="{=taom_faction_high_kingdom_of_lindon_perk_2_desc}+10% party speed in forest and +0.5 settlement loyalty per day." />
+	<string id="taom_faction_high_kingdom_of_lindon_perk_2_name" text="{=taom_faction_high_kingdom_of_lindon_perk_2_name}Woodland Grace" />
+	<string id="taom_faction_high_kingdom_of_lindon_strength_0" text="{=taom_faction_high_kingdom_of_lindon_strength_0}Elite warriors of legend" />
+	<string id="taom_faction_high_kingdom_of_lindon_strength_1" text="{=taom_faction_high_kingdom_of_lindon_strength_1}Wise leadership reaps greater influence from victory" />
+	<string id="taom_faction_high_kingdom_of_lindon_strength_2" text="{=taom_faction_high_kingdom_of_lindon_strength_2}Frugal, self-sufficient hosts" />
+	<string id="taom_faction_high_kingdom_of_lindon_strength_3" text="{=taom_faction_high_kingdom_of_lindon_strength_3}Hearth-rich, loyal havens" />
+	<string id="taom_faction_high_kingdom_of_lindon_su_0_desc" text="{=taom_faction_high_kingdom_of_lindon_su_0_desc}Legendary first-age veteran of the Eldar." />
+	<string id="taom_faction_high_kingdom_of_lindon_su_0_name" text="{=taom_faction_high_kingdom_of_lindon_su_0_name}Noldor Blade-master" />
+	<string id="taom_faction_high_kingdom_of_lindon_su_1_desc" text="{=taom_faction_high_kingdom_of_lindon_su_1_desc}Sea-elf guardian of the Havens." />
+	<string id="taom_faction_high_kingdom_of_lindon_su_1_name" text="{=taom_faction_high_kingdom_of_lindon_su_1_name}Falathrim Mariner-warden" />
+	<string id="taom_faction_high_kingdom_of_lindon_su_2_desc" text="{=taom_faction_high_kingdom_of_lindon_su_2_desc}Heavy Noldor guardian of the Grey Havens." />
+	<string id="taom_faction_high_kingdom_of_lindon_su_2_name" text="{=taom_faction_high_kingdom_of_lindon_su_2_name}Mithlond Sentinel" />
+	<string id="taom_faction_high_kingdom_of_lindon_trait_0" text="{=taom_faction_high_kingdom_of_lindon_trait_0}Círdan the Shipwright" />
+	<string id="taom_faction_high_kingdom_of_lindon_trait_1" text="{=taom_faction_high_kingdom_of_lindon_trait_1}The Grey Havens" />
+	<string id="taom_faction_high_kingdom_of_lindon_trait_2" text="{=taom_faction_high_kingdom_of_lindon_trait_2}Ships into the West" />
+	<string id="taom_faction_high_kingdom_of_lindon_trait_3" text="{=taom_faction_high_kingdom_of_lindon_trait_3}Last of the High Elves" />
+	<string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="{=taom_faction_high_kingdom_of_lindon_weakness_0}Elven Pride raises influence costs" />
+	<string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="{=taom_faction_high_kingdom_of_lindon_weakness_1}Fading people — few replacements" />
+	<string id="taom_faction_high_kingdom_of_lindon_weakness_2" text="{=taom_faction_high_kingdom_of_lindon_weakness_2}Cannot expand far from the Havens" />
 	<string id="taom_faction_khudorom_of_khand_bonus_0" text="{=taom_faction_khudorom_of_khand_bonus_0}+10% party speed on steppe (Steppe Charioteers)" />
 	<string id="taom_faction_khudorom_of_khand_bonus_1" text="{=taom_faction_khudorom_of_khand_bonus_1}50% less forest speed penalty + 15% sight range (Battanian, inherited)" />
 	<string id="taom_faction_khudorom_of_khand_bonus_2" text="{=taom_faction_khudorom_of_khand_bonus_2}+20% chance for veteran militia in towns (Battanian, inherited)" />
@@ -1882,8 +1958,35 @@
 	<string id="taom_faction_kingdom_of_lothlorien_weakness_0" text="{=taom_faction_kingdom_of_lothlorien_weakness_0}Timeless Craft slows expansion" />
 	<string id="taom_faction_kingdom_of_lothlorien_weakness_1" text="{=taom_faction_kingdom_of_lothlorien_weakness_1}Tiny standing army" />
 	<string id="taom_faction_kingdom_of_lothlorien_weakness_2" text="{=taom_faction_kingdom_of_lothlorien_weakness_2}Fading power — no growth" />
-	<string id="taom_faction_kingdom_of_moria_desc" text="{=taom_faction_kingdom_of_moria_desc}The Kingdom of Moria." />
-	<string id="taom_faction_kingdom_of_moria_name" text="{=taom_faction_kingdom_of_moria_name}Kingdom of Moria" />
+	<string id="taom_faction_kingdom_of_moria_bonus_0" text="{=taom_faction_kingdom_of_moria_bonus_0}-40% army influence cost (Orc Horde)" />
+	<string id="taom_faction_kingdom_of_moria_bonus_1" text="{=taom_faction_kingdom_of_moria_bonus_1}+30% party size limit (Mountain Host)" />
+	<string id="taom_faction_kingdom_of_moria_bonus_2" text="{=taom_faction_kingdom_of_moria_bonus_2}+10% party speed on snow (Mountain-Bred)" />
+	<string id="taom_faction_kingdom_of_moria_bonus_3" text="{=taom_faction_kingdom_of_moria_bonus_3}+15% party food consumption (Hungry Host)" />
+	<string id="taom_faction_kingdom_of_moria_desc" text="{=taom_faction_kingdom_of_moria_desc}The orc-host that holds the deep places of the Misty Mountains — the black pits of Moria, won from the Dwarves, and the cold peaks from Caradhras to Methedras. Larger and better-armed than the goblin rabble of the High Pass, they muster vast war-hosts for almost no influence and march hungry but tireless across the snows." />
+	<string id="taom_faction_kingdom_of_moria_name" text="{=taom_faction_kingdom_of_moria_name}Orcs of the Misty Mountains" />
+	<string id="taom_faction_kingdom_of_moria_perk_0_desc" text="{=taom_faction_kingdom_of_moria_perk_0_desc}Army recruitment costs 40% less influence — the orc-host needs no consensus to march." />
+	<string id="taom_faction_kingdom_of_moria_perk_0_name" text="{=taom_faction_kingdom_of_moria_perk_0_name}Orc Horde" />
+	<string id="taom_faction_kingdom_of_moria_perk_1_desc" text="{=taom_faction_kingdom_of_moria_perk_1_desc}+30% party size and +10% speed on snow — large war-hosts bred to the cold peaks." />
+	<string id="taom_faction_kingdom_of_moria_perk_1_name" text="{=taom_faction_kingdom_of_moria_perk_1_name}Mountain Host" />
+	<string id="taom_faction_kingdom_of_moria_perk_2_desc" text="{=taom_faction_kingdom_of_moria_perk_2_desc}A war-host of this size eats greedily — +15% party food consumption." />
+	<string id="taom_faction_kingdom_of_moria_perk_2_name" text="{=taom_faction_kingdom_of_moria_perk_2_name}Hungry Host" />
+	<string id="taom_faction_kingdom_of_moria_strength_0" text="{=taom_faction_kingdom_of_moria_strength_0}Vast cheap war-hosts" />
+	<string id="taom_faction_kingdom_of_moria_strength_1" text="{=taom_faction_kingdom_of_moria_strength_1}Almost no influence to muster armies" />
+	<string id="taom_faction_kingdom_of_moria_strength_2" text="{=taom_faction_kingdom_of_moria_strength_2}Snow-marching mobility" />
+	<string id="taom_faction_kingdom_of_moria_strength_3" text="{=taom_faction_kingdom_of_moria_strength_3}Hold the deep places of Moria" />
+	<string id="taom_faction_kingdom_of_moria_su_0_desc" text="{=taom_faction_kingdom_of_moria_su_0_desc}Heavier orc infantry of the deep halls." />
+	<string id="taom_faction_kingdom_of_moria_su_0_name" text="{=taom_faction_kingdom_of_moria_su_0_name}Moria Orc Warrior" />
+	<string id="taom_faction_kingdom_of_moria_su_1_desc" text="{=taom_faction_kingdom_of_moria_su_1_desc}Bow-orc of the deep halls and high tunnels." />
+	<string id="taom_faction_kingdom_of_moria_su_1_name" text="{=taom_faction_kingdom_of_moria_su_1_name}Moria Pit-archer" />
+	<string id="taom_faction_kingdom_of_moria_su_2_desc" text="{=taom_faction_kingdom_of_moria_su_2_desc}Raider bred in the dark of Khazad-dûm." />
+	<string id="taom_faction_kingdom_of_moria_su_2_name" text="{=taom_faction_kingdom_of_moria_su_2_name}Black Pit Marauder" />
+	<string id="taom_faction_kingdom_of_moria_trait_0" text="{=taom_faction_kingdom_of_moria_trait_0}Lords of Khazad-dûm" />
+	<string id="taom_faction_kingdom_of_moria_trait_1" text="{=taom_faction_kingdom_of_moria_trait_1}Orcs of the Deep" />
+	<string id="taom_faction_kingdom_of_moria_trait_2" text="{=taom_faction_kingdom_of_moria_trait_2}Plunderers of the Dwarrowdelf" />
+	<string id="taom_faction_kingdom_of_moria_trait_3" text="{=taom_faction_kingdom_of_moria_trait_3}Cold-peak War-host" />
+	<string id="taom_faction_kingdom_of_moria_weakness_0" text="{=taom_faction_kingdom_of_moria_weakness_0}Weaker troops than Men or Elves" />
+	<string id="taom_faction_kingdom_of_moria_weakness_1" text="{=taom_faction_kingdom_of_moria_weakness_1}Hungry hordes drain provisions" />
+	<string id="taom_faction_kingdom_of_moria_weakness_2" text="{=taom_faction_kingdom_of_moria_weakness_2}Universally hated by the Free Peoples" />
 	<string id="taom_faction_kingdom_of_neldoreth_desc" text="{=taom_faction_kingdom_of_neldoreth_desc}An Elven realm in the northern reaches of Mirkwood, where the Wood-elves maintain their ancient forests against the creeping darkness from the south." />
 	<string id="taom_faction_kingdom_of_neldoreth_name" text="{=taom_faction_kingdom_of_neldoreth_name}Kingdom of Neldoreth" />
 	<string id="taom_faction_kingdom_of_neldoreth_trait_0" text="{=taom_faction_kingdom_of_neldoreth_trait_0}Wood-elves" />
@@ -2086,4 +2189,78 @@
 
 	<!-- ===== END FactionMap (CC) ===== -->
 
+  <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
+  <string id="str_faction_official.goblin" text="{=taom_str_faction_official.goblin}a chieftain of Goblin-town" />
+  <string id="str_faction_official.goblin_f" text="{=taom_str_faction_official.goblin_f}a chieftainess of Goblin-town" />
+  <string id="str_faction_ruler.goblin" text="{=taom_str_faction_ruler.goblin}Warlord" />
+  <string id="str_faction_ruler.goblin_f" text="{=taom_str_faction_ruler.goblin_f}Lady Warlord" />
+  <string id="str_faction_ruler_term_in_speech.goblin" text="{=taom_str_faction_ruler_term_in_speech.goblin}the Warlord, {RULER.NAME}" />
+  <string id="str_faction_ruler_name_with_title.goblin" text="{=taom_str_faction_ruler_name_with_title.goblin}Warlord {RULER.NAME}" />
+  <string id="str_faction_noble_name_with_title.goblin" text="{=taom_str_faction_noble_name_with_title.goblin}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+  <string id="str_adjective_for_faction.goblin" text="{=taom_str_adjective_for_faction.goblin}Goblin" />
+  <string id="str_short_term_for_faction.goblin" text="{=taom_str_short_term_for_faction.goblin}Goblin" />
+  <string id="str_faction_formal_name_for_culture.goblin" text="{=taom_str_faction_formal_name_for_culture.goblin}Goblins of Goblin-town" />
+  <string id="str_faction_informal_name_for_culture.goblin" text="{=taom_str_faction_informal_name_for_culture.goblin}Goblin" />
+  <string id="str_neutral_term_for_culture.goblin" text="{=taom_str_neutral_term_for_culture.goblin}Goblins" />
+  <string id="str_culture_description.goblin" text="{=taom_str_culture_description.goblin}The Goblins of the High Pass are a teeming, vicious rabble dwelling in the warrens of Goblin-town. Led by their Great Goblin and petty captains, they raid the mountain roads without end, driven by greed and an ancient hatred of the Free Peoples." />
+  <string id="str_culture_rich_name.goblin" text="{=taom_str_culture_rich_name.goblin}Goblins" />
+  <string id="str_adjective_for_culture.goblin" text="{=taom_str_adjective_for_culture.goblin}Goblin" />
+  <string id="str_player_father_name.goblin" text="{=taom_str_player_father_name.goblin}Narzuk" />
+  <string id="str_player_mother_name.goblin" text="{=taom_str_player_mother_name.goblin}Borlia" />
+  <string id="taom_bandit_goblin_name" text="{=taom_bandit_goblin_name}Goblin Raiders" />
+  <string id="taom_bandit_goblin_m1" text="{=taom_bandit_goblin_m1}Bolg" />
+  <string id="taom_bandit_goblin_m2" text="{=taom_bandit_goblin_m2}Yazneg" />
+  <string id="taom_bandit_goblin_m3" text="{=taom_bandit_goblin_m3}Fimbul" />
+  <string id="taom_bandit_goblin_m4" text="{=taom_bandit_goblin_m4}Narzug" />
+  <string id="taom_bandit_goblin_m5" text="{=taom_bandit_goblin_m5}Gorbag" />
+  <string id="taom_bandit_goblin_m6" text="{=taom_bandit_goblin_m6}Mauhûr" />
+  <string id="taom_bandit_goblin_m7" text="{=taom_bandit_goblin_m7}Snaga" />
+  <string id="taom_bandit_goblin_m8" text="{=taom_bandit_goblin_m8}Ufthak" />
+  <string id="taom_bandit_goblin_m9" text="{=taom_bandit_goblin_m9}Radbug" />
+  <string id="taom_bandit_goblin_m10" text="{=taom_bandit_goblin_m10}Lugdush" />
+  <string id="taom_bandit_goblin_f1" text="{=taom_bandit_goblin_f1}Skarra" />
+  <string id="taom_bandit_goblin_f2" text="{=taom_bandit_goblin_f2}Vorga" />
+  <string id="taom_bandit_goblin_f3" text="{=taom_bandit_goblin_f3}Mazra" />
+  <string id="taom_bandit_goblin_f4" text="{=taom_bandit_goblin_f4}Grishta" />
+  <string id="taom_bandit_goblin_f5" text="{=taom_bandit_goblin_f5}Narzga" />
+  <string id="taom_hideout_desc_goblin" text="{=taom_hideout_desc_goblin}Beneath the crags of the High Pass you find a reeking warren of goblins burrowed deep into the bare rock." />
+
+  <!-- TAOM-NEWFACTIONS:goblin:END -->
+  <!-- TAOM-NEWFACTIONS:mistymountainorcs:BEGIN -->
+  <string id="str_faction_official.mistymountainorcs" text="{=taom_str_faction_official.mistymountainorcs}a chieftain of the Misty Mountains" />
+  <string id="str_faction_official.mistymountainorcs_f" text="{=taom_str_faction_official.mistymountainorcs_f}a chieftainess of the Misty Mountains" />
+  <string id="str_faction_ruler.mistymountainorcs" text="{=taom_str_faction_ruler.mistymountainorcs}Warlord" />
+  <string id="str_faction_ruler.mistymountainorcs_f" text="{=taom_str_faction_ruler.mistymountainorcs_f}Lady Warlord" />
+  <string id="str_faction_ruler_term_in_speech.mistymountainorcs" text="{=taom_str_faction_ruler_term_in_speech.mistymountainorcs}the Warlord, {RULER.NAME}" />
+  <string id="str_faction_ruler_name_with_title.mistymountainorcs" text="{=taom_str_faction_ruler_name_with_title.mistymountainorcs}Warlord {RULER.NAME}" />
+  <string id="str_faction_noble_name_with_title.mistymountainorcs" text="{=taom_str_faction_noble_name_with_title.mistymountainorcs}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+  <string id="str_adjective_for_faction.mistymountainorcs" text="{=taom_str_adjective_for_faction.mistymountainorcs}Orc" />
+  <string id="str_short_term_for_faction.mistymountainorcs" text="{=taom_str_short_term_for_faction.mistymountainorcs}Orc" />
+  <string id="str_faction_formal_name_for_culture.mistymountainorcs" text="{=taom_str_faction_formal_name_for_culture.mistymountainorcs}Orcs of the Misty Mountains" />
+  <string id="str_faction_informal_name_for_culture.mistymountainorcs" text="{=taom_str_faction_informal_name_for_culture.mistymountainorcs}Orc" />
+  <string id="str_neutral_term_for_culture.mistymountainorcs" text="{=taom_str_neutral_term_for_culture.mistymountainorcs}Misty Mountain Orcs" />
+  <string id="str_culture_description.mistymountainorcs" text="{=taom_str_culture_description.mistymountainorcs}The Orcs of the Misty Mountains are a brutal and numberless host of the high peaks. Led by their warlords, they wage endless raids on the lands below, relentless in their cruelty and their hunger for conquest." />
+  <string id="str_culture_rich_name.mistymountainorcs" text="{=taom_str_culture_rich_name.mistymountainorcs}Misty Mountain Orcs" />
+  <string id="str_adjective_for_culture.mistymountainorcs" text="{=taom_str_adjective_for_culture.mistymountainorcs}Orc" />
+  <string id="str_player_father_name.mistymountainorcs" text="{=taom_str_player_father_name.mistymountainorcs}Narzuk" />
+  <string id="str_player_mother_name.mistymountainorcs" text="{=taom_str_player_mother_name.mistymountainorcs}Borlia" />
+  <string id="taom_bandit_mistymountainorcs_name" text="{=taom_bandit_mistymountainorcs_name}Orc Raiders" />
+  <string id="taom_bandit_mistymountainorcs_m1" text="{=taom_bandit_mistymountainorcs_m1}Bolg" />
+  <string id="taom_bandit_mistymountainorcs_m2" text="{=taom_bandit_mistymountainorcs_m2}Yazneg" />
+  <string id="taom_bandit_mistymountainorcs_m3" text="{=taom_bandit_mistymountainorcs_m3}Fimbul" />
+  <string id="taom_bandit_mistymountainorcs_m4" text="{=taom_bandit_mistymountainorcs_m4}Narzug" />
+  <string id="taom_bandit_mistymountainorcs_m5" text="{=taom_bandit_mistymountainorcs_m5}Gorbag" />
+  <string id="taom_bandit_mistymountainorcs_m6" text="{=taom_bandit_mistymountainorcs_m6}Mauhûr" />
+  <string id="taom_bandit_mistymountainorcs_m7" text="{=taom_bandit_mistymountainorcs_m7}Snaga" />
+  <string id="taom_bandit_mistymountainorcs_m8" text="{=taom_bandit_mistymountainorcs_m8}Ufthak" />
+  <string id="taom_bandit_mistymountainorcs_m9" text="{=taom_bandit_mistymountainorcs_m9}Radbug" />
+  <string id="taom_bandit_mistymountainorcs_m10" text="{=taom_bandit_mistymountainorcs_m10}Lugdush" />
+  <string id="taom_bandit_mistymountainorcs_f1" text="{=taom_bandit_mistymountainorcs_f1}Skarra" />
+  <string id="taom_bandit_mistymountainorcs_f2" text="{=taom_bandit_mistymountainorcs_f2}Vorga" />
+  <string id="taom_bandit_mistymountainorcs_f3" text="{=taom_bandit_mistymountainorcs_f3}Mazra" />
+  <string id="taom_bandit_mistymountainorcs_f4" text="{=taom_bandit_mistymountainorcs_f4}Grishta" />
+  <string id="taom_bandit_mistymountainorcs_f5" text="{=taom_bandit_mistymountainorcs_f5}Narzga" />
+  <string id="taom_hideout_desc_mistymountainorcs" text="{=taom_hideout_desc_mistymountainorcs}Beneath the crags of the Misty Mountains you find a foul warren of orcs burrowed into the bare rock." />
+
+  <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
 </strings>

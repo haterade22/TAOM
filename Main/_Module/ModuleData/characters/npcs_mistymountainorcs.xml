@@ -1,0 +1,996 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<!-- ==================== GUNDABAD CIVILIAN NPCs ==================== -->
+	<!-- All use race="orc" for correct orc rendering -->
+
+	<!-- Tournament / Arena -->
+	<NPCCharacter id="tournament_master_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.mistymountainorcs" name="{=aom_mmo_arena}Arena Master">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Villager (upgrades to snaga) -->
+	<NPCCharacter id="villager_mistymountainorcs" race="orc" default_group="Infantry" level="1" name="{=aom_mmo_villager}Slave" occupation="Villager" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<upgrade_targets>
+			<upgrade_target id="NPCCharacter.mistymountainorcs_snaga" />
+		</upgrade_targets>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Caravan Staff -->
+	<NPCCharacter id="caravan_master_mistymountainorcs" race="orc" default_group="Infantry" level="26" name="{=aom_mmo_caravan_master}Orc Caravan Master" occupation="CaravanGuard" culture="Culture.mistymountainorcs">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="120" />
+			<skill id="Polearm" value="80" />
+			<skill id="Trade" value="100" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+				<equipment slot="Head" id="Item.sk_md_orc_inf_helmet_heavy_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="caravan_guard_mistymountainorcs" race="orc" default_group="Infantry" level="21" name="{=aom_mmo_caravan_guard}Orc Caravan Guard" occupation="CaravanGuard" culture="Culture.mistymountainorcs">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="100" />
+			<skill id="Polearm" value="100" />
+			<skill id="Bow" value="40" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+				<equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="veteran_caravan_guard_mistymountainorcs" race="orc" default_group="Infantry" level="26" name="{=aom_mmo_vet_caravan_guard}Orc Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.mistymountainorcs">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="130" />
+			<skill id="Polearm" value="130" />
+			<skill id="Bow" value="50" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+				<equipment slot="Head" id="Item.sk_md_orc_arc_helmet_heavy_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_e" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armed_trader_mistymountainorcs" race="orc" default_group="Infantry" level="16" name="{=aom_mmo_armed_trader}Orc Armed Trader" occupation="CaravanGuard" culture="Culture.mistymountainorcs">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills>
+			<skill id="Athletics" value="40" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="60" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
+				<equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Guards -->
+	<NPCCharacter id="prison_guard_mistymountainorcs" race="orc" default_group="Infantry" level="4" culture="Culture.mistymountainorcs" occupation="PrisonGuard" name="{=aom_mmo_prison_guard}Prison Guard" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills>
+			<skill id="OneHanded" value="50" />
+			<skill id="TwoHanded" value="50" />
+			<skill id="Polearm" value="50" />
+		</skills>
+		<upgrade_targets></upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item1" id="Item.wm_gundabad_spear_a01" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="guard_mistymountainorcs" race="orc" default_group="Infantry" level="16" name="{=aom_mmo_guard}Guard" occupation="Soldier" culture="Culture.mistymountainorcs">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="80" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+				<equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+				<equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Crafters -->
+	<NPCCharacter id="blacksmith_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="Blacksmith" culture="Culture.mistymountainorcs" name="{=aom_mmo_blacksmith}Blacksmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a02" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weaponsmith_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="Weaponsmith" culture="Culture.mistymountainorcs" name="{=aom_mmo_weaponsmith}Weaponsmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armorer_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="Armorer" culture="Culture.mistymountainorcs" name="{=aom_mmo_armorer}Armorer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="horseMerchant_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="HorseTrader" culture="Culture.mistymountainorcs" name="{=aom_mmo_warg_merchant}Warg Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchants -->
+	<NPCCharacter id="merchant_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.mistymountainorcs" name="{=aom_mmo_merchant}Trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Tavern -->
+	<NPCCharacter id="tavernkeeper_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" name="{=aom_mmo_tavernkeeper}Tavern Keeper" occupation="Tavernkeeper" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="taverngamehost_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" name="{=aom_mmo_gamehost}Game Host" occupation="TavernGameHost" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="musician_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" name="{=aom_mmo_musician}Musician" occupation="Musician" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="tavern_wench_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" name="{=aom_mmo_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Services -->
+	<NPCCharacter id="barber_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mistymountainorcs" name="{=aom_mmo_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="shop_worker_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="ShopWorker" culture="Culture.mistymountainorcs" name="{=aom_mmo_shop_worker}Shop Worker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="ransom_broker_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="RansomBroker" culture="Culture.mistymountainorcs" name="{=aom_mmo_ransom_broker}Ransom Broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Gang -->
+	<NPCCharacter id="gangleader_bodyguard_mistymountainorcs" race="orc" default_group="Infantry" level="16" is_hero="false" occupation="Townsfolk" culture="Culture.mistymountainorcs" name="{=aom_mmo_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+				<equipment slot="Head" id="Item.sk_gn_orc_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables -->
+
+	<!-- Merchant 1: Cautious orc trader -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_0" name="{=aom_mmo_notable_0}Cautious orc trader" race="orc" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 2: Cunning Orc haggler -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_0b" name="{=aom_mmo_notable_0b}Cunning Orc haggler" race="orc" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 3: Ruthless orc provisioner -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_1" name="{=aom_mmo_notable_1}Ruthless orc provisioner" race="orc" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 4: Cold Orc quartermaster -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_1b" name="{=aom_mmo_notable_1b}Cold Orc quartermaster" race="orc" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 5: Shrewd orc supply master -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_2" name="{=aom_mmo_notable_2}Shrewd orc supply master" race="orc" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 6: Wary Orc hoarder -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_2b" name="{=aom_mmo_notable_2b}Wary Orc hoarder" race="orc" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 7: Self-made orc dealer -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_3" name="{=aom_mmo_notable_3}Self-made orc dealer" race="orc" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 8: Jovial Orc peddler -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_3b" name="{=aom_mmo_notable_3b}Jovial Orc peddler" race="orc" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 9: Scheming orc profiteer -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_4" name="{=aom_mmo_notable_4}Scheming orc profiteer" race="orc" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchant 10: Devious Orc trader -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_4b" name="{=aom_mmo_notable_4b}Devious Orc trader" race="orc" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Preacher 1: Fanatical Orc war-chanter -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_5" name="{=aom_mmo_notable_5}Fanatical Orc war-chanter" race="orc" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Preacher 2: Stern orc taskmaster -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_6" name="{=aom_mmo_notable_6}Stern orc taskmaster" race="orc" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Preacher 3: Brooding orc mystic -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_7" name="{=aom_mmo_notable_7}Brooding orc mystic" race="orc" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Artisan 1: Gruff orc smith -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_8" name="{=aom_mmo_notable_8}Gruff orc smith" race="orc" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Artisan 2: Outgoing Orc forgemaster -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_9" name="{=aom_mmo_notable_9}Outgoing Orc forgemaster" race="orc" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 1: Protective Orc pit lord -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_gl1" name="{=aom_mmo_notable_gl1}Protective Orc pit lord" race="orc" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 2: Snarling orc enforcer -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_10" name="{=aom_mmo_notable_10}Snarling orc enforcer" race="orc" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 3: Intimidating orc brute -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_11" name="{=aom_mmo_notable_11}Intimidating orc brute" race="orc" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 4: Bestial Orc thug -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_gl4" name="{=aom_mmo_notable_gl4}Bestial Orc thug" race="orc" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 5: Scheming orc racketeer -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_12" name="{=aom_mmo_notable_12}Scheming orc racketeer" race="orc" is_template="true" voice="ironic" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- GangLeader 6: Menacing Orc cutthroat -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_13" name="{=aom_mmo_notable_13}Menacing Orc cutthroat" race="orc" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- RuralNotable 1: Gruff orc overseer -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_21" name="{=aom_mmo_notable_21}Gruff orc overseer" race="orc" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- RuralNotable 2: Agreeable Orc field boss -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_22" name="{=aom_mmo_notable_22}Agreeable Orc field boss" race="orc" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- RuralNotable 3: Vicious Orc slave-driver (added 2026-05-31 for notable-count feat) -->
+	<NPCCharacter id="spc_notable_mistymountainorcs_23" name="{=aom_mmo_notable_23}Vicious Orc slave-driver" race="orc" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Headman 1: Rebellious Orc captain -->
+	<NPCCharacter id="spc_mistymountainorcs_headman_1" name="{=aom_mmo_headman_1}Rebellious Orc captain" race="orc" is_template="true" voice="earnest" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Headman 2: Conservative orc elder -->
+	<NPCCharacter id="spc_mistymountainorcs_headman_2" name="{=aom_mmo_headman_2}Conservative orc elder" race="orc" is_template="true" voice="curt" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Valor" value="-1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_b" />
+				<equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Headman 3: Devious Orc headman -->
+	<NPCCharacter id="spc_mistymountainorcs_headman_3" name="{=aom_mmo_headman_3}Devious Orc headman" race="orc" is_template="true" voice="softspoken" default_group="Infantry" is_hero="false" culture="Culture.mistymountainorcs" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Beggars / Dancers -->
+	<NPCCharacter id="beggar_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mistymountainorcs" name="{=aom_mmo_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_beggar_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mistymountainorcs" name="{=aom_mmo_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_dancer_mistymountainorcs" race="orc" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.mistymountainorcs" name="{=aom_mmo_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Town Population -->
+	<NPCCharacter id="townsman_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_townsman}Townsman" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_infant_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_townsman_infant}Townsman" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_child_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_townsman_child}Townsman" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_teenager_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_townsman_teen}Townsman" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_infant_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_child_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_teenager_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Population -->
+	<NPCCharacter id="village_woman_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_village_woman}Village Woman" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_child_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_teenager_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_child_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_villager_child}Village Child" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_teenager_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_villager_teen}Village Teenager" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Practice Dummies -->
+	<NPCCharacter id="gear_practice_dummy_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_practice_dummy}Practice Dummy" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_1_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_practice_1}Practice Fighter" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_2_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_practice_2}Practice Fighter" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_3_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_practice_3}Practice Fighter" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
+				<equipment slot="Body" id="Item.sk_md_orc_inf_chest_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="gear_dummy_mistymountainorcs" race="orc" default_group="Infantry" name="{=aom_mmo_gear_dummy}Gear Dummy" occupation="Townsfolk" culture="Culture.mistymountainorcs" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gundabad" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+</NPCCharacters>

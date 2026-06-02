@@ -62,6 +62,8 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             multiplier += TaomCulturalFeats.RivendellArmyInfluenceCostFeat.EffectBonus;
         if (culture.HasFeat(TaomCulturalFeats.GundabadArmyInfluenceCostFeat))
             multiplier += TaomCulturalFeats.GundabadArmyInfluenceCostFeat.EffectBonus;
+        if (culture.HasFeat(TaomCulturalFeats.MistyMountainOrcsArmyInfluenceCostFeat))
+            multiplier += TaomCulturalFeats.MistyMountainOrcsArmyInfluenceCostFeat.EffectBonus;
         if (culture.HasFeat(TaomCulturalFeats.DolGuldurArmyInfluenceCostFeat))
             multiplier += TaomCulturalFeats.DolGuldurArmyInfluenceCostFeat.EffectBonus;
         if (culture.HasFeat(TaomCulturalFeats.MordorArmyInfluenceCostFeat))
@@ -88,6 +90,8 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             case TerrainKind.Snow:
                 ApplyIfHas(culture, TaomCulturalFeats.EreborSnowSpeedFeat, ref result);
                 ApplyIfHas(culture, TaomCulturalFeats.GundabadSnowSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.GoblinSnowSpeedFeat, ref result);
+                ApplyIfHas(culture, TaomCulturalFeats.MistyMountainOrcsSnowSpeedFeat, ref result);
                 break;
             case TerrainKind.Steppe:
                 ApplyIfHas(culture, TaomCulturalFeats.KhandSteppeSpeedFeat, ref result);
@@ -236,6 +240,10 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.AddFactor(TaomCulturalFeats.MordorPartySizeFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.GundabadPartySizeFeat))
             result.AddFactor(TaomCulturalFeats.GundabadPartySizeFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.GoblinPartySizeFeat))
+            result.AddFactor(TaomCulturalFeats.GoblinPartySizeFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.MistyMountainOrcsPartySizeFeat))
+            result.AddFactor(TaomCulturalFeats.MistyMountainOrcsPartySizeFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.DolGuldurPartySizeFeat))
             result.AddFactor(TaomCulturalFeats.DolGuldurPartySizeFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.IsengardPartySizeFeat))
@@ -260,6 +268,8 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.AddFactor(TaomCulturalFeats.DunlandVolunteerRateFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.GundabadVolunteerRateFeat))
             result.AddFactor(TaomCulturalFeats.GundabadVolunteerRateFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.GoblinVolunteerRateFeat))
+            result.AddFactor(TaomCulturalFeats.GoblinVolunteerRateFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.DolGuldurVolunteerRateFeat))
             result.AddFactor(TaomCulturalFeats.DolGuldurVolunteerRateFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.MordorVolunteerRateFeat))
@@ -350,6 +360,10 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.AddFactor(TaomCulturalFeats.LothlorienFoodConsumptionFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.DolGuldurFoodConsumptionFeat))
             result.AddFactor(TaomCulturalFeats.DolGuldurFoodConsumptionFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.GoblinFoodConsumptionFeat))
+            result.AddFactor(TaomCulturalFeats.GoblinFoodConsumptionFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.MistyMountainOrcsFoodConsumptionFeat))
+            result.AddFactor(TaomCulturalFeats.MistyMountainOrcsFoodConsumptionFeat.EffectBonus, CultureText);
     }
 
     // ── SettlementLoyalty ──────────────────────────────────────────────

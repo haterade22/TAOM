@@ -41,6 +41,9 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeRhunSettlements();
         InitializeRhunCulture();
         InitializeGundabadCulture();
+        InitializeGoblinCulture();
+        InitializeMistyMountainOrcsCulture();
+        InitializeRivendellCulture();
         InitializeMordorSettlements();
         InitializeMordorCulture();
         // (No InitializeMordorClans — user explicitly chose to skip clan pools.)
@@ -198,6 +201,41 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("gundabad_snaga", 7),
             new VolunteerChance("gundabad_grunt", 2),
             new VolunteerChance("gundabad_fighter", 1)
+        };
+    }
+
+    private static void InitializeGoblinCulture()
+    {
+        // Goblins of the High Pass — swarm faction (mirrors the Gundabad hostile-faction pattern).
+        CultureMap["goblin"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("goblin_snaga", 7),
+            new VolunteerChance("goblin_grunt", 2),
+            new VolunteerChance("goblin_fighter", 1)
+        };
+    }
+
+    private static void InitializeMistyMountainOrcsCulture()
+    {
+        // Orc-host of the Misty Mountains — culture-only pool (hostile faction).
+        CultureMap["mistymountainorcs"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("mistymountainorcs_snaga", 7),
+            new VolunteerChance("mistymountainorcs_grunt", 2),
+            new VolunteerChance("mistymountainorcs_fighter", 1)
+        };
+    }
+
+    private static void InitializeRivendellCulture()
+    {
+        // Noldor pool shared by the Rivendell kingdom and the new Lindon kingdom (both
+        // Culture.rivendell). CultureMap["rivendell"] was previously absent, so rivendell-culture
+        // settlements with no settlement/clan pool returned null — this fills that gap.
+        CultureMap["rivendell"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("imladris_recruit", 5),
+            new VolunteerChance("imladris_infantry", 3),
+            new VolunteerChance("imladris_bowman", 2)
         };
     }
 

@@ -1,0 +1,16 @@
+{
+  "goblin": [
+    "goblin_warg_tamer",
+    "goblin_tracker",
+    "goblin_scout",
+    "goblin_dread_rider_of_the_tower",
+    "goblin_despoiler_of_the_vale"
+  ],
+  "mistymountainorcs": [
+    "mistymountainorcs_warg_tamer",
+    "mistymountainorcs_tracker",
+    "mistymountainorcs_scout",
+    "mistymountainorcs_dread_rider_of_the_tower",
+    "mistymountainorcs_despoiler_of_the_vale"
+  ]
+}

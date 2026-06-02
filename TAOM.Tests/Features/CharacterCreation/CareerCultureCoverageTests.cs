@@ -56,7 +56,11 @@ public class CareerCultureCoverageTests
         var documentedExceptions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "shaghana",
-            "abanissa"
+            "abanissa",
+            // New Misty Mountains factions — playable cultures with placeholder troop trees;
+            // dedicated careers are a documented follow-up (see new-factions feature doc).
+            "goblin",
+            "mistymountainorcs"
         };
 
         // Act + Assert — every CC culture must have career coverage or be documented

@@ -905,4 +905,415 @@
                 id="policy_castle_charters" />
         </policies>
     </Kingdom>
+  <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
+    <Kingdom
+        id="goblin"
+        owner="Hero.lord_GB1_1"
+        initial_home_settlement="Settlement.town_GT1"
+        banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0"
+        primary_banner_color="0xFF1C2A1C"
+        secondary_banner_color="0xFF44582E"
+        color="0xFF1C2A1C"
+        color2="0xFF44582E"
+        culture="Culture.goblin"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_goblin_name}Goblins"
+        short_name="{=taom_goblin_short_name}Goblins"
+        title="{=taom_goblin_title}Goblin-Realm of the High Pass"
+        ruler_title="{=taom_goblin_ruler_title}Great Goblin"
+        text="{=taom_goblin_desc}The Goblins of the High Pass swarm the tunnels beneath the Misty Mountains, the spawn of the host the Great Goblin once led against dwarf and wayfarer alike. Numberless and vicious, they pour from Goblin-town to raid the mountain roads.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.battania"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+                    <relationship
+                kingdom="Kingdom.mistymountainorcs"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.bluecraig"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lindon"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+  <!-- TAOM-NEWFACTIONS:goblin:END -->
+  <!-- TAOM-NEWFACTIONS:mistymountainorcs:BEGIN -->
+    <Kingdom
+        id="mistymountainorcs"
+        owner="Hero.lord_MM1_1"
+        initial_home_settlement="Settlement.town_MM1"
+        banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0"
+        primary_banner_color="0xFF2E2E2E"
+        secondary_banner_color="0xFF6E5A40"
+        color="0xFF2E2E2E"
+        color2="0xFF6E5A40"
+        culture="Culture.mistymountainorcs"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_mistymountainorcs_name}Misty Mountain Orcs"
+        short_name="{=taom_mistymountainorcs_short_name}Misty Orcs"
+        title="{=taom_mistymountainorcs_title}Orc-Host of the Misty Mountains"
+        ruler_title="{=taom_mistymountainorcs_ruler_title}Warlord"
+        text="{=taom_mistymountainorcs_desc}The orc-host of the Misty Mountains holds the high places and deep delvings from Mount Gram to the gates of Moria. Bred for war in the cold peaks, they answer the call of the Shadow and hunger to reclaim the mountains for their own.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.battania"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+                    <relationship
+                kingdom="Kingdom.goblin"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.bluecraig"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lindon"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+  <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
+  <!-- TAOM-NEWFACTIONS:bluecraig:BEGIN -->
+    <Kingdom
+        id="bluecraig"
+        owner="Hero.lord_BC1_1"
+        initial_home_settlement="Settlement.town_GBC1"
+        banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0"
+        primary_banner_color="0xFF20303A"
+        secondary_banner_color="0xFF4A6478"
+        color="0xFF20303A"
+        color2="0xFF4A6478"
+        culture="Culture.goblin"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_bluecraig_name}Goblins of Blue Craig"
+        short_name="{=taom_bluecraig_short_name}Blue Craig"
+        title="{=taom_bluecraig_title}Goblin-Realm of Blue Craig"
+        ruler_title="{=taom_bluecraig_ruler_title}Great Goblin"
+        text="{=taom_bluecraig_desc}The goblin-warrens of Blue Craig in the Blue Mountains (Ered Luin) of the far west, hard by the Grey Havens of Lindon. A distinct, numberless host of goblin-kind — separate from their Misty Mountains cousins of Goblin Town — they swarm the western crags and trouble the Elves of the western shore.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.battania"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+                    <relationship
+                kingdom="Kingdom.goblin"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mistymountainorcs"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lindon"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+  <!-- TAOM-NEWFACTIONS:bluecraig:END -->
+  <!-- TAOM-NEWFACTIONS:lindon:BEGIN -->
+    <Kingdom
+        id="lindon"
+        owner="Hero.lord_LN1_1"
+        initial_home_settlement="Settlement.town_LN1"
+        banner_key="11.76.166.1528.1528.764.764.0.0.0.503.101.101.338.338.764.764.0.0.0.503.76.101.265.265.764.764.0.0.0.15009.202.12.435.435.764.764.1.0.0.15008.172.328.583.583.764.764.1.0.0"        primary_banner_color="0xFF50A090"
+        secondary_banner_color="0xFFC8E0D8"
+        color="0xFF50A090"
+        color2="0xFFC8E0D8"      
+        culture="Culture.rivendell"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_lindon_name}Lindon"
+        short_name="{=taom_lindon_short_name}Lindon"
+        title="{=taom_lindon_title}High Kingdom of Lindon"
+        ruler_title="{=taom_lindon_ruler_title}Lord of the Havens"
+        text="{=taom_lindon_desc}Lindon, the green land west of the Blue Mountains, is the last realm of the High Elves upon the shores of Middle-earth. From the Grey Havens of Mithlond the white ships sail into the West, while Círdan the Shipwright keeps watch over the fading light of the Eldar.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_s"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.umbar"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.aserai"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.vlandia"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="1"
+                isAtWar="false" />
+                    <relationship
+                kingdom="Kingdom.goblin"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mistymountainorcs"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.bluecraig"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+  <!-- TAOM-NEWFACTIONS:lindon:END -->
 </Kingdoms>

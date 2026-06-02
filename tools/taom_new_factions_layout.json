@@ -1,0 +1,676 @@
+{
+  "kingdoms": {
+    "mistymountainorcs": {
+      "culture": "mistymountainorcs",
+      "region": "MM",
+      "capital": "town_MM1",
+      "ruler_hero": "lord_MM1_1",
+      "side": "evil"
+    },
+    "goblin": {
+      "culture": "goblin",
+      "region": "GB",
+      "capital": "town_GT1",
+      "ruler_hero": "lord_GB1_1",
+      "side": "evil"
+    },
+    "lindon": {
+      "culture": "rivendell",
+      "region": "LN",
+      "capital": "town_LN1",
+      "ruler_hero": "lord_LN1_1",
+      "side": "free"
+    },
+    "bluecraig": {
+      "culture": "goblin",
+      "region": "BC",
+      "capital": "town_GBC1",
+      "ruler_hero": "lord_BC1_1",
+      "side": "evil"
+    }
+  },
+  "clans": {
+    "clan_mistymountainorcs_1": {
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "leader_hero": "lord_MM1_1",
+      "fiefs": [
+        "town_MM1",
+        "castle_MM1"
+      ]
+    },
+    "clan_mistymountainorcs_2": {
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "leader_hero": "lord_MM2_1",
+      "fiefs": [
+        "town_MM2",
+        "castle_MM2"
+      ]
+    },
+    "clan_mistymountainorcs_3": {
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "leader_hero": "lord_MM3_1",
+      "fiefs": [
+        "town_MM3",
+        "castle_MM3"
+      ]
+    },
+    "clan_mistymountainorcs_4": {
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "leader_hero": "lord_MM4_1",
+      "fiefs": [
+        "castle_MM4",
+        "castle_MM5"
+      ]
+    },
+    "clan_mistymountainorcs_5": {
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "leader_hero": "lord_MM5_1",
+      "fiefs": [
+        "castle_MM6",
+        "castle_MM7"
+      ]
+    },
+    "clan_goblin_1": {
+      "kingdom": "goblin",
+      "culture": "goblin",
+      "leader_hero": "lord_GB1_1",
+      "fiefs": [
+        "town_GT1"
+      ]
+    },
+    "clan_goblin_2": {
+      "kingdom": "goblin",
+      "culture": "goblin",
+      "leader_hero": "lord_GB2_1",
+      "fiefs": []
+    },
+    "clan_lindon_1": {
+      "kingdom": "lindon",
+      "culture": "rivendell",
+      "leader_hero": "lord_LN1_1",
+      "fiefs": [
+        "town_LN1"
+      ]
+    },
+    "clan_lindon_2": {
+      "kingdom": "lindon",
+      "culture": "rivendell",
+      "leader_hero": "lord_LN2_1",
+      "fiefs": []
+    },
+    "clan_bluecraig_1": {
+      "kingdom": "bluecraig",
+      "culture": "goblin",
+      "leader_hero": "lord_BC1_1",
+      "fiefs": [
+        "town_GBC1"
+      ]
+    },
+    "clan_bluecraig_2": {
+      "kingdom": "bluecraig",
+      "culture": "goblin",
+      "leader_hero": "lord_BC2_1",
+      "fiefs": []
+    },
+    "clan_bluecraig_3": {
+      "kingdom": "bluecraig",
+      "culture": "goblin",
+      "leader_hero": "lord_BC3_1",
+      "fiefs": []
+    },
+    "clan_bluecraig_4": {
+      "kingdom": "bluecraig",
+      "culture": "goblin",
+      "leader_hero": "lord_BC4_1",
+      "fiefs": []
+    },
+    "clan_bluecraig_5": {
+      "kingdom": "bluecraig",
+      "culture": "goblin",
+      "leader_hero": "lord_BC5_1",
+      "fiefs": []
+    },
+    "clan_goblin_3": {
+      "kingdom": "goblin",
+      "culture": "goblin",
+      "leader_hero": "lord_GB3_1",
+      "fiefs": []
+    },
+    "clan_goblin_4": {
+      "kingdom": "goblin",
+      "culture": "goblin",
+      "leader_hero": "lord_GB4_1",
+      "fiefs": []
+    },
+    "clan_goblin_5": {
+      "kingdom": "goblin",
+      "culture": "goblin",
+      "leader_hero": "lord_GB5_1",
+      "fiefs": []
+    }
+  },
+  "settlements": [
+    {
+      "id": "castle_MM1",
+      "type": "castle",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "owner": "clan_mistymountainorcs_1",
+      "posX": 690.869,
+      "posY": 1032.318,
+      "posZ": 85.098,
+      "is_castle": true
+    },
+    {
+      "id": "castle_MM2",
+      "type": "castle",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "owner": "clan_mistymountainorcs_2",
+      "posX": 662.539,
+      "posY": 915.535,
+      "posZ": 82.508,
+      "is_castle": true
+    },
+    {
+      "id": "castle_MM3",
+      "type": "castle",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "owner": "clan_mistymountainorcs_3",
+      "posX": 740.15,
+      "posY": 1162.776,
+      "posZ": 83.899,
+      "is_castle": true
+    },
+    {
+      "id": "castle_MM4",
+      "type": "castle",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "owner": "clan_mistymountainorcs_4",
+      "posX": 718.696,
+      "posY": 1170.734,
+      "posZ": 78.069,
+      "is_castle": true
+    },
+    {
+      "id": "castle_MM5",
+      "type": "castle",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "owner": "clan_mistymountainorcs_4",
+      "posX": 692.131,
+      "posY": 947.633,
+      "posZ": 83.958,
+      "is_castle": true
+    },
+    {
+      "id": "castle_MM6",
+      "type": "castle",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "owner": "clan_mistymountainorcs_5",
+      "posX": 728.796,
+      "posY": 990.031,
+      "posZ": 69.006,
+      "is_castle": true
+    },
+    {
+      "id": "castle_MM7",
+      "type": "castle",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "owner": "clan_mistymountainorcs_5",
+      "posX": 739.453,
+      "posY": 1098.336,
+      "posZ": 85.127,
+      "is_castle": true
+    },
+    {
+      "id": "castle_village_MM1_1",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM1",
+      "posX": 724.001,
+      "posY": 1013.595,
+      "posZ": 74.303
+    },
+    {
+      "id": "castle_village_MM1_2",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM1",
+      "posX": 725.024,
+      "posY": 1032.055,
+      "posZ": 73.802
+    },
+    {
+      "id": "castle_village_MM1_3",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM1",
+      "posX": 672.066,
+      "posY": 1059.415,
+      "posZ": 67.143
+    },
+    {
+      "id": "castle_village_MM1_4",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM1",
+      "posX": 661.276,
+      "posY": 1046.914,
+      "posZ": 67.813
+    },
+    {
+      "id": "castle_village_MM2_1",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM2",
+      "posX": 678.916,
+      "posY": 936.701,
+      "posZ": 83.99
+    },
+    {
+      "id": "castle_village_MM2_2",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM2",
+      "posX": 666.697,
+      "posY": 939.372,
+      "posZ": 81.483
+    },
+    {
+      "id": "castle_village_MM2_3",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM2",
+      "posX": 663.95,
+      "posY": 934.615,
+      "posZ": 79.422
+    },
+    {
+      "id": "castle_village_MM3_1",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM3",
+      "posX": 734.249,
+      "posY": 1180.36,
+      "posZ": 76.042
+    },
+    {
+      "id": "castle_village_MM4_1",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM4",
+      "posX": 725.421,
+      "posY": 1184.382,
+      "posZ": 76.125
+    },
+    {
+      "id": "castle_village_MM5_1",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM5",
+      "posX": 689.046,
+      "posY": 927.603,
+      "posZ": 75.951
+    },
+    {
+      "id": "castle_village_MM5_2",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM5",
+      "posX": 686.995,
+      "posY": 968.025,
+      "posZ": 82.917
+    },
+    {
+      "id": "castle_village_MM6_1",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM6",
+      "posX": 727.887,
+      "posY": 1003.352,
+      "posZ": 73.99
+    },
+    {
+      "id": "castle_village_MM7_1",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM7",
+      "posX": 717.868,
+      "posY": 1091.038,
+      "posZ": 75.336
+    },
+    {
+      "id": "castle_village_MM7_2",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM7",
+      "posX": 705.167,
+      "posY": 1091.067,
+      "posZ": 72.483
+    },
+    {
+      "id": "castle_village_MM7_3",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "castle_MM7",
+      "posX": 744.82,
+      "posY": 1116.899,
+      "posZ": 75.964
+    },
+    {
+      "id": "town_GT1",
+      "type": "town",
+      "kingdom": "goblin",
+      "culture": "goblin",
+      "owner": "clan_goblin_1",
+      "posX": 745.754,
+      "posY": 1137.235,
+      "posZ": 77.957,
+      "is_castle": false
+    },
+    {
+      "id": "town_LN1",
+      "type": "town",
+      "kingdom": "lindon",
+      "culture": "rivendell",
+      "owner": "clan_lindon_1",
+      "posX": 300.109,
+      "posY": 1113.782,
+      "posZ": 49.949,
+      "is_castle": false
+    },
+    {
+      "id": "town_MM1",
+      "type": "town",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "owner": "clan_mistymountainorcs_1",
+      "posX": 707.946,
+      "posY": 985.511,
+      "posZ": 75.413,
+      "is_castle": false
+    },
+    {
+      "id": "town_MM2",
+      "type": "town",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "owner": "clan_mistymountainorcs_2",
+      "posX": 677.4,
+      "posY": 993.833,
+      "posZ": 83.876,
+      "is_castle": false
+    },
+    {
+      "id": "town_MM3",
+      "type": "town",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "owner": "clan_mistymountainorcs_3",
+      "posX": 718.599,
+      "posY": 1062.776,
+      "posZ": 74.539,
+      "is_castle": false
+    },
+    {
+      "id": "village_GT1_1",
+      "type": "village",
+      "kingdom": "goblin",
+      "culture": "goblin",
+      "bound": "town_GT1",
+      "posX": 758.032,
+      "posY": 1103.51,
+      "posZ": 71.228
+    },
+    {
+      "id": "village_GT1_2",
+      "type": "village",
+      "kingdom": "goblin",
+      "culture": "goblin",
+      "bound": "town_GT1",
+      "posX": 761.845,
+      "posY": 1083.724,
+      "posZ": 70.951
+    },
+    {
+      "id": "village_GT1_3",
+      "type": "village",
+      "kingdom": "goblin",
+      "culture": "goblin",
+      "bound": "town_GT1",
+      "posX": 744.93,
+      "posY": 1080.082,
+      "posZ": 74.163
+    },
+    {
+      "id": "village_GT1_5",
+      "type": "village",
+      "kingdom": "goblin",
+      "culture": "goblin",
+      "bound": "town_GT1",
+      "posX": 764.886,
+      "posY": 1144.743,
+      "posZ": 70.422
+    },
+    {
+      "id": "village_GT1_6",
+      "type": "village",
+      "kingdom": "goblin",
+      "culture": "goblin",
+      "bound": "town_GT1",
+      "posX": 723.242,
+      "posY": 1147.192,
+      "posZ": 75.471
+    },
+    {
+      "id": "village_GT1_7",
+      "type": "village",
+      "kingdom": "goblin",
+      "culture": "goblin",
+      "bound": "town_GT1",
+      "posX": 765.375,
+      "posY": 1131.79,
+      "posZ": 69.749
+    },
+    {
+      "id": "village_MM1_1",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "town_MM1",
+      "posX": 716.243,
+      "posY": 998.966,
+      "posZ": 74.13
+    },
+    {
+      "id": "village_MM1_2",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "town_MM1",
+      "posX": 744.563,
+      "posY": 1030.523,
+      "posZ": 69.864
+    },
+    {
+      "id": "village_MM1_3",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "town_MM1",
+      "posX": 746.898,
+      "posY": 1010.079,
+      "posZ": 69.585
+    },
+    {
+      "id": "village_MM2_1",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "town_MM2",
+      "posX": 663.802,
+      "posY": 981.531,
+      "posZ": 80.984
+    },
+    {
+      "id": "village_MM2_2",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "town_MM2",
+      "posX": 668.747,
+      "posY": 979.763,
+      "posZ": 81.009
+    },
+    {
+      "id": "village_MM3_1",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "town_MM3",
+      "posX": 727.227,
+      "posY": 1050.151,
+      "posZ": 72.369
+    },
+    {
+      "id": "village_MM3_2",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "town_MM3",
+      "posX": 735.983,
+      "posY": 1063.898,
+      "posZ": 71.698
+    },
+    {
+      "id": "village_MM3_3",
+      "type": "village",
+      "kingdom": "mistymountainorcs",
+      "culture": "mistymountainorcs",
+      "bound": "town_MM3",
+      "posX": 735.716,
+      "posY": 1078.518,
+      "posZ": 74.987
+    },
+    {
+      "id": "village_LN1_1",
+      "type": "village",
+      "kingdom": "lindon",
+      "culture": "rivendell",
+      "bound": "town_LN1",
+      "posX": 319.1038,
+      "posY": 1148.808,
+      "posZ": 49.949
+    },
+    {
+      "id": "village_LN1_2",
+      "type": "village",
+      "kingdom": "lindon",
+      "culture": "rivendell",
+      "bound": "town_LN1",
+      "posX": 307.1111,
+      "posY": 1072.882,
+      "posZ": 49.949
+    },
+    {
+      "id": "village_LN1_3",
+      "type": "village",
+      "kingdom": "lindon",
+      "culture": "rivendell",
+      "bound": "town_LN1",
+      "posX": 232.0571,
+      "posY": 1078.803,
+      "posZ": 49.949
+    },
+    {
+      "id": "village_LN1_4",
+      "type": "village",
+      "kingdom": "lindon",
+      "culture": "rivendell",
+      "bound": "town_LN1",
+      "posX": 299.554,
+      "posY": 1142.623,
+      "posZ": 49.949
+    },
+    {
+      "id": "town_GBC1",
+      "type": "town",
+      "kingdom": "bluecraig",
+      "culture": "goblin",
+      "owner": "clan_bluecraig_1",
+      "posX": 250.9735,
+      "posY": 1270.663,
+      "posZ": 50.0,
+      "is_castle": false
+    },
+    {
+      "id": "village_GBC1_1",
+      "type": "village",
+      "kingdom": "bluecraig",
+      "culture": "goblin",
+      "bound": "town_GBC1",
+      "posX": 264.974,
+      "posY": 1258.663,
+      "posZ": 50.0,
+      "needs_scene_placement": true
+    },
+    {
+      "id": "village_GBC1_2",
+      "type": "village",
+      "kingdom": "bluecraig",
+      "culture": "goblin",
+      "bound": "town_GBC1",
+      "posX": 237.974,
+      "posY": 1280.663,
+      "posZ": 50.0,
+      "needs_scene_placement": true
+    },
+    {
+      "id": "village_GBC1_3",
+      "type": "village",
+      "kingdom": "bluecraig",
+      "culture": "goblin",
+      "bound": "town_GBC1",
+      "posX": 268.974,
+      "posY": 1284.663,
+      "posZ": 50.0,
+      "needs_scene_placement": true
+    },
+    {
+      "id": "village_GBC1_4",
+      "type": "village",
+      "kingdom": "bluecraig",
+      "culture": "goblin",
+      "bound": "town_GBC1",
+      "posX": 240.974,
+      "posY": 1254.663,
+      "posZ": 50.0,
+      "needs_scene_placement": true
+    }
+  ]
+}

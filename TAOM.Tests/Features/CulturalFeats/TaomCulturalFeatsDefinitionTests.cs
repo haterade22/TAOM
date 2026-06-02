@@ -16,15 +16,15 @@ public class TaomCulturalFeatsDefinitionTests
     /// without the game framework, we verify the code structure via reflection.
     /// </summary>
     [TestMethod]
-    public void AllFeatProperties_ReturnFeatObject_CountIs97()
+    public void AllFeatProperties_ReturnFeatObject_CountIs105()
     {
         var properties = typeof(TaomCulturalFeats)
             .GetProperties(BindingFlags.Public | BindingFlags.Static)
             .Where(p => p.PropertyType == typeof(FeatObject))
             .ToList();
 
-        Assert.AreEqual(97, properties.Count,
-            "Expected 97 culture feat properties (59 base + 18 terrain + 3 party-size + 4 volunteer-respawn + 4 village notable + 9 per-occupation town notable)");
+        Assert.AreEqual(105, properties.Count,
+            "Expected 105 culture feat properties (97 prior + 4 Goblin + 4 Misty Mountain Orcs)");
     }
 
     [TestMethod]
@@ -44,12 +44,12 @@ public class TaomCulturalFeatsDefinitionTests
     public void GetAllFeats_YieldsZeroOrFullSet()
     {
         // GetAllFeats returns empty when the static `_instance` is null (no game
-        // framework loaded), OR the full 92-feat enumeration when a sibling test
+        // framework loaded), OR the full 105-feat enumeration when a sibling test
         // (e.g. CulturalFeatsServiceTests) reflection-initialised the singleton.
         // Both states are valid in a test process; assert one or the other.
         var feats = TaomCulturalFeats.GetAllFeats().ToList();
-        Assert.IsTrue(feats.Count == 0 || feats.Count == 97,
-            $"GetAllFeats expected 0 (uninitialised) or 97 (full set), got {feats.Count}");
+        Assert.IsTrue(feats.Count == 0 || feats.Count == 105,
+            $"GetAllFeats expected 0 (uninitialised) or 105 (full set), got {feats.Count}");
     }
 
     [TestMethod]
@@ -153,6 +153,15 @@ public class TaomCulturalFeatsDefinitionTests
     [DataRow("MordorNotableCountTownGangLeaderFeat")]
     [DataRow("GundabadNotableCountTownArtisanFeat")]
     [DataRow("GundabadNotableCountTownGangLeaderFeat")]
+    // New factions (Misty Mountains expansion): Goblins (4) + Misty Mountain Orcs (4)
+    [DataRow("GoblinPartySizeFeat")]
+    [DataRow("GoblinVolunteerRateFeat")]
+    [DataRow("GoblinSnowSpeedFeat")]
+    [DataRow("GoblinFoodConsumptionFeat")]
+    [DataRow("MistyMountainOrcsArmyInfluenceCostFeat")]
+    [DataRow("MistyMountainOrcsPartySizeFeat")]
+    [DataRow("MistyMountainOrcsSnowSpeedFeat")]
+    [DataRow("MistyMountainOrcsFoodConsumptionFeat")]
     public void FeatProperty_Exists_IsPublicStatic(string propertyName)
     {
         var prop = typeof(TaomCulturalFeats).GetProperty(
@@ -192,6 +201,8 @@ public class TaomCulturalFeatsDefinitionTests
             { "Dunland", 3 },     // +1 party size, +1 volunteer rate
             { "Shaghana", 1 },
             { "Abanissa", 1 },
+            { "Goblin", 4 },             // party size, volunteer rate, snow speed, food consumption
+            { "MistyMountainOrcs", 4 },  // army influence cost, party size, snow speed, food consumption
         };
 
         foreach (var kvp in expectedCounts)
@@ -211,8 +222,8 @@ public class TaomCulturalFeatsDefinitionTests
             .Where(f => f.FieldType == typeof(FeatObject))
             .ToList();
 
-        Assert.AreEqual(97, fields.Count,
-            "Expected 97 private FeatObject fields (59 base + 18 terrain + 3 party-size + 4 volunteer + 4 village notable + 9 per-occupation town notable)");
+        Assert.AreEqual(105, fields.Count,
+            "Expected 105 private FeatObject fields (97 prior + 4 Goblin + 4 Misty Mountain Orcs)");
     }
 
     [TestMethod]

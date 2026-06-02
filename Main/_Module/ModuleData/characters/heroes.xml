@@ -1498,5 +1498,473 @@
 	<Hero id="named_companion_balakhor" faction="Faction.neutral" />
 	<Hero id="named_companion_noxix" faction="Faction.neutral" />
 
+  <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
+	<Hero
+		id="lord_GB1_1"
+		faction="Faction.clan_goblin_1"
+		text="{=lord_GB1_1_description}Muzgash, the Great Goblin of Goblin Town, master of the warrens of the High Pass." />
+	<Hero
+		id="lord_GB1_2"
+		faction="Faction.clan_goblin_1" />
+	<Hero
+		id="lord_GB1_3"
+		faction="Faction.clan_goblin_1" />
+	<Hero
+		id="lord_GB1_4"
+		faction="Faction.clan_goblin_1" />
+	<Hero
+		id="lord_GB1_5"
+		faction="Faction.clan_goblin_1"
+		spouse="Hero.lord_GB1_7" />
+	<Hero
+		id="lord_GB1_6"
+		faction="Faction.clan_goblin_1"
+		spouse="Hero.lord_GB1_8" />
+	<Hero
+		id="lord_GB1_7"
+		faction="Faction.clan_goblin_1"
+		spouse="Hero.lord_GB1_5" />
+	<Hero
+		id="lord_GB1_8"
+		faction="Faction.clan_goblin_1"
+		spouse="Hero.lord_GB1_6" />
+	<Hero
+		id="lord_GB2_1"
+		faction="Faction.clan_goblin_2" />
+	<Hero
+		id="lord_GB2_2"
+		faction="Faction.clan_goblin_2" />
+	<Hero
+		id="lord_GB2_3"
+		faction="Faction.clan_goblin_2" />
+	<Hero
+		id="lord_GB2_4"
+		faction="Faction.clan_goblin_2" />
+	<Hero
+		id="lord_GB2_5"
+		faction="Faction.clan_goblin_2"
+		spouse="Hero.lord_GB2_7" />
+	<Hero
+		id="lord_GB2_6"
+		faction="Faction.clan_goblin_2"
+		spouse="Hero.lord_GB2_8" />
+	<Hero
+		id="lord_GB2_7"
+		faction="Faction.clan_goblin_2"
+		spouse="Hero.lord_GB2_5" />
+	<Hero
+		id="lord_GB2_8"
+		faction="Faction.clan_goblin_2"
+		spouse="Hero.lord_GB2_6" />
+	<Hero
+		id="lord_GB3_1"
+		faction="Faction.clan_goblin_3" />
+	<Hero
+		id="lord_GB3_2"
+		faction="Faction.clan_goblin_3" />
+	<Hero
+		id="lord_GB3_3"
+		faction="Faction.clan_goblin_3" />
+	<Hero
+		id="lord_GB3_4"
+		faction="Faction.clan_goblin_3" />
+	<Hero
+		id="lord_GB3_5"
+		faction="Faction.clan_goblin_3"
+		spouse="Hero.lord_GB3_7" />
+	<Hero
+		id="lord_GB3_6"
+		faction="Faction.clan_goblin_3"
+		spouse="Hero.lord_GB3_8" />
+	<Hero
+		id="lord_GB3_7"
+		faction="Faction.clan_goblin_3"
+		spouse="Hero.lord_GB3_5" />
+	<Hero
+		id="lord_GB3_8"
+		faction="Faction.clan_goblin_3"
+		spouse="Hero.lord_GB3_6" />
+	<Hero
+		id="lord_GB4_1"
+		faction="Faction.clan_goblin_4" />
+	<Hero
+		id="lord_GB4_2"
+		faction="Faction.clan_goblin_4" />
+	<Hero
+		id="lord_GB4_3"
+		faction="Faction.clan_goblin_4" />
+	<Hero
+		id="lord_GB4_4"
+		faction="Faction.clan_goblin_4" />
+	<Hero
+		id="lord_GB4_5"
+		faction="Faction.clan_goblin_4"
+		spouse="Hero.lord_GB4_7" />
+	<Hero
+		id="lord_GB4_6"
+		faction="Faction.clan_goblin_4"
+		spouse="Hero.lord_GB4_8" />
+	<Hero
+		id="lord_GB4_7"
+		faction="Faction.clan_goblin_4"
+		spouse="Hero.lord_GB4_5" />
+	<Hero
+		id="lord_GB4_8"
+		faction="Faction.clan_goblin_4"
+		spouse="Hero.lord_GB4_6" />
+	<Hero
+		id="lord_GB5_1"
+		faction="Faction.clan_goblin_5" />
+	<Hero
+		id="lord_GB5_2"
+		faction="Faction.clan_goblin_5" />
+	<Hero
+		id="lord_GB5_3"
+		faction="Faction.clan_goblin_5" />
+	<Hero
+		id="lord_GB5_4"
+		faction="Faction.clan_goblin_5" />
+	<Hero
+		id="lord_GB5_5"
+		faction="Faction.clan_goblin_5"
+		spouse="Hero.lord_GB5_7" />
+	<Hero
+		id="lord_GB5_6"
+		faction="Faction.clan_goblin_5"
+		spouse="Hero.lord_GB5_8" />
+	<Hero
+		id="lord_GB5_7"
+		faction="Faction.clan_goblin_5"
+		spouse="Hero.lord_GB5_5" />
+	<Hero
+		id="lord_GB5_8"
+		faction="Faction.clan_goblin_5"
+		spouse="Hero.lord_GB5_6" />
+  <!-- TAOM-NEWFACTIONS:goblin:END -->
+  <!-- TAOM-NEWFACTIONS:mistymountainorcs:BEGIN -->
+	<Hero
+		id="lord_MM1_1"
+		faction="Faction.clan_mistymountainorcs_1"
+		text="{=lord_MM1_1_description}Bûrzum, Warlord of the Misty Mountains, who holds the deep places of Moria and the cold peaks above." />
+	<Hero
+		id="lord_MM1_2"
+		faction="Faction.clan_mistymountainorcs_1" />
+	<Hero
+		id="lord_MM1_3"
+		faction="Faction.clan_mistymountainorcs_1" />
+	<Hero
+		id="lord_MM1_4"
+		faction="Faction.clan_mistymountainorcs_1" />
+	<Hero
+		id="lord_MM1_5"
+		faction="Faction.clan_mistymountainorcs_1"
+		spouse="Hero.lord_MM1_7" />
+	<Hero
+		id="lord_MM1_6"
+		faction="Faction.clan_mistymountainorcs_1"
+		spouse="Hero.lord_MM1_8" />
+	<Hero
+		id="lord_MM1_7"
+		faction="Faction.clan_mistymountainorcs_1"
+		spouse="Hero.lord_MM1_5" />
+	<Hero
+		id="lord_MM1_8"
+		faction="Faction.clan_mistymountainorcs_1"
+		spouse="Hero.lord_MM1_6" />
+	<Hero
+		id="lord_MM2_1"
+		faction="Faction.clan_mistymountainorcs_2" />
+	<Hero
+		id="lord_MM2_2"
+		faction="Faction.clan_mistymountainorcs_2" />
+	<Hero
+		id="lord_MM2_3"
+		faction="Faction.clan_mistymountainorcs_2" />
+	<Hero
+		id="lord_MM2_4"
+		faction="Faction.clan_mistymountainorcs_2" />
+	<Hero
+		id="lord_MM2_5"
+		faction="Faction.clan_mistymountainorcs_2"
+		spouse="Hero.lord_MM2_7" />
+	<Hero
+		id="lord_MM2_6"
+		faction="Faction.clan_mistymountainorcs_2"
+		spouse="Hero.lord_MM2_8" />
+	<Hero
+		id="lord_MM2_7"
+		faction="Faction.clan_mistymountainorcs_2"
+		spouse="Hero.lord_MM2_5" />
+	<Hero
+		id="lord_MM2_8"
+		faction="Faction.clan_mistymountainorcs_2"
+		spouse="Hero.lord_MM2_6" />
+	<Hero
+		id="lord_MM3_1"
+		faction="Faction.clan_mistymountainorcs_3" />
+	<Hero
+		id="lord_MM3_2"
+		faction="Faction.clan_mistymountainorcs_3" />
+	<Hero
+		id="lord_MM3_3"
+		faction="Faction.clan_mistymountainorcs_3" />
+	<Hero
+		id="lord_MM3_4"
+		faction="Faction.clan_mistymountainorcs_3" />
+	<Hero
+		id="lord_MM3_5"
+		faction="Faction.clan_mistymountainorcs_3"
+		spouse="Hero.lord_MM3_7" />
+	<Hero
+		id="lord_MM3_6"
+		faction="Faction.clan_mistymountainorcs_3"
+		spouse="Hero.lord_MM3_8" />
+	<Hero
+		id="lord_MM3_7"
+		faction="Faction.clan_mistymountainorcs_3"
+		spouse="Hero.lord_MM3_5" />
+	<Hero
+		id="lord_MM3_8"
+		faction="Faction.clan_mistymountainorcs_3"
+		spouse="Hero.lord_MM3_6" />
+	<Hero
+		id="lord_MM4_1"
+		faction="Faction.clan_mistymountainorcs_4" />
+	<Hero
+		id="lord_MM4_2"
+		faction="Faction.clan_mistymountainorcs_4" />
+	<Hero
+		id="lord_MM4_3"
+		faction="Faction.clan_mistymountainorcs_4" />
+	<Hero
+		id="lord_MM4_4"
+		faction="Faction.clan_mistymountainorcs_4" />
+	<Hero
+		id="lord_MM4_5"
+		faction="Faction.clan_mistymountainorcs_4"
+		spouse="Hero.lord_MM4_7" />
+	<Hero
+		id="lord_MM4_6"
+		faction="Faction.clan_mistymountainorcs_4"
+		spouse="Hero.lord_MM4_8" />
+	<Hero
+		id="lord_MM4_7"
+		faction="Faction.clan_mistymountainorcs_4"
+		spouse="Hero.lord_MM4_5" />
+	<Hero
+		id="lord_MM4_8"
+		faction="Faction.clan_mistymountainorcs_4"
+		spouse="Hero.lord_MM4_6" />
+	<Hero
+		id="lord_MM5_1"
+		faction="Faction.clan_mistymountainorcs_5" />
+	<Hero
+		id="lord_MM5_2"
+		faction="Faction.clan_mistymountainorcs_5" />
+	<Hero
+		id="lord_MM5_3"
+		faction="Faction.clan_mistymountainorcs_5" />
+	<Hero
+		id="lord_MM5_4"
+		faction="Faction.clan_mistymountainorcs_5" />
+	<Hero
+		id="lord_MM5_5"
+		faction="Faction.clan_mistymountainorcs_5"
+		spouse="Hero.lord_MM5_7" />
+	<Hero
+		id="lord_MM5_6"
+		faction="Faction.clan_mistymountainorcs_5"
+		spouse="Hero.lord_MM5_8" />
+	<Hero
+		id="lord_MM5_7"
+		faction="Faction.clan_mistymountainorcs_5"
+		spouse="Hero.lord_MM5_5" />
+	<Hero
+		id="lord_MM5_8"
+		faction="Faction.clan_mistymountainorcs_5"
+		spouse="Hero.lord_MM5_6" />
+  <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
+  <!-- TAOM-NEWFACTIONS:bluecraig:BEGIN -->
+	<Hero
+		id="lord_BC1_1"
+		faction="Faction.clan_bluecraig_1"
+		text="{=lord_BC1_1_description}Morgrub, the Great Goblin of Blue Craig, whose swarms infest the Blue Mountains of the far west, hard by the Grey Havens of Lindon." />
+	<Hero
+		id="lord_BC1_2"
+		faction="Faction.clan_bluecraig_1" />
+	<Hero
+		id="lord_BC1_3"
+		faction="Faction.clan_bluecraig_1" />
+	<Hero
+		id="lord_BC1_4"
+		faction="Faction.clan_bluecraig_1" />
+	<Hero
+		id="lord_BC1_5"
+		faction="Faction.clan_bluecraig_1"
+		spouse="Hero.lord_BC1_7" />
+	<Hero
+		id="lord_BC1_6"
+		faction="Faction.clan_bluecraig_1"
+		spouse="Hero.lord_BC1_8" />
+	<Hero
+		id="lord_BC1_7"
+		faction="Faction.clan_bluecraig_1"
+		spouse="Hero.lord_BC1_5" />
+	<Hero
+		id="lord_BC1_8"
+		faction="Faction.clan_bluecraig_1"
+		spouse="Hero.lord_BC1_6" />
+	<Hero
+		id="lord_BC2_1"
+		faction="Faction.clan_bluecraig_2" />
+	<Hero
+		id="lord_BC2_2"
+		faction="Faction.clan_bluecraig_2" />
+	<Hero
+		id="lord_BC2_3"
+		faction="Faction.clan_bluecraig_2" />
+	<Hero
+		id="lord_BC2_4"
+		faction="Faction.clan_bluecraig_2" />
+	<Hero
+		id="lord_BC2_5"
+		faction="Faction.clan_bluecraig_2"
+		spouse="Hero.lord_BC2_7" />
+	<Hero
+		id="lord_BC2_6"
+		faction="Faction.clan_bluecraig_2"
+		spouse="Hero.lord_BC2_8" />
+	<Hero
+		id="lord_BC2_7"
+		faction="Faction.clan_bluecraig_2"
+		spouse="Hero.lord_BC2_5" />
+	<Hero
+		id="lord_BC2_8"
+		faction="Faction.clan_bluecraig_2"
+		spouse="Hero.lord_BC2_6" />
+	<Hero
+		id="lord_BC3_1"
+		faction="Faction.clan_bluecraig_3" />
+	<Hero
+		id="lord_BC3_2"
+		faction="Faction.clan_bluecraig_3" />
+	<Hero
+		id="lord_BC3_3"
+		faction="Faction.clan_bluecraig_3" />
+	<Hero
+		id="lord_BC3_4"
+		faction="Faction.clan_bluecraig_3" />
+	<Hero
+		id="lord_BC3_5"
+		faction="Faction.clan_bluecraig_3"
+		spouse="Hero.lord_BC3_7" />
+	<Hero
+		id="lord_BC3_6"
+		faction="Faction.clan_bluecraig_3"
+		spouse="Hero.lord_BC3_8" />
+	<Hero
+		id="lord_BC3_7"
+		faction="Faction.clan_bluecraig_3"
+		spouse="Hero.lord_BC3_5" />
+	<Hero
+		id="lord_BC3_8"
+		faction="Faction.clan_bluecraig_3"
+		spouse="Hero.lord_BC3_6" />
+	<Hero
+		id="lord_BC4_1"
+		faction="Faction.clan_bluecraig_4" />
+	<Hero
+		id="lord_BC4_2"
+		faction="Faction.clan_bluecraig_4" />
+	<Hero
+		id="lord_BC4_3"
+		faction="Faction.clan_bluecraig_4" />
+	<Hero
+		id="lord_BC4_4"
+		faction="Faction.clan_bluecraig_4" />
+	<Hero
+		id="lord_BC4_5"
+		faction="Faction.clan_bluecraig_4"
+		spouse="Hero.lord_BC4_7" />
+	<Hero
+		id="lord_BC4_6"
+		faction="Faction.clan_bluecraig_4"
+		spouse="Hero.lord_BC4_8" />
+	<Hero
+		id="lord_BC4_7"
+		faction="Faction.clan_bluecraig_4"
+		spouse="Hero.lord_BC4_5" />
+	<Hero
+		id="lord_BC4_8"
+		faction="Faction.clan_bluecraig_4"
+		spouse="Hero.lord_BC4_6" />
+	<Hero
+		id="lord_BC5_1"
+		faction="Faction.clan_bluecraig_5" />
+	<Hero
+		id="lord_BC5_2"
+		faction="Faction.clan_bluecraig_5" />
+	<Hero
+		id="lord_BC5_3"
+		faction="Faction.clan_bluecraig_5" />
+	<Hero
+		id="lord_BC5_4"
+		faction="Faction.clan_bluecraig_5" />
+	<Hero
+		id="lord_BC5_5"
+		faction="Faction.clan_bluecraig_5"
+		spouse="Hero.lord_BC5_7" />
+	<Hero
+		id="lord_BC5_6"
+		faction="Faction.clan_bluecraig_5"
+		spouse="Hero.lord_BC5_8" />
+	<Hero
+		id="lord_BC5_7"
+		faction="Faction.clan_bluecraig_5"
+		spouse="Hero.lord_BC5_5" />
+	<Hero
+		id="lord_BC5_8"
+		faction="Faction.clan_bluecraig_5"
+		spouse="Hero.lord_BC5_6" />
+  <!-- TAOM-NEWFACTIONS:bluecraig:END -->
+  <!-- TAOM-NEWFACTIONS:lindon:BEGIN -->
+	<Hero
+		id="lord_LN1_1"
+		faction="Faction.clan_lindon_1"
+		text="{=lord_LN1_1_description}Círdan, the Shipwright, Lord of the Grey Havens and eldest of the Eldar in Middle-earth, who kept the Ring Narya until he gave it to Mithrandir." />
+	<Hero
+		id="lord_LN1_2"
+		faction="Faction.clan_lindon_1" />
+	<Hero
+		id="lord_LN1_3"
+		faction="Faction.clan_lindon_1"
+		spouse="Hero.lord_LN1_5" />
+	<Hero
+		id="lord_LN1_4"
+		faction="Faction.clan_lindon_1"
+		spouse="Hero.lord_LN1_6" />
+	<Hero
+		id="lord_LN1_5"
+		faction="Faction.clan_lindon_1"
+		spouse="Hero.lord_LN1_3" />
+	<Hero
+		id="lord_LN1_6"
+		faction="Faction.clan_lindon_1"
+		spouse="Hero.lord_LN1_4" />
+	<Hero
+		id="lord_LN2_1"
+		faction="Faction.clan_lindon_2" />
+	<Hero
+		id="lord_LN2_2"
+		faction="Faction.clan_lindon_2" />
+	<Hero
+		id="lord_LN2_3"
+		faction="Faction.clan_lindon_2"
+		spouse="Hero.lord_LN2_4" />
+	<Hero
+		id="lord_LN2_4"
+		faction="Faction.clan_lindon_2"
+		spouse="Hero.lord_LN2_3" />
+  <!-- TAOM-NEWFACTIONS:lindon:END -->
 </Heroes>
 

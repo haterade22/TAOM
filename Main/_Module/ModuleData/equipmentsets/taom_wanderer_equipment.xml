@@ -1374,4 +1374,132 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+  <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
+	<EquipmentRoster id="npc_companion_equipment_template_goblin" culture="Culture.goblin">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Head" id="Item.roughhide_cap" />
+			<Equipment slot="Body" id="Item.nordic_hauberk" />
+			<Equipment slot="Cape" id="Item.scarf" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.roughhide_cap" />
+			<Equipment slot="Body" id="Item.nordic_hauberk" />
+			<Equipment slot="Cape" id="Item.scarf" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Head" id="Item.northern_fur_cap" />
+			<Equipment slot="Body" id="Item.nordic_sloven" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.northern_fur_cap" />
+			<Equipment slot="Body" id="Item.nordic_sloven" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Head" id="Item.roughhide_cap" />
+			<Equipment slot="Body" id="Item.nordic_tunic" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.roughhide_cap" />
+			<Equipment slot="Body" id="Item.nordic_tunic" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Body" id="Item.nordic_tunic" />
+			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Body" id="Item.long_woolen_tunic" />
+			<Equipment slot="Leg" id="Item.leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Body" id="Item.nordic_sloven" />
+			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+  <!-- TAOM-NEWFACTIONS:goblin:END -->
+  <!-- TAOM-NEWFACTIONS:mistymountainorcs:BEGIN -->
+	<EquipmentRoster id="npc_companion_equipment_template_mistymountainorcs" culture="Culture.mistymountainorcs">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Head" id="Item.roughhide_cap" />
+			<Equipment slot="Body" id="Item.nordic_hauberk" />
+			<Equipment slot="Cape" id="Item.scarf" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.roughhide_cap" />
+			<Equipment slot="Body" id="Item.nordic_hauberk" />
+			<Equipment slot="Cape" id="Item.scarf" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Head" id="Item.northern_fur_cap" />
+			<Equipment slot="Body" id="Item.nordic_sloven" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.northern_fur_cap" />
+			<Equipment slot="Body" id="Item.nordic_sloven" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Head" id="Item.roughhide_cap" />
+			<Equipment slot="Body" id="Item.nordic_tunic" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.roughhide_cap" />
+			<Equipment slot="Body" id="Item.nordic_tunic" />
+			<Equipment slot="Gloves" id="Item.leather_gloves" />
+			<Equipment slot="Leg" id="Item.mail_cavalier_boots" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Body" id="Item.nordic_tunic" />
+			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Body" id="Item.long_woolen_tunic" />
+			<Equipment slot="Leg" id="Item.leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+			<Equipment slot="Body" id="Item.nordic_sloven" />
+			<Equipment slot="Leg" id="Item.woven_leather_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+  <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
 </EquipmentRosters>

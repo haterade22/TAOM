@@ -74,6 +74,16 @@ public class TaomCulturalFeats
     private FeatObject _gundabadNotableCountTownArtisan;
     private FeatObject _gundabadNotableCountTownGangLeader;
     private FeatObject _gundabadNotableCountVillage;
+    // Goblins (Goblin Town) — vast weak swarms, snow-bred, ravenous (food penalty)
+    private FeatObject _goblinPartySize;
+    private FeatObject _goblinVolunteerRate;
+    private FeatObject _goblinSnowSpeed;
+    private FeatObject _goblinFoodConsumption;
+    // Misty Mountain Orcs — large weak war-host, snow-bred, hungry (food penalty)
+    private FeatObject _mistyMountainOrcsArmyInfluenceCost;
+    private FeatObject _mistyMountainOrcsPartySize;
+    private FeatObject _mistyMountainOrcsSnowSpeed;
+    private FeatObject _mistyMountainOrcsFoodConsumption;
 
     // Umbar
     private FeatObject _umbarCheaperCaravans;
@@ -210,6 +220,16 @@ public class TaomCulturalFeats
     public static FeatObject GundabadNotableCountTownArtisanFeat => Instance._gundabadNotableCountTownArtisan;
     public static FeatObject GundabadNotableCountTownGangLeaderFeat => Instance._gundabadNotableCountTownGangLeader;
     public static FeatObject GundabadNotableCountVillageFeat => Instance._gundabadNotableCountVillage;
+    // Goblins
+    public static FeatObject GoblinPartySizeFeat => Instance._goblinPartySize;
+    public static FeatObject GoblinVolunteerRateFeat => Instance._goblinVolunteerRate;
+    public static FeatObject GoblinSnowSpeedFeat => Instance._goblinSnowSpeed;
+    public static FeatObject GoblinFoodConsumptionFeat => Instance._goblinFoodConsumption;
+    // Misty Mountain Orcs
+    public static FeatObject MistyMountainOrcsArmyInfluenceCostFeat => Instance._mistyMountainOrcsArmyInfluenceCost;
+    public static FeatObject MistyMountainOrcsPartySizeFeat => Instance._mistyMountainOrcsPartySize;
+    public static FeatObject MistyMountainOrcsSnowSpeedFeat => Instance._mistyMountainOrcsSnowSpeed;
+    public static FeatObject MistyMountainOrcsFoodConsumptionFeat => Instance._mistyMountainOrcsFoodConsumption;
 
     // Umbar
     public static FeatObject UmbarCheaperCaravansFeat => Instance._umbarCheaperCaravans;
@@ -348,6 +368,16 @@ public class TaomCulturalFeats
         _gundabadNotableCountTownArtisan = Register("taom_gundabad_notable_count_town_artisan");
         _gundabadNotableCountTownGangLeader = Register("taom_gundabad_notable_count_town_gang_leader");
         _gundabadNotableCountVillage = Register("taom_gundabad_notable_count_village");
+        // Goblins
+        _goblinPartySize = Register("taom_goblin_party_size");
+        _goblinVolunteerRate = Register("taom_goblin_volunteer_rate");
+        _goblinSnowSpeed = Register("taom_goblin_snow_speed");
+        _goblinFoodConsumption = Register("taom_goblin_food_consumption");
+        // Misty Mountain Orcs
+        _mistyMountainOrcsArmyInfluenceCost = Register("taom_mistymountainorcs_army_influence_cost");
+        _mistyMountainOrcsPartySize = Register("taom_mistymountainorcs_party_size");
+        _mistyMountainOrcsSnowSpeed = Register("taom_mistymountainorcs_snow_speed");
+        _mistyMountainOrcsFoodConsumption = Register("taom_mistymountainorcs_food_consumption");
 
         _umbarCheaperCaravans = Register("taom_umbar_cheaper_caravans");
         _umbarRenown = Register("taom_umbar_renown");
@@ -610,6 +640,40 @@ public class TaomCulturalFeats
             "{=taom_feat_gun_ncv}Bone Camps",
             "{=taom_feat_gun_ncv_desc}Notable count in villages increased by 10%.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        // Goblins — vast weak swarms that breed endlessly and eat everything
+        _goblinPartySize.Initialize(
+            "{=taom_feat_gob_ps}Goblin Swarm",
+            "{=taom_feat_gob_ps_desc}Party size limit increased by 40%.",
+            0.4f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _goblinVolunteerRate.Initialize(
+            "{=taom_feat_gob_vr}Endless Spawn",
+            "{=taom_feat_gob_vr_desc}Village volunteer respawn rate increased by 25%.",
+            0.25f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _goblinSnowSpeed.Initialize(
+            "{=taom_feat_gob_ss}Tunnel-Runners",
+            "{=taom_feat_gob_ss_desc}Party movement speed increased by 10% in snow.",
+            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _goblinFoodConsumption.Initialize(
+            "{=taom_feat_gob_fc}Ravenous Swarm",
+            "{=taom_feat_gob_fc_desc}Party food consumption increased by 20%.",
+            0.2f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
+        // Misty Mountain Orcs — large weak war-host, cheap to muster, hungry on the march
+        _mistyMountainOrcsArmyInfluenceCost.Initialize(
+            "{=taom_feat_mmo_aic}Orc Horde",
+            "{=taom_feat_mmo_aic_desc}Army recruitment costs 40% less influence.",
+            -0.4f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _mistyMountainOrcsPartySize.Initialize(
+            "{=taom_feat_mmo_ps}Mountain Host",
+            "{=taom_feat_mmo_ps_desc}Party size limit increased by 30%.",
+            0.3f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _mistyMountainOrcsSnowSpeed.Initialize(
+            "{=taom_feat_mmo_ss}Mountain-Bred",
+            "{=taom_feat_mmo_ss_desc}Party movement speed increased by 10% in snow.",
+            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _mistyMountainOrcsFoodConsumption.Initialize(
+            "{=taom_feat_mmo_fc}Hungry Host",
+            "{=taom_feat_mmo_fc_desc}Party food consumption increased by 15%.",
+            0.15f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
 
         // Umbar — Corsairs: cheap caravans, battle renown, expensive wages
         _umbarCheaperCaravans.Initialize(
@@ -893,6 +957,14 @@ public class TaomCulturalFeats
         yield return _instance._gundabadNotableCountTownArtisan;
         yield return _instance._gundabadNotableCountTownGangLeader;
         yield return _instance._gundabadNotableCountVillage;
+        yield return _instance._goblinPartySize;
+        yield return _instance._goblinVolunteerRate;
+        yield return _instance._goblinSnowSpeed;
+        yield return _instance._goblinFoodConsumption;
+        yield return _instance._mistyMountainOrcsArmyInfluenceCost;
+        yield return _instance._mistyMountainOrcsPartySize;
+        yield return _instance._mistyMountainOrcsSnowSpeed;
+        yield return _instance._mistyMountainOrcsFoodConsumption;
         yield return _instance._umbarCheaperCaravans;
         yield return _instance._umbarRenown;
         yield return _instance._umbarWage;

@@ -312,6 +312,62 @@
         <GameType value = "EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- TAOM-NEWFACTIONS-REG:BEGIN -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="troops/troops_goblin"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/npcs_goblin"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_goblin"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="troops/troops_mistymountainorcs"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/npcs_mistymountainorcs"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_mistymountainorcs"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- TAOM-NEWFACTIONS-REG:END -->
     <XmlNode>
       <XmlName id="NPCCharacters" path="characters/npcs_mirkwood"/>
       <IncludedGameTypes>

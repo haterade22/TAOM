@@ -1140,6 +1140,30 @@ Build 0 err, suite **2896 pass / 2 skipped** (up from 2894 — +2 boundary tests
 
 ---
 
+### Review 47 — New Factions (Misty Mountain Orcs / Goblins / Goblin Town / Blue Craig / Lindon) (2026-06-02)
+
+4-kingdom / 2-culture data changeset cloned from `gundabad`, reviewed AFTER a proactive clone-leftover fix. **Codex (gpt-5.5 xhigh): 0 CRITICAL / 0 HIGH / 2 MED / 2 LOW.** Then a 5-agent adversarial completeness-audit workflow on top found 1 MED + 1 LOW that both Codex and the prior `/deep-review` (7 agents) missed. All findings verified against source + fixed at the generator source AND live files. Full detail + root-cause table: [rca-new-factions-2026-06-02.md](rca-new-factions-2026-06-02.md) (Phase 2/3).
+
+| # | Sev | Source | Finding | Resolution |
+|---|-----|--------|---------|------------|
+| C1 | MED | Codex | Goblin Town + Moria faction-map cards advertised Warg-riders/wolf-cavalry, but cavalry was stripped (infantry+archer only). | Reworked to surviving units in `make_new_factions_playable.py`; regenerated factions.json + harvested strings. |
+| C2 | MED | Codex | 14×2 notable names still said "pale orc" (clone sibling the "Pale Uruk"→raceword rule missed). | Added "pale orc"/"Pale Orc" remap + post-gen assertion; regenerated. |
+| **W1** | **MED** | **Completeness workflow** | `execution/alignment.json` had no row for the 4 new kingdoms → `AlignmentService` Neutral fallback mis-scored execution-relation penalties + disabled the diplomacy same-alignment war-block backstop. | Added orcs=`evil`, lindon=`free`. |
+| C3 | LOW | Codex | Lindon strength_1 "unifies armies cheaply" contradicted its own +25% army-influence-cost penalty. | Reworded to describe the +35% influence award; both files. |
+| C4 | LOW | Codex | Layout missing `clan_bluecraig_3..5`. | Added (sibling of the goblin-clan sync). |
+| W2 | LOW | Completeness workflow | 6 goblin-culture notables read "orc" not "goblin". | Culture-aware " orc "→raceword remap (no-op for the orc culture). |
+| — | DISPUTED | Codex + workflow | diplomacy graph (130 rels, 0 invalid/dup/contradictory), feat wiring (8×5 locations), recruitment pools, faction-map↔feat magnitudes, troop structure | Independently verified clean by both — no change. |
+
+Proactive (pre-Codex) clone-leftover DISPLAY-TEXT fix (2 culture names + 2 descriptions + 2 clan-pool names + ~24 loc strings + 36 notable names) — Codex CONFIRMED it had landed. Build 0 err, suite **2914 pass / 2 skipped**, validate_moduledata PASS.
+
+**Preventive actions written:**
+1. AGENTS.md "Bugs Codex typically misses" (review 47): whole-file config omissions when adding a faction (enumerate every kingdom-keyed config, don't only audit data present); clone-leftover DISPLAY text.
+2. AGENTS.md "What Codex does well" (review 47): good confirm/dispute calibration on a mostly-data changeset; blind spot = whole-file config omissions (needs a completeness pass).
+3. Memory `feedback_clone_leftover_display_text.md` (NEW) + generalized `feedback_faction_map_update_with_cultural_feats.md` to cover ALL kingdom-enumerating configs incl. `alignment.json`.
+4. Process lesson: the highest-value catch came from the completeness-audit workflow that ENUMERATED the configs that should have a row — not from the targeted reviewers that audited what existed. Keep the completeness pass in the new-faction review chain.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by
