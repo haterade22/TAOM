@@ -46,6 +46,7 @@ using TAOM.Features.EquipPresets;
 using TAOM.Features.EditorCacheRebuild;
 using TAOM.Features.CulturalFeats;
 using TAOM.Features.CultureMarketplace;
+using TAOM.Features.CultureConversion;
 using TAOM.Features.MissionDiagnostic;
 using TAOM.Features.CrashReport;
 using TAOM.Features.BattleLoadDiagnostics;
@@ -109,6 +110,7 @@ public static class IoC
         EditorCacheRebuildIoC.RegisterEditorCacheRebuildFeature(container);
         CulturalFeatsIoC.RegisterCulturalFeatsFeature(container);
         CultureMarketplaceIoC.RegisterCultureMarketplaceFeature(container);
+        CultureConversionIoC.RegisterCultureConversionFeature(container);
         MissionDiagnosticIoC.RegisterMissionDiagnosticFeature(container);
         CrashReportIoC.RegisterCrashReportFeature(container);
         BattleLoadDiagnosticsIoC.RegisterBattleLoadDiagnosticsFeature(container);

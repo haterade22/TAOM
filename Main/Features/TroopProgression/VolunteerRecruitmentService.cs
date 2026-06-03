@@ -50,9 +50,43 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeDaleCulture();
         InitializeDaleSettlements();
         InitializeRohanClans();
+        InitializeRohanCulture();
+        InitializeHaradCulture();
         InitializeIsengardCulture();
         InitializeDunlandCulture();
         InitializeDunlandClans();
+    }
+
+    // --- Rohan Culture Fallback (Culture.vlandia) ---
+    // Rohan previously had ONLY clan pools (InitializeRohanClans) and no culture-level fallback, so
+    // HasCulturePool("vlandia") was false. That made Rohan an invalid CultureConversion target — a Rohan
+    // clan conquering a foreign fief never triggered conversion (Codex adversarial review, 2026-06-02).
+    // Mirror the clan pool: all 7 Rohan basic recruits at equal weight 1.
+    private static void InitializeRohanCulture()
+    {
+        CultureMap["vlandia"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("rohan_wold_recruit",        1),
+            new VolunteerChance("rohan_westemnet_recruit",   1),
+            new VolunteerChance("rohan_eastemnet_recruit",   1),
+            new VolunteerChance("rohan_eastfold_recruit",    1),
+            new VolunteerChance("rohan_westfold_recruit",    1),
+            new VolunteerChance("rohan_westmarches_recruit", 1),
+            new VolunteerChance("rohan_edoras_recruit",      1),
+        };
+    }
+
+    // --- Harad Culture Fallback (Culture.aserai — the Harad kingdom) ---
+    // The Harad kingdom uses engine culture id "aserai" (cheatsheet). It had no CultureMap pool — only the
+    // Shaghâna/Âbanissa sub-factions did — so HasCulturePool("aserai") was false and Harad conquests never
+    // converted (Codex review, 2026-06-02). Reuse the same harad_levy/harad_noble pool as those sub-factions.
+    private static void InitializeHaradCulture()
+    {
+        CultureMap["aserai"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("harad_levy",  7),
+            new VolunteerChance("harad_noble", 3),
+        };
     }
 
     // --- Dunland (Culture.empire) Culture Fallback ---
@@ -320,20 +354,42 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
 
     public string GetVolunteerTroopId(VolunteerContext context)
     {
-        var pool = ResolveConditionalPool(context.SettlementId, context)
-                ?? ResolveConditionalPool(context.BoundSettlementId, context)
-                ?? ResolvePool(context.SettlementId, SettlementMap)
-                ?? ResolvePool(context.BoundSettlementId, SettlementMap)
-                ?? ResolvePool(context.OwnerClanId, ClanMap)
-                ?? ResolvePool(context.CultureId, CultureMap);
+        List<VolunteerChance> pool;
+        if (context.IsConvertedSettlement && context.SettlementCultureId != null)
+        {
+            // CultureConversion: a conquered fief that has fully converted recruits the NEW culture's
+            // troops, bypassing the settlement/clan pools (which hold the ORIGINAL culture's regional
+            // troops). SettlementCultureId == the converted Settlement.Culture; conversion is gated on
+            // HasCulturePool, so this normally hits. If somehow absent, fall through to the standard
+            // cascade rather than returning naked (no regression vs. pre-feature behavior).
+            pool = ResolvePool(context.SettlementCultureId, CultureMap) ?? ResolveStandardCascade(context);
+        }
+        else
+        {
+            pool = ResolveStandardCascade(context);
+        }
 
         if (pool == null || pool.Count == 0)
             return null;
 
         var troop = PickWeighted(pool);
-        _logger.LogDebug($"Volunteer: settlement={context.SettlementId} clan={context.OwnerClanId} culture={context.CultureId} → {troop}");
+        _logger.LogDebug($"Volunteer: settlement={context.SettlementId} clan={context.OwnerClanId} culture={context.CultureId} converted={context.IsConvertedSettlement} → {troop}");
         return troop;
     }
+
+    // Standard (non-converted) resolution cascade: conditional → per-settlement → per-clan → culture fallback.
+    private static List<VolunteerChance> ResolveStandardCascade(VolunteerContext context)
+    {
+        return ResolveConditionalPool(context.SettlementId, context)
+            ?? ResolveConditionalPool(context.BoundSettlementId, context)
+            ?? ResolvePool(context.SettlementId, SettlementMap)
+            ?? ResolvePool(context.BoundSettlementId, SettlementMap)
+            ?? ResolvePool(context.OwnerClanId, ClanMap)
+            ?? ResolvePool(context.CultureId, CultureMap);
+    }
+
+    public bool HasCulturePool(string cultureId)
+        => !string.IsNullOrEmpty(cultureId) && CultureMap.ContainsKey(cultureId);
 
     private static List<VolunteerChance> ResolveConditionalPool(string key, VolunteerContext context)
     {

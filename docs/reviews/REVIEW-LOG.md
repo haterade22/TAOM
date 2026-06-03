@@ -1191,6 +1191,22 @@ Proactive (pre-Codex) clone-leftover DISPLAY-TEXT fix (2 culture names + 2 descr
 
 ---
 
+## Review 49 — CultureConversion (2026-06-02)
+
+New feature: conquered town/castle (+ bound villages) gradually adopts the new owner's culture + troops. Reviewed via a 16-agent deep-review **workflow** (5 dimensions × adversarial-verify per finding + completeness critic, each critic finding re-verified) then a Codex `gpt-5.5 xhigh` adversarial pass.
+
+**Deep-review:** 10 findings raised → **6 confirmed, 4 refuted**. The 4 refutations included a plausible HIGH (R6 "store cleared while `Settlement.Culture` still holds an in-memory converted value") proven architecturally impossible by the verifier. Confirmed: 1 real code bug (`ReapplyConvertedCultures` discarded `SetSettlementCulture` failure → stale `IsConverted` record on mod-version culture removal), 2 cross-feature doc gaps (RevoltTuning loyalty coupling, CultureMarketplace goods hold-window lag), 3 test gaps. All fixed/deferred-with-rationale.
+
+**Codex:** 1 HIGH + 3 LOW; **DISPUTED 5 of 7 Known Suspects with decompiled evidence** (event-ordering, R6, save/load guard, cascade-refactor all verified safe). The HIGH (`HasCulturePool` gate excluded 5 playable cultures — Rohan/Khand/Harad/Mirkwood/Umbar — because it was defined by the existing `CultureMap` keys, not the full playable-culture set) was the highest-value catch and no deep-review dimension found it.
+
+**Preventive actions:**
+1. Added `CultureMap["vlandia"]` (Rohan) + `["aserai"]` (Harad) culture pools — the 2 missing cultures with existing recruitable troops; documented Khand/Mirkwood/Umbar as a known gap (no `is_basic_troop` set authored).
+2. New enumeration test `HasCulturePool_PlayableCultureWithTroops_ReturnsTrue` (+ `..._WithoutTroopSet_ReturnsFalse_KnownGap`) pins the FULL playable-culture domain against the gate — institutionalizes "enumerate the domain, don't spot-check the entries."
+3. AGENTS.md "Lessons" review-49 row + new "What Codex does well" bullet (enumerate-gate-domain). Same lesson as review 47's `alignment.json` whole-file omission.
+4. RCA: docs/reviews/rca-culture-conversion-2026-06-02.md (deep-review + Codex sections). CHANGELOG `2026-06-02` updated. Build green, **3026/3028 tests pass** (+23 review tests).
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

@@ -4,6 +4,8 @@
 
 Each day, every town in TAOM is seeded with a small rotation of items pulled from a culture-specific pool keyed to the town's current owner. Walk into Minas Tirith → see Gondor swan-cavalry helms and Ithilien gear; capture it as Mordor → the next day the rotating stock starts showing morgul and morannon items. The same mechanic applies to all 16+ LOTRLOME cultures without per-item authoring.
 
+> **Cross-feature:** this feature keys on `OwnerClan.Culture` (current owner, changes the instant a fief is captured), NOT `Settlement.Culture`. [CultureConversion](culture-conversion.md) only flips `Settlement.Culture` after a hold period — so a freshly-captured fief stocks the new owner's goods immediately while its troops/loyalty still reflect the original culture until conversion completes. This goods-vs-troops lag is intended. See culture-conversion.md → "Cross-feature interactions."
+
 ## Why This Exists
 
 LOTRLOME_Armory ships ~6,155 culture-tagged items across 17 LOTR factions (Gondor, Mordor, Rohan, Erebor, Isengard, Rivendell, Mirkwood, Rhun, Harad, Dunland, Gundabad, Dol Guldur, Arnor, Iron Hills, Mercenary, Thenn, Troll). Without this feature none of them appear in trade.

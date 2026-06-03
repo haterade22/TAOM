@@ -4,6 +4,8 @@
 
 Softens vanilla Bannerlord's revolt mechanic so LOTR's frequent settlement flips don't spawn rebel kingdoms every few weeks. Raises the loyalty thresholds required for revolt and dampens the different-culture ownership penalty. Values are JSON-configurable without recompilation.
 
+> **Cross-feature:** the `SettlementOwnerDifferentCultureLoyaltyEffect` penalty here only applies while `OwnerClan.Culture != Settlement.Culture`. [CultureConversion](culture-conversion.md) flips `Settlement.Culture` to the new owner after a hold period, which **removes** this penalty for that fief once it converts. See culture-conversion.md → "Cross-feature interactions."
+
 ## Why This Exists
 
 - **Vanilla behavior:** `DefaultSettlementLoyaltyModel` applies a brutal -3.0/day loyalty penalty when the owner's culture differs from the settlement's culture (and -1.0/day for different-culture governors). Settlements enter a "rebellious" visual state at loyalty ≤ 25 and actually revolt at loyalty ≤ 15, spawning an independent rebel clan via `RebellionsCampaignBehavior.StartRebellionEvent`.

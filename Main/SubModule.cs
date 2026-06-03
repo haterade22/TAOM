@@ -496,6 +496,14 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddBehavior(new CastleRecruitmentBehavior(
                 IoC.Resolve<ICastleRecruitmentService>(),
                 IoC.Resolve<IModLogger>()));
+
+            // CultureConversion — conquered cross-culture fiefs gradually adopt the new owner's culture
+            // (troops, militia, identity). Registered unconditionally so SyncData round-trips conversion
+            // records and completed overrides re-apply on load even when the MCM toggle is off.
+            campaignStarter.AddBehavior(new Features.CultureConversion.Hooks.CultureConversionBehavior(
+                IoC.Resolve<Features.CultureConversion.ICultureConversionService>(),
+                IoC.Resolve<Features.CultureConversion.ICultureConversionStore>(),
+                IoC.Resolve<IModLogger>()));
         }
     }
 

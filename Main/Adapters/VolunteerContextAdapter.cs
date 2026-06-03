@@ -1,5 +1,6 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.ObjectSystem;
+using TAOM.Features.CultureConversion;
 using TAOM.Features.TroopProgression;
 
 namespace TAOM.Adapters;
@@ -11,6 +12,13 @@ namespace TAOM.Adapters;
 // Source: Decompiled TaleWorlds.CampaignSystem - Hero, Settlement, Village classes
 public class VolunteerContextAdapter : IVolunteerContextAdapter
 {
+    private readonly ICultureConversionStore _conversionStore;
+
+    public VolunteerContextAdapter(ICultureConversionStore conversionStore)
+    {
+        _conversionStore = conversionStore;
+    }
+
     public VolunteerContext GetContext(Hero hero)
     {
         var settlement = hero.CurrentSettlement;
@@ -31,7 +39,15 @@ public class VolunteerContextAdapter : IVolunteerContextAdapter
         // Owner culture is read live (no caching) so kingdom flips take effect for the next volunteer pick.
         string ownerCultureId = settlement.OwnerClan?.Culture?.StringId;
 
-        return new VolunteerContext(settlementId, boundSettlementId, ownerClanId, cultureId, ownerCultureId);
+        // CultureConversion: the settlement's CURRENT culture (reflects any applied override) + whether
+        // this settlement — or, for villages, its bound parent — has been converted. When converted,
+        // recruitment resolves troops from the converted culture's pool instead of the stale settlement pool.
+        string settlementCultureId = settlement.Culture?.StringId;
+        bool isConverted = _conversionStore.IsConverted(settlementId)
+                           || (boundSettlementId != null && _conversionStore.IsConverted(boundSettlementId));
+
+        return new VolunteerContext(
+            settlementId, boundSettlementId, ownerClanId, cultureId, ownerCultureId, settlementCultureId, isConverted);
     }
 
     public CharacterObject ResolveCharacter(string characterId)

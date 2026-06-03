@@ -45,6 +45,23 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "How many recruiters each castle is populated with (vanilla towns = 5, villages = 3). Higher = more recruitment volume per castle. Default: 3.")]
     public int CastleNotablesPerCastle { get; set; } = 3;
 
+    // --- Culture Conversion ---
+
+    [SettingPropertyGroup("Culture Conversion")]
+    [SettingPropertyBool("Enable Culture Conversion", Order = 0,
+        HintText = "When enabled, a town/castle (and its villages) conquered by a different culture gradually adopts the new owner's culture — producing their troops, militia, and identity. Disabling stops NEW conversions; already-converted settlements stay converted.")]
+    public bool EnableCultureConversion { get; set; } = true;
+
+    [SettingPropertyGroup("Culture Conversion")]
+    [SettingPropertyInteger("Days To Convert", 1, 365, Order = 1,
+        HintText = "Days the new owner must hold a cross-culture fief before it converts. Lower = faster cultural takeover. Default: 45.")]
+    public int CultureConversionHoldDays { get; set; } = 45;
+
+    [SettingPropertyGroup("Culture Conversion")]
+    [SettingPropertyBool("Require Stable Loyalty", Order = 2,
+        HintText = "When enabled, a conquered fief only converts once its loyalty is high enough (configured in culture_conversion_config.json), so a city in unrest never flips. Default: off.")]
+    public bool CultureConversionRequireStableLoyalty { get; set; } = false;
+
     // --- War of the Ring ---
 
     [SettingPropertyGroup("War of the Ring")]

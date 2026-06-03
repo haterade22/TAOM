@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "requiredHoldDays": 45,
+  "requireStableLoyalty": false,
+  "minLoyaltyToConvert": 50,
+  "convertPlayerOwnedSettlements": true
+}
