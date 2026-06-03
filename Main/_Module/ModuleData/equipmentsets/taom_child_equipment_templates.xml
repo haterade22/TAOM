@@ -657,4 +657,142 @@
 		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
 	</EquipmentRoster>
 
+  <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
+	<EquipmentRoster id="child_template_goblin_noble_male" culture="Culture.goblin">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_goblin_noble_female" culture="Culture.goblin">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_goblin_townsman_male" culture="Culture.goblin">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_goblin_townsman_female" culture="Culture.goblin">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_goblin_villager_male" culture="Culture.goblin">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_goblin_villager_female" culture="Culture.goblin">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+
+  <!-- TAOM-NEWFACTIONS:goblin:END -->
+  <!-- TAOM-NEWFACTIONS:mistymountainorcs:BEGIN -->
+	<EquipmentRoster id="child_template_mistymountainorcs_noble_male" culture="Culture.mistymountainorcs">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mistymountainorcs_noble_female" culture="Culture.mistymountainorcs">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mistymountainorcs_townsman_male" culture="Culture.mistymountainorcs">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mistymountainorcs_townsman_female" culture="Culture.mistymountainorcs">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mistymountainorcs_villager_male" culture="Culture.mistymountainorcs">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_mistymountainorcs_villager_female" culture="Culture.mistymountainorcs">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+			<Equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+
+  <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
 </EquipmentRosters>

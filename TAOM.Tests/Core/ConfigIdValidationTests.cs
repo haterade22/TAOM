@@ -45,6 +45,73 @@ public class ConfigIdValidationTests
         return null;
     }
 
+    private static HashSet<string> CulturesWithFlaggedRoster(string filePath, string flagAttribute)
+    {
+        var cultures = new HashSet<string>();
+        if (!File.Exists(filePath))
+            return cultures;
+        foreach (var roster in XDocument.Load(filePath).Descendants("EquipmentRoster"))
+        {
+            if (roster.Element("Flags")?.Attribute(flagAttribute)?.Value != "true")
+                continue;
+            var culture = roster.Attribute("culture")?.Value?.Replace("Culture.", "");
+            if (!string.IsNullOrEmpty(culture))
+                cultures.Add(culture);
+        }
+        return cultures;
+    }
+
+    // --- Child-generation equipment templates (RCA 2026-06-02) ---
+    // A custom culture whose clans get lords triggers InitialChildGeneration -> HeroCreator.CreateChild
+    // -> EquipmentSelectionModel.GetEquipmentForInitialChildrenGeneration. That model searches for a
+    // culture-matching equipment roster flagged IsChildEquipmentTemplate (young) or
+    // IsTeenagerEquipmentTemplate (teen), both also IsLordTemplate; if NONE exists it returns null and
+    // vanilla NREs on new-game in EquipmentHelper.AssignHeroEquipmentFromEquipment. goblin +
+    // mistymountainorcs shipped without these rosters and crashed every new game.
+    [TestMethod]
+    public void ChildGenerationCultures_HaveChildTeenAndLordEquipmentTemplates()
+    {
+        var md = FindModuleDataPath();
+        if (md == null) { Assert.Inconclusive("ModuleData path not found — run from repo root"); return; }
+
+        var childFile = Path.Combine(md, "equipmentsets", "taom_child_equipment_templates.xml");
+        var lordFile = Path.Combine(md, "equipmentsets", "taom_lord_template_equipment.xml");
+
+        var childCultures = CulturesWithFlaggedRoster(childFile, "IsChildEquipmentTemplate");
+        var teenCultures = CulturesWithFlaggedRoster(lordFile, "IsTeenagerEquipmentTemplate");
+        var lordCultures = CulturesWithFlaggedRoster(lordFile, "IsLordTemplate");
+
+        // The new orc cultures were the regression — pin them so a future clone can't drop them again.
+        foreach (var c in new[] { "goblin", "mistymountainorcs" })
+            Assert.IsTrue(childCultures.Contains(c),
+                $"Culture '{c}' has no IsChildEquipmentTemplate roster in taom_child_equipment_templates.xml — " +
+                "InitialChildGeneration NREs in HeroCreator.CreateChild for this culture's lords.");
+
+        // Consistency: every culture with child templates must also have teenager + adult lord
+        // templates (a child grows into a teen then adult; child-gen draws teen equipment by age).
+        var missingTeen = childCultures.Where(c => !teenCultures.Contains(c)).OrderBy(c => c).ToList();
+        var missingLord = childCultures.Where(c => !lordCultures.Contains(c)).OrderBy(c => c).ToList();
+        Assert.AreEqual(0, missingTeen.Count,
+            $"Cultures with child templates but no IsTeenagerEquipmentTemplate lord roster: {string.Join(", ", missingTeen)}");
+        Assert.AreEqual(0, missingLord.Count,
+            $"Cultures with child templates but no IsLordTemplate roster: {string.Join(", ", missingLord)}");
+    }
+
+    [TestMethod]
+    public void NewOrcCultures_HaveChildEducationEquipmentRosters()
+    {
+        var md = FindModuleDataPath();
+        if (md == null) { Assert.Inconclusive("ModuleData path not found"); return; }
+
+        var eduFile = Path.Combine(md, "equipmentsets", "taom_education_equipment_templates.xml");
+        Assert.IsTrue(File.Exists(eduFile), "taom_education_equipment_templates.xml missing");
+        var ids = XDocument.Load(eduFile).Descendants("EquipmentRoster")
+            .Select(r => r.Attribute("id")?.Value ?? "").ToList();
+        foreach (var c in new[] { "goblin", "mistymountainorcs" })
+            Assert.IsTrue(ids.Any(id => id.StartsWith("child_education_equipments") && id.EndsWith("_" + c)),
+                $"Culture '{c}' has no child_education_equipments_*_{c} rosters — childhood education events NRE.");
+    }
+
     // --- Settlement Guards: Spear culture IDs ---
 
     [TestMethod]

@@ -160,6 +160,26 @@ Re-run order: `generate_new_factions.py` → `insert_new_factions.py` → `gener
 → `generate_new_faction_settlements.py --apply`. All inserts are idempotent
 (`<!-- TAOM-NEWFACTIONS:… -->` markers stripped + re-inserted).
 
+### Child / teenager / lord / education equipment templates (REQUIRED — child-generation crash, issue #267)
+
+A custom culture whose clans get lords triggers `InitialChildGeneration` → vanilla `HeroCreator.CreateChild` →
+`EquipmentSelectionModel.GetEquipmentForInitialChildrenGeneration`, which searches for a **culture-matching**
+equipment roster flagged `IsChildEquipmentTemplate` (young child) or `IsTeenagerEquipmentTemplate` (teen),
+both also `IsLordTemplate`; **if none exists it returns null and the game NREs on new-game.** Custom cultures
+get NONE of these for free (XSLT/vanilla cultures inherit vanilla's). So `insert_new_factions.py` also clones
+gundabad's rosters from three files (idempotent, armor/weapon remap via `transform()`; education keeps vanilla
+childhood clothing):
+
+| File | Flags | Per culture |
+|---|---|---|
+| `taom_child_equipment_templates.xml` | `IsChildEquipmentTemplate` + `IsLordTemplate` (+`IsFemaleTemplate`) | 6 (noble/townsman/villager × m/f) |
+| `taom_lord_template_equipment.xml` | `IsLordTemplate`, and `IsTeenagerEquipmentTemplate` on the teen rosters | 10 (lord/ruler battle/civ/teen × m/f) |
+| `taom_education_equipment_templates.xml` | none (id-suffix `_<culture>`, childhood-education events) | 98 |
+
+bluecraig (Culture.goblin) and Lindon (Culture.rivendell) inherit their culture's templates. Guarded by
+`ConfigIdValidationTests.ChildGenerationCultures_HaveChildTeenAndLordEquipmentTemplates` +
+`NewOrcCultures_HaveChildEducationEquipmentRosters`. RCA: [docs/reviews/rca-new-factions-2026-06-02.md](../reviews/rca-new-factions-2026-06-02.md) Phase 4.
+
 ## Key Files
 
 | Layer | File | New / Modified |

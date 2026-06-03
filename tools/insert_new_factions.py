@@ -131,6 +131,23 @@ def extract(text, pattern):
     return m.group(1)
 
 
+def extract_rosters_with_id_substr(text, substr):
+    """Return all <EquipmentRoster>...</EquipmentRoster> blocks (leading indent + trailing newline)
+    whose OPENING-tag id attribute contains `substr`. Opening tags may span multiple lines (the
+    education-template file formats them that way), so match the block, then read id from its head.
+    Used to clone gundabad's child / lord / education equipment templates for the orc cultures —
+    these were missed by the original clone, so GetEquipmentForInitialChildrenGeneration found no
+    culture-matching roster and returned null -> NRE on new-game child generation (2026-06-02)."""
+    out = []
+    for m in re.finditer(r'[ \t]*<EquipmentRoster\b.*?</EquipmentRoster>\n?', text, re.DOTALL):
+        block = m.group(0)
+        head = block[:block.find('>') + 1]  # opening tag (may be multi-line)
+        idm = re.search(r'\bid="([^"]*)"', head, re.DOTALL)
+        if idm and substr in idm.group(1):
+            out.append(block)
+    return "".join(out)
+
+
 def upsert_before(text, close_tag, payload, marker):
     """Strip prior marker block, then insert payload before the LAST close_tag."""
     text = re.sub(r'[ \t]*<!-- ' + re.escape(marker) + r':BEGIN -->.*?<!-- ' + re.escape(marker) + r':END -->\n',
@@ -146,6 +163,9 @@ def main():
     src_wequip = open(os.path.join(MD, "equipmentsets", "taom_wanderer_equipment.xml"), encoding="utf-8").read()
     src_party = open(os.path.join(MD, "taom_partyTemplates.xml"), encoding="utf-8").read()
     src_strings = open(os.path.join(MD, "taom_module_strings.xml"), encoding="utf-8").read()
+    src_child = open(os.path.join(MD, "equipmentsets", "taom_child_equipment_templates.xml"), encoding="utf-8").read()
+    src_lord = open(os.path.join(MD, "equipmentsets", "taom_lord_template_equipment.xml"), encoding="utf-8").read()
+    src_edu = open(os.path.join(MD, "equipmentsets", "taom_education_equipment_templates.xml"), encoding="utf-8").read()
 
     # extract gundabad source blocks
     gund_culture = extract(src_cult, r'([ \t]*<Culture\b[^>]*\bid="gundabad".*?</Culture>\n)')
@@ -165,8 +185,16 @@ def main():
     gund_str_lines = [ln for ln in src_strings.splitlines()
                       if "gundabad" in ln and "<string" in ln and "taom_faction_" not in ln]
     gund_strings = "\n".join("  " + ln.strip() for ln in gund_str_lines) + "\n"
+    # child / lord(+teen) / education equipment templates — cloned from gundabad; the armor+weapon
+    # remap happens inside transform(). The orc cultures lacked these, so vanilla
+    # EquipmentSelectionModel.GetEquipmentForInitialChildrenGeneration found no culture-matching
+    # roster and returned null -> NRE in HeroCreator.CreateChild on new-game (RCA 2026-06-02).
+    gund_child = extract_rosters_with_id_substr(src_child, "gundabad")
+    gund_lord = extract_rosters_with_id_substr(src_lord, "gundabad")
+    gund_edu = extract_rosters_with_id_substr(src_edu, "gundabad")
 
     out_cult, out_wand, out_wequip, out_party, out_strings = src_cult, src_wand, src_wequip, src_party, src_strings
+    out_child, out_lord, out_edu = src_child, src_lord, src_edu
 
     for culture, cfg in ORC.items():
         cap = CAP[cfg["capital"]]
@@ -195,12 +223,22 @@ def main():
         # --- strings ---
         out_strings = upsert_before(out_strings, "</strings>" if "</strings>" in out_strings else "</base>",
                                     transform(gund_strings, culture, cfg), f"TAOM-NEWFACTIONS:{culture}")
+        # --- child / lord(+teen) / education equipment templates (fixes child-generation NRE) ---
+        out_child = upsert_before(out_child, "</EquipmentRosters>", transform(gund_child, culture, cfg),
+                                  f"TAOM-NEWFACTIONS:{culture}")
+        out_lord = upsert_before(out_lord, "</EquipmentRosters>", transform(gund_lord, culture, cfg),
+                                 f"TAOM-NEWFACTIONS:{culture}")
+        out_edu = upsert_before(out_edu, "</EquipmentRosters>", transform(gund_edu, culture, cfg),
+                                f"TAOM-NEWFACTIONS:{culture}")
 
     for path, content in [(os.path.join(MD, "taom_spcultures.xml"), out_cult),
                           (os.path.join(MD, "taom_wanderers.xml"), out_wand),
                           (os.path.join(MD, "equipmentsets", "taom_wanderer_equipment.xml"), out_wequip),
                           (os.path.join(MD, "taom_partyTemplates.xml"), out_party),
-                          (os.path.join(MD, "taom_module_strings.xml"), out_strings)]:
+                          (os.path.join(MD, "taom_module_strings.xml"), out_strings),
+                          (os.path.join(MD, "equipmentsets", "taom_child_equipment_templates.xml"), out_child),
+                          (os.path.join(MD, "equipmentsets", "taom_lord_template_equipment.xml"), out_lord),
+                          (os.path.join(MD, "equipmentsets", "taom_education_equipment_templates.xml"), out_edu)]:
         open(path, "w", encoding="utf-8").write(content)
         ET.parse(path)
         print(f"  inserted + well-formed: {os.path.relpath(path, ROOT)}")

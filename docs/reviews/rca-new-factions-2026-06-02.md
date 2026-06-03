@@ -96,3 +96,43 @@ MED both prior reviews missed.
 - **The reviewers cleared the structural risks.** Codex + the workflow both independently verified the
   diplomacy graph (130 relationships, 0 invalid/dup/contradictory), the feat wiring (8 feats × 5 locations),
   the recruitment pools, and the faction-map↔feat magnitude consistency — high confidence those are correct.
+
+---
+
+## Phase 4 — Post-ship crash: child-generation equipment templates (2026-06-02, issue #267)
+
+**Symptom.** New game crashes (`NullReferenceException`) in vanilla `EquipmentHelper.AssignHeroEquipmentFromEquipment`
+during `InitialChildGeneration` for a new goblin clan (child "Durga", Culture.goblin, template "Hagza").
+
+**Root cause.** `HeroCreator.CreateChild → InitializeHeroFromSettings → EquipmentSelectionModel.GetEquipmentForInitialChildrenGeneration`
+calls `GetSuitableEquipmentSet(hero, IsLordTemplate | IsChildEquipmentTemplate [| IsFemaleTemplate], Civilian)`,
+which searches `MBEquipmentRosterExtensions.All` for a roster matching the hero's **culture** AND those flags,
+then returns `mBList.GetRandomElement()` — **null when the list is empty**. The new orc cultures `goblin` +
+`mistymountainorcs` had **no entries** in the four equipment-template categories the model (and the childhood
+education system) search: `taom_child_equipment_templates.xml` (IsChildEquipmentTemplate),
+`taom_lord_template_equipment.xml` (IsLordTemplate + IsTeenagerEquipmentTemplate), and
+`taom_education_equipment_templates.xml` (childhood-education events). The clone pipeline produced
+troops/npcs/equipment-sets/wanderers but **missed these template categories.** Lindon (Culture.rivendell)
+was unaffected because rivendell already had them — which is why only goblin children crashed.
+
+**A second hypothesis was refuted.** One investigation agent claimed ~12 Armory items were missing
+(`warg_brown`, `wm_gundabad_mace_a01`, …). False: `validate_moduledata` PASS (5,648-item registry incl. the
+Armory + Alliance.Wargs); the weapons/armor exist; `warg_brown` is in `Alliance.Wargs`, not the Armory. A
+missing *item* yields an empty slot, not a null *Equipment* object — it could not produce this NRE. Lesson
+restated: match the crash *mechanism* (null Equipment from an empty roster-match list) to the right cause.
+
+**Fix.** Extended `tools/insert_new_factions.py` to clone gundabad's child + lord(adult+teen) + education
+rosters → goblin/mistymountainorcs (orc armor/weapon remap via `transform()`; education keeps vanilla
+childhood clothing). Idempotent re-run touched only the 3 template files (the 5 prior shared files reproduced
+byte-identical). Orc lords keep warg mounts (canonical; distinct from the stripped warg-rider *troop* formations).
+
+| Category | Why missed | Preventive action |
+|---|---|---|
+| New culture absent from child/teen/lord/education equipment templates → child-gen NRE | The clone covered troops/npcs/equipment-sets/wanderers but not the four `Get*EquipmentForInitialChildrenGeneration`/education template categories; `validate_moduledata` doesn't model culture→template-flag coverage; no review enumerated it | Generator now clones all four; 2 preventive tests in `ConfigIdValidationTests` (`ChildGenerationCultures_HaveChildTeenAndLordEquipmentTemplates` pins goblin/mmo in the child file + asserts every child-template culture also has teen+adult lord templates; `NewOrcCultures_HaveChildEducationEquipmentRosters`). Memory: [[feedback_new_culture_equipment_templates_for_child_gen]]. |
+
+**Pattern (generalises the new-faction config-completeness lesson again).** "Add a culture" now means: the
+culture needs not just troops/equipment-sets but also **child + teenager + adult-lord + education equipment
+templates** (vanilla `EquipmentSelectionModel` + the childhood-education system require culture-matching,
+flagged rosters; custom cultures get none for free — XSLT/vanilla cultures inherit vanilla's). Same family as
+the `alignment.json` (W1) and faction-map misses: every culture/kingdom-enumerating system needs a row for a
+new faction, and not all of them are caught by `validate_moduledata` or the review agents.
