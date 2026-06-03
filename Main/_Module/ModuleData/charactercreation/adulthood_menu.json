@@ -1342,5 +1342,137 @@
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_goblin_1",
+        "culture_id": "goblin",
+        "text": "You won the Great Mountain Tournament and were named a warchief's retainer.",
+        "description": "The tournament was fought across three brutal rounds in the main hall. You came in as no one's favourite and left with a warchief's silver arm-ring and a better bunk. The other competitors respected you more for winning than they had for anything before.",
+        "skills": ["TwoHanded", "Riding"],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_goblin_2",
+        "culture_id": "goblin",
+        "text": "You established a profitable arms trade with a southern Orc clan.",
+        "description": "The southern clan had iron but no smiths. Goblin-town had tinkerers but needed food and furs. You brokered the first exchange, set the terms, and kept both sides from killing each other long enough for the deal to become habit. The warchief gave you a percentage.",
+        "skills": ["Crafting", "Trade"],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_goblin_3",
+        "culture_id": "goblin",
+        "text": "You shored up the lower mine galleries after a partial collapse.",
+        "description": "The collapse had trapped eight Orcs in the lower gallery. You assessed the stress pattern, directed the reinforcement work, and got the crew to safety before the secondary collapse that followed would have killed them. The warchief's engineer gave you the plans to keep.",
+        "skills": ["Engineering", "Athletics"],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_goblin_4",
+        "culture_id": "goblin",
+        "text": "You led the raid that broke the Dwarven outpost on the Grey Mountains.",
+        "description": "The Dwarves had fortified a pass that Goblin-town used for winter raids, cutting off access and costing the mountain a full season of plunder. You planned the assault, led the van, and broke the outpost's gate in a single push. The pass reopened. The Dwarves did not come back.",
+        "skills": ["OneHanded", "Polearm"],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_goblin_5",
+        "culture_id": "goblin",
+        "text": "You tracked a Dwarven scouting party for four days and brought back their maps.",
+        "description": "The Dwarves were mapping something in the Grey Mountains and Goblin-town needed to know what. You followed them through the high passes without being seen, waited until they camped, took the maps, and were back in the fortress before they raised the alarm.",
+        "skills": ["Scouting", "Bow"],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_goblin_6",
+        "culture_id": "goblin",
+        "text": "You framed a rival warleader for theft and took his position.",
+        "description": "The rival had been blocking your advancement for two years through bribes and better connections. You identified what he valued, arranged for the right objects to be in the wrong place at the wrong time, and made the discovery at the right moment. You had his position before the month was out.",
+        "skills": ["Roguery", "Throwing"],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mistymountainorcs_1",
+        "culture_id": "mistymountainorcs",
+        "text": "You won the Great Mountain Tournament and were named a warchief's retainer.",
+        "description": "The tournament was fought across three brutal rounds in the main hall. You came in as no one's favourite and left with a warchief's silver arm-ring and a better bunk. The other competitors respected you more for winning than they had for anything before.",
+        "skills": ["TwoHanded", "Riding"],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mistymountainorcs_2",
+        "culture_id": "mistymountainorcs",
+        "text": "You established a profitable arms trade with a southern Orc clan.",
+        "description": "The southern clan had iron but no smiths. Moria had smiths but needed food and furs. You brokered the first exchange, set the terms, and kept both sides from killing each other long enough for the deal to become habit. The warchief gave you a percentage.",
+        "skills": ["Crafting", "Trade"],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mistymountainorcs_3",
+        "culture_id": "mistymountainorcs",
+        "text": "You shored up the lower mine galleries after a partial collapse.",
+        "description": "The collapse had trapped eight Orcs in the lower gallery. You assessed the stress pattern, directed the reinforcement work, and got the crew to safety before the secondary collapse that followed would have killed them. The warchief's engineer gave you the plans to keep.",
+        "skills": ["Engineering", "Athletics"],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mistymountainorcs_4",
+        "culture_id": "mistymountainorcs",
+        "text": "You led the raid that broke the Dwarven outpost on the Grey Mountains.",
+        "description": "The Dwarves had fortified a pass that the Misty Mountains used for winter raids, cutting off access and costing the mountain a full season of plunder. You planned the assault, led the van, and broke the outpost's gate in a single push. The pass reopened. The Dwarves did not come back.",
+        "skills": ["OneHanded", "Polearm"],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mistymountainorcs_5",
+        "culture_id": "mistymountainorcs",
+        "text": "You tracked a Dwarven scouting party for four days and brought back their maps.",
+        "description": "The Dwarves were mapping something in the Grey Mountains and the Misty Mountains needed to know what. You followed them through the high passes without being seen, waited until they camped, took the maps, and were back in the fortress before they raised the alarm.",
+        "skills": ["Scouting", "Bow"],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_mistymountainorcs_6",
+        "culture_id": "mistymountainorcs",
+        "text": "You framed a rival warleader for theft and took his position.",
+        "description": "The rival had been blocking your advancement for two years through bribes and better connections. You identified what he valued, arranged for the right objects to be in the wrong place at the wrong time, and made the discovery at the right moment. You had his position before the month was out.",
+        "skills": ["Roguery", "Throwing"],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
     }
 ]

@@ -203,4 +203,31 @@ public class ConfigIdValidationTests
         Assert.AreEqual(22, ValidKingdomIds.Count,
             "Expected 22 valid kingdom IDs (incl. goblin, mistymountainorcs, lindon, bluecraig)");
     }
+
+    // --- Character-creation coverage (RCA 2026-06-02) ---
+    // NarrativeMenuBuilder filters CC narrative entries by culture_id == selectedCulture.StringId.
+    // A selectable culture with no entries in the culture-keyed menus renders the Family/Youth/
+    // Adulthood/Education stages BLANK. goblin + mistymountainorcs shipped playable but with no CC
+    // content (and no cc_body_properties body for the preview). Childhood is culture-independent.
+    [TestMethod]
+    public void NewCultures_HaveCharacterCreationMenuEntries()
+    {
+        var md = FindModuleDataPath();
+        if (md == null) { Assert.Inconclusive("ModuleData path not found — run from repo root"); return; }
+        var cc = Path.Combine(md, "charactercreation");
+        string[] cultureKeyedMenus = { "parents", "youth", "adulthood", "education" };
+
+        foreach (var culture in new[] { "goblin", "mistymountainorcs" })
+        {
+            foreach (var menu in cultureKeyedMenus)
+            {
+                var text = File.ReadAllText(Path.Combine(cc, menu + "_menu.json"));
+                Assert.IsTrue(text.Contains($"\"culture_id\": \"{culture}\""),
+                    $"{menu}_menu.json has no entry for culture '{culture}' — the CC {menu} stage renders blank.");
+            }
+            var body = XDocument.Load(Path.Combine(cc, "cc_body_properties.xml"));
+            Assert.IsTrue(body.Descendants("Culture").Any(c => c.Attribute("id")?.Value == culture),
+                $"cc_body_properties.xml has no <Culture id=\"{culture}\"> — CC body preview falls back to a default body.");
+        }
+    }
 }

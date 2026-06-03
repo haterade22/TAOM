@@ -660,17 +660,6 @@
       "posY": 1284.663,
       "posZ": 50.0,
       "needs_scene_placement": true
-    },
-    {
-      "id": "village_GBC1_4",
-      "type": "village",
-      "kingdom": "bluecraig",
-      "culture": "goblin",
-      "bound": "town_GBC1",
-      "posX": 240.974,
-      "posY": 1254.663,
-      "posZ": 50.0,
-      "needs_scene_placement": true
     }
   ]
 }

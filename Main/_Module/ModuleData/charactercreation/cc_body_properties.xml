@@ -137,4 +137,14 @@
     <BodyProperties version="4" age="25.01" weight="0.3426" build="0.3125" key="0009F00FC00000008777887188868877777788778888888888888888888878880085560308888888000000000000000000000000000000000000000043040140" />
   </Culture>
 
+  <!-- Goblins of Goblin Town (TAOM custom) — orc/goblin body (cloned from gundabad) -->
+  <Culture id="goblin">
+    <BodyProperties version="4" age="30.01" weight="0.7109" build="0.543" key="00003C08C0441000EF8819F83BEFEFFFFFFE86877F87EFFFFEFFFEFF7FFFFEFF00F8B6030FFFEFFF00000000000000000000000000000000000000001BFC0000" />
+  </Culture>
+
+  <!-- Misty Mountain Orcs (TAOM custom) — orc/goblin body (cloned from gundabad) -->
+  <Culture id="mistymountainorcs">
+    <BodyProperties version="4" age="30.01" weight="0.7109" build="0.543" key="00003C08C0441000EF8819F83BEFEFFFFFFE86877F87EFFFFEFFFEFF7FFFFEFF00F8B6030FFFEFFF00000000000000000000000000000000000000001BFC0000" />
+  </Culture>
+
 </CCBodyProperties>

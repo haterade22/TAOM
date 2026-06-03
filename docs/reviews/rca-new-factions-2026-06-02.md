@@ -136,3 +136,33 @@ templates** (vanilla `EquipmentSelectionModel` + the childhood-education system 
 flagged rosters; custom cultures get none for free — XSLT/vanilla cultures inherit vanilla's). Same family as
 the `alignment.json` (W1) and faction-map misses: every culture/kingdom-enumerating system needs a row for a
 new faction, and not all of them are caught by `validate_moduledata` or the review agents.
+
+---
+
+## Phase 5 — Post-ship: map-load crash + blank CC narrative (2026-06-02, issue #269)
+
+Two more new-faction completeness gaps surfaced in-game after Phase 4.
+
+**A. Hard crash — `SettlementVisual.OnStartup` NRE at map load.** `village_GBC1_4` (one of the 4 Blue
+Craig placeholder villages added in the Phase 1 deep-review HIGH #3 fix) existed in `settlements.xml` but
+had **no entity in the worldmap scene** (`TAOM_Map/SceneObj/Main_map/scene.xscene` — 0 refs; every other new
+settlement had exactly 1). `OnStartup` resolves `StrategicEntity = MapScene.GetCampaignEntityWithName(settlement.Id)`
+with a runtime-add fallback; for the orphan the fallback didn't yield a usable entity, so the unconditional
+`StrategicEntity.SetVisibilityExcludeParents(...)` NRE'd — crashing the campaign map for everyone. **Fix:**
+removed the orphan from the live `settlements.xml` (backup) + `taom_new_factions_layout.json`; 0 settlements
+now lack a worldmap entity. **Lesson:** adding a settlement to `settlements.xml` REQUIRES a matching
+worldmap-scene entity, or `SettlementVisual.OnStartup` NREs at map load. The Phase 1 fix that *added* the
+placeholder villages should have either placed their scene entities or not added the data — a data-only
+settlement is a latent map crash. (Self-inflicted by the earlier RCA's own fix — placeholder data without
+the scene side.)
+
+**B. Blank CC narrative stages.** goblin/mistymountainorcs were made playable but had no entries in the
+culture-keyed CC menus (`parents/youth/adulthood/education_menu.json`) — `NarrativeMenuBuilder` filters by
+`culture_id`, so the Family/Youth/Adulthood/Education stages rendered blank — and no `cc_body_properties.xml`
+body for the preview. **Fix:** cloned gundabad's entries → goblin/mmo (`tools/insert_new_faction_cc_menus.py`,
+Gundabad→culture display remap) + added cc_body bodies. Childhood is culture-independent (covered). Same
+"enumerate every culture-keyed system" family as W1/Phase 4 — the **complete** new-culture checklist is now:
+troops, equipment-sets, child/teen/lord/education equipment templates, wanderers, party templates, culture
+block + cultural_feats, clans/lords/heroes, diplomacy, **alignment.json**, faction-map card, **cultures.json**,
+**cc_body_properties.xml**, **the 4 CC narrative menus**, recruitment pools, **a worldmap-scene entity for
+every settlement**, and the C# feat wiring. Guarded by `ConfigIdValidationTests.NewCultures_HaveCharacterCreationMenuEntries`.
