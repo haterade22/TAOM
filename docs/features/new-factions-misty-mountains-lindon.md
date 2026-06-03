@@ -53,7 +53,11 @@ re-running it reproduces the live file exactly (positions + types) without clobb
 - **mistymountainorcs** (5 clans): clan_1 = town_MM1 + castle_MM1 (ruler), clan_2 = town_MM2 +
   castle_MM2, clan_3 = town_MM3 + castle_MM3, clan_4 = castle_MM4 + MM5, clan_5 = castle_MM6 + MM7.
 - **goblin** (5 clans): clan_1 = town_GT1 (ruler); clans 2-5 = landless vassal warbands.
-- **bluecraig** (5 clans): clan_1 = town_GBC1 + 4 villages (ruler); clans 2-5 = landless warbands.
+- **bluecraig** (5 clans): clan_1 = town_GBC1 + 3 villages (ruler); clan_2 = castle_GBC1 (Krathol) + 2
+  villages; clan_3 = castle_GBC2 (Gorgrim) + 2 villages; clan_4 = castle_GBC3 (Skarnak) + 4 villages;
+  clan_5 = castle_GBC4 (Bolgkrag) + 3 villages. The 4 castles + 11 castle-villages were added by
+  `tools/add_bluecraig_castles.py` (positions taken FROM the author's `scene.xscene` placements — every
+  settlement MUST have a worldmap-scene entity or `SettlementVisual.OnStartup` NREs at map load).
 - **lindon** (2 clans): clan_1 = town_LN1 (ruler), clan_2 = landless vassal.
 
 ### Lords / population
@@ -155,6 +159,8 @@ skill templates (`taom_elf_king/warrior/lady_skills`).
 | `tools/generate_new_faction_settlements.py` | `<Settlement>` blocks; `--apply` writes the live `TAOM_Map/settlements.xml` (+ timestamped backup) |
 | `tools/assign_orc_village_types.py` | Per-fief orc/goblin village economy (animal food + 1 mine; `VALID_VILLAGE_TYPES` guard); `--apply` edits the live settlements.xml in place |
 | `tools/make_new_factions_playable.py` | The 4 CC faction-map cards in `factions.json` (`--apply` dry-run guard); then `tools/harvest_factionmap_strings.py` propagates the card strings into `taom_module_strings.xml` |
+| `tools/insert_new_faction_cc_menus.py` | Clones gundabad's CC narrative menu entries → goblin/mistymountainorcs (parents/youth/adulthood/education); childhood is culture-independent. Fixes blank CC stages. |
+| `tools/add_bluecraig_castles.py` | Adds the 4 Blue Craig castles (`castle_GBC1..4`) + 11 castle-villages to the live settlements.xml, spread across clans 2-5 (`--apply` + backup; idempotent; positions FROM scene.xscene). Only adds ids already placed in the scene. |
 
 Re-run order: `generate_new_factions.py` → `insert_new_factions.py` → `generate_new_faction_kingdoms.py`
 → `generate_new_faction_settlements.py --apply`. All inserts are idempotent
