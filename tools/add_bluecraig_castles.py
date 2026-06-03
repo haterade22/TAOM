@@ -47,6 +47,7 @@ CASTLE_VILLAGES = [
     ("castle_village_GBC4_1", "Ufthak",   "287.148", "1337.777", "castle_GBC4", "swine_farm"),
     ("castle_village_GBC4_2", "Radbug",   "267.843", "1332.525", "castle_GBC4", "cattle_farm"),
     ("castle_village_GBC4_3", "Gorbag",   "246.831", "1325.109", "castle_GBC4", "silver_mine"),
+    ("castle_village_GBC4_4", "Lagduf",   "220.095", "1314.570", "castle_GBC4", "lumberjack"),
 ]
 
 CASTLE_BUILDINGS = """          <Building id="building_castle_fortifications" level="1" />
@@ -109,15 +110,20 @@ def main():
     text = rawb.decode("utf-8-sig")
     nl = "\r\n" if "\r\n" in text else "\n"
 
-    if 'id="castle_GBC1"' in text:
-        print("castle_GBC1 already present — nothing to do (idempotent).")
+    # per-id idempotency: add only the settlements not already present (so re-running picks up a
+    # newly-placed castle-village, e.g. GBC4_4, without duplicating the rest).
+    missing_castles = [c for c in CASTLES if f'id="{c[0]}"' not in text]
+    missing_villages = [v for v in CASTLE_VILLAGES if f'id="{v[0]}"' not in text]
+    if not missing_castles and not missing_villages:
+        print("all Blue Craig castles + castle-villages already present — nothing to do (idempotent).")
         return
 
-    blocks = [castle_block(*c, nl) for c in CASTLES] + [village_block(*v, nl) for v in CASTLE_VILLAGES]
-    print(f"Plan: +{len(CASTLES)} castles, +{len(CASTLE_VILLAGES)} castle-villages")
-    for cid, name, _, _, owner in CASTLES:
-        vils = [v for v in CASTLE_VILLAGES if v[4] == cid]
-        print(f"  {cid:14} {name:9} -> {owner}  ({len(vils)} villages: {', '.join(v[5] for v in vils)})")
+    blocks = [castle_block(*c, nl) for c in missing_castles] + [village_block(*v, nl) for v in missing_villages]
+    print(f"Plan: +{len(missing_castles)} castle(s), +{len(missing_villages)} castle-village(s) (only ids not already in settlements.xml)")
+    for cid, name, _, _, owner in missing_castles:
+        print(f"  {cid:22} {name:9} -> {owner}")
+    for vid, name, _, _, bound, vtype in missing_villages:
+        print(f"  {vid:22} {name:9} -> bound {bound} ({vtype})")
     if not args.apply:
         print("\nDRY RUN — re-run with --apply to write the live file.")
         return

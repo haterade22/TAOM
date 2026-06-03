@@ -55,7 +55,7 @@ re-running it reproduces the live file exactly (positions + types) without clobb
 - **goblin** (5 clans): clan_1 = town_GT1 (ruler); clans 2-5 = landless vassal warbands.
 - **bluecraig** (5 clans): clan_1 = town_GBC1 + 3 villages (ruler); clan_2 = castle_GBC1 (Krathol) + 2
   villages; clan_3 = castle_GBC2 (Gorgrim) + 2 villages; clan_4 = castle_GBC3 (Skarnak) + 4 villages;
-  clan_5 = castle_GBC4 (Bolgkrag) + 3 villages. The 4 castles + 11 castle-villages were added by
+  clan_5 = castle_GBC4 (Bolgkrag) + 4 villages. The 4 castles + 12 castle-villages were added by
   `tools/add_bluecraig_castles.py` (positions taken FROM the author's `scene.xscene` placements — every
   settlement MUST have a worldmap-scene entity or `SettlementVisual.OnStartup` NREs at map load).
 - **lindon** (2 clans): clan_1 = town_LN1 (ruler), clan_2 = landless vassal.
