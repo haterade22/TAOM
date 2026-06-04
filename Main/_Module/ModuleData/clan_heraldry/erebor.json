@@ -1,0 +1,497 @@
+{
+  "culture": "erebor",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF1E5A3A/FFB8860B base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=erebor).",
+  "clans": [
+    {
+      "id": "clan_erebor_1",
+      "source": "xml",
+      "theme": "erebor house 1 \u2014 balanced",
+      "color": "FF153F1C",
+      "color2": "FF964309",
+      "roster": [
+        {
+          "troop": "erebor_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_reg_miner",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "iron_hills_reg_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "iron_hills_noble_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "erebor_reg_fighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "iron_hills_noble_hammer_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "erebor_noble_shield_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "erebor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "ironpass_arbalest",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "iron_hills_noble_scout",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "ironpass_veteran_arbalest",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_erebor_erebor_1_template"
+    },
+    {
+      "id": "clan_erebor_2",
+      "source": "xml",
+      "theme": "erebor house 2 \u2014 infantry",
+      "color": "FF184825",
+      "color2": "FFA2570A",
+      "roster": [
+        {
+          "troop": "erebor_reg_miner",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "iron_hills_reg_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "ironpass_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_reg_fighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "erebor_noble_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "iron_hills_reg_fighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "ironpass_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "erebor_noble_shield_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "erebor_noble_veteran_axe_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "erebor_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "iron_hills_noble_sharpshooter",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_erebor_erebor_2_template"
+    },
+    {
+      "id": "clan_erebor_3",
+      "source": "xml",
+      "theme": "erebor house 3 \u2014 ranged",
+      "color": "FF1B512F",
+      "color2": "FFAD6E0A",
+      "roster": [
+        {
+          "troop": "iron_hills_reg_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "ironpass_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_noble_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "iron_hills_reg_fighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "erebor_noble_veteran_axe_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "erebor_reg_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_noble_ranger",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "iron_hills_reg_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_reg_bowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "erebor_noble_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "erebor_noble_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "ironpass_sharpshooter",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_erebor_erebor_3_template"
+    },
+    {
+      "id": "clan_erebor_4",
+      "source": "xml",
+      "theme": "erebor house 4 \u2014 elite",
+      "color": "FF1E5A3A",
+      "color2": "FFB8860B",
+      "roster": [
+        {
+          "troop": "iron_hills_reg_fighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "ironpass_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "iron_hills_noble_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "erebor_oathsworn",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "ironpass_mountain_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "iron_hills_noble_shield_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "iron_hills_noble_anvilguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "erebor_noble_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "iron_hills_reg_bowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "ironpass_arbalest",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "ironpass_sharpshooter",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "iron_hills_noble_veteran_sharpshooter",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_erebor_erebor_4_template"
+    },
+    {
+      "id": "clan_erebor_5",
+      "source": "xml",
+      "theme": "erebor house 5 \u2014 skirmisher",
+      "color": "FF216346",
+      "color2": "FFC3A10C",
+      "roster": [
+        {
+          "troop": "erebor_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_reg_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "ironpass_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "ironpass_mountain_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "iron_hills_reg_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_reg_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "iron_hills_reg_bowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "ironpass_arbalest",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "iron_hills_noble_veteran_sharpshooter",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "ironpass_veteran_arbalest",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_erebor_erebor_5_template"
+    },
+    {
+      "id": "clan_erebor_6",
+      "source": "xml",
+      "theme": "erebor house 6 \u2014 balanced",
+      "color": "FF246C54",
+      "color2": "FFCEBD0C",
+      "roster": [
+        {
+          "troop": "erebor_reg_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "iron_hills_reg_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "iron_hills_noble_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "erebor_reg_mattock_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "iron_hills_noble_shield_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "iron_hills_noble_anvilguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "erebor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "ironpass_arbalest",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "iron_hills_noble_scout",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "ironpass_veteran_arbalest",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_erebor_erebor_6_template"
+    },
+    {
+      "id": "clan_erebor_7",
+      "source": "xml",
+      "theme": "erebor house 7 \u2014 infantry",
+      "color": "FF277563",
+      "color2": "FFD7DA0D",
+      "roster": [
+        {
+          "troop": "erebor_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "iron_hills_reg_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "ironpass_warrior",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "iron_hills_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "erebor_reg_mattock_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "erebor_reg_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "erebor_noble_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "erebor_noble_axe_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "iron_hills_noble_anvilguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "erebor_noble_gate_warden",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "erebor_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "iron_hills_noble_sharpshooter",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_erebor_erebor_7_template"
+    }
+  ]
+}

@@ -1,0 +1,1092 @@
+{
+  "culture": "mordor",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF1A1717/FF7E1518 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=mordor).",
+  "clans": [
+    {
+      "id": "clan_empire_south_1",
+      "source": "xslt",
+      "theme": "mordor house 1 \u2014 balanced",
+      "color": "FF100E0F",
+      "color2": "FF5F102A",
+      "roster": [
+        {
+          "troop": "mordor_orc_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_tamer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_lackey",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_fighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_orc_reaver",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_shieldbearer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_scout",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_reaver",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_warg_ravager",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_1_template"
+    },
+    {
+      "id": "clan_empire_south_10",
+      "source": "xml",
+      "theme": "mordor house 2 \u2014 infantry",
+      "color": "FF100E0F",
+      "color2": "FF641128",
+      "roster": [
+        {
+          "troop": "mordor_warg_tamer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_lackey",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_orc_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_orc_impaler",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_shieldbearer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_infantry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_orc_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_crossbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_beastmaster",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_10_template"
+    },
+    {
+      "id": "clan_empire_south_11",
+      "source": "xml",
+      "theme": "mordor house 3 \u2014 ranged",
+      "color": "FF100E0F",
+      "color2": "FF681126",
+      "roster": [
+        {
+          "troop": "mordor_orc_lackey",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_orc_impaler",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_infantry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_skirmisher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_heavy_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_heavy_crossbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_ravager",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_11_template"
+    },
+    {
+      "id": "clan_empire_south_12",
+      "source": "xml",
+      "theme": "mordor house 4 \u2014 cavalry",
+      "color": "FF100E0F",
+      "color2": "FF6D1224",
+      "roster": [
+        {
+          "troop": "mordor_warg_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_impaler",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_vanguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_heavy_crossbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_reaver",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_warg_beastmaster",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_ravager",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_12_template"
+    },
+    {
+      "id": "clan_empire_south_13",
+      "source": "xml",
+      "theme": "mordor house 5 \u2014 elite",
+      "color": "FF121010",
+      "color2": "FF711322",
+      "roster": [
+        {
+          "troop": "mordor_uruk_fighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_orc_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_shieldguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_captain",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_orc_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_skirmisher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_crossbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_reaver",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_warg_ravager",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_beastmaster",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_13_template"
+    },
+    {
+      "id": "clan_empire_south_14",
+      "source": "xml",
+      "theme": "mordor house 6 \u2014 skirmisher",
+      "color": "FF151212",
+      "color2": "FF75141F",
+      "roster": [
+        {
+          "troop": "mordor_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_captain",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_skirmisher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_orc_scout",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_crossbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_heavy_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_beastmaster",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_14_template"
+    },
+    {
+      "id": "clan_empire_south_15",
+      "source": "xml",
+      "theme": "mordor house 7 \u2014 balanced",
+      "color": "FF171515",
+      "color2": "FF7A141C",
+      "roster": [
+        {
+          "troop": "mordor_orc_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_tamer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_lackey",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_baraddurguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_orc_reaver",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_scout",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_heavy_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_reaver",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_warg_ravager",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_15_template"
+    },
+    {
+      "id": "clan_empire_south_2",
+      "source": "xslt",
+      "theme": "mordor house 8 \u2014 infantry",
+      "color": "FF1A1717",
+      "color2": "FF7E1518",
+      "roster": [
+        {
+          "troop": "mordor_warg_tamer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_lackey",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_fighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_orc_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_orc_reaver",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_shieldbearer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_orc_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_heavy_crossbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_beastmaster",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_2_template"
+    },
+    {
+      "id": "clan_empire_south_3",
+      "source": "xslt",
+      "theme": "mordor house 9 \u2014 ranged",
+      "color": "FF1D1A19",
+      "color2": "FF821716",
+      "roster": [
+        {
+          "troop": "mordor_orc_lackey",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_orc_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_shieldbearer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_skirmisher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_crossbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_ravager",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_3_template"
+    },
+    {
+      "id": "clan_empire_south_4",
+      "source": "xslt",
+      "theme": "mordor house 10 \u2014 cavalry",
+      "color": "FF1F1C1C",
+      "color2": "FF871D16",
+      "roster": [
+        {
+          "troop": "mordor_warg_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_infantry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_crossbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_reaver",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_warg_beastmaster",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_ravager",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_4_template"
+    },
+    {
+      "id": "clan_empire_south_5",
+      "source": "xslt",
+      "theme": "mordor house 11 \u2014 elite",
+      "color": "FF221F1E",
+      "color2": "FF8B2317",
+      "roster": [
+        {
+          "troop": "mordor_orc_impaler",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_fighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_vanguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_shieldguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_orc_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_skirmisher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_heavy_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_heavy_crossbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_reaver",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_warg_ravager",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_beastmaster",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_5_template"
+    },
+    {
+      "id": "clan_empire_south_6",
+      "source": "xslt",
+      "theme": "mordor house 12 \u2014 skirmisher",
+      "color": "FF252121",
+      "color2": "FF8F2918",
+      "roster": [
+        {
+          "troop": "mordor_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_fighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_shieldguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_skirmisher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_orc_scout",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_heavy_crossbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_beastmaster",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_6_template"
+    },
+    {
+      "id": "clan_empire_south_7",
+      "source": "xslt",
+      "theme": "mordor house 13 \u2014 balanced",
+      "color": "FF282423",
+      "color2": "FF943019",
+      "roster": [
+        {
+          "troop": "mordor_orc_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_tamer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_lackey",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_captain",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_baraddurguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_scout",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_reaver",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_warg_ravager",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_7_template"
+    },
+    {
+      "id": "clan_empire_south_8",
+      "source": "xslt",
+      "theme": "mordor house 14 \u2014 infantry",
+      "color": "FF2A2725",
+      "color2": "FF983619",
+      "roster": [
+        {
+          "troop": "mordor_warg_tamer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_lackey",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_orc_fighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_baraddurguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_orc_reaver",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_orc_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_crossbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_beastmaster",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_8_template"
+    },
+    {
+      "id": "clan_empire_south_9",
+      "source": "xslt",
+      "theme": "mordor house 15 \u2014 ranged",
+      "color": "FF2D2928",
+      "color2": "FF9D3E1A",
+      "roster": [
+        {
+          "troop": "mordor_orc_lackey",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_fighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_orc_reaver",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_orc_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_uruk_skirmisher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mordor_uruk_heavy_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_uruk_heavy_crossbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mordor_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mordor_warg_ravager",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mordor_empire_south_9_template"
+    }
+  ]
+}

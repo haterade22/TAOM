@@ -1,0 +1,82 @@
+{
+  "culture": "lothlorien",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF184031/FFC0E3B5 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=rivendell).",
+  "clans": [
+    {
+      "id": "clan_lothlorien_1",
+      "source": "xml",
+      "theme": "lothlorien house 1 \u2014 balanced",
+      "color": "FF184031",
+      "color2": "FFC0E3B5",
+      "roster": [
+        {
+          "troop": "rivendell_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rivendell_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_swordguard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "imladris_nobleman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "battlemaster_of_the_first_age",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rivendell_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rivendell_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_bowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "imladris_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rivendell_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rivendell_royal_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "imladris_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rider_of_himring",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_lothlorien_lothlorien_1_template"
+    }
+  ]
+}

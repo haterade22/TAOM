@@ -1,0 +1,1492 @@
+{
+  "culture": "khuzait",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FFC0962E/FF5A1A14 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=khuzait).",
+  "clans": [
+    {
+      "id": "clan_khuzait_1",
+      "source": "xslt",
+      "theme": "rhun house 1 \u2014 balanced",
+      "color": "FFA35A27",
+      "color2": "FF3D0E18",
+      "roster": [
+        {
+          "troop": "easterling_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "balcoth_volunteer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "balcoth_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "far_rhun_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "sagarun_marine",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "easterling_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rhun_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "sagarun_skirmisher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dragon_wrath_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_youth",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_ashkur_nokor",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_horse_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_1_template"
+    },
+    {
+      "id": "clan_khuzait_10",
+      "source": "xml",
+      "theme": "rhun house 2 \u2014 infantry",
+      "color": "FFA66028",
+      "color2": "FF400E17",
+      "roster": [
+        {
+          "troop": "balcoth_volunteer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "far_rhun_levy",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "sagarun_deckhand",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "easterling_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "far_rhun_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "easterling_swordsman_new",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "loke_rim_shieldguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "loke_rim_maceman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rhun_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "black_sun_longbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "far_rhun_horseman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "loke_rim_gilded_cataphract",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "balcoth_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_karash_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_10_template"
+    },
+    {
+      "id": "clan_khuzait_11",
+      "source": "xml",
+      "theme": "rhun house 3 \u2014 ranged",
+      "color": "FFAA6629",
+      "color2": "FF430F17",
+      "roster": [
+        {
+          "troop": "far_rhun_levy",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "sagarun_deckhand",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "easterling_swordsman_new",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "easterling_halberdier_new",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "loke_rim_maceman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "easterling_skirmisher_new",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rhun_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "balcoth_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "easterling_veteran_archer_new",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "sagarun_storm_helmed_naffatun",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "sagarun_storm_marked_arbalest",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dragon_wrath_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_horse_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_11_template"
+    },
+    {
+      "id": "clan_khuzait_12",
+      "source": "xml",
+      "theme": "rhun house 4 \u2014 cavalry",
+      "color": "FFAD6D29",
+      "color2": "FF471016",
+      "roster": [
+        {
+          "troop": "sagarun_deckhand",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "easterling_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "easterling_halberdier_new",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dragon_wrath_disciple",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rhun_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "sagarun_storm_marked_arbalest",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "far_rhun_cavalry",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "far_rhun_horse_master",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "darkhun_cavalry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "kharaghul_horse_master",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "darkhun_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "balcoth_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_karash_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_12_template"
+    },
+    {
+      "id": "clan_khuzait_13",
+      "source": "xml",
+      "theme": "rhun house 5 \u2014 elite",
+      "color": "FFB0732A",
+      "color2": "FF4A1015",
+      "roster": [
+        {
+          "troop": "loke_rim_footman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dragon_wrath_acolyte",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "wain_footman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "wain_iron_glaive",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "black_sun_executioner",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "black_sun_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "loke_rim_gilded_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dragon_wrath_longbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_horse_master",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dragon_wrath_ash_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "wainrider_khans_chosen",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_13_template"
+    },
+    {
+      "id": "clan_khuzait_14",
+      "source": "xml",
+      "theme": "rhun house 6 \u2014 skirmisher",
+      "color": "FFB37A2B",
+      "color2": "FF4D1114",
+      "roster": [
+        {
+          "troop": "rhun_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "black_sun_trainee",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dragon_wrath_acolyte",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "black_sun_executioner",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "easterling_archer_new",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "loke_rim_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "black_sun_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "wainrider_wind_arrow_sharpshooter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "sagarun_naffatun",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dragon_wrath_longbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "black_sun_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "wainrider_khans_chosen",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "balcoth_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_karash_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_14_template"
+    },
+    {
+      "id": "clan_khuzait_15",
+      "source": "xml",
+      "theme": "rhun house 7 \u2014 balanced",
+      "color": "FFB6812C",
+      "color2": "FF501213",
+      "roster": [
+        {
+          "troop": "black_sun_trainee",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "darkhun_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "wain_footman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "black_sun_raider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "darkhun_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "loke_rim_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "black_sun_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "sagarun_naffatun",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "black_sun_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "easterling_cavalry_new",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "wainrider_swift_chariot",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_horse_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_15_template"
+    },
+    {
+      "id": "clan_khuzait_16",
+      "source": "xml",
+      "theme": "rhun house 8 \u2014 infantry",
+      "color": "FFBA882C",
+      "color2": "FF541413",
+      "roster": [
+        {
+          "troop": "darkhun_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "balcoth_footman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "far_rhun_footman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "sagarun_watchman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "black_sun_raider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "darkhun_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "sagarun_storm_forged_marine",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "loke_rim_gilded_shieldguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "black_sun_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dragon_wrath_ash_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "darkhun_horseman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "darkhun_cultist_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "balcoth_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_karash_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_16_template"
+    },
+    {
+      "id": "clan_khuzait_17",
+      "source": "xml",
+      "theme": "rhun house 9 \u2014 ranged",
+      "color": "FFBD8F2D",
+      "color2": "FF571713",
+      "roster": [
+        {
+          "troop": "balcoth_footman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "far_rhun_footman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "darkhun_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "balcoth_veteran_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "loke_rim_gilded_shieldguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "wainrider_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "easterling_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rhun_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "loke_rim_marksman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "black_sun_chosen_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dragon_wrath_obsidian_warbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "far_rhun_cataphract",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dragon_wrath_obsidian_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_horse_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_17_template"
+    },
+    {
+      "id": "clan_khuzait_18",
+      "source": "xml",
+      "theme": "rhun house 10 \u2014 cavalry",
+      "color": "FFC0962E",
+      "color2": "FF5A1A14",
+      "roster": [
+        {
+          "troop": "far_rhun_footman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "sagarun_watchman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "balcoth_veteran_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "loke_rim_gilded_champion",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "easterling_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dragon_wrath_obsidian_warbow",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_youth",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "far_rhun_horseman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "darkhun_veteran_cavalry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "easterling_veteran_cavalry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "wainrider_warlord_chariot",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "balcoth_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_karash_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_18_template"
+    },
+    {
+      "id": "clan_khuzait_19",
+      "source": "xml",
+      "theme": "rhun house 11 \u2014 elite",
+      "color": "FFC39D2F",
+      "color2": "FF5D1D15",
+      "roster": [
+        {
+          "troop": "far_rhun_gate_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "easterling_veteran_swordsman_new",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "easterling_veteran_halberdier_new",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dragon_wrath_infantry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "wain_darkhan",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "sagarun_crossbowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dragon_wrath_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "black_sun_longbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "easterling_veteran_cavalry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "kharaghul_ashkur_nokor",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "loke_rim_gilded_cataphract",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_19_template"
+    },
+    {
+      "id": "clan_khuzait_2",
+      "source": "xslt",
+      "theme": "rhun house 12 \u2014 skirmisher",
+      "color": "FFC6A530",
+      "color2": "FF602115",
+      "roster": [
+        {
+          "troop": "easterling_footman_new",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "loke_rim_initiate",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "easterling_veteran_swordsman_new",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "wain_darkhan",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "easterling_skirmisher_new",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rhun_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "balcoth_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "easterling_veteran_archer_new",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "loke_rim_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "black_sun_longbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "sagarun_storm_helmed_naffatun",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "loke_rim_gilded_cataphract",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "balcoth_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_karash_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_2_template"
+    },
+    {
+      "id": "clan_khuzait_3",
+      "source": "xslt",
+      "theme": "rhun house 13 \u2014 balanced",
+      "color": "FFCAAD30",
+      "color2": "FF642516",
+      "roster": [
+        {
+          "troop": "loke_rim_initiate",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "wain_youngblood",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "easterling_veteran_halberdier_new",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "loke_rim_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "black_sun_scourge",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rhun_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "balcoth_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "loke_rim_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "sagarun_storm_helmed_naffatun",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "far_rhun_cavalry",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dragon_wrath_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_horse_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_3_template"
+    },
+    {
+      "id": "clan_khuzait_4",
+      "source": "xslt",
+      "theme": "rhun house 14 \u2014 infantry",
+      "color": "FFCDB531",
+      "color2": "FF672817",
+      "roster": [
+        {
+          "troop": "wain_youngblood",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rhun_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "black_sun_footman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "darkhun_footman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "loke_rim_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "wain_glaiveman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "darkhun_ironbound",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dragon_wrath_ash_shieldguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "balcoth_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "sagarun_storm_marked_arbalest",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "far_rhun_horse_master",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "darkhun_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "balcoth_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_karash_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_4_template"
+    },
+    {
+      "id": "clan_khuzait_5",
+      "source": "xslt",
+      "theme": "rhun house 15 \u2014 ranged",
+      "color": "FFCEBC34",
+      "color2": "FF6A2C18",
+      "roster": [
+        {
+          "troop": "rhun_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "black_sun_footman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "wain_glaiveman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "black_sun_reaver",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dragon_wrath_ash_shieldguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "easterling_archer_new",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "loke_rim_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "black_sun_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "wainrider_wind_arrow_sharpshooter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "loke_rim_gilded_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dragon_wrath_longbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dragon_wrath_ash_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_horse_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_5_template"
+    },
+    {
+      "id": "clan_khuzait_6",
+      "source": "xslt",
+      "theme": "rhun house 16 \u2014 cavalry",
+      "color": "FFCFC237",
+      "color2": "FF6D3118",
+      "roster": [
+        {
+          "troop": "black_sun_footman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "darkhun_footman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "black_sun_reaver",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dragon_wrath_ash_executioner",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "loke_rim_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dragon_wrath_longbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "easterling_cavalry_new",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "darkhun_horseman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "far_rhun_iron_cataphract",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "kharaghul_nokor",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "wainrider_khans_chosen",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "balcoth_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_karash_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_6_template"
+    },
+    {
+      "id": "clan_khuzait_7",
+      "source": "xslt",
+      "theme": "rhun house 17 \u2014 elite",
+      "color": "FFD0C83A",
+      "color2": "FF713519",
+      "roster": [
+        {
+          "troop": "darkhun_veteran_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "far_rhun_iron_legionary",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "balcoth_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dragon_wrath_obsidian_shieldmaster",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dragon_wrath_obsidian_war_reaver",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "sagarun_arbalest",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "black_sun_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dragon_wrath_ash_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_nokor",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "wainrider_swift_chariot",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "darkhun_cultist_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_7_template"
+    },
+    {
+      "id": "clan_khuzait_8",
+      "source": "xslt",
+      "theme": "rhun house 18 \u2014 skirmisher",
+      "color": "FFD1CD3D",
+      "color2": "FF743A1A",
+      "roster": [
+        {
+          "troop": "easterling_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "balcoth_volunteer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "far_rhun_iron_legionary",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dragon_wrath_obsidian_war_reaver",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "wainrider_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "easterling_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rhun_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "loke_rim_marksman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "sagarun_skirmisher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dragon_wrath_ash_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "black_sun_chosen_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "far_rhun_cataphract",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "darkhun_cultist_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "balcoth_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_karash_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_8_template"
+    },
+    {
+      "id": "clan_khuzait_9",
+      "source": "xslt",
+      "theme": "rhun house 19 \u2014 balanced",
+      "color": "FFD0D140",
+      "color2": "FF773E1A",
+      "roster": [
+        {
+          "troop": "balcoth_volunteer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "far_rhun_levy",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "balcoth_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "far_rhun_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "sagarun_marine",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "easterling_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rhun_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "sagarun_skirmisher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "black_sun_chosen_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_youth",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dragon_wrath_obsidian_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "kharaghul_horse_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "kharaghul_keshig",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rhun_khuzait_9_template"
+    }
+  ]
+}

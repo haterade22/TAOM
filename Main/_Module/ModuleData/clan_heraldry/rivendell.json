@@ -1,0 +1,387 @@
+{
+  "culture": "rivendell",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF8A93B0/FF2A2A6E base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=rivendell).",
+  "clans": [
+    {
+      "id": "clan_lindon_1",
+      "source": "xml",
+      "theme": "rivendell house 1 \u2014 balanced",
+      "color": "FF758DA2",
+      "color2": "FF203054",
+      "roster": [
+        {
+          "troop": "rivendell_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rivendell_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_swordguard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "imladris_nobleman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "battlemaster_of_the_first_age",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rivendell_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rivendell_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_bowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "imladris_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rivendell_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rivendell_royal_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "imladris_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rider_of_himring",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rivendell_lindon_1_template"
+    },
+    {
+      "id": "clan_lindon_2",
+      "source": "xml",
+      "theme": "rivendell house 2 \u2014 infantry",
+      "color": "FF7F8FA9",
+      "color2": "FF252E61",
+      "roster": [
+        {
+          "troop": "rivendell_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_infantry",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rivendell_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_nobleman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "imladris_guardsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "imladris_warden",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rivendell_warden_gondolin",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rivendell_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_marchwarden",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "imladris_outrider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rivendell_high_captain",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "imladris_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rider_of_himring",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rivendell_lindon_2_template"
+    },
+    {
+      "id": "clan_rivendell_1",
+      "source": "xml",
+      "theme": "rivendell house 3 \u2014 ranged",
+      "color": "FF8A93B0",
+      "color2": "FF2A2A6E",
+      "roster": [
+        {
+          "troop": "imladris_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_infantry",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_guardsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "imladris_blademaster",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rivendell_warden_gondolin",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rivendell_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rivendell_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_bowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "imladris_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "imladris_marchwarden",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rivendell_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rivendell_glorfindel_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "imladris_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rider_of_himring",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rivendell_rivendell_1_template"
+    },
+    {
+      "id": "clan_rivendell_2",
+      "source": "xml",
+      "theme": "rivendell house 4 \u2014 cavalry",
+      "color": "FF9598B7",
+      "color2": "FF3A2F7B",
+      "roster": [
+        {
+          "troop": "imladris_infantry",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rivendell_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_blademaster",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rivendell_knight_golden_flower",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rivendell_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "imladris_marchwarden",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "imladris_outrider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rivendell_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "noldorin_lancer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rivendell_royal_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rivendell_royal_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "imladris_horse_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rider_of_himring",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rivendell_rivendell_2_template"
+    },
+    {
+      "id": "clan_rivendell_3",
+      "source": "xml",
+      "theme": "rivendell house 5 \u2014 elite",
+      "color": "FFA19FBE",
+      "color2": "FF4D3488",
+      "roster": [
+        {
+          "troop": "imladris_swordguard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "imladris_nobleman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "imladris_guardsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rivendell_gondolin_battlemaster",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "battlemaster_of_the_first_age",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "imladris_bowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "imladris_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "imladris_marchwarden",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rivendell_royal_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rivendell_high_captain",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rivendell_glorfindel_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rider_of_himring",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rivendell_rivendell_3_template"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "culture": "battania",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Colors-only (no TAOM troop pool); per-clan color = FF8A5A1E/FF5A1E18 base + per-clan variation.",
+  "clans": [
+    {
+      "id": "clan_battania_1",
+      "source": "xslt",
+      "theme": "khand house 1",
+      "color": "FF6D2D18",
+      "color2": "FF3E101A",
+      "roster": []
+    },
+    {
+      "id": "clan_battania_2",
+      "source": "xslt",
+      "theme": "khand house 2",
+      "color": "FF753919",
+      "color2": "FF461319",
+      "roster": []
+    },
+    {
+      "id": "clan_battania_3",
+      "source": "xslt",
+      "theme": "khand house 3",
+      "color": "FF7D451B",
+      "color2": "FF4E1517",
+      "roster": []
+    },
+    {
+      "id": "clan_battania_4",
+      "source": "xslt",
+      "theme": "khand house 4",
+      "color": "FF86531D",
+      "color2": "FF561A17",
+      "roster": []
+    },
+    {
+      "id": "clan_battania_5",
+      "source": "xslt",
+      "theme": "khand house 5",
+      "color": "FF8E621F",
+      "color2": "FF5E2219",
+      "roster": []
+    },
+    {
+      "id": "clan_battania_6",
+      "source": "xslt",
+      "theme": "khand house 6",
+      "color": "FF977121",
+      "color2": "FF662C1B",
+      "roster": []
+    },
+    {
+      "id": "clan_battania_7",
+      "source": "xslt",
+      "theme": "khand house 7",
+      "color": "FF9F8223",
+      "color2": "FF6E361D",
+      "roster": []
+    },
+    {
+      "id": "clan_battania_8",
+      "source": "xslt",
+      "theme": "khand house 8",
+      "color": "FFA79424",
+      "color2": "FF764120",
+      "roster": []
+    }
+  ]
+}

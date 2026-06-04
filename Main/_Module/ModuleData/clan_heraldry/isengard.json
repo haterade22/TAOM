@@ -1,0 +1,802 @@
+{
+  "culture": "isengard",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF2C2C2C/FFD8D8D8 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=isengard).",
+  "clans": [
+    {
+      "id": "clan_isengard_1",
+      "source": "xml",
+      "theme": "isengard house 1 \u2014 balanced",
+      "color": "FF1A1A1A",
+      "color2": "FFC6C6C6",
+      "roster": [
+        {
+          "troop": "isengard_orc_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_berserker",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_marauder",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_champion",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "orthanc_chosen",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "isengard_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "isengard_orc_warg_scout_v2",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_warg_rider_v2",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "orc_warg_enforcer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_isengard_isengard_1_template"
+    },
+    {
+      "id": "clan_isengard_10",
+      "source": "xml",
+      "theme": "isengard house 2 \u2014 infantry",
+      "color": "FF1E1E1E",
+      "color2": "FFCACACA",
+      "roster": [
+        {
+          "troop": "urukhai_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_berserker",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_brawler",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_fighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_butcher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_feller",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "orthanc_chosen",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_reaver",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_crossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "orc_warg_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_warg_ravager_v2",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_isengard_isengard_10_template"
+    },
+    {
+      "id": "clan_isengard_11",
+      "source": "xml",
+      "theme": "isengard house 3 \u2014 ranged",
+      "color": "FF212121",
+      "color2": "FFCDCDCD",
+      "roster": [
+        {
+          "troop": "isengard_orc_berserker",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_brawler",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_feller",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_reaver",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_arbalest",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_veterancrossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "isengard_orc_warg_scout_v2",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "orc_warg_lieutenant",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_isengard_isengard_11_template"
+    },
+    {
+      "id": "clan_isengard_2",
+      "source": "xml",
+      "theme": "isengard house 4 \u2014 cavalry",
+      "color": "FF252525",
+      "color2": "FFD1D1D1",
+      "roster": [
+        {
+          "troop": "isengard_orc_brawler",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_fighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_berserker",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "isengard_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "orc_warg_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_warg_scout_v2",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_warg_rider_v2",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "orc_warg_enforcer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "isengard_orc_warg_ravager_v2",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_isengard_isengard_2_template"
+    },
+    {
+      "id": "clan_isengard_3",
+      "source": "xml",
+      "theme": "isengard house 5 \u2014 elite",
+      "color": "FF282828",
+      "color2": "FFD4D4D4",
+      "roster": [
+        {
+          "troop": "urukhai_swordman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "isengard_orc_slayer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "isengard_orc_reaver",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_veteranpikeman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_pavise",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_tracker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_arbalest",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_crossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_veterancrossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "orc_warg_overseer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "isengard_orc_warg_ravager_v2",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "orc_warg_lieutenant",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_isengard_isengard_3_template"
+    },
+    {
+      "id": "clan_isengard_4",
+      "source": "xml",
+      "theme": "isengard house 6 \u2014 skirmisher",
+      "color": "FF2C2C2C",
+      "color2": "FFD8D8D8",
+      "roster": [
+        {
+          "troop": "isengard_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_warrior",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_slayer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_pavise",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_arbalest",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "isengard_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_veterancrossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "orc_warg_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "orc_warg_lieutenant",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_isengard_isengard_4_template"
+    },
+    {
+      "id": "clan_isengard_5",
+      "source": "xml",
+      "theme": "isengard house 7 \u2014 balanced",
+      "color": "FF303030",
+      "color2": "FFDCDCDC",
+      "roster": [
+        {
+          "troop": "isengard_orc_warrior",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_ravager",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_warrior",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_reaver",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_veteraninfantry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "orthanc_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "isengard_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "isengard_orc_warg_scout_v2",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_warg_rider_v2",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "orc_warg_enforcer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_isengard_isengard_5_template"
+    },
+    {
+      "id": "clan_isengard_6",
+      "source": "xml",
+      "theme": "isengard house 8 \u2014 infantry",
+      "color": "FF333333",
+      "color2": "FFDFDFDF",
+      "roster": [
+        {
+          "troop": "isengard_orc_ravager",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_warrior",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_slayer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_pikeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_veteranspearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "orthanc_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_nazg_hai",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_crossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "orc_warg_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_warg_ravager_v2",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_isengard_isengard_6_template"
+    },
+    {
+      "id": "clan_isengard_7",
+      "source": "xml",
+      "theme": "isengard house 9 \u2014 ranged",
+      "color": "FF373737",
+      "color2": "FFE3E3E3",
+      "roster": [
+        {
+          "troop": "urukhai_warrior",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_pikeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_veteranspearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_nazg_hai",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_arbalest",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_veterancrossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "isengard_orc_warg_scout_v2",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "orc_warg_lieutenant",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_isengard_isengard_7_template"
+    },
+    {
+      "id": "clan_isengard_8",
+      "source": "xml",
+      "theme": "isengard house 10 \u2014 cavalry",
+      "color": "FF3A3A3A",
+      "color2": "FFE6E6E6",
+      "roster": [
+        {
+          "troop": "isengard_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_veteranspearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "orthanc_warden",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "isengard_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "urukhai_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "orc_warg_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_warg_scout_v2",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "isengard_orc_warg_rider_v2",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "orc_warg_enforcer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "isengard_orc_warg_ravager_v2",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_isengard_isengard_8_template"
+    },
+    {
+      "id": "clan_isengard_9",
+      "source": "xml",
+      "theme": "isengard house 11 \u2014 elite",
+      "color": "FF3E3E3E",
+      "color2": "FFEAEAEA",
+      "roster": [
+        {
+          "troop": "urukhai_infantry",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "isengard_orc_marauder",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "isengard_orc_butcher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "orthanc_bodyguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_champion",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_tracker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_arbalest",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "urukhai_crossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "urukhai_veterancrossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "orc_warg_overseer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "isengard_orc_warg_ravager_v2",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "orc_warg_lieutenant",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_isengard_isengard_9_template"
+    }
+  ]
+}

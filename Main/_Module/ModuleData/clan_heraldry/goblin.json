@@ -1,0 +1,667 @@
+{
+  "culture": "goblin",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF22301E/FF4A5A30 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=goblin).",
+  "clans": [
+    {
+      "id": "clan_bluecraig_1",
+      "source": "xml",
+      "theme": "goblin house 1 \u2014 balanced",
+      "color": "FF151A10",
+      "color2": "FF404324",
+      "roster": [
+        {
+          "troop": "goblin_snaga",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_brute",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_veteran_sword_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_veteran_spear_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_sentry",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_goblin_bluecraig_1_template"
+    },
+    {
+      "id": "clan_bluecraig_2",
+      "source": "xml",
+      "theme": "goblin house 2 \u2014 infantry",
+      "color": "FF191F13",
+      "color2": "FF434826",
+      "roster": [
+        {
+          "troop": "goblin_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_fighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_brute",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_sword_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_spear_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_berserker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_veteran_spear_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_veteran_berserker",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_goblin_bluecraig_2_template"
+    },
+    {
+      "id": "clan_bluecraig_3",
+      "source": "xml",
+      "theme": "goblin house 3 \u2014 ranged",
+      "color": "FF1C2416",
+      "color2": "FF454D29",
+      "roster": [
+        {
+          "troop": "goblin_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_sword_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_spear_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_veteran_berserker",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_sentry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_goblin_bluecraig_3_template"
+    },
+    {
+      "id": "clan_bluecraig_4",
+      "source": "xml",
+      "theme": "goblin house 4 \u2014 elite",
+      "color": "FF1E2919",
+      "color2": "FF47522C",
+      "roster": [
+        {
+          "troop": "goblin_spear_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_berserker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_chosen_of_tharzog",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_guardian_of_the_tower",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_bolgs_ironfang",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_veteran_sword_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_sentry",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_goblin_bluecraig_4_template"
+    },
+    {
+      "id": "clan_bluecraig_5",
+      "source": "xml",
+      "theme": "goblin house 5 \u2014 skirmisher",
+      "color": "FF212E1C",
+      "color2": "FF49572F",
+      "roster": [
+        {
+          "troop": "goblin_fighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_snaga",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_berserker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_guardian_of_the_tower",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_sentry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_goblin_bluecraig_5_template"
+    },
+    {
+      "id": "clan_goblin_1",
+      "source": "xml",
+      "theme": "goblin house 6 \u2014 balanced",
+      "color": "FF233220",
+      "color2": "FF4B5D31",
+      "roster": [
+        {
+          "troop": "goblin_snaga",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_brute",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_bolgs_ironfang",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_veteran_sword_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_goblin_goblin_1_template"
+    },
+    {
+      "id": "clan_goblin_2",
+      "source": "xml",
+      "theme": "goblin house 7 \u2014 infantry",
+      "color": "FF253723",
+      "color2": "FF4C6234",
+      "roster": [
+        {
+          "troop": "goblin_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_fighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_brute",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_sword_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_spear_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_berserker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_veteran_sword_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_veteran_spear_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_sentry",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_goblin_goblin_2_template"
+    },
+    {
+      "id": "clan_goblin_3",
+      "source": "xml",
+      "theme": "goblin house 8 \u2014 ranged",
+      "color": "FF273C26",
+      "color2": "FF4D6737",
+      "roster": [
+        {
+          "troop": "goblin_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_sword_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_spear_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_veteran_spear_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_sentry",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_goblin_goblin_3_template"
+    },
+    {
+      "id": "clan_goblin_4",
+      "source": "xml",
+      "theme": "goblin house 9 \u2014 elite",
+      "color": "FF294129",
+      "color2": "FF4D6C3A",
+      "roster": [
+        {
+          "troop": "goblin_spear_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_berserker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_veteran_berserker",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_chosen_of_tharzog",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_guardian_of_the_tower",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_bolgs_ironfang",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_sentry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_goblin_goblin_4_template"
+    },
+    {
+      "id": "clan_goblin_5",
+      "source": "xml",
+      "theme": "goblin house 10 \u2014 skirmisher",
+      "color": "FF2C462E",
+      "color2": "FF4D713C",
+      "roster": [
+        {
+          "troop": "goblin_fighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_snaga",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_berserker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_chosen_of_tharzog",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "goblin_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "goblin_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "goblin_sentry",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_goblin_goblin_5_template"
+    }
+  ]
+}

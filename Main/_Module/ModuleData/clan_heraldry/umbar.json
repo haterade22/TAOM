@@ -1,0 +1,347 @@
+{
+  "culture": "umbar",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF2E2A24/FFB58A4E base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=umbar).",
+  "clans": [
+    {
+      "id": "clan_umbar_1",
+      "source": "xml",
+      "theme": "umbar house 1 \u2014 balanced",
+      "color": "FF1A1614",
+      "color2": "FF9D5C42",
+      "roster": [
+        {
+          "troop": "aux_basic",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite_root0",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite_root01",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root000",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root010",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root1",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite_root10",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root101",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root0001",
+          "min": 2,
+          "max": 4
+        }
+      ],
+      "template_id": "kingdom_hero_party_umbar_umbar_1_template"
+    },
+    {
+      "id": "clan_umbar_2",
+      "source": "xml",
+      "theme": "umbar house 2 \u2014 infantry",
+      "color": "FF221E1B",
+      "color2": "FFA86D46",
+      "roster": [
+        {
+          "troop": "umbar_elite",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite_root0",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "aux_basic",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite_root00",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root001",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root01",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root010",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root0000",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root1",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite_root100",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root0001",
+          "min": 2,
+          "max": 4
+        }
+      ],
+      "template_id": "kingdom_hero_party_umbar_umbar_2_template"
+    },
+    {
+      "id": "clan_umbar_3",
+      "source": "xml",
+      "theme": "umbar house 3 \u2014 ranged",
+      "color": "FF2A2621",
+      "color2": "FFB2804A",
+      "roster": [
+        {
+          "troop": "umbar_elite_root0",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "aux_basic",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite_root001",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root01",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root0000",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root1",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite_root10",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root101",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root100",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root0001",
+          "min": 2,
+          "max": 4
+        }
+      ],
+      "template_id": "kingdom_hero_party_umbar_umbar_3_template"
+    },
+    {
+      "id": "clan_umbar_4",
+      "source": "xml",
+      "theme": "umbar house 4 \u2014 cavalry",
+      "color": "FF322E27",
+      "color2": "FFB79353",
+      "roster": [
+        {
+          "troop": "aux_basic",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite_root01",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root000",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root1",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite_root100",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root0001",
+          "min": 2,
+          "max": 4
+        }
+      ],
+      "template_id": "kingdom_hero_party_umbar_umbar_4_template"
+    },
+    {
+      "id": "clan_umbar_5",
+      "source": "xml",
+      "theme": "umbar house 5 \u2014 elite",
+      "color": "FF3A372D",
+      "color2": "FFBBA55D",
+      "roster": [
+        {
+          "troop": "umbar_elite_root00",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root001",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root01",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root010",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root0000",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root10",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root101",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root100",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root0001",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_umbar_umbar_5_template"
+    },
+    {
+      "id": "clan_umbar_6",
+      "source": "xml",
+      "theme": "umbar house 6 \u2014 skirmisher",
+      "color": "FF424134",
+      "color2": "FFC0B567",
+      "roster": [
+        {
+          "troop": "umbar_elite_root0",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "aux_basic",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite_root001",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root0000",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root1",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "umbar_elite_root10",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "umbar_elite_root100",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root101",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "umbar_elite_root0001",
+          "min": 2,
+          "max": 4
+        }
+      ],
+      "template_id": "kingdom_hero_party_umbar_umbar_6_template"
+    }
+  ]
+}

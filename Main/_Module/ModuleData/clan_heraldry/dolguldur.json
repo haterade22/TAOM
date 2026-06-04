@@ -1,0 +1,452 @@
+{
+  "culture": "dolguldur",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF3A2E22/FF6E7A3E base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=dolguldur).",
+  "clans": [
+    {
+      "id": "clan_dolguldur_1",
+      "source": "xml",
+      "theme": "dolguldur house 1 \u2014 balanced",
+      "color": "FF231815",
+      "color2": "FF625D32",
+      "roster": [
+        {
+          "troop": "dg_goblin_slave",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_goblin_crawler",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_orc_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_uruk_veteran_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_khamul_shadow_disciple",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_goblin_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dolguldur_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_orc_scout",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_uruk_black_sharpshooter",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_warg_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_khamul_veiled_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_warg_red_fang",
+          "min": 2,
+          "max": 4
+        }
+      ],
+      "template_id": "kingdom_hero_party_dolguldur_dolguldur_1_template"
+    },
+    {
+      "id": "clan_dolguldur_2",
+      "source": "xml",
+      "theme": "dolguldur house 2 \u2014 infantry",
+      "color": "FF2C201A",
+      "color2": "FF6B6C37",
+      "roster": [
+        {
+          "troop": "dg_goblin_crawler",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_goblin_harrier",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_orc_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_orc_gnasher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_uruk_veteran_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dolguldur_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_uruk_black_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_uruk_black_slayer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dolguldur_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_khamul_shadow_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_khamul_shadow_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_warg_red_fang",
+          "min": 2,
+          "max": 4
+        }
+      ],
+      "template_id": "kingdom_hero_party_dolguldur_dolguldur_2_template"
+    },
+    {
+      "id": "clan_dolguldur_3",
+      "source": "xml",
+      "theme": "dolguldur house 3 \u2014 ranged",
+      "color": "FF35291F",
+      "color2": "FF6D753C",
+      "roster": [
+        {
+          "troop": "dg_goblin_harrier",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_orc_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dolguldur_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_goblin_impaler",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_uruk_black_slayer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_uruk_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dolguldur_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_goblin_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_goblin_fellbow",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_khamul_shadow_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_khamul_veiled_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_warg_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_khamul_veiled_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_warg_red_fang",
+          "min": 2,
+          "max": 4
+        }
+      ],
+      "template_id": "kingdom_hero_party_dolguldur_dolguldur_3_template"
+    },
+    {
+      "id": "clan_dolguldur_4",
+      "source": "xml",
+      "theme": "dolguldur house 4 \u2014 cavalry",
+      "color": "FF3F3325",
+      "color2": "FF6F7F40",
+      "roster": [
+        {
+          "troop": "dg_orc_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_orc_gnasher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_goblin_impaler",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_khamul_shadow_infantry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dolguldur_militia_veteran_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_khamul_veiled_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_warg_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_fell_warg_rider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_warg_skirmisher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_khamul_shadow_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_warg_red_fang",
+          "min": 2,
+          "max": 4
+        }
+      ],
+      "template_id": "kingdom_hero_party_dolguldur_dolguldur_4_template"
+    },
+    {
+      "id": "clan_dolguldur_5",
+      "source": "xml",
+      "theme": "dolguldur house 5 \u2014 elite",
+      "color": "FF483E2A",
+      "color2": "FF6F8845",
+      "roster": [
+        {
+          "troop": "dg_orc_reaver",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_uruk_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_khamul_shadow_initiate",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_khamul_shadow_warden",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_khamul_veiled_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_uruk_fell_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_khamul_shadow_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_uruk_black_sharpshooter",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_warg_skirmisher",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_khamul_veiled_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_khamul_shadow_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_warg_red_fang",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_dolguldur_dolguldur_5_template"
+    },
+    {
+      "id": "clan_dolguldur_6",
+      "source": "xml",
+      "theme": "dolguldur house 6 \u2014 skirmisher",
+      "color": "FF514A2F",
+      "color2": "FF6E924A",
+      "roster": [
+        {
+          "troop": "dg_uruk_foul",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dolguldur_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_uruk_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_khamul_veiled_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_goblin_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dolguldur_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_uruk_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_orc_scout",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_uruk_bowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dg_uruk_black_sharpshooter",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_khamul_shadow_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_warg_raider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dg_khamul_shadow_knight",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dg_warg_red_fang",
+          "min": 2,
+          "max": 4
+        }
+      ],
+      "template_id": "kingdom_hero_party_dolguldur_dolguldur_6_template"
+    }
+  ]
+}

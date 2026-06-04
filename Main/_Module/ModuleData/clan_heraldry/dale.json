@@ -1,0 +1,667 @@
+{
+  "culture": "sturgia",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF1E3A6E/FFD4A53A base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=sturgia).",
+  "clans": [
+    {
+      "id": "clan_sturgia_1",
+      "source": "xslt",
+      "theme": "dale house 1 \u2014 balanced",
+      "color": "FF163D52",
+      "color2": "FFC0652A",
+      "roster": [
+        {
+          "troop": "dale_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_man_at_arms",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_shipman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_lake_town_veteran",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_royal_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_outrider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_royal_cavalier",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_kinsman_of_eorl",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_dale_sturgia_1_template"
+    },
+    {
+      "id": "clan_sturgia_2",
+      "source": "xslt",
+      "theme": "dale house 2 \u2014 infantry",
+      "color": "FF183D59",
+      "color2": "FFC8752C",
+      "roster": [
+        {
+          "troop": "dale_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_squire",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_lake_town_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_riverman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_lake_town_mariner",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_lake_town_veteran",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_veteran_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_royal_crossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_knight",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_kings_guard",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_dale_sturgia_2_template"
+    },
+    {
+      "id": "clan_sturgia_3",
+      "source": "xslt",
+      "theme": "dale house 3 \u2014 ranged",
+      "color": "FF1A3D60",
+      "color2": "FFCF852D",
+      "roster": [
+        {
+          "troop": "dale_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_squire",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_lake_town_mariner",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_veteran_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_crossbowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_veteran_crossbowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_black_arrow_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_master_crossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_outrider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_kinsman_of_eorl",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_dale_sturgia_3_template"
+    },
+    {
+      "id": "clan_sturgia_4",
+      "source": "xslt",
+      "theme": "dale house 4 \u2014 cavalry",
+      "color": "FF1C3C67",
+      "color2": "FFD29633",
+      "roster": [
+        {
+          "troop": "dale_squire",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_lake_town_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_lake_town_mariner",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_royal_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_master_crossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_knight",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_outrider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_veteran_northman_scout",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_kings_guard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_kinsman_of_eorl",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_dale_sturgia_4_template"
+    },
+    {
+      "id": "clan_sturgia_5",
+      "source": "xslt",
+      "theme": "dale house 5 \u2014 elite",
+      "color": "FF1E3A6E",
+      "color2": "FFD4A53A",
+      "roster": [
+        {
+          "troop": "dale_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_guardsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_man_at_arms",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_dalian_mariner",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_lake_town_hearthguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_longbowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_veteran_crossbowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_royal_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_royal_crossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_royal_cavalier",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_kinsman_of_eorl",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_kings_guard",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_dale_sturgia_5_template"
+    },
+    {
+      "id": "clan_sturgia_6",
+      "source": "xslt",
+      "theme": "dale house 6 \u2014 skirmisher",
+      "color": "FF203775",
+      "color2": "FFD6B341",
+      "roster": [
+        {
+          "troop": "dale_footman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_guardsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_lake_town_hearthguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_crossbowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_veteran_crossbowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_royal_crossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_black_arrow_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_knight",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_kings_guard",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_dale_sturgia_6_template"
+    },
+    {
+      "id": "clan_sturgia_7",
+      "source": "xslt",
+      "theme": "dale house 7 \u2014 balanced",
+      "color": "FF22347C",
+      "color2": "FFD7C149",
+      "roster": [
+        {
+          "troop": "dale_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_man_at_arms",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_running_river_warden",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_shipman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_black_arrow_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_outrider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_royal_cavalier",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_kinsman_of_eorl",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_dale_sturgia_7_template"
+    },
+    {
+      "id": "clan_sturgia_8",
+      "source": "xslt",
+      "theme": "dale house 8 \u2014 infantry",
+      "color": "FF243083",
+      "color2": "FFD9CE50",
+      "roster": [
+        {
+          "troop": "dale_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_squire",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_lake_town_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_riverman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_lake_town_mariner",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_shipman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_lake_town_veteran",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_master_crossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_knight",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_kings_guard",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_dale_sturgia_8_template"
+    },
+    {
+      "id": "clan_sturgia_9",
+      "source": "xslt",
+      "theme": "dale house 9 \u2014 ranged",
+      "color": "FF262B8A",
+      "color2": "FFDADA57",
+      "roster": [
+        {
+          "troop": "dale_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_squire",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_lake_town_mariner",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_lake_town_veteran",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_crossbowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_bowman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_veteran_crossbowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "dale_royal_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_royal_crossbowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "dale_outrider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "dale_kinsman_of_eorl",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_dale_sturgia_9_template"
+    }
+  ]
+}

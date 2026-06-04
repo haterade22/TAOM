@@ -1,0 +1,622 @@
+{
+  "culture": "abanissa",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF1A3560/FFAA9240 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=aserai).",
+  "clans": [
+    {
+      "id": "clan_abanissa_1",
+      "source": "xml",
+      "theme": "abanissa house 1 \u2014 balanced",
+      "color": "FF123444",
+      "color2": "FF906136",
+      "roster": [
+        {
+          "troop": "harad_levy",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_swordfighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_sandblade",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_footman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_camel_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_abanissa_abanissa_1_template"
+    },
+    {
+      "id": "clan_abanissa_2",
+      "source": "xml",
+      "theme": "abanissa house 2 \u2014 infantry",
+      "color": "FF15364C",
+      "color2": "FF976E39",
+      "roster": [
+        {
+          "troop": "harad_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_spearfighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_levy",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_sandblade",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_sunlance",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_bronzefang",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_vipereye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_camelscout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpentguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_abanissa_abanissa_2_template"
+    },
+    {
+      "id": "clan_abanissa_3",
+      "source": "xml",
+      "theme": "abanissa house 3 \u2014 ranged",
+      "color": "FF173654",
+      "color2": "FF9F7C3C",
+      "roster": [
+        {
+          "troop": "harad_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_spearfighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_spearguard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_bronzefang",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_serpent_eye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_fangking",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_abanissa_abanissa_3_template"
+    },
+    {
+      "id": "clan_abanissa_4",
+      "source": "xml",
+      "theme": "abanissa house 4 \u2014 cavalry",
+      "color": "FF19365C",
+      "color2": "FFA68A3F",
+      "roster": [
+        {
+          "troop": "harad_spearfighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_levy",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_spearguard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_warlance",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_camelscout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_gildedfang",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_camelrider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_camel_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_abanissa_abanissa_4_template"
+    },
+    {
+      "id": "clan_abanissa_5",
+      "source": "xml",
+      "theme": "abanissa house 5 \u2014 elite",
+      "color": "FF1B3464",
+      "color2": "FFAE9A41",
+      "roster": [
+        {
+          "troop": "harad_swordfighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_sandblade",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_champion",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_footman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_vipereye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_serpent_eye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_camelrider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_serpentguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_fangking",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_abanissa_abanissa_5_template"
+    },
+    {
+      "id": "clan_abanissa_6",
+      "source": "xml",
+      "theme": "abanissa house 6 \u2014 skirmisher",
+      "color": "FF1D326C",
+      "color2": "FFB5AA44",
+      "roster": [
+        {
+          "troop": "harad_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_sandblade",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_footman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_serpent_eye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_camelscout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_fangking",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_abanissa_abanissa_6_template"
+    },
+    {
+      "id": "clan_abanissa_7",
+      "source": "xml",
+      "theme": "abanissa house 7 \u2014 balanced",
+      "color": "FF1F2E74",
+      "color2": "FFBAB949",
+      "roster": [
+        {
+          "troop": "harad_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_spearfighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_spearguard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_sunlance",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_camel_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_abanissa_abanissa_7_template"
+    },
+    {
+      "id": "clan_abanissa_8",
+      "source": "xml",
+      "theme": "abanissa house 8 \u2014 infantry",
+      "color": "FF22297C",
+      "color2": "FFB5BD50",
+      "roster": [
+        {
+          "troop": "harad_spearfighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_levy",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_spearguard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_swordfighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_bronzefang",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_warlance",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_vipereye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_camelscout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpentguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_abanissa_abanissa_8_template"
+    }
+  ]
+}

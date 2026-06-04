@@ -1,0 +1,337 @@
+{
+  "culture": "mistymountainorcs",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF2A2A2A/FF6E5A40 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=mistymountainorcs).",
+  "clans": [
+    {
+      "id": "clan_mistymountainorcs_1",
+      "source": "xml",
+      "theme": "mistymountainorcs house 1 \u2014 balanced",
+      "color": "FF181818",
+      "color2": "FF573D33",
+      "roster": [
+        {
+          "troop": "mistymountainorcs_snaga",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_brute",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_veteran_sword_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_veteran_spear_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_sentry",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mistymountainorcs_mistymountainorcs_1_template"
+    },
+    {
+      "id": "clan_mistymountainorcs_2",
+      "source": "xml",
+      "theme": "mistymountainorcs house 2 \u2014 infantry",
+      "color": "FF212121",
+      "color2": "FF634B39",
+      "roster": [
+        {
+          "troop": "mistymountainorcs_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_fighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_brute",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_sword_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_spear_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_berserker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_veteran_spear_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_veteran_berserker",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mistymountainorcs_mistymountainorcs_2_template"
+    },
+    {
+      "id": "clan_mistymountainorcs_3",
+      "source": "xml",
+      "theme": "mistymountainorcs house 3 \u2014 ranged",
+      "color": "FF2A2A2A",
+      "color2": "FF6E5A40",
+      "roster": [
+        {
+          "troop": "mistymountainorcs_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_sword_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_spear_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_veteran_berserker",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_sentry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mistymountainorcs_mistymountainorcs_3_template"
+    },
+    {
+      "id": "clan_mistymountainorcs_4",
+      "source": "xml",
+      "theme": "mistymountainorcs house 4 \u2014 elite",
+      "color": "FF333333",
+      "color2": "FF796B47",
+      "roster": [
+        {
+          "troop": "mistymountainorcs_spear_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_berserker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_chosen_of_tharzog",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_guardian_of_the_tower",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_bolgs_ironfang",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_veteran_sword_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_sentry",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mistymountainorcs_mistymountainorcs_4_template"
+    },
+    {
+      "id": "clan_mistymountainorcs_5",
+      "source": "xml",
+      "theme": "mistymountainorcs house 5 \u2014 skirmisher",
+      "color": "FF3C3C3C",
+      "color2": "FF857D4D",
+      "roster": [
+        {
+          "troop": "mistymountainorcs_fighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_snaga",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_berserker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_guardian_of_the_tower",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "mistymountainorcs_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "mistymountainorcs_sentry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "mistymountainorcs_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_mistymountainorcs_mistymountainorcs_5_template"
+    }
+  ]
+}

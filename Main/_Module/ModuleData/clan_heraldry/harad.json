@@ -1,0 +1,702 @@
+{
+  "culture": "aserai",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF8E1C1C/FFC9A227 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=aserai).",
+  "clans": [
+    {
+      "id": "clan_aserai_1",
+      "source": "xslt",
+      "theme": "harad house 1 \u2014 balanced",
+      "color": "FF701631",
+      "color2": "FFAB6121",
+      "roster": [
+        {
+          "troop": "harad_levy",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_swordfighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_sandblade",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_footman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_camel_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_harad_aserai_1_template"
+    },
+    {
+      "id": "clan_aserai_2",
+      "source": "xslt",
+      "theme": "harad house 2 \u2014 infantry",
+      "color": "FF78182D",
+      "color2": "FFB37023",
+      "roster": [
+        {
+          "troop": "harad_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_spearfighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_levy",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_sandblade",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_sunlance",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_bronzefang",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_vipereye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_camelscout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpentguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_harad_aserai_2_template"
+    },
+    {
+      "id": "clan_aserai_3",
+      "source": "xslt",
+      "theme": "harad house 3 \u2014 ranged",
+      "color": "FF7F1928",
+      "color2": "FFBA7F24",
+      "roster": [
+        {
+          "troop": "harad_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_spearfighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_spearguard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_bronzefang",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_serpent_eye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_fangking",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_harad_aserai_3_template"
+    },
+    {
+      "id": "clan_aserai_4",
+      "source": "xslt",
+      "theme": "harad house 4 \u2014 cavalry",
+      "color": "FF871B23",
+      "color2": "FFC29026",
+      "roster": [
+        {
+          "troop": "harad_spearfighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_levy",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_spearguard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_warlance",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_camelscout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_gildedfang",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_camelrider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_camel_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_harad_aserai_4_template"
+    },
+    {
+      "id": "clan_aserai_5",
+      "source": "xslt",
+      "theme": "harad house 5 \u2014 elite",
+      "color": "FF8E1C1C",
+      "color2": "FFC9A227",
+      "roster": [
+        {
+          "troop": "harad_swordfighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_sandblade",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_champion",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_footman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_vipereye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_serpent_eye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_camelrider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_serpentguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_fangking",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_harad_aserai_5_template"
+    },
+    {
+      "id": "clan_aserai_6",
+      "source": "xslt",
+      "theme": "harad house 6 \u2014 skirmisher",
+      "color": "FF95261D",
+      "color2": "FFD0B528",
+      "roster": [
+        {
+          "troop": "harad_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_sandblade",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_footman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_veteran_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_serpent_eye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_camelscout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_fangking",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_harad_aserai_6_template"
+    },
+    {
+      "id": "clan_aserai_7",
+      "source": "xslt",
+      "theme": "harad house 7 \u2014 balanced",
+      "color": "FF9D321F",
+      "color2": "FFD6C72C",
+      "roster": [
+        {
+          "troop": "harad_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_spearfighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_spearguard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_sunlance",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_camel_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_harad_aserai_7_template"
+    },
+    {
+      "id": "clan_aserai_8",
+      "source": "xslt",
+      "theme": "harad house 8 \u2014 infantry",
+      "color": "FFA43E20",
+      "color2": "FFD7D533",
+      "roster": [
+        {
+          "troop": "harad_spearfighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_levy",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_spearguard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_swordfighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_bronzefang",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_warlance",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_vipereye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_camelscout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpentguard",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_harad_aserai_8_template"
+    },
+    {
+      "id": "clan_aserai_9",
+      "source": "xslt",
+      "theme": "harad house 9 \u2014 ranged",
+      "color": "FFAC4B22",
+      "color2": "FFD0D93B",
+      "roster": [
+        {
+          "troop": "harad_levy",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_swordfighter",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_sandblade",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_warlance",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "harad_serpent_eye",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_marksman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_noble",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_fangking",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "harad_horsearcher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "harad_serpenthorsearcher",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_harad_aserai_9_template"
+    }
+  ]
+}

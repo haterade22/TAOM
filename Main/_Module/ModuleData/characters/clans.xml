@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- TAOM Additional Clans - All Cultures -->
 <Factions>
 
@@ -15,6 +15,9 @@
 		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
+		color="FF5A3A78"
+		color2="FFCBB7DA"
+		default_party_template="PartyTemplate.kingdom_hero_party_gondor_linhir_template"
 		banner_key="11.251.166.1528.1528.764.764.1.0.0.10016.303.290.600.600.764.800.0.0.0" />
 
   <Faction
@@ -26,6 +29,9 @@
 		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
+		color="FF4A6072"
+		color2="FFCBD3D8"
+		default_party_template="PartyTemplate.kingdom_hero_party_gondor_tolfalas_template"
 		banner_key="11.172.166.1528.1528.764.764.1.0.0.10012.332.171.1000.1000.764.770.0.0.0" />
 
   <Faction
@@ -37,6 +43,9 @@
 		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
+		color="FF1F6E63"
+		color2="FFCBA257"
+		default_party_template="PartyTemplate.kingdom_hero_party_gondor_serelond_template"
 		banner_key="11.101.166.1528.1528.764.764.1.0.0.10009.35.171.500.550.765.730.0.0.0" />
 
   <Faction
@@ -48,6 +57,9 @@
 		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
+		color="FF6E5A2C"
+		color2="FF9DAE78"
+		default_party_template="PartyTemplate.kingdom_hero_party_gondor_anfalas_template"
 		banner_key="11.293.203.1528.1528.764.764.1.0.0.10014.35.171.800.800.764.806.0.0.0" />
 
   <Faction
@@ -59,6 +71,9 @@
 		culture="Culture.gondor"
 		super_faction="Kingdom.empire_w"
 		is_noble="true"
+		color="FF2C3138"
+		color2="FF6E7A66"
+		default_party_template="PartyTemplate.kingdom_hero_party_gondor_blackroot_vale_template"
 		banner_key="11.2014.262.1528.1528.764.857.1.0.0.10007.172.171.600.600.765.742.0.0.0" />
   <!-- ============================================== -->
   <!-- EXTENDED EMPIRE SOUTH / MORDOR CLANS           -->
@@ -71,9 +86,12 @@
 		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M10_1"
-		culture="Culture.empire"
+		culture="Culture.mordor"
 		super_faction="Kingdom.empire_s"
 		is_noble="true"
+		color="FF100E0F"
+		color2="FF641128"
+		default_party_template="PartyTemplate.kingdom_hero_party_mordor_empire_south_10_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.212.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_empire_south_11"
@@ -81,9 +99,12 @@
 		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M11_1"
-		culture="Culture.empire"
+		culture="Culture.mordor"
 		super_faction="Kingdom.empire_s"
 		is_noble="true"
+		color="FF100E0F"
+		color2="FF681126"
+		default_party_template="PartyTemplate.kingdom_hero_party_mordor_empire_south_11_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.212.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_empire_south_12"
@@ -91,9 +112,12 @@
 		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M12_1"
-		culture="Culture.empire"
+		culture="Culture.mordor"
 		super_faction="Kingdom.empire_s"
 		is_noble="true"
+		color="FF100E0F"
+		color2="FF6D1224"
+		default_party_template="PartyTemplate.kingdom_hero_party_mordor_empire_south_12_template"
 		banner_key="11.149.166.1528.1528.764.764.1.0.0.14004.171.171.600.600.764.764.0.0.0" />
   <Faction
 		id="clan_empire_south_13"
@@ -101,9 +125,12 @@
 		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M13_1"
-		culture="Culture.empire"
+		culture="Culture.mordor"
 		super_faction="Kingdom.empire_s"
 		is_noble="true"
+		color="FF121010"
+		color2="FF711322"
+		default_party_template="PartyTemplate.kingdom_hero_party_mordor_empire_south_13_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.212.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_empire_south_14"
@@ -111,9 +138,12 @@
 		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M14_1"
-		culture="Culture.empire"
+		culture="Culture.mordor"
 		super_faction="Kingdom.empire_s"
 		is_noble="true"
+		color="FF151212"
+		color2="FF75141F"
+		default_party_template="PartyTemplate.kingdom_hero_party_mordor_empire_south_14_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.212.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_empire_south_15"
@@ -121,9 +151,12 @@
 		initial_home_settlement="Settlement.town_ES1"
 		tier="1"
 		owner="Hero.lord_M15_1"
-		culture="Culture.empire"
+		culture="Culture.mordor"
 		super_faction="Kingdom.empire_s"
 		is_noble="true"
+		color="FF171515"
+		color2="FF7A141C"
+		default_party_template="PartyTemplate.kingdom_hero_party_mordor_empire_south_15_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19015.212.171.700.700.764.764.0.0.0" />
 
   <!-- ============================================== -->
@@ -140,6 +173,9 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
+		color="FF355227"
+		color2="FFD9BF95"
+		default_party_template="PartyTemplate.kingdom_hero_party_rohan_vlandia_12_template"
 		banner_key="11.159.159.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_13"
@@ -150,6 +186,9 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
+		color="FF355428"
+		color2="FFDAC298"
+		default_party_template="PartyTemplate.kingdom_hero_party_rohan_vlandia_13_template"
 		banner_key="11.273.273.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_14"
@@ -160,6 +199,9 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
+		color="FF355629"
+		color2="FFDBC59A"
+		default_party_template="PartyTemplate.kingdom_hero_party_rohan_vlandia_14_template"
 		banner_key="11.158.158.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_15"
@@ -170,7 +212,10 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-	 banner_key="11.273.273.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
+	 color="FF35592A"
+		color2="FFDCC99D"
+		default_party_template="PartyTemplate.kingdom_hero_party_rohan_vlandia_15_template"
+		banner_key="11.273.273.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_16"
 		name="{=aom_clan_vlandia_16_name}House of Hunthelming"
@@ -180,7 +225,10 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
-	banner_key="11.262.262.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
+	color="FF355B2B"
+		color2="FFDDCC9F"
+		default_party_template="PartyTemplate.kingdom_hero_party_rohan_vlandia_16_template"
+		banner_key="11.262.262.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_17"
 		name="{=aom_clan_vlandia_17_name}House of Bregdaning"
@@ -190,6 +238,9 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
+		color="FF355D2C"
+		color2="FFDECFA2"
+		default_party_template="PartyTemplate.kingdom_hero_party_rohan_vlandia_17_template"
 		banner_key="11.293.293.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_18"
@@ -200,6 +251,9 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
+		color="FF35602D"
+		color2="FFDFD2A4"
+		default_party_template="PartyTemplate.kingdom_hero_party_rohan_vlandia_18_template"
 		banner_key="11.213.213.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_19"
@@ -210,6 +264,9 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
+		color="FF35622E"
+		color2="FFE0D5A7"
+		default_party_template="PartyTemplate.kingdom_hero_party_rohan_vlandia_19_template"
 		banner_key="11.272.272.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_20"
@@ -220,6 +277,9 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
+		color="FF356631"
+		color2="FFE1DAAC"
+		default_party_template="PartyTemplate.kingdom_hero_party_rohan_vlandia_20_template"
 		banner_key="11.263.263.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_21"
@@ -230,6 +290,9 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
+		color="FF346932"
+		color2="FFE2DDAE"
+		default_party_template="PartyTemplate.kingdom_hero_party_rohan_vlandia_21_template"
 		banner_key="11.273.273.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_vlandia_22"
@@ -240,6 +303,9 @@
 		culture="Culture.vlandia"
 		super_faction="Kingdom.vlandia"
 		is_noble="true"
+		color="FF346B33"
+		color2="FFE3DFB1"
+		default_party_template="PartyTemplate.kingdom_hero_party_rohan_vlandia_22_template"
 		banner_key="11.273.273.1528.1528.764.764.1.0.0.21005.2004.171.700.700.764.764.0.0.0" />
   <!-- ============================================== -->
   <!-- HARAD CLANS 10-26: moved to clan_shaghana_1-9  -->
@@ -260,6 +326,9 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
+		color="FFA66028"
+		color2="FF400E17"
+		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_10_template"
 		banner_key="11.211.211.1528.1528.764.764.1.0.0.14003.2000.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_11"
@@ -270,6 +339,9 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
+		color="FFAA6629"
+		color2="FF430F17"
+		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_11_template"
 		banner_key="11.2015.2015.1528.1528.764.764.1.0.0.14003.2000.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_12"
@@ -280,6 +352,9 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
+		color="FFAD6D29"
+		color2="FF471016"
+		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_12_template"
 		banner_key="11.116.116.2000.2000.764.764.1.0.0.17280.15.116.600.600.755.755.1.0.0" />
   <Faction
 		id="clan_khuzait_13"
@@ -290,6 +365,9 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
+		color="FFB0732A"
+		color2="FF4A1015"
+		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_13_template"
 		banner_key="11.2015.2015.1528.1528.764.764.1.0.0.14004.250.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_14"
@@ -300,6 +378,9 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
+		color="FFB37A2B"
+		color2="FF4D1114"
+		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_14_template"
 		banner_key="11.267.267.1528.1528.764.764.1.0.0.14002.2000.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_15"
@@ -310,6 +391,9 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
+		color="FFB6812C"
+		color2="FF501213"
+		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_15_template"
 		banner_key="15.100.116.2000.2000.764.764.1.0.0.510.0.116.20.15000.575.586.1.0.45" />
   <Faction
 		id="clan_khuzait_16"
@@ -320,6 +404,9 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
+		color="FFBA882C"
+		color2="FF541413"
+		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_16_template"
 		banner_key="17.2008.99.2000.2000.764.764.1.0.0.17281.116.116.350.350.750.750.0.0.45" />
   <Faction
 		id="clan_khuzait_17"
@@ -330,6 +417,9 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
+		color="FFBD8F2D"
+		color2="FF571713"
+		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_17_template"
 		banner_key="11.2015.2015.1528.1528.764.764.1.0.0.14012.250.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_18"
@@ -340,6 +430,9 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
+		color="FFC0962E"
+		color2="FF5A1A14"
+		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_18_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.14011.2002.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_19"
@@ -350,6 +443,9 @@
 		culture="Culture.khuzait"
 		super_faction="Kingdom.khuzait"
 		is_noble="true"
+		color="FFC39D2F"
+		color2="FF5D1D15"
+		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_19_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.14012.2002.171.700.700.764.764.0.0.0" />
 
   <!-- ============================================== -->
@@ -367,6 +463,9 @@
 		culture="Culture.erebor"
 		super_faction="Kingdom.erebor"
 		is_noble="true"
+		color="FF153F1C"
+		color2="FF964309"
+		default_party_template="PartyTemplate.kingdom_hero_party_erebor_erebor_1_template"
 		banner_key="11.100.75.4345.4345.764.764.1.0.0.521.172.100.51.51.652.641.0.0.267.521.172.100.45.45.583.712.0.0.267.521.172.100.35.35.602.802.0.0.267.521.172.100.51.51.877.641.0.1.87.521.172.100.45.45.944.712.0.1.87.521.172.100.35.35.925.802.0.1.87.24019.31.240.334.334.764.854.1.0.0.24510.31.240.167.167.764.589.1.0.0" />
 
   <!-- Bit Lóni -->
@@ -379,6 +478,9 @@
 		culture="Culture.erebor"
 		super_faction="Kingdom.erebor"
 		is_noble="true"
+		color="FF184825"
+		color2="FFA2570A"
+		default_party_template="PartyTemplate.kingdom_hero_party_erebor_erebor_2_template"
 		banner_key="11.149.166.1528.1528.764.764.1.0.0.24030.330.172.900.1100.765.1024.1.0.0.515.143.143.50.50.650.745.1.0.0.515.143.143.50.50.878.745.1.0.0.24509.143.172.200.200.765.656.1.0.0" />
 
   <!-- Bit Rár -->
@@ -391,6 +493,9 @@
 		culture="Culture.erebor"
 		super_faction="Kingdom.erebor"
 		is_noble="true"
+		color="FF1B512F"
+		color2="FFAD6E0A"
+		default_party_template="PartyTemplate.kingdom_hero_party_erebor_erebor_3_template"
 		banner_key="11.203.166.1528.1528.764.764.1.0.0.510.143.149.1876.120.748.842.0.0.0.505.149.149.1876.1100.765.1318.0.0.0.24505.31.116.150.150.765.919.1.0.0.24505.31.116.150.150.867.919.1.0.0.24505.31.116.150.150.972.919.1.0.0.24505.31.116.150.150.556.919.1.0.0.24505.31.116.150.150.658.919.1.0.0.24029.2000.172.400.400.765.700.1.0.0" />
 
   <!-- Bit Gror -->
@@ -403,6 +508,9 @@
 		culture="Culture.erebor"
 		super_faction="Kingdom.erebor"
 		is_noble="true"
+		color="FF1E5A3A"
+		color2="FFB8860B"
+		default_party_template="PartyTemplate.kingdom_hero_party_erebor_erebor_4_template"
 		banner_key="11.99.166.1528.1528.764.764.1.0.0.24022.29.193.800.800.782.819.1.0.0.505.97.171.5988.914.717.1314.0.0.0.24505.172.116.150.150.764.1004.1.0.0.24505.172.116.150.150.655.1004.1.0.0.24505.172.116.150.150.877.1004.1.0.0.24509.249.251.250.250.762.554.1.0.0" />
 
   <!-- Bit Górli -->
@@ -415,6 +523,9 @@
 		culture="Culture.erebor"
 		super_faction="Kingdom.erebor"
 		is_noble="true"
+		color="FF216346"
+		color2="FFC3A10C"
+		default_party_template="PartyTemplate.kingdom_hero_party_erebor_erebor_5_template"
 		banner_key="11.100.166.1528.1528.764.764.1.0.0.504.101.171.214.214.501.756.0.0.0.504.101.171.214.214.605.756.0.0.0.504.101.171.214.214.709.756.0.0.0.504.101.171.214.214.813.756.0.0.0.504.101.171.214.214.920.756.0.0.0.504.101.171.214.214.1024.756.0.0.0.504.100.171.178.178.501.762.0.0.0.504.100.171.178.178.605.762.0.0.0.504.100.171.178.178.709.762.0.0.0.504.100.171.178.178.813.762.0.0.0.504.100.171.178.178.919.762.0.0.0.504.100.171.178.178.1024.762.0.0.0.505.109.171.2003.679.791.1105.0.0.0.505.101.171.2003.845.1278.1116.0.0.44.505.101.171.2003.845.249.1116.0.1.313.505.101.171.38.126.727.1050.0.1.44.505.101.171.38.126.781.1050.0.0.314.505.101.171.38.169.783.967.0.1.26.505.101.171.38.169.725.967.0.0.330.504.101.171.38.63.756.891.0.0.0.505.102.171.34.110.729.1044.0.1.44.505.102.171.34.110.777.1044.0.0.314.505.102.171.34.149.779.972.0.1.26.505.102.171.34.149.728.972.0.0.330.504.102.171.34.56.756.905.0.0.0.504.101.171.120.120.500.778.0.0.0.504.101.171.120.120.604.778.0.0.0.504.101.171.120.120.708.778.0.0.0.504.101.171.120.120.812.778.0.0.0.504.101.171.120.120.919.778.0.0.0.504.101.171.120.120.1024.778.0.0.0.504.100.171.86.86.1024.782.0.0.0.504.100.171.86.86.919.782.0.0.0.504.100.171.86.86.812.782.0.0.0.504.100.171.86.86.707.782.0.0.0.504.100.171.86.86.604.782.0.0.0.504.100.171.86.86.500.782.0.0.0.504.101.171.120.120.973.778.0.0.0.504.101.171.120.120.868.778.0.0.0.504.101.171.120.120.762.778.0.0.0.504.101.171.120.120.658.778.0.0.0.504.101.171.120.120.553.778.0.0.0.504.100.171.86.86.552.782.0.0.0.504.100.171.86.86.657.782.0.0.0.504.100.171.86.86.761.782.0.0.0.504.100.171.86.86.867.782.0.0.0.504.100.171.86.86.972.782.0.0.0.504.101.171.28.28.541.772.0.0.0.504.101.171.28.28.563.772.0.0.0.504.101.171.28.28.647.772.0.0.0.504.101.171.28.28.669.772.0.0.0.504.101.171.28.28.751.772.0.0.0.504.101.171.28.28.773.772.0.0.0.504.101.171.28.28.751.772.0.0.0.504.101.171.28.28.773.772.0.0.0.24510.35.101.300.300.755.559.1.0.0" />
 
   <!-- Bit Róri -->
@@ -427,6 +538,9 @@
 		culture="Culture.erebor"
 		super_faction="Kingdom.erebor"
 		is_noble="true"
+		color="FF246C54"
+		color2="FFCEBD0C"
+		default_party_template="PartyTemplate.kingdom_hero_party_erebor_erebor_6_template"
 		banner_key="11.127.166.1528.1528.764.764.1.0.0.500.330.75.691.683.764.794.0.0.0.24024.331.75.400.700.924.872.1.0.0.24024.331.75.400.700.604.872.1.0.0.24025.331.75.600.600.765.946.1.0.0.505.324.116.15.200.668.900.0.0.148.505.324.116.15.200.881.944.0.1.210.505.100.171.2003.845.1287.1116.0.0.44.505.100.171.2003.845.257.1116.0.1.314" />
 
   <!-- Bit Nórin -->
@@ -439,6 +553,9 @@
 		culture="Culture.erebor"
 		super_faction="Kingdom.erebor"
 		is_noble="true"
+		color="FF277563"
+		color2="FFD7DA0D"
+		default_party_template="PartyTemplate.kingdom_hero_party_erebor_erebor_7_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.24016.108.149.525.525.764.757.0.0.0.24016.2000.149.500.500.764.757.0.0.0" />
 
   <!-- ============================================== -->
@@ -456,6 +573,9 @@
 		culture="Culture.rivendell"
 		super_faction="Kingdom.rivendell"
 		is_noble="true"
+		color="FF8A93B0"
+		color2="FF2A2A6E"
+		default_party_template="PartyTemplate.kingdom_hero_party_rivendell_rivendell_1_template"
 		banner_key="11.76.166.1528.1528.764.764.0.0.0.503.101.101.338.338.764.764.0.0.0.503.76.101.265.265.764.764.0.0.0.15009.202.12.435.435.764.764.1.0.0.15008.172.328.583.583.764.764.1.0.0" />
   <!-- Nos Glorfindel -->
   <Faction
@@ -467,6 +587,9 @@
 		culture="Culture.rivendell"
 		super_faction="Kingdom.rivendell"
 		is_noble="true"
+		color="FF9598B7"
+		color2="FF3A2F7B"
+		default_party_template="PartyTemplate.kingdom_hero_party_rivendell_rivendell_2_template"
 		banner_key="11.158.149.1528.1528.764.764.0.0.0.510.7.116.270.35.764.941.0.0.0.510.7.116.270.35.764.587.0.0.0.510.7.116.270.35.941.764.0.0.89.510.7.116.270.35.587.764.0.0.89.504.127.116.130.160.763.648.0.0.180.504.127.116.130.228.763.538.0.0.0.510.126.116.1.1243.763.578.0.0.0.510.126.116.4.705.763.601.0.0.90.504.127.116.130.160.763.879.0.1.0.504.127.116.130.228.763.989.0.1.180.510.126.116.1.1243.763.949.0.1.180.510.126.116.4.705.763.925.0.1.90.504.127.116.130.160.648.763.0.1.-90.504.127.116.130.228.538.763.0.1.90.510.126.116.1.1243.578.763.0.1.90.510.126.116.4.705.602.763.0.1.0.504.127.116.130.160.878.763.0.0.89.504.127.116.130.228.989.763.0.0.269.510.126.116.1.1353.941.763.0.0.270.510.126.116.4.705.925.763.0.0.359.504.127.116.92.114.817.704.0.0.134.504.127.116.92.162.875.649.0.0.314.510.126.116.1.891.854.669.0.0.314.510.126.116.2.506.841.681.0.0.44.504.127.116.92.114.708.704.0.1.225.504.127.116.92.162.652.649.0.1.45.510.126.116.1.891.672.669.0.1.45.510.126.116.2.506.684.681.0.1.315.504.127.116.92.114.708.821.0.0.-45.504.127.116.92.162.652.878.0.0.134.510.126.116.1.891.672.856.0.0.134.510.126.116.2.506.684.845.0.0.-136.504.127.116.92.114.817.821.0.1.45.504.127.116.92.162.875.878.0.1.225.510.126.116.1.891.854.856.0.1.225.510.126.116.2.506.841.845.0.1.135.17104.7.116.600.600.762.762.0.0.0.17371.7.116.800.800.755.755.0.0.0" />
 
   <!-- Patreon supporter clan: Elen-Nolmarë (House of the Star-Loremasters) - donated by Patreon supporter -->
@@ -479,6 +602,9 @@
 		culture="Culture.rivendell"
 		super_faction="Kingdom.rivendell"
 		is_noble="true"
+		color="FFA19FBE"
+		color2="FF4D3488"
+		default_party_template="PartyTemplate.kingdom_hero_party_rivendell_rivendell_3_template"
 		banner_key="11.76.166.1528.1528.764.764.0.0.0.503.101.101.338.338.764.764.0.0.0.503.76.101.265.265.764.764.0.0.0.15009.202.12.435.435.764.764.1.0.0.15008.172.328.583.583.764.764.1.0.0" />
 
   <!-- ============================================== -->
@@ -496,6 +622,9 @@
 		culture="Culture.mirkwood"
 		super_faction="Kingdom.mirkwood"
 		is_noble="true"
+		color="FF193F16"
+		color2="FFB1B963"
+		default_party_template="PartyTemplate.kingdom_hero_party_mirkwood_mirkwood_1_template"
 		banner_key="11.2.166.1528.1528.764.764.1.0.0.505.53.171.484.484.764.764.0.0.45.505.126.171.470.470.764.764.0.0.45.505.53.171.454.454.764.764.0.0.45.17003.164.116.500.500.766.770.1.0.0.17002.96.116.500.500.770.772.1.0.0" />
 
   <!-- Nos Oropher -->
@@ -508,6 +637,9 @@
 		culture="Culture.mirkwood"
 		super_faction="Kingdom.mirkwood"
 		is_noble="true"
+		color="FF1A4A1B"
+		color2="FFADBD6D"
+		default_party_template="PartyTemplate.kingdom_hero_party_mirkwood_mirkwood_2_template"
 		banner_key="11.2.166.1528.1528.764.764.1.0.0.505.53.171.484.484.764.764.0.0.45.505.126.171.470.470.764.764.0.0.45.505.53.171.454.454.764.764.0.0.45.17003.164.116.500.500.766.770.1.0.0.17002.96.116.500.500.770.772.1.0.0" />
 
   <!-- Nos Taurion -->
@@ -520,6 +652,9 @@
 		culture="Culture.mirkwood"
 		super_faction="Kingdom.mirkwood"
 		is_noble="true"
+		color="FF1D5526"
+		color2="FFA9C277"
+		default_party_template="PartyTemplate.kingdom_hero_party_mirkwood_mirkwood_3_template"
 		banner_key="11.152.166.1528.1528.764.764.1.0.0.505.100.171.484.484.764.764.0.0.44.17005.31.116.450.450.764.764.1.0.0.17004.262.116.450.450.764.764.1.0.0.515.262.116.92.92.765.551.0.0.0.515.31.116.80.80.765.551.0.0.0.515.262.116.102.102.765.551.0.0.44.515.31.116.80.80.765.551.0.0.44.515.262.116.92.92.765.979.0.0.0.515.31.116.80.80.765.979.0.0.0.515.262.116.102.102.765.979.0.0.44.515.31.116.80.80.765.979.0.0.44.515.262.116.92.92.550.765.0.0.0.515.31.116.80.80.550.765.0.0.0.515.262.116.102.102.550.765.0.0.44.515.31.116.80.80.550.765.0.0.44.515.262.116.92.92.980.765.0.0.0.515.31.116.80.80.980.765.0.0.0.515.262.116.102.102.980.765.0.0.44.515.31.116.80.80.980.765.0.0.44" />
 
   <!-- Nos Galengrim -->
@@ -532,6 +667,9 @@
 		culture="Culture.mirkwood"
 		super_faction="Kingdom.mirkwood"
 		is_noble="true"
+		color="FF215F32"
+		color2="FFA7C681"
+		default_party_template="PartyTemplate.kingdom_hero_party_mirkwood_mirkwood_4_template"
 		banner_key="11.139.166.1528.1528.764.764.1.0.0.505.44.171.499.499.764.764.0.0.43.505.138.171.476.476.764.764.0.0.43.503.44.116.375.375.765.763.0.0.0.503.44.116.38.53.764.608.0.0.0.503.44.116.38.53.764.920.0.0.0.503.44.116.38.53.920.764.0.0.89.503.44.116.38.53.608.764.0.0.89.503.44.116.38.53.654.655.0.0.44.503.44.116.75.75.765.761.0.0.0.503.44.116.38.53.873.655.0.1.314.503.44.116.38.53.873.873.0.0.-134.503.44.116.38.53.655.873.0.1.134.503.44.116.38.53.707.905.0.1.153.503.44.116.38.53.821.905.0.0.203.503.44.116.38.53.707.623.0.0.24.503.44.116.38.53.821.623.0.1.-25.503.44.116.38.53.906.707.0.0.-65.503.44.116.38.53.904.821.0.1.-116.503.44.116.38.53.621.707.0.1.64.503.44.116.38.53.623.821.0.0.115.17006.293.116.400.400.765.765.1.0.0.17007.297.116.375.375.772.765.1.0.0.17008.293.116.150.150.765.760.0.0.0" />
 
   <!-- Nos Alenwé -->
@@ -544,6 +682,9 @@
 		culture="Culture.mirkwood"
 		super_faction="Kingdom.mirkwood"
 		is_noble="true"
+		color="FF246A40"
+		color2="FFA6CB8B"
+		default_party_template="PartyTemplate.kingdom_hero_party_mirkwood_mirkwood_5_template"
 		banner_key="11.158.75.4345.4345.764.764.1.0.0.505.274.100.471.471.764.764.0.0.45.505.126.100.460.460.764.764.0.0.45.17299.128.116.75.75.764.1002.0.0.0.17299.128.116.75.75.764.526.0.0.0.17299.128.116.75.75.1002.764.0.0.0.17299.128.116.75.75.526.764.0.0.0.17358.31.165.500.500.763.763.1.0.0" />
 
   <!-- Nos Iminyé -->
@@ -556,6 +697,9 @@
 		culture="Culture.mirkwood"
 		super_faction="Kingdom.mirkwood"
 		is_noble="true"
+		color="FF287550"
+		color2="FFA7CF95"
+		default_party_template="PartyTemplate.kingdom_hero_party_mirkwood_mirkwood_6_template"
 		banner_key="11.158.75.4345.4345.764.764.1.0.0.505.274.100.471.471.764.764.0.0.45.505.126.100.460.460.764.764.0.0.45.17299.128.116.75.75.764.1002.0.0.0.17299.128.116.75.75.764.526.0.0.0.17299.128.116.75.75.1002.764.0.0.0.17299.128.116.75.75.526.764.0.0.0.17358.31.165.500.500.763.763.1.0.0" />
 
   <!-- ============================================== -->
@@ -573,6 +717,9 @@
 		culture="Culture.lothlorien"
 		super_faction="Kingdom.lothlorien"
 		is_noble="true"
+		color="FF184031"
+		color2="FFC0E3B5"
+		default_party_template="PartyTemplate.kingdom_hero_party_lothlorien_lothlorien_1_template"
 		banner_key="11.172.166.1528.1528.764.764.0.0.0.509.165.165.200.200.765.765.0.0.0.16008.228.165.650.650.765.765.1.0.0.16009.228.238.350.350.765.765.1.0.0" />
   <!-- ============================================== -->
   <!-- ISENGARD CLANS (isengard culture)              -->
@@ -589,6 +736,9 @@
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
 		is_noble="true"
+		color="FF1A1A1A"
+		color2="FFC6C6C6"
+		default_party_template="PartyTemplate.kingdom_hero_party_isengard_isengard_1_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.23000.224.171.605.605.764.764.0.0.0" />
 
   <!-- The Red Echelon -->
@@ -601,6 +751,9 @@
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
 		is_noble="true"
+		color="FF252525"
+		color2="FFD1D1D1"
+		default_party_template="PartyTemplate.kingdom_hero_party_isengard_isengard_2_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.23000.224.171.605.605.764.764.0.0.0" />
 
   <!-- The Black Echelon -->
@@ -613,6 +766,9 @@
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
 		is_noble="true"
+		color="FF282828"
+		color2="FFD4D4D4"
+		default_party_template="PartyTemplate.kingdom_hero_party_isengard_isengard_3_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.23001.224.171.605.605.764.764.0.0.0" />
 
   <!-- The Black Maw -->
@@ -625,6 +781,9 @@
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
 		is_noble="true"
+		color="FF2C2C2C"
+		color2="FFD8D8D8"
+		default_party_template="PartyTemplate.kingdom_hero_party_isengard_isengard_4_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.23000.224.171.605.605.764.764.0.0.0" />
 
   <!-- The Iron Fist -->
@@ -637,6 +796,9 @@
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
 		is_noble="true"
+		color="FF303030"
+		color2="FFDCDCDC"
+		default_party_template="PartyTemplate.kingdom_hero_party_isengard_isengard_5_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.23002.224.171.605.605.764.764.0.0.0" />
 
   <!-- The Blood Guard -->
@@ -649,6 +811,9 @@
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
 		is_noble="true"
+		color="FF333333"
+		color2="FFDFDFDF"
+		default_party_template="PartyTemplate.kingdom_hero_party_isengard_isengard_6_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.23000.224.171.605.605.764.764.0.0.0" />
 
   <!-- The Shadow Reavers -->
@@ -661,6 +826,9 @@
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
 		is_noble="true"
+		color="FF373737"
+		color2="FFE3E3E3"
+		default_party_template="PartyTemplate.kingdom_hero_party_isengard_isengard_7_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.23000.224.171.605.605.764.764.0.0.0" />
 
   <!-- The Skull Crushers -->
@@ -673,6 +841,9 @@
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
 		is_noble="true"
+		color="FF3A3A3A"
+		color2="FFE6E6E6"
+		default_party_template="PartyTemplate.kingdom_hero_party_isengard_isengard_8_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.23000.224.171.605.605.764.764.0.0.0" />
 
   <!-- The War Hounds -->
@@ -685,6 +856,9 @@
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
 		is_noble="true"
+		color="FF3E3E3E"
+		color2="FFEAEAEA"
+		default_party_template="PartyTemplate.kingdom_hero_party_isengard_isengard_9_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.23000.224.171.605.605.764.764.0.0.0" />
 
   <!-- The Ash Guard -->
@@ -697,6 +871,9 @@
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
 		is_noble="true"
+		color="FF1E1E1E"
+		color2="FFCACACA"
+		default_party_template="PartyTemplate.kingdom_hero_party_isengard_isengard_10_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.23000.224.171.605.605.764.764.0.0.0" />
 
   <!-- The Stone Breakers -->
@@ -709,6 +886,9 @@
 		culture="Culture.isengard"
 		super_faction="Kingdom.isengard"
 		is_noble="true"
+		color="FF212121"
+		color2="FFCDCDCD"
+		default_party_template="PartyTemplate.kingdom_hero_party_isengard_isengard_11_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.23000.224.171.605.605.764.764.0.0.0" />
 
   <!-- ============================================== -->
@@ -726,6 +906,9 @@
 		culture="Culture.gundabad"
 		super_faction="Kingdom.gundabad"
 		is_noble="true"
+		color="FF1A1716"
+		color2="FF573D33"
+		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_gundabad_1_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
 
   <!-- Gundruk -->
@@ -738,6 +921,9 @@
 		culture="Culture.gundabad"
 		super_faction="Kingdom.gundabad"
 		is_noble="true"
+		color="FF24201E"
+		color2="FF634B39"
+		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_gundabad_2_template"
 		banner_key="11.149.166.1528.1528.764.764.1.0.0.22003.2002.171.483.483.764.764.0.0.0" />
 
   <!-- Zarbag -->
@@ -750,6 +936,9 @@
 		culture="Culture.gundabad"
 		super_faction="Kingdom.gundabad"
 		is_noble="true"
+		color="FF2E2A26"
+		color2="FF6E5A40"
+		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_gundabad_3_template"
 		banner_key="11.331.331.1528.1528.764.764.1.0.0.22002.213.171.700.700.764.764.0.0.0" />
 
   <!-- Morzûg -->
@@ -762,6 +951,9 @@
 		culture="Culture.gundabad"
 		super_faction="Kingdom.gundabad"
 		is_noble="true"
+		color="FF38342E"
+		color2="FF796B47"
+		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_gundabad_4_template"
 		banner_key="11.331.331.1528.1528.764.764.1.0.0.19003.167.171.700.700.764.764.0.0.0" />
 
   <!-- Krûgash -->
@@ -774,6 +966,9 @@
 		culture="Culture.gundabad"
 		super_faction="Kingdom.gundabad"
 		is_noble="true"
+		color="FF423F36"
+		color2="FF857D4D"
+		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_gundabad_5_template"
 		banner_key="11.331.331.1528.1528.764.764.1.0.0.19002.2004.171.700.700.764.764.0.0.0" />
 
   <!-- ============================================== -->
@@ -791,6 +986,9 @@
 		culture="Culture.umbar"
 		super_faction="Kingdom.umbar"
 		is_noble="true"
+		color="FF1A1614"
+		color2="FF9D5C42"
+		default_party_template="PartyTemplate.kingdom_hero_party_umbar_umbar_1_template"
 		banner_key="11.149.166.1528.1528.764.764.1.0.0.505.266.171.483.483.764.764.0.0.44.505.142.171.451.451.764.764.0.0.43.505.266.171.483.483.764.764.0.0.0.505.2014.171.451.451.764.764.0.0.0.503.266.171.40.40.764.532.0.0.0.503.266.171.40.40.764.995.0.0.0.503.266.171.40.40.995.764.0.0.0.503.266.171.40.40.533.764.0.0.0.12000.266.116.200.200.768.774.1.0.0.502.266.116.350.350.765.765.1.0.45.502.266.116.350.350.765.765.1.0.0" />
   <Faction
 		id="clan_umbar_2"
@@ -801,6 +999,9 @@
 		culture="Culture.umbar"
 		super_faction="Kingdom.umbar"
 		is_noble="true"
+		color="FF221E1B"
+		color2="FFA86D46"
+		default_party_template="PartyTemplate.kingdom_hero_party_umbar_umbar_2_template"
 		banner_key="11.17.166.1528.1528.764.764.1.0.0.12004.2014.171.600.600.764.761.0.0.0" />
   <Faction
 		id="clan_umbar_3"
@@ -810,6 +1011,9 @@
 		culture="Culture.umbar"
 		super_faction="Kingdom.umbar"
 		is_noble="true"
+		color="FF2A2621"
+		color2="FFB2804A"
+		default_party_template="PartyTemplate.kingdom_hero_party_umbar_umbar_3_template"
 		banner_key="11.75.166.1528.1528.764.764.1.0.0.12006.203.171.600.600.764.761.0.0.0" />
   <Faction
 		id="clan_umbar_4"
@@ -820,6 +1024,9 @@
 		culture="Culture.umbar"
 		super_faction="Kingdom.umbar"
 		is_noble="true"
+		color="FF322E27"
+		color2="FFB79353"
+		default_party_template="PartyTemplate.kingdom_hero_party_umbar_umbar_4_template"
 		banner_key="11.2014.166.1528.1528.764.764.1.0.0.12001.172.171.700.700.754.700.0.0.0" />
   <Faction
 		id="clan_umbar_5"
@@ -830,6 +1037,9 @@
 		culture="Culture.umbar"
 		super_faction="Kingdom.umbar"
 		is_noble="true"
+		color="FF3A372D"
+		color2="FFBBA55D"
+		default_party_template="PartyTemplate.kingdom_hero_party_umbar_umbar_5_template"
 		banner_key="11.39.166.1528.1528.764.764.1.0.0.12002.2000.171.700.700.754.746.0.0.0" />
   <Faction
 		id="clan_umbar_6"
@@ -840,6 +1050,9 @@
 		culture="Culture.umbar"
 		super_faction="Kingdom.umbar"
 		is_noble="true"
+		color="FF424134"
+		color2="FFC0B567"
+		default_party_template="PartyTemplate.kingdom_hero_party_umbar_umbar_6_template"
 		banner_key="11.240.166.1528.1528.764.764.1.0.0.12003.172.171.700.711.754.767.0.0.0" />
 
   <!-- ============================================== -->
@@ -857,6 +1070,9 @@
 		culture="Culture.shaghana"
 		super_faction="Kingdom.shaghana"
 		is_noble="true"
+		color="FF82221A"
+		color2="FF3E1310"
+		default_party_template="PartyTemplate.kingdom_hero_party_shaghana_shaghana_1_template"
 		banner_key="11.91.176.1528.1528.764.764.1.0.0.503.122.171.47.47.765.506.0.0.0.503.122.171.47.47.806.507.0.0.0.503.122.171.47.47.846.517.0.0.0.503.122.171.47.47.882.535.0.0.0.503.122.171.47.47.916.558.0.0.0.503.122.171.47.47.947.583.0.0.0.503.122.171.47.47.975.613.0.0.0.503.122.171.47.47.997.648.0.0.0.503.122.271.547.547.764.764.0.1.179.503.149.271.532.532.764.764.0.1.179.503.122.171.47.47.1024.765.0.0.0.503.122.171.47.47.1021.725.0.0.0.503.122.171.47.47.1013.685.0.0.0.503.122.171.47.47.764.506.0.1.0.503.122.171.47.47.723.507.0.1.0.503.122.171.47.47.683.517.0.1.0.503.122.171.47.47.647.536.0.1.0.503.122.171.47.47.613.558.0.1.0.503.122.171.47.47.582.583.0.1.0.503.122.171.47.47.554.613.0.1.0.503.122.171.47.47.532.648.0.1.0.503.122.171.47.47.505.764.0.1.0.503.122.171.47.47.508.725.0.1.0.503.122.171.47.47.516.685.0.1.0.503.122.171.47.47.764.1023.0.0.174.503.122.171.47.47.723.1022.0.0.174.503.122.171.47.47.683.1012.0.0.174.503.122.171.47.47.647.993.0.0.174.503.122.171.47.47.613.971.0.0.174.503.122.171.47.47.582.946.0.0.174.503.122.171.47.47.554.916.0.0.174.503.122.171.47.47.532.881.0.0.174.503.122.171.47.47.505.764.0.0.174.503.122.171.47.47.508.804.0.0.174.503.122.171.47.47.516.844.0.0.174.503.122.171.47.47.764.1023.0.1.174.503.122.171.47.47.804.1022.0.1.174.503.122.171.47.47.844.1012.0.1.174.503.122.171.47.47.880.993.0.1.174.503.122.171.47.47.914.971.0.1.174.503.122.171.47.47.946.946.0.1.174.503.122.171.47.47.973.916.0.1.174.503.122.171.47.47.995.881.0.1.174.503.122.171.47.47.1022.765.0.1.174.503.122.171.47.47.1019.804.0.1.174.503.122.171.47.47.1011.844.0.1.0.13003.198.116.552.552.766.778.0.1.9.13003.172.271.552.552.766.778.0.1.20.503.149.116.150.150.767.767.0.0.0" />
   <Faction
 		id="clan_shaghana_2"
@@ -867,6 +1083,9 @@
 		culture="Culture.shaghana"
 		super_faction="Kingdom.shaghana"
 		is_noble="true"
+		color="FF8A2C1C"
+		color2="FF451912"
+		default_party_template="PartyTemplate.kingdom_hero_party_shaghana_shaghana_2_template"
 		banner_key="11.142.166.1528.1528.764.764.1.0.0.503.45.171.616.616.764.764.0.1.180.503.98.171.602.602.764.764.0.1.180.503.45.171.495.495.764.764.0.1.180.503.98.171.466.466.764.764.0.1.180.504.149.171.65.65.633.645.0.0.-130.504.149.171.65.65.764.581.0.0.-181.504.149.171.65.65.764.947.0.1.0.504.149.171.65.65.947.764.0.1.90.504.149.171.65.65.581.764.0.1.270.504.149.171.65.65.894.644.0.1.129.504.149.171.65.65.631.885.0.1.311.504.149.171.65.65.895.888.0.0.45.503.45.171.242.242.764.764.0.1.180.503.98.171.223.223.764.764.0.1.180.510.45.171.25.67.764.548.0.1.90.510.45.171.25.67.979.764.0.1.0.510.45.171.25.67.790.549.0.1.83.510.45.171.25.67.817.553.0.1.75.510.45.171.25.67.842.562.0.1.69.510.45.171.25.67.866.574.0.1.60.510.45.171.25.67.887.587.0.1.55.510.45.171.25.67.908.604.0.1.45.510.45.171.25.67.927.623.0.1.39.510.45.171.25.67.943.644.0.1.31.510.45.171.25.67.956.669.0.1.24.510.45.171.25.67.977.738.0.1.9.510.45.171.25.67.973.714.0.1.13.510.45.171.25.67.967.692.0.1.15.503.45.171.20.20.981.688.0.1.15.503.45.171.20.20.986.710.0.1.15.503.45.171.20.20.991.735.0.1.15.503.45.171.20.20.993.763.0.1.15.503.45.171.20.20.971.663.0.1.15.503.45.171.20.20.955.636.0.1.15.503.45.171.20.20.939.613.0.1.15.503.45.171.20.20.920.593.0.1.15.503.45.171.20.20.897.574.0.1.15.503.45.171.20.20.874.560.0.1.15.503.45.171.20.20.848.547.0.1.15.503.45.171.20.20.821.538.0.1.15.503.45.171.20.20.792.534.0.1.15.503.45.171.20.20.764.533.0.1.15.510.45.171.25.67.764.548.0.0.270.510.45.171.25.67.549.764.0.0.0.510.45.171.25.67.738.549.0.0.276.510.45.171.25.67.711.553.0.0.284.510.45.171.25.67.686.562.0.0.290.510.45.171.25.67.662.574.0.0.299.510.45.171.25.67.641.587.0.0.304.510.45.171.25.67.620.604.0.0.314.510.45.171.25.67.601.623.0.0.320.510.45.171.25.67.585.644.0.0.328.510.45.171.25.67.572.669.0.0.335.510.45.171.25.67.551.738.0.0.350.510.45.171.25.67.555.714.0.0.346.510.45.171.25.67.561.692.0.0.344.503.45.171.20.20.547.688.0.0.344.503.45.171.20.20.542.710.0.0.344.503.45.171.20.20.537.735.0.0.344.503.45.171.20.20.535.763.0.0.344.503.45.171.20.20.557.663.0.0.344.503.45.171.20.20.573.636.0.0.344.503.45.171.20.20.589.613.0.0.344.503.45.171.20.20.608.593.0.0.344.503.45.171.20.20.631.574.0.0.344.503.45.171.20.20.654.560.0.0.344.503.45.171.20.20.680.547.0.0.344.503.45.171.20.20.707.538.0.0.344.503.45.171.20.20.736.534.0.0.344.503.45.171.20.20.764.533.0.0.344.510.45.171.25.67.764.979.0.1.-90.510.45.171.25.67.549.764.0.1.180.510.45.171.25.67.738.978.0.1.-97.510.45.171.25.67.711.974.0.1.-105.510.45.171.25.67.686.965.0.1.-111.510.45.171.25.67.662.953.0.1.-120.510.45.171.25.67.641.940.0.1.-125.510.45.171.25.67.620.923.0.1.-135.510.45.171.25.67.601.904.0.1.-141.510.45.171.25.67.585.883.0.1.-149.510.45.171.25.67.572.858.0.1.-156.510.45.171.25.67.551.789.0.1.-171.510.45.171.25.67.555.813.0.1.-167.510.45.171.25.67.561.835.0.1.-165.503.45.171.20.20.547.839.0.1.-165.503.45.171.20.20.542.817.0.1.-165.503.45.171.20.20.537.792.0.1.-165.503.45.171.20.20.535.764.0.1.-165.503.45.171.20.20.557.864.0.1.-165.503.45.171.20.20.573.891.0.1.-165.503.45.171.20.20.589.914.0.1.-165.503.45.171.20.20.608.934.0.1.-165.503.45.171.20.20.631.953.0.1.-165.503.45.171.20.20.654.967.0.1.-165.503.45.171.20.20.680.980.0.1.-165.503.45.171.20.20.707.989.0.1.-165.503.45.171.20.20.736.993.0.1.-165.503.45.171.20.20.764.994.0.1.-165.510.45.171.25.67.764.979.0.0.90.510.45.171.25.67.979.764.0.0.180.510.45.171.25.67.790.978.0.0.96.510.45.171.25.67.817.974.0.0.104.510.45.171.25.67.842.965.0.0.110.510.45.171.25.67.866.953.0.0.119.510.45.171.25.67.887.940.0.0.124.510.45.171.25.67.908.923.0.0.134.510.45.171.25.67.927.904.0.0.140.510.45.171.25.67.943.883.0.0.148.510.45.171.25.67.956.858.0.0.155.510.45.171.25.67.977.789.0.0.170.510.45.171.25.67.973.813.0.0.166.510.45.171.25.67.967.835.0.0.164.503.45.171.20.20.981.839.0.0.164.503.45.171.20.20.986.817.0.0.164.503.45.171.20.20.991.792.0.0.164.503.45.171.20.20.993.764.0.0.164.503.45.171.20.20.971.864.0.0.164.503.45.171.20.20.955.891.0.0.164.503.45.171.20.20.939.914.0.0.164.503.45.171.20.20.920.934.0.0.164.503.45.171.20.20.897.953.0.0.164.503.45.171.20.20.874.967.0.0.164.503.45.171.20.20.848.980.0.0.164.503.45.171.20.20.821.989.0.0.164.503.45.171.20.20.792.993.0.0.164.503.45.171.20.20.764.994.0.0.164.510.149.171.130.150.764.613.0.0.90.510.149.171.130.150.764.913.0.0.90.510.149.171.130.150.917.764.0.0.0.510.149.171.130.150.612.764.0.0.0.510.149.171.130.150.876.662.0.0.43.510.149.171.130.150.652.665.0.1.316.510.149.171.130.150.874.866.0.1.136.510.149.171.130.150.653.865.0.0.-137.500.45.171.486.486.764.764.0.0.0.500.45.171.234.234.764.764.0.0.0.222.44.171.191.191.764.764.0.0.21.222.3.171.191.191.764.764.0.0.0" />
   <Faction
 		id="clan_shaghana_3"
@@ -877,6 +1096,9 @@
 		culture="Culture.shaghana"
 		super_faction="Kingdom.shaghana"
 		is_noble="true"
+		color="FF91371D"
+		color2="FF4C2014"
+		default_party_template="PartyTemplate.kingdom_hero_party_shaghana_shaghana_3_template"
 		banner_key="11.146.166.1528.1528.764.764.1.0.0.503.143.171.316.316.763.615.0.0.0.503.148.171.314.314.763.619.0.0.0.505.146.171.1074.314.763.701.0.0.180.504.131.171.446.177.690.766.0.1.270.504.77.171.409.162.690.766.0.1.270.504.131.171.459.182.834.759.0.0.90.504.77.171.421.167.834.759.0.0.90.504.143.171.284.744.761.780.0.0.180.504.148.171.278.728.761.773.0.0.180.504.143.171.42.131.764.440.0.0.0.504.143.171.36.128.821.449.0.0.-18.504.143.171.34.120.868.475.0.0.-33.504.143.171.29.108.901.514.0.0.-50.504.143.171.36.128.707.449.0.1.17.504.143.171.34.120.660.475.0.1.32.504.143.171.29.108.627.514.0.1.48.505.148.171.270.13.765.565.0.0.180.505.143.171.33.1475.993.767.0.0.180.505.148.171.130.1475.1039.744.0.0.180.505.142.171.474.1475.1270.744.0.0.180.505.143.171.33.1475.534.767.0.1.180.505.148.171.130.1475.489.744.0.1.180.505.142.171.474.1475.258.744.0.1.180.222.131.171.50.50.504.462.0.1.180.222.131.171.50.50.504.1065.0.1.180.222.131.171.50.50.504.617.0.1.180.222.131.171.50.50.504.764.0.1.180.222.131.171.50.50.505.911.0.1.180.222.131.171.50.50.1024.462.0.1.180.222.131.171.50.50.1024.1065.0.1.180.222.131.171.50.50.1024.617.0.1.180.222.131.171.50.50.1024.764.0.1.180.222.131.171.50.50.1025.911.0.1.180.427.131.171.132.132.764.604.0.1.0.515.131.171.97.97.764.546.0.1.0.515.131.171.97.97.764.546.0.1.45.500.91.171.44.44.764.545.0.1.45.10505.88.116.250.250.762.756.1.0.0" />
   <Faction
 		id="clan_shaghana_4"
@@ -887,6 +1109,9 @@
 		culture="Culture.shaghana"
 		super_faction="Kingdom.shaghana"
 		is_noble="true"
+		color="FF99431F"
+		color2="FF532816"
+		default_party_template="PartyTemplate.kingdom_hero_party_shaghana_shaghana_4_template"
 		banner_key="11.331.166.1528.1528.764.764.1.0.0.503.143.171.616.616.764.764.0.1.179.503.116.171.606.606.764.764.0.1.179.503.143.171.331.331.764.764.0.1.179.503.122.171.320.320.764.764.0.1.179.503.143.171.309.309.764.764.0.1.179.503.122.171.300.300.764.764.0.1.179.503.143.171.290.290.764.764.0.1.179.503.98.171.281.281.764.764.0.1.179.428.3.171.200.200.764.764.0.1.0.427.143.171.90.80.764.573.0.1.0.427.3.171.58.58.764.551.0.1.0.427.143.171.90.80.764.954.0.0.179.427.3.171.58.58.764.976.0.0.179.427.143.171.90.80.954.764.0.0.269.427.3.171.58.58.976.764.0.0.269.427.143.171.90.80.573.764.0.1.88.427.3.171.58.58.551.764.0.1.88.427.143.171.90.80.897.630.0.0.314.427.3.171.58.58.912.615.0.0.314.427.143.171.90.80.631.629.0.1.43.427.3.171.58.58.616.614.0.1.43.427.143.171.90.80.897.897.0.1.-135.427.3.171.58.58.912.912.0.1.-135.427.143.171.90.80.631.898.0.0.134.427.3.171.58.58.616.913.0.0.134" />
   <Faction
 		id="clan_shaghana_5"
@@ -897,6 +1122,9 @@
 		culture="Culture.shaghana"
 		super_faction="Kingdom.shaghana"
 		is_noble="true"
+		color="FFA05020"
+		color2="FF5A3018"
+		default_party_template="PartyTemplate.kingdom_hero_party_shaghana_shaghana_5_template"
 		banner_key="11.142.166.1528.1528.764.764.1.0.0.503.143.171.679.679.764.764.0.0.43.503.2000.171.656.656.764.764.0.0.43.503.143.171.584.584.764.764.0.0.43.503.2000.171.564.564.764.764.0.0.43.427.143.171.75.75.641.651.0.1.44.439.143.171.55.125.504.764.0.1.0.439.143.171.55.125.520.673.0.1.-17.439.143.171.55.125.568.590.0.1.-34.439.143.171.55.125.639.534.0.1.-56.439.143.171.55.125.726.503.0.1.-78.439.143.171.55.125.815.505.0.1.-99.439.143.171.55.125.898.535.0.1.-113.439.143.171.55.125.963.592.0.1.-137.439.143.171.55.125.1008.670.0.1.-157.439.143.171.55.125.1027.761.0.1.-177.439.143.171.55.125.1013.851.0.1.-194.439.143.171.55.125.970.931.0.1.-213.439.143.171.55.125.903.986.0.1.-234.439.143.171.55.125.818.1019.0.1.-254.439.143.171.55.125.726.1022.0.1.-275.439.143.171.55.125.639.992.0.1.-298.439.143.171.55.125.567.935.0.1.-320.439.143.171.55.125.520.853.0.1.-336.503.143.171.273.273.764.764.0.0.43.503.116.171.263.263.764.764.0.0.43.503.143.171.221.221.764.764.0.0.43.503.142.171.211.211.764.764.0.0.43.439.143.171.21.49.661.764.0.1.0.439.143.171.21.49.667.729.0.1.-17.439.143.171.21.49.686.696.0.1.-34.439.143.171.21.49.714.674.0.1.-56.439.143.171.21.49.748.662.0.1.-78.439.143.171.21.49.783.663.0.1.-99.439.143.171.21.49.816.674.0.1.-113.439.143.171.21.49.841.697.0.1.-137.439.143.171.21.49.859.727.0.1.-157.439.143.171.21.49.866.763.0.1.-177.439.143.171.21.49.861.798.0.1.-194.439.143.171.21.49.844.830.0.1.-213.439.143.171.21.49.818.851.0.1.-234.439.143.171.21.49.784.864.0.1.-254.439.143.171.21.49.748.866.0.1.-275.439.143.171.21.49.714.854.0.1.-298.439.143.171.21.49.686.831.0.1.-320.439.143.171.21.49.667.799.0.1.-336.427.143.171.75.75.886.651.0.0.314.427.143.171.75.75.886.877.0.1.-134.427.143.171.75.75.642.877.0.0.134.515.143.171.75.75.765.594.0.0.134.515.143.171.75.75.765.594.0.0.0.515.149.171.58.58.764.595.0.0.134.515.149.171.58.58.765.594.0.0.0.515.143.171.75.75.765.934.0.0.134.515.143.171.75.75.765.934.0.0.0.515.149.171.58.58.764.935.0.0.134.515.149.171.58.58.765.934.0.0.0.515.143.171.75.75.935.764.0.0.134.515.143.171.75.75.935.764.0.0.0.515.149.171.58.58.934.765.0.0.134.515.149.171.58.58.935.764.0.0.0.515.143.171.75.75.594.764.0.0.134.515.143.171.75.75.594.764.0.0.0.515.149.171.58.58.593.765.0.0.134.515.149.171.58.58.594.764.0.0.0.19006.143.116.175.175.765.765.1.0.0" />
   <Faction
 		id="clan_shaghana_6"
@@ -907,6 +1135,9 @@
 		culture="Culture.shaghana"
 		super_faction="Kingdom.shaghana"
 		is_noble="true"
+		color="FFA75E21"
+		color2="FF61391A"
+		default_party_template="PartyTemplate.kingdom_hero_party_shaghana_shaghana_6_template"
 		banner_key="11.148.166.1528.1528.764.764.1.0.0.503.143.171.679.679.764.764.0.0.42.503.149.171.662.662.764.764.0.0.42.503.143.171.591.591.764.764.0.0.42.503.149.171.573.573.764.764.0.0.42.503.143.171.20.20.1030.764.0.0.42.503.143.171.20.20.1025.704.0.0.42.503.143.171.20.20.1007.651.0.0.42.503.143.171.20.20.978.605.0.0.42.503.143.171.20.20.764.498.0.0.42.503.143.171.20.20.823.505.0.0.42.503.143.171.20.20.881.525.0.0.42.503.143.171.20.20.932.556.0.0.42.503.143.171.20.20.823.1023.0.0.42.503.143.171.20.20.932.972.0.0.42.503.143.171.20.20.764.1030.0.0.42.503.143.171.20.20.881.1003.0.0.42.503.143.171.20.20.978.923.0.0.42.503.143.171.20.20.1007.877.0.0.42.503.143.171.20.20.1025.824.0.0.42.503.143.171.20.20.499.764.0.1.312.503.143.171.20.20.504.704.0.1.312.503.143.171.20.20.522.651.0.1.312.503.143.171.20.20.551.605.0.1.312.503.143.171.20.20.765.498.0.1.312.503.143.171.20.20.706.505.0.1.312.503.143.171.20.20.648.525.0.1.312.503.143.171.20.20.597.556.0.1.312.503.143.171.20.20.706.1023.0.1.312.503.143.171.20.20.597.972.0.1.312.503.143.171.20.20.765.1030.0.1.312.503.143.171.20.20.648.1003.0.1.312.503.143.171.20.20.551.923.0.1.312.503.143.171.20.20.522.877.0.1.312.503.143.171.20.20.504.824.0.1.312.428.143.171.97.86.904.630.0.0.-42.428.143.171.97.86.624.630.0.1.42.428.143.171.97.86.624.898.0.0.134.428.143.171.97.86.904.898.0.1.221.503.143.171.269.269.764.764.0.0.42.503.142.171.258.258.764.764.0.0.42.503.143.171.217.217.764.764.0.0.42.503.142.171.205.205.764.764.0.0.42.512.143.171.30.30.764.663.0.0.0.512.143.171.30.30.764.865.0.0.0.512.143.171.30.30.663.764.0.0.87.512.143.171.30.30.665.744.0.0.74.512.143.171.30.30.671.725.0.0.56.512.143.171.30.30.680.709.0.0.48.512.143.171.30.30.691.693.0.0.39.512.143.171.30.30.705.681.0.0.27.512.143.171.30.30.722.672.0.0.15.512.143.171.30.30.742.666.0.0.4.512.143.171.30.30.742.862.0.1.169.512.143.171.30.30.722.856.0.1.157.512.143.171.30.30.705.847.0.1.145.512.143.171.30.30.691.835.0.1.134.512.143.171.30.30.680.819.0.1.121.512.143.171.30.30.671.803.0.1.115.512.143.171.30.30.665.784.0.1.99.512.143.171.30.30.765.663.0.1.0.512.143.171.30.30.765.865.0.1.0.512.143.171.30.30.866.764.0.1.267.512.143.171.30.30.864.744.0.1.277.512.143.171.30.30.858.725.0.1.295.512.143.171.30.30.849.709.0.1.301.512.143.171.30.30.838.693.0.1.314.512.143.171.30.30.824.681.0.1.326.512.143.171.30.30.807.672.0.1.337.512.143.171.30.30.787.666.0.1.349.512.143.171.30.30.787.862.0.0.182.512.143.171.30.30.807.856.0.0.194.512.143.171.30.30.824.847.0.0.206.512.143.171.30.30.838.835.0.0.218.512.143.171.30.30.849.819.0.0.230.512.143.171.30.30.858.803.0.0.238.512.143.171.30.30.864.784.0.0.254.13002.143.116.100.100.764.589.1.0.0.13002.143.116.100.100.764.939.1.1.179.13002.143.116.100.100.939.764.1.0.268.13002.143.116.100.100.589.764.1.1.89.13003.172.116.200.200.764.768.1.0.0" />
   <Faction
 		id="clan_shaghana_7"
@@ -917,6 +1148,9 @@
 		culture="Culture.shaghana"
 		super_faction="Kingdom.shaghana"
 		is_noble="true"
+		color="FFAF6C23"
+		color2="FF68431C"
+		default_party_template="PartyTemplate.kingdom_hero_party_shaghana_shaghana_7_template"
 		banner_key="11.77.166.1528.1528.764.764.1.0.0.504.143.171.847.2502.764.599.0.0.178.504.142.171.787.2390.764.599.0.0.178.411.143.171.50.50.492.417.0.0.178.411.143.171.50.50.508.488.0.0.178.411.143.171.50.50.525.561.0.0.178.411.143.171.50.50.543.629.0.0.178.411.143.171.50.50.561.697.0.0.178.411.143.171.50.50.577.769.0.0.178.411.143.171.50.50.598.844.0.0.178.411.143.171.50.50.618.924.0.0.178.411.143.171.50.50.638.997.0.0.178.411.143.171.50.50.658.1079.0.0.178.411.143.171.50.50.678.1158.0.0.178.411.143.171.50.50.699.1239.0.0.178.19013.143.116.250.250.763.488.1.0.0.13001.143.116.350.350.765.753.1.0.0.411.143.171.50.50.1036.417.0.1.180.411.143.171.50.50.1020.488.0.1.180.411.143.171.50.50.1003.561.0.1.180.411.143.171.50.50.985.629.0.1.180.411.143.171.50.50.967.697.0.1.180.411.143.171.50.50.951.769.0.1.180.411.143.171.50.50.930.844.0.1.180.411.143.171.50.50.910.924.0.1.180.411.143.171.50.50.890.997.0.1.180.411.143.171.50.50.870.1079.0.1.180.411.143.171.50.50.850.1158.0.1.180.411.143.171.50.50.829.1239.0.1.180" />
   <Faction
 		id="clan_shaghana_8"
@@ -927,6 +1161,9 @@
 		culture="Culture.shaghana"
 		super_faction="Kingdom.shaghana"
 		is_noble="true"
+		color="FFB67C24"
+		color2="FF6F4E1E"
+		default_party_template="PartyTemplate.kingdom_hero_party_shaghana_shaghana_8_template"
 		banner_key="11.3.166.1528.1528.764.764.1.0.0.503.116.171.616.616.764.764.0.1.179.503.98.171.47.47.765.506.0.0.0.503.98.171.47.47.806.507.0.0.0.503.98.171.47.47.846.517.0.0.0.503.98.171.47.47.882.535.0.0.0.503.98.171.47.47.916.558.0.0.0.503.98.171.47.47.947.583.0.0.0.503.98.171.47.47.975.613.0.0.0.503.98.171.47.47.997.648.0.0.0.503.98.171.47.47.1024.765.0.0.0.503.98.171.47.47.1021.725.0.0.0.503.98.171.47.47.1013.685.0.0.0.503.98.171.47.47.764.506.0.1.0.503.98.171.47.47.723.507.0.1.0.503.98.171.47.47.683.517.0.1.0.503.98.171.47.47.647.536.0.1.0.503.98.171.47.47.613.558.0.1.0.503.98.171.47.47.582.583.0.1.0.503.98.171.47.47.554.613.0.1.0.503.98.171.47.47.532.648.0.1.0.503.98.171.47.47.505.764.0.1.0.503.98.171.47.47.508.725.0.1.0.503.98.171.47.47.516.685.0.1.0.503.98.171.47.47.764.1023.0.0.179.503.98.171.47.47.723.1022.0.0.179.503.98.171.47.47.683.1012.0.0.179.503.98.171.47.47.647.993.0.0.179.503.98.171.47.47.613.971.0.0.179.503.98.171.47.47.582.946.0.0.179.503.98.171.47.47.554.916.0.0.179.503.98.171.47.47.532.881.0.0.179.503.98.171.47.47.505.764.0.0.179.503.98.171.47.47.508.804.0.0.179.503.98.171.47.47.516.844.0.0.179.503.98.171.47.47.764.1023.0.1.179.503.98.171.47.47.804.1022.0.1.179.503.98.171.47.47.844.1012.0.1.179.503.98.171.47.47.880.993.0.1.179.503.98.171.47.47.914.971.0.1.179.503.98.171.47.47.946.946.0.1.179.503.98.171.47.47.973.916.0.1.179.503.98.171.47.47.995.881.0.1.179.503.98.171.47.47.1022.764.0.1.179.503.98.171.47.47.1019.804.0.1.179.503.98.171.47.47.1011.844.0.1.179.10017.121.116.400.400.762.765.1.0.0.25001.231.116.177.177.763.758.1.0.0" />
   <Faction
 		id="clan_shaghana_9"
@@ -937,6 +1174,9 @@
 		culture="Culture.shaghana"
 		super_faction="Kingdom.shaghana"
 		is_noble="true"
+		color="FFBE8C26"
+		color2="FF765920"
+		default_party_template="PartyTemplate.kingdom_hero_party_shaghana_shaghana_9_template"
 		banner_key="11.231.176.1528.1528.764.764.1.0.0.503.116.271.616.616.764.764.0.1.176.503.142.171.47.47.765.506.0.0.0.503.142.171.47.47.806.507.0.0.0.503.142.171.47.47.846.517.0.0.0.503.142.171.47.47.882.535.0.0.0.503.142.171.47.47.916.558.0.0.0.503.142.171.47.47.947.583.0.0.0.503.142.171.47.47.975.613.0.0.0.503.142.171.47.47.997.648.0.0.0.503.142.171.47.47.1024.765.0.0.0.503.142.171.47.47.1021.725.0.0.0.503.142.171.47.47.1013.685.0.0.0.503.142.171.47.47.764.506.0.1.0.503.142.171.47.47.723.507.0.1.0.503.142.171.47.47.683.517.0.1.0.503.142.171.47.47.647.536.0.1.0.503.142.171.47.47.613.558.0.1.0.503.142.171.47.47.582.583.0.1.0.503.142.171.47.47.554.613.0.1.0.503.142.171.47.47.532.648.0.1.0.503.142.171.47.47.505.764.0.1.0.503.142.171.47.47.508.725.0.1.0.503.142.171.47.47.516.685.0.1.0.503.142.171.47.47.764.1023.0.0.176.503.142.171.47.47.723.1022.0.0.176.503.142.171.47.47.683.1012.0.0.176.503.142.171.47.47.647.993.0.0.176.503.142.171.47.47.613.971.0.0.176.503.142.171.47.47.582.946.0.0.176.503.142.171.47.47.554.916.0.0.176.503.142.171.47.47.532.881.0.0.176.503.142.171.47.47.505.764.0.0.176.503.142.171.47.47.508.804.0.0.176.503.142.171.47.47.516.844.0.0.176.503.142.171.47.47.764.1023.0.1.176.503.142.171.47.47.804.1022.0.1.176.503.142.171.47.47.844.1012.0.1.176.503.142.171.47.47.880.993.0.1.176.503.142.171.47.47.914.971.0.1.176.503.142.171.47.47.946.946.0.1.176.503.142.171.47.47.973.916.0.1.176.503.142.171.47.47.995.881.0.1.176.503.142.171.47.47.1022.764.0.1.176.503.142.171.47.47.1019.804.0.1.176.503.142.171.47.47.1011.844.0.1.176.503.142.171.359.359.765.765.0.1.176.503.116.171.319.319.765.765.0.1.176.503.98.171.212.212.765.765.0.1.176.503.142.171.173.173.765.765.0.1.176.503.116.171.137.137.765.765.0.1.176.503.98.171.29.29.765.591.0.0.0.503.98.171.29.29.793.591.0.0.0.503.98.171.29.29.819.598.0.0.0.503.98.171.29.29.843.609.0.0.0.503.98.171.29.29.865.625.0.0.0.503.98.171.29.29.887.641.0.0.0.503.98.171.29.29.905.661.0.0.0.503.98.171.29.29.920.686.0.0.0.503.98.171.29.29.937.762.0.0.0.503.98.171.29.29.934.737.0.0.0.503.98.171.29.29.929.709.0.0.0.503.98.171.29.29.765.591.0.1.0.503.98.171.29.29.737.591.0.1.0.503.98.171.29.29.709.598.0.1.0.503.98.171.29.29.686.609.0.1.0.503.98.171.29.29.663.625.0.1.0.503.98.171.29.29.643.641.0.1.0.503.98.171.29.29.625.661.0.1.0.503.98.171.29.29.609.686.0.1.0.503.98.171.29.29.591.762.0.1.0.503.98.171.29.29.593.737.0.1.0.503.98.171.29.29.598.709.0.1.0.503.98.171.29.29.765.934.0.0.176.503.98.171.29.29.737.934.0.0.176.503.98.171.29.29.709.927.0.0.176.503.98.171.29.29.686.915.0.0.176.503.98.171.29.29.663.900.0.0.176.503.98.171.29.29.643.883.0.0.176.503.98.171.29.29.625.865.0.0.176.503.98.171.29.29.609.840.0.0.176.503.98.171.29.29.591.762.0.0.176.503.98.171.29.29.593.789.0.0.176.503.98.171.29.29.598.816.0.0.176.503.98.171.29.29.765.934.0.1.176.503.98.171.29.29.791.934.0.1.176.503.98.171.29.29.816.927.0.1.176.503.98.171.29.29.840.915.0.1.176.503.98.171.29.29.865.900.0.1.176.503.98.171.29.29.884.883.0.1.176.503.98.171.29.29.904.865.0.1.176.503.98.171.29.29.918.840.0.1.176.503.98.171.29.29.937.762.0.1.176.503.98.171.29.29.934.789.0.1.176.503.98.171.29.29.929.816.0.1.176.510.142.171.119.119.765.650.0.1.86.510.142.171.119.119.765.879.0.1.86.510.142.171.119.119.879.765.0.1.0.510.142.171.119.119.650.765.0.1.0.510.142.171.119.119.847.678.0.1.41.510.142.171.119.119.682.678.0.0.311.510.142.171.119.119.847.850.0.0.131.510.142.171.119.119.682.850.0.1.-131.512.142.171.73.73.763.593.0.1.0.512.142.171.73.73.763.937.0.1.0.512.142.171.73.73.937.765.0.1.86.512.142.171.73.73.593.765.0.1.86.10017.131.116.200.200.765.765.1.0.0" />
 
   <!-- ============================================== -->
@@ -954,6 +1194,9 @@
 		culture="Culture.abanissa"
 		super_faction="Kingdom.abanissa"
 		is_noble="true"
+		color="FF123444"
+		color2="FF906136"
+		default_party_template="PartyTemplate.kingdom_hero_party_abanissa_abanissa_1_template"
 		banner_key="11.12.166.1528.1528.764.764.1.0.0.25005.238.26.650.650.764.764.0.0.0" />
   <Faction
 		id="clan_abanissa_2"
@@ -964,6 +1207,9 @@
 		culture="Culture.abanissa"
 		super_faction="Kingdom.abanissa"
 		is_noble="true"
+		color="FF15364C"
+		color2="FF976E39"
+		default_party_template="PartyTemplate.kingdom_hero_party_abanissa_abanissa_2_template"
 		banner_key="11.83.166.1528.1528.764.764.1.0.0.25011.266.171.580.750.764.764.0.0.0" />
   <Faction
 		id="clan_abanissa_3"
@@ -974,6 +1220,9 @@
 		culture="Culture.abanissa"
 		super_faction="Kingdom.abanissa"
 		is_noble="true"
+		color="FF173654"
+		color2="FF9F7C3C"
+		default_party_template="PartyTemplate.kingdom_hero_party_abanissa_abanissa_3_template"
 		banner_key="11.153.166.1528.1528.764.764.1.0.0.25007.331.323.550.900.764.764.0.0.0" />
   <Faction
 		id="clan_abanissa_4"
@@ -984,6 +1233,9 @@
 		culture="Culture.abanissa"
 		super_faction="Kingdom.abanissa"
 		is_noble="true"
+		color="FF19365C"
+		color2="FFA68A3F"
+		default_party_template="PartyTemplate.kingdom_hero_party_abanissa_abanissa_4_template"
 		banner_key="11.39.166.1528.1528.764.764.1.0.0.25006.273.273.600.600.764.764.0.0.0" />
   <Faction
 		id="clan_abanissa_5"
@@ -994,6 +1246,9 @@
 		culture="Culture.abanissa"
 		super_faction="Kingdom.abanissa"
 		is_noble="true"
+		color="FF1B3464"
+		color2="FFAE9A41"
+		default_party_template="PartyTemplate.kingdom_hero_party_abanissa_abanissa_5_template"
 		banner_key="11.201.166.1528.1528.764.764.1.0.0.25003.105.273.500.500.764.764.0.0.0" />
   <Faction
 		id="clan_abanissa_6"
@@ -1004,6 +1259,9 @@
 		culture="Culture.abanissa"
 		super_faction="Kingdom.abanissa"
 		is_noble="true"
+		color="FF1D326C"
+		color2="FFB5AA44"
+		default_party_template="PartyTemplate.kingdom_hero_party_abanissa_abanissa_6_template"
 		banner_key="11.193.166.1528.1528.764.764.1.0.0.25014.18.273.500.500.752.764.0.0.0" />
   <Faction
 		id="clan_abanissa_7"
@@ -1014,6 +1272,9 @@
 		culture="Culture.abanissa"
 		super_faction="Kingdom.abanissa"
 		is_noble="true"
+		color="FF1F2E74"
+		color2="FFBAB949"
+		default_party_template="PartyTemplate.kingdom_hero_party_abanissa_abanissa_7_template"
 		banner_key="11.87.166.1528.1528.764.764.1.0.0.25010.98.273.500.500.752.764.0.0.0" />
   <Faction
 		id="clan_abanissa_8"
@@ -1024,6 +1285,9 @@
 		culture="Culture.abanissa"
 		super_faction="Kingdom.abanissa"
 		is_noble="true"
+		color="FF22297C"
+		color2="FFB5BD50"
+		default_party_template="PartyTemplate.kingdom_hero_party_abanissa_abanissa_8_template"
 		banner_key="11.215.166.1528.1528.764.764.1.0.0.25004.179.273.600.650.752.857.0.0.0" />
 
   <!-- ============================================== -->
@@ -1041,6 +1305,9 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
+		color="FF231815"
+		color2="FF625D32"
+		default_party_template="PartyTemplate.kingdom_hero_party_dolguldur_dolguldur_1_template"
 		banner_key="11.149.166.1528.1528.764.764.1.0.0.18002.2002.2000.520.520.765.765.0.0.0" />
 
   <!-- Gûrzrak -->
@@ -1053,6 +1320,9 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
+		color="FF2C201A"
+		color2="FF6B6C37"
+		default_party_template="PartyTemplate.kingdom_hero_party_dolguldur_dolguldur_2_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18000.267.171.700.700.764.764.0.0.0" />
 
   <!-- Maugdur -->
@@ -1065,6 +1335,9 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
+		color="FF35291F"
+		color2="FF6D753C"
+		default_party_template="PartyTemplate.kingdom_hero_party_dolguldur_dolguldur_3_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.18003.212.171.700.700.764.764.0.0.0" />
 
   <!-- Dûrzan -->
@@ -1077,6 +1350,9 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
+		color="FF3F3325"
+		color2="FF6F7F40"
+		default_party_template="PartyTemplate.kingdom_hero_party_dolguldur_dolguldur_4_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19010.212.171.700.700.764.764.0.0.0" />
 
   <!-- Krâzgoth -->
@@ -1089,6 +1365,9 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
+		color="FF483E2A"
+		color2="FF6F8845"
+		default_party_template="PartyTemplate.kingdom_hero_party_dolguldur_dolguldur_5_template"
 		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19014.212.171.700.700.764.764.0.0.0" />
 
   <!-- Zûrbak -->
@@ -1101,7 +1380,10 @@
 		culture="Culture.dolguldur"
 		super_faction="Kingdom.dolguldur"
 		is_noble="true"
-	 banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19009.212.171.700.700.764.764.0.0.0" />
+	 color="FF514A2F"
+		color2="FF6E924A"
+		default_party_template="PartyTemplate.kingdom_hero_party_dolguldur_dolguldur_6_template"
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.19009.212.171.700.700.764.764.0.0.0" />
 
 	<!-- ============================================== -->
 	<!-- LOTR Bandit Clans                                -->
@@ -1112,14 +1394,15 @@
 	     Without these, hideouts that reference Culture.{dunland_raiders|...} would have
 	     no MapFaction, causing BanditSpawnCampaignBehavior to stall or NRE.
 	     initial_home_settlement points at one of the migrated hideouts per culture.
-	     Banner colors copy the vanilla bandit greyscale (FF8B7C73). -->
+	     color/color2 are faction-flavored (recolored from the old greyscale FF8B7C73 via
+     clan_heraldry/bandits.json); bandits have no kingdom so these tint their raider armor. -->
 
 	<Faction
 		id="dunland_raiders"
 		initial_home_settlement="Settlement.hideout_forest_1"
 		banner_key="11.181.166.1528.1528.764.764.1.0.0.26004.2000.171.650.650.765.800.0.0.0"
-		color="FF8B7C73"
-		color2="FF8B7C73"
+		color="FF5A3D28"
+		color2="FF7A2A22"
 		culture="Culture.dunland_raiders"
 		default_party_template="PartyTemplate.dunland_raiders_raider_party_template"
 		settlement_banner_mesh="none"
@@ -1132,8 +1415,8 @@
 		id="rhun_raiders"
 		initial_home_settlement="Settlement.hideout_steppe_1"
 		banner_key="11.2014.166.1528.1528.764.764.1.0.0.14010.131.116.700.700.765.765.0.0.90"
-		color="FF8B7C73"
-		color2="FF8B7C73"
+		color="FFA8842E"
+		color2="FF5A2418"
 		culture="Culture.rhun_raiders"
 		default_party_template="PartyTemplate.rhun_raiders_raider_party_template"
 		settlement_banner_mesh="none"
@@ -1146,8 +1429,8 @@
 		id="harad_raiders"
 		initial_home_settlement="Settlement.hideout_desert_1"
 		banner_key="11.149.166.1528.1528.764.764.1.0.0.504.142.171.813.2468.764.599.0.0.178.504.116.171.771.2278.764.599.0.0.178.504.142.171.733.2225.764.599.0.0.178.505.142.171.813.2468.205.600.0.0.0.505.116.171.813.2468.196.600.0.0.0.505.142.171.813.2468.189.600.0.0.0.505.142.171.813.2468.1322.600.0.1.0.505.116.171.813.2468.1331.600.0.1.0.505.142.171.813.2468.1338.600.0.1.0.503.116.171.133.133.763.512.0.1.0.503.142.171.118.118.763.512.0.1.0.504.142.171.49.49.744.564.0.1.314.504.142.171.49.49.783.564.0.0.44.503.116.171.33.71.763.559.0.1.0.503.116.171.106.106.763.512.0.1.0.503.142.171.84.84.763.512.0.1.0.503.116.171.71.71.763.512.0.1.0.503.142.171.49.49.763.512.0.1.0.503.116.171.21.21.763.604.0.1.0.402.116.171.48.48.501.1028.0.1.89.402.116.171.48.48.501.959.0.1.89.402.116.171.48.48.501.892.0.1.89.402.116.171.48.48.501.824.0.1.89.402.116.171.48.48.501.754.0.1.89.402.116.171.48.48.501.690.0.1.89.402.116.171.48.48.501.621.0.1.89.402.116.171.48.48.501.552.0.1.89.402.116.171.48.48.501.486.0.1.89.402.116.171.48.48.501.417.0.1.89.402.116.171.48.48.501.354.0.1.89.402.116.171.48.48.1025.1028.0.1.89.402.116.171.48.48.1025.959.0.1.89.402.116.171.48.48.1025.892.0.1.89.402.116.171.48.48.1025.824.0.1.89.402.116.171.48.48.1025.754.0.1.89.402.116.171.48.48.1025.690.0.1.89.402.116.171.48.48.1025.621.0.1.89.402.116.171.48.48.1025.552.0.1.89.402.116.171.48.48.1025.486.0.1.89.402.116.171.48.48.1025.417.0.1.89.402.116.171.48.48.1025.354.0.1.89.505.116.171.813.2468.109.600.0.0.0.505.142.171.813.2468.103.600.0.0.0.505.116.171.813.2468.1418.600.0.1.0.505.142.171.813.2468.1424.600.0.1.0.504.116.171.26.139.764.408.0.1.0.504.116.171.26.139.681.574.0.1.127.504.116.171.26.139.847.574.0.0.230.504.116.171.26.139.866.521.0.0.269.504.116.171.26.139.662.521.0.1.89.504.116.171.26.139.862.473.0.0.285.504.116.171.26.139.821.423.0.0.327.504.116.171.26.139.707.423.0.1.30.504.116.171.26.139.666.473.0.1.71.13000.2000.116.300.300.755.797.0.0.0"
-		color="FF8B7C73"
-		color2="FF8B7C73"
+		color="FF8E2A1E"
+		color2="FFAE7E34"
 		culture="Culture.harad_raiders"
 		default_party_template="PartyTemplate.harad_raiders_raider_party_template"
 		settlement_banner_mesh="none"
@@ -1160,8 +1443,8 @@
 		id="gundabad_raiders"
 		initial_home_settlement="Settlement.hideout_mountain_1"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0"
-		color="FF8B7C73"
-		color2="FF8B7C73"
+		color="FF2E2A26"
+		color2="FF564636"
 		culture="Culture.gundabad_raiders"
 		default_party_template="PartyTemplate.gundabad_raiders_raider_party_template"
 		settlement_banner_mesh="none"
@@ -1174,8 +1457,8 @@
 		id="umbar_corsairs"
 		initial_home_settlement="Settlement.hideout_seaside_1"
 		banner_key="11.149.166.1528.1528.764.764.1.0.0.505.266.171.483.483.764.764.0.0.44.505.142.171.451.451.764.764.0.0.43.505.266.171.483.483.764.764.0.0.0.505.2014.171.451.451.764.764.0.0.0.503.266.171.40.40.764.532.0.0.0.503.266.171.40.40.764.995.0.0.0.503.266.171.40.40.995.764.0.0.0.503.266.171.40.40.533.764.0.0.0.12000.266.116.200.200.768.774.1.0.0.502.266.116.350.350.765.765.1.0.45.502.266.116.350.350.765.765.1.0.0"
-		color="FF8B7C73"
-		color2="FF8B7C73"
+		color="FF26221E"
+		color2="FF8E6E44"
 		culture="Culture.umbar_corsairs"
 		default_party_template="PartyTemplate.umbar_corsairs_raider_party_template"
 		settlement_banner_mesh="none"
@@ -1192,8 +1475,8 @@
 		id="gondor_soldiers"
 		initial_home_settlement="Settlement.hideout_gondor_1"
 		banner_key="11.149.149.1528.1528.764.764.1.0.0.10000.172.2000.580.580.765.825.0.0.0"
-		color="FF8B7C73"
-		color2="FF8B7C73"
+		color="FF6E747C"
+		color2="FF36363E"
 		culture="Culture.gondor_soldiers"
 		default_party_template="PartyTemplate.gondor_soldiers_raider_party_template"
 		settlement_banner_mesh="none"
@@ -1206,8 +1489,8 @@
 		id="erebor_warriors"
 		initial_home_settlement="Settlement.hideout_erebor_1"
 		banner_key="11.100.75.4345.4345.764.764.1.0.0.521.172.100.62.62.630.618.0.0.268.521.172.100.54.54.548.703.0.0.268.521.172.100.42.42.571.810.0.0.268.521.172.100.62.62.899.618.0.1.88.521.172.100.54.54.980.703.0.1.88.521.172.100.42.42.957.810.0.1.88.24019.31.240.400.400.765.873.1.0.0.24510.31.240.200.200.765.556.1.0.0"
-		color="FF8B7C73"
-		color2="FF8B7C73"
+		color="FF5E4220"
+		color2="FF35543A"
 		culture="Culture.erebor_warriors"
 		default_party_template="PartyTemplate.erebor_warriors_raider_party_template"
 		settlement_banner_mesh="none"
@@ -1220,8 +1503,8 @@
 		id="mirkwood_stalkers"
 		initial_home_settlement="Settlement.hideout_mirkwood_1"
 		banner_key="11.2.166.1528.1528.764.764.1.0.0.505.53.171.484.484.764.764.0.0.45.505.126.171.470.470.764.764.0.0.45.505.53.171.454.454.764.764.0.0.45.17003.164.116.500.500.766.770.1.0.0.17002.96.116.500.500.770.772.1.0.0"
-		color="FF8B7C73"
-		color2="FF8B7C73"
+		color="FF2A4626"
+		color2="FF6E7E50"
 		culture="Culture.mirkwood_stalkers"
 		default_party_template="PartyTemplate.mirkwood_stalkers_raider_party_template"
 		settlement_banner_mesh="none"
@@ -1240,6 +1523,9 @@
 		culture="Culture.goblin"
 		super_faction="Kingdom.goblin"
 		is_noble="true"
+		color="FF233220"
+		color2="FF4B5D31"
+		default_party_template="PartyTemplate.kingdom_hero_party_goblin_goblin_1_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_goblin_2"
@@ -1250,6 +1536,9 @@
 		culture="Culture.goblin"
 		super_faction="Kingdom.goblin"
 		is_noble="true"
+		color="FF253723"
+		color2="FF4C6234"
+		default_party_template="PartyTemplate.kingdom_hero_party_goblin_goblin_2_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_goblin_3"
@@ -1260,6 +1549,9 @@
 		culture="Culture.goblin"
 		super_faction="Kingdom.goblin"
 		is_noble="true"
+		color="FF273C26"
+		color2="FF4D6737"
+		default_party_template="PartyTemplate.kingdom_hero_party_goblin_goblin_3_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_goblin_4"
@@ -1270,6 +1562,9 @@
 		culture="Culture.goblin"
 		super_faction="Kingdom.goblin"
 		is_noble="true"
+		color="FF294129"
+		color2="FF4D6C3A"
+		default_party_template="PartyTemplate.kingdom_hero_party_goblin_goblin_4_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_goblin_5"
@@ -1280,6 +1575,9 @@
 		culture="Culture.goblin"
 		super_faction="Kingdom.goblin"
 		is_noble="true"
+		color="FF2C462E"
+		color2="FF4D713C"
+		default_party_template="PartyTemplate.kingdom_hero_party_goblin_goblin_5_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <!-- TAOM-NEWFACTIONS:goblin:END -->
   <!-- TAOM-NEWFACTIONS:mistymountainorcs:BEGIN -->
@@ -1292,6 +1590,9 @@
 		culture="Culture.mistymountainorcs"
 		super_faction="Kingdom.mistymountainorcs"
 		is_noble="true"
+		color="FF181818"
+		color2="FF573D33"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_mistymountainorcs_1_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_mistymountainorcs_2"
@@ -1302,6 +1603,9 @@
 		culture="Culture.mistymountainorcs"
 		super_faction="Kingdom.mistymountainorcs"
 		is_noble="true"
+		color="FF212121"
+		color2="FF634B39"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_mistymountainorcs_2_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_mistymountainorcs_3"
@@ -1312,6 +1616,9 @@
 		culture="Culture.mistymountainorcs"
 		super_faction="Kingdom.mistymountainorcs"
 		is_noble="true"
+		color="FF2A2A2A"
+		color2="FF6E5A40"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_mistymountainorcs_3_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_mistymountainorcs_4"
@@ -1322,6 +1629,9 @@
 		culture="Culture.mistymountainorcs"
 		super_faction="Kingdom.mistymountainorcs"
 		is_noble="true"
+		color="FF333333"
+		color2="FF796B47"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_mistymountainorcs_4_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_mistymountainorcs_5"
@@ -1332,6 +1642,9 @@
 		culture="Culture.mistymountainorcs"
 		super_faction="Kingdom.mistymountainorcs"
 		is_noble="true"
+		color="FF3C3C3C"
+		color2="FF857D4D"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_mistymountainorcs_5_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
   <!-- TAOM-NEWFACTIONS:bluecraig:BEGIN -->
@@ -1344,6 +1657,9 @@
 		culture="Culture.goblin"
 		super_faction="Kingdom.bluecraig"
 		is_noble="true"
+		color="FF151A10"
+		color2="FF404324"
+		default_party_template="PartyTemplate.kingdom_hero_party_goblin_bluecraig_1_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_bluecraig_2"
@@ -1354,6 +1670,9 @@
 		culture="Culture.goblin"
 		super_faction="Kingdom.bluecraig"
 		is_noble="true"
+		color="FF191F13"
+		color2="FF434826"
+		default_party_template="PartyTemplate.kingdom_hero_party_goblin_bluecraig_2_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_bluecraig_3"
@@ -1364,6 +1683,9 @@
 		culture="Culture.goblin"
 		super_faction="Kingdom.bluecraig"
 		is_noble="true"
+		color="FF1C2416"
+		color2="FF454D29"
+		default_party_template="PartyTemplate.kingdom_hero_party_goblin_bluecraig_3_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_bluecraig_4"
@@ -1374,6 +1696,9 @@
 		culture="Culture.goblin"
 		super_faction="Kingdom.bluecraig"
 		is_noble="true"
+		color="FF1E2919"
+		color2="FF47522C"
+		default_party_template="PartyTemplate.kingdom_hero_party_goblin_bluecraig_4_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_bluecraig_5"
@@ -1384,6 +1709,9 @@
 		culture="Culture.goblin"
 		super_faction="Kingdom.bluecraig"
 		is_noble="true"
+		color="FF212E1C"
+		color2="FF49572F"
+		default_party_template="PartyTemplate.kingdom_hero_party_goblin_bluecraig_5_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <!-- TAOM-NEWFACTIONS:bluecraig:END -->
   <!-- TAOM-NEWFACTIONS:lindon:BEGIN -->
@@ -1396,6 +1724,9 @@
 		culture="Culture.rivendell"
 		super_faction="Kingdom.lindon"
 		is_noble="true"
+		color="FF758DA2"
+		color2="FF203054"
+		default_party_template="PartyTemplate.kingdom_hero_party_rivendell_lindon_1_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <Faction
 		id="clan_lindon_2"
@@ -1406,6 +1737,9 @@
 		culture="Culture.rivendell"
 		super_faction="Kingdom.lindon"
 		is_noble="true"
+		color="FF7F8FA9"
+		color2="FF252E61"
+		default_party_template="PartyTemplate.kingdom_hero_party_rivendell_lindon_2_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <!-- TAOM-NEWFACTIONS:lindon:END -->
 </Factions>

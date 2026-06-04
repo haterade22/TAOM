@@ -1,0 +1,372 @@
+{
+  "culture": "gundabad",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF2E2A26/FF6E5A40 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=gundabad).",
+  "clans": [
+    {
+      "id": "clan_gundabad_1",
+      "source": "xml",
+      "theme": "gundabad house 1 \u2014 balanced",
+      "color": "FF1A1716",
+      "color2": "FF573D33",
+      "roster": [
+        {
+          "troop": "gundabad_snaga",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_brute",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_veteran_sword_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_sentry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_warg_tamer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_dread_rider_of_the_tower",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_despoiler_of_the_vale",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_gundabad_gundabad_1_template"
+    },
+    {
+      "id": "clan_gundabad_2",
+      "source": "xml",
+      "theme": "gundabad house 2 \u2014 infantry",
+      "color": "FF24201E",
+      "color2": "FF634B39",
+      "roster": [
+        {
+          "troop": "gundabad_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_fighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_brute",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_sword_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_veteran_spear_warrior",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_veteran_berserker",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_warg_tamer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_dread_rider_of_the_tower",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_despoiler_of_the_vale",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_gundabad_gundabad_2_template"
+    },
+    {
+      "id": "clan_gundabad_3",
+      "source": "xml",
+      "theme": "gundabad house 3 \u2014 ranged",
+      "color": "FF2E2A26",
+      "color2": "FF6E5A40",
+      "roster": [
+        {
+          "troop": "gundabad_grunt",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_sword_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_spear_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_veteran_berserker",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_hunter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_sentry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_warg_tamer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_dread_rider_of_the_tower",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_despoiler_of_the_vale",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_gundabad_gundabad_3_template"
+    },
+    {
+      "id": "clan_gundabad_4",
+      "source": "xml",
+      "theme": "gundabad house 4 \u2014 cavalry",
+      "color": "FF38342E",
+      "color2": "FF796B47",
+      "roster": [
+        {
+          "troop": "gundabad_militia_veteran_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_fighter",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_spear_warrior",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_chosen_of_tharzog",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_militia_archer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_warg_tamer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_tracker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_dread_rider_of_the_tower",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "gundabad_despoiler_of_the_vale",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_gundabad_gundabad_4_template"
+    },
+    {
+      "id": "clan_gundabad_5",
+      "source": "xml",
+      "theme": "gundabad house 5 \u2014 elite",
+      "color": "FF423F36",
+      "color2": "FF857D4D",
+      "roster": [
+        {
+          "troop": "gundabad_berserker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_guard",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_brute",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_guardian_of_the_tower",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_bolgs_ironfang",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_lurker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_sentry",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_tracker",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "gundabad_dread_rider_of_the_tower",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "gundabad_despoiler_of_the_vale",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_gundabad_gundabad_5_template"
+    }
+  ]
+}

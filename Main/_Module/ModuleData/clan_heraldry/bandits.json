@@ -1,0 +1,14 @@
+{
+  "culture": "(bandits)",
+  "_note": "Colors-only recolor of the 8 LOTR bandit clans (were all gray FF8B7C73). Bandits have no kingdom, so MapFaction=clan -> these colors DO tint their raider troop armor. Faction-flavored but muted/grimy. Keeps each clan's existing raider/boss default_party_template.",
+  "clans": [
+    {"id": "dunland_raiders",   "source": "xml", "theme": "Dunland raiders",     "color": "FF5A3D28", "color2": "FF7A2A22"},
+    {"id": "rhun_raiders",      "source": "xml", "theme": "Rhun raiders",        "color": "FFA8842E", "color2": "FF5A2418"},
+    {"id": "harad_raiders",     "source": "xml", "theme": "Harad raiders",       "color": "FF8E2A1E", "color2": "FFAE7E34"},
+    {"id": "gundabad_raiders",  "source": "xml", "theme": "Gundabad raiders",    "color": "FF2E2A26", "color2": "FF564636"},
+    {"id": "umbar_corsairs",    "source": "xml", "theme": "Umbar corsairs",      "color": "FF26221E", "color2": "FF8E6E44"},
+    {"id": "gondor_soldiers",   "source": "xml", "theme": "Gondor deserters",    "color": "FF6E747C", "color2": "FF36363E"},
+    {"id": "erebor_warriors",   "source": "xml", "theme": "Erebor deserters",    "color": "FF5E4220", "color2": "FF35543A"},
+    {"id": "mirkwood_stalkers", "source": "xml", "theme": "Mirkwood deserters",  "color": "FF2A4626", "color2": "FF6E7E50"}
+  ]
+}

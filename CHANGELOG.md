@@ -1,5 +1,35 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-04
+
+### feat(clans): per-clan heraldry colors + per-clan party templates + lore kingdom repaint
+
+Gave **192 clans** distinct `color`/`color2` heraldry and **176 clans their own `default_party_template`** (region/archetype-themed rosters), and repainted all **8 vanilla-renamed kingdoms** to lore palettes. Driven by 4 new tools + per-culture spec files. `validate_moduledata` **PASS** (462 party templates), all touched XML/XSLT well-formed, C# build green (data-only change).
+
+**Why / verified mechanism:** TAOM armors use grayscale textures that tint to faction colors. Confirmed in installed 1.4.5 that a troop's battle-armor cloth tint comes from the **KINGDOM** color, not the clan color, for kingdom-bound clans: `Mission.cs:4422` → `new AgentBuildData(troop).ClothingColor1(agentTeam.Color)`; `PartyBase.PrimaryColorPair` = `(MapFaction.Color, MapFaction.Color2)`; `Clan.MapFaction` returns the Kingdom when the clan is in a kingdom (`Clan.cs:338`). So the *actual* gray-armor fix is the kingdom repaint; clan `color`/`color2` drives encyclopedia/UI heraldry + minor/independent/bandit troop tint. `default_party_template` still valid (`Clan.cs:112`, falls back to `Culture.DefaultPartyTemplate`).
+
+**Phase 0 — kingdoms** (`spkingdoms.xslt` via `tools/repaint_kingdom_colors.py`): Dunland earth-brown, Gondor steel/black, Mordor black/red, Dale blue/gold, Harad crimson/gold, Rohan green/straw, Khand bronze/red, Rhun gold/crimson.
+
+**Phases 1-3 — clans:** `tools/clan_registry.py` (209-clan inventory) → `tools/build_clan_specs.py` (auto-composes per-culture specs: lore base color + deterministic per-clan HSL variation; archetype-driven rosters from each culture's `troops_*.xml`, comment-stripped) → `tools/generate_clan_heraldry.py` (idempotent, 3-file: clans.xml attrs / spclans.xslt per-clan overrides with passthrough preserved / new `<MBPartyTemplate>` blocks). Gondor (14 clans) hand-authored by fiefdom (Dol Amroth Swan-Knight cavalry, Lossarnach axemen, Pinnath Gelin green archers, Blackroot Vale shadow-archers, …); the other 14 troop-having cultures auto-composed. Troopless cultures: shaghana/abanissa field Harad rosters, Lothlorien fields Rivendell, **Khand colors-only** (no TAOM troop pool — flagged for a future Khand troop tree). 8 LOTR bandit clans recolored from flat gray `FF8B7C73` to faction-flavored (these DO tint raider armor — bandits have no kingdom).
+
+**Scope / known:** `clan_empire_south_10-15` (Mordor-named, `Kingdom.empire_s`) were re-cultured from the stale `Culture.empire` to `Culture.mordor` so they now field Mordor troops + heraldry (their 6 Dunland templates were replaced by Mordor ones). Vanilla minor mercenary/outlaw factions (ghilman, skolderbrotva, …) left at vanilla colors. Spec files live at `Main/_Module/ModuleData/clan_heraldry/*.json`. **Save-compat:** additive/cosmetic — safe. **Not-tested (human seam):** in-game render of the new colors + rosters.
+
+### feat(spider): recruitable Giant Spider troop — Mission.SpawnAgent monster-swap, re-enabled
+
+Re-enabled the giant spider as a **recruitable troop**, replacing the abandoned rideable-mount approach (which hit a campaign-map `Skeleton.ForceUpdateBoneFrames` `AccessViolationException` crash *and* a per-mesh bone-render limit). The spider now recruits at Dol Guldur fiefs and spawns + fights as the spider Monster in every battle. Build green; **3030/3032 tests pass** (11 new: 5 service + 6 recruitment).
+
+**Mechanism:** a humanoid anchor troop (`taom_spider_creature`, race `dg_uruk`, so recruitment/roster/UI resolve) + a thin Harmony **Prefix on the universal `Mission.SpawnAgent` chokepoint** (`Patch45_SpiderTroopSpawn`) that — for that one troop — swaps `AgentBuildData.Monster(spider).NoHorses(true).NoWeapons(true)` and returns `true`. Co-exists with `Patch23_BannerColorPersistence` on the same method (both prefixes always return `true`). All decision logic lives in `ISpiderTroopSpawnService` (the sealed `AgentBuildData`/`Monster` stay at the patch boundary; the mutation is isolated behind an injected delegate for unit-testability); the patch itself is a 27-line delegate.
+
+**Recruitment:** `taom_spider_creature` (level 21 → Tier 4, ≤ MaxVolunteerTier 6) added at weight 1 to the 4 Dol Guldur settlement pools + the `dolguldur` culture fallback in `VolunteerRecruitmentService` (NOT the clan-path pool). Settlement pools feed both player and AI recruitment, so DG lords may occasionally field a spider too (thematic, rare). `occupation="Wanderer"` retained so the anchor stays out of the Custom-Battle troop picker (Codex #spider-2026-04-23).
+
+**Combat (unchanged):** `SpiderMissionBehavior` attaches the `SpiderTree` BT to every spider-bodied agent on build — the BT drives bites since a monster body has no vanilla melee. Bone-collision runs via the shared `IBoneCollisionService` singleton that `AdvancedCombatBehavior` ticks every frame, so bites fire in real campaign battles (verified by data-flow trace, not only the old Custom-Battle path).
+
+**Retired:** the manual Custom-Battle scatter-spawn smoke test — deleted `SpiderSpawnerService` + `ISpiderSpawnerService` + their tests + `SpiderConfig.SpawnCount/SpawnRadius`; the two object-ID constants moved to `SpiderConfig`. Removed the orphaned `dg_giant_spider_rider` cavalry troop (it referenced the now-deleted `spider_mount_*` items). Re-enabled the 4 `DISABLED 2026-05-14` markers (`IoC.cs`, `SubModule.cs`, `SubModule.xml`) + wired Patch45.
+
+**Deep-review:** 5 agents — Standards / API (8/8 verified against installed v1.4.5 DLLs) / Efficiency / Data-flow (0 gaps) all PASS; one ADR-002 entry-point line-count overage fixed (`SpiderMissionBehavior` 153 → 149). RCA: [`docs/reviews/rca-spider-troop-2026-06-04.md`](docs/reviews/rca-spider-troop-2026-06-04.md).
+
+**Not-tested (human seam):** in-game render of the live spider agent (the 4-legs-vs-8 per-mesh bone limit is unproven on the live-agent path) + whether bites land on the right contact points — the fang bone indices (23/37/43) remain documented placeholders pending a runtime bone dump. The recruit shows a humanoid silhouette in the party roster (anchor) but spawns as a spider in battle (accepted anchor tradeoff). `Save-compat:` new troop id, additive — safe.
+
 ## 2026-06-03
 
 ### docs(spider): correct skeleton + animation pipeline — proven in-game, recipe documented

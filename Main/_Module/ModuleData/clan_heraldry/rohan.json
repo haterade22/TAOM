@@ -1,0 +1,1697 @@
+{
+  "culture": "vlandia",
+  "_generated_by": "tools/build_clan_specs.py",
+  "_note": "Per-clan color = FF35632F/FFE0D6A8 base + per-clan variation; rosters archetype-composed from troops_*.xml (culture=vlandia).",
+  "clans": [
+    {
+      "id": "clan_vlandia_1",
+      "source": "xslt",
+      "theme": "rohan house 1 \u2014 balanced",
+      "color": "FF344B24",
+      "color2": "FFD7B48E",
+      "roster": [
+        {
+          "troop": "rohan_westfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westmarches_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westmarches_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_meduseld_veteran_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westemnet_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westemnet_royal_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_elite_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_1_template"
+    },
+    {
+      "id": "clan_vlandia_10",
+      "source": "xslt",
+      "theme": "rohan house 2 \u2014 infantry",
+      "color": "FF344D25",
+      "color2": "FFD8B790",
+      "roster": [
+        {
+          "troop": "rohan_westmarches_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_militiaman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westmarches_guardsman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_meduseld_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westfold_helmingas_axeman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westfold_veteran_2h_axeman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastemnet_royal_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_eorlingas_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_10_template"
+    },
+    {
+      "id": "clan_vlandia_11",
+      "source": "xslt",
+      "theme": "rohan house 3 \u2014 ranged",
+      "color": "FF354F26",
+      "color2": "FFD8BB93",
+      "roster": [
+        {
+          "troop": "rohan_edoras_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_militiaman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_meduseld_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westfold_veteran_2h_axeman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westemnet_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_eorlingas_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_kings_own_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_11_template"
+    },
+    {
+      "id": "clan_vlandia_12",
+      "source": "xml",
+      "theme": "rohan house 4 \u2014 cavalry",
+      "color": "FF355227",
+      "color2": "FFD9BF95",
+      "roster": [
+        {
+          "troop": "rohan_westfold_militiaman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westmarches_guardsman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westmarches_meduseld_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_lance_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westemnet_veteran_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_veteran_rider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westemnet_eorlingas_rider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westemnet_kings_own_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_elite_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_12_template"
+    },
+    {
+      "id": "clan_vlandia_13",
+      "source": "xml",
+      "theme": "rohan house 5 \u2014 elite",
+      "color": "FF355428",
+      "color2": "FFDAC298",
+      "roster": [
+        {
+          "troop": "rohan_westfold_veteran_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westfold_2h_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westmarches_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_helmingas_swordsman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_edoras_meduseld_helmingas_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westemnet_eorlingas_rider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_eastemnet_kings_own_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_kings_own_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_eorlingas_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_13_template"
+    },
+    {
+      "id": "clan_vlandia_14",
+      "source": "xml",
+      "theme": "rohan house 6 \u2014 skirmisher",
+      "color": "FF355629",
+      "color2": "FFDBC59A",
+      "roster": [
+        {
+          "troop": "rohan_edoras_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_2h_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_meduseld_helmingas_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_bowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_veteran_lancer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_kings_own_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_kings_own_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_14_template"
+    },
+    {
+      "id": "clan_vlandia_15",
+      "source": "xml",
+      "theme": "rohan house 7 \u2014 balanced",
+      "color": "FF35592A",
+      "color2": "FFDCC99D",
+      "roster": [
+        {
+          "troop": "rohan_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_axeman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westmarches_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_veteran_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_master_swordsman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westemnet_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_supreme_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_elite_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_15_template"
+    },
+    {
+      "id": "clan_vlandia_16",
+      "source": "xml",
+      "theme": "rohan house 8 \u2014 infantry",
+      "color": "FF355B2B",
+      "color2": "FFDDCC9F",
+      "roster": [
+        {
+          "troop": "rohan_westfold_axeman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westmarches_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_veteran_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westmarches_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_meduseld_master_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_edoras_meduseld_veteran_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westemnet_royal_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_eorlingas_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_16_template"
+    },
+    {
+      "id": "clan_vlandia_17",
+      "source": "xml",
+      "theme": "rohan house 9 \u2014 ranged",
+      "color": "FF355D2C",
+      "color2": "FFDECFA2",
+      "roster": [
+        {
+          "troop": "rohan_westfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westmarches_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westmarches_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_meduseld_veteran_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westemnet_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastemnet_royal_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_kings_own_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_17_template"
+    },
+    {
+      "id": "clan_vlandia_18",
+      "source": "xml",
+      "theme": "rohan house 10 \u2014 cavalry",
+      "color": "FF35602D",
+      "color2": "FFDFD2A4",
+      "roster": [
+        {
+          "troop": "rohan_westmarches_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westfold_helmingas_axeman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_lance_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westemnet_veteran_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastemnet_elite_lancer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_veteran_rider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_eorlingas_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_elite_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_18_template"
+    },
+    {
+      "id": "clan_vlandia_19",
+      "source": "xml",
+      "theme": "rohan house 11 \u2014 elite",
+      "color": "FF35622E",
+      "color2": "FFE0D5A7",
+      "roster": [
+        {
+          "troop": "rohan_edoras_meduseld_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westfold_veteran_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westfold_veteran_2h_axeman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westmarches_meduseld_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_veteran_rider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westemnet_kings_own_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_kings_own_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_eorlingas_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_19_template"
+    },
+    {
+      "id": "clan_vlandia_2",
+      "source": "xslt",
+      "theme": "rohan house 12 \u2014 skirmisher",
+      "color": "FF356430",
+      "color2": "FFE0D7A9",
+      "roster": [
+        {
+          "troop": "rohan_westfold_militiaman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westmarches_guardsman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westmarches_meduseld_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_bowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_veteran_lancer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastemnet_kings_own_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_kings_own_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_2_template"
+    },
+    {
+      "id": "clan_vlandia_20",
+      "source": "xml",
+      "theme": "rohan house 13 \u2014 balanced",
+      "color": "FF356631",
+      "color2": "FFE1DAAC",
+      "roster": [
+        {
+          "troop": "rohan_westmarches_guardsman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_veteran_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westfold_2h_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_helmingas_swordsman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westemnet_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_kings_own_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_elite_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_20_template"
+    },
+    {
+      "id": "clan_vlandia_21",
+      "source": "xml",
+      "theme": "rohan house 14 \u2014 infantry",
+      "color": "FF346932",
+      "color2": "FFE2DDAE",
+      "roster": [
+        {
+          "troop": "rohan_edoras_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_axeman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_2h_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westmarches_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_meduseld_helmingas_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_edoras_master_swordsman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_supreme_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_eorlingas_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_21_template"
+    },
+    {
+      "id": "clan_vlandia_22",
+      "source": "xml",
+      "theme": "rohan house 15 \u2014 ranged",
+      "color": "FF346B33",
+      "color2": "FFE3DFB1",
+      "roster": [
+        {
+          "troop": "rohan_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_axeman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westmarches_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_veteran_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_master_swordsman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westemnet_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westemnet_royal_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_kings_own_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_22_template"
+    },
+    {
+      "id": "clan_vlandia_3",
+      "source": "xslt",
+      "theme": "rohan house 16 \u2014 cavalry",
+      "color": "FF346D35",
+      "color2": "FFE4E2B3",
+      "roster": [
+        {
+          "troop": "rohan_westfold_axeman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_veteran_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_meduseld_master_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_lance_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westemnet_veteran_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westemnet_elite_rider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_eastemnet_elite_lancer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_eastemnet_royal_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_elite_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_3_template"
+    },
+    {
+      "id": "clan_vlandia_4",
+      "source": "xslt",
+      "theme": "rohan house 17 \u2014 elite",
+      "color": "FF357037",
+      "color2": "FFE5E4B6",
+      "roster": [
+        {
+          "troop": "rohan_westmarches_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_meduseld_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_meduseld_veteran_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westfold_helmingas_axeman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_elite_lancer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_eorlingas_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westemnet_kings_own_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_eorlingas_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_4_template"
+    },
+    {
+      "id": "clan_vlandia_5",
+      "source": "xslt",
+      "theme": "rohan house 18 \u2014 skirmisher",
+      "color": "FF36723A",
+      "color2": "FFE5E6B8",
+      "roster": [
+        {
+          "troop": "rohan_westmarches_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_swordsman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westfold_helmingas_axeman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_bowman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_veteran_lancer",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westemnet_kings_own_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_kings_own_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_5_template"
+    },
+    {
+      "id": "clan_vlandia_6",
+      "source": "xslt",
+      "theme": "rohan house 19 \u2014 balanced",
+      "color": "FF37743D",
+      "color2": "FFE5E7BB",
+      "roster": [
+        {
+          "troop": "rohan_edoras_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_militiaman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_meduseld_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westfold_veteran_2h_axeman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westemnet_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastemnet_kings_own_lancer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_elite_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_6_template"
+    },
+    {
+      "id": "clan_vlandia_7",
+      "source": "xslt",
+      "theme": "rohan house 20 \u2014 infantry",
+      "color": "FF387740",
+      "color2": "FFE5E8BD",
+      "roster": [
+        {
+          "troop": "rohan_westfold_militiaman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westmarches_guardsman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_veteran_spearman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westfold_veteran_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westmarches_meduseld_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_edoras_helmingas_swordsman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_kings_own_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_eorlingas_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_7_template"
+    },
+    {
+      "id": "clan_vlandia_8",
+      "source": "xslt",
+      "theme": "rohan house 21 \u2014 ranged",
+      "color": "FF397943",
+      "color2": "FFE5E8C0",
+      "roster": [
+        {
+          "troop": "rohan_westmarches_guardsman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_veteran_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westfold_2h_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_helmingas_swordsman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_archer",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_militia_veteran_archer",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_westemnet_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_supreme_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_recruit",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_kings_own_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_8_template"
+    },
+    {
+      "id": "clan_vlandia_9",
+      "source": "xslt",
+      "theme": "rohan house 22 \u2014 cavalry",
+      "color": "FF3A7B46",
+      "color2": "FFE5E9C2",
+      "roster": [
+        {
+          "troop": "rohan_edoras_militia",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_militia_spearman",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westfold_2h_axeman",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_edoras_meduseld_helmingas_spearman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastfold_skirmisher",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_eastfold_veteran_bowman",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_eastemnet_lance_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_westemnet_veteran_rider",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_edoras_golden_hall_rider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westemnet_elite_rider",
+          "min": 1,
+          "max": 2
+        },
+        {
+          "troop": "rohan_westemnet_royal_rider",
+          "min": 0,
+          "max": 1
+        },
+        {
+          "troop": "rohan_wold_scout",
+          "min": 2,
+          "max": 4
+        },
+        {
+          "troop": "rohan_wold_elite_horse_archer",
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "template_id": "kingdom_hero_party_rohan_vlandia_9_template"
+    }
+  ]
+}
