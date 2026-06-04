@@ -1768,16 +1768,16 @@
 			mesh_maturity_type="adult"
 			morph_key="1"
 			uses_stitching="false"
-			body_mesh_suffix="_fem"
+			body_mesh_suffix=""
 			min_scale="1.06"
 			skeleton="dwarf_skeleton_a"
-			body_meta_mesh="sm_dwarf_basemesh_a1_body"
-			body_meta_mesh_shoulders="sm_dwarf_basemesh_a1_shoulder"
+			body_meta_mesh="sk_dwarf_bm_f1_body"
+			body_meta_mesh_shoulders="sk_dwarf_bm_f1_shoulder"
 			body_meta_mesh_upperbody="box_a"
-			legs_mesh="sm_dwarf_basemesh_a1_legs"
-			hands_mesh="sm_dwarf_basemesh_a1_arms"
-			face_meta_mesh="sm_dwarf_basemesh_a1_head"
-			underwear_bottom_mesh=""
+			legs_mesh="sk_dwarf_bm_f1_legs"
+			hands_mesh="sk_dwarf_bm_f1_arms"
+			face_meta_mesh="sk_dwarf_bm_f1_head"
+			underwear_bottom_mesh="sk_dwarf_underwear_female"
 			underwear_top_mesh="">
 			<deform_keys>
 				<deform_key
@@ -3031,7 +3031,15 @@
 			</hair_meshes>
 			<eyebrow_meshes>
 				<eyebrow_mesh
-					name="" />
+					name="sk_dwarf_bm_f1_eyebrow_01" />
+				<eyebrow_mesh
+					name="sk_dwarf_bm_f1_eyebrow_02" />
+				<eyebrow_mesh
+					name="sk_dwarf_bm_f1_eyebrow_03" />
+				<eyebrow_mesh
+					name="sk_dwarf_bm_f1_eyebrow_04" />
+				<eyebrow_mesh
+					name="sk_dwarf_bm_f1_eyebrow_05" />
 			</eyebrow_meshes>
 			<beard_meshes>
 				<beard_mesh>
@@ -3421,23 +3429,23 @@
 					point="0.02, 0.01, 0.01" />
 			</eye_color_gradient_points>
 			<face_textures group_id="1">
-				<face_texture name="m_dwarf_basemesh_a1"
-							   lod_material="m_dwarf_basemesh_a1"
+				<face_texture name="m_dwarf_bm_female_a1_head"
+							   lod_material="m_dwarf_bm_female_a1_head"
 							  color="0xFFFFFFFF"
 							  tags="face_texture1,face_texture2">
 				</face_texture>
-				<face_texture name="m_dwarf_basemesh_a1"
-							   lod_material="m_dwarf_basemesh_a1"
+				<face_texture name="m_dwarf_bm_female_a1_head"
+							   lod_material="m_dwarf_bm_female_a1_head"
 							  color="0xFFFFFFFF"
 							  tags="face_texture3,face_texture4">
 				</face_texture>
-				<face_texture name="m_dwarf_basemesh_a1"
-							   lod_material="m_dwarf_basemesh_a1"
+				<face_texture name="m_dwarf_bm_female_a1_head"
+							   lod_material="m_dwarf_bm_female_a1_head"
 							  color="0xFFFFFFFF"
 							  tags="face_texture5,face_texture6,face_texture7">
 				</face_texture>
-				<face_texture name="m_dwarf_basemesh_a1"
-							   lod_material="m_dwarf_basemesh_a1"
+				<face_texture name="m_dwarf_bm_female_a1_head"
+							   lod_material="m_dwarf_bm_female_a1_head"
 							  color="0xFFFFFFFF"
 							  tags="face_texture8,face_texture9,face_texture10">
 				</face_texture>

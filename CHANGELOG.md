@@ -1,5 +1,33 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-03
+
+### docs(spider): correct skeleton + animation pipeline — proven in-game, recipe documented
+
+Revived the disabled giant-spider via the Blender MCP. Established + **proved in the Modding Kit model viewer** the correct skeleton/mesh/IK pipeline, and documented it as the source of truth: [`docs/features/spider-skeleton-animation-pipeline.md`](docs/features/spider-skeleton-animation-pipeline.md) + lessons L13–L18 in [`docs/research/creature-pipeline/LESSONS-LEARNED.md`](docs/research/creature-pipeline/LESSONS-LEARNED.md) + memory `project_spider_skeleton_animation_pipeline`.
+
+**Proven recipe:** the correct rig is `spider_skeleton` (62-bone, lowercase) in `E:\LOTRAOMAssets\_auto_workspace\haterade_teach_that_btch.blend` (NOT the broken 59-bone `sp_skeleton` the animator's clips live on). Export skeleton+mesh with **`primary_bone_axis='Y'`** (the old TAOM `'X'` preset force-aligns bones to world-X and destroys mirror symmetry — verified); set Type=horse; populate IK/ragdoll via `tpac_skeleton_transplant.py` (62 bodies + 61 D6 joints); export animations armature-only with root **`spider_skeleton_notused`** (warg-proven `<skeleton>_notused` convention).
+
+**Key findings:** the Modding-Kit bone-octahedron display looks "jacked" but is **cosmetic** (no leaf bones; Bannerlord uses bone origin+rotation, not tails — verified by reading the tpac rest matrices, `err=0`); `tail_err` is the symmetry metric (`dir_err`/y_axis is unreliable on degenerate bones); the warg (`Modules/Alliance.Wargs`) is the working-creature source of truth; the KBSBAUDRICE/Retarget addon was evaluated and rejected (humanoid/preset/GPL).
+
+**In progress:** retargeting the animator's clips (`sp_skeleton` → `spider_skeleton`) — LOCAL-space Copy-Rotation+bake (NOT world, which contorts); forward walk retargeted + body grounded, per-leg orientation skew remaining (rest-compensated retarget or re-author pending). **Not-tested:** in-engine animation playback beyond the model viewer; the per-leg walk polish is unfinished.
+
+### feat(spider): full clip set retargeted, action-set bound, full-mesh skeleton FBX
+
+Completed the retargeting begun above. All ~24 animator clips were retargeted `sp_skeleton` → `spider_skeleton` via a **rest-compensated retarget** (`Q_tgt = D·Q_src·D⁻¹`, `D = Mt_rest⁻¹·Ms_rest` per matched bone) — this fixes the per-leg orientation skew across the whole set in one pass (the LOCAL-space copy left alternating legs swinging backward; the conjugation re-expresses each source rotation in the target bone's frame). Exported as individual `an_spi_*` FBXs (NLA-strip take names so the take is bare, `primary_bone_axis='Y'`, `_notused` root). The **forward walk + run** instead use a procedural **metachronal-wave** builder (home-spread → leg1→4 step forward in sequence + foot-lift, left/right synced) because the animator's alternating gait made adjacent legs collide. Locomotion is **in-place** — the engine drives body travel (verified: the warg's walk has ~zero net root displacement). Memory: `feedback_movement_anims_in_place_engine_driven`.
+
+`action_sets_spider.xml` repointed from the now-gone `an_dg_spi_*` clips to the `an_spi_*` set — all 21 distinct bound clips resolve to compiled `*_geo.tpac` (verified); `act_spider_hit_right` + binding added, `botom`→`bottom` typo fixed, main idle = `an_spi_idle_2`, forward walk = `an_spi_walk_2`, run = `an_spi_run`. `spider_correct.fbx` re-exported with all three mesh variants `sk_spider_forest_a/b/c` (+5 LODs each = 18 meshes, 6.57 MB) so every spider skin ships. Both XMLs backed up to `*.xml.bak`. **Not-tested:** in-engine animation playback (human Modding-Kit re-import of the full-mesh FBX + in-game test pending; the `spider_skeleton` already carries its IK/ragdoll joints, so the mesh re-import does NOT require re-transplanting).
+
+### feat(race): female dwarves use dedicated feminine body/face/eyebrow meshes
+
+Wired the newly-authored female dwarf body set into the dwarf race. The adult female dwarf `<skin gender="1">` block in `LOTRLOME_Armory/ModuleData/skins.xml` previously pointed at the shared *male* base mesh `sm_dwarf_basemesh_a1_*` with `body_mesh_suffix="_fem"` — but no `_fem` mesh is packaged, so female dwarves rendered with the male-bodied base mesh. Repointed the block at the packaged feminine assets in `Assets/Race Test/dwarf/`:
+
+- Header meshes → `sk_dwarf_bm_f1_{body,head,arms,legs,shoulder}` (suffix cleared; materials `m_dwarf_bm_female_a1_*` ride on the meshes); `underwear_bottom_mesh="sk_dwarf_underwear_female"`.
+- `<eyebrow_meshes>` → the 5 feminine brows `sk_dwarf_bm_f1_eyebrow_01`…`_05` (was one empty entry).
+- `<face_textures>` (4 entries) → female head material `m_dwarf_bm_female_a1_head`.
+
+Shared `dwarf_skeleton_a` (no skeleton change), beard options kept (lore-accurate bearded dwarf women remain selectable), younger maturity tiers left on the shared base mesh (no feminine child/teen assets). No C# change — gender/race infra (`ActionSetCode…_female` suffix, `as_dwarf_female_facegen`) already handles the rest. Data-only edit to the live external module; tracked reference snapshot `docs/reference/lotrlome-armory-snapshot/skins.xml` updated to match. **Not-tested:** in-engine render (asset wiring, not unit-testable) — XML well-formedness verified.
+
 ## 2026-06-02
 
 ### feat(culture-conversion): conquered fiefs gradually adopt the new owner's culture + troops

@@ -1,0 +1,15 @@
+{
+  "name": "chariot_skeleton",
+  "comment": "Rigid/mechanical 2-wheel war chariot. Each wheel is its own bone so it can spin about its local axis; pole+yoke+hooks attach the draft animals. Fully scaffold-able (no organic deformation). Coordinate frame: Y=forward, Z=up, X=right. Meters.",
+  "bones": [
+    {"name": "root",    "parent": null,   "head": [0.0, 0.0, 0.0],    "tail": [0.0, 0.0, 0.2],    "roll": 0.0},
+    {"name": "body",    "parent": "root", "head": [0.0, -0.2, 0.55],  "tail": [0.0, -0.9, 0.55],  "roll": 0.0},
+    {"name": "axle",    "parent": "root", "head": [0.0, 0.0, 0.5],    "tail": [0.0, 0.2, 0.5],    "roll": 0.0},
+    {"name": "wheel_L", "parent": "axle", "head": [-0.85, 0.0, 0.5],  "tail": [-0.85, 0.0, 0.9],  "roll": 0.0},
+    {"name": "wheel_R", "parent": "axle", "head": [0.85, 0.0, 0.5],   "tail": [0.85, 0.0, 0.9],   "roll": 0.0},
+    {"name": "pole",    "parent": "root", "head": [0.0, 0.2, 0.5],    "tail": [0.0, 1.6, 0.45],   "roll": 0.0},
+    {"name": "yoke",    "parent": "pole", "head": [0.0, 1.6, 0.45],   "tail": [0.0, 1.7, 0.45],   "roll": 0.0},
+    {"name": "hook_L",  "parent": "yoke", "head": [-0.4, 1.65, 0.45], "tail": [-0.4, 1.85, 0.45], "roll": 0.0},
+    {"name": "hook_R",  "parent": "yoke", "head": [0.4, 1.65, 0.45],  "tail": [0.4, 1.85, 0.45],  "roll": 0.0}
+  ]
+}

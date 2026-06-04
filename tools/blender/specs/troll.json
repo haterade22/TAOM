@@ -1,0 +1,321 @@
+{
+ "name": "troll_skeleton",
+ "comment": "Oversized humanoid (troll/ogre): root/pelvis/spine1-2/chest/neck/head + 2 arms x4 + 2 legs x3. Can reuse the human action_set as a base. Y=fwd, Z=up, X=right, meters (troll ~3.2m).",
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "head": [
+    0,
+    0,
+    0
+   ],
+   "tail": [
+    0,
+    0,
+    0.2
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "pelvis",
+   "parent": "root",
+   "head": [
+    0,
+    0,
+    1.6
+   ],
+   "tail": [
+    0,
+    0,
+    1.8
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "spine1",
+   "parent": "pelvis",
+   "head": [
+    0,
+    0,
+    1.8
+   ],
+   "tail": [
+    0,
+    0,
+    2.1
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "spine2",
+   "parent": "spine1",
+   "head": [
+    0,
+    0,
+    2.1
+   ],
+   "tail": [
+    0,
+    0,
+    2.4
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "chest",
+   "parent": "spine2",
+   "head": [
+    0,
+    0,
+    2.4
+   ],
+   "tail": [
+    0,
+    0,
+    2.7
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "neck",
+   "parent": "chest",
+   "head": [
+    0,
+    0,
+    2.7
+   ],
+   "tail": [
+    0,
+    0,
+    2.9
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "head",
+   "parent": "neck",
+   "head": [
+    0,
+    0,
+    2.9
+   ],
+   "tail": [
+    0,
+    0,
+    3.2
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "clavicle_L",
+   "parent": "chest",
+   "head": [
+    -0.1,
+    0,
+    2.65
+   ],
+   "tail": [
+    -0.4,
+    0,
+    2.65
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "upperarm_L",
+   "parent": "clavicle_L",
+   "head": [
+    -0.4,
+    0,
+    2.65
+   ],
+   "tail": [
+    -0.7,
+    0,
+    2.1
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "lowerarm_L",
+   "parent": "upperarm_L",
+   "head": [
+    -0.7,
+    0,
+    2.1
+   ],
+   "tail": [
+    -0.8,
+    0,
+    1.6
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "hand_L",
+   "parent": "lowerarm_L",
+   "head": [
+    -0.8,
+    0,
+    1.6
+   ],
+   "tail": [
+    -0.85,
+    0,
+    1.4
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "thigh_L",
+   "parent": "pelvis",
+   "head": [
+    -0.25,
+    0,
+    1.6
+   ],
+   "tail": [
+    -0.3,
+    0,
+    0.9
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "calf_L",
+   "parent": "thigh_L",
+   "head": [
+    -0.3,
+    0,
+    0.9
+   ],
+   "tail": [
+    -0.32,
+    0,
+    0.2
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "foot_L",
+   "parent": "calf_L",
+   "head": [
+    -0.32,
+    0,
+    0.2
+   ],
+   "tail": [
+    -0.32,
+    0.3,
+    0.0
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "clavicle_R",
+   "parent": "chest",
+   "head": [
+    0.1,
+    0,
+    2.65
+   ],
+   "tail": [
+    0.4,
+    0,
+    2.65
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "upperarm_R",
+   "parent": "clavicle_R",
+   "head": [
+    0.4,
+    0,
+    2.65
+   ],
+   "tail": [
+    0.7,
+    0,
+    2.1
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "lowerarm_R",
+   "parent": "upperarm_R",
+   "head": [
+    0.7,
+    0,
+    2.1
+   ],
+   "tail": [
+    0.8,
+    0,
+    1.6
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "hand_R",
+   "parent": "lowerarm_R",
+   "head": [
+    0.8,
+    0,
+    1.6
+   ],
+   "tail": [
+    0.85,
+    0,
+    1.4
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "thigh_R",
+   "parent": "pelvis",
+   "head": [
+    0.25,
+    0,
+    1.6
+   ],
+   "tail": [
+    0.3,
+    0,
+    0.9
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "calf_R",
+   "parent": "thigh_R",
+   "head": [
+    0.3,
+    0,
+    0.9
+   ],
+   "tail": [
+    0.32,
+    0,
+    0.2
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "foot_R",
+   "parent": "calf_R",
+   "head": [
+    0.32,
+    0,
+    0.2
+   ],
+   "tail": [
+    0.32,
+    0.3,
+    0.0
+   ],
+   "roll": 0.0
+  }
+ ]
+}

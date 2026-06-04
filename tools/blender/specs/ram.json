@@ -1,0 +1,336 @@
+{
+ "name": "ram_skeleton",
+ "comment": "Generic quadruped (ram/goat): body axis + neck/head + 2 horns + 2 tail + 4 legs x3 joints. Y=fwd, Z=up, X=right, meters.",
+ "bones": [
+  {
+   "name": "root",
+   "parent": null,
+   "head": [
+    0,
+    0,
+    0
+   ],
+   "tail": [
+    0,
+    0,
+    0.1
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "pelvis",
+   "parent": "root",
+   "head": [
+    0,
+    -0.45,
+    0.65
+   ],
+   "tail": [
+    0,
+    -0.225,
+    0.67
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "spine_mid",
+   "parent": "pelvis",
+   "head": [
+    0,
+    -0.225,
+    0.67
+   ],
+   "tail": [
+    0,
+    0.1125,
+    0.68
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "chest",
+   "parent": "spine_mid",
+   "head": [
+    0,
+    0.1125,
+    0.68
+   ],
+   "tail": [
+    0,
+    0.3,
+    0.67
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "neck",
+   "parent": "chest",
+   "head": [
+    0,
+    0.3,
+    0.67
+   ],
+   "tail": [
+    0,
+    0.45,
+    0.8
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "head",
+   "parent": "neck",
+   "head": [
+    0,
+    0.45,
+    0.8
+   ],
+   "tail": [
+    0,
+    0.63,
+    0.83
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "horn_L",
+   "parent": "head",
+   "head": [
+    -0.06,
+    0.57,
+    0.87
+   ],
+   "tail": [
+    -0.12,
+    0.45,
+    0.95
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "horn_R",
+   "parent": "head",
+   "head": [
+    0.06,
+    0.57,
+    0.87
+   ],
+   "tail": [
+    0.12,
+    0.45,
+    0.95
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "tail1",
+   "parent": "pelvis",
+   "head": [
+    0,
+    -0.45,
+    0.65
+   ],
+   "tail": [
+    0,
+    -0.57,
+    0.6
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "tail2",
+   "parent": "tail1",
+   "head": [
+    0,
+    -0.57,
+    0.6
+   ],
+   "tail": [
+    0,
+    -0.67,
+    0.53
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "leg_fl_upper",
+   "parent": "chest",
+   "head": [
+    -0.18,
+    0.3,
+    0.65
+   ],
+   "tail": [
+    -0.18,
+    0.3,
+    0.3575
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "leg_fl_lower",
+   "parent": "leg_fl_upper",
+   "head": [
+    -0.18,
+    0.3,
+    0.3575
+   ],
+   "tail": [
+    -0.18,
+    0.3,
+    0.117
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "leg_fl_foot",
+   "parent": "leg_fl_lower",
+   "head": [
+    -0.18,
+    0.3,
+    0.117
+   ],
+   "tail": [
+    -0.18,
+    0.38,
+    0.0
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "leg_fr_upper",
+   "parent": "chest",
+   "head": [
+    0.18,
+    0.3,
+    0.65
+   ],
+   "tail": [
+    0.18,
+    0.3,
+    0.3575
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "leg_fr_lower",
+   "parent": "leg_fr_upper",
+   "head": [
+    0.18,
+    0.3,
+    0.3575
+   ],
+   "tail": [
+    0.18,
+    0.3,
+    0.117
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "leg_fr_foot",
+   "parent": "leg_fr_lower",
+   "head": [
+    0.18,
+    0.3,
+    0.117
+   ],
+   "tail": [
+    0.18,
+    0.38,
+    0.0
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "leg_bl_upper",
+   "parent": "pelvis",
+   "head": [
+    -0.18,
+    -0.45,
+    0.65
+   ],
+   "tail": [
+    -0.18,
+    -0.45,
+    0.3575
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "leg_bl_lower",
+   "parent": "leg_bl_upper",
+   "head": [
+    -0.18,
+    -0.45,
+    0.3575
+   ],
+   "tail": [
+    -0.18,
+    -0.45,
+    0.117
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "leg_bl_foot",
+   "parent": "leg_bl_lower",
+   "head": [
+    -0.18,
+    -0.45,
+    0.117
+   ],
+   "tail": [
+    -0.18,
+    -0.37,
+    0.0
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "leg_br_upper",
+   "parent": "pelvis",
+   "head": [
+    0.18,
+    -0.45,
+    0.65
+   ],
+   "tail": [
+    0.18,
+    -0.45,
+    0.3575
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "leg_br_lower",
+   "parent": "leg_br_upper",
+   "head": [
+    0.18,
+    -0.45,
+    0.3575
+   ],
+   "tail": [
+    0.18,
+    -0.45,
+    0.117
+   ],
+   "roll": 0.0
+  },
+  {
+   "name": "leg_br_foot",
+   "parent": "leg_br_lower",
+   "head": [
+    0.18,
+    -0.45,
+    0.117
+   ],
+   "tail": [
+    0.18,
+    -0.37,
+    0.0
+   ],
+   "roll": 0.0
+  }
+ ]
+}
