@@ -2,6 +2,22 @@
 
 ## 2026-06-04
 
+### refactor(spider): redesign as detached non-humanoid combatant — WIP checkpoint (warg stand-in, formation gated)
+
+Replaced the same-day in-place `Mission.SpawnAgent` `Monster`-swap (entry below) — which passed deep-review but crashed **in-game** with a native AccessViolation (vanilla `SpawnAgent` builds a `dg_uruk` humanoid skin on the spider skeleton). The spider now spawns as a **detached non-humanoid agent** via the engine's free-mount (`CreationType.FromHorseObj`) path, which skips the humanoid skin entirely. Build green; **3030/3032 tests pass**.
+
+**Why / mechanism:** the engine has only two agent-build shapes — humanoid combatant (skin+weapons+formation) and mount (none of those). A non-humanoid *combatant* is unsupported, so we use the *mount* build and re-add the combatant pieces by hand. New `SpiderDetachedAgentSpawner` (boundary glue) reflects private `Mission.CreateAgent` + `BuildAgent` + `Agent.SetMountInitialValues`: CreateAgent(FromHorseObj) → formation-slot frame via public `Mission.GetTroopSpawnFrameWithIndex` → SetTeam/Origin → seat the spider body mesh at `EquipmentIndex.ArmorItemEndSlot` → BuildAgent(null) → `InitializeMissionEquipment(null,null)` → `NotifyAgentBuilt` (fires OnAgentBuild → attaches the BT). The `Mission.SpawnAgent` prefix now returns **false** (skip vanilla) for the spider; fail-open (any failure → returns true → harmless humanoid anchor).
+
+**Five crash layers fixed** (decompiled evidence in the RCA): (1) DivideByZero — spider anim files registered under custom `project.mbproj` ids the runtime ignores → moved to recognized ids; (2) PreloadForRendering AV — missing `MountCreationKey` + NaN deploy direction → `SetMountInitialValues` + `Vec2.Forward` guard; (3) **PreloadForRendering AV — the real 62-bone spider mesh overflows the native per-mesh bone palette → OPEN (needs Modding-Kit mesh-split)**; (4) `WieldInitialWeapons` NRE (vanilla calls it post-spawn, derefs the uninitialized native wield pointer `0xee0`) → new `Agent_WieldInitialWeapons_SpiderSkip_Patch`; (5) formation membership → null `MissionEquipment` NRE (fixed via `InitializeMissionEquipment`) then native `GetMissileRange` AV on the uninitialized weapon struct (gated off, see below).
+
+**Investigation (3-agent decompile workflow):** the formation native-query surface is bounded to a single method (`GetMissileRange`); the native weapon state is fixable without the skin build via `agent.RemoveEquippedWeapon(slot)` ×5 (the same native `WeaponEquipped(Invalid)` the normal path runs for empty slots, no `AddSkinMeshes`); the `SpiderTree` BT drives no movement, so spiders need formation orders (or a new BT move node) to advance — detached spiders are passive bite-traps.
+
+**Checkpoint state:** formation membership GATED OFF (`SpiderConfig.EnableFormationMembership=false`) — detached + positioned + non-crashing, but passive. Committed behind a **warg render stand-in** (`SpiderMonsterId="warg"`/`SpiderMountItemId="warg_brown"`; real spider mesh can't render until the mesh-split; the warg renders cleanly through the identical path). The investigated root fix (`InitializeNativeWeaponState`) ships gated with the membership it enables. Recruit weight reverted 90→1 (+ test mocks `Next(100)`→`Next(11)`). `[Spider][diag]` logging retained for the ongoing debug.
+
+**Superseded:** `SpiderTroopSpawnService.TryApplySpiderMonsterSwap` → now a pure `IsSpiderTroop(string)` decision; the swap test file replaced with `IsSpiderTroop` tests.
+
+**Next (human seams):** mesh-split (Modding-Kit asset) → revert `SpiderConfig` to the real spider; flip `EnableFormationMembership` + in-game-test the native-weapon-state fix (fallback: `Agent.GetMissileRange→0` prefix); strip `[Spider][diag]`. See [`docs/features/spider.md`](docs/features/spider.md) + [`docs/reviews/rca-spider-troop-2026-06-04.md`](docs/reviews/rca-spider-troop-2026-06-04.md).
+
 ### feat(clans): per-clan heraldry colors + per-clan party templates + lore kingdom repaint
 
 Gave **192 clans** distinct `color`/`color2` heraldry and **176 clans their own `default_party_template`** (region/archetype-themed rosters), and repainted all **8 vanilla-renamed kingdoms** to lore palettes. Driven by 4 new tools + per-culture spec files. `validate_moduledata` **PASS** (462 party templates), all touched XML/XSLT well-formed, C# build green (data-only change).

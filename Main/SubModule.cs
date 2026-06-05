@@ -36,8 +36,8 @@ using TAOM.Features.CulturalFeats.Models;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.CustomBattles.Hooks;
 using TAOM.Features.Warg;
-// DISABLED 2026-05-14: Spider feature not ready for live game yet. Re-enable by uncommenting.
-// using TAOM.Features.Spider;
+using TAOM.Features.Spider;
+using TAOM.Features.Spider.Hooks;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.BattleBalance.Models;
 using TAOM.Features.Arena.Models;
@@ -220,6 +220,7 @@ public class SubModule : MBSubModuleBase
         CampaignSceneNotificationHelper_CreateNotificationCharacter_Transpiler.Initialize(bannerColorService);
         var agentColorStore = IoC.Resolve<IAgentColorStore>();
         Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter, agentColorStore);
+        Mission_SpawnAgent_SpiderSwap_Patch.Initialize(IoC.Resolve<ISpiderTroopSpawnService>(), IoC.Resolve<IModLogger>());
         Agent_EquipItemsFromSpawnEquipment_Patch.Initialize(bannerColorService, bannerHeroAdapter, agentColorStore);
         AgentVisuals_Create_Patch.Initialize(bannerColorService);
         MapConversationTableau_SpawnOpponentLeader_Patch.Initialize(bannerColorService, bannerHeroAdapter);
@@ -535,6 +536,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch24_BannerDriftGuard");
         _harmony.PatchCategory("Patch39_BanditPartySize");
         _harmony.PatchCategory("Patch40_HideoutDescription");
+        _harmony.PatchCategory("Patch45_SpiderTroopSpawn");
 
         var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();
         var specResLogger = IoC.Resolve<IModLogger>();
@@ -652,8 +654,7 @@ public class SubModule : MBSubModuleBase
         mission.AddMissionBehavior(new BehaviorTreeMissionLogic());
         mission.AddMissionBehavior(new AutonomousMovementPlayerController());
         mission.AddMissionBehavior(new WargMissionBehavior());
-        // DISABLED 2026-05-14: Spider feature not ready for live game yet. Re-enable by uncommenting.
-        // mission.AddMissionBehavior(new SpiderMissionBehavior());
+        mission.AddMissionBehavior(new SpiderMissionBehavior());
         mission.AddMissionBehavior(new SiegeDismountMissionBehavior());
         mission.AddMissionBehavior(new MixedFormationsMissionBehavior());
         mission.AddMissionBehavior(new SmartCavalryAIMissionBehavior());

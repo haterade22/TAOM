@@ -414,7 +414,7 @@ public class VolunteerRecruitmentServiceTests
     {
         // town_DG1: dg_goblin_slave(7) + dg_khamul_shadow_initiate(3) + taom_spider_creature(1) = total 11
         // Roll 7 lands in the khamul range [7,10) — spider sits at [10,11).
-        _random.Next(100) /* TEMP-SPIDER-TEST-WEIGHT: was Next(11); revert with the weight */.Returns(7);
+        _random.Next(11).Returns(7);
         var context = new VolunteerContext(
             settlementId: "town_DG1",
             boundSettlementId: null,
@@ -472,7 +472,7 @@ public class VolunteerRecruitmentServiceTests
     {
         // Culture pool: dg_goblin_slave(5) + dg_uruk_warrior(3) + dg_khamul_shadow_initiate(2) + taom_spider_creature(1) = 11
         // Roll 8 should land in khamul_shadow_initiate range [8,10) — spider sits at [10,11).
-        _random.Next(100) /* TEMP-SPIDER-TEST-WEIGHT: was Next(11); revert with the weight */.Returns(8);
+        _random.Next(11).Returns(8);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
@@ -495,7 +495,7 @@ public class VolunteerRecruitmentServiceTests
     {
         // <settlement>: dg_goblin_slave(7) + dg_khamul_shadow_initiate(3) + taom_spider_creature(1) = 11
         // Roll 10 lands in the spider range [10,11).
-        _random.Next(100) /* TEMP-SPIDER-TEST-WEIGHT: was Next(11); revert with the weight */.Returns(10);
+        _random.Next(11).Returns(10);
         var context = new VolunteerContext(
             settlementId: settlementId,
             boundSettlementId: null,
@@ -512,7 +512,7 @@ public class VolunteerRecruitmentServiceTests
     {
         // Culture pool: dg_goblin_slave(5) + dg_uruk_warrior(3) + dg_khamul_shadow_initiate(2) + taom_spider_creature(1) = 11
         // Roll 10 lands in the spider range [10,11).
-        _random.Next(100) /* TEMP-SPIDER-TEST-WEIGHT: was Next(11); revert with the weight */.Returns(10);
+        _random.Next(11).Returns(10);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,

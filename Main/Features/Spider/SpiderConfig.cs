@@ -4,9 +4,35 @@ namespace TAOM.Features.Spider;
 
 public static class SpiderConfig
 {
-    // Spawn behavior (Custom Battle smoke test)
-    public const int SpawnCount = 5;
-    public const float SpawnRadius = 12f;
+    // Object IDs — the recruitable troop anchor (humanoid race dg_uruk, so recruitment + roster UI
+    // resolve) and the Monster it is spawned as by Patch45_SpiderTroopSpawn (see SpiderTroopSpawnService
+    // + SpiderDetachedAgentSpawner).
+    //
+    // WARG RENDER STAND-IN (committed 2026-06-04): SpiderMonsterId / SpiderMountItemId point at the WARG
+    // (warg skeleton + warg_low mesh), NOT the spider. The real spider mesh "sk_spider_forest_c" is a
+    // single 62-bone mesh that overflows the native per-mesh bone palette and AccessViolations in
+    // Agent.PreloadForRendering during BuildAgent — so the spider cannot render in-game until that mesh is
+    // split into sub-meshes (Modding-Kit asset task). The warg renders cleanly and exercises the ENTIRE
+    // spawn code path, so it is the committed test stand-in. Once the spider mesh is split, return to the
+    // real spider by setting:  SpiderMonsterId = "spider";  SpiderMountItemId = "spider_mount_a";
+    // See docs/reviews/rca-spider-troop-2026-06-04.md.
+    public const string SpiderMonsterId = "warg";          // WARG STAND-IN — real value: "spider"
+    public const string SpiderCharacterId = "taom_spider_creature";
+
+    // The mesh-only Horse item (LOTRLOME_Armory/LOTRAOM_horses.xml) supplying the body mesh + Monster for
+    // the detached non-humanoid agent (SpiderDetachedAgentSpawner). is_mountable="false" +
+    // is_merchandise="false" + culture-less, so it is never rideable/rostered. WARG STAND-IN (see above).
+    public const string SpiderMountItemId = "warg_brown";  // WARG STAND-IN — real value: "spider_mount_a"
+
+    // Formation membership (advancing with the army) is GATED OFF. Enrolling the detached FromHorseObj
+    // agent in a Formation makes the engine team-AI read the agent's UNINITIALIZED native weapon state
+    // (FormationQuerySystem -> Agent.GetMissileRange -> native AccessViolation). The root fix
+    // (SpiderDetachedAgentSpawner.InitializeNativeWeaponState — native WeaponEquipped(Invalid) via
+    // RemoveEquippedWeapon, no skin build) is implemented but UNVERIFIED in-game, so it ships behind this
+    // flag together with the membership it enables. Flip to true to test formation membership next.
+    // Detached (false) spiders spawn positioned in the deployment zone but are PASSIVE — the SpiderTree BT
+    // bites adjacent targets only and has no move-to-enemy node. See docs/reviews/rca-spider-troop-2026-06-04.md.
+    public const bool EnableFormationMembership = false;
 
     // Combat behavior
     internal static float TargetDetectionRange = 4f;

@@ -1,0 +1,81 @@
+# RCA — Recruitable Giant Spider Troop (2026-06-04)
+
+> **Status: redesigned mid-day.** The in-place `Mission.SpawnAgent` `Monster`-swap approach reviewed in the appendix below passed deep-review with no *code* bugs — then crashed **in-game** with a native AccessViolation, because letting vanilla `SpawnAgent` run on the swapped agent builds a humanoid skin (`dg_uruk`) on the spider skeleton. It was replaced the same day with a **detached non-humanoid combatant** (`CreationType.FromHorseObj`) spawn that never builds a humanoid skin. This top section is the RCA of that redesign + its five-layer crash journey + the architecture investigation. The appendix is retained as the (now-superseded) swap approach's review.
+
+## Redesign — detached non-humanoid combatant
+
+**Root insight:** the engine has exactly two agent-build shapes — *humanoid combatant* (skin + weapons + formation) and *mount* (no skin, no weapons, no formation). A non-humanoid **combatant** is a category the engine does not natively support. The swap approach tried to use the humanoid build → humanoid skin on a spider skeleton → AV. The detached approach uses the **mount** build (`FromHorseObj`, which skips `AddSkinMeshes`) and then re-adds, by hand, the combatant pieces a troop needs. The cost: every piece the mount build skips (weapon/wield state, formation membership) becomes a separate front, and the engine's formation/team-AI assumes every member is a weapon-carrying humanoid.
+
+### The five-layer crash journey (each fixed in turn; all evidence from `ilspycmd` on installed v1.4.5 DLLs)
+
+| # | Crash | Root cause | Fix |
+|---|-------|-----------|-----|
+| 1 | `DivideByZeroException` (native `CreateAgent`) | Spider anim files were registered in `LOTRLOME_Armory/ModuleData/project.mbproj` under **custom** `soln_spider_*` ids the runtime silently ignores → the `as_spider` action set was never loaded | Move anim files to top-level under **recognized** ids (`soln_action_sets`/`_types`/`_monster_usage_sets`). *Lesson: the engine loads `project.mbproj` files only for a fixed id allowlist; custom ids are dropped silently. Read `rgl_log` to confirm which files the engine actually opens.* |
+| 2 | `AccessViolation` in `BuildAgent → PreloadForRendering` | (a) render data uninitialized — the free-mount path seats a `MountCreationKey` we omitted; (b) a `(0,0)` deploy direction normalized to a NaN frame | Reflected `Agent.SetMountInitialValues(name, MountCreationKey.GetRandomMountKeyString(...))` + a `Vec2.Forward` guard on invalid/zero direction |
+| 3 | `AccessViolation` in `PreloadForRendering` (mesh) | `sk_spider_forest_c` is a single **62-bone** mesh that overflows the native per-mesh bone palette (~40–58). `Skeleton.MaxBoneCount=64` is a *separate* skeleton cap | **Open** — needs a Modding-Kit mesh-split into sub-meshes ≤ ~40 bones. Proven via the warg stand-in (warg mesh renders through the identical code path) |
+| 4 | `NullReferenceException` in `Agent.GetPrimaryWieldedItemIndex` | Vanilla `MissionBattleSideSpawnContext.SpawnTroops` calls `agent.WieldInitialWeapons()` on every spawned agent; its first line derefs the spider's uninitialized native wield pointer (`0xee0`) | `Agent_WieldInitialWeapons_SpiderSkip_Patch` — skip wielding for the spider (it bites via its Monster, never wields) |
+| 5a | `NullReferenceException` in `Agent.IsRangedCached` | Joining a formation → `QueryLibrary.IsInfantry → IsRangedCached → Equipment.ContainsNonConsumableRangedWeaponWithAmmo()` derefs the **null `MissionEquipment`** (the mount build never creates one) | `EnsureMissionEquipment` → `agent.InitializeMissionEquipment(null,null)` builds an empty (weaponless) `MissionEquipment` from the SpawnEquipment → weapon-cache queries return `false` |
+| 5b | native `AccessViolation` in `Agent.GetMissileRange` | Formation membership → `TeamAIGeneral.OnUnitAddedToFormationForTheFirstTime → BehaviorSkirmish → FormationQuerySystem` reads per-unit `agent.MaximumMissileRange → GetMissileRange()` (native) which walks the **uninitialized native weapon struct** | **Gated off** + investigated root fix `InitializeNativeWeaponState` (see below) |
+
+**Recurring theme (3×):** the uninitialized native wield pointers (`0xee0/4/8`) bit us at WieldInitialWeapons, then aiming, then missile-range. They exist because `FromHorseObj` has no case in `Agent.EquipItemsFromSpawnEquipment` (Agent.cs:4532) — the native `WeaponEquipped` loop that initializes per-slot weapon records never runs for a mount-path agent.
+
+### Architecture investigation (3-agent decompile workflow) — the decisive findings
+
+1. **Formation native-query surface is bounded to ONE method.** Every per-unit query the formation/team-AI makes reads *managed-cached* state (now valid via the `MissionEquipment` fix) **except** `agent.MaximumMissileRange → GetMissileRange()` (native, no managed early-out). A Harmony prefix returning `0f` for the spider is **sufficient** to survive formation membership + `BehaviorSkirmish` planning (HIGH confidence — verified by enumerating all ~45 `FormationQuerySystem` delegates, every `Formation` aggregator, every `QueryLibrary` predicate, and grepping the whole behavior/tactic set). The aiming natives (`CurrentAimingError`, etc.) are **not** on the formation path — they fire only for an actively-aiming ranged agent, which the spider never is.
+2. **The native wield state IS fixable without the skin build.** `WeaponEquipped` (native per-slot weapon init) and `AddSkinMeshes` (humanoid skin) are two **distinct, sequential** operations in `EquipItemsFromSpawnEquipment`. The public `agent.RemoveEquippedWeapon(slot)` (Agent.cs:4814) runs the *same* native `WeaponEquipped(InvalidWeaponData)` the normal path runs for empty slots — **without** `AddSkinMeshes`. Looping it over all 5 weapon slots initializes the native weapon struct → `GetMissileRange`/aiming reads stop AV'ing. This is the **root** fix for both 5b *and* future per-frame combat reads (high-confidence-but-unverified: native bodies are unreadable, so it must be confirmed in-game).
+3. **The spider BT does NOT drive movement.** `SpiderTree` only detects enemies within ~16m and bites within ~4m; it has *no* move-to-enemy node. The warg's only movement node steers `warg.RiderAgent` (a rider, which the spider lacks). So a **detached** spider is a stationary bite-trap; advancing toward the enemy requires either **formation movement orders** (i.e. formation membership) or a **new BT movement node**. Movement was always intended to come from the formation.
+
+### Decision + checkpoint (committed 2026-06-04)
+
+- **Detached + positioned, formation membership GATED OFF** (`SpiderConfig.EnableFormationMembership = false`). This is the verified non-crashing state: spiders spawn in the deployment zone, render (with the warg stand-in), and do not crash — but are passive.
+- **Warg render stand-in committed** (`SpiderMonsterId="warg"`, `SpiderMountItemId="warg_brown"`) — the real spider mesh AVs at render (#3) until the mesh-split, so the warg (which renders cleanly and exercises the entire spawn path) is the committed test vehicle. Real values `"spider"` / `"spider_mount_a"` documented inline.
+- The investigated root fix (`InitializeNativeWeaponState`, #2) ships **behind the same flag** so the next-session re-enable is a one-line flip + an in-game test.
+
+### Next-session plan
+
+1. Flip `EnableFormationMembership = true`, test in-game. If the formation `GetMissileRange` AV is gone → membership + advance-with-army works. If not → add the `Agent.GetMissileRange→0` prefix (finding #1, bounded + HIGH confidence).
+2. (Asset) split `sk_spider_forest_c` into `<AdditionalMeshes>` sub-meshes ≤ ~40 bones; revert `SpiderConfig` to the real spider.
+3. If membership stays off by design, add a spider-self BT movement node (model on `WargAiControlledGetToEnemy`, retargeted off `RiderAgent`).
+4. Strip `[Spider][diag]` logging once shipping.
+
+### Preventive lessons
+
+- **A clean deep-review is not an in-game pass.** The swap approach (appendix) passed 5 agents with zero code bugs and still hard-crashed natively. Engine-coupled agent-build code MUST be smoke-tested in-game before "done."
+- **Non-humanoid combatant = mount-build + manual combatant re-add.** When you reuse `FromHorseObj` to dodge the skin build, you inherit *every* gap the mount path has (weapon/wield state, formation membership) — audit the full troop-spawn contract (`Mission.SpawnTroop`) and re-add each piece, in order, or the engine's humanoid assumptions AV one layer at a time.
+- Extends memory `feedback_nonhumanoid_creature_troop_not_mount` (troop-not-mount) with the build-shape detail: the troop is recruited as a humanoid anchor but *spawned* via the mount build, not the humanoid build.
+
+---
+
+## Appendix — deep-review of the SUPERSEDED in-place `Monster`-swap approach
+
+> Retained for history. This reviewed the approach that returned `true` from the `Mission.SpawnAgent` prefix after `agentBuildData.Monster(spider)` — which crashed in-game (humanoid skin on the spider skeleton). The detached redesign above replaced it.
+
+### Summary
+
+Deep-review (5 agents) of the recruitable-spider-troop feature found **no correctness bugs** and **one minor style finding** (an ADR-002 entry-point line-count overage), fixed in-session. The high-blast-radius risks were all verified clean: the `Mission.SpawnAgent` chokepoint prefix is fail-safe (always returns `true`, null-guarded), it coexists with Patch23_BannerColorPersistence (both return `true`), bites work in real campaign battles via the shared `IBoneCollisionService` singleton that `AdvancedCombatBehavior` ticks, and the level-21 spider (Tier 4) is below MaxVolunteerTier 6 so it is genuinely offerable as a volunteer. Build + 3030/3032 tests green. **(Note: "no correctness bugs" was true of the managed code reviewed; the design itself was the bug — it crashed natively in-game, which the redesign above fixes.)**
+
+## Findings
+
+| # | Sev | Finding | Category | Why missed | Preventive action |
+|---|-----|---------|----------|------------|-------------------|
+| 1 | LOW | `SpiderMissionBehavior.cs` 153 lines > ADR-002 "<150" ceiling | Style / Critical-Rule ceiling | Gutting the scatter-spawn path took the file 201→153; I verified behavior + delegation, not `wc -l` against the 150 ceiling | After editing an entry-point class (MissionBehavior / Patch / GameModel / CampaignBehavior), `wc -l` it against 150. One-off; no new rule needed. |
+| 2 | (overstated) | Agent 4 rated "LOTRLOME_Armory absent from `SubModule.xml` DependedModules" as CRITICAL ("Monster load fails at runtime") | Review-process / false-severity | Agent 4 assumed declared load-order affects a runtime lookup | Resolved by evidence-over-claims — see Notes. Not a spider bug; pre-existing whole-mod matter, not bundled into this feature. |
+
+## Notes
+
+- **Finding 2 is the valuable process datapoint.** The deep-review's own "when two agents disagree, that's signal" rule fired: Agent 4 (Completeness) called the missing LOTRLOME dependency CRITICAL, while Agent 5 (Data Flow) traced the Monster null-path as a graceful fail-open. The disagreement forced a mechanism check — the spider Monster is resolved by a **runtime** `MBObjectManager.GetObject<Monster>("spider")` at agent-spawn time, by which point every enabled module is loaded regardless of declared order; and the service already fail-opens (logs + spawns the humanoid anchor) if it is absent. So the declared dependency is load-order-irrelevant for the spider. The general lesson: "module X owns entity Y" does **not** imply a load-time cross-module dependency when the consumer is a runtime lookup. TAOM has never declared LOTRLOME_Armory despite using its items everywhere, and ships fine — a pre-existing whole-mod observation, surfaced for the user, deliberately not fixed inside this surgical feature.
+- **No systemic / repeat-offender pattern.** Finding 1 is a one-off ceiling miss, not a recurring class (unlike the NaN-gate trio). No new feedback memory warranted.
+
+## Prior design dead-end — the rideable-mount crash (the real "never again" lesson)
+
+Before the troop approach, the spider was built as a **rideable mount** (creature-as-HorseItem, `dg_giant_spider_rider`). It was fully reversed because it failed two ways:
+
+1. **Campaign-map crash (game-breaking):** a mounted creature gets a map party icon; building it calls `Skeleton.ForceUpdateBoneFrames()` (via `MobilePartyVisual.AddMobileIconComponents` → `RefreshPartyIcon`), which threw `AccessViolationException` on entering the open world. This path exists ONLY for mounts.
+2. **Per-mesh bone-render limit:** a single skinned Mesh has a native ~40–58 per-draw-call bone cap; the 8-leg spider mesh exceeded it (only 4 legs rendered). `Skeleton.MaxBoneCount=64` is a separate (skeleton) cap; the fix would be a multi-mesh split (warg `<AdditionalMeshes>`).
+
+**Preventive (cross-session):** memory `feedback_nonhumanoid_creature_troop_not_mount` — any future non-humanoid creature is a recruitable troop via the `Mission.SpawnAgent` monster-swap, never a mount. The troop path never gets a map icon (no `ForceUpdateBoneFrames`) and spawns on the live-agent path. Also captured in `docs/features/spider.md` "Why This Exists". This is the systemic lesson; the troop feature's own deep-review (above) was clean.
+
+## Human-seam items (not review findings — require in-game verification)
+
+- **Live-agent render:** whether the spider shows all 8 legs. The per-mesh bone-render limit was the *mount-path* symptom (4 of 8 legs); it is unproven on the *live-agent* spawn path and can only be confirmed by recruiting a spider and taking it to battle.
+- **Fang bone indices (23/37/43)** are documented placeholders copied from the warg — bites may land on the wrong contact points until a runtime bone dump resolves the real `joint5_l/r` / `joint12_m` indices on `as_spider`.

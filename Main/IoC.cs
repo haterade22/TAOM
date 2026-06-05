@@ -20,8 +20,7 @@ using TAOM.Features.AdvancedCombat;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.TroopWeight;
 using TAOM.Features.Warg;
-// DISABLED 2026-05-14: Spider feature not ready for live game yet. Re-enable by uncommenting.
-// using TAOM.Features.Spider;
+using TAOM.Features.Spider;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.MainMenuCustomizer;
 using TAOM.Features.Messengers;
@@ -83,8 +82,7 @@ public static class IoC
         TroopWeightIoC.RegisterTroopWeightFeature(container);
         AdvancedCombatIoC.RegisterAdvancedCombatFeature(container);
         WargIoC.RegisterWargFeature(container);
-        // DISABLED 2026-05-14: Spider feature not ready for live game yet. Re-enable by uncommenting.
-        // SpiderIoC.RegisterSpiderFeature(container);
+        SpiderIoC.RegisterSpiderFeature(container);
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);
         MainMenuCustomizerIoC.RegisterMainMenuCustomizerFeature(container);

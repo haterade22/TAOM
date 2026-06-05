@@ -1,32 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
-  <!-- ==================== SPIDER CREATURE ANCHOR ==================== -->
-  <!-- Minimal NPCCharacter used solely as a BasicCharacterObject anchor for
-       AgentBuildData when SpiderSpawnerService spawns spider agents at runtime.
+  <!-- ==================== SPIDER CREATURE (RECRUITABLE) ==================== -->
+  <!-- The giant spider, recruitable at Dol Guldur fiefs (see VolunteerRecruitmentService,
+       weight 1) and spawned + fought as the spider Monster via Patch45_SpiderTroopSpawn.
 
-       The race attribute is humanoid (dg_uruk) because Bannerlord's NPCCharacter
-       schema requires a race that resolves through skins.xml — non-humanoid races
-       (spider) are NOT valid here. The actual visual is overridden at spawn time
-       by AgentBuildData.Monster(spider) which swaps in the spider Monster +
-       skeleton, making the race here cosmetically irrelevant.
+       race="dg_uruk" is a HUMANOID ANCHOR: Bannerlord's NPCCharacter schema requires a
+       race that resolves through skins.xml — the non-humanoid "spider" race is NOT valid
+       here, and recruitment / party-roster / UI all need a resolvable humanoid. The actual
+       battle visual is overridden at spawn time by Patch45 -> AgentBuildData.Monster(spider)
+       (+ NoWeapons/NoHorses), which swaps in the spider skeleton + animations. The recruit
+       therefore shows a humanoid silhouette in the party roster but spawns as a spider in
+       every battle — an accepted cosmetic tradeoff of the anchor approach.
 
-       This troop should NEVER appear in party templates, custom-battle pickers,
-       or recruitment menus — it exists only to satisfy AgentBuildData and is
-       spawned exclusively via SpiderMissionBehavior. Equipment is intentionally
-       empty + NoWeapons/NoHorses on AgentBuildData ensure no items render.
+       occupation="Wanderer" is CRITICAL and must stay: the engine sets IsSoldier=true when
+       the occupation string contains "soldier" (BasicCharacterObject), and Custom Battle's
+       troop picker iterates BasicCharacterObjects where IsSoldier && !IsObsolete
+       (ArmyCompositionGroupVM). hidden_in_encyclopedia and is_basic_troop="false" do NOT
+       exclude it from that picker — only the non-soldier occupation does. Codex review
+       #spider-2026-04-23 caught this. The troop is offered ONLY through the Dol Guldur
+       volunteer pool; it must NOT be added to party templates or the basic_troop / elite
+       slots in taom_spcultures.xml.
 
-       occupation="Wanderer" is critical: the engine sets IsSoldier=true if the
-       occupation string contains "soldier" (case-insensitive, see
-       BasicCharacterObject.cs). Custom Battle's troop picker iterates
-       BasicCharacterObjects where IsSoldier && !IsObsolete (see
-       ArmyCompositionGroupVM) — hidden_in_encyclopedia and is_basic_troop="false"
-       do NOT exclude from this picker. Anything containing "soldier" puts this
-       anchor in the player's troop selection menu. Codex review #spider-2026-04-23
-       caught this. Use "Wanderer" or similar non-soldier occupation. -->
+       Equipment is intentionally empty — the bite is a CustomAttack driven by
+       SpiderBehaviorTree/SpiderAttackService, not a weapon. Skills exist only to give the
+       agent a credible tier (~T5) + hit points; weapon skills do not drive its damage. -->
   <NPCCharacter id="taom_spider_creature"
                 race="dg_uruk"
                 default_group="Infantry"
+                level="21"
                 is_hero="false"
                 is_basic_troop="false"
                 hidden_in_encyclopedia="true"
@@ -34,7 +36,11 @@
                 culture="Culture.dolguldur"
                 name="{=taom_spider_creature_name}Giant Spider">
     <face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
-    <skills></skills>
+    <skills>
+      <skill id="Athletics" value="120" />
+      <skill id="OneHanded" value="120" />
+      <skill id="Polearm" value="120" />
+    </skills>
     <Equipments>
       <EquipmentRoster />
     </Equipments>
