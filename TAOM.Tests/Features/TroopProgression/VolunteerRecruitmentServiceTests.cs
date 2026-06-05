@@ -412,8 +412,9 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_DolGuldurSettlement_HighRoll_ReturnsShadowInitiate()
     {
-        // town_DG1: dg_goblin_slave(7) + dg_khamul_shadow_initiate(3) = total 10
-        _random.Next(10).Returns(7);
+        // town_DG1: dg_goblin_slave(7) + dg_khamul_shadow_initiate(3) + taom_spider_creature(1) = total 11
+        // Roll 7 lands in the khamul range [7,10) — spider sits at [10,11).
+        _random.Next(100) /* TEMP-SPIDER-TEST-WEIGHT: was Next(11); revert with the weight */.Returns(7);
         var context = new VolunteerContext(
             settlementId: "town_DG1",
             boundSettlementId: null,
@@ -469,9 +470,9 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_DolGuldurCulture_ContainsKhamulInitiate()
     {
-        // Culture pool: dg_goblin_slave(5) + dg_uruk_warrior(3) + dg_khamul_shadow_initiate(2) = 10
-        // Roll 8 should land in khamul_shadow_initiate range
-        _random.Next(10).Returns(8);
+        // Culture pool: dg_goblin_slave(5) + dg_uruk_warrior(3) + dg_khamul_shadow_initiate(2) + taom_spider_creature(1) = 11
+        // Roll 8 should land in khamul_shadow_initiate range [8,10) — spider sits at [10,11).
+        _random.Next(100) /* TEMP-SPIDER-TEST-WEIGHT: was Next(11); revert with the weight */.Returns(8);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
@@ -481,6 +482,63 @@ public class VolunteerRecruitmentServiceTests
         var result = _sut.GetVolunteerTroopId(context);
 
         Assert.AreEqual("dg_khamul_shadow_initiate", result);
+    }
+
+    // --- Dol Guldur spider recruitment (Patch45_SpiderTroopSpawn) ---
+
+    [TestMethod]
+    [DataRow("town_DG1")]
+    [DataRow("castle_DG1")]
+    [DataRow("castle_DG2")]
+    [DataRow("castle_DG3")]
+    public void GetVolunteerTroopId_DolGuldurSettlement_MaxRoll_ReturnsSpider(string settlementId)
+    {
+        // <settlement>: dg_goblin_slave(7) + dg_khamul_shadow_initiate(3) + taom_spider_creature(1) = 11
+        // Roll 10 lands in the spider range [10,11).
+        _random.Next(100) /* TEMP-SPIDER-TEST-WEIGHT: was Next(11); revert with the weight */.Returns(10);
+        var context = new VolunteerContext(
+            settlementId: settlementId,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "dolguldur");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("taom_spider_creature", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DolGuldurCulture_MaxRoll_ReturnsSpider()
+    {
+        // Culture pool: dg_goblin_slave(5) + dg_uruk_warrior(3) + dg_khamul_shadow_initiate(2) + taom_spider_creature(1) = 11
+        // Roll 10 lands in the spider range [10,11).
+        _random.Next(100) /* TEMP-SPIDER-TEST-WEIGHT: was Next(11); revert with the weight */.Returns(10);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "dolguldur");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("taom_spider_creature", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DolGuldurClanPool_ExcludesSpider()
+    {
+        // Clan-path pool stays goblin(7) + khamul(3) = 10 — the spider is intentionally absent so
+        // clan-path recruitment never yields it. Even a max roll returns khamul, not the spider.
+        _random.Next(Arg.Any<int>()).Returns(9);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_dolguldur_1",
+            cultureId: "dolguldur");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreNotEqual("taom_spider_creature", result);
     }
 
     // --- Dol Guldur village bound settlement fallback ---

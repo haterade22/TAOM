@@ -372,9 +372,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         if (pool == null || pool.Count == 0)
             return null;
 
-        var troop = PickWeighted(pool);
-        _logger.LogDebug($"Volunteer: settlement={context.SettlementId} clan={context.OwnerClanId} culture={context.CultureId} converted={context.IsConvertedSettlement} → {troop}");
-        return troop;
+        return PickWeighted(pool);
     }
 
     // Standard (non-converted) resolution cascade: conditional → per-settlement → per-clan → culture fallback.
@@ -509,10 +507,15 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
 
     private static void InitializeDolGuldurSettlements()
     {
-        AddSettlement("town_DG1",   ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3));
-        AddSettlement("castle_DG1", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3));
-        AddSettlement("castle_DG2", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3));
-        AddSettlement("castle_DG3", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3));
+        // taom_spider_creature: the giant spider, recruitable at Dol Guldur fiefs only. It rides in the
+        // party roster as a humanoid anchor (race dg_uruk) and spawns + fights as the spider Monster via
+        // Patch45_SpiderTroopSpawn. Settlement pools feed BOTH player and AI lord recruitment. Deliberately
+        // absent from the clan-path pool (InitializeDolGuldurClans) to keep that source clean.
+        // !!! TEMP-SPIDER-TEST-WEIGHT: spider weight cranked 1 -> 90 for in-game testing. REVERT to 1 before commit. !!!
+        AddSettlement("town_DG1",   ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 90));
+        AddSettlement("castle_DG1", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 90));
+        AddSettlement("castle_DG2", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 90));
+        AddSettlement("castle_DG3", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 90));
     }
 
     // --- Dol Guldur Clan Mappings ---
@@ -535,7 +538,11 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         {
             new VolunteerChance("dg_goblin_slave", 5),
             new VolunteerChance("dg_uruk_warrior", 3),
-            new VolunteerChance("dg_khamul_shadow_initiate", 2)
+            new VolunteerChance("dg_khamul_shadow_initiate", 2),
+            // Giant spider — culture-fallback recruit for any Dol Guldur fief not in the per-settlement
+            // map above. Spawns + fights as the spider Monster (Patch45_SpiderTroopSpawn).
+            // !!! TEMP-SPIDER-TEST-WEIGHT: cranked 1 -> 90 for in-game testing. REVERT to 1 before commit. !!!
+            new VolunteerChance("taom_spider_creature", 90)
         };
     }
 
