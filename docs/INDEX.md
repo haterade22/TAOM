@@ -109,7 +109,10 @@
 
 ### Infrastructure & tooling
 - [bannerlord-engine-and-toolchain](reference/bannerlord-engine-and-toolchain.md) — **the whole engine/toolchain**: shipping-vs-editor builds, managed-vs-native DLL split, verified tech stack (Mono, PhysX, Granite, DX11, DLSS), the managed↔native bridge, FBX→tpac pipeline, custom-creature workflow. `tools/decompile_bannerlord.ps1` (dual-build decompile) + `tools/pe_inspect.py` (see into native DLLs)
-- **`reference/engine/` — phased engine study** (one process traced end-to-end from the decompile, what/how/why): [agent-spawn-and-render-pipeline](reference/engine/agent-spawn-and-render-pipeline.md) (Phase 1 — `SpawnAgent`/`SpawnMonster`→`CreateAgent`→`BuildAgent`→native `PreloadForRendering`; pins the spider render AV to the mesh, not the spawn code). More phases added sequentially.
+- **`reference/engine/` — phased engine study** (one process traced end-to-end from the decompile, what/how/why):
+  - [agent-spawn-and-render-pipeline](reference/engine/agent-spawn-and-render-pipeline.md) (Phase 1 — `SpawnAgent`/`SpawnMonster`→`CreateAgent`→`BuildAgent`→native `PreloadForRendering`; pins the spider render AV to the mesh, not the spawn code)
+  - [animation-binding-and-playback](reference/engine/animation-binding-and-playback.md) (Phase 2 — `Monster.FillAnimationSystemData`→`CreateAgent` binds the rig; `SetActionChannel`→native plays it; the "won't animate" diagnostic chain)
+  - More phases added sequentially.
 - [bannerlord-animation-clip-flags](reference/bannerlord-animation-clip-flags.md) — the `AnimFlags` clip-flag system + per-clip-type recipe + full per-flag reference (all ~60); flags are baked into the `_anm.tpac`, NOT `action_types.xml`; the spider's clips ship with zero flags (= broken locomotion)
 - [editor-cache-rebuild](features/editor-cache-rebuild.md) — parallel + incremental + resumable settlement distance cache rebuild
 - [scene-scripts](features/scene-scripts.md) — engine-discovered ScriptComponentBehavior subclasses (CS_Road, etc.)
