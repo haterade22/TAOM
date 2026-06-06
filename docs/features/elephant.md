@@ -75,6 +75,27 @@ production-grade; validated via side-view renders that the rig deforms correctly
 - **Next:** author run/turn/rear/death + the 3 `act_war_elephant_attack_*` clips the same way (or refine these in
   Cascadeur), import all into the Modding Kit → `*_anm.tpac`, and bind them in the 1.4.5 `as_war_elephant` action-set.
 
+### The real ADOD animation source — found, but unsliced (2026-06-06)
+
+The production ADOD elephant clips exist as **source** at
+`…/Modules/ADOD_Beasts/AssetSources/elephants/elephant_anims_all_{left,right,turn_left,turn_right}.fbx` (on
+`elephant_skeleton` — all 52 non-leaf bones match our rig exactly). **But each is one ~1341-frame concatenated take
+with no embedded clip boundaries** — no named sub-takes, no pose markers (ADOD defined the per-clip frame ranges
+inside the Modding Kit project, which isn't shipped). A leg-motion-profile heuristic couldn't separate them cleanly
+(a 672-frame low-activity block then dozens of 8–12 frame fragments). So the source **can't be auto-sliced** — it
+must be sliced by scrubbing in the Modding Kit (how ADOD built it).
+
+**The already-sliced real clips = the 31 compiled `elephant_*_anm.tpac`** in `…/ADOD_Beasts/Assets/elephants/animations/`
+— skeleton-agnostic clip data that binds to `elephant_skeleton` (our rig). **Fastest path to the full 1-for-1 set:**
+copy those tpacs into `LOTRLOME_Armory/Assets/creature/elephant/animations/` and reference them in `as_war_elephant`
+(rename to `an_war_elephant_*` to avoid an ADOD id collision). Caveat: 1.2.12-era, but clip tpacs are skeleton-relative
+keyframe data (no embedded skeleton — confirmed by the deep-dive), so they should bind on 1.4.5; verify in-game.
+
+**Three animation paths — your call:** (a) **compiled tpacs** — real, full 31-clip set, fastest, slight 1.2.12 risk;
+(b) **Kit-slice the source FBX** — fully re-authored/owned, but manual boundary definition; (c) **the hand-authored
+idle+walk above** — fully owned + 1.4.5-clean, but only 2 rough clips. (a) is quickest to a working animated elephant;
+(c) is the safest fully-owned starting point. The trample C# works regardless (codes degrade to `act_none`).
+
 ## Overview
 
 A rideable **Harad war elephant** — a `Mountable=true` mount (ridden by a Harad crewman) that also **auto-attacks**
