@@ -48,8 +48,32 @@ skipped but the **trample damage + knockdown still land**. So the gameplay works
    doesn't have — fixed to ` Spine_04`.)
 2. **1.4.5 action-set + clips** — author `as_war_elephant` against the **vanilla 1.4.5** quadruped-mount schema
    (NOT ADOD's 1.2.12 `as_elephant`), binding TAOM-compiled clips. This is the gating dependency for animation.
-3. **Animations** — author the elephant clips on our FBX in Blender → Modding-Kit compile (the creature pipeline).
+3. **Animations** — **idle + walk authored** (2026-06-06, in Blender via MCP — see below); remaining clips
+   (run/turn/rear/death + the 3 attack clips) + the Modding-Kit compile of all clips are the next step.
 4. **Harad rider troop + recruitment**, and an in-game smoke test.
+
+### Authored animations — first pass (2026-06-06, Blender via MCP)
+
+Authored two in-place, looping elephant clips directly on our `elephant_skeleton` rig via the Blender MCP
+(procedural keyframing, no Cascadeur/visual-iteration loop — these are a **rough first pass to refine**, NOT
+production-grade; validated via side-view renders that the rig deforms correctly + the gait alternates):
+
+| Clip | Frames | Motion |
+|------|--------|--------|
+| `an_war_elephant_idle` | 1–49 (loop) | breathing (spine pitch) + head sway + a phase-offset wave down the 29-segment trunk + ear flick + tail sway; legs static |
+| `an_war_elephant_walk` | 1–25 (loop) | 4-leg lateral-sequence gait (LH→LF→RH→RF, ±11° hip swing + slight knee lift) + subtle body bob + trunk/tail sway; **zero root translation** (engine supplies forward travel — `feedback_movement_anims_in_place_engine_driven`) |
+
+- **Exported** (Modding-Kit-ready, verified: 1 Null + 60 LimbNodes + animation take, 0 meshes):
+  `E:\LOTRAOMAssets\Elephant\clips\an_war_elephant_idle.fbx` + `an_war_elephant_walk.fbx`. Recipe:
+  `object_types={ARMATURE}`, **`primary_bone_axis='Y'`** (lesson L13), `add_leaf_bones=False`,
+  `bake_anim_use_nla_strips=True` (bare take names, lesson L11) — same axis as the body FBX so they bind.
+- **Workspace saved** for refinement: `E:\LOTRAOMAssets\Elephant\elephant_anim_workspace.blend` (the 2 actions live on the rig).
+- **Bone-axis reference for further authoring** (from the rig diff): forward=+Y, up=+Z; **local-Z rotation = fore/aft
+  pitch** (leg swing, head nod, trunk/tail fore-aft) for nearly every bone (their local-Z ≈ world +X);
+  **local-X = lateral sway**. +local-Z swings a leg forward. Legs: front = ` R/L UpperArm`→`Forearm`→`Hand`;
+  back = ` R/L Thigh`→`Calf`→`Foot` (point −Z). The 29-seg trunk = ` Queue de cheval *`, the 7-seg tail = ` Tail*`.
+- **Next:** author run/turn/rear/death + the 3 `act_war_elephant_attack_*` clips the same way (or refine these in
+  Cascadeur), import all into the Modding Kit → `*_anm.tpac`, and bind them in the 1.4.5 `as_war_elephant` action-set.
 
 ## Overview
 

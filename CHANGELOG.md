@@ -1,5 +1,15 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-06
+
+### chore(elephant): author first-pass idle + walk animations in Blender (via MCP) on our rig
+
+Authored two in-place, looping elephant clips directly on the `elephant_skeleton` rig through the Blender MCP — the honest answer to "make animations in Blender." (ADOD's elephant-body clips exist only as compiled `.tpac`, not Blender-importable source; warg is human-skeleton and spider is 8-legged, so neither retargets to a quadruped — authoring was the path.) Procedural keyframing, validated via side-view renders (rig deforms correctly, gait alternates); a **rough first pass to refine in Cascadeur**, not production-grade.
+
+- `an_war_elephant_idle` (1–49 loop): breathing + head sway + a wave down the 29-segment trunk + ear flick + tail sway.
+- `an_war_elephant_walk` (1–25 loop): 4-leg lateral-sequence gait (±11° hip swing + slight knee lift) + body bob + trunk/tail sway, **zero root translation** (engine supplies travel).
+- Exported as Modding-Kit-ready clip FBX (`primary_bone_axis='Y'` L13, `add_leaf_bones=False`, bare take names L11; verified 60 LimbNodes + animation take) to `E:\LOTRAOMAssets\Elephant\clips\`; workspace saved to `E:\LOTRAOMAssets\Elephant\elephant_anim_workspace.blend`. The clips + blend live on `E:\` (not in-repo); doc + bone-axis authoring reference in [docs/features/elephant.md](docs/features/elephant.md). Next: run/turn/rear/attack clips + Modding-Kit compile + the `as_war_elephant` action-set.
+
 ## 2026-06-05
 
 ### feat(elephant): Harad war-elephant trample + mount-lock — 1-for-1 ADOD port, adapted to v1.4.5 (C# done, data/anim seams)
