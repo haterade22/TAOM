@@ -107,30 +107,42 @@ died on). A decompile + asset comparison of ADOD's wolf overturns this RCA's cor
 `CreateHorseAgentFromRosterElements` → `CreateAgent(…, FromHorseObj)` + `agent.SetMountInitialValues(name, MountCreationKey)`;
 AI via `ADODBeastsWolfAgentComponent`. It renders + fights riderless in-game.
 
-| | ADOD wolf (works) | Our spider (AV'd) |
-|---|---|---|
-| Spawn | `SpawnMonster` → `CreateAgent(FromHorseObj)` + `SetMountInitialValues` | hand-rolled `CreateAgent(FromHorseObj)` + `SetMountInitialValues` — **already equivalent** |
-| Skeleton bones | **57** | 62 (only 5 more) |
-| **Skeleton `Usage`** | **`'other'`** | **`'horse'`** |
-
-**Three conclusions of this RCA are refuted or in serious doubt:**
+**What's VERIFIED (still holds):**
 1. **"A non-humanoid riderless combatant is a shape the engine doesn't support" — REFUTED.** ADOD's wolves are exactly that and work.
-2. **"The 62-bone / 58-bone mesh overflows the per-mesh palette → `PreloadForRendering` AV" — in serious doubt.** The wolf renders at a **57-bone** skeleton (5 fewer than the spider). A 5-bone gap doesn't flip render→AV. The mesh-split we chased was likely a red herring. (Wolf per-*mesh* palette not directly measured — but the skeleton count alone undercuts the theory.)
-3. **The spawn path was not the cause** — our `SpiderDetachedAgentSpawner` already replicated `SetMountInitialValues` + the MountCreationKey (the one genuinely-subtle piece).
+2. **The spawn path is not the cause.** Our `SpiderDetachedAgentSpawner` hand-rolls `CreateAgent(FromHorseObj)` + `SetMountInitialValues` + `BuildAgent(null)` — decompiled (Mission.cs:4394/4525/4007, Agent.cs:4532) as the **identical** chain the wolf's public `Mission.SpawnMonster` runs. `EquipItemsFromSpawnEquipment` skips `AddSkinMeshes` for `FromHorseObj` for **both** wolf and spider, both reach the same native `PreloadForRendering`. The wolf proves that path renders fine.
 
-**Leading hypothesis (UNTESTED) — the spider skeleton `Usage`.** The wolf's skeleton is **`Usage='other'`**; the
-spider's is **`Usage='horse'`**. This RCA repeatedly described the AV as *"specific to the mount-render path"* — and
-`Usage='horse'` is precisely what routes a skeleton onto that path. The wolf avoids it with `Usage='other'` while
-*still* spawning via `FromHorseObj`. We added a `--usage` flag to `tpac_skeleton_transplant` this session but the
-recipe always kept `'horse'`, so **`Usage='other'` was very likely never tested in-game.**
+### CORRECTION (verified by workflow `w06c6pz7n`, 2026-06-06) — the `Usage='horse'→'other'` lead above was WRONG
 
-**The cheap experiment to revive the spider:** `python tools/tpac_skeleton_transplant.py <spider tpac> spider_skeleton --usage other`,
-re-import, flip `SpiderConfig.Enabled=true`, and test — keeping the existing `FromHorseObj`/`SetMountInitialValues`
-spawn. If the AV disappears, the spider was never "impossible"; it was a one-field skeleton-Usage bug, and the entire
-detached-vs-ridden agonising + the mesh-split were chasing the wrong cause. Framed as a hypothesis (the spider is
-paused; this is the most promising untried lead, not a confirmed fix). **Lesson: when comparing to a working
-reference mod, compare the WORKING ANALOG (wolf = riderless), not the convenient one (elephant = ridden) — and check
-the skeleton `Usage` field, not just bone counts + spawn code.**
+The first cut of this section claimed the spider skeleton was `Usage='horse'` and proposed transplanting it to `'other'` as the cheap fix. **That was a fabrication-by-inference — I never dumped the actual tpac.** Direct measurement refutes it **two independent ways**:
+
+| skeleton | bones | `Usage` | renders? |
+|---|---|---|---|
+| `spider_skeleton` (`spider_correct_geo.tpac`) | 62 | **`'other'`** | AVs (riderless) |
+| `adod_wolf_armature_unused` | 57 | **`'other'`** | works (riderless) |
+| `skeleton_warg` | 49 | `'horse'` | works (ridden) |
+| `elephant_skeleton` | 60 | `'horse'` | works (ridden) |
+
+The spider is **already `'other'`** (so "switch to other" is a no-op), **and** the elephant renders fine at `'horse'` — so `Usage` does **not** route onto a crashing path, and **neither `Usage` nor bone count predicts the crash.** Do **NOT** re-transplant the spider skeleton (it's a no-op that risks corrupting a known-good rig).
+
+### The real divergences from the wolf — and which (if any) matter
+
+The wolf rides the **vanilla horse pipeline**: `monster_usage="horse"` (ADOD authors no custom wolf usage) + an `as_adod_wolf` action_set built on vanilla **`act_horse_*`** types bound to wolf anims; Item `Type="Animal"`. The spider invents a **custom** `monster_usage="spider"` + `act_spider_*` vocabulary (with 13 `TEMP-ANM-UNBLOCK` substitutions for clips missing `_anm.tpac`) + Item `Type="Horse"`. **Following the wolf here (flip `monster_usage`→`"horse"`, rebuild `as_spider` on `act_horse_*`, Item `Type`→`"Animal"`) is worth doing for ROBUSTNESS — it deletes the custom-vocabulary + missing-`_anm` DivideByZero risk class — but it is ANIMATION/movement data, NOT the render path. It will NOT by itself fix the AV.**
+
+### Most-likely actual root cause: the spider MESH asset's native skin data
+
+By elimination (skeleton Usage, bone count, spawn path, Item Type all matched-or-counter-exampled), the remaining untested variable is the **spider mesh's own native skin data** (per-mesh bone palette / per-vertex influences / vertex buffer in `spider_correct.fbx`). Two supporting facts: a render-diag prefix showed `AgentVisuals=ok, skel.bones=62` (managed build fine; the AV is purely native), and the L/R mesh-split was already built + tested in-game + **AV'd** (so the bone-cap fix was already tried).
+
+**🚩 RED FLAG (workflow finding):** the "split" `spider_correct_geo.tpac` is **~7804 KB — the same size as the original single-mesh backup (~7574–7803 KB).** A genuine L/R bone-palette split would NOT produce a file the same size as the single mesh. This strongly suggests the "split" **duplicated geometry rather than partitioning the bone palettes** — i.e. the split never actually reduced any per-mesh palette, so the bone-cap theory was "refuted" by a split that never worked. *(Caveat: no mesh-skin dumper exists; `tpac_skeleton_dump.py` reads skeleton segments only — the mesh-defect cause is inferred by elimination, confirmable only in-game.)*
+
+### Ranked revival experiments (cheapest-first)
+
+1. **(~5 min, no asset work)** Confirm the current already-`'other'` spider still AVs (flip `Enabled=true`, one battle). Kills the Usage lead for free. If it does NOT crash, the prior AV was environmental (shader/driver).
+2. **(cheap, no Blender)** **Un-split single mesh** — author a spider item with `mesh=` on one mesh and **no `<AdditionalMeshes>`**, like the wolf's single mesh. The split is exhausted (refuted); the *un-split* direction is the genuinely untried one. Renders → the split was the corruption (ship single-mesh). Still AVs → the mesh asset's skin data is the defect → 4.
+3. **(cheap)** **Wolf-mesh-on-spider-skeleton control** — point the spider item `mesh=` at a known-good single creature mesh, keep `monster=Monster.spider`. Renders → defect is 100% localized to the spider mesh. AVs → defect is in the skeleton↔mesh binding/skeleton render data.
+4. **(Blender/Kit, expensive)** Re-author `spider_correct.fbx` skin: clamp ≤4 influences/vertex, drop zero-weight influences, genuinely minimal per-half palette, export skeleton+mesh in **one** FBX, regenerate the tpac.
+5. **(fallback, proven)** If 2–4 fail, ship the spider as a `Mountable=true` **ridden mount** (warg/elephant machinery — both render). The wolf proves riderless *can* work, so this is the fallback, not the first move.
+
+**Lesson: I claimed `Usage='horse'` without dumping the tpac — a verify-before-asserting failure (`evidence-over-claims.md` §C). Always `tpac_skeleton_dump` the actual asset before building a hypothesis on a field value. And the "split" file-size red flag shows a fix can be "tested + refuted" while never actually being applied — verify the asset change took effect (file size, palette count) before trusting the refutation.**
 
 ## Appendix — deep-review of the SUPERSEDED in-place `Monster`-swap approach
 

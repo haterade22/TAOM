@@ -16,17 +16,22 @@ public static class SpiderConfig
     // resolve) and the Monster it is spawned as by Patch45_SpiderTroopSpawn (see SpiderTroopSpawnService
     // + SpiderDetachedAgentSpawner).
     //
-    // REAL SPIDER (2026-06-05): SpiderMonsterId / SpiderMountItemId point at the real spider monster +
-    // mesh-split body (no longer the warg render stand-in). The full spider body mesh (~58 bones, one
-    // piece) overflowed the native per-mesh bone-palette cap and AccessViolated in Agent.PreloadForRendering;
-    // it is now split L/R into sk_spider_forest_c (base/left, 33 bones) + sk_spider_forest_c_2 (right,
-    // 30 bones, via the item's <AdditionalMeshes>), each under the cap. spider_correct.fbx ->
-    // spider_correct_geo.tpac carries the split meshes + the 62-bone spider_skeleton (IK transplant
-    // re-applied). A 3-agent pre-flip audit (2026-06-05) cleared the activation chain (as_spider clips,
-    // monster_usage, all monster-XML bones, FromHorseObj visual build, riderless locomotion). The only
-    // risk the in-game render confirms is the per-mesh bone cap; SpiderDetachedAgentSpawner fails open
-    // (try/catch -> humanoid anchor + log) if a half still overflows. Prior warg stand-in: see git history
-    // + docs/reviews/rca-spider-troop-2026-06-04.md.
+    // REAL SPIDER — PAUSED, render AV unresolved. SpiderMonsterId / SpiderMountItemId point at the real
+    // spider monster + body mesh. It AccessViolates in native Agent.PreloadForRendering on spawn.
+    //
+    // CORRECTED 2026-06-06 (workflow w06c6pz7n) — the standing theories below were wrong/refuted:
+    //   * NOT skeleton Usage: spider_skeleton is already Usage='other' (== the working ADOD wolf); the
+    //     elephant renders at Usage='horse'. Usage doesn't route the crash.
+    //   * NOT bone count: wolf renders riderless at 57 bones; spider is 62.
+    //   * NOT spawn path: SpiderDetachedAgentSpawner's reflected FromHorseObj chain is decompiled-identical
+    //     to the wolf's public Mission.SpawnMonster.
+    //   * The "L/R mesh split <=40 bones/half" was already tested in-game and the AV PERSISTED — AND the
+    //     split tpac is the SAME file size as the original single mesh, so the split likely duplicated
+    //     geometry instead of partitioning palettes (it may never have actually worked).
+    // MOST-LIKELY real cause: the spider MESH's native skin data (per-mesh palette / >4 influences / vertex
+    // buffer in spider_correct.fbx). CHEAPEST untried test: an UN-split single mesh (like the wolf's).
+    // SpiderDetachedAgentSpawner fails open (try/catch -> humanoid anchor + log). Full ranked experiments:
+    // docs/reviews/rca-spider-troop-2026-06-04.md "Update 2026-06-06".
     public const string SpiderMonsterId = "spider";
     public const string SpiderCharacterId = "taom_spider_creature";
 

@@ -12,12 +12,15 @@
 > warg/horse path) — see [elephant.md](elephant.md). To resume: resolve the render AV and flip `SpiderConfig.Enabled`
 > back to `true`.
 >
-> **⚠️ 2026-06-06 — this "unsupported shape" verdict is likely WRONG.** Comparing to ADOD's **wolves** (working
-> riderless non-humanoid creatures at a **57-bone** skeleton, `Usage='other'`) refutes both the "engine doesn't
-> support riderless creatures" and the "62-bone mesh is over the limit" conclusions. The standout untried difference:
-> the wolf skeleton is **`Usage='other'`**; ours is **`Usage='horse'`** (the mount-render path the AV is "specific
-> to"). **The cheap revival experiment:** re-transplant `spider_skeleton` to `--usage other`, re-import, flip
-> `Enabled=true`, test. See the [RCA "Update 2026-06-06"](../reviews/rca-spider-troop-2026-06-04.md#update-2026-06-06--adod-wolf-comparison-the-spiders-impossible-verdict-is-likely-wrong) for the full comparison.
+> **⚠️ 2026-06-06 — this "unsupported shape" verdict is likely WRONG (but NOT for the Usage reason first proposed).**
+> ADOD's **wolves** are working riderless non-humanoid creatures (57-bone, `Usage='other'`), so the engine *does*
+> support the shape. **Correction (verified):** the spider skeleton is **already `Usage='other'`** (not `'horse'` as
+> first claimed — that was an un-dumped inference), and the elephant renders at `'horse'` — so Usage + bone count both
+> fail to predict the crash, and the spawn path is decompiled-identical to the wolf's. The **most-likely real cause is
+> the spider MESH's native skin data** — and the "L/R split" tpac is the *same file size* as the original single mesh,
+> suggesting the split **duplicated geometry instead of partitioning palettes** (so the bone-cap "refutation" tested a
+> split that never worked). **Cheapest untried test: an un-split single mesh** (like the wolf's). Full ranked
+> experiments + the corrected matrix: [RCA "Update 2026-06-06"](../reviews/rca-spider-troop-2026-06-04.md).
 >
 > <details><summary>Historical: the (paused) riderless-autonomous detached-combatant architecture</summary>
 >
