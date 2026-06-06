@@ -114,6 +114,7 @@
   - [animation-binding-and-playback](reference/engine/animation-binding-and-playback.md) (Phase 2 — `Monster.FillAnimationSystemData`→`CreateAgent` binds the rig; `SetActionChannel`→native plays it; the "won't animate" diagnostic chain)
   - [monster-model](reference/engine/monster-model.md) (Phase 3 — the `monsters.xml` schema: bone-index map by name, IK/capsules/flags/usage, base-monster inheritance; what TAOM authors per creature)
   - [mission-and-missionbehavior-lifecycle](reference/engine/mission-and-missionbehavior-lifecycle.md) (Phase 4 — the in-battle runtime: `MissionBehavior`/`MissionLogic` virtuals, `AddMissionBehavior` dispatch, lifecycle order; confirms the `: MissionLogic` gotcha)
+  - [object-system-mbobjectmanager](reference/engine/object-system-mbobjectmanager.md) (Phase 5 — `MBObjectManager` `RegisterType`/`LoadXML`/`GetObject<T>(stringId)`; the data backbone; null-on-missing = the underwear bug; load-order-tolerant cross-module merge)
   - More phases added sequentially.
 - [bannerlord-animation-clip-flags](reference/bannerlord-animation-clip-flags.md) — the `AnimFlags` clip-flag system + per-clip-type recipe + full per-flag reference (all ~60); flags are baked into the `_anm.tpac`, NOT `action_types.xml`; the spider's clips ship with zero flags (= broken locomotion)
 - [editor-cache-rebuild](features/editor-cache-rebuild.md) — parallel + incremental + resumable settlement distance cache rebuild

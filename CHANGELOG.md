@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased study — Phase 5: object system (MBObjectManager + XML→object)
+
+[docs/reference/engine/object-system-mbobjectmanager.md](docs/reference/engine/object-system-mbobjectmanager.md) — the data backbone the spawn chain + every TAOM feature use. `RegisterType<T>(element, list, typeId)` (Monster→Monsters@2, Item→Items@4, NPCCharacter@16, Culture@17, PartyTemplate@24, Settlement@25…); `LoadXML(list)` merges all enabled modules' XML + deserializes into objects (where `SubModule.xml` `<XmlNode><XmlName id="…"/>` plugs in); `GetObject<T>(stringId)` resolves by `StringId` and **returns clean null on missing** (so a broken `Item.X` ref → no mesh = the "underwear bug" — caught statically by `tools/validate_moduledata.py`). Cross-module merge is **load-order-tolerant** at runtime (the ADOD/LOTRLOME-needn't-be-declared finding). The `RegisterType` typeId is the `MBGUID` object-type tag — distinct from `SaveableTypeDefiner` base ids.
+
 ### docs(engine): phased study — Phase 4: Mission + MissionBehavior lifecycle
 
 [docs/reference/engine/mission-and-missionbehavior-lifecycle.md](docs/reference/engine/mission-and-missionbehavior-lifecycle.md) — the in-battle runtime backbone every TAOM feature plugs into. The `MissionBehavior` base virtual surface (lifecycle/agent/combat/tick/teardown hooks); `MissionLogic : MissionBehavior` (`BehaviorType=Logic` + battle-flow virtuals `OnBattleEnded`/`MissionEnded`); `AddMissionBehavior`/`GetMissionBehavior`/`RemoveMissionBehavior`; the lifecycle order; the dispatch. **Confirms the `: MissionLogic` gotcha at the source:** `AddMissionBehavior` does `MissionLogics.Add(missionBehavior as MissionLogic)` (Mission.cs:4610) — `BehaviorType=Logic` without `: MissionLogic` → `as` is null → null in `MissionLogics` → NRE every tick (`feedback_missionbehaviortype_logic_requires_missionlogic_inheritance`).
