@@ -96,6 +96,17 @@ keyframe data (no embedded skeleton — confirmed by the deep-dive), so they sho
 idle+walk above** — fully owned + 1.4.5-clean, but only 2 rough clips. (a) is quickest to a working animated elephant;
 (c) is the safest fully-owned starting point. The trample C# works regardless (codes degrade to `act_none`).
 
+**Resolution (2026-06-06): duplicate into LOTRLOME_Armory, done in the Kit (project-owner choice).** The 5 ADOD
+elephant animation-source FBX (`adod_elephant.fbx` + `elephant_anims_all_{left,right,turn_left,turn_right}.fbx`)
+were **staged into `LOTRLOME_Armory/AssetSources/elephants/`** (same `elephant_skeleton` → binds to our rig). The
+owner re-creates the 30 clips in the Modding Kit from these + the frame ranges (the Kit shows each clip's
+`Source 1`/`Source 2`). **Why not auto-sliced:** the per-clip ranges DO ship — in `ADOD_Beasts/AssetPackages/pack0.tpac`,
+where each clip resource is `[name][int32 size-marker ~120–300][+12 Duration f][+16 Source1 f][+20 Source2 f]…[+60/64/68
+StepPoints −1,−1,−1]`. `elephant_attack_1` = 900–940 (matches the Kit), attacks 2/3/4 = 950–990 / 1000–1060 / 1070–1130,
+death = 1255–1335, stand_2/3 = 540–600 / 610–670. But the **locomotion families** (walk/trot/turn, canter/gallop +L/R)
+collide in a heuristic parse (names live in a shared table + the defs) — not reliably auto-extractable, so the Kit is the
+source of truth for those. My hand-authored `an_war_elephant_idle`/`_walk` remain as the throwaway fallback.
+
 ## Overview
 
 A rideable **Harad war elephant** — a `Mountable=true` mount (ridden by a Harad crewman) that also **auto-attacks**
