@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased study — Phase 3: the Monster model (monsters.xml → engine rig)
+
+[docs/reference/engine/monster-model.md](docs/reference/engine/monster-model.md) — the field-by-field `monsters.xml` schema (from `TaleWorlds.Core/Monster.cs` `Deserialize`): identity/animation binding (`action_set`/`monster_usage`), combat/movement stats, the full **bone-index map resolved BY NAME against the skeleton** (look-direction, ragdoll, **foot-IK end-effectors**, rein, slope-detect, rider-sit — `validateHasParentBone`, so a wrong name silently disables the feature), capsules, flags, and `base_monster` inheritance. This is exactly what TAOM authors per creature. Gotchas: foot-IK exposes only **2 effectors** (a >2-leg spider can't fully ground); wrong bone name = silent -1; `Mountable=false`/`IsHumanoid=false` for a creature-troop. Ties to Phase 1 (`CreateAgent`) + Phase 2 (`FillAnimationSystemData`).
+
 ### docs(engine): phased study — Phase 2: animation binding + action playback
 
 [docs/reference/engine/animation-binding-and-playback.md](docs/reference/engine/animation-binding-and-playback.md) — how an agent gets its animation rig from its `Monster` and how an action plays. **Binding:** `Monster.FillAnimationSystemData` (MountAndBlade.cs:101588) bundles the ActionSet (from `ActionSetCode`), MonsterUsageSetIndex (from `MonsterUsage`), speed limits, StepSize, and the full bone-index map into `AnimationSystemData` → `CreateAgent` (native) — the Monster is the single source of the rig; `SetActionSet` swaps it for suffixed sets (`_villager`/`_lord`/`_facegen`). **Playback:** `SetActionChannel` (Agent.cs:2368) is a native pass-through (action index + `(ulong)AnimFlags`); clip resolution, priority arbitration, flag application, blending, and the gait builder are all native. Payoff: the creature animation dependency chain — action_set valid? monster_usage right? bone names right? clip `_anm` present? clip flags set? — the diagnostic order for "the creature won't animate."
