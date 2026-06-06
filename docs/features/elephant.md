@@ -1,9 +1,47 @@
 # War Elephant (Harad rideable mount)
 
-> **Status: C# BUILT + WIRED (2026-06-05); data + animations are human seams.** The trample/mount-lock C# is a
-> 1-for-1 behavioral port of ADOD's elephant, adapted to **v1.4.5**, fully wired (IoC + SubModule) and green
-> (3041 tests). The Monster/Item data + the 1.4.5 action-set + the animation clips remain a Modding-Kit/Blender
-> seam (see "Implementation" + "Remaining seams"). Supersedes the paused [Giant Spider](spider.md).
+> **Status: C# BUILT + WIRED (2026-06-05); DEPLOYED FOR FIRST IN-GAME TEST (2026-06-06, pending verification).**
+> The trample/mount-lock C# is a 1-for-1 behavioral port of ADOD's elephant, adapted to **v1.4.5**, fully wired
+> (IoC + SubModule) and green (3041 tests). Supersedes the paused [Giant Spider](spider.md).
+>
+> **First-test deployment (2026-06-06) — NOT yet confirmed in-game.** To unblock a first test without authoring
+> the 1.4.5 action-set, the Monster + Item were deployed to live `LOTRLOME_Armory` with the Monster's
+> `action_set`/`monster_usage` pointed at **ADOD's working `as_elephant` + `elephant` usage** (both bound to
+> `elephant_skeleton`, which our `elephant_mesh` is skinned to). This makes it **load + animate + trample at once
+> — REQUIRES ADOD_Beasts enabled in the load order.** Deployed/changed:
+> - `LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_elephant.xml` (NEW, de-risked refs) + registered in `LOTRLOME_Armory/SubModule.xml`.
+> - `<Item id="taom_war_elephant">` added to live `LOTRAOM_horses.xml`.
+> - **TEMP** `Horse`-slot mount on `harad_militia` (`Main/.../troops_harad.xml`, marked `TEMP-ELEPHANT-TEST`, REVERT before commit) so a Harad party fields an AI-ridden elephant.
+> - Backups: `*.bak-elephant` beside the two edited LOTRLOME files.
+>
+> **To run the test:** enable ADOD_Beasts in the launcher → `./build.ps1` → fight a Harad party → watch the
+> AI-ridden elephant trample (rider within 3 m, facing) + confirm the mount can't be stolen. Trample is
+> **AI-rider-only** (early-returns for `Agent.Main`), so don't test by riding it yourself. If the elephant is
+> invisible, the in-tpac mesh name ≠ `elephant_mesh`; watch `rgl_log` on first load for missing-asset errors.
+> **Shipping path (post-test):** author a TAOM-owned `as_war_elephant` + `war_elephant` usage to drop the ADOD
+> dependency (the repo-reference `docs/features/elephant/lotr_monster_elephant.xml` keeps those intended refs).
+>
+> **Trample tick VERIFIED 1.4.5-safe (2026-06-06).** The howdah workflow proved `AgentComponent.OnTickAsAI` (the
+> virtual ADOD's trample/crew AI overrides) **does not exist in v1.4.5** — so ADOD's *own* trample is dead on our
+> engine. TAOM's port pre-fixed this: `ElephantMissionBehavior : MissionLogic`, trample runs in `OnMissionTick`
+> iterating `Mission.Current.AllAgents` ([ElephantMissionBehavior.cs:60](../../Main/Features/Elephant/ElephantMissionBehavior.cs#L60)), not on an AgentComponent. The trample will fire.
+>
+> **Self-contained clip consolidation — IN PROGRESS (2026-06-06).** Confirmed via `tools/tpac_skeleton_scan.py`:
+> LOTRLOME's `elephant_harad_armor_01_geo.tpac` **already carries `elephant_skeleton`** (item [3], `type=Skeleton`),
+> so only the *clips* are missing for a standalone elephant. The clip set = **31 `*_anm.tpac`** (359 B clip defs)
+> **+ 4 `elephant_anims_all_*_geo.tpac`** (~1.1 MB each, the actual animation data) — **copied** into
+> `LOTRLOME_Armory/Assets/creature/elephant/animations/` (35 tpacs). **Still pending:** author `as_war_elephant`
+> (clone of ADOD's 78-action `as_elephant`, bound to `elephant_skeleton`) + its `act_elephant_*` action-types, then
+> repoint the Monster to `as_war_elephant` + vanilla `monster_usage="horse"` (the ArtemsHunts 1.4.X pattern, avoids
+> a custom usage). **OPEN RISK (our `docs/tools/spider-skeleton-tpac-tools.md` line 341):** compiled animation-clip
+> *wrappers* normally come from the Kit's import flow — a blind copy of loose `_anm.tpac` *may* come up silent
+> in-game ("action set not found" / T-pose). To be tested empirically; fallback = the de-risked ADOD-reuse above.
+>
+> **CREW / HOWDAH (the multi-troop war elephant) — researched, not built.** How ADOD puts a *crew* of AI archers on
+> the elephant's back (a `UsableMachine` howdah with `StandingPoint` seats, per-tick frame-glued to the elephant's
+> neck point, crew force-spawned per seat) + the 4 v1.4.5 API drifts a TAOM port must fix:
+> **[howdah-crew-mechanism.md](elephant/howdah-crew-mechanism.md).** This is a separate, larger sub-feature to
+> sequence after the single-rider trample is confirmed.
 >
 > **Scope — this is a *standard* war elephant, NOT the giant mumakil / Oliphaunt.** A normal-scale ridden mount
 > (one Harad crewman rides it). TAOM already represents the mumakil separately (the existing `mumak_rider` troop

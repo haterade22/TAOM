@@ -2,6 +2,14 @@
 
 ## 2026-06-06
 
+### docs(elephant): howdah crew mechanism + v1.4.5 portability; trample tick verified; clip consolidation underway
+
+Decompiled `ADOD_Beasts.dll` + verified against installed v1.4.5 DLLs to answer "how does ADOD put a *crew* of AI troops on the elephant's back." New [docs/features/elephant/howdah-crew-mechanism.md](docs/features/elephant/howdah-crew-mechanism.md): the crew is a `UsableMachine` **howdah** whose `StandingPoint` children are seats; it is **not** bone-parented but **per-tick frame-copied onto the elephant's neck point** (`GetGlobalStableNeckPoint` + `Frame` → `SetFrame`); each seat **force-spawns** its own AI ranged crew (armor-tier → `additional_elephant_characters.xml` → 1/2/4 archers) and locks them with `act_howdah_stand_bow`. The mahout is a separate normal mount-rider.
+
+- **v1.4.5 portability:** mechanism is buildable, but ADOD's 1.2.12 code has 4 drifts a port must fix — `AgentComponent.OnTickAsAI` (gone; use `OnTick`/`OnTickParallel`), `StandingPoint.OnUse(Agent)` → `(Agent, sbyte)`, `MissionObject.SetDisabled(bool)` semantics (always-disable, not toggle), `UsableMachine.GetDescriptionText` (`string`→`TextObject`, `GameEntity`→`WeakGameEntity`).
+- **Trample tick VERIFIED 1.4.5-safe:** ADOD's trample rides the now-dead `OnTickAsAI`; TAOM's port pre-fixed it (`ElephantMissionBehavior : MissionLogic.OnMissionTick`). The deployed trample test will fire.
+- **Self-contained clips underway:** confirmed via `tpac_skeleton_scan.py` that LOTRLOME's geo already carries `elephant_skeleton`; copied the 31 `*_anm.tpac` clip defs + 4 `elephant_anims_all_*_geo.tpac` data files into LOTRLOME. Pending: author `as_war_elephant` + `act_elephant_*` types + repoint Monster (vanilla `monster_usage="horse"`, the ArtemsHunts 1.4.X pattern). Open risk: compiled clip *wrappers* may need a Kit re-import (per `docs/tools/spider-skeleton-tpac-tools.md`) — to be tested empirically.
+
 ### docs(spider): ADOD wolf-code deep-dive + ready-to-apply render-test/wolf-alignment reference
 
 Answered "what does ADOD's wolf code do, and why does the wolf render while the spider AVs?" by decompiling `ADOD_Beasts.dll` + `NativeHook.dll` (EasyHook). The wolf's ~1000 lines of managed code (`ADODBeastsWolfAgentComponent`, `ADODBeastsMissionLogic`) + 3 native hooks (`Agent_AiTick`/`Agent_Tick`/`AgentMovementAndDynamicsSystem_UpdateFlags`) are **all movement/AI — ZERO render hooks**. So the wolf renders through the stock engine path with no render code (its single-mesh `Type="Animal"` body just fits the per-mesh bone-palette cap); **no code fixes the spider AV — it's the mesh.** Also recorded: ADOD's creatures aren't roster troops (wolf = scripted companion via public `Mission.SpawnMonster`; elephant = ridden mount), so the spider's riderless-troop design is TAOM's own.
