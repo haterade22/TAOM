@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  TAOM war-elephant Horse Item — READY-TO-DROP reference (authored 2026-06-05).
+
+  Integration: paste the <Item> block below INSIDE the existing <Items> root of
+    <game>/Modules/LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml
+  (right before its closing </Items>, next to the spider_mount_a item). Do NOT add a second <Items> wrapper.
+
+  1-for-1 of ADOD's elephant Item with id elephant -> taom_war_elephant and monster -> Monster.taom_war_elephant.
+  mesh="elephant_mesh" is the body mesh inside the imported elephant_harad_armor_01_geo.tpac (verified export name).
+  Armor/howdah meshes (SK_Elephant_Armor_A.*) can be added later as a HorseHarness item or <AdditionalMeshes>
+  once their in-tpac names are confirmed in the Modding Kit; the body alone is a working mount.
+-->
+<Items>
+	<Item
+		id="taom_war_elephant"
+		name="{=taom_war_elephant}War Elephant"
+		mesh="elephant_mesh"
+		subtype="horse"
+		item_category="war_horse"
+		weight="999"
+		is_merchandise="false"
+		Type="Horse">
+		<ItemComponent>
+			<Horse
+				monster="Monster.taom_war_elephant"
+				maneuver="20"
+				speed="20"
+				charge_damage="350"
+				body_length="100"
+				is_mountable="true"
+				extra_health="0">
+				<AdditionalMeshes>
+				</AdditionalMeshes>
+				<Materials>
+				</Materials>
+			</Horse>
+		</ItemComponent>
+		<Flags Civilian="true" />
+	</Item>
+</Items>

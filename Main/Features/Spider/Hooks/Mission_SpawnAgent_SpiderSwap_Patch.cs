@@ -30,6 +30,10 @@ public static class Mission_SpawnAgent_SpiderSwap_Patch
     [HarmonyPrefix]
     public static bool Prefix(Mission __instance, AgentBuildData agentBuildData, ref Agent __result)
     {
+        // FEATURE PAUSED: the detached-spider render AV is unresolved (see SpiderConfig.Enabled). Let the
+        // vanilla spawn run so the troop appears as its harmless humanoid anchor instead of crashing.
+        if (!SpiderConfig.Enabled)
+            return true;
         if (_service == null || agentBuildData == null)
             return true;
         if (!_service.IsSpiderTroop(agentBuildData.AgentCharacter?.StringId))

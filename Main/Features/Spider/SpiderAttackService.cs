@@ -57,6 +57,8 @@ public class SpiderAttackService : ISpiderAttackService
             // CustomAttacksUtils.TakeDamage operates on sealed Agent types.
             var attackerAgent = (attacker as AgentAdapter)?.GetUnderlyingAgent();
             var targetAgent = (target as AgentAdapter)?.GetUnderlyingAgent();
+            _logger.LogInfo($"[Spider][diag] HIT: bite connected on '{targetAgent?.Name ?? "?"}' bone={boneId} " +
+                            $"damage={damage} vel={velocity:0.0} armor={armor} targetMount={target.HasMount}.");
             if (attackerAgent != null && targetAgent != null)
                 CustomAttacksUtils.TakeDamage(targetAgent, attackerAgent, damage);
         }
@@ -95,6 +97,9 @@ public class SpiderAttackService : ISpiderAttackService
             actionProgressMax = 0.5f;
         }
 
+        _logger.LogInfo($"[Spider][diag] bite: CustomAttack vel.Y={spider.MovementVelocity.Y:0.0} " +
+                        $"reach={targetDetectionRange:0.0}m radius={boneCollisionRadius:0.0} bones={boneIds.Count} " +
+                        $"action={(spider.MovementVelocity.Y >= 4f ? "charge" : "front")}.");
         spider.CustomAttack(action, boneIds, actionProgressMin, actionProgressMax, targetDetectionRange, boneCollisionRadius, true,
             (attackerAdapter, targetAdapter, boneId) => HandleSpiderTargetHit(attackerAdapter, targetAdapter, boneId));
     }

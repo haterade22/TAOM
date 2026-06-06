@@ -83,6 +83,7 @@ public static class IoC
         AdvancedCombatIoC.RegisterAdvancedCombatFeature(container);
         WargIoC.RegisterWargFeature(container);
         SpiderIoC.RegisterSpiderFeature(container);
+        Features.Elephant.ElephantIoC.RegisterElephantFeature(container);
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);
         MainMenuCustomizerIoC.RegisterMainMenuCustomizerFeature(container);

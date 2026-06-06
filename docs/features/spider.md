@@ -1,10 +1,25 @@
 # Spider
 
-> **Status (2026-06-04): WORK IN PROGRESS — detached non-humanoid combatant.** The giant spider is a recruitable Dol Guldur troop that, at battle spawn, is intercepted on `Mission.SpawnAgent` and built as a **detached non-humanoid agent** via the engine's free-mount (`FromHorseObj`) path — the only way to put a non-humanoid body on the battlefield without the humanoid-skin build that crashes. The earlier in-place `AgentBuildData.Monster`-swap design (which let vanilla `SpawnAgent` build a humanoid skin on the spider skeleton → native AccessViolation) is **superseded**.
+> **Status (2026-06-05): PAUSED — disabled in code.** `SpiderConfig.Enabled = false` gates
+> `Mission_SpawnAgent_SpiderSwap_Patch`, so the recruitable troop now spawns as its harmless **humanoid anchor**
+> (`dg_uruk`) instead of crashing the battle. The blocker is a native **`Agent.PreloadForRendering` AccessViolation**
+> on the 62-bone skeleton, reached through the **detached / non-mountable (`Mountable="false"`) mount-render
+> sub-path**. An exhaustive 2026-06-05 investigation **refuted every data-level cause** (mesh-split, ≤4 influences,
+> physics, skeleton integrity, shader cache, material binding) — a render-diag patch proved `AgentVisuals=ok
+> skel.bones=62` *build* fine and the native GPU preload is what AVs. The root issue is that a **non-humanoid
+> riderless combatant is a shape the engine does not support**; we hacked it in via `FromHorseObj` and hit a wall the
+> data cannot move. Work is paused in favour of a **`Mountable=true` ridden war-elephant** (the supported
+> warg/horse path) — see [elephant.md](elephant.md). To resume: resolve the render AV and flip `SpiderConfig.Enabled`
+> back to `true`. **If revived, the lesson is to make the spider a ridden mount, not a detached agent.**
 >
-> **Two things still gate a fully-shipping spider** (both tracked below + in the RCA): (1) the real 62-bone spider mesh AccessViolations at render and needs a **Modding-Kit mesh-split**; (2) **formation membership** (advancing with the army) is implemented but gated off pending an in-game test of the native weapon-state init. As a committed, non-crashing checkpoint the feature ships behind a **warg render stand-in** (`SpiderConfig` points at the warg monster/mesh, which renders cleanly and exercises the entire spawn code path).
+> <details><summary>Historical: the (paused) riderless-autonomous detached-combatant architecture</summary>
 >
-> Crash-fix journey, decompiled evidence, and the next-session plan: [`docs/reviews/rca-spider-troop-2026-06-04.md`](../reviews/rca-spider-troop-2026-06-04.md). Skeleton / mesh / animation authoring (the in-Blender + Modding-Kit side): [`spider-skeleton-animation-pipeline.md`](spider-skeleton-animation-pipeline.md).
+> **Architecture: detached + autonomous BT.** A `FromHorseObj` agent has garbage native wield/aiming state (the build path skips it) that is **unfixable** (can't read → NRE, can't write → `WeaponEquipped` AV). So `Agent_SpiderNativeWieldGuard_Patch` guards the **3 managed methods** that read it (`GetMissileRange`/`Get{Primary,Offhand}WieldedItemIndex` → `0`/`None`) — a closed, bounded set (every red property funnels through these 3), not whack-a-mole. Having no formation, `SpiderMoveToEnemyTask` drives the spider toward the nearest enemy (mission-wide search) via the wield-free `SetScriptedPositionAndDirection`; it bites via its Monster's `CustomAttack`. The earlier in-place `Monster`-swap **and** formation-membership designs are both **superseded** (formation membership adds an unavoidable null-`HumanAIComponent` crash — see RCA).
+>
+> **Two human seams remained:** (1) the real spider mesh AVs at render (a **58-bone** single mesh > the ~40 per-mesh palette) — split L/R in `spider_correct.fbx` (each half ≤40 bones), but the render AV persisted even with `AgentVisuals=ok skel.bones=62`, so the mesh-bone-count branch was *refuted* as the cause; (2) in-game validation of advance + bite + survive-being-hit with the **real** spider (the warg stand-in is `Mountable=true`, so it mount-wanders and masks movement). The feature shipped behind the warg render stand-in.
+> </details>
+>
+> Crash-fix journey + decompiled evidence: [`docs/reviews/rca-spider-troop-2026-06-04.md`](../reviews/rca-spider-troop-2026-06-04.md). Mesh-split + skeleton/animation authoring: [`spider-skeleton-animation-pipeline.md`](spider-skeleton-animation-pipeline.md).
 
 ## Overview
 

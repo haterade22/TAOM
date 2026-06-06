@@ -3,22 +3,34 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Domain;
+using TAOM.Features.Elephant;
 
 namespace TAOM.Features.CareerSystem.Models;
 
 // Phase 9b — thin boundary per gamemodels.md rule 4. All branching/stat-mutation logic
 // lives in ICareerAgentStatService. This file extracts primitives from the sealed Agent
 // at the boundary and delegates. Closes deferred audit-issue #142 inline-logic P2.
+//
+// 2026-06-05: the shared AgentStatCalculateModel slot also carries the war-elephant mount-lock
+// (1-for-1 ADOD ADODAgentStatCalculateModel) — non-rider AI can't take the elephant. The elephant
+// id check is delegated to IElephantAttackService; the boundary only applies the result via ternaries.
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerPassiveService _passiveService;
     private readonly ICareerAgentStatService _agentStatService;
+    private readonly IElephantAttackService _elephant;
 
-    public TaomAgentStatCalculateModel(ICareerPassiveService passiveService, ICareerAgentStatService agentStatService)
+    public TaomAgentStatCalculateModel(ICareerPassiveService passiveService, ICareerAgentStatService agentStatService, IElephantAttackService elephant)
     {
         _passiveService = passiveService;
         _agentStatService = agentStatService;
+        _elephant = elephant;
     }
+
+    public override bool CanAgentRideMount(Agent agent, Agent targetMount)
+        => _elephant.IsElephantMonster(targetMount?.Monster?.StringId)
+            ? false
+            : base.CanAgentRideMount(agent, targetMount);
 
     public override float GetEffectiveMaxHealth(Agent agent)
     {
@@ -38,5 +50,10 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
             isHuman: agent.IsHuman,
             isHero: agent.IsHero,
             agentDrivenProperties);
+
+        // War-elephant mount-lock (1-for-1 ADOD): a near-infinite MountDifficulty so non-rider AI can't take it.
+        agentDrivenProperties.MountDifficulty = _elephant.IsElephantMonster(agent?.Monster?.StringId)
+            ? ElephantConfig.MountDifficulty
+            : agentDrivenProperties.MountDifficulty;
     }
 }

@@ -9,10 +9,11 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.Spider;
 
 /// <summary>
-/// Minimal AI tree for AI-controlled spider agents.
-/// Selector: "no enemy near" → sleep ; otherwise → bite + sleep.
-/// No rider logic, no rage mode (unlike Warg). Vanilla AI handles movement;
-/// the BT only triggers attacks since vanilla AI doesn't drive non-humanoid strikes.
+/// Minimal AI tree for AI-controlled DETACHED spider agents.
+/// Selector: "no enemy near" → sleep ; otherwise → move-to-enemy → bite → sleep.
+/// No rider logic, no rage mode (unlike Warg). The detached spider has NO formation movement orders, so
+/// the BT drives BOTH its advance (<see cref="BehaviorTreeElements.SpiderMoveToEnemyTask"/>, via the
+/// wield-free SetScriptedPositionAndDirection) AND its non-humanoid bite (vanilla AI drives neither).
 /// </summary>
 public class SpiderBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTSpiderBlackboard
 {
@@ -32,7 +33,8 @@ public class SpiderBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTSpiderBlac
                 .AddSelector("no enemy near", new NoEnemyNearSpiderDecorator())
                     .AddTask(new SleepTask(new System.TimeSpan(0, 0, 1)))
                 .Up()
-                .AddSequence("bite enemy")
+                .AddSequence("engage enemy")
+                    .AddTask(new SpiderMoveToEnemyTask())
                     .AddTask(new SpiderAttackTask())
                     .AddTask(new SleepTask(new System.TimeSpan(0, 0, SpiderConfig.SleepAfterAttack)))
                 .Up()

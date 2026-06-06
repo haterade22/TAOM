@@ -511,10 +511,11 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         // party roster as a humanoid anchor (race dg_uruk) and spawns + fights as the spider Monster via
         // Patch45_SpiderTroopSpawn. Settlement pools feed BOTH player and AI lord recruitment. Deliberately
         // absent from the clan-path pool (InitializeDolGuldurClans) to keep that source clean.
-        AddSettlement("town_DG1",   ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 1));
-        AddSettlement("castle_DG1", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 1));
-        AddSettlement("castle_DG2", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 1));
-        AddSettlement("castle_DG3", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 1));
+        // !!! TEMP-SPIDER-TEST-WEIGHT: spider 1 -> 90 for reliable in-battle testing. REVERT to 1 before commit. !!!
+        AddSettlement("town_DG1",   ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 90));
+        AddSettlement("castle_DG1", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 90));
+        AddSettlement("castle_DG2", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 90));
+        AddSettlement("castle_DG3", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 90));
     }
 
     // --- Dol Guldur Clan Mappings ---
@@ -540,7 +541,8 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("dg_khamul_shadow_initiate", 2),
             // Giant spider — culture-fallback recruit for any Dol Guldur fief not in the per-settlement
             // map above. Spawns + fights as the spider Monster (Patch45_SpiderTroopSpawn).
-            new VolunteerChance("taom_spider_creature", 1)
+            // !!! TEMP-SPIDER-TEST-WEIGHT: spider 1 -> 90 for reliable in-battle testing. REVERT to 1 before commit. !!!
+            new VolunteerChance("taom_spider_creature", 90)
         };
     }
 

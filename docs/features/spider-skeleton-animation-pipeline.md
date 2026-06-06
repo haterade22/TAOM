@@ -81,7 +81,7 @@ Armature-space head positions (×100 cm; front = −Y / fangs, back = +Y / abdom
 ---
 
 ## Deliverables (all in `E:\LOTRAOMAssets\_auto_workspace\`)
-- **`spider_correct.fbx`** — `spider_skeleton` + `sk_spider_forest_c` + LODs (primary Y). The skeleton+mesh foundation.
+- **`spider_correct.fbx`** — `spider_skeleton` (62 bones, **untouched**) + all 3 variants **split L/R for the per-mesh bone cap**: `sk_spider_forest_{a,b,c}` (base, 33 bones) + `sk_spider_forest_{a,b,c}_2` (additional, 30 bones), all 6 LODs (primary Y). See "Mesh-split" below. (The original single-mesh export is regenerable from the haterade blend.)
 - **`spider_correct_geo.tpac`** (in LOTRLOME_Armory) — imported + **IK/ragdoll transplanted** (62 bodies, 61 D6). `.backup` saved.
 - **`spider_walk.fbx`** — forward walk (`sp_walk_1_001`) LOCAL-retargeted onto `spider_skeleton` (`spider_skeleton_notused` root). Body grounded; legs need per-leg polish.
 - **`spider_test_anim.fbx`** — crude leg-curl test (validated the anim pipeline).
@@ -89,6 +89,18 @@ Armature-space head positions (×100 cm; front = −Y / fangs, back = +Y / abdom
 
 ## Source-of-truth reference: the WARG (works in-game)
 `E:\Steam\...\Modules\Alliance.Wargs` — `AssetSources/2_lotr/monster/warg/Warg_Rig_V5.fbx` (rig, root `Skeleton_Warg`), `animations/*.fbx` (anim roots `Skeleton_Warg_notused`), `Assets/.../animations/*_geo.tpac` (compiled clips). This is where the `_notused` convention + the working-creature structure were confirmed.
+
+## Mesh-split for the per-mesh bone limit (the render AV fix) — done 2026-06-05
+
+**The bug.** `sk_spider_forest_c` weights to **58 bones in one mesh**. Bannerlord's native per-draw bone palette is **~40** (NOT the 64-bone `Skeleton.MaxBoneCount` — that's a separate, higher cap), so a single 58-bone mesh overflows it → `AccessViolationException` in `Agent.PreloadForRendering` at spawn. (The skeleton is 62 bones; older notes' "62-bone mesh" conflated skeleton-count with mesh-bone-usage — the mesh uses 58.)
+
+**The warg proves the rule** (measured in Blender from `Warg_Rig_V5.fbx`): a **49-bone** `Skeleton_Warg`, but every mesh is authored ≤40 — `warg_low` sits at *exactly* 40, `warg_low_fur` 35. The body renders across several meshes (base `warg_low` + `<AdditionalMeshes>` `warg_low_fur`), each with its own ≤40 palette. The split is bone-driven, not just cloth.
+
+**The fix (in `spider_correct.fbx`).** Split each `sk_spider_forest_{a,b,c}` along the body midline into a base (Left, **33 bones**) + a `_2` additional (Right, **30 bones**), all 6 LODs, clamping cross-midline weights so each half references only its side's legs + the 10 central bones (`root_m`, `spine1/2_m`, `chest_m`, `head_m`, `joint12-16_m`). The 62-bone skeleton is left **byte-identical**. Scripted in Blender via the MCP: per vertex, take the dominant-bone side (`_l`/`_r`/`_m` suffix) → duplicate → delete the other side's verts → drop the other side's vertex groups → renormalize → remove empty groups.
+
+**To finish it (human seam):** import `spider_correct.fbx` → **re-run `tpac_skeleton_transplant.py spider_skeleton`** (the import regenerates the geo tpac + wipes the IK, same as any mesh re-import) → in `spider_mount_a` (`LOTRAOM_horses.xml`) add `<AdditionalMeshes><Mesh name="sk_spider_forest_c_2" /></AdditionalMeshes>` (the warg pattern) → flip `SpiderConfig` from the warg stand-in back to `"spider"` / `"spider_mount_a"` → test the render (all 8 legs, no AV).
+
+**Lesson — skeleton + meshes must ship in ONE FBX.** A mesh-only FBX export (armature deselected) **drops the skin weights entirely** (verified: re-import shows 0 vertex groups) — Blender stores skin in the FBX armature deformer, so without the armature the meshes import static. So you cannot import the IK'd skeleton from one file and skinned meshes from another; the split meshes + the unchanged skeleton go in the same `spider_correct.fbx` (the editor also rejects duplicate-named skeletons across two imports).
 
 ## Blender debugging notes
 - **Render to PNG to SEE the spider** — viewport *screenshots* via MCP came back empty (mesh has a 90° import rotation + framing fails). Instead: add a camera + sun, `sc.render.engine='BLENDER_WORKBENCH'`, `bpy.ops.render.render(write_still=True)` to a file, then `Read` it. This works.

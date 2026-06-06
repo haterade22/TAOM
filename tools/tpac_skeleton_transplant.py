@@ -157,43 +157,48 @@ def parse_definition(data: bytes):
 
 
 def classify_bone(name: str) -> dict:
-    """Map a spider bone name to its joint group and physics defaults.
+    """Map a spider bone to its BoneBodyPartType + physics defaults.
 
-    Handles BOTH naming conventions:
-    - Old (spider_skeleton, 62 bones): lowercase 'root_m', 'joint40_l', 'joint5_r'
-    - New (erkamspider_skeleton, 58 bones): mixed 'Root_M', 'spine1_M', 'joint40_L', 'joint5_R'
+    body_type matches the in-engine BoneBodyPartType enum (lowercased): head /
+    chest / abdomen are CRITICAL hit zones (full damage, can be a killing blow);
+    arm_left / arm_right / legs are non-critical periphery. This replaces the
+    earlier all-'abdomen' placeholder and mirrors how the working warg skeleton
+    assigns zones (head/chest/neck/legs/arms/abdomen).
 
-    Classification is case-insensitive and prefix-based. Defaults per group are
-    heuristic — picked from anatomy of an 8-legged spider rig. Tunable; if visual
-    results need refining, edit values here.
+    radius_frac sizes the collision/ragdoll capsule as a fraction of the bone's
+    segment length (the child offset, computed in build_userdata). Case-insensitive,
+    prefix-based; tune fractions/masses here if the ragdoll needs refining.
 
-    Returns dict with: group, body_type, mass, swing1_limit, swing2_limit.
+    Returns dict with: group, body_type, mass, radius_frac, swing1, swing2.
     """
     n = name.lower()
 
-    # Body axis: stiff, modest swing
-    if n in ('root_m', 'spine1_m', 'spine2_m', 'chest_m'):
-        return {'group': 'body_axis',  'body_type': 'abdomen', 'mass': 8.0, 'swing1': 0.30, 'swing2': 0.50}
+    # Body axis (cephalothorax): root/spine1 = abdomen, spine2/chest = chest. Critical.
+    if n in ('root_m', 'spine1_m'):
+        return {'group': 'body_axis', 'body_type': 'abdomen', 'mass': 8.0, 'radius_frac': 0.45, 'swing1': 0.30, 'swing2': 0.50}
+    if n in ('spine2_m', 'chest_m'):
+        return {'group': 'chest',     'body_type': 'chest',   'mass': 8.0, 'radius_frac': 0.45, 'swing1': 0.30, 'swing2': 0.50}
 
-    # Head + mouth: look-around freedom (joint12_m only present in old 62-bone skeleton)
+    # Head + jaw: critical hit zone (joint12_m only present in old 62-bone skeleton)
     if n in ('head_m', 'joint12_m'):
-        return {'group': 'head',       'body_type': 'abdomen', 'mass': 3.0, 'swing1': 0.70, 'swing2': 1.20}
+        return {'group': 'head',      'body_type': 'head',    'mass': 3.0, 'radius_frac': 0.40, 'swing1': 0.70, 'swing2': 1.20}
 
-    # Fangs (chelicerae): bite articulation
+    # Fangs (chelicerae): part of the head zone.
     if n in ('joint5_l', 'joint5_r'):
-        return {'group': 'fang',       'body_type': 'abdomen', 'mass': 0.5, 'swing1': 0.40, 'swing2': 0.60}
+        return {'group': 'fang',      'body_type': 'head',    'mass': 0.5, 'radius_frac': 0.25, 'swing1': 0.40, 'swing2': 0.60}
 
-    # Abdomen + stinger: tail-like bend (joint16_m only in old skeleton)
+    # Rear abdomen + tail/stinger: critical body mass (joint16_m only in old skeleton)
     if n in ('joint13_m', 'joint14_m', 'joint15_m', 'joint16_m'):
-        return {'group': 'abdomen',    'body_type': 'abdomen', 'mass': 4.0, 'swing1': 0.30, 'swing2': 0.50}
+        return {'group': 'abdomen',   'body_type': 'abdomen', 'mass': 4.0, 'radius_frac': 0.30, 'swing1': 0.30, 'swing2': 0.50}
 
-    # Pedipalps: held near mouth, articulate freely (joint21 only in old skeleton)
+    # Pedipalps (front feeler-arms): non-critical, mapped to arm zones by side
+    # (joint21 only in old skeleton).
     if n.startswith('joint17_') or n.startswith('joint18_') or n.startswith('joint19_') \
        or n.startswith('joint20_') or n.startswith('joint21_'):
-        return {'group': 'pedipalp',   'body_type': 'abdomen', 'mass': 0.3, 'swing1': 0.80, 'swing2': 1.40}
+        side = 'arm_left' if n.endswith('_l') else 'arm_right'
+        return {'group': 'pedipalp',  'body_type': side,      'mass': 0.3, 'radius_frac': 0.15, 'swing1': 0.80, 'swing2': 1.40}
 
-    # All four pairs of legs (back -> front: 22-26, 28-32, 34-38, 40-44)
-    # Standard quadruped leg constraint pattern from warg's leg chain.
+    # The 8 walking legs (4 pairs back -> front: 22-26, 28-32, 34-38, 40-44): non-critical.
     leg_prefixes = (
         'joint22_', 'joint23_', 'joint24_', 'joint25_', 'joint26_',
         'joint28_', 'joint29_', 'joint30_', 'joint31_', 'joint32_',
@@ -201,13 +206,13 @@ def classify_bone(name: str) -> dict:
         'joint40_', 'joint41_', 'joint42_', 'joint43_', 'joint44_',
     )
     if any(n.startswith(p) for p in leg_prefixes):
-        return {'group': 'leg',        'body_type': 'abdomen', 'mass': 0.6, 'swing1': 0.40, 'swing2': 0.80}
+        return {'group': 'leg',       'body_type': 'legs',    'mass': 0.6, 'radius_frac': 0.10, 'swing1': 0.40, 'swing2': 0.80}
 
-    # Fallback: unrecognized bone, use warg-style defaults
-    return {'group': 'unknown',        'body_type': 'abdomen', 'mass': 1.0, 'swing1': 0.50, 'swing2': 1.00}
+    # Fallback: unrecognized bone, treat as body mass.
+    return {'group': 'unknown',       'body_type': 'abdomen', 'mass': 1.0, 'radius_frac': 0.15, 'swing1': 0.50, 'swing2': 1.00}
 
 
-def build_userdata(parsed_def: dict, original_userdata: dict | None) -> bytes:
+def build_userdata(parsed_def: dict, original_userdata: dict | None, usage: str = 'horse') -> bytes:
     """Build a new SkeletonUserData buffer.
 
     parsed_def: output of parse_definition (gives us bone names + parents)
@@ -225,8 +230,8 @@ def build_userdata(parsed_def: dict, original_userdata: dict | None) -> bytes:
         w.vec4((0.0, 0.0, 0.0, 1.0))
         w.vec4((0.0, 0.0, 0.0, 1.0))
 
-    # Usage: 'horse' (force regardless of original)
-    w.sized_string('horse')
+    # Usage: forced to `usage` (default 'horse'; --usage other/human changes the engine render path)
+    w.sized_string(usage)
 
     if original_userdata:
         w.sized_string(original_userdata['unknown_str'])
@@ -237,24 +242,49 @@ def build_userdata(parsed_def: dict, original_userdata: dict | None) -> bytes:
         w.guid(b'\x00' * 16)
         unknown_int = 0
 
-    # Bodies: per-bone, classified by name pattern
+    # Bodies: per-bone, classified by name pattern. Collision + ragdoll capsules
+    # run from the bone origin toward its child, using the child's rest-frame offset
+    # so the capsule's axis + length + scale match the skeleton automatically (no
+    # unit guessing). Leaf bones extend along +Y (the limb-segment convention seen
+    # in the tpac) by their own incoming segment length. Radius is role-scaled off
+    # the segment length. This replaces the earlier all-zero placeholder bodies,
+    # whose degenerate (origin-collapsed) capsules left every bone physics-less.
+    children = {}
+    for idx, bn in enumerate(bones):
+        if bn['parent_idx'] >= 0:
+            children.setdefault(bn['parent_idx'], []).append(idx)
+
+    def capsule_p2(i):
+        kids = children.get(i, [])
+        if kids:
+            # prefer an axial (_m) child so body bones run down the spine, not out a leg
+            axial = [k for k in kids if bones[k]['name'].endswith('_m')]
+            rf = bones[(axial[0] if axial else kids[0])]['rest_frame']
+            return (rf[12], rf[13], rf[14])
+        rf = bones[i]['rest_frame']  # leaf: continue along +Y by this segment's length
+        mag = (rf[12] ** 2 + rf[13] ** 2 + rf[14] ** 2) ** 0.5
+        return (0.0, mag if mag > 1e-4 else 0.1, 0.0)
+
     w.i32(len(bones))
     group_counts = {}
-    for b in bones:
+    for i, b in enumerate(bones):
         cls = classify_bone(b['name'])
         group_counts[cls['group']] = group_counts.get(cls['group'], 0) + 1
+        p2 = capsule_p2(i)
+        seglen = (p2[0] ** 2 + p2[1] ** 2 + p2[2] ** 2) ** 0.5
+        r = max(0.02, cls['radius_frac'] * seglen)
         w.sized_string(b['name'])    # bone_name
         w.b(False)                    # enable_blend = false
         w.sized_string('')            # type = ''
         w.sized_string(cls['body_type'])
         w.f32(cls['mass'])
-        w.vec4((0.0, 0.0, 0.0, 1.0))  # ragdoll_pos1
-        w.vec4((0.0, 0.0, 0.0, 1.0))  # ragdoll_pos2
-        w.f32(0.05)                   # ragdoll_radius
-        w.vec4((0.0, 0.0, 0.0, 1.0))  # collision_pos1
-        w.vec4((0.0, 0.0, 0.0, 1.0))  # collision_pos2
-        w.f32(0.05)                   # collision_radius
-        w.f32(0.05)                   # collision_max_radius
+        w.vec4((0.0, 0.0, 0.0, 1.0))            # ragdoll_pos1 (bone origin)
+        w.vec4((p2[0], p2[1], p2[2], 1.0))      # ragdoll_pos2 (toward child)
+        w.f32(r)                                 # ragdoll_radius
+        w.vec4((0.0, 0.0, 0.0, 1.0))            # collision_pos1 (bone origin)
+        w.vec4((p2[0], p2[1], p2[2], 1.0))      # collision_pos2 (toward child)
+        w.f32(r)                                 # collision_radius
+        w.f32(r * 1.2)                           # collision_max_radius
 
     # Print classification summary (visible during transplant run)
     print('  Bone classification:')
@@ -332,11 +362,12 @@ def parse_userdata_full(data: bytes):
 def main():
     args = sys.argv[1:]
     if len(args) < 2:
-        print('Usage: python3 tpac_skeleton_transplant.py <tpac-path> <skeleton-name> [--dry-run] [--out <new-path>]')
+        print('Usage: python3 tpac_skeleton_transplant.py <tpac-path> <skeleton-name> [--dry-run] [--out <new-path>] [--usage horse|other|human]')
         sys.exit(1)
     tpac_path = args[0]
     target_name = args[1]
     dry_run = '--dry-run' in args
+    usage = args[args.index('--usage') + 1] if '--usage' in args else 'horse'
     out_path = tpac_path
     if '--out' in args:
         out_path = args[args.index('--out') + 1]
@@ -366,10 +397,10 @@ def main():
     print(f'  segment storage={usrseg["storage_size"]}  actual={usrseg["actual_size"]}')
 
     # Build new userdata
-    new_userdata = build_userdata(parsed_def, parsed_usr)
+    new_userdata = build_userdata(parsed_def, parsed_usr, usage)
     new_compressed = lz4.block.compress(new_userdata, mode='high_compression', store_size=False)
     print(f'\n=== {target_name} NEW UserData ===')
-    print(f'  Usage: \'horse\'')
+    print(f'  Usage: {usage!r}')
     print(f'  Bodies: {len(parsed_def["bones"])}')
     print(f'  Constraints: {len([b for b in parsed_def["bones"] if b["parent_idx"] >= 0])} D6 joints')
     print(f'  Uncompressed size: {len(new_userdata)} bytes (was {usrseg["actual_size"]})')

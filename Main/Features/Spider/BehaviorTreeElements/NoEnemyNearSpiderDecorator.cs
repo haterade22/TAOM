@@ -22,19 +22,20 @@ public class NoEnemyNearSpiderDecorator : BTReturnFalseDecorator, IBTBannerlordB
     {
         Agent agent = Agent.GetValue();
         if (agent == null || !agent.IsActive()) return true;
-        if (SpatialGrid.Instance == null) return true;
+        Mission mission = Mission.Current;
+        if (mission == null) return true;
 
-        // Use a wider scan range than the attack range so spiders detect enemies
-        // before they're already in bite range.
-        List<Agent> nearby = SpatialGrid.Instance.GetNearAliveAgentsInRange(SpiderConfig.TargetDetectionRange * 4f, agent);
+        // Engage whenever ANY enemy exists in the mission, not just within a 16m scan: a detached spider
+        // must advance toward the enemy line from across the battlefield (SpiderMoveToEnemyTask does the
+        // distance-agnostic advance). The old 16m scan meant the engage branch never ran at battle start
+        // (enemies far away) so the spiders idled and mount-wandered.
         Team spiderTeam = agent.Team;
-        foreach (Agent candidate in nearby)
+        foreach (Agent candidate in mission.Agents)
         {
-            if (candidate == agent) continue;
-            if (!candidate.IsActive()) continue;
+            if (candidate == agent || !candidate.IsActive()) continue;
             if (candidate.Team == null || candidate.Team == spiderTeam) continue;
-            return false; // enemy in range — child should execute
+            return false; // an enemy exists — run the engage branch (move + bite)
         }
-        return true; // no enemy — return-false-decorator returns false from parent's POV (skip child)
+        return true; // no enemies left — idle
     }
 }

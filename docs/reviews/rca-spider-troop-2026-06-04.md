@@ -44,6 +44,56 @@
 - **Non-humanoid combatant = mount-build + manual combatant re-add.** When you reuse `FromHorseObj` to dodge the skin build, you inherit *every* gap the mount path has (weapon/wield state, formation membership) — audit the full troop-spawn contract (`Mission.SpawnTroop`) and re-add each piece, in order, or the engine's humanoid assumptions AV one layer at a time.
 - Extends memory `feedback_nonhumanoid_creature_troop_not_mount` (troop-not-mount) with the build-shape detail: the troop is recruited as a humanoid anchor but *spawned* via the mount build, not the humanoid build.
 
+## Update 2026-06-05 — architecture resolved (riderless autonomous) + mesh-split done
+
+The next-session plan above was executed in-game. What actually happened (full detail in the 2026-06-05 CHANGELOG entry + [spider.md](../features/spider.md) + [spider-skeleton-animation-pipeline.md](../features/spider-skeleton-animation-pipeline.md)):
+
+- **Formation membership = dead end.** Flipping `EnableFormationMembership=true` crashed *before* the `GetMissileRange` read: `InitializeNativeWeaponState`'s `RemoveEquippedWeapon` → native `WeaponEquipped` AV (the native wield struct can't be **written** either). A 3-agent decompile workflow also found formation membership adds a *second* crash — a null-`HumanAIComponent` NRE in the per-agent formation tick (`Agent.cs:4726`) — for no benefit a detached spider needs. **Rejected.**
+- **The native-wield surface is a CLOSED set of 3** — `GetMissileRange` + `Get{Primary,Offhand}WieldedItemIndex`; every red debugger property funnels through them. `Agent_SpiderNativeWieldGuard_Patch` guards all 3 (→ `0`/`None`, the correct answer for a weaponless biter). This is the *complete* fix, not whack-a-mole — the reframe that resolved the user's (correct) "we'll just error into the next one" concern.
+- **Chosen architecture: detached + autonomous BT** (riderless, matches the monster vision). `SpiderMoveToEnemyTask` advances the spider via the wield-free `SetScriptedPositionAndDirection`. Mount+rider was the only zero-native-wield alternative (the map-icon crash that shelved the old mount design does NOT fire for a non-leader rider troop) but ships a *visible rider*. In-game the spiders spawn + render (warg stand-in) with **no crash**; the wander was root-caused to a 16m engage gate (enemies far at battle start) and fixed with a mission-wide nearest-enemy search.
+- **Mesh-split done** (`spider_correct.fbx`): the warg authors every mesh ≤40 bones over a 49-bone skeleton; the spider mesh weights to **58** (skeleton 62 — the "62-bone mesh" was a count conflation). Each `sk_spider_forest_{a,b,c}` split L/R into base (33) + `_2` additional (30), skeleton byte-identical. Pending Modding-Kit compile + `<AdditionalMeshes>` wiring.
+
+**New preventive lessons (2026-06-05):**
+- **The native wield state of a `FromHorseObj` agent is unfixable but bounded.** Can't read it (NRE), can't write it (`WeaponEquipped` AV) — so don't try to *initialize* it; *guard the small closed set* of managed methods that read it, enumerated by decompile (don't assume whack-a-mole).
+- **A warg stand-in (`Mountable=true`) is a good RENDER proxy but a bad BEHAVIOUR proxy** — its mount-AI wanders and masks movement. Validate non-humanoid behaviour only with the real `Mountable=false` creature.
+- **Skeleton + meshes must ship in one FBX** — a mesh-only export drops skin weights (Blender stores skin in the armature deformer; the editor also rejects duplicate skeleton names across two imports).
+
+---
+
+## Update 2026-06-05 (later) — render AV refuted at the data level → feature PAUSED → pivot to a ridden elephant
+
+The mesh-split landed and the real spider (`Mountable="false"`) was tested in-game. It **deterministically AccessViolated in native `Agent.PreloadForRendering`** — straight to desktop, every battle entry. The session that followed was an exhaustive attempt to move that wall at the data level; it failed, and the feature was **paused by the project owner** (`SpiderConfig.Enabled = false`).
+
+### What was refuted (every data-level hypothesis)
+
+| Hypothesis | How tested | Verdict |
+|---|---|---|
+| Mesh > per-mesh bone palette | L/R split each `sk_spider_forest_*` ≤40 bones, rebuilt FBX | **Refuted** — AV persisted with the split mesh |
+| Build/visuals failure | A render-diag Harmony prefix (`[HandleProcessCorruptedStateExceptions]`) logged the agent's state on the way into `PreloadForRendering` | **Refuted** — log showed `AgentVisuals=ok skel.bones=62`; visuals + skeleton **build fine** |
+| Skeleton integrity / IK / >4 influences / physics | `tpac_skeleton_*` dumps + transplant re-applied; influences clamped | **Refuted** — all clean, AV unchanged |
+| Missing/corrupt shader (`pbr_metallic ×385` "Missing shader from sack") | Renamed `compressed_shader_cache.sack` → engine recompiled live | **Refuted** — same AV; cache restored byte-identical (1,594,448,832 B) |
+| Material binding | Verified the spider material/texture refs resolve | **Refuted** |
+
+**Decisive evidence:** the render-diag patch proved the managed side is healthy — `AgentVisuals=ok`, `skel.bones=62` — and the crash is the **native GPU render-preload** of that skeleton, reached only through the **detached / non-mountable mount-render sub-path**. (The patch was deleted when the feature paused — it would spam on warg battles.) A GPU "device removed" error seen separately on the campaign map was a driver TDR, not caused by any cache edit (the `.sack` was proven unchanged).
+
+### Root cause (architectural, not a bug)
+
+**The engine supports exactly two agent shapes — a humanoid combatant (skin + weapons + formation) and a ridden mount.** There is no "non-humanoid riderless combatant." The detached spider hacked a mount (`FromHorseObj`) into a riderless fighter, and the **non-mountable detached path through `Agent.PreloadForRendering`** is the one we cannot satisfy with data. This is the *same* root insight as the original redesign ("a non-humanoid combatant is a category the engine does not natively support") — now confirmed to extend all the way down to native GPU render-preload, not just the managed skin/weapon/formation layers.
+
+### The decisive contrast — why the elephant works where the spider didn't
+
+ADOD's war-elephant (deep-dive `w21npmp7s`, 2026-06-05) is a **60-bone** non-humanoid creature that **renders fine in battle** — because it is a `Mountable="true"` **ridden mount** (a normal humanoid rider sits on it; the horse/warg path), never the detached render path. So:
+
+- **The spider's wall is the detached / `Mountable="false"` path — NOT the bone count.** A 60-bone skeleton renders fine ridden; a 62-bone one AVs detached. Bone count was refuted twice (split mesh + ADOD's working 60-bone elephant).
+- **The supported way to ship a non-humanoid creature is as a ridden mount that auto-attacks** — exactly the warg pattern. The elephant takes that lane and touches none of the five crash layers the spider fought (humanoid-skin AV, native-wield NRE/AV, formation null-`HumanAIComponent` NRE, map-icon crash, render-preload AV).
+
+**Preventive lesson (the "never again"):** to put a non-humanoid creature in a TAOM battle, make it a **`Mountable="true"` ridden mount** (warg/horse machinery) — do **not** spawn it as a detached `FromHorseObj` riderless agent. The detached path is unsupported and its native render-preload AV cannot be moved with data. If the spider is ever revived, re-shape it as a ridden mount. Full elephant design: [elephant.md](../features/elephant.md).
+
+### Tooling built this session (kept)
+
+- `tools/spider_render_triage.py` — one-command crash-triage (auto-finds latest `taom_debug` + `rgl_log` + crash dump; reports intercepts/fail-opens, render-acted lines, missing-shaders, formation-crash signature; prints a VERDICT). Pure stdlib, read-only, fail-soft.
+- `tools/tpac_skeleton_transplant.py --usage horse|other|human` — the skeleton-`Usage` flag (was hardcoded `'horse'`), so a creature skeleton can be written as `'horse'` (mount), `'other'`, or `'human'` for render-path experiments.
+
 ---
 
 ## Appendix — deep-review of the SUPERSEDED in-place `Monster`-swap approach

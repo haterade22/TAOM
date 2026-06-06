@@ -443,7 +443,8 @@ public class SubModule : MBSubModuleBase
             var careerAgentStat = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAgentStatService>();
             campaignStarter.AddModel(new TaomMapVisibilityModel(careerPassives));
             campaignStarter.AddModel(new TaomInventoryCapacityModel(careerPassives));
-            campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerPassiveService, careerAgentStat));
+            var elephantAttackService = IoC.Resolve<Features.Elephant.IElephantAttackService>();
+            campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerPassiveService, careerAgentStat, elephantAttackService));
             campaignStarter.AddModel<AgentApplyDamageModel>(new TaomAgentApplyDamageModel(careerAgentStat));
             campaignStarter.AddModel(new TaomClanTierModel(careerPassiveService));
 
@@ -655,6 +656,7 @@ public class SubModule : MBSubModuleBase
         mission.AddMissionBehavior(new AutonomousMovementPlayerController());
         mission.AddMissionBehavior(new WargMissionBehavior());
         mission.AddMissionBehavior(new SpiderMissionBehavior());
+        mission.AddMissionBehavior(new Features.Elephant.ElephantMissionBehavior());
         mission.AddMissionBehavior(new SiegeDismountMissionBehavior());
         mission.AddMissionBehavior(new MixedFormationsMissionBehavior());
         mission.AddMissionBehavior(new SmartCavalryAIMissionBehavior());

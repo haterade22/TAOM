@@ -1,5 +1,7 @@
 using System;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
+using System.Security;
 using HarmonyLib;
 using TAOM.Core.Logging;
 using TaleWorlds.Core;
@@ -66,6 +68,13 @@ internal static class SpiderDetachedAgentSpawner
     /// prefix intercepted) and returns the agent, or <c>null</c> to fail open (caller then lets the
     /// vanilla humanoid-anchor spawn proceed — no crash). Never throws.
     /// </summary>
+    // [HandleProcessCorruptedStateExceptions] + [SecurityCritical] make the catch below actually fire for
+    // the native AccessViolation thrown by BuildAgent -> Agent.PreloadForRendering. An AV is a corrupted-
+    // state exception that .NET silently skips past a normal catch(Exception), so without these a bad spider
+    // mesh HARD-CRASHES the game instead of failing open to the humanoid anchor. The AV is in native C++
+    // (TaleWorlds.Native.dll) we cannot patch; this is the managed-side graceful-degradation guard.
+    [HandleProcessCorruptedStateExceptions]
+    [SecurityCritical]
     public static Agent? TrySpawnDetachedSpider(Mission mission, AgentBuildData source)
     {
         if (mission == null || source == null)
@@ -222,25 +231,20 @@ internal static class SpiderDetachedAgentSpawner
         //      returns false instead of throwing. MUST run before AttachToFormation.
         EnsureMissionEquipment(agent);
 
-        // 7) Formation membership — GATED OFF for now (SpiderConfig.EnableFormationMembership == false).
-        //    Detached + positioned (above) is the verified non-crashing state: the agent spawns in the
-        //    deployment zone but is NOT a formation member, so the engine's team-AI never reads its
-        //    (uninitialized) native weapon state.
+        // 7) Formation membership — enrolls the spider in the army formation so it advances with the line
+        //    (the free-mount build leaves it formation-less + passive). GATED behind
+        //    SpiderConfig.EnableFormationMembership so the detached (false) state stays available.
         //
-        //    Why it is gated: enrolling the agent (agent.Formation = formation) triggers
-        //    TeamAIGeneral.OnUnitAddedToFormationForTheFirstTime -> BehaviorSkirmish ->
-        //    FormationQuerySystem reads agent.MaximumMissileRange -> native GetMissileRange() ->
-        //    AccessViolation, because the FromHorseObj build path skips EquipItemsFromSpawnEquipment's
-        //    native WeaponEquipped loop (Agent.cs:4532 has no FromHorseObj case) and the agent's native
-        //    per-slot weapon records are never initialized. InitializeNativeWeaponState (below) is the
-        //    root fix — it runs the SAME native WeaponEquipped(Invalid) for each slot WITHOUT AddSkinMeshes
-        //    — but it is UNVERIFIED in-game (native bodies unreadable), so it stays behind the flag until
-        //    tested. Detached spiders are also currently PASSIVE: the SpiderTree BT only bites adjacent
-        //    targets and has no move-to-enemy node — advancing requires either formation movement orders
-        //    (this path) or a new BT movement node. See docs/reviews/rca-spider-troop-2026-06-04.md.
+        //    The native-wield wall: a FromHorseObj agent's native wield pointers (0xee0/4/8) are GARBAGE —
+        //    we can neither READ them (GetPrimaryWieldedItemIndex NRE) nor WRITE them (RemoveEquippedWeapon
+        //    -> native WeaponEquipped AccessViolation, confirmed in-game 2026-06-05). So the formation/team-AI
+        //    per-unit native read (GetMissileRange) and any combat wield query would AV. We cannot fix the
+        //    native state; instead Agent_SpiderNativeWieldGuard_Patch GUARDS the three managed methods that
+        //    deref those pointers — GetMissileRange -> 0, Get{Primary,Offhand}WieldedItemIndex -> None — for
+        //    the spider, so the engine never touches the garbage pointers (whether detached or formationed).
+        //    See docs/reviews/rca-spider-troop-2026-06-04.md.
         if (SpiderConfig.EnableFormationMembership)
         {
-            InitializeNativeWeaponState(agent);
             AttachToFormation(agent, formation);
         }
         else
@@ -284,33 +288,6 @@ internal static class SpiderDetachedAgentSpawner
             Exception inner = e.InnerException ?? e;
             _logger?.LogError($"[Spider] EnsureMissionEquipment threw {inner.GetType().Name}: {inner.Message} — " +
                               "weapon-cache queries may still NRE when the agent joins a formation.");
-        }
-    }
-
-    /// <summary>
-    /// Initializes the agent's NATIVE per-slot weapon records to empty (no weapons). The FromHorseObj
-    /// build path skips EquipItemsFromSpawnEquipment's WeaponEquipped loop (Agent.cs:4532 has no
-    /// FromHorseObj case), leaving the native weapon/wield struct uninitialized — native reads such as
-    /// <c>GetMissileRange()</c>/<c>CurrentAimingError</c> walk that struct and AccessViolation once the
-    /// agent is a formation member or enters combat. <c>RemoveEquippedWeapon(slot)</c> runs the SAME
-    /// native <c>WeaponEquipped(InvalidWeaponData)</c> the normal path runs for empty slots
-    /// (Agent.cs:4814-4825) WITHOUT <c>AddSkinMeshes</c> — so no humanoid skin build. UNVERIFIED in-game
-    /// (native bodies unreadable); only invoked when <see cref="SpiderConfig.EnableFormationMembership"/>
-    /// is on, behind which it is being validated. Guarded + logged; never throws out.
-    /// </summary>
-    private static void InitializeNativeWeaponState(Agent agent)
-    {
-        try
-        {
-            for (int slot = (int)EquipmentIndex.WeaponItemBeginSlot; slot < (int)EquipmentIndex.NumAllWeaponSlots; slot++)
-                agent.RemoveEquippedWeapon((EquipmentIndex)slot);
-            _logger?.LogInfo("[Spider][diag] native weapon state initialized (RemoveEquippedWeapon x5).");
-        }
-        catch (Exception e)
-        {
-            Exception inner = e.InnerException ?? e;
-            _logger?.LogError($"[Spider] InitializeNativeWeaponState threw {inner.GetType().Name}: {inner.Message} — " +
-                              "native weapon reads (GetMissileRange/aiming) may still AccessViolation.");
         }
     }
 
