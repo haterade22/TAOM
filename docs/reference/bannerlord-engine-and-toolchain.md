@@ -65,6 +65,46 @@ them):
 (NAudio.* — managed audio lib, editor-build only, used by the Kit's audio tooling. MinHook/`TAOM.NativeSkinFixes`
 are TAOM-vendored native hooks, not shipped by TaleWorlds — see CLAUDE.md.)
 
+### 3.1 Verified facts (PE inspection 2026-06-06 — NOT guesses)
+
+Inspected with **`tools/pe_inspect.py`** (stdlib PE export/import parser — how to "see into" a native DLL when
+ilspycmd can't) + the PE **version resource** (PowerShell `(Get-Item).VersionInfo`). Exact versions:
+
+| DLL | Product (version resource) | Version |
+|---|---|---|
+| `Qt5Core/Gui/Widgets/Concurrent/Sql/Test` | Qt5, "C++ Application Development Framework", The Qt Company Ltd. | **5.11.2.0** |
+| `libfbxsdk` | FBX SDK, Autodesk, Inc. | **2016.0 Release (232667)** |
+| `nvtt` | NVIDIA Texture Tools, NVIDIA Corporation | **2.1.0.0** |
+| `embree3` | Intel Embree Ray Tracing Kernels, Intel | **3.6.1** |
+| `tbb` | Intel Threading Building Blocks, Intel | **2018.0** |
+| `FreeImage` | FreeImage library | **3.17.0** |
+| `d3dcompiler_47` | Direct3D HLSL Compiler, Microsoft | 10.0.18362 |
+| `steam_api64` | Steam Client API, Valve | 06.91.21.57 |
+| `ispc_texcomp` | *(blank resource)* — exports `CompressBlocksBC1/BC3/BC6H/BC7/ASTC/ETC1` + `GetProfile_*` ⇒ **Intel ISPC Texture Compressor** | — |
+| `EOSSDK-Win64-Shipping` | *(blank resource)* — 680 exports `EOS_Achievements_*`/… ⇒ **Epic Online Services SDK** | — |
+
+**`TaleWorlds.Native.dll` = the engine — its IMPORT TABLE is the engine's real tech stack (fact, 53 imports):**
+
+| Dependency | What it proves |
+|---|---|
+| **`mono-2.0-sgen.dll`** | Bannerlord's managed code runs on the **Mono** runtime (sgen GC), hosted by the native engine — NOT CoreCLR/.NET Framework directly. |
+| **`PhysX_64` + `PhysXCommon/Cooking/Foundation_64`** | The physics engine is **NVIDIA PhysX**. (So collision capsules, ragdoll, `body_capsule` in monsters.xml feed PhysX.) |
+| **`grCore` / `grGranite` / `grGraniteDX11`** | Texture streaming is **Granite** (Graphine virtual texturing). |
+| **`d3d11.dll` / `dxgi.dll` / `D3DCOMPILER_47`** | Renderer is **DirectX 11**. |
+| `nvtt`, `ispc_texcomp`, `embree3`, `libfbxsdk`, `FreeImage`, `Qt5*` | The editor/import toolchain is linked into the engine (wEditor build). |
+| `GfeSDK.dll` | NVIDIA GeForce Experience (highlights/recording). |
+
+**`TaleWorlds.Native.dll` exports (36, fact):** mostly `NVSDK_NGX_*` (**NVIDIA NGX / DLSS** AI upscaling), plus
+the **managed↔native bootstrap**: `WotsMain` / `WotsMainNative` / `WotsMainNativeCoreCLR` / `create_game_application`
+/ `get_ftdn_managed_interface` / `pass_managed_initialize_method_pointer` / `pass_managed_library_callback_method_pointers`
+/ `pass_controller_methods`. These `pass_managed_*` exports are the mechanism behind the `[EngineMethod]` bridge in
+§4 — the engine receives managed method pointers at startup, then calls back into Mono. (No per-API named exports
+like `get_animation_flags` — those are dispatched through the callback table, not exported symbols, which is why
+the engine's per-feature logic isn't visible as exports.)
+
+**To see into any other native DLL:** `python tools/pe_inspect.py <dll> [--max-names N]` → machine, PE32+,
+internal name, export count + sample, import list. For .NET DLLs use `ilspycmd` (full source) instead.
+
 ## 4. The managed↔native bridge (how C# calls the engine)
 
 Almost everything visible/physical is implemented in `TaleWorlds.Native.dll` (C++); the managed assemblies call
