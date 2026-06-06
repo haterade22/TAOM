@@ -22,6 +22,15 @@
 > split that never worked). **Cheapest untried test: an un-split single mesh** (like the wolf's). Full ranked
 > experiments + the corrected matrix: [RCA "Update 2026-06-06"](../reviews/rca-spider-troop-2026-06-04.md).
 >
+> **2026-06-06 — ADOD code deep-dive (the wolf "has a lot of code"):** decompiled `ADOD_Beasts.dll` +
+> `NativeHook.dll`. The wolf's code (`ADODBeastsWolfAgentComponent` ~600 lines, `ADODBeastsMissionLogic` ~460,
+> and 3 EasyHook native hooks: `Agent_AiTick`/`Agent_Tick`/`AgentMovementAndDynamicsSystem_UpdateFlags`) is
+> **all movement/AI — ZERO render hooks.** So the wolf renders with no render code; **no code fixes the spider AV,
+> it's the mesh.** (Also: ADOD's wolf is a scripted companion, the elephant a ridden mount — neither is a roster
+> troop; and the wolf spawns via the *public* `Mission.SpawnMonster`, not our reflected `FromHorseObj`.)
+> **Ready-to-apply render tests (A) + optional wolf XML alignment (B):**
+> [`spider/wolf-parity-and-render-tests.md`](spider/wolf-parity-and-render-tests.md).
+>
 > <details><summary>Historical: the (paused) riderless-autonomous detached-combatant architecture</summary>
 >
 > **Architecture: detached + autonomous BT.** A `FromHorseObj` agent has garbage native wield/aiming state (the build path skips it) that is **unfixable** (can't read → NRE, can't write → `WeaponEquipped` AV). So `Agent_SpiderNativeWieldGuard_Patch` guards the **3 managed methods** that read it (`GetMissileRange`/`Get{Primary,Offhand}WieldedItemIndex` → `0`/`None`) — a closed, bounded set (every red property funnels through these 3), not whack-a-mole. Having no formation, `SpiderMoveToEnemyTask` drives the spider toward the nearest enemy (mission-wide search) via the wield-free `SetScriptedPositionAndDirection`; it bites via its Monster's `CustomAttack`. The earlier in-place `Monster`-swap **and** formation-membership designs are both **superseded** (formation membership adds an unavoidable null-`HumanAIComponent` crash — see RCA).

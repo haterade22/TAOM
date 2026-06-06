@@ -2,6 +2,13 @@
 
 ## 2026-06-06
 
+### docs(spider): ADOD wolf-code deep-dive + ready-to-apply render-test/wolf-alignment reference
+
+Answered "what does ADOD's wolf code do, and why does the wolf render while the spider AVs?" by decompiling `ADOD_Beasts.dll` + `NativeHook.dll` (EasyHook). The wolf's ~1000 lines of managed code (`ADODBeastsWolfAgentComponent`, `ADODBeastsMissionLogic`) + 3 native hooks (`Agent_AiTick`/`Agent_Tick`/`AgentMovementAndDynamicsSystem_UpdateFlags`) are **all movement/AI — ZERO render hooks**. So the wolf renders through the stock engine path with no render code (its single-mesh `Type="Animal"` body just fits the per-mesh bone-palette cap); **no code fixes the spider AV — it's the mesh.** Also recorded: ADOD's creatures aren't roster troops (wolf = scripted companion via public `Mission.SpawnMonster`; elephant = ridden mount), so the spider's riderless-troop design is TAOM's own.
+
+- Corrected an over-claim in [RCA "Update 2026-06-06"](docs/reviews/rca-spider-troop-2026-06-04.md): the optional wolf XML alignment does **NOT** delete the `TEMP-ANM-UNBLOCK` DivideByZero risk (that `/0` is a missing-`_anm.tpac` clip-compile gap, independent of `monster_usage`) and risks degrading the gait.
+- New [`docs/features/spider/wolf-parity-and-render-tests.md`](docs/features/spider/wolf-parity-and-render-tests.md): two **separate, ready-to-apply** workstreams — **A** render bisection (un-split single mesh → wolf-mesh control → FBX skin re-author → ridden-mount fallback) and **B** optional wolf XML alignment (`monster_usage`→`horse`, Item `Type`→`Animal`, `act_horse_*` action-set rebuild) with caveats. Plus the `SpiderConfig` comment corrected off the refuted bone-cap-split theory.
+
 ### chore(elephant): author first-pass idle + walk animations in Blender (via MCP) on our rig
 
 Authored two in-place, looping elephant clips directly on the `elephant_skeleton` rig through the Blender MCP — the honest answer to "make animations in Blender." (ADOD's elephant-body clips exist only as compiled `.tpac`, not Blender-importable source; warg is human-skeleton and spider is 8-legged, so neither retargets to a quadruped — authoring was the path.) Procedural keyframing, validated via side-view renders (rig deforms correctly, gait alternates); a **rough first pass to refine in Cascadeur**, not production-grade.
