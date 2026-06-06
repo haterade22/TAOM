@@ -646,6 +646,15 @@ rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.G
 
 **Decompiled source layout** (`E:\Decompiled_Bannerlord\` — for browsing only, never signatures):
 
+> ⚠️ **The category folders below are the SHIPPING-CLIENT decompile — they STRIP editor-only code.** Editor-only
+> managed types (`EditorGame`, `MBEditor`, `AnimalSpawnSettings`, `VertexAnimator`, FBX-import / scene / animation
+> authoring) live ONLY in the **wEditor** build of the *same-named* DLLs — **"absent from this dump" ≠ "doesn't
+> exist."** Lookup order: **shipping → if missing, the editor build → if still missing, it's native (Qt/C++).** For
+> both builds side-by-side use the dual-build decompile at `E:\Decompiled_Bannerlord\{_shipping_build,_editor_build}\`
+> (regen: `tools/decompile_bannerlord.ps1`); inspect native DLLs with `tools/pe_inspect.py`. Full map (builds,
+> managed-vs-native, the Mono/PhysX/Granite/DX11 engine stack, FBX→tpac pipeline):
+> [docs/reference/bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md).
+
 | Folder | Contents |
 |--------|----------|
 | `Campaign/` | `TaleWorlds.CampaignSystem` — GameModels, behaviors, actions (1,556 files) |
@@ -659,7 +668,7 @@ rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.G
 | `Launcher/` | Launcher.Library, Launcher.Steam (40 files) |
 | `ThirdParty/` | Newtonsoft.Json, Steamworks.NET, jose-jwt (1,081 files) |
 
-**DLL path** (for ILSpy MCP fallback): `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\`
+**DLL path** (for ILSpy MCP fallback): `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\` (shipping). **Editor build = `…\bin\Win64_Shipping_wEditor\`** — same-named DLLs with editor-only types compiled in.
 
 ### Configuration
 
@@ -712,7 +721,7 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 - Use `/reload-plugins` to pick up new or modified skills without restarting Claude Code
 
 - Target: Bannerlord v1.4.5 (installed game version)
-- `E:\Decompiled_Bannerlord\` holds the fresh v1.4.5 dump (re-decompiled 2026-05-22). Browse for patterns; `ilspycmd` on installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\` remains authoritative for signatures.
+- `E:\Decompiled_Bannerlord\` holds the fresh v1.4.5 dump (re-decompiled 2026-05-22) — **this is the SHIPPING-CLIENT decompile (strips editor code).** For editor-only code use the dual-build decompile `E:\Decompiled_Bannerlord\{_shipping_build,_editor_build}\` (see the ⚠️ note under "Decompiled source layout" + [docs/reference/bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md)). Browse for patterns; `ilspycmd` on installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\` remains authoritative for signatures.
 - Historical migration notes (1.2 → 1.3, 1.3 → 1.4) — see `docs/migration/`
 - No git actions unless explicitly asked
 

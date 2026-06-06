@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(claude): guard CLAUDE.md against the shipping-vs-editor decompile trap
+
+`E:\Decompiled_Bannerlord\` is the SHIPPING-client decompile and silently strips editor-only code (editor-only managed types like `EditorGame`/`MBEditor`/`AnimalSpawnSettings`/`VertexAnimator` + the FBX-import/scene/animation authoring live only in the wEditor build of the same-named DLLs). Added the ⚠️ warning + the lookup order (shipping → editor build → native) + the dual-build decompile pointer to CLAUDE.md in all three spots that reference the decompile (the "Decompiled source layout" section, the DLL-path line, and the Notes), so "absent from this dump ≠ doesn't exist" is never mistaken again.
+
 ### docs(adod): full ADOD_Beasts architecture + line-by-line TAOM port comparison
 
 [docs/reference/adod-beasts-architecture-and-taom-port.md](docs/reference/adod-beasts-architecture-and-taom-port.md) — the complete `ADOD_Beasts` mod understood end-to-end (from a full `ilspycmd` decompile, line-by-line audited vs TAOM, verified vs installed v1.4.5): the two creature idioms (elephant = ridden mount + howdah; wolf = map-acquired FSM pet), the **start-to-finish runtime lifecycle** (load → game-start → mission-init → agent-build → per-tick → hit → teardown) with the WHY behind each design choice, and the TAOM comparison sitting inside it across all 4 subsystems (elephant trample/lock, howdah crew, wolf AI, infra).
