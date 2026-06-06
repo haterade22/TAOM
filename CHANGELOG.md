@@ -2,6 +2,14 @@
 
 ## 2026-06-06
 
+### docs+tools(engine): dual-build decompile + Bannerlord engine/toolchain reference + animation-clip flags
+
+Front-loaded the "understand the whole engine, don't re-derive it in pieces" knowledge into permanent references.
+
+- **`tools/decompile_bannerlord.ps1`** — decompiles BOTH Bannerlord builds (shipping client + wEditor) into `E:\Decompiled_Bannerlord\{_shipping_build,_editor_build}\` (one .cs per .NET DLL; native DLLs listed in `_native_dlls.txt`). The shipping decompile strips editor code; the wEditor build has editor-only managed types (`EditorGame`, `MBEditor`, `AnimalSpawnSettings`, `VertexAnimator`, …). Re-run after an engine update.
+- **[docs/reference/bannerlord-engine-and-toolchain.md](docs/reference/bannerlord-engine-and-toolchain.md)** — the full picture: the two builds, managed-vs-native DLL split, what every native component is (`TaleWorlds.Native`=the C++ engine core; Qt5=the Kit's UI framework; libfbxsdk/nvtt/ispc/embree/FreeImage=the import/texture/lighting toolchain), the managed↔native bridge (`MBAPI`/`[EngineMethod]`/`[EngineStruct]`), the TaleWorlds assembly families, the FBX→tpac asset pipeline, and the cross-cutting custom-creature workflow.
+- **[docs/reference/bannerlord-animation-clip-flags.md](docs/reference/bannerlord-animation-clip-flags.md)** — the `AnimFlags` clip-flag system + the per-clip-type recipe (movement = `synch_with_movement`+`cyclic`; attack = `lock_movement`+`enforce_all`; priority in the low byte). The spider's clips ship with ZERO flags (= broken locomotion even once it renders); the elephant's are flagged per-type. Flags are baked into the `_anm.tpac` (Kit Animation Clip Inspector), not in `action_types.xml`.
+
 ### docs(elephant): howdah crew mechanism + v1.4.5 portability; trample tick verified; clip consolidation underway
 
 Decompiled `ADOD_Beasts.dll` + verified against installed v1.4.5 DLLs to answer "how does ADOD put a *crew* of AI troops on the elephant's back." New [docs/features/elephant/howdah-crew-mechanism.md](docs/features/elephant/howdah-crew-mechanism.md): the crew is a `UsableMachine` **howdah** whose `StandingPoint` children are seats; it is **not** bone-parented but **per-tick frame-copied onto the elephant's neck point** (`GetGlobalStableNeckPoint` + `Frame` → `SetFrame`); each seat **force-spawns** its own AI ranged crew (armor-tier → `additional_elephant_characters.xml` → 1/2/4 archers) and locks them with `act_howdah_stand_bow`. The mahout is a separate normal mount-rider.
