@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased engine study — Phase 1: agent spawn → render pipeline
+
+Start of a depth-first phased study of the engine's moddable surface (one process traced end-to-end from the decompile, documented, then the next). **Phase 1** = [docs/reference/engine/agent-spawn-and-render-pipeline.md](docs/reference/engine/agent-spawn-and-render-pipeline.md): the full `SpawnAgent`/`SpawnMonster` → `CreateAgent` → `BuildAgent` → `EquipItemsFromSpawnEquipment` → `PreloadForRendering` chain, traced to the native boundary (`IMBAgent.preload_for_rendering`), with what/how/why per step. Payoff: pinned the spider's AccessViolation — `EquipItemsFromSpawnEquipment`'s `switch (_creationType)` has cases only for `FromRoster`/`FromCharacterObj` (skin + weapons); **`FromHorseObj` skips both**, so a creature renders only its mount mesh, and the native `preload_for_rendering` AVs when that mesh's per-mesh bone palette overflows. The spawn *path* is identical wolf↔spider — **it's the mesh, not the code** — which is exactly why the wolf's public `SpawnMonster` + un-split mesh is the recommended fix.
+
 ### docs(claude): guard CLAUDE.md against the shipping-vs-editor decompile trap
 
 `E:\Decompiled_Bannerlord\` is the SHIPPING-client decompile and silently strips editor-only code (editor-only managed types like `EditorGame`/`MBEditor`/`AnimalSpawnSettings`/`VertexAnimator` + the FBX-import/scene/animation authoring live only in the wEditor build of the same-named DLLs). Added the ⚠️ warning + the lookup order (shipping → editor build → native) + the dual-build decompile pointer to CLAUDE.md in all three spots that reference the decompile (the "Decompiled source layout" section, the DLL-path line, and the Notes), so "absent from this dump ≠ doesn't exist" is never mistaken again.
