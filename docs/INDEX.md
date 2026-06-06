@@ -37,7 +37,9 @@
 - [mixed-formations](features/mixed-formations.md) — heterogeneous formation layout system
 - [companion-tactics](features/companion-tactics.md) — companion-driven formation overrides; `CancelStanceOnMove` postfix
 - [warg-combat](features/warg-combat.md) — BT elements, WargAttackService, WargMissionBehavior
-- [spider](features/spider.md) — spider creature combat
+- [spider](features/spider.md) — spider creature combat (PAUSED: native render AV; fix = wolf's public SpawnMonster + un-split mesh)
+- [elephant](features/elephant.md) — war-elephant trample + mount-lock (1-for-1 ADOD port) + [howdah-crew-mechanism](features/elephant/howdah-crew-mechanism.md) (UsableMachine crew platform; not yet ported)
+- [adod-beasts-architecture-and-taom-port](reference/adod-beasts-architecture-and-taom-port.md) — **the whole ADOD_Beasts mod end-to-end** (lifecycle + the WHY) + line-by-line TAOM port comparison across all 4 subsystems; the 1.2.12→1.4.5 drift catalogue. Read this before re-decompiling ADOD.
 - [troop-weight-system](features/troop-weight-system.md) — TroopWeightSettings, PartyBase / TroopRoster patches (Patch17)
 - [battle-balance](features/battle-balance.md) — TaomMilitaryPowerModel, TaomCombatSimulationModel
 - [battle-scenes](features/battle-scenes.md) — battle scene system (Patch0, currently DISABLED)
@@ -106,6 +108,8 @@
 - [army-targeting](features/army-targeting.md) — besieger commitment stickiness, priority lists, border floor
 
 ### Infrastructure & tooling
+- [bannerlord-engine-and-toolchain](reference/bannerlord-engine-and-toolchain.md) — **the whole engine/toolchain**: shipping-vs-editor builds, managed-vs-native DLL split, verified tech stack (Mono, PhysX, Granite, DX11, DLSS), the managed↔native bridge, FBX→tpac pipeline, custom-creature workflow. `tools/decompile_bannerlord.ps1` (dual-build decompile) + `tools/pe_inspect.py` (see into native DLLs)
+- [bannerlord-animation-clip-flags](reference/bannerlord-animation-clip-flags.md) — the `AnimFlags` clip-flag system + per-clip-type recipe + full per-flag reference (all ~60); flags are baked into the `_anm.tpac`, NOT `action_types.xml`; the spider's clips ship with zero flags (= broken locomotion)
 - [editor-cache-rebuild](features/editor-cache-rebuild.md) — parallel + incremental + resumable settlement distance cache rebuild
 - [scene-scripts](features/scene-scripts.md) — engine-discovered ScriptComponentBehavior subclasses (CS_Road, etc.)
 - [crash-report](features/crash-report.md) — crash report enrichment

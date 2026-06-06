@@ -2,6 +2,14 @@
 
 ## 2026-06-06
 
+### docs(adod): full ADOD_Beasts architecture + line-by-line TAOM port comparison
+
+[docs/reference/adod-beasts-architecture-and-taom-port.md](docs/reference/adod-beasts-architecture-and-taom-port.md) — the complete `ADOD_Beasts` mod understood end-to-end (from a full `ilspycmd` decompile, line-by-line audited vs TAOM, verified vs installed v1.4.5): the two creature idioms (elephant = ridden mount + howdah; wolf = map-acquired FSM pet), the **start-to-finish runtime lifecycle** (load → game-start → mission-init → agent-build → per-tick → hit → teardown) with the WHY behind each design choice, and the TAOM comparison sitting inside it across all 4 subsystems (elephant trample/lock, howdah crew, wolf AI, infra).
+
+- **Port verdict:** TAOM's elephant trample + mount-lock is a **faithful 1-for-1 port, no bugs**, and safer than ADOD in places (null-guards, exact-id matching, the dead-`OnTickAsAI`→`OnMissionTick` fix). Every non-port (howdah, rider camera, `CharacterObject.GetPower` patch, MCM, manual-trample, the whole wolf subsystem + its SaveDefiner/UI) is correctly scoped out because TAOM's elephant is a non-rideable creature-troop, not ADOD's ridden mount.
+- **Key facts:** the elephant needs **no SaveDefiner** (ADOD's persists the *wolf*); the `NativeHook`/EasyHook import is **dead/unused** (the elephant does NOT need native movement hooks); the 1.2.12→1.4.5 drift catalogue (`OnTickAsAI` gone, `SetMovementDirection` ref→in, `StandingPoint.OnUse`+sbyte, `SetDisabled` semantics, `GetDescriptionText` types).
+- **Actionable:** the wolf's public `Mission.SpawnMonster` + single un-split mesh is the spider's recommended render-AV fix (the reflected `FromHorseObj` chain is what AVs); optional spider polish (speed-ladder, Mission.Mode gate, vision cone); a candidate elephant SubModule arena/indoor gate.
+
 ### docs+tools(engine): dual-build decompile + Bannerlord engine/toolchain reference + animation-clip flags
 
 Front-loaded the "understand the whole engine, don't re-derive it in pieces" knowledge into permanent references.
