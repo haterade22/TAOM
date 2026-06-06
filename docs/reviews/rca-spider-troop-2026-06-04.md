@@ -96,6 +96,42 @@ ADOD's war-elephant (deep-dive `w21npmp7s`, 2026-06-05) is a **60-bone** non-hum
 
 ---
 
+## Update 2026-06-06 — ADOD wolf comparison: the spider's "impossible" verdict is likely WRONG
+
+While porting the elephant, the user pointed out ADOD ships **wolves** — and the wolf is the true analog to the
+spider (the elephant is a `Mountable=true` *ridden* mount, so it never touches the riderless render path the spider
+died on). A decompile + asset comparison of ADOD's wolf overturns this RCA's core conclusions:
+
+**ADOD's wolf is a WORKING riderless non-humanoid creature.** `adod_wolf_*` Monster: no `Mountable` flag,
+`monster_usage="horse"`, `action_set="as_adod_wolf"`. Spawned via `Mission.SpawnMonster(item, …)` →
+`CreateHorseAgentFromRosterElements` → `CreateAgent(…, FromHorseObj)` + `agent.SetMountInitialValues(name, MountCreationKey)`;
+AI via `ADODBeastsWolfAgentComponent`. It renders + fights riderless in-game.
+
+| | ADOD wolf (works) | Our spider (AV'd) |
+|---|---|---|
+| Spawn | `SpawnMonster` → `CreateAgent(FromHorseObj)` + `SetMountInitialValues` | hand-rolled `CreateAgent(FromHorseObj)` + `SetMountInitialValues` — **already equivalent** |
+| Skeleton bones | **57** | 62 (only 5 more) |
+| **Skeleton `Usage`** | **`'other'`** | **`'horse'`** |
+
+**Three conclusions of this RCA are refuted or in serious doubt:**
+1. **"A non-humanoid riderless combatant is a shape the engine doesn't support" — REFUTED.** ADOD's wolves are exactly that and work.
+2. **"The 62-bone / 58-bone mesh overflows the per-mesh palette → `PreloadForRendering` AV" — in serious doubt.** The wolf renders at a **57-bone** skeleton (5 fewer than the spider). A 5-bone gap doesn't flip render→AV. The mesh-split we chased was likely a red herring. (Wolf per-*mesh* palette not directly measured — but the skeleton count alone undercuts the theory.)
+3. **The spawn path was not the cause** — our `SpiderDetachedAgentSpawner` already replicated `SetMountInitialValues` + the MountCreationKey (the one genuinely-subtle piece).
+
+**Leading hypothesis (UNTESTED) — the spider skeleton `Usage`.** The wolf's skeleton is **`Usage='other'`**; the
+spider's is **`Usage='horse'`**. This RCA repeatedly described the AV as *"specific to the mount-render path"* — and
+`Usage='horse'` is precisely what routes a skeleton onto that path. The wolf avoids it with `Usage='other'` while
+*still* spawning via `FromHorseObj`. We added a `--usage` flag to `tpac_skeleton_transplant` this session but the
+recipe always kept `'horse'`, so **`Usage='other'` was very likely never tested in-game.**
+
+**The cheap experiment to revive the spider:** `python tools/tpac_skeleton_transplant.py <spider tpac> spider_skeleton --usage other`,
+re-import, flip `SpiderConfig.Enabled=true`, and test — keeping the existing `FromHorseObj`/`SetMountInitialValues`
+spawn. If the AV disappears, the spider was never "impossible"; it was a one-field skeleton-Usage bug, and the entire
+detached-vs-ridden agonising + the mesh-split were chasing the wrong cause. Framed as a hypothesis (the spider is
+paused; this is the most promising untried lead, not a confirmed fix). **Lesson: when comparing to a working
+reference mod, compare the WORKING ANALOG (wolf = riderless), not the convenient one (elephant = ridden) — and check
+the skeleton `Usage` field, not just bone counts + spawn code.**
+
 ## Appendix — deep-review of the SUPERSEDED in-place `Monster`-swap approach
 
 > Retained for history. This reviewed the approach that returned `true` from the `Mission.SpawnAgent` prefix after `agentBuildData.Monster(spider)` — which crashed in-game (humanoid skin on the spider skeleton). The detached redesign above replaced it.

@@ -10,7 +10,14 @@
 > riderless combatant is a shape the engine does not support**; we hacked it in via `FromHorseObj` and hit a wall the
 > data cannot move. Work is paused in favour of a **`Mountable=true` ridden war-elephant** (the supported
 > warg/horse path) — see [elephant.md](elephant.md). To resume: resolve the render AV and flip `SpiderConfig.Enabled`
-> back to `true`. **If revived, the lesson is to make the spider a ridden mount, not a detached agent.**
+> back to `true`.
+>
+> **⚠️ 2026-06-06 — this "unsupported shape" verdict is likely WRONG.** Comparing to ADOD's **wolves** (working
+> riderless non-humanoid creatures at a **57-bone** skeleton, `Usage='other'`) refutes both the "engine doesn't
+> support riderless creatures" and the "62-bone mesh is over the limit" conclusions. The standout untried difference:
+> the wolf skeleton is **`Usage='other'`**; ours is **`Usage='horse'`** (the mount-render path the AV is "specific
+> to"). **The cheap revival experiment:** re-transplant `spider_skeleton` to `--usage other`, re-import, flip
+> `Enabled=true`, test. See the [RCA "Update 2026-06-06"](../reviews/rca-spider-troop-2026-06-04.md#update-2026-06-06--adod-wolf-comparison-the-spiders-impossible-verdict-is-likely-wrong) for the full comparison.
 >
 > <details><summary>Historical: the (paused) riderless-autonomous detached-combatant architecture</summary>
 >
