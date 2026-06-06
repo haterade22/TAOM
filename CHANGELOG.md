@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased study — Phase 4: Mission + MissionBehavior lifecycle
+
+[docs/reference/engine/mission-and-missionbehavior-lifecycle.md](docs/reference/engine/mission-and-missionbehavior-lifecycle.md) — the in-battle runtime backbone every TAOM feature plugs into. The `MissionBehavior` base virtual surface (lifecycle/agent/combat/tick/teardown hooks); `MissionLogic : MissionBehavior` (`BehaviorType=Logic` + battle-flow virtuals `OnBattleEnded`/`MissionEnded`); `AddMissionBehavior`/`GetMissionBehavior`/`RemoveMissionBehavior`; the lifecycle order; the dispatch. **Confirms the `: MissionLogic` gotcha at the source:** `AddMissionBehavior` does `MissionLogics.Add(missionBehavior as MissionLogic)` (Mission.cs:4610) — `BehaviorType=Logic` without `: MissionLogic` → `as` is null → null in `MissionLogics` → NRE every tick (`feedback_missionbehaviortype_logic_requires_missionlogic_inheritance`).
+
 ### docs(engine): phased study — Phase 3: the Monster model (monsters.xml → engine rig)
 
 [docs/reference/engine/monster-model.md](docs/reference/engine/monster-model.md) — the field-by-field `monsters.xml` schema (from `TaleWorlds.Core/Monster.cs` `Deserialize`): identity/animation binding (`action_set`/`monster_usage`), combat/movement stats, the full **bone-index map resolved BY NAME against the skeleton** (look-direction, ragdoll, **foot-IK end-effectors**, rein, slope-detect, rider-sit — `validateHasParentBone`, so a wrong name silently disables the feature), capsules, flags, and `base_monster` inheritance. This is exactly what TAOM authors per creature. Gotchas: foot-IK exposes only **2 effectors** (a >2-leg spider can't fully ground); wrong bone name = silent -1; `Mountable=false`/`IsHumanoid=false` for a creature-troop. Ties to Phase 1 (`CreateAgent`) + Phase 2 (`FillAnimationSystemData`).
