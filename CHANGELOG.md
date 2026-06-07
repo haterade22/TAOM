@@ -1,5 +1,34 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-07
+
+### feat(cultural-feats): Wave 1 expansion — 24 new feats across 11 cultures
+
+Adds 24 new cultural feats, raising the total from 105 to **129**. All are **Q-class** — each plugs into an EXISTING `CulturalFeatsService.Apply*` method via an added `HasFeat` check; no new GameModels, no new service methods, no conditional logic. Targets the thinly-covered cultures surfaced by the #260 faction-map rewrite (Dale, Khand, Harad, Rhûn each had only 1-2 TAOM feats; the new Goblin / Misty Mountain Orcs cultures had 4 baseline each).
+
+New feats by culture:
+- **Mordor** — Dark Smithing (-15% smithing energy)
+- **Erebor** — Dwarven Thrift (+5% tariff income)
+- **Umbar** — Corsair Raid Doctrine (+20% raid damage), Black Numenorean Endurance (-10% food consumption)
+- **Lothlorien** — Fading Light (-15% village volunteer respawn, negative — the Elves diminish)
+- **Mirkwood** — Isolationist Court (+15% army influence cost, negative — Thranduil's reluctance to coalition)
+- **Goblin** — Captured-Weapon Hoard (-10% smithing energy), Goblin Ambush (+10% raid damage)
+- **Misty Mountain Orcs** — Looted Forges (-15% smithing energy), Cave Troll Levy (+15% raid damage), Echoing Halls (-10% construction speed, negative)
+- **Dale** (sturgia) — Dwarven Trade Alliance (+10% tariff income), Black Arrow Tradition (+10% renown), Small Territory Exposure (-0.5 loyalty/day, negative)
+- **Khand** (battania) — Mercenary Premium (+8% renown), Tribute to Mordor (-10% tariff income, negative), Steppe Endurance (-10% food consumption), Charioteer Mobility (+5% party size)
+- **Harad** (aserai) — Mumakil Drivers (+5 morale), Desert Endurance (-15% food consumption), Far Harad Savagery (+15% raid damage), Divided Tribes (+15% army influence cost, negative)
+- **Rhûn** (khuzait) — Easterling Tribute (-0.5 loyalty/day, negative), Steppe Raider Doctrine (+15% raid damage)
+
+Axis-collision audit done before authoring (dropped a proposed Goblin party-size feat — Goblin already has "Goblin Swarm +40%"). Conditional feats (Goblin Sunlight Aversion, Mirkwood Spider-Tainted Paths, Rhûn Cavalry-Only, Mirkwood garrison-wage) deliberately deferred to Wave 1.5 — they need new condition logic / a different model, so they're E-class, not Q.
+
+Files: `TaomCulturalFeats.cs` (24× field+accessor+Register+Initialize+GetAllFeats), `CulturalFeatsService.cs` (24 HasFeat checks across 11 existing Apply* methods), `taom_spcultures.xml` (11 custom-culture `<feat>` refs), `spcultures.xslt` (13 XSLT-culture `<feat>` refs on aserai/khuzait/sturgia/battania), `TaomCulturalFeatsDefinitionTests.cs` (count 105→129, 24 DataRows, per-culture dict bumps), `CulturalFeatsServiceTests.cs` (24 reflection-table entries + 24 dispatch tests, one per (culture, axis) cell per `feedback_per_branch_dispatch_test_enumeration`).
+
+**Verification:** `dotnet build TAOM.Tests` → 0 errors. `dotnet test TAOM.Tests` → **3091 passed / 0 failed / 2 skipped** (up from 3043 — +48 discovered cases: 24 dispatch tests + 24 DataRows). `python tools/validate_moduledata.py` → PASS (all XML feat refs resolve, 38 cultures).
+
+Faction-map CC page content + 12-language localization for the 48 new `{=taom_feat_*}` strings follow in the next commit (per the standing `feedback_faction_map_update_with_cultural_feats` instruction).
+
+Save-compat: safe (init-time FeatObjects, no new save fields).
+
 ## 2026-06-06
 
 ### docs(guidance): propagate engine study knowledge into all agent guidance files

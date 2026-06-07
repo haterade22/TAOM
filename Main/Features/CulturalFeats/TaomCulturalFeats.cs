@@ -21,6 +21,7 @@ public class TaomCulturalFeats
     private FeatObject _ereborMorale;
     private FeatObject _ereborSmithing;
     private FeatObject _ereborSnowSpeed;
+    private FeatObject _ereborTariffIncome;
 
     // Rivendell
     private FeatObject _rivendellArmyInfluence;
@@ -36,6 +37,7 @@ public class TaomCulturalFeats
     private FeatObject _mirkwoodHearthGrowth;
     private FeatObject _mirkwoodFoodConsumption;
     private FeatObject _mirkwoodMorale;
+    private FeatObject _mirkwoodArmyInfluenceCost;
 
     // Lothlorien
     private FeatObject _lothlorienForestSpeed;
@@ -44,6 +46,7 @@ public class TaomCulturalFeats
     private FeatObject _lothlorienFoodConsumption;
     private FeatObject _lothlorienLoyalty;
     private FeatObject _lothlorienMorale;
+    private FeatObject _lothlorienVolunteerRate;
 
     // Isengard
     private FeatObject _isengardCheaperRecruits;
@@ -79,11 +82,16 @@ public class TaomCulturalFeats
     private FeatObject _goblinVolunteerRate;
     private FeatObject _goblinSnowSpeed;
     private FeatObject _goblinFoodConsumption;
+    private FeatObject _goblinSmithing;
+    private FeatObject _goblinRaidDamage;
     // Misty Mountain Orcs — large weak war-host, snow-bred, hungry (food penalty)
     private FeatObject _mistyMountainOrcsArmyInfluenceCost;
     private FeatObject _mistyMountainOrcsPartySize;
     private FeatObject _mistyMountainOrcsSnowSpeed;
     private FeatObject _mistyMountainOrcsFoodConsumption;
+    private FeatObject _mistyMountainOrcsSmithing;
+    private FeatObject _mistyMountainOrcsRaidDamage;
+    private FeatObject _mistyMountainOrcsConstructionSpeed;
 
     // Umbar
     private FeatObject _umbarCheaperCaravans;
@@ -91,6 +99,8 @@ public class TaomCulturalFeats
     private FeatObject _umbarWage;
     private FeatObject _umbarTariffIncome;
     private FeatObject _umbarDesertSpeed;
+    private FeatObject _umbarRaidDamage;
+    private FeatObject _umbarFoodConsumption;
 
     // Dol Guldur
     private FeatObject _dolguldurArmyInfluenceCost;
@@ -125,6 +135,7 @@ public class TaomCulturalFeats
     private FeatObject _mordorSwampSpeed;
     private FeatObject _mordorNightSpeed;
     private FeatObject _mordorVolunteerRate;
+    private FeatObject _mordorSmithing;
     // Per-occupation town notable feats (AdditionType.Add); Mordor only boosts Gang Leaders.
     private FeatObject _mordorNotableCountTownGangLeader;
     private FeatObject _mordorNotableCountVillage;
@@ -139,17 +150,30 @@ public class TaomCulturalFeats
 
     // Dale (XSLT culture — custom C# feats)
     private FeatObject _dalePlainSpeed;
+    private FeatObject _daleTariffIncome;
+    private FeatObject _daleRenown;
+    private FeatObject _daleLoyalty;
 
     // Khand (XSLT culture — custom C# feats)
     private FeatObject _khandSteppeSpeed;
+    private FeatObject _khandRenown;
+    private FeatObject _khandTariffIncome;
+    private FeatObject _khandFoodConsumption;
+    private FeatObject _khandPartySize;
 
     // Rhun (XSLT culture — custom C# feats)
     private FeatObject _rhunSteppeSpeed;
     private FeatObject _rhunPartySize;
+    private FeatObject _rhunLoyalty;
+    private FeatObject _rhunRaidDamage;
 
     // Harad (XSLT culture — custom C# feats)
     private FeatObject _haradDesertSpeed;
     private FeatObject _haradPartySize;
+    private FeatObject _haradMorale;
+    private FeatObject _haradFoodConsumption;
+    private FeatObject _haradRaidDamage;
+    private FeatObject _haradArmyInfluenceCost;
 
     // Dunland (XSLT culture — custom C# feats)
     private FeatObject _dunlandPlainSpeed;
@@ -170,6 +194,7 @@ public class TaomCulturalFeats
     public static FeatObject EreborMoraleFeat => Instance._ereborMorale;
     public static FeatObject EreborSmithingFeat => Instance._ereborSmithing;
     public static FeatObject EreborSnowSpeedFeat => Instance._ereborSnowSpeed;
+    public static FeatObject EreborTariffIncomeFeat => Instance._ereborTariffIncome;
 
     // Rivendell
     public static FeatObject RivendellArmyInfluenceFeat => Instance._rivendellArmyInfluence;
@@ -185,6 +210,7 @@ public class TaomCulturalFeats
     public static FeatObject MirkwoodHearthGrowthFeat => Instance._mirkwoodHearthGrowth;
     public static FeatObject MirkwoodFoodConsumptionFeat => Instance._mirkwoodFoodConsumption;
     public static FeatObject MirkwoodMoraleFeat => Instance._mirkwoodMorale;
+    public static FeatObject MirkwoodArmyInfluenceCostFeat => Instance._mirkwoodArmyInfluenceCost;
 
     // Lothlorien
     public static FeatObject LothlorienForestSpeedFeat => Instance._lothlorienForestSpeed;
@@ -193,6 +219,7 @@ public class TaomCulturalFeats
     public static FeatObject LothlorienFoodConsumptionFeat => Instance._lothlorienFoodConsumption;
     public static FeatObject LothlorienLoyaltyFeat => Instance._lothlorienLoyalty;
     public static FeatObject LothlorienMoraleFeat => Instance._lothlorienMorale;
+    public static FeatObject LothlorienVolunteerRateFeat => Instance._lothlorienVolunteerRate;
 
     // Isengard
     public static FeatObject IsengardCheaperRecruitsFeat => Instance._isengardCheaperRecruits;
@@ -225,11 +252,16 @@ public class TaomCulturalFeats
     public static FeatObject GoblinVolunteerRateFeat => Instance._goblinVolunteerRate;
     public static FeatObject GoblinSnowSpeedFeat => Instance._goblinSnowSpeed;
     public static FeatObject GoblinFoodConsumptionFeat => Instance._goblinFoodConsumption;
+    public static FeatObject GoblinSmithingFeat => Instance._goblinSmithing;
+    public static FeatObject GoblinRaidDamageFeat => Instance._goblinRaidDamage;
     // Misty Mountain Orcs
     public static FeatObject MistyMountainOrcsArmyInfluenceCostFeat => Instance._mistyMountainOrcsArmyInfluenceCost;
     public static FeatObject MistyMountainOrcsPartySizeFeat => Instance._mistyMountainOrcsPartySize;
     public static FeatObject MistyMountainOrcsSnowSpeedFeat => Instance._mistyMountainOrcsSnowSpeed;
     public static FeatObject MistyMountainOrcsFoodConsumptionFeat => Instance._mistyMountainOrcsFoodConsumption;
+    public static FeatObject MistyMountainOrcsSmithingFeat => Instance._mistyMountainOrcsSmithing;
+    public static FeatObject MistyMountainOrcsRaidDamageFeat => Instance._mistyMountainOrcsRaidDamage;
+    public static FeatObject MistyMountainOrcsConstructionSpeedFeat => Instance._mistyMountainOrcsConstructionSpeed;
 
     // Umbar
     public static FeatObject UmbarCheaperCaravansFeat => Instance._umbarCheaperCaravans;
@@ -237,6 +269,8 @@ public class TaomCulturalFeats
     public static FeatObject UmbarWageFeat => Instance._umbarWage;
     public static FeatObject UmbarTariffIncomeFeat => Instance._umbarTariffIncome;
     public static FeatObject UmbarDesertSpeedFeat => Instance._umbarDesertSpeed;
+    public static FeatObject UmbarRaidDamageFeat => Instance._umbarRaidDamage;
+    public static FeatObject UmbarFoodConsumptionFeat => Instance._umbarFoodConsumption;
 
     // Dol Guldur
     public static FeatObject DolGuldurArmyInfluenceCostFeat => Instance._dolguldurArmyInfluenceCost;
@@ -269,6 +303,7 @@ public class TaomCulturalFeats
     public static FeatObject MordorSwampSpeedFeat => Instance._mordorSwampSpeed;
     public static FeatObject MordorNightSpeedFeat => Instance._mordorNightSpeed;
     public static FeatObject MordorVolunteerRateFeat => Instance._mordorVolunteerRate;
+    public static FeatObject MordorSmithingFeat => Instance._mordorSmithing;
     public static FeatObject MordorNotableCountTownGangLeaderFeat => Instance._mordorNotableCountTownGangLeader;
     public static FeatObject MordorNotableCountVillageFeat => Instance._mordorNotableCountVillage;
 
@@ -282,17 +317,30 @@ public class TaomCulturalFeats
 
     // Dale
     public static FeatObject DalePlainSpeedFeat => Instance._dalePlainSpeed;
+    public static FeatObject DaleTariffIncomeFeat => Instance._daleTariffIncome;
+    public static FeatObject DaleRenownFeat => Instance._daleRenown;
+    public static FeatObject DaleLoyaltyFeat => Instance._daleLoyalty;
 
     // Khand
     public static FeatObject KhandSteppeSpeedFeat => Instance._khandSteppeSpeed;
+    public static FeatObject KhandRenownFeat => Instance._khandRenown;
+    public static FeatObject KhandTariffIncomeFeat => Instance._khandTariffIncome;
+    public static FeatObject KhandFoodConsumptionFeat => Instance._khandFoodConsumption;
+    public static FeatObject KhandPartySizeFeat => Instance._khandPartySize;
 
     // Rhun
     public static FeatObject RhunSteppeSpeedFeat => Instance._rhunSteppeSpeed;
     public static FeatObject RhunPartySizeFeat => Instance._rhunPartySize;
+    public static FeatObject RhunLoyaltyFeat => Instance._rhunLoyalty;
+    public static FeatObject RhunRaidDamageFeat => Instance._rhunRaidDamage;
 
     // Harad
     public static FeatObject HaradDesertSpeedFeat => Instance._haradDesertSpeed;
     public static FeatObject HaradPartySizeFeat => Instance._haradPartySize;
+    public static FeatObject HaradMoraleFeat => Instance._haradMorale;
+    public static FeatObject HaradFoodConsumptionFeat => Instance._haradFoodConsumption;
+    public static FeatObject HaradRaidDamageFeat => Instance._haradRaidDamage;
+    public static FeatObject HaradArmyInfluenceCostFeat => Instance._haradArmyInfluenceCost;
 
     // Dunland
     public static FeatObject DunlandPlainSpeedFeat => Instance._dunlandPlainSpeed;
@@ -323,6 +371,7 @@ public class TaomCulturalFeats
         _ereborMorale = Register("taom_erebor_morale");
         _ereborSmithing = Register("taom_erebor_smithing");
         _ereborSnowSpeed = Register("taom_erebor_snow_speed");
+        _ereborTariffIncome = Register("taom_erebor_tariff_income");
 
         _rivendellArmyInfluence = Register("taom_rivendell_army_influence");
         _rivendellHearthGrowth = Register("taom_rivendell_hearth_growth");
@@ -336,6 +385,7 @@ public class TaomCulturalFeats
         _mirkwoodHearthGrowth = Register("taom_mirkwood_hearth_growth");
         _mirkwoodFoodConsumption = Register("taom_mirkwood_food_consumption");
         _mirkwoodMorale = Register("taom_mirkwood_morale");
+        _mirkwoodArmyInfluenceCost = Register("taom_mirkwood_army_influence_cost");
 
         _lothlorienForestSpeed = Register("taom_lothlorien_forest_speed");
         _lothlorienGarrisonWage = Register("taom_lothlorien_garrison_wage");
@@ -343,6 +393,7 @@ public class TaomCulturalFeats
         _lothlorienFoodConsumption = Register("taom_lothlorien_food_consumption");
         _lothlorienLoyalty = Register("taom_lothlorien_loyalty");
         _lothlorienMorale = Register("taom_lothlorien_morale");
+        _lothlorienVolunteerRate = Register("taom_lothlorien_volunteer_rate");
 
         _isengardCheaperRecruits = Register("taom_isengard_cheaper_recruits");
         _isengardGarrisonWage = Register("taom_isengard_garrison_wage");
@@ -373,17 +424,24 @@ public class TaomCulturalFeats
         _goblinVolunteerRate = Register("taom_goblin_volunteer_rate");
         _goblinSnowSpeed = Register("taom_goblin_snow_speed");
         _goblinFoodConsumption = Register("taom_goblin_food_consumption");
+        _goblinSmithing = Register("taom_goblin_smithing");
+        _goblinRaidDamage = Register("taom_goblin_raid_damage");
         // Misty Mountain Orcs
         _mistyMountainOrcsArmyInfluenceCost = Register("taom_mistymountainorcs_army_influence_cost");
         _mistyMountainOrcsPartySize = Register("taom_mistymountainorcs_party_size");
         _mistyMountainOrcsSnowSpeed = Register("taom_mistymountainorcs_snow_speed");
         _mistyMountainOrcsFoodConsumption = Register("taom_mistymountainorcs_food_consumption");
+        _mistyMountainOrcsSmithing = Register("taom_mistymountainorcs_smithing");
+        _mistyMountainOrcsRaidDamage = Register("taom_mistymountainorcs_raid_damage");
+        _mistyMountainOrcsConstructionSpeed = Register("taom_mistymountainorcs_construction_speed");
 
         _umbarCheaperCaravans = Register("taom_umbar_cheaper_caravans");
         _umbarRenown = Register("taom_umbar_renown");
         _umbarWage = Register("taom_umbar_wage");
         _umbarTariffIncome = Register("taom_umbar_tariff_income");
         _umbarDesertSpeed = Register("taom_umbar_desert_speed");
+        _umbarRaidDamage = Register("taom_umbar_raid_damage");
+        _umbarFoodConsumption = Register("taom_umbar_food_consumption");
 
         _dolguldurArmyInfluenceCost = Register("taom_dolguldur_army_influence_cost");
         _dolguldurMilitiaProduction = Register("taom_dolguldur_militia_production");
@@ -413,6 +471,7 @@ public class TaomCulturalFeats
         _mordorSwampSpeed = Register("taom_mordor_swamp_speed");
         _mordorNightSpeed = Register("taom_mordor_night_speed");
         _mordorVolunteerRate = Register("taom_mordor_volunteer_rate");
+        _mordorSmithing = Register("taom_mordor_smithing");
         _mordorNotableCountTownGangLeader = Register("taom_mordor_notable_count_town_gang_leader");
         _mordorNotableCountVillage = Register("taom_mordor_notable_count_village");
 
@@ -430,6 +489,19 @@ public class TaomCulturalFeats
         _dunlandPlainSpeed = Register("taom_dunland_plain_speed");
         _rhunPartySize = Register("taom_rhun_party_size");
         _haradPartySize = Register("taom_harad_party_size");
+        _daleTariffIncome = Register("taom_dale_tariff_income");
+        _daleRenown = Register("taom_dale_renown");
+        _daleLoyalty = Register("taom_dale_loyalty");
+        _khandRenown = Register("taom_khand_renown");
+        _khandTariffIncome = Register("taom_khand_tariff_income");
+        _khandFoodConsumption = Register("taom_khand_food_consumption");
+        _khandPartySize = Register("taom_khand_party_size");
+        _rhunLoyalty = Register("taom_rhun_loyalty");
+        _rhunRaidDamage = Register("taom_rhun_raid_damage");
+        _haradMorale = Register("taom_harad_morale");
+        _haradFoodConsumption = Register("taom_harad_food_consumption");
+        _haradRaidDamage = Register("taom_harad_raid_damage");
+        _haradArmyInfluenceCost = Register("taom_harad_army_influence_cost");
         _dunlandPartySize = Register("taom_dunland_party_size");
         _dunlandVolunteerRate = Register("taom_dunland_volunteer_rate");
         _shaghanaDesertSpeed = Register("taom_shaghana_desert_speed");
@@ -467,6 +539,10 @@ public class TaomCulturalFeats
             "{=taom_feat_erebor_ss}Mountain Folk",
             "{=taom_feat_erebor_ss_desc}Party movement speed increased by 10% in snow.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _ereborTariffIncome.Initialize(
+            "{=taom_feat_erebor_ti}Dwarven Thrift",
+            "{=taom_feat_erebor_ti_desc}Tariff income increased by 5%.",
+            0.05f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
 
         // Rivendell — High Elves: strong armies, good growth, expensive to rally
         _rivendellArmyInfluence.Initialize(
@@ -515,6 +591,10 @@ public class TaomCulturalFeats
             "{=taom_feat_mrk_mor}Woodland Bonds",
             "{=taom_feat_mrk_mor_desc}Party morale increased by 3.",
             3f, isPositiveEffect: true, FeatObject.AdditionType.Add);
+        _mirkwoodArmyInfluenceCost.Initialize(
+            "{=taom_feat_mrk_aic}Isolationist Court",
+            "{=taom_feat_mrk_aic_desc}Army recruitment costs 15% more influence.",
+            0.15f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
 
         // Lothlorien — Golden Wood: forest speed, cheap garrisons, slow building
         _lothlorienForestSpeed.Initialize(
@@ -541,6 +621,10 @@ public class TaomCulturalFeats
             "{=taom_feat_loth_mor}Elven Harmony",
             "{=taom_feat_loth_mor_desc}Party morale increased by 3.",
             3f, isPositiveEffect: true, FeatObject.AdditionType.Add);
+        _lothlorienVolunteerRate.Initialize(
+            "{=taom_feat_loth_vr}Fading Light",
+            "{=taom_feat_loth_vr_desc}Village volunteer respawn rate reduced by 15%.",
+            -0.15f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
 
         // Isengard — Saruman: cheap mounted recruits, cheap garrisons, decision penalty
         _isengardCheaperRecruits.Initialize(
@@ -657,6 +741,14 @@ public class TaomCulturalFeats
             "{=taom_feat_gob_fc}Ravenous Swarm",
             "{=taom_feat_gob_fc_desc}Party food consumption increased by 20%.",
             0.2f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
+        _goblinSmithing.Initialize(
+            "{=taom_feat_gob_sm}Captured-Weapon Hoard",
+            "{=taom_feat_gob_sm_desc}Smithing energy cost reduced by 10%.",
+            -0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _goblinRaidDamage.Initialize(
+            "{=taom_feat_gob_rd}Goblin Ambush",
+            "{=taom_feat_gob_rd_desc}Raid damage increased by 10%.",
+            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
         // Misty Mountain Orcs — large weak war-host, cheap to muster, hungry on the march
         _mistyMountainOrcsArmyInfluenceCost.Initialize(
             "{=taom_feat_mmo_aic}Orc Horde",
@@ -674,6 +766,18 @@ public class TaomCulturalFeats
             "{=taom_feat_mmo_fc}Hungry Host",
             "{=taom_feat_mmo_fc_desc}Party food consumption increased by 15%.",
             0.15f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
+        _mistyMountainOrcsSmithing.Initialize(
+            "{=taom_feat_mmo_sm}Looted Forges",
+            "{=taom_feat_mmo_sm_desc}Smithing energy cost reduced by 15%.",
+            -0.15f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _mistyMountainOrcsRaidDamage.Initialize(
+            "{=taom_feat_mmo_rd}Cave Troll Levy",
+            "{=taom_feat_mmo_rd_desc}Raid damage increased by 15%.",
+            0.15f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _mistyMountainOrcsConstructionSpeed.Initialize(
+            "{=taom_feat_mmo_cs}Echoing Halls",
+            "{=taom_feat_mmo_cs_desc}Construction speed reduced by 10%.",
+            -0.1f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
 
         // Umbar — Corsairs: cheap caravans, battle renown, expensive wages
         _umbarCheaperCaravans.Initialize(
@@ -696,6 +800,14 @@ public class TaomCulturalFeats
             "{=taom_feat_umb_ds}Desert Corsairs",
             "{=taom_feat_umb_ds_desc}Party movement speed increased by 10% in deserts.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _umbarRaidDamage.Initialize(
+            "{=taom_feat_umb_rd}Corsair Raid Doctrine",
+            "{=taom_feat_umb_rd_desc}Raid damage increased by 20%.",
+            0.2f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _umbarFoodConsumption.Initialize(
+            "{=taom_feat_umb_fc}Black Numenorean Endurance",
+            "{=taom_feat_umb_fc_desc}Party food consumption reduced by 10%.",
+            -0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
 
         // Dol Guldur — Shadow: cheap armies, veteran militia, slow construction
         _dolguldurArmyInfluenceCost.Initialize(
@@ -807,6 +919,10 @@ public class TaomCulturalFeats
             "{=taom_feat_mor_vr}Sauron's Levy",
             "{=taom_feat_mor_vr_desc}Village volunteer respawn rate increased by 20%.",
             0.2f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _mordorSmithing.Initialize(
+            "{=taom_feat_mord_sm}Dark Smithing",
+            "{=taom_feat_mord_sm_desc}Smithing energy cost reduced by 15%.",
+            -0.15f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
         // Per-occupation town notable counts. Mordor target: 2 Merchant + 1 Artisan + 4 Gang Leader = 7.
         _mordorNotableCountTownGangLeader.Initialize(
             "{=taom_feat_mor_nctg}Black Speech Heralds",
@@ -848,12 +964,40 @@ public class TaomCulturalFeats
             "{=taom_feat_dale_pls}Vale Traders",
             "{=taom_feat_dale_pls_desc}Party movement speed increased by 10% on plains.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _daleTariffIncome.Initialize(
+            "{=taom_feat_dale_ti}Dwarven Trade Alliance",
+            "{=taom_feat_dale_ti_desc}Tariff income increased by 10%.",
+            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _daleRenown.Initialize(
+            "{=taom_feat_dale_r}Black Arrow Tradition",
+            "{=taom_feat_dale_r_desc}Battle renown increased by 10%.",
+            0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _daleLoyalty.Initialize(
+            "{=taom_feat_dale_loy}Small Territory Exposure",
+            "{=taom_feat_dale_loy_desc}Settlement loyalty reduced by 0.5 per day.",
+            -0.5f, isPositiveEffect: false, FeatObject.AdditionType.Add);
 
         // Khand — Variags: steppe charioteers
         _khandSteppeSpeed.Initialize(
             "{=taom_feat_khand_sts}Steppe Charioteers",
             "{=taom_feat_khand_sts_desc}Party movement speed increased by 10% on steppes.",
             0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _khandRenown.Initialize(
+            "{=taom_feat_khand_r}Mercenary Premium",
+            "{=taom_feat_khand_r_desc}Battle renown increased by 8%.",
+            0.08f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _khandTariffIncome.Initialize(
+            "{=taom_feat_khand_ti}Tribute to Mordor",
+            "{=taom_feat_khand_ti_desc}Tariff income reduced by 10%.",
+            -0.1f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
+        _khandFoodConsumption.Initialize(
+            "{=taom_feat_khand_fc}Steppe Endurance",
+            "{=taom_feat_khand_fc_desc}Party food consumption reduced by 10%.",
+            -0.1f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _khandPartySize.Initialize(
+            "{=taom_feat_khand_ps}Charioteer Mobility",
+            "{=taom_feat_khand_ps_desc}Party size limit increased by 5%.",
+            0.05f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
 
         // Rhun — Easterlings: mounted outriders
         _rhunSteppeSpeed.Initialize(
@@ -864,6 +1008,14 @@ public class TaomCulturalFeats
             "{=taom_feat_rhun_ps}Easterling Host",
             "{=taom_feat_rhun_ps_desc}Party size limit increased by 5%.",
             0.05f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _rhunLoyalty.Initialize(
+            "{=taom_feat_rhun_loy}Easterling Tribute",
+            "{=taom_feat_rhun_loy_desc}Settlement loyalty reduced by 0.5 per day.",
+            -0.5f, isPositiveEffect: false, FeatObject.AdditionType.Add);
+        _rhunRaidDamage.Initialize(
+            "{=taom_feat_rhun_rd}Steppe Raider Doctrine",
+            "{=taom_feat_rhun_rd_desc}Raid damage increased by 15%.",
+            0.15f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
 
         // Harad — Haradrim: sons of the sun
         _haradDesertSpeed.Initialize(
@@ -874,6 +1026,22 @@ public class TaomCulturalFeats
             "{=taom_feat_har_ps}Haradrim Warbands",
             "{=taom_feat_har_ps_desc}Party size limit increased by 5%.",
             0.05f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _haradMorale.Initialize(
+            "{=taom_feat_harad_mor}Mumakil Drivers",
+            "{=taom_feat_harad_mor_desc}Party morale increased by 5.",
+            5f, isPositiveEffect: true, FeatObject.AdditionType.Add);
+        _haradFoodConsumption.Initialize(
+            "{=taom_feat_harad_fc}Desert Endurance",
+            "{=taom_feat_harad_fc_desc}Party food consumption reduced by 15%.",
+            -0.15f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _haradRaidDamage.Initialize(
+            "{=taom_feat_harad_rd}Far Harad Savagery",
+            "{=taom_feat_harad_rd_desc}Raid damage increased by 15%.",
+            0.15f, isPositiveEffect: true, FeatObject.AdditionType.AddFactor);
+        _haradArmyInfluenceCost.Initialize(
+            "{=taom_feat_harad_aic}Divided Tribes",
+            "{=taom_feat_harad_aic_desc}Army recruitment costs 15% more influence.",
+            0.15f, isPositiveEffect: false, FeatObject.AdditionType.AddFactor);
 
         // Dunland — Hill-men: hill marchers
         _dunlandPlainSpeed.Initialize(
@@ -917,6 +1085,7 @@ public class TaomCulturalFeats
         yield return _instance._ereborMorale;
         yield return _instance._ereborSmithing;
         yield return _instance._ereborSnowSpeed;
+        yield return _instance._ereborTariffIncome;
         yield return _instance._rivendellArmyInfluence;
         yield return _instance._rivendellHearthGrowth;
         yield return _instance._rivendellArmyInfluenceCost;
@@ -928,12 +1097,14 @@ public class TaomCulturalFeats
         yield return _instance._mirkwoodHearthGrowth;
         yield return _instance._mirkwoodFoodConsumption;
         yield return _instance._mirkwoodMorale;
+        yield return _instance._mirkwoodArmyInfluenceCost;
         yield return _instance._lothlorienForestSpeed;
         yield return _instance._lothlorienGarrisonWage;
         yield return _instance._lothlorienConstructionSpeed;
         yield return _instance._lothlorienFoodConsumption;
         yield return _instance._lothlorienLoyalty;
         yield return _instance._lothlorienMorale;
+        yield return _instance._lothlorienVolunteerRate;
         yield return _instance._isengardCheaperRecruits;
         yield return _instance._isengardGarrisonWage;
         yield return _instance._isengardDecisionPenalty;
@@ -961,15 +1132,22 @@ public class TaomCulturalFeats
         yield return _instance._goblinVolunteerRate;
         yield return _instance._goblinSnowSpeed;
         yield return _instance._goblinFoodConsumption;
+        yield return _instance._goblinSmithing;
+        yield return _instance._goblinRaidDamage;
         yield return _instance._mistyMountainOrcsArmyInfluenceCost;
         yield return _instance._mistyMountainOrcsPartySize;
         yield return _instance._mistyMountainOrcsSnowSpeed;
         yield return _instance._mistyMountainOrcsFoodConsumption;
+        yield return _instance._mistyMountainOrcsSmithing;
+        yield return _instance._mistyMountainOrcsRaidDamage;
+        yield return _instance._mistyMountainOrcsConstructionSpeed;
         yield return _instance._umbarCheaperCaravans;
         yield return _instance._umbarRenown;
         yield return _instance._umbarWage;
         yield return _instance._umbarTariffIncome;
         yield return _instance._umbarDesertSpeed;
+        yield return _instance._umbarRaidDamage;
+        yield return _instance._umbarFoodConsumption;
         yield return _instance._dolguldurArmyInfluenceCost;
         yield return _instance._dolguldurMilitiaProduction;
         yield return _instance._dolguldurConstructionSpeed;
@@ -996,6 +1174,7 @@ public class TaomCulturalFeats
         yield return _instance._mordorSwampSpeed;
         yield return _instance._mordorNightSpeed;
         yield return _instance._mordorVolunteerRate;
+        yield return _instance._mordorSmithing;
         yield return _instance._mordorNotableCountTownGangLeader;
         yield return _instance._mordorNotableCountVillage;
         yield return _instance._rohanMountedCost;
@@ -1005,11 +1184,24 @@ public class TaomCulturalFeats
         yield return _instance._rohanMorale;
         yield return _instance._rohanPlainSpeed;
         yield return _instance._dalePlainSpeed;
+        yield return _instance._daleTariffIncome;
+        yield return _instance._daleRenown;
+        yield return _instance._daleLoyalty;
         yield return _instance._khandSteppeSpeed;
+        yield return _instance._khandRenown;
+        yield return _instance._khandTariffIncome;
+        yield return _instance._khandFoodConsumption;
+        yield return _instance._khandPartySize;
         yield return _instance._rhunSteppeSpeed;
         yield return _instance._rhunPartySize;
+        yield return _instance._rhunLoyalty;
+        yield return _instance._rhunRaidDamage;
         yield return _instance._haradDesertSpeed;
         yield return _instance._haradPartySize;
+        yield return _instance._haradMorale;
+        yield return _instance._haradFoodConsumption;
+        yield return _instance._haradRaidDamage;
+        yield return _instance._haradArmyInfluenceCost;
         yield return _instance._dunlandPlainSpeed;
         yield return _instance._dunlandPartySize;
         yield return _instance._dunlandVolunteerRate;

@@ -68,6 +68,10 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             multiplier += TaomCulturalFeats.DolGuldurArmyInfluenceCostFeat.EffectBonus;
         if (culture.HasFeat(TaomCulturalFeats.MordorArmyInfluenceCostFeat))
             multiplier += TaomCulturalFeats.MordorArmyInfluenceCostFeat.EffectBonus;
+        if (culture.HasFeat(TaomCulturalFeats.MirkwoodArmyInfluenceCostFeat))
+            multiplier += TaomCulturalFeats.MirkwoodArmyInfluenceCostFeat.EffectBonus;
+        if (culture.HasFeat(TaomCulturalFeats.HaradArmyInfluenceCostFeat))
+            multiplier += TaomCulturalFeats.HaradArmyInfluenceCostFeat.EffectBonus;
 
         return multiplier != 0f ? (int)(baseCost * (1f + multiplier)) : baseCost;
     }
@@ -181,6 +185,8 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.AddFactor(TaomCulturalFeats.DolGuldurConstructionSpeedFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.IsengardConstructionSpeedFeat))
             result.AddFactor(TaomCulturalFeats.IsengardConstructionSpeedFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.MistyMountainOrcsConstructionSpeedFeat))
+            result.AddFactor(TaomCulturalFeats.MistyMountainOrcsConstructionSpeedFeat.EffectBonus, CultureText);
     }
 
     // ── VillageProduction ──────────────────────────────────────────────
@@ -216,6 +222,10 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             return;
         if (culture.HasFeat(TaomCulturalFeats.UmbarRenownFeat))
             result.AddFactor(TaomCulturalFeats.UmbarRenownFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.DaleRenownFeat))
+            result.AddFactor(TaomCulturalFeats.DaleRenownFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.KhandRenownFeat))
+            result.AddFactor(TaomCulturalFeats.KhandRenownFeat.EffectBonus, CultureText);
     }
 
     // ── PartyTroopUpgrade ──────────────────────────────────────────────
@@ -256,6 +266,8 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.AddFactor(TaomCulturalFeats.RhunPartySizeFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.HaradPartySizeFeat))
             result.AddFactor(TaomCulturalFeats.HaradPartySizeFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.KhandPartySizeFeat))
+            result.AddFactor(TaomCulturalFeats.KhandPartySizeFeat.EffectBonus, CultureText);
     }
 
     // ── VolunteerRespawn ──────────────────────────────────────────────
@@ -274,6 +286,8 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.AddFactor(TaomCulturalFeats.DolGuldurVolunteerRateFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.MordorVolunteerRateFeat))
             result.AddFactor(TaomCulturalFeats.MordorVolunteerRateFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.LothlorienVolunteerRateFeat))
+            result.AddFactor(TaomCulturalFeats.LothlorienVolunteerRateFeat.EffectBonus, CultureText);
     }
 
     // ── NotableSpawn ──────────────────────────────────────────────────
@@ -364,6 +378,12 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.AddFactor(TaomCulturalFeats.GoblinFoodConsumptionFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.MistyMountainOrcsFoodConsumptionFeat))
             result.AddFactor(TaomCulturalFeats.MistyMountainOrcsFoodConsumptionFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.UmbarFoodConsumptionFeat))
+            result.AddFactor(TaomCulturalFeats.UmbarFoodConsumptionFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.KhandFoodConsumptionFeat))
+            result.AddFactor(TaomCulturalFeats.KhandFoodConsumptionFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.HaradFoodConsumptionFeat))
+            result.AddFactor(TaomCulturalFeats.HaradFoodConsumptionFeat.EffectBonus, CultureText);
     }
 
     // ── SettlementLoyalty ──────────────────────────────────────────────
@@ -382,6 +402,10 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.Add(TaomCulturalFeats.RivendellLoyaltyFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.RohanLoyaltyFeat))
             result.Add(TaomCulturalFeats.RohanLoyaltyFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.DaleLoyaltyFeat))
+            result.Add(TaomCulturalFeats.DaleLoyaltyFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.RhunLoyaltyFeat))
+            result.Add(TaomCulturalFeats.RhunLoyaltyFeat.EffectBonus, CultureText);
     }
 
     // ── PartyMorale ────────────────────────────────────────────────────
@@ -400,6 +424,8 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.Add(TaomCulturalFeats.MirkwoodMoraleFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.LothlorienMoraleFeat))
             result.Add(TaomCulturalFeats.LothlorienMoraleFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.HaradMoraleFeat))
+            result.Add(TaomCulturalFeats.HaradMoraleFeat.EffectBonus, CultureText);
     }
 
     // ── Smithing ───────────────────────────────────────────────────────
@@ -412,6 +438,12 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.AddFactor(TaomCulturalFeats.EreborSmithingFeat.EffectBonus);
         if (culture.HasFeat(TaomCulturalFeats.IsengardSmithingFeat))
             result.AddFactor(TaomCulturalFeats.IsengardSmithingFeat.EffectBonus);
+        if (culture.HasFeat(TaomCulturalFeats.MordorSmithingFeat))
+            result.AddFactor(TaomCulturalFeats.MordorSmithingFeat.EffectBonus);
+        if (culture.HasFeat(TaomCulturalFeats.GoblinSmithingFeat))
+            result.AddFactor(TaomCulturalFeats.GoblinSmithingFeat.EffectBonus);
+        if (culture.HasFeat(TaomCulturalFeats.MistyMountainOrcsSmithingFeat))
+            result.AddFactor(TaomCulturalFeats.MistyMountainOrcsSmithingFeat.EffectBonus);
     }
 
     // ── ClanFinance (tariffs) ──────────────────────────────────────────
@@ -422,6 +454,12 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             return;
         if (culture.HasFeat(TaomCulturalFeats.UmbarTariffIncomeFeat))
             result.AddFactor(TaomCulturalFeats.UmbarTariffIncomeFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.EreborTariffIncomeFeat))
+            result.AddFactor(TaomCulturalFeats.EreborTariffIncomeFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.DaleTariffIncomeFeat))
+            result.AddFactor(TaomCulturalFeats.DaleTariffIncomeFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.KhandTariffIncomeFeat))
+            result.AddFactor(TaomCulturalFeats.KhandTariffIncomeFeat.EffectBonus, CultureText);
     }
 
     // ── Raid ───────────────────────────────────────────────────────────
@@ -436,5 +474,15 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
             result.AddFactor(TaomCulturalFeats.GundabadRaidDamageFeat.EffectBonus, CultureText);
         if (culture.HasFeat(TaomCulturalFeats.IsengardRaidDamageFeat))
             result.AddFactor(TaomCulturalFeats.IsengardRaidDamageFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.UmbarRaidDamageFeat))
+            result.AddFactor(TaomCulturalFeats.UmbarRaidDamageFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.GoblinRaidDamageFeat))
+            result.AddFactor(TaomCulturalFeats.GoblinRaidDamageFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.MistyMountainOrcsRaidDamageFeat))
+            result.AddFactor(TaomCulturalFeats.MistyMountainOrcsRaidDamageFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.HaradRaidDamageFeat))
+            result.AddFactor(TaomCulturalFeats.HaradRaidDamageFeat.EffectBonus, CultureText);
+        if (culture.HasFeat(TaomCulturalFeats.RhunRaidDamageFeat))
+            result.AddFactor(TaomCulturalFeats.RhunRaidDamageFeat.EffectBonus, CultureText);
     }
 }

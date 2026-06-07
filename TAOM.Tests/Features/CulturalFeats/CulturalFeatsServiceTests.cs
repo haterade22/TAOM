@@ -988,6 +988,286 @@ public class CulturalFeatsServiceTests
         Assert.AreEqual(100f, en.ResultNumber);
     }
 
+    // ── Wave 1: Smithing (Mordor / Goblin / Misty Mountain Orcs) ──────
+
+    [TestMethod]
+    public void ApplySmithingFeats_MordorOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.MordorSmithingFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplySmithingFeats(culture, ref en);
+        Assert.AreEqual(
+            100f * (1f + TaomCulturalFeats.MordorSmithingFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplySmithingFeats_GoblinOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.GoblinSmithingFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplySmithingFeats(culture, ref en);
+        Assert.AreEqual(
+            100f * (1f + TaomCulturalFeats.GoblinSmithingFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplySmithingFeats_MistyMountainOrcsOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.MistyMountainOrcsSmithingFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplySmithingFeats(culture, ref en);
+        Assert.AreEqual(
+            100f * (1f + TaomCulturalFeats.MistyMountainOrcsSmithingFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    // ── Wave 1: Tariff income (Erebor / Dale / Khand) ─────────────────
+
+    [TestMethod]
+    public void ApplyTariffIncomeFeats_EreborOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.EreborTariffIncomeFeat);
+        var en = new ExplainedNumber(500f);
+        _sut.ApplyTariffIncomeFeats(culture, ref en);
+        Assert.AreEqual(
+            500f * (1f + TaomCulturalFeats.EreborTariffIncomeFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyTariffIncomeFeats_DaleOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.DaleTariffIncomeFeat);
+        var en = new ExplainedNumber(500f);
+        _sut.ApplyTariffIncomeFeats(culture, ref en);
+        Assert.AreEqual(
+            500f * (1f + TaomCulturalFeats.DaleTariffIncomeFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyTariffIncomeFeats_KhandOnly_ReducesIncome()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.KhandTariffIncomeFeat);
+        var en = new ExplainedNumber(500f);
+        _sut.ApplyTariffIncomeFeats(culture, ref en);
+        Assert.AreEqual(
+            500f * (1f + TaomCulturalFeats.KhandTariffIncomeFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    // ── Wave 1: Raid damage (Umbar / Goblin / MMO / Harad / Rhun) ─────
+
+    [TestMethod]
+    public void ApplyRaidDamageFeats_UmbarOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.UmbarRaidDamageFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplyRaidDamageFeats(culture, ref en);
+        Assert.AreEqual(
+            100f * (1f + TaomCulturalFeats.UmbarRaidDamageFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyRaidDamageFeats_GoblinOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.GoblinRaidDamageFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplyRaidDamageFeats(culture, ref en);
+        Assert.AreEqual(
+            100f * (1f + TaomCulturalFeats.GoblinRaidDamageFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyRaidDamageFeats_MistyMountainOrcsOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.MistyMountainOrcsRaidDamageFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplyRaidDamageFeats(culture, ref en);
+        Assert.AreEqual(
+            100f * (1f + TaomCulturalFeats.MistyMountainOrcsRaidDamageFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyRaidDamageFeats_HaradOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.HaradRaidDamageFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplyRaidDamageFeats(culture, ref en);
+        Assert.AreEqual(
+            100f * (1f + TaomCulturalFeats.HaradRaidDamageFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyRaidDamageFeats_RhunOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.RhunRaidDamageFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplyRaidDamageFeats(culture, ref en);
+        Assert.AreEqual(
+            100f * (1f + TaomCulturalFeats.RhunRaidDamageFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    // ── Wave 1: Food consumption (Umbar / Khand / Harad) ──────────────
+
+    [TestMethod]
+    public void ApplyFoodConsumptionFeats_UmbarOnly_ReducesCost()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.UmbarFoodConsumptionFeat);
+        var en = new ExplainedNumber(10f);
+        _sut.ApplyFoodConsumptionFeats(culture, ref en);
+        Assert.AreEqual(
+            10f * (1f + TaomCulturalFeats.UmbarFoodConsumptionFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyFoodConsumptionFeats_KhandOnly_ReducesCost()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.KhandFoodConsumptionFeat);
+        var en = new ExplainedNumber(10f);
+        _sut.ApplyFoodConsumptionFeats(culture, ref en);
+        Assert.AreEqual(
+            10f * (1f + TaomCulturalFeats.KhandFoodConsumptionFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyFoodConsumptionFeats_HaradOnly_ReducesCost()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.HaradFoodConsumptionFeat);
+        var en = new ExplainedNumber(10f);
+        _sut.ApplyFoodConsumptionFeats(culture, ref en);
+        Assert.AreEqual(
+            10f * (1f + TaomCulturalFeats.HaradFoodConsumptionFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    // ── Wave 1: Volunteer respawn (Lothlorien) ────────────────────────
+
+    [TestMethod]
+    public void ApplyVolunteerRespawnFeats_LothlorienCulture_ReducesRate()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.LothlorienVolunteerRateFeat);
+        var en = new ExplainedNumber(0.7f);
+        _sut.ApplyVolunteerRespawnFeats(culture, ref en);
+        Assert.AreEqual(
+            0.7f * (1f + TaomCulturalFeats.LothlorienVolunteerRateFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    // ── Wave 1: Army influence cost (Mirkwood / Harad) ────────────────
+
+    [TestMethod]
+    public void ApplyArmyInfluenceCost_MirkwoodOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.MirkwoodArmyInfluenceCostFeat);
+        var result = _sut.ApplyArmyInfluenceCost(culture, 100);
+        var expected = (int)(100 * (1f + TaomCulturalFeats.MirkwoodArmyInfluenceCostFeat.EffectBonus));
+        Assert.AreEqual(expected, result);
+    }
+
+    [TestMethod]
+    public void ApplyArmyInfluenceCost_HaradOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.HaradArmyInfluenceCostFeat);
+        var result = _sut.ApplyArmyInfluenceCost(culture, 100);
+        var expected = (int)(100 * (1f + TaomCulturalFeats.HaradArmyInfluenceCostFeat.EffectBonus));
+        Assert.AreEqual(expected, result);
+    }
+
+    // ── Wave 1: Construction speed (Misty Mountain Orcs) ──────────────
+
+    [TestMethod]
+    public void ApplyConstructionSpeedFeats_MistyMountainOrcsOnly_ReducesSpeed()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.MistyMountainOrcsConstructionSpeedFeat);
+        var en = new ExplainedNumber(20f);
+        _sut.ApplyConstructionSpeedFeats(culture, ref en);
+        Assert.AreEqual(
+            20f * (1f + TaomCulturalFeats.MistyMountainOrcsConstructionSpeedFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    // ── Wave 1: Battle renown (Dale / Khand) ──────────────────────────
+
+    [TestMethod]
+    public void ApplyRenownFeats_DaleOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.DaleRenownFeat);
+        var en = new ExplainedNumber(50f);
+        _sut.ApplyRenownFeats(culture, ref en);
+        Assert.AreEqual(
+            50f * (1f + TaomCulturalFeats.DaleRenownFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyRenownFeats_KhandOnly_AppliesFactor()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.KhandRenownFeat);
+        var en = new ExplainedNumber(50f);
+        _sut.ApplyRenownFeats(culture, ref en);
+        Assert.AreEqual(
+            50f * (1f + TaomCulturalFeats.KhandRenownFeat.EffectBonus),
+            en.ResultNumber, 0.0001f);
+    }
+
+    // ── Wave 1: Settlement loyalty (Dale / Rhun) ──────────────────────
+
+    [TestMethod]
+    public void ApplyLoyaltyFeats_DaleOnly_AddsBonus()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.DaleLoyaltyFeat);
+        var en = new ExplainedNumber(2f);
+        _sut.ApplyLoyaltyFeats(culture, ref en);
+        Assert.AreEqual(
+            2f + TaomCulturalFeats.DaleLoyaltyFeat.EffectBonus,
+            en.ResultNumber, 0.0001f);
+    }
+
+    [TestMethod]
+    public void ApplyLoyaltyFeats_RhunOnly_AddsBonus()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.RhunLoyaltyFeat);
+        var en = new ExplainedNumber(2f);
+        _sut.ApplyLoyaltyFeats(culture, ref en);
+        Assert.AreEqual(
+            2f + TaomCulturalFeats.RhunLoyaltyFeat.EffectBonus,
+            en.ResultNumber, 0.0001f);
+    }
+
+    // ── Wave 1: Party morale (Harad) ──────────────────────────────────
+
+    [TestMethod]
+    public void ApplyMoraleFeats_HaradOnly_AddsBonus()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.HaradMoraleFeat);
+        var en = new ExplainedNumber(50f);
+        _sut.ApplyMoraleFeats(culture, ref en);
+        Assert.AreEqual(
+            50f + TaomCulturalFeats.HaradMoraleFeat.EffectBonus,
+            en.ResultNumber, 0.0001f);
+    }
+
+    // ── Wave 1: Party size (Khand) ────────────────────────────────────
+
+    [TestMethod]
+    public void ApplyPartySizeFeats_KhandOnly_AppliesFivePercent()
+    {
+        var culture = AdapterWith(TaomCulturalFeats.KhandPartySizeFeat);
+        var en = new ExplainedNumber(100f);
+        _sut.ApplyPartySizeFeats(culture, ref en);
+        Assert.AreEqual(100f * (1f + 0.05f), en.ResultNumber, 0.0001f);
+    }
+
     // ── Adapter helpers ────────────────────────────────────────────────
 
     /// <summary>
@@ -1152,6 +1432,32 @@ public class CulturalFeatsServiceTests
                 ("_gundabadNotableCountTownArtisan", "taom_gundabad_notable_count_town_artisan", 1f),
                 ("_gundabadNotableCountTownGangLeader", "taom_gundabad_notable_count_town_gang_leader", 3f),
                 ("_gundabadNotableCountVillage", "taom_gundabad_notable_count_village", 0.1f),
+
+                // Wave 1 economy/military feats (24)
+                ("_mordorSmithing", "taom_mordor_smithing", -0.15f),
+                ("_ereborTariffIncome", "taom_erebor_tariff_income", 0.05f),
+                ("_umbarRaidDamage", "taom_umbar_raid_damage", 0.2f),
+                ("_umbarFoodConsumption", "taom_umbar_food_consumption", -0.1f),
+                ("_lothlorienVolunteerRate", "taom_lothlorien_volunteer_rate", -0.15f),
+                ("_mirkwoodArmyInfluenceCost", "taom_mirkwood_army_influence_cost", 0.15f),
+                ("_goblinSmithing", "taom_goblin_smithing", -0.1f),
+                ("_goblinRaidDamage", "taom_goblin_raid_damage", 0.1f),
+                ("_mistyMountainOrcsSmithing", "taom_mistymountainorcs_smithing", -0.15f),
+                ("_mistyMountainOrcsRaidDamage", "taom_mistymountainorcs_raid_damage", 0.15f),
+                ("_mistyMountainOrcsConstructionSpeed", "taom_mistymountainorcs_construction_speed", -0.1f),
+                ("_daleTariffIncome", "taom_dale_tariff_income", 0.1f),
+                ("_daleRenown", "taom_dale_renown", 0.1f),
+                ("_daleLoyalty", "taom_dale_loyalty", -0.5f),
+                ("_khandRenown", "taom_khand_renown", 0.08f),
+                ("_khandTariffIncome", "taom_khand_tariff_income", -0.1f),
+                ("_khandFoodConsumption", "taom_khand_food_consumption", -0.1f),
+                ("_khandPartySize", "taom_khand_party_size", 0.05f),
+                ("_haradMorale", "taom_harad_morale", 5f),
+                ("_haradFoodConsumption", "taom_harad_food_consumption", -0.15f),
+                ("_haradRaidDamage", "taom_harad_raid_damage", 0.15f),
+                ("_haradArmyInfluenceCost", "taom_harad_army_influence_cost", 0.15f),
+                ("_rhunLoyalty", "taom_rhun_loyalty", -0.5f),
+                ("_rhunRaidDamage", "taom_rhun_raid_damage", 0.15f),
             };
 
             var effectBonusProp = typeof(FeatObject).GetProperty(

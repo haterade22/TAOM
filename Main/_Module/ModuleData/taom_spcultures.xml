@@ -225,6 +225,7 @@
       <feat id="taom_erebor_morale" />
       <feat id="taom_erebor_smithing" />
       <feat id="taom_erebor_snow_speed" />
+      <feat id="taom_erebor_tariff_income" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -957,6 +958,7 @@
       <feat id="taom_mirkwood_hearth_growth" />
       <feat id="taom_mirkwood_food_consumption" />
       <feat id="taom_mirkwood_morale" />
+      <feat id="taom_mirkwood_army_influence_cost" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -1318,6 +1320,7 @@
       <feat id="taom_lothlorien_food_consumption" />
       <feat id="taom_lothlorien_loyalty" />
       <feat id="taom_lothlorien_morale" />
+      <feat id="taom_lothlorien_volunteer_rate" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -2420,6 +2423,8 @@
       <feat id="taom_umbar_wage" />
       <feat id="taom_umbar_tariff_income" />
       <feat id="taom_umbar_desert_speed" />
+      <feat id="taom_umbar_raid_damage" />
+      <feat id="taom_umbar_food_consumption" />
     </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -3534,6 +3539,7 @@
       <feat id="taom_mordor_swamp_speed" />
       <feat id="taom_mordor_night_speed" />
       <feat id="taom_mordor_volunteer_rate" />
+      <feat id="taom_mordor_smithing" />
       <feat id="taom_mordor_notable_count_town_gang_leader" />
       <feat id="taom_mordor_notable_count_village" />
     </cultural_feats>
@@ -4730,6 +4736,8 @@
             <feat id="taom_goblin_volunteer_rate" />
             <feat id="taom_goblin_snow_speed" />
             <feat id="taom_goblin_food_consumption" />
+            <feat id="taom_goblin_smithing" />
+            <feat id="taom_goblin_raid_damage" />
         </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />
@@ -5089,6 +5097,9 @@
             <feat id="taom_mistymountainorcs_party_size" />
             <feat id="taom_mistymountainorcs_snow_speed" />
             <feat id="taom_mistymountainorcs_food_consumption" />
+            <feat id="taom_mistymountainorcs_smithing" />
+            <feat id="taom_mistymountainorcs_raid_damage" />
+            <feat id="taom_mistymountainorcs_construction_speed" />
         </cultural_feats>
     <possible_clan_banner_icon_ids>
       <icon id="100" />

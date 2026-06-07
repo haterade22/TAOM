@@ -1349,6 +1349,10 @@
 			<xsl:apply-templates select="@*|node()"/>
 			<feat id="taom_harad_desert_speed" />
 			<feat id="taom_harad_party_size" />
+			<feat id="taom_harad_morale" />
+			<feat id="taom_harad_food_consumption" />
+			<feat id="taom_harad_raid_damage" />
+			<feat id="taom_harad_army_influence_cost" />
 		</xsl:copy>
 	</xsl:template>
 
@@ -1357,6 +1361,8 @@
 			<xsl:apply-templates select="@*|node()"/>
 			<feat id="taom_rhun_steppe_speed" />
 			<feat id="taom_rhun_party_size" />
+			<feat id="taom_rhun_loyalty" />
+			<feat id="taom_rhun_raid_damage" />
 		</xsl:copy>
 	</xsl:template>
 
@@ -1364,6 +1370,9 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()"/>
 			<feat id="taom_dale_plain_speed" />
+			<feat id="taom_dale_tariff_income" />
+			<feat id="taom_dale_renown" />
+			<feat id="taom_dale_loyalty" />
 		</xsl:copy>
 	</xsl:template>
 
@@ -1371,6 +1380,10 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()"/>
 			<feat id="taom_khand_steppe_speed" />
+			<feat id="taom_khand_renown" />
+			<feat id="taom_khand_tariff_income" />
+			<feat id="taom_khand_food_consumption" />
+			<feat id="taom_khand_party_size" />
 		</xsl:copy>
 	</xsl:template>
 

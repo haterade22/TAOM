@@ -16,15 +16,15 @@ public class TaomCulturalFeatsDefinitionTests
     /// without the game framework, we verify the code structure via reflection.
     /// </summary>
     [TestMethod]
-    public void AllFeatProperties_ReturnFeatObject_CountIs105()
+    public void AllFeatProperties_ReturnFeatObject_CountIs129()
     {
         var properties = typeof(TaomCulturalFeats)
             .GetProperties(BindingFlags.Public | BindingFlags.Static)
             .Where(p => p.PropertyType == typeof(FeatObject))
             .ToList();
 
-        Assert.AreEqual(105, properties.Count,
-            "Expected 105 culture feat properties (97 prior + 4 Goblin + 4 Misty Mountain Orcs)");
+        Assert.AreEqual(129, properties.Count,
+            "Expected 129 culture feat properties (105 prior + 24 Wave 1 economy/military feats)");
     }
 
     [TestMethod]
@@ -44,12 +44,12 @@ public class TaomCulturalFeatsDefinitionTests
     public void GetAllFeats_YieldsZeroOrFullSet()
     {
         // GetAllFeats returns empty when the static `_instance` is null (no game
-        // framework loaded), OR the full 105-feat enumeration when a sibling test
+        // framework loaded), OR the full 129-feat enumeration when a sibling test
         // (e.g. CulturalFeatsServiceTests) reflection-initialised the singleton.
         // Both states are valid in a test process; assert one or the other.
         var feats = TaomCulturalFeats.GetAllFeats().ToList();
-        Assert.IsTrue(feats.Count == 0 || feats.Count == 105,
-            $"GetAllFeats expected 0 (uninitialised) or 105 (full set), got {feats.Count}");
+        Assert.IsTrue(feats.Count == 0 || feats.Count == 129,
+            $"GetAllFeats expected 0 (uninitialised) or 129 (full set), got {feats.Count}");
     }
 
     [TestMethod]
@@ -162,6 +162,31 @@ public class TaomCulturalFeatsDefinitionTests
     [DataRow("MistyMountainOrcsPartySizeFeat")]
     [DataRow("MistyMountainOrcsSnowSpeedFeat")]
     [DataRow("MistyMountainOrcsFoodConsumptionFeat")]
+    // Wave 1 economy/military feats (24)
+    [DataRow("MordorSmithingFeat")]
+    [DataRow("EreborTariffIncomeFeat")]
+    [DataRow("UmbarRaidDamageFeat")]
+    [DataRow("UmbarFoodConsumptionFeat")]
+    [DataRow("LothlorienVolunteerRateFeat")]
+    [DataRow("MirkwoodArmyInfluenceCostFeat")]
+    [DataRow("GoblinSmithingFeat")]
+    [DataRow("GoblinRaidDamageFeat")]
+    [DataRow("MistyMountainOrcsSmithingFeat")]
+    [DataRow("MistyMountainOrcsRaidDamageFeat")]
+    [DataRow("MistyMountainOrcsConstructionSpeedFeat")]
+    [DataRow("DaleTariffIncomeFeat")]
+    [DataRow("DaleRenownFeat")]
+    [DataRow("DaleLoyaltyFeat")]
+    [DataRow("KhandRenownFeat")]
+    [DataRow("KhandTariffIncomeFeat")]
+    [DataRow("KhandFoodConsumptionFeat")]
+    [DataRow("KhandPartySizeFeat")]
+    [DataRow("HaradMoraleFeat")]
+    [DataRow("HaradFoodConsumptionFeat")]
+    [DataRow("HaradRaidDamageFeat")]
+    [DataRow("HaradArmyInfluenceCostFeat")]
+    [DataRow("RhunLoyaltyFeat")]
+    [DataRow("RhunRaidDamageFeat")]
     public void FeatProperty_Exists_IsPublicStatic(string propertyName)
     {
         var prop = typeof(TaomCulturalFeats).GetProperty(
@@ -183,26 +208,26 @@ public class TaomCulturalFeatsDefinitionTests
 
         var expectedCounts = new Dictionary<string, int>
         {
-            { "Erebor", 7 },
+            { "Erebor", 8 },      // Wave 1: +1 tariff income
             { "Rivendell", 6 },
-            { "Mirkwood", 5 },
-            { "Lothlorien", 6 },
+            { "Mirkwood", 6 },    // Wave 1: +1 army influence cost
+            { "Lothlorien", 7 },  // Wave 1: +1 volunteer rate
             { "Isengard", 13 },   // +3 per-occupation town notable + 1 village (was +2 → now +4 over base)
             { "Gundabad", 10 },   // +1 volunteer rate, +2 per-occ town notable + 1 village (was +3 → now +4 over base)
-            { "Umbar", 5 },
+            { "Umbar", 7 },       // Wave 1: +1 raid damage, +1 food consumption
             { "DolGuldur", 10 },  // +1 volunteer rate, +3 per-occ town notable + 1 village
             { "Gondor", 7 },      // unchanged
-            { "Mordor", 11 },     // +1 volunteer rate, +1 per-occ town notable + 1 village (was +3 → still +3 over base)
+            { "Mordor", 12 },     // Wave 1: +1 smithing
             { "Rohan", 6 },
-            { "Dale", 1 },
-            { "Khand", 1 },
-            { "Rhun", 2 },        // +1 party size
-            { "Harad", 2 },       // +1 party size
+            { "Dale", 4 },        // Wave 1: +1 tariff income, +1 renown, +1 loyalty
+            { "Khand", 5 },       // Wave 1: +1 renown, +1 tariff income, +1 food consumption, +1 party size
+            { "Rhun", 4 },        // +1 party size; Wave 1: +1 loyalty, +1 raid damage
+            { "Harad", 6 },       // +1 party size; Wave 1: +1 morale, +1 food consumption, +1 raid damage, +1 army influence cost
             { "Dunland", 3 },     // +1 party size, +1 volunteer rate
             { "Shaghana", 1 },
             { "Abanissa", 1 },
-            { "Goblin", 4 },             // party size, volunteer rate, snow speed, food consumption
-            { "MistyMountainOrcs", 4 },  // army influence cost, party size, snow speed, food consumption
+            { "Goblin", 6 },             // party size, volunteer rate, snow speed, food consumption; Wave 1: +1 smithing, +1 raid damage
+            { "MistyMountainOrcs", 7 },  // army influence cost, party size, snow speed, food consumption; Wave 1: +1 smithing, +1 raid damage, +1 construction speed
         };
 
         foreach (var kvp in expectedCounts)
@@ -222,8 +247,8 @@ public class TaomCulturalFeatsDefinitionTests
             .Where(f => f.FieldType == typeof(FeatObject))
             .ToList();
 
-        Assert.AreEqual(105, fields.Count,
-            "Expected 105 private FeatObject fields (97 prior + 4 Goblin + 4 Misty Mountain Orcs)");
+        Assert.AreEqual(129, fields.Count,
+            "Expected 129 private FeatObject fields (105 prior + 24 Wave 1 economy/military feats)");
     }
 
     [TestMethod]
