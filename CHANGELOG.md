@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased study — Phase 6: save system (SaveableTypeDefiner + SyncData)
+
+[docs/reference/engine/save-system.md](docs/reference/engine/save-system.md) — how a feature persists state. `CampaignBehaviorBase.SyncData(IDataStore)` (the default path — primitives/strings/registered types, no registration needed) vs `SaveableTypeDefiner` + `[SaveableField(n)]` (register a custom class/struct/enum). Confirms the base+localId gotcha at the source: `AddClassDefinition(type, saveId)` → `_saveBaseId + saveId` (SaveSystem.cs:1125), so overlapping (base+localId) ranges collide → **crash at Module.Initialize** (`feedback_saveable_typedefiner_localid_offset`; bases step by 100). TAOM idiom: store composite strings + `SyncData` to avoid a SaveDefiner. The elephant needs none (battle-only state); `MBObjectBase` objects save by `MBGUID` (Phase 5 typeId) — a separate id space.
+
 ### docs(engine): phased study — Phase 5: object system (MBObjectManager + XML→object)
 
 [docs/reference/engine/object-system-mbobjectmanager.md](docs/reference/engine/object-system-mbobjectmanager.md) — the data backbone the spawn chain + every TAOM feature use. `RegisterType<T>(element, list, typeId)` (Monster→Monsters@2, Item→Items@4, NPCCharacter@16, Culture@17, PartyTemplate@24, Settlement@25…); `LoadXML(list)` merges all enabled modules' XML + deserializes into objects (where `SubModule.xml` `<XmlNode><XmlName id="…"/>` plugs in); `GetObject<T>(stringId)` resolves by `StringId` and **returns clean null on missing** (so a broken `Item.X` ref → no mesh = the "underwear bug" — caught statically by `tools/validate_moduledata.py`). Cross-module merge is **load-order-tolerant** at runtime (the ADOD/LOTRLOME-needn't-be-declared finding). The `RegisterType` typeId is the `MBGUID` object-type tag — distinct from `SaveableTypeDefiner` base ids.
