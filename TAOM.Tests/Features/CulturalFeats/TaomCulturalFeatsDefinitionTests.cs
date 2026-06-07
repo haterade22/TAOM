@@ -1,7 +1,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TAOM.Features.CulturalFeats;
 
@@ -273,5 +276,94 @@ public class TaomCulturalFeatsDefinitionTests
 
         Assert.IsNotNull(caravanField,
             "Field _umbarCheaperCaravans should exist as a private instance field");
+    }
+
+    /// <summary>
+    /// Pins the PRODUCTION Initialize(...) metadata for the 24 Wave 1 feats against a
+    /// canonical spec, by source-parsing TaomCulturalFeats.cs. The unit-test harness cannot
+    /// call CreateAndRegister()/InitializeAll() (FeatObject.Initialize reaches into the game
+    /// framework), and the dispatch tests in CulturalFeatsServiceTests inject FAKE FeatObjects
+    /// from a mirrored table — so without this test a production sign-flip or wrong magnitude
+    /// (e.g. "+0.15f" instead of "-0.15f" on a cost-reduction feat) would pass every test.
+    /// Codex Wave 1 review (2026-06-07) MEDIUM finding: production EffectBonus / IsPositive /
+    /// AdditionType / string-id for the 24 new feats were unpinned. Source-parse is brittle to
+    /// field renames by design — a rename should re-confirm the spec.
+    /// </summary>
+    [TestMethod]
+    public void Wave1Feats_ProductionMetadata_MatchesSpec()
+    {
+        // (field, stringId, effectBonus literal, isPositiveEffect, AdditionType)
+        var spec = new (string field, string id, string bonus, bool positive, string addType)[]
+        {
+            ("_mordorSmithing", "taom_mordor_smithing", "-0.15f", true, "AddFactor"),
+            ("_ereborTariffIncome", "taom_erebor_tariff_income", "0.05f", true, "AddFactor"),
+            ("_umbarRaidDamage", "taom_umbar_raid_damage", "0.2f", true, "AddFactor"),
+            ("_umbarFoodConsumption", "taom_umbar_food_consumption", "-0.1f", true, "AddFactor"),
+            ("_lothlorienVolunteerRate", "taom_lothlorien_volunteer_rate", "-0.15f", false, "AddFactor"),
+            ("_mirkwoodArmyInfluenceCost", "taom_mirkwood_army_influence_cost", "0.15f", false, "AddFactor"),
+            ("_goblinSmithing", "taom_goblin_smithing", "-0.1f", true, "AddFactor"),
+            ("_goblinRaidDamage", "taom_goblin_raid_damage", "0.1f", true, "AddFactor"),
+            ("_mistyMountainOrcsSmithing", "taom_mistymountainorcs_smithing", "-0.15f", true, "AddFactor"),
+            ("_mistyMountainOrcsRaidDamage", "taom_mistymountainorcs_raid_damage", "0.15f", true, "AddFactor"),
+            ("_mistyMountainOrcsConstructionSpeed", "taom_mistymountainorcs_construction_speed", "-0.1f", false, "AddFactor"),
+            ("_daleTariffIncome", "taom_dale_tariff_income", "0.1f", true, "AddFactor"),
+            ("_daleRenown", "taom_dale_renown", "0.1f", true, "AddFactor"),
+            ("_daleLoyalty", "taom_dale_loyalty", "-0.5f", false, "Add"),
+            ("_khandRenown", "taom_khand_renown", "0.08f", true, "AddFactor"),
+            ("_khandTariffIncome", "taom_khand_tariff_income", "-0.1f", false, "AddFactor"),
+            ("_khandFoodConsumption", "taom_khand_food_consumption", "-0.1f", true, "AddFactor"),
+            ("_khandPartySize", "taom_khand_party_size", "0.05f", true, "AddFactor"),
+            ("_haradMorale", "taom_harad_morale", "5f", true, "Add"),
+            ("_haradFoodConsumption", "taom_harad_food_consumption", "-0.15f", true, "AddFactor"),
+            ("_haradRaidDamage", "taom_harad_raid_damage", "0.15f", true, "AddFactor"),
+            ("_haradArmyInfluenceCost", "taom_harad_army_influence_cost", "0.15f", false, "AddFactor"),
+            ("_rhunLoyalty", "taom_rhun_loyalty", "-0.5f", false, "Add"),
+            ("_rhunRaidDamage", "taom_rhun_raid_damage", "0.15f", true, "AddFactor"),
+        };
+
+        var source = File.ReadAllText(LocateSource("Main/Features/CulturalFeats/TaomCulturalFeats.cs"));
+        var failures = new List<string>();
+
+        foreach (var (field, id, bonus, positive, addType) in spec)
+        {
+            // 1. Register("id") binds the expected field to the expected string-id.
+            var registerPattern = $"{Regex.Escape(field)} = Register(\"{Regex.Escape(id)}\")";
+            if (!source.Contains(registerPattern))
+                failures.Add($"{field}: missing or mismatched Register(\"{id}\")");
+
+            // 2. The Initialize(...) call carries the expected bonus / isPositiveEffect / AdditionType.
+            // Match the full call (multi-line) from "<field>.Initialize(" to the closing ");".
+            var initMatch = Regex.Match(
+                source,
+                Regex.Escape(field) + @"\.Initialize\((?<body>.*?)\);",
+                RegexOptions.Singleline);
+            if (!initMatch.Success)
+            {
+                failures.Add($"{field}: no Initialize(...) call found");
+                continue;
+            }
+
+            var body = initMatch.Groups["body"].Value;
+            var expectedTail =
+                $"{bonus}, isPositiveEffect: {positive.ToString().ToLowerInvariant()}, FeatObject.AdditionType.{addType}";
+            var normalized = Regex.Replace(body, @"\s+", " ");
+            if (!normalized.Contains(expectedTail))
+                failures.Add($"{field}: Initialize metadata != expected \"{expectedTail}\" (got: ...{normalized.Substring(System.Math.Max(0, normalized.Length - 80))})");
+        }
+
+        Assert.AreEqual(0, failures.Count,
+            "Wave 1 production feat metadata drifted from spec:\n" + string.Join("\n", failures));
+    }
+
+    private static string LocateSource(string relPath)
+    {
+        var dir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+        while (dir != null)
+        {
+            if (Directory.Exists(Path.Combine(dir.FullName, ".git")))
+                return Path.Combine(dir.FullName, relPath.Replace('/', Path.DirectorySeparatorChar));
+            dir = dir.Parent;
+        }
+        throw new InvalidOperationException("repo root (.git) not found from " + AppDomain.CurrentDomain.BaseDirectory);
     }
 }

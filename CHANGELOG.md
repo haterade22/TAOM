@@ -2,6 +2,19 @@
 
 ## 2026-06-07
 
+### chore(cultural-feats): Wave 1 review closeout — /deep-review + /review-codex + RCA + docs + 11-lang translation
+
+Ran the mandatory review pipeline on the Wave 1 feats (it had been skipped before the first commit — a process miss the user caught by asking; documented as the headline lesson in the RCA). Issue [#273](https://github.com/haterade22/TAOM/issues/273) created retroactively.
+
+- **`/deep-review`** (5 agents): 4 PASS clean (Standards, Compatibility, Efficiency, Data-Flow 24/24 CONNECTED); Completeness flagged the missing issue → #273. Per-(culture,axis) dispatch coverage 24/24 (the Review 45 lesson held).
+- **`/review-codex`** (gpt-5.5 xhigh): 0 CRITICAL / 0 HIGH / 1 MED / 2 LOW, all 7 Known Suspects CONFIRMED CLEAN.
+  - **MED (fixed):** the 24 feats' production metadata was unpinned by tests (dispatch tests use a mirror table of fake FeatObjects; `RegisterAll_UsesCorrectStringIds` only counts fields). Added `Wave1Feats_ProductionMetadata_MatchesSpec` — source-parses `Initialize(...)` so a production sign-flip fails the build.
+  - **LOW (fixed):** stale `spcultures.xslt` append-block comment (said "terrain movement-speed" but appends 8 axis types); feature-doc feat table omitted the 24 Wave 1 feats + said "97".
+- **Docs (organized for future sessions/agents):** RCA `docs/reviews/rca-cultural-feats-wave1-2026-06-07.md` (what/why/how/why-missed/lessons); feature-doc Wave-1 section + Wave model (Q/E/N); **new `docs/research/cultural-feats-roadmap.md`** (Wave 1 shipped + Wave 1.5/2/3 per-culture menu + untapped GameModel surface — promoted from the ephemeral plan file so it survives); REVIEW-LOG review 50; AGENTS.md Codex-feedback loop; 2 new memories (`feedback_review_before_commit_not_after`, `feedback_mirror_table_drifts_from_production`).
+- **Localization:** propagated the 26 new `taom_faction_*_bonus_*` faction-map keys to 11 AI languages (Polish hand-translated). Zero U+2212 across all 25 source/lang/cache files. (Encyclopedia feat strings follow the established English-default-fallback convention shared by all 129 feats.)
+
+**Verification:** build 0 errors; `dotnet test` **3092 / 0 / 2** (+1 metadata test); `validate_moduledata.py` PASS; FactionMapDataTests 93/93.
+
 ### feat(cultural-feats): Wave 1 expansion — 24 new feats across 11 cultures
 
 Adds 24 new cultural feats, raising the total from 105 to **129**. All are **Q-class** — each plugs into an EXISTING `CulturalFeatsService.Apply*` method via an added `HasFeat` check; no new GameModels, no new service methods, no conditional logic. Targets the thinly-covered cultures surfaced by the #260 faction-map rewrite (Dale, Khand, Harad, Rhûn each had only 1-2 TAOM feats; the new Goblin / Misty Mountain Orcs cultures had 4 baseline each).

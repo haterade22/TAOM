@@ -232,12 +232,53 @@ The six vanilla-wrapped cultures get their terrain feat appended to their `<cult
 - Harmony 2.x (patching `Campaign.InitializeDefaultCampaignObjects`)
 - TaleWorlds.CampaignSystem.dll (`FeatObject`, `CultureObject`, `DefaultXxxModel` classes)
 
+### Wave 1 Expansion Feats (24) — 2026-06-07
+
+The "Wave model" for future feat work: feats are classified by implementation cost and shipped in waves.
+
+- **Q-class** (Quick): plugs into an EXISTING `CulturalFeatsService.Apply*` method via one `HasFeat` check. No new GameModel, service method, or conditional logic. **Wave 1 is all Q-class.**
+- **E-class** (Extension): adds a new override method to an EXISTING `Taom*Model` (e.g. post-victory morale on `TaomPartyMoraleModel`). Deferred to Wave 2.
+- **N-class** (New model): a brand-new `Taom*Model` overriding a vanilla `Default*Model` not yet wrapped (e.g. prisoner take rate, sight range). Deferred to Wave 3.
+
+Full menu (Wave 1 shipped + Wave 1.5/2/3 proposals): [`docs/research/cultural-feats-roadmap.md`](../research/cultural-feats-roadmap.md).
+
+Wave 1 added 24 feats (105 → 129), targeting cultures that read thin after the #260 faction-map rewrite. Authoring discipline: an **axis-collision audit ran before authoring** (dropped a proposed Goblin party-size feat — Goblin already has "Goblin Swarm +40%"). Reviewed by `/deep-review` (5 agents) + `/review-codex` (0 CRITICAL/HIGH); RCA: [`docs/reviews/rca-cultural-feats-wave1-2026-06-07.md`](../reviews/rca-cultural-feats-wave1-2026-06-07.md).
+
+| Culture | Feat ID | Effect | Bonus | Positive | Service method |
+|---------|---------|--------|-------|----------|----------------|
+| Mordor | `taom_mordor_smithing` | -15% smithing energy cost | -0.15 | Yes | ApplySmithingFeats |
+| Erebor | `taom_erebor_tariff_income` | +5% tariff income | 0.05 | Yes | ApplyTariffIncomeFeats |
+| Umbar | `taom_umbar_raid_damage` | +20% raid damage | 0.2 | Yes | ApplyRaidDamageFeats |
+| Umbar | `taom_umbar_food_consumption` | -10% party food consumption | -0.1 | Yes | ApplyFoodConsumptionFeats |
+| Lothlorien | `taom_lothlorien_volunteer_rate` | -15% village volunteer respawn | -0.15 | No | ApplyVolunteerRespawnFeats |
+| Mirkwood | `taom_mirkwood_army_influence_cost` | +15% army influence cost | 0.15 | No | ApplyArmyInfluenceCost |
+| Goblin | `taom_goblin_smithing` | -10% smithing energy cost | -0.1 | Yes | ApplySmithingFeats |
+| Goblin | `taom_goblin_raid_damage` | +10% raid damage | 0.1 | Yes | ApplyRaidDamageFeats |
+| Misty Mtn Orcs | `taom_mistymountainorcs_smithing` | -15% smithing energy cost | -0.15 | Yes | ApplySmithingFeats |
+| Misty Mtn Orcs | `taom_mistymountainorcs_raid_damage` | +15% raid damage | 0.15 | Yes | ApplyRaidDamageFeats |
+| Misty Mtn Orcs | `taom_mistymountainorcs_construction_speed` | -10% construction speed | -0.1 | No | ApplyConstructionSpeedFeats |
+| Dale (sturgia) | `taom_dale_tariff_income` | +10% tariff income | 0.1 | Yes | ApplyTariffIncomeFeats |
+| Dale (sturgia) | `taom_dale_renown` | +10% battle renown | 0.1 | Yes | ApplyRenownFeats |
+| Dale (sturgia) | `taom_dale_loyalty` | -0.5 settlement loyalty/day | -0.5 | No | ApplyLoyaltyFeats |
+| Khand (battania) | `taom_khand_renown` | +8% battle renown | 0.08 | Yes | ApplyRenownFeats |
+| Khand (battania) | `taom_khand_tariff_income` | -10% tariff income | -0.1 | No | ApplyTariffIncomeFeats |
+| Khand (battania) | `taom_khand_food_consumption` | -10% party food consumption | -0.1 | Yes | ApplyFoodConsumptionFeats |
+| Khand (battania) | `taom_khand_party_size` | +5% party size limit | 0.05 | Yes | ApplyPartySizeFeats |
+| Harad (aserai) | `taom_harad_morale` | +5 party morale | 5.0 | Yes | ApplyMoraleFeats |
+| Harad (aserai) | `taom_harad_food_consumption` | -15% party food consumption | -0.15 | Yes | ApplyFoodConsumptionFeats |
+| Harad (aserai) | `taom_harad_raid_damage` | +15% raid damage | 0.15 | Yes | ApplyRaidDamageFeats |
+| Harad (aserai) | `taom_harad_army_influence_cost` | +15% army influence cost | 0.15 | No | ApplyArmyInfluenceCost |
+| Rhûn (khuzait) | `taom_rhun_loyalty` | -0.5 settlement loyalty/day | -0.5 | No | ApplyLoyaltyFeats |
+| Rhûn (khuzait) | `taom_rhun_raid_damage` | +15% raid damage | 0.15 | Yes | ApplyRaidDamageFeats |
+
+**Deferred to Wave 1.5** (need conditional logic / a different model — E-class, not Q): Goblin Sunlight Aversion (daylight-conditional speed), Mirkwood Spider-Tainted Paths (non-forest-conditional speed), Rhûn Cavalry-Only (infantry-% conditional speed), Mirkwood Thranduil's Vaults (garrison wage lives in `TaomPartyWageModel`, not `CulturalFeatsService`).
+
 ## Tests
 
 | File | Coverage |
 |------|----------|
-| `TAOM.Tests/Features/CulturalFeats/TaomCulturalFeatsDefinitionTests.cs` | Feat property count (97), uniqueness, culture distribution, field structure |
-| `TAOM.Tests/Features/CulturalFeats/CulturalFeatsServiceTests.cs` | Per-feat dispatch incl. terrain-speed (per-terrain match, Mordor 5% vs 10%, night, null/wrong-terrain no-ops) |
+| `TAOM.Tests/Features/CulturalFeats/TaomCulturalFeatsDefinitionTests.cs` | Feat property count (129), uniqueness, culture distribution, field structure, **Wave 1 production-metadata pin** (`Wave1Feats_ProductionMetadata_MatchesSpec` — source-parses `Initialize(...)` so a production sign-flip can't pass; see Codex review 2026-06-07 MEDIUM) |
+| `TAOM.Tests/Features/CulturalFeats/CulturalFeatsServiceTests.cs` | Per-feat dispatch incl. terrain-speed (per-terrain match, Mordor 5% vs 10%, night, null/wrong-terrain no-ops) and one dispatch test per (culture, axis) cell for the Wave 1 feats (per `feedback_per_branch_dispatch_test_enumeration`) |
 
 GameModel overrides are thin entry points (delegate to `base` + apply feat modifier via the service) and are verified via in-game testing. The `TaomPartySpeedModel.MapTerrain` boundary mapping is verified in-game (it consumes the sealed `TerrainType`).
 

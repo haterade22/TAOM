@@ -1207,6 +1207,23 @@ New feature: conquered town/castle (+ bound villages) gradually adopts the new o
 
 ---
 
+## Review 50 — Cultural-Feats Wave 1 Expansion (2026-06-07)
+
+24 new Q-class cultural feats across 11 cultures (105 → 129), each plugging into an existing `CulturalFeatsService.Apply*` method via a `HasFeat` check. Reviewed via `/deep-review` (5 agents) + Codex `gpt-5.5 xhigh`. **Both reviews were run AFTER commit + push** — a process miss (the user asked "did we do a deep review and codex review?"); documented as the headline RCA lesson.
+
+**Deep-review:** 4 of 5 agents PASS clean (Standards, Compatibility — no new API, Efficiency, Data-Flow 24/24 CONNECTED). Completeness flagged 1 HIGH process gap: **no GitHub issue** existed at commit time → created [#273](https://github.com/haterade22/TAOM/issues/273) retroactively. The per-(culture,axis) dispatch-test coverage (the Review 45 / `feedback_per_branch_dispatch_test_enumeration` lesson) was correctly applied this time — 24/24 dispatch tests present.
+
+**Codex:** **0 CRITICAL / 0 HIGH / 1 MEDIUM / 2 LOW**, all 7 Known Suspects CONFIRMED CLEAN (sign/flag conventions, army-influence penalty direction, negative-Add loyalty mechanics + balance via vanilla drift decompile, XSLT passthrough safety, register↔XML exact match, no U+2212, no axis collision). MEDIUM = production feat metadata (EffectBonus sign / IsPositive / AdditionType / string-id) for the 24 feats was **unpinned by tests** — the dispatch tests use a mirror table of fake FeatObjects, and `RegisterAll_UsesCorrectStringIds` (despite its name) only counts fields. A production sign-flip would pass every test. LOW = stale feature-doc table + stale XSLT comment.
+
+**Preventive actions:**
+1. Added `Wave1Feats_ProductionMetadata_MatchesSpec` — source-parses `TaomCulturalFeats.cs` to pin all 24 feats' `Register("id")` + `Initialize(bonus, isPositive, AdditionType)` against a canonical spec (closes the MEDIUM; a sign-flip now fails the build).
+2. New memories: `feedback_review_before_commit_not_after` (the process miss — repeat of rca-crash-report-2026-05-25) and `feedback_mirror_table_drifts_from_production` (mirror tables need a mirror==production assertion).
+3. AGENTS.md "Lessons" review-50 row + new "What Codex does well" bullet (catch mirror-table drift) + new "Bugs Codex typically misses" note for the deep-review Completeness agent (test *presence* ≠ test *power*).
+4. Promoted the Wave roadmap to `docs/research/cultural-feats-roadmap.md`; feature-doc Wave-1 section added; LOW fixes applied.
+5. RCA: docs/reviews/rca-cultural-feats-wave1-2026-06-07.md (deep-review + Codex sections). CHANGELOG `2026-06-07` updated. Build green, **3092/3094 tests pass** (+1 metadata test on top of the +48 Wave-1 test cases).
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

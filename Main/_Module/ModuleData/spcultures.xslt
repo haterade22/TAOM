@@ -1342,8 +1342,11 @@
 		</xsl:copy>
 	</xsl:template>
 
-	<!-- TAOM terrain movement-speed feats: append to each culture's vanilla cultural_feats,
-	     preserving the existing vanilla feats. Harad/Easterling/Dale/Khand reuse vanilla IDs. -->
+	<!-- TAOM cultural feats for vanilla-wrapped cultures: append to each culture's vanilla
+	     cultural_feats, preserving the existing vanilla feats. Covers terrain movement-speed
+	     AND the Wave 1 economy/military feats (tariff, renown, loyalty, food, raid, morale,
+	     party-size, army-influence-cost). Harad=aserai / Easterling(Rhun)=khuzait /
+	     Dale=sturgia / Khand=battania reuse the vanilla culture IDs. -->
 	<xsl:template match="Culture[@id='aserai']/cultural_feats">
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()"/>
