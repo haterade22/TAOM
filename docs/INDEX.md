@@ -117,6 +117,7 @@
   - [object-system-mbobjectmanager](reference/engine/object-system-mbobjectmanager.md) (Phase 5 — `MBObjectManager` `RegisterType`/`LoadXML`/`GetObject<T>(stringId)`; the data backbone; null-on-missing = the underwear bug; load-order-tolerant cross-module merge)
   - [save-system](reference/engine/save-system.md) (Phase 6 — `SyncData` vs `SaveableTypeDefiner`+`[SaveableField]`; the base+localId collision gotcha; TAOM composite-string idiom)
   - [gamemodel-system](reference/engine/gamemodel-system.md) (Phase 7 — `GetModel<T>` last-added-wins; `AddModel` inheritance vs decorator; register-after-defaults + one-override-per-type; TAOM's ~40 overrides)
+  - [scene-gameentity-scriptcomponent](reference/engine/scene-gameentity-scriptcomponent.md) (Phase 8 — `GameEntity`/`ScriptComponentBehavior`/prefab; engine-discovery by class name; `[EditableScriptComponentVariable]` = config-must-validate)
   - More phases added sequentially.
 - [bannerlord-animation-clip-flags](reference/bannerlord-animation-clip-flags.md) — the `AnimFlags` clip-flag system + per-clip-type recipe + full per-flag reference (all ~60); flags are baked into the `_anm.tpac`, NOT `action_types.xml`; the spider's clips ship with zero flags (= broken locomotion)
 - [editor-cache-rebuild](features/editor-cache-rebuild.md) — parallel + incremental + resumable settlement distance cache rebuild

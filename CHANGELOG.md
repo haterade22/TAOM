@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased study — Phase 8: scene / GameEntity / ScriptComponentBehavior / prefab
+
+[docs/reference/engine/scene-gameentity-scriptcomponent.md](docs/reference/engine/scene-gameentity-scriptcomponent.md) — the scene-object backbone under `Main/SceneScripts` + the howdah prefab. `GameEntity : NativeObject` (`Instantiate(prefabName)`, `SetFrame`, hierarchy, `GetFirstScriptOfType<T>`); `ScriptComponentBehavior : DotNetObject` engine-discovered **by class name** (startup `CacheEditableFieldsForAllScriptComponents`), attached via a prefab `<script name="X">`, driven through `[EngineCallback]` virtuals (`Construct`→`OnInit`→`OnTick` per `GetTickRequirement`/`TickRequirement`→`OnRemoved`); per-instance config via `[EditableScriptComponentVariable]`. Gotcha: those editable fields **are config** — validate (NaN/range/finite), the recurring NaN-gate bug class (`feedback_editor_fields_are_config`, shipped 3×). `GameEntity` is native (scene graph); the script logic is managed (callbacks).
+
 ### docs(engine): phased study — Phase 7: GameModel system (how overrides plug in)
 
 [docs/reference/engine/gamemodel-system.md](docs/reference/engine/gamemodel-system.md) — the mechanism behind TAOM's ~40 `TaomXxxModel : DefaultXxxModel` overrides. Models live in an ordered `_models` list; `GetModel<T>()` scans **backward** so the **last-added model of a type wins** (the Default is shadowed, not removed) — MountAndBlade.cs:61604. `AddModel(GameModel)` (61614) is the simple add TAOM uses with inheritance + `base`; `AddModel<T>(MBGameModel<T>)` (61619) is the decorator path (`Initialize(previous)`) ADOD used. Campaign models = `Campaign.Current.Models`, mission models = `MissionGameModels.Current`, both resolved from the `GameStarter`'s `_models`. Gotchas: register **after** defaults (OnGameStart); **one override per type** (last wins) → TAOM consolidates concerns into one shared-slot override (e.g. `TaomAgentStatCalculateModel` = elephant lock + career stats); always call `base`.
