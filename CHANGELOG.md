@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased study — Phase 15: agent combat stats (AgentStatCalculateModel / AgentDrivenProperties)
+
+[docs/reference/engine/agent-stats-and-driven-properties.md](docs/reference/engine/agent-stats-and-driven-properties.md) — the per-agent combat-stat pipeline TAOM's `TaomAgentStatCalculateModel` overrides (career passives + war-elephant mount-lock). `AgentDrivenProperties` = a bag of ~99 `float` `DrivenProperty` channels (`MountSpeed`/`MountManeuver`/`MountChargeDamage`/`MountDifficulty`/`SwingSpeedMultiplier`/`WeaponInaccuracy`/…) read by the native combat sim every tick; `AgentStatCalculateModel` fills it via `InitializeAgentStats` (spawn) + `UpdateAgentStats` (on mount/weapon/perk change — called from the Phase-14 `MountAgent` setter). Documents the TAOM model inheriting `SandboxAgentStatCalculateModel` (no `Default*` exists), the one-override-per-type consolidation (career + elephant in one slot), and the engine-scale-research + NaN-guard ADP gotchas.
+
 ### docs(engine): phased study — Phase 14: mount / rider runtime (Agent.Mount / RiderSitBone)
 
 [docs/reference/engine/mount-and-rider-runtime.md](docs/reference/engine/mount-and-rider-runtime.md) — the in-mission half of the creature picture: a mount is its own `Agent` (FromHorseObj from `Equipment[Horse].HorseComponent.Monster`), a rider another `Agent`, linked via `Agent.Mount` (two-phase — flags `EventControlFlag.Mount`, native completes next tick) → rider seated at the mount Monster's `RiderSitBoneIndex` (lenient, by-name → -1 trap), reins at the `Rein*` bones. `IsMount`=`AgentFlag.Mountable`, `MountAgent`/`RiderAgent` native-backed. Distinguishes the three TAOM seating modes: cavalry (`Mount`), elephant (mahout `Mount` + howdah crew on UsableMachine StandingPoints — Phase 12), new spider (riderless, `Mountable="false"`, `rider_sit_bone` dropped). `MonsterUsage`/`FamilyType` drive action set + AI grouping.
