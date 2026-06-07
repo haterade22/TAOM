@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased study — Phase 10: item / equipment model
+
+[docs/reference/engine/item-equipment-model.md](docs/reference/engine/item-equipment-model.md) — the data model under thousands of TAOM items (armor/weapons/mounts/troop loadouts). `ItemObject : MBObjectBase` (Type + `ItemComponent`); `HorseComponent : ItemComponent` carries the **`Monster`** (what makes an item a creature/mount). `EquipmentIndex` slots: weapons 0-4, armor Head/Body/Leg/Gloves/Cape 5-9, **`Horse`=`ArmorItemEndSlot`=10**, `HorseHarness`=11. `EquipmentElement` = `Item` + **`ItemModifier`** (the modifier lives on the *element*, not the ItemObject — the root of the modifier-preserving-overload rule). Gotchas reconfirmed: use `(EquipmentElement,int)` overloads / `InventoryLogic.TransferCommand` (not direct `equipment[slot]=`); armor cover attributes; broken `Item.X` ref → null → underwear bug (validate_moduledata).
+
 ### docs(engine): phased study — Phase 9: CampaignEvents + CampaignBehavior
 
 [docs/reference/engine/campaignevents-and-campaignbehavior.md](docs/reference/engine/campaignevents-and-campaignbehavior.md) — the campaign-side hook system every TAOM `CampaignBehavior` uses. `CampaignBehaviorBase` contract is just `RegisterEvents()` (subscribe) + `SyncData()` (persist) + `GetCampaignBehavior<T>()`; registered via `campaignStarter.AddBehavior` in `OnGameStart`. `CampaignEvents` is the static `MbEvent` registry (DailyTick, OnSettlementOwnerChanged, OnGameLoaded…); subscribe with `IMbEvent.AddNonSerializedListener(owner, action)`. **Confirms two gotchas at the source:** `IMbEvent` has only `AddNonSerializedListener` + `ClearListeners(owner)` — **no `RemoveNonSerializedListener`** (`feedback_imbevent_remove_one_unavailable`); and `CampaignBehaviorBase` has **no `OnGameEnd`/`OnFinalize`** virtual (`feedback_campaignbehavior_no_ongameend` — use `OnGameOverEvent`/`OnNewGameCreatedEvent`).

@@ -119,6 +119,7 @@
   - [gamemodel-system](reference/engine/gamemodel-system.md) (Phase 7 — `GetModel<T>` last-added-wins; `AddModel` inheritance vs decorator; register-after-defaults + one-override-per-type; TAOM's ~40 overrides)
   - [scene-gameentity-scriptcomponent](reference/engine/scene-gameentity-scriptcomponent.md) (Phase 8 — `GameEntity`/`ScriptComponentBehavior`/prefab; engine-discovery by class name; `[EditableScriptComponentVariable]` = config-must-validate)
   - [campaignevents-and-campaignbehavior](reference/engine/campaignevents-and-campaignbehavior.md) (Phase 9 — `CampaignBehaviorBase` `RegisterEvents`/`SyncData`; `CampaignEvents`/`IMbEvent` subscription; no-RemoveListener + no-OnGameEnd gotchas)
+  - [item-equipment-model](reference/engine/item-equipment-model.md) (Phase 10 — `ItemObject`/`ItemComponent`/`HorseComponent.Monster`; `EquipmentIndex` slots (Horse=ArmorItemEndSlot=10); `EquipmentElement`=Item+Modifier → the modifier-preserving-overload rule)
   - More phases added sequentially.
 - [bannerlord-animation-clip-flags](reference/bannerlord-animation-clip-flags.md) — the `AnimFlags` clip-flag system + per-clip-type recipe + full per-flag reference (all ~60); flags are baked into the `_anm.tpac`, NOT `action_types.xml`; the spider's clips ship with zero flags (= broken locomotion)
 - [editor-cache-rebuild](features/editor-cache-rebuild.md) — parallel + incremental + resumable settlement distance cache rebuild
