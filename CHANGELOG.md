@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased study — Phase 7: GameModel system (how overrides plug in)
+
+[docs/reference/engine/gamemodel-system.md](docs/reference/engine/gamemodel-system.md) — the mechanism behind TAOM's ~40 `TaomXxxModel : DefaultXxxModel` overrides. Models live in an ordered `_models` list; `GetModel<T>()` scans **backward** so the **last-added model of a type wins** (the Default is shadowed, not removed) — MountAndBlade.cs:61604. `AddModel(GameModel)` (61614) is the simple add TAOM uses with inheritance + `base`; `AddModel<T>(MBGameModel<T>)` (61619) is the decorator path (`Initialize(previous)`) ADOD used. Campaign models = `Campaign.Current.Models`, mission models = `MissionGameModels.Current`, both resolved from the `GameStarter`'s `_models`. Gotchas: register **after** defaults (OnGameStart); **one override per type** (last wins) → TAOM consolidates concerns into one shared-slot override (e.g. `TaomAgentStatCalculateModel` = elephant lock + career stats); always call `base`.
+
 ### docs(engine): phased study — Phase 6: save system (SaveableTypeDefiner + SyncData)
 
 [docs/reference/engine/save-system.md](docs/reference/engine/save-system.md) — how a feature persists state. `CampaignBehaviorBase.SyncData(IDataStore)` (the default path — primitives/strings/registered types, no registration needed) vs `SaveableTypeDefiner` + `[SaveableField(n)]` (register a custom class/struct/enum). Confirms the base+localId gotcha at the source: `AddClassDefinition(type, saveId)` → `_saveBaseId + saveId` (SaveSystem.cs:1125), so overlapping (base+localId) ranges collide → **crash at Module.Initialize** (`feedback_saveable_typedefiner_localid_offset`; bases step by 100). TAOM idiom: store composite strings + `SyncData` to avoid a SaveDefiner. The elephant needs none (battle-only state); `MBObjectBase` objects save by `MBGUID` (Phase 5 typeId) — a separate id space.
