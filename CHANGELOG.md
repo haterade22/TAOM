@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased study — Phase 9: CampaignEvents + CampaignBehavior
+
+[docs/reference/engine/campaignevents-and-campaignbehavior.md](docs/reference/engine/campaignevents-and-campaignbehavior.md) — the campaign-side hook system every TAOM `CampaignBehavior` uses. `CampaignBehaviorBase` contract is just `RegisterEvents()` (subscribe) + `SyncData()` (persist) + `GetCampaignBehavior<T>()`; registered via `campaignStarter.AddBehavior` in `OnGameStart`. `CampaignEvents` is the static `MbEvent` registry (DailyTick, OnSettlementOwnerChanged, OnGameLoaded…); subscribe with `IMbEvent.AddNonSerializedListener(owner, action)`. **Confirms two gotchas at the source:** `IMbEvent` has only `AddNonSerializedListener` + `ClearListeners(owner)` — **no `RemoveNonSerializedListener`** (`feedback_imbevent_remove_one_unavailable`); and `CampaignBehaviorBase` has **no `OnGameEnd`/`OnFinalize`** virtual (`feedback_campaignbehavior_no_ongameend` — use `OnGameOverEvent`/`OnNewGameCreatedEvent`).
+
 ### docs(engine): phased study — Phase 8: scene / GameEntity / ScriptComponentBehavior / prefab
 
 [docs/reference/engine/scene-gameentity-scriptcomponent.md](docs/reference/engine/scene-gameentity-scriptcomponent.md) — the scene-object backbone under `Main/SceneScripts` + the howdah prefab. `GameEntity : NativeObject` (`Instantiate(prefabName)`, `SetFrame`, hierarchy, `GetFirstScriptOfType<T>`); `ScriptComponentBehavior : DotNetObject` engine-discovered **by class name** (startup `CacheEditableFieldsForAllScriptComponents`), attached via a prefab `<script name="X">`, driven through `[EngineCallback]` virtuals (`Construct`→`OnInit`→`OnTick` per `GetTickRequirement`/`TickRequirement`→`OnRemoved`); per-instance config via `[EditableScriptComponentVariable]`. Gotcha: those editable fields **are config** — validate (NaN/range/finite), the recurring NaN-gate bug class (`feedback_editor_fields_are_config`, shipped 3×). `GameEntity` is native (scene graph); the script logic is managed (callbacks).
