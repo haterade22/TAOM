@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased study — Phase 12: usable mission objects (UsableMachine/StandingPoint)
+
+[docs/reference/engine/usable-machines.md](docs/reference/engine/usable-machines.md) — the usable-object hierarchy generalized from the howdah. `MissionObject : ScriptComponentBehavior` (Phase 8) → `SynchedMissionObject` → `UsableMissionObject` (`OnUse(Agent, sbyte)`, `MovingAgent`, lock frames) → `StandingPoint` (+ TeamLimit/AgentLimit/RangedArea/WeaponRequirement/VolumeBox subtypes) and `UsableMachine` (`: …, IDetachment, IOrderable, IFocusable`; auto-collects `StandingPoints`; `MaxUserCount=StandingPoints.Count`); `SiegeWeapon : UsableMachine` is the vanilla template; `UsableMachineAIBase` drives AI to occupy. Carries the howdah's 4 v1.4.5 drifts (`OnUse`+sbyte, `SetDisabled`=isParentObject, `GetDescriptionText`→TextObject/WeakGameEntity) + the moving-machine per-tick frame-copy pattern. Full port spec: howdah-crew-mechanism.md.
+
 ### docs(engine): phased study — Phase 11: UI (GauntletUI / ViewModel / screen + state)
 
 [docs/reference/engine/gauntletui-viewmodel-screen.md](docs/reference/engine/gauntletui-viewmodel-screen.md) — the MVVM-over-Gauntlet UI stack TAOM's career screen / messengers / quick actions use. `ViewModel` (`[DataSourceProperty]` + `Execute…` + `OnPropertyChanged`) ↔ a movie (`.xml` widget tree) bound by `GauntletLayer.LoadMovie(movieName, vm)`; full windows via `ScreenBase`/`GameState`/`GameStateScreen`; vanilla-UI extension via UIExtenderEx mixins + prefab-extensions. Consolidates the UI gotcha cluster: `GameStateScreen` **must** implement `IGameStateListener` (else crash); push states via `CreateState`+`PushState` (not `new`); overlays need `SetInputRestrictions` (else dead button); use the public VM setter (not reflected notify); `{=key}` via `TextObject.ToString()`; custom sprites need a **baked** atlas (loose PNG renders blank).
