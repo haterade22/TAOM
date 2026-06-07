@@ -25,9 +25,15 @@ Files: `TaomCulturalFeats.cs` (24× field+accessor+Register+Initialize+GetAllFea
 
 **Verification:** `dotnet build TAOM.Tests` → 0 errors. `dotnet test TAOM.Tests` → **3091 passed / 0 failed / 2 skipped** (up from 3043 — +48 discovered cases: 24 dispatch tests + 24 DataRows). `python tools/validate_moduledata.py` → PASS (all XML feat refs resolve, 38 cultures).
 
-Faction-map CC page content + 12-language localization for the 48 new `{=taom_feat_*}` strings follow in the next commit (per the standing `feedback_faction_map_update_with_cultural_feats` instruction).
-
 Save-compat: safe (init-time FeatObjects, no new save fields).
+
+### feat(faction-map): surface the 24 Wave 1 feats on CC culture pages
+
+Per the standing `feedback_faction_map_update_with_cultural_feats` instruction, every new cultural feat must appear on the CC faction-map page so players choosing a starting culture see accurate info. Added **26 `bonuses[]` lines** to `factions.json` across 12 playable faction entries (24 feats; Goblin's 2 feats appear on both `goblins_of_goblin_town` and `goblins_of_blue_craig` since both play the `goblin` culture). Each line is keyed `{=taom_faction_<faction>_bonus_<N>}` and harvested into `taom_module_strings.xml` via `tools/harvest_factionmap_strings.py` (+26 string entries). Negatives use ASCII hyphen-minus (the in-game font renders U+2212 as a low underscore — #260 Phase 3 bug). The encyclopedia feat strings (`{=taom_feat_*}`) follow the established English-default-fallback convention shared by all 129 feats (not part of the harvested/translated pipeline).
+
+**Verification:** `FactionMapDataTests` 93/93 — `EveryFactionStringField_StartsWithLocalizationKey` and `EveryFactionMapKey_HasMatchingStringInTaomModuleStrings` both pass (every new string keyed, every key resolves). JSON valid. Zero U+2212.
+
+12-language translation of the 26 new `taom_faction_*_bonus_*` keys: deferred (English fallback displays correctly via the #260 Phase 1 `FactionDisplayHelper.Localize` path until propagated).
 
 ## 2026-06-06
 

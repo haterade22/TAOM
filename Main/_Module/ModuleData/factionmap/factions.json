@@ -123,6 +123,14 @@
       {
         "text": "{=taom_faction_goblins_of_blue_craig_bonus_3}+20% party food consumption (Ravenous Swarm)",
         "positive": false
+      },
+      {
+        "text": "{=taom_faction_goblins_of_blue_craig_bonus_4}+10% smithing efficiency (Captured-Weapon Hoard)",
+        "positive": true
+      },
+      {
+        "text": "{=taom_faction_goblins_of_blue_craig_bonus_5}+10% raid damage (Goblin Ambush)",
+        "positive": true
       }
     ],
     "special_units": [
@@ -278,6 +286,14 @@
       {
         "text": "{=taom_faction_goblins_of_goblin_town_bonus_3}+20% party food consumption (Ravenous Swarm)",
         "positive": false
+      },
+      {
+        "text": "{=taom_faction_goblins_of_goblin_town_bonus_4}+10% smithing efficiency (Captured-Weapon Hoard)",
+        "positive": true
+      },
+      {
+        "text": "{=taom_faction_goblins_of_goblin_town_bonus_5}+10% raid damage (Goblin Ambush)",
+        "positive": true
       }
     ],
     "special_units": [
@@ -444,6 +460,18 @@
       {
         "text": "{=taom_faction_kingdom_of_moria_bonus_3}+15% party food consumption (Hungry Host)",
         "positive": false
+      },
+      {
+        "text": "{=taom_faction_kingdom_of_moria_bonus_4}+15% smithing efficiency (Looted Forges)",
+        "positive": true
+      },
+      {
+        "text": "{=taom_faction_kingdom_of_moria_bonus_5}+15% raid damage (Cave Troll Levy)",
+        "positive": true
+      },
+      {
+        "text": "{=taom_faction_kingdom_of_moria_bonus_6}-10% construction speed (Echoing Halls)",
+        "positive": false
       }
     ],
     "special_units": [
@@ -521,7 +549,8 @@
       {"text": "{=taom_faction_kingdom_of_lothlorien_bonus_2}-15% party food consumption (Lembas Bread)", "positive": true},
       {"text": "{=taom_faction_kingdom_of_lothlorien_bonus_3}+3 party morale (Elven Harmony)", "positive": true},
       {"text": "{=taom_faction_kingdom_of_lothlorien_bonus_4}+0.5 settlement loyalty per day (Elven Grace)", "positive": true},
-      {"text": "{=taom_faction_kingdom_of_lothlorien_bonus_5}-10% building construction speed (Timeless Craft)", "positive": false}
+      {"text": "{=taom_faction_kingdom_of_lothlorien_bonus_5}-10% building construction speed (Timeless Craft)", "positive": false},
+      {"text": "{=taom_faction_kingdom_of_lothlorien_bonus_6}-15% village volunteer respawn rate (Fading Light)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_kingdom_of_lothlorien_su_0_name}Galadhrim Guard", "description": "{=taom_faction_kingdom_of_lothlorien_su_0_desc}Elite Elven defender."},
@@ -673,7 +702,8 @@
       {"text": "{=taom_faction_kingdom_of_lasgalen_bonus_1}+25% militia veteran chance (Silvan Wardens)", "positive": true},
       {"text": "{=taom_faction_kingdom_of_lasgalen_bonus_2}+3 party morale (Woodland Bonds)", "positive": true},
       {"text": "{=taom_faction_kingdom_of_lasgalen_bonus_3}-15% party food consumption (Woodland Sustenance)", "positive": true},
-      {"text": "{=taom_faction_kingdom_of_lasgalen_bonus_4}-20% village hearth growth (Forest Isolation)", "positive": false}
+      {"text": "{=taom_faction_kingdom_of_lasgalen_bonus_4}-20% village hearth growth (Forest Isolation)", "positive": false},
+      {"text": "{=taom_faction_kingdom_of_lasgalen_bonus_5}+15% army influence cost (Isolationist Court)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_kingdom_of_lasgalen_su_0_name}Mirkwood Sentinel", "description": "{=taom_faction_kingdom_of_lasgalen_su_0_desc}Elite forest archer."},
@@ -719,7 +749,8 @@
       {"text": "{=taom_faction_kingdom_of_erebor_bonus_3}+10% village production (Dwarven Industry)", "positive": true},
       {"text": "{=taom_faction_kingdom_of_erebor_bonus_4}+5 party morale (Dwarven Stubbornness)", "positive": true},
       {"text": "{=taom_faction_kingdom_of_erebor_bonus_5}+1 settlement loyalty per day (Dwarven Honor)", "positive": true},
-      {"text": "{=taom_faction_kingdom_of_erebor_bonus_6}-15% building construction speed (Dwarven Perfectionism)", "positive": false}
+      {"text": "{=taom_faction_kingdom_of_erebor_bonus_6}-15% building construction speed (Dwarven Perfectionism)", "positive": false},
+      {"text": "{=taom_faction_kingdom_of_erebor_bonus_7}+5% tariff income (Dwarven Thrift)", "positive": true}
     ],
     "special_units": [
       {"name": "{=taom_faction_kingdom_of_erebor_su_0_name}Iron Guard of Erebor", "description": "{=taom_faction_kingdom_of_erebor_su_0_desc}Elite Dwarven heavy infantry."},
@@ -762,7 +793,10 @@
       {"text": "{=taom_faction_kingdom_of_dale_bonus_0}+10% party speed on plains (Vale Traders)", "positive": true},
       {"text": "{=taom_faction_kingdom_of_dale_bonus_1}+10% village grain production (Sturgian, inherited)", "positive": true},
       {"text": "{=taom_faction_kingdom_of_dale_bonus_2}-50% army influence cost (Sturgian, inherited)", "positive": true},
-      {"text": "{=taom_faction_kingdom_of_dale_bonus_3}+20% relationship penalty from kingdom decisions (Sturgian, inherited)", "positive": false}
+      {"text": "{=taom_faction_kingdom_of_dale_bonus_3}+20% relationship penalty from kingdom decisions (Sturgian, inherited)", "positive": false},
+      {"text": "{=taom_faction_kingdom_of_dale_bonus_4}+10% tariff income (Dwarven Trade Alliance)", "positive": true},
+      {"text": "{=taom_faction_kingdom_of_dale_bonus_5}+10% battle renown (Black Arrow Tradition)", "positive": true},
+      {"text": "{=taom_faction_kingdom_of_dale_bonus_6}-0.5 settlement loyalty per day (Small Territory Exposure)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_kingdom_of_dale_su_0_name}Black Arrow Ranger", "description": "{=taom_faction_kingdom_of_dale_su_0_desc}Bard's legacy archer."},
@@ -1018,7 +1052,8 @@
       {"text": "{=taom_faction_dominion_of_mordor_bonus_6}+20% village volunteer respawn rate (Sauron's Levy)", "positive": true},
       {"text": "{=taom_faction_dominion_of_mordor_bonus_7}+2 Gang Leader notables per town (Black Speech Heralds)", "positive": true},
       {"text": "{=taom_faction_dominion_of_mordor_bonus_8}+5% village notable count (Slave Drivers)", "positive": true},
-      {"text": "{=taom_faction_dominion_of_mordor_bonus_9}+20% party wages (Dark Tribute)", "positive": false}
+      {"text": "{=taom_faction_dominion_of_mordor_bonus_9}+20% party wages (Dark Tribute)", "positive": false},
+      {"text": "{=taom_faction_dominion_of_mordor_bonus_10}+15% smithing efficiency (Dark Smithing)", "positive": true}
     ],
     "special_units": [
       {"name": "{=taom_faction_dominion_of_mordor_su_0_name}Black Uruk", "description": "{=taom_faction_dominion_of_mordor_su_0_desc}Elite shock infantry from Barad-dur."},
@@ -1063,7 +1098,9 @@
       {"text": "{=taom_faction_golden_realm_of_rhun_bonus_1}+5% party size limit (Easterling Host)", "positive": true},
       {"text": "{=taom_faction_golden_realm_of_rhun_bonus_2}-10% mounted recruit and upgrade cost (Khuzait, inherited)", "positive": true},
       {"text": "{=taom_faction_golden_realm_of_rhun_bonus_3}+25% horse, mule, cow, and sheep village production (Khuzait, inherited)", "positive": true},
-      {"text": "{=taom_faction_golden_realm_of_rhun_bonus_4}-20% town tax income (Khuzait, inherited)", "positive": false}
+      {"text": "{=taom_faction_golden_realm_of_rhun_bonus_4}-20% town tax income (Khuzait, inherited)", "positive": false},
+      {"text": "{=taom_faction_golden_realm_of_rhun_bonus_5}-0.5 settlement loyalty per day (Easterling Tribute)", "positive": false},
+      {"text": "{=taom_faction_golden_realm_of_rhun_bonus_6}+15% raid damage (Steppe Raider Doctrine)", "positive": true}
     ],
     "special_units": [
       {"name": "{=taom_faction_golden_realm_of_rhun_su_0_name}Easterling Kataphract", "description": "{=taom_faction_golden_realm_of_rhun_su_0_desc}Elite armored cavalry."},
@@ -1130,7 +1167,11 @@
       {"text": "{=taom_faction_khudorom_of_khand_bonus_0}+10% party speed on steppe (Steppe Charioteers)", "positive": true},
       {"text": "{=taom_faction_khudorom_of_khand_bonus_1}50% less forest speed penalty + 15% sight range (Battanian, inherited)", "positive": true},
       {"text": "{=taom_faction_khudorom_of_khand_bonus_2}+20% chance for veteran militia in towns (Battanian, inherited)", "positive": true},
-      {"text": "{=taom_faction_khudorom_of_khand_bonus_3}-10% building construction speed (Battanian, inherited)", "positive": false}
+      {"text": "{=taom_faction_khudorom_of_khand_bonus_3}-10% building construction speed (Battanian, inherited)", "positive": false},
+      {"text": "{=taom_faction_khudorom_of_khand_bonus_4}+8% battle renown (Mercenary Premium)", "positive": true},
+      {"text": "{=taom_faction_khudorom_of_khand_bonus_5}-10% tariff income (Tribute to Mordor)", "positive": false},
+      {"text": "{=taom_faction_khudorom_of_khand_bonus_6}-10% party food consumption (Steppe Endurance)", "positive": true},
+      {"text": "{=taom_faction_khudorom_of_khand_bonus_7}+5% party size limit (Charioteer Mobility)", "positive": true}
     ],
     "special_units": [
       {"name": "{=taom_faction_khudorom_of_khand_su_0_name}Variag Horse Archer", "description": "{=taom_faction_khudorom_of_khand_su_0_desc}Elite mounted skirmisher."},
@@ -1187,7 +1228,11 @@
       {"text": "{=taom_faction_taskralan_of_harwan_bonus_1}+5% party size limit (Haradrim Warbands)", "positive": true},
       {"text": "{=taom_faction_taskralan_of_harwan_bonus_2}-30% caravan build cost + -10% trade penalty (Aserai Trader, inherited)", "positive": true},
       {"text": "{=taom_faction_taskralan_of_harwan_bonus_3}No speed penalty on desert (Aserai Desert, inherited)", "positive": true},
-      {"text": "{=taom_faction_taskralan_of_harwan_bonus_4}+5% daily troop wages (Aserai Wages, inherited)", "positive": false}
+      {"text": "{=taom_faction_taskralan_of_harwan_bonus_4}+5% daily troop wages (Aserai Wages, inherited)", "positive": false},
+      {"text": "{=taom_faction_taskralan_of_harwan_bonus_5}+5 party morale (Mumakil Drivers)", "positive": true},
+      {"text": "{=taom_faction_taskralan_of_harwan_bonus_6}-15% party food consumption (Desert Endurance)", "positive": true},
+      {"text": "{=taom_faction_taskralan_of_harwan_bonus_7}+15% raid damage (Far Harad Savagery)", "positive": true},
+      {"text": "{=taom_faction_taskralan_of_harwan_bonus_8}+15% army influence cost (Divided Tribes)", "positive": false}
     ],
     "special_units": [
       {"name": "{=taom_faction_taskralan_of_harwan_su_0_name}Mumakil War Tower", "description": "{=taom_faction_taskralan_of_harwan_su_0_desc}Devastating war beast."},
@@ -1232,7 +1277,9 @@
       {"text": "{=taom_faction_havens_of_umbar_bonus_1}+15% tariff income (Corsair Trade Networks)", "positive": true},
       {"text": "{=taom_faction_havens_of_umbar_bonus_2}+8% battle renown (Corsair Glory)", "positive": true},
       {"text": "{=taom_faction_havens_of_umbar_bonus_3}+10% party speed on desert (Desert Corsairs)", "positive": true},
-      {"text": "{=taom_faction_havens_of_umbar_bonus_4}+8% party wages (Corsair Greed)", "positive": false}
+      {"text": "{=taom_faction_havens_of_umbar_bonus_4}+8% party wages (Corsair Greed)", "positive": false},
+      {"text": "{=taom_faction_havens_of_umbar_bonus_5}+20% raid damage (Corsair Raid Doctrine)", "positive": true},
+      {"text": "{=taom_faction_havens_of_umbar_bonus_6}-10% party food consumption (Black Numenorean Endurance)", "positive": true}
     ],
     "special_units": [
       {"name": "{=taom_faction_havens_of_umbar_su_0_name}Black Numenorean Captain", "description": "{=taom_faction_havens_of_umbar_su_0_desc}Towering long-blooded lord."},
