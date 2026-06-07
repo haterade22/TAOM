@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased study — Phase 11: UI (GauntletUI / ViewModel / screen + state)
+
+[docs/reference/engine/gauntletui-viewmodel-screen.md](docs/reference/engine/gauntletui-viewmodel-screen.md) — the MVVM-over-Gauntlet UI stack TAOM's career screen / messengers / quick actions use. `ViewModel` (`[DataSourceProperty]` + `Execute…` + `OnPropertyChanged`) ↔ a movie (`.xml` widget tree) bound by `GauntletLayer.LoadMovie(movieName, vm)`; full windows via `ScreenBase`/`GameState`/`GameStateScreen`; vanilla-UI extension via UIExtenderEx mixins + prefab-extensions. Consolidates the UI gotcha cluster: `GameStateScreen` **must** implement `IGameStateListener` (else crash); push states via `CreateState`+`PushState` (not `new`); overlays need `SetInputRestrictions` (else dead button); use the public VM setter (not reflected notify); `{=key}` via `TextObject.ToString()`; custom sprites need a **baked** atlas (loose PNG renders blank).
+
 ### docs(engine): phased study — Phase 10: item / equipment model
 
 [docs/reference/engine/item-equipment-model.md](docs/reference/engine/item-equipment-model.md) — the data model under thousands of TAOM items (armor/weapons/mounts/troop loadouts). `ItemObject : MBObjectBase` (Type + `ItemComponent`); `HorseComponent : ItemComponent` carries the **`Monster`** (what makes an item a creature/mount). `EquipmentIndex` slots: weapons 0-4, armor Head/Body/Leg/Gloves/Cape 5-9, **`Horse`=`ArmorItemEndSlot`=10**, `HorseHarness`=11. `EquipmentElement` = `Item` + **`ItemModifier`** (the modifier lives on the *element*, not the ItemObject — the root of the modifier-preserving-overload rule). Gotchas reconfirmed: use `(EquipmentElement,int)` overloads / `InventoryLogic.TransferCommand` (not direct `equipment[slot]=`); armor cover attributes; broken `Item.X` ref → null → underwear bug (validate_moduledata).
