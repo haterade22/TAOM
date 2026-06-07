@@ -109,4 +109,114 @@ public class TroopWeightServiceTests
 
         _xmlLoader.Received(2).GetTroopWeights();
     }
+
+    // --- ComputeWeightedHealthyAndWounded (phantom-wounded fix core) ---
+
+    // THE regression test. Before the fix, the vanilla tooltip computed
+    // wounded = NumberOfAllMembers(weighted=46) - NumberOfHealthyMembers(unweighted=23) = 23 phantom.
+    // The weighted split must report 0 wounded for a party that has never fought.
+    [TestMethod]
+    public void ComputeWeightedHealthyAndWounded_Weight2TroopsNoWounded_WoundedIsZero()
+    {
+        var elements = new[] { ("imladris_blademaster", 23, 0) };
+
+        var (healthy, wounded) = _sut.ComputeWeightedHealthyAndWounded(elements);
+
+        Assert.AreEqual(46, healthy, "23 weight-2 troops should count as 46 battle-ready");
+        Assert.AreEqual(0, wounded, "No real wounds => 0 wounded, not the weight surplus");
+    }
+
+    // Invariant that makes the phantom impossible: weighted healthy + weighted wounded == weighted
+    // member total, so any consumer doing (AllMembers - HealthyMembers) gets the real wounded count.
+    [TestMethod]
+    public void ComputeWeightedHealthyAndWounded_HealthyPlusWoundedEqualsWeightedTotal()
+    {
+        var elements = new[] { ("cave_troll", 5, 2), ("gondor_recruit", 10, 3) };
+
+        var (healthy, wounded) = _sut.ComputeWeightedHealthyAndWounded(elements);
+
+        // cave_troll w4: healthy (5-2)*4=12, wounded 2*4=8. recruit w1: healthy 7, wounded 3.
+        Assert.AreEqual(19, healthy);
+        Assert.AreEqual(11, wounded);
+        int weightedTotal = (5 * 4) + (10 * 1); // Number*weight summed = 30
+        Assert.AreEqual(weightedTotal, healthy + wounded, "healthy + wounded must equal weighted member total");
+    }
+
+    [TestMethod]
+    public void ComputeWeightedHealthyAndWounded_Weight1NoWounded_ReturnsRealCounts()
+    {
+        var elements = new[] { ("gondor_recruit", 46, 0) };
+
+        var (healthy, wounded) = _sut.ComputeWeightedHealthyAndWounded(elements);
+
+        Assert.AreEqual(46, healthy);
+        Assert.AreEqual(0, wounded);
+    }
+
+    [TestMethod]
+    public void ComputeWeightedHealthyAndWounded_WithRealWounded_WeightsWounded()
+    {
+        var elements = new[] { ("imladris_blademaster", 10, 3) };
+
+        var (healthy, wounded) = _sut.ComputeWeightedHealthyAndWounded(elements);
+
+        Assert.AreEqual(14, healthy, "(10-3) healthy * weight 2");
+        Assert.AreEqual(6, wounded, "3 wounded * weight 2");
+    }
+
+    [TestMethod]
+    public void ComputeWeightedHealthyAndWounded_Empty_ReturnsZero()
+    {
+        var (healthy, wounded) = _sut.ComputeWeightedHealthyAndWounded(new (string, int, int)[0]);
+
+        Assert.AreEqual(0, healthy);
+        Assert.AreEqual(0, wounded);
+    }
+
+    [TestMethod]
+    public void ComputeWeightedHealthyAndWounded_Null_ReturnsZero()
+    {
+        var (healthy, wounded) = _sut.ComputeWeightedHealthyAndWounded(null);
+
+        Assert.AreEqual(0, healthy);
+        Assert.AreEqual(0, wounded);
+    }
+
+    [TestMethod]
+    public void ComputeWeightedHealthyAndWounded_NegativeWounded_TreatedAsZero()
+    {
+        var elements = new[] { ("gondor_recruit", 5, -2) };
+
+        var (healthy, wounded) = _sut.ComputeWeightedHealthyAndWounded(elements);
+
+        Assert.AreEqual(5, healthy);
+        Assert.AreEqual(0, wounded);
+    }
+
+    [TestMethod]
+    public void ComputeWeightedHealthyAndWounded_WoundedExceedsNumber_HealthyFloorsAtZero()
+    {
+        var elements = new[] { ("imladris_blademaster", 3, 5) };
+
+        var (healthy, wounded) = _sut.ComputeWeightedHealthyAndWounded(elements);
+
+        Assert.AreEqual(0, healthy, "Healthy must floor at 0, never negative");
+        Assert.AreEqual(10, wounded, "5 wounded * weight 2");
+    }
+
+    [TestMethod]
+    public void ComputeWeightedHealthyAndWounded_FractionalWeight_CeilingsEachSeparately()
+    {
+        _xmlLoader.GetTroopWeights().Returns(new Dictionary<string, float>(System.StringComparer.OrdinalIgnoreCase)
+        {
+            { "light_scout", 0.5f }
+        });
+        var sut = new TroopWeightService(_logger, _xmlLoader);
+        var elements = new[] { ("light_scout", 3, 1) };
+
+        var (healthy, wounded) = sut.ComputeWeightedHealthyAndWounded(elements);
+
+        Assert.AreEqual(1, healthy, "(3-1)*0.5 = 1.0 -> ceil 1");
+        Assert.AreEqual(1, wounded, "1*0.5 = 0.5 -> ceil 1");
+    }
 }

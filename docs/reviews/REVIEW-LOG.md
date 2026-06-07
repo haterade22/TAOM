@@ -1222,6 +1222,20 @@ New feature: conquered town/castle (+ bound villages) gradually adopts the new o
 4. Promoted the Wave roadmap to `docs/research/cultural-feats-roadmap.md`; feature-doc Wave-1 section added; LOW fixes applied.
 5. RCA: docs/reviews/rca-cultural-feats-wave1-2026-06-07.md (deep-review + Codex sections). CHANGELOG `2026-06-07` updated. Build green, **3092/3094 tests pass** (+1 metadata test on top of the +48 Wave-1 test cases).
 
+## Review 51 — TroopWeight Phantom-Wounded Display Fix (2026-06-07)
+
+Four display-only Postfixes that fix phantom "wounded" troops caused by the TroopWeight feature weighting `PartyBase.NumberOfAllMembers` but not its sibling `NumberOfHealthyMembers` (vanilla derives `wounded = all − healthy` on 4 surfaces). User-reported. Reviewed via `/deep-review` (5 agents) + Codex `gpt-5.5 xhigh` — both BEFORE commit this time.
+
+**Deep-review:** Standards / Compatibility (8/8 v1.4.5 members verified) / Completeness PASS. Found 1 HIGH (per-call `List` allocation on the nameplate hot path) + 1 MED (missing version cache) — both fixed (shared zero-alloc `WeightedContribution` helper + leak-free `ConditionalWeakTable` cache). 1 MED rounding note documented (integer weights only → never manifests).
+
+**Codex:** **1 CRITICAL / 0 HIGH / 1 MED / 1 LOW.**
+- **MED (CONFIRMED, fixed):** `GameMenuPartyItemVM.PartyWoundedSize` vanilla setter has a copy-paste guard bug (`value != _partySize`), silently dropping a wounded write equal to the current PartySize. Fixed with a PartySize-nudge before the wounded write. **This is the bug deep-review missed** — the Compatibility agent confirmed the property is public-set but never read the setter BODY. Generalised to AGENTS.md + memory `feedback_taleworlds_vm_setter_decompile`.
+- **LOW (CONFIRMED, fixed):** healing-block strip also removed the next section's leading spacer; now preserved.
+- **CRITICAL (DISPUTED, declined w/ evidence):** ADR-007 — service exposes sealed `PartyBase`/`TroopRoster`. Pre-existing across 4 shipped methods; this change added ZERO new sealed types (and added an engine-free pure method). Refactoring the whole service behind a roster adapter is a legitimate follow-up, not a ship-blocker for a display fix. Codex over-weighted a pre-existing condition — logged as a new Codex false-positive pattern in AGENTS.md ("`git blame` the signature before rating an architectural finding CRITICAL/blocking").
+- Suspects 1 (VersionNo cache — independently confirmed valid via `AddToCountsAtIndex` → `UpdateVersion()`), 3 (rounding — 84 integer weights), 5 (toggle off), 6 (surface completeness — exactly 4) all DISPUTED by Codex = no bug; matched my analysis.
+
+**Preventive actions:** memory `feedback_weighted_getter_in_derived_family` (override one operand of an engine `derived = A op B` getter family → audit every sibling-combining consumer, which lives in unrelated files); AGENTS.md review-51 bullets (Codex does-well: VM setter-body decompile; false-positive: pre-existing-condition-as-CRITICAL). RCA: `docs/reviews/rca-troopweight-phantom-wounded-2026-06-07.md`. CHANGELOG `2026-06-07`. Build green, **3106/3108 tests pass**.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

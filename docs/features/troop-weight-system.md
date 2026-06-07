@@ -44,6 +44,47 @@ Hooks (2)    (2 - Recruitment + Party VM)
   [TaomSettings.EnableTroopWeight guard]
 ```
 
+## Phantom-Wounded Display Fix (2026-06-07)
+
+### The bug
+
+A brand-new campaign showed the player party as **"62 troops / 16 wounded"** with no battle fought. The wounds were **phantom**. The party genuinely had **46 soldiers, 0 wounded**, that *weighed* 62 toward the 23 cap because some were weight-≥2 troops.
+
+Vanilla derives the displayed wounded count by subtracting two sibling getters:
+
+```
+wounded = PartyBase.NumberOfAllMembers - PartyBase.NumberOfHealthyMembers
+```
+
+This feature weights `NumberOfAllMembers` (→ 62) but deliberately leaves `NumberOfHealthyMembers` **unweighted** (→ 46), because that getter feeds gameplay, not just display. So the weight surplus (62 − 46 = 16) rendered as phantom wounds. A weight-2 troop adds 2 to `NumberOfAllMembers` but 1 to `NumberOfHealthyMembers`; the gap is the phantom count.
+
+### Why the getter is NOT weighted (the fix is display-only)
+
+Weighting `NumberOfHealthyMembers` globally would be the tidy fix but is **gameplay-dangerous**. Decompile-verified consumers that would break: `PartyGroupTroopSupplier` (battle troop supply), `MapEventParty._healthyManCountAtStart` + `DisorganizedStateCampaignBehavior` (casualty tracking), `DefaultTroopSacrificeModel` (sacrifice limit — would let you sacrifice more men than you have), `DefaultInventoryCapacityModel`, `DefaultPartyDesertionModel`, battle strength/winner determination. So the fix touches **display only**.
+
+### The four display surfaces fixed
+
+All four compute `NumberOfAllMembers − NumberOfHealthyMembers`. Each gets a display-only Postfix in `Patch17_TroopWeight` that rewrites the shown numbers with a weighted (healthy, wounded) split via `ITroopWeightService.GetWeightedHealthAndWounded`, so **battle-ready + wounded equals the weighted member total** the panel header already shows (e.g. "Battle Ready 62 / Wounded 0", matching "62/23").
+
+| Surface | Vanilla method | What the Postfix rewrites |
+|---------|----------------|---------------------------|
+| Main party HUD health tooltip | `CampaignUIHelper.GetMainPartyHealthTooltip` | "Battle Ready Troops" + "Wounded Troops" values; strips the spurious healing-rate block when weighted wounded == 0 |
+| Any-party health tooltip | `CampaignUIHelper.GetPartyHealthTooltip(PartyBase)` | Same |
+| Encounter "X vs Y" menu item | `GameMenuPartyItemVM.RefreshCounts` | `PartySize` / `PartyWoundedSize` / `PartySizeLbl` |
+| Party map nameplate text | `Helpers.PartyBaseHelper.GetPartySizeText(PartyBase)` | Rebuilds the `str_party_health` TextObject with weighted `HEALTHY_NUM` / `WOUNDED_NUM` |
+
+All four run for **every** party (the `NumberOfAllMembers` weighting is not main-party-only), so enemy/ally party tooltips and nameplates with heavy troops are corrected too. All four gate on `TaomSettings.EnableTroopWeight` — toggling the feature off reverts every surface to vanilla.
+
+### Known property: separate-ceiling rounding
+
+`GetWeightedHealthAndWounded` ceilings weighted healthy and weighted wounded **independently** (matching the existing `PartyVMPopulatePartyListLabelHook`). For **integer** weights — all TAOM ships — `healthy + wounded` exactly equals the weighted member total. With *fractional* weights and mixed wound states, the two ceilings can sum to 1 above `Ceiling(total)`, making the tooltip read 1 higher than the panel header. Cosmetic-only; documented rather than "fixed" because changing it would make the tooltip disagree with the party-list label.
+
+### Performance
+
+`GetWeightedHealthAndWounded` walks the roster (allocation-free — no intermediate collection) and caches the result per party in a `ConditionalWeakTable<PartyBase, box>` keyed by `MemberRoster.VersionNo`. The weak table is reference-keyed (no `GetHashCode` collisions) and auto-evicts on party GC (no unbounded growth — unlike the `Dictionary<int,...>` caches in the count hooks). `VersionNo` is decompile-verified to bump on wound/heal (`TroopRoster.AddToCountsAtIndex` → `UpdateVersion()` when `woundedCountChange != 0`), so the cached wounded count is never stale after a battle.
+
+RCA: [`docs/reviews/rca-troopweight-phantom-wounded-2026-06-07.md`](../reviews/rca-troopweight-phantom-wounded-2026-06-07.md).
+
 ## Configuration
 
 ### Config File: `Main/_Module/ModuleData/TroopWeights/troop_weights.xml`
@@ -86,9 +127,9 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 | `Main/Features/TroopWeight/ITroopWeightXmlLoader.cs` | Loader interface |
 | `Main/Features/TroopWeight/TroopWeightXmlLoader.cs` | XML parser using `IPathService`, graceful degradation on missing file |
 | `Main/Features/TroopWeight/TroopWeightIoC.cs` | `RegisterTroopWeightFeature()` + `InitializeHooks()` |
-| `Main/Features/TroopWeight/Hooks/IOn*.cs` | 4 hook interfaces (2 PartyBase + 2 UI) |
-| `Main/Features/TroopWeight/Hooks/*Hook.cs` | 4 hook implementations (2 PartyBase + 2 UI) |
-| `Main/Features/TroopWeight/Hooks/*_Patch.cs` | 4 Harmony patches (Patch17_TroopWeight) |
+| `Main/Features/TroopWeight/Hooks/IOn*.cs` | 8 hook interfaces (2 PartyBase + 2 party/recruitment UI + 4 phantom-wounded display) |
+| `Main/Features/TroopWeight/Hooks/*Hook.cs` | 5 hook implementations (the original 4 + `TroopWeightDisplayHook`, which implements the 4 display interfaces) |
+| `Main/Features/TroopWeight/Hooks/*_Patch.cs` | 8 Harmony patches (all `Patch17_TroopWeight`): 2 PartyBase getters + RecruitmentVM + PartyVM + the 4 phantom-wounded display patches |
 | `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Weight definitions (~80 entries) |
 | `Main/Features/TaomSettings.cs` | MCM toggle (`EnableTroopWeight`) |
 
@@ -100,8 +141,9 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 
 ## Tests
 
-- `TAOM.Tests/Features/TroopWeight/TroopWeightServiceTests.cs` — 9 tests covering null/empty/known/unknown IDs, caching, case insensitivity, cache clearing
+- `TAOM.Tests/Features/TroopWeight/TroopWeightServiceTests.cs` — covers null/empty/known/unknown IDs, caching, case insensitivity, cache clearing, PLUS the `ComputeWeightedHealthyAndWounded` phantom-wounded core: the regression case (weight-2 troops, 0 real wounds → 0 wounded), the `healthy + wounded == weighted total` invariant, real-wounded weighting, empty/null, negative-wounded, wounded>number floor, and fractional-weight ceiling
 - `TAOM.Tests/Features/TroopWeight/TroopWeightXmlLoaderTests.cs` — 10 tests covering valid XML, missing file, lazy loading, duplicates, zero/negative weights, missing attributes, invalid values, case insensitivity, reload
+- `TAOM.Tests/Features/TroopWeight/TroopWeightHooksTests.cs` — construction / interface / null-tolerance for all hook implementations including `TroopWeightDisplayHook` (the display hooks touch sealed TaleWorlds types, so behavior is verified in-game; the weighted math is fully unit-tested via the service core)
 
 ## How to Add a New Weighted Troop
 

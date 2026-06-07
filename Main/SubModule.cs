@@ -181,7 +181,8 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IOnPartyBaseNumberOfAllMembers>(),
             IoC.Resolve<IOnPartyBaseNumberOfRegularMembers>(),
             IoC.Resolve<IOnRecruitmentVMRefreshPartyProperties>(),
-            IoC.Resolve<IOnPartyVMPopulatePartyListLabel>());
+            IoC.Resolve<IOnPartyVMPopulatePartyListLabel>(),
+            IoC.Resolve<TroopWeightDisplayHook>());
 
         CustomBattlesIoC.InitializeHooks(
             IoC.Resolve<IOnGetCustomBattleCommanders>(),

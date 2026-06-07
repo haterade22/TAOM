@@ -440,7 +440,7 @@ When you dispatch a subagent to **implement then review** work, follow the two-s
 | `Patch14_Execution` | Execution system | Various |
 | `Patch15_BannerLayerLimit` | Banner layer limit | Various |
 | `Patch16_AtmospherePersistence` | Forced-atmosphere scenes | `Mission.Initialize` |
-| `Patch17_TroopWeight` | Troop weight system | `PartyBase`, `TroopRoster` |
+| `Patch17_TroopWeight` | Troop weight system (heavy troops cost more party-size budget) + phantom-wounded display fix | `PartyBase.NumberOfAllMembers`/`NumberOfRegularMembers` getters, `RecruitmentVM`, `PartyVM`; **+4 display Postfixes** (`CampaignUIHelper.GetMainPartyHealthTooltip`/`GetPartyHealthTooltip`, `GameMenuPartyItemVM.RefreshCounts`, `Helpers.PartyBaseHelper.GetPartySizeText`) that rewrite battle-ready/wounded with a weighted split so the weight surplus no longer renders as phantom wounds. Display-only — `NumberOfHealthyMembers` intentionally NOT weighted (it feeds gameplay). See `docs/features/troop-weight-system.md`. |
 | `Patch18_CulturalFeats` | Custom culture feat registration | `Campaign.InitializeDefaultCampaignObjects` |
 | `Patch19_CustomBattles` | Custom battle TAOM factions/commanders/troops | `CustomBattleData`, `CustomBattleHelper`, `BannerlordMissions` |
 | `Patch20_NarrativeHorseGuard` | Suppress CC narrative horse crashes for no-mount cultures | `CharacterCreationCampaignBehavior`, `CharacterCreationNarrativeStageView` |

@@ -2,6 +2,16 @@
 
 ## 2026-06-07
 
+### fix(troop-weight): phantom-wounded display across four UI surfaces
+
+A brand-new campaign showed the player party as "62 troops / 16 wounded" with no battle fought. The wounds were **phantom**: the party had 46 soldiers, 0 wounded, that *weighed* 62 toward the 23 cap because some were weight-≥2 troops.
+
+- **Root cause:** the TroopWeight feature Postfix-weights `PartyBase.NumberOfAllMembers` but deliberately leaves the sibling `NumberOfHealthyMembers` unweighted (it feeds gameplay: battle supply, casualty tracking, sacrifice limits). Four vanilla display surfaces derive `wounded = NumberOfAllMembers − NumberOfHealthyMembers`, so the weight surplus (62 − 46 = 16) rendered as phantom wounds. A data-flow gap in the original feature — a getter weighted without auditing the consumers that combine it with its unweighted sibling.
+- **Fix (display-only):** four new `Patch17_TroopWeight` Postfixes rewrite the shown numbers with a weighted (healthy, wounded) split via `ITroopWeightService.GetWeightedHealthAndWounded`, so battle-ready + wounded equals the weighted member total the panel already shows (Battle Ready 62 / Wounded 0). Targets `CampaignUIHelper.GetMainPartyHealthTooltip` + `GetPartyHealthTooltip`, `GameMenuPartyItemVM.RefreshCounts`, and `Helpers.PartyBaseHelper.GetPartySizeText`. Runs for every party; gated by `EnableTroopWeight`. The getters are untouched (weighting `NumberOfHealthyMembers` globally would corrupt casualty math + sacrifice limits — rejected).
+- **Perf:** weighted split walks the roster allocation-free and caches per party in a `ConditionalWeakTable` keyed by `MemberRoster.VersionNo` (reference-keyed, auto-evicting — no leak; `VersionNo` decompile-verified to bump on wound/heal).
+- **Review:** `/deep-review` (5 agents — Standards/Compat/Completeness PASS) found 1 HIGH (per-call list allocation on the nameplate path) + 1 MED (missing cache) — both fixed; 1 MED rounding note documented (integer weights only, never manifests). Codex adversarial review dispatched. RCA: `docs/reviews/rca-troopweight-phantom-wounded-2026-06-07.md`. Feature doc: `docs/features/troop-weight-system.md` (Phantom-Wounded Display Fix section).
+- **Verification:** build 0 errors; `dotnet test` 3106 / 0 / 2 (TroopWeight 43/43).
+
 ### chore(cultural-feats): Wave 1 review closeout — /deep-review + /review-codex + RCA + docs + 11-lang translation
 
 Ran the mandatory review pipeline on the Wave 1 feats (it had been skipped before the first commit — a process miss the user caught by asking; documented as the headline lesson in the RCA). Issue [#273](https://github.com/haterade22/TAOM/issues/273) created retroactively.

@@ -124,4 +124,55 @@ public class TroopWeightHooksTests
         var hook = new RecruitmentVMRefreshPartyPropertiesHook(_service, _logger);
         Assert.IsInstanceOfType(hook, typeof(IOnRecruitmentVMRefreshPartyProperties));
     }
+
+    // --- TroopWeightDisplayHook (phantom-wounded display fix; one hook, four IOn* surfaces) ---
+
+    [TestMethod]
+    public void TroopWeightDisplayHook_Constructs()
+    {
+        var hook = new TroopWeightDisplayHook(_service, _logger);
+        Assert.IsNotNull(hook);
+    }
+
+    [TestMethod]
+    public void TroopWeightDisplayHook_ImplementsAllFourInterfaces()
+    {
+        var hook = new TroopWeightDisplayHook(_service, _logger);
+
+        Assert.IsInstanceOfType(hook, typeof(IOnCampaignUIHelperGetMainPartyHealthTooltip));
+        Assert.IsInstanceOfType(hook, typeof(IOnCampaignUIHelperGetPartyHealthTooltip));
+        Assert.IsInstanceOfType(hook, typeof(IOnGameMenuPartyItemRefreshCounts));
+        Assert.IsInstanceOfType(hook, typeof(IOnPartyBaseHelperGetPartySizeText));
+    }
+
+    [TestMethod]
+    public void TroopWeightDisplayHook_RefreshCountsNullPartyItem_DoesNotThrow()
+    {
+        var hook = new TroopWeightDisplayHook(_service, _logger);
+
+        // Null receiver must hit the guarded early-exit, not throw.
+        hook.OnGameMenuPartyItemRefreshCounts(null);
+    }
+
+    [TestMethod]
+    public void TroopWeightDisplayHook_GetPartySizeTextNullParty_LeavesResultUnchanged()
+    {
+        var hook = new TroopWeightDisplayHook(_service, _logger);
+        TaleWorlds.Localization.TextObject result = null;
+
+        hook.OnGetPartySizeText(null, ref result);
+
+        Assert.IsNull(result, "Null party must early-exit without setting __result");
+    }
+
+    [TestMethod]
+    public void TroopWeightDisplayHook_GetPartyHealthTooltipNullParty_DoesNotThrow()
+    {
+        var hook = new TroopWeightDisplayHook(_service, _logger);
+        System.Collections.Generic.List<TaleWorlds.Core.ViewModelCollection.Information.TooltipProperty> result = null;
+
+        hook.OnGetPartyHealthTooltip(null, ref result);
+
+        Assert.IsNull(result, "Null party must early-exit without allocating a list");
+    }
 }
