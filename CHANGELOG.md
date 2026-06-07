@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(engine): phased study — Phase 16: campaign object graph (Hero/Clan/Kingdom/MobileParty/Settlement)
+
+[docs/reference/engine/campaign-object-graph.md](docs/reference/engine/campaign-object-graph.md) — the campaign-map simulation entities every TAOM campaign behavior (Phase 9) navigates + mutates. `Hero`∈`Clan`∈`Kingdom` (Clan+Kingdom both `IFaction`); `Hero` leads a `MobileParty` whose troops live in a `PartyBase`; a `Settlement` (town/castle/village) is `OwnerClan`-owned. All `MBObjectBase` (Phase 5 id-lookup + Phase 6 save) except `MobileParty` (`CampaignObjectBase`). Documents the full nav-property graph, `MapFaction` allegiance resolution, and the recurring campaign-object rules: ADR-007 sealed-type adapters, `?.` on chained `OwnerClan?.Culture`, `Settlement.Culture` is a non-engine-saved field (CultureConversion re-applies OnGameLoaded), castle `.Village==null` NRE trap, per-kingdom/culture mapping, read-only cached membership lists. Notes the campaign layer is **entirely managed** (no native boundary) — why TAOM features live here.
+
 ### docs(engine): phased study — Phase 15: agent combat stats (AgentStatCalculateModel / AgentDrivenProperties)
 
 [docs/reference/engine/agent-stats-and-driven-properties.md](docs/reference/engine/agent-stats-and-driven-properties.md) — the per-agent combat-stat pipeline TAOM's `TaomAgentStatCalculateModel` overrides (career passives + war-elephant mount-lock). `AgentDrivenProperties` = a bag of ~99 `float` `DrivenProperty` channels (`MountSpeed`/`MountManeuver`/`MountChargeDamage`/`MountDifficulty`/`SwingSpeedMultiplier`/`WeaponInaccuracy`/…) read by the native combat sim every tick; `AgentStatCalculateModel` fills it via `InitializeAgentStats` (spawn) + `UpdateAgentStats` (on mount/weapon/perk change — called from the Phase-14 `MountAgent` setter). Documents the TAOM model inheriting `SandboxAgentStatCalculateModel` (no `Default*` exists), the one-override-per-type consolidation (career + elephant in one slot), and the engine-scale-research + NaN-guard ADP gotchas.
