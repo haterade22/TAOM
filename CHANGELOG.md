@@ -2,6 +2,10 @@
 
 ## 2026-06-06
 
+### docs(guidance): propagate engine study knowledge into all agent guidance files
+
+Added engine study doc references to the four files every agent or session loads: `CLAUDE.md` Doc Lookup table (9 new rows covering the major engine process docs + a browse-all entry), `CLAUDE.md` TaleWorlds Research lookup order (step 0: check engine study docs before raw decompile), `AGENTS.md` TaleWorlds Research section (step 0 + per-review-scenario routing table + shipping vs editor DLL warning), `docs/ai-includes/taleworlds-research-guide.md` (step 0 callout at the top of the Decompilation Workflow section), `docs/ai-includes/agent-operating-manual.md` (new "Engine process understanding" row in the Tool catalog + shipping-vs-editor DLL warning on the browse row). These files previously pointed agents straight to cold decompilation; they now point to the pre-filtered, TAOM-relevant, file:line-cited engine study docs as the first lookup layer.
+
 ### docs(engine): phased study — Phase 19: campaign heartbeat (Campaign.Tick / CampaignTime / MobilePartyAi)
 
 [docs/reference/engine/campaign-tick-time-and-party-ai.md](docs/reference/engine/campaign-tick-time-and-party-ai.md) — the campaign-map "frame" that drives every TAOM `DailyTick`/`HourlyTick` behavior, closing the campaign loop back to Phase 17. `MapTimeTracker` advances `CampaignTime` (struct over `_numTicks`; `Now`/`ToDays`/`Days(n)` factories) scaled by `TimeControlMode`; `Campaign.Tick` (Campaign.cs:954) fires the Phase-9 periodic events (`CampaignEventDispatcher`/`_campaignPeriodicEventManager` — Hourly/Daily/Weekly on clock-boundary crossings), advances `MapEvent`s, runs staggered party AI (`MobilePartyAi.Tick`→`CheckPartyNeedsUpdate`→`bestAiBehavior`→`DefaultBehavior`/`TargetSettlement`), and `EncounterManager.Tick` turns party collisions into Phase-17 encounters. Documents the `CampaignTime`-as-deadline-unit rule (Messengers/Siege/CultureConversion), game-time-not-real-time event firing, staggered-AI + `DefaultBehaviorNeedsUpdate` gotchas, and CastleRecruitment Patch42's seat on `HourlyTickParty`/`AiHourlyTick`. Entirely managed (no native boundary).

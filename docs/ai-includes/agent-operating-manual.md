@@ -25,8 +25,9 @@
 
 | Need | Command | Notes |
 |------|---------|-------|
-| **TaleWorlds signature / decompile** | `pwsh tools/taom-src.ps1 path <FullTypeName>` | **PRIMARY.** Decompiles the installed **v1.4.5** DLL on cache miss, prints an absolute `.cs` path. Compose: `rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)` |
-| Browse engine source for patterns | `Read`/`Grep` under `E:\Decompiled_Bannerlord\` | Now a **v1.4.5** dump (re-decompiled 2026-05-22). Fine for browsing; for authoritative signatures still prefer `taom-src`. |
+| **Engine process understanding** | `Read` [`docs/reference/engine/`](../reference/engine/) | **First for "how does X work" questions.** 19 processes pre-analyzed + TAOM-relevant gotchas: lifecycle, formations, mount/rider, campaign-mission seam, heartbeat, agent spawn, GauntletUI, GameModel, save/object system. Check here before cold decompile. |
+| **TaleWorlds signature / decompile** | `pwsh tools/taom-src.ps1 path <FullTypeName>` | **PRIMARY for signature verification.** Decompiles the installed **v1.4.5** DLL on cache miss, prints an absolute `.cs` path. Compose: `rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)` |
+| Browse engine source for patterns | `Read`/`Grep` under `E:\Decompiled_Bannerlord\` | **v1.4.5** dump. Fine for browsing; for authoritative signatures still prefer `taom-src`. ⚠️ SHIPPING-CLIENT build — editor-only types (`MBEditor`, `AnimalSpawnSettings`, FBX toolchain) only exist in `_editor_build\`. "Absent from dump" ≠ "doesn't exist." |
 | Decompile fallback | `ilspycmd "<dll>" -t "<Type>"` or the `ilspy` MCP | Only if `taom-src` fails. |
 | **Build** | `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true` | Use this, NOT `./build.ps1`, during agent work (avoids `out/` contention). |
 | **Test** | `dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true` | Add `--filter "FullyQualifiedName~X"` to narrow. |

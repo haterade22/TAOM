@@ -74,6 +74,8 @@ AI assistants **MUST** research TaleWorlds decompiled source code before proceed
 
 ## Decompilation Workflow
 
+> **Step 0 — check the engine study docs first.** 19 engine processes are pre-analyzed, TAOM-relevant, and file:line-cited at [`docs/reference/engine/`](../reference/engine/). If your question is "how does X work" (agent spawn, formation/team AI, mount/rider, campaign→mission seam, campaign heartbeat, MBSubModuleBase lifecycle, GauntletUI, GameModel system, save/object system, usable machines, campaign object graph) — read the doc first. It's faster than cold decompilation and pre-filters for TAOM gotchas. Only proceed to decompilation below when the engine study docs don't cover your specific type or method.
+
 ### Preferred: ILSpy MCP Server (Recommended)
 
 The `ilspy` MCP server provides direct decompilation without manual CLI commands. It's configured in `.vscode/mcp.json` and available to Claude Code automatically.
