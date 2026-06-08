@@ -138,6 +138,14 @@
                 <equipment
                     slot="Leg"
                     id="Item.haradrim_boots" />
+                <!-- TEMP-ELEPHANT-TEST (2026-06-07): war-elephant mount so a Harad party fields an
+                     AI-ridden elephant for in-battle trample/mount-lock testing. REVERT before commit. -->
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_war_elephant" />
+              <equipment
+              slot="HorseHarness"
+              id="Item.sk_elephant_armor_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

@@ -40,6 +40,59 @@
     </tattoo_tags>
   </BodyProperty>
   <BodyProperty
+		id="fighter_sturgia">
+    <BodyPropertiesMin
+			version="4"
+			age="28.76"
+			weight="0.1991"
+			build="0.4645"
+			key="0000400340CC024356D76484774A8786A628275779556B5AAB8B6B81887AA89502A736240A57777A000000000000000000000000000000000000000029544000"  />
+    <BodyPropertiesMax
+			version="4"
+			age="39.11"
+			weight="0.3843"
+			build="0.500"
+			key="0000900A40CC3203DD83299CDBBA8CEBCB9DA98B2C899FCDCDBD9C8B89DEDDD902B866240BDDDBBB0000000000000000000000000000000000000000296C7140"  />
+    <hair_tags>
+      <hair_tag
+				name="TiedAcrossBack" />
+      <hair_tag
+				name="LongAndBushy" />
+      <hair_tag
+				name="BraidedAndLong" />
+      <hair_tag
+				name="HighPonytail" />
+      <hair_tag
+				name="Bandit Hair 3" />
+      <hair_tag
+				name="TiedAcrossBack" />
+    </hair_tags>
+    <beard_tags>
+      <beard_tag
+				name="WaxedBeardWithShavedCheeks" />
+      <beard_tag
+				name="BeardWithShavedCheeks" />
+      <beard_tag
+				name="LightGoatee" />
+      <beard_tag
+				name="MediumDutch" />
+      <beard_tag
+				name="LightShortBeard" />
+      <beard_tag
+				name="WaxedBeardWithShavedCheeks" />
+      <beard_tag
+				name="Stubble" />
+      <beard_tag
+				name="BushyBandholz" />
+      <beard_tag
+				name="BeardWithShavedCheeks" />
+    </beard_tags>
+    <tattoo_tags>
+      <tattoo_tag
+				name="Cleanface" />
+    </tattoo_tags>
+  </BodyProperty>
+  <BodyProperty
 		id="fighter_gundabad">
     <BodyPropertiesMin
 			version="4"
@@ -161,38 +214,48 @@
     <BodyPropertiesMin
 			version="4"
 			age="28.76"
-			weight="0.2022"
-			build="0.4059"
-			key="001ED00B80CC0854B696963664695277957985696556287883C6437796B7D6570496364509376677000000000000000000000000000000000000000035341146"  />
+			weight="0.2978"
+			build="0.662"
+			key="0020C00D80CC05D4677118844442A5550783782C25995865566444754233442702AA46240A648967000000000000000000000000000000000000000037543080"  />
     <BodyPropertiesMax
 			version="4"
 			age="39.11"
-			weight="0.2639"
-			build="0.5046"
-			key="0039F80B80CC09D9BD9CCA3CB4BC8BD9DCCB8CCCCBBB88CBDBCBB7BB9BDB899904A846450A8ABAC7000000000000000000000000000000000000000035641146"  />
+			weight="0.3627"
+			build="0.7454"
+			key="0039EC0F00CC35D4DD71188BA888A9B96BCC7B9C6ADC8CBCBCCCC8CCAD8BBC8B02AB56240ACBCBAB000000000000000000000000000000000000000037646140"  />
     <hair_tags>
       <hair_tag
-				name="empire" />
+				name="TiedAcrossBack" />
       <hair_tag
-				name="sturgia" />
+				name="LongAndBushy" />
       <hair_tag
-				name="battania" />
+				name="BraidedAndLong" />
       <hair_tag
-				name="khuzait" />
+				name="HighPonytail" />
+      <hair_tag
+				name="Bandit Hair 3" />
+      <hair_tag
+				name="TiedAcrossBack" />
     </hair_tags>
     <beard_tags>
       <beard_tag
-				name="empire" />
+				name="ThinMustache" />
       <beard_tag
-				name="sturgia" />
+				name="MustacheAndPatch" />
       <beard_tag
-				name="battania" />
+				name="Stubble" />
       <beard_tag
-				name="khuzait" />
+				name="HeavyShortBeard" />
+      <beard_tag
+				name="FrenchForkBeard" />
+      <beard_tag
+				name="BushyBandholz" />
+      <beard_tag
+				name="BushyBandholzLong" />
     </beard_tags>
     <tattoo_tags>
       <tattoo_tag
-				name="Cleanface" />
+				name="Eastern17" />
     </tattoo_tags>
   </BodyProperty>
   <BodyProperty
@@ -239,15 +302,15 @@
     <BodyPropertiesMin
 			version="4"
 			age="29.71"
-			weight="0.006"
-			build="0.2419"
-			key="0000000980CC000222811336724630711111732225204F22221212215111111004A406460AF2221700000000000000000000000000000000000000000D640000"  />
+			weight="0.0046"
+			build="0.1296"
+			key="0008500AC058300183810444434330348AAAA674B873A14B6543A699BB66A62C493400130DF016752002A00000B00000000000000000001D0000000023A800C0" />
     <BodyPropertiesMax
 			version="4"
 			age="49.39"
-			weight="0.006"
-			build="0.3619"
-			key="0000CC0F00CC0007DD88283D54DED5EECC7D77CCCDC486DDCCCCD5DE9367553404B606460BFDD54C00000000000000000000000000000000000000000D7C0000"  />
+			weight="0.0046"
+			build="0.1914"
+			key="0008500F00580007CB81077989A7B8A878BCA674B873A4AA889BC5BA76BA49C48D6700460D9BABA93003D00000D00000000000000000004D0000000023B80000" />
     <hair_tags>
       <hair_tag
 				name="TiedAcrossBack" />
@@ -279,13 +342,13 @@
 			version="4"
 			age="29.29"
 			weight="0"
-			build="0.7728"
+			build="0.9728"
 			key="0020F00FC00030008771188F38770F8801F688778888888888888888546A000601AF06130A888888000000000000000000000000000000000000000043640140" />
     <BodyPropertiesMax
 			version="4"
 			age="29.29"
 			weight="0"
-			build="0.8728"
+			build="0.9728"
 			key="001EF00FC00030008771188F38770F8801F688778888888888888888546A000601AF06130A888888000000000000000000000000000000000000000043640140" />
     <hair_tags>
       <hair_tag
@@ -523,41 +586,23 @@
 			key="0000AC08C070048A97C1188A94689057B8CC8886C9713F764B47547759A578C6062320460C1CA3463305300000C00000000000000000004C0000000019884000" />
     <hair_tags>
       <hair_tag
-				name="Ponytail" />
+				name="empire" />
       <hair_tag
-				name="LongAndBushy" />
+				name="sturgia" />
       <hair_tag
-				name="TiedAcrossBack" />
+				name="battania" />
       <hair_tag
-				name="BraidedAndLong" />
-      <hair_tag
-				name="HighPonytail" />
-      <hair_tag
-				name="Bandit Hair 3" />
-      <hair_tag
-				name="TiedAcrossBack" />
+				name="khuzait" />
     </hair_tags>
     <beard_tags>
       <beard_tag
-				name="MustacheAndPatch" />
+				name="empire" />
       <beard_tag
-				name="BeardWithShavedCheeks" />
+				name="sturgia" />
       <beard_tag
-				name="TrimmedDutch" />
+				name="battania" />
       <beard_tag
-				name="MediumDutch" />
-      <beard_tag
-				name="LightShortBeard" />
-      <beard_tag
-				name="HeavyShortBeard" />
-      <beard_tag
-				name="PointedShortBeard" />
-      <beard_tag
-				name="Stubble" />
-      <beard_tag
-				name="BushyBandholz" />
-      <beard_tag
-				name="BushyBandholzLong" />
+				name="khuzait" />
     </beard_tags>
     <tattoo_tags>
       <tattoo_tag
@@ -780,15 +825,15 @@
     <BodyPropertiesMin
 			version="4"
 			age="25.01"
-			weight="0.1806"
-			build="0.3472"
-			key="0002000080CC00411171110123117110112774111920161122212722712222000475364607222222000000000000000000000000000000000000000034F40000"  />
+			weight="0.2114"
+			build="0.5756"
+			key="0000000000CC0041007007076067700602098500070000210000051080000000029936240900026800000000000000000000000000000000000000002B340000"  />
     <BodyPropertiesMax
 			version="4"
 			age="40.01"
-			weight="0.2423"
-			build="0.591"
-			key="001CC80D00CC02CADD79E81C65CC7677B99E7ACD8EA58BDDFDD7CAEE76A857260489464608DA899B0000000000000000000000000000000000000000350C0000"  />
+			weight="0.2485"
+			build="0.6775"
+			key="0007CC0780CC32CADD912D1F82FF7CCC983F86CC5C5789C8F9A999498453433202AA46240AB9988D00000000000000000000000000000000000000006B4C0000"  />
     <hair_tags>
       <hair_tag
 				name="empire" />
