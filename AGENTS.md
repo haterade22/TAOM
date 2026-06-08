@@ -239,6 +239,7 @@ HarmonyPatch / GameModel / CampaignBehavior   <-- THIN (<150 lines, no logic)
 | XML config | `Main/_Module/ModuleData/` |
 | XSLT files | `Main/_Module/ModuleData/*.xslt` |
 | TaleWorlds DLLs | `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client` |
+| Doc-graph tool | `tools/graph_query.py` — query/audit the docs link graph (`explain`/`path`/`metrics`); ref `docs/features/doc-graph.md` |
 
 ---
 

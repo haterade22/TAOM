@@ -35,6 +35,7 @@
 | Troop equipment refs | `python tools/validate_all_troop_refs.py` | Underwear-bug gate across all 7 culture troop XMLs. |
 | API signature snapshot | `pwsh tools/snapshot_api_surface.ps1 [-Check]` | Regenerate / verify the committed v1.4.5 signature snapshot. |
 | Doc health | `python tools/lint_docs.py --summary` | Dead links / stale-version refs / orphan docs. |
+| Doc graph | `python tools/graph_query.py metrics` (+ `explain <doc>` / `path <a> <b>`) | Query/audit the docs link graph: god-nodes/bridges/orphans (`metrics`), a doc's neighbourhood (`explain`), shortest path between two docs (`path`). `--json` for machine output. Full ref: [`docs/features/doc-graph.md`](../features/doc-graph.md). |
 | Full tool list | see [`tools/README.md`](../../tools/README.md) | Generators, rebalancers, localization, faction-map, etc. |
 
 **Target engine version is Bannerlord v1.4.5.** Anything in an agent prompt or doc that still says "v1.3.15" is stale — trust the installed DLLs + `taom-src`.

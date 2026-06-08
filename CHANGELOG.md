@@ -2,6 +2,16 @@
 
 ## 2026-06-08
 
+### docs(doc-graph): wire /doc-graph into the discoverability surfaces
+
+Registered the doc-graph tool (shipped 820eda7) in every place a future reader looks, closing the agent-facing gap.
+
+- **CLAUDE.md** skills table — main-session discovery.
+- **`docs/ai-includes/agent-operating-manual.md` §2 tool catalog** — the subagent source-of-truth. This is the fix that makes "subagents run the CLI directly" actually true: the eager `/doc-graph` skill *description* reaches the main session but **not** subagents, which read the manual instead.
+- **AGENTS.md** Key Paths — the Codex reviewer.
+
+Deliberately NOT added to the 5 per-agent files (all read the shared manual) or `.claude/rules/` (doc-graph is a tool, not a behavior rule).
+
 ### feat(elephant): Harad war elephant confirmed in-game — action-sets self-contained in LOTRLOME_Armory
 
 War elephants now spawn in battle without ADOD_Beasts in the load order. Multiple elephants with Harad riders confirmed in-game (battle screenshot). Two data-pipeline crashes resolved:

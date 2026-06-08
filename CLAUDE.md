@@ -127,6 +127,7 @@ This is a project-level discipline, not a one-off feature note — every future 
 | `/finish-branch [branch] [base]` | Integrate a merge-ready branch into trunk: FF-check → merge → regenerate backlinks → CHANGELOG → delete branch (local+remote) → push (confirm). Post-`/ship`; TAOM trunk-based, not Git Flow. |
 | `/adopt-external [url]` | Review an external repo/article and fold the useful parts into TAOM: security-vet first → map novel-vs-duplicative → tiered recommendation → port (never install) → adversarial review → commit. Follows `docs/ai-includes/external-repo-adoption.md`. |
 | `/security-scan` | Audit TAOM's own Claude config (`.claude/`, `.mcp.json`, `settings*.json`, `CLAUDE.md`) for committed secrets, over-broad permissions, hook exfiltration, MCP risk, hidden-unicode injection. Runs `tools/audit_claude_config.py`. |
+| `/doc-graph [explain\|path\|metrics]` | Query + audit the docs/ knowledge graph (`tools/graph_query.py`): `explain` a doc's links, `path` between two docs, `metrics` (god nodes / bridges / orphans). Topology, not search. ADR-010 Phase 5; sibling of the `/lint-docs` + `/knowledge-compile` doc-tooling layer. |
 
 ### Workflow → Skill convention
 
@@ -275,6 +276,7 @@ When you dispatch a subagent to **implement then review** work, follow the two-s
 | Brief/spawn a subagent correctly | [agent-operating-manual.md](./docs/ai-includes/agent-operating-manual.md) — execution model (can't invoke skills), tool catalog, what to recommend |
 | Author a new culture's armor + troop tree (end-to-end) | [new-culture-authoring.md](./docs/ai-includes/new-culture-authoring.md) — phases, helpers, color convention, iteration loops |
 | Add or fix lord skills + traits (any culture, any canonical character) | [lord-skills-authoring.md](./docs/ai-includes/lord-skills-authoring.md) — TAOM SkillSet system, archetype catalog, per-NPC override recipes, gotchas |
+| Create a craftable weapon (FBX → tpac → 4 XML files, by hand) | [weapon-creation-workflow.md](./docs/ai-includes/weapon-creation-workflow.md) — manual Step A–Z; per-piece schema, `bo_` collision convention, brace/couch/pike, **bows/shields = no decimals** rule. Automated alternative: [weapon-xml-pipeline.md](./docs/features/weapon-xml-pipeline.md) |
 | Plan future GameModel overrides | [roadmap.md](./docs/roadmap.md) |
 | Add or update translations | [TRANSLATOR_GUIDE.md](./docs/localization/TRANSLATOR_GUIDE.md) + [tools/README.md](./tools/README.md#localization-pipeline) |
 | Understand MBSubModuleBase lifecycle or Harmony patch registration | [submodule-lifecycle-and-harmony.md](./docs/reference/engine/submodule-lifecycle-and-harmony.md) — when callbacks fire, patch kinds (Prefix/Postfix/Transpiler), deferred-apply gotcha, managed vs native boundary |
