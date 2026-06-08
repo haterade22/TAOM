@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
-"""Author generic Orc armor items per KEYforce Mordor spec.
+"""Author generic Orc + Morannon armor items per KEYforce Mordor spec.
 
-Source-of-truth: E:\\repos\\lotraom-assets\\tools\\mordor_armor_and_troops.txt
-Issue: KEYforce mesh-first revamp (Mordor pass)
+Source-of-truth: E:\\repos\\lotraom-assets\\tools\\mordor_armor_and_troops.md
+Issue: KEYforce mesh-first revamp (Mordor pass + Morannon sub-line)
 
 Adds `sk_gn_orc_*` (generic cross-faction) and `sk_md_orc_*` (Mordor paint)
-helmets, chests, pauldrons, bracers, and boots. Black Uruk (`sk_uruk_mordor_*`)
-items are already authored — not touched.
+helmets, chests, pauldrons, bracers, and boots, PLUS the KEYforce Morannon
+sub-line `sk_md_mor_*` (92 items: Arc/Inf/Pik combat lines across light/med/
+heavy/elite tiers; bracers Arc+Inf only — Pik shares Inf bracers; greaves
+shared across all lines). Black Uruk (`sk_uruk_mordor_*`) items are already
+authored — not touched.
+
+Per project convention:
+- All helmets emit hair_cover_type="all" + beard_cover_type="all" (matches
+  the in-game Armory state; explicit `hair_cover=` overrides apply).
+- All bracers explicitly emit covers_hands="true|false" (no longer omitted
+  when False) so Morannon bracers carry covers_hands="false" verbatim.
 
 Usage:
     python tools/generate_mordor_armor.py --dry-run
@@ -68,7 +77,7 @@ class ArmorItem:
     tier: str
     material: str
     modifier_group: str = ""
-    hair_cover: str = "type2"
+    hair_cover: str = "all"
     beard_cover: str = "all"
     covers_body: bool = False
     covers_hands: bool = False
@@ -276,6 +285,122 @@ LEG_ARMORS = [
 ]
 
 
+# =============================================================================
+# KEYforce Morannon sub-line (sk_md_mor_*)
+# Spec: E:\repos\lotraom-assets\tools\mordor_armor_and_troops.md (lines 375-591)
+# Three combat lines: Arc (archer), Inf (infantry), Pik (polearm).
+# Pik shares Inf bracers (no separate Pik bracer items). Greaves shared.
+# 92 items total: 33 helmets + 20 chests + 18 pauldrons + 12 bracers + 9 greaves.
+# All helmets carry hair_cover_type="all" (via dataclass default).
+# All bracers carry covers_hands="false" (explicit; matches existing Mordor pattern).
+# =============================================================================
+def _morannon_items():
+    head, body, shoulder, arm, leg = [], [], [], [], []
+    roman = {"a": "I", "b": "II", "c": "III", "d": "IV"}
+    lines3 = [("arc", "Archer"), ("inf", "Infantry"), ("pik", "Polearm")]
+    lines2 = [("arc", "Archer"), ("inf", "Infantry")]
+
+    # Helmets — 3 lines x (3 light + 3 med + 3 heavy + 2 elite) = 33
+    helmet_tiers = [
+        ("light", "Light",  "Leather", "abc"),
+        ("med",   "Medium", "Plate",   "abc"),
+        ("heavy", "Heavy",  "Plate",   "abc"),
+        ("elite", "Elite",  "Plate",   "ab"),
+    ]
+    for lid, lname in lines3:
+        for tid, tname, mat, letters in helmet_tiers:
+            tkey = "medium" if tid == "med" else tid
+            for v in letters:
+                head.append(ArmorItem(
+                    f"sk_md_mor_{lid}_helmet_{tid}_{v}",
+                    f"Morannon {lname} {tname} Helmet {roman[v]}",
+                    "head", tkey, mat,
+                ))
+
+    # Chests — Arc + Inf only, light (2) + med (4) + heavy (4) = 10 each, 20 total
+    # Arc line = tunic/leather, Inf line = chainmail/plate. arm_armor follows existing pattern.
+    chest_data = [
+        ("arc", "Archer",   {"light": "Cloth",     "medium": "Leather",   "heavy": "Leather"}, {"medium": 8,  "heavy": 10}),
+        ("inf", "Infantry", {"light": "Chainmail", "medium": "Chainmail", "heavy": "Plate"},    {"medium": 10, "heavy": 14}),
+    ]
+    chest_tiers = [
+        ("light", "Light",  "ab"),
+        ("med",   "Medium", "abcd"),
+        ("heavy", "Heavy",  "abcd"),
+    ]
+    for lid, lname, mats, arm_stats in chest_data:
+        for tid, tname, letters in chest_tiers:
+            tkey = "medium" if tid == "med" else tid
+            for v in letters:
+                body.append(ArmorItem(
+                    f"sk_md_mor_{lid}_chest_{tid}_{v}",
+                    f"Morannon {lname} {tname} Chest {roman[v]}",
+                    "body", tkey, mats[tkey],
+                    covers_body=True,
+                    arm_armor_stat=arm_stats.get(tkey),
+                ))
+
+    # Pauldrons — 3 lines x (2 light + 2 med + 2 heavy) = 18
+    pauld_tiers = [
+        ("light", "Light",  "Leather"),
+        ("med",   "Medium", "Plate"),
+        ("heavy", "Heavy",  "Plate"),
+    ]
+    for lid, lname in lines3:
+        for tid, tname, mat in pauld_tiers:
+            tkey = "medium" if tid == "med" else tid
+            for v in "ab":
+                shoulder.append(ArmorItem(
+                    f"sk_md_mor_{lid}_pauld_{tid}_{v}",
+                    f"Morannon {lname} {tname} Pauldron {roman[v]}",
+                    "shoulder", tkey, mat,
+                ))
+
+    # Bracers — Arc + Inf only (Pik shares Inf), 2 lines x (2+2+2) = 12
+    # covers_hands explicitly False per user directive (matches Mordor convention).
+    bracer_tiers = [
+        ("light", "Light",  "Leather"),
+        ("med",   "Medium", "Plate"),
+        ("heavy", "Heavy",  "Plate"),
+    ]
+    for lid, lname in lines2:
+        for tid, tname, mat in bracer_tiers:
+            tkey = "medium" if tid == "med" else tid
+            for v in "ab":
+                arm.append(ArmorItem(
+                    f"sk_md_mor_{lid}_bracer_{tid}_{v}",
+                    f"Morannon {lname} {tname} Bracer {roman[v]}",
+                    "arm", tkey, mat,
+                    covers_hands=False,
+                ))
+
+    # Greaves — shared, no line distinction, (3+3+3) = 9
+    grvs_tiers = [
+        ("light", "Light",  "Leather"),
+        ("med",   "Medium", "Leather"),
+        ("heavy", "Heavy",  "Plate"),
+    ]
+    for tid, tname, mat in grvs_tiers:
+        tkey = "medium" if tid == "med" else tid
+        for v in "abc":
+            leg.append(ArmorItem(
+                f"sk_md_mor_grvs_{tid}_{v}",
+                f"Morannon {tname} Greaves {roman[v]}",
+                "leg", tkey, mat,
+                covers_legs=True,
+            ))
+
+    return head, body, shoulder, arm, leg
+
+
+_mor_head, _mor_body, _mor_shoulder, _mor_arm, _mor_leg = _morannon_items()
+HEAD_ARMORS     += _mor_head
+BODY_ARMORS     += _mor_body
+SHOULDER_ARMORS += _mor_shoulder
+ARM_ARMORS      += _mor_arm
+LEG_ARMORS      += _mor_leg
+
+
 SLOT_MAP = {
     "head":     (HEAD_ARMORS,     "head_armors.xml"),
     "body":     (BODY_ARMORS,     "body_armors.xml"),
@@ -330,8 +455,7 @@ def generate_item_xml(item: ArmorItem) -> str:
         ]
     elif item.slot == "arm":
         armor_attrs.append(f'arm_armor="{stats["arm_armor"]}"')
-        if item.covers_hands:
-            armor_attrs.append('covers_hands="true"')
+        armor_attrs.append(f'covers_hands="{"true" if item.covers_hands else "false"}"')
         armor_attrs.append(f'modifier_group="{item.modifier_group}"')
         armor_attrs.append(f'material_type="{item.material}"')
     elif item.slot == "leg":
@@ -410,7 +534,8 @@ def apply(armory_base: str):
 
         section_comment = (
             "\n    <!-- ============================================================== -->\n"
-            "    <!--  KEYforce Mordor generic Orc armor (sk_gn_orc_*, sk_md_orc_*)   -->\n"
+            "    <!--  KEYforce Mordor armor: orc pool + Morannon sub-line           -->\n"
+            "    <!--  (sk_gn_orc_*, sk_md_orc_*, sk_md_mor_*)                       -->\n"
             "    <!-- ============================================================== -->\n\n"
         )
         content = content.replace(closing_tag, f"{section_comment}{new_xml}\n\n{closing_tag}")

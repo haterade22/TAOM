@@ -2,6 +2,18 @@
 
 ## 2026-06-08
 
+### feat(armory): KEYforce Morannon armor sub-line (sk_md_mor_*) — 92 items
+
+KEYforce dropped the Morannon armor pack at `…/AssetSources/Mordor/morannon_armors`; the meshes were rendering empty in-game because no `<Item>` definitions existed yet. Spec catalog: `E:\repos\lotraom-assets\tools\mordor_armor_and_troops.md` lines 375–591.
+
+Extended `tools/generate_mordor_armor.py` with a Morannon section that emits the spec's full 92-item inventory (`sk_md_mor_*`, `culture="Culture.mordor"`): 33 helmets (Arc/Inf/Pik × light a/b/c + med a/b/c + heavy a/b/c + 2 elite), 20 chests (Arc + Inf), 18 pauldrons (Arc/Inf/Pik), 12 bracers (Arc + Inf — Pik shares Inf bracers), 9 greaves (shared). Items appended to the five `mordor/*_armors.xml` files via the existing dedup-by-id + section-comment writer (external Armory module, not git-tracked).
+
+Convention tightening in the generator (applies to all helmets/bracers going forward, not just Morannon):
+- `ArmorItem.hair_cover` default changed `"type2"` → `"all"`. Matches the existing Armory state (the 2026 helmet-cover sweep set every Mordor helmet to `"all"`). Existing items are unaffected (already in XML; dedup skips them on re-apply).
+- Arm-slot emission now always writes `covers_hands="true|false"` explicitly (previously omitted when `False`). Lets Morannon bracers carry `covers_hands="false"` verbatim, matching the existing Mordor bracer XML pattern.
+
+Verified after `--apply`: 33/33 helmets carry `hair_cover_type="all"` + `beard_cover_type="all"`; 12/12 bracers carry `covers_hands="false"`; all 5 files well-formed; `validate_all_troop_refs.py` PASS; re-apply is idempotent (adds 0). No troop wears any `sk_md_mor_*` yet — that's a separate authoring pass.
+
 ### docs(weapons): manual weapon-creation workflow + Dale weapon set authored
 
 Authored the full Dale (Culture.sturgia) weapon set into LOTRLOME_Armory (live files, not in repo): 30 crafting pieces (3 swords, 3 one-handed axes, 1 two-handed axe, 2 spears, 6 polearm heads, 3 shared shafts) registered across `LOTRLOME_crafting_pieces.xml`, `weapon_descriptions.xslt` (7 categories incl. couchable/bracing/pike for the long polearms), `crafting_templates.xslt` (5 categories), and 15 `<CraftedItem>` presets + 2 single-piece bows in `LOTRAOM_weapons.xml`. Mesh + `bo_` collision names pulled authoritatively from the tpac; all references validated. Polearm-head `bo_` collision meshes wired to predicted names pending artist delivery. Bow `weapon_length` fixed to integer (`unsignedInt` schema rejects decimals).
