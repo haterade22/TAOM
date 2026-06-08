@@ -12,10 +12,9 @@ public class ElephantAttackService : IElephantAttackService
 {
     public bool IsElephantMonster(string? monsterId) => monsterId == ElephantConfig.ElephantMonsterId;
 
-    public bool ShouldAiTrample(float distanceToTarget, float facingDot, float randomRoll, bool alreadyAttacking)
+    public bool ShouldAiTrample(float facingDot, float randomRoll, bool alreadyAttacking)
     {
         return !alreadyAttacking
-            && distanceToTarget < ElephantConfig.TrampleTargetRange
             && facingDot > ElephantConfig.TrampleFacingDot
             && randomRoll < ElephantConfig.TrampleChancePerTick;
     }

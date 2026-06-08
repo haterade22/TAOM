@@ -10,7 +10,7 @@ public static class SpiderConfig
     // the detached spawn, so the recruitable troop appears as its harmless humanoid anchor (dg_uruk) instead of
     // crashing the battle. Paused in favour of a warg-pattern rideable war-elephant. Flip to true (and resolve
     // the render AV) to resume. IsSpiderTroop is left intact so its unit tests still pass.
-    public const bool Enabled = false;
+    public static bool Enabled = false;
 
     // Object IDs — the recruitable troop anchor (humanoid race dg_uruk, so recruitment + roster UI
     // resolve) and the Monster it is spawned as by Patch45_SpiderTroopSpawn (see SpiderTroopSpawnService
@@ -53,7 +53,7 @@ public static class SpiderConfig
     // Formation != null, and buys nothing a detached spider needs except movement (which a BT move-node
     // gives without the formation team-AI surface). Detached + Agent_SpiderNativeWieldGuard_Patch (the
     // closed 3-method native-wield guard) is the lower-risk architecture. See the RCA.
-    public const bool EnableFormationMembership = false;
+    public static bool EnableFormationMembership = false;
 
     // Combat behavior
     internal static float TargetDetectionRange = 4f;

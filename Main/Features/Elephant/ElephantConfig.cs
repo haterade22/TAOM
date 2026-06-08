@@ -8,21 +8,22 @@ namespace TAOM.Features.Elephant;
 /// </summary>
 public static class ElephantConfig
 {
-    /// <summary>The elephant Monster's StringId (authored in LOTRLOME_Armory). Drives mount identification + lock.</summary>
+    /// <summary>The elephant Monster's StringId — matches Monster id="taom_war_elephant" in LOTRLOME_Armory.</summary>
     public const string ElephantMonsterId = "taom_war_elephant";
 
     /// <summary>MountDifficulty forced on the elephant so non-rider AI can't take it (ADOD: 999f).</summary>
     public const float MountDifficulty = 999f;
 
     // --- AI auto-trample gates (1-for-1 ADOD ADODBeastsElephantAgentComponent.OnTickAsAI) ---
-    /// <summary>The rider's target must be within this distance of the elephant for a trample (ADOD: 3f).</summary>
-    public const float TrampleTargetRange = 3f;
-    /// <summary>The elephant must face the target: dot(toTarget, lookDir) above this (ADOD: 0.25f).</summary>
+    /// <summary>Kept for reference; was the rider-target proximity gate (ADOD: 3f). Gate removed — rider's AI target is
+    /// anywhere on the battlefield; trample now scans the elephant's own position instead.</summary>
+    public const float TrampleTargetRange = 10f;
+    /// <summary>The elephant must face the direction of its nearest enemy: dot(toTarget, lookDir) above this (ADOD: 0.25f).</summary>
     public const float TrampleFacingDot = 0.25f;
     /// <summary>Per-AI-tick probability the trample fires when gated in (ADOD: 0.001f).</summary>
-    public const float TrampleChancePerTick = 0.001f;
-    /// <summary>Radius around the target inside which enemies are trampled (ADOD: 2f).</summary>
-    public const float TrampleRadius = 2f;
+    public const float TrampleChancePerTick = 0.005f;
+    /// <summary>Radius around the target inside which enemies are trampled (ADOD: 2f; raised to 4f to match elephant footprint).</summary>
+    public const float TrampleRadius = 4f;
     /// <summary>Base trample damage; halved-to-a-quarter vs blocking targets, doubled for inflicted (ADOD: 10).</summary>
     public const int TrampleBaseDamage = 10;
     /// <summary>Blow magnitude passed to the damage primitive (ADOD blows use ~the base magnitude; 50f is TAOM's default).</summary>

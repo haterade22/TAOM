@@ -11,10 +11,10 @@ public interface IElephantAttackService
     bool IsElephantMonster(string? monsterId);
 
     /// <summary>
-    /// ADOD's <c>OnTickAsAI</c> trample gate: fire only when not already attacking, the rider's target is within
-    /// range, the elephant faces it, and the per-tick probability roll passes.
+    /// ADOD's <c>OnTickAsAI</c> trample gate: fire only when not already attacking, the elephant faces its scan
+    /// direction, and the per-tick probability roll passes.
     /// </summary>
-    bool ShouldAiTrample(float distanceToTarget, float facingDot, float randomRoll, bool alreadyAttacking);
+    bool ShouldAiTrample(float facingDot, float randomRoll, bool alreadyAttacking);
 
     /// <summary>ADOD's trample damage: <c>round(base * (blocking ? 0.25 : 1)) * 2</c>.</summary>
     int ComputeInflictedDamage(bool targetBlocking);

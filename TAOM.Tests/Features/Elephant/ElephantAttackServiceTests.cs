@@ -3,7 +3,7 @@ using TAOM.Features.Elephant;
 
 // War-elephant trample — pure decision-service tests (1-for-1 with ADOD's gates + damage formula).
 // The service has no TaleWorlds dependencies, so every branch is reachable without mocks; the engine
-// values (distance, facing dot, random roll, blocking) are supplied by ElephantMissionBehavior in-game.
+// values (facing dot, random roll, blocking) are supplied by ElephantMissionBehavior in-game.
 
 namespace TAOM.Tests.Features.Elephant;
 
@@ -30,43 +30,34 @@ public class ElephantAttackServiceTests
         => Assert.IsFalse(_sut.IsElephantMonster(null));
 
     // ------------------------------------------------------------------ ShouldAiTrample (gate exhaustion)
-    // All-pass baseline: close (1m < 3), facing (0.9 > 0.25), roll passes (0 < 0.001), not attacking.
+    // All-pass baseline: facing (0.9 > 0.25), roll passes (0 < 0.001), not attacking.
 
     [TestMethod]
     public void ShouldAiTrample_AllGatesPass_ReturnsTrue()
-        => Assert.IsTrue(_sut.ShouldAiTrample(distanceToTarget: 1f, facingDot: 0.9f, randomRoll: 0f, alreadyAttacking: false));
+        => Assert.IsTrue(_sut.ShouldAiTrample(facingDot: 0.9f, randomRoll: 0f, alreadyAttacking: false));
 
     [TestMethod]
     public void ShouldAiTrample_AlreadyAttacking_ReturnsFalse()
-        => Assert.IsFalse(_sut.ShouldAiTrample(1f, 0.9f, 0f, alreadyAttacking: true));
-
-    [TestMethod]
-    public void ShouldAiTrample_TargetOutOfRange_ReturnsFalse()
-        => Assert.IsFalse(_sut.ShouldAiTrample(distanceToTarget: 5f, facingDot: 0.9f, randomRoll: 0f, alreadyAttacking: false));
+        => Assert.IsFalse(_sut.ShouldAiTrample(0.9f, 0f, alreadyAttacking: true));
 
     [TestMethod]
     public void ShouldAiTrample_NotFacingTarget_ReturnsFalse()
-        => Assert.IsFalse(_sut.ShouldAiTrample(1f, facingDot: 0.1f, randomRoll: 0f, alreadyAttacking: false));
+        => Assert.IsFalse(_sut.ShouldAiTrample(facingDot: 0.1f, randomRoll: 0f, alreadyAttacking: false));
 
     [TestMethod]
     public void ShouldAiTrample_RandomRollFailsProbability_ReturnsFalse()
         // 0.5 is well above the 0.001 per-tick chance → no trample this tick.
-        => Assert.IsFalse(_sut.ShouldAiTrample(1f, 0.9f, randomRoll: 0.5f, alreadyAttacking: false));
-
-    [TestMethod]
-    public void ShouldAiTrample_DistanceExactlyAtRange_ReturnsFalse()
-        // Strict "< TrampleTargetRange" (ADOD uses `< 3f`), so exactly 3m does not trample.
-        => Assert.IsFalse(_sut.ShouldAiTrample(distanceToTarget: ElephantConfig.TrampleTargetRange, facingDot: 0.9f, randomRoll: 0f, alreadyAttacking: false));
+        => Assert.IsFalse(_sut.ShouldAiTrample(0.9f, randomRoll: 0.5f, alreadyAttacking: false));
 
     [TestMethod]
     public void ShouldAiTrample_FacingDotExactlyAtThreshold_ReturnsFalse()
         // Strict "> TrampleFacingDot" (ADOD uses `> 0.25f`), so exactly at the threshold does not trample.
-        => Assert.IsFalse(_sut.ShouldAiTrample(distanceToTarget: 1f, facingDot: ElephantConfig.TrampleFacingDot, randomRoll: 0f, alreadyAttacking: false));
+        => Assert.IsFalse(_sut.ShouldAiTrample(facingDot: ElephantConfig.TrampleFacingDot, randomRoll: 0f, alreadyAttacking: false));
 
     [TestMethod]
     public void ShouldAiTrample_RandomRollExactlyAtChance_ReturnsFalse()
         // Strict "< TrampleChancePerTick" (ADOD uses `< 0.001f`), so a roll equal to the chance does not trample.
-        => Assert.IsFalse(_sut.ShouldAiTrample(distanceToTarget: 1f, facingDot: 0.9f, randomRoll: ElephantConfig.TrampleChancePerTick, alreadyAttacking: false));
+        => Assert.IsFalse(_sut.ShouldAiTrample(facingDot: 0.9f, randomRoll: ElephantConfig.TrampleChancePerTick, alreadyAttacking: false));
 
     // ------------------------------------------------------------------ ComputeInflictedDamage
 

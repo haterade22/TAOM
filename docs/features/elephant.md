@@ -1,47 +1,45 @@
 # War Elephant (Harad rideable mount)
 
-> **Status: C# BUILT + WIRED (2026-06-05); DEPLOYED FOR FIRST IN-GAME TEST (2026-06-06, pending verification).**
+> **Status: C# BUILT + WIRED (2026-06-05); ACTION-SETS SELF-CONTAINED IN LOTRLOME (2026-06-08); IN-GAME BATTLE CONFIRMED (2026-06-08).**
 > The trample/mount-lock C# is a 1-for-1 behavioral port of ADOD's elephant, adapted to **v1.4.5**, fully wired
 > (IoC + SubModule) and green (3041 tests). Supersedes the paused [Giant Spider](spider.md).
 >
-> **First-test deployment (2026-06-06) — NOT yet confirmed in-game.** To unblock a first test without authoring
-> the 1.4.5 action-set, the Monster + Item were deployed to live `LOTRLOME_Armory` with the Monster's
-> `action_set`/`monster_usage` pointed at **ADOD's working `as_elephant` + `elephant` usage** (both bound to
-> `elephant_skeleton`, which our `elephant_mesh` is skinned to). This makes it **load + animate + trample at once
-> — REQUIRES ADOD_Beasts enabled in the load order.** Deployed/changed:
+> **ADOD_Beasts dependency ELIMINATED (2026-06-08).** After resolving two data-pipeline crashes during the LOTRLOME-
+> standalone deployment (see "Action-sets deployment crash history" below), the ADOD `as_elephant` action-set block
+> was ported into `LOTRLOME_Armory/ModuleData/action_sets.xml` (merged into the module's single `soln_action_sets`
+> entry in `project.mbproj` — the same pattern as `as_spider`). The game now loads and elephants spawn in battle
+> without ADOD_Beasts in the load order.
+>
+> **IN-GAME BATTLE CONFIRMED (2026-06-08).** Multiple war elephants with Harad riders spawned and fought correctly
+> in battle (screenshot: 5 elephants, riders visible, correct mesh, formation movement). Animations run from the
+> ADOD `as_elephant` clips already in `LOTRLOME_Armory/Assets/creature/elephant/animations/` (the 35 tpacs copied
+> during self-contained clip consolidation). Remaining steps: author TAOM-owned `as_war_elephant` action-set with
+> the TAOM-authored clip names, revert the TEMP `troops_harad.xml` test entry, author the actual Harad rider troop.
+>
+> **First-test deployment (2026-06-06) — CONFIRMED.** The Monster + Item were deployed to live `LOTRLOME_Armory`
+> with the Monster's `action_set="as_elephant"` / `monster_usage="elephant"` (both from ADOD).  Deployed/changed:
 > - `LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_elephant.xml` (NEW, de-risked refs) + registered in `LOTRLOME_Armory/SubModule.xml`.
 > - `<Item id="taom_war_elephant">` added to live `LOTRAOM_horses.xml`.
 > - **TEMP** `Horse`-slot mount on `harad_militia` (`Main/.../troops_harad.xml`, marked `TEMP-ELEPHANT-TEST`, REVERT before commit) so a Harad party fields an AI-ridden elephant.
 > - Backups: `*.bak-elephant` beside the two edited LOTRLOME files.
->
-> **To run the test:** enable ADOD_Beasts in the launcher → `./build.ps1` → fight a Harad party → watch the
-> AI-ridden elephant trample (rider within 3 m, facing) + confirm the mount can't be stolen. Trample is
-> **AI-rider-only** (early-returns for `Agent.Main`), so don't test by riding it yourself. If the elephant is
-> invisible, the in-tpac mesh name ≠ `elephant_mesh`; watch `rgl_log` on first load for missing-asset errors.
-> **Shipping path (post-test):** author a TAOM-owned `as_war_elephant` + `war_elephant` usage to drop the ADOD
-> dependency (the repo-reference `docs/features/elephant/lotr_monster_elephant.xml` keeps those intended refs).
 >
 > **Trample tick VERIFIED 1.4.5-safe (2026-06-06).** The howdah workflow proved `AgentComponent.OnTickAsAI` (the
 > virtual ADOD's trample/crew AI overrides) **does not exist in v1.4.5** — so ADOD's *own* trample is dead on our
 > engine. TAOM's port pre-fixed this: `ElephantMissionBehavior : MissionLogic`, trample runs in `OnMissionTick`
 > iterating `Mission.Current.AllAgents` ([ElephantMissionBehavior.cs:60](../../Main/Features/Elephant/ElephantMissionBehavior.cs#L60)), not on an AgentComponent. The trample will fire.
 >
-> **Self-contained clip consolidation — IN PROGRESS (2026-06-06).** Confirmed via `tools/tpac_skeleton_scan.py`:
-> LOTRLOME's `elephant_harad_armor_01_geo.tpac` **already carries `elephant_skeleton`** (item [3], `type=Skeleton`),
-> so only the *clips* are missing for a standalone elephant. The clip set = **31 `*_anm.tpac`** (359 B clip defs)
-> **+ 4 `elephant_anims_all_*_geo.tpac`** (~1.1 MB each, the actual animation data) — **copied** into
-> `LOTRLOME_Armory/Assets/creature/elephant/animations/` (35 tpacs). **Still pending:** author `as_war_elephant`
-> (clone of ADOD's 78-action `as_elephant`, bound to `elephant_skeleton`) + its `act_elephant_*` action-types, then
-> repoint the Monster to `as_war_elephant` + vanilla `monster_usage="horse"` (the ArtemsHunts 1.4.X pattern, avoids
-> a custom usage). **OPEN RISK (our `docs/tools/spider-skeleton-tpac-tools.md` line 341):** compiled animation-clip
-> *wrappers* normally come from the Kit's import flow — a blind copy of loose `_anm.tpac` *may* come up silent
-> in-game ("action set not found" / T-pose). To be tested empirically; fallback = the de-risked ADOD-reuse above.
+> **Self-contained clip consolidation — DONE (2026-06-06/08).** LOTRLOME's `elephant_harad_armor_01_geo.tpac`
+> carries `elephant_skeleton`. The clip set (**31 `*_anm.tpac`** + **4 `elephant_anims_all_*_geo.tpac`**, 35 total)
+> was copied to `LOTRLOME_Armory/Assets/creature/elephant/animations/`. The ADOD `as_elephant` action-set block
+> was ported to `action_sets.xml` (2026-06-08, same pattern as `as_spider`). Monster still points at `as_elephant`
+> (ADOD id) + `monster_usage="elephant"` — next step: rename to `as_war_elephant` + `war_elephant` usage when
+> authoring the full TAOM-owned action-set with TAOM clip names.
 >
 > **CREW / HOWDAH (the multi-troop war elephant) — researched, not built.** How ADOD puts a *crew* of AI archers on
 > the elephant's back (a `UsableMachine` howdah with `StandingPoint` seats, per-tick frame-glued to the elephant's
 > neck point, crew force-spawned per seat) + the 4 v1.4.5 API drifts a TAOM port must fix:
 > **[howdah-crew-mechanism.md](elephant/howdah-crew-mechanism.md).** This is a separate, larger sub-feature to
-> sequence after the single-rider trample is confirmed.
+> sequence after the single-rider trample is confirmed. **Single-rider trample is now confirmed (2026-06-08).**
 >
 > **Scope — this is a *standard* war elephant, NOT the giant mumakil / Oliphaunt.** A normal-scale ridden mount
 > (one Harad crewman rides it). TAOM already represents the mumakil separately (the existing `mumak_rider` troop
@@ -75,6 +73,38 @@ architecture on the v1.4.5 API.
 **Graceful degradation (important):** the attack action codes are `act_war_elephant_attack_1..3`, defined in the
 (not-yet-authored) 1.4.5 action-set. If they're absent they resolve to `act_none` — the attack **animation** is
 skipped but the **trample damage + knockdown still land**. So the gameplay works before the animations exist.
+
+### Action-sets deployment crash history (2026-06-08)
+
+Two crashes were encountered when deploying the elephant action-set self-contained inside LOTRLOME_Armory
+(without ADOD_Beasts). Both trace to the same architecture finding about how Bannerlord loads animation data.
+
+#### Core finding: `action_sets` is a native-only data type
+
+- `GetMergedXmlForNative` iterates `XmlResource.MbprojXmls` — populated from `project.mbproj` `<file>` entries only.
+- `GetMergedXmlForManaged` iterates `XmlResource.XmlInformationList` — populated from `SubModule.xml` `<XmlNode>` entries only.
+- These are **completely separate pipelines** with no overlap.
+- `action_sets` is **native-only**: processed exclusively through `project.mbproj → GetMergedXmlForNative → C++ animation engine`.
+- `SubModule.xml` `<XmlName id="action_sets" ...>` entries are **meaningless** — vanilla `Native/SubModule.xml` has **zero** action_sets entries. Any LOTRLOME action_sets XmlNode in SubModule.xml was never doing anything.
+- The correct pattern (confirmed by the spider precedent): merge all action_sets for a module into its **single** `soln_action_sets` file registered in `project.mbproj`.
+
+#### Crash #3 — `KeyNotFoundException` at startup (`MBObjectManager.MergeElements`)
+
+**Symptom:** Game crashed ~17.6s into startup (`System.Collections.Generic.KeyNotFoundException` in `MBObjectManager.MergeElements` during `Module.CreateProcessedActionSetsXMLForNative`).
+
+**Root cause:** Adding `action_sets_elephant.xml` as a **second** `soln_action_sets` entry in `project.mbproj` caused `MergeTwoXmls` to be called with `element1` = the fully-accumulated action_sets from ALL previous modules (Native + SandBox + Alliance.Wargs + LOTRLOME's main 60K-line `action_sets.xml`). `MergeElements` builds a dictionary from `element1`'s children keyed on `elementSchema[GetFullXPathOfElement(element3)]` — if any child in the accumulated `element1` has an XPath not present in the action_sets XSD schema → `KeyNotFoundException`.
+
+**Fix:** Remove the second `soln_action_sets` entry. Merge the elephant action_sets block into LOTRLOME's existing single `action_sets.xml` (no second `MergeElements` call).
+
+#### Crash #4 — `AccessViolationException` in `Skeleton.TickAnimations` (thumbnail render)
+
+**Symptom:** Game loaded but crashed when the party/character screen tried to render a portrait thumbnail for a troop with the elephant in its Horse slot — `System.AccessViolationException` in `Skeleton.TickAnimations`, called from `CharacterSpawner.SpawnMount`.
+
+**Root cause:** After removing the second `soln_action_sets` entry (Crash #3 fix), the elephant action_sets were no longer registered in the **native animation engine** at all (they'd been dropped entirely, not yet merged into the main file). When the thumbnail system created an elephant skeleton and called `Skeleton.TickAnimations`, no animations were registered for `elephant_skeleton` → AV in native code.
+
+**Fix:** Merge the three elephant action_set definitions (`as_elephant`, `as_elephant_town_and_village`, `as_elephant_map`) into LOTRLOME's main `action_sets.xml` (registered as the single `soln_action_sets` entry in `project.mbproj`). The native engine then registers `as_elephant` on load → `TickAnimations` finds a valid animation state → no AV.
+
+**Resolution (2026-06-08):** Both crashes fixed. Elephant thumbnail renders correctly; elephants spawn and fight in battle (confirmed by screenshot). The standalone `ModuleData/Animations/action_sets_elephant.xml` still exists as a reference copy but is not registered anywhere — the live entries are the appended block at the bottom of `action_sets.xml`.
 
 ### Remaining seams (need the Modding Kit / Blender / you)
 
@@ -338,11 +368,11 @@ files are data/assets:
 | Component | Path | Status |
 |-----------|------|--------|
 | Mesh + skeleton tpac | `LOTRLOME_Armory/Assets/creature/elephant/mesh/elephant_harad_armor_01_geo.tpac` (+ textures) | **imported** (2026-06-05) |
-| Monster XML | `…/LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_elephant.xml` (id `taom_war_elephant`) | TODO — recipe below |
-| Item XML | `…/LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` (Horse item `taom_war_elephant`, mesh `elephant_mesh`) | TODO — recipe below |
-| Action set (1.4.5) | `…/LOTRLOME_Armory/ModuleData/…/action_sets…` (`as_war_elephant`, vanilla-1.4.5 schema, NOT ADOD's) | TODO — gating seam |
-| Animation clips | `LOTRLOME_Armory/Assets/creature/elephant/animations/` (TAOM-authored, Blender → Kit) | TODO — gating seam |
-| Recruitment | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` (Harad pools) | TODO |
+| Monster XML | `…/LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_elephant.xml` (id `taom_war_elephant`) | **deployed** (2026-06-06) |
+| Item XML | `…/LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` (Horse item `taom_war_elephant`, mesh `elephant_mesh`) | **deployed** (2026-06-06) |
+| Action set | `…/LOTRLOME_Armory/ModuleData/action_sets.xml` (`as_elephant` block appended; uses ADOD ids + clip names — pending rename to `as_war_elephant`) | **deployed** (2026-06-08); confirmed in-game |
+| Animation clips | `LOTRLOME_Armory/Assets/creature/elephant/animations/` (35 ADOD tpacs — working; TAOM-authored clips pending) | **copied** (2026-06-06); animates in-game |
+| Recruitment | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` (Harad pools) | TODO — using TEMP harad_militia entry |
 
 ## Reference: ADOD_Beasts
 
@@ -374,9 +404,11 @@ attribution gating required. (Confirmed by the project owner, 2026-06-05.)
 - [x] **C# trample + mission behavior + IoC/SubModule wiring** — DONE (2026-06-05, 1-for-1 ADOD on v1.4.5, build green; 11 service tests).
 - [x] **Mount-lock** (`CanAgentRideMount=false` + `MountDifficulty=999`) folded into `TaomAgentStatCalculateModel` — DONE (2026-06-05).
 - [x] **Mesh + skeleton imported** to `LOTRLOME_Armory/Assets/creature/elephant/` — DONE (2026-06-05, by the project owner).
-- [ ] Author the **Monster + Horse Item** (`taom_war_elephant`) into LOTRLOME_Armory — recipe below; Monster id must stay `taom_war_elephant`.
-- [ ] Author a **1.4.5 action-set** `as_war_elephant` (vanilla-1.4.5 quadruped-mount schema, **NOT** ADOD's 1.2.12 `as_elephant`) — gating seam.
-- [ ] **Build the elephant animations on our FBX** (Blender → Modding-Kit compile) — TAOM-owned, NOT ADOD's 1.2.12 clips. Gating seam for animation.
-- [ ] Author the Harad rider tier(s) + recruitment pool; update `factions.json` if the war elephant is a Harad identity element.
-- [ ] In-game smoke: mount, charge, confirm trample + knockdown (works even pre-animation), confirm AI cannot steal the mount.
-- [ ] Tune damage/gates after in-game testing (current values are ADOD's 1-for-1 baseline — the "improve" step).
+- [x] **Monster + Horse Item** (`taom_war_elephant`) deployed into LOTRLOME_Armory — DONE (2026-06-06). `lotr_monster_elephant.xml` + `taom_war_elephant` Item in `LOTRAOM_horses.xml` + SubModule.xml registrations.
+- [x] **Action-set deployed self-contained** in LOTRLOME_Armory — DONE (2026-06-08). ADOD's `as_elephant` / `as_elephant_town_and_village` / `as_elephant_map` merged into `LOTRLOME_Armory/ModuleData/action_sets.xml` (single `soln_action_sets` entry in `project.mbproj`). Two deployment crashes fixed (see "Action-sets deployment crash history" above).
+- [x] **In-game battle smoke test** — CONFIRMED (2026-06-08). Multiple war elephants with Harad riders spawned, rendered, and fought correctly in battle. ADOD_Beasts NOT in load order.
+- [ ] Revert **TEMP** `Horse`-slot entry in `Main/_Module/ModuleData/troops/troops_harad.xml` — marked `TEMP-ELEPHANT-TEST`, MUST revert before any commit.
+- [ ] Author a **TAOM-owned action-set** `as_war_elephant` (rename from `as_elephant`, bind TAOM-authored clip names) to make the action-set fully TAOM-authored (currently uses ADOD ids / clip names verbatim).
+- [ ] **Build the elephant animations on our FBX** (Blender → Modding-Kit compile) — TAOM-owned, NOT ADOD's 1.2.12 clips. Gating seam for the rename to `as_war_elephant`.
+- [ ] Author the actual Harad rider tier(s) + recruitment pool (currently testing via TEMP harad_militia entry); update `factions.json` if the war elephant is a Harad identity element.
+- [ ] Tune damage/gates after further in-game testing (current values are ADOD's 1-for-1 baseline — the "improve" step).
