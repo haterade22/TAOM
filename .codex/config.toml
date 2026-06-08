@@ -1,23 +1,24 @@
-# TAOM — Codex acts as independent reviewer/verifier
 model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
 project_doc_max_bytes = 65536
-
 sandbox_mode = "workspace-write"
 approval_policy = "on-failure"
 
 [shell_environment_policy]
 inherit = "all"
 
+[shell_environment_policy.set]
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"
+
 [mcp_servers.filesystem]
 command = "npx"
 args = [
-  "-y",
-  "@modelcontextprotocol/server-filesystem",
-  "C:\\Users\\mikew\\source\\repos\\TAOM",
-  "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",
-  "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBoxCore\\ModuleData",
-  "E:\\Decompiled_Bannerlord"
+    "-y",
+    "@modelcontextprotocol/server-filesystem",
+    'C:\Users\mikew\source\repos\TAOM',
+    'E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\SandBox\ModuleData',
+    'E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\SandBoxCore\ModuleData',
+    'E:\Decompiled_Bannerlord',
 ]
 
 [mcp_servers.git]
@@ -26,7 +27,30 @@ args = ["mcp-server-git"]
 
 [mcp_servers.ilspy]
 command = "python"
-args = ["-m", "ilspy_mcp_server"]
+args = [
+    "-m",
+    "ilspy_mcp_server",
+]
 
 [mcp_servers.ilspy.env]
 ILSPY_PATH = "ilspycmd"
+
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/"
+
+[mcp_servers.serena]
+command = "uvx"
+args = [
+    "--from",
+    "git+https://github.com/oraios/serena",
+    "serena",
+    "start-mcp-server",
+    "--context",
+    "ide-assistant",
+    "--project",
+    "c:/Users/mikew/source/repos/TAOM",
+]
+
+[mcp_servers.taom-moduledata]
+command = "python"
+args = ["c:/Users/mikew/source/repos/TAOM/tools/taom_mcp_server.py"]

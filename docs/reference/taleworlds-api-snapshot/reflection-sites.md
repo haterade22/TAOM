@@ -42,6 +42,7 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…CustomBattle.CustomBattleSideVM` | `OnCultureSelection` | method | `CustomBattleSideVM_Constructor_Patch.cs:23` | CustomBattles faction injection |
 | `TaleWorlds.MountAndBlade.Mission` | `RegisterBlow` | method | `CustomAttacksUtils.cs:55` | AdvancedCombat custom attacks |
 | `SandBox.GauntletUI.BannerEditor.BannerEditorView` | `RefreshShieldAndCharacter` | method | `BannerEditorView_OnTick_Patch.cs:21` | Banner paste refresh |
+| `SandBox.Objects.Usables.MusicianGroup` | `_trackEvent` | field | `MusicianGroupSuppressionAdapter.cs:9` | Music tavern vanilla SoundEvent release |
 | `…Party.PartyScreenLogic+PartyCommand` | `TotalNumber` | member | `PartyScreenLogic_AddCommand_Patch.cs:71` | SpecialResources transactional spend |
 | `TaleWorlds.Engine.PathReuseCache` | `_store` | field | `PersistentPathCache.cs:149` | EditorCacheRebuild path-cache extract |
 | `…Map.DistanceCache.NavigationCache`1` | `_settlementToSettlementDistanceWithLandRatio` | field | `NavigationCacheAdapter.cs:71` | Distance cache rebuild |
@@ -61,7 +62,7 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…Map.DistanceCache.NavigationCacheElement`1` | `Sort` | method (static) | `NavigationCacheAdapter.cs:101` | Element sort |
 | `…Map.DistanceCache.SandBoxNavigationCache` | `GetSceneXmlCrcValues` | method | `NavigationCacheAdapter.cs:107` | Scene CRC validation |
 
-Status (2026-05-28): **all 32 resolve against installed v1.4.5.**
+Status (2026-06-06): **all 33 resolve against installed v1.4.5.**
 
 ---
 

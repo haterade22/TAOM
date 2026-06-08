@@ -73,6 +73,8 @@ using TAOM.Features.FiefManagement;
 using TAOM.Features.FiefManagement.Hooks;
 using TAOM.Features.SettlementNameplateFade;
 using TAOM.Features.SettlementNameplateFade.Hooks;
+using TAOM.Features.Music;
+using TAOM.Features.Music.Hooks;
 using TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle;
 using BehaviorTreeWrapper;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
@@ -188,7 +190,8 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IOnGetCustomBattleFactions>(),
             IoC.Resolve<IOnGetDefaultTroopOfFormation>(),
             IoC.Resolve<ISideCommanderFilter>(),
-            logger);
+            logger,
+            IoC.Resolve<ICustomBattleMusicContextService>());
 
         _harmony.PatchCategory("Patch21_ShaderPrecompilation");
         ShaderPrecompilationIoC.InitializeHooks(logger);
@@ -481,6 +484,10 @@ public class SubModule : MBSubModuleBase
             // EnableMessengers is OFF (disabled = inert, not absent).
             campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.Messengers.MessengerCampaignBehavior>());
 
+            // Music — campaign runtime feeder only. It captures context snapshots and delegates
+            // playback to IMusicPlaybackService; mission runtime is handled by MusicMissionBehavior.
+            campaignStarter.AddBehavior(IoC.Resolve<MusicCampaignBehavior>());
+
             // CultureMarketplace (#207) — daily injection of LOTRLOME items into town markets
             // keyed by owner culture. No SyncData (stock lives in vanilla Settlement.ItemRoster).
             campaignStarter.AddBehavior(new Features.CultureMarketplace.CultureMarketplaceBehavior(
@@ -537,6 +544,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch39_BanditPartySize");
         _harmony.PatchCategory("Patch40_HideoutDescription");
         _harmony.PatchCategory("Patch45_SpiderTroopSpawn");
+        _harmony.PatchCategory("Patch46_Music");
 
         var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();
         var specResLogger = IoC.Resolve<IModLogger>();
@@ -656,6 +664,7 @@ public class SubModule : MBSubModuleBase
         mission.AddMissionBehavior(new WargMissionBehavior());
         mission.AddMissionBehavior(new SpiderMissionBehavior());
         mission.AddMissionBehavior(new SiegeDismountMissionBehavior());
+        mission.AddMissionBehavior(new MusicMissionBehavior());
         mission.AddMissionBehavior(new MixedFormationsMissionBehavior());
         mission.AddMissionBehavior(new SmartCavalryAIMissionBehavior());
         mission.AddMissionBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());

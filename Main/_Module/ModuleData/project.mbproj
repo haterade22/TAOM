@@ -8,4 +8,5 @@
 	<file id="soln_voice_definitions" name="ModuleData/lotr_uruk_hai_voice_def.xml" type="voice_definitions" />
 	<file id="soln_voice_definitions" name="ModuleData/VoiceDefinitions/LOTR/lotr_warg_voice_def.xml" type="voice_definitions" />
 	<file id="soln_module_sound" name="ModuleData/module_sounds.xml" type="module_sound" />
+	<file id="soln_module_sound" name="ModuleData/taom_music_module_sounds.xml" type="module_sound" />
 </base>

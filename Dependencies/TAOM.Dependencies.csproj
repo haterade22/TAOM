@@ -6,6 +6,8 @@
 		<PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
 		<ModuleId>TAOM.Dependencies</ModuleId>
 		<ModuleName>TAOM.Dependencies</ModuleName>
+		<!-- BuildResources copy targets key on ModuleId, so blank it for compile-only test runs. -->
+		<ModuleId Condition="'$(DisableModuleCopy)' == 'true'"></ModuleId>
 		<NoWarn>$(NoWarn);8600;8601;8602;8603;8604;8618;8625;8374;8174</NoWarn>
 		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -31,7 +33,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
 		<PackageReference Include="Harmony.Extensions" Version="3.2.0.77" PrivateAssets="all" />
 		<PackageReference Include="BUTR.Harmony.Analyzer" Version="1.0.1.50" PrivateAssets="all" />
 
@@ -59,7 +61,7 @@
 		<PackageReference Include="Bannerlord.MCM" Version="5.11.4" />
 	</ItemGroup>
 
-	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">
+	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules" Condition="'$(DisableModuleCopy)' != 'true'">
 		<MakeDir Directories="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" />
 		<MakeDir Directories="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" />
 		<Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" SkipUnchangedFiles="true" />

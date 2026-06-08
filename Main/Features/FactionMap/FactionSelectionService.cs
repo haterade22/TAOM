@@ -90,6 +90,7 @@ public class FactionSelectionService : IFactionSelectionService
             Description = faction.Description,
             Playable = faction.Playable,
             HasCulture = !string.IsNullOrEmpty(faction.GameFaction),
+            CultureId = faction.GameFaction ?? "",
             Side = faction.Side ?? "neutral",
             Difficulty = faction.Difficulty,
             DifficultyText = FormatDifficultyText(faction.Difficulty),

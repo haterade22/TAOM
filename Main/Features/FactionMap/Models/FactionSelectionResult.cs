@@ -7,6 +7,7 @@ public class FactionSelectionResult
     public string Description { get; set; } = "";
     public bool Playable { get; set; }
     public bool HasCulture { get; set; }
+    public string CultureId { get; set; } = "";
     public string Side { get; set; } = "neutral";
     public int Difficulty { get; set; }
     public string DifficultyText { get; set; } = "";

@@ -19,7 +19,7 @@ These are pulled via `<PackageReference>` in `Dependencies/TAOM.Dependencies.csp
 | `Lib.Harmony` | `2.4.2` | `0Harmony.dll` (Harmony 2.x + MonoMod + Cecil + Iced ILRepack'd) |
 | `Bannerlord.UIExtenderEx` | `2.13.1` | `Bannerlord.UIExtenderEx.dll` |
 | `Bannerlord.MCM` | `5.11.4` | `MCMv5.dll` (the MCM API — settings attributes, base classes) |
-| `System.Runtime.CompilerServices.Unsafe` | `6.0.0` | `System.Runtime.CompilerServices.Unsafe.dll` (Harmony dep) |
+| `System.Runtime.CompilerServices.Unsafe` | `4.5.3` | `System.Runtime.CompilerServices.Unsafe.dll` (net472 polyfill; assembly version 4.0.4.1 required by bundled System.Memory) |
 | `Harmony.Extensions` | `3.2.0.77` | Source-only extension methods |
 | `BUTR.Harmony.Analyzer` | `1.0.1.50` | Roslyn analyzer (compile-time only) |
 | `Bannerlord.BuildResources` | `1.1.0.129` | MSBuild tasks for module deployment |
@@ -323,7 +323,7 @@ After a fresh build, `Dependencies/_Module/bin/Win64_Shipping_Client/` should co
 0Harmony.dll                                                  (NuGet — Lib.Harmony)
 Bannerlord.UIExtenderEx.dll                                   (NuGet — Bannerlord.UIExtenderEx)
 MCMv5.dll                                                     (NuGet — Bannerlord.MCM)
-System.Runtime.CompilerServices.Unsafe.dll                    (NuGet — Lib.Harmony transitive)
+System.Runtime.CompilerServices.Unsafe.dll                    (NuGet — net472 polyfill pinned for bundled System.Memory)
 TAOM.Dependencies.dll                                         (built from our source)
 TAOM.Dependencies.pdb                                         (built from our source)
 Bannerlord.ButterLib.dll                                      (vendored from Workshop 2859232415)

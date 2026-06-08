@@ -6,6 +6,8 @@
 		<PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
 		<ModuleId>$(MSBuildProjectName)</ModuleId>
 		<ModuleName>$(MSBuildProjectName)</ModuleName>
+		<!-- BuildResources copy targets key on ModuleId, so blank it for compile-only test runs. -->
+		<ModuleId Condition="'$(DisableModuleCopy)' == 'true'"></ModuleId>
 		<NoWarn>$(NoWarn);8600;8601;8602;8603;8604;8618;8625</NoWarn>
 		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -128,7 +130,7 @@
 	  <Content Include="_Module\GUI\.vs\VSWorkspaceState.json" />
 	</ItemGroup>
 
-	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules">
+	<Target Name="CopyBinariesToModuleFolder" BeforeTargets="PostBuildCopyToModules" Condition="'$(DisableModuleCopy)' != 'true'">
 		<!-- Create directories if they don't exist -->
 		<MakeDir Directories="$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\" Condition="!Exists('$(ProjectDir)_Module\bin\Gaming.Desktop.x64_Shipping_Client\')" />
 		<MakeDir Directories="$(ProjectDir)_Module\bin\Win64_Shipping_Client\" Condition="!Exists('$(ProjectDir)_Module\bin\Win64_Shipping_Client\')" />

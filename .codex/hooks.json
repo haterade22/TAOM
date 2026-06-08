@@ -1,0 +1,156 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\check-build-before-commit.sh'"
+          },
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\validate-push.sh'"
+          },
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\check-changelog-changed.sh'"
+          },
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\check-claude-files-tracked.sh'"
+          },
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\block-dangerous-git.sh'"
+          },
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\check-moduledata-validation.sh'"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\config-protection.sh'"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\suggest-compact.sh'"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\mcp-health-check.sh'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\notify-csharp-edit.sh'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\notify-test-results.sh'"
+          },
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\mark-verification-run.sh'"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\pre-compact.sh'"
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\post-compact.sh'"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\session-start.sh'"
+          },
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\detect-docs-gaps.sh'"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\log-agent.sh'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\check-changelog-updated.sh'"
+          },
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\check-deep-review.sh'"
+          },
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\check-verification-evidence.sh'"
+          },
+          {
+            "type": "command",
+            "command": "'D:\\documents\\GitHub\\TAOM\\.codex\\hooks\\session-stop.sh'"
+          }
+        ]
+      }
+    ]
+  }
+}

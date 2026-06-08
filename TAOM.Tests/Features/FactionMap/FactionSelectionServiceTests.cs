@@ -55,6 +55,7 @@ public class FactionSelectionServiceTests
         Assert.AreEqual("Kingdom of Gondor", result.FactionName);
         Assert.IsTrue(result.Playable);
         Assert.IsTrue(result.HasCulture);
+        Assert.AreEqual("gondor", result.CultureId);
         Assert.AreEqual("free", result.Side);
         Assert.AreEqual(2, result.Difficulty);
         Assert.AreEqual("faction_gondor", result.ImageId);

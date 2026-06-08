@@ -55,6 +55,8 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "RegisterBlow", "Method", "CustomAttacksUtils.cs:55")]
     // --- BannerColorPersistence banner-paste (BannerEditorView_OnTick_Patch.cs) ---
     [DataRow("SandBox.GauntletUI.BannerEditor.BannerEditorView", "BannerEditorView", "RefreshShieldAndCharacter", "Method", "BannerEditorView_OnTick_Patch.cs:21")]
+    // --- Music tavern suppression (MusicianGroupSuppressionAdapter.cs) ---
+    [DataRow("SandBox.Objects.Usables.MusicianGroup", "MusicianGroup", "_trackEvent", "Field", "MusicianGroupSuppressionAdapter.cs:9")]
     // --- SpecialResources transactional spend (PartyScreenLogic_AddCommand_Patch.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.Party.PartyScreenLogic+PartyCommand", "PartyCommand", "TotalNumber", "Member", "PartyScreenLogic_AddCommand_Patch.cs:71")]
     // --- EditorCacheRebuild path cache (PersistentPathCache.cs) ---

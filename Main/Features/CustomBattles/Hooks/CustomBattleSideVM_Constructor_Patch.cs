@@ -26,7 +26,7 @@ public static class CustomBattleSideVM_Constructor_Patch
     }
 
     [HarmonyPostfix]
-    public static void Postfix(CustomBattleSideVM __instance)
+    public static void Postfix(CustomBattleSideVM __instance, bool isPlayerSide)
     {
         try
         {
@@ -37,6 +37,7 @@ public static class CustomBattleSideVM_Constructor_Patch
                 typeof(Action<BasicCultureObject>), __instance, _onCultureSelectionMethod);
 
             __instance.FactionSelectionGroup = new TaomFactionSelectionVM(callback);
+            CustomBattleSideVM_OnCultureSelection_Patch.RegisterSide(__instance, isPlayerSide);
             _logger?.LogInfo($"[CustomBattles] Injected TaomFactionSelectionVM with {__instance.FactionSelectionGroup.Factions.Count} factions");
 
             var initialFaction = __instance.FactionSelectionGroup.SelectedItem?.Faction;

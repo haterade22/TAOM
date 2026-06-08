@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TaleWorlds.Core;
 using TAOM.Core.Logging;
+using TAOM.Features.Music;
 
 namespace TAOM.Features.CharacterCreation.Hooks;
 
@@ -30,6 +31,17 @@ public static class CharacterCreationContent_SetSelectedCulture_Patch
         catch (Exception ex)
         {
             try { IoC.Resolve<IModLogger>()?.LogWarning($"[Patch29-CCBodyProperties] failed: {ex.Message}"); } catch { }
+        }
+
+        try
+        {
+            var musicContext = IoC.Resolve<ICharacterCreationMusicContextService>();
+            musicContext?.ConfirmCulture(culture.StringId);
+            CharacterCreationMusicSmokeTrace.CultureConfirmed(culture.StringId);
+        }
+        catch (Exception ex)
+        {
+            try { IoC.Resolve<IModLogger>()?.LogWarning($"[Patch46-Music] character creation culture signal failed: {ex.Message}"); } catch { }
         }
     }
 }

@@ -8,12 +8,14 @@
   <ModuleCategory value="Singleplayer"/>
   <ModuleType value="Community" />
   <DependedModules>
+    <DependedModule Id="TAOM.Dependencies" />
     <DependedModule Id="Native" />
     <DependedModule Id="SandBoxCore" />
     <DependedModule Id="Sandbox" />
     <DependedModule Id="CustomBattle" />
   </DependedModules>
   <DependedModuleMetadatas>
+    <DependedModuleMetadata id="TAOM.Dependencies" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.4.5.*" />
     <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />

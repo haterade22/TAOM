@@ -50,6 +50,7 @@ using TAOM.Features.MissionDiagnostic;
 using TAOM.Features.CrashReport;
 using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.SettlementNameplateFade;
+using TAOM.Features.Music;
 
 namespace TAOM;
 
@@ -113,6 +114,7 @@ public static class IoC
         CrashReportIoC.RegisterCrashReportFeature(container);
         BattleLoadDiagnosticsIoC.RegisterBattleLoadDiagnosticsFeature(container);
         NameplateFadeIoC.RegisterSettlementNameplateFadeFeature(container);
+        MusicIoC.RegisterMusicFeature(container);
 
         _container = container;
 

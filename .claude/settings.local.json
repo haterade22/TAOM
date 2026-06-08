@@ -42,7 +42,10 @@
       "PowerShell(./build.ps1 -RunTests 2>&1)",
       "PowerShell(dotnet build Main/TAOM.csproj -c Debug -p:DisableModuleCopy=true --verbosity quiet 2>&1)",
       "PowerShell(dotnet test TAOM.Tests/TAOM.Tests.csproj -c Debug --no-restore --verbosity quiet 2>&1)",
-      "PowerShell(dotnet test TAOM.Tests/TAOM.Tests.csproj -c Debug -p:DisableModuleCopy=true --verbosity quiet 2>&1)"
+      "PowerShell(dotnet test TAOM.Tests/TAOM.Tests.csproj -c Debug -p:DisableModuleCopy=true --verbosity quiet 2>&1)",
+      "PowerShell([System.Net.NetworkCredential]::new\\('', \\(Get-StoredCredential -Target \"git:https://github.com\" -ErrorAction SilentlyContinue\\)?.Password ?? ''\\).Password | ForEach-Object { if \\($_\\) { \"Cred found\" } else { \"No cred\" } })",
+      "PowerShell(ilspycmd $dll -t SandBox.MusicBehavior 2>&1)",
+      "PowerShell($dll = \"A:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Mount & Blade II Bannerlord\\\\Modules\\\\SandBox\\\\bin\\\\Win64_Shipping_Client\\\\SandBox.dll\")"
     ],
     "additionalDirectories": [
       "E:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\SandBox\\ModuleData",

@@ -2,6 +2,7 @@ using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TAOM.Features.FactionMap.Models;
 using TAOM.Features.FactionMap.Widgets;
 
 namespace TAOM.Features.FactionMap.ViewModels;
@@ -13,6 +14,7 @@ public class FactionSelectionVM : ViewModel
     private readonly IFactionSelectionService _selectionService;
     private readonly IFactionHoverService _hoverService;
     private readonly ICultureResolverService _cultureResolver;
+    private readonly Action<string> _onCulturePreviewSelected;
     private string _selectedRegionName = "";
     private string _title = "Choose your Realm";
     private string _selectedFactionName = "";
@@ -40,13 +42,15 @@ public class FactionSelectionVM : ViewModel
         IFactionSelectionService selectionService,
         IFactionHoverService hoverService,
         ICultureResolverService cultureResolver,
-        ILandmarkService landmarkService)
+        ILandmarkService landmarkService,
+        Action<string> onCulturePreviewSelected = null)
     {
         _onCultureSelected = onCultureSelected;
         _onPreviousStage = onPreviousStage;
         _selectionService = selectionService;
         _hoverService = hoverService;
         _cultureResolver = cultureResolver;
+        _onCulturePreviewSelected = onCulturePreviewSelected;
 
         FactionTraits = new MBBindingList<FactionTraitItemVM>();
         FactionBonuses = new MBBindingList<FactionBonusItemVM>();
@@ -113,6 +117,7 @@ public class FactionSelectionVM : ViewModel
         _selectedRegionName = regionName;
         var result = _selectionService.SelectRegion(regionName);
         FactionDisplayHelper.ApplyResult(this, result);
+        SignalCulturePreview(result);
     }
 
     public void ExecuteConfirm()
@@ -144,5 +149,20 @@ public class FactionSelectionVM : ViewModel
         base.OnFinalize();
         _hoverService.Reset();
         FactionDisplayHelper.Finalize(this);
+    }
+
+    private void SignalCulturePreview(FactionSelectionResult result)
+    {
+        if (_onCulturePreviewSelected == null ||
+            result == null ||
+            !result.Found ||
+            !result.Playable ||
+            !result.HasCulture ||
+            string.IsNullOrWhiteSpace(result.CultureId))
+        {
+            return;
+        }
+
+        _onCulturePreviewSelected(result.CultureId);
     }
 }

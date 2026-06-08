@@ -114,7 +114,9 @@ public class FiefHubCampaignBehaviorTests
         if (source == null)
             Assert.Inconclusive("FiefHubCampaignBehavior.cs not found — run from repo root");
 
-        StringAssert.Contains(source, "starter.AddGameMenu(\n            \"fief_hub\"",
+        var normalizedSource = source.Replace("\r\n", "\n");
+
+        StringAssert.Contains(normalizedSource, "starter.AddGameMenu(\n            \"fief_hub\"",
             "Must add the 'fief_hub' game menu via starter.AddGameMenu.");
         StringAssert.Contains(source, "\"fief_hub_prev\"",
             "Must register the 'previous fief' menu option.");

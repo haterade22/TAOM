@@ -5,6 +5,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.GauntletUI.Data;
 using TAOM.Core.Logging;
+using TAOM.Features.Music;
 using TAOM.Features.FactionMap.ViewModels;
 using TAOM.Features.FactionMap.Widgets;
 
@@ -112,7 +113,8 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
                 _selectionService,
                 _hoverService,
                 _cultureResolver,
-                _landmarkService);
+                _landmarkService,
+                OnFactionMapCultureSelected);
 
             if (_originalDataSource != null)
             {
@@ -138,5 +140,21 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
     {
         _factionVM = null;
         _originalDataSource = null;
+    }
+
+    private void OnFactionMapCultureSelected(string cultureId)
+    {
+        if (string.IsNullOrWhiteSpace(cultureId))
+            return;
+
+        try
+        {
+            IoC.Resolve<ICharacterCreationMusicContextService>()?.SelectCulture(cultureId);
+            CharacterCreationMusicSmokeTrace.CultureSelected(cultureId, "faction_map_region_selected");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[Patch46-Music] faction map selected-culture signal failed: {ex.Message}");
+        }
     }
 }
