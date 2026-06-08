@@ -2,6 +2,19 @@
 
 ## 2026-06-08
 
+### chore(tooling): generator robustness fixes + Morannon RCA closeout
+
+Three follow-ups from the `/deep-review` of the Morannon armor + troop tree work:
+
+- **`tools/generate_mordor_armor.py`** — `apply()` hardened with three robustness fixes flagged by the tooling-correctness agent:
+  - **Idempotent section header.** Guarded with `if section_marker in original_content: section_comment = ""`. Re-running `--apply` no longer re-injects the "KEYforce Mordor armor" comment block. Verified: re-apply on already-populated XMLs leaves exactly one header per file.
+  - **CRLF preservation.** Added `newline=""` to both read and write `open()` calls. Round-trips file bytes verbatim on any platform (was previously safe only on Windows native Python).
+  - **`.bak` sidecar before in-place overwrite.** Each apply writes `<filepath>.bak` containing the pre-mutation content before writing the new content. The Armory is not git-tracked, so this is the only recovery path for a corrupted write.
+- **5 mordor Armory XMLs** (`head/body/shoulder/arm/leg_armors.xml` under `LOTRLOME_Armory/.../mordor/`) — removed the historical orphan "KEYforce Mordor generic Orc armor" comment block left over from a prior orc-pool apply; the current Morannon-era header now stands alone. Item counts and ref integrity unchanged (validator + XML well-formedness PASS).
+- **RCA written** at [`docs/reviews/rca-morannon-2026-06-08.md`](docs/reviews/rca-morannon-2026-06-08.md). Documents the 4 deep-review findings (3 fixed, 1 documented-and-dropped) plus the per-agent miss analysis. The data-flow agent's "missing `LOTRLOME_Armory` DependedModule" finding turned out to be intentional project policy (declaring it breaks the Bannerlord editor) — memorialized as `feedback_no_depended_module_for_lotrlome_armory.md` so future deep-reviews drop the false positive.
+
+No game-runtime change. Generator output is byte-identical except for the dedup'd comment header and CRLF preservation.
+
 ### feat(troops): KEYforce Morannon troop tree (race=orc, T2→T6) — 10 troops, recruitable
 
 Authored the Black Gate garrison troop line per `lotraom-assets/tools/mordor_armor_and_troops.md` lines 544–591, equipped in the freshly-shipped `sk_md_mor_*` armor (commit `ae2313e`):

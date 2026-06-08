@@ -511,10 +511,11 @@ def apply(armory_base: str):
             print(f"ERROR: {filepath} not found", file=sys.stderr)
             continue
 
-        with open(filepath, "r", encoding="utf-8") as f:
-            content = f.read()
+        # newline="" preserves CRLF (or whatever the file uses) round-trip on any platform.
+        with open(filepath, "r", encoding="utf-8", newline="") as f:
+            original_content = f.read()
 
-        existing_ids = {item.id for item in items if f'id="{item.id}"' in content}
+        existing_ids = {item.id for item in items if f'id="{item.id}"' in original_content}
         new_items = [i for i in items if i.id not in existing_ids]
         grand_skipped += len(existing_ids)
 
@@ -528,22 +529,35 @@ def apply(armory_base: str):
 
         new_xml = "\n\n".join(generate_item_xml(item) for item in new_items)
         closing_tag = "</Items>"
-        if closing_tag not in content:
+        if closing_tag not in original_content:
             print(f"ERROR: {closing_tag} not found in {filepath}", file=sys.stderr)
             continue
 
-        section_comment = (
-            "\n    <!-- ============================================================== -->\n"
-            "    <!--  KEYforce Mordor armor: orc pool + Morannon sub-line           -->\n"
-            "    <!--  (sk_gn_orc_*, sk_md_orc_*, sk_md_mor_*)                       -->\n"
-            "    <!-- ============================================================== -->\n\n"
-        )
-        content = content.replace(closing_tag, f"{section_comment}{new_xml}\n\n{closing_tag}")
+        # Idempotent section comment: if the marker line is already present
+        # (prior apply run injected it), skip the header block and just append
+        # the new items. Otherwise emit the comment block once.
+        section_marker = "KEYforce Mordor armor"
+        if section_marker in original_content:
+            section_comment = ""
+        else:
+            section_comment = (
+                "\n    <!-- ============================================================== -->\n"
+                "    <!--  KEYforce Mordor armor: orc pool + Morannon sub-line           -->\n"
+                "    <!--  (sk_gn_orc_*, sk_md_orc_*, sk_md_mor_*)                       -->\n"
+                "    <!-- ============================================================== -->\n\n"
+            )
+        new_content = original_content.replace(closing_tag, f"{section_comment}{new_xml}\n\n{closing_tag}")
 
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(content)
+        # Backup-before-write: the Armory is not git-tracked, so an unintended
+        # corruption is unrecoverable without a sibling .bak.
+        bak_path = filepath + ".bak"
+        with open(bak_path, "w", encoding="utf-8", newline="") as f:
+            f.write(original_content)
 
-        print(f"    -> wrote {len(new_items)} items to {filepath}")
+        with open(filepath, "w", encoding="utf-8", newline="") as f:
+            f.write(new_content)
+
+        print(f"    -> wrote {len(new_items)} items to {filepath} (backup: {bak_path})")
         grand_added += len(new_items)
 
     print(f"\nDone. Added {grand_added} new items, skipped {grand_skipped} already present.")
