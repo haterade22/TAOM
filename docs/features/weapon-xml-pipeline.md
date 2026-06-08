@@ -2,6 +2,8 @@
 
 Project-agnostic FBX -> 4-XML weapon-build automation. Replaces the manual workflow of editing four separate files (in three different formats) every time a new weapon mesh ships.
 
+> **Authoring by hand instead?** See [weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md) — the manual Step A–Z guide for the same four files. Prefer the manual workflow when pieces are **shared / interchangeable** (e.g. 8 spear+polearm heads across 3 shafts), which this one-weapon-per-manifest-entry pipeline can't express without redundant duplicate pieces. The manual guide also documents the per-piece schema, the `bo_` collision convention, and the **bows/shields-cannot-use-decimals** datatype rule.
+
 ## Overview
 
 `tools/build_weapon_xml.py` reads a small XML manifest describing one or more weapons, optionally cross-checks against an FBX file, and emits idempotent edits across the four weapon-system files in a Bannerlord module's `ModuleData/`:

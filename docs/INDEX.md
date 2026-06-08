@@ -59,7 +59,8 @@
 - [gondor-armor-revamp](features/gondor-armor-revamp.md) — Gondor armor authoring + roster swap (issue #99)
 - [gondor-ithilien-ranger](features/gondor-ithilien-ranger.md) — Ithil Guard conditional + Ranger line
 - [multi-culture-armor-revamp](features/multi-culture-armor-revamp.md) — Mordor/Isengard/Dol Guldur/Erebor/Rhun armor pass (issue #211)
-- [weapon-xml-pipeline](features/weapon-xml-pipeline.md) — weapon XML generation + rebalancing
+- [weapon-xml-pipeline](features/weapon-xml-pipeline.md) — weapon XML generation + rebalancing (automated)
+- [weapon-creation-workflow](ai-includes/weapon-creation-workflow.md) — manual Step A–Z guide: FBX → tpac → 4 XML files → validate → in-game (bows/shields = no decimals)
 - [dale](features/dale.md) — Dale culture authoring (armor, troops, Lake-Town recruitment override) — proof-of-life for full-culture authoring
 - [tournament-armor-assignment](features/tournament-armor-assignment.md) — per-participant culture armor in TaomTournamentModel
 - See also: CLAUDE.md "Equipment & Armory" for canonical-folder table per item-ID prefix

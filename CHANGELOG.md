@@ -2,6 +2,12 @@
 
 ## 2026-06-08
 
+### docs(weapons): manual weapon-creation workflow + Dale weapon set authored
+
+Authored the full Dale (Culture.sturgia) weapon set into LOTRLOME_Armory (live files, not in repo): 30 crafting pieces (3 swords, 3 one-handed axes, 1 two-handed axe, 2 spears, 6 polearm heads, 3 shared shafts) registered across `LOTRLOME_crafting_pieces.xml`, `weapon_descriptions.xslt` (7 categories incl. couchable/bracing/pike for the long polearms), `crafting_templates.xslt` (5 categories), and 15 `<CraftedItem>` presets + 2 single-piece bows in `LOTRAOM_weapons.xml`. Mesh + `bo_` collision names pulled authoritatively from the tpac; all references validated. Polearm-head `bo_` collision meshes wired to predicted names pending artist delivery. Bow `weapon_length` fixed to integer (`unsignedInt` schema rejects decimals).
+
+New doc [docs/ai-includes/weapon-creation-workflow.md](docs/ai-includes/weapon-creation-workflow.md) — manual Step A–Z guide (FBX → editor import → tpac name extraction → 4 XML files → validation → in-game smoke test). Documents the schema for each piece type, the `bo_` collision convention, the brace/couch/pike registration, and the **bows/shields-cannot-use-decimals** datatype rule (single-piece `<Item>` weapon stats are `unsignedInt`; crafting-piece `length`/`blade_length`/`blade_width` are float). Registered in `docs/INDEX.md`; complements the automated [weapon-xml-pipeline](docs/features/weapon-xml-pipeline.md).
+
 ### docs(doc-graph): wire /doc-graph into the discoverability surfaces
 
 Registered the doc-graph tool (shipped 820eda7) in every place a future reader looks, closing the agent-facing gap.
