@@ -80,7 +80,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_spear_b" />
+                <equipment slot="Item0" id="Item.dale_spear_a" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
@@ -161,7 +161,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_halberd_b" />
+                <equipment slot="Item0" id="Item.dale_poleaxe_a" />
                 <equipment slot="Item1" id="Item.dale_sword_a" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
@@ -294,7 +294,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_halberd_b" />
+                <equipment slot="Item0" id="Item.dale_poleaxe_a" />
                 <equipment slot="Item1" id="Item.dale_sword_a" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
@@ -339,7 +339,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_halberd_b" />
+                <equipment slot="Item0" id="Item.dale_halberd_a" />
                 <equipment slot="Item1" id="Item.dale_sword_a" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b03" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b03" />
@@ -348,7 +348,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_halberd_b" />
+                <equipment slot="Item0" id="Item.dale_poleaxe_a" />
                 <equipment slot="Item1" id="Item.dale_sword_a" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b03" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b03" />
@@ -391,7 +391,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_halberd_b" />
+                <equipment slot="Item0" id="Item.dale_halberd_a" />
                 <equipment slot="Item1" id="Item.dale_sword_a" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b04" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b04" />
@@ -441,7 +441,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_spear_b" />
+                <equipment slot="Item0" id="Item.dale_spear_a" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a02" />
                 <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a02" />
@@ -851,7 +851,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.dale_sword_b" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
-                <equipment slot="Item2" id="Item.dale_winged_spear_a" />
+                <equipment slot="Item2" id="Item.dale_spear_b" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a01" />
                 <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a01" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a01" />
@@ -861,7 +861,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.dale_sword_b" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
-                <equipment slot="Item2" id="Item.dale_war_axe_b" />
+                <equipment slot="Item2" id="Item.dale_war_axe_a" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b01" />
                 <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b01" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b01" />
@@ -898,7 +898,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.dale_sword_a" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
-                <equipment slot="Item2" id="Item.dale_winged_spear_b" />
+                <equipment slot="Item2" id="Item.dale_winged_spear_a" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a02" />
                 <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a02" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a02" />
@@ -906,9 +906,9 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a02" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_war_axe_c" />
+                <equipment slot="Item0" id="Item.dale_war_axe_b" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
-                <equipment slot="Item2" id="Item.dale_halberd_b" />
+                <equipment slot="Item2" id="Item.dale_spear_b" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b02" />
                 <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b02" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b02" />
@@ -945,7 +945,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.dale_sword_a" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
-                <equipment slot="Item2" id="Item.dale_halberd_b" />
+                <equipment slot="Item2" id="Item.dale_winged_spear_b" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a03" />
                 <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a03" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a03" />
@@ -955,7 +955,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.dale_sword_a" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
-                <equipment slot="Item2" id="Item.dale_great_axe_a" />
+                <equipment slot="Item2" id="Item.dale_war_axe_c" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b03" />
                 <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b03" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b03" />
@@ -990,7 +990,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.dale_sword_a" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
-                <equipment slot="Item2" id="Item.dale_halberd_b" />
+                <equipment slot="Item2" id="Item.dale_winged_spear_a" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a04" />
                 <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a04" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a04" />
@@ -1049,7 +1049,7 @@
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.dale_sword_b" />
                 <equipment slot="Item1" id="Item.horsemans_heater_shield" />
-                <equipment slot="Item2" id="Item.dale_winged_spear_b" />
+                <equipment slot="Item2" id="Item.dale_winged_spear_a" />
                 <equipment slot="Horse" id="Item.sturgia_horse" />
                 <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b01" />
@@ -1186,7 +1186,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_winged_spear_b" />
+                <equipment slot="Item0" id="Item.dale_winged_spear_a" />
                 <equipment slot="Item1" id="Item.heavy_horsemans_kite_shield" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Horse" id="Item.charger" />
@@ -1198,7 +1198,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a02" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_winged_spear_b" />
+                <equipment slot="Item0" id="Item.dale_winged_spear_a" />
                 <equipment slot="Item1" id="Item.heavy_horsemans_kite_shield" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Horse" id="Item.charger" />
@@ -1249,7 +1249,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_halberd_b" />
+                <equipment slot="Item0" id="Item.dale_winged_spear_b" />
                 <equipment slot="Item1" id="Item.heavy_horsemans_kite_shield" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Horse" id="Item.charger" />
@@ -1298,7 +1298,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_halberd_b" />
+                <equipment slot="Item0" id="Item.dale_winged_spear_b" />
                 <equipment slot="Item1" id="Item.heavy_horsemans_kite_shield" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Horse" id="Item.charger" />
@@ -1347,7 +1347,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b01" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_winged_spear_b" />
+                <equipment slot="Item0" id="Item.dale_spear_b" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b01" />
@@ -1384,7 +1384,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_winged_spear_b" />
+                <equipment slot="Item0" id="Item.dale_winged_spear_a" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b02" />
@@ -1394,7 +1394,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b02" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_winged_spear_b" />
+                <equipment slot="Item0" id="Item.dale_spear_b" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b02" />
@@ -1439,7 +1439,7 @@
                 <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b03" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_winged_spear_b" />
+                <equipment slot="Item0" id="Item.dale_winged_spear_a" />
                 <equipment slot="Item1" id="Item.sturgia_infantry_shield_b" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b03" />
