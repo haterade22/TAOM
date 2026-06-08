@@ -275,9 +275,14 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
 
     // --- Mordor Settlement Mappings ---
     // Two distinct pools by settlement type:
-    //   - Towns (3): canonical Mordor pool with Black Uruks as the rareish elite path (weight 3/10),
-    //                orcs as the common path (weight 4 on orc_recruit), plus 3 specialist tier-2 entries.
-    //   - Castles (8): town pool MINUS Black Uruks (per user spec: BU recruitable in towns only).
+    //   - Towns (3): canonical Mordor pool with Morannon as the dominant elite-orc path (weight 5/15),
+    //                Black Uruks as the rare elite (weight 3), orcs as the common baseline (weight 4),
+    //                plus 3 specialist tier-2 entries.
+    //   - Castles (8): town pool MINUS Black Uruks (per user spec: BU recruitable in towns only);
+    //                  Morannon weight 4 (still > the orc_recruit common baseline tier-wise as elite line).
+    //
+    // Per user direction (2026-06-08): Morannon troops must be MORE plentiful than Black Uruks in Mordor.
+    // Weight 5 for Morannon vs 3 for Black Uruk in towns satisfies that.
     //
     // town_ES2 (Pelgaur / Minas Morgul) has the existing AddSettlementConditional Ithil Guard rule
     // that fires BEFORE this SettlementMap lookup when Gondor owns the town. When Mordor owns
@@ -287,11 +292,12 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
     {
         (string, int)[] townPool =
         {
-            ("mordor_uruk_grunt",   3),  // Black Uruk Grunt — line entry; rareish elite
+            ("mordor_uruk_grunt",   3),  // Black Uruk Grunt — line entry; rare elite
             ("mordor_orc_recruit",  4),  // Orc Recruit — common baseline
             ("mordor_orc_impaler",  1),  // mid-tier orc polearm specialist
             ("mordor_orc_hunter",   1),  // mid-tier orc ranged
             ("mordor_warg_tamer",   1),  // warg cavalry line entry
+            ("morannon_recruit",    5),  // Morannon Recruit — dominant elite-orc (Black Gate garrison)
         };
         AddSettlement("town_ES1", townPool);  // Danustica
         AddSettlement("town_ES2", townPool);  // Pelgaur — falls through Ithil Guard conditional when Mordor-owned
@@ -303,6 +309,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             ("mordor_orc_impaler",  1),
             ("mordor_orc_hunter",   1),
             ("mordor_warg_tamer",   1),
+            ("morannon_recruit",    4),  // Morannon Recruit — elite-orc presence in fortresses
         };
         AddSettlement("castle_ES1", castlePool);  // The Morannon
         AddSettlement("castle_ES2", castlePool);  // Carach Angren
@@ -315,8 +322,8 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
     }
 
     // --- Mordor Culture Fallback ---
-    // Matches the town pool (includes Black Uruks). Safety net for any Mordor settlement not
-    // explicitly mapped above — none expected, but explicit > implicit per simplicity-criterion.md.
+    // Matches the town pool (includes Black Uruks + Morannon). Safety net for any Mordor settlement
+    // not explicitly mapped above — none expected, but explicit > implicit per simplicity-criterion.md.
     private static void InitializeMordorCulture()
     {
         CultureMap["mordor"] = new List<VolunteerChance>
@@ -326,6 +333,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("mordor_orc_impaler",  1),
             new VolunteerChance("mordor_orc_hunter",   1),
             new VolunteerChance("mordor_warg_tamer",   1),
+            new VolunteerChance("morannon_recruit",    5),  // Morannon Recruit — dominant elite-orc
         };
     }
 
@@ -511,11 +519,10 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         // party roster as a humanoid anchor (race dg_uruk) and spawns + fights as the spider Monster via
         // Patch45_SpiderTroopSpawn. Settlement pools feed BOTH player and AI lord recruitment. Deliberately
         // absent from the clan-path pool (InitializeDolGuldurClans) to keep that source clean.
-        // !!! TEMP-SPIDER-TEST-WEIGHT: spider 1 -> 90 for reliable in-battle testing. REVERT to 1 before commit. !!!
-        AddSettlement("town_DG1",   ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 90));
-        AddSettlement("castle_DG1", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 90));
-        AddSettlement("castle_DG2", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 90));
-        AddSettlement("castle_DG3", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 90));
+        AddSettlement("town_DG1",   ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 1));
+        AddSettlement("castle_DG1", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 1));
+        AddSettlement("castle_DG2", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 1));
+        AddSettlement("castle_DG3", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 1));
     }
 
     // --- Dol Guldur Clan Mappings ---
@@ -541,8 +548,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("dg_khamul_shadow_initiate", 2),
             // Giant spider — culture-fallback recruit for any Dol Guldur fief not in the per-settlement
             // map above. Spawns + fights as the spider Monster (Patch45_SpiderTroopSpawn).
-            // !!! TEMP-SPIDER-TEST-WEIGHT: spider 1 -> 90 for reliable in-battle testing. REVERT to 1 before commit. !!!
-            new VolunteerChance("taom_spider_creature", 90)
+            new VolunteerChance("taom_spider_creature", 1)
         };
     }
 

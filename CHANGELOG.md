@@ -2,6 +2,43 @@
 
 ## 2026-06-08
 
+### feat(troops): KEYforce Morannon troop tree (race=orc, T2→T6) — 10 troops, recruitable
+
+Authored the Black Gate garrison troop line per `lotraom-assets/tools/mordor_armor_and_troops.md` lines 544–591, equipped in the freshly-shipped `sk_md_mor_*` armor (commit `ae2313e`):
+
+- **10 new troops** in `troops_mordor.xml`: `morannon_recruit` (T2, `is_basic_troop="true"`) → `morannon_fighter`/`morannon_skirmisher` (T3) → `morannon_warrior`/`morannon_scout` (T4) → `morannon_infantry`/`morannon_spearman`/`morannon_archer` (T5) → `morannon_heavy_infantry`/`morannon_heavy_spearman` (T6). All `race="orc"`, `culture="Culture.mordor"`, `BodyProperty.fighter_orc_mordor`. Skill curves mirror existing Mordor orc curves (`Athletics 30→105`, etc.) with T5 specialist biases (Polearm/Bow/1H) and a T6 step.
+- **Armor:** Arc/Inf/Pik tier-matched Morannon pieces (light→med→heavy progression). Pik line shares Inf bracers per spec; greaves shared across all lines.
+- **Weapons:** existing `wm_mordor_set1_sword/polearm` family + `sm_mordor_shield_small/mid` shields for melee; `hunting_bow`/`composite_bow` + `barbed_arrows`/`bodkin_arrows_a` for archers. (Spec marked weapons TBD; reused the existing Mordor orc weapon pool — same race, consistent visual.)
+- **Lord parties:** 10 new `PartyTemplateStack` entries in `kingdom_hero_party_mordor_template` (Recruit 3–6, line troops 1–4, Heavy variants 0–2). AI Mordor lords now field Morannon alongside Black Uruks + orcs + wargs.
+- **Recruitment** (per user direction: Morannon should be MORE plentiful than Black Uruks in Mordor): `VolunteerRecruitmentService` Mordor pools updated — town pool gains `morannon_recruit` at weight **5** (vs Black Uruk Grunt's 3), castle pool at weight **4**, culture fallback at weight **5**. New town pool weight 10→15, castle pool 7→11, culture 10→15. Test boundary rolls updated (`Danustica` / `TheMorannon` / `MordorCulture`) plus new DataRows covering the morannon roll range.
+
+No save-compat impact (10 additive troops; no existing IDs renamed or deleted). All ref integrity validated via `validate_moduledata.py` (PASS — 5,757 items, 4,520 NPCCharacters cross-checked).
+
+**Build env note:** the deploy-copy step is blocked by a locked `0Harmony.dll` (Bannerlord/Steam open). Close the game to run `dotnet test TAOM.Tests`.
+
+### feat(elephant): functional howdah seat — vanilla detachment auto-assigns archers
+
+Added `TaomHowdahMachine` (UsableMachine) and `TaomHowdahStandingPoint` (StandingPoint) — a clean-room
+v1.4.5 port of ADOD_Beasts' howdah system. The machine entity repositions itself to the elephant's neck
+every frame via `AgentVisuals.GetGlobalStableNeckPoint`; the standing point teleports the seated archer
+each tick. Vanilla detachment auto-assigns harad archers because `GetDetachmentWeightAux` returns 1f —
+no custom crew-spawn code needed. Instantiated by `ElephantMissionBehavior.OnAgentBuild` when the mahout's
+HorseHarness StringId matches `ElephantConfig.HarnessStringId` ("sk_elephant_armor_a"). Prefab:
+`Main/_Module/Prefabs/taom_howdah_agent.xml` (physics cage + script components). Seated animation
+`act_howdah_stand_bow` resolves to `act_none` until the tpac is ported from ADOD — teleport still works.
+
+v1.4.5 API drift fixed vs ADOD source: `GetDescriptionText(WeakGameEntity)→TextObject`,
+`OnUse(Agent, sbyte)`, `TeleportToPosition` (was `SetPosition`), `WorldPosition` ctor,
+`Agent.AIScriptedFrameFlags.None` (nested enum), removed `AgentOnLandFlags`/`SetOnLandState`.
+
+### feat(spider): redesign taom_spider_creature as goblin Cavalry Soldier with horse-slot mount
+
+`taom_spider_creature` rewritten as a goblin Cavalry Soldier (`occupation="Soldier"`,
+`default_group="Cavalry"`, `culture="Culture.dolguldur"`) carrying `Equipment slot="Horse"
+id="Item.spider_mount_a"`. The spider_mount_a item's `<Horse monster="Monster.spider">` drives the
+engine's horse-slot spawn path — no custom spawn interception needed. `SpiderConfig.Enabled=false` gates
+all Patch45 behavior-tree/wield-guard patches so the goblin rider wields weapons normally. VolunteerRecruitmentService weight reverted 90 → 1 at all four DG settlement pools and the culture fallback.
+
 ### feat(armory): KEYforce Morannon armor sub-line (sk_md_mor_*) — 92 items
 
 KEYforce dropped the Morannon armor pack at `…/AssetSources/Mordor/morannon_armors`; the meshes were rendering empty in-game because no `<Item>` definitions existed yet. Spec catalog: `E:\repos\lotraom-assets\tools\mordor_armor_and_troops.md` lines 375–591.

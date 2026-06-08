@@ -1615,8 +1615,8 @@ public class VolunteerRecruitmentServiceTests
     }
 
     // --- Mordor settlement pools ---
-    // Town pool: mordor_uruk_grunt(3) + mordor_orc_recruit(4) + mordor_orc_impaler(1) + mordor_orc_hunter(1) + mordor_warg_tamer(1) = 10
-    // Castle pool: same MINUS Black Uruks — orc_recruit(4) + orc_impaler(1) + orc_hunter(1) + warg_tamer(1) = 7
+    // Town pool: mordor_uruk_grunt(3) + mordor_orc_recruit(4) + mordor_orc_impaler(1) + mordor_orc_hunter(1) + mordor_warg_tamer(1) + morannon_recruit(5) = 15
+    // Castle pool: same MINUS Black Uruks — orc_recruit(4) + orc_impaler(1) + orc_hunter(1) + warg_tamer(1) + morannon_recruit(4) = 11
 
     [TestMethod]
     [DataRow("town_ES1", "mordor_uruk_grunt")]  // Danustica
@@ -1639,7 +1639,7 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    // Town pool boundary rolls — total weight 10
+    // Town pool boundary rolls — total weight 15
     [DataRow(0, "mordor_uruk_grunt")]
     [DataRow(2, "mordor_uruk_grunt")]
     [DataRow(3, "mordor_orc_recruit")]
@@ -1647,9 +1647,11 @@ public class VolunteerRecruitmentServiceTests
     [DataRow(7, "mordor_orc_impaler")]
     [DataRow(8, "mordor_orc_hunter")]
     [DataRow(9, "mordor_warg_tamer")]
+    [DataRow(10, "morannon_recruit")]
+    [DataRow(14, "morannon_recruit")]
     public void GetVolunteerTroopId_Danustica_BoundaryRolls_ReturnExpectedTroop(int roll, string expected)
     {
-        _random.Next(10).Returns(roll);
+        _random.Next(15).Returns(roll);
         var context = new VolunteerContext(
             settlementId: "town_ES1",
             boundSettlementId: null,
@@ -1688,15 +1690,17 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    // Castle pool boundary rolls — total weight 7 (no Black Uruks)
+    // Castle pool boundary rolls — total weight 11 (no Black Uruks; Morannon weight 4)
     [DataRow(0, "mordor_orc_recruit")]
     [DataRow(3, "mordor_orc_recruit")]
     [DataRow(4, "mordor_orc_impaler")]
     [DataRow(5, "mordor_orc_hunter")]
     [DataRow(6, "mordor_warg_tamer")]
+    [DataRow(7, "morannon_recruit")]
+    [DataRow(10, "morannon_recruit")]
     public void GetVolunteerTroopId_TheMorannon_BoundaryRolls_ReturnExpectedTroop(int roll, string expected)
     {
-        _random.Next(7).Returns(roll);
+        _random.Next(11).Returns(roll);
         var context = new VolunteerContext(
             settlementId: "castle_ES1",
             boundSettlementId: null,
@@ -1751,7 +1755,7 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    // Culture pool same as town pool — total weight 10
+    // Culture pool same as town pool — total weight 15
     [DataRow(0, "mordor_uruk_grunt")]
     [DataRow(2, "mordor_uruk_grunt")]
     [DataRow(3, "mordor_orc_recruit")]
@@ -1759,9 +1763,11 @@ public class VolunteerRecruitmentServiceTests
     [DataRow(7, "mordor_orc_impaler")]
     [DataRow(8, "mordor_orc_hunter")]
     [DataRow(9, "mordor_warg_tamer")]
+    [DataRow(10, "morannon_recruit")]
+    [DataRow(14, "morannon_recruit")]
     public void GetVolunteerTroopId_MordorCulture_BoundaryRolls_ReturnExpectedTroop(int roll, string expected)
     {
-        _random.Next(10).Returns(roll);
+        _random.Next(15).Returns(roll);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,

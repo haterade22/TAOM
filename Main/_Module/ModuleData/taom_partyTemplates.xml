@@ -778,6 +778,16 @@
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.mordor_uruk_heavy_archer" />
 			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.mordor_uruk_crossbow" />
 			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.mordor_uruk_heavy_crossbow" />
+			<PartyTemplateStack min_value="3" max_value="6" troop="NPCCharacter.morannon_recruit" />
+			<PartyTemplateStack min_value="2" max_value="5" troop="NPCCharacter.morannon_fighter" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.morannon_skirmisher" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.morannon_warrior" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.morannon_scout" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.morannon_infantry" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.morannon_spearman" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.morannon_archer" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.morannon_heavy_infantry" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.morannon_heavy_spearman" />
 		</stacks>
 	</MBPartyTemplate>
 
