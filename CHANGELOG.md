@@ -2,6 +2,17 @@
 
 ## 2026-06-08
 
+### feat(elephant): Harad war elephant confirmed in-game — action-sets self-contained in LOTRLOME_Armory
+
+War elephants now spawn in battle without ADOD_Beasts in the load order. Multiple elephants with Harad riders confirmed in-game (battle screenshot). Two data-pipeline crashes resolved:
+
+- **Crash #3 — `KeyNotFoundException` at startup (`MBObjectManager.MergeElements`):** Adding `action_sets_elephant.xml` as a second `soln_action_sets` entry in `project.mbproj` triggered `MergeTwoXmls` on the fully-accumulated action_sets element from ALL prior modules. Any child XPath absent from the action_sets XSD → `KeyNotFoundException`. Fix: removed the second entry; merged the three elephant action_set definitions (`as_elephant`, `as_elephant_town_and_village`, `as_elephant_map`) into LOTRLOME's existing single `action_sets.xml` (the spider pattern).
+- **Crash #4 — `AccessViolationException` in `Skeleton.TickAnimations` (thumbnail render):** After removing the separate entry, the elephant action_sets were unregistered in the native animation engine. The party-screen thumbnail for a troop with an elephant in the Horse slot called `CharacterSpawner.SpawnMount` → `Skeleton.TickAnimations` → AV. Fix: same as Crash #3 (action_sets in main file = native engine registers `as_elephant` → TickAnimations finds valid state).
+
+**Architecture finding (affects all future LOTRLOME creature work):** `action_sets` is a **native-only** data type processed exclusively through `project.mbproj → GetMergedXmlForNative`. `SubModule.xml` `<XmlName id="action_sets" ...>` entries are meaningless (vanilla Native module has zero such entries). Correct pattern: one `soln_action_sets` entry per module, all action_sets merged into that file. The comment in `project.mbproj` (previously incorrect "managed path" explanation) was updated to document the KNFE mechanism.
+
+Live files changed (LOTRLOME_Armory, not in repo): `ModuleData/action_sets.xml` (appended), `ModuleData/project.mbproj` (comment fixed), `SubModule.xml` (removed now-meaningless action_sets XmlNode). `docs/features/elephant.md` updated with crash history, architecture finding, and confirmed status.
+
 ### feat(doc-graph): query + audit the docs/ knowledge graph (ADR-010 Phase 5)
 
 Adopted the genuinely-novel subset of the external [graphify](https://github.com/safishamsi/graphify) tool — `explain`/`path` query verbs + god-node/bridge metrics — as a deterministic, offline, pure-stdlib tool over TAOM's own doc-link graph. Issue [#276](https://github.com/haterade22/TAOM/issues/276).

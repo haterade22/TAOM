@@ -13,8 +13,15 @@ The tool is deterministic and offline (reads only the markdown links already in 
 
 ## When to use
 
-- **Navigate** (mid-task, token-cheap): you'd otherwise open several docs to learn how they connect.
-- **Audit** (KB hygiene): periodic check for over-connected hubs, fragile single-link joins, and orphaned docs — like `/skill-stocktake`, but for docs.
+Two modes — **Navigate** (mid-task, token-cheap) and **Audit** (periodic KB hygiene). Concrete triggers:
+
+- Orienting in an unfamiliar subsystem before touching it → `explain X`
+- Checking whether two areas are already documented as related → `path A B --directed`
+- Sizing blast radius before renaming / splitting / deleting a doc → `explain X`
+- After a batch of docs lands (migration, `/knowledge-compile`, feature wave) — did any ship orphaned? → `metrics`
+- Periodic hygiene pass — god nodes / bridges / orphans, like `/skill-stocktake` for docs → `metrics --top 15`
+
+**Not** for full-text search (grep / INDEX.md), C# symbols (Serena), or game-data refs (taom-moduledata MCP). Full use-case table + "when NOT to use it": [docs/features/doc-graph.md](../../../docs/features/doc-graph.md#when-this-is-the-ideal-tool-use-cases).
 
 ## Steps
 

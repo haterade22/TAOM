@@ -70,6 +70,32 @@ None. The tool reads `docs/` directly and takes no config file. Behaviour is con
 - [tools/tests/test_graph_query.py](../../tools/tests/test_graph_query.py) — 17 tests, hermetic (synthetic docs tree in a tempdir; never reads the live `docs/` tree, per memory `feedback_mirror_table_drifts_from_production`). Covers edge extraction (fence/inline-code/non-md/http/fragment handling), footer dedup, eligibility filter, inbound/degrees, `explain`, BFS `path` (directed + undirected + no-path + symmetry), components, **bridges** (the highest-value metric), god-node ranking, orphans, and node resolution (slug/filename/relpath + ambiguity).
 - Run: `python -m unittest discover -s tools/tests -p "test_*.py"`
 
+## When this is the ideal tool (use-cases)
+
+Reach for doc-graph when the question is about the **shape** of the documentation — how docs relate, what's central, what's disconnected — not about their **content** (content search is grep / [INDEX.md](../INDEX.md)). Concretely:
+
+| Situation / trigger | Command | What it gives you |
+|---|---|---|
+| **Orienting in an unfamiliar subsystem** before you touch it — "what docs surround the career system?" | `explain career-system` | The doc's whole neighbourhood (what references it + what it links out to) in ~15 lines — instead of opening 9 docs to reconstruct it. |
+| **"Are these two areas already related?"** before building a feature that spans both | `path A B --directed` | The real link chain, or "no path" — which tells you they're documented in isolation (a genuine gap, or genuinely unrelated). |
+| **Pre-refactor blast radius** — about to rename / move / split / delete a doc | `explain X` | Everything that references X (inbound) = what you'll orphan if you remove it. A **feature doc** that ranks as a god node is a signal it covers too much and wants splitting. |
+| **After a batch of docs lands** (`/knowledge-compile`, a migration, a feature wave) — did any ship disconnected? | `metrics` (orphans) | The docs that exist but nothing links — so no future session or agent will ever find them. |
+| **Periodic KB hygiene** — like `/skill-stocktake`, but for docs | `metrics --top 15` | God nodes (split candidates), bridges (fragile single-link joins), orphans (dead / mis-filed docs) in one pass. |
+| **Finding the front door to a cluster** — "where do I start reading about X?" | `metrics` god-node ranking | The most-referenced doc in an area is its natural entry point. |
+| **A token-conscious subagent** answering "what's related to X?" | `explain X --json` | A compact machine-readable neighbourhood instead of reading X's full doc and chasing its links — the context-budget lever. |
+| **Pre-merge / pre-release cross-link check** | `metrics` (bridges) | `INDEX.md → X` bridges flag docs reachable **only** through the index; if that one entry is ever dropped, X vanishes from navigation. |
+
+These compose: a typical audit is `metrics` → `explain` the worst orphan / god node → act → re-run. See [adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md) for the first real run, which surfaced TAOM's star-topology-around-INDEX.md and 64 isolated docs.
+
+### When it's NOT the right tool
+
+| You actually want… | Use instead |
+|---|---|
+| "Which doc mentions term Z?" (full-text search) | `grep` / [INDEX.md](../INDEX.md) — this is topology, not search (ADR-010 deferred a `search_docs.py` for exactly this). |
+| C# type / method / reference relationships | **Serena** MCP. |
+| Item / troop / culture / party-template references | `tools/taom_query.py` / the taom-moduledata MCP. |
+| "Where's the doc for feature X?" — a one-off lookup | [INDEX.md](../INDEX.md), faster than building the graph. |
+
 ## How to use it
 
 ### Navigate (mid-task, token-cheap)
