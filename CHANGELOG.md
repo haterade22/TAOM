@@ -1,5 +1,18 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-08
+
+### feat(doc-graph): query + audit the docs/ knowledge graph (ADR-010 Phase 5)
+
+Adopted the genuinely-novel subset of the external [graphify](https://github.com/safishamsi/graphify) tool — `explain`/`path` query verbs + god-node/bridge metrics — as a deterministic, offline, pure-stdlib tool over TAOM's own doc-link graph. Issue [#276](https://github.com/haterade22/TAOM/issues/276).
+
+- **Why:** the ADR-010 doc-tooling layer curates + lints the ~300-doc web (INDEX.md, `lint_docs.py`, `build_backlinks.py`) but never let you *interrogate its shape*. `lint_docs` already builds an inbound-reference index and throws it away after orphan detection. This exposes it.
+- **What:** `tools/doc_graph.py` (shared lib — reuses `lint_docs`'s link parser rather than copy-pasting it; `deque` BFS, union-find components, naive bridges) + `tools/graph_query.py` CLI: `explain <doc>` (neighbourhood), `path <a> <b>` (shortest chain, `--directed`), `metrics` (god nodes / bridges / orphans, `--top`/`--summary`/`--json`). `.md` nodes only.
+- **Critical scoping:** most of graphify duplicates TAOM tooling (Serena = C# symbols; `taom_schema` = game-data refs; `lint_docs` = dead-links/orphans) or contradicts ADR-010 (Obsidian/HTML/RAG rejected). **Rejected:** install/tree-sitter/NetworkX, LLM-inferred edges, HTML/D3/Obsidian/Neo4j, the redundant `query` verb, always-loaded MCP, memory-layer ingestion (latter three documented as deferred future phases). No new dependency, no content egress. Review: `docs/reviews/adopt-graphify-2026-06-08.md`.
+- **Repeatable workflow:** codified as the `/doc-graph` skill (+ `docs/features/doc-graph.md` authoritative reference). Sessions invoke the skill; subagents run the CLI directly (`--json`).
+- **First live run paid for itself:** 314 nodes / 490 edges / 70 components / 129 bridges / 64 orphans — surfaced that the KB is a star topology around INDEX.md (most feature docs lack peer cross-links) and 64 docs are fully isolated (e.g. `clan-heraldry.md`). Invisible to grep + `lint_docs`'s feature-only orphan check.
+- **Verification:** `python -m unittest discover -s tools/tests -p "test_*.py"` — 20 new tests, **113 total, 0 failures**. Hermetic synthetic fixtures (never reads the live docs/ tree). `/deep-review` (3 focused agents): 1 MED + 5 LOW, all fixed in-session.
+
 ## 2026-06-07
 
 ### fix(troop-weight): phantom-wounded display across four UI surfaces

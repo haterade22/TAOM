@@ -135,6 +135,7 @@
 - [crash-report](features/crash-report.md) — crash report enrichment
 - [mission-diagnostic](features/mission-diagnostic.md) — first-tick MissionBehavior dump + action-set capture for mod-conflict diagnostics
 - [bannerlord-together-compat](features/bannerlord-together-compat.md) — multiplayer mod compat surface
+- [doc-graph](features/doc-graph.md) — query + audit *this* knowledge graph (`/doc-graph` skill + `tools/graph_query.py`): `explain` a doc's links, `path` between two docs, `metrics` (god nodes / bridges / orphans). [ADR-010](adrs/010-knowledge-base-architecture.md) Phase 5; adopted from [graphify](reviews/adopt-graphify-2026-06-08.md)
 
 ## Architecture Decision Records (canonical project rules)
 

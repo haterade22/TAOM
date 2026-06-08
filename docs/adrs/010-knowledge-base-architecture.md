@@ -36,6 +36,14 @@ Adopt a layered knowledge-base architecture on top of the existing `docs/` tree,
 - No conversion of CHANGELOG.md into wiki form. It stays as a chronological release log.
 - No automated rewriting of existing feature docs by Claude. The `/knowledge-compile` skill is for net-new material in `raw/ → research/`, not for editing canonical feature docs.
 
+### Amendment (2026-06-08): Phase 5 — graph analytics over the link graph
+
+5. **`tools/doc_graph.py` + `tools/graph_query.py` + `/doc-graph` skill** — query and audit the existing doc-link graph. Three verbs: `explain` (a doc's inbound/outbound neighbourhood), `path` (BFS shortest connection chain between two docs), `metrics` (god nodes = degree centrality, bridges = single-edge cluster joins, isolated orphans). Pure stdlib, deterministic, offline — it reuses the `lint_docs.py` link parser (Phase 2) and reads only links that already resolve on disk; no LLM, no new dependency.
+
+This is the adopted-and-scoped subset of the external [graphify](https://github.com/safishamsi/graphify) tool (review: [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md)) — its `explain`/`path` verbs and god-node/bridge metrics, which nothing else in TAOM provides. The rest of graphify was rejected as duplicative (Serena owns C# symbols; `taom_schema` owns game-data refs; Phase 2/3 own dead-link/orphan/backlink) or as already-rejected-here (Obsidian/wikilinks — Alternative 1; docs-site visualization generators — Alternative 2; RAG/vector store — the Decision's "Out of scope" clause; graphify's HTML/D3 + Neo4j export follow the same no-viz rationale). Confidence-tagged `INFERRED` edges, memory-layer ingestion, and MCP exposure are documented as deferred future phases in the feature doc.
+
+**This is NOT the deferred `search_docs.py`** (below). It does not do full-text search — it answers topology questions (`how do these two docs connect`, `which doc is an over-connected hub`, `which link holds two clusters together`) that grep cannot, so it does not reopen the search-engine deferral.
+
 ## Consequences
 
 ### Positive
@@ -132,7 +140,9 @@ Phased rollout, independent commits, stop-anywhere:
 3. **Phase 3 (+2 days)**: ship `tools/build_backlinks.py`. First run regenerates `## Referenced by` footers across ~290 files. Single bot-authored commit reviewed structurally, not line-by-line.
 4. **Phase 4 (when raw material is ready)**: ship `docs/raw/README.md`, `docs/research/README.md`, `tools/compile_research.py`, `.claude/skills/knowledge-compile/`. First test compile drops a sample raw directory in and verifies the output.
 
-A `tools/search_docs.py` (Karpathy's "naive search engine") is **deferred indefinitely**. `Grep` over `docs/` is fast enough; revisit if a real bottleneck emerges.
+5. **Phase 5 (2026-06-08)**: ship `tools/doc_graph.py` + `tools/graph_query.py` + `.claude/skills/doc-graph/` (graph analytics — see the amendment under Decision). Reuses the Phase 2 link parser; no new dependency.
+
+A `tools/search_docs.py` (Karpathy's "naive search engine") is **deferred indefinitely**. `Grep` over `docs/` is fast enough; revisit if a real bottleneck emerges. Note: Phase 5's `graph_query.py` is **not** this — it does graph topology, not full-text search.
 
 ## References
 
