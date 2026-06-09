@@ -34,7 +34,7 @@ This pattern showed up live during exploration: the first Explore agent reviewin
 | Agent | Result |
 |-------|--------|
 | Standards (ADR-002/003/004/005/007, IoC, category registration) | PASS — service takes a primitive `int`; patch delegates the decision; constructor injection of `IRaceManager`; `[HarmonyPatchCategory]` string matches `SubModule.cs`. |
-| Compatibility (vs **installed** v1.4.5 DLLs) | PASS — 10/10 APIs verified. Highest-risk item: the private field is exactly `_match`, so the `___match` injection is live (not null). `EquipmentElement.Invalid = new EquipmentElement(null)`; `EquipmentIndex.Horse=10`/`HorseHarness=11`; `AddEquipmentToSlotWithoutAgent(EquipmentIndex, EquipmentElement)` confirmed public. |
+| Compatibility (vs **installed** v1.4.5 DLLs) | **WRONG on the highest-risk item — caused a post-ship crash (see below).** It verified the field is exactly `_match` (correct) but then asserted `___match` injection was "live (not null)" — false. Harmony strips **three** underscores, so `___match` resolves to a field named `match` (nonexistent) → patch fails to apply → crash on load. Correct is `____match` (four). The other items were right: `EquipmentElement.Invalid = new EquipmentElement(null)`, `EquipmentIndex.Horse=10`/`HorseHarness=11`, `AddEquipmentToSlotWithoutAgent` public. |
 | Efficiency | PASS — `PrepareForMatch` runs once per match; lazy `??=` IoC cache; no allocations/LINQ in the loop. |
 | Completeness | The 3 doc/issue gaps it flagged (feature doc, GitHub issue, CLAUDE.md patch row) are **closed by this documentation pass**. Tests + IoC complete. |
 | Data Flow | PASS — 6 flows, 0 gaps. The two highest-value traces both confirmed: (1) `PrepareForMatch` is the complete chokepoint, `AddRandomClothes` touches only 5–9, nothing re-adds a horse after the postfix; (3) `EquipmentElement.Invalid.Item == null` and `Mission.SpawnAgent` guards mount creation on `Item != null`, so clearing the slot produces no mount. |
@@ -45,6 +45,37 @@ This pattern showed up live during exploration: the first Explore agent reviewin
 |---|-----|---------|-------------|
 | 1 | LOW | Static `_service` cache in `Patch46_TournamentDwarfDismount` has no `ResetForUnload()` (unlike `CrashReportPatchHelper`). | **DECLINED (recorded, not silent).** The patch mirrors [`Patch40_HideoutDescription`](../../Main/Features/BanditManagement/Hooks/Patch40_HideoutDescription.cs) exactly — identical lazy `_service ??= IoC.Resolve<>()` with no reset. `TournamentService` is a pure, stateless singleton with no disposable deps; `GetService()` is null-guarded; the only manifestation needs reload-in-same-process *and* re-patch, and the stale instance would still resolve identical logic. Per the simplicity criterion, adding reset plumbing for that edge case (which the sibling pattern doesn't handle either) isn't warranted. Revisit if `TournamentService` ever gains disposable dependencies. |
 
+## POST-SHIP CRASH (2026-06-09 18:00) — Harmony field-injection underscore miscount
+
+After commit `ef0c326` was pushed and deployed, the game **crashed on every campaign load**:
+
+```
+HarmonyLib.HarmonyException: Patching exception in method ...TournamentFightMissionController::PrepareForMatch()
+  Inner: System.ArgumentException: No such field defined in class ...TournamentFightMissionController
+         Parameter name: match
+  at HarmonyLib.MethodCreatorTools.EmitCallParameter
+  at TAOM.SubModule.OnGameInitializationFinished ... SubModule.cs:line 542 (PatchCategory)
+```
+
+| # | Sev | Bug | Category | Root cause |
+|---|-----|-----|----------|------------|
+| 2 | **CRITICAL (hard crash on load)** | Postfix parameter `___match` (three underscores) made Harmony look for a field named `match`; the field is `_match` → patch failed to apply → `HarmonyException` propagated uncaught out of `PatchCategory` → crash | Harmony field-injection convention | Harmony strips a **three-underscore** (`___`) prefix and uses the remainder as the field name. The target field's own name begins with an underscore (`_match`), so the parameter must be `____match` (**four** underscores = `___` + `_match`). `___match` strips to `match` (nonexistent). |
+
+**Fix:** `___match` → `____match` in `Patch46_TournamentDwarfDismount.Postfix`. Proven by the crash's own message — Harmony reported `Parameter name: match`, i.e. it stripped exactly three underscores; `____match` strips to `_match`, the real field.
+
+### Why this shipped — and why review didn't catch it
+
+- **The deep-review Compatibility agent gave a confidently WRONG verdict on the exact highest-risk item.** It correctly decompiled the field name (`_match`) but then miscalculated the prefix ("`__` Harmony prefix + `_match`" — the prefix is `___`, not `__`) and blessed `___match`. I relied on that verdict instead of counting underscores myself or testing patch application. This is a live instance of `evidence-over-claims.md`: *"a confident subagent report is a claim, not evidence"* — and it landed on the one item the whole patch hinged on.
+- **Unit tests structurally cannot catch it.** Harmony patches are not applied in the MSTest host; the 28 green Arena tests exercised `ShouldDismountInTournament` (pure logic) but never the patch wiring. A Harmony patch's *only* real verification is **applying it** — in-game, or via a patch-application smoke test.
+- **The plan doc and original patch both had `___match`** from the start, so there was no point where a correct value was degraded — the wrong value was never independently checked against the three-underscore rule.
+
+### Preventive actions (crash)
+
+1. **Memory:** [`feedback_harmony_private_field_injection_underscore_count`](../../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_harmony_private_field_injection_underscore_count.md) — Harmony private-field injection is `___` (three) + the field's literal name; a field named `_x` needs `____x` (four). Count from the field name, not by eyeball. The crash message `Parameter name: <stripped>` tells you exactly how many it stripped.
+2. **Process:** a Harmony patch is "verified" only when it has been **applied** (in-game load, or a dedicated patch-application test) — never on signature-decompile alone. Treat a subagent's "injection is live" as a claim to test, not a fact. (Reinforces `evidence-over-claims.md`.)
+3. **Worth a follow-up grep:** audit every TAOM Harmony patch that injects a private field whose name starts with `_` for the same off-by-one underscore. (No other field-injection patch was changed in this feature, but the trap is general.)
+4. **Defensive consideration (not done):** `OnGameInitializationFinished` calls `PatchCategory` with no try/catch, so one bad patch crashes the whole load. `PatchShield` Finalizers guard patch *bodies*, not patch *application*. Wrapping each `PatchCategory` (or the block) so a single failed application logs + continues would downgrade this class of bug from crash to disabled-feature. Left as a separate `SubModule.cs` decision (single-owner file; silently swallowing application failures has its own risks).
+
 ## Why each deep-review agent's scope behaved as it did
 
 - **Standards / Efficiency** — correctly scoped to the changed files; nothing to add.
@@ -52,13 +83,14 @@ This pattern showed up live during exploration: the first Explore agent reviewin
 - **Completeness** — surfaced the doc/issue debt, which this pass discharges. Note it also caught that `arena.md` + `tournament-armor-assignment.md` were stale (pre-#137) — fixed here.
 - **Data Flow** — the decisive agent. It is the one that would have caught the *originating* bug had the feature been reviewed before shipping the original tournament model: the "which method owns slot 10" question is a data-flow trace, not a per-file check.
 
-## Honesty / verification status (what did NOT run this session)
+## Verification timeline
 
-- **No `dotnet build` / `dotnet test` run.** Bannerlord was running (PID 67828) and held `TAOM.dll` / `0Harmony.dll` / `Bannerlord.ButterLib.dll`; the Bannerlord.BuildResources post-build deploy (`CopyBinariesWindows` / `CopyModule`, gated only by game-folder existence, not by `DisableModuleCopy`) cannot overwrite locked files. So the new tests' GREEN state is **unconfirmed** — the code is written and the logic reviewed, but no build evidence exists yet. (Per `evidence-over-claims.md`, this is stated, not papered over.)
-- **No Codex adversarial pass.** `/review-codex` was not run this session. The completion workflow's Phase 2/3 Codex steps remain outstanding.
-- **No in-game verification.** Dwarf-on-foot in an Erebor town + a human-culture town (empire-template fallback), and non-dwarf-still-mounted regression, all remain to be observed in-game.
+- **Build + tests (after the game was closed):** GREEN — `dotnet test TAOM.Tests` = 3109 passed / 2 skipped, the 28 Arena tests all pass. (7 failures in `VolunteerRecruitmentServiceTests.GetVolunteerTroopId_DolGuldur*` are pre-existing **in-flight spider + DolGuldur** work in the uncommitted tree, not this change.)
+- **Committed + pushed:** `ef0c326` on `bannerlord-1.4.5`, then deployed.
+- **In-game load → CRASHED** (the `____match` underscore bug above). Root-caused from the crash report + fixed in a follow-up hotfix; `TAOM.dll` rebuilt and redeployed. **The patch now needs an in-game load to confirm it no longer crashes**, then the original dismount check (dwarf-on-foot in an Erebor town + a human-culture/empire-fallback town; non-dwarf still mounted).
+- **Still NOT run:** `/review-codex` adversarial pass (Phase 2/3 of the completion workflow).
 
-These three are the outstanding gates before this fix is "done" by the full completion workflow. Issue #277 was closed at the user's explicit instruction with this status recorded in its close comment.
+Lesson reinforced: the build/tests passing said nothing about the patch *applying* — only loading the game did. Issue #277 was closed at the user's explicit instruction with status recorded; the post-ship crash + hotfix is captured here.
 
 ## Preventive action
 

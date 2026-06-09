@@ -63,7 +63,7 @@ TaomTournamentModel : DefaultTournamentModel        ← thin: converts sealed→
 == (B) Harmony postfix (Patch46) ==
 TournamentFightMissionController.PrepareForMatch()   ← vanilla assigns MatchEquipment (incl. horse)
         | [Postfix]
-Patch46_TournamentDwarfDismount.Postfix(___match)
+Patch46_TournamentDwarfDismount.Postfix(____match)   // 4 underscores: ___ prefix + field _match
    foreach team → foreach participant:
       if service.ShouldDismountInTournament(participant.Character.Race):
          clear MatchEquipment[Horse] + [HorseHarness] = EquipmentElement.Invalid
@@ -102,7 +102,7 @@ To change armor or rewards, **edit XML, not code** — add/edit `gear_practice_d
 ## Dependencies
 
 - `TaleWorlds.CampaignSystem.GameComponents.DefaultTournamentModel` (base class)
-- `SandBox.Tournaments.MissionLogics.TournamentFightMissionController` (Patch46 target — SandBox.dll; private field `_match` injected as `___match`)
+- `SandBox.Tournaments.MissionLogics.TournamentFightMissionController` (Patch46 target — SandBox.dll; private field `_match` injected as `____match` — **four** underscores: Harmony's `___` prefix + the field name `_match`. Using three (`___match`) crashed the game on load; see RCA 2026-06-09.)
 - `TaleWorlds.CampaignSystem.TournamentGames.{TournamentMatch, TournamentTeam, TournamentParticipant}` (iterated in Patch46)
 - `TaleWorlds.Core.{Equipment, EquipmentIndex, EquipmentElement}` (slot clearing)
 - [`IRaceManager`](../../Main/Core/Domain/IRaceManager.cs) (TAOM, `Reuse.Singleton`) — race-id → race-name resolution for the dwarf check

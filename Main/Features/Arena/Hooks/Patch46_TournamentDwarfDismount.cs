@@ -37,14 +37,18 @@ public static class Patch46_TournamentDwarfDismount
     private static ITournamentService GetService() =>
         _service ??= TAOM.IoC.Resolve<ITournamentService>();
 
+    // Harmony injects the private field `_match` as a parameter prefixed with THREE underscores
+    // (`___` + the field name `_match`) → `____match` (four underscores total). Using `___match`
+    // (three) made Harmony look for a field named `match`, which does not exist → the patch failed
+    // to apply and crashed the game on load (HarmonyException at PatchCategory). See RCA 2026-06-09.
     [HarmonyPostfix]
-    public static void Postfix(TournamentMatch ___match)
+    public static void Postfix(TournamentMatch ____match)
     {
-        if (___match?.Teams == null) return;
+        if (____match?.Teams == null) return;
         var service = GetService();
         if (service == null) return;
 
-        foreach (var team in ___match.Teams)
+        foreach (var team in ____match.Teams)
         {
             if (team?.Participants == null) continue;
             foreach (var participant in team.Participants)

@@ -2,6 +2,22 @@
 
 ## 2026-06-09
 
+### hotfix(arena): Patch46 crashed on game load — Harmony field-injection underscore miscount
+
+The Patch46 commit (`ef0c326`) crashed every campaign load:
+`HarmonyException` → `ArgumentException: No such field defined ... Parameter name: match`, out of
+`PatchCategory` at `SubModule.cs:542`. The postfix injected the private `_match` field as `___match`
+(three underscores); Harmony strips a three-underscore prefix and looked for a field named `match`,
+which doesn't exist, so the patch failed to apply and the exception propagated uncaught. Fix:
+`___match` → `____match` (four underscores = Harmony's `___` + the field's own name `_match`).
+
+Lesson captured (RCA + `feedback_harmony_private_field_injection_underscore_count`): a Harmony patch
+is verified only by *applying* it (in-game) — unit tests don't apply patches, and the deep-review
+Compatibility agent's "injection is live" verdict was wrong on the exact item the patch hinged on.
+
+**Files:** `Main/Features/Arena/Hooks/Patch46_TournamentDwarfDismount.cs`. **Build:** green; redeployed.
+**RCA:** `docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md` (POST-SHIP CRASH section).
+
 ### fix(arena): dwarves spawn inside the horse as tournament cavalry (Patch46)
 
 Dwarf tournament participants were sometimes given a mounted loadout and rendered *inside* the horse mesh —
