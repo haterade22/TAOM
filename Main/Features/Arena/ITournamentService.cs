@@ -31,4 +31,11 @@ public interface ITournamentService
 
     /// <summary>Resolve the dummy-character ID for participant armor selection.</summary>
     string ResolveDummyId(string participantCultureId, string settlementCultureId);
+
+    /// <summary>
+    /// True if a tournament participant of this FaceGen race id must fight on foot — i.e. their
+    /// custom skeleton clips inside the mount when given a mounted loadout. Currently: dwarves.
+    /// Keyed on race (not culture) so a dwarf competing in any town's tournament is caught.
+    /// </summary>
+    bool ShouldDismountInTournament(int raceId);
 }

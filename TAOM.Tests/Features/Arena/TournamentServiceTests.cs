@@ -1,4 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using TAOM.Core.Domain;
 using TAOM.Features.Arena;
 
 namespace TAOM.Tests.Features.Arena;
@@ -8,16 +10,33 @@ namespace TAOM.Tests.Features.Arena;
 /// (CalculateStartChance, CalculateEndChance, ResolveDummyId) are unit-testable here without
 /// Campaign.Current. BuildPrizePool requires Items.All (sealed engine cache) — tested via the
 /// boundary in-game; not unit-testable.
+/// ShouldDismountInTournament (dwarf tournament-cavalry fix, Patch46) is pure over IRaceManager.
 /// </summary>
 [TestClass]
 public class TournamentServiceTests
 {
+    // Arbitrary FaceGen race ids — the IRaceManager mock defines their meaning.
+    private const int DwarfRaceId = 1;
+    private const int HumanRaceId = 0;
+    private const int ElfRaceId = 2;
+    private const int OrcRaceId = 3;
+    private const int InvalidRaceId = 999;
+
+    private IRaceManager _raceManager;
     private TournamentService _sut;
 
     [TestInitialize]
     public void Setup()
     {
-        _sut = new TournamentService();
+        _raceManager = Substitute.For<IRaceManager>();
+        // Default: every id used here is valid unless a test overrides it.
+        _raceManager.IsValidRaceId(Arg.Any<int>()).Returns(true);
+        _raceManager.GetRaceNameFromId(DwarfRaceId).Returns("dwarf");
+        _raceManager.GetRaceNameFromId(HumanRaceId).Returns("human");
+        _raceManager.GetRaceNameFromId(ElfRaceId).Returns("elf");
+        _raceManager.GetRaceNameFromId(OrcRaceId).Returns("orc");
+
+        _sut = new TournamentService(_raceManager);
     }
 
     // --- CalculateStartChance ---
@@ -120,5 +139,50 @@ public class TournamentServiceTests
     public void ResolveDummyId_BothEmpty_FallsBackToEmpire()
     {
         Assert.AreEqual("gear_practice_dummy_empire", _sut.ResolveDummyId("", ""));
+    }
+
+    // --- ShouldDismountInTournament (Patch46 — dwarf tournament-cavalry fix) ---
+
+    [TestMethod]
+    public void ShouldDismountInTournament_DwarfRace_ReturnsTrue()
+    {
+        Assert.IsTrue(_sut.ShouldDismountInTournament(DwarfRaceId));
+    }
+
+    [TestMethod]
+    public void ShouldDismountInTournament_DwarfRaceMixedCase_ReturnsTrue()
+    {
+        // Defensive — name comparison is case-insensitive.
+        _raceManager.GetRaceNameFromId(DwarfRaceId).Returns("Dwarf");
+        Assert.IsTrue(_sut.ShouldDismountInTournament(DwarfRaceId));
+    }
+
+    [TestMethod]
+    public void ShouldDismountInTournament_HumanRace_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.ShouldDismountInTournament(HumanRaceId));
+    }
+
+    [TestMethod]
+    public void ShouldDismountInTournament_ElfRace_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.ShouldDismountInTournament(ElfRaceId));
+    }
+
+    [TestMethod]
+    public void ShouldDismountInTournament_OrcRace_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.ShouldDismountInTournament(OrcRaceId));
+    }
+
+    [TestMethod]
+    public void ShouldDismountInTournament_InvalidRaceId_ReturnsFalseAndDoesNotTrustLookup()
+    {
+        // Validate-before-lookup: GetRaceNameFromId returns "human" for unknown ids, which must
+        // never be reached for an invalid id (csharp-architecture.md "Validate Before Lookup").
+        _raceManager.IsValidRaceId(InvalidRaceId).Returns(false);
+
+        Assert.IsFalse(_sut.ShouldDismountInTournament(InvalidRaceId));
+        _raceManager.DidNotReceive().GetRaceNameFromId(InvalidRaceId);
     }
 }

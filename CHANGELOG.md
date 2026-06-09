@@ -1,5 +1,121 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-09
+
+### fix(arena): dwarves spawn inside the horse as tournament cavalry (Patch46)
+
+Dwarf tournament participants were sometimes given a mounted loadout and rendered *inside* the horse mesh —
+their custom (shorter) skeleton has a misaligned rider bone (the same defect `EyeHeightAdjustmentHook` works
+around for dwarf-on-mount eye height).
+
+**Root cause.** The horse does NOT come from TAOM's `TaomTournamentModel.GetParticipantArmor` override. In
+`SandBox.Tournaments.MissionLogics.TournamentFightMissionController`, `PrepareForMatch` clones the settlement
+culture's tournament *weapon* template (`CultureObject.TournamentTeamTemplatesFor{One,Two,Four}Participant`, or
+the `tournament_template_empire_*` fallback) into each `participant.MatchEquipment` — and some of those templates
+include a horse in slot 10. `AddRandomClothes` (which calls `GetParticipantArmor`) only copies armor slots 5–9, so
+the existing override has zero control over the mount.
+
+**Fix.** New Harmony postfix `Patch46_TournamentDwarfDismount` on the public `PrepareForMatch` — the single
+chokepoint feeding both the visual spawn (`SpawnAgentWithRandomItems`) and the AI `Simulate`. It iterates the
+match's teams/participants and, for any participant whose race `ITournamentService.ShouldDismountInTournament`
+returns true (currently dwarves), clears `EquipmentIndex.Horse` + `HorseHarness` via
+`AddEquipmentToSlotWithoutAgent(slot, EquipmentElement.Invalid)`. Keyed on **race, not culture**, so a dwarf
+competing in any town — and the player, if a dwarf — is dismounted. The decision uses the validate-before-lookup
+pattern via `IRaceManager` (`IsValidRaceId` before `GetRaceNameFromId`, then case-insensitive `"dwarf"`). It resolves
+race through the same `IRaceManager` as `EyeHeightAdjustmentHook`, plus the `IsValidRaceId` guard that hook lacks. No
+inline logic in the patch (ADR-002/007); lazy IoC resolve like
+Patch40.
+
+**Also:** corrected the stale Phase-9b-#137 architecture in `docs/features/arena.md` +
+`docs/features/tournament-armor-assignment.md` (they still described a no-arg `TaomTournamentModel` with logic on
+the model; logic actually lives in `TournamentService`).
+
+**Files:** `Main/Features/Arena/ITournamentService.cs`, `Main/Features/Arena/TournamentService.cs`,
+`Main/Features/Arena/Hooks/Patch46_TournamentDwarfDismount.cs` (new), `Main/SubModule.cs`,
+`TAOM.Tests/Features/Arena/TournamentServiceTests.cs` (+6 tests, +`IRaceManager` mock).
+**Issue:** #277 (closed). **RCA:** `docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md`.
+**Review:** `/deep-review` — Standards/Compatibility/Efficiency/Data-Flow PASS (10/10 APIs verified vs installed
+v1.4.5 DLLs, incl. the `_match` field + `EquipmentElement.Invalid` clearing semantics); 1 LOW finding declined
+with reasoning.
+**Not-tested (game-only):** Harmony patch invocation; in-game verification pending — the build was blocked this
+session by Bannerlord running and locking module DLLs.
+
+### fix(elephant): howdah archers at ground level, elephants ignoring commands, end-of-battle freeze — three root causes
+
+Three separate bugs reported after the GetTickRequirement fix landed: archers invisible in howdah seats,
+elephants not responding to formation commands, and a hard freeze when the last enemy died.
+
+**Bug 1 — Howdah at terrain level (archers invisible + elephants blocked).**
+Root cause: `RepositionToElephant()` called `GetBoneEntitialFrame(boneIndex, false)` on `Spine1_05`.
+In v1.4.5 this returns the bone's entity-local frame — the bone origin is near the entity pivot, so the
+returned Z ≈ 0 (entity-local), which placed the howdah entity and all 4 seats at terrain height (~82.8m in
+the test map). Each `OnTick` then teleported archers DOWN to Z≈82.8m (confirmed by logs: 24000+ ticks at
+terrain-Z). The elephant command issue was a secondary effect — 8 archers physically crowded the elephant's
+feet, blocking its navmesh movement.
+Fix: `RepositionToElephant()` replaced with `elephantAgent.Position + Vec3(0,0,HowdahHeightAboveGround=3.2f)`.
+The same offset was already used by the spawn code for initial archer placement; consolidating to one constant.
+
+**Bug 2 — End-of-battle freeze.**
+Root cause: `LockUserPositions=true` was set on seated archers in `OnUse`. Bannerlord's end-battle sequencer
+fires synchronously in the same frame as the last kill — it's a busy-loop that tries to move all agents to
+victory positions. With locked agents it spins forever. The `MissionEnded` check in `OnTick` runs one frame
+LATER and never gets the chance to fire.
+Fix: removed `LockUserPositions` and `LockUserFrames` from `OnUse`/`ReleaseAgent` entirely. Archers are now
+held in position solely by per-tick `TeleportToPosition` + `SetScriptedPosition`. Without the lock, the
+sequencer can freely move archers at battle end — no busy-loop.
+
+**Also fixed (2026-06-08, previous entry):** `GetTickRequirement()` missing from `TaomHowdahStandingPoint`
+(engine never called `OnTick`). Belt-and-suspenders `ReleaseAllSeats()` on machine tick when `MissionEnded`.
+
+**Files:** `Main/Features/Elephant/TaomHowdahStandingPoint.cs`, `Main/Features/Elephant/TaomHowdahMachine.cs`.
+**Build:** deployed to game 2026-06-09 08:48 — awaiting in-game confirmation.
+**Verify:** `[Howdah] RepositionToElephant FIRST — howdahOrigin=...` Z should be ≈86m (terrain ~82.8 + 3.2).
+
+### feat(elephant): sealed-package howdah — force-spawned crew, 4 seats, dedicated rider character
+
+Redesigned the howdah from a vanilla-detachment model (1 seat, archers walked to seat) to a sealed-package
+model (4 seats, crew auto-spawned at battle start from a fixed character pool, not drawn from the party
+roster). Design motivation: vanilla `UsableMachine` detachment cannot reliably path to a moving target
+(the elephant walks away before archers reach the seat position).
+
+**`harad_elephant_rider` character** (`Main/_Module/ModuleData/troops/troops_harad.xml`):
+- Dedicated troop `[Harad] Elephant Rider`, `default_group="HorseArcher"` — places the elephant in the
+  cavalry formation that receives charge commands correctly.
+- `level=22`, `occupation="Soldier"`, `culture="Culture.aserai"`.
+- `harad_archer` (crew character): `default_group="Ranged"` — confirmed NOT contaminating HorseArcher
+  formation.
+
+**Troop weight** (`Main/_Module/ModuleData/TroopWeights/troop_weights.xml`):
+- `harad_elephant_rider` weight = **7.0** — accounts for the whole package:
+  2 (elephant) + 1 (mahout rider) + 4 (howdah crew, auto-spawned in battle, not in party roster).
+
+**4-seat prefab** (`Main/_Module/Prefabs/taom_howdah_agent.xml`):
+- Expanded from 1 seat to 4 `TaomHowdahStandingPoint` seats in a 2×2 grid:
+  front-left `(-0.280, -0.340, 0.273)`, front-right `(0.420, -0.340, 0.273)`,
+  back-left `(-0.280, 0.340, 0.273)`, back-right `(0.420, 0.340, 0.273)`.
+- **All physics barrier entities removed.** Four `_barrier_04x04m` entities (scaled 20 m tall) were
+  present in the original prefab and blocked agent navmesh movement at battle end, contributing to the freeze.
+  In TAOM's teleport-based design (archers pinned each frame via `TeleportToPosition`), physical containment
+  is redundant.
+
+**Sealed-package spawn** (`ElephantMissionBehavior.TrySpawnHowdahCrew`):
+- `GetDetachmentWeightAux` changed from `1f` → `0f` — vanilla detachment no longer assigns troops.
+- All four seats filled via `Mission.SpawnAgent(buildData)` + `seat.OnUse(crewAgent, 0)` in
+  `OnAgentBuild` when the mahout builds.
+- Spawn position: `mahout.Position + Vec3(0, 0, HowdahHeightAboveGround)` — on-navmesh fallback; archers
+  teleport to correct seat position on first `OnTick` frame.
+
+**`IsUsableByAgent` override** (`TaomHowdahStandingPoint`):
+- Returns false when `MovingAgent != null` — prevents the F-key "Enter" prompt appearing for player when
+  seats are already occupied by crew.
+
+**Files:** `Main/Features/Elephant/TaomHowdahStandingPoint.cs` (new),
+`Main/Features/Elephant/TaomHowdahMachine.cs` (new),
+`Main/_Module/Prefabs/taom_howdah_agent.xml` (new),
+`Main/_Module/ModuleData/troops/troops_harad.xml` (harad_elephant_rider character — TEMP Horse/HorseHarness
+entry MUST be reverted before commit),
+`Main/_Module/ModuleData/TroopWeights/troop_weights.xml` (weight 7.0 entry).
+
 ## 2026-06-08
 
 ### chore(tooling): generator robustness fixes + Morannon RCA closeout

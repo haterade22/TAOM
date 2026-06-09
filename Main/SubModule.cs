@@ -539,6 +539,7 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch39_BanditPartySize");
         _harmony.PatchCategory("Patch40_HideoutDescription");
         _harmony.PatchCategory("Patch45_SpiderTroopSpawn");
+        _harmony.PatchCategory("Patch46_TournamentDwarfDismount");
 
         var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();
         var specResLogger = IoC.Resolve<IModLogger>();

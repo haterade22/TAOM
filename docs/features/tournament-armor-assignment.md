@@ -2,7 +2,9 @@
 
 ## Overview
 
-`TaomTournamentModel` overrides three `DefaultTournamentModel` methods: participant armor assignment, regular prize selection, and elite prize selection. Participants wear their own culture's skeleton-appropriate gear, and prizes are drawn from LOTRLOME_Armory items matching the hosting settlement's culture and tier.
+`TaomTournamentModel` overrides five `DefaultTournamentModel` methods. **This doc covers the two equipment/prize concerns** — participant armor assignment and regular/elite prize selection. Participants wear their own culture's skeleton-appropriate gear, and prizes are drawn from LOTRLOME_Armory items matching the hosting settlement's culture and tier. For the full override list, the Phase 9b #137 service extraction, and the separate **dwarf-dismount** fix (Patch46), see the authoritative code-side doc [arena.md](arena.md).
+
+> **Architecture note (Phase 9b #137):** the decision logic described below now lives in [`TournamentService`](../../Main/Features/Arena/TournamentService.cs); `TaomTournamentModel` is a thin entry point that delegates to it via the injected `ITournamentService`. Earlier revisions of this doc described logic on the model and a no-arg constructor — both are outdated.
 
 ## Why This Exists
 
@@ -14,7 +16,7 @@
 
 ### Design Challenge
 
-The vanilla method completely discards participant identity — it only cares about which settlement is hosting. There is no race check anywhere in the tournament equipment pipeline (`TournamentFightMissionController.AddRandomClothes`, `FightTournamentGame.GetParticipantCharacters`, etc.).
+The vanilla method completely discards participant identity — it only cares about which settlement is hosting. For **armor**, there is no race check anywhere in the equipment pipeline (`TournamentFightMissionController.AddRandomClothes`, `FightTournamentGame.GetParticipantCharacters`, etc.) — TAOM keys armor on the participant's *culture* instead. (For **mounts** — a separate concern — TAOM now *does* do a race check: `Patch46_TournamentDwarfDismount` strips the horse from dwarf participants in `PrepareForMatch`, because the mount comes from the culture weapon template, not from `GetParticipantArmor`. See [arena.md](arena.md).)
 
 ### Solution Approach
 
@@ -41,7 +43,7 @@ No configuration. Purely data-driven via the `gear_practice_dummy_*` NPCCharacte
 
 ### gear_practice_dummy_* coverage
 
-All 13 TAOM cultures have entries (fixed in session 2026-03-31):
+Every TAOM culture has a `gear_practice_dummy_<culture>` entry. A grep of `id="gear_practice_dummy_` across `npcs_*.xml` (2026-06-09) finds **17** (coverage filled in session 2026-03-31). Representative sample below — `rohan`, `mistymountainorcs`, and `goblin` also have entries but are not tabulated here:
 
 | Culture | File | Body item |
 |---------|------|-----------|
@@ -75,24 +77,22 @@ Falls back to `base` (vanilla) when no culture-specific items are found (e.g., l
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/Arena/Models/TaomTournamentModel.cs` | 3 overrides: participant armor, regular prizes, elite prizes |
-| `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs` | 8 unit tests (ResolveDummyId + tier constants) |
-| `Main/SubModule.cs` | Registration: `campaignStarter.AddModel(new TaomTournamentModel())` |
+| `Main/Features/Arena/Models/TaomTournamentModel.cs` | 5 overrides (thin; delegates to `ITournamentService`): participant armor, regular/elite prizes, start/end chance |
+| `Main/Features/Arena/TournamentService.cs` | Decision logic: `ResolveDummyId`, `BuildPrizePool`, start/end-chance, `ShouldDismountInTournament` |
+| `TAOM.Tests/Features/Arena/TournamentServiceTests.cs` | 21 unit tests (`ResolveDummyId` fallback chain, start/end chance, `ShouldDismountInTournament`) |
+| `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs` | 7 unit tests (tier-constant invariants on the model) |
+| `Main/SubModule.cs:385` | Registration: `campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<ITournamentService>()))` |
 | `Main/_Module/ModuleData/characters/npcs_{culture}.xml` | `gear_practice_dummy_*` entries per culture |
 
 ## Dependencies
 
-None. `TaomTournamentModel` has no constructor dependencies — instantiated directly with `new`.
+`TaomTournamentModel` takes `ITournamentService` via constructor injection (registered `Reuse.Singleton` in [ArenaIoC.cs](../../Main/Features/Arena/ArenaIoC.cs)). `TournamentService` in turn injects [`IRaceManager`](../../Main/Core/Domain/IRaceManager.cs) (for the dwarf-dismount check). It is no longer instantiated with a no-arg `new`.
 
 ## Tests
 
-- `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs` — 5 tests covering `ResolveDummyId`:
-  - Participant culture present → returns participant culture dummy ID
-  - Null participant culture → returns settlement culture dummy ID
-  - Empty participant culture → returns settlement culture dummy ID
-  - Both null → returns empire fallback
-  - Null participant + empty settlement → returns empire fallback
-- `GetParticipantArmor` is not unit-testable (requires live `ObjectManager` / game state)
+- `TAOM.Tests/Features/Arena/TournamentServiceTests.cs` — **21 tests**. `ResolveDummyId` fallback chain (participant culture → settlement culture → empire), start/end-chance functions, and `ShouldDismountInTournament` (dwarf/case/non-dwarf/invalid). These moved here from the model test when the logic was extracted to the service (#137).
+- `TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs` — **7 tests** (tier-constant invariants on the model).
+- `GetParticipantArmor` and the `Patch46` postfix are not unit-testable (require a live `ObjectManager` / game state) — covered by the service unit tests + in-game verification.
 
 ## How to Add a New Culture
 
