@@ -319,6 +319,14 @@ you can revert just the one that broke while keeping the others.
 | Decimals OK | crafting-piece `length`, `blade_length`, `blade_width` (float) |
 | Decimals **forbidden** | all single-piece `<Item>` weapon stats — bows, shields, crossbows, javelins, thrown (`unsignedInt`) |
 
+## Visual companion — Bannerlord Weapon Piece Aligner
+When a crafted weapon's pieces don't line up (haft clipping the head, weapon sitting wrong in the hand),
+preview and tune the `<BuildData>` offsets **before** launching the game with
+[tools/BannerlordCraftingTool/](../../tools/BannerlordCraftingTool/README.md) — a standalone WPF app that
+loads `crafting_pieces.xml` + your FBX meshes and reproduces the engine's exact piece-positioning
+(`WeaponDesign.CalculatePivotDistances`). It's self-contained (no TAOM/Bannerlord build dependency) and
+ships as a downloadable Release zip. Export tuned offsets to JSON and patch them back into the source XML.
+
 ## Related
 - [weapon-xml-pipeline.md](../features/weapon-xml-pipeline.md) — automated alternative for self-contained weapons
 - [item-equipment-model.md](../reference/engine/item-equipment-model.md) — engine `ItemObject`/`ItemComponent`/`Equipment` model

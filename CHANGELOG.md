@@ -2,7 +2,19 @@
 
 ## 2026-06-09
 
-### hotfix(arena): Patch46 crashed on game load — Harmony field-injection underscore miscount
+### tools(crafting): vendor the Bannerlord Weapon Piece Aligner into the repo + ship a Release
+
+Brought the standalone weapon-piece preview tool (KEYforce's WPF app, overhauled this session to a
+verbatim port of the engine's `WeaponDesign.CalculatePivotDistances` / `CalculateWeaponLength` assembly
+math + dark theme) into the repo at [tools/BannerlordCraftingTool/](tools/BannerlordCraftingTool/README.md)
+so it's versioned and shareable. It is **fully standalone** — `.NET 8` WPF, two NuGet deps (`AssimpNet`,
+`HelixToolkit.Wpf`), **zero TAOM/Bannerlord build dependency** (verified by grep: no `TAOM`/`LOTRLOME`/
+`TaleWorlds` refs in any source) — so anyone can clone-and-build or download-and-run. Kept **out of
+`TAOM.sln`** (CI builds the solution explicitly, so the .NET 8 desktop app never enters the pipeline);
+`bin`/`obj`/`.vs` are covered by the existing global gitignore rules — only the 6 source files commit.
+README rewritten to be self-contained (generic vanilla examples, build/run/publish instructions, no
+inbound dependency on TAOM docs). Distributed as a self-contained `win-x64` Release zip (no .NET runtime
+needed to run). One-way cross-link added from [weapon-creation-workflow.md](docs/ai-includes/weapon-creation-workflow.md).
 
 The Patch46 commit (`ef0c326`) crashed every campaign load:
 `HarmonyException` → `ArgumentException: No such field defined ... Parameter name: match`, out of
