@@ -17,11 +17,14 @@ fallback contains the rider, so it cannot be recruited anywhere else. Level rais
 `VolunteerRecruitmentServiceTests.cs` (+4 tests, TDD: rider rolls at clan_aserai_1's top bucket; clan still rolls
 normal levy; culture + other-clan never roll the rider). **Build:** green. **Tests:** 5/5 Aserai (RED-first then
 GREEN). Validator PASS.
-**Tuning notes (flagged for the owner):** weight 1 = rare — bump for more frequent elephants. Rider skills (Riding
-80 / Polearm 80) left at pre-level-51 values — the rider controls the mount (the elephant does the damage); bump if
-a more capable mahout is wanted. Not yet in any party template, so AI Ayerikkä lords field it only when they recruit
-it. (Pre-existing, unrelated: 7 Dol Guldur recruitment tests are red on the baseline since the `2b54853` spider-pause
-— they expect spider/khamul troops pulled from the pool; not touched here.)
+**Skills set to a level-51 mounted-melee elite profile** (follow-up): Riding 385 / Polearm 380 / OneHanded 345 /
+Athletics 220 + TwoHanded 150 / Bow 60 / Crossbow 40 / Throwing 80 — calibrated against the level-46 cavalry elite
+`gondor_da_swan_knight` (Riding 365 / Polearm 375), bumped for the +5 levels; Riding is highest since the rider
+controls a war elephant. (Was Riding 80 / Polearm 80 — level-15-ish values left over from the troop's first draft.)
+**Tuning notes (flagged for the owner):** recruitment weight 1 = rare; bump for more frequent elephants. Not yet in
+any party template, so AI Ayerikkä lords field it only when they recruit it. (Pre-existing, unrelated: 7 Dol Guldur
+recruitment tests are red on the baseline since the `2b54853` spider-pause — they expect spider/khamul troops pulled
+from the pool; not touched here.) Issue #278.
 
 ### feat(elephant): cooldown-driven attack sequencing — trample + directional tusk swings (BT phase 1.5)
 

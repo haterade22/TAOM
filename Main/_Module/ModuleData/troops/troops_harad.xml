@@ -156,22 +156,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="55" />
+                value="220" />
             <skill
                 id="Riding"
-                value="80" />
+                value="385" />
             <skill
                 id="OneHanded"
-                value="70" />
+                value="345" />
+            <skill
+                id="TwoHanded"
+                value="150" />
             <skill
                 id="Polearm"
-                value="80" />
+                value="380" />
             <skill
                 id="Bow"
-                value="30" />
+                value="60" />
+            <skill
+                id="Crossbow"
+                value="40" />
             <skill
                 id="Throwing"
-                value="25" />
+                value="80" />
         </skills>
         <Equipments>
             <EquipmentRoster>
