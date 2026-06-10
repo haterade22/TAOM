@@ -171,7 +171,7 @@
                 value="380" />
             <skill
                 id="Bow"
-                value="60" />
+                value="290" />
             <skill
                 id="Crossbow"
                 value="40" />
@@ -187,6 +187,12 @@
                 <equipment
                     slot="Item1"
                     id="Item.aserai_sword_3_t3" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_heavy_bow" />
+                <equipment
+                    slot="Item3"
+                    id="Item.bodkin_arrows_b" />
                 <equipment
                     slot="Head"
                     id="Item.haradrim_head" />

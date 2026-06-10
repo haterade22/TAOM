@@ -17,10 +17,14 @@ fallback contains the rider, so it cannot be recruited anywhere else. Level rais
 `VolunteerRecruitmentServiceTests.cs` (+4 tests, TDD: rider rolls at clan_aserai_1's top bucket; clan still rolls
 normal levy; culture + other-clan never roll the rider). **Build:** green. **Tests:** 5/5 Aserai (RED-first then
 GREEN). Validator PASS.
-**Skills set to a level-51 mounted-melee elite profile** (follow-up): Riding 385 / Polearm 380 / OneHanded 345 /
-Athletics 220 + TwoHanded 150 / Bow 60 / Crossbow 40 / Throwing 80 — calibrated against the level-46 cavalry elite
-`gondor_da_swan_knight` (Riding 365 / Polearm 375), bumped for the +5 levels; Riding is highest since the rider
-controls a war elephant. (Was Riding 80 / Polearm 80 — level-15-ish values left over from the troop's first draft.)
+**Skills set to a level-51 mounted-melee/archer elite profile** (follow-up): Riding 385 / Polearm 380 / OneHanded
+345 / Bow 290 / Athletics 220 + TwoHanded 150 / Crossbow 40 / Throwing 80 — calibrated against the level-46 cavalry
+elite `gondor_da_swan_knight` (Riding 365 / Polearm 375), bumped for the +5 levels; Riding is highest since the
+rider controls a war elephant. (Was Riding 80 / Polearm 80 — level-15-ish values left over from the first draft.)
+**Bow + arrows added** (the troop is `HorseArcher` but had no ranged weapon): `Item2` = `steppe_heavy_bow`
+(mounted-capable), `Item3` = `bodkin_arrows_b` (armor-piercing) — alongside the existing `eastern_spear` + `aserai_sword`,
+filling all 4 weapon slots. The mahout now shoots from the elephant's back (separate from the deferred howdah crew).
+Bow skill raised 60 → 290 to match. Item refs validated (PASS).
 **Tuning notes (flagged for the owner):** recruitment weight 1 = rare; bump for more frequent elephants. Not yet in
 any party template, so AI Ayerikkä lords field it only when they recruit it. (Pre-existing, unrelated: 7 Dol Guldur
 recruitment tests are red on the baseline since the `2b54853` spider-pause — they expect spider/khamul troops pulled
