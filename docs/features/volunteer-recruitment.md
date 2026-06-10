@@ -49,6 +49,8 @@ The `AllNonMilitiaNonBossTroops_AreReachableFromARecruitmentPoolRoot` test enfor
 
 **Shadowing gotcha:** `CultureMap` is the *lowest-priority* pool. If a culture's fiefs all have a `SettlementMap`/`ClanMap` pool, a troop placed only in that culture's `CultureMap` entry never surfaces at those fiefs (it only fires for converted fiefs and unmapped settlements). To make a line recruitable at a culture's *own* settlements, add its root to the **settlement + clan** pools, not just culture. (This was the root cause of the Dol Guldur "uruk line not recruitable" report — `dg_uruk_warrior` sat in `CultureMap["dolguldur"]` but every DG fief had a settlement/clan pool that shadowed it.)
 
+**Clan-restricting an elite (shadowing used deliberately):** the same `ClanMap`-over-`CultureMap` priority can gate a troop to ONE clan. The war-elephant rider (`harad_elephant_rider`, level 51 — see [elephant.md](elephant.md)) is recruitable only by `clan_aserai_1` (Ayerikkä): `InitializeHaradClans` gives that clan a pool that **copies** the aserai culture fallback (`harad_levy` 7 / `harad_noble` 3) and **adds** the rider at weight 1. Because the clan pool shadows culture and no other aserai clan has a pool, the rider surfaces only at Ayerikkä's fiefs; everywhere else falls through to the rider-less culture pool. (Note the copy: a clan pool *replaces* — not merges with — the culture fallback, so you must re-list the normal recruits or the clan would offer ONLY the elite.)
+
 ### Component Diagram
 
 ```
@@ -151,6 +153,7 @@ The predicate is evaluated **per-lookup**, not at registration time — kingdom 
   - `BuildPool` validation: empty entries, non-positive weight, blank troop id
   - **Reachability guard** (`AllNonMilitiaNonBossTroops_AreReachableFromARecruitmentPoolRoot`): floods the `troops_*.xml` upgrade graph from all pool roots and asserts only militia/`*_boss`/`cave_troll` are unreachable — see [Reachability invariant](#reachability-invariant-every-troop-is-accounted-for). Plus `AllPooledTroopIds_ResolveToRealTroops_NoTypos` (every pooled id resolves to a real troop, except the `taom_spider_creature` anchor).
   - Newly-wired cultures Mirkwood (`mirkwood_recruit`) + Umbar (`aux_basic` / `umbar_elite`), and the reachability-fix line entries (Gundabad archer/scout, Isengard orc/Orthanc, Dol Guldur orc/uruk at settlement + clan).
+  - Harad `clan_aserai_1` (Ayerikkä) elephant-rider pool: the rider rolls at the clan's top weight bucket; the clan still rolls its normal `harad_levy`; the aserai culture fallback + any other aserai clan never roll the rider (`GetVolunteerTroopId_ClanAserai1_*` / `_AseraiCulture_NoClanPool_*` / `_OtherAseraiClan_*`).
 
 ## How to add a new culture's pool
 
