@@ -478,9 +478,10 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_DolGuldurSettlement_HighRoll_ReturnsShadowInitiate()
     {
-        // town_DG1: dg_goblin_slave(7) + dg_khamul_shadow_initiate(3) + taom_spider_creature(1) = total 11
-        // Roll 7 lands in the khamul range [7,10) — spider sits at [10,11).
-        _random.Next(100) /* TEMP-SPIDER-TEST-WEIGHT: spider 90 -> total 100; revert to Next(11) before commit */.Returns(7);
+        // town_DG1 pool (total 18): goblin_slave(7)[0..6] + orc_recruit(4)[7..10] + uruk_foul(2)[11..12]
+        // + khamul_shadow_initiate(3)[13..15] + orc_scout(1)[16] + spider(1)[17].
+        // Roll 13 lands at the start of the khamul range.
+        _random.Next(18).Returns(13);
         var context = new VolunteerContext(
             settlementId: "town_DG1",
             boundSettlementId: null,
@@ -536,9 +537,10 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_DolGuldurCulture_ContainsKhamulInitiate()
     {
-        // Culture pool: dg_goblin_slave(5) + dg_uruk_warrior(3) + dg_khamul_shadow_initiate(2) + taom_spider_creature(1) = 11
-        // Roll 8 should land in khamul_shadow_initiate range [8,10) — spider sits at [10,11).
-        _random.Next(100) /* TEMP-SPIDER-TEST-WEIGHT: spider 90 -> total 100; revert to Next(11) before commit */.Returns(8);
+        // Culture pool (total 17): goblin_slave(5)[0..4] + orc_recruit(3)[5..7] + uruk_foul(2)[8..9]
+        // + uruk_warrior(3)[10..12] + khamul_shadow_initiate(2)[13..14] + orc_scout(1)[15] + spider(1)[16].
+        // Roll 13 lands at the start of the khamul range.
+        _random.Next(17).Returns(13);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
@@ -559,9 +561,9 @@ public class VolunteerRecruitmentServiceTests
     [DataRow("castle_DG3")]
     public void GetVolunteerTroopId_DolGuldurSettlement_MaxRoll_ReturnsSpider(string settlementId)
     {
-        // <settlement>: dg_goblin_slave(7) + dg_khamul_shadow_initiate(3) + taom_spider_creature(1) = 11
-        // Roll 10 lands in the spider range [10,11).
-        _random.Next(100) /* TEMP-SPIDER-TEST-WEIGHT: spider 90 -> total 100; revert to Next(11) before commit */.Returns(10);
+        // <settlement> pool (total 18): goblin_slave(7) + orc_recruit(4) + uruk_foul(2)
+        // + khamul_shadow_initiate(3) + orc_scout(1) + spider(1). Roll 17 lands in the spider range [17,18).
+        _random.Next(18).Returns(17);
         var context = new VolunteerContext(
             settlementId: settlementId,
             boundSettlementId: null,
@@ -576,9 +578,9 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_DolGuldurCulture_MaxRoll_ReturnsSpider()
     {
-        // Culture pool: dg_goblin_slave(5) + dg_uruk_warrior(3) + dg_khamul_shadow_initiate(2) + taom_spider_creature(1) = 11
-        // Roll 10 lands in the spider range [10,11).
-        _random.Next(100) /* TEMP-SPIDER-TEST-WEIGHT: spider 90 -> total 100; revert to Next(11) before commit */.Returns(10);
+        // Culture pool (total 17): goblin_slave(5) + orc_recruit(3) + uruk_foul(2) + uruk_warrior(3)
+        // + khamul_shadow_initiate(2) + orc_scout(1) + spider(1). Roll 16 lands in the spider range [16,17).
+        _random.Next(17).Returns(16);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
@@ -593,8 +595,8 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_DolGuldurClanPool_ExcludesSpider()
     {
-        // Clan-path pool stays goblin(7) + khamul(3) = 10 — the spider is intentionally absent so
-        // clan-path recruitment never yields it. Even a max roll returns khamul, not the spider.
+        // Clan-path pool (total 17): goblin(7) + orc_recruit(4) + uruk_foul(2) + khamul(3) + orc_scout(1)
+        // — the spider is intentionally absent (settlement-path only), so clan recruitment never yields it.
         _random.Next(Arg.Any<int>()).Returns(9);
         var context = new VolunteerContext(
             settlementId: null,
@@ -658,10 +660,10 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_EreborSettlement_HighRoll_ReturnsNoble()
     {
-        // town_E1 now uses the Erebor+Iron Hills mix (total 12):
-        // miner(5)[0..4] + noble(3)[5..7] + iron_hills_reg_recruit(2)[8..9] + iron_hills_noble(2)[10..11].
-        // Roll 5 still lands in the erebor_noble range.
-        _random.Next(12).Returns(5);
+        // town_E1 uses the Erebor+Iron Hills mix (total 15): miner(5)[0..4] + noble(3)[5..7]
+        // + iron_hills_reg_recruit(2)[8..9] + iron_hills_noble(2)[10..11] + ironpass_recruit(2)[12..13]
+        // + erebor_oathsworn(1)[14]. Roll 5 still lands in the erebor_noble range.
+        _random.Next(15).Returns(5);
         var context = new VolunteerContext(
             settlementId: "town_E1",
             boundSettlementId: null,
@@ -718,10 +720,9 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_EreborCulture_HighRoll_ReturnsIronHills()
     {
-        // Culture pool: erebor_reg_miner(5) + erebor_noble(3) + iron_hills_reg_recruit(2) + iron_hills_noble(2) = 12
-        // Roll 8 lands in iron_hills_reg_recruit range (5+3=8 .. 5+3+2=10, exclusive upper).
-        // (iron_hills_noble line was added in #212 KEYforce revamp; weight grew from 10 → 12.)
-        _random.Next(12).Returns(8);
+        // Culture pool (total 15): miner(5) + noble(3) + iron_hills_reg_recruit(2)[8..9] + iron_hills_noble(2)
+        // + ironpass_recruit(2) + erebor_oathsworn(1). Roll 8 lands in iron_hills_reg_recruit range.
+        _random.Next(15).Returns(8);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
@@ -757,8 +758,8 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_EreborTown_Roll8_ReturnsIronHillsRecruit()
     {
-        // town_E1 settlement pool now includes Iron Hills. Roll 8 → iron_hills_reg_recruit.
-        _random.Next(12).Returns(8);
+        // town_E1 settlement pool (total 15) includes Iron Hills. Roll 8 → iron_hills_reg_recruit [8..9].
+        _random.Next(15).Returns(8);
         var context = new VolunteerContext(
             settlementId: "town_E1",
             boundSettlementId: null,
@@ -773,8 +774,8 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_EreborClan_Roll11_ReturnsIronHillsNoble()
     {
-        // clan_erebor_1 pool now includes Iron Hills. Roll 11 = last entry → iron_hills_noble.
-        _random.Next(12).Returns(11);
+        // clan_erebor_1 pool (total 15) includes Iron Hills. Roll 11 → iron_hills_noble [10..11].
+        _random.Next(15).Returns(11);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
@@ -1130,7 +1131,8 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    // Far-Rhun pool: levy(4) + footman(2) + horseman(3) + loke(1) = 10
+    // Far-Rhun pool: levy(4) + footman(2) + horseman(3) + loke(1) + horse_master(1) = 11
+    // (horse_master appended at index [10]; rolls 0..9 unchanged)
     [DataRow(0, "far_rhun_levy")]
     [DataRow(3, "far_rhun_levy")]
     [DataRow(4, "far_rhun_footman")]
@@ -1140,7 +1142,7 @@ public class VolunteerRecruitmentServiceTests
     [DataRow(9, "loke_rim_initiate")]
     public void GetVolunteerTroopId_Sart_BoundaryRolls_ReturnExpectedTroop(int roll, string expected)
     {
-        _random.Next(10).Returns(roll);
+        _random.Next(11).Returns(roll);
         var context = new VolunteerContext(
             settlementId: "town_RU5",
             boundSettlementId: null,
@@ -1215,7 +1217,8 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    // Mixed pool: balcoth(1)+blacksun(1)+darkhun(1)+dragon(1)+farrhun(1)+kharaghul(1)+loke(1)+sagarun(1)+wain(2) = 10
+    // Mixed pool: balcoth(1)+blacksun(1)+darkhun(1)+dragon(1)+farrhun(1)+kharaghul(1)+loke(1)+sagarun(1)+wain(2)+easterling(2) = 12
+    // (easterling_recruit appended at [10..11]; rolls 0..9 unchanged)
     [DataRow(0, "balcoth_volunteer")]
     [DataRow(1, "black_sun_trainee")]
     [DataRow(2, "darkhun_recruit")]
@@ -1226,9 +1229,10 @@ public class VolunteerRecruitmentServiceTests
     [DataRow(7, "sagarun_deckhand")]
     [DataRow(8, "wain_youngblood")]
     [DataRow(9, "wain_youngblood")]
+    [DataRow(10, "easterling_recruit")]
     public void GetVolunteerTroopId_Mistrand_BoundaryRolls_ReturnExpectedTroop(int roll, string expected)
     {
-        _random.Next(10).Returns(roll);
+        _random.Next(12).Returns(roll);
         var context = new VolunteerContext(
             settlementId: "town_RU1",
             boundSettlementId: null,
@@ -1259,7 +1263,8 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    // Kharaghul pool: loke(1) + youth(5) + raider(2) + horse_scout(2) = 10
+    // Kharaghul pool: loke(1) + youth(5) + raider(2) + horse_scout(2) + horse_master(1) = 11
+    // (horse_master appended at index [10]; rolls 0..9 unchanged)
     [DataRow(0, "loke_rim_initiate")]
     [DataRow(1, "kharaghul_youth")]
     [DataRow(5, "kharaghul_youth")]
@@ -1269,7 +1274,7 @@ public class VolunteerRecruitmentServiceTests
     [DataRow(9, "kharaghul_horse_scout")]
     public void GetVolunteerTroopId_Iorig_BoundaryRolls_ReturnExpectedTroop(int roll, string expected)
     {
-        _random.Next(10).Returns(roll);
+        _random.Next(11).Returns(roll);
         var context = new VolunteerContext(
             settlementId: "town_RU8",
             boundSettlementId: null,
@@ -1299,7 +1304,8 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    // Culture pool: balcoth(1)+blacksun(1)+darkhun(1)+dragon(1)+farrhun(1)+kharaghul(1)+loke(1)+sagarun(1)+wain(2) = 10
+    // Culture pool: balcoth(1)+blacksun(1)+darkhun(1)+dragon(1)+farrhun(1)+kharaghul(1)+loke(1)+sagarun(1)+wain(2)+easterling(2) = 12
+    // (easterling_recruit appended at [10..11]; rolls 0..9 unchanged)
     [DataRow(0, "balcoth_volunteer")]
     [DataRow(1, "black_sun_trainee")]
     [DataRow(2, "darkhun_recruit")]
@@ -1310,9 +1316,10 @@ public class VolunteerRecruitmentServiceTests
     [DataRow(7, "sagarun_deckhand")]
     [DataRow(8, "wain_youngblood")]
     [DataRow(9, "wain_youngblood")]
+    [DataRow(10, "easterling_recruit")]
     public void GetVolunteerTroopId_RhunCulture_BoundaryRolls_ReturnExpectedTroop(int roll, string expected)
     {
-        _random.Next(10).Returns(roll);
+        _random.Next(12).Returns(roll);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
@@ -2093,9 +2100,11 @@ public class VolunteerRecruitmentServiceTests
     }
 
     // --- Isengard (Uruk-Hai) culture recruitment pool ---
-    // Pool weights (total 10): urukhai_recruit(4) + urukhai_skirmisher(2) + orc_warg_scout(2)
-    //   + urukhai_warrior(1) + urukhai_scout(1).
-    // Cumulative: [0..3]=recruit, [4..5]=skirmisher, [6..7]=warg_scout, [8]=warrior, [9]=scout.
+    // Pool weights (total 14): urukhai_recruit(4) + urukhai_skirmisher(2) + orc_warg_scout(2)
+    //   + urukhai_warrior(1) + urukhai_scout(1) + isengard_orc_grunt(3) + orthanc_chosen(1).
+    // Cumulative: [0..3]=recruit, [4..5]=skirmisher, [6..7]=warg_scout, [8]=warrior, [9]=scout,
+    //   [10..12]=orc_grunt, [13]=orthanc_chosen. (orc_grunt + orthanc_chosen appended as
+    //   reachability fixes for the isengard_orc_* and Orthanc Guard lines; rolls 0..9 unchanged.)
 
     [TestMethod]
     public void GetVolunteerTroopId_IsengardCulture_LowRoll_ReturnsRecruit()
@@ -2115,8 +2124,8 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_IsengardCulture_MidRoll_ReturnsSkirmisher()
     {
-        // Roll 4 lands at the start of the skirmisher bucket (recruit covers 0..3).
-        _random.Next(10).Returns(4);
+        // Roll 4 lands at the start of the skirmisher bucket (recruit covers 0..3). Pool total now 14.
+        _random.Next(14).Returns(4);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
@@ -2129,10 +2138,11 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    public void GetVolunteerTroopId_IsengardCulture_HighRoll_ReturnsScout()
+    public void GetVolunteerTroopId_IsengardCulture_Roll9_ReturnsScout()
     {
-        // Roll 9 is the last index — Scout (final weight-1 entry, off-by-one guard).
-        _random.Next(10).Returns(9);
+        // Roll 9 = urukhai_scout (the bow-line entry). Pool total now 14; scout sits at [9],
+        // with the appended orc_grunt[10..12] + orthanc_chosen[13] reachability fixes after it.
+        _random.Next(14).Returns(9);
         var context = new VolunteerContext(
             settlementId: null,
             boundSettlementId: null,
@@ -2229,13 +2239,13 @@ public class VolunteerRecruitmentServiceTests
     }
 
     // --- New factions: Goblins, Misty Mountain Orcs, Lindon (rivendell culture) ---
-    // Pools mirror the Gundabad hostile-faction shape: snaga(7)/grunt(2)/fighter(1) = total 10.
-    // Cumulative: snaga rolls 0..6, grunt 7..8, fighter 9.
+    // Goblin / MMO pools: snaga(7)[0..6] + grunt(2)[7..8] + fighter(1)[9] + hunter(2)[10..11] = total 12
+    // (hunter appended as a reachability fix for the orphaned archer line; rolls 0..9 unchanged).
 
     [TestMethod]
     public void GetVolunteerTroopId_GoblinCulture_LowRoll_ReturnsSnaga()
     {
-        _random.Next(10).Returns(0);
+        _random.Next(12).Returns(0);
         var context = new VolunteerContext(null, null, null, "goblin");
         Assert.AreEqual("goblin_snaga", _sut.GetVolunteerTroopId(context));
     }
@@ -2243,7 +2253,7 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_GoblinCulture_HighRoll_ReturnsFighter()
     {
-        _random.Next(10).Returns(9);
+        _random.Next(12).Returns(9);
         var context = new VolunteerContext(null, null, null, "goblin");
         Assert.AreEqual("goblin_fighter", _sut.GetVolunteerTroopId(context));
     }
@@ -2251,7 +2261,7 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_MistyMountainOrcsCulture_LowRoll_ReturnsSnaga()
     {
-        _random.Next(10).Returns(0);
+        _random.Next(12).Returns(0);
         var context = new VolunteerContext(null, null, null, "mistymountainorcs");
         Assert.AreEqual("mistymountainorcs_snaga", _sut.GetVolunteerTroopId(context));
     }
@@ -2259,17 +2269,19 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_MistyMountainOrcsCulture_HighRoll_ReturnsFighter()
     {
-        _random.Next(10).Returns(9);
+        _random.Next(12).Returns(9);
         var context = new VolunteerContext(null, null, null, "mistymountainorcs");
         Assert.AreEqual("mistymountainorcs_fighter", _sut.GetVolunteerTroopId(context));
     }
 
-    // rivendell pool: imladris_recruit(5)/imladris_infantry(3)/imladris_bowman(2) = total 10.
+    // rivendell pool: imladris_recruit(5)[0..4]/imladris_infantry(3)[5..7]/imladris_bowman(2)[8..9]
+    //   + rivendell_noble(1)[10] + rivendell_knight_golden_flower(1)[11] = total 12.
+    // (the two named-elite line entries appended as reachability fixes; rolls 0..9 unchanged.)
     // Serves both the Rivendell kingdom and the new Lindon kingdom (both Culture.rivendell).
     [TestMethod]
     public void GetVolunteerTroopId_RivendellCulture_LowRoll_ReturnsRecruit()
     {
-        _random.Next(10).Returns(0);
+        _random.Next(12).Returns(0);
         var context = new VolunteerContext(null, null, null, "rivendell");
         Assert.AreEqual("imladris_recruit", _sut.GetVolunteerTroopId(context));
     }
@@ -2277,8 +2289,230 @@ public class VolunteerRecruitmentServiceTests
     [TestMethod]
     public void GetVolunteerTroopId_RivendellCulture_HighRoll_ReturnsBowman()
     {
-        _random.Next(10).Returns(9);
+        _random.Next(12).Returns(9);
         var context = new VolunteerContext(null, null, null, "rivendell");
         Assert.AreEqual("imladris_bowman", _sut.GetVolunteerTroopId(context));
+    }
+
+    // --- Reachability guard (every troop is accounted for) ---
+    // A LOTR troop line is only recruitable if one of its troops is injected into a pool, OR a pooled
+    // troop upgrades into it. This test parses the upgrade graph from every troops_*.xml, floods from the
+    // union of all pool roots (AllPooledTroopIds), and asserts the ONLY unreachable troops are the
+    // intentionally non-recruited ones: settlement militia (*_militia_*), bandit-hideout bosses (*_boss),
+    // and the cave_troll monster (deferred — needs spider-style spawn support before it's safe to recruit).
+    // A future orphaned line then fails the build here instead of silently becoming unrecruitable in-game.
+
+    [TestMethod]
+    public void AllNonMilitiaNonBossTroops_AreReachableFromARecruitmentPoolRoot()
+    {
+        var troopsDir = ResolveTroopsDir();
+        if (troopsDir == null)
+        {
+            Assert.Inconclusive("Could not locate Main/_Module/ModuleData/troops relative to test bin");
+            return;
+        }
+
+        var (nodes, upgrades) = ParseTroopGraph(troopsDir);
+
+        // Roots = every troop id any pool can offer.
+        var roots = new HashSet<string>();
+        foreach (var id in VolunteerRecruitmentService.AllPooledTroopIds())
+            if (nodes.Contains(id))
+                roots.Add(id);
+
+        // The Gondor JSON pools — including the conditional Ithil Guard line (gondor_ith_*) — load at
+        // runtime in-game but NOT in the test bin (the auto-loader resolves a game-relative path that
+        // doesn't exist here, leaving only the hand-written fallback pools). Seed those roots from the
+        // production gondor.json via the real loader so the graph matches the live root set. No static
+        // state is mutated — the delegates only record troop ids locally.
+        var jsonPath = ResolveRepoJsonPath();
+        if (jsonPath != null)
+        {
+            GondorRecruitmentJsonLoader.LoadFromPath(
+                path: jsonPath,
+                addSettlement: (_, entries) => { foreach (var e in entries) if (nodes.Contains(e.Item1)) roots.Add(e.Item1); },
+                addSettlementConditional: (_, __, entries) => { foreach (var e in entries) if (nodes.Contains(e.Item1)) roots.Add(e.Item1); },
+                logger: _logger);
+        }
+
+        var reachable = new HashSet<string>();
+        var stack = new Stack<string>(roots);
+        while (stack.Count > 0)
+        {
+            var n = stack.Pop();
+            if (!reachable.Add(n)) continue;
+            if (upgrades.TryGetValue(n, out var kids))
+                foreach (var k in kids)
+                    if (!reachable.Contains(k)) stack.Push(k);
+        }
+
+        var gaps = new List<string>();
+        foreach (var id in nodes)
+            if (!reachable.Contains(id) && !IsIntentionallyUnrecruited(id))
+                gaps.Add(id);
+        gaps.Sort();
+
+        Assert.AreEqual(0, gaps.Count,
+            "These troops are fielded by AI lords but cannot be recruited or upgraded into from any pool " +
+            "root. Add their line-entry troop to VolunteerRecruitmentService, or (if intentionally AI-only) " +
+            "extend IsIntentionallyUnrecruited:\n  " + string.Join("\n  ", gaps));
+    }
+
+    [TestMethod]
+    public void AllPooledTroopIds_ResolveToRealTroops_NoTypos()
+    {
+        var troopsDir = ResolveTroopsDir();
+        if (troopsDir == null) { Assert.Inconclusive("troops dir not found"); return; }
+        var (nodes, _) = ParseTroopGraph(troopsDir);
+
+        var missing = new List<string>();
+        foreach (var id in VolunteerRecruitmentService.AllPooledTroopIds())
+            // taom_spider_creature is a roster anchor defined in characters/, not a troops_*.xml row.
+            if (id != "taom_spider_creature" && !nodes.Contains(id))
+                missing.Add(id);
+        missing.Sort();
+
+        Assert.AreEqual(0, missing.Count,
+            "Pool references troop ids absent from every troops_*.xml (typos?):\n  " + string.Join("\n  ", missing));
+    }
+
+    private static bool IsIntentionallyUnrecruited(string troopId)
+        => troopId.Contains("_militia_")          // settlement militia — spawned, not recruited
+           || troopId.EndsWith("_boss")           // bandit-hideout bosses
+           || troopId == "cave_troll";            // non-humanoid monster; deferred pending spider-style spawn support
+
+    private static string ResolveTroopsDir()
+    {
+        var dir = new System.IO.DirectoryInfo(System.AppDomain.CurrentDomain.BaseDirectory);
+        for (int i = 0; i < 12 && dir != null; i++, dir = dir.Parent)
+        {
+            var candidate = System.IO.Path.Combine(dir.FullName, "Main", "_Module", "ModuleData", "troops");
+            if (System.IO.Directory.Exists(candidate))
+                return candidate;
+        }
+        return null;
+    }
+
+    private static (HashSet<string> nodes, Dictionary<string, List<string>> upgrades) ParseTroopGraph(string troopsDir)
+    {
+        var nodes = new HashSet<string>();
+        var upgrades = new Dictionary<string, List<string>>();
+        foreach (var file in System.IO.Directory.GetFiles(troopsDir, "troops_*.xml"))
+        {
+            var doc = System.Xml.Linq.XDocument.Load(file);
+            foreach (var npc in doc.Descendants("NPCCharacter"))
+            {
+                var id = (string)npc.Attribute("id");
+                if (string.IsNullOrEmpty(id)) continue;
+                nodes.Add(id);
+                var kids = new List<string>();
+                foreach (var ut in npc.Descendants("upgrade_target"))
+                {
+                    var tid = (string)ut.Attribute("id");
+                    if (string.IsNullOrEmpty(tid)) continue;
+                    const string prefix = "NPCCharacter.";
+                    if (tid.StartsWith(prefix)) tid = tid.Substring(prefix.Length);
+                    kids.Add(tid);
+                }
+                if (kids.Count > 0) upgrades[id] = kids;
+            }
+        }
+        return (nodes, upgrades);
+    }
+
+    // --- Reachability fixes: user-reported lines now recruitable ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_GundabadCulture_Roll10_ReturnsHunter_ArcherLineEntry()
+    {
+        // Pool (total 13): snaga(7)[0..6] grunt(2)[7..8] fighter(1)[9] hunter(2)[10..11] scout(1)[12].
+        _random.Next(13).Returns(10);
+        var context = new VolunteerContext(null, null, null, "gundabad");
+        Assert.AreEqual("gundabad_hunter", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_GundabadCulture_Roll12_ReturnsScout_HorseArcherLineEntry()
+    {
+        _random.Next(13).Returns(12);
+        var context = new VolunteerContext(null, null, null, "gundabad");
+        Assert.AreEqual("gundabad_scout", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_IsengardCulture_Roll10_ReturnsOrcGrunt_OrcLineEntry()
+    {
+        _random.Next(14).Returns(10);
+        var context = new VolunteerContext(null, null, null, "isengard");
+        Assert.AreEqual("isengard_orc_grunt", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_IsengardCulture_Roll13_ReturnsOrthancChosen_EliteLineEntry()
+    {
+        _random.Next(14).Returns(13);
+        var context = new VolunteerContext(null, null, null, "isengard");
+        Assert.AreEqual("orthanc_chosen", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DolGuldurSettlement_Roll7_ReturnsOrcRecruit()
+    {
+        // town_DG1 (18): goblin(7)[0..6] orc_recruit(4)[7..10] uruk_foul(2)[11..12] khamul(3)[13..15] orc_scout(1)[16] spider(1)[17]
+        _random.Next(18).Returns(7);
+        var context = new VolunteerContext("town_DG1", null, null, "dolguldur");
+        Assert.AreEqual("dg_orc_recruit", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DolGuldurSettlement_Roll11_ReturnsUrukFoul()
+    {
+        _random.Next(18).Returns(11);
+        var context = new VolunteerContext("town_DG1", null, null, "dolguldur");
+        Assert.AreEqual("dg_uruk_foul", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DolGuldurClan_Roll7_ReturnsOrcRecruit()
+    {
+        // Clan pool (17): goblin(7)[0..6] orc_recruit(4)[7..10] uruk_foul(2)[11..12] khamul(3)[13..15] orc_scout(1)[16]
+        _random.Next(17).Returns(7);
+        var context = new VolunteerContext(null, null, "clan_dolguldur_1", "dolguldur");
+        Assert.AreEqual("dg_orc_recruit", _sut.GetVolunteerTroopId(context));
+    }
+
+    // --- Newly-wired cultures (previously recruited nothing) ---
+
+    [TestMethod]
+    public void GetVolunteerTroopId_MirkwoodCulture_ReturnsMirkwoodRecruit()
+    {
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(null, null, null, "mirkwood");
+        Assert.AreEqual("mirkwood_recruit", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_UmbarCulture_Roll0_ReturnsAuxBasic()
+    {
+        // umbar pool: aux_basic(7)[0..6] + umbar_elite(3)[7..9] = total 10
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(null, null, null, "umbar");
+        Assert.AreEqual("aux_basic", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_UmbarCulture_Roll7_ReturnsUmbarElite()
+    {
+        _random.Next(10).Returns(7);
+        var context = new VolunteerContext(null, null, null, "umbar");
+        Assert.AreEqual("umbar_elite", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void HasCulturePool_MirkwoodAndUmbar_NowTrue()
+    {
+        // Both were absent before this fix — making them valid CultureConversion targets now.
+        Assert.IsTrue(_sut.HasCulturePool("mirkwood"));
+        Assert.IsTrue(_sut.HasCulturePool("umbar"));
     }
 }

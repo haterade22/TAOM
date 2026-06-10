@@ -56,6 +56,8 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeIsengardCulture();
         InitializeDunlandCulture();
         InitializeDunlandClans();
+        InitializeMirkwoodCulture();
+        InitializeUmbarCulture();
     }
 
     // --- Rohan Culture Fallback (Culture.vlandia) ---
@@ -164,6 +166,12 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("orc_warg_scout",     2),  // Warg-Rider cavalry
             new VolunteerChance("urukhai_warrior",    1),  // melee mid
             new VolunteerChance("urukhai_scout",      1),  // bow-line entry
+            // Reachability fix: the isengard_orc_* line (rooted at isengard_orc_grunt) and the
+            // Orthanc Guard line (rooted at orthanc_chosen) were fielded by AI lords but orphaned
+            // from every pool, so players could never recruit/upgrade into them. Grunt is the
+            // common Mordor-style orc baseline (3); the L26 Orthanc elite is a rare line-entry (1).
+            new VolunteerChance("isengard_orc_grunt", 3),  // orc line + warg_v2 line entry
+            new VolunteerChance("orthanc_chosen",     1),  // Orthanc Guard elite line entry
         };
     }
 
@@ -249,7 +257,13 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         {
             new VolunteerChance("gundabad_snaga", 7),
             new VolunteerChance("gundabad_grunt", 2),
-            new VolunteerChance("gundabad_fighter", 1)
+            new VolunteerChance("gundabad_fighter", 1),
+            // Reachability fix: the Gundabad archer line (gundabad_hunter -> lurker -> sentry ->
+            // archer) and the horse-archer scout line (gundabad_scout -> despoiler) had no path
+            // from the melee snaga root, so they never appeared in recruitment. Add their entry
+            // troops directly. Hunter is the archer-line entry (2); scout the rarer mounted line (1).
+            new VolunteerChance("gundabad_hunter", 2),  // archer line entry
+            new VolunteerChance("gundabad_scout", 1)    // horse-archer line entry
         };
     }
 
@@ -260,7 +274,10 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         {
             new VolunteerChance("goblin_snaga", 7),
             new VolunteerChance("goblin_grunt", 2),
-            new VolunteerChance("goblin_fighter", 1)
+            new VolunteerChance("goblin_fighter", 1),
+            // Reachability fix (same shape as Gundabad): goblin archer line
+            // (goblin_hunter -> lurker -> sentry -> archer) was orphaned from the melee root.
+            new VolunteerChance("goblin_hunter", 2)  // archer line entry
         };
     }
 
@@ -271,7 +288,10 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         {
             new VolunteerChance("mistymountainorcs_snaga", 7),
             new VolunteerChance("mistymountainorcs_grunt", 2),
-            new VolunteerChance("mistymountainorcs_fighter", 1)
+            new VolunteerChance("mistymountainorcs_fighter", 1),
+            // Reachability fix (same shape as Gundabad): MMO archer line
+            // (mistymountainorcs_hunter -> lurker -> sentry -> archer) was orphaned.
+            new VolunteerChance("mistymountainorcs_hunter", 2)  // archer line entry
         };
     }
 
@@ -284,7 +304,15 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         {
             new VolunteerChance("imladris_recruit", 5),
             new VolunteerChance("imladris_infantry", 3),
-            new VolunteerChance("imladris_bowman", 2)
+            new VolunteerChance("imladris_bowman", 2),
+            // Reachability fix: the named Rivendell elite lines — the noble cavalry line
+            // (rivendell_noble -> royal_guard -> royal_knight -> high_captain/glorfindel_guard)
+            // and the Gondolin / Golden-Flower foot elites (rivendell_knight_golden_flower ->
+            // warden_gondolin / gondolin_battlemaster) — were AI-only orphans. Add their line
+            // entries at rare weight 1 each (they are L36+ high elites; the imladris line stays
+            // the common recruit).
+            new VolunteerChance("rivendell_noble", 1),                 // noble cavalry line entry
+            new VolunteerChance("rivendell_knight_golden_flower", 1)   // Gondolin/Golden-Flower elite line entry
         };
     }
 
@@ -349,6 +377,35 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("mordor_orc_hunter",   1),
             new VolunteerChance("mordor_warg_tamer",   1),
             new VolunteerChance("morannon_recruit",    5),  // Morannon Recruit — dominant elite-orc
+        };
+    }
+
+    // --- Mirkwood (Culture.mirkwood) Culture Fallback ---
+    // Mirkwood (the Woodland Realm) shipped with NO recruitment wiring at all — no "mirkwood"
+    // CultureMap key and no settlement/clan pools — so the player could recruit nothing at a
+    // Mirkwood fief. The Mirkwood roster is intentionally high-tier (every non-militia troop is
+    // L36+ elite Silvan elves); mirkwood_recruit (L36, the culture basic_troop) is the sole line
+    // root, and the whole infantry / ranged (sentinels) / cavalry (rochenlas) tree upgrades from it.
+    private static void InitializeMirkwoodCulture()
+    {
+        CultureMap["mirkwood"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("mirkwood_recruit", 1),
+        };
+    }
+
+    // --- Umbar (Culture.umbar) Culture Fallback ---
+    // Umbar (the Corsair city-states) likewise shipped with NO recruitment wiring, so its fiefs
+    // recruited nothing. aux_basic (L6 auxiliary levy) is the common baseline — a TERMINAL recruit
+    // with no upgrade_targets (recruitable but never promotes). umbar_elite (L11) is the entry of the
+    // umbar_elite_root* corsair line (the culture basic_troop / bandit_raider) and ALONE connects the
+    // whole corsair upgrade tree. Both are pooled so neither is an unreachable orphan.
+    private static void InitializeUmbarCulture()
+    {
+        CultureMap["umbar"] = new List<VolunteerChance>
+        {
+            new VolunteerChance("aux_basic",   7),
+            new VolunteerChance("umbar_elite", 3),
         };
     }
 
@@ -534,23 +591,49 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         // party roster as a humanoid anchor (race dg_uruk) and spawns + fights as the spider Monster via
         // Patch45_SpiderTroopSpawn. Settlement pools feed BOTH player and AI lord recruitment. Deliberately
         // absent from the clan-path pool (InitializeDolGuldurClans) to keep that source clean.
-        AddSettlement("town_DG1",   ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 1));
-        AddSettlement("castle_DG1", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 1));
-        AddSettlement("castle_DG2", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 1));
-        AddSettlement("castle_DG3", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3), ("taom_spider_creature", 1));
+        // Orc + Uruk line entries (dg_orc_recruit, dg_uruk_foul, dg_orc_scout) are added DIRECTLY to
+        // the settlement (and clan) pools — not just the culture fallback — because culture is the
+        // lowest-priority pool and every Dol Guldur fief has a settlement/clan pool that shadows it.
+        // Without these, the orc line (dg_orc_recruit -> gnasher/warrior/reaver + the warg line that
+        // hangs off it) and the uruk line (dg_uruk_foul -> warrior -> ...) were unrecruitable at every
+        // DG settlement even though lords fielded them.
+        AddSettlement("town_DG1",   DolGuldurSettlementPool);
+        AddSettlement("castle_DG1", DolGuldurSettlementPool);
+        AddSettlement("castle_DG2", DolGuldurSettlementPool);
+        AddSettlement("castle_DG3", DolGuldurSettlementPool);
     }
+
+    // Settlement pool (total 18): goblins common, orcs the mid-line meat, a uruk entry, khamul shadow
+    // elite, a rare ranged-orc entry, and the giant spider at the rare tail (spawns via Patch45).
+    private static readonly (string, int)[] DolGuldurSettlementPool =
+    {
+        ("dg_goblin_slave",           7),
+        ("dg_orc_recruit",            4),  // orc line + warg line entry
+        ("dg_uruk_foul",              2),  // uruk line entry
+        ("dg_khamul_shadow_initiate", 3),
+        ("dg_orc_scout",              1),  // ranged-orc line entry (dg_orc_scout -> dg_orc_archer)
+        ("taom_spider_creature",      1),
+    };
 
     // --- Dol Guldur Clan Mappings ---
 
     private static void InitializeDolGuldurClans()
     {
-        AddClan("clan_dolguldur_1", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3));
-        AddClan("clan_dolguldur_2", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3));
-        AddClan("clan_dolguldur_3", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3));
-        AddClan("clan_dolguldur_4", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3));
-        AddClan("clan_dolguldur_5", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3));
-        AddClan("clan_dolguldur_6", ("dg_goblin_slave", 7), ("dg_khamul_shadow_initiate", 3));
+        // Clan pool (total 17): identical to the settlement pool MINUS the spider, which stays
+        // exclusive to the settlement-path pool (the giant spider is a per-fief recruit, not a
+        // clan-army recruit — see InitializeDolGuldurSettlements + Patch45).
+        for (int i = 1; i <= 6; i++)
+            AddClan($"clan_dolguldur_{i}", DolGuldurClanPool);
     }
+
+    private static readonly (string, int)[] DolGuldurClanPool =
+    {
+        ("dg_goblin_slave",           7),
+        ("dg_orc_recruit",            4),  // orc line + warg line entry
+        ("dg_uruk_foul",              2),  // uruk line entry
+        ("dg_khamul_shadow_initiate", 3),
+        ("dg_orc_scout",              1),  // ranged-orc line entry
+    };
 
     // --- Dol Guldur Culture Fallback ---
 
@@ -559,8 +642,13 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         CultureMap["dolguldur"] = new List<VolunteerChance>
         {
             new VolunteerChance("dg_goblin_slave", 5),
+            // Orc + uruk line entries — also added here (not only to settlement/clan) so a CONVERTED
+            // fief that recruits via the culture pool still gets the full Dol Guldur roster.
+            new VolunteerChance("dg_orc_recruit", 3),   // orc line + warg line entry
+            new VolunteerChance("dg_uruk_foul", 2),     // uruk line entry (T2; dg_uruk_warrior below is the T3 mid)
             new VolunteerChance("dg_uruk_warrior", 3),
             new VolunteerChance("dg_khamul_shadow_initiate", 2),
+            new VolunteerChance("dg_orc_scout", 1),     // ranged-orc line entry
             // Giant spider — culture-fallback recruit for any Dol Guldur fief not in the per-settlement
             // map above. Spawns + fights as the spider Monster (Patch45_SpiderTroopSpawn).
             new VolunteerChance("taom_spider_creature", 1)
@@ -573,12 +661,20 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
     // Erebor-leaning 8:4 weight (miner 5 / noble 3 / Iron Hills recruit 2 / Iron Hills noble 2).
     // Applied to BOTH settlements and clans — settlement pools are checked first, so the mix must
     // live there too or it would never surface in the mapped Erebor towns/castles.
+    // Total 15. The two trailing entries are reachability fixes (appended last so the existing
+    // cumulative ranges of the first four are unchanged): the Iron Pass line (ironpass_recruit ->
+    // warrior -> infantry -> axeman -> ... + the ironpass_arbalest ranged sub-line) and the
+    // Erebor Oathsworn elite line (erebor_oathsworn -> legionary -> royal_legionary) were fielded
+    // by AI lords but orphaned from every pool. Iron Pass recruit at modest weight (2); the L36
+    // Oathsworn elite as a rare line-entry (1).
     private static readonly (string, int)[] EreborMix =
     {
         ("erebor_reg_miner",       5),
         ("erebor_noble",           3),
         ("iron_hills_reg_recruit", 2),
         ("iron_hills_noble",       2),
+        ("ironpass_recruit",       2),  // Iron Pass line entry
+        ("erebor_oathsworn",       1),  // Oathsworn elite line entry
     };
 
     private static void InitializeEreborSettlements()
@@ -625,7 +721,10 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("iron_hills_reg_recruit", 2),
             // T2 entry-point of the Iron Hills Noble line added in #212 KEYforce revamp.
             // Without this, the 13-troop noble line is fielded by AI but not recruitable in villages.
-            new VolunteerChance("iron_hills_noble", 2)
+            new VolunteerChance("iron_hills_noble", 2),
+            // Reachability fixes (mirror EreborMix): Iron Pass line + Oathsworn elite line.
+            new VolunteerChance("ironpass_recruit", 2),  // Iron Pass line entry
+            new VolunteerChance("erebor_oathsworn", 1)   // Oathsworn elite line entry
         };
     }
 
@@ -745,12 +844,14 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         AddSettlement("castle_RU9",  balcothPool);
 
         // Far-Rhun pool: Sârt + Ulbarath + Chêya
+        // far_rhun_horse_master appended (reachability fix): its cavalry line was an AI-only orphan.
         (string, int)[] farRhunPool =
         {
-            ("far_rhun_levy",     4),
-            ("far_rhun_footman",  2),
-            ("far_rhun_horseman", 3),
-            ("loke_rim_initiate", 1),
+            ("far_rhun_levy",        4),
+            ("far_rhun_footman",     2),
+            ("far_rhun_horseman",    3),
+            ("loke_rim_initiate",    1),
+            ("far_rhun_horse_master", 1),  // cavalry line entry (orphaned before)
         };
         AddSettlement("town_RU5",    farRhunPool);
         AddSettlement("castle_RU11", farRhunPool);
@@ -769,7 +870,10 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         AddSettlement("town_RU6",   wainPool);
         AddSettlement("castle_RU6", wainPool);
 
-        // Mixed pool: Mistrand + Lest + Samârnûl (identical to culture fallback by design — explicit > implicit)
+        // Mixed pool: Mistrand + Lest + Samârnûl (generic Rhun pool).
+        // easterling_recruit appended (reachability fix): the easterling_*_new tree (footman ->
+        // swordsman/halberdier -> veterans + bowman/skirmisher/archer + cavalry) had no recruitable
+        // root anywhere. The mixed pool is the generic Rhun home, so easterlings live here + in culture.
         (string, int)[] mixedPool =
         {
             ("balcoth_volunteer",    1),
@@ -781,18 +885,21 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             ("loke_rim_initiate",    1),
             ("sagarun_deckhand",     1),
             ("wain_youngblood",      2),
+            ("easterling_recruit",   2),  // easterling line entry (orphaned before)
         };
         AddSettlement("town_RU1",   mixedPool);
         AddSettlement("town_RU2",   mixedPool);
         AddSettlement("castle_RU4", mixedPool);
 
         // Kharaghul pool: Iôrig + Ulathar
+        // kharaghul_horse_master appended (reachability fix): its cavalry line was an AI-only orphan.
         (string, int)[] kharaghulPool =
         {
-            ("loke_rim_initiate",     1),
-            ("kharaghul_youth",       5),
-            ("kharaghul_raider",      2),
-            ("kharaghul_horse_scout", 2),
+            ("loke_rim_initiate",      1),
+            ("kharaghul_youth",        5),
+            ("kharaghul_raider",       2),
+            ("kharaghul_horse_scout",  2),
+            ("kharaghul_horse_master", 1),  // cavalry line entry (orphaned before)
         };
         AddSettlement("town_RU8",   kharaghulPool);
         AddSettlement("castle_RU5", kharaghulPool);
@@ -814,6 +921,8 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("loke_rim_initiate",    1),
             new VolunteerChance("sagarun_deckhand",     1),
             new VolunteerChance("wain_youngblood",      2),
+            // Reachability fix (mirror the mixed pool): easterling line entry for converted fiefs.
+            new VolunteerChance("easterling_recruit",   2),
         };
     }
 
@@ -839,6 +948,25 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
     // Internal accessor for tests — clears the conditional map between test scenarios that re-seed it.
     internal static bool TryRemoveConditionalSettlement(string settlementId)
         => ConditionalSettlementMap.Remove(settlementId);
+
+    // Internal accessor for tests — every troop id the service can offer across ALL pools
+    // (settlement + clan + culture + conditional). The reachability guard test
+    // (VolunteerRecruitmentServiceTests) flood-fills the troop-XML upgrade graph from these roots
+    // and asserts every non-militia / non-boss troop is reachable, so a future orphaned line fails
+    // the build instead of silently becoming unrecruitable.
+    internal static IEnumerable<string> AllPooledTroopIds()
+    {
+        var ids = new HashSet<string>();
+        foreach (var pool in SettlementMap.Values)
+            foreach (var c in pool) ids.Add(c.CharacterId);
+        foreach (var pool in ClanMap.Values)
+            foreach (var c in pool) ids.Add(c.CharacterId);
+        foreach (var pool in CultureMap.Values)
+            foreach (var c in pool) ids.Add(c.CharacterId);
+        foreach (var entry in ConditionalSettlementMap.Values)
+            foreach (var c in entry.Pool) ids.Add(c.CharacterId);
+        return ids;
+    }
 
     internal static List<VolunteerChance> BuildPool(string ownerId, (string troopId, int weight)[] entries)
     {

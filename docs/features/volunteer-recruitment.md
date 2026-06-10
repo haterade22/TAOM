@@ -38,8 +38,16 @@ GetVolunteerTroopId(context)
 Weighted selection within each pool uses cumulative-weight roll-out (see `PickWeighted`).
 
 Pool data has two sources:
-1. **Hand-written C# `InitializeXxx*()` methods** — Gondor, Dol Guldur, Erebor, Lothlórien, Shaghâna, Âbanissa, Rhûn, Gundabad. Static-constructor wiring; one method per (culture, scope) combination.
+1. **Hand-written C# `InitializeXxx*()` methods** — Gondor, Dol Guldur, Erebor, Lothlórien, Shaghâna, Âbanissa, Rhûn, Gundabad, Goblin, Misty Mountain Orcs, Rivendell, Mordor, Dale, Rohan, Harad, Dunland, Isengard, Mirkwood, Umbar. Static-constructor wiring; one method per (culture, scope) combination.
 2. **JSON file `recruitment_pools/gondor.json`** — for Gondor only as of 2026-05-23. Loaded lazily once per process via `EnsureGondorJsonLoaded` in the instance constructor (idempotent via `Interlocked.CompareExchange`). JSON entries OVERWRITE matching hand-written keys when present; absent JSON file = hand-written behaviour (which is what tests see).
+
+### Reachability invariant (every troop is accounted for)
+
+A pool only injects a few **root** troop IDs; the player obtains the rest of a line by *upgrading* those roots up the troop tree. So a troop is recruitable **iff it is a pool root, OR a pool root upgrades into it** (transitively). A line whose entry troop is an upgrade-graph orphan AND absent from every pool is fielded by AI lords but unobtainable by the player.
+
+The `AllNonMilitiaNonBossTroops_AreReachableFromARecruitmentPoolRoot` test enforces this: it parses the upgrade graph from every `troops_*.xml`, floods from `VolunteerRecruitmentService.AllPooledTroopIds()` (plus the production `gondor.json` conditional pool, via the real loader), and fails the build if any troop is unreachable **except** the intentionally non-recruited set — settlement militia (`*_militia_*`, spawned via `militia_*_template`), bandit-hideout bosses (`*_boss`), and `cave_troll` (a non-humanoid monster deferred until it has spider-style `Mission.SpawnAgent` swap support). When you author a new line, add its entry troop to a pool or this test tells you which IDs you left orphaned.
+
+**Shadowing gotcha:** `CultureMap` is the *lowest-priority* pool. If a culture's fiefs all have a `SettlementMap`/`ClanMap` pool, a troop placed only in that culture's `CultureMap` entry never surfaces at those fiefs (it only fires for converted fiefs and unmapped settlements). To make a line recruitable at a culture's *own* settlements, add its root to the **settlement + clan** pools, not just culture. (This was the root cause of the Dol Guldur "uruk line not recruitable" report — `dg_uruk_warrior` sat in `CultureMap["dolguldur"]` but every DG fief had a settlement/clan pool that shadowed it.)
 
 ### Component Diagram
 
@@ -141,6 +149,8 @@ The predicate is evaluated **per-lookup**, not at registration time — kingdom 
   - JSON loader: missing file, malformed JSON, NaN/Infinity/negative weight skipping, percentage→weight conversion, recognised vs unrecognised condition routing
   - Integration test against the real `gondor.json` file (walks up from test bin to find repo root)
   - `BuildPool` validation: empty entries, non-positive weight, blank troop id
+  - **Reachability guard** (`AllNonMilitiaNonBossTroops_AreReachableFromARecruitmentPoolRoot`): floods the `troops_*.xml` upgrade graph from all pool roots and asserts only militia/`*_boss`/`cave_troll` are unreachable — see [Reachability invariant](#reachability-invariant-every-troop-is-accounted-for). Plus `AllPooledTroopIds_ResolveToRealTroops_NoTypos` (every pooled id resolves to a real troop, except the `taom_spider_creature` anchor).
+  - Newly-wired cultures Mirkwood (`mirkwood_recruit`) + Umbar (`aux_basic` / `umbar_elite`), and the reachability-fix line entries (Gundabad archer/scout, Isengard orc/Orthanc, Dol Guldur orc/uruk at settlement + clan).
 
 ## How to add a new culture's pool
 

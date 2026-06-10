@@ -70,20 +70,19 @@ public class VolunteerRecruitmentConversionTests
     [DataRow("abanissa")]
     [DataRow("goblin")]
     [DataRow("mistymountainorcs")]
+    [DataRow("mirkwood")]  // wired 2026-06-10: mirkwood_recruit culture pool (recruitment-reachability fix)
+    [DataRow("umbar")]     // wired 2026-06-10: aux_basic + umbar_elite culture pool (recruitment-reachability fix)
     public void HasCulturePool_PlayableCultureWithTroops_ReturnsTrue(string cultureId)
     {
         Assert.IsTrue(_sut.HasCulturePool(cultureId),
             $"Playable culture '{cultureId}' must have a recruitment pool so its conquests can convert.");
     }
 
-    // KNOWN GAP (documented, not a bug): battania (Khand), mirkwood, and umbar are fief-owning kingdoms but
-    // have no recruitable basic-troop set authored (no troops_khand.xml; mirkwood/umbar troops carry no
-    // is_basic_troop). Conversion to these is intentionally gated off until their recruitment pools exist.
-    // If/when pools are authored, move these rows up to the covered test above.
+    // KNOWN GAP (documented, not a bug): battania (Khand) is a fief-owning kingdom but has no recruitable
+    // basic-troop set authored (no troops_khand.xml). Conversion to it is intentionally gated off until a
+    // recruitment pool exists. (mirkwood + umbar were wired 2026-06-10 and moved to the covered test above.)
     [TestMethod]
     [DataRow("battania")]  // Khand -- no troop set authored
-    [DataRow("mirkwood")]  // troops exist but none flagged is_basic_troop
-    [DataRow("umbar")]     // only boss/elite troops authored
     public void HasCulturePool_PlayableCultureWithoutTroopSet_ReturnsFalse_KnownGap(string cultureId)
     {
         Assert.IsFalse(_sut.HasCulturePool(cultureId),
