@@ -67,6 +67,72 @@ public class VolunteerRecruitmentServiceTests
         Assert.IsNull(result);
     }
 
+    // --- Harad war-elephant rider: recruitable ONLY by clan_aserai_1 (Ayerikkä) ---
+    // Clan pool [harad_levy:7, harad_noble:3, harad_elephant_rider:1] (total 11): roll 10 = rider.
+    // Per troops.md, the clan pool SHADOWS the aserai culture fallback, so it copies levy/noble too.
+
+    [TestMethod]
+    public void GetVolunteerTroopId_ClanAserai1_TopBucket_RollsElephantRider()
+    {
+        _random.Next(11).Returns(10);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_aserai_1",
+            cultureId: "aserai");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("harad_elephant_rider", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_ClanAserai1_LowBucket_StillRollsNormalHaradLevy()
+    {
+        _random.Next(11).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_aserai_1",
+            cultureId: "aserai");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("harad_levy", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AseraiCulture_NoClanPool_NeverRollsElephantRider()
+    {
+        // Culture fallback pool [levy:7, noble:3] (total 10): top bucket (roll 9) is noble, NOT the rider.
+        _random.Next(10).Returns(9);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "aserai");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("harad_noble", result);
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_OtherAseraiClan_FallsToCulture_NeverRollsElephantRider()
+    {
+        // A different aserai clan has no clan pool -> falls to the culture fallback -> no rider available.
+        _random.Next(10).Returns(9);
+        var context = new VolunteerContext(
+            settlementId: null,
+            boundSettlementId: null,
+            ownerClanId: "clan_aserai_2",
+            cultureId: "aserai");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("harad_noble", result);
+    }
+
     [TestMethod]
     public void GetVolunteerTroopId_AllNulls_ReturnsNull()
     {

@@ -138,14 +138,67 @@
                 <equipment
                     slot="Leg"
                     id="Item.haradrim_boots" />
-                <!-- TEMP-ELEPHANT-TEST (2026-06-07): war-elephant mount so a Harad party fields an
-                     AI-ridden elephant for in-battle trample/mount-lock testing. REVERT before commit. -->
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="harad_elephant_rider"
+        default_group="HorseArcher"
+        level="51"
+        name="{=harad_elephant_rider_name}[Aharad] Elephant Rider"
+        occupation="Soldier"
+        culture="Culture.aserai">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="55" />
+            <skill
+                id="Riding"
+                value="80" />
+            <skill
+                id="OneHanded"
+                value="70" />
+            <skill
+                id="Polearm"
+                value="80" />
+            <skill
+                id="Bow"
+                value="30" />
+            <skill
+                id="Throwing"
+                value="25" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.eastern_spear_4_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.aserai_sword_3_t3" />
+                <equipment
+                    slot="Head"
+                    id="Item.haradrim_head" />
+                <equipment
+                    slot="Body"
+                    id="Item.haradrim_torso" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.haradrim_gloves" />
+                <equipment
+                    slot="Leg"
+                    id="Item.haradrim_boots" />
                 <equipment
                     slot="Horse"
                     id="Item.taom_war_elephant" />
-              <equipment
-              slot="HorseHarness"
-              id="Item.sk_elephant_armor_a" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.sk_elephant_armor_a" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

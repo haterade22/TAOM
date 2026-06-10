@@ -376,8 +376,8 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battle Tactics/Smart Cavalry", GroupOrder = 22)]
     [SettingPropertyBool("Enable Smart Cavalry AI", Order = 0,
-        HintText = "Master toggle. When off, cavalry uses vanilla charge logic. When on, the player's cavalry formations execute coordinated line charges with passthrough + reform behavior.")]
-    public bool EnableSmartCavalryAI { get; set; } = true;
+        HintText = "Master toggle. When off, cavalry uses vanilla charge logic. When on, the player's cavalry formations execute coordinated line charges with passthrough + reform behavior. Default OFF while war-elephant interaction is being tuned.")]
+    public bool EnableSmartCavalryAI { get; set; } = false;
 
     [SettingPropertyGroup("Battle Tactics/Smart Cavalry")]
     [SettingPropertyBool("Enable Friendly Collision Avoidance", Order = 1,

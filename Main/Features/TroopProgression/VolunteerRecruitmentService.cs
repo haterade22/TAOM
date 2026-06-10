@@ -52,6 +52,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeRohanClans();
         InitializeRohanCulture();
         InitializeHaradCulture();
+        InitializeHaradClans();
         InitializeIsengardCulture();
         InitializeDunlandCulture();
         InitializeDunlandClans();
@@ -87,6 +88,20 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("harad_levy",  7),
             new VolunteerChance("harad_noble", 3),
         };
+    }
+
+    // --- Harad Clans (Culture.aserai) ---
+    // The war-elephant rider (level-51 elite) is recruitable ONLY by clan_aserai_1 (Ayerikkä). A clan pool
+    // SHADOWS the aserai culture fallback (troops.md priority: clan > culture), so it copies the levy/noble pool
+    // and ADDS harad_elephant_rider at a low weight (1 of 11 ~= 9% of Ayerikkä's volunteer rolls). No other
+    // clan or the culture fallback contains the rider, so it cannot be recruited anywhere else. Weight is the
+    // rarity tuning knob.
+    private static void InitializeHaradClans()
+    {
+        AddClan("clan_aserai_1",
+            ("harad_levy",           7),
+            ("harad_noble",          3),
+            ("harad_elephant_rider", 1));
     }
 
     // --- Dunland (Culture.empire) Culture Fallback ---

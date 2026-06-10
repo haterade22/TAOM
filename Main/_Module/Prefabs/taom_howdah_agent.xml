@@ -1,0 +1,202 @@
+<prefabs>
+	<!-- Howdah seat for the TAOM war-elephant (sk_elephant_armor_a harness).
+	     Clean-room port of ADOD_Beasts' adod_howdah_4_agent.xml.
+	     All meshes are visible_only_when_editing — visually invisible in-game.
+	     The sk_elephant_armor_a harness provides the visual; this entity provides the
+	     functional layer (physics cage + TaomHowdahMachine script + TaomHowdahStandingPoint seat).
+	     Instantiated at runtime in ElephantMissionBehavior.OnAgentBuild when the mahout's
+	     HorseHarness == sk_elephant_armor_a. Position tracks elephant neck every frame via
+	     TaomHowdahMachine.RepositionToElephant().
+	     Physics body: bo_empire_keep_a_door_top creates an elevated physical floor at howdah height
+	     so UseGameObject -> native TranslateUser correctly positions agents at elevated Z (not terrain Z).
+	     Four _barrier_04x04m children cage the platform using ADOD's exact positions/scales (same
+	     sk_elephant_armor_a geometry). -->
+	<game_entity name="taom_howdah_agent" old_prefab_name="" mobility="1">
+		<flags>
+			<flag name="record_to_scene_replay" value="true"/>
+		</flags>
+		<visibility_masks>
+			<visibility_mask name="visible_only_when_editing" value="true"/>
+		</visibility_masks>
+		<transform position="0.000, 0.000, 0.000" rotation_euler="0.000, 0.000, 0.000"/>
+		<physics shape="bo_empire_keep_a_door_top">
+			<body_flags>
+				<body_flag name="dont_collide_with_camera"/>
+			</body_flags>
+		</physics>
+		<components>
+			<meta_mesh_component name="empire_keep_a_door_top"/>
+		</components>
+		<scripts>
+			<script name="TaomHowdahMachine">
+				<variables>
+					<variable name="PilotStandingPointTag" value=""/>
+					<variable name="AmmoPickUpTag" value=""/>
+					<variable name="WaitStandingPointTag" value=""/>
+					<variable name="NavMeshPrefabName" value=""/>
+				</variables>
+			</script>
+		</scripts>
+		<children>
+			<!-- 4 archer seats in a 2x2 grid (front-left, front-right, back-left, back-right).
+			     Positions tuned to the sk_elephant_armor_a howdah platform surface (Z=0.273).
+			     Rotations face each archer outward for better field of fire.
+			     Barrier cage uses ADOD's exact X/Y extents: X~-0.66..0.77, Y~-0.83..0.81. -->
+			<game_entity name="foods_watermelon_a" old_prefab_name="" mobility="1">
+				<flags>
+					<flag name="record_to_scene_replay" value="true"/>
+				</flags>
+				<visibility_masks>
+					<visibility_mask name="visible_only_when_editing" value="true"/>
+				</visibility_masks>
+				<transform position="-0.280, -0.340, 0.273" rotation_euler="0.000, 0.000, -0.785"/>
+				<components>
+					<meta_mesh_component name="foods_watermelon_a"/>
+				</components>
+				<scripts>
+					<script name="TaomHowdahStandingPoint">
+						<variables>
+							<variable name="AutoSheathWeapons" value="false"/>
+							<variable name="AutoEquipWeaponsOnUseStopped" value="false"/>
+							<variable name="AutoWieldWeapons" value="false"/>
+							<variable name="TranslateUser" value="true"/>
+							<variable name="HasRecentlyBeenRechecked" value="false"/>
+							<variable name="NavMeshPrefabName" value=""/>
+						</variables>
+					</script>
+				</scripts>
+			</game_entity>
+			<game_entity name="foods_watermelon_a" old_prefab_name="" mobility="1">
+				<flags>
+					<flag name="record_to_scene_replay" value="true"/>
+				</flags>
+				<visibility_masks>
+					<visibility_mask name="visible_only_when_editing" value="true"/>
+				</visibility_masks>
+				<transform position="0.420, -0.340, 0.273" rotation_euler="0.000, 0.000, 0.785"/>
+				<components>
+					<meta_mesh_component name="foods_watermelon_a"/>
+				</components>
+				<scripts>
+					<script name="TaomHowdahStandingPoint">
+						<variables>
+							<variable name="AutoSheathWeapons" value="false"/>
+							<variable name="AutoEquipWeaponsOnUseStopped" value="false"/>
+							<variable name="AutoWieldWeapons" value="false"/>
+							<variable name="TranslateUser" value="true"/>
+							<variable name="HasRecentlyBeenRechecked" value="false"/>
+							<variable name="NavMeshPrefabName" value=""/>
+						</variables>
+					</script>
+				</scripts>
+			</game_entity>
+			<game_entity name="foods_watermelon_a" old_prefab_name="" mobility="1">
+				<flags>
+					<flag name="record_to_scene_replay" value="true"/>
+				</flags>
+				<visibility_masks>
+					<visibility_mask name="visible_only_when_editing" value="true"/>
+				</visibility_masks>
+				<transform position="-0.280, 0.340, 0.273" rotation_euler="0.000, 0.000, -2.356"/>
+				<components>
+					<meta_mesh_component name="foods_watermelon_a"/>
+				</components>
+				<scripts>
+					<script name="TaomHowdahStandingPoint">
+						<variables>
+							<variable name="AutoSheathWeapons" value="false"/>
+							<variable name="AutoEquipWeaponsOnUseStopped" value="false"/>
+							<variable name="AutoWieldWeapons" value="false"/>
+							<variable name="TranslateUser" value="true"/>
+							<variable name="HasRecentlyBeenRechecked" value="false"/>
+							<variable name="NavMeshPrefabName" value=""/>
+						</variables>
+					</script>
+				</scripts>
+			</game_entity>
+			<game_entity name="foods_watermelon_a" old_prefab_name="" mobility="1">
+				<flags>
+					<flag name="record_to_scene_replay" value="true"/>
+				</flags>
+				<visibility_masks>
+					<visibility_mask name="visible_only_when_editing" value="true"/>
+				</visibility_masks>
+				<transform position="0.420, 0.340, 0.273" rotation_euler="0.000, 0.000, 2.356"/>
+				<components>
+					<meta_mesh_component name="foods_watermelon_a"/>
+				</components>
+				<scripts>
+					<script name="TaomHowdahStandingPoint">
+						<variables>
+							<variable name="AutoSheathWeapons" value="false"/>
+							<variable name="AutoEquipWeaponsOnUseStopped" value="false"/>
+							<variable name="AutoWieldWeapons" value="false"/>
+							<variable name="TranslateUser" value="true"/>
+							<variable name="HasRecentlyBeenRechecked" value="false"/>
+							<variable name="NavMeshPrefabName" value=""/>
+						</variables>
+					</script>
+				</scripts>
+			</game_entity>
+			<!-- Physics cage barriers — exact values from ADOD's adod_howdah_4_agent.xml.
+			     Scale Y=20.000 makes them tall so agents cannot escape vertically.
+			     dont_collide_with_camera keeps the camera unobstructed during battle. -->
+			<game_entity name="_barrier_04x04m" old_prefab_name="" mobility="1">
+				<visibility_masks>
+					<visibility_mask name="visible_only_when_editing" value="true"/>
+				</visibility_masks>
+				<transform position="0.044, -0.831, 0.273" rotation_euler="0.000, 0.000, 0.000" scale="1.450, 20.000, 1.000"/>
+				<physics shape="bo_barrier" override_material="wood">
+					<body_flags>
+						<body_flag name="dont_collide_with_camera"/>
+					</body_flags>
+				</physics>
+				<components>
+					<meta_mesh_component name="barrier"/>
+				</components>
+			</game_entity>
+			<game_entity name="_barrier_04x04m" old_prefab_name="" mobility="1">
+				<visibility_masks>
+					<visibility_mask name="visible_only_when_editing" value="true"/>
+				</visibility_masks>
+				<transform position="0.044, 0.812, 0.273" rotation_euler="0.000, 0.000, 3.141" scale="1.450, 20.000, 1.000"/>
+				<physics shape="bo_barrier" override_material="wood">
+					<body_flags>
+						<body_flag name="dont_collide_with_camera"/>
+					</body_flags>
+				</physics>
+				<components>
+					<meta_mesh_component name="barrier"/>
+				</components>
+			</game_entity>
+			<game_entity name="_barrier_04x04m" old_prefab_name="" mobility="1">
+				<visibility_masks>
+					<visibility_mask name="visible_only_when_editing" value="true"/>
+				</visibility_masks>
+				<transform position="-0.658, -0.025, 0.273" rotation_euler="0.000, 0.000, -1.571" scale="1.650, 20.000, 1.000"/>
+				<physics shape="bo_barrier" override_material="wood">
+					<body_flags>
+						<body_flag name="dont_collide_with_camera"/>
+					</body_flags>
+				</physics>
+				<components>
+					<meta_mesh_component name="barrier"/>
+				</components>
+			</game_entity>
+			<game_entity name="_barrier_04x04m" old_prefab_name="" mobility="1">
+				<visibility_masks>
+					<visibility_mask name="visible_only_when_editing" value="true"/>
+				</visibility_masks>
+				<transform position="0.765, -0.025, 0.273" rotation_euler="0.000, 0.000, 1.571" scale="1.650, 20.000, 1.000"/>
+				<physics shape="bo_barrier" override_material="wood">
+					<body_flags>
+						<body_flag name="dont_collide_with_camera"/>
+					</body_flags>
+				</physics>
+				<components>
+					<meta_mesh_component name="barrier"/>
+				</components>
+			</game_entity>
+		</children>
+	</game_entity>
+</prefabs>

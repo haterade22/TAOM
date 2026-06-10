@@ -109,6 +109,10 @@
     <!-- Pinnath Gelin cavalry (#224 polish pass) — T6 elite cavalry -->
     <TroopWeight id="gondor_pg_vet_cavalry" weight="2.0" />
 
+    <!-- ===== HARAD ===== -->
+    <!-- War Elephant package (Weight 7.0): 2 (elephant) + 1 (mahout) + 4 (howdah crew, auto-spawned in battle) -->
+    <TroopWeight id="harad_elephant_rider" weight="7.0" />
+
     <!-- ===== ISENGARD ===== -->
     <!-- Orthanc Guard Line (Weight 2.0) -->
     <TroopWeight id="orthanc_guard" weight="2.0" />

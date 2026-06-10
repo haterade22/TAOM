@@ -35,11 +35,78 @@
 > (ADOD id) + `monster_usage="elephant"` — next step: rename to `as_war_elephant` + `war_elephant` usage when
 > authoring the full TAOM-owned action-set with TAOM clip names.
 >
-> **CREW / HOWDAH (the multi-troop war elephant) — researched, not built.** How ADOD puts a *crew* of AI archers on
-> the elephant's back (a `UsableMachine` howdah with `StandingPoint` seats, per-tick frame-glued to the elephant's
-> neck point, crew force-spawned per seat) + the 4 v1.4.5 API drifts a TAOM port must fix:
-> **[howdah-crew-mechanism.md](elephant/howdah-crew-mechanism.md).** This is a separate, larger sub-feature to
-> sequence after the single-rider trample is confirmed. **Single-rider trample is now confirmed (2026-06-08).**
+> **CREW / HOWDAH — slide root cause DIAGNOSED (2026-06-10); fix DEFERRED by project-owner decision.**
+> `TaomHowdahMachine` + `TaomHowdahStandingPoint` ship 4 seats in a 2×2 grid. Crew is force-spawned at battle
+> start (sealed-package model — `harad_archer` ×4, not drawn from party roster).
+>
+> **CURRENT SHIPPED STATE (2026-06-10): the elephant rides, tramples, and walks/charges WITHOUT sliding** — but with
+> **no howdah crew** and **no spine bone-tracking**. The isolation ladder confirmed TWO independent slide sources —
+> (1) the force-spawned crew and (2) bone-tracking — both of which physically shove the elephant. Both are **disabled
+> for now** (project-owner decision: defer the fix). Cavalry-reassignment + trample are confirmed innocent and stay
+> enabled. The empty howdah still instantiates and follows the elephant via the fixed-offset path. To resume the
+> crew+howdah feature, implement the physics-contact fix and re-enable the two disabled paths — see
+> "### Slide root-cause isolation" below for the confirmed diagnosis + the planned fix.
+>
+> **2026-06-10 — what this session changed (some confirmed, some under test):**
+> - **One slide source fixed — action codes:** `act_war_elephant_attack_*` resolved to `act_none` (channel 0 =
+>   locomotion channel → kills walk/run cycle while engine keeps translating = slide). Fixed: renamed to
+>   `act_elephant_attack_1/2/3` (verified live in LOTRLOME action_types.xml + action_sets_elephant.xml). This
+>   removed a *constant* slide but a residual slide remained — see the isolation section for the two further sources.
+> - **Trample-into-empty-air gate restored:** ADOD's `target != null && distance < 3m` gate was missing from the
+>   1-for-1 port. Trample fired ~1–2×/sec into empty air overriding channel 0. Fixed: `TrampleTriggerRange = 3f`
+>   proximity + facing scan before firing.
+> - **Bone tracking (Spine1_05) implemented — but is a SUSPECTED slide source (under test):** `TaomHowdahMachine`
+>   resolves `Spine1_05` by case-insensitive name enumeration on first live tick, then `GetBoneEntitialFrameWithIndex`
+>   + `TransformToParent` each tick. Load-time AV (bone APIs during `OnAgentBuild`) fixed by the `_liveTicking` flag.
+>   BUT the isolation ladder shows bone-tracking is likely the second slide source — it SetFrames the howdah's `bo_`
+>   physics floor *at the spine bone* (inside the elephant's collision capsule), and the solver shoves the elephant.
+> - **SmartCavalryAI default changed to `false`** — user disabled in MCM during debugging; default updated to match.
+> - **Archer "constant draw" fixed:** the per-tick `SetActionChannel(0, act_howdah_stand_bow)` pose-lock (added
+>   earlier this session as the jitter fix) pinned the archer's upper body in a draw stance so the combat AI could
+>   never fire. **Removed** (2026-06-10) — combat AI drives the bow animation; the archer is held by `TeleportToPosition`.
+>   (`SetOnLandState`/`AgentOnLandFlags`, ADOD's anti-fall API, do NOT exist in v1.4.5 — confirmed zero matches.)
+>
+> 1. **`GetTickRequirement()` missing** — `TaomHowdahStandingPoint` didn't override `GetTickRequirement()` so the
+>    engine never called `OnTick`. Fixed by adding `TickRequirement.Tick | base` override (2026-06-08).
+>
+> 2. **Howdah at terrain level (archers invisible + elephants blocked)** — `RepositionToElephant()` used
+>    `GetBoneEntitialFrame` on the `Spine1_05` bone, which returns Z ≈ 0 in entity-local space in v1.4.5
+>    (bone origin is near the entity pivot, not the physical bone location). Fixed (2026-06-09): use simple
+>    `elephantAgent.Position + Vec3(0,0,HowdahHeightAboveGround=3.2f)`.
+>
+> 3. **End-of-battle freeze (1st root cause)** — `LockUserPositions=true` was set on seated archers. Bannerlord's
+>    end-battle sequencer immediately tries to move all agents to victory positions; locked agents busy-loop forever.
+>    Fixed (2026-06-09): removed `LockUserPositions`/`LockUserFrames` entirely.
+>
+> 4. **Archers not shooting — `act_none` animation freeze** — `HowdahBowAnim = ActionIndexCache.Create("act_howdah_stand_bow")`
+>    resolves to `act_none` when the tpac doesn't exist. The `OnTick` guard `!action.GetName().Contains("howdah")` is
+>    always true for `act_none` → `SetActionChannel(0, act_none)` called every tick → action channel permanently
+>    frozen → archers cannot perform ANY combat animations and cannot shoot. Fixed (2026-06-09): removed the
+>    `SetActionChannel` block entirely. The engine's combat AI handles shooting animations without interference.
+>
+> 5. **Archers not responding to formation commands** — `OnUse` set `userAgent.Formation = null`, removing archers
+>    from their formation entirely. Formation-level attack/fire commands never reached them. Fixed (2026-06-09):
+>    removed the `Formation = null` call. Archers stay in their formation; `SetScriptedPosition` each tick overrides
+>    movement targets (keeping them on the howdah) while attack orders still reach them through the formation.
+>
+> 6. **End-of-battle freeze (2nd root cause)** — `SetScriptedPosition` remained active on agents after the battle
+>    ended. The end-battle sequencer issues movement orders that collide with the scripted position state → agents
+>    cannot walk to exit positions → sequencer stalls. Additionally `TaomHowdahMachine.OnEndMission` nulled
+>    `elephantAgent` and called `base.OnEndMission()` WITHOUT calling `ReleaseAllSeats()` first — so `ReleaseAgent()`
+>    ran with a null elephant ref, couldn't call `TeleportToPosition`, and left scripted state active.
+>    Fixed (2026-06-09): (a) `ReleaseAllSeats()` added to `OnEndMission()` before nulling refs; (b) `ReleaseAgent()`
+>    now calls `agent.TeleportToPosition(elephantAgent?.Position ?? agent.Position)` before `ClearTargetZ()` —
+>    snapping the agent to navmesh and clearing all elevated scripted position state.
+>
+> **ADOD XML analysis** — studied all 3 ADOD howdah variants (`adod_howdah_1_agent.xml`, `howdah_object.xml`,
+> `adod_howdah_4_agents.xml`) 2026-06-09. Key findings vs our `taom_howdah_agent.xml`:
+> - Every ADOD variant uses `TranslateUser="true"` on seats (base class positions agents via physics-level frame
+>   translation each tick). Our prefab uses `TranslateUser="false"` with our custom `SetScriptedPosition`/`SetTargetZ`.
+> - Every ADOD variant includes 4 `_barrier_04x04m` child entities with `missile_only` body flags — physical walls
+>   keeping archers inside the howdah basket. Our prefab has NO barrier entities.
+> - ADOD's 4-seat variant: `AutoWieldWeapons="true"` (we have `false`), all seats tagged `<tag name="pilot"/>`.
+>
+> See how ADOD implements this: **[howdah-crew-mechanism.md](elephant/howdah-crew-mechanism.md).**
 >
 > **Scope — this is a *standard* war elephant, NOT the giant mumakil / Oliphaunt.** A normal-scale ridden mount
 > (one Harad crewman rides it). TAOM already represents the mumakil separately (the existing `mumak_rider` troop
@@ -50,6 +117,64 @@
 > runtime. The C# was verified call-by-call against v1.4.5 (the one drift — `ActionIndexCache.Name` → `GetName()`
 > — was caught by the compiler and fixed); the data is authored fresh for 1.4.5.
 
+## Slide root-cause isolation (2026-06-10 — DIAGNOSED; fix DEFERRED)
+
+The elephant "slides" — the body translates across the battlefield while the legs don't run a walk/run cycle.
+The action-code fix above removed a *constant* slide; a residual slide remained. We ran a one-disable-at-a-time
+isolation ladder. **Each row is a deployed build the user tested in a live battle; cumulative unless noted.**
+
+| Build | Cavalry reassign (1) | Trample anim (2) | Bone-tracking (3) | Crew spawn (4) | Result |
+|-------|:---:|:---:|:---:|:---:|--------|
+| A (7:05) | off | on | on | on | **slides** (right) |
+| B (7:14) | off | off | off | on | **slides** (left) |
+| rung 4 (7:29) | off | off | off | **off** | **NO slide** |
+| control (7:45) | **on** | **on** | **on** | off | **slides** (back) |
+| bone test (7:52) | on | on | **off** | off | **NO slide** ✓ |
+
+**Two independent slide sources — both CONFIRMED (2026-06-10). Both must be off for no-slide:**
+- **Source 1 — the crew.** B (crew on, 1/2/3 off) slides; rung 4 (crew off, 1/2/3 off) does not. So the 4
+  force-spawned crew agents cause a slide on their own.
+- **Source 2 — bone-tracking.** control (bone on, crew off) slides; bone-test (bone off, crew off) does not.
+  CONFIRMED by the single-variable bone-test.
+- **Cleared — cavalry reassignment + trample animation are INNOCENT.** Both were ON in the bone-test build, which
+  did not slide. They stay enabled.
+
+**Leading mechanism (unconfirmed): physics bodies placed inside the elephant's collision capsule each tick.**
+- Bone-tracking `SetFrame`s the howdah's `bo_empire_keep_a_door_top` physics floor *at the spine bone* (inside the
+  elephant body). The fixed-offset fallback places it at `elephant.Position + 3.2 Z` — *above* the capsule, no
+  contact (rung 4 used fixed-offset and did NOT slide). So bone-tracking's floor likely overlaps the elephant and
+  the solver shoves the dynamic elephant agent.
+- The crew likely shove via the same mechanism — teleported each tick onto/near the elephant, their capsules
+  overlap the (scaled) elephant capsule.
+- **If confirmed, the fix is unified:** stop the howdah floor + crew from physically contacting the elephant
+  (drop the howdah's `bo_` physics — archers are teleported, they don't need a physical floor — and/or disable
+  crew-vs-mount collision, and/or raise the bone-tracked frame so the floor clears the capsule).
+
+**Latent bug surfaced during the ladder (separate from the slide):** with bone-tracking off, the fixed-offset
+fallback (`RepositionToFixedOffset`) placed the archers at the elephant's *legs*, not on its back. So the
+build-time + bone-failure safety path is positioning wrong and needs fixing regardless. **Bone-tracking is the
+visually-correct placement** (archers on top) and must be restored once the slide is solved.
+
+**Process lesson (logged):** two premature conclusions were made and then refuted by the user's control tests —
+first "it's the `as_elephant` data" (refuted by rung 4: crew off then no slide), then "the crew is the *sole* cause"
+(refuted by the control build: crew off + 1/2/3 on then slides). Cumulative-disable ladders confirm *necessity* but
+not *sufficiency*; isolate a single variable and run the complementary control before concluding a root cause.
+
+**Decision (2026-06-10): fix DEFERRED.** Both slide sources are left **disabled** for now (project-owner call —
+come back to it later). The two disabled code paths are marked `DEFERRED` in source with a pointer back here:
+
+| Source | Disabled where | Re-enable when |
+|--------|----------------|----------------|
+| Crew spawn | `ElephantMissionBehavior.TryInstantiateHowdah` — `TrySpawnHowdahCrew(...)` call commented | The crew↔elephant collision fix lands (e.g. give crew the elephant's `FaceGroupId` — the engine's own rider-vs-mount no-collision mechanism). `TrySpawnHowdahCrew` retained. |
+| Bone-tracking | `TaomHowdahMachine.RepositionToElephant` — `TryRepositionToBone()` branch commented (fixed-offset only) | The floor-physics fix lands (drop the `bo_` floor's collision, or raise the bone frame so the floor clears the capsule). `TryRepositionToBone`/`ResolveBoneIndex` retained. |
+
+**Planned fix (when resumed):** both sources are one mechanism — a physics body inside the elephant's collision
+capsule. The likely unified fix: stop the howdah floor + crew from physically contacting the elephant. The
+candidate API is `Agent.SetAgentExcludeStateForFaceGroupId` / shared `FaceGroupId` (how a rider already avoids
+colliding with its own mount) for the crew, plus dropping or clearing the `bo_` floor's collision for the howdah.
+Cavalry-reassignment + trample stay enabled (confirmed innocent). The TEMP `harad_militia` Horse-slot test entry in
+`troops_harad.xml` remains for testing and must NOT be committed.
+
 ## Implementation — C# built + wired (2026-06-05)
 
 The trample + mount-lock are **done, wired, and green** (build + 3041 tests). This is a 1-for-1 behavioral port of
@@ -58,21 +183,114 @@ architecture on the v1.4.5 API.
 
 | File | Role |
 |------|------|
-| [`Main/Features/Elephant/ElephantConfig.cs`](../../Main/Features/Elephant/ElephantConfig.cs) | Constants — `ElephantMonsterId="taom_war_elephant"`, `MountDifficulty=999`, trample gates (range 3, dot 0.25, chance 0.001/tick, radius 2) + base damage 10 — all 1-for-1 ADOD. |
-| [`Main/Features/Elephant/IElephantAttackService.cs`](../../Main/Features/Elephant/IElephantAttackService.cs) + [`ElephantAttackService.cs`](../../Main/Features/Elephant/ElephantAttackService.cs) | **Pure** logic (no TaleWorlds deps): `IsElephantMonster`, `ShouldAiTrample(dist,dot,roll,attacking)`, `ComputeInflictedDamage(blocking)` = `round(10*(blocking?0.25:1))*2`. Unit-tested. |
-| [`Main/Features/Elephant/ElephantMissionBehavior.cs`](../../Main/Features/Elephant/ElephantMissionBehavior.cs) | Boundary `MissionLogic`: tracks elephant agents (OnAgentBuild + first-tick scan, fail-soft), and per tick, for each **AI-ridden** elephant whose rider has a target in range while facing it, plays an attack action + deals a **radial knockdown** (`CustomAttacksUtils.TakeDamage`, the TAOM-clean equivalent of ADOD's `RegisterBlow`) to enemies within 2 m of the target. |
+| [`Main/Features/Elephant/ElephantConfig.cs`](../../Main/Features/Elephant/ElephantConfig.cs) | Constants — `ElephantMonsterId="taom_war_elephant"`, `MountDifficulty=999`, attack gates (`TrampleTriggerRange=3f` proximity gate restored from ADOD, `TrampleFacingDot=0.25`, `TrampleCooldownSeconds=10` / `SideAttackCooldownSeconds=4`, `TrampleRadius=4f` damage radius) + base damage 10 + the attack clip-name constants (`TrampleActionName` / `SideAttackLeft/RightActionName`). `TrampleTriggerRange` was the missing ADOD gate — without it the elephant swung into empty air and killed the locomotion channel. |
+| [`Main/Features/Elephant/IElephantAttackService.cs`](../../Main/Features/Elephant/IElephantAttackService.cs) + [`ElephantAttackService.cs`](../../Main/Features/Elephant/ElephantAttackService.cs) | **Pure** logic (no TaleWorlds deps): `IsElephantMonster`, `ShouldEngage(facingDot, alreadyAttacking)` (facing gate; the BT scan passes -1 when no enemy in range), `IsOffCooldown(lastFired, now, seconds)` (inclusive ≥; future stamps read as ON cooldown), `ComputeInflictedDamage(blocking)` = `round(10*(blocking?0.25:1))*2`. Unit-tested. |
+| [`Main/Features/Elephant/ElephantMissionBehavior.cs`](../../Main/Features/Elephant/ElephantMissionBehavior.cs) | Boundary `MissionLogic`: registers `"ElephantTree"` + attaches a per-agent `BehaviorTreeAgentComponent` to every elephant (first-tick scan + `OnAgentBuild` late-spawn + dead-agent pruning — the warg's exact wiring). `Initialize` logs an error if any attack action resolved to `act_none` (Armory-drift guard). Also instantiates the howdah when the mahout builds. **As of 2026-06-10 the attacks are BT-driven** — the old inline `TryAiTrample` loop was removed (see "Behavior tree" below). |
+| [`Main/Features/Elephant/ElephantBehaviorTree.cs`](../../Main/Features/Elephant/ElephantBehaviorTree.cs) + [`BehaviorTreeElements/`](../../Main/Features/Elephant/BehaviorTreeElements/) | Per-agent behavior tree (warg pattern): `EnemyInTrampleRangeDecorator` (facing+range gate → `ShouldEngage`; writes `TargetBearing`), `AttackOffCooldownDecorator` ×2 (→ `IsOffCooldown`), `ElephantAttackTaskBase` → `ElephantTrampleTask`/`ElephantSideAttackTask` (→ `ComputeInflictedDamage`), `ElephantAttackActions` (shared eager-resolved `ActionIndexCache`s + Index-compare gate). Reuses the shared `HasRiderDecorator`/`IsAiControlledDecorator`/`HasNoRiderDecorator`. |
 | [`…/CareerSystem/Models/TaomAgentStatCalculateModel.cs`](../../Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs) | EDITED — the shared `AgentStatCalculateModel` slot now also carries the **mount-lock**: `CanAgentRideMount`→false for the elephant + `MountDifficulty=999` (both via the injected `IElephantAttackService`, applied with ternaries per gamemodels.md rule 4). |
-| `ElephantIoC.cs`, `IoC.cs`, `SubModule.cs` | Service registered (Singleton); `ElephantMissionBehavior` added to the mission list; the stat-model ctor takes the elephant service. |
-| [`TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs`](../../TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs) | 11 tests (IsElephantMonster ×3, ShouldAiTrample gate-exhaustion ×6, ComputeInflictedDamage ×2). |
+| `ElephantIoC.cs`, `IoC.cs`, `SubModule.cs` | Service registered (Singleton); `ElephantMissionBehavior` added to the mission list; the stat-model ctor takes the elephant service. (No new registration for the BT — it attaches inside the mission behavior; nodes resolve the service via IoC like `WargAttackTask`.) |
+| [`TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs`](../../TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs) | 16 tests (IsElephantMonster ×3, ShouldEngage ×5 incl. the no-enemy −1 sentinel, IsOffCooldown ×6 incl. exact-boundary + future-stamp clock skew, ComputeInflictedDamage ×2). The BT calls these same pure methods, so they remain the attack decision's regression guard. |
 
 **1.4.5 adaptations vs ADOD's 1.2.12 decompile:** `ActionIndexCache.GetName()` (not `.Name`); the 2-arg
 `SetActionChannel(0, anim)` (ADOD's long arg list is exactly the engine defaults); `CustomAttacksUtils.TakeDamage`
 (TAOM's clean damage primitive, with a `knockDown` flag that maps to ADOD's knockdown BlowFlag) instead of a raw
 `Blow`/`RegisterBlow`. Behaviorally identical; no native code (ADOD's `NativeHook.dll` is dead anyway).
 
-**Graceful degradation (important):** the attack action codes are `act_war_elephant_attack_1..3`, defined in the
-(not-yet-authored) 1.4.5 action-set. If they're absent they resolve to `act_none` — the attack **animation** is
-skipped but the **trample damage + knockdown still land**. So the gameplay works before the animations exist.
+**Action code correction (2026-06-10):** the attack codes shipped as `act_war_elephant_attack_1..3` and were
+claimed to degrade gracefully to `act_none`. This was **wrong** — `act_none` on channel 0 does NOT skip the
+animation; it kills the **full-body locomotion channel**, so the elephant body freezes while the engine keeps
+translating it (the "sliding" bug). The correct codes are **`act_elephant_attack_1/2/3`** — verified registered
+in `LOTRLOME_Armory/ModuleData/action_types.xml` lines 99–102 and bound to real clips in `action_sets_elephant.xml`
+lines 89–100. These resolve to valid animated attacks and do not interfere with the walk/run channel. The clip
+caches now live in `ElephantAttackActions` (eager-resolved once, shared by the tasks + the engage gate), and
+`ElephantMissionBehavior.Initialize` logs an error if any resolve to `act_none` — so a future Armory rename is
+detected at mission start instead of silently re-introducing the slide (2026-06-10 review finding).
+
+### Behavior tree (AI attacks) — 2026-06-10
+
+The AI attacks run as a per-agent **behavior tree**, mirroring the warg (`WargMissionBehavior` + `WargBehaviorTree`)
+— the foundation of the "rich AI-driven creatures" direction. Phase 1 landed as a behavior-preserving port of the
+inline trample; **phase 1.5 (same day) replaced the stochastic model with the project owner's cooldown workflow**:
+
+> enemy in range → **trample** if off cooldown (10s, priority) → else **left/right tusk swing** picked by the
+> enemy's bearing, if off cooldown (4s) → else idle — the engine's regular mount AI (rider cavalry AI + native
+> charge) always continues underneath; the BT only layers attacks on top.
+
+This is a deliberate behavior CHANGE from ADOD, verified by decompiling the live `ADOD_Beasts.dll`: ADOD picks
+randomly among `attack_1..3` at 0.001/tick with no left/right awareness, no cooldowns, and never uses `attack_4`
+(which IS bound to a real clip — `action_types.xml` 99–102, `action_sets.xml` 59684–59687).
+
+**Architecture (warg-consistent).** The BT elements are *boundary code* — they hold the raw `Agent` on the blackboard
+and touch `Mission`/`Agent` directly, delegating only the **pure decisions** to the unit-tested
+`ElephantAttackService` (`ShouldEngage` facing/anim gate + `IsOffCooldown` + `ComputeInflictedDamage`; 16 tests).
+No adapter expansion, no new service. `ElephantMissionBehavior` registers `"ElephantTree"` and attaches a
+`BehaviorTreeAgentComponent` per elephant (first-tick scan + `OnAgentBuild` late-spawn + dead-agent pruning); the
+engine's `Agent.Tick` auto-ticks each tree.
+
+**Tree shape** ([ElephantBehaviorTree.cs](../../Main/Features/Elephant/ElephantBehaviorTree.cs)):
+
+```
+main (Selector)
+├─ has rider           [HasRiderDecorator]        ← reused base
+│  ├─ ai controlled    [IsAiControlledDecorator]  ← reused base (AI-ridden only)
+│  │  ├─ enemy in range [EnemyInTrampleRangeDecorator]  ← facing+3m gate; writes TargetBearing; blocks mid-anim
+│  │  │  ├─ trample      [AttackOffCooldown(Trample, 10s)]    → ElephantTrampleTask (attack_1) → Sleep(300ms)
+│  │  │  ├─ side attack  [AttackOffCooldown(SideAttack, 4s)]  → ElephantSideAttackTask (attack_2 L / attack_3 R) → Sleep(300ms)
+│  │  │  └─ (both on cooldown → falls through to idle = regular AI continues)
+│  │  └─ SleepTask(200ms)        ← idle; bounds the native scan cadence (~5/s)
+│  └─ SleepTask(1s)              ← player-ridden (ai branch skipped); phase-2 player-trample branch goes here
+└─ no rider            [HasNoRiderDecorator]       ← reused base
+   └─ SleepTask(4s)
+```
+
+| BT element | Role | Pure logic it calls |
+|------------|------|---------------------|
+| `EnemyInTrampleRangeDecorator` | Engage gate: cheap already-attacking exit, then one radial scan for the best-facing live enemy within `TrampleTriggerRange`; writes the enemy's signed bearing to the blackboard. | `ShouldEngage` |
+| `AttackOffCooldownDecorator` | One class, two instances — gates the trample (10s) and side-attack (4s) branches off the blackboard stamps. | `IsOffCooldown` |
+| `ElephantAttackTaskBase` → `ElephantTrampleTask` / `ElephantSideAttackTask` | Shared template: play clip on channel 0, stamp cooldown, radial knockdown to all enemies in `TrampleRadius`. Side task picks left/right by bearing sign (positive = LEFT, Z-up right-handed cross product). | `ComputeInflictedDamage` |
+| `IBTElephantBlackboard` | Cooldown stamps + `TargetBearing`, reflection-copied onto every node by the tree builder. | — |
+
+**Clip-role mapping — VERIFIED numerically (2026-06-10, Blender trajectory analysis).** Nothing in the XML or
+ADOD's code identifies the clips (numbers everywhere, and ADOD picked randomly), so the roles were measured: the
+staged source FBX (`elephant_anims_all_left.fbx`, frame ranges from the pack0.tpac parse) was imported into a live
+Blender session (temp datablocks, cleaned to baseline) and the `Head_08` bone's signed lateral excursion sampled
+per clip window. Result — **`attack_1`** winds up right then strikes sweeping **toward the LEFT** (left-target
+swing); **`attack_2`** is its mirror (right-target swing); **`attack_3` and `attack_4`** are near-identical full
+**double-sweep thrashes** (right→left→right, 60 frames) — the natural trample visual for radial damage. Mapped in
+`ElephantConfig`: trample = `attack_3` (alternating randomly with `attack_4` for variety — a clip ADOD never
+played), left swing = `attack_1`, right swing = `attack_2`. The stand-window control measured ~zero motion,
+confirming the frame ranges. Final eyeball check in one battle is still welcome, but the mapping is no longer a guess.
+
+**Phase 2 (future, not built):** a `player controlled` branch under "has rider" (ADOD's Space/Input-57 trample), and
+optional enrage/charge state (warg-style rage). Those add blackboard fields + branches without touching this baseline.
+
+**Tested-via-game:** BT elements + wiring are not unit-tested (consistent with all warg BT elements + Harmony patches,
+ADR-008); the pure decisions they call are covered by `ElephantAttackServiceTests` (16/16 green).
+
+**Reviewed three ways, all clean (2026-06-10, all BEFORE commit):** a custom 13-agent adversarial workflow (below),
+then the stock `/deep-review` (5 agents — Standards / 32-of-32 v1.4.5 APIs / 16-of-16 tests / 8-of-8 data-flow traces,
+verdict READY) and `/review-codex` (gpt-5.5 xhigh — VERDICT CLEAN, 0 findings), which **agreed with the deep-review
+on all 8 Known Suspects**. Codex independently decompiled `Vec2.LeftVec()` (handedness) and verified
+`BTBlackboardValue<T>` is a class (cooldowns engage). Full record: REVIEW-LOG.md Review 52.
+
+**Review notes (2026-06-10 adversarial workflow, 13 agents, 10 confirmed findings — 4 fixed, 5 recorded, 1 was the
+stale table above).** Accepted-behavior observations, recorded so they aren't re-derived:
+- **Side swings deal the full 360° radial damage** (same disc as the trample, only the clip + cooldown differ) —
+  spec asked for animations + cooldowns; a bearing-cone victim filter is an "improve" item.
+- **Left/right pick is near-arbitrary in crowds** (the max-facing-dot enemy is the most front-on one, bearing ≈ 0) —
+  visually fine for a dead-ahead target. Flank/rear enemies (dot ≤ 0.25) never trigger ANY attack (ADOD's gate);
+  if flank coverage is ever wanted, pick the max-|bearing| in-cone enemy or relax the gate for side attacks only.
+- **Bearing convention verified against the engine:** `Vec2.LeftVec()` = (-y, x) in the v1.4.5 decompile —
+  positive cross-z = LEFT is TaleWorlds' own convention.
+- **Effective trample period is ~10.7–12s, not a crisp 10s** — a side swing started just before the trample comes
+  off cooldown blocks it for one clip length (the priority ordering is honored at every evaluation instant).
+- **Cooldowns/sleeps are wall-clock `DateTime.Now`** (elapse during pause; real-time under slow-motion) — library +
+  warg precedent (`SleepTask` itself is wall-clock). Switch to `Mission.Current.CurrentTime` only if pause-exploit
+  behavior ever matters.
+- `base(10)` is NOT a 10ms eval throttle (int division truncates <1000 to 0 → tree runs every component tick, warg
+  same); the `SleepTask` leaves are the only real pacing knobs.
+- `ElephantMissionBehavior` is 253 lines vs ADR-002's <150 guidance — ~65 lines are the deliberately-disabled
+  `TrySpawnHowdahCrew` (deferred slide fix); extract a howdah-installer boundary class when the crew fix lands.
 
 ### Action-sets deployment crash history (2026-06-08)
 
@@ -410,5 +628,23 @@ attribution gating required. (Confirmed by the project owner, 2026-06-05.)
 - [ ] Revert **TEMP** `Horse`-slot entry in `Main/_Module/ModuleData/troops/troops_harad.xml` — marked `TEMP-ELEPHANT-TEST`, MUST revert before any commit.
 - [ ] Author a **TAOM-owned action-set** `as_war_elephant` (rename from `as_elephant`, bind TAOM-authored clip names) to make the action-set fully TAOM-authored (currently uses ADOD ids / clip names verbatim).
 - [ ] **Build the elephant animations on our FBX** (Blender → Modding-Kit compile) — TAOM-owned, NOT ADOD's 1.2.12 clips. Gating seam for the rename to `as_war_elephant`.
-- [ ] Author the actual Harad rider tier(s) + recruitment pool (currently testing via TEMP harad_militia entry); update `factions.json` if the war elephant is a Harad identity element.
+- [x] Author the Harad rider troop + recruitment — DONE (2026-06-10). `harad_elephant_rider` (level 51, `Culture.aserai`, `HorseArcher`) recruitable ONLY by `clan_aserai_1` (Ayerikkä) via `VolunteerRecruitmentService.InitializeHaradClans` (clan pool copies the levy/noble fallback + adds the rider at weight 1). The TEMP `harad_militia` Horse-slot test entry was replaced by this dedicated troop. Remaining rider polish: not yet in any party template (AI Ayerikkä lords field it only when recruited); rider skills left at pre-level-51 values; recruitment weight is a rarity knob. Update `factions.json` if the war elephant becomes a Harad identity element.
 - [ ] Tune damage/gates after further in-game testing (current values are ADOD's 1-for-1 baseline — the "improve" step).
+- [ ] **DEFERRED — re-enable howdah crew (slide source #1).** Crew spawn is disabled (`TrySpawnHowdahCrew` call
+      commented in `ElephantMissionBehavior.TryInstantiateHowdah`). Re-enable with a crew↔elephant collision fix —
+      candidate: give the crew the elephant's `FaceGroupId` via `Agent.SetAgentExcludeStateForFaceGroupId` (the
+      engine's rider-vs-mount no-collision mechanism). See "Slide root-cause isolation".
+- [ ] **DEFERRED — re-enable spine bone-tracking (slide source #2).** Disabled (`TryRepositionToBone` branch
+      commented in `TaomHowdahMachine.RepositionToElephant`; fixed-offset only). Re-enable with a floor-physics fix —
+      drop the `bo_empire_keep_a_door_top` collision (archers are teleported, don't need a physical floor) or raise
+      the bone frame so the floor clears the elephant capsule. See "Slide root-cause isolation".
+- [ ] **Fix the fixed-offset fallback (`RepositionToFixedOffset`)** — it places the howdah at the elephant's *legs*,
+      not its back (surfaced during the slide ladder when bone-tracking was off). Harmless now (no crew), but it is
+      the build-time + bone-failure safety path and must position correctly before crew are re-enabled.
+- [ ] **Add physical barrier entities to `taom_howdah_agent.xml`** — all ADOD howdah variants include 4 `_barrier_04x04m`
+      entities with `missile_only` body flag to physically wall archers inside the basket. Without them archers can be
+      pushed/walk off the howdah. Match `adod_howdah_4_agents.xml` barrier layout.
+- [ ] **Evaluate `TranslateUser = true`** — all ADOD howdah seats use `TranslateUser="true"` (physics-level frame
+      translation by the base `StandingPoint.OnTick`). Our seats use `TranslateUser="false"` + custom `SetScriptedPosition`
+      + `SetTargetZ`. If Z-snap issues persist with our approach, switching to ADOD's pattern requires: (1) `TranslateUser="true"`
+      on seat entities in `taom_howdah_agent.xml`, (2) calling `base.OnTick(dt)` at the end of `TaomHowdahStandingPoint.OnTick`.
