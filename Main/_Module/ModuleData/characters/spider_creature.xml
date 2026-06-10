@@ -1,48 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
 
-  <!-- ==================== SPIDER CREATURE (RECRUITABLE) ==================== -->
-  <!-- The giant spider, recruitable at Dol Guldur fiefs (see VolunteerRecruitmentService,
-       weight 1) and spawned + fought as the spider Monster via Patch45_SpiderTroopSpawn.
+  <!-- Spider Rider: goblin cavalry troop that rides the Giant Spider mount (spider_mount_a).
+       Replaces the old detached-spider anchor (dg_uruk race, Wanderer) with the horse-slot
+       mount pattern — same as taom_war_elephant / harad_mahout. The engine spawns TWO agents:
+         1. The goblin rider (FromCharacterObj, humanoid, race=goblin)
+         2. The spider mount (FromHorseObj, Monster.spider, non-humanoid)
+       No C# spawn interception required; vanilla cavalry spawn handles both.
 
-       race="dg_uruk" is a HUMANOID ANCHOR: Bannerlord's NPCCharacter schema requires a
-       race that resolves through skins.xml — the non-humanoid "spider" race is NOT valid
-       here, and recruitment / party-roster / UI all need a resolvable humanoid. The actual
-       battle visual is overridden at spawn time by Patch45 -> AgentBuildData.Monster(spider)
-       (+ NoWeapons/NoHorses), which swaps in the spider skeleton + animations. The recruit
-       therefore shows a humanoid silhouette in the party roster but spawns as a spider in
-       every battle — an accepted cosmetic tradeoff of the anchor approach.
+       occupation="Soldier" → IsSoldier=true → appears in Custom Battle picker (intended;
+       the goblin-riding-a-spider is a valid custom-battle unit). The old "Wanderer" trick
+       was needed only because the old approach embedded the spider in the rider's visual.
 
-       occupation="Wanderer" is CRITICAL and must stay: the engine sets IsSoldier=true when
-       the occupation string contains "soldier" (BasicCharacterObject), and Custom Battle's
-       troop picker iterates BasicCharacterObjects where IsSoldier && !IsObsolete
-       (ArmyCompositionGroupVM). hidden_in_encyclopedia and is_basic_troop="false" do NOT
-       exclude it from that picker — only the non-soldier occupation does. Codex review
-       #spider-2026-04-23 caught this. The troop is offered ONLY through the Dol Guldur
-       volunteer pool; it must NOT be added to party templates or the basic_troop / elite
-       slots in taom_spcultures.xml.
+       SpiderConfig.Enabled=false gates the Patch45 behavior-tree/wield-guard patches so they
+       don't interfere with the rider's normal weapon equip and formation membership.
 
-       Equipment is intentionally empty — the bite is a CustomAttack driven by
-       SpiderBehaviorTree/SpiderAttackService, not a weapon. Skills exist only to give the
-       agent a credible tier (~T5) + hit points; weapon skills do not drive its damage. -->
+       VolunteerRecruitmentService already has this ID at DG fiefs (weight 90 TEMP — revert
+       to 1 before commit). -->
   <NPCCharacter id="taom_spider_creature"
-                race="dg_uruk"
-                default_group="Infantry"
-                level="21"
+                race="goblin"
+                default_group="Cavalry"
+                level="20"
                 is_hero="false"
                 is_basic_troop="false"
-                hidden_in_encyclopedia="true"
-                occupation="Wanderer"
+                occupation="Soldier"
                 culture="Culture.dolguldur"
-                name="{=taom_spider_creature_name}Giant Spider">
-    <face><face_key_template value="BodyProperty.fighter_dolguldur" /></face>
+                name="{=taom_spider_creature_name}Spider Rider">
+    <face><face_key_template value="BodyProperty.fighter_goblin" /></face>
     <skills>
-      <skill id="Athletics" value="120" />
-      <skill id="OneHanded" value="120" />
-      <skill id="Polearm" value="120" />
+      <skill id="Athletics" value="80" />
+      <skill id="Riding" value="100" />
+      <skill id="OneHanded" value="100" />
+      <skill id="Polearm" value="80" />
     </skills>
     <Equipments>
-      <EquipmentRoster />
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a03" />
+        <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+        <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+        <equipment slot="Horse" id="Item.spider_mount_a" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a03" />
+        <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+        <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+        <equipment slot="Horse" id="Item.spider_mount_a" />
+      </EquipmentRoster>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a02" />
+        <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_c" />
+        <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+        <equipment slot="Horse" id="Item.spider_mount_a" />
+      </EquipmentRoster>
     </Equipments>
   </NPCCharacter>
 

@@ -26,7 +26,12 @@ public static class Agent_WieldInitialWeapons_SpiderSkip_Patch
     // Returns false (skip vanilla) only for the detached spider agent — whose Character is the spider
     // troop anchor (taom_spider_creature) even under the warg render-diagnostic. Any other agent returns
     // true so vanilla weapon-wielding is untouched.
+    // Guard: when Enabled=false the goblin cavalry RIDER has StringId "taom_spider_creature" and must
+    // wield its weapons normally via the horse-slot mount path.
     [HarmonyPrefix]
     public static bool Prefix(Agent __instance)
-        => __instance?.Character?.StringId != SpiderConfig.SpiderCharacterId;
+    {
+        if (!SpiderConfig.Enabled) return true;
+        return __instance?.Character?.StringId != SpiderConfig.SpiderCharacterId;
+    }
 }

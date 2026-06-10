@@ -26,7 +26,7 @@ namespace TAOM.Features.Spider.Hooks;
 internal static class SpiderWieldGuard
 {
     internal static bool IsSpider(Agent agent)
-        => agent?.Character?.StringId == SpiderConfig.SpiderCharacterId;
+        => SpiderConfig.Enabled && agent?.Character?.StringId == SpiderConfig.SpiderCharacterId;
 }
 
 /// <summary>Spider guard: GetMissileRange -> 0 (skips the native read the formation team-AI makes).</summary>

@@ -60,6 +60,7 @@ public class SpiderMissionBehavior : MissionLogic
         try
         {
             if (!_initialized) Initialize();
+            if (!SpiderConfig.Enabled) return;
 
             if (_managesCombatInfrastructure)
             {
@@ -111,6 +112,7 @@ public class SpiderMissionBehavior : MissionLogic
     {
         base.OnAgentBuild(agent, banner);
         if (!_treesAdded || agent == null) return;
+        if (!SpiderConfig.Enabled) return;
 
         try
         {
