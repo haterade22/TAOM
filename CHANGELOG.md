@@ -2,6 +2,65 @@
 
 ## 2026-06-10
 
+### fix(elephant): resolve `TaomHowdahMachine._liveTicking` CS0414 warning
+
+The deferred spine bone-tracking left `_liveTicking` assigned (in `OnTick`) but never read (its only reader — the
+bone-tracking branch in `RepositionToElephant` — was commented out). Rather than delete the field (it carries the
+load-safety pattern: bone APIs are only touched once the mission is live, so the `OnAgentBuild`-time call never
+AVs), the gate is kept wired and disabled via a new `private static readonly bool BoneTrackingEnabled = false`:
+`if (_liveTicking && BoneTrackingEnabled && TryRepositionToBone()) return;`. `static readonly` (not `const`) so the
+`_liveTicking` read is never constant-folded away. Re-enabling spine bone-tracking (with the floor-collision fix) is
+now a one-line flip to `true`. No behavior change (bone-tracking stays off). Build green, 0 warnings on the field.
+
+### fix(troops): close recruitment-reachability gaps — orphaned lines + two unwired cultures
+
+Players reported whole troop lines never appearing in recruitment (Gundabad Archer line, Dol Guldur orc & uruk
+lines, Isengard orc lines). Root cause: `VolunteerRecruitmentService` injects only a few "root" troop IDs into pools
+and the player upgrades up each tree — but a line is recruitable **only if one of its troops is a pool root, OR a
+pool root upgrades into it**. Several lines were orphaned in the upgrade graph and absent from every pool, so lords
+fielded them but players could never obtain them. Audited all 16 troop trees via a flood-fill of the upgrade graph
+from the actual pool roots: **174 of 802 troops were unreachable; ~105 are intentional (settlement militia `*_militia_*`,
+bandit-hideout bosses `*_boss`); the rest were genuine gaps.** Remediation = **pool additions only** (no upgrade-tree
+surgery, no save-compat risk) — add each orphaned line's entry troop to the appropriate pool.
+
+**Lines made recruitable (entry troop → pool):**
+- **Dol Guldur** — `dg_orc_recruit` (orc + warg lines), `dg_uruk_foul` (uruk line), `dg_orc_scout` (ranged-orc) added
+  to the **settlement + clan** pools (not just culture — culture is the lowest-priority pool and every DG fief has a
+  settlement/clan pool that *shadowed* the existing `dg_uruk_warrior` culture entry; that shadowing was the reported
+  "uruk not recruitable" root cause).
+- **Isengard** — `isengard_orc_grunt` (orc + warg_v2 lines), `orthanc_chosen` (Orthanc Guard) → culture pool.
+- **Gundabad** — `gundabad_hunter` (archer line), `gundabad_scout` (horse-archer) → culture pool.
+- **Goblin** / **Misty Mountain Orcs** — `*_hunter` (archer line) → culture pool (same shape as Gundabad).
+- **Erebor** — `ironpass_recruit` (Iron Pass line), `erebor_oathsworn` (Oathsworn elite) → `EreborMix` + culture.
+- **Rhun** — `easterling_recruit` (easterling tree) → mixed + culture pools; `far_rhun_horse_master`,
+  `kharaghul_horse_master` (cavalry lines) → their themed settlement pools.
+- **Rivendell** — `rivendell_noble` (noble cavalry), `rivendell_knight_golden_flower` (Gondolin/Golden-Flower elites)
+  → culture pool (rare weight 1).
+
+**Two fully-unwired cultures wired** (had no `CultureMap` key and no settlement/clan pools — recruited *nothing*):
+- **Mirkwood** — new `InitializeMirkwoodCulture` → `mirkwood_recruit` (the L36 culture `basic_troop`; the Mirkwood
+  roster is intentionally all high-tier Silvan elves, so this single root connects the whole infantry/ranged/cavalry tree).
+- **Umbar** — new `InitializeUmbarCulture` → `aux_basic` (L6 levy) + `umbar_elite` (corsair elite line entry).
+  Both are now valid `CultureConversion` targets (`HasCulturePool` true).
+
+**Deferred:** `cave_troll` (Mordor, L51) — a non-humanoid `Monster` never spawned in any party template and with no
+spider-style `Mission.SpawnAgent` swap support; recruiting it risks a spawn crash. Left out + documented as a known
+gap (the guard test whitelists it alongside militia/bosses).
+
+**Regression guard:** new `AllNonMilitiaNonBossTroops_AreReachableFromARecruitmentPoolRoot` test parses every
+`troops_*.xml` upgrade graph, floods from `VolunteerRecruitmentService.AllPooledTroopIds()` (+ the production
+`gondor.json` conditional Ithil Guard pool, loaded via the real loader), and **fails the build if any non-militia /
+non-boss / non-cave_troll troop becomes unreachable** — so a future orphaned line can't silently ship.
+
+**Files:** `VolunteerRecruitmentService.cs` (pool additions, 2 new culture methods, `AllPooledTroopIds()` test
+accessor), `VolunteerRecruitmentServiceTests.cs` (+15 tests incl. the reachability guard; rewrote 7 stale
+`TEMP-SPIDER-TEST-WEIGHT` DG tests that mocked `Next(100)` against a real total of 11 and had been failing in the
+baseline; updated Erebor/Rhun/Isengard/Goblin/MMO/Rivendell weight-coupled tests for the new pool totals),
+`VolunteerRecruitmentConversionTests.cs` (moved mirkwood/umbar from the known-gap test to the covered test).
+**Build:** green. **Tests:** 3140 pass / 0 fail (was 3133 pass / 7 fail). **Save-compat:** additive — pool changes
+only, no troop IDs renamed, no upgrade trees altered.
+
+
 ### feat(troops): war-elephant rider — level 51, recruitable only by clan_aserai_1 (Ayerikkä)
 
 The `harad_elephant_rider` (the war elephant's dedicated Harad mahout, added with the howdah) is now a **level-51

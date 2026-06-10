@@ -140,6 +140,12 @@ public class TaomHowdahMachine : UsableMachine
     private bool _loggedBoneError;
     private sbyte _anchorBoneIndex = -1;
 
+    // DEFERRED (2026-06-10): spine bone-tracking is a CONFIRMED slide source — the howdah's bo_ floor tracked to the
+    // spine bone sits inside the elephant's collision capsule and the physics solver shoves the elephant. Disabled
+    // until the floor-collision fix; flip true (with that fix) to re-enable. static readonly (NOT const) so the
+    // _liveTicking read in the RepositionToElephant gate is never constant-folded away.
+    private static readonly bool BoneTrackingEnabled = false;
+
     internal void RepositionToElephant()
     {
         // DEFERRED (2026-06-10): bone-tracking is a CONFIRMED slide source and is disabled for now.
@@ -147,10 +153,12 @@ public class TaomHowdahMachine : UsableMachine
         // so the physics solver shoves the elephant ("slide"). Confirmed by the isolation ladder: the bone-test
         // build (bone off + crew off) did NOT slide; the control build (bone on + crew off) DID. Fixed-offset
         // (feet + 3.2 Z) keeps the floor above the capsule, so the empty howdah no longer perturbs the elephant.
-        // Re-enable the bone branch ONLY together with the physics-contact fix (drop the floor's collision, or
-        // raise the bone frame to clear the capsule). TryRepositionToBone/ResolveBoneIndex are retained for that
-        // fix. See docs/features/elephant.md → "Slide root-cause isolation".
-        // if (_liveTicking && TryRepositionToBone()) return;
+        // Re-enable ONLY together with the physics-contact fix (drop the floor's collision, or raise the bone frame
+        // to clear the capsule): flip BoneTrackingEnabled true. The gate stays wired (and BoneTrackingEnabled is
+        // false) so the _liveTicking load-safety — bone APIs only once the mission is live; the OnAgentBuild-time
+        // call has it false and takes the fixed-offset path — and the bone path are both preserved.
+        // See docs/features/elephant.md → "Slide root-cause isolation".
+        if (_liveTicking && BoneTrackingEnabled && TryRepositionToBone()) return;
         RepositionToFixedOffset();
     }
 
