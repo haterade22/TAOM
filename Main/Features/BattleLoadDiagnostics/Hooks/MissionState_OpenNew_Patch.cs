@@ -33,6 +33,11 @@ public static class MissionState_OpenNew_Patch
     {
         try
         {
+            // PlayerEncounter.Current dereferences Campaign.Current, which is null in
+            // Custom Battle / non-campaign game modes -- guard so the (caught) NRE stops
+            // tripping break-on-thrown debugger sessions on every custom battle start.
+            if (TaleWorlds.CampaignSystem.Campaign.Current == null) return null;
+
             var enc = PlayerEncounter.Current;
             if (enc == null) return null;
 
