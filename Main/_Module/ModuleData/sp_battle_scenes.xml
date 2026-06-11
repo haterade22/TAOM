@@ -456,11 +456,7 @@
  terrain="Plain"
  forest_density="Low"
  map_indices="85,86,92,91,87,81,88,90,89"></Scene>
-  <Scene
- id="taom_dwarves_battle_001_forceatmo"
- terrain="Plain"
- forest_density="Low"
- map_indices="85,86,92,91,87,81,88,90,89"></Scene>
+
   <!-- Extended indices 158-180 (TAOM map grid) and 181-255 (catch-all for unmapped pixels) -->
 	<Scene
 		id="battle_terrain_r"
