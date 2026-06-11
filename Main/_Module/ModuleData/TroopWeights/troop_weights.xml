@@ -80,6 +80,9 @@
     <TroopWeight id="mordor_warg_beastmaster" weight="2.0" />
 
     <!-- ===== DOL GULDUR ===== -->
+    <!-- Spider Rider package (Weight 3.0): 2 (giant spider mount) + 1 (goblin rider) — elephant precedent (7.0 = 2+1+4) -->
+    <TroopWeight id="taom_spider_creature" weight="3.0" />
+
     <!-- Khamul's Shadow Line (Weight 2.0) -->
     <TroopWeight id="dg_khamul_shadow_knight" weight="2.0" />
     <TroopWeight id="dg_khamul_shadow_reaper" weight="2.0" />

@@ -53,7 +53,6 @@ public class AgentAdapter : IAgentAdapter
     internal Agent GetUnderlyingAgent() => _agent;
 
     public bool IsWarg() => _agent.Monster.StringId == "warg";
-    public bool IsSpider() => _agent.Monster.StringId == "spider";
     public bool IsHorse() => _agent.Monster.StringId == "horse";
     public bool IsCamel() => _agent.Monster.StringId == "camel";
     public bool IsActive() => _agent?.IsActive() ?? false;

@@ -24,7 +24,6 @@ public interface IAgentAdapter
     ActionIndexCache GetCurrentAction(int actionChannelNo);
     float GetCurrentActionProgress(int actionChannelNo);
     bool IsWarg();
-    bool IsSpider();
     bool IsHorse();
     bool IsCamel();
     bool IsActive();

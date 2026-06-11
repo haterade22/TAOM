@@ -1,5 +1,4 @@
 using BehaviorTrees;
-using BehaviorTreeWrapper;
 using BehaviorTreeWrapper.BlackBoardClasses;
 using BehaviorTreeWrapper.Tasks;
 using TAOM.Features.AdvancedCombat.BaseBehaviorTree;
@@ -9,16 +8,23 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.Spider;
 
 /// <summary>
-/// Minimal AI tree for AI-controlled DETACHED spider agents.
-/// Selector: "no enemy near" → sleep ; otherwise → move-to-enemy → bite → sleep.
-/// No rider logic, no rage mode (unlike Warg). The detached spider has NO formation movement orders, so
-/// the BT drives BOTH its advance (<see cref="BehaviorTreeElements.SpiderMoveToEnemyTask"/>, via the
-/// wield-free SetScriptedPositionAndDirection) AND its non-humanoid bite (vanilla AI drives neither).
+/// Behavior tree for the RIDDEN giant spider — the third creature in the warg → elephant BT lineage.
+/// Built per spider-mount agent by <see cref="SpiderMissionBehavior"/> via a
+/// <c>BehaviorTreeAgentComponent</c>; the engine auto-ticks it each frame.
+///
+/// Tree SHAPE is the elephant's (has-rider / ai-controlled / no-rider branches over the reused base
+/// decorators); bite PACING is the warg's (ONE attack kind ⇒ a post-bite SleepTask is the cooldown —
+/// no blackboard stamp state, per the simplicity criterion). The rider's normal cavalry AI drives all
+/// movement; this tree only layers the bite on top. The anti-chain gate lives inside
+/// <see cref="SpiderCanBiteDecorator"/>.
 /// </summary>
 public class SpiderBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTSpiderBlackboard
 {
     public BTBlackboardValue<Agent> Agent { get; set; }
 
+    // base(10): NOT a 10ms throttle — BehaviorTreeAgentComponent.OnTick divides by 1000 in INT math, so any
+    // value <1000 truncates to 0 and the tree runs every component tick (warg/elephant parity). Pacing
+    // comes from the SleepTask leaves below; don't tune cadence via this ctor arg (elephant review 2026-06-10).
     public SpiderBehaviorTree(Agent agent) : base(10)
     {
         Agent = new BTBlackboardValue<Agent>(agent);
@@ -28,20 +34,23 @@ public class SpiderBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTSpiderBlac
     {
         if (objects[0] is not Agent agent) return null;
 
-        BehaviorTree tree = StartBuildingTree(new SpiderBehaviorTree(agent))
+        return StartBuildingTree(new SpiderBehaviorTree(agent))
             .AddSelector("main")
-                .AddSelector("no enemy near", new NoEnemyNearSpiderDecorator())
-                    .AddTask(new SleepTask(new System.TimeSpan(0, 0, 1)))
+                .AddSelector("has rider", new HasRiderDecorator())
+                    .AddSelector("ai controlled", new IsAiControlledDecorator())
+                        .AddSequence("bite", new SpiderCanBiteDecorator())
+                            .AddTask(new SpiderAttackTask())
+                            .AddTask(new SleepTask(new System.TimeSpan(0, 0, SpiderConfig.SleepAfterAttack)))
+                        .Up()
+                        .AddTask(new SleepTask(new System.TimeSpan(0, 0, 0, 0, 200)))  // idle: bounds the scan cadence
+                    .Up()
+                    .AddTask(new SleepTask(new System.TimeSpan(0, 0, 1)))              // player-ridden: ai branch skipped
                 .Up()
-                .AddSequence("engage enemy")
-                    .AddTask(new SpiderMoveToEnemyTask())
-                    .AddTask(new SpiderAttackTask())
-                    .AddTask(new SleepTask(new System.TimeSpan(0, 0, SpiderConfig.SleepAfterAttack)))
+                .AddSequence("no rider", new HasNoRiderDecorator())
+                    .AddTask(new SleepTask(new System.TimeSpan(0, 0, 4)))              // riderless: rider died
                 .Up()
             .Up()
             .AddConstantEventListener(new OnSpiderDied())
             .Finish();
-
-        return tree;
     }
 }

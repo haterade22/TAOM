@@ -13,6 +13,9 @@ namespace TAOM.Features.Spider.BehaviorTreeElements;
 /// </summary>
 public class SpiderAttackTask : BTTask, IBTBannerlordBase, IBTSpiderBlackboard
 {
+    private IMissionAdapterFactory _adapterFactory;
+    private ISpiderAttackService _attackService;
+
     BTBlackboardValue<Agent> _agent;
     public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
 
@@ -21,10 +24,10 @@ public class SpiderAttackTask : BTTask, IBTBannerlordBase, IBTSpiderBlackboard
         Agent spider = Agent.GetValue();
         if (spider == null || !spider.IsActive()) return BTTaskStatus.FinishedWithFalse;
 
-        var adapterFactory = IoC.Resolve<IMissionAdapterFactory>();
-        var attackService = IoC.Resolve<ISpiderAttackService>();
-        var spiderAdapter = adapterFactory.GetAgentAdapter(spider);
-        attackService.SpiderAttack(spiderAdapter);
+        _adapterFactory ??= IoC.Resolve<IMissionAdapterFactory>();
+        _attackService ??= IoC.Resolve<ISpiderAttackService>();
+        var spiderAdapter = _adapterFactory.GetAgentAdapter(spider);
+        _attackService.SpiderAttack(spiderAdapter);
         return BTTaskStatus.FinishedWithTrue;
     }
 }

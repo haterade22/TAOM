@@ -6,7 +6,7 @@ public static class SpiderIoC
 {
     public static void RegisterSpiderFeature(IContainer container)
     {
-        container.Register<ISpiderAttackService, SpiderAttackService>(Reuse.Transient);
-        container.Register<ISpiderTroopSpawnService, SpiderTroopSpawnService>(Reuse.Singleton);
+        // Singleton: stateless pure-decision + boundary service (elephant parity).
+        container.Register<ISpiderAttackService, SpiderAttackService>(Reuse.Singleton);
     }
 }

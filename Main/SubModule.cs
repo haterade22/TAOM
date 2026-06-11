@@ -37,7 +37,6 @@ using TAOM.Features.CustomBattles;
 using TAOM.Features.CustomBattles.Hooks;
 using TAOM.Features.Warg;
 using TAOM.Features.Spider;
-using TAOM.Features.Spider.Hooks;
 using TAOM.Features.BattleBalance;
 using TAOM.Features.BattleBalance.Models;
 using TAOM.Features.Arena.Models;
@@ -221,7 +220,6 @@ public class SubModule : MBSubModuleBase
         CampaignSceneNotificationHelper_CreateNotificationCharacter_Transpiler.Initialize(bannerColorService);
         var agentColorStore = IoC.Resolve<IAgentColorStore>();
         Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter, agentColorStore);
-        Mission_SpawnAgent_SpiderSwap_Patch.Initialize(IoC.Resolve<ISpiderTroopSpawnService>(), IoC.Resolve<IModLogger>());
         Agent_EquipItemsFromSpawnEquipment_Patch.Initialize(bannerColorService, bannerHeroAdapter, agentColorStore);
         AgentVisuals_Create_Patch.Initialize(bannerColorService);
         MapConversationTableau_SpawnOpponentLeader_Patch.Initialize(bannerColorService, bannerHeroAdapter);
@@ -445,7 +443,8 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomMapVisibilityModel(careerPassives));
             campaignStarter.AddModel(new TaomInventoryCapacityModel(careerPassives));
             var elephantAttackService = IoC.Resolve<Features.Elephant.IElephantAttackService>();
-            campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerPassiveService, careerAgentStat, elephantAttackService));
+            var spiderAttackService = IoC.Resolve<ISpiderAttackService>();
+            campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerPassiveService, careerAgentStat, elephantAttackService, spiderAttackService));
             campaignStarter.AddModel<AgentApplyDamageModel>(new TaomAgentApplyDamageModel(careerAgentStat));
             campaignStarter.AddModel(new TaomClanTierModel(careerPassiveService));
 
@@ -538,7 +537,6 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch24_BannerDriftGuard");
         _harmony.PatchCategory("Patch39_BanditPartySize");
         _harmony.PatchCategory("Patch40_HideoutDescription");
-        _harmony.PatchCategory("Patch45_SpiderTroopSpawn");
         _harmony.PatchCategory("Patch46_TournamentDwarfDismount");
 
         var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();

@@ -1,214 +1,187 @@
-# Spider
+# Spider (Giant Spider — Ridden Mount)
 
-> **Status (2026-06-05): PAUSED — disabled in code.** `SpiderConfig.Enabled = false` gates
-> `Mission_SpawnAgent_SpiderSwap_Patch`, so the recruitable troop now spawns as its harmless **humanoid anchor**
-> (`dg_uruk`) instead of crashing the battle. The blocker is a native **`Agent.PreloadForRendering` AccessViolation**
-> on the 62-bone skeleton, reached through the **detached / non-mountable (`Mountable="false"`) mount-render
-> sub-path**. An exhaustive 2026-06-05 investigation **refuted every data-level cause** (mesh-split, ≤4 influences,
-> physics, skeleton integrity, shader cache, material binding) — a render-diag patch proved `AgentVisuals=ok
-> skel.bones=62` *build* fine and the native GPU preload is what AVs. The root issue is that a **non-humanoid
-> riderless combatant is a shape the engine does not support**; we hacked it in via `FromHorseObj` and hit a wall the
-> data cannot move. Work is paused in favour of a **`Mountable=true` ridden war-elephant** (the supported
-> warg/horse path) — see [elephant.md](elephant.md). To resume: resolve the render AV and flip `SpiderConfig.Enabled`
-> back to `true`.
->
-> **⚠️ 2026-06-06 — this "unsupported shape" verdict is likely WRONG (but NOT for the Usage reason first proposed).**
-> ADOD's **wolves** are working riderless non-humanoid creatures (57-bone, `Usage='other'`), so the engine *does*
-> support the shape. **Correction (verified):** the spider skeleton is **already `Usage='other'`** (not `'horse'` as
-> first claimed — that was an un-dumped inference), and the elephant renders at `'horse'` — so Usage + bone count both
-> fail to predict the crash, and the spawn path is decompiled-identical to the wolf's. The **most-likely real cause is
-> the spider MESH's native skin data** — and the "L/R split" tpac is the *same file size* as the original single mesh,
-> suggesting the split **duplicated geometry instead of partitioning palettes** (so the bone-cap "refutation" tested a
-> split that never worked). **Cheapest untried test: an un-split single mesh** (like the wolf's). Full ranked
-> experiments + the corrected matrix: [RCA "Update 2026-06-06"](../reviews/rca-spider-troop-2026-06-04.md).
->
-> **2026-06-06 — ADOD code deep-dive (the wolf "has a lot of code"):** decompiled `ADOD_Beasts.dll` +
-> `NativeHook.dll`. The wolf's code (`ADODBeastsWolfAgentComponent` ~600 lines, `ADODBeastsMissionLogic` ~460,
-> and 3 EasyHook native hooks: `Agent_AiTick`/`Agent_Tick`/`AgentMovementAndDynamicsSystem_UpdateFlags`) is
-> **all movement/AI — ZERO render hooks.** So the wolf renders with no render code; **no code fixes the spider AV,
-> it's the mesh.** (Also: ADOD's wolf is a scripted companion, the elephant a ridden mount — neither is a roster
-> troop; and the wolf spawns via the *public* `Mission.SpawnMonster`, not our reflected `FromHorseObj`.)
-> **Ready-to-apply render tests (A) + optional wolf XML alignment (B):**
-> [`spider/wolf-parity-and-render-tests.md`](spider/wolf-parity-and-render-tests.md).
->
-> <details><summary>Historical: the (paused) riderless-autonomous detached-combatant architecture</summary>
->
-> **Architecture: detached + autonomous BT.** A `FromHorseObj` agent has garbage native wield/aiming state (the build path skips it) that is **unfixable** (can't read → NRE, can't write → `WeaponEquipped` AV). So `Agent_SpiderNativeWieldGuard_Patch` guards the **3 managed methods** that read it (`GetMissileRange`/`Get{Primary,Offhand}WieldedItemIndex` → `0`/`None`) — a closed, bounded set (every red property funnels through these 3), not whack-a-mole. Having no formation, `SpiderMoveToEnemyTask` drives the spider toward the nearest enemy (mission-wide search) via the wield-free `SetScriptedPositionAndDirection`; it bites via its Monster's `CustomAttack`. The earlier in-place `Monster`-swap **and** formation-membership designs are both **superseded** (formation membership adds an unavoidable null-`HumanAIComponent` crash — see RCA).
->
-> **Two human seams remained:** (1) the real spider mesh AVs at render (a **58-bone** single mesh > the ~40 per-mesh palette) — split L/R in `spider_correct.fbx` (each half ≤40 bones), but the render AV persisted even with `AgentVisuals=ok skel.bones=62`, so the mesh-bone-count branch was *refuted* as the cause; (2) in-game validation of advance + bite + survive-being-hit with the **real** spider (the warg stand-in is `Mountable=true`, so it mount-wanders and masks movement). The feature shipped behind the warg render stand-in.
-> </details>
->
-> Crash-fix journey + decompiled evidence: [`docs/reviews/rca-spider-troop-2026-06-04.md`](../reviews/rca-spider-troop-2026-06-04.md). Mesh-split + skeleton/animation authoring: [`spider-skeleton-animation-pipeline.md`](spider-skeleton-animation-pipeline.md).
+> **Status (2026-06-11): WORKING — mount lane proven in battle.** Full formations of 8-legged
+> giant spiders with goblin riders load and fight in Custom Battle (verified in-game 2026-06-11
+> 08:36, screenshot in session log; `[SpiderDiag]` probe battery all-green, `[MountSpawn] success`
+> for `spider_mount_a`). The detached-combatant architecture documented in earlier revisions of
+> this file was **deleted 2026-06-10** (git history preserves it) — the spider is now a plain
+> **Mountable Horse-slot mount** ridden by the `taom_spider_creature` goblin (the warg/elephant
+> pattern). Remaining items are cosmetic polish + the rest of the in-game ladder (see "Current
+> state" below).
 
 ## Overview
 
-Giant spiders are a recruitable troop of Dol Guldur. Bannerlord cannot host a non-humanoid creature as an ordinary `NPCCharacter` (the `race=` field resolves against a humanoid-only `skins.xml`), so the troop uses a **humanoid anchor** (`taom_spider_creature`, `race="dg_uruk"`) for everything the troop system needs — recruitment, party roster, UI. At battle spawn a Harmony **prefix on `Mission.SpawnAgent` returns `false`** for that one troop and **builds the agent itself** as a detached spider via reflected private engine methods, mirroring how the engine spawns a riderless mount. The recruit shows a humanoid silhouette in the party roster but spawns and fights as a giant spider in battle.
+The Giant Spider is a **rideable mount**: `taom_spider_creature` (goblin, Cavalry, Dol Guldur)
+carries `Item.spider_mount_a` in its Horse equipment slot; the vanilla cavalry spawn builds two
+agents — the goblin rider (`FromCharacterObj`) and the spider mount (`FromHorseObj`,
+`Monster.spider`). No spawn interception, no Harmony patch on the spawn path. The spider
+auto-bites enemies via a per-agent behavior tree (`SpiderBehaviorTree`, attached by
+`SpiderMissionBehavior` keyed on `Monster.StringId == "spider"`), mirroring the elephant.
 
-## Why This Exists
+## Why this exists (and the three architectures that led here)
 
-LOTR combat needs Mirkwood / Dol-Guldur giant spiders, but the engine offers no direct way to make a non-humanoid creature a recruitable, battle-spawning combatant. Three approaches were tried:
+LOTR needs Dol Guldur's giant spiders as a fielded force. Bannerlord has no first-class
+non-humanoid roster troop, so three shapes were tried:
 
-1. **Rideable mount** (spider as a `HorseItem` ridden by an uruk) — abandoned: a mounted creature gets a campaign-map party icon whose build calls `Skeleton.ForceUpdateBoneFrames()` → `AccessViolationException` on entering the open world (a hard crash that exists ONLY for mounts). See memory `feedback_nonhumanoid_creature_troop_not_mount`.
-2. **In-place Monster swap** (`Mission.SpawnAgent` prefix returns `true` after `agentBuildData.Monster(spider).NoHorses(true).NoWeapons(true)`) — **superseded**: vanilla `SpawnAgent` then runs its normal humanoid build (`EquipItemsFromSpawnEquipment` → `AddSkinMeshes`) on the spider skeleton, applying a `dg_uruk` skin onto non-matching bones → native AccessViolation during the agent-visual build.
-3. **Detached non-humanoid combatant** (current) — the prefix returns `false` and reproduces the engine's **free-mount** build (`CreationType.FromHorseObj`), which skips `AddSkinMeshes` entirely. The body mesh comes from a mesh-only `Horse` item; the Monster supplies the skeleton + `as_spider` animations. No humanoid skin is ever built.
+1. **Rideable mount (2026-06-03, first attempt)** — abandoned at the time for a map-icon
+   `ForceUpdateBoneFrames` AV that was later understood (missing `_map`/`_town_and_village`
+   child action sets — the elephant Crash #4 class) and for the thumbnail/tableau AV whose true
+   root cause took until 2026-06-11 to find (below).
+2. **Detached riderless combatant (2026-06-04 → 06-05)** — `Mission.SpawnAgent` prefix
+   hand-building a `FromHorseObj` spider with native wield guards. Worked in battle, then hit a
+   `PreloadForRendering` AV from the 58-bone single mesh (per-mesh GPU palette ≈ 40) and was
+   PAUSED. The whole machinery (Patch45, wield guards, spawn service, move task) was **deleted
+   2026-06-10**.
+3. **Rideable mount, take two (2026-06-10 → 06-11, current)** — after the war elephant proved
+   the ridden-mount lane end-to-end, the spider was converted back: mesh split L/R to fit the
+   bone palette, mount surface authored, and the tableau/mission AVs root-caused to a **missing
+   `quad_movement` clip tag** (the actual fix). This file documents that architecture.
+
+## THE ROOT CAUSE (2026-06-10/11 investigation)
+
+**Who:** Mike (in-game repro + debugger dumps) + Claude (instrumentation, probe battery, byte
+forensics), one ~6-hour `/investigate` session.
+**What crashed:** native `AccessViolationException`, faulting address `0x10` (null + 0x10 field
+read), inside `Skeleton.TickAnimations` / `GetWalkSpeedLimitOfMountable`.
+**Where:** every mount-context first-touch — Custom Battle thumbnail
+(`CharacterSpawner.SpawnMount`), inventory equip (`CharacterTableau.AdjustCharacterForStanceIndex`),
+and mission deployment (`Agent.Build → set_Formation → WalkingSpeedLimitOfMountable`) — while
+warg and elephant sailed through the identical code paths.
+**When:** first hit the moment the spider became a Horse-slot mount (2026-06-10). The detached-era
+spider never crashed here because non-mount agents never engage the quadruped gait machinery.
+
+**Why (root cause):** the `an_spi_*` animation clips were Kit-compiled (2026-06-03 loop sessions)
+**without the `quad_movement` tag and step points** in their `_anm.tpac` metadata. Every working
+quadruped's movement clips carry that tag (verified by byte-diffing ADOD's
+`elephant_canter_anm.tpac`, which also carries `make_walk_sound`, four step-point fractions, and
+movement speed params — ours had empty tag lists and step points `-1,-1,-1,-1`). A
+`movement_system="quadrupedal"` action set whose movement-bound clips lack the tag builds a
+**null native gait structure** at skeleton creation; the first tick (or the first mount-speed
+query) dereferences it → AV at `+0x10`. A secondary fingerprint: resolving any *unbound* action
+through such a set returns a runtime-synthesized garbage record (`1002467048434979358_0`)
+instead of a real animation name.
+
+**How it was found:** an instrumented replacement for the engine's private `SpawnMount`
+(`CharacterSpawnerService.SpawnMountLogged`) with write-ahead logging + `[HandleProcessCorruptedStateExceptions]`
+graceful-catch (crash → logged mount-less degradation), plus a one-shot **probe battery**
+(`RunSpiderMountDiagnostics`) that tick-tested fresh skeletons under controlled (action set ×
+usage set) pairings. The battery's truth table eliminated, in order: the Kit-compiled skeleton
+resource (T3/T4: warg data ticks it fine), the Monster record (same object passed to passing
+probes — `family_type=11`, `num_paces=6` both fine), the usage-set enrichment (bare 6/4 shape
+also failed), the clip *bindings* (all repointed to one intact clip — still failed), the child
+action sets, the old-vs-new tpac (both failed), and dangling `_anm→_geo`/skeleton GUIDs (byte
+cross-reference clean). The final cross-probes (T5: `as_spider`×warg-usage AV; T6:
+`as_warg`×spider-usage OK) convicted the action set's *engagement of our clips*; byte-diffing a
+working ADOD clip against ours exposed the missing tag in minutes.
+
+**The fix (how):** rebuild the movement clips' `_anm.tpac` on the elephant template — keep ADOD's
+proven post-name layout (tags `quad_movement` + `make_walk_sound`, step-point fractions, movement
+params), substitute each clip's own identity fields (file/resource/curve GUIDs, name, duration
+trio, blend float, trailer hash). Patched clips: `an_spi_walk_2`, `an_spi_walk_left`,
+`an_spi_walk_right`, `an_spi_run` (the only clips bound to movement actions). Originals preserved
+as `*.bak-untagged` beside them. Non-movement clips (attacks/hits/deaths) correctly do NOT carry
+`quad_movement` (ADOD's attacks don't either).
+
+**THE LESSON (any future creature):** when compiling creature animation clips in the Modding Kit,
+movement/gait clips MUST get the `quad_movement` flag (+ step points) in the Kit's animation
+editor before saving. An untagged movement clip is a delayed native AV that detonates only when
+a `movement_system="quadrupedal"` action set engages it — thumbnails, tableaus, and mounts, not
+the detached spawn paths that earlier testing exercised.
 
 ## Architecture
 
-### Design challenge
+### Data plane (all LIVE in `LOTRLOME_Armory` — registration map below)
 
-`FromHorseObj` is the engine's *mount* recipe: it skips the humanoid skin (good) but also skips weapon/wield setup and leaves the agent out of all formations (a riderless horse is not an army combatant). Making that same construction fight as a **troop** means re-adding, by hand and in the right order, the pieces a normal troop spawn would have gotten — position, team, casualty origin, a body mesh, an (empty) weapon state, and formation membership — while never triggering the skin build.
-
-### Solution — the detached spawn pipeline
-
-```
-Dol Guldur notable volunteers (VolunteerRecruitmentService, weight 1)
-                    │ player/AI recruits "Giant Spider"
-                    ▼
-        party roster holds taom_spider_creature (humanoid anchor)
-                    │ battle deploy → MissionBattleSideSpawnContext.SpawnTroops
-                    │              → Mission.SpawnAgent(agentBuildData) per troop
-                    ▼
-   Patch45_SpiderTroopSpawn  (Prefix on Mission.SpawnAgent)
-        if IsSpiderTroop(agentBuildData.AgentCharacter):
-            __result = SpiderDetachedAgentSpawner.TrySpawnDetachedSpider(...)
-            return false        ← skip the vanilla humanoid build
-        else return true        ← every other troop unaffected
-                    ▼
-   SpiderDetachedAgentSpawner.TrySpawnDetachedSpider  (boundary glue, reflected privates)
-     1. compute formation-slot frame  (public Mission.GetTroopSpawnFrameWithIndex)
-     2. CreateAgent(FromHorseObj, character)            ← no humanoid skin
-     3. SetInitialFrame(slot pos/dir)  +  SetMountInitialValues(name, mountKey)
-     4. SetTeam + Origin (casualty/XP)  +  InitializeSpawnEquipment(mesh item @ Horse slot)
-     5. BuildAgent(agent, null)                          ← free-mount build (Formation null, AI)
-     6. EnsureMissionEquipment  → InitializeMissionEquipment(null,null)  (empty MissionEquipment)
-     7. [GATED OFF] InitializeNativeWeaponState + AttachToFormation
-     8. NotifyAgentBuilt → OnAgentBuild fires           ← attaches the BT, casualty trackers
-                    ▼
-   SpiderMissionBehavior attaches SpiderTree BT to spider-bodied agents
-        SpiderAttackService (CustomAttack via fang bones; bone-collision through the
-        shared IBoneCollisionService singleton that AdvancedCombatBehavior ticks)
-```
-
-### The three Harmony patches (all in `Patch45_SpiderTroopSpawn`, applied at `SubModule.cs:539`)
-
-| Patch class | Target | Role |
+| Piece | File | Key facts |
 |---|---|---|
-| `Mission_SpawnAgent_SpiderSwap_Patch` | `Mission.SpawnAgent` (Prefix) | For the spider troop: build the detached agent + `return false`; else `return true` (fail-open → vanilla humanoid anchor, never a crash). Co-exists with `Patch23_BannerColorPersistence` on the same method. |
-| `Agent_WieldInitialWeapons_SpiderSkip_Patch` | `Agent.WieldInitialWeapons` (Prefix) | Skip wielding for the spider. Vanilla `SpawnTroops` calls `WieldInitialWeapons()` on every spawned agent; its first line (`GetPrimaryWieldedItemIndex`) derefs the spider's uninitialized native wield pointer → NRE. The spider bites via its Monster, never wields — skipping is correct. |
-| (`InitializeNativeWeaponState`, in the spawner) | `Agent.RemoveEquippedWeapon` ×5 | **Gated off** (`SpiderConfig.EnableFormationMembership`). The investigated *root* fix for the native weapon state — see "Formation membership" below. |
+| Monster | `ModuleData/Monsters/LOTR/lotr_monster_spider.xml` | `id="spider"`, `Mountable="true"`, `rider_sit_bone="chest_m"`, `num_paces="6"` (every mountable monster is 6 — paces 0–5), `family_type="11"`, slope block (head + front/back leg roots), `action_set="as_spider"`, `monster_usage="spider"` |
+| Action set | `ModuleData/action_sets.xml` → `as_spider` | `skeleton="spider_skeleton"`, `movement_system="quadrupedal"`, 36 bindings. Movement actions bind ONLY tagged clips (walk_2/left/right, run). Idles/turns/jump/taunt currently bind tagged walk clips (pose-correct idles need a tagged Kit recompile). `act_horse_forward_canter` is bound explicitly (the tableau pose; warg precedent — `as_warg` binds it too) |
+| Child sets | same file: `as_spider_town_and_village`, `as_spider_map` | `base_set="as_spider"`; absence = map-icon/thumbnail AV class (elephant Crash #4) |
+| Usage set | `ModuleData/monster_usage_sets.xml` → `id="spider"` | Full mount surface: 10 verb attrs (rear/dash/kick/quick-stops/jump/hit-object…), upper-body movements, movements (paces 0–5, gallop both foot variants), rider movement-adders (`act_horse_rider_*` — global codes animating the RIDER), jumps (`act_horse_jump_*`, bound in as_spider), falls, strikes. Every pace 0–5 keeps a `direction="none"` reference row (missing one = native ÷0, the 2026-06-04 crash) |
+| Mount item | `ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` → `spider_mount_a` | `is_mountable`, `<Horse monster="Monster.spider" maneuver=60 speed=40 charge_damage=10 body_length=100>`, `<AdditionalMeshes><Mesh name="sk_spider_forest_c_2"/>` (the L/R split second half) |
+| Skeleton + meshes | `Assets/creature/spider/animations/spider_correct_geo.tpac` (2.7MB, split) | 62-bone `spider_skeleton` + `sk_spider_forest_c` / `_c_2` L/R-split meshes (≤38 bones/half; the unsplit 58-bone mesh AVs `PreloadForRendering`). Physics transplanted (62 bodies + 61 D6 joints). Pre-split original: `spider_correct_geo.tpac.backup` |
+| Clips | `Assets/creature/spider/animations/an_spi_*_{anm,geo}.tpac` | Loose-pair format (same as ADOD elephant). Movement clips tagged (see ROOT CAUSE). The 13 `new_animation_clip*_anm.tpac` files are NOT garbage — Kit default filenames whose internal resource names are real (`an_spi_hit_front`, `an_spi_death_1`, …; quirk: `an_spi_idle2` has no second underscore) |
+| Rider troop | TAOM `Main/_Module/ModuleData/characters/spider_creature.xml` | `taom_spider_creature`: goblin, Cavalry, level 20, Dol Guldur, 3 equipment rosters all with `Horse = spider_mount_a` |
+| Troop weight | `TroopWeights/troop_weights.xml` | 3.0 (2 mount + 1 rider; elephant precedent 7.0) |
+| Recruitment | `VolunteerRecruitmentService` DG settlement pools | weight 1, all Dol Guldur fiefs (intentionally absent from clan pools) |
 
-- **Patch45 is thin + fail-safe:** the spawner never throws out (try/catch around every reflected invoke; `TargetInvocationException` unwrapped + logged once per error class). Any null/binding/asset failure → returns `null` → the prefix returns `true` → vanilla spawns the harmless humanoid anchor.
-- **The decision is unit-testable, the spawn is boundary glue:** `ISpiderTroopSpawnService.IsSpiderTroop(string)` is a pure, mocked decision; `SpiderDetachedAgentSpawner` is engine-coupled glue (reflection + `MBObjectManager` + sealed types) invoked by the patch, verified in-game rather than unit-tested (ADR-002/007 boundary).
+### Registration map (the `project.mbproj` truth — load-bearing)
 
-## The crash-fix journey (2026-06-04)
+Native animation XML loads ONLY from `LOTRLOME_Armory/ModuleData/project.mbproj` `<file>` entries
+with **standard ids**: `soln_action_sets` → root `action_sets.xml`, `soln_action_types` → root
+`action_types.xml`, `soln_monster_usage_sets` → root `monster_usage_sets.xml`. Custom ids are
+silently ignored (2026-06-04 RCA, comment in the mbproj itself). The `Animations/` and
+`MonsterUsage/` subfolder copies are superseded reference copies. SubModule.xml `<Xmls>` handles
+only the managed types (Monsters, Items). Alliance.Wargs follows the same pattern.
 
-The detached redesign surfaced five distinct crash layers, each fixed in turn (full evidence + stacks in the RCA):
+### Rider-side bindings (the thrust-loop fix, 2026-06-11)
 
-1. **DivideByZero (native `CreateAgent`)** — the spider animation files were registered in `LOTRLOME_Armory/ModuleData/project.mbproj` under *custom* `soln_spider_*` ids the runtime silently ignores. **Fix:** move them to top-level files under the engine's *recognized* ids (`soln_action_types`, `soln_monster_usage_sets`, `soln_action_sets`).
-2. **AccessViolation — missing mount-key + NaN direction** — `BuildAgent → PreloadForRendering` AV'd because the agent's render data was uninitialized and a `(0,0)` deploy direction normalized to a NaN frame. **Fix:** reflected `Agent.SetMountInitialValues(name, MountCreationKey)` + a `Vec2.Forward` direction guard.
-3. **AccessViolation — the spider mesh** — `sk_spider_forest_c` is a single **62-bone** mesh that overflows the native per-mesh bone palette → AV in `PreloadForRendering`. **Not yet fixed** (needs a Modding-Kit mesh-split). Confirmed via the warg stand-in: the warg mesh renders cleanly through the exact same code path.
-4. **NRE — `WieldInitialWeapons`** — vanilla `SpawnTroops` calls `agent.WieldInitialWeapons()` post-spawn; it derefs the uninitialized native wield pointer (`0xee0`). **Fix:** `Agent_WieldInitialWeapons_SpiderSkip_Patch`.
-5. **NRE → native AV — formation membership** — adding the agent to a formation triggers engine classification: `IsInfantry → IsRangedCached → Equipment.Contains…()` (NRE on the null `MissionEquipment`), then `BehaviorSkirmish → MaximumMissileRange → GetMissileRange()` (native AV on the uninitialized weapon struct). **Partial fix:** `EnsureMissionEquipment` (managed, shipped on) resolves the NRE; the native AV is resolved by `InitializeNativeWeaponState` (gated off, see below).
+When an agent rides a mount, the engine resolves the **mount's usage-set actions against the
+RIDER's action set** to pick the rider's lean/sway overlay (this is what the
+`as_goblin_warrior does not contain act_spider_*` rgl warnings were). Unresolved rider-side
+lookups degrade per-set — the elephant's mahout falls back benignly, the spider's goblin looped
+a thrust action. The supported mechanism (Alliance.Wargs precedent — the FIRST set in
+`action_sets_warg.xml` is a partial `as_human_warrior`!) is a **partial `as_human_warrior`
+block that the engine merges into the global set**, binding every usage-referenced mount action
+to a rider animation. The spider's partial lives in the root `action_sets.xml` right above
+`as_spider` (24 bindings) and **reuses the globally-registered `rider_warg_*` clips**
+(Alliance.Wargs is a hard dependency) until bespoke spider-rider clips exist. `act_horse_*`
+codes (rider adders, jumps, canter) are already vanilla-covered rider-side. Race sets like
+`as_goblin_warrior` inherit the human-warrior surface (goblin WARG riders work via the same
+merge), so one partial covers all riders incl. the player.
 
-## Current checkpoint state — what works / what's gated
+### Code plane (TAOM `Main/Features/Spider/`)
 
-| Layer | State |
+| Piece | Role |
 |---|---|
-| Spawn as detached non-humanoid agent | ✅ working (8 agents spawn, get BTs, correct `as_warg`/`as_spider` action set) |
-| Render | ✅ with the **warg stand-in**; ❌ real spider mesh AVs until the mesh-split |
-| Deployment-zone positioning | ✅ `Mission.GetTroopSpawnFrameWithIndex` (vanilla-exact slot frame) |
-| Empty `MissionEquipment` | ✅ `InitializeMissionEquipment(null,null)` — weapon-cache queries return `false` not NRE |
-| `WieldInitialWeapons` NRE | ✅ skipped for the spider |
-| Formation membership (advance with army, commandable) | ⏸ **gated off** (`SpiderConfig.EnableFormationMembership = false`) — detached spiders are positioned but **passive** (the BT bites adjacent targets only; no move-to-enemy node) |
-| Native weapon-state init (root fix for the formation/combat native AVs) | ⏸ implemented, gated with the membership it enables, **unverified in-game** |
+| `SpiderMissionBehavior` | Elephant-shape: registers `"SpiderTree"`, first-tick scan + `OnAgentBuild` late-attach keyed on `Monster.StringId == "spider"` (never character id — the character is the goblin), dead pruning |
+| `SpiderBehaviorTree` | `main → has rider → ai controlled → [bite gate → SpiderAttackTask → Sleep] → idle`; player-ridden and riderless branches sleep (engine mount AI runs) |
+| `BehaviorTreeElements/SpiderCanBiteDecorator` | anti-chain gate (`IsSpiderAttack`), SpatialGrid scan, side via `RiderAgent?.Team.Side ?? Team.Side`, cone+range hit check |
+| `BehaviorTreeElements/SpiderAttackActions` | eager `ActionIndexCache` for bite clips + `AnyUnresolved()` drift guard |
+| `SpiderAttackService` | pure (TaleWorlds-free): bite gates, warg-pattern rider damage attribution, `IsSpiderMonster()` |
+| `TaomAgentStatCalculateModel` (CareerSystem) | mount-lock: `CanAgentRideMount=false` + `MountDifficulty=999` for spider mounts (and elephant) — players can't steal the mount; the Horse-slot cavalry spawn ignores the lock for the assigned rider |
+| `CharacterSpawnerService.SpawnMountLogged` (HeroRace) | instrumented replica of the engine's private `SpawnMount` with per-step logging + graceful mount-less degradation on failure. **Keep** (strictly better than the old blind reflective call); demote logging to `LogDebug` at ship. The one-shot `RunSpiderMountDiagnostics` probe battery + `TickProbe` are TEMP-DIAG — retire after the ladder |
 
-## Recruitment
+## Current state & known issues (2026-06-11, post-polish round)
 
-`taom_spider_creature` is added at **weight 1** to the four Dol Guldur settlement pools (`town_DG1`, `castle_DG1`–`castle_DG3`) and the `dolguldur` culture fallback in `VolunteerRecruitmentService`. It is deliberately **absent from the clan-path pool**. Because settlement pools feed both player and AI recruitment, AI Dol Guldur lords may occasionally field a spider too (thematic, rare). `level="21"` maps to Tier 4, ≤ `MaxVolunteerTier` (6), so the spider is genuinely offerable as a volunteer.
-
-## Configuration
-
-| File / Class | Purpose |
+| Item | Status |
 |---|---|
-| `Main/Features/Spider/SpiderConfig.cs` | `SpiderMonsterId` / `SpiderMountItemId` (**currently the warg stand-in** — real values `"spider"` / `"spider_mount_a"`); `SpiderCharacterId="taom_spider_creature"`; `EnableFormationMembership=false`; combat tuning + fang bone indices (placeholders 23/37/43) |
-| `Main/_Module/ModuleData/characters/spider_creature.xml` | The recruitable anchor `<NPCCharacter id="taom_spider_creature">` — `race="dg_uruk"`, `level="21"`, `occupation="Wanderer"` (keeps it out of the Custom-Battle picker), `is_basic_troop="false"`, `hidden_in_encyclopedia="true"` |
-| `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | Dol Guldur settlement + culture pools include the spider (weight 1) |
-| `LOTRLOME_Armory/.../LOTRAOM_horses.xml` → `spider_mount_a` | Mesh-only `Horse` item (`mesh="sk_spider_forest_c"`, `monster="Monster.spider"`, `is_mountable="false"`, `is_merchandise="false"`, culture-less) — the spider body mesh + Monster for the detached agent. Never rideable/rostered. |
-| `LOTRLOME_Armory/.../Monsters/LOTR/lotr_monster_spider.xml` | `<Monster id="spider" … Mountable="false" IsHumanoid="false">` (62 bones) |
-| `LOTRLOME_Armory/ModuleData/project.mbproj` | Registers the spider anim files under **recognized** ids (`soln_action_sets`/`_types`/`_monster_usage_sets`) so the runtime loads them — see journey #1 |
+| Thumbnail / picker | ✅ mounted spider renders, no crash |
+| Custom battle deployment | ✅ full formations spawn (riders seated, 8 legs) |
+| Spider idle | ✅ pose-correct: `an_spi_idle` (3.5s) tagged + bound (idle_2 → `an_spi_idle2`, the no-underscore resource quirk) |
+| Turns / jump | ✅ `an_spi_turn_left/right` + `an_spi_jump` tagged + bound |
+| Deaths / hits / attacks | ✅ natural clips bound (`an_spi_death_1/2`, `hit_front/right`, `attack_left/right/top`) — no quad tag needed (ADOD parity) |
+| Rider animation | ✅ partial `as_human_warrior` with 24 spider→`rider_warg_*` bindings (see "Rider-side bindings"); riders seated correctly in the 09:50 battle |
+| Vanilla-map battle (full polish data) | ✅ 2026-06-11 09:50 `battle_terrain_biome_092`: playable, formations deployed, idles standing, riders seated, battery all-green, 0 mount failures |
+| `lotrtaom_iron_hills_01_forceatmo` | ❌ **SEPARATE BUG — not spider. The scene has NEVER loaded: 7/7 CTDs** (2026-06-10 20:53→2026-06-11 15:16), all dying at `scene.xscene` load, pre-agent-spawn — incl. runs with all-green spider probes. `taom_gondor_village_001_forceatmo` loads fine, so the forceatmo/Patch16 mechanism is exonerated — it's this scene's assets. Several 6/10 "spider mission CTDs" were this scene, conflated into the spider evidence. Own issue/investigation |
+| Walk gait skew | ⚠️ known from the retarget work (pre-existing; polish) |
+| Charge visual | 💡 unused 112KB `an_spi_charge` clip exists — possible upgrade over `an_spi_attack_charge` for the pounce; evaluate later |
+| Inventory equip | ❓ retest (was the second AV repro; same root cause, expected fixed) |
+| Campaign map icon | ❓ ladder step (c) pending (needs campaign) |
+| Player riding / slope / conversation+inventory tableaus | ❓ ladder step (d) pending |
+| Bite BT in battle | ❓ verify `SpiderTree` fires for AI riders |
+| Diagnostics | battery kept as a regression canary until the ladder completes (one-shot, 6 probes, ms-cheap); `docs/_scratch_characterspawner.cs` deleted; retire battery at ship |
+| `.bak` inventory | `action_sets.xml.bak-spider-mount`, `monster_usage_sets.xml.bak-spider-mount`, `.bak-usage-enriched`, `lotr_monster_spider.xml.bak-*`, 9× `*_anm.tpac.bak-untagged`, `spider_correct_geo.tpac.backup` — clean up at ship |
 
-## Key Files
+## How-to: tag a movement clip
 
-| File | Purpose |
-|---|---|
-| `Main/Features/Spider/Hooks/SpiderDetachedAgentSpawner.cs` | Boundary glue — reflected `Mission.CreateAgent` + `Mission.BuildAgent` + `Agent.SetMountInitialValues`; the full detached spawn sequence; `EnsureMissionEquipment` / `InitializeNativeWeaponState` / `AttachToFormation` |
-| `Main/Features/Spider/Hooks/Mission_SpawnAgent_SpiderSwap_Patch.cs` | `Patch45_SpiderTroopSpawn` prefix — detached spawn + `return false`, else `return true` |
-| `Main/Features/Spider/Hooks/Agent_WieldInitialWeapons_SpiderSkip_Patch.cs` | Skip `WieldInitialWeapons` for the spider |
-| `Main/Features/Spider/ISpiderTroopSpawnService.cs` / `SpiderTroopSpawnService.cs` | Pure `IsSpiderTroop(string)` decision (the swap logic is gone) |
-| `Main/Features/Spider/SpiderMissionBehavior.cs` | `MissionLogic` — attaches `SpiderTree` BT to spider-bodied agents; owns `SpatialGrid`/bone-collision only when no other combat behavior already does |
-| `Main/Features/Spider/SpiderBehaviorTree.cs` + `BehaviorTreeElements/*` | BT: no-enemy-near → sleep, else → `SpiderAttackTask` (bite-in-place; **no movement node**) |
-| `Main/Features/Spider/ISpiderAttackService.cs` / `SpiderAttackService.cs` | Bite damage calc + `CustomAttack` |
-| `Main/IoC.cs` / `Main/SubModule.cs` | Feature registration + Patch45 `Initialize` + `PatchCategory("Patch45_SpiderTroopSpawn")` (`SubModule.cs:539`) + `AddMissionBehavior` |
+**Durable fix (Kit editor):** open the clip → **Clip usages** section (bottom of the properties
+panel, below Flags) → add **`quad_movement`**; check the **`make_walk_sound`** Flag; set step
+points. Full editor field map + per-category ADOD flag recipes:
+[spider-skeleton-animation-pipeline.md §3c](spider-skeleton-animation-pipeline.md).
 
-## Dependencies
+**Interim byte-patch (what shipped 2026-06-11):** take a working ADOD `_anm.tpac` (e.g.
+`elephant_canter_anm.tpac`), keep its post-name layout (step points, the `make_walk_sound` flag
+list + `quad_movement` usage list, movement params), substitute the target clip's file GUID (@8),
+resource GUID (@52), name (+length @72), duration trio (pos+12 where pos=76+namelen), curve GUID
+(both occurrences), blend float, trailer hash; fix the content-size u32 @28 (= filesize − 36).
 
-- **`LOTRLOME_Armory`** — provides the spider Monster, `as_spider` action set, skeleton, mesh, animations, and the `spider_mount_a` mesh item. Resolved by a **runtime** `MBObjectManager` lookup at spawn (all modules loaded by battle time), and the spawner fail-opens if absent, so load order is not load-bearing for the spider specifically.
-- **`Alliance.Wargs`** — provides the `warg` Monster + `warg_brown` item + `warg_low` mesh used by the current render stand-in.
-- **`Main/Features/AdvancedCombat`** — `IBoneCollisionService` (singleton, ticked by `AdvancedCombatBehavior`), `SpatialGrid`, `CustomAttack`.
-- **`BehaviorTrees` + `BehaviorTreeWrapper`** — BT framework (inlined into `TAOM.dll`).
+## History / references
 
-## Tests
-
-- `TAOM.Tests/Features/Spider/SpiderTroopSpawnServiceTests.cs` — `IsSpiderTroop` decision (spider id, non-spider, null, ctor smoke).
-- `TAOM.Tests/Features/Spider/SpiderAttackServiceTests.cs` — bite damage formula + skip-guard exhaustion.
-- `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` — spider pool coverage (4 settlements + culture return the spider on max roll at weight 1; clan-path pool excludes it).
-- `SpiderDetachedAgentSpawner` (reflection + engine build), the BT nodes, and `SpiderMissionBehavior` are engine-coupled → in-game smoke test. Full suite: **3030 pass / 2 skip**.
-
-## How-To
-
-### Resume / test in-game (warg stand-in)
-
-1. Close Bannerlord, `./build.ps1 -RunTests` (deploy needs the game closed; confirm green).
-2. Launch with TAOM + LOTRLOME_Armory + Alliance.Wargs enabled.
-3. Recruit a "Giant Spider" at a Dol Guldur fief (rare at weight 1) and take it to battle.
-4. Grep the new `rgl_log` / `taom_debug` for `[Spider][diag]` lines — they dump the intercepted build data, the chosen spawn frame, post-build agent state, and (if enabled) formation attach. With the stand-in you should see warg-bodied agents spawn + render in the deployment zone with **no crash**.
-
-### Re-enable formation membership (next session, needs in-game verification)
-
-1. Set `SpiderConfig.EnableFormationMembership = true`. This runs `InitializeNativeWeaponState` (native `WeaponEquipped(Invalid)` for all 5 weapon slots via `RemoveEquippedWeapon`, no skin build) **then** `AttachToFormation`.
-2. Test in-game. If the formation `GetMissileRange` native AV is gone, membership works (spiders advance with the army). If it persists, the fallback is a `Agent.GetMissileRange` prefix returning `0` for the spider (the formation-query surface is a single bounded method — HIGH confidence, see RCA).
-3. If membership stays off by design, the spiders need a **BT movement node** (model on `WargAiControlledGetToEnemy`, but target the spider itself, not a non-existent `RiderAgent`) — otherwise they are passive bite-traps.
-
-### Return to the real spider (after the mesh-split)
-
-Split `sk_spider_forest_c` into base + `<AdditionalMeshes>` sub-meshes each ≤ ~40 bones (Modding-Kit), then set `SpiderConfig.SpiderMonsterId = "spider"` and `SpiderMountItemId = "spider_mount_a"`.
-
-### Strip the diagnostic logging
-
-All temporary instrumentation is tagged `[Spider][diag]` — grep `Main/Features/Spider/` for that tag and remove once the spider ships.
-
-## Known Issues / Next Steps
-
-1. **Spider mesh-split (asset, blocking real spider)** — `sk_spider_forest_c` (62-bone single mesh) AVs at `PreloadForRendering`. Split into sub-meshes each ≤ ~40 bones; the 62-bone *skeleton* is fine (`Skeleton.MaxBoneCount=64`), the limit is per-*mesh*.
-2. **Formation membership (gated, needs test)** — `InitializeNativeWeaponState` is the investigated root fix; verify in-game, or fall back to the `GetMissileRange→0` prefix.
-3. **Detached spiders are passive** — the `SpiderTree` BT only bites adjacent targets; advancing requires formation movement orders (path #2) or a new BT movement node.
-4. **Fang bone indices are placeholders** (23/37/43, copied from the warg) — bites may land off-target until a runtime bone dump resolves `joint5_l/r` / `joint12_m` on `as_spider`.
-5. **Humanoid roster silhouette** — the recruit shows the `dg_uruk` anchor in the party roster (visual only swaps at battle spawn). Accepted tradeoff.
-6. **Warg stand-in is committed** — revert to the real spider once the mesh-split lands (see How-To).
-
-## History
-
-- **2026-06-04 (pm)** — redesigned to the **detached non-humanoid combatant** (`FromHorseObj`) approach; fixed 5 crash layers; shipped a non-crashing checkpoint behind the warg stand-in with formation membership gated off. This doc.
-- **2026-06-04 (am)** — re-enabled as a recruitable troop via the in-place `Mission.SpawnAgent` `Monster`-swap (superseded the same day — the swap built a humanoid skin on the spider skeleton → AV).
-- **2026-05-14** — feature disabled in-place (rideable-mount + scatter design).
-- **2026-04-23** — original spider Monster + skeleton + animations from `LOTRLOME_Armory`.
-
----
-
-<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
-
-## Referenced by
-
-- [docs/INDEX.md](../INDEX.md)
-
-<!-- backlinks-end -->
+- Root-cause session (this doc's RCA section): 2026-06-10 → 06-11, `/investigate`.
+- Detached-era RCA: [`docs/reviews/rca-spider-troop-2026-06-04.md`](../reviews/rca-spider-troop-2026-06-04.md)
+  (its "unsupported shape" verdict is superseded — the supported shape is the ridden mount).
+- Mesh split + skeleton/animation authoring: [`spider-skeleton-animation-pipeline.md`](spider-skeleton-animation-pipeline.md).
+- Elephant (the lane-prover + template donor): [`elephant.md`](elephant.md).
+- Memory: `feedback_quad_movement_tag_required_for_gait_clips`,
+  `feedback_nonhumanoid_creature_troop_not_mount` (revised — the mount verdict is reversed).

@@ -604,7 +604,8 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
     }
 
     // Settlement pool (total 18): goblins common, orcs the mid-line meat, a uruk entry, khamul shadow
-    // elite, a rare ranged-orc entry, and the giant spider at the rare tail (spawns via Patch45).
+    // elite, a rare ranged-orc entry, and the spider RIDER at the rare tail (a goblin cavalry troop
+    // whose Horse slot carries the Giant Spider mount — vanilla cavalry spawn, no patch).
     private static readonly (string, int)[] DolGuldurSettlementPool =
     {
         ("dg_goblin_slave",           7),
@@ -619,9 +620,9 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
 
     private static void InitializeDolGuldurClans()
     {
-        // Clan pool (total 17): identical to the settlement pool MINUS the spider, which stays
-        // exclusive to the settlement-path pool (the giant spider is a per-fief recruit, not a
-        // clan-army recruit — see InitializeDolGuldurSettlements + Patch45).
+        // Clan pool (total 17): identical to the settlement pool MINUS the spider rider, which stays
+        // exclusive to the settlement-path pool (the spider rider is a per-fief recruit, not a
+        // clan-army recruit — see InitializeDolGuldurSettlements).
         for (int i = 1; i <= 6; i++)
             AddClan($"clan_dolguldur_{i}", DolGuldurClanPool);
     }

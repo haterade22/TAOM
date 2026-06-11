@@ -20,6 +20,8 @@ public class SpiderAttackService : ISpiderAttackService
         _logger = logger;
     }
 
+    public bool IsSpiderMonster(string? monsterId) => monsterId == SpiderConfig.SpiderMonsterId;
+
     public int CalculateSpiderBiteDamage(IAgentAdapter target, float velocity, float armorEffectivenessPercent)
     {
         float fromSpeed = Math.Min(SpiderConfig.MaxSpeedDamage, velocity * SpiderConfig.MaxSpeedDamage / SpiderConfig.SpeedForMaxDamage);
@@ -32,7 +34,12 @@ public class SpiderAttackService : ISpiderAttackService
     {
         if (target == null || !target.IsActive() || target.IsFadingOut()) return;
         if (attacker == null) return;
-        if (attacker.IsSameTeam(target)) return;
+
+        // RIDDEN-mount team rule (warg pattern): if the victim is a mount, attribute its team to its
+        // rider; the spider's own side is decided by ITS rider when present (the spider is the mount).
+        var victimTeamSource = target.IsMount && target.RiderAgent != null ? target.RiderAgent : target;
+        var attackerTeamSource = attacker.RiderAgent ?? attacker;
+        if (attackerTeamSource.IsSameTeam(victimTeamSource)) return;
 
         try
         {
@@ -42,6 +49,15 @@ public class SpiderAttackService : ISpiderAttackService
             int armor = target.GetBaseArmorEffectivenessForBodyPart(BoneBodyPartType.Chest);
             int damage = CalculateSpiderBiteDamage(target, velocity, armor);
 
+            // Damager attribution (warg pattern): prefer the spider's rider; fall back to the spider
+            // itself when riderless. If both are absent/dead, vanilla self-damage fallback at 20.
+            IAgentAdapter damager = attacker.RiderAgent ?? attacker;
+            if (damager == null || damager.Health <= 0)
+            {
+                damager = target;
+                damage = 20;
+            }
+
             if (target.IsHorse() || target.IsCamel()) damage *= 2;
 
             if (!target.HasMount)
@@ -50,17 +66,18 @@ public class SpiderAttackService : ISpiderAttackService
                 if (damage < SpiderConfig.DamageToFlinch) anim = DamageAnimation.Nothing;
                 else if (damage < SpiderConfig.DamageToFall) anim = DamageAnimation.Flinch;
                 else anim = DamageAnimation.Fall;
-                target.ProjectAgent(attacker.Position, anim);
+                target.ProjectAgent(damager.Position, anim);
             }
 
             // Underlying-agent extraction at the boundary — required because
             // CustomAttacksUtils.TakeDamage operates on sealed Agent types.
-            var attackerAgent = (attacker as AgentAdapter)?.GetUnderlyingAgent();
+            var damagerAgent = (damager as AgentAdapter)?.GetUnderlyingAgent();
             var targetAgent = (target as AgentAdapter)?.GetUnderlyingAgent();
             _logger.LogInfo($"[Spider][diag] HIT: bite connected on '{targetAgent?.Name ?? "?"}' bone={boneId} " +
-                            $"damage={damage} vel={velocity:0.0} armor={armor} targetMount={target.HasMount}.");
-            if (attackerAgent != null && targetAgent != null)
-                CustomAttacksUtils.TakeDamage(targetAgent, attackerAgent, damage);
+                            $"damage={damage} vel={velocity:0.0} armor={armor} targetMount={target.HasMount} " +
+                            $"damager={(attacker.RiderAgent != null ? "rider" : "spider-self")}.");
+            if (damagerAgent != null && targetAgent != null)
+                CustomAttacksUtils.TakeDamage(targetAgent, damagerAgent, damage);
         }
         catch (Exception e)
         {

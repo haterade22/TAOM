@@ -2,8 +2,10 @@ using TAOM.Adapters;
 using TAOM.Core.Domain;
 using TAOM.Features.HeroRace.Configuration;
 using TAOM.Core.Infrastructure;
+using TAOM.Core.Logging;
 using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -18,13 +20,15 @@ public class CharacterSpawnerService : ICharacterSpawnerService
 {
     private readonly IRaceManager _raceManager;
     private readonly IFaceGenAdapter _faceGenAdapter;
+    private readonly IModLogger _logger;
     private readonly RacePositionConfig _config;
     private readonly Dictionary<string, RacePositionConfigItem> _configLookup;
 
-    public CharacterSpawnerService(IRaceManager raceManager, IFaceGenAdapter faceGenAdapter)
+    public CharacterSpawnerService(IRaceManager raceManager, IFaceGenAdapter faceGenAdapter, IModLogger logger)
     {
         _raceManager = raceManager ?? throw new ArgumentNullException(nameof(raceManager));
         _faceGenAdapter = faceGenAdapter ?? throw new ArgumentNullException(nameof(faceGenAdapter));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _config = RacePositionConfig.LoadConfig("CharacterImagePatch");
         _configLookup = BuildConfigLookup(_config);
     }
@@ -134,8 +138,8 @@ public class CharacterSpawnerService : ICharacterSpawnerService
 
         if (spawner.HasMount)
         {
-            ReflectionHelper.SetFieldValue(spawner, "_horseEntity", horseEntity);
-            ReflectionHelper.CallPrivateMethod(spawner, "SpawnMount", new Object[] { characterCode });
+            ReflectionHelper.SetFieldValue(spawner, "_horseEntity", (GameEntity)null);
+            SpawnMountLogged(spawner, characterCode);
             horseEntity = ReflectionHelper.GetFieldValue<CharacterSpawner, GameEntity>(spawner, "_horseEntity");
         }
 
@@ -195,5 +199,199 @@ public class CharacterSpawnerService : ICharacterSpawnerService
         ReflectionHelper.SetFieldValue(spawner, "_horseEntity", horseEntity);
         ReflectionHelper.SetFieldValue(spawner, "_agentVisuals", agentVisuals);
         ReflectionHelper.SetFieldValue(spawner, "_spawnFrame", spawnFrame);
+    }
+
+    // TEMP-DIAG (spider-mount tableau AV, 2026-06-10): one-shot probe battery, fired the
+    // first time a spider mount reaches the tableau spawner this process. Each probe is a
+    // fresh entity + isolated catch (a caught AV provably does not poison later spawns —
+    // 3 warg mounts succeeded right after the spider AV in the 20:53 session log).
+    // Interpretation: T1 AV + T3 AV -> the Kit-compiled spider_skeleton resource is the
+    // poison. T1 AV + T3 OK -> the as_spider/spider-usage native data is the poison.
+    // T1 OK + T2 AV -> setting the (unbound) canter pose channel is the poison. All OK ->
+    // the poison needs AddMountMeshToEntity (probes omit it; the main path includes it).
+    private static bool _spiderDiagRan;
+
+    [HandleProcessCorruptedStateExceptions]
+    private void RunSpiderMountDiagnostics(CharacterSpawner spawner, Monster spiderMonster)
+    {
+        try
+        {
+            MBActionSet asSpider = MBActionSet.GetActionSet("as_spider");
+            MBActionSet asWarg = MBActionSet.GetActionSet("as_warg");
+            ActionIndexCache canter = ActionIndexCache.Create("act_horse_forward_canter");
+            string spiderCanterAnim = asSpider.IsValid ? asSpider.GetAnimationName(in canter) : "<set invalid>";
+            string wargCanterAnim = asWarg.IsValid ? asWarg.GetAnimationName(in canter) : "<set invalid>";
+            _logger.LogInfo($"[SpiderDiag] canter binding: as_spider='{spiderCanterAnim}' as_warg='{wargCanterAnim}'");
+
+            // Which of the 2026-06-11 typed mount-verb/fall bindings did the ENGINE actually compile?
+            // (the 15:19 battle warned 'as_spider does not contain act_spider_strike_back' although the
+            // XML on disk binds it -- split file-truth from engine-truth.)
+            if (asSpider.IsValid)
+            {
+                foreach (string code in new[]
+                         {
+                             "act_spider_strike_back", "act_spider_strike_front", "act_spider_rear",
+                             "act_spider_rear_damaged", "act_spider_fall_roll", "act_spider_fall_roll_continue",
+                             "act_spider_attack_back", "act_spider_idle",
+                         })
+                {
+                    ActionIndexCache ac = ActionIndexCache.Create(code);
+                    _logger.LogInfo($"[SpiderDiag] engine binding {code} -> '{asSpider.GetAnimationName(in ac)}'");
+                }
+                MBActionSet asHuman = MBActionSet.GetActionSet("as_human_warrior");
+                ActionIndexCache rocky = ActionIndexCache.Create("act_spider_fall_roll");
+                _logger.LogInfo($"[SpiderDiag] rider partial: as_human_warrior x act_spider_fall_roll -> '{(asHuman.IsValid ? asHuman.GetAnimationName(in rocky) : "<set invalid>")}'");
+            }
+            _logger.LogInfo($"[SpiderDiag] usage indices: spider={Agent.GetMonsterUsageIndex("spider")} warg={Agent.GetMonsterUsageIndex("warg")} elephant={Agent.GetMonsterUsageIndex("elephant")} human={Agent.GetMonsterUsageIndex("human")}");
+
+            TickProbe("T1 spider_skeleton + as_spider/spider, no pose", "spider_skeleton", asSpider, "spider", spiderMonster, setPoseChannel: false, spawner);
+            TickProbe("T2 spider_skeleton + as_spider/spider, canter pose", "spider_skeleton", asSpider, "spider", spiderMonster, setPoseChannel: true, spawner);
+            if (asWarg.IsValid)
+            {
+                TickProbe("T3 spider_skeleton + as_warg/warg, no pose", "spider_skeleton", asWarg, "warg", spiderMonster, setPoseChannel: false, spawner);
+                TickProbe("T4 spider_skeleton + as_warg/warg, canter pose", "spider_skeleton", asWarg, "warg", spiderMonster, setPoseChannel: true, spawner);
+                // Cross probes: split the failing (set x usage) pair into halves.
+                // T5 OK + T6 AV  -> the "spider" usage-set native data is the poison.
+                // T5 AV + T6 OK  -> as_spider itself is the poison.
+                TickProbe("T5 CROSS spider_skeleton + as_spider/WARG-usage, no pose", "spider_skeleton", asSpider, "warg", spiderMonster, setPoseChannel: false, spawner);
+                TickProbe("T6 CROSS spider_skeleton + as_warg/SPIDER-usage, no pose", "spider_skeleton", asWarg, "spider", spiderMonster, setPoseChannel: false, spawner);
+            }
+            _logger.LogInfo("[SpiderDiag] battery complete");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[SpiderDiag] battery itself failed: {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    [HandleProcessCorruptedStateExceptions]
+    private void TickProbe(string label, string skeletonName, MBActionSet actionSet, string usageName, Monster monster, bool setPoseChannel, CharacterSpawner spawner)
+    {
+        GameEntity probe = null;
+        string step = "CreateEmpty";
+        try
+        {
+            probe = GameEntity.CreateEmpty(spawner.GameEntity.Scene, isModifiableFromEditor: false);
+            probe.Name = "SpiderDiagProbe";
+            step = "CreateAgentSkeleton";
+            probe.CreateAgentSkeleton(skeletonName, isHumanoid: false, actionSet, usageName, monster);
+            step = "CopyComponentsToSkeleton";
+            probe.CopyComponentsToSkeleton();
+            if (setPoseChannel)
+            {
+                step = "SetAgentActionChannel";
+                ActionIndexCache pose = ActionIndexCache.Create(spawner.PoseActionForHorse);
+                probe.Skeleton.SetAgentActionChannel(0, in pose, 0f);
+            }
+            step = "TickAnimations";
+            AgentVisuals visuals = ReflectionHelper.GetFieldValue<CharacterSpawner, AgentVisuals>(spawner, "_agentVisuals");
+            probe.Skeleton.TickAnimations(0.01f, visuals.GetVisuals().GetGlobalFrame(), tickAnimsForChildren: true);
+            _logger.LogInfo($"[SpiderDiag] {label}: OK");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[SpiderDiag] {label}: FAILED at '{step}' with {ex.GetType().Name}");
+        }
+        finally
+        {
+            try
+            {
+                if (probe != null)
+                {
+                    spawner.GameEntity.Scene?.RemoveEntity(probe, 98);
+                }
+            }
+            catch
+            {
+                // probe entity may be half-built
+            }
+        }
+    }
+
+    // DIAGNOSTIC (spider-mount tableau AV, 2026-06-10): replicates the private
+    // CharacterSpawner.SpawnMount body (decompiled v1.4.5, Native/bin View dll) with a
+    // write-ahead log line before each native call so the TAOM log names the exact dying
+    // step and the skeleton's native pointer. On ANY failure the half-built mount entity
+    // is removed and the spawn continues mount-less instead of crashing the game.
+    // HandleProcessCorruptedStateExceptions lets the catch see a native AccessViolation.
+    [HandleProcessCorruptedStateExceptions]
+    private void SpawnMountLogged(CharacterSpawner spawner, CharacterCode characterCode)
+    {
+        GameEntity horse = null;
+        string step = "CalculateEquipment";
+        try
+        {
+            Equipment equipment = characterCode.CalculateEquipment();
+            ItemObject mountItem = equipment[(EquipmentIndex)10].Item;
+            if (mountItem == null)
+            {
+                spawner.HasMount = false;
+                return;
+            }
+
+            Monster monster = mountItem.HorseComponent.Monster;
+            _logger.LogDebug($"[MountSpawn] item={mountItem.StringId} monster={monster.StringId} actionSet={monster.ActionSetCode} usage={monster.MonsterUsage} pose={spawner.PoseActionForHorse}");
+
+            if (monster.StringId == "spider" && !_spiderDiagRan)
+            {
+                _spiderDiagRan = true;
+                RunSpiderMountDiagnostics(spawner, monster);
+            }
+
+            step = "GameEntity.CreateEmpty";
+            horse = GameEntity.CreateEmpty(spawner.GameEntity.Scene, isModifiableFromEditor: false);
+            horse.Name = "MountEntity";
+
+            step = "MBActionSet.GetActionSet";
+            MBActionSet actionSet = MBActionSet.GetActionSet(monster.ActionSetCode);
+            string skeletonName = actionSet.IsValid ? actionSet.GetSkeletonName() : null;
+            _logger.LogDebug($"[MountSpawn] actionSet.IsValid={actionSet.IsValid} skeletonName='{skeletonName}'");
+
+            step = "CreateAgentSkeleton";
+            horse.CreateAgentSkeleton(skeletonName, isHumanoid: false, actionSet, monster.MonsterUsage, monster);
+            step = "CopyComponentsToSkeleton";
+            horse.CopyComponentsToSkeleton();
+            Skeleton skeleton = horse.Skeleton;
+            _logger.LogDebug($"[MountSpawn] skeleton={(skeleton == null ? "NULL" : "ok")} nativePtr=0x{(skeleton?.Pointer ?? UIntPtr.Zero):X}");
+
+            step = "SetAgentActionChannel";
+            ActionIndexCache pose = ActionIndexCache.Create(spawner.PoseActionForHorse);
+            skeleton.SetAgentActionChannel(0, in pose, MBMath.ClampFloat(spawner.HorseAnimationProgress, 0f, 1f));
+
+            step = "AddChild";
+            spawner.GameEntity.AddChild(horse.WeakEntity);
+
+            step = "AddMountMeshToEntity";
+            ItemObject harnessItem = equipment[(EquipmentIndex)11].Item;
+            MountVisualCreator.AddMountMeshToEntity(horse, mountItem, harnessItem, MountCreationKey.GetRandomMountKeyString(mountItem, MBRandom.RandomInt()));
+
+            step = "SetVisibilityExcludeParents";
+            horse.SetVisibilityExcludeParents(visible: true);
+
+            step = "TickAnimations";
+            AgentVisuals visuals = ReflectionHelper.GetFieldValue<CharacterSpawner, AgentVisuals>(spawner, "_agentVisuals");
+            _logger.LogDebug("[MountSpawn] entering TickAnimations (the historical AV site)...");
+            horse.Skeleton.TickAnimations(0.01f, visuals.GetVisuals().GetGlobalFrame(), tickAnimsForChildren: true);
+
+            ReflectionHelper.SetFieldValue(spawner, "_horseEntity", horse);
+            _logger.LogDebug("[MountSpawn] success");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[MountSpawn] FAILED at step '{step}': {ex.GetType().Name}: {ex.Message} -- skipping mount for this tableau spawn");
+            try
+            {
+                if (horse != null)
+                {
+                    spawner.GameEntity.Scene?.RemoveEntity(horse, 98);
+                }
+            }
+            catch
+            {
+                // entity may be half-built; never let cleanup mask the diagnostic
+            }
+            ReflectionHelper.SetFieldValue(spawner, "_horseEntity", (GameEntity)null);
+            spawner.HasMount = false;
+        }
     }
 }

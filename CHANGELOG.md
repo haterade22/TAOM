@@ -1,5 +1,53 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-11
+
+### feat(spider): giant spider rideable mount WORKING in battle — root cause was a missing `quad_movement` clip tag
+
+Spider formations with goblin riders now load and fight in Custom Battle (verified in-game; the
+detached-combatant architecture was deleted 2026-06-10 in favor of the warg/elephant Mountable
+Horse-slot pattern). A ~6-hour `/investigate` session root-caused the universal mount-context
+`AccessViolation` (faulting address `0x10` in `Skeleton.TickAnimations` /
+`GetWalkSpeedLimitOfMountable` — thumbnail, inventory tableau, AND mission deployment): **the
+`an_spi_*` clips were Kit-compiled without the `quad_movement` tag + step points** that every
+working quadruped's movement clips carry. A `movement_system="quadrupedal"` action set measuring
+untagged movement clips builds a null native gait structure; the first tick dereferences it.
+Proven by byte-diffing ADOD's `elephant_canter_anm.tpac` against ours and fixed by rebuilding
+`an_spi_walk_2/_left/_right` + `an_spi_run` `_anm.tpac` on the elephant template (tags + step
+points grafted, per-clip GUIDs/durations kept; originals at `*.bak-untagged`).
+
+**Method (reusable):** instrumented replacement of the engine's private `SpawnMount`
+(`CharacterSpawnerService.SpawnMountLogged` — per-step write-ahead logging + corrupted-state
+catch that degrades to a mount-less spawn instead of crashing) + a one-shot probe battery
+(`RunSpiderMountDiagnostics`) tick-testing (action set × usage set) cross-pairings on fresh
+skeletons. The truth table eliminated skeleton/Monster/usage/bindings/tpac/children theories in
+single-relaunch steps before the byte diff named the tag. The battery + scratch decompile are
+TEMP-DIAG (retire before ship); the graceful-skip spawner is a keeper.
+
+**Polish round (same day):** 5 more clips tagged via the template byte-patch (`an_spi_idle`,
+`an_spi_idle2`, `an_spi_turn_left/right`, `an_spi_jump` — 9 total; all `_anm↔_geo` curve-GUID
+pairings verified) and every `as_spider` action rebound to its pose-correct clip (real idles,
+turns, deaths `an_spi_death_1/2`, hits `hit_front/right`, attacks `attack_left/right/top`).
+**Rider thrust-loop fixed** via the Alliance.Wargs mechanism: when an agent rides, the engine
+resolves the MOUNT's usage actions against the RIDER's action set for the rider overlay — the
+warg ships a partial `as_human_warrior` merge block for this; the spider now has one too (24
+bindings reusing the globally-registered `rider_warg_*` clips). The 13 `new_animation_clip*`
+orphan files turned out to hold the real idle/turn/death/hit/attack resources.
+
+**Also fixed/learned en route:** spider usage set gained the full mountable surface (10 verb
+attrs, rider adders, jumps, falls, paces 0–5 incl. gallop foot variants — every mountable monster
+is `num_paces="6"`); explicit `act_horse_forward_canter` binding (warg precedent — the tableau
+pose); native animation XML loads ONLY via `project.mbproj` standard ids (`soln_action_sets` etc.
+— root `action_sets.xml` / `monster_usage_sets.xml` are the live files); the 13
+`new_animation_clip*_anm.tpac` "orphans" carry real internal resource names (`an_spi_hit_front`
+etc.); `BattleLoadDiagnostics.BuildEncounterSummary` now guards `Campaign.Current == null`
+(Custom Battle NRE noise). Known cosmetic follow-ups: spider idles play the walk cycle in place
+(pose-correct idles need a tagged Kit recompile), rider loops a thrust action on spider-back,
+walk gait skew (pre-existing). Docs: `docs/features/spider.md` (rewritten — architecture + full
+RCA), `docs/features/spider-skeleton-animation-pipeline.md` (quad_movement section). Memory:
+`feedback_quad_movement_tag_required_for_gait_clips`;
+`feedback_nonhumanoid_creature_troop_not_mount` revised (mount verdict reversed).
+
 ## 2026-06-10
 
 ### fix(elephant): resolve `TaomHowdahMachine._liveTicking` CS0414 warning

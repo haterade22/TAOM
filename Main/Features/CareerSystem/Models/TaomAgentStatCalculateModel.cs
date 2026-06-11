@@ -4,6 +4,7 @@ using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.Elephant;
+using TAOM.Features.Spider;
 
 namespace TAOM.Features.CareerSystem.Models;
 
@@ -14,21 +15,24 @@ namespace TAOM.Features.CareerSystem.Models;
 // 2026-06-05: the shared AgentStatCalculateModel slot also carries the war-elephant mount-lock
 // (1-for-1 ADOD ADODAgentStatCalculateModel) — non-rider AI can't take the elephant. The elephant
 // id check is delegated to IElephantAttackService; the boundary only applies the result via ternaries.
+// 2026-06-10: same lock extended to the ridden giant spider (ISpiderAttackService.IsSpiderMonster).
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerPassiveService _passiveService;
     private readonly ICareerAgentStatService _agentStatService;
     private readonly IElephantAttackService _elephant;
+    private readonly ISpiderAttackService _spider;
 
-    public TaomAgentStatCalculateModel(ICareerPassiveService passiveService, ICareerAgentStatService agentStatService, IElephantAttackService elephant)
+    public TaomAgentStatCalculateModel(ICareerPassiveService passiveService, ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider)
     {
         _passiveService = passiveService;
         _agentStatService = agentStatService;
         _elephant = elephant;
+        _spider = spider;
     }
 
     public override bool CanAgentRideMount(Agent agent, Agent targetMount)
-        => _elephant.IsElephantMonster(targetMount?.Monster?.StringId)
+        => _elephant.IsElephantMonster(targetMount?.Monster?.StringId) || _spider.IsSpiderMonster(targetMount?.Monster?.StringId)
             ? false
             : base.CanAgentRideMount(agent, targetMount);
 
@@ -51,9 +55,11 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
             isHero: agent.IsHero,
             agentDrivenProperties);
 
-        // War-elephant mount-lock (1-for-1 ADOD): a near-infinite MountDifficulty so non-rider AI can't take it.
+        // Creature mount-lock (1-for-1 ADOD): a near-infinite MountDifficulty so non-rider AI can't take it.
         agentDrivenProperties.MountDifficulty = _elephant.IsElephantMonster(agent?.Monster?.StringId)
             ? ElephantConfig.MountDifficulty
-            : agentDrivenProperties.MountDifficulty;
+            : _spider.IsSpiderMonster(agent?.Monster?.StringId)
+                ? SpiderConfig.MountDifficulty
+                : agentDrivenProperties.MountDifficulty;
     }
 }

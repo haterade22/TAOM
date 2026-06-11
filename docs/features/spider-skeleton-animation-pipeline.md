@@ -1,6 +1,17 @@
 # Spider Skeleton + Animation Pipeline (Blender → Modding Kit → Bannerlord)
 
-**Status (2026-06-03):** Skeleton + mesh + IK/ragdoll pipeline **PROVEN in-game**. **Full animation clip set retargeted + bound** — all ~24 clips retargeted `sp_skeleton`→`spider_skeleton` via rest-compensated retarget, exported as `an_spi_*` FBXs; forward walk + run use the procedural metachronal-wave builder; `action_sets_spider.xml` repointed to the `an_spi_*` set (all bindings resolve); `spider_correct.fbx` re-exported with all 3 mesh variants (a/b/c + LODs). **Remaining (human seam):** re-import the full-mesh FBX to the Kit (the `spider_skeleton` already carries its IK/ragdoll joints — no re-transplant needed), then in-game test. This doc is the source of truth — proven recipe, gotchas, deliverables.
+**Status (2026-06-11): mount lane PROVEN in battle** — spider formations with goblin riders load
+and fight (see [spider.md](spider.md) for the full architecture + the 2026-06-10/11 RCA). The
+critical pipeline addition since 2026-06-03: **movement clips MUST carry the `quad_movement` tag
++ step points in their `_anm.tpac`** (section below) — clips compiled without it cause a native
+AccessViolation the first time a `movement_system="quadrupedal"` action set engages them
+(thumbnail/inventory tableau/mission mount paths; the detached spawn paths of the 06-03 era never
+exercised them, which is why the gap survived testing). **Registration correction:** the live
+action set is `as_spider` in the module-root `action_sets.xml` (registered via `project.mbproj`
+`soln_action_sets`) — `Animations/action_sets_spider.xml` is a superseded, unregistered copy;
+every reference to it below should be read as the root file.
+
+**Status (2026-06-03, historical):** Skeleton + mesh + IK/ragdoll pipeline **PROVEN in-game**. **Full animation clip set retargeted + bound** — all ~24 clips retargeted `sp_skeleton`→`spider_skeleton` via rest-compensated retarget, exported as `an_spi_*` FBXs; forward walk + run use the procedural metachronal-wave builder; `action_sets_spider.xml` repointed to the `an_spi_*` set (all bindings resolve); `spider_correct.fbx` re-exported with all 3 mesh variants (a/b/c + LODs). **Remaining (human seam):** re-import the full-mesh FBX to the Kit (the `spider_skeleton` already carries its IK/ragdoll joints — no re-transplant needed), then in-game test. This doc is the source of truth — proven recipe, gotchas, deliverables.
 
 > **Final action-set bindings (2026-06-03):** main idle `an_spi_idle_2`, alt idle `an_spi_idle`, forward walk `an_spi_walk_2` (no dedicated walk_forward clip), run `an_spi_run` (never `an_spi_run_2`), strafes `an_spi_walk_left/right`. Locomotion is **in-place** (engine drives travel — see [[feedback_movement_anims_in_place_engine_driven]]). The metachronal-wave gait (home→leg1-4 sequential forward step + lift, sides synced) replaced the animator's alternating gait, which collided adjacent legs.
 
@@ -33,7 +44,72 @@
 
 ### 3. Animation export (per clip)
 - **Armature-only**, root named **`spider_skeleton_notused`** (real-name + `_notused` suffix — see gotcha below), **`primary_bone_axis='Y'`**, `bake_anim_use_nla_strips=True` (bare take name).
-- Import as **Skeleton Animation** → Owner Skeleton `spider_skeleton` → make an **Animation Clip** (Source 1=0, Source 2 = the clip's last frame, Duration auto > 0, Blend in ≈ 0.1) → bind in `action_sets_spider.xml`.
+- Import as **Skeleton Animation** → Owner Skeleton `spider_skeleton` → make an **Animation Clip** (Source 1=0, Source 2 = the clip's last frame, Duration auto > 0, Blend in ≈ 0.1) → bind in the root `action_sets.xml`.
+- **MANDATORY for movement/gait clips (walk/run/strafe/turn/idle-as-movement): set the
+  `quad_movement` animation flag (+ `make_walk_sound` + step points) in the Kit's clip editor
+  BEFORE saving.** See the next section — an untagged movement clip compiles fine, plays fine on
+  a detached agent, and then AVs the engine the first time a quadrupedal action set measures it.
+
+### 3b. THE `quad_movement` TAG (root cause of the 2026-06-10 mount AVs)
+
+Byte-diff of a working ADOD clip (`elephant_canter_anm.tpac`) vs ours exposed the difference:
+
+| `_anm.tpac` field | ADOD (works) | our 06-03 compiles (AV'd) |
+|---|---|---|
+| step points | 4 real fractions (0.11/0.25/0.38/0.67) | `-1,-1,-1,-1` (unset) |
+| sound tag list | `make_walk_sound` | empty |
+| movement tag list | **`quad_movement`** + speed params | empty |
+
+A `movement_system="quadrupedal"` action set measuring untagged movement clips builds a **null
+native gait structure** → `AccessViolation` (+0x10) on the first `Skeleton.TickAnimations` /
+`GetWalkSpeedLimitOfMountable`, in every mount context. Non-movement clips (attacks/hits/deaths)
+correctly do NOT carry the tag (ADOD's attacks don't either — they carry `lock_movement` /
+`client_prediction`-class flags only).
+
+**Interim fix applied 2026-06-11:** 9 clips byte-patched onto the elephant template
+(`an_spi_walk_2/_left/_right`, `an_spi_run`, `an_spi_idle`, `an_spi_idle2`,
+`an_spi_turn_left/right`, `an_spi_jump` — tags + step points grafted; each clip's own
+GUIDs/name/duration kept; originals at `*.bak-untagged`). **Durable fix:** recompile in the Kit
+with the fields set (next section). The byte-patch recipe lives in [spider.md](spider.md) "How-to".
+
+### 3c. WHERE these live in the Kit's clip editor (captured 2026-06-11, editor screenshots)
+
+Open the animation clip in the Modding Kit editor. The properties panel has, top to bottom:
+**Loading Type** (dropdown — ADOD ships `Never load` on elephant_attack_1; load-on-demand, works
+fine), **Flags** (checkbox list), and a collapsed **Clip usages** section at the bottom.
+
+- **`quad_movement` is a CLIP USAGE, not a Flag** — add it in the "Clip usages" section. This is
+  the field whose absence caused the mount AVs.
+- **`make_walk_sound` IS a Flag** (footstep sounds) — check it on gait clips.
+- **Step points** are the footstep-timing fractions (separate field; ADOD's canter has 4).
+- `_anm.tpac` serialization (verified by byte-diff): string-list 1 = the CHECKED flags,
+  string-list 2 = the clip usages (+ per-usage params). Unchecked = empty lists.
+
+**The full Flags list** (for reference; engine semantics mostly self-describing):
+`disable_agent_agent_collisions, ignore_all_collisions, ignore_static_body_collisions,
+use_last_step_point_as_data, make_bodyfall_sound, client_prediction, keep, restart,
+client_owner_prediction, make_walk_sound, disable_hand_ik, stick_item_to_left_hand,
+blends_according_to_look_slope, synch_with_horse, use_left_hand_during_attack, lock_camera,
+lock_movement, synch_with_movement, enable_left_hand_ik, enable_hand_spring_ik,
+enable_hand_blend_ik, synch_with_ladder_movement, do_not_keep_track_of_sound, enforce_lowerbody,
+enforce_all, cyclic, enforce_root_rotation, allow_head_movement, disable_foot_ik,
+affected_by_movement, update_bounding_volume, align_with_ground, ignore_slope, displace_position,
+reset_camera_height, ignore_scale_on_root_position, blend_main_item_bone_entitially,
+enforce_weapon_tip_with_rope_stretched, enforce_weapon_tip_with_rope_relaxed,
+disable_auto_increment_progress, switch_item_between_hands, attach_sound_to_agent, spawn_particle`
+
+**ADOD per-category flag recipes (parity targets when recompiling spider clips):**
+
+| Clip category | Flags | Clip usages |
+|---|---|---|
+| gait (walk/run/turn/idle-as-movement) | `make_walk_sound` | **`quad_movement`** (+ step points) |
+| attack (`elephant_attack_1` verified in-editor) | `client_prediction, lock_movement, enforce_all` | — |
+| death (`elephant_death`) | `make_bodyfall_sound, client_prediction, do_not_keep_track_of_sound, enforce_all, update_bounding_volume` | — |
+| rear (`elephant_rear`) | `lock_movement, enforce_lowerbody` | — |
+
+Our spider attack/death clips currently ship with NO flags — they work, but lack ADOD's polish
+flags (`lock_movement` on attacks stops the mount sliding mid-bite; `make_bodyfall_sound` on
+deaths adds the thud). Set these when the clips get their Kit recompile.
 
 ---
 
@@ -113,8 +189,13 @@ Armature-space head positions (×100 cm; front = −Y / fangs, back = +Y / abdom
 ## Retarget add-on verdict (KBSBAUDRICE/Retarget)
 **Not adopting.** Humanoid/preset-based, GUI-first, hard to script, GPL, Blender-5-only — poor fit for creature rigs. Use TAOM's own constraint+bake retarget (above) or `tools/blender_bone_retargeter.py`.
 
-## Next steps
-1. Fix the walk's per-leg skew — try the rest-compensated retarget (a), else per-leg (b), else re-author (c).
-2. Retarget the full clip set (walk_left/right, idle, run, turns, attacks, deaths) the same way → bind in `action_sets_spider.xml`.
-3. Bake `primary_bone_axis='Y'` + the `_notused` anim convention into `tools/blender/creature_anim_ops.py` exports.
-4. Re-enable the disabled spider feature (4 `DISABLED 2026-05-14` markers) once animations are in.
+## Next steps (updated 2026-06-11, post-polish)
+1. ~~Tag the idle/turn clips~~ DONE via byte-patch (9 clips total tagged: walk_2/left/right, run,
+   idle, idle2, turn_left/right, jump — all pose-correct clips bound in `as_spider`).
+   **Durable fix remains:** Kit-recompile those clips with the flags set, replacing the patched files.
+2. ~~Rider thrust loop~~ DONE: partial `as_human_warrior` block (warg precedent) binding the
+   spider's usage actions → `rider_warg_*` clips. Future: bespoke spider-rider clips.
+3. Fix the walk's per-leg skew — rest-compensated retarget (a), else per-leg (b), else re-author (c).
+4. Bake `primary_bone_axis='Y'` + the `_notused` convention + **the quad_movement flag step** into
+   `tools/blender/creature_anim_ops.py` exports / the compile checklist.
+5. Evaluate the unused 112KB `an_spi_charge` clip as the pounce visual (vs `an_spi_attack_charge`).

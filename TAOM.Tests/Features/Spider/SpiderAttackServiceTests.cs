@@ -188,6 +188,132 @@ public class SpiderAttackServiceTests
     }
 
     // ---------------------------------------------------------------------
+    // IsSpiderMonster — BT-attach + mount-lock key (mirrors IElephantAttackService.IsElephantMonster)
+    // ---------------------------------------------------------------------
+
+    [TestMethod]
+    public void IsSpiderMonster_SpiderId_ReturnsTrue()
+        => Assert.IsTrue(_sut.IsSpiderMonster(SpiderConfig.SpiderMonsterId));
+
+    [TestMethod]
+    public void IsSpiderMonster_OtherId_ReturnsFalse()
+        => Assert.IsFalse(_sut.IsSpiderMonster("warg"));
+
+    [TestMethod]
+    public void IsSpiderMonster_Null_ReturnsFalse()
+        => Assert.IsFalse(_sut.IsSpiderMonster(null));
+
+    // ---------------------------------------------------------------------
+    // HandleSpiderTargetHit — RIDDEN-mount attribution (warg pattern):
+    //   victimTeamSource = target.IsMount && target.RiderAgent != null ? target.RiderAgent : target
+    //   friendly skip    = (attacker.RiderAgent ?? attacker).IsSameTeam(victimTeamSource)
+    //   damager          = attacker.RiderAgent ?? attacker; dead/null damager -> self-fallback 20 dmg
+    // Observable: ProjectAgent(damager.Position, anim) + armor-read suppression on skips.
+    // ---------------------------------------------------------------------
+
+    private static IAgentAdapter EnemyTarget()
+    {
+        var target = Substitute.For<IAgentAdapter>();
+        target.IsActive().Returns(true);
+        target.IsFadingOut().Returns(false);
+        target.State.Returns(AgentState.Active);
+        target.HasMount.Returns(false);
+        target.IsMount.Returns(false);
+        target.IsHorse().Returns(false);
+        target.IsCamel().Returns(false);
+        target.GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>()).Returns(0);
+        return target;
+    }
+
+    [TestMethod]
+    public void HandleSpiderTargetHit_RiderSameTeamAsVictim_DoesNotDamage()
+    {
+        var attacker = Substitute.For<IAgentAdapter>();
+        var rider = Substitute.For<IAgentAdapter>();
+        var target = EnemyTarget();
+        attacker.RiderAgent.Returns(rider);
+        rider.IsSameTeam(target).Returns(true);     // the RIDER's team decides
+        attacker.IsSameTeam(target).Returns(false); // spider's own team must NOT be consulted
+
+        _sut.HandleSpiderTargetHit(attacker, target, 0);
+
+        target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
+        target.DidNotReceive().ProjectAgent(Arg.Any<Vec3>(), Arg.Any<DamageAnimation>());
+    }
+
+    [TestMethod]
+    public void HandleSpiderTargetHit_VictimIsMountWithRider_UsesVictimRiderForTeamCheck()
+    {
+        var attacker = Substitute.For<IAgentAdapter>();
+        var rider = Substitute.For<IAgentAdapter>();
+        var victimRider = Substitute.For<IAgentAdapter>();
+        var target = EnemyTarget();
+        target.IsMount.Returns(true);
+        target.RiderAgent.Returns(victimRider);
+        attacker.RiderAgent.Returns(rider);
+        rider.IsSameTeam(victimRider).Returns(true);  // friendly via the victim's RIDER
+        rider.IsSameTeam(target).Returns(false);
+
+        _sut.HandleSpiderTargetHit(attacker, target, 0);
+
+        target.DidNotReceive().GetBaseArmorEffectivenessForBodyPart(Arg.Any<BoneBodyPartType>());
+    }
+
+    [TestMethod]
+    public void HandleSpiderTargetHit_LiveRider_RiderIsDamager_ProjectsFromRiderPosition()
+    {
+        var attacker = Substitute.For<IAgentAdapter>();
+        var rider = Substitute.For<IAgentAdapter>();
+        var target = EnemyTarget();
+        attacker.RiderAgent.Returns(rider);
+        rider.IsSameTeam(target).Returns(false);
+        rider.Health.Returns(50);
+        rider.Position.Returns(new Vec3(1f, 2f, 3f));
+        attacker.Position.Returns(new Vec3(9f, 9f, 9f));
+        attacker.MovementVelocity.Returns(new Vec2(0f, 0f));
+
+        _sut.HandleSpiderTargetHit(attacker, target, 0);
+
+        // damage = 35 (base, no speed, no armor) >= DamageToFall(30) -> Fall, projected from the RIDER.
+        target.Received(1).ProjectAgent(new Vec3(1f, 2f, 3f), DamageAnimation.Fall);
+    }
+
+    [TestMethod]
+    public void HandleSpiderTargetHit_DeadRider_SelfFallback20Damage()
+    {
+        var attacker = Substitute.For<IAgentAdapter>();
+        var rider = Substitute.For<IAgentAdapter>();
+        var target = EnemyTarget();
+        attacker.RiderAgent.Returns(rider);
+        rider.IsSameTeam(target).Returns(false);
+        rider.Health.Returns(0);                     // dead rider -> self-fallback, damage forced to 20
+        target.Position.Returns(new Vec3(4f, 4f, 4f));
+        attacker.MovementVelocity.Returns(new Vec2(0f, 15f)); // would be 50 dmg without the fallback
+
+        _sut.HandleSpiderTargetHit(attacker, target, 0);
+
+        // fallback: damager = target itself, damage = 20 -> Flinch (8 <= 20 < 30), projected from target.
+        target.Received(1).ProjectAgent(new Vec3(4f, 4f, 4f), DamageAnimation.Flinch);
+    }
+
+    [TestMethod]
+    public void HandleSpiderTargetHit_NoRider_SpiderSelfIsDamager()
+    {
+        var attacker = Substitute.For<IAgentAdapter>();
+        var target = EnemyTarget();
+        attacker.RiderAgent.Returns((IAgentAdapter)null);
+        attacker.IsSameTeam(target).Returns(false);
+        attacker.Health.Returns(120);
+        attacker.Position.Returns(new Vec3(7f, 7f, 7f));
+        attacker.MovementVelocity.Returns(new Vec2(0f, 0f));
+
+        _sut.HandleSpiderTargetHit(attacker, target, 0);
+
+        // riderless spider (rider died): the spider itself is the damager; 35 dmg -> Fall.
+        target.Received(1).ProjectAgent(new Vec3(7f, 7f, 7f), DamageAnimation.Fall);
+    }
+
+    // ---------------------------------------------------------------------
     // Construction
     // ---------------------------------------------------------------------
 

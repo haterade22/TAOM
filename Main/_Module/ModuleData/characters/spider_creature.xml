@@ -12,11 +12,13 @@
        the goblin-riding-a-spider is a valid custom-battle unit). The old "Wanderer" trick
        was needed only because the old approach embedded the spider in the rider's visual.
 
-       SpiderConfig.Enabled=false gates the Patch45 behavior-tree/wield-guard patches so they
-       don't interfere with the rider's normal weapon equip and formation membership.
+       The detached-spider machinery (Patch45 spawn-swap + native wield guards) was DELETED
+       2026-06-10 — the rider equips weapons + joins formations via plain vanilla cavalry
+       rules. The spider mount auto-bites via SpiderBehaviorTree (attached by
+       SpiderMissionBehavior, keyed on Monster.StringId=="spider").
 
-       VolunteerRecruitmentService already has this ID at DG fiefs (weight 90 TEMP — revert
-       to 1 before commit). -->
+       VolunteerRecruitmentService carries this ID in the Dol Guldur settlement pools at
+       weight 1 (rare fief recruit; intentionally absent from the clan pools). -->
   <NPCCharacter id="taom_spider_creature"
                 race="goblin"
                 default_group="Cavalry"

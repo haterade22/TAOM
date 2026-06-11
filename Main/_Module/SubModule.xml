@@ -233,8 +233,8 @@
         <GameType value = "EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
-    <!-- Giant Spider recruitable troop anchor (humanoid NPCCharacter; spawns as the spider
-         Monster via Patch45_SpiderTroopSpawn). Recruitable at Dol Guldur fiefs. -->
+    <!-- Spider Rider (goblin cavalry NPCCharacter; rides the Giant Spider mount via its
+         Horse slot — vanilla cavalry spawn, no patch). Recruitable at Dol Guldur fiefs. -->
     <XmlNode>
       <XmlName id="NPCCharacters" path="characters/spider_creature"/>
       <IncludedGameTypes>
