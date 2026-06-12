@@ -141,8 +141,30 @@ merge), so one partial covers all riders incl. the player.
 | `SpiderAttackService` | pure (TaleWorlds-free): bite gates, warg-pattern rider damage attribution, `IsSpiderMonster()` |
 | `TaomAgentStatCalculateModel` (CareerSystem) | mount-lock: `CanAgentRideMount=false` + `MountDifficulty=999` for spider mounts (and elephant) — players can't steal the mount; the Horse-slot cavalry spawn ignores the lock for the assigned rider |
 | `CharacterSpawnerService.SpawnMountLogged` (HeroRace) | instrumented replica of the engine's private `SpawnMount` with per-step logging + graceful mount-less degradation on failure. **Keep** (strictly better than the old blind reflective call); demote logging to `LogDebug` at ship. The one-shot `RunSpiderMountDiagnostics` probe battery + `TickProbe` are TEMP-DIAG — retire after the ladder |
+| `Hooks/Agent_Die_SpiderDismount_Patch` (Patch47) | **rider-death AV mitigation — REQUIRED, exonerated and re-enabled 2026-06-12.** A rider dying while seated AVs inside the native `Agent.Die` path (1.4.5: use-after-free 3× on 06-11; 1.4.6: melee-thrust repro 06-12 — Die-path lookup returned **float bits as a table index** from a corrupted action record, mixed-mode-debugger-proven: faulting `RAX+RCX*4` matched bit-for-bit with RCX = float −0.094). The patch routes around it: Prefix on `Agent.Die` hard-dismounts via the engine's own private `SetMountAgent(null)` (cached `AccessTools` at `Initialize`) so riders die the proven on-foot death (verified: `act_death_by_arrow_head2`, clean sever, 0 dead-linked riders); a dying spider frees its rider first. **The 06-12-morning indictment ("post-sever tick AV") was overturned** — that crash was the `CanAttack`/`set_attack_entity` charge CTD, Event-Log-proven to fire with AND without Patch47. Vanilla mounts untouched; body try/catch'd. Registered after Patch46 |
 
-## Current state & known issues (2026-06-11, post-polish round)
+## The v1.4.6 engine-bump campaign (2026-06-12) — three crashes, three root causes, GREEN
+
+Steam force-bumped the engine **1.4.5 → 1.4.6 on 2026-06-11 17:39, mid-campaign** (Version.xml +
+DLL timestamps; the managed combat assembly is byte-identical — every change is native-internal).
+1.4.6's rewritten usage/AI lookups stopped tolerating missed keys (shipping builds compile out
+the asserts; the miss path dereferences the end-sentinel), which turned three latent spider-data
+quirks into CTDs. All three were root-caused by Event-Log fault-offset correlation + offline
+disassembly of `TaleWorlds.Native.dll` (pdata bounds, rip-relative string maps, caller chains)
++ live mixed-mode debugger forensics, then fixed in DATA (plus Patch47):
+
+| # | Site (RVA) | Trigger | Root cause | Fix |
+|---|---|---|---|---|
+| 1 | `Agent_ai::set_attack_entity` (`0x6BAB4E`, null `agent+0xAD8`) | cavalry charge order | `CanAttack="true"` on the Monster — activates the engine attack-AI, a path NO working mount takes (warg/elephant/horse declare no such flag) | flag removed; Flags pruned to the warg-exact 5 |
+| 2 | `monster_usage.cpp` jump lookup (`0x634396`, sentinel deref, target `0x3`) | first spider jump (riverbank), caught mid `act_horse_jump_high_loop` with corrupted record strings | `jump_start_action` typed `actt_jump` (warg+elephant use `actt_dash`) + jump rows covering only front/none of the engine's NINE directions — BT creatures turn mid-jump and produce directional queries vanilla riders never do | retype `actt_dash` + **45-row total jump table** (9 directions × all states; applied to the elephant too) |
+| 3 | native `Die` path (`0x5FE0C9`, float-bits-as-index) | melee thrust kills a mounted rider | corrupted action record consumed by the mounted-death resolution (the 1.4.5 use-after-free Die crashes are plausibly the same corruption surfacing later) | **Patch47** dismount-before-death (see Code plane) |
+| — | full parity audit (`tools/audit_mount_parity.py`) | — | 5 further deltas vs warg/elephant/horse: flag extras, missing rider capsule/eye adders, quick-stop slots miswired to an untyped idle, untyped pace-1 idle row, light strikes reusing the typed heavy action | all closed (warg-exact shapes); byte-patched `_anm` tpacs structurally verified CLEAN (sizes, layout, string tables — donor-exact) |
+
+**Verdict: full river battle on 1.4.6 — charge, bank jumps, river crossing, prolonged melee,
+rider deaths, spider deaths — NO CRASH** (user-confirmed). The end-to-end recipe distilled from
+this + the elephant campaign: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md).
+
+## Current state & known issues (2026-06-12, post-1.4.6 campaign)
 
 | Item | Status |
 |---|---|
@@ -153,7 +175,9 @@ merge), so one partial covers all riders incl. the player.
 | Deaths / hits / attacks | ✅ natural clips bound (`an_spi_death_1/2`, `hit_front/right`, `attack_left/right/top`) — no quad tag needed (ADOD parity) |
 | Rider animation | ✅ partial `as_human_warrior` with 24 spider→`rider_warg_*` bindings (see "Rider-side bindings"); riders seated correctly in the 09:50 battle |
 | Vanilla-map battle (full polish data) | ✅ 2026-06-11 09:50 `battle_terrain_biome_092`: playable, formations deployed, idles standing, riders seated, battery all-green, 0 mount failures |
-| `lotrtaom_iron_hills_01_forceatmo` | ❌ **SEPARATE BUG — not spider. The scene has NEVER loaded: 7/7 CTDs** (2026-06-10 20:53→2026-06-11 15:16), all dying at `scene.xscene` load, pre-agent-spawn — incl. runs with all-green spider probes. `taom_gondor_village_001_forceatmo` loads fine, so the forceatmo/Patch16 mechanism is exonerated — it's this scene's assets. Several 6/10 "spider mission CTDs" were this scene, conflated into the spider evidence. Own issue/investigation |
+| **v1.4.6 full battle (river map)** | ✅ **2026-06-12: charge + bank jumps + river crossing + prolonged melee + rider deaths + spider deaths, NO CRASH** — all three 1.4.6 crash sites fixed (see the engine-bump campaign section) |
+| Rider death while mounted | ✅ Patch47 dismount-before-death re-enabled (exonerated 2026-06-12); riders die clean on-foot deaths; required on 1.4.6 (melee-death Die-path AV proven without it) |
+| `lotrtaom_iron_hills_01_forceatmo` | ❌ **SEPARATE BUG — not spider. The scene has NEVER loaded: 8/8 CTDs** (2026-06-10 20:53→2026-06-12 06:27), all dying at `scene.xscene` load, pre-agent-spawn — incl. runs with all-green spider probes. `taom_gondor_village_001_forceatmo` loads fine, so the forceatmo/Patch16 mechanism is exonerated — it's this scene's assets. Several 6/10 "spider mission CTDs" were this scene, conflated into the spider evidence. **Removed from `custom_battle_scenes.xml` 2026-06-12** so it stops eating test runs; restore once repaired. Own issue/investigation |
 | Walk gait skew | ⚠️ known from the retarget work (pre-existing; polish) |
 | Charge visual | 💡 unused 112KB `an_spi_charge` clip exists — possible upgrade over `an_spi_attack_charge` for the pounce; evaluate later |
 | Inventory equip | ❓ retest (was the second AV repro; same root cause, expected fixed) |
@@ -175,6 +199,12 @@ points. Full editor field map + per-category ADOD flag recipes:
 list + `quad_movement` usage list, movement params), substitute the target clip's file GUID (@8),
 resource GUID (@52), name (+length @72), duration trio (pos+12 where pos=76+namelen), curve GUID
 (both occurrences), blend float, trailer hash; fix the content-size u32 @28 (= filesize − 36).
+
+## External-module change ledger
+
+Every LOTRLOME_Armory change (what + why + rollback + make-permanent path) is recorded in
+[docs/reference/lotrlome-spider-mount-changes.md](../reference/lotrlome-spider-mount-changes.md) —
+the module is outside this repo, so that ledger is the only durable record of its state.
 
 ## History / references
 

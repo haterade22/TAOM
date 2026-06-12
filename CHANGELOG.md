@@ -2,6 +2,41 @@
 
 ## 2026-06-12
 
+### fix(spider): v1.4.6 engine-bump campaign — three native crash sites root-caused and fixed; spider mount GREEN on 1.4.6
+
+Steam force-bumped Bannerlord **1.4.5 → 1.4.6 on 2026-06-11 17:39, mid-campaign** (managed
+combat assembly byte-identical — all changes native-internal; 1.4.5 decompile baseline preserved
+at `E:\Decompiled_Bannerlord\_shipping_build_v1.4.5`). 1.4.6's rewritten native lookups stopped
+tolerating missed keys (shipping builds compile out the asserts; the miss path dereferences the
+end-sentinel), turning three latent spider-data quirks into CTDs. Each was root-caused via Event
+Log fault-offset correlation, offline `TaleWorlds.Native.dll` disassembly (pdata bounds,
+rip-relative string maps, caller chains), and live mixed-mode debugger forensics — then fixed in
+LOTRLOME data + one patch: **(1)** charge CTD in `Agent_ai::set_attack_entity` (RVA `0x6BAB4E`,
+null `agent+0xAD8`, fired with AND without Patch47) — root cause `CanAttack="true"` on the
+Monster, an engine attack-AI path NO working mount takes; Flags pruned to the warg-exact five.
+**(2)** riverbank-jump CTD in the `monster_usage.cpp` jump lookup (RVA `0x634396`; debugger
+caught a spider mid `act_horse_jump_high_loop` with interleaved/corrupted record strings) — root
+causes `jump_start_action` typed `actt_jump` (warg+elephant: `actt_dash`) and jump rows covering
+only 2 of the engine's NINE directions (BT creatures turn mid-jump; vanilla riders never do);
+retyped + **45-row total jump table**, applied to the **elephant** too (shared template).
+**(3)** melee-thrust mounted-rider death AV in the native `Die` path (RVA `0x5FE0C9`) — the
+death resolution consumed a corrupted action record (float bits −0.094 as a table index;
+faulting address matched `RAX+RCX*4` bit-for-bit); the 9 byte-patched `_anm` tpacs verified
+structurally clean and every referenced animation exists (no phantoms), so **Patch47
+(`Agent_Die_SpiderDismount_Patch`) was exonerated** (its earlier indictment was crash #1) **and
+re-enabled** — severed riders die clean on-foot deaths. A scripted **mount parity audit**
+(`tools/audit_mount_parity.py`, kept as a permanent tool) closed 5 more deltas vs
+warg/elephant/horse (rider capsule/eye adders, quick-stop slots miswired to an untyped idle,
+typed pace-1 idle row, untyped while-moving light strikes); BT code parity verified clean.
+**Verdict: full river battle on 1.4.6 — charge, bank jumps, river crossing, prolonged melee,
+rider + spider deaths — NO CRASH.** Also: `lotrtaom_iron_hills_01_forceatmo` removed from
+`custom_battle_scenes.xml` (separate bug: 8/8 CTDs at `scene.xscene` load since 06-10, pre-spawn;
+own issue) and the `RunSpiderMountDiagnostics` battery gained engine-binding + goblin-set
+probes. New docs: `docs/ai-includes/creature-mount-authoring.md` (the complete
+elephant+spider-distilled creature-mount workflow, 16-gotcha index),
+`docs/features/spider.md` engine-bump section, `docs/features/elephant.md` 1.4.6 exposure
+table, ledger trail entries 6-11.
+
 ### feat(harness): adopt `/improve` whole-repo audit skill from shadcn/improve
 
 Ported shadcn/improve @ `5428507` (MIT) via the `/adopt-external` cycle (security-vet passed:
@@ -49,6 +84,12 @@ catch that degrades to a mount-less spawn instead of crashing) + a one-shot prob
 skeletons. The truth table eliminated skeleton/Monster/usage/bindings/tpac/children theories in
 single-relaunch steps before the byte diff named the tag. The battery + scratch decompile are
 TEMP-DIAG (retire before ship); the graceful-skip spawner is a keeper.
+
+**External-module ledger:** every LOTRLOME_Armory change (action sets incl. the rider
+`as_human_warrior` partial, typed `actt_fall`/verb action codes, usage-set mount surface, Monster
+`num_paces`/`family_type`/slope, the split-mesh tpac + 9 byte-patched clips) is now recorded with
+rationale + rollback inventory in `docs/reference/lotrlome-spider-mount-changes.md` — the module
+is outside the repo, so the ledger is the durable record of its state.
 
 **Polish round (same day):** 5 more clips tagged via the template byte-patch (`an_spi_idle`,
 `an_spi_idle2`, `an_spi_turn_left/right`, `an_spi_jump` — 9 total; all `_anm↔_geo` curve-GUID

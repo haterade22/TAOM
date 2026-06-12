@@ -608,6 +608,23 @@ warg; data is re-authored from ADOD; meshes/textures are our own FBX (purchased 
 The elephant asset was **purchased from Artem (the ADOD author) for use in TAOM** — no clean-room re-derivation or
 attribution gating required. (Confirmed by the project owner, 2026-06-05.)
 
+## v1.4.6 exposure (2026-06-12) — jump table hardened; battle-test owed
+
+Steam force-bumped the engine 1.4.5 → 1.4.6 on 2026-06-11; the spider campaign then proved
+1.4.6's rewritten native usage/AI lookups **crash on missed keys** that 1.4.5 tolerated (full
+story: [spider.md](./spider.md) "The v1.4.6 engine-bump campaign"; the distilled recipe:
+[creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md)). The elephant's
+standing per the spider's three crash sites:
+
+| Spider crash site | Elephant status |
+|---|---|
+| `CanAttack` → `Agent_ai::set_attack_entity` | **clean** — the elephant Monster never declared `CanAttack` (parity audit 2026-06-12) |
+| jump-map miss (`monster_usage.cpp`) | **fixed proactively 2026-06-12** — `act_elephant_jump_start` was already `actt_dash`, but the jump rows were the same front+none-only template; expanded to the 45-row / 9-direction total table (same edit as the spider's) |
+| mounted-death Die-path AV | **covered for spiders only** — Patch47 keys on `IsSpiderMonster`. If a mahout death on 1.4.6 reproduces the melee-death AV, generalize Patch47 to elephant mounts (one service predicate) |
+
+**Owed:** an elephant battle on 1.4.6 (charge + melee + mahout deaths). Not fielded since the
+bump as of 2026-06-12.
+
 ## Open items
 
 - [x] Fold in the exact recipe + the ADOD code/NativeHook verdict from the deep-dive workflow. *(done 2026-06-05)*

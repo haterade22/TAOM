@@ -538,6 +538,15 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch39_BanditPartySize");
         _harmony.PatchCategory("Patch40_HideoutDescription");
         _harmony.PatchCategory("Patch46_TournamentDwarfDismount");
+        // Patch47 RE-ENABLED 2026-06-12 after full exoneration: its 06-12 morning indictment
+        // ("post-sever tick AV") was actually the CanAttack charge crash at set_attack_entity
+        // (0x6BAB4E), which fired with AND without Patch47 and is fixed in data (LOTRLOME
+        // monster Flags). Patch47's own job verified working: severed riders die clean on-foot
+        // deaths (act_death_by_arrow class) instead of AVing in the native mounted-death path —
+        // which 1.4.6 still does on melee deaths (Die-path AV reading float-bits-as-index from
+        // a corrupted action record, debugger-proven 06-12). See docs/features/spider.md.
+        Features.Spider.Hooks.Agent_Die_SpiderDismount_Patch.Initialize();
+        _harmony.PatchCategory("Patch47_SpiderDeathDismount");
 
         var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();
         var specResLogger = IoC.Resolve<IModLogger>();

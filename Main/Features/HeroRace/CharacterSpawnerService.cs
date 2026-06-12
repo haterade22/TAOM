@@ -241,6 +241,20 @@ public class CharacterSpawnerService : ICharacterSpawnerService
                 MBActionSet asHuman = MBActionSet.GetActionSet("as_human_warrior");
                 ActionIndexCache rocky = ActionIndexCache.Create("act_spider_fall_roll");
                 _logger.LogInfo($"[SpiderDiag] rider partial: as_human_warrior x act_spider_fall_roll -> '{(asHuman.IsValid ? asHuman.GetAnimationName(in rocky) : "<set invalid>")}'");
+
+                // The actual riders are GOBLINS (as_goblin_warrior, base_set=as_human_warrior).
+                // base-set inheritance snapshots at definition time, so the rider partial must
+                // load FIRST or goblins never see the spider bindings (the rider-death AV +
+                // thrust-loop suspect). act_warg_forward_walk = the warg-inheritance control.
+                MBActionSet asGoblin = MBActionSet.GetActionSet("as_goblin_warrior");
+                if (asGoblin.IsValid)
+                {
+                    foreach (string code in new[] { "act_spider_walk_forward", "act_spider_fall_roll", "act_spider_run_forward", "act_warg_forward_walk" })
+                    {
+                        ActionIndexCache gc = ActionIndexCache.Create(code);
+                        _logger.LogInfo($"[SpiderDiag] GOBLIN rider set: {code} -> '{asGoblin.GetAnimationName(in gc)}'");
+                    }
+                }
             }
             _logger.LogInfo($"[SpiderDiag] usage indices: spider={Agent.GetMonsterUsageIndex("spider")} warg={Agent.GetMonsterUsageIndex("warg")} elephant={Agent.GetMonsterUsageIndex("elephant")} human={Agent.GetMonsterUsageIndex("human")}");
 

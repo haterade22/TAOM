@@ -12,6 +12,7 @@
 | Authoring a new feature module | [ai-includes/architecture.md](ai-includes/architecture.md) + [ADR-002](adrs/002-thin-entry-points.md) + [ADR-007](adrs/007-adapter-pattern.md), then pick the nearest existing feature doc as a template |
 | Authoring a new culture's armor + troops end-to-end | [ai-includes/new-culture-authoring.md](ai-includes/new-culture-authoring.md) |
 | Adding or fixing lord skills + traits (any culture) | [ai-includes/lord-skills-authoring.md](ai-includes/lord-skills-authoring.md) |
+| Adding a rideable creature mount end-to-end (assets → XML → C# → validation) | [ai-includes/creature-mount-authoring.md](ai-includes/creature-mount-authoring.md) — elephant+spider-distilled; the 1.4.6 lookup-hardening rules + 16-gotcha index |
 | Researching a TaleWorlds API before editing | [ai-includes/taleworlds-research-guide.md](ai-includes/taleworlds-research-guide.md) + `pwsh tools/taom-src.ps1 path <Type>` |
 | Adding text the player will read | [localization/TRANSLATOR_GUIDE.md](localization/TRANSLATOR_GUIDE.md) + [features/localization.md](features/localization.md) |
 | Closing out a feature (build → review → ship) | CLAUDE.md "Completion Workflow" + [reviews/REVIEW-GUIDE.md](reviews/REVIEW-GUIDE.md) |
