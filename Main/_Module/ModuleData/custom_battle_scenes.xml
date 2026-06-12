@@ -2,105 +2,118 @@
 <CustomBattleScenes>
   <!--Siege Scenes-->
   <Scene
-    id="lotrtaom_minas_tirith_forceatmo"
-    name="{=aom_minas_tirith_name}[Gondor] Minas Tirith"
+    id="taom_gondor_town_minas_tirith_forceatmo"
+    name="{=aom_taom_gondor_town_minas_tirith_forceatmo_name}[Gondor] Minas Tirith"
     terrain="Plain"
     is_siege_map="true" />
   <Scene
-    id="HART_ISENGARD"
-    name="{=aom_HART_ISENGARD_name}[Isengard] Orthanc"
+    id="taom_isengard_town_orthanc_forceatmo"
+    name="{=aom_taom_isengard_town_orthanc_forceatmo_name}[Isengard] Orthanc"
     terrain="Plain"
     is_siege_map="true" />
   <Scene
-    id="lotraom_w_osgiliath_i_forceatmo"
-    name="{=aom_lotraom_w_osgiliath_i_forceatmo_name}[Gondor] Osgiliath"
+    id="taom_gondor_town_osgiliath_w_forceatmo"
+    name="{=aom_taom_gondor_town_osgiliath_w_forceatmo_name}[Gondor] Osgiliath (West)"
     terrain="Plain"
     is_siege_map="true" />
   <Scene
-    id="Barad_Faen_Castle"
-    name="{=aom_Barad_Faen_Castle_name}[Gondor] Barad Faen Castle"
+    id="taom_gondor_town_osgiliath_e_forceatmo"
+    name="{=aom_taom_gondor_town_osgiliath_e_forceatmo_name}[Gondor] Osgiliath (East)"
     terrain="Plain"
     is_siege_map="true" />
   <Scene
-    id="Bergraw_Castle"
-    name="{=aom_Bergraw_Castle_name}[Gondor] Bergraw Castle"
+    id="taom_gondor_castle_001_forceatmo"
+    name="{=aom_taom_gondor_castle_001_forceatmo_name}[Gondor] Barad Faen Castle"
     terrain="Plain"
     is_siege_map="true" />
   <Scene
-    id="Melgobas_Castle"
-    name="{=aom_Melgobas_Castle_name}[Gondor] Melgobas Castle"
+    id="taom_gondor_castle_002_forceatmo"
+    name="{=aom_taom_gondor_castle_002_forceatmo_name}[Gondor] Bergraw Castle"
     terrain="Plain"
     is_siege_map="true" />
   <Scene
-    id="HelmsDeep_forceatmo"
-    name="{=aom_HelmsDeep_forceatmo_name}[Rohan] Helms Deep - Night Rain"
+    id="taom_gondor_castle_003_forceatmo"
+    name="{=aom_taom_gondor_castle_003_forceatmo_name}[Gondor] Melgobas Castle"
     terrain="Plain"
     is_siege_map="true" />
   <Scene
-    id="Helms_Deep_Town_forceatmo"
-    name="{=aom_Helms_Deep_Town_forceatmo_name}[Rohan] Helms Deep V2"
+    id="taom_rohan_castle_helms_deep_forceatmo"
+    name="{=aom_taom_rohan_castle_helms_deep_forceatmo_name}[Rohan] Helms Deep - Night Rain"
     terrain="Plain"
     is_siege_map="true" />
   <Scene
-    id="Lossarnach_Town"
-    name="{=aom_Lossarnach_Town_name}[Gondor] Lossarnach Town"
+    id="taom_gondor_town_lossarnach_forceatmo"
+    name="{=aom_taom_gondor_town_lossarnach_forceatmo_name}[Gondor] Lossarnach Town"
     terrain="Plain"
     is_siege_map="true" />
   <Scene
-    id="lotrtaom_hat_gondor_town_calembel"
-    name="{=aom_lotrtaom_hat_gondor_town_calembel_name}[Gondor] Calembel Town"
+    id="taom_mordor_town_goblin_town_forceatmo"
+    name="{=aom_taom_mordor_town_goblin_town_forceatmo_name}[Mordor] Goblin Town"
     terrain="Plain"
     is_siege_map="true" />
   <!--Battle Scenes-->
   <Scene
-    id="lotrtaom_kys_fords_of_isen_forceatmo"
-    name="{=aom_lotrtaom_kys_fords_of_isen_forceatmo_name}[Rohan] Fords of Isen"
+    id="taom_rohan_battle_fords_of_isen_forceatmo"
+    name="{=aom_taom_rohan_battle_fords_of_isen_forceatmo_name}[Rohan] Fords of Isen"
     terrain="Plain"
     is_siege_map="false" />
   <Scene
-    id="lotrtaom_rohan_plains_westfold"
-    name="{=aom_lotrtaom_rohan_plains_westfold_name}[Rohan] Rohan Plains"
+    id="taom_rohan_battle_001_forceatmo"
+    name="{=aom_taom_rohan_battle_001_forceatmo_name}[Rohan] Rohan Plains"
     terrain="Plain"
     is_siege_map="false" />
   <Scene
-    id="lotrtaom_kys_dead_marshes_forceatmo"
-    name="{=aom_lotrtaom_kys_dead_marshes_forceatmo_name}[Mordor] Dead Marshes"
+    id="taom_mordor_battle_dead_marshes_forceatmo"
+    name="{=aom_taom_mordor_battle_dead_marshes_forceatmo_name}[Mordor] Dead Marshes"
     terrain="Plain"
     is_siege_map="false" />
   <Scene
-    id="lotrtaom_kys_gondor_village_a_forceatmo"
-    name="{=aom_lotrtaom_kys_gondor_village_a_forceatmo_name}[Gondor] Gondor Village A"
+    id="taom_gondor_village_001_forceatmo"
+    name="{=aom_taom_gondor_village_001_forceatmo_name}[Gondor] Gondor Village A"
+    terrain="Plain"
+    is_siege_map="false" />
+  <!-- lotrtaom_iron_hills_01_forceatmo removed: scene.xscene CTDs on load, 8/8 attempts
+       (2026-06-11/12). Crash is in scene asset loading, pre-agent-spawn; restore once the
+       scene is repaired. Tracked in the spider-session closeout GitHub issue. -->
+  <Scene
+    id="taom_mordor_battle_black_gates_forceatmo"
+    name="{=aom_taom_mordor_battle_black_gates_forceatmo_name}[Mordor] Black Gate"
     terrain="Plain"
     is_siege_map="false" />
   <Scene
-    id="shogun_gondor_village_01"
-    name="{=aom_shogun_gondor_village_01_name}[Gondor] Shogun Gondor Village A"
+    id="taom_mordor_battle_001_forceatmo"
+    name="{=aom_taom_mordor_battle_001_forceatmo_name}[Mordor] Mordor Plains I"
     terrain="Plain"
     is_siege_map="false" />
   <Scene
-    id="lotrtaom_iron_hills_01_forceatmo"
-    name="{=aom_lotrtaom_iron_hills_01_forceatmo_name}[Erebor] Shogun Iron Hills"
+    id="taom_mordor_battle_002_forceatmo"
+    name="{=aom_taom_mordor_battle_002_forceatmo_name}[Mordor] Mordor Plains II"
     terrain="Plain"
     is_siege_map="false" />
   <Scene
-    id="lotrtaom_kys_black_gates_forceatmo"
-    name="{=aom_lotrtaom_kys_black_gates_forceatmo_name}[Mordor] Black Gate"
+    id="taom_mordor_battle_003_forceatmo"
+    name="{=aom_taom_mordor_battle_003_forceatmo_name}[Mordor] Mordor Plains III"
+    terrain="Plain"
+    is_siege_map="false" />
+  <Scene
+    id="taom_mordor_battle_004_forceatmo"
+    name="{=aom_taom_mordor_battle_004_forceatmo_name}[Mordor] Mordor Plains IV"
     terrain="Plain"
     is_siege_map="false" />
   <!--Village Scenes-->
   <Scene
-    id="Camloth_Village"
-    name="{=aom_Camloth_Village_name}[Gondor] Camloth Village"
+    id="taom_gondor_village_002_forceatmo"
+    name="{=aom_taom_gondor_village_002_forceatmo_name}[Gondor] Camloth Village"
     terrain="Plain"
     is_siege_map="false" />
   <Scene
-    id="Dinadab_Village_forceatmo"
-    name="{=aom_Dinadab_Village_forceatmo_name}[Gondor] Dinadab Village"
+    id="taom_gondor_village_003_forceatmo"
+    name="{=aom_taom_gondor_village_003_forceatmo_name}[Gondor] Dinadab Village"
     terrain="Plain"
     is_siege_map="false" />
   <Scene
-    id="Mereham_Village"
-    name="{=aom_Mereham_Village_name}[Gondor] Mereham Village"
+    id="taom_gondor_village_004_forceatmo"
+    name="{=aom_taom_gondor_village_004_forceatmo_name}[Gondor] Mereham Village"
     terrain="Plain"
     is_siege_map="false" />
 </CustomBattleScenes>
