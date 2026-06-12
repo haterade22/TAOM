@@ -1,5 +1,31 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-12
+
+### feat(harness): adopt `/improve` whole-repo audit skill from shadcn/improve
+
+Ported shadcn/improve @ `5428507` (MIT) via the `/adopt-external` cycle (security-vet passed:
+pure markdown instructions, no executable surface, read-only by design; anti-prompt-injection
++ secrets-handling rules kept at full upstream force, incl. the verbatim subagent-briefing
+copies). New skill `.claude/skills/improve/` — a proactive
+**whole-repo** improvement audit (vs our change-scoped `/deep-review`): recon → parallel
+category subagents → advisor re-verifies every finding (`evidence-over-claims.md` §A) →
+prioritized table → self-contained handoff plans in `plans/` (drift-checked, verification-gated,
+STOP-conditioned) that cheaper executor models can run via `execute <plan>` + tech-lead review.
+Calibrated to TAOM: tenth audit category (game-data integrity — scene refs, localization
+coverage, action-set/`quad_movement` requirements, canonical Armory folders, stale shadows),
+real verification commands (`-p:DisableModuleCopy=true` on build AND test, the validators),
+TDD-first plan steps, issue-first mandate, single-owner-file guards, worktree-isolated dispatch,
+and run-or-cite wiring to the dedicated audits (`/security-scan`, `/lint-docs`,
+`/skill-stocktake`, `validate_moduledata.py`). Skipped from upstream: plugin packaging +
+shadcn/ui example (we port text, never install). Registered in CLAUDE.md skill table + routing.
+Adversarial Workflow review (3 dimensions × verify-each-finding, 18 agents) confirmed 14 port
+defects, all fixed pre-commit — notably: flagless `dotnet test TAOM.Tests` deploys to the game
+install via the tests→Main `PostBuildCopyToModules` chain (flag now mandated everywhere), an
+`execute`-precondition that authorized ungated `gh issue create`, a fabricated exemplar path
+(`HeroAdapter.cs`), and three upstream protections lost in compression (hunk-level diff
+traceability, no-runnable-PoC rule, security prioritization tiebreaker) — all restored.
+
 ## 2026-06-11
 
 ### feat(spider): giant spider rideable mount WORKING in battle — root cause was a missing `quad_movement` clip tag

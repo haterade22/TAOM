@@ -128,6 +128,7 @@ This is a project-level discipline, not a one-off feature note — every future 
 | `/adopt-external [url]` | Review an external repo/article and fold the useful parts into TAOM: security-vet first → map novel-vs-duplicative → tiered recommendation → port (never install) → adversarial review → commit. Follows `docs/ai-includes/external-repo-adoption.md`. |
 | `/security-scan` | Audit TAOM's own Claude config (`.claude/`, `.mcp.json`, `settings*.json`, `CLAUDE.md`) for committed secrets, over-broad permissions, hook exfiltration, MCP risk, hidden-unicode injection. Runs `tools/audit_claude_config.py`. |
 | `/doc-graph [explain\|path\|metrics]` | Query + audit the docs/ knowledge graph (`tools/graph_query.py`): `explain` a doc's links, `path` between two docs, `metrics` (god nodes / bridges / orphans). Topology, not search. ADR-010 Phase 5; sibling of the `/lint-docs` + `/knowledge-compile` doc-tooling layer. |
+| `/improve [quick\|deep\|category\|branch\|next\|plan\|review-plan\|execute\|reconcile] [--issues]` | Whole-repo improvement audit (10 categories incl. game-data integrity) → vetted prioritized findings → self-contained handoff plans in `plans/` for cheaper executors. Advisor never edits source. Ported from shadcn/improve (MIT). |
 
 ### Workflow → Skill convention
 
@@ -167,6 +168,7 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | "audit our skills", "are any skills broken", quarterly harness check | **`/skill-stocktake`** | None — diagnostic, no destructive action |
 | User shares an external repo/article "to see what we can adopt", "review this repo", "next repo", or pastes a GitHub URL to evaluate for adoption into TAOM | **`/adopt-external`** | None — always. It runs the security-vet-first → map → tier → port-never-install → review → commit cycle. |
 | Before `/ship`, or after editing a hook / MCP server / `settings*.json` permission / `CLAUDE.md` | **`/security-scan`** | Only when config/hooks/permissions changed or shipping — skip for routine feature edits. |
+| "audit the whole repo", "what's worth doing / what should we build next", "write a handoff plan for X" | **`/improve`** | Repo-wide / proactive asks only — change-scoped C# review stays with `/deep-review`; build+test gating with `/verify`. |
 
 ### Soft suggest (offer, don't auto-invoke)
 
