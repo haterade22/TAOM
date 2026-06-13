@@ -2,6 +2,21 @@
 
 ## 2026-06-13
 
+### docs(readme): refresh README for current feature set + repo metadata + license files
+
+Rewrote the README's drifted content (the last substantive pass predated ~a year of feature work)
+while keeping the dev-forward structure. Re-verified every stat from source: 55 feature modules (was
+50), 38 GameModel overrides (37), 50 careers across 16 cultures, 11 special resources across 18
+kingdoms, 800+ troop definitions (802 across 16 culture files), 2,600+ unit tests (2,617 methods),
+85 feature docs (74). Rebuilt the factions table — dropped the never-implemented "Arthedain", added
+the #266/#270 factions (Lindon, Misty Mountain Orcs, Goblin-town, Blue Craig) regrouped as Free /
+Dark / Independent. Expanded the headline-features list (Legendary War Beasts, Culture Conversion,
+Smart Battle AI, Bandit Management, Localization) and refreshed the harness counts (41 skills / 22
+hooks / 18 rules / 7 MCP servers). Embedded the faction-map render and linked the Erebor kitbash
+build reference. Added `LICENSE` (MIT — GitHub detects it once committed) + `LICENSE-CONTENT.md` (CC
+BY-NC-SA 4.0) for the code/content split the README already claimed. Set the previously-empty GitHub
+repo description + 12 topics via `gh repo edit`.
+
 ### chore(mcp): add ImagineArt remote MCP server (image/video/upscale/music gen)
 
 Registered the hosted ImagineArt MCP server (`https://mcp.imagine.art`, HTTP transport, OAuth — no API

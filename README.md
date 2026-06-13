@@ -2,17 +2,19 @@
 
 A Lord of the Rings total conversion mod for **Mount & Blade II: Bannerlord v1.4.5**.
 
+![The TAOM world map — Middle-earth at the time of the War of the Ring](tools/factionmap_output/verification_full.png)
+
 ## What is it
 
-TAOM reimagines Bannerlord as Middle-earth during the War of the Ring. Sixteen factions wage war
-across a custom map with hundreds of unique troops, race-specific lifespans, autonomous warg AI,
-alignment-driven diplomacy, a full career/class progression system, per-kingdom special resources,
-and dozens of other systems. Every kingdom, clan, lord, and troop has been replaced or rewritten to
-fit Tolkien's world.
+TAOM reimagines Bannerlord as Middle-earth during the War of the Ring. More than twenty kingdoms wage
+war across a custom map — hundreds of unique troops, rideable war beasts (war elephants, giant
+spiders, wargs), race-specific lifespans, alignment-driven diplomacy, a full career/class progression
+system, per-kingdom special resources, and dozens of other systems. Every kingdom, clan, lord, and
+troop has been replaced or rewritten to fit Tolkien's world.
 
-**By the numbers:** 50 feature modules · 37 GameModel overrides · 30+ Harmony patch categories ·
-50 careers across 16 cultures · 11 special resources across 18 kingdoms · 2,200+ unit tests ·
-74 feature/architecture docs.
+**By the numbers:** 55 feature modules · 38 GameModel overrides · 30+ Harmony patch categories ·
+50 careers across 16 cultures · 11 special resources across 18 kingdoms · 800+ troop definitions ·
+2,600+ unit tests · 85 feature docs.
 
 > The active development branch (and the GitHub default) is **`bannerlord-1.4.5`**.
 
@@ -48,14 +50,14 @@ NSubstitute. Shared build settings live in [`Directory.Build.props`](Directory.B
 ```
 TAOM/
 ├── Main/                     # Mod source (.NET Framework 4.7.2)
-│   ├── Features/             # 50 feature modules (CareerSystem, SpecialResources, Warg, …)
+│   ├── Features/             # 55 feature modules (CareerSystem, SpecialResources, Elephant, …)
 │   ├── Core/                 # Core infrastructure + IoC
 │   ├── Adapters/             # Sealed-type adapters (IHeroAdapter, etc.)
 │   └── _Module/              # Bannerlord module files (SubModule.xml, ModuleData, GUI)
-├── TAOM.Tests/               # Unit tests (MSTest + NSubstitute, 2,200+ tests)
+├── TAOM.Tests/               # Unit tests (MSTest + NSubstitute, 2,600+ tests)
 ├── docs/
 │   ├── adrs/                 # Architecture Decision Records (11)
-│   ├── features/             # Feature documentation (74 files)
+│   ├── features/             # Feature documentation (85 files)
 │   └── migration/            # Bannerlord version-migration tracking
 ├── tools/                    # Rebalancing + localization scripts
 ├── .claude/                  # Claude Code config (skills, agents, rules, hooks, memory)
@@ -90,30 +92,40 @@ See the [Architecture Decision Records](docs/adrs/) for the full set of design c
 
 ### Factions
 
-| Free Peoples | Dark Powers | Neutral |
-|--------------|-------------|---------|
-| Gondor, Rohan, Rivendell, Mirkwood, Lothlorien, Erebor, Dale, Arthedain | Mordor, Isengard, Gundabad, Dol Guldur, Easterlings (Rhun), Harad, Khand | Umbar (corsairs, hostile to all) |
+| Free Peoples | Dark Powers | Independent |
+|--------------|-------------|-------------|
+| Gondor · Rohan · Erebor · Dale · Rivendell · Lothlórien · Mirkwood · **Lindon** | Mordor · Isengard · Dol Guldur · Gundabad · **Misty Mountain Orcs** · **Goblin-town** · **Blue Craig** · Dunland · Easterlings (Rhûn) · Harad · Khand | Umbar (corsairs) · Shaghâna · Âbanissa |
 
-Over 100 clans and 500+ unique troop definitions across all factions.
+Over 100 clans and 800+ unique troop definitions across all factions. Settlements like Erebor are
+hand-kitbashed in the editor — see the [build reference](docs/kitbash/erebor/).
 
 ### Headline systems
 
 - **Career System** — 50 careers across 16 cultures; pick one at character creation, progress a
   tiered choice tree, unlock passive bonuses + an active battlefield ability (press **V**).
+- **Legendary War Beasts** — ride wargs, Harad **war elephants** (trample + tusk auto-attacks), and
+  Dol Guldur **giant spiders** (auto-bite); each driven by behavior-tree AI and fielded as cavalry.
 - **Special Resources** — 11 per-kingdom resources (War Spoils, Gems, Elven Wine, …) that gate
   elite troop upgrades; XML-driven with many-to-one kingdom/culture mappings.
-- **Cultural Feats** — 16 lore-driven culture feats (Rohan cavalry speed, Erebor smithing, Mordor
-  raid damage, Gondor loyalty), each backed by a GameModel override.
+- **Cultural Feats** — lore-driven per-culture bonuses (Rohan cavalry speed, Erebor smithing, Mordor
+  raid damage, Gondor loyalty, …), each backed by a dedicated GameModel override.
+- **Culture Conversion** — conquered towns, castles, and their villages gradually adopt the
+  conqueror's culture, switching recruitment pools to match.
+- **Smart Battle AI** — coordinated cavalry line-charges, companion-led formation tactics, and mixed
+  formations that interleave unit types instead of segregating them.
 - **War of the Ring** — scripted phased escalation into permanent total war between Free Peoples and
   Dark Powers; configurable via JSON + MCM.
 - **Race & Age System** — race-appropriate lifespans and fertility (immortal elves, 250-year
   dwarves, fast-breeding orcs, ageless Nazgûl).
-- **Warg Combat** — behavior-tree AI; wargs hunt autonomously and enter rage mode on heavy damage.
 - **Named Companions** — 18 lore companions (Aragorn, Legolas, Gimli, …) as recruitable wanderers.
+- **Bandit Management** — five LOTR bandit cultures replace vanilla hideouts, with configurable
+  density and themed encounter flavor.
+- **Localization** — full text support across **12 languages** with graceful English fallback.
 
-…and ~40 more systems (banner color persistence, settlement guards, custom battles, siege defense,
-tournament armor, shader precompilation, and more). Each is documented under
-[`docs/features/`](docs/features/). LOTR rules are enforced through **37 GameModel overrides** and
+…and dozens more systems (castle recruitment, culture marketplace, troop-weight balancing,
+messengers, quick-action inventory, banner color persistence, settlement guards, custom battles,
+siege defense, tournament armor, shader precompilation, and more). Each is documented under
+[`docs/features/`](docs/features/). LOTR rules are enforced through **38 GameModel overrides** and
 **30+ Harmony patch categories** — both registries are catalogued in [CLAUDE.md](CLAUDE.md).
 
 ## How It's Built (AI-assisted pipeline)
@@ -121,8 +133,8 @@ tournament armor, shader precompilation, and more). Each is documented under
 TAOM is developed with a structured, AI-assisted engineering pipeline.
 
 - **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)** is integrated as more than a
-  code generator: 33 custom slash-command skills, 5 specialized agents, 18 automated hooks,
-  15 path-scoped rule files, persistent cross-session memory, and 7 MCP servers (symbolic code
+  code generator: 41 custom slash-command skills, 5 specialized agents, 22 automated hooks,
+  18 path-scoped rule files, persistent cross-session memory, and 7 MCP servers (symbolic code
   navigation, decompilation, git, GitHub). [CLAUDE.md](CLAUDE.md) is the authoritative reference
   every session loads.
 - **Codex** (OpenAI) runs as an *independent adversarial reviewer* — it shares no session context
@@ -152,11 +164,10 @@ Place all modules in your Bannerlord `Modules/` directory, enable them in the la
 
 ## License
 
-**Code** (C# mod source): [MIT License](https://opensource.org/licenses/MIT)
+**Code** (C# mod source): [MIT License](LICENSE)
 
 **Content** (art, lore, data, XML assets derived from Tolkien's works):
-[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) — non-commercial, attribution
-required, share-alike.
+[CC BY-NC-SA 4.0](LICENSE-CONTENT.md) — non-commercial, attribution required, share-alike.
 
 This mod is a fan project and is not affiliated with or endorsed by the Tolkien Estate,
 New Line Cinema, or TaleWorlds Entertainment.
