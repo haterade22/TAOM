@@ -33,7 +33,7 @@ The "free creature" path. Steps (Mission.cs:4399-4416):
 2. Build a spawn `Equipment` with the mount item at `EquipmentIndex.ArmorItemEndSlot` + harness at `HorseHarness`; `agent.InitializeSpawnEquipment(...)` (Mission.cs:4402-4407).
 3. **`BuildAgent(agent, null)`** (Mission.cs:4414).
 
-**This is the path the working ADOD wolf uses (public `SpawnMonster`), and the path TAOM's spider *should* use.**
+**This is the path the working upstream-pack wolf uses (public `SpawnMonster`), and the path TAOM's spider *should* use.**
 TAOM's spider instead *reflects* `CreateAgent`+`BuildAgent` directly (`SpiderDetachedAgentSpawner`) — a hand-rolled
 copy of this exact chain. **The chain is decompiled-identical; the reflection is not the bug** (see §"the spider AV").
 
@@ -104,7 +104,7 @@ creature is the engine-supported way to render a non-humanoid body with no human
 2. The AV is in **native `preload_for_rendering`** (Agent.cs:4923→5189→IMBAgent.cs:533) — the GPU upload of that
    mesh's skinned vertices + **per-mesh bone palette** (a native cap, ~40 bones/draw). The spider's mesh references
    more bones than the cap → native AV. **Nothing in managed code can fix it; it's a mesh asset problem.**
-3. **The spawn *path* is not the cause.** ADOD's wolf uses the public `SpawnMonster` chain above and renders fine;
+3. **The spawn *path* is not the cause.** The upstream pack's wolf uses the public `SpawnMonster` chain above and renders fine;
    the spider reflects the *same* `CreateAgent`+`BuildAgent` chain. Both reach the same native `preload`. The wolf's
    mesh fits the palette; the spider's doesn't. → **Fix is the mesh** (un-split single mesh / re-author skin to ≤cap),
    not the spawn code. The RCA's recommended cheapest experiment (the wolf's public `SpawnMonster` + single un-split
@@ -113,7 +113,7 @@ creature is the engine-supported way to render a non-humanoid body with no human
 ## TAOM relevance map
 
 - `SpawnAgent` (Entry A) — every human troop; the spider troop's `Mission.SpawnAgent` prefix intercept; `Patch23`.
-- `SpawnMonster` (Entry B) — riderless creatures (ADOD wolf; TAOM's intended spider + elephant-as-creature path).
+- `SpawnMonster` (Entry B) — riderless creatures (upstream-pack wolf; TAOM's intended spider + elephant-as-creature path).
 - `EquipItemsFromSpawnEquipment` switch — the reason a creature must be `FromHorseObj` (no humanoid skin).
 - `PreloadForRendering` (native) — the render AV; mesh-side fix only.
 - Mount-item mesh — set via the `HorseComponent` on the item at `ArmorItemEndSlot` (the spider/elephant mount item).

@@ -10,7 +10,7 @@ namespace TAOM.Features.Elephant;
 /// Seats a single harad archer on the elephant's back and carries them with it every frame.
 /// Positioning mechanism: <see cref="Agent.TeleportToPosition"/> is called every OnTick with the
 /// seat entity's current world position. TeleportToPosition calls MBAPI.IMBAgent.SetPosition
-/// with the Vec3 as-is (no navmesh Z-snap) — ADOD_Beasts uses the same pattern via a NativeHook
+/// with the Vec3 as-is (no navmesh Z-snap) — the upstream beasts pack uses the same pattern via a NativeHook
 /// SetPosition. Since the parent howdah entity tracks the elephant each frame via
 /// TaomHowdahMachine.RepositionToElephant, this keeps the archer elevated on the howdah platform.
 /// On release, TeleportToPosition drops the agent to elephant ground level for the exit sequencer.
@@ -54,7 +54,7 @@ internal class TaomHowdahStandingPoint : StandingPoint
         LockUserFrames = true;
         AddMovingAgent(userAgent);
         userAgent.SetDetachableFromFormation(true);
-        // Pull the archer OUT of its formation (ADOD parity). Kept in HorseArcher, the formation issues
+        // Pull the archer OUT of its formation (upstream-pack parity). Kept in HorseArcher, the formation issues
         // "walk to your ground slot" orders every tick — the archer keeps trying to leave the howdah and is
         // teleported back, so it shuffles in place (visible even in the deployment phase). With no formation
         // it auto-fires at nearby enemies instead, driven by the Alarmed watch state. _previousFormation is
@@ -98,7 +98,7 @@ internal class TaomHowdahStandingPoint : StandingPoint
         // TeleportToPosition calls MBAPI.IMBAgent.SetPosition with the Vec3 as-is (no navmesh
         // Z-snap), so the elevated seat Z (~3.2m above elephant) is preserved.
         // This counteracts the navmesh gravity that snapped agents to terrain Z on spawn.
-        // ADOD_Beasts uses the equivalent pattern via a NativeHook SetPosition each tick.
+        // The upstream beasts pack uses the equivalent pattern via a NativeHook SetPosition each tick.
         MovingAgent.TeleportToPosition(GameEntity.GlobalPosition);
 
         // NO SetActionChannel here (2026-06-10). Forcing act_howdah_stand_bow each tick pinned the archer's

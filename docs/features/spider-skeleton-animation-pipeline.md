@@ -1,5 +1,9 @@
 # Spider Skeleton + Animation Pipeline (Blender → Modding Kit → Bannerlord)
 
+> **Companion:** the locomotion/rider *refinement* workflow + theory lives at
+> [creature-animation-blender-mcp-workflow.md](../ai-includes/creature-animation-blender-mcp-workflow.md);
+> this file is the rig/skeleton truth.
+
 **Status (2026-06-11): mount lane PROVEN in battle** — spider formations with goblin riders load
 and fight (see [spider.md](spider.md) for the full architecture + the 2026-06-10/11 RCA). The
 critical pipeline addition since 2026-06-03: **movement clips MUST carry the `quad_movement` tag
@@ -52,9 +56,9 @@ every reference to it below should be read as the root file.
 
 ### 3b. THE `quad_movement` TAG (root cause of the 2026-06-10 mount AVs)
 
-Byte-diff of a working ADOD clip (`elephant_canter_anm.tpac`) vs ours exposed the difference:
+Byte-diff of a working upstream pack clip (`elephant_canter_anm.tpac`) vs ours exposed the difference:
 
-| `_anm.tpac` field | ADOD (works) | our 06-03 compiles (AV'd) |
+| `_anm.tpac` field | Upstream (works) | our 06-03 compiles (AV'd) |
 |---|---|---|
 | step points | 4 real fractions (0.11/0.25/0.38/0.67) | `-1,-1,-1,-1` (unset) |
 | sound tag list | `make_walk_sound` | empty |
@@ -63,7 +67,7 @@ Byte-diff of a working ADOD clip (`elephant_canter_anm.tpac`) vs ours exposed th
 A `movement_system="quadrupedal"` action set measuring untagged movement clips builds a **null
 native gait structure** → `AccessViolation` (+0x10) on the first `Skeleton.TickAnimations` /
 `GetWalkSpeedLimitOfMountable`, in every mount context. Non-movement clips (attacks/hits/deaths)
-correctly do NOT carry the tag (ADOD's attacks don't either — they carry `lock_movement` /
+correctly do NOT carry the tag (the upstream pack's attacks don't either — they carry `lock_movement` /
 `client_prediction`-class flags only).
 
 **Interim fix applied 2026-06-11:** 9 clips byte-patched onto the elephant template
@@ -75,13 +79,13 @@ with the fields set (next section). The byte-patch recipe lives in [spider.md](s
 ### 3c. WHERE these live in the Kit's clip editor (captured 2026-06-11, editor screenshots)
 
 Open the animation clip in the Modding Kit editor. The properties panel has, top to bottom:
-**Loading Type** (dropdown — ADOD ships `Never load` on elephant_attack_1; load-on-demand, works
+**Loading Type** (dropdown — the upstream pack ships `Never load` on elephant_attack_1; load-on-demand, works
 fine), **Flags** (checkbox list), and a collapsed **Clip usages** section at the bottom.
 
 - **`quad_movement` is a CLIP USAGE, not a Flag** — add it in the "Clip usages" section. This is
   the field whose absence caused the mount AVs.
 - **`make_walk_sound` IS a Flag** (footstep sounds) — check it on gait clips.
-- **Step points** are the footstep-timing fractions (separate field; ADOD's canter has 4).
+- **Step points** are the footstep-timing fractions (separate field; the upstream pack's canter has 4).
 - `_anm.tpac` serialization (verified by byte-diff): string-list 1 = the CHECKED flags,
   string-list 2 = the clip usages (+ per-usage params). Unchecked = empty lists.
 
@@ -98,7 +102,7 @@ reset_camera_height, ignore_scale_on_root_position, blend_main_item_bone_entitia
 enforce_weapon_tip_with_rope_stretched, enforce_weapon_tip_with_rope_relaxed,
 disable_auto_increment_progress, switch_item_between_hands, attach_sound_to_agent, spawn_particle`
 
-**ADOD per-category flag recipes (parity targets when recompiling spider clips):**
+**Upstream pack per-category flag recipes (parity targets when recompiling spider clips):**
 
 | Clip category | Flags | Clip usages |
 |---|---|---|
@@ -107,7 +111,7 @@ disable_auto_increment_progress, switch_item_between_hands, attach_sound_to_agen
 | death (`elephant_death`) | `make_bodyfall_sound, client_prediction, do_not_keep_track_of_sound, enforce_all, update_bounding_volume` | — |
 | rear (`elephant_rear`) | `lock_movement, enforce_lowerbody` | — |
 
-Our spider attack/death clips currently ship with NO flags — they work, but lack ADOD's polish
+Our spider attack/death clips currently ship with NO flags — they work, but lack the upstream pack's polish
 flags (`lock_movement` on attacks stops the mount sliding mid-bite; `make_bodyfall_sound` on
 deaths adds the thud). Set these when the clips get their Kit recompile.
 
@@ -199,3 +203,18 @@ Armature-space head positions (×100 cm; front = −Y / fangs, back = +Y / abdom
 4. Bake `primary_bone_axis='Y'` + the `_notused` convention + **the quad_movement flag step** into
    `tools/blender/creature_anim_ops.py` exports / the compile checklist.
 5. Evaluate the unused 112KB `an_spi_charge` clip as the pounce visual (vs `an_spi_attack_charge`).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/creature-animation-blender-mcp-workflow.md](../ai-includes/creature-animation-blender-mcp-workflow.md)
+- [docs/ai-includes/creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md)
+- [docs/features/spider.md](./spider.md)
+- [docs/reference/lotrlome-spider-mount-changes.md](../reference/lotrlome-spider-mount-changes.md)
+- [docs/research/creature-pipeline/LESSONS-LEARNED.md](../research/creature-pipeline/LESSONS-LEARNED.md)
+- [docs/reviews/rca-spider-troop-2026-06-04.md](../reviews/rca-spider-troop-2026-06-04.md)
+
+<!-- backlinks-end -->

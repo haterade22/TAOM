@@ -82,9 +82,9 @@ The mesh-split landed and the real spider (`Mountable="false"`) was tested in-ga
 
 ### The decisive contrast — why the elephant works where the spider didn't
 
-ADOD's war-elephant (deep-dive `w21npmp7s`, 2026-06-05) is a **60-bone** non-humanoid creature that **renders fine in battle** — because it is a `Mountable="true"` **ridden mount** (a normal humanoid rider sits on it; the horse/warg path), never the detached render path. So:
+The upstream beasts pack's war-elephant (deep-dive `w21npmp7s`, 2026-06-05) is a **60-bone** non-humanoid creature that **renders fine in battle** — because it is a `Mountable="true"` **ridden mount** (a normal humanoid rider sits on it; the horse/warg path), never the detached render path. So:
 
-- **The spider's wall is the detached / `Mountable="false"` path — NOT the bone count.** A 60-bone skeleton renders fine ridden; a 62-bone one AVs detached. Bone count was refuted twice (split mesh + ADOD's working 60-bone elephant).
+- **The spider's wall is the detached / `Mountable="false"` path — NOT the bone count.** A 60-bone skeleton renders fine ridden; a 62-bone one AVs detached. Bone count was refuted twice (split mesh + the upstream pack's working 60-bone elephant).
 - **The supported way to ship a non-humanoid creature is as a ridden mount that auto-attacks** — exactly the warg pattern. The elephant takes that lane and touches none of the five crash layers the spider fought (humanoid-skin AV, native-wield NRE/AV, formation null-`HumanAIComponent` NRE, map-icon crash, render-preload AV).
 
 **Preventive lesson (the "never again"):** to put a non-humanoid creature in a TAOM battle, make it a **`Mountable="true"` ridden mount** (warg/horse machinery) — do **not** spawn it as a detached `FromHorseObj` riderless agent. The detached path is unsupported and its native render-preload AV cannot be moved with data. If the spider is ever revived, re-shape it as a ridden mount. Full elephant design: [elephant.md](../features/elephant.md).
@@ -96,19 +96,19 @@ ADOD's war-elephant (deep-dive `w21npmp7s`, 2026-06-05) is a **60-bone** non-hum
 
 ---
 
-## Update 2026-06-06 — ADOD wolf comparison: the spider's "impossible" verdict is likely WRONG
+## Update 2026-06-06 — upstream-pack wolf comparison: the spider's "impossible" verdict is likely WRONG
 
-While porting the elephant, the user pointed out ADOD ships **wolves** — and the wolf is the true analog to the
+While porting the elephant, the user pointed out the upstream beasts pack ships **wolves** — and the wolf is the true analog to the
 spider (the elephant is a `Mountable=true` *ridden* mount, so it never touches the riderless render path the spider
-died on). A decompile + asset comparison of ADOD's wolf overturns this RCA's core conclusions:
+died on). A decompile + asset comparison of the upstream pack's wolf overturns this RCA's core conclusions:
 
-**ADOD's wolf is a WORKING riderless non-humanoid creature.** `adod_wolf_*` Monster: no `Mountable` flag,
+**The upstream pack's wolf is a WORKING riderless non-humanoid creature.** `adod_wolf_*` Monster: no `Mountable` flag,
 `monster_usage="horse"`, `action_set="as_adod_wolf"`. Spawned via `Mission.SpawnMonster(item, …)` →
 `CreateHorseAgentFromRosterElements` → `CreateAgent(…, FromHorseObj)` + `agent.SetMountInitialValues(name, MountCreationKey)`;
 AI via `ADODBeastsWolfAgentComponent`. It renders + fights riderless in-game.
 
 **What's VERIFIED (still holds):**
-1. **"A non-humanoid riderless combatant is a shape the engine doesn't support" — REFUTED.** ADOD's wolves are exactly that and work.
+1. **"A non-humanoid riderless combatant is a shape the engine doesn't support" — REFUTED.** The upstream pack's wolves are exactly that and work.
 2. **The spawn path is not the cause.** Our `SpiderDetachedAgentSpawner` hand-rolls `CreateAgent(FromHorseObj)` + `SetMountInitialValues` + `BuildAgent(null)` — decompiled (Mission.cs:4394/4525/4007, Agent.cs:4532) as the **identical** chain the wolf's public `Mission.SpawnMonster` runs. `EquipItemsFromSpawnEquipment` skips `AddSkinMeshes` for `FromHorseObj` for **both** wolf and spider, both reach the same native `PreloadForRendering`. The wolf proves that path renders fine.
 
 ### CORRECTION (verified by workflow `w06c6pz7n`, 2026-06-06) — the `Usage='horse'→'other'` lead above was WRONG
@@ -126,25 +126,25 @@ The spider is **already `'other'`** (so "switch to other" is a no-op), **and** t
 
 ### The real divergences from the wolf — and which (if any) matter
 
-The wolf rides the **vanilla horse pipeline**: `monster_usage="horse"` (ADOD authors no custom wolf usage) + an `as_adod_wolf` action_set built on vanilla **`act_horse_*`** types bound to wolf anims; Item `Type="Animal"`. The spider invents a **custom** `monster_usage="spider"` + `act_spider_*` vocabulary (with 13 `TEMP-ANM-UNBLOCK` substitutions for clips missing `_anm.tpac`) + Item `Type="Horse"`. **Following the wolf here (flip `monster_usage`→`"horse"`, rebuild `as_spider` on `act_horse_*`, Item `Type`→`"Animal"`) is ANIMATION/movement data, NOT the render path — it will NOT by itself fix the AV.** It is *optional* robustness, and the value is smaller than first stated: it does **NOT** delete the missing-`_anm` DivideByZero risk. That `/0` fires when an action plays a clip whose `_anm.tpac` was never compiled (duration 0) — **independent of `monster_usage`.** Re-binding to `act_horse_*` still routes to `an_spi_*` clips, and any still missing an `_anm` still crashes. The only fix for the `/0` class is **re-exporting the missing `_anm.tpac` clips in the Kit** (the 13 `TEMP-ANM-UNBLOCK` items). It also risks *degrading* the spider's gait — the custom `act_spider_*` set drives proper spider clips, whereas the wolf's horse-pipeline approach makes the wolf move horse-ish.
+The wolf rides the **vanilla horse pipeline**: `monster_usage="horse"` (the upstream pack authors no custom wolf usage) + an `as_adod_wolf` action_set built on vanilla **`act_horse_*`** types bound to wolf anims; Item `Type="Animal"`. The spider invents a **custom** `monster_usage="spider"` + `act_spider_*` vocabulary (with 13 `TEMP-ANM-UNBLOCK` substitutions for clips missing `_anm.tpac`) + Item `Type="Horse"`. **Following the wolf here (flip `monster_usage`→`"horse"`, rebuild `as_spider` on `act_horse_*`, Item `Type`→`"Animal"`) is ANIMATION/movement data, NOT the render path — it will NOT by itself fix the AV.** It is *optional* robustness, and the value is smaller than first stated: it does **NOT** delete the missing-`_anm` DivideByZero risk. That `/0` fires when an action plays a clip whose `_anm.tpac` was never compiled (duration 0) — **independent of `monster_usage`.** Re-binding to `act_horse_*` still routes to `an_spi_*` clips, and any still missing an `_anm` still crashes. The only fix for the `/0` class is **re-exporting the missing `_anm.tpac` clips in the Kit** (the 13 `TEMP-ANM-UNBLOCK` items). It also risks *degrading* the spider's gait — the custom `act_spider_*` set drives proper spider clips, whereas the wolf's horse-pipeline approach makes the wolf move horse-ish.
 
-### What ADOD's own CODE does (and doesn't) — the wolf deep-dive (2026-06-06)
+### What the upstream pack's own CODE does (and doesn't) — the wolf deep-dive (2026-06-06)
 
-The user's prompt — *"the wolf also has a lot of code in the ADOD beast to make it work"* — is correct, and it sharpens the conclusion. Decompiled `ADOD_Beasts.dll` + `NativeHook.dll` (EasyHook) via `ilspycmd`:
+The user's prompt — *"the wolf also has a lot of code in the upstream beast pack to make it work"* — is correct, and it sharpens the conclusion. Decompiled `ADOD_Beasts.dll` + `NativeHook.dll` (EasyHook) via `ilspycmd`:
 
-| ADOD component | Lines | Purpose | Render-relevant? |
+| Upstream-pack component | Lines | Purpose | Render-relevant? |
 |---|---|---|---|
 | `ADODBeastsWolfAgentComponent : AgentComponent` | ~600 | Wolf speed-limits, attack channels, look-direction, dynamics | **No** — movement/AI |
 | `ADODBeastsMissionLogic : MissionLogic` | ~460 | Spawns the wolf, attaches the component, manages target entity | **No** — spawn/AI |
 | `NativeHook.dll` (EasyHook `LocalHook`, byte-sig scan) | 3 hooks | `Agent_AiTick`, `Agent_Tick`, `AgentMovementAndDynamicsSystem_UpdateFlags` | **No** — AI/tick/physics |
 
-**ADOD installs ZERO render hooks.** No hook on `PreloadForRendering`, `AddSkinMeshes`, `AgentVisuals`, skin/mesh/bone-palette. (`agent_visuals = 1752` is a struct-field *offset* the tick hooks use to read the visuals pointer — not a render patch.) **So the wolf renders through the stock engine path with no render code — purely because its mesh fits the native per-mesh bone-palette cap** (single-mesh `Type="Animal"`, 57-bone skeleton). This *independently confirms* "the render AV is the spider mesh, and no code fixes it."
+**The upstream pack installs ZERO render hooks.** No hook on `PreloadForRendering`, `AddSkinMeshes`, `AgentVisuals`, skin/mesh/bone-palette. (`agent_visuals = 1752` is a struct-field *offset* the tick hooks use to read the visuals pointer — not a render patch.) **So the wolf renders through the stock engine path with no render code — purely because its mesh fits the native per-mesh bone-palette cap** (single-mesh `Type="Animal"`, 57-bone skeleton). This *independently confirms* "the render AV is the spider mesh, and no code fixes it."
 
 Two further architecture facts from the decompile:
-- **ADOD's creatures are NOT roster troops.** The **wolf** is a scripted single companion (campaign behavior tracks an "acquired wolf id"; mission logic manually spawns **one** when `Agent.Main` spawns). The **elephant is a ridden mount** (`agent.IsHuman && agent.HasMount && IsElephant(...)` + a howdah). "A recruitable troop spawning riderless in a formation" is **TAOM's own, harder design — ADOD never attempted it.**
+- **The upstream pack's creatures are NOT roster troops.** The **wolf** is a scripted single companion (campaign behavior tracks an "acquired wolf id"; mission logic manually spawns **one** when `Agent.Main` spawns). The **elephant is a ridden mount** (`agent.IsHuman && agent.HasMount && IsElephant(...)` + a howdah). "A recruitable troop spawning riderless in a formation" is **TAOM's own, harder design — the upstream pack never attempted it.**
 - **The wolf spawns via the PUBLIC API:** `Mission.Current.SpawnMonster(wolfMountItem, default(ItemRosterElement) /*empty rider*/, ref pos, ref dir, -1)`. Our `SpiderDetachedAgentSpawner` hand-rolls a *reflected* `CreateAgent(FromHorseObj)` + `InitializeSpawnEquipment`. Switching the spider to the public `SpawnMonster` is cleaner/more robust (not the render fix; do it once the mesh renders).
 
-**Net:** ADOD's "lot of code" is the recipe for *creature movement/AI*, not *rendering*. The render blocker stays the mesh (experiments 2–4 below); the movement-code parity (an `AgentComponent` + the 3 native tick hooks, or our existing behavior-tree path) is real but strictly *downstream* of render.
+**Net:** the upstream pack's "lot of code" is the recipe for *creature movement/AI*, not *rendering*. The render blocker stays the mesh (experiments 2–4 below); the movement-code parity (an `AgentComponent` + the 3 native tick hooks, or our existing behavior-tree path) is real but strictly *downstream* of render.
 
 ### Most-likely actual root cause: the spider MESH asset's native skin data
 

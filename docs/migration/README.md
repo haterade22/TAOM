@@ -38,7 +38,7 @@ TAOM uses XSLT transformations to modify vanilla Bannerlord XML at load time. Th
 | [v1.3-api-changes.md](./v1.3-api-changes.md) | Summary of key API changes |
 | [xml-migration-strategy.md](./xml-migration-strategy.md) | Step-by-step XML migration |
 | [XML-SCHEMA-CHANGES.md](./XML-SCHEMA-CHANGES.md) | 1.2 to 1.3 schema differences |
-| [ROT-CORE-ANALYSIS.md](./ROT-CORE-ANALYSIS.md) | ROT-Core DLL compatibility analysis |
+| [ROT-CORE-ANALYSIS.md](./ROT-CORE-ANALYSIS.md) | Upstream-pack core DLL compatibility analysis |
 
 ## Migration Status
 

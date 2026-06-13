@@ -13,7 +13,7 @@ namespace TAOM.Features.Elephant.BehaviorTreeElements;
 /// Shared template for elephant attacks: plays the derived class's attack animation on channel 0, stamps the
 /// derived class's cooldown, and deals radial knockdown damage (`CustomAttacksUtils.TakeDamage`) to every live
 /// enemy within <see cref="ElephantConfig.TrampleRadius"/>. Damage amount from the pure
-/// <see cref="IElephantAttackService.ComputeInflictedDamage"/> (ADOD's formula, shield-block-aware). Boundary
+/// <see cref="IElephantAttackService.ComputeInflictedDamage"/> (the upstream pack's formula, shield-block-aware). Boundary
 /// code, mirroring the warg's <c>WargAttackTask</c>.
 /// </summary>
 public abstract class ElephantAttackTaskBase : BTTask, IBTBannerlordBase, IBTElephantBlackboard
@@ -51,7 +51,7 @@ public abstract class ElephantAttackTaskBase : BTTask, IBTBannerlordBase, IBTEle
         foreach (Agent victim in _scratch)
         {
             if (victim == null || victim == elephant || !victim.IsActive() || !victim.IsEnemyOf(rider)) continue;
-            // ADOD parity: only a SHIELD block reduces the damage; weapon parries take full damage.
+            // Upstream-pack parity: only a SHIELD block reduces the damage; weapon parries take full damage.
             // (Fully-qualified — the `Agent` blackboard property shadows the Agent type.)
             bool blocking = victim.GetCurrentActionType(1) == TaleWorlds.MountAndBlade.Agent.ActionCodeType.DefendShield;
             int damage = _service.ComputeInflictedDamage(blocking);
@@ -63,7 +63,7 @@ public abstract class ElephantAttackTaskBase : BTTask, IBTBannerlordBase, IBTEle
 
 /// <summary>
 /// The trample (double-sweep thrash) — the priority attack, 10s cooldown. Alternates randomly between the two
-/// near-identical thrash clips (attack_3/attack_4) for variety; ADOD never played attack_4 at all.
+/// near-identical thrash clips (attack_3/attack_4) for variety; the upstream pack never played attack_4 at all.
 /// </summary>
 public class ElephantTrampleTask : ElephantAttackTaskBase
 {

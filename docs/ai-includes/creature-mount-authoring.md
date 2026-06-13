@@ -2,7 +2,7 @@
 
 How to take a non-humanoid creature from raw assets to a **rideable, battle-stable mount** in
 TAOM on Bannerlord 1.4.6. Distilled from the two campaigns that proved every step the hard way:
-the **war elephant** (2026-06-03 → 06-10, ADOD port) and the **giant spider**
+the **war elephant** (2026-06-03 → 06-10, upstream-pack port) and the **giant spider**
 (2026-06-04 → 06-12, custom skeleton + custom clips — the maximal case). The warg
 (Alliance.Wargs) is the always-on reference implementation: when in doubt, do what the warg does.
 

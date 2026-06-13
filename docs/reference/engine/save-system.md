@@ -68,7 +68,7 @@ space (Phase 5) is because `MBObjectBase` objects are referenced by `MBGUID` (th
 - **A `SaveableTypeDefiner` is only needed for a custom class/struct/enum** you must serialize directly. Then: unique
   base (≥100 past the last), `[SaveableField(n)]` on each field, localIds inside the window. **Collision = crash at
   Module.Initialize**, not a soft failure.
-- **The elephant needs no SaveDefiner** (it's battle-only state) — confirmed in the [ADOD comparison](../adod-beasts-architecture-and-taom-port.md); ADOD's SaveDefiner persists the *wolf* (`_acquiredWolfId`). A creature-*troop* with no campaign state needs nothing here.
+- **The elephant needs no SaveDefiner** (it's battle-only state) — confirmed in the [upstream-pack comparison](../adod-beasts-architecture-and-taom-port.md); the upstream pack's SaveDefiner persists the *wolf* (`_acquiredWolfId`). A creature-*troop* with no campaign state needs nothing here.
 - `OnGameLoaded`/`SyncData` mutations on heroes/settlements must follow the entity-state-matrix rule
   (`.claude/rules/csharp-architecture.md`) — load-path mutation is destructive; guard it.
 - New saveable validation: TAOM has no engine-level guard against base-id collision — discipline is on the author +
@@ -81,5 +81,5 @@ may reference native resources (an `MBObjectBase`'s `MBGUID`), but the persisten
 
 ## Evidence (file:line, v1.4.5)
 - `TaleWorlds.SaveSystem.cs`:1046 (`SaveableTypeDefiner`), 1052 (ctor `_saveBaseId`), 1123-1126 (`AddClassDefinition` → `_saveBaseId + saveId`), 1129-1135 (`AddClassDefinitionWithCustomFields`), 1167 (`AddEnumDefinition`), 1112 (`AddBasicTypeDefinition`), 1062-1100 (`Define*` virtuals), 134 (`SaveableFieldAttribute`).
-- TAOM precedent + the collision rule: memory `feedback_saveable_typedefiner_localid_offset`; ADOD `ADODBeastsSaveDefiner` (the wolf) in the [ADOD comparison](../adod-beasts-architecture-and-taom-port.md).
+- TAOM precedent + the collision rule: memory `feedback_saveable_typedefiner_localid_offset`; the upstream pack's `ADODBeastsSaveDefiner` (the wolf) in the [upstream-pack comparison](../adod-beasts-architecture-and-taom-port.md).
 - `CampaignBehaviorBase.SyncData(IDataStore)` — the per-behavior persistence override (TAOM features override it widely).

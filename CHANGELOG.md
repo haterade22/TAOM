@@ -2,6 +2,57 @@
 
 ## 2026-06-13
 
+### chore(mcp): add ImagineArt remote MCP server (image/video/upscale/music gen)
+
+Registered the hosted ImagineArt MCP server (`https://mcp.imagine.art`, HTTP transport, OAuth — no API
+key) in `.mcp.json` and trusted it in `.claude/settings.local.json → enabledMcpjsonServers`. Exposes
+image/video generation, background removal, 4× upscaling, and music generation. Per-user OAuth: each
+contributor runs their own `/mcp` login (mirrors the existing `github` HTTP server). Requires a Claude
+Code restart to load, then `/mcp` → `imagine` → browser OAuth.
+
+### docs(creature-anim): consolidate the session's animation knowledge — master doc + skill + memories
+
+Structured/organized all creature & rider animation documentation from the 2026-06-12/13 Blender-MCP
+session (elephant locomotion, spider idle, rider-system mapping, chariot crash-fix) around a single
+source of truth — `docs/ai-includes/creature-animation-blender-mcp-workflow.md`. Added to the master:
+a **§8 Lessons / pitfalls** section (incl. the session meta-lesson — *re-verify a port's documented
+completeness*; chariot.md had claimed all clips were `quad_movement`-tagged, 2 were not), chariot
+horse-team biomechanics + results rows, and the `quad_movement` byte-graft patcher in the tooling list.
+New skill **`/refine-creature-anim`** (thin entry point → the master doc; registered in CLAUDE.md Skills
++ Doc Lookup tables). The four feature docs (elephant / spider / chariot / spider-skeleton-animation-
+pipeline) now cross-link the master, fixing the broken backlink graph; `spider.md` gained the
+idle-refinement record. New durable memories: `reference_creature_animation_blender_mcp_toolkit`,
+`feedback_blender_512_slotted_action_api`, `feedback_rider_animation_on_mount_composite_verify`; updated
+`feedback_quad_movement_tag_required_for_gait_clips` + `feedback_ported_data_upstream_bugs_vanilla_baseline`.
+Organized + executed via three workflows (chariot investigation; docs audit→plan; apply→adversarial-verify
+— all 6 verify criteria PASS).
+
+### chore(tools): commit the creature-animation Blender-MCP toolkit to the repo
+
+Copied the 4 remaining Python tools that drove the 2026-06-12/13 animation session out of the authoring
+workspace (`E:\LOTRAOMAssets\…`) into the repo so the documented workflow is runnable from a clean
+checkout: `tools/blender/harness.py` (Workbench render rig + gait analyze/re-phase/damp/freeze ops),
+`tools/blender/spider_cfg.py` (8-leg config layer over the harness),
+`tools/tpac_clipinfo.py` (per-clip `_anm.tpac` Source1/Source2 + flag parser), and
+`tools/patch_quad_movement.py` (parse-based `quad_movement` ClipUsage byte-graft patcher). The 5th tool,
+`tools/blender/creature_anim_ops.py` (clip extract/retime/export), was already committed in `849faf4`.
+Wired the repo paths into `docs/ai-includes/creature-animation-blender-mcp-workflow.md` §1 + §7 (the
+`E:\` paths kept for provenance). Verified none are gitignored.
+
+### docs: remove third-party mod names from TAOM docs + code comments
+
+Per the standing rule that TAOM documentation must not NAME other mods, de-named every prose/comment
+reference to the two upstream creature mods the elephant + chariot were ported from — replaced the bare
+mod names with neutral terms ("the donor mod" / "the upstream beasts pack" for the elephant source; "the
+upstream (chariot) pack" for the chariot source) across the feature/reference/review docs, the Elephant
+C# comments, and the CHANGELOG history. **Functional tokens KEPT** (code, not prose): class, DLL, and
+module-folder names that embed the legacy prefixes; an engine brush id; asset paths; and clip filenames.
+The two source-analysis docs are kept verbatim as internal provenance records, along with the links that
+resolve to them. Run as an 8-agent workflow (7 file-groups + adversarial verify); the verify caught one
+coverage gap (`rca-chariot-2026-06-12.md`, since fixed). Left untouched as out-of-scope (machine-generated
+or captured, not authored docs): the session commit-message log, an untracked `/improve` audit JSON, and
+verbatim tool-output paths inside 3 Codex review transcripts.
+
 ### process(improve): harden the audit skill after a read-only violation in its first run
 
 The first whole-repo `/improve` audit (117-agent fan-out) had one category agent ignore its
@@ -16,7 +67,57 @@ surviving only via the harness journal). `audit-playbook.md` §9 marks the named
 read-only-only. Memory: `feedback_readonly_subagents_need_verbatim_allowlist`. The 85 recovered audit
 findings were harvested to `plans/_audit/2026-06-12-harvest.{json,md}` (untracked working files).
 
+### fix(chariot-anim): tag the 2 untagged gait clips with quad_movement (latent mount-crash fix)
+
+A multi-agent investigation workflow + independent `tpac_clipinfo` re-verification of all 24 compiled
+chariot `_anm.tpac` clips found `chariot_gait_walkfast` + `chariot_gait_walkbackfast` shipped WITHOUT
+`quad_movement` (the doc claimed the upstream pack pre-solved this for all clips — it hadn't; their siblings DO carry
+it). An untagged movement clip AVs at `Skeleton.TickAnimations` on the first mount tick in a live
+mission (`feedback_quad_movement_tag_required_for_gait_clips.md`). Fixed by byte-grafting the
+`quad_movement` usage + step points from each tagged sibling onto the two gait clips (preserving each
+clip's own source range); originals at `*.bak-untagged`, patcher under
+`E:\LOTRAOMAssets\_auto_workspace\_chariot_refine\`. Structurally verified; in-game mission test still
+required. Verified already-fine + left untouched: wheel rotation (720° baked spin), the 5 rider clips +
+XSLT injection, the 7 tagged gaits, look overlays, death substitutions. Ranked follow-ups (horse-team
+phasing, parity-tool param, cart bounce, map rider rows) documented in
+`docs/features/chariot.md` + `docs/ai-includes/creature-animation-blender-mcp-workflow.md`.
+
+### chore(spider/rider-anim): fix spider idle (walk-in-place) + map the rider-animation system (Blender-MCP, source-side)
+
+Continuation of the creature-animation refinement (asset-side, `E:\LOTRAOMAssets\`; no repo code):
+- **Spider idle** — the shipped `an_spi_idle` is a walk-in-place (all 8 legs cycle). Fixed with a new
+  `freeze_toward_rest` harness tool: blend the 52 leg/pedipalp bones toward rest pose (factor 0.92)
+  while keeping the 10 `_m` body bones for breathing → a settled braced stance. In-place, perfect loop
+  (0° seam), subtle body breathing. Verified via top/side renders.
+- **Rider-animation system mapped** — rider = `human_skeleton` (28 bones); mounted clips bound in the
+  `as_human_warrior` action set via `act_<mount>_*` → `rider_<mount>_*`; rider parented to the mount's
+  `rider_sit_bone` (warg `Spine1_M`, spider `chest_m`, elephant ` Spine1_05`). The spider reuses the
+  warg's `rider_warg_*` set → goblin sits warg-style on a broad spider. Established a
+  composite-rider-on-mount verification technique (place rider at the sit bone, viewport screenshot).
+  Spider-rider clip authoring + elephant-rider improvement remain, with a documented path.
+- New reusable doc: **`docs/ai-includes/creature-animation-blender-mcp-workflow.md`** (workflow, theory,
+  rider system, results, remaining work).
+
 ## 2026-06-12
+
+### chore(elephant-anim): refine walk/run + author full TAOM-owned locomotion set (Blender-MCP, source-side)
+
+Overnight Blender-MCP session improving the elephant's natural locomotion (asset-side, on
+`E:\LOTRAOMAssets\Elephant\`; no repo code changed). Extracted the donor mod's source gaits onto our
+`elephant_skeleton` rig and corrected toward real elephant biomechanics, measured with a new
+foot-trajectory analyzer:
+- **walk** — re-phased the donor mod's 2-beat *pace* (ipsilateral legs swing together) into a **4-beat
+  lateral sequence** (BL→FL→BR→FR), and damped the front-foot over-lift (1.0→0.48, height-weighted
+  so planted feet stay grounded). In-place preserved.
+- **run** — the donor mod's "canter" was a diagonal *trot* (impossible for an elephant — implies an aerial
+  phase); rebuilt as a natural **fast amble** (time-compressed refined walk; lateral, no suspension).
+- Authored **trot / walk_backwards / turn_left / turn_right / idle** to complete the set (7 clips).
+- Exported all as Kit-ready FBX (`elephant_skeleton_notused`, 60 bones, Bannerlord axes, baked,
+  take-named); export round-trip verified on Blender 5.1.2 (slotted-action API).
+Reusable tooling + before/after renders + work `.blend` under `E:\LOTRAOMAssets\Elephant\`.
+**Not yet Kit-compiled or in-game-tested** (GUI-only step); handoff + the mandatory `quad_movement`
+tagging in `clips_refine_20260612\README_HANDOFF.md`. See `docs/features/elephant.md` "Animation
+refinement — full TAOM-owned locomotion set".
 
 ### feat(harness): 3 skills + version-drift hook from the v1.4.6 spider campaign workflows
 
@@ -39,14 +140,18 @@ the 1.4.5→1.4.6 force-bump went unnoticed for a morning and poisoned crash att
 Deliberately NOT skill-ified (single-command / documented-emergency): the parity audit tool,
 the `_anm` byte-patch graft.
 
-### feat(chariot): port ROT 8.0 war chariot as Rhûn Wainrider ridden mount (issue #279)
+### feat(chariot): port the upstream chariot pack war chariot as Rhûn Wainrider ridden mount (issue #279)
 
-ROT 8.0's standard war chariot, 1-for-1 into the warg/elephant/spider mount pipeline. ONE Monster
+The upstream chariot pack's standard war chariot, 1-for-1 into the warg/elephant/spider mount pipeline. ONE Monster
 (`chariot`) / ONE 60-bone skeleton (two vanilla-named horse bone sets + pole/cart/wheels); rider
 STANDS in the cart (rider anims injected into `as_human_warrior` via the Armory `action_sets.xslt`,
-the elephant mechanism). No BT / attack service / mission behavior — vanilla mount AI + a mount-lock:
-new static `ChariotConfig` (no IoC) + third ternary arm in `TaomAgentStatCalculateModel`
-(`CanAgentRideMount` + `MountDifficulty` 999f). 8 new tests; suite green at 3,151. Delivered via the
+the elephant mechanism). No BT / attack service / mission behavior /
+mount-lock — **zero TAOM C#** (maintainer decision: chariots stay remountable mid-battle, upstream-pack
+parity; riding difficulty 120 is the only gate. An initial TDD-green ChariotConfig mount-lock was
+deleted same-day on that decision). Suite green at 3,143. The upstream pack's own chariot C# decompiled and
+verified vestigial (never-read maneuver cache + empty tick). Kit-imported skeleton got the upstream pack's full
+SkeletonUserData (physics/IK, 17,648 B vs the Kit's 6,567 B default) transplanted verbatim after a
+60/60 bone identity gate. Delivered via the
 existing Wain tree: `wainrider_swift_chariot` (T8) + `wainrider_warlord_chariot` (T9) Horse slots
 swapped `khuzait_horse` → `taom_chariot_a` (HorseHarness dropped — the chariot item carries its own
 harness mesh); zero recruitment changes. Armory data: Monster (no ragdoll — vehicle),
@@ -54,9 +159,9 @@ harness mesh); zero recruitment changes. Armory data: Monster (no ragdoll — ve
 `chariot_stand_1` (verified absent from TAOM packs), chariot usage set, rider XSLT rows
 (6 mountings / 8 falls / 8 strikes), `taom_chariot_a` item (split-mesh AdditionalMeshes:
 `chariot_horse_brown_2` horse B + mane + `chariot_harness_e_rein` + `chariot_ride`; NOT
-`chariot_ride_alt` — dead texture refs in ROT itself). Assets: 6 Metameshes (29 split objects,
+`chariot_ride_alt` — dead texture refs in the upstream pack itself). Assets: 6 Metameshes (29 split objects,
 all ≤40-bone palettes), 3 master anims, 24 clips generated programmatically via TpacTool.Lib from
-ROT's originals (full flags/usages/step-points fidelity — quad_movement pre-solved by ROT) after
+the upstream pack's originals (full flags/usages/step-points fidelity — quad_movement pre-solved by the upstream pack) after
 the Kit rejected Assimp FBXs (**no legacy `Takes` section** — Blender round-trip required;
 key format lesson, see docs/features/chariot.md). SkeletalAnimation `Skeleton` GUIDs wired
 programmatically (`chariot_skeleton` / vanilla `human_skeleton`). 1.4.6 landmine audit vs the
@@ -135,7 +240,7 @@ Horse-slot pattern). A ~6-hour `/investigate` session root-caused the universal 
 `an_spi_*` clips were Kit-compiled without the `quad_movement` tag + step points** that every
 working quadruped's movement clips carry. A `movement_system="quadrupedal"` action set measuring
 untagged movement clips builds a null native gait structure; the first tick dereferences it.
-Proven by byte-diffing ADOD's `elephant_canter_anm.tpac` against ours and fixed by rebuilding
+Proven by byte-diffing the donor mod's `elephant_canter_anm.tpac` against ours and fixed by rebuilding
 `an_spi_walk_2/_left/_right` + `an_spi_run` `_anm.tpac` on the elephant template (tags + step
 points grafted, per-clip GUIDs/durations kept; originals at `*.bak-untagged`).
 
@@ -272,7 +377,7 @@ Extended the just-landed elephant behavior tree from "random trample" to the pro
 **enemy in range → trample if off cooldown (10s) → else left/right tusk swing by enemy bearing if off cooldown
 (4s) → else idle (the engine's regular mount AI always continues underneath — the BT only layers attacks).**
 
-This intentionally REPLACES ADOD's stochastic model: decompiling the live `ADOD_Beasts.dll` confirmed ADOD picks
+This intentionally REPLACES the donor mod's stochastic model: decompiling the live `ADOD_Beasts.dll` confirmed the donor mod picks
 randomly among `act_elephant_attack_1..3` at 0.001/tick with **no left/right awareness and no cooldowns** (and
 never uses `attack_4`, which IS bound to a real clip — verified in LOTRLOME `action_types.xml` 99–102 +
 `action_sets.xml` 59684–59687). The deterministic-cooldown + bearing-aware model is TAOM's own design.
@@ -295,7 +400,7 @@ never uses `attack_4`, which IS bound to a real clip — verified in LOTRLOME `a
   to baseline) and the `Head_08` bone's signed lateral excursion sampled per pack0.tpac clip frame-window —
   `attack_1` winds up right then strikes sweeping LEFT, `attack_2` mirrors (strikes RIGHT), `attack_3`/`attack_4`
   are near-identical 60-frame double-sweep thrashes. Mapped: **trample = `attack_3` ⟷ `attack_4`** (random
-  alternation for variety — a clip ADOD never played), **left swing = `attack_1`**, **right swing = `attack_2`**.
+  alternation for variety — a clip the donor mod never played), **left swing = `attack_1`**, **right swing = `attack_2`**.
   The stand-window control measured ~zero motion, validating the frame ranges. (The first guess — 1=trample,
   2=left, 3=right — was wrong on all three; the trajectory data refuted it before it ever shipped to a battle.)
 - Tree shape: `enemy in range → [trample(CD) | side attack(CD)] → idle`; the already-mid-attack-anim gate
@@ -318,7 +423,7 @@ Fixed in-session: stale elephant.md Key Files table (MED); engage gate now Index
 immune); `Initialize` logs an error if any attack action resolves to `act_none` (Armory-drift guard for the exact
 "slide" failure class that shipped 2026-06-09); `base(10)` documented as a dead throttle (int division — SleepTasks
 are the real pacing knobs). Recorded-not-changed (spec-conformant): side swings deal full radial damage; left/right
-pick near-arbitrary in crowds; flank enemies never trigger attacks (ADOD's 0.25 gate); effective trample period
+pick near-arbitrary in crowds; flank enemies never trigger attacks (the donor mod's 0.25 gate); effective trample period
 ~10.7–12s due to swing-anim blocking; wall-clock cooldowns (pause-exploitable, library precedent); MissionBehavior
 253 lines (ADR-002 nominal — ~65 lines are the deferred crew spawn). All in elephant.md "Review notes".
 **Stock review passes (both BEFORE commit, both CLEAN):** `/deep-review` 5 agents — Standards/Compatibility
@@ -380,7 +485,7 @@ Fix: renamed to `act_elephant_attack_1/2/3` — verified registered in `LOTRLOME
 lines 99–102 and bound to real clips in `action_sets_elephant.xml` lines 89–100.
 
 **Bug 2 — Sliding (secondary): trample fired into empty air, overriding locomotion channel.**
-The 1-for-1 ADOD port dropped ADOD's `target != null && distance < 3m` gate. Without it the trample rolled
+The 1-for-1 donor-mod port dropped the donor mod's `target != null && distance < 3m` gate. Without it the trample rolled
 ~1–2×/sec with no nearby enemies, playing an attack animation on channel 0 and interrupting the walk cycle each
 time. Confirmed by logs: many "Trample firing" lines with zero "Trample hit" lines.
 Fix: added `TrampleTriggerRange = 3f` (`ElephantConfig`) — a proximity + facing-dot scan before the roll. Trample
@@ -616,15 +721,15 @@ No save-compat impact (10 additive troops; no existing IDs renamed or deleted). 
 ### feat(elephant): functional howdah seat — vanilla detachment auto-assigns archers
 
 Added `TaomHowdahMachine` (UsableMachine) and `TaomHowdahStandingPoint` (StandingPoint) — a clean-room
-v1.4.5 port of ADOD_Beasts' howdah system. The machine entity repositions itself to the elephant's neck
+v1.4.5 port of the donor mod's howdah system. The machine entity repositions itself to the elephant's neck
 every frame via `AgentVisuals.GetGlobalStableNeckPoint`; the standing point teleports the seated archer
 each tick. Vanilla detachment auto-assigns harad archers because `GetDetachmentWeightAux` returns 1f —
 no custom crew-spawn code needed. Instantiated by `ElephantMissionBehavior.OnAgentBuild` when the mahout's
 HorseHarness StringId matches `ElephantConfig.HarnessStringId` ("sk_elephant_armor_a"). Prefab:
 `Main/_Module/Prefabs/taom_howdah_agent.xml` (physics cage + script components). Seated animation
-`act_howdah_stand_bow` resolves to `act_none` until the tpac is ported from ADOD — teleport still works.
+`act_howdah_stand_bow` resolves to `act_none` until the tpac is ported from the donor mod — teleport still works.
 
-v1.4.5 API drift fixed vs ADOD source: `GetDescriptionText(WeakGameEntity)→TextObject`,
+v1.4.5 API drift fixed vs the donor mod source: `GetDescriptionText(WeakGameEntity)→TextObject`,
 `OnUse(Agent, sbyte)`, `TeleportToPosition` (was `SetPosition`), `WorldPosition` ctor,
 `Agent.AIScriptedFrameFlags.None` (nested enum), removed `AgentOnLandFlags`/`SetOnLandState`.
 
@@ -666,7 +771,7 @@ Deliberately NOT added to the 5 per-agent files (all read the shared manual) or 
 
 ### feat(elephant): Harad war elephant confirmed in-game — action-sets self-contained in LOTRLOME_Armory
 
-War elephants now spawn in battle without ADOD_Beasts in the load order. Multiple elephants with Harad riders confirmed in-game (battle screenshot). Two data-pipeline crashes resolved:
+War elephants now spawn in battle without the donor mod in the load order. Multiple elephants with Harad riders confirmed in-game (battle screenshot). Two data-pipeline crashes resolved:
 
 - **Crash #3 — `KeyNotFoundException` at startup (`MBObjectManager.MergeElements`):** Adding `action_sets_elephant.xml` as a second `soln_action_sets` entry in `project.mbproj` triggered `MergeTwoXmls` on the fully-accumulated action_sets element from ALL prior modules. Any child XPath absent from the action_sets XSD → `KeyNotFoundException`. Fix: removed the second entry; merged the three elephant action_set definitions (`as_elephant`, `as_elephant_town_and_village`, `as_elephant_map`) into LOTRLOME's existing single `action_sets.xml` (the spider pattern).
 - **Crash #4 — `AccessViolationException` in `Skeleton.TickAnimations` (thumbnail render):** After removing the separate entry, the elephant action_sets were unregistered in the native animation engine. The party-screen thumbnail for a troop with an elephant in the Horse slot called `CharacterSpawner.SpawnMount` → `Skeleton.TickAnimations` → AV. Fix: same as Crash #3 (action_sets in main file = native engine registers `as_elephant` → TickAnimations finds valid state).
@@ -800,7 +905,7 @@ Added engine study doc references to the four files every agent or session loads
 
 ### docs(engine): phased study — Phase 7: GameModel system (how overrides plug in)
 
-[docs/reference/engine/gamemodel-system.md](docs/reference/engine/gamemodel-system.md) — the mechanism behind TAOM's ~40 `TaomXxxModel : DefaultXxxModel` overrides. Models live in an ordered `_models` list; `GetModel<T>()` scans **backward** so the **last-added model of a type wins** (the Default is shadowed, not removed) — MountAndBlade.cs:61604. `AddModel(GameModel)` (61614) is the simple add TAOM uses with inheritance + `base`; `AddModel<T>(MBGameModel<T>)` (61619) is the decorator path (`Initialize(previous)`) ADOD used. Campaign models = `Campaign.Current.Models`, mission models = `MissionGameModels.Current`, both resolved from the `GameStarter`'s `_models`. Gotchas: register **after** defaults (OnGameStart); **one override per type** (last wins) → TAOM consolidates concerns into one shared-slot override (e.g. `TaomAgentStatCalculateModel` = elephant lock + career stats); always call `base`.
+[docs/reference/engine/gamemodel-system.md](docs/reference/engine/gamemodel-system.md) — the mechanism behind TAOM's ~40 `TaomXxxModel : DefaultXxxModel` overrides. Models live in an ordered `_models` list; `GetModel<T>()` scans **backward** so the **last-added model of a type wins** (the Default is shadowed, not removed) — MountAndBlade.cs:61604. `AddModel(GameModel)` (61614) is the simple add TAOM uses with inheritance + `base`; `AddModel<T>(MBGameModel<T>)` (61619) is the decorator path (`Initialize(previous)`) the donor mod used. Campaign models = `Campaign.Current.Models`, mission models = `MissionGameModels.Current`, both resolved from the `GameStarter`'s `_models`. Gotchas: register **after** defaults (OnGameStart); **one override per type** (last wins) → TAOM consolidates concerns into one shared-slot override (e.g. `TaomAgentStatCalculateModel` = elephant lock + career stats); always call `base`.
 
 ### docs(engine): phased study — Phase 6: save system (SaveableTypeDefiner + SyncData)
 
@@ -808,7 +913,7 @@ Added engine study doc references to the four files every agent or session loads
 
 ### docs(engine): phased study — Phase 5: object system (MBObjectManager + XML→object)
 
-[docs/reference/engine/object-system-mbobjectmanager.md](docs/reference/engine/object-system-mbobjectmanager.md) — the data backbone the spawn chain + every TAOM feature use. `RegisterType<T>(element, list, typeId)` (Monster→Monsters@2, Item→Items@4, NPCCharacter@16, Culture@17, PartyTemplate@24, Settlement@25…); `LoadXML(list)` merges all enabled modules' XML + deserializes into objects (where `SubModule.xml` `<XmlNode><XmlName id="…"/>` plugs in); `GetObject<T>(stringId)` resolves by `StringId` and **returns clean null on missing** (so a broken `Item.X` ref → no mesh = the "underwear bug" — caught statically by `tools/validate_moduledata.py`). Cross-module merge is **load-order-tolerant** at runtime (the ADOD/LOTRLOME-needn't-be-declared finding). The `RegisterType` typeId is the `MBGUID` object-type tag — distinct from `SaveableTypeDefiner` base ids.
+[docs/reference/engine/object-system-mbobjectmanager.md](docs/reference/engine/object-system-mbobjectmanager.md) — the data backbone the spawn chain + every TAOM feature use. `RegisterType<T>(element, list, typeId)` (Monster→Monsters@2, Item→Items@4, NPCCharacter@16, Culture@17, PartyTemplate@24, Settlement@25…); `LoadXML(list)` merges all enabled modules' XML + deserializes into objects (where `SubModule.xml` `<XmlNode><XmlName id="…"/>` plugs in); `GetObject<T>(stringId)` resolves by `StringId` and **returns clean null on missing** (so a broken `Item.X` ref → no mesh = the "underwear bug" — caught statically by `tools/validate_moduledata.py`). Cross-module merge is **load-order-tolerant** at runtime (the donor-mod/LOTRLOME-needn't-be-declared finding). The `RegisterType` typeId is the `MBGUID` object-type tag — distinct from `SaveableTypeDefiner` base ids.
 
 ### docs(engine): phased study — Phase 4: Mission + MissionBehavior lifecycle
 
@@ -830,12 +935,12 @@ Start of a depth-first phased study of the engine's moddable surface (one proces
 
 `E:\Decompiled_Bannerlord\` is the SHIPPING-client decompile and silently strips editor-only code (editor-only managed types like `EditorGame`/`MBEditor`/`AnimalSpawnSettings`/`VertexAnimator` + the FBX-import/scene/animation authoring live only in the wEditor build of the same-named DLLs). Added the ⚠️ warning + the lookup order (shipping → editor build → native) + the dual-build decompile pointer to CLAUDE.md in all three spots that reference the decompile (the "Decompiled source layout" section, the DLL-path line, and the Notes), so "absent from this dump ≠ doesn't exist" is never mistaken again.
 
-### docs(adod): full ADOD_Beasts architecture + line-by-line TAOM port comparison
+### docs(donor-mod): full donor-mod architecture + line-by-line TAOM port comparison
 
-[docs/reference/adod-beasts-architecture-and-taom-port.md](docs/reference/adod-beasts-architecture-and-taom-port.md) — the complete `ADOD_Beasts` mod understood end-to-end (from a full `ilspycmd` decompile, line-by-line audited vs TAOM, verified vs installed v1.4.5): the two creature idioms (elephant = ridden mount + howdah; wolf = map-acquired FSM pet), the **start-to-finish runtime lifecycle** (load → game-start → mission-init → agent-build → per-tick → hit → teardown) with the WHY behind each design choice, and the TAOM comparison sitting inside it across all 4 subsystems (elephant trample/lock, howdah crew, wolf AI, infra).
+[docs/reference/adod-beasts-architecture-and-taom-port.md](docs/reference/adod-beasts-architecture-and-taom-port.md) — the complete donor mod understood end-to-end (from a full `ilspycmd` decompile, line-by-line audited vs TAOM, verified vs installed v1.4.5): the two creature idioms (elephant = ridden mount + howdah; wolf = map-acquired FSM pet), the **start-to-finish runtime lifecycle** (load → game-start → mission-init → agent-build → per-tick → hit → teardown) with the WHY behind each design choice, and the TAOM comparison sitting inside it across all 4 subsystems (elephant trample/lock, howdah crew, wolf AI, infra).
 
-- **Port verdict:** TAOM's elephant trample + mount-lock is a **faithful 1-for-1 port, no bugs**, and safer than ADOD in places (null-guards, exact-id matching, the dead-`OnTickAsAI`→`OnMissionTick` fix). Every non-port (howdah, rider camera, `CharacterObject.GetPower` patch, MCM, manual-trample, the whole wolf subsystem + its SaveDefiner/UI) is correctly scoped out because TAOM's elephant is a non-rideable creature-troop, not ADOD's ridden mount.
-- **Key facts:** the elephant needs **no SaveDefiner** (ADOD's persists the *wolf*); the `NativeHook`/EasyHook import is **dead/unused** (the elephant does NOT need native movement hooks); the 1.2.12→1.4.5 drift catalogue (`OnTickAsAI` gone, `SetMovementDirection` ref→in, `StandingPoint.OnUse`+sbyte, `SetDisabled` semantics, `GetDescriptionText` types).
+- **Port verdict:** TAOM's elephant trample + mount-lock is a **faithful 1-for-1 port, no bugs**, and safer than the donor mod in places (null-guards, exact-id matching, the dead-`OnTickAsAI`→`OnMissionTick` fix). Every non-port (howdah, rider camera, `CharacterObject.GetPower` patch, MCM, manual-trample, the whole wolf subsystem + its SaveDefiner/UI) is correctly scoped out because TAOM's elephant is a non-rideable creature-troop, not the donor mod's ridden mount.
+- **Key facts:** the elephant needs **no SaveDefiner** (the donor mod's persists the *wolf*); the `NativeHook`/EasyHook import is **dead/unused** (the elephant does NOT need native movement hooks); the 1.2.12→1.4.5 drift catalogue (`OnTickAsAI` gone, `SetMovementDirection` ref→in, `StandingPoint.OnUse`+sbyte, `SetDisabled` semantics, `GetDescriptionText` types).
 - **Actionable:** the wolf's public `Mission.SpawnMonster` + single un-split mesh is the spider's recommended render-AV fix (the reflected `FromHorseObj` chain is what AVs); optional spider polish (speed-ladder, Mission.Mode gate, vision cone); a candidate elephant SubModule arena/indoor gate.
 
 ### docs+tools(engine): dual-build decompile + Bannerlord engine/toolchain reference + animation-clip flags
@@ -849,22 +954,22 @@ Front-loaded the "understand the whole engine, don't re-derive it in pieces" kno
 
 ### docs(elephant): howdah crew mechanism + v1.4.5 portability; trample tick verified; clip consolidation underway
 
-Decompiled `ADOD_Beasts.dll` + verified against installed v1.4.5 DLLs to answer "how does ADOD put a *crew* of AI troops on the elephant's back." New [docs/features/elephant/howdah-crew-mechanism.md](docs/features/elephant/howdah-crew-mechanism.md): the crew is a `UsableMachine` **howdah** whose `StandingPoint` children are seats; it is **not** bone-parented but **per-tick frame-copied onto the elephant's neck point** (`GetGlobalStableNeckPoint` + `Frame` → `SetFrame`); each seat **force-spawns** its own AI ranged crew (armor-tier → `additional_elephant_characters.xml` → 1/2/4 archers) and locks them with `act_howdah_stand_bow`. The mahout is a separate normal mount-rider.
+Decompiled `ADOD_Beasts.dll` + verified against installed v1.4.5 DLLs to answer "how does the donor mod put a *crew* of AI troops on the elephant's back." New [docs/features/elephant/howdah-crew-mechanism.md](docs/features/elephant/howdah-crew-mechanism.md): the crew is a `UsableMachine` **howdah** whose `StandingPoint` children are seats; it is **not** bone-parented but **per-tick frame-copied onto the elephant's neck point** (`GetGlobalStableNeckPoint` + `Frame` → `SetFrame`); each seat **force-spawns** its own AI ranged crew (armor-tier → `additional_elephant_characters.xml` → 1/2/4 archers) and locks them with `act_howdah_stand_bow`. The mahout is a separate normal mount-rider.
 
-- **v1.4.5 portability:** mechanism is buildable, but ADOD's 1.2.12 code has 4 drifts a port must fix — `AgentComponent.OnTickAsAI` (gone; use `OnTick`/`OnTickParallel`), `StandingPoint.OnUse(Agent)` → `(Agent, sbyte)`, `MissionObject.SetDisabled(bool)` semantics (always-disable, not toggle), `UsableMachine.GetDescriptionText` (`string`→`TextObject`, `GameEntity`→`WeakGameEntity`).
-- **Trample tick VERIFIED 1.4.5-safe:** ADOD's trample rides the now-dead `OnTickAsAI`; TAOM's port pre-fixed it (`ElephantMissionBehavior : MissionLogic.OnMissionTick`). The deployed trample test will fire.
+- **v1.4.5 portability:** mechanism is buildable, but the donor mod's 1.2.12 code has 4 drifts a port must fix — `AgentComponent.OnTickAsAI` (gone; use `OnTick`/`OnTickParallel`), `StandingPoint.OnUse(Agent)` → `(Agent, sbyte)`, `MissionObject.SetDisabled(bool)` semantics (always-disable, not toggle), `UsableMachine.GetDescriptionText` (`string`→`TextObject`, `GameEntity`→`WeakGameEntity`).
+- **Trample tick VERIFIED 1.4.5-safe:** the donor mod's trample rides the now-dead `OnTickAsAI`; TAOM's port pre-fixed it (`ElephantMissionBehavior : MissionLogic.OnMissionTick`). The deployed trample test will fire.
 - **Self-contained clips underway:** confirmed via `tpac_skeleton_scan.py` that LOTRLOME's geo already carries `elephant_skeleton`; copied the 31 `*_anm.tpac` clip defs + 4 `elephant_anims_all_*_geo.tpac` data files into LOTRLOME. Pending: author `as_war_elephant` + `act_elephant_*` types + repoint Monster (vanilla `monster_usage="horse"`, the ArtemsHunts 1.4.X pattern). Open risk: compiled clip *wrappers* may need a Kit re-import (per `docs/tools/spider-skeleton-tpac-tools.md`) — to be tested empirically.
 
-### docs(spider): ADOD wolf-code deep-dive + ready-to-apply render-test/wolf-alignment reference
+### docs(spider): donor-mod wolf-code deep-dive + ready-to-apply render-test/wolf-alignment reference
 
-Answered "what does ADOD's wolf code do, and why does the wolf render while the spider AVs?" by decompiling `ADOD_Beasts.dll` + `NativeHook.dll` (EasyHook). The wolf's ~1000 lines of managed code (`ADODBeastsWolfAgentComponent`, `ADODBeastsMissionLogic`) + 3 native hooks (`Agent_AiTick`/`Agent_Tick`/`AgentMovementAndDynamicsSystem_UpdateFlags`) are **all movement/AI — ZERO render hooks**. So the wolf renders through the stock engine path with no render code (its single-mesh `Type="Animal"` body just fits the per-mesh bone-palette cap); **no code fixes the spider AV — it's the mesh.** Also recorded: ADOD's creatures aren't roster troops (wolf = scripted companion via public `Mission.SpawnMonster`; elephant = ridden mount), so the spider's riderless-troop design is TAOM's own.
+Answered "what does the donor mod's wolf code do, and why does the wolf render while the spider AVs?" by decompiling `ADOD_Beasts.dll` + `NativeHook.dll` (EasyHook). The wolf's ~1000 lines of managed code (`ADODBeastsWolfAgentComponent`, `ADODBeastsMissionLogic`) + 3 native hooks (`Agent_AiTick`/`Agent_Tick`/`AgentMovementAndDynamicsSystem_UpdateFlags`) are **all movement/AI — ZERO render hooks**. So the wolf renders through the stock engine path with no render code (its single-mesh `Type="Animal"` body just fits the per-mesh bone-palette cap); **no code fixes the spider AV — it's the mesh.** Also recorded: the donor mod's creatures aren't roster troops (wolf = scripted companion via public `Mission.SpawnMonster`; elephant = ridden mount), so the spider's riderless-troop design is TAOM's own.
 
 - Corrected an over-claim in [RCA "Update 2026-06-06"](docs/reviews/rca-spider-troop-2026-06-04.md): the optional wolf XML alignment does **NOT** delete the `TEMP-ANM-UNBLOCK` DivideByZero risk (that `/0` is a missing-`_anm.tpac` clip-compile gap, independent of `monster_usage`) and risks degrading the gait.
 - New [`docs/features/spider/wolf-parity-and-render-tests.md`](docs/features/spider/wolf-parity-and-render-tests.md): two **separate, ready-to-apply** workstreams — **A** render bisection (un-split single mesh → wolf-mesh control → FBX skin re-author → ridden-mount fallback) and **B** optional wolf XML alignment (`monster_usage`→`horse`, Item `Type`→`Animal`, `act_horse_*` action-set rebuild) with caveats. Plus the `SpiderConfig` comment corrected off the refuted bone-cap-split theory.
 
 ### chore(elephant): author first-pass idle + walk animations in Blender (via MCP) on our rig
 
-Authored two in-place, looping elephant clips directly on the `elephant_skeleton` rig through the Blender MCP — the honest answer to "make animations in Blender." (ADOD's elephant-body clips exist only as compiled `.tpac`, not Blender-importable source; warg is human-skeleton and spider is 8-legged, so neither retargets to a quadruped — authoring was the path.) Procedural keyframing, validated via side-view renders (rig deforms correctly, gait alternates); a **rough first pass to refine in Cascadeur**, not production-grade.
+Authored two in-place, looping elephant clips directly on the `elephant_skeleton` rig through the Blender MCP — the honest answer to "make animations in Blender." (The donor mod's elephant-body clips exist only as compiled `.tpac`, not Blender-importable source; warg is human-skeleton and spider is 8-legged, so neither retargets to a quadruped — authoring was the path.) Procedural keyframing, validated via side-view renders (rig deforms correctly, gait alternates); a **rough first pass to refine in Cascadeur**, not production-grade.
 
 - `an_war_elephant_idle` (1–49 loop): breathing + head sway + a wave down the 29-segment trunk + ear flick + tail sway.
 - `an_war_elephant_walk` (1–25 loop): 4-leg lateral-sequence gait (±11° hip swing + slight knee lift) + body bob + trunk/tail sway, **zero root translation** (engine supplies travel).
@@ -872,17 +977,17 @@ Authored two in-place, looping elephant clips directly on the `elephant_skeleton
 
 ## 2026-06-05
 
-### feat(elephant): Harad war-elephant trample + mount-lock — 1-for-1 ADOD port, adapted to v1.4.5 (C# done, data/anim seams)
+### feat(elephant): Harad war-elephant trample + mount-lock — 1-for-1 donor-mod port, adapted to v1.4.5 (C# done, data/anim seams)
 
-Built the C# for a rideable **Harad war elephant** that auto-tramples — a 1-for-1 behavioral port of ADOD_Beasts' elephant (`ADODBeastsElephantAgentComponent.OnTickAsAI` + `ADODAgentStatCalculateModel`), re-implemented in TAOM-clean architecture. **ADOD is built for ~1.2.12, NOT 1.4.5** — so it's a behavioral reference only; every TaleWorlds call was verified against the installed v1.4.5 DLLs (the one genuine drift, ADOD's removed `ActionIndexCache.Name` property, was compiler-caught and migrated to `GetName()`). Build green, **3043 tests**.
+Built the C# for a rideable **Harad war elephant** that auto-tramples — a 1-for-1 behavioral port of the donor mod's elephant (`ADODBeastsElephantAgentComponent.OnTickAsAI` + `ADODAgentStatCalculateModel`), re-implemented in TAOM-clean architecture. **The donor mod is built for ~1.2.12, NOT 1.4.5** — so it's a behavioral reference only; every TaleWorlds call was verified against the installed v1.4.5 DLLs (the one genuine drift, the donor mod's removed `ActionIndexCache.Name` property, was compiler-caught and migrated to `GetName()`). Build green, **3043 tests**.
 
-**What it does:** an AI-ridden elephant whose rider has a target within 3 m, while facing it (dot > 0.25), fires a 0.1%/tick trample — plays an attack action + deals a radial knockdown (`CustomAttacksUtils.TakeDamage`) to enemies within 2 m of the target (20 dmg, ¼ vs shield-block). A `CanAgentRideMount=false` + `MountDifficulty=999` mount-lock (folded into the shared `TaomAgentStatCalculateModel`) stops the AI stealing it. All ADOD constants (3/0.25/0.001/2/10) are 1-for-1.
+**What it does:** an AI-ridden elephant whose rider has a target within 3 m, while facing it (dot > 0.25), fires a 0.1%/tick trample — plays an attack action + deals a radial knockdown (`CustomAttacksUtils.TakeDamage`) to enemies within 2 m of the target (20 dmg, ¼ vs shield-block). A `CanAgentRideMount=false` + `MountDifficulty=999` mount-lock (folded into the shared `TaomAgentStatCalculateModel`) stops the AI stealing it. All donor-mod constants (3/0.25/0.001/2/10) are 1-for-1.
 
-**Files:** new `Main/Features/Elephant/` — `ElephantConfig`, pure unit-tested `IElephantAttackService`/`ElephantAttackService` (`IsElephantMonster`/`ShouldAiTrample`/`ComputeInflictedDamage`, 13 tests), boundary `ElephantMissionBehavior` (tracks elephant agents, radial trample), `ElephantIoC` (Singleton). Wired into `IoC.cs` + `SubModule.cs`; mount-lock in `TaomAgentStatCalculateModel`. No native code (ADOD's `NativeHook.dll` is dead).
+**Files:** new `Main/Features/Elephant/` — `ElephantConfig`, pure unit-tested `IElephantAttackService`/`ElephantAttackService` (`IsElephantMonster`/`ShouldAiTrample`/`ComputeInflictedDamage`, 13 tests), boundary `ElephantMissionBehavior` (tracks elephant agents, radial trample), `ElephantIoC` (Singleton). Wired into `IoC.cs` + `SubModule.cs`; mount-lock in `TaomAgentStatCalculateModel`. No native code (the donor mod's `NativeHook.dll` is dead).
 
-**Reviewed** (4-agent + adversarial-synthesis workflow, verdict SHIP_WITH_FIXES, no HIGH): fixed in-session — a per-frame `GetName()` string-alloc on the hot path (added a `RandomFloat < chance` pre-gate so ~99.9% of frames short-circuit before any native call; reuse a scan buffer; `Agent.ActionCodeType.DefendShield` instead of the magic `2`); docstrings corrected to stop over-claiming byte-identical 1-for-1; +2 boundary tests. Documented (not code-changed): two impulse-only deviations from ADOD (blocking victims don't get the KnockBack stagger; blocking-mounted victims aren't dismounted — damage is identical), and Pierce-vs-Cut damage-type (cosmetic).
+**Reviewed** (4-agent + adversarial-synthesis workflow, verdict SHIP_WITH_FIXES, no HIGH): fixed in-session — a per-frame `GetName()` string-alloc on the hot path (added a `RandomFloat < chance` pre-gate so ~99.9% of frames short-circuit before any native call; reuse a scan buffer; `Agent.ActionCodeType.DefendShield` instead of the magic `2`); docstrings corrected to stop over-claiming byte-identical 1-for-1; +2 boundary tests. Documented (not code-changed): two impulse-only deviations from the donor mod (blocking victims don't get the KnockBack stagger; blocking-mounted victims aren't dismounted — damage is identical), and Pierce-vs-Cut damage-type (cosmetic).
 
-**⚠️ Inert until data is authored (known seam).** No `taom_war_elephant` Monster ships yet, so the feature does nothing in-game until the data is dropped in. **Ready-to-drop 1.4.5 files authored** (validated): `docs/features/elephant/lotr_monster_elephant.xml` + `horse_item_taom_war_elephant.xml`. Remaining human seams: a **1.4.5** action-set `as_war_elephant` (NOT ADOD's 1.2.12 `as_elephant`) + animation clips (Blender → Modding-Kit), the Harad rider troop + recruitment, and the in-game smoke test. The mesh+skeleton are already imported to `LOTRLOME_Armory/Assets/creature/elephant/`. Graceful: even before animations exist, the trample **damage** lands (attack codes resolve to `act_none`). See [docs/features/elephant.md](docs/features/elephant.md). Not committed-as-shipped — this is the C# baseline; "improve" steps (full block-flag parity, player-trample, true block detection) are queued.
+**⚠️ Inert until data is authored (known seam).** No `taom_war_elephant` Monster ships yet, so the feature does nothing in-game until the data is dropped in. **Ready-to-drop 1.4.5 files authored** (validated): `docs/features/elephant/lotr_monster_elephant.xml` + `horse_item_taom_war_elephant.xml`. Remaining human seams: a **1.4.5** action-set `as_war_elephant` (NOT the donor mod's 1.2.12 `as_elephant`) + animation clips (Blender → Modding-Kit), the Harad rider troop + recruitment, and the in-game smoke test. The mesh+skeleton are already imported to `LOTRLOME_Armory/Assets/creature/elephant/`. Graceful: even before animations exist, the trample **damage** lands (attack codes resolve to `act_none`). See [docs/features/elephant.md](docs/features/elephant.md). Not committed-as-shipped — this is the C# baseline; "improve" steps (full block-flag parity, player-trample, true block detection) are queued.
 
 Research: decompiled `ADOD_Beasts.dll`; verified v1.4.5 signatures via `taom-src`/ilspycmd.
 Not-tested: in-game spawn/trample/mount-lock (engine-coupled; documented seam — requires the data + a running game).
@@ -893,7 +998,7 @@ Took the giant spider in-game with the real (`Mountable="false"`) mesh + 62-bone
 
 **Root cause (architectural, not a bug):** the engine supports exactly two agent shapes — a **humanoid combatant** and a **ridden mount**. A non-humanoid **riderless** combatant is not a shape the engine has; the detached spider hacked a mount (`FromHorseObj`) into a riderless fighter and hit a native wall the data cannot move. **Paused** rather than continue: `SpiderConfig.Enabled = false` gates `Mission_SpawnAgent_SpiderSwap_Patch`, so the recruitable troop now spawns as its harmless **humanoid anchor** (`dg_uruk`) instead of crashing — the feature is inert, not removed; `IsSpiderTroop` + its unit tests stay intact. Build green, 3030 tests pass. The render-diag patch was deleted (would spam on warg battles).
 
-**Pivot — a ridden war-elephant (the supported path).** A 4-agent ADOD_Beasts deep-dive (`w21npmp7s`) confirmed ADOD's war-elephant is a **standard `Mountable="true"` Bannerlord mount** — the exact warg pattern — and renders a **60-bone** non-humanoid creature fine in battle. **So the spider's wall is the detached/`Mountable="false"` path, NOT the bone count** (refuted twice: split mesh + ADOD's working 60-bone elephant). The recipe: Monster (`Mountable/CanRear/CanCharge=true`, `bovine`, `rider_sit_bone=" Spine1_05"`), a `Type="Horse"` item (`charge_damage=350`), a **normal humanoid rider** filling the `Horse`+`HorseHarness` slots (no creature troop), an `as_elephant` action set, and a **pure-managed C# trample** (`OnTickAsAI` → `Blow`/`RegisterBlow`, same mechanic as `WargAttackService`) + a `CanAgentRideMount=false`/`MountDifficulty=999f` mount-lock. **`NativeHook.dll`/`EasyHook.dll` are dead in ADOD** (zero call sites) — no native code to port. Decision: **clone the warg's architecture for the C#, re-author ADOD's data under TAOM/Harad ids (e.g. `taom_war_elephant` — a plain war elephant, NOT the giant mumakil), author TAOM's own animations on our FBX** (project-owner decision — ADOD's reusable clip set recorded as a declined fallback), port no native code. Asset licensed (purchased from Artem, the ADOD author). New design doc: [docs/features/elephant.md](docs/features/elephant.md).
+**Pivot — a ridden war-elephant (the supported path).** A 4-agent donor-mod deep-dive (`w21npmp7s`) confirmed the donor mod's war-elephant is a **standard `Mountable="true"` Bannerlord mount** — the exact warg pattern — and renders a **60-bone** non-humanoid creature fine in battle. **So the spider's wall is the detached/`Mountable="false"` path, NOT the bone count** (refuted twice: split mesh + the donor mod's working 60-bone elephant). The recipe: Monster (`Mountable/CanRear/CanCharge=true`, `bovine`, `rider_sit_bone=" Spine1_05"`), a `Type="Horse"` item (`charge_damage=350`), a **normal humanoid rider** filling the `Horse`+`HorseHarness` slots (no creature troop), an `as_elephant` action set, and a **pure-managed C# trample** (`OnTickAsAI` → `Blow`/`RegisterBlow`, same mechanic as `WargAttackService`) + a `CanAgentRideMount=false`/`MountDifficulty=999f` mount-lock. **`NativeHook.dll`/`EasyHook.dll` are dead in the donor mod** (zero call sites) — no native code to port. Decision: **clone the warg's architecture for the C#, re-author the donor mod's data under TAOM/Harad ids (e.g. `taom_war_elephant` — a plain war elephant, NOT the giant mumakil), author TAOM's own animations on our FBX** (project-owner decision — the donor mod's reusable clip set recorded as a declined fallback), port no native code. Asset licensed (purchased from Artem, the donor mod's author). New design doc: [docs/features/elephant.md](docs/features/elephant.md).
 
 **Scaffolded the elephant service core** (`Main/Features/Elephant/`, new files only — no IoC/SubModule/XML wiring): `IElephantAttackService` + `ElephantAttackService` + `ElephantConfig`, a faithful clone of `WargAttackService` per the deep-dive's "structure from warg" decision — `CalculateTrampleDamage` (pure formula), `HandleTrampleHit` (guards + team rules + knockdown + boundary `CustomAttacksUtils.TakeDamage`), `Trample` (velocity-branch `CustomAttack`); adapter-pure (ADR-007). 19 unit tests mirror the warg's; **build green, 3049 tests pass** (was 3030). Trample bone set + damage tuning are placeholders pending an in-game bone-index dump (the WargConfig pattern). Not yet wired — `ElephantMissionBehavior` + IoC + the Monster/Item/action-set XML + the TAOM-authored animations await the asset import and your id/culture/tuning decisions. Not committed (awaiting review).
 
@@ -8389,5 +8494,5 @@ Implemented custom race handling for non-human characters (dwarves, orcs, uruk-h
 
 - Created Architecture Decision Records (ADRs 001-009)
 - Created AI include docs: architecture, patterns, TDD, research workflow, code quality, security
-- Created migration documentation: tracking, XML schema changes, v1.3 API changes, ROT-Core analysis
+- Created migration documentation: tracking, XML schema changes, v1.3 API changes, source-mod core analysis
 - Created testing guide

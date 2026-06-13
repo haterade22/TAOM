@@ -39,8 +39,8 @@
 - [companion-tactics](features/companion-tactics.md) — companion-driven formation overrides; `CancelStanceOnMove` postfix
 - [warg-combat](features/warg-combat.md) — BT elements, WargAttackService, WargMissionBehavior
 - [spider](features/spider.md) — spider creature combat (PAUSED: native render AV; fix = wolf's public SpawnMonster + un-split mesh)
-- [elephant](features/elephant.md) — war-elephant trample + mount-lock (1-for-1 ADOD port) + [howdah-crew-mechanism](features/elephant/howdah-crew-mechanism.md) (UsableMachine crew platform; not yet ported)
-- [adod-beasts-architecture-and-taom-port](reference/adod-beasts-architecture-and-taom-port.md) — **the whole ADOD_Beasts mod end-to-end** (lifecycle + the WHY) + line-by-line TAOM port comparison across all 4 subsystems; the 1.2.12→1.4.5 drift catalogue. Read this before re-decompiling ADOD.
+- [elephant](features/elephant.md) — war-elephant trample + mount-lock (1-for-1 upstream-pack port) + [howdah-crew-mechanism](features/elephant/howdah-crew-mechanism.md) (UsableMachine crew platform; not yet ported)
+- [upstream beasts pack architecture and TAOM port](reference/adod-beasts-architecture-and-taom-port.md) — **the whole upstream beasts pack end-to-end** (lifecycle + the WHY) + line-by-line TAOM port comparison across all 4 subsystems; the 1.2.12→1.4.5 drift catalogue. Read this before re-decompiling the upstream pack.
 - [troop-weight-system](features/troop-weight-system.md) — TroopWeightSettings, PartyBase / TroopRoster patches (Patch17)
 - [battle-balance](features/battle-balance.md) — TaomMilitaryPowerModel, TaomCombatSimulationModel
 - [battle-scenes](features/battle-scenes.md) — battle scene system (Patch0, currently DISABLED)

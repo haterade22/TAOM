@@ -45,7 +45,7 @@ registers a file under the **`Monsters`** list; at load, all modules' `Monsters`
 turns it into `Monster` objects. (TAOM's `taom_npccharacter`/`Items`/`SPCultures`/`partyTemplates` registrations
 work the same way.) **Cross-module merging means the load is order-tolerant** — by the time `LoadXML` runs, every
 enabled module's rows are present, so an object defined in one module + referenced in another resolves regardless of
-declared load order (the basis for the ADOD finding that LOTRLOME needn't be a declared dependency).
+declared load order (the basis for the upstream-pack finding that LOTRLOME needn't be a declared dependency).
 
 ### Resolution — `GetObject` (ObjectSystem.cs:813/867/981/994)
 - `GetObject<T>(string objectName)` (867) — resolve by `StringId`; **returns clean `null` if not found** (no
@@ -75,7 +75,7 @@ deserializes it.
   catches **statically** (BROKEN_ITEM_REF / BROKEN_TROOP_REF / UNKNOWN_CULTURE) before it becomes a runtime null —
   run it before committing ModuleData. (Sibling: `.claude/rules/moduledata-validation.md`.)
 - **Cross-module resolution is order-tolerant** at runtime (everything's merged before `LoadXML`), so TAOM resolving
-  LOTRLOME items/monsters works without declaring LOTRLOME as a dependency (ADOD-comparison finding) — but the
+  LOTRLOME items/monsters works without declaring LOTRLOME as a dependency (upstream-pack-comparison finding) — but the
   *static* validator still needs `--game-modules` to see LOTRLOME.
 - The `RegisterType` **typeId** (Monster=2, Item=4, NPCCharacter=16…) is the **object-type** tag in `MBGUID` — distinct
   from the `SaveableTypeDefiner` base ids used for non-`MBObjectBase` saveable classes (Phase 6).

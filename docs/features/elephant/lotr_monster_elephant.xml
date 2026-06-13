@@ -9,15 +9,15 @@
       <IncludedGameTypes><GameType value="Campaign"/><GameType value="CampaignStoryMode"/><GameType value="CustomGame"/></IncludedGameTypes>
     </XmlNode>
 
-  This is a 1-for-1 of ADOD's elephant Monster (decompiled 2026-06-05) with:
+  This is a 1-for-1 of the upstream beasts pack's elephant Monster (decompiled 2026-06-05) with:
     - id  : elephant -> taom_war_elephant   (MUST match Main/Features/Elephant/ElephantConfig.ElephantMonsterId)
     - the bone block kept verbatim — these names match our imported `elephant_skeleton` (verified bone-for-bone).
 
-  ⚠️ TWO 1.4.5 SEAMS (ADOD's are 1.2.12 — do NOT reuse them):
+  ⚠️ TWO 1.4.5 SEAMS (the upstream pack's are 1.2.12 — do NOT reuse them):
     - action_set="as_war_elephant"   — author a v1.4.5 action-set bound to `elephant_skeleton` with TAOM-compiled
-                                        clips (act_war_elephant_walk/idle/turn/.../attack_1..3). NOT ADOD's as_elephant.
+                                        clips (act_war_elephant_walk/idle/turn/.../attack_1..3). NOT the upstream pack's as_elephant.
     - monster_usage="war_elephant"   — author a v1.4.5 monster_usage_set (use a vanilla quadruped-mount usage as the
-                                        template). NOT ADOD's `elephant` usage.
+                                        template). NOT the upstream pack's `elephant` usage.
   Until those exist the elephant spawns as a mount but won't animate; the C# trample DAMAGE still works
   (act_war_elephant_attack_* resolve to act_none gracefully).
 -->

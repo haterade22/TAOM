@@ -57,6 +57,7 @@
     "filesystem",
     "git",
     "ilspy",
-    "taom-moduledata"
+    "taom-moduledata",
+    "imagine"
   ]
 }

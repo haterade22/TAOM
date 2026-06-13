@@ -66,7 +66,7 @@ in the Kit with no code.
   full line-level port spec + the moving-machine "manual per-tick frame-copy to the elephant neck" pattern are in
   [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanism.md). Any future TAOM usable machine (deployable,
   siege-defense object, ridden platform) follows this hierarchy.
-- **v1.4.5 drifts** (ADOD is 1.2.12 — confirmed): `OnUse(Agent)` → **`OnUse(Agent, sbyte agentBoneIndex)`**
+- **v1.4.5 drifts** (the upstream pack is 1.2.12 — confirmed): `OnUse(Agent)` → **`OnUse(Agent, sbyte agentBoneIndex)`**
   (UsableMissionObject.cs:360 — add the param or the override is dead); `MissionObject.SetDisabled(bool)` — the bool is
   **`isParentObject`**, the call **always disables** (no toggle); `UsableMachine.GetDescriptionText` →
   `(WeakGameEntity)→TextObject` (not `(GameEntity)→string`).

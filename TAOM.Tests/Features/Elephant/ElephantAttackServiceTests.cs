@@ -4,7 +4,7 @@ using TAOM.Features.Elephant;
 
 // War-elephant attack — pure decision-service tests. The service has no TaleWorlds dependencies, so every
 // branch is reachable without mocks; the engine values (facing dot, current time, blocking) are supplied by
-// the behavior-tree nodes in-game. The 2026-06-10 cooldown rework replaced ADOD's per-tick probability roll
+// the behavior-tree nodes in-game. The 2026-06-10 cooldown rework replaced the upstream pack's per-tick probability roll
 // (ShouldAiTrample) with deterministic cooldowns (ShouldEngage + IsOffCooldown) — the BT decides cadence.
 
 namespace TAOM.Tests.Features.Elephant;
@@ -47,7 +47,7 @@ public class ElephantAttackServiceTests
 
     [TestMethod]
     public void ShouldEngage_FacingDotExactlyAtThreshold_ReturnsFalse()
-        // Strict "> TrampleFacingDot" (ADOD uses `> 0.25f`), so exactly at the threshold does not engage.
+        // Strict "> TrampleFacingDot" (the upstream pack uses `> 0.25f`), so exactly at the threshold does not engage.
         => Assert.IsFalse(_sut.ShouldEngage(facingDot: ElephantConfig.TrampleFacingDot, alreadyAttacking: false));
 
     [TestMethod]
@@ -89,11 +89,11 @@ public class ElephantAttackServiceTests
 
     [TestMethod]
     public void ComputeInflictedDamage_TargetNotBlocking_ReturnsTwentyDamage()
-        // ADOD: round(10 * 1) * 2 = 20.
+        // Upstream pack: round(10 * 1) * 2 = 20.
         => Assert.AreEqual(20, _sut.ComputeInflictedDamage(targetBlocking: false));
 
     [TestMethod]
     public void ComputeInflictedDamage_TargetBlocking_ReturnsReducedDamage()
-        // ADOD: round(10 * 0.25 = 2.5) * 2. Math.Round(2.5) = 2 (banker's rounding) → 4.
+        // Upstream pack: round(10 * 0.25 = 2.5) * 2. Math.Round(2.5) = 2 (banker's rounding) → 4.
         => Assert.AreEqual(4, _sut.ComputeInflictedDamage(targetBlocking: true));
 }

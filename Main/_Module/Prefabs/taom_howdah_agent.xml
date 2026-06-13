@@ -1,6 +1,6 @@
 <prefabs>
 	<!-- Howdah seat for the TAOM war-elephant (sk_elephant_armor_a harness).
-	     Clean-room port of ADOD_Beasts' adod_howdah_4_agent.xml.
+	     Clean-room port of the upstream beasts pack's 4-seat howdah agent prefab.
 	     All meshes are visible_only_when_editing — visually invisible in-game.
 	     The sk_elephant_armor_a harness provides the visual; this entity provides the
 	     functional layer (physics cage + TaomHowdahMachine script + TaomHowdahStandingPoint seat).
@@ -9,7 +9,7 @@
 	     TaomHowdahMachine.RepositionToElephant().
 	     Physics body: bo_empire_keep_a_door_top creates an elevated physical floor at howdah height
 	     so UseGameObject -> native TranslateUser correctly positions agents at elevated Z (not terrain Z).
-	     Four _barrier_04x04m children cage the platform using ADOD's exact positions/scales (same
+	     Four _barrier_04x04m children cage the platform using the upstream pack's exact positions/scales (same
 	     sk_elephant_armor_a geometry). -->
 	<game_entity name="taom_howdah_agent" old_prefab_name="" mobility="1">
 		<flags>
@@ -41,7 +41,7 @@
 			<!-- 4 archer seats in a 2x2 grid (front-left, front-right, back-left, back-right).
 			     Positions tuned to the sk_elephant_armor_a howdah platform surface (Z=0.273).
 			     Rotations face each archer outward for better field of fire.
-			     Barrier cage uses ADOD's exact X/Y extents: X~-0.66..0.77, Y~-0.83..0.81. -->
+			     Barrier cage uses the upstream pack's exact X/Y extents: X~-0.66..0.77, Y~-0.83..0.81. -->
 			<game_entity name="foods_watermelon_a" old_prefab_name="" mobility="1">
 				<flags>
 					<flag name="record_to_scene_replay" value="true"/>
@@ -138,7 +138,7 @@
 					</script>
 				</scripts>
 			</game_entity>
-			<!-- Physics cage barriers — exact values from ADOD's adod_howdah_4_agent.xml.
+			<!-- Physics cage barriers — exact values from the upstream beasts pack's 4-seat howdah agent prefab.
 			     Scale Y=20.000 makes them tall so agents cannot escape vertically.
 			     dont_collide_with_camera keeps the camera unobstructed during battle. -->
 			<game_entity name="_barrier_04x04m" old_prefab_name="" mobility="1">

@@ -50,6 +50,10 @@
       "command": "python",
       "args": ["c:/Users/mikew/source/repos/TAOM/tools/taom_mcp_server.py"],
       "env": {}
+    },
+    "imagine": {
+      "type": "http",
+      "url": "https://mcp.imagine.art"
     }
   }
 }
