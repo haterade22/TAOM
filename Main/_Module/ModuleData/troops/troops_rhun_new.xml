@@ -3807,8 +3807,7 @@
                 <equipment slot="Cape" id="Item.sk_rh_loke_cape_scale_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_lam_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_heavy_a" />
-                <equipment slot="Horse" id="Item.khuzait_horse" />
-                <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+                <equipment slot="Horse" id="Item.taom_chariot_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>
@@ -3845,8 +3844,7 @@
                 <equipment slot="Cape" id="Item.sk_rh_loke_cape_scale_heavy_a" />
                 <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_lam_heavy_a" />
                 <equipment slot="Leg" id="Item.sk_rh_loke_grvs_scale_heavy_a" />
-                <equipment slot="Horse" id="Item.khuzait_horse" />
-                <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+                <equipment slot="Horse" id="Item.taom_chariot_a" />
             </EquipmentRoster>
             <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
         </Equipments>

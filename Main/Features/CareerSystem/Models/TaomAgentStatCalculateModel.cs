@@ -13,9 +13,11 @@ namespace TAOM.Features.CareerSystem.Models;
 // at the boundary and delegates. Closes deferred audit-issue #142 inline-logic P2.
 //
 // 2026-06-05: the shared AgentStatCalculateModel slot also carries the war-elephant mount-lock
-// (1-for-1 ADOD ADODAgentStatCalculateModel) — non-rider AI can't take the elephant. The elephant
+// (1-for-1 with the upstream beasts pack's agent-stat-calculate-model) — non-rider AI can't take the elephant. The elephant
 // id check is delegated to IElephantAttackService; the boundary only applies the result via ternaries.
 // 2026-06-10: same lock extended to the ridden giant spider (ISpiderAttackService.IsSpiderMonster).
+// 2026-06-12: the Rhûn war chariot (issue #279) deliberately has NO mount-lock — maintainer wants
+// chariots remountable mid-battle (upstream-chariot-pack parity; the item's riding difficulty 120 is the only gate).
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerPassiveService _passiveService;
@@ -55,7 +57,7 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
             isHero: agent.IsHero,
             agentDrivenProperties);
 
-        // Creature mount-lock (1-for-1 ADOD): a near-infinite MountDifficulty so non-rider AI can't take it.
+        // Creature mount-lock (1-for-1 with the upstream beasts pack): a near-infinite MountDifficulty so non-rider AI can't take it.
         agentDrivenProperties.MountDifficulty = _elephant.IsElephantMonster(agent?.Monster?.StringId)
             ? ElephantConfig.MountDifficulty
             : _spider.IsSpiderMonster(agent?.Monster?.StringId)
