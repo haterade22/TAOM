@@ -129,6 +129,9 @@ This is a project-level discipline, not a one-off feature note — every future 
 | `/security-scan` | Audit TAOM's own Claude config (`.claude/`, `.mcp.json`, `settings*.json`, `CLAUDE.md`) for committed secrets, over-broad permissions, hook exfiltration, MCP risk, hidden-unicode injection. Runs `tools/audit_claude_config.py`. |
 | `/doc-graph [explain\|path\|metrics]` | Query + audit the docs/ knowledge graph (`tools/graph_query.py`): `explain` a doc's links, `path` between two docs, `metrics` (god nodes / bridges / orphans). Topology, not search. ADR-010 Phase 5; sibling of the `/lint-docs` + `/knowledge-compile` doc-tooling layer. |
 | `/improve [quick\|deep\|category\|branch\|next\|plan\|review-plan\|execute\|reconcile] [--issues]` | Whole-repo improvement audit (10 categories incl. game-data integrity) → vetted prioritized findings → self-contained handoff plans in `plans/` for cheaper executors. Advisor never edits source. Ported from shadcn/improve (MIT). |
+| `/native-crash-triage` | Root-cause native CTDs (AV in TaleWorlds.Native.dll) without symbols: Event Log fault offsets → `tools/native_crash_triage.py` (pdata bounds, string maps, caller chains) → mixed-mode debugger protocol. The 3-sites-in-one-day v1.4.6 method. |
+| `/new-creature-mount [name]` | Author a rideable creature mount end-to-end per `docs/ai-includes/creature-mount-authoring.md` (elephant+spider-proven): assets → Monster/action/usage XML → C# BT → parity-audit-first validation. |
+| `/engine-bump` | Respond to a Bannerlord version change: preserve decompile baseline → regen + managed diff → `/verify-bindings` + parity audits → control battles. Session-start hook warns on drift (pin: `.claude/pinned-game-version.txt`). |
 
 ### Workflow → Skill convention
 
@@ -147,6 +150,9 @@ When the user's message matches one of these patterns, **proactively invoke** th
 | User intent / phrase | Invoke | Confidence gate |
 |----------------------|--------|-----------------|
 | "this is broken", "why isn't this working", "it was working yesterday", crash logs, stack traces, exceptions from a TAOM patch or service | **`/investigate`** — never debug ad-hoc; the Iron Law is non-negotiable | None — always |
+| Native CTD: `0xC0000005` / `AccessViolationException` with the stack dying in `TaleWorlds.Native.dll` (or any native module), "crashed to desktop" with no managed culprit | **`/native-crash-triage`** — Event Log offsets discriminate sites across runs; never blind-retry a native AV | None — always. `/investigate` hands off here when the trail goes native |
+| "add a new creature", "make X rideable", "new mount", a creature troop/mount feature kickoff | **`/new-creature-mount`** — warg parity is law; parity-audit-first beats per-crash debugging | Skip if the user is just sketching aloud — invoke when they say "do it" |
+| Session-start hook prints "GAME VERSION DRIFT", Steam updated Bannerlord, "the game updated", deliberate engine migration | **`/engine-bump`** — preserve the decompile baseline BEFORE regenerating; compare Event Log offsets before attributing crashes to your changes | None — always, and BEFORE trusting any test run |
 | "the build won't compile", `error CS####` output, dotnet build failure | **`/build-fix`** | None — always. If error mentions a missing/renamed TaleWorlds type, hand off to `/research` first; if `/build-fix` retry budget triggers, hand off to `/investigate`. |
 | "scaffold a feature", "new feature for X", "add a system that does Y" | **`/new-feature`** then offer `/freeze` to scope-lock during implementation | Skip if the user is just sketching aloud — only invoke when they say "do it" |
 | "review this", "is this ready to merge", "before commit" on C# changes | **`/deep-review`** (or `/deep-review --codex` if user wants both) | **Only for C# changes touching ≥2 files OR any feature module.** For one-line fixes, XML/config/docs, skip — running 5+ agents is wasteful. |
@@ -698,7 +704,7 @@ Project-level MCP servers (Serena, GitHub, filesystem, git, ilspy, taom-moduleda
 | `check-build-before-commit.sh` | PreToolUse (Bash) | Blocks `git commit` if build fails |
 | `notify-csharp-edit.sh` | PostToolUse (Edit\|Write) | Logs C# file modifications |
 | `check-changelog-updated.sh` | Stop | Reminds to update CHANGELOG.md |
-| `session-start.sh` | SessionStart | Prints branch, recent commits, CHANGELOG summary on startup |
+| `session-start.sh` | SessionStart | Prints branch, recent commits, CHANGELOG summary on startup. **Also warns loudly on game-version drift** (installed `Version.xml` vs `.claude/pinned-game-version.txt`) → run `/engine-bump`. |
 | `pre-compact.sh` | PreCompact | Dumps modified files list before context compaction |
 | `log-agent.sh` | SubagentStart | Audit logs agent invocations to `.claude/logs/agent-audit.log` |
 | `config-protection.sh` | PreToolUse (Edit\|Write) | Blocks edits to CLAUDE.md, Directory.Build.props, ADRs without explicit request |
@@ -724,6 +730,7 @@ When these hooks fire, Claude must respond as specified — not just read the ou
 | Hook | Expected Response |
 |------|------------------|
 | `post-compact.sh` | Immediately `Read` MEMORY.md and each file listed under "Files in flight" before resuming work. Do not continue from transcript memory alone — the file is the source of truth. |
+| `session-start.sh` ("GAME VERSION DRIFT" warning) | Surface the drift to the user FIRST and invoke `/engine-bump` before any build/test/crash-attribution work. Do not dismiss it — every test run on an unacknowledged engine bump produces misattributable evidence (the 1.4.6 lesson). |
 | `detect-docs-gaps.sh` | Mention the gap list once to the user ("I noticed these features have no feature doc: ..."). Do NOT auto-create docs. Wait for user direction — they may have a reason the gap exists. |
 | `validate-push.sh` (blocked) | Never retry with `--no-verify` or downgrade to a non-force push silently. Explain the block and ask the user whether to push to a non-protected branch instead. |
 | `block-dangerous-git.sh` (ask) | When it prompts, approve ONLY if you intend to discard uncommitted/unpushed work; otherwise commit or stash first, then proceed. Don't auto-approve. |

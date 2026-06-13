@@ -2,6 +2,52 @@
 
 ## 2026-06-12
 
+### feat(harness): 3 skills + version-drift hook from the v1.4.6 spider campaign workflows
+
+The session's three recurring multi-step workflows skill-ified per the CLAUDE.md
+workflow→skill convention, wired for auto-routing (CLAUDE.md Skills + Skill Routing tables) and
+for subagents (agent-operating-manual execution-model recommendations + tool catalog rows):
+**`/native-crash-triage`** — name a native CTD site without symbols (Windows Event Log fault
+offsets discriminate sites across runs; new permanent `tools/native_crash_triage.py` does pdata
+function bounds + hexdump + rip-relative string maps + caller chains, smoke-tested against both
+known 1.4.6 sites; mixed-mode debugger protocol with the Immediate-window probe library).
+**`/new-creature-mount`** — thin entry point over `docs/ai-includes/creature-mount-authoring.md`
+(the `/new-culture` pattern): phase order, warg-parity law, parity-audit-first validation gates,
+Patch47 predicate extension. **`/engine-bump`** — the Steam-force-update response: preserve the
+decompile baseline BEFORE regen, managed diff to scope blast radius, `/verify-bindings` +
+parity audits + control battles, Event-Log offset comparison before crash attribution. Plus
+**session-start.sh now warns loudly on game-version drift** (installed `Version.xml` vs new
+tracked pin `.claude/pinned-game-version.txt`, currently v1.4.6; fail-open; tested both states
+via Git Bash) with a Hook Response Contract requiring `/engine-bump` before trusting test runs —
+the 1.4.5→1.4.6 force-bump went unnoticed for a morning and poisoned crash attribution.
+Deliberately NOT skill-ified (single-command / documented-emergency): the parity audit tool,
+the `_anm` byte-patch graft.
+
+### feat(chariot): port ROT 8.0 war chariot as Rhûn Wainrider ridden mount (issue #279)
+
+ROT 8.0's standard war chariot, 1-for-1 into the warg/elephant/spider mount pipeline. ONE Monster
+(`chariot`) / ONE 60-bone skeleton (two vanilla-named horse bone sets + pole/cart/wheels); rider
+STANDS in the cart (rider anims injected into `as_human_warrior` via the Armory `action_sets.xslt`,
+the elephant mechanism). No BT / attack service / mission behavior — vanilla mount AI + a mount-lock:
+new static `ChariotConfig` (no IoC) + third ternary arm in `TaomAgentStatCalculateModel`
+(`CanAgentRideMount` + `MountDifficulty` 999f). 8 new tests; suite green at 3,151. Delivered via the
+existing Wain tree: `wainrider_swift_chariot` (T8) + `wainrider_warlord_chariot` (T9) Horse slots
+swapped `khuzait_horse` → `taom_chariot_a` (HorseHarness dropped — the chariot item carries its own
+harness mesh); zero recruitment changes. Armory data: Monster (no ragdoll — vehicle),
+23+4 action_types, `as_chariot`(+town/map) with 10 howdah/elephant-clip references substituted →
+`chariot_stand_1` (verified absent from TAOM packs), chariot usage set, rider XSLT rows
+(6 mountings / 8 falls / 8 strikes), `taom_chariot_a` item (split-mesh AdditionalMeshes:
+`chariot_horse_brown_2` horse B + mane + `chariot_harness_e_rein` + `chariot_ride`; NOT
+`chariot_ride_alt` — dead texture refs in ROT itself). Assets: 6 Metameshes (29 split objects,
+all ≤40-bone palettes), 3 master anims, 24 clips generated programmatically via TpacTool.Lib from
+ROT's originals (full flags/usages/step-points fidelity — quad_movement pre-solved by ROT) after
+the Kit rejected Assimp FBXs (**no legacy `Takes` section** — Blender round-trip required;
+key format lesson, see docs/features/chariot.md). SkeletalAnimation `Skeleton` GUIDs wired
+programmatically (`chariot_skeleton` / vanilla `human_skeleton`). 1.4.6 landmine audit vs the
+spider RCA: Flags = warg-exact five (no `CanAttack`), jump profile = vanilla-horse (no custom
+actt_jump, no BT mid-jump turning). Validators PASS. In-game full-path verification + deep-review
+in flight; black/white variants + wide_chariot are drop-in follow-ups.
+
 ### fix(spider): v1.4.6 engine-bump campaign — three native crash sites root-caused and fixed; spider mount GREEN on 1.4.6
 
 Steam force-bumped Bannerlord **1.4.5 → 1.4.6 on 2026-06-11 17:39, mid-campaign** (managed

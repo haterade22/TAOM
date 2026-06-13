@@ -12,6 +12,9 @@
 2. **You cannot invoke skills (slash commands), and you cannot spawn other agents.** None of the TAOM custom agents are granted the `Skill` or `Task` tool. So when a job calls for a skill, **you recommend it — you do not run it.** Put the recommendation in your final report and let the orchestrator (the main session) invoke it. Examples you will commonly want to recommend:
    - build won't compile → recommend **`/build-fix`**
    - a TAOM C# bug / "why is this broken" → recommend **`/investigate`**
+   - a NATIVE crash (`0xC0000005` / AV in `TaleWorlds.Native.dll`) → recommend **`/native-crash-triage`** (you CAN run its tool yourself: `python tools/native_crash_triage.py --rva 0x<offset>`)
+   - the installed game version changed / "GAME VERSION DRIFT" in session output → recommend **`/engine-bump`** and treat all crash evidence as suspect until it runs
+   - creature/mount authoring work → recommend **`/new-creature-mount`** (and READ `docs/ai-includes/creature-mount-authoring.md` yourself — it is the authoritative workflow)
    - scope-locking edits to one dir → recommend **`/freeze`**
    - pre-merge review of a finished feature → recommend **`/deep-review`** / **`/ship`**
    - an engine-binding or signature concern → recommend **`/verify-bindings`** / **`/research`**
@@ -34,6 +37,8 @@
 | Engine-binding gate | `dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "TestCategory=BindingVerification"` | Verifies patch/GameModel/reflection bindings resolve against the installed engine. |
 | Troop equipment refs | `python tools/validate_all_troop_refs.py` | Underwear-bug gate across all 7 culture troop XMLs. |
 | API signature snapshot | `pwsh tools/snapshot_api_surface.ps1 [-Check]` | Regenerate / verify the committed v1.4.5 signature snapshot. |
+| **Native crash site naming** | `python tools/native_crash_triage.py --rva 0x<EventLog-fault-offset>` (or `--ip 0x<RIP> --base 0x<module-base>`) | Names a native CTD site WITHOUT symbols: pdata function bounds, hexdump, referenced strings, caller chains. Full protocol (Event Log, debugger setup): `.claude/skills/native-crash-triage/SKILL.md`. |
+| **Creature-mount data parity** | `python tools/audit_mount_parity.py` | Diffs a mount's Monster/usage/action surfaces vs warg/elephant/horse. Run BEFORE battle-testing creature changes; extend its `FILES`/`MOUNTS` maps for new creatures. |
 | Doc health | `python tools/lint_docs.py --summary` | Dead links / stale-version refs / orphan docs. |
 | Doc graph | `python tools/graph_query.py metrics` (+ `explain <doc>` / `path <a> <b>`) | Query/audit the docs link graph: god-nodes/bridges/orphans (`metrics`), a doc's neighbourhood (`explain`), shortest path between two docs (`path`). `--json` for machine output. Full ref: [`docs/features/doc-graph.md`](../features/doc-graph.md). |
 | Full tool list | see [`tools/README.md`](../../tools/README.md) | Generators, rebalancers, localization, faction-map, etc. |
@@ -46,10 +51,10 @@
 
 Grouped by purpose. Authoritative list + when-to-use routing: the **Skills** + **Skill Routing** tables in [`CLAUDE.md`](../../CLAUDE.md).
 
-- **Build/debug:** `/build-fix` (compile errors, minimal diffs), `/investigate` (root-cause C# debugging), `/agent-introspection-debugging` (failing agent runs).
+- **Build/debug:** `/build-fix` (compile errors, minimal diffs), `/investigate` (root-cause C# debugging), `/native-crash-triage` (native CTDs — Event Log offsets + `tools/native_crash_triage.py` + debugger protocol), `/engine-bump` (game version changed — baseline-preserve, regen, re-verify), `/agent-introspection-debugging` (failing agent runs).
 - **Build/verify a change:** `/verify` (build+test+git), `/verify-bindings` (engine API bindings + snapshot), `/deep-review` (multi-agent review), `/review-codex` + `/codex-verify` (Codex — costs money), `/ship` (full completion sequence).
 - **Research:** `/research` (decompile + analyze a TaleWorlds class), `/taom-src` (one-shot signature lookup), `/xslt-check` (XSLT passthrough).
-- **Authoring:** `/new-feature`, `/new-culture`, `/lord-skills`, `/author-armor`, `/localize`, `/new-adr`, `/issue`.
+- **Authoring:** `/new-feature`, `/new-culture`, `/new-creature-mount` (rideable creatures — warg-parity workflow over `docs/ai-includes/creature-mount-authoring.md`), `/lord-skills`, `/author-armor`, `/localize`, `/new-adr`, `/issue`.
 - **Scope/hygiene:** `/freeze` + `/unfreeze` (edit lock), `/scope-check`, `/deslop`, `/commit-split`, `/context-save` + `/context-restore`, `/context-budget`, `/skill-stocktake`.
 - **Adoption/security:** `/adopt-external` (review an external repo/article and fold useful parts into TAOM — if your job is evaluating an outside source, recommend this), `/security-scan` (audit TAOM's own Claude config for secrets / permission / hook-exfil / MCP risk via `tools/audit_claude_config.py`).
 

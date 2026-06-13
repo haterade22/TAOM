@@ -24,6 +24,21 @@ echo "=== TAOM Session Context ==="
 BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
 echo "Branch: $BRANCH"
 
+# Game-version drift check (the 1.4.5->1.4.6 Steam force-bump cost a morning of
+# misattributed crashes before anyone noticed). Pin lives in .claude/pinned-game-version.txt;
+# on drift, warn loudly and point at /engine-bump. Fail-open: any missing file = silence.
+GAME_VERSION_XML="${BANNERLORD_GAME_DIR:-E:/Steam/steamapps/common/Mount & Blade II Bannerlord}/bin/Win64_Shipping_Client/Version.xml"
+PIN_FILE=".claude/pinned-game-version.txt"
+if [[ -f "$GAME_VERSION_XML" && -f "$PIN_FILE" ]]; then
+  INSTALLED=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' "$GAME_VERSION_XML" 2>/dev/null | head -1)
+  PINNED=$(tr -d '[:space:]' < "$PIN_FILE" 2>/dev/null)
+  if [[ -n "$INSTALLED" && -n "$PINNED" && "$INSTALLED" != "$PINNED" ]]; then
+    echo ""
+    echo "!!! GAME VERSION DRIFT: installed $INSTALLED but TAOM is pinned to $PINNED !!!"
+    echo "!!! Steam likely force-updated. Run /engine-bump BEFORE trusting any test run. !!!"
+  fi
+fi
+
 # Last 5 commits
 echo ""
 echo "Recent commits:"
