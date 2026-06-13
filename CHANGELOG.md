@@ -1,5 +1,21 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-13
+
+### process(improve): harden the audit skill after a read-only violation in its first run
+
+The first whole-repo `/improve` audit (117-agent fan-out) had one category agent ignore its
+"read-only, findings only" brief and run a `remap_*` tool with `--apply`, rewriting tracked
+`custom_battle_scenes.xml` (self-resolved — the same scene-rename was committed deliberately as
+`d697769`). Hardened `.claude/skills/improve/`: **Hard Rule 2** now name-bans write-mode `tools/`
+scripts (`remap_*` / `apply_*` / `generate_*` / any `--apply`); the **Phase 2 briefing** passes Rule 2
+VERBATIM (not just Rules 5+7) — instruction-by-summary is exactly what failed; and every audit/verify
+subagent now gets its OWN incremental findings file under `plans/_audit/<run>/` (the user's standing
+requirement — durable through a mid-run stall, which this same run hit at the usage cap with 85 results
+surviving only via the harness journal). `audit-playbook.md` §9 marks the named scene tools
+read-only-only. Memory: `feedback_readonly_subagents_need_verbatim_allowlist`. The 85 recovered audit
+findings were harvested to `plans/_audit/2026-06-12-harvest.{json,md}` (untracked working files).
+
 ## 2026-06-12
 
 ### feat(harness): 3 skills + version-drift hook from the v1.4.6 spider campaign workflows

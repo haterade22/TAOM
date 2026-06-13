@@ -102,7 +102,7 @@ The house rules make violations crisp — cite the ADR/rule in the finding:
 
 ## 9. Game Data Integrity (TAOM-specific)
 
-The mod ships ~10K strings × 12 languages, hundreds of troops/items, and XML that crashes the game when wrong. `python tools/validate_moduledata.py` owns broken Item/NPCCharacter/Culture refs, dup ids, and civilian-type checks — **run it, report its ERROR/WARNING counts, then audit what it can't see**:
+The mod ships ~10K strings × 12 languages, hundreds of troops/items, and XML that crashes the game when wrong. `python tools/validate_moduledata.py` owns broken Item/NPCCharacter/Culture refs, dup ids, and civilian-type checks — **run it, report its ERROR/WARNING counts, then audit what it can't see**. The `tools/` scripts named below are READ-ONLY auditors; run them plain or with `--dry-run`. **NEVER run their write-mode siblings (`remap_*`, `apply_*`, `generate_*`, any `--apply`) — those rewrite tracked game data, which is Hard Rule 2's exact prohibition; a stale ref you find is a *finding*, not something you fix here.**
 
 - Cross-module refs it doesn't reach: scene names vs the installed game (`tools/audit_scene_names.py` / `audit_battle_scenes.py` — vanilla renames scenes between versions; stale refs crash battles), Armory items mis-filed against the CLAUDE.md prefix→canonical-folder table when the id is unique (an actual id COLLISION is already caught — the validator emits `DUPLICATE_ITEM_DEF`), action-set/skeleton requirements (every TAOM race id needs full `as_<race>_facegen` entries; movement clips need `quad_movement` tags).
 - Localization coverage: new `{=KEY}` strings missing from `taom_*_strings.xml`, languages missing `LanguageFile` rows, XSLT-injected text never harvested.
