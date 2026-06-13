@@ -2,6 +2,25 @@
 
 ## 2026-06-13
 
+### data(scenes): fix 3 live town-center scene crashes + complete the orthanc-gate remap (plan 004)
+
+The live external `TAOM_Map/settlements.xml` pointed Orthanc/Isengard (`town_isengard`), Helm's Deep
+(`town_V2`), and Calembel (`town_EW9`) town-centers at SceneObj folders deleted by a post-2026-05-28
+rename wave — entering any of the three CTD'd. Remapped (confirmed via `audit_scene_names.py`):
+Isengard→`taom_isengard_town_orthanc_forceatmo`, Helm's Deep→`taom_rohan_castle_helms_deep_forceatmo`,
+Calembel→`empire_town_h` (stopgap — no Calembel scene exists on disk; real scene = deferred Option B).
+`tools/remap_stale_scene_names.py` gained the 3 entries **and two correctness fixes the live data forced**:
+(1) the matcher was literal `scene_name="X"` and caught only the bare slot — town centers repeat the
+scene across `scene_name`/`_1`/`_2`/`_3`, so 3 of 4 dead slots survived every prior run; switched to a
+slot-aware regex (this also completed the long-incomplete `castle_orthanc_gate` remap — its `_1/_2/_3`
+slots were still dead, invisible to `audit_scene_names.py` which reads only the bare slot); (2) the
+upfront "all replacements exist on disk" gate aborted on the stale no-op Osgiliath entry (its replacement
+was itself later renamed away) — now only entries that actually match the live file are gated. Applied
+with `--backup` (`settlements.xml.bak_scenes`); 15 refs rewritten; XML re-verified well-formed.
+**Save-compat: none** (scene names aren't serialized). **Not-tested:** in-game town entry (external
+module, live session). Deep-review of the 4 audit-fix branches: see
+`docs/reviews/rca-improve-plans-2026-06-13.md` (1 LOW, fixed).
+
 ### docs(readme): refresh README for current feature set + repo metadata + license files
 
 Rewrote the README's drifted content (the last substantive pass predated ~a year of feature work)

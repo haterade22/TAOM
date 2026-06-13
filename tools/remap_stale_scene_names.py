@@ -38,6 +38,12 @@ REMAP = {
     "castle_orthanc_gate": "battania_castle_a",
     "castle_village_isengard_a": "battania_village_c",
     "village_isengard_a": "battania_village_e",
+    # town-center scenes deleted by the post-2026-05-28 SceneObj rename wave (plan 004).
+    # NOTE: each town center repeats the scene across scene_name / _1 / _2 / _3 slots,
+    # so the matcher below must cover all four (a bare scene_name= match fixes only 1/4).
+    "HART_isengard": "taom_isengard_town_orthanc_forceatmo",
+    "Helms_Deep_Town_forceatmo": "taom_rohan_castle_helms_deep_forceatmo",
+    "lotrtaom_hat_gondor_town_calembel": "empire_town_h",
 }
 
 
@@ -61,13 +67,25 @@ def main() -> int:
         ap.error("pass --dry-run or --apply")
 
     folders = scene_folders_lower()
-    bad = [new for new in REMAP.values() if new.lower() not in folders]
+    # Only require a replacement scene to exist for entries that ACTUALLY match the
+    # live file. A no-op entry (its old ref already removed by a prior run / later
+    # rename) must not abort the whole run just because its now-unused replacement
+    # value was itself renamed away. (e.g. the Osgiliath typo entry: old ref long
+    # gone from the file; its replacement scene was deleted in a later wave.)
+    live_check_text = LIVE.read_text(encoding="utf-8-sig", errors="replace") if LIVE.exists() else ""
+
+    def _matches_live(old: str) -> bool:
+        return re.search(r'scene_name(?:_\d+)?="' + re.escape(old) + r'"', live_check_text) is not None
+
+    active = {old: new for old, new in REMAP.items() if _matches_live(old)}
+    bad = [new for new in set(active.values()) if new.lower() not in folders]
     if bad:
-        print("ABORT — replacement scene(s) not found on disk:")
+        print("ABORT — replacement scene(s) for matched remaps not found on disk:")
         for b in bad:
             print(f"  {b}")
         return 1
-    print(f"All {len(set(REMAP.values()))} replacement scenes verified present on disk.\n")
+    print(f"{len(active)} of {len(REMAP)} remaps match the live file; "
+          f"all {len(set(active.values()))} of their replacement scenes exist on disk.\n")
 
     targets = [LIVE]
     if args.shadow:
@@ -82,10 +100,14 @@ def main() -> int:
         total = 0
         print(f"== {path} ==")
         for old, new in REMAP.items():
-            pat = f'scene_name="{old}"'
-            n = text.count(pat)
+            # Match every level slot: scene_name="X" AND scene_name_1/_2/_3="X".
+            # Town-center Locations repeat the scene across all four; a bare
+            # scene_name="X" match would fix only the first slot and leave the
+            # crash live in the others. Preserve the slot suffix on replace.
+            pat = re.compile(r'(scene_name(?:_\d+)?=")' + re.escape(old) + r'"')
+            n = len(pat.findall(text))
             if n:
-                text = text.replace(pat, f'scene_name="{new}"')
+                text = pat.sub(lambda m: m.group(1) + new + '"', text)
                 total += n
                 print(f"  {old} -> {new}  ({n})")
         print(f"  total replacements: {total}")
