@@ -28,11 +28,40 @@ deployed XML still depends on, and most failures are SILENT (riderless spawn, no
 crash in-mission. **Back up first** (rename the old file to `*.backup` — already standard here),
 then know these requirements BEFORE replacing, and run the gate AFTER.
 
+> ## 🛑 IF A REWORK BROKE A WORKING CREATURE: RESTORE THE BACKUP FOLDER FIRST — DO NOT REBUILD
+>
+> **The single most expensive lesson of the 2026-06-14 spider session.** When a Blender/Kit rework
+> breaks a previously-working creature, the FIRST move is to **restore the whole-creature backup
+> folder** the user takes whenever a creature works — NOT to surgically rebuild the skeleton / clips
+> / physics. That session spent ~a full day reconstructing a skeleton (physics transplant), clips
+> (`_anm` regen), and chasing native AVs (launch → thumbnail → battle-spawn `sound_and_collision`),
+> when the **proven working bundle already existed** in a dated backup folder. Restoring one
+> `spider_correct_geo.tpac` from it fixed in one copy what hours of surgery could not.
+>
+> **Where the backups live** (ask the user; these are the known TAOM locations as of 2026-06-14):
+> - **`E:\LOTRAOMAssets\_tpac_backup_<YYYYMMDD>\<creature>\`** — the user's "whole folder when it
+>   worked" backup (has `spider\` + `elephant\` subfolders: the live `Assets/creature/<c>/` mirror —
+>   `animations/`, `meshes/`, `textures/`, the `_geo`/`_anm` tpacs). **This is the gold copy.**
+> - `E:\LOTRAOMAssets\Elephant\_backups\`, `E:\LOTRAOMAssets\_auto_workspace\_backups\`,
+>   `E:\spider_anim_backup_<date>\` — older / workspace backups.
+> - My session-made backups (`_spider_rebuild_backup_<date>\`, `*.bak-*` siblings) capture the
+>   BROKEN/intermediate states — NOT the working one. The user's `_tpac_backup_<date>` is the working one.
+>
+> **How to tell the working bundle from a broken one** (before restoring): the working skeleton has
+> `Usage='horse'` + per-bone bodies + N-1 D6 constraints (`tools/tpac_skeleton_transplant.py <tpac>
+> <skel> --dry-run`), and a **distinct skeleton `owner_guid`** from the raw 5/1 source. A raw skeleton
+> (`Usage='other'`, 0 constraints) launch-crashes; a mesh-only re-export goes riderless. Hash-diff
+> (`Get-FileHash`) the backup vs the live bundle to confirm they actually differ before copying.
+>
+> Only rebuild from FBX if NO working backup exists. Even then, clone the **warg's** working
+> skeleton+collision setup (a 49-bone single-mesh creature mount that builds cleanly) rather than
+> authoring from scratch, and test incrementally: launch → thumbnail → spawn → battle.
+
 ### The four ways a re-export breaks a working mount (all observed)
 
 | # | What the swap drops | Symptom | Detect | Fix |
 |---|---|---|---|---|
-| 1 | **The Skeleton resource** — a mesh/geo re-export ships **mesh-only**, dropping `<creature>_skeleton` | `CreateAgentSkeleton("<creature>_skeleton")` → null → **RIDERLESS mount** (graceful, NO crash — easy to miss) | the skeleton must exist as a `type=Skeleton` resource in a **live (non-`.backup`) loose tpac**, exactly like the working elephant (`elephant_skeleton` in live loose `mesh/adod_elephant_geo.tpac`) | `tools/tpac_skeleton_extract.py <backup> <skel_name> <out>` → standalone skeleton-only tpac, deploy loose (no mesh-duplicate). Do NOT rename the action_set's `skeleton=` to a mesh name; do NOT fully revert (the backup's un-split mesh re-hits #4). RCA: spider 2026-06-13 |
+| 1 | **The Skeleton resource** — a mesh/geo re-export ships **mesh-only**, dropping `<creature>_skeleton` | `CreateAgentSkeleton("<creature>_skeleton")` → null → **RIDERLESS mount** (graceful, NO crash — easy to miss) | the skeleton must exist as a `type=Skeleton` resource in a **live (non-`.backup`) loose tpac**, exactly like the working elephant (`elephant_skeleton` **bundled with the mesh** in live loose `mesh/adod_elephant_geo.tpac`) | **Re-BUNDLE it into the new mesh tpac**: `tools/tpac_skeleton_inject.py <new_mesh.tpac> <backup_with_skeleton.tpac> <skel_name> <out.tpac>` → skeleton + meshes in ONE tpac (the proven structure). Do NOT use `tpac_skeleton_extract.py` (a STANDALONE skeleton-only tpac CRASHED the engine — recursive worker-thread native AV; spider 2026-06-14). Do NOT rename the action_set's `skeleton=` to a mesh name; do NOT fully revert (the backup's un-split mesh re-hits #4). RCA: spider 2026-06-13/14 |
 | 2 | **The `quad_movement` tag** on a measured-gait clip (Kit recompile loses it) | `Skeleton.TickAnimations` AV (`+0x10`) on the FIRST mission tick, every mount context | byte-scan each `monster_usage_movements`-bound clip's deployed `_anm.tpac` for `quad_movement` | byte-graft the tag from a tagged sibling (spider.md "How-to"), or re-tag in the Kit |
 | 3 | **A binding target** (a rename orphans an `animation="X"`) | degenerate record → AV / null when resolved | every `animation=` in `as_<c>` + children + the rider partial must resolve to a real resource in a deployed tpac | re-point the binding to the correct existing clip; never bind a name no tpac carries |
 | 4 | **The mesh split** (re-export ships the un-split >38-bone mesh) | `Agent.PreloadForRendering` AV at spawn | per-mesh bone palette ≤ ~38–40; keep the L/R split, recombined via the item's `<AdditionalMeshes>` | keep/restore the split-mesh export |
@@ -234,5 +263,9 @@ crash. Keep the previous decompile as `_shipping_build_vX.Y.Z` (the 1.4.5 baseli
 17. **A mesh/geo re-export can ship MESH-ONLY, silently dropping the `<creature>_skeleton`
     resource → `CreateAgentSkeleton` null → RIDERLESS mount (no crash, easy to miss).** After any
     asset swap, the skeleton must live in a live (non-`.backup`) loose tpac like the working
-    elephant; run `tools/verify_mount_assets.py <creature>`. Fix via `tools/tpac_skeleton_extract.py`.
-    (spider rework 2026-06-13). See the "Replacing FBX/TPAC files" section at the top.
+    elephant; run `tools/verify_mount_assets.py <creature>`. **Fix by re-BUNDLING the skeleton into
+    the new mesh tpac with `tools/tpac_skeleton_inject.py` — NOT a standalone skeleton tpac.** The
+    standalone approach (`tpac_skeleton_extract.py`, since deprecated) CRASHED the engine with a
+    recursive worker-thread native AV (spider 2026-06-14): a standalone skeleton tpac is an unproven
+    structure, and every shipping creature bundles its skeleton WITH the mesh. (spider rework
+    2026-06-13/14). See the "Replacing FBX/TPAC files" section at the top.

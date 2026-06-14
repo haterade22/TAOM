@@ -160,6 +160,32 @@ and `troll_skeleton_export.fbx` (skeleton + `troll_walk_forward`).
    `movement_system="bipedal"`) maps each `act_*` to the troll clips.
 4. **Register:** see the race-authoring recipe in [troll-race.md](../features/troll-race.md).
 
+### E. Producing the clip set — per-clip loop (no assimp, repeatable)
+For each clip (proven loop, 2026-06-14):
+```
+pwsh tools/read_anim_keyframes_tpac.ps1 -Clip <human_clip>      # tpac -> JSON (TpacTool.Lib, no assimp)
+# in Blender (exec rebuild_anim_from_json.py + arp_retarget.py):
+rebuild_from_json(<json>, "<human_armature>")                  # JSON -> human anim on the armature
+rem = retarget("<human_armature>", "rig", 1, <frames>)         # -> troll _remap; rename to troll_<clip>
+# assign the troll action + its slot, then:
+ge_export(<out.fbx>, rest_pose_only=False)                     # troll clip -> Kit-ready FBX
+```
+**Core set** — source these human clips (all confirmed present in v1.4.5 `animations.tpac`, human skeleton
+`dd7f3586`) and bind each troll clip to the matching `act_*` code copied from vanilla `as_human_warrior`:
+
+| Troll clip | Source human clip |
+|---|---|
+| troll_walk_forward / _backward / _left / _right | anim_walk_(forward\|backwards\|left\|right)_unarmed |
+| troll_run_forward / _backward / _left / _right | anim_run_(forward\|backwards\|left\|right)_unarmed |
+| troll_stand_idle | anim_stand_idle |
+| troll_turn_left / _right | anim_turn_(left\|right)_unarmed |
+| troll_death_front / _back | anim_death_fall_(front\|back_heavy) |
+| troll_defend_up / _left / _right | anim_defend_(up\|left\|right)_1h_active |
+
+A bespoke skeleton has NO `base_set` fallback (its bones differ from human), so unbound `act_*` codes
+T-pose — extend the set as needed; the loop above is mechanical per clip. (`troll_walk_forward` +
+`troll_run_forward` already produced + exported to the Hill Troll race-test `clips/` folder.)
+
 ## Proven prototype (2026-06-13)
 - ARP enabled on Blender 5.1.2 (167 ops). Imported the 28-bone `human_skeleton` + a real action.
 - Built + corrected the human→troll FK map; `arp.retarget` baked **198 fcurves** onto the troll `rig`.

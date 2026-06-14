@@ -1,15 +1,26 @@
 #!/usr/bin/env python3
 """
-Extract a single Skeleton asset from a Bannerlord .tpac into a NEW standalone tpac
-containing ONLY that skeleton (no meshes/geometry), so it can be deployed loose to
-register the skeleton resource without colliding with any mesh tpac.
+DEPRECATED -- DO NOT USE. Use tools/tpac_skeleton_inject.py instead.
 
-WHY: a creature's skeleton resource (referenced by an action_set's skeleton="<name>")
-must be present in a loaded tpac or CreateAgentSkeleton returns null -> riderless mount.
-If a mesh re-export drops the skeleton from the geo tpac, this rebuilds a skeleton-only
-tpac from a backup that still has it, WITHOUT reintroducing the (possibly stale/un-split)
-backup meshes. Born 2026-06-13: the spider rework's new spider_correct_geo.tpac shipped
-mesh-only; spider_skeleton survived only in sk_spider_forest_c_geo.tpac.backup.
+Extract a single Skeleton asset from a Bannerlord .tpac into a NEW standalone tpac
+containing ONLY that skeleton (no meshes/geometry).
+
+WHY DEPRECATED (2026-06-14): a STANDALONE skeleton-only tpac is an UNPROVEN structure and
+CRASHED the engine. The spider's standalone spider_skeleton_geo.tpac (produced by this tool
+2026-06-13) caused a recursive worker-thread native AV (reading null) on spawn -- WORSE than
+the graceful riderless state it was meant to fix. Two defects: (1) it reused the skeleton's
+item_guid as the package_guid (a GUID collision -- every working tpac has a DISTINCT package
+guid), and (2) no shipping creature uses a standalone skeleton tpac; every working creature
+(elephant, the 06-12 green spider) BUNDLES the skeleton WITH its mesh in one tpac.
+
+THE FIX is to re-bundle: inject the skeleton from the backup back INTO the new mesh tpac with
+tools/tpac_skeleton_inject.py, recreating the proven bundled structure. RCA + lesson:
+feedback_mesh_reexport_drops_skeleton_resource.md, docs/reference/lotrlome-spider-mount-changes.md.
+
+(Original intent, kept for reference: a creature's skeleton resource -- referenced by an
+action_set's skeleton="<name>" -- must be present in a loaded tpac or CreateAgentSkeleton
+returns null -> riderless mount. If a mesh re-export drops it, restore it. Do that with
+tpac_skeleton_inject.py, NOT this standalone extract.)
 
 Format (container ver 2, per tpac_skeleton_scan.py + AssetPackage.cs):
   header(36) = magic(4)+ver(4)+package_guid(16)+num_items(4)+pad(4)+pad(4)
@@ -95,10 +106,18 @@ def extract(src_path, skel_name, out_path, dry_run=False):
 
 
 def main():
+    if '--i-know-this-crashes' not in sys.argv:
+        sys.exit(
+            "DEPRECATED: tpac_skeleton_extract.py produces a STANDALONE skeleton tpac that CRASHED "
+            "the engine (spider 2026-06-14, recursive worker-thread native AV). Use "
+            "tools/tpac_skeleton_inject.py to BUNDLE the skeleton into the mesh tpac instead "
+            "(the proven structure). See this file's docstring + "
+            "feedback_mesh_reexport_drops_skeleton_resource.md. "
+            "Override only for forensic comparison: re-run with --i-know-this-crashes.")
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     dry = '--dry-run' in sys.argv
     if len(args) != 3:
-        print('Usage: python tpac_skeleton_extract.py <src.tpac> <skeleton_name> <out.tpac> [--dry-run]')
+        print('Usage: python tpac_skeleton_extract.py <src.tpac> <skeleton_name> <out.tpac> [--dry-run] --i-know-this-crashes')
         sys.exit(1)
     extract(args[0], args[1], args[2], dry_run=dry)
 

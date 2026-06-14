@@ -126,7 +126,9 @@ def main():
     else:
         print(f"  [FAIL] skeleton '{skel_name}' NOT found as a Skeleton resource in any live loose "
               f"tpac -> CreateAgentSkeleton null -> RIDERLESS mount. "
-              f"Fix: tools/tpac_skeleton_extract.py from the backup.")
+              f"Fix: BUNDLE it back into the mesh tpac with tools/tpac_skeleton_inject.py "
+              f"<new_mesh.tpac> <backup_with_skeleton.tpac> {skel_name} <out.tpac> "
+              f"(NOT tpac_skeleton_extract.py -- a standalone skeleton tpac CRASHES the engine).")
         fails.append("skeleton")
 
     # build resource-name -> set of tpacs containing it (byte-scan), once

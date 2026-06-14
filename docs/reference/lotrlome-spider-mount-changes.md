@@ -1,9 +1,23 @@
-# LOTRLOME_Armory changes for the Spider Mount (2026-06-10 → 06-12)
+# LOTRLOME_Armory changes for the Spider Mount (2026-06-10 → 06-14)
 
 The giant-spider mount's **data plane lives entirely in the external `LOTRLOME_Armory` module**
 (`E:\Steam\...\Modules\LOTRLOME_Armory\`), which is NOT in this repo. This ledger records every
 change made there during the spider-mount conversion + RCA, **why** each exists, and how to roll
-back or make permanent. Companion docs: [spider.md](../features/spider.md) (architecture + the
+back or make permanent.
+
+> ## 2026-06-14 RESOLUTION — restored the working bundle from backup (read this first)
+>
+> The 2026-06-13 Blender/Kit rework broke the spider across 4 native-AV layers (launch parse →
+> thumbnail TickAnimations[HCSE-handled] → **fatal battle-spawn `sound_and_collision_info` build**,
+> RVA 0x490E02). All the surgery below (skeleton transplant, `_anm` regen, standalone-extract,
+> inject re-bundle) was a **dead-end rebuild** — the proven 6/11 working `spider_correct_geo.tpac`
+> already existed in the user's whole-folder backup **`E:\LOTRAOMAssets\_tpac_backup_20260613\spider\`**
+> (skeleton `owner_guid a9ec7d87…`, `Usage='horse'`, 6/10 pre-rework mesh). **Restoring that one file
+> fixed it.** Live bundle is now that restored copy; the broken Kit-rebuild bundle is preserved as
+> `animations/spider_correct_geo.tpac.bak-kitbroken-20260614`. **Rule going forward: when a rework
+> breaks a creature, RESTORE the `_tpac_backup_<date>` folder first — don't rebuild.** See
+> `feedback_creature_rework_restore_from_backup_first.md` +
+> `docs/ai-includes/creature-mount-authoring.md` → "IF A REWORK BROKE A WORKING CREATURE". Companion docs: [spider.md](../features/spider.md) (architecture + the
 full RCA) and [spider-skeleton-animation-pipeline.md](../features/spider-skeleton-animation-pipeline.md)
 (asset pipeline + the `quad_movement` requirement).
 
@@ -116,9 +130,8 @@ spiders. Root-caused by symmetry with the working elephant (`elephant_skeleton` 
 loose `mesh/adod_elephant_geo.tpac`; the engine loads loose Assets, not the stale 6/10 baked
 `AssetPackages/pack6.tpac`).
 
-| File ADDED | Why |
-|---|---|
-| `Assets/creature/spider/meshes/spider_skeleton_geo.tpac` (4.5KB) | Standalone skeleton-only tpac holding just `spider_skeleton` (SkeletonDefinitionData 3844/5033 + SkeletonUserData 416/6637), extracted **bit-identical** from `sk_spider_forest_c_geo.tpac.backup` item [2] via the new repo tool `tools/tpac_skeleton_extract.py`. Skeleton-only (no meshes) so it does NOT collide with the new split-mesh `spider_correct_geo.tpac`. Re-scan-validated with `tpac_skeleton_scan.py` (mimics the engine parser). Restores parity with the elephant. **Rollback = delete this one file.** In-game spawn-with-rider verification owed. |
+| Fix (2026-06-13, REVERTED — CRASHED) | `Assets/creature/spider/meshes/spider_skeleton_geo.tpac` (4.5KB) — a STANDALONE skeleton-only tpac extracted from the backup via `tpac_skeleton_extract.py`. **This crashed the engine** on spawn: a recursive worker-thread native AV reading null (`0x00007FFDAE001397` in `TaleWorlds.Native.dll`). Two defects — (1) it reused the skeleton's item_guid as the package_guid (every working tpac has a DISTINCT package guid; the collision drove a recursive resolver into null), and (2) no shipping creature uses a standalone skeleton tpac at all. Deleted 2026-06-14. |
+| Fix (2026-06-14, CORRECT) | Re-bundled the skeleton **into** the new mesh tpac with the new repo tool `tools/tpac_skeleton_inject.py`: `spider_correct_geo.tpac` is now a **4-item** tpac (`spider_correct.fbx` + `sk_spider_forest_c` + `_c_2` + `spider_skeleton`), keeping its own distinct package guid `f544…`. The skeleton data is **bit-identical** (sha256-verified) to `sk_spider_forest_c_geo.tpac.backup` item [2]. This is the PROVEN bundled structure — skeleton WITH mesh in one tpac, exactly like the working elephant's `adod_elephant_geo.tpac`. Post-deploy gate `verify_mount_assets.py spider` = PASS. Mesh-only state backed up as `animations/spider_correct_geo.tpac.bak-meshonly-20260614`. **In-game spawn-with-rider verification owed (deployed 2026-06-14).** |
 
 **Make permanent (the durable path):** recompile the 9 patched clips in the Modding Kit with the
 fields set in the editor — `quad_movement` in **Clip usages**, `make_walk_sound` Flag, step

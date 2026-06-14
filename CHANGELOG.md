@@ -2,6 +2,77 @@
 
 ## 2026-06-14
 
+### feat(claude): adopt blader/humanizer — always-load `ai-prose-style.md` rule + on-demand `/humanizer` skill
+
+Ported [blader/humanizer](https://github.com/blader/humanizer) (MIT — pure markdown, no code/hooks,
+security-clean) into TAOM's `.claude/` config as a **hybrid**, per `/adopt-external` discipline
+(port, never install). Two artifacts:
+
+- **`.claude/rules/ai-prose-style.md`** (always-load, no `paths:`) — the "end-state": the high-value
+  subset of the humanizer pattern list applied to every prose artifact Claude writes (commit bodies,
+  CHANGELOG entries, issue/PR bodies, feature docs, RCAs). Targets significance inflation, vague
+  attributions, rule-of-three, filler, excessive hedging, generic conclusions, manufactured
+  punchlines, aphorism formulas, signposting, and chatbot artifacts. Kept tight to limit eager tax.
+- **`.claude/skills/humanizer/SKILL.md`** (on-demand) — the full 33-pattern reference + voice
+  calibration + "what makes this so obviously AI generated?" audit pass, for deep-cleaning a finished
+  artifact. Body loads only when invoked.
+
+**House-style carve-out** (verified by grep: ~4,340 em-dashes + ~3,500 boldface across CHANGELOG +
+docs): em-dashes (#14), boldface (#15), inline-`**Label:**` headers (#16), tables, and backticked
+paths are deliberate TAOM semantic markers — both artifacts **keep** them and do **not** mass-rewrite
+existing docs. Sycophancy (#22) points at `response-style.md` Rule 1 instead of duplicating it.
+Dropped upstream `version:`/`compatibility:`/`license:` frontmatter (not Claude Code fields) per
+`external-skill-ports.md`. Scope: new work; `/humanizer` available for opt-in spot-cleans later.
+
+Registered in CLAUDE.md (skills table, scoped-rules table, soft-suggest routing).
+
+### fix(spider): restore the proven 6/11 working bundle from the user's backup folder — ending a multi-crash rebuild dead-end
+
+The 2026-06-13 Blender/Kit rework broke the spider mount across **four** native-AV layers, each
+fixed/worked-around in turn before the real fix surfaced: **(1) launch** — the rework shipped
+`spider_correct_geo.tpac` mesh-only, then a raw 5/1 skeleton was bundled (`Usage='other'`, 0
+constraints) → asset-preload parser AV (RVA 0x91397); fixed by `tpac_skeleton_transplant` to
+`Usage='horse'` + 62 bodies + 61 D6 constraints. **(2) thumbnail** — clicking the troop →
+`SpawnMountLogged:261` `Skeleton.TickAnimations` gait AV (RVA 0x75D4E7); already guarded by
+`[HandleProcessCorruptedStateExceptions]` + graceful mount-skip, so it's a *first-chance debugger
+break* (native debugging left on from the chariot session), not fatal — Continue/disable the Win32
+exception break and it proceeds. **(3) battle spawn** — `Agent.BuildAux` → native `Build` →
+`sound_and_collision_info_class` body construction AV (RVA 0x490E02), **fatal**. Triaged via
+`native_crash_triage.py` (IP+base from the *same* run — ASLR re-bases each launch); the `.pdata`
+function's rip-relative string `'Could not find sound_and_collision_info_class_definition: %s'`
+named the native collision-body build. The Monster's `sound_and_collision_info_class="horse"` is
+defined, so the failure was in the **6/13 Kit-rebuild mesh**, not the skeleton.
+
+**The actual fix was one file copy.** The user's whole-creature backup
+`E:\LOTRAOMAssets\_tpac_backup_20260613\spider\` held the **proven 6/11 working bundle** (skeleton
+`owner_guid a9ec7d87…`, `Usage='horse'`; the 6/10 pre-rework mesh). Restoring `spider_correct_geo.tpac`
+from it (hash-verified, broken Kit bundle preserved as `.bak-kitbroken-20260614`) over the broken
+one — combined with the already-restored 6/11 clips — returns the live spider to the exact state that
+spawned and fought on 6/11. `verify_mount_assets.py spider` = PASS. **In-game battle verification
+pending.** The `elephant\` backup sits in the same folder for when its rework breaks it.
+
+**Lesson (documented):** when a Blender/Kit rework breaks a working creature, **restore the
+`_tpac_backup_<date>` folder FIRST — do not surgically rebuild.** See
+`docs/ai-includes/creature-mount-authoring.md` → "IF A REWORK BROKE A WORKING CREATURE" +
+`feedback_creature_rework_restore_from_backup_first.md`. New repo tooling from the session:
+`tpac_skeleton_inject.py` (re-bundle a dropped skeleton — the proven structure; `tpac_skeleton_extract.py`
+standalone deprecated/crashes), `verify_mount_assets.py` post-deploy gate.
+
+### docs(rules): add always-load response-style rule (lead with scrutiny + confidence tags)
+
+New `.claude/rules/response-style.md` (no `paths:` → loads every session) encoding two
+user standing instructions:
+- **Lead with scrutiny, not agreement** — never open a reply with "You're absolutely
+  right" / "Great point"; open by challenging the assumption, naming what's missing, or
+  asking the gap-exposing question. Gated on being *load-bearing* so it reconciles with
+  `think-before-coding.md`'s anti-over-asking guard rather than fighting it; cross-refs
+  `evidence-over-claims.md` §A (the existing banned-phrase list) instead of duplicating it.
+- **Rate confidence on every response** — open every reply with `[Certain]` / `[Likely]` /
+  `[Guessing]`, tagging load-bearing claims inline when a reply mixes levels. Makes the
+  certainty calibration of `evidence-over-claims.md` §C explicit and always-visible.
+
+Pointer row added to the CLAUDE.md "Scoped Rules" table beside the other always-load rules.
+
 ### feat(troll-race): no-assimp keyframe pipeline — source human clips → retarget → troll clips, fully autonomous
 
 TpacTool's assimp FBX *exporter* access-violates (`0xC0000005`) when driven headlessly, blocking
