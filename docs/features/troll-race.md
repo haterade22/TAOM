@@ -105,12 +105,17 @@ gives a working troll with zero animation authoring — useful as a fallback / f
   with materials cleared so Blender builds an animated armature). One walk imported with 269 fcurves.
 - ✅ Retarget PROVEN: human walk → troll ARP rig, 72 moving fcurves, clean run (`troll_walk_forward`
   in `troll_anim_WORK_20260613.blend`). `arp_retarget.py` carries 4 hard-won fixes (see workflow doc).
-- ⚠ Headless extraction is UNRELIABLE: TpacTool's assimp `ExportSceneToBlob` access-violates
+- ⚠ Headless *extraction* is UNRELIABLE: TpacTool's assimp `ExportSceneToBlob` access-violates
   (`0xC0000005`) when driven from pwsh / PowerShell (both .NET 10 and .NET Framework). It worked
   for a few single exports then crashed deterministically. **Source clips via the Modding Kit's
   resource exporter** (stable — runs assimp in its own process), or retry TpacTool when it cooperates.
-- ⏳ Remaining (all Kit/UI): source the human clip set → batch-retarget (ARP UI) → ARP GE export
-  (deform-only, no IK) → Kit-compile troll skeleton + clips → author `as_troll_warrior` + skin.
+- ✅ Skeleton GE export PROVEN HEADLESS (`ge_export()` in `arp_retarget.py`): exported `skeleton_troll`
+  (**30 deform bones, no IK/control bones**) + skinned body to
+  `E:\LOTRAOMAssets\_troll_extract\troll_skeleton_only.fbx` (rest pose, for the skeleton definition)
+  and `troll_skeleton_export.fbx` (skeleton + the `troll_walk_forward` clip). **Ready for Kit import.**
+- ⏳ Remaining (Kit GUI + data): Kit-compile the skeleton FBX → `skeleton_troll` tpac (+ clips) →
+  author `as_troll_warrior` (`skeleton="skeleton_troll"`, `movement_system="bipedal"`) + a `<race>` skin
+  → enable a troop with that race → Custom-Battle test. (IK editing stays on the Blender ARP rig.)
 
 > **Game skeletons have NO IK joints.** IK lives only in the Blender ARP authoring rig
 > (`troll_rig_01.blend`: `c_foot_ik.l`, `c_hand_ik`, …) and is baked into the animation on export;

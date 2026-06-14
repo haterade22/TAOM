@@ -199,12 +199,44 @@ def save_bmap(filepath):
 
 
 # ---- GAME-ENGINE FBX EXPORT (ARP > Export) ------------------------------------------------
-# ARP's arp_export_fbx_panel exports the clean DEFORM skeleton (root.x, spine_01.x ...) + the
-# baked action, ready for Modding-Kit import -> SkeletalAnimation -> _anm.tpac. Like retarget,
-# it does internal active-object/mode switches, so if scripting it, use _ovv() (window/area/
-# region only, no active_object pin). If it still poll-fails headless, run it from the 3D-view
-# ARP "Export" tab. Bannerlord-compatible settings (confirmed valid enums):
-#   scn.arp_export_rig_type   = 'UNIVERSAL'   # export the deform bones as-is (no humanoid remap)
-#   scn.arp_engine_type       = 'OTHERS'
-#   scn.arp_bone_axis_primary_export   = 'Y'
-#   scn.arp_bone_axis_secondary_export = 'X'
+# CONFIRMED working HEADLESS 2026-06-14 via bpy.ops.arp.arp_export_fbx_panel(quick_export=True)
+# + the _ovv() override (window/area/region only, NO active_object pin -- the same fix that
+# unblocked retarget; quick_export=True bypasses the file dialog). Exports the clean DEFORM
+# skeleton (root.x, spine_01.x, foot.l ... -- 30 bones, NO IK/control bones) + the selected
+# skinned mesh, ready for Modding-Kit import. Verified: a skeleton-only export re-imported as
+# 'skeleton_troll' with 30 deform bones and zero c_*/_ik controls.
+
+def ge_export(filepath, rig="rig", meshes=("troll_hill_body_a.base",), rest_pose_only=True,
+              rig_export_name="skeleton_troll"):
+    """ARP Game-Engine FBX export of the troll deform skeleton (+ selected meshes) for Kit import.
+    rest_pose_only=True detaches any action on the rig first so the FBX is a pure rest-pose
+    skeleton (otherwise an assigned clip bakes in -- handy for a skeleton+anim test export).
+    Bannerlord-compatible settings: UNIVERSAL rig type, engine OTHERS, primary axis Y / secondary X."""
+    scn = bpy.context.scene
+    scn.arp_export_rig_type = 'UNIVERSAL'
+    scn.arp_engine_type = 'OTHERS'
+    scn.arp_bone_axis_primary_export = 'Y'
+    scn.arp_bone_axis_secondary_export = 'X'
+    scn.arp_ge_sel_only = True
+    scn.arp_ge_force_rest_pose_export = True
+    scn.arp_export_rig_name = rig_export_name
+    r = bpy.data.objects[rig]
+    detached = None
+    if rest_pose_only and r.animation_data and r.animation_data.action:
+        detached = r.animation_data.action.name
+        r.animation_data.action = None
+    for o in bpy.data.objects:
+        try: o.select_set(False)
+        except Exception: pass
+    r.select_set(True)
+    for mn in meshes:
+        m = bpy.data.objects.get(mn)
+        if m:
+            m.select_set(True)
+    bpy.context.view_layer.objects.active = r
+    with bpy.context.temp_override(**_ovv()):
+        bpy.ops.arp.arp_export_fbx_panel(filepath=filepath, quick_export=True, check_existing=False)
+    import os
+    return {"filepath": filepath, "exists": os.path.exists(filepath),
+            "size": (os.path.getsize(filepath) if os.path.exists(filepath) else 0),
+            "detached_action": detached}

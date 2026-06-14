@@ -2,6 +2,32 @@
 
 ## 2026-06-14
 
+### fix(spider): re-bundle the dropped skeleton INTO the mesh tpac — the 06-13 standalone skeleton tpac crashed the engine
+
+The 2026-06-13 riderless-spider fix (a STANDALONE `spider/meshes/spider_skeleton_geo.tpac` produced
+by `tpac_skeleton_extract.py`) **crashed the game** when the user tested it: a recursive worker-thread
+native AV reading null (`0x00007FFDAE001397` in `TaleWorlds.Native.dll`) — worse than the graceful
+riderless state it replaced. Root cause: a standalone skeleton-only tpac is an **unproven structure** —
+every working creature (elephant, the 06-12 green spider) BUNDLES the skeleton WITH its mesh in one tpac;
+and the extract tool reused the skeleton's `item_guid` as the package GUID, a self-referential collision
+that drove the engine's recursive resource resolver into null (confirmed by GUID comparison vs the
+working elephant/backup, which have DISTINCT package GUIDs).
+
+**Correct fix:** new repo tool `tools/tpac_skeleton_inject.py` injects the `spider_skeleton` resource
+from `sk_spider_forest_c_geo.tpac.backup` **into** the new split-mesh `spider_correct_geo.tpac`, rebuilding
+it as a **4-item** tpac (fbx + 2 meshes + skeleton) that keeps its own distinct package GUID. Skeleton data
+is **sha256-bit-identical** to the backup. This recreates the proven bundled structure (matches the working
+elephant's `adod_elephant_geo.tpac`). Post-deploy gate `verify_mount_assets.py spider` = PASS (skeleton
+present, all 7 gait clips `quad_movement`-tagged, no phantom bindings). Standalone tpac deleted; mesh-only
+state backed up as `animations/spider_correct_geo.tpac.bak-meshonly-20260614`. **In-game spawn-with-rider
+verification owed** (deployed 2026-06-14).
+
+`tpac_skeleton_extract.py` is **deprecated** — its docstring now leads with the crash RCA and it refuses to
+run without `--i-know-this-crashes`. All "skeleton-drop fix" guidance updated across CLAUDE.md,
+`creature-mount-authoring.md` (gotcha #17 + the failure-mode table), `verify_mount_assets.py`'s remediation
+hint, `spider.md`, `lotrlome-spider-mount-changes.md`, and `spider-skeleton-tpac-tools.md` to point at the
+bundle/inject approach. Lesson updated in `feedback_mesh_reexport_drops_skeleton_resource.md`.
+
 ### feat(troll-race): enable the cave_troll as a live Mordor unit + prove the bespoke-skeleton retarget pipeline end-to-end
 
 **Track 1 — working animated troll (shipping).** Re-enabled the `cave_troll` NPCCharacter in
@@ -30,8 +56,14 @@ library onto the Auto-Rig Pro troll rig:
 - **Known limitation:** TpacTool's assimp `ExportSceneToBlob` access-violates (`0xC0000005`) when driven
   headlessly under both pwsh-7/.NET-10 and Windows-PowerShell-5.1/.NET-Framework — a few single exports
   succeed then it crashes deterministically. Source clips via the Modding Kit's exporter instead.
-- Remaining (all Kit/UI): source the clip set → batch-retarget (ARP UI) → ARP GE export (deform-only,
-  no IK) → Kit-compile troll skeleton + clips → author `as_troll_warrior` + skin.
+- **Skeleton GE export PROVEN HEADLESS** (`ge_export()` in `arp_retarget.py`): the same no-`active_object`-pin
+  override unblocked ARP's Game-Engine export via `arp_export_fbx_panel(quick_export=True)`. Exported
+  `skeleton_troll` (30 deform bones, **no IK/control bones** — verified by re-import) + skinned body to
+  `troll_skeleton_only.fbx` (rest pose) and `troll_skeleton_export.fbx` (+ the walk). Corrects the earlier
+  "ARP GE export is UI-only" claim — it was the same active-object-pin bug as the retarget.
+- Remaining (Kit GUI + data): Kit-compile the skeleton FBX → `skeleton_troll` tpac (+ clips) → author
+  `as_troll_warrior` (`skeleton="skeleton_troll"`, bipedal) + a `<race>` skin → enable a troop → test.
+  Game skeletons carry no IK; IK editing stays on the Blender ARP rig (bake + re-export).
 
 Docs: `docs/features/troll-race.md` + `docs/ai-includes/troll-race-arp-retargeting-workflow.md` updated
 with the proven pipeline, the IK-vs-deform clarification, and the assimp-headless RCA.
@@ -55,6 +87,9 @@ up), so the stale 6/10 baked `pack6.tpac` that still holds `spider_skeleton` is 
 source. NOTE: the audit's own verifier initially mis-rejected this (assumed the baked pack was
 the runtime source); resolved by re-running the authoritative `tpac_skeleton_scan.py` myself per
 `evidence-over-claims.md`.
+
+> **SUPERSEDED 2026-06-14 — this standalone-tpac fix CRASHED the engine; see the 2026-06-14 spider
+> entry above. The correct fix re-bundles the skeleton into the mesh tpac via `tpac_skeleton_inject.py`.**
 
 **Fix (keeps all the user's new work):** new repo tool `tools/tpac_skeleton_extract.py` extracts
 a single Skeleton (+ its 2 data segments) from a tpac into a standalone skeleton-only tpac;

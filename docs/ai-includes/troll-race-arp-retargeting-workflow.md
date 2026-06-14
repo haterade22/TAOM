@@ -18,11 +18,18 @@ hand-authored quadrupeds; a humanoid race reuses the human library via retargeti
 
 | Step | Why it's a hand-off |
 |---|---|
-| **ARP Game-Engine FBX export** | ARP's export op calls nested `bpy.ops.object.select_all` that **poll-fails under a scripted `temp_override`** (confirmed 2026-06-13). Run it from the 3D-view **ARP → Export** tab. Settings confirmed below. |
-| **FBX → `.tpac` compile** | The Modding Kit's resource importer turns an FBX into a `SkeletalAnimation` master (`_geo.tpac`) + the skeleton tpac. `TpacTool.Lib` can clone/edit *clip metadata* (`_anm.tpac`) but cannot bake FBX curves into a SkeletalAnimation. GUI-only. |
+| **FBX → `.tpac` compile** | The Modding Kit's resource importer turns an FBX into a skeleton tpac + `SkeletalAnimation` masters. `TpacTool.Lib` can clone/edit *clip metadata* (`_anm.tpac`) but cannot bake FBX curves into a SkeletalAnimation, and its headless FBX *export* is unstable (assimp AV). GUI-only. |
 | **In-game test** | Launch + Custom Battle. Yours. |
 
-Everything **above** those lines — source acquisition, retarget, the bone map, the race data — is scriptable.
+> **ARP Game-Engine FBX export is NO LONGER a hard boundary** (corrected 2026-06-14). It works
+> HEADLESS via `bpy.ops.arp.arp_export_fbx_panel(filepath=…, quick_export=True, check_existing=False)`
+> under the `_ovv()` override (window/area/region only, no `active_object` pin — `quick_export=True`
+> bypasses the file dialog). Use `ge_export()` in `arp_retarget.py`. Proven: exported `skeleton_troll`
+> (30 deform bones, no IK) + skinned mesh to FBX. The earlier "poll-fails headless" claim was the
+> same `active_object`-pin bug as the retarget.
+
+Everything except FBX→tpac compile + in-game test — source acquisition, retarget, the bone map, the
+**deform-skeleton GE export**, the race data — is scriptable.
 
 ## Auto-Rig Pro: install + license
 
@@ -122,12 +129,16 @@ retarget is almost always one of these:**
    `target_rig["arp_retarget_bound"]=True` flag (every later bake then re-bakes a static bind). The
    driver also defensively clears that flag before binding.
 
-### C. Export the troll deform skeleton + baked clip  *(ARP UI hand-off)*
-Select the troll `rig` → **ARP → Export**, with: `arp_export_rig_type = UNIVERSAL` (export the deform
-bones as-is — the troll's own skeleton), `arp_engine_type = OTHERS`, `arp_bone_axis_primary_export = Y`,
-`arp_bone_axis_secondary_export = X`. Output FBX carries ONLY the clean 30-bone deform skeleton
-(`root.x`, `spine_01.x`, `arm_stretch.l`, `thigh_stretch.l`, …) + the baked action.
-*(Scripting this hit the poll wall above; a custom deform-bake exporter is a candidate future tool.)*
+### C. Export the troll deform skeleton  *(SCRIPTABLE — `ge_export()`)*
+Use `ge_export(filepath, rig="rig", meshes=("troll_hill_body_a.base",), rest_pose_only=True)` in
+`arp_retarget.py` — it sets `arp_export_rig_type=UNIVERSAL`, `arp_engine_type=OTHERS`, axes Y/X,
+selects the rig + mesh, and calls `bpy.ops.arp.arp_export_fbx_panel(quick_export=True)` under the
+`_ovv()` override. Output FBX carries ONLY the clean **30-bone deform skeleton** (`root.x`,
+`spine_01.x`, `arm_stretch.l`, `thigh_stretch.l`, …, **no IK/control bones**), named `skeleton_troll`,
++ the selected skinned mesh. `rest_pose_only=True` detaches any assigned action first (a clean skeleton
+definition); `False` bakes the rig's current action in too (skeleton + a test clip in one FBX).
+PROVEN 2026-06-14: `E:\LOTRAOMAssets\_troll_extract\troll_skeleton_only.fbx` (skeleton+mesh, rest pose)
+and `troll_skeleton_export.fbx` (skeleton + `troll_walk_forward`).
 
 ### D. Compile → bind → register  *(Kit + data)*
 1. **Kit:** import the deform FBX → `troll_skeleton` (the troll's game skeleton tpac) + import each clip
