@@ -5,6 +5,11 @@ _Module/bin/
 TestResults/
 out/
 
+# Visual Studio Edit-and-Continue / debug temp. VS dumps decompiled engine sources
+# here while stepping (e.g. enc_temp_folder/<hash>/MissionState.cs). Never commit —
+# a background auto-commit swept one in on 2026-06-14.
+enc_temp_folder/
+
 # Tool backups: rebalance/audit scripts write <file>.bak before destructive edits
 # (see tools/README.md "XML I/O convention"). Git is the real backup — never commit these.
 *.bak

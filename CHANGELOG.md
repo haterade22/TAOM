@@ -2,6 +2,13 @@
 
 ## 2026-06-14
 
+### chore(repo): untrack VS Edit-and-Continue temp + gitignore `enc_temp_folder/`
+
+A background auto-commit (`d31cf15`) swept `enc_temp_folder/<hash>/MissionState.cs` — a
+decompiled engine source Visual Studio dumped into its debug temp while stepping through the
+spider mission-tick crash — into the repo and pushed it. Removed it from the index and added
+`enc_temp_folder/` to `.gitignore` so VS debug temp can't be committed again.
+
 ### feat(claude): adopt blader/humanizer — always-load `ai-prose-style.md` rule + on-demand `/humanizer` skill
 
 Ported [blader/humanizer](https://github.com/blader/humanizer) (MIT — pure markdown, no code/hooks,
