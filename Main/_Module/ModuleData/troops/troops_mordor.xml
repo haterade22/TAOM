@@ -1964,16 +1964,17 @@
     <!-- Harad Line -->
 
     <!--Orc-->
-    <!-- DISABLED 2026-05-14: Cave troll WIP; not ready for live game yet. Re-enable by uncommenting.
-         Note: cave_troll is is_basic_troop="true" with culture="Culture.mordor" — wrapping the entire
-         NPCCharacter prevents vanilla DefaultVolunteerModel.GetBasicVolunteer from selecting it as a
-         Mordor volunteer (TaomVolunteerModel falls through to base for cultures without an explicit pool).
+    <!-- Re-enabled 2026-06-13: live Mordor troll race unit. is_basic_troop set false so vanilla
+         DefaultVolunteerModel.GetBasicVolunteer cannot pick the L51 troll as a Mordor *basic*
+         volunteer (the sole concern behind the 2026-05-14 disable). The troll spawns via the Mordor
+         hero party template; to make it recruitable, add an explicit Mordor pool to
+         VolunteerRecruitmentService instead of flipping is_basic_troop back to true. -->
     <NPCCharacter
         id="cave_troll"
         race="cave_troll"
         default_group="Infantry"
         level="51"
-        is_basic_troop="true"
+        is_basic_troop="false"
         name="{=aom_cave_troll_name}[Mordor] Armored Troll"
         occupation="Soldier"
         culture="Culture.mordor">
@@ -2099,7 +2100,6 @@
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
-    -->
     <!-- ==================== MORDOR MILITIA TROOPS ==================== -->
 
     <NPCCharacter

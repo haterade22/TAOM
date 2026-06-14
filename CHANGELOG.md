@@ -1,5 +1,41 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-14
+
+### feat(troll-race): enable the cave_troll as a live Mordor unit + prove the bespoke-skeleton retarget pipeline end-to-end
+
+**Track 1 — working animated troll (shipping).** Re-enabled the `cave_troll` NPCCharacter in
+`troops/troops_mordor.xml` (it had been commented out 2026-05-14 as WIP). Set `is_basic_troop="false"`
+so vanilla `DefaultVolunteerModel.GetBasicVolunteer` cannot pick the level-51 troll as a Mordor *basic*
+recruit (the sole reason for the original disable), and added it to `kingdom_hero_party_mordor_template`
+(0–2 per army) so it spawns in Mordor lord armies. The troll uses the **full human animation library**
+via `as_cave_troll_warrior` (`base_set="as_human_warrior"`) on `human_skeleton`, scaled to troll size —
+the same way dwarves/orcs get their animations. Every asset it needs (Monster, skin/race, action_set,
+meshes, all 9 armor/weapon items) **already lives in LOTRLOME_Armory — nothing imported**; zero C#
+changes (the engine auto-lists the race from `skins.xml`). `validate_moduledata.py` PASS (NPC 4521→4522).
+
+**Track 2 — bespoke retargeted set (pipeline proven; source step is a Kit/UI hand-off).** Proved the
+full autonomous path for giving the troll its own troll-proportioned clip set by retargeting the human
+library onto the Auto-Rig Pro troll rig:
+- **Extraction** `animations.tpac` → FBX via new `tools/extract_human_anims_tpac.ps1` (the human
+  skeleton lives in `EmAssetPackages/human/human.tpac`, NOT skeletons.tpac; a skinned mesh with
+  materials cleared is required or Blender imports static empties). A walk imported with 269 fcurves —
+  the chariot "Takes" risk did not materialize.
+- **Retarget** human walk → troll rig: **72 moving fcurves, clean** (`troll_walk_forward` saved in
+  `troll_anim_WORK_20260613.blend`). `tools/blender/arp_retarget.py` corrected with four hard-won fixes:
+  drop unmapped bone-map entries (not blank them), assign the source action slot (Blender 5.1 slotted
+  actions → otherwise flat bakes), override with window/area/region only (no `active_object` pin → ARP
+  switches active internally, fixing the `eb=None` bind crash + the unbind-aborting mode-toggle error),
+  and clear a stuck `arp_retarget_bound` flag.
+- **Known limitation:** TpacTool's assimp `ExportSceneToBlob` access-violates (`0xC0000005`) when driven
+  headlessly under both pwsh-7/.NET-10 and Windows-PowerShell-5.1/.NET-Framework — a few single exports
+  succeed then it crashes deterministically. Source clips via the Modding Kit's exporter instead.
+- Remaining (all Kit/UI): source the clip set → batch-retarget (ARP UI) → ARP GE export (deform-only,
+  no IK) → Kit-compile troll skeleton + clips → author `as_troll_warrior` + skin.
+
+Docs: `docs/features/troll-race.md` + `docs/ai-includes/troll-race-arp-retargeting-workflow.md` updated
+with the proven pipeline, the IK-vs-deform clarification, and the assimp-headless RCA.
+
 ## 2026-06-13
 
 ### fix(spider): restore the loose spider_skeleton resource dropped by the Blender-loop mesh re-export (riderless-spider regression)

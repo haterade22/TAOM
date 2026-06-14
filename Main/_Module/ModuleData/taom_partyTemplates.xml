@@ -788,6 +788,7 @@
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.morannon_archer" />
 			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.morannon_heavy_infantry" />
 			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.morannon_heavy_spearman" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.cave_troll" />
 		</stacks>
 	</MBPartyTemplate>
 
