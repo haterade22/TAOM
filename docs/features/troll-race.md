@@ -109,6 +109,12 @@ gives a working troll with zero animation authoring — useful as a fallback / f
   (`0xC0000005`) when driven from pwsh / PowerShell (both .NET 10 and .NET Framework). It worked
   for a few single exports then crashed deterministically. **Source clips via the Modding Kit's
   resource exporter** (stable — runs assimp in its own process), or retry TpacTool when it cooperates.
+- ✅ **No-assimp clip pipeline WORKS (PROVEN 2026-06-14)** — the bypass for the assimp crash. Read clip
+  keyframes via `tools/read_anim_keyframes_tpac.ps1` (TpacTool.Lib → JSON, no assimp) → rebuild on the
+  human armature via `tools/blender/rebuild_anim_from_json.py` → retarget → `ge_export`. End-to-end:
+  rebuilt walk → 72 fcurves (= FBX path); `troll_run_forward` produced from JSON alone (it crashed assimp).
+  Exported `troll_walk_forward.fbx` + `troll_run_forward.fbx` to
+  `LOTRLOME_Armory/AssetSources/Race Test/Mordor/Trolls/Hill Troll/clips/`. Repeatable per-clip, autonomous.
 - ✅ Skeleton GE export PROVEN HEADLESS (`ge_export()` in `arp_retarget.py`): exported `skeleton_troll`
   (**30 deform bones, no IK/control bones**) + skinned body to
   `E:\LOTRAOMAssets\_troll_extract\troll_skeleton_only.fbx` (rest pose, for the skeleton definition)

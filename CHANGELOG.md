@@ -2,6 +2,26 @@
 
 ## 2026-06-14
 
+### feat(troll-race): no-assimp keyframe pipeline — source human clips → retarget → troll clips, fully autonomous
+
+TpacTool's assimp FBX *exporter* access-violates (`0xC0000005`) when driven headlessly, blocking
+tpac→FBX. Built our own at the TPAC **data** layer (like the spider/elephant clipgen — no assimp):
+- `tools/read_anim_keyframes_tpac.ps1` — reads a SkeletalAnimation's per-bone rotation/position
+  keyframes + the skeleton bone order/rest via `TpacTool.Lib` → JSON. Pure data, never crashes.
+- `tools/blender/rebuild_anim_from_json.py` — rebuilds the clip onto the human armature in Blender by
+  walking the bone hierarchy with the JSON local transforms. **Calibration verified:** the JSON local
+  quaternion equals the Blender armature-space pose with NO axis swap/conjugate (pelvis t0
+  `(0.7071,0,-0.7071,0)` matches exactly); frame-1 pose reproduces the FBX import bone-for-bone.
+- `ge_export()` in `arp_retarget.py` — ARP Game-Engine export now works **headless**
+  (`arp_export_fbx_panel(quick_export=True)` under the no-`active_object`-pin override).
+
+**Proven end-to-end:** JSON-rebuilt walk → retarget → 72 moving fcurves, identical to the FBX-sourced
+walk; and `troll_run_forward` (a clip that crashed assimp) produced from JSON alone. Exported
+`troll_walk_forward.fbx` + `troll_run_forward.fbx` to
+`LOTRLOME_Armory/AssetSources/Race Test/Mordor/Trolls/Hill Troll/clips/` for Kit-compile. The bespoke
+troll path (chosen over human-skeleton reuse) is now unblocked and repeatable per-clip, no assimp,
+no Kit-export dependency. Remaining: produce the full core set, Kit-compile, author `as_troll_warrior`.
+
 ### fix(spider): re-bundle the dropped skeleton INTO the mesh tpac — the 06-13 standalone skeleton tpac crashed the engine
 
 The 2026-06-13 riderless-spider fix (a STANDALONE `spider/meshes/spider_skeleton_geo.tpac` produced

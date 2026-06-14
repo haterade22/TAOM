@@ -63,7 +63,16 @@ makes feasible by sourcing every clip from the human library.
 ## The pipeline
 
 ### A. Source human animations into Blender  *(gate; choose one)*
-- **Modding-Kit export (recommended, reliable):** in the Kit, select human `SkeletalAnimation` clips →
+- **No-assimp keyframe rebuild (AUTONOMOUS — WORKING, PROVEN 2026-06-14):** THE bypass for the assimp
+  FBX-export crash. `pwsh tools/read_anim_keyframes_tpac.ps1 -Clip <name>` dumps the clip's per-bone
+  rotation/position keyframes + skeleton bone order to JSON via `TpacTool.Lib` (pure data, no assimp →
+  never crashes). Then in Blender `rebuild_from_json(json_path, human_armature)`
+  (`tools/blender/rebuild_anim_from_json.py`) walks the bone hierarchy with the JSON local transforms.
+  **Calibration:** the JSON local quaternion = the Blender armature-space pose with NO axis swap/conjugate
+  (pelvis t0 `(0.7071,0,-0.7071,0)` matches exactly). Verified end-to-end: rebuilt walk → retarget = 72
+  fcurves (identical to FBX path); `troll_run_forward` produced from JSON alone (it crashed assimp). The
+  human-armature base is any correct-rest `human_skeleton` import (bones named pelvis/spine/…). **Use this.**
+- **Modding-Kit export (also reliable):** in the Kit, select human `SkeletalAnimation` clips →
   Export FBX. Start with a core wave: idle / walk / run / turn + a few attacks + death.
 - **tpac extract (BUILT — `tools/extract_human_anims_tpac.ps1`; PROVEN-correct but headless-unstable):**
   the human `Skeleton` (`human_skeleton`, GUID `dd7f3586-…`) lives in
