@@ -100,8 +100,25 @@ underscore). tpac filename ≠ resource name.
 | `monster_usage_sets.xml` | `.bak-spider-mount`, `.bak-usage-enriched`, `.bak-parity-146` |
 | `lotr_monster_spider.xml` | `.bak-spider-mount`, `.bak`, `.bak-canattack-146` (pre CanAttack removal), `.bak-parity-146` |
 | 9 patched `*_anm.tpac` | `*.bak-untagged` beside each (+ `an_spi_run_anm.tpac.bak-canter-template`) |
-| `spider_correct_geo.tpac` | `.backup` (the 7.8MB pre-split build) |
+| `spider_correct_geo.tpac` | `meshes/sk_spider_forest_c_geo.tpac.backup` (7.8MB pre-split build; ALSO the source of `spider_skeleton` for the 06-13 fix below) |
 | `SubModule.xml` | `.bak-elephant` (predates this effort) |
+
+## 2026-06-13 — Blender-loop rework regression + the skeleton fix
+
+The user reworked the spider in a Blender loop and Kit-recompiled (backing up files first). A
+post-rework audit found everything sound EXCEPT a HIGH regression: the new
+`Assets/creature/spider/animations/spider_correct_geo.tpac` (2.78MB) shipped **mesh-only**
+(`sk_spider_forest_c` + `_c_2`), dropping the `spider_skeleton` Skeleton resource. The 06-12
+working build's geo tpac had carried the skeleton; the re-export did not. With no live loose tpac
+providing it (it survived only in `meshes/sk_spider_forest_c_geo.tpac.backup`), the action_set's
+`skeleton="spider_skeleton"` resolved to nothing → `CreateAgentSkeleton` null → riderless
+spiders. Root-caused by symmetry with the working elephant (`elephant_skeleton` lives in its live
+loose `mesh/adod_elephant_geo.tpac`; the engine loads loose Assets, not the stale 6/10 baked
+`AssetPackages/pack6.tpac`).
+
+| File ADDED | Why |
+|---|---|
+| `Assets/creature/spider/meshes/spider_skeleton_geo.tpac` (4.5KB) | Standalone skeleton-only tpac holding just `spider_skeleton` (SkeletonDefinitionData 3844/5033 + SkeletonUserData 416/6637), extracted **bit-identical** from `sk_spider_forest_c_geo.tpac.backup` item [2] via the new repo tool `tools/tpac_skeleton_extract.py`. Skeleton-only (no meshes) so it does NOT collide with the new split-mesh `spider_correct_geo.tpac`. Re-scan-validated with `tpac_skeleton_scan.py` (mimics the engine parser). Restores parity with the elephant. **Rollback = delete this one file.** In-game spawn-with-rider verification owed. |
 
 **Make permanent (the durable path):** recompile the 9 patched clips in the Modding Kit with the
 fields set in the editor — `quad_movement` in **Clip usages**, `make_walk_sound` Flag, step

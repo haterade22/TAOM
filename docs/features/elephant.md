@@ -393,6 +393,35 @@ Kit-compiled / in-game-tested** (Blender→tpac is GUI-only). Compile steps + th
 `clips_refine_20260612\README_HANDOFF.md`. Faithful donor baselines kept (`*_SRC` actions) to A/B
 in-game. Memory: `project-elephant-animation-refine-inflight`.
 
+### Idle ear-fan (2026-06-13, Blender-MCP)
+
+Baseline-analyzed all 7 refined clips with `analyze_gait`; the gaits were sound (lateral
+sequence, in-place, secondary trunk/ear/tail motion present), but the **idle's ears were frozen**
+(0.5° local rotation — a statue) while a standing elephant constantly fans its ears. Authored a
+natural ear-fan: raised-cosine out-and-back about each ear bone's **local X** (the diagonal ear
+rig fans the tip out+up / in+down on local X — the best horiz/vert tip ratio of the three axes,
+measured; driver 14°, distal segment lags 4f at +6° floppy follow-through). ~19 cm ear-tip travel
+per loop, clean cyclic seam (`loop_seam_rot_deg` 25.5 → 26.4), still in-place. The reusable
+`add_ear_flap()` was added to `_refine_tools/harness.py`. Idle re-exported to
+`clips_refine_20260613\an_war_elephant_idle.fbx`. Handoff +`quad_movement` reminder:
+`clips_refine_20260613\README_HANDOFF.md`.
+
+Same session, **canter + gallop rebuilt**: the deployed `as_elephant` binds the raw ADOD
+`elephant_canter` / `elephant_gallop` for paces 4–5, and those are diagonal trots with an implied
+aerial phase (impossible for a 5-ton elephant). Replaced with `an_war_elephant_canter` (43f) +
+`an_war_elephant_gallop` (33f), time-compressed (`timescale_action`) from the verified refined
+walk so they inherit the correct 4-beat lateral sequence, damped lift, in-place root, secondary
+motion, and clean loop — faster ambles, the elephant's true top gait. Exported to
+`clips_refine_20260613\`; bind canter→pace4, gallop→pace5 at the `as_war_elephant` rename. (trot +
+strafe reuse the walk in the deployed set — no separate clips needed.) **Open lifts** (not done):
+`turn_left`/`turn_right` are identical duplicates with no turn character; rear-foot stance slip on
+the gaits; rider clip authoring (in progress separately).
+
+> **Blender-session note (2026-06-13):** two Blender instances were open during this work; the
+> Kit-ready **FBX in `clips_refine_20260613\` are the canonical deliverables** (instance-
+> independent). The `.blend` got Save-As'd to `troll_anim_WORK_20260613.blend` (16.6 MB, full
+> elephant scene + an in-progress rider composite) — naming is muddled but no data was lost.
+
 ### The real donor animation source — found, but unsliced (2026-06-06)
 
 The production donor elephant clips exist as **source** at

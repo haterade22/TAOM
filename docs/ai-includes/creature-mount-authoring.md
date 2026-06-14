@@ -20,6 +20,45 @@ Companion docs: [spider.md](../features/spider.md) (architecture + every RCA),
 
 ---
 
+## ⚠️ REPLACING FBX / TPAC FILES — read before EVERY refine cycle
+
+**Animation refinement is constant; the asset-swap is where a working mount silently breaks.** A
+Blender rework → Kit recompile → deploy of new `_anm`/`_geo` tpacs can drop something the
+deployed XML still depends on, and most failures are SILENT (riderless spawn, no crash) or only
+crash in-mission. **Back up first** (rename the old file to `*.backup` — already standard here),
+then know these requirements BEFORE replacing, and run the gate AFTER.
+
+### The four ways a re-export breaks a working mount (all observed)
+
+| # | What the swap drops | Symptom | Detect | Fix |
+|---|---|---|---|---|
+| 1 | **The Skeleton resource** — a mesh/geo re-export ships **mesh-only**, dropping `<creature>_skeleton` | `CreateAgentSkeleton("<creature>_skeleton")` → null → **RIDERLESS mount** (graceful, NO crash — easy to miss) | the skeleton must exist as a `type=Skeleton` resource in a **live (non-`.backup`) loose tpac**, exactly like the working elephant (`elephant_skeleton` in live loose `mesh/adod_elephant_geo.tpac`) | `tools/tpac_skeleton_extract.py <backup> <skel_name> <out>` → standalone skeleton-only tpac, deploy loose (no mesh-duplicate). Do NOT rename the action_set's `skeleton=` to a mesh name; do NOT fully revert (the backup's un-split mesh re-hits #4). RCA: spider 2026-06-13 |
+| 2 | **The `quad_movement` tag** on a measured-gait clip (Kit recompile loses it) | `Skeleton.TickAnimations` AV (`+0x10`) on the FIRST mission tick, every mount context | byte-scan each `monster_usage_movements`-bound clip's deployed `_anm.tpac` for `quad_movement` | byte-graft the tag from a tagged sibling (spider.md "How-to"), or re-tag in the Kit |
+| 3 | **A binding target** (a rename orphans an `animation="X"`) | degenerate record → AV / null when resolved | every `animation=` in `as_<c>` + children + the rider partial must resolve to a real resource in a deployed tpac | re-point the binding to the correct existing clip; never bind a name no tpac carries |
+| 4 | **The mesh split** (re-export ships the un-split >38-bone mesh) | `Agent.PreloadForRendering` AV at spawn | per-mesh bone palette ≤ ~38–40; keep the L/R split, recombined via the item's `<AdditionalMeshes>` | keep/restore the split-mesh export |
+
+Two more invariants the swap must preserve: the **skeleton resource NAME must equal the
+action_set's `skeleton="…"`** (the Blender armature name becomes the skeleton name; the FBX-export
+recipe renames the armature to `<skel>_notused` for *animation* clips so they don't register a 2nd
+skeleton — but the *mesh* export must keep the real skeleton name), and **movement clips stay
+in-place** (zero net root travel).
+
+### MANDATORY post-deploy gate (run after every tpac/FBX replace, BEFORE battle-testing)
+
+```
+python tools/verify_mount_assets.py <spider|elephant>
+```
+
+It statically checks all of #1–#3 (skeleton present in a live loose tpac, every measured-gait
+clip tagged, no phantom bindings) and exits non-zero on any FAIL. **PASS is necessary but not
+sufficient** — it cannot see #4 (mesh bone-palette) or in-game behavior, so a PASS still requires
+an **in-game spawn-with-rider check** (the mount must appear *with* its rider, not a lone rider).
+Add a new creature to the tool's `CREATURES` config. Skeleton/tag/binding internals:
+`tools/tpac_skeleton_scan.py` + `docs/tools/spider-skeleton-tpac-tools.md`. Lesson memory:
+`feedback-mesh-reexport-drops-skeleton-resource`.
+
+---
+
 ## Phase 0 — Assets (skeleton, meshes, physics)
 
 | Requirement | Rule | Failure mode if violated |
@@ -192,3 +231,8 @@ crash. Keep the previous decompile as `_shipping_build_vX.Y.Z` (the 1.4.5 baseli
 15. Patch47 dismount-before-death stays — the 1.4.6 native mounted-death path still corrupts
     (06-12, melee-thrust repro).
 16. A missing lookup key CRASHES on 1.4.6; an extra row is inert. When in doubt, add rows.
+17. **A mesh/geo re-export can ship MESH-ONLY, silently dropping the `<creature>_skeleton`
+    resource → `CreateAgentSkeleton` null → RIDERLESS mount (no crash, easy to miss).** After any
+    asset swap, the skeleton must live in a live (non-`.backup`) loose tpac like the working
+    elephant; run `tools/verify_mount_assets.py <creature>`. Fix via `tools/tpac_skeleton_extract.py`.
+    (spider rework 2026-06-13). See the "Replacing FBX/TPAC files" section at the top.

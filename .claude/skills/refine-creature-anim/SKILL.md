@@ -32,6 +32,20 @@ If Blender-MCP is down or the harness is missing, STOP and report — do not sel
    take = scene name, armature renamed `<skel>_notused`; round-trip verify by re-import.
 7. Hand off to `/new-creature-mount` for Kit-compile (tag `quad_movement` + step points on MOVEMENT clips) + in-game test.
 
+## MANDATORY post-deploy gate (after replacing ANY `_anm`/`_geo` tpac — refinement is constant, the swap is where it breaks)
+Back up the old tpac first (`*.backup`), then after deploying the new one, BEFORE battle-testing:
+```
+python tools/verify_mount_assets.py <spider|elephant>
+```
+It catches the three silent regressions a Kit re-export causes — **dropped `<creature>_skeleton`
+resource** (mesh-only re-export → `CreateAgentSkeleton` null → RIDERLESS mount, NO crash),
+**dropped `quad_movement`** on a measured-gait clip (TickAnimations AV), and **orphaned bindings**.
+PASS is necessary, not sufficient — it can't see the mesh bone-palette split or in-game behaviour,
+so still do an in-game spawn-with-rider check. Full requirements + the four failure modes:
+[creature-mount-authoring.md](../../../docs/ai-includes/creature-mount-authoring.md) → "REPLACING
+FBX / TPAC FILES". Lesson: `feedback-mesh-reexport-drops-skeleton-resource` (spider rework
+2026-06-13 shipped mesh-only → riderless until caught).
+
 For rider clips use the composite method (master §4a): parent rider `human_skeleton` to the mount's sit
 bone, verify fit with the meshed `orc_rider.fbx`, re-pose per clip, export `rider_<mount>_*`, bind an `as_human_warrior` partial.
 

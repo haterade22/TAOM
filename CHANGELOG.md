@@ -2,6 +2,79 @@
 
 ## 2026-06-13
 
+### fix(spider): restore the loose spider_skeleton resource dropped by the Blender-loop mesh re-export (riderless-spider regression)
+
+A comprehensive post-rework audit (4 parallel dimensions, every finding adversarially
+re-verified) found the spider sound against the **entire** creature-mount checklist — no
+`CanAttack`, `family_type=1`, `actt_dash` jump type, 45-row/9-direction jump table, typed
+falls/verbs, quick-stops wired right, rider partial at top-of-file, **all `quad_movement` tags
+preserved by the Kit recompile**, zero phantom bindings — **except one HIGH regression**: the
+rework's new `spider_correct_geo.tpac` shipped **mesh-only**, dropping the `spider_skeleton`
+Skeleton resource (it survived only in the `.backup`). With no loose tpac providing it,
+`CreateAgentSkeleton("spider_skeleton")` returns null → riders spawn with no spider mount
+(graceful-degrade, no crash — the source of the retired diagnostic's null skeleton). Root-caused
+by symmetry with the **working** elephant (which carries `elephant_skeleton` in its live loose
+`adod_elephant_geo.tpac`); the engine loads loose Assets here (also why the new loose anims show
+up), so the stale 6/10 baked `pack6.tpac` that still holds `spider_skeleton` is not the live
+source. NOTE: the audit's own verifier initially mis-rejected this (assumed the baked pack was
+the runtime source); resolved by re-running the authoritative `tpac_skeleton_scan.py` myself per
+`evidence-over-claims.md`.
+
+**Fix (keeps all the user's new work):** new repo tool `tools/tpac_skeleton_extract.py` extracts
+a single Skeleton (+ its 2 data segments) from a tpac into a standalone skeleton-only tpac;
+extracted `spider_skeleton` bit-identical from the backup → deployed loose as
+`spider/meshes/spider_skeleton_geo.tpac` (4.5 KB, no mesh-duplicate vs the new split mesh).
+Re-scan-validated (the scanner mimics the engine parser); now symmetric to the elephant. Fully
+reversible (one added file). **In-game spawn-with-rider verification still owed** (couldn't test
+during the autonomous window). Also fixed the stale `family_type="11"` in `spider.md`'s
+data-plane table (deployed is correctly `1`). The other audit findings were all LOW/cosmetic
+(generic Kit clip-pack filenames, the `an_spi_idle2`/`idle_2` spelling split — both resolve
+correctly; an `audit_mount_parity.py` Section E suffix-comparison false-positive).
+
+### feat(troll-race): Auto-Rig Pro humanoid-retargeting pipeline + troll-race scaffolding
+
+Adopted **Auto-Rig Pro (ARP)** as a TAOM animation tool for humanoid **races** and proved the
+retargeting pipeline for the **troll** (a bipedal race like the human/dwarf/orc — **not** a rideable
+mount, so none of the warg/spider/elephant mount machinery or `quad_movement` applies). Deep-reviewed
+ARP v3.78.10; built an installable hyphen-free zip (`E:\LOTRAOMAssets\Auto-Rig Pro v3.78.10\auto_rig_pro.zip`);
+confirmed it **runs on Blender 5.1.2** (167 ops) despite its 4.2 manifest. **Proved end-to-end:**
+imported the 28-bone Bannerlord `human_skeleton` + a real action, built + corrected ARP's auto-guessed
+human→troll FK bone map (it mis-mapped the spine chain, forearms, fingers), and `arp.retarget` baked
+**198 fcurves** onto the troll rig — the troll deforms (`hand.l` Δ1.55, `foot.l` Δ1.23). Committed the
+reusable bits (ARP itself stays an install-separately dependency — GPL + paid):
+- `tools/blender/arp_retarget.py` — retarget driver (import source, build+correct map, bake, save .bmap).
+- `tools/blender/bannerlord_human_to_troll.bmap` — the saved bone map.
+- `docs/ai-includes/troll-race-arp-retargeting-workflow.md` — the full HOW (source → retarget → export → compile → bind → register), with the proven steps + the GUI hand-offs.
+- `docs/features/troll-race.md` — feature doc + race-authoring recipe (the `cave_troll`/`hill_troll`
+  LOTRLOME_Armory template; bipedal, `monster_usage="human"`, standalone `as_troll_warrior`).
+
+Mapped + documented the **hard hand-offs** that can't be scripted/automated: ARP Game-Engine FBX export
+(UI — scripting hits a nested `bpy.ops` poll), FBX→`.tpac` compile (Modding-Kit GUI), human-anim source
+export (Kit-export recommended; tpac-extract feasible via `TpacTool.IO.Assimp.AssimpModelExporter` but
+unbuilt + carries the Assimp "Takes" risk), and in-game test. Prototype scene:
+`E:\LOTRAOMAssets\troll_anim_WORK_20260613.blend` (`troll_rig_01.blend` left pristine).
+
+### fix(spider): retire the SpiderDiag probe battery (NRE in custom battle) + idle ear-fan refinement
+
+Two things. **(1)** Removed the TEMP-DIAG `RunSpiderMountDiagnostics` + `TickProbe` battery
+(and the `_spiderDiagRan` latch + call site) from `CharacterSpawnerService` — it was first-chance
+NREing on probe T1 in the custom-battle thumbnail path (`probe.Skeleton` came back null from
+`CreateAgentSkeleton` after the spider clips were reworked in the Blender loop). The battery was
+always slated for retirement once the spider went green in battle (2026-06-12); the real
+`SpawnMountLogged` path keeps its graceful mount-skip. Build green, deployed. Verified the
+Blender-loop redo did **not** drop `quad_movement` on any main-gait clip (spider `an_spi_walk/run`
++ elephant `walk/trot/canter/gallop/turns/backwards` all tagged); the untagged clips that remain
+are bound only to idle / head-turn-overlay / dash / map slots, not the measured movement rows.
+**(2)** Elephant idle ear-fan (Blender-MCP): `analyze_gait` across all 7 refined clips found the
+gaits sound but the **idle's ears frozen** (0.5°). Authored a natural raised-cosine ear-fan about
+each ear bone's local X (driver 14°, distal floppy-lag) — ~19 cm tip travel, clean loop, in-place
+preserved; added reusable `add_ear_flap()` to the refine harness. Same session, **rebuilt canter
+(43f) + gallop (33f)**: the deployed `as_elephant` binds raw ADOD `elephant_canter`/`elephant_gallop`
+(diagonal trots with an impossible aerial phase) for paces 4–5; replaced with faster ambles
+time-compressed from the verified refined walk (correct lateral sequence, in-place, clean loop —
+the elephant's true top gait). 3 Kit-ready FBX in `clips_refine_20260613\` (idle, canter, gallop;
+Kit-compile + `quad_movement` tag pending, GUI). Docs: `docs/features/elephant.md` + handoff README.
+
 ### data(scenes): fix 3 live town-center scene crashes + complete the orthanc-gate remap (plan 004)
 
 The live external `TAOM_Map/settlements.xml` pointed Orthanc/Isengard (`town_isengard`), Helm's Deep

@@ -6,6 +6,10 @@ live Blender session driven over MCP, with a quantitative + visual feedback loop
 rider-animation system, and fixed the chariot's untagged gait clips. Companion to [`spider-skeleton-animation-pipeline.md`](../features/spider-skeleton-animation-pipeline.md)
 (rig/skeleton truth) and [`elephant.md`](../features/elephant.md).
 
+> **Humanoid RACE (not a mount)?** For a bipedal race like the troll that reuses the human animation
+> library via **Auto-Rig Pro retargeting** (instead of hand-authored quadruped gaits), see
+> [`troll-race-arp-retargeting-workflow.md`](troll-race-arp-retargeting-workflow.md).
+
 > **Hard boundary:** Blender → `.tpac` compile is **Modding-Kit-GUI-only**. This workflow produces
 > refined clips + **Kit-ready FBX**; it cannot compile or in-game-test them. Movement clips then MUST
 > be tagged `quad_movement` at Kit compile (see [`spider.md`](../features/spider.md) "How-to") or the
@@ -89,6 +93,13 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
    take = scene name; armature renamed `<skel>_notused`. Round-trip verify by re-import.
 7. **Hand off** → Kit-compile each FBX **with `quad_movement` + step points** (movement clips only),
    bind in the action set, in-game Custom-Battle test.
+8. **POST-DEPLOY GATE (mandatory, every tpac/FBX swap):** after replacing the deployed tpacs and
+   BEFORE battle-testing, run `python tools/verify_mount_assets.py <creature>`. A Kit re-export can
+   silently drop the **`<creature>_skeleton` resource** (mesh-only re-export → `CreateAgentSkeleton`
+   null → RIDERLESS mount, no crash), drop **`quad_movement`** on a measured-gait clip (TickAnimations
+   AV), or orphan a **binding** — the gate catches all three. Full requirements + the four failure
+   modes: [`creature-mount-authoring.md`](./creature-mount-authoring.md) → "REPLACING FBX / TPAC
+   FILES". (spider rework 2026-06-13 shipped mesh-only → riderless until the audit caught it.)
 
 ## 4. Rider-animation system (how mounted riders work)
 
