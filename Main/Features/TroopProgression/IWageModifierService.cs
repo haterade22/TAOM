@@ -14,9 +14,10 @@ namespace TAOM.Features.TroopProgression;
 public interface IWageModifierService
 {
     /// <summary>
-    /// Apply garrison-wage feats (when the party is an actual garrison) and party-wage
-    /// feats (always for the owner culture, including the Rohan mounted-wage share)
-    /// to <paramref name="result"/>.
+    /// Apply garrison-wage feats (when the party is an actual garrison — resolved from the
+    /// fief owner's culture) and party-wage feats (resolved from the party's culture via the
+    /// leader-first <c>CultureFeatAdapter.ResolvePartyCulture</c> chokepoint, including the Rohan
+    /// mounted-wage share) to <paramref name="result"/>.
     /// </summary>
     void ApplyWageModifiers(
         ref ExplainedNumber result,

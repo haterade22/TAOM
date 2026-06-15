@@ -36,6 +36,23 @@ taom_spcultures.xml (<cultural_feats> references feat IDs)
 9 GameModel overrides (check culture.HasFeat() and apply bonuses)
 ```
 
+### Party-Culture Resolution — the `ResolvePartyCulture` chokepoint
+
+GameModels that key feats off a **party's** culture (PartySize, PartyMorale, PartySpeed, FoodConsumption, PartyTroopUpgrade, BattleReward) resolve culture through one boundary helper — `CultureFeatAdapter.ResolvePartyCulture(PartyBase)` and its `FromOrNull(PartyBase)` wrapper — never inline. It mirrors vanilla `PartyBaseHelper.HasFeat` precedence, every step null-safe:
+
+```csharp
+party.LeaderHero?.Culture
+    ?? party.MapFaction?.Culture   // null-safe stand-in for party.Culture
+    ?? party.Owner?.Culture
+    ?? party.Settlement?.Culture;
+```
+
+**Why `party.MapFaction?.Culture`, never `party.Culture`:** `PartyBase.Culture` is `MapFaction.Culture` with no null guard (PartyBase.cs:255), and `MapFaction` is null for a faction-less party (e.g. an empty lord party during `Army.OnSiegeStarted` strength calc). `party.Culture` throws the NRE *inside its own getter*, so an `if (party.Culture != null)` guard can't help. This shipped as a campaign-map crash (issue #281, RCA [`rca-culturefeat-partyculture-nre-2026-06-15.md`](../reviews/rca-culturefeat-partyculture-nre-2026-06-15.md)); the chokepoint above is the fix. `Hero.Culture` and `Settlement.Culture` are plain fields, safe once the owner/settlement is non-null — so `Owner?.Culture` / `Settlement?.Culture` need no inner guard.
+
+**Uniformity (2026-06-15):** all **9** party-culture feat models route through this chokepoint — PartySize, PartyMorale, PartySpeed, FoodConsumption, PartyTroopUpgrade, BattleReward, and (swept 2026-06-15) ArmyManagement, Raid, and PartyWage (line 49). The last three previously resolved inline as `Owner?.Culture` — null-safe (never the throwing `party.Culture`, so no crash) but precedence-inconsistent, skipping `LeaderHero`. Migrating them makes every party-culture feat resolve identically and matches vanilla `HasFeat`; it also closes the door on a future `?? party.Culture` fallback silently reintroducing the NRE. *Behavior shift:* a hero of culture A leading a party owned by a culture-B clan now gets A's army-influence / raid-damage / wage feats (the leader's culture), not B's. **Deliberately excluded** because they are *not* party-scoped: garrison wage (`TaomPartyWageModel.ResolveGarrisonInputs`, keyed on the fief owner's culture), the settlement-owner feat models (`TaomSettlementLoyaltyModel`, `TaomBuildingConstructionModel`, `TaomSettlementMilitiaModel`), and per-hero `StringId` career passives.
+
+**Base-call protection — `PartyBaseHelper_HasFeat_Patch` (Codex review, 2026-06-15).** The chokepoint protects TAOM's *own* feat checks, but each `TaomXxxModel` calls `base.XxxMethod()` first, and several vanilla base methods (`DefaultArmyManagementCalculationModel.DailyBeingAtArmyInfluenceAward`, `DefaultBattleRewardModel.CalculateRenownGain`, `DefaultPartySpeedCalculatingModel.CalculateFinalSpeed`, `DefaultPartyTroopUpgradeModel.GetGoldCostForUpgrade`) call vanilla `PartyBaseHelper.HasFeat` → the same throwing `party.Culture`, so the NRE could still fire *inside the base call*. A Harmony Prefix on `Helpers.PartyBaseHelper.HasFeat` ([`Hooks/PartyBaseHelper_HasFeat_Patch.cs`](../../Main/Features/CulturalFeats/Hooks/PartyBaseHelper_HasFeat_Patch.cs), `Patch18_CulturalFeats` category) replaces its body with `ResolvePartyCulture(party)?.HasFeat(feat) ?? false` — fixing the vanilla bug at the source for every caller, behaviorally identical to vanilla for non-crashing inputs. The systemic lesson: fixing your own boundary doesn't protect the vanilla `base.X()` you call into. See [the RCA Phase 3e addendum](../reviews/rca-culturefeat-partyculture-nre-2026-06-15.md).
+
 ## Configuration
 
 ### Config: `Main/_Module/ModuleData/taom_spcultures.xml`

@@ -1250,6 +1250,20 @@ The AI war-elephant's attacks reworked from the upstream pack's random per-tick 
 
 ---
 
+## Review 53 — CulturalFeats `PartyBase.Culture` NRE fix + party-culture chokepoint migration (2026-06-15)
+
+A campaign-map `NullReferenceException` (`Army.OnSiegeStarted` → party `EstimatedStrength`/`Morale`/`PartySizeLimit`) root-caused to `CultureFeatAdapter.ResolvePartyCulture` calling `party.Culture`, which is the unguarded vanilla `PartyBase.Culture => MapFaction.Culture` (PartyBase.cs:255) — NREs inside the getter when `MapFaction == null` (a faction-less party). Fix: null-safe `?.` chain + migration of all 9 party-culture GameModels onto the single chokepoint. Reviewed via `/deep-review` (5 agents, READY) + 2 verification workflows + Codex `gpt-5.5 xhigh`.
+
+**Codex VERDICT: ISSUES FOUND — 0 CRITICAL / 2 HIGH / 2 MED / 1 LOW.** The highest-value catch of the whole chain, missed by all 7 prior agents: every `TaomXxxModel` calls `base.XxxMethod()` FIRST, and 4 vanilla base methods (`DailyBeingAtArmyInfluenceAward`, `CalculateRenownGain`, `CalculateFinalSpeed`, `GetGoldCostForUpgrade`) call vanilla `PartyBaseHelper.HasFeat` → the same throwing `party.Culture`, so the NRE can still fire inside the base call — which TAOM-side null-safety cannot reach. A `Main/`-scoped data-flow sweep is structurally blind to a crash inside vanilla `Helpers.PartyBaseHelper`.
+
+**Verification (2 researcher + 1 design agent, v1.4.6 decompile):** 2 of the 4 base-method findings reachable exactly as Codex stated (ArmyManagement HIGH, BattleReward MED-downgraded-from-HIGH); 1 over-attributed (`CalculatePartyInfluenceCost` NREs on `LeaderHero.GetRelation` line 64 before reaching `HasFeat`); the 2 MED (Speed, TroopUpgrade) confirmed. Completeness sweep cleared 4 un-flagged base methods (PartySize/Morale/FoodConsumption/Raid have no `HasFeat`), confirming the original crash was TAOM-side.
+
+**Root fix (1 patch, not Codex's per-model "inline the vanilla calculation"):** Harmony Prefix on `Helpers.PartyBaseHelper.HasFeat` (`PartyBaseHelper_HasFeat_Patch`, `Patch18_CulturalFeats`) → `ResolvePartyCulture(party)?.HasFeat(feat) ?? false`. Fixes every base caller + future caller, behaviorally identical to vanilla for non-crashing inputs. Plus the LOW doc-comment fix in `IWageModifierService.cs`.
+
+**Preventive:** RCA Phase 3e addendum (`rca-culturefeat-partyculture-nre-2026-06-15.md`) with the generalizable rule (override-calls-base → audit the base's derefs on degenerate inputs); memory `feedback_taleworlds_computed_getter_nre_route_through_chokepoint` extended with the base-call lesson; AGENTS.md "What Codex does well" bullet added; `.claude/rules/adapters.md` strengthened with the named computed-getter trap. Build clean (0 errors); suite green except 9 pre-existing `GetVolunteerTroopId_DolGuldur*` failures from an unrelated working-tree `TEMP-SPIDER-TEST` weight bump (2835 passed with that class excluded). HasFeat Prefix is test-via-game (ADR-008); in-game retest owed.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

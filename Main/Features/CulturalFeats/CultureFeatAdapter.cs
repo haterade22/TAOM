@@ -63,14 +63,13 @@ public sealed class CultureFeatAdapter : ICultureFeatAdapter
     {
         if (party == null)
             return null;
-        if (party.LeaderHero != null)
-            return party.LeaderHero.Culture;
-        if (party.Culture != null)
-            return party.Culture;
-        if (party.Owner != null)
-            return party.Owner.Culture;
-        if (party.Settlement != null)
-            return party.Settlement.Culture;
-        return null;
+        // party.Culture is `MapFaction.Culture` with no null guard — it NREs when
+        // MapFaction is null (faction-less lord party during army siege-start strength
+        // calc). Use the null-safe MapFaction?.Culture equivalent; every step is `?.`
+        // per .claude/rules/adapters.md (TaleWorlds getters crash before your null check).
+        return party.LeaderHero?.Culture
+            ?? party.MapFaction?.Culture
+            ?? party.Owner?.Culture
+            ?? party.Settlement?.Culture;
     }
 }

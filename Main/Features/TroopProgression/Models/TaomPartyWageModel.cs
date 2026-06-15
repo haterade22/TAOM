@@ -46,7 +46,13 @@ public class TaomPartyWageModel : DefaultPartyWageModel
         var result = base.GetTotalWage(mobileParty, troopRoster, includeDescriptions);
 
         var garrisonInputs = ResolveGarrisonInputs(mobileParty);
-        var partyCulture = mobileParty.Party?.Owner?.Culture;
+        // Party wage feats key off the party's OWN culture — resolve via the shared
+        // CultureFeatAdapter.ResolvePartyCulture chokepoint (vanilla PartyBaseHelper.HasFeat
+        // precedence: LeaderHero-first, MapFaction-aware, null-safe), not the prior Owner-only
+        // inline. Behavior shift: a Rohan hero leading a Gundabad-owned party now pays Rohan wage
+        // rates, matching how every other party-culture feat resolves. Garrison wage (below) stays
+        // separate — it is settlement-owner-scoped, not party-scoped.
+        var partyCulture = CultureFeatAdapter.ResolvePartyCulture(mobileParty.Party);
         var partyInputs = ResolvePartyInputs(partyCulture);
         float rohanMountedWageBonus = ResolveRohanMountedWageBonus(partyCulture);
         float mountedWageShare = ComputeMountedWageShare(rohanMountedWageBonus, result.BaseNumber, troopRoster);
@@ -79,6 +85,9 @@ public class TaomPartyWageModel : DefaultPartyWageModel
         if (!mobileParty.IsGarrison || mobileParty.CurrentSettlement?.Town == null)
             return WageFeatInputs.None;
 
+        // Settlement-scoped by design: garrison wage feats key off the FIEF OWNER's culture (who
+        // pays the garrison), NOT the garrison party's own culture — so this deliberately does NOT
+        // route through ResolvePartyCulture. See docs/features/cultural-feats.md.
         var garrisonCulture = mobileParty.CurrentSettlement.Owner?.Culture;
         if (garrisonCulture == null)
             return WageFeatInputs.None;

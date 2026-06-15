@@ -22,8 +22,13 @@ public class TaomRaidModel : DefaultRaidModel
         MapEventSide attackerSide, float settlementHitPoints)
     {
         var result = base.CalculateHitDamage(attackerSide, settlementHitPoints);
+        // Vanilla PartyBaseHelper.HasFeat precedence via the shared chokepoint (LeaderHero-first,
+        // null-safe). MapEventSide.LeaderParty is a PartyBase, so pass it straight to
+        // FromOrNull(PartyBase). Replaces the prior Owner-only inline that skipped LeaderHero.Culture
+        // (Codex review 43). The careerPassives call below keys on the owner Hero's StringId (a
+        // per-hero passive, not a culture feat) — intentionally left on Owner.
         _feats.ApplyRaidDamageFeats(
-            CultureFeatAdapter.FromOrNull(attackerSide?.LeaderParty?.Owner?.Culture),
+            CultureFeatAdapter.FromOrNull(attackerSide?.LeaderParty),
             ref result);
         _careerPassives.ApplyFactor(attackerSide?.LeaderParty?.Owner?.StringId, ref result, PassiveEffectType.TroopDamage);
         return result;

@@ -18,13 +18,17 @@ public class TaomArmyManagementModel : DefaultArmyManagementCalculationModel
         _feats = feats;
     }
 
+    // Resolve party culture via the shared CultureFeatAdapter.FromOrNull(PartyBase) chokepoint —
+    // vanilla PartyBaseHelper.HasFeat precedence (LeaderHero-first, MapFaction-aware), null-safe.
+    // Replaces the prior Owner-only inline that skipped LeaderHero.Culture (the Codex-review-43
+    // systemic gap the other party-culture models were already migrated for).
     public override float DailyBeingAtArmyInfluenceAward(MobileParty armyMemberParty)
         => _feats.ApplyArmyInfluenceAward(
-            CultureFeatAdapter.FromOrNull(armyMemberParty.Party?.Owner?.Culture),
+            CultureFeatAdapter.FromOrNull(armyMemberParty.Party),
             base.DailyBeingAtArmyInfluenceAward(armyMemberParty));
 
     public override int CalculatePartyInfluenceCost(MobileParty armyLeaderParty, MobileParty party)
         => _feats.ApplyArmyInfluenceCost(
-            CultureFeatAdapter.FromOrNull(armyLeaderParty.Party?.Owner?.Culture),
+            CultureFeatAdapter.FromOrNull(armyLeaderParty.Party),
             base.CalculatePartyInfluenceCost(armyLeaderParty, party));
 }

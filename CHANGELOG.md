@@ -1,5 +1,58 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-15
+
+### fix(cultural-feats): guard the `PartyBase.Culture` NRE in party-culture feat resolution
+
+`CultureFeatAdapter.ResolvePartyCulture` called `party.Culture` directly. `PartyBase.Culture` is
+`MapFaction.Culture` with no null guard (PartyBase.cs:255), so it threw a `NullReferenceException`
+*inside the getter* when a faction-less party was scored (`MapFaction == null` — e.g. an empty lord
+party during `Army.OnSiegeStarted` strength calc); the `if (party.Culture != null)` guard couldn't
+help because the getter throws before it returns. This crashed the campaign-map tick through
+`TaomPartySizeModel.GetPartyMemberSizeLimit` and `TaomPartyMoraleModel.GetEffectivePartyMorale`, and
+exposed three more callers (PartySpeed, FoodConsumption, PartyTroopUpgrade) on the same path.
+
+Rewrote `ResolvePartyCulture` as a null-safe chain —
+`party.LeaderHero?.Culture ?? party.MapFaction?.Culture ?? party.Owner?.Culture ?? party.Settlement?.Culture`
+— preserving the vanilla `PartyBaseHelper.HasFeat` precedence with `MapFaction?.Culture` as the
+null-safe equivalent of `party.Culture`. Migrated `TaomBattleRewardModel` off its direct
+`winnerParty.Culture` `??`-fallback onto `FromOrNull(winnerParty)`, closing the same exposure and the
+old `Owner ?? Culture` precedence that skipped `LeaderHero`. Build clean, 3169 tests green; the
+adapter rule and feature doc now name the computed-getter trap so it can't recur silently.
+
+Follow-on: swept the three remaining Owner-only party-culture callers — `TaomArmyManagementModel`
+(army-influence award + cost), `TaomRaidModel` (raid damage), and `TaomPartyWageModel` (party wage,
+line 49) — onto the same `ResolvePartyCulture` chokepoint, so all nine party-culture feat models now
+resolve culture identically (LeaderHero-first, vanilla `PartyBaseHelper.HasFeat` order). These used
+`Owner?.Culture` (no crash), but inline resolution left the door open for a future `?? party.Culture`
+fallback to reintroduce the NRE. Behavior shift: a hero leading a party owned by a different culture's
+clan now gets the leader's feats, not the owner's. Garrison wage (settlement-owner-scoped) and
+per-hero career passives are deliberately left as-is. Verified pre- and post-edit by adversarial
+agent workflows; build clean, 3169 tests green.
+
+Codex hardening: the Codex adversarial review caught a residual exposure all prior passes missed —
+every `TaomXxxModel` calls `base.XxxMethod()` FIRST, and several vanilla base methods
+(`DailyBeingAtArmyInfluenceAward`, `CalculateRenownGain`, `CalculateFinalSpeed`, `GetGoldCostForUpgrade`)
+call vanilla `PartyBaseHelper.HasFeat` → the same throwing `party.Culture`, so the NRE could still fire
+inside the base call, which TAOM-side null-safety can't reach. Fixed at the root: a Harmony Prefix on
+`Helpers.PartyBaseHelper.HasFeat` (`Main/Features/CulturalFeats/Hooks/PartyBaseHelper_HasFeat_Patch.cs`,
+`Patch18_CulturalFeats` category) replaces the body with `ResolvePartyCulture(party)?.HasFeat(feat) ?? false`
+— behaviorally identical to vanilla for every non-crashing input, returns false instead of NREing for a
+faction-less party, covering every base caller + any future caller in one patch (vs reimplementing N base
+methods, which drift each engine bump). Plus a LOW doc-comment fix in `IWageModifierService.cs`. Verified
+against the v1.4.6 decompile: 2 of Codex's 4 base-method findings reachable as stated, 1 over-attributed
+(`CalculatePartyInfluenceCost` NREs on `LeaderHero` first), 4 sibling base methods swept clean. See the RCA
+Phase 3e addendum.
+
+Not-tested: `ResolvePartyCulture` takes a sealed `PartyBase` (live `Campaign.Current`) — not
+unit-testable (ADR-008 "test via game"). The HasFeat Prefix is also test-via-game (Harmony doesn't apply
+in the MSTest host). In-game retest of the crashing save is owed.
+
+Research: PartyBase.Culture / MapFaction (PartyBase.cs:255, 236-250), PartyBaseHelper.HasFeat.
+Save-compat: none — pure null-safety in a GameModel boundary helper.
+
+Issue #281. RCA: `docs/reviews/rca-culturefeat-partyculture-nre-2026-06-15.md`.
+
 ## 2026-06-14
 
 ### chore(repo): untrack VS Edit-and-Continue temp + gitignore `enc_temp_folder/`

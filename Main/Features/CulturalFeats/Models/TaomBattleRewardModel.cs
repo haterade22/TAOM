@@ -31,7 +31,10 @@ public class TaomBattleRewardModel : DefaultBattleRewardModel
             contributionShareOfWinnerParty,
             renownMultiplierForWinnerSide,
             includeDescriptions);
-        _feats.ApplyRenownFeats(CultureFeatAdapter.FromOrNull(winnerParty.Owner?.Culture ?? winnerParty.Culture), ref result);
+        // Vanilla PartyBaseHelper.HasFeat precedence via the shared helper. Replaces the prior
+        // `winnerParty.Owner?.Culture ?? winnerParty.Culture`: winnerParty.Culture is `MapFaction.Culture`
+        // and NREs when MapFaction is null, and the old order skipped LeaderHero.Culture (Codex review 43).
+        _feats.ApplyRenownFeats(CultureFeatAdapter.FromOrNull(winnerParty), ref result);
         _careerPassives.ApplyFactor((winnerParty.Owner ?? winnerParty.LeaderHero)?.StringId, ref result, PassiveEffectType.BattleRenownGain);
         return result;
     }
