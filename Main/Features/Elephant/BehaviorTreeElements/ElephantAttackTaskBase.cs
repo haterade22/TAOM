@@ -36,6 +36,9 @@ public abstract class ElephantAttackTaskBase : BTTask, IBTBannerlordBase, IBTEle
     /// <summary>Stamp this attack kind's cooldown (write DateTime.Now into the matching blackboard value).</summary>
     protected abstract void StampCooldown(DateTime now);
 
+    /// <summary>Which attack this task is — selects the damage band in <see cref="IElephantAttackService.ComputeInflictedDamage"/>.</summary>
+    protected abstract ElephantAttackKind AttackKind { get; }
+
     public override BTTaskStatus Execute()
     {
         Agent elephant = Agent.GetValue();
@@ -54,7 +57,8 @@ public abstract class ElephantAttackTaskBase : BTTask, IBTBannerlordBase, IBTEle
             // Upstream-pack parity: only a SHIELD block reduces the damage; weapon parries take full damage.
             // (Fully-qualified — the `Agent` blackboard property shadows the Agent type.)
             bool blocking = victim.GetCurrentActionType(1) == TaleWorlds.MountAndBlade.Agent.ActionCodeType.DefendShield;
-            int damage = _service.ComputeInflictedDamage(blocking);
+            // Roll per victim so each enemy caught in the radius takes an independent hit within the kind's band.
+            int damage = _service.ComputeInflictedDamage(AttackKind, blocking, MBRandom.RandomFloat);
             CustomAttacksUtils.TakeDamage(victim, elephant, damage, ElephantConfig.TrampleBlowMagnitude, knockDown: !blocking);
         }
         return BTTaskStatus.FinishedWithTrue;
@@ -71,6 +75,8 @@ public class ElephantTrampleTask : ElephantAttackTaskBase
         => MBRandom.RandomFloat < 0.5f ? ElephantAttackActions.Trample : ElephantAttackActions.TrampleAlt;
 
     protected override void StampCooldown(DateTime now) => TrampleLastFired.SetValue(now);
+
+    protected override ElephantAttackKind AttackKind => ElephantAttackKind.Trample;
 }
 
 /// <summary>
@@ -83,4 +89,6 @@ public class ElephantSideAttackTask : ElephantAttackTaskBase
         => TargetBearing.GetValue() >= 0f ? ElephantAttackActions.SwingLeft : ElephantAttackActions.SwingRight;
 
     protected override void StampCooldown(DateTime now) => SideAttackLastFired.SetValue(now);
+
+    protected override ElephantAttackKind AttackKind => ElephantAttackKind.SideAttack;
 }

@@ -1,4 +1,5 @@
 using System;
+using TAOM.Features.Elephant.BehaviorTreeElements;
 
 namespace TAOM.Features.Elephant;
 
@@ -18,10 +19,17 @@ public class ElephantAttackService : IElephantAttackService
     public bool IsOffCooldown(DateTime? lastFired, DateTime now, double cooldownSeconds)
         => lastFired == null || (now - lastFired.Value).TotalSeconds >= cooldownSeconds;
 
-    public int ComputeInflictedDamage(bool targetBlocking)
+    public int ComputeInflictedDamage(ElephantAttackKind kind, bool targetBlocking, float roll)
     {
-        // Upstream pack: num = round(10 * (blocking ? 0.25 : 1)); inflicted = num * 2.
-        int baseDamage = (int)Math.Round(ElephantConfig.TrampleBaseDamage * (targetBlocking ? 0.25f : 1f));
-        return baseDamage * 2;
+        int min = kind == ElephantAttackKind.Trample ? ElephantConfig.TrampleMinDamage : ElephantConfig.TuskMinDamage;
+        int max = kind == ElephantAttackKind.Trample ? ElephantConfig.TrampleMaxDamage : ElephantConfig.TuskMaxDamage;
+
+        // Clamp the roll to [0,1]; an explicit NaN check is required because NaN comparisons are always false
+        // (no float.IsFinite on .NET Framework 4.7.2). A NaN/below-range roll collapses to the band minimum.
+        float r = float.IsNaN(roll) || roll < 0f ? 0f : (roll > 1f ? 1f : roll);
+
+        int rolled = min + (int)Math.Round(r * (max - min));
+        float mult = targetBlocking ? ElephantConfig.BlockedDamageMultiplier : 1f;
+        return (int)Math.Round(rolled * mult);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using TAOM.Features.Elephant.BehaviorTreeElements;
 
 namespace TAOM.Features.Elephant;
 
@@ -28,6 +29,11 @@ public interface IElephantAttackService
     /// </summary>
     bool IsOffCooldown(DateTime? lastFired, DateTime now, double cooldownSeconds);
 
-    /// <summary>The upstream pack's trample damage: <c>round(base * (blocking ? 0.25 : 1)) * 2</c>.</summary>
-    int ComputeInflictedDamage(bool targetBlocking);
+    /// <summary>
+    /// Per-hit damage for an attack <paramref name="kind"/>: rolls a value in the kind's [min,max] band using
+    /// <paramref name="roll"/> (a [0,1] float from <c>MBRandom.RandomFloat</c>, clamped + NaN-guarded here), then
+    /// scales by <see cref="ElephantConfig.BlockedDamageMultiplier"/> when <paramref name="targetBlocking"/>.
+    /// Trample 50-100, side-swing (tusk) 50-75 before block scaling.
+    /// </summary>
+    int ComputeInflictedDamage(ElephantAttackKind kind, bool targetBlocking, float roll);
 }

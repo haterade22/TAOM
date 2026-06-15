@@ -1,8 +1,10 @@
 # War Elephant (Harad rideable mount)
 
 > **Status: C# BUILT + WIRED (2026-06-05); ACTION-SETS SELF-CONTAINED IN LOTRLOME (2026-06-08); IN-GAME BATTLE CONFIRMED (2026-06-08).**
-> The trample/mount-lock C# is a 1-for-1 behavioral port of the donor mod's elephant, adapted to **v1.4.5**, fully wired
-> (IoC + SubModule) and green (3041 tests). Supersedes the paused [Giant Spider](spider.md).
+> The mount-lock + the structural trample/tusk mechanic are a behavioral port of the donor mod's elephant, adapted to
+> **v1.4.5**, fully wired (IoC + SubModule) and green. The attack **cadence** (deterministic cooldowns, 2026-06-10) and
+> the per-kind randomized **damage** (trample 50-100, tusk 50-75, 2026-06-15) are TAOM's own rebalance — NOT 1-for-1 with
+> the donor. Supersedes the paused [Giant Spider](spider.md).
 >
 > **Upstream-pack dependency ELIMINATED (2026-06-08).** After resolving two data-pipeline crashes during the LOTRLOME-
 > standalone deployment (see "Action-sets deployment crash history" below), the donor `as_elephant` action-set block
@@ -177,19 +179,21 @@ Cavalry-reassignment + trample stay enabled (confirmed innocent). The TEMP `hara
 
 ## Implementation — C# built + wired (2026-06-05)
 
-The trample + mount-lock are **done, wired, and green** (build + 3041 tests). This is a 1-for-1 behavioral port of
-the donor mod's `ADODBeastsElephantAgentComponent.OnTickAsAI` + `ADODAgentStatCalculateModel`, re-implemented in TAOM-clean
-architecture on the v1.4.5 API.
+The trample + mount-lock are **done, wired, and green** (build + tests). The mount-lock (`ADODAgentStatCalculateModel`)
+and the structural attack mechanic from `ADODBeastsElephantAgentComponent.OnTickAsAI` are a behavioral port, re-implemented
+in TAOM-clean architecture on the v1.4.5 API — but the attack **cadence** (deterministic cooldowns, 2026-06-10) and the
+per-kind randomized **damage** (trample 50-100 / tusk 50-75, 2026-06-15) are TAOM's deliberate rebalance, NOT the donor's
+per-tick random roll / fixed ~20 damage.
 
 | File | Role |
 |------|------|
-| [`Main/Features/Elephant/ElephantConfig.cs`](../../Main/Features/Elephant/ElephantConfig.cs) | Constants — `ElephantMonsterId="taom_war_elephant"`, `MountDifficulty=999`, attack gates (`TrampleTriggerRange=3f` proximity gate restored from the donor mod, `TrampleFacingDot=0.25`, `TrampleCooldownSeconds=10` / `SideAttackCooldownSeconds=4`, `TrampleRadius=4f` damage radius) + base damage 10 + the attack clip-name constants (`TrampleActionName` / `SideAttackLeft/RightActionName`). `TrampleTriggerRange` was the missing donor gate — without it the elephant swung into empty air and killed the locomotion channel. |
-| [`Main/Features/Elephant/IElephantAttackService.cs`](../../Main/Features/Elephant/IElephantAttackService.cs) + [`ElephantAttackService.cs`](../../Main/Features/Elephant/ElephantAttackService.cs) | **Pure** logic (no TaleWorlds deps): `IsElephantMonster`, `ShouldEngage(facingDot, alreadyAttacking)` (facing gate; the BT scan passes -1 when no enemy in range), `IsOffCooldown(lastFired, now, seconds)` (inclusive ≥; future stamps read as ON cooldown), `ComputeInflictedDamage(blocking)` = `round(10*(blocking?0.25:1))*2`. Unit-tested. |
+| [`Main/Features/Elephant/ElephantConfig.cs`](../../Main/Features/Elephant/ElephantConfig.cs) | Constants — `ElephantMonsterId="taom_war_elephant"`, `MountDifficulty=999`, attack gates (`TrampleTriggerRange=3f` proximity gate restored from the donor mod, `TrampleFacingDot=0.25`, `TrampleCooldownSeconds=10` / `SideAttackCooldownSeconds=4`, `TrampleRadius=4f` damage radius) + per-kind damage bands (`TrampleMin/MaxDamage=50/100`, `TuskMin/MaxDamage=50/75`, `BlockedDamageMultiplier=0.25`) + the attack clip-name constants (`TrampleActionName` / `SideAttackLeft/RightActionName`). `TrampleTriggerRange` was the missing donor gate — without it the elephant swung into empty air and killed the locomotion channel. |
+| [`Main/Features/Elephant/IElephantAttackService.cs`](../../Main/Features/Elephant/IElephantAttackService.cs) + [`ElephantAttackService.cs`](../../Main/Features/Elephant/ElephantAttackService.cs) | **Pure** logic (no TaleWorlds deps): `IsElephantMonster`, `ShouldEngage(facingDot, alreadyAttacking)` (facing gate; the BT scan passes -1 when no enemy in range), `IsOffCooldown(lastFired, now, seconds)` (inclusive ≥; future stamps read as ON cooldown), `ComputeInflictedDamage(kind, blocking, roll)` = `round((min + roll·(max−min)) · (blocking?0.25:1))` with the band chosen by `ElephantAttackKind` (Trample 50-100, SideAttack/tusk 50-75; roll is a [0,1] `MBRandom.RandomFloat` supplied per victim by the BT, clamped + NaN-guarded). Unit-tested. |
 | [`Main/Features/Elephant/ElephantMissionBehavior.cs`](../../Main/Features/Elephant/ElephantMissionBehavior.cs) | Boundary `MissionLogic`: registers `"ElephantTree"` + attaches a per-agent `BehaviorTreeAgentComponent` to every elephant (first-tick scan + `OnAgentBuild` late-spawn + dead-agent pruning — the warg's exact wiring). `Initialize` logs an error if any attack action resolved to `act_none` (Armory-drift guard). Also instantiates the howdah when the mahout builds. **As of 2026-06-10 the attacks are BT-driven** — the old inline `TryAiTrample` loop was removed (see "Behavior tree" below). |
 | [`Main/Features/Elephant/ElephantBehaviorTree.cs`](../../Main/Features/Elephant/ElephantBehaviorTree.cs) + [`BehaviorTreeElements/`](../../Main/Features/Elephant/BehaviorTreeElements/) | Per-agent behavior tree (warg pattern): `EnemyInTrampleRangeDecorator` (facing+range gate → `ShouldEngage`; writes `TargetBearing`), `AttackOffCooldownDecorator` ×2 (→ `IsOffCooldown`), `ElephantAttackTaskBase` → `ElephantTrampleTask`/`ElephantSideAttackTask` (→ `ComputeInflictedDamage`), `ElephantAttackActions` (shared eager-resolved `ActionIndexCache`s + Index-compare gate). Reuses the shared `HasRiderDecorator`/`IsAiControlledDecorator`/`HasNoRiderDecorator`. |
 | [`…/CareerSystem/Models/TaomAgentStatCalculateModel.cs`](../../Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs) | EDITED — the shared `AgentStatCalculateModel` slot now also carries the **mount-lock**: `CanAgentRideMount`→false for the elephant + `MountDifficulty=999` (both via the injected `IElephantAttackService`, applied with ternaries per gamemodels.md rule 4). |
 | `ElephantIoC.cs`, `IoC.cs`, `SubModule.cs` | Service registered (Singleton); `ElephantMissionBehavior` added to the mission list; the stat-model ctor takes the elephant service. (No new registration for the BT — it attaches inside the mission behavior; nodes resolve the service via IoC like `WargAttackTask`.) |
-| [`TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs`](../../TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs) | 16 tests (IsElephantMonster ×3, ShouldEngage ×5 incl. the no-enemy −1 sentinel, IsOffCooldown ×6 incl. exact-boundary + future-stamp clock skew, ComputeInflictedDamage ×2). The BT calls these same pure methods, so they remain the attack decision's regression guard. |
+| [`TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs`](../../TAOM.Tests/Features/Elephant/ElephantAttackServiceTests.cs) | 24 tests (IsElephantMonster ×3, ShouldEngage ×5 incl. the no-enemy −1 sentinel, IsOffCooldown ×6 incl. exact-boundary + future-stamp clock skew, ComputeInflictedDamage ×10 — both kinds × min/max/midpoint/blocking boundaries + NaN/out-of-range roll clamps). The BT calls these same pure methods, so they remain the attack decision's regression guard. |
 
 **1.4.5 adaptations vs the donor mod's 1.2.12 decompile:** `ActionIndexCache.GetName()` (not `.Name`); the 2-arg
 `SetActionChannel(0, anim)` (the donor's long arg list is exactly the engine defaults); `CustomAttacksUtils.TakeDamage`
@@ -220,9 +224,23 @@ This is a deliberate behavior CHANGE from the donor mod, verified by decompiling
 randomly among `attack_1..3` at 0.001/tick with no left/right awareness, no cooldowns, and never uses `attack_4`
 (which IS bound to a real clip — `action_types.xml` 99–102, `action_sets.xml` 59684–59687).
 
+### Bow rider + lethal damage rebalance — 2026-06-15
+
+In-game feedback (elephant confirmed working in battle): the rider was useless and the attacks too weak. Two changes:
+
+- **Rider loadout** (`troops/troops_harad.xml`, `harad_elephant_rider`): the primary spear (`eastern_spear_4_t4`)
+  couldn't reach ground targets from the elephant's back, so the `HorseArcher`-grouped rider melee-swung into air.
+  The spear is replaced with a **second `bodkin_arrows_b` quiver** (Item0); the rider already carried
+  `steppe_heavy_bow` (Item2) + arrows (Item3) + `aserai_sword_3_t3` (Item1, kept as melee backup). With no
+  polearm the AI defaults to the bow and now shoots infantry; the two quivers give sustained fire.
+- **Per-kind randomized damage:** the shared fixed `round(10·mult)·2 = 20` became distinct per-hit bands rolled per
+  victim — **trample 50-100, tusk 50-75** (shield block still scales to ×0.25). The `× 2` doubling artifact is gone
+  (damage is expressed directly); `ComputeInflictedDamage` now takes the `ElephantAttackKind` + a [0,1] roll. The two
+  attack tasks supply their kind via a new `AttackKind` abstract; the BT passes `MBRandom.RandomFloat` per victim.
+
 **Architecture (warg-consistent).** The BT elements are *boundary code* — they hold the raw `Agent` on the blackboard
 and touch `Mission`/`Agent` directly, delegating only the **pure decisions** to the unit-tested
-`ElephantAttackService` (`ShouldEngage` facing/anim gate + `IsOffCooldown` + `ComputeInflictedDamage`; 16 tests).
+`ElephantAttackService` (`ShouldEngage` facing/anim gate + `IsOffCooldown` + `ComputeInflictedDamage`; 24 tests).
 No adapter expansion, no new service. `ElephantMissionBehavior` registers `"ElephantTree"` and attaches a
 `BehaviorTreeAgentComponent` per elephant (first-tick scan + `OnAgentBuild` late-spawn + dead-agent pruning); the
 engine's `Agent.Tick` auto-ticks each tree.
@@ -265,7 +283,7 @@ confirming the frame ranges. Final eyeball check in one battle is still welcome,
 optional enrage/charge state (warg-style rage). Those add blackboard fields + branches without touching this baseline.
 
 **Tested-via-game:** BT elements + wiring are not unit-tested (consistent with all warg BT elements + Harmony patches,
-ADR-008); the pure decisions they call are covered by `ElephantAttackServiceTests` (16/16 green).
+ADR-008); the pure decisions they call are covered by `ElephantAttackServiceTests` (24/24 green).
 
 **Reviewed three ways, all clean (2026-06-10, all BEFORE commit):** a custom 13-agent adversarial workflow (below),
 then the stock `/deep-review` (5 agents — Standards / 32-of-32 v1.4.5 APIs / 16-of-16 tests / 8-of-8 data-flow traces,
@@ -707,7 +725,7 @@ bump as of 2026-06-12.
 - [ ] Author a **TAOM-owned action-set** `as_war_elephant` (rename from `as_elephant`, bind TAOM-authored clip names) to make the action-set fully TAOM-authored (currently uses donor ids / clip names verbatim).
 - [ ] **Build the elephant animations on our FBX** (Blender → Modding-Kit compile) — TAOM-owned, NOT the donor's 1.2.12 clips. Gating seam for the rename to `as_war_elephant`.
 - [x] Author the Harad rider troop + recruitment — DONE (2026-06-10). `harad_elephant_rider` (level 51, `Culture.aserai`, `HorseArcher`) recruitable ONLY by `clan_aserai_1` (Ayerikkä) via `VolunteerRecruitmentService.InitializeHaradClans` (clan pool copies the levy/noble fallback + adds the rider at weight 1). The TEMP `harad_militia` Horse-slot test entry was replaced by this dedicated troop. Remaining rider polish: not yet in any party template (AI Ayerikkä lords field it only when recruited); rider skills left at pre-level-51 values; recruitment weight is a rarity knob. Update `factions.json` if the war elephant becomes a Harad identity element.
-- [ ] Tune damage/gates after further in-game testing (current values are the donor's 1-for-1 baseline — the "improve" step).
+- [x] Tune damage after in-game testing — DONE (2026-06-15): replaced the donor's fixed ~20 with TAOM per-kind randomized bands (trample 50-100, tusk 50-75, ×0.25 on shield block); gates unchanged. Also swapped the rider's primary spear (`eastern_spear_4_t4`) for a 2nd `bodkin_arrows_b` quiver so the mounted archer fires at ground targets instead of melee-swinging into air.
 - [ ] **DEFERRED — re-enable howdah crew (slide source #1).** Crew spawn is disabled (`TrySpawnHowdahCrew` call
       commented in `ElephantMissionBehavior.TryInstantiateHowdah`). Re-enable with a crew↔elephant collision fix —
       candidate: give the crew the elephant's `FaceGroupId` via `Agent.SetAgentExcludeStateForFaceGroupId` (the

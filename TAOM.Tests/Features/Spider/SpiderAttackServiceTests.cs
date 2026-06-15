@@ -1,3 +1,4 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
@@ -33,49 +34,80 @@ public class SpiderAttackServiceTests
     //   damage     = (int)(allDamage * absorption)
     // ---------------------------------------------------------------------
 
+    // critRoll 1f = no crit (CritChance 0.2) unless a test states otherwise.
+
     [TestMethod]
     public void CalculateSpiderBiteDamage_ZeroVelocityZeroArmor_ReturnsBaseDamage()
     {
         var target = Substitute.For<IAgentAdapter>();
-        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 0f, armorEffectivenessPercent: 0f);
-        // fromSpeed=0, allDamage=35, absorption=1.0, damage=35
-        Assert.AreEqual(35, result);
+        // fromSpeed=0, allDamage=75 (MaxBaseDamage), absorption=1.0, damage=75
+        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 0f, armorEffectivenessPercent: 0f, critRoll: 1f);
+        Assert.AreEqual(75, result);
     }
 
     [TestMethod]
     public void CalculateSpiderBiteDamage_MaxVelocityZeroArmor_ReturnsCappedDamage()
     {
         var target = Substitute.For<IAgentAdapter>();
-        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 15f, armorEffectivenessPercent: 0f);
-        // fromSpeed=15, allDamage=50, absorption=1.0, damage=50
-        Assert.AreEqual(50, result);
+        // fromSpeed = Min(25, 15×25/15=25) = 25, allDamage=100, absorption=1.0, damage=100
+        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 15f, armorEffectivenessPercent: 0f, critRoll: 1f);
+        Assert.AreEqual(100, result);
     }
 
     [TestMethod]
     public void CalculateSpiderBiteDamage_ExcessiveVelocity_ClampsSpeedDamageToMax()
     {
         var target = Substitute.For<IAgentAdapter>();
-        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 100f, armorEffectivenessPercent: 0f);
-        // fromSpeed = Min(15, 100) = 15 (capped)
-        Assert.AreEqual(50, result);
+        // fromSpeed = Min(25, 100×25/15=166) = 25 (capped at MaxSpeedDamage), allDamage=100, damage=100
+        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 100f, armorEffectivenessPercent: 0f, critRoll: 1f);
+        Assert.AreEqual(100, result);
     }
 
     [TestMethod]
-    public void CalculateSpiderBiteDamage_FullArmor_ReturnsZero()
+    public void CalculateSpiderBiteDamage_MaxArmor_FlooredByMinPassthrough()
     {
         var target = Substitute.For<IAgentAdapter>();
-        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 15f, armorEffectivenessPercent: 100f);
-        // absorption = 0 → damage = 0
-        Assert.AreEqual(0, result);
-    }
-
-    [TestMethod]
-    public void CalculateSpiderBiteDamage_HalfArmor_ReturnsHalvedDamage()
-    {
-        var target = Substitute.For<IAgentAdapter>();
-        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 5f, armorEffectivenessPercent: 50f);
-        // fromSpeed=5, allDamage=40, absorption=0.5, damage=20
+        // absorption = (100 − 100×1.1)/100 = −0.1, clamped UP to MinArmorPassthrough 0.2 → 100×0.2 = 20.
+        // Even max-armor plate always takes a bite (no full immunity).
+        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 15f, armorEffectivenessPercent: 100f, critRoll: 1f);
         Assert.AreEqual(20, result);
+    }
+
+    [TestMethod]
+    public void CalculateSpiderBiteDamage_MediumArmorAtCharge_TwoHitKillBand()
+    {
+        var target = Substitute.For<IAgentAdapter>();
+        // Medium line trooper (~35 torso armor), charge velY 8: fromSpeed=Min(25,8×25/15=13.3)=13.3,
+        // allDamage=88.3, absorption=(100−35×1.1)/100=0.615, damage=54 → ~2 hits on 100 HP.
+        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 8f, armorEffectivenessPercent: 35f, critRoll: 1f);
+        Assert.AreEqual(54, result);
+    }
+
+    [TestMethod]
+    public void CalculateSpiderBiteDamage_HeavyArmorAtCharge_ThreeHitKillBand()
+    {
+        var target = Substitute.For<IAgentAdapter>();
+        // Heavy elite (~55 torso armor), charge velY 8: allDamage=88.3, absorption=(100−55×1.1)/100=0.395, damage=34 → ~3 hits.
+        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 8f, armorEffectivenessPercent: 55f, critRoll: 1f);
+        Assert.AreEqual(34, result);
+    }
+
+    [TestMethod]
+    public void CalculateSpiderBiteDamage_CritRollBelowChance_AppliesMultiplier()
+    {
+        var target = Substitute.For<IAgentAdapter>();
+        // critRoll 0.1 < CritChance 0.2 → crit. allDamage=75 (vel 0, no armor) × CritMultiplier 1.75 = 131.
+        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 0f, armorEffectivenessPercent: 0f, critRoll: 0.1f);
+        Assert.AreEqual(131, result);
+    }
+
+    [TestMethod]
+    public void CalculateSpiderBiteDamage_CritRollAtChance_NoCrit()
+    {
+        var target = Substitute.For<IAgentAdapter>();
+        // critRoll 0.2 is NOT < CritChance 0.2 (strict) → no crit → 75.
+        int result = _sut.CalculateSpiderBiteDamage(target, velocity: 0f, armorEffectivenessPercent: 0f, critRoll: 0.2f);
+        Assert.AreEqual(75, result);
     }
 
     // ---------------------------------------------------------------------
@@ -167,7 +199,7 @@ public class SpiderAttackServiceTests
     public void SpiderAttack_NullSpider_DoesNothing()
     {
         // Should not throw.
-        _sut.SpiderAttack(spider: null);
+        _sut.SpiderAttack(spider: null, SpiderAttackKind.Pounce, bearing: 0f);
     }
 
     [TestMethod]
@@ -176,7 +208,7 @@ public class SpiderAttackServiceTests
         var spider = Substitute.For<IAgentAdapter>();
         spider.IsActive().Returns(false);
 
-        _sut.SpiderAttack(spider);
+        _sut.SpiderAttack(spider, SpiderAttackKind.Pounce, bearing: 0f);
 
         spider.DidNotReceive().CustomAttack(
             Arg.Any<ActionIndexCache>(),
@@ -274,7 +306,8 @@ public class SpiderAttackServiceTests
 
         _sut.HandleSpiderTargetHit(attacker, target, 0);
 
-        // damage = 35 (base, no speed, no armor) >= DamageToFall(30) -> Fall, projected from the RIDER.
+        // damage = 75 (MaxBaseDamage, no speed, no armor) >= DamageToFall(30) -> Fall, projected from the RIDER
+        // (a crit would only raise it; still Fall).
         target.Received(1).ProjectAgent(new Vec3(1f, 2f, 3f), DamageAnimation.Fall);
     }
 
@@ -309,9 +342,104 @@ public class SpiderAttackServiceTests
 
         _sut.HandleSpiderTargetHit(attacker, target, 0);
 
-        // riderless spider (rider died): the spider itself is the damager; 35 dmg -> Fall.
+        // riderless spider (rider died): the spider itself is the damager; 75 dmg -> Fall.
         target.Received(1).ProjectAgent(new Vec3(7f, 7f, 7f), DamageAnimation.Fall);
     }
+
+    // ---------------------------------------------------------------------
+    // SelectActionName — directional clip resolution (pure; one test per (kind, branch) cell)
+    //   Pounce:     vel.Y >= ChargeVelocityThreshold(4) -> charge,  else front
+    //   SideAttack: bearing >= 0 -> left (LEFT),         else right
+    // ---------------------------------------------------------------------
+
+    [TestMethod]
+    public void SelectActionName_PounceLowVelocity_ReturnsFront()
+        => Assert.AreEqual(SpiderConfig.PounceFrontActionName,
+            _sut.SelectActionName(SpiderAttackKind.Pounce, velocityY: 0f, bearing: 0f));
+
+    [TestMethod]
+    public void SelectActionName_PounceAtChargeThreshold_ReturnsCharge()
+        // Inclusive >= threshold — at exactly the charge speed it uses the running lunge.
+        => Assert.AreEqual(SpiderConfig.PounceChargeActionName,
+            _sut.SelectActionName(SpiderAttackKind.Pounce, velocityY: SpiderConfig.ChargeVelocityThreshold, bearing: 0f));
+
+    [TestMethod]
+    public void SelectActionName_PounceHighVelocity_ReturnsCharge()
+        => Assert.AreEqual(SpiderConfig.PounceChargeActionName,
+            _sut.SelectActionName(SpiderAttackKind.Pounce, velocityY: 10f, bearing: 0f));
+
+    [TestMethod]
+    public void SelectActionName_SideAttackPositiveBearing_ReturnsLeft()
+        // Positive bearing = enemy on the LEFT; bearing is ignored for the velocity here.
+        => Assert.AreEqual(SpiderConfig.SwingLeftActionName,
+            _sut.SelectActionName(SpiderAttackKind.SideAttack, velocityY: 10f, bearing: 0.5f));
+
+    [TestMethod]
+    public void SelectActionName_SideAttackZeroBearing_ReturnsLeft()
+        // Boundary: >= 0 resolves LEFT.
+        => Assert.AreEqual(SpiderConfig.SwingLeftActionName,
+            _sut.SelectActionName(SpiderAttackKind.SideAttack, velocityY: 0f, bearing: 0f));
+
+    [TestMethod]
+    public void SelectActionName_SideAttackNegativeBearing_ReturnsRight()
+        => Assert.AreEqual(SpiderConfig.SwingRightActionName,
+            _sut.SelectActionName(SpiderAttackKind.SideAttack, velocityY: 0f, bearing: -0.5f));
+
+    // ---------------------------------------------------------------------
+    // SelectBones — bone-collision set matching the resolved clip (pure)
+    // ---------------------------------------------------------------------
+
+    [TestMethod]
+    public void SelectBones_PounceLowVelocity_ReturnsFrontBones()
+        => Assert.AreSame(SpiderConfig.PounceFrontBones,
+            _sut.SelectBones(SpiderAttackKind.Pounce, velocityY: 0f, bearing: 0f));
+
+    [TestMethod]
+    public void SelectBones_PounceHighVelocity_ReturnsChargeBones()
+        => Assert.AreSame(SpiderConfig.PounceChargeBones,
+            _sut.SelectBones(SpiderAttackKind.Pounce, velocityY: 10f, bearing: 0f));
+
+    [TestMethod]
+    public void SelectBones_SideAttackPositiveBearing_ReturnsLeftBones()
+        => Assert.AreSame(SpiderConfig.LeftSwingBones,
+            _sut.SelectBones(SpiderAttackKind.SideAttack, velocityY: 0f, bearing: 1f));
+
+    [TestMethod]
+    public void SelectBones_SideAttackNegativeBearing_ReturnsRightBones()
+        => Assert.AreSame(SpiderConfig.RightSwingBones,
+            _sut.SelectBones(SpiderAttackKind.SideAttack, velocityY: 0f, bearing: -1f));
+
+    // ---------------------------------------------------------------------
+    // IsOffCooldown — pure cooldown gate (mirror ElephantAttackServiceTests)
+    // ---------------------------------------------------------------------
+
+    private static readonly DateTime Now = new(2026, 6, 15, 12, 0, 0);
+
+    [TestMethod]
+    public void IsOffCooldown_NeverFired_ReturnsTrue()
+        => Assert.IsTrue(_sut.IsOffCooldown(lastFired: null, now: Now, cooldownSeconds: 5.0));
+
+    [TestMethod]
+    public void IsOffCooldown_JustFired_ReturnsFalse()
+        => Assert.IsFalse(_sut.IsOffCooldown(lastFired: Now, now: Now, cooldownSeconds: 5.0));
+
+    [TestMethod]
+    public void IsOffCooldown_PartiallyElapsed_ReturnsFalse()
+        => Assert.IsFalse(_sut.IsOffCooldown(lastFired: Now.AddSeconds(-2), now: Now, cooldownSeconds: 5.0));
+
+    [TestMethod]
+    public void IsOffCooldown_ExactlyAtCooldown_ReturnsTrue()
+        // Inclusive ">= cooldown" — available the moment the window closes.
+        => Assert.IsTrue(_sut.IsOffCooldown(lastFired: Now.AddSeconds(-5), now: Now, cooldownSeconds: 5.0));
+
+    [TestMethod]
+    public void IsOffCooldown_FullyElapsed_ReturnsTrue()
+        => Assert.IsTrue(_sut.IsOffCooldown(lastFired: Now.AddSeconds(-30), now: Now, cooldownSeconds: 5.0));
+
+    [TestMethod]
+    public void IsOffCooldown_LastFiredInFuture_ReturnsFalse()
+        // Clock skew / bad stamp: a future lastFired reads as ON cooldown, not off.
+        => Assert.IsFalse(_sut.IsOffCooldown(lastFired: Now.AddSeconds(10), now: Now, cooldownSeconds: 5.0));
 
     // ---------------------------------------------------------------------
     // Construction

@@ -3,7 +3,7 @@
 **Date:** 2026-06-15
 **Feature:** CulturalFeats (party-culture feat resolution)
 **Severity of shipped bug:** HIGH (campaign-map hard crash)
-**Fix commit:** _pending_ (CultureFeatAdapter.cs + TaomBattleRewardModel.cs)
+**Fix commit:** 0046eaf (null-safe `ResolvePartyCulture` + Harmony Prefix on `PartyBaseHelper.HasFeat`; pushed to `bannerlord-1.4.5`). **In-game confirmed 2026-06-15** — no crash recurrence in normal play. Issue #281 closed.
 
 ## Top-line summary
 
@@ -44,7 +44,7 @@ This crash was found in production (live debug session), not by the review — t
 
 ## Tests
 
-`ResolvePartyCulture(PartyBase)` is engine-boundary (sealed `PartyBase`, requires live `Campaign.Current`) — not unit-testable in the MSTest harness (ADR-008 "test via game"). Verified by: full build clean (0 errors, `-p:ModuleId=` to skip the game-folder copy while the game was running), 3169 tests green, and the pending in-game retest of the crashing save.
+`ResolvePartyCulture(PartyBase)` is engine-boundary (sealed `PartyBase`, requires live `Campaign.Current`) — not unit-testable in the MSTest harness (ADR-008 "test via game"). Verified by: full build clean (0 errors, `-p:ModuleId=` to skip the game-folder copy while the game was running), 3169 tests green, and in-game confirmed 2026-06-15 (no crash recurrence in normal play).
 
 ## Phase 3e addendum — Codex caught the residual exposure my fix and 7 review agents missed (2026-06-15)
 
@@ -79,4 +79,4 @@ Verified against the v1.4.6 decompile (2-researcher + 1-design workflow):
 
 **When you override a GameModel/engine method and call `base.X(...)`, the base runs vanilla code on the same inputs — including degenerate ones your feature newly produces. Fixing your own boundary (adapter/service) does not protect the base call. Decompile the base method and audit what it dereferences on the degenerate input, or patch the shared vanilla helper at the source.** A data-flow sweep scoped to `Main/` is blind to crashes inside the vanilla methods `Main/` calls into. Codified in `feedback_taleworlds_computed_getter_nre_route_through_chokepoint.md`.
 
-**Tests:** the `HasFeat` Prefix can't be unit-tested (Harmony doesn't apply in the MSTest host; `HasFeat` takes a sealed `PartyBase`) — ADR-008 "test via game." Verified: build clean (0 errors); full suite green except 9 pre-existing `GetVolunteerTroopId_DolGuldur*` failures caused by an unrelated working-tree `TEMP-SPIDER-TEST` weight bump (`taom_spider_creature` 1→40, marked "REVERT before commit"), not this change (2835 passed with that class excluded). In-game retest of the crashing save still owed.
+**Tests:** the `HasFeat` Prefix can't be unit-tested (Harmony doesn't apply in the MSTest host; `HasFeat` takes a sealed `PartyBase`) — ADR-008 "test via game." Verified: build clean (0 errors); full suite green except 9 pre-existing `GetVolunteerTroopId_DolGuldur*` failures caused by an unrelated working-tree `TEMP-SPIDER-TEST` weight bump (`taom_spider_creature` 1→40, marked "REVERT before commit"), not this change (2835 passed with that class excluded). In-game confirmed 2026-06-15 — no crash recurrence in normal play (the exact `Army.OnSiegeStarted` siege-start path was not force-reproduced). Committed 0046eaf; issue #281 closed.

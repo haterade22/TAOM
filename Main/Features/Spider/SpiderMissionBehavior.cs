@@ -47,14 +47,15 @@ public class SpiderMissionBehavior : MissionLogic
         if (BTRegister.Logger == null)
             BTRegister.AddLogger(new TaomBTLogger());
 
-        // Armory-drift guard: the bite clip names live in the EXTERNAL LOTRLOME action_types.xml and
+        // Armory-drift guard: the attack clip names live in the EXTERNAL LOTRLOME action_types.xml and
         // ActionIndexCache resolves eagerly — a rename there silently yields act_none, and playing act_none
         // on channel 0 kills the locomotion cycle (the elephant "slide" class). Detect at mission start.
         if (SpiderAttackActions.AnyUnresolved())
             _logger.LogError(
-                "[Spider] One or more bite actions resolved to act_none — LOTRLOME action_types drift? " +
-                $"Expected {SpiderConfig.BiteStandActionName}/{SpiderConfig.BiteChargeActionName}. " +
-                "Bites will not animate correctly.");
+                "[Spider] One or more attack actions resolved to act_none — LOTRLOME action_types drift? " +
+                $"Expected {SpiderConfig.PounceFrontActionName}/{SpiderConfig.PounceChargeActionName}/" +
+                $"{SpiderConfig.SwingLeftActionName}/{SpiderConfig.SwingRightActionName}. " +
+                "Attacks will not animate correctly.");
 
         _logger.LogInfo("[Spider] Initialized");
     }

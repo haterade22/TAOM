@@ -44,6 +44,16 @@ public static class CrashReportIoC
         container.Register<JsonCrashReportRenderer>(Reuse.Singleton);
         container.Register<CrashBundleWriter>(Reuse.Singleton);
 
+        // Bundle throttle — dedup by signature + session cap + cooldown. Without it a
+        // per-tick crash spams hundreds of taom_crash_*.zip. Constants (not MCM): one
+        // bundle per distinct crash, at most 25/session, >=30s between writes.
+        container.RegisterDelegate<CrashBundleThrottle>(_ =>
+            new CrashBundleThrottle(
+                maxBundlesPerSession: 25,
+                minInterval: System.TimeSpan.FromSeconds(30),
+                clock: () => System.DateTime.UtcNow),
+            Reuse.Singleton);
+
         // ButterLib reflection adapter.
         container.Register<IButterLibExceptionHandlerAdapter, ButterLibExceptionHandlerAdapter>(Reuse.Singleton);
 

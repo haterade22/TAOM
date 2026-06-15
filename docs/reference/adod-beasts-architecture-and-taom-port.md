@@ -21,9 +21,11 @@ choice is the root of everything else:
 | **Wolf** | a **map-acquired single PET** bound to the main hero, spawned riderless via the public `Mission.SpawnMonster`, driven by a hand-rolled FSM `AgentComponent` | A companion that follows + fights for the player needs persistent campaign state (which wolf you own) + per-frame follow/aggro logic the engine doesn't provide for a free creature. |
 
 **TAOM's relationship to each is different:**
-- The **elephant trample + mount-lock** is a **faithful 1-for-1 port** — but re-homed onto a **non-rideable
-  creature-troop** (TAOM's `taom_war_elephant` Monster) instead of ADOD's ridden mount, per
-  `feedback_nonhumanoid_creature_troop_not_mount.md`. The **howdah is not ported** (a separate future feature).
+- The **elephant mount-lock + the structural trample/tusk mechanic** are ported from ADOD, re-homed onto a **ridden
+  mount** troop (the mahout rides a `taom_war_elephant` Monster, like ADOD's ridden mount) — but the attack **damage**
+  (trample 50-100 / tusk 50-75, randomized per victim, 2026-06-15) and the cooldown **cadence** (2026-06-10) are TAOM's
+  deliberate rebalance, NOT 1-for-1 with ADOD's fixed-10×2 / 0.001-per-tick roll. The **howdah is not ported** (a
+  separate future feature).
 - The **wolf is not ported at all.** TAOM's **spider** solves the same "riderless non-humanoid combatant" problem
   with an **independent design** (a behavior tree reusing Warg/AdvancedCombat), not a port of the wolf's FSM. The
   wolf is a *reference* (its public-`SpawnMonster` spawn path is the spider's recommended render fix).
@@ -104,9 +106,11 @@ GetPower patch, and the mount-AI — they're all properties of the ridden-mount 
 - **Why coded that way:** a low per-tick probability gives an organic, occasional trample rather than a metronome;
   the facing/range gates keep it to the front arc; the mount-lock exists because ADOD's elephant is a real
   rideable horse-class mount that the AI would otherwise commandeer.
-- **TAOM port (verdict: HIGH faithfulness, no bugs):** every constant is 1-for-1 (`ElephantConfig.cs`); the gate +
-  damage formula are extracted to a unit-tested `IElephantAttackService` (ADR-002/007); the mount-lock folds into
-  the shared `TaomAgentStatCalculateModel`. **Safer than ADOD** in two places: `?.` null-guards on
+- **TAOM port (verdict: HIGH faithfulness on the mechanic, no bugs):** the facing/range **gate** constants are 1-for-1
+  (`ElephantConfig.cs`), but the **damage** and **cooldown** constants are TAOM's deliberate rebalance — trample 50-100 /
+  tusk 50-75 randomized per victim (2026-06-15) replacing ADOD's fixed base-10×2, and a fixed 10s/4s cooldown model
+  (2026-06-10) replacing the 0.001/tick probability. The gate + damage formula are extracted to a unit-tested
+  `IElephantAttackService` (ADR-002/007); the mount-lock folds into the shared `TaomAgentStatCalculateModel`. **Safer than ADOD** in two places: `?.` null-guards on
   `targetMount.Monster` (ADOD had a latent NRE), and exact `Monster.StringId == "taom_war_elephant"` identity vs
   ADOD's brittle `Name.ToLower().Contains("elephant")` substring. **Crucially, TAOM moved the tick off the dead
   `OnTickAsAI` onto `MissionLogic.OnMissionTick`** (see §5) — so TAOM's trample actually fires on 1.4.5 where
@@ -158,8 +162,8 @@ scoped out:
 
 ## 4. Port verdict
 
-TAOM's elephant port is **faithful where it matters and safer in several places**: the trample (constants + gates
-+ damage 1-for-1), the mount-lock (`CanAgentRideMount`/`MountDifficulty=999`), and the `: MissionLogic` lifecycle
+TAOM's elephant port is **faithful where it matters and safer in several places**: the trample (facing/range gates
+1-for-1; damage + cadence deliberately rebalanced — trample 50-100 / tusk 50-75, fixed-cooldown model), the mount-lock (`CanAgentRideMount`/`MountDifficulty=999`), and the `: MissionLogic` lifecycle
 are all correct, with added null-guards, exact-id matching, the dead-`OnTickAsAI`→`OnMissionTick` fix, and pure
 logic extracted to a tested service. Every **non-port** (howdah, rider camera, `GetPower` patch, MCM, manual-Space
 trample, hit-SFX, the entire wolf subsystem + its SaveDefiner/MissionView) is **correctly scoped out** because

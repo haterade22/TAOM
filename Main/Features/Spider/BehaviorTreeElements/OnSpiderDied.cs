@@ -1,3 +1,4 @@
+using System;
 using BehaviorTrees;
 using BehaviorTreeWrapper;
 using BehaviorTreeWrapper.AbstractDecoratorsListeners;
@@ -17,6 +18,12 @@ public class OnSpiderDied : BannerlordConstantEventListener, IBTBannerlordBase, 
 {
     BTBlackboardValue<Agent> _agent;
     public BTBlackboardValue<Agent> Agent { get => _agent; set => _agent = value; }
+
+    // Blackboard members are injected by the BT builder onto every node implementing IBTSpiderBlackboard; this
+    // listener only reads Agent, but must satisfy the interface (mirrors the warg/elephant event listeners).
+    public BTBlackboardValue<DateTime?> PounceLastFired { get; set; }
+    public BTBlackboardValue<DateTime?> SideAttackLastFired { get; set; }
+    public BTBlackboardValue<float> TargetBearing { get; set; }
 
     public OnSpiderDied() : base(SubscriptionPossibilities.OnSelfRemoved) { }
 

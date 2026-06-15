@@ -156,7 +156,21 @@ Armature-space head positions (×100 cm; front = −Y / fangs, back = +Y / abdom
 | leg | `joint28_r/l` | spine1_m | +16.6 |
 | leg | `joint22_r/l` | root_m | +35.2 (rearmost) |
 
-(The 4 walking legs are most likely `joint40, joint34, joint28, joint22` front→back; `joint17`=pedipalp, `joint5`=fang. **Confirm leg numbering with the user before per-leg edits.**)
+(The 4 walking legs are `joint40, joint34, joint28, joint22` front→back; `joint17`=pedipalp, `joint5`=fang.
+**CONFIRMED 2026-06-15** (user + the bite-collision work): **Leg 1 = front**, and the engine bone INDICES
+(via `python tools/tpac_skeleton_dump.py <spider_correct_geo.tpac> spider_skeleton` — index = bone-array order,
+root=0 then constraint-child order) are:
+
+| Leg / part | bones (per side) | front-RIGHT `_r` idx | front-LEFT `_l` idx |
+|---|---|---|---|
+| **Leg 1 (front)** | `joint40-44` (shoulder→thigh→knee→tibia→tip) | **14,15,16,17,18** | **19,20,21,22,23** |
+| Leg 2 | `joint34-38` | 3-7 | 8-12 |
+| fang `joint5_r/l` | chelicerae | 26 | 32 |
+| mouth `joint12_m` = 25, `chest_m` = 13, `head_m` = 24 | (central) | | |
+
+The combat bite-collision uses the **front legs' outer bones** (`SpiderConfig` front-leg consts: thigh→tip =
+15-18 / 20-23). See [spider.md → "Damage + bite-collision tuning"](spider.md) + memory
+`feedback_creature_bite_collision_real_bones_not_placeholders`.)
 
 ---
 

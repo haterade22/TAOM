@@ -613,7 +613,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         ("dg_uruk_foul",              2),  // uruk line entry
         ("dg_khamul_shadow_initiate", 3),
         ("dg_orc_scout",              1),  // ranged-orc line entry (dg_orc_scout -> dg_orc_archer)
-        ("taom_spider_creature",      1),
+        ("taom_spider_creature",     40),  // TEMP-SPIDER-TEST: weight 1 -> 40 for campaign battle testing; REVERT before commit.
     };
 
     // --- Dol Guldur Clan Mappings ---
@@ -651,8 +651,8 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("dg_khamul_shadow_initiate", 2),
             new VolunteerChance("dg_orc_scout", 1),     // ranged-orc line entry
             // Giant spider — culture-fallback recruit for any Dol Guldur fief not in the per-settlement
-            // map above. Spawns + fights as the spider Monster (Patch45_SpiderTroopSpawn).
-            new VolunteerChance("taom_spider_creature", 1)
+            // map above. Spawns + fights as the spider Monster via the vanilla cavalry spawn (ridden mount).
+            new VolunteerChance("taom_spider_creature", 40)  // TEMP-SPIDER-TEST: weight 1 -> 40 for campaign battle testing; REVERT before commit.
         };
     }
 

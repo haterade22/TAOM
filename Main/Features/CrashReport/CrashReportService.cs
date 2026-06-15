@@ -29,6 +29,7 @@ public sealed class CrashReportService : ICrashReportService
     private readonly JsonCrashReportRenderer _jsonRenderer;
     private readonly CrashBundleWriter _bundleWriter;
     private readonly IButterLibExceptionHandlerAdapter _butterLib;
+    private readonly CrashBundleThrottle _throttle;
 
     [ThreadStatic] private static bool _handling;
 
@@ -51,7 +52,8 @@ public sealed class CrashReportService : ICrashReportService
         PlainTextCrashReportRenderer plainRenderer,
         JsonCrashReportRenderer jsonRenderer,
         CrashBundleWriter bundleWriter,
-        IButterLibExceptionHandlerAdapter butterLib)
+        IButterLibExceptionHandlerAdapter butterLib,
+        CrashBundleThrottle throttle)
     {
         _logger = logger;
         _identity = identity;
@@ -70,6 +72,7 @@ public sealed class CrashReportService : ICrashReportService
         _jsonRenderer = jsonRenderer;
         _bundleWriter = bundleWriter;
         _butterLib = butterLib;
+        _throttle = throttle;
     }
 
     public string? HandleException(Exception exception, string originatingPatchTarget)
@@ -86,6 +89,26 @@ public sealed class CrashReportService : ICrashReportService
             if (CrashReportSettings.Instance?.SuspendButterLibHandler ?? true)
             {
                 try { _butterLib.TrySuspend(); } catch { }
+            }
+
+            // Dedup chokepoint. The capture sources (9 per-tick Harmony Finalizers, the
+            // AppDomain hook, the battle-load watchdog, native callback shims) all funnel
+            // here, so a crash that recurs every frame would otherwise write a fresh bundle
+            // each tick — re-zipping an ever-growing taom_debug.log. Compute the cheap
+            // signature (reads the frozen stack only; no engine collectors) and let the
+            // throttle decide. On suppression: one log line, no ComposeContext / bundle /
+            // notify — this kills both the disk spam and the growing-log feedback loop.
+            var earlyStack = StackFrameSnapshotBuilder.FromException(exception);
+            string earlySignature = CrashSignatureCalculator.Compute(
+                exception?.GetType().FullName ?? "(unknown)", originatingPatchTarget, earlyStack);
+            var admission = _throttle.Admit(earlySignature);
+            if (admission.Decision != CrashBundleDecision.WriteBundle)
+            {
+                _logger.LogError(
+                    $"[CrashReport] {admission.Decision} {CrashSignatureCalculator.Short(earlySignature)} " +
+                    $"({exception?.GetType().Name ?? "(unknown)"} @ {originatingPatchTarget}) " +
+                    $"occurrence #{admission.Occurrence} — bundle suppressed");
+                return null;
             }
 
             // Reduced-capture mode for off-main-thread captures (Codex review #46 MED-03).

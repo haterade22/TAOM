@@ -2,6 +2,113 @@
 
 ## 2026-06-15
 
+### fix(spider): lethal bite — damage tuning, per-hit crit, and front-leg bone-collision
+
+Battle feedback: the spider "didn't kill anything." Two causes, both fixed.
+
+- **Damage** (`SpiderAttackService.CalculateSpiderBiteDamage`): raised from 35 base + linear armor (~20/bite vs
+  armor) to `75 + min(velY×25/15, 25)` raw × `clamp((100 − armor×1.1)/100, 0.2, 1)`, plus a **per-hit crit**
+  (`CritChance 0.2`, `×1.75`). Outcomes: unarmored/light ≈ one-shot, medium ≈ 2 hits, heavy ≈ 3 (2 on a crit);
+  a 20% min-passthrough floor so even plate always takes a bite. Crit roll is `MBRandom.RandomFloat` at the
+  boundary (`HandleSpiderTargetHit`) — the formula stays pure; logged as ` CRIT`. Confirmed: 71-75/bite on
+  Looters in the 14:58 campaign log.
+- **The real cause — hit rate.** The 14:53 log showed **75 attacks vs 2 hits (~3% connect)**: the bite played
+  but almost never landed, so damage rarely applied. The bone-collision used the warg-placeholder bone indices
+  (23/37/43) — on the spider's own skeleton those sit on rear / other-side legs — with a tight 0.3-0.4m radius.
+  Fixed to the spider's real **front-leg bones**, verified from the engine skeleton via
+  `tools/tpac_skeleton_dump.py` (front-right `joint40-44_r` = 14-18, front-left `joint40-44_l` = 19-23): pounce
+  uses both front legs' outer bones `[15-18,20-23]`, side swipes the matching side's leg. Radius 0.3-0.4 →
+  **1.8 (pounce) / 1.5 (side)**; detection range 4 → 5.
+
+SpiderAttackService tests: 38 → 41 (damage bands per-armor + crit-roll cells). Deep-review (5 agents) clean
+except one MEDIUM perf finding — `SpatialGrid.GetAgentsInRadius(buffer)` scanned every occupied cell + filtered;
+now enumerates only the radius bounding-box cells via `TryGetValue`. Plus an `isCrit`-log honesty fix.
+
+Not-tested: in-game hit-rate after the front-leg/radius change (live-only — pending battle test; watch
+HIT-vs-ATTACK + `bones=[…]` in the diag log). Research: `tpac_skeleton_dump` of `spider_skeleton`;
+`Agent.GetBaseArmorEffectivenessForBodyPart` → `ArmorTorso`.
+
+### fix(crash-report): deduplicate bundle ZIPs — one per crash, not hundreds
+
+A crash that recurs every tick (the normal failure mode for a broken mission/campaign) made
+`CrashReportService.HandleException` call `_bundleWriter.Write(...)` on every frame, producing hundreds of
+`taom_crash_<timestamp>_<sig>.zip` files at a ~4 s cadence — each ~20 KB larger than the last, because each
+cycle re-zipped the ever-growing `taom_debug.log` that the same method had just appended the full report to.
+
+New pure `CrashBundleThrottle` (session singleton, lock-guarded, clock-injected) sits at the `HandleException`
+chokepoint — every capture source funnels through it. The crash signature is computed cheaply up front (frozen
+stack only); on suppression the method writes one log line and returns before `ComposeContext`/bundle/notify,
+killing both the disk spam **and** the growing-log feedback loop. Three session layers (constants, not MCM):
+**dedup** (a signature is bundled at most once), **cap** (≤25 bundles/session), **cooldown** (≥30 s between
+writes; the first bundle is never gated, so the real crash is always captured). A recurring crash now produces
+exactly one zip. 10 new throttle tests; CrashReport suite 31 green.
+
+This fixes the file spam only — the underlying recurring crash is unchanged (its identity is in `report.txt`
+inside any existing bundle). Existing accumulated zips under `…/Logs/` can be deleted manually.
+
+### feat(spider): directional attack model — pounce + left/right swipes by bearing
+
+Replaced the warg-style single bite with the elephant's directional model (bone-collision retained, not
+the elephant's radial AoE). When an enemy is engageable, the spider fires a priority **pounce**
+(`act_spider_attack_front`, or `act_spider_attack_charge` at `vel.Y ≥ 4`) off a ~5s cooldown; otherwise a
+**left/right swipe** (`act_spider_attack_left`/`_right`) chosen by the nearest enemy's signed bearing off
+a ~2s cooldown. All four clips already existed + were bound in `as_spider` — only `front`+`charge` were
+used before, so this is pure C# (no asset changes). AI-ridden only.
+
+New BT nodes mirror the elephant 1:1: `SpiderEngageDecorator` (engage + bearing), `SpiderAttackOffCooldownDecorator`,
+`SpiderAttackTaskBase`/`SpiderPounceTask`/`SpiderSideAttackTask`, `SpiderAttackKind`. `SpiderConfig` +
+`SpiderAttackActions` + `SpiderAttackService` (`SelectActionName`/`SelectBones`/`IsOffCooldown`) reworked;
+`SpiderAttackTask` + `SpiderCanBiteDecorator` deleted. Comprehensive `[Spider][diag] ATTACK fire` logging
+(attack-gated, removable). **Confirmed working in-game** (2026-06-15 campaign log: clip matches bearing sign).
+
+Deep-review (5 agents): clean except one MEDIUM perf finding — `SpiderEngageDecorator` allocated a `List<Agent>`
+per scan; fixed with an additive zero-alloc `SpatialGrid.GetNearAliveAgentsInRange(..., buffer)` overload +
+reusable `_scratch` (elephant-parity). 16 new SpiderAttackService tests + 10 CustomAttacksUtils tests; full
+suite 3169 green. RCA: `docs/reviews/rca-spider-directional-attacks-2026-06-15.md`.
+
+### fix(spider): Patch48 — strip CanDismount on hits to mounted Spider Riders (native HandleBlowAux AV)
+
+A finite real-melee `CanDismount` hit on a **surviving** mounted Spider Rider AVs inside native
+`Agent.HandleBlowAux` reading `0x3` (debugger-proven 2026-06-15). Same broken non-vanilla mounted-dismount
+native path that Patch47 routes around on *death* — but Patch47 only hard-dismounts before `Die`, so a
+non-lethal dismount hit still reaches the crash. `Patch48_SpiderHitDismountGuard` (prefix on
+`Agent.HandleBlowAux`) strips `BlowFlags.CanDismount` when the victim's mount is the spider Monster, so the
+native dismount never fires — the rider stays on the locked mount, damage still applies. Spider-only (matches
+Patch47); the elephant mahout shares the latent fault but hasn't surfaced.
+
+**Applied, in-game confirmation owed.** Corrects an earlier misdiagnosis: the same crash (first seen with a
+truncated `TickMissionAux → Mission.Tick` stack) was attributed to NaN geometry from our synthetic bite. It
+is not — the blow is finite, vanilla, and on a rider. The `CustomAttacksUtils` NaN/live-state guard
+(`IsBlowGeometrySafe` + active/health revalidation before the reflected `Mission.RegisterBlow`, shared
+warg+spider+elephant) is valid defensive hardening but does **not** fix this crash.
+
+Not-tested: in-game (live-only — Patch48 verified only by applying it in battle, per harmony-patches discipline).
+Research: `Mission.MeleeHitCallback` → `Mission.RegisterBlow` → `Agent.RegisterBlow`/`HandleBlow`/`HandleBlowAux`.
+
+### feat(elephant): bow-armed rider + lethal per-kind trample/tusk damage
+
+In-battle feedback (elephant confirmed working in game): the rider couldn't hit anyone and the attacks
+were too weak.
+
+- **Rider now shoots instead of poking with a spear.** `harad_elephant_rider` carried `eastern_spear_4_t4`
+  as its primary, which can't reach foot targets from the elephant's back — so the `HorseArcher`-grouped
+  rider swung melee into empty air. Replaced the spear (Item0) with a second `bodkin_arrows_b` quiver; the
+  rider already held `steppe_heavy_bow` + arrows + an `aserai_sword_3_t3` (kept as melee backup). With no
+  polearm the AI defaults to the bow; the two quivers give sustained fire from elevation. No new item ids,
+  validator clean.
+- **Distinct, randomized damage.** Trample and tusk shared one fixed value (20 unblocked). They now roll
+  independent per-victim bands — trample 50-100, tusk 50-75 — with a shield block still scaling to ×0.25.
+  `ComputeInflictedDamage` takes the existing `ElephantAttackKind` + a [0,1] `MBRandom.RandomFloat` (clamped +
+  NaN-guarded, supplied by the BT), keeping the service pure; the `× 2` doubling artifact is dropped. The two
+  attack tasks select their band via a new `AttackKind` abstract on `ElephantAttackTaskBase`. Mirrors the
+  spider's per-kind split.
+
+ElephantAttackService tests: 16 → 24 (10 ComputeInflictedDamage cells — both kinds × min/max/midpoint/blocking
++ NaN/out-of-range clamps). Build clean, elephant suite green; moduledata validator PASS.
+
+Not-tested: in-battle AI bow-fire + actual HP loss (live-only — pending battle test).
+Rejected: keeping the spear / adding a longer lance — the reach problem is structural to a back-mounted melee.
+
 ### fix(cultural-feats): guard the `PartyBase.Culture` NRE in party-culture feat resolution
 
 `CultureFeatAdapter.ResolvePartyCulture` called `party.Culture` directly. `PartyBase.Culture` is
@@ -52,6 +159,22 @@ Research: PartyBase.Culture / MapFaction (PartyBase.cs:255, 236-250), PartyBaseH
 Save-compat: none — pure null-safety in a GameModel boundary helper.
 
 Issue #281. RCA: `docs/reviews/rca-culturefeat-partyculture-nre-2026-06-15.md`.
+
+### fix(career): right-anchor in-battle ability HUD beside the health bar (ultrawide-safe)
+
+Players reported the in-battle Career Ability HUD (ability icon + name + "Press V" prompt + charge
+bar) sat at the left-middle of the screen, then that successive placements either overlapped or
+couldn't reach the player health bar. The health bar is anchored to the **right edge**, so on an
+ultrawide display a `Center`-anchored panel lands far to the left and can't sit beside it. Re-anchored
+the root widget in `Main/_Module/GUI/Prefabs/CareerSystem/AbilityHUD.xml` to
+`HorizontalAlignment="Right"` / `MarginRight="480"` / `VerticalAlignment="Bottom"` / `MarginBottom="80"`
+so the panel tracks the same right edge as the health bar at any screen width and sits just to its
+left. Children (icon/name/prompt/charge bar) lay out relative to the root and move with it — no child
+edits. Prefab-only change; no C#, sprite, or binding changes.
+
+Not-tested: final on-screen placement is GUI-live-only — `MarginRight` is the horizontal knob
+(decrease to push further right toward the health bar, increase to pull left); `MarginBottom` is the
+vertical knob.
 
 ## 2026-06-14
 

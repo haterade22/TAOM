@@ -548,6 +548,12 @@ public class SubModule : MBSubModuleBase
         Features.Spider.Hooks.Agent_Die_SpiderDismount_Patch.Initialize();
         _harmony.PatchCategory("Patch47_SpiderDeathDismount");
 
+        // Patch48: the non-lethal sibling of Patch47. A CanDismount melee hit on a mounted Spider Rider AVs in
+        // native HandleBlowAux (reading 0x3) — the same broken non-vanilla mounted-dismount path Patch47 routes
+        // around on death. Strips CanDismount for spider riders so the native dismount never fires (the rider
+        // stays on the locked mount; damage still applies). Debugger-proven 2026-06-15. See docs/features/spider.md.
+        _harmony.PatchCategory("Patch48_SpiderHitDismountGuard");
+
         var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();
         var specResLogger = IoC.Resolve<IModLogger>();
         PartyCharacterVM_InitializeUpgrades_Patch.Initialize(resourceHook, specResLogger);

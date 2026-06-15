@@ -15,8 +15,10 @@ The Giant Spider is a **rideable mount**: `taom_spider_creature` (goblin, Cavalr
 carries `Item.spider_mount_a` in its Horse equipment slot; the vanilla cavalry spawn builds two
 agents — the goblin rider (`FromCharacterObj`) and the spider mount (`FromHorseObj`,
 `Monster.spider`). No spawn interception, no Harmony patch on the spawn path. The spider
-auto-bites enemies via a per-agent behavior tree (`SpiderBehaviorTree`, attached by
-`SpiderMissionBehavior` keyed on `Monster.StringId == "spider"`), mirroring the elephant.
+auto-attacks enemies via a per-agent behavior tree (`SpiderBehaviorTree`, attached by
+`SpiderMissionBehavior` keyed on `Monster.StringId == "spider"`), mirroring the elephant — a
+directional repertoire (priority pounce + left/right swipes by bearing) as of 2026-06-15
+(see "Directional attack model" below).
 
 ## Why this exists (and the three architectures that led here)
 
@@ -140,13 +142,17 @@ problem + the bespoke re-pose path are covered in
 | Piece | Role |
 |---|---|
 | `SpiderMissionBehavior` | Elephant-shape: registers `"SpiderTree"`, first-tick scan + `OnAgentBuild` late-attach keyed on `Monster.StringId == "spider"` (never character id — the character is the goblin), dead pruning |
-| `SpiderBehaviorTree` | `main → has rider → ai controlled → [bite gate → SpiderAttackTask → Sleep] → idle`; player-ridden and riderless branches sleep (engine mount AI runs) |
-| `BehaviorTreeElements/SpiderCanBiteDecorator` | anti-chain gate (`IsSpiderAttack`), SpatialGrid scan, side via `RiderAgent?.Team.Side ?? Team.Side`, cone+range hit check |
-| `BehaviorTreeElements/SpiderAttackActions` | eager `ActionIndexCache` for bite clips + `AnyUnresolved()` drift guard |
-| `SpiderAttackService` | pure (TaleWorlds-free): bite gates, warg-pattern rider damage attribution, `IsSpiderMonster()` |
+| `SpiderBehaviorTree` | Elephant-mirrored DIRECTIONAL tree (2026-06-15): `main → has rider → ai controlled → engage → [pounce-off-cooldown → SpiderPounceTask] / [side-off-cooldown → SpiderSideAttackTask] → idle`; player-ridden + riderless branches sleep. Blackboard: `PounceLastFired`/`SideAttackLastFired`/`TargetBearing` |
+| `BehaviorTreeElements/SpiderEngageDecorator` | engage gate (replaces `SpiderCanBiteDecorator`): anti-chain (`IsSpiderAttack`) + zero-alloc `SpatialGrid` scan (reusable `_scratch` buffer) + cone hit check, then writes the NEAREST enemy's signed bearing (+=LEFT) to `TargetBearing` |
+| `BehaviorTreeElements/SpiderAttackOffCooldownDecorator` | per-kind cooldown gate (`SpiderAttackKind.Pounce` ~5s priority / `SideAttack` ~2s gap-filler) via `IsOffCooldown` |
+| `BehaviorTreeElements/SpiderAttackTaskBase` + `SpiderPounceTask`/`SpiderSideAttackTask` | stamp the kind's cooldown, then fire `SpiderAttack(kind, bearing)` (bone-collision per clip) |
+| `BehaviorTreeElements/SpiderAttackActions` | eager `ActionIndexCache` for the 4 clips (front/charge/left/right) + `ForName` resolve + `IsSpiderAttack` anti-chain + `AnyUnresolved()` drift guard |
+| `SpiderAttackService` | pure (TaleWorlds-free): `SelectActionName`/`SelectBones` (pounce=front/charge by speed; side=left/right by bearing), `IsOffCooldown`, warg-pattern rider damage attribution, `IsSpiderMonster()`; `SpiderAttack` fires the bone-collision `CustomAttack` + the `[Spider][diag] ATTACK fire` log |
+| `AdvancedCombat/CustomAttacksUtils` (shared warg+spider+elephant) | synthetic-blow damage application. 2026-06-15 hardening: live-state revalidation + `IsBlowGeometrySafe` finiteness gate before the reflected `Mission.RegisterBlow` (defensive; NOT the fix for the dismount crash below) |
 | `TaomAgentStatCalculateModel` (CareerSystem) | mount-lock: `CanAgentRideMount=false` + `MountDifficulty=999` for spider mounts (and elephant) — players can't steal the mount; the Horse-slot cavalry spawn ignores the lock for the assigned rider |
 | `CharacterSpawnerService.SpawnMountLogged` (HeroRace) | instrumented replica of the engine's private `SpawnMount` with per-step logging + graceful mount-less degradation on failure. **Keep** (strictly better than the old blind reflective call); demote logging to `LogDebug` at ship. The one-shot `RunSpiderMountDiagnostics` probe battery + `TickProbe` are TEMP-DIAG — retire after the ladder |
 | `Hooks/Agent_Die_SpiderDismount_Patch` (Patch47) | **rider-death AV mitigation — REQUIRED, exonerated and re-enabled 2026-06-12.** A rider dying while seated AVs inside the native `Agent.Die` path (1.4.5: use-after-free 3× on 06-11; 1.4.6: melee-thrust repro 06-12 — Die-path lookup returned **float bits as a table index** from a corrupted action record, mixed-mode-debugger-proven: faulting `RAX+RCX*4` matched bit-for-bit with RCX = float −0.094). The patch routes around it: Prefix on `Agent.Die` hard-dismounts via the engine's own private `SetMountAgent(null)` (cached `AccessTools` at `Initialize`) so riders die the proven on-foot death (verified: `act_death_by_arrow_head2`, clean sever, 0 dead-linked riders); a dying spider frees its rider first. **The 06-12-morning indictment ("post-sever tick AV") was overturned** — that crash was the `CanAttack`/`set_attack_entity` charge CTD, Event-Log-proven to fire with AND without Patch47. Vanilla mounts untouched; body try/catch'd. Registered after Patch46 |
+| `Hooks/Agent_HandleBlowAux_SpiderDismountGuard_Patch` (Patch48) | **non-lethal sibling of Patch47 — APPLIED 2026-06-15, in-game confirmation pending.** A finite real-melee `CanDismount` hit on a *surviving* mounted Spider Rider AVs inside native `Agent.HandleBlowAux` reading `0x3` (debugger-proven 2026-06-15; stack `MeleeHitCallback → Mission.RegisterBlow → Agent.RegisterBlow → HandleBlow → HandleBlowAux`). Same broken non-vanilla mounted-DISMOUNT native path Patch47 routes around on death — but Patch47 only covers death (it hard-dismounts before `Die`), so a non-lethal dismount hit still reaches the crash. Prefix on `Agent.HandleBlowAux` strips `BlowFlags.CanDismount` when the victim's mount is the spider Monster → native dismount never fires, rider stays on the locked mount, damage still applies. Spider-only (matches Patch47); elephant mahout shares the latent fault but hasn't surfaced. Registered after Patch47 |
 
 ## The v1.4.6 engine-bump campaign (2026-06-12) — three crashes, three root causes, GREEN
 
@@ -169,6 +175,87 @@ disassembly of `TaleWorlds.Native.dll` (pdata bounds, rip-relative string maps, 
 rider deaths, spider deaths — NO CRASH** (user-confirmed). The end-to-end recipe distilled from
 this + the elephant campaign: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md).
 
+## Directional attack model + dismount-on-hit crash (2026-06-15)
+
+Two pieces of work this session: the bite was upgraded to a directional repertoire, and a *separate*
+campaign-battle crash was root-caused.
+
+### Directional attacks (✅ confirmed working in-game)
+
+The warg-style single bite was replaced with the **elephant's directional model** (bone-collision
+retained, not the elephant's radial AoE). When a live enemy is engageable, the spider fires a priority
+**pounce** (`act_spider_attack_front`, or `act_spider_attack_charge` at `vel.Y ≥ 4`) if off its ~5s
+cooldown; otherwise a **left/right swipe** (`act_spider_attack_left`/`_right`) chosen by the nearest
+enemy's signed bearing, off a ~2s cooldown. All four clips already existed + were bound in `as_spider`
+(only `front`+`charge` were used before). AI-ridden only (player keeps manual control). The pure
+selection logic (`SelectActionName`/`SelectBones`/`IsOffCooldown`) is unit-tested; the BT nodes mirror
+the elephant 1:1. Verified in the 2026-06-15 13:43 campaign log: clean `[Spider][diag] ATTACK fire`
+lines, clip matching bearing sign exactly (`bearing>=0 → left`, `<0 → right`).
+
+`SpiderEngageDecorator` was also given a reusable `_scratch` buffer (zero-alloc `SpatialGrid` scan) via
+a new additive `SpatialGrid.GetNearAliveAgentsInRange(..., buffer)` overload — elephant-parity allocation
+discipline, found by deep-review.
+
+### The dismount-on-hit crash (Patch48 — ✅ fixed, confirmed in-game 2026-06-15)
+
+**Symptom:** ~1 min into a campaign battle with many spiders, a fatal native AV reading `0x3`. Captured
+under the debugger 2026-06-15: the victim is a **surviving** mounted Spider Rider (Health 12), hit by a
+**real enemy melee weapon** (`Mission.MeleeHitCallback`, NOT our synthetic bite path), the blow geometry
+is **finite**, and it carries **`BlowFlags.CanDismount`**. Stack: `MeleeHitCallback → Mission.RegisterBlow
+→ Agent.RegisterBlow → Agent.HandleBlow → Agent.HandleBlowAux` → native AV at `HandleBlowAux`.
+
+**Root cause:** the engine's native mounted-**dismount** path for the non-vanilla spider mount — the
+*same fault class* as the mounted-**death** path Patch47 routes around (the Patch47 RCA equalized every
+data surface and concluded it's unfixable by data). Patch47 only covers death (hard-dismount before
+`Die`), so a non-lethal `CanDismount` hit still reaches the broken native dismount in `HandleBlowAux`.
+The rider's own animations are complete (`as_goblin_warrior` inherits the full human death/fall surface
+via `base_set="as_human_warrior"`) — not a missing-animation bug.
+
+**Diagnosis correction (honesty):** the *first* report of this crash (truncated stack
+`TickMissionAux → Mission.Tick`, "[Spider][diag] bite flood before the crash") was misdiagnosed as NaN
+geometry corrupting native state from our synthetic blow. It is not — the blow is finite, vanilla, and
+on a rider. The bite flood was correlation. The `CustomAttacksUtils` NaN/live-state guard added that
+session is valid *defensive hardening* but does **not** fix this crash.
+
+**Fix:** `Patch48_SpiderHitDismountGuard` (Code-plane table above) — prefix on `Agent.HandleBlowAux`
+strips `CanDismount` from blows on spider-mounted riders so the native dismount never fires. Also the
+correct design (the spider is a locked mount; its rider must not be knocked off). **Confirmed in-game
+2026-06-15** — a full campaign battle with enemies meleeing the mounted spider riders, no `0x3` crash
+(the hypothesis held: the AV was the `CanDismount` native dismount in `HandleBlowAux`). RCA:
+[rca-spider-dismount-on-hit-2026-06-15.md](../reviews/rca-spider-dismount-on-hit-2026-06-15.md).
+
+### Damage + bite-collision tuning (2026-06-15)
+
+**Damage model** (`SpiderAttackService.CalculateSpiderBiteDamage`, per bone-collision hit, applied as Pierce):
+`raw = 75 (MaxBaseDamage) + min(velY×25/15, 25)` → 75..100, then `× clamp((100 − armor×1.1)/100, 0.2, 1)`,
+then a **per-hit crit** (`CritChance 0.2`, `×CritMultiplier 1.75`). Outcomes: unarmored/light ≈ one-shot,
+medium (~35 torso armor) ≈ 2 hits, heavy (~55) ≈ 3 (2 on a crit), and a 20% min-passthrough floor so even
+plate always takes a bite. Crit roll is `MBRandom.RandomFloat` at the boundary (`HandleSpiderTargetHit`),
+keeping the formula pure; logged as ` CRIT` in `[Spider][diag] HIT`. **Deployed + confirmed** — the
+2026-06-15 14:58 log shows 71-75 per bite on Looters. The previous values (35 base + linear armor) chipped
+~20 vs armor; the bump was battle feedback ("didn't kill anything").
+
+**Bite-collision fix (the real "didn't kill anything" cause).** The 14:53 log showed **75 ATTACK fires vs
+2 HITs (~3% connect)** — the bite *played* constantly but almost never landed, so the (now-lethal) damage
+rarely applied. Cause: the bone-collision used the **warg-placeholder bone indices (23/37/43)** — on the
+spider's own skeleton those sit on rear / other-side legs — with a tight 0.3-0.4m sphere, so the indexed
+bones rarely passed within range of a target (the exact failure the warg's own code comment warns about:
+a few bones + a small radius can't form a detection volume). Fix: a giant spider strikes with its **front
+legs**, so the bite now uses the real front-leg bones, **verified from the engine skeleton** via
+`python tools/tpac_skeleton_dump.py <spider_correct_geo.tpac> spider_skeleton`:
+
+| | shoulder(40) | thigh(41) | knee(42) | tibia(43) | tip(44) |
+|---|---|---|---|---|---|
+| front-right `joint4X_r` | 14 | **15** | **16** | **17** | **18** |
+| front-left `joint4X_l` | 19 | **20** | **21** | **22** | **23** |
+
+Collision uses the outer leg (thigh→tip): **pounce** = both front legs `[15,16,17,18,20,21,22,23]`,
+**left/right swipe** = the matching side's leg. **Radius 0.3-0.4 → 1.8 (pounce) / 1.5 (side)** (the warg
+used 1.0m with a 10-bone cone; the giant spider is ~2× and strikes with long legs), and detection range
+4 → 5. In-game confirmation owed — watch the HIT-vs-ATTACK ratio + `bones=[…]` in the diag log; the radius
+consts (`SpiderConfig.PounceCollisionRadius`/`SideCollisionRadius`) are the dials. The real fang bones
+(`joint5_r/l` = 26/32, mouth `joint12_m` = 25) are available if a bite-at-the-mouth model is wanted later.
+
 ## Current state & known issues (2026-06-12, post-1.4.6 campaign)
 
 | Item | Status |
@@ -183,13 +270,17 @@ this + the elephant campaign: [creature-mount-authoring.md](../ai-includes/creat
 | Vanilla-map battle (full polish data) | ✅ 2026-06-11 09:50 `battle_terrain_biome_092`: playable, formations deployed, idles standing, riders seated, battery all-green, 0 mount failures |
 | **v1.4.6 full battle (river map)** | ✅ **2026-06-12: charge + bank jumps + river crossing + prolonged melee + rider deaths + spider deaths, NO CRASH** — all three 1.4.6 crash sites fixed (see the engine-bump campaign section) |
 | Rider death while mounted | ✅ Patch47 dismount-before-death re-enabled (exonerated 2026-06-12); riders die clean on-foot deaths; required on 1.4.6 (melee-death Die-path AV proven without it) |
+| Rider non-lethal `CanDismount` hit | ✅ **Patch48 (2026-06-15) — confirmed in-game.** A surviving mounted rider taking a dismountable melee hit AV'd in native `HandleBlowAux` (`0x3`); the prefix strips `CanDismount` for spider riders. Sibling of Patch47 (death) on the same broken native dismount path. See "Damage + bite-collision tuning" / RCA |
 | `lotrtaom_iron_hills_01_forceatmo` | ❌ **SEPARATE BUG — not spider. The scene has NEVER loaded: 8/8 CTDs** (2026-06-10 20:53→2026-06-12 06:27), all dying at `scene.xscene` load, pre-agent-spawn — incl. runs with all-green spider probes. `taom_gondor_village_001_forceatmo` loads fine, so the forceatmo/Patch16 mechanism is exonerated — it's this scene's assets. Several 6/10 "spider mission CTDs" were this scene, conflated into the spider evidence. **Removed from `custom_battle_scenes.xml` 2026-06-12** so it stops eating test runs; restore once repaired. Own issue/investigation |
 | Walk gait skew | ⚠️ known from the retarget work (pre-existing; polish) |
 | Charge visual | 💡 unused 112KB `an_spi_charge` clip exists — possible upgrade over `an_spi_attack_charge` for the pounce; evaluate later |
 | Inventory equip | ❓ retest (was the second AV repro; same root cause, expected fixed) |
 | Campaign map icon | ❓ ladder step (c) pending (needs campaign) |
 | Player riding / slope / conversation+inventory tableaus | ❓ ladder step (d) pending |
-| Bite BT in battle | ❓ verify `SpiderTree` fires for AI riders |
+| Bite BT in battle | ✅ confirmed — `SpiderTree` fires for AI riders (2026-06-15 campaign log) |
+| Directional attacks (pounce + L/R) | ✅ confirmed working in-game (2026-06-15) — clip matches enemy bearing; see "Directional attack model" |
+| Bite damage / lethality | ✅ tuned + deployed (2026-06-15) — 75 base + speed, armor curve, 20% crit; 71-75/bite on Looters (one-shot light, ~2 medium, ~3 heavy). Tunable via `SpiderConfig` |
+| Bite hit-rate (front-leg collision) | ⚠️ **fixed 2026-06-15, in-game confirm owed** — was ~3% connect (warg-placeholder bones + tight radius); now real front-leg bones (`joint40-44_r/l` = 14-18/19-23) + 1.8/1.5m radius. Watch HIT-vs-ATTACK in the diag log |
 | Diagnostics | battery kept as a regression canary until the ladder completes (one-shot, 6 probes, ms-cheap); `docs/_scratch_characterspawner.cs` deleted; retire battery at ship |
 | `.bak` inventory | `action_sets.xml.bak-spider-mount`, `monster_usage_sets.xml.bak-spider-mount`, `.bak-usage-enriched`, `lotr_monster_spider.xml.bak-*`, 9× `*_anm.tpac.bak-untagged`, `spider_correct_geo.tpac.backup` — clean up at ship |
 

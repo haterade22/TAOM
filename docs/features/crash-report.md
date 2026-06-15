@@ -74,6 +74,22 @@ Two layers of protection prevent infinite recursion if a collector / renderer it
 1. `CrashReportPatchHelper._onPatchStack` — thread-static `bool`. Set by every Finalizer entry; if already set, returns the original exception unchanged (lets vanilla / BUTR take over).
 2. `CrashReportService._handling` (also thread-static) — short-circuits a second `HandleException` call on the same thread.
 
+### Bundle deduplication / throttle
+
+The thread-static re-entry guards above stop a *single* `HandleException` from recursing — they do **not** stop the *same crash from being captured on successive ticks*. Because the catch points are per-tick/per-frame lifecycle methods, a crash that recurs every frame (the normal failure mode for a broken mission/campaign — the same NRE throws each tick) called `_bundleWriter.Write(...)` on every cycle. Each cycle re-zipped the ever-growing `taom_debug.log` (which `WriteToLog` had just appended the full report to), producing **hundreds of monotonically-growing `taom_crash_*.zip` files** at a few-second cadence. (Reported 2026-06-15.)
+
+[`CrashBundleThrottle`](../../Main/Features/CrashReport/CrashBundleThrottle.cs) — a pure, lock-guarded, clock-injected session singleton — sits at the `HandleException` chokepoint (consulted right after the BUTR-suspend block, before the heavy `ComposeContext`). The signature is computed cheaply up front (frozen stack only, no engine collectors); on any non-`WriteBundle` decision the method writes one log line and returns, skipping collection, bundle, and the player inquiry. This simultaneously caps disk writes **and** breaks the growing-log feedback loop.
+
+Three session-scoped layers (reset only on a fresh game launch; constants in `CrashReportIoC`, **not** MCM):
+
+| Layer | Rule | Decision |
+|---|---|---|
+| **Dedup** | a signature that already produced a bundle is never re-bundled | `SuppressDuplicate` |
+| **Cap** | at most **25** distinct bundles per session | `SuppressCap` |
+| **Cooldown** | a *new* signature within **30 s** of the last write is held off — but **not** marked bundled, so it can still get its one bundle later | `SuppressCooldown` |
+
+The very first bundle is never cooldown-gated (`_bundlesWritten > 0` guard), so the real crash is always captured. Net effect: a recurring crash produces **exactly one** zip; a degenerate "different exception every tick" burst is bounded by cap + cooldown. Unit-tested in [`CrashBundleThrottleTests`](../../TAOM.Tests/Features/CrashReport/CrashBundleThrottleTests.cs).
+
 ### BUTR coexistence
 
 TAOM ships ButterLib 2.10.4 via `TAOM.Dependencies`, which contains its own `ExceptionHandlerSubSystem`. By default we suspend it on the first capture via reflection — `ButterLibExceptionHandlerAdapter.TrySuspend()` calls `ExceptionHandlerSubSystem.Instance.Disable()`. This avoids both BUTR's window and ours firing for the same crash. The user can disable our suspension via MCM (`TAOM — Crash Report → Master → Suspend BUTR Exception Handler`).

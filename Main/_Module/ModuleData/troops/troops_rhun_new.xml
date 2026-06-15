@@ -3777,7 +3777,7 @@
         id="wainrider_swift_chariot"
         default_group="Cavalry"
         level="41"
-        name="{=aom_wainrider_swift_chariot_name}[Rhûn] Wainrider Swift-Chariot"
+        name="{=aom_wainrider_swift_chariot_name}[ARhûn] Wainrider Swift-Chariot"
         occupation="Soldier"
         culture="Culture.khuzait">
         <face>

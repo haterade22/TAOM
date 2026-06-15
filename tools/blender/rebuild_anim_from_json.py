@@ -33,7 +33,13 @@ def rebuild_from_json(json_path, armature_name, action_suffix="_src"):
     J = json.load(open(json_path))
     arm = bpy.data.objects[armature_name]
     bones = J["bones"]
-    rest = {b["name"]: _mat16(b["rest"]) for b in bones}
+    # Bannerlord RestFrame is DirectX/XNA ROW-major (bone offset lives in M41-M43, the bottom row).
+    # Blender Matrix is column-major (translation in the right column M14-M34), so we MUST transpose,
+    # or every bone offset reads as 0.0 -> children stack on their parent -> the whole skeleton collapses
+    # onto the root (the "jumbled mess"). RCA 2026-06-14: this masked itself because the retarget still
+    # produced moving fcurves (a count), so it was never caught by a visual check. Transpose fixes
+    # offsets AND the rest-rotation fallback (row-major R -> column-major R^T).
+    rest = {b["name"]: _mat16(b["rest"]).transposed() for b in bones}
     parent = {b["name"]: b["parent"] for b in bones}
     order = [b["name"] for b in bones]                 # parent-before-child (verified)
     anim = {a["bone"]: a for a in J["boneAnims"]}

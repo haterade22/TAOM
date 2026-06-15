@@ -41,6 +41,19 @@ public class SpatialGrid
     public List<Agent> GetAgentsInRadius(Vec3 center, float radius)
     {
         List<Agent> agents = new();
+        GetAgentsInRadius(center, radius, agents);
+        return agents;
+    }
+
+    /// <summary>
+    /// Zero-alloc overload: clears <paramref name="buffer"/> and fills it with the agents in radius. Use from
+    /// per-eval BT hot paths (e.g. the creature engage decorators) with a reusable field buffer to avoid a fresh
+    /// List allocation every scan — the elephant's <c>EnemyInTrampleRangeDecorator</c> uses the equivalent
+    /// <c>Mission.GetNearbyAgents(..., scratch)</c> form. The allocating overload above delegates here.
+    /// </summary>
+    public void GetAgentsInRadius(Vec3 center, float radius, List<Agent> buffer)
+    {
+        buffer.Clear();
         float radiusSquared = radius * radius;
         int minX = (int)Math.Floor((center.x - radius) / CellSize);
         int maxX = (int)Math.Floor((center.x + radius) / CellSize);
@@ -49,26 +62,23 @@ public class SpatialGrid
         int minZ = (int)Math.Floor((center.z - radius) / CellSize);
         int maxZ = (int)Math.Floor((center.z + radius) / CellSize);
 
-        foreach (var kvp in Grid)
+        // Enumerate ONLY the cells in the radius bounding box (TryGetValue per cell) rather than scanning every
+        // occupied cell in the grid and filtering by key — the bbox is tiny for the creature scan ranges (≤~27
+        // cells at CellSize 20) while the grid can hold hundreds of cells in a full battle (deep-review 2026-06-15).
+        for (int x = minX; x <= maxX; x++)
+        for (int y = minY; y <= maxY; y++)
+        for (int z = minZ; z <= maxZ; z++)
         {
-            var key = kvp.Key;
-            if (key.Item1 >= minX && key.Item1 <= maxX &&
-                key.Item2 >= minY && key.Item2 <= maxY &&
-                key.Item3 >= minZ && key.Item3 <= maxZ)
+            if (!Grid.TryGetValue((x, y, z), out List<Agent> cell)) continue;
+            foreach (Agent agent in cell)
             {
-                foreach (Agent agent in kvp.Value)
-                {
-                    float dx = agent.Position.x - center.x;
-                    float dy = agent.Position.y - center.y;
-                    float dz = agent.Position.z - center.z;
-                    if (dx * dx + dy * dy + dz * dz <= radiusSquared)
-                    {
-                        agents.Add(agent);
-                    }
-                }
+                float dx = agent.Position.x - center.x;
+                float dy = agent.Position.y - center.y;
+                float dz = agent.Position.z - center.z;
+                if (dx * dx + dy * dy + dz * dz <= radiusSquared)
+                    buffer.Add(agent);
             }
         }
-        return agents;
     }
 
     public List<Agent> GetNearAliveAgentsInRange(float range, Agent target)
@@ -79,5 +89,11 @@ public class SpatialGrid
     public List<Agent> GetNearAliveAgentsInRange(float range, Vec3 targetPos)
     {
         return GetAgentsInRadius(targetPos, range);
+    }
+
+    /// <summary>Zero-alloc overload — fills <paramref name="buffer"/> with the alive agents in range of <paramref name="target"/>.</summary>
+    public void GetNearAliveAgentsInRange(float range, Agent target, List<Agent> buffer)
+    {
+        GetAgentsInRadius(target.Position, range, buffer);
     }
 }

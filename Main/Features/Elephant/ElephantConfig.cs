@@ -43,9 +43,22 @@ public static class ElephantConfig
     public const double SideAttackCooldownSeconds = 4.0;
     /// <summary>Radius around the target inside which enemies are trampled (upstream pack: 2f; raised to 4f to match elephant footprint).</summary>
     public const float TrampleRadius = 4f;
-    /// <summary>Base trample damage; halved-to-a-quarter vs blocking targets, doubled for inflicted (upstream pack: 10).</summary>
-    public const int TrampleBaseDamage = 10;
-    /// <summary>Blow magnitude passed to the damage primitive (upstream-pack blows use ~the base magnitude; 50f is TAOM's default).</summary>
+    // --- Per-hit randomized damage (2026-06-15) — replaced the upstream pack's fixed `round(10 * mult) * 2 = 20`
+    // with distinct per-kind bands rolled per victim, so a war elephant feels lethal. The roll is supplied by the
+    // BT node (MBRandom.RandomFloat) into the pure service. A shield block scales the rolled value by
+    // BlockedDamageMultiplier (the upstream pack's 0.25 quarter, now named); the upstream `* 2` doubling is gone
+    // because damage is expressed directly. TrampleBlowMagnitude stays the knockback impulse, not HP.
+    /// <summary>Minimum trample (radial stomp) damage before block scaling.</summary>
+    public const int TrampleMinDamage = 50;
+    /// <summary>Maximum trample (radial stomp) damage before block scaling.</summary>
+    public const int TrampleMaxDamage = 100;
+    /// <summary>Minimum tusk (side-swing) damage before block scaling.</summary>
+    public const int TuskMinDamage = 50;
+    /// <summary>Maximum tusk (side-swing) damage before block scaling.</summary>
+    public const int TuskMaxDamage = 75;
+    /// <summary>Damage multiplier applied when the victim is shield-blocking (upstream-pack parity quarter).</summary>
+    public const float BlockedDamageMultiplier = 0.25f;
+    /// <summary>Blow magnitude passed to the damage primitive — knockback impulse, independent of inflicted HP (TAOM default).</summary>
     public const float TrampleBlowMagnitude = 50f;
 
     // --- Attack clip mapping — VERIFIED numerically (2026-06-10) by sampling the Head_08 bone's lateral
