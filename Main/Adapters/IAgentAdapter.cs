@@ -44,4 +44,15 @@ public interface IAgentAdapter
         bool stopOnFirstHit,
         Action<IAgentAdapter, IAgentAdapter, sbyte> onHitCallback,
         Action onExpirationCallback = null);
+
+    /// <summary>Plays <paramref name="action"/> then fires <paramref name="onHitCallback"/> instantly for every
+    /// enemy within <paramref name="strikeRadius"/> whose horizontal bearing from this agent's look-direction is
+    /// inside [<paramref name="arcCenterBearingDeg"/> ± <paramref name="arcHalfAngleDeg"/>] (signed, + = LEFT).
+    /// The reliable radial alternative to bone-collision for large mounts (elephant-style); excludes self + rider.</summary>
+    void RadialStrike(
+        ActionIndexCache action,
+        float strikeRadius,
+        float arcHalfAngleDeg,
+        float arcCenterBearingDeg,
+        Action<IAgentAdapter, IAgentAdapter, sbyte> onHitCallback);
 }

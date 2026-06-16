@@ -7,7 +7,9 @@ This is the RACE counterpart to the creature-MOUNT workflow in
 hand-authored quadrupeds; a humanoid race reuses the human library via retargeting.
 
 > **Status (2026-06-14):** BOTH the **extraction** (tpac→FBX) and the **retarget** halves are PROVEN
-> on Blender 5.1.2 (human walk → troll, 72 moving fcurves, clean run). Extraction is tooled
+> on Blender 5.1.2 (human walk → troll). ⚠ The rebuild had a row-major-rest COLLAPSE bug (fixed
+> 2026-06-14, see §A) — the old "72 fcurves, clean run" was a count, not a visual check; always screenshot
+> the rebuilt pose. Extraction is tooled
 > (`tools/extract_human_anims_tpac.ps1`) but **headless-UNSTABLE** (assimp access-violation — see
 > Hard boundaries); source clips via the Modding Kit instead. The **export → compile → bind → in-game**
 > half is gated on the Kit GUI + the game. Separately, the `cave_troll` race (`human_skeleton` + the
@@ -55,10 +57,24 @@ with action sets `base_set="as_human_warrior"` (they *inherit* human clips for f
 `cave_troll` troop + `BodyProperty.fighter_cave_troll`, currently **disabled** (2026-05-14) — that is the
 ready-made template for the race data (see [troll-race.md](../features/troll-race.md)).
 
-**Design decision (2026-06-13): the troll is a SEPARATE race with its OWN skeleton + a full bespoke
-clip set** (NOT `base_set="as_human_warrior"` reuse). That frees the skeleton (the ARP-derived deform
-bones need not match human bone names) at the cost of compiling a full clip set — which ARP retargeting
-makes feasible by sourcing every clip from the human library.
+**Direction (updated 2026-06-14): the SHIPPING troll is `cave_troll` on `human_skeleton`** (inherits the
+full human set via `base_set`), confirmed in battle. There are **two ways** to give a humanoid race custom
+movement — pick by how different the motion must be:
+
+- **`human_skeleton` race + clip override (LIGHTWEIGHT — what `cave_troll` uses).** A clip authored on
+  `human_skeleton` plays DIRECTLY (the race already runs on that skeleton), so you **skip B + C entirely —
+  no ARP retarget, no skeleton export**: rebuild the gait on `human_skeleton` (step A) → restyle → standard
+  `bpy.ops.export_scene.fbx` (armature-only, Y/X axes, baked) → Kit-compile → override only the specific
+  `act_*` codes you changed in `as_<race>_warrior`. Used for the troll lumbering walk/run (`troll_walk_lumber`
+  / `troll_run_lumber`, sway ×1.4). The rest of the human set keeps playing via `base_set`.
+- **Bespoke OWN-skeleton + full retargeted set (HEAVY — PARKED for the troll).** A separate skeleton whose
+  bones need not match human, with a *full* compiled clip set (no `base_set` fallback → unbound codes T-pose).
+  Frees the skeleton but costs every clip + multiple Kit hand-offs. The B→C→D pipeline below is this path;
+  for a humanoid whose attacks are engine-driven anyway it rarely pays off.
+
+> **Asset gate:** authored animation FBXs are exported to a NON-Armory staging folder
+> (`E:\LOTRAOMAssets\troll_clips_to_import\`); the user imports them into LOTRLOME_Armory + Kit-compiles
+> themselves (see memory `feedback-keep-new-anims-out-of-armory`). Never write new FBXs into the Armory.
 
 ## The pipeline
 
@@ -68,9 +84,14 @@ makes feasible by sourcing every clip from the human library.
   rotation/position keyframes + skeleton bone order to JSON via `TpacTool.Lib` (pure data, no assimp →
   never crashes). Then in Blender `rebuild_from_json(json_path, human_armature)`
   (`tools/blender/rebuild_anim_from_json.py`) walks the bone hierarchy with the JSON local transforms.
-  **Calibration:** the JSON local quaternion = the Blender armature-space pose with NO axis swap/conjugate
-  (pelvis t0 `(0.7071,0,-0.7071,0)` matches exactly). Verified end-to-end: rebuilt walk → retarget = 72
-  fcurves (identical to FBX path); `troll_run_forward` produced from JSON alone (it crashed assimp). The
+  **Calibration (CRITICAL — two requirements, both mandatory):** (1) the animated rotation quaternions need
+  NO axis swap/conjugate (pelvis t0 `(0.7071,0,-0.7071,0)` matches the Blender pose exactly); (2) **the bone
+  REST matrix MUST be `.transposed()`** — Bannerlord `RestFrame` is DirectX ROW-major (bone offset in
+  M41-M43), so without the transpose every offset reads 0 → every bone stacks on the root → the whole
+  skeleton COLLAPSES (RCA 2026-06-14; fixed in `rebuild_anim_from_json.py`). ⚠ The old "72 fcurves" proof
+  was a COUNT, not a visual check — pre-fix the rebuilt clips were collapsed and nobody noticed. **ALWAYS
+  screenshot the rebuilt pose** (a standing, grounded figure). Post-fix, a rebuilt walk/run on
+  `human_skeleton` is clean; `troll_run_forward` was produced from JSON alone (it crashed assimp). The
   human-armature base is any correct-rest `human_skeleton` import (bones named pelvis/spine/…). **Use this.**
 - **Modding-Kit export (also reliable):** in the Kit, select human `SkeletalAnimation` clips →
   Export FBX. Start with a core wave: idle / walk / run / turn + a few attacks + death.

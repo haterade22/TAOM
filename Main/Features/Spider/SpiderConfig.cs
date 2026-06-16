@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace TAOM.Features.Spider;
 
 /// <summary>
@@ -28,10 +26,18 @@ public static class SpiderConfig
     internal const float BiteAttackRange = 1.5f;
     /// <summary>Facing cone for the engage gate, degrees (warg parity: 30).</summary>
     internal const float BiteConeAngleDegrees = 30f;
-    /// <summary>CustomAttack candidate pre-filter radius (SpatialGrid scan around the spider center). The front legs
-    /// reach ~2m out and the collision sphere adds ~1.8m, so the effective strike reach is ~4m — keep this a touch
-    /// wider so a reachable target isn't pre-filtered out before the bone check. Bumped 4→5 with the leg-strike model.</summary>
-    internal static float TargetDetectionRange = 5f;
+    // --- Radial strike (2026-06-15): bone-collision connected only ~6% on this big fast mount even with the
+    // correct front-leg bones + a 1.8m sphere, so damage is now dealt RADIALLY in a front arc when the spider
+    // attacks (the elephant's reliable model). The front-leg ANIMATION still plays; the front ARC keeps it a
+    // directed front-leg strike. Tunable from battle feel. ---
+    /// <summary>Radius (m) around the spider within which an attack damages enemies — covers the front-leg strike reach.</summary>
+    public const float StrikeRadius = 3.5f;
+    /// <summary>Pounce arc half-angle (deg) about straight ahead — a forward cone (±70° = 140°).</summary>
+    public const float PounceArcHalfAngleDeg = 70f;
+    /// <summary>Side-swipe arc center offset (deg) from straight ahead (+ = LEFT). Left swipe centers here; right at its negation.</summary>
+    public const float SideArcCenterDeg = 45f;
+    /// <summary>Side-swipe arc half-angle (deg) about the side center — covers forward-to-flank on that side.</summary>
+    public const float SideArcHalfAngleDeg = 50f;
 
     // --- Directional attack model (elephant parity: priority attack on a long cooldown, side attacks on a short one) ---
     /// <summary>Forward speed (vel.Y) at or above which a pounce uses the running charge clip instead of the standing front bite.</summary>
@@ -74,12 +80,10 @@ public static class SpiderConfig
     public const int DamageToFlinch = 8;
     public const int DamageToFall = 30;
 
-    // Front-leg bone indices — the giant spider strikes/grabs with its FRONT LEGS (Leg 1). Indices VERIFIED
-    // from spider_skeleton via `python tools/tpac_skeleton_dump.py <spider_correct_geo.tpac> spider_skeleton`
-    // (2026-06-15): front-RIGHT joint40-44_r = 14-18, front-LEFT joint40-44_l = 19-23. Leg segments per side:
-    // 40=shoulder 41=thigh 42=knee 43=tibia 44=tip. Collision uses the OUTER leg (thigh→tip) — the part that
-    // reaches out and sweeps through targets. (The prior warg-placeholder bones 23/37/43 sat mostly on rear /
-    // other-side legs, so a 0.3-0.4m sphere overlapped a target only ~3% of attacks — the 2026-06-15 battle log.)
+    // Front-leg bone indices — VERIFIED reference, kept for a possible future bone-based feature (NOT wired to
+    // damage in the radial model). From spider_skeleton via
+    // `python tools/tpac_skeleton_dump.py <spider_correct_geo.tpac> spider_skeleton` (2026-06-15): front-RIGHT
+    // joint40-44_r = 14-18, front-LEFT joint40-44_l = 19-23 (40=shoulder 41=thigh 42=knee 43=tibia 44=tip).
     public const sbyte FrontRightLegThigh = 15;  // joint41_r
     public const sbyte FrontRightLegKnee  = 16;  // joint42_r
     public const sbyte FrontRightLegTibia = 17;  // joint43_r
@@ -88,36 +92,4 @@ public static class SpiderConfig
     public const sbyte FrontLeftLegKnee   = 21;  // joint42_l
     public const sbyte FrontLeftLegTibia  = 22;  // joint43_l
     public const sbyte FrontLeftLegTip    = 23;  // joint44_l
-
-    /// <summary>Bone-collision sphere radius for a pounce — large because the spider's long front legs sweep a
-    /// wide arc as it lunges (the warg used 1.0m with a 10-bone front cone; the giant spider is ~2× and strikes
-    /// with its legs). Tuned 2026-06-15 after a battle log showed the prior 0.3-0.4m radius connecting ~3% of attacks.</summary>
-    public const float PounceCollisionRadius = 1.8f;
-    /// <summary>Bone-collision sphere radius for a side swipe (one front leg).</summary>
-    public const float SideCollisionRadius = 1.5f;
-
-    // Pre-allocated bone-index lists for SpiderAttackService.SelectBones — avoids per-attack list allocation.
-    // List<sbyte> (not IReadOnlyList) because IAgentAdapter.CustomAttack needs a concrete List. Treat as immutable.
-    /// <summary>Pounce (standing front strike) — BOTH front legs' outer bones (thigh→tip): a two-legged lunge.</summary>
-    public static readonly List<sbyte> PounceFrontBones = new List<sbyte>
-    {
-        FrontRightLegThigh, FrontRightLegKnee, FrontRightLegTibia, FrontRightLegTip,
-        FrontLeftLegThigh, FrontLeftLegKnee, FrontLeftLegTibia, FrontLeftLegTip,
-    };
-    /// <summary>Charge pounce (fast lunge) — both front legs, same as the standing strike (the spider plows in legs-first).</summary>
-    public static readonly List<sbyte> PounceChargeBones = new List<sbyte>
-    {
-        FrontRightLegThigh, FrontRightLegKnee, FrontRightLegTibia, FrontRightLegTip,
-        FrontLeftLegThigh, FrontLeftLegKnee, FrontLeftLegTibia, FrontLeftLegTip,
-    };
-    /// <summary>Left swipe — the LEFT front leg (thigh→tip).</summary>
-    public static readonly List<sbyte> LeftSwingBones = new List<sbyte>
-    {
-        FrontLeftLegThigh, FrontLeftLegKnee, FrontLeftLegTibia, FrontLeftLegTip,
-    };
-    /// <summary>Right swipe — the RIGHT front leg (thigh→tip).</summary>
-    public static readonly List<sbyte> RightSwingBones = new List<sbyte>
-    {
-        FrontRightLegThigh, FrontRightLegKnee, FrontRightLegTibia, FrontRightLegTip,
-    };
 }

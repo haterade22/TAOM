@@ -47,14 +47,18 @@ LOTRLOME_Armory already ships two troll races — **the ready-made data template
 
 ## Skeleton + animation approach (this project)
 
-**Decision (2026-06-13): the troll gets its OWN skeleton (exported from the `troll_rig_01.blend` ARP
-rig) and a full bespoke clip set**, rather than `base_set="as_human_warrior"` reuse. Rationale + the
-exact ARP retarget/export pipeline live in the workflow doc. The skeleton's deform bones are ARP-named
-(`root.x`, `spine_01.x`, …) — fine for a standalone race since its `as_troll_warrior` binds its own
-compiled clips (it does not need to be human-bone-compatible).
+**Current direction (updated 2026-06-14): the SHIPPING troll is `cave_troll` on `human_skeleton`** with
+`as_cave_troll_warrior` (`base_set="as_human_warrior"`) — it inherits the full human animation set
+(walk/run/attacks/death) for free, confirmed working in battle. Troll *flavor* is layered on top as
+**movement overrides only**: lumbering walk/run clips authored on `human_skeleton` (so they play directly
+— NO ARP retarget) and bound to the cave_troll's forward walk/run `act_*` codes. Attacks stay
+engine-driven — Bannerlord battle melee is pose-blend, not standalone clips (the vanilla 2h attack clips
+extract as 0-keyframe shells) — so custom clips can only ever change *movement*.
 
-If a faster path is wanted, the **`cave_troll` model** (reuse `human_skeleton` + `base_set=as_human_warrior`)
-gives a working troll with zero animation authoring — useful as a fallback / first-light.
+**The bespoke OWN-skeleton path (`skeleton_troll` + a full retargeted clip set, decided 2026-06-13) is
+PARKED.** It works in principle (ARP retarget → `ge_export`; see the workflow doc) but adds a large clip
+set + multiple Kit hand-offs for a humanoid whose attacks are engine-driven regardless. Revisit only if
+the troll ever needs movement that human-skeleton overrides can't express.
 
 ## Race-authoring recipe
 
@@ -81,6 +85,9 @@ gives a working troll with zero animation authoring — useful as a fallback / f
 | Retarget driver + map | `tools/blender/arp_retarget.py`, `tools/blender/bannerlord_human_to_troll.bmap` |
 | Human-clip extractor | `tools/extract_human_anims_tpac.ps1` (tpac→FBX; **run under Windows PowerShell 5.1**) |
 | Extracted source clips | `E:\LOTRAOMAssets\_troll_extract\` (e.g. `core\anim_walk_forward_unarmed.fbx`) |
+| No-assimp clip pipeline | `tools/read_anim_keyframes_tpac.ps1` (tpac→JSON) + `tools/blender/rebuild_anim_from_json.py` (JSON→Blender; **transpose-fixed 2026-06-14**) |
+| Lumber clips (staged, pending Kit-compile) | `E:\LOTRAOMAssets\troll_clips_to_import\troll_{walk,run}_lumber.fbx` — **NON-Armory**; user imports + Kit-compiles |
+| Lumber work scene | `E:\LOTRAOMAssets\troll_lumber_WORK_20260614.blend` (`human_skeleton` + the 2 lumber actions) |
 | Monster / skin / action_set | `<game>\Modules\LOTRLOME_Armory\ModuleData\{monsters,skins,action_sets}.xml` |
 | BodyProperty | `Main/_Module/ModuleData/TAOM_bodyproperties.xml` (`fighter_cave_troll`) |
 | Troop | `Main/_Module/ModuleData/troops/troops_mordor.xml` (`cave_troll`, **ENABLED 2026-06-14**) |
@@ -97,9 +104,24 @@ gives a working troll with zero animation authoring — useful as a fallback / f
 - ✅ Uses the full human animation library via `as_cave_troll_warrior` (`base_set="as_human_warrior"`)
   on `human_skeleton`. ALL assets (Monster/skin/action_set/meshes/items) already live in
   LOTRLOME_Armory — **nothing to import.** Zero C# changes (engine auto-lists the race via skins.xml).
-- Test: fight a Mordor army; armored trolls spawn + fight as humanoid infantry.
+- ✅ CONFIRMED in battle (2026-06-14): trolls spawn at ~1.9× scale, armored, wield 2h maces/spears/
+  hammers/axes, fight + die correctly via the inherited human anim set — no T-pose, no underwear, no crash.
+- 🟡 Troll-flavored MOVEMENT (first pass, pending Kit-compile): `troll_walk_lumber` + `troll_run_lumber`
+  authored on `human_skeleton` (pelvis/spine sway ×1.4 for a heavier gait), staged armature-only at
+  `E:\LOTRAOMAssets\troll_clips_to_import\` (**NON-Armory** — the user imports + Kit-compiles). Then 20
+  `as_cave_troll_warrior` forward walk/run overrides (`act_{walk,run}_forward_{2h,2h_axe,polearm,1h,unarmed}`
+  + each `_left_stance`) bind them; refine the look interactively (`/refine-creature-anim`) after the
+  in-game look. **Authored anim FBXs stage OUTSIDE LOTRLOME_Armory until the user imports them** (standing rule).
 
 ### Track 2 — bespoke retargeted set (pipeline proven; source step is a Kit/UI hand-off)
+
+> ⚠ **CORRECTION (2026-06-14):** the "PROVEN / 72 fcurves" claims below were validated by an fcurve
+> COUNT, not a visual check. `rebuild_from_json` had a row-major/column-major bug that read every bone
+> offset as 0 and **collapsed the rebuilt clip onto the root** (on both `human_skeleton` and
+> `skeleton_troll`). FIXED 2026-06-14 — `.transposed()` on the rest matrix in `rebuild_anim_from_json.py`;
+> post-fix a rebuild yields a clean grounded standing gait. ALWAYS screenshot the rebuilt pose. The clips
+> ge_exported to the Hill Troll `clips/` folder before the fix are collapsed garbage — don't compile them.
+
 - ✅ Extraction PROVEN: human clip `animations.tpac` → FBX via `tools/extract_human_anims_tpac.ps1`
   (the human skeleton lives in `EmAssetPackages/human/human.tpac`, NOT skeletons.tpac; meshed export
   with materials cleared so Blender builds an animated armature). One walk imported with 269 fcurves.

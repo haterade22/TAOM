@@ -2,6 +2,53 @@
 
 ## 2026-06-15
 
+### fix(battle-load): raise stall-watchdog threshold 45s → 5 min (false-positive on slow siege loads)
+
+A crash bundle from a Minas Tirith siege (`taom_crash_20260615_230847_b18f3441`) was a
+**false-positive from `BattleLoadStallWatchdog`, not a real crash or hang.** The watchdog fires a
+synthetic `BattleLoadStallException` (handed to the crash-report collector — never thrown into the
+game loop) when a mission load runs past `StallWatchdogSeconds`. The default was 45 s, but the large
+custom `taom_gondor_town_minas_tirith_forceatmo` scene legitimately takes ~3-5 min to load on first
+entry (native scene streaming + first-time shader compile, downstream of all TAOM managed code), so
+the watchdog tripped at 45 s while the load was still progressing — the player spawned in normally
+minutes later. Field battles still load in ~6-10 s, which is what 45 s was tuned for.
+
+Raised the default `StallWatchdogSeconds` 45 → 300 (`BattleLoadDiagnosticsSettings` +
+`BattleLoadDiagnosticsSettingsProvider` fail-open default) and the MCM/clamp ceiling 300 → 600 so the
+new default isn't pinned at the rail. No logic change — the pure `ShouldFire` decision is untouched,
+and its threshold-agnostic tests stay green. MCM persistence note: existing saved configs keep their
+old value; bump the in-game slider (or clear the saved config) for the new default to take effect on
+the current machine.
+
+Not-tested: in-game watchdog timing (live-only — load the Minas Tirith siege, confirm no
+`WATCHDOG STILL LOADING` within 5 min).
+
+### fix(troll-anim): rebuild_from_json bone-offset collapse + first-pass lumbering walk/run
+
+The `cave_troll` is confirmed working in battle (spawns ~1.9× scale, armored, melee weapons, no crashes).
+Reverted the LOTRLOME_Armory `skins.xml` cave_troll skins from a bespoke-skeleton detour back to the
+working `human_skeleton` + `lotr_troll_*` meshes (`skins.xml.troll_bak`; bespoke version preserved at
+`skins.xml.bespoke_skeleton_bak`); `validate_moduledata.py` PASS.
+
+**Root-caused a silent bug in `tools/blender/rebuild_anim_from_json.py`.** It read each bone's rest OFFSET
+from the wrong matrix cell — Bannerlord `RestFrame` is DirectX row-major (offset in M41-M43), but the
+loader read the column → every offset = 0 → every bone stacked on the root → the rebuilt clip collapsed to
+a single point (on `human_skeleton` and the bespoke `skeleton_troll` alike — the "jumbled mess"). The bug
+survived because the only prior check was an fcurve COUNT ("72 fcurves"), never a visual one. Fixed with
+`.transposed()` on the rest matrix; verified the rebuilt walk/run are clean, grounded, striding humans
+(numeric bone heads + screenshots). Every clip the buggy rebuild produced earlier was collapsed.
+
+**Authored first-pass troll-flavored movement:** `troll_walk_lumber` + `troll_run_lumber`, rebuilt on
+`human_skeleton` (so they play directly on the cave_troll — no ARP retarget needed) with pelvis/spine sway
+amplified ×1.4 for a heavier gait. Exported armature-only to a NON-Armory staging folder
+(`E:\LOTRAOMAssets\troll_clips_to_import\`) per a new standing rule: authored anim FBXs stage outside
+LOTRLOME_Armory until the user imports + Kit-compiles them. Pending: Kit-compile → 20 `as_cave_troll_warrior`
+forward walk/run overrides (`act_{walk,run}_forward_{2h,2h_axe,polearm,1h,unarmed}` + each `_left_stance`)
+→ in-game test.
+
+Not-tested: in-game lumber (live-only — pending Kit-compile + Mordor battle). Research: vanilla
+`action_sets.xml` forward walk/run act-code set (stance-inflated; only melee stances overridden).
+
 ### fix(spider): lethal bite — damage tuning, per-hit crit, and front-leg bone-collision
 
 Battle feedback: the spider "didn't kill anything." Two causes, both fixed.

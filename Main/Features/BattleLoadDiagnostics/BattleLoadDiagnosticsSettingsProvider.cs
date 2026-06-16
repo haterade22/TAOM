@@ -8,9 +8,9 @@ namespace TAOM.Features.BattleLoadDiagnostics;
 // into a comparison).
 public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosticsSettingsProvider
 {
-    private const double DefaultWatchdogSeconds = 45d;
+    private const double DefaultWatchdogSeconds = 300d;
     private const double MinWatchdogSeconds = 10d;
-    private const double MaxWatchdogSeconds = 300d;
+    private const double MaxWatchdogSeconds = 600d;
 
     public bool IsEnabled =>
         BattleLoadDiagnosticsSettings.Instance?.EnableBattleLoadDiagnostics ?? true;

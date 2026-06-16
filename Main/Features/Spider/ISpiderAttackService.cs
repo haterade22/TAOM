@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using TAOM.Adapters;
 
 namespace TAOM.Features.Spider;
@@ -12,7 +11,8 @@ public interface ISpiderAttackService
     int CalculateSpiderBiteDamage(IAgentAdapter target, float velocity, float armorEffectivenessPercent, float critRoll);
     void HandleSpiderTargetHit(IAgentAdapter attacker, IAgentAdapter target, sbyte boneId);
 
-    /// <summary>Fires the resolved directional attack (pounce or left/right swipe) via bone-collision CustomAttack.</summary>
+    /// <summary>Fires the resolved directional attack (pounce or left/right swipe): plays the clip + deals radial
+    /// damage in the kind's front arc (reliable, replacing the unreliable bone-collision).</summary>
     void SpiderAttack(IAgentAdapter spider, SpiderAttackKind kind, float bearing);
 
     // --- Pure decision helpers (no TaleWorlds types — unit-tested; elephant-parity) ---
@@ -23,6 +23,7 @@ public interface ISpiderAttackService
     /// <summary>Resolves the clip name for a (kind, velocity, bearing): pounce → front/charge by speed; side → left/right by bearing (≥0 = LEFT).</summary>
     string SelectActionName(SpiderAttackKind kind, float velocityY, float bearing);
 
-    /// <summary>Resolves the bone-collision set matching <see cref="SelectActionName"/>.</summary>
-    List<sbyte> SelectBones(SpiderAttackKind kind, float velocityY, float bearing);
+    /// <summary>Resolves the radial-damage arc for a (kind, bearing): pounce → forward cone; side → forward-left
+    /// (bearing ≥ 0) or forward-right flank. Returns (arc center offset deg, half-angle deg); + center = LEFT.</summary>
+    (float centerDeg, float halfAngleDeg) SelectArc(SpiderAttackKind kind, float bearing);
 }

@@ -31,7 +31,7 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     public bool EnableStallWatchdogBundle { get; set; } = true;
 
     [SettingPropertyGroup("Stall Watchdog")]
-    [SettingPropertyInteger("Stall Threshold (seconds)", 10, 300, Order = 2,
-        HintText = "How long a battle load may run before the watchdog flags it as stalled. Default 45s.")]
-    public int StallWatchdogSeconds { get; set; } = 45;
+    [SettingPropertyInteger("Stall Threshold (seconds)", 10, 600, Order = 2,
+        HintText = "How long a battle load may run before the watchdog flags it as stalled. Default 300s (5 min) — large custom siege scenes (e.g. Minas Tirith) legitimately take minutes to load on first entry.")]
+    public int StallWatchdogSeconds { get; set; } = 300;
 }

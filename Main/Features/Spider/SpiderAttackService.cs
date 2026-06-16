@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
@@ -102,25 +101,18 @@ public class SpiderAttackService : ISpiderAttackService
         float velocityY = spider.MovementVelocity.Y;
         string clipName = SelectActionName(kind, velocityY, bearing);
         ActionIndexCache action = SpiderAttackActions.ForName(clipName);
-        List<sbyte> boneIds = SelectBones(kind, velocityY, bearing);
+        (float arcCenterDeg, float arcHalfAngleDeg) = SelectArc(kind, bearing);
 
-        // Charge pounce gets a wider/longer collision window (the lunge sweeps through); the front bite and the
-        // side swipes use the tighter standing window. Per-clip, mirroring the warg's standing-vs-running split.
-        bool isChargePounce = kind == SpiderAttackKind.Pounce && velocityY >= SpiderConfig.ChargeVelocityThreshold;
-        float actionProgressMin = 0.1f;
-        float actionProgressMax = isChargePounce ? 0.7f : 0.5f;
-        float boneCollisionRadius = kind == SpiderAttackKind.Pounce ? SpiderConfig.PounceCollisionRadius : SpiderConfig.SideCollisionRadius;
-        float targetDetectionRange = SpiderConfig.TargetDetectionRange;
-
-        // [Spider][diag] fire log — attack-gated (fires only when an attack actually fires; the BT cooldown
-        // decorators limit this to ~once/2-5s per spider, never per-tick). Single prefix for one-grep removal
-        // after in-game sign-off. bearing is informational for a pounce (clip is chosen by speed there).
+        // [Spider][diag] fire log — attack-gated (the BT cooldown decorators limit this to ~once/2-5s per spider).
+        // Single prefix for one-grep removal after sign-off.
         _logger.LogInfo($"[Spider][diag] ATTACK fire: kind={kind} clip={clipName} " +
-                        $"bearing={bearing:0.000}({(bearing >= 0f ? "LEFT" : "RIGHT")}) vel.Y={velocityY:0.0} " +
-                        $"bones=[{string.Join(",", boneIds)}] range={targetDetectionRange:0.0}m radius={boneCollisionRadius:0.0} " +
-                        $"window=[{actionProgressMin:0.0}-{actionProgressMax:0.0}].");
+                        $"arc=center{arcCenterDeg:0}±{arcHalfAngleDeg:0}deg radius={SpiderConfig.StrikeRadius:0.0}m " +
+                        $"bearing={bearing:0.00}({(bearing >= 0f ? "LEFT" : "RIGHT")}) vel.Y={velocityY:0.0}.");
 
-        spider.CustomAttack(action, boneIds, actionProgressMin, actionProgressMax, targetDetectionRange, boneCollisionRadius, true,
+        // Radial damage in the front arc (the elephant's reliable model — replaces the bone-collision that
+        // connected ~6%). Each in-arc enemy runs through HandleSpiderTargetHit (team check, crit, armor, rider
+        // attribution, fall/flinch). The front-leg clip still plays for the visual.
+        spider.RadialStrike(action, SpiderConfig.StrikeRadius, arcHalfAngleDeg, arcCenterDeg,
             (attackerAdapter, targetAdapter, boneId) => HandleSpiderTargetHit(attackerAdapter, targetAdapter, boneId));
     }
 
@@ -134,8 +126,12 @@ public class SpiderAttackService : ISpiderAttackService
             ? (velocityY >= SpiderConfig.ChargeVelocityThreshold ? SpiderConfig.PounceChargeActionName : SpiderConfig.PounceFrontActionName)
             : (bearing >= 0f ? SpiderConfig.SwingLeftActionName : SpiderConfig.SwingRightActionName);
 
-    public List<sbyte> SelectBones(SpiderAttackKind kind, float velocityY, float bearing)
-        => kind == SpiderAttackKind.Pounce
-            ? (velocityY >= SpiderConfig.ChargeVelocityThreshold ? SpiderConfig.PounceChargeBones : SpiderConfig.PounceFrontBones)
-            : (bearing >= 0f ? SpiderConfig.LeftSwingBones : SpiderConfig.RightSwingBones);
+    public (float centerDeg, float halfAngleDeg) SelectArc(SpiderAttackKind kind, float bearing)
+    {
+        if (kind == SpiderAttackKind.Pounce)
+            return (0f, SpiderConfig.PounceArcHalfAngleDeg);   // forward cone
+        // Side swipe: the matching front flank (+ center = LEFT, the bearing sign convention).
+        float center = bearing >= 0f ? SpiderConfig.SideArcCenterDeg : -SpiderConfig.SideArcCenterDeg;
+        return (center, SpiderConfig.SideArcHalfAngleDeg);
+    }
 }

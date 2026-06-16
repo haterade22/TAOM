@@ -16,6 +16,9 @@ public class AgentAdapter : IAgentAdapter
     private readonly IMissionAdapterFactory _factory;
     private readonly IModLogger _logger;
     private readonly Func<IBoneCollisionService> _boneCollisionServiceFactory;
+    // Reusable scan buffer for RadialStrike (the attack is cooldown-gated, but the field buffer keeps the
+    // zero-alloc SpatialGrid overload's benefit and matches the engage decorator's pattern).
+    private readonly List<Agent> _radialScratch = new();
 
     public AgentAdapter(Agent agent, IMissionAdapterFactory factory, IModLogger logger, Func<IBoneCollisionService> boneCollisionServiceFactory)
     {
@@ -183,5 +186,60 @@ public class AgentAdapter : IAgentAdapter
             onHitCallback,
             onExpirationCallback
         ));
+    }
+
+    public void RadialStrike(
+        ActionIndexCache action,
+        float strikeRadius,
+        float arcHalfAngleDeg,
+        float arcCenterBearingDeg,
+        Action<IAgentAdapter, IAgentAdapter, sbyte> onHitCallback)
+    {
+        if (_agent == null || !_agent.IsActive() || _agent.IsFadingOut())
+        {
+            _logger.LogWarning("AgentAdapter:RadialStrike: attempt to use on a null or dead agent.");
+            return;
+        }
+
+        _agent.SetActionChannel(0, action, true);
+
+        if (SpatialGrid.Instance == null)
+        {
+            _logger.LogWarning("AgentAdapter:RadialStrike: SpatialGrid not initialized.");
+            return;
+        }
+
+        // Radial-in-arc: fire onHitCallback for every enemy within strikeRadius whose horizontal bearing from our
+        // look-direction is inside [arcCenter ± arcHalfAngle] (signed bearing, + = LEFT). Instant at strike time —
+        // the elephant's reliable radial model, replacing the bone-collision that connected only ~6% on this big
+        // fast mount (the team check + damage live in the callback, HandleSpiderTargetHit). Excludes self + rider.
+        SpatialGrid.Instance.GetNearAliveAgentsInRange(strikeRadius, _agent, _radialScratch);
+        if (_radialScratch.Count == 0) return;
+
+        Vec3 lookDir = _agent.LookDirection;
+        float lookLenSq = lookDir.x * lookDir.x + lookDir.y * lookDir.y;
+        if (lookLenSq < 1e-6f) return;                       // degenerate facing — skip this strike
+        float invLook = 1f / (float)Math.Sqrt(lookLenSq);
+        float lx = lookDir.x * invLook, ly = lookDir.y * invLook;
+
+        for (int i = 0; i < _radialScratch.Count; i++)
+        {
+            Agent target = _radialScratch[i];
+            if (target == _agent || target == _agent.RiderAgent || !target.IsActive()) continue;
+
+            float dx = target.Position.x - _agent.Position.x;
+            float dy = target.Position.y - _agent.Position.y;
+            float lenSq = dx * dx + dy * dy;
+            if (lenSq < 1e-4f) continue;                     // on top of us — no meaningful bearing
+            float inv = 1f / (float)Math.Sqrt(lenSq);
+            float tx = dx * inv, ty = dy * inv;
+
+            float dot = lx * tx + ly * ty;                   // forward-ness
+            float cross = lx * ty - ly * tx;                 // side (+ = left)
+            float signedAngleDeg = (float)(Math.Atan2(cross, dot) * (180.0 / Math.PI));
+            if (Math.Abs(signedAngleDeg - arcCenterBearingDeg) > arcHalfAngleDeg) continue;
+
+            onHitCallback(this, _factory.GetAgentAdapter(target), 0);
+        }
     }
 }

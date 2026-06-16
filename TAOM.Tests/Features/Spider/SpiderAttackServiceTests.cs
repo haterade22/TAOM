@@ -203,20 +203,17 @@ public class SpiderAttackServiceTests
     }
 
     [TestMethod]
-    public void SpiderAttack_InactiveSpider_DoesNotInvokeCustomAttack()
+    public void SpiderAttack_InactiveSpider_DoesNotStrike()
     {
         var spider = Substitute.For<IAgentAdapter>();
         spider.IsActive().Returns(false);
 
         _sut.SpiderAttack(spider, SpiderAttackKind.Pounce, bearing: 0f);
 
-        spider.DidNotReceive().CustomAttack(
+        spider.DidNotReceive().RadialStrike(
             Arg.Any<ActionIndexCache>(),
-            Arg.Any<System.Collections.Generic.List<sbyte>>(),
-            Arg.Any<float>(), Arg.Any<float>(), Arg.Any<float>(), Arg.Any<float>(),
-            Arg.Any<bool>(),
-            Arg.Any<System.Action<IAgentAdapter, IAgentAdapter, sbyte>>(),
-            Arg.Any<System.Action>());
+            Arg.Any<float>(), Arg.Any<float>(), Arg.Any<float>(),
+            Arg.Any<System.Action<IAgentAdapter, IAgentAdapter, sbyte>>());
     }
 
     // ---------------------------------------------------------------------
@@ -386,28 +383,47 @@ public class SpiderAttackServiceTests
             _sut.SelectActionName(SpiderAttackKind.SideAttack, velocityY: 0f, bearing: -0.5f));
 
     // ---------------------------------------------------------------------
-    // SelectBones — bone-collision set matching the resolved clip (pure)
+    // SelectArc — radial-damage arc per (kind, bearing) (pure)
+    //   Pounce → forward cone (center 0, ±PounceArcHalfAngleDeg)
+    //   SideAttack → forward flank: center +SideArcCenterDeg (bearing≥0=LEFT) or its negation, ±SideArcHalfAngleDeg
     // ---------------------------------------------------------------------
 
     [TestMethod]
-    public void SelectBones_PounceLowVelocity_ReturnsFrontBones()
-        => Assert.AreSame(SpiderConfig.PounceFrontBones,
-            _sut.SelectBones(SpiderAttackKind.Pounce, velocityY: 0f, bearing: 0f));
+    public void SelectArc_Pounce_ReturnsForwardCone()
+    {
+        var (center, half) = _sut.SelectArc(SpiderAttackKind.Pounce, bearing: 0.5f);
+        Assert.AreEqual(0f, center);
+        Assert.AreEqual(SpiderConfig.PounceArcHalfAngleDeg, half);
+    }
 
     [TestMethod]
-    public void SelectBones_PounceHighVelocity_ReturnsChargeBones()
-        => Assert.AreSame(SpiderConfig.PounceChargeBones,
-            _sut.SelectBones(SpiderAttackKind.Pounce, velocityY: 10f, bearing: 0f));
+    public void SelectArc_PounceIgnoresBearing_AlwaysForward()
+    {
+        var (center, _) = _sut.SelectArc(SpiderAttackKind.Pounce, bearing: -0.9f);
+        Assert.AreEqual(0f, center);
+    }
 
     [TestMethod]
-    public void SelectBones_SideAttackPositiveBearing_ReturnsLeftBones()
-        => Assert.AreSame(SpiderConfig.LeftSwingBones,
-            _sut.SelectBones(SpiderAttackKind.SideAttack, velocityY: 0f, bearing: 1f));
+    public void SelectArc_SideAttackPositiveBearing_ReturnsLeftFlank()
+    {
+        var (center, half) = _sut.SelectArc(SpiderAttackKind.SideAttack, bearing: 1f);
+        Assert.AreEqual(SpiderConfig.SideArcCenterDeg, center);    // + = LEFT
+        Assert.AreEqual(SpiderConfig.SideArcHalfAngleDeg, half);
+    }
 
     [TestMethod]
-    public void SelectBones_SideAttackNegativeBearing_ReturnsRightBones()
-        => Assert.AreSame(SpiderConfig.RightSwingBones,
-            _sut.SelectBones(SpiderAttackKind.SideAttack, velocityY: 0f, bearing: -1f));
+    public void SelectArc_SideAttackZeroBearing_ReturnsLeftFlank()
+        // Boundary: >= 0 resolves LEFT (matches SelectActionName's left/right split).
+        => Assert.AreEqual(SpiderConfig.SideArcCenterDeg,
+            _sut.SelectArc(SpiderAttackKind.SideAttack, bearing: 0f).centerDeg);
+
+    [TestMethod]
+    public void SelectArc_SideAttackNegativeBearing_ReturnsRightFlank()
+    {
+        var (center, half) = _sut.SelectArc(SpiderAttackKind.SideAttack, bearing: -1f);
+        Assert.AreEqual(-SpiderConfig.SideArcCenterDeg, center);   // - = RIGHT
+        Assert.AreEqual(SpiderConfig.SideArcHalfAngleDeg, half);
+    }
 
     // ---------------------------------------------------------------------
     // IsOffCooldown — pure cooldown gate (mirror ElephantAttackServiceTests)
