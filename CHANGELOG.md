@@ -4,6 +4,8 @@
 
 ### feat(troop-weight): shed-on-upgrade so AI lords respect troop weight + fix unweighted UI counts
 
+Issue: #282.
+
 **The bug a user spotted:** AI lords (e.g. Galadriel's Lothlórien army of 317 elves) field far more
 elite troops than the troop-weight budget should allow, making them too strong in auto-resolve.
 
