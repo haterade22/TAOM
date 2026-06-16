@@ -85,6 +85,66 @@ All four run for **every** party (the `NumberOfAllMembers` weighting is not main
 
 RCA: [`docs/reviews/rca-troopweight-phantom-wounded-2026-06-07.md`](../reviews/rca-troopweight-phantom-wounded-2026-06-07.md).
 
+## Shed-on-Upgrade — AI lords respect troop weight (2026-06-16)
+
+### The gap
+
+A user reported AI lords (e.g. a Lothlórien army of 317 elves) fielding far more elite troops than
+the weight budget should allow. Investigation (decompile-verified) found:
+
+- **AI recruitment already respects weight.** Vanilla `RecruitmentCampaignBehavior` reads the patched
+  `PartyBase.NumberOfAllMembers` everywhere it decides "am I full / recruit more," so AI parties stop
+  *recruiting* at their weighted cap — exactly like the player.
+- **AI auto-upgrades did NOT.** `PartyUpgraderCampaignBehavior.UpgradeReadyTroops(PartyBase)` auto-
+  upgrades an AI party's ready troops with no party-size check (it skips only `MainParty`). In vanilla
+  this is harmless because an upgrade preserves headcount, and headcount == weight when every troop is
+  weight 1. TAOM breaks that invariant: a party fills its cap with weight-1 recruits, then auto-upgrades
+  them into weight-2/3 elites and balloons to 2–3× its intended weighted budget. Nothing trimmed it.
+- **The player party is immune** — it never auto-upgrades (you upgrade manually and see the weighted
+  count via the display patches).
+
+### The fix
+
+A postfix on `UpgradeReadyTroops` (`Patch17_TroopWeight`) runs once per party *after* all its upgrades
+(so the roster mutation happens outside vanilla's loop). The hook re-guards `MainParty`/`!IsActive`
+(vanilla's own guard), early-outs when `CalculateWeightedMemberCount(party) <= PartySizeLimit`, then
+reads the roster into engine-free `WeightedTroopEntry` rows and calls the pure planner:
+
+`ITroopWeightService.PlanShed(entries, limit)` sheds the lowest-value bodies first (ascending Tier,
+then Weight; never heroes/leader) until the weighted total is back within the limit — "fewer, better
+troops." Removals apply via `MemberRoster.AddToCounts(character, -count)`. Side benefit: over-cap
+*legacy* parties trim on their next upgrade tick too. Gated on `EnableTroopWeight`; event-gated
+`[TroopWeight][diag]` logging fires only when a shed happens (strip after in-game sign-off).
+
+### Auto-resolve is power-driven, NOT count-driven (why weight can't touch it)
+
+Simulated-battle strength is `Σ over each man (Number − Wounded) × per-troop-power`, built by iterating
+`MemberRoster` directly (`MapEvent` → `MapEventSide` → `DefaultMilitaryPowerModel.GetPowerOfParty`). It
+**never reads** the TAOM-patched `NumberOfAllMembers`/`NumberOfRegularMembers` getters (it uses the
+deliberately-unweighted `NumberOfHealthyMembers` for side size). So troop weight is invisible to auto-
+resolve, and 317 elves correctly fight as 317 real bodies at elite power. The *only* weight-side lever
+for "elven armies should be a bit lower in a fight" is making the army **be** smaller — which shed-on-
+upgrade does. (Scaling per-troop power by weight in `TaomMilitaryPowerModel.GetDefaultTroopPower` is the
+only alternative and was rejected — it would nerf elite combat strength, contradicting the design.)
+
+### UI count displays (weighted vs raw)
+
+Surfaces that read the raw `MemberRoster.TotalManCount` show the *unweighted* headcount. Newly corrected
+to the weighted total:
+
+| Surface | Method | Status |
+|---------|--------|--------|
+| Clan-screen party list ("X/limit" + "Party Size:" subtitle) | `ClanPartyItemVM.UpdateProperties` | **Fixed** (postfix, via `TroopWeightDisplayHook`) |
+| Main-party health tooltip — "Land Troop Capacity" row | `CampaignUIHelper.GetMainPartyHealthTooltip` (raw at `:1083`) | **Fixed** (extended `RewriteHealthTooltip`; the red over-capacity tint still follows vanilla's raw compare — cosmetic) |
+| Map party-nameplate hover tooltip ("Troops (N)" + formation breakdown) | data-bound map widget — exact builder not located in the decompile | **Deferred** — needs in-game tracing before a safe patch |
+| Town garrison tooltip | `CampaignUIHelper.GetTownGarrisonTooltip` (`:561`) | **Deferred** — weighting a garrison count is debatable (garrisons aren't party-size-budgeted) |
+| Map info bar troop count | `MapInfoVM` | **Deferred** — low impact (player's own count) |
+
+Already weight-aware (no work): anything reading `NumberOfAllMembers` directly, and the 6 prior patches
+(recruitment screen, party-transfer label, the 3 health-tooltip battle-ready/wounded surfaces, map
+nameplate *number* via `PartyBaseHelper.GetPartySizeText`). `ArmyManagementItemVM.Strength` is a power
+figure, not a count — out of scope.
+
 ## Configuration
 
 ### Config File: `Main/_Module/ModuleData/TroopWeights/troop_weights.xml`
@@ -122,8 +182,11 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/TroopWeight/ITroopWeightService.cs` | Service interface: `GetTroopWeight(string)`, `CalculateWeightedMemberCount(PartyBase)`, etc. |
-| `Main/Features/TroopWeight/TroopWeightService.cs` | Core implementation with `Dictionary<string, float>` cache (case-insensitive) |
+| `Main/Features/TroopWeight/ITroopWeightService.cs` | Service interface: `GetTroopWeight(string)`, `CalculateWeightedMemberCount(PartyBase)`, `PlanShed(...)`, etc. |
+| `Main/Features/TroopWeight/TroopWeightService.cs` | Core implementation with `Dictionary<string, float>` cache (case-insensitive) + the pure `PlanShed` planner |
+| `Main/Features/TroopWeight/TroopShedPlanning.cs` | Engine-free `WeightedTroopEntry` / `ShedInstruction` types for the pure shed planner |
+| `Main/Features/TroopWeight/Hooks/PartyUpgraderUpgradeReadyTroops*` | Shed-on-upgrade: interface + boundary hook + `Patch17_TroopWeight` postfix on `UpgradeReadyTroops` |
+| `Main/Features/TroopWeight/Hooks/ClanPartyItemVM_UpdateProperties_Patch.cs` + `IOnClanPartyItemUpdateProperties.cs` | Clan-screen party-list weighted count (handled in `TroopWeightDisplayHook`) |
 | `Main/Features/TroopWeight/ITroopWeightXmlLoader.cs` | Loader interface |
 | `Main/Features/TroopWeight/TroopWeightXmlLoader.cs` | XML parser using `IPathService`, graceful degradation on missing file |
 | `Main/Features/TroopWeight/TroopWeightIoC.cs` | `RegisterTroopWeightFeature()` + `InitializeHooks()` |

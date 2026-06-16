@@ -30,6 +30,7 @@
     <TroopWeight id="imladris_nobleman" weight="2.0" />
     <TroopWeight id="imladris_swordguard" weight="2.0" />
     <TroopWeight id="imladris_archer" weight="2.0" />
+    <TroopWeight id="imladris_bowman" weight="2.0" />
     <TroopWeight id="rivendell_noble" weight="2.0" />
 
     <!-- ===== MIRKWOOD — Wood Elves ===== -->

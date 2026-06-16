@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement;
 using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.Overlay;
 using TaleWorlds.Core;
 using TaleWorlds.Core.ViewModelCollection.Information;
@@ -25,7 +26,8 @@ public class TroopWeightDisplayHook :
     IOnCampaignUIHelperGetMainPartyHealthTooltip,
     IOnCampaignUIHelperGetPartyHealthTooltip,
     IOnGameMenuPartyItemRefreshCounts,
-    IOnPartyBaseHelperGetPartySizeText
+    IOnPartyBaseHelperGetPartySizeText,
+    IOnClanPartyItemUpdateProperties
 {
     private readonly ITroopWeightService _troopWeightService;
     private readonly IModLogger _logger;
@@ -141,6 +143,36 @@ public class TroopWeightDisplayHook :
         }
     }
 
+    public void OnClanPartyItemUpdateProperties(ClanPartyItemVM partyItem)
+    {
+        try
+        {
+            var party = partyItem?.Party;
+            if (party?.MobileParty == null || party.MemberRoster == null)
+                return;
+
+            int weightedTotal = (int)Math.Ceiling(_troopWeightService.CalculateWeightedMemberCount(party));
+            // 0 weighted on a non-empty roster means the read failed — leave the vanilla text.
+            if (weightedTotal == 0 && party.MemberRoster.Count > 0)
+                return;
+
+            // Mirror vanilla UpdateProperties' "X/limit" + "Party Size: X/limit" build, with the weighted
+            // current substituted for the raw TotalManCount it used.
+            GameTexts.SetVariable("LEFT", weightedTotal);
+            GameTexts.SetVariable("RIGHT", party.PartySizeLimit);
+            string sizeText = GameTexts.FindText("str_LEFT_over_RIGHT").ToString();
+            partyItem.PartySizeText = sizeText;
+
+            GameTexts.SetVariable("LEFT", GameTexts.FindText("str_party_morale_party_size").ToString());
+            GameTexts.SetVariable("RIGHT", sizeText);
+            partyItem.PartySizeSubTitleText = GameTexts.FindText("str_LEFT_colon_RIGHT").ToString();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[TroopWeight] ClanPartyItem.UpdateProperties hook error: {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
     /// <summary>
     /// Rewrites the "Battle Ready Troops" and "Wounded Troops" entries of a vanilla party-health
     /// tooltip with the weighted split. When weighted wounded is 0, strips the healing-rate block
@@ -172,6 +204,17 @@ public class TroopWeightDisplayHook :
             {
                 prop.ValueLabel = wounded.ToString();
                 woundedIdx = i;
+            }
+            else if (prop.DefinitionLabel == _landCapacityStr)
+            {
+                // Capacity row (main-party tooltip only). Vanilla builds "current/limit" from the RAW
+                // MemberRoster.TotalManCount, so it disagrees with the weighted header. Rewrite the
+                // current to the weighted member total (healthy + wounded). Vanilla decided the red
+                // "over capacity" color on the RAW compare, so a weighted-over / raw-under party shows
+                // the over number without the red tint — cosmetic, acceptable for a display-only fix.
+                var capText = GameTexts.FindText("str_LEFT_over_RIGHT_no_space");
+                capText.SetTextVariable("LEFT", healthy + wounded).SetTextVariable("RIGHT", party.PartySizeLimit);
+                prop.ValueLabel = capText.ToString();
             }
         }
 

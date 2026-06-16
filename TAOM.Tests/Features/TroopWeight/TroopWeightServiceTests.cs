@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System.Collections.Generic;
+using System.Linq;
 using TAOM.Core.Logging;
 using TAOM.Features.TroopWeight;
 
@@ -218,5 +219,155 @@ public class TroopWeightServiceTests
 
         Assert.AreEqual(1, healthy, "(3-1)*0.5 = 1.0 -> ceil 1");
         Assert.AreEqual(1, wounded, "1*0.5 = 0.5 -> ceil 1");
+    }
+
+    // --- PlanShed (shed-on-upgrade core) ---
+
+    private static double WeightedAfter(
+        IReadOnlyList<WeightedTroopEntry> entries, IReadOnlyList<ShedInstruction> plan)
+    {
+        var remaining = new Dictionary<string, int>();
+        foreach (var e in entries)
+            remaining[e.TroopId] = e.Count;
+        foreach (var s in plan)
+            remaining[s.TroopId] -= s.Count;
+
+        double weighted = 0d;
+        foreach (var e in entries)
+            weighted += (double)remaining[e.TroopId] * e.Weight;
+        return weighted;
+    }
+
+    [TestMethod]
+    public void PlanShed_WithinLimit_ReturnsEmpty()
+    {
+        var entries = new List<WeightedTroopEntry>
+        {
+            new("gondor_recruit", 1, 1f, 20, false),
+            new("imladris_blademaster", 5, 2f, 4, false), // weighted 20 + 8 = 28
+        };
+
+        var plan = _sut.PlanShed(entries, 30);
+
+        Assert.AreEqual(0, plan.Count, "28 weighted <= 30 limit => nothing shed");
+    }
+
+    [TestMethod]
+    public void PlanShed_ExactlyAtLimit_ReturnsEmpty()
+    {
+        var entries = new List<WeightedTroopEntry>
+        {
+            new("imladris_blademaster", 5, 2f, 15, false), // weighted 30
+        };
+
+        var plan = _sut.PlanShed(entries, 30);
+
+        Assert.AreEqual(0, plan.Count, "weighted == limit is not over budget");
+    }
+
+    [TestMethod]
+    public void PlanShed_OverLimit_ShedsLowestTierFirst_KeepingElites()
+    {
+        var entries = new List<WeightedTroopEntry>
+        {
+            new("gondor_recruit", 1, 1f, 20, false),       // weighted 20
+            new("imladris_blademaster", 5, 2f, 10, false), // weighted 20
+        };
+        // total weighted 40, limit 30, overflow 10 -> shed 10 recruits (weight 1), elites untouched
+
+        var plan = _sut.PlanShed(entries, 30);
+
+        Assert.AreEqual(1, plan.Count);
+        Assert.AreEqual("gondor_recruit", plan[0].TroopId, "lowest-tier fodder shed first");
+        Assert.AreEqual(10, plan[0].Count);
+        Assert.IsTrue(WeightedAfter(entries, plan) <= 30, "post-shed weighted within limit");
+    }
+
+    [TestMethod]
+    public void PlanShed_AllElite_ShedsLowestTierElite()
+    {
+        var entries = new List<WeightedTroopEntry>
+        {
+            new("imladris_blademaster", 5, 2f, 10, false),   // weighted 20
+            new("rivendell_royal_knight", 6, 3f, 10, false), // weighted 30
+        };
+        // total 50, limit 40, overflow 10 -> shed 5 blademasters (lowest tier), knights untouched
+
+        var plan = _sut.PlanShed(entries, 40);
+
+        Assert.AreEqual(1, plan.Count);
+        Assert.AreEqual("imladris_blademaster", plan[0].TroopId, "lowest-tier elite shed, highest tier kept");
+        Assert.AreEqual(5, plan[0].Count);
+        Assert.IsTrue(WeightedAfter(entries, plan) <= 40);
+    }
+
+    [TestMethod]
+    public void PlanShed_NeverShedsHeroes()
+    {
+        var entries = new List<WeightedTroopEntry>
+        {
+            new("hero_galadriel", 10, 1f, 1, true),    // hero — must never be shed
+            new("gondor_recruit", 1, 1f, 50, false),   // weighted 50
+        };
+        // total weighted 51, limit 30, overflow 21 -> shed 21 recruits, hero kept
+
+        var plan = _sut.PlanShed(entries, 30);
+
+        Assert.IsFalse(plan.Any(s => s.TroopId == "hero_galadriel"), "heroes are never sheddable");
+        Assert.AreEqual(1, plan.Count);
+        Assert.AreEqual("gondor_recruit", plan[0].TroopId);
+        Assert.AreEqual(21, plan[0].Count);
+        Assert.IsTrue(WeightedAfter(entries, plan) <= 30);
+    }
+
+    [TestMethod]
+    public void PlanShed_OnlyHeroesOverLimit_ReturnsEmpty()
+    {
+        var entries = new List<WeightedTroopEntry>
+        {
+            new("hero_a", 10, 1f, 20, true),
+            new("hero_b", 10, 1f, 20, true), // weighted 40, all heroes
+        };
+
+        var plan = _sut.PlanShed(entries, 30);
+
+        Assert.AreEqual(0, plan.Count, "nothing sheddable when only heroes exceed the limit");
+    }
+
+    [TestMethod]
+    public void PlanShed_CascadesAcrossTiers_WhenLowestTierInsufficient()
+    {
+        var entries = new List<WeightedTroopEntry>
+        {
+            new("gondor_recruit", 1, 1f, 5, false),         // weighted 5
+            new("imladris_blademaster", 5, 2f, 20, false),  // weighted 40
+        };
+        // total 45, limit 30, overflow 15. Shed all 5 recruits (-5 -> overflow 10),
+        // then ceil(10/2)=5 blademasters (-10). Both tiers appear.
+
+        var plan = _sut.PlanShed(entries, 30);
+
+        Assert.AreEqual(2, plan.Count);
+        Assert.AreEqual("gondor_recruit", plan[0].TroopId);
+        Assert.AreEqual(5, plan[0].Count);
+        Assert.AreEqual("imladris_blademaster", plan[1].TroopId);
+        Assert.AreEqual(5, plan[1].Count);
+        Assert.IsTrue(WeightedAfter(entries, plan) <= 30);
+    }
+
+    [TestMethod]
+    public void PlanShed_NullEntries_ReturnsEmpty()
+    {
+        var plan = _sut.PlanShed(null, 30);
+
+        Assert.AreEqual(0, plan.Count);
+    }
+
+    [TestMethod]
+    public void PlanShed_EmptyEntries_ReturnsEmpty()
+    {
+        var plan = _sut.PlanShed(new List<WeightedTroopEntry>(), 30);
+
+        Assert.AreEqual(0, plan.Count);
     }
 }

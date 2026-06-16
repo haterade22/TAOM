@@ -161,6 +161,57 @@ public class TroopWeightService : ITroopWeightService
         }
     }
 
+    public IReadOnlyList<ShedInstruction> PlanShed(IReadOnlyList<WeightedTroopEntry> entries, int limit)
+    {
+        var result = new List<ShedInstruction>();
+        if (entries == null || entries.Count == 0)
+            return result;
+
+        // Weighted member total on the same basis as CalculateWeightedMemberCount / the patched
+        // NumberOfAllMembers the size limit is checked against (Number * weight, incl. wounded).
+        double weighted = 0d;
+        for (int i = 0; i < entries.Count; i++)
+        {
+            var e = entries[i];
+            if (e.Count > 0)
+                weighted += (double)e.Count * e.Weight;
+        }
+
+        double overflow = weighted - limit;
+        if (overflow <= 0d)
+            return result;
+
+        // Shed lowest-value first: keep elites, trim the cheap fodder. Heroes are never sheddable.
+        var sheddable = new List<WeightedTroopEntry>();
+        for (int i = 0; i < entries.Count; i++)
+        {
+            var e = entries[i];
+            if (!e.IsHero && e.Count > 0 && e.Weight > 0f)
+                sheddable.Add(e);
+        }
+        sheddable.Sort((a, b) =>
+        {
+            int byTier = a.Tier.CompareTo(b.Tier);
+            return byTier != 0 ? byTier : a.Weight.CompareTo(b.Weight);
+        });
+
+        foreach (var e in sheddable)
+        {
+            if (overflow <= 0d)
+                break;
+
+            int bodiesNeeded = (int)Math.Ceiling(overflow / e.Weight);
+            int shed = Math.Min(e.Count, bodiesNeeded);
+            if (shed <= 0)
+                continue;
+
+            result.Add(new ShedInstruction(e.TroopId, shed));
+            overflow -= (double)shed * e.Weight;
+        }
+
+        return result;
+    }
+
     public void ClearCache()
     {
         _weights = _xmlLoader.GetTroopWeights();

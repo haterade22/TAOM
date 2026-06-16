@@ -1,5 +1,52 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-16
+
+### feat(troop-weight): shed-on-upgrade so AI lords respect troop weight + fix unweighted UI counts
+
+**The bug a user spotted:** AI lords (e.g. Galadriel's Lothlórien army of 317 elves) field far more
+elite troops than the troop-weight budget should allow, making them too strong in auto-resolve.
+
+**Root cause (decompile-verified):** AI *recruitment* already respects weight — vanilla
+`RecruitmentCampaignBehavior` reads the TAOM-patched `PartyBase.NumberOfAllMembers`, so AI parties
+stop recruiting at their weighted cap. But `PartyUpgraderCampaignBehavior.UpgradeReadyTroops` auto-
+upgrades an AI party's ready troops with **no** size check (it preserves headcount, which in vanilla
+preserves "weight" because every troop is weight 1). TAOM breaks that invariant: a party fills its cap
+with weight-1 recruits, then auto-upgrades them into weight-2/3 elites and balloons to 2–3× its
+weighted budget, with nothing to trim it back. The player party is immune (it never auto-upgrades).
+
+**Fix — shed-on-upgrade.** A new `Patch17_TroopWeight` postfix on `UpgradeReadyTroops` (public; vanilla
+skips MainParty + inactive parties, and the hook re-guards both) reads the roster into engine-free
+rows, calls a pure unit-tested planner `ITroopWeightService.PlanShed` that trims the cheapest bodies
+(ascending Tier→Weight, never heroes) until the weighted total is back within `PartySizeLimit`, then
+applies the removals via `MemberRoster.AddToCounts(ch, -n)`. Net effect: AI fields **fewer, better**
+troops — the intended quality-over-quantity design — and over-cap legacy parties trim on their next
+upgrade tick. Gated on `TaomSettings.EnableTroopWeight`; event-gated `[diag]` logging proves the right
+parties trim in-game (to be stripped after sign-off).
+
+**Auto-resolve clarification (no change needed):** auto-resolve is power-and-per-man-roster driven
+(`MapEvent`→`DefaultMilitaryPowerModel.GetPowerOfParty` = Σ (Number−Wounded)×per-troop-power, iterating
+the roster directly); it never reads the weighted getters. So weight could never make 317 elves fight
+as fewer — the only lever is making the army *be* smaller, which shed-on-upgrade does.
+
+**UI count displays.** Two surfaces that showed the RAW (unweighted) headcount now match the weighted
+budget the rest of the feature enforces: the clan-screen party list (`ClanPartyItemVM.UpdateProperties`)
+and the main-party health tooltip's "Land Troop Capacity" row (extended `TroopWeightDisplayHook`).
+Deferred (need in-game tracing of the exact builder, or weighting is debatable): the map party-nameplate
+hover tooltip, the town-garrison tooltip, and the map info bar.
+
+**Config.** Added the lone missing elven elite weight: `imladris_bowman` = 2.0 (sibling `imladris_archer`
+was already 2.0). Lothlórien reuses Rivendell's troop tree, whose elites are otherwise fully weighted.
+
+Tests: `PlanShed` covered by 10 new pure unit tests (within-limit no-op, lowest-tier-first, all-elite,
+never-shed-heroes, cross-tier cascade, exact-fit, null/empty). Harmony postfix + roster mutation + the
+two display patches touch sealed types → in-game verification.
+
+Research: `PartyUpgraderCampaignBehavior.UpgradeReadyTroops`, `DefaultMilitaryPowerModel.GetPowerOfParty`,
+`ClanPartyItemVM.UpdateProperties`, `CampaignUIHelper.GetMainPartyHealthTooltip`.
+Save-compat: safe — no new saved fields; trims existing rosters in place.
+Not-tested: the Harmony postfixes (live-game only).
+
 ## 2026-06-15
 
 ### fix(battle-load): raise stall-watchdog threshold 45s → 5 min (false-positive on slow siege loads)

@@ -31,5 +31,17 @@ public interface ITroopWeightService
     /// </summary>
     (int Healthy, int Wounded) GetWeightedHealthAndWounded(PartyBase party);
 
+    /// <summary>
+    /// Pure planner for shed-on-upgrade. Given a party's roster as engine-free
+    /// <see cref="WeightedTroopEntry"/> rows and its (vanilla) party-size <paramref name="limit"/>,
+    /// returns the troops to remove so the WEIGHTED member total no longer exceeds the limit.
+    /// Sheds lowest-value first (ascending Tier, then Weight) so elites are kept and the cheap fodder
+    /// that ballooned the party via auto-upgrade is trimmed — the "fewer, better troops" intent.
+    /// Never sheds hero entries. Removes only as many bodies as needed to reach the budget (no
+    /// over-shed). Returns an empty list when already within budget, when nothing sheddable remains,
+    /// or on null/empty input. Engine-free; unit-tested.
+    /// </summary>
+    IReadOnlyList<ShedInstruction> PlanShed(IReadOnlyList<WeightedTroopEntry> entries, int limit);
+
     void ClearCache();
 }

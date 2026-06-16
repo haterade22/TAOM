@@ -181,6 +181,7 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IOnPartyBaseNumberOfRegularMembers>(),
             IoC.Resolve<IOnRecruitmentVMRefreshPartyProperties>(),
             IoC.Resolve<IOnPartyVMPopulatePartyListLabel>(),
+            IoC.Resolve<IOnPartyUpgraderUpgradeReadyTroops>(),
             IoC.Resolve<TroopWeightDisplayHook>());
 
         CustomBattlesIoC.InitializeHooks(
@@ -553,6 +554,11 @@ public class SubModule : MBSubModuleBase
         // around on death. Strips CanDismount for spider riders so the native dismount never fires (the rider
         // stays on the locked mount; damage still applies). Debugger-proven 2026-06-15. See docs/features/spider.md.
         _harmony.PatchCategory("Patch48_SpiderHitDismountGuard");
+
+        // Patch13_RaceAge — noise reduction (NOT a crash fix). NOPs the harmless
+        // mother.Race == father.Race SilentAssert in DeliverOffSpring that fires on every
+        // mixed-race birth (normal in TAOM). Stops the debugger break + debug-log spam.
+        _harmony.PatchCategory("Patch13_RaceAge");
 
         var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();
         var specResLogger = IoC.Resolve<IModLogger>();
