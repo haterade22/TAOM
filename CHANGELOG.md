@@ -2,6 +2,20 @@
 
 ## 2026-06-16
 
+### fix(race-age): suppress harmless DeliverOffSpring race-assert (debugger break + log spam on mixed-race births)
+
+Issue: #283.
+
+Restored the `DeliverOffSpring_RaceAssert_Patch` transpiler (category `Patch13_RaceAge`, removed in
+`28225bc`). Vanilla `HeroCreator.DeliverOffSpring` carries `Debug.SilentAssert(mother.Race == father.Race)`,
+whose condition is `false` on every cross-race birth — normal in TAOM. It is harmless to players
+(ButterLib's `DebugManagerWrapper` only `LogDebug`s it; `MBDebug.SilentAssert` only `Debugger.Break()`s
+when a debugger is attached), but it breaks an attached debugger on every mixed-race birth and spams the
+log. The transpiler NOPs the race-comparison + assert call, leaving the stack balanced; birth behavior is
+unchanged. Noise reduction, not a crash fix — surfaced while investigating a player crash report that was
+ruled out as this assert (the real fault, if any, is downstream and still needs a player `rgl_log.txt`).
+IL match verified against the installed DLL via `/deep-review`.
+
 ### feat(troop-weight): shed-on-upgrade so AI lords respect troop weight + fix unweighted UI counts
 
 Issue: #282.
