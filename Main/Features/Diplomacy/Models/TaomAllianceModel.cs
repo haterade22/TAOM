@@ -26,12 +26,17 @@ public class TaomAllianceModel : DefaultAllianceModel
         var result = base.GetScoreOfStartingAlliance(
             querierKingdom, queriedKingdom, out explanationText, includeDescription);
 
+        bool involvesPlayer = PlayerKingdomHelper.InvolvesPlayerRuledKingdom(querierKingdom, queriedKingdom);
+
         float modifier = _diplomacyService.GetAllianceScoreModifier(
-            querierKingdom.StringId, queriedKingdom.StringId);
+            querierKingdom.StringId, queriedKingdom.StringId, involvesPlayer);
 
         if (modifier != 0f)
         {
-            result.Add(modifier, new TextObject("{=taom_alliance_lore}Lore Alignment"));
+            var label = involvesPlayer
+                ? new TextObject("{=taom_alliance_player_freedom}Player Diplomacy")
+                : new TextObject("{=taom_alliance_lore}Lore Alignment");
+            result.Add(modifier, label);
         }
 
         return result;

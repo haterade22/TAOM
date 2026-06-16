@@ -25,6 +25,16 @@ Two problems exist:
 - `TaomAllianceModel` overrides `DefaultAllianceModel.GetScoreOfStartingAlliance` to add a score modifier (+1000 for Permanent, +500 for Natural, -10000 for Hostile) so the AI naturally favors or avoids alliances matching lore.
 - `DiplomacyBehavior` (`CampaignBehaviorBase`) establishes initial permanent alliances on new game creation and re-enforces them on every session load.
 
+**Player Alliance Freedom subsystem:**
+
+A player who founds their own kingdom could not form alliances. This is **not** a TAOM block — it is two vanilla limitations: (1) the player can never *initiate* an alliance (`KingdomDecisionProposalBehavior.DailyTickClan` early-returns for `Clan.PlayerClan`; `AllianceCampaignBehavior` only delivers offers *to* the player), and (2) a new player kingdom cannot clear `DefaultAllianceModel.CanMakeAlliance`'s `>= 50f` acceptance score (vanilla scores 0 without bordering fiefs + a >430-threat neighbor), so AI never offers and the v1.4.6 Kingdom→Diplomacy "Propose/Enact Alliance" button stays greyed.
+
+- **Receive + unblock the vanilla button (Part A).** `IDiplomacyService` exposes player-aware overloads: `GetAllianceScoreModifier(a, b, involvesPlayer)` returns `+1000` when the player's kingdom is one of the pair (clears the 50f wall, skips the `-10000` Hostile penalty), and `IsAllianceDecisionAllowed(a, b, involvesPlayer)` returns true for any player-involved pair. `TaomAllianceModel` and `TaomKingdomDecisionPermissionModel` compute `involvesPlayer = querier == Clan.PlayerClan?.Kingdom || queried == Clan.PlayerClan?.Kingdom` at the boundary and delegate. The v1.4.6 Kingdom-screen button's enable-gate routes through `StartAllianceDecision.IsAllowed()` (→ `IsStartAllianceDecisionAllowedBetweenKingdoms` → the permission model) and `CanMakeDecision()` (→ `CanMakeAlliance` → the alliance score), so Part A turns the *existing vanilla button* on. **No custom UI was built** — the vanilla button already exists; a UIExtenderEx duplicate would only add crash surface.
+- **Initiate via dialog (Part B).** `PlayerAllianceProposalBehavior` (`CampaignBehaviorBase`) registers a conversation line — "I propose an alliance between our realms." — that appears when a player who *rules* their kingdom talks one-on-one to another kingdom's *ruler*. On accept it forms the alliance via `IAllianceAdapter.StartAlliance`. Gated by `CanPlayerProposeAlliance` (ids present + distinct, at peace, not already allied). Stateless (alliances persist via vanilla's `AllianceCampaignBehavior`).
+- **Full freedom (design decision):** player-involved pairs ignore the lore `Hostile` tier — a Gondor-culture player kingdom may ally Mordor. AI-vs-AI diplomacy is unchanged: the retained 2-arg `GetAllianceScoreModifier`/`IsAllianceAllowed` paths behave exactly as before, and `involvesPlayer:false` is byte-identical to the legacy behavior.
+- **Cost asymmetry (intentional):** the dialog forms the alliance directly at **0 influence**; the vanilla Kingdom-screen button uses the influence-cost `StartAllianceDecision` flow (~200 influence for a multi-clan kingdom). Two deliberate paths.
+- `MaxNumberOfAlliances => int.MaxValue` (pre-existing on `TaomAllianceModel`) removes the vanilla cap of 2 — model-global, so it also lets AI kingdoms exceed 2 alliances.
+
 **War of the Ring subsystem:**
 - `WarOfTheRingService` (implements `IWarOfTheRingService`) tracks `CurrentPhase` (`Peace`, `IsengardWar`, `FullWar`). Each daily tick it checks elapsed campaign days against configured thresholds and transitions phases.
 - Phase 1 (`IsengardWar`): declares specific wars from `phase1.wars` in `war_of_the_ring.json`.
@@ -55,7 +65,20 @@ Harmony Patch11_Diplomacy
   MakePeaceAction.ApplyInternal        [Prefix] -> IOnPeaceAction.ShouldPreventPeace
 
 GameModel: TaomAllianceModel : DefaultAllianceModel
-  GetScoreOfStartingAlliance -> IDiplomacyService.GetAllianceScoreModifier
+  GetScoreOfStartingAlliance -> IDiplomacyService.GetAllianceScoreModifier(a,b,involvesPlayer)
+
+GameModel: TaomKingdomDecisionPermissionModel : DefaultKingdomDecisionPermissionModel
+  IsStartAllianceDecisionAllowedBetweenKingdoms -> IDiplomacyService.IsAllianceDecisionAllowed(a,b,involvesPlayer)
+
+Conversation dialog (initiate)
+  PlayerAllianceProposalBehavior --> IDiplomacyService.CanPlayerProposeAlliance
+                                     IDiplomacyService.FormPlayerAlliance
+                                              |
+                                        IAllianceAdapter.StartAlliance
+
+Vanilla Kingdom->Diplomacy "Propose/Enact Alliance" button (receive/initiate)
+  StartAllianceDecision.IsAllowed      -> TaomKingdomDecisionPermissionModel (player bypass)
+  StartAllianceDecision.CanMakeDecision -> TaomAllianceModel score (+1000 player bonus clears 50f gate)
 ```
 
 ## Configuration
@@ -90,8 +113,9 @@ Both `triggerDay` values are currently set to 1 (immediate on new game). MCM ove
 | `Main/Features/Diplomacy/DiplomacyIoC.cs` | DryIoc registrations and static `InitializeHooks` wiring |
 | `Main/Features/Diplomacy/DiplomacyBehavior.cs` | `CampaignBehaviorBase`: establishes/enforces permanent alliances on new game and session load |
 | `Main/Features/Diplomacy/WarOfTheRingBehavior.cs` | `CampaignBehaviorBase`: daily tick drives phase transition checks |
-| `Main/Features/Diplomacy/IDiplomacyService.cs` | Service interface: tier lookup, score modifier, alliance enforcement |
-| `Main/Features/Diplomacy/DiplomacyService.cs` | Implementation: loads config, computes scores, enforces alliances |
+| `Main/Features/Diplomacy/PlayerAllianceProposalBehavior.cs` | `CampaignBehaviorBase`: conversation dialog letting a player kingdom-ruler initiate an alliance with another ruler |
+| `Main/Features/Diplomacy/IDiplomacyService.cs` | Service interface: tier lookup, score modifier, alliance enforcement, player-freedom overloads + proposal methods |
+| `Main/Features/Diplomacy/DiplomacyService.cs` | Implementation: loads config, computes scores, enforces alliances, player-freedom score/permission + `CanPlayerProposeAlliance`/`FormPlayerAlliance` |
 | `Main/Features/Diplomacy/IWarOfTheRingService.cs` | Service interface: phase state, peace blocking, phase transition |
 | `Main/Features/Diplomacy/WarOfTheRingService.cs` | Implementation: phase state machine, war declarations |
 | `Main/Features/Diplomacy/DiplomacyConfigProvider.cs` | Deserializes `diplomacy.json` |
@@ -103,7 +127,7 @@ Both `triggerDay` values are currently set to 1 (immediate on new game). MCM ove
 | `Main/Features/Diplomacy/Hooks/DeclareWarAction_ApplyInternal_Patch.cs` | Harmony Prefix — calls `IOnAllianceAction.ShouldPreventWarDeclaration` |
 | `Main/Features/Diplomacy/Hooks/MakePeaceAction_ApplyInternal_Patch.cs` | Harmony Prefix — calls `IOnPeaceAction.ShouldPreventPeace` |
 | `Main/Features/Diplomacy/Models/TaomAllianceModel.cs` | `DefaultAllianceModel` override: adds lore score modifier to alliance scoring |
-| `Main/Features/Diplomacy/Models/TaomKingdomDecisionPermissionModel.cs` | `DefaultKingdomDecisionPermissionModel` override (see file for details) |
+| `Main/Features/Diplomacy/Models/TaomKingdomDecisionPermissionModel.cs` | `DefaultKingdomDecisionPermissionModel` override: blocks lore-Hostile alliance decisions (AI pairs) but allows any decision involving the player's kingdom (full freedom); also blocks war on permanent allies + peace during full War of the Ring |
 | `Main/Features/Diplomacy/Models/TaomDiplomacyModel.cs` | Additional diplomacy model override |
 | `Main/Features/Diplomacy/Models/AllianceTier.cs` | Enum: `Permanent`, `Natural`, `Neutral`, `Hostile` |
 | `Main/Features/Diplomacy/Models/KingdomRelationship.cs` | POCO: kingdom pair + tier |
@@ -123,7 +147,7 @@ Both `triggerDay` values are currently set to 1 (immediate on new game). MCM ove
 ## Tests
 | File | Coverage |
 |------|---------|
-| `TAOM.Tests/Features/Diplomacy/DiplomacyServiceTests.cs` | Tier lookup, score modifiers, alliance allowed/blocked, initial alliance establishment, enforcement |
+| `TAOM.Tests/Features/Diplomacy/DiplomacyServiceTests.cs` | Tier lookup, score modifiers, alliance allowed/blocked, initial alliance establishment, enforcement, player-freedom score/permission overloads, `CanPlayerProposeAlliance` (same/empty/at-war/already-allied/Hostile-tier), `FormPlayerAlliance` |
 | `TAOM.Tests/Features/Diplomacy/WarOfTheRingServiceTests.cs` | Phase transitions, peace blocking, MCM override, test-mode day overrides, hostile-tier auto-war |
 | `TAOM.Tests/Features/Diplomacy/DiplomacyConfigProviderTests.cs` | JSON parsing, missing file handling |
 | `TAOM.Tests/Features/Diplomacy/AllianceActionHookTests.cs` | `ShouldPreventAllianceEnd` and `ShouldPreventWarDeclaration` for permanent vs non-permanent tiers |

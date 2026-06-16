@@ -1264,6 +1264,23 @@ A campaign-map `NullReferenceException` (`Army.OnSiegeStarted` → party `Estima
 
 ---
 
+## Review 54 — Player Alliance Freedom (player-founded kingdoms can form alliances) (2026-06-16)
+
+A user reported player-founded kingdoms can't make alliances. Root cause (decompile-verified, v1.4.6): **not** a TAOM block — two vanilla gates (player can never *initiate*; a new player kingdom can't clear `CanMakeAlliance`'s 50f score wall, so AI never offers and the vanilla Kingdom-screen button stays greyed). Fix scoped to `Main/Features/Diplomacy/`: player-aware score (+1000) + permission bypass on the two GameModels (turns the existing vanilla button on — no custom UI), plus a `PlayerAllianceProposalBehavior` dialog to initiate. Reviewed via `/deep-review` (5 agents) + Codex `gpt-5.5 xhigh`.
+
+**Deep-review:** 1 HIGH caught + fixed — a duplicate `<string id="taom_alliance_formed">` collision with a pre-existing harvested string (the **data-flow** agent's string-key→consumption trace found it; the completeness agent checked presence but not uniqueness). Renamed the new key to `taom_player_alliance_formed`. Two other flags triaged as a disputed ADR-002 stylistic note (pre-existing permission-gate idiom) and an overstated efficiency flag (`CanPlayerProposeAlliance` is dialog-only, not in any AI tick).
+
+**Codex VERDICT: ISSUES FOUND — 0 CRITICAL / 1 HIGH / 1 MED / 1 LOW**, all verified against source + v1.4.6 decompile and all confirmed real; fixed in-session. Codex correctly DISPUTED the core mechanic (verified +1000 clears every `CanMakeAlliance` gate in both directions incl. `CanMakeAllianceWithPlayerSupport`; confirmed the string-key fix complete + the 2-arg regression path byte-identical).
+- **HIGH (highest-value catch, missed by all 5 deep-review agents):** `InvolvesPlayerKingdom` (both GameModels) used `Clan.PlayerClan?.Kingdom` without checking the player *rules* it — a **vassal/mercenary** player's AI-ruled liege kingdom would get the freedom bypass, changing AI-vs-AI diplomacy. The dialog helper had the correct `RulingClan == PlayerClan` check; the two model helpers diverged from it. Fixed by extracting one `PlayerKingdomHelper.GetPlayerRuledKingdom()` used by all three sites (single source of truth).
+- **MED:** dialog target accepted any ruling-*clan* member, not the kingdom **leader** — fixed to require `kingdom.Leader == hero`.
+- **LOW:** dialog showed "alliance forged" after a possibly-no-op `void FormPlayerAlliance` — made it return `bool` (confirms `AreAllied`), gated the message, +2 tests.
+
+**Root-cause pattern:** HIGH+MED are the same shape — a too-loose identity predicate (membership vs *rulership*); the HIGH specifically came from **helper duplication drift** (a predicate that must agree across N entry points should have one definition). Same lesson as the string-id finding from another angle. Deep-review's data-flow agent verified `involvesPlayer` was symmetric + null-safe but didn't enumerate the player's own faction-role states (ruler / vassal / mercenary) — a state-enumeration gap analogous to the entity-state-matrix rule applied to political status.
+
+**Result:** build clean; Diplomacy suite 35/35 (the repo's 9 `GetVolunteerTroopId_DolGuldur*` failures are pre-existing, unrelated working-tree troop drift). New memory `feedback_verify_string_id_unique_before_add`. RCA: `docs/reviews/rca-player-alliance-freedom-2026-06-16.md` (deep-review + Codex sections). Issue #284. Reviews ran BEFORE commit (no after-push miss this time).
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

@@ -353,6 +353,7 @@ public class SubModule : MBSubModuleBase
             var wotrService = IoC.Resolve<IWarOfTheRingService>();
             var diplomacyLogger = IoC.Resolve<IModLogger>();
             campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService, diplomacyLogger));
+            campaignStarter.AddBehavior(new PlayerAllianceProposalBehavior(diplomacyService, diplomacyLogger));
             campaignStarter.AddModel(new TaomAllianceModel(diplomacyService));
             campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService));
             campaignStarter.AddModel(new TaomDiplomacyModel(wotrService));

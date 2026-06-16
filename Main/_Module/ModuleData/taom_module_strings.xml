@@ -814,6 +814,10 @@
 
 	<string id="taom_career" text="{=taom_career}Career" />
 	<string id="taom_alliance_lore" text="{=taom_alliance_lore}Lore Alignment" />
+	<string id="taom_alliance_player_freedom" text="{=taom_alliance_player_freedom}Player Diplomacy" />
+	<string id="taom_alliance_propose" text="{=taom_alliance_propose}I propose an alliance between our realms." />
+	<string id="taom_alliance_accept" text="{=taom_alliance_accept}Then let our realms stand together. This alliance is forged." />
+	<string id="taom_player_alliance_formed" text="{=taom_player_alliance_formed}An alliance has been forged between {PLAYER_KINGDOM} and {TARGET_KINGDOM}." />
 	<string id="taom_alliance_blocked" text="{=taom_alliance_blocked}These kingdoms can never be allied." />
 	<string id="taom_war_blocked" text="{=taom_war_blocked}These kingdoms are bound by an unbreakable alliance." />
 	<string id="taom_wotr_no_peace" text="{=taom_wotr_no_peace}The War of the Ring rages. There can be no peace." />

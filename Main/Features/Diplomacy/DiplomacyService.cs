@@ -46,8 +46,21 @@ public class DiplomacyService : IDiplomacyService
         return _relationships.TryGetValue(key, out var tier) ? tier : AllianceTier.Neutral;
     }
 
+    // Large enough that base.GetScoreOfStartingAlliance (≈0 for a new player kingdom)
+    // + this clears the vanilla CanMakeAlliance threshold (>= 50f), so AI kingdoms
+    // will offer alliances to the player regardless of borders / neighbor threat.
+    private const float PlayerAllianceScoreBonus = 1000f;
+
     public float GetAllianceScoreModifier(string kingdomAId, string kingdomBId)
     {
+        return GetAllianceScoreModifier(kingdomAId, kingdomBId, involvesPlayer: false);
+    }
+
+    public float GetAllianceScoreModifier(string kingdomAId, string kingdomBId, bool involvesPlayer)
+    {
+        if (involvesPlayer)
+            return PlayerAllianceScoreBonus;
+
         var tier = GetRelationshipTier(kingdomAId, kingdomBId);
         switch (tier)
         {
@@ -61,6 +74,40 @@ public class DiplomacyService : IDiplomacyService
     public bool IsAllianceAllowed(string kingdomAId, string kingdomBId)
     {
         return GetRelationshipTier(kingdomAId, kingdomBId) != AllianceTier.Hostile;
+    }
+
+    public bool IsAllianceDecisionAllowed(string kingdomAId, string kingdomBId, bool involvesPlayer)
+    {
+        // Full freedom: lore Hostile never blocks a decision involving the player.
+        return involvesPlayer || IsAllianceAllowed(kingdomAId, kingdomBId);
+    }
+
+    public bool CanPlayerProposeAlliance(string playerKingdomId, string targetKingdomId)
+    {
+        if (string.IsNullOrEmpty(playerKingdomId) || string.IsNullOrEmpty(targetKingdomId))
+            return false;
+        if (playerKingdomId == targetKingdomId)
+            return false;
+        if (_allianceAdapter.AreAtWar(playerKingdomId, targetKingdomId))
+            return false;
+        if (_allianceAdapter.AreAllied(playerKingdomId, targetKingdomId))
+            return false;
+        return true;
+    }
+
+    public bool FormPlayerAlliance(string playerKingdomId, string targetKingdomId)
+    {
+        if (!CanPlayerProposeAlliance(playerKingdomId, targetKingdomId))
+            return false;
+
+        _logger.LogInfo($"[Diplomacy] Player-initiated alliance: {playerKingdomId} <-> {targetKingdomId}");
+        _allianceAdapter.StartAlliance(playerKingdomId, targetKingdomId);
+
+        // Confirm the engine actually formed it (StartAlliance no-ops on a missing kingdom).
+        bool formed = _allianceAdapter.AreAllied(playerKingdomId, targetKingdomId);
+        if (!formed)
+            _logger.LogWarning($"[Diplomacy] Player-initiated alliance had no effect: {playerKingdomId} <-> {targetKingdomId}");
+        return formed;
     }
 
     public bool IsWarAllowed(string kingdomAId, string kingdomBId)

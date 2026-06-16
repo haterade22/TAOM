@@ -248,4 +248,129 @@ public class DiplomacyServiceTests
         });
     }
 
+    // --- Player alliance freedom (issue: player kingdoms could not form alliances) ---
+    // Full freedom: any check that involves the player's kingdom bypasses the lore
+    // Hostile gate, so AI will offer to the player and the player can accept.
+
+    [TestMethod]
+    public void GetAllianceScoreModifier_InvolvesPlayer_OverridesHostileToClearThreshold()
+    {
+        // empire_w↔empire_s is Hostile in the fixture. Vanilla CanMakeAlliance needs the
+        // total score >= 50f; the player branch must contribute enough to clear it and
+        // never apply the -10000 Hostile penalty.
+        var score = _sut.GetAllianceScoreModifier("empire_w", "empire_s", involvesPlayer: true);
+
+        Assert.IsTrue(score >= 50f);
+    }
+
+    [TestMethod]
+    public void GetAllianceScoreModifier_NotInvolvesPlayer_PreservesTierBehavior()
+    {
+        Assert.IsTrue(_sut.GetAllianceScoreModifier("empire_w", "empire_s", involvesPlayer: false) < -500f);
+        Assert.AreEqual(0f, _sut.GetAllianceScoreModifier("empire_w", "battania", involvesPlayer: false));
+    }
+
+    [TestMethod]
+    public void GetAllianceScoreModifier_TwoArgOverload_MatchesNonPlayerBehavior()
+    {
+        // Regression: the legacy 2-arg form must equal the involvesPlayer:false path.
+        Assert.AreEqual(
+            _sut.GetAllianceScoreModifier("empire_w", "empire_s", involvesPlayer: false),
+            _sut.GetAllianceScoreModifier("empire_w", "empire_s"));
+    }
+
+    [TestMethod]
+    public void IsAllianceDecisionAllowed_InvolvesPlayer_AllowsEvenHostile()
+    {
+        Assert.IsTrue(_sut.IsAllianceDecisionAllowed("empire_w", "empire_s", involvesPlayer: true));
+    }
+
+    [TestMethod]
+    public void IsAllianceDecisionAllowed_NotInvolvesPlayer_PreservesHostileBlock()
+    {
+        Assert.IsFalse(_sut.IsAllianceDecisionAllowed("empire_w", "empire_s", involvesPlayer: false));
+        Assert.IsTrue(_sut.IsAllianceDecisionAllowed("empire_w", "vlandia", involvesPlayer: false));
+    }
+
+    [TestMethod]
+    public void CanPlayerProposeAlliance_SameKingdom_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.CanPlayerProposeAlliance("player_kingdom", "player_kingdom"));
+    }
+
+    [TestMethod]
+    public void CanPlayerProposeAlliance_EmptyId_ReturnsFalse()
+    {
+        Assert.IsFalse(_sut.CanPlayerProposeAlliance("", "empire_w"));
+        Assert.IsFalse(_sut.CanPlayerProposeAlliance("player_kingdom", null));
+    }
+
+    [TestMethod]
+    public void CanPlayerProposeAlliance_AtWar_ReturnsFalse()
+    {
+        // Alliances require peace first (vanilla CanMakeAlliance rejects at-war pairs).
+        _allianceAdapter.AreAtWar("player_kingdom", "empire_w").Returns(true);
+
+        Assert.IsFalse(_sut.CanPlayerProposeAlliance("player_kingdom", "empire_w"));
+    }
+
+    [TestMethod]
+    public void CanPlayerProposeAlliance_AlreadyAllied_ReturnsFalse()
+    {
+        _allianceAdapter.AreAllied("player_kingdom", "empire_w").Returns(true);
+
+        Assert.IsFalse(_sut.CanPlayerProposeAlliance("player_kingdom", "empire_w"));
+    }
+
+    [TestMethod]
+    public void CanPlayerProposeAlliance_PeaceAndNotAllied_ReturnsTrue()
+    {
+        // Defaults: AreAtWar=false, AreAllied=false.
+        Assert.IsTrue(_sut.CanPlayerProposeAlliance("player_kingdom", "empire_w"));
+    }
+
+    [TestMethod]
+    public void CanPlayerProposeAlliance_HostileTier_ReturnsTrue()
+    {
+        // Full freedom: lore Hostile (empire_w↔empire_s) does not block the player.
+        Assert.IsTrue(_sut.CanPlayerProposeAlliance("empire_w", "empire_s"));
+    }
+
+    [TestMethod]
+    public void FormPlayerAlliance_ValidPairAndEngineForms_CallsStartAllianceAndReturnsTrue()
+    {
+        // AreAllied: first call is the can-propose precondition (false → may propose);
+        // second call is the post-StartAlliance confirmation (true → it formed).
+        _allianceAdapter.AreAllied("player_kingdom", "empire_w").Returns(false, true);
+
+        var result = _sut.FormPlayerAlliance("player_kingdom", "empire_w");
+
+        _allianceAdapter.Received(1).StartAlliance("player_kingdom", "empire_w");
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void FormPlayerAlliance_ValidPairButEngineNoOps_ReturnsFalse()
+    {
+        // AreAllied stays false even after StartAlliance — e.g. a missing/eliminated kingdom
+        // made the adapter no-op. The method must report failure, not success.
+        _allianceAdapter.AreAllied("player_kingdom", "empire_w").Returns(false);
+
+        var result = _sut.FormPlayerAlliance("player_kingdom", "empire_w");
+
+        _allianceAdapter.Received(1).StartAlliance("player_kingdom", "empire_w");
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public void FormPlayerAlliance_AlreadyAllied_DoesNotCallStartAllianceAndReturnsFalse()
+    {
+        _allianceAdapter.AreAllied("player_kingdom", "empire_w").Returns(true);
+
+        var result = _sut.FormPlayerAlliance("player_kingdom", "empire_w");
+
+        _allianceAdapter.DidNotReceive().StartAlliance("player_kingdom", "empire_w");
+        Assert.IsFalse(result);
+    }
+
 }

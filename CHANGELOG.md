@@ -2,6 +2,64 @@
 
 ## 2026-06-16
 
+### chore(tooling): wire Substance 3D Painter MCP for live AI texturing control
+
+Set up a Substance 3D Painter MCP server so Claude Code can drive a live Painter session — the
+texturing-side sibling of the existing Blender MCP (used for TAOM's LOTRLOME armor + creature
+textures). After a code-level deep-dive of three free GitHub repos (josharghhh ~45 tools / MIT,
+elliezu ~8 tools, mdanuz — disqualified: no license + bare `exec()` RCE), chose the commercial
+**MCP Pro for Painter** v1.2.1 ($15). It rides Adobe's built-in `--enable-remote-scripting` HTTP
+bridge (`localhost:60041`, **no in-Painter plugin to maintain**), wraps every layer mutation in
+`ScopedModification` (single Ctrl+Z reverts an AI edit sequence), exposes 179 tools / 33 modules,
+and is verified on the installed Painter 12.0.3 (Python API 0.3.5).
+
+- Server copied to `C:\Users\mikew\substance_painter_mcp\` (off the E: asset folder); `uv` builds
+  its venv there — `painter-mcp --help` + `painter-mcp-setup doctor` confirm 179 tools register on
+  Python 3.14.
+- Registered in machine-local `~/.claude.json` under the TAOM project `mcpServers` as
+  `substance-painter` (`uv run --directory … painter-mcp --mode full`), mirroring the `blender`
+  entry exactly. **Not** committed to the repo — personal env tooling, like the Blender MCP.
+- Added `launch-painter-remote.bat` and `docs/reference/substance-painter-mcp-setup.md` (setup,
+  architecture, modes, security, troubleshooting).
+- Full mode (179) is the vendor's Claude-Code recommendation: deferred tool loading keeps context
+  cost near zero. `--no-execute-arbitrary` available to strip the two code-exec tools if desired.
+
+Not-tested: live `painter_connect` round-trip — requires Painter launched with the flag + a full
+Claude Code restart to load the new MCP server (next step).
+
+### feat(diplomacy): let player-founded kingdoms form alliances (initiate + receive, full freedom)
+
+A user reported that players who start their own kingdom cannot make alliances. Root cause (decompile-verified
+against v1.4.6): this is **not** a TAOM block — it is two vanilla gates. (1) The player can never *initiate* an
+alliance — `KingdomDecisionProposalBehavior.DailyTickClan` early-returns for `Clan.PlayerClan` and
+`AllianceCampaignBehavior` only ever delivers offers *to* the player. (2) A new player kingdom can't clear
+`DefaultAllianceModel.CanMakeAlliance`'s `>= 50f` acceptance score (vanilla scores 0 without bordering + a
+>430-threat neighbor), so AI never offers and the v1.4.6 Kingdom→Diplomacy "Propose/Enact Alliance" button
+stays greyed.
+
+**Fix (scoped to `Main/Features/Diplomacy/`):**
+- **Receive + unblock the vanilla button (Part A).** `IDiplomacyService` gains player-aware overloads:
+  `GetAllianceScoreModifier(a,b,involvesPlayer)` returns `+1000` (clears the 50f wall, skips the `-10000`
+  Hostile penalty) and `IsAllianceDecisionAllowed(a,b,involvesPlayer)` allows any pair the player is in.
+  `TaomAllianceModel` + `TaomKingdomDecisionPermissionModel` compute `involvesPlayer` at the boundary and
+  delegate. The vanilla button's enable-gate routes through `StartAllianceDecision.IsAllowed()` (→ the
+  permission model) and `CanMakeDecision()` (→ the alliance score), so Part A turns the existing button on —
+  no custom UI was built (the v1.4.6 screen already ships the button; a custom one would only duplicate it).
+- **Initiate via dialog (Part B).** New thin `PlayerAllianceProposalBehavior` adds an "I propose an alliance
+  between our realms" line when a player kingdom-ruler talks one-on-one to another kingdom's ruler; on accept
+  it forms the alliance via `IAllianceAdapter.StartAlliance`. Gated by `CanPlayerProposeAlliance` (distinct,
+  at peace, not already allied).
+- **Full freedom (per user decision):** player-involved pairs ignore the lore `Hostile` tier; AI-vs-AI
+  diplomacy is byte-identical to before (the 2-arg service methods are retained and regression-tested).
+
+**Known design note:** the dialog forms the alliance directly (0 influence), while the vanilla Kingdom-screen
+button uses the influence-cost decision flow — two intentional paths with different costs.
+
+Reviewed via `/deep-review` (5 agents) + `/review-codex`. Deep-review caught + fixed one HIGH: a duplicate
+`<string id="taom_alliance_formed">` collision with a pre-existing harvested string (renamed the new key to
+`taom_player_alliance_formed`). RCA: `docs/reviews/rca-player-alliance-freedom-2026-06-16.md`. Localization:
+4 new `taom_alliance_*` source keys added; AI-language propagation runs separately. Issue: #284.
+
 ### fix(race-age): suppress harmless DeliverOffSpring race-assert (debugger break + log spam on mixed-race births)
 
 Issue: #283.

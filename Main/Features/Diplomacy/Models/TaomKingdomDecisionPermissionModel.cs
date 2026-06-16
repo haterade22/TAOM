@@ -18,7 +18,9 @@ public class TaomKingdomDecisionPermissionModel : DefaultKingdomDecisionPermissi
     public override bool IsStartAllianceDecisionAllowedBetweenKingdoms(
         Kingdom kingdom1, Kingdom kingdom2, out TextObject reason)
     {
-        if (!_diplomacyService.IsAllianceAllowed(kingdom1.StringId, kingdom2.StringId))
+        bool involvesPlayer = PlayerKingdomHelper.InvolvesPlayerRuledKingdom(kingdom1, kingdom2);
+
+        if (!_diplomacyService.IsAllianceDecisionAllowed(kingdom1.StringId, kingdom2.StringId, involvesPlayer))
         {
             reason = new TextObject("{=taom_alliance_blocked}These kingdoms can never be allied.");
             return false;
