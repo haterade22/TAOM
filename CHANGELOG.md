@@ -1,5 +1,46 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-17
+
+### fix(crash): guard vanilla siege-start NRE + warg-bite NRE; fix CultureMarketplace removal underflow
+
+Three independent fixes from crash bundle `taom_crash_20260617_165538` + a follow-up debug log, all on
+Bannerlord v1.4.6.115628.
+
+**1. Map-tick CTD on AI siege start (the reported "crashing while walking").** A `NullReferenceException`
+in vanilla `Army.FindBestGatheringSettlementAndMoveTheLeader` — it dereferences `settlement.GatePosition`
+(Army.cs:726, v1.4.6) with no null guard when a besieger army can't resolve a gathering fortification
+(every kingdom fortress under siege / out of range, and `FindNearestFortificationToMobileParty` returns
+null); a null `Kingdom` throws in the same method at line 659. The crash report shows no TAOM patch on the
+stack — it's a vanilla missing-null-guard that TAOM's aggressive cross-map siege targeting
+(`Patch22_ArmyTargeting`) makes more reachable. **Fix:** `Patch49_ArmyGatheringNreGuard` — a Harmony
+Finalizer that swallows only `NullReferenceException`, so the army skips relocating its gathering leader
+this tick (vanilla already null-guards `AiBehaviorObject` downstream) and re-plans next tick instead of
+crashing. Mirrors the Patch47/48 vanilla-crash-guard pattern.
+
+**2. CultureMarketplace `RemoveItem` underflow spam (6,949 logged errors in one session).**
+`TownRosterAdapter.RemoveItem` sized the removal from the first stack of an item (`FindIndexOfItem`,
+modifier-agnostic) but applied it to `new EquipmentElement(itemObject)` (null modifier), which the engine
+matches by exact element — so the removal landed on a different, smaller stack and drove its `Amount`
+negative → `MBUnderFlowException("ItemRosterElement::Amount")`. **Fix:** rewrite to mirror the already-fixed
+`GetItemCount` — collect every matching stack with its own modifier-preserving `EquipmentElement`
+(`GetElementCopyAtIndex`), then remove per-stack clamped to that stack's amount. Underflow is now
+impossible. The `ITownRosterAdapter` contract is unchanged.
+
+**3. Warg-on-warg bite NRE (caught, non-fatal, log spam).** When a ridden warg bites another warg, the
+shared synthetic-bite path (`CustomAttacksUtils.TakeDamage` → `Mission.RegisterBlow` → `OnAgentHit`) calls
+`affectedAgent.CheckToDropFlaggedItem()` on the victim mount, which NREs on a null wielded `Item`
+(Agent.cs:3595). **Fix:** `Patch50_DropFlaggedItemGuard` — a Harmony Finalizer that swallows only the NRE;
+damage is applied upstream in `HandleBlow`, so the bite still lands. Covers warg + spider.
+
+Build green (0 warnings). Verified against installed v1.4.6 DLLs (all APIs + Finalizer signatures). Deep
+review: 0 standards / compatibility / data-flow defects. The 9 pre-existing `VolunteerRecruitmentService`
+Dol Guldur test failures on this branch are untouched by this changeset.
+
+Not-tested: adapter↔`ItemRoster` modifier mechanics + both Harmony Finalizers require the live game (no unit
+harness for sealed `ItemRoster` / Harmony patches, per ADR-008) — in-game gate is RemoveItem error count → ~0
+and no CTD on AI siege start.
+
 ## 2026-06-16
 
 ### chore(tooling): patch Painter-MCP channel reads for 12.0.3 + add layer-rollback helper

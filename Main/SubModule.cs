@@ -195,6 +195,12 @@ public class SubModule : MBSubModuleBase
         ShaderPrecompilationIoC.InitializeHooks(logger);
 
         _harmony.PatchCategory("Patch22_ArmyTargeting");
+        // Patch49: Finalizer guarding vanilla Army.FindBestGatheringSettlementAndMoveTheLeader,
+        // which NREs (Army.cs:726 settlement.GatePosition / 659 Kingdom.Settlements, v1.4.6) when a
+        // besieger army can't resolve a gathering fortification — a map-tick CTD on siege start.
+        // No TAOM patch is on the stack; aggressive Patch22 targeting just makes it more reachable.
+        // Crash report 2026-06-17. See the patch's doc-comment.
+        _harmony.PatchCategory("Patch49_ArmyGatheringNreGuard");
         _harmony.PatchCategory("Patch30_MixedFormations");
         // Patch_MissionTime_SetMovementOrder (shared by Patch31_SmartCavalryAI +
         // Patch35_CompanionTactics' Formation.SetMovementOrder hook) is applied in
@@ -555,6 +561,13 @@ public class SubModule : MBSubModuleBase
         // around on death. Strips CanDismount for spider riders so the native dismount never fires (the rider
         // stays on the locked mount; damage still applies). Debugger-proven 2026-06-15. See docs/features/spider.md.
         _harmony.PatchCategory("Patch48_SpiderHitDismountGuard");
+
+        // Patch50: Finalizer swallowing a vanilla NRE in Agent.CheckToDropFlaggedItem (Agent.cs:3595),
+        // reached via the shared synthetic-bite path (CustomAttacksUtils.TakeDamage → RegisterBlow →
+        // OnAgentHit → affectedAgent.CheckToDropFlaggedItem) when a warg bites another warg (mount
+        // victim with a null wielded Item). Already caught by WargAttackService, but swallowing lets
+        // OnAgentHit finish and stops the log spam. Crash report 2026-06-17. See the patch doc-comment.
+        _harmony.PatchCategory("Patch50_DropFlaggedItemGuard");
 
         // Patch13_RaceAge — noise reduction (NOT a crash fix). NOPs the harmless
         // mother.Race == father.Race SilentAssert in DeliverOffSpring that fires on every

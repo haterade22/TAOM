@@ -93,15 +93,38 @@ public class TownRosterAdapter : ITownRosterAdapter
             var itemObject = MBObjectManager.Instance?.GetObject<ItemObject>(itemId);
             if (itemObject == null) return false;
             var roster = settlement.ItemRoster;
-            var index = roster.FindIndexOfItem(itemObject);
-            if (index < 0) return false;
-            var have = roster.GetElementNumber(index);
-            if (have <= 0) return false;
-            var toRemove = Math.Min(count, have);
-            // Vanilla AddToCounts accepts negative counts; this triggers OnInventoryUpdated
-            // → MarketData price recalculation per Town.OnInventoryUpdated (decompiled v1.3.15).
-            roster.AddToCounts(new EquipmentElement(itemObject), -toRemove);
-            return true;
+
+            // A single ItemObject can occupy MULTIPLE roster stacks when stacks carry different
+            // ItemModifiers (e.g. "Sharp assassin_armor" + plain "assassin_armor"). The old code
+            // sized `toRemove` from the FIRST stack (FindIndexOfItem is modifier-agnostic) but
+            // applied it to `new EquipmentElement(itemObject)` (null modifier), which AddToCounts
+            // matches by EXACT element — so the removal landed on a DIFFERENT, smaller stack and
+            // drove its Amount negative → MBUnderFlowException("ItemRosterElement::Amount") spam
+            // (crash report 2026-06-17: thousands of CultureMarketplace RemoveItem failures).
+            // Mirror GetItemCount above: collect every matching stack with its OWN EquipmentElement
+            // (modifier-preserving), then remove per-stack clamped to that stack's amount. Snapshot
+            // first — AddToCounts mutates/reindexes the roster as stacks empty.
+            var stacks = new List<(EquipmentElement element, int amount)>();
+            for (var i = 0; i < roster.Count; i++)
+            {
+                if (roster.GetItemAtIndex(i) != itemObject) continue;
+                var amt = roster.GetElementNumber(i);
+                if (amt > 0)
+                    stacks.Add((roster.GetElementCopyAtIndex(i).EquipmentElement, amt));
+            }
+            if (stacks.Count == 0) return false;
+
+            var remaining = count;
+            foreach (var (element, amount) in stacks)
+            {
+                if (remaining <= 0) break;
+                var take = Math.Min(remaining, amount);
+                // Vanilla AddToCounts accepts negative counts; this triggers OnInventoryUpdated
+                // → MarketData price recalculation per Town.OnInventoryUpdated (decompiled v1.3.15).
+                roster.AddToCounts(element, -take);
+                remaining -= take;
+            }
+            return remaining < count; // removed at least one unit
         }
         catch (Exception ex)
         {
