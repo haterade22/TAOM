@@ -52,11 +52,20 @@ public sealed class LogTailCollector
     {
         try
         {
-            var docs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var dir = Path.Combine(docs, "Mount and Blade II Bannerlord", "logs");
-            if (!Directory.Exists(dir)) return null;
-            return new DirectoryInfo(dir)
-                .EnumerateFiles("rgl_log_*.txt")
+            // The engine writes rgl_log_*.txt to %ProgramData% by default; older / Documents-
+            // redirected (incl. OneDrive) installs use MyDocuments. Probe ProgramData first,
+            // then MyDocuments, and take the newest across whichever directories exist —
+            // resolving the MyDocuments-only assumption that left the bundle's rgl section empty
+            // on ProgramData/OneDrive installs.
+            var roots = new[]
+            {
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            };
+            return roots
+                .Select(r => Path.Combine(r, "Mount and Blade II Bannerlord", "logs"))
+                .Where(Directory.Exists)
+                .SelectMany(d => new DirectoryInfo(d).EnumerateFiles("rgl_log_*.txt"))
                 .OrderByDescending(f => f.LastWriteTimeUtc)
                 .FirstOrDefault()?.FullName;
         }

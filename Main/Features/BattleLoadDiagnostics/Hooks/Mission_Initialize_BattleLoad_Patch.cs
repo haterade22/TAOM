@@ -11,8 +11,13 @@ namespace TAOM.Features.BattleLoadDiagnostics.Hooks;
 public static class Mission_Initialize_BattleLoad_Patch
 {
     private static IBattleLoadDiagnosticsService? _service;
+    private static IBattleLoadStallMarker? _stallMarker;
 
-    public static void Initialize(IBattleLoadDiagnosticsService service) => _service = service;
+    public static void Initialize(IBattleLoadDiagnosticsService service, IBattleLoadStallMarker stallMarker)
+    {
+        _service = service;
+        _stallMarker = stallMarker;
+    }
 
     [HarmonyPrefix]
     public static void Prefix(Mission __instance)
@@ -23,7 +28,11 @@ public static class Mission_Initialize_BattleLoad_Patch
         // Open the window only when enabled — the watchdog and phase-5 are both gated on it,
         // and phase 6 closes it on the first playable tick.
         BattleLoadLoadingWindow.Enter();
-        try { svc.LogMissionInitialize(__instance?.SceneName ?? "<null>"); }
+        var scene = __instance?.SceneName ?? "<null>";
+        // Write the inflight marker: if this load hangs and the player force-quits, the
+        // surviving marker triggers a "send your log" notice on the next main menu.
+        try { _stallMarker?.MarkInflight(scene); } catch { /* diagnostic only */ }
+        try { svc.LogMissionInitialize(scene); }
         catch { /* diagnostic only */ }
     }
 }

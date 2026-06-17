@@ -11,6 +11,7 @@ public static class BattleLoadDiagnosticsIoC
         container.Register<IEquipmentDumpFormatter, EquipmentDumpFormatter>(Reuse.Singleton);
         container.Register<IBattleLoadDiagnosticsService, BattleLoadDiagnosticsService>(Reuse.Singleton);
         container.Register<IEquipmentSnapshotAdapter, EquipmentSnapshotAdapter>(Reuse.Singleton);
+        container.Register<IBattleLoadStallMarker, BattleLoadStallMarker>(Reuse.Singleton);
         container.Register<BattleLoadStallWatchdog>(Reuse.Singleton);
     }
 }

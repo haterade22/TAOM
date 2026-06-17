@@ -10,9 +10,14 @@ namespace TAOM.Features.BattleLoadDiagnostics.Hooks;
 public sealed class BattleLoadPhaseBehavior : MissionLogic
 {
     private readonly IBattleLoadDiagnosticsService _service;
+    private readonly IBattleLoadStallMarker _stallMarker;
     private bool _playableLogged;
 
-    public BattleLoadPhaseBehavior(IBattleLoadDiagnosticsService service) => _service = service;
+    public BattleLoadPhaseBehavior(IBattleLoadDiagnosticsService service, IBattleLoadStallMarker stallMarker)
+    {
+        _service = service;
+        _stallMarker = stallMarker;
+    }
 
     public override void OnMissionTick(float dt)
     {
@@ -26,8 +31,10 @@ public sealed class BattleLoadPhaseBehavior : MissionLogic
         catch { /* diagnostic only */ }
         finally
         {
-            // Reaching a tick means the load finished — stop watching regardless of logging.
+            // Reaching a tick means the load finished — stop watching + clear the inflight
+            // marker so no stall notice fires next session.
             BattleLoadLoadingWindow.Close();
+            try { _stallMarker?.ClearInflight(); } catch { /* best-effort */ }
         }
     }
 
@@ -35,5 +42,6 @@ public sealed class BattleLoadPhaseBehavior : MissionLogic
     {
         _playableLogged = false;
         BattleLoadLoadingWindow.Close();
+        try { _stallMarker?.ClearInflight(); } catch { /* best-effort */ }
     }
 }

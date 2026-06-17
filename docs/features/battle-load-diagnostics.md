@@ -68,7 +68,7 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `EnableStallWatchdogBundle` | `true` | Also write a crash-bundle ZIP on stall (needs Crash Report capture on). |
 | `StallWatchdogSeconds` | `300` | Seconds of load before flagging a stall (range 10–600; NaN/range-guarded in the provider). Default is 5 min because large custom siege scenes (e.g. Minas Tirith) legitimately take minutes to load on first entry; 45 s false-positived on them. |
 
-`Reuse.Singleton` — MCM caches for the whole process; changes apply on the next launch, not mid-session.
+`Reuse.Singleton` — the provider is a process singleton, but `IsEnabled` reads the MCM value live on each access, so an in-game toggle takes effect immediately. Every gate (the Mission.Initialize prefix, the watchdog poll, the behavior-add) reads through this one provider, so they stay consistent with each other at any instant.
 
 ## Key Files
 
@@ -96,16 +96,42 @@ Wiring: `Main/IoC.cs` (registration), `Main/SubModule.cs` (`OnGameInitialization
 
 ## Tests
 
-`TAOM.Tests/Features/BattleLoadDiagnostics/` (26 tests, all green):
+`TAOM.Tests/Features/BattleLoadDiagnostics/` (36 tests, all green):
 
 - `EquipmentDumpFormatterTests` — null/empty snapshots, `shieldBo=<null>` token on missing collision mesh, id/kind inclusion, one-line-per-slot.
 - `BattleLoadLoadingWindowTests` — open/close/`OpenedAtUtc` transitions.
 - `BattleLoadStallWatchdogTests` — `ShouldFire` at/above/below threshold, already-fired, window-closed.
 - `BattleLoadDiagnosticsServiceTests` — disabled = no writes, scene/index/summary in markers, formatter delegation, begin-before-body ordering, status-line update, and **every phase method swallows a throwing logger** (the feature must never crash the game).
+- `BattleLoadStallMarkerTests` — `Format`/`Parse` round-trip (scene + UTC + **absolute** log path), write→consume→delete lifecycle, consume-once, `ClearInflight`, missing-directory creation, and a locked/undeletable marker still surfacing its parsed info (parse-before-delete).
 
 Hooks and the `MissionLogic` are game-only (ADR-008) and verified in-game.
 
+### Reaching the dev: the stall marker + next-session notice
+
+A hang freezes the **main thread**, so no in-the-moment dialog can render and the player force-quits — meaning the on-disk log + watchdog bundle never reach us. `IBattleLoadStallMarker` (`BattleLoadStallMarker`) closes that gap, mirroring `Dependencies/Foundation/IncompatibleModDetector`'s marker pattern:
+
+- **phase 4** (`Mission.Initialize` prefix) writes `Logs/battle-load-inflight.marker` (scene + UTC + the current `taom_debug` log path);
+- **phase 6 / mission end** (`BattleLoadPhaseBehavior`) deletes it once the load reaches a tick;
+- the **next session's main menu** (`SubModule.OnBeforeInitialModuleScreenSetAsRoot`) calls `TryConsumeStaleMarker()` — a *surviving* marker means the previous load never finished, so `StallReportNotifier` shows a soft `ShowInquiry` ("last battle load may not have finished") with an **Open log folder** button pointing at the prior session's log.
+
+This complements the watchdog: the watchdog fires for a player who **waits** past the threshold; the marker catches the (more common) player who **force-quits** the hang long before that. The marker lives in `Logs/` alongside `taom_debug_*.log` and the crash bundle, so one folder has everything. Wording is soft because a benign Alt-F4 during a load also leaves a marker — a low-harm false positive.
+
 ## How-To
+
+### Triage a user's log automatically (equipment vs code)
+
+Instead of reading the log by hand, run `tools/triage_battle_load.py` — it parses the `[BattleLoad]` lifecycle and prints a one-line **VERDICT** + the suspect agent/item/mesh:
+
+```bash
+# verdict from the log alone
+python tools/triage_battle_load.py <taom_debug_*.log>
+# authoritative: add the player's engine log to CONFIRM a missing mesh
+python tools/triage_battle_load.py <taom_debug_*.log> --rgl-log <rgl_log_errors_*.txt>
+# or hand it the whole crash bundle (it extracts both logs)
+python tools/triage_battle_load.py --bundle <taom_crash_*.zip>
+```
+
+Verdicts: `EQUIPMENT` (ends at `AgentEquipBegin`, names the stuck agent's items), `EQUIPMENT_CONFIRMED` (+ the rgl_log's `get_object failed for body:` matches a suspect — reuses `validate_mesh_refs.parse_rgl_text`), `POST_EQUIP` (equipped fine, froze before playable → not equipment), `SCENE` / `PRE_SCENE` (froze during/before scene load → code), `COMPLETED`, `UNKNOWN` (diagnostics were off). Exit code is 1 for any diagnosed hang, 0 for COMPLETED/UNKNOWN, 2 for a bad path. Tests: `tools/tests/test_triage_battle_load.py`. The player-facing collection path (which files to ask for) is `.github/ISSUE_TEMPLATE/battle-load-hang.md`.
 
 ### Read a hang log
 

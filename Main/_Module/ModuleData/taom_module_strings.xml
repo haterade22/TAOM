@@ -2293,4 +2293,9 @@
   <string id="taom_hideout_desc_mistymountainorcs" text="{=taom_hideout_desc_mistymountainorcs}Beneath the crags of the Misty Mountains you find a foul warren of orcs burrowed into the bare rock." />
 
   <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
+
+  <!-- Battle Load Diagnostics — next-session stall notice (StallReportNotifier) -->
+  <string id="taom_bld_stall_title" text="{=taom_bld_stall_title}TAOM: last battle load may not have finished" />
+  <string id="taom_bld_stall_dismiss" text="{=taom_bld_stall_dismiss}Dismiss" />
+  <string id="taom_bld_stall_openfolder" text="{=taom_bld_stall_openfolder}Open log folder" />
 </strings>

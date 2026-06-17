@@ -255,6 +255,19 @@ public class SubModule : MBSubModuleBase
         base.OnBeforeInitialModuleScreenSetAsRoot();
         IoC.Resolve<IMainMenuCustomizerService>().CustomizeMenu();
 
+        // BattleLoadDiagnostics collection: a battle/scene load that hung last session left
+        // an inflight marker (phase-4 wrote it; phase-6/end never ran to clear it). If it
+        // survived to this main menu, the previous load never finished — surface a notice so
+        // the player knows to send the diagnostic log. See docs/features/battle-load-diagnostics.md.
+        try
+        {
+            var stallMarker = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadStallMarker>();
+            var stale = stallMarker?.TryConsumeStaleMarker();
+            if (stale != null)
+                Features.BattleLoadDiagnostics.StallReportNotifier.Notify(stale);
+        }
+        catch { /* never block the main menu over a diagnostic */ }
+
         // NativeSkinFixes — three native MinHook detours that fix engine bugs
         // TaleWorlds won't: covers_head morph freeze, hair cloth orphan, beard
         // cloth orphan. Loads TAOM.NativeSkinFixes.dll from Main/_Module/bin
@@ -596,10 +609,11 @@ public class SubModule : MBSubModuleBase
         // missing). The background stall watchdog auto-triggers a crash bundle on a freeze.
         var battleLoadSvc = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsService>();
         var equipSnapshotAdapter = IoC.Resolve<IEquipmentSnapshotAdapter>();
+        var battleLoadStallMarker = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadStallMarker>();
         Features.BattleLoadDiagnostics.Hooks.PlayerEncounter_Start_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.MissionState_OpenNew_Patch.Initialize(battleLoadSvc);
         Features.BattleLoadDiagnostics.Hooks.BattleSceneSelection_Patch.Initialize(battleLoadSvc);
-        Features.BattleLoadDiagnostics.Hooks.Mission_Initialize_BattleLoad_Patch.Initialize(battleLoadSvc);
+        Features.BattleLoadDiagnostics.Hooks.Mission_Initialize_BattleLoad_Patch.Initialize(battleLoadSvc, battleLoadStallMarker);
         Features.BattleLoadDiagnostics.Hooks.Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch.Initialize(battleLoadSvc, equipSnapshotAdapter);
         _harmony.PatchCategory("Patch43_BattleLoadDiagnostics");
         IoC.Resolve<Features.BattleLoadDiagnostics.BattleLoadStallWatchdog>().Start();
@@ -716,7 +730,8 @@ public class SubModule : MBSubModuleBase
         // the loading window so the stall watchdog stands down and phase-5 stops logging.
         var battleLoadDiagSvc = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsService>();
         if (battleLoadDiagSvc != null && battleLoadDiagSvc.IsEnabled)
-            mission.AddMissionBehavior(new Features.BattleLoadDiagnostics.Hooks.BattleLoadPhaseBehavior(battleLoadDiagSvc));
+            mission.AddMissionBehavior(new Features.BattleLoadDiagnostics.Hooks.BattleLoadPhaseBehavior(
+                battleLoadDiagSvc, IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadStallMarker>()));
 
         // Dev-trigger behavior watches the CrashReport MCM toggle and throws a tagged
         // TaomDevTriggerException on the next OnMissionTick when the player flips

@@ -2,6 +2,34 @@
 
 ## 2026-06-17
 
+### feat(tools): triage_battle_load.py — equipment-vs-code verdict from a battle-load log
+
+New `tools/triage_battle_load.py` answers the recurring "is this infinite-loading-screen report an
+equipment issue or a code issue?" mechanically instead of by hand. It parses the `[BattleLoad]`
+lifecycle that `BattleLoadDiagnostics` writes to `taom_debug.log` and prints a one-line **VERDICT**:
+`EQUIPMENT` (froze at `AgentEquipBegin` — names the stuck agent + its items/mesh names),
+`EQUIPMENT_CONFIRMED` (the player's `rgl_log` `get_object failed for body:` matches a suspect —
+reuses `validate_mesh_refs.parse_rgl_text` rather than re-implementing it), `POST_EQUIP` (equipped
+fine, froze before playable → not equipment), `SCENE`/`PRE_SCENE` (froze during/before scene load →
+code), `COMPLETED`, `UNKNOWN`. Accepts a loose log, `--rgl-log`, or a `--bundle` zip; `--json` output;
+exit 1 on a diagnosed hang. Pure stdlib, 28 tests (`tools/tests/test_triage_battle_load.py`), verified
+end-to-end agreeing with `validate_mesh_refs.py` on the real `bo_cap_wm_boromir_shield` missing-body case.
+
+### feat(battle-load-diagnostics): stall marker + next-session notice so hang logs reach the dev
+
+A battle-load hang freezes the main thread, so no in-the-moment dialog can render and the player
+force-quits — the on-disk log never reaches us. New `IBattleLoadStallMarker` (`BattleLoadStallMarker`)
+closes that gap, mirroring `IncompatibleModDetector`'s marker pattern: phase 4 (`Mission.Initialize`)
+writes `Logs/battle-load-inflight.marker` (scene + the session's `taom_debug` log path); phase 6 /
+mission end clears it; the next session's main menu (`OnBeforeInitialModuleScreenSetAsRoot`) consumes a
+*surviving* marker and shows a soft `StallReportNotifier` inquiry ("last battle load may not have
+finished") with an **Open log folder** button. Complements the 300s watchdog — that catches a player
+who waits; the marker catches the one who force-quits. New `.github/ISSUE_TEMPLATE/battle-load-hang.md`
+tells players which files to attach. Marker service unit-tested (Format/Parse round-trip, consume-once,
+clear); the notice surface is game-only (ADR-008). 3 player strings added to `taom_module_strings.xml`.
+
+## 2026-06-17
+
 ### fix(crash): guard vanilla siege-start NRE + warg-bite NRE; fix CultureMarketplace removal underflow
 
 Three independent fixes from crash bundle `taom_crash_20260617_165538` + a follow-up debug log, all on
