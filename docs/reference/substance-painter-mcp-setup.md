@@ -56,6 +56,56 @@ recommendation for Claude Code specifically, because deferred tool loading makes
 surface nearly free in context. Drop to a smaller mode only if a different client with a hard
 tool-count limit is ever pointed at this server.
 
+## Local fixes applied (Painter 12.0.3)
+
+These edits live in the local **editable** copy under `C:\Users\mikew\substance_painter_mcp\server\`.
+They are **not** committed to this repo (the package is proprietary — its license §3 forbids
+publishing the source) and must be **re-applied after a vendor update** (lifetime updates overwrite
+`server/`). Because `uv` installs the package editable, a Claude Code restart picks the patch up
+with no reinstall — confirmed: `import server.tools.texture_set` resolves to the source path, not a
+`.venv` copy.
+
+**Channel reads — fixed.** 12.0.3 removed `TextureSet.all_channels()`; channels moved to the
+**`Stack`**. The vendor's channel-enumeration tools returned empty `channels: []` and one smoke
+test failed (`textureset_all_channels`). Fix: route each channel read through the stack with a
+legacy fallback —
+
+```python
+ts.get_stack().all_channels() if hasattr(ts, "get_stack") else ts.all_channels()
+```
+
+Applied at 8 call sites in 5 files: `server/serializers.py`, `server/tools/texture_set.py` (×2),
+`server/tools/introspection.py` (×2), `server/tools/layer.py` (×2, preserving the `{{}}` snippet
+brace-escaping), `server/tools/validation.py` (×2). Verified two ways: the bundled `painter-cli`
+(`set list` reports `BaseColor/Height/Roughness/Metallic/Normal`; `probe smoke --category all` →
+**15/15**, was 14/15) and the reloaded Claude-Code-hosted server (`list_texture_sets` now returns
+the channels).
+
+**Undo — not fixable (Adobe limitation).** A probe of all 18 `substance_painter` submodules found
+**zero** undo/redo callables, so `verify_undo_works` / the `history` tools correctly report
+`UnsupportedError`. Nothing to patch. Manual **Ctrl+Z** still works (every mutation is wrapped in
+`ScopedModification`); for AI-driven layer additions, use the rollback helper below.
+
+## Layer rollback helper — `taom_layer_rollback.py`
+
+TAOM-owned (`C:\Users\mikew\substance_painter_mcp\taom_layer_rollback.py`, separate from the vendor
+package — **update-safe**). A practical layer-level stand-in for the missing scriptable undo:
+snapshot the layer UIDs before an AI batch, then delete any layers added since.
+
+```text
+cd C:/Users/mikew/substance_painter_mcp
+uv run python taom_layer_rollback.py snapshot --out baseline.json   # before the AI works
+# ... AI adds layers via MCP ...
+uv run python taom_layer_rollback.py rollback baseline.json         # remove what was added
+uv run python taom_layer_rollback.py rollback baseline.json --dry-run  # preview only
+uv run python taom_layer_rollback.py list                           # inspect current layers
+```
+
+It reuses the bundled `PainterClient` for the wire protocol and mirrors the vendor's delete path
+(`node.delete()` inside `ScopedModification`). **Scope:** reverts layer **additions** only — not
+paint strokes, property/opacity/blend tweaks, channel edits, or deletions. Verified: snapshot → add
+a fill layer → rollback deleted exactly the new layer, baseline untouched.
+
 ## Security
 
 Sound model (see the package's `SECURITY.md`): stdio-only, loopback-only to Painter, **no
@@ -64,7 +114,9 @@ arbitrary execution. Two tools — `execute_python` / `execute_js` — are genui
 execution inside Painter. To strip them (e.g. when pasting untrusted text into prompts), add
 `"--no-execute-arbitrary"` to the `args` in `.claude.json`; the other 177 tools keep working.
 Every layer mutation is wrapped in `ScopedModification`, so a single **Ctrl+Z** in Painter
-reverts a whole AI edit sequence.
+reverts a whole AI edit sequence (for scripted layer-level rollback of an AI batch, see
+`taom_layer_rollback.py` under "Layer rollback helper"). Note there is **no scriptable undo** in
+12.0.3 — Ctrl+Z is manual-only.
 
 ## Verify / troubleshoot
 
@@ -76,6 +128,8 @@ reverts a whole AI edit sequence.
 - **`ConnectionError: Cannot reach Painter`** → Painter not running, or launched without
   `--enable-remote-scripting` (use the `.bat`), or no project open.
 - **`ModuleNotFoundError: substance_painter`** → Painter too old (pre-11.0). N/A here (12.0.3).
+- **`channels: []` on every texture set** → the pre-patch 12.0.3 `all_channels` bug; fixed locally
+  (see "Local fixes applied"). If it reappears, a vendor update overwrote the patch — re-apply it.
 - **`TimeoutError` on long bakes/exports** → use the async export tools, or raise `--timeout`.
 
 ## Updating

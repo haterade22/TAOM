@@ -2,6 +2,39 @@
 
 ## 2026-06-16
 
+### chore(tooling): patch Painter-MCP channel reads for 12.0.3 + add layer-rollback helper
+
+Local fixes to the (proprietary, editable) MCP Pro for Painter install after testing on Painter
+12.0.3 — env tooling only, no vendor source committed to the repo. (1) Channels moved `TextureSet`
+→ `Stack` in 12.0.3, so the vendor's `ts.all_channels()` calls returned empty; routed 8 call sites
+across 5 `server/` files through `ts.get_stack().all_channels()` with a legacy fallback. Verified:
+`painter-cli set list` reports channels and `probe smoke --category all` is 15/15 (was 14/15), and
+the reloaded Claude-Code-hosted server's `list_texture_sets` now returns them. (2) Painter 12.0.3
+exposes no scriptable undo (probed — zero undo/redo callables); added TAOM-owned
+`taom_layer_rollback.py` (snapshot layer UIDs → delete layers added since) as a layer-level
+workaround, with manual Ctrl+Z otherwise. Re-apply the channel patch after a vendor update. See
+`docs/reference/substance-painter-mcp-setup.md`.
+
+### docs(quests): map vanilla issue/quest system + author LOTR conversion plan
+
+Researched Bannerlord 1.4.5's procedural issue/quest system end-to-end and produced two docs: an engine
+reference and a TAOM conversion plan with a per-issue disposition matrix. Planning only — no code.
+
+Key findings: TAOM is sandbox-only (no `StoryMode` dependency; `StoryModeNewGame` hidden), so the vanilla
+main storyline (Dragon Banner / Neretzes conspiracy) never spawns — the live surface is **43 procedural
+issues** (36 registered in `SandBoxManager.Initialize`, 7 in `SandBoxSubModule.InitializeGameStarter`;
+StoryMode adds none). Issues are culture-relative, so they already pull LOTR troops/items from the
+issue-giver's culture; the conversion gap is hard-coded display text plus a few vanilla base-good refs.
+Per the decision to **replace + disable** vanilla issues, the recommended suppression is
+`CampaignGameStarter.RemoveBehaviors<T>()` (not the `CanHaveCampaignIssues` veto, which also governs notable
+despawn). Audit dispositions: **41 Replace, 1 Reskin, 0 Drop**.
+
+- `docs/reference/engine/issue-and-quest-system.md` — new engine reference (issue→quest pipeline, the 43-issue
+  sandbox set, `IssueModel` surface, `OnGameLoaded` auto-cancel + `SpecialQuestType`, suppression seam)
+- `docs/features/lotr-issues.md` — new conversion plan: 43-issue disposition matrix, custom-issue framework,
+  suppression strategy, localization, verification, future LOTR main-quest sketch, risks
+- `docs/INDEX.md` — registered both docs (CLAUDE.md Doc Lookup entry pending — `config-protection` hook gate)
+
 ### chore(tooling): wire Substance 3D Painter MCP for live AI texturing control
 
 Set up a Substance 3D Painter MCP server so Claude Code can drive a live Painter session — the

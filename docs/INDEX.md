@@ -96,6 +96,7 @@
 
 ### Sandbox, lifecycle, & UI
 - [main-menu-customizer](features/main-menu-customizer.md) — hide Campaign, rename Sandbox → "Enter The Age Of Men"
+- [lotr-issues](features/lotr-issues.md) — **PLAN** — convert the 43 vanilla procedural issues to LOTR (replace + disable); per-issue disposition matrix
 - [encyclopedia](features/encyclopedia.md) — encyclopedia screen extensions, dispatch entry points
 - [quick-actions](features/quick-actions.md) — inventory "Sell All" multi-action menu (Patch34)
 - [fief-management](features/fief-management.md) — custom GameState for fief management
@@ -131,6 +132,7 @@
   - [campaign-to-mission-bridge](reference/engine/campaign-to-mission-bridge.md) (Phase 17 — **the seam between the two halves**: `MobileParty` encounter→`EncounterManager`/`StartBattleAction`→`MapEvent`→`PlayerEncounter`→`CampaignMission.OpenBattleMission`→`MissionState.OpenNew` (CreateState+PushState, Phase 11)→Mission (Phase 4)→`SpawnAgent` (Phase 1); CasualtyHandler back to campaign; managed→native seam = `MissionState.OpenNew`)
   - [submodule-lifecycle-and-harmony](reference/engine/submodule-lifecycle-and-harmony.md) (Phase 18, **integration capstone** — the meta-layer: `MBSubModuleBase` lifecycle (`OnSubModuleLoad`/`OnGameStart`/`OnMissionBehaviorInitialize`/`OnSubModuleUnloaded`), Harmony owner/categories/Prefix-Postfix-Transpiler-Finalizer/deferred application, the 3 registration mechanisms (patch vs `AddModel` vs `AddBehavior`), Harmony-managed vs MinHook-native boundary, PatchShield)
   - [campaign-tick-time-and-party-ai](reference/engine/campaign-tick-time-and-party-ai.md) (Phase 19 — the campaign **heartbeat** closing the loop to Phase 17: `MapTimeTracker` advances `CampaignTime` at `TimeControlMode` speed; `Campaign.Tick`→periodic events (Phase 9) + `MapEvent` + staggered `MobilePartyAi` (`DefaultBehavior`/`TargetSettlement`) + `EncounterManager`→encounter; `CampaignTime`-as-deadline-unit, game-time-not-real-time, staggered-AI gotchas)
+  - [issue-and-quest-system](reference/engine/issue-and-quest-system.md) (sibling reference, not a numbered phase — `IssueBase`/`QuestBase`/`IssueManager`/`QuestManager`: the procedural issue→quest pipeline, the 43-issue sandbox registration set (`SandBoxManager.Initialize` + `SandBoxSubModule`), `IssueModel` surface, `OnGameLoaded` auto-cancel + `SpecialQuestType`, `RemoveBehaviors<T>` suppression; backs the [lotr-issues](features/lotr-issues.md) conversion plan)
 - [bannerlord-animation-clip-flags](reference/bannerlord-animation-clip-flags.md) — the `AnimFlags` clip-flag system + per-clip-type recipe + full per-flag reference (all ~60); flags are baked into the `_anm.tpac`, NOT `action_types.xml`; the spider's clips ship with zero flags (= broken locomotion)
 - [editor-cache-rebuild](features/editor-cache-rebuild.md) — parallel + incremental + resumable settlement distance cache rebuild
 - [scene-scripts](features/scene-scripts.md) — engine-discovered ScriptComponentBehavior subclasses (CS_Road, etc.)
