@@ -2,33 +2,37 @@
 
 ## 2026-06-17
 
-### feat(tools): triage_battle_load.py — equipment-vs-code verdict from a battle-load log
+### feat(recruitment): alignment-gated recruitment — opposed factions refuse to serve
 
-New `tools/triage_battle_load.py` answers the recurring "is this infinite-loading-screen report an
-equipment issue or a code issue?" mechanically instead of by hand. It parses the `[BattleLoad]`
-lifecycle that `BattleLoadDiagnostics` writes to `taom_debug.log` and prints a one-line **VERDICT**:
-`EQUIPMENT` (froze at `AgentEquipBegin` — names the stuck agent + its items/mesh names),
-`EQUIPMENT_CONFIRMED` (the player's `rgl_log` `get_object failed for body:` matches a suspect —
-reuses `validate_mesh_refs.parse_rgl_text` rather than re-implementing it), `POST_EQUIP` (equipped
-fine, froze before playable → not equipment), `SCENE`/`PRE_SCENE` (froze during/before scene load →
-code), `COMPLETED`, `UNKNOWN`. Accepts a loose log, `--rgl-log`, or a `--bundle` zip; `--json` output;
-exit 1 on a diagnosed hang. Pure stdlib, 28 tests (`tools/tests/test_triage_battle_load.py`), verified
-end-to-end agreeing with `validate_mesh_refs.py` on the real `bo_cap_wm_boromir_shield` missing-body case.
+A recruiter (player or AI lord) can no longer recruit volunteers at a settlement controlled by an
+enemy-aligned kingdom. A Free-aligned lord is barred from Evil-controlled settlements and, by default,
+the reverse; Neutral factions (Umbar/Shaghana/Abanissa) are unaffected either way.
 
-### feat(battle-load-diagnostics): stall marker + next-session notice so hang logs reach the dev
+**Mechanism.** One GameModel override, no Harmony. The player recruit UI and AI lords both clamp their
+recruitable volunteer slots to `VolunteerModel.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero)`;
+TAOM's existing `TaomVolunteerModel` now returns `-1` (the engine's own "recruit nothing from this notable"
+signal, as it does for negative relation) when the recruiter's kingdom alignment opposes the recruitment
+settlement's controlling-kingdom alignment. Both sides resolve to a kingdom StringId (`buyerHero.Clan.Kingdom`
+vs `sellerHero.CurrentSettlement.MapFaction`) keyed through the existing `IAlignmentService` /
+`execution/alignment.json` — the same `MapFaction.StringId`-not-`Culture` disambiguation that keeps
+Gondor (`empire_w`, free) and Mordor (`empire_s`, evil) distinct.
 
-A battle-load hang freezes the main thread, so no in-the-moment dialog can render and the player
-force-quits — the on-disk log never reaches us. New `IBattleLoadStallMarker` (`BattleLoadStallMarker`)
-closes that gap, mirroring `IncompatibleModDetector`'s marker pattern: phase 4 (`Mission.Initialize`)
-writes `Logs/battle-load-inflight.marker` (scene + the session's `taom_debug` log path); phase 6 /
-mission end clears it; the next session's main menu (`OnBeforeInitialModuleScreenSetAsRoot`) consumes a
-*surviving* marker and shows a soft `StallReportNotifier` inquiry ("last battle load may not have
-finished") with an **Open log folder** button. Complements the 300s watchdog — that catches a player
-who waits; the marker catches the one who force-quits. New `.github/ISSUE_TEMPLATE/battle-load-hang.md`
-tells players which files to attach. Marker service unit-tested (Format/Parse round-trip, consume-once,
-clear); the notice surface is game-only (ADR-008). 3 player strings added to `taom_module_strings.xml`.
+**Config.** `recruitment_alignment/recruitment_alignment_config.json` (`enabled`, `mode` =
+Symmetric|GoodRejectsEvil, `applyToAi`) + MCM group "World/Recruitment Alignment" (3 toggles, GroupOrder 36).
+Mode validated on load (unknown → Symmetric + warning). Neutral never blocks; garrison auto-recruit and AI
+map-recruit are inherently same-kingdom and never trigger.
 
-## 2026-06-17
+New feature `Main/Features/AlignmentRecruitment/` (pure service + config/settings providers + IoC). 31 unit
+tests (full 3×3 recruiter×source alignment matrix × both modes, toggles, config validation). Feature doc:
+`docs/features/alignment-recruitment.md`. Issue #286.
+
+Reviewed: `/deep-review` (5 agents, READY) + Codex gpt-5.5 xhigh (0 CRITICAL / 1 HIGH / 1 LOW; all 6 Known
+Suspects DISPUTED with decompiled evidence — Codex proved `Clan.Kingdom` is alignment-equivalent to vanilla's
+`MapFaction` incl. mercenaries, so the recruiter basis needs no change). HIGH (test matrix 6/9 → 9/9) + LOW
+(doc MCM-over-JSON precedence) fixed in-session. RCA: `docs/reviews/rca-AlignmentRecruitment-2026-06-17.md`.
+
+Save-compat: additive, no new saved state.
+Not-tested: the `TaomVolunteerModel` override + in-game UI/AI gate (GameModel slot — validated in-game).
 
 ### fix(crash): guard vanilla siege-start NRE + warg-bite NRE; fix CultureMarketplace removal underflow
 
@@ -68,6 +72,67 @@ Dol Guldur test failures on this branch are untouched by this changeset.
 Not-tested: adapter↔`ItemRoster` modifier mechanics + both Harmony Finalizers require the live game (no unit
 harness for sealed `ItemRoster` / Harmony patches, per ADR-008) — in-game gate is RemoveItem error count → ~0
 and no CTD on AI siege start.
+
+### chore(diplomacy): instrument player-alliance loss (diagnostics only; durability war-block reverted after review)
+
+Follow-up to the player-alliance-freedom feature (#284). In-game feedback: a player who founded
+their own kingdom could form an alliance via the Kingdom→Diplomacy button, but the encyclopedia
+showed no ally shortly after; also "no alliance missions / diplomacy options."
+
+**Confirmed vanilla mechanism (decompile-verified, v1.4.6):** `AllianceCampaignBehavior.OnWarDeclared`
+(line 678-681) calls `EndAlliance` the instant war is declared between two allied kingdoms, and
+TAOM's `AllianceCampaignBehavior_EndAlliance_Patch` protects **only `Permanent`-tier** pairs — a
+player-formed (`Neutral`-tier) alliance is unprotected. But the *trigger* (what declares the war)
+was never reproduced statically, so the root cause (form-then-broken vs never-persists) is still
+unconfirmed.
+
+**Shipping diagnostics only — NO behavior change.** A first pass added a `DiplomacyService.IsWarAllowed`
+branch to block war between the player's ruled kingdom and a current ally. `/review-codex` caught that
+this **soft-locks the player**: v1.4.6 has no "break alliance" UI — the player's *only* exit from an
+alliance is to declare war on the ally (`KingdomDiplomacyVM` → `DeclareWarDecision` →
+`DeclareWarAction.ApplyByKingdomDecision`), which that branch blocked at both the permission model and
+the `DeclareWarAction` prefix. It also created a call-to-war partial-state bug (side effects commit
+before the blocked war). The war-block, `IAllianceAdapter.GetPlayerRuledKingdomId()`, and its 4 tests
+were **reverted**; `IsWarAllowed` is back to its prior behavior.
+
+**What remains (temporary, removable):** `[Diplomacy][diag]` logging only — a Postfix on
+`AllianceCampaignBehavior.StartAlliance` logs when a player alliance forms (covers the kingdom-screen
+button path the service-side logging missed), and the `EndAlliance` patch logs every player-involved
+end attempt. One play session's log will tell us whether the alliance is **formed-then-broken** (and by
+what war) or **never persists** — then the targeted fix can be written against the confirmed cause
+(Iron Law: no fix on an unconfirmed root cause). The "no diplomacy options" report is the intentionally
+leader-only proposal dialog (the kingdom-screen button is the main path), not a bug.
+
+Reviewed via `/deep-review` (5 agents, READY) + `/review-codex` (gpt-5.5 xhigh: 2 HIGH + 1 LOW — the
+HIGHs were the soft-lock + call-to-war atomicity of the reverted war-block; the deep-review missed the
+soft-lock and wrongly assumed a break-alliance UI existed). RCA:
+`docs/reviews/rca-player-alliance-freedom-2026-06-16.md` (2026-06-17 follow-up). Issue: #284.
+
+### feat(tools): triage_battle_load.py — equipment-vs-code verdict from a battle-load log
+
+New `tools/triage_battle_load.py` answers the recurring "is this infinite-loading-screen report an
+equipment issue or a code issue?" mechanically instead of by hand. It parses the `[BattleLoad]`
+lifecycle that `BattleLoadDiagnostics` writes to `taom_debug.log` and prints a one-line **VERDICT**:
+`EQUIPMENT` (froze at `AgentEquipBegin` — names the stuck agent + its items/mesh names),
+`EQUIPMENT_CONFIRMED` (the player's `rgl_log` `get_object failed for body:` matches a suspect —
+reuses `validate_mesh_refs.parse_rgl_text` rather than re-implementing it), `POST_EQUIP` (equipped
+fine, froze before playable → not equipment), `SCENE`/`PRE_SCENE` (froze during/before scene load →
+code), `COMPLETED`, `UNKNOWN`. Accepts a loose log, `--rgl-log`, or a `--bundle` zip; `--json` output;
+exit 1 on a diagnosed hang. Pure stdlib, 28 tests (`tools/tests/test_triage_battle_load.py`), verified
+end-to-end agreeing with `validate_mesh_refs.py` on the real `bo_cap_wm_boromir_shield` missing-body case.
+
+### feat(battle-load-diagnostics): stall marker + next-session notice so hang logs reach the dev
+
+A battle-load hang freezes the main thread, so no in-the-moment dialog can render and the player
+force-quits — the on-disk log never reaches us. New `IBattleLoadStallMarker` (`BattleLoadStallMarker`)
+closes that gap, mirroring `IncompatibleModDetector`'s marker pattern: phase 4 (`Mission.Initialize`)
+writes `Logs/battle-load-inflight.marker` (scene + the session's `taom_debug` log path); phase 6 /
+mission end clears it; the next session's main menu (`OnBeforeInitialModuleScreenSetAsRoot`) consumes a
+*surviving* marker and shows a soft `StallReportNotifier` inquiry ("last battle load may not have
+finished") with an **Open log folder** button. Complements the 300s watchdog — that catches a player
+who waits; the marker catches the one who force-quits. New `.github/ISSUE_TEMPLATE/battle-load-hang.md`
+tells players which files to attach. Marker service unit-tested (Format/Parse round-trip, consume-once,
+clear); the notice surface is game-only (ADR-008). 3 player strings added to `taom_module_strings.xml`.
 
 ## 2026-06-16
 

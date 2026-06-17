@@ -53,3 +53,60 @@ C1 and C2 are the **same shape**: an identity/authorization predicate that is to
 
 The fixed predicates live in `PlayerKingdomHelper` / the dialog behavior, both of which read `Clan.PlayerClan` / `Hero.OneToOneConversationHero` (campaign statics, not mockable in the unit harness). Per ADR-008 these boundary checks are verified in-game, not unit-tested — so the preventive value is the single-source-of-truth helper, not a new unit test. In-game check added to the verification list: confirm a *vassal* player does NOT see/trigger the freedom bypass, and the dialog line appears only when talking to the actual kingdom leader.
 
+---
+
+## Follow-up (2026-06-17): player alliances vanish from the encyclopedia (durability)
+
+**In-game report (post-ship):** a player who founded their own kingdom formed an alliance via the Kingdom→Diplomacy button, but the encyclopedia showed no ally shortly after; also "no alliance missions and no diplomacy options."
+
+**Root cause (decompile-verified, v1.4.6 — the linchpin read directly):** vanilla `AllianceCampaignBehavior.OnWarDeclared` (AllianceCampaignBehavior.cs:678-681) calls `EndAlliance` the instant war is declared between two allied kingdoms. TAOM's `AllianceCampaignBehavior_EndAlliance_Patch` blocks that end **only for `Permanent`-tier** pairs. A player-formed alliance defaults to `Neutral` tier → unprotected → any war on the pair silently dissolves it. The only other `EndAlliance` caller (line 654-656) is the expiry path, gated on `EndTime.IsPast`; TAOM's `MaxDurationOfAlliance => 100 years` keeps it dormant. So the **war declaration is the only realistic auto-break.**
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|-----|-----|----------|------------|-------------------|
+| F1 | HIGH | A player-formed alliance is silently auto-broken: vanilla `OnWarDeclared → EndAlliance` ends it on any war declared on the pair, and TAOM's end-protection is scoped to `Permanent` tier only — player alliances (`Neutral`) are unprotected. | Protection scoped to one tier misses a newly-introduced state | The player-alliance-freedom feature added a NEW way to create alliance state (player-formed, `Neutral` tier) but reused the *durability* model designed for the lore `Permanent` alliances — which doesn't cover the new instances. The original work focused on *forming* alliances (score + permission bypass) and never asked "what auto-UNDOES this state, and does our protection extend to it?" | Fixed: `DiplomacyService.IsWarAllowed` blocks war between the kingdom the player *rules* (`IAllianceAdapter.GetPlayerRuledKingdomId()`) and a *current ally* — stopping the involuntary war at its source rather than blocking `EndAlliance` (which would trap the player's own break-alliance action). 4 unit tests; in-game confirmation via temporary `[Diplomacy][diag]` logging. |
+| F2 | INFO | "No diplomacy options" (dialog never appears). | Reachability (by design) | Part B's dialog requires conversing one-on-one with a rival kingdom's *leader* (gate tightened per Codex MED-C2). In normal play you rarely meet a rival ruler. | Not a bug — **user decision: keep leader-only**; the always-reachable Kingdom-screen button is the primary path. Documented in the feature doc. |
+| F3 | INFO | "No alliance missions." | Downstream | Vanilla call-to-war / ally content has nothing to trigger on if the alliance doesn't persist. | Expected to resolve once F1 holds; confirm in-game. |
+
+### Root-cause pattern (the systemic lesson)
+
+**A new mechanism that creates engine state inherits the durability of the LEAST-protected existing category, not the one you mentally file it under.** Player alliances are conceptually "the player's deliberate choice = should stick," but mechanically they're `Neutral`-tier alliances, and TAOM only hardened `Permanent`-tier alliances against the engine's auto-break. When you add a feature that *creates* engine state (an alliance, a stance, a settlement override), audit the full lifecycle of that state — specifically **what vanilla systems can UNDO it, and whether any TAOM protection covers the new instances** — not just the creation path. This is the lifecycle sibling of the "override-calls-base inherits the base's preconditions" lesson (`feedback_taleworlds_computed_getter_nre_route_through_chokepoint`): there it was a *crash* inheriting an unguarded base; here it's *state durability* inheriting an unscoped protection.
+
+### Why the original deep-review + Codex missed F1
+
+Both reviews scoped to the *forming* path (score, permission, the decision flow, the string key). Neither traced **the post-formation lifecycle** — "the alliance forms; now what in the engine can end it, and are we protected?" The deep-review data-flow agent traced `involvesPlayer` end-to-end through `CanMakeAlliance` (formation) but stopped at "alliance forms = success"; it never asked "does it *persist*?" — the exact "is the field populated vs are non-empty values actually produced" gap the data-flow prompt warns about, applied one step later (formed vs stays-formed). The fix lives on a path (`IsWarAllowed` / `OnWarDeclared`) that wasn't in the feature's original change scope, so a change-scoped review couldn't reach it.
+
+### Diagnostics (temporary)
+
+`AllianceCampaignBehavior_StartAlliance_Patch` (Postfix) logs player-involved alliance formation on any path; the `EndAlliance` patch logs player-involved end attempts; `IsWarAllowed` logs protective war blocks. These confirm form → war-blocked → no-end in the player's log and disambiguate form-then-break (F1, fixed) from never-persist (would re-scope to the formation path). **Strip after in-game sign-off** (`feedback_comprehensive_diag_logging_then_remove`). NOTE: this follow-up has NOT yet been through `/deep-review` + `/review-codex` — that gate is deferred until in-game logging confirms F1 is the actual cause, per the Iron Law (no fix declared done without root-cause confirmation).
+
+### Feedback memory to codify
+
+`feedback_new_engine_state_audit_what_undoes_it.md` — when a feature *creates* engine state (alliance/stance/override), audit what vanilla systems auto-UNDO it and whether existing TAOM protection (often scoped to a specific lore tier / category) extends to the new instances. New state inherits the least-protected category's durability, not the one you associate it with.
+
+---
+
+## Codex review of the durability fix (2026-06-17) — fix REVERTED to diagnostics-only
+
+The durability fix above (block the involuntary war via `DiplomacyService.IsWarAllowed`) went through `/deep-review` (5 agents, READY) then `/review-codex` (gpt-5.5 xhigh). Deep-review's efficiency flags were dismissed on code re-read (the `AreAllied` scan is short-circuited; the diag string is gated). **Codex found 2 HIGH the deep-review missed, and the verdict was to REVERT.**
+
+| # | Sev | Finding | Verified? | Outcome |
+|---|-----|---------|-----------|---------|
+| C1 | HIGH | **Soft-lock.** Blocking war between the player and a current ally removes the player's only exit from an alliance. v1.4.6 has **no "break alliance" UI** — `KingdomDiplomacyVM` exposes only propose-Alliance / declare-War / declare-Peace / TradeAgreement; the player ends an alliance by *declaring war on the ally* (`OnDeclareWar` → `DeclareWarDecision` → `DeclareWarAction.ApplyByKingdomDecision` → `OnWarDeclared` → `EndAlliance`). The fix blocked that at both `TaomKingdomDecisionPermissionModel.IsWarDecisionAllowedBetweenKingdoms` and the `DeclareWarAction` prefix → player trapped for ~100 years. | **CONFIRMED** by me: decompiled `KingdomDiplomacyVM` (no break-alliance action) + grepped all 3 `EndAlliance` callers (all internal: expiry/war/daily-cleanup). | **Reverted the war-block.** |
+| C2 | HIGH | **Call-to-war atomicity.** `StartCallToWarAgreement` commits the agreement + gold transfer + `OnCallToWarAgreementStarted` + bonuses *before* `DeclareWarAction.ApplyByCallToWarAgreement`. Blocking the war at `ApplyInternal` leaves a paid agreement with no war. | CONFIRMED via Codex's pasted v1.4.6 decompile (side effects precede the war call). | Mooted by the revert. |
+| C3 | LOW | Player-ruled predicate duplicated in `AllianceAdapter.GetPlayerRuledKingdomId` + `PlayerKingdomHelper` — the same drift shape as review 54's vassal-bypass bug. | CONFIRMED. | Mooted by the revert (`GetPlayerRuledKingdomId` removed — no consumer remained). |
+
+**Decision (user-confirmed): revert the war-block, ship diagnostics-only.** Reverted `IsWarAllowed` to its prior behavior, removed `IAllianceAdapter.GetPlayerRuledKingdomId` (no remaining consumer) + its 4 tests. Kept only the `[Diplomacy][diag]` logging (StartAlliance Postfix + EndAlliance line). One play session's log will confirm whether the alliance is form-then-broken or never-persists; the targeted fix is written *then*, against the confirmed cause.
+
+### Root-cause pattern (why the war-block was wrong)
+
+Two compounding mistakes: (1) **I fixed an unconfirmed root cause** — the diagnostics that would confirm form-then-broken vs never-persist had not yet run in-game, yet I shipped a behavioral fix anyway, violating the Iron Law I'd written into the plan ("diagnose first"). (2) **Blocking a state transition trapped the entity.** "Protect the alliance" was implemented as "block the war," but the war was the player's *only* exit — so the protection became a cage. **When you block a transition to protect state, enumerate every exit the entity had and confirm at least one deliberate exit survives.** This is the inverse of `feedback_new_engine_state_audit_what_undoes_it` (which asks "what undoes this state?"); here the answer ("the war") was *also the only sanctioned exit*, so removing it created the soft-lock.
+
+### Why each reviewer landed where it did
+
+- **Deep-review (5 agents): MISSED C1 + C2, and actively asserted the opposite.** The data-flow agent claimed "the player can break the alliance via the vanilla Break Alliance UI → EndAlliance directly" — there is no such UI. I relayed that unverified to the user (evidence-over-claims §A.4 violation: a confident subagent claim relayed without spot-verifying the load-bearing fact). The agents reasoned about the war-block in isolation (does it block the right wars? is it efficient?) and never asked "after this blocks the war, can the player still leave the alliance at all?" — a missing **exit-survival** trace.
+- **Codex: CAUGHT both**, by decompiling `KingdomDiplomacyVM` to enumerate the actual player actions (no break-alliance) and `StartCallToWarAgreement` to find the side-effect-before-war ordering. Same strength as prior reviews: independently decompiling to settle a load-bearing assumption instead of asserting it.
+
+### Feedback memory to codify (this round)
+
+Extend `feedback_new_engine_state_audit_what_undoes_it.md` with the **exit-survival** corollary: before blocking a transition to *preserve* state, enumerate the entity's exits and confirm a deliberate one survives (don't turn protection into a soft-lock); and **don't ship a behavioral fix for an unconfirmed root cause** — diagnose first when the trigger isn't reproduced.
+

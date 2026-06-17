@@ -169,6 +169,7 @@ public class SubModule : MBSubModuleBase
         var peaceHook = IoC.Resolve<IOnPeaceAction>();
         DiplomacyIoC.InitializeHooks(allianceHook, peaceHook);
         AllianceCampaignBehavior_EndAlliance_Patch.Initialize(logger);
+        AllianceCampaignBehavior_StartAlliance_Patch.Initialize(logger);
         AllianceCampaignBehavior_AddAllianceDecision_Patch.Initialize(logger);
         DeclareWarAction_ApplyInternal_Patch.Initialize(logger);
         MakePeaceAction_ApplyInternal_Patch.Initialize(logger);

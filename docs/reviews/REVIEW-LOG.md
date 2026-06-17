@@ -1281,6 +1281,42 @@ A user reported player-founded kingdoms can't make alliances. Root cause (decomp
 
 ---
 
+## Review 55 — Player Alliance Durability (follow-up to #284) (2026-06-17)
+
+A first-pass fix for the in-game "player alliance vanishes from the encyclopedia" report: `DiplomacyService.IsWarAllowed` was extended to block war between the kingdom the player *rules* and a current ally (stopping vanilla `OnWarDeclared → EndAlliance` from auto-dissolving a `Neutral`-tier player alliance, which TAOM's end-protection covered only for `Permanent` pairs). Reviewed via `/deep-review` (5 agents) + Codex `gpt-5.5 xhigh`.
+
+**Deep-review: READY (missed the real bugs).** Standards/Compat/Completeness PASS; its two efficiency flags were dismissed on code re-read (the `AreAllied` scan is short-circuited behind the player-involvement check; the diag string is inside the guarded `if`). Its data-flow agent **wrongly asserted "the player can break the alliance via the vanilla Break Alliance UI"** and so cleared the design — there is no such UI.
+
+**Codex VERDICT: ISSUES FOUND — 0 CRITICAL / 2 HIGH / 1 LOW. Outcome: war-block REVERTED, diagnostics-only shipped.**
+- **HIGH C1 (soft-lock, the highest-value catch):** v1.4.6 `KingdomDiplomacyVM` exposes only propose-Alliance / declare-War / declare-Peace / TradeAgreement — **no break-alliance action**. The player's only exit from an alliance is to *declare war on the ally* (`OnDeclareWar` → `DeclareWarDecision` → `DeclareWarAction.ApplyByKingdomDecision`). The fix blocked that at both `TaomKingdomDecisionPermissionModel.IsWarDecisionAllowedBetweenKingdoms` and the `DeclareWarAction` prefix → player trapped for ~100 years. **Verified by me:** decompiled the VM (no break action) + grepped all 3 `EndAlliance` callers (all internal: expiry/war/daily-cleanup).
+- **HIGH C2 (call-to-war atomicity):** `StartCallToWarAgreement` commits agreement + gold + event + bonuses before `ApplyByCallToWarAgreement`; blocking the war at `ApplyInternal` leaves a paid agreement with no war.
+- **LOW C3:** the player-ruled predicate was duplicated in `AllianceAdapter.GetPlayerRuledKingdomId` + `PlayerKingdomHelper` (review-54 drift shape).
+
+**Decision (user-confirmed): revert.** `IsWarAllowed` restored to prior behavior; `GetPlayerRuledKingdomId` (no remaining consumer) + its 4 tests removed; only the `[Diplomacy][diag]` logging (StartAlliance Postfix + EndAlliance line) ships, to confirm form-then-broken vs never-persists in-game before any behavioral fix. 35/35 Diplomacy tests green after revert.
+
+**Root-cause pattern:** (1) shipped a behavioral fix for an **unconfirmed root cause** (the diagnostics that would confirm the trigger hadn't run in-game) — violating the plan's own diagnose-first Iron Law; (2) **blocking a state transition trapped the entity** — "protect the alliance" was implemented as "block the war," but the war was the player's only exit. Lesson: before blocking a transition to protect state, enumerate the entity's exits and confirm a deliberate one survives. Memory extended: `feedback_new_engine_state_audit_what_undoes_it` (exit-survival corollary). RCA: `docs/reviews/rca-player-alliance-freedom-2026-06-16.md` (Codex-review-of-durability-fix section). Codex caught a soft-lock by decompiling the VM to enumerate real player actions — the same independent-decompile strength as prior reviews; the deep-review's failure was an unverified UI assertion relayed as fact (evidence-over-claims §A.4).
+
+---
+
+## Review 56 — AlignmentRecruitment (2026-06-17)
+
+New feature (issue #286): a recruiter cannot recruit volunteers at a settlement controlled by an enemy-aligned kingdom, via a single override of `VolunteerModel.MaximumIndexHeroCanRecruitFromHero` in `TaomVolunteerModel` returning `-1` (the engine's own "recruit nothing from this notable" signal). Reviewed via `/deep-review` (5 agents) + Codex `gpt-5.5 xhigh`.
+
+**Deep-review: READY (0 code findings).** Standards/Efficiency/Data-flow clean; Completeness flagged only the (then-)missing GitHub issue. Its Compatibility agent verified the override signature and that `-1` blocks all slots — but **falsely asserted `MaximumIndexGarrisonCanRecruitFromHero` has "zero callers"** (a cache-only grep miss).
+
+**Codex VERDICT: ISSUES FOUND — 0 CRITICAL / 1 HIGH / 1 LOW. All 6 Known Suspects DISPUTED / DESIGN-QUESTION with decompiled evidence.**
+- **Suspect 1 (recruiter-basis asymmetry) DISPUTED — Codex's highest-value work:** decompiled `Hero.MapFaction` (= `Clan.Kingdom ?? Clan`) and the mercenary-service chain (`StartMercenaryServiceAction → ChangeKingdomAction.ApplyByJoinFactionAsMercenary` sets `clan.Kingdom`), proving `buyerHero.Clan.Kingdom.StringId` is alignment-equivalent to `MapFaction.StringId` in every case. The asymmetry I flagged as the lead suspect is a non-defect — no change made. **Verified independently** (Hero.cs:566; garrison/merc citations).
+- **Suspect 2 (garrison) DISPUTED — corrected my deep-review agent:** the Garrison method IS live (`GarrisonRecruitmentCampaignBehavior` calls `VolunteerModel.n(town.Settlement, notable)` ×2). But recruiter = town owner, source = same town → same kingdom → never blocked; non-override is safe.
+- Suspects 3/6 DISPUTED (Village.MapFaction = vanilla parity; `useValueAsRelation` hard `-1` correct for an alignment block — relation can't unlock alignment). Suspects 4/5 DESIGN-QUESTION (MCM-over-JSON precedence; companion-led-party `isPlayer`) — both documented as intentional.
+- **HIGH (Codex) / MEDIUM (mine): test-coverage gap** — `GoodRejectsEvilMode_MatchesMatrix` covered 6/9 (recruiterSide × sourceSide) cells while the doc claimed per-cell; the symmetric matrix was full 9 but the second mode was trimmed. **No runtime risk** (the 3 omitted cells are all Neutral→no-block, behaviorally covered by the shared Neutral early-return). Fixed → 9/9; suite 28→31, all green.
+- **LOW: doc** — How-To overstated JSON runtime control; MCM shadows JSON in-game. Fixed (How-To now states MCM is authoritative, JSON is the compiled/test default).
+
+**Process:** both reviews ran BEFORE the closing commit; the GitHub issue was created before the closing commit (not retroactively, reversing the review-50/54/55 misses). No behavioral fix needed — the override, config validation, ADR compliance, and API usage were clean.
+
+**Root-cause pattern (second-instance trimming):** the primary case was done right and the secondary under-specified — symmetric matrix full 9 / second mode trimmed; first config knob documented / MCM-over-JSON precedence unstated for both knobs. Same shape as the native-port hot-path miss. Lessons: (1) every mode matrix must be full N×N when the doc claims per-cell; (2) review "zero callers"/"not found" claims must grep the full `E:\Decompiled_Bannerlord` tree, not the taom-src cache. RCA: `docs/reviews/rca-AlignmentRecruitment-2026-06-17.md`.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

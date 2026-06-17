@@ -31,6 +31,11 @@ public static class AllianceCampaignBehavior_EndAlliance_Patch
             return true;
         }
 
+        // DIAGNOSTIC (removable after sign-off): surface every end attempt involving the kingdom
+        // the player rules, so the in-game log shows exactly when/why a player alliance dissolves.
+        if (PlayerKingdomHelper.InvolvesPlayerRuledKingdom(kingdom1, kingdom2))
+            _logger?.LogInfo($"[Diplomacy][diag] Player alliance END attempt: {kingdom1.StringId} <-> {kingdom2.StringId}");
+
         if (_hook.ShouldPreventAllianceEnd(kingdom1.StringId, kingdom2.StringId))
         {
             // Audit Agent 2 (2026-05-22) — corrected v1.4.5 behavior:

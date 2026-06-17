@@ -34,6 +34,8 @@ A player who founds their own kingdom could not form alliances. This is **not** 
 - **Full freedom (design decision):** player-involved pairs ignore the lore `Hostile` tier — a Gondor-culture player kingdom may ally Mordor. AI-vs-AI diplomacy is unchanged: the retained 2-arg `GetAllianceScoreModifier`/`IsAllianceAllowed` paths behave exactly as before, and `involvesPlayer:false` is byte-identical to the legacy behavior.
 - **Cost asymmetry (intentional):** the dialog forms the alliance directly at **0 influence**; the vanilla Kingdom-screen button uses the influence-cost `StartAllianceDecision` flow (~200 influence for a multi-clan kingdom). Two deliberate paths.
 - `MaxNumberOfAlliances => int.MaxValue` (pre-existing on `TaomAllianceModel`) removes the vanilla cap of 2 — model-global, so it also lets AI kingdoms exceed 2 alliances.
+- **Durability (2026-06-17 follow-up — UNDER INVESTIGATION, diagnostics only).** A formed player alliance was reported vanishing from the encyclopedia. Confirmed vanilla mechanism: `AllianceCampaignBehavior.OnWarDeclared` (AllianceCampaignBehavior.cs:678-681) calls `EndAlliance` the instant war is declared between two allied kingdoms, and TAOM's `AllianceCampaignBehavior_EndAlliance_Patch` protects **only `Permanent`-tier** pairs — a player alliance is `Neutral` → unprotected. But the *trigger* (what declares the war) was never reproduced, so form-then-broken vs never-persists is **unconfirmed**. A first-pass fix (a `DiplomacyService.IsWarAllowed` branch blocking war between the player's ruled kingdom and a current ally) was **reverted** — `/review-codex` showed it soft-locks the player: v1.4.6 has **no "break alliance" UI**, so the player's only exit from an alliance is to *declare war on the ally* (`KingdomDiplomacyVM` → `DeclareWarDecision` → `DeclareWarAction.ApplyByKingdomDecision`), which the block prevented at both the permission model and the `DeclareWarAction` prefix. `IsWarAllowed` is back to its prior behavior (Permanent + same-alignment only). Next step is diagnostics-first (below), then a targeted fix against the confirmed cause.
+- **Diagnostics (TEMPORARY — strip after in-game sign-off).** `AllianceCampaignBehavior_StartAlliance_Patch` (Postfix, `Patch11_Diplomacy`) logs `[Diplomacy][diag] Player alliance FORMED` on any path (kingdom-screen button + dialog); the `EndAlliance` patch logs `[Diplomacy][diag] Player alliance END attempt`. Together they distinguish **form-then-break** (FORMED then END attempt — and what war triggered it) from **never-persist** (FORMED never logs). These are the only behavior in the 2026-06-17 follow-up that ships; they make no gameplay change. Remove once the root cause is confirmed in-game and the real fix lands (per `feedback_comprehensive_diag_logging_then_remove`).
 
 **War of the Ring subsystem:**
 - `WarOfTheRingService` (implements `IWarOfTheRingService`) tracks `CurrentPhase` (`Peace`, `IsengardWar`, `FullWar`). Each daily tick it checks elapsed campaign days against configured thresholds and transitions phases.
@@ -60,9 +62,10 @@ WarOfTheRingBehavior --> IWarOfTheRingService.CheckPhaseTransition
                             IDiplomacyService.GetRelationshipTier
 
 Harmony Patch11_Diplomacy
-  AllianceCampaignBehavior.EndAlliance [Prefix] -> IOnAllianceAction.ShouldPreventAllianceEnd
-  DeclareWarAction.ApplyInternal       [Prefix] -> IOnAllianceAction.ShouldPreventWarDeclaration
+  AllianceCampaignBehavior.EndAlliance [Prefix] -> IOnAllianceAction.ShouldPreventAllianceEnd  (+ [diag] log)
+  DeclareWarAction.ApplyInternal       [Prefix] -> IOnAllianceAction.ShouldPreventWarDeclaration -> IsWarAllowed (Permanent + same-alignment only)
   MakePeaceAction.ApplyInternal        [Prefix] -> IOnPeaceAction.ShouldPreventPeace
+  AllianceCampaignBehavior.StartAlliance [Postfix] -> [diag] log (TEMPORARY, player-involved)
 
 GameModel: TaomAllianceModel : DefaultAllianceModel
   GetScoreOfStartingAlliance -> IDiplomacyService.GetAllianceScoreModifier(a,b,involvesPlayer)
@@ -123,8 +126,9 @@ Both `triggerDay` values are currently set to 1 (immediate on new game). MCM ove
 | `Main/Features/Diplomacy/TaomSettingsProvider.cs` | Wraps `TaomSettings` MCM for testable access |
 | `Main/Features/Diplomacy/Hooks/AllianceActionHook.cs` | `IOnAllianceAction` — decides whether to block alliance end / war declaration |
 | `Main/Features/Diplomacy/Hooks/PeaceActionHook.cs` | `IOnPeaceAction` — decides whether to block peace during full war |
-| `Main/Features/Diplomacy/Hooks/AllianceCampaignBehavior_EndAlliance_Patch.cs` | Harmony Prefix — calls `IOnAllianceAction.ShouldPreventAllianceEnd` |
-| `Main/Features/Diplomacy/Hooks/DeclareWarAction_ApplyInternal_Patch.cs` | Harmony Prefix — calls `IOnAllianceAction.ShouldPreventWarDeclaration` |
+| `Main/Features/Diplomacy/Hooks/AllianceCampaignBehavior_EndAlliance_Patch.cs` | Harmony Prefix — calls `IOnAllianceAction.ShouldPreventAllianceEnd` (+ temporary `[diag]` log of player-involved end attempts) |
+| `Main/Features/Diplomacy/Hooks/AllianceCampaignBehavior_StartAlliance_Patch.cs` | Harmony Postfix — **TEMPORARY diagnostic** (`Patch11_Diplomacy`): logs `[Diplomacy][diag] Player alliance FORMED` on any path (kingdom-screen button + dialog). Strip after in-game durability sign-off. |
+| `Main/Features/Diplomacy/Hooks/DeclareWarAction_ApplyInternal_Patch.cs` | Harmony Prefix — calls `IOnAllianceAction.ShouldPreventWarDeclaration` (→ `IsWarAllowed`: blocks war on Permanent allies + same-alignment pairs) |
 | `Main/Features/Diplomacy/Hooks/MakePeaceAction_ApplyInternal_Patch.cs` | Harmony Prefix — calls `IOnPeaceAction.ShouldPreventPeace` |
 | `Main/Features/Diplomacy/Models/TaomAllianceModel.cs` | `DefaultAllianceModel` override: adds lore score modifier to alliance scoring |
 | `Main/Features/Diplomacy/Models/TaomKingdomDecisionPermissionModel.cs` | `DefaultKingdomDecisionPermissionModel` override: blocks lore-Hostile alliance decisions (AI pairs) but allows any decision involving the player's kingdom (full freedom); also blocks war on permanent allies + peace during full War of the Ring |
@@ -138,7 +142,7 @@ Both `triggerDay` values are currently set to 1 (immediate on new game). MCM ove
 | `Main/_Module/ModuleData/diplomacy/war_of_the_ring.json` | War of the Ring phase config |
 
 ## Dependencies
-- `IAllianceAdapter` — wraps `AllianceCampaignBehavior`, `StanceLink`, `Kingdom` (sealed TaleWorlds types); provides `AreAllied`, `StartAlliance`, `AreAtWar`, `DeclareWar`, `GetAllKingdomIds`
+- `IAllianceAdapter` — wraps `AllianceCampaignBehavior`, `StanceLink`, `Kingdom` (sealed TaleWorlds types); provides `AreAllied`, `StartAlliance`, `AreAtWar`, `DeclareWar`, `MakePeace`, `GetAllKingdomIds`
 - `IDiplomacyConfigProvider` — loads diplomacy.json
 - `IWarOfTheRingConfigProvider` — loads war_of_the_ring.json
 - `ITaomSettingsProvider` — wraps `TaomSettings` MCM
@@ -147,7 +151,7 @@ Both `triggerDay` values are currently set to 1 (immediate on new game). MCM ove
 ## Tests
 | File | Coverage |
 |------|---------|
-| `TAOM.Tests/Features/Diplomacy/DiplomacyServiceTests.cs` | Tier lookup, score modifiers, alliance allowed/blocked, initial alliance establishment, enforcement, player-freedom score/permission overloads, `CanPlayerProposeAlliance` (same/empty/at-war/already-allied/Hostile-tier), `FormPlayerAlliance` |
+| `TAOM.Tests/Features/Diplomacy/DiplomacyServiceTests.cs` | Tier lookup, score modifiers, alliance allowed/blocked, initial alliance establishment, enforcement, player-freedom score/permission overloads, `CanPlayerProposeAlliance` (same/empty/at-war/already-allied/Hostile-tier), `FormPlayerAlliance`, `IsWarAllowed` (Permanent/same-alignment/neutral) |
 | `TAOM.Tests/Features/Diplomacy/WarOfTheRingServiceTests.cs` | Phase transitions, peace blocking, MCM override, test-mode day overrides, hostile-tier auto-war |
 | `TAOM.Tests/Features/Diplomacy/DiplomacyConfigProviderTests.cs` | JSON parsing, missing file handling |
 | `TAOM.Tests/Features/Diplomacy/AllianceActionHookTests.cs` | `ShouldPreventAllianceEnd` and `ShouldPreventWarDeclaration` for permanent vs non-permanent tiers |
