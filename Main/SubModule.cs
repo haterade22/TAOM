@@ -356,9 +356,10 @@ public class SubModule : MBSubModuleBase
             // volunteer-respawn-rate feats (Dunland/Gundabad/Dol Guldur/Mordor). The later
             // "Cultural feat models" block reuses this same `culturalFeats` reference.
             var culturalFeats = IoC.Resolve<TAOM.Features.CulturalFeats.ICulturalFeatsService>();
+            var recruitmentAlignment = IoC.Resolve<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentService>();
             campaignStarter.AddModel(new TaomCharacterStatsModel());
             campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers));
-            campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats));
+            campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment));
 
             var raceAgeService = IoC.Resolve<IRaceAgeService>();
             var heroAgeAdapter = IoC.Resolve<IHeroAgeAdapter>();

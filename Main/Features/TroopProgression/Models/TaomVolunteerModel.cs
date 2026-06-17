@@ -3,6 +3,7 @@ using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
 using TAOM.Adapters;
+using TAOM.Features.AlignmentRecruitment;
 using TAOM.Features.CulturalFeats;
 
 namespace TAOM.Features.TroopProgression.Models;
@@ -13,20 +14,43 @@ public class TaomVolunteerModel : DefaultVolunteerModel
     private readonly IVolunteerRecruitmentService _recruitmentService;
     private readonly IVolunteerContextAdapter _contextAdapter;
     private readonly ICulturalFeatsService _feats;
+    private readonly IRecruitmentAlignmentService _recruitmentAlignment;
 
     public TaomVolunteerModel(
         IVolunteerTierService volunteerTierService,
         IVolunteerRecruitmentService recruitmentService,
         IVolunteerContextAdapter contextAdapter,
-        ICulturalFeatsService feats)
+        ICulturalFeatsService feats,
+        IRecruitmentAlignmentService recruitmentAlignment)
     {
         _volunteerTierService = volunteerTierService;
         _recruitmentService = recruitmentService;
         _contextAdapter = contextAdapter;
         _feats = feats;
+        _recruitmentAlignment = recruitmentAlignment;
     }
 
     public override int MaxVolunteerTier => _volunteerTierService.MaxVolunteerTier;
+
+    /// <summary>
+    /// Alignment-gated recruitment. Both the player recruit UI and AI lords clamp their recruitable
+    /// volunteer slots to this index; returning -1 (the engine's own "recruit nothing from this
+    /// notable" signal, as it does for negative relation) blocks the whole source. We gate on the
+    /// RECRUITER's kingdom alignment vs the SOURCE settlement's controlling-kingdom alignment — both
+    /// keyed by kingdom StringId (the keys in alignment.json), the same disambiguation
+    /// <c>TaomTargetScoreModel</c> uses (MapFaction.StringId, not Culture, so empire_w/empire_s split).
+    /// Decision lives entirely in <see cref="IRecruitmentAlignmentService"/>; this is a boundary that
+    /// extracts ids + falls through to base (gamemodels.md rule 4).
+    /// </summary>
+    public override int MaximumIndexHeroCanRecruitFromHero(Hero buyerHero, Hero sellerHero, int useValueAsRelation = -101)
+    {
+        var recruiterKingdomId = buyerHero?.Clan?.Kingdom?.StringId;
+        var sourceKingdomId = sellerHero?.CurrentSettlement?.MapFaction?.StringId;
+        var isPlayer = buyerHero == Hero.MainHero;
+        return _recruitmentAlignment.IsRecruitmentBlocked(recruiterKingdomId, sourceKingdomId, isPlayer)
+            ? -1
+            : base.MaximumIndexHeroCanRecruitFromHero(buyerHero, sellerHero, useValueAsRelation);
+    }
 
     public override CharacterObject GetBasicVolunteer(Hero sellerHero)
     {

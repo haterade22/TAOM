@@ -501,6 +501,23 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Hideouts each bandit faction starts with on a new campaign. Vanilla = 7. Default: 14. Higher = denser early game (the world settles toward the steady-state max as you clear them).")]
     public int BanditInitialHideoutsPerFaction { get; set; } = 14;
 
+    // --- World / Recruitment Alignment ---
+
+    [SettingPropertyGroup("World/Recruitment Alignment", GroupOrder = 36)]
+    [SettingPropertyBool("Enable Recruitment Alignment Block", Order = 0,
+        HintText = "When enabled, a recruiter cannot recruit volunteers at a settlement controlled by an opposed-alignment kingdom (Free vs Evil). Alignment comes from execution/alignment.json, keyed by the kingdom you serve. Neutral factions (Umbar etc.) never block. When off, recruitment is vanilla.")]
+    public bool EnableAlignmentRecruitment { get; set; } = true;
+
+    [SettingPropertyGroup("World/Recruitment Alignment")]
+    [SettingPropertyBool("Only Good Rejects Evil", Order = 1,
+        HintText = "When ON, only a Free-aligned recruiter is blocked from Evil-controlled settlements; Evil recruiters may recruit anywhere. When OFF (default), the block is symmetric — Free and Evil each refuse the other.")]
+    public bool AlignmentRecruitmentGoodRejectsEvilOnly { get; set; } = false;
+
+    [SettingPropertyGroup("World/Recruitment Alignment")]
+    [SettingPropertyBool("Apply To AI Lords", Order = 2,
+        HintText = "When ON (default), AI lords are also blocked from recruiting in opposed-alignment settlements. When OFF, only the player is restricted.")]
+    public bool EnableAlignmentRecruitmentAi { get; set; } = true;
+
     // --- Map UI / Settlement Nameplates ---
 
     [SettingPropertyGroup("Map UI/Settlement Nameplates", GroupOrder = 40)]

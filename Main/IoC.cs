@@ -14,6 +14,7 @@ using TAOM.Features.Diplomacy;
 using TAOM.Features.Encyclopedia;
 using TAOM.Features.RaceAge;
 using TAOM.Features.Execution;
+using TAOM.Features.AlignmentRecruitment;
 using TAOM.Features.StartupResources;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.AdvancedCombat;
@@ -77,6 +78,7 @@ public static class IoC
         DiplomacyIoC.RegisterDiplomacyFeature(container);
         RaceAgeIoC.RegisterRaceAgeFeature(container);
         ExecutionIoC.RegisterExecutionFeature(container);
+        RecruitmentAlignmentIoC.RegisterAlignmentRecruitmentFeature(container);
         EncyclopediaIoC.RegisterEncyclopediaFeature(container);
         StartupResourcesIoC.RegisterStartupResourcesFeature(container);
         TroopWeightIoC.RegisterTroopWeightFeature(container);
