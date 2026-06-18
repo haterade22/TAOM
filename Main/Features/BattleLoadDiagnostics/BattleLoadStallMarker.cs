@@ -24,7 +24,9 @@ public sealed class BattleLoadStallMarker : IBattleLoadStallMarker
         : this(logger, Path.Combine("Logs", MarkerFileName)) { }
 
     // Test seam: inject a temp marker path so the file lifecycle is unit-tested.
-    public BattleLoadStallMarker(IModLogger logger, string markerPath)
+    // internal (not public) so DryIoc sees a single public ctor and auto-resolves it;
+    // TAOM.Tests reaches this via InternalsVisibleTo (see TAOM.csproj).
+    internal BattleLoadStallMarker(IModLogger logger, string markerPath)
     {
         _logger = logger;
         _markerPath = markerPath;

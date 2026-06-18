@@ -2,6 +2,20 @@
 
 ## 2026-06-17
 
+### fix(crash): BattleLoadDiagnostics stall marker crashed startup (two public ctors)
+
+`BattleLoadStallMarker` exposed two public constructors — the production `(IModLogger)` and a
+`(IModLogger, string)` test seam. DryIoc auto-selects a constructor only when there is exactly one
+public ctor, so `BattleLoadDiagnosticsIoC.RegisterBattleLoadDiagnosticsFeature` threw
+`UnableToSelectSinglePublicConstructorFromMultiple` at `OnSubModuleLoad`, a hard CTD before the main
+menu. Regression from commit `01c01900`, which introduced the marker.
+
+Fix: make the test-seam ctor `internal` — leaving one public ctor for DryIoc while `TAOM.Tests` keeps
+access via the existing `InternalsVisibleTo`. Added a reflection guard test asserting a single public
+ctor so re-publicizing it fails in CI, not at game load. No registration or behavior change.
+
+Save-compat: none (load-path crash fix).
+
 ### feat(recruitment): alignment-gated recruitment — opposed factions refuse to serve
 
 A recruiter (player or AI lord) can no longer recruit volunteers at a settlement controlled by an

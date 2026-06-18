@@ -143,4 +143,17 @@ public class BattleLoadStallMarkerTests
             Assert.AreEqual("battle_terrain_locked", info!.SceneName);
         }
     }
+
+    // ---- DI-registration guard ---- //
+    [TestMethod]
+    public void BattleLoadStallMarker_HasSinglePublicConstructor_ForDryIocResolution()
+    {
+        // DryIoc auto-resolves only with exactly one PUBLIC ctor. The test-seam (logger, path)
+        // ctor is internal on purpose; re-publicizing it crashes OnSubModuleLoad. Fail here, not
+        // at game load. (regression guard for the 2026-06-17 UnableToSelectSinglePublicConstructor CTD)
+        var publicCtors = typeof(BattleLoadStallMarker)
+            .GetConstructors(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        Assert.AreEqual(1, publicCtors.Length,
+            "BattleLoadStallMarker must expose exactly one public ctor so DryIoc can select it");
+    }
 }
