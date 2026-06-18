@@ -20,6 +20,10 @@ public static class AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch
     private static IArmyTargetingSettingsProvider _settings;
     private static IModLogger _logger;
 
+    // One-shot breadcrumb: log the first time the floor is applied, then stay silent.
+    // The path fires per-army-per-tick; we only want a single "this is alive" marker.
+    private static bool _loggedBorderFloor;
+
     // Audit Agent 1 CRITICAL fix 2026-05-22: vanilla 1.4.5 method now has FOUR out params:
     //   private void CalculateDistanceScoreForBesieging(
     //       Settlement targetSettlement,
@@ -58,8 +62,12 @@ public static class AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch
             if (_service.IsInPriorityList(factionId, settlementId))
             {
                 bestDistanceScore = floor;
-                _logger ??= IoC.Resolve<IModLogger>();
-                _logger.LogDebug($"ArmyTargeting: border proximity floor {floor:F2} applied for {factionId}→{settlementId}");
+                if (!_loggedBorderFloor)
+                {
+                    _loggedBorderFloor = true;
+                    _logger ??= IoC.Resolve<IModLogger>();
+                    _logger.LogDebug($"ArmyTargeting: border proximity floor {floor:F2} applied for {factionId}→{settlementId}");
+                }
             }
         }
         catch (Exception)

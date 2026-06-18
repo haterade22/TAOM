@@ -1,5 +1,7 @@
-# Battle scenes the "Pre-compile Shaders" walk loads so their terrain + forced-atmosphere
-# shaders compile (the d3dcompiler battle-load crash/hang class — issue #287).
+# Scenes the "Pre-compile Shaders" walk loads so their terrain + forced-atmosphere shaders
+# compile (the d3dcompiler battle-load crash/hang class — issue #287). Covers open-field battle
+# scenes, custom SIEGE settlement scenes, and custom VILLAGE scenes — every TAOM-authored
+# `_forceatmo` scene ships header-only (no compressed_shader_cache.sack) and runtime-compiles.
 #
 # One scene id per line. Lines starting with '#' are comments; blank lines are ignored.
 # If this file is missing or empty, the baked default (this same TAOM battle-scene set) is used.
@@ -13,4 +15,28 @@ taom_mordor_battle_black_gates_forceatmo
 taom_mordor_battle_dead_marshes_forceatmo
 taom_rohan_battle_001_forceatmo
 taom_rohan_battle_fords_of_isen_forceatmo
-# taom_dwarves_battle_001_forceatmo  -- excluded: not in custom_battle_scenes.xml, can't load as a custom battle (Codex 2026-06-17)
+
+# Custom SIEGE scenes (Gondor/Isengard/Rohan settlement defenses) — all #287 class (header-only).
+# Added 2026-06-18 as ordinary Battle/ScenePass items (the walk loads any registered scene by id).
+# Terrain + atmosphere + static wall geometry compile via the Battle path; whether dynamic
+# siege-engine materials also need the engine's "Siege" mission path is being probed in-game.
+taom_gondor_castle_001_forceatmo
+taom_gondor_castle_002_forceatmo
+taom_gondor_castle_003_forceatmo
+taom_gondor_town_minas_tirith_forceatmo
+taom_gondor_town_osgiliath_w_forceatmo
+taom_gondor_town_osgiliath_e_forceatmo
+taom_gondor_town_lossarnach_forceatmo
+taom_isengard_town_orthanc_forceatmo
+taom_rohan_castle_helms_deep_forceatmo
+
+# Custom VILLAGE scenes (Gondor — 66 settlement instances) — all #287 class. Same Battle load path.
+taom_gondor_village_001_forceatmo
+taom_gondor_village_002_forceatmo
+taom_gondor_village_003_forceatmo
+taom_gondor_village_004_forceatmo
+
+# EXCLUSIONS — do not add these:
+# taom_dwarves_battle_001_forceatmo  -- orphan: assigned to 0 settlements; only reachable via the Custom Battle menu (Codex 2026-06-17).
+# lotrtaom_iron_hills_01_forceatmo   -- its scene.xscene CTDs on load (commented out of custom_battle_scenes.xml); a separate crash class, must stay excluded.
+# taom_mordor_town_goblin_town_forceatmo -- registered siege map but assigned to 0 settlements (orphan).

@@ -9,7 +9,9 @@ runs the second pass on IL the first already NOPped, can't find its anchor, and 
 latent bug** — any player loading a 2nd campaign/custom-battle in one session hits it; the shader walk
 (N games per process) just made it deterministic on item 2. Issue #288. Fix verified by `/deep-review`
 (5 agents, all clean — guard blast-radius traced statement-by-statement, IL anchor re-verified against
-installed v1.4.6).
+installed v1.4.6) AND by Codex gpt-5.5 xhigh (**SHIP, 0/0/0/0** — independently swept every transpiler
+in `Hooks/`+`Patches/` to confirm no other throwing-anchor sibling remains, and confirmed `PatchCategory`
+is only ever called in `SubModule.cs`).
 
 ## Findings
 

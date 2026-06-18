@@ -37,6 +37,10 @@ The recurring failure mode in `/deep-review` agents (caught across multiple Code
 
 It also gives `/deep-review` a concrete handle for the deletion-win case. A reviewer who finds a 50-line helper that nothing actually uses should not need to argue for its removal — the rule is "deletion that holds parity = always keep," full stop.
 
+## Relationship to other rules
+
+- `think-before-coding.md`'s **reuse ladder** is the *reuse-before-write* companion: it fires *before* a change exists (don't write what the engine or an existing service already provides); this rule judges a change *after* it exists (keep or reject). `/deslop` + `/deep-review` enforce both on finished code.
+
 ## Source
 
 Imported from karpathy/autoresearch `program.md` "Simplicity criterion" paragraph (March 2026). The original framing was for ML hyperparameter changes ("a 0.001 val_bpb improvement that adds 20 lines of hacky code? Probably not worth it. An improvement of ~0 but much simpler code? Keep."); this rule generalizes it to any TAOM code change.

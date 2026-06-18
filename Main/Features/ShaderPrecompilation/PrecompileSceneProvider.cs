@@ -15,10 +15,13 @@ public sealed class PrecompileSceneProvider : IPrecompileSceneProvider
 {
     private const string ConfigRelPath = "shader_precompilation/precompile_scenes.txt";
 
-    // The worldmap-grid scenes battles actually use (TAOM_Map/SceneObj). These are the ones that
-    // runtime-compile their terrain + forced-atmosphere shaders on entry today.
+    // The TAOM-authored scenes (TAOM_Map/SceneObj) that runtime-compile their terrain + forced-atmosphere
+    // shaders on entry — every one ships header-only (no compressed_shader_cache.sack) = the #287 class.
+    // Open-field battles + custom siege settlement scenes + custom village scenes (all load by id via the
+    // same "Battle" ScenePass; the walk bypasses custom_battle_scenes.xml). Mirrors precompile_scenes.txt.
     public static readonly IReadOnlyList<string> DefaultScenes = new[]
     {
+        // Open-field battle scenes
         "taom_mordor_battle_001_forceatmo",
         "taom_mordor_battle_002_forceatmo",
         "taom_mordor_battle_003_forceatmo",
@@ -27,9 +30,23 @@ public sealed class PrecompileSceneProvider : IPrecompileSceneProvider
         "taom_mordor_battle_dead_marshes_forceatmo",
         "taom_rohan_battle_001_forceatmo",
         "taom_rohan_battle_fords_of_isen_forceatmo",
-        // NOTE: taom_dwarves_battle_001_forceatmo exists on disk but is NOT in custom_battle_scenes.xml
-        // (nor any worldmap/battle data) — it can't load as a custom battle and is never used in a real
-        // battle, so precompiling it has no value and would just time out. Excluded (Codex 2026-06-17).
+        // Custom siege settlement scenes (loaded via the Battle path; siege-engine-material coverage probed in-game)
+        "taom_gondor_castle_001_forceatmo",
+        "taom_gondor_castle_002_forceatmo",
+        "taom_gondor_castle_003_forceatmo",
+        "taom_gondor_town_minas_tirith_forceatmo",
+        "taom_gondor_town_osgiliath_w_forceatmo",
+        "taom_gondor_town_osgiliath_e_forceatmo",
+        "taom_gondor_town_lossarnach_forceatmo",
+        "taom_isengard_town_orthanc_forceatmo",
+        "taom_rohan_castle_helms_deep_forceatmo",
+        // Custom village scenes (66 settlement instances)
+        "taom_gondor_village_001_forceatmo",
+        "taom_gondor_village_002_forceatmo",
+        "taom_gondor_village_003_forceatmo",
+        "taom_gondor_village_004_forceatmo",
+        // EXCLUDED: taom_dwarves_battle_001_forceatmo + taom_mordor_town_goblin_town_forceatmo (orphans,
+        // 0 settlements); lotrtaom_iron_hills_01_forceatmo (scene.xscene CTDs on load — separate crash class).
     };
 
     private readonly IPathService _pathService;

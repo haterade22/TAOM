@@ -11,6 +11,12 @@ public class ArmyTargetingService : IArmyTargetingService
     private readonly Dictionary<string, float> _aggressionIndex;
     private readonly Dictionary<string, float> _distanceRangeIndex;
 
+    // One-shot breadcrumbs: each path fires per-army-per-tick, so log the first occurrence
+    // (with real values) then stay silent. Static = once per game process.
+    private static bool _loggedTargetMultiplier;
+    private static bool _loggedStrengthMultiplier;
+    private static bool _loggedDistanceCompensation;
+
     public ArmyTargetingService(IArmyTargetingSettingsProvider settings, IArmyTargetingConfigProvider configProvider, IModLogger logger)
     {
         _settings = settings;
@@ -43,8 +49,11 @@ public class ArmyTargetingService : IArmyTargetingService
             }
         }
 
-        if (multiplier != 1.0f)
+        if (multiplier != 1.0f && !_loggedTargetMultiplier)
+        {
+            _loggedTargetMultiplier = true;
             _logger.LogDebug($"ArmyTargeting: {factionId}→{candidateId} target ×{multiplier:F2} (committed={committedTargetId})");
+        }
 
         return multiplier;
     }
@@ -56,7 +65,11 @@ public class ArmyTargetingService : IArmyTargetingService
         if (_aggressionIndex.TryGetValue(factionId, out float m))
         {
             float result = m * _settings.EvilAggressionScale;
-            _logger.LogDebug($"ArmyTargeting: {factionId} strength ×{result:F2}");
+            if (!_loggedStrengthMultiplier)
+            {
+                _loggedStrengthMultiplier = true;
+                _logger.LogDebug($"ArmyTargeting: {factionId} strength ×{result:F2}");
+            }
             return result;
         }
         return 1.0f;
@@ -70,7 +83,11 @@ public class ArmyTargetingService : IArmyTargetingService
         if (!targets.TryGetValue(targetId, out _)) return 1.0f;
         if (!_distanceRangeIndex.TryGetValue(factionId, out float scale)) return 1.0f;
         float compensation = scale * _settings.LongRangePriorityBoostScale;
-        _logger.LogDebug($"ArmyTargeting: distance compensation ×{compensation:F2} for {factionId}→{targetId}");
+        if (!_loggedDistanceCompensation)
+        {
+            _loggedDistanceCompensation = true;
+            _logger.LogDebug($"ArmyTargeting: distance compensation ×{compensation:F2} for {factionId}→{targetId}");
+        }
         return compensation;
     }
 

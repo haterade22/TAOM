@@ -2,6 +2,48 @@
 
 ## 2026-06-18
 
+### chore(logging): gate ArmyTargeting + TroopWeight per-tick diagnostics to fire once
+
+Both features are confirmed working, so their per-event diagnostics (`ArmyTargeting:` border-floor /
+strength / target / distance-compensation DEBUG lines; `[TroopWeight][diag] Shed` INFO line) no longer
+flood the log every AI tick / upgrade event. Each is wrapped in a `private static bool` one-shot guard
+(reusing the `TaomHowdahMachine._loggedBoneError` pattern) so it logs the first occurrence — with real
+values, as a "this path is alive" breadcrumb — then stays silent for the rest of the process. Messages
+and log levels unchanged; init/load logs and WARNING/exception paths untouched. No test changes (no test
+asserts these calls).
+
+### feat(shader-precompilation): extend the walk to custom siege + village scenes (#287)
+
+The pre-compile walk covered only the 8 open-field `taom_*_battle_*_forceatmo` scenes. TAOM's custom
+**siege** settlement scenes (9 — Gondor castles/towns, Isengard Orthanc, Helm's Deep) and custom
+**village** scenes (4 Gondor, 66 settlement instances) are the **same #287 class** — verified each ships
+header-only (`terrain_shaders_header_data.bin`, no `compressed_shader_cache.sack`) so it runtime-compiles
+on entry. Added all 13 to `precompile_scenes.txt` + the baked `DefaultScenes` (walk now 8 → 21 scene
+passes). Data-only: they load via the existing `"Battle"` ScenePass — the walk loads any registered
+scene by id, bypassing `custom_battle_scenes.xml` (verified in `TaomShaderGameManager.MakeBattleData`).
+Villages are guaranteed covered (identical open-field path). Sieges load terrain + atmosphere + static
+wall geometry via the Battle path; whether dynamic siege-engine materials also need the engine's
+`"Siege"` mission path is an **in-game probe** — if the next walk leaves siege caches cold, a small
+`SceneSiegePass` C# builder (`GameTypeStringId="Siege"` + non-null machine/wall arrays) is the escalation.
+Excludes the 2 orphan scenes (0 settlements: `taom_dwarves_battle_001`, `taom_mordor_town_goblin_town`)
+and the load-CTD `lotrtaom_iron_hills_01_forceatmo`. Scene inventory + loadability assessed via a 6-agent
+investigation; build 0/0, 24 shader tests green. Reused-vanilla siege/village scenes need nothing (they
+ship their own `.sack`).
+
+### docs(rules): add a reuse-before-write ladder to think-before-coding (adopt ponytail kernel)
+
+Evaluated [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) (MIT) — a YAGNI/minimalism
+plugin for AI agents — for adoption. Finding: ~90% duplicative of `simplicity-criterion.md` / `/deslop` /
+`/deep-review` / `/improve`, and installing it would be a per-session context tax + prompt-injection-by-design.
+Adopted only its one genuinely-additive kernel: an ordered *reuse-before-write* ladder (engine API → existing
+service/adapter → one-line delegation → minimal new code), TAOM-translated and folded into the existing
+always-load `think-before-coding.md` rule — no new skill or hook. Intensity toggles, a debt registry, and inline
+"simplification ceiling" markers were consciously skipped (each a misfit or redundant). Plugin not installed;
+reviewed text ported only. Full security vet + novel-vs-duplicative map + skip reasons:
+`docs/reviews/adopt-ponytail-2026-06-18.md`. Logged ponytail in the `external-repo-adoption.md` Precedents
+ledger, added a reciprocal cross-link in `simplicity-criterion.md`, and noted the ladder in the
+`think-before-coding.md` row of CLAUDE.md's Scoped-Rules table.
+
 ### fix(crash): guard per-game-init patch application so a 2nd game in one process doesn't re-patch (#288)
 
 `SubModule.OnGameInitializationFinished` applied the whole ~26-category Harmony patch block (+ manual

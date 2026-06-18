@@ -14,6 +14,10 @@ public class PartyUpgraderUpgradeReadyTroopsHook : IOnPartyUpgraderUpgradeReadyT
     private readonly ITroopWeightService _troopWeightService;
     private readonly IModLogger _logger;
 
+    // One-shot breadcrumb: log the first shed event (with real values), then stay silent.
+    // Static = once per game process, so the diag doesn't flood across upgrade ticks.
+    private static bool _loggedShed;
+
     public PartyUpgraderUpgradeReadyTroopsHook(ITroopWeightService troopWeightService, IModLogger logger)
     {
         _troopWeightService = troopWeightService;
@@ -68,12 +72,16 @@ public class PartyUpgraderUpgradeReadyTroopsHook : IOnPartyUpgraderUpgradeReadyT
                 }
             }
 
-            // [diag] event-gated (fires only when a shed happens) — proves the right parties trim in-game.
-            // Strip after sign-off per the comprehensive-diag-then-remove rule.
-            if (shedTotal > 0)
+            // [diag] one-shot breadcrumb: feature is confirmed working, so log only the FIRST
+            // shed of the session (with real values) as a "this path is alive" marker, then stay
+            // silent — the comprehensive-diag-then-remove rule's keep-one-line form.
+            if (shedTotal > 0 && !_loggedShed)
+            {
+                _loggedShed = true;
                 _logger.LogInfo(
                     $"[TroopWeight][diag] Shed {shedTotal} bodies from '{party.Name}' " +
                     $"(weighted {weighted:0.#} > limit {limit}); kept elites.");
+            }
         }
         catch (Exception ex)
         {

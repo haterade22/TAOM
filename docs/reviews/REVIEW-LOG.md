@@ -1337,6 +1337,18 @@ Re-enabled the "Pre-compile Shaders" InitialStateOption (disabled 2026-05-22) an
 
 ---
 
+## Review 58 — re-patch crash fix (#288) (2026-06-18)
+
+A 2-file crash fix surfaced by review 57's shader walk: it crashed entering item 2/9 with a `HarmonyException`. Root cause — `SubModule.OnGameInitializationFinished` applies all ~26 patch categories on EVERY game init with no guard; Harmony patches are process-global, so the 2nd game init re-applied everything and the non-idempotent `DeliverOffSpring` transpiler, chained twice, couldn't find its already-NOPped `Debug.SilentAssert` anchor and threw. **General latent bug** (any 2nd game/custom-battle in one session), not shader-specific. Fix = (1) a `_gameInitPatchesApplied` once-per-process guard (mirrors `_missionTimePatchesApplied`); (2) the transpiler soft-fails (returns unmodified IL) instead of throwing (mirrors `RefreshCharacterEntityAuxPatch`). Reviewed via `/deep-review` (5 agents) + Codex `gpt-5.5 xhigh`.
+
+**Deep-review: READY (1 LOW fixed).** Agent 5 (data-flow) classified every statement in `OnGameInitializationFinished` as process-global patch-wiring (the `game` param is never used in the guarded body; per-game `AddBehavior`/`AddModel` live in `OnGameStart`; the watchdog is a process-lifetime singleton with its own `if(_timer!=null)return`). Agent 2 re-verified against installed v1.4.6 that `DeliverOffSpring(Hero,Hero,bool)` + the `Debug.SilentAssert`/`get_Race` IL anchors are still present, so the happy path is unaffected. Agent 1 caught a LOW (dead `using System;` after the throw-removal) — fixed in-session.
+
+**Codex VERDICT: SHIP — 0 CRITICAL / 0 HIGH / 0 MED / 0 LOW.** All 5 Known Suspects CONFIRMED clean with file:line evidence (suspect 4, PatchShield, "DISPUTED as a ship-blocking regression" — i.e. it agreed no mitigation is required). Codex's value on a clean changeset was breadth: it (a) SWEPT every transpiler in `Hooks/`+`Patches/` and confirmed no other throwing-anchor transpiler remains (the RCA's preventive lesson, verified independently), (b) confirmed `PatchCategory` is only ever called in `SubModule.cs` (no uncovered re-application path), (c) confirmed thread-safety (synchronous `GameLoadingState.OnTick` → no concurrent entry; static-vs-instance matches the existing `_missionTimePatchesApplied` guard), and (d) surfaced a verified-but-out-of-scope nuance: PatchShield's `ProtectedOwnerPrefixes` lists `"TAOM"` but the main gameplay owner is `"com.taom.mod"` (doesn't match the prefix), so gameplay patches can be unpatched on a version-mismatch — likely intentional (protect the shield infra, let incompatible gameplay patches disable), no change made.
+
+**Root-cause pattern:** the same lesson was learned once and not generalized — `RefreshCharacterEntityAuxPatch` was converted from throw-to-soft-fail in Phase 9b #160 ("any lookup throwing ArgumentException at PatchCategory time crashed the mod during OnGameInitializationFinished"), but the sweep never reached `DeliverOffSpring_RaceAssert_Patch`, which then crashed the moment a code path (the shader walk) re-applied its category. Lessons: (1) Harmony patch *application* is process-global, once-per-process — gating per-game-init patch blocks belongs guarded (`_missionTimePatchesApplied` pattern), never run per-game; (2) an IL-mutating transpiler must be idempotent OR its category gated once — a throw-on-missing-anchor transpiler is a latent crash the moment anything re-applies it; when you convert one to soft-fail, SWEEP every sibling of the same shape. Both reviews ran BEFORE any commit. RCA: `docs/reviews/rca-repatch-crash-2026-06-18.md`.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

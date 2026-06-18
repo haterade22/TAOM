@@ -42,3 +42,4 @@ The user shares a repo or article "to see what we can adopt into our own project
 
 - **obra/superpowers** → `.claude/rules/evidence-over-claims.md` + verification hooks + review-discipline edits. See `CHANGELOG.md` 2026-05-29 and `docs/reviews/rca-superpowers-enforcement-2026-05-29.md`.
 - **affaan-m/ECC** → `tools/audit_claude_config.py` + `/security-scan` + this skill/doc. See `CHANGELOG.md` 2026-05-29.
+- **DietrichGebert/ponytail** → `.claude/rules/think-before-coding.md` ("Reuse ladder" section) — its YAGNI decision ladder, TAOM-translated to engine API → existing service/adapter → one-line delegation → minimal new code. The rest was duplicative of `simplicity-criterion.md` / `/deslop` / `/deep-review` / `/improve`; plugin not installed. See `CHANGELOG.md` 2026-06-18 and `docs/reviews/adopt-ponytail-2026-06-18.md`.

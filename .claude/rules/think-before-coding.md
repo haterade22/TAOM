@@ -50,6 +50,17 @@ If the request is not just ambiguous but *open-ended* — multiple viable design
 
 This is deliberately lighter than a formal design-doc-per-feature gate (rejected as too heavy for an expert solo dev on most TAOM work). It's the same discipline as the rest of this rule — surface the fork before committing to a branch — applied when the fork is a *design* choice rather than an *interpretation* choice. The "When NOT to ask" guard above still governs: trivial / mechanical / recoverable work skips this entirely.
 
+## Reuse ladder (check what exists before writing new)
+
+Once you know *what* the user asked for, walk this ladder top-down and stop at the first rung that satisfies the need. Writing new code is the LAST resort, not the first.
+
+1. **Does TaleWorlds already provide it?** A GameModel hook, a `CampaignEvent`, an existing engine method — verify via `/research` / `taom-src` before assuming you must build it (Critical Rules: *Research First*, *Verify Before Reference*).
+2. **Does an existing TAOM service / adapter already do it?** Reuse it (ADR-007 / ADR-002); never re-wrap a sealed type that already has an adapter, or duplicate logic a service already owns.
+3. **Can it be a one-line delegation** into that existing service/model?
+4. **Only then: write the minimum.** No interface-with-one-implementation, no "in case we need it later" plumbing (`simplicity-criterion.md` rejects both).
+
+This is the *reuse-before-write* companion to `simplicity-criterion.md`'s *keep-or-reject* matrix: that rule judges a change after it exists; this ladder stops the unnecessary one from being written.
+
 ## How to apply
 
 At the start of a non-trivial task, before the first Edit/Write, say in one line what you're about to do AND what you're assuming.
@@ -78,3 +89,5 @@ If the assumption is uncertain enough that picking wrong wastes meaningful work 
 Imported from https://github.com/forrestchang/andrej-karpathy-skills (which packages karpathy/autoresearch behavioral principles). Original framing: *"State your assumptions explicitly. If uncertain, ask."* The "when NOT to ask" section is a TAOM-specific guard — the upstream rule does not address the opposite failure mode of over-questioning, which is a known LLM bug we've hit in past sessions.
 
 The "lightweight design pass" section was added 2026-05-29 from obra/superpowers' `brainstorming` skill — we took its "one question at a time, multiple-choice / propose 2-3 approaches" core but deliberately dropped its mandatory per-feature design-doc-commit + multi-stage approval gate as too heavy for TAOM's workflow.
+
+The "reuse ladder" section was added 2026-06-18 from [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) (MIT) — its YAGNI "decision ladder" (need it? → stdlib → native → reuse dep → one-liner → build), TAOM-translated to the TaleWorlds/ADR domain (engine API → existing service or adapter → one-line delegation → minimal new code). The rest of ponytail was evaluated and consciously not adopted — already covered harder by `simplicity-criterion.md` / `/deslop` / `/deep-review` / `/improve`; full novel-vs-duplicative map + skip reasons in `docs/reviews/adopt-ponytail-2026-06-18.md`.
