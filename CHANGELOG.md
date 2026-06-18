@@ -1,5 +1,18 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-18
+
+### fix(data): tag the 10 Mordor boss equipment rosters with `culture="Culture.mordor"`
+
+Sauron / Witch-king / Nazgûl / Khamûl `*_civ_equipment` + `*_bat_equipment` rosters in
+`taom_equipment_sets_mordor.xml` had no `culture=` attribute, so the engine logged 10
+"don't have culture definition, make sure this is intended" warnings on load (visible in the
+crash-report log tail; benign, not a crash cause). Added `culture="Culture.mordor"` to each
+opening tag. Safe: the rosters are referenced by id from the named heroes (binding unchanged),
+and `DefaultEquipmentSelectionModel` only draws a culture roster into random hero generation
+when its `EquipmentCategories` exactly matches the requested template flags — these flag-less
+rosters (`== None`) never match, so no boss gear leaks into Mordor's random pool. Validator clean.
+
 ## 2026-06-17
 
 ### feat(shader-precompilation): re-enable + scene-walk to fix the battle-load d3dcompiler CTD (#287)
@@ -16,7 +29,11 @@ The rewrite walks a work list: item 0 = all-characters battle, then one pass per
 so each scene's terrain/atmosphere shaders compile. `ShaderPrecompileRunner` chains the per-item
 custom battles (StartNewGame → settle → EndGame → next); the per-item compile-detection is a pure,
 unit-tested `ShaderPrecompileDecider` (generalizes the proven `_observedWork` latch from the
-2026-05-04 initial-zero RCA). Progress mirrors onto the loading-screen text + a 1 Hz toast.
+2026-05-04 initial-zero RCA). Progress mirrors onto the loading-screen text + a 1 Hz toast; the
+status line recomputes on a ~1 s cadence (and the scene-load phase gets its own moving clock) so the
+item/total timers tick live instead of freezing between shader-count changes (the line was previously
+rebuilt only at item boundaries + on shader-count change, leaving the "loading" phase showing a static
+`item 0s`). The display patch already re-reads the line every frame — only its content needed to move.
 
 Deep-review (5 agents) fixes folded in: the decider's "nothing to compile" grace now counts **render**
 time (from first non-loading frame), not load time — otherwise a heavy scene still loading on an HDD
