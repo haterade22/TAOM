@@ -32,13 +32,15 @@ vs `sellerHero.CurrentSettlement.MapFaction`) keyed through the existing `IAlign
 Gondor (`empire_w`, free) and Mordor (`empire_s`, evil) distinct.
 
 **Config.** `recruitment_alignment/recruitment_alignment_config.json` (`enabled`, `mode` =
-Symmetric|GoodRejectsEvil, `applyToAi`) + MCM group "World/Recruitment Alignment" (3 toggles, GroupOrder 36).
-Mode validated on load (unknown → Symmetric + warning). Neutral never blocks; garrison auto-recruit and AI
-map-recruit are inherently same-kingdom and never trigger.
+Symmetric|GoodRejectsEvil, `applyToAi`, `applyToPlayer`) + MCM group "World/Recruitment Alignment" (4 toggles,
+GroupOrder 36). The player and AI gates are independent: a player can exempt themselves ("Apply To Player"
+off) while AI lords stay gated — or the reverse — and the master "Enable Recruitment Alignment Block" off
+disables the whole feature for everyone. Mode validated on load (unknown → Symmetric + warning). Neutral never
+blocks; garrison auto-recruit and AI map-recruit are inherently same-kingdom and never trigger.
 
-New feature `Main/Features/AlignmentRecruitment/` (pure service + config/settings providers + IoC). 31 unit
-tests (full 3×3 recruiter×source alignment matrix × both modes, toggles, config validation). Feature doc:
-`docs/features/alignment-recruitment.md`. Issue #286.
+New feature `Main/Features/AlignmentRecruitment/` (pure service + config/settings providers + IoC). 34 unit
+tests (full 3×3 recruiter×source alignment matrix × both modes, master + per-side player/AI toggles, config
+validation). Feature doc: `docs/features/alignment-recruitment.md`. Issue #286.
 
 Reviewed: `/deep-review` (5 agents, READY) + Codex gpt-5.5 xhigh (0 CRITICAL / 1 HIGH / 1 LOW; all 6 Known
 Suspects DISPUTED with decompiled evidence — Codex proved `Clan.Kingdom` is alignment-equivalent to vanilla's
