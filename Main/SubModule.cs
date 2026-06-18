@@ -86,6 +86,7 @@ public class SubModule : MBSubModuleBase
     private static float _shaderTickAccumulator;
     private static ShaderPrecompileRunner _shaderRunner;
     private static bool _missionTimePatchesApplied;
+    private static bool _gameInitPatchesApplied;
 
     protected override void OnSubModuleLoad()
     {
@@ -533,6 +534,16 @@ public class SubModule : MBSubModuleBase
     public override void OnGameInitializationFinished(Game game)
     {
         base.OnGameInitializationFinished(game);
+
+        // Harmony patches are process-global (applied to methods, persist across games). Apply this
+        // whole per-game-init patch block ONCE per process — re-applying on a 2nd game init duplicates
+        // every prefix/postfix, restarts the BattleLoad watchdog, and CRASHES the non-idempotent
+        // DeliverOffSpring transpiler (chained twice, it can't find its already-NOPped anchor). The
+        // shader-precompile walk starts N custom games in one process and tripped exactly this on item 2;
+        // a player loading a 2nd campaign/custom-battle in one session hits the same crash.
+        // Mirrors _missionTimePatchesApplied in OnMissionBehaviorInitialize.
+        if (_gameInitPatchesApplied) return;
+        _gameInitPatchesApplied = true;
 
         _harmony.PatchCategory("Patch1_FirstTimeInit");
         _harmony.PatchCategory("Patch2_RefreshTableau");

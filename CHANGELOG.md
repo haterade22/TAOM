@@ -2,6 +2,27 @@
 
 ## 2026-06-18
 
+### fix(crash): guard per-game-init patch application so a 2nd game in one process doesn't re-patch (#288)
+
+`SubModule.OnGameInitializationFinished` applied the whole ~26-category Harmony patch block (+ manual
+patches + the BattleLoad watchdog start) on **every** game init with no guard. Harmony patches are
+process-global, so the 2nd game init in one process re-applied everything — duplicate prefix/postfix,
+a 2nd watchdog start, and fatally the non-idempotent `DeliverOffSpring_RaceAssert_Patch` transpiler
+chained twice: the 2nd pass ran on IL the 1st already NOPped, couldn't find its `Debug.SilentAssert`
+anchor, and threw a `HarmonyException`. Surfaced as a hard crash entering **item 2/9** of the shader
+pre-compile walk (the first code to start N games in one process) — but it's a **general latent bug**:
+any player loading a 2nd campaign or starting a 2nd custom battle in one session hit the same crash.
+
+Two fixes: (1) a `_gameInitPatchesApplied` once-per-process guard (mirrors the existing
+`_missionTimePatchesApplied`) — deep-review verified the entire guarded body is process-global
+patch-wiring (the `game` parameter is never used in it; the genuine per-game `AddBehavior`/`AddModel`
+registrations live in `OnGameStart`; the watchdog is a process-lifetime singleton), so single-campaign
+play is unchanged. (2) the `DeliverOffSpring` transpiler now soft-fails (returns unmodified IL + a
+warning) instead of throwing when its anchor is missing — mirroring `RefreshCharacterEntityAuxPatch`,
+which learned this same lesson in Phase 9b #160 (the sweep was never applied to this straggler). The
+patch is pure noise-reduction, so a no-op is harmless. `/deep-review` clean (5 agents); API re-verified
+against installed v1.4.6. RCA: `docs/reviews/rca-repatch-crash-2026-06-18.md`.
+
 ### fix(data): tag the 10 Mordor boss equipment rosters with `culture="Culture.mordor"`
 
 Sauron / Witch-king / Nazgûl / Khamûl `*_civ_equipment` + `*_bat_equipment` rosters in

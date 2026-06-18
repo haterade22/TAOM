@@ -1,5 +1,4 @@
 using HarmonyLib;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -7,6 +6,7 @@ using System.Reflection.Emit;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.RaceAge.Hooks;
 
@@ -43,8 +43,13 @@ public static class DeliverOffSpring_RaceAssert_Patch
         }
 
         if (callIndex < 0)
-            throw new ArgumentException(
-                "Cannot find Debug.SilentAssert call in DeliverOffSpring IL. Patch: DeliverOffSpring_RaceAssert_Patch");
+        {
+            // Anchor gone (already NOPped by a prior application of this transpiler, or the engine IL
+            // changed). This patch is pure noise-reduction, so degrade to a no-op instead of throwing
+            // out of PatchCategory and crashing the mod (mirrors RefreshCharacterEntityAuxPatch).
+            LogTranspilerDegradation("Debug.SilentAssert call not found in DeliverOffSpring IL.");
+            return newInstructions.AsEnumerable();
+        }
 
         // Walk backwards from the call to find the start of the argument sequence.
         // The IL pattern is:
@@ -87,8 +92,10 @@ public static class DeliverOffSpring_RaceAssert_Patch
         }
 
         if (startIndex < 0)
-            throw new ArgumentException(
-                "Cannot find race comparison start in DeliverOffSpring IL. Patch: DeliverOffSpring_RaceAssert_Patch");
+        {
+            LogTranspilerDegradation("Race-comparison start (ldarg.0 ... get_Race) not found in DeliverOffSpring IL.");
+            return newInstructions.AsEnumerable();
+        }
 
         // NOP out the entire SilentAssert sequence (args + call)
         for (int i = startIndex; i <= callIndex; i++)
@@ -98,5 +105,16 @@ public static class DeliverOffSpring_RaceAssert_Patch
         }
 
         return newInstructions.AsEnumerable();
+    }
+
+    private static void LogTranspilerDegradation(string detail)
+    {
+        try
+        {
+            IoC.Resolve<IModLogger>()?.LogWarning(
+                $"[RaceAge] DeliverOffSpring_RaceAssert_Patch transpiler degrading to no-op — {detail} " +
+                $"The harmless mixed-race SilentAssert noise-reduction will not apply this session (no gameplay effect).");
+        }
+        catch { /* logger resolution failure must not surface to the transpiler caller */ }
     }
 }

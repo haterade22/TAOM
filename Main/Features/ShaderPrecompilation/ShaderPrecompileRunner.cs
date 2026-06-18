@@ -45,6 +45,7 @@ public sealed class ShaderPrecompileRunner
     private long _walkStartedMs;
     private int _lastRemaining = -1;
     private long _lastEndLogMs;
+    private long _lastStatusMs;      // last time StatusLine was recomputed — drives the ~1s live refresh
     // Monotonic id per started item. A game manager captures it and echoes it in its callback, so a
     // late callback from a previously-started (timed-out) item cannot flip the CURRENT item to Running.
     private int _generation;
@@ -135,11 +136,15 @@ public sealed class ShaderPrecompileRunner
 
     private void TickStarting()
     {
-        if (NowMs() - _stateEnteredMs >= StartTimeoutMs)
+        long now = NowMs();
+        if (now - _stateEnteredMs >= StartTimeoutMs)
         {
             _logger?.LogWarning($"[ShaderPrecompilation] item {_index + 1} never started rendering in {StartTimeoutMs / 1000}s — advancing");
             BeginEnd();
+            return;
         }
+        // Tick the loading clock ~1/s so the scene-load phase shows a moving timer, not a frozen 0s.
+        if (now - _lastStatusMs >= 1000) UpdateStatus(_plan[_index], -1, now);
     }
 
     private void TickRunning()
@@ -147,7 +152,8 @@ public sealed class ShaderPrecompileRunner
         long now = NowMs();
         int remaining = Utilities.GetNumberOfShaderCompilationsInProgress();
         long itemElapsed = now - _itemStartedMs;
-        if (remaining != _lastRemaining) { UpdateStatus(_plan[_index], remaining, now); _lastRemaining = remaining; }
+        // Refresh on a shader-count change OR a ~1s tick so the item/total clocks advance smoothly.
+        if (remaining != _lastRemaining || now - _lastStatusMs >= 1000) { UpdateStatus(_plan[_index], remaining, now); _lastRemaining = remaining; }
 
         // The scene hasn't rendered (so shaders haven't queued) while the loading window is up —
         // the decider counts the "nothing to compile" grace from first render, not from StartGame.
@@ -211,11 +217,16 @@ public sealed class ShaderPrecompileRunner
 
     private void UpdateStatus(PrecompileItem item, int remaining, long now)
     {
-        int itemSec = _state == RunState.Running ? Sec(now - _itemStartedMs) : 0;
+        // Running: item clock counts from first render. Starting (scene loading): it counts from when
+        // the item entered Starting, so the "loading" phase shows a moving timer instead of a frozen 0s.
+        int itemSec = _state == RunState.Running ? Sec(now - _itemStartedMs)
+                    : _state == RunState.Starting ? Sec(now - _stateEnteredMs)
+                    : 0;
         int totalSec = Sec(now - _walkStartedMs);
         string rem = remaining < 0 ? "loading" : $"{remaining} shaders";
         StatusLine = $"Pre-compiling shaders — {_index + 1}/{_plan.Count}: {item.Description} — {rem} " +
                      $"(item {FormatElapsed(itemSec)}, total {FormatElapsed(totalSec)})";
+        _lastStatusMs = now;
     }
 
     private static long NowMs() => DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
