@@ -2,7 +2,99 @@
 
 ## 2026-06-18
 
-### chore(logging): gate ArmyTargeting + TroopWeight per-tick diagnostics to fire once
+### feat(settlement-food): fix garrison food starvation + tunable settlement food (#289)
+
+Settlements ran chronic food deficits. Root cause: the Troop Weight feature (`Patch17_TroopWeight`)
+postfixes the global `PartyBase.NumberOfAllMembers` getter and raises it to a *weighted* count, and
+vanilla `DefaultSettlementFoodModel` reads exactly that getter for the garrison food term
+(`NumberOfAllMembers / 20`). Elite garrisons (troop weights 2.0–3.0) therefore consumed 2–3× the food
+the engine intends — a globally-weighted getter leaking into an unrelated gameplay consumer (the food
+model), the same bug-class as the earlier phantom-wounded UI leak.
+
+New `TaomSettlementFoodModel : DefaultSettlementFoodModel` (food-model-only fix — the global getter
+stays weighted, so AI strength reads and garrison capacity are unchanged):
+
+- **Garrison correction:** since vanilla `NumberOfAllMembers == MemberRoster.TotalManCount`, the model
+  adds back `(weighted − raw) / garrisonDivisor` so the garrison term uses the raw body count. No-op
+  when Troop Weight is off (weighted == raw). Applies under siege too (the inflation is version-agnostic).
+- **Tunable knobs** (`settlement_food/settlement_food_config.json`, ships at vanilla values): garrison
+  + prosperity consumption divisors, town/castle base food, per-village multiplier, flat bonus, storage
+  caps. Production knobs are siege-gated (vanilla zeroes production under siege). Validated by
+  `SettlementFoodConfigProvider` (divisors ≥ 1; floats finite ≥ 0 via `FiniteFloatValidator`; invalid →
+  vanilla default + warning). MCM "Settlement Food → Enable Settlement Food Tuning" (on by default;
+  off = vanilla engine math).
+
+Thin model → pure `SettlementFoodService` (delta math, 27 unit tests) → `TownFoodSnapshot` boundary
+(ADR-002/007). Deep review: PASS (standards, 12/12 API compat, data-flow clean — 0 gaps). Reference
+doc `docs/reference/engine/settlement-economy-food-prosperity.md`; feature doc `docs/features/settlement-food.md`.
+
+### fix(native-skin-fixes): ship a static-CRT DLL so it loads for players (Win32 error 126)
+
+A player's log showed `TAOM.NativeSkinFixes.dll failed to load — feature inert. LoadLibrary failed
+(Win32 error 126)`. Error 126 (`ERROR_MOD_NOT_FOUND`) means a module in the DLL's dependency chain is
+missing. `python tools/pe_inspect.py` on the vendored DLL proved the cause: it imported `MSVCP140D.dll`,
+`VCRUNTIME140D.dll`, `VCRUNTIME140_1D.dll`, `ucrtbased.dll` — the **debug CRT**, which is not
+redistributable and ships only with Visual Studio. The DLL was a Debug build, and the vcxproj Debug
+config had no `<RuntimeLibrary>` element, so MSBuild defaulted it to `/MDd` (dynamic debug CRT). Every
+player without VS hit 126; installing the VC++ redist would not have helped (it carries the release CRT,
+not the debug CRT). `MinHook.x64.dll` was never the culprit — it imports only `KERNEL32.dll`.
+
+TAOM ships the Debug build, so the fix makes Debug self-contained: the vcxproj Debug config now sets
+`<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>` (`/MTd`, static debug CRT) to match Release's `/MT`.
+The DLL was rebuilt and re-vendored; `pe_inspect` confirms it now imports only `MinHook.x64.dll`,
+`KERNEL32.dll`, and the OS-guaranteed `SHELL32.dll`/`ole32.dll` — no redistributable dependency. Three
+guards prevent the regression from recurring: `Build.ps1` runs `pe_inspect` on its own output and throws
+on any dynamic-CRT import; the new `check-native-dll-crt.sh` PreToolUse hook validates the **staged blob**
+(`git show :path`, not the on-disk file — they diverge when a binary is rebuilt out-of-band) and blocks a
+commit staging a dynamic-CRT DLL; the `validate-xml` CI job re-checks the committed binary. The C# loader's
+error-126 message now reports whether the plugin + `MinHook.x64.dll` are present and points at the static-CRT
+requirement. Documented in `docs/features/native-skin-fixes.md` "Build & CRT requirement". The byte-pattern
+signatures remain `<PATTERN_TBD>` placeholders (separate open follow-up) — this fix makes the DLL loadable,
+a prerequisite for the hooks doing anything once patterns are authored. NativeSkinFixes tests 10/10 green;
+the 9 failing `VolunteerRecruitmentServiceTests` (Dol Guldur) are pre-existing and unrelated. Reviewed via
+`/deep-review` (4 agents, 0 bugs) + Codex `gpt-5.5` xhigh (1 HIGH + 2 LOW, all confirmed and fixed: hook
+now validates the staged blob; git matcher rejects option-prefixed `commit-tree`/`commit-graph`; doc lists
+the OS DLLs). RCA `docs/reviews/rca-native-skin-fixes-crt-2026-06-18.md`.
+
+### feat(shader-precompilation): auto-skip scenes that hard-crash the walk (per-scene crash guard)
+
+A user's mods-removed run crashed the walk at item 9 (`taom_rohan_battle_fords_of_isen_forceatmo`) with a
+pure-native ACCESS_VIOLATION during the scene's `MissionInitialize`, concurrent with the `pbr_terrain`
+input-layout-9 shader compile (the same shader that division-by-zeros at Helm's Deep) — GPU/driver-specific
+(the scene loads fine on other machines). A native scene-load crash isn't catchable in managed code, so it
+hard-stops the walk; without a guard, an affected user can never get past that item. (Diagnosed from the
+user's `taom_debug` + `rgl_log` + `palantir` triple, reconciled by timestamp; the popup-spam in their first
+report was a *pre-existing* third-party MBSuperSpeed `get_InputManager` AV, not TAOM.)
+
+New `ShaderPrecompileCrashGuard` (mirrors `BattleLoadStallMarker`): the runner writes the scene id it is
+about to load to `Logs/shader-precompile-inflight.marker` (survives a hard crash); if that marker is still
+there at the next walk's start, the scene crashed mid-load and is recorded to a persistent
+`Logs/shader-precompile-crashed-scenes.txt` skip list, which the runner drops from the plan so the walk
+completes. ScenePass items only (the character battle is essential); the marker is cleared only at full
+item resolution (load + compile + teardown), so a slow item or a clean exit never gets recorded — only a
+true process crash does. Delete the crashed-scenes file to retry. 10 new unit tests (34 total); build 0/0.
+**Known limitation:** the underlying `pbr_terrain` input-layout-9 div-by-zero (Helm's Deep + fords_of_isen)
+is a vanilla engine shader bug; the root fix (a shader-source override) is deferred — the guard makes the
+walk robust to it (and any other GPU-specific bad scene) in the meantime. Reviewed via `/deep-review --codex`
+— 5 agents + Codex `gpt-5.5 xhigh` both clean (Codex SHIP 0/0/0/0, all 7 Known Suspects DISPUTED with
+file:line evidence; the load-bearing false-skip trace confirmed every non-crash item-end clears the marker
+via the `TickEnding` resolution block). The data-flow agent caught one LOW Codex missed: `OnItemFailed`
+only checked `generation`, not `_state`, so a late failure callback could re-enter `BeginEnd` and reset the
+Ending timer — fixed by mirroring `OnItemRendering`'s `generation + _state==Starting` stale-callback guard.
+
+### fix(shader-precompilation): suppress the battle-load stall watchdog during the walk
+
+A player's cold-cache run compiled item 1 (the all-troops character battle, 3000 troops) for **830s**;
+the `BattleLoadStallWatchdog` (300s threshold) false-positived at 305s and emitted a spurious
+`[CrashReport]` bundle mid-walk. The load wasn't stuck — it finished at 830s and the walk completed —
+but the user got an alarming "crash" artifact. This hits every first-time cold-cache run, since item 1
+is always the longest. Fix: `ShaderPrecompileRunner` sets `BattleLoadStallWatchdog.SuppressStallDetection`
+(new `volatile` static) true for the whole walk (in `Begin`) and clears it in `Finish`; the watchdog's
+`Poll` early-returns while suppressed. The precompile's long loads are intentional and the runner has its
+own per-item timeouts, so the stall watchdog (which exists to catch *real* battle hangs) should stay
+quiet during the walk. Diagnosed from a player's `rgl_log` + `palantir` + `taom_debug` triple
+(the popup error they reported was actually a pre-existing third-party MBSuperSpeed `get_InputManager`
+AV — 13k occurrences starting 18h before the precompile — not TAOM). Build 0/0.
 
 Both features are confirmed working, so their per-event diagnostics (`ArmyTargeting:` border-floor /
 strength / target / distance-compensation DEBUG lines; `[TroopWeight][diag] Shed` INFO line) no longer

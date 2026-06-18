@@ -62,6 +62,12 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)MinHook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!-- Static debug CRT (/MTd): link the CRT into the DLL so it has NO external
+           ucrtbased.dll / vcruntime140d.dll dependency. Without this, MSBuild
+           defaults Debug to /MDd (dynamic debug CRT), and the debug CRT is NOT
+           redistributable — players without Visual Studio get LoadLibrary error
+           126. TAOM ships the Debug build, so this MUST be static. -->
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>

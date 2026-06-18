@@ -32,9 +32,10 @@ except Exception:
 ' 2>/dev/null)
 
 # Two-stage git-commit matcher: handle `git -C/-c ... commit`; reject
-# `git commit-tree` / `commit-graph`. Per .claude/rules/harness-facts.md.
+# `git commit-tree` / `commit-graph` (incl. option-prefixed `git -C . commit-tree`).
+# Per .claude/rules/harness-facts.md.
 case "$COMMAND" in
-    *"git commit-"*) echo '{}'; exit 0 ;;
+    *"git commit-"* | *"git -"*" commit-"*) echo '{}'; exit 0 ;;
 esac
 case "$COMMAND" in
     *"git commit"* | *"git -"*" commit"* ) ;;
@@ -62,18 +63,27 @@ done <<< "$STAGED"
 [[ $HAS_DLL -eq 0 ]] && { echo '{}'; exit 0; }
 
 # Fail open if we can't run the check.
-[[ -f "$DLL" ]] || { echo '{}'; exit 0; }
 PY=$(command -v python3 || command -v python || true)
 [[ -z "$PY" ]] && { echo '{}'; exit 0; }
 [[ -f tools/pe_inspect.py ]] || { echo '{}'; exit 0; }
 
-IMPORTS=$("$PY" tools/pe_inspect.py "$DLL" 2>/dev/null)
+# Validate the STAGED BLOB -- what the commit will actually contain -- not the
+# on-disk working-tree file. They can differ: a rebuilt static DLL on disk while
+# a stale dynamic blob is still what's staged (or vice versa). `git show :PATH`
+# is the index version; extract it to a temp file since pe_inspect reads a path.
+TMP=$(mktemp 2>/dev/null) || { echo '{}'; exit 0; }
+if ! git show ":$DLL" > "$TMP" 2>/dev/null || [[ ! -s "$TMP" ]]; then
+    rm -f "$TMP"; echo '{}'; exit 0
+fi
+IMPORTS=$("$PY" tools/pe_inspect.py "$TMP" 2>/dev/null)
+rm -f "$TMP"
 [[ -z "$IMPORTS" ]] && { echo '{}'; exit 0; }
 
 # Dynamic CRT imports => the redistributable/debug runtime players lack. A
 # static-CRT build (Debug /MTd or Release /MT) imports only MinHook.x64.dll +
-# KERNEL32.dll and never matches this.
-if ! printf '%s' "$IMPORTS" | grep -iqE 'VCRUNTIME|MSVCP140|ucrtbase|api-ms-win-crt'; then
+# KERNEL32.dll (plus OS-guaranteed DLLs like SHELL32.dll / ole32.dll that the
+# static CRT pulls in) and never matches this.
+if ! printf '%s' "$IMPORTS" | grep -iqE 'VCRUNTIME|MSVCP[0-9]+|MSVCR[0-9]+|ucrtbase|api-ms-win-crt'; then
     echo '{}'; exit 0
 fi
 

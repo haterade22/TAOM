@@ -30,6 +30,13 @@ public sealed class BattleLoadStallWatchdog : IDisposable
     private long _lastWindowOpenedTicks = -1L;
     private bool _firedForCurrentWindow;
 
+    // Set true by ShaderPrecompileRunner while a shader-precompile walk is active. The walk
+    // intentionally loads battles that legitimately take many minutes (cold-cache item 1 = 3000
+    // troops compiling every character shader — observed 830s on a slow machine), which would trip
+    // the stall threshold and emit a SPURIOUS crash bundle. Volatile: written on the main thread,
+    // read on this timer thread. (False-positive found in a user's cold run, 2026-06-18.)
+    public static volatile bool SuppressStallDetection;
+
     public BattleLoadStallWatchdog(
         IModLogger logger,
         IBattleLoadDiagnosticsSettingsProvider settings,
@@ -56,6 +63,8 @@ public sealed class BattleLoadStallWatchdog : IDisposable
     {
         try
         {
+            // A shader-precompile walk intentionally does multi-minute loads — never flag those as stalls.
+            if (SuppressStallDetection) { _firedForCurrentWindow = false; return; }
             if (!_settings.IsEnabled || !_settings.StallWatchdogEnabled) return;
 
             var openedAt = BattleLoadLoadingWindow.OpenedAtUtc;

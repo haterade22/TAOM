@@ -78,6 +78,7 @@
 - [settlement-guards](features/settlement-guards.md) — per-settlement guard pools, clan/culture fallback (Patch28)
 - [settlement-nameplate-fade](features/settlement-nameplate-fade.md) — distance-based nameplate fade (Patch38)
 - [revolt-tuning](features/revolt-tuning.md) — JSON-tunable revolt soft-nerf, TaomSettlementLoyaltyModel
+- [settlement-food](features/settlement-food.md) — garrison food-leak fix + tunable food, TaomSettlementFoodModel
 - [startup-resources](features/startup-resources.md) — per-culture player startup gold/items
 - [cultural-feats](features/cultural-feats.md) — 16 culture-feat GameModel overrides (Patch18)
 
@@ -133,6 +134,7 @@
   - [submodule-lifecycle-and-harmony](reference/engine/submodule-lifecycle-and-harmony.md) (Phase 18, **integration capstone** — the meta-layer: `MBSubModuleBase` lifecycle (`OnSubModuleLoad`/`OnGameStart`/`OnMissionBehaviorInitialize`/`OnSubModuleUnloaded`), Harmony owner/categories/Prefix-Postfix-Transpiler-Finalizer/deferred application, the 3 registration mechanisms (patch vs `AddModel` vs `AddBehavior`), Harmony-managed vs MinHook-native boundary, PatchShield)
   - [campaign-tick-time-and-party-ai](reference/engine/campaign-tick-time-and-party-ai.md) (Phase 19 — the campaign **heartbeat** closing the loop to Phase 17: `MapTimeTracker` advances `CampaignTime` at `TimeControlMode` speed; `Campaign.Tick`→periodic events (Phase 9) + `MapEvent` + staggered `MobilePartyAi` (`DefaultBehavior`/`TargetSettlement`) + `EncounterManager`→encounter; `CampaignTime`-as-deadline-unit, game-time-not-real-time, staggered-AI gotchas)
   - [issue-and-quest-system](reference/engine/issue-and-quest-system.md) (sibling reference, not a numbered phase — `IssueBase`/`QuestBase`/`IssueManager`/`QuestManager`: the procedural issue→quest pipeline, the 43-issue sandbox registration set (`SandBoxManager.Initialize` + `SandBoxSubModule`), `IssueModel` surface, `OnGameLoaded` auto-cancel + `SpecialQuestType`, `RemoveBehaviors<T>` suppression; backs the [lotr-issues](features/lotr-issues.md) conversion plan)
+  - [settlement-economy-food-prosperity](reference/engine/settlement-economy-food-prosperity.md) (sibling reference, not a numbered phase — `DefaultSettlementFoodModel`/`DefaultSettlementProsperityModel`: food = production − consumption (`Prosperity/40` + `garrison/20`), village food caps at 18/day, the prosperity death-spiral, garrisons don't starve-to-death, caravans don't feed towns; backs the [settlement-food](features/settlement-food.md) Troop-Weight fix + tuning)
 - [bannerlord-animation-clip-flags](reference/bannerlord-animation-clip-flags.md) — the `AnimFlags` clip-flag system + per-clip-type recipe + full per-flag reference (all ~60); flags are baked into the `_anm.tpac`, NOT `action_types.xml`; the spider's clips ship with zero flags (= broken locomotion)
 - [editor-cache-rebuild](features/editor-cache-rebuild.md) — parallel + incremental + resumable settlement distance cache rebuild
 - [scene-scripts](features/scene-scripts.md) — engine-discovered ScriptComponentBehavior subclasses (CS_Road, etc.)

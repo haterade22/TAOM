@@ -34,6 +34,7 @@ using TAOM.Features.CareerSystem;
 using TAOM.Features.SettlementGuards;
 using TAOM.Features.NamedCompanions;
 using TAOM.Features.RevoltTuning;
+using TAOM.Features.SettlementFood;
 using TAOM.Features.BanditManagement;
 using TAOM.Features.CastleRecruitment;
 using TAOM.Features.SiegeDismount;
@@ -98,6 +99,7 @@ public static class IoC
         SettlementGuardsIoC.RegisterSettlementGuardsFeature(container);
         NamedCompanionIoC.RegisterNamedCompanionsFeature(container);
         RevoltTuningIoC.RegisterRevoltTuningFeature(container);
+        SettlementFoodIoC.RegisterSettlementFoodFeature(container);
         BanditManagementIoC.RegisterBanditManagementFeature(container);
         CastleRecruitmentIoC.RegisterCastleRecruitmentFeature(container);
         SiegeDismountIoC.RegisterSiegeDismountFeature(container);

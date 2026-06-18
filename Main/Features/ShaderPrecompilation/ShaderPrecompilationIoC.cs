@@ -10,6 +10,7 @@ public static class ShaderPrecompilationIoC
     {
         container.Register<IShaderPrecompilationService, ShaderPrecompilationService>(Reuse.Singleton);
         container.Register<IPrecompileSceneProvider, PrecompileSceneProvider>(Reuse.Singleton);
+        container.Register<IShaderPrecompileCrashGuard, ShaderPrecompileCrashGuard>(Reuse.Singleton);
         container.Register<ShaderPrecompileRunner>(Reuse.Singleton);
     }
 

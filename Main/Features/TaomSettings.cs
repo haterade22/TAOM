@@ -28,6 +28,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Weighted party size — elite units consume more party capacity. Cave trolls (4x), elves (2x), warg riders (2x).")]
     public bool EnableTroopWeight { get; set; } = true;
 
+    // --- Settlement Food ---
+
+    [SettingPropertyGroup("Settlement Food")]
+    [SettingPropertyBool("Enable Settlement Food Tuning", Order = 0,
+        HintText = "Corrects garrison food consumption (Troop Weight no longer inflates it for elite garrisons) and applies the tunable food knobs in settlement_food/settlement_food_config.json (consumption divisors, base/village/flat production, storage caps). Off = vanilla engine food math (garrison food stays weighted). Config edits need an app restart.")]
+    public bool EnableSettlementFoodTuning { get; set; } = true;
+
     // --- Castle Recruitment ---
 
     [SettingPropertyGroup("Castle Recruitment")]

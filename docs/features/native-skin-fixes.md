@@ -150,6 +150,52 @@ to fill them in.
   Each hook reports success / failure individually so partial degradation is
   visible.
 
+## Build & CRT requirement (static CRT is mandatory)
+
+The native DLL **must link the C runtime statically.** This is the line between
+"loads on every player's machine" and "fails with `LoadLibrary` Win32 error 126
+for anyone without Visual Studio."
+
+- **TAOM ships the Debug build** (built from Visual Studio). The vcxproj Debug
+  config therefore sets `<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>`
+  (`/MTd`, **static** debug CRT); Release sets `MultiThreaded` (`/MT`, static).
+  Either is self-contained — never vendor a dynamic-CRT build.
+- **Why it matters:** a dynamic CRT (`/MDd` debug, or `/MD` release) makes the
+  DLL import `vcruntime140*.dll` / `msvcp140*.dll` / `ucrtbase*.dll`. The
+  **debug** CRT (`*140d.dll`, `ucrtbased.dll`) is **not redistributable** — it
+  ships only with Visual Studio — so a Debug `/MDd` build loads on a dev machine
+  but errors 126 for every player. Installing the VC++ redist does NOT help: it
+  contains the *release* CRT, not the debug CRT. MSBuild's Debug default with no
+  explicit `<RuntimeLibrary>` is `/MDd` — that exact gap shipped a Debug DLL that
+  failed for players (2026-06-18).
+- **A correct static-CRT build imports only `MinHook.x64.dll` + `KERNEL32.dll`**
+  (plus the OS-guaranteed `SHELL32.dll` / `ole32.dll` the static CRT pulls in —
+  both present on every Windows machine, so neither causes error 126). Verify any
+  rebuild with `python tools/pe_inspect.py
+  Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` — any
+  `VCRUNTIME*` / `MSVCP*` / `MSVCR*` / `ucrtbase*` / `api-ms-win-crt*` import means
+  the build is dynamic and must be redone.
+- **`MinHook.x64.dll` is a required sidecar.** It is dynamically linked, but its
+  own only import is `KERNEL32.dll`, so it is itself self-contained. It must sit
+  next to the plugin in `bin/Win64_Shipping_Client/`. The `.gitignore` allowlist
+  force-includes both DLLs and the vcxproj `CopyMinHookSidecar` post-build target
+  keeps it in sync.
+
+**Three automated guards enforce this** (none replaces an in-game load test, but
+they stop the regression at the source):
+
+1. `Build.ps1` runs `pe_inspect.py` on its own output and `throw`s on any
+   dynamic-CRT import before the DLL can be vendored.
+2. The `check-native-dll-crt.sh` PreToolUse hook blocks a `git commit` that
+   stages a dynamic-CRT DLL.
+3. The `validate-xml` CI job (`.github/workflows/build.yml`) re-runs the same
+   check on the committed binary.
+
+> The byte-pattern signatures still ship as `<PATTERN_TBD>` placeholders (see
+> "Open follow-ups"), so even once the DLL loads, the hooks stay inert until the
+> patterns are authored. The static-CRT fix is a **prerequisite** — it makes the
+> DLL *loadable* on player machines — not the feature's activation.
+
 ## Tests
 
 - `TAOM.Tests/Features/NativeSkinFixes/NativeSkinFixesInstallerTests.cs` — 8

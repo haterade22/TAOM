@@ -2298,4 +2298,7 @@
   <string id="taom_bld_stall_title" text="{=taom_bld_stall_title}TAOM: last battle load may not have finished" />
   <string id="taom_bld_stall_dismiss" text="{=taom_bld_stall_dismiss}Dismiss" />
   <string id="taom_bld_stall_openfolder" text="{=taom_bld_stall_openfolder}Open log folder" />
+
+  <!-- Settlement Food — labeled line in the town food-breakdown tooltip (TaomSettlementFoodModel) -->
+  <string id="taom_settlement_food_adjustment" text="{=taom_settlement_food_adjustment}Settlement food (TAOM)" />
 </strings>

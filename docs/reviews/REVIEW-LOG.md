@@ -1349,6 +1349,18 @@ A 2-file crash fix surfaced by review 57's shader walk: it crashed entering item
 
 ---
 
+## Review 59 — SettlementFood (TaomSettlementFoodModel) (2026-06-18)
+
+New feature: a `DefaultSettlementFoodModel` override fixing the Troop-Weight garrison food leak (the food model read the Patch17-weighted `NumberOfAllMembers` for the garrison term → elite garrisons ate 2–3× intended; the override adds back `(weighted − raw)/divisor` so the term uses the raw body count) + vanilla food constants exposed as MCM/JSON-tunable knobs. Thin model → pure `SettlementFoodService` (delta math) → `TownFoodSnapshot` boundary; validated config provider.
+
+**Deep-review (5 agents): PASS / 0 findings.** Standards clean (override body = constant-ternaries + boundary-convert-then-delegate). Compat 12/12 verified against installed DLLs (noted installed game is v1.4.6 vs branch's stated 1.4.5 — pre-existing drift, types stable). Data-flow traced 7 flows, 0 gaps — including the two load-bearing ones (garrison divisor identical in the model's overridden constant AND the service correction; every service term is a delta vs base → no double-count). Efficiency: no HIGH; 1 MED + 2 LOW consciously declined per `simplicity-criterion.md` (per-*day* path; the `Enabled` 5×-singleton-read can't be cached without breaking the live MCM toggle).
+
+**Codex (gpt-5.5 xhigh): 0 CRITICAL / 0 HIGH / 0 MED / 1 LOW.** All 6 Known Suspects CONFIRMED clean with file:line evidence; Codex independently hand-computed the worked scenario TWO ways (base-plus-delta vs intended-absolute) → same +2.333, proving no double-count, and scanned `troop_weights.xml` confirming 0 weights < 1.0 (so the `weighted > raw` guard can't under-correct). The lone LOW was a doc/contract inaccuracy, not a logic bug: the `SettlementFoodConfig` summary comment said "Production knobs ADD food", but `TownBaseFood`/`CastleBaseFood`/`VillageFoodMultiplier` are absolute REPLACEMENT values (default = vanilla) — `townBaseFood=0` passes `[0,10000]`, then the service applies `0 − 15` (a reduction). Fixed (Codex's option b): corrected the comment + feature-doc to state replacement-vs-additive semantics (knobs tune both directions, consistent with the divisors; only `flatFoodBonus` is purely additive), + regression test `ComputeFoodDelta_BelowVanillaTownBaseFood_ProducesNegativeDelta` (28 tests green). No production-logic change — the behavior was correct, the prose was not.
+
+**Process:** both reviews ran BEFORE any commit (feature uncommitted). Reference doc `docs/reference/engine/settlement-economy-food-prosperity.md` + feature doc + INDEX + CHANGELOG written. RCA: `docs/reviews/rca-settlement-food-2026-06-18.md`. CLAUDE.md table row + GitHub issue pending user OK (config-protection hook blocked CLAUDE.md). Codex prompt + raw output: `docs/reviews/codex-adversarial-settlement-food-2026-06-18.{prompt.md,md}`.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

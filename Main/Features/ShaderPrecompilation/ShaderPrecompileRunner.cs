@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TAOM.Core.Logging;
+using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.ShaderPrecompilation.Domain;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
@@ -34,6 +36,7 @@ public sealed class ShaderPrecompileRunner
 
     private readonly IShaderPrecompilationService _service;
     private readonly IPrecompileSceneProvider _sceneProvider;
+    private readonly IShaderPrecompileCrashGuard _crashGuard;
     private readonly IModLogger _logger;
     private readonly ShaderPrecompileDecider _decider = new();
 
@@ -50,10 +53,12 @@ public sealed class ShaderPrecompileRunner
     // late callback from a previously-started (timed-out) item cannot flip the CURRENT item to Running.
     private int _generation;
 
-    public ShaderPrecompileRunner(IShaderPrecompilationService service, IPrecompileSceneProvider sceneProvider, IModLogger logger)
+    public ShaderPrecompileRunner(IShaderPrecompilationService service, IPrecompileSceneProvider sceneProvider,
+        IShaderPrecompileCrashGuard crashGuard, IModLogger logger)
     {
         _service = service;
         _sceneProvider = sceneProvider;
+        _crashGuard = crashGuard;
         _logger = logger;
     }
 
@@ -66,7 +71,17 @@ public sealed class ShaderPrecompileRunner
     {
         if (IsActive) { _logger?.LogWarning("[ShaderPrecompilation] walk already running — ignoring Begin"); return; }
         _active = this;
-        _plan = ShaderPrecompilePlanner.BuildPlan(_sceneProvider.GetScenes());
+        // Quiet the battle-load stall watchdog for the whole walk — item 1 (all-troops, cold cache)
+        // legitimately loads for many minutes and would otherwise trip the 300s stall crash-bundle.
+        BattleLoadStallWatchdog.SuppressStallDetection = true;
+        // Self-heal against a scene that hard-crashed a prior walk's process (GPU-specific native AV
+        // during load — e.g. fords_of_isen on the pbr_terrain input-layout-9 compile): the guard
+        // records that scene and we drop it from the plan so the walk can complete.
+        var skip = new HashSet<string>(_crashGuard.ConsumeAndGetSkipSet(), StringComparer.OrdinalIgnoreCase);
+        var scenes = _sceneProvider.GetScenes();
+        if (skip.Count > 0)
+            scenes = scenes.Where(s => !skip.Contains(s)).ToList();
+        _plan = ShaderPrecompilePlanner.BuildPlan(scenes);
         _index = 0;
         _walkStartedMs = NowMs();
         _logger?.LogInfo($"[ShaderPrecompilation] === WALK START — {_plan.Count} items ({_plan.Count - 1} scenes + 1 character battle) ===");
@@ -82,6 +97,10 @@ public sealed class ShaderPrecompileRunner
         EnterState(RunState.Starting);
         UpdateStatus(item, -1, NowMs());
         _logger?.LogInfo($"[ShaderPrecompilation] --- item {_index + 1}/{_plan.Count}: {item.Description} ---");
+        // Record the scene we're about to load so a hard process crash during its load leaves a survivor
+        // marker the next walk records + skips. Scene passes only — the character battle is essential and
+        // not part of the skippable scene list.
+        if (item.Kind == PrecompileItemKind.ScenePass) _crashGuard.MarkLoading(item.SceneId);
         try
         {
             MBGameManager.StartNewGame(new TaomShaderGameManager(item, gen, _service, _logger));
@@ -111,7 +130,11 @@ public sealed class ShaderPrecompileRunner
 
     private void OnItemFailed(int generation)
     {
-        if (generation != _generation) return;
+        // Mirror OnItemRendering's guard: only the CURRENT item, while still Starting, may act on a
+        // failure callback. A late callback from a timed-out item — or one arriving after we already
+        // advanced to Ending — must be ignored, else it re-enters BeginEnd and resets the Ending timer
+        // (deep-review 2026-06-18 Agent 5; same stale-callback class as the generation tag).
+        if (generation != _generation || _state != RunState.Starting) return;
         _logger?.LogWarning($"[ShaderPrecompilation] item {_index + 1} failed to start — advancing");
         BeginEnd();
     }
@@ -195,6 +218,10 @@ public sealed class ShaderPrecompileRunner
 
         if ((atMenu && sinceEnd >= EndSettleMs) || sinceEnd >= EndTimeoutMs)
         {
+            // Item fully resolved (load + compile + teardown) without crashing the process — clear the
+            // inflight marker so this scene is NOT recorded as crashed. A hard crash anywhere earlier in
+            // the item's lifecycle never reaches here, leaving the marker for the crash guard to find.
+            _crashGuard.ClearLoading();
             _logger?.LogInfo($"[ShaderPrecompilation] Ending item {_index + 1} resolved via {(atMenu ? "clean-menu" : "timeout")} at {Sec(sinceEnd)}s");
             _index++;
             if (_index < _plan.Count) StartCurrentItem();
@@ -204,6 +231,8 @@ public sealed class ShaderPrecompileRunner
 
     private void Finish()
     {
+        _crashGuard.ClearLoading();  // belt-and-suspenders — the last item's resolution already cleared it
+        BattleLoadStallWatchdog.SuppressStallDetection = false;  // walk over — re-arm the stall watchdog for real battles
         EnterState(RunState.Complete);
         long total = NowMs() - _walkStartedMs;
         StatusLine = $"Shader pre-compilation COMPLETE — {_plan.Count} items in {FormatElapsed(Sec(total))}. You can play now.";

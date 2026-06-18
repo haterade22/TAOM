@@ -61,6 +61,8 @@ using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.SettlementGuards;
 using TAOM.Features.SettlementGuards.Hooks;
 using TAOM.Features.RevoltTuning;
+using TAOM.Features.SettlementFood;
+using TAOM.Features.SettlementFood.Models;
 using TAOM.Features.BanditManagement;
 using TAOM.Features.BanditManagement.Models;
 using TAOM.Features.CastleRecruitment;
@@ -407,6 +409,7 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives));
             campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats));
             campaignStarter.AddModel(new TaomSettlementLoyaltyModel(culturalFeats, IoC.Resolve<IRevoltTuningConfigProvider>()));
+            campaignStarter.AddModel(new TaomSettlementFoodModel(IoC.Resolve<ISettlementFoodService>(), IoC.Resolve<ISettlementFoodConfigProvider>()));
             campaignStarter.AddModel(new TaomBanditDensityModel(IoC.Resolve<IBanditScalingService>()));
             campaignStarter.AddModel(new TaomPartyMoraleModel(culturalFeats, careerPassives));
             campaignStarter.AddModel(new TaomSmithingModel(culturalFeats, careerPassives));

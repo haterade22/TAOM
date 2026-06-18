@@ -81,7 +81,17 @@ internal static class NativeHookLoader
         if (_hooksModule == IntPtr.Zero)
         {
             int err = Marshal.GetLastWin32Error();
-            _lastLoadError = $"LoadLibrary failed (Win32 error {err}). Expected DLL at: {Path.Combine(binDir, DllName + ".dll")}";
+            string pluginPath = Path.Combine(binDir, DllName + ".dll");
+            _lastLoadError = $"LoadLibrary failed (Win32 error {err}). Expected DLL at: {pluginPath}";
+            if (err == 126) // ERROR_MOD_NOT_FOUND: the plugin OR one of its dependency DLLs is missing.
+            {
+                bool pluginPresent = File.Exists(pluginPath);
+                bool minHookPresent = File.Exists(Path.Combine(binDir, "MinHook.x64.dll"));
+                _lastLoadError += $" (error 126 = a module in the dependency chain is missing." +
+                    $" plugin present: {pluginPresent}, MinHook.x64.dll present: {minHookPresent}." +
+                    " If both are present, the plugin was likely built against a non-static CRT — a debug/dynamic" +
+                    " build needs Visual Studio's runtime DLLs that players don't have. Rebuild static: Debug /MTd or Release /MT.)";
+            }
             return false;
         }
 

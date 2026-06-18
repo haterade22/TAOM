@@ -81,6 +81,8 @@ SubModule.OnApplicationTick ──▶ runner.Tick()   (every frame while the wal
 
 **Scene list:** `Main/_Module/ModuleData/shader_precompilation/precompile_scenes.txt` — one scene id per line, `#` comments, blank lines ignored. Read directly by `PrecompileSceneProvider` (no SubModule.xml registration; it is not engine-loaded XML). If missing/empty, the baked `DefaultScenes` (the 21 TAOM `_forceatmo` scenes — 8 open-field battles + 9 custom siege + 4 custom village) is used. All are header-only on disk (no `compressed_shader_cache.sack`), so all runtime-compile; reused-vanilla siege/village scenes ship their own `.sack` and need nothing. Sieges currently ride the `"Battle"` ScenePass (terrain + atmosphere + static walls); a `"Siege"`-mission builder is the escalation if siege-engine materials stay cold (probed in-game). Add `battle_terrain_*` ids to also cover vanilla terrains (each adds ~5-15 min to the walk).
 
+**Crash skip list:** `Logs/shader-precompile-crashed-scenes.txt` — auto-managed by `ShaderPrecompileCrashGuard`. If a scene hard-crashes the process during load (a GPU/driver-specific native AV — e.g. `fords_of_isen` on the `pbr_terrain` input-layout-9 compile), the runner records it here (via a surviving `shader-precompile-inflight.marker`) and drops it from subsequent walks so the walk can complete. **Delete this file to retry the skipped scenes.** Only true process crashes are recorded — a slow item, a per-item timeout, or a clean exit never lands here.
+
 Tunable constants live in `ShaderPrecompileDecider.cs` (grace/settle/no-progress/per-item-timeout), `ShaderPrecompileRunner.cs` (start/end timeouts), and `TaomShaderGameManager.cs`:
 
 | Constant | Value | Description |
