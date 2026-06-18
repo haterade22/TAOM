@@ -59,6 +59,7 @@ public class RecruitmentAlignmentConfigProvider : IRecruitmentAlignmentConfigPro
             Enabled = parsed.Enabled,
             Mode = parsed.Mode,
             ApplyToAi = parsed.ApplyToAi,
+            ApplyToPlayer = parsed.ApplyToPlayer,
         };
 
         var defaults = new RecruitmentAlignmentConfig();

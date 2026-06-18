@@ -514,8 +514,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public bool AlignmentRecruitmentGoodRejectsEvilOnly { get; set; } = false;
 
     [SettingPropertyGroup("World/Recruitment Alignment")]
-    [SettingPropertyBool("Apply To AI Lords", Order = 2,
-        HintText = "When ON (default), AI lords are also blocked from recruiting in opposed-alignment settlements. When OFF, only the player is restricted.")]
+    [SettingPropertyBool("Apply To Player", Order = 2,
+        HintText = "When ON (default), YOU are blocked from recruiting in opposed-alignment settlements. When OFF, you may recruit anyone regardless of alignment (AI lords are still gated if 'Apply To AI Lords' is on). The master 'Enable Recruitment Alignment Block' toggle off disables the whole feature for everyone.")]
+    public bool EnableAlignmentRecruitmentPlayer { get; set; } = true;
+
+    [SettingPropertyGroup("World/Recruitment Alignment")]
+    [SettingPropertyBool("Apply To AI Lords", Order = 3,
+        HintText = "When ON (default), AI lords are also blocked from recruiting in opposed-alignment settlements. When OFF, AI recruits freely (you are still gated if 'Apply To Player' is on).")]
     public bool EnableAlignmentRecruitmentAi { get; set; } = true;
 
     // --- Map UI / Settlement Nameplates ---

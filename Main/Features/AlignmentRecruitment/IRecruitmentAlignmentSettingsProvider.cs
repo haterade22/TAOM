@@ -8,5 +8,6 @@ public interface IRecruitmentAlignmentSettingsProvider
 {
     bool IsEnabled { get; }
     bool ApplyToAi { get; }
+    bool ApplyToPlayer { get; }
     bool GoodRejectsEvilOnly { get; }
 }

@@ -1,5 +1,6 @@
 {
   "enabled": true,
   "mode": "Symmetric",
-  "applyToAi": true
+  "applyToAi": true,
+  "applyToPlayer": true
 }

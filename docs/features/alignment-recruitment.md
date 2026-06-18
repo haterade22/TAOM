@@ -34,7 +34,7 @@ IAlignmentService.GetKingdomSide  +  IRecruitmentAlignmentSettingsProvider (MCM 
 `recruiterSide`, `sourceSide` ∈ {Free, Evil, Neutral} from `GetKingdomSide`.
 - **Symmetric** (default): block ⇔ both sides non-Neutral AND different.
 - **GoodRejectsEvil**: block ⇔ `recruiterSide == Free && sourceSide == Evil` (Evil recruiters unrestricted).
-- Neutral on either side never blocks; disabled never blocks; if "Apply To AI Lords" is off, AI recruiters never block.
+- Neutral on either side never blocks; disabled never blocks; if "Apply To AI Lords" is off, AI recruiters never block; if "Apply To Player" is off, the player never blocks. The player and AI gates are independent — you can keep AI gated while exempting yourself, or the reverse.
 
 Note: the service deliberately does **not** call `IAlignmentService.AreEnemyAlignments`, whose Neutral semantics are inverted for this purpose (it treats Neutral as an enemy of everyone).
 
@@ -44,8 +44,9 @@ Note: the service deliberately does **not** call `IAlignmentService.AreEnemyAlig
 |--------|-------|---------|---------|
 | `recruitment_alignment/recruitment_alignment_config.json` | `enabled` | `true` | Master toggle. |
 | | `mode` | `"Symmetric"` | `"Symmetric"` or `"GoodRejectsEvil"`. Unknown value → reverts to Symmetric with a warning. |
-| | `applyToAi` | `true` | When false, only the player is gated. |
-| MCM "World/Recruitment Alignment" | Enable Recruitment Alignment Block / Only Good Rejects Evil / Apply To AI Lords | as above | MCM overrides JSON at runtime (`Reuse.Singleton` — JSON edits need a process restart; MCM is live). |
+| | `applyToAi` | `true` | When false, AI lords recruit unrestricted (the player is still gated if `applyToPlayer`). |
+| | `applyToPlayer` | `true` | When false, the player recruits unrestricted (AI lords are still gated if `applyToAi`). |
+| MCM "World/Recruitment Alignment" | Enable Recruitment Alignment Block / Only Good Rejects Evil / Apply To Player / Apply To AI Lords | as above | MCM overrides JSON at runtime (`Reuse.Singleton` — JSON edits need a process restart; MCM is live). The player and AI toggles are independent; the master toggle off disables the feature for everyone. |
 
 Alignment data itself lives in `execution/alignment.json` (shared with Execution + Diplomacy) — 22 kingdom StringIds, no changes needed for this feature.
 
@@ -81,6 +82,8 @@ The `TaomVolunteerModel` override is a thin boundary (GameModel) and is validate
 **MCM is authoritative in-game; JSON is the compiled default.** `RecruitmentAlignmentSettingsProvider` reads `TaomSettings.Instance?.X ?? jsonDefault`, and `TaomSettings.Instance` is non-null whenever MCM is loaded (i.e. always, in a normal game). So the MCM toggles win at runtime; the JSON file only supplies the value used in unit tests and during the early-startup window before MCM initializes. This matches every other TAOM settings provider (e.g. `CastleRecruitmentSettingsProvider`). **To change behavior in a running game, use the MCM panel** — editing the JSON alone will not take effect because the hardcoded MCM defaults shadow it.
 
 **Restrict to "good rejects evil" only** — toggle "Only Good Rejects Evil" in MCM (the JSON `"mode": "GoodRejectsEvil"` sets the compiled default for tests / pre-MCM startup). Evil lords may then recruit anywhere.
+
+**Disable for yourself only** — toggle off "Apply To Player" in MCM (JSON `"applyToPlayer": false`). You recruit anyone; AI lords stay gated. To disable the whole feature for everyone instead, toggle off the master "Enable Recruitment Alignment Block".
 
 **Disable for AI** — toggle off "Apply To AI Lords" in MCM (JSON `"applyToAi": false` is the compiled default).
 

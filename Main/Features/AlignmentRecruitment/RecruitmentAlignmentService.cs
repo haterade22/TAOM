@@ -24,6 +24,8 @@ public class RecruitmentAlignmentService : IRecruitmentAlignmentService
     {
         if (!_settings.IsEnabled)
             return false;
+        if (isPlayerRecruiter && !_settings.ApplyToPlayer)
+            return false;
         if (!isPlayerRecruiter && !_settings.ApplyToAi)
             return false;
 

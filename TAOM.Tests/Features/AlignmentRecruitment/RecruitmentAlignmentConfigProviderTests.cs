@@ -43,13 +43,14 @@ public class RecruitmentAlignmentConfigProviderTests
     [TestMethod]
     public void GetConfig_ValidSymmetric_ParsesAllFields()
     {
-        WriteConfig(@"{ ""enabled"": true, ""mode"": ""Symmetric"", ""applyToAi"": true }");
+        WriteConfig(@"{ ""enabled"": true, ""mode"": ""Symmetric"", ""applyToAi"": true, ""applyToPlayer"": false }");
 
         var config = _sut.GetConfig();
 
         Assert.IsTrue(config.Enabled);
         Assert.AreEqual("Symmetric", config.Mode);
         Assert.IsTrue(config.ApplyToAi);
+        Assert.IsFalse(config.ApplyToPlayer);
         Assert.IsFalse(config.GoodRejectsEvilOnly);
         _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("Loaded")));
     }
@@ -98,6 +99,7 @@ public class RecruitmentAlignmentConfigProviderTests
         Assert.IsTrue(config.Enabled);
         Assert.AreEqual("Symmetric", config.Mode);
         Assert.IsTrue(config.ApplyToAi);
+        Assert.IsTrue(config.ApplyToPlayer);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("not found")));
     }
 

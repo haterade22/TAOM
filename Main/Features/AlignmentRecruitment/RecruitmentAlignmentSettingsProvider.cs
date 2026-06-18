@@ -20,6 +20,8 @@ public sealed class RecruitmentAlignmentSettingsProvider : IRecruitmentAlignment
 
     public bool ApplyToAi => TaomSettings.Instance?.EnableAlignmentRecruitmentAi ?? _defaults.ApplyToAi;
 
+    public bool ApplyToPlayer => TaomSettings.Instance?.EnableAlignmentRecruitmentPlayer ?? _defaults.ApplyToPlayer;
+
     public bool GoodRejectsEvilOnly =>
         TaomSettings.Instance?.AlignmentRecruitmentGoodRejectsEvilOnly ?? _defaults.GoodRejectsEvilOnly;
 }

@@ -20,8 +20,11 @@ public class RecruitmentAlignmentConfig
     /// </summary>
     public string Mode { get; set; } = ModeSymmetric;
 
-    /// <summary>When false, only the player is gated; AI lords recruit unrestricted.</summary>
+    /// <summary>When false, AI lords recruit unrestricted (the player is still gated if <see cref="ApplyToPlayer"/>).</summary>
     public bool ApplyToAi { get; set; } = true;
+
+    /// <summary>When false, the player recruits unrestricted (AI lords are still gated if <see cref="ApplyToAi"/>).</summary>
+    public bool ApplyToPlayer { get; set; } = true;
 
     public const string ModeSymmetric = "Symmetric";
     public const string ModeGoodRejectsEvil = "GoodRejectsEvil";

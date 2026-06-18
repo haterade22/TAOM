@@ -24,6 +24,7 @@ public class RecruitmentAlignmentServiceTests
         // Defaults: feature on, symmetric, applies to AI. Each test overrides as needed.
         _settings.IsEnabled.Returns(true);
         _settings.ApplyToAi.Returns(true);
+        _settings.ApplyToPlayer.Returns(true);
         _settings.GoodRejectsEvilOnly.Returns(false);
 
         _sut = new RecruitmentAlignmentService(_alignment, _settings);
@@ -118,6 +119,36 @@ public class RecruitmentAlignmentServiceTests
         SetSides(FactionSide.Free, FactionSide.Evil);
 
         Assert.IsTrue(_sut.IsRecruitmentBlocked(RecruiterId, SourceId, isPlayerRecruiter: false));
+    }
+
+    // --- ApplyToPlayer gate (symmetric to ApplyToAi: player vs AI x applyToPlayer on/off) ---
+
+    [TestMethod]
+    public void IsRecruitmentBlocked_ApplyToPlayerFalse_PlayerRecruiter_NeverBlocks()
+    {
+        _settings.ApplyToPlayer.Returns(false);
+        SetSides(FactionSide.Free, FactionSide.Evil);
+
+        Assert.IsFalse(_sut.IsRecruitmentBlocked(RecruiterId, SourceId, isPlayerRecruiter: true));
+    }
+
+    [TestMethod]
+    public void IsRecruitmentBlocked_ApplyToPlayerFalse_AiRecruiter_StillBlocks()
+    {
+        _settings.ApplyToPlayer.Returns(false);
+        _settings.ApplyToAi.Returns(true);
+        SetSides(FactionSide.Free, FactionSide.Evil);
+
+        Assert.IsTrue(_sut.IsRecruitmentBlocked(RecruiterId, SourceId, isPlayerRecruiter: false));
+    }
+
+    [TestMethod]
+    public void IsRecruitmentBlocked_ApplyToPlayerTrue_PlayerRecruiter_Blocks()
+    {
+        _settings.ApplyToPlayer.Returns(true);
+        SetSides(FactionSide.Free, FactionSide.Evil);
+
+        Assert.IsTrue(_sut.IsRecruitmentBlocked(RecruiterId, SourceId, isPlayerRecruiter: true));
     }
 
     // --- Null/unknown ids resolve to Neutral via the alignment service => never block ---
