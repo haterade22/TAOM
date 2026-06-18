@@ -1,8 +1,10 @@
 # Shader Pre-compilation
 
+> **2026-06-17 re-enable + scene-walk (issue #287).** Re-enabled (was disabled 2026-05-22) and rewritten to walk the all-characters battle **then each TAOM battle scene**, so terrain + forced-atmosphere shaders compile too — not just character shaders. This targets the intermittent battle-load `d3dcompiler` CTD/hang: TAOM_Map battle scenes ship no `compressed_shader_cache.sack`, so their terrain/atmosphere shaders runtime-compile on entry. See "Scene-walk architecture" below. **In-game-only (ADR-008) — pending a 1-2 hr precompile test.**
+
 ## Overview
 
-Adds a "Pre-compile Shaders" button to the main menu that runs a hidden custom battle containing all TAOM characters. The Bannerlord engine compiles shaders for every unique model/material it renders, eliminating mid-game stutter caused by first-encounter shader compilation. The loading screen shows live progress during compilation.
+Adds a "Pre-compile Shaders" main-menu option that walks a sequence of hidden custom battles so the Bannerlord engine compiles every shader it would otherwise compile mid-battle: first an all-characters battle (character/equipment shaders), then one pass per TAOM battle scene (that scene's terrain + forced-atmosphere shaders). Eliminates first-encounter stutter AND the runtime-compile crash/hang on battle entry. Progress shows on the loading screen + a 1 Hz status toast.
 
 ## Why This Exists
 
@@ -51,9 +53,35 @@ Patch21_ShaderPrecompilation:
                     → updates DescriptionText only when count changes
 ```
 
+### Scene-walk architecture (2026-06-17)
+
+The single-battle flow above is now item 0 of a **work list**. The whole walk:
+
+```
+SubModule menu action  ──▶  ShaderPrecompileRunner.Begin()
+    plan = ShaderPrecompilePlanner.BuildPlan( PrecompileSceneProvider.GetScenes() )
+         = [ CharacterBattle(battle_terrain_029) ] + [ ScenePass(scene) for each TAOM battle scene ]
+
+SubModule.OnApplicationTick ──▶ runner.Tick()   (every frame while the walk is active)
+    StartCurrentItem → MBGameManager.StartNewGame(new TaomShaderGameManager(item))
+        TaomShaderGameManager.OnLoadFinished → CustomBattleHelper.StartGame(item data)
+                                             → ShaderPrecompileRunner.NotifyItemRendering()  [Running]
+    TickRunning → ShaderPrecompileDecider.Decide(remaining, itemElapsed, now, isLoading)
+        Wait / AdvanceItem / AbortItem
+    BeginEnd → MBGameManager.EndGame()  [Ending]
+    TickEnding → back at menu? → next item or Finish()
+```
+
+- **`ShaderPrecompileDecider`** (pure, unit-tested) owns per-item compile detection. Completion (count back to 0) requires `_observedWork` first (the 2026-05-04 initial-zero latch fix, generalized). The "nothing to compile, advance" grace counts **render** time (from the first non-loading frame), not load time, so a heavy scene still loading is never skipped. Backstops: a 15-min no-progress (count frozen) abort and a 90-min absolute per-item cap.
+- **`ShaderPrecompileRunner`** (engine boundary) owns the outer state machine (Idle→Starting→Running→Ending→Complete) and chains the per-item custom battles. Every state has a timeout escape. `Game.Current==null` is the post-`EndGame` teardown signal, with a 30-s backstop; `TickEnding` logs the live state at 1 Hz because whether `Game.Current` reliably nulls for a custom battle is an open in-game question.
+- **`TaomShaderGameManager`** (`CustomGameManager` subclass) builds the per-item `CustomBattleData`: `CharacterBattle` = all troops; `ScenePass` = a handful of troops on the item's real scene.
+- **`PrecompileSceneProvider`** reads the scene list (below) and falls back to a baked default (the 8 TAOM `_forceatmo` battle scenes incl. the #287 crash scene `taom_mordor_battle_003_forceatmo`).
+
 ## Configuration
 
-No configuration file. The feature has tunable constants in `TaomShaderGameManager.cs` and `Hooks/LoadingScreen_ShaderProgress_Patch.cs`:
+**Scene list:** `Main/_Module/ModuleData/shader_precompilation/precompile_scenes.txt` — one scene id per line, `#` comments, blank lines ignored. Read directly by `PrecompileSceneProvider` (no SubModule.xml registration; it is not engine-loaded XML). If missing/empty, the baked `DefaultScenes` (the 8 registered TAOM battle scenes) is used. Add `battle_terrain_*` ids to also cover vanilla terrains (each adds ~5-15 min to the walk).
+
+Tunable constants live in `ShaderPrecompileDecider.cs` (grace/settle/no-progress/per-item-timeout), `ShaderPrecompileRunner.cs` (start/end timeouts), and `TaomShaderGameManager.cs`:
 
 | Constant | Value | Description |
 |----------|-------|-------------|
@@ -75,8 +103,14 @@ The original values (`MaxTroopsPerSide=2000`, `SoldierCopies=4`, `StuckAbortSeco
 |------|---------|
 | `Main/Features/ShaderPrecompilation/IShaderPrecompilationService.cs` | Service interface |
 | `Main/Features/ShaderPrecompilation/ShaderPrecompilationService.cs` | Queries `IObjectManagerAdapter` for all cultures (bandits included — they have unique meshes/equipment that need shader coverage too), deduplicates character IDs, caches culture set |
-| `Main/Features/ShaderPrecompilation/ShaderPrecompilationIoC.cs` | DryIoc singleton registration + hook init |
-| `Main/Features/ShaderPrecompilation/TaomShaderGameManager.cs` | Extends `CustomGameManager`, builds `CustomBattleData` from service output |
+| `Main/Features/ShaderPrecompilation/ShaderPrecompilationIoC.cs` | DryIoc singleton registration (+ `IPrecompileSceneProvider`, `ShaderPrecompileRunner`) + hook init |
+| `Main/Features/ShaderPrecompilation/ShaderPrecompileRunner.cs` | **Orchestrator** (engine boundary): outer state machine, chains per-item custom battles, drives the decider, owns the status line |
+| `Main/Features/ShaderPrecompilation/ShaderPrecompileDecider.cs` | **Pure** per-item compile-detection state machine (observed-work latch, render-grace, settle, no-progress + absolute timeouts) |
+| `Main/Features/ShaderPrecompilation/ShaderPrecompilePlanner.cs` | **Pure** work-list builder: character battle + one ScenePass per scene |
+| `Main/Features/ShaderPrecompilation/{IPrecompileSceneProvider,PrecompileSceneProvider}.cs` | Scene list from `precompile_scenes.txt` (baked-default fallback) |
+| `Main/Features/ShaderPrecompilation/Domain/PrecompileItem.cs` | `PrecompileItem` + `PrecompileItemKind {CharacterBattle, ScenePass}` |
+| `Main/_Module/ModuleData/shader_precompilation/precompile_scenes.txt` | Editable scene list (defaults to the 8 TAOM `_forceatmo` battle scenes) |
+| `Main/Features/ShaderPrecompilation/TaomShaderGameManager.cs` | Extends `CustomGameManager`; builds per-item `CustomBattleData` (CharacterBattle = all troops; ScenePass = minimal troops on the item's scene) |
 | `Main/Features/ShaderPrecompilation/Hooks/LoadingScreen_ShaderProgress_Patch.cs` | `Patch21_ShaderPrecompilation` — loading screen progress text |
 | `Main/SubModule.cs` | Applies `Patch21_ShaderPrecompilation`, calls `InitializeHooks`, registers menu button in `OnBeforeInitialModuleScreenSetAsRoot()` |
 | `Main/IoC.cs` | `ShaderPrecompilationIoC.RegisterShaderPrecompilationFeature(container)` |
@@ -91,7 +125,12 @@ The original values (`MaxTroopsPerSide=2000`, `SoldierCopies=4`, `StuckAbortSeco
 
 ## Tests
 
-- `TAOM.Tests/Features/ShaderPrecompilation/ShaderPrecompilationServiceTests.cs` — 7 tests covering:
+The pure core is unit-tested (the runner / game manager / patch are engine boundaries, ADR-008, game-only):
+
+- `ShaderPrecompileDeciderTests` — the observation state machine: first-frame-zero (RCA regression), render-grace vs load-grace (the 2026-06-17 premature-advance fix), settle, idle-dip, no-progress-stuck, absolute timeout, work-observed-during-loading.
+- `ShaderPrecompilePlannerTests` + `PrecompileSceneProviderParseTests` — work-list order (character battle first), scene dedup, `ParseSceneList` comments/blanks/trim, default-scenes-includes-crash-scene.
+
+- `ShaderPrecompilationServiceTests` — 7 tests covering:
   - Happy path: returns character IDs from all included cultures
   - Bandit culture **inclusion** (bandits have unique meshes/equipment that need shader coverage too)
   - `GetCharacterIdsForShaderBattle` adapter exception → empty result + logged error
@@ -120,6 +159,7 @@ If a culture's characters are not getting compiled, verify:
 
 - [#57 — feat: Shader Pre-compilation at Main Menu](https://github.com/haterade22/TAOM/issues/57) — original feature, OPEN
 - [#106 — fix: silent character drop + premature 120s abort + stale latch on retry/abort](https://github.com/haterade22/TAOM/issues/106) — 2026-05-04 stability fix, OPEN until in-game verification
+- [#287 — Battle-load CTD/hang: scenes lack precompiled shader caches](https://github.com/haterade22/TAOM/issues/287) — 2026-06-17 re-enable + scene-walk, OPEN until in-game verification
 
 ---
 

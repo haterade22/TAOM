@@ -1,0 +1,16 @@
+# Battle scenes the "Pre-compile Shaders" walk loads so their terrain + forced-atmosphere
+# shaders compile (the d3dcompiler battle-load crash/hang class — issue #287).
+#
+# One scene id per line. Lines starting with '#' are comments; blank lines are ignored.
+# If this file is missing or empty, the baked default (this same TAOM battle-scene set) is used.
+# To also pre-compile vanilla terrains, add battle_terrain_* ids (from sp_battle_scenes.xml) below
+# — note each added scene adds ~5-15 min to the run.
+taom_mordor_battle_001_forceatmo
+taom_mordor_battle_002_forceatmo
+taom_mordor_battle_003_forceatmo
+taom_mordor_battle_004_forceatmo
+taom_mordor_battle_black_gates_forceatmo
+taom_mordor_battle_dead_marshes_forceatmo
+taom_rohan_battle_001_forceatmo
+taom_rohan_battle_fords_of_isen_forceatmo
+# taom_dwarves_battle_001_forceatmo  -- excluded: not in custom_battle_scenes.xml, can't load as a custom battle (Codex 2026-06-17)

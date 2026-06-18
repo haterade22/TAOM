@@ -2,6 +2,37 @@
 
 ## 2026-06-17
 
+### feat(shader-precompilation): re-enable + scene-walk to fix the battle-load d3dcompiler CTD (#287)
+
+Re-enabled the "Pre-compile Shaders" main-menu option (disabled 2026-05-22 as unreliable) and
+extended it to cover the shaders behind the intermittent battle-load crash/hang. The crash (#287)
+is a `d3dcompiler` access violation while the engine compiles a TAOM battle scene's **terrain +
+forced-atmosphere** shaders at runtime — TAOM_Map battle scenes ship no `compressed_shader_cache.sack`
+(only `terrain_shaders_header_data.bin`), unlike Native scenes, so every entry runtime-compiles.
+
+The old feature only rendered all troops on one scene (character shaders), missing scene shaders.
+The rewrite walks a work list: item 0 = all-characters battle, then one pass per TAOM battle scene
+(`taom_mordor_battle_001..004_forceatmo`, etc., from `shader_precompilation/precompile_scenes.txt`)
+so each scene's terrain/atmosphere shaders compile. `ShaderPrecompileRunner` chains the per-item
+custom battles (StartNewGame → settle → EndGame → next); the per-item compile-detection is a pure,
+unit-tested `ShaderPrecompileDecider` (generalizes the proven `_observedWork` latch from the
+2026-05-04 initial-zero RCA). Progress mirrors onto the loading-screen text + a 1 Hz toast.
+
+Deep-review (5 agents) fixes folded in: the decider's "nothing to compile" grace now counts **render**
+time (from first non-loading frame), not load time — otherwise a heavy scene still loading on an HDD
+would be skipped before its shaders ever queued (HIGH). The `Game.Current==null` post-EndGame teardown
+check is instrumented at 1 Hz (an open question — `EndGame` is async and may leave a `CustomBattleState`
+live) so the first real walk resolves whether the clean-menu signal fires or the timeout carries items.
+24 unit tests on the pure core. **In-game-only (ADR-008): pending a 1-2 hr precompile test.**
+Codex adversarial review confirmed a stale-callback bug (fixed via per-item generation-tagging),
+corrected the teardown timeout (`Game.Current` does null on the clean path, so the backstop is now a
+generous 90s, not a 30s force-advance), and flagged `taom_dwarves_battle_001_forceatmo` as an orphan
+(absent from `custom_battle_scenes.xml` — excluded). **Known limitation:** the character battle's
+shader coverage is bounded by the engine's battle-size render cap, so not every troop's shaders
+compile in one pass — scene shaders (the #287 crash class) are fully covered; full character coverage
+(roster batching) is iteration-2 work. The persistent Gauntlet overlay is also deferred to iteration 2
+(loading-screen text + toast cover the run).
+
 ### fix(crash): BattleLoadDiagnostics stall marker crashed startup (two public ctors)
 
 `BattleLoadStallMarker` exposed two public constructors — the production `(IModLogger)` and a
