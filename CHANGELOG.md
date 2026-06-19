@@ -36,25 +36,28 @@ the 11 AI languages. Service logic covered by 10 new `SpecialResourceServiceTest
 Taking a career-choice point didn't visibly change its pip ("it is the same as normal", every
 ability). Root cause was visual, not a binding bug: all three pip states drew the **same hollow
 pale-gold ring** (`CareerSystem\career_point_pip`) differing only by alpha tint, so "taken" bumped
-a pip from alpha 224 → 255 — a ~12% change on a hollow ring with no filled-vs-empty cue. The
-`RefreshValues` → `RebuildChoiceGroups` rebind path was already correct; the state updated but never
-read as changed. Gauntlet `Color` is a multiplicative tint (can't brighten past the sprite's own
-pixels), so the fix is a distinct *filled* sprite plus a wider alpha gap:
-- **New sprite** `Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/career_point_pip_filled.png`
-  — the existing ornate ring composited over a warm-gold filled center (256×256, same category).
-- **`CareerScreen.xml`** (all 3 tiers) — the `@IsTaken` pip now uses `career_point_pip_filled`
-  (`#FFFFFFFF`); `@IsFreeToTake` dimmed `#FFFFFFE0` → `#FFFFFF55`; `@IsUnavailable` `#FFFFFF78` →
-  `#FFFFFF22`. Taken = solid lit disc; available = faint ring; locked = barely-there ring.
+a pip from alpha 224 → 255 — a ~12% change on a hollow ring. The `RefreshValues` →
+`RebuildChoiceGroups` rebind path was already correct; the state updated but never read as changed.
+(An in-game test confirmed the binding: when pips were taken the faint rings correctly *disappeared*
+— so `@IsTaken` registers; only the visual was missing.) Gauntlet `Color` is a multiplicative tint
+(can't brighten past the sprite's own pixels), so the fix is a brighter *lit-ring* sprite for the
+taken state plus a wider alpha gap on the others:
+- **New sprite** `Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/career_point_pip_lit.png`
+  — the One-Ring ring brightened toward white with a soft glow halo (256×256, same category).
+- **`CareerScreen.xml`** (all 3 tiers) — `@IsTaken` uses `career_point_pip_lit` (`#FFFFFFFF`);
+  `@IsFreeToTake` dimmed `#FFFFFFE0` → `#FFFFFF55`; `@IsUnavailable` `#FFFFFF78` → `#FFFFFF22`.
+  Default = faint hollow ring; taken = bright glowing ring.
 
-No C# / binding changes.
+No C# / binding changes. (Supersedes the first-pass `career_point_pip_filled` disc, which read wrong
+and rendered blank because the new PNG was never baked — deleted.)
 
-Bake-required: `career_point_pip_filled` is a NEW loose PNG — close the game, run the editor
+Bake-required: `career_point_pip_lit` is a NEW loose PNG — close the game, run the editor
 sprite-generation for the TAOM module (regenerates `TAOMSpriteData.xml` + `AssetSources/GauntletUI/`
 + the `_tex.tpac`), then sync those back into the repo (see `docs/features/gui-sprite-system.md`
-"Deploying a prefab/sprite change"). Until then the filled pip renders blank in the player client.
+"Deploying a prefab/sprite change"). Until then the taken pip renders blank in the player client.
 
 Not-tested: sprite bake + in-game render (Bannerlord was running, so the generator/editor compile
-couldn't run this session) — verify the taken pip lights up on `+` after the editor bake.
+couldn't run this session) — verify the taken pip brightens on `+` after the editor bake.
 
 ## 2026-06-18
 
