@@ -416,7 +416,7 @@
 		terrain="Swamp"
 		map_indices="46"></Scene>
 
-  <Scene
+ <!-- <Scene
   id="taom_mordor_battle_001_forceatmo"
   terrain="Swamp"
   forest_density="Low"
@@ -445,7 +445,8 @@
     id="taom_mordor_battle_dead_marshes_forceatmo"
     terrain="Swamp"
     forest_density="Low"
-    map_indices="83,82"></Scene>
+    map_indices="83,82"></Scene> -->
+  
   <!-- Rohan field-battle scenes DISABLED 2026-06-19: the pbr_terrain input-layout-9 compile hard-crashes
        some GPUs during scene load (native AV; same shader as the Helm's Deep X4008 dialog). Their Plain map
        cells (62, 81, 85, 86, 87, 88, 89, 90, 91, 92) are added to the vanilla battle_terrain_r (Plain) entry
