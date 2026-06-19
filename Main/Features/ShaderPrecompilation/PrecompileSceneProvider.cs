@@ -28,8 +28,10 @@ public sealed class PrecompileSceneProvider : IPrecompileSceneProvider
         "taom_mordor_battle_004_forceatmo",
         "taom_mordor_battle_black_gates_forceatmo",
         "taom_mordor_battle_dead_marshes_forceatmo",
-        "taom_rohan_battle_001_forceatmo",
-        "taom_rohan_battle_fords_of_isen_forceatmo",
+        // Rohan field-battle scenes DISABLED 2026-06-19 (pbr_terrain input-layout-9 GPU crash; also removed
+        // from sp_battle_scenes.xml so real battles fall back to vanilla terrain). Re-enable with the shader override.
+        // "taom_rohan_battle_001_forceatmo",
+        // "taom_rohan_battle_fords_of_isen_forceatmo",
         // Custom siege settlement scenes (loaded via the Battle path; siege-engine-material coverage probed in-game)
         "taom_gondor_castle_001_forceatmo",
         "taom_gondor_castle_002_forceatmo",
@@ -39,7 +41,7 @@ public sealed class PrecompileSceneProvider : IPrecompileSceneProvider
         "taom_gondor_town_osgiliath_e_forceatmo",
         "taom_gondor_town_lossarnach_forceatmo",
         "taom_isengard_town_orthanc_forceatmo",
-        "taom_rohan_castle_helms_deep_forceatmo",
+        // "taom_rohan_castle_helms_deep_forceatmo",  // DISABLED 2026-06-19: same Rohan pbr_terrain input-layout-9 crash class
         // Custom village scenes (66 settlement instances)
         "taom_gondor_village_001_forceatmo",
         "taom_gondor_village_002_forceatmo",

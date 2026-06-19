@@ -2,6 +2,26 @@
 
 ## 2026-06-18
 
+### fix(shader/scenes): disable the Rohan `_forceatmo` scenes that hard-crash some GPUs
+
+The Rohan `pbr_terrain` input-layout-9 shader (the line-818 `normalize()` div-by-zero — same one that
+threw the X4008 dialog at Helm's Deep) **hard-crashes some GPUs** with a native AV during scene load:
+a tester's precompile walk died at `rohan_battle_001` (item 8) and `fords_of_isen` (item 9), and the
+same scenes would crash those players in *real* Rohan battles too. Until a `pbr_terrain` shader-source
+override lands, the three Rohan `_forceatmo` scenes are disabled:
+- **`precompile_scenes.txt` + `PrecompileSceneProvider.DefaultScenes`** — `rohan_battle_001`,
+  `fords_of_isen`, and `helms_deep` commented out (walk: 21 → 18 scenes).
+- **`sp_battle_scenes.xml`** — the two Rohan field-battle `<Scene>` entries commented out so real Rohan
+  field battles no longer load the crashy custom scenes; their Plain map cells (62, 81, 85-92) are
+  re-routed to the vanilla `battle_terrain_r` (Plain) so coverage stays complete (audit: all 0-255
+  covered; XML parses; build 0/0, 34 tests). Trade-off: those Rohan field battles now use a generic
+  vanilla Plain terrain for **all** players (not just the affected GPU) — acceptable vs a crash, and
+  reversible once the shader is fixed (re-enable comments left in place).
+
+**Note:** Helm's Deep is still registered as a *siege* in `custom_battle_scenes.xml` (not in
+`sp_battle_scenes.xml`); if real Rohan-castle sieges crash the same GPUs, remove it there too. The
+crash-guard remains as the catch-all for any *other* GPU-specific bad scene.
+
 ### feat(settlement-food): fix garrison food starvation + tunable settlement food (#289)
 
 Settlements ran chronic food deficits. Root cause: the Troop Weight feature (`Patch17_TroopWeight`)

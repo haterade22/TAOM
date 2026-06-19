@@ -446,20 +446,20 @@
     terrain="Swamp"
     forest_density="Low"
     map_indices="83,82"></Scene>
-  <Scene
-   id="taom_rohan_battle_fords_of_isen_forceatmo"
-   terrain="Plain"
-   forest_density="Low"
-   map_indices="88,62,89"></Scene>
-  <Scene
- id="taom_rohan_battle_001_forceatmo"
- terrain="Plain"
- forest_density="Low"
- map_indices="85,86,92,91,87,81,88,90,89"></Scene>
+  <!-- Rohan field-battle scenes DISABLED 2026-06-19: the pbr_terrain input-layout-9 compile hard-crashes
+       some GPUs during scene load (native AV; same shader as the Helm's Deep X4008 dialog). Their Plain map
+       cells (62, 81, 85, 86, 87, 88, 89, 90, 91, 92) are added to the vanilla battle_terrain_r (Plain) entry
+       below, so real Rohan field battles fall back to a safe vanilla terrain. Re-enable once a pbr_terrain
+       shader-source override lands.
+  <Scene id="taom_rohan_battle_fords_of_isen_forceatmo" terrain="Plain" forest_density="Low" map_indices="88,62,89"></Scene>
+  <Scene id="taom_rohan_battle_001_forceatmo" terrain="Plain" forest_density="Low" map_indices="85,86,92,91,87,81,88,90,89"></Scene>
+  -->
 
-  <!-- Extended indices 158-180 (TAOM map grid) and 181-255 (catch-all for unmapped pixels) -->
+  <!-- Extended indices 158-180 (TAOM map grid) and 181-255 (catch-all), plus the ex-Rohan Plain cells
+       62, 81, 85, 86, 87, 88, 89, 90, 91, 92 re-routed here 2026-06-19 (the disabled Rohan scenes above)
+       so those cells keep a valid vanilla Plain mapping after their custom scenes were removed. -->
 	<Scene
 		id="battle_terrain_r"
 		terrain="Plain"
-		map_indices="158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255"></Scene>
+		map_indices="62, 81, 85, 86, 87, 88, 89, 90, 91, 92, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255"></Scene>
 </SPBattleScenes>
