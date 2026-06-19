@@ -107,6 +107,7 @@ There is **NO `pack0.tpac`** for UI sprites — UI atlases are per-category `<ca
 - **Cause 1 (bake):** the One Ring pip first rendered blank because it was a *new* loose PNG that had never been packed — `Assets/GauntletUI/ui_taom_career_system_1_tex.tpac` + the `AssetSources` sheet had no pip pixels. Running `SpriteSheetGenerator.exe` fixed the bake: the pip landed on sheet 1 at `SheetX=2428 SheetY=1670` (256×256), confirmed by cropping that rect out of the regenerated `AssetSources/GauntletUI/ui_taom_career_system_1.png` and seeing the ring.
 - **Cause 2 (render) — the one that survived the regen:** after a correct bake the pip was *still* invisible in-game. Root cause was the **prefab**, not the asset: the pip was drawn at `22×28px` with `Color="#FFFFFF45"` (27% alpha) for the empty state — a thin gold line-art ring at that size/opacity on a near-black node reads as faint embossing. Fix: bump the pip to `38×38` and raise the state opacities (`#FFFFFFFF` taken / `#FFFFFFE0` available / `#FFFFFF78` empty). No regen needed for this — it's prefab-only.
 - **Review lesson:** the earlier `/deep-review` + Codex passes verified the manifest *shape* and (wrongly) assumed a runtime-build model + `pack0.tpac`; and the first RCA wrongly concluded "regen will fix the blank pip." Both the asset bake AND the prefab render must be verified, and **only the live game confirms a sprite is visible** — a CLEAN review cannot. Memory: `feedback_sprite_atlas_baked_regen_required`.
+- **2026-06-19 follow-up — pip never "lit up" on point-take.** The render fix above raised the empty-state opacity but left all three states on the *same hollow ring*; taken (`#FFFFFFFF`) vs available (`#FFFFFFE0`) was only a ~12% alpha gap, imperceptible. Since Gauntlet `Color` is a multiplicative tint (can't brighten a sprite past its own pixels), the real fix was a **distinct filled sprite** `career_point_pip_filled` (ornate ring + warm-gold filled center) for `@IsTaken`, plus a wider alpha gap on the hollow-ring states (`@IsFreeToTake` `#FFFFFF55`, `@IsUnavailable` `#FFFFFF22`) in all 3 tiers of `CareerScreen.xml`. Re-confirms the same lesson: a hollow ring at +12% alpha "bakes correctly yet reads identical" — visual distinction is a *design* property, not a bake property.
 
 ### Verifying a sprite (bake + render) — BOTH are required
 
@@ -227,7 +228,7 @@ Modeled on TOR's career screen with expandable choice panels.
 
 **Key features:**
 - `VisualDefinition="ExtendablePanel"` — choice groups expand 80px→750px on hover
-- `@IsTaken` / `@IsFreeToTake` — different icon colors for taken vs available
+- `@IsTaken` / `@IsFreeToTake` / `@IsUnavailable` — distinct pip art per state: taken draws the **filled** `career_point_pip_filled` sprite at full opacity; available/locked draw the hollow `career_point_pip` ring at a low/very-low alpha. (Pre-2026-06-19 all three shared the hollow ring at near-identical alpha, so an increased skill didn't visibly "light up" — see the worked example below.)
 - `@IsActive` + `@ButtonsVisible` — +/- buttons appear on hover, hidden when locked
 - `CareerSystem\locked_chains` sprite overlay on locked tiers
 - `<Standard.Background />` and `<Standard.DialogCloseButtons />` for native look

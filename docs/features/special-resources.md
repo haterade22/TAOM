@@ -112,8 +112,32 @@ Multiple `<Kingdom>` and `<Culture>` child elements map to the same resource (ma
 ### Troop Costs: `Main/_Module/ModuleData/special_resources/troop_resource_costs.xml`
 
 ```xml
+<!-- Upgrade target: charged on the party-screen upgrade (Patch26) -->
 <Troop id="mordor_uruk_darkblade" resource_id="war_spoils" upgrade_cost="2" daily_upkeep="0.1" />
+<!-- Recruitable volunteer: charged at recruitment (Patch51), not upgrade -->
+<Troop id="harad_elephant_rider" resource_id="war_drums" recruit_cost="50" daily_upkeep="10" />
+<Troop id="taom_spider_creature" resource_id="war_spoils" recruit_cost="5" daily_upkeep="1" />
 ```
+
+Three cost fields, any combination allowed per troop:
+
+| Field | When charged | Path |
+|-------|-------------|------|
+| `upgrade_cost` | Party-screen upgrade into this troop | Patch26 (`PartyScreenLogic.UpgradeTroop`) |
+| `recruit_cost` | Recruited as a volunteer (one-time) | Patch51 gate + `OnUnitRecruitedEvent` charge |
+| `daily_upkeep` | Every daily tick the troop is in the party | `OnDailyTickHero` → `GetDailyUpkeep` |
+
+`recruit_cost` exists because the elephant/spider are **volunteer recruits, not upgrade targets** — nothing
+upgrades into them, so `upgrade_cost` would never fire. It is kept distinct from `upgrade_cost` so a troop
+that is both can't be double-charged. The **charged resource is always the player's resolved resource**
+(`ResolveResource(kingdom, culture)`); the `resource_id` attribute is documentation only. Fully data-driven:
+giving any troop a `recruit_cost` gates + charges it with no code change.
+
+**Recruit gate (Patch51_RecruitmentResourceGate):** a postfix on the private `RecruitmentVM.RefreshPartyProperties`
+disables the Done button (with a `{=taom_recruit_needs_resource}` "Requires N <Resource>" hint) when the cart
+holds an unaffordable troop — mirroring vanilla's gold gate, only ever forcing the flag false. The matching
+deduction is on `OnUnitRecruitedEvent` (player-only; the AI/generic recruit path fires `OnTroopRecruited`
+instead, so AI lords are never charged).
 
 ### Current Values (all resources)
 
@@ -138,8 +162,11 @@ Multiple `<Kingdom>` and `<Culture>` child elements map to the same resource (ma
 | `Main/Features/SpecialResources/Hooks/PartyCharacterVM_InitializeUpgrades_Patch.cs` | Grey out upgrades, show cost hint |
 | `Main/Features/SpecialResources/Hooks/PartyScreenLogic_AddCommand_Patch.cs` | Prefix: clamp count before execution |
 | `Main/Features/SpecialResources/Hooks/PartyScreenLogic_UpgradeTroop_Patch.cs` | Postfix: queue resource spend |
-| `Main/Features/SpecialResources/Hooks/IOnPartyUpgradeResourceCheck.cs` | Hook interface |
-| `Main/Features/SpecialResources/Hooks/PartyUpgradeResourceCheckHook.cs` | Hook implementation |
+| `Main/Features/SpecialResources/Hooks/IOnPartyUpgradeResourceCheck.cs` | Upgrade hook interface |
+| `Main/Features/SpecialResources/Hooks/PartyUpgradeResourceCheckHook.cs` | Upgrade hook implementation |
+| `Main/Features/SpecialResources/Hooks/IOnRecruitmentResourceGate.cs` | Recruit gate hook interface |
+| `Main/Features/SpecialResources/Hooks/RecruitmentResourceGateHook.cs` | Recruit gate hook implementation |
+| `Main/Features/SpecialResources/Hooks/RecruitmentVM_RecruitGate_Patch.cs` | Patch51: block Done button when recruit cost unaffordable |
 | `Main/Features/SpecialResources/UI/SpecialResourceMapBarMixin.cs` | Map bar UIExtenderEx mixin |
 | `Main/Features/SpecialResources/UI/SpecialResourceSpriteWidget.cs` | Dynamic icon sprite (extends IconBrushWidget) |
 | `Main/Features/SpecialResources/UI/SpecialResourcePrefab.cs` | PrefabExtension: swap widget in BottomInfoBar |

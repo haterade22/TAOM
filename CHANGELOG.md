@@ -1,5 +1,61 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-19
+
+### feat(special-resources): gate the war elephant + spider behind special-resource cost & upkeep
+
+The Harad war elephant (`harad_elephant_rider`) and Dol Guldur spider (`taom_spider_creature`) now
+cost a special resource to recruit and to maintain — paid in the player's resolved resource (War
+Drums for a Harad/aserai player, War Spoils for Dol Guldur):
+
+| Troop | Recruit cost | Daily upkeep |
+|-------|-------------|--------------|
+| `harad_elephant_rider` | 50 | 10 |
+| `taom_spider_creature` | 5 | 1 |
+
+- **Upkeep** rides the existing daily roster scan (`SpecialResourcesBehavior.OnDailyTickHero` →
+  `GetDailyUpkeep`) — just two `daily_upkeep` entries in `troop_resource_costs.xml`. Drain to 0 and
+  the existing desertion mechanic removes them.
+- **Recruit cost** is new: a dedicated `recruit_cost` XML field (kept separate from `upgrade_cost`
+  so a troop can't be double-charged) — these are volunteer recruits, not upgrade targets, so the
+  Patch26 upgrade gate never fired for them. Two halves:
+  - **Block** — `Patch51_RecruitmentResourceGate` postfixes the private `RecruitmentVM.RefreshPartyProperties`
+    and disables the Done button (with a "Requires N <Resource>" hint) when the cart holds an
+    unaffordable elephant/spider, mirroring vanilla's gold gate.
+  - **Charge** — `SpecialResourcesBehavior` subscribes to `OnUnitRecruitedEvent` (player-only — the
+    AI/generic recruit path fires the separate `OnTroopRecruited`) and deducts `recruit_cost × count`.
+- Fully data-driven: any troop given a `recruit_cost` is gated + charged with no hardcoded ids. The
+  charged resource is the player's resolved resource; the entry's `resource_id` is documentation only.
+- Player-only (the whole SpecialResources system tracks `Hero.MainHero`); AI lords are unaffected.
+
+New string `{=taom_recruit_needs_resource}` — run `tools/translate_with_claude.py` to propagate to
+the 11 AI languages. Service logic covered by 10 new `SpecialResourceServiceTests`.
+
+### fix(career-ui): make career-ability pips visibly light up when a skill is increased (#290)
+
+Taking a career-choice point didn't visibly change its pip ("it is the same as normal", every
+ability). Root cause was visual, not a binding bug: all three pip states drew the **same hollow
+pale-gold ring** (`CareerSystem\career_point_pip`) differing only by alpha tint, so "taken" bumped
+a pip from alpha 224 → 255 — a ~12% change on a hollow ring with no filled-vs-empty cue. The
+`RefreshValues` → `RebuildChoiceGroups` rebind path was already correct; the state updated but never
+read as changed. Gauntlet `Color` is a multiplicative tint (can't brighten past the sprite's own
+pixels), so the fix is a distinct *filled* sprite plus a wider alpha gap:
+- **New sprite** `Main/_Module/GUI/SpriteParts/ui_taom_career_system/CareerSystem/career_point_pip_filled.png`
+  — the existing ornate ring composited over a warm-gold filled center (256×256, same category).
+- **`CareerScreen.xml`** (all 3 tiers) — the `@IsTaken` pip now uses `career_point_pip_filled`
+  (`#FFFFFFFF`); `@IsFreeToTake` dimmed `#FFFFFFE0` → `#FFFFFF55`; `@IsUnavailable` `#FFFFFF78` →
+  `#FFFFFF22`. Taken = solid lit disc; available = faint ring; locked = barely-there ring.
+
+No C# / binding changes.
+
+Bake-required: `career_point_pip_filled` is a NEW loose PNG — close the game, run the editor
+sprite-generation for the TAOM module (regenerates `TAOMSpriteData.xml` + `AssetSources/GauntletUI/`
++ the `_tex.tpac`), then sync those back into the repo (see `docs/features/gui-sprite-system.md`
+"Deploying a prefab/sprite change"). Until then the filled pip renders blank in the player client.
+
+Not-tested: sprite bake + in-game render (Bannerlord was running, so the generator/editor compile
+couldn't run this session) — verify the taken pip lights up on `+` after the editor bake.
+
 ## 2026-06-18
 
 ### fix(shader/scenes): disable the Rohan `_forceatmo` scenes that hard-crash some GPUs

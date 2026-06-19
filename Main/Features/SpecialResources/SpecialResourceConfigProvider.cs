@@ -148,7 +148,8 @@ public class SpecialResourceConfigProvider : ISpecialResourceConfigProvider
                     troopId: el.Attribute("id")?.Value ?? "",
                     resourceId: el.Attribute("resource_id")?.Value ?? "",
                     upgradeCost: (int)ParseFloat(el, "upgrade_cost", 0f),
-                    dailyUpkeep: ParseFloat(el, "daily_upkeep", 0f));
+                    dailyUpkeep: ParseFloat(el, "daily_upkeep", 0f),
+                    recruitCost: (int)ParseFloat(el, "recruit_cost", 0f));
 
                 if (!string.IsNullOrEmpty(entry.TroopId))
                     _troopCosts[entry.TroopId] = entry;

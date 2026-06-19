@@ -255,6 +255,125 @@ public class SpecialResourceServiceTests
         _storage.Received(1).Add("hero1", "war_spoils", -12f);
     }
 
+    // ── Recruit Cost (elephant/spider volunteer gate) ──
+
+    [TestMethod]
+    public void ChargeRecruitCost_DeductsRecruitCostTimesCount()
+    {
+        var cost = new TroopResourceCostEntry("harad_elephant_rider", "war_drums", upgradeCost: 0, dailyUpkeep: 10f, recruitCost: 50);
+        _config.GetTroopCost("harad_elephant_rider").Returns(cost);
+
+        _service.ChargeRecruitCost("hero1", "empire_s", null, "harad_elephant_rider", 2);
+
+        _storage.Received(1).Add("hero1", "war_spoils", -100f);
+    }
+
+    [TestMethod]
+    public void ChargeRecruitCost_NoCostEntry_NoOp()
+    {
+        _config.GetTroopCost("plain_troop").Returns((TroopResourceCostEntry)null);
+
+        _service.ChargeRecruitCost("hero1", "empire_s", null, "plain_troop", 1);
+
+        _storage.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void ChargeRecruitCost_ZeroRecruitCost_NoOp()
+    {
+        // An upkeep-only entry (recruit_cost omitted) must not deduct on recruit.
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", upgradeCost: 4, dailyUpkeep: 0.2f, recruitCost: 0);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+
+        _service.ChargeRecruitCost("hero1", "empire_s", null, "mordor_uruk_captain", 3);
+
+        _storage.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void ChargeRecruitCost_NoResolvedResource_NoOp()
+    {
+        var cost = new TroopResourceCostEntry("harad_elephant_rider", "war_drums", upgradeCost: 0, dailyUpkeep: 10f, recruitCost: 50);
+        _config.GetTroopCost("harad_elephant_rider").Returns(cost);
+
+        _service.ChargeRecruitCost("hero1", "unmapped_kingdom", null, "harad_elephant_rider", 1);
+
+        _storage.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void CanAffordRecruit_BalanceEqualsCost_Allowed()
+    {
+        var cost = new TroopResourceCostEntry("harad_elephant_rider", "war_drums", upgradeCost: 0, dailyUpkeep: 10f, recruitCost: 50);
+        _config.GetTroopCost("harad_elephant_rider").Returns(cost);
+        _storage.Get("hero1", "war_spoils").Returns(50f);
+
+        var result = _service.CanAffordRecruit("hero1", "empire_s", null,
+            new List<RecruitCartEntry> { new("harad_elephant_rider", 1) });
+
+        Assert.IsFalse(result.Blocked);
+    }
+
+    [TestMethod]
+    public void CanAffordRecruit_BalanceBelowCost_Blocked()
+    {
+        var cost = new TroopResourceCostEntry("harad_elephant_rider", "war_drums", upgradeCost: 0, dailyUpkeep: 10f, recruitCost: 50);
+        _config.GetTroopCost("harad_elephant_rider").Returns(cost);
+        _storage.Get("hero1", "war_spoils").Returns(49f);
+
+        var result = _service.CanAffordRecruit("hero1", "empire_s", null,
+            new List<RecruitCartEntry> { new("harad_elephant_rider", 1) });
+
+        Assert.IsTrue(result.Blocked);
+        Assert.AreEqual(50, result.Required);
+        Assert.AreEqual("War Spoils", result.ResourceDisplayName);
+    }
+
+    [TestMethod]
+    public void CanAffordRecruit_SumsMultipleCartEntries()
+    {
+        var cost = new TroopResourceCostEntry("harad_elephant_rider", "war_drums", upgradeCost: 0, dailyUpkeep: 10f, recruitCost: 50);
+        _config.GetTroopCost("harad_elephant_rider").Returns(cost);
+        _storage.Get("hero1", "war_spoils").Returns(120f);
+
+        var result = _service.CanAffordRecruit("hero1", "empire_s", null,
+            new List<RecruitCartEntry> { new("harad_elephant_rider", 3) }); // 150 > 120
+
+        Assert.IsTrue(result.Blocked);
+        Assert.AreEqual(150, result.Required);
+    }
+
+    [TestMethod]
+    public void CanAffordRecruit_CartTroopHasNoRecruitCost_Allowed()
+    {
+        _config.GetTroopCost("plain_troop").Returns((TroopResourceCostEntry)null);
+        _storage.Get("hero1", "war_spoils").Returns(0f);
+
+        var result = _service.CanAffordRecruit("hero1", "empire_s", null,
+            new List<RecruitCartEntry> { new("plain_troop", 5) });
+
+        Assert.IsFalse(result.Blocked);
+    }
+
+    [TestMethod]
+    public void CanAffordRecruit_NoResolvedResource_Allowed()
+    {
+        var cost = new TroopResourceCostEntry("harad_elephant_rider", "war_drums", upgradeCost: 0, dailyUpkeep: 10f, recruitCost: 50);
+        _config.GetTroopCost("harad_elephant_rider").Returns(cost);
+
+        var result = _service.CanAffordRecruit("hero1", "unmapped_kingdom", null,
+            new List<RecruitCartEntry> { new("harad_elephant_rider", 1) });
+
+        Assert.IsFalse(result.Blocked);
+    }
+
+    [TestMethod]
+    public void CanAffordRecruit_EmptyCart_Allowed()
+    {
+        var result = _service.CanAffordRecruit("hero1", "empire_s", null, new List<RecruitCartEntry>());
+        Assert.IsFalse(result.Blocked);
+    }
+
     // ── Daily Tick ──
 
     [TestMethod]

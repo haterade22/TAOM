@@ -16,6 +16,23 @@ public interface ISpecialResourceService
     void ApplyDailyTick(string heroId, string kingdomId, string cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
     bool CanAffordUpgrade(string heroId, string kingdomId, string cultureId, string troopId, int count);
     void SpendForUpgrade(string heroId, string kingdomId, string cultureId, string troopId, int count);
+
+    /// <summary>
+    /// Deducts the one-time recruit cost (<c>recruit_cost</c>) for <paramref name="troopId"/> ×
+    /// <paramref name="count"/> from the player's resolved resource. No-op when the troop has no
+    /// recruit cost or the hero's kingdom/culture maps to no resource. Charged from
+    /// <c>OnUnitRecruitedEvent</c> (player-only) for the elephant/spider volunteers; the
+    /// RecruitmentVM gate guarantees affordability before this fires.
+    /// </summary>
+    void ChargeRecruitCost(string heroId, string kingdomId, string cultureId, string troopId, int count);
+
+    /// <summary>
+    /// Decides whether the recruit-volunteers cart can be confirmed: sums <c>recruit_cost × count</c>
+    /// for cart entries that carry a recruit cost and compares to the player's current resolved-resource
+    /// balance. Returns <see cref="RecruitGateResult.Allowed"/> when nothing in the cart costs a resource
+    /// or the hero maps to no resource. Used by the RecruitmentVM Done-button gate.
+    /// </summary>
+    RecruitGateResult CanAffordRecruit(string heroId, string kingdomId, string cultureId, IReadOnlyList<RecruitCartEntry> cart);
     void BeginPartyScreenSession();
     void QueueUpgradeSpend(string heroId, string troopId, int count);
     float GetAvailableAfterPending(string heroId, string kingdomId, string cultureId);
@@ -75,5 +92,36 @@ public sealed class TroopDesertionEntry
     {
         TroopId = troopId;
         DesertCount = desertCount;
+    }
+}
+
+/// <summary>One recruit-screen cart line: a troop id and how many copies of it are in the cart.</summary>
+public sealed class RecruitCartEntry
+{
+    public string TroopId { get; }
+    public int Count { get; }
+
+    public RecruitCartEntry(string troopId, int count)
+    {
+        TroopId = troopId;
+        Count = count;
+    }
+}
+
+/// <summary>Outcome of <see cref="ISpecialResourceService.CanAffordRecruit"/> — whether to block the
+/// Done button and, if so, the resource amount/name to surface in the hint.</summary>
+public sealed class RecruitGateResult
+{
+    public bool Blocked { get; }
+    public int Required { get; }
+    public string ResourceDisplayName { get; }
+
+    public static readonly RecruitGateResult Allowed = new(false, 0, null);
+
+    public RecruitGateResult(bool blocked, int required, string resourceDisplayName)
+    {
+        Blocked = blocked;
+        Required = required;
+        ResourceDisplayName = resourceDisplayName;
     }
 }

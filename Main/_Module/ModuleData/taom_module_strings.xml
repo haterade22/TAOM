@@ -2301,4 +2301,7 @@
 
   <!-- Settlement Food — labeled line in the town food-breakdown tooltip (TaomSettlementFoodModel) -->
   <string id="taom_settlement_food_adjustment" text="{=taom_settlement_food_adjustment}Settlement food (TAOM)" />
+
+  <!-- Special Resources — recruit-screen Done-button hint when the player can't afford an elephant/spider -->
+  <string id="taom_recruit_needs_resource" text="{=taom_recruit_needs_resource}Requires {AMOUNT} {RESOURCE}" />
 </strings>

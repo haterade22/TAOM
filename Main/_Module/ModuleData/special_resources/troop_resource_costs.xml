@@ -15,5 +15,11 @@
   <!-- Command line -->
   <Troop id="mordor_uruk_captain" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.2" />
   <Troop id="mordor_uruk_baraddurguard" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.3" />
-  <!-- Special -->
+  <!-- Special: elite creature mounts gated behind their culture's special resource.
+       recruit_cost is a ONE-TIME charge at volunteer recruitment (these are not upgrade targets,
+       so upgrade_cost would never fire). The charged resource is the PLAYER's resolved resource —
+       resource_id here is documentation only. Harad/aserai players pay War Drums; Dol Guldur
+       players pay War Spoils. -->
+  <Troop id="harad_elephant_rider" resource_id="war_drums" recruit_cost="50" daily_upkeep="10" />
+  <Troop id="taom_spider_creature" resource_id="war_spoils" recruit_cost="5" daily_upkeep="1" />
 </TroopResourceCosts>

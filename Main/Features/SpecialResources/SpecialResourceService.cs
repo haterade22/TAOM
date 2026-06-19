@@ -199,6 +199,47 @@ public class SpecialResourceService : ISpecialResourceService
         _logger.LogInfo($"[SpecRes] SPEND: -{totalCost} {resource.DisplayName} for {troopId} x{count}");
     }
 
+    public void ChargeRecruitCost(string heroId, string kingdomId, string cultureId, string troopId, int count)
+    {
+        if (count <= 0) return;
+
+        var resource = ResolveResource(kingdomId, cultureId);
+        if (resource == null) return;
+
+        var cost = _config.GetTroopCost(troopId);
+        if (cost == null || cost.RecruitCost <= 0) return;
+
+        var totalCost = cost.RecruitCost * count;
+        _storage.Add(heroId, resource.Id, -totalCost);
+        _logger.LogInfo($"[SpecRes] RECRUIT: -{totalCost} {resource.DisplayName} for {troopId} x{count}");
+    }
+
+    public RecruitGateResult CanAffordRecruit(string heroId, string kingdomId, string cultureId, IReadOnlyList<RecruitCartEntry> cart)
+    {
+        if (cart == null || cart.Count == 0) return RecruitGateResult.Allowed;
+
+        var resource = ResolveResource(kingdomId, cultureId);
+        if (resource == null) return RecruitGateResult.Allowed;
+
+        var required = 0;
+        foreach (var entry in cart)
+        {
+            if (entry == null || entry.Count <= 0) continue;
+            var cost = _config.GetTroopCost(entry.TroopId);
+            if (cost == null || cost.RecruitCost <= 0) continue;
+            required += cost.RecruitCost * entry.Count;
+        }
+
+        if (required <= 0) return RecruitGateResult.Allowed;
+
+        var available = _storage.Get(heroId, resource.Id);
+        var blocked = available < required;
+        if (blocked)
+            _logger.LogDebug($"[SpecRes] RECRUIT GATE: blocked (need {required} {resource.DisplayName}, have {available:F0})");
+
+        return new RecruitGateResult(blocked, required, resource.DisplayName);
+    }
+
     public void BeginPartyScreenSession()
     {
         _pendingSpend = 0f;

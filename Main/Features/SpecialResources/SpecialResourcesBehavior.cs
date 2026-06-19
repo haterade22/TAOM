@@ -51,6 +51,12 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, OnNewGameCreated);
         CampaignEvents.TournamentFinished.AddNonSerializedListener(this, OnTournamentFinished);
         CampaignEvents.OnHideoutBattleCompletedEvent.AddNonSerializedListener(this, OnHideoutCompleted);
+        // Player-only recruit charge: OnUnitRecruited fires only from player-facing recruit flows
+        // (recruit-volunteers screen, mercenary, prisoners), NOT the AI/generic ApplyInternal path
+        // (that fires OnTroopRecruited). Charges the one-time recruit_cost for any troop that carries
+        // one (elephant/spider). The RecruitmentVM gate (Patch51) blocks confirming an unaffordable
+        // cart, so this deduction never drives the balance negative for those troops.
+        CampaignEvents.OnUnitRecruitedEvent.AddNonSerializedListener(this, OnUnitRecruited);
         // Phase 9b #133 P1 — ScreenManager is static/global and outlives any campaign. New campaign
         // in same process: a second behavior instance registers another listener; first instance's
         // listener stays alive, calling _service.BeginPartyScreenSession() on the shared singleton
@@ -307,6 +313,20 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
         _service.EarnFromHideout(hero.StringId, kingdomId, cultureId);
         NotifyEarning(hero.StringId, kingdomId, cultureId, "hideout");
+    }
+
+    // Charges the one-time recruit_cost for the recruited troop (no-op unless it carries one). Player-only
+    // event, so we always charge Hero.MainHero's resolved resource. Data-driven: any troop with a
+    // recruit_cost in troop_resource_costs.xml is charged here and gated by Patch51 — no hardcoded ids.
+    private void OnUnitRecruited(CharacterObject character, int count)
+    {
+        if (character == null || count <= 0) return;
+
+        var hero = Hero.MainHero;
+        if (hero == null) return;
+
+        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        _service.ChargeRecruitCost(hero.StringId, kingdomId, cultureId, character.StringId, count);
     }
 
     private void NotifyEarning(string heroId, string kingdomId, string cultureId, string source)

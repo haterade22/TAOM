@@ -606,7 +606,9 @@ public class SubModule : MBSubModuleBase
         PartyCharacterVM_InitializeUpgrades_Patch.Initialize(resourceHook, specResLogger);
         PartyScreenLogic_UpgradeTroop_Patch.Initialize(resourceHook, specResLogger);
         PartyScreenLogic_AddCommand_Patch.Initialize(resourceHook, specResLogger);
+        RecruitmentVM_RecruitGate_Patch.Initialize(IoC.Resolve<IOnRecruitmentResourceGate>(), specResLogger);
         _harmony.PatchCategory("Patch26_SpecialResources");
+        _harmony.PatchCategory("Patch51_RecruitmentResourceGate");
         _harmony.PatchCategory("Patch27_CareerSystem");
         _harmony.PatchCategory("Patch29_CCBodyProperties");
         _harmony.PatchCategory("Patch44_CCNameAutofill");
