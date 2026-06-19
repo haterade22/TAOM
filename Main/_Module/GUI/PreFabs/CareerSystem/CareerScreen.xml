@@ -117,7 +117,7 @@
                                               <ItemTemplate>
                                                 <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="46" SuggestedWidth="46" MarginLeft="16">
                                                   <Children>
-                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="38" SuggestedWidth="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip_filled" Color="#FFFFFFFF" IsVisible="@IsTaken" />
+                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="38" SuggestedWidth="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip_lit" Color="#FFFFFFFF" IsVisible="@IsTaken" />
                                                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="38" SuggestedWidth="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFF55" IsVisible="@IsFreeToTake" />
                                                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="38" SuggestedWidth="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFF22" IsVisible="@IsUnavailable" />
                                                   </Children>
@@ -186,7 +186,7 @@
                                               <ItemTemplate>
                                                 <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="46" SuggestedWidth="46" MarginLeft="16">
                                                   <Children>
-                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="38" SuggestedWidth="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip_filled" Color="#FFFFFFFF" IsVisible="@IsTaken" />
+                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="38" SuggestedWidth="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip_lit" Color="#FFFFFFFF" IsVisible="@IsTaken" />
                                                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="38" SuggestedWidth="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFF55" IsVisible="@IsFreeToTake" />
                                                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="38" SuggestedWidth="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFF22" IsVisible="@IsUnavailable" />
                                                   </Children>
@@ -252,7 +252,7 @@
                                               <ItemTemplate>
                                                 <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="46" SuggestedWidth="46" MarginLeft="16">
                                                   <Children>
-                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="38" SuggestedWidth="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip_filled" Color="#FFFFFFFF" IsVisible="@IsTaken" />
+                                                    <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="38" SuggestedWidth="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip_lit" Color="#FFFFFFFF" IsVisible="@IsTaken" />
                                                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="38" SuggestedWidth="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFF55" IsVisible="@IsFreeToTake" />
                                                     <Widget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="38" SuggestedWidth="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="CareerSystem\career_point_pip" Color="#FFFFFF22" IsVisible="@IsUnavailable" />
                                                   </Children>
