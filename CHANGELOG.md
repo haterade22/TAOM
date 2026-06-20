@@ -2,6 +2,28 @@
 
 ## 2026-06-19
 
+### fix(scenes): disable the Mordor `_forceatmo` field-battle scenes that hard-crash some GPUs
+
+Same `pbr_terrain` vista-permutation crash class as the Rohan/Helm's Deep scenes disabled earlier the
+same day (the line-818 `normalize()` div-by-zero that escalates to a hard X-error; native AV on some
+GPUs during scene load). The six Mordor `_forceatmo` battle scenes are now disabled:
+- **`precompile_scenes.txt`** — `taom_mordor_battle_001`/`_002`/`_003`/`_004`/`_black_gates`/`_dead_marshes_forceatmo`
+  commented out. They're already removed from `sp_battle_scenes.xml`, so precompiling them was dead walk-work.
+  (`PrecompileSceneProvider.cs` `DefaultScenes` was *not* touched here — it still lists all six Mordor ids,
+  so it's now out of sync with the txt; the live `precompile_scenes.txt` wins, since the baked default only
+  applies when the txt is missing or empty. Unlike the Rohan trio, which the prior commit commented out in
+  `DefaultScenes` too.)
+- **`sp_battle_scenes.xml`** — the six Mordor `<Scene>` entries (all `terrain="Swamp"`) commented out so real
+  Mordor field battles no longer load the crashy custom scenes. Unlike Rohan, no new fallback entry was needed:
+  those map cells already resolve to other live vanilla `battle_terrain_*` entries — the TAOM-grid range
+  (161-180) to the extended `battle_terrain_r` (Plain) catch-all, and the non-grid cells (82, 83, 84, 94, 109,
+  127, 128, 131, 152, 153) to existing Desert / Steppe / Plain biome entries (`battle_terrain_010`,
+  `battle_terrain_022`, `battle_terrain_biome_083/094/128/131`, `battle_terrain_031`) — so every cell keeps a
+  valid mapping with the custom scenes gone.
+
+Reversible: re-enable comments are left in place, to be lifted together once the native shader-compile-guard
+hook lands (issue #287).
+
 ### feat(special-resources): gate the war elephant + spider behind special-resource cost & upkeep
 
 The Harad war elephant (`harad_elephant_rider`) and Dol Guldur spider (`taom_spider_creature`) now
@@ -51,13 +73,14 @@ taken state plus a wider alpha gap on the others:
 No C# / binding changes. (Supersedes the first-pass `career_point_pip_filled` disc, which read wrong
 and rendered blank because the new PNG was never baked — deleted.)
 
-Bake-required: `career_point_pip_lit` is a NEW loose PNG — close the game, run the editor
-sprite-generation for the TAOM module (regenerates `TAOMSpriteData.xml` + `AssetSources/GauntletUI/`
-+ the `_tex.tpac`), then sync those back into the repo (see `docs/features/gui-sprite-system.md`
-"Deploying a prefab/sprite change"). Until then the taken pip renders blank in the player client.
+Baked: `career_point_pip_lit` was packed via the editor sprite-generation — `TAOMSpriteData.xml`
+registers it on `ui_taom_career_system` sheet 1 at rect (3764,3124), the atlas PNG carries the
+glowing-ring pixels, and `ui_taom_career_system_1_tex.tpac` was rebuilt by the editor's
+texture-compile pass. Manifest + atlas + tpac + lit PNG are all committed (f221ba37, 92281887), so a
+later `./build.ps1` won't clobber the bake.
 
-Not-tested: sprite bake + in-game render (Bannerlord was running, so the generator/editor compile
-couldn't run this session) — verify the taken pip brightens on `+` after the editor bake.
+Not-tested: in-game visual only — bake is verified static (manifest rect + non-empty atlas pixels);
+a CLEAN review cannot certify a sprite renders, so confirm the taken pip shows the bright ring on `+`.
 
 ## 2026-06-18
 
