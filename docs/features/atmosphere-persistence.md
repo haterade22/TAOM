@@ -82,6 +82,20 @@ No configuration needed. Scene creators add "forceatmo" anywhere in the scene na
 
 Minimal — one `string.IndexOf` call per mission load. The `PropertyInfo` for reflection is cached as `static readonly`.
 
+## Not the `_forceatmo` battle-load crash cause (2026-06-19 audit)
+
+A tester suspected this patch (`Patch16_AtmospherePersistence`) of causing the native access violation seen at `Mission.Initialize` when loading `_forceatmo` **battle** scenes. The correlation that prompted the check is real but circumstantial: the crash sits at `Mission.Initialize`, and this patch is a Harmony **Prefix on `Mission.Initialize`** that fires for exactly the scenes whose names contain `forceatmo` (`Mission_Initialize_Patch.Prefix`, lines 27-52; the `RequiresAtmosphereOverride` gate, line 32). On that surface it looks like the obvious culprit.
+
+**The patch is exonerated.** What the Prefix writes is benign:
+
+- It sets `rec.PlayingInCampaignMode = false` and `rec.AtmosphereOnCampaign = AtmosphereInfo.GetInvalidAtmosphereInfo()` (`Mission_Initialize_Patch.cs:42-43`).
+- `TaleWorlds.Library.AtmosphereInfo` is a value **struct** (`AtmosphereInfo.cs:5`). Its `AtmosphereName` field is `[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]` (`AtmosphereInfo.cs:9-10`) — a **fixed inline character buffer**, not a pointer. `GetInvalidAtmosphereInfo()` returns `new AtmosphereInfo { AtmosphereName = "" }` (`AtmosphereInfo.cs:37-43`), and `IsValid => !string.IsNullOrEmpty(AtmosphereName)` (`AtmosphereInfo.cs:35`). So "invalid" means a **zeroed value struct with an empty (not null) name** — there is no null pointer for native code to dereference.
+- The whole `MissionInitializerRecord` is marshalled by-ref into native `MBAPI.IMBMission.InitializeMission`. There is no managed branch on `PlayingInCampaignMode`, and the only managed reads of `AtmosphereOnCampaign` are the record's own `SerializeTo`/`DeserializeFrom`. Whether native reads `AtmosphereOnCampaign` when `PlayingInCampaignMode == false` is therefore invisible to managed decompile.
+
+**The vanilla precedent settles the invisible part.** `BannerlordMissions.OpenCustomBattleLordsHallMission` (`BannerlordMissions.cs:242`) constructs a `MissionInitializerRecord` with `PlayingInCampaignMode = false` (`BannerlordMissions.cs:270`) and **omits** `AtmosphereOnCampaign` entirely — so it stays at the struct default, which is exactly `GetInvalidAtmosphereInfo()` (`MissionInitializerRecord.cs:51`). It then opens a **live combat mission** via `MissionState.OpenNew("CustomBattleLordsHall", ..., new MissionBehavior[17] { ... })` (`BannerlordMissions.cs:267`). Vanilla ships the precise `PlayingInCampaignMode = false` + invalid-atmosphere field pair that this patch produces into the same native `InitializeMission`, in a real fighting mission, and runs clean. Whatever native does with `AtmosphereOnCampaign` under `PlayingInCampaignMode == false`, the engine already does it on a shipping code path.
+
+**Root cause remains unproven.** The affected player's crash log carries no faulting-module or offset, so attribution is open. The live, unfalsified hypothesis is the terrain-shader vista permutation (`Shaders/Sources/terrain_pixel_functions.rsh:818` — `normalize(final_world_space_normal)` after a `lerp(..., vista_blend_weight)` that folds to zero when `weight_accumulation == 0` at vista distance, giving X4008 divide-by-zero escalated to a hard error by X3129). The gate to confirm is native triage on an affected player's Event Log "Application Error" offset (or a crash dump) through `tools/native_crash_triage.py`; the native shader-compile-guard hook plan is blocked on that data. In the meantime the `_forceatmo` battle scenes were disabled at the data layer (the Rohan scenes in `ee2cb04b`, the Mordor scenes in `62470413`) rather than by touching this patch — which the audit confirms is not implicated. See [shader-precompilation.md](shader-precompilation.md) + [battle-load-diagnostics.md](battle-load-diagnostics.md).
+
 ## GitHub Issue
 
 - **Issue:** #43 — [feat: atmosphere persistence for forced-atmosphere scenes](https://github.com/haterade22/TAOM/issues/43)
