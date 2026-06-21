@@ -8,6 +8,12 @@ namespace TAOM.Features.CompanionTactics.FormationPresets.Models;
 /// Persistable formation preset. The <see cref="SaveableField"/> attributes mark fields for
 /// SaveSystem serialization; class id is registered in <see cref="FormationPresetSaveableTypeDefiner"/>
 /// (BaseId 726900601, class 101 — matches the original developer mod for save-import compat).
+///
+/// NOTE: field id 3 is intentionally retired. It previously held a <c>DateTime _createdAt</c>, which
+/// the TaleWorlds SaveSystem cannot serialize (DateTime is not a registered basic/struct type) — every
+/// campaign save crashed in <c>GameData.Write</c> with a null serialized buffer once a preset existed.
+/// The remaining field ids (1,2,4,5,6) are unchanged so any already-persisted data still maps; the gap
+/// at 3 is deliberate (do not reuse it for a non-equivalent field). See docs/features/companion-tactics.md.
 /// </summary>
 public class HoNFormationPreset
 {
@@ -16,9 +22,6 @@ public class HoNFormationPreset
 
     [SaveableField(2)]
     private string _name;
-
-    [SaveableField(3)]
-    private DateTime _createdAt;
 
     [SaveableField(4)]
     private Dictionary<string, int> _heroFormationAssignments;
@@ -31,7 +34,6 @@ public class HoNFormationPreset
 
     public string Id { get => _id; set => _id = value; }
     public string Name { get => _name; set => _name = value; }
-    public DateTime CreatedAt { get => _createdAt; set => _createdAt = value; }
 
     public Dictionary<string, int> HeroFormationAssignments
     {
@@ -57,7 +59,6 @@ public class HoNFormationPreset
         _heroFormationAssignments = new Dictionary<string, int>();
         _captainHeroIds = new List<string>();
         _formationClasses = new Dictionary<int, int>();
-        _createdAt = DateTime.Now;
     }
 
     public HoNFormationPreset(string name) : this()

@@ -434,8 +434,8 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battle Tactics/Formation Presets", GroupOrder = 28)]
     [SettingPropertyBool("Enable Formation Presets", Order = 0,
-        HintText = "Save/load named OOB hero-to-formation assignments per campaign.")]
-    public bool EnableFormationPresets { get; set; } = true;
+        HintText = "Save/load named OOB hero-to-formation assignments per campaign. Work-in-progress (loading a preset is not yet wired) — off by default; opt in to try it.")]
+    public bool EnableFormationPresets { get; set; } = false;
 
     [SettingPropertyGroup("Battle Tactics/Formation Presets")]
     [SettingPropertyInteger("Max Formation Presets", 1, 20, Order = 1,

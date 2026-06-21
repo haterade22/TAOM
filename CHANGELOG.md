@@ -1,5 +1,50 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-21
+
+### fix(companion-tactics): stop Formation Preset saves from corrupting campaigns; gate the WIP feature off by default
+
+A player reported a crash-to-desktop on **every** save once they saved an Order-of-Battle formation preset
+(crash bundle `taom_crash_20260621_200427_8754f009`, occurrence #2987; 17 GB working set at crash). Root cause:
+`HoNFormationPreset` carried a `[SaveableField(3)] DateTime _createdAt`, and `System.DateTime` is not a type the
+TaleWorlds SaveSystem can serialize (its basic set is int/long/float/string/Vec*/Color/MBGUID — no DateTime/TimeSpan).
+On save the engine fell through to the `CustomStruct` path (`writer.WriteInt((int)Value)` → `InvalidCastException`),
+leaving a null serialized buffer that NRE'd in `GameData.Write`'s `.Sum((byte[] x) => x.Length)` on the
+`AsyncFileSaveDriver` background thread — surfacing as the reported `AggregateException` at `Game.OnSaveCompleted`.
+The field was vestigial (never read anywhere in TAOM). The existing `try/catch` in
+`FormationPresetCampaignBehavior.SyncData` could not catch it — the byte serialization runs later, off-thread,
+outside that block.
+
+- **Fix:** removed the `DateTime` `[SaveableField]`. Remaining ids (1,2,4,5,6) are unchanged so any already-persisted
+  data still maps; id 3 is retired (the gap is deliberate). Every remaining field is now serializable.
+- **Protection:** `EnableFormationPresets` now defaults **off** (the feature is WIP — loading a preset is not yet
+  wired). Players opt in via MCM "Battle Tactics/Formation Presets". The campaign behavior + `SaveableTypeDefiner`
+  stay registered unconditionally, so saves round-trip safely whether the toggle is on or off.
+- **Regression guard:** new `HoNFormationPresetSerializationTests` reflects over the model's `[SaveableField]` members
+  and fails if any is not a serializable type (verified: re-adding a `DateTime` field fails it).
+- **Recovery:** because the save *write* fails, no post-preset save file ever completed — a player's last valid save
+  predates the preset. Loading any existing save and continuing works; the fix is self-healing, no migration needed.
+- **Review findings fixed (`/deep-review` + `/review-codex`, both 0 HIGH/MED):** (1) `FormationPresetSaveableTypeDefiner`
+  no longer re-registers `Dictionary<string,int>`/`Dictionary<int,int>`/`List<string>` — the engine's
+  `SaveableBasicTypeDefiner` already provides them, and re-registering triggers `Debug.FailedAssert("duplicate
+  definition")` in `SaveableTypeDefiner.ConstructContainerDefinition` (verified via ilspycmd on the installed DLL);
+  only the mod-specific `List<HoNFormationPreset>` is registered now. (2) The regression test now uses an
+  exact-closed-type allowlist (basic types + registered classes + registered containers + registered enums, each
+  cited to its definer) instead of a structural "List-of-basic is fine" heuristic — it no longer false-passes an
+  unregistered container (e.g. `Dictionary<float,int>`) and fails closed on an unknown enum, with a source-parse
+  consistency check tying the allowlist to the definer. RCA: `docs/reviews/rca-formation-preset-save-fix-2026-06-21.md`.
+
+Issue #292.
+
+Files: `HoNFormationPreset.cs`, `TaomSettings.cs`, `CompanionTacticsSettingsProvider.cs`,
+`FormationPresetCampaignBehavior.cs` (comment), `TAOM.Tests/Features/CompanionTactics/FormationPresets/HoNFormationPresetSerializationTests.cs`.
+Player was on engine v1.4.6 / repo targets v1.4.5 — SaveSystem behavior is identical; not a version issue.
+
+Caveat: the player also ran two third-party add-ons (`TAOMTweaks.*`, `TAOMCultureAlignmentOverhaul`). The dump names
+only "a null serialized buffer," but TAOM's `DateTime` field independently produces this exact signature and matches
+the player's own correlation, so it is a definite TAOM defect regardless. If CTDs persist on a clean install after
+this fix, that points at the add-ons (separate investigation).
+
 ## 2026-06-20
 
 ### feat(lotr-issues): replace all 43 vanilla procedural issues with LOTR-authored issues

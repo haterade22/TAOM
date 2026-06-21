@@ -9,9 +9,15 @@ using TAOM.Features.CompanionTactics.FormationPresets.Models;
 namespace TAOM.Features.CompanionTactics.FormationPresets.Hooks;
 
 /// <summary>
-/// Owns the SyncData buffer for formation presets. Wraps the SyncData call in try/catch in
-/// case the SaveableTypeDefiner BaseId 726900601 collides with another mod — a parse error
-/// degrades gracefully (presets reset, behavior continues).
+/// Owns the SyncData buffer for formation presets. The try/catch around <c>dataStore.SyncData</c>
+/// guards the LOAD path (deserialize / BaseId collision with another mod) and the save-time ref
+/// population — on a parse error it degrades gracefully (presets reset, behavior continues).
+///
+/// It does NOT and cannot guard the SAVE byte-serialization: the engine writes the buffer later on the
+/// AsyncFileSaveDriver background thread, outside this method, so an unserializable field would crash
+/// there regardless of this catch. The fix for that class of bug lives in the saveable model itself —
+/// keep every <see cref="HoNFormationPreset"/> <c>[SaveableField]</c> a serializable type (pinned by
+/// <c>HoNFormationPresetSerializationTests</c>). History: a <c>DateTime</c> field used to crash every save.
 /// </summary>
 public sealed class FormationPresetCampaignBehavior : CampaignBehaviorBase
 {

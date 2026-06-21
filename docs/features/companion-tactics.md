@@ -106,7 +106,7 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 | `EnableOOBRoleDisplay` | true | Show role indicators on OOB hero items + captain tooltips. |
 | `CompanionRolesDebug` | false | HUD diagnostics. |
 | **Formation Presets (Group 28)** | | |
-| `EnableFormationPresets` | true | Save/load OOB hero-to-formation assignments per campaign. |
+| `EnableFormationPresets` | **false** | Save/load OOB hero-to-formation assignments per campaign. **Off by default — WIP (loading a preset is not yet wired); opt in to try it.** |
 | `MaxFormationPresets` | 10 (1–20) | Save attempts beyond this are refused with a warning ("Preset limit reached. Delete one before saving."). |
 | `FormationPresetsDebug` | false | HUD diagnostics. |
 | **Battle Action Bar (Group 29)** | | |
@@ -125,10 +125,10 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 | `Main/Features/CompanionTactics/Roles/RoleTooltipDecorator.cs` | Cached `PropertyInfo` mutations of vanilla VMs' Name + tooltip cache |
 | `Main/Features/CompanionTactics/Roles/Hooks/Patch35_*.cs` | 3 Harmony postfixes + 1 manual patch (private GetCaptainTooltip) |
 | `Main/Features/CompanionTactics/FormationPresets/FormationPresetService.cs` | CRUD with `MaxFormationPresets` enforcement |
-| `Main/Features/CompanionTactics/FormationPresets/Models/HoNFormationPreset.cs` | `[SaveableField]` POCO; 6 fields |
+| `Main/Features/CompanionTactics/FormationPresets/Models/HoNFormationPreset.cs` | `[SaveableField]` POCO; 5 fields (ids 1,2,4,5,6 — id 3 retired, was unserializable `DateTime`) |
 | `Main/Features/CompanionTactics/FormationPresets/Models/FormationPresetSaveableTypeDefiner.cs` | BaseId 726900601, class 101 |
 | `Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs` | Cached-FieldInfo reflection on `_dataSource`, `_isActive`; `GauntletLayer` lifecycle |
-| `Main/Features/CompanionTactics/FormationPresets/Hooks/FormationPresetCampaignBehavior.cs` | `SyncData` with try/catch — degrades to empty on BaseId collision |
+| `Main/Features/CompanionTactics/FormationPresets/Hooks/FormationPresetCampaignBehavior.cs` | `SyncData` with try/catch — guards the LOAD/ref path only (NOT the off-thread save write); degrades to empty on BaseId collision |
 | `Main/Features/CompanionTactics/FormationPresets/Hooks/Patch35_Mission_OnTick.cs` | **HOT PATH** — toggle check + lazy-cached service call, zero allocations |
 | `Main/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs` | MissionView; field-battle-only `GauntletLayer` attach + 0.5s refresh + 1–9 hotkey input |
 | `Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs` | Implements `CancelStanceOnMove`. Belongs to shared `Patch_MissionTime_SetMovementOrder` category (applied once from `OnMissionBehaviorInitialize` because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`). |
@@ -149,14 +149,16 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 
 ## Tests
 
-74 tests across 6 files in `TAOM.Tests/Features/CompanionTactics/`:
+84 tests across 8 files in `TAOM.Tests/Features/CompanionTactics/`:
 
-- `Roles/CompanionRoleServiceTests.cs` — 24 tests; one per role + edge cases (no equipment; mounted+ranged → HorseArcher; mounted+melee → Cavalry; cache hit/miss; null hero / null equipment).
+- `Roles/CompanionRoleServiceTests.cs` — 25 tests; one per role + edge cases (no equipment; mounted+ranged → HorseArcher; mounted+melee → Cavalry; cache hit/miss; null hero / null equipment).
 - `BattleActionBar/FormationCompositionAnalyzerTests.cs` — 10 tests; HasRanged / HasPolearm / HasShield / HasCavalry positive + negative; ratio thresholds.
 - `BattleActionBar/BattleActionBarServiceTests.cs` — 10 tests; composition→buttons mapping; `EnableVolleyFire = false` removes Volley button; feature-disabled returns empty.
 - `BattleActionBar/TroopStanceManagerTests.cs` — 8 tests; per-formationIndex isolation; ClearAllStances; SetStance toggle behavior.
 - `FormationPresets/FormationPresetServiceTests.cs` — 14 tests; SaveResult.LimitReached path; missing-hero pruning on load; OnGameLoaded; OnMissionEnd state reset; SaveableType round-trip.
 - `FormationPresets/HeroAutoAssignerTests.cs` — 7 tests; each role → expected formation slot scoring; ScoreHeroForFormation null safety.
+- `FormationPresets/HoNFormationPresetSerializationTests.cs` — 5 tests; every `[SaveableField]` must be a save-serializable type (the DateTime save-corruption regression guard, allowlist fails closed on unknown types); every container field's exact closed type is allowlisted; ids unique; retired id 3 not reused; definer registers only the mod-specific container (no duplicate-of-engine registrations).
+- `SharedMovementOrderPostfixTests.cs` — 5 tests; shared `Formation.SetMovementOrder` postfix dispatch (SmartCavalry + CancelStanceOnMove) ordering/guards.
 
 ## How to add a new combat role
 
@@ -179,6 +181,8 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 
 ## Known limitations
 
+- **FormationPresets is WIP and ships off by default (`EnableFormationPresets = false`).** Saving a preset works, but loading one back is not yet wired (the Load path is a stub). The toggle was flipped to off after a save-corruption CTD (see below); opt in via MCM "Battle Tactics/Formation Presets" to try the save side.
+- **History — DateTime save-corruption CTD (fixed 2026-06-21).** `HoNFormationPreset` used to carry a `[SaveableField(3)] DateTime _createdAt`. `System.DateTime` is not a TaleWorlds-serializable type, so once a preset was persisted, **every** campaign save crashed: the engine left a null serialized buffer that NRE'd in `GameData.Write` on the async save thread → `AggregateException` CTD (crash bundle `taom_crash_20260621_200427_8754f009`). The field was vestigial; it was removed (id 3 retired) and pinned by `HoNFormationPresetSerializationTests`. **Player recovery:** because the save *write* failed, no post-preset save file ever completed, so a player's last valid save predates the preset — loading any existing save and continuing works (self-healing, no migration). The `try/catch` in `SyncData` did **not** and **cannot** catch this class of bug: byte serialization runs later on the `AsyncFileSaveDriver` background thread, outside that block. The fix belongs in the saveable model (keep every `[SaveableField]` serializable), not in a behavior-level catch.
 - **Stances are display-only.** Pressing 1–9 in the action bar updates the stance dict and highlights the button, but the formation behavior is unchanged. The original developer's mod was the same — TAOM Phase 1 ports verbatim. Real stance enforcement (firing-order changes, tightened spacing, brace-pose triggers) requires APIs not exposed by the engine and is deferred to a follow-up feature.
 - **`CompanionRoleService._cache` does not evict dead heroes.** Cache is keyed by Hero.StringId. When a hero dies or is removed mid-campaign, the cache entry leaks for the rest of the session. The leak is bounded (one entry per Hero ever inspected) and small — a pathological 1000-hero campaign leaks ~50KB. A follow-up could subscribe to `OnHeroKilled` to evict, but it's not blocking.
 - **Hot-path role detection uses `Agent.SpawnEquipment`, not current battle equipment.** `FormationAdapter.EnsurePolearmShieldCounts` reads each agent's spawn-time equipment to compute polearm + shield counts. If a hero swaps weapons mid-battle, the action bar composition does not update until next mission. Tooltip role detection (campaign-time) uses `Hero.BattleEquipment` and is current.
@@ -188,9 +192,10 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 
 - BaseId: `726900601` (matches the original developer mod for save-import compat).
 - Class id: `101` (`HoNFormationPreset`).
-- Container types registered: `List<HoNFormationPreset>`, `Dictionary<string,int>`, `Dictionary<int,int>`, `List<string>`.
+- `HoNFormationPreset` `[SaveableField]` ids: `1` (`_id`), `2` (`_name`), `4` (`_heroFormationAssignments`), `5` (`_captainHeroIds`), `6` (`_formationClasses`). **Id `3` is retired** (was an unserializable `DateTime _createdAt` that crashed every save — see "Known limitations"). The gap is deliberate; do not reuse id 3 for a non-equivalent field. **Every `[SaveableField]` must be a basic/registered serializable type** — pinned by `HoNFormationPresetSerializationTests`.
+- Container types registered by the TAOM definer: `List<HoNFormationPreset>` only (the SyncData payload). The member containers `Dictionary<string,int>`, `Dictionary<int,int>`, `List<string>` are NOT re-registered — the engine's `SaveableBasicTypeDefiner` already provides them, and re-registering hits `Debug.FailedAssert("duplicate definition")` in `SaveableTypeDefiner.ConstructContainerDefinition` (verified via ilspycmd on the installed DLL, 2026-06-21).
 - SyncData key: `"TAOM_FormationPresets"`.
-- Failure mode: `FormationPresetCampaignBehavior.SyncData` wraps the call in try/catch. On any deserialization error, logs a warning and resets `_savedPresets` to empty rather than crashing the load.
+- Failure modes: `FormationPresetCampaignBehavior.SyncData` wraps the call in try/catch, which guards the **LOAD/ref-population** path — on a deserialization error it logs a warning and resets `_savedPresets` to empty rather than crashing the load. It does **not** guard the **SAVE byte-write**, which the engine performs later on the `AsyncFileSaveDriver` background thread; an unserializable field there crashes regardless of this catch (the DateTime bug). Keep the model's fields serializable.
 
 ## Reviews
 

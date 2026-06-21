@@ -24,9 +24,15 @@ public class FormationPresetSaveableTypeDefiner : SaveableTypeDefiner
 
     protected override void DefineContainerDefinitions()
     {
+        // Only register the container the engine does NOT already provide. The element-type
+        // containers used by HoNFormationPreset's fields — Dictionary<string,int>,
+        // Dictionary<int,int>, List<string> — are ALL registered by the engine's own
+        // SaveableBasicTypeDefiner.DefineContainerDefinitions() (verified via ilspycmd on the
+        // installed TaleWorlds.SaveSystem.dll, 2026-06-21). Re-registering them here hits the
+        // duplicate branch in SaveableTypeDefiner.ConstructContainerDefinition →
+        // Debug.FailedAssert("duplicate definition for ...") at save-system init (assert noise in
+        // editor/debug; no-op in shipping). List<HoNFormationPreset> is mod-specific (the SyncData
+        // payload type) and must be registered here.
         ConstructContainerDefinition(typeof(List<HoNFormationPreset>));
-        ConstructContainerDefinition(typeof(Dictionary<string, int>));
-        ConstructContainerDefinition(typeof(Dictionary<int, int>));
-        ConstructContainerDefinition(typeof(List<string>));
     }
 }

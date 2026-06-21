@@ -11,7 +11,7 @@ public sealed class CompanionTacticsSettingsProvider : ICompanionTacticsSettings
     public bool EnableOOBRoleDisplay => TaomSettings.Instance?.EnableOOBRoleDisplay ?? true;
     public bool CompanionRolesDebug => TaomSettings.Instance?.CompanionRolesDebug ?? false;
 
-    public bool EnableFormationPresets => TaomSettings.Instance?.EnableFormationPresets ?? true;
+    public bool EnableFormationPresets => TaomSettings.Instance?.EnableFormationPresets ?? false;
     public int MaxFormationPresets => TaomSettings.Instance?.MaxFormationPresets ?? 10;
     public bool FormationPresetsDebug => TaomSettings.Instance?.FormationPresetsDebug ?? false;
 
