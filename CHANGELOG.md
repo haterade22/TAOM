@@ -1,5 +1,70 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-20
+
+### feat(lotr-issues): replace all 43 vanilla procedural issues with LOTR-authored issues
+
+The campaign's most frequent player-facing content — the ~43 procedural "issues" that spawn at notables and lords
+(deliver grain, clear a bandit base, escort a caravan, recruit gang members, …) — shipped Calradic flavor text into
+a Middle-earth total conversion. `Main/Features/LotrIssues/` now suppresses all 43 vanilla issue behaviors
+(`LotrIssueSuppression.SuppressAll` → `RemoveBehaviors<T>`, each guarded; the host `IssuesCampaignBehavior` is kept so
+`OnCheckForIssueEvent` still fires) and replaces them with 43 TAOM-authored issues on a generic-template + XML-config
+architecture (mirrors CareerQuest): `taom_lotr_issues.xml` → validating `LotrIssueConfigProvider` → pure
+`ILotrIssueService` → `LotrIssuesCampaignBehavior` (def rides into the issue via `PotentialIssueData.RelatedObject`)
+→ templates → paired quests. Sealed types stay behind `ILotrIssueGiverAdapter`/`ILotrIssueRewardAdapter`
+(ADR-002/007).
+
+- **3 mechanic templates** (`IssueBase` + paired `QuestBase`), each parameterized by config:
+  - **DeliverGoods** (14) — accumulate N of an `item:<id>` trade good, hand in via dialog.
+  - **DeliverPersonnel** (2) — hand over N bandit prisoners from the player's `PrisonRoster`.
+  - **Combat** (27, `variant=`) — event-driven count, auto-completes on N: `DefeatRaids` (24, won battles),
+    `CaptureLords` (1, at-war lord taken prisoner), `WinTournaments` (2, tournament won).
+- The matrix's bespoke Escort/EconomicGather/ConquestMilitary/SocialMisc/CraftItem mechanics were **reframed onto the
+  proven Deliver/Combat mechanics** (the documented "deliberately-simplified" trade-off) rather than blind-built —
+  guaranteeing an engine-validated, non-crashing v1; richer bespoke mechanics are deferred.
+- **Saves:** `LotrIssueSaveableTypeDefiner` base `726900801`, localIds 101–106 (3 issue/quest pairs), clear of
+  CareerQuest's `726900802`.
+- **Localization:** 308 keys in `taom_lotr_issue_strings.xml` (English source-of-truth; defaults also embed inline so
+  text renders pre-translation), registered as a GameText node + an 8th `<LanguageFile>` across all 12
+  `language_data.xml` with per-language stubs; `LanguageDataXmlTests` bumped 7→8. AI translation propagation
+  (`tools/translate_with_claude.py`) is the one deferred standard-pipeline step (English fallback live).
+- **Tests:** 57 LotrIssues (config-provider rules incl. Combat-variant validation, service math, suppression list,
+  template type-keyed invariants) + 21 localization, all green; full build clean. Consolidated deep-review (5 agents):
+  0 HIGH, 0 correctness MED. Codex adversarial pass: 1 HIGH + 1 MED + 1 LOW, all verified against the decompile and
+  fixed in-session (see below).
+- **Recurrence guardrails (so the review findings can't happen again):** `LotrIssueTemplateInvariantsTests` pins
+  `IssueQuestCanBeDuplicated => true` on all 3 templates via reflection (removing it fails the build); the
+  Combat-variant load gate + 3 per-value tests pin the MED. Systemic: new `.claude/rules/csharp-architecture.md`
+  section "One Engine Type for Many Config Variants" (audit EVERY `GetType()`-keyed engine path, not the first found),
+  a matching `/deep-review` Agent-2 SHARED-ENGINE-TYPE CHECK, the "Config Providers MUST Validate" rule extended to
+  consumer-branched string fields, AGENTS.md (Codex side), and memory `feedback_shared_engine_type_enumerate_gettype_paths`.
+- **Codex HIGH fix — `IssueQuestCanBeDuplicated => true` on all 3 templates.** `IssueBase.CheckPreconditions` blocks
+  accepting a 2nd active quest of the same `GetType()` unless this property (default `false`) is overridden; since all
+  configs of a template share one type, the player could otherwise hold at most ONE active quest per template across
+  every config. The 5-agent deep-review found the spawn-side type throttle but missed this accept-side gate. Codex MED:
+  Combat `variant` is now validated at load (unknown value skipped + warned, not silently routed to DefeatRaids).
+- **Known v1 limitation (remaining, accepted = plan Risk #5):** the spawn-side over-representation throttle + cooldown
+  in `IssuesCampaignBehavior` still key on issue **type**, so the world hosts fewer simultaneous LOTR issues than
+  vanilla's 43 distinct types and rare Combat variants surface infrequently. A per-`def.Id` type split is the deferred
+  mitigation if in-game observation shows the rate is too low. (The accept-gate half of this limitation is now fixed,
+  above.)
+
+Constraint: a true per-config issue-type bucket is impossible under the generic-template design without code generation.
+Save-compat: new-campaign feature — a pre-suppression save keeps in-flight vanilla issues whose behavior is now gone.
+Not-tested: in-game issue spawn/turn-in/save-load (entry points; requires a live campaign).
+Research: IssueBase/QuestBase/IssueManager/QuestManager + CampaignEvents.{TournamentFinished,HeroPrisonerTaken,OnPlayerBattleEndEvent} (v1.4.6 decompile).
+
+### fix(dale): re-level the troop tree onto the standard +5 tier ladder
+
+`troops_dale.xml` used an off-ladder level scale (6, 12, 19, 25, 32, 39) while every peer culture
+(Gondor, Rohan, Erebor) had moved to the TAOM ladder `level = 6 + (tier-1)*5`. Remapped all 35 Dale
+troops onto it — 6→6, 12→11, 19→16, 25→21, 32→26, 39→31 — so the 6-tier tree now spans levels 6–31
+(top troops drop 39→31, the direct result of starting at 6 with +5 steps). Levels only: no id, tree,
+skill, or equipment changes, so save-compat holds (engine re-applies on load). Also corrected the
+stale `TIER_LEVEL` table in `tools/generate_dale_troops.py` (it claimed to mirror Erebor/Rohan but
+didn't) so a future regen stays on the ladder. Upgrade ordering verified strictly increasing per
+branch; ModuleData validator clean.
+
 ## 2026-06-19
 
 ### fix(scenes): disable the Mordor `_forceatmo` field-battle scenes that hard-crash some GPUs

@@ -1,8 +1,9 @@
-# LOTR Issues — Vanilla Quest/Issue Conversion Plan
+# LOTR Issues — Vanilla Quest/Issue Conversion
 
-> **Status: PLAN (not yet implemented).** This is the research + disposition deliverable for converting Bannerlord's
-> procedural issue system to Middle-earth. No `Main/Features/LotrIssues/` code exists yet; this doc is the spec a
-> follow-up implementation PR executes. Engine mechanics it relies on are documented in
+> **Status: IMPLEMENTED (2026-06-20).** All 43 vanilla procedural issues are suppressed and replaced by 43
+> TAOM-authored LOTR issues, built on a generic-template + XML-config architecture in `Main/Features/LotrIssues/`.
+> See **Implementation (as built)** below for the shipped design; the disposition matrix and risk analysis that
+> follow are the original research deliverable, kept for provenance. Engine mechanics are documented in
 > [issue-and-quest-system.md](../reference/engine/issue-and-quest-system.md).
 
 ## Overview
@@ -267,6 +268,55 @@ seeds…`). Two relevant facts:
   survival.
 - **Pre-merge:** `/deep-review` then `/review-codex`, orchestrated by `/ship`.
 
+## Implementation (as built)
+
+The shipped feature **collapsed the planned 8 mechanic templates to 3**, all validated by deep-review + the Wave-0
+Codex pass. Every one of the 43 issues maps onto one of these via XML config — no bespoke per-issue classes.
+
+| Template (`IssueBase` + paired `QuestBase`) | Mechanic | Issues |
+|---|---|---|
+| **DeliverGoods** | accumulate N of an `item:<id>` trade good, hand in via dialog | 14 (grain/supplies/draught/crafting/tools/horses/herd/artisan×2/offload/revenue/art-of-trade/tutor/special-weapons) |
+| **DeliverPersonnel** | hand over N bandit prisoners from the player's `PrisonRoster` | 2 (gang recruits, mine laborers) |
+| **Combat** (`variant=`) | event-driven count, auto-completes on N (no turn-in) | 27 — `DefeatRaids` (24, won battles), `CaptureLords` (1, at-war lord taken prisoner), `WinTournaments` (2, tournament won) |
+
+**Why 3, not 8:** the "Escort-a-moving-party", "EconomicGather", "ConquestMilitary", and "SocialMisc/CraftItem"
+mechanics from the matrix below were each reframed onto the proven Deliver/Combat mechanics rather than authored as
+bespoke blind-built templates (e.g. caravan-ambush/escort → "defeat the raiders on the road"; revenue-farming →
+"collect the tithe-in-kind"; lady's-knight/betting-fraud → `WinTournaments`; rescue-the-daughter → "defeat the gang
+that holds her"). This is the matrix's documented **deliberately-simplified** trade-off taken to its conclusion: it
+guarantees a green, non-crashing v1 where every mechanic is already engine-validated, and defers richer bespoke
+mechanics (accompany a live party, price intervention, siege objectives, social minigames) to a future iteration.
+
+**Architecture** (ADR-002 thin entry points / ADR-007 adapters):
+`taom_lotr_issues.xml` → `LotrIssueConfigProvider` (validates, skips-invalid-and-warns, `FiniteFloatValidator`) →
+`ILotrIssueService` (pure: eligibility, count/reward math, reward application) → `LotrIssuesCampaignBehavior` (one
+`OnCheckForIssueEvent` listener; the `LotrIssueDefinition` rides into the constructed issue via
+`PotentialIssueData.RelatedObject`) → the 3 templates → paired quests. Sealed types stay behind
+`ILotrIssueGiverAdapter` / `ILotrIssueRewardAdapter`. Vanilla's 43 issue behaviors are removed in
+`SubModule.OnGameStart` via `LotrIssueSuppression.SuppressAll` (`RemoveBehaviors<T>`, each guarded), keeping the host
+`IssuesCampaignBehavior` so `OnCheckForIssueEvent` still fires. Saves register at base `726900801`, localIds 101–106
+(3 issue/quest pairs).
+
+**Localization:** 308 keys in `taom_lotr_issue_strings.xml` (English source-of-truth; defaults also embed inline in
+the config so text renders pre-translation), registered as a GameText node + an 8th `<LanguageFile>` in all 12
+`language_data.xml` with per-language stubs. AI translation propagation via `tools/translate_with_claude.py` is the
+one remaining standard pipeline step (deferred — English fallback is live).
+
+**Per-type behavior (one mechanism fixed, one is an accepted v1 trade-off — this doc's Risk #5).** All configs of a
+template share one runtime type: 27 Combat → `typeof(CombatLotrIssue)`, 14 DeliverGoods → `typeof(DeliverGoodsLotrIssue)`,
+2 DeliverPersonnel → `typeof(DeliverPersonnelLotrIssue)`. Two engine mechanisms key on the issue **type**:
+
+- **Accept gate — FIXED (Codex review, 2026-06-20).** `IssueBase.CheckPreconditions` blocks accepting a second active
+  quest of the same `GetType()` unless `IssueQuestCanBeDuplicated` is overridden — by default
+  (`IssueQuestCanBeDuplicated => false`) the player could hold at most ONE active quest per template across all its
+  configs. All three templates now override `protected override bool IssueQuestCanBeDuplicated => true`, so configs of a
+  template run concurrently.
+- **Spawn throttle — accepted.** The over-representation score + per-settlement zero-out + cooldown in
+  `IssuesCampaignBehavior` still key on type, so the world hosts fewer simultaneous LOTR issues than vanilla's 43
+  distinct types would, and rare Combat variants surface infrequently. A true per-config type bucket is impossible
+  under the generic-template design without code generation; the deferred mitigation is to split the high-volume
+  templates into a few `def.Id`-keyed subclasses if in-game observation shows the rate is too low.
+
 ## Appendix — Future LOTR Main Quest (out of this effort)
 
 A "War of the Ring" *story arc* as a custom `SpecialQuest` line — NOT a revived StoryMode storyline (TAOM has no
@@ -292,19 +342,25 @@ Ring](war-of-the-ring.md) feature. Register saveables in the same `726900801` se
    in-progress quest's objective list in config between versions soft-locks saved progress (CareerQuest known
    limitation; applies here too).
 
-## Key Files (planned — none exist yet)
+## Key Files (as built)
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/LotrIssues/LotrIssuesCampaignBehavior.cs` | thin behavior: subscribe `OnCheckForIssue` + suppress vanilla |
-| `Main/Features/LotrIssues/ILotrIssueService.cs` / `LotrIssueService.cs` | issue selection + per-mechanic logic |
-| `Main/Features/LotrIssues/Issues/*.cs` | the ≈4–6 generic mechanic `IssueBase`/`QuestBase` classes |
-| `Main/Features/LotrIssues/LotrIssueConfigProvider.cs` | validating XML loader |
-| `Main/Features/LotrIssues/LotrIssueSaveableTypeDefiner.cs` | save registration (base `726900801`) |
-| `Main/_Module/ModuleData/lotr_issues/taom_lotr_issues.xml` | issue content (flavor, cultures, rewards) |
-| `Main/_Module/ModuleData/taom_lotr_issue_strings.xml` | localization keys |
+| `Main/Features/LotrIssues/LotrIssuesCampaignBehavior.cs` | thin behavior: one `OnCheckForIssueEvent` listener → `AddPotentialIssueData` with def-carrying `RelatedObject` |
+| `Main/Features/LotrIssues/ILotrIssueService.cs` / `LotrIssueService.cs` | pure: eligibility, count/reward math, reward application |
+| `Main/Features/LotrIssues/Templates/{DeliverGoods,DeliverPersonnel,Combat}LotrIssue.cs` | the 3 generic mechanic `IssueBase` + paired `QuestBase` classes |
+| `Main/Features/LotrIssues/LotrIssueConfigProvider.cs` | validating XML loader (skips-invalid-and-warns, `FiniteFloatValidator`) |
+| `Main/Features/LotrIssues/LotrIssueSuppression.cs` | `RemoveBehaviors<T>` of all 43 vanilla issue behaviors + suppression-list test |
+| `Main/Features/LotrIssues/LotrIssueSaveableTypeDefiner.cs` | save registration (base `726900801`, localIds 101–106) |
+| `Main/Features/LotrIssues/Domain/*.cs` | `LotrIssueDefinition` + `LotrIssueTemplate`/`IssueGiverOccupation`/`IssueFrequencyTier` enums |
+| `Main/Adapters/{ILotrIssueGiverAdapter,ILotrIssueRewardAdapter}.cs` (+impls) | sealed-type boundary (ADR-007) |
+| `Main/_Module/ModuleData/lotr_issues/taom_lotr_issues.xml` | the 43 issue configs (flavor, cultures, rewards, counts) |
+| `Main/_Module/ModuleData/taom_lotr_issue_strings.xml` | 308 localization keys (English source-of-truth) |
+| `TAOM.Tests/Features/LotrIssues/*` | config-provider + service + suppression tests (50) |
 
 ## GitHub Issue
 
-- **Issue:** _to be created when implementation starts_ (per the mandatory issue-before-commit rule).
-- **Status:** Planning.
+- **Issue:** [#291](https://github.com/haterade22/TAOM/issues/291) — feat(lotr-issues): replace all 43 vanilla
+  procedural issues with LOTR-authored issues.
+- **Status:** Implemented; in-game smoke (issue spawns, text renders, accept→progress→complete, save/load) is the
+  remaining user-side validation gate.

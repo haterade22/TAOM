@@ -118,6 +118,7 @@ public static class IoC
         CrashReportIoC.RegisterCrashReportFeature(container);
         BattleLoadDiagnosticsIoC.RegisterBattleLoadDiagnosticsFeature(container);
         NameplateFadeIoC.RegisterSettlementNameplateFadeFeature(container);
+        Features.LotrIssues.LotrIssuesIoC.RegisterLotrIssuesFeature(container);
 
         _container = container;
 

@@ -4,20 +4,21 @@ This guide is for anyone translating TAOM (Tales From the Age of Men) into anoth
 
 ## Overview
 
-TAOM ships with translatable strings across **three modules** and **seven file types**. Total: ~12,200 strings per language.
+TAOM ships with translatable strings across **three modules** and **eight file types**. Total: ~12,000 strings per language.
 
-### TAOM module (7 files, ~6,238 strings)
+### TAOM module (8 files, ~8,157 strings)
 
 Located at `Main/_Module/ModuleData/Languages/<LANG>/`:
 
 | File | What it contains | Entries |
 |------|------------------|---------|
-| `std_taom_module_strings_{locale}.xml` | Faction names, titles, culture terms, UI labels (career screen, main menu, etc.) | ~653 |
-| `std_taom_wanderer_strings_{locale}.xml` | Wanderer backstories for all cultures | ~1,177 |
+| `std_taom_module_strings_{locale}.xml` | Faction names, titles, culture terms, UI labels (career screen, main menu, etc.) | ~2,104 |
+| `std_taom_wanderer_strings_{locale}.xml` | Wanderer backstories for all cultures | ~1,337 |
 | `std_taom_named_companion_strings_{locale}.xml` | Named companion dialog (Aragorn, Legolas, Gimli, etc.) | ~126 |
 | `std_taom_cc_strings_{locale}.xml` | Character creation narratives (parents, childhood, youth, education, adulthood) | ~772 |
 | `std_taom_career_strings_{locale}.xml` | Career system names, descriptions, ability tooltips, choices | ~2,050 |
 | `std_taom_messenger_strings_{locale}.xml` | Messenger feature UI | ~29 |
+| `std_taom_lotr_issue_strings_{locale}.xml` | LOTR custom-issue text — issue/quest titles, descriptions, giver dialog, objectives | ~308 |
 | `std_taom_xslt_strings_{locale}.xml` | Kingdom/culture/clan/lord/hero descriptions injected via XSLT (Encyclopedia content) | ~1,431 |
 
 ### TAOM_Map module (1 file, ~1,102 strings)
@@ -133,7 +134,7 @@ The repo includes a Claude-powered translation pipeline that produces high-quali
 # Preview cost and counts (no API calls):
 python tools/translate_with_claude.py --lang PL --dry-run
 
-# Run full translation across all 7 TAOM files + TAOM_Map + Armory:
+# Run full translation across all 8 TAOM files + TAOM_Map + Armory:
 python tools/translate_with_claude.py --lang PL --apply
 
 # Translate just one module:

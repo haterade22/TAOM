@@ -108,22 +108,23 @@ Reference: `docs/reviews/rca-scene-tooling-2026-05-28.md` (why this convention e
 
 ## Localization Pipeline
 
-Four scripts that together produce, translate, validate, and inject loc XMLs across all 12 supported languages × 3 modules (TAOM + TAOM_Map + LOTRLOME_Armory). Per-language full coverage is **~10,019 strings** across 27 files (7 TAOM + 1 Map + 19 Armory).
+Four scripts that together produce, translate, validate, and inject loc XMLs across all 12 supported languages × 3 modules (TAOM + TAOM_Map + LOTRLOME_Armory). Per-language full coverage is **~12,000 strings** across 28 files (8 TAOM + 1 Map + 19 Armory).
 
 | Script | Purpose | Output |
 |--------|---------|--------|
-| `generate_translation_template.py` | Generate English templates for a target language across the 7 TAOM source XMLs | `Main/_Module/ModuleData/Languages/<LANG>/std_taom_*.xml` |
-| `translate_with_claude.py` | AI first-draft translation via Claude API (Sonnet 4.5). 4-tier fallback: override → cache → LLM → English. Translates TAOM + TAOM_Map + LOTRLOME_Armory. | All 27 language XMLs for `<LANG>` |
-| `rebuild_translation_files.py` | Inject cached translations into XML files from scratch (rebuilds the language file structure using English source + overrides + cache). Use after API runs to apply translations cleanly. | All 27 language XMLs for `<LANG>` (or `--all` for every language) |
+| `generate_translation_template.py` | Generate English templates for a target language across the 8 TAOM source XMLs | `Main/_Module/ModuleData/Languages/<LANG>/std_taom_*.xml` |
+| `translate_with_claude.py` | AI first-draft translation via Claude API (Sonnet 4.5). 4-tier fallback: override → cache → LLM → English. Translates TAOM + TAOM_Map + LOTRLOME_Armory. | All 28 language XMLs for `<LANG>` |
+| `rebuild_translation_files.py` | Inject cached translations into XML files from scratch (rebuilds the language file structure using English source + overrides + cache). Use after API runs to apply translations cleanly. | All 28 language XMLs for `<LANG>` (or `--all` for every language) |
 | `translation_status.sh` | One-shot status dashboard: per-language cache size + last batch line + running process count. | (stdout) |
 
 **Source XMLs** (the engine's English fallback + translator's discoverable list):
-- `Main/_Module/ModuleData/taom_module_strings.xml` (~653 — faction names, UI labels)
-- `Main/_Module/ModuleData/taom_wanderer_strings.xml` (~1,177 — wanderer backstories)
+- `Main/_Module/ModuleData/taom_module_strings.xml` (~2,104 — faction names, UI labels)
+- `Main/_Module/ModuleData/taom_wanderer_strings.xml` (~1,337 — wanderer backstories)
 - `Main/_Module/ModuleData/named_companions/named_companion_strings.xml` (~126 — Aragorn etc.)
 - `Main/_Module/ModuleData/taom_cc_strings.xml` (~772 — CC narratives)
 - `Main/_Module/ModuleData/taom_career_strings.xml` (~2,050 — career names + tooltips)
 - `Main/_Module/ModuleData/taom_messenger_strings.xml` (~29 — Messenger UI)
+- `Main/_Module/ModuleData/taom_lotr_issue_strings.xml` (~308 — LOTR custom-issue titles, descriptions, giver dialog, objectives)
 - `Main/_Module/ModuleData/taom_xslt_strings.xml` (~1,431 — kingdom/culture/clan/lord/hero descriptions extracted from XSLT)
 
 **External-module source XMLs** (not in repo, in game install — already include English text with inline `{=KEY}`):
@@ -134,7 +135,7 @@ Four scripts that together produce, translate, validate, and inject loc XMLs acr
 - Overrides (hand-curated canonical translations, e.g. Tolkien proper nouns): `tools/translation_overrides/<lang>.json` — git-tracked, edit freely
 - Cache (machine-written API results): `tools/translation_cache/<lang>.json` — git-tracked, ~700KB-1.3MB per language
 
-**Setup:** Set `ANTHROPIC_API_KEY` env var. Estimated cost ~$3-10 per language for a full first pass (~10,000 strings). Cache makes re-runs effectively free.
+**Setup:** Set `ANTHROPIC_API_KEY` env var. Estimated cost ~$3-10 per language for a full first pass (~12,000 strings). Cache makes re-runs effectively free.
 
 **Usage:**
 ```bash

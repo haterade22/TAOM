@@ -107,15 +107,31 @@ public class LanguageDataXmlTests
     }
 
     [TestMethod]
-    public void AllLanguageDirs_HaveExactlySevenLanguageFiles()
+    public void AllLanguageDirs_HaveExactlyEightLanguageFiles()
     {
         foreach (var lang in SupportedLanguageDirs)
         {
             var path = Path.Combine(LanguagesPath, lang, "language_data.xml");
             var doc = XDocument.Load(path);
             var count = doc.Descendants("LanguageFile").Count();
-            Assert.AreEqual(7, count,
-                $"Languages/{lang}/language_data.xml should declare exactly 7 LanguageFile entries (module, wanderer, companion, cc, career, messenger, xslt)");
+            Assert.AreEqual(8, count,
+                $"Languages/{lang}/language_data.xml should declare exactly 8 LanguageFile entries (module, wanderer, companion, cc, career, messenger, lotr_issue, xslt)");
+        }
+    }
+
+    [TestMethod]
+    public void AllLanguageDirs_HaveLotrIssueStringsFile()
+    {
+        foreach (var lang in SupportedLanguageDirs)
+        {
+            var langDataPath = Path.Combine(LanguagesPath, lang, "language_data.xml");
+            var doc = XDocument.Load(langDataPath);
+            var paths = doc.Descendants("LanguageFile")
+                .Select(f => (string)f.Attribute("xml_path") ?? "")
+                .ToList();
+            Assert.IsTrue(
+                paths.Any(p => p.Contains("taom_lotr_issue_strings")),
+                $"Languages/{lang}/language_data.xml missing taom_lotr_issue_strings reference");
         }
     }
 

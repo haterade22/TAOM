@@ -12,9 +12,9 @@ spiders, wargs), race-specific lifespans, alignment-driven diplomacy, a full car
 system, per-kingdom special resources, and dozens of other systems. Every kingdom, clan, lord, and
 troop has been replaced or rewritten to fit Tolkien's world.
 
-**By the numbers:** 55 feature modules · 38 GameModel overrides · 30+ Harmony patch categories ·
+**By the numbers:** 58 feature modules · 39 GameModel overrides · 30+ Harmony patch categories ·
 50 careers across 16 cultures · 11 special resources across 18 kingdoms · 800+ troop definitions ·
-2,600+ unit tests · 85 feature docs.
+2,600+ unit tests · 90 feature docs.
 
 > The active development branch (and the GitHub default) is **`bannerlord-1.4.5`**.
 
@@ -50,14 +50,14 @@ NSubstitute. Shared build settings live in [`Directory.Build.props`](Directory.B
 ```
 TAOM/
 ├── Main/                     # Mod source (.NET Framework 4.7.2)
-│   ├── Features/             # 55 feature modules (CareerSystem, SpecialResources, Elephant, …)
+│   ├── Features/             # 58 feature modules (CareerSystem, SpecialResources, LotrIssues, Elephant, …)
 │   ├── Core/                 # Core infrastructure + IoC
 │   ├── Adapters/             # Sealed-type adapters (IHeroAdapter, etc.)
 │   └── _Module/              # Bannerlord module files (SubModule.xml, ModuleData, GUI)
 ├── TAOM.Tests/               # Unit tests (MSTest + NSubstitute, 2,600+ tests)
 ├── docs/
 │   ├── adrs/                 # Architecture Decision Records (11)
-│   ├── features/             # Feature documentation (85 files)
+│   ├── features/             # Feature documentation (90 files)
 │   └── migration/            # Bannerlord version-migration tracking
 ├── tools/                    # Rebalancing + localization scripts
 ├── .claude/                  # Claude Code config (skills, agents, rules, hooks, memory)
@@ -125,7 +125,7 @@ hand-kitbashed in the editor — see the [build reference](docs/kitbash/erebor/)
 …and dozens more systems (castle recruitment, culture marketplace, troop-weight balancing,
 messengers, quick-action inventory, banner color persistence, settlement guards, custom battles,
 siege defense, tournament armor, shader precompilation, and more). Each is documented under
-[`docs/features/`](docs/features/). LOTR rules are enforced through **38 GameModel overrides** and
+[`docs/features/`](docs/features/). LOTR rules are enforced through **39 GameModel overrides** and
 **30+ Harmony patch categories** — both registries are catalogued in [CLAUDE.md](CLAUDE.md).
 
 ## How It's Built (AI-assisted pipeline)

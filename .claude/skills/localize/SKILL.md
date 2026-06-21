@@ -30,7 +30,7 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 - `tools/translation_status.sh` — coverage report.
 
 ## Validate
-`dotnet test TAOM.Tests --filter "LanguageDataXmlTests"` — enforces 7 LanguageFile refs/language, well-formed XML, no missing files. For Case B the test count bump is mandatory or this goes red.
+`dotnet test TAOM.Tests --filter "LanguageDataXmlTests"` — enforces 8 LanguageFile refs/language, well-formed XML, no missing files. For Case B the test count bump is mandatory or this goes red.
 
 ## Gotchas
 - Morphologically-rich languages (RU/JP/KO/TR/CN) hit gender-agreement rejections that fall back to English — flag for human polish (no auto-fix).

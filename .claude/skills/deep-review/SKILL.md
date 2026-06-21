@@ -127,6 +127,7 @@ FOR EACH FILE that references TaleWorlds APIs:
    - The method is not marked internal/private
    - For GameModel overrides: the base class method signature is correct
    - For Harmony patches: the target method exists with the expected signature
+3. **SHARED-ENGINE-TYPE CHECK (MANDATORY when a generic template/class instantiates ONE engine type for MANY logical config variants — e.g. one IssueBase subclass for N issue configs, one MissionBehavior for N spawns).** The engine's `GetType()`-keyed bookkeeping collapses all variants into a single object. Decompile the engine BASE type + its manager/behavior and grep for EVERY path that branches on the runtime type: `GetType()`, `.GetType() ==`, `is <Type>`, `Dictionary<Type,...>`, type-name cooldown keys. Enumerate ALL of them and confirm the collapsed-to-one-type behavior is acceptable for each — do NOT stop at the first one found. The classic miss (Codex review #61): `IssueBase.CheckPreconditions` has TWO type-keyed gates in one method — a soft spawn-over-representation score AND a HARD accept gate (`IssueQuestCanBeDuplicated`, default false, caps the player at one active quest per type). The review found the soft one and shipped the hard one. For IssueBase the full set is: spawn score + per-settlement zero-out + accept gate + cooldown + despawn. See `.claude/rules/csharp-architecture.md` "One Engine Type for Many Config Variants."
 
 OUTPUT FORMAT:
 For each API usage:

@@ -6,5 +6,6 @@
   <LanguageFile xml_path="IT/std_taom_cc_strings_ita-IT.xml" />
   <LanguageFile xml_path="IT/std_taom_career_strings_ita-IT.xml" />
   <LanguageFile xml_path="IT/std_taom_messenger_strings_ita-IT.xml" />
+  <LanguageFile xml_path="IT/std_taom_lotr_issue_strings_ita-IT.xml" />
   <LanguageFile xml_path="IT/std_taom_xslt_strings_ita-IT.xml" />
 </LanguageData>

@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+  <!-- TAOM LOTR custom-issue player-facing text. English source-of-truth for the 12-language
+       pipeline. Defaults also embed inline in taom_lotr_issues.xml so text renders pre-translation.
+       Harvested by tools/_harvest_lotr_issue_strings.py. -->
+  <string id="taom_lotr_issue_grain_title" text="{=taom_lotr_issue_grain_title}{ISSUE_SETTLEMENT} Needs Seed Grain" />
+  <string id="taom_lotr_issue_grain_desc" text="{=taom_lotr_issue_grain_desc}The folk of {ISSUE_SETTLEMENT} have lost their seed grain and will go hungry unless the fields are sown." />
+  <string id="taom_lotr_issue_grain_brief" text="{=taom_lotr_issue_grain_brief}The shadow has been hard on us, traveller. Rats and a bitter winter took our seed-corn. Without grain to sow, we will not last the year." />
+  <string id="taom_lotr_issue_grain_accept" text="{=taom_lotr_issue_grain_accept}Is there nothing to be done?" />
+  <string id="taom_lotr_issue_grain_expl" text="{=taom_lotr_issue_grain_expl}If you could bring us {COUNT} measures of grain, we could sow the fields before the season turns. We have no coin to buy so much ourselves." />
+  <string id="taom_lotr_issue_grain_soln" text="{=taom_lotr_issue_grain_soln}I will find that grain for you." />
+  <string id="taom_lotr_issue_grain_task" text="{=taom_lotr_issue_grain_task}Collect grain ({COUNT})" />
+  <string id="taom_lotr_issue_supplies_title" text="{=taom_lotr_issue_supplies_title}A Host in Need of Provender" />
+  <string id="taom_lotr_issue_supplies_desc" text="{=taom_lotr_issue_supplies_desc}A lord mustering for war needs grain to feed the gathered host before it marches." />
+  <string id="taom_lotr_issue_supplies_brief" text="{=taom_lotr_issue_supplies_brief}My soldiers gather, but a sword does not fill a belly. Without grain to feed them, this host will scatter before it ever takes the field." />
+  <string id="taom_lotr_issue_supplies_accept" text="{=taom_lotr_issue_supplies_accept}How much grain do you need?" />
+  <string id="taom_lotr_issue_supplies_expl" text="{=taom_lotr_issue_supplies_expl}Bring me {COUNT} measures of grain and my men will march on full stomachs. Do this and the realm will remember it." />
+  <string id="taom_lotr_issue_supplies_soln" text="{=taom_lotr_issue_supplies_soln}I will bring grain for your host." />
+  <string id="taom_lotr_issue_supplies_task" text="{=taom_lotr_issue_supplies_task}Bring grain to the host ({COUNT})" />
+  <string id="taom_lotr_issue_draught_title" text="{=taom_lotr_issue_draught_title}{ISSUE_SETTLEMENT} Needs Beasts of Burden" />
+  <string id="taom_lotr_issue_draught_desc" text="{=taom_lotr_issue_draught_desc}The village of {ISSUE_SETTLEMENT} has lost its draught oxen and cannot work the fields." />
+  <string id="taom_lotr_issue_draught_brief" text="{=taom_lotr_issue_draught_brief}Our oxen were taken -- some by raiders, some by hunger. Without beasts to pull the plough, the soil lies hard and the fields go unsown." />
+  <string id="taom_lotr_issue_draught_accept" text="{=taom_lotr_issue_draught_accept}What would help?" />
+  <string id="taom_lotr_issue_draught_expl" text="{=taom_lotr_issue_draught_expl}If you could drive {COUNT} head of cattle to us, we could break the ground again before the season turns." />
+  <string id="taom_lotr_issue_draught_soln" text="{=taom_lotr_issue_draught_soln}I will bring you cattle." />
+  <string id="taom_lotr_issue_draught_task" text="{=taom_lotr_issue_draught_task}Deliver cattle ({COUNT})" />
+  <string id="taom_lotr_issue_crafting_title" text="{=taom_lotr_issue_crafting_title}{ISSUE_SETTLEMENT} Needs Iron" />
+  <string id="taom_lotr_issue_crafting_desc" text="{=taom_lotr_issue_crafting_desc}The smith of {ISSUE_SETTLEMENT} has run dry of iron and cannot mend tool nor blade." />
+  <string id="taom_lotr_issue_crafting_brief" text="{=taom_lotr_issue_crafting_brief}The forge stands cold, traveller. Without iron the smith cannot shoe a horse nor mend a ploughshare, and the village suffers for it." />
+  <string id="taom_lotr_issue_crafting_accept" text="{=taom_lotr_issue_crafting_accept}Where would you get iron?" />
+  <string id="taom_lotr_issue_crafting_expl" text="{=taom_lotr_issue_crafting_expl}Bring us {COUNT} bars of iron and the forge will ring again. We have not the coin to buy so much ourselves." />
+  <string id="taom_lotr_issue_crafting_soln" text="{=taom_lotr_issue_crafting_soln}I will find you iron." />
+  <string id="taom_lotr_issue_crafting_task" text="{=taom_lotr_issue_crafting_task}Deliver iron ({COUNT})" />
+  <string id="taom_lotr_issue_tools_title" text="{=taom_lotr_issue_tools_title}{ISSUE_SETTLEMENT} Needs Tools" />
+  <string id="taom_lotr_issue_tools_desc" text="{=taom_lotr_issue_tools_desc}The folk of {ISSUE_SETTLEMENT} lack the tools to work their land and craft their goods." />
+  <string id="taom_lotr_issue_tools_brief" text="{=taom_lotr_issue_tools_brief}Our scythes are rusted through and our hammers broken. Honest work is slow work without honest tools." />
+  <string id="taom_lotr_issue_tools_accept" text="{=taom_lotr_issue_tools_accept}What do you need?" />
+  <string id="taom_lotr_issue_tools_expl" text="{=taom_lotr_issue_tools_expl}If you brought us {COUNT} sets of tools, the village could set itself right and prosper once more." />
+  <string id="taom_lotr_issue_tools_soln" text="{=taom_lotr_issue_tools_soln}I will bring you tools." />
+  <string id="taom_lotr_issue_tools_task" text="{=taom_lotr_issue_tools_task}Deliver tools ({COUNT})" />
+  <string id="taom_lotr_issue_horses_title" text="{=taom_lotr_issue_horses_title}A Lord in Want of Horses" />
+  <string id="taom_lotr_issue_horses_desc" text="{=taom_lotr_issue_horses_desc}A lord has lost mounts to war and attrition and needs fresh horses for his riders." />
+  <string id="taom_lotr_issue_horses_brief" text="{=taom_lotr_issue_horses_brief}War is cruel to horses, traveller. Mine have foundered on hard roads, and a rider without a mount is but a slow spearman." />
+  <string id="taom_lotr_issue_horses_accept" text="{=taom_lotr_issue_horses_accept}How many horses do you need?" />
+  <string id="taom_lotr_issue_horses_expl" text="{=taom_lotr_issue_horses_expl}Bring me {COUNT} sound horses and my riders will ride again. You will be paid well for them." />
+  <string id="taom_lotr_issue_horses_soln" text="{=taom_lotr_issue_horses_soln}I will bring you horses." />
+  <string id="taom_lotr_issue_horses_task" text="{=taom_lotr_issue_horses_task}Deliver horses ({COUNT})" />
+  <string id="taom_lotr_issue_recruits_title" text="{=taom_lotr_issue_recruits_title}Fresh Blood for the Gang" />
+  <string id="taom_lotr_issue_recruits_desc" text="{=taom_lotr_issue_recruits_desc}A gang leader wants captured outlaws pressed into his service." />
+  <string id="taom_lotr_issue_recruits_brief" text="{=taom_lotr_issue_recruits_brief}A gang is only as strong as its numbers, and mine are thin. Bring me captives with no love for the law and I'll make use of them." />
+  <string id="taom_lotr_issue_recruits_accept" text="{=taom_lotr_issue_recruits_accept}What kind of captives?" />
+  <string id="taom_lotr_issue_recruits_expl" text="{=taom_lotr_issue_recruits_expl}Bring me {COUNT} bandit captives and I'll see them put to work. There's coin in it for you, no questions asked." />
+  <string id="taom_lotr_issue_recruits_soln" text="{=taom_lotr_issue_recruits_soln}I'll bring you captives." />
+  <string id="taom_lotr_issue_recruits_task" text="{=taom_lotr_issue_recruits_task}Deliver bandit captives ({COUNT})" />
+  <string id="taom_lotr_issue_laborers_title" text="{=taom_lotr_issue_laborers_title}Hands for the Mines" />
+  <string id="taom_lotr_issue_laborers_desc" text="{=taom_lotr_issue_laborers_desc}A landowner needs strong backs for hard labor and will take captured bandits." />
+  <string id="taom_lotr_issue_laborers_brief" text="{=taom_lotr_issue_laborers_brief}The diggings need workers and free men won't go down there. Bring me bandits in chains and they'll earn their keep with a pick." />
+  <string id="taom_lotr_issue_laborers_accept" text="{=taom_lotr_issue_laborers_accept}You want prisoners?" />
+  <string id="taom_lotr_issue_laborers_expl" text="{=taom_lotr_issue_laborers_expl}Bring me {COUNT} bandit captives for the labor gangs and I'll pay you for the trouble of taking them." />
+  <string id="taom_lotr_issue_laborers_soln" text="{=taom_lotr_issue_laborers_soln}I'll bring you captives." />
+  <string id="taom_lotr_issue_laborers_task" text="{=taom_lotr_issue_laborers_task}Deliver bandit captives ({COUNT})" />
+  <string id="taom_lotr_issue_banditbase_title" text="{=taom_lotr_issue_banditbase_title}A Lair Near {ISSUE_SETTLEMENT}" />
+  <string id="taom_lotr_issue_banditbase_desc" text="{=taom_lotr_issue_banditbase_desc}A nest of raiders preys on the roads near {ISSUE_SETTLEMENT}." />
+  <string id="taom_lotr_issue_banditbase_brief" text="{=taom_lotr_issue_banditbase_brief}There is a foul nest of them in the hills, traveller. They take our goods and our people, and the watch is too few to root them out." />
+  <string id="taom_lotr_issue_banditbase_accept" text="{=taom_lotr_issue_banditbase_accept}Where is this lair?" />
+  <string id="taom_lotr_issue_banditbase_expl" text="{=taom_lotr_issue_banditbase_expl}Break the raiders that haunt our roads and we will reward you. The land will breathe easier for it." />
+  <string id="taom_lotr_issue_banditbase_soln" text="{=taom_lotr_issue_banditbase_soln}I will scour them out." />
+  <string id="taom_lotr_issue_outlaws_title" text="{=taom_lotr_issue_outlaws_title}Outlaws on the Trade Roads" />
+  <string id="taom_lotr_issue_outlaws_desc" text="{=taom_lotr_issue_outlaws_desc}Raiding bands are strangling a merchant's trade and must be broken." />
+  <string id="taom_lotr_issue_outlaws_brief" text="{=taom_lotr_issue_outlaws_brief}My caravans cannot pass for the raiders on the roads. Break enough of their bands and trade may flow again." />
+  <string id="taom_lotr_issue_outlaws_accept" text="{=taom_lotr_issue_outlaws_accept}How many bands?" />
+  <string id="taom_lotr_issue_outlaws_expl" text="{=taom_lotr_issue_outlaws_expl}Defeat the bands plaguing the roads -- a few good victories will scatter the rest -- and I will pay you handsomely." />
+  <string id="taom_lotr_issue_outlaws_soln" text="{=taom_lotr_issue_outlaws_soln}I will clear the roads." />
+  <string id="taom_lotr_issue_poachers_title" text="{=taom_lotr_issue_poachers_title}A Gang of Poachers" />
+  <string id="taom_lotr_issue_poachers_desc" text="{=taom_lotr_issue_poachers_desc}A large band of poachers is ruining a merchant's hunting trade." />
+  <string id="taom_lotr_issue_poachers_brief" text="{=taom_lotr_issue_poachers_brief}Poachers have grown bold and many -- they strip the woods bare and drive off honest hunters. Someone must put them down." />
+  <string id="taom_lotr_issue_poachers_accept" text="{=taom_lotr_issue_poachers_accept}Where do they range?" />
+  <string id="taom_lotr_issue_poachers_expl" text="{=taom_lotr_issue_poachers_expl}Defeat the poacher band and the woods will be ours again. There is coin in it for you." />
+  <string id="taom_lotr_issue_poachers_soln" text="{=taom_lotr_issue_poachers_soln}I will deal with them." />
+  <string id="taom_lotr_issue_captured_title" text="{=taom_lotr_issue_captured_title}My Men in Chains" />
+  <string id="taom_lotr_issue_captured_desc" text="{=taom_lotr_issue_captured_desc}A gang leader's people were taken by bounty hunters and he wants them freed." />
+  <string id="taom_lotr_issue_captured_brief" text="{=taom_lotr_issue_captured_brief}Bounty hunters took some of my lads and mean to sell them. Break the curs holding them and there's coin in it -- quiet coin." />
+  <string id="taom_lotr_issue_captured_accept" text="{=taom_lotr_issue_captured_accept}Who holds them?" />
+  <string id="taom_lotr_issue_captured_expl" text="{=taom_lotr_issue_captured_expl}Find the band that took my men and break it. Do that and you'll be paid, no questions asked." />
+  <string id="taom_lotr_issue_captured_soln" text="{=taom_lotr_issue_captured_soln}I'll free your men." />
+  <string id="taom_lotr_issue_deserters_title" text="{=taom_lotr_issue_deserters_title}Deserters Prey on {ISSUE_SETTLEMENT}" />
+  <string id="taom_lotr_issue_deserters_desc" text="{=taom_lotr_issue_deserters_desc}A band of deserters extorts {ISSUE_SETTLEMENT} and has killed those who refused." />
+  <string id="taom_lotr_issue_deserters_brief" text="{=taom_lotr_issue_deserters_brief}Broken men with swords come for our grain and our coin, and they have spilled blood. We cannot fight them alone." />
+  <string id="taom_lotr_issue_deserters_accept" text="{=taom_lotr_issue_deserters_accept}I will help. Where are they?" />
+  <string id="taom_lotr_issue_deserters_expl" text="{=taom_lotr_issue_deserters_expl}Lie in wait and break the deserters when they come. Rid us of them and you will have our thanks and our coin." />
+  <string id="taom_lotr_issue_deserters_soln" text="{=taom_lotr_issue_deserters_soln}I will end their raiding." />
+  <string id="taom_lotr_issue_commons_title" text="{=taom_lotr_issue_commons_title}Trouble at the Commons" />
+  <string id="taom_lotr_issue_commons_desc" text="{=taom_lotr_issue_commons_desc}Armed rivals are seizing a village's grazing commons by force." />
+  <string id="taom_lotr_issue_commons_brief" text="{=taom_lotr_issue_commons_brief}Hard men have taken our grazing land and drive off any who come near. Our herds starve while they hold it." />
+  <string id="taom_lotr_issue_commons_accept" text="{=taom_lotr_issue_commons_accept}Who are they?" />
+  <string id="taom_lotr_issue_commons_expl" text="{=taom_lotr_issue_commons_expl}Drive the rivals off our commons by force and the pasture is ours again. We will pay what we can." />
+  <string id="taom_lotr_issue_commons_soln" text="{=taom_lotr_issue_commons_soln}I will drive them off." />
+  <string id="taom_lotr_issue_rivalgang_title" text="{=taom_lotr_issue_rivalgang_title}A Rival Moves In" />
+  <string id="taom_lotr_issue_rivalgang_desc" text="{=taom_lotr_issue_rivalgang_desc}A rival gang is muscling in on a crime boss's turf and must be put down." />
+  <string id="taom_lotr_issue_rivalgang_brief" text="{=taom_lotr_issue_rivalgang_brief}Another outfit thinks it can take what's mine. Break them in the alleys and the streets are quiet again -- and you're paid." />
+  <string id="taom_lotr_issue_rivalgang_accept" text="{=taom_lotr_issue_rivalgang_accept}Where do they gather?" />
+  <string id="taom_lotr_issue_rivalgang_expl" text="{=taom_lotr_issue_rivalgang_expl}Defeat the rival gang and make an example of them. Do it and there's good coin waiting." />
+  <string id="taom_lotr_issue_rivalgang_soln" text="{=taom_lotr_issue_rivalgang_soln}Consider it done." />
+  <string id="taom_lotr_issue_spy_title" text="{=taom_lotr_issue_spy_title}An Enemy Spy" />
+  <string id="taom_lotr_issue_spy_desc" text="{=taom_lotr_issue_spy_desc}A lord suspects an enemy agent moves against him and wants the spy's party hunted down." />
+  <string id="taom_lotr_issue_spy_brief" text="{=taom_lotr_issue_spy_brief}There is a viper in the grass -- an agent of my enemies, moving with a band of cutthroats. Find them and end them before they strike." />
+  <string id="taom_lotr_issue_spy_accept" text="{=taom_lotr_issue_spy_accept}How will I know them?" />
+  <string id="taom_lotr_issue_spy_expl" text="{=taom_lotr_issue_spy_expl}Hunt down the spy's party and destroy it. Rid me of this threat and you will be well rewarded." />
+  <string id="taom_lotr_issue_spy_soln" text="{=taom_lotr_issue_spy_soln}I will hunt them down." />
+  <string id="taom_lotr_issue_revolt_title" text="{=taom_lotr_issue_revolt_title}A Renegade Noble" />
+  <string id="taom_lotr_issue_revolt_desc" text="{=taom_lotr_issue_revolt_desc}A lesser noble has raised the peasants in revolt and must be put down." />
+  <string id="taom_lotr_issue_revolt_brief" text="{=taom_lotr_issue_revolt_brief}A petty lordling stirs the peasants against their betters and gathers armed men. Break his strength before the revolt spreads." />
+  <string id="taom_lotr_issue_revolt_accept" text="{=taom_lotr_issue_revolt_accept}Where does he muster?" />
+  <string id="taom_lotr_issue_revolt_expl" text="{=taom_lotr_issue_revolt_expl}Defeat the renegade and his rabble and order will be restored. You will be rewarded for your service." />
+  <string id="taom_lotr_issue_revolt_soln" text="{=taom_lotr_issue_revolt_soln}I will put down this revolt." />
+  <string id="taom_lotr_issue_company_title" text="{=taom_lotr_issue_company_title}A Company of Trouble" />
+  <string id="taom_lotr_issue_company_desc" text="{=taom_lotr_issue_company_desc}A band of sellswords hired to harass a lord must be driven off." />
+  <string id="taom_lotr_issue_company_brief" text="{=taom_lotr_issue_company_brief}My enemies have set a company of sellswords on my lands. They burn and pillage under another's coin. Break them for me." />
+  <string id="taom_lotr_issue_company_accept" text="{=taom_lotr_issue_company_accept}Where do they raid?" />
+  <string id="taom_lotr_issue_company_expl" text="{=taom_lotr_issue_company_expl}Defeat the mercenary company and my lands will know peace again. I will pay you well." />
+  <string id="taom_lotr_issue_company_soln" text="{=taom_lotr_issue_company_soln}I will break them." />
+  <string id="taom_lotr_issue_prodigal_title" text="{=taom_lotr_issue_prodigal_title}A Kinsman in Debt" />
+  <string id="taom_lotr_issue_prodigal_desc" text="{=taom_lotr_issue_prodigal_desc}A lord's young kinsman has fallen in with a gang that holds him for his debts." />
+  <string id="taom_lotr_issue_prodigal_brief" text="{=taom_lotr_issue_prodigal_brief}A foolish young cousin of mine fell among thieves and now they hold him against his debts. Break the gang and free him." />
+  <string id="taom_lotr_issue_prodigal_accept" text="{=taom_lotr_issue_prodigal_accept}Where is he held?" />
+  <string id="taom_lotr_issue_prodigal_expl" text="{=taom_lotr_issue_prodigal_expl}Defeat the gang that holds my kinsman and bring him out. I will pay his debt many times over for your trouble." />
+  <string id="taom_lotr_issue_prodigal_soln" text="{=taom_lotr_issue_prodigal_soln}I will free your kinsman." />
+  <string id="taom_lotr_issue_rival_title" text="{=taom_lotr_issue_rival_title}A Hated Rival" />
+  <string id="taom_lotr_issue_rival_desc" text="{=taom_lotr_issue_rival_desc}A lord wants a rival lord taken alive in battle." />
+  <string id="taom_lotr_issue_rival_brief" text="{=taom_lotr_issue_rival_brief}There is a lord I would see humbled -- taken alive and brought low. Capture an enemy lord in battle and I will count it a great service." />
+  <string id="taom_lotr_issue_rival_accept" text="{=taom_lotr_issue_rival_accept}You want him alive?" />
+  <string id="taom_lotr_issue_rival_expl" text="{=taom_lotr_issue_rival_expl}Take an enemy lord prisoner in battle and the deed is done. You will be richly rewarded." />
+  <string id="taom_lotr_issue_rival_soln" text="{=taom_lotr_issue_rival_soln}I will bring you a captive lord." />
+  <string id="taom_lotr_issue_caravanambush_title" text="{=taom_lotr_issue_caravanambush_title}An Ambush on the Road" />
+  <string id="taom_lotr_issue_caravanambush_desc" text="{=taom_lotr_issue_caravanambush_desc}Raiders have set an ambush for a merchant's caravan and must be broken first." />
+  <string id="taom_lotr_issue_caravanambush_brief" text="{=taom_lotr_issue_caravanambush_brief}I have word that brigands lie in wait for my caravan on the road ahead. Spring their trap and break them before they bleed me dry." />
+  <string id="taom_lotr_issue_caravanambush_accept" text="{=taom_lotr_issue_caravanambush_accept}Where do they lie in wait?" />
+  <string id="taom_lotr_issue_caravanambush_expl" text="{=taom_lotr_issue_caravanambush_expl}Find the raiders waiting in ambush and destroy them. Clear the road and my goods -- and your reward -- will get through." />
+  <string id="taom_lotr_issue_caravanambush_soln" text="{=taom_lotr_issue_caravanambush_soln}I will break their ambush." />
+  <string id="taom_lotr_issue_escortcaravan_title" text="{=taom_lotr_issue_escortcaravan_title}Clear the Trade Road" />
+  <string id="taom_lotr_issue_escortcaravan_desc" text="{=taom_lotr_issue_escortcaravan_desc}A merchant's caravan cannot pass until the raiding bands on the road are broken." />
+  <string id="taom_lotr_issue_escortcaravan_brief" text="{=taom_lotr_issue_escortcaravan_brief}My wains dare not roll while raiders haunt the road. Break enough of their bands and the way will be open for honest trade once more." />
+  <string id="taom_lotr_issue_escortcaravan_accept" text="{=taom_lotr_issue_escortcaravan_accept}How many stand in the way?" />
+  <string id="taom_lotr_issue_escortcaravan_expl" text="{=taom_lotr_issue_escortcaravan_expl}Defeat the bands that menace the trade road and my caravans will roll again. I will pay you well for safe passage." />
+  <string id="taom_lotr_issue_escortcaravan_soln" text="{=taom_lotr_issue_escortcaravan_soln}I will clear the way." />
+  <string id="taom_lotr_issue_herd_title" text="{=taom_lotr_issue_herd_title}A Herd for {ISSUE_SETTLEMENT}" />
+  <string id="taom_lotr_issue_herd_desc" text="{=taom_lotr_issue_herd_desc}The folk of {ISSUE_SETTLEMENT} need livestock driven to them to rebuild their flocks." />
+  <string id="taom_lotr_issue_herd_brief" text="{=taom_lotr_issue_herd_brief}Wolves and worse have thinned our flocks to nothing, traveller. Without beasts to breed, the village will not see another fat winter." />
+  <string id="taom_lotr_issue_herd_accept" text="{=taom_lotr_issue_herd_accept}What would you have me bring?" />
+  <string id="taom_lotr_issue_herd_expl" text="{=taom_lotr_issue_herd_expl}Drive {COUNT} head of sheep to us and our flocks may grow again. We will pay what the village can spare." />
+  <string id="taom_lotr_issue_herd_soln" text="{=taom_lotr_issue_herd_soln}I will bring you a herd." />
+  <string id="taom_lotr_issue_herd_task" text="{=taom_lotr_issue_herd_task}Deliver livestock ({COUNT})" />
+  <string id="taom_lotr_issue_snare_title" text="{=taom_lotr_issue_snare_title}A Trap for the Greedy" />
+  <string id="taom_lotr_issue_snare_desc" text="{=taom_lotr_issue_snare_desc}A gang leader wants a band of grasping rivals lured into a trap and destroyed." />
+  <string id="taom_lotr_issue_snare_brief" text="{=taom_lotr_issue_snare_brief}There's a greedy lot who'd rob their own mothers. Lure them in and break them, and we'll split what they were carrying -- quiet-like." />
+  <string id="taom_lotr_issue_snare_accept" text="{=taom_lotr_issue_snare_accept}Who are these rivals?" />
+  <string id="taom_lotr_issue_snare_expl" text="{=taom_lotr_issue_snare_expl}Spring the trap on the greedy band and put them down. Do it clean and there's a fat purse in it for you." />
+  <string id="taom_lotr_issue_snare_soln" text="{=taom_lotr_issue_snare_soln}I'll see it done." />
+  <string id="taom_lotr_issue_cantsell_title" text="{=taom_lotr_issue_cantsell_title}Wares With No Market" />
+  <string id="taom_lotr_issue_cantsell_desc" text="{=taom_lotr_issue_cantsell_desc}An artisan's goods are piling up unsold and need carrying to a market that wants them." />
+  <string id="taom_lotr_issue_cantsell_brief" text="{=taom_lotr_issue_cantsell_brief}My shelves groan with ware no one here will buy, traveller. If my craft could reach a town that needs it, I would not starve at my own bench." />
+  <string id="taom_lotr_issue_cantsell_accept" text="{=taom_lotr_issue_cantsell_accept}What do you make?" />
+  <string id="taom_lotr_issue_cantsell_expl" text="{=taom_lotr_issue_cantsell_expl}Bring me {COUNT} loads of pottery to send to better markets and I will pay you a share of the trade." />
+  <string id="taom_lotr_issue_cantsell_soln" text="{=taom_lotr_issue_cantsell_soln}I will see your wares move." />
+  <string id="taom_lotr_issue_cantsell_task" text="{=taom_lotr_issue_cantsell_task}Gather pottery to trade ({COUNT})" />
+  <string id="taom_lotr_issue_overpriced_title" text="{=taom_lotr_issue_overpriced_title}Costly Materials" />
+  <string id="taom_lotr_issue_overpriced_desc" text="{=taom_lotr_issue_overpriced_desc}An artisan cannot afford the raw materials their craft demands and needs them brought cheap." />
+  <string id="taom_lotr_issue_overpriced_brief" text="{=taom_lotr_issue_overpriced_brief}The price of good leather has climbed beyond all reason, and my craft dies for want of it. Bring me some at an honest cost and I will remember it." />
+  <string id="taom_lotr_issue_overpriced_accept" text="{=taom_lotr_issue_overpriced_accept}What do you need?" />
+  <string id="taom_lotr_issue_overpriced_expl" text="{=taom_lotr_issue_overpriced_expl}Bring me {COUNT} loads of leather and my workshop will sing again. I will pay you fairly for the trouble." />
+  <string id="taom_lotr_issue_overpriced_soln" text="{=taom_lotr_issue_overpriced_soln}I will find you leather." />
+  <string id="taom_lotr_issue_overpriced_task" text="{=taom_lotr_issue_overpriced_task}Deliver leather ({COUNT})" />
+  <string id="taom_lotr_issue_offload_title" text="{=taom_lotr_issue_offload_title}Hot Goods to Move" />
+  <string id="taom_lotr_issue_offload_desc" text="{=taom_lotr_issue_offload_desc}A gang leader has stolen goods to shift and needs a quiet hand to carry them." />
+  <string id="taom_lotr_issue_offload_brief" text="{=taom_lotr_issue_offload_brief}I've a pile of goods that mustn't be seen by the wrong eyes. Carry them for me and there's clean coin waiting -- no questions, no names." />
+  <string id="taom_lotr_issue_offload_accept" text="{=taom_lotr_issue_offload_accept}What am I carrying?" />
+  <string id="taom_lotr_issue_offload_expl" text="{=taom_lotr_issue_offload_expl}Get me {COUNT} loads of these goods and move them quietly. Do it well and the next job is yours too." />
+  <string id="taom_lotr_issue_offload_soln" text="{=taom_lotr_issue_offload_soln}I'll move your goods." />
+  <string id="taom_lotr_issue_offload_task" text="{=taom_lotr_issue_offload_task}Acquire the goods ({COUNT})" />
+  <string id="taom_lotr_issue_revenue_title" text="{=taom_lotr_issue_revenue_title}The Tithe in Kind" />
+  <string id="taom_lotr_issue_revenue_desc" text="{=taom_lotr_issue_revenue_desc}A landowner is owed a tithe in grain that the outlying farms have not paid." />
+  <string id="taom_lotr_issue_revenue_brief" text="{=taom_lotr_issue_revenue_brief}The farms owe me their tithe and pay it in grain, not coin -- when they pay at all. Collect what is owed and bring it in, and you will have a cut." />
+  <string id="taom_lotr_issue_revenue_accept" text="{=taom_lotr_issue_revenue_accept}How much is owed?" />
+  <string id="taom_lotr_issue_revenue_expl" text="{=taom_lotr_issue_revenue_expl}Bring in {COUNT} measures of grain as the tithe demands and I will pay you a fair share for the collecting." />
+  <string id="taom_lotr_issue_revenue_soln" text="{=taom_lotr_issue_revenue_soln}I will gather your tithe." />
+  <string id="taom_lotr_issue_revenue_task" text="{=taom_lotr_issue_revenue_task}Collect the grain tithe ({COUNT})" />
+  <string id="taom_lotr_issue_arttrade_title" text="{=taom_lotr_issue_arttrade_title}A Venture in Trade" />
+  <string id="taom_lotr_issue_arttrade_desc" text="{=taom_lotr_issue_arttrade_desc}A would-be trader needs goods brought in to turn a profit and prove the venture sound." />
+  <string id="taom_lotr_issue_arttrade_brief" text="{=taom_lotr_issue_arttrade_brief}I mean to make my fortune in trade, traveller, but I need the goods to start. Bring me the stock and I will turn it to gold for us both." />
+  <string id="taom_lotr_issue_arttrade_accept" text="{=taom_lotr_issue_arttrade_accept}What stock do you need?" />
+  <string id="taom_lotr_issue_arttrade_expl" text="{=taom_lotr_issue_arttrade_expl}Bring me {COUNT} loads of oil to set the venture rolling and you will share in the profit when it is sold." />
+  <string id="taom_lotr_issue_arttrade_soln" text="{=taom_lotr_issue_arttrade_soln}I will stock your venture." />
+  <string id="taom_lotr_issue_arttrade_task" text="{=taom_lotr_issue_arttrade_task}Deliver trade stock ({COUNT})" />
+  <string id="taom_lotr_issue_smugglers_title" text="{=taom_lotr_issue_smugglers_title}Breaking the Smugglers" />
+  <string id="taom_lotr_issue_smugglers_desc" text="{=taom_lotr_issue_smugglers_desc}A smuggling ring is undercutting honest trade and a merchant wants it broken." />
+  <string id="taom_lotr_issue_smugglers_brief" text="{=taom_lotr_issue_smugglers_brief}A ring of smugglers floods the market with goods that paid no toll, and honest traders are ruined for it. Break their run and trade will right itself." />
+  <string id="taom_lotr_issue_smugglers_accept" text="{=taom_lotr_issue_smugglers_accept}Where do they run their goods?" />
+  <string id="taom_lotr_issue_smugglers_expl" text="{=taom_lotr_issue_smugglers_expl}Defeat the smugglers and scatter their ring. Rid the roads of them and I will pay you for the service." />
+  <string id="taom_lotr_issue_smugglers_soln" text="{=taom_lotr_issue_smugglers_soln}I will break their ring." />
+  <string id="taom_lotr_issue_gangweapons_title" text="{=taom_lotr_issue_gangweapons_title}Arms for the Taking" />
+  <string id="taom_lotr_issue_gangweapons_desc" text="{=taom_lotr_issue_gangweapons_desc}A gang leader wants a rival's weapon cache seized by force." />
+  <string id="taom_lotr_issue_gangweapons_brief" text="{=taom_lotr_issue_gangweapons_brief}A rival outfit sits on a fine cache of arms, and my lads fight with rusted knives. Break them and the cache is ours -- and a share is yours." />
+  <string id="taom_lotr_issue_gangweapons_accept" text="{=taom_lotr_issue_gangweapons_accept}Where is this cache?" />
+  <string id="taom_lotr_issue_gangweapons_expl" text="{=taom_lotr_issue_gangweapons_expl}Defeat the band that holds the arms and the weapons are mine to take. Do it and there's good coin in your hand." />
+  <string id="taom_lotr_issue_gangweapons_soln" text="{=taom_lotr_issue_gangweapons_soln}I'll take their cache." />
+  <string id="taom_lotr_issue_garrison_title" text="{=taom_lotr_issue_garrison_title}Holding the Walls" />
+  <string id="taom_lotr_issue_garrison_desc" text="{=taom_lotr_issue_garrison_desc}A lord's garrison is hard-pressed and needs the enemies harrying it driven off." />
+  <string id="taom_lotr_issue_garrison_brief" text="{=taom_lotr_issue_garrison_brief}My garrison is stretched thin and the enemy presses us at every turn. Break the bands that harry my walls and you will give my men room to breathe." />
+  <string id="taom_lotr_issue_garrison_accept" text="{=taom_lotr_issue_garrison_accept}Who presses you?" />
+  <string id="taom_lotr_issue_garrison_expl" text="{=taom_lotr_issue_garrison_expl}Defeat the enemies harrying my garrison and the walls will hold. The realm will reward you for it." />
+  <string id="taom_lotr_issue_garrison_soln" text="{=taom_lotr_issue_garrison_soln}I will relieve your garrison." />
+  <string id="taom_lotr_issue_conquest_title" text="{=taom_lotr_issue_conquest_title}Breaking the Enemy's Strength" />
+  <string id="taom_lotr_issue_conquest_desc" text="{=taom_lotr_issue_conquest_desc}A lord planning a conquest needs the enemy's field forces broken before he marches." />
+  <string id="taom_lotr_issue_conquest_brief" text="{=taom_lotr_issue_conquest_brief}I mean to take what is rightfully mine, but the enemy's strength stands in the way. Break his forces in the field and the prize will fall the easier." />
+  <string id="taom_lotr_issue_conquest_accept" text="{=taom_lotr_issue_conquest_accept}What would you have me do?" />
+  <string id="taom_lotr_issue_conquest_expl" text="{=taom_lotr_issue_conquest_expl}Defeat the enemy's forces and weaken his hold. Do this and a share of the conquest's spoils is yours." />
+  <string id="taom_lotr_issue_conquest_soln" text="{=taom_lotr_issue_conquest_soln}I will break his strength." />
+  <string id="taom_lotr_issue_raid_title" text="{=taom_lotr_issue_raid_title}Carrying the War to the Enemy" />
+  <string id="taom_lotr_issue_raid_desc" text="{=taom_lotr_issue_raid_desc}A lord wants the enemy's lands harried and their raiding parties destroyed." />
+  <string id="taom_lotr_issue_raid_brief" text="{=taom_lotr_issue_raid_brief}It is time the enemy felt the war on his own soil. Hunt down his raiding parties and put them to the sword, and his lands will know fear." />
+  <string id="taom_lotr_issue_raid_accept" text="{=taom_lotr_issue_raid_accept}Where shall I strike?" />
+  <string id="taom_lotr_issue_raid_expl" text="{=taom_lotr_issue_raid_expl}Defeat the enemy parties that range his borders. Bloody his lands and you will be well rewarded." />
+  <string id="taom_lotr_issue_raid_soln" text="{=taom_lotr_issue_raid_soln}I will carry the war to them." />
+  <string id="taom_lotr_issue_scout_title" text="{=taom_lotr_issue_scout_title}Eyes on the Enemy" />
+  <string id="taom_lotr_issue_scout_desc" text="{=taom_lotr_issue_scout_desc}A lord needs the enemy's patrols broken so his scouts can see the borderlands clear." />
+  <string id="taom_lotr_issue_scout_brief" text="{=taom_lotr_issue_scout_brief}I am blind to the enemy's movements while his patrols range the border. Break them and clear my sight, and I will know where to strike." />
+  <string id="taom_lotr_issue_scout_accept" text="{=taom_lotr_issue_scout_accept}Where do his patrols range?" />
+  <string id="taom_lotr_issue_scout_expl" text="{=taom_lotr_issue_scout_expl}Defeat the enemy patrols screening the border so my scouts can pass. Do this and you will be paid for it." />
+  <string id="taom_lotr_issue_scout_soln" text="{=taom_lotr_issue_scout_soln}I will clear the border." />
+  <string id="taom_lotr_issue_knight_title" text="{=taom_lotr_issue_knight_title}A Champion's Favour" />
+  <string id="taom_lotr_issue_knight_desc" text="{=taom_lotr_issue_knight_desc}A noblewoman wishes to see her favour carried to victory in the lists." />
+  <string id="taom_lotr_issue_knight_brief" text="{=taom_lotr_issue_knight_brief}I would have a champion bear my favour in the tourney and win glory in my name. Triumph in the lists and you will earn my lasting gratitude." />
+  <string id="taom_lotr_issue_knight_accept" text="{=taom_lotr_issue_knight_accept}You would have me fight in the lists?" />
+  <string id="taom_lotr_issue_knight_expl" text="{=taom_lotr_issue_knight_expl}Win a tournament bearing my favour and the honour is ours both. You will be rewarded for the victory." />
+  <string id="taom_lotr_issue_knight_soln" text="{=taom_lotr_issue_knight_soln}I will win for you." />
+  <string id="taom_lotr_issue_tutor_title" text="{=taom_lotr_issue_tutor_title}For the Heir's Schooling" />
+  <string id="taom_lotr_issue_tutor_desc" text="{=taom_lotr_issue_tutor_desc}A lord wants fine cloth and goods brought to outfit his heir's education in proper style." />
+  <string id="taom_lotr_issue_tutor_brief" text="{=taom_lotr_issue_tutor_brief}My heir must be schooled as befits our line, with fine raiment and the trappings of learning. Bring me what is needed and the boy will want for nothing." />
+  <string id="taom_lotr_issue_tutor_accept" text="{=taom_lotr_issue_tutor_accept}What must I bring?" />
+  <string id="taom_lotr_issue_tutor_expl" text="{=taom_lotr_issue_tutor_expl}Bring me {COUNT} bolts of velvet to clothe my heir as a lord should be clothed, and you will be paid well for it." />
+  <string id="taom_lotr_issue_tutor_soln" text="{=taom_lotr_issue_tutor_soln}I will provide for your heir." />
+  <string id="taom_lotr_issue_tutor_task" text="{=taom_lotr_issue_tutor_task}Deliver fine cloth ({COUNT})" />
+  <string id="taom_lotr_issue_training_title" text="{=taom_lotr_issue_training_title}Blooding the Retainers" />
+  <string id="taom_lotr_issue_training_desc" text="{=taom_lotr_issue_training_desc}A landowner wants his green retainers blooded against real foes in the field." />
+  <string id="taom_lotr_issue_training_brief" text="{=taom_lotr_issue_training_brief}My retainers are soft and untried, and soft men die in the first fight. Lead them against real foes and make hard soldiers of them." />
+  <string id="taom_lotr_issue_training_accept" text="{=taom_lotr_issue_training_accept}You want them blooded?" />
+  <string id="taom_lotr_issue_training_expl" text="{=taom_lotr_issue_training_expl}Win some hard fights and teach my retainers the trade of war. Toughen them and you will be paid for the teaching." />
+  <string id="taom_lotr_issue_training_soln" text="{=taom_lotr_issue_training_soln}I will make soldiers of them." />
+  <string id="taom_lotr_issue_inn_title" text="{=taom_lotr_issue_inn_title}Swindled and Sore" />
+  <string id="taom_lotr_issue_inn_desc" text="{=taom_lotr_issue_inn_desc}A notable was cheated of his property by swindlers and wants them taught a hard lesson." />
+  <string id="taom_lotr_issue_inn_brief" text="{=taom_lotr_issue_inn_brief}A pack of cheats and sharps took my property with loaded dice and false papers. Break them for me and I may yet hold up my head in this town." />
+  <string id="taom_lotr_issue_inn_accept" text="{=taom_lotr_issue_inn_accept}Who cheated you?" />
+  <string id="taom_lotr_issue_inn_expl" text="{=taom_lotr_issue_inn_expl}Find the swindlers and break them. Teach them a lesson they will not forget and I will reward you as I am able." />
+  <string id="taom_lotr_issue_inn_soln" text="{=taom_lotr_issue_inn_soln}I will settle the score." />
+  <string id="taom_lotr_issue_feud_title" text="{=taom_lotr_issue_feud_title}An Old Feud" />
+  <string id="taom_lotr_issue_feud_desc" text="{=taom_lotr_issue_feud_desc}A bitter feud has turned to bloodshed and a lord wants the rival faction's armed men broken." />
+  <string id="taom_lotr_issue_feud_brief" text="{=taom_lotr_issue_feud_brief}There is bad blood between my house and another, old and deep, and now it has come to swords. Break their armed men and the feud may at last be settled." />
+  <string id="taom_lotr_issue_feud_accept" text="{=taom_lotr_issue_feud_accept}Who do you feud with?" />
+  <string id="taom_lotr_issue_feud_expl" text="{=taom_lotr_issue_feud_expl}Defeat the rival faction's men and end this feud by force. Do it and my house will be in your debt." />
+  <string id="taom_lotr_issue_feud_soln" text="{=taom_lotr_issue_feud_soln}I will end this feud." />
+  <string id="taom_lotr_issue_daughter_title" text="{=taom_lotr_issue_daughter_title}A Daughter Taken" />
+  <string id="taom_lotr_issue_daughter_desc" text="{=taom_lotr_issue_daughter_desc}A notable's daughter has been seized by a gang and her family wants her freed." />
+  <string id="taom_lotr_issue_daughter_brief" text="{=taom_lotr_issue_daughter_brief}My daughter -- they have taken my daughter, traveller, and demand a ransom I cannot pay. Break the curs that hold her and bring her home to me." />
+  <string id="taom_lotr_issue_daughter_accept" text="{=taom_lotr_issue_daughter_accept}Where is she held?" />
+  <string id="taom_lotr_issue_daughter_expl" text="{=taom_lotr_issue_daughter_expl}Find the gang that took my girl and break it. Bring her safe home and I will give you all I have to spare." />
+  <string id="taom_lotr_issue_daughter_soln" text="{=taom_lotr_issue_daughter_soln}I will bring her home." />
+  <string id="taom_lotr_issue_betting_title" text="{=taom_lotr_issue_betting_title}A Sure Wager" />
+  <string id="taom_lotr_issue_betting_desc" text="{=taom_lotr_issue_betting_desc}A gang leader has bet heavily on the tourney and needs a fighter to make his wager pay." />
+  <string id="taom_lotr_issue_betting_brief" text="{=taom_lotr_issue_betting_brief}I've laid down a heavy purse on the next tourney, and I don't like to lose. Win it for me and there's a fat share of the winnings in it for you." />
+  <string id="taom_lotr_issue_betting_accept" text="{=taom_lotr_issue_betting_accept}You want me to win the tourney?" />
+  <string id="taom_lotr_issue_betting_expl" text="{=taom_lotr_issue_betting_expl}Win a tournament and make my wager pay. Take the prize and I'll see you well rewarded from the winnings." />
+  <string id="taom_lotr_issue_betting_soln" text="{=taom_lotr_issue_betting_soln}I'll win your wager." />
+  <string id="taom_lotr_issue_special_title" text="{=taom_lotr_issue_special_title}Iron for the Forge" />
+  <string id="taom_lotr_issue_special_desc" text="{=taom_lotr_issue_special_desc}A gang leader wants fine iron brought to forge a set of special blades." />
+  <string id="taom_lotr_issue_special_brief" text="{=taom_lotr_issue_special_brief}I want blades made -- proper ones, not the rubbish my lads carry -- and that takes good iron. Bring me the metal and I'll see the smiths put to work." />
+  <string id="taom_lotr_issue_special_accept" text="{=taom_lotr_issue_special_accept}How much iron?" />
+  <string id="taom_lotr_issue_special_expl" text="{=taom_lotr_issue_special_expl}Bring me {COUNT} bars of good iron for the forge and there's coin in it -- the blades are my business." />
+  <string id="taom_lotr_issue_special_soln" text="{=taom_lotr_issue_special_soln}I'll bring you iron." />
+  <string id="taom_lotr_issue_special_task" text="{=taom_lotr_issue_special_task}Deliver iron ({COUNT})" />
+  <string id="taom_lotr_issue_fallback_title" text="{=taom_lotr_issue_fallback_title}A Request for Aid" />
+  <string id="taom_lotr_issue_fallback_desc" text="{=taom_lotr_issue_fallback_desc}A local needs goods delivered." />
+  <string id="taom_lotr_issue_fallback_brief" text="{=taom_lotr_issue_fallback_brief}We are in need, traveller." />
+  <string id="taom_lotr_issue_fallback_accept" text="{=taom_lotr_issue_fallback_accept}How can I help?" />
+  <string id="taom_lotr_issue_fallback_expl" text="{=taom_lotr_issue_fallback_expl}Bring us {COUNT} {ITEM} and we will be saved." />
+  <string id="taom_lotr_issue_fallback_soln" text="{=taom_lotr_issue_fallback_soln}I will bring what you need." />
+  <string id="taom_lotr_issue_common_accepted" text="{=taom_lotr_issue_common_accepted}Bring {COUNT} {ITEM} to {QUEST_SETTLEMENT}." />
+  <string id="taom_lotr_issue_common_ready" text="{=taom_lotr_issue_common_ready}You have enough to complete the task. Return to {QUEST_SETTLEMENT} to hand it over." />
+  <string id="taom_lotr_issue_common_cancel" text="{=taom_lotr_issue_common_cancel}The agreement has been cancelled." />
+  <string id="taom_lotr_issue_common_timeout" text="{=taom_lotr_issue_common_timeout}You failed to deliver the goods in time." />
+  <string id="taom_lotr_issue_common_offer_accept" text="{=taom_lotr_issue_common_offer_accept}Thank you. I will not forget this kindness." />
+  <string id="taom_lotr_issue_common_have_you" text="{=taom_lotr_issue_common_have_you}Have you brought what we need?" />
+  <string id="taom_lotr_issue_common_thanks" text="{=taom_lotr_issue_common_thanks}Bless you, traveller. You have saved us." />
+  <string id="taom_lotr_issue_common_await" text="{=taom_lotr_issue_common_await}We await your return." />
+  <string id="taom_lotr_issue_common_turnin" text="{=taom_lotr_issue_common_turnin}Yes. Here it is." />
+  <string id="taom_lotr_issue_common_working" text="{=taom_lotr_issue_common_working}Not yet — I'm working on it." />
+  <string id="taom_lotr_issue_common_not_enough" text="{=taom_lotr_issue_common_not_enough}You don't have enough yet." />
+  <string id="taom_lotr_issue_common_task" text="{=taom_lotr_issue_common_task}Collect Goods" />
+  <string id="taom_lotr_issue_pers_expl" text="{=taom_lotr_issue_pers_expl}Bring me {COUNT} captives and I will pay you well." />
+  <string id="taom_lotr_issue_pers_soln" text="{=taom_lotr_issue_pers_soln}I will bring you captives." />
+  <string id="taom_lotr_issue_pers_accepted" text="{=taom_lotr_issue_pers_accepted}Deliver {COUNT} bandit captives to {QUEST_SETTLEMENT}." />
+  <string id="taom_lotr_issue_pers_ready" text="{=taom_lotr_issue_pers_ready}You have enough captives. Return to {QUEST_SETTLEMENT} to hand them over." />
+  <string id="taom_lotr_issue_pers_timeout" text="{=taom_lotr_issue_pers_timeout}You failed to deliver the captives in time." />
+  <string id="taom_lotr_issue_pers_have" text="{=taom_lotr_issue_pers_have}Have you brought the captives?" />
+  <string id="taom_lotr_issue_pers_thanks" text="{=taom_lotr_issue_pers_thanks}They'll do nicely. You have my thanks." />
+  <string id="taom_lotr_issue_pers_turnin" text="{=taom_lotr_issue_pers_turnin}Yes. Here they are." />
+  <string id="taom_lotr_issue_pers_not_enough" text="{=taom_lotr_issue_pers_not_enough}You don't have enough captives yet." />
+  <string id="taom_lotr_issue_pers_task" text="{=taom_lotr_issue_pers_task}Take bandit captives" />
+  <string id="taom_lotr_issue_combat_expl" text="{=taom_lotr_issue_combat_expl}Deal with our enemies and you will be rewarded." />
+  <string id="taom_lotr_issue_combat_soln" text="{=taom_lotr_issue_combat_soln}I will deal with them." />
+  <string id="taom_lotr_issue_combat_task_capture" text="{=taom_lotr_issue_combat_task_capture}Capture enemy lords ({COUNT})" />
+  <string id="taom_lotr_issue_combat_task_tourney" text="{=taom_lotr_issue_combat_task_tourney}Win tournaments ({COUNT})" />
+  <string id="taom_lotr_issue_combat_task_defeat" text="{=taom_lotr_issue_combat_task_defeat}Defeat the raiders ({COUNT})" />
+  <string id="taom_lotr_issue_combat_timeout" text="{=taom_lotr_issue_combat_timeout}You failed to deal with the threat in time." />
+</strings>

@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  TAOM LOTR custom issues (Wave 0 — T1 DeliverGoods proof-of-life).
+  Loaded + validated by LotrIssueConfigProvider (NOT a GameText/SubModule.xml node).
+  Each <LotrIssue> instantiates a generic template (template=) parameterized by these attributes.
+  Text keys embed {=KEY}default inline so they render before the Wave-7 localization harvest;
+  {ISSUE_SETTLEMENT}/{COUNT}/{ITEM} are filled at runtime by the template.
+  item_source: "item:<id>" (Wave 0) or "category:<cat>" (Wave 1+). troop_source: basic|elite|bandit|mount|prisoners.
+-->
+<LotrIssues>
+  <LotrIssue id="lotr_headman_needs_grain"
+             template="DeliverGoods"
+             giver_occupation="Headman"
+             frequency="Common"
+             cultures=""
+             count="12"
+             count_per_difficulty="120"
+             item_source="item:grain"
+             troop_source=""
+             reward_gold_base="0"
+             reward_gold_per_difficulty="1500"
+             reward_renown="1"
+             reward_item=""
+             relation_min="-10"
+             title_key="{=taom_lotr_issue_grain_title}{ISSUE_SETTLEMENT} Needs Seed Grain"
+             description_key="{=taom_lotr_issue_grain_desc}The folk of {ISSUE_SETTLEMENT} have lost their seed grain and will go hungry unless the fields are sown."
+             brief_key="{=taom_lotr_issue_grain_brief}The shadow has been hard on us, traveller. Rats and a bitter winter took our seed-corn. Without grain to sow, we will not last the year."
+             accept_key="{=taom_lotr_issue_grain_accept}Is there nothing to be done?"
+             explanation_key="{=taom_lotr_issue_grain_expl}If you could bring us {COUNT} measures of grain, we could sow the fields before the season turns. We have no coin to buy so much ourselves."
+             solution_accept_key="{=taom_lotr_issue_grain_soln}I will find that grain for you."
+             task_key="{=taom_lotr_issue_grain_task}Collect grain ({COUNT})" />
+
+  <!-- Wave 1 — remaining T1 DeliverGoods (single-item deliveries; reuse the proof-of-life template). -->
+
+  <LotrIssue id="lotr_army_needs_supplies"
+             template="DeliverGoods" giver_occupation="Lord" frequency="VeryCommon" cultures=""
+             count="20" count_per_difficulty="160" item_source="item:grain"
+             reward_gold_base="0" reward_gold_per_difficulty="2200" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_supplies_title}A Host in Need of Provender"
+             description_key="{=taom_lotr_issue_supplies_desc}A lord mustering for war needs grain to feed the gathered host before it marches."
+             brief_key="{=taom_lotr_issue_supplies_brief}My soldiers gather, but a sword does not fill a belly. Without grain to feed them, this host will scatter before it ever takes the field."
+             accept_key="{=taom_lotr_issue_supplies_accept}How much grain do you need?"
+             explanation_key="{=taom_lotr_issue_supplies_expl}Bring me {COUNT} measures of grain and my men will march on full stomachs. Do this and the realm will remember it."
+             solution_accept_key="{=taom_lotr_issue_supplies_soln}I will bring grain for your host."
+             task_key="{=taom_lotr_issue_supplies_task}Bring grain to the host ({COUNT})" />
+
+  <LotrIssue id="lotr_village_needs_draught"
+             template="DeliverGoods" giver_occupation="Headman" frequency="Common" cultures=""
+             count="6" count_per_difficulty="20" item_source="item:cow"
+             reward_gold_base="0" reward_gold_per_difficulty="1100" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_draught_title}{ISSUE_SETTLEMENT} Needs Beasts of Burden"
+             description_key="{=taom_lotr_issue_draught_desc}The village of {ISSUE_SETTLEMENT} has lost its draught oxen and cannot work the fields."
+             brief_key="{=taom_lotr_issue_draught_brief}Our oxen were taken -- some by raiders, some by hunger. Without beasts to pull the plough, the soil lies hard and the fields go unsown."
+             accept_key="{=taom_lotr_issue_draught_accept}What would help?"
+             explanation_key="{=taom_lotr_issue_draught_expl}If you could drive {COUNT} head of cattle to us, we could break the ground again before the season turns."
+             solution_accept_key="{=taom_lotr_issue_draught_soln}I will bring you cattle."
+             task_key="{=taom_lotr_issue_draught_task}Deliver cattle ({COUNT})" />
+
+  <LotrIssue id="lotr_village_needs_crafting_materials"
+             template="DeliverGoods" giver_occupation="RuralNotable" frequency="Rare" cultures=""
+             count="8" count_per_difficulty="24" item_source="item:iron"
+             reward_gold_base="0" reward_gold_per_difficulty="1400" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_crafting_title}{ISSUE_SETTLEMENT} Needs Iron"
+             description_key="{=taom_lotr_issue_crafting_desc}The smith of {ISSUE_SETTLEMENT} has run dry of iron and cannot mend tool nor blade."
+             brief_key="{=taom_lotr_issue_crafting_brief}The forge stands cold, traveller. Without iron the smith cannot shoe a horse nor mend a ploughshare, and the village suffers for it."
+             accept_key="{=taom_lotr_issue_crafting_accept}Where would you get iron?"
+             explanation_key="{=taom_lotr_issue_crafting_expl}Bring us {COUNT} bars of iron and the forge will ring again. We have not the coin to buy so much ourselves."
+             solution_accept_key="{=taom_lotr_issue_crafting_soln}I will find you iron."
+             task_key="{=taom_lotr_issue_crafting_task}Deliver iron ({COUNT})" />
+
+  <LotrIssue id="lotr_village_needs_tools"
+             template="DeliverGoods" giver_occupation="Headman" frequency="Common" cultures=""
+             count="10" count_per_difficulty="30" item_source="item:tools"
+             reward_gold_base="0" reward_gold_per_difficulty="1200" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_tools_title}{ISSUE_SETTLEMENT} Needs Tools"
+             description_key="{=taom_lotr_issue_tools_desc}The folk of {ISSUE_SETTLEMENT} lack the tools to work their land and craft their goods."
+             brief_key="{=taom_lotr_issue_tools_brief}Our scythes are rusted through and our hammers broken. Honest work is slow work without honest tools."
+             accept_key="{=taom_lotr_issue_tools_accept}What do you need?"
+             explanation_key="{=taom_lotr_issue_tools_expl}If you brought us {COUNT} sets of tools, the village could set itself right and prosper once more."
+             solution_accept_key="{=taom_lotr_issue_tools_soln}I will bring you tools."
+             task_key="{=taom_lotr_issue_tools_task}Deliver tools ({COUNT})" />
+
+  <LotrIssue id="lotr_lord_needs_horses"
+             template="DeliverGoods" giver_occupation="Lord" frequency="VeryCommon" cultures=""
+             count="6" count_per_difficulty="18" item_source="item:sumpter_horse"
+             reward_gold_base="0" reward_gold_per_difficulty="2000" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_horses_title}A Lord in Want of Horses"
+             description_key="{=taom_lotr_issue_horses_desc}A lord has lost mounts to war and attrition and needs fresh horses for his riders."
+             brief_key="{=taom_lotr_issue_horses_brief}War is cruel to horses, traveller. Mine have foundered on hard roads, and a rider without a mount is but a slow spearman."
+             accept_key="{=taom_lotr_issue_horses_accept}How many horses do you need?"
+             explanation_key="{=taom_lotr_issue_horses_expl}Bring me {COUNT} sound horses and my riders will ride again. You will be paid well for them."
+             solution_accept_key="{=taom_lotr_issue_horses_soln}I will bring you horses."
+             task_key="{=taom_lotr_issue_horses_task}Deliver horses ({COUNT})" />
+
+  <!-- Wave 1 — DeliverPersonnel (hand over N bandit prisoners; no item/troop source needed). -->
+
+  <LotrIssue id="lotr_gang_needs_recruits"
+             template="DeliverPersonnel" giver_occupation="GangLeader" frequency="VeryCommon" cultures=""
+             count="5" count_per_difficulty="10"
+             reward_gold_base="0" reward_gold_per_difficulty="1600" reward_renown="0" relation_min="-10"
+             title_key="{=taom_lotr_issue_recruits_title}Fresh Blood for the Gang"
+             description_key="{=taom_lotr_issue_recruits_desc}A gang leader wants captured outlaws pressed into his service."
+             brief_key="{=taom_lotr_issue_recruits_brief}A gang is only as strong as its numbers, and mine are thin. Bring me captives with no love for the law and I'll make use of them."
+             accept_key="{=taom_lotr_issue_recruits_accept}What kind of captives?"
+             explanation_key="{=taom_lotr_issue_recruits_expl}Bring me {COUNT} bandit captives and I'll see them put to work. There's coin in it for you, no questions asked."
+             solution_accept_key="{=taom_lotr_issue_recruits_soln}I'll bring you captives."
+             task_key="{=taom_lotr_issue_recruits_task}Deliver bandit captives ({COUNT})" />
+
+  <LotrIssue id="lotr_landlord_needs_laborers"
+             template="DeliverPersonnel" giver_occupation="RuralNotable" frequency="Common" cultures=""
+             count="6" count_per_difficulty="12"
+             reward_gold_base="0" reward_gold_per_difficulty="1500" reward_renown="0" relation_min="-10"
+             title_key="{=taom_lotr_issue_laborers_title}Hands for the Mines"
+             description_key="{=taom_lotr_issue_laborers_desc}A landowner needs strong backs for hard labor and will take captured bandits."
+             brief_key="{=taom_lotr_issue_laborers_brief}The diggings need workers and free men won't go down there. Bring me bandits in chains and they'll earn their keep with a pick."
+             accept_key="{=taom_lotr_issue_laborers_accept}You want prisoners?"
+             explanation_key="{=taom_lotr_issue_laborers_expl}Bring me {COUNT} bandit captives for the labor gangs and I'll pay you for the trouble of taking them."
+             solution_accept_key="{=taom_lotr_issue_laborers_soln}I'll bring you captives."
+             task_key="{=taom_lotr_issue_laborers_task}Deliver bandit captives ({COUNT})" />
+
+  <!-- Wave 2 — Combat (event-driven count; variant=DefeatRaids counts won battles, CaptureLords counts at-war lord captures). -->
+
+  <LotrIssue id="lotr_nearby_bandit_base" template="Combat" variant="DefeatRaids"
+             giver_occupation="Headman" frequency="VeryCommon" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="1800" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_banditbase_title}A Lair Near {ISSUE_SETTLEMENT}"
+             description_key="{=taom_lotr_issue_banditbase_desc}A nest of raiders preys on the roads near {ISSUE_SETTLEMENT}."
+             brief_key="{=taom_lotr_issue_banditbase_brief}There is a foul nest of them in the hills, traveller. They take our goods and our people, and the watch is too few to root them out."
+             accept_key="{=taom_lotr_issue_banditbase_accept}Where is this lair?"
+             explanation_key="{=taom_lotr_issue_banditbase_expl}Break the raiders that haunt our roads and we will reward you. The land will breathe easier for it."
+             solution_accept_key="{=taom_lotr_issue_banditbase_soln}I will scour them out." />
+
+  <LotrIssue id="lotr_merchant_outlaws" template="Combat" variant="DefeatRaids"
+             giver_occupation="Merchant" frequency="VeryCommon" cultures="" count="3" count_per_difficulty="2"
+             reward_gold_base="0" reward_gold_per_difficulty="2000" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_outlaws_title}Outlaws on the Trade Roads"
+             description_key="{=taom_lotr_issue_outlaws_desc}Raiding bands are strangling a merchant's trade and must be broken."
+             brief_key="{=taom_lotr_issue_outlaws_brief}My caravans cannot pass for the raiders on the roads. Break enough of their bands and trade may flow again."
+             accept_key="{=taom_lotr_issue_outlaws_accept}How many bands?"
+             explanation_key="{=taom_lotr_issue_outlaws_expl}Defeat the bands plaguing the roads -- a few good victories will scatter the rest -- and I will pay you handsomely."
+             solution_accept_key="{=taom_lotr_issue_outlaws_soln}I will clear the roads." />
+
+  <LotrIssue id="lotr_merchant_poachers" template="Combat" variant="DefeatRaids"
+             giver_occupation="Merchant" frequency="Common" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="1600" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_poachers_title}A Gang of Poachers"
+             description_key="{=taom_lotr_issue_poachers_desc}A large band of poachers is ruining a merchant's hunting trade."
+             brief_key="{=taom_lotr_issue_poachers_brief}Poachers have grown bold and many -- they strip the woods bare and drive off honest hunters. Someone must put them down."
+             accept_key="{=taom_lotr_issue_poachers_accept}Where do they range?"
+             explanation_key="{=taom_lotr_issue_poachers_expl}Defeat the poacher band and the woods will be ours again. There is coin in it for you."
+             solution_accept_key="{=taom_lotr_issue_poachers_soln}I will deal with them." />
+
+  <LotrIssue id="lotr_captured_gang" template="Combat" variant="DefeatRaids"
+             giver_occupation="GangLeader" frequency="Common" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="1500" reward_renown="0" relation_min="-10"
+             title_key="{=taom_lotr_issue_captured_title}My Men in Chains"
+             description_key="{=taom_lotr_issue_captured_desc}A gang leader's people were taken by bounty hunters and he wants them freed."
+             brief_key="{=taom_lotr_issue_captured_brief}Bounty hunters took some of my lads and mean to sell them. Break the curs holding them and there's coin in it -- quiet coin."
+             accept_key="{=taom_lotr_issue_captured_accept}Who holds them?"
+             explanation_key="{=taom_lotr_issue_captured_expl}Find the band that took my men and break it. Do that and you'll be paid, no questions asked."
+             solution_accept_key="{=taom_lotr_issue_captured_soln}I'll free your men." />
+
+  <LotrIssue id="lotr_extortion_deserters" template="Combat" variant="DefeatRaids"
+             giver_occupation="Headman" frequency="Common" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="1500" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_deserters_title}Deserters Prey on {ISSUE_SETTLEMENT}"
+             description_key="{=taom_lotr_issue_deserters_desc}A band of deserters extorts {ISSUE_SETTLEMENT} and has killed those who refused."
+             brief_key="{=taom_lotr_issue_deserters_brief}Broken men with swords come for our grain and our coin, and they have spilled blood. We cannot fight them alone."
+             accept_key="{=taom_lotr_issue_deserters_accept}I will help. Where are they?"
+             explanation_key="{=taom_lotr_issue_deserters_expl}Lie in wait and break the deserters when they come. Rid us of them and you will have our thanks and our coin."
+             solution_accept_key="{=taom_lotr_issue_deserters_soln}I will end their raiding." />
+
+  <LotrIssue id="lotr_landlord_commons" template="Combat" variant="DefeatRaids"
+             giver_occupation="RuralNotable" frequency="Common" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="1500" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_commons_title}Trouble at the Commons"
+             description_key="{=taom_lotr_issue_commons_desc}Armed rivals are seizing a village's grazing commons by force."
+             brief_key="{=taom_lotr_issue_commons_brief}Hard men have taken our grazing land and drive off any who come near. Our herds starve while they hold it."
+             accept_key="{=taom_lotr_issue_commons_accept}Who are they?"
+             explanation_key="{=taom_lotr_issue_commons_expl}Drive the rivals off our commons by force and the pasture is ours again. We will pay what we can."
+             solution_accept_key="{=taom_lotr_issue_commons_soln}I will drive them off." />
+
+  <LotrIssue id="lotr_rival_gang" template="Combat" variant="DefeatRaids"
+             giver_occupation="GangLeader" frequency="Common" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="1700" reward_renown="0" relation_min="-10"
+             title_key="{=taom_lotr_issue_rivalgang_title}A Rival Moves In"
+             description_key="{=taom_lotr_issue_rivalgang_desc}A rival gang is muscling in on a crime boss's turf and must be put down."
+             brief_key="{=taom_lotr_issue_rivalgang_brief}Another outfit thinks it can take what's mine. Break them in the alleys and the streets are quiet again -- and you're paid."
+             accept_key="{=taom_lotr_issue_rivalgang_accept}Where do they gather?"
+             explanation_key="{=taom_lotr_issue_rivalgang_expl}Defeat the rival gang and make an example of them. Do it and there's good coin waiting."
+             solution_accept_key="{=taom_lotr_issue_rivalgang_soln}Consider it done." />
+
+  <LotrIssue id="lotr_spy_party" template="Combat" variant="DefeatRaids"
+             giver_occupation="Lord" frequency="Rare" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="2200" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_spy_title}An Enemy Spy"
+             description_key="{=taom_lotr_issue_spy_desc}A lord suspects an enemy agent moves against him and wants the spy's party hunted down."
+             brief_key="{=taom_lotr_issue_spy_brief}There is a viper in the grass -- an agent of my enemies, moving with a band of cutthroats. Find them and end them before they strike."
+             accept_key="{=taom_lotr_issue_spy_accept}How will I know them?"
+             explanation_key="{=taom_lotr_issue_spy_expl}Hunt down the spy's party and destroy it. Rid me of this threat and you will be well rewarded."
+             solution_accept_key="{=taom_lotr_issue_spy_soln}I will hunt them down." />
+
+  <LotrIssue id="lotr_lesser_noble_revolt" template="Combat" variant="DefeatRaids"
+             giver_occupation="Lord" frequency="Rare" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="2400" reward_renown="3" relation_min="-10"
+             title_key="{=taom_lotr_issue_revolt_title}A Renegade Noble"
+             description_key="{=taom_lotr_issue_revolt_desc}A lesser noble has raised the peasants in revolt and must be put down."
+             brief_key="{=taom_lotr_issue_revolt_brief}A petty lordling stirs the peasants against their betters and gathers armed men. Break his strength before the revolt spreads."
+             accept_key="{=taom_lotr_issue_revolt_accept}Where does he muster?"
+             explanation_key="{=taom_lotr_issue_revolt_expl}Defeat the renegade and his rabble and order will be restored. You will be rewarded for your service."
+             solution_accept_key="{=taom_lotr_issue_revolt_soln}I will put down this revolt." />
+
+  <LotrIssue id="lotr_company_trouble" template="Combat" variant="DefeatRaids"
+             giver_occupation="Lord" frequency="Rare" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="2200" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_company_title}A Company of Trouble"
+             description_key="{=taom_lotr_issue_company_desc}A band of sellswords hired to harass a lord must be driven off."
+             brief_key="{=taom_lotr_issue_company_brief}My enemies have set a company of sellswords on my lands. They burn and pillage under another's coin. Break them for me."
+             accept_key="{=taom_lotr_issue_company_accept}Where do they raid?"
+             explanation_key="{=taom_lotr_issue_company_expl}Defeat the mercenary company and my lands will know peace again. I will pay you well."
+             solution_accept_key="{=taom_lotr_issue_company_soln}I will break them." />
+
+  <LotrIssue id="lotr_prodigal_son" template="Combat" variant="DefeatRaids"
+             giver_occupation="Lord" frequency="Rare" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="2000" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_prodigal_title}A Kinsman in Debt"
+             description_key="{=taom_lotr_issue_prodigal_desc}A lord's young kinsman has fallen in with a gang that holds him for his debts."
+             brief_key="{=taom_lotr_issue_prodigal_brief}A foolish young cousin of mine fell among thieves and now they hold him against his debts. Break the gang and free him."
+             accept_key="{=taom_lotr_issue_prodigal_accept}Where is he held?"
+             explanation_key="{=taom_lotr_issue_prodigal_expl}Defeat the gang that holds my kinsman and bring him out. I will pay his debt many times over for your trouble."
+             solution_accept_key="{=taom_lotr_issue_prodigal_soln}I will free your kinsman." />
+
+  <LotrIssue id="lotr_rival_captured" template="Combat" variant="CaptureLords"
+             giver_occupation="Lord" frequency="Rare" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="2600" reward_renown="3" relation_min="-10"
+             title_key="{=taom_lotr_issue_rival_title}A Hated Rival"
+             description_key="{=taom_lotr_issue_rival_desc}A lord wants a rival lord taken alive in battle."
+             brief_key="{=taom_lotr_issue_rival_brief}There is a lord I would see humbled -- taken alive and brought low. Capture an enemy lord in battle and I will count it a great service."
+             accept_key="{=taom_lotr_issue_rival_accept}You want him alive?"
+             explanation_key="{=taom_lotr_issue_rival_expl}Take an enemy lord prisoner in battle and the deed is done. You will be richly rewarded."
+             solution_accept_key="{=taom_lotr_issue_rival_soln}I will bring you a captive lord." />
+
+  <!-- Wave 3 — Escort/ambush cluster (reframed onto Combat/DeliverGoods; a bespoke escort-a-moving-party
+       mechanic is deferred to a future iteration, per the lotr-issues.md simplification clause). -->
+
+  <LotrIssue id="lotr_caravan_ambush" template="Combat" variant="DefeatRaids"
+             giver_occupation="Merchant" frequency="Common" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="2000" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_caravanambush_title}An Ambush on the Road"
+             description_key="{=taom_lotr_issue_caravanambush_desc}Raiders have set an ambush for a merchant's caravan and must be broken first."
+             brief_key="{=taom_lotr_issue_caravanambush_brief}I have word that brigands lie in wait for my caravan on the road ahead. Spring their trap and break them before they bleed me dry."
+             accept_key="{=taom_lotr_issue_caravanambush_accept}Where do they lie in wait?"
+             explanation_key="{=taom_lotr_issue_caravanambush_expl}Find the raiders waiting in ambush and destroy them. Clear the road and my goods -- and your reward -- will get through."
+             solution_accept_key="{=taom_lotr_issue_caravanambush_soln}I will break their ambush." />
+
+  <LotrIssue id="lotr_escort_caravan" template="Combat" variant="DefeatRaids"
+             giver_occupation="Merchant" frequency="Common" cultures="" count="2" count_per_difficulty="2"
+             reward_gold_base="0" reward_gold_per_difficulty="2200" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_escortcaravan_title}Clear the Trade Road"
+             description_key="{=taom_lotr_issue_escortcaravan_desc}A merchant's caravan cannot pass until the raiding bands on the road are broken."
+             brief_key="{=taom_lotr_issue_escortcaravan_brief}My wains dare not roll while raiders haunt the road. Break enough of their bands and the way will be open for honest trade once more."
+             accept_key="{=taom_lotr_issue_escortcaravan_accept}How many stand in the way?"
+             explanation_key="{=taom_lotr_issue_escortcaravan_expl}Defeat the bands that menace the trade road and my caravans will roll again. I will pay you well for safe passage."
+             solution_accept_key="{=taom_lotr_issue_escortcaravan_soln}I will clear the way." />
+
+  <LotrIssue id="lotr_deliver_herd" template="DeliverGoods" giver_occupation="Headman" frequency="Common" cultures=""
+             count="8" count_per_difficulty="24" item_source="item:sheep"
+             reward_gold_base="0" reward_gold_per_difficulty="1300" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_herd_title}A Herd for {ISSUE_SETTLEMENT}"
+             description_key="{=taom_lotr_issue_herd_desc}The folk of {ISSUE_SETTLEMENT} need livestock driven to them to rebuild their flocks."
+             brief_key="{=taom_lotr_issue_herd_brief}Wolves and worse have thinned our flocks to nothing, traveller. Without beasts to breed, the village will not see another fat winter."
+             accept_key="{=taom_lotr_issue_herd_accept}What would you have me bring?"
+             explanation_key="{=taom_lotr_issue_herd_expl}Drive {COUNT} head of sheep to us and our flocks may grow again. We will pay what the village can spare."
+             solution_accept_key="{=taom_lotr_issue_herd_soln}I will bring you a herd."
+             task_key="{=taom_lotr_issue_herd_task}Deliver livestock ({COUNT})" />
+
+  <LotrIssue id="lotr_snare_wealthy" template="Combat" variant="DefeatRaids"
+             giver_occupation="GangLeader" frequency="Common" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="1800" reward_renown="0" relation_min="-10"
+             title_key="{=taom_lotr_issue_snare_title}A Trap for the Greedy"
+             description_key="{=taom_lotr_issue_snare_desc}A gang leader wants a band of grasping rivals lured into a trap and destroyed."
+             brief_key="{=taom_lotr_issue_snare_brief}There's a greedy lot who'd rob their own mothers. Lure them in and break them, and we'll split what they were carrying -- quiet-like."
+             accept_key="{=taom_lotr_issue_snare_accept}Who are these rivals?"
+             explanation_key="{=taom_lotr_issue_snare_expl}Spring the trap on the greedy band and put them down. Do it clean and there's a fat purse in it for you."
+             solution_accept_key="{=taom_lotr_issue_snare_soln}I'll see it done." />
+
+  <!-- Wave 4 — Economic cluster (reframed onto DeliverGoods/Combat; a bespoke price/fence/smuggle economy
+       mechanic is deferred per the simplification clause). -->
+
+  <LotrIssue id="lotr_artisan_cant_sell" template="DeliverGoods" giver_occupation="Artisan" frequency="Common" cultures=""
+             count="10" count_per_difficulty="30" item_source="item:pottery"
+             reward_gold_base="0" reward_gold_per_difficulty="1300" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_cantsell_title}Wares With No Market"
+             description_key="{=taom_lotr_issue_cantsell_desc}An artisan's goods are piling up unsold and need carrying to a market that wants them."
+             brief_key="{=taom_lotr_issue_cantsell_brief}My shelves groan with ware no one here will buy, traveller. If my craft could reach a town that needs it, I would not starve at my own bench."
+             accept_key="{=taom_lotr_issue_cantsell_accept}What do you make?"
+             explanation_key="{=taom_lotr_issue_cantsell_expl}Bring me {COUNT} loads of pottery to send to better markets and I will pay you a share of the trade."
+             solution_accept_key="{=taom_lotr_issue_cantsell_soln}I will see your wares move."
+             task_key="{=taom_lotr_issue_cantsell_task}Gather pottery to trade ({COUNT})" />
+
+  <LotrIssue id="lotr_artisan_overpriced" template="DeliverGoods" giver_occupation="Artisan" frequency="Common" cultures=""
+             count="8" count_per_difficulty="24" item_source="item:leather"
+             reward_gold_base="0" reward_gold_per_difficulty="1400" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_overpriced_title}Costly Materials"
+             description_key="{=taom_lotr_issue_overpriced_desc}An artisan cannot afford the raw materials their craft demands and needs them brought cheap."
+             brief_key="{=taom_lotr_issue_overpriced_brief}The price of good leather has climbed beyond all reason, and my craft dies for want of it. Bring me some at an honest cost and I will remember it."
+             accept_key="{=taom_lotr_issue_overpriced_accept}What do you need?"
+             explanation_key="{=taom_lotr_issue_overpriced_expl}Bring me {COUNT} loads of leather and my workshop will sing again. I will pay you fairly for the trouble."
+             solution_accept_key="{=taom_lotr_issue_overpriced_soln}I will find you leather."
+             task_key="{=taom_lotr_issue_overpriced_task}Deliver leather ({COUNT})" />
+
+  <LotrIssue id="lotr_offload_stolen" template="DeliverGoods" giver_occupation="GangLeader" frequency="Common" cultures=""
+             count="6" count_per_difficulty="18" item_source="item:stolen_goods"
+             reward_gold_base="0" reward_gold_per_difficulty="1700" reward_renown="0" relation_min="-10"
+             title_key="{=taom_lotr_issue_offload_title}Hot Goods to Move"
+             description_key="{=taom_lotr_issue_offload_desc}A gang leader has stolen goods to shift and needs a quiet hand to carry them."
+             brief_key="{=taom_lotr_issue_offload_brief}I've a pile of goods that mustn't be seen by the wrong eyes. Carry them for me and there's clean coin waiting -- no questions, no names."
+             accept_key="{=taom_lotr_issue_offload_accept}What am I carrying?"
+             explanation_key="{=taom_lotr_issue_offload_expl}Get me {COUNT} loads of these goods and move them quietly. Do it well and the next job is yours too."
+             solution_accept_key="{=taom_lotr_issue_offload_soln}I'll move your goods."
+             task_key="{=taom_lotr_issue_offload_task}Acquire the goods ({COUNT})" />
+
+  <LotrIssue id="lotr_revenue_farming" template="DeliverGoods" giver_occupation="RuralNotable" frequency="Common" cultures=""
+             count="12" count_per_difficulty="100" item_source="item:grain"
+             reward_gold_base="0" reward_gold_per_difficulty="1600" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_revenue_title}The Tithe in Kind"
+             description_key="{=taom_lotr_issue_revenue_desc}A landowner is owed a tithe in grain that the outlying farms have not paid."
+             brief_key="{=taom_lotr_issue_revenue_brief}The farms owe me their tithe and pay it in grain, not coin -- when they pay at all. Collect what is owed and bring it in, and you will have a cut."
+             accept_key="{=taom_lotr_issue_revenue_accept}How much is owed?"
+             explanation_key="{=taom_lotr_issue_revenue_expl}Bring in {COUNT} measures of grain as the tithe demands and I will pay you a fair share for the collecting."
+             solution_accept_key="{=taom_lotr_issue_revenue_soln}I will gather your tithe."
+             task_key="{=taom_lotr_issue_revenue_task}Collect the grain tithe ({COUNT})" />
+
+  <LotrIssue id="lotr_art_of_trade" template="DeliverGoods" giver_occupation="RuralNotable" frequency="Rare" cultures=""
+             count="8" count_per_difficulty="30" item_source="item:oil"
+             reward_gold_base="0" reward_gold_per_difficulty="1800" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_arttrade_title}A Venture in Trade"
+             description_key="{=taom_lotr_issue_arttrade_desc}A would-be trader needs goods brought in to turn a profit and prove the venture sound."
+             brief_key="{=taom_lotr_issue_arttrade_brief}I mean to make my fortune in trade, traveller, but I need the goods to start. Bring me the stock and I will turn it to gold for us both."
+             accept_key="{=taom_lotr_issue_arttrade_accept}What stock do you need?"
+             explanation_key="{=taom_lotr_issue_arttrade_expl}Bring me {COUNT} loads of oil to set the venture rolling and you will share in the profit when it is sold."
+             solution_accept_key="{=taom_lotr_issue_arttrade_soln}I will stock your venture."
+             task_key="{=taom_lotr_issue_arttrade_task}Deliver trade stock ({COUNT})" />
+
+  <LotrIssue id="lotr_smugglers" template="Combat" variant="DefeatRaids"
+             giver_occupation="Merchant" frequency="Common" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="1900" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_smugglers_title}Breaking the Smugglers"
+             description_key="{=taom_lotr_issue_smugglers_desc}A smuggling ring is undercutting honest trade and a merchant wants it broken."
+             brief_key="{=taom_lotr_issue_smugglers_brief}A ring of smugglers floods the market with goods that paid no toll, and honest traders are ruined for it. Break their run and trade will right itself."
+             accept_key="{=taom_lotr_issue_smugglers_accept}Where do they run their goods?"
+             explanation_key="{=taom_lotr_issue_smugglers_expl}Defeat the smugglers and scatter their ring. Rid the roads of them and I will pay you for the service."
+             solution_accept_key="{=taom_lotr_issue_smugglers_soln}I will break their ring." />
+
+  <LotrIssue id="lotr_gang_needs_weapons" template="Combat" variant="DefeatRaids"
+             giver_occupation="GangLeader" frequency="Common" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="1700" reward_renown="0" relation_min="-10"
+             title_key="{=taom_lotr_issue_gangweapons_title}Arms for the Taking"
+             description_key="{=taom_lotr_issue_gangweapons_desc}A gang leader wants a rival's weapon cache seized by force."
+             brief_key="{=taom_lotr_issue_gangweapons_brief}A rival outfit sits on a fine cache of arms, and my lads fight with rusted knives. Break them and the cache is ours -- and a share is yours."
+             accept_key="{=taom_lotr_issue_gangweapons_accept}Where is this cache?"
+             explanation_key="{=taom_lotr_issue_gangweapons_expl}Defeat the band that holds the arms and the weapons are mine to take. Do it and there's good coin in your hand."
+             solution_accept_key="{=taom_lotr_issue_gangweapons_soln}I'll take their cache." />
+
+  <!-- Wave 5 — Military cluster (reframed onto Combat/DefeatRaids; bespoke siege/garrison/scout mechanics
+       are deferred per the simplification clause). -->
+
+  <LotrIssue id="lotr_garrison_troops" template="Combat" variant="DefeatRaids"
+             giver_occupation="Lord" frequency="Rare" cultures="" count="2" count_per_difficulty="2"
+             reward_gold_base="0" reward_gold_per_difficulty="2200" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_garrison_title}Holding the Walls"
+             description_key="{=taom_lotr_issue_garrison_desc}A lord's garrison is hard-pressed and needs the enemies harrying it driven off."
+             brief_key="{=taom_lotr_issue_garrison_brief}My garrison is stretched thin and the enemy presses us at every turn. Break the bands that harry my walls and you will give my men room to breathe."
+             accept_key="{=taom_lotr_issue_garrison_accept}Who presses you?"
+             explanation_key="{=taom_lotr_issue_garrison_expl}Defeat the enemies harrying my garrison and the walls will hold. The realm will reward you for it."
+             solution_accept_key="{=taom_lotr_issue_garrison_soln}I will relieve your garrison." />
+
+  <LotrIssue id="lotr_conquest" template="Combat" variant="DefeatRaids"
+             giver_occupation="Lord" frequency="Rare" cultures="" count="3" count_per_difficulty="2"
+             reward_gold_base="0" reward_gold_per_difficulty="2600" reward_renown="3" relation_min="-10"
+             title_key="{=taom_lotr_issue_conquest_title}Breaking the Enemy's Strength"
+             description_key="{=taom_lotr_issue_conquest_desc}A lord planning a conquest needs the enemy's field forces broken before he marches."
+             brief_key="{=taom_lotr_issue_conquest_brief}I mean to take what is rightfully mine, but the enemy's strength stands in the way. Break his forces in the field and the prize will fall the easier."
+             accept_key="{=taom_lotr_issue_conquest_accept}What would you have me do?"
+             explanation_key="{=taom_lotr_issue_conquest_expl}Defeat the enemy's forces and weaken his hold. Do this and a share of the conquest's spoils is yours."
+             solution_accept_key="{=taom_lotr_issue_conquest_soln}I will break his strength." />
+
+  <LotrIssue id="lotr_raid_territory" template="Combat" variant="DefeatRaids"
+             giver_occupation="Lord" frequency="Rare" cultures="" count="2" count_per_difficulty="2"
+             reward_gold_base="0" reward_gold_per_difficulty="2200" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_raid_title}Carrying the War to the Enemy"
+             description_key="{=taom_lotr_issue_raid_desc}A lord wants the enemy's lands harried and their raiding parties destroyed."
+             brief_key="{=taom_lotr_issue_raid_brief}It is time the enemy felt the war on his own soil. Hunt down his raiding parties and put them to the sword, and his lands will know fear."
+             accept_key="{=taom_lotr_issue_raid_accept}Where shall I strike?"
+             explanation_key="{=taom_lotr_issue_raid_expl}Defeat the enemy parties that range his borders. Bloody his lands and you will be well rewarded."
+             solution_accept_key="{=taom_lotr_issue_raid_soln}I will carry the war to them." />
+
+  <LotrIssue id="lotr_scout_garrisons" template="Combat" variant="DefeatRaids"
+             giver_occupation="Lord" frequency="Rare" cultures="" count="2" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="2000" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_scout_title}Eyes on the Enemy"
+             description_key="{=taom_lotr_issue_scout_desc}A lord needs the enemy's patrols broken so his scouts can see the borderlands clear."
+             brief_key="{=taom_lotr_issue_scout_brief}I am blind to the enemy's movements while his patrols range the border. Break them and clear my sight, and I will know where to strike."
+             accept_key="{=taom_lotr_issue_scout_accept}Where do his patrols range?"
+             explanation_key="{=taom_lotr_issue_scout_expl}Defeat the enemy patrols screening the border so my scouts can pass. Do this and you will be paid for it."
+             solution_accept_key="{=taom_lotr_issue_scout_soln}I will clear the border." />
+
+  <!-- Wave 6 — Social + craft cluster (reframed onto Combat/DeliverGoods; tournament-win variant for the
+       wager issues, deliver for the provisioning issues; bespoke social minigames deferred). -->
+
+  <LotrIssue id="lotr_ladys_knight" template="Combat" variant="WinTournaments"
+             giver_occupation="RuralNotable" frequency="Rare" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="2000" reward_renown="3" relation_min="-10"
+             title_key="{=taom_lotr_issue_knight_title}A Champion's Favour"
+             description_key="{=taom_lotr_issue_knight_desc}A noblewoman wishes to see her favour carried to victory in the lists."
+             brief_key="{=taom_lotr_issue_knight_brief}I would have a champion bear my favour in the tourney and win glory in my name. Triumph in the lists and you will earn my lasting gratitude."
+             accept_key="{=taom_lotr_issue_knight_accept}You would have me fight in the lists?"
+             explanation_key="{=taom_lotr_issue_knight_expl}Win a tournament bearing my favour and the honour is ours both. You will be rewarded for the victory."
+             solution_accept_key="{=taom_lotr_issue_knight_soln}I will win for you." />
+
+  <LotrIssue id="lotr_lords_tutor" template="DeliverGoods" giver_occupation="Lord" frequency="Rare" cultures=""
+             count="6" count_per_difficulty="20" item_source="item:velvet"
+             reward_gold_base="0" reward_gold_per_difficulty="1700" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_tutor_title}For the Heir's Schooling"
+             description_key="{=taom_lotr_issue_tutor_desc}A lord wants fine cloth and goods brought to outfit his heir's education in proper style."
+             brief_key="{=taom_lotr_issue_tutor_brief}My heir must be schooled as befits our line, with fine raiment and the trappings of learning. Bring me what is needed and the boy will want for nothing."
+             accept_key="{=taom_lotr_issue_tutor_accept}What must I bring?"
+             explanation_key="{=taom_lotr_issue_tutor_expl}Bring me {COUNT} bolts of velvet to clothe my heir as a lord should be clothed, and you will be paid well for it."
+             solution_accept_key="{=taom_lotr_issue_tutor_soln}I will provide for your heir."
+             task_key="{=taom_lotr_issue_tutor_task}Deliver fine cloth ({COUNT})" />
+
+  <LotrIssue id="lotr_landlord_training" template="Combat" variant="DefeatRaids"
+             giver_occupation="RuralNotable" frequency="Common" cultures="" count="2" count_per_difficulty="2"
+             reward_gold_base="0" reward_gold_per_difficulty="1600" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_training_title}Blooding the Retainers"
+             description_key="{=taom_lotr_issue_training_desc}A landowner wants his green retainers blooded against real foes in the field."
+             brief_key="{=taom_lotr_issue_training_brief}My retainers are soft and untried, and soft men die in the first fight. Lead them against real foes and make hard soldiers of them."
+             accept_key="{=taom_lotr_issue_training_accept}You want them blooded?"
+             explanation_key="{=taom_lotr_issue_training_expl}Win some hard fights and teach my retainers the trade of war. Toughen them and you will be paid for the teaching."
+             solution_accept_key="{=taom_lotr_issue_training_soln}I will make soldiers of them." />
+
+  <LotrIssue id="lotr_inn_and_out" template="Combat" variant="DefeatRaids"
+             giver_occupation="RuralNotable" frequency="Common" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="1500" reward_renown="0" relation_min="-10"
+             title_key="{=taom_lotr_issue_inn_title}Swindled and Sore"
+             description_key="{=taom_lotr_issue_inn_desc}A notable was cheated of his property by swindlers and wants them taught a hard lesson."
+             brief_key="{=taom_lotr_issue_inn_brief}A pack of cheats and sharps took my property with loaded dice and false papers. Break them for me and I may yet hold up my head in this town."
+             accept_key="{=taom_lotr_issue_inn_accept}Who cheated you?"
+             explanation_key="{=taom_lotr_issue_inn_expl}Find the swindlers and break them. Teach them a lesson they will not forget and I will reward you as I am able."
+             solution_accept_key="{=taom_lotr_issue_inn_soln}I will settle the score." />
+
+  <LotrIssue id="lotr_family_feud" template="Combat" variant="DefeatRaids"
+             giver_occupation="Lord" frequency="Rare" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="2000" reward_renown="1" relation_min="-10"
+             title_key="{=taom_lotr_issue_feud_title}An Old Feud"
+             description_key="{=taom_lotr_issue_feud_desc}A bitter feud has turned to bloodshed and a lord wants the rival faction's armed men broken."
+             brief_key="{=taom_lotr_issue_feud_brief}There is bad blood between my house and another, old and deep, and now it has come to swords. Break their armed men and the feud may at last be settled."
+             accept_key="{=taom_lotr_issue_feud_accept}Who do you feud with?"
+             explanation_key="{=taom_lotr_issue_feud_expl}Defeat the rival faction's men and end this feud by force. Do it and my house will be in your debt."
+             solution_accept_key="{=taom_lotr_issue_feud_soln}I will end this feud." />
+
+  <LotrIssue id="lotr_daughter_found" template="Combat" variant="DefeatRaids"
+             giver_occupation="Merchant" frequency="Rare" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="2200" reward_renown="2" relation_min="-10"
+             title_key="{=taom_lotr_issue_daughter_title}A Daughter Taken"
+             description_key="{=taom_lotr_issue_daughter_desc}A notable's daughter has been seized by a gang and her family wants her freed."
+             brief_key="{=taom_lotr_issue_daughter_brief}My daughter -- they have taken my daughter, traveller, and demand a ransom I cannot pay. Break the curs that hold her and bring her home to me."
+             accept_key="{=taom_lotr_issue_daughter_accept}Where is she held?"
+             explanation_key="{=taom_lotr_issue_daughter_expl}Find the gang that took my girl and break it. Bring her safe home and I will give you all I have to spare."
+             solution_accept_key="{=taom_lotr_issue_daughter_soln}I will bring her home." />
+
+  <LotrIssue id="lotr_betting_fraud" template="Combat" variant="WinTournaments"
+             giver_occupation="GangLeader" frequency="Rare" cultures="" count="1" count_per_difficulty="1"
+             reward_gold_base="0" reward_gold_per_difficulty="2000" reward_renown="0" relation_min="-10"
+             title_key="{=taom_lotr_issue_betting_title}A Sure Wager"
+             description_key="{=taom_lotr_issue_betting_desc}A gang leader has bet heavily on the tourney and needs a fighter to make his wager pay."
+             brief_key="{=taom_lotr_issue_betting_brief}I've laid down a heavy purse on the next tourney, and I don't like to lose. Win it for me and there's a fat share of the winnings in it for you."
+             accept_key="{=taom_lotr_issue_betting_accept}You want me to win the tourney?"
+             explanation_key="{=taom_lotr_issue_betting_expl}Win a tournament and make my wager pay. Take the prize and I'll see you well rewarded from the winnings."
+             solution_accept_key="{=taom_lotr_issue_betting_soln}I'll win your wager." />
+
+  <LotrIssue id="lotr_special_weapons" template="DeliverGoods" giver_occupation="GangLeader" frequency="Rare" cultures=""
+             count="6" count_per_difficulty="18" item_source="item:iron"
+             reward_gold_base="0" reward_gold_per_difficulty="1800" reward_renown="0" relation_min="-10"
+             title_key="{=taom_lotr_issue_special_title}Iron for the Forge"
+             description_key="{=taom_lotr_issue_special_desc}A gang leader wants fine iron brought to forge a set of special blades."
+             brief_key="{=taom_lotr_issue_special_brief}I want blades made -- proper ones, not the rubbish my lads carry -- and that takes good iron. Bring me the metal and I'll see the smiths put to work."
+             accept_key="{=taom_lotr_issue_special_accept}How much iron?"
+             explanation_key="{=taom_lotr_issue_special_expl}Bring me {COUNT} bars of good iron for the forge and there's coin in it -- the blades are my business."
+             solution_accept_key="{=taom_lotr_issue_special_soln}I'll bring you iron."
+             task_key="{=taom_lotr_issue_special_task}Deliver iron ({COUNT})" />
+</LotrIssues>

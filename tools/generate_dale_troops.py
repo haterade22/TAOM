@@ -55,8 +55,9 @@ OUTPUT_DEFAULT = os.path.join(
     "..", "Main", "_Module", "ModuleData", "troops", "troops_dale.xml"
 )
 
-# Tier -> level (mirrors Erebor/Rohan baselines)
-TIER_LEVEL = {2: 6, 3: 12, 4: 19, 5: 25, 6: 32, 7: 39, 8: 46}
+# Tier -> level. TAOM tier ladder: level = 6 + (rung-1)*5, capped at 51 (T10),
+# matching Erebor/Rohan/Gondor. Dale's internal tier 2 = ladder rung 1 (level 6).
+TIER_LEVEL = {2: 6, 3: 11, 4: 16, 5: 21, 6: 26, 7: 31, 8: 36}
 
 
 @dataclass

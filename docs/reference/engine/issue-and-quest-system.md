@@ -2,7 +2,7 @@
 
 > **One subsystem, traced from the decompile** (v1.4.5): how the campaign generates the procedural "problems at a
 > notable" the player solves (the `IssueBase` issues), how an issue becomes a `QuestBase`, and every seam a mod can use
-> to add, tune, or remove them. This is the engine reference behind TAOM's [LOTR issue conversion](../../features/lotr-issues.md).
+> to add, tune, or remove them. This is the engine reference behind TAOM's [LOTR issue conversion](../../features/lotr-issues.md) (implemented 2026-06-20 — all 43 vanilla issues suppressed + replaced).
 > Sibling of [campaignevents-and-campaignbehavior](./campaignevents-and-campaignbehavior.md) and
 > [campaign-tick-time-and-party-ai](./campaign-tick-time-and-party-ai.md); for how custom quests persist, see
 > [save-system](./save-system.md).
@@ -240,5 +240,5 @@ IssuesCampaignBehavior.OnSettlementDailyTick (saturation check, towns 1-3 / vill
 *Engine reference for Bannerlord v1.4.5. Citations are decompiled `TaleWorlds.*` source under `E:\Decompiled_Bannerlord\`
 (browse-only; verify signatures with `pwsh tools/taom-src.ps1 path <Type>`). See also:
 [campaignevents-and-campaignbehavior](./campaignevents-and-campaignbehavior.md),
-[submodule lifecycle](./submodule-lifecycle-and-harmony.md), [save-system](./save-system.md), and the TAOM conversion
-plan [lotr-issues.md](../../features/lotr-issues.md).*
+[submodule lifecycle](./submodule-lifecycle-and-harmony.md), [save-system](./save-system.md), and the TAOM
+implementation [lotr-issues.md](../../features/lotr-issues.md) (shipped 2026-06-20).*

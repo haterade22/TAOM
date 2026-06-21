@@ -531,6 +531,15 @@ public class SubModule : MBSubModuleBase
                 IoC.Resolve<Features.CultureConversion.ICultureConversionService>(),
                 IoC.Resolve<Features.CultureConversion.ICultureConversionStore>(),
                 IoC.Resolve<IModLogger>()));
+
+            // LotrIssues — suppress ALL 43 vanilla procedural issue behaviors (Sandbox registered them
+            // before this OnGameStart) and register the single LOTR custom-issue dispatcher in their
+            // place. New-campaign feature: a pre-suppression save keeps in-flight vanilla issues until
+            // they resolve, since their behaviors are only absent for newly-started campaigns here.
+            Features.LotrIssues.LotrIssueSuppression.SuppressAll(campaignStarter, IoC.Resolve<IModLogger>());
+            campaignStarter.AddBehavior(new Features.LotrIssues.LotrIssuesCampaignBehavior(
+                IoC.Resolve<Features.LotrIssues.ILotrIssueService>(),
+                IoC.Resolve<IModLogger>()));
         }
     }
 

@@ -86,6 +86,8 @@ Any provider or boundary class that exposes user-editable values must validate s
 
 **Why:** Review #25 (RevoltTuning) found a HIGH bug where the provider logged "Loaded" success for any parseable file. A plausible user edit like a sign-flipped penalty `1.0` (should be `-1.0`) would silently flip the feature from "soften revolts" to "accelerate revolts" with no warning. Syntax-error tests (missing file, malformed JSON) did not cover this class of failure.
 
+**Especially validate any string field the CONSUMER branches on.** If a template/service does `switch (value)` / `if (value == "X")` with an `else`/default fallback, an unrecognized value (a typo) silently takes the default and changes mechanics — the field is "parsed-but-unresolvable" (the M1 trap). Validate the field against the known set at load and SKIP+warn on an unknown non-empty value; allow empty only if empty is the explicit, intended default. Example (Codex review #61): `LotrIssueConfigProvider` passed Combat `variant` through unvalidated, and `CombatLotrIssue` routed any unknown value to its DefeatRaids `else` branch, so `variant="CaptureLord"` (typo) silently became a different quest. Fixed with a `ValidCombatVariants` gate + per-value tests.
+
 **Test requirement:** Tests must cover semantically-invalid-but-parseable values for every validated field — not just missing-file and malformed-JSON cases. One test per validation rule.
 
 **Doc requirement:** When documenting "edit this file to retune," state the reload scope explicitly. `Reuse.Singleton` providers (the TAOM default) cache for the entire Bannerlord process — changes require a full application restart, not a new campaign or save-load. Never claim "next game load" without cross-checking the DryIoc lifetime.
@@ -121,6 +123,16 @@ bool allowed = valid && cultureData.Races.Any(r => r == raceName);
 **Test requirement:** when fixing a finding of this class, add a regression test where the lookup returns the fallback value and assert the caller rejects the input. Example: `SetPlayerRace_InvalidFaceGenRaceId_DoesNotPreserve_FallsBackToCultureDefault` ([CharacterCreationContentServiceTests.cs](../../TAOM.Tests/Features/CharacterCreation/CharacterCreationContentServiceTests.cs)).
 
 **Sibling rule:** see "Config Providers MUST Validate" above for the input-validation rule at the LOADER side; this rule is the input-validation rule at the CONSUMER side. Both are needed because the loader's validation may be downstream of mid-process state mutation (e.g., a save-load that brought in junk race IDs from a prior mod version).
+
+## One Engine Type for Many Config Variants: Audit EVERY Type-Keyed Engine Path (MANDATORY)
+
+When a generic template instantiates **one** engine type for **many** logical config variants (the LotrIssues pattern: 27 Combat configs all become `typeof(CombatLotrIssue)`; 14 Deliver → `typeof(DeliverGoodsLotrIssue)`), the engine's `GetType()`-keyed bookkeeping treats all those variants as a SINGLE object. Before shipping such a feature — and when reviewing one — you MUST enumerate **every** engine code path that branches on `instance.GetType()` for that base type and confirm the collapsed-to-one-type behavior is acceptable for each. Finding ONE such path and stopping is the exact miss this rule prevents.
+
+**How to enumerate:** decompile the engine base type + its manager/behavior and grep for `GetType()`, `.GetType() ==`, `IssueType`, `is <Type>`, and any `Dictionary<Type,...>` keyed on the runtime type. For `IssueBase` the set is (v1.4.6): **(1) spawn over-representation score** + **(2) per-settlement/clan "already has this type" zero-out** + **(3) accept gate** (`CheckPreconditions` → `IssueQuestCanBeDuplicated`, default `false`) + **(4) cooldown** (keyed on `type.Name`) + **(5) despawn**. Each is independent; (1)/(2)/(4) only throttle *spawning* (acceptable, documented as a limitation), but (3) is a HARD accept-block — the player could hold at most ONE active quest per template across all configs until `IssueQuestCanBeDuplicated => true` is overridden.
+
+**Why this rule exists:** Codex review #61 (2026-06-20). The 5-agent deep-review's lifecycle agent read `IssueBase.CheckPreconditions` for the per-type spawn saturation but traced only the over-representation SCORE and stopped — it missed the SEPARATE hard accept-gate **in the same method**. One method, two type-keyed mechanisms; the soft one was found, the hard one shipped. Pinned by `LotrIssueTemplateInvariantsTests` (asserts `IssueQuestCanBeDuplicated == true` for all 3 templates) and the deep-review skill's per-type check. RCA: `docs/reviews/rca-lotr-issues-wave0-2026-06-17.md` (Codex pass section).
+
+**Test requirement:** for each engine type-keyed behavior you deliberately opt into (e.g. `IssueQuestCanBeDuplicated => true`), add a reflection/invariant test pinning the override so a refactor can't silently restore the breaking default.
 
 ## File Layout
 

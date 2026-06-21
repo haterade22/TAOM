@@ -48,7 +48,7 @@
     <NPCCharacter
         id="dale_militia"
         default_group="Infantry"
-        level="12"
+        level="11"
         name="{=aom_dale_militia_name}[Dale] Lake-Town Militia"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -94,7 +94,7 @@
     <NPCCharacter
         id="dale_lake_town_skirmisher"
         default_group="Infantry"
-        level="19"
+        level="16"
         name="{=aom_dale_lake_town_skirmisher_name}[Dale] Lake-Town Watchman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -139,7 +139,7 @@
     <NPCCharacter
         id="dale_lake_town_mariner"
         default_group="Infantry"
-        level="25"
+        level="21"
         name="{=aom_dale_lake_town_mariner_name}[Dale] Lake-Town Veteran Watchman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -184,7 +184,7 @@
     <NPCCharacter
         id="dale_lake_town_veteran"
         default_group="Infantry"
-        level="32"
+        level="26"
         name="{=aom_dale_lake_town_veteran_name}[Dale] Lake-Town Officer of the Watch"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -227,7 +227,7 @@
     <NPCCharacter
         id="dale_footman"
         default_group="Infantry"
-        level="19"
+        level="16"
         name="{=aom_dale_footman_name}[Dale] Lake-Town Patrolman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -272,7 +272,7 @@
     <NPCCharacter
         id="dale_spearman"
         default_group="Infantry"
-        level="25"
+        level="21"
         name="{=aom_dale_spearman_name}[Dale] Lake-Town Pikeman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -317,7 +317,7 @@
     <NPCCharacter
         id="dale_veteran_spearman"
         default_group="Infantry"
-        level="32"
+        level="26"
         name="{=aom_dale_veteran_spearman_name}[Dale] Lake-Town Veteran Pikeman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -362,7 +362,7 @@
     <NPCCharacter
         id="dale_lake_town_hearthguard"
         default_group="Infantry"
-        level="39"
+        level="31"
         name="{=aom_dale_lake_town_hearthguard_name}[Dale] Lake-Town Hearthguard"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -405,7 +405,7 @@
     <NPCCharacter
         id="dale_squire"
         default_group="Infantry"
-        level="12"
+        level="11"
         name="{=aom_dale_squire_name}[Dale] Dalian Levy"
         occupation="Soldier"
         is_basic_troop="true"
@@ -455,7 +455,7 @@
     <NPCCharacter
         id="dale_bowman"
         default_group="Ranged"
-        level="19"
+        level="16"
         name="{=aom_dale_bowman_name}[Dale] Dalian Yeoman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -502,7 +502,7 @@
     <NPCCharacter
         id="dale_longbowman"
         default_group="Ranged"
-        level="25"
+        level="21"
         name="{=aom_dale_longbowman_name}[Dale] Dalian Bowman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -549,7 +549,7 @@
     <NPCCharacter
         id="dale_royal_archer"
         default_group="Ranged"
-        level="32"
+        level="26"
         name="{=aom_dale_royal_archer_name}[Dale] Dalian Marksman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -596,7 +596,7 @@
     <NPCCharacter
         id="dale_black_arrow_marksman"
         default_group="Ranged"
-        level="39"
+        level="31"
         name="{=aom_dale_black_arrow_marksman_name}[Dale] Dalian Barding"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -641,7 +641,7 @@
     <NPCCharacter
         id="dale_crossbowman"
         default_group="Ranged"
-        level="19"
+        level="16"
         name="{=aom_dale_crossbowman_name}[Dale] Dalian Crossbowman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -688,7 +688,7 @@
     <NPCCharacter
         id="dale_veteran_crossbowman"
         default_group="Ranged"
-        level="25"
+        level="21"
         name="{=aom_dale_veteran_crossbowman_name}[Dale] Dalian Veteran Crossbowman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -735,7 +735,7 @@
     <NPCCharacter
         id="dale_royal_crossbowman"
         default_group="Ranged"
-        level="32"
+        level="26"
         name="{=aom_dale_royal_crossbowman_name}[Dale] Dalian Master Crossbowman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -782,7 +782,7 @@
     <NPCCharacter
         id="dale_master_crossbowman"
         default_group="Ranged"
-        level="39"
+        level="31"
         name="{=aom_dale_master_crossbowman_name}[Dale] Dalian Royal Crossbowman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -827,7 +827,7 @@
     <NPCCharacter
         id="dale_man_at_arms"
         default_group="Infantry"
-        level="19"
+        level="16"
         name="{=aom_dale_man_at_arms_name}[Dale] Dalian Militia"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -874,7 +874,7 @@
     <NPCCharacter
         id="dale_guardsman"
         default_group="Infantry"
-        level="25"
+        level="21"
         name="{=aom_dale_guardsman_name}[Dale] Dalian Guardsman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -921,7 +921,7 @@
     <NPCCharacter
         id="dale_royal_guard"
         default_group="Infantry"
-        level="32"
+        level="26"
         name="{=aom_dale_royal_guard_name}[Dale] Dalian Swordsman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -968,7 +968,7 @@
     <NPCCharacter
         id="dale_running_river_warden"
         default_group="Infantry"
-        level="39"
+        level="31"
         name="{=aom_dale_running_river_warden_name}[Dale] Dalian Royal Swordsman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -1012,7 +1012,7 @@
     <NPCCharacter
         id="dale_outrider"
         default_group="Cavalry"
-        level="19"
+        level="16"
         name="{=aom_dale_outrider_name}[Dale] Dalian Merchant Guard"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -1064,7 +1064,7 @@
     <NPCCharacter
         id="dale_knight"
         default_group="Cavalry"
-        level="25"
+        level="21"
         name="{=aom_dale_knight_name}[Dale] Dalian Northman Scout"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -1115,7 +1115,7 @@
     <NPCCharacter
         id="dale_veteran_northman_scout"
         default_group="Cavalry"
-        level="32"
+        level="26"
         name="{=aom_dale_veteran_northman_scout_name}[Dale] Dalian Veteran Northman Scout"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -1164,7 +1164,7 @@
     <NPCCharacter
         id="dale_royal_cavalier"
         default_group="Cavalry"
-        level="25"
+        level="21"
         name="{=aom_dale_royal_cavalier_name}[Dale] Dalian Cavalry"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -1215,7 +1215,7 @@
     <NPCCharacter
         id="dale_kinsman_of_eorl"
         default_group="Cavalry"
-        level="32"
+        level="26"
         name="{=aom_dale_kinsman_of_eorl_name}[Dale] Dalian Heavy Cavalry"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -1266,7 +1266,7 @@
     <NPCCharacter
         id="dale_kings_guard"
         default_group="Cavalry"
-        level="39"
+        level="31"
         name="{=aom_dale_kings_guard_name}[Dale] Dalian King's Guard"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -1315,7 +1315,7 @@
     <NPCCharacter
         id="dale_riverman"
         default_group="Infantry"
-        level="19"
+        level="16"
         name="{=aom_dale_riverman_name}[Dale] Dalian Riverman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -1362,7 +1362,7 @@
     <NPCCharacter
         id="dale_shipman"
         default_group="Infantry"
-        level="25"
+        level="21"
         name="{=aom_dale_shipman_name}[Dale] Dalian Shipman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -1409,7 +1409,7 @@
     <NPCCharacter
         id="dale_dalian_mariner"
         default_group="Infantry"
-        level="32"
+        level="26"
         name="{=aom_dale_dalian_mariner_name}[Dale] Dalian Mariner"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -1527,7 +1527,7 @@
     <NPCCharacter
         id="dale_militia_veteran_spearman"
         default_group="Infantry"
-        level="19"
+        level="16"
         name="{=aom_dale_militia_veteran_spearman_name}[Dale] Veteran Militia Spearman"
         occupation="Soldier"
         culture="Culture.sturgia">
@@ -1562,7 +1562,7 @@
     <NPCCharacter
         id="dale_militia_veteran_archer"
         default_group="Ranged"
-        level="19"
+        level="16"
         name="{=aom_dale_militia_veteran_archer_name}[Dale] Veteran Militia Archer"
         occupation="Soldier"
         culture="Culture.sturgia">

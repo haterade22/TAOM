@@ -825,6 +825,14 @@
         <GameType value="EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- LOTR custom-issue player-facing text (LotrIssues feature) -->
+    <XmlNode>
+      <XmlName id="GameText" path="taom_lotr_issue_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <!-- Loc keys harvested from XSLT transforms (kingdom/culture/clan/lord/hero descriptions) -->
     <XmlNode>
       <XmlName id="GameText" path="taom_xslt_strings"/>
