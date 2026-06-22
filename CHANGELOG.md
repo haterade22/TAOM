@@ -189,8 +189,12 @@ glowing-ring pixels, and `ui_taom_career_system_1_tex.tpac` was rebuilt by the e
 texture-compile pass. Manifest + atlas + tpac + lit PNG are all committed (f221ba37, 92281887), so a
 later `./build.ps1` won't clobber the bake.
 
-Not-tested: in-game visual only — bake is verified static (manifest rect + non-empty atlas pixels);
-a CLEAN review cannot certify a sprite renders, so confirm the taken pip shows the bright ring on `+`.
+Verified in-game (2026-06-22): taken pips brighten to the glowing ring, `+`/`-` render and work.
+One operational gotcha surfaced first: a long-running game session showed a half-broken career UI
+(`-` invisible, `+` dead) because the re-bake **relocated** `plus`/`minus`/`lit` in the atlas while
+`career_point_pip` stayed put, and the live session held the pre-bake atlas texture against the new
+manifest rects. A clean relaunch (which reloads atlas + manifest + tpac together) fixed it — no file
+change. Lesson: after a re-bake that repositions sprites, restart the game.
 
 ## 2026-06-18
 
