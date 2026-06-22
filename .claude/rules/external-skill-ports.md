@@ -60,6 +60,16 @@ When you copy a skill from another repo (gstack, everything-claude-code, awesome
 
 We've shipped four port-drift bugs across three review passes (`triggers:` field unsupported, inline-hook activation conflated with state-file presence, `paths: ["**/*"]` treated as always-load, hardcoded MCP tool counts copied without verifying). The pattern is "trusted the upstream because it worked there."
 
+## Security-vet FIRST (before trusting any field)
+
+A foreign skill is untrusted code until vetted — porting its frontmatter/hooks/scripts means running its instructions. Before the field checks below, run the foreign tree through TAOM's auditor:
+
+```bash
+python tools/audit_claude_config.py --root <path-to-foreign-skill> --external
+```
+
+`--external` raises TAOM's six SkillSpector-derived regex categories (`excessive-agency`, `memory-poisoning`, `prompt-leakage`, `tool-misuse`, `rogue-agent`, `output-handling`) from advisory to full severity for an untrusted tree; the Python-AST scan (`ast-exec`) and clean-room YARA layer (`yara-*`) fire at full severity regardless of `--external`. Resolve every CRITICAL/HIGH (or consciously reject the source) before porting any text. This is the automated supplement to — not a replacement for — the manual read in `external-repo-adoption.md` § Security pass (which also covers the heavyweight static-only NVIDIA SkillSpector option for deeper LLM-intent / taint / CVE coverage, run isolated and never installed). Full detail: [`docs/reviews/adopt-skillspector-2026-06-22.md`](../../docs/reviews/adopt-skillspector-2026-06-22.md).
+
 ## Frontmatter field check
 
 For every field in the upstream skill's frontmatter, verify it appears in **`.claude/rules/harness-facts.md`** as documented-and-consumed by current Claude Code. As of 2026-04-26 the documented fields are:
@@ -110,6 +120,7 @@ After porting:
 1. **Run `bash .claude/skills/context-budget/scan.sh --verbose`** — confirm the new skill appears with reasonable eager (frontmatter) and lazy (body) tokens. Description over 30 words gets flagged.
 2. **Update CHANGELOG.md** in the same commit. The pre-commit hook `check-changelog-changed.sh` enforces this for `.claude/` changes.
 3. **Commit + run `/codex-verify`** for any non-trivial port — Codex catches the lifecycle and load-semantic mistakes Claude tends to make on first port.
+4. **Re-run `/security-scan`** on TAOM's own tree after the port lands. The SkillSpector regex categories run advisory (INFO) on a self-audit; the loud, full-severity pass is the foreign-tree `--external` run you did in "Security-vet FIRST" above — don't conflate the two.
 
 ## Lessons from the Tier 1 adoption (the canonical port-drift case study)
 

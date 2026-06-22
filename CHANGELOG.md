@@ -1,5 +1,34 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-22
+
+### feat(security-scan): adopt NVIDIA SkillSpector patterns into the config auditor
+
+Folded the portable, deterministic parts of [NVIDIA/SkillSpector](https://github.com/NVIDIA/SkillSpector)
+(Apache-2.0, a security scanner for AI-agent skills) into `tools/audit_claude_config.py` via the `/adopt-external`
+cycle. Motivation: TAOM regularly pulls external skills, and the `/adopt-external` security-vet phase was a manual
+read — SkillSpector automates exactly that. We **ported patterns, did not install** the tool (it's a LangGraph/LLM
+agent with network egress; per port-never-install it never enters TAOM's harness).
+
+- **6 new deterministic categories** (`excessive-agency`, `memory-poisoning`, `prompt-leakage`, `tool-misuse`,
+  `rogue-agent`, `output-handling`) + a stdlib-`ast` scan (`ast-exec`, with an `exec`-wrapping-decoded-source chain
+  rated CRITICAL). Apache-2.0 attribution preserved in the source.
+- **Clean-room YARA layer** — `tools/yara_rules/taom_skill_signatures.yar` (7 rules: reverse-shell, webshell, C2,
+  info-stealer, cryptominer, backdoor-persistence, hacktool). TAOM-authored from scratch: SkillSpector's bundled
+  `.yar` files are Neo23x0/signature-base derivatives under **DRL-1.1 / unstated license** and were **not vendored**.
+  The layer is **import-guarded** — without `yara-python` the scan still runs and the layer is skipped with an INFO
+  note, so the CI gate is never blocked by a missing dependency.
+- **Calibration:** the regex categories are **advisory (INFO) on a TAOM self-audit** (our own hooks/docs legitimately
+  reference attack patterns — e.g. the hook that *blocks* `--no-verify`) and fire at **full severity under the new
+  `--external` flag** for vetting a foreign skill. The teeth that gate regardless are `hook-exfil`, the AST chain, and
+  YARA. Self-audit adds zero new non-INFO findings (verified).
+- **Tier 2:** SkillSpector documented as the heavyweight static-only foreign-skill vet tool (isolated venv/Docker,
+  never installed) in `external-repo-adoption.md` + `/adopt-external` + `/security-scan`.
+- **Tests:** `tools/tests/test_audit_skillspector.py` (25 tests; AV-safe in-memory drive). Full suite 166 pass.
+- **Routing/timing wired in (so the capability is actually USED):** the foreign-skill vet (`audit_claude_config.py --root <clone> --external`) and the two-mode `/security-scan` are now referenced at every surface that decides WHEN to run them — CLAUDE.md Skill-catalog + Skill-Routing tables (`/adopt-external` + `/security-scan` rows, broadened to the "external skill / SKILL.md / plugin" trigger), `.claude/rules/external-skill-ports.md` (new "Security-vet FIRST" step + process-check item), `.claude/rules/harness-facts.md` (porting pointer), `/skill-stocktake` ("after porting" trigger + pairing), `docs/INDEX.md` (auditor + adopt-* review family), `docs/ai-includes/agent-operating-manual.md` (skill + tool catalogs). Discovery + verification ran as multi-agent workflows.
+- **`/deep-review` fix round (17 confirmed findings, 0 refuted; 22 agents, per-finding adversarial verification):** closed a real security-coverage gap — a bare `"*"` allow-grant (`perm-star-wildcard`, CRITICAL) and a JSON-quoted `"tools": ["*"]` wildcard were caught by neither scanner (only the YAML frontmatter form was). Also: `promptleak-reveal` now matches the `the` article; `toolmisuse-rmtree` message corrected to "absolute path"; YARA `BeaconType` BLE false-positive removed (narrowed to `C2Server`), nmap scan-flags broadened, Firefox reversed-order added; `scan_skillspector` now records `audit-allow` suppressions; a vacuous test assertion (HIGH) fixed; firing tests added for all HIGH regex rules + the AST leaf rules + YARA fail-open paths. Test suite 166 → 185, self-audit exit 0. Three LOW findings consciously accepted (narrowing would trade a false-positive for a false-negative) + one process LOW (GitHub issue) deferred. RCA: `docs/reviews/rca-skillspector-2026-06-22.md`. Memories: `feedback_detection_ruleset_per_rule_test_matrix`, `feedback_no_vacuous_test_assertions`.
+- See `docs/reviews/adopt-skillspector-2026-06-22.md`.
+
 ## 2026-06-21
 
 ### fix(companion-tactics): stop Formation Preset saves from corrupting campaigns; gate the WIP feature off by default

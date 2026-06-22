@@ -25,6 +25,7 @@ See **[external-repo-adoption.md § The cycle](../../../docs/ai-includes/externa
 - **Most of a general operator repo is irrelevant or duplicative** for a C#/.NET Bannerlord mod. Be honest and critical.
 - **Right-size the fan-out** — if the README makes the verdict obvious (clearly out-of-domain → skip), do a light inline pass; don't spin up a multi-agent workflow to confirm the obvious.
 - **Verify load-bearing security claims yourself** before relaying a subagent's read — a subagent verdict is a hypothesis (`evidence-over-claims.md` A.4).
+- **Vet a foreign *skill* automatically** during the security pass: `python tools/audit_claude_config.py --root <repo> --external` fires TAOM's SkillSpector-derived categories at full severity. Heavyweight option: NVIDIA SkillSpector run static-only in an isolated venv/Docker (never installed). It supplements, never replaces, the manual read.
 - After porting config/hooks, run **`/security-scan`** on our own result.
 - When DESCRIBING security patterns in the skill/docs you author, avoid embedding literal trigger strings (they can self-flag `/security-scan`) — describe the category or use `audit-allow:`.
 

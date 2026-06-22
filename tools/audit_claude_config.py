@@ -1,11 +1,35 @@
 #!/usr/bin/env python3
 """Audit TAOM's Claude Code configuration surface for security issues.
 
-Deterministic, offline, stdlib-only. A portable subset of affaan-m/ECC's
-"AgentShield" rule set, CALIBRATED TO TAOM. The notable calibration: TAOM
-*mandates* fail-open hooks (`|| true`, `2>/dev/null`, always `exit 0`) per
-`.claude/rules/harness-facts.md`, so that pattern is NOT a finding here (it is
-in upstream AgentShield). We keep only high-signal, low-false-positive rules.
+Deterministic and offline. Stdlib-only by default; one OPTIONAL layer (YARA)
+activates if `yara-python` is importable and is skipped (INFO note) otherwise,
+so the auditor always runs and the CI gate never hard-fails on a missing dep.
+
+The base rule set is a portable subset of affaan-m/ECC's "AgentShield",
+CALIBRATED TO TAOM. The notable calibration: TAOM *mandates* fail-open hooks
+(`|| true`, `2>/dev/null`, always `exit 0`) per `.claude/rules/harness-facts.md`,
+so that pattern is NOT a finding here (it is in upstream AgentShield). We keep
+only high-signal, low-false-positive rules.
+
+The agency/mempoison/promptleak/toolmisuse/rogue/output categories + the AST
+scan are a portable, calibrated subset of NVIDIA SkillSpector's deterministic
+`static_patterns_*` + `behavioral_ast` analyzers (Apache-2.0,
+https://github.com/NVIDIA/SkillSpector). Per Apache-2.0 §4 the upstream
+attribution is preserved here. We port only the offline regex/AST logic — NOT
+the LangGraph runtime or the LLM "semantic" analyzers. The YARA rules in
+tools/yara_rules/ are TAOM clean-room originals (the upstream DRL-1.1 /
+unlicensed Neo23x0-derived .yar files were NOT vendored). See
+docs/reviews/adopt-skillspector-2026-06-22.md.
+
+CALIBRATION: the ported SkillSpector regex categories (agency/mempoison/
+promptleak/toolmisuse/rogue/output) are ADVISORY (INFO) on a TAOM self-audit,
+because TAOM's own hooks and docs legitimately reference attack patterns (the
+hook that BLOCKS `--no-verify`; a doc quoting "from now on, always ..." as an
+example). Pass --external when vetting an untrusted/foreign tree to raise them
+to full severity (the "skills from the internet aren't harmless" use case). The
+genuine code/IOC teeth — the separate hook-exfil, AST-chain, and YARA layers —
+fire at full severity regardless of --external. `audit-allow: <rule>` suppresses
+a line; lines that read like documentation examples are skipped automatically.
 
 Scans (relative to --root, default = repo root):
   .claude/{skills,agents,rules,hooks}/**, .claude/settings.json,
@@ -17,9 +41,18 @@ Categories:
   hook-exfil         network exfil / reverse shells / log-tampering in hooks
   mcp-risk           hardcoded MCP secrets, auto-approve, unpinned npx -y
   prompt-injection   hidden unicode / "ignore previous instructions" / fetch-exec
+  excessive-agency   unrestricted tool grants, skip-confirmation, unbounded resource use
+  memory-poisoning   persistent-context injection, memory wipe/poison, identity rewrite
+  prompt-leakage     reveal/exfiltrate system prompt or instructions
+  tool-misuse        dangerous params (shell=True, rm -rf /, --no-verify, TLS off)
+  rogue-agent        self-modification, disable-safety, cron/rc persistence
+  output-handling    model output piped to exec/eval/innerHTML/SQL; unbounded output
+  ast-exec           (.py) exec/eval/compile/__import__/os-exec/subprocess/dynamic-getattr
+  yara-*             (optional) clean-room webshell/malware/C2/miner/hacktool IOCs
 
 Exit codes:  2 = at least one CRITICAL finding (CI gate) · 1 = usage error · 0 = clean/non-critical
 Flags:  --json  machine output · --root PATH  scan root · --min SEV  only report >= severity
+        --external  raise SkillSpector regex categories to full severity (foreign tree)
 
 Inline suppression: put `audit-allow: <rule-id>` in a comment on the SAME line
 to suppress a known-safe match (e.g. an injection phrase quoted as an example in
@@ -28,6 +61,7 @@ a security doc). Use sparingly; suppressions are reported in the summary.
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import re
 import sys
@@ -166,7 +200,10 @@ def scan_permissions(path: Path, rel: str, text: str, res: Result) -> None:
     for entry in allow if isinstance(allow, list) else []:
         e = str(entry)
         low = e.lower()
-        if re.fullmatch(r"Bash\(\*[:)].*", e) or e in ("Bash(*)", "Bash(*:*)"):
+        if e.strip() in ("*", "*:*"):
+            res.findings.append(Finding("perm-star-wildcard", "CRITICAL", "permissions",
+                rel, 0, f"Bare wildcard allow-grant (grants every tool): {e}"))
+        elif re.fullmatch(r"Bash\(\*[:)].*", e) or e in ("Bash(*)", "Bash(*:*)"):
             res.findings.append(Finding("perm-bash-wildcard", "CRITICAL", "permissions",
                 rel, 0, f"Unrestricted shell grant: {e}"))
         elif e in ("Write(*)", "Edit(*)"):
@@ -291,6 +328,247 @@ def scan_injection(rel: str, text: str, res: Result, is_doc: bool) -> None:
 
 
 # --------------------------------------------------------------------------- #
+# SkillSpector-derived categories  (ported + calibrated to TAOM)
+#
+# Portable subset of NVIDIA SkillSpector's deterministic `static_patterns_*` +
+# `behavioral_ast` analyzers (Apache-2.0; https://github.com/NVIDIA/SkillSpector).
+# Apache-2.0 §4 attribution preserved. We port only offline regex/AST logic, not
+# the LangGraph runtime or LLM analyzers. CALIBRATION: advisory (INFO) on a TAOM
+# self-audit (our own hooks/docs legitimately reference attack patterns); full
+# severity under --external (vetting a foreign tree). Lines that read like
+# documentation examples (backticks, "never", "e.g.", prohibition phrasing) are
+# skipped to keep the self-audit quiet. The full-severity teeth are the separate
+# hook-exfil, AST, and YARA layers. `audit-allow: <rule>` suppresses a line.
+# --------------------------------------------------------------------------- #
+
+# (rule_id, severity, regex, message) — IGNORECASE compiled below.
+_EXCESSIVE_AGENCY = [
+    ("agency-wildcard-tools", "HIGH", r"['\"]?(?:tools?|permissions?|allowed-tools)['\"]?\s*:\s*\[?\s*['\"]?\*['\"]?\s*\]?", "wildcard tool/permission grant (no least-privilege boundary)"),
+    ("agency-exec-arbitrary", "HIGH", r"(?:execute|run)\s+(?:arbitrary|any)\s+(?:commands?|code|scripts?)", "instruction to execute arbitrary commands/code"),
+    ("agency-all-tools", "MED", r"(?:allow|grant|enable)\s+(?:access\s+to\s+)?(?:all|any|every)\s+tools?", "grants access to all/any tools"),
+    ("agency-invoke-any-tool", "MED", r"(?:call|invoke|use|execute)\s+(?:any|all|every)\s+(?:available\s+)?tools?", "invoke any/all available tools"),
+    ("agency-skip-confirm", "MED", r"(?:skip|bypass|disable)\s+(?:user\s+)?(?:confirmation|approval|consent|verification|prompt)", "skip/bypass user confirmation"),
+    ("agency-auto-approve", "MED", r"(?:auto[_-]?approve|auto[_-]?confirm|auto[_-]?execute|auto[_-]?deploy)\b", "auto-approve / auto-execute directive"),
+    ("agency-unbounded-retry", "MED", r"max[_-]?retries?\s*=\s*(?:None|0|float\s*\(\s*['\"]inf['\"]|math\.inf|infinity)", "unbounded retry budget"),
+    ("agency-unlimited-calls", "LOW", r"(?:unlimited|infinite|unbounded)\s+(?:api\s+)?(?:calls?|requests?|queries?|invocations?)", "unbounded API/resource use"),
+]
+_MEMORY_POISONING = [
+    ("mempoison-inject-false", "HIGH", r"(?:inject|insert|plant)\s+(?:false|fake|fabricated|malicious)\s+(?:memor(?:y|ies)|information|context|data|history)", "inject false/fabricated memory"),
+    ("mempoison-poison", "HIGH", r"(?:poison|contaminate|corrupt|taint)\s+(?:your\s+)?(?:memory|context|state|knowledge|training)", "poison/corrupt memory or context"),
+    ("mempoison-displace", "HIGH", r"(?:displace|push\s+out|overwrite|crowd\s+out|evict)\s+(?:the\s+)?(?:original|system|previous|existing|safety)\s+(?:instructions?|prompt|context|rules?)", "displace original/safety instructions"),
+    ("mempoison-persist", "MED", r"(?:store|save|persist|retain)\s+(?:this|the\s+following)\s+(?:in|to|across)\s+(?:your\s+)?(?:memory|context|state|knowledge)", "persist content into agent memory/context"),
+    ("mempoison-from-now-on", "MED", r"(?:from\s+now\s+on|henceforth|going\s+forward|permanently)\s*[,:]?\s*(?:always|you\s+must|you\s+should|you\s+will)\b", "persistent behavior-override directive"),
+    ("mempoison-forget-prev", "MED", r"(?:forget|discard|drop|abandon)\s+(?:all\s+)?(?:previous|prior|earlier|past)\s+(?:instructions?|context|conversation|messages?|rules?)", "discard prior instructions/context"),
+    ("mempoison-rewrite-identity", "MED", r"(?:rewrite|redefine)\s+(?:your\s+)?(?:personality|identity|purpose|mission|role|character)", "rewrite agent identity/purpose"),
+]
+_PROMPT_LEAKAGE = [
+    ("promptleak-reveal", "HIGH", r"(?:print|output|show|display|reveal|expose|return|echo)\s+(?:your\s+|the\s+)?(?:full\s+)?(?:system\s+)?(?:prompt|instructions?|rules?|guidelines?|directives?)\b", "reveal/output the system prompt or instructions"),
+    ("promptleak-exfil", "HIGH", r"(?:send|post|upload|transmit)\s+(?:your\s+)?(?:system\s+)?(?:prompt|instructions?|rules?)\s+(?:to|via)\s+(?:https?://|external|remote|webhook|api|server)", "exfiltrate the system prompt to an external sink"),
+    ("promptleak-repeat-above", "MED", r"(?:repeat|recite|reproduce)\s+(?:everything|all|the\s+text)\s+(?:above|before|prior|preceding)\b", "repeat everything above (prompt extraction)"),
+    ("promptleak-encode", "MED", r"(?:encode|encrypt|rot13|base64|reverse)\s+(?:your\s+)?(?:system\s+)?(?:prompt|instructions?|rules?)\b", "encode/obfuscate the system prompt for extraction"),
+    ("promptleak-write-file", "MED", r"(?:write|save|store|log|dump)\s+(?:your\s+)?(?:system\s+)?(?:prompt|instructions?|rules?)\s+(?:to|into|in)\s+(?:a\s+)?(?:file|disk|log|database|storage)", "write the system prompt to a file/log"),
+]
+_TOOL_MISUSE = [
+    ("toolmisuse-shell-true", "HIGH", r"(?:subprocess\.\w+|Popen)\s*\([^)]*shell\s*=\s*True", "subprocess with shell=True (command-injection vector)"),
+    ("toolmisuse-rm-rf-root", "HIGH", r"\b(?:rm|del|erase)\s+[^|\n]*-(?:r|rf|fr)\s+[/~]", "recursive force-delete of a root/home path"),
+    ("toolmisuse-rmtree-root", "HIGH", r"shutil\.rmtree\s*\(?[^)\n]{0,80}['\"]?\s*/\s*['\"]?", "shutil.rmtree on an absolute path"),
+    ("toolmisuse-no-verify", "MED", r"--no-?(?:verify|check|validate|confirm|protect|safe)\b", "safety-bypassing CLI flag (--no-verify etc.)"),
+    ("toolmisuse-chmod-777", "MED", r"(?:chmod|chown)\s+[^|\n]*(?:777|666|a\+rwx)", "world-writable permission grant"),
+    ("toolmisuse-tls-off", "MED", r"(?:verify\s*=\s*False|NODE_TLS_REJECT_UNAUTHORIZED\s*=\s*['\"]?0|--no-check-certificate|--insecure\b|curl\s+[^|\n]*\s-k\b)", "TLS/cert verification disabled"),
+]
+_ROGUE_AGENT = [
+    ("rogue-self-write", "HIGH", r"open\s*\(\s*__file__\s*,\s*['\"]w", "skill writing to its own file (__file__, 'w')"),
+    ("rogue-self-modify", "HIGH", r"(?:self[_-]?modify|self[_-]?update|self[_-]?rewrite|self[_-]?patch|self[_-]?evolve)\b", "self-modification directive"),
+    ("rogue-modify-skill", "HIGH", r"(?:write|modify|edit|update|overwrite|patch)\s+(?:this\s+)?(?:skill(?:'s)?|SKILL\.md)\b", "instruction to modify this skill's own files"),
+    ("rogue-disable-safety", "HIGH", r"(?:disable|remove|delete|bypass)\s+(?:the\s+)?(?:safety|security|guard|protection|constraint)\s+(?:check|rule|mechanism|feature)", "disable a safety/security control at runtime"),
+    ("rogue-cron", "MED", r"crontab\s+(?:-[el]\b|[^|\n]*>>?\s*/)", "cron persistence install"),
+    ("rogue-rc-persist", "HIGH", r"(?:>>?\s*|(?:append|add|write|install)\s+(?:to|into)\s+)(?:~/)?\.(?:bashrc|zshrc|profile|bash_profile|login|cshrc)\b", "shell-rc autostart persistence"),
+]
+_OUTPUT_HANDLING = [
+    ("output-exec-response", "HIGH", r"(?:exec|eval)\s*\(\s*(?:response|output|result|answer|completion|reply|generated)\b", "model output passed to exec/eval"),
+    ("output-shell-response", "HIGH", r"(?:subprocess\.\w+|os\.system|os\.popen)\s*\([^)\n]*(?:response|output|result|answer|completion)\b", "model output passed to a shell sink"),
+    ("output-innerhtml", "MED", r"(?:innerHTML|document\.write|dangerouslySetInnerHTML)\s*[=(]\s*(?:response|output|result|answer|completion|\{)", "model output injected into HTML (XSS sink)"),
+    ("output-unbounded-tokens", "LOW", r"max[_-]?tokens?\s*=\s*(?:None|float\s*\(\s*['\"]inf['\"]|math\.inf|999999|1000000)", "unbounded output token limit"),
+]
+
+_SKILLSPECTOR_CATEGORIES = [
+    ("excessive-agency", _EXCESSIVE_AGENCY),
+    ("memory-poisoning", _MEMORY_POISONING),
+    ("prompt-leakage", _PROMPT_LEAKAGE),
+    ("tool-misuse", _TOOL_MISUSE),
+    ("rogue-agent", _ROGUE_AGENT),
+    ("output-handling", _OUTPUT_HANDLING),
+]
+# Flattened: (rule, severity, compiled, message, category)
+_SKILL_COMPILED = [
+    (rid, sev, re.compile(rx, re.IGNORECASE), msg, cat)
+    for cat, rules in _SKILLSPECTOR_CATEGORIES
+    for rid, sev, rx, msg in rules
+]
+
+# Lines that read like documentation examples (prohibition / quoting idioms).
+# On a TAOM self-audit these almost always quote a pattern as an example, not
+# enact it; skip them so the self-audit stays quiet. This skip is applied ONLY
+# in self-audit (downgrade) mode — under --external we want maximum sensitivity
+# and accept that a foreign doc quoting an attack phrase may fire. "example:" /
+# "for example" are used (NOT bare "example", which matches URLs like evil.example).
+_EXAMPLE_HINTS = (
+    "`", "e.g.", "for example", "such as", "example:", "do not", "don't",
+    "never ", "avoid", "instead of", "must not", "should not", "rather than",
+)
+
+
+def _looks_like_example(line: str) -> bool:
+    low = line.lower()
+    return any(h in low for h in _EXAMPLE_HINTS)
+
+
+def scan_skillspector(rel: str, text: str, res: Result, downgrade: bool) -> None:
+    for lineno, line in enumerate(text.splitlines(), 1):
+        if downgrade and _looks_like_example(line):
+            continue
+        for rid, sev, rx, msg, cat in _SKILL_COMPILED:
+            if not rx.search(line):
+                continue
+            if _suppressed(line, rid):
+                res.suppressed.append(f"{rel}:{lineno} {rid}")
+                continue
+            eff = "INFO" if downgrade else sev
+            res.findings.append(Finding(rid, eff, cat, rel, lineno, msg, line.strip()[:100]))
+
+
+# --------------------------------------------------------------------------- #
+# Behavioral AST scan  (.py files; stdlib `ast`, no dependency)
+# --------------------------------------------------------------------------- #
+
+_AST_SUBPROCESS = frozenset({
+    "call", "run", "Popen", "check_output", "check_call", "getoutput", "getstatusoutput",
+})
+_AST_OS_EXEC = frozenset({
+    "system", "popen", "execl", "execle", "execlp", "execlpe", "execv", "execve",
+    "execvp", "execvpe", "spawnl", "spawnle", "spawnlp", "spawnlpe", "spawnv",
+    "spawnve", "spawnvp", "spawnvpe", "posix_spawn", "posix_spawnp",
+})
+_AST_TAINT_HINTS = ("base64", "codecs", "marshal", "urllib", "requests", "httpx")
+
+
+def _ast_call_name(node: ast.Call) -> str | None:
+    f = node.func
+    if isinstance(f, ast.Name):
+        return f.id
+    if isinstance(f, ast.Attribute):
+        parts = [f.attr]
+        cur: ast.expr = f.value
+        while isinstance(cur, ast.Attribute):
+            parts.append(cur.attr)
+            cur = cur.value
+        if isinstance(cur, ast.Name):
+            parts.append(cur.id)
+            return ".".join(reversed(parts))
+    return None
+
+
+def _ast_dangerous_source(node: ast.AST) -> str | None:
+    for child in ast.walk(node):
+        if not isinstance(child, ast.Call):
+            continue
+        name = _ast_call_name(child)
+        if not name:
+            continue
+        if name in ("compile", "__import__") or name.startswith(("subprocess.", "os.")):
+            return name
+        if any(p in name for p in _AST_TAINT_HINTS):
+            return name
+    return None
+
+
+def scan_ast(rel: str, text: str, res: Result) -> None:
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return
+    lines = text.splitlines()
+
+    def emit(rule: str, sev: str, ln: int, msg: str) -> None:
+        line_txt = lines[ln - 1] if 0 < ln <= len(lines) else ""
+        if _suppressed(line_txt, rule):
+            res.suppressed.append(f"{rel}:{ln} {rule}")
+            return
+        res.findings.append(Finding(rule, sev, "ast-exec", rel, ln, msg, line_txt.strip()[:100]))
+
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        name = _ast_call_name(node)
+        if not name:
+            continue
+        ln = getattr(node, "lineno", 0)
+        if name in ("exec", "eval"):
+            if node.args:
+                src = _ast_dangerous_source(node.args[0])
+                if src:
+                    emit("ast-exec-chain", "CRITICAL", ln, f"dangerous execution chain: {name}() wrapping {src}()")
+            emit(f"ast-{name}", "HIGH", ln, f"{name}() call — arbitrary code execution")
+        elif name == "__import__":
+            emit("ast-dynimport", "MED", ln, "dynamic __import__() — bypasses static analysis")
+        elif name == "compile":
+            emit("ast-compile", "MED", ln, "compile() — code-object construction from a string")
+        elif name.startswith("subprocess.") and name.split(".", 1)[1] in _AST_SUBPROCESS:
+            emit("ast-subprocess", "MED", ln, "subprocess call — command execution")
+        elif name.startswith("os.") and name.split(".", 1)[1] in _AST_OS_EXEC:
+            emit("ast-os-exec", "HIGH", ln, "os.system/exec-family call — shell command execution")
+        elif name == "getattr" and len(node.args) >= 2 and not isinstance(node.args[1], ast.Constant):
+            emit("ast-dyn-getattr", "LOW", ln, "dynamic getattr() with non-literal attribute")
+
+
+# --------------------------------------------------------------------------- #
+# YARA scan  (OPTIONAL — clean-room rules in tools/yara_rules/; needs yara-python)
+# --------------------------------------------------------------------------- #
+
+_YARA_DIR = Path(__file__).resolve().parent / "yara_rules"
+_YARA_SEV = {"MEDIUM": "MED"}  # normalize .yar severity strings to TAOM's set
+
+
+def scan_yara(files: list[tuple[Path, str]], res: Result) -> None:
+    try:
+        import yara  # type: ignore  # optional dependency
+    except ImportError:
+        res.findings.append(Finding(
+            "yara-unavailable", "INFO", "yara", ".", 0,
+            "yara-python not installed; YARA signature layer skipped "
+            "(pip install yara-python for webshell/malware/C2 coverage)"))
+        return
+    rule_files = sorted(_YARA_DIR.glob("*.yar")) if _YARA_DIR.is_dir() else []
+    if not rule_files:
+        return
+    try:
+        rules = yara.compile(filepaths={p.stem: str(p) for p in rule_files})
+    except yara.Error as e:  # malformed rule — fail open, don't crash the audit
+        res.findings.append(Finding("yara-compile-error", "INFO", "yara", ".", 0,
+            f"YARA rules failed to compile: {e}"))
+        return
+    for path, rel in files:
+        try:
+            data = path.read_bytes()
+        except OSError:
+            continue
+        try:
+            matches = rules.match(data=data)
+        except yara.Error:
+            continue
+        for m in matches:
+            meta = getattr(m, "meta", {}) or {}
+            sev = str(meta.get("severity", "HIGH")).upper()
+            sev = _YARA_SEV.get(sev, sev)
+            if sev not in SEV_RANK:
+                sev = "HIGH"
+            cat = str(meta.get("category", "yara-match"))
+            res.findings.append(Finding(
+                f"yara-{m.rule}", sev, cat, rel, 0,
+                str(meta.get("description", f"YARA rule {m.rule} matched"))))
+
+
+# --------------------------------------------------------------------------- #
 # File collection + dispatch
 # --------------------------------------------------------------------------- #
 
@@ -321,7 +599,7 @@ def collect(root: Path) -> list[Path]:
     return out
 
 
-def scan_file(path: Path, root: Path, res: Result) -> None:
+def scan_file(path: Path, root: Path, res: Result, external: bool = False) -> None:
     rel = str(path.relative_to(root)).replace("\\", "/")
     text = _read(path)
     res.scanned_files += 1
@@ -340,6 +618,15 @@ def scan_file(path: Path, root: Path, res: Result) -> None:
         scan_hook(rel, text, res)
     if path.suffix == ".md" or name in ("claude.md", "agents.md"):
         scan_injection(rel, text, res, is_doc)
+
+    # On a TAOM self-audit the SkillSpector regex categories are advisory (INFO):
+    # TAOM's own hooks/docs legitimately reference `--no-verify`, quote attack
+    # phrases as examples, etc. Pass --external when vetting an untrusted/foreign
+    # tree to raise them to full severity. Genuine code/IOC danger is caught at
+    # full severity by the separate hook-exfil, AST, and YARA layers regardless.
+    scan_skillspector(rel, text, res, downgrade=not external)
+    if path.suffix == ".py":
+        scan_ast(rel, text, res)
 
 
 # --------------------------------------------------------------------------- #
@@ -379,6 +666,9 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--root", default=".", help="repo root to scan (default: cwd)")
     ap.add_argument("--json", action="store_true", help="machine-readable JSON output")
     ap.add_argument("--min", default="INFO", choices=SEVERITIES, help="only report findings >= this severity")
+    ap.add_argument("--external", action="store_true",
+                    help="scanning an external/untrusted tree (not TAOM's own): raise the "
+                         "SkillSpector regex categories from advisory INFO to full severity")
     args = ap.parse_args(argv)
 
     root = Path(args.root).resolve()
@@ -387,8 +677,10 @@ def main(argv: list[str]) -> int:
         return 1
 
     res = Result()
-    for p in collect(root):
-        scan_file(p, root, res)
+    collected = collect(root)
+    for p in collected:
+        scan_file(p, root, res, external=args.external)
+    scan_yara([(p, str(p.relative_to(root)).replace("\\", "/")) for p in collected], res)
 
     min_rank = SEV_RANK[args.min]
     (report_json if args.json else report_text)(res, min_rank)

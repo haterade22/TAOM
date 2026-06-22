@@ -112,6 +112,7 @@
 - [army-targeting](features/army-targeting.md) — besieger commitment stickiness, priority lists, border floor
 
 ### Infrastructure & tooling
+- **Claude-config security auditor** — `tools/audit_claude_config.py` (behind `/security-scan`): scans `.claude/`, `.mcp.json`, `settings*.json`, `CLAUDE.md` for secrets / over-broad permissions / hook-exfil / MCP risk / prompt-injection, plus SkillSpector-derived skill-threat categories + Python-AST + clean-room YARA. Run on TAOM's own config before `/ship` or after a hook/permission/MCP change; run `--root <repo> --external` (full severity) to vet a FOREIGN skill BEFORE adopting it via `/adopt-external`. Adoption review: [adopt-skillspector](reviews/adopt-skillspector-2026-06-22.md).
 - [bannerlord-engine-and-toolchain](reference/bannerlord-engine-and-toolchain.md) — **the whole engine/toolchain**: shipping-vs-editor builds, managed-vs-native DLL split, verified tech stack (Mono, PhysX, Granite, DX11, DLSS), the managed↔native bridge, FBX→tpac pipeline, custom-creature workflow. `tools/decompile_bannerlord.ps1` (dual-build decompile) + `tools/pe_inspect.py` (see into native DLLs)
 - **`reference/engine/` — phased engine study** (19 phases, COMPLETE; one process traced end-to-end from the decompile, what/how/why). The arc: campaign heartbeat → object → encounter → mission → agent → render, plus every cross-cutting system + the integration meta-layer:
   - [agent-spawn-and-render-pipeline](reference/engine/agent-spawn-and-render-pipeline.md) (Phase 1 — `SpawnAgent`/`SpawnMonster`→`CreateAgent`→`BuildAgent`→native `PreloadForRendering`; pins the spider render AV to the mesh, not the spawn code)
@@ -162,6 +163,7 @@ Other standards: [ADR-001 XML config](adrs/001-xml-config.md), [ADR-003 No `#reg
 - Per-feature RCAs live as `reviews/rca-<feature>-<date>.md` — read these BEFORE re-implementing related behaviour. Filename convention is grep-friendly.
 - Auto-detected reviews: `reviews/codex-adversarial-<feature>-<date>.md` (prompt + output pairs).
 - Balance/data audits (machine-generated, distinct from RCAs): `reviews/<topic>-audit-<date>.md`. Current: [reviews/cc-bonus-audit-2026-05-30.md](reviews/cc-bonus-audit-2026-05-30.md) — per-culture character-creation skill/attribute/focus totals vs vanilla budget; regenerate with `tools/audit_cc_bonuses.py`.
+- External adoption reviews (one outside source folded into TAOM, distinct from RCAs): `reviews/adopt-<source>-<date>.md`. Current: [adopt-graphify](reviews/adopt-graphify-2026-06-08.md), [adopt-ponytail](reviews/adopt-ponytail-2026-06-18.md), [adopt-skillspector](reviews/adopt-skillspector-2026-06-22.md) (NVIDIA SkillSpector → 6 deterministic skill-threat categories + Python-AST + clean-room YARA in `tools/audit_claude_config.py`, plus the `--external` foreign-skill vet). Executable procedure: [ai-includes/external-repo-adoption.md](ai-includes/external-repo-adoption.md).
 
 ## Migration history (v1.2 → v1.3 → v1.4.5)
 

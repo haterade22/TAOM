@@ -16,7 +16,7 @@ Adapted from [affaan-m/everything-claude-code/skills/skill-stocktake](https://gi
 ## When to use
 
 - Quarterly audit (or after a major harness change)
-- After porting skills from external suites — confirm none silently broken
+- After porting skills from external suites — confirm none silently broken, and security-vet the source first with `python tools/audit_claude_config.py --root <foreign-skill> --external` (per `external-skill-ports.md`)
 - When `/context-budget` flags bloat or staleness in any component
 - When a skill's behavior surprised you and you suspect decay
 
@@ -149,7 +149,7 @@ If full-audit and findings exist, suggest creating GitHub issues for HIGH/MEDIUM
 
 - `/context-budget` — token-cost audit. Stocktake is correctness/quality; context-budget is cost. Run both quarterly.
 - `/deep-review` — applies to one feature/diff; stocktake applies to the harness as a whole.
-- `/security-scan` — `tools/audit_claude_config.py` audits the SAME surface for security (committed secrets, over-broad permissions, hook exfiltration, MCP risk). Stocktake is quality; security-scan is safety. Run it during a full stocktake.
+- `/security-scan` — `tools/audit_claude_config.py` audits the SAME surface for security (committed secrets, over-broad permissions, hook exfiltration, MCP risk) plus SkillSpector-derived skill-threat categories (excessive-agency, memory-poisoning, prompt-leakage, tool-misuse, rogue-agent, output-handling) + Python-AST + clean-room YARA. Stocktake is quality; security-scan is safety. Run it (self-audit) during a full stocktake; run it with `--root <dir> --external` to vet a FOREIGN skill at full severity BEFORE adoption.
 - `external-skill-ports.md` — when fixing findings on a ported skill, re-check the port-drift checklist there.
 
 ## Notes
