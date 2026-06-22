@@ -2,6 +2,15 @@
 
 ## 2026-06-22
 
+### docs(context-save): adopt the "suggested skills" handoff field from mattpocock/skills
+
+Reviewed mattpocock/skills `teach` + `handoff` (MIT) via `/adopt-external`.
+
+- **`teach` — skipped** (out-of-domain): a personal-learning HTML-lesson framework; TAOM's only "teaching" need is the agent-facing knowledge base, already served by ADRs/RCAs/memories/engine docs.
+- **`handoff` — Tier 1**: ~85% duplicative of `/context-save` (which is richer — git state + decisions-with-why + "what surprised you" — and persists in-repo at `.claude/state/context/` vs handoff's ephemeral OS temp). Folded its one nugget into `/context-save`'s output format: a **"Suggested skills for the next session"** field (name the entry points the resuming session should invoke, given TAOM's large catalog) + an explicit **secret-redaction** note.
+- Security vet clean: `--external` foreign-skill vet over all 6 files → no findings. Self-audit exit 0.
+- See `docs/reviews/adopt-mattpocock-teach-handoff-2026-06-22.md`.
+
 ### docs(improve): adopt the deep/shallow-module lens from mattpocock/skills
 
 Reviewed `mattpocock/skills` `improve-codebase-architecture` (MIT) via `/adopt-external`. It is ~90% duplicative of TAOM's `/improve` (itself a shadcn/improve port) — same advisor-not-implementer scan→present→pick workflow. Adopted the one genuine gap (Tier 1 only):

@@ -63,9 +63,12 @@ Then **append** the agent-supplied narrative — these are the parts the user / 
 3. **Open questions / blockers:** what's NOT yet decided that the next session needs to address.
 4. **Files in flight:** which files are mid-edit and why (one line each).
 5. **Next concrete step:** the single next action a fresh session should take.
-6. **Anything that surprised you this session:** the kind of thing future-you would forget. (Optional — but the highest-value field when present.)
+6. **Suggested skills for the next session:** which TAOM skills the resuming session should reach for first, in order — e.g. "`/context-restore` this snapshot, then `/verify`, then `/deep-review` on the changed scope." TAOM's catalog is large; naming the entry points saves the next session re-deriving the route. (Adopted from mattpocock/skills `handoff`, MIT.)
+7. **Anything that surprised you this session:** the kind of thing future-you would forget. (Optional — but the highest-value field when present.)
 
 Use `AskUserQuestion` to gather any of these the user can fill faster than you can infer.
+
+**Redact secrets:** never write API keys, tokens, credentials, or PII into a snapshot — reference the `file:line` + credential type instead. Snapshots are gitignored but are still local plaintext.
 
 ## Output format (what gets written)
 
@@ -103,6 +106,11 @@ Implementing Tier 2 + Tier 3 picks from Claude Code ecosystem review (#93). 6 of
 
 ## Next concrete step
 Port refactoring-specialist subagent to .claude/agents/, run /context-budget to confirm headroom impact, then commit.
+
+## Suggested skills for the next session
+1. `/context-restore` this snapshot
+2. `/context-budget` to confirm headroom after the port
+3. `/deep-review` the changed scope, then commit
 
 ## Anything that surprised you this session
 The amend bypass (Codex review #28) was a real prevention-theater finding. Now codified in harness-facts.md "Amend exemptions" section so the same mental model error can't recur.
