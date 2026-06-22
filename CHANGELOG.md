@@ -2,6 +2,16 @@
 
 ## 2026-06-22
 
+### docs(improve): adopt the deep/shallow-module lens from mattpocock/skills
+
+Reviewed `mattpocock/skills` `improve-codebase-architecture` (MIT) via `/adopt-external`. It is ~90% duplicative of TAOM's `/improve` (itself a shadcn/improve port) — same advisor-not-implementer scan→present→pick workflow. Adopted the one genuine gap (Tier 1 only):
+
+- `/improve` audit-playbook § Tech Debt & Architecture gains a **shallow-module** detector (Ousterhout: interface ≈ implementation complexity → the abstraction doesn't earn its keep) + the **deepening deletion test** (would inlining it *concentrate* complexity or *scatter* it?), framed as the under-abstraction counterpart to the existing "god modules" over-concentration bullet.
+- `simplicity-criterion.md` gains one line distinguishing its "is this code redundant?" deletion test from the new "is this abstraction shallow?" deepening deletion test.
+- **Skipped** (duplicative of TAOM's existing model): the HTML/Mermaid report (markdown plans fit better — git-friendly, offline), and the 3-skill companion suite (`/codebase-design`, `/grilling`, `/domain-modeling` + `CONTEXT.md`) which overlaps ADRs + the docs/ knowledge graph + memories.
+- Security vet clean: MIT, no scripts/hooks; **first production use of the `--external` foreign-skill vet** (`audit_claude_config.py --root <clone> --external` → no findings). Self-audit exit 0.
+- See `docs/reviews/adopt-mattpocock-improve-architecture-2026-06-22.md`.
+
 ### feat(security-scan): adopt NVIDIA SkillSpector patterns into the config auditor
 
 Folded the portable, deterministic parts of [NVIDIA/SkillSpector](https://github.com/NVIDIA/SkillSpector)

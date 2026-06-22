@@ -40,6 +40,7 @@ It also gives `/deep-review` a concrete handle for the deletion-win case. A revi
 ## Relationship to other rules
 
 - `think-before-coding.md`'s **reuse ladder** is the *reuse-before-write* companion: it fires *before* a change exists (don't write what the engine or an existing service already provides); this rule judges a change *after* it exists (keep or reject). `/deslop` + `/deep-review` enforce both on finished code.
+- This rule's "deletion that holds parity" test asks *is this code redundant?* It is NOT the same as `/improve`'s **deepening deletion test** (audit-playbook § Tech Debt & Architecture), which asks *is this abstraction shallow?* — would inlining a module *concentrate* complexity (deepen) or *scatter* it (keep). Redundant-code deletion vs shallow-abstraction deepening are different lenses; don't conflate them.
 
 ## Source
 
