@@ -4840,6 +4840,3150 @@
             <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
+    <!-- Dol Guldur Clan 7 (Ghâshrûz) -->
+    <NPCCharacter id="lord_D7_1" race="dg_uruk" name="{=aom_lord_D7_1_name}Lugmor" age="45" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_chieftain_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D7_2" race="dg_uruk" name="{=aom_lord_D7_2_name}Vrûkash" age="34" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D7_3" race="dg_uruk" name="{=aom_lord_D7_3_name}Druzgûl" age="29" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D7_4" race="dg_uruk" name="{=aom_lord_D7_4_name}Throgma" age="40" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_e" />
+            <EquipmentSet id="dolguldur_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D7_5" race="dg_uruk" name="{=aom_lord_D7_5_name}Bûrzghash" age="31" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_a" />
+            <EquipmentSet id="dolguldur_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D7_6" race="dg_uruk" name="{=aom_lord_D7_6_name}Ghâshnak" age="27" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D7_7" race="dg_uruk" name="{=aom_lord_D7_7_name}Mwhazga" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D7_8" race="dg_uruk" name="{=aom_lord_D7_8_name}Skûrla" age="32" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D7_9" race="dg_uruk" name="{=aom_lord_D7_9_name}Ghûrnia" age="23" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_e" />
+            <EquipmentSet id="dolguldur_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D7_10" race="dg_uruk" name="{=aom_lord_D7_10_name}Vrûzga" age="36" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_a" />
+            <EquipmentSet id="dolguldur_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Dol Guldur Clan 8 (Morbhak) -->
+    <NPCCharacter id="lord_D8_1" race="dg_uruk" name="{=aom_lord_D8_1_name}Skûlgar" age="46" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_chieftain_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D8_2" race="dg_uruk" name="{=aom_lord_D8_2_name}Morbhûl" age="35" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D8_3" race="dg_uruk" name="{=aom_lord_D8_3_name}Rhâzgar" age="30" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D8_4" race="dg_uruk" name="{=aom_lord_D8_4_name}Uzgûth" age="41" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_e" />
+            <EquipmentSet id="dolguldur_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D8_5" race="dg_uruk" name="{=aom_lord_D8_5_name}Mauthak" age="32" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_a" />
+            <EquipmentSet id="dolguldur_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D8_6" race="dg_uruk" name="{=aom_lord_D8_6_name}Naghza" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D8_7" race="dg_uruk" name="{=aom_lord_D8_7_name}Dûrnia" age="33" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D8_8" race="dg_uruk" name="{=aom_lord_D8_8_name}Lûrgha" age="24" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D8_9" race="dg_uruk" name="{=aom_lord_D8_9_name}Thûzga" age="37" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_e" />
+            <EquipmentSet id="dolguldur_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Dol Guldur Clan 9 (Skûlgath) -->
+    <NPCCharacter id="lord_D9_1" race="dg_uruk" name="{=aom_lord_D9_1_name}Naltûr" age="44" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_chieftain_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D9_2" race="dg_uruk" name="{=aom_lord_D9_2_name}Grishûl" age="33" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D9_3" race="dg_uruk" name="{=aom_lord_D9_3_name}Hlakûm" age="28" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D9_4" race="dg_uruk" name="{=aom_lord_D9_4_name}Zûrghan" age="39" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_e" />
+            <EquipmentSet id="dolguldur_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D9_5" race="dg_uruk" name="{=aom_lord_D9_5_name}Dûlmash" age="30" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_a" />
+            <EquipmentSet id="dolguldur_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D9_6" race="dg_uruk" name="{=aom_lord_D9_6_name}Morgza" age="25" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D9_7" race="dg_uruk" name="{=aom_lord_D9_7_name}Skâlna" age="31" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D9_8" race="dg_uruk" name="{=aom_lord_D9_8_name}Brûzha" age="22" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Dol Guldur Clan 10 (Drûzgûl) -->
+    <NPCCharacter id="lord_D10_1" race="dg_uruk" name="{=aom_lord_D10_1_name}Vrâkmug" age="45" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_chieftain_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D10_2" race="dg_uruk" name="{=aom_lord_D10_2_name}Shâgthul" age="34" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D10_3" race="dg_uruk" name="{=aom_lord_D10_3_name}Gûrnak" age="29" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D10_4" race="dg_uruk" name="{=aom_lord_D10_4_name}Brôzag" age="40" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_e" />
+            <EquipmentSet id="dolguldur_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D10_5" race="dg_uruk" name="{=aom_lord_D10_5_name}Ghâzla" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_a" />
+            <EquipmentSet id="dolguldur_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D10_6" race="dg_uruk" name="{=aom_lord_D10_6_name}Uzrina" age="32" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D10_7" race="dg_uruk" name="{=aom_lord_D10_7_name}Hlûrza" age="23" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Dol Guldur Clan 11 (Vrûkmog) -->
+    <NPCCharacter id="lord_D11_1" race="dg_uruk" name="{=aom_lord_D11_1_name}Thûrzog" age="46" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_chieftain_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D11_2" race="dg_uruk" name="{=aom_lord_D11_2_name}Mokrash" age="35" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D11_3" race="dg_uruk" name="{=aom_lord_D11_3_name}Azgûrth" age="30" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D11_4" race="dg_uruk" name="{=aom_lord_D11_4_name}Hûzmog" age="41" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_e" />
+            <EquipmentSet id="dolguldur_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D11_5" race="dg_uruk" name="{=aom_lord_D11_5_name}Vûlna" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_a" />
+            <EquipmentSet id="dolguldur_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D11_6" race="dg_uruk" name="{=aom_lord_D11_6_name}Drâzga" age="33" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Dol Guldur Clan 12 (Hlakûrz) -->
+    <NPCCharacter id="lord_D12_1" race="dg_uruk" name="{=aom_lord_D12_1_name}Skarvûk" age="44" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_chieftain_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D12_2" race="dg_uruk" name="{=aom_lord_D12_2_name}Lûghnar" age="33" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D12_3" race="dg_uruk" name="{=aom_lord_D12_3_name}Vorgûl" age="28" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D12_4" race="dg_uruk" name="{=aom_lord_D12_4_name}Nûrgha" age="25" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_e" />
+            <EquipmentSet id="dolguldur_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D12_5" race="dg_uruk" name="{=aom_lord_D12_5_name}Skûzla" age="31" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_a" />
+            <EquipmentSet id="dolguldur_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Dol Guldur Clan 13 (Throzbûz) -->
+    <NPCCharacter id="lord_D13_1" race="dg_uruk" name="{=aom_lord_D13_1_name}Dramthak" age="45" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_chieftain_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D13_2" race="dg_uruk" name="{=aom_lord_D13_2_name}Ghûlbag" age="34" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D13_3" race="dg_uruk" name="{=aom_lord_D13_3_name}Rûkmash" age="29" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D13_4" race="dg_uruk" name="{=aom_lord_D13_4_name}Throzgûr" age="40" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_e" />
+            <EquipmentSet id="dolguldur_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D13_5" race="dg_uruk" name="{=aom_lord_D13_5_name}Bûlzag" age="31" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_a" />
+            <EquipmentSet id="dolguldur_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D13_6" race="dg_uruk" name="{=aom_lord_D13_6_name}Mhargza" age="26" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D13_7" race="dg_uruk" name="{=aom_lord_D13_7_name}Ghûlna" age="32" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D13_8" race="dg_uruk" name="{=aom_lord_D13_8_name}Râzgha" age="23" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D13_9" race="dg_uruk" name="{=aom_lord_D13_9_name}Bûlzna" age="36" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_e" />
+            <EquipmentSet id="dolguldur_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Dol Guldur Clan 14 (Rhâzgor) -->
+    <NPCCharacter id="lord_D14_1" race="dg_uruk" name="{=aom_lord_D14_1_name}Nûrghak" age="46" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_chieftain_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D14_2" race="dg_uruk" name="{=aom_lord_D14_2_name}Slagthûm" age="35" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D14_3" race="dg_uruk" name="{=aom_lord_D14_3_name}Hrûkdan" age="30" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D14_4" race="dg_uruk" name="{=aom_lord_D14_4_name}Mazgûth" age="41" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_e" />
+            <EquipmentSet id="dolguldur_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D14_5" race="dg_uruk" name="{=aom_lord_D14_5_name}Throzga" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_a" />
+            <EquipmentSet id="dolguldur_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D14_6" race="dg_uruk" name="{=aom_lord_D14_6_name}Uzghla" age="33" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D14_7" race="dg_uruk" name="{=aom_lord_D14_7_name}Lûkzha" age="24" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <!-- Dol Guldur Clan 15 (Uzghûl) -->
+    <NPCCharacter id="lord_D15_1" race="dg_uruk" name="{=aom_lord_D15_1_name}Olghûr" age="44" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_chieftain_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D15_2" race="dg_uruk" name="{=aom_lord_D15_2_name}Gûthrak" age="33" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_c" />
+            <EquipmentSet id="dolguldur_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D15_3" race="dg_uruk" name="{=aom_lord_D15_3_name}Zhâgmor" age="28" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_d" />
+            <EquipmentSet id="dolguldur_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D15_4" race="dg_uruk" name="{=aom_lord_D15_4_name}Drûbnash" age="39" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="265" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="190" />
+            <skill id="Athletics" value="265" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="240" />
+            <skill id="Tactics" value="255" />
+            <skill id="Roguery" value="240" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="270" />
+            <skill id="Trade" value="140" />
+            <skill id="Steward" value="200" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="180" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-1" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="2" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_e" />
+            <EquipmentSet id="dolguldur_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D15_5" race="dg_uruk" name="{=aom_lord_D15_5_name}Vrâgna" age="25" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_a" />
+            <EquipmentSet id="dolguldur_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_D15_6" race="dg_uruk" name="{=aom_lord_D15_6_name}Dhûrza" age="31" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+        <face>
+            <BodyProperties version="4" age="35" weight="0.2" build="0.74" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="160" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="160" />
+            <skill id="Crossbow" value="110" />
+            <skill id="Throwing" value="140" />
+            <skill id="Riding" value="110" />
+            <skill id="Athletics" value="200" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="170" />
+            <skill id="Tactics" value="160" />
+            <skill id="Roguery" value="210" />
+            <skill id="Charm" value="130" />
+            <skill id="Leadership" value="150" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="180" />
+            <skill id="Medicine" value="120" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="-2" />
+            <Trait id="Generosity" value="-2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="-2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="-1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="1" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dolguldur_bat_template_medium_b" />
+            <EquipmentSet id="dolguldur_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
     <!-- Culture.empire -->
     <NPCCharacter id="lord_1_1_1" name="{=aom_lord_1_1_1_name}Eldith Grey-Claw" default_group="Infantry" age="32" voice="ironic" is_female="true" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dunland_warrior_skills">
         <face>

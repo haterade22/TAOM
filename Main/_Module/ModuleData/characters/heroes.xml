@@ -1257,6 +1257,216 @@
 		id="lord_D6_10"
 		faction="Faction.clan_dolguldur_6"
 		text="{=kazla_description}Kazla, a arcane enforcer, punishes disloyalty, maintaining order in Khamul's shadowed halls." />
+	<!-- Dol Guldur Clan 7 (Ghâshrûz) -->
+	<Hero
+		id="lord_D7_1"
+		faction="Faction.clan_dolguldur_7" />
+	<Hero
+		id="lord_D7_2"
+		faction="Faction.clan_dolguldur_7" />
+	<Hero
+		id="lord_D7_3"
+		faction="Faction.clan_dolguldur_7" />
+	<Hero
+		id="lord_D7_4"
+		faction="Faction.clan_dolguldur_7" />
+	<Hero
+		id="lord_D7_5"
+		faction="Faction.clan_dolguldur_7" />
+	<Hero
+		id="lord_D7_6"
+		faction="Faction.clan_dolguldur_7" />
+	<Hero
+		id="lord_D7_7"
+		faction="Faction.clan_dolguldur_7" />
+	<Hero
+		id="lord_D7_8"
+		faction="Faction.clan_dolguldur_7" />
+	<Hero
+		id="lord_D7_9"
+		faction="Faction.clan_dolguldur_7" />
+	<Hero
+		id="lord_D7_10"
+		faction="Faction.clan_dolguldur_7" />
+	<!-- Dol Guldur Clan 8 (Morbhak) -->
+	<Hero
+		id="lord_D8_1"
+		faction="Faction.clan_dolguldur_8" />
+	<Hero
+		id="lord_D8_2"
+		faction="Faction.clan_dolguldur_8" />
+	<Hero
+		id="lord_D8_3"
+		faction="Faction.clan_dolguldur_8" />
+	<Hero
+		id="lord_D8_4"
+		faction="Faction.clan_dolguldur_8" />
+	<Hero
+		id="lord_D8_5"
+		faction="Faction.clan_dolguldur_8" />
+	<Hero
+		id="lord_D8_6"
+		faction="Faction.clan_dolguldur_8" />
+	<Hero
+		id="lord_D8_7"
+		faction="Faction.clan_dolguldur_8" />
+	<Hero
+		id="lord_D8_8"
+		faction="Faction.clan_dolguldur_8" />
+	<Hero
+		id="lord_D8_9"
+		faction="Faction.clan_dolguldur_8" />
+	<!-- Dol Guldur Clan 9 (Skûlgath) -->
+	<Hero
+		id="lord_D9_1"
+		faction="Faction.clan_dolguldur_9" />
+	<Hero
+		id="lord_D9_2"
+		faction="Faction.clan_dolguldur_9" />
+	<Hero
+		id="lord_D9_3"
+		faction="Faction.clan_dolguldur_9" />
+	<Hero
+		id="lord_D9_4"
+		faction="Faction.clan_dolguldur_9" />
+	<Hero
+		id="lord_D9_5"
+		faction="Faction.clan_dolguldur_9" />
+	<Hero
+		id="lord_D9_6"
+		faction="Faction.clan_dolguldur_9" />
+	<Hero
+		id="lord_D9_7"
+		faction="Faction.clan_dolguldur_9" />
+	<Hero
+		id="lord_D9_8"
+		faction="Faction.clan_dolguldur_9" />
+	<!-- Dol Guldur Clan 10 (Drûzgûl) -->
+	<Hero
+		id="lord_D10_1"
+		faction="Faction.clan_dolguldur_10" />
+	<Hero
+		id="lord_D10_2"
+		faction="Faction.clan_dolguldur_10" />
+	<Hero
+		id="lord_D10_3"
+		faction="Faction.clan_dolguldur_10" />
+	<Hero
+		id="lord_D10_4"
+		faction="Faction.clan_dolguldur_10" />
+	<Hero
+		id="lord_D10_5"
+		faction="Faction.clan_dolguldur_10" />
+	<Hero
+		id="lord_D10_6"
+		faction="Faction.clan_dolguldur_10" />
+	<Hero
+		id="lord_D10_7"
+		faction="Faction.clan_dolguldur_10" />
+	<!-- Dol Guldur Clan 11 (Vrûkmog) -->
+	<Hero
+		id="lord_D11_1"
+		faction="Faction.clan_dolguldur_11" />
+	<Hero
+		id="lord_D11_2"
+		faction="Faction.clan_dolguldur_11" />
+	<Hero
+		id="lord_D11_3"
+		faction="Faction.clan_dolguldur_11" />
+	<Hero
+		id="lord_D11_4"
+		faction="Faction.clan_dolguldur_11" />
+	<Hero
+		id="lord_D11_5"
+		faction="Faction.clan_dolguldur_11" />
+	<Hero
+		id="lord_D11_6"
+		faction="Faction.clan_dolguldur_11" />
+	<!-- Dol Guldur Clan 12 (Hlakûrz) -->
+	<Hero
+		id="lord_D12_1"
+		faction="Faction.clan_dolguldur_12" />
+	<Hero
+		id="lord_D12_2"
+		faction="Faction.clan_dolguldur_12" />
+	<Hero
+		id="lord_D12_3"
+		faction="Faction.clan_dolguldur_12" />
+	<Hero
+		id="lord_D12_4"
+		faction="Faction.clan_dolguldur_12" />
+	<Hero
+		id="lord_D12_5"
+		faction="Faction.clan_dolguldur_12" />
+	<!-- Dol Guldur Clan 13 (Throzbûz) -->
+	<Hero
+		id="lord_D13_1"
+		faction="Faction.clan_dolguldur_13" />
+	<Hero
+		id="lord_D13_2"
+		faction="Faction.clan_dolguldur_13" />
+	<Hero
+		id="lord_D13_3"
+		faction="Faction.clan_dolguldur_13" />
+	<Hero
+		id="lord_D13_4"
+		faction="Faction.clan_dolguldur_13" />
+	<Hero
+		id="lord_D13_5"
+		faction="Faction.clan_dolguldur_13" />
+	<Hero
+		id="lord_D13_6"
+		faction="Faction.clan_dolguldur_13" />
+	<Hero
+		id="lord_D13_7"
+		faction="Faction.clan_dolguldur_13" />
+	<Hero
+		id="lord_D13_8"
+		faction="Faction.clan_dolguldur_13" />
+	<Hero
+		id="lord_D13_9"
+		faction="Faction.clan_dolguldur_13" />
+	<!-- Dol Guldur Clan 14 (Rhâzgor) -->
+	<Hero
+		id="lord_D14_1"
+		faction="Faction.clan_dolguldur_14" />
+	<Hero
+		id="lord_D14_2"
+		faction="Faction.clan_dolguldur_14" />
+	<Hero
+		id="lord_D14_3"
+		faction="Faction.clan_dolguldur_14" />
+	<Hero
+		id="lord_D14_4"
+		faction="Faction.clan_dolguldur_14" />
+	<Hero
+		id="lord_D14_5"
+		faction="Faction.clan_dolguldur_14" />
+	<Hero
+		id="lord_D14_6"
+		faction="Faction.clan_dolguldur_14" />
+	<Hero
+		id="lord_D14_7"
+		faction="Faction.clan_dolguldur_14" />
+	<!-- Dol Guldur Clan 15 (Uzghûl) -->
+	<Hero
+		id="lord_D15_1"
+		faction="Faction.clan_dolguldur_15" />
+	<Hero
+		id="lord_D15_2"
+		faction="Faction.clan_dolguldur_15" />
+	<Hero
+		id="lord_D15_3"
+		faction="Faction.clan_dolguldur_15" />
+	<Hero
+		id="lord_D15_4"
+		faction="Faction.clan_dolguldur_15" />
+	<Hero
+		id="lord_D15_5"
+		faction="Faction.clan_dolguldur_15" />
+	<Hero
+		id="lord_D15_6"
+		faction="Faction.clan_dolguldur_15" />
 
 	<!-- ========== GONDOR (EMPIRE WEST) - Additional Heroes ========== -->
 	<Hero
