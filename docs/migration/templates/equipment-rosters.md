@@ -393,7 +393,9 @@ All examples below are quoted **verbatim** from vanilla 1.4.5 XML; the file:line
 </EquipmentRoster>
 ```
 
-These rosters are **selected by code** (the education campaign behavior) via roster-id lookup, not by template resolution. They don't need flags. TAOM's `taom_education_equipment_templates.xml` (10,154 lines) follows the same pattern, which is correct — leave it alone except for the missing `equipmentType=` default (vanilla also omits — the engine treats omitted as Battle, which is fine for these "stage" rosters which are equipment progression sets, not template selectors).
+These rosters are **selected by code** (the education campaign behavior) via roster-id lookup, not by template resolution. They don't need flags. TAOM's `taom_education_equipment_templates.xml` (10,154 lines) follows the same flag/`equipmentType` pattern, which is correct (vanilla also omits `equipmentType=` — the engine treats omitted as Battle, fine for these "stage" rosters which are equipment progression sets, not template selectors).
+
+> ⚠️ **Correction (2026-06-22):** TAOM's education templates did NOT mirror vanilla on the `culture` attribute — vanilla's example above carries `culture="Culture.aserai"`, but all **980** TAOM rosters shipped WITHOUT it, producing 980 `EquipmentRoster ... don't have culture definition` warnings every launch. The attribute is the one part of this pattern that IS required (1.4.3+, see the attribute table above). Fixed by `tools/add_education_roster_cultures.py` (adds `culture="Culture.<id>"` from the `_<culture>` id suffix). So: education rosters need **no flags and no `equipmentType=`, but they DO need `culture=`** like every other standalone roster.
 
 ---
 
@@ -561,7 +563,7 @@ Plus authoring NEW rosters for the missing matrix combos (see "Mandatory per-cul
 
 **Current state:** 10,154 lines, NO deprecated flags, NO `<EquipmentSet civilian=...>`. Selected by `EducationCampaignBehavior` via roster ID lookup.
 
-**Target state:** No changes required. (Vanilla `SandBox/education_equipment_templates.xml` confirms: education rosters have no `<Flags>` and no `equipmentType=`.)
+**Target state:** ~~No changes required.~~ **Corrected 2026-06-22:** flags/`equipmentType` need no migration (vanilla `SandBox/education_equipment_templates.xml` confirms education rosters have no `<Flags>` and no `equipmentType=`), BUT the file was missing the required `culture="Culture.<id>"` on all 980 `<EquipmentRoster>` elements (980 startup warnings). Fixed via `tools/add_education_roster_cultures.py`. No further changes required.
 
 ### `taom_equipment_sets_named_companions.xml`
 

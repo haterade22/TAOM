@@ -29,6 +29,7 @@ Not-tested: in-game/editor re-validation that the 10 errors are gone from the lo
 
 - Added `culture="Culture.<name>"` to all 980 rosters, matching vanilla's two-attribute layout, via new `tools/add_education_roster_cultures.py` (`--dry-run`/`--apply`, `.bak` backup, idempotent). The culture is the id's final token; all 10 (`dolguldur, erebor, goblin, gondor, gundabad, isengard, mirkwood, mistymountainorcs, mordor, rivendell`) verified present in `taom_spcultures.xml`, so each `Culture.*` resolves.
 - Verified: 980 `culture="Culture.` attributes, 0 unsplit/missing, XML well-formed, `validate_moduledata.py` PASS (no `UNKNOWN_CULTURE`).
+- Docs: corrected the stale "no migration needed / leave it alone" claims for `taom_education_equipment_templates.xml` in `docs/migration/TRACKING.md` + `docs/migration/templates/equipment-rosters.md` (they overlooked the missing `culture=`); added the roster-level `culture="Culture.<id>"` requirement to the `.claude/rules/xml-data.md` EquipmentRosters rule (sibling of the civilian-`equipmentType` gotcha) so it can't recur.
 
 Not-tested: in-game confirmation the warnings are gone from the log (the real gate is a relaunch).
 

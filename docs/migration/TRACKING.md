@@ -59,6 +59,7 @@ Plan file: `C:\Users\mikew\.claude\plans\we-did-this-on-crystalline-piglet.md`
 - **`IsNobleTemplate` is RENAMED to `IsLordTemplate` (1:1)**, not removed as dev notes implied.
 - **All 12 TAOM custom cultures fail mandatory roster matrix** — expected pre-S5b authoring. The audit returns 0/96 mandatory + 0/48 optional rosters passing because current rosters use OLD flag names not in the new flag set.
 - **Already 1.4.5-compatible (no migration needed):** `taom_career_starting_equipment.xml`, `taom_education_equipment_templates.xml`.
+  - **Correction (2026-06-22):** "no migration needed" was scoped to flags/`equipmentType` only (education rosters correctly omit both). `taom_education_equipment_templates.xml` was in fact missing the required `culture="Culture.<id>"` on **all 980** `<EquipmentRoster>` elements → 980 `don't have culture definition` startup warnings. Fixed by adding the attribute in vanilla's two-attr layout (`tools/add_education_roster_cultures.py`). The `_<culture>` id suffix supplies the value; all 10 cultures verified in `taom_spcultures.xml`.
 
 #### GameModel drift discovered
 
