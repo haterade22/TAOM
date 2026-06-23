@@ -2,6 +2,15 @@
 
 ## 2026-06-22
 
+### fix(data): assign culture to child-education EquipmentRosters (980 startup warnings)
+
+`equipmentsets/taom_education_equipment_templates.xml` mirrors vanilla `education_equipment_templates.xml` but omitted the `culture="Culture.<name>"` attribute the vanilla template declares on every `<EquipmentRoster>`. The engine's `MBEquipmentRoster.Deserialize` logged one warning per roster — `EquipmentRoster with id: child_education_equipments_..._gundabad don't have culture definition` — 980 of them at every startup (confirmed in `rgl_log_21416.txt`: all 980 are child-education rosters, no other roster type affected; 10 cultures × 98). Non-fatal (the roster still loads and the `EducationCampaignBehavior` lookup keys off the culture embedded in the id, not `EquipmentCulture`), but it was log noise and a template-conformance gap.
+
+- Added `culture="Culture.<name>"` to all 980 rosters, matching vanilla's two-attribute layout, via new `tools/add_education_roster_cultures.py` (`--dry-run`/`--apply`, `.bak` backup, idempotent). The culture is the id's final token; all 10 (`dolguldur, erebor, goblin, gondor, gundabad, isengard, mirkwood, mistymountainorcs, mordor, rivendell`) verified present in `taom_spcultures.xml`, so each `Culture.*` resolves.
+- Verified: 980 `culture="Culture.` attributes, 0 unsplit/missing, XML well-formed, `validate_moduledata.py` PASS (no `UNKNOWN_CULTURE`).
+
+Not-tested: in-game confirmation the warnings are gone from the log (the real gate is a relaunch).
+
 ### fix(render): force GPU face-morph for custom-race crowd agents (Erebor-arena dwarf CTD + naked stands)
 
 A dwarf in the Erebor arena crashed to desktop (native AV `0xC0000005` reading `0x24C` in `TaleWorlds.Native.dll`, worker thread) and every dwarf spectator in the stands rendered naked. Native triage (`tools/native_crash_triage.py` over the 7 fault frames) put the crash in the engine's face static-morph builder — the function carrying `"No morph data found for face mesh. Can not do static morph."` — dereferencing a **null morph-data pointer**. Root cause: the custom LOTR head meshes lack the per-face-component morph data the CPU/static-morph path indexes. Verified in Blender (importing `sk_dwarf_bm_f1.fbx`: `…head.eye` = **0 shape keys** vs 102 on base/mouth) and in the compiled tpac (**no** LOTRLOME head has a `face_eyelash_mesh` that vanilla `head_male_a`/`head_female_a` carry — same gap on uruk/orc/nazghul/elf/goblin/troll/saruman). The static path is taken only for batched, deferred location-character spawns (arena/town spectators), so dwarves render fine in battles/town/CC (GPU morph) but the arena crowd both crashes and renders as bare base mesh (the aborted AgentVisuals build never attaches equipment). `NativeSkinFixes` is inert (`<PATTERN_TBD>` stubs) → pure vanilla; equipment refs validate clean.

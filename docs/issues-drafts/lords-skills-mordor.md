@@ -1,5 +1,7 @@
 # feat(lords-skills): Mordor — lore-driven skills + traits for 97 adult NPCs
 
+> **Erratum (2026-06-22, commit `c9434b5a`).** The 3 Nazgûl (Tainted / Shadow of Northmen / Shadow of Umbar) listed below as Mordor canonical highlights — plus their master Khamûl — were re-cultured Mordor→Dol Guldur and now belong to that draft. 21 Norse-themed Group-A lords (Astrid Bearclaw, Fenrik, Tormund…) also left for Dunland, so the "97 adult NPCs" count is now an over-count. Regenerate from the live roster before creating this issue.
+
 ## Motivation
 
 Following the Gondor Lord Review session (2026-05-26) and Gondor skills+traits pass

@@ -1,5 +1,7 @@
 # feat(lords-skills): Dol Guldur — lore-driven skills + traits for 59 adult NPCs
 
+> **Erratum (2026-06-22, commit `c9434b5a`).** This draft's "no canonical Khamûl entry / no canonical Tolkien overrides" is now **wrong**: Khamûl, the Easterling (`lord_1_48`) and his 3 Nazgûl (`lord_1_48_1/2/3`) were re-cultured Mordor→Dol Guldur and carry explicit canonical skill templates (`taom_nazgul_skills`). The adult-NPC count gained these 4. Regenerate from the live roster before creating this issue.
+
 ## Motivation
 
 Following the Gondor Lord Review session (2026-05-26) and Gondor skills+traits pass

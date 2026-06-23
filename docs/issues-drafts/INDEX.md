@@ -1,5 +1,7 @@
 # Lords Skills+Traits — GitHub Issue Drafts
 
+> **Erratum (2026-06-22, commit `c9434b5a`).** These drafts + the per-culture NPC counts below reflect the 2026-05-27 sweep. A later culture-vs-faction deconfliction re-cultured several lords — **21 Mordor→Dunland**, **Khamûl + 3 Nazgûl Mordor→Dol Guldur**, **Alcaea→Khand**, **Duilin→Gondor** — so the Mordor / Dunland / Dol Guldur / Khand / Gondor counts and the Dol Guldur / Mordor canonical-highlight notes are stale. Regenerate from the live roster before creating these issues.
+
 One draft per TAOM culture. To create each issue:
 
 ```bash

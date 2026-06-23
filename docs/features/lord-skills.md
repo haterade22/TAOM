@@ -128,6 +128,8 @@ N/A. Skills bake at hero CREATION (one-time, ~ms per hero). No per-tick / per-fr
 
 Total: 17 cultures, ~880 adult NPCs, 120 SkillSets. 18 GitHub issues #228-#245.
 
+> **Erratum (2026-06-22, commit `c9434b5a`).** The per-culture counts above record the 2026-05-27 sweep's scope (issues #228–#245) and were accurate then. A later culture-vs-faction deconfliction re-cultured several lords across factions — **21 Mordor→Dunland**, **Khamûl + 3 Nazgûl Mordor→Dol Guldur**, **Alcaea Dunland→Khand**, **Duilin Dunland→Gondor** — so current per-culture rosters differ (Mordor lower, Dunland/Dol Guldur higher). Notably **Dol Guldur now holds the Khamûl + 3-Nazgûl canonical overrides** (`taom_nazgul_skills`), and the 21 Norse-themed Group-A lords are now Dunland. The grand total (~880) is unchanged — lords moved *between* cultures. Re-run `tools/apply_culture_skills_traits.py --culture <c>` for live counts.
+
 ## Save Compatibility
 
 Hero skills bake at hero CREATION. Existing campaigns keep their old (vanilla SkillSet) values. New campaigns + un-spawned heroes use the new TAOM SkillSets. Document this in any user-facing release notes.
