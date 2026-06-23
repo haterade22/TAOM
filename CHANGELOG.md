@@ -2,6 +2,12 @@
 
 ## 2026-06-22
 
+### fix(clans): add missing initial_home_settlement to clan_umbar_3
+
+`Factions.xsd` rejected `characters/clans.xml` in the editor — `The required attribute 'initial_home_settlement' is missing` on the `<Faction id="clan_umbar_3">` node (House of Heshlâ, line 1006). It was the only one of 119 clans missing the attribute; the line was simply never authored (the recent per-clan-party-template commit touched the same block but didn't add or remove it). Set it to `Settlement.castle_U1` ("Bej Magha"), which the live `TAOM_Map/settlements.xml` already declares as `owner="Faction.clan_umbar_3"` — so the clan now starts in the castle it owns, matching every sibling Umbar clan (each `initial_home_settlement` points at a settlement that clan owns).
+
+- Verified comprehensively: a per-block scan of all 119 Factions reports 0 missing; `spclans.xslt` strips-then-re-adds the attribute on every modified clan and never emits a bare `<Faction>`; `TAOM_Map/spclans.xml` is an empty stub; `heroes.xslt`/`lords.xslt` only reference factions, never define them. `validate_moduledata.py` PASS (no cross-ref regressions). Deployed copy in `Modules/TAOM/` updated to match.
+
 ### fix(data): assign culture to child-education EquipmentRosters (980 startup warnings)
 
 `equipmentsets/taom_education_equipment_templates.xml` mirrors vanilla `education_equipment_templates.xml` but omitted the `culture="Culture.<name>"` attribute the vanilla template declares on every `<EquipmentRoster>`. The engine's `MBEquipmentRoster.Deserialize` logged one warning per roster — `EquipmentRoster with id: child_education_equipments_..._gundabad don't have culture definition` — 980 of them at every startup (confirmed in `rgl_log_21416.txt`: all 980 are child-education rosters, no other roster type affected; 10 cultures × 98). Non-fatal (the roster still loads and the `EducationCampaignBehavior` lookup keys off the culture embedded in the id, not `EquipmentCulture`), but it was log noise and a template-conformance gap.
