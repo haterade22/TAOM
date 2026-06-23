@@ -2,6 +2,21 @@
 
 ## 2026-06-22
 
+### docs(validation): note that clans.xml is outside the moduledata validator's coverage
+
+Documented why the `clan_umbar_3` missing-`initial_home_settlement` bug slipped every TAOM gate: `validate_moduledata.py` carries no schema for `characters/clans.xml` and does not enforce engine XSD required-attributes, so a `<Faction>` missing a `Factions.xsd`-required attribute passes both the validator and the pre-commit hook and fails only at engine/editor load. Added a "Coverage boundary" section to [docs/features/moduledata-validation.md](docs/features/moduledata-validation.md) and a matching Discipline bullet to the auto-loaded `.claude/rules/moduledata-validation.md` (which fires for `characters/*.xml`) directing clan editors to verify in the Bannerlord editor too.
+
+### fix(data): drop the non-schema `child_monster` attribute from Rohan child templates
+
+`NPCCharacters.xsd` rejected `characters/npcs_rohan.xml` in the editor — `The 'child_monster' attribute is not declared` on all 10 child-template `<NPCCharacter>` blocks (infant/child/teenager townsman, townswoman, villager, village-woman; `rgl_log_21416.txt` lines 7930-7967). `child_monster="child_male_child"` (plus the female/teenager variants) is not a real Bannerlord attribute: absent from `NPCCharacters.xsd`, used by zero vanilla XML across Native/SandBox/SandBoxCore, never read by the engine (`BasicCharacterObject.Deserialize` has no such field), and referenced by no TAOM C#. A child agent's body derives from `race` + age/`BodyProperties` automatically — there is no per-character child-monster attribute to set — so the fix is removal, not a rename.
+
+- Removed all 10 `child_monster` lines from the repo source and the live `Modules/TAOM/` copy. The surrounding `is_child_template="true"` is a valid, XSD-declared attribute, produced no error, and is kept.
+- These Rohan child NPCs are live, not dead: `spcultures.xslt` (lines 637-643) wires them into the vlandia (Rohan) culture's `townsman_infant` / `townsman_child` / `townsman_teenager` / `villager_male_child` / `villager_male_teenager` / `villager_female_child` role attributes, so they spawn in Rohan towns and villages.
+- Rohan is the only file in the whole install that uses `is_child_template`; every other culture authors the same child role single-line with `skill_template=` and no `is_child_template` (e.g. `townsman_infant_gondor`, `townsman_infant_dolguldur`). Both styles are schema-valid — only `child_monster` was invalid — so the stylistic inconsistency is left untouched (not a validation error).
+- Verified: 0 `child_monster` matches under `Main/` and the live module; `validate_moduledata.py` PASS (4,522 NPCCharacters parse, no cross-ref regressions).
+
+Not-tested: in-game/editor re-validation that the 10 errors are gone from the log (the real gate is a relaunch).
+
 ### fix(clans): add missing initial_home_settlement to clan_umbar_3
 
 `Factions.xsd` rejected `characters/clans.xml` in the editor — `The required attribute 'initial_home_settlement' is missing` on the `<Faction id="clan_umbar_3">` node (House of Heshlâ, line 1006). It was the only one of 119 clans missing the attribute; the line was simply never authored (the recent per-clan-party-template commit touched the same block but didn't add or remove it). Set it to `Settlement.castle_U1` ("Bej Magha"), which the live `TAOM_Map/settlements.xml` already declares as `owner="Faction.clan_umbar_3"` — so the clan now starts in the castle it owns, matching every sibling Umbar clan (each `initial_home_settlement` points at a settlement that clan owns).

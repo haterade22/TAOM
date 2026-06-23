@@ -64,6 +64,14 @@ The CLI, hook, and MCP server are thin front-ends over the same engine — the e
 
 Cross-reference kinds are defined in `REF_KINDS` (code, not schema) because the prefixes are fixed Bannerlord conventions. The vanilla-culture floor set (`VANILLA_CULTURES`) backstops cultures that exist only in code/XSLT output.
 
+## Coverage boundary — engine XSD rules are NOT checked
+
+The validator checks **cross-references** (the `Item.` / `NPCCharacter.` / `Culture.` / `PartyTemplate.` prefixes, on any attribute in any `ModuleData/**/*.xml` — including `characters/clans.xml`) plus **per-schema** duplicate-id / enum / civilian-type rules. It does **not** validate the engine's own XSD schemas (`<game>/XmlSchemas/*.xsd`), which enforce *required-attribute presence* and element structure.
+
+Concretely, `characters/clans.xml` has **no validator schema** (`tools/schemas/` covers only equipmentsets / npccharacter / spcultures). A clan (`<Faction>`) missing a `Factions.xsd`-required attribute such as `initial_home_settlement` therefore passes both `validate_moduledata.py` and the pre-commit hook, and surfaces only when the engine/editor loads the file (`Error: The required attribute 'initial_home_settlement' is missing. Node: Faction`). This is how `clan_umbar_3` shipped without a home settlement (fixed 2026-06-22). When authoring or editing `clans.xml`, open the file in the Bannerlord editor (or rely on an engine load) to catch required-attribute violations — the TAOM validator will not. A future improvement would be a `taom_factions.json` schema, but presence-of-required-attribute is not currently in the validator's model.
+
+The same boundary applies in the other direction — an **extra, XSD-undeclared attribute** — even for files the validator *does* schema. `validate_moduledata.py` checks declared field types, enums, and cross-refs but does not reject unknown attributes; the engine's `NPCCharacters.xsd` does. So `npcs_rohan.xml` passed the validator (all 4,522 NPCCharacters parse) while the editor flagged a bogus `child_monster="…"` on its 10 child-template blocks (`Error: The 'child_monster' attribute is not declared`, fixed 2026-06-22). A clean `validate_moduledata.py` is necessary but not sufficient — the Bannerlord editor / an engine load is the authority for the XSD layer (both required-attribute presence *and* no-undeclared-attributes). Decide a flagged attribute via the decompiled deserializer + vanilla usage: bogus → remove (`child_monster`), real-but-XSD-incomplete → keep (`family_type` on horses, which `Items.xsd` likewise fails to declare).
+
 ## Key Files
 
 | File | Purpose |
