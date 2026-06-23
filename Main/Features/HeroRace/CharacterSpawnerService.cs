@@ -98,6 +98,14 @@ public class CharacterSpawnerService : ICharacterSpawnerService
 
         Monster baseMonsterFromRace = _faceGenAdapter.GetBaseMonsterFromRace(characterCode.Race);
 
+        // Resolve the action set by RACE NAME ("as_dwarf_warrior"), not via the engine's
+        // GetActionSetWithSuffix(monster,…). That engine path resolves a custom-race base monster to
+        // the HUMAN action set ("as_human_warrior"), which loads the human skeleton; race-specific
+        // clothing meshes (rigged to e.g. dwarf_skeleton_a) then can't bind and render invisible —
+        // the naked arena-spectator crowd (519 scene CharacterSpawner "crowd" entities route through
+        // here). See docs/features/face-morph-compat.md "Arena-spectator naked-dwarf".
+        MBActionSet raceActionSet = ResolveRaceActionSet(characterCode.Race, characterCode.IsFemale, spawner.ActionSetSuffix, baseMonsterFromRace);
+
         // 1.3: ActionCode takes in ActionIndexCache
         var idleStart = ActionIndexCache.Create("act_inventory_idle_start");
         agentVisuals = AgentVisuals.Create(new AgentVisualsData().Equipment(characterCode.CalculateEquipment()).BodyProperties(bodyProperties).Race(characterCode.Race)
@@ -105,7 +113,7 @@ public class CharacterSpawnerService : ICharacterSpawnerService
             .Scale(1f)
             .SkeletonType(characterCode.IsFemale ? SkeletonType.Female : SkeletonType.Male)
             .Entity(agentEntity)
-            .ActionSet(MBGlobals.GetActionSetWithSuffix(baseMonsterFromRace, characterCode.IsFemale, spawner.ActionSetSuffix))
+            .ActionSet(raceActionSet)
             .ActionCode(in idleStart)
             .Scene(spawner.GameEntity.Scene)
             .Monster(baseMonsterFromRace)
@@ -199,6 +207,51 @@ public class CharacterSpawnerService : ICharacterSpawnerService
         ReflectionHelper.SetFieldValue(spawner, "_horseEntity", horseEntity);
         ReflectionHelper.SetFieldValue(spawner, "_agentVisuals", agentVisuals);
         ReflectionHelper.SetFieldValue(spawner, "_spawnFrame", spawnFrame);
+    }
+
+    // Resolves the humanoid action set for a spawned tableau/scene character by RACE NAME.
+    // The arena cheering crowd is built from scene CharacterSpawner entities through this service.
+    // The engine's GetActionSetWithSuffix resolves a custom-race base monster to the HUMAN action
+    // set ("as_human_warrior") — loading the human skeleton, so race-rigged clothing meshes can't
+    // bind and render invisible (naked dwarf spectators, confirmed in the rgl/taom_debug logs).
+    // We build "as_<race>_<suffix>" explicitly (e.g. as_dwarf_warrior), mirroring the proven-correct
+    // CharacterTableau_RefreshCharacterTableau_Patch (which is why CC + encyclopedia dwarves are
+    // already right), and fall back to "as_<race>_warrior" if the suffix-specific set isn't authored.
+    // Human / unknown races keep the original engine resolution — no change for vanilla-mesh races.
+    private MBActionSet ResolveRaceActionSet(int race, bool isFemale, string suffix, Monster baseMonster)
+    {
+        var raceName = _raceManager.GetRaceNameFromId(race);
+
+        if (!_raceManager.IsValidRaceId(race) || string.Equals(raceName, "human", StringComparison.OrdinalIgnoreCase))
+        {
+            var vanilla = MBGlobals.GetActionSetWithSuffix(baseMonster, isFemale, suffix);
+            _logger.LogDebug($"[HeroRace][CrowdSpawn] race={race}('{raceName}') -> vanilla GetActionSetWithSuffix(suffix='{suffix}', valid={vanilla.IsValid})");
+            return vanilla;
+        }
+
+        var (primary, fallback) = BuildRaceActionSetNames(raceName, isFemale, suffix);
+        var set = MBActionSet.GetActionSet(primary);
+        bool usedFallback = !set.IsValid;
+        if (usedFallback)
+        {
+            set = MBActionSet.GetActionSet(fallback);
+        }
+
+        _logger.LogDebug(
+            $"[HeroRace][CrowdSpawn] race={race}('{raceName}') monster='{baseMonster?.StringId}'/base='{baseMonster?.BaseMonster}' " +
+            $"suffix='{suffix}' primary='{primary}'(valid={!usedFallback})" +
+            (usedFallback ? $" -> fallback='{fallback}'(valid={set.IsValid})" : string.Empty) +
+            $" final-valid={set.IsValid}");
+
+        return set;
+    }
+
+    // Pure: build the race-prefixed action-set name + a guaranteed-base "_warrior" fallback.
+    // e.g. ("dwarf", false, "_villager") -> ("as_dwarf_villager", "as_dwarf_warrior").
+    internal static (string primary, string fallback) BuildRaceActionSetNames(string raceName, bool isFemale, string suffix)
+    {
+        var prefix = isFemale ? $"as_{raceName}_female" : $"as_{raceName}";
+        return ($"{prefix}{suffix ?? string.Empty}", $"{prefix}_warrior");
     }
 
     // DIAGNOSTIC (spider-mount tableau AV, 2026-06-10): replicates the private

@@ -55,7 +55,6 @@
         name="{=aom_roh_townsman_infant}Townsman"
         occupation="Townsfolk"
         is_child_template="true"
-        child_monster="child_male_child"
         culture="Culture.vlandia"
         default_group="Infantry">
         <face>
@@ -75,7 +74,6 @@
         occupation="Townsfolk"
         is_female="true"
         is_child_template="true"
-        child_monster="child_female_child"
         culture="Culture.vlandia"
         default_group="Infantry">
         <face>
@@ -94,7 +92,6 @@
         name="{=aom_roh_townsman_child}Townsman"
         occupation="Townsfolk"
         is_child_template="true"
-        child_monster="child_male_child"
         culture="Culture.vlandia"
         default_group="Infantry">
         <face>
@@ -114,7 +111,6 @@
         occupation="Townsfolk"
         is_female="true"
         is_child_template="true"
-        child_monster="child_female_child"
         culture="Culture.vlandia"
         default_group="Infantry">
         <face>
@@ -133,7 +129,6 @@
         name="{=aom_roh_townsman_teen}Townsman"
         occupation="Townsfolk"
         is_child_template="true"
-        child_monster="child_male_teenager"
         culture="Culture.vlandia"
         default_group="Infantry">
         <face>
@@ -157,7 +152,6 @@
         occupation="Townsfolk"
         is_female="true"
         is_child_template="true"
-        child_monster="child_female_teenager"
         culture="Culture.vlandia"
         default_group="Infantry">
         <face>
@@ -233,7 +227,6 @@
         name="{=aom_roh_villager_child}Villager"
         occupation="Villager"
         is_child_template="true"
-        child_monster="child_male_child"
         culture="Culture.vlandia"
         default_group="Infantry">
         <face>
@@ -253,7 +246,6 @@
         occupation="Villager"
         is_female="true"
         is_child_template="true"
-        child_monster="child_female_child"
         culture="Culture.vlandia"
         default_group="Infantry">
         <face>
@@ -272,7 +264,6 @@
         name="{=aom_roh_villager_teen}Villager"
         occupation="Villager"
         is_child_template="true"
-        child_monster="child_male_teenager"
         culture="Culture.vlandia"
         default_group="Infantry">
         <face>
@@ -296,7 +287,6 @@
         occupation="Villager"
         is_female="true"
         is_child_template="true"
-        child_monster="child_female_teenager"
         culture="Culture.vlandia"
         default_group="Infantry">
         <face>

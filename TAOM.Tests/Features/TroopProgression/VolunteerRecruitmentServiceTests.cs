@@ -323,7 +323,11 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
-    // town_EW2 / town_EW3 (West / East Osgiliath): osg_veteran(6) + ano_peasant(4) — total 10
+    // town_EW2 / town_EW3 (West / East Osgiliath): osg_veteran(6) + ano_peasant(4) — total 10.
+    // NOTE: this exercises the HAND-WRITTEN FALLBACK pool (the JSON file isn't on the test bin path,
+    // so the loader returns early). The live JSON pool DOES include gondor_ithilien_ranger at 10% —
+    // see GondorJsonLoader_ProductionJson_PlacesIthilienRangerAtTenPercent. The AreNotEqual below is a
+    // true statement about the fallback pool only, not the live game.
     [DataRow("town_EW2", 0, "gondor_osg_veteran")]
     [DataRow("town_EW2", 5, "gondor_osg_veteran")]
     [DataRow("town_EW2", 6, "gondor_ano_peasant")]
@@ -1672,6 +1676,48 @@ public class VolunteerRecruitmentServiceTests
         Assert.AreEqual("town_ES2", conditionalsCalled[0]);
         Assert.IsTrue(settlementsCalled.Contains("town_EW1"), "Minas Tirith (town_EW1) must be in the JSON pools");
         Assert.IsTrue(settlementsCalled.Contains("town_EW4"), "Pelargir (town_EW4) must be in the JSON pools");
+    }
+
+    [TestMethod]
+    // Live-behavior regression: the production gondor.json must place gondor_ithilien_ranger at ~10%
+    // in the Anórien-front settlements (Minas Tirith, Osgiliath ×2, Cair Andros). The hand-written
+    // fallback pools carry the ranger, but the JSON loader OVERWRITES SettlementMap at runtime — so if
+    // the JSON drops the ranger it spawns at 0% in-game while the fallback-only unit tests stay green.
+    // This test drives the real JSON to guard against that divergence (ranger-dropped-to-0% fix).
+    [DataRow("town_EW1")]
+    [DataRow("town_EW2")]
+    [DataRow("town_EW3")]
+    [DataRow("castle_EW4")]
+    public void GondorJsonLoader_ProductionJson_PlacesIthilienRangerAtTenPercent(string settlementId)
+    {
+        var repoJsonPath = ResolveRepoJsonPath();
+        if (repoJsonPath == null)
+        {
+            Assert.Inconclusive("Could not locate Main/_Module/ModuleData/recruitment_pools/gondor.json relative to test bin");
+            return;
+        }
+
+        var captured = new Dictionary<string, (string troopId, int weight)[]>();
+        GondorRecruitmentJsonLoader.LoadFromPath(
+            path: repoJsonPath,
+            addSettlement: (id, entries) => captured[id] = entries,
+            addSettlementConditional: (_, __, ___) => { },
+            logger: _logger);
+
+        Assert.IsTrue(captured.ContainsKey(settlementId), $"{settlementId} must be a JSON settlement pool");
+
+        int total = 0;
+        int rangerWeight = 0;
+        foreach (var (troopId, weight) in captured[settlementId])
+        {
+            total += weight;
+            if (troopId == "gondor_ithilien_ranger")
+                rangerWeight += weight;
+        }
+
+        Assert.IsTrue(rangerWeight > 0, $"{settlementId} JSON pool must include gondor_ithilien_ranger");
+        double share = (double)rangerWeight / total;
+        Assert.AreEqual(0.10, share, 1e-4, $"{settlementId}: ranger share {share:P2} should be 10%");
     }
 
     private static string ResolveRepoJsonPath()

@@ -1,5 +1,66 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-23
+
+### feat(clans): expand Misty Mountain Orcs to 15 clans (6♂/4♀ each) + ownerless-clan audit
+
+The Misty Mountain Orcs (`Culture.mistymountainorcs` / `Kingdom.mistymountainorcs`) grow from 5 clans to **15**, every clan a 10-strong orc warband (6 male + 4 female) so the faction is numerous in keeping with its Misty-Mountains seat. **110 new lords** authored via `tools/generate_mistymountain_clans.py`.
+
+- **10 new clans** `clan_mistymountainorcs_6`–`_15` (Grobûrz, Skarnâk, Maughâsh, Throgmaw, Lugbúrz, Hrakdûr, Uzgnâsh, Vrakmaw, Gashrim, Morzûk) — each a fresh 10-lord warband (chieftain `lord_MM<N>_1` + 5 male warriors + 4 females). Tier 3, fiefless, homed at the existing MM settlements, `super_faction="Kingdom.mistymountainorcs"`, the shared MM kingdom `banner_key`, and the generic `kingdom_hero_party_mistymountainorcs_template` (per-clan templates exist only for clans 1–5).
+- **Existing 5 clans topped up** from 6♂/2♀ to 6♂/4♀ — two female kin (`lord_MM<N>_9`, `_10`) added each. Pure additions; no existing entry edited.
+- Each lord is `race="orc"`, `Culture.mistymountainorcs`, `Infantry`, full-authored: an `<NPCCharacter>` in `characters/lords.xml` (shared orc face, `taom_orc_chieftain`/`warrior`/`female_skills`, evil-leaning traits, `mistymountainorcs_bat_template_medium_*` + civilian equipment) + a `<Hero faction="…" text="{=…_bio}…"/>` in `characters/heroes.xml`. New clans carry two internal marriages; top-up females are faction-only. All three insertions anchor to the `TAOM-NEWFACTIONS:mistymountainorcs:END` markers. Orcish names (Tolkien-canon Grishnak/Ugluk/Shagrat/Lugdush/Muzgash + invented), deduped against names already in use.
+- **Ownerless-clan audit** (requested): scanned all 124 `<Faction>` definitions against the full defined-hero set (TAOM `characters/*.xml` + `lords.xslt` + vanilla `SandBox/lords.xml`). **Zero dangling owners** — the only previously-broken ones were `clan_khuzait_12`/`_13` (fixed earlier today). Eight factions carry no `owner` attribute *by design* — the bandit cultures (`dunland_raiders`, `rhun_raiders`, `harad_raiders`, `gundabad_raiders`, `umbar_corsairs`) and minor factions (`gondor_soldiers`, `erebor_warriors`, `mirkwood_stalkers`), owner-less like vanilla `looters`.
+- Verified: all three files well-formed; `validate_moduledata.py` PASS; all 15 MM clans present with 10 members at 6♂/4♀; every owner resolves to a defined NPCCharacter; no duplicate ids.
+
+Not-tested: in-game/editor load. New-campaign feature — existing saves keep the 5-clan Misty Mountain roster until a fresh game.
+
+### feat(clans): expand the eight Rhûn clans to 10 lords each + reheraldry 3 clans
+
+Every Rhûn (khuzait-culture) clan `clan_khuzait_12`–`_19` now fields a full 10-member noble house (6 male + 4 female, the owner counted among the males), matching the Gondor/Mordor/Gundabad multi-member precedent. **74 new lords** authored via `tools/generate_rhun_clan_lords.py`.
+
+- **Two ownerless clans fixed**: `clan_khuzait_12` (Hûz) and `_13` (Adekig) pointed their `owner=` at `Hero.lord_6_23` / `lord_6_24`, which were defined nowhere — a dangling reference. Both owners are now created.
+- **Per clan**: clans 12–13 get a created owner + 9 kin (10 new each); clans 14–19 keep their existing owner and gain 9 kin. Each new lord is a full `<NPCCharacter>` in `characters/lords.xml` (face / skills / traits / `rhun_bat_template_medium_*` + civilian equipment, `taom_easterling_lord` / `_lady` / `_archer_skills`) plus a `<Hero faction="Faction.clan_khuzait_NN" text="{=..._bio}…"/>` in `characters/heroes.xml`. Family wiring is shallow by design — owner single, two married couples per clan, the rest faction-only house kin — so there are no age-inconsistent parent links (the existing owners are aged 31–41) and no existing owner entries had to be edited.
+- **Easterling names** drawn from researched pools: Tolkien-canon Easterling names (Borlad, Ulfast, Brodda, Lorgan…), Mongol/Turkic Khuzait given names (the khuzait culture is the Tartar/Hun counterpart), and the established TAOM style — each taking the clan surname (e.g. "Borlad Hûz").
+- **3 new banner keys** (per request): Hûz, Vazevian (`clan_khuzait_18`), and Bozorganith (`_19`) in `characters/clans.xml`.
+- Verified: all three files well-formed; `validate_moduledata.py` PASS; all 74 ids present in both `lords.xml` and `heroes.xml` with no duplicates; every clan 6♂/4♀; the three banner keys confirmed on their clans.
+
+Not-tested: in-game/editor load. New-campaign feature — existing saves keep their current Rhûn rosters until a fresh game.
+
+### feat(mordor): rewrite Sauron's text, evil-rename + re-race Mordor lords, flesh out 3 clans
+
+Sauron (`lord_1_17`) is now active in-game; replaced his placeholder text (*"This entry exists only to display his terrible armor"*) with a conquest-ready Dark Lord biography. Updated key `TAOM_hero_1_17` in both `heroes.xslt` (the `Hero[@id='lord_1_17']` override) and the harvested source string in `taom_xslt_strings.xml`.
+
+- **5 evil renames** (vanilla `lord_1_*` overridden via `lords.xslt`): Obron→**Skarnak**, Jathea→**Morgha**, Sanion→**Herumarth**, Debana→**Naktharil**, Honoratus→**Khorgath**. Each updated in 4 mirrored spots — the `aom_lord_1_<N>_name` string + the `lords.xslt` name override, plus the `TAOM_hero_1_<N>` description in `heroes.xslt` + `taom_xslt_strings.xml` (rewritten with dark flavor, family relations untouched: Herumarth/Khorgath/Naktharil remain Sauron + Morgha's children).
+- **4 lords given the uruk race**: Skarnak (`lord_1_49`), Gorthak (`lord_1_68`), Grukhash (`lord_1_69`), Bûrznak (`lord_1_74`) rendered as humans because their `lords.xslt` overrides never injected a `race` — added `<xsl:attribute name="race">uruk</xsl:attribute>` to each (now 13 race-injecting templates, up from 9). Also corrected three encyclopedia descriptions whose text named a different character than the displayed name (`TAOM_hero_1_68` "Tharos"→Gorthak, `_69` "Niphon"→Grukhash, `_74` "Zachanis"→Bûrznak).
+- **24 new uruk lords** across the three near-empty Mordor clans Zarûnik (`clan_empire_south_13`), Ûgrakhûr (`_14`), Brughash (`_15`) — 8 each (4 male + 4 female), bringing each to the ~10-member, 6♂/4♀ shape counting the existing owner + child. Authored as new `<NPCCharacter>` entries in `characters/lords.xml` (cloned from `lord_M13_1` for males / `lord_1_47_1` Mina for females): `race="uruk"`, `culture="Culture.mordor"`, `taom_orc_warrior_skills` (♂) / `taom_orc_female_skills` (♀), `empire` hair/beard tags, equipment cycling the existing `mordor_bat_template_medium_*` / `mordor_civ_template_default_*` (a–e) rosters. Each wired to its clan via a `<Hero faction="Faction.clan_empire_south_<NN>" text="{=..._bio}…"/>` entry in `characters/heroes.xml` with a short Black-Gate / Nurn-pens / Tower-guard bio. Names echo canonical orc morphology (Ufthak, Mûzgash, Yagûl, Snagrat).
+- Verified: all 5 edited files well-formed; `validate_moduledata.py` PASS (4,596 NPCCharacters, no broken refs / duplicate ids); 24 new ids distinct and each present in both `lords.xml` and `heroes.xml`; each re-raced template carries exactly one `race` line; no duplicate/stale renamed string ids.
+
+Not-tested: in-game/editor load. `Settlement.Culture`-independent — but the live check is a new campaign (Sauron's encyclopedia page, the 5 renamed heroes, the 4 re-raced lords showing orc faces, and the 3 clans' fuller member lists). New-campaign feature: existing saves keep the old names/races until a fresh game.
+
+### feat(clans): populate Shaghâna + Âbanissa clans to 10 heroes each
+
+Both kingdoms split off from Harad and shipped with exactly **one lord per clan** (the owner). Brought every clan to **10 heroes** — the existing male owner + 5 new males (`_2`–`_6`) + 4 new females (`_7`–`_10`), 6M/4F matching the Gundabad pass. **153 new lords**: Shaghâna 9 clans × 9 = 81 (`Culture.shaghana`, Cavalry), Âbanissa 8 clans × 9 = 72 (`Culture.abanissa`, Infantry), each with a matching `<Hero>` registration wiring it to its clan in `characters/heroes.xml`.
+
+- Names are curated Harad/Southron given names (Perso-Babylonian style — Suladân, Faramûz, Banûshad, Roshanak…) consistent with the mod's existing Âbanissa/Shaghâna aesthetic (Phaxsharân, Kûmaraknis). 85 unique male + 68 unique female, none colliding with the 17 existing owners.
+- New lords clone the live `lord_SH1_1`/`lord_AB1_1` (male: `face_key_template="BodyProperty.fighter_haradrim"`, `taom_knight_skills`, Harad equipment, culture default_group) and `lord_3_13_1`/Sira (female: `is_female="true"`, female `BodyProperties` + `aserai` hair, `taom_lady_skills`); equipment rotates the `harad_bat_template_medium_a`–`_e` / `harad_civ_template_a`–`_e` variants. No `race` attr (default human — Harad). No new equipment rosters or party templates.
+- Generated by `tools/populate_harad_clans.py` (idempotent) — extracts the real template blocks and inserts each clan's 9 new lords right after that clan's owner (lords.xml) / owner Hero (heroes.xml).
+- Verified: both files well-formed; all 17 clans confirmed at 10 lords (6M/4F) + 10 hero regs; 170 SH/AB lord ids all unique; `validate_moduledata.py` PASS; accented names byte-correct UTF-8 (`Suladân`=`\xc3\xa2`, `Banûshad`=`\xc3\xbb`).
+
+Concurrency note: `characters/lords.xml` + `heroes.xml` were under concurrent edit (Rhûn/Mordor clan work, same session) during this change — my 153 additions coexist with theirs in the same files; verify ownership before any selective commit.
+
+Not-tested: in-game/editor load (encyclopedia → Shaghâna/Âbanissa → each clan shows 10 members).
+
+### feat(clans): add 5 Gundabad clans + 50 lords
+
+Expanded the Gundabad kingdom from 5 clans to 10. New clans `clan_gundabad_6`–`clan_gundabad_10` — **Grishûk, Lugdush, Maukrim, Skarzag, Throkmaw** — each tier-3, fiefless and homed at `Settlement.town_G1` (matching every existing minor Gundabad clan), assigned to the kingdom via `super_faction="Kingdom.gundabad"`. Per request, all five carry the **Gundabad Kingdom `banner_key`** (`11.330.166.…`); previously only the ruling clan Ashmog shared it. `default_party_template` points at the generic `kingdom_hero_party_gundabad_template` (no per-clan templates added). Per-clan `color`/`color2` drawn from the existing dark-orc heraldry palette.
+
+- **50 new lords** in `characters/lords.xml` — 6 male + 4 female per clan, all `race="pale_uruk"` (the Gundabad race), `culture="Culture.gundabad"`, `occupation="Lord"`. Skill sets: `taom_orc_chieftain_skills` for each clan owner (`lord_GN_1`), `taom_orc_warrior_skills` for the other males, `taom_orc_female_skills` for the females; equipment rosters `gundabad_bat_template_medium_a`/`_d` + civilian `gundabad_civ_template_default_a`/`_d`. Females set `is_female="true"` and omit `<beard_tags>`.
+- **50 `<Hero>` registrations** in `characters/heroes.xml` wiring each lord to its clan (`faction="Faction.clan_gundabad_N"`); the clan owner is `lord_GN_1`, matching each `<Faction owner=...>`.
+- Generated by `tools/add_gundabad_clans.py` (idempotent) — clones the real `clan_gundabad_5` / `lord_G5_1`/`_2`/`_9` blocks verbatim and substitutes ids/names/colors, so inserted XML is structurally identical to its siblings (CRLF + tab indentation preserved).
+- Verified: all three files well-formed; `validate_moduledata.py` PASS (4,572 NPCCharacters, no broken cross-refs / duplicate ids); each new clan confirmed at 10 lords (6M/4F) + 10 hero regs.
+
+Not-tested: in-game/editor load. `clans.xml` has no validator schema and the validator does not enforce XSD required-attributes — required attrs are present by cloning `clan_gundabad_5`, but the authoritative check is a new-campaign launch (encyclopedia → Gundabad → 10 clans, kingdom banner, leader + 9 members each).
+
 ## 2026-06-22
 
 ### docs(validation): note that clans.xml is outside the moduledata validator's coverage
@@ -8,7 +69,7 @@ Documented why the `clan_umbar_3` missing-`initial_home_settlement` bug slipped 
 
 ### fix(data): drop the non-schema `child_monster` attribute from Rohan child templates
 
-`NPCCharacters.xsd` rejected `characters/npcs_rohan.xml` in the editor — `The 'child_monster' attribute is not declared` on all 10 child-template `<NPCCharacter>` blocks (infant/child/teenager townsman, townswoman, villager, village-woman; `rgl_log_21416.txt` lines 7930-7967). `child_monster="child_male_child"` (plus the female/teenager variants) is not a real Bannerlord attribute: absent from `NPCCharacters.xsd`, used by zero vanilla XML across Native/SandBox/SandBoxCore, never read by the engine (`BasicCharacterObject.Deserialize` has no such field), and referenced by no TAOM C#. A child agent's body derives from `race` + age/`BodyProperties` automatically — there is no per-character child-monster attribute to set — so the fix is removal, not a rename.
+`NPCCharacters.xsd` rejected `characters/npcs_rohan.xml` in the editor — `The 'child_monster' attribute is not declared` on all 10 child-template `<NPCCharacter>` blocks (infant/child/teenager townsman, townswoman, villager, village-woman; `rgl_log_21416.txt` lines 7930-7967). `child_monster="child_male_child"` (plus the female/teenager variants) is not a real Bannerlord attribute: absent from `NPCCharacters.xsd`, used by zero vanilla XML across Native/SandBox/SandBoxCore, never read by the engine (`BasicCharacterObject.Deserialize` has no such field), and referenced by no TAOM C#. A child agent's body derives from `race` + age/`BodyProperties` automatically — there is no per-character child-monster attribute to set — so the fix is removal, not a rename. Issue #294.
 
 - Removed all 10 `child_monster` lines from the repo source and the live `Modules/TAOM/` copy. The surrounding `is_child_template="true"` is a valid, XSD-declared attribute, produced no error, and is kept.
 - These Rohan child NPCs are live, not dead: `spcultures.xslt` (lines 637-643) wires them into the vlandia (Rohan) culture's `townsman_infant` / `townsman_child` / `townsman_teenager` / `villager_male_child` / `villager_male_teenager` / `villager_female_child` role attributes, so they spawn in Rohan towns and villages.

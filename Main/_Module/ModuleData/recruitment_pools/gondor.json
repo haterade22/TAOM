@@ -281,39 +281,42 @@
       "description": "Minas Tirith: Anorien + Citadel Guard",
       "settlements": ["town_EW1"],
       "troops": {
-        "gondor_ano_peasant": 12,
-        "gondor_ano_archer_militia": 12,
-        "gondor_ano_militia": 12,
-        "gondor_ano_footman": 12,
-        "gondor_ano_skirmisher": 12,
+        "gondor_ano_peasant": 10,
+        "gondor_ano_archer_militia": 10,
+        "gondor_ano_militia": 10,
+        "gondor_ano_footman": 10,
+        "gondor_ano_skirmisher": 10,
         "gondor_mt_trainee": 20,
-        "gondor_mt_veteran": 20
+        "gondor_mt_veteran": 20,
+        "gondor_ithilien_ranger": 10
       }
     },
     {
       "description": "Osgiliath: Anorien + Osgiliath",
       "settlements": ["town_EW2", "town_EW3"],
       "troops": {
-        "gondor_ano_peasant": 12,
-        "gondor_ano_archer_militia": 12,
-        "gondor_ano_militia": 12,
-        "gondor_ano_footman": 12,
-        "gondor_ano_skirmisher": 12,
+        "gondor_ano_peasant": 10,
+        "gondor_ano_archer_militia": 10,
+        "gondor_ano_militia": 10,
+        "gondor_ano_footman": 10,
+        "gondor_ano_skirmisher": 10,
         "gondor_osg_veteran": 20,
-        "gondor_osg_skirmisher": 20
+        "gondor_osg_skirmisher": 20,
+        "gondor_ithilien_ranger": 10
       }
     },
     {
       "description": "Cair Andros: Anorien + Cair Andros",
       "settlements": ["castle_EW4"],
       "troops": {
-        "gondor_ano_peasant": 12,
-        "gondor_ano_archer_militia": 12,
-        "gondor_ano_militia": 12,
-        "gondor_ano_footman": 12,
-        "gondor_ano_skirmisher": 12,
+        "gondor_ano_peasant": 10,
+        "gondor_ano_archer_militia": 10,
+        "gondor_ano_militia": 10,
+        "gondor_ano_footman": 10,
+        "gondor_ano_skirmisher": 10,
         "gondor_ca_noble": 20,
-        "gondor_ca_veteran": 20
+        "gondor_ca_veteran": 20,
+        "gondor_ithilien_ranger": 10
       }
     },
     {
