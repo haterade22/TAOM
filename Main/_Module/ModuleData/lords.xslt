@@ -1220,8 +1220,8 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1258,8 +1258,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_e" />
-                <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1274,8 +1274,8 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1312,8 +1312,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1540,13 +1540,13 @@
     <xsl:template match="NPCCharacter[@id='lord_1_27']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_27</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_27_name}Maugrash</xsl:attribute>
             <xsl:attribute name="age">37</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="race">orc</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -1709,8 +1709,8 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1747,8 +1747,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_c" />
-                <EquipmentSet id="mordor_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1764,8 +1764,8 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1802,8 +1802,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1819,8 +1819,8 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1857,8 +1857,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_e" />
-                <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -1873,8 +1873,8 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1911,8 +1911,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2031,6 +2031,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_37']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_37</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_37_name}Goshank</xsl:attribute>
             <xsl:attribute name="age">21</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
@@ -2201,8 +2202,8 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2239,8 +2240,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2255,8 +2256,8 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2293,8 +2294,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_c" />
-                <EquipmentSet id="mordor_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2309,8 +2310,8 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2347,8 +2348,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2363,8 +2364,8 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2401,8 +2402,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_e" />
-                <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2581,8 +2582,8 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2619,8 +2620,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2635,8 +2636,8 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2673,8 +2674,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_e" />
-                <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2689,8 +2690,8 @@
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Ranged</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2727,8 +2728,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2743,8 +2744,8 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Ranged</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2781,8 +2782,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2797,8 +2798,8 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2835,8 +2836,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_c" />
-                <EquipmentSet id="mordor_civ_template_default_c" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_c" />
+                <EquipmentSet id="dunland_civ_template_default_c" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2851,8 +2852,8 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2889,8 +2890,8 @@
                 <Trait id="Authoritarian" value="2" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_d" />
-                <EquipmentSet id="mordor_civ_template_default_d" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_d" />
+                <EquipmentSet id="dunland_civ_template_default_d" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2906,8 +2907,8 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2944,8 +2945,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_e" />
-                <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_e" />
+                <EquipmentSet id="dunland_civ_template_default_e" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -2960,8 +2961,8 @@
             <xsl:attribute name="voice">ironic</xsl:attribute>
             <xsl:attribute name="default_group">HorseArcher</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2998,8 +2999,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -3495,6 +3496,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_30']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_30</xsl:attribute>
+            <xsl:attribute name="race">orc</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_30_name}Gothmog, Lieutenant of Morgul</xsl:attribute>
             <xsl:attribute name="age">24</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
@@ -3554,7 +3556,7 @@
             <xsl:attribute name="voice">earnest</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.dolguldur</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -3603,6 +3605,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_54']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_54</xsl:attribute>
+            <xsl:attribute name="race">orc</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_54_name}Shagrat, Captain of Cirith Ungol</xsl:attribute>
             <xsl:attribute name="age">28</xsl:attribute>
             <xsl:attribute name="voice">ironic</xsl:attribute>
@@ -3657,6 +3660,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_55']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_55</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_55_name}Mathmog</xsl:attribute>
             <xsl:attribute name="age">28</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
@@ -3711,13 +3715,13 @@
     <xsl:template match="NPCCharacter[@id='lord_1_63']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_63</xsl:attribute>
+            <xsl:attribute name="race">orc</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_63_name}Gorbag, Captain of Minas Morgul</xsl:attribute>
             <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="race">uruk</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -3771,8 +3775,8 @@
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3809,8 +3813,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -3820,7 +3824,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_68']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_68</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_68_name}Tharos</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_68_name}Gorthak</xsl:attribute>
             <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">curt</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -3874,7 +3878,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_69']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_69</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_69_name}Niphon</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_69_name}Grukhash</xsl:attribute>
             <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
@@ -3928,6 +3932,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_72']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_72</xsl:attribute>
+            <xsl:attribute name="race">uruk</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_72_name}Bolg</xsl:attribute>
             <xsl:attribute name="age">33</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
@@ -3982,7 +3987,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_74']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_74</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_74_name}Zachanis</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_74_name}Bûrznak</xsl:attribute>
             <xsl:attribute name="age">30</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
@@ -6044,7 +6049,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_30_2']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_30_2</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_30_2_name}Callinia</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_30_2_name}Mogra</xsl:attribute>
             <xsl:attribute name="age">3</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
@@ -6072,7 +6077,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_30_3']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_30_3</xsl:attribute>
-            <xsl:attribute name="name">{=aom_lord_1_30_3_name}Synesios</xsl:attribute>
+            <xsl:attribute name="name">{=aom_lord_1_30_3_name}Snaga</xsl:attribute>
             <xsl:attribute name="age">2</xsl:attribute>
             <xsl:attribute name="voice">softspoken</xsl:attribute>
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
@@ -6106,7 +6111,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.dolguldur</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -6161,7 +6166,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.dolguldur</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -6216,7 +6221,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
+            <xsl:attribute name="culture">Culture.dolguldur</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
@@ -6492,8 +6497,8 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_female_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6530,8 +6535,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_a" />
-                <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_a" />
+                <EquipmentSet id="dunland_civ_template_default_a" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -6547,8 +6552,8 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -6585,8 +6590,8 @@
                 <Trait id="Authoritarian" value="1" />
             </Traits>
             <Equipments>
-                <EquipmentSet id="mordor_bat_template_medium_b" />
-                <EquipmentSet id="mordor_civ_template_default_b" equipmentType="Civilian" />
+                <EquipmentSet id="dunland_bat_template_medium_b" />
+                <EquipmentSet id="dunland_civ_template_default_b" equipmentType="Civilian" />
             </Equipments>
             <xsl:apply-templates select="node()[not(self::face or self::skills or self::Traits or self::Equipments)]"/>
         </xsl:copy>
@@ -15307,7 +15312,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
-            <xsl:attribute name="culture">Culture.empire</xsl:attribute>
+            <xsl:attribute name="culture">Culture.battania</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>

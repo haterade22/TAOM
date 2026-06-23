@@ -6034,7 +6034,7 @@
             <EquipmentSet id="dunland_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_30_2" name="{=aom_lord_1_30_2_name}Callinia" voice="softspoken" age="3" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
+    <NPCCharacter id="lord_1_30_2" name="{=aom_lord_1_30_2_name}Mogra" voice="softspoken" age="3" is_female="true" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_chatelaine_skills_rookie">
         <face>
             <!--face_key
 			value="0016c92e0000200dbc4597a5256457a995879939bbeca7a766c7893aa68945570006435409b1876400001105000030a30000001f000000000000000000002000"
@@ -6073,7 +6073,7 @@
             <EquipmentSet id="dunland_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_30_3" name="{=aom_lord_1_30_3_name}Synesios" voice="softspoken" age="2" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills_rookie">
+    <NPCCharacter id="lord_1_30_3" name="{=aom_lord_1_30_3_name}Snaga" voice="softspoken" age="2" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.spc_knight_skills_rookie">
         <face>
             <!--face_key
 			value="0016c92e0000200dbc4597a5256457a995879939bbeca7a766c7893aa68945570006435409b1876400001105000030a30000001f000000000000000000002000"
@@ -6115,7 +6115,7 @@
             <EquipmentSet id="dunland_civ_template_default_c" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_56_1" name="{=aom_lord_1_56_1_name}Gwenna" is_female="true" voice="curt" age="22" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_female_skills">
+    <NPCCharacter id="lord_1_56_1" name="{=aom_lord_1_56_1_name}Gwenna" is_female="true" voice="curt" age="22" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dunland_warrior_skills">
         <face>
             <!--face_key
 			value="0005c9258000100e63727ac8926a687a1a85878578987c9b437e6347545abcb7000aa894057768c900001105000030a30000001f000000000000000000004000"
@@ -6163,7 +6163,7 @@
             <EquipmentSet id="dunland_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_56_2" name="{=aom_lord_1_56_2_name}Rustica" is_female="true" voice="softspoken" age="17" default_group="Cavalry" is_hero="true" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_orc_warrior_skills">
+    <NPCCharacter id="lord_1_56_2" name="{=aom_lord_1_56_2_name}Rustica" is_female="true" voice="softspoken" age="17" default_group="Cavalry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dunland_warrior_skills">
         <face>
             <!--face_key
 			value="0005c9258000100e63727ac8926a687a1a85878578987c9b437e6347545abcb7000aa894057768c900001105000030a30000001f000000000000000000004000"
@@ -6538,7 +6538,7 @@
             <EquipmentSet id="dunland_civ_template_default_b" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_WE9_l_1" name="{=aom_lord_WE9_l_1_name}Duilin" age="31" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.empire" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_knight_skills">
+    <NPCCharacter id="lord_WE9_l_1" name="{=aom_lord_WE9_l_1_name}Duilin" age="31" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.gondor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_knight_skills">
         <face>
             <!-- Placeholder face value -->
             <BodyProperties version="4" weight="0.75" build="0.85" key="0011840B40CC12CBB7B2B8C953C76674299A5DC93264A4A938C659683379847901777613077D5972000000000000000000000000000000000000000040E42102" />
@@ -19138,7 +19138,7 @@
             <EquipmentSet id="mordor_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_48_1" name="{=aom_lord_1_48_1_name}Nazgûl, the Tainted" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
+    <NPCCharacter id="lord_1_48_1" name="{=aom_lord_1_48_1_name}Nazgûl, the Tainted" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
         <face>
             <!--face_key
 			value="001c892580001008a66a975e578a799294576eaa3a3954b6774485a4155abb6d0000a6d40dd3989700001105000030a30000001f000000000000000000009000"
@@ -19189,7 +19189,7 @@
             <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_48_2" name="{=aom_lord_1_48_2_name}Nazgûl, the Shadow of Northmen" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
+    <NPCCharacter id="lord_1_48_2" name="{=aom_lord_1_48_2_name}Nazgûl, the Shadow of Northmen" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
         <face>
             <!--face_key
 			value="001c892580001008a66a975e578a799294576eaa3a3954b6774485a4155abb6d0000a6d40dd3989700001105000030a30000001f000000000000000000009000"
@@ -19240,7 +19240,7 @@
             <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_48_3" name="{=aom_lord_1_48_3_name}Nazgûl, the Shadow of Umbar" default_group="Infantry" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
+    <NPCCharacter id="lord_1_48_3" name="{=aom_lord_1_48_3_name}Nazgûl, the Shadow of Umbar" default_group="Infantry" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
         <face>
             <!--face_key
 			value="001c892580001008a66a975e578a799294576eaa3a3954b6774485a4155abb6d0000a6d40dd3989700001105000030a30000001f000000000000000000009000"

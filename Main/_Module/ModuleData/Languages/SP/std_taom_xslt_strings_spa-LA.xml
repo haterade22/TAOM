@@ -1426,13 +1426,13 @@
 
     <string id="aom_lord_1_56_name" text="Tormund, el Martillo" />
 
-    <string id="aom_lord_1_68_name" text="Tharos" />
+    <string id="aom_lord_1_68_name" text="Gorthak" />
 
-    <string id="aom_lord_1_69_name" text="Niphon" />
+    <string id="aom_lord_1_69_name" text="Grukhash" />
 
     <string id="aom_lord_1_72_name" text="Bolg" />
 
-    <string id="aom_lord_1_74_name" text="Zachanis" />
+    <string id="aom_lord_1_74_name" text="Bûrznak" />
 
     <string id="aom_lord_1_1_1_name" text="Eldith Garragris" />
 
@@ -1508,9 +1508,9 @@
 
     <string id="aom_lord_1_30_1_name" text="Svala Colmillo Rojo" />
 
-    <string id="aom_lord_1_30_2_name" text="Callinia" />
+    <string id="aom_lord_1_30_2_name" text="Mogra" />
 
-    <string id="aom_lord_1_30_3_name" text="Synesios" />
+    <string id="aom_lord_1_30_3_name" text="Snaga" />
 
     <string id="aom_lord_1_48_1_name" text="Nazgûl, el Corrompido" />
 
@@ -2344,7 +2344,7 @@
 
     <string id="TAOM_hero_1_30_3" text="Synesios es un sirviente de la Sombra." />
 
-    <string id="TAOM_hero_1_56_2" text="Rustica sirve en los ejércitos de la oscuridad." />
+    <string id="TAOM_hero_1_56_2" text="Rustica rides to war alongside her father Tormund, a fierce young warrior of the clan." />
 
     <string id="TAOM_hero_1_63_2" text="Comatasa es un orco criado para la guerra." />
 

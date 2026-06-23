@@ -1242,10 +1242,12 @@
 
 	<xsl:template match="Hero[@id='lord_1_56_2']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_56_2}Rustica serves in the armies of darkness.</xsl:attribute>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother' and local-name() != 'faction']"/>
+			<xsl:attribute name="text">{=TAOM_hero_1_56_2}Rustica rides to war alongside her father Tormund, a fierce young warrior of the clan.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_56</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_56_1</xsl:attribute>
+			<!-- whole house -> Dunland: move from clan_empire_south_4 (Mordor) to parents' clan_empire_north_8 -->
+			<xsl:attribute name="faction">Faction.clan_empire_north_8</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
