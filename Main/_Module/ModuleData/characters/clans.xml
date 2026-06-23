@@ -1005,6 +1005,7 @@
 		banner_key="11.17.166.1528.1528.764.764.1.0.0.12004.2014.171.600.600.764.761.0.0.0" />
   <Faction
 		id="clan_umbar_3"
+		initial_home_settlement="Settlement.castle_U1"
 		name="{=aom_clan_umbar_1_name}House of Heshlâ"
 		tier="4"
 		owner="Hero.lord_U3_1"
