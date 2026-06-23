@@ -789,6 +789,161 @@
 		id="lord_G5_10"
 		faction="Faction.clan_gundabad_5"
 		text="{=ulzara_description}Ulzara is an orc seer, interpreting signs from the dark lords as in Tolkien's prophetic elements. Her visions direct the clan's fateful actions." />
+	<!-- Gundabad Clan 6 (Grishûk) -->
+	<Hero
+		id="lord_G6_1"
+		faction="Faction.clan_gundabad_6" />
+	<Hero
+		id="lord_G6_2"
+		faction="Faction.clan_gundabad_6" />
+	<Hero
+		id="lord_G6_3"
+		faction="Faction.clan_gundabad_6" />
+	<Hero
+		id="lord_G6_4"
+		faction="Faction.clan_gundabad_6" />
+	<Hero
+		id="lord_G6_5"
+		faction="Faction.clan_gundabad_6" />
+	<Hero
+		id="lord_G6_6"
+		faction="Faction.clan_gundabad_6" />
+	<Hero
+		id="lord_G6_7"
+		faction="Faction.clan_gundabad_6" />
+	<Hero
+		id="lord_G6_8"
+		faction="Faction.clan_gundabad_6" />
+	<Hero
+		id="lord_G6_9"
+		faction="Faction.clan_gundabad_6" />
+	<Hero
+		id="lord_G6_10"
+		faction="Faction.clan_gundabad_6" />
+	<!-- Gundabad Clan 7 (Lugdush) -->
+	<Hero
+		id="lord_G7_1"
+		faction="Faction.clan_gundabad_7" />
+	<Hero
+		id="lord_G7_2"
+		faction="Faction.clan_gundabad_7" />
+	<Hero
+		id="lord_G7_3"
+		faction="Faction.clan_gundabad_7" />
+	<Hero
+		id="lord_G7_4"
+		faction="Faction.clan_gundabad_7" />
+	<Hero
+		id="lord_G7_5"
+		faction="Faction.clan_gundabad_7" />
+	<Hero
+		id="lord_G7_6"
+		faction="Faction.clan_gundabad_7" />
+	<Hero
+		id="lord_G7_7"
+		faction="Faction.clan_gundabad_7" />
+	<Hero
+		id="lord_G7_8"
+		faction="Faction.clan_gundabad_7" />
+	<Hero
+		id="lord_G7_9"
+		faction="Faction.clan_gundabad_7" />
+	<Hero
+		id="lord_G7_10"
+		faction="Faction.clan_gundabad_7" />
+	<!-- Gundabad Clan 8 (Maukrim) -->
+	<Hero
+		id="lord_G8_1"
+		faction="Faction.clan_gundabad_8" />
+	<Hero
+		id="lord_G8_2"
+		faction="Faction.clan_gundabad_8" />
+	<Hero
+		id="lord_G8_3"
+		faction="Faction.clan_gundabad_8" />
+	<Hero
+		id="lord_G8_4"
+		faction="Faction.clan_gundabad_8" />
+	<Hero
+		id="lord_G8_5"
+		faction="Faction.clan_gundabad_8" />
+	<Hero
+		id="lord_G8_6"
+		faction="Faction.clan_gundabad_8" />
+	<Hero
+		id="lord_G8_7"
+		faction="Faction.clan_gundabad_8" />
+	<Hero
+		id="lord_G8_8"
+		faction="Faction.clan_gundabad_8" />
+	<Hero
+		id="lord_G8_9"
+		faction="Faction.clan_gundabad_8" />
+	<Hero
+		id="lord_G8_10"
+		faction="Faction.clan_gundabad_8" />
+	<!-- Gundabad Clan 9 (Skarzag) -->
+	<Hero
+		id="lord_G9_1"
+		faction="Faction.clan_gundabad_9" />
+	<Hero
+		id="lord_G9_2"
+		faction="Faction.clan_gundabad_9" />
+	<Hero
+		id="lord_G9_3"
+		faction="Faction.clan_gundabad_9" />
+	<Hero
+		id="lord_G9_4"
+		faction="Faction.clan_gundabad_9" />
+	<Hero
+		id="lord_G9_5"
+		faction="Faction.clan_gundabad_9" />
+	<Hero
+		id="lord_G9_6"
+		faction="Faction.clan_gundabad_9" />
+	<Hero
+		id="lord_G9_7"
+		faction="Faction.clan_gundabad_9" />
+	<Hero
+		id="lord_G9_8"
+		faction="Faction.clan_gundabad_9" />
+	<Hero
+		id="lord_G9_9"
+		faction="Faction.clan_gundabad_9" />
+	<Hero
+		id="lord_G9_10"
+		faction="Faction.clan_gundabad_9" />
+	<!-- Gundabad Clan 10 (Throkmaw) -->
+	<Hero
+		id="lord_G10_1"
+		faction="Faction.clan_gundabad_10" />
+	<Hero
+		id="lord_G10_2"
+		faction="Faction.clan_gundabad_10" />
+	<Hero
+		id="lord_G10_3"
+		faction="Faction.clan_gundabad_10" />
+	<Hero
+		id="lord_G10_4"
+		faction="Faction.clan_gundabad_10" />
+	<Hero
+		id="lord_G10_5"
+		faction="Faction.clan_gundabad_10" />
+	<Hero
+		id="lord_G10_6"
+		faction="Faction.clan_gundabad_10" />
+	<Hero
+		id="lord_G10_7"
+		faction="Faction.clan_gundabad_10" />
+	<Hero
+		id="lord_G10_8"
+		faction="Faction.clan_gundabad_10" />
+	<Hero
+		id="lord_G10_9"
+		faction="Faction.clan_gundabad_10" />
+	<Hero
+		id="lord_G10_10"
+		faction="Faction.clan_gundabad_10" />
 
 	<!-- ============================================== -->
 	<!-- HARAD HEROES A10-A26: moved to lord_SH/AB      -->
@@ -1374,13 +1529,109 @@
 		faction="Faction.clan_empire_south_13"
 		text="{=aom_lord_M13_1_bio}Thurak stands sentinel at the Morannon, the iron Black Gate where the legions of Lugburz pour out into the northern wastes. Fear of the Great Eye is the marrow of him, for he was once flogged on the gate-stones for letting a tark scout slip past in the dusk. Since that day he has not slept the whole night through, and his uruks know better than to be found drowsing on the wall. The Brughash of Durzan he watches with a particular dread, for they keep their own counsel in the south and do not answer the muster as swiftly as the Gate would like." />
 	<Hero
+		id="lord_M13_2"
+		faction="Faction.clan_empire_south_13"
+		text="{=aom_lord_M13_2_bio}Grublat is a gate-captain of the Morannon, a heavy-handed uruk who counts the muster with his fists. He has broken more of his own snaga than any tark ever has." />
+	<Hero
+		id="lord_M13_3"
+		faction="Faction.clan_empire_south_13"
+		text="{=aom_lord_M13_3_bio}Mazgur keeps the watch-fires on the northern wall of the Black Gate, a sharp-eyed archer who trusts no shadow that moves out on the Dagorlad." />
+	<Hero
+		id="lord_M13_4"
+		faction="Faction.clan_empire_south_13"
+		text="{=aom_lord_M13_4_bio}Ufthak clawed his way up from the slave-gangs of Udun to a banner of his own, and means to drown the memory of the lash in the blood of Men." />
+	<Hero
+		id="lord_M13_5"
+		faction="Faction.clan_empire_south_13"
+		text="{=aom_lord_M13_5_bio}Lugrod is an old killer of the Morannon garrison, slow to anger and slower to forgive, who has outlived three captains by being the last orc standing on the wall." />
+	<Hero
+		id="lord_M13_12"
+		faction="Faction.clan_empire_south_13"
+		text="{=aom_lord_M13_12_bio}Shelgra rides the Dagorlad as a scout-captain for the Gate, and brings back more heads than reports." />
+	<Hero
+		id="lord_M13_13"
+		faction="Faction.clan_empire_south_13"
+		text="{=aom_lord_M13_13_bio}Bruga oversees the weapon-pits behind the Black Gate, and flogs any smith-snaga who lets a blade go dull." />
+	<Hero
+		id="lord_M13_14"
+		faction="Faction.clan_empire_south_13"
+		text="{=aom_lord_M13_14_bio}Nazgra is a venom-tongued archer of the wall, feared in the barracks more than on the field." />
+	<Hero
+		id="lord_M13_15"
+		faction="Faction.clan_empire_south_13"
+		text="{=aom_lord_M13_15_bio}Ushka leads a raiding-pack that strikes north from the Gate, and answers the muster only when it suits her." />
+	<Hero
 		id="lord_M14_1"
 		faction="Faction.clan_empire_south_14"
 		text="{=aom_lord_M14_1_bio}Uznash is an overseer-captain of the Nurn slave-pens, where the thralls of Harad and the East break their backs to feed the legions. He came up through the whip-gangs, and his hatred of Men is a cold practiced thing, learned on the fields and not in any battle. The horse-boys of the Mark have never heard of him, and that is a wound he means to repair when the great muster comes. He has an old quarrel with Gulnak of the Arki, who named his uruks farm-snaga at a Udun counting." />
 	<Hero
+		id="lord_M14_2"
+		faction="Faction.clan_empire_south_14"
+		text="{=aom_lord_M14_2_bio}Durbgul is a whip-captain of the Nurn pens, who measures a thrall's worth by how long it lasts under the lash." />
+	<Hero
+		id="lord_M14_3"
+		faction="Faction.clan_empire_south_14"
+		text="{=aom_lord_M14_3_bio}Snagrat drives the field-gangs of Nurn from horseback, and has never once walked among the slaves he herds." />
+	<Hero
+		id="lord_M14_4"
+		faction="Faction.clan_empire_south_14"
+		text="{=aom_lord_M14_4_bio}Hrakmaw guards the granaries that feed the legions, a brutal quartermaster who hangs hoarders from the storehouse beams." />
+	<Hero
+		id="lord_M14_5"
+		faction="Faction.clan_empire_south_14"
+		text="{=aom_lord_M14_5_bio}Gorbuz came up through the whip-gangs beside Uznash, and resents that the pens answer to his old comrade and not to him." />
+	<Hero
+		id="lord_M14_12"
+		faction="Faction.clan_empire_south_14"
+		text="{=aom_lord_M14_12_bio}Vushka keeps the tally of the Nurn thralls, and culls the count herself when the books run long." />
+	<Hero
+		id="lord_M14_13"
+		faction="Faction.clan_empire_south_14"
+		text="{=aom_lord_M14_13_bio}Krimpa breaks the new-taken slaves of Harad and the East, and is proud that few of them survive her breaking." />
+	<Hero
+		id="lord_M14_14"
+		faction="Faction.clan_empire_south_14"
+		text="{=aom_lord_M14_14_bio}Lhakra rides the pen-borders hunting runaways, and brings them back in pieces as a lesson to the rest." />
+	<Hero
+		id="lord_M14_15"
+		faction="Faction.clan_empire_south_14"
+		text="{=aom_lord_M14_15_bio}Grisha oversees the poison-fields of southern Nurn, where the air itself does most of the killing." />
+	<Hero
 		id="lord_M15_1"
 		faction="Faction.clan_empire_south_15"
 		text="{=aom_lord_M15_1_bio}Durzan commands a Tower-guard company in the shadow of Barad-dur itself, chosen for cunning over bulk by an officer of the Mouth's household. Payback is the engine of him, for a Morgul-captain reported his company light at a muster three years past and his banner was nearly broken for it. That captain is dead now in a stair-quarrel none can quite explain, and Durzan has been seen at the Mouth's gate more than once since. He keeps a particular eye on the Cirith Ungol garrison, and on Maugrukh's accounting of the dead." />
+	<Hero
+		id="lord_M15_2"
+		faction="Faction.clan_empire_south_15"
+		text="{=aom_lord_M15_2_bio}Razhuk stands a Tower-guard company beneath Barad-dur, chosen for cunning, and trusts none of his own captains." />
+	<Hero
+		id="lord_M15_3"
+		faction="Faction.clan_empire_south_15"
+		text="{=aom_lord_M15_3_bio}Muzgash patrols the stairs below the Dark Tower, a silent killer who reports straight to the Mouth's household." />
+	<Hero
+		id="lord_M15_4"
+		faction="Faction.clan_empire_south_15"
+		text="{=aom_lord_M15_4_bio}Bolgrat holds a watchpost on the road to Cirith Ungol, and feuds quietly with the tower garrison over the counting of the dead." />
+	<Hero
+		id="lord_M15_5"
+		faction="Faction.clan_empire_south_15"
+		text="{=aom_lord_M15_5_bio}Throkka is a brute of the Tower-guard, kept for the work that wants no cunning, only weight and a heavy blade." />
+	<Hero
+		id="lord_M15_12"
+		faction="Faction.clan_empire_south_15"
+		text="{=aom_lord_M15_12_bio}Yagul carries word between Barad-dur and the Morgul Vale, and has seen the inside of the Tower more than once." />
+	<Hero
+		id="lord_M15_13"
+		faction="Faction.clan_empire_south_15"
+		text="{=aom_lord_M15_13_bio}Skraa keeps the under-cells of the Tower-guard, where the questioning is done and seldom finished quickly." />
+	<Hero
+		id="lord_M15_14"
+		faction="Faction.clan_empire_south_15"
+		text="{=aom_lord_M15_14_bio}Murgha leads a night-pack along the Mordor road, and it is said the Eye itself favours her cruelty." />
+	<Hero
+		id="lord_M15_15"
+		faction="Faction.clan_empire_south_15"
+		text="{=aom_lord_M15_15_bio}Lozka watches the Cirith Ungol garrison on Durzan's behalf, and counts their failings against the day she takes their pass." />
 	<Hero
 		id="lord_M16_1"
 		faction="Faction.clan_empire_south_10"
@@ -1419,34 +1670,605 @@
 		id="lord_6_30"
 		faction="Faction.clan_khuzait_19"
 		text="{=rurazaur_description}Rurazaur Bozorganith, a beast-master of Rhûn, commands fearsome creatures in battle during the Third Age for Sauron. His bond with wild beasts sows chaos among foes. Rurazaur's monstrous allies amplify the terror of the Easterling assaults." />
+	<Hero
+		id="lord_6_23"
+		faction="Faction.clan_khuzait_12"
+		text="{=aom_lord_6_23_bio}Borlad, lord of House Hûz, holds the saddle-thrones of his Easterling kin east of the Sea of Rhûn and bends the tribes to the will of the Dark Tower." />
+	<Hero
+		id="lord_6_23_1"
+		spouse="Hero.lord_6_23_2"
+		faction="Faction.clan_khuzait_12"
+		text="{=aom_lord_6_23_1_bio}Borlach of House Hûz rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_23_2"
+		spouse="Hero.lord_6_23_1"
+		faction="Faction.clan_khuzait_12"
+		text="{=aom_lord_6_23_2_bio}Armaga of House Hûz is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_23_3"
+		spouse="Hero.lord_6_23_4"
+		faction="Faction.clan_khuzait_12"
+		text="{=aom_lord_6_23_3_bio}Borthand of House Hûz rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_23_4"
+		spouse="Hero.lord_6_23_3"
+		faction="Faction.clan_khuzait_12"
+		text="{=aom_lord_6_23_4_bio}Cotota of House Hûz is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_23_5"
+		faction="Faction.clan_khuzait_12"
+		text="{=aom_lord_6_23_5_bio}Ulfast of House Hûz is counted among the keen horse-archers of Rhûn, loosing his shafts from the saddle at a full gallop." />
+	<Hero
+		id="lord_6_23_6"
+		faction="Faction.clan_khuzait_12"
+		text="{=aom_lord_6_23_6_bio}Ulwarth of House Hûz rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_23_7"
+		faction="Faction.clan_khuzait_12"
+		text="{=aom_lord_6_23_7_bio}Uldor of House Hûz rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_23_8"
+		faction="Faction.clan_khuzait_12"
+		text="{=aom_lord_6_23_8_bio}Chinua of House Hûz is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_23_9"
+		faction="Faction.clan_khuzait_12"
+		text="{=aom_lord_6_23_9_bio}Gerel of House Hûz is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_24"
+		faction="Faction.clan_khuzait_13"
+		text="{=aom_lord_6_24_bio}Brodda, lord of House Adekig, holds the saddle-thrones of his Easterling kin east of the Sea of Rhûn and bends the tribes to the will of the Dark Tower." />
+	<Hero
+		id="lord_6_24_1"
+		spouse="Hero.lord_6_24_2"
+		faction="Faction.clan_khuzait_13"
+		text="{=aom_lord_6_24_1_bio}Lorgan of House Adekig rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_24_2"
+		spouse="Hero.lord_6_24_1"
+		faction="Faction.clan_khuzait_13"
+		text="{=aom_lord_6_24_2_bio}Goksun of House Adekig is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_24_3"
+		spouse="Hero.lord_6_24_4"
+		faction="Faction.clan_khuzait_13"
+		text="{=aom_lord_6_24_3_bio}Böri of House Adekig rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_24_4"
+		spouse="Hero.lord_6_24_3"
+		faction="Faction.clan_khuzait_13"
+		text="{=aom_lord_6_24_4_bio}Khulan of House Adekig is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_24_5"
+		faction="Faction.clan_khuzait_13"
+		text="{=aom_lord_6_24_5_bio}Kustîg of House Adekig is counted among the keen horse-archers of Rhûn, loosing his shafts from the saddle at a full gallop." />
+	<Hero
+		id="lord_6_24_6"
+		faction="Faction.clan_khuzait_13"
+		text="{=aom_lord_6_24_6_bio}Yumruk of House Adekig rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_24_7"
+		faction="Faction.clan_khuzait_13"
+		text="{=aom_lord_6_24_7_bio}Adarkidai of House Adekig rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_24_8"
+		faction="Faction.clan_khuzait_13"
+		text="{=aom_lord_6_24_8_bio}Konsha of House Adekig is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_24_9"
+		faction="Faction.clan_khuzait_13"
+		text="{=aom_lord_6_24_9_bio}Samga of House Adekig is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_25_1"
+		spouse="Hero.lord_6_25_2"
+		faction="Faction.clan_khuzait_14"
+		text="{=aom_lord_6_25_1_bio}Ganbaatar of House Cilzeron rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_25_2"
+		spouse="Hero.lord_6_25_1"
+		faction="Faction.clan_khuzait_14"
+		text="{=aom_lord_6_25_2_bio}Sarnai of House Cilzeron is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_25_3"
+		spouse="Hero.lord_6_25_4"
+		faction="Faction.clan_khuzait_14"
+		text="{=aom_lord_6_25_3_bio}Gantulga of House Cilzeron rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_25_4"
+		spouse="Hero.lord_6_25_3"
+		faction="Faction.clan_khuzait_14"
+		text="{=aom_lord_6_25_4_bio}Sertac of House Cilzeron is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_25_5"
+		faction="Faction.clan_khuzait_14"
+		text="{=aom_lord_6_25_5_bio}Khenbish of House Cilzeron is counted among the keen horse-archers of Rhûn, loosing his shafts from the saddle at a full gallop." />
+	<Hero
+		id="lord_6_25_6"
+		faction="Faction.clan_khuzait_14"
+		text="{=aom_lord_6_25_6_bio}Muunokhoi of House Cilzeron rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_25_7"
+		faction="Faction.clan_khuzait_14"
+		text="{=aom_lord_6_25_7_bio}Subetai of House Cilzeron rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_25_8"
+		faction="Faction.clan_khuzait_14"
+		text="{=aom_lord_6_25_8_bio}Suna of House Cilzeron is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_25_9"
+		faction="Faction.clan_khuzait_14"
+		text="{=aom_lord_6_25_9_bio}Tsetseg of House Cilzeron is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_26_1"
+		spouse="Hero.lord_6_26_2"
+		faction="Faction.clan_khuzait_15"
+		text="{=aom_lord_6_26_1_bio}Jelme of House Kalkian rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_26_2"
+		spouse="Hero.lord_6_26_1"
+		faction="Faction.clan_khuzait_15"
+		text="{=aom_lord_6_26_2_bio}Tuya of House Kalkian is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_26_3"
+		spouse="Hero.lord_6_26_4"
+		faction="Faction.clan_khuzait_15"
+		text="{=aom_lord_6_26_3_bio}Boroghul of House Kalkian rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_26_4"
+		spouse="Hero.lord_6_26_3"
+		faction="Faction.clan_khuzait_15"
+		text="{=aom_lord_6_26_4_bio}Yesugen of House Kalkian is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_26_5"
+		faction="Faction.clan_khuzait_15"
+		text="{=aom_lord_6_26_5_bio}Mukhali of House Kalkian is counted among the keen horse-archers of Rhûn, loosing his shafts from the saddle at a full gallop." />
+	<Hero
+		id="lord_6_26_6"
+		faction="Faction.clan_khuzait_15"
+		text="{=aom_lord_6_26_6_bio}Chilaun of House Kalkian rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_26_7"
+		faction="Faction.clan_khuzait_15"
+		text="{=aom_lord_6_26_7_bio}Berke of House Kalkian rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_26_8"
+		faction="Faction.clan_khuzait_15"
+		text="{=aom_lord_6_26_8_bio}Yosma of House Kalkian is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_26_9"
+		faction="Faction.clan_khuzait_15"
+		text="{=aom_lord_6_26_9_bio}Aigiarn of House Kalkian is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_27_1"
+		spouse="Hero.lord_6_27_2"
+		faction="Faction.clan_khuzait_16"
+		text="{=aom_lord_6_27_1_bio}Toqto of House Zorian rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_27_2"
+		spouse="Hero.lord_6_27_1"
+		faction="Faction.clan_khuzait_16"
+		text="{=aom_lord_6_27_2_bio}Alagh of House Zorian is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_27_3"
+		spouse="Hero.lord_6_27_4"
+		faction="Faction.clan_khuzait_16"
+		text="{=aom_lord_6_27_3_bio}Arghun of House Zorian rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_27_4"
+		spouse="Hero.lord_6_27_3"
+		faction="Faction.clan_khuzait_16"
+		text="{=aom_lord_6_27_4_bio}Alaqai of House Zorian is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_27_5"
+		faction="Faction.clan_khuzait_16"
+		text="{=aom_lord_6_27_5_bio}Baidar of House Zorian is counted among the keen horse-archers of Rhûn, loosing his shafts from the saddle at a full gallop." />
+	<Hero
+		id="lord_6_27_6"
+		faction="Faction.clan_khuzait_16"
+		text="{=aom_lord_6_27_6_bio}Kadan of House Zorian rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_27_7"
+		faction="Faction.clan_khuzait_16"
+		text="{=aom_lord_6_27_7_bio}Orda of House Zorian rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_27_8"
+		faction="Faction.clan_khuzait_16"
+		text="{=aom_lord_6_27_8_bio}Altani of House Zorian is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_27_9"
+		faction="Faction.clan_khuzait_16"
+		text="{=aom_lord_6_27_9_bio}Bayalun of House Zorian is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_28_1"
+		spouse="Hero.lord_6_28_2"
+		faction="Faction.clan_khuzait_17"
+		text="{=aom_lord_6_28_1_bio}Sartaq of House Mithruntai rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_28_2"
+		spouse="Hero.lord_6_28_1"
+		faction="Faction.clan_khuzait_17"
+		text="{=aom_lord_6_28_2_bio}Börte of House Mithruntai is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_28_3"
+		spouse="Hero.lord_6_28_4"
+		faction="Faction.clan_khuzait_17"
+		text="{=aom_lord_6_28_3_bio}Nogai of House Mithruntai rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_28_4"
+		spouse="Hero.lord_6_28_3"
+		faction="Faction.clan_khuzait_17"
+		text="{=aom_lord_6_28_4_bio}Bulgan of House Mithruntai is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_28_5"
+		faction="Faction.clan_khuzait_17"
+		text="{=aom_lord_6_28_5_bio}Tamir of House Mithruntai is counted among the keen horse-archers of Rhûn, loosing his shafts from the saddle at a full gallop." />
+	<Hero
+		id="lord_6_28_6"
+		faction="Faction.clan_khuzait_17"
+		text="{=aom_lord_6_28_6_bio}Otgon of House Mithruntai rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_28_7"
+		faction="Faction.clan_khuzait_17"
+		text="{=aom_lord_6_28_7_bio}Temur of House Mithruntai rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_28_8"
+		faction="Faction.clan_khuzait_17"
+		text="{=aom_lord_6_28_8_bio}Chimeg of House Mithruntai is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_28_9"
+		faction="Faction.clan_khuzait_17"
+		text="{=aom_lord_6_28_9_bio}Doquz of House Mithruntai is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_29_1"
+		spouse="Hero.lord_6_29_2"
+		faction="Faction.clan_khuzait_18"
+		text="{=aom_lord_6_29_1_bio}Achiq of House Vazevian rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_29_2"
+		spouse="Hero.lord_6_29_1"
+		faction="Faction.clan_khuzait_18"
+		text="{=aom_lord_6_29_2_bio}Enkhtuya of House Vazevian is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_29_3"
+		spouse="Hero.lord_6_29_4"
+		faction="Faction.clan_khuzait_18"
+		text="{=aom_lord_6_29_3_bio}Qutlugh of House Vazevian rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_29_4"
+		spouse="Hero.lord_6_29_3"
+		faction="Faction.clan_khuzait_18"
+		text="{=aom_lord_6_29_4_bio}Oyuun of House Vazevian is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_29_5"
+		faction="Faction.clan_khuzait_18"
+		text="{=aom_lord_6_29_5_bio}Vethkar of House Vazevian is counted among the keen horse-archers of Rhûn, loosing his shafts from the saddle at a full gallop." />
+	<Hero
+		id="lord_6_29_6"
+		faction="Faction.clan_khuzait_18"
+		text="{=aom_lord_6_29_6_bio}Aurzan of House Vazevian rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_29_7"
+		faction="Faction.clan_khuzait_18"
+		text="{=aom_lord_6_29_7_bio}Khorlug of House Vazevian rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_29_8"
+		faction="Faction.clan_khuzait_18"
+		text="{=aom_lord_6_29_8_bio}Sarangerel of House Vazevian is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_29_9"
+		faction="Faction.clan_khuzait_18"
+		text="{=aom_lord_6_29_9_bio}Tselmeg of House Vazevian is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_30_1"
+		spouse="Hero.lord_6_30_2"
+		faction="Faction.clan_khuzait_19"
+		text="{=aom_lord_6_30_1_bio}Saghost of House Bozorganith rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_30_2"
+		spouse="Hero.lord_6_30_1"
+		faction="Faction.clan_khuzait_19"
+		text="{=aom_lord_6_30_2_bio}Udval of House Bozorganith is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_30_3"
+		spouse="Hero.lord_6_30_4"
+		faction="Faction.clan_khuzait_19"
+		text="{=aom_lord_6_30_3_bio}Dûrkan of House Bozorganith rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_30_4"
+		spouse="Hero.lord_6_30_3"
+		faction="Faction.clan_khuzait_19"
+		text="{=aom_lord_6_30_4_bio}Zaya of House Bozorganith is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_30_5"
+		faction="Faction.clan_khuzait_19"
+		text="{=aom_lord_6_30_5_bio}Mazdûr of House Bozorganith is counted among the keen horse-archers of Rhûn, loosing his shafts from the saddle at a full gallop." />
+	<Hero
+		id="lord_6_30_6"
+		faction="Faction.clan_khuzait_19"
+		text="{=aom_lord_6_30_6_bio}Hethûl of House Bozorganith rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_30_7"
+		faction="Faction.clan_khuzait_19"
+		text="{=aom_lord_6_30_7_bio}Taurkan of House Bozorganith rides at the head of the clan's lancers, a hard-handed kinsman whose banner is feared across the plains of Rhûn." />
+	<Hero
+		id="lord_6_30_8"
+		faction="Faction.clan_khuzait_19"
+		text="{=aom_lord_6_30_8_bio}Nergui of House Bozorganith is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
+	<Hero
+		id="lord_6_30_9"
+		faction="Faction.clan_khuzait_19"
+		text="{=aom_lord_6_30_9_bio}Narangerel of House Bozorganith is a proud woman of the Easterlings, mistress of hearth and granary and no stranger to the horse and the bow." />
 
 	<!-- ========== SHAGHANA LORDS ========== -->
 	<Hero
 		id="lord_SH1_1"
 		faction="Faction.clan_shaghana_1" />
 	<Hero
+		id="lord_SH1_2"
+		faction="Faction.clan_shaghana_1" />
+	<Hero
+		id="lord_SH1_3"
+		faction="Faction.clan_shaghana_1" />
+	<Hero
+		id="lord_SH1_4"
+		faction="Faction.clan_shaghana_1" />
+	<Hero
+		id="lord_SH1_5"
+		faction="Faction.clan_shaghana_1" />
+	<Hero
+		id="lord_SH1_6"
+		faction="Faction.clan_shaghana_1" />
+	<Hero
+		id="lord_SH1_7"
+		faction="Faction.clan_shaghana_1" />
+	<Hero
+		id="lord_SH1_8"
+		faction="Faction.clan_shaghana_1" />
+	<Hero
+		id="lord_SH1_9"
+		faction="Faction.clan_shaghana_1" />
+	<Hero
+		id="lord_SH1_10"
+		faction="Faction.clan_shaghana_1" />
+	<Hero
 		id="lord_SH2_1"
+		faction="Faction.clan_shaghana_2" />
+	<Hero
+		id="lord_SH2_2"
+		faction="Faction.clan_shaghana_2" />
+	<Hero
+		id="lord_SH2_3"
+		faction="Faction.clan_shaghana_2" />
+	<Hero
+		id="lord_SH2_4"
+		faction="Faction.clan_shaghana_2" />
+	<Hero
+		id="lord_SH2_5"
+		faction="Faction.clan_shaghana_2" />
+	<Hero
+		id="lord_SH2_6"
+		faction="Faction.clan_shaghana_2" />
+	<Hero
+		id="lord_SH2_7"
+		faction="Faction.clan_shaghana_2" />
+	<Hero
+		id="lord_SH2_8"
+		faction="Faction.clan_shaghana_2" />
+	<Hero
+		id="lord_SH2_9"
+		faction="Faction.clan_shaghana_2" />
+	<Hero
+		id="lord_SH2_10"
 		faction="Faction.clan_shaghana_2" />
 	<Hero
 		id="lord_SH3_1"
 		faction="Faction.clan_shaghana_3" />
 	<Hero
+		id="lord_SH3_2"
+		faction="Faction.clan_shaghana_3" />
+	<Hero
+		id="lord_SH3_3"
+		faction="Faction.clan_shaghana_3" />
+	<Hero
+		id="lord_SH3_4"
+		faction="Faction.clan_shaghana_3" />
+	<Hero
+		id="lord_SH3_5"
+		faction="Faction.clan_shaghana_3" />
+	<Hero
+		id="lord_SH3_6"
+		faction="Faction.clan_shaghana_3" />
+	<Hero
+		id="lord_SH3_7"
+		faction="Faction.clan_shaghana_3" />
+	<Hero
+		id="lord_SH3_8"
+		faction="Faction.clan_shaghana_3" />
+	<Hero
+		id="lord_SH3_9"
+		faction="Faction.clan_shaghana_3" />
+	<Hero
+		id="lord_SH3_10"
+		faction="Faction.clan_shaghana_3" />
+	<Hero
 		id="lord_SH4_1"
+		faction="Faction.clan_shaghana_4" />
+	<Hero
+		id="lord_SH4_2"
+		faction="Faction.clan_shaghana_4" />
+	<Hero
+		id="lord_SH4_3"
+		faction="Faction.clan_shaghana_4" />
+	<Hero
+		id="lord_SH4_4"
+		faction="Faction.clan_shaghana_4" />
+	<Hero
+		id="lord_SH4_5"
+		faction="Faction.clan_shaghana_4" />
+	<Hero
+		id="lord_SH4_6"
+		faction="Faction.clan_shaghana_4" />
+	<Hero
+		id="lord_SH4_7"
+		faction="Faction.clan_shaghana_4" />
+	<Hero
+		id="lord_SH4_8"
+		faction="Faction.clan_shaghana_4" />
+	<Hero
+		id="lord_SH4_9"
+		faction="Faction.clan_shaghana_4" />
+	<Hero
+		id="lord_SH4_10"
 		faction="Faction.clan_shaghana_4" />
 	<Hero
 		id="lord_SH5_1"
 		faction="Faction.clan_shaghana_5" />
 	<Hero
+		id="lord_SH5_2"
+		faction="Faction.clan_shaghana_5" />
+	<Hero
+		id="lord_SH5_3"
+		faction="Faction.clan_shaghana_5" />
+	<Hero
+		id="lord_SH5_4"
+		faction="Faction.clan_shaghana_5" />
+	<Hero
+		id="lord_SH5_5"
+		faction="Faction.clan_shaghana_5" />
+	<Hero
+		id="lord_SH5_6"
+		faction="Faction.clan_shaghana_5" />
+	<Hero
+		id="lord_SH5_7"
+		faction="Faction.clan_shaghana_5" />
+	<Hero
+		id="lord_SH5_8"
+		faction="Faction.clan_shaghana_5" />
+	<Hero
+		id="lord_SH5_9"
+		faction="Faction.clan_shaghana_5" />
+	<Hero
+		id="lord_SH5_10"
+		faction="Faction.clan_shaghana_5" />
+	<Hero
 		id="lord_SH6_1"
+		faction="Faction.clan_shaghana_6" />
+	<Hero
+		id="lord_SH6_2"
+		faction="Faction.clan_shaghana_6" />
+	<Hero
+		id="lord_SH6_3"
+		faction="Faction.clan_shaghana_6" />
+	<Hero
+		id="lord_SH6_4"
+		faction="Faction.clan_shaghana_6" />
+	<Hero
+		id="lord_SH6_5"
+		faction="Faction.clan_shaghana_6" />
+	<Hero
+		id="lord_SH6_6"
+		faction="Faction.clan_shaghana_6" />
+	<Hero
+		id="lord_SH6_7"
+		faction="Faction.clan_shaghana_6" />
+	<Hero
+		id="lord_SH6_8"
+		faction="Faction.clan_shaghana_6" />
+	<Hero
+		id="lord_SH6_9"
+		faction="Faction.clan_shaghana_6" />
+	<Hero
+		id="lord_SH6_10"
 		faction="Faction.clan_shaghana_6" />
 	<Hero
 		id="lord_SH7_1"
 		faction="Faction.clan_shaghana_7" />
 	<Hero
+		id="lord_SH7_2"
+		faction="Faction.clan_shaghana_7" />
+	<Hero
+		id="lord_SH7_3"
+		faction="Faction.clan_shaghana_7" />
+	<Hero
+		id="lord_SH7_4"
+		faction="Faction.clan_shaghana_7" />
+	<Hero
+		id="lord_SH7_5"
+		faction="Faction.clan_shaghana_7" />
+	<Hero
+		id="lord_SH7_6"
+		faction="Faction.clan_shaghana_7" />
+	<Hero
+		id="lord_SH7_7"
+		faction="Faction.clan_shaghana_7" />
+	<Hero
+		id="lord_SH7_8"
+		faction="Faction.clan_shaghana_7" />
+	<Hero
+		id="lord_SH7_9"
+		faction="Faction.clan_shaghana_7" />
+	<Hero
+		id="lord_SH7_10"
+		faction="Faction.clan_shaghana_7" />
+	<Hero
 		id="lord_SH8_1"
 		faction="Faction.clan_shaghana_8" />
 	<Hero
+		id="lord_SH8_2"
+		faction="Faction.clan_shaghana_8" />
+	<Hero
+		id="lord_SH8_3"
+		faction="Faction.clan_shaghana_8" />
+	<Hero
+		id="lord_SH8_4"
+		faction="Faction.clan_shaghana_8" />
+	<Hero
+		id="lord_SH8_5"
+		faction="Faction.clan_shaghana_8" />
+	<Hero
+		id="lord_SH8_6"
+		faction="Faction.clan_shaghana_8" />
+	<Hero
+		id="lord_SH8_7"
+		faction="Faction.clan_shaghana_8" />
+	<Hero
+		id="lord_SH8_8"
+		faction="Faction.clan_shaghana_8" />
+	<Hero
+		id="lord_SH8_9"
+		faction="Faction.clan_shaghana_8" />
+	<Hero
+		id="lord_SH8_10"
+		faction="Faction.clan_shaghana_8" />
+	<Hero
 		id="lord_SH9_1"
+		faction="Faction.clan_shaghana_9" />
+	<Hero
+		id="lord_SH9_2"
+		faction="Faction.clan_shaghana_9" />
+	<Hero
+		id="lord_SH9_3"
+		faction="Faction.clan_shaghana_9" />
+	<Hero
+		id="lord_SH9_4"
+		faction="Faction.clan_shaghana_9" />
+	<Hero
+		id="lord_SH9_5"
+		faction="Faction.clan_shaghana_9" />
+	<Hero
+		id="lord_SH9_6"
+		faction="Faction.clan_shaghana_9" />
+	<Hero
+		id="lord_SH9_7"
+		faction="Faction.clan_shaghana_9" />
+	<Hero
+		id="lord_SH9_8"
+		faction="Faction.clan_shaghana_9" />
+	<Hero
+		id="lord_SH9_9"
+		faction="Faction.clan_shaghana_9" />
+	<Hero
+		id="lord_SH9_10"
 		faction="Faction.clan_shaghana_9" />
 
 	<!-- ========== ABANISSA LORDS ========== -->
@@ -1454,25 +2276,241 @@
 		id="lord_AB1_1"
 		faction="Faction.clan_abanissa_1" />
 	<Hero
+		id="lord_AB1_2"
+		faction="Faction.clan_abanissa_1" />
+	<Hero
+		id="lord_AB1_3"
+		faction="Faction.clan_abanissa_1" />
+	<Hero
+		id="lord_AB1_4"
+		faction="Faction.clan_abanissa_1" />
+	<Hero
+		id="lord_AB1_5"
+		faction="Faction.clan_abanissa_1" />
+	<Hero
+		id="lord_AB1_6"
+		faction="Faction.clan_abanissa_1" />
+	<Hero
+		id="lord_AB1_7"
+		faction="Faction.clan_abanissa_1" />
+	<Hero
+		id="lord_AB1_8"
+		faction="Faction.clan_abanissa_1" />
+	<Hero
+		id="lord_AB1_9"
+		faction="Faction.clan_abanissa_1" />
+	<Hero
+		id="lord_AB1_10"
+		faction="Faction.clan_abanissa_1" />
+	<Hero
 		id="lord_AB2_1"
+		faction="Faction.clan_abanissa_2" />
+	<Hero
+		id="lord_AB2_2"
+		faction="Faction.clan_abanissa_2" />
+	<Hero
+		id="lord_AB2_3"
+		faction="Faction.clan_abanissa_2" />
+	<Hero
+		id="lord_AB2_4"
+		faction="Faction.clan_abanissa_2" />
+	<Hero
+		id="lord_AB2_5"
+		faction="Faction.clan_abanissa_2" />
+	<Hero
+		id="lord_AB2_6"
+		faction="Faction.clan_abanissa_2" />
+	<Hero
+		id="lord_AB2_7"
+		faction="Faction.clan_abanissa_2" />
+	<Hero
+		id="lord_AB2_8"
+		faction="Faction.clan_abanissa_2" />
+	<Hero
+		id="lord_AB2_9"
+		faction="Faction.clan_abanissa_2" />
+	<Hero
+		id="lord_AB2_10"
 		faction="Faction.clan_abanissa_2" />
 	<Hero
 		id="lord_AB3_1"
 		faction="Faction.clan_abanissa_3" />
 	<Hero
+		id="lord_AB3_2"
+		faction="Faction.clan_abanissa_3" />
+	<Hero
+		id="lord_AB3_3"
+		faction="Faction.clan_abanissa_3" />
+	<Hero
+		id="lord_AB3_4"
+		faction="Faction.clan_abanissa_3" />
+	<Hero
+		id="lord_AB3_5"
+		faction="Faction.clan_abanissa_3" />
+	<Hero
+		id="lord_AB3_6"
+		faction="Faction.clan_abanissa_3" />
+	<Hero
+		id="lord_AB3_7"
+		faction="Faction.clan_abanissa_3" />
+	<Hero
+		id="lord_AB3_8"
+		faction="Faction.clan_abanissa_3" />
+	<Hero
+		id="lord_AB3_9"
+		faction="Faction.clan_abanissa_3" />
+	<Hero
+		id="lord_AB3_10"
+		faction="Faction.clan_abanissa_3" />
+	<Hero
 		id="lord_AB4_1"
+		faction="Faction.clan_abanissa_4" />
+	<Hero
+		id="lord_AB4_2"
+		faction="Faction.clan_abanissa_4" />
+	<Hero
+		id="lord_AB4_3"
+		faction="Faction.clan_abanissa_4" />
+	<Hero
+		id="lord_AB4_4"
+		faction="Faction.clan_abanissa_4" />
+	<Hero
+		id="lord_AB4_5"
+		faction="Faction.clan_abanissa_4" />
+	<Hero
+		id="lord_AB4_6"
+		faction="Faction.clan_abanissa_4" />
+	<Hero
+		id="lord_AB4_7"
+		faction="Faction.clan_abanissa_4" />
+	<Hero
+		id="lord_AB4_8"
+		faction="Faction.clan_abanissa_4" />
+	<Hero
+		id="lord_AB4_9"
+		faction="Faction.clan_abanissa_4" />
+	<Hero
+		id="lord_AB4_10"
 		faction="Faction.clan_abanissa_4" />
 	<Hero
 		id="lord_AB5_1"
 		faction="Faction.clan_abanissa_5" />
 	<Hero
+		id="lord_AB5_2"
+		faction="Faction.clan_abanissa_5" />
+	<Hero
+		id="lord_AB5_3"
+		faction="Faction.clan_abanissa_5" />
+	<Hero
+		id="lord_AB5_4"
+		faction="Faction.clan_abanissa_5" />
+	<Hero
+		id="lord_AB5_5"
+		faction="Faction.clan_abanissa_5" />
+	<Hero
+		id="lord_AB5_6"
+		faction="Faction.clan_abanissa_5" />
+	<Hero
+		id="lord_AB5_7"
+		faction="Faction.clan_abanissa_5" />
+	<Hero
+		id="lord_AB5_8"
+		faction="Faction.clan_abanissa_5" />
+	<Hero
+		id="lord_AB5_9"
+		faction="Faction.clan_abanissa_5" />
+	<Hero
+		id="lord_AB5_10"
+		faction="Faction.clan_abanissa_5" />
+	<Hero
 		id="lord_AB6_1"
+		faction="Faction.clan_abanissa_6" />
+	<Hero
+		id="lord_AB6_2"
+		faction="Faction.clan_abanissa_6" />
+	<Hero
+		id="lord_AB6_3"
+		faction="Faction.clan_abanissa_6" />
+	<Hero
+		id="lord_AB6_4"
+		faction="Faction.clan_abanissa_6" />
+	<Hero
+		id="lord_AB6_5"
+		faction="Faction.clan_abanissa_6" />
+	<Hero
+		id="lord_AB6_6"
+		faction="Faction.clan_abanissa_6" />
+	<Hero
+		id="lord_AB6_7"
+		faction="Faction.clan_abanissa_6" />
+	<Hero
+		id="lord_AB6_8"
+		faction="Faction.clan_abanissa_6" />
+	<Hero
+		id="lord_AB6_9"
+		faction="Faction.clan_abanissa_6" />
+	<Hero
+		id="lord_AB6_10"
 		faction="Faction.clan_abanissa_6" />
 	<Hero
 		id="lord_AB7_1"
 		faction="Faction.clan_abanissa_7" />
 	<Hero
+		id="lord_AB7_2"
+		faction="Faction.clan_abanissa_7" />
+	<Hero
+		id="lord_AB7_3"
+		faction="Faction.clan_abanissa_7" />
+	<Hero
+		id="lord_AB7_4"
+		faction="Faction.clan_abanissa_7" />
+	<Hero
+		id="lord_AB7_5"
+		faction="Faction.clan_abanissa_7" />
+	<Hero
+		id="lord_AB7_6"
+		faction="Faction.clan_abanissa_7" />
+	<Hero
+		id="lord_AB7_7"
+		faction="Faction.clan_abanissa_7" />
+	<Hero
+		id="lord_AB7_8"
+		faction="Faction.clan_abanissa_7" />
+	<Hero
+		id="lord_AB7_9"
+		faction="Faction.clan_abanissa_7" />
+	<Hero
+		id="lord_AB7_10"
+		faction="Faction.clan_abanissa_7" />
+	<Hero
 		id="lord_AB8_1"
+		faction="Faction.clan_abanissa_8" />
+	<Hero
+		id="lord_AB8_2"
+		faction="Faction.clan_abanissa_8" />
+	<Hero
+		id="lord_AB8_3"
+		faction="Faction.clan_abanissa_8" />
+	<Hero
+		id="lord_AB8_4"
+		faction="Faction.clan_abanissa_8" />
+	<Hero
+		id="lord_AB8_5"
+		faction="Faction.clan_abanissa_8" />
+	<Hero
+		id="lord_AB8_6"
+		faction="Faction.clan_abanissa_8" />
+	<Hero
+		id="lord_AB8_7"
+		faction="Faction.clan_abanissa_8" />
+	<Hero
+		id="lord_AB8_8"
+		faction="Faction.clan_abanissa_8" />
+	<Hero
+		id="lord_AB8_9"
+		faction="Faction.clan_abanissa_8" />
+	<Hero
+		id="lord_AB8_10"
 		faction="Faction.clan_abanissa_8" />
 
 	<!-- ============================================== -->
@@ -1783,6 +2821,486 @@
 		id="lord_MM5_8"
 		faction="Faction.clan_mistymountainorcs_5"
 		spouse="Hero.lord_MM5_6" />
+  	<Hero
+		id="lord_MM6_1"
+		faction="Faction.clan_mistymountainorcs_6"
+		text="{=aom_lord_MM6_1_bio}Grishnak, chieftain of the Grobûrz orcs, holds the deep galleries and cold passes of the Misty Mountains for the Shadow." />
+	<Hero
+		id="lord_MM6_2"
+		spouse="Hero.lord_MM6_7"
+		faction="Faction.clan_mistymountainorcs_6"
+		text="{=aom_lord_MM6_2_bio}Ugluk of the Grobûrz warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM6_3"
+		spouse="Hero.lord_MM6_8"
+		faction="Faction.clan_mistymountainorcs_6"
+		text="{=aom_lord_MM6_3_bio}Mauhur of the Grobûrz warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM6_4"
+		faction="Faction.clan_mistymountainorcs_6"
+		text="{=aom_lord_MM6_4_bio}Grukhash of the Grobûrz warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM6_5"
+		faction="Faction.clan_mistymountainorcs_6"
+		text="{=aom_lord_MM6_5_bio}Bolg of the Grobûrz warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM6_6"
+		faction="Faction.clan_mistymountainorcs_6"
+		text="{=aom_lord_MM6_6_bio}Othrod of the Grobûrz warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM6_7"
+		spouse="Hero.lord_MM6_2"
+		faction="Faction.clan_mistymountainorcs_6"
+		text="{=aom_lord_MM6_7_bio}Mogza of the Grobûrz orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM6_8"
+		spouse="Hero.lord_MM6_3"
+		faction="Faction.clan_mistymountainorcs_6"
+		text="{=aom_lord_MM6_8_bio}Urgha of the Grobûrz orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM6_9"
+		faction="Faction.clan_mistymountainorcs_6"
+		text="{=aom_lord_MM6_9_bio}Shazga of the Grobûrz orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM6_10"
+		faction="Faction.clan_mistymountainorcs_6"
+		text="{=aom_lord_MM6_10_bio}Ulzga of the Grobûrz orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM7_1"
+		faction="Faction.clan_mistymountainorcs_7"
+		text="{=aom_lord_MM7_1_bio}Golfimbul, chieftain of the Skarnâk orcs, holds the deep galleries and cold passes of the Misty Mountains for the Shadow." />
+	<Hero
+		id="lord_MM7_2"
+		spouse="Hero.lord_MM7_7"
+		faction="Faction.clan_mistymountainorcs_7"
+		text="{=aom_lord_MM7_2_bio}Grakmaw of the Skarnâk warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM7_3"
+		spouse="Hero.lord_MM7_8"
+		faction="Faction.clan_mistymountainorcs_7"
+		text="{=aom_lord_MM7_3_bio}Skardush of the Skarnâk warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM7_4"
+		faction="Faction.clan_mistymountainorcs_7"
+		text="{=aom_lord_MM7_4_bio}Throgar of the Skarnâk warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM7_5"
+		faction="Faction.clan_mistymountainorcs_7"
+		text="{=aom_lord_MM7_5_bio}Burzlug of the Skarnâk warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM7_6"
+		faction="Faction.clan_mistymountainorcs_7"
+		text="{=aom_lord_MM7_6_bio}Mokrash of the Skarnâk warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM7_7"
+		spouse="Hero.lord_MM7_2"
+		faction="Faction.clan_mistymountainorcs_7"
+		text="{=aom_lord_MM7_7_bio}Skrelga of the Skarnâk orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM7_8"
+		spouse="Hero.lord_MM7_3"
+		faction="Faction.clan_mistymountainorcs_7"
+		text="{=aom_lord_MM7_8_bio}Hagra of the Skarnâk orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM7_9"
+		faction="Faction.clan_mistymountainorcs_7"
+		text="{=aom_lord_MM7_9_bio}Burzga of the Skarnâk orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM7_10"
+		faction="Faction.clan_mistymountainorcs_7"
+		text="{=aom_lord_MM7_10_bio}Gralka of the Skarnâk orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM8_1"
+		faction="Faction.clan_mistymountainorcs_8"
+		text="{=aom_lord_MM8_1_bio}Naglur, chieftain of the Maughâsh orcs, holds the deep galleries and cold passes of the Misty Mountains for the Shadow." />
+	<Hero
+		id="lord_MM8_2"
+		spouse="Hero.lord_MM8_7"
+		faction="Faction.clan_mistymountainorcs_8"
+		text="{=aom_lord_MM8_2_bio}Vrakdush of the Maughâsh warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM8_3"
+		spouse="Hero.lord_MM8_8"
+		faction="Faction.clan_mistymountainorcs_8"
+		text="{=aom_lord_MM8_3_bio}Hrumgash of the Maughâsh warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM8_4"
+		faction="Faction.clan_mistymountainorcs_8"
+		text="{=aom_lord_MM8_4_bio}Uzdur of the Maughâsh warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM8_5"
+		faction="Faction.clan_mistymountainorcs_8"
+		text="{=aom_lord_MM8_5_bio}Gorlak of the Maughâsh warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM8_6"
+		faction="Faction.clan_mistymountainorcs_8"
+		text="{=aom_lord_MM8_6_bio}Snagrat of the Maughâsh warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM8_7"
+		spouse="Hero.lord_MM8_2"
+		faction="Faction.clan_mistymountainorcs_8"
+		text="{=aom_lord_MM8_7_bio}Gnasha of the Maughâsh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM8_8"
+		spouse="Hero.lord_MM8_3"
+		faction="Faction.clan_mistymountainorcs_8"
+		text="{=aom_lord_MM8_8_bio}Vugra of the Maughâsh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM8_9"
+		faction="Faction.clan_mistymountainorcs_8"
+		text="{=aom_lord_MM8_9_bio}Mauza of the Maughâsh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM8_10"
+		faction="Faction.clan_mistymountainorcs_8"
+		text="{=aom_lord_MM8_10_bio}Snazga of the Maughâsh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM9_1"
+		faction="Faction.clan_mistymountainorcs_9"
+		text="{=aom_lord_MM9_1_bio}Durbghash, chieftain of the Throgmaw orcs, holds the deep galleries and cold passes of the Misty Mountains for the Shadow." />
+	<Hero
+		id="lord_MM9_2"
+		spouse="Hero.lord_MM9_7"
+		faction="Faction.clan_mistymountainorcs_9"
+		text="{=aom_lord_MM9_2_bio}Mughrim of the Throgmaw warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM9_3"
+		spouse="Hero.lord_MM9_8"
+		faction="Faction.clan_mistymountainorcs_9"
+		text="{=aom_lord_MM9_3_bio}Krithak of the Throgmaw warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM9_4"
+		faction="Faction.clan_mistymountainorcs_9"
+		text="{=aom_lord_MM9_4_bio}Lurtzag of the Throgmaw warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM9_5"
+		faction="Faction.clan_mistymountainorcs_9"
+		text="{=aom_lord_MM9_5_bio}Naznur of the Throgmaw warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM9_6"
+		faction="Faction.clan_mistymountainorcs_9"
+		text="{=aom_lord_MM9_6_bio}Ufgrish of the Throgmaw warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM9_7"
+		spouse="Hero.lord_MM9_2"
+		faction="Faction.clan_mistymountainorcs_9"
+		text="{=aom_lord_MM9_7_bio}Krimza of the Throgmaw orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM9_8"
+		spouse="Hero.lord_MM9_3"
+		faction="Faction.clan_mistymountainorcs_9"
+		text="{=aom_lord_MM9_8_bio}Throga of the Throgmaw orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM9_9"
+		faction="Faction.clan_mistymountainorcs_9"
+		text="{=aom_lord_MM9_9_bio}Lugza of the Throgmaw orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM9_10"
+		faction="Faction.clan_mistymountainorcs_9"
+		text="{=aom_lord_MM9_10_bio}Bargha of the Throgmaw orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM10_1"
+		faction="Faction.clan_mistymountainorcs_10"
+		text="{=aom_lord_MM10_1_bio}Brakghash, chieftain of the Lugbúrz orcs, holds the deep galleries and cold passes of the Misty Mountains for the Shadow." />
+	<Hero
+		id="lord_MM10_2"
+		spouse="Hero.lord_MM10_7"
+		faction="Faction.clan_mistymountainorcs_10"
+		text="{=aom_lord_MM10_2_bio}Morznak of the Lugbúrz warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM10_3"
+		spouse="Hero.lord_MM10_8"
+		faction="Faction.clan_mistymountainorcs_10"
+		text="{=aom_lord_MM10_3_bio}Gashzur of the Lugbúrz warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM10_4"
+		faction="Faction.clan_mistymountainorcs_10"
+		text="{=aom_lord_MM10_4_bio}Druzhak of the Lugbúrz warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM10_5"
+		faction="Faction.clan_mistymountainorcs_10"
+		text="{=aom_lord_MM10_5_bio}Krumbash of the Lugbúrz warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM10_6"
+		faction="Faction.clan_mistymountainorcs_10"
+		text="{=aom_lord_MM10_6_bio}Nargrim of the Lugbúrz warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM10_7"
+		spouse="Hero.lord_MM10_2"
+		faction="Faction.clan_mistymountainorcs_10"
+		text="{=aom_lord_MM10_7_bio}Hrunza of the Lugbúrz orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM10_8"
+		spouse="Hero.lord_MM10_3"
+		faction="Faction.clan_mistymountainorcs_10"
+		text="{=aom_lord_MM10_8_bio}Uzga of the Lugbúrz orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM10_9"
+		faction="Faction.clan_mistymountainorcs_10"
+		text="{=aom_lord_MM10_9_bio}Gashka of the Lugbúrz orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM10_10"
+		faction="Faction.clan_mistymountainorcs_10"
+		text="{=aom_lord_MM10_10_bio}Durza of the Lugbúrz orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM11_1"
+		faction="Faction.clan_mistymountainorcs_11"
+		text="{=aom_lord_MM11_1_bio}Skrunak, chieftain of the Hrakdûr orcs, holds the deep galleries and cold passes of the Misty Mountains for the Shadow." />
+	<Hero
+		id="lord_MM11_2"
+		spouse="Hero.lord_MM11_7"
+		faction="Faction.clan_mistymountainorcs_11"
+		text="{=aom_lord_MM11_2_bio}Vughar of the Hrakdûr warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM11_3"
+		spouse="Hero.lord_MM11_8"
+		faction="Faction.clan_mistymountainorcs_11"
+		text="{=aom_lord_MM11_3_bio}Lazgar of the Hrakdûr warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM11_4"
+		faction="Faction.clan_mistymountainorcs_11"
+		text="{=aom_lord_MM11_4_bio}Hrokmaw of the Hrakdûr warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM11_5"
+		faction="Faction.clan_mistymountainorcs_11"
+		text="{=aom_lord_MM11_5_bio}Buzgar of the Hrakdûr warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM11_6"
+		faction="Faction.clan_mistymountainorcs_11"
+		text="{=aom_lord_MM11_6_bio}Maukrim of the Hrakdûr warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM11_7"
+		spouse="Hero.lord_MM11_2"
+		faction="Faction.clan_mistymountainorcs_11"
+		text="{=aom_lord_MM11_7_bio}Naghza of the Hrakdûr orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM11_8"
+		spouse="Hero.lord_MM11_3"
+		faction="Faction.clan_mistymountainorcs_11"
+		text="{=aom_lord_MM11_8_bio}Vrelga of the Hrakdûr orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM11_9"
+		faction="Faction.clan_mistymountainorcs_11"
+		text="{=aom_lord_MM11_9_bio}Hroza of the Hrakdûr orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM11_10"
+		faction="Faction.clan_mistymountainorcs_11"
+		text="{=aom_lord_MM11_10_bio}Skarza of the Hrakdûr orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM12_1"
+		faction="Faction.clan_mistymountainorcs_12"
+		text="{=aom_lord_MM12_1_bio}Throkdush, chieftain of the Uzgnâsh orcs, holds the deep galleries and cold passes of the Misty Mountains for the Shadow." />
+	<Hero
+		id="lord_MM12_2"
+		spouse="Hero.lord_MM12_7"
+		faction="Faction.clan_mistymountainorcs_12"
+		text="{=aom_lord_MM12_2_bio}Gorash of the Uzgnâsh warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM12_3"
+		spouse="Hero.lord_MM12_8"
+		faction="Faction.clan_mistymountainorcs_12"
+		text="{=aom_lord_MM12_3_bio}Maukhash of the Uzgnâsh warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM12_4"
+		faction="Faction.clan_mistymountainorcs_12"
+		text="{=aom_lord_MM12_4_bio}Skarnash of the Uzgnâsh warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM12_5"
+		faction="Faction.clan_mistymountainorcs_12"
+		text="{=aom_lord_MM12_5_bio}Throgash of the Uzgnâsh warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM12_6"
+		faction="Faction.clan_mistymountainorcs_12"
+		text="{=aom_lord_MM12_6_bio}Lugash of the Uzgnâsh warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM12_7"
+		spouse="Hero.lord_MM12_2"
+		faction="Faction.clan_mistymountainorcs_12"
+		text="{=aom_lord_MM12_7_bio}Lazga of the Uzgnâsh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM12_8"
+		spouse="Hero.lord_MM12_3"
+		faction="Faction.clan_mistymountainorcs_12"
+		text="{=aom_lord_MM12_8_bio}Brughza of the Uzgnâsh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM12_9"
+		faction="Faction.clan_mistymountainorcs_12"
+		text="{=aom_lord_MM12_9_bio}Nurzga of the Uzgnâsh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM12_10"
+		faction="Faction.clan_mistymountainorcs_12"
+		text="{=aom_lord_MM12_10_bio}Gulza of the Uzgnâsh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM13_1"
+		faction="Faction.clan_mistymountainorcs_13"
+		text="{=aom_lord_MM13_1_bio}Burzash, chieftain of the Vrakmaw orcs, holds the deep galleries and cold passes of the Misty Mountains for the Shadow." />
+	<Hero
+		id="lord_MM13_2"
+		spouse="Hero.lord_MM13_7"
+		faction="Faction.clan_mistymountainorcs_13"
+		text="{=aom_lord_MM13_2_bio}Hrakash of the Vrakmaw warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM13_3"
+		spouse="Hero.lord_MM13_8"
+		faction="Faction.clan_mistymountainorcs_13"
+		text="{=aom_lord_MM13_3_bio}Uzash of the Vrakmaw warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM13_4"
+		faction="Faction.clan_mistymountainorcs_13"
+		text="{=aom_lord_MM13_4_bio}Grishash of the Vrakmaw warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM13_5"
+		faction="Faction.clan_mistymountainorcs_13"
+		text="{=aom_lord_MM13_5_bio}Mogash of the Vrakmaw warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM13_6"
+		faction="Faction.clan_mistymountainorcs_13"
+		text="{=aom_lord_MM13_6_bio}Nazash of the Vrakmaw warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM13_7"
+		spouse="Hero.lord_MM13_2"
+		faction="Faction.clan_mistymountainorcs_13"
+		text="{=aom_lord_MM13_7_bio}Razga of the Vrakmaw orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM13_8"
+		spouse="Hero.lord_MM13_3"
+		faction="Faction.clan_mistymountainorcs_13"
+		text="{=aom_lord_MM13_8_bio}Mughza of the Vrakmaw orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM13_9"
+		faction="Faction.clan_mistymountainorcs_13"
+		text="{=aom_lord_MM13_9_bio}Drozga of the Vrakmaw orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM13_10"
+		faction="Faction.clan_mistymountainorcs_13"
+		text="{=aom_lord_MM13_10_bio}Krunza of the Vrakmaw orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM14_1"
+		faction="Faction.clan_mistymountainorcs_14"
+		text="{=aom_lord_MM14_1_bio}Vrakash, chieftain of the Gashrim orcs, holds the deep galleries and cold passes of the Misty Mountains for the Shadow." />
+	<Hero
+		id="lord_MM14_2"
+		spouse="Hero.lord_MM14_7"
+		faction="Faction.clan_mistymountainorcs_14"
+		text="{=aom_lord_MM14_2_bio}Durbash of the Gashrim warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM14_3"
+		spouse="Hero.lord_MM14_8"
+		faction="Faction.clan_mistymountainorcs_14"
+		text="{=aom_lord_MM14_3_bio}Krithash of the Gashrim warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM14_4"
+		faction="Faction.clan_mistymountainorcs_14"
+		text="{=aom_lord_MM14_4_bio}Lurtash of the Gashrim warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM14_5"
+		faction="Faction.clan_mistymountainorcs_14"
+		text="{=aom_lord_MM14_5_bio}Ufthash of the Gashrim warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM14_6"
+		faction="Faction.clan_mistymountainorcs_14"
+		text="{=aom_lord_MM14_6_bio}Brakash of the Gashrim warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM14_7"
+		spouse="Hero.lord_MM14_2"
+		faction="Faction.clan_mistymountainorcs_14"
+		text="{=aom_lord_MM14_7_bio}Nashga of the Gashrim orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM14_8"
+		spouse="Hero.lord_MM14_3"
+		faction="Faction.clan_mistymountainorcs_14"
+		text="{=aom_lord_MM14_8_bio}Vughza of the Gashrim orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM14_9"
+		faction="Faction.clan_mistymountainorcs_14"
+		text="{=aom_lord_MM14_9_bio}Snurga of the Gashrim orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM14_10"
+		faction="Faction.clan_mistymountainorcs_14"
+		text="{=aom_lord_MM14_10_bio}Hralga of the Gashrim orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM15_1"
+		faction="Faction.clan_mistymountainorcs_15"
+		text="{=aom_lord_MM15_1_bio}Morzash, chieftain of the Morzûk orcs, holds the deep galleries and cold passes of the Misty Mountains for the Shadow." />
+	<Hero
+		id="lord_MM15_2"
+		spouse="Hero.lord_MM15_7"
+		faction="Faction.clan_mistymountainorcs_15"
+		text="{=aom_lord_MM15_2_bio}Gashash of the Morzûk warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM15_3"
+		spouse="Hero.lord_MM15_8"
+		faction="Faction.clan_mistymountainorcs_15"
+		text="{=aom_lord_MM15_3_bio}Snagash of the Morzûk warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM15_4"
+		faction="Faction.clan_mistymountainorcs_15"
+		text="{=aom_lord_MM15_4_bio}Lagdash of the Morzûk warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM15_5"
+		faction="Faction.clan_mistymountainorcs_15"
+		text="{=aom_lord_MM15_5_bio}Shagash of the Morzûk warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM15_6"
+		faction="Faction.clan_mistymountainorcs_15"
+		text="{=aom_lord_MM15_6_bio}Gromash of the Morzûk warband is a thick-necked orc captain, his cleaver notched from the raiding of the mountain roads." />
+	<Hero
+		id="lord_MM15_7"
+		spouse="Hero.lord_MM15_2"
+		faction="Faction.clan_mistymountainorcs_15"
+		text="{=aom_lord_MM15_7_bio}Bolzga of the Morzûk orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM15_8"
+		spouse="Hero.lord_MM15_3"
+		faction="Faction.clan_mistymountainorcs_15"
+		text="{=aom_lord_MM15_8_bio}Ufza of the Morzûk orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM15_9"
+		faction="Faction.clan_mistymountainorcs_15"
+		text="{=aom_lord_MM15_9_bio}Gorza of the Morzûk orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM15_10"
+		faction="Faction.clan_mistymountainorcs_15"
+		text="{=aom_lord_MM15_10_bio}Maukhza of the Morzûk orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM1_9"
+		faction="Faction.clan_mistymountainorcs_1"
+		text="{=aom_lord_MM1_9_bio}Skarnza of the Bûrzghâsh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM1_10"
+		faction="Faction.clan_mistymountainorcs_1"
+		text="{=aom_lord_MM1_10_bio}Throgza of the Bûrzghâsh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM2_9"
+		faction="Faction.clan_mistymountainorcs_2"
+		text="{=aom_lord_MM2_9_bio}Burzza of the Krimpâsh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM2_10"
+		faction="Faction.clan_mistymountainorcs_2"
+		text="{=aom_lord_MM2_10_bio}Hrakza of the Krimpâsh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM3_9"
+		faction="Faction.clan_mistymountainorcs_3"
+		text="{=aom_lord_MM3_9_bio}Uzza of the Dushnakh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM3_10"
+		faction="Faction.clan_mistymountainorcs_3"
+		text="{=aom_lord_MM3_10_bio}Grishza of the Dushnakh orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM4_9"
+		faction="Faction.clan_mistymountainorcs_4"
+		text="{=aom_lord_MM4_9_bio}Nazza of the Morgrim orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM4_10"
+		faction="Faction.clan_mistymountainorcs_4"
+		text="{=aom_lord_MM4_10_bio}Vrakza of the Morgrim orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM5_9"
+		faction="Faction.clan_mistymountainorcs_5"
+		text="{=aom_lord_MM5_9_bio}Durbza of the Vargrim orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
+	<Hero
+		id="lord_MM5_10"
+		faction="Faction.clan_mistymountainorcs_5"
+		text="{=aom_lord_MM5_10_bio}Krithza of the Vargrim orcs is a snarling she-orc of the deep places, as quick with the knife as any of her brood." />
   <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
   <!-- TAOM-NEWFACTIONS:bluecraig:BEGIN -->
 	<Hero

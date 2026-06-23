@@ -1130,7 +1130,7 @@
 	<xsl:template match="Hero[@id='lord_1_177']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_177}Honoratus serves as an officer in the armies of Mordor.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_177}Khorgath serves as a high officer in the armies of Mordor, a son of Sauron raised to the muster of war. He drives his legions toward the lands of Men with the cold patience of one who knows the Eye is always watching.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_17</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_18</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -1140,7 +1140,7 @@
 	<xsl:template match="Hero[@id='lord_1_29']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_29}Sanion is a Black Numenorean captain who commands a fortress.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_29}Herumarth, a Black Númenórean of Sauron's own blood, commands a fortress on the marches of Mordor. Cold and proud, he keeps the old Númenórean cruelty sharpened by the Shadow that sired him.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_17</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_18</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -1150,7 +1150,7 @@
 	<xsl:template match="Hero[@id='lord_1_17']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_17}Sauron the Great, Dark Lord of Mordor. This entry exists only to display his terrible armor.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_17}Sauron the Great, Dark Lord of Mordor and Lord of the Rings, has risen again. From the black tower of Barad-dûr his Eye sweeps the lands of the West, and the legions of Gorgoroth muster beneath his banner. The Free Peoples reckoned him beaten, but the Shadow only bided its time. Now he marches to break them and bind all of Middle-earth under one dominion. Let the kings of Men despair, for the age of Sauron is come.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -1158,7 +1158,7 @@
 	<xsl:template match="Hero[@id='lord_1_18']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_18}Jathea serves in the dark hierarchy of Mordor.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_18}Morgha stands at the Dark Lord's side, mistress of the inner hierarchy of Lugbúrz. Her word carries the weight of the Eye, and the captains of Mordor fear her counsel as much as Sauron's wrath.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
 	</xsl:template>
@@ -1166,7 +1166,7 @@
 	<xsl:template match="Hero[@id='lord_1_39']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'father' and local-name() != 'mother']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_39}Debana is a servant of the Shadow, skilled in dark arts.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_39}Naktharil, daughter of the Dark Lord, is steeped in the dark arts of Dol Guldur and Lugbúrz. She walks the Shadow's hidden roads, and those who cross her are not heard from again.</xsl:attribute>
 			<xsl:attribute name="father">Hero.lord_1_17</xsl:attribute>
 			<xsl:attribute name="mother">Hero.lord_1_18</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -1195,7 +1195,7 @@
 	<xsl:template match="Hero[@id='lord_1_49']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_49}Obron leads a company of Mordor orcs.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_49}Skarnak leads a company of Mordor orcs, a brutal captain who claws his way up the muster by breaking those above him. The lash and the Eye are the only laws he keeps.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_49_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1294,7 +1294,7 @@
 	<xsl:template match="Hero[@id='lord_1_74']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_74}Zachanis commands a regiment of orcs.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_74}Bûrznak commands a regiment of Mordor orcs, a mounted captain who rides down stragglers and deserters alike.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_74_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1331,7 +1331,7 @@
 	<xsl:template match="Hero[@id='lord_1_68']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_68}Tharos is an Orc captain serving in the pass.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_68}Gorthak is an orc captain holding the high pass into Mordor, watchful and merciless to any who would slip past the Eye.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_68_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1360,7 +1360,7 @@
 	<xsl:template match="Hero[@id='lord_1_69']">
 		<xsl:copy>
 			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse']"/>
-			<xsl:attribute name="text">{=TAOM_hero_1_69}Niphon commands a fortress on the borders of Mordor.</xsl:attribute>
+			<xsl:attribute name="text">{=TAOM_hero_1_69}Grukhash commands a fortress on the borders of Mordor, a wary keeper of the Shadow's marches.</xsl:attribute>
 			<xsl:attribute name="spouse">Hero.lord_1_69_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>

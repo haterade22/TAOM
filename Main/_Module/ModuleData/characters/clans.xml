@@ -355,7 +355,7 @@
 		color="FFAD6D29"
 		color2="FF471016"
 		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_12_template"
-		banner_key="11.116.116.2000.2000.764.764.1.0.0.17280.15.116.600.600.755.755.1.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.14013.249.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_13"
 		name="{=aom_clan_khuzait_13_name}Adekig"
@@ -433,7 +433,7 @@
 		color="FFC0962E"
 		color2="FF5A1A14"
 		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_18_template"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.14011.2002.171.700.700.764.764.0.0.0" />
+		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.14011.249.171.700.700.764.764.0.0.0" />
   <Faction
 		id="clan_khuzait_19"
 		name="{=aom_clan_khuzait_19_name}Bozorganith"
@@ -446,7 +446,7 @@
 		color="FFC39D2F"
 		color2="FF5D1D15"
 		default_party_template="PartyTemplate.kingdom_hero_party_rhun_khuzait_19_template"
-		banner_key="11.2001.2001.1528.1528.764.764.1.0.0.14012.2002.171.700.700.764.764.0.0.0" />
+		banner_key="11.2015.2015.1528.1528.764.764.1.0.0.14002.249.171.591.591.764.764.0.0.0" />
 
   <!-- ============================================== -->
   <!-- EREBOR CLANS (erebor culture)                  -->
@@ -970,6 +970,81 @@
 		color2="FF857D4D"
 		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_gundabad_5_template"
 		banner_key="11.331.331.1528.1528.764.764.1.0.0.19002.2004.171.700.700.764.764.0.0.0" />
+
+  <!-- Grishûk -->
+  <Faction
+		id="clan_gundabad_6"
+		initial_home_settlement="Settlement.town_G1"
+		name="{=aom_clan_gundabad_6_name}Grishûk"
+		tier="3"
+		owner="Hero.lord_G6_1"
+		culture="Culture.gundabad"
+		super_faction="Kingdom.gundabad"
+		is_noble="true"
+		color="FF1F1B18"
+		color2="FF5E4636"
+		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+
+  <!-- Lugdush -->
+  <Faction
+		id="clan_gundabad_7"
+		initial_home_settlement="Settlement.town_G1"
+		name="{=aom_clan_gundabad_7_name}Lugdush"
+		tier="3"
+		owner="Hero.lord_G7_1"
+		culture="Culture.gundabad"
+		super_faction="Kingdom.gundabad"
+		is_noble="true"
+		color="FF26221C"
+		color2="FF6B5238"
+		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+
+  <!-- Maukrim -->
+  <Faction
+		id="clan_gundabad_8"
+		initial_home_settlement="Settlement.town_G1"
+		name="{=aom_clan_gundabad_8_name}Maukrim"
+		tier="3"
+		owner="Hero.lord_G8_1"
+		culture="Culture.gundabad"
+		super_faction="Kingdom.gundabad"
+		is_noble="true"
+		color="FF302B24"
+		color2="FF74603E"
+		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+
+  <!-- Skarzag -->
+  <Faction
+		id="clan_gundabad_9"
+		initial_home_settlement="Settlement.town_G1"
+		name="{=aom_clan_gundabad_9_name}Skarzag"
+		tier="3"
+		owner="Hero.lord_G9_1"
+		culture="Culture.gundabad"
+		super_faction="Kingdom.gundabad"
+		is_noble="true"
+		color="FF3A352C"
+		color2="FF7E6B45"
+		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+
+  <!-- Throkmaw -->
+  <Faction
+		id="clan_gundabad_10"
+		initial_home_settlement="Settlement.town_G1"
+		name="{=aom_clan_gundabad_10_name}Throkmaw"
+		tier="3"
+		owner="Hero.lord_G10_1"
+		culture="Culture.gundabad"
+		super_faction="Kingdom.gundabad"
+		is_noble="true"
+		color="FF45413A"
+		color2="FF8A8050"
+		default_party_template="PartyTemplate.kingdom_hero_party_gundabad_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
 
   <!-- ============================================== -->
   <!-- UMBAR CLANS (umbar culture)                    -->
@@ -1646,6 +1721,136 @@
 		color="FF3C3C3C"
 		color2="FF857D4D"
 		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_mistymountainorcs_5_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+    <Faction
+		id="clan_mistymountainorcs_6"
+		initial_home_settlement="Settlement.town_MM1"
+		name="{=aom_clan_mistymountainorcs_6_name}Grobûrz"
+		tier="3"
+		owner="Hero.lord_MM6_1"
+		culture="Culture.mistymountainorcs"
+		super_faction="Kingdom.mistymountainorcs"
+		is_noble="true"
+		color="FF181818"
+		color2="FF573D33"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+  <Faction
+		id="clan_mistymountainorcs_7"
+		initial_home_settlement="Settlement.town_MM2"
+		name="{=aom_clan_mistymountainorcs_7_name}Skarnâk"
+		tier="3"
+		owner="Hero.lord_MM7_1"
+		culture="Culture.mistymountainorcs"
+		super_faction="Kingdom.mistymountainorcs"
+		is_noble="true"
+		color="FF212121"
+		color2="FF634B39"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+  <Faction
+		id="clan_mistymountainorcs_8"
+		initial_home_settlement="Settlement.town_MM3"
+		name="{=aom_clan_mistymountainorcs_8_name}Maughâsh"
+		tier="3"
+		owner="Hero.lord_MM8_1"
+		culture="Culture.mistymountainorcs"
+		super_faction="Kingdom.mistymountainorcs"
+		is_noble="true"
+		color="FF2A2A2A"
+		color2="FF6E5A40"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+  <Faction
+		id="clan_mistymountainorcs_9"
+		initial_home_settlement="Settlement.castle_MM4"
+		name="{=aom_clan_mistymountainorcs_9_name}Throgmaw"
+		tier="3"
+		owner="Hero.lord_MM9_1"
+		culture="Culture.mistymountainorcs"
+		super_faction="Kingdom.mistymountainorcs"
+		is_noble="true"
+		color="FF333333"
+		color2="FF796B47"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+  <Faction
+		id="clan_mistymountainorcs_10"
+		initial_home_settlement="Settlement.castle_MM6"
+		name="{=aom_clan_mistymountainorcs_10_name}Lugbúrz"
+		tier="3"
+		owner="Hero.lord_MM10_1"
+		culture="Culture.mistymountainorcs"
+		super_faction="Kingdom.mistymountainorcs"
+		is_noble="true"
+		color="FF3C3C3C"
+		color2="FF857D4D"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+  <Faction
+		id="clan_mistymountainorcs_11"
+		initial_home_settlement="Settlement.town_MM1"
+		name="{=aom_clan_mistymountainorcs_11_name}Hrakdûr"
+		tier="3"
+		owner="Hero.lord_MM11_1"
+		culture="Culture.mistymountainorcs"
+		super_faction="Kingdom.mistymountainorcs"
+		is_noble="true"
+		color="FF181818"
+		color2="FF573D33"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+  <Faction
+		id="clan_mistymountainorcs_12"
+		initial_home_settlement="Settlement.town_MM2"
+		name="{=aom_clan_mistymountainorcs_12_name}Uzgnâsh"
+		tier="3"
+		owner="Hero.lord_MM12_1"
+		culture="Culture.mistymountainorcs"
+		super_faction="Kingdom.mistymountainorcs"
+		is_noble="true"
+		color="FF212121"
+		color2="FF634B39"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+  <Faction
+		id="clan_mistymountainorcs_13"
+		initial_home_settlement="Settlement.town_MM3"
+		name="{=aom_clan_mistymountainorcs_13_name}Vrakmaw"
+		tier="3"
+		owner="Hero.lord_MM13_1"
+		culture="Culture.mistymountainorcs"
+		super_faction="Kingdom.mistymountainorcs"
+		is_noble="true"
+		color="FF2A2A2A"
+		color2="FF6E5A40"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+  <Faction
+		id="clan_mistymountainorcs_14"
+		initial_home_settlement="Settlement.castle_MM4"
+		name="{=aom_clan_mistymountainorcs_14_name}Gashrim"
+		tier="3"
+		owner="Hero.lord_MM14_1"
+		culture="Culture.mistymountainorcs"
+		super_faction="Kingdom.mistymountainorcs"
+		is_noble="true"
+		color="FF333333"
+		color2="FF796B47"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_template"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+  <Faction
+		id="clan_mistymountainorcs_15"
+		initial_home_settlement="Settlement.castle_MM6"
+		name="{=aom_clan_mistymountainorcs_15_name}Morzûk"
+		tier="3"
+		owner="Hero.lord_MM15_1"
+		culture="Culture.mistymountainorcs"
+		super_faction="Kingdom.mistymountainorcs"
+		is_noble="true"
+		color="FF3C3C3C"
+		color2="FF857D4D"
+		default_party_template="PartyTemplate.kingdom_hero_party_mistymountainorcs_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <!-- TAOM-NEWFACTIONS:mistymountainorcs:END -->
   <!-- TAOM-NEWFACTIONS:bluecraig:BEGIN -->

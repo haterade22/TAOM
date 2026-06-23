@@ -1354,9 +1354,9 @@
 
 	<string id="aom_lord_1_17_name" text="{=aom_lord_1_17_name}Sauron" />
 
-	<string id="aom_lord_1_177_name" text="{=aom_lord_1_177_name}Honoratus" />
+	<string id="aom_lord_1_177_name" text="{=aom_lord_1_177_name}Khorgath" />
 
-	<string id="aom_lord_1_18_name" text="{=aom_lord_1_18_name}Jathea" />
+	<string id="aom_lord_1_18_name" text="{=aom_lord_1_18_name}Morgha" />
 
 	<string id="aom_lord_1_21_name" text="{=aom_lord_1_21_name}Fenrik the Red Wolf" />
 
@@ -1374,7 +1374,7 @@
 
 	<string id="aom_lord_1_28_name" text="{=aom_lord_1_28_name}Nazgûl, The Betrayer" />
 
-	<string id="aom_lord_1_29_name" text="{=aom_lord_1_29_name}Sanion" />
+	<string id="aom_lord_1_29_name" text="{=aom_lord_1_29_name}Herumarth" />
 
 	<string id="aom_lord_1_31_name" text="{=aom_lord_1_31_name}Zrsa Blackfang" />
 
@@ -1392,7 +1392,7 @@
 
 	<string id="aom_lord_1_38_name" text="{=aom_lord_1_38_name}Nazgûl, the Undying" />
 
-	<string id="aom_lord_1_39_name" text="{=aom_lord_1_39_name}Debana" />
+	<string id="aom_lord_1_39_name" text="{=aom_lord_1_39_name}Naktharil" />
 
 	<string id="aom_lord_1_41_name" text="{=aom_lord_1_41_name}Beregund Wolfborn" />
 
@@ -1406,7 +1406,7 @@
 
 	<string id="aom_lord_1_47_name" text="{=aom_lord_1_47_name}Ulbos" />
 
-	<string id="aom_lord_1_49_name" text="{=aom_lord_1_49_name}Obron" />
+	<string id="aom_lord_1_49_name" text="{=aom_lord_1_49_name}Skarnak" />
 
 	<string id="aom_lord_1_20_name" text="{=aom_lord_1_20_name}Astrid Bearclaw" />
 
@@ -2358,21 +2358,21 @@
 
 	<string id="TAOM_hero_1_48_3" text="{=TAOM_hero_1_48_3}The Shadow of Umbar haunts the southern coasts." />
 
-	<string id="TAOM_hero_1_177" text="{=TAOM_hero_1_177}Honoratus serves as an officer in the armies of Mordor." />
+	<string id="TAOM_hero_1_177" text="{=TAOM_hero_1_177}Khorgath serves as a high officer in the armies of Mordor, a son of Sauron raised to the muster of war. He drives his legions toward the lands of Men with the cold patience of one who knows the Eye is always watching." />
 
-	<string id="TAOM_hero_1_29" text="{=TAOM_hero_1_29}Sanion is a Black Numenorean captain who commands a fortress." />
+	<string id="TAOM_hero_1_29" text="{=TAOM_hero_1_29}Herumarth, a Black Númenórean of Sauron's own blood, commands a fortress on the marches of Mordor. Cold and proud, he keeps the old Númenórean cruelty sharpened by the Shadow that sired him." />
 
-	<string id="TAOM_hero_1_17" text="{=TAOM_hero_1_17}Sauron the Great, Dark Lord of Mordor. This entry exists only to display his terrible armor." />
+	<string id="TAOM_hero_1_17" text="{=TAOM_hero_1_17}Sauron the Great, Dark Lord of Mordor and Lord of the Rings, has risen again. From the black tower of Barad-dûr his Eye sweeps the lands of the West, and the legions of Gorgoroth muster beneath his banner. The Free Peoples reckoned him beaten, but the Shadow only bided its time. Now he marches to break them and bind all of Middle-earth under one dominion. Let the kings of Men despair, for the age of Sauron is come." />
 
-	<string id="TAOM_hero_1_18" text="{=TAOM_hero_1_18}Jathea serves in the dark hierarchy of Mordor." />
+	<string id="TAOM_hero_1_18" text="{=TAOM_hero_1_18}Morgha stands at the Dark Lord's side, mistress of the inner hierarchy of Lugbúrz. Her word carries the weight of the Eye, and the captains of Mordor fear her counsel as much as Sauron's wrath." />
 
-	<string id="TAOM_hero_1_39" text="{=TAOM_hero_1_39}Debana is a servant of the Shadow, skilled in dark arts." />
+	<string id="TAOM_hero_1_39" text="{=TAOM_hero_1_39}Naktharil, daughter of the Dark Lord, is steeped in the dark arts of Dol Guldur and Lugbúrz. She walks the Shadow's hidden roads, and those who cross her are not heard from again." />
 
 	<string id="TAOM_hero_1_30" text="{=TAOM_hero_1_30}Gothmog, Lieutenant of Morgul, commands the armies of Mordor at the Pelennor Fields. A brutal and cunning Orc, he leads from the front." />
 
 	<string id="TAOM_hero_1_30_1" text="{=TAOM_hero_1_30_1}Svala Redfang is an Orc captain under Gothmog's command." />
 
-	<string id="TAOM_hero_1_49" text="{=TAOM_hero_1_49}Obron leads a company of Mordor orcs." />
+	<string id="TAOM_hero_1_49" text="{=TAOM_hero_1_49}Skarnak leads a company of Mordor orcs, a brutal captain who claws his way up the muster by breaking those above him. The lash and the Eye are the only laws he keeps." />
 
 	<string id="TAOM_hero_1_49_1" text="{=TAOM_hero_1_49_1}Tristania serves in the dark forces." />
 
@@ -2392,7 +2392,7 @@
 
 	<string id="TAOM_hero_1_63_1" text="{=TAOM_hero_1_63_1}Valaria serves in the citadel of the dead." />
 
-	<string id="TAOM_hero_1_74" text="{=TAOM_hero_1_74}Zachanis commands a regiment of orcs." />
+	<string id="TAOM_hero_1_74" text="{=TAOM_hero_1_74}Bûrznak commands a regiment of Mordor orcs, a mounted captain who rides down stragglers and deserters alike." />
 
 	<string id="TAOM_hero_1_74_1" text="{=TAOM_hero_1_74_1}Zena serves the dark masters of Mordor." />
 
@@ -2400,13 +2400,13 @@
 
 	<string id="TAOM_hero_1_54_1" text="{=TAOM_hero_1_54_1}Constalia serves in the tower of Cirith Ungol." />
 
-	<string id="TAOM_hero_1_68" text="{=TAOM_hero_1_68}Tharos is an Orc captain serving in the pass." />
+	<string id="TAOM_hero_1_68" text="{=TAOM_hero_1_68}Gorthak is an orc captain holding the high pass into Mordor, watchful and merciless to any who would slip past the Eye." />
 
 	<string id="TAOM_hero_1_68_1" text="{=TAOM_hero_1_68_1}Silvina serves in the garrison of the spider's pass." />
 
 	<string id="TAOM_hero_1_69_2" text="{=TAOM_hero_1_69_2}Dorathila serves in the dark armies." />
 
-	<string id="TAOM_hero_1_69" text="{=TAOM_hero_1_69}Niphon commands a fortress on the borders of Mordor." />
+	<string id="TAOM_hero_1_69" text="{=TAOM_hero_1_69}Grukhash commands a fortress on the borders of Mordor, a wary keeper of the Shadow's marches." />
 
 	<string id="TAOM_hero_1_69_1" text="{=TAOM_hero_1_69_1}Areliana serves in the borderlands." />
 
