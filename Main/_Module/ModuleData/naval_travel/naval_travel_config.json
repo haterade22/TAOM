@@ -1,0 +1,11 @@
+{
+  "enabled": true,
+  "applyToPlayer": true,
+  "applyToAi": true,
+  "embarkThresholdDistance": 0.5,
+  "navalTerrainTypeIds": [8, 10, 11, 18, 19, 23, 24, 25],
+  "renderBoatVisual": true,
+  "boatMeshName": "boat_sail_on",
+  "boatScale": 0.4,
+  "sailModifierKey": "LeftAlt"
+}

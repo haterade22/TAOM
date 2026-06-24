@@ -23,6 +23,7 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 15 | 2026-04-05 | Wave4B (Time+ChildGen+Startup+Menu+Enc+BattleScenes) | no-ship | agree | 3 (1 HIGH, 2 MEDIUM) | 0 | 0 | v6 |
 | 16 | 2026-04-06 | Infrastructure (Adapters+Core+SubModule+IoC) | no-ship | agree | 3 (2 HIGH, 1 MEDIUM) | 0 | 0 | v6 |
 | 17 | 2026-04-07 | SpecialResources (adversarial vs TOR_Core) | needs-attention | partial-agree | 2 confirmed (sprite, storage) | 1 (kingdom_id) | 0 | v6-adversarial |
+| 18 | 2026-06-24 | SaveLoadTableauGuard (#299) | issues-found | agree | 1 confirmed (CRITICAL patch-apply timing) + 1 LOW | 0 | 0 | adversarial-xhigh |
 
 ## Metrics
 
@@ -1360,6 +1361,18 @@ New feature: a `DefaultSettlementFoodModel` override fixing the Troop-Weight gar
 **Codex (gpt-5.5 xhigh): 0 CRITICAL / 0 HIGH / 0 MED / 1 LOW.** All 6 Known Suspects CONFIRMED clean with file:line evidence; Codex independently hand-computed the worked scenario TWO ways (base-plus-delta vs intended-absolute) → same +2.333, proving no double-count, and scanned `troop_weights.xml` confirming 0 weights < 1.0 (so the `weighted > raw` guard can't under-correct). The lone LOW was a doc/contract inaccuracy, not a logic bug: the `SettlementFoodConfig` summary comment said "Production knobs ADD food", but `TownBaseFood`/`CastleBaseFood`/`VillageFoodMultiplier` are absolute REPLACEMENT values (default = vanilla) — `townBaseFood=0` passes `[0,10000]`, then the service applies `0 − 15` (a reduction). Fixed (Codex's option b): corrected the comment + feature-doc to state replacement-vs-additive semantics (knobs tune both directions, consistent with the divisors; only `flatFoodBonus` is purely additive), + regression test `ComputeFoodDelta_BelowVanillaTownBaseFood_ProducesNegativeDelta` (28 tests green). No production-logic change — the behavior was correct, the prose was not.
 
 **Process:** both reviews ran BEFORE any commit (feature uncommitted). Reference doc `docs/reference/engine/settlement-economy-food-prosperity.md` + feature doc + INDEX + CHANGELOG written. RCA: `docs/reviews/rca-settlement-food-2026-06-18.md`. CLAUDE.md table row + GitHub issue pending user OK (config-protection hook blocked CLAUDE.md). Codex prompt + raw output: `docs/reviews/codex-adversarial-settlement-food-2026-06-18.{prompt.md,md}`.
+
+---
+
+## Review 62 — NavalTravel (TaomPartyNavigationModel) (2026-06-24)
+
+New feature: unlocks Bannerlord's base-engine naval-travel system (campaign-map water pathing, embark/disembark, native party-as-ship rendering) for everyone WITHOUT the paid Naval DLC, by overriding `DefaultPartyNavigationModel`. The override is a faithful port of the official NavalDLC's internal `NavalPartyNavigationModel` (same naval terrain rules, `0.5` embark threshold, naval-aware `CanPlayerNavigateToPosition`) with the **single change** that the ship-ownership capability gate becomes a TAOM config/MCM gate. Thin model → pure `INavalTravelService` → MCM-over-JSON settings → validated config provider. No Harmony patch (the engine's `NavigationHelper.CanPlayerNavigateToPosition` routes through the model).
+
+**Deep-review (5 agents, then a focused 3-agent re-pass after fixes): clean.** Standards PASS (override body = boundary-extract-then-delegate). Compat 21/21 verified against installed v1.4.6 (incl. the `GetPathDistanceBetweenAIFaces` `out float` 7th-arg signature). Data-flow 7 traced / 0 gaps — but it traced TAOM-internal flow and reasoned the ungated terrain methods "harmless," missing the engine-internal cross-party propagation. Efficiency: 2 micro-opts (O(n) terrain scan → ctor `HashSet`; `new int[0]` → `Array.Empty`), both fixed.
+
+**Codex (gpt-5.5 xhigh): 0 CRITICAL / 1 HIGH / 1 MED / 0 LOW.** 4 of 6 Known Suspects DISPUTED with file:line evidence (port fidelity + arg/cost order, GameModel replacement via end-of-list `GetGameModel` scan, terrain-set faithfulness, snapshot-vs-live config). **HIGH (highest-value, all deep-review agents missed across both passes):** `HasNavalNavigationCapability` keyed only on `IsMainParty`; the engine force-propagates `IsCurrentlyAtSea` down the army attachment tree (`MobileParty.cs:493-496`) and recomputes `NavigationCapability` per party (`:464-479`), so with `ApplyToAi=false` a player-led army's attached AI parties are dragged to sea with `Default`-only nav → stranded/desync. Codex DECOMPILED `MobileParty` to prove the propagation rather than assert it. **MED:** live-disabling mid-voyage soft-locked an at-sea party. Both fixed via the unified pure `INavalTravelService.HasNavalCapability(isMain, isAtSea, attachedLeaderCanSail)` — already-at-sea ⇒ keep capability (reach land); else gates govern embark-from-land; else inherit army leader capability — pinned by a 9-cell matrix test (suite 33 → 42, all green).
+
+**Process:** both reviews ran BEFORE any commit (feature uncommitted). Feature doc + CHANGELOG + GitHub issue #296 + CLAUDE.md→v1.4.6 done. RCA: `docs/reviews/rca-navaltravel-2026-06-24.md`; memory `feedback_gamemodel_capability_engine_propagation`. Codex prompt + raw output: `docs/reviews/codex-adversarial-navaltravel-2026-06-24.{prompt.md,md}`.
 
 ---
 

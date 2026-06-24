@@ -530,6 +530,23 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When ON (default), AI lords are also blocked from recruiting in opposed-alignment settlements. When OFF, AI recruits freely (you are still gated if 'Apply To Player' is on).")]
     public bool EnableAlignmentRecruitmentAi { get; set; } = true;
 
+    // --- Naval Travel ---
+
+    [SettingPropertyGroup("World/Naval Travel", GroupOrder = 37)]
+    [SettingPropertyBool("Enable Naval Travel", Order = 0,
+        HintText = "When enabled, parties can sail across water on the campaign map (the engine's native naval travel, unlocked without the Naval DLC). When off, movement is vanilla land-only.")]
+    public bool EnableNavalTravel { get; set; } = true;
+
+    [SettingPropertyGroup("World/Naval Travel")]
+    [SettingPropertyBool("Apply To Player", Order = 1,
+        HintText = "When ON (default), YOUR party can sail. When OFF, you stay land-bound (AI still sails if 'Apply To AI Lords' is on). The master 'Enable Naval Travel' toggle off disables sailing for everyone.")]
+    public bool NavalTravelApplyToPlayer { get; set; } = true;
+
+    [SettingPropertyGroup("World/Naval Travel")]
+    [SettingPropertyBool("Apply To AI Lords", Order = 2,
+        HintText = "When ON (default), AI lords' parties can also sail. When OFF, only the player sails and AI stays on land — the conservative option if AI naval routing looks odd.")]
+    public bool NavalTravelApplyToAi { get; set; } = true;
+
     // --- Map UI / Settlement Nameplates ---
 
     [SettingPropertyGroup("Map UI/Settlement Nameplates", GroupOrder = 40)]

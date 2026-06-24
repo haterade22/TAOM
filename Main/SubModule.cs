@@ -33,6 +33,8 @@ using TAOM.Features.AtmospherePersistence.Hooks;
 using TAOM.Features.TroopProgression.Models;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.CulturalFeats.Models;
+using TAOM.Features.NavalTravel;
+using TAOM.Features.NavalTravel.Models;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.CustomBattles.Hooks;
 using TAOM.Features.Warg;
@@ -89,6 +91,7 @@ public class SubModule : MBSubModuleBase
     private static ShaderPrecompileRunner _shaderRunner;
     private static bool _missionTimePatchesApplied;
     private static bool _gameInitPatchesApplied;
+    private static bool _basicTableauGuardApplied;
 
     protected override void OnSubModuleLoad()
     {
@@ -260,6 +263,26 @@ public class SubModule : MBSubModuleBase
         base.OnBeforeInitialModuleScreenSetAsRoot();
         IoC.Resolve<IMainMenuCustomizerService>().CustomizeMenu();
 
+        // Patch55_BasicTableauRaceGuard — MUST be applied HERE, not in OnGameInitializationFinished.
+        // The Save/Load hero preview (BasicCharacterTableau) renders on the COLD main menu, before any
+        // game-init callback fires. The sibling CharacterTableau patches live in Patch2_RefreshTableau,
+        // applied in OnGameInitializationFinished (campaign init) — too late to guard the save-list CTD
+        // (Codex C1, issue #299). By here, IoC.Configure() (OnSubModuleLoad) has already set the guard,
+        // and the initial module screen has not been pushed yet, so the prefix attaches before the save
+        // list can render. Process-static one-shot; fail-open (a missing guard is no worse than vanilla).
+        if (!_basicTableauGuardApplied)
+        {
+            _basicTableauGuardApplied = true;
+            try
+            {
+                _harmony.PatchCategory("Patch55_BasicTableauRaceGuard");
+            }
+            catch (System.Exception ex)
+            {
+                IoC.Resolve<IModLogger>().LogError($"[HeroRace] Patch55_BasicTableauRaceGuard apply failed: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+
         // BattleLoadDiagnostics collection: a battle/scene load that hung last session left
         // an inflight marker (phase-4 wrote it; phase-6/end never ran to clear it). If it
         // survived to this main menu, the previous load never finished — surface a notice so
@@ -362,6 +385,10 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomCharacterStatsModel());
             campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers));
             campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment));
+
+            // NavalTravel — unlock the engine's native naval system (water pathing + embark/disembark
+            // + native ship rendering) for everyone without the Naval DLC by overriding PartyNavigationModel.
+            campaignStarter.AddModel(new TaomPartyNavigationModel(IoC.Resolve<INavalTravelService>(), IoC.Resolve<IModLogger>()));
 
             var raceAgeService = IoC.Resolve<IRaceAgeService>();
             var heroAgeAdapter = IoC.Resolve<IHeroAgeAdapter>();
@@ -634,6 +661,13 @@ public class SubModule : MBSubModuleBase
         // (default 0.15 = half vanilla). See docs/features/party-icon-scale.md.
         Features.PartyIconScale.Hooks.Patch53_PartyIconScale.Initialize(IoC.Resolve<IModLogger>());
         _harmony.PatchCategory("Patch53_PartyIconScale");
+
+        // Patch54_NavalTravelBoatVisual — render an at-sea party as a boat. The base game omits the
+        // figure at sea but adds no ship (the campaign ship visual is otherwise NavalDLC.View-only), so
+        // this Postfix adds the base-game boat_sail_on mesh to the party's StrategicEntity when at sea.
+        // See docs/features/naval-travel.md.
+        Features.NavalTravel.Hooks.Patch54_NavalTravelBoatVisual.Initialize(IoC.Resolve<Features.NavalTravel.INavalTravelService>(), IoC.Resolve<IModLogger>());
+        _harmony.PatchCategory("Patch54_NavalTravelBoatVisual");
 
         // BattleLoadDiagnostics — phase-stamp the attack->battle-playable lifecycle so an
         // intermittent battle-load hang leaves a log whose last line names the stuck phase

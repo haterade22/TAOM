@@ -2,6 +2,91 @@
 
 ## 2026-06-24
 
+### balance(troops): rebaseline all 16 cultures onto the skill curve + read-only balance analyzer
+
+Troop content added since the last skill pass (the #212 culture revamps, the Morannon orcs, new cultures) had drifted off the baseline + cultural-modifier curve — the #212 Erebor/Iron Hills nobles shipped at roughly *half* their tier's skills (`iron_hills_noble_ironbreaker` had OneHanded 90 where the curve calls for 325). A new read-only overview tool measured the drift; a targeted rebaseline corrected it. The baseline numbers themselves were left unchanged (Gondor already matches them exactly — they are the validated standard).
+
+- **New `tools/analyze_troop_balance.py`** — read-only per-culture balance overview. Imports the baseline + `CULTURAL_MODS` tables verbatim from `rebalance_troops.py` (single source of truth for the curve), parses all 16 `troops_*.xml`, and emits a color-coded HTML report + markdown + JSON to `tools/reports/troop-balance/` (heatmap parity matrix, per-culture skill/tier/upgrade/weight detail, data-quality findings). Never writes troop XML. `--outlier-threshold N` / `--stdout`.
+- **Rebaseline applied** via `rebalance_troops.py --apply`: **262 troops rewritten across 11 files** (dunland/harad/rivendell/rohan/umbar were already on-curve and untouched). Diff is balanced (1,701 insertions / 1,701 deletions = skill-*values* only, no structural change); `validate_moduledata` PASS (zero broken refs); overview outliers **186 → 14** (the 14 are benign Mordor partial-skill-block troops); 780/798 troops now within ±25 of the formula (up from 593).
+- **Four new/changed cultural modifiers**, each adversarially balance-checked against peer cultures: `goblin` (weakest-orc swarm floor, net −81), `mistymountainorcs` (just below Gundabad, net −7), `dale` (Men of the North — best non-elf polearm nation `Pol +25` + strong 2H/bows, net +56), and `dolguldur` bumped from near-neutral (−5) to elite (net +65, 2H-heavy) so Sauron's uruks land ~Isengard-tier and can contest the bordering elf realms instead of being nerfed to a weak curve.
+- **Three tooling fixes** in `rebalance_troops.py`: `detect_culture` now maps `rhun_new`→`rhun` (the Easterling modifier had been silently un-applied because the filename derives `rhun_new`); a `SKIP_TROOP_IDS` exclusion preserves the bespoke `cave_troll` + `harad_elephant_rider`; and a latent `UnicodeEncodeError` (a `Δ` char crashed Windows cp1252 stdout once enough >100 deltas appeared) is fixed.
+- Save-compat: troop skills are read from XML at agent spawn (nothing serialized per troop-type) — applies to new and existing saves, no migration. See `docs/features/troop-skill-balance.md`.
+
+### fix(ui): save-load hero preview CTD on custom-race saves
+
+Loading a save from the main menu crashed with a native `AccessViolationException` in `BasicCharacterTableau.RefreshCharacterTableau` whenever the save's character was a custom (non-human) race. The Load Game hero preview (`SaveLoadHeroTableauTextureProvider`) builds the body through the agentless `MBAgentVisuals.FillEntityWithBodyMeshesWithoutAgentVisuals` static-morph path, which dereferences a null morph-data pointer for a custom-race head that lacks the per-face-component morph data vanilla heads carry (same crash class as the Erebor-arena #295). A native AV is a corrupted-state exception and can't be caught, so the fix is preventive.
+
+- **`BasicTableauRaceGuard`** (+ `IBasicTableauRaceGuard` + `BasicCharacterTableau_RefreshCharacterTableau_Patch`) — a Harmony prefix coerces the tableau's private `_race` to the human base (0) for any race whose head lacks the data, before the native build reads it. An allow-list seam (`TableauSafeRaces`, today just the human base) lets a race rejoin the true-to-race preview once its head morph data is authored asset-side.
+- Scope is surgical: `BasicCharacterTableau` is instantiated only by the Save/Load preview — the in-game inventory / character-creation tableaus use `CharacterTableau` (the AgentVisuals path, already race-correct) and are untouched. Tradeoff: an affected custom-race save shows a human-headed thumbnail (with correct equipment) until the head morph data lands. Thin patch → pure `IBasicTableauRaceGuard` (ADR-002/007), unit-tested.
+- **Timing (Codex C1):** the patch has its own `Patch55_BasicTableauRaceGuard` category applied in `SubModule.OnBeforeInitialModuleScreenSetAsRoot` (before the main menu can show the save list), NOT the sibling CharacterTableau patches' `Patch2_RefreshTableau` — that category applies in `OnGameInitializationFinished` (campaign init), which is too late for a cold-menu save-list preview, so it would have left the reported crash unguarded. Process-static one-shot, fail-open. RCA: `docs/reviews/rca-savetableau-2026-06-24.md`.
+
+### fix(map): caravans showed "Text with id str_convoy_party_name doesn't exist!"
+
+The NavalTravel feature (#296) flips `HasNavalNavigationCapability` on globally, so the engine's `CaravanPartyComponent.CacheName` takes its naval branch and looks up `str_convoy_party_name` / `str_armed_convoy_party_name` — strings that ship only in the unloaded NavalDLC. Because *Apply To AI* is on by default, every AI caravan reports naval capability (even idle on land), so the placeholder error rendered on all of them in the settlement parties panel.
+
+- Defined both convoy ids in `taom_module_strings.xml`, mirroring the vanilla CARAVAN text and reusing its translation keys (`{=LjUhEJxz}` / `{=l4pRw7pO}`) — caravans read "Caravan of {name}" uniformly on land and sea, and all 12 languages resolve for free (no translation-pipeline run). No Harmony patch. The clan-finance line was unaffected (it gates on the separate `CanHaveNavalNavigationCapability`).
+
+### chore(docs): reorganize harness memory into a feature-centric system + master lessons doc
+
+The harness memory (`~/.claude/projects/.../memory/`) had grown to 234 lines / 66 KB in a single `MEMORY.md` — over the session load cap, so it was silently truncated every session. Reorganized ~174 flat one-fact files into a feature-centric structure and a new canonical lessons record.
+
+- **New `docs/reviews/LESSONS-LEARNED.md`** — canonical, uncapped record of **146 engineering lessons** in 13 subsystem categories (every `/deep-review`, `/review-codex`, and RCA lesson). Each entry is `### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`.
+- **Harness memory** (outside the repo) restructured: thin always-loaded `MEMORY.md` index (29 lines), per-feature files (`memory/features/`), cross-cutting topic files (`memory/topics/`), and a `memory/README.md` routing-rule/convention doc. Migration was multi-agent + audited file-by-file — zero loss (7 stride-gap lessons and the inline "Key Learnings" recovered by hand); flat originals retired (snapshot kept).
+- **Per-feature changelogs:** a `## Changelog` section added to `docs/features/TEMPLATE.md` and all 91 feature docs, seeded only from verifiably-mapped global `CHANGELOG.md` entries (honest stub where none — no fabricated history). The global `CHANGELOG.md` remains the chronological log of record.
+- **Convention wired in:** `/deep-review` and `/review-codex` now append confirmed lessons to `LESSONS-LEARNED.md` at their RCA step (read-before / append-after); `CLAUDE.md` Doc-Lookup points to it.
+
+### feat(map): naval travel — sail across water without the Naval DLC
+
+Campaign-map parties can now sail across water — and look like boats while they do. Bannerlord v1.4.6 ships the
+naval-travel MOVEMENT system in the base engine (water pathing, embark/disembark transitions) but switches it OFF via
+`DefaultPartyNavigationModel.HasNavalNavigationCapability` returning `false`; the official `NavalDLC` module turns it
+on only for ship-owners and bundles a large Calradia payload. TAOM unlocks the base-engine movement for everyone with
+no DLC by overriding that one GameModel. The boat VISUAL is a separate problem the base game does NOT solve (it omits
+the figure at sea but renders no ship — the campaign ship visual is otherwise only in `NavalDLC.View`), so TAOM adds
+that itself via `Patch54_NavalTravelBoatVisual`.
+
+- **`TaomPartyNavigationModel : DefaultPartyNavigationModel`** — a faithful port of NavalDLC's internal
+  `NavalPartyNavigationModel` (same naval terrain rules, `0.5` embark threshold, naval-aware
+  `CanPlayerNavigateToPosition`), with the single change that the ship-ownership capability gate becomes a TAOM
+  config/MCM decision (`INavalTravelService.CanPartySail`). No navmesh hack — the base engine handles click-to-sail
+  (`Helpers.NavigationHelper.CanPlayerNavigateToPosition` → `SetMoveGoToPoint`) and the land↔sea transition natively.
+- **`Patch54_NavalTravelBoatVisual`** (Postfix on `SandBox.View.MobilePartyVisual.AddMobileIconComponents`) renders the
+  boat. The base game omits the leader figure at sea but adds no ship, so an at-sea party adds the configured boat mesh
+  (`boat_sail_on` — a base-game `Native` shared mesh, also `map_icon_ship`; loads with no DLC) scaled 0.4 to its
+  `StrategicEntity`, mirroring NavalDLC's no-ship recipe. Idempotent via a `taom_naval_boat` tag (never accumulates,
+  follows + despawns with the party). JSON-swappable `boatMeshName`/`boatScale` + a `renderBoatVisual` toggle.
+- Thin model → pure `INavalTravelService` → MCM-over-JSON `INavalTravelSettingsProvider` → validated
+  `NavalTravelConfigProvider` (ADR-002/007). Config `naval_travel/naval_travel_config.json`: `enabled` /
+  `applyToPlayer` / `applyToAi` / `embarkThresholdDistance` (finite, `[0,50]`) / `navalTerrainTypeIds` (default
+  `[8,10,11,18,19,23,24,25]`, validated against `TerrainType`) / `renderBoatVisual` / `boatMeshName` / `boatScale`
+  (finite `(0,100]`).
+- MCM **World → Naval Travel**: master *Enable* + independent *Apply To Player* + *Apply To AI Lords* (all on by
+  default; master off = vanilla land-only). AI-off is the conservative player-only option.
+- No dependency on the NavalDLC module or DLC entitlement. Reuses only base-engine APIs present for everyone.
+- Reviewed: `/deep-review` (5 agents, clean after 2 efficiency micro-opts) + `/review-codex` (gpt-5.5 xhigh). Codex
+  found 1 HIGH + 1 MED, both verified real against the engine source and fixed: (HIGH) `HasNavalNavigationCapability`
+  keyed only on `IsMainParty`, so a player-led army's attached AI parties were forced to sea (engine propagates
+  `IsCurrentlyAtSea` down the attachment tree + recomputes `NavigationCapability` per party) with `Default`-only nav →
+  stranded; now an attached party inherits its army leader's capability (mirrors NavalDLC). (MED) live-disabling
+  mid-voyage could soft-lock an at-sea party; now an already-at-sea party keeps capability to reach land (gates govern
+  new embarks from land only). Both encoded in the pure `INavalTravelService.HasNavalCapability(isMain, isAtSea,
+  attachedLeaderCanSail)` + a 9-cell matrix test. RCA `docs/reviews/rca-navaltravel-2026-06-24.md`; memory
+  `feedback_gamemodel_capability_engine_propagation`.
+- Tests: 55 (`NavalTravelServiceTests` gate + HasNavalCapability + ShouldRenderBoat matrices + `NavalTravelConfigProviderTests`
+  validation incl. boat fields). Issue #296. See `docs/features/naval-travel.md`.
+- **In-game iteration (set-sail modifier + boat-hook fix; sea-only scope).** Diag confirmed the model side works
+  (capability granted, water navmesh enabled `invalidForAll=[7,13,14,21,22]`, party reaches `mainAtSea=True`) but the
+  auto-pathfinder always prefers land/bridge over sea (region-switch costs are `0`, but a land route is shorter/found
+  first), and the boat never appeared. Two fixes: (1) **set-sail is now player-initiated** — `CanPlayerNavigateToPosition`
+  allows a water click from land only while the new `sailModifierKey` (default `LeftAlt`) is held → the party routes to
+  the coast and the engine's embark transition fires (disembark stays automatic); (2) **boat hook fixed** — the at-sea
+  change doesn't trigger an icon rebuild, so `AddMobileIconComponents` alone never saw it; added a second Patch54 hook on
+  `MobilePartyVisual.OnTransitionEnded`. Scope set to **sea-only** (TAOM_Map rivers are a water-`10` channel with
+  impassable mountain-`7` banks + bridges, so walkable land never borders river water → embark can't span the bank; they
+  self-exclude). Naval settlement-distance/AI routing remains unsupported — the engine only registers the `Naval`/`All`
+  navigation caches for a NavalDLC map/module (#120). Temporary `[NavalTravel][diag]` logging present; strip after
+  in-game sign-off. End-to-end sail + boat render still pending verification.
+
 ### feat(map): MCM-configurable party-icon figure scale (default half vanilla)
 
 Campaign-map party icons rendered their leader figure and mount at the engine's hardcoded `0.3` scale, which felt
