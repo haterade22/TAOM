@@ -128,6 +128,11 @@ Update the `SellEvent` / `UnequipEvent` constants in `QuickActionsAudioPlayer.cs
 - The filter loop iterates `RightItemListVM` (typically <100 items). No reflection on the hot path — direct property reads only. No allocation per item beyond the adapter wrappers (one `InventoryItemAdapter` per right-pane item per click).
 - `InventoryVMAdapter` is a singleton; the active-VM reference is replaced on each inventory open via the constructor Postfix.
 
+## Changelog
+
+- 2026-05-13 — Fixed the `IsSearchAvailable` per-save contract (#146): added a `_persistedVersion` SyncData tag so the search toggle survives reload while a mid-game MCM change still takes effect, instead of unconditional per-tick overwrite.
+- 2026-05-06 — Ported QuickActions from the external `TransferbuttonMenu` module into `Main/Features/` (Patch34): four Harmony patches on `SPInventoryVM`, the 4-option "Sell All" menu, per-save inventory-search toggle, 15 MCM settings, 53 tests.
+
 ## GitHub Issue
 
 - **Issue:** _to be created with closing commit_

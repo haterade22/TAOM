@@ -154,3 +154,11 @@ the troll ever needs movement that human-skeleton overrides can't express.
 ## See also
 - [troll-race-arp-retargeting-workflow.md](../ai-includes/troll-race-arp-retargeting-workflow.md) — the HOW.
 - [hero-race.md](hero-race.md) — TAOM race system (id mapping, camera/eye-height, persistence).
+
+## Changelog
+
+- 2026-06-15 — `fix(troll-anim)`: fixed `rebuild_from_json` bone-offset collapse, authored first-pass lumbering walk/run, reverted the cave_troll skins back to `human_skeleton` + `lotr_troll_*` meshes.
+- 2026-06-14 — `feat(troll-race)`: built the no-assimp keyframe pipeline (read tpac keyframes → JSON → rebuild in Blender → retarget → headless `ge_export`), producing `troll_walk_forward`/`troll_run_forward` autonomously.
+- 2026-06-14 — `feat(troll-race)`: enabled the `cave_troll` as a live Mordor unit (`is_basic_troop="false"`, added to the Mordor party template) on `human_skeleton` reusing the full human anim set, and proved the bespoke-skeleton retarget pipeline end-to-end.
+- 2026-06-13 — `feat(troll-race)`: adopted Auto-Rig Pro, proved the human→troll retargeting pipeline, and scaffolded the troll race (feature doc + authoring recipe).
+- 2026-05-14 — Phase 9c: disabled troll content in-place (the `cave_troll` troop + two troll-themed careers) while preserving all artifacts for later re-enable.

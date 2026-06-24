@@ -127,6 +127,10 @@ This was done for 5 Lossarnach extras. New mod version permits ID changes — pr
 
 No runtime performance impact — this is a pure data refit. Item resolution at troop spawn is unchanged in cost. The 99 new Armory items add ~5 KB to the per-faction item index, negligible.
 
+## Changelog
+
+- 2026-05-01 — KEYforce Gondor armor revamp (#99): 99 new `sk_gd_*` Armory items across 5 slots for 8 southern regions, 98 troops refit + 5 Lossarnach noble troops retired in `troops_gondor.xml`, recruitment/guard rewiring to the axebearer line, and the phase-2 generator + applier + ref-validator tooling.
+
 ## GitHub Issue
 
 - **Issue:** [#99 — feat(gondor): KEYforce armor revamp — add 99 items + restructure 13 regional troop trees](https://github.com/haterade22/TAOM/issues/99)

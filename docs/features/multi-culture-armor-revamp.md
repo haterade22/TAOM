@@ -114,6 +114,10 @@ No runtime impact. Pure data addition. ~277 new items add ~15 KB total to per-cu
 
 **Codified lesson:** CLAUDE.md "Equipment & Armory" now includes a per-prefix canonical-folder table. Memory: `feedback_multi_folder_id_uniqueness.md`. RCA: `docs/reviews/rca-multi-culture-armor-revamp-2026-05-22.md`.
 
+## Changelog
+
+- 2026-05-22 — KEYforce multi-culture armor revamp (#211): mesh-first authoring pass adding 277 new Armory items across 5 cultures (Mordor 103, Isengard 15, Dol Guldur 14, Erebor 123, Rhun 22; Gundabad already complete). Added 5 per-culture `generate_<culture>_armor.py` generators (idempotent, sharing the `STAT_TIERS` table) plus the new multi-culture `validate_all_troop_refs.py` gate (7/7 cultures PASS, 0 missing refs). Post-review fix re-targeted the Erebor `sk_dwarf_iron_*` items from `erebor/` to the canonical `iron_hills/` folder, avoiding 118 duplicate IDs.
+
 ## GitHub Issue
 
 - **Issue:** [#211 — feat(armory): KEYforce multi-culture armor revamp](https://github.com/haterade22/TAOM/issues/211)

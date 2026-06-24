@@ -98,6 +98,11 @@ UIExtenderEx:
 
 `OnTick()` runs every frame (~60+ fps). The method is allocation-free — no LINQ, no collections, no string operations. Each adapter property access reads a static singleton (`MapScreen.Instance`, `Campaign.Current`). Settings are read from MCM via simple property getters with null-coalescing fallbacks.
 
+## Changelog
+
+- 2026-04-06 — Adversarial-review fix: turbo restore now runs before the early returns in `OnTick()`.
+- 2026-04-05 — Feature landed: configurable campaign-map speed (BetterTime replacement) — Space/E/Ctrl+Space tiers, Extra Fast-Forward MapBar button via UIExtenderEx, 3 MCM multiplier sliders, 14 unit tests.
+
 ## GitHub Issue
 
 - **Issue:** #181 — Time acceleration feature

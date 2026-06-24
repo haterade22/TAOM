@@ -91,6 +91,12 @@ Banner keys are declared in:
 3. For vanilla kingdoms/clans being overridden, add an `<xsl:template match="Kingdom[@id='...']">` block in `spkingdoms.xslt` or `spclans.xslt` containing `<xsl:attribute name="banner_key">your_code</xsl:attribute>`.
 4. The injection service picks up the new key automatically on next session launch — no code changes required.
 
+## Changelog
+- 2026-05-13 — Phase 9b: fixed `BannerExclusionService` singleton not resetting between campaigns; added `Reset()` + `OnNewGameCreatedEvent` reset before injection so canon banners re-inject in later campaigns (closes #124).
+- 2026-04-06 — Layer-limit handling moved into BannerColorPersistence: replaced the `Banner_TryGetBannerDataFromCode_Patch` postfix with an IL transpiler and deleted `BannerLayerExpander.cs`.
+- 2026-04-02 — Injection now fires once on new-game creation and save load (`OnNewGameCreatedEvent` + `OnGameLoadedEvent`) instead of on every session launch / battle return.
+- 2026-03-06 — Initial port of the Banner Injection system: re-applies `banner_key` values to kingdoms and clans, with player-modified-banner exclusion and config parsing from XML + XSLT sources.
+
 ## GitHub Issue
 - **Issue:** Unknown
 - **Status:** Unknown

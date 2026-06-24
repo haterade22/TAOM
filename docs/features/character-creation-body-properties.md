@@ -182,6 +182,15 @@ This feature went through three iterations before working in-game. Each iteratio
 
 The systemic lesson: **for any state-mutation hook in the CC pipeline, decompile the entire call chain that touches the same state, not just the entry-point method.** Vanilla often has a *parallel* writer that fires from a different code path moments after yours. Captured in memory entry `feedback_taleworlds_vm_setter_decompile`.
 
+## Changelog
+
+- 2026-05-06 — Docs: CLAUDE.md `Patch29_CCBodyProperties` row updated to list the third target (`CharacterCreationCultureStageVM.OnCultureSelection`), reflecting the 3-patch architecture.
+- 2026-05-06 — Docs: feature-doc rewrite to the final 3-patch architecture + lessons-learned; seeded `cc_body_properties.xml` with 17 cultures (6 vanilla XSLT + 11 TAOM custom); in-game verified, issue #108 closed.
+- 2026-05-06 — Fix: vanilla `OnCultureSelection`'s `InitializePlayersFaceKeyAccordingToCultureSelection` clobbered our body after the `SetSelectedCulture` postfix — added a sibling Patch29 postfix on `OnCultureSelection` to re-apply the configured body.
+- 2026-05-06 — Fix: body never reached the FaceGen preview (regression) — restored the direct `Hero.MainHero.{StaticBodyProperties, Weight, Build}` writes the adapter needs when `UpdatePlayerCharacterBodyProperties`' `IsPlayerCharacter && IsHero` guard fails.
+- 2026-05-06 — Feat: per-culture default BodyProperties on the CC screen (XML-driven via `cc_body_properties.xml`, Patch29 postfix on `SetSelectedCulture` + career-menu `RefreshAgentVisuals` BodySync, issue #108).
+- 2026-05-06 — Fix: review-driven hardening of issue #108 — corrected the `age=` doc/code mismatch and added the career-menu body-sync prefix from `/deep-review` findings.
+
 ## GitHub Issue
 
 - **Issue:** #108 — Per-culture default BodyProperties on Character Creation screen

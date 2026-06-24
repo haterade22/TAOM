@@ -199,6 +199,12 @@ For state-sensitive pools (owner culture, season, prosperity threshold, etc.):
 
 Known overhead: the `LogDebug` call in `GetVolunteerTroopId` interpolates a string on every call regardless of whether Debug logs are enabled, because `IModLogger` doesn't expose `IsDebugEnabled`. This was inherited from pre-existing code, not introduced by this session; it's tracked for a future logger-interface improvement.
 
+## Changelog
+
+- 2026-06-24 — Restored `gondor_ithilien_ranger` to 10% in the **live** Gondor JSON pools (Minas Tirith / Osgiliath / Cair Andros) after the loader's straight-replace overwrote the hand-written ranger weight; added a production-JSON regression test.
+- 2026-06-10 — Closed recruitment-reachability gaps: flood-filled the upgrade graph from every pool root, added orphaned root troops (Gundabad/Dol Guldur/Isengard lines) and wired Mirkwood + Umbar pools, plus the reachability guard test.
+- 2026-05-23 — Added Rhûn per-settlement pools (Easterling → Loke-Rim), introduced the `AddSettlementConditional` conditional-pool API + `ConditionalSettlementMap`, and moved Gondor pools to `recruitment_pools/gondor.json` via `GondorRecruitmentJsonLoader` (#215).
+
 ## GitHub Issue
 
 - **Issue:** #215 — feat(troops): Rhun recruitment + Easterling → Loke-Rim + conditional-pool API

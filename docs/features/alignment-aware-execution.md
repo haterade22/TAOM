@@ -486,3 +486,8 @@ Edit `KinslayingMultiplier` in `Main/Features/Execution/Hooks/ExecutionActionHoo
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
+
+## Changelog
+
+- 2026-05-14 — Phase 9b extraction (#147): pulled `IExecutionRelationService` out of `TaomExecutionRelationModel` (returns `ExecutionRelationResult { RelationDelta, ShowNotification }`), reduced the model body to a single-call delegate, and replaced direct `Hero.MainHero.MapFaction.StringId` access with injected `IPlayerContextAdapter.GetPlayerKingdomId()`.
+- 2026-03-25 — Introduced the Alignment-Aware Execution System: `Main/Features/Execution/` with `TaomExecutionRelationModel` GameModel override + `KillCharacterAction.ApplyInternal` / `TraitLevelingHelper.OnLordExecuted` Harmony patches (`Patch14_Execution`), `alignment.json` (16 kingdoms → Free/Evil/Neutral), zero-penalty cross-alignment kills, 1.5x kinslaying penalties, and 28 tests.

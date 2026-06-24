@@ -135,3 +135,7 @@ MCM knobs (merged over JSON by [`CultureConversionSettingsProvider`](../../Main/
 ## Performance
 
 `OnSettlementConquered` fires only on ownership changes; the daily sweep iterates **only records with a pending timer** (typically a handful), each a dictionary lookup + a few adapter reads. No per-frame or per-settlement-per-day global scan. Conversion records are the only persisted state, serialized as one `Dictionary<string,string>`.
+
+## Changelog
+
+- 2026-06-02 — Introduced the `Main/Features/CultureConversion/` module: conquered cross-culture towns/castles (and bound villages) gradually flip `Settlement.Culture` after a configurable hold period, recruiting the new owner's troops and dropping the foreign-occupier loyalty penalty; reconquest-to-original reverts. Adds a converted-settlement recruitment branch (`HasCulturePool` gate + `VolunteerContext` fields), persisted records re-applied on load, JSON + MCM "Culture Conversion" config. Includes deep-review + Codex fixes (stale-record purge on culture-removal, `HasCulturePool` playable-culture gate adding Rohan/Harad).

@@ -63,6 +63,9 @@ To properly resolve the warning:
 
 The patch is a safety net only; the intended fix is to add the scene entities.
 
+## Changelog
+- 2026-03-20 — Added the Harmony Prefix on `BesiegerCamp.GetSiegeCampPartyPosition`: guards empty `siegeCamp1GlobalFrames`, swaps camp2 frames into the camp1 slot when camp1 is empty, and falls back to the settlement gate position when both arrays are empty (fixes the `IndexOutOfRangeException` on settlements like "Gwígar" lacking `siege_camp_1` scene entities).
+
 ## GitHub Issue
 - **Issue:** Unknown (introduced in commit `d3cb87c` — "fix: add patch to guard against IndexOutOfRangeException in siege camp positioning")
 - **Status:** Unknown

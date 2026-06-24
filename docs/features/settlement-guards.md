@@ -135,6 +135,11 @@ No concerns. Guards spawn once per settlement entry (~20 guards). Config is lazy
 
 Fully safe. `GuardsCampaignBehavior.SyncData` is empty -- guards spawn fresh every settlement entry. Adding/removing/changing guard config has zero save impact.
 
+## Changelog
+
+- 2026-05-13 — Phase 9b: closed #192 (added a manual-Harmony wiring smoke test for the two `_harmony.Patch(...)` sites, which have no `[HarmonyPatchCategory]`) and #157 (replaced the bare `catch {}` in `GuardsCampaignBehavior_TakeGuardAgentData_Patch` with `catch (Exception ex)` + one-shot `IModLogger.LogError` to avoid per-spawn log spam).
+- 2026-04-08 — Initial Per-Settlement Guard System: Harmony prefixes on `TakeGuardAgentDataFromGarrisonTroopList` and `GetSuitableSpear`, XML config with 14 Gondor settlements + 16 culture spear mappings, settlement→clan→culture fallback, weighted random selection, 27 tests.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

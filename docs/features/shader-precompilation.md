@@ -157,6 +157,19 @@ If a culture's characters are not getting compiled, verify:
 - **LoadingScreen patch:** Runs every frame during loading screens. Calls `Utilities.GetNumberOfShaderCompilationsInProgress()` (a native engine call) then early-exits if the count hasn't changed. String allocation (`$"Compiling shaders... {n} remaining"`) only occurs when the count changes — typically once per second during active compilation.
 - **Service:** `GetValidCultureIds()` builds the culture `HashSet` once and caches it for the service's lifetime. `GetAllCharacterInfos()` is only called once per shader battle initiation.
 
+## Changelog
+
+- 2026-06-18 — Added a per-scene crash guard (`ShaderPrecompileCrashGuard`) that records hard-crashing scenes to a skip list and drops them from the plan so the walk can finish.
+- 2026-06-18 — Suppressed the battle-load stall watchdog during the walk (longest legitimate load).
+- 2026-06-18 — Extended the walk to custom siege + village scenes; `precompile_scenes.txt`/`DefaultScenes` grew from 8 to 21 scenes (#287).
+- 2026-06-17 — Re-enabled the "Pre-compile Shaders" menu option and rewrote it to scene-walk each TAOM battle scene so terrain/atmosphere shaders compile, targeting the battle-load d3dcompiler CTD (#287).
+- 2026-05-22 — Hid the Pre-compile Shaders main-menu option (commented the `InitialStateOption`) while the feature was unreliable; rest of the wiring kept active.
+- 2026-05-04 — Added visible per-second progress UI and fixed the initial-zero latch race (#106 follow-up).
+- 2026-05-04 — Eliminated the silent character drop and relaxed the premature stuck-abort (#106, follow-up to #57).
+- 2026-04-06 — Reset the abort latch on completion.
+- 2026-04-02 — Added stuck-shader auto-abort with a countdown UI (#57).
+- 2026-04-02 — Added the "Pre-compile Shaders" main-menu option launching a hidden all-characters custom battle (#57).
+
 ## GitHub Issues
 
 - [#57 — feat: Shader Pre-compilation at Main Menu](https://github.com/haterade22/TAOM/issues/57) — original feature, OPEN

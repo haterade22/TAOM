@@ -190,6 +190,20 @@ Cross-reference validation:
   - Data Flow: 7 flows traced, 0 hard gaps, 1 MEDIUM inconsistency (lord rosters — documented as known follow-up)
 - `python tools/validate_all_troop_refs.py` — 121 armor refs in troops_dale.xml, all resolve. Combined with manual non-armor (weapons/horses/shields/arrows) cross-check against 25,184 vanilla+armory IDs: all 50 non-armor refs resolve.
 
+## Changelog
+
+- 2026-06-20 — Re-leveled the troop tree onto the standard `level = 6 + (tier-1)*5` ladder (was off-ladder 6/12/19/25/32/39); fixed the stale `TIER_LEVEL` table in `generate_dale_troops.py`.
+- 2026-05-26 — Lake-Town settlement recruitment override: `town_S1` (Lake-Town) gets a unique 2-troop pool (`InitializeDaleSettlements`), checked before the culture pool; bulk-set all Armory helmet `hair_cover_type` to `all`.
+- 2026-05-26 — Single-variant per-tier armor for royal lines; Riverman line swapped to `infrantry` silver mesh; cavalry color swap; new T6 `dale_veteran_northman_scout`; volunteer pool replaced (one entry per branch).
+- 2026-05-26 — Swapped Royal/Master display names so "Royal" reads as the highest rank (IDs unchanged; `dale_master_crossbowman` now displays "Royal Crossbowman", `dale_running_river_warden` "Dalian Royal Swordsman").
+- 2026-05-26 — Explicit per-tier bronze/silver armor mapping for all royal lines + new Royal Crossbowman sub-line (4 crossbowmen, 30→34 troops); `dale_squire` upgrades extended to crossbowman.
+- 2026-05-26 — Dalian rebrand of troop display names + cavalry split into Light/Heavy branches off `dale_outrider` + new T7 `dale_kings_guard` King's Guard terminal.
+- 2026-05-26 — Swapped Watch/Pikeman weapons (Hearthguard becomes a vanilla-pike anti-cavalry unit) and dropped Lake-Town Peasant bracers (chest + boots only).
+- 2026-05-26 — Removed T8 elites (Dale caps at T7); added T7 `dale_lake_town_hearthguard`; per-tier explicit armor; reordered `dale_squire` upgrades.
+- 2026-05-26 — Troop-tree restructure: Lake-Town renames, equipment swaps for the two Lake-Town infantry lines, and a new royal-tier Riverman spear-and-shield line (27→30 troops, IDs preserved).
+- 2026-05-26 — Initial Dale culture ship: 163 armor items wired into LOTRLOME_Armory + a 27-troop tree on `Culture.sturgia`, party templates, `InitializeDaleCulture` recruitment pool, XSLT bindings, and 4 tests.
+- 2026-05-26 — Authored the repeatable end-to-end culture-authoring guide from the 11-commit Dale session and added the banner link in this doc.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

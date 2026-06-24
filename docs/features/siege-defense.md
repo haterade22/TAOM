@@ -142,6 +142,11 @@ Changes take effect on next game load (config is loaded at construction).
 
 `IsWatchedSiege` is called once per `OnSiegeEventStarted` — not on any tick. The `OnHourlyTick` loop only iterates `_activeEvents` (typically 0–3 entries). No allocations outside of dictionary lookups. `VisualTrackerManager` uses reference counting internally; `forceRemove: true` ensures clean teardown even if multiple callers registered the same settlement.
 
+## Changelog
+
+- 2026-05-13 — Phase 9b persistence hardening (#132): implemented `SiegeDefenseBehavior.SyncData` (flat-primitive serialization of `_activeEvents`, re-registers VisualTracker on load), added `OnNewGameCreatedEvent` → `Reset()`, and replaced the silent `DaysFromNow` catch with `CampaignTime.Never` fallback; +6 tests.
+- 2026-04-05 — Initial SiegeDefense feature: `OnSiegeEventStartedEvent`-driven detection (no Harmony), `IPlayerContextAdapter` dynamic kingdom/mercenary check replacing the static `WatchedFactionIds` list, native `VisualTrackerManager` tracking circle, towns-only filter, config + "Siege Defense" MCM group; 17 unit tests.
+
 ## GitHub Issue
 
 - **Issue:** haterade22/TAOM#67 — feat: Siege Defense — timed settlement defense events for player kingdom

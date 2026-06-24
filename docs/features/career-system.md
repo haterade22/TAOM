@@ -276,6 +276,24 @@ When the player picks "I wish to discuss my career path" on any companion (under
 
 **Switch contract:** `ICareerSwitchService.SwitchCareer(heroStringId, hero, newCareerId)` clears old career + choices + tier unlocks + flags, sets the new career, adds the new root choice, refreshes the passive cache. `CanSwitch` rejects same-career switches at the boundary (`hero.StringId → _dataService.GetCareerStringId → ordinal-ignore-case == newCareerStringId`).
 
+## Changelog
+
+- 2026-06-19 — Career-ability pips now visibly light up when a skill is increased: taken state uses a brighter dedicated `career_point_pip_lit` sprite (One-Ring ring whitened + glow halo) instead of a ~12% alpha bump on the shared hollow ring (#290).
+- 2026-06-15 — Right-anchored the in-battle ability HUD beside the player health bar (`MarginRight="480"`) so it tracks the right edge and stays reachable on ultrawide displays.
+- 2026-06-02 — Decomposed `CareerPerkMissionBehavior` 302→139 LOC into three Singleton controllers + two adapters; repurposed 98 dead `MaxCharge` mutations as `CooldownReduction` with a `min_cooldown_seconds` floor (closes #102, #104).
+- 2026-06-01 — Added the "While active" effect-scope badge in the choice tree + dialogue-driven career-switch picker (#265); added the career-tied quest framework (TOR adoption, 1.4.5-verified) with Gondor proof-of-life.
+- 2026-05-31 — In-game review pass on the career-screen revamp (singularized names, tier-label alignment, node spacing, pip bake + render fixes).
+- 2026-05-30 — Career-screen UI revamp: Tier 3→Tier 1 ordering, "Requires Level N" locked-tier labels, always-visible point-pip strips, 441 web-researched lore names + TOR rank-title adoption.
+- 2026-05-29 — Fixed party-size passive applied flat instead of as a ×N factor; activated 310 dead wrapped-schema career passives.
+- 2026-05-27 — Added starter-equipment rosters for every culture (12 new cultures × 6 archetypes).
+- 2026-05-26 — Re-enabled `cave_troll_master` as Gundabad Berserker (Infantry); renamed Gundabad/Rivendell/Dunland/Isengard/Dale careers to Tolkien-flavored display names.
+- 2026-05-24 — All 50 ability tooltips now state actual archetype effects + duration; added warg-mount cavalry starters (Isengard/Gundabad/Mordor/Dol Guldur); fixed Gondor cavalry starter.
+- 2026-05-21 — Fixed Captain of Osgiliath Keystone descriptions to say "Career Ability" not "Sailing".
+- 2026-05-20 — Review-stage 3D preview now matches career selection (#206).
+- 2026-05-19 — Added archetype-driven starting equipment at character creation; removed orphan `career_menu.json` entries for disabled WIP careers.
+
+_See the repository-root `CHANGELOG.md` for full chronological history._
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

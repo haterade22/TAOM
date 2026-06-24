@@ -119,3 +119,7 @@ python -m unittest tools.tests.test_validate_mesh_refs        # this tool only
 - **Auto-discovered rgl_log may be empty.** "Newest" is by mtime; a freshly-launched session writes an essentially-empty error log. Pass `--rgl-log` explicitly to target a log with real warnings.
 - **Item XML only.** Scene-body / scene-mesh refs in `.sco`/scene XML are out of scope (Tier A still *reports* engine warnings about them, classified INFO). Material/texture refs, weapon-craft piece meshes, and skin/race body-meta meshes (`hands_mesh`, `legs_mesh`, etc. — present in race XML, not item XML) are not extracted.
 - **No MCP tool / no pre-commit hook (yet).** This is a diagnostic run on demand, not a commit gate. An MCP tool (`mesh_ref_check`) over the same engine could be added later alongside the `taom-moduledata` server if interactive querying proves useful; it was deliberately left out of v1 to keep scope tight.
+
+## Changelog
+
+- 2026-06-01 — Added `tools/validate_mesh_refs.py`, a pure-stdlib three-tier mesh / collision-body existence validator (Tier A authoritative `rgl_log` cross-ref, Tier B offline `.tpac` TOC for visual meshes, Tier C coarse `bo_` byte-scan); first run found 3 real Armory data bugs and 30 new tests were added.

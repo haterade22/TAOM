@@ -102,3 +102,7 @@ An empty/absent `roster` ⇒ colours-only (no template, no `default_party_templa
 - Vanilla minor mercenary/outlaw factions (ghilman, skolderbrotva, wolfskins, …) left at vanilla colours.
 - Khand per-clan rosters await a dedicated Khand troop tree.
 - Non-Gondor clan colours are systematic (lore base + variation), not individually hand-named heraldry.
+
+## Changelog
+
+- 2026-06-04 — Gave 192 clans distinct heraldry `color`/`color2`, 176 clans their own `default_party_template`, and repainted all 8 vanilla-renamed kingdoms to lore palettes via 4 new tools + per-culture spec files; `validate_moduledata` PASS (462 party templates), data-only.

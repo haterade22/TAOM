@@ -178,6 +178,11 @@ The `Patch31` Postfix runs on every `SetMovementOrder` call but bails on non-cav
 - Recursion guard is a single boolean, not a counter — nested reentry inside a `using SmartCavalryRecursionGuard.Enter()` scope would clear the flag prematurely. Not exercised by current code paths, but worth a follow-up if we ever chain SetPositioning + SetMovementOrder synchronously (current implementation does both as separate top-level calls).
 - The path planner's "behind cavalry / past target" filters use signed projections onto the charge direction; very-near-the-target enemies (length < 1m) cause early-exit `false`. Acceptable: the Forming→Charging gate handles these via the alignment check.
 
+## Changelog
+
+- 2026-05-13 — Added a `_lock` around `CavalryChargeService` `_states` access (GetState/OnMissionEnd/HandleChargeOrder/Tick + `state.State` mutations) to guard against a future Patch31 refactor re-introducing a cross-thread race (#155).
+- 2026-05-07 — Fixed a SubModule-load NRE by deferring the `Patch31` `Formation.SetMovementOrder` postfix into the shared `Patch_MissionTime_SetMovementOrder` category (applied once at `OnMissionBehaviorInitialize`), since `MovementOrder.cctor` reads `Mission.Current.CurrentTime` which is null during `OnSubModuleLoad`.
+
 ## GitHub Issue
 
 - **Issue:** TBD — to be opened with feature port commits.

@@ -256,6 +256,12 @@ Restart the game. Patch37 won't apply; the other mod's Finalizers take over.
 - Save-game attachment toggle (currently the player attaches manually)
 - Crash signature de-dup ring buffer (suppress duplicate-signature crashes after N within a session)
 
+## Changelog
+
+- 2026-06-15 — Deduplicated crash bundle ZIPs: new session-scoped `CrashBundleThrottle` (dedup + ≤25/session cap + 30s cooldown) at the `HandleException` chokepoint so a per-tick recurring crash produces exactly one zip instead of hundreds; 10 throttle tests added.
+- 2026-05-25 — Codex adversarial review (Review 41): 8 confirmed findings fixed (2 HIGH including post-reload disposed-logger Finalizers and a decorative `EnableCrashCapture` toggle, plus 4 MED / 2 LOW such as the dead per-frame Harmony-correlation block).
+- 2026-05-25 — Initial feature: TAOM-native comprehensive crash diagnostic capture — 10 Harmony Finalizers (Patch37_CrashReport) + `*CallbacksGenerated` reflection hooks + AppDomain safety net, full sectioned `report.txt`/`report.json` capture, ZIP bundle, ButterLib coexistence, and a dedicated MCM page.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

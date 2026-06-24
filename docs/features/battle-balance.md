@@ -145,6 +145,13 @@ The models themselves test the static helpers (`CalculateTierPower`, `CalculateB
 
 Use the MCM panel: **TAOM → Troop Power → Tier7Power / Tier8Power / Tier9Power / Tier10Power**. Changes apply on the next `GetDefaultTroopPower` call, no restart needed. To make ≤T6 also use JSON values, flip MCM **OverrideVanillaTierPower** to `true`.
 
+## Changelog
+
+- 2026-05-13 — Phase 9b: `BattleBalanceConfigProvider` now validates per-key (TierPower T0-T10 finite + > 0, CulturalSurvivalBonuses finite + [-1, +1]); invalid values revert to compiled default with a warning (partial closes #140).
+- 2026-05-07 — Feature doc `battle-balance.md` created (backfilled one of 5 missing feature docs flagged by `detect-docs-gaps.sh`).
+- 2026-04-06 — Config key fixes (`rohan`→`vlandia`, `dol_guldur`→`dolguldur`) plus test DataRows, from the full-codebase adversarial review.
+- 2026-03-31 — Fixed `TaomPartyHealingModel.GetSurvivalChance` NRE in arena practice by guarding the null `party` parameter (#52).
+
 ## GitHub Issue
 
 - **Issue:** None — feature predates the mandatory issue-per-feature policy.

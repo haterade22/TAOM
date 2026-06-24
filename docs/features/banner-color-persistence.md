@@ -139,6 +139,13 @@ Set `"EnableDriftGuard": false` in `banner_color_config.json`.
 
 Open the Banner Editor in-game, copy another clan's banner code from the encyclopedia, then Ctrl+V in the banner editor. The shield and character model should update immediately.
 
+## Changelog
+
+- 2026-05-14 — #187 `BannerTripletOrderingTests` (5 tests) verifying all 3 banner-triplet patches reference `IBannerColorService` + SubModule Initialize; #172 F2 scoped the Patch24 `UpdateBannerColorsAccordingToKingdom` Prefix to the player clan only (NPC clans get vanilla sync); #172 F3 added a `TargetMethod()` null-guard with logging.
+- 2026-04-06 — Adversarial-review fixes: fail-safe config defaults (`??true`→`??false`), unique-color RGB inversion, sentinel removal.
+- 2026-04-05 — Enhancement: deeper 3D battle + conversation color coverage (5 new patches + `AgentColorStore`, `AgentVisuals.Create` randomness disable, 2 `MapConversationTableau` patches, `OrderOfBattleHeroItemVM`; added `EnableAgentVisualColors`/`EnableConversationTableauColors` flags).
+- 2026-04-05 — Initial feature: Patch15 layer-limit transpiler (replaces RemoveRange-reparse postfix), Patch24 drift guard, Patch23 UI color persistence across 11 screens + BannerPaste, `BannerColorConfig` with 5 flags.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

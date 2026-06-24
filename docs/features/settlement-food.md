@@ -121,3 +121,7 @@ engine math, including the weighted garrison food).
 
 `CalculateTownFoodStocksChange` runs per fief per day (not a per-frame hot path). The snapshot walks
 bound villages once; the service is O(villages). Config is cached at first access.
+
+## Changelog
+
+- 2026-06-18 — `feat(settlement-food)` (#289): added `TaomSettlementFoodModel` fixing the Troop-Weight garrison food starvation (garrison term uses raw body count) plus MCM/JSON-tunable food knobs (consumption divisors, base/village/flat production, storage caps); MCM master toggle on by default.

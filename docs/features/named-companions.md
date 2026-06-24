@@ -151,6 +151,11 @@ Controls which companions spawn, where, and their race.
 | 6 missing Armory item IDs | In-game (naked companions) | Replaced deleted LOTRAOM items with LOTRLOME_Armory equivalents |
 | Unused `_logger` field in behavior | Codex Review #23 | Removed dead field, simplified constructor |
 
+## Changelog
+
+- 2026-05-13 — Entity State Matrix completion (#127 + #184): added prisoner/fugitive placement guards to `EnsureCompanionsPlaced` and a per-process `ResetSession()` so companions aren't force-placed onto captors/fugitives or skipped across campaigns in the same Bannerlord process.
+- 2026-04-08 — Initial feature: XML/JSON-driven placement of 18 named companions across 7 cultures as recruitable `is_hero`/`Wanderer` characters with fixed identity, race corrections, custom backstory dialog, and a load-time recruited-companion guard.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

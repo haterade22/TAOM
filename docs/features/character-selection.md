@@ -55,6 +55,9 @@ No unit tests exist for `CharacterSelection` in `TAOM.Tests/Features/`. The patc
 ## How to Update the Action Set Suffix
 The suffix `"_facegen"` is hardcoded in the `GetActionSet` static method inside `RefreshCharacterEntityAuxPatch`. To change the action set used for preview, update the string literal in that method. No IL changes are required — only the `GetActionSet` helper logic needs changing.
 
+## Changelog
+- 2026-05-14 — Made the `RefreshCharacterEntityAuxPatch` transpiler soft-fail (log + return unmodified IL) instead of throwing `ArgumentException` on a missing ctor / ActionSet setter / IL pattern, so a missed anchor no longer bricks startup (closes #160).
+
 ## GitHub Issue
 - **Issue:** Unknown (introduced in commit `6a2611e` — "add late patches for character tableau and action set generation, improve race handling")
 - **Status:** Unknown

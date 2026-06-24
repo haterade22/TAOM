@@ -221,3 +221,10 @@ Character creation runs once per new game. All data is loaded and cached on firs
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
+
+## Changelog
+
+- 2026-05-30 — Zeroed the Career CC stage bonuses (`career_menu.json`, 49 entries): `focus/skill_level/attribute_to_add → 0` and `skills`/`attribute` arrays cleared, so a selected career renders a clean zero-bonus line; career still drives specialization + starting equipment.
+- 2026-05-20 — `CareerMenuService.UpdateCareerEquipmentPreview` now applies the culture-default → career-roster two-step chain so the review-stage 3D preview matches the chosen career, and switching careers mid-CC starts from a clean slate (#206).
+- 2026-05-19 — Removed orphan `career_menu.json` entries for the disabled WIP careers `far_harad_halftroll` and `cave_troll_master`, fixing the `EveryJsonEntry_HasMatchingCareerInXml` cross-reference test.
+- 2026-04-14 — Initial feature: added the 6th "Career" narrative stage after adulthood, culture-filtered career options with CC skill/attribute bonuses, 50 `career_menu.json` entries, and a "No specialization" fallback that prevents the empty-menu crash (#84).

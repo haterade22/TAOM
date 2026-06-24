@@ -135,6 +135,12 @@ Saveable types (registered via PresetSaveableTypeDefiner, BaseId 726900501):
 - **Pre-existing item locks are not respected.** The original module reserved an `IsLocked` slot to skip mid-load mutation; in v1 we don't surface that path, since the adapter applies the slots in a single tight loop and vanilla doesn't auto-mutate equipment between consecutive `equipment[i] = …` assignments. If a future feature pre-locks items via `SPItemVM.IsLocked`, this feature will overwrite them.
 - **`CosmeticItem` field is NOT preserved.** `EquipmentElement.CosmeticItem` is a public field but has no `[SaveableProperty]`, so it doesn't survive the save/load cycle even in vanilla. Out of scope for this feature.
 
+## Changelog
+
+- 2026-05-19 — Fixed the Presets overlay button being a silent no-op by wiring `SetInputRestrictions()`/`ResetInputRestrictions()` on the z-order-1000 `GauntletLayer`.
+- 2026-05-13 — Lifted `IInventoryScreenAdapter.SetActive(SPInventoryVM?)` onto the interface (Phase 9b) so `Patch33_SPInventoryVMRefresh` resolves the interface without a concrete-type cast.
+- 2026-05-07 — Codex review fix pass (Patch33): routed the Load path through vanilla `InventoryLogic`/`TransferCommand`, fully wired IoC + Patch33 category + behavior, added empty-slot clearing, dead-equipment guard, slot-fit enforcement, and restored the 3 MCM properties.
+
 ## GitHub Issue
 
 To be opened on session close.

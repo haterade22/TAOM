@@ -103,6 +103,9 @@ Add the clan id or culture id to the `excluded_clans` or `excluded_cultures` arr
 
 Changes take effect on the next new game. Existing saves are not affected (the behavior only runs at new-game creation).
 
+## Changelog
+- 2026-05-13 — Config validation hardening (#126): NaN/Infinity/range guards on `FemaleRatio` and `ChildCountMultiplier`, `SelectTemplate` returns null for zero-adult clans instead of throwing, and a `MinAge > MaxAge` ordering swap.
+
 ## GitHub Issue
 - **Issue:** Unknown (commit `0b3a1f6`)
 - **Status:** Unknown

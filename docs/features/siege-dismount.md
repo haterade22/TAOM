@@ -139,6 +139,11 @@ Disable round-trip:
 2. Confirm one `[SiegeDismount] disabled via MCM — patches inert` line at next siege.
 3. Enter a siege — player remains mounted.
 
+## Changelog
+
+- 2026-05-13 — Added SiegeDismount MissionBehavior wiring tests (closes #193): asserts the `AddMissionBehavior` registration in `OnMissionBehaviorInitialize`, the IoC feature registration, and that the behavior inherits `MissionBehavior`.
+- 2026-05-06 — Ported the external SiegeDismount module into `Main/Features/SiegeDismount/` (adapter/service/IoC pattern, MCM under `Battle Tactics / Siege Dismount`, four behavior modes), then fixed deep-review and Codex adversarial HIGH findings — switched siege detection to `Mission.IsSiegeBattle` only (dropped false-positive scene-name matching) and preserved `ItemModifier` on the mount round-trip.
+
 ## GitHub Issue
 
 - **Issue:** TBD (create with `/issue feature SiegeDismount integration` before commit)

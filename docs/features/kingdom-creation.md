@@ -569,6 +569,11 @@ There are no automated unit tests for kingdom XML data. Validation is performed 
 3. Opening the encyclopedia and verifying kingdom, clan, and lord entries all render correctly
 4. Visiting a settlement owned by the new kingdom and confirming wanderers, notables, and guards appear with correct culture visuals
 
+## Changelog
+
+- 2026-04-03 — Harad Split follow-up: restored original clan banner keys for the 17 new clans, added the 6-branch education templates for `Culture.shaghana`/`Culture.abanissa`, removed leftover duplicate `clan_aserai_10–26` clans, and added this `kingdom-creation.md` guide.
+- 2026-04-03 — Split Harad into three kingdoms (#63): added independent `Kingdom.shaghana`/`Kingdom.abanissa` with cultures, 17 clans, 17 lords + heroes, 26 notable NPCs each, settlement reassignment, recruitment fallback pools, strings, and character-creation culture entries (Harwan stays on `aserai`).
+
 ## GitHub Issue
 
 - **Issue:** #63 — Harad Split: Shaghana and Abanissa kingdoms

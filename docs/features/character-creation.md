@@ -402,6 +402,19 @@ Beyond the LOTRLOME data layer, vanilla `CharacterCreationCampaignBehavior.AgeSe
 
 The Postfix's scope is deliberately limited to the age-30 code path. Vanilla references `act_childhood_athlete` in two other locations (`CharacterCreationCampaignBehavior.cs:1599` + `:2016`, both youth backstory option handlers); those are untouched. If a future report surfaces broken poses at those backstory options, repeat the same Postfix recipe targeting `MerchantsParentsOptionOnSelect` / whichever specific method.
 
+## Changelog
+
+- 2026-06-01 — `fix(character-creation)` #264: culture-appropriate family/clan name (assign `Hero.MainHero.Culture` before `SetSelectedCulture`; Rohan/`vlandia` "dey Corvand" override) + `Patch44_CCNameAutofill` pre-fills the blank Review-stage name field via `ExecuteRandomizeName()`.
+- 2026-05-30 — `balance(cc)`: cut the CC bonus budget back to vanilla (7→5 focus) by zeroing the two TAOM-added sources — the Career stage and the `cultures.json` culture-base bonus.
+- 2026-05-22 — `fix(cc)`: authored missing `as_elf_facegen` + `as_elf_female_facegen` so elves render upright on the parent menu; `Patch20` age-30 animation override (re-set `act_childhood_athlete` → `act_childhood_focus`); `migration(ui)` flipped CC narrative + culture stage ListPanel direction after the v1.4.0 layout-fix regression.
+- 2026-05-13 — CharacterCreation service-locator → constructor injection (#125); `Patch20` SpawnNonHuman finalizer now logs generic NREs before suppressing (#163); CC × HeroRace race-ID save/load round-trip pinned (#181).
+- 2026-05-06 — Re-implemented `Patch9_RaceFilter` (culture-restricted race dropdown via `FaceGenVM.Refresh` postfix); added `Patch29_CCBodyProperties` (per-culture default BodyProperties, #108); `SetPlayerRace` honors the player's FaceGen choice; player startup gold + CC equipment persistence on finalize.
+- 2026-04-14 — Added a 6th narrative stage letting players choose a culture-eligible career during character creation.
+- 2026-04-08 — Added missing CC parent equipment rosters for `shaghana` and `abanissa`.
+- 2026-03-31 — Fixed 3 cascading dwarf-CC crashes via `Patch20_NarrativeHorseGuard` (3 Prefixes + 1 Finalizer covering all no-mount horse-read sites) (#50).
+- 2026-03-15 — Fixed non-human races (dwarf/elf/uruk) displaying as human models during character creation (#22).
+- 2026-03-12 — Ported the LOTRAOM character-creation narrative system to the 1.3.x handler-based API + added CC equipment rosters for all cultures.
+
 ## GitHub Issue
 - **Race filter (Patch9_RaceFilter re-implementation):** [#107](https://github.com/haterade22/TAOM/issues/107) — closed 2026-05-06
 - **Per-culture default BodyProperties (Patch29_CCBodyProperties):** added in same session, not separately ticketed

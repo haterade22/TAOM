@@ -99,6 +99,15 @@ Falls back to `base` (vanilla) when no culture-specific items are found (e.g., l
 1. Add `gear_practice_dummy_{culture_string_id}` to `npcs_{culture}.xml` with a non-civilian `EquipmentRoster` using skeleton-appropriate items from that culture's armory
 2. No code changes needed — `TaomTournamentModel` picks it up automatically via the culture StringId lookup
 
+## Changelog
+
+- 2026-06-09 — Fixed the Patch46 dwarf-dismount postfix crashing every campaign load (`____match` underscore-count fix for the private `_match` field); corrected the stale Phase-9b-#137 architecture notes in this doc + `arena.md`.
+- 2026-06-09 — Added `Patch46_TournamentDwarfDismount` postfix on `PrepareForMatch` to clear the Horse/HorseHarness slots for dwarf participants (mount comes from the culture weapon template, not `GetParticipantArmor`) so dwarves no longer spawn inside the horse mesh (#277).
+- 2026-05-14 — Extracted the decision logic (`ResolveDummyId`, `BuildPrizePool`, start/end-chance) from `TaomTournamentModel` into the new `ITournamentService`, leaving the model a thin boundary delegate (#137).
+- 2026-03-31 — Added per-participant culture armor: `TaomTournamentModel.GetParticipantArmor` tries the participant's own culture's `gear_practice_dummy_*` first, then falls back to vanilla, so visiting human lords no longer wear dwarf gear on human skeletons (#52).
+- 2026-03-31 — Added culture-specific tournament prize items: `GetRegularRewardItems`/`GetEliteRewardItems` scan `Items.All` filtered by settlement culture and `item.Tierf` (regular 2–4, elite 4+), with graceful `base` fallback (#52).
+- 2026-03-31 — Tuned tournament frequency: removed the vanilla week-gate start chance and extended the end-chance grace period, with all tuning values as testable `internal const` (#52).
+
 ## GitHub Issue
 
 - **Issue:** [#52 — feat: TaomTournamentModel — per-participant culture armor assignment](https://github.com/haterade22/TAOM/issues/52)

@@ -164,6 +164,12 @@ Bannerlord must already support the language natively (it must have an entry in 
 
 No performance impact — translation files are loaded once at startup by the engine and cached in a static dictionary. Empty translation files (the current stub state) add zero overhead.
 
+## Changelog
+
+- 2026-05-23 — Added the AI first-draft translation pipeline (`tools/translate_with_claude.py` + `tools/rebuild_translation_files.py`) with a 4-tier fallback chain (overrides → cache → LLM → English) and first-draft coverage across all 11 AI-translated languages.
+- 2026-04-29 — Code-side string localization (#96): wrapped Main Menu / CC Narrative / Career System literals with `{=KEY}default`, extracted `taom_cc_strings.xml` + `taom_career_strings.xml`, scaffolded per-language stubs, and bumped `LanguageDataXmlTests` from 3 to 5 LanguageFile entries.
+- 2026-04-03 — Localization Infrastructure (#65): added the `Languages/` directory structure (37 XML files — English anchor, 12 manifests, 24 stubs), made 1,773 strings translatable with English fallback, and added 15 structural contract tests in `LanguageDataXmlTests.cs`.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

@@ -287,6 +287,10 @@ The pipeline is project-agnostic. Run `--init` from any directory containing wea
 - **Texture / material assignment** — lives in the FBX/material editor.
 - **Hand-tuning numeric stats** — the manifest is the human-input layer; the pipeline does no balancing.
 
+## Changelog
+
+- 2026-04-27 — Added `tools/build_weapon_xml.py` + the `tools/weapon_xml/` package automating the four-file weapon-authoring flow (crafting pieces, items XML, both XSLTs); project-agnostic, idempotent, supports crafted (4-piece) and single-piece weapons; 25 unit tests; ships with in-session deep-review fixes (XSLT self-heal, `body_name` `sm_`/`wm_` derivation, atomic writes, newline preservation, prefix culture resolution). (#95)
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

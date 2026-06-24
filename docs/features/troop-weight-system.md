@@ -231,6 +231,13 @@ Weight values are continuous floats — any positive value works. Common tiers:
 - **PartyBase-only patching:** Patches target `PartyBase.NumberOfAllMembers` / `NumberOfRegularMembers` only, NOT `TroopRoster.TotalManCount` / `TotalHealthyCount`. TroopRoster getters fire for every roster in the game (prisoners, garrisons, temp rosters); patching them caused IndexOutOfRange on partially-initialized rosters during game loading.
 - **Single-threaded:** All caches use `Dictionary` (not `ConcurrentDictionary`) because the campaign tick loop is single-threaded
 
+## Changelog
+
+- 2026-06-16 — Shed-on-upgrade: `Patch17_TroopWeight` postfix on `UpgradeReadyTroops` makes AI lords respect the weight budget by trimming the cheapest bodies via the pure `ITroopWeightService.PlanShed` planner; also fixed unweighted UI counts (clan-screen party list + main-party "Land Troop Capacity" row).
+- 2026-06-07 — Phantom-wounded display fix across four UI surfaces (main/any-party health tooltips, encounter menu item, party nameplate text), rewriting battle-ready/wounded from a weighted split so the surplus no longer shows as fake wounds.
+- 2026-05-14 — Phase 9c: disabled the `cave_troll` weight-4.0 entry in-place (WIP troll content). Phase 9b: added `TroopWeightHooksTests.cs` (10 tests) for the four `IOn*` hook implementations.
+- 2026-03-26 — Initial feature: data-driven `troop_weights.xml` (~80 troops), `Patch17_TroopWeight` PartyBase getter postfixes + 2 UI patches, `EnableTroopWeight` MCM toggle; PartyBase-only patching after TroopRoster-level patches caused IndexOutOfRange freezes.
+
 ## GitHub Issues
 
 - **Feature:** #41 — [feat: Troop Weight System — Elite unit party capacity](https://github.com/haterade22/TAOM/issues/41) — Closed

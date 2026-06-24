@@ -137,6 +137,11 @@ These were considered and intentionally **not** built in v1 (scope + ROI; see th
 - **Memory-layer ingestion** — the out-of-repo memory files (`[[wikilinks]]` + markdown) could be a second labelled subgraph. Deferred: the memory dir path is harness-coupled (project-slug encoding of cwd), the syntax is mixed, and `[[ ]]` targets can dangle. If built: opt-in (`--include-memory`), best-effort path derivation, failure-tolerant (skip + warn, never crash).
 - **MCP exposure** — the verbs already return dicts, so wrapping them in a stdio MCP server (like `taom_mcp_server.py`) is trivial. Deferred: an always-loaded MCP is a standing token cost ([context-budget](../../.claude/skills/context-budget/SKILL.md)) for a low-frequency tool; the CLI is the right surface until usage proves otherwise.
 
+## Changelog
+
+- 2026-06-08 — Wired `/doc-graph` into the discoverability surfaces (CLAUDE.md skills table, agent-operating-manual tool catalog, AGENTS.md Key Paths) so subagents and the Codex reviewer find it.
+- 2026-06-08 — Shipped the doc-graph tool (`tools/doc_graph.py` + `tools/graph_query.py`): `explain`/`path`/`metrics` verbs over the doc-link graph, pure-stdlib, `.md` nodes only; codified as the `/doc-graph` skill. ADR-010 Phase 5, issue #276.
+
 ## GitHub Issue
 
 - **Issue:** [#276](https://github.com/haterade22/TAOM/issues/276) — Doc-graph analytics (ADR-010 Phase 5)

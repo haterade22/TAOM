@@ -314,6 +314,19 @@ the module is outside this repo, so that ledger is the only durable record of it
 - Memory: `feedback_quad_movement_tag_required_for_gait_clips`,
   `feedback_nonhumanoid_creature_troop_not_mount` (revised — the mount verdict is reversed).
 
+## Changelog
+
+- 2026-06-15 — Lethal-bite tuning: 75 base + speed bonus, armor curve, 20% per-hit crit; front-leg bone-collision (joint40-44) with 1.8/1.5m radius replacing the warg-placeholder bones.
+- 2026-06-15 — Directional attack model: priority pounce (`act_spider_attack_front`/`_charge`) + left/right swipes by enemy bearing; new BT nodes mirror the elephant 1:1.
+- 2026-06-15 — Patch48 (`SpiderHitDismountGuard`): strips `BlowFlags.CanDismount` on hits to surviving mounted Spider Riders, avoiding the native `HandleBlowAux` AV; sibling of Patch47.
+- 2026-06-14 — Restored the proven 6/11 working bundle (`spider_correct_geo.tpac`) from the user's backup, ending the multi-crash Kit-rework dead-end.
+- 2026-06-14 — Re-bundled the dropped `spider_skeleton` resource INTO the mesh tpac via `tpac_skeleton_inject.py`; the prior standalone skeleton tpac crashed the engine.
+- 2026-06-13 — Restored the loose `spider_skeleton` resource dropped by the Blender-loop mesh re-export (riderless-spider regression).
+- 2026-06-13 — Retired the SpiderDiag probe battery (custom-battle NRE) and refined the idle.
+- 2026-06-13 — Fixed the spider idle (walk-in-place) and mapped the rider-animation system source-side (Blender-MCP).
+- 2026-06-12 — v1.4.6 engine-bump campaign: three native crash sites root-caused and fixed (`CanAttack`, jump lookup, Die path); spider mount GREEN on 1.4.6.
+- 2026-06-11 — Giant spider rideable mount WORKING in battle; root cause was a missing `quad_movement` clip tag.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

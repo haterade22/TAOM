@@ -154,6 +154,13 @@ The formation mapping uses culture militia properties from `BasicCultureObject`/
 
 ---
 
+## Changelog
+
+- 2026-05-13 — Verified the `CustomBattleSideVM.OnCultureSelection(BasicCultureObject)` private signature against the installed CustomBattle DLL and documented the assembly path inline so the Patch19 hook target won't silently break (#162).
+- 2026-05-04 — Commander dropdown now filters per-culture and caps at 3 via the new `ISideCommanderFilter`; added `OnCultureSelection`/`RefreshValues` postfixes and the `CommanderSelectorRebuilder` safe-rebuild helper (Codex Review 30 P1).
+- 2026-03-27 — Fixed the Custom Battle screen-init NRE by registering cultures/lords for `CustomGame`/`EditorGame`, adding empty-list fallbacks, excluding wanderers/notables, and replacing the broken faction selector with `TaomFactionSelectionVM`.
+- 2026-03-27 — Initial Custom Battles feature: TAOM cultures, commanders, and formation-mapped troops in Custom Battle mode via the `Patch19_CustomBattles` Harmony patches plus a friendly-fire team-fix MissionBehavior.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

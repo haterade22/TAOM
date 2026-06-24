@@ -83,6 +83,11 @@ None. Tier values and wage tables are hardcoded in `VolunteerTierService` and `T
 4. Run tests to confirm GREEN.
 5. Update `CHANGELOG.md`.
 
+## Changelog
+- 2026-05-14 — Extracted `IWageModifierService`/`WageModifierService` from `TaomPartyWageModel`, moving inline garrison/party/Rohan wage-feat and recruitment-cost logic out of the override bodies (+22 tests); closes #180, partial #148.
+- 2026-05-13 — Moved `IVolunteerContextAdapter` registration into `TroopProgressionIoC` for feature cohesion (was in global `Main/IoC.cs`); partial #148.
+- 2026-03-10 — Initial TroopProgression feature: raised troop tier cap 6→10 (`TaomCharacterStatsModel`), volunteer cap 4→6 (`TaomVolunteerModel`), extended wage/recruitment-cost tables (`TaomPartyWageModel`/`TroopCostService`) with 39 new tests.
+
 ## GitHub Issue
 - **Issue:** Unknown
 - **Status:** Unknown

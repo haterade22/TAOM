@@ -117,6 +117,12 @@ _moduleMenuAdapter.RenameOption("Multiplayer", "PvP"); // or rename it
 
 The `HideOption` and `RenameOption` calls are idempotent — safe to call on every menu visit.
 
+## Changelog
+
+- 2026-04-29 — Localized the "Enter The Age Of Men" label: `MainMenuCustomizerService.cs` now wraps the rename text with `{=taom_main_menu_new_game}` (#96).
+- 2026-04-04 — Fix: restored "Saved Games" and "Continue Campaign" (only `StoryModeNewGame` stays hidden) and guarded the duplicate "Pre-compile Shaders" entry with a `GetInitialStateOptionWithId` null-check (#55).
+- 2026-04-04 — Feat: initial MainMenuCustomizer — hide vanilla "Campaign"/`StoryModeNewGame` and rename "Sandbox" to "Enter The Age Of Men" via `OnBeforeInitialModuleScreenSetAsRoot` + `IModuleMenuAdapter` (#55).
+
 ## GitHub Issue
 
 - **Issue:** #55 — Main menu: hide Campaign, rename Sandbox to "Enter The Age Of Men"

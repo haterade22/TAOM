@@ -238,3 +238,15 @@ bluecraig (Culture.goblin) and Lindon (Culture.rivendell) inherit their culture'
 The user typed the kingdom id as `golbin`; it was implemented as `goblin` (the kingdom is named
 "Goblins"; `golbin` read as a transposition typo). IDs are save-immutable — confirm before
 starting a campaign if `golbin` was intended.
+
+## Changelog
+
+- 2026-06-23 — Misty Mountain Orcs grown from 5 to 15 clans (10-strong 6♂/4♀ warbands, +110 lords) via `generate_mistymountain_clans.py`; ownerless-clan audit clean.
+- 2026-06-02 — Codex + completeness-audit fixes: remapped Gundabad clone-leftover display text, reworked faction-map cards off the stripped cavalry, added the 4 kingdoms to `execution/alignment.json`.
+- 2026-06-02 — Deep-review fixes: `cattle_range`→`cattle_farm` VillageType, `TAOM_Map`→TAOM module dependency declared, Blue Craig given placeholder villages/economy.
+- 2026-06-02 — Reviewed editor-saved settlements and assigned per-fief orc/goblin village economies (animal food + ~1 mine; generator reproduces the live file).
+- 2026-06-02 — Blue Craig confirmed as a separate western goblin kingdom by Lindon and expanded to ~40 lords.
+- 2026-06-02 — Goblin + Misty Mountain Orc lord rosters expanded to ~40 each with within-clan breeding pairs.
+- 2026-06-02 — Added the Goblins of Blue Craig kingdom and forever-alliance diplomacy (`diplomacy/diplomacy.json`).
+- 2026-06-02 — Added cultural feats, CC-playability, orc-only armor + no-cavalry troops, and Third-Age lord/settlement names for Misty Mountains + Lindon.
+- 2026-06-01 — Initial feature: three new kingdoms and two new cultures (Misty Mountain Orcs, Goblins, Lindon) as full AI map-factions.

@@ -213,6 +213,16 @@ Edit attributes on the `<Resource>` element. Each resource can have independent 
 - String formatting only when amount changes (cached `_lastAmount`)
 - Comprehensive logging uses `LogDebug` for high-frequency paths, `LogInfo` for events
 
+## Changelog
+
+- 2026-06-19 — Gate the war elephant + spider behind recruit cost + daily upkeep via a new `recruit_cost` XML field and `Patch51_RecruitmentResourceGate` (block Done button) + `OnUnitRecruitedEvent` charge.
+- 2026-06-01 — Deficit warning now fires only when the next tick's projected net would push the balance to ≤ 0 (`GetProjectedDailyNet` shared with the real tick math), replacing the low-but-stable `< Cap*0.1` warning.
+- 2026-05-14 — R1-reset of resource state, added desertion grace, and per-resource seeding (closes deferred #133).
+- 2026-05-13 — Fixed SyncData per-resource cap clamp + screen-event leak + NaN ParseFloat (#133), and made `QueueUpgradeSpend` debit the career-discounted effective cost with regression tests (#174, #194).
+- 2026-05-04 — Deduped the hot-path `ResolveResource` DEBUG log spam by `(kingdom, culture)` key.
+- 2026-04-14 — Corrected the Gondor resource display name from "Caster" to "Castar".
+- 2026-04-08 — Initial Per-Kingdom Special Resource System (#73): 11 resources across 18 kingdoms, earning/spending/desertion/map-bar/SyncData; plus Codex adversarial review fixes (#72) including the `mordor`→`empire_s` ship-blocker and the transactional upgrade-spend pattern.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

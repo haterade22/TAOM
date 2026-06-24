@@ -108,6 +108,11 @@ No C# code changed — no unit tests applicable. Verified via:
 - Build succeeds (0 errors)
 - String key format matches TAOM conventions
 
+## Changelog
+
+- 2026-04-06 — All 14 vanilla minor factions replaced with lore-appropriate Middle-earth equivalents via `spclans.xslt` (14 templates) + `taom_module_strings.xml` (42 strings); 3 settlement remaps and the Dunlending Reavers vlandia→empire culture change.
+- 2026-03-26 — Fixed `NullReferenceException` at `CharacterObject.get_StealthEquipments()` when spawning minor faction heroes (e.g. Ghilman) on new-game start, by setting `default_stealth_equipment_roster` in the 4 XSLT culture templates (`spcultures.xslt`).
+
 ## GitHub Issue
 
 - **Issue:** #71 — feat: LOTR-themed minor factions (mercenaries, mafias, sects, nomads)

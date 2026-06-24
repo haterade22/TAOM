@@ -170,6 +170,18 @@ Both `triggerDay` values are currently set to 1 (immediate on new game). MCM ove
 2. Add a `WarDeclaration` entry to the appropriate phase's `wars` array: `{ "attacker": "empire_s", "defender": "empire_w" }`.
 3. The war is declared idempotently (only if the factions are not already at war).
 
+## Changelog
+
+- 2026-06-17 — Instrumented player-alliance loss with `[Diplomacy][diag]` logging only; the durability war-block (`DiplomacyService.IsWarAllowed` branch) was reverted after review (it soft-locked the player out of the only alliance-exit path).
+- 2026-06-16 — Let player-founded kingdoms form alliances: player-aware service overloads unblock the vanilla Kingdom→Diplomacy button (Part A) and a new `PlayerAllianceProposalBehavior` dialog lets a kingdom-ruler initiate (Part B); full freedom, AI-vs-AI diplomacy unchanged.
+- 2026-05-22 — War of the Ring phase defaults retuned to Day 2 (Phase 1) / Day 14 (Phase 2), both MCM-tunable.
+- 2026-05-22 — Split peace + alliance invariants in `EnforcePermanentAlliances` (Mordor showing in both Wars and Alliances lists); closed Dale↔Isengard gap.
+- 2026-05-22 — Promoted Harad (`empire_s ↔ aserai`) from Natural to Permanent alliance with Mordor + added MakePeace step in alliance enforcement.
+- 2026-05-19 — Blocked war between same-alignment kingdoms (#203).
+- 2026-05-13 — War of the Ring phase persistence via SyncData + config validation in the JSON providers (#129); plus prefix documentation + diagnostic logs (#152, #153).
+- 2026-04-09 — Added `CanMakeAlliance` override to `TaomAllianceModel` as a hard gate (via `IDiplomacyService.IsAllianceAllowed`) for permanently hostile factions.
+- 2026-03-27 — Added diagnostic/initialization logging to diplomacy enforcement hooks, behaviors, and the 3 diplomacy Harmony patches.
+
 ## GitHub Issue
 - **Issue:** Unknown (commits reference `16f7f4e` for initial implementation; no issue number in messages)
 - **Status:** Active

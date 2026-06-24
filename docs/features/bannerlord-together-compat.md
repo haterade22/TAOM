@@ -104,6 +104,11 @@ BT must defer `PatchAll()` — or at minimum the `DefaultClanFinanceModel` patch
 - [ ] War of the Ring forced wars trigger correctly on host; client mirrors state
 - [ ] Siege defense events fire on host; client sees outcome via state sync
 
+## Changelog
+
+- 2026-04-03 — Noted that removing the 13 GameModel static `TextObject` field initializers (no longer emitting a `.cctor()`) does NOT fix the BT startup crash; RCA confirmed the crash is in vanilla `DefaultClanFinanceModel..cctor()`, triggered by BT's `OnSubModuleLoad`-time `Harmony.PatchAll()` when `Game.Current` is null.
+- 2026-04-02 — Initial passive-compat pass: added `[HarmonyPriority(Priority.High)]` to the `DeclareWarAction`/`MakePeaceAction` `ApplyInternal` patches so TAOM constraints validate before BT syncs, confirmed TAOM runs on BT's 1.3.15 minimum, and added this feature doc.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

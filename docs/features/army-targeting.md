@@ -184,6 +184,12 @@ No TaleWorlds adapter interfaces are required — the service works exclusively 
 
 **Implemented:** `Patch22_ArmyTargeting` — Harmony Postfix on `CalculateDistanceScoreForBesieging`. When `bestDistanceScore == 0` and the target is in the faction's priority list, substitutes `BorderProximityFloor` (MCM, default 0.15). This ensures `GetTargetScoreForFaction` is at least called for priority targets.
 
+## Changelog
+
+- 2026-04-04 — Phase 2: added `Patch22_ArmyTargeting` Harmony Postfix on `CalculateDistanceScoreForBesieging` substituting a "Border Proximity Floor" (default 0.15) for priority targets vanilla scores at 0.
+- 2026-04-04 — Added evil-faction aggression (`FactionAggressionMultipliers` strength-gate bypass) + large-map distance compensation (`FactionDistanceRangeMultipliers`) to `TaomTargetScoreModel`, with MCM aggression/long-range sliders.
+- 2026-04-03 — Initial feature: `TaomTargetScoreModel` adds Besieger army commitment stickiness + JSON faction priority lists, with MCM toggle, Commitment Multiplier, and Priority List Boost.
+
 ## GitHub Issue
 
 - **Issue:** [#64 — feat: AI Strategic Intelligence — army commitment stickiness + faction priority target lists](https://github.com/haterade22/TAOM/issues/64)

@@ -747,6 +747,19 @@ bump as of 2026-06-12.
 
 ---
 
+## Changelog
+
+- 2026-06-19 — War elephant (`harad_elephant_rider`) gated behind a special-resource recruit cost + per-day upkeep.
+- 2026-06-15 — Bow-armed rider (spear → second bodkin quiver) + lethal per-kind randomized damage (trample 50-100, tusk 50-75); service tests 16 → 24.
+- 2026-06-13 — Idle ear-fan authored + canter/gallop rebuilt as faster ambles from the refined walk (Blender-MCP).
+- 2026-06-12 — Walk/run refined + full TAOM-owned locomotion set (trot/walk_backwards/turns/idle) authored on `elephant_skeleton` (Blender-MCP, source-side).
+- 2026-06-10 — Behavior-tree-driven AI trample (warg pattern, phase 1) → cooldown-driven attack sequencing with directional tusk swings (BT phase 1.5); slide root-cause isolation; `TaomHowdahMachine._liveTicking` CS0414 fix.
+- 2026-06-10 — War-elephant rider troop raised to level 51, recruitable only by `clan_aserai_1` (Ayerikkä).
+- 2026-06-09 — Sealed-package howdah (force-spawned crew, 4 seats, dedicated rider); fixed howdah ground-level archers, ignored commands, and end-of-battle freeze.
+- 2026-06-08 — Harad war elephant confirmed in-game; action-sets made self-contained in `LOTRLOME_Armory`; functional howdah seat via vanilla detachment.
+- 2026-06-06 — First-pass idle + walk animations authored in Blender (via MCP); howdah crew mechanism documented + clip consolidation underway.
+- 2026-06-05 — Harad war-elephant trample + mount-lock C# implemented (donor-mod behavioral port adapted to v1.4.5).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

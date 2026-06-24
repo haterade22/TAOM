@@ -140,6 +140,12 @@ The 12 Erebor wanderers (`spc_wanderer_erebor_0` … `_11`) share one equipment 
 
 **Audit recipe for the next dwarf NPC:** `python tools/validate_moduledata.py` confirms refs resolve and civilian sets stay tagged; the negative-lookahead grep above flags any non-dwarf item that slipped into a dwarf NPC's roster.
 
+## Changelog
+- 2026-05-14 — Hardened RacePersistence (#130): added `ResetForNewCampaign()` on new-game so stale race maps don't carry across campaigns, dropped the `race>0` filter so human resets are captured, and null-guarded the hero-roster adapter.
+- 2026-05-14 — Added `RacePersistenceBehavior` wiring tests (#183) pinning the OnBeforeSave (capture) and OnSessionLaunched (restore) subscriptions and IoC registration.
+- 2026-04-08 — HeroRace fixes: ActionSetCode BaseMonster/StringId preference and EyeHeight init retry.
+- 2026-01-29 — Initial HeroRace feature: race-aware character spawning/tableau rendering, eye-height adjustment, race persistence across save/load, and the four Harmony patches.
+
 ## GitHub Issue
 - **Issue:** Unknown
 - **Status:** Unknown

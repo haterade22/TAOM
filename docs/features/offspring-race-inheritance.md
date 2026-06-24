@@ -53,6 +53,10 @@ This is part of the broader RaceAge feature. The race inherited by offspring det
 
 Vanilla's `GetStaticBodyProperties` method for offspring uses `hero.Mother.CharacterObject.Race` for face mesh generation — always the mother's race, regardless of the child's actual race. This means a child of a Human father and Elf mother will have the father's race (Human) but facial features generated from the Elf mesh. This is deferred as a cosmetic issue — in most cases the visual difference is minimal, and it could be argued as lore-appropriate (half-elven features).
 
+## Changelog
+
+_No dated entries mapped from the global `CHANGELOG.md` yet — this section is the go-forward home for offspring-race-inheritance changes. See the repository-root `CHANGELOG.md` for full chronological history._
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

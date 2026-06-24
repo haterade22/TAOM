@@ -126,6 +126,12 @@ The `Patch46` postfix and the model methods that touch `Game.Current.ObjectManag
 
 If another custom-skeleton race is ever a tournament participant and clips inside mounts, extend the check in [TournamentService.ShouldDismountInTournament](../../Main/Features/Arena/TournamentService.cs) (e.g. compare against a small set of race names instead of the single `DwarfRaceName` constant). Add a unit test mirroring `ShouldDismountInTournament_DwarfRace_ReturnsTrue`. Non-humanoid creatures (spider, etc.) are **troops**, not tournament heroes, so they never hit this path — see memory `nonhumanoid-creature-troop-not-mount`.
 
+## Changelog
+
+- 2026-06-09 — Patch46 dwarf dismount added (`fix(arena)`, #277): postfix on `PrepareForMatch` clears Horse/HorseHarness for dwarf participants so they never spawn inside the mount; same-day hotfix corrected the injected `_match` field from three underscores to four (`____match`) after it crashed every campaign load.
+- 2026-05-14 — Phase 9b: decision logic extracted from `TaomTournamentModel` into `ITournamentService` (`CalculateStartChance`/`CalculateEndChance`/`BuildPrizePool`/`ResolveDummyId`), registered via new `ArenaIoC`; model is now a thin boundary (#137).
+- 2026-03-31 — Tournament model overhaul (#52): increased tournament frequency (lord-count step curve, 20-day end grace), culture-specific prize pools scanned from `Items.All` by culture + Tierf, and per-participant culture armor via `GetParticipantArmor`; the `gear_practice_dummy_<culture>` rosters that feed it had `civilian="true"` removed and a missing Lothlórien entry added (#51).
+
 ## GitHub Issue
 
 - **Patch46 dwarf dismount:** [#277 — fix(arena): dwarves spawn inside the horse as tournament cavalry](https://github.com/haterade22/TAOM/issues/277) (2026-06-09). RCA: [docs/reviews/rca-tournament-dwarf-dismount-2026-06-09.md](../reviews/rca-tournament-dwarf-dismount-2026-06-09.md).

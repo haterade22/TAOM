@@ -145,6 +145,12 @@ The hotkey is currently hard-coded as `InputKey.F6` in `MapScreenInputAdapter.Is
 - Pressing Confirm/Exit inside the screen pops back to the `fief_hub` menu (not all the way to the campaign map). This matches vanilla town-management UX where Done returns to the settlement menu.
 - When the player is currently INSIDE a settlement, F6 is guarded by `ActiveState is MapState` — the hotkey is inert. This prevents interleaving the hub menu with the vanilla settlement menu.
 
+## Changelog
+
+- 2026-05-14 — F6 fast-path: `FiefHubService.Count` now delegates to `ISettlementOwnershipAdapter.GetPlayerOwnedFiefCount()` (iterates the cached `Clan.PlayerClan.Settlements`) instead of building a `FiefSummary` list off `Settlement.All`; closes deferred #143 (+5 tests).
+- 2026-05-13 — Swap restore safety + presenter reset: `RemoteFiefSettlementSwapper.Restore` uses the party ref captured at `Swap` time (no longer leaves `_currentSettlement` pointing at a remote fief), and `FiefHubMenuPresenter.Reset()` clears all 4 stateful fields to drop stale cross-campaign state; partial #143.
+- 2026-05-13 — Behavior-callback test coverage: added `FiefHubCampaignBehaviorTests.cs` (7 tests covering presenter-reset delegation, SyncData, and event/menu wiring); closes #177.
+
 ## GitHub Issue
 
 - **Issue:** N/A — feature ported as part of the 7-feature LOTRAOM port queue

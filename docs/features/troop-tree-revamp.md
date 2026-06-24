@@ -178,6 +178,11 @@ If KEYforce's spec changes and a new troop ID needs to be added to (e.g.) Mordor
 - **Patrol-level / vassal-reward templates** — only `kingdom_hero_party_<culture>_template` was expanded this pass; patrol and reward templates use legacy compositions until a follow-up issue.
 - **Dol Guldur Khamul human troops party-template wiring** — already in `kingdom_hero_party_dolguldur_template` per the pre-revamp audit; no new wiring needed.
 
+## Changelog
+
+- 2026-05-25 — Gondor troop polish (#224): delta-style `apply_gondor_polish_224.py` touched 58 troops (94 equipment ops) + added 2 Pinnath Gelin cavalry NPCs and the upgrade-target branch.
+- 2026-05-23 — KEYforce troop tree revamp (#212): 48 new troops, 30 deletions, 113 equipment refits across Mordor/Isengard/Dol Guldur/Gundabad/Erebor via per-culture apply scripts + downstream cleanup/expand/validate pipeline.
+
 ## GitHub Issue
 
 - **Issue:** #212

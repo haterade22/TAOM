@@ -120,6 +120,10 @@ Comment out [Main/SubModule.cs:97](../../Main/SubModule.cs):
 
 The loader will still run (lines 99-111 are unguarded), but its `RegisterOverride` calls land in a dictionary that nothing reads, since the patch is no longer applied. Vanilla short-circuit wins for every call. No harm, no extra cost.
 
+## Changelog
+
+_No dated entries mapped from the global `CHANGELOG.md` yet — this section is the go-forward home for localization-override changes. See the repository-root `CHANGELOG.md` for full chronological history._
+
 ## GitHub Issue
 
 - **Issue:** None — feature predates the mandatory issue-per-feature policy.

@@ -284,6 +284,12 @@ SRWLOCK-protected `g_hiddenFaces` and `g_beardClothFaces` sets are accessed
 once per Face_mesh creation; the shared-read locks are non-contended in
 practice (only `CoversHeadHook` writes, and only during AgentVisuals init).
 
+## Changelog
+
+- 2026-06-18 — fix: ship a static-CRT DLL (`/MTd`) so the native DLL loads for players instead of failing with `LoadLibrary` Win32 error 126; documented the Build & CRT requirement (the byte-pattern signatures still ship as `<PATTERN_TBD>` placeholders).
+- 2026-05-26 — feat: adopt + port NativeSkinFixes into TAOM (v1.4.5, in-repo, pattern-scanning) — C++ source vendored under `Dependencies/NativeSkinFixes.NativeHooks/`, C# wrapper inlined into `TAOM.dll`, hardcoded RVAs replaced with byte-pattern scanning, unified logging, boot banner, and 8 installer unit tests.
+- 2026-04-10 — feat: fork the community NativeSkinFixes mod into TAOM — covers_head morph (jazz-hands) fix + hair/beard cloth physics via a C++ native DLL with 3 MinHook detours and a C# P/Invoke interop layer (7 RVAs verified against Bannerlord v1.4.0).
+
 ## GitHub Issue
 
 - **Issue:** TODO — create on next session via `/issue feature "Adopt NativeSkinFixes into TAOM (v1.4.5 port, in-repo)"`

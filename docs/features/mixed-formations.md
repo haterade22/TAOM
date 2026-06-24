@@ -169,6 +169,11 @@ Debug-mode round-trip:
 2. Trigger an auto-default-apply or a hotkey cycle.
 3. Confirm `[MixedFormations] auto-assigned default layout ...` and `[MixedFormations] cycled N formation(s) → ...` lines appear both in `rgl_log.txt` and on the in-game HUD with the `[MixedFormations]` prefix.
 
+## Changelog
+
+- 2026-05-13 — Added SmartCavalryAI × MixedFormations handshake tests (3 tests pinning the `RepresentativeIsCavalry` guards in `FormationLayoutService` so a refactor can't re-introduce the charge-line overwrite).
+- 2026-05-06 — Ported the external `MixedFormations` sibling module into `Main/Features/` (Patch30 Prefix on `Formation.GetOrderPositionOfUnit`, adapter/service/IoC pattern, 4 MCM settings, 36 unit tests); fixed Codex review findings (navmesh validation + thread-safety lock) and deep-review findings (hot-path service caching in Patch30 + `default:` guard in `LayoutPositioner` switch).
+
 ## GitHub Issue
 
 - **Issue:** TBD (create with `/issue feature MixedFormations integration` before commit)

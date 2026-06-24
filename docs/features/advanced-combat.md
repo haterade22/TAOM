@@ -82,6 +82,10 @@ None. Grid cell size is a hardcoded constant (`CellSize = 20f`) in `SpatialGrid.
 4. Pass the returned `BoneCheck` to `AdvancedCombatBehavior.AddBoneCheckComponent(check)` — the behavior is accessible via `Mission.Current.GetMissionBehavior<AdvancedCombatBehavior>()`.
 5. The check runs automatically each tick until it expires or all targets are hit.
 
+## Changelog
+- 2026-05-13 — Added `SpatialGridDebugServiceTests.cs` (2 minimum-coverage tests) for `#185`, and updated this doc's Tests section to reflect `BoneCollisionServiceTests.cs` (`#198`).
+- 2026-04-06 — Decoupled the bone-check tick from the 2-second spatial-grid update throttle.
+
 ## GitHub Issue
 - **Issue:** Unknown
 - **Status:** Unknown

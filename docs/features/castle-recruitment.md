@@ -114,3 +114,7 @@ Boundary classes (`CastleRecruitmentBehavior`, `CastleNotableMaintainer`, the `P
 - Castle volunteer regen uses a fixed probability curve, not vanilla's faction-fief-density scaling (a minor, intentional balance simplification — the vanilla formula NREs for castles).
 - The volunteer fill does **not** re-sort `VolunteerTypes` by tier like vanilla (cosmetic only; all slots are valid troops).
 - See `docs/reviews/rca-castle-recruitment-2026-05-31.md` for the deep-review findings + the "widening a settlement-type gate" root-cause pattern.
+
+## Changelog
+
+- 2026-05-31 — Recruit troops from castles (player + AI): new `CastleRecruitment` module (Patch42) — castle "Recruit troops" menu, AI scoring/travel/drain via two transpilers + `HourlyTickParty` postfix, `HeroCreator.CreateNotable` castle notables with castle-safe occupations and daily volunteer fill, issue/quest suppression, MCM "Castle Recruitment" group + `castle_recruitment_config.json` (master/AI toggles, notables-per-castle 1-5 default 3).

@@ -94,6 +94,10 @@ This patch runs at ~3000 calls/second on a populated map (60 FPS × ~50 visible 
 - **No allocations.** Pure arithmetic, no LINQ, no closures, no string formatting.
 - **Branch order optimized for common case.** Disabled → invalid input → close-up → far-away → between (linear).
 
+## Changelog
+
+- 2026-05-25 — feat(map) #223: distance-based settlement nameplate fade — Harmony Postfix on `SettlementNameplateWidget.DetermineTargetAlphaValue()` multiplies vanilla target alpha by a [0,1] fade factor from `DistanceToCamera`; 3 MCM settings (`EnableNameplateFade`, `NameplateFadeNearDistance` 5-500/80, `NameplateFadeFarDistance` 10-1000/200); disabled/NaN/`Far<=Near` short-circuit to vanilla; deep-review fixed 1 HIGH + 1 MED + 1 LOW (cached `TaomSettings.Instance`, `Initialize(svc)` static-field capture, Infinity-near regression test).
+
 ## GitHub Issue
 
 - **Issue:** [#223 — feat(map): distance-based settlement nameplate fade](https://github.com/haterade22/TAOM/issues/223)

@@ -261,3 +261,8 @@ The WotR system **extends** the existing Diplomacy feature, not replaces it:
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
+
+## Changelog
+
+- 2026-05-22 — WotR phase defaults retuned to Day 2 (Phase 1) / Day 14 (Phase 2); `testMode` tightened to 1/3; phase state persists via `SyncData` (`WarOfTheRing_CurrentPhase`).
+- 2026-05-13 — Phase 9b: `WarOfTheRingService.CurrentPhase` now persisted (no per-load transition replay); `WarOfTheRingConfigProvider` gains null-literal JSON fallback + semantic TriggerDay validation (closes #129).

@@ -187,3 +187,9 @@ The daily tick iterates all alive heroes to check age-based death. Several optim
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
+
+## Changelog
+
+- 2026-06-23 — Restored the `DeliverOffSpring_RaceAssert_Patch` transpiler (`Patch13_RaceAge`) to suppress the harmless `mother.Race == father.Race` SilentAssert on cross-race births (#283).
+- 2026-05-13 — RaceAge hardening: `_raceIdCache` reset on session launch, validate-before-lookup in `GetEntry`, semantic validation in `RaceAgeConfigProvider.LoadConfig`; extracted `TaomPregnancyModel.ComputeBaseChance` pure helper (#179) and fixed its `heroAge` int-truncation regression to use float `Hero.Age`.
+- 2026-04-06 — Adversarial-review fixes: `comesOfAge=18` standardized and `becomeOld` set per-race.

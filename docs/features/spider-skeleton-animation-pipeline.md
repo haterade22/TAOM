@@ -220,6 +220,13 @@ The combat bite-collision uses the **front legs' outer bones** (`SpiderConfig` f
 
 ---
 
+## Changelog
+
+- 2026-06-14 — Re-bundled the dropped `spider_skeleton` resource back INTO the split-mesh `spider_correct_geo.tpac` via the new `tpac_skeleton_inject.py` (4-item tpac, distinct package GUID), since the 06-13 standalone skeleton-only tpac crashed the engine; `tpac_skeleton_extract.py` deprecated.
+- 2026-06-13 — Restored the loose `spider_skeleton` resource that the Blender-loop mesh re-export had dropped (mesh-only tpac → null `CreateAgentSkeleton` → riderless spider); fixed via an extracted standalone skeleton tpac (later superseded by the 06-14 inject fix).
+- 2026-06-11 — Giant spider rideable mount working in battle; root-caused the universal mount-context AccessViolation to `an_spi_*` movement clips compiled without the `quad_movement` tag + step points, and byte-grafted the tag onto the elephant template (9 clips); documented the `quad_movement` section here.
+- 2026-06-03 — Established and proved the correct skeleton/mesh/IK pipeline (62-bone `spider_skeleton`, `primary_bone_axis='Y'`, `_notused` anim root, `tpac_skeleton_transplant.py` IK/ragdoll) and authored this doc; full ~24-clip set rest-compensated-retargeted and bound in the action set.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

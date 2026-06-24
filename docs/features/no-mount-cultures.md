@@ -121,6 +121,10 @@ No unit tests — all patches are thin Harmony entry points with no extractable 
 2. No C# changes needed — the patches detect horse absence from `DefaultEquipment[Horse].Item` at runtime.
 3. Verify: `grep -c 'slot="Horse"' taom_char_creation_equipment.xml` — confirm only horse-enabled cultures have the slot.
 
+## Changelog
+
+- 2026-03-31 — Completed `Patch20_NarrativeHorseGuard` to 4 patches (3 Prefixes + 1 Finalizer) covering the youth, adult, and age-selection CC stages plus the shared `SpawnNonHumanNarrativeMenuCharacter` spawn; removed Horse/HorseHarness slots from Erebor CC rosters so dwarves no longer crash during character creation.
+
 ## GitHub Issues
 
 - **Issue #49** — [Arena practice crash for all 13 TAOM cultures](https://github.com/haterade22/TAOM/issues/49) — Closed

@@ -121,6 +121,10 @@ If `DefaultMapWeatherModel` (or another model) gains a new position-input method
 4. Body: pull `Campaign.Current?.MapSceneWrapper`, null-check, call `WeatherPositionClamper.ClampPosition`, mutate the ref.
 5. Add a unit test for any new clamping case in `WeatherPositionClamperTests.cs`.
 
+## Changelog
+
+_No dated entries mapped from the global `CHANGELOG.md` yet — this section is the go-forward home for weather-bounds-guard changes. See the repository-root `CHANGELOG.md` for full chronological history._
+
 ## GitHub Issue
 
 - **Issue:** None — feature predates the mandatory issue-per-feature policy.

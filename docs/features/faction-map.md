@@ -171,6 +171,13 @@ One entry per region id (matching faction id). Fields:
 3. If the faction is playable, set `"playable": true` and set `"game_faction"` to the matching TAOM culture id.
 4. Rebuild and test in character creation — the new region polygon should appear and clicking it should show the faction info panel.
 
+## Changelog
+- 2026-06-07 — Surfaced the 24 Wave 1 cultural feats on the CC faction pages (26 keyed `bonuses[]` lines across 12 playable factions, harvested into `taom_module_strings.xml`).
+- 2026-06-01 — #260 CC faction-map rewrite: all 16 playable factions rewritten and keyed for localization (Phases 1-3), 11 AI-language translation propagation, U+2212 minus-glyph fix, FormatDifficultyText localized, and the XSLT-inheritance/hover-Localize Codex reconcile.
+- 2026-05-24 — Kingdom-card overhaul: multi-unit support (`special_units[]` array schema + `FactionSpecialUnitItemVM`), painted portraits, tuned difficulty, content refresh.
+- 2026-05-04 — Fixed the spurious `banner_flag.png` ERROR on CC entry (empty banner defaults + demoted the file-not-found LogError to LogDebug).
+- 2026-03-11 — Ported the external LOTRAOM_FactionMap feature into `Main/Features/FactionMap/`, replacing vanilla culture selection with a clickable Middle-earth map.
+
 ## GitHub Issue
 - **Issue:** [#260](https://github.com/haterade22/TAOM/issues/260) — `feat(faction-map): rewrite CC pages + full localization sweep` (2026-06-01)
 - **Status:** Shipped — Phase 1 (helper) `53ce308`, Phase 2 main (16-faction content + 599 keys) `cbbcc41`, Phase 2 deep-review fix `7f0de78`, Phase 2 Codex fix `0577363`, Phase 3 (11-language translation) — see CHANGELOG for the Phase 3 commit.

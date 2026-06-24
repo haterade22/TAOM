@@ -97,3 +97,7 @@ The `TaomVolunteerModel` override is a thin boundary (GameModel) and is validate
 - Recruiter alignment uses `buyerHero.Clan.Kingdom.StringId`. This is equivalent to the engine's own `Hero.MapFaction` (= `Clan.Kingdom ?? Clan`) for alignment purposes: a hero serving a kingdom (vassal or mercenary — mercenary service sets `Clan.Kingdom`) resolves to that kingdom; a clanless/independent hero resolves to Neutral either way.
 - Player UX: blocked notables show greyed-out volunteers (the same visual vanilla uses for negative relation). A custom "won't serve you" tooltip is a possible follow-up (would need a `RecruitVolunteerTroopVM` UI postfix).
 - Garrison auto-recruit and AI map-recruit are inherently same-kingdom and never trigger the gate.
+
+## Changelog
+
+- 2026-06-17 — Initial feature: alignment-gated recruitment via a single `TaomVolunteerModel.MaximumIndexHeroCanRecruitFromHero` `-1` override (no Harmony); kingdom-StringId alignment through `IAlignmentService` / `execution/alignment.json`; Symmetric/GoodRejectsEvil modes + independent player/AI MCM toggles ("World/Recruitment Alignment", GroupOrder 36) + JSON config; 34 unit tests. Issue #286.

@@ -175,6 +175,12 @@ Edit `cache_rebuild_config.json`: `"forceVanilla": true` or `"enabled": false`. 
 
 **Why ~30 min and not 5 min:** Phase 2's corridor scan (vanilla `CheckBeingNeighbor`) re-pathfinds every fortification pair. A future optimization would memoize Phase 1's paths for Phase 2 reuse (scaffold is in `Caching/PathReuseCache.cs` + `PersistentPathCache.cs`, not yet wired into the builders). That alone is a 2-3× win on top of the current 6-8× parallelism win.
 
+## Changelog
+
+- 2026-05-13 — Removed the legacy editor-mode integration: deleted the `Patch37_CacheBuildOverride` Harmony patch (never functioned in singleplayer; editor mode crashed third-party mods) and simplified the feature to the single in-game MCM-trigger path.
+- 2026-05-12 — Pivoted from editor-mode Harmony integration to an in-game MCM trigger: added `IRuntimeCacheRebuildService` + the `Map Tools / Distance Cache Rebuild` MCM button, building against the live campaign's `MapSceneWrapper` with atomic `.tmp → final` write and `.prev` backup.
+- 2026-05-12 — Initial feature: parallel + incremental + resumable settlement distance cache builder (`Parallel.For` Phase 1/2, smoke-test gate, checkpointing, settlement-diff incremental, validation report), plus deep-review and Codex review #38 correctness fixes.
+
 ## GitHub Issue
 
 - **Issue:** [#118](https://github.com/haterade22/TAOM/issues/118)

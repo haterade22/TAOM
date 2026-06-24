@@ -151,6 +151,11 @@ If a new gameplay rule needs to gate on alignment (e.g., "different relation rul
 
 `ExecutionContext.HasContext` is a single `ThreadLocal<string>` read — cheap and re-entrant-safe.
 
+## Changelog
+
+- 2026-05-14 — Phase 9b refactor (#147): extracted `IExecutionRelationService` returning `ExecutionRelationResult`, reduced `TaomExecutionRelationModel.GetRelationChangeForExecutingHero` to a single-call delegate, and replaced direct `Hero.MainHero.MapFaction.StringId` access with injected `IPlayerContextAdapter.GetPlayerKingdomId()`.
+- 2026-03-25 — Introduced the Alignment-Aware Execution system: new `Main/Features/Execution/` override, `TaomExecutionRelationModel`, Harmony patches on `KillCharacterAction.ApplyInternal` + `TraitLevelingHelper.OnLordExecuted`, `execution/alignment.json` (16 kingdoms → Free/Evil/Neutral), zero penalty for cross-alignment kills, 1.5× kinslaying penalties, and 28 tests.
+
 ## GitHub Issue
 
 - **Issue:** [#196](https://github.com/haterade22/TAOM/issues/196) — `audit-docs: Execution — docs/features/execution.md MISSING (Phase 0 #19 carryover)`

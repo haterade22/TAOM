@@ -143,6 +143,13 @@ Alliance.Wargs (XML: monster, items, animations)
 - **IoC.Resolve in BT evaluators**: Called every frame for factory lookups — should cache resolved instances
 - **Grid updates**: Every 5 ticks via AdvancedCombatBehavior, not every frame
 
+## Changelog
+
+- 2026-05-14 — Phase 9b: refactored `IWargAttackService.HandleWargTargetHit`/`WargAttack` to take `IAgentAdapter` instead of sealed `Agent`, making all three attack methods directly unit-testable (closes #178).
+- 2026-05-13 — Updated the Tests section to reflect `WargAttackServiceTests.cs` (7 tests); cross-referenced #178 ADR-007 blocker (#199).
+- 2026-03-27 — Fixed BT runtime failures: moved tree init to first `OnMissionTick`, made the no-rider tree construction null-safe, so wargs actually attack in combat.
+- 2026-03-26 — Initial port of the autonomous warg combat system from LOTRAOM (behavior-tree AI, rage mode, SpatialGrid, bone collision) for Bannerlord 1.3.12 (#44).
+
 ## GitHub Issue
 
 - **Issue:** #44 — [feat: Port warg combat system from LOTRAOM](https://github.com/haterade22/TAOM/issues/44)

@@ -333,3 +333,12 @@ GameModel overrides are thin entry points (delegate to `base` + apply feat modif
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
+
+## Changelog
+
+- 2026-06-15 — Guarded the `PartyBase.Culture` NRE in party-culture feat resolution: the `ResolvePartyCulture` chokepoint plus a `PartyBaseHelper.HasFeat` Prefix that protects the vanilla `base.X()` calls.
+- 2026-06-07 — Wave 1 expansion: +24 Q-class feats across 11 thin cultures (total 105 → 129), plus the mandatory review closeout (`/deep-review` + `/review-codex` + RCA + 11-language translation).
+- 2026-05-31 — Per-occupation town notable counts (per-(culture, occupation) `Add` semantics, Isengard/Dol Guldur Gang-Leader hubs) and party-size retune + Dunland/Rhûn/Harad party-size + village volunteer respawn-rate + per-settlement notable-count feats (total 77 → 92 → 97).
+- 2026-05-28 — Terrain-based cultural movement-speed bonuses: 18 home-terrain party-speed feats (total 59 → 77) via `TaomPartySpeedModel`.
+- 2026-05-14 — Phase 9b: extracted the `CulturalFeats` service + added tests (closes #144, #176).
+- 2026-04-03 — Removed static `TextObject` field initializers from the CulturalFeats + TroopProgression GameModels to drop the implicit static constructor (#62).

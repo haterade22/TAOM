@@ -282,6 +282,16 @@ The 99 hideout name strings in `TAOM_Map/Languages/<LANG>/loc_settlements.xml` w
 
 A save from before this feature loads cleanly; the player sees renamed hideouts + LOTR bandit cultures appear at next bandit spawn. A save FROM this feature loads on a version without it provided the bandit clans get re-mapped to vanilla culture IDs — which they do automatically since `is_bandit="true"` cultures are reaped from the loaded spcultures set at campaign init.
 
+## Changelog
+
+- 2026-05-31 — `fix`: hideout boss fight spawned every bandit friendly (forced retreat) — added 8 dedicated `{culture}_boss` troops with `occupation="Bandit"` + matching bandit culture so the guard dialog no longer hijacks the boss conversation.
+- 2026-05-29 — `feat`: Patch40 themed LOTR hideout encounter descriptions replace vanilla's "(Undefined hideout type)" placeholder for the 5 TAOM bandit cultures.
+- 2026-05-29 — `feat`: early-game density boost + cap tuning — initial hideouts 7→14, min-parties-to-infest 2→1, max caps set to 100 hideouts/3 parties; added the "Initial Hideouts Per Faction" MCM slider and the `Cap()` vanilla-floor fix.
+- 2026-05-28 — `feat`: Wave-2 bandit cultures (`gondor_soldiers`, `erebor_warriors`, `mirkwood_stalkers`) + 10 hideouts each, plus expansion of the Haradrim and Umbar hideout ranges.
+- 2026-05-28 — `fix`: strip the 5 homeless vanilla bandit clans + retarget each LOTR bandit clan/culture banner to its parent-kingdom heraldry.
+- 2026-05-27 — `fix`: XSLT-remove the 5 vanilla hideout-bandit clans to stop the new-game `KeyNotFoundException` in `GetInfestedHideoutCount` (looters clan kept).
+- 2026-05-27 — `feat`: initial feature — replace 5 vanilla bandit cultures with LOTR factions, `TaomBanditDensityModel` + `Patch39_BanditPartySize` PlayerProgress scaling, MCM/JSON config, 99-hideout migration (issue #247).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

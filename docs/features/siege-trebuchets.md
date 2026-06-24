@@ -74,6 +74,11 @@ Edit `Main/Features/Siege/Models/TaomSiegeEventModel.cs`. Each `yield return` ad
 - **`FireTrebuchet` is broken in current Bannerlord** — the getter returns the non-fire Trebuchet backing field. Do not yield it or players get duplicated Trebuchet entries. Re-check in a future Bannerlord update.
 - Global scope: every defender everywhere gets trebuchets, not just Gondor. If this feels unthematic for, e.g., steppe castle defenders (Rhûn), convert to a culture-gated service.
 
+## Changelog
+
+- 2026-05-13 — Fixed `TaomSiegeEventModel` NRE (#134): garrison defenders have null `party.MobileParty`, so the unguarded `HasPerk(...)` chain threw on every garrison siege-defense calculation; added `?.HasPerk(...) == true` short-circuit matching vanilla's null-perk semantics.
+- 2026-04-20 — Added `TaomSiegeEventModel` (extends `DefaultSiegeEventModel`) yielding `Trebuchet` to defenders in `GetAvailableDefenderSiegeEngines`, preserving vanilla fire-variant perk gating; `FireTrebuchet` skipped due to the getter bug. Registered in `SubModule.OnGameStart`.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

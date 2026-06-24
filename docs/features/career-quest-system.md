@@ -77,3 +77,7 @@ The existing Career System (`ICareerDataService`, `ICareerRegistry`), and vanill
 - **In-game testing pending** — the `QuestBase` shell, inquiry offer, event tracking, completion + save/load are only confirmable in the live game (entry points, not unit-tested). `CareerQuest` overrides `SpecialQuestType` so the engine doesn't auto-cancel it on load (it has no associated `IssueBase`).
 - **Known limitations:** editing a quest's objective list in XML while a save has that quest *in progress* can soft-lock it (the saved progress slots don't resize on load) — change objectives only between playthroughs. A `SkillThreshold` id that doesn't resolve to a real skill logs a warning at quest start and never progresses (fix the id). `VisitSettlementType` counts each entry, not distinct settlements.
 - Phase 2: author quests for the remaining careers; NPC turn-in dialogs (`SetDialogs`) + a `giver_kind`/quest-giver concept; item/companion rewards; an MCM disable toggle; the 11-language translation run.
+
+## Changelog
+
+- 2026-06-01 — Career-tied quest framework (TOR adoption, 1.4.5-verified) + Gondor proof-of-life: hybrid tier gate (quest unlock OR level gate), pure `CareerQuestService` + validating `CareerQuestConfigProvider`, `CareerQuest : QuestBase` engine shell, `CareerQuestSaveableTypeDefiner` (save-id collision fixed → `726900802`), career attribute flags. Post-review: `KillEnemyLords` → `DefeatEnemyLords` (capture, not execute).

@@ -202,6 +202,13 @@ TaleWorlds VMs   IDataStore.SyncData       GauntletLayer + LoadMovie
 - `/deep-review CompanionTactics` (5 parallel agents): 2 confirmed bugs found and fixed (`GetRoleColor` missing OneHanded + Slinger cases; `BattleActionBarDebug` setting was unused). 1 false positive disposed of (`MultiSelectionInquiryData` parameter order — call site uses named args). See `docs/reviews/rca-companiontactics-2026-05-06.md`.
 - Codex adversarial prompt is staged at `docs/reviews/codex-prompt-companiontactics-2026-05-06.md` for manual dispatch via `/codex:adversarial-review --background`. The autonomous codex:rescue dispatch in this session did not finalize (Codex runtime stall — not a CompanionTactics-specific failure).
 
+## Changelog
+
+- 2026-06-21 — Fixed the Formation Preset save-corruption CTD: removed the unserializable `[SaveableField(3)] DateTime _createdAt` (id 3 retired), gated `EnableFormationPresets` off by default as WIP, and added `HoNFormationPresetSerializationTests` as a regression guard (#292).
+- 2026-05-25 — Wired `SetInputRestrictions()` on the OOB overlay and battle-action-bar `GauntletLayer`s so their buttons register with the MissionScreen input dispatcher (mouse clicks were silently dropped); fixed the latent twin in `BattleActionBarMissionView` (#225).
+- 2026-05-13 — Surfaced a player-facing `InformationManager` message on `SyncData` failure (was internal-log only) and added an explicit `Reset()` to `IFormationPresetService` instead of overloading the load path (#139).
+- 2026-05-13 — Filtered `Patch35_Formation_SetMovementOrder` to the player team only, fixing a cross-thread `Dictionary` race where async AI-tick movement orders mutated the stance dict (#149).
+
 ## GitHub Issue
 
 Not yet created. To create retroactively per CLAUDE.md "GitHub Issue & Knowledge Base Requirements":

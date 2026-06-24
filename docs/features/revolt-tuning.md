@@ -115,6 +115,10 @@ Invalid individual fields are reverted to their compiled default; other fields i
 - Context-aware scoping (grace period after conquest, watched-faction filtering)
 - MCM integration
 
+## Changelog
+
+- 2026-04-20 — Introduced the Revolt Tuning feature: `IRevoltTuningConfigProvider` (cached Newtonsoft JSON, fallback to defaults), `revolt_tuning_config.json`, and four `TaomSettlementLoyaltyModel` property overrides (rebellion threshold 15→5, rebellious-state 25→10, owner different-culture penalty -3.0→-1.0, governor -1.0→-0.5) with semantic validation and 13 unit tests.
+
 ## GitHub Issue
 
 - **Issue:** _pending — create via `gh issue create` with the completion workflow_

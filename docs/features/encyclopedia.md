@@ -61,6 +61,10 @@ The setting is stored by MCM in its own JSON store under the `TAOM` folder.
 2. Gate the new behavior on an existing or new `TaomSettings` property.
 3. Add a test that covers both the short-circuit and delegate-to-base paths using the `Func<bool>` constructor.
 
+## Changelog
+
+- 2026-05-13 — #145: replaced concrete-singleton coupling (`TaomSettings.Instance?.ShowAllEncyclopediaCharacters`) in `TaomInformationRestrictionModel` with an injected `IEncyclopediaSettingsProvider` (new `EncyclopediaSettingsProvider` + `EncyclopediaIoC`, registered in `Main/IoC.cs`); tests updated to NSubstitute on the new interface.
+
 ## GitHub Issue
 - **Issue:** Unknown (commits reference `9f14d24` and `b68feab` but no issue number)
 - **Status:** Active

@@ -101,3 +101,7 @@ mount-site shape) if caravan animals should match.
 - Custom TAOM mounts (warg/elephant/spider) need no special handling — the mount swap is `ScaleFactor * GetScale()`,
   so their larger `ScaleFactor` stays proportionally large, just halved.
 - Settlements are scaled in the editor, not via code (per the source guide) — out of scope here.
+
+## Changelog
+
+- 2026-06-24 — Added MCM-configurable party-icon figure scale (default `0.15`, half vanilla `0.30`): `Patch53_PartyIconScale` transpiler rewrites both `0.3f` literals (leader figure + mount) in `MobilePartyVisual.AddCharacterToPartyIcon` to `PartyIconScaleConfig.GetScale()`, reading the new "Map Figure Scale" MCM slider. Issue #297.

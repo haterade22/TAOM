@@ -187,6 +187,10 @@ Alliance's `Alliance.Common/Extensions/CustomScripts/Scripts/` folder has 13 sce
 
 Editor-only feature with 0.5s minimum regen interval in Live mode. Per regeneration: 1 `List<float>` (distances) + 1 `List<RoadSampleFrame>` + 4 small arrays (lefts/rights/leftUVs/rightUVs) + 1 `List<RoadTriangle>` + 1 native `Mesh` + 1 native `MetaMesh`. Allocations are bounded and short-lived; GC pressure is acceptable for editor use.
 
+## Changelog
+
+- 2026-05-13 — Shipped the scene scripts library: `CS_Road` procedural mesh generator (clean-room port from Alliance, 16 editor fields, 67 helper unit tests); restored TAOM editor-mode loading so the engine discovers the `ScriptComponentBehavior` subclass; added a build target to auto-mirror `Win64_Shipping_Client` → `Win64_Shipping_wEditor`; added CS_Road comprehensive diagnostic logging + a map-maker quickstart doc; landed the CS_Road RCA preventive measures (FiniteFloatValidator scope, mandatory RCA gate).
+
 ## GitHub Issue
 
 - **Issue:** [#119](https://github.com/haterade22/TAOM/issues/119) — Scene scripts library: CS_Road procedural mesh generator (clean-room port)

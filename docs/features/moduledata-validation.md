@@ -156,6 +156,10 @@ Out of scope for v1 (documented as coverage gaps, not bugs): armor `covers_legs`
 
 NPC duplicate-id + enum coverage spans `troops/`, `characters/`, `named_companions/`, `taom_wanderers.xml`, and `taom_education_character_templates.xml` (the `taom_npccharacter.json` `applies_to` set — **add any new `<NPCCharacter>`-defining file there** or its dup/enum checks won't run; Codex review 2026-05-30 caught three uncovered files). The civilian-type rule treats `_civ*` and `child_template_*` rosters as civilian and checks every `<EquipmentSet>`, but **deliberately excludes** `child_education_*` education templates (0/784 are `Civilian`-tagged in real data — an unconfirmed convention; flagging them would be 784 false positives — confirm the convention before extending the rule).
 
+## Changelog
+
+- 2026-05-30 — Initial schema-driven ModuleData cross-reference validator adopted (idea-only) from TheOldRealms/TOR_Tools: unified `taom_schema.py` engine + `validate_moduledata.py` CLI + 3 schemas catching the recurring bug classes (broken item/troop/culture/party-template refs, duplicate ids, missing civilian type, invalid enum); wired in as an auto-loaded scoped rule + a commit-blocking PreToolUse hook. Same dated entry covers the 2026-05-31 follow-up: the `taom_query.py` query API + `taom_mcp_server.py` MCP server (9 tools) and a second deep-review pass. See repo-root `CHANGELOG.md` for full detail.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

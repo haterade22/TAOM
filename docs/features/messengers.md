@@ -165,6 +165,11 @@ The boundary classes (`MessengerCampaignBehavior`, UI mixin/prefab, `MessengerSe
 - `MessengerEncyclopediaMixin` caches the four state-independent `HintViewModel` instances at construction (`_emptyHint`, `_hintTargetUnavailable`, `_hintMessengersDisabled`, `_hintSystemUnavailable`); the rejection-reason hint is keyed by `MessengerValidationResult` and only re-allocated when the rejection class transitions.
 - `MessengerConfigProvider` and `MessengerSettingsProvider` are `Reuse.Singleton`; config is loaded once via `Lazy<>` at first access.
 
+## Changelog
+
+- 2026-05-13 — Wired Messengers into IoC + campaign starter (fixed encyclopedia hero-click NRE, #121) and added a wiring regression test (#191); fixed UI mixin notifications firing on self (#166) and per-campaign/arrival state-reset gaps (#123).
+- 2026-05-06 — Ported the LOTRAOM messenger system to TAOM (1.3.15): paid messenger dispatch from the encyclopedia/dialog, travel + arrival conversation routing, primitive-dict save, MCM + JSON tunables, 12-language localization (#109).
+
 ## GitHub Issue
 
 - **Issue:** [#109 — feat(messengers): port LOTRAOM messenger system to TAOM (1.3.15)](https://github.com/haterade22/TAOM/issues/109)

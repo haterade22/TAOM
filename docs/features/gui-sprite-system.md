@@ -371,3 +371,10 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
+
+## Changelog
+
+- 2026-06-19 — Career-ability pips now visibly light up on point-take: new `career_point_pip_lit` ring sprite (brightened + glow halo) for the taken state, widened alpha gaps on the other states, baked + committed.
+- 2026-05-31 — Decompile-verified GUI sprite-bake pipeline documented end-to-end (`SpriteSheetGenerator.exe` inputs/outputs, no `pack0.tpac` for UI atlases, `_tex.tpac` is a separate downstream texture-compile); added "Verifying a sprite (bake + render)" and "Deploying a prefab/sprite change" sections plus the consolidated gotchas table.
+- 2026-05-31 — Career-pip blank-render fix established the "two failure modes" rule: a new loose PNG must be packed by the generator (bake) AND the prefab must size/tint it readably (render); baked != visible, only the live game confirms render.
+- 2026-04-14 — Career-screen sprite atlas established: dedicated `ui_taom_career_system` category created to stop oversized career images corrupting the main `ui_taom` atlas; portraits 800x400, ability icons 256x256; in-game sprite-path fixes (removed extra `TAOM\` prefix, added `SpecialResources\` prefix).

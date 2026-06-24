@@ -139,6 +139,12 @@ The `titleType` is sourced from `manager.CharacterCreationContent.SelectedTitleT
 - `Clan.Influence` has a public setter; increasing it does not trigger `SkillLevelingManager.OnInfluenceSpent` (only decreasing does)
 - `Hero.AllAliveHeroes` returns `MBReadOnlyList<Hero>`, safe to iterate at campaign start index 1
 
+## Changelog
+
+- 2026-05-13 — Added `ParseGold`/`ParseInfluence` validation to the config provider (TryParse + range/finite checks, matching `ParsePlayerGold`); negative gold and NaN influence now revert with a warning instead of flowing through (closes #136).
+- 2026-05-06 — Added per-culture `playerGold` (player starting funds at CC finalize) and youth-option equipment persistence onto `Hero.MainHero.BattleEquipment`/`CivilianEquipment`; seeded `playerGold` per culture and added missing `empire`/`shaghana`/`abanissa` rows.
+- 2026-04-06 — Initial feature: culture-based startup gold to Lord heroes and influence to clans at new-game creation via `StartupResourcesBehavior` (index 1), data-driven by `startup_resources_config.xml`.
+
 ## GitHub Issue
 
 - **Issue:** #42 — [feat: culture-based startup gold and influence distribution](https://github.com/haterade22/TAOM/issues/42)

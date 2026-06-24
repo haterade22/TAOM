@@ -211,6 +211,16 @@ Restart Bannerlord (the config is `Reuse.Singleton` and cached for the process l
 - Per-tick work is one dict lookup + K=6 weighted-random draws over a single culture's list (~100–1,200 entries depending on culture). Linear scan; no allocations per tick beyond the result list.
 - No `SyncData` — injected items live in vanilla `Settlement.ItemRoster` which the engine already persists. Save-load is unaffected.
 
+## Changelog
+
+- 2026-06-17 — Fixed `TownRosterAdapter.RemoveItem` underflow (6,949 logged errors/session): removal was sized from the first stack but applied to a modifier-less `EquipmentElement`, driving a different stack negative; rewrote to remove per modifier-preserving stack clamped to its amount.
+- 2026-05-21 — Extracted `ICultureMarketplaceMaintenanceService` (behavior shrank below ADR-002 limit), added a one-shot `_initialSweepDone` flag for the initial filter sweep, and made `TownRosterAdapter.GetItemCount` sum across modifier-split stacks. Deep-review fix-ups (#207 follow-up).
+- 2026-05-21 — Added guaranteed warg stock (`min_stock` on `<Routing><Item>`, cap-bypassing daily top-up) and a cross-culture filter pass that removes foreign-culture LOTRLOME items (capped daily, uncapped one-time new-game sweep); shared `ClassifyEffectiveCulture` classifier (#207 follow-up).
+- 2026-05-20 — Deduplicated routed cultures after alias normalization so `mordor,mordor` / `rohan,vlandia` no longer silently double an item's draw weight (#207).
+- 2026-05-20 — Added the `<Routing>` mechanism so cross-culture items (the 4 warg items) appear in all listed cultures' pools, plus per-culture pool-size diagnostic logging (#207).
+- 2026-05-20 — Post-Codex fixes: renamed cap to `PerTownTotalRosterCap` (60 → 200), added the `rohan` → `vlandia` culture alias, added Mirkwood/Harad prefix-fallback rows, and added a 3-attempt pool-build failure latch (#207).
+- 2026-05-20 — Initial feature: `CultureMarketplaceBehavior` injects K=6 weighted-random culture-appropriate items per town per day, auto-deriving pools from `MBObjectManager` with ID-prefix fallback and dynamic owner-culture binding (#207).
+
 ## GitHub Issue
 
 - **Issue:** [#207 — feat(marketplace): culture-aware item injection for town markets](https://github.com/haterade22/TAOM/issues/207)

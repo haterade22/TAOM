@@ -160,3 +160,10 @@ Add a value to `BattleLoadPhase`, a method to `IBattleLoadDiagnosticsService`, a
 - [mesh-ref-validation.md](mesh-ref-validation.md) — the companion tool that confirms/eliminates the missing-`bo_`-mesh hypothesis offline + via `rgl_log`.
 - [mission-diagnostic.md](mission-diagnostic.md) — sibling diagnostic that dumps `MissionBehaviors`/`MissionLogics` on first tick (shares the same log file).
 - [crash-report.md](crash-report.md) — the bundle pipeline the watchdog reuses.
+
+## Changelog
+
+- 2026-06-17 — Added the `IBattleLoadStallMarker` / next-session notice: phase 4 writes `Logs/battle-load-inflight.marker`, a surviving marker on next launch surfaces a soft `StallReportNotifier` inquiry with an Open-log-folder button (plus a `battle-load-hang.md` issue template).
+- 2026-06-17 — Added `tools/triage_battle_load.py`, which parses the `[BattleLoad]` lifecycle and prints a one-line EQUIPMENT / EQUIPMENT_CONFIRMED / POST_EQUIP / SCENE / PRE_SCENE verdict naming the stuck agent/item/mesh.
+- 2026-06-17 — Fixed a startup CTD: `BattleLoadStallMarker`'s second public ctor made DryIoc throw `UnableToSelectSinglePublicConstructorFromMultiple`; the test-seam ctor was made `internal`, leaving one public ctor.
+- 2026-06-01 — Introduced the `BattleLoadDiagnostics` feature (`Patch43`): phase-stamps the full attack→battle-playable lifecycle across 6 markers, dumps per-agent equipment with `bo=`/`shieldBo=` mesh names, and runs the background stall watchdog (CrashReport bundle on stall).

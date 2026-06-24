@@ -85,6 +85,10 @@ When a user reports a crash, search the attached `taom_debug_*.log` for `[Missio
 - **Session snapshot:** runs once per game launch. Negligible.
 - **Memory:** the dedup `HashSet` resets per-mission via `ResetForNewMission`. No long-lived collections grow unbounded.
 
+## Changelog
+
+- 2026-05-24 — Initial MissionDiagnostic feature: comprehensive crash-investigation logging to `taom_debug_*.log` (session snapshot + first-tick mission-behavior/MissionLogic dump flagging `BehaviorType=Logic` non-`MissionLogic` offenders + 5s action-set capture), best-effort try/catch on every log path so a diagnostic failure never blocks gameplay.
+
 ## GitHub Issue
 
 - **Issue:** not separately ticketed — the diagnostic was authored alongside the `feedback_missionbehaviortype_logic_requires_missionlogic_inheritance` rule. See CHANGELOG entries from late May 2026 for the BehaviorTreeWrapper.dll inlining RCA that motivated it.

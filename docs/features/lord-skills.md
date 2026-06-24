@@ -134,6 +134,13 @@ Total: 17 cultures, ~880 adult NPCs, 120 SkillSets. 18 GitHub issues #228-#245.
 
 Hero skills bake at hero CREATION. Existing campaigns keep their old (vanilla SkillSet) values. New campaigns + un-spawned heroes use the new TAOM SkillSets. Document this in any user-facing release notes.
 
+## Changelog
+
+- 2026-05-28 — Added the TAOM-owned `taom_lord_skill_sets.xml` (120 SkillSets) and swapped every adult lord's `skill_template` to it, so the lore-driven values actually take effect (the engine ignores `<skills>` on heroes and honors `skill_template`); 737 NPCs across 17 cultures now use TAOM SkillSets.
+- 2026-05-28 — Added the feature doc + authoring guide (`docs/ai-includes/lord-skills-authoring.md`), Doc Lookup row, and `skill_template`-not-`<skills>` memory entry.
+- 2026-05-27 — Swept lore-driven skills + traits across the remaining 16 cultures (~880 adult NPCs in `lords.xml` + `lords.xslt`) via the generalized `tools/apply_culture_skills_traits.py` (25 new archetypes, race-aware defaults, per-culture canonical overrides).
+- 2026-05-27 — Authored lore-driven skills + traits for the first 118 Gondor adult lords (the Gondor pass this feature grew from).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

@@ -158,6 +158,15 @@ No code changes outside the service + tests + XML. `TaomVolunteerModel.MaxVolunt
 
 None — pure data lookup. `VolunteerRecruitmentService.GetVolunteerTroopId` is called per notable per day at most, runs O(N) over a 2-entry pool, allocates zero. Static `Dictionary<string, List<VolunteerChance>>` maps populated once at class load.
 
+## Changelog
+
+- 2026-06-22 — Restored the Ithilien Ranger to 10% in the live Gondor pools by adding `gondor_ithilien_ranger: 10` to the `gondor.json` Minas Tirith / Osgiliath / Cair Andros groups (the JSON loader overwrites the fallback pool, so its live spawn rate was 0%); added a production-JSON regression test.
+- 2026-05-23 — Re-equipped Faramir as Ithilien Ranger Captain (battle + civilian rosters), replacing the peasant-looking leather kit with his dedicated character-specific gear.
+- 2026-05-23 — Authored this feature doc and codified the `equipmentType="Civilian"` EquipmentRosters schema rule.
+- 2026-05-19 — Upgraded all 8 ranger quivers to Noldar Elven Arrows (`wm_elven_arrow_v*_*`), the highest-damage/largest-quiver arrows in the Armory.
+- 2026-05-19 — Dropped the 4 Ithil Guard plate rosters (12 → 8) so rangers wear only items literally branded "Ithilien."
+- 2026-05-19 — Added the standalone T9 `gondor_ithilien_ranger` troop with Ithilien-themed equipment rosters, recruitable from Minas Tirith and the two Ithilien-area castles via `VolunteerRecruitmentService`.
+
 ## GitHub Issue
 
 - **Issue:** #201 — feat(troops): T9 Ithilien Ranger recruitable from Ithilien-area notables

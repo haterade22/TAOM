@@ -151,3 +151,8 @@ INVENTORY.md.
 - Follow-ups: black/white horse variants + `wide_chariot` (drop-in: same split, items exist in the upstream pack),
   proper mount-death clips (currently `chariot_stand_1` freeze), localization pass for
   `{=taom_chariot_a}`, fix `tools/blender/creature_anim_ops.py` stale `primary_bone_axis='X'` (L13)
+
+## Changelog
+
+- 2026-06-13 — Tagged the 2 untagged gait clips (`chariot_gait_walkfast` + `chariot_gait_walkbackfast`) with `quad_movement` to fix a latent mount-crash; in-game mission test still pending.
+- 2026-06-12 — Ported the upstream pack's war chariot as the Rhûn Wainrider ridden mount (issue #279): one Monster / 60-bone skeleton, zero TAOM C#, swift/warlord chariot tiers swapped onto `taom_chariot_a`.

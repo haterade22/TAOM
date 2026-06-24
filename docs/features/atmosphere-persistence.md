@@ -96,6 +96,10 @@ A tester suspected this patch (`Patch16_AtmospherePersistence`) of causing the n
 
 **Root cause remains unproven.** The affected player's crash log carries no faulting-module or offset, so attribution is open. The live, unfalsified hypothesis is the terrain-shader vista permutation (`Shaders/Sources/terrain_pixel_functions.rsh:818` — `normalize(final_world_space_normal)` after a `lerp(..., vista_blend_weight)` that folds to zero when `weight_accumulation == 0` at vista distance, giving X4008 divide-by-zero escalated to a hard error by X3129). The gate to confirm is native triage on an affected player's Event Log "Application Error" offset (or a crash dump) through `tools/native_crash_triage.py`; the native shader-compile-guard hook plan is blocked on that data. In the meantime the `_forceatmo` battle scenes were disabled at the data layer (the Rohan scenes in `ee2cb04b`, the Mordor scenes in `62470413`) rather than by touching this patch — which the audit confirms is not implicated. See [shader-precompilation.md](shader-precompilation.md) + [battle-load-diagnostics.md](battle-load-diagnostics.md).
 
+## Changelog
+
+- 2026-03-26 — Feature added: scenes with "forceatmo" in their name bypass campaign weather to preserve scene-embedded atmosphere; 1.3 refactor replaced the fragile string-based patch with a type-safe `Mission.Initialize()` prefix (`Patch16_AtmospherePersistence`), static `AtmosphereOverrideService`, 7 scene-name-detection tests.
+
 ## GitHub Issue
 
 - **Issue:** #43 — [feat: atmosphere persistence for forced-atmosphere scenes](https://github.com/haterade22/TAOM/issues/43)

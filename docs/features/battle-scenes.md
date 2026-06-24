@@ -108,6 +108,14 @@ When `TAOM_Map` is integrated and the three XML files (or at minimum `sp_battle_
 
 The `MapScene_Load_DiagnosticPatch` prints to the engine log every time `MapScene.Load` runs. Bannerlord's "last active module with a `Main_map` scene wins" rule means load order matters. If the diagnostic shows `SandBox` as the selected module instead of `TAOM_Map`, the load-order setting (`Modules/Native/SubModule.xml`-style ordering, or the Launcher) is putting TAOM_Map ahead of SandBox; reverse it.
 
+## Changelog
+
+- 2026-06-01 — Re-enabled `Patch0_BattleScenes` (`feat(battle-scenes)`): uncommented the `PatchCategory` gate so TAOM's full 0–255 `sp_battle_scenes` table loads; doc flipped DISABLED→ENABLED.
+- 2026-06-01 — Root-caused/resolved a campaign-load `AccessViolationException` (`fix(taom_map)+docs(battle-scenes)`) traced to a mis-imported `worldmap_battle_scene_grid` texture; fixed by a lossless re-import at the `Assets/world_map/` resource path.
+- 2026-05-31 — Deep-dive reference doc on the worldmap battle-scene grid + LOTR re-author plan (`docs(battle-scenes)`).
+- 2026-03-05 — Added the `MBMapScene_GetBattleSceneIndexMap_Patch` and `MapScene_Load_DiagnosticPatch` diagnostic patches.
+- 2026-02-11 — Implemented the battle scene system (`sp_battle_scenes.xml`) and the `Campaign_InitializeScenes_Patch` loader.
+
 ## GitHub Issue
 
 - **Issue:** None.
