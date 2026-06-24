@@ -547,6 +547,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Camera distance at which fade completes. Nameplates farther than this are fully hidden. Must be greater than Fade Start Distance. Default 200.")]
     public float NameplateFadeFarDistance { get; set; } = 200f;
 
+    // --- Map UI / Party Icons ---
+
+    [SettingPropertyGroup("Map UI/Party Icons", GroupOrder = 41)]
+    [SettingPropertyFloatingInteger("Map Figure Scale", 0.05f, 1.0f, "#0.00", Order = 0,
+        HintText = "Size of party-icon figures and their mounts on the campaign map. Vanilla = 0.30; default 0.15 = half (makes parties feel smaller relative to settlements). Applies on the next icon rebuild after changing.")]
+    public float MapFigureScale { get; set; } = 0.15f;
+
     // --- Map Tools / Distance Cache Rebuild ---
     //
     // Rebuilds Modules/TAOM_Map/ModuleData/DistanceCaches/settlements_distance_cache_Default.bin

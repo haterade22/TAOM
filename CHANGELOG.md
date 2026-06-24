@@ -1,5 +1,35 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-24
+
+### feat(map): MCM-configurable party-icon figure scale (default half vanilla)
+
+Campaign-map party icons rendered their leader figure and mount at the engine's hardcoded `0.3` scale, which felt
+oversized next to settlements. `Patch53_PartyIconScale` — a Harmony transpiler on `MobilePartyVisual.AddCharacterToPartyIcon`
+(`SandBox.View.dll`) — rewrites the two `0.3f` scale literals (leader figure + mount) into a `call` to
+`PartyIconScaleConfig.GetScale()`, which reads a new MCM slider so both honour a runtime-tunable size.
+
+- **People site** = `ldc.r4 0.3` immediately before `callvirt AgentVisualsData::Scale` (`.Scale(0.3f)`); **mount site**
+  = `ldc.r4 0.3` immediately before `mul` (`.Scale(item.ScaleFactor * 0.3f)`). Each swap mutates the `ldc.r4` in place
+  (stack-neutral; branch labels preserved). The method's other `0.3` literals feed animation-speed math (`/ 0.3f` =
+  `div`) and are not matched. Fail-safe: a missing site is skipped with a warning, vanilla `0.3` preserved — never throws.
+- **MCM "Map Figure Scale"** (TAOM → Map UI → Party Icons), default `0.15` (half of vanilla `0.30`), range `0.05`–`1.0`,
+  drives people + mounts together. `PartyIconScaleConfig.Resolve` validates via `FiniteFloatValidator` (NaN/±Inf/out-of-range/null
+  → default). Reads live, so a slider change applies on the next icon rebuild.
+- Transpiler logic lives in the pure `PartyIconScaleTranspiler` (thin `Patch53` entry delegates to it); the IL `call`
+  target is the static `PartyIconScaleConfig.GetScale()` (same "transpiler calls a static" pattern as `CastleAiToggle`).
+  Coexists with the BannerColorPersistence Postfix on the same method.
+- Verified: type rename `PartyVisual` → `MobilePartyVisual` and both IL sites confirmed against the installed v1.4.6
+  `SandBox.View.dll`. 18 new tests pass (10 config + 8 synthetic-IL transpiler). `/deep-review` (5 agents) + Codex
+  adversarial review both READY-to-commit: all 6 known suspects refuted, 0 code findings; the standards-agent's
+  ADR-007 + "needs a service" findings were rejected with evidence (TaomSettings is TAOM-owned, not a TaleWorlds
+  sealed type; the static IL-call-target follows the `CastleAiToggle` precedent). Review artifact:
+  `docs/reviews/codex-adversarial-PartyIconScale-2026-06-24.md`. Issue #297. See `docs/features/party-icon-scale.md`.
+
+Research: decompiled `MobilePartyVisual.AddCharacterToPartyIcon` + `AgentVisualsData.Scale` (v1.4.6).
+Not-tested: live transpiler invocation + in-game render (needs a running game).
+Save-compat: no save impact — pure visual/runtime patch, no persisted state.
+
 ## 2026-06-23
 
 ### feat(clans): expand Misty Mountain Orcs to 15 clans (6♂/4♀ each) + ownerless-clan audit

@@ -628,6 +628,13 @@ public class SubModule : MBSubModuleBase
         SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.Initialize(IoC.Resolve<INameplateFadeService>());
         _harmony.PatchCategory("Patch38_SettlementNameplateFade");
 
+        // Patch53_PartyIconScale — transpiler that rewrites the two hardcoded 0.3f campaign-map scale
+        // literals in MobilePartyVisual.AddCharacterToPartyIcon (leader figure + its mount) into a call
+        // to PartyIconScaleConfig.GetScale(), so both honour the MCM "Map Figure Scale" slider
+        // (default 0.15 = half vanilla). See docs/features/party-icon-scale.md.
+        Features.PartyIconScale.Hooks.Patch53_PartyIconScale.Initialize(IoC.Resolve<IModLogger>());
+        _harmony.PatchCategory("Patch53_PartyIconScale");
+
         // BattleLoadDiagnostics — phase-stamp the attack->battle-playable lifecycle so an
         // intermittent battle-load hang leaves a log whose last line names the stuck phase
         // (and, for the equipment phase, the agent + the item whose bo_ collision mesh is
