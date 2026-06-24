@@ -11,6 +11,10 @@
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_umbar_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.umbar" name="{=aom_um_notable_0b}Umbar harbor provisioner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -19,6 +23,11 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
@@ -34,6 +43,10 @@
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_umbar_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.umbar" name="{=aom_um_notable_1b}Cold-eyed Umbar trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -42,6 +55,11 @@
 		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.boromir_jerkin" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.boromir_jerkin" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
@@ -57,6 +75,10 @@
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_umbar_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.umbar" name="{=aom_um_notable_2b}Cautious Umbar supply runner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -65,6 +87,11 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
@@ -80,6 +107,10 @@
 				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_umbar_3b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.umbar" name="{=aom_um_notable_3b}Scheming Umbar merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -88,6 +119,11 @@
 		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
@@ -103,6 +139,10 @@
 				<equipment slot="Body" id="Item.boromir_jerkin" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.boromir_jerkin" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_umbar_4b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.umbar" name="{=aom_um_notable_4b}Devious corsair black marketeer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -111,6 +151,11 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
@@ -127,6 +172,10 @@
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_umbar_6" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.umbar" name="{=aom_um_notable_6}Stern Umbar sea-priest" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
@@ -138,6 +187,11 @@
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_umbar_7" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.umbar" name="{=aom_um_notable_7}Keeper of corsair traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
@@ -145,6 +199,10 @@
 		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
@@ -161,6 +219,11 @@
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.boromir_jerkin" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_umbar_9" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.umbar" name="{=aom_um_notable_9}Corsair rope-master" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
@@ -168,6 +231,10 @@
 		<Traits><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
@@ -184,6 +251,11 @@
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_umbar_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.umbar" name="{=aom_um_notable_10}Corsair dock boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -191,6 +263,10 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
@@ -205,6 +281,11 @@
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_umbar_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.umbar" name="{=aom_um_notable_gl4}Bestial Umbar thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -212,6 +293,10 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.boromir_jerkin" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.boromir_jerkin" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
@@ -225,6 +310,10 @@
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_umbar_13" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.umbar" name="{=aom_um_notable_13}Menacing corsair warlord" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -232,6 +321,11 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
@@ -248,6 +342,10 @@
 				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_long_var" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_umbar_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.umbar" name="{=aom_um_notable_22}Agreeable Umbar elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
@@ -255,6 +353,10 @@
 		<Traits><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>
@@ -271,6 +373,11 @@
 				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.boromir_jerkin" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_umbar_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.umbar" name="{=aom_um_headman_2}Conservative Umbar headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
@@ -281,6 +388,10 @@
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Leg" id="Item.ithilien_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_umbar_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.umbar" name="{=aom_um_headman_3}Devious Umbar headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
@@ -288,6 +399,10 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
 				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
 			</EquipmentRoster>

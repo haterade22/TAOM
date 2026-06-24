@@ -25,6 +25,18 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -47,6 +59,14 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -62,6 +82,10 @@
         </face>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
@@ -84,6 +108,10 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -99,6 +127,10 @@
         </face>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
@@ -118,6 +150,10 @@
         </face>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
@@ -143,6 +179,14 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -163,6 +207,14 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -197,6 +249,18 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -219,6 +283,14 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -234,6 +306,10 @@
         </face>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -256,6 +332,10 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -275,6 +355,14 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -301,6 +389,14 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -322,6 +418,16 @@
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
@@ -351,6 +457,16 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -370,6 +486,16 @@
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
@@ -397,6 +523,16 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -416,6 +552,16 @@
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
@@ -443,6 +589,14 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -461,6 +615,14 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
@@ -486,6 +648,14 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -504,6 +674,14 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -532,6 +710,16 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -550,6 +738,14 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
@@ -788,6 +984,16 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -813,6 +1019,18 @@
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
                 <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_d" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -823,6 +1041,10 @@
         <Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -837,6 +1059,10 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_1}Proud horse-lord merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -848,6 +1074,10 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_1b}Cold Rohirric dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -856,6 +1086,10 @@
         <Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.cts_rohan_armor1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -871,6 +1105,11 @@
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.vlandia" name="{=aom_roh_notable_2b}Cautious Rohirric grain trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -882,6 +1121,10 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_3" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.vlandia" name="{=aom_roh_notable_3}Self-made Rohirric merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -890,6 +1133,11 @@
         <Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
@@ -906,6 +1154,11 @@
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_4" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_4}Shrewd Rohirric trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -918,6 +1171,11 @@
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_4b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_4b}Devious horse-lord merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -926,6 +1184,10 @@
         <Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.cts_rohan_armor3" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
@@ -942,6 +1204,11 @@
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_6" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.vlandia" name="{=aom_roh_notable_6}Stern Riddermark wise-man" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
@@ -953,6 +1220,11 @@
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_7" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_7}Keeper of Rohirric traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
@@ -960,6 +1232,11 @@
         <Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
@@ -977,6 +1254,11 @@
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_9" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.vlandia" name="{=aom_roh_notable_9}Gifted Riddermark craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
@@ -984,6 +1266,11 @@
         <Traits><Trait id="Generosity" value="1" /></Traits>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.cts_rohan_armor1" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
@@ -1002,6 +1289,12 @@
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_10}Mocking Rohirric gang boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -1013,6 +1306,11 @@
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_notable_11}Brutal Riddermark enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -1020,6 +1318,11 @@
         <Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.cts_rohan_armor1" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
@@ -1036,6 +1339,12 @@
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_12" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.vlandia" name="{=aom_roh_notable_12}Sly Rohirric smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -1047,6 +1356,11 @@
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_13" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_notable_13}Menacing Riddermark gang leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -1054,6 +1368,12 @@
         <Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.cts_rohan_armor3" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
@@ -1072,6 +1392,11 @@
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_notable_rohan_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.vlandia" name="{=aom_roh_notable_22}Respected Riddermark elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
@@ -1079,6 +1404,11 @@
         <Traits><Trait id="Honor" value="1" /></Traits>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
@@ -1096,6 +1426,11 @@
                 <equipment slot="Cape" id="Item.cts_rohan_cape2" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots1" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_rohan_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.vlandia" name="{=aom_roh_headman_2}Cautious Riddermark headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
@@ -1107,6 +1442,11 @@
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="spc_rohan_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.vlandia" name="{=aom_roh_headman_3}Cunning horse-lord headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
@@ -1114,6 +1454,12 @@
         <Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Cape" id="Item.cts_roha_cape1" />
                 <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
@@ -1140,6 +1486,14 @@
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
         </Equipments>
     </NPCCharacter>
 
@@ -1154,6 +1508,10 @@
         </face>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
@@ -1172,6 +1530,10 @@
         </face>
         <Equipments>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>
@@ -1194,6 +1556,14 @@
                 <equipment slot="Leg" id="Item.cts_rohan_boots3" />
             </EquipmentRoster>
             <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
                 <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
                 <equipment slot="Leg" id="Item.cts_rohan_boots4" />
             </EquipmentRoster>

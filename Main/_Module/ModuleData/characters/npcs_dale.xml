@@ -18,6 +18,14 @@
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -33,6 +41,14 @@
 				<equipment slot="Body" id="Item.nordic_padded_cloth" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.fur_skirt" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -41,6 +57,9 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.nordic_padded_cloth" />
 			</EquipmentRoster>
 		</Equipments>
@@ -53,6 +72,9 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.fur_skirt" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.fur_skirt" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -61,6 +83,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.nordic_padded_cloth" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
@@ -75,6 +101,10 @@
 				<equipment slot="Body" id="Item.fur_skirt" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.fur_skirt" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -86,6 +116,10 @@
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -94,6 +128,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_skirt" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.fur_skirt" />
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -135,6 +174,15 @@
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.fur_skirt" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -146,6 +194,9 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.nordic_padded_cloth" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -154,6 +205,9 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_skirt" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.fur_skirt" />
 			</EquipmentRoster>
 		</Equipments>
@@ -167,6 +221,10 @@
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -175,6 +233,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_skirt" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.fur_skirt" />
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -197,6 +260,16 @@
 				<equipment slot="Cape" id="Item.rough_bearskin" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -211,6 +284,16 @@
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.nordic_sloven_leather" />
 				<equipment slot="Gloves" id="Item.leather_gloves" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -232,6 +315,16 @@
 				<equipment slot="Gloves" id="Item.leather_gloves" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -245,6 +338,16 @@
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Gloves" id="Item.leather_gloves" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -266,6 +369,16 @@
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -283,6 +396,15 @@
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -295,6 +417,15 @@
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.nordic_padded_cloth" />
 				<equipment slot="Cape" id="Item.rough_bearskin" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -315,6 +446,15 @@
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.fur_skirt" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -331,6 +471,15 @@
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -340,6 +489,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Gloves" id="Item.rough_tied_bracers" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Gloves" id="Item.rough_tied_bracers" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -357,6 +511,14 @@
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
@@ -379,6 +541,12 @@
 				<equipment slot="Gloves" id="Item.leather_gloves" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -391,6 +559,14 @@
 		</skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+				<equipment slot="Head" id="Item.imperial_open_mail_coif" />
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
 				<equipment slot="Head" id="Item.imperial_open_mail_coif" />
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
@@ -493,6 +669,15 @@
 				<equipment slot="Body" id="Item.nordic_sloven_leather" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -502,6 +687,12 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.sturgia_axe_2_t2" />
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Gloves" id="Item.leather_gloves" />
@@ -523,6 +714,14 @@
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -535,6 +734,10 @@
 				<equipment slot="Body" id="Item.nordic_sloven_leather" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -543,6 +746,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.fur_skirt" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.fur_skirt" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
@@ -558,6 +765,14 @@
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.fur_skirt" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.nordic_padded_cloth" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
@@ -617,6 +832,10 @@
 				<equipment slot="Body" id="Item.nordic_padded_cloth" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -626,6 +845,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.nordic_padded_cloth" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
@@ -640,6 +863,10 @@
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -651,6 +878,10 @@
 				<equipment slot="Body" id="Item.fur_skirt" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.fur_skirt" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -659,6 +890,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.nordic_sloven_leather" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
@@ -674,6 +909,11 @@
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -682,6 +922,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Cape" id="Item.rough_bearskin" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -702,6 +947,11 @@
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_0b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dl_notable_0b}Shrewd laketown merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -710,6 +960,11 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Cape" id="Item.rough_bearskin" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -726,6 +981,11 @@
 				<equipment slot="Gloves" id="Item.leather_gloves" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_notable_1b}Cold Barding merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -737,6 +997,10 @@
 				<equipment slot="Body" id="Item.nordic_padded_cloth" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_2" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.sturgia" name="{=aom_dl_notable_2}Dale gem dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -745,6 +1009,11 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Gloves" id="Item.leather_gloves" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -761,6 +1030,11 @@
 				<equipment slot="Cape" id="Item.rough_bearskin" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_3" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dl_notable_3}Self-made Dale merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -769,6 +1043,11 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.nordic_sloven_leather" />
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -786,6 +1065,12 @@
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_notable_4}Shrewd Barding merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -798,6 +1083,11 @@
 				<equipment slot="Gloves" id="Item.leather_gloves" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_4b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dl_notable_4b}Devious Dale merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -806,6 +1096,10 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
@@ -822,6 +1116,11 @@
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_6" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_notable_6}Stern Barding lorekeeper" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
@@ -833,6 +1132,11 @@
 				<equipment slot="Cape" id="Item.rough_bearskin" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_7" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.sturgia" name="{=aom_dl_notable_7}Dale keeper of traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
@@ -840,6 +1144,12 @@
 		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.nordic_sloven_leather" />
 				<equipment slot="Gloves" id="Item.leather_gloves" />
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
@@ -858,6 +1168,11 @@
 				<equipment slot="Gloves" id="Item.leather_gloves" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_9" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.sturgia" name="{=aom_dl_notable_9}Gifted Dale craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
@@ -865,6 +1180,11 @@
 		<Traits><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.nordic_padded_cloth" />
 				<equipment slot="Gloves" id="Item.leather_gloves" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -883,6 +1203,12 @@
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.sturgia" name="{=aom_dl_notable_10}Sardonic Barding outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -890,6 +1216,11 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.nordic_sloven_leather" />
 				<equipment slot="Cape" id="Item.rough_bearskin" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -905,6 +1236,11 @@
 				<equipment slot="Gloves" id="Item.rough_tied_bracers" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Gloves" id="Item.rough_tied_bracers" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_notable_gl4}Ruthless Barding thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -912,6 +1248,11 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.nordic_sloven_leather" />
 				<equipment slot="Gloves" id="Item.leather_gloves" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -927,6 +1268,11 @@
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.ragged_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.ragged_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_13" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.sturgia" name="{=aom_dl_notable_13}Menacing laketown schemer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -934,6 +1280,11 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Cape" id="Item.rough_bearskin" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -951,6 +1302,11 @@
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_dale_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.sturgia" name="{=aom_dl_notable_22}Agreeable Dale elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
@@ -958,6 +1314,11 @@
 		<Traits><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Cape" id="Item.rough_bearskin" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
@@ -975,6 +1336,11 @@
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_sloven_leather" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_dale_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.sturgia" name="{=aom_dl_headman_2}Conservative Barding headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
@@ -987,6 +1353,12 @@
 				<equipment slot="Cape" id="Item.rough_bearskin" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.nordic_padded_cloth" />
+				<equipment slot="Gloves" id="Item.leather_gloves" />
+				<equipment slot="Cape" id="Item.rough_bearskin" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_dale_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.sturgia" name="{=aom_dl_headman_3}Shrewd Dale headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
@@ -994,6 +1366,11 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.padded_leather_overcoat" />
+				<equipment slot="Cape" id="Item.fur_cloak_a" />
+				<equipment slot="Leg" id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.padded_leather_overcoat" />
 				<equipment slot="Cape" id="Item.fur_cloak_a" />
 				<equipment slot="Leg" id="Item.strapped_leather_boots" />

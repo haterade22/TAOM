@@ -94,6 +94,14 @@ Without `equipmentType="Civilian"` on a civilian roster, the engine treats it as
 
 **This rule is for the STANDALONE roster pattern only.** Inline equipment under `<NPCCharacter><Equipments>...</Equipments>` (in `characters/*.xml` and `troops/troops_*.xml`) uses a different attribute (`civilian="true"` on `<EquipmentRoster>`) — that pattern is governed separately and is NOT affected by this rule.
 
+## Townsfolk/notables need a plain (battle) roster too — arena spectators (#295)
+
+Arena stand spectators are the settlement culture's `townsman`/`townswoman` + notables, spawned engine/scene-side with **battle** equipment. An `<NPCCharacter>` whose inline `<Equipments>` block is **civilian-only** (`<EquipmentRoster civilian="true">` with NO plain `<EquipmentRoster>`) has an empty `FirstBattleEquipment` → it spawns **naked in the arena**. The town walk uses *civilian* equipment, so the same character looks fine there — that asymmetry is why the bug was arena-only and every-culture. Every TAOM culture's townsfolk/notables shipped civilian-only and were naked in every arena until `tools/add_townsfolk_battle_rosters.py` appended a battle twin of each civilian roster (1089 NPCs / 20 cultures).
+
+**When authoring a new townsfolk/notable NPCCharacter, add a plain `<EquipmentRoster>` (mirroring the civilian one) in addition to the `civilian="true"` one — or re-run `tools/add_townsfolk_battle_rosters.py`.**
+
+Aside (for future arena/crowd debugging): `CharacterSpawner.InitWithCharacter` is the UI **tableau** spawner (encyclopedia / clan / character-creation previews), NOT the arena stand crowd — the arena spectators are real `Mission.Agent`s spawned engine/scene-side. Don't chase `CharacterSpawner` for arena render bugs.
+
 ## Formatting
 - 2-space indentation (per .editorconfig)
 - UTF-8 encoding

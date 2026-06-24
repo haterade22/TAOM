@@ -21,6 +21,18 @@
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -61,6 +73,14 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
@@ -193,6 +213,12 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item1" id="Item.wm_mordor_set1_axe_a01" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item1" id="Item.wm_mordor_set1_sword_a01" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item1" id="Item.wm_mordor_set1_axe_a01" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -220,6 +246,22 @@
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
+				<equipment slot="Item1" id="Item.sm_mordor_shield_small_a" />
+				<equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_a1" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
+				<equipment slot="Item1" id="Item.sm_mordor_shield_mid_a" />
+				<equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_b1" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -235,6 +277,18 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
@@ -259,6 +313,18 @@
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -273,6 +339,18 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
@@ -294,6 +372,14 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -305,6 +391,12 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 			</EquipmentRoster>
 		</Equipments>
@@ -319,6 +411,14 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
@@ -337,6 +437,14 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -349,6 +457,14 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
@@ -365,6 +481,12 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -377,6 +499,14 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
@@ -395,6 +525,14 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -407,6 +545,12 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 			</EquipmentRoster>
 		</Equipments>
@@ -424,6 +568,14 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -435,6 +587,12 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 			</EquipmentRoster>
 		</Equipments>
@@ -452,6 +610,14 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -466,6 +632,16 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
@@ -491,6 +667,20 @@
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+				<equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_a1" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
+				<equipment slot="Head" id="Item.sk_uruk_mordor_helmet_medium_b1" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -501,6 +691,11 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
@@ -517,6 +712,11 @@
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_mordor_1" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_1}Ruthless Mordor arms dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -525,6 +725,11 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
@@ -541,6 +746,11 @@
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_mordor_2" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mordor" name="{=aom_mr_notable_2}Mordor ore dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -549,6 +759,11 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
@@ -564,6 +779,10 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_mordor_3" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_3}Self-made Mordor trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -572,6 +791,12 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
@@ -589,6 +814,11 @@
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_mordor_4" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_4}Shrewd Mordor provisioner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -597,6 +827,11 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
@@ -613,6 +848,11 @@
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -622,6 +862,10 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
@@ -636,6 +880,11 @@
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_mordor_7" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mordor" name="{=aom_mr_notable_7}Keeper of the dark rites" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
@@ -643,6 +892,11 @@
 		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
@@ -660,6 +914,11 @@
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_mordor_9" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.mordor" name="{=aom_mr_notable_9}Mordor forge-master" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
@@ -667,6 +926,12 @@
 		<Traits><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
@@ -686,6 +951,12 @@
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_mordor_10" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.mordor" name="{=aom_mr_notable_10}Mordor pit boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -693,6 +964,12 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
@@ -709,6 +986,11 @@
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_mordor_gl4" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_gl4}Bestial Mordor thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -716,6 +998,11 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
@@ -731,6 +1018,11 @@
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_mordor_13" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mordor" name="{=aom_mr_notable_13}Menacing Mordor warlord" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -738,6 +1030,12 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
 				<equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_medium_a" />
@@ -755,6 +1053,10 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_mordor_22" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mordor" name="{=aom_mr_notable_22}Watchful Mordor elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
@@ -766,6 +1068,11 @@
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_mordor_23" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_notable_23}Brooding Mordor reaver" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
@@ -773,6 +1080,11 @@
 		<Traits><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
@@ -789,6 +1101,10 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_mordor_headman_2" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.mordor" name="{=aom_mr_headman_2}Conservative Mordor headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
@@ -800,6 +1116,11 @@
 				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Cape" id="Item.sk_uruk_mordor_pauldron_medium_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_mordor_headman_3" race="uruk" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.mordor" name="{=aom_mr_headman_3}Devious Mordor headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
@@ -807,6 +1128,10 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
@@ -826,6 +1151,14 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -839,6 +1172,14 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
@@ -857,6 +1198,14 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -869,6 +1218,14 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
@@ -887,6 +1244,14 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -902,6 +1267,14 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_c1" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -914,6 +1287,14 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
@@ -935,6 +1316,16 @@
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_a1" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_medium_b1" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_greaves_medium_a" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -948,6 +1339,13 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 			</EquipmentRoster>
 		</Equipments>
@@ -964,6 +1362,13 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -976,6 +1381,14 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
@@ -1061,6 +1474,14 @@
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
 				<equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
 			</EquipmentRoster>

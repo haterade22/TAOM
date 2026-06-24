@@ -103,7 +103,6 @@ public static class IoC
         BanditManagementIoC.RegisterBanditManagementFeature(container);
         CastleRecruitmentIoC.RegisterCastleRecruitmentFeature(container);
         SiegeDismountIoC.RegisterSiegeDismountFeature(container);
-        Features.FaceMorphCompat.FaceMorphCompatIoC.RegisterFaceMorphCompatFeature(container);
         MixedFormationsIoC.RegisterMixedFormationsFeature(container);
         SmartCavalryAIIoC.RegisterSmartCavalryAIFeature(container);
         QuickActionsIoC.RegisterQuickActionsFeature(container);

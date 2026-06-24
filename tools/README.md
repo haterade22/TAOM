@@ -51,6 +51,7 @@ Reference: `docs/reviews/rca-scene-tooling-2026-05-28.md` (why this convention e
 | `generate_xslt.py` | Generate `spcultures.xslt` from LOTRAOM reference data | `Main/_Module/ModuleData/spcultures.xslt` |
 | `generate_batch2_wanderers.py` | Generate wanderers for 8 kingdoms lacking LOTRAOM data | taom_wanderers*.xml files |
 | `extract_wanderers.py` | Convert LOTRAOM wanderer data into TAOM format | 4 taom_wanderer_*.xml files |
+| `add_townsfolk_battle_rosters.py` | Append a plain battle `<EquipmentRoster>` (mirroring each civilian one) to every civilian-only `<NPCCharacter>` so townsfolk/notables aren't naked as arena-stand spectators (arena spawns them with battle equipment; #295). Idempotent (skips NPCs that already have a battle roster), BOM/CRLF-preserving. `--apply` writes (default dry-run); `--glob` overrides the default `npcs_*.xml` scope. | `Main/_Module/ModuleData/characters/npcs_*.xml` |
 
 ## Rebalancing
 

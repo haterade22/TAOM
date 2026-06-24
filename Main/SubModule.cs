@@ -610,14 +610,6 @@ public class SubModule : MBSubModuleBase
         // mixed-race birth (normal in TAOM). Stops the debugger break + debug-log spam.
         _harmony.PatchCategory("Patch13_RaceAge");
 
-        // Patch52 — custom-race face-morph crash guard. Forces the GPU face-morph path for custom-mesh
-        // races (everything except the vanilla "human" race) at the private Agent.AddSkinMeshes
-        // chokepoint, so batched/deferred crowd spawns (arena & town spectators) never reach the
-        // CPU/static-morph path that AVs on a custom head whose face component lacks morph data
-        // (dwarf eye mesh = 0 morph targets; no custom LOTR head has a face_eyelash_mesh). Fixes the
-        // Erebor-arena dwarf crash + naked stands. See docs/features/face-morph-compat.md.
-        _harmony.PatchCategory("Patch52_CustomRaceFaceMorph");
-
         var resourceHook = IoC.Resolve<IOnPartyUpgradeResourceCheck>();
         var specResLogger = IoC.Resolve<IModLogger>();
         PartyCharacterVM_InitializeUpgrades_Patch.Initialize(resourceHook, specResLogger);

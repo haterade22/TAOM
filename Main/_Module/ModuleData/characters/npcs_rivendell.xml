@@ -14,6 +14,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_a" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -125,6 +130,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -133,6 +142,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
@@ -146,6 +159,9 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -154,6 +170,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
@@ -169,6 +189,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -179,6 +203,9 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -187,6 +214,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
@@ -203,6 +234,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_a" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -215,6 +251,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -223,6 +263,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
@@ -239,6 +284,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_b" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -247,6 +297,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
@@ -262,6 +316,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -270,6 +328,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
@@ -284,6 +346,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -292,6 +358,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
 				<equipment slot="Cape" id="Item.rivendell_cape_a" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
@@ -308,6 +379,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -319,6 +394,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -327,6 +406,12 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
 				<equipment slot="Cape" id="Item.rivendell_cape_b" />
@@ -348,6 +433,9 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -360,6 +448,13 @@
 		</skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
+				<equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+				<equipment slot="Body" id="Item.rivendell_torso_infantry_tier2" />
+				<equipment slot="Gloves" id="Item.rivendell_vambraces_2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_greaves2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.wm_rivendell_sword_a02" />
 				<equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
 				<equipment slot="Body" id="Item.rivendell_torso_infantry_tier2" />
@@ -380,6 +475,12 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_b" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -389,6 +490,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
@@ -403,6 +508,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -411,6 +520,11 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Cape" id="Item.rivendell_cape_a" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
@@ -429,6 +543,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_a" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_0b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_0b}Elven vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -437,6 +556,10 @@
 		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
@@ -452,6 +575,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_b" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_1b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_1b}Aloof elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -463,6 +591,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_2" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_2}Elven gem dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -471,6 +603,11 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
 				<equipment slot="Cape" id="Item.rivendell_cape_b" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
@@ -487,6 +624,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_a" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_3" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_3}Self-made elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -498,6 +640,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_3b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_3b}Elven lorekeeper of trade" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -506,6 +652,10 @@
 		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
@@ -521,6 +671,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_a" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_4b" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_4b}Devious elven merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
@@ -529,6 +684,11 @@
 		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
 				<equipment slot="Cape" id="Item.rivendell_cape_b" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
@@ -546,6 +706,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_a" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_6" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_6}Stern elven elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
@@ -556,6 +721,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_7" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.rivendell" name="{=aom_rv_notable_7}Elven keeper of traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
@@ -563,6 +732,11 @@
 		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Cape" id="Item.rivendell_cape_b" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
@@ -580,6 +754,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_a" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_9" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.rivendell" name="{=aom_rv_notable_9}Gifted elven craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
@@ -587,6 +766,10 @@
 		<Traits><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
@@ -603,6 +786,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_a" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_10" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_10}Sardonic elven outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -613,6 +801,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_11" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_notable_11}Intimidating elven enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -620,6 +812,10 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
@@ -634,6 +830,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_b" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_12" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.rivendell" name="{=aom_rv_notable_12}Cunning elven smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -644,6 +845,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_13" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_13}Menacing elven schemer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
@@ -651,6 +856,11 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Cape" id="Item.rivendell_cape_a" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
@@ -668,6 +878,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_b" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_notable_rivendell_22" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_notable_22}Agreeable elven elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
@@ -675,6 +890,10 @@
 		<Traits><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
@@ -691,6 +910,11 @@
 				<equipment slot="Cape" id="Item.rivendell_cape_a" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Cape" id="Item.rivendell_cape_a" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_rivendell_headman_2" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.rivendell" name="{=aom_rv_headman_2}Conservative elven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
@@ -701,6 +925,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 	<NPCCharacter id="spc_rivendell_headman_3" race="elf" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.rivendell" name="{=aom_rv_headman_3}Devious elven headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
@@ -708,6 +936,11 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
+				<equipment slot="Cape" id="Item.rivendell_cape_b" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier4" />
 				<equipment slot="Cape" id="Item.rivendell_cape_b" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
@@ -772,6 +1005,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -783,6 +1020,9 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -791,6 +1031,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
@@ -805,6 +1049,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -815,6 +1063,9 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -823,6 +1074,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
@@ -837,6 +1092,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -845,6 +1104,9 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 			</EquipmentRoster>
 		</Equipments>
@@ -858,6 +1120,10 @@
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier2" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -868,6 +1134,9 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
 			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
 
@@ -876,6 +1145,10 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
+				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
+			</EquipmentRoster>
+			<EquipmentRoster>
 				<equipment slot="Body" id="Item.rivendell_torso_light_light_tier3" />
 				<equipment slot="Leg" id="Item.rivendell_boots_leather2" />
 			</EquipmentRoster>
