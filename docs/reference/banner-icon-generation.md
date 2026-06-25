@@ -62,9 +62,15 @@ Validate well-formed XML after editing (`python -c "import xml.etree.ElementTree
 
 ## Step 4a — Banner material pipeline (the render) — **Modding Kit**
 
-1. Put the **green-on-black** source at `AssetSources/BannerIcons/taom_banners_<culture>_alpha_NN.psd` (PNG works as import too).
-2. In the **Bannerlord Modding Kit** (editor), import the texture and create a banner-icon **material named exactly** `taom_banners_<culture>_alpha_NN`. The editor writes `Assets/BannerIcons/taom_banners_<culture>_alpha_NN_mtl.tpac` + `_tex.tpac`.
-3. The `material_name` in `banner_icons.xml` must match that name exactly. **No tpac → blank icon** (no crash).
+The flag draws from the **material** (`_mtl.tpac`), which references the **texture** (`_tex.tpac`). You need **both**; they are produced by **two different actions**:
+
+1. **Texture** — put the green-on-black source at `AssetSources/BannerIcons/taom_banners_<culture>_alpha_NN.(psd|png)` and import it. **Importing the source image (PSD *or* PNG) produces ONLY the `_tex.tpac`.** (Verified 2026-06: PSD-vs-PNG makes no difference — both yield texture-only. The earlier "use PSD" theory was wrong.)
+2. **Material** — a **separate Kit step**: create a banner-icon **Material** named exactly `taom_banners_<culture>_alpha_NN`, assign the banner shader, point it at the texture, save → writes `_mtl.tpac`. This is the step that was missing when icons showed in the picker but rendered **blank on the flag**. The existing sheets' shader uses flags `two_sided` + `modulate1` + `alpha_test` (from the `_mtl.tpac` binary).
+3. `material_name` in `banner_icons.xml` must match exactly. **Verify BOTH** `_mtl.tpac` **and** `_tex.tpac` exist per material — `_tex` alone = blank flag (the picker may still show it via the GauntletUI sprite).
+
+**Do NOT hand-clone `_mtl.tpac`.** It's a tiny (~368 B) file but carries a material self-GUID (bytes 8–23), a texture-reference GUID (tail 97–112), and an 8-byte trailing checksum (247–254) — editing the name without correctly regenerating the GUIDs/checksum produces a mis-linked or invalid material. Use the Kit.
+
+⚠️ The editor's GauntletUI repack **deletes non-atlas folders/files under `AssetSources/GauntletUI`** — don't stash working files there; keep them in scratch / a sibling folder.
 *(This step is GUI-only; it cannot be done from CLI. Building valid banner `.tpac`s requires the in-engine asset pipeline.)*
 
 ## Step 4b — GauntletUI sprite pipeline (the UI atlas) — **sprite generator**
