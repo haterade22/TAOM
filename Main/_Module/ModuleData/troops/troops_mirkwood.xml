@@ -1324,14 +1324,14 @@
             <face_key_template value="BodyProperty.fighter_mirkwood" />
         </face>
         <skills>
-            <skill id="Athletics" value="140" />
+            <skill id="Athletics" value="130" />
             <skill id="Riding" value="20" />
-            <skill id="OneHanded" value="140" />
-            <skill id="TwoHanded" value="95" />
-            <skill id="Polearm" value="100" />
-            <skill id="Bow" value="180" />
-            <skill id="Crossbow" value="80" />
-            <skill id="Throwing" value="90" />
+            <skill id="OneHanded" value="110" />
+            <skill id="TwoHanded" value="75" />
+            <skill id="Polearm" value="75" />
+            <skill id="Bow" value="135" />
+            <skill id="Crossbow" value="75" />
+            <skill id="Throwing" value="80" />
         </skills>
         <Equipments>
             <EquipmentRoster>

@@ -24,6 +24,14 @@ SKILL_NAMES = ['Athletics', 'Riding', 'OneHanded', 'TwoHanded', 'Polearm', 'Bow'
 
 SKIP_FILES = set()
 
+# Troops EXCLUDED from the formula rebaseline — genuine non-humanoid creatures and
+# hand-tuned bespoke mount riders whose skills are intentionally off the humanoid curve.
+# (cave_troll = monster; harad_elephant_rider = bespoke elephant-back archer.)
+SKIP_TROOP_IDS = {
+    'cave_troll',
+    'harad_elephant_rider',
+}
+
 # =============================================================================
 # Baseline Skill Tables (center values per level per group)
 # =============================================================================
@@ -132,9 +140,13 @@ CULTURAL_MODS = {
         'Athletics': 5, 'TwoHanded': 10, 'Polearm': 5, 'Throwing': 5,
         'Riding': -5, 'Bow': -10, 'Crossbow': -10,
     },
+    # Dol Guldur — Sauron's northern stronghold of elite dark uruks. Bumped to ~Isengard
+    # tier (net +65, 2H-heavy = brutal cleavers) so its uruks stay strong enough to contest
+    # the bordering elf realms (Lothlorien/Mirkwood/Rivendell) instead of dropping to a weak
+    # curve. Lands just under Isengard; still far below elf-tier (fights elves via numbers/wargs).
     'dolguldur': {
-        'OneHanded': 5, 'TwoHanded': 5,
-        'Riding': -10, 'Polearm': 0, 'Bow': -5, 'Crossbow': -5,
+        'Athletics': 12, 'Riding': -5, 'OneHanded': 15, 'TwoHanded': 25,
+        'Polearm': 18, 'Bow': -5, 'Crossbow': -5, 'Throwing': 10,
     },
     'harad': {
         'Riding': 15, 'OneHanded': 5, 'Bow': 10,
@@ -152,6 +164,24 @@ CULTURAL_MODS = {
         'Athletics': 10, 'OneHanded': 10, 'TwoHanded': 5,
         'Riding': -15,
     },
+    # Goblin-town goblins — the weakest orc culture, a cheap disposable foot swarm.
+    # Below mordor/gundabad on every axis (verified L21 Inf ~474 vs mordor 535).
+    'goblin': {
+        'Athletics': -10, 'Riding': -15, 'OneHanded': -8, 'TwoHanded': -5,
+        'Polearm': -8, 'Bow': -15, 'Crossbow': -15, 'Throwing': -5,
+    },
+    # Misty Mountain Orcs — cheap orc swarm, hardier than Goblin-town but sits just
+    # below gundabad in melee (Pol +3 vs gundabad +5); poor ranged, no real cavalry.
+    'mistymountainorcs': {
+        'Athletics': 5, 'Riding': -5, 'TwoHanded': 5, 'Polearm': 3,
+        'Bow': -10, 'Crossbow': -10, 'Throwing': 5,
+    },
+    # Dale / Esgaroth — Men of the North, polearm + two-handed + bow specialists.
+    # Best non-elf polearm nation (Pol +25 tops iron_hills +20); top Men archery.
+    'dale': {
+        'Athletics': 5, 'Riding': -10, 'OneHanded': 5, 'TwoHanded': 12,
+        'Polearm': 25, 'Bow': 12, 'Crossbow': 12, 'Throwing': -5,
+    },
 }
 
 
@@ -159,6 +189,10 @@ def detect_culture(troop_id, filename_culture):
     """Detect the actual culture from troop ID, handling Iron Hills in erebor file."""
     if 'iron_hills' in troop_id or troop_id.startswith('iron_hills'):
         return 'iron_hills'
+    # troops_rhun_new.xml is Rhun's real roster; map it to the 'rhun' modifier key so
+    # the easterling cavalry/pike deltas actually apply (the filename derives 'rhun_new').
+    if filename_culture == 'rhun_new':
+        return 'rhun'
     return filename_culture
 
 
@@ -385,6 +419,17 @@ def process_file(filepath, dry_run=True):
 
     for npc in root.findall('.//NPCCharacter'):
         troop_id = npc.get('id', '')
+        if troop_id in SKIP_TROOP_IDS:
+            changes.append({
+                'file': filename, 'id': troop_id,
+                'name': get_display_name(npc.get('name', '')),
+                'level': int(npc.get('level', '0')),
+                'group': npc.get('default_group', 'Infantry'),
+                'culture': detect_culture(troop_id, filename_culture),
+                'status': 'SKIPPED (excluded: creature/hand-tuned)',
+                'old': {}, 'new': None,
+            })
+            continue
         troop_name = get_display_name(npc.get('name', ''))
         level = int(npc.get('level', '0'))
         group = npc.get('default_group', 'Infantry')
@@ -501,7 +546,7 @@ def print_report(all_changes):
         print(f"WARNING: {len(big_deltas)} troops with total skill change > 100 points")
         print(f"{'='*120}")
         for c in sorted(big_deltas, key=lambda x: abs(x['delta']), reverse=True):
-            print(f"  {c['name']:<45} L{c['level']:>2} {c['culture']:<12} old={c['total_old']:>5} new={c['total_new']:>5} Δ={c['delta']:+d}")
+            print(f"  {c['name']:<45} L{c['level']:>2} {c['culture']:<12} old={c['total_old']:>5} new={c['total_new']:>5} delta={c['delta']:+d}")
 
 
 def main():

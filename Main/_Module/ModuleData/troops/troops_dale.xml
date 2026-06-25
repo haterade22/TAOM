@@ -17,14 +17,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="45" />
+            <skill id="Athletics" value="38" />
             <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="30" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="35" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="20" />
+            <skill id="OneHanded" value="33" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="53" />
+            <skill id="Bow" value="17" />
+            <skill id="Crossbow" value="12" />
+            <skill id="Throwing" value="5" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_militia" />
@@ -56,14 +56,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="60" />
+            <skill id="Athletics" value="53" />
             <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="50" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="55" />
-            <skill id="Bow" value="45" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="30" />
+            <skill id="OneHanded" value="65" />
+            <skill id="TwoHanded" value="67" />
+            <skill id="Polearm" value="95" />
+            <skill id="Bow" value="22" />
+            <skill id="Crossbow" value="17" />
+            <skill id="Throwing" value="15" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_lake_town_skirmisher" />
@@ -102,13 +102,13 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="75" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="70" />
-            <skill id="TwoHanded" value="30" />
-            <skill id="Polearm" value="95" />
-            <skill id="Bow" value="0" />
-            <skill id="Crossbow" value="0" />
+            <skill id="Athletics" value="85" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="95" />
+            <skill id="TwoHanded" value="97" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
             <skill id="Throwing" value="25" />
         </skills>
         <upgrade_targets>
@@ -147,14 +147,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="95" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="100" />
-            <skill id="TwoHanded" value="50" />
-            <skill id="Polearm" value="125" />
-            <skill id="Bow" value="0" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="30" />
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="122" />
+            <skill id="Polearm" value="155" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="45" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_lake_town_veteran" />
@@ -192,14 +192,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="115" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="130" />
-            <skill id="TwoHanded" value="70" />
-            <skill id="Polearm" value="160" />
-            <skill id="Bow" value="0" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="35" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="10" />
+            <skill id="OneHanded" value="180" />
+            <skill id="TwoHanded" value="167" />
+            <skill id="Polearm" value="195" />
+            <skill id="Bow" value="32" />
+            <skill id="Crossbow" value="27" />
+            <skill id="Throwing" value="65" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -235,14 +235,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="80" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="70" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="100" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="85" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="95" />
+            <skill id="TwoHanded" value="97" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="25" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_spearman" />
@@ -281,13 +281,13 @@
         </face>
         <skills>
             <skill id="Athletics" value="100" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="85" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="135" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="122" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="45" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_veteran_spearman" />
@@ -325,14 +325,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="100" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="170" />
-            <skill id="Bow" value="30" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="10" />
+            <skill id="OneHanded" value="165" />
+            <skill id="TwoHanded" value="167" />
+            <skill id="Polearm" value="210" />
+            <skill id="Bow" value="32" />
+            <skill id="Crossbow" value="27" />
+            <skill id="Throwing" value="65" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_lake_town_hearthguard" />
@@ -370,14 +370,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="145" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="150" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="235" />
-            <skill id="Bow" value="35" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="125" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="235" />
+            <skill id="TwoHanded" value="222" />
+            <skill id="Polearm" value="260" />
+            <skill id="Bow" value="37" />
+            <skill id="Crossbow" value="32" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -414,14 +414,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="60" />
+            <skill id="Athletics" value="53" />
             <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="50" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="55" />
-            <skill id="Bow" value="45" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="30" />
+            <skill id="OneHanded" value="65" />
+            <skill id="TwoHanded" value="67" />
+            <skill id="Polearm" value="95" />
+            <skill id="Bow" value="22" />
+            <skill id="Crossbow" value="17" />
+            <skill id="Throwing" value="15" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_riverman" />
@@ -463,14 +463,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="75" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="55" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="40" />
-            <skill id="Bow" value="90" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="20" />
+            <skill id="Athletics" value="90" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="75" />
+            <skill id="TwoHanded" value="57" />
+            <skill id="Polearm" value="70" />
+            <skill id="Bow" value="97" />
+            <skill id="Crossbow" value="37" />
+            <skill id="Throwing" value="25" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_longbowman" />
@@ -510,14 +510,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="95" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="70" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="50" />
-            <skill id="Bow" value="125" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="105" />
+            <skill id="TwoHanded" value="77" />
+            <skill id="Polearm" value="95" />
+            <skill id="Bow" value="142" />
+            <skill id="Crossbow" value="42" />
+            <skill id="Throwing" value="35" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_royal_archer" />
@@ -557,14 +557,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="115" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="85" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="60" />
-            <skill id="Bow" value="160" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="30" />
+            <skill id="Athletics" value="110" />
+            <skill id="Riding" value="10" />
+            <skill id="OneHanded" value="145" />
+            <skill id="TwoHanded" value="97" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="182" />
+            <skill id="Crossbow" value="47" />
+            <skill id="Throwing" value="45" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_black_arrow_marksman" />
@@ -604,14 +604,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="100" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="70" />
-            <skill id="Bow" value="195" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="35" />
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="112" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="217" />
+            <skill id="Crossbow" value="52" />
+            <skill id="Throwing" value="55" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -649,14 +649,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="75" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="55" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="0" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="90" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="90" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="75" />
+            <skill id="TwoHanded" value="57" />
+            <skill id="Polearm" value="70" />
+            <skill id="Bow" value="37" />
+            <skill id="Crossbow" value="97" />
+            <skill id="Throwing" value="25" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_veteran_crossbowman" />
@@ -696,14 +696,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="95" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="70" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="0" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="125" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="105" />
+            <skill id="TwoHanded" value="77" />
+            <skill id="Polearm" value="95" />
+            <skill id="Bow" value="42" />
+            <skill id="Crossbow" value="142" />
+            <skill id="Throwing" value="35" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_royal_crossbowman" />
@@ -743,14 +743,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="115" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="85" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="0" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="160" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="110" />
+            <skill id="Riding" value="10" />
+            <skill id="OneHanded" value="145" />
+            <skill id="TwoHanded" value="97" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="47" />
+            <skill id="Crossbow" value="182" />
+            <skill id="Throwing" value="45" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_master_crossbowman" />
@@ -790,14 +790,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="135" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="100" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="0" />
-            <skill id="Bow" value="30" />
-            <skill id="Crossbow" value="195" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="112" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="52" />
+            <skill id="Crossbow" value="217" />
+            <skill id="Throwing" value="55" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -835,14 +835,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="80" />
-            <skill id="Riding" value="0" />
+            <skill id="Athletics" value="85" />
+            <skill id="Riding" value="5" />
             <skill id="OneHanded" value="95" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="85" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="TwoHanded" value="97" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="25" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_guardsman" />
@@ -883,13 +883,13 @@
         </face>
         <skills>
             <skill id="Athletics" value="100" />
-            <skill id="Riding" value="0" />
+            <skill id="Riding" value="5" />
             <skill id="OneHanded" value="130" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="115" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="TwoHanded" value="122" />
+            <skill id="Polearm" value="155" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="45" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_royal_guard" />
@@ -929,14 +929,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="160" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="145" />
-            <skill id="Bow" value="30" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="10" />
+            <skill id="OneHanded" value="195" />
+            <skill id="TwoHanded" value="167" />
+            <skill id="Polearm" value="180" />
+            <skill id="Bow" value="32" />
+            <skill id="Crossbow" value="27" />
+            <skill id="Throwing" value="65" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_running_river_warden" />
@@ -976,14 +976,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="140" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="190" />
-            <skill id="TwoHanded" value="130" />
-            <skill id="Polearm" value="175" />
-            <skill id="Bow" value="35" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="125" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="250" />
+            <skill id="TwoHanded" value="222" />
+            <skill id="Polearm" value="245" />
+            <skill id="Bow" value="37" />
+            <skill id="Crossbow" value="32" />
+            <skill id="Throwing" value="75" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -1020,14 +1020,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="65" />
-            <skill id="Riding" value="115" />
-            <skill id="OneHanded" value="80" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="110" />
-            <skill id="Bow" value="40" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="90" />
+            <skill id="Riding" value="85" />
+            <skill id="OneHanded" value="85" />
+            <skill id="TwoHanded" value="62" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="20" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_knight" />
@@ -1072,14 +1072,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="85" />
-            <skill id="Riding" value="155" />
-            <skill id="OneHanded" value="110" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="145" />
-            <skill id="Bow" value="60" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="110" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="72" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="37" />
+            <skill id="Crossbow" value="27" />
+            <skill id="Throwing" value="25" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_veteran_northman_scout" />
@@ -1123,14 +1123,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="95" />
-            <skill id="Riding" value="180" />
-            <skill id="OneHanded" value="130" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="170" />
-            <skill id="Bow" value="70" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="150" />
+            <skill id="OneHanded" value="175" />
+            <skill id="TwoHanded" value="92" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="42" />
+            <skill id="Crossbow" value="32" />
+            <skill id="Throwing" value="35" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -1172,14 +1172,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="85" />
-            <skill id="Riding" value="160" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="110" />
             <skill id="OneHanded" value="120" />
-            <skill id="TwoHanded" value="0" />
+            <skill id="TwoHanded" value="72" />
             <skill id="Polearm" value="170" />
-            <skill id="Bow" value="40" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Bow" value="37" />
+            <skill id="Crossbow" value="27" />
+            <skill id="Throwing" value="25" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_kinsman_of_eorl" />
@@ -1223,14 +1223,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="95" />
-            <skill id="Riding" value="185" />
-            <skill id="OneHanded" value="145" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="195" />
-            <skill id="Bow" value="60" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="150" />
+            <skill id="OneHanded" value="175" />
+            <skill id="TwoHanded" value="92" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="42" />
+            <skill id="Crossbow" value="32" />
+            <skill id="Throwing" value="35" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_kings_guard" />
@@ -1274,14 +1274,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="110" />
-            <skill id="Riding" value="220" />
-            <skill id="OneHanded" value="180" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="235" />
-            <skill id="Bow" value="70" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="135" />
+            <skill id="Riding" value="200" />
+            <skill id="OneHanded" value="225" />
+            <skill id="TwoHanded" value="112" />
+            <skill id="Polearm" value="275" />
+            <skill id="Bow" value="47" />
+            <skill id="Crossbow" value="37" />
+            <skill id="Throwing" value="45" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -1323,14 +1323,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="80" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="80" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="95" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="85" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="95" />
+            <skill id="TwoHanded" value="97" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="25" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_shipman" />
@@ -1371,13 +1371,13 @@
         </face>
         <skills>
             <skill id="Athletics" value="100" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="100" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="125" />
-            <skill id="Bow" value="25" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="130" />
+            <skill id="TwoHanded" value="122" />
+            <skill id="Polearm" value="155" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="45" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_dalian_mariner" />
@@ -1417,14 +1417,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="120" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="125" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="160" />
-            <skill id="Bow" value="30" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="10" />
+            <skill id="OneHanded" value="180" />
+            <skill id="TwoHanded" value="167" />
+            <skill id="Polearm" value="195" />
+            <skill id="Bow" value="32" />
+            <skill id="Crossbow" value="27" />
+            <skill id="Throwing" value="65" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -1462,14 +1462,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="50" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="40" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="70" />
-            <skill id="Bow" value="15" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="122" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="45" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_militia_veteran_spearman" />
@@ -1498,14 +1498,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="50" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="30" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="0" />
-            <skill id="Bow" value="80" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="15" />
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="105" />
+            <skill id="TwoHanded" value="77" />
+            <skill id="Polearm" value="95" />
+            <skill id="Bow" value="142" />
+            <skill id="Crossbow" value="42" />
+            <skill id="Throwing" value="35" />
         </skills>
         <upgrade_targets>
             <upgrade_target id="NPCCharacter.dale_militia_veteran_archer" />
@@ -1535,14 +1535,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="85" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="85" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="120" />
-            <skill id="Bow" value="20" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="0" />
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="115" />
+            <skill id="TwoHanded" value="122" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="45" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>
@@ -1570,14 +1570,14 @@
             <face_key_template value="BodyProperty.fighter_sturgia" />
         </face>
         <skills>
-            <skill id="Athletics" value="80" />
-            <skill id="Riding" value="0" />
-            <skill id="OneHanded" value="60" />
-            <skill id="TwoHanded" value="0" />
-            <skill id="Polearm" value="0" />
-            <skill id="Bow" value="125" />
-            <skill id="Crossbow" value="0" />
-            <skill id="Throwing" value="25" />
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="105" />
+            <skill id="TwoHanded" value="77" />
+            <skill id="Polearm" value="95" />
+            <skill id="Bow" value="142" />
+            <skill id="Crossbow" value="42" />
+            <skill id="Throwing" value="35" />
         </skills>
         <upgrade_targets></upgrade_targets>
         <Equipments>

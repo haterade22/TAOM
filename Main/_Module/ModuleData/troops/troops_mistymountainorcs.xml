@@ -16,19 +16,19 @@
         <skills>
             <skill
                 id="Athletics"
-                value="38" />
+                value="53" />
             <skill
                 id="Riding"
-                value="0" />
+                value="5" />
             <skill
                 id="OneHanded"
-                value="28" />
+                value="60" />
             <skill
                 id="TwoHanded"
-                value="28" />
+                value="60" />
             <skill
                 id="Polearm"
-                value="33" />
+                value="73" />
             <skill
                 id="Bow"
                 value="0" />
@@ -37,7 +37,7 @@
                 value="0" />
             <skill
                 id="Throwing"
-                value="15" />
+                value="25" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.mistymountainorcs_grunt" />
@@ -207,10 +207,10 @@
                 value="30" />
             <skill
                 id="TwoHanded"
-                value="35" />
+                value="30" />
             <skill
                 id="Polearm"
-                value="35" />
+                value="33" />
             <skill
                 id="Bow"
                 value="45" />
@@ -479,28 +479,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="53" />
+                value="85" />
             <skill
                 id="Riding"
-                value="5" />
+                value="10" />
             <skill
                 id="OneHanded"
-                value="60" />
+                value="90" />
             <skill
                 id="TwoHanded"
-                value="65" />
+                value="90" />
             <skill
                 id="Polearm"
-                value="75" />
+                value="98" />
             <skill
                 id="Bow"
-                value="0" />
+                value="5" />
             <skill
                 id="Crossbow"
                 value="0" />
             <skill
                 id="Throwing"
-                value="25" />
+                value="35" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.mistymountainorcs_fighter" />
@@ -699,10 +699,10 @@
                 value="70" />
             <skill
                 id="TwoHanded"
-                value="55" />
+                value="50" />
             <skill
                 id="Polearm"
-                value="50" />
+                value="48" />
             <skill
                 id="Bow"
                 value="75" />
@@ -835,10 +835,10 @@
                 value="100" />
             <skill
                 id="TwoHanded"
-                value="75" />
+                value="70" />
             <skill
                 id="Polearm"
-                value="75" />
+                value="73" />
             <skill
                 id="Bow"
                 value="120" />
@@ -913,10 +913,10 @@
                 value="140" />
             <skill
                 id="TwoHanded"
-                value="95" />
+                value="90" />
             <skill
                 id="Polearm"
-                value="95" />
+                value="93" />
             <skill
                 id="Bow"
                 value="160" />
@@ -1066,19 +1066,19 @@
         <skills>
             <skill
                 id="Athletics"
-                value="85" />
+                value="100" />
             <skill
                 id="Riding"
                 value="10" />
             <skill
                 id="OneHanded"
-                value="90" />
+                value="125" />
             <skill
                 id="TwoHanded"
-                value="95" />
+                value="115" />
             <skill
                 id="Polearm"
-                value="100" />
+                value="133" />
             <skill
                 id="Bow"
                 value="5" />
@@ -1087,7 +1087,7 @@
                 value="0" />
             <skill
                 id="Throwing"
-                value="35" />
+                value="55" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.mistymountainorcs_brute" />
@@ -1124,19 +1124,19 @@
         <skills>
             <skill
                 id="Athletics"
-                value="85" />
+                value="100" />
             <skill
                 id="Riding"
                 value="10" />
             <skill
                 id="OneHanded"
-                value="90" />
+                value="125" />
             <skill
                 id="TwoHanded"
-                value="95" />
+                value="115" />
             <skill
                 id="Polearm"
-                value="100" />
+                value="133" />
             <skill
                 id="Bow"
                 value="5" />
@@ -1145,7 +1145,7 @@
                 value="0" />
             <skill
                 id="Throwing"
-                value="35" />
+                value="55" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.mistymountainorcs_spear_warrior" />
@@ -1180,28 +1180,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="100" />
+                value="105" />
             <skill
                 id="Riding"
-                value="10" />
+                value="15" />
             <skill
                 id="OneHanded"
-                value="125" />
+                value="175" />
             <skill
                 id="TwoHanded"
-                value="120" />
+                value="160" />
             <skill
                 id="Polearm"
-                value="135" />
+                value="173" />
             <skill
                 id="Bow"
-                value="5" />
+                value="10" />
             <skill
                 id="Crossbow"
-                value="0" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="75" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.mistymountainorcs_veteran_sword_warrior" />
@@ -1237,28 +1237,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="105" />
+                value="125" />
             <skill
                 id="Riding"
-                value="15" />
+                value="20" />
             <skill
                 id="OneHanded"
-                value="175" />
+                value="230" />
             <skill
                 id="TwoHanded"
-                value="165" />
+                value="215" />
             <skill
                 id="Polearm"
-                value="175" />
+                value="238" />
             <skill
                 id="Bow"
-                value="10" />
+                value="15" />
             <skill
                 id="Crossbow"
-                value="5" />
+                value="10" />
             <skill
                 id="Throwing"
-                value="75" />
+                value="85" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.mistymountainorcs_veteran_berserker" />
@@ -1294,28 +1294,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="125" />
+                value="145" />
             <skill
                 id="Riding"
-                value="20" />
+                value="25" />
             <skill
                 id="OneHanded"
-                value="230" />
+                value="270" />
             <skill
                 id="TwoHanded"
-                value="220" />
+                value="255" />
             <skill
                 id="Polearm"
-                value="240" />
+                value="278" />
             <skill
                 id="Bow"
-                value="15" />
+                value="20" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="15" />
             <skill
                 id="Throwing"
-                value="85" />
+                value="95" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1465,28 +1465,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="100" />
+                value="105" />
             <skill
                 id="Riding"
-                value="10" />
+                value="15" />
             <skill
                 id="OneHanded"
-                value="140" />
+                value="190" />
             <skill
                 id="TwoHanded"
-                value="120" />
+                value="160" />
             <skill
                 id="Polearm"
-                value="120" />
+                value="158" />
             <skill
                 id="Bow"
-                value="5" />
+                value="10" />
             <skill
                 id="Crossbow"
-                value="0" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="75" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.mistymountainorcs_berserker" />
@@ -1521,28 +1521,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="105" />
+                value="125" />
             <skill
                 id="Riding"
-                value="15" />
+                value="20" />
             <skill
                 id="OneHanded"
-                value="190" />
+                value="245" />
             <skill
                 id="TwoHanded"
-                value="165" />
+                value="215" />
             <skill
                 id="Polearm"
-                value="160" />
+                value="223" />
             <skill
                 id="Bow"
-                value="10" />
+                value="15" />
             <skill
                 id="Crossbow"
-                value="5" />
+                value="10" />
             <skill
                 id="Throwing"
-                value="75" />
+                value="85" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.mistymountainorcs_chosen_of_tharzog" />
@@ -1624,28 +1624,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="125" />
+                value="145" />
             <skill
                 id="Riding"
-                value="20" />
+                value="25" />
             <skill
                 id="OneHanded"
-                value="230" />
+                value="270" />
             <skill
                 id="TwoHanded"
-                value="220" />
+                value="255" />
             <skill
                 id="Polearm"
-                value="240" />
+                value="278" />
             <skill
                 id="Bow"
-                value="15" />
+                value="20" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="15" />
             <skill
                 id="Throwing"
-                value="85" />
+                value="95" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.mistymountainorcs_bolgs_ironfang" />
@@ -1681,28 +1681,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="100" />
+                value="105" />
             <skill
                 id="Riding"
-                value="10" />
+                value="15" />
             <skill
                 id="OneHanded"
-                value="110" />
+                value="160" />
             <skill
                 id="TwoHanded"
-                value="120" />
+                value="160" />
             <skill
                 id="Polearm"
-                value="150" />
+                value="188" />
             <skill
                 id="Bow"
-                value="5" />
+                value="10" />
             <skill
                 id="Crossbow"
-                value="0" />
+                value="5" />
             <skill
                 id="Throwing"
-                value="55" />
+                value="75" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.mistymountainorcs_veteran_spear_warrior" />
@@ -1737,28 +1737,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="105" />
+                value="125" />
             <skill
                 id="Riding"
-                value="15" />
+                value="20" />
             <skill
                 id="OneHanded"
-                value="160" />
+                value="200" />
             <skill
                 id="TwoHanded"
-                value="165" />
+                value="230" />
             <skill
                 id="Polearm"
-                value="190" />
+                value="253" />
             <skill
                 id="Bow"
-                value="10" />
+                value="15" />
             <skill
                 id="Crossbow"
-                value="5" />
+                value="10" />
             <skill
                 id="Throwing"
-                value="75" />
+                value="85" />
         </skills>
         <upgrade_targets>
       <upgrade_target id="NPCCharacter.mistymountainorcs_guardian_of_the_tower" />
@@ -1845,28 +1845,28 @@
         <skills>
             <skill
                 id="Athletics"
-                value="125" />
+                value="145" />
             <skill
                 id="Riding"
-                value="20" />
+                value="25" />
             <skill
                 id="OneHanded"
-                value="230" />
+                value="255" />
             <skill
                 id="TwoHanded"
-                value="220" />
+                value="255" />
             <skill
                 id="Polearm"
-                value="240" />
+                value="293" />
             <skill
                 id="Bow"
-                value="15" />
+                value="20" />
             <skill
                 id="Crossbow"
-                value="10" />
+                value="15" />
             <skill
                 id="Throwing"
-                value="85" />
+                value="95" />
         </skills>
         <upgrade_targets />
         <Equipments>
@@ -1911,10 +1911,10 @@
                 value="110" />
             <skill
                 id="TwoHanded"
-                value="120" />
+                value="115" />
             <skill
                 id="Polearm"
-                value="150" />
+                value="148" />
             <skill
                 id="Bow"
                 value="5" />
@@ -2015,10 +2015,10 @@
                 value="100" />
             <skill
                 id="TwoHanded"
-                value="75" />
+                value="70" />
             <skill
                 id="Polearm"
-                value="75" />
+                value="73" />
             <skill
                 id="Bow"
                 value="120" />
@@ -2131,10 +2131,10 @@
                 value="110" />
             <skill
                 id="TwoHanded"
-                value="120" />
+                value="115" />
             <skill
                 id="Polearm"
-                value="150" />
+                value="148" />
             <skill
                 id="Bow"
                 value="5" />
@@ -2256,10 +2256,10 @@
                 value="100" />
             <skill
                 id="TwoHanded"
-                value="75" />
+                value="70" />
             <skill
                 id="Polearm"
-                value="75" />
+                value="73" />
             <skill
                 id="Bow"
                 value="120" />
@@ -2369,11 +2369,11 @@
       <face_key_template value="BodyProperty.fighter_gundabad" />
     </face>
     <skills>
-      <skill id="Athletics" value="150" />
+      <skill id="Athletics" value="145" />
       <skill id="Riding" value="25" />
-      <skill id="OneHanded" value="280" />
-      <skill id="TwoHanded" value="240" />
-      <skill id="Polearm" value="240" />
+      <skill id="OneHanded" value="270" />
+      <skill id="TwoHanded" value="255" />
+      <skill id="Polearm" value="278" />
       <skill id="Bow" value="20" />
       <skill id="Crossbow" value="15" />
       <skill id="Throwing" value="95" />
