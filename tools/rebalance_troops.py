@@ -136,6 +136,14 @@ CULTURAL_MODS = {
         'TwoHanded': 5, 'Throwing': 5,
         'Athletics': -5, 'Riding': -5, 'Polearm': -5, 'Bow': -5, 'Crossbow': -5,
     },
+    # Mordor Black Uruks (mordor_uruk_* — heavy uruk-hai of Barad-dur) — elite line routed via
+    # detect_culture, NOT the weak Mordor-orc floor. Net +52: between Gundabad (0) and Dol Guldur
+    # (+65). Elite melee + competent ranged (Bow/Xbow left at baseline — they field real archers
+    # and crossbows, unlike the other orc cultures that nerf ranged). Uruks > Orcs > Goblins.
+    'mordor_uruk': {
+        'Athletics': 10, 'Riding': -5, 'OneHanded': 12, 'TwoHanded': 18,
+        'Polearm': 12, 'Throwing': 5,
+    },
     'gundabad': {
         'Athletics': 5, 'TwoHanded': 10, 'Polearm': 5, 'Throwing': 5,
         'Riding': -5, 'Bow': -10, 'Crossbow': -10,
@@ -164,11 +172,13 @@ CULTURAL_MODS = {
         'Athletics': 10, 'OneHanded': 10, 'TwoHanded': 5,
         'Riding': -15,
     },
-    # Goblin-town goblins — the weakest orc culture, a cheap disposable foot swarm.
-    # Below mordor/gundabad on every axis (verified L21 Inf ~474 vs mordor 535).
+    # Goblin-town goblins — throwaway foot swarm: the weakest orc MELEE in the game. EXCEPTION:
+    # their archers are very dangerous (Bow +15, above Dale's +12) — the Bow modifier only
+    # meaningfully lifts the Ranged-group troops (melee Bow baselines are tiny), so the swarm
+    # stays trash while the archers bite. Glass cannon. Uruks > Orcs > Goblins (melee).
     'goblin': {
         'Athletics': -10, 'Riding': -15, 'OneHanded': -8, 'TwoHanded': -5,
-        'Polearm': -8, 'Bow': -15, 'Crossbow': -15, 'Throwing': -5,
+        'Polearm': -8, 'Bow': 15, 'Crossbow': -15, 'Throwing': -5,
     },
     # Misty Mountain Orcs — cheap orc swarm, hardier than Goblin-town but sits just
     # below gundabad in melee (Pol +3 vs gundabad +5); poor ranged, no real cavalry.
@@ -193,6 +203,10 @@ def detect_culture(troop_id, filename_culture):
     # the easterling cavalry/pike deltas actually apply (the filename derives 'rhun_new').
     if filename_culture == 'rhun_new':
         return 'rhun'
+    # Mordor Black Uruks (mordor_uruk_*) are an elite line inside the mordor file — route them
+    # to their own elite modifier so they aren't dragged down to the weak Mordor-orc curve.
+    if troop_id.startswith('mordor_uruk'):
+        return 'mordor_uruk'
     return filename_culture
 
 

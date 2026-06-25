@@ -31,7 +31,7 @@
                 value="62" />
             <skill
                 id="Bow"
-                value="0" />
+                value="25" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -213,7 +213,7 @@
                 value="22" />
             <skill
                 id="Bow"
-                value="40" />
+                value="70" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -494,7 +494,7 @@
                 value="87" />
             <skill
                 id="Bow"
-                value="0" />
+                value="30" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -705,7 +705,7 @@
                 value="37" />
             <skill
                 id="Bow"
-                value="70" />
+                value="100" />
             <skill
                 id="Crossbow"
                 value="10" />
@@ -841,7 +841,7 @@
                 value="62" />
             <skill
                 id="Bow"
-                value="115" />
+                value="145" />
             <skill
                 id="Crossbow"
                 value="15" />
@@ -919,7 +919,7 @@
                 value="82" />
             <skill
                 id="Bow"
-                value="155" />
+                value="185" />
             <skill
                 id="Crossbow"
                 value="20" />
@@ -1081,7 +1081,7 @@
                 value="122" />
             <skill
                 id="Bow"
-                value="0" />
+                value="30" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -1139,7 +1139,7 @@
                 value="122" />
             <skill
                 id="Bow"
-                value="0" />
+                value="30" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -1195,7 +1195,7 @@
                 value="162" />
             <skill
                 id="Bow"
-                value="5" />
+                value="35" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -1252,7 +1252,7 @@
                 value="227" />
             <skill
                 id="Bow"
-                value="10" />
+                value="40" />
             <skill
                 id="Crossbow"
                 value="5" />
@@ -1309,7 +1309,7 @@
                 value="267" />
             <skill
                 id="Bow"
-                value="15" />
+                value="45" />
             <skill
                 id="Crossbow"
                 value="10" />
@@ -1480,7 +1480,7 @@
                 value="147" />
             <skill
                 id="Bow"
-                value="5" />
+                value="35" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -1536,7 +1536,7 @@
                 value="212" />
             <skill
                 id="Bow"
-                value="10" />
+                value="40" />
             <skill
                 id="Crossbow"
                 value="5" />
@@ -1639,7 +1639,7 @@
                 value="267" />
             <skill
                 id="Bow"
-                value="15" />
+                value="45" />
             <skill
                 id="Crossbow"
                 value="10" />
@@ -1696,7 +1696,7 @@
                 value="177" />
             <skill
                 id="Bow"
-                value="5" />
+                value="35" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -1752,7 +1752,7 @@
                 value="242" />
             <skill
                 id="Bow"
-                value="10" />
+                value="40" />
             <skill
                 id="Crossbow"
                 value="5" />
@@ -1860,7 +1860,7 @@
                 value="282" />
             <skill
                 id="Bow"
-                value="15" />
+                value="45" />
             <skill
                 id="Crossbow"
                 value="10" />
@@ -1917,7 +1917,7 @@
                 value="137" />
             <skill
                 id="Bow"
-                value="0" />
+                value="30" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -2021,7 +2021,7 @@
                 value="62" />
             <skill
                 id="Bow"
-                value="115" />
+                value="145" />
             <skill
                 id="Crossbow"
                 value="15" />
@@ -2137,7 +2137,7 @@
                 value="137" />
             <skill
                 id="Bow"
-                value="0" />
+                value="30" />
             <skill
                 id="Crossbow"
                 value="0" />
@@ -2262,7 +2262,7 @@
                 value="62" />
             <skill
                 id="Bow"
-                value="115" />
+                value="145" />
             <skill
                 id="Crossbow"
                 value="15" />
@@ -2374,7 +2374,7 @@
       <skill id="OneHanded" value="262" />
       <skill id="TwoHanded" value="245" />
       <skill id="Polearm" value="267" />
-      <skill id="Bow" value="15" />
+      <skill id="Bow" value="45" />
       <skill id="Crossbow" value="10" />
       <skill id="Throwing" value="85" />
     </skills>

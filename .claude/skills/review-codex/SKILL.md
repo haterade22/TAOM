@@ -225,6 +225,7 @@ For EACH confirmed bug that Codex found, answer:
 - A config validation test that cross-references IDs at test time
 - A note in `docs/reviews/REVIEW-GUIDE.md` as a new check item
 - A rule in `.claude/rules/` if it's a recurring pattern
+- A `### <rule>` entry in `docs/reviews/LESSONS-LEARNED.md` (the canonical cross-feature lessons record, by subsystem) — **mandatory for any systemic finding.** Shape: `### rule` → `**Why missed:**` → `**Prevent:**` → `**Source:**`. This is the always-consulted master list (indexed from the harness `MEMORY.md`); read the matching category before the next review of that subsystem.
 
 Do NOT skip this step. The point is not just to fix bugs — it's to make the same category of bug impossible in future features. Output the analysis as:
 

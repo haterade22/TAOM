@@ -19,12 +19,13 @@ Race is an `int` in `CharacterObject` and `Hero`, not a strong type. The mapping
 Save compatibility: Bannerlord's `SyncData` serializes `Hero` fields but not the `Race` property directly in all paths. Races must be captured before saving and restored after loading.
 
 ### Solution Approach
-Four Harmony patches intercept the key rendering and race-assignment paths:
+Five Harmony patches intercept the key rendering and race-assignment paths:
 
 - `Patch3_SetRace` (`CharacterTableau_SetRace_Patch`) — Postfix on `CharacterTableau.SetRace`. After the race field is written, resets agent visuals and calls `InitializeAgentVisuals` so that the tableau rebuilds with the new monster base.
 - `Patch4_CharacterSpawner` (`CharacterSpawner_InitWithCharacter_Patch`) — Prefix on `CharacterSpawner.InitWithCharacter`. When `characterCode.Race > 0`, fully replaces the method with `CharacterSpawnerService.InitWithCharacter`, which replicates the vanilla logic but calls `_faceGenAdapter.GetBaseMonsterFromRace(race)` and applies per-race position offsets from `RacePositionConfig`.
 - `Patch5_FaceGen` (`FaceGen_GetBaseMonsterFromRace_Patch`) — Postfix on `FaceGen.GetBaseMonsterFromRace`. Delegates to `EyeHeightAdjustmentHook`, which lowers `StandingEyeHeight` and `CrouchEyeHeight` by 0.2 for the `dwarf` race via reflection.
 - `CharacterTableau_RefreshCharacterTableau_Patch` — Postfix on `CharacterTableau.RefreshCharacterTableau`. Delegates to `CharacterTableauService.RefreshCharacterTableau`, which rebuilds agent visuals with race-aware position offsets read from `CharacterAvatarPatch.json`.
+- `BasicCharacterTableau_RefreshCharacterTableau_Patch` (`Patch55_BasicTableauRaceGuard`, applied in `OnBeforeInitialModuleScreenSetAsRoot`) — Prefix on the private `BasicCharacterTableau.RefreshCharacterTableau` (the Save/Load hero preview, a **different** class from `CharacterTableau`). Coerces the private `_race` to the human base via `IBasicTableauRaceGuard.ResolveSafeRace` so the agentless static-morph build can't AV on a custom-race head — see "Save/Load Hero Preview CTD Guard" below.
 
 `RacePersistenceBehavior` (CampaignBehaviorBase) captures all hero races to a `Dictionary<string, int>` before save (`OnBeforeSaveEvent`) and restores them after session launch (`OnSessionLaunchedEvent`). The dictionary is serialized through `SyncData` under the key `_taom_heroRaceMap`.
 
@@ -76,6 +77,7 @@ Special case: entries prefixed with `mount_` (e.g., `mount_dwarf`) are used to o
 |------|---------|
 | `Main/Features/HeroRace/HeroRaceIoC.cs` | DryIoc registrations; also initializes `FaceGen_GetBaseMonsterFromRace_Patch` with the resolved hook |
 | `Main/Features/HeroRace/CharacterTableauService.cs` | Rebuilds tableau agent visuals with race-aware camera offsets |
+| `Main/Features/HeroRace/IBasicTableauRaceGuard.cs` / `BasicTableauRaceGuard.cs` | Allow-list deciding which races are safe in the agentless `BasicCharacterTableau` build (Save/Load preview); coerces others to the human base |
 | `Main/Features/HeroRace/CharacterSpawnerService.cs` | Full reimplementation of `CharacterSpawner.InitWithCharacter` with race-aware monster base |
 | `Main/Features/HeroRace/EyeHeightAdjustmentHook.cs` | Lowers dwarf eye height by 0.2 via reflection on the `Monster` struct |
 | `Main/Features/HeroRace/RacePersistenceService.cs` | Captures and restores hero race integers across save/load |
@@ -86,11 +88,13 @@ Special case: entries prefixed with `mount_` (e.g., `mount_dwarf`) are used to o
 | `Main/Features/HeroRace/Hooks/CharacterTableau_RefreshCharacterTableau_Patch.cs` | RefreshCharacterTableau postfix |
 | `Main/Features/HeroRace/Hooks/CharacterSpawner_InitWithCharacter_Patch.cs` | Patch4_CharacterSpawner prefix |
 | `Main/Features/HeroRace/Hooks/FaceGen_GetBaseMonsterFromRace_Patch.cs` | Patch5_FaceGen postfix delegating to EyeHeightAdjustmentHook |
+| `Main/Features/HeroRace/Hooks/BasicCharacterTableau_RefreshCharacterTableau_Patch.cs` | `Patch55_BasicTableauRaceGuard` prefix (applied pre-menu in `OnBeforeInitialModuleScreenSetAsRoot`); coerces the Save/Load preview `_race` to a tableau-safe race (CTD guard) |
 | `Main/Features/HeroRace/Hooks/ActionSetCode_GenerateActionSetNameWithSuffix_Patch.cs` | Action set suffix handling for non-human races |
 | `TAOM.Tests/Features/HeroRace/EyeHeightAdjustmentHookTests.cs` | Dwarf eye-height adjustment logic |
 | `TAOM.Tests/Features/HeroRace/RacePersistenceServiceTests.cs` | Capture/restore race dictionary |
 | `TAOM.Tests/Features/HeroRace/RacePersistenceBehaviorTests.cs` | Event registration |
 | `TAOM.Tests/Features/HeroRace/Configuration/RacePositionConfigTests.cs` | Config POCO loading |
+| `TAOM.Tests/Features/HeroRace/BasicTableauRaceGuardTests.cs` | `ResolveSafeRace` allow-list: human preserved, custom/invalid coerced to human |
 
 ## Dependencies
 - `IRaceManager` — maps race int to race name string (from `TAOM.Core.Domain`)
@@ -140,7 +144,22 @@ The 12 Erebor wanderers (`spc_wanderer_erebor_0` … `_11`) share one equipment 
 
 **Audit recipe for the next dwarf NPC:** `python tools/validate_moduledata.py` confirms refs resolve and civilian sets stay tagged; the negative-lookahead grep above flags any non-dwarf item that slipped into a dwarf NPC's roster.
 
+## Save/Load Hero Preview CTD Guard (2026-06-24)
+
+Loading a save from the main menu hard-crashed (`AccessViolationException`) when the save's character was a custom (non-human) race. The crash is **vanilla code fed bad data** — no TAOM patch was on the stack.
+
+**Root cause.** The Load Game screen renders each save's hero into a `BasicCharacterTableau` (a class **distinct** from the `CharacterTableau` used in inventory/CC). `BasicCharacterTableau.RefreshCharacterTableau` parses the save's character code → sets a private `_race`, then builds the body via the **agentless** native `MBAgentVisuals.FillEntityWithBodyMeshesWithoutAgentVisuals(entity, SkinGenerationParams{_race}, _bodyProperties, glovesMesh)` on the hardcoded human skeleton. For a custom-race head the native static-morph build dereferences a null morph-data pointer (custom LOTRLOME heads lack the per-face-component morph data vanilla heads carry — the same gap behind the Erebor-arena crash, issue #295). Because a native AV is a corrupted-state exception, a `try/catch` in managed code can't catch it; the fix must prevent the bad native call.
+
+**Why `CharacterTableau` doesn't crash but `BasicCharacterTableau` does.** `CharacterTableau` (inventory, character-creation) builds through `AgentVisuals.Refresh` with `.UseMorphAnims(true).Race(race)` — the morph-tolerant path. `BasicCharacterTableau` (Save/Load preview only) uses the agentless static-morph path with no such handling. The two are separate classes; the existing four HeroRace patches target `CharacterTableau`, leaving the Save/Load path unguarded.
+
+**Fix.** `BasicCharacterTableau_RefreshCharacterTableau_Patch` (Prefix) coerces the private `_race` to a render-safe race via `IBasicTableauRaceGuard.ResolveSafeRace` before the native build. `BasicTableauRaceGuard` keeps an allow-list of races whose heads carry the morph data (`TableauSafeRaces`, today only the human base `0`); any race not on it is coerced to human. Coercing `_race` selects vanilla human head+body meshes (which have the morph data), so the AV can't fire — the other `SkinGenerationParams` fields (`_bodyMeshType`/`_bodyDeformType`/`_skinMeshesMask`) are sub-selectors within the chosen race's mesh set and don't drive the head morph path independently.
+
+**Scope / tradeoff.** Decompile confirmed `BasicCharacterTableau` is instantiated **only** by `SaveLoadHeroTableauTextureProvider`, so the guard touches nothing but the Save/Load preview. An affected custom-race save shows a human-headed thumbnail (equipment still correct) until the head morph data is authored asset-side (issue #295) — at which point that race's id joins `TableauSafeRaces` and its true preview returns.
+
+**Timing (Codex C1, issue #299) — the easy-to-miss part.** The guard has its own `Patch55_BasicTableauRaceGuard` category applied from `SubModule.OnBeforeInitialModuleScreenSetAsRoot`, with a process-static one-shot flag. It does **not** ride the sibling CharacterTableau patches' `Patch2_RefreshTableau`, which `SubModule` applies in `OnGameInitializationFinished` (campaign init). The other HeroRace tableau patches protect in-game/CC screens that only appear after a game starts, so applying them at campaign-init is both safe and in time. But the Save/Load preview is the one View tableau that renders on the **cold main menu, before any game-init callback** — so its guard must attach earlier, before the initial module screen is pushed (the guard object is already set by `IoC.Configure` in `OnSubModuleLoad`). The original fix reused `Patch2_RefreshTableau` and would have left the reported crash unguarded; the deep-review's lifecycle trace conflated "after module load" with "after game-init." RCA: `docs/reviews/rca-savetableau-2026-06-24.md`.
+
 ## Changelog
+- 2026-06-24 — Save/Load hero preview CTD guard (#299): `BasicCharacterTableau_RefreshCharacterTableau_Patch` + `BasicTableauRaceGuard` coerce a custom `_race` to the human base so the agentless static-morph build can't AV on a morph-less custom head (issue #295 class). Save/Load-preview-only; in-game `CharacterTableau` untouched. Own `Patch55_BasicTableauRaceGuard` category applied pre-menu in `OnBeforeInitialModuleScreenSetAsRoot` (Codex C1: `Patch2_RefreshTableau` applies at campaign-init, too late for the cold-menu save list).
 - 2026-05-14 — Hardened RacePersistence (#130): added `ResetForNewCampaign()` on new-game so stale race maps don't carry across campaigns, dropped the `race>0` filter so human resets are captured, and null-guarded the hero-roster adapter.
 - 2026-05-14 — Added `RacePersistenceBehavior` wiring tests (#183) pinning the OnBeforeSave (capture) and OnSessionLaunched (restore) subscriptions and IoC registration.
 - 2026-04-08 — HeroRace fixes: ActionSetCode BaseMonster/StringId preference and EyeHeight init retry.
