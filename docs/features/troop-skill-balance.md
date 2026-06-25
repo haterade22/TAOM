@@ -82,6 +82,12 @@ Result: **262 troops rewritten across 11 files** (the under-tuned cultures; dunl
 
 Verification: `validate_moduledata` PASS (zero broken refs); diff perfectly balanced (1,701 insertions / 1,701 deletions = skill-values-only, no structural change); overview outliers **186 → 14** (the 14 are benign Mordor partial-skill-block troops whose *present* skills are on-curve); **780 / 798 troops within ±25 of the formula** (up from 593).
 
+## Level monotonicity & militia
+
+A balance pass must never let a lower-level troop out-stat a higher-level one. `analyze_troop_balance.py` checks this (total-skill based, ±25 tolerance for weapon-spec noise) across two axes: **upgrade paths** (the troop you upgrade INTO must be higher-level and not weaker) and **within culture+group** (no lower level out-totals a higher level). Because the baseline is monotonic by construction and rebaselined troops match it, professional troops report **zero inversions**.
+
+**Militia are deliberately excluded.** TAOM militia take the **level-21 baseline regardless of their actual level** (`is_militia` in `rebalance_troops.py`) — so a L6/L11 militia out-stats mid-level regulars. That's intentional: militia exist to make sieges and village defense costly, not to sit in a clean progression (user direction, 2026-06-24). The check skips them and reports the count; don't "fix" militia to satisfy monotonicity. Weapon-spec role-changes on upgrade (a melee troop → an archer) are also not flagged — the upgraded troop's total is ≥, it just specializes differently.
+
 ## Key Files
 
 | File | Purpose |
@@ -104,7 +110,7 @@ Save-compat: troop skills are read from XML at agent spawn, so a rebaseline appl
 
 ## Changelog
 
-- 2026-06-24 — Black Uruk + goblin-archer follow-up: routed the `mordor_uruk_*` Black Uruk line to a new elite `mordor_uruk` modifier (net +52, between Gundabad & Dol Guldur — they were stuck on the weak Mordor-orc curve); raised goblin `Bow −15 → +15` so goblin archers are dangerous while the melee swarm stays throwaway (Uruks > Orcs > Goblins, with the goblin-archer exception). Only goblin + mordor files changed.
+- 2026-06-24 — Black Uruk + goblin-archer follow-up: routed the `mordor_uruk_*` Black Uruk line to a new elite `mordor_uruk` modifier (net +52, between Gundabad & Dol Guldur — they were stuck on the weak Mordor-orc curve); raised goblin `Bow −15 → +15` so goblin archers are dangerous while the melee swarm stays throwaway (Uruks > Orcs > Goblins, with the goblin-archer exception). Only goblin + mordor files changed. Added a **level-monotonicity check** to `analyze_troop_balance.py` (upgrade-path + within-culture+group, militia-excluded): 0 inversions among professional troops.
 - 2026-06-24 — Added the read-only `analyze_troop_balance.py` overview generator; full-roster rebaseline (262 troops / 11 files); authored `goblin`/`mistymountainorcs`/`dale` modifiers, bumped `dolguldur` to elite, fixed the `rhun_new`→`rhun` key mismatch, added `SKIP_TROOP_IDS` (cave_troll + elephant rider), fixed a latent `Δ` stdout crash.
 
 ## Related

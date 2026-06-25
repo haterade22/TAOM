@@ -171,6 +171,7 @@ def parse_troop_file(filepath):
             'group': group,
             'culture': culture,
             'is_basic': npc.get('is_basic_troop', 'false') == 'true',
+            'militia': rb.is_militia(troop_id, name),
             'actual': actual,
             'upgrades': upgrades,
             'has_equipment': has_equipment,
@@ -257,6 +258,63 @@ def data_quality(all_troops, file_cultures):
         'dead_modifiers': dead_mods,
         'special_troops': specials,
         'mount_riders': riders,
+    }
+
+
+# =============================================================================
+# Monotonicity (no lower level stronger than a higher level)
+# =============================================================================
+
+def check_monotonicity(all_troops, tolerance=25):
+    """Find genuine level-inversions among PROFESSIONAL troops.
+
+    MILITIA ARE EXCLUDED by design: TAOM militia are intentionally over-statted for siege /
+    village defense (they take the L21 baseline regardless of level), so a low-level militia
+    out-statting a mid-level regular is deliberate, not a bug (user direction 2026-06-24).
+
+    Comparison is total-skill based: weapon-spec swaps preserve a troop's total, so a melee
+    troop upgrading into an archer (lower melee-primary, same/higher total) is NOT flagged.
+    """
+    by_id = {t['id']: t for t in all_troops}
+
+    def total(t):
+        return sum(t['actual'].get(s, 0) for s in SKILL_NAMES)
+
+    def comparable(t):
+        return (not t['militia'] and not t.get('special')
+                and len(t['actual']) >= 6 and t['level'] in BASELINE_LEVELS)
+
+    upgrade_viol = []
+    for t in all_troops:
+        if t['militia'] or t.get('special'):
+            continue
+        for uid in t['upgrades']:
+            u = by_id.get(uid)
+            if not u or u['militia']:
+                continue
+            if u['level'] < t['level']:
+                upgrade_viol.append((t, u, 'target is lower level', t['level'] - u['level']))
+            elif comparable(t) and comparable(u) and total(u) < total(t) - tolerance:
+                upgrade_viol.append((t, u, 'target weaker (total)', total(t) - total(u)))
+
+    by_cg = defaultdict(list)
+    for t in all_troops:
+        if comparable(t):
+            by_cg[(t['culture'], t['group'])].append(t)
+    level_viol, seen = [], set()
+    for ts in by_cg.values():
+        for a in ts:
+            for b in ts:
+                if a['level'] < b['level'] and total(a) > total(b) + tolerance:
+                    if (a['id'], b['id']) not in seen:
+                        seen.add((a['id'], b['id']))
+                        level_viol.append((a, b, total(a) - total(b)))
+
+    return {
+        'upgrade_violations': sorted(upgrade_viol, key=lambda x: -x[3]),
+        'level_violations': sorted(level_viol, key=lambda x: -x[2]),
+        'militia_excluded': sum(1 for t in all_troops if t['militia']),
+        'tolerance': tolerance,
     }
 
 
@@ -468,6 +526,28 @@ def render_report(by_culture, all_troops, all_ids, dq, threshold):
                  f'are judged on the formula like any troop — only the non-humanoid mounts above are '
                  f'exempt. {flagged} currently read as skill outliers (may be intentional hand-tuning; '
                  f'review in the per-culture sections).\n')
+
+    # Monotonicity
+    m = dq['monotonicity']
+    L.append('## Level monotonicity (no lower level stronger than a higher level)\n')
+    L.append(f'Professional troops only — **militia excluded** (intentionally over-statted for siege / '
+             f'village defense). Total-skill based, ±{m["tolerance"]} tolerance for weapon-spec noise. '
+             f'{m["militia_excluded"]} militia not checked.\n')
+    if not m['upgrade_violations'] and not m['level_violations']:
+        L.append('**No inversions.** ✅ Every professional troop is ≥ all lower-level troops in its '
+                 'culture+group, and every upgrade target is higher-level and not weaker.\n')
+    else:
+        if m['upgrade_violations']:
+            L.append(f'**Upgrade-path inversions** ({len(m["upgrade_violations"])}):')
+            for t, u, kind, d in m['upgrade_violations']:
+                L.append(f"- `{t['id']}` (L{t['level']}) → `{u['id']}` (L{u['level']}) — {kind} by {d}")
+            L.append('')
+        if m['level_violations']:
+            L.append(f'**Within culture+group inversions** ({len(m["level_violations"])}):')
+            for a, b, d in m['level_violations']:
+                L.append(f"- {a['culture']}/{a['group']}: `{a['id']}` (L{a['level']}) out-totals "
+                         f"`{b['id']}` (L{b['level']}) by {d}")
+            L.append('')
 
     # Parity matrix
     L.append('## Cross-culture parity matrix\n')
@@ -754,6 +834,24 @@ def render_html(by_culture, all_troops, all_ids, dq, threshold):
         H.append('<div class="callout">Off-formula-grid troops (level not on the baseline grid): '
                  + ', '.join(f'<code>{_esc(t["id"])}</code> (L{t["level"]})' for t in off_grid) + '</div>')
 
+    # Monotonicity
+    m = dq['monotonicity']
+    H.append('<h2>Level monotonicity</h2>')
+    H.append(f'<p class="sub">No lower-level troop stronger than a higher-level one. Professional troops '
+             f'only — <b>{m["militia_excluded"]} militia excluded</b> (intentionally over-statted for siege / '
+             f'village defense). Total-skill based, ±{m["tolerance"]} tolerance for weapon-spec noise.</p>')
+    if not m['upgrade_violations'] and not m['level_violations']:
+        H.append('<div class="callout ok">No inversions — every upgrade target is higher-level and not '
+                 'weaker, and no lower level out-totals a higher level within a culture+group.</div>')
+    else:
+        for t, u, kind, d in m['upgrade_violations']:
+            H.append(f'<div class="callout bad">Upgrade: <code>{_esc(t["id"])}</code> (L{t["level"]}) → '
+                     f'<code>{_esc(u["id"])}</code> (L{u["level"]}) — {_esc(kind)} by {d}</div>')
+        for a, b, d in m['level_violations']:
+            H.append(f'<div class="callout bad">{_esc(a["culture"])}/{_esc(a["group"])}: '
+                     f'<code>{_esc(a["id"])}</code> (L{a["level"]}) out-totals '
+                     f'<code>{_esc(b["id"])}</code> (L{b["level"]}) by {d}</div>')
+
     # Parity
     H.append('<h2>Cross-culture parity matrix</h2>')
     H.append('<p class="sub">Average total skill (sum of 8 skills) per culture at each tier, '
@@ -834,6 +932,7 @@ def main():
     analyze(all_troops, weights, args.outlier_threshold)
     all_ids = {t['id'] for t in all_troops}
     dq = data_quality(all_troops, file_cultures)
+    dq['monotonicity'] = check_monotonicity(all_troops)
 
     report = render_report(by_culture, all_troops, all_ids, dq, args.outlier_threshold)
     report_html = render_html(by_culture, all_troops, all_ids, dq, args.outlier_threshold)
@@ -860,6 +959,9 @@ def main():
         print(f'Remap findings: {[r["file_culture"] for r in dq["remap_findings"]]}')
         print(f'Dead modifiers: {dq["dead_modifiers"]}')
         print(f'Special/creature troops: {len(dq["special_troops"])}')
+        m = dq['monotonicity']
+        print(f'Monotonicity (professional troops, militia excluded): '
+              f'{len(m["upgrade_violations"])} upgrade + {len(m["level_violations"])} level inversions')
 
 
 if __name__ == '__main__':

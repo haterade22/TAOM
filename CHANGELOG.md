@@ -1,5 +1,16 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-25
+
+### balance(troops): Black Uruk elite tier + dangerous goblin archers + level-monotonicity check
+
+Mordor's Black Uruks (`mordor_uruk_*`) were stuck on the weak Mordor-orc curve despite being far better than the orc rabble; goblin archers were as weak as the rest of the throwaway goblin swarm. Two targeted modifier fixes plus a permanent level-ordering guard.
+
+- **Black Uruks → elite.** Routed the `mordor_uruk_*` line through `detect_culture` to a new `mordor_uruk` modifier (net +52: Ath+10 1H+12 2H+18 Pol+12 Thr+5, Bow/Xbow at baseline since they field real archers/crossbows). Lands between Gundabad (0) and Dol Guldur (+65) — the same `iron_hills`-style id-routing used for an elite sub-line living inside a culture's file. Honours Uruks > Orcs > Goblins.
+- **Goblin archers → dangerous.** Raised goblin `Bow −15 → +15` (above Dale's +12). The Bow modifier only meaningfully lifts the Ranged group, so goblin archers become a real threat while the melee swarm stays throwaway — a glass cannon.
+- **Level-monotonicity check** added to `analyze_troop_balance.py` (upgrade-path + within-culture+group, total-skill based, ±25 weapon-spec tolerance): **0 inversions among professional troops**. Militia are excluded by design — they take the L21 baseline regardless of level (intentionally tough for siege / village defense), so a low-level militia out-statting a mid-level regular is deliberate, not a bug.
+- Only `troops_goblin.xml` + `troops_mordor.xml` changed (balanced values-only diff); `validate_moduledata` PASS. See `docs/features/troop-skill-balance.md`.
+
 ## 2026-06-24
 
 ### fix(graphics): shader pre-compile — stop the multi-restart crash grind on affected GPUs (Phase 0 of #287)
