@@ -13,13 +13,92 @@
   <!-- Cavalry (Nurn Warg Riders top-tier) -->
   <Troop id="mordor_warg_beastmaster" resource_id="war_spoils" upgrade_cost="1" daily_upkeep="0.05" />
   <!-- Command line -->
-  <Troop id="mordor_uruk_captain" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.2" />
-  <Troop id="mordor_uruk_baraddurguard" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.3" />
+  <Troop id="mordor_uruk_captain" resource_id="war_spoils" upgrade_cost="4" daily_upkeep="0.2" merchant_cost="14" />
+  <Troop id="mordor_uruk_baraddurguard" resource_id="war_spoils" upgrade_cost="5" daily_upkeep="0.3" merchant_cost="12" />
   <!-- Special: elite creature mounts gated behind their culture's special resource.
        recruit_cost is a ONE-TIME charge at volunteer recruitment (these are not upgrade targets,
        so upgrade_cost would never fire). The charged resource is the PLAYER's resolved resource —
        resource_id here is documentation only. Harad/aserai players pay War Drums; Dol Guldur
        players pay War Spoils. -->
-  <Troop id="harad_elephant_rider" resource_id="war_drums" recruit_cost="50" daily_upkeep="10" />
-  <Troop id="taom_spider_creature" resource_id="war_spoils" recruit_cost="5" daily_upkeep="1" />
+  <Troop id="harad_elephant_rider" resource_id="war_drums" recruit_cost="50" daily_upkeep="10" merchant_cost="70" />
+  <Troop id="taom_spider_creature" resource_id="war_spoils" recruit_cost="5" daily_upkeep="1" merchant_cost="18" />
+
+  <!-- ============================================================================
+       Elite Emissary merchant offers (merchant_cost = one-time price the faction
+       emissary charges at a key settlement, in the SETTLEMENT OWNER's special
+       resource — resource_id below is documentation only). Separate from recruit_cost
+       so an elite that is also a volunteer is never double-charged across the two
+       economies. Cost band by tier: L36≈10-14, L41≈18, L46≈28, L51≈45, creatures≈premium.
+       Surfaced by elite_emissary/elite_emissary_config.xml. See docs/features/elite-emissary.md.
+       (mordor_uruk_captain/baraddurguard, harad_elephant_rider, taom_spider_creature
+       carry their merchant_cost on the rows above so their upgrade/recruit costs survive.)
+       ============================================================================ -->
+
+  <!-- Gondor (Castar) -->
+  <Troop id="gondor_ithilien_ranger" resource_id="caster" merchant_cost="45" />
+  <Troop id="gondor_mt_fountain_guard" resource_id="caster" merchant_cost="28" />
+  <Troop id="gondor_ith_moon_guard" resource_id="caster" merchant_cost="28" />
+  <Troop id="gondor_da_swan_knight" resource_id="caster" merchant_cost="28" />
+  <Troop id="gondor_mt_captain" resource_id="caster" merchant_cost="18" />
+  <Troop id="gondor_da_vet_knight" resource_id="caster" merchant_cost="18" />
+  <Troop id="gondor_cal_vale_knight" resource_id="caster" merchant_cost="18" />
+  <Troop id="gondor_ith_sharpshooter" resource_id="caster" merchant_cost="18" />
+
+  <!-- Erebor + Iron Hills (Gems) -->
+  <Troop id="erebor_noble_royal_warden" resource_id="gems" merchant_cost="28" />
+  <Troop id="erebor_oathsworn_royal_legionary" resource_id="gems" merchant_cost="28" />
+  <Troop id="iron_hills_noble_royal_warden" resource_id="gems" merchant_cost="28" />
+  <Troop id="erebor_noble_shield_breaker" resource_id="gems" merchant_cost="18" />
+  <Troop id="erebor_noble_gate_warden" resource_id="gems" merchant_cost="18" />
+  <Troop id="iron_hills_noble_ironbreaker" resource_id="gems" merchant_cost="18" />
+
+  <!-- Dol Guldur (War Spoils) -->
+  <Troop id="dg_khamul_shadow_knight" resource_id="war_spoils" merchant_cost="28" />
+  <Troop id="dg_khamul_shadow_reaper" resource_id="war_spoils" merchant_cost="28" />
+  <Troop id="dg_khamul_shadow_bowman" resource_id="war_spoils" merchant_cost="28" />
+  <Troop id="dg_khamul_veiled_knight" resource_id="war_spoils" merchant_cost="18" />
+  <Troop id="dg_fell_warg_rider" resource_id="war_spoils" merchant_cost="12" />
+
+  <!-- Isengard (War Spoils) -->
+  <Troop id="orthanc_bodyguard" resource_id="war_spoils" merchant_cost="18" />
+  <Troop id="urukhai_nazg_hai" resource_id="war_spoils" merchant_cost="14" />
+  <Troop id="orthanc_warden" resource_id="war_spoils" merchant_cost="12" />
+
+  <!-- Gundabad (War Spoils) -->
+  <Troop id="gundabad_dread_rider_of_the_tower" resource_id="war_spoils" merchant_cost="18" />
+  <Troop id="gundabad_bolgs_ironfang" resource_id="war_spoils" merchant_cost="14" />
+  <Troop id="gundabad_veteran_berserker" resource_id="war_spoils" merchant_cost="12" />
+  <Troop id="gundabad_guardian_of_the_tower" resource_id="war_spoils" merchant_cost="12" />
+
+  <!-- Mirkwood (Elven Wine) -->
+  <Troop id="mirkwood_palaceguard" resource_id="elven_wine" merchant_cost="45" />
+  <Troop id="mirkwood_thingolheir" resource_id="elven_wine" merchant_cost="45" />
+  <Troop id="mirkwood_beleglas" resource_id="elven_wine" merchant_cost="28" />
+  <Troop id="mirkwood_borderwardens" resource_id="elven_wine" merchant_cost="28" />
+  <Troop id="mirkwood_guardians" resource_id="elven_wine" merchant_cost="28" />
+  <Troop id="mirkwood_wardens" resource_id="elven_wine" merchant_cost="18" />
+
+  <!-- Rivendell (Elven Wine) -->
+  <Troop id="rivendell_high_captain" resource_id="elven_wine" merchant_cost="45" />
+  <Troop id="rivendell_knight_golden_flower" resource_id="elven_wine" merchant_cost="45" />
+  <Troop id="rivendell_warden_gondolin" resource_id="elven_wine" merchant_cost="45" />
+  <Troop id="rivendell_glorfindel_guard" resource_id="elven_wine" merchant_cost="45" />
+  <Troop id="rivendell_royal_knight" resource_id="elven_wine" merchant_cost="28" />
+  <Troop id="rider_of_himring" resource_id="elven_wine" merchant_cost="28" />
+  <Troop id="imladris_blademaster" resource_id="elven_wine" merchant_cost="18" />
+
+  <!-- Rohan (Marks) -->
+  <Troop id="rohan_edoras_golden_hall_supreme_rider" resource_id="marks" merchant_cost="18" />
+  <Troop id="rohan_edoras_golden_hall_kings_own_rider" resource_id="marks" merchant_cost="12" />
+  <Troop id="rohan_westemnet_kings_own_rider" resource_id="marks" merchant_cost="12" />
+  <Troop id="rohan_eastemnet_kings_own_lancer" resource_id="marks" merchant_cost="12" />
+  <Troop id="rohan_wold_kings_own_horse_archer" resource_id="marks" merchant_cost="12" />
+
+  <!-- Rhun (War Banners) -->
+  <Troop id="dragon_wrath_obsidian_knight" resource_id="war_banners" merchant_cost="28" />
+  <Troop id="dragon_wrath_obsidian_warbow" resource_id="war_banners" merchant_cost="28" />
+  <Troop id="dragon_wrath_obsidian_shieldmaster" resource_id="war_banners" merchant_cost="28" />
+  <Troop id="wainrider_warlord_chariot" resource_id="war_banners" merchant_cost="28" />
+  <Troop id="dragon_wrath_ash_knight" resource_id="war_banners" merchant_cost="18" />
+  <Troop id="loke_rim_gilded_champion" resource_id="war_banners" merchant_cost="12" />
 </TroopResourceCosts>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settlement Elite Emissary — buy a faction's elite troops for its special resource.
+     KeySettlements: where the emissary appears (verified against TAOM_Map/settlements.xml).
+     CultureOffers: keyed by the settlement's CURRENT OWNER culture (so conquest flips the offerings).
+     Prices live in special_resources/troop_resource_costs.xml (merchant_cost); a troop listed here
+     without a merchant_cost row is dropped + warned at load. Cultures that map to NO special resource
+     (goblin, mistymountainorcs) or have no L36+ elites (dale/sturgia, dunland/empire, umbar, khand/
+     battania, lothlorien) are intentionally omitted — the option won't appear there.
+     See docs/features/elite-emissary.md. -->
+<EliteEmissary enabled="true">
+  <KeySettlements>
+    <Settlement id="town_EW1" />       <!-- Minas Tirith (Gondor) -->
+    <Settlement id="town_ES1" />       <!-- Barad Dûr (Mordor) -->
+    <Settlement id="town_E1" />        <!-- Erebor -->
+    <Settlement id="town_DG1" />       <!-- Dol Guldur -->
+    <Settlement id="town_isengard" />  <!-- Orthanc (Isengard) -->
+    <Settlement id="town_G1" />        <!-- Mount Gundabad -->
+    <Settlement id="town_M1" />        <!-- Felegoth (Mirkwood) -->
+    <Settlement id="town_R1" />        <!-- Rivendell -->
+    <Settlement id="town_V1" />        <!-- Edoras (Rohan) -->
+    <Settlement id="town_RU1" />       <!-- Mistrand (Rhun) -->
+    <Settlement id="town_A1" />        <!-- Korb Taskral (Harad) -->
+  </KeySettlements>
+
+  <CultureOffers>
+    <Culture id="gondor">
+      <Troop id="gondor_ithilien_ranger" />
+      <Troop id="gondor_mt_fountain_guard" />
+      <Troop id="gondor_ith_moon_guard" />
+      <Troop id="gondor_da_swan_knight" />
+      <Troop id="gondor_mt_captain" />
+      <Troop id="gondor_da_vet_knight" />
+      <Troop id="gondor_cal_vale_knight" />
+      <Troop id="gondor_ith_sharpshooter" />
+    </Culture>
+
+    <Culture id="mordor">
+      <Troop id="mordor_uruk_baraddurguard" />
+      <Troop id="mordor_uruk_captain" />
+      <Troop id="taom_spider_creature" />
+    </Culture>
+
+    <Culture id="erebor">
+      <Troop id="erebor_noble_royal_warden" />
+      <Troop id="erebor_oathsworn_royal_legionary" />
+      <Troop id="iron_hills_noble_royal_warden" />
+      <Troop id="erebor_noble_shield_breaker" />
+      <Troop id="erebor_noble_gate_warden" />
+      <Troop id="iron_hills_noble_ironbreaker" />
+    </Culture>
+
+    <Culture id="dolguldur">
+      <Troop id="dg_khamul_shadow_knight" />
+      <Troop id="dg_khamul_shadow_reaper" />
+      <Troop id="dg_khamul_shadow_bowman" />
+      <Troop id="dg_khamul_veiled_knight" />
+      <Troop id="dg_fell_warg_rider" />
+    </Culture>
+
+    <Culture id="isengard">
+      <Troop id="orthanc_bodyguard" />
+      <Troop id="urukhai_nazg_hai" />
+      <Troop id="orthanc_warden" />
+    </Culture>
+
+    <Culture id="gundabad">
+      <Troop id="gundabad_dread_rider_of_the_tower" />
+      <Troop id="gundabad_bolgs_ironfang" />
+      <Troop id="gundabad_veteran_berserker" />
+      <Troop id="gundabad_guardian_of_the_tower" />
+    </Culture>
+
+    <Culture id="mirkwood">
+      <Troop id="mirkwood_palaceguard" />
+      <Troop id="mirkwood_thingolheir" />
+      <Troop id="mirkwood_beleglas" />
+      <Troop id="mirkwood_borderwardens" />
+      <Troop id="mirkwood_guardians" />
+      <Troop id="mirkwood_wardens" />
+    </Culture>
+
+    <Culture id="rivendell">
+      <Troop id="rivendell_high_captain" />
+      <Troop id="rivendell_knight_golden_flower" />
+      <Troop id="rivendell_warden_gondolin" />
+      <Troop id="rivendell_glorfindel_guard" />
+      <Troop id="rivendell_royal_knight" />
+      <Troop id="rider_of_himring" />
+      <Troop id="imladris_blademaster" />
+    </Culture>
+
+    <Culture id="vlandia">
+      <Troop id="rohan_edoras_golden_hall_supreme_rider" />
+      <Troop id="rohan_edoras_golden_hall_kings_own_rider" />
+      <Troop id="rohan_westemnet_kings_own_rider" />
+      <Troop id="rohan_eastemnet_kings_own_lancer" />
+      <Troop id="rohan_wold_kings_own_horse_archer" />
+    </Culture>
+
+    <Culture id="khuzait">
+      <Troop id="dragon_wrath_obsidian_knight" />
+      <Troop id="dragon_wrath_obsidian_warbow" />
+      <Troop id="dragon_wrath_obsidian_shieldmaster" />
+      <Troop id="wainrider_warlord_chariot" />
+      <Troop id="dragon_wrath_ash_knight" />
+      <Troop id="loke_rim_gilded_champion" />
+    </Culture>
+
+    <Culture id="aserai">
+      <Troop id="harad_elephant_rider" />
+    </Culture>
+  </CultureOffers>
+</EliteEmissary>

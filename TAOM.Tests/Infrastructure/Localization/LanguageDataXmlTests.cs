@@ -107,15 +107,15 @@ public class LanguageDataXmlTests
     }
 
     [TestMethod]
-    public void AllLanguageDirs_HaveExactlyEightLanguageFiles()
+    public void AllLanguageDirs_HaveExactlyNineLanguageFiles()
     {
         foreach (var lang in SupportedLanguageDirs)
         {
             var path = Path.Combine(LanguagesPath, lang, "language_data.xml");
             var doc = XDocument.Load(path);
             var count = doc.Descendants("LanguageFile").Count();
-            Assert.AreEqual(8, count,
-                $"Languages/{lang}/language_data.xml should declare exactly 8 LanguageFile entries (module, wanderer, companion, cc, career, messenger, lotr_issue, xslt)");
+            Assert.AreEqual(9, count,
+                $"Languages/{lang}/language_data.xml should declare exactly 9 LanguageFile entries (module, wanderer, companion, cc, career, messenger, lotr_issue, xslt, emissary)");
         }
     }
 
@@ -196,6 +196,22 @@ public class LanguageDataXmlTests
             Assert.IsTrue(
                 paths.Any(p => p.Contains("taom_messenger_strings")),
                 $"Languages/{lang}/language_data.xml missing taom_messenger_strings reference");
+        }
+    }
+
+    [TestMethod]
+    public void AllLanguageDirs_HaveEmissaryStringsFile()
+    {
+        foreach (var lang in SupportedLanguageDirs)
+        {
+            var langDataPath = Path.Combine(LanguagesPath, lang, "language_data.xml");
+            var doc = XDocument.Load(langDataPath);
+            var paths = doc.Descendants("LanguageFile")
+                .Select(f => (string)f.Attribute("xml_path") ?? "")
+                .ToList();
+            Assert.IsTrue(
+                paths.Any(p => p.Contains("taom_emissary_strings")),
+                $"Languages/{lang}/language_data.xml missing taom_emissary_strings reference");
         }
     }
 

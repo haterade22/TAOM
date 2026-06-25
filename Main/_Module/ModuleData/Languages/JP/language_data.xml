@@ -8,4 +8,5 @@
   <LanguageFile xml_path="JP/std_taom_messenger_strings_jpn-JP.xml" />
   <LanguageFile xml_path="JP/std_taom_lotr_issue_strings_jpn-JP.xml" />
   <LanguageFile xml_path="JP/std_taom_xslt_strings_jpn-JP.xml" />
+  <LanguageFile xml_path="JP/std_taom_emissary_strings_jpn-JP.xml" />
 </LanguageData>

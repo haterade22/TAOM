@@ -374,6 +374,135 @@ public class SpecialResourceServiceTests
         Assert.IsFalse(result.Blocked);
     }
 
+    // ── Merchant Purchase (Elite Emissary) ──
+    // merchant_cost is a SEPARATE field from recruit_cost so the emissary never collides with the
+    // volunteer gate. The charged resource is resolved from the SETTLEMENT OWNER's faction (the
+    // kingdom/culture args), not the player's clan.
+
+    [TestMethod]
+    public void CanAffordMerchantPurchase_BalanceAboveCost_ReturnsTrue()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", upgradeCost: 4, dailyUpkeep: 0f, recruitCost: 0, merchantCost: 30);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+        _storage.Get("hero1", "war_spoils").Returns(100f);
+
+        Assert.IsTrue(_service.CanAffordMerchantPurchase("hero1", "empire_s", null, "mordor_uruk_captain", 3)); // 90 ≤ 100
+    }
+
+    [TestMethod]
+    public void CanAffordMerchantPurchase_BalanceBelowCost_ReturnsFalse()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", upgradeCost: 4, dailyUpkeep: 0f, recruitCost: 0, merchantCost: 30);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+        _storage.Get("hero1", "war_spoils").Returns(80f);
+
+        Assert.IsFalse(_service.CanAffordMerchantPurchase("hero1", "empire_s", null, "mordor_uruk_captain", 3)); // 90 > 80
+    }
+
+    [TestMethod]
+    public void CanAffordMerchantPurchase_BalanceEqualsCost_ReturnsTrue()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", upgradeCost: 4, dailyUpkeep: 0f, recruitCost: 0, merchantCost: 30);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+        _storage.Get("hero1", "war_spoils").Returns(90f);
+
+        Assert.IsTrue(_service.CanAffordMerchantPurchase("hero1", "empire_s", null, "mordor_uruk_captain", 3)); // 90 == 90
+    }
+
+    [TestMethod]
+    public void CanAffordMerchantPurchase_NoMerchantCost_AllowsByDefault()
+    {
+        // An upgrade/upkeep-only entry (merchant_cost omitted) is not an emissary offer; afford-allow
+        // so the gate decision lives in the offer-list builder, not here.
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", upgradeCost: 4, dailyUpkeep: 0.2f);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+        _storage.Get("hero1", "war_spoils").Returns(0f);
+
+        Assert.IsTrue(_service.CanAffordMerchantPurchase("hero1", "empire_s", null, "mordor_uruk_captain", 5));
+    }
+
+    [TestMethod]
+    public void CanAffordMerchantPurchase_ZeroCount_AllowsByDefault()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", upgradeCost: 0, dailyUpkeep: 0f, recruitCost: 0, merchantCost: 30);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+        _storage.Get("hero1", "war_spoils").Returns(0f);
+
+        Assert.IsTrue(_service.CanAffordMerchantPurchase("hero1", "empire_s", null, "mordor_uruk_captain", 0));
+    }
+
+    [TestMethod]
+    public void ChargeMerchantPurchase_DeductsMerchantCostTimesCount_FromOwnerResource()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", upgradeCost: 4, dailyUpkeep: 0f, recruitCost: 0, merchantCost: 30);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+
+        _service.ChargeMerchantPurchase("hero1", "empire_s", null, "mordor_uruk_captain", 2);
+
+        _storage.Received(1).Add("hero1", "war_spoils", -60f);
+    }
+
+    [TestMethod]
+    public void ChargeMerchantPurchase_NoMerchantCost_NoOp()
+    {
+        // recruit_cost set but merchant_cost 0 — must NOT deduct (proves the two economies don't cross).
+        var cost = new TroopResourceCostEntry("harad_elephant_rider", "war_drums", upgradeCost: 0, dailyUpkeep: 10f, recruitCost: 50, merchantCost: 0);
+        _config.GetTroopCost("harad_elephant_rider").Returns(cost);
+
+        _service.ChargeMerchantPurchase("hero1", "empire_s", null, "harad_elephant_rider", 2);
+
+        _storage.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void ChargeMerchantPurchase_NoCostEntry_NoOp()
+    {
+        _config.GetTroopCost("plain_troop").Returns((TroopResourceCostEntry)null);
+
+        _service.ChargeMerchantPurchase("hero1", "empire_s", null, "plain_troop", 1);
+
+        _storage.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void ChargeMerchantPurchase_NoResolvedResource_NoOp()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", upgradeCost: 0, dailyUpkeep: 0f, recruitCost: 0, merchantCost: 30);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+
+        _service.ChargeMerchantPurchase("hero1", "unmapped_kingdom", null, "mordor_uruk_captain", 1);
+
+        _storage.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void ChargeMerchantPurchase_ZeroCount_NoOp()
+    {
+        var cost = new TroopResourceCostEntry("mordor_uruk_captain", "war_spoils", upgradeCost: 0, dailyUpkeep: 0f, recruitCost: 0, merchantCost: 30);
+        _config.GetTroopCost("mordor_uruk_captain").Returns(cost);
+
+        _service.ChargeMerchantPurchase("hero1", "empire_s", null, "mordor_uruk_captain", 0);
+
+        _storage.DidNotReceive().Add(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
+    }
+
+    [TestMethod]
+    public void RecruitVsMerchant_SameTroopWithBothCosts_ChargeIndependentFields()
+    {
+        // The headline "never double-charged" invariant, load-bearing only for a troop that is BOTH a
+        // recruitable volunteer AND an emissary offer (harad_elephant_rider / taom_spider_creature):
+        // the volunteer path charges recruit_cost, the emissary path charges merchant_cost — never the
+        // other's field. Deep-review 2026-06-25 (completeness critic gap #5).
+        var cost = new TroopResourceCostEntry("harad_elephant_rider", "war_drums", upgradeCost: 0, dailyUpkeep: 10f, recruitCost: 50, merchantCost: 70);
+        _config.GetTroopCost("harad_elephant_rider").Returns(cost);
+
+        _service.ChargeRecruitCost("hero1", "empire_s", null, "harad_elephant_rider", 1);
+        _storage.Received(1).Add("hero1", "war_spoils", -50f);   // volunteer path → recruit_cost
+
+        _service.ChargeMerchantPurchase("hero1", "empire_s", null, "harad_elephant_rider", 1);
+        _storage.Received(1).Add("hero1", "war_spoils", -70f);   // emissary path → merchant_cost
+    }
+
     // ── Daily Tick ──
 
     [TestMethod]

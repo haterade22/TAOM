@@ -33,6 +33,25 @@ public interface ISpecialResourceService
     /// or the hero maps to no resource. Used by the RecruitmentVM Done-button gate.
     /// </summary>
     RecruitGateResult CanAffordRecruit(string heroId, string kingdomId, string cultureId, IReadOnlyList<RecruitCartEntry> cart);
+
+    /// <summary>
+    /// True if the hero can afford <c>merchant_cost × count</c> of <paramref name="troopId"/> from the
+    /// resource resolved via <paramref name="kingdomId"/>/<paramref name="cultureId"/> — pass the
+    /// SETTLEMENT OWNER's faction so the emissary charges the settlement faction's resource (Elite
+    /// Emissary feature). Returns true (afford-allow) when count ≤ 0, the troop has no
+    /// <c>merchant_cost</c>, or the faction maps to no resource (those cases are gated elsewhere).
+    /// Distinct from <see cref="CanAffordRecruit"/>, which reads <c>recruit_cost</c> for the volunteer gate.
+    /// </summary>
+    bool CanAffordMerchantPurchase(string heroId, string kingdomId, string cultureId, string troopId, int count);
+
+    /// <summary>
+    /// Deducts <c>merchant_cost × count</c> of <paramref name="troopId"/> from the resource resolved via
+    /// <paramref name="kingdomId"/>/<paramref name="cultureId"/> (pass the SETTLEMENT OWNER's faction).
+    /// No-op when count ≤ 0, the troop has no <c>merchant_cost</c>, or the faction maps to no resource.
+    /// Reads <c>merchant_cost</c>, never <c>recruit_cost</c> — the two economies never cross.
+    /// </summary>
+    void ChargeMerchantPurchase(string heroId, string kingdomId, string cultureId, string troopId, int count);
+
     void BeginPartyScreenSession();
     void QueueUpgradeSpend(string heroId, string troopId, int count);
     float GetAvailableAfterPending(string heroId, string kingdomId, string cultureId);

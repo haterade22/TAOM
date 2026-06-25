@@ -8,4 +8,5 @@
   <LanguageFile xml_path="TR/std_taom_messenger_strings_tur-TR.xml" />
   <LanguageFile xml_path="TR/std_taom_lotr_issue_strings_tur-TR.xml" />
   <LanguageFile xml_path="TR/std_taom_xslt_strings_tur-TR.xml" />
+  <LanguageFile xml_path="TR/std_taom_emissary_strings_tur-TR.xml" />
 </LanguageData>

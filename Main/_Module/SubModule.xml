@@ -833,6 +833,14 @@
         <GameType value="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Elite Emissary player-facing text (EliteEmissary feature) -->
+    <XmlNode>
+      <XmlName id="GameText" path="taom_emissary_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <!-- Loc keys harvested from XSLT transforms (kingdom/culture/clan/lord/hero descriptions) -->
     <XmlNode>
       <XmlName id="GameText" path="taom_xslt_strings"/>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+
+	<!-- Menu + dialog -->
+	<string id="taom_emissary_menu" text="{=taom_emissary_menu}Speak with the faction emissary" />
+	<string id="taom_emissary_no_trade" text="{=taom_emissary_no_trade}There is no elite trade for this faction here." />
+	<string id="taom_emissary_greet" text="{=taom_emissary_greet}You seek the finest warriors our people can offer? Name them, and they are yours — for the right price." />
+	<string id="taom_emissary_buy" text="{=taom_emissary_buy}I wish to purchase elite units." />
+	<string id="taom_emissary_leave" text="{=taom_emissary_leave}Not today." />
+
+	<!-- Troop list -->
+	<string id="taom_emissary_list_title" text="{=taom_emissary_list_title}Elite Units" />
+	<string id="taom_emissary_list_desc" text="{=taom_emissary_list_desc}Balance: {AMOUNT} {RESOURCE}" />
+	<string id="taom_emissary_offer_line" text="{=taom_emissary_offer_line}{NAME} — {COST} {RESOURCE}" />
+	<string id="taom_emissary_offer_afford" text="{=taom_emissary_offer_afford}You can afford up to {MAX}." />
+	<string id="taom_emissary_offer_cant" text="{=taom_emissary_offer_cant}Not enough {RESOURCE}." />
+	<string id="taom_emissary_select" text="{=taom_emissary_select}Select" />
+	<string id="taom_emissary_back" text="{=taom_emissary_back}Back" />
+
+	<!-- Quantity picker -->
+	<string id="taom_emissary_qty_title" text="{=taom_emissary_qty_title}How many {TROOP}?" />
+	<string id="taom_emissary_qty_desc" text="{=taom_emissary_qty_desc}Each costs {COST} {RESOURCE}. You have {BALANCE}." />
+	<string id="taom_emissary_qty_line" text="{=taom_emissary_qty_line}{QTY} (×{COST} = {TOTAL} {RESOURCE})" />
+	<string id="taom_emissary_confirm" text="{=taom_emissary_confirm}Recruit" />
+
+	<!-- Outcomes -->
+	<string id="taom_emissary_bought" text="{=taom_emissary_bought}Recruited {QTY} {TROOP} for {COST} {RESOURCE}." />
+	<string id="taom_emissary_cant_afford" text="{=taom_emissary_cant_afford}Not enough {RESOURCE} — need {COST}." />
+	<string id="taom_emissary_no_resource" text="{=taom_emissary_no_resource}There is no emissary trade in this settlement." />
+	<string id="taom_emissary_no_offers" text="{=taom_emissary_no_offers}The emissary has no elite units to offer right now." />
+	<string id="taom_emissary_failed" text="{=taom_emissary_failed}The emissary could not complete the deal." />
+
+</strings>

@@ -553,6 +553,15 @@ public class SubModule : MBSubModuleBase
                 IoC.Resolve<ICastleRecruitmentService>(),
                 IoC.Resolve<IModLogger>()));
 
+            // EliteEmissary — buy a faction's elite troops for its special resource at key settlements.
+            // Registered unconditionally so the MCM master toggle takes effect at runtime; stateless (no SyncData).
+            campaignStarter.AddBehavior(new Features.EliteEmissary.Hooks.EliteEmissaryBehavior(
+                IoC.Resolve<Features.EliteEmissary.IEliteEmissaryService>(),
+                IoC.Resolve<Features.EliteEmissary.IEliteEmissarySettingsProvider>(),
+                IoC.Resolve<Features.EliteEmissary.IEliteEmissaryConfigProvider>(),
+                IoC.Resolve<ISettlementOwnerAdapter>(),
+                IoC.Resolve<IModLogger>()));
+
             // CultureConversion — conquered cross-culture fiefs gradually adopt the new owner's culture
             // (troops, militia, identity). Registered unconditionally so SyncData round-trips conversion
             // records and completed overrides re-apply on load even when the MCM toggle is off.

@@ -240,6 +240,46 @@ public class SpecialResourceService : ISpecialResourceService
         return new RecruitGateResult(blocked, required, resource.DisplayName);
     }
 
+    public bool CanAffordMerchantPurchase(string heroId, string kingdomId, string cultureId, string troopId, int count)
+    {
+        if (count <= 0) return true;
+
+        var resource = ResolveResource(kingdomId, cultureId);
+        if (resource == null) return true;
+
+        var cost = _config.GetTroopCost(troopId);
+        if (cost == null || cost.MerchantCost <= 0) return true;
+
+        var totalCost = cost.MerchantCost * count;
+        var available = _storage.Get(heroId, resource.Id);
+        var canAfford = available >= totalCost;
+        _logger.LogDebug($"[SpecRes] CanAffordMerchant: {troopId} x{count} cost={totalCost} {resource.DisplayName} available={available:F0} → {canAfford}");
+        return canAfford;
+    }
+
+    public void ChargeMerchantPurchase(string heroId, string kingdomId, string cultureId, string troopId, int count)
+    {
+        if (count <= 0) return;
+
+        var resource = ResolveResource(kingdomId, cultureId);
+        if (resource == null)
+        {
+            _logger.LogWarning($"[SpecRes] MERCHANT charge skipped: {troopId} x{count} — kingdom='{kingdomId}' culture='{cultureId}' maps to no resource");
+            return;
+        }
+
+        var cost = _config.GetTroopCost(troopId);
+        if (cost == null || cost.MerchantCost <= 0)
+        {
+            _logger.LogWarning($"[SpecRes] MERCHANT charge skipped: {troopId} has no merchant_cost");
+            return;
+        }
+
+        var totalCost = cost.MerchantCost * count;
+        _storage.Add(heroId, resource.Id, -totalCost);
+        _logger.LogInfo($"[SpecRes] MERCHANT: -{totalCost} {resource.DisplayName} for {troopId} x{count} (balance now {_storage.Get(heroId, resource.Id):F0})");
+    }
+
     public void BeginPartyScreenSession()
     {
         _pendingSpend = 0f;

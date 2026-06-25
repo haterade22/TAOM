@@ -38,6 +38,7 @@ using TAOM.Features.RevoltTuning;
 using TAOM.Features.SettlementFood;
 using TAOM.Features.BanditManagement;
 using TAOM.Features.CastleRecruitment;
+using TAOM.Features.EliteEmissary;
 using TAOM.Features.SiegeDismount;
 using TAOM.Features.MixedFormations;
 using TAOM.Features.SmartCavalryAI;
@@ -104,6 +105,7 @@ public static class IoC
         SettlementFoodIoC.RegisterSettlementFoodFeature(container);
         BanditManagementIoC.RegisterBanditManagementFeature(container);
         CastleRecruitmentIoC.RegisterCastleRecruitmentFeature(container);
+        EliteEmissaryIoC.RegisterEliteEmissaryFeature(container);
         SiegeDismountIoC.RegisterSiegeDismountFeature(container);
         MixedFormationsIoC.RegisterMixedFormationsFeature(container);
         SmartCavalryAIIoC.RegisterSmartCavalryAIFeature(container);

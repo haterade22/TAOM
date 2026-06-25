@@ -52,6 +52,18 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "How many recruiters each castle is populated with (vanilla towns = 5, villages = 3). Higher = more recruitment volume per castle. Default: 3.")]
     public int CastleNotablesPerCastle { get; set; } = 3;
 
+    // --- Elite Emissary ---
+
+    [SettingPropertyGroup("Elite Emissary")]
+    [SettingPropertyBool("Enable Elite Emissary", Order = 0,
+        HintText = "At a faction's key settlements (capitals), speak with the faction emissary to buy that faction's elite troops for its special resource (Castar, War Spoils, Gems...). Conquering a settlement flips its offerings to the new owner.")]
+    public bool EnableEliteEmissary { get; set; } = true;
+
+    [SettingPropertyGroup("Elite Emissary")]
+    [SettingPropertyBool("Hide Emissary Without Resource", Order = 1,
+        HintText = "When on, the emissary option is hidden at settlements whose owner faction has no special resource. When off, the option still appears but is disabled with an explanatory hint.")]
+    public bool HideEmissaryWhenNoResource { get; set; } = true;
+
     // --- Culture Conversion ---
 
     [SettingPropertyGroup("Culture Conversion")]
