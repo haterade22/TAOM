@@ -35,6 +35,8 @@ using TAOM.Features.AdvancedCombat;
 using TAOM.Features.CulturalFeats.Models;
 using TAOM.Features.NavalTravel;
 using TAOM.Features.NavalTravel.Models;
+using TAOM.Features.NazgulFamily;
+using TAOM.Features.NazgulFamily.Models;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.CustomBattles.Hooks;
 using TAOM.Features.Warg;
@@ -399,6 +401,12 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomAgeModel(raceAgeService));
             campaignStarter.AddModel(new TaomPregnancyModel(raceAgeService));
             campaignStarter.AddModel(new TaomHeroCreationModel());
+
+            // Ringwraiths (Witch-King + Nazgûl) take no spouse/parents/children: block their marriage
+            // (so no spouse ⇒ no children) + a defensive clear-on-load for pre-feature saves.
+            var nazgulRegistry = IoC.Resolve<INazgulRegistry>();
+            campaignStarter.AddModel(new TaomMarriageModel(nazgulRegistry));
+            campaignStarter.AddBehavior(new NazgulFamilyBehavior(nazgulRegistry, IoC.Resolve<IModLogger>()));
 
             var diplomacyService = IoC.Resolve<IDiplomacyService>();
             var wotrService = IoC.Resolve<IWarOfTheRingService>();

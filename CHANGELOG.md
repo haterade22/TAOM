@@ -2,6 +2,29 @@
 
 ## 2026-06-25
 
+### feat(nazgul-family): Ringwraiths take no spouse, parents, or children
+
+The Witch-King of Angmar and the seven named Nazgûl (8 lord ids) are undead — they never have a
+family. Implemented as a small `MarriageModel` override + a defensive clear-on-load.
+
+- `TaomMarriageModel : DefaultMarriageModel` makes the 8 wraith ids unmarriageable —
+  `IsCoupleSuitableForMarriage` → false if either is a wraith (the hard chokepoint:
+  `MarriageAction.ApplyInternal` consults it before assigning the spouse), and `IsSuitableForMarriage`
+  → false for a wraith (via `Hero.CanMarry`). No spouse ⇒ no children. Everything non-wraith falls
+  through to vanilla.
+- `NazgulFamilyBehavior` (OnSessionLaunched) nulls Spouse/Father/Mother + clears Children for the 8
+  ids — for saves made before the feature; a no-op in a new campaign (the links never form).
+- Why a code feature and not a data edit: `lords.xslt` already strips predefined family (each lord is
+  rebuilt with explicit attributes only), and TAOM's initial child generation already excludes the
+  `mordor` culture — so runtime marriage was the only remaining family source, and it all funnels
+  through `MarriageModel`. `INazgulRegistry` holds the lore-fixed 8-id roster (a compiled constant, not
+  config; no MCM toggle — it's a lore-correctness fix).
+- Verified: build green; 17 `NazgulRegistry` tests (8 ids true, non-wraiths/null/empty/prefix false,
+  case-insensitive); the `EveryTaomGameModel_IsRegistered_InSubModule` binding test passes. Independent
+  v1.4.6 decompile review confirmed COMPLETE on all marriage/family paths + clear-on-load safety
+  (two-way `Spouse` clear matches the engine's own `KillCharacterAction`; no clan/heir invariant
+  broken). See `docs/features/nazgul-family.md`.
+
 ### balance(lords): canonical legendary-lord hierarchy (Mordor / Elves / Gondor)
 
 Authored a lore-driven, strictly-ranked stat hierarchy for 17 named legendary lords, resolved through their `skill_template` → `taom_lord_skill_sets.xml` (the authoritative source the engine reads). Designed + verified against 17 interlocking constraints (cross-faction total ladder + intra-faction orders + role signatures + skill cap) before applying; re-verified against the resolved data.
