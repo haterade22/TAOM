@@ -634,6 +634,15 @@ public class SubModule : MBSubModuleBase
         // OnAgentHit finish and stops the log spam. Crash report 2026-06-17. See the patch doc-comment.
         _harmony.PatchCategory("Patch50_DropFlaggedItemGuard");
 
+        // Patch56_SceneNotificationVisualGuard: Finalizer swallowing a managed NRE in
+        // PopupSceneSpawnPoint.InitializeWithAgentVisuals, reached via GauntletSceneNotification.OpenScene
+        // when the become-king (or sibling) cinematic builds a character whose human AgentVisuals yields
+        // null — the engine derefs the human visual without a null guard (it guards only the mount). The
+        // finalizer aborts the cinematic cleanly (HideSceneNotification) so cinematics that CAN render
+        // still play. Fourth raw custom-race/visual render path (after Patch55). Crash reports
+        // 2026-06-24/25 (become ruler of empire_w/gondor). See the patch doc-comment.
+        _harmony.PatchCategory("Patch56_SceneNotificationVisualGuard");
+
         // Patch13_RaceAge — noise reduction (NOT a crash fix). NOPs the harmless
         // mother.Race == father.Race SilentAssert in DeliverOffSpring that fires on every
         // mixed-race birth (normal in TAOM). Stops the debugger break + debug-log spam.

@@ -75,10 +75,32 @@ Output should contain `as_elf_facegen` and `as_elf_female_facegen`. If either is
 
 **Important rule** carried over to memory `feedback_lotrlome_action_set_aliases.md`: when fixing CC parent rendering, the recipe must both (a) **patch** existing facegen action_sets with 1.3 aliases AND (b) **create** missing facegen action_sets for any race in TAOM cultures that LOTRLOME's authors never anticipated as a playable race. Patching alone is not enough.
 
+## Standalone combat action_set parity — `as_dwarf_warrior`
+
+Separate from the `_facegen` (Character Creation) sets above: `as_dwarf_warrior` is the dwarf race's **combat** action set, and it is **standalone** — `skeleton="dwarf_skeleton_a"`, **no `base_set`**. Standalone sets inherit nothing, so every action type the engine gains after the set was authored is simply absent until added by hand.
+
+This is the only LOTR race at risk. The other races' combat sets are stubs with `base_set="as_human_warrior"` (`as_orc_warrior`, `as_uruk_warrior`, `as_goblin_warrior`, and **both trolls** — `as_cave_troll_warrior`, `as_hill_troll_warrior`), and LOTRLOME's own `as_human_warrior` is a 48-line PARTIAL that **field-merges into Native's full `as_human_warrior`** (the load-order comment at the top of `action_sets.xml` explains this; the engine merge is confirmed in `Module.cs` `CreateProcessedActionSetsXMLForNative`) — Native carries the water/swim/stagger actions, so every `base_set="as_human_warrior"` race inherits them. `as_dwarf_warrior` has no merge partner.
+
+Enumerating every `action_set` with a `skeleton=` and no `base_set` confirms the scope: the LIVE file has only **5** standalone sets — the `as_human_warrior` merge-partial, `as_dwarf_warrior`, and the creature mounts `as_spider` / `as_elephant` / `as_chariot`. `as_dwarf_warrior` is the **only standalone humanoid combat set**; the creature mounts use creature movement systems (the bipedal water-dive path doesn't apply to them).
+
+`as_dwarf_warrior` was originally seeded from **Native 1.3** action types (`tools/Generate-ActionSets.ps1`). By Native **1.4.6** it had silently drifted to **423 missing active action types** — including the engine's water actions (`act_dive_*` / `act_swim_*`), which CTD the game when a dwarf falls into water (the 2026-06-25 crash). The fix restores full parity with Native's active `as_human_warrior`:
+
+```bash
+# Dry-run (shows the gap; 0 missing == at parity). Defaults: Native install path, set-id as_dwarf_warrior.
+python tools/patch_dwarf_action_parity.py --target "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/ModuleData/action_sets.xml"
+
+# Apply to BOTH the live file and this snapshot (additive, comment-safe, idempotent, writes a .bak):
+python tools/patch_dwarf_action_parity.py --target "<live action_sets.xml>" --apply
+python tools/patch_dwarf_action_parity.py --target "docs/reference/lotrlome-armory-snapshot/action_sets.xml" --apply
+```
+
+**Re-run after every engine bump** (it's in the `/engine-bump` checklist): a new engine version can add action types to `as_human_warrior` that the standalone dwarf set won't get automatically. The script is `--set-id`-parameterized for any future standalone humanoid set (`as_dwarf_warrior` is the default). Use an XML reader for any parity diff, not raw grep — Native comments out ~126 disabled actions that a text scan would wrongly count as "missing."
+
 ## Snapshot date
 
-2026-05-22 — `action_sets.xml` re-snapshotted with elf CC parent entries appended.
-Previous snapshot: 2026-05-04 — initial snapshot with the 1.3 action-type alias edits across the 12 pre-existing facegen sets.
+2026-06-25 — `action_sets.xml` patched in place: +423 missing Native 1.4.6 action types added to `as_dwarf_warrior` for engine parity (+1311 lines, additions-only; the dwarf water-CTD fix). Done via `tools/patch_dwarf_action_parity.py`, NOT a full re-snapshot — so the snapshot still lags the LIVE file on the spider/elephant/chariot creature sets added during the June 2026 mount work (10 action_sets present in LIVE, absent here). Re-snapshot those separately if they ever need a restore.
+Previous: 2026-05-22 — `action_sets.xml` re-snapshotted with elf CC parent entries appended.
+Previous: 2026-05-04 — initial snapshot with the 1.3 action-type alias edits across the 12 pre-existing facegen sets.
 
 If you re-snapshot later (e.g., after a LOTRLOME update we want to track), bump this date and note any changes vs. the previous snapshot.
 

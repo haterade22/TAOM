@@ -13421,6 +13421,1317 @@
 		<action
 			type="act_camel_tableau_pose_rider_bow"
 			animation="camel_tableau_pose_rider_bow" />
+		<action
+			type="act_sit_reader"
+			animation="anim_sit_reader" />
+		<action
+			type="act_run_idle_dagger"
+			animation="stand_dagger" />
+		<action
+			type="act_run_forward_dagger"
+			animation="run_forward_1h" />
+		<action
+			type="act_run_right_dagger"
+			animation="run_right_1h" />
+		<action
+			type="act_run_left_dagger"
+			animation="run_left_1h" />
+		<action
+			type="act_run_backward_dagger"
+			animation="run_backward_1h" />
+		<action
+			type="act_run_right_back_dagger"
+			animation="run_right_back_1h" />
+		<action
+			type="act_run_left_back_dagger"
+			animation="run_left_back_1h" />
+		<action
+			type="act_run_right_to_left_dagger"
+			animation="run_right_to_left_1h" />
+		<action
+			type="act_run_left_to_right_dagger"
+			animation="run_left_to_right_1h" />
+		<action
+			type="act_turn_dagger"
+			animation="turn_unarmed" />
+		<action
+			type="act_run_idle_dagger_left_stance"
+			animation="stand_dagger_leftstance" />
+		<action
+			type="act_run_forward_dagger_left_stance"
+			animation="run_forward_1h_left_stance" />
+		<action
+			type="act_run_right_dagger_left_stance"
+			animation="run_right_1h" />
+		<action
+			type="act_run_left_dagger_left_stance"
+			animation="run_left_1h" />
+		<action
+			type="act_run_backward_dagger_left_stance"
+			animation="run_backward_1h_left_stance" />
+		<action
+			type="act_run_right_back_dagger_left_stance"
+			animation="run_right_back_1h" />
+		<action
+			type="act_run_left_back_dagger_left_stance"
+			animation="run_left_back_1h" />
+		<action
+			type="act_run_right_to_left_dagger_left_stance"
+			animation="run_right_to_left_1h" />
+		<action
+			type="act_run_left_to_right_dagger_left_stance"
+			animation="run_left_to_right_1h" />
+		<action
+			type="act_turn_dagger_left_stance"
+			animation="turn_unarmed_left_stance" />
+		<action
+			type="act_walk_idle_dagger"
+			animation="stand_dagger" />
+		<action
+			type="act_walk_forward_dagger"
+			animation="walk_forward_1h" />
+		<action
+			type="act_walk_right_dagger"
+			animation="walk_right_1h" />
+		<action
+			type="act_walk_left_dagger"
+			animation="walk_left_1h" />
+		<action
+			type="act_walk_backward_dagger"
+			animation="walk_backward_1h" />
+		<action
+			type="act_walk_right_back_dagger"
+			animation="walk_right_back_1h" />
+		<action
+			type="act_walk_left_back_dagger"
+			animation="walk_left_back_1h" />
+		<action
+			type="act_walk_right_to_left_dagger"
+			animation="walk_right_to_left_1h" />
+		<action
+			type="act_walk_left_to_right_dagger"
+			animation="walk_left_to_right_1h" />
+		<action
+			type="act_walk_idle_dagger_left_stance"
+			animation="stand_dagger_leftstance" />
+		<action
+			type="act_walk_forward_dagger_left_stance"
+			animation="walk_forward_1h_left_stance" />
+		<action
+			type="act_walk_right_dagger_left_stance"
+			animation="walk_right_1h" />
+		<action
+			type="act_walk_left_dagger_left_stance"
+			animation="walk_left_1h" />
+		<action
+			type="act_walk_backward_dagger_left_stance"
+			animation="walk_backward_1h" />
+		<action
+			type="act_walk_right_back_dagger_left_stance"
+			animation="walk_right_back_1h" />
+		<action
+			type="act_walk_left_back_dagger_left_stance"
+			animation="walk_left_back_1h" />
+		<action
+			type="act_walk_right_to_left_dagger_left_stance"
+			animation="walk_right_to_left_1h" />
+		<action
+			type="act_walk_left_to_right_dagger_left_stance"
+			animation="walk_left_to_right_1h" />
+		<action
+			type="act_crouch_walk_idle_drag"
+			animation="crouch_stand_drag" />
+		<action
+			type="act_crouch_walk_forward_drag"
+			animation="crouch_walk_forward_drag" />
+		<action
+			type="act_crouch_walk_backward_drag"
+			animation="crouch_walk_backward_drag" />
+		<action
+			type="act_crouch_walk_right_drag"
+			animation="crouch_walk_right_drag" />
+		<action
+			type="act_crouch_walk_left_drag"
+			animation="crouch_walk_left_drag" />
+		<action
+			type="act_crouch_walk_right_back_drag"
+			animation="crouch_walk_right_back_drag" />
+		<action
+			type="act_crouch_walk_left_back_drag"
+			animation="crouch_walk_left_back_drag" />
+		<action
+			type="act_crouch_walk_right_to_left_drag"
+			animation="crouch_walk_right_to_left_drag" />
+		<action
+			type="act_crouch_walk_left_to_right_drag"
+			animation="crouch_walk_left_to_right_drag" />
+		<action
+			type="act_lancer_ride_4_hand_shield"
+			animation="lancer_ride_4_hand_shield" />
+		<action
+			type="act_lancer_ride_4_hand_shield_shake"
+			animation="lancer_ride_4_shake_hand_shield" />
+		<action
+			type="act_camel_lancer_charge_parried"
+			animation="camel_rider_couch_lance_parried" />
+		<action
+			type="act_camel_lancer_ride_4"
+			animation="camel_rider_couch_lance" />
+		<action
+			type="act_camel_lancer_ride_4_shake"
+			animation="camel_rider_couch_shake" />
+		<action
+			type="act_camel_lancer_ride_4_no_shield"
+			animation="camel_rider_couch_lance" />
+		<action
+			type="act_camel_lancer_ride_4_no_shield_shake"
+			animation="camel_rider_couch_lance_no_shield" />
+		<action
+			type="act_camel_lancer_ride_4_hand_shield"
+			animation="camel_rider_couch_lance_hand_shield" />
+		<action
+			type="act_camel_lancer_ride_4_hand_shield_shake"
+			animation="camel_rider_couch_shield_shake" />
+		<action
+			type="act_polearm_brace_ready_up"
+			animation="polearm_brace_ready" />
+		<action
+			type="act_polearm_brace_ready_down"
+			animation="polearm_brace_low_ready" />
+		<action
+			type="act_switch_alternate_dagger"
+			animation="switch_alternate_dagger" />
+		<action
+			type="act_switch_alternate_dagger_continue"
+			animation="switch_alternate_dagger_continue" />
+		<action
+			type="act_switch_alternate_dagger_left_stance"
+			animation="switch_alternate_dagger_left_stance" />
+		<action
+			type="act_switch_alternate_dagger_continue_left_stance"
+			animation="switch_alternate_dagger_left_stance_continue" />
+		<action
+			type="act_switch_back_alternate_dagger_left_stance"
+			animation="switch_back_alternate_dagger_left_stance" />
+		<action
+			type="act_switch_back_alternate_dagger_left_stance_continue"
+			animation="switch_back_alternate_dagger_left_stance_continue" />
+		<action
+			type="act_switch_back_alternate_dagger"
+			animation="switch_back_alternate_dagger" />
+		<action
+			type="act_switch_back_alternate_dagger_continue"
+			animation="switch_back_alternate_dagger_continue" />
+		<action
+			type="act_reload_bow_top_crouched"
+			animation="crouch_bow_top_reload" />
+		<action
+			type="act_reload_bow_right_crouched"
+			animation="crouch_bow_reload" />
+		<action
+			type="act_reload_crossbow_fast_continue"
+			animation="reload_crossbow_fast_continue" />
+		<action
+			type="act_reload_crossbow_light_continue"
+			animation="reload_crossbow_light_continue" />
+		<action
+			type="act_reload_crossbow_light_crouched"
+			animation="reload_crossbow_light_crouched" />
+		<action
+			type="act_reload_crossbow_light_crouched_continue"
+			animation="reload_crossbow_continue_crouched" />
+		<action
+			type="act_reload_javelin_crouched"
+			animation="crouch_javelin_reload" />
+		<action
+			type="act_reload_throwing_knife_crouched"
+			animation="reload_throwing_knife_crouched" />
+		<action
+			type="act_reload_throwing_axe_crouched"
+			animation="crouch_throw_reload" />
+		<action
+			type="act_reload_stone_crouched"
+			animation="reload_throwing_stone_crouched" />
+		<action
+			type="act_ready_sling"
+			animation="ready_sling" />
+		<action
+			type="act_release_sling"
+			animation="release_sling" />
+		<action
+			type="act_release_sling_continue"
+			animation="release_sling_continue" />
+		<action
+			type="act_reload_sling"
+			animation="reload_sling" />
+		<action
+			type="act_reload_sling_continue"
+			animation="reload_sling_continue" />
+		<action
+			type="act_ready_continue_sling"
+			animation="ready_continue_sling" />
+		<action
+			type="act_ready_sling_with_shield"
+			animation="ready_sling_with_shield" />
+		<action
+			type="act_release_sling_with_shield"
+			animation="release_sling_with_shield" />
+		<action
+			type="act_release_sling_continue_with_shield"
+			animation="release_sling_continue_with_shield" />
+		<action
+			type="act_reload_sling_with_shield"
+			animation="reload_sling_with_shield" />
+		<action
+			type="act_reload_sling_continue_with_shield"
+			animation="reload_sling_continue_with_shield" />
+		<action
+			type="act_ready_continue_sling_with_shield"
+			animation="ready_continue_sling_with_shield" />
+		<action
+			type="act_ready_sling_with_shield_horseback"
+			animation="ready_sling_with_shield_horseback" />
+		<action
+			type="act_ready_continue_sling_with_shield_horseback"
+			animation="ready_continue_sling_with_shield_horseback" />
+		<action
+			type="act_ready_slashright_dagger"
+			animation="ready_slashright_dagger" />
+		<action
+			type="act_release_slashright_dagger"
+			animation="release_slashright_dagger" />
+		<action
+			type="act_quick_release_slashright_dagger"
+			animation="quick_release_slashright_dagger" />
+		<action
+			type="act_release_slashright_stuck_dagger"
+			animation="release_slashright_stuck_dagger" />
+		<action
+			type="act_quick_release_slashright_stuck_dagger"
+			animation="quick_release_slashright_stuck_dagger" />
+		<action
+			type="act_blocked_slashright_dagger"
+			animation="blocked_slashright_dagger" />
+		<action
+			type="act_quick_blocked_slashright_dagger"
+			animation="quick_blocked_slashright_dagger" />
+		<action
+			type="act_ready_slashright_dagger_leftstance"
+			animation="ready_slashright_dagger_leftstance" />
+		<action
+			type="act_release_slashright_dagger_leftstance"
+			animation="release_slashright_dagger_leftstance" />
+		<action
+			type="act_quick_release_slashright_dagger_leftstance"
+			animation="quick_release_slashright_dagger_leftstance" />
+		<action
+			type="act_release_slashright_stuck_dagger_leftstance"
+			animation="release_slashright_stuck_dagger_leftstance" />
+		<action
+			type="act_quick_release_slashright_stuck_dagger_leftstance"
+			animation="quick_release_slashright_stuck_dagger_leftstance" />
+		<action
+			type="act_blocked_slashright_dagger_leftstance"
+			animation="blocked_slashright_dagger_leftstance" />
+		<action
+			type="act_quick_blocked_slashright_dagger_leftstance"
+			animation="quick_blocked_slashright_dagger_leftstance" />
+		<action
+			type="act_ready_slashleft_dagger"
+			animation="ready_slashleft_dagger" />
+		<action
+			type="act_release_slashleft_dagger"
+			animation="release_slashleft_dagger" />
+		<action
+			type="act_release_slashleft_stuck_dagger"
+			animation="release_slashleft_stuck_dagger" />
+		<action
+			type="act_quick_release_slashleft_dagger"
+			animation="quick_release_slashleft_dagger" />
+		<action
+			type="act_quick_release_slashleft_stuck_dagger"
+			animation="quick_release_slashleft_stuck_dagger" />
+		<action
+			type="act_blocked_slashleft_dagger"
+			animation="blocked_slashleft_dagger" />
+		<action
+			type="act_quick_blocked_slashleft_dagger"
+			animation="quick_blocked_slashleft_dagger" />
+		<action
+			type="act_ready_slashleft_dagger_leftstance"
+			animation="ready_slashleft_dagger_leftstance" />
+		<action
+			type="act_release_slashleft_dagger_leftstance"
+			animation="release_slashleft_dagger_leftstance" />
+		<action
+			type="act_release_slashleft_stuck_dagger_leftstance"
+			animation="release_slashleft_stuck_dagger_leftstance" />
+		<action
+			type="act_quick_release_slashleft_dagger_leftstance"
+			animation="quick_release_slashleft_dagger_leftstance" />
+		<action
+			type="act_quick_release_slashleft_stuck_dagger_leftstance"
+			animation="quick_release_slashleft_stuck_dagger_leftstance" />
+		<action
+			type="act_blocked_slashleft_dagger_leftstance"
+			animation="blocked_slashleft_dagger_leftstance" />
+		<action
+			type="act_quick_blocked_slashleft_dagger_leftstance"
+			animation="quick_blocked_slashleft_dagger_leftstance" />
+		<action
+			type="act_ready_backstab_1h"
+			animation="ready_backstab_1h" />
+		<action
+			type="act_release_backstab_1h"
+			animation="release_backstab_1h" />
+		<action
+			type="act_quick_release_backstab_1h"
+			animation="quick_release_backstab_1h" />
+		<action
+			type="act_release_backstab_stuck_1h"
+			animation="release_backstab_stuck_1h" />
+		<action
+			type="act_quick_release_backstab_stuck_1h"
+			animation="quick_release_backstab_stuck_1h" />
+		<action
+			type="act_blocked_backstab_1h"
+			animation="blocked_backstab_1h" />
+		<action
+			type="act_quick_blocked_backstab_1h"
+			animation="quick_blocked_backstab_1h" />
+		<action
+			type="act_ready_backstab_1h_left_stance"
+			animation="ready_backstab_1h_left_stance" />
+		<action
+			type="act_release_backstab_1h_left_stance"
+			animation="release_backstab_1h_left_stance" />
+		<action
+			type="act_quick_release_backstab_1h_left_stance"
+			animation="quick_release_backstab_1h_left_stance" />
+		<action
+			type="act_release_backstab_stuck_1h_left_stance"
+			animation="release_backstab_stuck_1h_left_stance" />
+		<action
+			type="act_quick_release_backstab_stuck_1h_left_stance"
+			animation="quick_release_backstab_stuck_1h_left_stance" />
+		<action
+			type="act_blocked_backstab_1h_left_stance"
+			animation="blocked_backstab_1h_left_stance" />
+		<action
+			type="act_quick_blocked_backstab_1h_left_stance"
+			animation="quick_blocked_backstab_1h_left_stance" />
+		<action
+			type="act_dagger_guard_up_1h"
+			animation="dagger_guard_up" />
+		<action
+			type="act_dagger_guard_up_1h_left_stance"
+			animation="dagger_guard_up_left_stance" />
+		<action
+			type="act_dagger_guard_left_1h"
+			animation="dagger_guard_left_1h" />
+		<action
+			type="act_dagger_guard_left_1h_left_stance"
+			animation="dagger_guard_left_1h_left_stance" />
+		<action
+			type="act_dagger_guard_right_1h"
+			animation="dagger_guard_right_1h" />
+		<action
+			type="act_dagger_guard_right_1h_left_stance"
+			animation="dagger_guard_right_1h_left_stance" />
+		<action
+			type="act_ready_slashright_flail"
+			animation="ready_slashright_flail" />
+		<action
+			type="act_ready_continue_slashright_flail"
+			animation="ready_continue_slashright_flail" />
+		<action
+			type="act_ready_continue_slashright_flail_readyfrom"
+			animation="ready_continue_slashright_flail_readyfrom" />
+		<action
+			type="act_ready_from_right_slashright_flail"
+			animation="ready_from_right_slashright_flail" />
+		<action
+			type="act_ready_from_right_overswing_flail"
+			animation="ready_from_right_overswing_flail" />
+		<action
+			type="act_ready_slashright_flail_horseback"
+			animation="ready_slashright_flail_horseback" />
+		<action
+			type="act_ready_continue_slashright_flail_horseback"
+			animation="ready_continue_slashright_flail_horseback" />
+		<action
+			type="act_quick_release_slashright_flail"
+			animation="quick_release_slashright_flail" />
+		<action
+			type="act_quick_release_slashright_flail_continue"
+			animation="quick_release_slashright_flail_continue" />
+		<action
+			type="act_quick_release_slashright_flail_balanced"
+			animation="quick_release_slashright_flail_balanced" />
+		<action
+			type="act_quick_release_slashright_flail_balanced_continue"
+			animation="quick_release_slashright_flail_balanced_continue" />
+		<action
+			type="act_release_slashright_flail"
+			animation="release_slashright_flail" />
+		<action
+			type="act_release_slashright_flail_continue"
+			animation="release_slashright_flail_continue" />
+		<action
+			type="act_release_slashright_flail_balanced"
+			animation="release_slashright_flail_balanced" />
+		<action
+			type="act_release_slashright_flail_balanced_continue"
+			animation="release_slashright_flail_balanced_continue" />
+		<action
+			type="act_quick_blocked_slashright_flail"
+			animation="quick_blocked_slashright_flail" />
+		<action
+			type="act_quick_blocked_slashright_flail_balanced"
+			animation="quick_blocked_slashright_flail_balanced" />
+		<action
+			type="act_blocked_slashright_flail"
+			animation="blocked_slashright_flail" />
+		<action
+			type="act_blocked_slashright_flail_balanced"
+			animation="blocked_slashright_flail_balanced" />
+		<action
+			type="act_ready_slashright_flail_left_stance"
+			animation="ready_slashright_flail_left_stance" />
+		<action
+			type="act_ready_continue_slashright_flail_left_stance"
+			animation="ready_continue_slashright_flail_left_stance" />
+		<action
+			type="act_ready_continue_slashright_flail_left_stance_readyfrom"
+			animation="ready_continue_slashright_flail_left_stance_readyfrom" />
+		<action
+			type="act_ready_from_right_slashright_flail_left_stance"
+			animation="ready_from_right_slashright_flail_left_stance" />
+		<action
+			type="act_ready_from_right_overswing_flail_left_stance"
+			animation="ready_from_right_overswing_flail_left_stance" />
+		<action
+			type="act_quick_release_slashright_flail_left_stance"
+			animation="quick_release_slashright_flail_left_stance" />
+		<action
+			type="act_quick_release_slashright_flail_left_stance_continue"
+			animation="quick_release_slashright_flail_left_stance_continue" />
+		<action
+			type="act_quick_release_slashright_flail_balanced_left_stance"
+			animation="quick_release_slashright_flail_balanced_left_stance" />
+		<action
+			type="act_quick_release_slashright_flail_balanced_lstance_continue"
+			animation="quick_release_slashright_flail_balanced_lstance_continue" />
+		<action
+			type="act_release_slashright_flail_left_stance"
+			animation="release_slashright_flail_left_stance" />
+		<action
+			type="act_release_slashright_flail_left_stance_continue"
+			animation="release_slashright_flail_left_stance_continue" />
+		<action
+			type="act_release_slashright_flail_balanced_left_stance"
+			animation="release_slashright_flail_balanced_left_stance" />
+		<action
+			type="act_release_slashright_flail_balanced_left_stance_continue"
+			animation="release_slashright_flail_balanced_left_stance_continue" />
+		<action
+			type="act_quick_blocked_slashright_flail_left_stance"
+			animation="quick_blocked_slashright_flail_left_stance" />
+		<action
+			type="act_quick_blocked_slashright_flail_balanced_left_stance"
+			animation="quick_blocked_slashright_flail_balanced_left_stance" />
+		<action
+			type="act_blocked_slashright_flail_left_stance"
+			animation="blocked_slashright_flail_left_stance" />
+		<action
+			type="act_blocked_slashright_flail_balanced_left_stance"
+			animation="blocked_slashright_flail_balanced_left_stance" />
+		<action
+			type="act_ready_slashleft_flail"
+			animation="ready_slashleft_flail" />
+		<action
+			type="act_ready_continue_slashleft_flail"
+			animation="ready_continue_slashleft_flail" />
+		<action
+			type="act_ready_continue_slashleft_flail_readyfrom"
+			animation="ready_continue_slashleft_flail_readyfrom" />
+		<action
+			type="act_ready_slashleft_flail_horseback"
+			animation="ready_slashleft_flail_horseback" />
+		<action
+			type="act_ready_continue_slashleft_flail_horseback"
+			animation="ready_continue_slashleft_flail_horseback" />
+		<action
+			type="act_ready_from_left_slashleft_flail"
+			animation="ready_from_left_slashleft_flail" />
+		<action
+			type="act_ready_from_left_overswing_flail"
+			animation="ready_from_left_overswing_flail" />
+		<action
+			type="act_quick_release_slashleft_flail"
+			animation="quick_release_slashleft_flail" />
+		<action
+			type="act_quick_release_slashleft_flail_continue"
+			animation="quick_release_slashleft_flail_continue" />
+		<action
+			type="act_quick_release_slashleft_flail_balanced"
+			animation="quick_release_slashleft_flail_balanced" />
+		<action
+			type="act_quick_release_slashleft_flail_balanced_continue"
+			animation="quick_release_slashleft_flail_balanced_continue" />
+		<action
+			type="act_release_slashleft_flail"
+			animation="release_slashleft_flail" />
+		<action
+			type="act_release_slashleft_flail_continue"
+			animation="release_slashleft_flail_continue" />
+		<action
+			type="act_release_slashleft_flail_balanced"
+			animation="release_slashleft_flail_balanced" />
+		<action
+			type="act_release_slashleft_flail_balanced_continue"
+			animation="release_slashleft_flail_balanced_continue" />
+		<action
+			type="act_quick_blocked_slashleft_flail"
+			animation="quick_blocked_slashleft_flail" />
+		<action
+			type="act_quick_blocked_slashleft_flail_balanced"
+			animation="quick_blocked_slashleft_flail_balanced" />
+		<action
+			type="act_blocked_slashleft_flail"
+			animation="blocked_slashleft_flail" />
+		<action
+			type="act_blocked_slashleft_flail_balanced"
+			animation="blocked_slashleft_flail_balanced" />
+		<action
+			type="act_ready_slashleft_flail_left_stance"
+			animation="ready_slashleft_flail_left_stance" />
+		<action
+			type="act_ready_continue_slashleft_flail_left_stance"
+			animation="ready_continue_slashleft_flail_left_stance" />
+		<action
+			type="act_ready_continue_slashleft_flail_left_stance_readyfrom"
+			animation="ready_continue_slashleft_flail_left_stance_readyfrom" />
+		<action
+			type="act_ready_from_left_slashleft_flail_left_stance"
+			animation="ready_from_left_slashleft_flail_left_stance" />
+		<action
+			type="act_ready_from_left_overswing_flail_left_stance"
+			animation="ready_from_left_overswing_flail_left_stance" />
+		<action
+			type="act_quick_release_slashleft_flail_left_stance"
+			animation="quick_release_slashleft_flail_left_stance" />
+		<action
+			type="act_quick_release_slashleft_flail_left_stance_continue"
+			animation="quick_release_slashleft_flail_left_stance_continue" />
+		<action
+			type="act_quick_release_slashleft_flail_balanced_left_stance"
+			animation="quick_release_slashleft_flail_balanced_left_stance" />
+		<action
+			type="act_quick_release_slashleft_flail_balanced_lstance_continue"
+			animation="quick_release_slashleft_flail_balanced_lstance_continue" />
+		<action
+			type="act_release_slashleft_flail_left_stance"
+			animation="release_slashleft_flail_left_stance" />
+		<action
+			type="act_release_slashleft_flail_left_stance_continue"
+			animation="release_slashleft_flail_left_stance_continue" />
+		<action
+			type="act_release_slashleft_flail_balanced_left_stance"
+			animation="release_slashleft_flail_balanced_left_stance" />
+		<action
+			type="act_release_slashleft_flail_balanced_left_stance_continue"
+			animation="release_slashleft_flail_balanced_left_stance_continue" />
+		<action
+			type="act_quick_blocked_slashleft_flail_left_stance"
+			animation="quick_blocked_slashleft_flail_left_stance" />
+		<action
+			type="act_quick_blocked_slashleft_flail_balanced_left_stance"
+			animation="quick_blocked_slashleft_flail_balanced_left_stance" />
+		<action
+			type="act_blocked_slashleft_flail_left_stance"
+			animation="blocked_slashleft_flail_left_stance" />
+		<action
+			type="act_blocked_slashleft_flail_balanced_left_stance"
+			animation="blocked_slashleft_flail_balanced_left_stance" />
+		<action
+			type="act_ready_overswing_flail"
+			animation="ready_overswing_flail" />
+		<action
+			type="act_ready_continue_overswing_flail"
+			animation="ready_continue_overswing_flail" />
+		<action
+			type="act_ready_continue_overswing_flail_readyfrom"
+			animation="ready_continue_overswing_flail_readyfrom" />
+		<action
+			type="act_ready_overswing_flail_horseback"
+			animation="ready_overswing_flail_horseback" />
+		<action
+			type="act_ready_continue_overswing_flail_horseback"
+			animation="ready_continue_overswing_flail_horseback" />
+		<action
+			type="act_ready_from_up_overswing_flail"
+			animation="ready_from_up_overswing_flail" />
+		<action
+			type="act_ready_from_up_slashright_flail"
+			animation="ready_from_up_slashright_flail" />
+		<action
+			type="act_ready_from_up_slashleft_flail"
+			animation="ready_from_up_slashleft_flail" />
+		<action
+			type="act_quick_release_overswing_flail"
+			animation="quick_release_overswing_flail" />
+		<action
+			type="act_quick_release_overswing_flail_continue"
+			animation="quick_release_overswing_flail_continue" />
+		<action
+			type="act_quick_release_overswing_flail_balanced"
+			animation="quick_release_overswing_flail_balanced" />
+		<action
+			type="act_quick_release_overswing_flail_balanced_continue"
+			animation="quick_release_overswing_flail_balanced_continue" />
+		<action
+			type="act_release_overswing_flail"
+			animation="release_overswing_flail" />
+		<action
+			type="act_release_overswing_flail_continue"
+			animation="release_overswing_flail_continue" />
+		<action
+			type="act_release_overswing_flail_balanced"
+			animation="release_overswing_flail_balanced" />
+		<action
+			type="act_release_overswing_flail_balanced_continue"
+			animation="release_overswing_flail_balanced_continue" />
+		<action
+			type="act_quick_blocked_overswing_flail"
+			animation="quick_blocked_overswing_flail" />
+		<action
+			type="act_quick_blocked_overswing_flail_balanced"
+			animation="quick_blocked_overswing_flail_balanced" />
+		<action
+			type="act_blocked_overswing_flail"
+			animation="blocked_overswing_flail" />
+		<action
+			type="act_blocked_overswing_flail_balanced"
+			animation="blocked_overswing_flail_balanced" />
+		<action
+			type="act_ready_overswing_flail_left_stance"
+			animation="ready_overswing_flail_left_stance" />
+		<action
+			type="act_ready_continue_overswing_flail_left_stance"
+			animation="ready_continue_overswing_flail_left_stance" />
+		<action
+			type="act_ready_continue_overswing_flail_left_stance_readyfrom"
+			animation="ready_continue_overswing_flail_left_stance_readyfrom" />
+		<action
+			type="act_ready_from_up_overswing_flail_left_stance"
+			animation="ready_from_up_overswing_flail_left_stance" />
+		<action
+			type="act_ready_from_up_slashright_flail_left_stance"
+			animation="ready_from_up_slashright_flail_left_stance" />
+		<action
+			type="act_ready_from_up_slashleft_flail_left_stance"
+			animation="ready_from_up_slashleft_flail_left_stance" />
+		<action
+			type="act_quick_release_overswing_flail_left_stance"
+			animation="quick_release_overswing_flail_left_stance" />
+		<action
+			type="act_quick_release_overswing_flail_left_stance_continue"
+			animation="quick_release_overswing_flail_left_stance_continue" />
+		<action
+			type="act_quick_release_overswing_flail_balanced_left_stance"
+			animation="quick_release_overswing_flail_balanced_left_stance" />
+		<action
+			type="act_quick_release_overswing_flail_balanced_lstance_continue"
+			animation="quick_release_overswing_flail_balanced_lstance_continue" />
+		<action
+			type="act_release_overswing_flail_left_stance"
+			animation="release_overswing_flail_left_stance" />
+		<action
+			type="act_release_overswing_flail_left_stance_continue"
+			animation="release_overswing_flail_left_stance_continue" />
+		<action
+			type="act_release_overswing_flail_balanced_left_stance"
+			animation="release_overswing_flail_balanced_left_stance" />
+		<action
+			type="act_release_overswing_flail_balanced_left_stance_continue"
+			animation="release_overswing_flail_balanced_left_stance_continue" />
+		<action
+			type="act_quick_blocked_overswing_flail_left_stance"
+			animation="quick_blocked_overswing_flail_left_stance" />
+		<action
+			type="act_quick_blocked_overswing_flail_balanced_left_stance"
+			animation="quick_blocked_overswing_flail_balanced_left_stance" />
+		<action
+			type="act_blocked_overswing_flail_left_stance"
+			animation="blocked_overswing_flail_left_stance" />
+		<action
+			type="act_blocked_overswing_flail_balanced_left_stance"
+			animation="blocked_overswing_flail_balanced_left_stance" />
+		<action
+			type="act_strike_swim"
+			animation="swim_strike" />
+		<action
+			type="act_death_swim_1"
+			animation="swim_death"
+			alternative_group="swim_death_alt" />
+		<action
+			type="act_death_swim_1_continue"
+			animation="death_swim_1_continue" />
+		<action
+			type="act_death_swim_2"
+			animation="swim_death_02"
+			alternative_group="swim_death_alt" />
+		<action
+			type="act_death_swim_2_continue"
+			animation="death_swim_2_continue" />
+		<action
+			type="act_drafted_to_war_pose"
+			animation="drafted_to_war_pose" />
+		<action
+			type="act_swim_idle_unarmed"
+			animation="swim_idle_unarmed" />
+		<action
+			type="act_swim_forward_unarmed"
+			animation="swim_forward_unarmed" />
+		<action
+			type="act_swim_backward_unarmed"
+			animation="swim_backward_unarmed" />
+		<action
+			type="act_swim_right_back_unarmed"
+			animation="swim_backward_right_unarmed" />
+		<action
+			type="act_swim_left_back_unarmed"
+			animation="swim_backward_left_unarmed" />
+		<action
+			type="act_swim_right_unarmed"
+			animation="swim_right_unarmed" />
+		<action
+			type="act_swim_left_unarmed"
+			animation="swim_left_unarmed" />
+		<action
+			type="act_dive_idle_unarmed"
+			animation="dive_idle_unarmed" />
+		<action
+			type="act_dive_forward_unarmed"
+			animation="dive_forward_unarmed" />
+		<action
+			type="act_dive_backward_unarmed"
+			animation="dive_backward_unarmed" />
+		<action
+			type="act_dive_right_back_unarmed"
+			animation="dive_backward_right_unarmed" />
+		<action
+			type="act_dive_left_back_unarmed"
+			animation="dive_backward_left_unarmed" />
+		<action
+			type="act_dive_right_unarmed"
+			animation="dive_right_unarmed" />
+		<action
+			type="act_dive_left_unarmed"
+			animation="dive_left_unarmed" />
+		<action
+			type="act_usage_row_idle_right"
+			animation="row_idle_right" />
+		<action
+			type="act_usage_row_idle_left"
+			animation="row_idle_left" />
+		<action
+			type="act_usage_row_idle_no_hold"
+			animation="row_idle_right_rest" />
+		<action
+			type="act_usage_row_loop_right"
+			animation="row_right"
+			alternative_group="row_right_alternative" />
+		<action
+			type="act_usage_row_loop_right_2"
+			animation="row_right_2"
+			alternative_group="row_right_alternative" />
+		<action
+			type="act_usage_row_loop_right_3"
+			animation="row_right_3"
+			alternative_group="row_right_alternative" />
+		<action
+			type="act_usage_row_loop_right_backward"
+			animation="row_right_backward"
+			alternative_group="row_right_backward_alternative" />
+		<action
+			type="act_usage_row_loop_right_backward_2"
+			animation="row_right_backward_2"
+			alternative_group="row_right_backward_alternative" />
+		<action
+			type="act_usage_row_loop_right_backward_3"
+			animation="row_right_backward_3"
+			alternative_group="row_right_backward_alternative" />
+		<action
+			type="act_usage_row_loop_left"
+			animation="row_left"
+			alternative_group="row_left_alternative" />
+		<action
+			type="act_usage_row_loop_left_2"
+			animation="row_left_2"
+			alternative_group="row_left_alternative" />
+		<action
+			type="act_usage_row_loop_left_3"
+			animation="row_left_3"
+			alternative_group="row_left_alternative" />
+		<action
+			type="act_usage_row_loop_left_backward"
+			animation="row_left_backward"
+			alternative_group="row_right_backward_alternative" />
+		<action
+			type="act_usage_row_loop_left_backward_2"
+			animation="row_left_backward_2"
+			alternative_group="row_right_backward_alternative" />
+		<action
+			type="act_usage_row_loop_left_backward_3"
+			animation="row_left_backward_3"
+			alternative_group="row_right_backward_alternative" />
+		<action
+			type="act_row_sit_down_right"
+			animation="row_sit_down_right" />
+		<action
+			type="act_row_stand_up_right"
+			animation="row_stand_up_right" />
+		<action
+			type="act_row_sit_down_left"
+			animation="row_sit_down_left" />
+		<action
+			type="act_row_stand_up_left"
+			animation="row_stand_up_left" />
+		<action
+			type="act_row_strike"
+			animation="row_strike" />
+		<action
+			type="act_row_death_right"
+			animation="row_death_right" />
+		<action
+			type="act_row_death_left"
+			animation="row_death_left" />
+		<action
+			type="act_escape_jump"
+			animation="escape_jump_1"
+			alternative_group="escape_jump_alternative" />
+		<action
+			type="act_escape_jump_2"
+			animation="escape_jump_2"
+			alternative_group="escape_jump_alternative" />
+		<action
+			type="act_escape_jump_3"
+			animation="escape_jump_3"
+			alternative_group="escape_jump_alternative" />
+		<action
+			type="act_escape_jump_4"
+			animation="escape_jump_4"
+			alternative_group="escape_jump_alternative" />
+		<action
+			type="act_raid_jump_1"
+			animation="raid_jump_01"
+			alternative_group="raid_jump_alternative" />
+		<action
+			type="act_raid_jump_2"
+			animation="raid_jump_02"
+			alternative_group="raid_jump_alternative" />
+		<action
+			type="act_raid_jump_3"
+			animation="raid_jump_03"
+			alternative_group="raid_jump_alternative" />
+		<action
+			type="act_raid_jump_4"
+			animation="raid_jump_04"
+			alternative_group="raid_jump_alternative" />
+		<action
+			type="act_climb_net"
+			animation="net_climbing" />
+		<action
+			type="act_climb_net_ending"
+			animation="climb_net_ending" />
+		<action
+			type="act_climb_net_ending_continue"
+			animation="climb_net_ending_continue" />
+		<action
+			type="act_rudder_pushforward_stand_idle"
+			animation="rudder_pushforward_stand_idle" />
+		<action
+			type="act_rudder_pushforward_pull_idle"
+			animation="rudder_pushforward_pull_idle" />
+		<action
+			type="act_rudder_pushforward_push_idle"
+			animation="rudder_pushforward_push_idle" />
+		<action
+			type="act_rudder_backward_stand_idle"
+			animation="rudder_backward_stand_idle" />
+		<action
+			type="act_rudder_backward_pull_idle"
+			animation="rudder_backward_pull_idle" />
+		<action
+			type="act_rudder_backward_push_idle"
+			animation="rudder_backward_push_idle" />
+		<action
+			type="act_ship_connection_break"
+			animation="ship_connection_break" />
+		<action
+			type="act_agent_binds_machine_tinkering"
+			animation="agent_binds_machine_tinkering" />
+		<action
+			type="act_usage_hook_ready"
+			animation="usage_hook_ready" />
+		<action
+			type="act_usage_hook_release"
+			animation="usage_hook_release" />
+		<action
+			type="act_ship_control_captain_idle"
+			animation="ship_control_captain_idle" />
+		<action
+			type="act_roundship_captain_idle"
+			animation="roundship_captain_idle" />
+		<action
+			type="act_xebec_ship_captain_idle"
+			animation="xebec_ship_captain_idle" />
+		<action
+			type="act_ship_capture"
+			animation="ship_capture" />
+		<action
+			type="act_stagger_forward"
+			animation="stagger_forward" />
+		<action
+			type="act_stagger_backward"
+			animation="stagger_backward" />
+		<action
+			type="act_stagger_right"
+			animation="stagger_right" />
+		<action
+			type="act_stagger_left"
+			animation="stagger_left" />
+		<action
+			type="act_stagger_forward_2"
+			animation="stagger_forward_lvl2"
+			alternative_group="stagger_forward_lvl2_alt" />
+		<action
+			type="act_stagger_forward_2_2"
+			animation="stagger_forward_lvl2_2"
+			alternative_group="stagger_forward_lvl2_alt" />
+		<action
+			type="act_stagger_forward_2_3"
+			animation="stagger_forward_lvl2_3"
+			alternative_group="stagger_forward_lvl2_alt" />
+		<action
+			type="act_stagger_backward_2"
+			animation="stagger_backward_lvl2"
+			alternative_group="stagger_backward_lvl2_alt" />
+		<action
+			type="act_stagger_backward_2_2"
+			animation="stagger_backward_lvl2_2"
+			alternative_group="stagger_backward_lvl2_alt" />
+		<action
+			type="act_stagger_backward_2_3"
+			animation="stagger_backward_lvl2_3"
+			alternative_group="stagger_backward_lvl2_alt" />
+		<action
+			type="act_stagger_right_2"
+			animation="stagger_right_lvl2"
+			alternative_group="stagger_right_lvl2_alt" />
+		<action
+			type="act_stagger_right_2_2"
+			animation="stagger_right_lvl2_2"
+			alternative_group="stagger_right_lvl2_alt" />
+		<action
+			type="act_stagger_right_2_3"
+			animation="stagger_right_lvl2_3"
+			alternative_group="stagger_right_lvl2_alt" />
+		<action
+			type="act_stagger_left_2"
+			animation="stagger_left_lvl2"
+			alternative_group="stagger_left_lvl2_alt" />
+		<action
+			type="act_stagger_left_2_2"
+			animation="stagger_left_lvl2_2"
+			alternative_group="stagger_left_lvl2_alt" />
+		<action
+			type="act_stagger_left_2_3"
+			animation="stagger_left_lvl2_3"
+			alternative_group="stagger_left_lvl2_alt" />
+		<action
+			type="act_stagger_forward_3"
+			animation="stagger_forward_3" />
+		<action
+			type="act_stagger_forward_3_continue_stand"
+			animation="stagger_forward_3_continue_stand"
+			alternative_group="stagger_stand_forward_alt" />
+		<action
+			type="act_stagger_forward_3_continue_stand_2"
+			animation="stagger_forward_3_continue_stand_2"
+			alternative_group="stagger_stand_forward_alt" />
+		<action
+			type="act_stagger_forward_3_continue"
+			animation="stagger_forward_3_continue" />
+		<action
+			type="act_stagger_backward_3"
+			animation="stagger_backward_3" />
+		<action
+			type="act_stagger_backward_3_continue_stand"
+			animation="stagger_backward_3_continue_stand"
+			alternative_group="stagger_stand_backward_alt" />
+		<action
+			type="act_stagger_backward_3_continue_stand_2"
+			animation="stagger_backward_3_continue_stand_2"
+			alternative_group="stagger_stand_backward_alt" />
+		<action
+			type="act_stagger_backward_3_continue"
+			animation="stagger_backward_3_continue" />
+		<action
+			type="act_stagger_right_3"
+			animation="stagger_right_3" />
+		<action
+			type="act_stagger_right_3_continue_stand"
+			animation="stagger_right_3_continue_stand"
+			alternative_group="stagger_stand_right_alt" />
+		<action
+			type="act_stagger_right_3_continue_stand_2"
+			animation="stagger_right_3_continue_stand_2"
+			alternative_group="stagger_stand_right_alt" />
+		<action
+			type="act_stagger_right_3_continue"
+			animation="stagger_right_3_continue" />
+		<action
+			type="act_stagger_left_3"
+			animation="stagger_left_3" />
+		<action
+			type="act_stagger_left_3_continue_stand"
+			animation="stagger_left_3_continue_stand"
+			alternative_group="stagger_stand_left_alt" />
+		<action
+			type="act_stagger_left_3_continue_stand_2"
+			animation="stagger_left_3_continue_stand_2"
+			alternative_group="stagger_stand_left_alt" />
+		<action
+			type="act_stagger_left_3_continue"
+			animation="stagger_left_3_continue" />
+		<action
+			type="act_conversation_naval_start"
+			animation="conversation_naval_start" />
+		<action
+			type="act_conversation_naval_idle_loop"
+			animation="conversation_naval_idle_loop" />
+		<action
+			type="act_conversation_naval_unsure"
+			animation="conversation_naval_unsure" />
+		<action
+			type="act_conversation_naval_trivial"
+			animation="conversation_naval_trivial" />
+		<action
+			type="act_conversation_naval_positive"
+			animation="conversation_naval_positive" />
+		<action
+			type="act_conversation_naval_very_positive"
+			animation="conversation_naval_very_positive" />
+		<action
+			type="act_conversation_naval_negative"
+			animation="conversation_naval_negative" />
+		<action
+			type="act_conversation_naval_very_negative"
+			animation="conversation_naval_very_negative" />
+		<action
+			type="act_wood_workshop_idle_part_01"
+			animation="wood_workshop_idle_part_01" />
+		<action
+			type="act_wood_workshop_idle_part_02"
+			animation="wood_workshop_idle_part_02" />
+		<action
+			type="act_wood_workshop_idle_part_03"
+			animation="convo_stand_confident_male2" />
+		<action
+			type="act_fishnet_repairer_idle"
+			animation="fishnet_repairer_idle" />
+		<action
+			type="act_fishnet_sharpening_knife_idle"
+			animation="sharpening_knife_idle" />
+		<action
+			type="act_villager_arms_on_fence_idle"
+			animation="villager_arms_on_fence_idle" />
+		<action
+			type="act_filling_cart_loop"
+			animation="filling_cart_loop" />
+		<action
+			type="act_shipyard_worker_idle"
+			animation="shipyard_worker_idle" />
+		<action
+			type="act_villager_sitting_on_dock"
+			animation="villager_sitting_on_dock" />
+		<action
+			type="act_villager_sitting_on_beach_idle"
+			animation="villager_sitting_on_beach_idle" />
+		<action
+			type="act_villager_sitting_on_beach_arrive"
+			animation="villager_sitting_on_beach_arrive" />
+		<action
+			type="act_villager_sitting_on_beach_leave"
+			animation="villager_sitting_on_beach_leave" />
+		<action
+			type="act_villager_sawing"
+			animation="villager_sawing" />
+		<action
+			type="act_villager_washing_floor"
+			animation="villager_washing_floor" />
+		<action
+			type="act_shipyard_worker_repair_loop"
+			animation="shipyard_worker_repair_loop" />
+		<action
+			type="act_shipyard_worker_repair_arrive"
+			animation="shipyard_worker_repair_arrive" />
+		<action
+			type="act_shipyard_worker_repair_leave"
+			animation="shipyard_worker_repair_leave" />
+		<action
+			type="act_shipyard_worker_repair_loop_2"
+			animation="shipyard_worker_repair_loop_2" />
+		<action
+			type="act_shipyard_worker_repair_loop_2_arrive"
+			animation="shipyard_worker_repair_loop_2_arrive" />
+		<action
+			type="act_character_creation_vlandia_fisherman_father"
+			animation="vlandia_fisherman_father" />
+		<action
+			type="act_character_creation_vlandia_fisherman_mother"
+			animation="vlandia_fisherman_mother" />
+		<action
+			type="act_character_creation_vlandia_dockers_father"
+			animation="vlandia_dockers_father" />
+		<action
+			type="act_character_creation_vlandia_dockers_mother"
+			animation="vlandia_dockers_mother" />
+		<action
+			type="act_character_creation_nord_sailors_father"
+			animation="nord_sailors_father" />
+		<action
+			type="act_character_creation_nord_sailors_mother"
+			animation="nord_sailors_mother" />
+		<action
+			type="act_character_creation_nord_shipwrights_father"
+			animation="nord_shipwrights_father" />
+		<action
+			type="act_character_creation_nord_shipwrights_mother"
+			animation="nord_shipwrights_mother" />
+		<action
+			type="act_character_creation_sturgia_riverfisherman_father"
+			animation="sturgia_river_fisherman_father" />
+		<action
+			type="act_character_creation_sturgia_riverfisherman_mother"
+			animation="sturgia_river_fisherman_mother" />
+		<action
+			type="act_character_creation_sturgia_shipbuilder_father"
+			animation="sturgia_shipbuilder_father" />
+		<action
+			type="act_character_creation_sturgia_shipbuilder_mother"
+			animation="sturgia_shipbuilder_mother" />
+		<action
+			type="act_character_creation_empire_smallboatfisherman_father"
+			animation="empire_smallboatfisherman_father" />
+		<action
+			type="act_character_creation_empire_smallboatfisherman_mother"
+			animation="empire_smallboatfisherman_mother" />
+		<action
+			type="act_character_creation_empire_imperial_fleet_father"
+			animation="empire_imperial_fleet_father" />
+		<action
+			type="act_character_creation_empire_imperial_fleet_mother"
+			animation="empire_imperial_fleet_mother" />
+		<action
+			type="act_character_creation_aserai_ferryman_father"
+			animation="aserai_ferryman_father" />
+		<action
+			type="act_character_creation_aserai_ferryman_mother"
+			animation="aserai_ferryman_mother" />
+		<action
+			type="act_character_creation_aserai_corsair_trader_father"
+			animation="aserai_corsair_trader_father" />
+		<action
+			type="act_character_creation_aserai_corsair_trader_mother"
+			animation="aserai_corsair_trader_mother" />
+		<action
+			type="act_character_creation_khuzait_river_foragers_father"
+			animation="khuzait_river_foragers_father" />
+		<action
+			type="act_character_creation_khuzait_river_foragers_mother"
+			animation="khuzait_river_foragers_mother" />
+		<action
+			type="act_character_creation_khuzait_river_traders_father"
+			animation="khuzait_river_traders_father" />
+		<action
+			type="act_character_creation_khuzait_river_traders_mother"
+			animation="khuzait_river_traders_mother" />
+		<action
+			type="act_character_creation_battania_currach_sailors_father"
+			animation="battania_currach_sailors_father" />
+		<action
+			type="act_character_creation_battania_currach_sailors_mother"
+			animation="battania_currach_sailors_mother" />
+		<action
+			type="act_character_creation_battania_guardian_of_the_lake_father"
+			animation="battania_guardian_of_the_lake_father" />
+		<action
+			type="act_character_creation_battania_guardian_of_the_lake_mother"
+			animation="battania_guardian_of_the_lake_mother" />
+		<action
+			type="act_character_creation_nord_served_as_a_shieldbearer"
+			animation="nord_served_as_a_shieldbearer" />
+		<action
+			type="act_cutscene_ship_sister_save_sister"
+			animation="cine_ship_sister_save_sister" />
+		<action
+			type="act_cutscene_ship_sister_save_brother"
+			animation="cine_ship_sister_save_brother" />
+		<action
+			type="act_cutscene_ship_sister_save_chained_sister"
+			animation="cine_ship_sister_save_chained_sister" />
+		<action
+			type="act_cutscene_ship_sister_save_chained_brother"
+			animation="cine_ship_sister_save_chained_brother" />
+		<action
+			type="act_cutscene_sister_save_brother"
+			animation="cutscene_sister_save_brother" />
+		<action
+			type="act_cutscene_sister_save_sister"
+			animation="cutscene_sister_save_sister" />
+		<action
+			type="act_cutscene_sister_save_door"
+			animation="cutscene_sister_save_door" />
+		<action
+			type="act_cutscene_sister_save_brother_idle"
+			animation="cutscene_sister_save_brother_idle" />
+		<action
+			type="act_cutscene_sister_save_sister_idle"
+			animation="cutscene_sister_save_sister_idle" />
+		<action
+			type="act_cutscene_sister_save_brother_idle_end"
+			animation="cutscene_sister_save_brother_idle_end" />
+		<action
+			type="act_cutscene_sister_save_sister_idle_end"
+			animation="cutscene_sister_save_sister_idle_end" />
+		<action
+			type="act_cutscene_sister_save_door_idle"
+			animation="cutscene_sister_save_door_idle" />
+		<action
+			type="act_cutscene_sister_save_brother_v2"
+			animation="cutscene_sister_save_brother_v2" />
+		<action
+			type="act_cutscene_sister_save_sister_v2"
+			animation="cutscene_sister_save_sister_v2" />
+		<action
+			type="act_cutscene_sister_save_brother_idle_v2"
+			animation="cutscene_sister_save_brother_idle_v2" />
+		<action
+			type="act_cutscene_sister_save_sister_idle_v2"
+			animation="cutscene_sister_save_sister_idle_v2" />
+		<action
+			type="act_cutscene_npc_argue_player_1"
+			animation="anim_cutscene_npc_argue_player_1" />
+		<action
+			type="act_cutscene_break_chains_1"
+			animation="anim_cutscene_break_chains_1" />
+		<action
+			type="act_cutscene_break_chains_short"
+			animation="anim_cutscene_break_chains_short" />
 	</action_set>
 	<action_set
 		id="as_dwarf_female_warrior"

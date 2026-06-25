@@ -42,11 +42,18 @@ moved → all gameplay changes were NATIVE-internal.
 1. **`/verify-bindings`** — every Harmony patch / GameModel / reflection site.
 2. **`python tools/audit_mount_parity.py`** — creature data vs the (possibly re-schema'd)
    vanilla baselines.
-3. Vanilla data rescan per `.claude/rules/vanilla-data-comparison.md` (scene renames/removals,
+3. **`python tools/patch_dwarf_action_parity.py --target <action_sets.xml>`** (dry-run) — every
+   STANDALONE humanoid race action_set (`skeleton=` set, no `base_set`) vs Native's `as_human_warrior`.
+   A new engine version adds action types to `as_human_warrior` that a standalone set doesn't inherit
+   → CTD on first use (the 1.3→1.4.6 dwarf water-CTD: 423 types had drifted). `as_dwarf_warrior` is the
+   only standalone humanoid set today (trolls use `base_set="as_human_warrior"` and inherit; enumerate
+   standalone sets to confirm, don't assume). 0 missing = parity; `--apply` writes both the live LOTRLOME
+   file and the snapshot. `--set-id` for any future standalone set.
+4. Vanilla data rescan per `.claude/rules/vanilla-data-comparison.md` (scene renames/removals,
    XML re-schemas) + check which vanilla `ModuleData` XMLs the update actually touched
    (timestamp filter).
-4. Update the pin: write the new version into `.claude/state/pinned-game-version.txt`.
-5. CLAUDE.md target-version note + memory update (needs explicit user OK for CLAUDE.md).
+5. Update the pin: write the new version into `.claude/state/pinned-game-version.txt`.
+6. CLAUDE.md target-version note + memory update (needs explicit user OK for CLAUDE.md).
 
 ## Phase 5 — Control battles before believing anything
 
