@@ -132,6 +132,13 @@ CULTURAL_MODS = {
         'Athletics': 10, 'Riding': 5, 'OneHanded': 10, 'TwoHanded': 15,
         'Polearm': 15, 'Crossbow': 10, 'Throwing': 10,
     },
+    # Orthanc guard (orthanc_* — Saruman's chosen fighting Uruk-hai) — Isengard's elite line,
+    # routed via detect_culture. Net +111: the best NON-elf troops in the game, a clear step
+    # above the regular uruk-hai (+75), still far below elves. Sword+shield melee (Bow baseline).
+    'isengard_orthanc': {
+        'Athletics': 18, 'Riding': 5, 'OneHanded': 22, 'TwoHanded': 22,
+        'Polearm': 20, 'Crossbow': 12, 'Throwing': 12,
+    },
     'mordor': {
         'TwoHanded': 5, 'Throwing': 5,
         'Athletics': -5, 'Riding': -5, 'Polearm': -5, 'Bow': -5, 'Crossbow': -5,
@@ -207,6 +214,10 @@ def detect_culture(troop_id, filename_culture):
     # to their own elite modifier so they aren't dragged down to the weak Mordor-orc curve.
     if troop_id.startswith('mordor_uruk'):
         return 'mordor_uruk'
+    # Orthanc guard (orthanc_*) is Isengard's elite line inside the isengard file — route to its
+    # own elite modifier so Saruman's best out-class the regular uruk-hai.
+    if troop_id.startswith('orthanc'):
+        return 'isengard_orthanc'
     return filename_culture
 
 

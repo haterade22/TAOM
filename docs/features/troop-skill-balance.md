@@ -58,6 +58,7 @@ Deltas on top of baseline. Elves run high (elite at everything); orcs run low; m
 | rohan | −5 | +20 | · | · | +10 | −5 | −10 | +2 | Riders of Rohan |
 | harad | · | +15 | +5 | −10 | −5 | +10 | · | · | Southron horse + archers |
 | isengard | +10 | +5 | +10 | +15 | +15 | · | +10 | +10 | Uruk-hai, strong |
+| **isengard_orthanc** | **+18** | **+5** | **+22** | **+22** | **+20** | · | **+12** | **+12** | **Orthanc guard — Saruman's elite, the best NON-elf line (net +111)** |
 | **dolguldur** | **+12** | **−5** | **+15** | **+25** | **+18** | **−5** | **−5** | **+10** | **Elite dark uruks (~Isengard-tier, 2H-heavy)** |
 | **mordor_uruk** | **+10** | **−5** | **+12** | **+18** | **+12** | · | · | **+5** | **Mordor Black Uruks — elite line, between Gundabad & Dol Guldur (Bow/Xbow baseline = real archers)** |
 | gundabad | +5 | −5 | · | +10 | +5 | −10 | −10 | +5 | Mountain orcs, poor ranged |
@@ -65,7 +66,7 @@ Deltas on top of baseline. Elves run high (elite at everything); orcs run low; m
 | mordor | −5 | −5 | · | +5 | −5 | −5 | −5 | +5 | Weak orcs |
 | **goblin** | **−10** | **−15** | **−8** | **−5** | **−8** | **+15** | **−15** | **−5** | **Throwaway melee swarm — but dangerous archers (Bow +15, above Dale)** |
 
-(Bold = authored/changed in the 2026-06-24 rebaseline.) `iron_hills` modifier applies to `iron_hills_*` troops inside the erebor file, and `mordor_uruk` to the `mordor_uruk_*` Black Uruk line inside the mordor file (both routed by `detect_culture` so an elite sub-line isn't dragged onto its file's weak culture curve); `lothlorien` is a **dead entry** — Lothlórien fields no troops of its own (full Rivendell reskin: `basic_troop=imladris_recruit`, party templates point at `rivendell_*`), so its troops rebaseline as `rivendell`. Kept as documented intent.
+(Bold = authored/changed in the 2026-06-24/25 rebaseline work.) `detect_culture` id-routes elite sub-lines to their own modifier so they aren't dragged onto their file's base culture curve: `iron_hills_*` (in the erebor file) → `iron_hills`, `mordor_uruk_*` Black Uruks → `mordor_uruk`, `orthanc_*` (Saruman's elite guard in the isengard file) → `isengard_orthanc`. `lothlorien` is a **dead entry** — Lothlórien fields no troops of its own (full Rivendell reskin: `basic_troop=imladris_recruit`, party templates point at `rivendell_*`), so its troops rebaseline as `rivendell`. Kept as documented intent.
 
 ## The 2026-06-24 rebaseline
 
@@ -110,6 +111,7 @@ Save-compat: troop skills are read from XML at agent spawn, so a rebaseline appl
 
 ## Changelog
 
+- 2026-06-25 — Orthanc elite: routed the `orthanc_*` guard line (Saruman's best, sword+shield, L26–41) to a new `isengard_orthanc` modifier (net +111) — now the best NON-elf line in the game, a clear step above the regular uruk-hai (+75), still far below elves. Only `troops_isengard.xml` changed (4 troops, +36 each). Same id-routing pattern as the Black Uruks. Surfaced by the 2026-06-25 deep review.
 - 2026-06-24 — Black Uruk + goblin-archer follow-up: routed the `mordor_uruk_*` Black Uruk line to a new elite `mordor_uruk` modifier (net +52, between Gundabad & Dol Guldur — they were stuck on the weak Mordor-orc curve); raised goblin `Bow −15 → +15` so goblin archers are dangerous while the melee swarm stays throwaway (Uruks > Orcs > Goblins, with the goblin-archer exception). Only goblin + mordor files changed. Added a **level-monotonicity check** to `analyze_troop_balance.py` (upgrade-path + within-culture+group, militia-excluded): 0 inversions among professional troops.
 - 2026-06-24 — Added the read-only `analyze_troop_balance.py` overview generator; full-roster rebaseline (262 troops / 11 files); authored `goblin`/`mistymountainorcs`/`dale` modifiers, bumped `dolguldur` to elite, fixed the `rhun_new`→`rhun` key mismatch, added `SKIP_TROOP_IDS` (cave_troll + elephant rider), fixed a latent `Δ` stdout crash.
 
