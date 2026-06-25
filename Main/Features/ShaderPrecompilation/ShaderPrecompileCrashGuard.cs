@@ -42,6 +42,13 @@ public sealed class ShaderPrecompileCrashGuard : IShaderPrecompileCrashGuard
         {
             AppendCrashedScene(crashedScene);
             _logger?.LogWarning($"[ShaderPrecompilation] scene '{crashedScene}' crashed the previous walk's process during load — recording it to the skip list");
+            // This is a native GPU/driver AV we can only fix with the fault address. Tell the user (in the
+            // log, which the crash bundle carries) exactly how to capture it while the Event Log entry is fresh.
+            _logger?.LogWarning(
+                "[ShaderPrecompilation] To help fix this crash: open Windows Event Viewer (Win+R -> eventvwr.msc) " +
+                "-> Windows Logs -> Application, find the most recent 'Application Error' for Bannerlord.exe, and " +
+                "send its 'Faulting module name' + 'Fault offset' (or right-click -> Save Selected Events) to the " +
+                "TAOM author. Until then, the scene is auto-skipped (delete shader-precompile-crashed-scenes.txt to retry).");
         }
 
         // 2. Return the persistent skip set.

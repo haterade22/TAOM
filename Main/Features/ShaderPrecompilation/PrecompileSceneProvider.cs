@@ -19,15 +19,24 @@ public sealed class PrecompileSceneProvider : IPrecompileSceneProvider
     // shaders on entry — every one ships header-only (no compressed_shader_cache.sack) = the #287 class.
     // Open-field battles + custom siege settlement scenes + custom village scenes (all load by id via the
     // same "Battle" ScenePass; the walk bypasses custom_battle_scenes.xml). Mirrors precompile_scenes.txt.
+    //
+    // SOURCE OF TRUTH: keep this list in sync with `precompile_scenes.txt` (the live override). The
+    // commented-out crashers below mirror the disabled set there — they ship `_forceatmo` but their
+    // pbr_terrain vista permutation hard-crashes some GPUs on scene load, so a missing/empty config must
+    // NOT resurrect them via this fallback (the 2026-06-25 fallback-drift fix; pinned by
+    // PrecompileSceneProviderParseTests.DefaultScenes_ExcludesDisabledCrashScenes). Re-enable together once
+    // the native shader-compile-guard hook lands (#287).
     public static readonly IReadOnlyList<string> DefaultScenes = new[]
     {
-        // Open-field battle scenes
-        "taom_mordor_battle_001_forceatmo",
-        "taom_mordor_battle_002_forceatmo",
-        "taom_mordor_battle_003_forceatmo",
-        "taom_mordor_battle_004_forceatmo",
-        "taom_mordor_battle_black_gates_forceatmo",
-        "taom_mordor_battle_dead_marshes_forceatmo",
+        // Open-field battle scenes — ALL DISABLED (pbr_terrain vista-permutation GPU crash on load).
+        // Mordor DISABLED 2026-06-25 (was the fallback-drift: uncommented here while disabled in the live
+        // config). Also removed from sp_battle_scenes.xml so real battles fall back to vanilla terrain.
+        // "taom_mordor_battle_001_forceatmo",
+        // "taom_mordor_battle_002_forceatmo",
+        // "taom_mordor_battle_003_forceatmo",
+        // "taom_mordor_battle_004_forceatmo",
+        // "taom_mordor_battle_black_gates_forceatmo",
+        // "taom_mordor_battle_dead_marshes_forceatmo",
         // Rohan field-battle scenes DISABLED 2026-06-19 (pbr_terrain input-layout-9 GPU crash; also removed
         // from sp_battle_scenes.xml so real battles fall back to vanilla terrain). Re-enable with the shader override.
         // "taom_rohan_battle_001_forceatmo",

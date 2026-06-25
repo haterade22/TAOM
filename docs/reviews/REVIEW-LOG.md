@@ -24,6 +24,7 @@ Running scorecard of all reviews. **COMPLETE: 25/25 features reviewed, 2026-04-0
 | 16 | 2026-04-06 | Infrastructure (Adapters+Core+SubModule+IoC) | no-ship | agree | 3 (2 HIGH, 1 MEDIUM) | 0 | 0 | v6 |
 | 17 | 2026-04-07 | SpecialResources (adversarial vs TOR_Core) | needs-attention | partial-agree | 2 confirmed (sprite, storage) | 1 (kingdom_id) | 0 | v6-adversarial |
 | 18 | 2026-06-24 | SaveLoadTableauGuard (#299) | issues-found | agree | 1 confirmed (CRITICAL patch-apply timing) + 1 LOW | 0 | 0 | adversarial-xhigh |
+| 19 | 2026-06-25 | ShaderPrecompile Phase 0 (#287) | ship | agree | 1 LOW (doc test-name drift) — confirmed all 6 suspects + the disputed boundary-direct-read non-defect | 0 | 0 | adversarial-xhigh |
 
 ## Metrics
 

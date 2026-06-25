@@ -78,7 +78,15 @@ public sealed class ShaderPrecompileRunner
         // during load — e.g. fords_of_isen on the pbr_terrain input-layout-9 compile): the guard
         // records that scene and we drop it from the plan so the walk can complete.
         var skip = new HashSet<string>(_crashGuard.ConsumeAndGetSkipSet(), StringComparer.OrdinalIgnoreCase);
-        var scenes = _sceneProvider.GetScenes();
+        if (skip.Count > 0) ShowCrashCaptureToast(skip.Count);
+        // Scene passes (terrain/atmosphere) are the GPU-crash-prone part (#287). The MCM "Include Scene
+        // Passes" toggle lets an affected user run only the safe all-characters pass without editing files
+        // or waiting for the native shader-compile guard — off => empty scene list => character battle only.
+        // We still consume the crash guard's inflight marker above so a prior crash is recorded regardless.
+        bool includeScenePasses = TAOM.Features.TaomSettings.Instance?.EnableScenePassPrecompilation ?? true;
+        IReadOnlyList<string> scenes = includeScenePasses ? _sceneProvider.GetScenes() : Array.Empty<string>();
+        if (!includeScenePasses)
+            _logger?.LogInfo("[ShaderPrecompilation] scene passes disabled in MCM (Graphics/Shader Precompilation) — running the all-characters pass only");
         if (skip.Count > 0)
             scenes = scenes.Where(s => !skip.Contains(s)).ToList();
         _plan = ShaderPrecompilePlanner.BuildPlan(scenes);
@@ -240,6 +248,21 @@ public sealed class ShaderPrecompileRunner
         // IsActive flips false here, so show the completion line directly (the tick won't fire again).
         try { InformationManager.DisplayMessage(new InformationMessage(StatusLine)); } catch { }
         _active = null;
+    }
+
+    // One concise in-game pointer at walk start when a prior scene hard-crashed: the native fault address
+    // (Windows Event Log) is the one thing we need to actually fix it (#287). Best-effort — never break the walk.
+    private void ShowCrashCaptureToast(int skippedCount)
+    {
+        try
+        {
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"{skippedCount} scene(s) crashed your GPU on a previous shader pre-compile. To help fix it, send the " +
+                "latest Bannerlord 'Application Error' from Windows Event Viewer (eventvwr.msc -> Windows Logs -> " +
+                "Application) to the TAOM author. Details are in the Logs folder.",
+                new Color(1f, 0.7f, 0.3f)));
+        }
+        catch { /* never break the walk over a toast */ }
     }
 
     private void EnterState(RunState s) { _state = s; _stateEnteredMs = NowMs(); }

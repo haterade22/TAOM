@@ -331,7 +331,9 @@ public class SubModule : MBSubModuleBase
                     () => InformationManager.HideInquiry())),
                 isDisabledAndReason: () => (false, new TextObject("")),
                 enabledHint:         new TextObject("{=taom_precompile_hint}Pre-compiles shaders to eliminate in-game stutter + the battle-load crash. Run once after installing TAOM."),
-                isHidden:            null));
+                // Hidden live when the MCM master toggle is off (no relaunch needed). Defaults to shown
+                // if settings aren't resolvable yet. The "Include Scene Passes" toggle is read inside Begin().
+                isHidden:            () => !(Features.TaomSettings.Instance?.EnableShaderPrecompilation ?? true)));
         }
     }
 

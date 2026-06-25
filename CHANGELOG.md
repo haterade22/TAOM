@@ -2,6 +2,15 @@
 
 ## 2026-06-24
 
+### fix(graphics): shader pre-compile — stop the multi-restart crash grind on affected GPUs (Phase 0 of #287)
+
+The "Pre-compile Shaders" walk hard-crashes the *process* (native AV in the engine's `pbr_terrain` vista permutation — `normalize()` of a `lerp`-to-zero normal at `Shaders/Sources/terrain_pixel_functions.rsh:818`) while loading certain TAOM `_forceatmo` scenes on some GPUs. The existing crash-guard self-heals but records only ONE crashing scene per crash → restart → relaunch cycle, so a GPU that rejects all ~12 Gondor scenes forced up to 12 restarts before the walk finished — users read that as "pre-compile crashes." This is the unblocked groundwork toward the native shader-compile guard (the permanent fix): it gives affected users an immediate way out and sets up the crash-data capture the native hook needs.
+
+- **`DefaultScenes` fallback-drift fixed** — the baked fallback still listed the 6 disabled Mordor open-field scenes uncommented, so a missing/empty `precompile_scenes.txt` resurrected known process-crashers. `DefaultScenes` now mirrors the live config (12 active siege + village scenes; every open-field battle scene commented out). Pinned by `PrecompileSceneProviderParseTests.DefaultScenes_ExcludesDisabledCrashScenes` (+ `DefaultScenes_IncludesActiveSiegeScene`).
+- **MCM toggles** (new "Graphics/Shader Precompilation" group): *Enable Shader Precompilation* (master — live-hides the menu option via its `isHidden` callback) and *Include Scene Passes* (off = run only the safe all-characters pass, which compiles every troop/equipment shader and never crashes). An affected user can now pre-compile the bulk of the value with zero crash risk and no file editing.
+- **Post-crash capture guidance** — on the relaunch after a scene crash, the runner shows a one-line in-game toast and the crash guard logs the exact steps to export the Windows Event Viewer "Application Error" entry (faulting module + fault offset) — the one datum the native guard needs and that the managed crash log can't capture (the walk dies in native code).
+- Not-tested: the menu `isHidden` callback + the in-game toast (engine-boundary UI, ADR-008). The shader-source root cause is confirmed but **unshippable** (engine-global `Shaders/`, not per-module) — it stays a local diagnostic. The native guard itself (Phases 1-3) is gated on a real fault offset from an affected machine. See `docs/features/shader-precompilation.md`.
+
 ### balance(troops): rebaseline all 16 cultures onto the skill curve + read-only balance analyzer
 
 Troop content added since the last skill pass (the #212 culture revamps, the Morannon orcs, new cultures) had drifted off the baseline + cultural-modifier curve — the #212 Erebor/Iron Hills nobles shipped at roughly *half* their tier's skills (`iron_hills_noble_ironbreaker` had OneHanded 90 where the curve calls for 325). A new read-only overview tool measured the drift; a targeted rebaseline corrected it. The baseline numbers themselves were left unchanged (Gondor already matches them exactly — they are the validated standard).
