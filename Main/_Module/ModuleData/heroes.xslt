@@ -1052,7 +1052,7 @@
 	<!-- Empire South 2 -->
 	<xsl:template match="Hero[@id='lord_1_15']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_15}The Witch-King of Angmar, Lord of the Nazgul, is Sauron's most terrible servant. He was once a great king of Men, corrupted by his Ring of Power into an undying wraith.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1060,7 +1060,7 @@
 
 	<xsl:template match="Hero[@id='lord_1_155']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_155}The Dark Marshall commands the Nazgul in battle, second only to the Witch-King.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1068,7 +1068,7 @@
 
 	<xsl:template match="Hero[@id='lord_1_16']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_16}The Knight of Umbar was once a lord of the Corsairs before taking the Ring.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1076,7 +1076,7 @@
 
 	<xsl:template match="Hero[@id='lord_1_28']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_28}The Betrayer was once a king in the East before his corruption.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1084,7 +1084,7 @@
 
 	<xsl:template match="Hero[@id='lord_1_38']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'spouse' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_38}The Undying was a sorcerer-king who sought immortality and found only eternal servitude.</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
 		</xsl:copy>
@@ -1092,7 +1092,7 @@
 
 	<xsl:template match="Hero[@id='lord_1_48']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction' and local-name() != 'spouse' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_48}Khamul the Easterling, second of the Nine, once ruled a great kingdom in Rhun before accepting a Ring of Power.</xsl:attribute>
 			<xsl:attribute name="faction">Faction.clan_dolguldur_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -1101,7 +1101,7 @@
 
 	<xsl:template match="Hero[@id='lord_1_48_1']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction' and local-name() != 'spouse' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_48_1}The Tainted spreads corruption wherever he rides.</xsl:attribute>
 			<xsl:attribute name="faction">Faction.clan_dolguldur_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -1110,7 +1110,7 @@
 
 	<xsl:template match="Hero[@id='lord_1_48_2']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction' and local-name() != 'spouse' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_48_2}The Shadow of the Northmen hunts in the cold lands.</xsl:attribute>
 			<xsl:attribute name="faction">Faction.clan_dolguldur_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>
@@ -1119,7 +1119,7 @@
 
 	<xsl:template match="Hero[@id='lord_1_48_3']">
 		<xsl:copy>
-			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction']"/>
+			<xsl:apply-templates select="@*[local-name() != 'text' and local-name() != 'faction' and local-name() != 'spouse' and local-name() != 'father' and local-name() != 'mother']"/>
 			<xsl:attribute name="text">{=TAOM_hero_1_48_3}The Shadow of Umbar haunts the southern coasts.</xsl:attribute>
 			<xsl:attribute name="faction">Faction.clan_dolguldur_1</xsl:attribute>
 			<xsl:apply-templates select="node()"/>

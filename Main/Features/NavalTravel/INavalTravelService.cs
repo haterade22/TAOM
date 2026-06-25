@@ -13,6 +13,18 @@ public interface INavalTravelService
     bool IsEnabled { get; }
 
     /// <summary>
+    /// Whether to suppress the vanilla <c>AIMoveToNearestLandBehavior</c> at-sea→nearest-land rescue
+    /// tick. That behavior fires only for a party already <c>IsCurrentlyAtSea</c> and calls the native
+    /// cross-region land-pathfind (<c>GetNearestFaceCenterForPositionWithPath</c>), which AVs on
+    /// TAOM_Map because the naval region-map navigation infrastructure it expects is never built (#120).
+    /// Nothing puts a party at sea except this feature, so the behavior is inert in vanilla TAOM and the
+    /// only thing the rescue can do on TAOM_Map is crash — suppress it whenever the feature is enabled
+    /// (the player disembarks manually; the patch covers AI parties too). When the feature is off the
+    /// behavior is inert anyway, so we leave it running (vanilla).
+    /// </summary>
+    bool ShouldSuppressAtSeaLandRescue { get; }
+
+    /// <summary>
     /// Embark/disembark proximity the engine uses to begin a land↔sea transition. NavalDLC uses
     /// 0.5; the engine default of 0 effectively blocks embarking.
     /// </summary>

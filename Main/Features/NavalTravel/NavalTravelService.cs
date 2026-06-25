@@ -23,6 +23,8 @@ public class NavalTravelService : INavalTravelService
 
     public bool IsEnabled => _settings.IsEnabled;
 
+    public bool ShouldSuppressAtSeaLandRescue => _settings.IsEnabled;
+
     public float EmbarkThresholdDistance => _settings.EmbarkThresholdDistance;
 
     public bool CanPartySail(bool isPlayerParty)

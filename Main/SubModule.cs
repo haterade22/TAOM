@@ -697,6 +697,17 @@ public class SubModule : MBSubModuleBase
         Features.NavalTravel.Hooks.Patch54_NavalTravelBoatVisual.Initialize(IoC.Resolve<Features.NavalTravel.INavalTravelService>(), IoC.Resolve<IModLogger>());
         _harmony.PatchCategory("Patch54_NavalTravelBoatVisual");
 
+        // Patch57_NavalAtSeaLandRescueGuard — prevent a native AV CTD: enabling naval travel lets a party
+        // reach IsCurrentlyAtSea, and the vanilla AIMoveToNearestLandBehavior at-sea->land rescue tick then
+        // calls a native cross-region pathfind (GetNearestFaceCenterForPositionWithPath) that AVs on
+        // TAOM_Map (no naval region navmesh, #120) — a map-tick CTD for any party at sea, incl. the player.
+        // Prefix skips the behavior while the feature is enabled (native AV can't be caught by a Finalizer).
+        // Crash report 2026-06-25 (#296). Drift-safe: try/caught so a future engine rename can't fail load.
+        var navalRescueLogger = IoC.Resolve<IModLogger>();
+        Features.NavalTravel.Hooks.Patch57_NavalAtSeaLandRescueGuard.Initialize(IoC.Resolve<Features.NavalTravel.INavalTravelService>(), navalRescueLogger);
+        try { _harmony.PatchCategory("Patch57_NavalAtSeaLandRescueGuard"); }
+        catch (System.Exception ex) { navalRescueLogger.LogWarning($"[NavalTravel] Patch57 at-sea rescue guard failed to apply: {ex.Message}"); }
+
         // BattleLoadDiagnostics — phase-stamp the attack->battle-playable lifecycle so an
         // intermittent battle-load hang leaves a log whose last line names the stuck phase
         // (and, for the equipment phase, the agent + the item whose bo_ collision mesh is

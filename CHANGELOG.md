@@ -4,26 +4,35 @@
 
 ### feat(nazgul-family): Ringwraiths take no spouse, parents, or children
 
-The Witch-King of Angmar and the seven named Nazgûl (8 lord ids) are undead — they never have a
-family. Implemented as a small `MarriageModel` override + a defensive clear-on-load.
+The nine Ringwraiths — the Witch-King, Khamûl the Easterling, and the seven other Nazgûl (9 lord ids) —
+are undead and never have a family. Two layers: a **data strip** removes the vanilla family seed, and a
+`MarriageModel` override blocks any future marriage; a clear-on-load handles pre-strip saves.
 
-- `TaomMarriageModel : DefaultMarriageModel` makes the 8 wraith ids unmarriageable —
+- **Data strip (`characters/heroes.xslt`):** vanilla `heroes.xml` wires the nine wraiths into a
+  self-contained family graph at the **Hero** level (Witch-King↔lord_1_16 + children 155/28/38;
+  Khamûl↔lord_1_48_1 + children 48_2/48_3). The nine wraith Hero templates now also strip
+  `spouse`/`father`/`mother` (matching the convention ~150 other lord templates already follow), so a
+  new campaign seeds them family-free.
+- `TaomMarriageModel : DefaultMarriageModel` makes the 9 wraith ids unmarriageable —
   `IsCoupleSuitableForMarriage` → false if either is a wraith (the hard chokepoint:
   `MarriageAction.ApplyInternal` consults it before assigning the spouse), and `IsSuitableForMarriage`
-  → false for a wraith (via `Hero.CanMarry`). No spouse ⇒ no children. Everything non-wraith falls
-  through to vanilla.
-- `NazgulFamilyBehavior` (OnSessionLaunched) nulls Spouse/Father/Mother + clears Children for the 8
-  ids — for saves made before the feature; a no-op in a new campaign (the links never form).
-- Why a code feature and not a data edit: `lords.xslt` already strips predefined family (each lord is
-  rebuilt with explicit attributes only), and TAOM's initial child generation already excludes the
-  `mordor` culture — so runtime marriage was the only remaining family source, and it all funnels
-  through `MarriageModel`. `INazgulRegistry` holds the lore-fixed 8-id roster (a compiled constant, not
-  config; no MCM toggle — it's a lore-correctness fix).
-- Verified: build green; 17 `NazgulRegistry` tests (8 ids true, non-wraiths/null/empty/prefix false,
-  case-insensitive); the `EveryTaomGameModel_IsRegistered_InSubModule` binding test passes. Independent
-  v1.4.6 decompile review confirmed COMPLETE on all marriage/family paths + clear-on-load safety
-  (two-way `Spouse` clear matches the engine's own `KillCharacterAction`; no clan/heir invariant
-  broken). See `docs/features/nazgul-family.md`.
+  → false (via `Hero.CanMarry`). No spouse ⇒ no children. Everything non-wraith falls through to vanilla.
+- `NazgulFamilyBehavior` (OnSessionLaunched) is the legacy-save fallback: nulls Spouse (+ clears the
+  `ExSpouses` residual via reflection, mirroring the engine's full sever), removes the wraith from each
+  ex-parent's Children (the Father/Mother setters are asymmetric on null), and clears Children. A no-op
+  on a new campaign (the strip leaves nothing to clear). All nine wraiths (incl. Khamûl) are registered,
+  so the graph is wraith-internal — no non-wraith is widowed.
+- Child-gen is already excluded for both wraith cultures (`mordor` + `dolguldur`).
+  `INazgulRegistry` holds the lore-fixed 9-id roster (a compiled constant; no MCM toggle — a
+  lore-correctness fix).
+- **Deep-review hardening (this same session):** a 7-dimension multi-agent review + completeness critic
+  inverted the original premise — the first cut attributed the family strip to `lords.xslt` (which
+  transforms `NPCCharacter` defs that carry NO family; family is Hero-level in `heroes.xml`/`heroes.xslt`),
+  so the wraiths actually shipped with full vanilla family on every new campaign. Fixes: the heroes.xslt
+  strip, adding the 9th wraith Khamûl (`lord_1_48`, a married non-wraith the skill_template scope missed),
+  the ExSpouses + asymmetric-parent ClearFamily corrections, and the doc/comment premise. 19
+  `NazgulRegistry` tests (9 ids true; `lord_1_4`/`lord_1_485` prefix/superstring false; null/empty;
+  case-insensitive). See `docs/features/nazgul-family.md` + the deep-review record.
 
 ### balance(lords): canonical legendary-lord hierarchy (Mordor / Elves / Gondor)
 
@@ -192,6 +201,21 @@ that itself via `Patch54_NavalTravelBoatVisual`.
   self-exclude). Naval settlement-distance/AI routing remains unsupported — the engine only registers the `Naval`/`All`
   navigation caches for a NavalDLC map/module (#120). Temporary `[NavalTravel][diag]` logging present; strip after
   in-game sign-off. End-to-end sail + boat render still pending verification.
+- **In-game iteration #2 (input read + native at-sea crash guard).** Two issues surfaced testing the set-sail modifier:
+  - **Set-sail key never registered** — `Input.IsKeyDown(LeftAlt)` returns `false` when polled from the
+    `PartyNavigationModel` (outside an input layer): the active map input layer owns/consumes key routing, so the
+    buffered poll misses the held key. Switched `IsSailModifierHeld` to read `Input.IsKeyDownImmediate` (raw device
+    state, bypasses the layer gate) and accept *either* source; the `[diag]` line now logs both for verifiability.
+  - **Native AV CTD (`0xC0000005` reading `0x4`) on the hourly AI tick** — granting naval capability lets a party reach
+    `IsCurrentlyAtSea`, which activates the vanilla `AIMoveToNearestLandBehavior.AiHourlyTick` (inert in vanilla TAOM
+    since nothing ever reaches sea). It calls the native cross-region land-pathfind
+    `GetNearestFaceCenterForPositionWithPath`, which dereferences the naval region-map navmesh TAOM_Map never builds
+    (#120) and crashes — for *any* at-sea party (AI now, the player once sailing works). A native AV can't be caught by
+    a managed Finalizer (corrupted-state exception), so `Patch57_NavalAtSeaLandRescueGuard` (Prefix) skips the behavior
+    while the feature is enabled — the prevent-the-call pattern of Patch47/48. Player disembark is unaffected (it goes
+    through `CanPlayerNavigateToPosition`, not this behavior); for non-at-sea parties the behavior already early-returns,
+    so the only behavioral change is preventing the crash. Decision is the pure
+    `INavalTravelService.ShouldSuppressAtSeaLandRescue`; +2 tests (57 total). Crash report 2026-06-25, #296.
 
 ### feat(map): MCM-configurable party-icon figure scale (default half vanilla)
 

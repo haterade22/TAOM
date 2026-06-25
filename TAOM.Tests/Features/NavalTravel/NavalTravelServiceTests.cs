@@ -117,6 +117,18 @@ public class NavalTravelServiceTests
         Assert.AreEqual(1.25f, _sut.EmbarkThresholdDistance);
     }
 
+    // --- ShouldSuppressAtSeaLandRescue: Patch57 skips the crashing vanilla at-sea→land rescue tick
+    // (native AV on TAOM_Map, #120) whenever the feature is enabled; runs vanilla when off. ---
+    [DataTestMethod]
+    [DataRow(true, true)]    // feature enabled → suppress (a party can be at sea → the native pathfind would AV)
+    [DataRow(false, false)]  // feature off → nothing is ever at sea → behavior inert → leave vanilla running
+    public void ShouldSuppressAtSeaLandRescue_MatchesEnabledGate(bool enabled, bool expected)
+    {
+        _settings.IsEnabled.Returns(enabled);
+
+        Assert.AreEqual(expected, _sut.ShouldSuppressAtSeaLandRescue);
+    }
+
     // --- ShouldRenderBoat: boat icon shown only when enabled + render-on + at sea + not transitioning ---
     [DataTestMethod]
     [DataRow(true, true, true, false, true)]    // enabled, render-on, at sea, not transitioning → boat

@@ -76,8 +76,11 @@ party walks to the coast and the base engine's embark transition (`NavigationHel
 fired in `MobileParty`'s movement tick) carries it onto the water. Without the modifier, water-from-land
 is rejected as vanilla — so neither the player's normal clicks nor AI ever sail by accident.
 **Disembarking is automatic:** once at sea, a normal click on land routes the party to the coast and
-the disembark transition fires. The input read is a thin boundary in the model (`Input.IsKeyDown`);
-the modifier key parses once at construction (unknown name → `LeftAlt`).
+the disembark transition fires. The input read is a thin boundary in the model: it uses
+**`Input.IsKeyDownImmediate`** (raw device state), not the buffered `Input.IsKeyDown` — the model polls
+from *outside* the map's input layer (during the navigation query), and the active map layer owns/consumes
+key routing, so the buffered poll returns `false` even while the key is physically held. The read accepts
+*either* source for robustness; the modifier key parses once at construction (unknown name → `LeftAlt`).
 
 ### Boat visual (`Patch54_NavalTravelBoatVisual`)
 
@@ -102,6 +105,27 @@ naval-aware, so the player can sail to shore instead of soft-locking (the base m
 from a non-land position). Once back on land it loses capability ⇒ no re-embark. The boat visual is
 independently gated by `renderBoatVisual` (default on) — turn it off to sail with the vanilla
 (figure-less) at-sea icon.
+
+### At-sea crash guard (`Patch57_NavalAtSeaLandRescueGuard`)
+
+Enabling naval movement has a side effect: once a party can reach `IsCurrentlyAtSea`, it **activates a
+vanilla campaign behavior that is dormant in stock TAOM** — `AIMoveToNearestLandBehavior.AiHourlyTick`,
+which fires only for an at-sea party and tries to path it back to land. That behavior calls the native
+cross-region pathfind `MapScene.GetNearestFaceCenterForPositionWithPath` (`maxDist = MapDiagonal/2`,
+`excludedFaceIds = GetInvalidTerrainTypesForNavigationType(All) = {7,13,14,21,22}`), which dereferences
+the **naval region-map navmesh TAOM_Map never builds** (#120) → a native access violation
+(`0xC0000005` reading `0x4`) on the hourly AI tick. It hits *any* at-sea party — AI parties (which can
+drift to sea when *Apply To AI* is on) and the player once sailing works.
+
+A native AV is a corrupted-state exception that a managed Finalizer cannot reliably catch (unlike the
+managed-NRE finalizers Patch49/50), so the fix is the **prevent-the-call Prefix** pattern used by the
+spider guards (Patch47/48): `Patch57` skips `AiHourlyTick` whenever the feature is enabled. This is
+behavior-neutral apart from preventing the crash — player disembark routes through
+`CanPlayerNavigateToPosition` (not this behavior), and for non-at-sea parties the behavior already
+early-returns. The behavior's only job (auto-pathing an at-sea party to land) can *only* crash on
+TAOM_Map until #120 is solved, so there is nothing valid to lose. The skip decision is the pure
+`INavalTravelService.ShouldSuppressAtSeaLandRescue` (= `IsEnabled`); the patch targets the internal
+vanilla type by name and is drift-safe (a bind failure logs + no-ops rather than failing module load).
 
 ## Configuration
 
@@ -131,6 +155,7 @@ set are advanced JSON-only tuning.
 |------|---------|
 | `Main/Features/NavalTravel/Models/TaomPartyNavigationModel.cs` | The GameModel override (the movement mechanism). |
 | `Main/Features/NavalTravel/Hooks/Patch54_NavalTravelBoatVisual.cs` | Two Postfixes (`MobilePartyVisual.OnTransitionEnded` + `.AddMobileIconComponents`) sharing `UpdateBoat` — renders the boat at sea. |
+| `Main/Features/NavalTravel/Hooks/Patch57_NavalAtSeaLandRescueGuard.cs` | Prefix that skips the vanilla `AIMoveToNearestLandBehavior.AiHourlyTick` while enabled — prevents the native at-sea→land pathfind AV (#120). |
 | `Main/Features/NavalTravel/INavalTravelService.cs` / `NavalTravelService.cs` | Pure sail/terrain/threshold decisions. |
 | `Main/Features/NavalTravel/INavalTravelSettingsProvider.cs` / `NavalTravelSettingsProvider.cs` | MCM-over-JSON live settings. |
 | `Main/Features/NavalTravel/NavalTravelConfig.cs` / `INavalTravelConfigProvider.cs` / `NavalTravelConfigProvider.cs` | JSON DTO + validating loader. |
@@ -145,8 +170,11 @@ set are advanced JSON-only tuning.
   members (`IsCurrentlyAtSea`, `NavigationCapability`, `SetSailAtPosition`/`DisembarkToPosition`,
   `GetRegionSwitchCostFromLandToSea/SeaToLand`), `Helpers.NavigationHelper`, `IMapScene.GetPathDistanceBetweenAIFaces`,
   `Campaign.PathFindingMaxCostLimit`, `TerrainType`.
-- Set sail — `TaleWorlds.InputSystem.Input.IsKeyDown` (modifier read), and the base move handler's
+- Set sail — `TaleWorlds.InputSystem.Input.IsKeyDownImmediate` (modifier read — raw device state, since the
+  buffered `IsKeyDown` misses keys polled outside the map input layer), and the base move handler's
   `SetMoveGoToPoint` / `NavigationHelper.GetEmbarkAndDisembarkDataForPlayer` (embark trigger).
+- Crash guard — Harmony Prefix on the internal `AIMoveToNearestLandBehavior.AiHourlyTick`
+  (`AccessTools.TypeByName`), to suppress its native `MapScene.GetNearestFaceCenterForPositionWithPath` call.
 - Boat visual — `SandBox.View`'s `MobilePartyVisual.OnTransitionEnded` + `.AddMobileIconComponents`
   (Harmony targets) + the base-game **`Native` `boat_sail_on` mesh** (in `meshes_shared_*.tpac`;
   registered as `map_icon_ship`) + `GameEntity`/`MetaMesh`/`MatrixFrame` (`TaleWorlds.Engine`/`TaleWorlds.Library`).
@@ -160,8 +188,8 @@ independent player/AI gates; the `HasNavalCapability` full-gate matrix covering 
 inheritance + disabled gate; naval-terrain membership; passthroughs) and `NavalTravelConfigProviderTests`
 (valid/missing/malformed/empty parse; threshold NaN/negative/too-large reversion; terrain-id
 unknown-drop / dedupe / empty / all-invalid reversion; caching; `ShouldRenderBoat` matrix + boat-field
-validation). 55 tests, all green. The model + Patch54 are thin entry points — verified in-game, not
-unit-tested (ADR-008).
+validation; `ShouldSuppressAtSeaLandRescue` enabled-gate). 57 tests, all green. The model + Patch54/57
+are thin entry points — verified in-game, not unit-tested (ADR-008).
 
 ## How-To
 
@@ -224,3 +252,4 @@ release the key and click land while at sea — it disembarks on the coast.
 - 2026-06-24 — Initial feature: `TaomPartyNavigationModel` unlocks base-engine naval movement without the DLC + `Patch54_NavalTravelBoatVisual` renders the at-sea boat icon; MCM World → Naval Travel toggles (Enable / Apply To Player / Apply To AI Lords); Codex review fixed at-sea/army-leader capability inheritance (HIGH) and live-disable mid-voyage (MED). Issue #296.
 - 2026-06-24 — In-game iteration: confirmed via diag that capability + water navmesh + at-sea state all work, but (a) the auto-pathfinder always prefers land/bridge over sea and (b) the boat never appeared. Added the **set-sail modifier** (`sailModifierKey`, default LeftAlt — hold + click water to embark deliberately, since auto-pathing won't sail), scoped to **sea-only** (rivers self-exclude via mountain-`7` banks + bridges), and **fixed the boat hook** (added `MobilePartyVisual.OnTransitionEnded` — the rebuild hook alone never saw the at-sea change). Boat assets `boat_sail_on`/`boatScale`/`renderBoatVisual` + the naval-distance-cache gap (#120) documented. End-to-end sail + boat render still in-game-pending; `[diag]` logging temporary.
 - 2026-06-24 — Fix: caravans showed `ERROR: Text with id str_convoy_party_name doesn't exist!` because the naval-name branch in `CaravanPartyComponent.CacheName` resolves NavalDLC-only strings. Re-provided both convoy ids in `taom_module_strings.xml` mirroring the vanilla caravan text + keys (no patch, free localization). See "Known interactions".
+- 2026-06-25 — In-game iteration #2 (two fixes): (1) **Set-sail key never registered** — `Input.IsKeyDown(LeftAlt)` returns false polled from the model (outside the map input layer, which consumes key routing); switched to `Input.IsKeyDownImmediate` (raw device state), accepting either source. (2) **Native AV CTD** (`0xC0000005` reading `0x4`) on the hourly AI tick — an at-sea party activates the dormant vanilla `AIMoveToNearestLandBehavior`, whose native cross-region land-pathfind dereferences TAOM_Map's missing naval region navmesh (#120). Added `Patch57_NavalAtSeaLandRescueGuard` (Prefix skip while enabled; native AV ≠ Finalizer-catchable, so prevent-the-call like Patch47/48). +2 tests (57 total). Crash report 2026-06-25, #296. Decompile-confirmed root cause; in-game verification of the fix still pending.

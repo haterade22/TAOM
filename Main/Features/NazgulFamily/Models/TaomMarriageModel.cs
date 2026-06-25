@@ -5,11 +5,13 @@ namespace TAOM.Features.NazgulFamily.Models;
 
 /// <summary>
 /// Makes the Ringwraiths (Witch-King + Nazgûl) ineligible for marriage, so they never acquire a
-/// spouse over campaign time — and therefore never have children. Runtime marriage
-/// (<c>RomanceCampaignBehavior</c> → <c>MarriageAction</c>) is the only family source for these
-/// lords: their predefined family is stripped by <c>lords.xslt</c> (each lord is rebuilt with only
-/// explicit attributes) and TAOM's initial child generation already excludes the <c>mordor</c>
-/// culture. Every non-wraith decision falls through to vanilla <see cref="DefaultMarriageModel"/>.
+/// spouse over campaign time — and therefore never have children — by overriding exactly the two
+/// methods the engine's marriage paths consult. Their PREDEFINED family (vanilla <c>heroes.xml</c>
+/// seeds the nine wraiths into a self-contained family graph) is removed at the data layer by
+/// <c>characters/heroes.xslt</c>; this model blocks any FUTURE runtime marriage
+/// (<c>RomanceCampaignBehavior</c> → <c>MarriageAction</c>, both gated by these methods), and TAOM's
+/// initial child generation already excludes both wraith cultures (<c>mordor</c> + <c>dolguldur</c>).
+/// Every non-wraith decision falls through to vanilla <see cref="DefaultMarriageModel"/>.
 /// </summary>
 public sealed class TaomMarriageModel : DefaultMarriageModel
 {

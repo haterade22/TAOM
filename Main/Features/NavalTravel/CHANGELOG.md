@@ -3,6 +3,31 @@
 Feature-scoped change log. The canonical project log is [`../../../CHANGELOG.md`](../../../CHANGELOG.md);
 keep new entries here in sync with it (this file is the per-feature curated view, not a replacement).
 
+## 2026-06-25 — in-game iteration #2: input read + native at-sea crash guard (issue #296)
+
+Two issues surfaced while testing the set-sail modifier in-game (both decompile/log-confirmed; the fixes
+themselves are in-game-pending a redeploy):
+
+- **Set-sail key never registered.** `Input.IsKeyDown(LeftAlt)` returns `false` when polled from
+  `TaomPartyNavigationModel` — the model runs *outside* the campaign map's input layer (during the
+  navigation query), and the active layer owns/consumes key routing, so the buffered poll misses the held
+  key. `IsSailModifierHeld` now reads **`Input.IsKeyDownImmediate`** (raw device state, bypasses the layer
+  gate) and accepts *either* source; the `[diag]` line logs both for verifiability.
+- **Native AV CTD (`0xC0000005` reading `0x4`) on the hourly AI tick** → `Patch57_NavalAtSeaLandRescueGuard`.
+  Granting naval capability lets a party reach `IsCurrentlyAtSea`, which **activates** the vanilla
+  `AIMoveToNearestLandBehavior.AiHourlyTick` (inert in stock TAOM since nothing reaches sea). It calls the
+  native cross-region land-pathfind `MapScene.GetNearestFaceCenterForPositionWithPath`
+  (`maxDist=MapDiagonal/2`, `excludedFaceIds={7,13,14,21,22}`), which dereferences the naval region-map
+  navmesh **TAOM_Map never builds** (#120) → CTD for any at-sea party (AI now, the player once sailing
+  works). A native AV is a corrupted-state exception a managed Finalizer can't reliably catch, so the fix
+  is a **Prefix that skips the behavior** while the feature is enabled (prevent-the-call, like the spider
+  Patch47/48). Behavior-neutral apart from the crash — player disembark routes through
+  `CanPlayerNavigateToPosition`, and non-at-sea parties already early-return. Decision = pure
+  `INavalTravelService.ShouldSuppressAtSeaLandRescue` (= `IsEnabled`); the patch targets the internal
+  vanilla type by name and is drift-safe. **+2 tests (57 total).** Root cause confirmed by decompiling
+  `AIMoveToNearestLandBehavior` (installed v1.4.6): `maxDist` + `excludedFaceIds` matched the crash data
+  exactly. Crash report 2026-06-25.
+
 ## 2026-06-24 — initial implementation (issue #296)
 
 - `TaomPartyNavigationModel : DefaultPartyNavigationModel` unlocks the base-engine naval system without

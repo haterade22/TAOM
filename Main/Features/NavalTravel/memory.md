@@ -14,8 +14,9 @@ paid Naval DLC**. **Sea-only by design** (rivers self-exclude — see below). TH
   Harmony patch for movement).
 - **Set sail (player-initiated)** = the engine's auto-pathfinder NEVER chooses sea over land/bridge, so
   sailing is deliberate: the model's `CanPlayerNavigateToPosition` allows a water click *from land* only
-  while the `sailModifierKey` (default LeftAlt, `Input.IsKeyDown`) is held → the party heads to the coast
-  and the base embark transition fires. Disembark = automatic (click land while at sea).
+  while the `sailModifierKey` (default LeftAlt) is held → the party heads to the coast and the base embark
+  transition fires. Disembark = automatic (click land while at sea). **Read the key via
+  `Input.IsKeyDownImmediate`, NOT `Input.IsKeyDown`** — see the input gotcha below.
 - **Boat visual** = `Patch54_NavalTravelBoatVisual` (TWO Postfixes on SandBox.View `MobilePartyVisual`:
   `OnTransitionEnded` drives the add/remove on the embark/disembark; `AddMobileIconComponents` re-adds on
   rebuild). The base game does NOT render a ship at sea (omits the figure + adds nothing); the campaign
@@ -92,11 +93,35 @@ paid Naval DLC**. **Sea-only by design** (rivers self-exclude — see below). TH
   patch. **Do NOT remove those strings.** The clan-finance line gates on the SEPARATE
   `CanHaveNavalNavigationCapability` (culture ship-hulls, false for TAOM) so it was never affected.
 
+## Gotchas — set-sail input + native at-sea crash (fixed 2026-06-25, in-game-pending)
+
+- **Modifier key read: use `Input.IsKeyDownImmediate`, not `Input.IsKeyDown`.** The model polls the key
+  from *outside* the map's input layer (during the navigation query). The buffered `IsKeyDown` reflects
+  layer-routed/consumed state, so it returns `false` even while the key is physically held → the sail
+  modifier appeared dead (water clicks rejected, `[diag]` never logged "DOWN"). `IsKeyDownImmediate` reads
+  raw device state and bypasses the gate. `IsSailModifierHeld` reads BOTH and accepts either.
+- **Native AV CTD from a DORMANT vanilla behavior (`Patch57_NavalAtSeaLandRescueGuard`).** Granting naval
+  capability lets a party reach `IsCurrentlyAtSea`, which **activates** the vanilla
+  `AIMoveToNearestLandBehavior.AiHourlyTick` — inert in stock TAOM because nothing ever goes to sea. It
+  calls the native `MapScene.GetNearestFaceCenterForPositionWithPath` (cross-region land pathfind,
+  `maxDist=MapDiagonal/2`, `excludedFaceIds=GetInvalidTerrainTypesForNavigationType(All)={7,13,14,21,22}`),
+  which dereferences TAOM_Map's **missing naval region navmesh** (#120) → `0xC0000005` reading `0x4` on the
+  hourly AI tick, for ANY at-sea party. **A native AV is a corrupted-state exception — a managed Finalizer
+  can't reliably catch it** (unlike Patch49/50's managed-NRE finalizers), so the fix is a **Prefix that
+  skips the behavior** (prevent-the-call, like the spider Patch47/48). Decision = pure
+  `INavalTravelService.ShouldSuppressAtSeaLandRescue` (= `IsEnabled`). Behavior-neutral apart from the
+  crash: player disembark uses `CanPlayerNavigateToPosition` (not this behavior), non-at-sea parties
+  early-return anyway. **Lesson: enabling a dormant engine subsystem can wake OTHER dormant engine
+  behaviors that assume infrastructure TAOM_Map lacks — grep the engine for behaviors gated on the state
+  you're newly enabling (`IsCurrentlyAtSea` here) before shipping.**
+
 ## Known limits / owed
 
 - **CONFIRMED in-game (diag):** capability granted (`HasNavalNavigationCapability=True`), water navmesh
   enabled (`invalidForAll=[7,13,14,21,22]` — no water), party reaches `mainAtSea=True`. Movement works.
-- **NOT yet confirmed end-to-end:** the set-sail modifier embark + the boat render — `[NavalTravel][diag]`
-  logging is in `TaomPartyNavigationModel` + `Patch54`; **STRIP after sign-off**.
+- **NOT yet confirmed end-to-end:** the set-sail modifier embark (now via `IsKeyDownImmediate`), the boat
+  render, and the `Patch57` crash guard — `[NavalTravel][diag]` logging is in `TaomPartyNavigationModel` +
+  `Patch54`; **STRIP after sign-off**.
 - Sea-only by design (rivers self-exclude). Sea encounters use default battle handling (no naval combat).
-- Naval settlement-distance + AI naval routing unsupported (caches not registered, #120).
+- Naval settlement-distance + AI naval routing unsupported (caches not registered, #120). Because AI-at-sea
+  is unsupported AND was the likely crash party, consider defaulting `applyToAi` **off** until #120 lands.
