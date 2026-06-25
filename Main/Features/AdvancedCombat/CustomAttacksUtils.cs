@@ -89,6 +89,35 @@ public class CustomAttacksUtils
         _registerBlow(Mission.Current, attacker, victim, realHitEntity, b, ref collisionData, in attackerWeapon, ref combatLogData);
     }
 
+    // TEMP DIAGNOSTIC (crash report 2026-06-25 — native AV reading 0x0 in MBAgentVisuals.GetBoneTypeData,
+    // reached via Agent.HandleBlow -> GetProtectorArmorMaterialOfBone(b.BoneIndex) from this synthetic bite).
+    // REMOVE once the culprit victim is confirmed.
+    //
+    // Must be a SYNCHRONOUS flushed write, NOT IModLogger: TAOM's FileLogger is async (a background thread
+    // drains the queue every ~50ms), so a line logged immediately before the native RegisterBlow would still
+    // be queued when the AV kills the process — the one line naming the culprit would be lost. File.AppendAllText
+    // opens+writes+flushes+closes on the mission thread, so the last line reaches disk before the crash.
+    // The bite path is single-threaded (Mission.OnMissionTick -> BoneCollisionService.TickBoneChecks), so no
+    // contention. Reading victim.AgentVisuals here is safe — the getter returns the managed wrapper (or null)
+    // and does NOT call into the native GetBoneTypeData that crashes.
+    private static void LogSyntheticBlowDiag(Agent attacker, Agent victim, sbyte boneIndex)
+    {
+        try
+        {
+            string line =
+                $"[{DateTime.Now:HH:mm:ss.fff}] attacker={attacker?.Monster?.StringId ?? "null"} " +
+                $"victim=\"{victim?.Name ?? "null"}\" victimMonster={victim?.Monster?.StringId ?? "null"} " +
+                $"IsHuman={victim?.IsHuman} IsMount={victim?.IsMount} HasMount={victim?.HasMount} " +
+                $"VisualsNull={victim?.AgentVisuals == null} boneIndex={boneIndex}";
+            System.IO.Directory.CreateDirectory("Logs");
+            System.IO.File.AppendAllText(System.IO.Path.Combine("Logs", "taom_bite_diag.log"), line + Environment.NewLine);
+        }
+        catch
+        {
+            // Diagnostic only — never let logging turn a bite into a crash of its own.
+        }
+    }
+
     public static void TakeDamage(Agent victim, int damage, float magnitude = 50f, bool knockDown = false)
     {
         TakeDamage(victim, victim, damage, magnitude, knockDown);
@@ -175,6 +204,9 @@ public class CustomAttacksUtils
 
         CombatLogData combatLogData = new(false, attacker.IsHuman, attacker.IsMine, attacker.RiderAgent != null, attacker.RiderAgent != null && attacker.RiderAgent.IsMine, attacker.IsMount, victim.IsHuman, victim.IsMine, victim.Health <= 0f, victim.RiderAgent != null, victim.RiderAgent != null && victim.RiderAgent.IsMine, victim.IsMount, null, victim.RiderAgent == victim, knockDown, false, 0f);
         MissionWeapon weapon = MissionWeapon.Invalid;
+        // TEMP DIAGNOSTIC (2026-06-25) — capture the victim + boneIndex handed to the engine RIGHT BEFORE the
+        // native call that AVs, so the last flushed line names the culprit. Remove after root cause confirmed.
+        LogSyntheticBlowDiag(attacker, victim, blow.BoneIndex);
         RegisterBlow(attacker, victim, WeakGameEntity.Invalid, blow, ref attackCollisionDataForDebugPurpose, in weapon, ref combatLogData);
     }
 

@@ -42,13 +42,14 @@ moved → all gameplay changes were NATIVE-internal.
 1. **`/verify-bindings`** — every Harmony patch / GameModel / reflection site.
 2. **`python tools/audit_mount_parity.py`** — creature data vs the (possibly re-schema'd)
    vanilla baselines.
-3. **`python tools/patch_dwarf_action_parity.py --target <action_sets.xml>`** (dry-run) — every
-   STANDALONE humanoid race action_set (`skeleton=` set, no `base_set`) vs Native's `as_human_warrior`.
-   A new engine version adds action types to `as_human_warrior` that a standalone set doesn't inherit
-   → CTD on first use (the 1.3→1.4.6 dwarf water-CTD: 423 types had drifted). `as_dwarf_warrior` is the
-   only standalone humanoid set today (trolls use `base_set="as_human_warrior"` and inherit; enumerate
-   standalone sets to confirm, don't assume). 0 missing = parity; `--apply` writes both the live LOTRLOME
-   file and the snapshot. `--set-id` for any future standalone set.
+3. **`python tools/audit_action_set_parity.py`** — resolves EVERY action_set's effective surface
+   (own actions + `base_set` chain + cross-module field-merge) and flags any HUMANOID set missing
+   part of Native's `as_human_warrior` (exit 1 if any). A new engine version can add action types to
+   `as_human_warrior` that a standalone set won't inherit → CTD on first use (the 1.3→1.4.6 dwarf
+   water-CTD: 423 types had drifted). For each gap the audit reports, fix with
+   `python tools/patch_dwarf_action_parity.py --set-id <id> --apply` (writes both the live LOTRLOME file
+   and the snapshot). The audit confirmed `as_dwarf_warrior` was the only humanoid gap (1110 humanoid
+   sets, 0 others). Creature mounts (spider/elephant/chariot) use a separate surface → `audit_mount_parity.py`.
 4. Vanilla data rescan per `.claude/rules/vanilla-data-comparison.md` (scene renames/removals,
    XML re-schemas) + check which vanilla `ModuleData` XMLs the update actually touched
    (timestamp filter).

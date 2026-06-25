@@ -38,7 +38,6 @@ public class TaomPartyNavigationModel : DefaultPartyNavigationModel
     // Diagnostics (temporary — strip after in-game sign-off).
     private bool? _lastMainCapability;
     private (bool targetOnLand, bool mainAtSea, bool result)? _lastCanNav;
-    private bool _lastModifierHeld;
 
     public TaomPartyNavigationModel(INavalTravelService service, IModLogger logger)
     {
@@ -176,12 +175,15 @@ public class TaomPartyNavigationModel : DefaultPartyNavigationModel
     /// </summary>
     private bool IsSailModifierHeld()
     {
-        var held = Input.IsKeyDown(_sailModifierKey);
-        if (held != _lastModifierHeld)
-        {
-            _lastModifierHeld = held;
-            _logger.LogInfo($"[NavalTravel][diag] sail modifier ({_sailModifierKey}) {(held ? "DOWN" : "up")}.");
-        }
+        // The map's active input layer owns/consumes key routing, so a poll from outside a layer
+        // (this GameModel, called during the map tick) sees the buffered IsKeyDown as false even
+        // while the key is physically held. IsKeyDownImmediate reads the raw device state and
+        // bypasses that gate. Accept EITHER source so the modifier works regardless of which the
+        // engine populates in this context. [diag] logs both so the input path is verifiable in-game.
+        var immediate = Input.IsKeyDownImmediate(_sailModifierKey);
+        var buffered = Input.IsKeyDown(_sailModifierKey);
+        var held = immediate || buffered;
+        _logger.LogInfo($"[NavalTravel][diag] sail modifier ({_sailModifierKey}): immediate={immediate} buffered={buffered} -> held={held}.");
         return held;
     }
 

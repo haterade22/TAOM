@@ -96,6 +96,8 @@ python tools/patch_dwarf_action_parity.py --target "docs/reference/lotrlome-armo
 
 **Re-run after every engine bump** (it's in the `/engine-bump` checklist): a new engine version can add action types to `as_human_warrior` that the standalone dwarf set won't get automatically. The script is `--set-id`-parameterized for any future standalone humanoid set (`as_dwarf_warrior` is the default). Use an XML reader for any parity diff, not raw grep — Native comments out ~126 disabled actions that a text scan would wrongly count as "missing."
 
+To find *which* sets need fixing (not just dwarf), run **`python tools/audit_action_set_parity.py`** first — it resolves every action_set's effective surface (own actions + full `base_set` chain + the cross-module merge) and exits non-zero listing any HUMANOID set short of Native's surface. As of 2026-06-25 it reports 0 humanoid gaps across all 1110 humanoid sets; the 9 creature-mount sets (spider/elephant/chariot) use a separate surface (`audit_mount_parity.py`).
+
 ## Snapshot date
 
 2026-06-25 — `action_sets.xml` patched in place: +423 missing Native 1.4.6 action types added to `as_dwarf_warrior` for engine parity (+1311 lines, additions-only; the dwarf water-CTD fix). Done via `tools/patch_dwarf_action_parity.py`, NOT a full re-snapshot — so the snapshot still lags the LIVE file on the spider/elephant/chariot creature sets added during the June 2026 mount work (10 action_sets present in LIVE, absent here). Re-snapshot those separately if they ever need a restore.
