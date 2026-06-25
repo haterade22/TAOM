@@ -22789,7 +22789,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Culture.mirkwood -->
-    <NPCCharacter id="lord_M1_1" race="elf" name="{=aom_lord_M1_1_name}Thranduil" age="30" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_elf_king_skills">
+    <NPCCharacter id="lord_M1_1" race="elf" name="{=aom_lord_M1_1_name}Thranduil" age="30" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_M1_1_skills">
         <face>
             <BodyProperties version="4" age="22" weight="0.037" build="0.5602" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
             <hair_tags>

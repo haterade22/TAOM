@@ -894,7 +894,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_witch_king_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1003,7 +1003,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1058,7 +1058,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
             <xsl:attribute name="race">elf</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_chieftain_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_sauron_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1601,7 +1601,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -1922,6 +1922,7 @@
     <xsl:template match="NPCCharacter[@id='lord_1_34']">
         <xsl:copy>
             <xsl:attribute name="id">lord_1_34</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_canonical_lord_1_34_skills</xsl:attribute>
             <xsl:attribute name="name">{=aom_lord_1_34_name}Faramir</xsl:attribute>
             <xsl:attribute name="age">36</xsl:attribute>
             <xsl:attribute name="voice">earnest</xsl:attribute>
@@ -2094,7 +2095,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_bn_sorceress_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_nazgul_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>

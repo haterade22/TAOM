@@ -2,6 +2,15 @@
 
 ## 2026-06-25
 
+### balance(lords): canonical legendary-lord hierarchy (Mordor / Elves / Gondor)
+
+Authored a lore-driven, strictly-ranked stat hierarchy for 17 named legendary lords, resolved through their `skill_template` → `taom_lord_skill_sets.xml` (the authoritative source the engine reads). Designed + verified against 17 interlocking constraints (cross-faction total ladder + intra-faction orders + role signatures + skill cap) before applying; re-verified against the resolved data.
+
+- **Cross-faction total ladder:** Sauron **5450 (#1 in the game)** > Galadriel 5050 > Elrond 4980 > Thranduil 4900 > **Witch-King 4865** > Celeborn 4780 > Glorfindel 4650 > Legolas 4600 > Nazgûl 4545 > Boromir 4265 → Imrahil 4125 → Faramir 3955 → Forlong 3800 → Golasgil 3700 → Hirluin 3600 → Angbor 3500 → Duinhir 3400. (User calls: top elves outrank the Witch-King; great elves above the Nazgûl; Boromir = top of Men, below the supernatural tier.)
+- **Role signatures:** Sauron supreme/all-max; Galadriel manager+leader+fighter (top all-rounder); **Celeborn best elven fighter, Glorfindel 2nd** (combat axis); **Legolas best archer in the game (Bow 330)**; Boromir best swordsman + captain (1H 325 + Leadership); Imrahil best cavalry (Riding 320 + lance); Faramir best-Man archer + hunter + tactics (Bow 310 < Legolas); Forlong 2H; Golasgil mace; Hirluin/Angbor knights; Duinhir Blackroot bowmen; **Denethor a manager** (Steward 310, low combat).
+- **Fixes folded in:** Sauron was on a generic 45-lord orc-chieftain set (3640); the Nazgûl were inconsistent (one on a 2,840 grunt set) — now unified on `taom_nazgul_skills`; **Faramir had no resolvable SkillSet** (now `taom_canonical_lord_1_34_skills`, skill_template added); Thranduil split from the shared `elf_king` set (Círdan unaffected). New sets: `taom_sauron_skills`, `taom_witch_king_skills`, `taom_canonical_lord_M1_1_skills`.
+- Verified: all 3 edited files parse; `validate_moduledata` PASS; analyzer confirms Sauron = game max total, Legolas = game max Bow; no collateral (Círdan/orc-chieftain lords unchanged). **Maintenance note:** 15 of these lords also have canonical entries in `tools/apply_culture_skills_traits.py`; the live XML is hand-tuned and authoritative — re-running that generator (`--apply`) would revert them (it has already drifted ~149 lords from the XML), so update its canonical entries first if regenerating.
+
 ### tools(lords): per-culture lord stats + perk review (read-only)
 
 Extended the troop balance-review idea to lords. Lords carry the full 18-skill hero set, and each skill level unlocks **perks** with concrete bonuses — so the review identifies the perks first, then shows what each lord's skills unlock.
