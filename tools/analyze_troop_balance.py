@@ -469,7 +469,7 @@ def render_report(by_culture, all_troops, all_ids, dq, threshold):
     outliers = sum(1 for t in all_troops if t['outlier'])
     off_grid = [t for t in all_troops if t['off_grid']]
     dq_count = (len(dq['cultures_without_identity'])
-                + len([r for r in dq['remap_findings'] if not r['in_mods'] or True])
+                + len(dq['remap_findings'])
                 + len(dq['dead_modifiers']))
 
     L = []
