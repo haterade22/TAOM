@@ -49,6 +49,13 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         CampaignEvents.RaidCompletedEvent.AddNonSerializedListener(this, OnRaidCompleted);
         CampaignEvents.OnPrisonerTakenEvent.AddNonSerializedListener(this, OnPrisonerTaken);
         CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, OnNewGameCreated);
+        // Resource seeding fires at culture-FINALIZE, not new-game-create: OnNewGameCreated and
+        // OnSessionLaunched both run while the character-creation PLACEHOLDER culture is still on
+        // Hero.MainHero.Culture, so seeding there seeds the wrong faction's resource (2026-06-25 bug —
+        // a Gondor pick was seeded Tribal Relics and never got Castar). CC-over = new game (culture set);
+        // OnGameLoaded = existing/legacy save (culture already correct).
+        CampaignEvents.OnCharacterCreationIsOverEvent.AddNonSerializedListener(this, OnCharacterCreationIsOver);
+        CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
         CampaignEvents.TournamentFinished.AddNonSerializedListener(this, OnTournamentFinished);
         CampaignEvents.OnHideoutBattleCompletedEvent.AddNonSerializedListener(this, OnHideoutCompleted);
         // Player-only recruit charge: OnUnitRecruited fires only from player-facing recruit flows
@@ -103,40 +110,41 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
         // Phase 9b deferred #133 P2 R1 — clear singleton-scope service state so a second
         // campaign in the same process can't inherit _inSession / _pendingSpend from the
-        // prior campaign. Must run BEFORE InitializeHero so any stale _loggedResolveKeys
-        // dedupe entries don't suppress the new campaign's first-resolve diagnostics.
+        // prior campaign. Must run BEFORE any seeding so stale _loggedResolveKeys dedupe
+        // entries don't suppress the new campaign's first-resolve diagnostics.
         _service.ResetSessionState();
-
-        GetHeroIds(hero, out var kingdomId, out var cultureId);
-        _service.InitializeHero(hero.StringId, kingdomId, cultureId);
         _isFirstTickAfterLoad = true;
-        _logger.LogInfo($"SpecialResources: Initialized resource for {hero.Name}");
+        // Seeding is deliberately NOT done here: at OnNewGameCreated the chosen culture is not yet
+        // applied to Hero.MainHero.Culture (still the character-creation placeholder), so seeding now
+        // seeds the wrong faction's resource. It happens at OnCharacterCreationIsOver instead. (2026-06-25.)
     }
 
-    private void OnSessionLaunched(CampaignGameStarter starter)
+    // New game: the player's culture is finalized by the time character creation completes (Patch29 /
+    // CultureSettingService set Hero.MainHero.Culture during the culture stage). Seed the starting
+    // resource now, with the correct culture. InitializeHero is the existing (tested) unconditional
+    // seed — correct here because a freshly-created hero is untracked.
+    private void OnCharacterCreationIsOver()
     {
-        _isFirstTickAfterLoad = true;
-
         var hero = Hero.MainHero;
         if (hero == null) return;
+        GetHeroIds(hero, out var kingdomId, out var cultureId);
+        _service.InitializeHero(hero.StringId, kingdomId, cultureId);
+        _logger.LogInfo($"SpecialResources: Seeded starting resource for {hero.Name} at character-creation finalize");
+    }
 
+    // Existing/legacy save: culture is already finalized. Contains-gated backstop so a save predating
+    // SpecialResources (or a hero never seeded) gets its starting amount once, without ever overwriting
+    // an earned/spent balance (the #133 P2 gate). On a new game this is a no-op (CC-over already seeded).
+    private void OnGameLoaded(CampaignGameStarter starter)
+    {
+        var hero = Hero.MainHero;
+        if (hero == null) return;
         GetHeroIds(hero, out var kingdomId, out var cultureId);
         var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
-        // Phase 9b deferred #133 P2 — pre-fix this gate was `current <= 0f`, which seeded
-        // StartingAmount EVERY TIME OnSessionLaunched fired with balance==0 for the
-        // resolved resource. Two failure modes:
-        //   1. Kingdom-change in-session (Gondor → Mordor) — the new kingdom resolves
-        //      to a different SpecialResource the player has never owned. Balance==0
-        //      because they've never earned any → seeded as if it were a legacy save,
-        //      bypassing "earn it" progression.
-        //   2. Player spends down to 0, saves, reloads — re-seeded back up to
-        //      StartingAmount, effectively a refund.
-        // Fix: gate on storage.Contains, which is true iff the (hero, resource) pair has
-        // ever been written. A legacy save (predating SpecialResources) has zero entries
-        // for the player → Contains==false → seed once. After that, the key is present
-        // regardless of value, so no further seeding occurs.
+        // Gate on storage.Contains (true iff the (hero, resource) pair was ever written) — never
+        // re-seed a spent-to-0 or kingdom-changed balance, only a never-seen pair.
         var alreadyTracked = _storage.Contains(hero.StringId, resource.Id);
         if (!alreadyTracked && resource.StartingAmount > 0f)
         {
@@ -145,11 +153,17 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         }
         else if (!alreadyTracked)
         {
-            // Resource has StartingAmount=0 but we still need to record the (hero, resource)
-            // pair so the next OnSessionLaunched doesn't re-evaluate it as "never seen."
-            // Write 0f explicitly — Set is idempotent.
+            // StartingAmount==0 — still record the pair so it isn't re-evaluated as "never seen."
             _storage.Set(hero.StringId, resource.Id, 0f);
         }
+    }
+
+    private void OnSessionLaunched(CampaignGameStarter starter)
+    {
+        // Seeding moved to OnCharacterCreationIsOver (new game) + OnGameLoaded (load): OnSessionLaunched
+        // fires while character creation is still in progress (placeholder culture), so seeding here
+        // seeded the wrong faction's resource. (2026-06-25 seeding-culture bug.)
+        _isFirstTickAfterLoad = true;
     }
 
     private void OnDailyTickHero(Hero hero)
