@@ -94,6 +94,25 @@ public class CareerChoicesIntegrationTests
     }
 
     [TestMethod]
+    public void RealChoicesXml_NoPhantomPassiveType_EveryTypeHasConsumer()
+    {
+        // Phantom-bonus regression guard. Every PassiveEffect type used by a shipped pip MUST
+        // have a runtime consumer (PassiveEffectConsumers). A type without one is selectable in
+        // the career tree but inert in-game. Six such types shipped as phantoms across ~211 pips
+        // (HorseChargeDamage / HorseHealth / StealthBonus / TroopResistance / Ammo /
+        // HealthRegeneration) before being wired; this pins the shipped XML so a new phantom
+        // cannot ship silently again.
+        var phantom = _provider.LoadChoices()
+            .Where(c => c.Passive != null && !PassiveEffectConsumers.IsConsumed(c.Passive.EffectType))
+            .Select(c => $"{c.Id} (type={c.Passive.EffectType})")
+            .ToList();
+
+        Assert.AreEqual(0, phantom.Count,
+            "Every PassiveEffect type in the shipped XML must have a runtime consumer in "
+            + "PassiveEffectConsumers. Phantom (inert) choices: " + string.Join(", ", phantom));
+    }
+
+    [TestMethod]
     public void RealChoicesXml_EveryParsedPassive_HasFiniteNonZeroMagnitude()
     {
         // Codex review 2026-05-29 hardening: a malformed value=/magnitude= parses to 0 (ParseFloat

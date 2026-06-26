@@ -77,6 +77,7 @@ public class CareerConfigProvider : ICareerConfigProvider
 
         LoadCareersXml();
         LoadChoicesXml();
+        ValidatePassiveConsumers();
         LoadAbilityTemplatesXml();
         LoadAbilityTuningXml();
 
@@ -236,8 +237,8 @@ public class CareerConfigProvider : ICareerConfigProvider
                     // Accept value= as an alias for magnitude= (the wrapper schema uses value=).
                     // magnitude= takes precedence when both are present.
                     magnitude: ParseFloat(passiveEl, "magnitude", ParseFloat(passiveEl, "value", 0f)),
-                    operation: ParseEnum<OperationType>(passiveEl, "operation", OperationType.Add),
-                    isPercentage: ParseBool(passiveEl, "is_percentage", false),
+                    // operation= / is_percentage= were parsed-but-never-read (the consumer chooses
+                    // additive vs multiplicative per type); dropped. attack_type_mask IS consumed.
                     attackTypeMask: ParseEnum<AttackTypeMask>(passiveEl, "attack_type_mask", AttackTypeMask.All));
             }
 
@@ -278,6 +279,26 @@ public class CareerConfigProvider : ICareerConfigProvider
             _logger.LogError($"CareerConfig: failed to parse choice: {ex.Message}");
             return null;
         }
+    }
+
+    // Load-time phantom-bonus gate (csharp-architecture.md "Config Providers MUST Validate").
+    // Any choice whose PassiveEffect type has no runtime consumer is selectable but inert; warn
+    // loudly so it surfaces in the log instead of silently doing nothing in-game.
+    private void ValidatePassiveConsumers()
+    {
+        var unconsumed = new List<string>();
+        foreach (var choice in _choices)
+        {
+            var passive = choice.Passive;
+            if (passive == null) continue;
+            if (!PassiveEffectConsumers.IsConsumed(passive.EffectType))
+                unconsumed.Add($"{choice.Id} (type={passive.EffectType})");
+        }
+
+        if (unconsumed.Count > 0)
+            _logger.LogWarning(
+                $"CareerSystem: {unconsumed.Count} choice(s) reference a PassiveEffect type with NO runtime " +
+                $"consumer — phantom bonus, selectable but inert: {string.Join(", ", unconsumed)}");
     }
 
     private void LoadAbilityTemplatesXml()
@@ -467,13 +488,6 @@ public class CareerConfigProvider : ICareerConfigProvider
         if (float.IsNaN(result) || float.IsInfinity(result))
             return defaultValue;
         return result;
-    }
-
-    private static bool ParseBool(XElement el, string attrName, bool defaultValue)
-    {
-        var val = el.Attribute(attrName)?.Value;
-        if (val == null) return defaultValue;
-        return bool.TryParse(val, out var result) ? result : defaultValue;
     }
 
     private static T ParseEnum<T>(XElement el, string attrName, T defaultValue) where T : struct

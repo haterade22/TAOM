@@ -266,6 +266,99 @@ public class CareerPassiveServiceTests
         Assert.AreEqual(0f, _service.GetPassiveMagnitude("", PassiveEffectType.Damage));
     }
 
+    // ── GetMaskedMagnitude — attack_type_mask honoring for Damage/Resistance ──
+
+    private static CareerChoiceDefinition NullRootChoice() => new CareerChoiceDefinition(
+        id: "wb_root", groupId: "", type: ChoiceType.Passive,
+        description: "", iconSprite: "", passive: null, mutations: null);
+
+    [TestMethod]
+    public void GetMaskedMagnitude_MeleeMaskedDamage_AppliesToMeleeHitOnly()
+    {
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_melee_dmg", 10);
+        _registry.GetChoice("wb_melee_dmg").Returns(new CareerChoiceDefinition(
+            id: "wb_melee_dmg", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.Damage, 0.15f, attackTypeMask: AttackTypeMask.Melee),
+            mutations: null));
+        _registry.GetChoice("wb_root").Returns(NullRootChoice());
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(0.15f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee), 0.001f);
+        Assert.AreEqual(0f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Ranged), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetMaskedMagnitude_AllMaskedEntry_AppliesToBothDeliveryTypes()
+    {
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_all_dmg", 10);
+        _registry.GetChoice("wb_all_dmg").Returns(new CareerChoiceDefinition(
+            id: "wb_all_dmg", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.Damage, 0.10f, attackTypeMask: AttackTypeMask.All),
+            mutations: null));
+        _registry.GetChoice("wb_root").Returns(NullRootChoice());
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(0.10f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee), 0.001f);
+        Assert.AreEqual(0.10f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Ranged), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetMaskedMagnitude_MeleeAndRangedPips_SumOnlyMatchingDeliveryType()
+    {
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_melee", 10);
+        _dataService.TryAddChoice("hero1", "wb_ranged", 10);
+        _registry.GetChoice("wb_melee").Returns(new CareerChoiceDefinition(
+            id: "wb_melee", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.Damage, 0.12f, attackTypeMask: AttackTypeMask.Melee),
+            mutations: null));
+        _registry.GetChoice("wb_ranged").Returns(new CareerChoiceDefinition(
+            id: "wb_ranged", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.Damage, 0.08f, attackTypeMask: AttackTypeMask.Ranged),
+            mutations: null));
+        _registry.GetChoice("wb_root").Returns(NullRootChoice());
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(0.12f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee), 0.001f);
+        Assert.AreEqual(0.08f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Ranged), 0.001f);
+        // The mask-agnostic total still sums both (used by non-damage consumers).
+        Assert.AreEqual(0.20f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.Damage), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetMaskedMagnitude_AllPlusMeleePips_SumOnMeleeButOnlyAllOnRanged()
+    {
+        // The live black_uruk_captain case: an All-masked Resistance (e.g. a Blunt pip coarsened to
+        // All) + a Melee-masked Resistance on one hero. On a melee hit BOTH buckets intersect and
+        // sum; on a ranged hit only the All bucket applies.
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_all", 10);
+        _dataService.TryAddChoice("hero1", "wb_melee", 10);
+        _registry.GetChoice("wb_all").Returns(new CareerChoiceDefinition(
+            id: "wb_all", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.Resistance, 0.10f, attackTypeMask: AttackTypeMask.All),
+            mutations: null));
+        _registry.GetChoice("wb_melee").Returns(new CareerChoiceDefinition(
+            id: "wb_melee", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
+            passive: new PassiveEffect(PassiveEffectType.Resistance, 0.05f, attackTypeMask: AttackTypeMask.Melee),
+            mutations: null));
+        _registry.GetChoice("wb_root").Returns(NullRootChoice());
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(0.15f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee), 0.001f);
+        Assert.AreEqual(0.10f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Ranged), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetMaskedMagnitude_NullHeroOrMissingHero_ReturnsZero()
+    {
+        _service.RefreshCache(_dataService, _registry);
+        Assert.AreEqual(0f, _service.GetMaskedMagnitude(null, PassiveEffectType.Damage, AttackTypeMask.Melee));
+        Assert.AreEqual(0f, _service.GetMaskedMagnitude("nobody", PassiveEffectType.Damage, AttackTypeMask.Melee));
+    }
+
     [TestMethod]
     public void RefreshCache_SecondRefresh_ReplacesPriorCache()
     {

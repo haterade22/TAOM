@@ -1,4 +1,5 @@
 using TaleWorlds.MountAndBlade;
+using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem.Abilities;
 
@@ -28,17 +29,27 @@ public interface ICareerAgentStatService
     void ApplyAgentStatModifiers(string? heroId, int agentIndex, bool isHuman, bool isHero, AgentDrivenProperties props);
 
     /// <summary>
-    /// Returns the post-amplification damage value. Applies the attacker's
-    /// ArmorPenetration career passive when present.
+    /// Returns the agent's adjusted max health. A hero gets a flat <c>Health</c> career-passive
+    /// add; a MOUNT whose rider is a hero gets a multiplicative <c>HorseHealth</c> bonus. Exactly
+    /// one of <paramref name="heroId"/> / <paramref name="mountRiderHeroId"/> is expected to be
+    /// non-null (the boundary never sets both — an agent is a hero or a mount, not both).
     /// </summary>
-    float CalculateDamageAmplification(string? attackerHeroId, float baseResult);
+    float ApplyMaxHealthPassives(string? heroId, string? mountRiderHeroId, float baseHealth);
 
     /// <summary>
-    /// Returns the post-reduction damage value. Applies the victim's Resistance career
-    /// passive, the victim hero's active self-buff DamageReductionBonus, and any AoE
-    /// ally-buff DamageReductionBonus that matches <paramref name="victimAgentIndex"/>.
+    /// Returns the post-amplification damage value. Applies the attacker's ArmorPenetration
+    /// career passive and the attacker's <c>Damage</c> passive for the hit's delivery type
+    /// (<paramref name="hitMask"/> — a melee or ranged Damage pip only fires on the matching hit).
     /// </summary>
-    float CalculateDamageReduction(string? victimHeroId, int? victimAgentIndex, float baseResult);
+    float CalculateDamageAmplification(string? attackerHeroId, AttackTypeMask hitMask, float baseResult);
+
+    /// <summary>
+    /// Returns the post-reduction damage value. Applies the victim's Resistance career passive
+    /// for the hit's delivery type (<paramref name="hitMask"/>) + self-buff DamageReductionBonus,
+    /// the <c>TroopResistance</c> passive of the victim's party leader (for non-hero troops), and
+    /// any AoE ally-buff DamageReductionBonus that matches <paramref name="victimAgentIndex"/>.
+    /// </summary>
+    float CalculateDamageReduction(string? victimHeroId, int? victimAgentIndex, string? troopLeaderHeroId, AttackTypeMask hitMask, float baseResult);
 
     /// <summary>
     /// Returns true if the victim hero has a non-zero ShruggedOff career passive.

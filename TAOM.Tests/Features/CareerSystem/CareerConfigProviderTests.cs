@@ -144,7 +144,6 @@ public class CareerConfigProviderTests
         Assert.IsNotNull(root.Passive);
         Assert.AreEqual(PassiveEffectType.TroopDamage, root.Passive.EffectType);
         Assert.AreEqual(0.05f, root.Passive.Magnitude, 0.001f);
-        Assert.IsTrue(root.Passive.IsPercentage);
         Assert.AreEqual(1, root.Mutations.Count);
         Assert.AreEqual("skill_scaling", root.Mutations[0].CalculatorId);
         Assert.AreEqual("Leadership", root.Mutations[0].Params["skill"]);
@@ -201,6 +200,29 @@ public class CareerConfigProviderTests
 
         var choices = _provider.LoadChoices();
         Assert.AreEqual(AttackTypeMask.Melee, choices[0].Passive.AttackTypeMask);
+    }
+
+    [TestMethod]
+    public void LoadChoices_UnrepresentableAttackTypeMask_DegradesToAll()
+    {
+        // Blunt/Cut are NOT AttackTypeMask members (enum is None/Melee/Ranged/All). Five shipped
+        // Resistance pips author them and rely on ParseEnum's unknown-name fallback to All (apply
+        // to every hit). Pin that intentional coarsening so a future stricter parser can't silently
+        // zero those pips.
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""cblunt"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""Resistance"" magnitude=""0.05"" attack_type_mask=""Blunt"" />
+  </Choice>
+  <Choice id=""ccut"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""Resistance"" magnitude=""0.08"" attack_type_mask=""Cut"" />
+  </Choice>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+        Assert.AreEqual(AttackTypeMask.All, choices[0].Passive.AttackTypeMask, "Blunt must degrade to All");
+        Assert.AreEqual(AttackTypeMask.All, choices[1].Passive.AttackTypeMask, "Cut must degrade to All");
     }
 
     [TestMethod]
@@ -427,6 +449,41 @@ public class CareerConfigProviderTests
         Assert.AreEqual(2, choices.Count);
         Assert.IsNull(choices[0].Passive);
         Assert.IsNull(choices[1].Passive);
+    }
+
+    // ── Phantom-bonus load-time gate (PassiveEffectConsumers) ──
+
+    [TestMethod]
+    public void LoadChoices_UnconsumedPassiveType_LogsPhantomWarning()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""c1"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""WindsOfMagic"" magnitude=""0.1"" />
+  </Choice>
+</CareerChoices>");
+
+        _provider.LoadChoices();
+
+        _logger.Received().LogWarning(Arg.Is<string>(
+            s => s.Contains("phantom") && s.Contains("c1") && s.Contains("WindsOfMagic")));
+    }
+
+    [TestMethod]
+    public void LoadChoices_ConsumedPassiveType_NoPhantomWarning()
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""c1"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""Damage"" magnitude=""0.1"" />
+  </Choice>
+</CareerChoices>");
+
+        _provider.LoadChoices();
+
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("phantom")));
     }
 
     private void WriteCareersXml(string content)

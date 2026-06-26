@@ -19,6 +19,12 @@ public class CareerPassiveService : ICareerPassiveService
     private Dictionary<string, Dictionary<PassiveEffectType, float>> _cache
         = new Dictionary<string, Dictionary<PassiveEffectType, float>>();
 
+    // Per-(type, authored-mask) breakdown, populated alongside _cache. Lets the damage path honor
+    // attack_type_mask (a "+X% ranged damage" pip only fires on ranged hits) while _cache keeps the
+    // mask-agnostic per-type total every other consumer reads. Swapped under the same lock as _cache.
+    private Dictionary<string, Dictionary<PassiveEffectType, Dictionary<AttackTypeMask, float>>> _maskedCache
+        = new Dictionary<string, Dictionary<PassiveEffectType, Dictionary<AttackTypeMask, float>>>();
+
     // Phase 9b #173 — cached localization string for the ApplyFactor/Flat methods. Was duplicated
     // in CareerPassiveHelper; consolidated here so deletion of the helper doesn't leak the text.
     private static TextObject? _careerText;
@@ -31,9 +37,10 @@ public class CareerPassiveService : ICareerPassiveService
 
     public void RefreshCache(ICareerDataService dataService, ICareerRegistry registry)
     {
-        // Phase 9b #173 F2 — build the new dict OUTSIDE the lock, then swap under the lock.
+        // Phase 9b #173 F2 — build the new dicts OUTSIDE the lock, then swap under the lock.
         // Reads can briefly capture the OLD reference and finish their work without contention.
         var nextCache = new Dictionary<string, Dictionary<PassiveEffectType, float>>();
+        var nextMaskedCache = new Dictionary<string, Dictionary<PassiveEffectType, Dictionary<AttackTypeMask, float>>>();
 
         var allData = dataService.GetAllData();
         _logger.LogInfo($"CareerSystem: Refreshing passive cache for {allData.Count} heroes");
@@ -44,38 +51,28 @@ public class CareerPassiveService : ICareerPassiveService
             if (string.IsNullOrEmpty(heroData.CareerStringId)) continue;
 
             var effectMap = new Dictionary<PassiveEffectType, float>();
+            var maskedMap = new Dictionary<PassiveEffectType, Dictionary<AttackTypeMask, float>>();
 
             foreach (var choiceId in heroData.ChoiceIds)
             {
                 var choice = registry.GetChoice(choiceId);
-                if (choice?.Passive == null) continue;
-
-                var passive = choice.Passive;
-                if (effectMap.TryGetValue(passive.EffectType, out var existing))
-                    effectMap[passive.EffectType] = existing + passive.Magnitude;
-                else
-                    effectMap[passive.EffectType] = passive.Magnitude;
+                if (choice?.Passive != null)
+                    Accumulate(effectMap, maskedMap, choice.Passive);
             }
 
-            // Also check root choice
+            // Root choice passive is always active even if not in ChoiceIds.
             var career = registry.GetCareer(heroData.CareerStringId);
             if (career != null)
             {
                 var rootChoice = registry.GetChoice(career.RootChoiceId);
                 if (rootChoice?.Passive != null && !heroData.HasChoice(career.RootChoiceId))
-                {
-                    // Root choice passive is always active even if not in ChoiceIds
-                    var passive = rootChoice.Passive;
-                    if (effectMap.TryGetValue(passive.EffectType, out var existing))
-                        effectMap[passive.EffectType] = existing + passive.Magnitude;
-                    else
-                        effectMap[passive.EffectType] = passive.Magnitude;
-                }
+                    Accumulate(effectMap, maskedMap, rootChoice.Passive);
             }
 
             if (effectMap.Count > 0)
             {
                 nextCache[heroId] = effectMap;
+                nextMaskedCache[heroId] = maskedMap;
                 _logger.LogDebug($"CareerSystem: Cached {effectMap.Count} passives for hero '{heroId}' (career: {heroData.CareerStringId})");
             }
         }
@@ -83,8 +80,27 @@ public class CareerPassiveService : ICareerPassiveService
         lock (_lock)
         {
             _cache = nextCache;
+            _maskedCache = nextMaskedCache;
         }
         _logger.LogInfo($"CareerSystem: Passive cache complete — {nextCache.Count} heroes with active passives");
+    }
+
+    // Accumulates one passive into both the mask-agnostic per-type total and the per-(type, mask)
+    // breakdown. Shared by the choice loop + the root-choice path so the two stay in sync.
+    private static void Accumulate(
+        Dictionary<PassiveEffectType, float> effectMap,
+        Dictionary<PassiveEffectType, Dictionary<AttackTypeMask, float>> maskedMap,
+        PassiveEffect passive)
+    {
+        var type = passive.EffectType;
+        effectMap[type] = effectMap.TryGetValue(type, out var existing)
+            ? existing + passive.Magnitude
+            : passive.Magnitude;
+
+        if (!maskedMap.TryGetValue(type, out var byMask))
+            maskedMap[type] = byMask = new Dictionary<AttackTypeMask, float>();
+        var mask = passive.AttackTypeMask;
+        byMask[mask] = byMask.TryGetValue(mask, out var m) ? m + passive.Magnitude : passive.Magnitude;
     }
 
     public float GetPassiveMagnitude(string heroStringId, PassiveEffectType type)
@@ -102,6 +118,25 @@ public class CareerPassiveService : ICareerPassiveService
         if (magnitude != 0f)
             _logger.LogDebug($"CareerSystem: GetPassiveMagnitude hero='{heroStringId}' type={type} = {magnitude}");
         return magnitude;
+    }
+
+    public float GetMaskedMagnitude(string heroStringId, PassiveEffectType type, AttackTypeMask hitMask)
+    {
+        if (string.IsNullOrEmpty(heroStringId)) return 0f;
+
+        Dictionary<string, Dictionary<PassiveEffectType, Dictionary<AttackTypeMask, float>>> snapshot;
+        lock (_lock) { snapshot = _maskedCache; }
+
+        if (!snapshot.TryGetValue(heroStringId, out var typeMap)) return 0f;
+        if (!typeMap.TryGetValue(type, out var byMask)) return 0f;
+
+        // Sum every authored-mask bucket whose delivery type intersects the hit (All-masked
+        // entries carry both bits, so they apply to any hit).
+        var total = 0f;
+        foreach (var entry in byMask)
+            if ((entry.Key & hitMask) != AttackTypeMask.None)
+                total += entry.Value;
+        return total;
     }
 
     public bool HasActivePassive(string heroStringId, PassiveEffectType type)

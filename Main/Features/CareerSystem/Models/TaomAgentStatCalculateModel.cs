@@ -2,7 +2,6 @@ using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Abilities;
-using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.Elephant;
 using TAOM.Features.Spider;
 
@@ -20,14 +19,12 @@ namespace TAOM.Features.CareerSystem.Models;
 // chariots remountable mid-battle (upstream-chariot-pack parity; the item's riding difficulty 120 is the only gate).
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
-    private readonly ICareerPassiveService _passiveService;
     private readonly ICareerAgentStatService _agentStatService;
     private readonly IElephantAttackService _elephant;
     private readonly ISpiderAttackService _spider;
 
-    public TaomAgentStatCalculateModel(ICareerPassiveService passiveService, ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider)
+    public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider)
     {
-        _passiveService = passiveService;
         _agentStatService = agentStatService;
         _elephant = elephant;
         _spider = spider;
@@ -41,10 +38,14 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
     public override float GetEffectiveMaxHealth(Agent agent)
     {
         var baseHealth = base.GetEffectiveMaxHealth(agent);
-        if (!agent.IsHero) return baseHealth;
-        var heroId = (agent.Character as CharacterObject)?.HeroObject?.StringId;
-        if (heroId == null) return baseHealth;
-        return baseHealth + _passiveService.GetPassiveMagnitude(heroId, PassiveEffectType.Health);
+        // Hero → flat Health passive; mount whose rider is a hero → multiplicative HorseHealth.
+        // Primitive extraction only; the decision lives in the service (gamemodels.md rule 4).
+        var heroId = agent.IsHero ? (agent.Character as CharacterObject)?.HeroObject?.StringId : null;
+        var rider = agent.IsMount ? agent.RiderAgent : null;
+        var riderHeroId = (rider != null && rider.IsHero)
+            ? (rider.Character as CharacterObject)?.HeroObject?.StringId
+            : null;
+        return _agentStatService.ApplyMaxHealthPassives(heroId, riderHeroId, baseHealth);
     }
 
     public override void UpdateAgentStats(Agent agent, AgentDrivenProperties agentDrivenProperties)

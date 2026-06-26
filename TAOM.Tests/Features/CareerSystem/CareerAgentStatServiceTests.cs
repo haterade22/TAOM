@@ -80,8 +80,11 @@ public class CareerAgentStatServiceTests
     }
 
     [TestMethod]
-    public void ApplyAgentStatModifiers_HeroWithDamageAndMovementSpeedPassives_AddsBoth()
+    public void ApplyAgentStatModifiers_DamagePassive_NotAppliedAsFlatMultiplier()
     {
+        // Damage moved to the per-hit amplification path (attack_type_mask honored), so it must
+        // NOT be applied as a flat DamageMultiplierBonus during UpdateAgentStats. MovementSpeed
+        // still is (it is not attack-typed).
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.Damage).Returns(0.20f);
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.MovementSpeed).Returns(0.05f);
 
@@ -91,8 +94,34 @@ public class CareerAgentStatServiceTests
 
         _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, props);
 
-        Assert.AreEqual(0.20f, props.DamageMultiplierBonus, 0.001f);
+        Assert.AreEqual(0f, props.DamageMultiplierBonus, 0.001f);
         Assert.AreEqual(1.05f, props.MaxSpeedMultiplier, 0.001f);
+    }
+
+    [TestMethod]
+    public void ApplyAgentStatModifiers_HeroWithHorseChargeDamagePassive_ScalesMountChargeDamage()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.HorseChargeDamage).Returns(0.15f);
+
+        var props = new AgentDrivenProperties();
+        props.MountChargeDamage = 100f;
+
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, props);
+
+        Assert.AreEqual(115f, props.MountChargeDamage, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyAgentStatModifiers_HeroWithZeroHorseChargeDamage_DoesNotMutateMountChargeDamage()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.HorseChargeDamage).Returns(0f);
+
+        var props = new AgentDrivenProperties();
+        props.MountChargeDamage = 80f;
+
+        _sut.ApplyAgentStatModifiers("hero1", agentIndex: 1, isHuman: true, isHero: true, props);
+
+        Assert.AreEqual(80f, props.MountChargeDamage, 0.01f);
     }
 
     [TestMethod]
@@ -214,22 +243,67 @@ public class CareerAgentStatServiceTests
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // CalculateDamageAmplification — attacker armor-pen passive
+    // ApplyMaxHealthPassives — hero Health (flat) + mount HorseHealth (multiplicative)
+    // ──────────────────────────────────────────────────────────────────────────
+
+    [TestMethod]
+    public void ApplyMaxHealthPassives_Hero_AddsHealthFlat()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.Health).Returns(50f);
+
+        var result = _sut.ApplyMaxHealthPassives(heroId: "hero1", mountRiderHeroId: null, baseHealth: 100f);
+
+        Assert.AreEqual(150f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyMaxHealthPassives_MountWithHeroRider_ScalesHorseHealthMultiplicatively()
+    {
+        _passives.GetPassiveMagnitude("rider1", PassiveEffectType.HorseHealth).Returns(0.15f);
+
+        var result = _sut.ApplyMaxHealthPassives(heroId: null, mountRiderHeroId: "rider1", baseHealth: 200f);
+
+        Assert.AreEqual(230f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyMaxHealthPassives_MountWithZeroHorseHealth_ReturnsBase()
+    {
+        _passives.GetPassiveMagnitude("rider1", PassiveEffectType.HorseHealth).Returns(0f);
+
+        var result = _sut.ApplyMaxHealthPassives(heroId: null, mountRiderHeroId: "rider1", baseHealth: 200f);
+
+        Assert.AreEqual(200f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyMaxHealthPassives_NeitherHeroNorMountRider_ReturnsBaseAndDoesNotQuery()
+    {
+        var result = _sut.ApplyMaxHealthPassives(heroId: null, mountRiderHeroId: null, baseHealth: 100f);
+
+        Assert.AreEqual(100f, result, 0.01f);
+        _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // CalculateDamageAmplification — attacker armor-pen + mask-gated Damage passive
     // ──────────────────────────────────────────────────────────────────────────
 
     [TestMethod]
     public void CalculateDamageAmplification_NullAttackerHeroId_ReturnsBaseUnchanged()
     {
-        var result = _sut.CalculateDamageAmplification(attackerHeroId: null, baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification(attackerHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(100f, result);
         _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
+        _passives.DidNotReceiveWithAnyArgs().GetMaskedMagnitude(default!, default, default);
     }
 
     [TestMethod]
-    public void CalculateDamageAmplification_ZeroArmorPen_ReturnsBaseUnchanged()
+    public void CalculateDamageAmplification_ZeroArmorPenAndZeroDamage_ReturnsBaseUnchanged()
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0f);
-        var result = _sut.CalculateDamageAmplification("hero1", baseResult: 100f);
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee).Returns(0f);
+        var result = _sut.CalculateDamageAmplification("hero1", AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(100f, result);
     }
 
@@ -237,8 +311,36 @@ public class CareerAgentStatServiceTests
     public void CalculateDamageAmplification_NonZeroArmorPen_MultipliesBase()
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.25f);
-        var result = _sut.CalculateDamageAmplification("hero1", baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification("hero1", AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(125f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_MeleeDamagePassiveOnMeleeHit_MultipliesBase()
+    {
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee).Returns(0.15f);
+        var result = _sut.CalculateDamageAmplification("hero1", AttackTypeMask.Melee, baseResult: 100f);
+        Assert.AreEqual(115f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_RangedHit_OnlyAppliesRangedMaskedDamage()
+    {
+        // The masked lookup returns 0 for a ranged hit when only a melee Damage pip is held; verify
+        // the service forwards the hit mask and does not boost the wrong delivery type.
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Ranged).Returns(0f);
+        var result = _sut.CalculateDamageAmplification("hero1", AttackTypeMask.Ranged, baseResult: 100f);
+        Assert.AreEqual(100f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_ArmorPenAndDamageStack_MultiplyTogether()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.20f);
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee).Returns(0.10f);
+        var result = _sut.CalculateDamageAmplification("hero1", AttackTypeMask.Melee, baseResult: 100f);
+        // 100 * 1.20 * 1.10 = 132
+        Assert.AreEqual(132f, result, 0.01f);
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -248,25 +350,35 @@ public class CareerAgentStatServiceTests
     [TestMethod]
     public void CalculateDamageReduction_NoHeroAndNoVictim_ReturnsBaseUnchanged()
     {
-        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: null, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: null, troopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(100f, result);
     }
 
     [TestMethod]
     public void CalculateDamageReduction_HeroWithResistance_MultipliesByOneMinus()
     {
-        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.Resistance).Returns(0.30f);
-        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: null, baseResult: 100f);
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee).Returns(0.30f);
+        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: null, troopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(70f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_RangedHit_DoesNotApplyMeleeOnlyResistance()
+    {
+        // A melee-masked Resistance pip must not reduce a ranged hit; the masked lookup keyed on the
+        // ranged hit returns 0, so the base damage passes through unchanged.
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Ranged).Returns(0f);
+        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: null, troopLeaderHeroId: null, AttackTypeMask.Ranged, baseResult: 100f);
+        Assert.AreEqual(100f, result, 0.01f);
     }
 
     [TestMethod]
     public void CalculateDamageReduction_HeroWithSelfBuffReduction_StacksWithResistance()
     {
-        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.Resistance).Returns(0.10f);
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee).Returns(0.10f);
         CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageReductionBonus = 0.20f });
 
-        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: null, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: null, troopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
 
         // 100 * (1-0.10) * (1-0.20) = 100 * 0.9 * 0.8 = 72
         Assert.AreEqual(72f, result, 0.01f);
@@ -277,7 +389,7 @@ public class CareerAgentStatServiceTests
     {
         CareerAbilityBuffTracker.SetAllyBuff(99, new ActiveBuffs { DamageReductionBonus = 0.15f });
 
-        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: 99, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: 99, troopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
 
         Assert.AreEqual(85f, result, 0.01f);
     }
@@ -287,11 +399,11 @@ public class CareerAgentStatServiceTests
     {
         // A hero can also have an ally-buff entry (Infantry AoE puts hero in the ally map too).
         // The original code applies BOTH the hero self-buff and the ally-buff for the same agent.
-        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.Resistance).Returns(0f);
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee).Returns(0f);
         CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageReductionBonus = 0.20f });
         CareerAbilityBuffTracker.SetAllyBuff(7, new ActiveBuffs { DamageReductionBonus = 0.10f });
 
-        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: 7, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: 7, troopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
 
         // 100 * (1-0.20) * (1-0.10) = 100 * 0.8 * 0.9 = 72
         Assert.AreEqual(72f, result, 0.01f);
@@ -300,10 +412,31 @@ public class CareerAgentStatServiceTests
     [TestMethod]
     public void CalculateDamageReduction_ZeroResistanceAndZeroBuffs_ReturnsBaseUnchanged()
     {
-        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.Resistance).Returns(0f);
-        // No buff, no ally-buff entries.
-        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: 7, baseResult: 100f);
+        // No buff, no ally-buff entries; masked Resistance defaults to 0.
+        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: 7, troopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(100f, result);
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_TroopLeaderWithTroopResistance_MultipliesByOneMinus()
+    {
+        // A non-hero troop victim: victimHeroId is null, troopLeaderHeroId is the party leader.
+        // TroopResistance is not attack-typed, so it uses the mask-agnostic GetPassiveMagnitude.
+        _passives.GetPassiveMagnitude("leader1", PassiveEffectType.TroopResistance).Returns(0.20f);
+
+        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: null, troopLeaderHeroId: "leader1", AttackTypeMask.Melee, baseResult: 100f);
+
+        Assert.AreEqual(80f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_ZeroTroopResistance_ReturnsBaseUnchanged()
+    {
+        _passives.GetPassiveMagnitude("leader1", PassiveEffectType.TroopResistance).Returns(0f);
+
+        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: null, troopLeaderHeroId: "leader1", AttackTypeMask.Melee, baseResult: 100f);
+
+        Assert.AreEqual(100f, result, 0.01f);
     }
 
     // ──────────────────────────────────────────────────────────────────────────

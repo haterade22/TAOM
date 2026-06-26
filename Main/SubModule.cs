@@ -459,7 +459,7 @@ public class SubModule : MBSubModuleBase
             var battleBalanceConfig = IoC.Resolve<IBattleBalanceConfigProvider>();
             campaignStarter.AddModel(new TaomMilitaryPowerModel(battleBalanceSettings, battleBalanceConfig));
             campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings));
-            campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig));
+            campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig, IoC.Resolve<ICareerPassiveService>()));
 
             campaignStarter.AddModel(new TaomInformationRestrictionModel(IoC.Resolve<IEncyclopediaSettingsProvider>()));
 
@@ -506,7 +506,7 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomInventoryCapacityModel(careerPassives));
             var elephantAttackService = IoC.Resolve<Features.Elephant.IElephantAttackService>();
             var spiderAttackService = IoC.Resolve<ISpiderAttackService>();
-            campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerPassiveService, careerAgentStat, elephantAttackService, spiderAttackService));
+            campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService));
             campaignStarter.AddModel<AgentApplyDamageModel>(new TaomAgentApplyDamageModel(careerAgentStat));
             campaignStarter.AddModel(new TaomClanTierModel(careerPassiveService));
 
@@ -852,6 +852,7 @@ public class SubModule : MBSubModuleBase
                 IoC.Resolve<Features.CareerSystem.Abilities.IAbilityActivationController>(),
                 IoC.Resolve<Features.CareerSystem.UI.IAbilityHudController>(),
                 IoC.Resolve<Features.CareerSystem.Abilities.IAbilityEffectExecutor>(),
+                IoC.Resolve<Features.CareerSystem.ICareerPassiveService>(),
                 IoC.Resolve<IModLogger>()));
         }
     }

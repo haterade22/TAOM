@@ -36,26 +36,57 @@ public class CareerAgentStatService : ICareerAgentStatService
         ApplyAllyBuff(agentIndex, props);
     }
 
-    public float CalculateDamageAmplification(string? attackerHeroId, float baseResult)
+    public float ApplyMaxHealthPassives(string? heroId, string? mountRiderHeroId, float baseHealth)
+    {
+        if (!string.IsNullOrEmpty(heroId))
+            return baseHealth + _passives.GetPassiveMagnitude(heroId!, PassiveEffectType.Health);
+
+        if (!string.IsNullOrEmpty(mountRiderHeroId))
+        {
+            var horseHealth = _passives.GetPassiveMagnitude(mountRiderHeroId!, PassiveEffectType.HorseHealth);
+            if (horseHealth != 0f) return baseHealth * (1f + horseHealth);
+        }
+
+        return baseHealth;
+    }
+
+    public float CalculateDamageAmplification(string? attackerHeroId, AttackTypeMask hitMask, float baseResult)
     {
         if (string.IsNullOrEmpty(attackerHeroId)) return baseResult;
 
+        var result = baseResult;
+
         var armorPen = _passives.GetPassiveMagnitude(attackerHeroId!, PassiveEffectType.ArmorPenetration);
-        return armorPen != 0f ? baseResult * (1f + armorPen) : baseResult;
+        if (armorPen != 0f) result *= (1f + armorPen);
+
+        // Damage is attack-type-specific (a melee or ranged pip), so it applies here on the hit
+        // path (gated by hitMask) rather than as a flat DamageMultiplierBonus.
+        var damage = _passives.GetMaskedMagnitude(attackerHeroId!, PassiveEffectType.Damage, hitMask);
+        if (damage != 0f) result *= (1f + damage);
+
+        return result;
     }
 
-    public float CalculateDamageReduction(string? victimHeroId, int? victimAgentIndex, float baseResult)
+    public float CalculateDamageReduction(string? victimHeroId, int? victimAgentIndex, string? troopLeaderHeroId, AttackTypeMask hitMask, float baseResult)
     {
         var result = baseResult;
 
         if (!string.IsNullOrEmpty(victimHeroId))
         {
-            var resistance = _passives.GetPassiveMagnitude(victimHeroId!, PassiveEffectType.Resistance);
+            var resistance = _passives.GetMaskedMagnitude(victimHeroId!, PassiveEffectType.Resistance, hitMask);
             if (resistance != 0f) result *= (1f - resistance);
 
             var heroBuff = CareerAbilityBuffTracker.GetBuff(victimHeroId!);
             if (heroBuff != null && heroBuff.DamageReductionBonus != 0f)
                 result *= (1f - heroBuff.DamageReductionBonus);
+        }
+
+        // TroopResistance — the victim is a non-hero troop whose party leader took the passive.
+        // Mutually exclusive with the hero Resistance above (a hero victim has no troopLeaderHeroId).
+        if (!string.IsNullOrEmpty(troopLeaderHeroId))
+        {
+            var troopResistance = _passives.GetPassiveMagnitude(troopLeaderHeroId!, PassiveEffectType.TroopResistance);
+            if (troopResistance != 0f) result *= (1f - troopResistance);
         }
 
         if (victimAgentIndex.HasValue)
@@ -85,11 +116,16 @@ public class CareerAgentStatService : ICareerAgentStatService
         var swingBonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.SwingSpeed);
         if (swingBonus != 0f) props.SwingSpeedMultiplier += swingBonus;
 
-        var damageBonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.Damage);
-        if (damageBonus != 0f) props.DamageMultiplierBonus += damageBonus;
+        // NOTE: the Damage passive is NOT applied here. It is attack-type-specific (a melee or
+        // ranged pip via attack_type_mask) and so is applied on the per-hit damage path
+        // (CalculateDamageAmplification), where the hit's delivery type is known. Applying it as a
+        // flat DamageMultiplierBonus here would ignore the mask and boost every hit.
 
         var speedBonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.MovementSpeed);
         if (speedBonus != 0f) props.MaxSpeedMultiplier += speedBonus;
+
+        var chargeBonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.HorseChargeDamage);
+        if (chargeBonus != 0f) props.MountChargeDamage *= (1f + chargeBonus);
     }
 
     private static void ApplyHeroSelfBuff(string heroId, AgentDrivenProperties props)

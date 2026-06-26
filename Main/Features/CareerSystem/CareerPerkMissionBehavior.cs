@@ -6,6 +6,7 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Abilities;
+using TAOM.Features.CareerSystem.Domain;
 using TAOM.Features.CareerSystem.UI;
 
 namespace TAOM.Features.CareerSystem;
@@ -22,6 +23,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
     private readonly IAbilityActivationController _activationController;
     private readonly IAbilityHudController _hudController;
     private readonly IAbilityEffectExecutor _effectExecutor;
+    private readonly ICareerPassiveService _passives;
     private readonly IModLogger _logger;
 
     private bool _loggedMissionStart;
@@ -35,6 +37,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
         IAbilityActivationController activationController,
         IAbilityHudController hudController,
         IAbilityEffectExecutor effectExecutor,
+        ICareerPassiveService passives,
         IModLogger logger)
     {
         _dataService = dataService;
@@ -42,6 +45,7 @@ public class CareerPerkMissionBehavior : MissionBehavior
         _activationController = activationController;
         _hudController = hudController;
         _effectExecutor = effectExecutor;
+        _passives = passives;
         _logger = logger;
     }
 
@@ -89,6 +93,29 @@ public class CareerPerkMissionBehavior : MissionBehavior
             _activeContexts[i].Tick(currentTime);
             if (_activeContexts[i].IsExpired)
                 _activeContexts.RemoveAt(i);
+        }
+    }
+
+    // Ammo career passive — a hero with the passive spawns with multiplicatively more ammo in
+    // every ranged slot. OnAgentBuild fires once per agent after equipment is built; the
+    // non-hero early-out keeps the per-spawn cost negligible for the 99% of agents.
+    public override void OnAgentBuild(Agent agent, Banner banner)
+    {
+        if (agent == null || !agent.IsHero) return;
+        var heroId = (agent.Character as CharacterObject)?.HeroObject?.StringId;
+        if (string.IsNullOrEmpty(heroId)) return;
+
+        var bonus = _passives.GetPassiveMagnitude(heroId, PassiveEffectType.Ammo);
+        if (bonus <= 0f) return;
+
+        for (var slot = EquipmentIndex.WeaponItemBeginSlot; slot < EquipmentIndex.NumAllWeaponSlots; slot++)
+        {
+            var weapon = agent.Equipment[slot];
+            if (weapon.IsEmpty || !weapon.IsAnyAmmo()) continue;
+
+            int boosted = CareerPassiveMath.BoostAmmo(weapon.ModifiedMaxAmount, weapon.Amount, bonus);
+            if (boosted > weapon.Amount)
+                agent.SetWeaponAmountInSlot(slot, (short)boosted, enforcePrimaryItem: false);
         }
     }
 

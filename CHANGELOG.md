@@ -2,6 +2,52 @@
 
 ## 2026-06-25
 
+### fix(career): wire up six phantom pip bonuses + honor attack_type_mask
+
+Players reported that advancing career tiers didn't deliver the advertised bonuses. Root cause: **six
+`PassiveEffectType` values were authored into ~211 pips but had no runtime consumer** — selecting one was
+cached and applied to nothing (~16% of all pip-passives). All six are now wired, the dead types can't
+recur silently, and the never-read passive metadata is gone.
+
+- **Six consumers wired:** `HorseChargeDamage` → `MountChargeDamage` (rider props); `HorseHealth` →
+  mount max-health (multiplicative, resolved from the rider hero); `HealthRegeneration` → hero daily
+  healing (`GetDailyHealingHpForHeroes`); `StealthBonus` → `GetPartySpottingRatioForMainPartySeeingRange`
+  (lower ratio = harder to detect); `TroopResistance` → the leader's non-hero troops on the damage-reduction
+  path; `Ammo` → `OnAgentBuild` (multiplicative on a slot's max ammo). Consumers span
+  `CareerAgentStatService`, `TaomAgentStatCalculateModel`, `TaomAgentApplyDamageModel`,
+  `TaomMapVisibilityModel`, `TaomPartyHealingModel`, and `CareerPerkMissionBehavior`.
+- **Balance re-tune:** all six types normalized to a uniform 10–15% band (tier-scaled 0.10/0.13/0.15) via
+  `tools/retune_phantom_passives.py`; flat `HorseHealth` (30/60/100) and `Ammo` (3/5/8) counts converted to
+  percentage multipliers to match the new consumers.
+- **attack_type_mask honored:** `Damage` (all 190 shipped pips are Melee/Ranged-masked) moved off the flat
+  `DamageMultiplierBonus` onto the per-hit amplification path, gated by the hit's delivery type
+  (`IsMissile ? Ranged : Melee`); `Resistance` masks honored too. `CareerPassiveService` gained a
+  per-(type, mask) cache + `GetMaskedMagnitude`. `Blunt`/`Cut` masks (5 pips, unrepresentable in the
+  `[Flags]` enum) deliberately degrade to `All`.
+- **No silent phantoms:** `PassiveEffectConsumers` is the compiled source of truth; `CareerConfigProvider`
+  warns at load for any pip whose type has no consumer; a shipped-XML regression test pins it.
+- **Dead metadata removed:** the never-read `operation` / `is_percentage` fields dropped from `PassiveEffect`
+  (`attack_type_mask` kept + wired). Pure Ammo/StealthBonus arithmetic extracted to the testable
+  `CareerPassiveMath`.
+- Adversarially reviewed (6-dimension multi-agent + per-finding verification): 0 HIGH; fixes applied for a
+  TroopResistance mount-origin under-application (`VictimRiderAgentOrigin` for mount hits), a `gamemodels`
+  rule-4 violation in `TaomPartyHealingModel` (ctor-injected the passive service), and test-coverage gaps.
+  An independent **Codex (gpt-5.5, xhigh)** adversarial pass then returned **CLEAN (0/0/0/0)**, closing all
+  8 Known Suspects — it decompiled the damage pipeline to confirm the masked-`Damage` stage-move
+  (amplification, before armor) is an acceptable consequence of honoring the mask, not a defect.
+
+- **Descriptions synced (English):** `tools/retune_phantom_descriptions.py` rewrote 168 pip descriptions to
+  the new values (type-phrase-anchored so ability-mutation numbers are untouched) and converted the Ammo
+  pips from "+N ammo" to "+N% ammo" to match the now-multiplicative consumer — in both the inline defaults
+  and `taom_career_strings.xml`. The 11 AI-translated language files still state the old numbers; re-run
+  `tools/translate_with_claude.py` to propagate (deferred). 18 keystone descriptions that never stated the
+  passive value (they describe an ability mutation) were intentionally left as-is.
+
+Research: AttackInformation.VictimRiderAgentOrigin, AgentDrivenProperties.MountChargeDamage,
+MapVisibilityModel.GetPartySpottingRatioForMainPartySeeingRange, PartyHealingModel.GetDailyHealingHpForHeroes
+Save-compat: none — all runtime models, no new SyncData
+Not-tested: the GameModel/MissionBehavior boundaries (Harmony/agent-spawn paths require a live game)
+
 ### feat(nazgul-family): Ringwraiths take no spouse, parents, or children
 
 The nine Ringwraiths — the Witch-King, Khamûl the Easterling, and the seven other Nazgûl (9 lord ids) —

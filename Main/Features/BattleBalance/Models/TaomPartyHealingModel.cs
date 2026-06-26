@@ -12,12 +12,15 @@ public class TaomPartyHealingModel : DefaultPartyHealingModel
 {
     private readonly IBattleBalanceSettingsProvider _settings;
     private readonly IBattleBalanceConfigProvider _configProvider;
+    private readonly ICareerPassiveService _careerPassives;
 
     public TaomPartyHealingModel(IBattleBalanceSettingsProvider settings,
-        IBattleBalanceConfigProvider configProvider)
+        IBattleBalanceConfigProvider configProvider,
+        ICareerPassiveService careerPassives)
     {
         _settings = settings;
         _configProvider = configProvider;
+        _careerPassives = careerPassives;
     }
 
     public override float GetSurvivalChance(PartyBase party, CharacterObject character,
@@ -49,19 +52,25 @@ public class TaomPartyHealingModel : DefaultPartyHealingModel
             }
         }
 
-        // Career passive: TroopRegeneration increases survival chance
+        // Career passive: TroopRegeneration increases survival chance. GetSurvivalChance returns a
+        // raw float (not ExplainedNumber), so the multiplicative apply stays inline here.
         var hero = party.Owner ?? party.LeaderHero;
         if (hero != null)
         {
-            var passiveService = IoC.Resolve<ICareerPassiveService>();
-            if (passiveService != null)
-            {
-                float magnitude = passiveService.GetPassiveMagnitude(hero.StringId, PassiveEffectType.TroopRegeneration);
-                if (magnitude != 0f)
-                    result = Math.Min(1f, result * (1f + magnitude));
-            }
+            float magnitude = _careerPassives.GetPassiveMagnitude(hero.StringId, PassiveEffectType.TroopRegeneration);
+            if (magnitude != 0f)
+                result = Math.Min(1f, result * (1f + magnitude));
         }
 
+        return result;
+    }
+
+    public override ExplainedNumber GetDailyHealingHpForHeroes(PartyBase party, bool isPrisoners, bool includeDescriptions = false)
+    {
+        var result = base.GetDailyHealingHpForHeroes(party, isPrisoners, includeDescriptions);
+        // Career passive: HealthRegeneration boosts the party's hero daily HP recovery. Owner ??
+        // LeaderHero matches the sibling GetSurvivalChance resolution above.
+        _careerPassives.ApplyFactor((party?.Owner ?? party?.LeaderHero)?.StringId, ref result, PassiveEffectType.HealthRegeneration);
         return result;
     }
 

@@ -218,11 +218,11 @@
 	<string id="taom_roi_t1b_p1" text="{=taom_roi_t1b_p1}+5% resistance." />
 	<string id="taom_roi_t1b_p2" text="{=taom_roi_t1b_p2}+25 max health." />
 	<string id="taom_roi_t1b_p3" text="{=taom_roi_t1b_p3}+5% party spotting range." />
-	<string id="taom_roi_t1b_p4" text="{=taom_roi_t1b_p4}+5% stealth bonus." />
+	<string id="taom_roi_t1b_p4" text="{=taom_roi_t1b_p4}+10% stealth bonus." />
 	<string id="taom_roi_t2a_key" text="{=taom_roi_t2a_key}Ambush charge requirement reduced, activating more frequently." />
 	<string id="taom_roi_t2a_p1" text="{=taom_roi_t2a_p1}+10% party spotting range." />
 	<string id="taom_roi_t2a_p2" text="{=taom_roi_t2a_p2}+10% movement speed." />
-	<string id="taom_roi_t2a_p3" text="{=taom_roi_t2a_p3}+10% stealth bonus." />
+	<string id="taom_roi_t2a_p3" text="{=taom_roi_t2a_p3}+13% stealth bonus." />
 	<string id="taom_roi_t2a_p4" text="{=taom_roi_t2a_p4}+10% battle renown gain." />
 	<string id="taom_roi_t2b_key" text="{=taom_roi_t2b_key}Ambush also increases troop ranged damage while active." />
 	<string id="taom_roi_t2b_p1" text="{=taom_roi_t2b_p1}+12% ranged damage." />
@@ -280,17 +280,17 @@
 	<string id="taom_kob_t1b_p1" text="{=taom_kob_t1b_p1}+8% resistance." />
 	<string id="taom_kob_t1b_p2" text="{=taom_kob_t1b_p2}+40 max health." />
 	<string id="taom_kob_t1b_p3" text="{=taom_kob_t1b_p3}+10% horse health." />
-	<string id="taom_kob_t1b_p4" text="{=taom_kob_t1b_p4}+5% troop resistance." />
+	<string id="taom_kob_t1b_p4" text="{=taom_kob_t1b_p4}+10% troop resistance." />
 	<string id="taom_kob_t2a_key" text="{=taom_kob_t2a_key}Stampede charge requirement reduced for more frequent thundering charges." />
-	<string id="taom_kob_t2a_p1" text="{=taom_kob_t2a_p1}+15% horse charge damage." />
+	<string id="taom_kob_t2a_p1" text="{=taom_kob_t2a_p1}+13% horse charge damage." />
 	<string id="taom_kob_t2a_p2" text="{=taom_kob_t2a_p2}+12% melee damage." />
 	<string id="taom_kob_t2a_p3" text="{=taom_kob_t2a_p3}+8% movement speed." />
 	<string id="taom_kob_t2a_p4" text="{=taom_kob_t2a_p4}+10% battle renown gain." />
 	<string id="taom_kob_t2b_key" text="{=taom_kob_t2b_key}Stampede also boosts troop resistance while active." />
 	<string id="taom_kob_t2b_p1" text="{=taom_kob_t2b_p1}+10% resistance." />
 	<string id="taom_kob_t2b_p2" text="{=taom_kob_t2b_p2}+50 max health." />
-	<string id="taom_kob_t2b_p3" text="{=taom_kob_t2b_p3}+15% horse health." />
-	<string id="taom_kob_t2b_p4" text="{=taom_kob_t2b_p4}+8% troop resistance." />
+	<string id="taom_kob_t2b_p3" text="{=taom_kob_t2b_p3}+13% horse health." />
+	<string id="taom_kob_t2b_p4" text="{=taom_kob_t2b_p4}+13% troop resistance." />
 	<string id="taom_kob_t3a_key" text="{=taom_kob_t3a_key}Stampede grants troop morale while active, inspiring the host of Belfalas." />
 	<string id="taom_kob_t3a_p1" text="{=taom_kob_t3a_p1}+15% troop morale." />
 	<string id="taom_kob_t3a_p2" text="{=taom_kob_t3a_p2}+4 party size." />
@@ -299,8 +299,8 @@
 	<string id="taom_kob_t3b_key" text="{=taom_kob_t3b_key}Stampede radius and duration maximized — the charge of Dol Amroth is unstoppable." />
 	<string id="taom_kob_t3b_p1" text="{=taom_kob_t3b_p1}+15% resistance." />
 	<string id="taom_kob_t3b_p2" text="{=taom_kob_t3b_p2}+75 max health." />
-	<string id="taom_kob_t3b_p3" text="{=taom_kob_t3b_p3}+20% horse charge damage." />
-	<string id="taom_kob_t3b_p4" text="{=taom_kob_t3b_p4}+12% troop resistance." />
+	<string id="taom_kob_t3b_p3" text="{=taom_kob_t3b_p3}+15% horse charge damage." />
+	<string id="taom_kob_t3b_p4" text="{=taom_kob_t3b_p4}+15% troop resistance." />
 	<string id="taom_buc_root_desc" text="{=taom_buc_root_desc}Dark Fortitude grants +30 health and emboldens Black Uruk battle-rage." />
 	<string id="taom_buc_t1_a_key" text="{=taom_buc_t1_a_key}Iron Hide" />
 	<string id="taom_buc_t1_a_key_desc" text="{=taom_buc_t1_a_key_desc}Tempered by forge and war, your hide turns blades. Bloodrage radius +3." />
@@ -366,21 +366,21 @@
 	<string id="taom_mc_t1_a_key" text="{=taom_mc_t1_a_key}Poisoned Barb" />
 	<string id="taom_mc_t1_a_key_desc" text="{=taom_mc_t1_a_key_desc}Your arrows carry vile toxins. Voice of the One radius +3." />
 	<string id="taom_mc_t1_a_p1" text="{=taom_mc_t1_a_p1}Dark Whisper" />
-	<string id="taom_mc_t1_a_p1_desc" text="{=taom_mc_t1_a_p1_desc}Your chants unsettle the enemy. +5% troop resistance." />
+	<string id="taom_mc_t1_a_p1_desc" text="{=taom_mc_t1_a_p1_desc}Your chants unsettle the enemy. +10% troop resistance." />
 	<string id="taom_mc_t1_a_p2" text="{=taom_mc_t1_a_p2}Steady Aim" />
 	<string id="taom_mc_t1_a_p2_desc" text="{=taom_mc_t1_a_p2_desc}Patient and precise. +6% ranged damage." />
 	<string id="taom_mc_t1_a_p3" text="{=taom_mc_t1_a_p3}Cult Fervour" />
 	<string id="taom_mc_t1_a_p3_desc" text="{=taom_mc_t1_a_p3_desc}The One's blessing shields the faithful. +25 health." />
 	<string id="taom_mc_t1_a_p4" text="{=taom_mc_t1_a_p4}Shadow Step" />
-	<string id="taom_mc_t1_a_p4_desc" text="{=taom_mc_t1_a_p4_desc}You move unseen between salvos. +5% stealth bonus." />
+	<string id="taom_mc_t1_a_p4_desc" text="{=taom_mc_t1_a_p4_desc}You move unseen between salvos. +10% stealth bonus." />
 	<string id="taom_mc_t1_b_key" text="{=taom_mc_t1_b_key}Sauron's Whisper" />
 	<string id="taom_mc_t1_b_key_desc" text="{=taom_mc_t1_b_key_desc}The voice carries further. Voice of the One duration +4s." />
 	<string id="taom_mc_t1_b_p1" text="{=taom_mc_t1_b_p1}Quiver of Darkness" />
-	<string id="taom_mc_t1_b_p1_desc" text="{=taom_mc_t1_b_p1_desc}You carry more black-shafted bolts. +3 ammo." />
+	<string id="taom_mc_t1_b_p1_desc" text="{=taom_mc_t1_b_p1_desc}You carry more black-shafted bolts. +10% ammo." />
 	<string id="taom_mc_t1_b_p2" text="{=taom_mc_t1_b_p2}Ritual Scarring" />
 	<string id="taom_mc_t1_b_p2_desc" text="{=taom_mc_t1_b_p2_desc}Pain-wards from Mulkerhili rites. +30 health." />
 	<string id="taom_mc_t1_b_p3" text="{=taom_mc_t1_b_p3}Prophet's Step" />
-	<string id="taom_mc_t1_b_p3_desc" text="{=taom_mc_t1_b_p3_desc}Sauron's grace keeps you swift and hidden. +4% stealth bonus." />
+	<string id="taom_mc_t1_b_p3_desc" text="{=taom_mc_t1_b_p3_desc}Sauron's grace keeps you swift and hidden. +10% stealth bonus." />
 	<string id="taom_mc_t1_b_p4" text="{=taom_mc_t1_b_p4}Dark Blessing" />
 	<string id="taom_mc_t1_b_p4_desc" text="{=taom_mc_t1_b_p4_desc}The One's eye is upon you. +8% resistance to ranged." />
 	<string id="taom_mc_t2_a_key" text="{=taom_mc_t2_a_key}Congregation of Dread" />
@@ -392,7 +392,7 @@
 	<string id="taom_mc_t2_a_p3" text="{=taom_mc_t2_a_p3}Fanatic's Resolve" />
 	<string id="taom_mc_t2_a_p3_desc" text="{=taom_mc_t2_a_p3_desc}Death means nothing to true believers. +35 health." />
 	<string id="taom_mc_t2_a_p4" text="{=taom_mc_t2_a_p4}Cult Logistics" />
-	<string id="taom_mc_t2_a_p4_desc" text="{=taom_mc_t2_a_p4_desc}The cult's network keeps the host provisioned. +5 ammo." />
+	<string id="taom_mc_t2_a_p4_desc" text="{=taom_mc_t2_a_p4_desc}The cult's network keeps the host provisioned. +13% ammo." />
 	<string id="taom_mc_t2_b_key" text="{=taom_mc_t2_b_key}Dark Sermon" />
 	<string id="taom_mc_t2_b_key_desc" text="{=taom_mc_t2_b_key_desc}Your prayer extends over the battlefield. Voice of the One duration +2s." />
 	<string id="taom_mc_t2_b_p1" text="{=taom_mc_t2_b_p1}Dread Mantra" />
@@ -412,7 +412,7 @@
 	<string id="taom_mc_t3_a_p3" text="{=taom_mc_t3_a_p3}Congregation's Army" />
 	<string id="taom_mc_t3_a_p3_desc" text="{=taom_mc_t3_a_p3_desc}Believers flock to your banner. +4 party size." />
 	<string id="taom_mc_t3_a_p4" text="{=taom_mc_t3_a_p4}Blessed Quiver" />
-	<string id="taom_mc_t3_a_p4_desc" text="{=taom_mc_t3_a_p4_desc}Sauron's blessing multiplies your shafts. +8 ammo." />
+	<string id="taom_mc_t3_a_p4_desc" text="{=taom_mc_t3_a_p4_desc}Sauron's blessing multiplies your shafts. +15% ammo." />
 	<string id="taom_mc_t3_b_key" text="{=taom_mc_t3_b_key}Dark Covenant" />
 	<string id="taom_mc_t3_b_key_desc" text="{=taom_mc_t3_b_key_desc}The voice requires less sacrifice to invoke. Voice charge cost -30." />
 	<string id="taom_mc_t3_b_p1" text="{=taom_mc_t3_b_p1}Cult of the Eye" />
@@ -427,9 +427,9 @@
 	<string id="taom_sr_t1_a_key" text="{=taom_sr_t1_a_key}Shadow Gallop" />
 	<string id="taom_sr_t1_a_key_desc" text="{=taom_sr_t1_a_key_desc}You vanish into Mordor's dark. Sneak-Creeping radius +3." />
 	<string id="taom_sr_t1_a_p1" text="{=taom_sr_t1_a_p1}Warg Instinct" />
-	<string id="taom_sr_t1_a_p1_desc" text="{=taom_sr_t1_a_p1_desc}Your mount is as vicious as you. +6% horse charge damage." />
+	<string id="taom_sr_t1_a_p1_desc" text="{=taom_sr_t1_a_p1_desc}Your mount is as vicious as you. +10% horse charge damage." />
 	<string id="taom_sr_t1_a_p2" text="{=taom_sr_t1_a_p2}Creeping Flanker" />
-	<string id="taom_sr_t1_a_p2_desc" text="{=taom_sr_t1_a_p2_desc}You appear where least expected. +5% stealth bonus." />
+	<string id="taom_sr_t1_a_p2_desc" text="{=taom_sr_t1_a_p2_desc}You appear where least expected. +10% stealth bonus." />
 	<string id="taom_sr_t1_a_p3" text="{=taom_sr_t1_a_p3}Hard Riding" />
 	<string id="taom_sr_t1_a_p3_desc" text="{=taom_sr_t1_a_p3_desc}Your body endures the harshest rides. +25 health." />
 	<string id="taom_sr_t1_a_p4" text="{=taom_sr_t1_a_p4}Hit and Fade" />
@@ -437,7 +437,7 @@
 	<string id="taom_sr_t1_b_key" text="{=taom_sr_t1_b_key}Night Rider" />
 	<string id="taom_sr_t1_b_key_desc" text="{=taom_sr_t1_b_key_desc}The dark protects you longer. Sneak-Creeping duration +4s." />
 	<string id="taom_sr_t1_b_p1" text="{=taom_sr_t1_b_p1}Wiry Mount" />
-	<string id="taom_sr_t1_b_p1_desc" text="{=taom_sr_t1_b_p1_desc}Your beast keeps its legs in the hardest fights. +5% horse health." />
+	<string id="taom_sr_t1_b_p1_desc" text="{=taom_sr_t1_b_p1_desc}Your beast keeps its legs in the hardest fights. +10% horse health." />
 	<string id="taom_sr_t1_b_p2" text="{=taom_sr_t1_b_p2}Raider's Speed" />
 	<string id="taom_sr_t1_b_p2_desc" text="{=taom_sr_t1_b_p2_desc}You outpace any pursuit. +5% movement speed." />
 	<string id="taom_sr_t1_b_p3" text="{=taom_sr_t1_b_p3}Pack Tactics" />
@@ -447,7 +447,7 @@
 	<string id="taom_sr_t2_a_key" text="{=taom_sr_t2_a_key}Ambush Surge" />
 	<string id="taom_sr_t2_a_key_desc" text="{=taom_sr_t2_a_key_desc}You strike before the enemy knows you're there. Sneak-Creeping charge cost -20." />
 	<string id="taom_sr_t2_a_p1" text="{=taom_sr_t2_a_p1}Momentum Killer" />
-	<string id="taom_sr_t2_a_p1_desc" text="{=taom_sr_t2_a_p1_desc}Your charge breaks enemy formations. +8% horse charge damage." />
+	<string id="taom_sr_t2_a_p1_desc" text="{=taom_sr_t2_a_p1_desc}Your charge breaks enemy formations. +13% horse charge damage." />
 	<string id="taom_sr_t2_a_p2" text="{=taom_sr_t2_a_p2}Relentless Pursuit" />
 	<string id="taom_sr_t2_a_p2_desc" text="{=taom_sr_t2_a_p2_desc}No one outruns a Snaga rider. +8% party movement speed." />
 	<string id="taom_sr_t2_a_p3" text="{=taom_sr_t2_a_p3}Raider's Haul" />
@@ -459,7 +459,7 @@
 	<string id="taom_sr_t2_b_p1" text="{=taom_sr_t2_b_p1}Screaming Descent" />
 	<string id="taom_sr_t2_b_p1_desc" text="{=taom_sr_t2_b_p1_desc}Your war-cry demoralises all but the bravest. +6% troop morale." />
 	<string id="taom_sr_t2_b_p2" text="{=taom_sr_t2_b_p2}Flanking Expert" />
-	<string id="taom_sr_t2_b_p2_desc" text="{=taom_sr_t2_b_p2_desc}You direct the flanking assault with precision. +10% stealth bonus." />
+	<string id="taom_sr_t2_b_p2_desc" text="{=taom_sr_t2_b_p2_desc}You direct the flanking assault with precision. +13% stealth bonus." />
 	<string id="taom_sr_t2_b_p3" text="{=taom_sr_t2_b_p3}Pillager's Share" />
 	<string id="taom_sr_t2_b_p3_desc" text="{=taom_sr_t2_b_p3_desc}Shared loot keeps the pack loyal. -5% troop wages." />
 	<string id="taom_sr_t2_b_p4" text="{=taom_sr_t2_b_p4}Iron Saddle" />
@@ -467,7 +467,7 @@
 	<string id="taom_sr_t3_a_key" text="{=taom_sr_t3_a_key}Shadow Stampede" />
 	<string id="taom_sr_t3_a_key_desc" text="{=taom_sr_t3_a_key_desc}An army of riders materialises from the dark. Sneak-Creeping radius +5." />
 	<string id="taom_sr_t3_a_p1" text="{=taom_sr_t3_a_p1}Death Charge" />
-	<string id="taom_sr_t3_a_p1_desc" text="{=taom_sr_t3_a_p1_desc}Your charge devastates all in its path. +12% horse charge damage." />
+	<string id="taom_sr_t3_a_p1_desc" text="{=taom_sr_t3_a_p1_desc}Your charge devastates all in its path. +15% horse charge damage." />
 	<string id="taom_sr_t3_a_p2" text="{=taom_sr_t3_a_p2}Warg-Lord's Command" />
 	<string id="taom_sr_t3_a_p2_desc" text="{=taom_sr_t3_a_p2_desc}A vast pack rides under your banner. +4 party size." />
 	<string id="taom_sr_t3_a_p3" text="{=taom_sr_t3_a_p3}Enduring Shadow" />
@@ -555,7 +555,7 @@
 	<string id="taom_moa_t1_a_p3" text="{=taom_moa_t1_a_p3}Aldburg Training" />
 	<string id="taom_moa_t1_a_p3_desc" text="{=taom_moa_t1_a_p3_desc}Aldburg archers are the finest in the Mark. +25 health." />
 	<string id="taom_moa_t1_a_p4" text="{=taom_moa_t1_a_p4}Full Quiver" />
-	<string id="taom_moa_t1_a_p4_desc" text="{=taom_moa_t1_a_p4_desc}You carry more white-feathered shafts than any other. +3 ammo." />
+	<string id="taom_moa_t1_a_p4_desc" text="{=taom_moa_t1_a_p4_desc}You carry more white-feathered shafts than any other. +10% ammo." />
 	<string id="taom_moa_t1_b_key" text="{=taom_moa_t1_b_key}Steadfast Draw" />
 	<string id="taom_moa_t1_b_key_desc" text="{=taom_moa_t1_b_key_desc}You hold your draw longer for the perfect shot. Light Fletching duration +4s." />
 	<string id="taom_moa_t1_b_p1" text="{=taom_moa_t1_b_p1}Swift Nock" />
@@ -565,17 +565,17 @@
 	<string id="taom_moa_t1_b_p3" text="{=taom_moa_t1_b_p3}Open Field Scout" />
 	<string id="taom_moa_t1_b_p3_desc" text="{=taom_moa_t1_b_p3_desc}You read the plains of Rohan as a book. +5% party spotting range." />
 	<string id="taom_moa_t1_b_p4" text="{=taom_moa_t1_b_p4}Rohirrim Discipline" />
-	<string id="taom_moa_t1_b_p4_desc" text="{=taom_moa_t1_b_p4_desc}You drill your archers to hold the line. +3% troop resistance." />
+	<string id="taom_moa_t1_b_p4_desc" text="{=taom_moa_t1_b_p4_desc}You drill your archers to hold the line. +10% troop resistance." />
 	<string id="taom_moa_t2_a_key" text="{=taom_moa_t2_a_key}Volley Captain" />
 	<string id="taom_moa_t2_a_key_desc" text="{=taom_moa_t2_a_key_desc}You coordinate devastating mass fire. Light Fletching charge cost -20." />
 	<string id="taom_moa_t2_a_p1" text="{=taom_moa_t2_a_p1}Pin the Line" />
-	<string id="taom_moa_t2_a_p1_desc" text="{=taom_moa_t2_a_p1_desc}Your volleys suppress enemy advances. +8% troop resistance." />
+	<string id="taom_moa_t2_a_p1_desc" text="{=taom_moa_t2_a_p1_desc}Your volleys suppress enemy advances. +13% troop resistance." />
 	<string id="taom_moa_t2_a_p2" text="{=taom_moa_t2_a_p2}Bodkin Point" />
 	<string id="taom_moa_t2_a_p2_desc" text="{=taom_moa_t2_a_p2_desc}Hardened tips punch through mail and plate. +10% armour penetration." />
 	<string id="taom_moa_t2_a_p3" text="{=taom_moa_t2_a_p3}Field Craft" />
-	<string id="taom_moa_t2_a_p3_desc" text="{=taom_moa_t2_a_p3_desc}You use every fold of ground to your advantage. +8% stealth bonus." />
+	<string id="taom_moa_t2_a_p3_desc" text="{=taom_moa_t2_a_p3_desc}You use every fold of ground to your advantage. +13% stealth bonus." />
 	<string id="taom_moa_t2_a_p4" text="{=taom_moa_t2_a_p4}War Arrow Cache" />
-	<string id="taom_moa_t2_a_p4_desc" text="{=taom_moa_t2_a_p4_desc}Pre-positioned caches keep your quiver full. +5 ammo." />
+	<string id="taom_moa_t2_a_p4_desc" text="{=taom_moa_t2_a_p4_desc}Pre-positioned caches keep your quiver full. +13% ammo." />
 	<string id="taom_moa_t2_b_key" text="{=taom_moa_t2_b_key}Sustained Barrage" />
 	<string id="taom_moa_t2_b_key_desc" text="{=taom_moa_t2_b_key_desc}The rain of arrows does not abate. Light Fletching duration +2s." />
 	<string id="taom_moa_t2_b_p1" text="{=taom_moa_t2_b_p1}Covering Fire" />
@@ -595,7 +595,7 @@
 	<string id="taom_moa_t3_a_p3" text="{=taom_moa_t3_a_p3}War Host Bowmen" />
 	<string id="taom_moa_t3_a_p3_desc" text="{=taom_moa_t3_a_p3_desc}Your legend draws the finest archers. +4 party size." />
 	<string id="taom_moa_t3_a_p4" text="{=taom_moa_t3_a_p4}Endless Shafts" />
-	<string id="taom_moa_t3_a_p4_desc" text="{=taom_moa_t3_a_p4_desc}Your supply lines keep the arrows flying. +8 ammo." />
+	<string id="taom_moa_t3_a_p4_desc" text="{=taom_moa_t3_a_p4_desc}Your supply lines keep the arrows flying. +15% ammo." />
 	<string id="taom_moa_t3_b_key" text="{=taom_moa_t3_b_key}Reflexive Loose" />
 	<string id="taom_moa_t3_b_key_desc" text="{=taom_moa_t3_b_key_desc}The nock and release is pure muscle memory. Light Fletching charge cost -30." />
 	<string id="taom_moa_t3_b_p1" text="{=taom_moa_t3_b_p1}Rain of Arrows" />
@@ -606,13 +606,13 @@
 	<string id="taom_moa_t3_b_p3_desc" text="{=taom_moa_t3_b_p3_desc}Your deeds bring glory to Aldburg. +12% battle renown gain." />
 	<string id="taom_moa_t3_b_p4" text="{=taom_moa_t3_b_p4}Army of the Mark" />
 	<string id="taom_moa_t3_b_p4_desc" text="{=taom_moa_t3_b_p4_desc}The finest bowmen of Rohan rally to your banner. +5 party size." />
-	<string id="taom_ew_root_desc" text="{=taom_ew_root_desc}Warcry of Eorl grants +5% horse charge damage, summoning the thunder of the ancestors." />
+	<string id="taom_ew_root_desc" text="{=taom_ew_root_desc}Warcry of Eorl grants +10% horse charge damage, summoning the thunder of the ancestors." />
 	<string id="taom_ew_t1_a_key" text="{=taom_ew_t1_a_key}Ancestor's Thunder" />
 	<string id="taom_ew_t1_a_key_desc" text="{=taom_ew_t1_a_key_desc}The warcry echoes across the plain. Warcry of Eorl radius +3." />
 	<string id="taom_ew_t1_a_p1" text="{=taom_ew_t1_a_p1}First Charge" />
-	<string id="taom_ew_t1_a_p1_desc" text="{=taom_ew_t1_a_p1_desc}You lead the charge and none can match your speed. +6% horse charge damage." />
+	<string id="taom_ew_t1_a_p1_desc" text="{=taom_ew_t1_a_p1_desc}You lead the charge and none can match your speed. +10% horse charge damage." />
 	<string id="taom_ew_t1_a_p2" text="{=taom_ew_t1_a_p2}Born to Ride" />
-	<string id="taom_ew_t1_a_p2_desc" text="{=taom_ew_t1_a_p2_desc}Horse and rider are one. +5% horse health." />
+	<string id="taom_ew_t1_a_p2_desc" text="{=taom_ew_t1_a_p2_desc}Horse and rider are one. +10% horse health." />
 	<string id="taom_ew_t1_a_p3" text="{=taom_ew_t1_a_p3}Grassland Endurance" />
 	<string id="taom_ew_t1_a_p3_desc" text="{=taom_ew_t1_a_p3_desc}Riding the Mark's plains has hardened you. +25 health." />
 	<string id="taom_ew_t1_a_p4" text="{=taom_ew_t1_a_p4}Rallying Cry" />
@@ -626,11 +626,11 @@
 	<string id="taom_ew_t1_b_p3" text="{=taom_ew_t1_b_p3}Rider's Resolve" />
 	<string id="taom_ew_t1_b_p3_desc" text="{=taom_ew_t1_b_p3_desc}You do not break, no matter the odds. +30 health." />
 	<string id="taom_ew_t1_b_p4" text="{=taom_ew_t1_b_p4}Stalwart Mount" />
-	<string id="taom_ew_t1_b_p4_desc" text="{=taom_ew_t1_b_p4_desc}Your horse is battle-hardened. +6% horse health." />
+	<string id="taom_ew_t1_b_p4_desc" text="{=taom_ew_t1_b_p4_desc}Your horse is battle-hardened. +10% horse health." />
 	<string id="taom_ew_t2_a_key" text="{=taom_ew_t2_a_key}Eorl's Legacy" />
 	<string id="taom_ew_t2_a_key_desc" text="{=taom_ew_t2_a_key_desc}The ancestors ride with you always. Warcry charge cost -20." />
 	<string id="taom_ew_t2_a_p1" text="{=taom_ew_t2_a_p1}Unstoppable Charge" />
-	<string id="taom_ew_t2_a_p1_desc" text="{=taom_ew_t2_a_p1_desc}Nothing stands before the Rohirrim. +10% horse charge damage." />
+	<string id="taom_ew_t2_a_p1_desc" text="{=taom_ew_t2_a_p1_desc}Nothing stands before the Rohirrim. +13% horse charge damage." />
 	<string id="taom_ew_t2_a_p2" text="{=taom_ew_t2_a_p2}Shield Wall Breaker" />
 	<string id="taom_ew_t2_a_p2_desc" text="{=taom_ew_t2_a_p2_desc}Your charge shatters shield walls. +8% melee damage." />
 	<string id="taom_ew_t2_a_p3" text="{=taom_ew_t2_a_p3}Rohirrim Morale" />
@@ -640,7 +640,7 @@
 	<string id="taom_ew_t2_b_key" text="{=taom_ew_t2_b_key}Riding Song" />
 	<string id="taom_ew_t2_b_key_desc" text="{=taom_ew_t2_b_key_desc}The song of the Eotheod carries the riders onward. Warcry duration +2s." />
 	<string id="taom_ew_t2_b_p1" text="{=taom_ew_t2_b_p1}Mearas-Bred" />
-	<string id="taom_ew_t2_b_p1_desc" text="{=taom_ew_t2_b_p1_desc}Your horse has the blood of the Mearas. +10% horse health." />
+	<string id="taom_ew_t2_b_p1_desc" text="{=taom_ew_t2_b_p1_desc}Your horse has the blood of the Mearas. +13% horse health." />
 	<string id="taom_ew_t2_b_p2" text="{=taom_ew_t2_b_p2}Plains Master" />
 	<string id="taom_ew_t2_b_p2_desc" text="{=taom_ew_t2_b_p2_desc}You know every valley and ridge of the Mark. +8% party spotting range." />
 	<string id="taom_ew_t2_b_p3" text="{=taom_ew_t2_b_p3}Honour Bound" />
@@ -650,7 +650,7 @@
 	<string id="taom_ew_t3_a_key" text="{=taom_ew_t3_a_key}Charge of the Rohirrim" />
 	<string id="taom_ew_t3_a_key_desc" text="{=taom_ew_t3_a_key_desc}The greatest charge in the age of men. Warcry radius +5." />
 	<string id="taom_ew_t3_a_p1" text="{=taom_ew_t3_a_p1}Pelennor's Thunder" />
-	<string id="taom_ew_t3_a_p1_desc" text="{=taom_ew_t3_a_p1_desc}As at the Fields of the Pelennor, your charge is unstoppable. +14% horse charge damage." />
+	<string id="taom_ew_t3_a_p1_desc" text="{=taom_ew_t3_a_p1_desc}As at the Fields of the Pelennor, your charge is unstoppable. +15% horse charge damage." />
 	<string id="taom_ew_t3_a_p2" text="{=taom_ew_t3_a_p2}Lord of the Mark" />
 	<string id="taom_ew_t3_a_p2_desc" text="{=taom_ew_t3_a_p2_desc}The greatest riders follow you. +75 health." />
 	<string id="taom_ew_t3_a_p3" text="{=taom_ew_t3_a_p3}Eored Commander" />
@@ -687,11 +687,11 @@
 	<string id="taom_ws_t1_b_p3" text="{=taom_ws_t1_b_p3}Loyal Guard" />
 	<string id="taom_ws_t1_b_p3_desc" text="{=taom_ws_t1_b_p3_desc}Your men need little pay -- duty is enough. -4% troop wages." />
 	<string id="taom_ws_t1_b_p4" text="{=taom_ws_t1_b_p4}River Lord's Discipline" />
-	<string id="taom_ws_t1_b_p4_desc" text="{=taom_ws_t1_b_p4_desc}Your infantry hold firm when others break. +3% troop resistance." />
+	<string id="taom_ws_t1_b_p4_desc" text="{=taom_ws_t1_b_p4_desc}Your infantry hold firm when others break. +10% troop resistance." />
 	<string id="taom_ws_t2_a_key" text="{=taom_ws_t2_a_key}Prepared Crossing" />
 	<string id="taom_ws_t2_a_key_desc" text="{=taom_ws_t2_a_key_desc}You have scouted this ground for years. River Navigator charge cost -20." />
 	<string id="taom_ws_t2_a_p1" text="{=taom_ws_t2_a_p1}Shield Line" />
-	<string id="taom_ws_t2_a_p1_desc" text="{=taom_ws_t2_a_p1_desc}Your men form an impenetrable wall. +8% troop resistance." />
+	<string id="taom_ws_t2_a_p1_desc" text="{=taom_ws_t2_a_p1_desc}Your men form an impenetrable wall. +13% troop resistance." />
 	<string id="taom_ws_t2_a_p2" text="{=taom_ws_t2_a_p2}Tested Steel" />
 	<string id="taom_ws_t2_a_p2_desc" text="{=taom_ws_t2_a_p2_desc}Every weapon is honed by the Stangard smiths. +8% melee damage." />
 	<string id="taom_ws_t2_a_p3" text="{=taom_ws_t2_a_p3}Fangorn's Warning" />
@@ -711,7 +711,7 @@
 	<string id="taom_ws_t3_a_key" text="{=taom_ws_t3_a_key}Stangard's Bastion" />
 	<string id="taom_ws_t3_a_key_desc" text="{=taom_ws_t3_a_key_desc}You are the last line between civilisation and darkness. River Navigator radius +5." />
 	<string id="taom_ws_t3_a_p1" text="{=taom_ws_t3_a_p1}Unbreakable Line" />
-	<string id="taom_ws_t3_a_p1_desc" text="{=taom_ws_t3_a_p1_desc}Your shieldwall has never broken. +12% troop resistance." />
+	<string id="taom_ws_t3_a_p1_desc" text="{=taom_ws_t3_a_p1_desc}Your shieldwall has never broken. +15% troop resistance." />
 	<string id="taom_ws_t3_a_p2" text="{=taom_ws_t3_a_p2}Immortal Guard" />
 	<string id="taom_ws_t3_a_p2_desc" text="{=taom_ws_t3_a_p2_desc}The watch never ends. +75 health." />
 	<string id="taom_ws_t3_a_p3" text="{=taom_ws_t3_a_p3}Garrison Commander" />
@@ -795,11 +795,11 @@
 	<string id="taom_wh_t1_a_p1" text="{=taom_wh_t1_a_p1}Wolf's Patience" />
 	<string id="taom_wh_t1_a_p1_desc" text="{=taom_wh_t1_a_p1_desc}You wait for the perfect moment to strike. +6% ranged damage." />
 	<string id="taom_wh_t1_a_p2" text="{=taom_wh_t1_a_p2}Hill Stalker" />
-	<string id="taom_wh_t1_a_p2_desc" text="{=taom_wh_t1_a_p2_desc}You move without sound through the Dunlending hills. +5% stealth bonus." />
+	<string id="taom_wh_t1_a_p2_desc" text="{=taom_wh_t1_a_p2_desc}You move without sound through the Dunlending hills. +10% stealth bonus." />
 	<string id="taom_wh_t1_a_p3" text="{=taom_wh_t1_a_p3}Hunter's Endurance" />
 	<string id="taom_wh_t1_a_p3_desc" text="{=taom_wh_t1_a_p3_desc}You track prey for days without rest. +25 health." />
 	<string id="taom_wh_t1_a_p4" text="{=taom_wh_t1_a_p4}Bone Quiver" />
-	<string id="taom_wh_t1_a_p4_desc" text="{=taom_wh_t1_a_p4_desc}Dunlending fletching traditions fill your quiver. +3 ammo." />
+	<string id="taom_wh_t1_a_p4_desc" text="{=taom_wh_t1_a_p4_desc}Dunlending fletching traditions fill your quiver. +10% ammo." />
 	<string id="taom_wh_t1_b_key" text="{=taom_wh_t1_b_key}Extended Hunt" />
 	<string id="taom_wh_t1_b_key_desc" text="{=taom_wh_t1_b_key_desc}The mark persists through the chaos of battle. Marked Prey duration +4s." />
 	<string id="taom_wh_t1_b_p1" text="{=taom_wh_t1_b_p1}Quick Nock" />
@@ -819,11 +819,11 @@
 	<string id="taom_wh_t2_a_p3" text="{=taom_wh_t2_a_p3}Wilderness Survivor" />
 	<string id="taom_wh_t2_a_p3_desc" text="{=taom_wh_t2_a_p3_desc}The wild has taught you to survive anything. +35 health." />
 	<string id="taom_wh_t2_a_p4" text="{=taom_wh_t2_a_p4}Deep Quiver" />
-	<string id="taom_wh_t2_a_p4_desc" text="{=taom_wh_t2_a_p4_desc}Your clan supplies enough arrows for a siege. +5 ammo." />
+	<string id="taom_wh_t2_a_p4_desc" text="{=taom_wh_t2_a_p4_desc}Your clan supplies enough arrows for a siege. +13% ammo." />
 	<string id="taom_wh_t2_b_key" text="{=taom_wh_t2_b_key}Sustained Mark" />
 	<string id="taom_wh_t2_b_key_desc" text="{=taom_wh_t2_b_key_desc}The mark is set deep and does not fade. Marked Prey duration +2s." />
 	<string id="taom_wh_t2_b_p1" text="{=taom_wh_t2_b_p1}Ambush Predator" />
-	<string id="taom_wh_t2_b_p1_desc" text="{=taom_wh_t2_b_p1_desc}You attack from concealment for maximum effect. +10% stealth bonus." />
+	<string id="taom_wh_t2_b_p1_desc" text="{=taom_wh_t2_b_p1_desc}You attack from concealment for maximum effect. +13% stealth bonus." />
 	<string id="taom_wh_t2_b_p2" text="{=taom_wh_t2_b_p2}Dunlending Resilience" />
 	<string id="taom_wh_t2_b_p2_desc" text="{=taom_wh_t2_b_p2_desc}Hard life in the hills makes you nigh-unkillable. +10% resistance to melee." />
 	<string id="taom_wh_t2_b_p3" text="{=taom_wh_t2_b_p3}Unseen Path" />
@@ -850,15 +850,15 @@
 	<string id="taom_wh_t3_b_p3_desc" text="{=taom_wh_t3_b_p3_desc}Every trophy adds to your fearsome legend. +14% battle renown gain." />
 	<string id="taom_wh_t3_b_p4" text="{=taom_wh_t3_b_p4}Great Pack" />
 	<string id="taom_wh_t3_b_p4_desc" text="{=taom_wh_t3_b_p4_desc}Every wolfskin hunter in Dunland rides with you. +6 party size." />
-	<string id="taom_cr_root_desc" text="{=taom_cr_root_desc}Warpack Charge grants +5% horse charge damage and drives enemy lines into chaos." />
+	<string id="taom_cr_root_desc" text="{=taom_cr_root_desc}Warpack Charge grants +10% horse charge damage and drives enemy lines into chaos." />
 	<string id="taom_cr_t1_a_key" text="{=taom_cr_t1_a_key}Clan Thunder" />
 	<string id="taom_cr_t1_a_key_desc" text="{=taom_cr_t1_a_key_desc}The ground shakes as the riders descend. Warpack Charge radius +3." />
 	<string id="taom_cr_t1_a_p1" text="{=taom_cr_t1_a_p1}Dunlending Rider" />
-	<string id="taom_cr_t1_a_p1_desc" text="{=taom_cr_t1_a_p1_desc}You ride as one with your mount. +6% horse charge damage." />
+	<string id="taom_cr_t1_a_p1_desc" text="{=taom_cr_t1_a_p1_desc}You ride as one with your mount. +10% horse charge damage." />
 	<string id="taom_cr_t1_a_p2" text="{=taom_cr_t1_a_p2}Hardy Mount" />
-	<string id="taom_cr_t1_a_p2_desc" text="{=taom_cr_t1_a_p2_desc}Dunlending mountain ponies are tough as iron. +5% horse health." />
+	<string id="taom_cr_t1_a_p2_desc" text="{=taom_cr_t1_a_p2_desc}Dunlending mountain ponies are tough as iron. +10% horse health." />
 	<string id="taom_cr_t1_a_p3" text="{=taom_cr_t1_a_p3}Clan Escort" />
-	<string id="taom_cr_t1_a_p3_desc" text="{=taom_cr_t1_a_p3_desc}Your riders guard the clan from harm. +3% troop resistance." />
+	<string id="taom_cr_t1_a_p3_desc" text="{=taom_cr_t1_a_p3_desc}Your riders guard the clan from harm. +10% troop resistance." />
 	<string id="taom_cr_t1_a_p4" text="{=taom_cr_t1_a_p4}Saddle Endurance" />
 	<string id="taom_cr_t1_a_p4_desc" text="{=taom_cr_t1_a_p4_desc}You ride for days without dismounting. +25 health." />
 	<string id="taom_cr_t1_b_key" text="{=taom_cr_t1_b_key}Sustained Charge" />
@@ -874,7 +874,7 @@
 	<string id="taom_cr_t2_a_key" text="{=taom_cr_t2_a_key}Warpack Unleashed" />
 	<string id="taom_cr_t2_a_key_desc" text="{=taom_cr_t2_a_key_desc}The pack is always ready to charge. Warpack Charge cost -20." />
 	<string id="taom_cr_t2_a_p1" text="{=taom_cr_t2_a_p1}Crushing Impact" />
-	<string id="taom_cr_t2_a_p1_desc" text="{=taom_cr_t2_a_p1_desc}Your charge shatters enemy formations. +10% horse charge damage." />
+	<string id="taom_cr_t2_a_p1_desc" text="{=taom_cr_t2_a_p1_desc}Your charge shatters enemy formations. +13% horse charge damage." />
 	<string id="taom_cr_t2_a_p2" text="{=taom_cr_t2_a_p2}Swift Pursuit" />
 	<string id="taom_cr_t2_a_p2_desc" text="{=taom_cr_t2_a_p2_desc}No one outruns the clanguard. +8% party movement speed." />
 	<string id="taom_cr_t2_a_p3" text="{=taom_cr_t2_a_p3}Plunder Renown" />
@@ -894,7 +894,7 @@
 	<string id="taom_cr_t3_a_key" text="{=taom_cr_t3_a_key}Clan of Riders" />
 	<string id="taom_cr_t3_a_key_desc" text="{=taom_cr_t3_a_key_desc}Every rider in Dunland rides under your banner. Warpack Charge radius +5." />
 	<string id="taom_cr_t3_a_p1" text="{=taom_cr_t3_a_p1}Avalanche Charge" />
-	<string id="taom_cr_t3_a_p1_desc" text="{=taom_cr_t3_a_p1_desc}Your charge cannot be stopped. +14% horse charge damage." />
+	<string id="taom_cr_t3_a_p1_desc" text="{=taom_cr_t3_a_p1_desc}Your charge cannot be stopped. +15% horse charge damage." />
 	<string id="taom_cr_t3_a_p2" text="{=taom_cr_t3_a_p2}Mountain Born" />
 	<string id="taom_cr_t3_a_p2_desc" text="{=taom_cr_t3_a_p2_desc}You were born to this saddle. +75 health." />
 	<string id="taom_cr_t3_a_p3" text="{=taom_cr_t3_a_p3}Great Warpack" />
@@ -945,7 +945,7 @@
 	<string id="taom_steppe_bowmaster_root_desc" text="{=taom_steppe_bowmaster_root_desc}Storm of Arrows grants +5% ranged damage and improves sustained fire." />
 	<string id="taom_sb_t1a_key" text="{=taom_sb_t1a_key}Storm of Arrows radius increased, volleys cover more ground." />
 	<string id="taom_sb_t1a_p1" text="{=taom_sb_t1a_p1}+8% ranged damage." />
-	<string id="taom_sb_t1a_p2" text="{=taom_sb_t1a_p2}+2 ammo." />
+	<string id="taom_sb_t1a_p2" text="{=taom_sb_t1a_p2}+10% ammo." />
 	<string id="taom_sb_t1a_p3" text="{=taom_sb_t1a_p3}+7% movement speed." />
 	<string id="taom_sb_t1a_p4" text="{=taom_sb_t1a_p4}+5% party spotting range." />
 	<string id="taom_sb_t1b_key" text="{=taom_sb_t1b_key}Storm of Arrows duration extended, a relentless hail." />
@@ -954,7 +954,7 @@
 	<string id="taom_sb_t1b_p3" text="{=taom_sb_t1b_p3}+5% troop damage." />
 	<string id="taom_sb_t1b_p4" text="{=taom_sb_t1b_p4}+5% battle renown gain." />
 	<string id="taom_sb_t2a_key" text="{=taom_sb_t2a_key}Storm of Arrows charge reduced, neverending quiver." />
-	<string id="taom_sb_t2a_p1" text="{=taom_sb_t2a_p1}+4 ammo." />
+	<string id="taom_sb_t2a_p1" text="{=taom_sb_t2a_p1}+13% ammo." />
 	<string id="taom_sb_t2a_p2" text="{=taom_sb_t2a_p2}+10% ranged damage." />
 	<string id="taom_sb_t2a_p3" text="{=taom_sb_t2a_p3}+10% movement speed." />
 	<string id="taom_sb_t2a_p4" text="{=taom_sb_t2a_p4}+10% party spotting range." />
@@ -965,7 +965,7 @@
 	<string id="taom_sb_t2b_p4" text="{=taom_sb_t2b_p4}+10% battle renown gain." />
 	<string id="taom_sb_t3a_key" text="{=taom_sb_t3a_key}Storm of Arrows radius greatly expanded, an inescapable rain." />
 	<string id="taom_sb_t3a_p1" text="{=taom_sb_t3a_p1}+15% ranged damage." />
-	<string id="taom_sb_t3a_p2" text="{=taom_sb_t3a_p2}+6 ammo." />
+	<string id="taom_sb_t3a_p2" text="{=taom_sb_t3a_p2}+15% ammo." />
 	<string id="taom_sb_t3a_p3" text="{=taom_sb_t3a_p3}+15% battle renown gain." />
 	<string id="taom_sb_t3a_p4" text="{=taom_sb_t3a_p4}+15% party spotting range." />
 	<string id="taom_sb_t3b_key" text="{=taom_sb_t3b_key}Storm of Arrows charge greatly reduced, unceasing volleys." />
@@ -973,34 +973,34 @@
 	<string id="taom_sb_t3b_p2" text="{=taom_sb_t3b_p2}+75 max health." />
 	<string id="taom_sb_t3b_p3" text="{=taom_sb_t3b_p3}+15% troop damage." />
 	<string id="taom_sb_t3b_p4" text="{=taom_sb_t3b_p4}+5 party size." />
-	<string id="taom_chariot_warlord_root_desc" text="{=taom_chariot_warlord_root_desc}Scything Charge grants +5% horse charge damage and inspires mounted warriors." />
+	<string id="taom_chariot_warlord_root_desc" text="{=taom_chariot_warlord_root_desc}Scything Charge grants +10% horse charge damage and inspires mounted warriors." />
 	<string id="taom_cw_t1a_key" text="{=taom_cw_t1a_key}Scything Charge radius expanded, blades cut a wider swathe." />
-	<string id="taom_cw_t1a_p1" text="{=taom_cw_t1a_p1}+7% horse charge damage." />
+	<string id="taom_cw_t1a_p1" text="{=taom_cw_t1a_p1}+10% horse charge damage." />
 	<string id="taom_cw_t1a_p2" text="{=taom_cw_t1a_p2}+8% melee damage." />
 	<string id="taom_cw_t1a_p3" text="{=taom_cw_t1a_p3}+5% troop damage." />
 	<string id="taom_cw_t1a_p4" text="{=taom_cw_t1a_p4}+5% party movement speed." />
 	<string id="taom_cw_t1b_key" text="{=taom_cw_t1b_key}Scything Charge duration extended, momentum sustained." />
-	<string id="taom_cw_t1b_p1" text="{=taom_cw_t1b_p1}+30 horse health." />
+	<string id="taom_cw_t1b_p1" text="{=taom_cw_t1b_p1}+10% horse health." />
 	<string id="taom_cw_t1b_p2" text="{=taom_cw_t1b_p2}+25 max health." />
 	<string id="taom_cw_t1b_p3" text="{=taom_cw_t1b_p3}+5% troop morale." />
 	<string id="taom_cw_t1b_p4" text="{=taom_cw_t1b_p4}+5% battle renown gain." />
 	<string id="taom_cw_t2a_key" text="{=taom_cw_t2a_key}Scything Charge charge reduced, wheels never stop turning." />
-	<string id="taom_cw_t2a_p1" text="{=taom_cw_t2a_p1}+12% horse charge damage." />
+	<string id="taom_cw_t2a_p1" text="{=taom_cw_t2a_p1}+13% horse charge damage." />
 	<string id="taom_cw_t2a_p2" text="{=taom_cw_t2a_p2}+10% party movement speed." />
 	<string id="taom_cw_t2a_p3" text="{=taom_cw_t2a_p3}+10% troop morale." />
 	<string id="taom_cw_t2a_p4" text="{=taom_cw_t2a_p4}+3 party size." />
 	<string id="taom_cw_t2b_key" text="{=taom_cw_t2b_key}Scything Charge boosts mount resilience during the charge." />
 	<string id="taom_cw_t2b_p1" text="{=taom_cw_t2b_p1}+10% melee damage." />
-	<string id="taom_cw_t2b_p2" text="{=taom_cw_t2b_p2}+60 horse health." />
+	<string id="taom_cw_t2b_p2" text="{=taom_cw_t2b_p2}+13% horse health." />
 	<string id="taom_cw_t2b_p3" text="{=taom_cw_t2b_p3}+12% troop damage." />
 	<string id="taom_cw_t2b_p4" text="{=taom_cw_t2b_p4}+10% battle renown gain." />
 	<string id="taom_cw_t3a_key" text="{=taom_cw_t3a_key}Scything Charge radius greatly expanded, an unstoppable AoE sweep." />
-	<string id="taom_cw_t3a_p1" text="{=taom_cw_t3a_p1}+18% horse charge damage." />
+	<string id="taom_cw_t3a_p1" text="{=taom_cw_t3a_p1}+15% horse charge damage." />
 	<string id="taom_cw_t3a_p2" text="{=taom_cw_t3a_p2}+15% melee damage." />
 	<string id="taom_cw_t3a_p3" text="{=taom_cw_t3a_p3}+15% troop damage." />
 	<string id="taom_cw_t3a_p4" text="{=taom_cw_t3a_p4}+15% battle renown gain." />
 	<string id="taom_cw_t3b_key" text="{=taom_cw_t3b_key}Scything Charge charge greatly reduced, the wheels grind ceaselessly." />
-	<string id="taom_cw_t3b_p1" text="{=taom_cw_t3b_p1}+100 horse health." />
+	<string id="taom_cw_t3b_p1" text="{=taom_cw_t3b_p1}+15% horse health." />
 	<string id="taom_cw_t3b_p2" text="{=taom_cw_t3b_p2}+15% party movement speed." />
 	<string id="taom_cw_t3b_p3" text="{=taom_cw_t3b_p3}+20% troop morale." />
 	<string id="taom_cw_t3b_p4" text="{=taom_cw_t3b_p4}+5 party size." />
@@ -1038,7 +1038,7 @@
 	<string id="taom_pezarsani_javelineer_root_desc" text="{=taom_pezarsani_javelineer_root_desc}Sunfire Volley grants +5% ranged damage and quickens javelin throws." />
 	<string id="taom_pj_t1a_key" text="{=taom_pj_t1a_key}Sunfire Volley radius increased, javelins cover wider ground." />
 	<string id="taom_pj_t1a_p1" text="{=taom_pj_t1a_p1}+8% ranged damage." />
-	<string id="taom_pj_t1a_p2" text="{=taom_pj_t1a_p2}+2 ammo." />
+	<string id="taom_pj_t1a_p2" text="{=taom_pj_t1a_p2}+10% ammo." />
 	<string id="taom_pj_t1a_p3" text="{=taom_pj_t1a_p3}+7% movement speed." />
 	<string id="taom_pj_t1a_p4" text="{=taom_pj_t1a_p4}+5% battle renown gain." />
 	<string id="taom_pj_t1b_key" text="{=taom_pj_t1b_key}Sunfire Volley duration extended, sustained harassing fire." />
@@ -1047,7 +1047,7 @@
 	<string id="taom_pj_t1b_p3" text="{=taom_pj_t1b_p3}+5% troop damage." />
 	<string id="taom_pj_t1b_p4" text="{=taom_pj_t1b_p4}+5% party spotting range." />
 	<string id="taom_pj_t2a_key" text="{=taom_pj_t2a_key}Sunfire Volley charge reduced, never out of javelins." />
-	<string id="taom_pj_t2a_p1" text="{=taom_pj_t2a_p1}+4 ammo." />
+	<string id="taom_pj_t2a_p1" text="{=taom_pj_t2a_p1}+13% ammo." />
 	<string id="taom_pj_t2a_p2" text="{=taom_pj_t2a_p2}+10% ranged damage." />
 	<string id="taom_pj_t2a_p3" text="{=taom_pj_t2a_p3}+10% movement speed." />
 	<string id="taom_pj_t2a_p4" text="{=taom_pj_t2a_p4}+10% battle renown gain." />
@@ -1058,7 +1058,7 @@
 	<string id="taom_pj_t2b_p4" text="{=taom_pj_t2b_p4}+10% party spotting range." />
 	<string id="taom_pj_t3a_key" text="{=taom_pj_t3a_key}Sunfire Volley radius greatly expanded, an inescapable barrage." />
 	<string id="taom_pj_t3a_p1" text="{=taom_pj_t3a_p1}+15% ranged damage." />
-	<string id="taom_pj_t3a_p2" text="{=taom_pj_t3a_p2}+6 ammo." />
+	<string id="taom_pj_t3a_p2" text="{=taom_pj_t3a_p2}+15% ammo." />
 	<string id="taom_pj_t3a_p3" text="{=taom_pj_t3a_p3}+15% battle renown gain." />
 	<string id="taom_pj_t3a_p4" text="{=taom_pj_t3a_p4}+15% movement speed." />
 	<string id="taom_pj_t3b_key" text="{=taom_pj_t3b_key}Sunfire Volley charge greatly reduced, unrelenting harassment." />
@@ -1066,34 +1066,34 @@
 	<string id="taom_pj_t3b_p2" text="{=taom_pj_t3b_p2}+75 max health." />
 	<string id="taom_pj_t3b_p3" text="{=taom_pj_t3b_p3}+15% troop damage." />
 	<string id="taom_pj_t3b_p4" text="{=taom_pj_t3b_p4}+15% party spotting range." />
-	<string id="taom_mahud_beast_rider_root_desc" text="{=taom_mahud_beast_rider_root_desc}Echoes of Mûmakan grants +5% horse charge damage and spreads fear." />
+	<string id="taom_mahud_beast_rider_root_desc" text="{=taom_mahud_beast_rider_root_desc}Echoes of Mûmakan grants +10% horse charge damage and spreads fear." />
 	<string id="taom_mbr_t1a_key" text="{=taom_mbr_t1a_key}Echoes of Mûmakan radius expanded, fear spreads further." />
-	<string id="taom_mbr_t1a_p1" text="{=taom_mbr_t1a_p1}+7% horse charge damage." />
+	<string id="taom_mbr_t1a_p1" text="{=taom_mbr_t1a_p1}+10% horse charge damage." />
 	<string id="taom_mbr_t1a_p2" text="{=taom_mbr_t1a_p2}+8% melee damage." />
 	<string id="taom_mbr_t1a_p3" text="{=taom_mbr_t1a_p3}+5% troop morale." />
 	<string id="taom_mbr_t1a_p4" text="{=taom_mbr_t1a_p4}+5% party movement speed." />
 	<string id="taom_mbr_t1b_key" text="{=taom_mbr_t1b_key}Echoes of Mûmakan duration extended, fear lingers." />
-	<string id="taom_mbr_t1b_p1" text="{=taom_mbr_t1b_p1}+30 horse health." />
+	<string id="taom_mbr_t1b_p1" text="{=taom_mbr_t1b_p1}+10% horse health." />
 	<string id="taom_mbr_t1b_p2" text="{=taom_mbr_t1b_p2}+5% troop damage." />
 	<string id="taom_mbr_t1b_p3" text="{=taom_mbr_t1b_p3}+5% battle renown gain." />
 	<string id="taom_mbr_t1b_p4" text="{=taom_mbr_t1b_p4}+5% resistance." />
 	<string id="taom_mbr_t2a_key" text="{=taom_mbr_t2a_key}Echoes of Mûmakan charge reduced, terror always imminent." />
-	<string id="taom_mbr_t2a_p1" text="{=taom_mbr_t2a_p1}+12% horse charge damage." />
+	<string id="taom_mbr_t2a_p1" text="{=taom_mbr_t2a_p1}+13% horse charge damage." />
 	<string id="taom_mbr_t2a_p2" text="{=taom_mbr_t2a_p2}+10% troop morale." />
 	<string id="taom_mbr_t2a_p3" text="{=taom_mbr_t2a_p3}+10% troop damage." />
 	<string id="taom_mbr_t2a_p4" text="{=taom_mbr_t2a_p4}+10% battle renown gain." />
 	<string id="taom_mbr_t2b_key" text="{=taom_mbr_t2b_key}Echoes of Mûmakan boosts beast resilience during the charge." />
 	<string id="taom_mbr_t2b_p1" text="{=taom_mbr_t2b_p1}+12% melee damage." />
-	<string id="taom_mbr_t2b_p2" text="{=taom_mbr_t2b_p2}+60 horse health." />
+	<string id="taom_mbr_t2b_p2" text="{=taom_mbr_t2b_p2}+13% horse health." />
 	<string id="taom_mbr_t2b_p3" text="{=taom_mbr_t2b_p3}+10% party movement speed." />
 	<string id="taom_mbr_t2b_p4" text="{=taom_mbr_t2b_p4}+3 party size." />
 	<string id="taom_mbr_t3a_key" text="{=taom_mbr_t3a_key}Echoes of Mûmakan radius greatly expanded, the very earth shakes." />
-	<string id="taom_mbr_t3a_p1" text="{=taom_mbr_t3a_p1}+18% horse charge damage." />
+	<string id="taom_mbr_t3a_p1" text="{=taom_mbr_t3a_p1}+15% horse charge damage." />
 	<string id="taom_mbr_t3a_p2" text="{=taom_mbr_t3a_p2}+15% melee damage." />
 	<string id="taom_mbr_t3a_p3" text="{=taom_mbr_t3a_p3}+20% troop morale." />
 	<string id="taom_mbr_t3a_p4" text="{=taom_mbr_t3a_p4}+15% battle renown gain." />
 	<string id="taom_mbr_t3b_key" text="{=taom_mbr_t3b_key}Echoes of Mûmakan charge greatly reduced, unending dread." />
-	<string id="taom_mbr_t3b_p1" text="{=taom_mbr_t3b_p1}+100 horse health." />
+	<string id="taom_mbr_t3b_p1" text="{=taom_mbr_t3b_p1}+15% horse health." />
 	<string id="taom_mbr_t3b_p2" text="{=taom_mbr_t3b_p2}+15% party movement speed." />
 	<string id="taom_mbr_t3b_p3" text="{=taom_mbr_t3b_p3}+15% troop damage." />
 	<string id="taom_mbr_t3b_p4" text="{=taom_mbr_t3b_p4}+75 max health." />
@@ -1104,14 +1104,14 @@
 	<string id="taom_fhh_t1a_p3" text="{=taom_fhh_t1a_p3}+8% melee damage." />
 	<string id="taom_fhh_t1a_p4" text="{=taom_fhh_t1a_p4}+5% troop morale." />
 	<string id="taom_fhh_t1b_key" text="{=taom_fhh_t1b_key}Vile Brutality duration extended, the troll's rage lasts longer." />
-	<string id="taom_fhh_t1b_p1" text="{=taom_fhh_t1b_p1}+8% troop resistance." />
+	<string id="taom_fhh_t1b_p1" text="{=taom_fhh_t1b_p1}+10% troop resistance." />
 	<string id="taom_fhh_t1b_p2" text="{=taom_fhh_t1b_p2}+5% troop damage." />
 	<string id="taom_fhh_t1b_p3" text="{=taom_fhh_t1b_p3}+5% battle renown gain." />
 	<string id="taom_fhh_t1b_p4" text="{=taom_fhh_t1b_p4}+25 max health." />
 	<string id="taom_fhh_t2a_key" text="{=taom_fhh_t2a_key}Vile Brutality charge reduced, rage ignites faster." />
 	<string id="taom_fhh_t2a_p1" text="{=taom_fhh_t2a_p1}+12% resistance." />
 	<string id="taom_fhh_t2a_p2" text="{=taom_fhh_t2a_p2}+50 max health." />
-	<string id="taom_fhh_t2a_p3" text="{=taom_fhh_t2a_p3}+12% troop resistance." />
+	<string id="taom_fhh_t2a_p3" text="{=taom_fhh_t2a_p3}+13% troop resistance." />
 	<string id="taom_fhh_t2a_p4" text="{=taom_fhh_t2a_p4}+10% troop morale." />
 	<string id="taom_fhh_t2b_key" text="{=taom_fhh_t2b_key}Vile Brutality makes the halftroll even more terrifying." />
 	<string id="taom_fhh_t2b_p1" text="{=taom_fhh_t2b_p1}+60 max health." />
@@ -1131,16 +1131,16 @@
 	<string id="taom_cl_root_desc" text="{=taom_cl_root_desc}Shieldwall grants +5% resistance and your formation holds firm against all odds." />
 	<string id="taom_cl_t1_a_key" text="{=taom_cl_t1_a_key}Shieldwall radius expanded, protecting a wider formation." />
 	<string id="taom_cl_t1_a_p1" text="{=taom_cl_t1_a_p1}+8% resistance." />
-	<string id="taom_cl_t1_a_p2" text="{=taom_cl_t1_a_p2}+5% troop resistance." />
+	<string id="taom_cl_t1_a_p2" text="{=taom_cl_t1_a_p2}+10% troop resistance." />
 	<string id="taom_cl_t1_a_p3" text="{=taom_cl_t1_a_p3}+30 max health." />
 	<string id="taom_cl_t1_a_p4" text="{=taom_cl_t1_a_p4}+5% troop morale." />
 	<string id="taom_cl_t1_b_key" text="{=taom_cl_t1_b_key}Shieldwall duration extended, enduring the longest assaults." />
 	<string id="taom_cl_t1_b_p1" text="{=taom_cl_t1_b_p1}+8% melee damage." />
 	<string id="taom_cl_t1_b_p2" text="{=taom_cl_t1_b_p2}+25 max health." />
-	<string id="taom_cl_t1_b_p3" text="{=taom_cl_t1_b_p3}+5% troop resistance." />
+	<string id="taom_cl_t1_b_p3" text="{=taom_cl_t1_b_p3}+10% troop resistance." />
 	<string id="taom_cl_t1_b_p4" text="{=taom_cl_t1_b_p4}+7% swing speed." />
 	<string id="taom_cl_t2_a_key" text="{=taom_cl_t2_a_key}Shieldwall charge reduced, rallying the wall more often." />
-	<string id="taom_cl_t2_a_p1" text="{=taom_cl_t2_a_p1}+10% troop resistance." />
+	<string id="taom_cl_t2_a_p1" text="{=taom_cl_t2_a_p1}+13% troop resistance." />
 	<string id="taom_cl_t2_a_p2" text="{=taom_cl_t2_a_p2}+2 party size." />
 	<string id="taom_cl_t2_a_p3" text="{=taom_cl_t2_a_p3}+10% resistance." />
 	<string id="taom_cl_t2_a_p4" text="{=taom_cl_t2_a_p4}-10% troop wages." />
@@ -1190,11 +1190,11 @@
 	<string id="taom_ldm_t3_b_p2" text="{=taom_ldm_t3_b_p2}+15% ranged damage." />
 	<string id="taom_ldm_t3_b_p3" text="{=taom_ldm_t3_b_p3}+75 max health." />
 	<string id="taom_ldm_t3_b_p4" text="{=taom_ldm_t3_b_p4}+10% party spotting range." />
-	<string id="taom_bk_root_desc" text="{=taom_bk_root_desc}Unyielding grants +5% horse charge damage as your warband rides without mercy." />
+	<string id="taom_bk_root_desc" text="{=taom_bk_root_desc}Unyielding grants +10% horse charge damage as your warband rides without mercy." />
 	<string id="taom_bk_t1_a_key" text="{=taom_bk_t1_a_key}Unyielding radius expanded, rallying a broader tide of riders." />
-	<string id="taom_bk_t1_a_p1" text="{=taom_bk_t1_a_p1}+8% horse charge damage." />
+	<string id="taom_bk_t1_a_p1" text="{=taom_bk_t1_a_p1}+10% horse charge damage." />
 	<string id="taom_bk_t1_a_p2" text="{=taom_bk_t1_a_p2}+5% troop morale." />
-	<string id="taom_bk_t1_a_p3" text="{=taom_bk_t1_a_p3}+30 horse health." />
+	<string id="taom_bk_t1_a_p3" text="{=taom_bk_t1_a_p3}+10% horse health." />
 	<string id="taom_bk_t1_a_p4" text="{=taom_bk_t1_a_p4}+5% melee damage." />
 	<string id="taom_bk_t1_b_key" text="{=taom_bk_t1_b_key}Unyielding duration extended, sustaining the fearless charge." />
 	<string id="taom_bk_t1_b_p1" text="{=taom_bk_t1_b_p1}+7% resistance." />
@@ -1207,13 +1207,13 @@
 	<string id="taom_bk_t2_a_p3" text="{=taom_bk_t2_a_p3}+10% battle renown gain." />
 	<string id="taom_bk_t2_a_p4" text="{=taom_bk_t2_a_p4}-10% troop wages." />
 	<string id="taom_bk_t2_b_key" text="{=taom_bk_t2_b_key}Unyielding fortifies mounts during the charge." />
-	<string id="taom_bk_t2_b_p1" text="{=taom_bk_t2_b_p1}+12% horse charge damage." />
-	<string id="taom_bk_t2_b_p2" text="{=taom_bk_t2_b_p2}+60 horse health." />
+	<string id="taom_bk_t2_b_p1" text="{=taom_bk_t2_b_p1}+13% horse charge damage." />
+	<string id="taom_bk_t2_b_p2" text="{=taom_bk_t2_b_p2}+13% horse health." />
 	<string id="taom_bk_t2_b_p3" text="{=taom_bk_t2_b_p3}+10% resistance." />
 	<string id="taom_bk_t2_b_p4" text="{=taom_bk_t2_b_p4}+10% troop morale." />
 	<string id="taom_bk_t3_a_key" text="{=taom_bk_t3_a_key}Unyielding radius greatly expanded, the stampede is unstoppable." />
-	<string id="taom_bk_t3_a_p1" text="{=taom_bk_t3_a_p1}+18% horse charge damage." />
-	<string id="taom_bk_t3_a_p2" text="{=taom_bk_t3_a_p2}+100 horse health." />
+	<string id="taom_bk_t3_a_p1" text="{=taom_bk_t3_a_p1}+15% horse charge damage." />
+	<string id="taom_bk_t3_a_p2" text="{=taom_bk_t3_a_p2}+15% horse health." />
 	<string id="taom_bk_t3_a_p3" text="{=taom_bk_t3_a_p3}+15% troop morale." />
 	<string id="taom_bk_t3_a_p4" text="{=taom_bk_t3_a_p4}+4 party size." />
 	<string id="taom_bk_t3_b_key" text="{=taom_bk_t3_b_key}Unyielding charge greatly reduced, ever-present and relentless." />
@@ -1230,7 +1230,7 @@
 	<string id="taom_dg2_t1_b_key" text="{=taom_dg2_t1_b_key}Gate Hold duration extended, fortifying the defense." />
 	<string id="taom_dg2_t1_b_p1" text="{=taom_dg2_t1_b_p1}+8% resistance." />
 	<string id="taom_dg2_t1_b_p2" text="{=taom_dg2_t1_b_p2}+5% troop morale." />
-	<string id="taom_dg2_t1_b_p3" text="{=taom_dg2_t1_b_p3}+5% troop resistance." />
+	<string id="taom_dg2_t1_b_p3" text="{=taom_dg2_t1_b_p3}+10% troop resistance." />
 	<string id="taom_dg2_t1_b_p4" text="{=taom_dg2_t1_b_p4}+5% troop regeneration." />
 	<string id="taom_dg2_t2_a_key" text="{=taom_dg2_t2_a_key}Gate Hold charge reduced, activating more frequently." />
 	<string id="taom_dg2_t2_a_p1" text="{=taom_dg2_t2_a_p1}+10% troop morale." />
@@ -1240,7 +1240,7 @@
 	<string id="taom_dg2_t2_b_key" text="{=taom_dg2_t2_b_key}Gate Hold grants additional defensive buffs while active." />
 	<string id="taom_dg2_t2_b_p1" text="{=taom_dg2_t2_b_p1}+12% resistance." />
 	<string id="taom_dg2_t2_b_p2" text="{=taom_dg2_t2_b_p2}+60 max health." />
-	<string id="taom_dg2_t2_b_p3" text="{=taom_dg2_t2_b_p3}+10% troop resistance." />
+	<string id="taom_dg2_t2_b_p3" text="{=taom_dg2_t2_b_p3}+13% troop resistance." />
 	<string id="taom_dg2_t2_b_p4" text="{=taom_dg2_t2_b_p4}+10% troop damage." />
 	<string id="taom_dg2_t3_a_key" text="{=taom_dg2_t3_a_key}Gate Hold radius greatly expanded, devastating power." />
 	<string id="taom_dg2_t3_a_p1" text="{=taom_dg2_t3_a_p1}+15% melee damage." />
@@ -1262,11 +1262,11 @@
 	<string id="taom_dm_t1_b_p1" text="{=taom_dm_t1_b_p1}+5% resistance." />
 	<string id="taom_dm_t1_b_p2" text="{=taom_dm_t1_b_p2}+25 max health." />
 	<string id="taom_dm_t1_b_p3" text="{=taom_dm_t1_b_p3}+5% party spotting range." />
-	<string id="taom_dm_t1_b_p4" text="{=taom_dm_t1_b_p4}+5% stealth bonus." />
+	<string id="taom_dm_t1_b_p4" text="{=taom_dm_t1_b_p4}+10% stealth bonus." />
 	<string id="taom_dm_t2_a_key" text="{=taom_dm_t2_a_key}Black Arrow charge reduced, maintaining constant pressure." />
 	<string id="taom_dm_t2_a_p1" text="{=taom_dm_t2_a_p1}+10% party spotting range." />
 	<string id="taom_dm_t2_a_p2" text="{=taom_dm_t2_a_p2}+10% movement speed." />
-	<string id="taom_dm_t2_a_p3" text="{=taom_dm_t2_a_p3}+10% stealth bonus." />
+	<string id="taom_dm_t2_a_p3" text="{=taom_dm_t2_a_p3}+13% stealth bonus." />
 	<string id="taom_dm_t2_a_p4" text="{=taom_dm_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_dm_t2_b_key" text="{=taom_dm_t2_b_key}Black Arrow gains additional penetration while active." />
 	<string id="taom_dm_t2_b_p1" text="{=taom_dm_t2_b_p1}+12% ranged damage." />
@@ -1286,11 +1286,11 @@
 	<string id="taom_dale_outrider_root_desc" text="{=taom_dale_outrider_root_desc}Trade Road Sprint grants +5% melee damage and your horse quickens." />
 	<string id="taom_dor_t1_a_key" text="{=taom_dor_t1_a_key}Trade Road Sprint radius expanded, sweeping wider formations." />
 	<string id="taom_dor_t1_a_p1" text="{=taom_dor_t1_a_p1}+8% melee damage." />
-	<string id="taom_dor_t1_a_p2" text="{=taom_dor_t1_a_p2}+7% horse charge damage." />
+	<string id="taom_dor_t1_a_p2" text="{=taom_dor_t1_a_p2}+10% horse charge damage." />
 	<string id="taom_dor_t1_a_p3" text="{=taom_dor_t1_a_p3}+7% swing speed." />
 	<string id="taom_dor_t1_a_p4" text="{=taom_dor_t1_a_p4}+5% party movement speed." />
 	<string id="taom_dor_t1_b_key" text="{=taom_dor_t1_b_key}Trade Road Sprint duration extended, maintaining momentum." />
-	<string id="taom_dor_t1_b_p1" text="{=taom_dor_t1_b_p1}+30 horse health." />
+	<string id="taom_dor_t1_b_p1" text="{=taom_dor_t1_b_p1}+10% horse health." />
 	<string id="taom_dor_t1_b_p2" text="{=taom_dor_t1_b_p2}+25 max health." />
 	<string id="taom_dor_t1_b_p3" text="{=taom_dor_t1_b_p3}-5% troop wages." />
 	<string id="taom_dor_t1_b_p4" text="{=taom_dor_t1_b_p4}+5% resistance." />
@@ -1301,16 +1301,16 @@
 	<string id="taom_dor_t2_a_p4" text="{=taom_dor_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_dor_t2_b_key" text="{=taom_dor_t2_b_key}Trade Road Sprint boosts mount resilience while active." />
 	<string id="taom_dor_t2_b_p1" text="{=taom_dor_t2_b_p1}+12% melee damage." />
-	<string id="taom_dor_t2_b_p2" text="{=taom_dor_t2_b_p2}+12% horse charge damage." />
-	<string id="taom_dor_t2_b_p3" text="{=taom_dor_t2_b_p3}+60 horse health." />
+	<string id="taom_dor_t2_b_p2" text="{=taom_dor_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_dor_t2_b_p3" text="{=taom_dor_t2_b_p3}+13% horse health." />
 	<string id="taom_dor_t2_b_p4" text="{=taom_dor_t2_b_p4}+10% swing speed." />
 	<string id="taom_dor_t3_a_key" text="{=taom_dor_t3_a_key}Trade Road Sprint radius greatly expanded, unstoppable impact." />
 	<string id="taom_dor_t3_a_p1" text="{=taom_dor_t3_a_p1}+18% melee damage." />
-	<string id="taom_dor_t3_a_p2" text="{=taom_dor_t3_a_p2}+18% horse charge damage." />
+	<string id="taom_dor_t3_a_p2" text="{=taom_dor_t3_a_p2}+15% horse charge damage." />
 	<string id="taom_dor_t3_a_p3" text="{=taom_dor_t3_a_p3}+15% swing speed." />
 	<string id="taom_dor_t3_a_p4" text="{=taom_dor_t3_a_p4}+15% troop damage." />
 	<string id="taom_dor_t3_b_key" text="{=taom_dor_t3_b_key}Trade Road Sprint charge greatly reduced, ride without ceasing." />
-	<string id="taom_dor_t3_b_p1" text="{=taom_dor_t3_b_p1}+100 horse health." />
+	<string id="taom_dor_t3_b_p1" text="{=taom_dor_t3_b_p1}+15% horse health." />
 	<string id="taom_dor_t3_b_p2" text="{=taom_dor_t3_b_p2}-15% troop wages." />
 	<string id="taom_dor_t3_b_p3" text="{=taom_dor_t3_b_p3}+15% party movement speed." />
 	<string id="taom_dor_t3_b_p4" text="{=taom_dor_t3_b_p4}+75 max health." />
@@ -1323,7 +1323,7 @@
 	<string id="taom_ig_t1_b_key" text="{=taom_ig_t1_b_key}Mithril Bastion duration extended, fortifying the defense." />
 	<string id="taom_ig_t1_b_p1" text="{=taom_ig_t1_b_p1}+8% resistance." />
 	<string id="taom_ig_t1_b_p2" text="{=taom_ig_t1_b_p2}+5% troop morale." />
-	<string id="taom_ig_t1_b_p3" text="{=taom_ig_t1_b_p3}+5% troop resistance." />
+	<string id="taom_ig_t1_b_p3" text="{=taom_ig_t1_b_p3}+10% troop resistance." />
 	<string id="taom_ig_t1_b_p4" text="{=taom_ig_t1_b_p4}+5% troop regeneration." />
 	<string id="taom_ig_t2_a_key" text="{=taom_ig_t2_a_key}Mithril Bastion charge reduced, activating more frequently." />
 	<string id="taom_ig_t2_a_p1" text="{=taom_ig_t2_a_p1}+10% troop morale." />
@@ -1333,7 +1333,7 @@
 	<string id="taom_ig_t2_b_key" text="{=taom_ig_t2_b_key}Mithril Bastion grants additional defensive buffs while active." />
 	<string id="taom_ig_t2_b_p1" text="{=taom_ig_t2_b_p1}+12% resistance." />
 	<string id="taom_ig_t2_b_p2" text="{=taom_ig_t2_b_p2}+60 max health." />
-	<string id="taom_ig_t2_b_p3" text="{=taom_ig_t2_b_p3}+10% troop resistance." />
+	<string id="taom_ig_t2_b_p3" text="{=taom_ig_t2_b_p3}+13% troop resistance." />
 	<string id="taom_ig_t2_b_p4" text="{=taom_ig_t2_b_p4}+10% troop damage." />
 	<string id="taom_ig_t3_a_key" text="{=taom_ig_t3_a_key}Mithril Bastion radius greatly expanded, devastating power." />
 	<string id="taom_ig_t3_a_p1" text="{=taom_ig_t3_a_p1}+15% melee damage." />
@@ -1355,11 +1355,11 @@
 	<string id="taom_cbm_t1_b_p1" text="{=taom_cbm_t1_b_p1}+5% resistance." />
 	<string id="taom_cbm_t1_b_p2" text="{=taom_cbm_t1_b_p2}+25 max health." />
 	<string id="taom_cbm_t1_b_p3" text="{=taom_cbm_t1_b_p3}+5% party spotting range." />
-	<string id="taom_cbm_t1_b_p4" text="{=taom_cbm_t1_b_p4}+5% stealth bonus." />
+	<string id="taom_cbm_t1_b_p4" text="{=taom_cbm_t1_b_p4}+10% stealth bonus." />
 	<string id="taom_cbm_t2_a_key" text="{=taom_cbm_t2_a_key}Precision Barrage charge reduced, maintaining constant pressure." />
 	<string id="taom_cbm_t2_a_p1" text="{=taom_cbm_t2_a_p1}+10% party spotting range." />
 	<string id="taom_cbm_t2_a_p2" text="{=taom_cbm_t2_a_p2}+10% movement speed." />
-	<string id="taom_cbm_t2_a_p3" text="{=taom_cbm_t2_a_p3}+10% stealth bonus." />
+	<string id="taom_cbm_t2_a_p3" text="{=taom_cbm_t2_a_p3}+13% stealth bonus." />
 	<string id="taom_cbm_t2_a_p4" text="{=taom_cbm_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_cbm_t2_b_key" text="{=taom_cbm_t2_b_key}Precision Barrage gains additional penetration while active." />
 	<string id="taom_cbm_t2_b_p1" text="{=taom_cbm_t2_b_p1}+12% ranged damage." />
@@ -1379,11 +1379,11 @@
 	<string id="taom_ram_rider_root_desc" text="{=taom_ram_rider_root_desc}Mountain Charge grants +5% melee damage, the ram lowers its horns." />
 	<string id="taom_rr_t1_a_key" text="{=taom_rr_t1_a_key}Mountain Charge radius expanded, sweeping wider formations." />
 	<string id="taom_rr_t1_a_p1" text="{=taom_rr_t1_a_p1}+8% melee damage." />
-	<string id="taom_rr_t1_a_p2" text="{=taom_rr_t1_a_p2}+7% horse charge damage." />
+	<string id="taom_rr_t1_a_p2" text="{=taom_rr_t1_a_p2}+10% horse charge damage." />
 	<string id="taom_rr_t1_a_p3" text="{=taom_rr_t1_a_p3}+7% swing speed." />
 	<string id="taom_rr_t1_a_p4" text="{=taom_rr_t1_a_p4}+5% party movement speed." />
 	<string id="taom_rr_t1_b_key" text="{=taom_rr_t1_b_key}Mountain Charge duration extended, maintaining momentum." />
-	<string id="taom_rr_t1_b_p1" text="{=taom_rr_t1_b_p1}+30 horse health." />
+	<string id="taom_rr_t1_b_p1" text="{=taom_rr_t1_b_p1}+10% horse health." />
 	<string id="taom_rr_t1_b_p2" text="{=taom_rr_t1_b_p2}+25 max health." />
 	<string id="taom_rr_t1_b_p3" text="{=taom_rr_t1_b_p3}-5% troop wages." />
 	<string id="taom_rr_t1_b_p4" text="{=taom_rr_t1_b_p4}+5% resistance." />
@@ -1394,16 +1394,16 @@
 	<string id="taom_rr_t2_a_p4" text="{=taom_rr_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_rr_t2_b_key" text="{=taom_rr_t2_b_key}Mountain Charge boosts mount resilience while active." />
 	<string id="taom_rr_t2_b_p1" text="{=taom_rr_t2_b_p1}+12% melee damage." />
-	<string id="taom_rr_t2_b_p2" text="{=taom_rr_t2_b_p2}+12% horse charge damage." />
-	<string id="taom_rr_t2_b_p3" text="{=taom_rr_t2_b_p3}+60 horse health." />
+	<string id="taom_rr_t2_b_p2" text="{=taom_rr_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_rr_t2_b_p3" text="{=taom_rr_t2_b_p3}+13% horse health." />
 	<string id="taom_rr_t2_b_p4" text="{=taom_rr_t2_b_p4}+10% swing speed." />
 	<string id="taom_rr_t3_a_key" text="{=taom_rr_t3_a_key}Mountain Charge radius greatly expanded, unstoppable impact." />
 	<string id="taom_rr_t3_a_p1" text="{=taom_rr_t3_a_p1}+18% melee damage." />
-	<string id="taom_rr_t3_a_p2" text="{=taom_rr_t3_a_p2}+18% horse charge damage." />
+	<string id="taom_rr_t3_a_p2" text="{=taom_rr_t3_a_p2}+15% horse charge damage." />
 	<string id="taom_rr_t3_a_p3" text="{=taom_rr_t3_a_p3}+15% swing speed." />
 	<string id="taom_rr_t3_a_p4" text="{=taom_rr_t3_a_p4}+15% troop damage." />
 	<string id="taom_rr_t3_b_key" text="{=taom_rr_t3_b_key}Mountain Charge charge greatly reduced, ride without ceasing." />
-	<string id="taom_rr_t3_b_p1" text="{=taom_rr_t3_b_p1}+100 horse health." />
+	<string id="taom_rr_t3_b_p1" text="{=taom_rr_t3_b_p1}+15% horse health." />
 	<string id="taom_rr_t3_b_p2" text="{=taom_rr_t3_b_p2}-15% troop wages." />
 	<string id="taom_rr_t3_b_p3" text="{=taom_rr_t3_b_p3}+15% party movement speed." />
 	<string id="taom_rr_t3_b_p4" text="{=taom_rr_t3_b_p4}+75 max health." />
@@ -1416,7 +1416,7 @@
 	<string id="taom_bd_t1_b_key" text="{=taom_bd_t1_b_key}Starlight Weave duration extended, fortifying the defense." />
 	<string id="taom_bd_t1_b_p1" text="{=taom_bd_t1_b_p1}+8% resistance." />
 	<string id="taom_bd_t1_b_p2" text="{=taom_bd_t1_b_p2}+5% troop morale." />
-	<string id="taom_bd_t1_b_p3" text="{=taom_bd_t1_b_p3}+5% troop resistance." />
+	<string id="taom_bd_t1_b_p3" text="{=taom_bd_t1_b_p3}+10% troop resistance." />
 	<string id="taom_bd_t1_b_p4" text="{=taom_bd_t1_b_p4}+5% troop regeneration." />
 	<string id="taom_bd_t2_a_key" text="{=taom_bd_t2_a_key}Starlight Weave charge reduced, activating more frequently." />
 	<string id="taom_bd_t2_a_p1" text="{=taom_bd_t2_a_p1}+10% troop morale." />
@@ -1426,7 +1426,7 @@
 	<string id="taom_bd_t2_b_key" text="{=taom_bd_t2_b_key}Starlight Weave grants additional defensive buffs while active." />
 	<string id="taom_bd_t2_b_p1" text="{=taom_bd_t2_b_p1}+12% resistance." />
 	<string id="taom_bd_t2_b_p2" text="{=taom_bd_t2_b_p2}+60 max health." />
-	<string id="taom_bd_t2_b_p3" text="{=taom_bd_t2_b_p3}+10% troop resistance." />
+	<string id="taom_bd_t2_b_p3" text="{=taom_bd_t2_b_p3}+13% troop resistance." />
 	<string id="taom_bd_t2_b_p4" text="{=taom_bd_t2_b_p4}+10% troop damage." />
 	<string id="taom_bd_t3_a_key" text="{=taom_bd_t3_a_key}Starlight Weave radius greatly expanded, devastating power." />
 	<string id="taom_bd_t3_a_p1" text="{=taom_bd_t3_a_p1}+15% melee damage." />
@@ -1448,11 +1448,11 @@
 	<string id="taom_elar_t1_b_p1" text="{=taom_elar_t1_b_p1}+5% resistance." />
 	<string id="taom_elar_t1_b_p2" text="{=taom_elar_t1_b_p2}+25 max health." />
 	<string id="taom_elar_t1_b_p3" text="{=taom_elar_t1_b_p3}+5% party spotting range." />
-	<string id="taom_elar_t1_b_p4" text="{=taom_elar_t1_b_p4}+5% stealth bonus." />
+	<string id="taom_elar_t1_b_p4" text="{=taom_elar_t1_b_p4}+10% stealth bonus." />
 	<string id="taom_elar_t2_a_key" text="{=taom_elar_t2_a_key}Elven Sight charge reduced, maintaining constant pressure." />
 	<string id="taom_elar_t2_a_p1" text="{=taom_elar_t2_a_p1}+10% party spotting range." />
 	<string id="taom_elar_t2_a_p2" text="{=taom_elar_t2_a_p2}+10% movement speed." />
-	<string id="taom_elar_t2_a_p3" text="{=taom_elar_t2_a_p3}+10% stealth bonus." />
+	<string id="taom_elar_t2_a_p3" text="{=taom_elar_t2_a_p3}+13% stealth bonus." />
 	<string id="taom_elar_t2_a_p4" text="{=taom_elar_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_elar_t2_b_key" text="{=taom_elar_t2_b_key}Elven Sight gains additional penetration while active." />
 	<string id="taom_elar_t2_b_p1" text="{=taom_elar_t2_b_p1}+12% ranged damage." />
@@ -1472,11 +1472,11 @@
 	<string id="taom_rivendell_knight_root_desc" text="{=taom_rivendell_knight_root_desc}Last Alliance grants +5% melee damage and inspires your allies." />
 	<string id="taom_rvk_t1_a_key" text="{=taom_rvk_t1_a_key}Last Alliance radius expanded, sweeping wider formations." />
 	<string id="taom_rvk_t1_a_p1" text="{=taom_rvk_t1_a_p1}+8% melee damage." />
-	<string id="taom_rvk_t1_a_p2" text="{=taom_rvk_t1_a_p2}+7% horse charge damage." />
+	<string id="taom_rvk_t1_a_p2" text="{=taom_rvk_t1_a_p2}+10% horse charge damage." />
 	<string id="taom_rvk_t1_a_p3" text="{=taom_rvk_t1_a_p3}+7% swing speed." />
 	<string id="taom_rvk_t1_a_p4" text="{=taom_rvk_t1_a_p4}+5% party movement speed." />
 	<string id="taom_rvk_t1_b_key" text="{=taom_rvk_t1_b_key}Last Alliance duration extended, maintaining momentum." />
-	<string id="taom_rvk_t1_b_p1" text="{=taom_rvk_t1_b_p1}+30 horse health." />
+	<string id="taom_rvk_t1_b_p1" text="{=taom_rvk_t1_b_p1}+10% horse health." />
 	<string id="taom_rvk_t1_b_p2" text="{=taom_rvk_t1_b_p2}+25 max health." />
 	<string id="taom_rvk_t1_b_p3" text="{=taom_rvk_t1_b_p3}-5% troop wages." />
 	<string id="taom_rvk_t1_b_p4" text="{=taom_rvk_t1_b_p4}+5% resistance." />
@@ -1487,16 +1487,16 @@
 	<string id="taom_rvk_t2_a_p4" text="{=taom_rvk_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_rvk_t2_b_key" text="{=taom_rvk_t2_b_key}Last Alliance boosts mount resilience while active." />
 	<string id="taom_rvk_t2_b_p1" text="{=taom_rvk_t2_b_p1}+12% melee damage." />
-	<string id="taom_rvk_t2_b_p2" text="{=taom_rvk_t2_b_p2}+12% horse charge damage." />
-	<string id="taom_rvk_t2_b_p3" text="{=taom_rvk_t2_b_p3}+60 horse health." />
+	<string id="taom_rvk_t2_b_p2" text="{=taom_rvk_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_rvk_t2_b_p3" text="{=taom_rvk_t2_b_p3}+13% horse health." />
 	<string id="taom_rvk_t2_b_p4" text="{=taom_rvk_t2_b_p4}+10% swing speed." />
 	<string id="taom_rvk_t3_a_key" text="{=taom_rvk_t3_a_key}Last Alliance radius greatly expanded, unstoppable impact." />
 	<string id="taom_rvk_t3_a_p1" text="{=taom_rvk_t3_a_p1}+18% melee damage." />
-	<string id="taom_rvk_t3_a_p2" text="{=taom_rvk_t3_a_p2}+18% horse charge damage." />
+	<string id="taom_rvk_t3_a_p2" text="{=taom_rvk_t3_a_p2}+15% horse charge damage." />
 	<string id="taom_rvk_t3_a_p3" text="{=taom_rvk_t3_a_p3}+15% swing speed." />
 	<string id="taom_rvk_t3_a_p4" text="{=taom_rvk_t3_a_p4}+15% troop damage." />
 	<string id="taom_rvk_t3_b_key" text="{=taom_rvk_t3_b_key}Last Alliance charge greatly reduced, ride without ceasing." />
-	<string id="taom_rvk_t3_b_p1" text="{=taom_rvk_t3_b_p1}+100 horse health." />
+	<string id="taom_rvk_t3_b_p1" text="{=taom_rvk_t3_b_p1}+15% horse health." />
 	<string id="taom_rvk_t3_b_p2" text="{=taom_rvk_t3_b_p2}-15% troop wages." />
 	<string id="taom_rvk_t3_b_p3" text="{=taom_rvk_t3_b_p3}+15% party movement speed." />
 	<string id="taom_rvk_t3_b_p4" text="{=taom_rvk_t3_b_p4}+75 max health." />
@@ -1509,7 +1509,7 @@
 	<string id="taom_wdn_t1_b_key" text="{=taom_wdn_t1_b_key}Nimrodel Blessing duration extended, fortifying the defense." />
 	<string id="taom_wdn_t1_b_p1" text="{=taom_wdn_t1_b_p1}+8% resistance." />
 	<string id="taom_wdn_t1_b_p2" text="{=taom_wdn_t1_b_p2}+5% troop morale." />
-	<string id="taom_wdn_t1_b_p3" text="{=taom_wdn_t1_b_p3}+5% troop resistance." />
+	<string id="taom_wdn_t1_b_p3" text="{=taom_wdn_t1_b_p3}+10% troop resistance." />
 	<string id="taom_wdn_t1_b_p4" text="{=taom_wdn_t1_b_p4}+5% troop regeneration." />
 	<string id="taom_wdn_t2_a_key" text="{=taom_wdn_t2_a_key}Nimrodel Blessing charge reduced, activating more frequently." />
 	<string id="taom_wdn_t2_a_p1" text="{=taom_wdn_t2_a_p1}+10% troop morale." />
@@ -1519,7 +1519,7 @@
 	<string id="taom_wdn_t2_b_key" text="{=taom_wdn_t2_b_key}Nimrodel Blessing grants additional defensive buffs while active." />
 	<string id="taom_wdn_t2_b_p1" text="{=taom_wdn_t2_b_p1}+12% resistance." />
 	<string id="taom_wdn_t2_b_p2" text="{=taom_wdn_t2_b_p2}+60 max health." />
-	<string id="taom_wdn_t2_b_p3" text="{=taom_wdn_t2_b_p3}+10% troop resistance." />
+	<string id="taom_wdn_t2_b_p3" text="{=taom_wdn_t2_b_p3}+13% troop resistance." />
 	<string id="taom_wdn_t2_b_p4" text="{=taom_wdn_t2_b_p4}+10% troop damage." />
 	<string id="taom_wdn_t3_a_key" text="{=taom_wdn_t3_a_key}Nimrodel Blessing radius greatly expanded, devastating power." />
 	<string id="taom_wdn_t3_a_p1" text="{=taom_wdn_t3_a_p1}+15% melee damage." />
@@ -1541,11 +1541,11 @@
 	<string id="taom_gar_t1_b_p1" text="{=taom_gar_t1_b_p1}+5% resistance." />
 	<string id="taom_gar_t1_b_p2" text="{=taom_gar_t1_b_p2}+25 max health." />
 	<string id="taom_gar_t1_b_p3" text="{=taom_gar_t1_b_p3}+5% party spotting range." />
-	<string id="taom_gar_t1_b_p4" text="{=taom_gar_t1_b_p4}+5% stealth bonus." />
+	<string id="taom_gar_t1_b_p4" text="{=taom_gar_t1_b_p4}+10% stealth bonus." />
 	<string id="taom_gar_t2_a_key" text="{=taom_gar_t2_a_key}Silver Rain charge reduced, maintaining constant pressure." />
 	<string id="taom_gar_t2_a_p1" text="{=taom_gar_t2_a_p1}+10% party spotting range." />
 	<string id="taom_gar_t2_a_p2" text="{=taom_gar_t2_a_p2}+10% movement speed." />
-	<string id="taom_gar_t2_a_p3" text="{=taom_gar_t2_a_p3}+10% stealth bonus." />
+	<string id="taom_gar_t2_a_p3" text="{=taom_gar_t2_a_p3}+13% stealth bonus." />
 	<string id="taom_gar_t2_a_p4" text="{=taom_gar_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_gar_t2_b_key" text="{=taom_gar_t2_b_key}Silver Rain gains additional penetration while active." />
 	<string id="taom_gar_t2_b_p1" text="{=taom_gar_t2_b_p1}+12% ranged damage." />
@@ -1565,11 +1565,11 @@
 	<string id="taom_sentinel_root_desc" text="{=taom_sentinel_root_desc}Elanor Swiftness grants +5% melee damage and elven grace." />
 	<string id="taom_snt_t1_a_key" text="{=taom_snt_t1_a_key}Elanor Swiftness radius expanded, sweeping wider formations." />
 	<string id="taom_snt_t1_a_p1" text="{=taom_snt_t1_a_p1}+8% melee damage." />
-	<string id="taom_snt_t1_a_p2" text="{=taom_snt_t1_a_p2}+7% horse charge damage." />
+	<string id="taom_snt_t1_a_p2" text="{=taom_snt_t1_a_p2}+10% horse charge damage." />
 	<string id="taom_snt_t1_a_p3" text="{=taom_snt_t1_a_p3}+7% swing speed." />
 	<string id="taom_snt_t1_a_p4" text="{=taom_snt_t1_a_p4}+5% party movement speed." />
 	<string id="taom_snt_t1_b_key" text="{=taom_snt_t1_b_key}Elanor Swiftness duration extended, maintaining momentum." />
-	<string id="taom_snt_t1_b_p1" text="{=taom_snt_t1_b_p1}+30 horse health." />
+	<string id="taom_snt_t1_b_p1" text="{=taom_snt_t1_b_p1}+10% horse health." />
 	<string id="taom_snt_t1_b_p2" text="{=taom_snt_t1_b_p2}+25 max health." />
 	<string id="taom_snt_t1_b_p3" text="{=taom_snt_t1_b_p3}-5% troop wages." />
 	<string id="taom_snt_t1_b_p4" text="{=taom_snt_t1_b_p4}+5% resistance." />
@@ -1580,16 +1580,16 @@
 	<string id="taom_snt_t2_a_p4" text="{=taom_snt_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_snt_t2_b_key" text="{=taom_snt_t2_b_key}Elanor Swiftness boosts mount resilience while active." />
 	<string id="taom_snt_t2_b_p1" text="{=taom_snt_t2_b_p1}+12% melee damage." />
-	<string id="taom_snt_t2_b_p2" text="{=taom_snt_t2_b_p2}+12% horse charge damage." />
-	<string id="taom_snt_t2_b_p3" text="{=taom_snt_t2_b_p3}+60 horse health." />
+	<string id="taom_snt_t2_b_p2" text="{=taom_snt_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_snt_t2_b_p3" text="{=taom_snt_t2_b_p3}+13% horse health." />
 	<string id="taom_snt_t2_b_p4" text="{=taom_snt_t2_b_p4}+10% swing speed." />
 	<string id="taom_snt_t3_a_key" text="{=taom_snt_t3_a_key}Elanor Swiftness radius greatly expanded, unstoppable impact." />
 	<string id="taom_snt_t3_a_p1" text="{=taom_snt_t3_a_p1}+18% melee damage." />
-	<string id="taom_snt_t3_a_p2" text="{=taom_snt_t3_a_p2}+18% horse charge damage." />
+	<string id="taom_snt_t3_a_p2" text="{=taom_snt_t3_a_p2}+15% horse charge damage." />
 	<string id="taom_snt_t3_a_p3" text="{=taom_snt_t3_a_p3}+15% swing speed." />
 	<string id="taom_snt_t3_a_p4" text="{=taom_snt_t3_a_p4}+15% troop damage." />
 	<string id="taom_snt_t3_b_key" text="{=taom_snt_t3_b_key}Elanor Swiftness charge greatly reduced, ride without ceasing." />
-	<string id="taom_snt_t3_b_p1" text="{=taom_snt_t3_b_p1}+100 horse health." />
+	<string id="taom_snt_t3_b_p1" text="{=taom_snt_t3_b_p1}+15% horse health." />
 	<string id="taom_snt_t3_b_p2" text="{=taom_snt_t3_b_p2}-15% troop wages." />
 	<string id="taom_snt_t3_b_p3" text="{=taom_snt_t3_b_p3}+15% party movement speed." />
 	<string id="taom_snt_t3_b_p4" text="{=taom_snt_t3_b_p4}+75 max health." />
@@ -1602,7 +1602,7 @@
 	<string id="taom_shw_t1_b_key" text="{=taom_shw_t1_b_key}Forest Cloak duration extended, fortifying the defense." />
 	<string id="taom_shw_t1_b_p1" text="{=taom_shw_t1_b_p1}+8% resistance." />
 	<string id="taom_shw_t1_b_p2" text="{=taom_shw_t1_b_p2}+5% troop morale." />
-	<string id="taom_shw_t1_b_p3" text="{=taom_shw_t1_b_p3}+5% troop resistance." />
+	<string id="taom_shw_t1_b_p3" text="{=taom_shw_t1_b_p3}+10% troop resistance." />
 	<string id="taom_shw_t1_b_p4" text="{=taom_shw_t1_b_p4}+5% troop regeneration." />
 	<string id="taom_shw_t2_a_key" text="{=taom_shw_t2_a_key}Forest Cloak charge reduced, activating more frequently." />
 	<string id="taom_shw_t2_a_p1" text="{=taom_shw_t2_a_p1}+10% troop morale." />
@@ -1612,7 +1612,7 @@
 	<string id="taom_shw_t2_b_key" text="{=taom_shw_t2_b_key}Forest Cloak grants additional defensive buffs while active." />
 	<string id="taom_shw_t2_b_p1" text="{=taom_shw_t2_b_p1}+12% resistance." />
 	<string id="taom_shw_t2_b_p2" text="{=taom_shw_t2_b_p2}+60 max health." />
-	<string id="taom_shw_t2_b_p3" text="{=taom_shw_t2_b_p3}+10% troop resistance." />
+	<string id="taom_shw_t2_b_p3" text="{=taom_shw_t2_b_p3}+13% troop resistance." />
 	<string id="taom_shw_t2_b_p4" text="{=taom_shw_t2_b_p4}+10% troop damage." />
 	<string id="taom_shw_t3_a_key" text="{=taom_shw_t3_a_key}Forest Cloak radius greatly expanded, devastating power." />
 	<string id="taom_shw_t3_a_p1" text="{=taom_shw_t3_a_p1}+15% melee damage." />
@@ -1634,11 +1634,11 @@
 	<string id="taom_sva_t1_b_p1" text="{=taom_sva_t1_b_p1}+5% resistance." />
 	<string id="taom_sva_t1_b_p2" text="{=taom_sva_t1_b_p2}+25 max health." />
 	<string id="taom_sva_t1_b_p3" text="{=taom_sva_t1_b_p3}+5% party spotting range." />
-	<string id="taom_sva_t1_b_p4" text="{=taom_sva_t1_b_p4}+5% stealth bonus." />
+	<string id="taom_sva_t1_b_p4" text="{=taom_sva_t1_b_p4}+10% stealth bonus." />
 	<string id="taom_sva_t2_a_key" text="{=taom_sva_t2_a_key}Canopy Strike charge reduced, maintaining constant pressure." />
 	<string id="taom_sva_t2_a_p1" text="{=taom_sva_t2_a_p1}+10% party spotting range." />
 	<string id="taom_sva_t2_a_p2" text="{=taom_sva_t2_a_p2}+10% movement speed." />
-	<string id="taom_sva_t2_a_p3" text="{=taom_sva_t2_a_p3}+10% stealth bonus." />
+	<string id="taom_sva_t2_a_p3" text="{=taom_sva_t2_a_p3}+13% stealth bonus." />
 	<string id="taom_sva_t2_a_p4" text="{=taom_sva_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_sva_t2_b_key" text="{=taom_sva_t2_b_key}Canopy Strike gains additional penetration while active." />
 	<string id="taom_sva_t2_b_p1" text="{=taom_sva_t2_b_p1}+12% ranged damage." />
@@ -1658,11 +1658,11 @@
 	<string id="taom_elk_rider_root_desc" text="{=taom_elk_rider_root_desc}Antler Crash grants +5% melee damage, the great elk charges." />
 	<string id="taom_elk_t1_a_key" text="{=taom_elk_t1_a_key}Antler Crash radius expanded, sweeping wider formations." />
 	<string id="taom_elk_t1_a_p1" text="{=taom_elk_t1_a_p1}+8% melee damage." />
-	<string id="taom_elk_t1_a_p2" text="{=taom_elk_t1_a_p2}+7% horse charge damage." />
+	<string id="taom_elk_t1_a_p2" text="{=taom_elk_t1_a_p2}+10% horse charge damage." />
 	<string id="taom_elk_t1_a_p3" text="{=taom_elk_t1_a_p3}+7% swing speed." />
 	<string id="taom_elk_t1_a_p4" text="{=taom_elk_t1_a_p4}+5% party movement speed." />
 	<string id="taom_elk_t1_b_key" text="{=taom_elk_t1_b_key}Antler Crash duration extended, maintaining momentum." />
-	<string id="taom_elk_t1_b_p1" text="{=taom_elk_t1_b_p1}+30 horse health." />
+	<string id="taom_elk_t1_b_p1" text="{=taom_elk_t1_b_p1}+10% horse health." />
 	<string id="taom_elk_t1_b_p2" text="{=taom_elk_t1_b_p2}+25 max health." />
 	<string id="taom_elk_t1_b_p3" text="{=taom_elk_t1_b_p3}-5% troop wages." />
 	<string id="taom_elk_t1_b_p4" text="{=taom_elk_t1_b_p4}+5% resistance." />
@@ -1673,16 +1673,16 @@
 	<string id="taom_elk_t2_a_p4" text="{=taom_elk_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_elk_t2_b_key" text="{=taom_elk_t2_b_key}Antler Crash boosts mount resilience while active." />
 	<string id="taom_elk_t2_b_p1" text="{=taom_elk_t2_b_p1}+12% melee damage." />
-	<string id="taom_elk_t2_b_p2" text="{=taom_elk_t2_b_p2}+12% horse charge damage." />
-	<string id="taom_elk_t2_b_p3" text="{=taom_elk_t2_b_p3}+60 horse health." />
+	<string id="taom_elk_t2_b_p2" text="{=taom_elk_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_elk_t2_b_p3" text="{=taom_elk_t2_b_p3}+13% horse health." />
 	<string id="taom_elk_t2_b_p4" text="{=taom_elk_t2_b_p4}+10% swing speed." />
 	<string id="taom_elk_t3_a_key" text="{=taom_elk_t3_a_key}Antler Crash radius greatly expanded, unstoppable impact." />
 	<string id="taom_elk_t3_a_p1" text="{=taom_elk_t3_a_p1}+18% melee damage." />
-	<string id="taom_elk_t3_a_p2" text="{=taom_elk_t3_a_p2}+18% horse charge damage." />
+	<string id="taom_elk_t3_a_p2" text="{=taom_elk_t3_a_p2}+15% horse charge damage." />
 	<string id="taom_elk_t3_a_p3" text="{=taom_elk_t3_a_p3}+15% swing speed." />
 	<string id="taom_elk_t3_a_p4" text="{=taom_elk_t3_a_p4}+15% troop damage." />
 	<string id="taom_elk_t3_b_key" text="{=taom_elk_t3_b_key}Antler Crash charge greatly reduced, ride without ceasing." />
-	<string id="taom_elk_t3_b_p1" text="{=taom_elk_t3_b_p1}+100 horse health." />
+	<string id="taom_elk_t3_b_p1" text="{=taom_elk_t3_b_p1}+15% horse health." />
 	<string id="taom_elk_t3_b_p2" text="{=taom_elk_t3_b_p2}-15% troop wages." />
 	<string id="taom_elk_t3_b_p3" text="{=taom_elk_t3_b_p3}+15% party movement speed." />
 	<string id="taom_elk_t3_b_p4" text="{=taom_elk_t3_b_p4}+75 max health." />
@@ -1695,7 +1695,7 @@
 	<string id="taom_ub_t1_b_key" text="{=taom_ub_t1_b_key}Blood Rage duration extended, fortifying the defense." />
 	<string id="taom_ub_t1_b_p1" text="{=taom_ub_t1_b_p1}+8% resistance." />
 	<string id="taom_ub_t1_b_p2" text="{=taom_ub_t1_b_p2}+5% troop morale." />
-	<string id="taom_ub_t1_b_p3" text="{=taom_ub_t1_b_p3}+5% troop resistance." />
+	<string id="taom_ub_t1_b_p3" text="{=taom_ub_t1_b_p3}+10% troop resistance." />
 	<string id="taom_ub_t1_b_p4" text="{=taom_ub_t1_b_p4}+5% troop regeneration." />
 	<string id="taom_ub_t2_a_key" text="{=taom_ub_t2_a_key}Blood Rage charge reduced, activating more frequently." />
 	<string id="taom_ub_t2_a_p1" text="{=taom_ub_t2_a_p1}+10% troop morale." />
@@ -1705,7 +1705,7 @@
 	<string id="taom_ub_t2_b_key" text="{=taom_ub_t2_b_key}Blood Rage grants additional defensive buffs while active." />
 	<string id="taom_ub_t2_b_p1" text="{=taom_ub_t2_b_p1}+12% resistance." />
 	<string id="taom_ub_t2_b_p2" text="{=taom_ub_t2_b_p2}+60 max health." />
-	<string id="taom_ub_t2_b_p3" text="{=taom_ub_t2_b_p3}+10% troop resistance." />
+	<string id="taom_ub_t2_b_p3" text="{=taom_ub_t2_b_p3}+13% troop resistance." />
 	<string id="taom_ub_t2_b_p4" text="{=taom_ub_t2_b_p4}+10% troop damage." />
 	<string id="taom_ub_t3_a_key" text="{=taom_ub_t3_a_key}Blood Rage radius greatly expanded, devastating power." />
 	<string id="taom_ub_t3_a_p1" text="{=taom_ub_t3_a_p1}+15% melee damage." />
@@ -1727,11 +1727,11 @@
 	<string id="taom_ucb_t1_b_p1" text="{=taom_ucb_t1_b_p1}+5% resistance." />
 	<string id="taom_ucb_t1_b_p2" text="{=taom_ucb_t1_b_p2}+25 max health." />
 	<string id="taom_ucb_t1_b_p3" text="{=taom_ucb_t1_b_p3}+5% party spotting range." />
-	<string id="taom_ucb_t1_b_p4" text="{=taom_ucb_t1_b_p4}+5% stealth bonus." />
+	<string id="taom_ucb_t1_b_p4" text="{=taom_ucb_t1_b_p4}+10% stealth bonus." />
 	<string id="taom_ucb_t2_a_key" text="{=taom_ucb_t2_a_key}Iron Rain charge reduced, maintaining constant pressure." />
 	<string id="taom_ucb_t2_a_p1" text="{=taom_ucb_t2_a_p1}+10% party spotting range." />
 	<string id="taom_ucb_t2_a_p2" text="{=taom_ucb_t2_a_p2}+10% movement speed." />
-	<string id="taom_ucb_t2_a_p3" text="{=taom_ucb_t2_a_p3}+10% stealth bonus." />
+	<string id="taom_ucb_t2_a_p3" text="{=taom_ucb_t2_a_p3}+13% stealth bonus." />
 	<string id="taom_ucb_t2_a_p4" text="{=taom_ucb_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_ucb_t2_b_key" text="{=taom_ucb_t2_b_key}Iron Rain gains additional penetration while active." />
 	<string id="taom_ucb_t2_b_p1" text="{=taom_ucb_t2_b_p1}+12% ranged damage." />
@@ -1751,11 +1751,11 @@
 	<string id="taom_warg_scout_root_desc" text="{=taom_warg_scout_root_desc}Pack Howl grants +5% melee damage and terrifies nearby foes." />
 	<string id="taom_wsc_t1_a_key" text="{=taom_wsc_t1_a_key}Pack Howl radius expanded, sweeping wider formations." />
 	<string id="taom_wsc_t1_a_p1" text="{=taom_wsc_t1_a_p1}+8% melee damage." />
-	<string id="taom_wsc_t1_a_p2" text="{=taom_wsc_t1_a_p2}+7% horse charge damage." />
+	<string id="taom_wsc_t1_a_p2" text="{=taom_wsc_t1_a_p2}+10% horse charge damage." />
 	<string id="taom_wsc_t1_a_p3" text="{=taom_wsc_t1_a_p3}+7% swing speed." />
 	<string id="taom_wsc_t1_a_p4" text="{=taom_wsc_t1_a_p4}+5% party movement speed." />
 	<string id="taom_wsc_t1_b_key" text="{=taom_wsc_t1_b_key}Pack Howl duration extended, maintaining momentum." />
-	<string id="taom_wsc_t1_b_p1" text="{=taom_wsc_t1_b_p1}+30 horse health." />
+	<string id="taom_wsc_t1_b_p1" text="{=taom_wsc_t1_b_p1}+10% horse health." />
 	<string id="taom_wsc_t1_b_p2" text="{=taom_wsc_t1_b_p2}+25 max health." />
 	<string id="taom_wsc_t1_b_p3" text="{=taom_wsc_t1_b_p3}-5% troop wages." />
 	<string id="taom_wsc_t1_b_p4" text="{=taom_wsc_t1_b_p4}+5% resistance." />
@@ -1766,16 +1766,16 @@
 	<string id="taom_wsc_t2_a_p4" text="{=taom_wsc_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_wsc_t2_b_key" text="{=taom_wsc_t2_b_key}Pack Howl boosts mount resilience while active." />
 	<string id="taom_wsc_t2_b_p1" text="{=taom_wsc_t2_b_p1}+12% melee damage." />
-	<string id="taom_wsc_t2_b_p2" text="{=taom_wsc_t2_b_p2}+12% horse charge damage." />
-	<string id="taom_wsc_t2_b_p3" text="{=taom_wsc_t2_b_p3}+60 horse health." />
+	<string id="taom_wsc_t2_b_p2" text="{=taom_wsc_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_wsc_t2_b_p3" text="{=taom_wsc_t2_b_p3}+13% horse health." />
 	<string id="taom_wsc_t2_b_p4" text="{=taom_wsc_t2_b_p4}+10% swing speed." />
 	<string id="taom_wsc_t3_a_key" text="{=taom_wsc_t3_a_key}Pack Howl radius greatly expanded, unstoppable impact." />
 	<string id="taom_wsc_t3_a_p1" text="{=taom_wsc_t3_a_p1}+18% melee damage." />
-	<string id="taom_wsc_t3_a_p2" text="{=taom_wsc_t3_a_p2}+18% horse charge damage." />
+	<string id="taom_wsc_t3_a_p2" text="{=taom_wsc_t3_a_p2}+15% horse charge damage." />
 	<string id="taom_wsc_t3_a_p3" text="{=taom_wsc_t3_a_p3}+15% swing speed." />
 	<string id="taom_wsc_t3_a_p4" text="{=taom_wsc_t3_a_p4}+15% troop damage." />
 	<string id="taom_wsc_t3_b_key" text="{=taom_wsc_t3_b_key}Pack Howl charge greatly reduced, ride without ceasing." />
-	<string id="taom_wsc_t3_b_p1" text="{=taom_wsc_t3_b_p1}+100 horse health." />
+	<string id="taom_wsc_t3_b_p1" text="{=taom_wsc_t3_b_p1}+15% horse health." />
 	<string id="taom_wsc_t3_b_p2" text="{=taom_wsc_t3_b_p2}-15% troop wages." />
 	<string id="taom_wsc_t3_b_p3" text="{=taom_wsc_t3_b_p3}+15% party movement speed." />
 	<string id="taom_wsc_t3_b_p4" text="{=taom_wsc_t3_b_p4}+75 max health." />
@@ -1788,7 +1788,7 @@
 	<string id="taom_ctm_t1_b_key" text="{=taom_ctm_t1_b_key}Troll Frenzy duration extended, fortifying the defense." />
 	<string id="taom_ctm_t1_b_p1" text="{=taom_ctm_t1_b_p1}+8% resistance." />
 	<string id="taom_ctm_t1_b_p2" text="{=taom_ctm_t1_b_p2}+5% troop morale." />
-	<string id="taom_ctm_t1_b_p3" text="{=taom_ctm_t1_b_p3}+5% troop resistance." />
+	<string id="taom_ctm_t1_b_p3" text="{=taom_ctm_t1_b_p3}+10% troop resistance." />
 	<string id="taom_ctm_t1_b_p4" text="{=taom_ctm_t1_b_p4}+5% troop regeneration." />
 	<string id="taom_ctm_t2_a_key" text="{=taom_ctm_t2_a_key}Troll Frenzy charge reduced, activating more frequently." />
 	<string id="taom_ctm_t2_a_p1" text="{=taom_ctm_t2_a_p1}+10% troop morale." />
@@ -1798,7 +1798,7 @@
 	<string id="taom_ctm_t2_b_key" text="{=taom_ctm_t2_b_key}Troll Frenzy grants additional defensive buffs while active." />
 	<string id="taom_ctm_t2_b_p1" text="{=taom_ctm_t2_b_p1}+12% resistance." />
 	<string id="taom_ctm_t2_b_p2" text="{=taom_ctm_t2_b_p2}+60 max health." />
-	<string id="taom_ctm_t2_b_p3" text="{=taom_ctm_t2_b_p3}+10% troop resistance." />
+	<string id="taom_ctm_t2_b_p3" text="{=taom_ctm_t2_b_p3}+13% troop resistance." />
 	<string id="taom_ctm_t2_b_p4" text="{=taom_ctm_t2_b_p4}+10% troop damage." />
 	<string id="taom_ctm_t3_a_key" text="{=taom_ctm_t3_a_key}Troll Frenzy radius greatly expanded, devastating power." />
 	<string id="taom_ctm_t3_a_p1" text="{=taom_ctm_t3_a_p1}+15% melee damage." />
@@ -1820,11 +1820,11 @@
 	<string id="taom_gbs_t1_b_p1" text="{=taom_gbs_t1_b_p1}+5% resistance." />
 	<string id="taom_gbs_t1_b_p2" text="{=taom_gbs_t1_b_p2}+25 max health." />
 	<string id="taom_gbs_t1_b_p3" text="{=taom_gbs_t1_b_p3}+5% party spotting range." />
-	<string id="taom_gbs_t1_b_p4" text="{=taom_gbs_t1_b_p4}+5% stealth bonus." />
+	<string id="taom_gbs_t1_b_p4" text="{=taom_gbs_t1_b_p4}+10% stealth bonus." />
 	<string id="taom_gbs_t2_a_key" text="{=taom_gbs_t2_a_key}Poison Dart charge reduced, maintaining constant pressure." />
 	<string id="taom_gbs_t2_a_p1" text="{=taom_gbs_t2_a_p1}+10% party spotting range." />
 	<string id="taom_gbs_t2_a_p2" text="{=taom_gbs_t2_a_p2}+10% movement speed." />
-	<string id="taom_gbs_t2_a_p3" text="{=taom_gbs_t2_a_p3}+10% stealth bonus." />
+	<string id="taom_gbs_t2_a_p3" text="{=taom_gbs_t2_a_p3}+13% stealth bonus." />
 	<string id="taom_gbs_t2_a_p4" text="{=taom_gbs_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_gbs_t2_b_key" text="{=taom_gbs_t2_b_key}Poison Dart gains additional penetration while active." />
 	<string id="taom_gbs_t2_b_p1" text="{=taom_gbs_t2_b_p1}+12% ranged damage." />
@@ -1844,11 +1844,11 @@
 	<string id="taom_warg_pack_leader_root_desc" text="{=taom_warg_pack_leader_root_desc}Alpha Howl grants +5% melee damage and the pack hunts." />
 	<string id="taom_wpl_t1_a_key" text="{=taom_wpl_t1_a_key}Alpha Howl radius expanded, sweeping wider formations." />
 	<string id="taom_wpl_t1_a_p1" text="{=taom_wpl_t1_a_p1}+8% melee damage." />
-	<string id="taom_wpl_t1_a_p2" text="{=taom_wpl_t1_a_p2}+7% horse charge damage." />
+	<string id="taom_wpl_t1_a_p2" text="{=taom_wpl_t1_a_p2}+10% horse charge damage." />
 	<string id="taom_wpl_t1_a_p3" text="{=taom_wpl_t1_a_p3}+7% swing speed." />
 	<string id="taom_wpl_t1_a_p4" text="{=taom_wpl_t1_a_p4}+5% party movement speed." />
 	<string id="taom_wpl_t1_b_key" text="{=taom_wpl_t1_b_key}Alpha Howl duration extended, maintaining momentum." />
-	<string id="taom_wpl_t1_b_p1" text="{=taom_wpl_t1_b_p1}+30 horse health." />
+	<string id="taom_wpl_t1_b_p1" text="{=taom_wpl_t1_b_p1}+10% horse health." />
 	<string id="taom_wpl_t1_b_p2" text="{=taom_wpl_t1_b_p2}+25 max health." />
 	<string id="taom_wpl_t1_b_p3" text="{=taom_wpl_t1_b_p3}-5% troop wages." />
 	<string id="taom_wpl_t1_b_p4" text="{=taom_wpl_t1_b_p4}+5% resistance." />
@@ -1859,16 +1859,16 @@
 	<string id="taom_wpl_t2_a_p4" text="{=taom_wpl_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_wpl_t2_b_key" text="{=taom_wpl_t2_b_key}Alpha Howl boosts mount resilience while active." />
 	<string id="taom_wpl_t2_b_p1" text="{=taom_wpl_t2_b_p1}+12% melee damage." />
-	<string id="taom_wpl_t2_b_p2" text="{=taom_wpl_t2_b_p2}+12% horse charge damage." />
-	<string id="taom_wpl_t2_b_p3" text="{=taom_wpl_t2_b_p3}+60 horse health." />
+	<string id="taom_wpl_t2_b_p2" text="{=taom_wpl_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_wpl_t2_b_p3" text="{=taom_wpl_t2_b_p3}+13% horse health." />
 	<string id="taom_wpl_t2_b_p4" text="{=taom_wpl_t2_b_p4}+10% swing speed." />
 	<string id="taom_wpl_t3_a_key" text="{=taom_wpl_t3_a_key}Alpha Howl radius greatly expanded, unstoppable impact." />
 	<string id="taom_wpl_t3_a_p1" text="{=taom_wpl_t3_a_p1}+18% melee damage." />
-	<string id="taom_wpl_t3_a_p2" text="{=taom_wpl_t3_a_p2}+18% horse charge damage." />
+	<string id="taom_wpl_t3_a_p2" text="{=taom_wpl_t3_a_p2}+15% horse charge damage." />
 	<string id="taom_wpl_t3_a_p3" text="{=taom_wpl_t3_a_p3}+15% swing speed." />
 	<string id="taom_wpl_t3_a_p4" text="{=taom_wpl_t3_a_p4}+15% troop damage." />
 	<string id="taom_wpl_t3_b_key" text="{=taom_wpl_t3_b_key}Alpha Howl charge greatly reduced, ride without ceasing." />
-	<string id="taom_wpl_t3_b_p1" text="{=taom_wpl_t3_b_p1}+100 horse health." />
+	<string id="taom_wpl_t3_b_p1" text="{=taom_wpl_t3_b_p1}+15% horse health." />
 	<string id="taom_wpl_t3_b_p2" text="{=taom_wpl_t3_b_p2}-15% troop wages." />
 	<string id="taom_wpl_t3_b_p3" text="{=taom_wpl_t3_b_p3}+15% party movement speed." />
 	<string id="taom_wpl_t3_b_p4" text="{=taom_wpl_t3_b_p4}+75 max health." />
@@ -1881,7 +1881,7 @@
 	<string id="taom_swr_t1_b_key" text="{=taom_swr_t1_b_key}Soul Drain duration extended, fortifying the defense." />
 	<string id="taom_swr_t1_b_p1" text="{=taom_swr_t1_b_p1}+8% resistance." />
 	<string id="taom_swr_t1_b_p2" text="{=taom_swr_t1_b_p2}+5% troop morale." />
-	<string id="taom_swr_t1_b_p3" text="{=taom_swr_t1_b_p3}+5% troop resistance." />
+	<string id="taom_swr_t1_b_p3" text="{=taom_swr_t1_b_p3}+10% troop resistance." />
 	<string id="taom_swr_t1_b_p4" text="{=taom_swr_t1_b_p4}+5% troop regeneration." />
 	<string id="taom_swr_t2_a_key" text="{=taom_swr_t2_a_key}Soul Drain charge reduced, activating more frequently." />
 	<string id="taom_swr_t2_a_p1" text="{=taom_swr_t2_a_p1}+10% troop morale." />
@@ -1891,7 +1891,7 @@
 	<string id="taom_swr_t2_b_key" text="{=taom_swr_t2_b_key}Soul Drain grants additional defensive buffs while active." />
 	<string id="taom_swr_t2_b_p1" text="{=taom_swr_t2_b_p1}+12% resistance." />
 	<string id="taom_swr_t2_b_p2" text="{=taom_swr_t2_b_p2}+60 max health." />
-	<string id="taom_swr_t2_b_p3" text="{=taom_swr_t2_b_p3}+10% troop resistance." />
+	<string id="taom_swr_t2_b_p3" text="{=taom_swr_t2_b_p3}+13% troop resistance." />
 	<string id="taom_swr_t2_b_p4" text="{=taom_swr_t2_b_p4}+10% troop damage." />
 	<string id="taom_swr_t3_a_key" text="{=taom_swr_t3_a_key}Soul Drain radius greatly expanded, devastating power." />
 	<string id="taom_swr_t3_a_p1" text="{=taom_swr_t3_a_p1}+15% melee damage." />
@@ -1913,11 +1913,11 @@
 	<string id="taom_nca_t1_b_p1" text="{=taom_nca_t1_b_p1}+5% resistance." />
 	<string id="taom_nca_t1_b_p2" text="{=taom_nca_t1_b_p2}+25 max health." />
 	<string id="taom_nca_t1_b_p3" text="{=taom_nca_t1_b_p3}+5% party spotting range." />
-	<string id="taom_nca_t1_b_p4" text="{=taom_nca_t1_b_p4}+5% stealth bonus." />
+	<string id="taom_nca_t1_b_p4" text="{=taom_nca_t1_b_p4}+10% stealth bonus." />
 	<string id="taom_nca_t2_a_key" text="{=taom_nca_t2_a_key}Dark Bolt charge reduced, maintaining constant pressure." />
 	<string id="taom_nca_t2_a_p1" text="{=taom_nca_t2_a_p1}+10% party spotting range." />
 	<string id="taom_nca_t2_a_p2" text="{=taom_nca_t2_a_p2}+10% movement speed." />
-	<string id="taom_nca_t2_a_p3" text="{=taom_nca_t2_a_p3}+10% stealth bonus." />
+	<string id="taom_nca_t2_a_p3" text="{=taom_nca_t2_a_p3}+13% stealth bonus." />
 	<string id="taom_nca_t2_a_p4" text="{=taom_nca_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_nca_t2_b_key" text="{=taom_nca_t2_b_key}Dark Bolt gains additional penetration while active." />
 	<string id="taom_nca_t2_b_p1" text="{=taom_nca_t2_b_p1}+12% ranged damage." />
@@ -1937,11 +1937,11 @@
 	<string id="taom_fell_rider_root_desc" text="{=taom_fell_rider_root_desc}Dread Charge grants +5% melee damage, shadow wreathing your mount." />
 	<string id="taom_flr_t1_a_key" text="{=taom_flr_t1_a_key}Dread Charge radius expanded, sweeping wider formations." />
 	<string id="taom_flr_t1_a_p1" text="{=taom_flr_t1_a_p1}+8% melee damage." />
-	<string id="taom_flr_t1_a_p2" text="{=taom_flr_t1_a_p2}+7% horse charge damage." />
+	<string id="taom_flr_t1_a_p2" text="{=taom_flr_t1_a_p2}+10% horse charge damage." />
 	<string id="taom_flr_t1_a_p3" text="{=taom_flr_t1_a_p3}+7% swing speed." />
 	<string id="taom_flr_t1_a_p4" text="{=taom_flr_t1_a_p4}+5% party movement speed." />
 	<string id="taom_flr_t1_b_key" text="{=taom_flr_t1_b_key}Dread Charge duration extended, maintaining momentum." />
-	<string id="taom_flr_t1_b_p1" text="{=taom_flr_t1_b_p1}+30 horse health." />
+	<string id="taom_flr_t1_b_p1" text="{=taom_flr_t1_b_p1}+10% horse health." />
 	<string id="taom_flr_t1_b_p2" text="{=taom_flr_t1_b_p2}+25 max health." />
 	<string id="taom_flr_t1_b_p3" text="{=taom_flr_t1_b_p3}-5% troop wages." />
 	<string id="taom_flr_t1_b_p4" text="{=taom_flr_t1_b_p4}+5% resistance." />
@@ -1952,16 +1952,16 @@
 	<string id="taom_flr_t2_a_p4" text="{=taom_flr_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_flr_t2_b_key" text="{=taom_flr_t2_b_key}Dread Charge boosts mount resilience while active." />
 	<string id="taom_flr_t2_b_p1" text="{=taom_flr_t2_b_p1}+12% melee damage." />
-	<string id="taom_flr_t2_b_p2" text="{=taom_flr_t2_b_p2}+12% horse charge damage." />
-	<string id="taom_flr_t2_b_p3" text="{=taom_flr_t2_b_p3}+60 horse health." />
+	<string id="taom_flr_t2_b_p2" text="{=taom_flr_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_flr_t2_b_p3" text="{=taom_flr_t2_b_p3}+13% horse health." />
 	<string id="taom_flr_t2_b_p4" text="{=taom_flr_t2_b_p4}+10% swing speed." />
 	<string id="taom_flr_t3_a_key" text="{=taom_flr_t3_a_key}Dread Charge radius greatly expanded, unstoppable impact." />
 	<string id="taom_flr_t3_a_p1" text="{=taom_flr_t3_a_p1}+18% melee damage." />
-	<string id="taom_flr_t3_a_p2" text="{=taom_flr_t3_a_p2}+18% horse charge damage." />
+	<string id="taom_flr_t3_a_p2" text="{=taom_flr_t3_a_p2}+15% horse charge damage." />
 	<string id="taom_flr_t3_a_p3" text="{=taom_flr_t3_a_p3}+15% swing speed." />
 	<string id="taom_flr_t3_a_p4" text="{=taom_flr_t3_a_p4}+15% troop damage." />
 	<string id="taom_flr_t3_b_key" text="{=taom_flr_t3_b_key}Dread Charge charge greatly reduced, ride without ceasing." />
-	<string id="taom_flr_t3_b_p1" text="{=taom_flr_t3_b_p1}+100 horse health." />
+	<string id="taom_flr_t3_b_p1" text="{=taom_flr_t3_b_p1}+15% horse health." />
 	<string id="taom_flr_t3_b_p2" text="{=taom_flr_t3_b_p2}-15% troop wages." />
 	<string id="taom_flr_t3_b_p3" text="{=taom_flr_t3_b_p3}+15% party movement speed." />
 	<string id="taom_flr_t3_b_p4" text="{=taom_flr_t3_b_p4}+75 max health." />
@@ -1974,7 +1974,7 @@
 	<string id="taom_crb_t1_b_key" text="{=taom_crb_t1_b_key}Boarding Action duration extended, fortifying the defense." />
 	<string id="taom_crb_t1_b_p1" text="{=taom_crb_t1_b_p1}+8% resistance." />
 	<string id="taom_crb_t1_b_p2" text="{=taom_crb_t1_b_p2}+5% troop morale." />
-	<string id="taom_crb_t1_b_p3" text="{=taom_crb_t1_b_p3}+5% troop resistance." />
+	<string id="taom_crb_t1_b_p3" text="{=taom_crb_t1_b_p3}+10% troop resistance." />
 	<string id="taom_crb_t1_b_p4" text="{=taom_crb_t1_b_p4}+5% troop regeneration." />
 	<string id="taom_crb_t2_a_key" text="{=taom_crb_t2_a_key}Boarding Action charge reduced, activating more frequently." />
 	<string id="taom_crb_t2_a_p1" text="{=taom_crb_t2_a_p1}+10% troop morale." />
@@ -1984,7 +1984,7 @@
 	<string id="taom_crb_t2_b_key" text="{=taom_crb_t2_b_key}Boarding Action grants additional defensive buffs while active." />
 	<string id="taom_crb_t2_b_p1" text="{=taom_crb_t2_b_p1}+12% resistance." />
 	<string id="taom_crb_t2_b_p2" text="{=taom_crb_t2_b_p2}+60 max health." />
-	<string id="taom_crb_t2_b_p3" text="{=taom_crb_t2_b_p3}+10% troop resistance." />
+	<string id="taom_crb_t2_b_p3" text="{=taom_crb_t2_b_p3}+13% troop resistance." />
 	<string id="taom_crb_t2_b_p4" text="{=taom_crb_t2_b_p4}+10% troop damage." />
 	<string id="taom_crb_t3_a_key" text="{=taom_crb_t3_a_key}Boarding Action radius greatly expanded, devastating power." />
 	<string id="taom_crb_t3_a_p1" text="{=taom_crb_t3_a_p1}+15% melee damage." />
@@ -2006,11 +2006,11 @@
 	<string id="taom_crc_t1_b_p1" text="{=taom_crc_t1_b_p1}+5% resistance." />
 	<string id="taom_crc_t1_b_p2" text="{=taom_crc_t1_b_p2}+25 max health." />
 	<string id="taom_crc_t1_b_p3" text="{=taom_crc_t1_b_p3}+5% party spotting range." />
-	<string id="taom_crc_t1_b_p4" text="{=taom_crc_t1_b_p4}+5% stealth bonus." />
+	<string id="taom_crc_t1_b_p4" text="{=taom_crc_t1_b_p4}+10% stealth bonus." />
 	<string id="taom_crc_t2_a_key" text="{=taom_crc_t2_a_key}Rigging Shot charge reduced, maintaining constant pressure." />
 	<string id="taom_crc_t2_a_p1" text="{=taom_crc_t2_a_p1}+10% party spotting range." />
 	<string id="taom_crc_t2_a_p2" text="{=taom_crc_t2_a_p2}+10% movement speed." />
-	<string id="taom_crc_t2_a_p3" text="{=taom_crc_t2_a_p3}+10% stealth bonus." />
+	<string id="taom_crc_t2_a_p3" text="{=taom_crc_t2_a_p3}+13% stealth bonus." />
 	<string id="taom_crc_t2_a_p4" text="{=taom_crc_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_crc_t2_b_key" text="{=taom_crc_t2_b_key}Rigging Shot gains additional penetration while active." />
 	<string id="taom_crc_t2_b_p1" text="{=taom_crc_t2_b_p1}+12% ranged damage." />
@@ -2030,11 +2030,11 @@
 	<string id="taom_corsair_captain_root_desc" text="{=taom_corsair_captain_root_desc}Plunder grants +5% melee damage and rallies your crew." />
 	<string id="taom_crca_t1_a_key" text="{=taom_crca_t1_a_key}Plunder radius expanded, sweeping wider formations." />
 	<string id="taom_crca_t1_a_p1" text="{=taom_crca_t1_a_p1}+8% melee damage." />
-	<string id="taom_crca_t1_a_p2" text="{=taom_crca_t1_a_p2}+7% horse charge damage." />
+	<string id="taom_crca_t1_a_p2" text="{=taom_crca_t1_a_p2}+10% horse charge damage." />
 	<string id="taom_crca_t1_a_p3" text="{=taom_crca_t1_a_p3}+7% swing speed." />
 	<string id="taom_crca_t1_a_p4" text="{=taom_crca_t1_a_p4}+5% party movement speed." />
 	<string id="taom_crca_t1_b_key" text="{=taom_crca_t1_b_key}Plunder duration extended, maintaining momentum." />
-	<string id="taom_crca_t1_b_p1" text="{=taom_crca_t1_b_p1}+30 horse health." />
+	<string id="taom_crca_t1_b_p1" text="{=taom_crca_t1_b_p1}+10% horse health." />
 	<string id="taom_crca_t1_b_p2" text="{=taom_crca_t1_b_p2}+25 max health." />
 	<string id="taom_crca_t1_b_p3" text="{=taom_crca_t1_b_p3}-5% troop wages." />
 	<string id="taom_crca_t1_b_p4" text="{=taom_crca_t1_b_p4}+5% resistance." />
@@ -2045,16 +2045,16 @@
 	<string id="taom_crca_t2_a_p4" text="{=taom_crca_t2_a_p4}+10% battle renown gain." />
 	<string id="taom_crca_t2_b_key" text="{=taom_crca_t2_b_key}Plunder boosts mount resilience while active." />
 	<string id="taom_crca_t2_b_p1" text="{=taom_crca_t2_b_p1}+12% melee damage." />
-	<string id="taom_crca_t2_b_p2" text="{=taom_crca_t2_b_p2}+12% horse charge damage." />
-	<string id="taom_crca_t2_b_p3" text="{=taom_crca_t2_b_p3}+60 horse health." />
+	<string id="taom_crca_t2_b_p2" text="{=taom_crca_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_crca_t2_b_p3" text="{=taom_crca_t2_b_p3}+13% horse health." />
 	<string id="taom_crca_t2_b_p4" text="{=taom_crca_t2_b_p4}+10% swing speed." />
 	<string id="taom_crca_t3_a_key" text="{=taom_crca_t3_a_key}Plunder radius greatly expanded, unstoppable impact." />
 	<string id="taom_crca_t3_a_p1" text="{=taom_crca_t3_a_p1}+18% melee damage." />
-	<string id="taom_crca_t3_a_p2" text="{=taom_crca_t3_a_p2}+18% horse charge damage." />
+	<string id="taom_crca_t3_a_p2" text="{=taom_crca_t3_a_p2}+15% horse charge damage." />
 	<string id="taom_crca_t3_a_p3" text="{=taom_crca_t3_a_p3}+15% swing speed." />
 	<string id="taom_crca_t3_a_p4" text="{=taom_crca_t3_a_p4}+15% troop damage." />
 	<string id="taom_crca_t3_b_key" text="{=taom_crca_t3_b_key}Plunder charge greatly reduced, ride without ceasing." />
-	<string id="taom_crca_t3_b_p1" text="{=taom_crca_t3_b_p1}+100 horse health." />
+	<string id="taom_crca_t3_b_p1" text="{=taom_crca_t3_b_p1}+15% horse health." />
 	<string id="taom_crca_t3_b_p2" text="{=taom_crca_t3_b_p2}-15% troop wages." />
 	<string id="taom_crca_t3_b_p3" text="{=taom_crca_t3_b_p3}+15% party movement speed." />
 	<string id="taom_crca_t3_b_p4" text="{=taom_crca_t3_b_p4}+75 max health." />
