@@ -61,7 +61,7 @@ public class NavalTravelConfigProviderTests
     {
         var config = _sut.GetConfig();
 
-        Assert.IsTrue(config.Enabled);
+        Assert.IsFalse(config.Enabled); // default is false — feature parked pending navmesh (#296/#120)
         Assert.IsTrue(config.ApplyToPlayer);
         Assert.IsTrue(config.ApplyToAi);
         Assert.AreEqual(NavalTravelConfig.DefaultEmbarkThresholdDistance, config.EmbarkThresholdDistance);
@@ -76,7 +76,7 @@ public class NavalTravelConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.IsTrue(config.Enabled);
+        Assert.IsFalse(config.Enabled); // default is false — feature parked pending navmesh (#296/#120)
         Assert.AreEqual(NavalTravelConfig.DefaultEmbarkThresholdDistance, config.EmbarkThresholdDistance);
         _logger.Received().LogError(Arg.Is<string>(s => s.Contains("Failed to parse")));
     }
@@ -88,7 +88,7 @@ public class NavalTravelConfigProviderTests
 
         var config = _sut.GetConfig();
 
-        Assert.IsTrue(config.Enabled);
+        Assert.IsFalse(config.Enabled); // default is false — feature parked pending navmesh (#296/#120)
         Assert.AreEqual(NavalTravelConfig.DefaultEmbarkThresholdDistance, config.EmbarkThresholdDistance);
         CollectionAssert.AreEqual(NavalTravelConfig.DefaultNavalTerrainTypeIds(), config.NavalTerrainTypeIds);
         _logger.Received().LogInfo(Arg.Is<string>(s => s.Contains("Loaded")));

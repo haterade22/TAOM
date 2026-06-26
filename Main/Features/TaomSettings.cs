@@ -558,8 +558,8 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("World/Naval Travel", GroupOrder = 37)]
     [SettingPropertyBool("Enable Naval Travel", Order = 0,
-        HintText = "When enabled, parties can sail across water on the campaign map (the engine's native naval travel, unlocked without the Naval DLC). When off, movement is vanilla land-only.")]
-    public bool EnableNavalTravel { get; set; } = true;
+        HintText = "Currently DISABLED — the map's navmesh isn't set up for naval travel yet, so this feature is parked in code and this toggle has no effect for now. (When re-enabled: parties sail across water on the campaign map — the engine's native naval travel, unlocked without the Naval DLC.)")]
+    public bool EnableNavalTravel { get; set; } = false;
 
     [SettingPropertyGroup("World/Naval Travel")]
     [SettingPropertyBool("Apply To Player", Order = 1,

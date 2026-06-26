@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "applyToPlayer": true,
   "applyToAi": true,
   "embarkThresholdDistance": 0.5,

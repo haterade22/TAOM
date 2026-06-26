@@ -390,9 +390,13 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers));
             campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment));
 
-            // NavalTravel — unlock the engine's native naval system (water pathing + embark/disembark
-            // + native ship rendering) for everyone without the Naval DLC by overriding PartyNavigationModel.
-            campaignStarter.AddModel(new TaomPartyNavigationModel(IoC.Resolve<INavalTravelService>(), IoC.Resolve<IModLogger>()));
+            // NavalTravel — PARKED 2026-06-26: TAOM_Map's navmesh isn't set up to take advantage of naval
+            // travel (no naval region navmesh → AI can't route at sea; #296/#120), so the feature is disabled
+            // at the wiring level — registering nothing keeps vanilla DefaultPartyNavigationModel + vanilla
+            // navmesh regardless of any persisted MCM toggle. All code/tests/fixes are preserved for re-enable.
+            // RE-ENABLE: uncomment this model registration + the Patch54/Patch57 blocks in
+            // OnGameInitializationFinished, and flip the `enabled` defaults back to true.
+            // campaignStarter.AddModel(new TaomPartyNavigationModel(IoC.Resolve<INavalTravelService>(), IoC.Resolve<IModLogger>()));
 
             var raceAgeService = IoC.Resolve<IRaceAgeService>();
             var heroAgeAdapter = IoC.Resolve<IHeroAgeAdapter>();
@@ -690,23 +694,21 @@ public class SubModule : MBSubModuleBase
         Features.PartyIconScale.Hooks.Patch53_PartyIconScale.Initialize(IoC.Resolve<IModLogger>());
         _harmony.PatchCategory("Patch53_PartyIconScale");
 
-        // Patch54_NavalTravelBoatVisual — render an at-sea party as a boat. The base game omits the
-        // figure at sea but adds no ship (the campaign ship visual is otherwise NavalDLC.View-only), so
-        // this Postfix adds the base-game boat_sail_on mesh to the party's StrategicEntity when at sea.
-        // See docs/features/naval-travel.md.
-        Features.NavalTravel.Hooks.Patch54_NavalTravelBoatVisual.Initialize(IoC.Resolve<Features.NavalTravel.INavalTravelService>(), IoC.Resolve<IModLogger>());
-        _harmony.PatchCategory("Patch54_NavalTravelBoatVisual");
-
-        // Patch57_NavalAtSeaLandRescueGuard — prevent a native AV CTD: enabling naval travel lets a party
-        // reach IsCurrentlyAtSea, and the vanilla AIMoveToNearestLandBehavior at-sea->land rescue tick then
-        // calls a native cross-region pathfind (GetNearestFaceCenterForPositionWithPath) that AVs on
-        // TAOM_Map (no naval region navmesh, #120) — a map-tick CTD for any party at sea, incl. the player.
-        // Prefix skips the behavior while the feature is enabled (native AV can't be caught by a Finalizer).
-        // Crash report 2026-06-25 (#296). Drift-safe: try/caught so a future engine rename can't fail load.
-        var navalRescueLogger = IoC.Resolve<IModLogger>();
-        Features.NavalTravel.Hooks.Patch57_NavalAtSeaLandRescueGuard.Initialize(IoC.Resolve<Features.NavalTravel.INavalTravelService>(), navalRescueLogger);
-        try { _harmony.PatchCategory("Patch57_NavalAtSeaLandRescueGuard"); }
-        catch (System.Exception ex) { navalRescueLogger.LogWarning($"[NavalTravel] Patch57 at-sea rescue guard failed to apply: {ex.Message}"); }
+        // NavalTravel PARKED 2026-06-26 (#296/#120) — see the model-registration comment in OnGameStart.
+        // Patch54 (boat visual) + Patch57 (at-sea native-AV crash guard) are only meaningful while a party
+        // can be at sea, which only the (now-unregistered) TaomPartyNavigationModel enables — so neither is
+        // applied while the feature is parked. RE-ENABLE: uncomment both blocks with the model registration.
+        // Patch54_NavalTravelBoatVisual — render an at-sea party as a boat (base game renders no ship at sea).
+        // Features.NavalTravel.Hooks.Patch54_NavalTravelBoatVisual.Initialize(IoC.Resolve<Features.NavalTravel.INavalTravelService>(), IoC.Resolve<IModLogger>());
+        // _harmony.PatchCategory("Patch54_NavalTravelBoatVisual");
+        //
+        // Patch57_NavalAtSeaLandRescueGuard — prevent the native AV CTD on the hourly AI tick (the vanilla
+        // AIMoveToNearestLandBehavior's native cross-region pathfind AVs on TAOM_Map's missing naval navmesh,
+        // #120). Only fires for an at-sea party, which can't happen while the model is unregistered.
+        // var navalRescueLogger = IoC.Resolve<IModLogger>();
+        // Features.NavalTravel.Hooks.Patch57_NavalAtSeaLandRescueGuard.Initialize(IoC.Resolve<Features.NavalTravel.INavalTravelService>(), navalRescueLogger);
+        // try { _harmony.PatchCategory("Patch57_NavalAtSeaLandRescueGuard"); }
+        // catch (System.Exception ex) { navalRescueLogger.LogWarning($"[NavalTravel] Patch57 at-sea rescue guard failed to apply: {ex.Message}"); }
 
         // BattleLoadDiagnostics — phase-stamp the attack->battle-playable lifecycle so an
         // intermittent battle-load hang leaves a log whose last line names the stuck phase

@@ -3,6 +3,18 @@
 Feature-scoped change log. The canonical project log is [`../../../CHANGELOG.md`](../../../CHANGELOG.md);
 keep new entries here in sync with it (this file is the per-feature curated view, not a replacement).
 
+## 2026-06-26 — PARKED (feature disabled pending navmesh, #296/#120)
+
+Disabled at the wiring level: TAOM_Map's navmesh isn't set up for naval travel (no naval region navmesh →
+the engine can't route at sea, #120). The `TaomPartyNavigationModel` registration and the `Patch54`/`Patch57`
+registrations are commented out in `Main/SubModule.cs`; with nothing registered the game uses vanilla
+`DefaultPartyNavigationModel` + vanilla navmesh, regardless of any persisted MCM toggle (a default-flip alone
+wouldn't disable it — `IsEnabled` reads the MCM value first, which testers already have saved on). `enabled`
+defaulted **false** in `naval_travel_config.json` + `NavalTravelConfig` + `TaomSettings.EnableNavalTravel`
+(MCM hint notes it's inert); 3 ConfigProvider default tests updated. All code, the 57 tests, and the
+input/crash fixes are preserved. **RE-ENABLE** = uncomment the 3 `SubModule.cs` blocks + flip the `enabled`
+defaults true, once TAOM_Map has naval navmesh.
+
 ## 2026-06-25 — in-game iteration #2: input read + native at-sea crash guard (issue #296)
 
 Two issues surfaced while testing the set-sail modifier in-game (both decompile/log-confirmed; the fixes

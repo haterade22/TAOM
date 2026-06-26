@@ -1,5 +1,41 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-26
+
+### fix(faction-map): pass origin settlement to GenerateClanName (Rohan CC NRE) (#301)
+
+Confirming a Rohan culture at character creation threw a `NullReferenceException` inside the engine's
+`NameGenerator.GenerateClanName`. `CultureSettingService` passed `null` for the `Settlement clanOriginSettlement`
+argument, but the engine's `vlandia` special-case unconditionally dereferences `clanOriginSettlement.Name` —
+and TAOM repurposes `vlandia` as Rohan, so **every** Rohan confirm hit it.
+
+- The method's outer try/catch caught the throw (not a hard CTD), but the Rohan clan-name override then
+  silently failed (clan kept vanilla's hardcoded `"dey Corvand"`), the rest of the try-block was skipped, and
+  the log filled with `SetCultureOnCharacterCreation error`.
+- Fix: resolve a culture-appropriate settlement (`Settlement.All` first-of-culture, else first overall) and pass
+  it. The `ORIGIN_SETTLEMENT` text variable is unused by TAOM's `<clan_names>` (verified — no clan name
+  references the token), so the choice is cosmetic; only non-null-ness matters. Single call site, one file.
+- Verified against the v1.4.6 decompile. Not unit-tested (engine-boundary reflection shim, test-via-game per
+  ADR-008); the 9 unrelated Dol Guldur recruitment-pool test failures are pre-existing (confirmed by stash).
+
+### chore(map): park Naval Travel (#296) — disabled pending TAOM_Map naval navmesh (#120)
+
+TAOM_Map's navmesh isn't set up to support naval travel (no naval region navmesh → the engine can't route
+parties at sea — the same gap behind the #120 distance-cache limitation and the Patch57 at-sea crash), so the
+feature is **disabled at the wiring level** until the map gains naval navmesh support.
+
+- **Parked, not deleted.** `TaomPartyNavigationModel`'s registration and the `Patch54`/`Patch57` registrations
+  are commented out in `Main/SubModule.cs` with a dated `RE-ENABLE` marker. With nothing registered the game
+  uses vanilla `DefaultPartyNavigationModel` + vanilla navmesh — guaranteed land-only regardless of any
+  **persisted MCM toggle** (the reason a default-flip alone wasn't enough: `IsEnabled` reads the MCM value
+  first, which testers already have saved as on).
+- `enabled` now defaults to **false** in all three places (`naval_travel_config.json`, `NavalTravelConfig`,
+  `TaomSettings.EnableNavalTravel`); the MCM hint says the toggle is currently inert. 3 ConfigProvider
+  default tests updated to assert the new default. All naval code, the 57 tests, and the recent input
+  (`IsKeyDownImmediate`) + native-AV-guard (`Patch57`) fixes are preserved for re-enable.
+- **RE-ENABLE** when TAOM_Map has naval navmesh: uncomment the 3 `SubModule.cs` blocks + flip the `enabled`
+  defaults back to true. See `docs/features/naval-travel.md` (Status) + the feature memory.
+
 ## 2026-06-25
 
 ### fix(career): wire up six phantom pip bonuses + honor attack_type_mask

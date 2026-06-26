@@ -2,6 +2,16 @@
 
 > Issue #296. Related: #120 (land-only distance caches).
 
+> **⛔ STATUS: PARKED (disabled) — 2026-06-26.** TAOM_Map's navmesh isn't set up to support naval travel
+> (no naval region navmesh → the engine can't route at sea; this is the same gap behind #120 and the
+> Patch57 at-sea crash). The feature is **disabled at the wiring level**: the `TaomPartyNavigationModel`
+> registration and the `Patch54`/`Patch57` registrations are commented out in `Main/SubModule.cs`, and
+> `enabled` defaults to false (JSON/DTO/MCM). With nothing registered the game uses vanilla
+> `DefaultPartyNavigationModel` + vanilla navmesh, regardless of any persisted MCM toggle. **All code,
+> tests, and fixes below are preserved** — this doc describes the design for when it's active. **RE-ENABLE:**
+> uncomment the 3 `SubModule.cs` blocks (marked with a `RE-ENABLE` comment) and flip the `enabled` defaults
+> back to true, once TAOM_Map has naval navmesh support.
+
 ## Overview
 
 Lets campaign-map parties sail across **open sea** — and look like boats while they do — for **every
@@ -252,4 +262,5 @@ release the key and click land while at sea — it disembarks on the coast.
 - 2026-06-24 — Initial feature: `TaomPartyNavigationModel` unlocks base-engine naval movement without the DLC + `Patch54_NavalTravelBoatVisual` renders the at-sea boat icon; MCM World → Naval Travel toggles (Enable / Apply To Player / Apply To AI Lords); Codex review fixed at-sea/army-leader capability inheritance (HIGH) and live-disable mid-voyage (MED). Issue #296.
 - 2026-06-24 — In-game iteration: confirmed via diag that capability + water navmesh + at-sea state all work, but (a) the auto-pathfinder always prefers land/bridge over sea and (b) the boat never appeared. Added the **set-sail modifier** (`sailModifierKey`, default LeftAlt — hold + click water to embark deliberately, since auto-pathing won't sail), scoped to **sea-only** (rivers self-exclude via mountain-`7` banks + bridges), and **fixed the boat hook** (added `MobilePartyVisual.OnTransitionEnded` — the rebuild hook alone never saw the at-sea change). Boat assets `boat_sail_on`/`boatScale`/`renderBoatVisual` + the naval-distance-cache gap (#120) documented. End-to-end sail + boat render still in-game-pending; `[diag]` logging temporary.
 - 2026-06-24 — Fix: caravans showed `ERROR: Text with id str_convoy_party_name doesn't exist!` because the naval-name branch in `CaravanPartyComponent.CacheName` resolves NavalDLC-only strings. Re-provided both convoy ids in `taom_module_strings.xml` mirroring the vanilla caravan text + keys (no patch, free localization). See "Known interactions".
+- 2026-06-26 — **PARKED (disabled).** TAOM_Map's navmesh isn't set up for naval travel (#120), so the feature is disabled at the wiring level: `TaomPartyNavigationModel` + `Patch54`/`Patch57` registrations commented out in `SubModule.cs`, `enabled` defaulted false (JSON/DTO/MCM). Vanilla model/navmesh used regardless of any persisted MCM toggle. All code + 57 tests preserved; re-enable = uncomment the 3 blocks + flip defaults. See the Status banner at the top.
 - 2026-06-25 — In-game iteration #2 (two fixes): (1) **Set-sail key never registered** — `Input.IsKeyDown(LeftAlt)` returns false polled from the model (outside the map input layer, which consumes key routing); switched to `Input.IsKeyDownImmediate` (raw device state), accepting either source. (2) **Native AV CTD** (`0xC0000005` reading `0x4`) on the hourly AI tick — an at-sea party activates the dormant vanilla `AIMoveToNearestLandBehavior`, whose native cross-region land-pathfind dereferences TAOM_Map's missing naval region navmesh (#120). Added `Patch57_NavalAtSeaLandRescueGuard` (Prefix skip while enabled; native AV ≠ Finalizer-catchable, so prevent-the-call like Patch47/48). +2 tests (57 total). Crash report 2026-06-25, #296. Decompile-confirmed root cause; in-game verification of the fix still pending.

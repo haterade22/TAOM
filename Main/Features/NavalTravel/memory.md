@@ -1,5 +1,14 @@
 # NavalTravel — in-folder memory
 
+> **⛔ PARKED 2026-06-26 — feature DISABLED at the wiring level.** TAOM_Map's navmesh isn't set up for naval
+> travel (no naval region navmesh → engine can't route at sea, #120). The `TaomPartyNavigationModel`
+> registration + `Patch54`/`Patch57` registrations are **commented out in `Main/SubModule.cs`**, and `enabled`
+> defaults false (JSON/DTO/MCM). Nothing is registered → vanilla `DefaultPartyNavigationModel` + vanilla
+> navmesh, regardless of any **persisted MCM toggle** (a default-flip alone wouldn't disable it: `IsEnabled`
+> reads MCM first, which testers already have saved on). All code/tests/fixes preserved. **RE-ENABLE:**
+> uncomment the 3 `SubModule.cs` blocks (marked `RE-ENABLE`) + flip the `enabled` defaults true, once the map
+> has naval navmesh. Everything below is the design/lessons for when it's active.
+
 **Read this before editing this folder.** It is the terse "what a future editor must know" list — the
 comprehensive reference is [`docs/features/naval-travel.md`](../../../docs/features/naval-travel.md);
 the cross-cutting lesson (applies to *all* GameModels) lives in the global memory

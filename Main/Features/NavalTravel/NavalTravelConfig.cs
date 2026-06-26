@@ -7,8 +7,13 @@ namespace TAOM.Features.NavalTravel;
 /// </summary>
 public class NavalTravelConfig
 {
-    /// <summary>Master toggle. When false the feature is inert (vanilla land-only movement).</summary>
-    public bool Enabled { get; set; } = true;
+    /// <summary>
+    /// Master toggle. When false the feature is inert (vanilla land-only movement). Defaults to FALSE:
+    /// the feature is PARKED at the wiring level (the GameModel + patches are not registered) because
+    /// TAOM_Map lacks the naval navmesh to support it (#296/#120). Re-enable the wiring AND flip this back
+    /// to true together.
+    /// </summary>
+    public bool Enabled { get; set; } = false;
 
     /// <summary>When false the player party never gains naval capability (AI still gated by <see cref="ApplyToAi"/>).</summary>
     public bool ApplyToPlayer { get; set; } = true;

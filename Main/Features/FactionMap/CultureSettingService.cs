@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Core.Logging;
 
 namespace TAOM.Features.FactionMap;
@@ -64,9 +66,19 @@ public class CultureSettingService : ICultureSettingService
                     if (culture.StringId == "vlandia" && Hero.MainHero != null && Clan.PlayerClan != null
                         && culture.ClanNameList != null && culture.ClanNameList.Count > 0)
                     {
-                        var clanName = NameGenerator.Current.GenerateClanName(culture, null);
-                        if (clanName != null)
-                            Clan.PlayerClan.ChangeClanName(clanName, clanName);
+                        // GenerateClanName's vlandia special-case unconditionally derefs the settlement's
+                        // Name (engine NameGenerator.cs), so a null settlement NREs. Pass a real
+                        // culture-appropriate settlement. The ORIGIN_SETTLEMENT text variable is unused by
+                        // TAOM's <clan_names>, so the choice is cosmetic — any non-null settlement avoids
+                        // the crash; first-of-culture is thematically apt.
+                        var originSettlement = Settlement.All.FirstOrDefault(s => s.Culture == culture)
+                                               ?? Settlement.All.FirstOrDefault();
+                        if (originSettlement != null)
+                        {
+                            var clanName = NameGenerator.Current.GenerateClanName(culture, originSettlement);
+                            if (clanName != null)
+                                Clan.PlayerClan.ChangeClanName(clanName, clanName);
+                        }
                     }
                 }
                 else
