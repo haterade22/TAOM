@@ -49,3 +49,32 @@ from `RecruitmentAlignmentConfigProviderTests`. Appended to `LESSONS-LEARNED.md`
 
 `dotnet test TAOM.Tests --filter AlignmentDesertion` → green (service 18 + GetCultureSide 5 + ConfigProvider 12).
 No HIGH/MEDIUM findings; no deferrals requiring a GitHub-issue / commit-trailer / CHANGELOG record.
+
+## Codex adversarial pass (2026-06-27)
+
+Independent Codex (gpt-5.5, xhigh) review after the 5-agent deep-review + commit `ac20b2d7`. Verdict:
+**0 CRITICAL, 0 HIGH, 1 MEDIUM, 2 LOW** — all 3 confirmed against source + installed v1.4.6 DLLs and
+fixed in follow-up. Codex independently re-derived the full decision matrix, verified the TroopRoster
+mutation + DailyTick lifecycle against the engine, and cross-referenced every alignment id (no typos).
+
+| # | Sev | Finding | Category | Why missed | Fix |
+|---|-----|---------|----------|------------|-----|
+| C1 | MEDIUM | `OnDailyTickParty` gated only on `LeaderHero.Clan.Kingdom`, so it processed **any** hero-led party with a kingdom — incl. player/AI **caravans** (companion-led → clan + kingdom present). Contradicts the "lords' field parties" MCM hint; risked silently shedding caravan guards. | Missing vanilla gate (party-type) | `DailyTickPartyEvent` fires for **every** `MobileParty` (lord/caravan/garrison/villager/militia/bandit). My behavior + its comment *assumed* only lord parties have a hero-led clan — false for caravans. The deep-review Data Flow agent traced "bandit/caravan excluded" but accepted the same false premise instead of checking the party-type flags. | Gate `if (!party.IsLordParty && !party.IsMainParty) return;`. Also definitively excludes garrison parties from the party path (they desert via `OnDailyTickSettlement`), closing a latent double-processing path. |
+| C2 | LOW | Service comment claimed mercenary owners are exempt ("no purge"), but a mercenary clan keeps `Clan.Kingdom = employer`, so it resolves to the employer's side and **does** purge. | Stale/incorrect comment | Wrote the comment from an assumption about mercenary clan state without decompiling `StartMercenaryServiceAction`. | Corrected the comment; behavior (mercenary lord parties shed opposed troops, fighting for their employer's side) is intended and kept. |
+| C3 | LOW | Rate `0` still shed 1 per opposed type (min-1 floor fired at 0%); a 0% slider reads as "off" to a user but wasn't. | Logic / UX semantics | Designed the min-1 floor for small stacks at normal rates; didn't consider rate exactly 0 as a distinct "no desertion" intent (treated the master toggle as the only off switch). | Added `if (rate <= 0f) return result;` before the loop; pinned by `CalculateDesertion_RateZero_ReturnsEmpty`. |
+
+### Lesson (Campaign Mechanics) — `DailyTickPartyEvent` fires for ALL party types; filter explicitly
+
+`CampaignEvents.DailyTickPartyEvent` (and `MobileParty.All` iteration generally) yields **every** mobile
+party — lord, caravan, garrison, villager, militia, bandit. A handler that means "lord field parties +
+the player" must gate on `party.IsLordParty || party.IsMainParty`, NOT on a proxy like "has a hero
+leader with a kingdom" (caravans satisfy that). Likewise a garrison handled via `DailyTickSettlementEvent`
+must be excluded from the party path or it double-processes. Appended to `LESSONS-LEARNED.md` (Campaign
+Mechanics). Why the deep-review missed it: the Data Flow agent reasoned about *which clans* are excluded
+(kingdomless/bandit) but inherited the same "only lords are hero-led" premise the code's own comment
+asserted — it never enumerated the party-type flags. Codex caught it by decompiling `CaravanPartyComponent`.
+
+### Follow-up verification
+
+Build green; `--filter AlignmentDesertion|AlignmentServiceTests` → **82 passed, 0 failed** (+1 rate-0 test).
+Fixes land in a follow-up commit (the original `ac20b2d7` is already pushed; not amended).

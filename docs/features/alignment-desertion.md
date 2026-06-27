@@ -34,8 +34,9 @@ Neutral and they would never desert.
 
 ### Solution Approach
 
-- A new `CampaignBehavior` subscribes to `DailyTickPartyEvent` (mobile parties) and
-  `DailyTickSettlementEvent` (garrisons). It does only engine I/O: snapshot the roster into POCOs, call
+- A new `CampaignBehavior` subscribes to `DailyTickPartyEvent` (gated to `IsLordParty || IsMainParty` —
+  the event fires for ALL mobile parties, so caravans/villagers/militia/bandits/garrisons are excluded)
+  and `DailyTickSettlementEvent` (garrisons). It does only engine I/O: snapshot the roster into POCOs, call
   the pure service, apply the returned removals via `TroopRoster.AddToCounts`. No Harmony patch, no
   GameModel, no adapter (the roster I/O stays in the thin behavior, mirroring the SpecialResources
   desertion precedent), no `SyncData` (desertion is recomputed daily from live rosters).
@@ -51,9 +52,15 @@ Given owner kingdom id, `isPlayerOwned`, `isGarrison`, and a roster snapshot:
 1. Master toggle off / empty roster → none.
 2. Owner gate: player + `!ApplyToPlayer` → none; AI + `!ApplyToAi` → none.
 3. Location gate: garrison + `!ApplyToGarrisons` → none; party + `!ApplyToParties` → none.
-4. Owner side Neutral (includes kingdomless/independent) → none.
-5. Per troop: skip heroes, zero-count, Neutral-culture, and same-side troops. Opposed troops desert
+4. Owner side Neutral (includes kingdomless/independent) → none. (Mercenary clans keep `Kingdom` set to
+   their employer, so they resolve to the employer's side and DO purge — not exempt.)
+5. Rate ≤ 0 → none (a 0% slider means "no desertion"; the min-1 floor does not fire at rate 0).
+6. Per troop: skip heroes, zero-count, Neutral-culture, and same-side troops. Opposed troops desert
    `min(count, max(1, (int)(count × rate)))`. Symmetric — Free sheds Evil and Evil sheds Free.
+
+The behavior gates the party path to `IsLordParty || IsMainParty` (lord field parties incl. army members
++ the player's main party). Caravans, villagers, militia, bandits, and garrison parties are excluded from
+the party path; garrisons desert via the settlement tick under their own MCM gate.
 
 ### Component Diagram
 
@@ -79,7 +86,7 @@ JSON defaults; MCM overrides at runtime. Validated on load (singleton-cached —
 | Field | Type | Description |
 |-------|------|-------------|
 | `Enabled` | bool | Master toggle. False = vanilla (no alignment desertion). |
-| `Rate` | float | Fraction (0..1) of each opposed troop type that deserts per day. NaN/out-of-range → reverts to 0.5 + warning. |
+| `Rate` | float | Fraction (0..1) of each opposed troop type that deserts per day (min 1 above 0). `0` = no desertion. NaN/out-of-range → reverts to 0.5 + warning. |
 | `ApplyToAi` | bool | AI-owned parties/garrisons shed opposed troops. |
 | `ApplyToPlayer` | bool | The player's party/garrisons shed opposed troops. |
 | `ApplyToParties` | bool | Mobile parties are affected. |
@@ -124,9 +131,9 @@ culture-id keys whose ids differ from their kingdom id:
 
 ## Tests
 
-- `TAOM.Tests/Features/AlignmentDesertion/AlignmentDesertionServiceTests.cs` — 18 tests: master toggle,
+- `TAOM.Tests/Features/AlignmentDesertion/AlignmentDesertionServiceTests.cs` — 19 tests: master toggle,
   each owner/location gate, Evil↔Free symmetric desertion, same-side/Neutral-owner/Neutral-troop/hero
-  skips, min-1 floor, cap-at-count, mixed-roster selectivity, kingdomless owner, zero-count.
+  skips, min-1 floor, cap-at-count, rate-0 no-op, mixed-roster selectivity, kingdomless owner, zero-count.
 - `TAOM.Tests/Features/AlignmentDesertion/AlignmentDesertionConfigProviderTests.cs` — 12 tests: one per
   `Rate` validation rule (above-1, below-0, NaN, Infinity revert to 0.5 + warn; 0/1/valid preserved) plus
   missing-file / malformed-JSON / empty-object / cache-identity.

@@ -1390,6 +1390,18 @@ New feature: a data-driven `custom_battle/custom_battle_commanders.json` maps ea
 
 ---
 
+## Review 66 — AlignmentDesertion (2026-06-27)
+
+New feature: troops whose CULTURE alignment (Free vs Evil) is opposed to their lord's KINGDOM alignment desert daily from mobile parties + garrisons (50%/day per type, min 1; MCM-gated by player/AI and parties/garrisons). Pure `AlignmentDesertionService` + thin `DailyTickPartyEvent`/`DailyTickSettlementEvent` behavior; reuses Execution `IAlignmentService` via a new `GetCultureSide`; added `gondor`=free / `mordor`=evil culture keys to `alignment.json`.
+
+**Deep-review (5 agents + adversarial verify): 0 HIGH / 0 MED / 3 LOW.** 8 findings raised, 5 refuted as NOT_A_BUG on re-read. Confirmed (all LOW): missing `AlignmentDesertionConfigProviderTests` (fixed in-session, 12 tests), localization gap (English-only, engine falls back), pending issue number (intended pre-close state).
+
+**Codex (gpt-5.5 xhigh): 0 CRITICAL / 0 HIGH / 1 MEDIUM / 2 LOW** — all 3 confirmed + fixed. **MEDIUM (all 5 deep-review agents missed):** `OnDailyTickParty` gated only on `LeaderHero?.Clan?.Kingdom` — `DailyTickPartyEvent` fires for ALL mobile parties, so companion-led player/AI caravans (clan + kingdom present) were processed, contradicting the "lords' field parties" intent + risking garrison double-processing. Fixed: gate on `IsLordParty || IsMainParty`. LOWs: stale "mercenaries exempt" comment (they keep `Kingdom`=employer and DO purge — comment corrected); rate 0 shed 1 via the min-1 floor (added `rate <= 0` guard + pinning test). Codex proved the catch by decompiling `CaravanPartyComponent.Leader`; it verified the `AddToCounts` removal + periodic-ticker lifecycle correct.
+
+**Process:** feature committed (`ac20b2d7`) at the user's request, then deep-review + Codex review; fixes land in a follow-up commit. Build green; `--filter AlignmentDesertion|AlignmentServiceTests` → 82 passed. RCA: `docs/reviews/rca-alignment-desertion-2026-06-27.md`. Codex prompt + raw output: `docs/reviews/codex-adversarial-alignmentdesertion-2026-06-27.{prompt.md,md}`. Lesson: a `DailyTickPartyEvent` handler that means "lords + player" must gate on `IsLordParty || IsMainParty`, not a "hero-led clan with a kingdom" proxy.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

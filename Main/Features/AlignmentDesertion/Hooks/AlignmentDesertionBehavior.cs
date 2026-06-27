@@ -45,8 +45,14 @@ public class AlignmentDesertionBehavior : CampaignBehaviorBase
         if (!_service.IsEnabled || party == null)
             return;
 
-        // Only lord/clan field parties carry an alignment; caravans, villagers, militia, and bandits
-        // have no leader clan (or no kingdom) and fall through. Army members each tick individually.
+        // Only lord field parties (incl. army members, which each tick individually) and the player's
+        // main party shed troops here. Caravans (companion-led, so they have a clan + kingdom),
+        // villagers, militia, bandits, and garrison parties are excluded — garrisons desert via
+        // OnDailyTickSettlement under their own MCM gate. (Without this gate a player/AI caravan's
+        // guards would desert — the "lords' field parties" promise the MCM hint makes. Codex #1.)
+        if (!party.IsLordParty && !party.IsMainParty)
+            return;
+
         var clan = party.LeaderHero?.Clan;
         var kingdom = clan?.Kingdom;
         if (kingdom == null)

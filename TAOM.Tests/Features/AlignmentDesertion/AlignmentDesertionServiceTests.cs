@@ -251,6 +251,18 @@ public class AlignmentDesertionServiceTests
     }
 
     [TestMethod]
+    public void CalculateDesertion_RateZero_ReturnsEmpty()
+    {
+        // Rate 0 = no desertion; the min-1 floor must NOT manufacture a removal at 0%. (Codex #3.)
+        _settings.Rate.Returns(0f);
+        var troops = Troops(new DesertionTroopInfo("gondor_knight", "gondor", false, 20));
+
+        var result = _service.CalculateDesertion(EvilKingdom, false, false, troops);
+
+        Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
     public void CalculateDesertion_MixedRoster_OnlyOppositeDeserts()
     {
         var troops = Troops(

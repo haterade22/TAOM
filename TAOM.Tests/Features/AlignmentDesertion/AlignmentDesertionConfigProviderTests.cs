@@ -115,7 +115,7 @@ public class AlignmentDesertionConfigProviderTests
     [TestMethod]
     public void GetConfig_RateZero_Preserved()
     {
-        // 0 is in-range (a valid "no desertion" rate) — must NOT revert.
+        // 0 is in-range -- the provider preserves it (no revert); the service treats rate 0 as no desertion.
         WriteConfig(@"{ ""Rate"": 0.0 }");
 
         var config = _sut.GetConfig();

@@ -40,9 +40,15 @@ public class AlignmentDesertionService : IAlignmentDesertionService
         if (!isGarrison && !_settings.ApplyToParties) return result;
 
         var ownerSide = _alignment.GetKingdomSide(ownerKingdomId);
-        if (ownerSide == FactionSide.Neutral) return result; // mercenary/independent/kingdomless — no purge
+        // Neutral-aligned (Umbar/Shaghana/Abanissa), independent, or kingdomless owners never purge.
+        // NOTE: a mercenary clan keeps Clan.Kingdom set to its employer, so it resolves to the
+        // employer's side and DOES purge opposed troops -- it is not exempt here. (Codex #2.)
+        if (ownerSide == FactionSide.Neutral) return result;
 
         var rate = _settings.Rate;
+        // Rate 0 = no desertion. The master toggle is the off switch, but a 0% slider must also mean
+        // "none" -- without this the min-1 floor below would still shed 1 per opposed type. (Codex #3.)
+        if (rate <= 0f) return result;
 
         foreach (var troop in troops)
         {
@@ -51,7 +57,7 @@ public class AlignmentDesertionService : IAlignmentDesertionService
 
             var troopSide = _alignment.GetCultureSide(troop.CultureId);
             if (troopSide == FactionSide.Neutral || troopSide == ownerSide)
-                continue; // loyal or mercenary — stays
+                continue; // loyal (same side) or mercenary-culture (Neutral) -- stays
 
             var desertCount = Math.Max(1, (int)(troop.Count * rate));
             desertCount = Math.Min(desertCount, troop.Count);

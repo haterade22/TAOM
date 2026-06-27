@@ -2,6 +2,21 @@
 
 ## 2026-06-27
 
+### fix(alignment-desertion): Codex review — gate party path to lord/main parties
+
+Follow-up to `ac20b2d7` after the Codex adversarial review (0 CRITICAL / 0 HIGH / 1 MEDIUM / 2 LOW).
+
+- **MEDIUM:** `AlignmentDesertionBehavior.OnDailyTickParty` gated only on the leader's clan having a
+  kingdom, but `DailyTickPartyEvent` fires for every `MobileParty` — a companion-led player/AI **caravan**
+  has a clan + kingdom, so its guards would desert, contradicting the "lords' field parties" MCM hint (and
+  risking garrison double-processing). Now gated `if (!party.IsLordParty && !party.IsMainParty) return;`.
+- **LOW:** corrected a service comment that wrongly claimed mercenary clans are exempt — a mercenary keeps
+  `Clan.Kingdom` set to its employer, so it resolves to the employer's side and does shed opposed troops.
+- **LOW:** rate `0` now means no desertion (added `if (rate <= 0f) return;`) — previously the min-1 floor
+  shed 1 per opposed type even at a 0% slider. Pinned by `CalculateDesertion_RateZero_ReturnsEmpty`.
+- All 3 confirmed against installed v1.4.6 DLLs; build green, 82 AlignmentDesertion/AlignmentService tests
+  pass. RCA: `docs/reviews/rca-alignment-desertion-2026-06-27.md` (Codex pass).
+
 ### feat(alignment-desertion): opposed-alignment troops desert daily
 
 New feature: troops whose culture is opposed in alignment to their lord (Free vs Evil) desert each
