@@ -41,6 +41,18 @@ The fix is a singleton hook (`ISideCommanderFilter` / `SideCommanderFilter`) tha
 
 Both side-VM postfixes log a `LogWarning` to `rgl_log.txt` if a culture has zero matching commanders, so future `lords.xml` culture-tag misalignment surfaces in logs instead of silently regressing the dropdown to the unfiltered list.
 
+### Curated commander lists (per faction)
+
+The default top-3-alphabetical behavior never reliably surfaces the named LOTR lords a player wants (Boromir, Théoden, Sauron…), and its 2-segment-id regex (`^lord_[A-Za-z0-9]+_[A-Za-z0-9]+$`, the `GetCommanderIds_ExcludesSubLords` guarantee) **excludes 3-segment ids outright** — Éomer `lord_4_3_1`, Éowyn `lord_4_3_2`, the lesser Nazgûl `lord_1_48_1/2/3` can never appear no matter the cap.
+
+A data-driven config (`custom_battle/custom_battle_commanders.json`) maps each faction key (culture `StringId`) to an **ordered** list of lord ids. `CustomBattleService.GetCommanderIdsForFaction` branches on `ICustomBattleCommandersProvider.HasCuratedEntry(factionId)`: a configured faction returns that exact list, in order, **bypassing** the regex, the `takeMax` cap, and the culture filter (so 3-segment ids and cross-culture lords are allowed). Unconfigured factions keep the default behavior unchanged.
+
+Because curated resolution bypasses the culture filter, a lord may be listed under a faction whose `StringId` differs from the lord's own culture — e.g. Khamûl (`lord_1_48`, `Culture.dolguldur`) and Duinhir (`lord_WE9_l`, `Culture.empire`) both appear under their requested faction. This is intentional: the config is the source of truth for what shows under each faction.
+
+The master `CustomBattleData.Characters` list (`GetCommanderIds()`) is deliberately **unchanged** — it stays regex-filtered. The per-faction dropdown is rebuilt directly from `GetBasicCharacter`-resolved objects (`CommanderSelectorRebuilder.Apply`), independent of the master list, so curated 3-segment ids surface in the dropdown without polluting the global pool. `CuratedDropdownIndependenceTests` pins this decoupling.
+
+The provider validates per the **Config Providers MUST Validate** rule (missing/malformed file → all factions default; empty/whitespace ids skipped; duplicates deduped first-occurrence-order; unknown faction keys kept-but-warned; a faction with no valid ids falls back to default). `Reuse.Singleton` → **edits require a full game restart**, not a save-load. Unresolvable ids cannot be checked at load (no live `MBObjectManager`); they are warned + skipped at resolve time in `SideCommanderFilter`.
+
 ### Component Diagram
 
 ```
@@ -105,7 +117,11 @@ No external configuration files. All data loaded dynamically from `Game.Current.
 | `Main/Features/CustomBattles/Hooks/CustomBattleSideVM_OnCultureSelection_Patch.cs` | Harmony postfix — filters commander dropdown on faction click (cap=3) |
 | `Main/Features/CustomBattles/Hooks/CustomBattleSideVM_RefreshValues_Patch.cs` | Harmony postfix — defensive re-filter for refresh events |
 | `Main/Features/CustomBattles/Hooks/ISideCommanderFilter.cs` | Hook interface — resolves commanders for a culture |
-| `Main/Features/CustomBattles/Hooks/SideCommanderFilter.cs` | Hook impl — calls service with `MaxCommandersPerCulture = 3` |
+| `Main/Features/CustomBattles/Hooks/SideCommanderFilter.cs` | Hook impl — calls service with `MaxCommandersPerCulture = 3`; warns + skips any commander id that fails to resolve |
+| `Main/Features/CustomBattles/Config/custom_battle_commanders.json` *(in `Main/_Module/ModuleData/custom_battle/`)* | Curated per-faction commander lists (faction culture id → ordered lord ids) |
+| `Main/Features/CustomBattles/Config/CustomBattleCommandersConfig.cs` | DTO for the curated config (`Dictionary<string, List<string>> Factions`) |
+| `Main/Features/CustomBattles/Config/ICustomBattleCommandersProvider.cs` | Provider interface — `HasCuratedEntry` (validate-before-lookup gate) + `GetCuratedCommanderIds` |
+| `Main/Features/CustomBattles/Config/CustomBattleCommandersProvider.cs` | Validating `Lazy` singleton provider (mirrors `CultureConversionConfigProvider`) |
 | `Main/Features/CustomBattles/Hooks/CommanderSelectorRebuilder.cs` | Static helper — calls vanilla `SelectorVM<T>.Refresh(items, 0, onChange)` to safely rebuild the selector. Reads existing `_onChange` via cached `FieldInfo` so Refresh's overwrite preserves the wiring. (Issue #105 — replaced manual `Clear() + AddItem(*N) + reflection-on-_selectedIndex` approach to match the canonical safe rebuild pattern.) |
 | `Main/Features/CustomBattles/Hooks/CustomBattleSideVM_OnCharacterSelection_Patch.cs` | Defensive Prefix on the private `OnCharacterSelection(SelectorVM<CharacterItemVM>)` — returns `false` when `selector?.SelectedItem == null`. Stops vanilla NRE that surfaced when `SelectedIndex` setter fires `_onChange.Invoke` with an empty `ItemList` (Issue #105 Bug 1). |
 | `Main/Adapters/IObjectManagerAdapter.cs` | Adapter interface + CultureInfo/CharacterInfo DTOs |
@@ -123,7 +139,9 @@ No external configuration files. All data loaded dynamically from `Game.Current.
 
 | Test File | Methods | Coverage |
 |-----------|---------|----------|
-| `TAOM.Tests/Features/CustomBattles/CustomBattleServiceTests.cs` | 22 | Faction filtering, commander filtering, formation mapping, takeMax cap (4 dedicated tests: cap, deterministic order, fewer-than-cap, zero-cap), null/empty edge cases |
+| `TAOM.Tests/Features/CustomBattles/CustomBattleServiceTests.cs` | 28 | Faction filtering, commander filtering, formation mapping, takeMax cap, null/empty edge cases + **6 curated-branch tests** (curated order preserved, regex+cap bypass, culture-filter bypass, non-curated default path, null guard precedes provider, master list unchanged) |
+| `TAOM.Tests/Features/CustomBattles/CustomBattleCommandersProviderTests.cs` | 16 | Config load + validation: order preserved (incl. 3-segment/>3-length), case-insensitive keys, missing/malformed file, no-factions-map, empty/whitespace id, dedupe, empty/unknown faction key, all-invalid faction not registered, info-not-warning, lazy caching |
+| `TAOM.Tests/Features/CustomBattles/CuratedDropdownIndependenceTests.cs` | 1 | Pins the master-list/dropdown decoupling (curated id absent from `GetCommanderIds()` still resolves) |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleCommandersHookTests.cs` | 3 | Resolution, null filtering, empty case |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleFactionsHookTests.cs` | 3 | Resolution, null filtering, empty case |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleTroopHookTests.cs` | 5 | Vanilla passthrough, TAOM resolution, null service/adapter results |
@@ -147,6 +165,13 @@ Patches and `CustomBattleTeamFixBehavior` are thin entry points — tested indir
 3. Ensure the character has `is_hero="true"` and an ID that doesn't contain `companion`, `child`, `tutorial`, or `commander_`
 4. The service will automatically include them
 
+### How to curate a faction's commander dropdown
+
+1. Edit `Main/_Module/ModuleData/custom_battle/custom_battle_commanders.json`.
+2. Add or edit a `"factions"` entry keyed by the faction's **culture `StringId`** (note: Rohan = `vlandia`) with an ordered array of lord ids. Any id that resolves via `MBObjectManager` is allowed, including 3-segment ids and lords whose own culture differs from the faction key.
+3. To revert a faction to the default top-3-alphabetical behavior, remove its entry.
+4. **Restart the game** — the provider is `Reuse.Singleton` (cached for the whole process), so edits do not take effect on a save-load.
+
 ### How to change formation troop assignments
 
 The formation mapping uses culture militia properties from `BasicCultureObject`/`CultureObject`. To change which troop appears for a formation:
@@ -156,6 +181,7 @@ The formation mapping uses culture militia properties from `BasicCultureObject`/
 
 ## Changelog
 
+- 2026-06-27 — Added curated per-faction commander lists (`custom_battle/custom_battle_commanders.json` + validating `CustomBattleCommandersProvider`). A configured faction shows an exact ordered list of named lords, bypassing the alphabetical cap, the 2-segment-id regex, and the culture filter; unconfigured factions keep the default. Ships lists for Mordor, Gondor, Rohan, Mirkwood, Rivendell, Lothlórien, Isengard, Erebor. Also reassigned the 3 lesser Nazgûl (`lord_1_48_1/2/3`) from `dolguldur` to `mordor` culture (Khamûl stays Dol Guldur).
 - 2026-05-13 — Verified the `CustomBattleSideVM.OnCultureSelection(BasicCultureObject)` private signature against the installed CustomBattle DLL and documented the assembly path inline so the Patch19 hook target won't silently break (#162).
 - 2026-05-04 — Commander dropdown now filters per-culture and caps at 3 via the new `ISideCommanderFilter`; added `OnCultureSelection`/`RefreshValues` postfixes and the `CommanderSelectorRebuilder` safe-rebuild helper (Codex Review 30 P1).
 - 2026-03-27 — Fixed the Custom Battle screen-init NRE by registering cultures/lords for `CustomGame`/`EditorGame`, adding empty-list fallbacks, excluding wanderers/notables, and replacing the broken faction selector with `TaomFactionSelectionVM`.

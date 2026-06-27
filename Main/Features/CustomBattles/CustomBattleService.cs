@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.CustomBattles.Config;
 
 namespace TAOM.Features.CustomBattles;
 
@@ -13,14 +14,19 @@ public class CustomBattleService : ICustomBattleService
 
     private readonly IObjectManagerAdapter _objectManager;
     private readonly IModLogger _logger;
+    private readonly ICustomBattleCommandersProvider _commandersProvider;
 
     private Dictionary<string, CultureInfo> _cultureCache;
     private List<CharacterInfo> _characterCache;
 
-    public CustomBattleService(IObjectManagerAdapter objectManager, IModLogger logger)
+    public CustomBattleService(
+        IObjectManagerAdapter objectManager,
+        IModLogger logger,
+        ICustomBattleCommandersProvider commandersProvider)
     {
         _objectManager = objectManager;
         _logger = logger;
+        _commandersProvider = commandersProvider;
     }
 
     public IReadOnlyList<string> GetFactionIds()
@@ -64,6 +70,13 @@ public class CustomBattleService : ICustomBattleService
     {
         if (string.IsNullOrEmpty(factionId) || takeMax <= 0)
             return new List<string>();
+
+        // Curated override: a configured faction shows EXACTLY its ordered list — bypassing the
+        // IsValidCommander regex (so 3-segment ids appear), the culture filter (so a cross-culture
+        // lord may be listed), and takeMax (curated lists can exceed the cap). Unresolvable ids are
+        // warned + skipped downstream in SideCommanderFilter.
+        if (_commandersProvider.HasCuratedEntry(factionId))
+            return _commandersProvider.GetCuratedCommanderIds(factionId);
 
         try
         {

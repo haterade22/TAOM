@@ -1,0 +1,13 @@
+{
+  "_comment": "Curated Custom Battle commander lists per faction. Key = culture StringId (vlandia = Rohan). Values = lord StringIds in display order. A configured faction shows EXACTLY this list (bypassing the default top-3 alphabetical + the 2-segment-id regex + the culture filter), so 3-segment ids and cross-culture lords are allowed. Factions NOT listed keep the default behavior. Reuse.Singleton: edits require a full game restart.",
+  "factions": {
+    "mordor":     ["lord_1_17", "lord_1_15", "lord_1_63", "lord_1_54", "lord_1_155", "lord_1_16", "lord_1_28", "lord_1_38", "lord_1_48", "lord_1_48_1", "lord_1_48_2", "lord_1_48_3"],
+    "gondor":     ["lord_1_75", "lord_1_34", "lord_1_9", "lord_1_45", "lord_1_71", "lord_1_52", "lord_1_53", "lord_WE9_l"],
+    "vlandia":    ["lord_4_1", "lord_4_3_1", "lord_4_7", "lord_4_3_2", "lord_4_16", "lord_4_6", "lord_4_28"],
+    "mirkwood":   ["lord_M1_1", "lord_M1_11"],
+    "rivendell":  ["lord_R1_1", "lord_R2_1", "lord_R1_3", "lord_R1_4"],
+    "lothlorien": ["lord_L1_1", "lord_L1_2"],
+    "isengard":   ["lord_I1_1", "lord_I4_1", "lord_I2_1", "lord_I2_3", "lord_I3_1"],
+    "erebor":     ["lord_E1_1", "lord_E1_2", "lord_E1_5"]
+  }
+}

@@ -24627,7 +24627,7 @@
             <EquipmentSet id="mordor_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_48_1" name="{=aom_lord_1_48_1_name}Nazgûl, the Tainted" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
+    <NPCCharacter id="lord_1_48_1" name="{=aom_lord_1_48_1_name}Nazgûl, the Tainted" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
         <face>
             <!--face_key
 			value="001c892580001008a66a975e578a799294576eaa3a3954b6774485a4155abb6d0000a6d40dd3989700001105000030a30000001f000000000000000000009000"
@@ -24678,7 +24678,7 @@
             <EquipmentSet id="mordor_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_48_2" name="{=aom_lord_1_48_2_name}Nazgûl, the Shadow of Northmen" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
+    <NPCCharacter id="lord_1_48_2" name="{=aom_lord_1_48_2_name}Nazgûl, the Shadow of Northmen" default_group="Infantry" is_female="false" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
         <face>
             <!--face_key
 			value="001c892580001008a66a975e578a799294576eaa3a3954b6774485a4155abb6d0000a6d40dd3989700001105000030a30000001f000000000000000000009000"
@@ -24729,7 +24729,7 @@
             <EquipmentSet id="mordor_civ_template_default_a" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
-    <NPCCharacter id="lord_1_48_3" name="{=aom_lord_1_48_3_name}Nazgûl, the Shadow of Umbar" default_group="Infantry" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.dolguldur" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
+    <NPCCharacter id="lord_1_48_3" name="{=aom_lord_1_48_3_name}Nazgûl, the Shadow of Umbar" default_group="Infantry" age="20" voice="curt" is_hero="true" race="uruk" culture="Culture.mordor" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_nazgul_skills">
         <face>
             <!--face_key
 			value="001c892580001008a66a975e578a799294576eaa3a3954b6774485a4155abb6d0000a6d40dd3989700001105000030a30000001f000000000000000000009000"

@@ -4,6 +4,7 @@ using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CustomBattles;
+using TAOM.Features.CustomBattles.Config;
 
 namespace TAOM.Tests.Features.CustomBattles;
 
@@ -12,6 +13,7 @@ public class CustomBattleServiceTests
 {
     private IObjectManagerAdapter _objectManager;
     private IModLogger _logger;
+    private ICustomBattleCommandersProvider _commandersProvider;
     private CustomBattleService _sut;
 
     [TestInitialize]
@@ -19,9 +21,12 @@ public class CustomBattleServiceTests
     {
         _objectManager = Substitute.For<IObjectManagerAdapter>();
         _logger = Substitute.For<IModLogger>();
+        _commandersProvider = Substitute.For<ICustomBattleCommandersProvider>();
+        // Default: no faction is curated, so existing tests exercise the default selection path.
+        _commandersProvider.HasCuratedEntry(Arg.Any<string>()).Returns(false);
         _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>());
         _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>());
-        _sut = new CustomBattleService(_objectManager, _logger);
+        _sut = new CustomBattleService(_objectManager, _logger, _commandersProvider);
     }
 
     [TestMethod]
@@ -391,5 +396,118 @@ public class CustomBattleServiceTests
 
         // Assert
         Assert.IsNull(result);
+    }
+
+    // --- Curated commander config (custom_battle_commanders.json) ---
+
+    [TestMethod]
+    public void GetCommanderIdsForFaction_CuratedFaction_ReturnsCuratedListInOrder()
+    {
+        // Arrange — curated faction returns the provider's exact ordered list, untouched
+        var curated = new List<string> { "lord_1_17", "lord_1_15", "lord_1_63" };
+        _commandersProvider.HasCuratedEntry("mordor").Returns(true);
+        _commandersProvider.GetCuratedCommanderIds("mordor").Returns(curated);
+        // Character cache deliberately contains a different mordor lord to prove the default path is skipped
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "lord_other", IsHero = true, CultureId = "mordor" }
+        });
+
+        // Act
+        var result = _sut.GetCommanderIdsForFaction("mordor", 3);
+
+        // Assert — same sequence, same order, no default-path lord
+        CollectionAssert.AreEqual((System.Collections.ICollection)curated, (System.Collections.ICollection)result);
+    }
+
+    [TestMethod]
+    public void GetCommanderIdsForFaction_CuratedFaction_BypassesRegexAndCap()
+    {
+        // Arrange — 5 ids including 3-segment ids that the IsValidCommander regex would reject
+        var curated = new List<string> { "lord_4_1", "lord_4_3_1", "lord_4_3_2", "lord_4_7", "lord_4_16" };
+        _commandersProvider.HasCuratedEntry("vlandia").Returns(true);
+        _commandersProvider.GetCuratedCommanderIds("vlandia").Returns(curated);
+
+        // Act — takeMax=3 must be ignored on the curated path
+        var result = _sut.GetCommanderIdsForFaction("vlandia", 3);
+
+        // Assert — all 5 returned, including the 3-segment ids
+        Assert.AreEqual(5, result.Count);
+        CollectionAssert.Contains((System.Collections.ICollection)result, "lord_4_3_1");
+        CollectionAssert.Contains((System.Collections.ICollection)result, "lord_4_3_2");
+    }
+
+    [TestMethod]
+    public void GetCommanderIdsForFaction_CuratedFaction_IgnoresCultureFilter()
+    {
+        // Arrange — curated ids whose CharacterInfo culture would NOT match the faction key
+        var curated = new List<string> { "lord_1_48", "lord_WE9_l" }; // dolguldur + empire culture lords under "mordor"
+        _commandersProvider.HasCuratedEntry("mordor").Returns(true);
+        _commandersProvider.GetCuratedCommanderIds("mordor").Returns(curated);
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "lord_1_48", IsHero = true, CultureId = "dolguldur" },
+            new() { Id = "lord_WE9_l", IsHero = true, CultureId = "empire" }
+        });
+
+        // Act
+        var result = _sut.GetCommanderIdsForFaction("mordor", 3);
+
+        // Assert — returned despite culture mismatch
+        Assert.AreEqual(2, result.Count);
+        CollectionAssert.AreEqual((System.Collections.ICollection)curated, (System.Collections.ICollection)result);
+    }
+
+    [TestMethod]
+    public void GetCommanderIdsForFaction_NonCuratedFaction_UsesDefaultAlphabeticalTopN()
+    {
+        // Arrange — provider has no entry; default path applies
+        _commandersProvider.HasCuratedEntry("empire").Returns(false);
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "lord_emp_3", IsHero = true, CultureId = "empire" },
+            new() { Id = "lord_emp_1", IsHero = true, CultureId = "empire" },
+            new() { Id = "lord_emp_2", IsHero = true, CultureId = "empire" }
+        });
+
+        // Act
+        var result = _sut.GetCommanderIdsForFaction("empire", 3);
+
+        // Assert — alphabetical default behavior preserved
+        Assert.AreEqual(3, result.Count);
+        Assert.AreEqual("lord_emp_1", result[0]);
+        Assert.AreEqual("lord_emp_2", result[1]);
+        Assert.AreEqual("lord_emp_3", result[2]);
+    }
+
+    [TestMethod]
+    public void GetCommanderIdsForFaction_NullFactionId_DoesNotConsultProvider()
+    {
+        // Act
+        var result = _sut.GetCommanderIdsForFaction(null, 3);
+
+        // Assert — null guard precedes the provider branch
+        Assert.AreEqual(0, result.Count);
+        _commandersProvider.DidNotReceive().HasCuratedEntry(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetCommanderIds_Unchanged_DoesNotConsultCuratedProvider()
+    {
+        // Arrange — master list path must stay regex-filtered, independent of curated config
+        _commandersProvider.HasCuratedEntry(Arg.Any<string>()).Returns(true);
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "lord_1_1",   IsHero = true, CultureId = "gondor" },
+            new() { Id = "lord_1_1_1", IsHero = true, CultureId = "gondor" }  // 3-segment sub-lord, regex-excluded
+        });
+
+        // Act
+        var result = _sut.GetCommanderIds();
+
+        // Assert — only the 2-segment lord; curated provider never consulted by the master list
+        Assert.AreEqual(1, result.Count);
+        CollectionAssert.Contains((System.Collections.ICollection)result, "lord_1_1");
+        _commandersProvider.DidNotReceive().GetCuratedCommanderIds(Arg.Any<string>());
     }
 }

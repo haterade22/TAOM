@@ -1,5 +1,41 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-27
+
+### feat(custom-battles): curated per-faction commander lists
+
+The Custom Battle commander dropdown showed the first 3 lords of a culture sorted alphabetically by id
+— so named LOTR lords rarely appeared, and the 2-segment-id regex behind `GetCommanderIds_ExcludesSubLords`
+made 3-segment ids (Éomer `lord_4_3_1`, Éowyn `lord_4_3_2`, the lesser Nazgûl `lord_1_48_1/2/3`)
+**unreachable** at any cap.
+
+- New data-driven config `Main/_Module/ModuleData/custom_battle/custom_battle_commanders.json` maps each
+  faction (culture `StringId`; Rohan = `vlandia`) to an ordered list of lord ids. Ships curated lists for
+  Mordor, Gondor, Rohan, Mirkwood, Rivendell, Lothlórien, Isengard, Erebor.
+- `CustomBattleService.GetCommanderIdsForFaction` now branches on
+  `ICustomBattleCommandersProvider.HasCuratedEntry`: a configured faction returns its exact ordered list,
+  **bypassing** the regex, the `takeMax` cap, and the culture filter (so cross-culture lords like Khamûl
+  under Mordor, and 3-segment ids, can appear). Unconfigured factions keep the default behavior. The master
+  `GetCommanderIds()` pool stays regex-filtered — the dropdown is rebuilt independently from
+  `GetBasicCharacter`, so curated 3-segment ids surface without polluting the global pool
+  (`CuratedDropdownIndependenceTests` pins this).
+- New `CustomBattleCommandersProvider` (`Reuse.Singleton`, `Lazy`) validates per the "Config Providers MUST
+  Validate" rule: missing/malformed → all factions default; empty/whitespace ids skipped; duplicates deduped
+  (first-occurrence order); unknown faction keys kept-but-warned; a faction with no valid ids falls back to
+  default. Edits require a full game restart. Unresolvable ids are warned + skipped at resolve time in
+  `SideCommanderFilter`.
+- Reassigned the 3 lesser Nazgûl (`lord_1_48_1/2/3`) from `Culture.dolguldur` to `Culture.mordor` in
+  `lords.xml` + `lords.xslt` (Khamûl `lord_1_48` stays Dol Guldur; Witch-King + the other 5 Nazgûl were
+  already mordor). NazgulFamily is id-keyed (culture-independent); child-gen excludes both cultures, so the
+  feature is unaffected.
+- Tests: +23 (6 service curated-branch, 16 provider validation, 1 dropdown-independence). All 61 CustomBattles
+  tests pass; ModuleData validation passes. The 9 unrelated `GetVolunteerTroopId_DolGuldur*` failures are
+  pre-existing (confirmed by reverting the data files to HEAD).
+
+Save-compat: `Hero.Culture` is an engine-saved field, so the 3 Nazgûl culture edits apply to NEW campaigns
+  only — existing saves keep those lords as `dolguldur` until a new game. Harmless (NazgulFamily is id-keyed,
+  child-gen excludes both cultures). The custom-battle curated lists are unaffected (they bypass culture).
+
 ## 2026-06-26
 
 ### fix(faction-map): pass origin settlement to GenerateClanName (Rohan CC NRE) (#301)

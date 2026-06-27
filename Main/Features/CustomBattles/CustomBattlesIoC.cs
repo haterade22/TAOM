@@ -1,4 +1,5 @@
 using DryIoc;
+using TAOM.Features.CustomBattles.Config;
 using TAOM.Features.CustomBattles.Hooks;
 
 namespace TAOM.Features.CustomBattles;
@@ -7,6 +8,7 @@ public static class CustomBattlesIoC
 {
     public static void RegisterCustomBattlesFeature(IContainer container)
     {
+        container.Register<ICustomBattleCommandersProvider, CustomBattleCommandersProvider>(Reuse.Singleton);
         container.Register<ICustomBattleService, CustomBattleService>(Reuse.Singleton);
         container.Register<ISideCommanderFilter, SideCommanderFilter>(Reuse.Singleton);
         container.Register<IOnGetCustomBattleCommanders, CustomBattleCommandersHook>(Reuse.Transient);

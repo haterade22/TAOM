@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TaleWorlds.Core;
@@ -30,9 +29,16 @@ public class SideCommanderFilter : ISideCommanderFilter
             return new List<BasicCharacterObject>();
 
         var ids = _service.GetCommanderIdsForFaction(cultureId, MaxCommandersPerCulture);
-        return ids
-            .Select(id => _objectManager.GetBasicCharacter(id))
-            .Where(c => c != null)
-            .ToList();
+        var resolved = new List<BasicCharacterObject>();
+        foreach (var id in ids)
+        {
+            var character = _objectManager.GetBasicCharacter(id);
+            if (character != null)
+                resolved.Add(character);
+            else
+                _logger.LogWarning($"SideCommanderFilter: commander id '{id}' for culture '{cultureId}' did not resolve to a character — skipped");
+        }
+
+        return resolved;
     }
 }
