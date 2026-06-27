@@ -1378,6 +1378,18 @@ New feature: unlocks Bannerlord's base-engine naval-travel system (campaign-map 
 
 ---
 
+## Review 65 — CustomBattle curated commander lists (2026-06-27)
+
+New feature: a data-driven `custom_battle/custom_battle_commanders.json` maps each faction (culture StringId; Rohan = `vlandia`) to an ordered curated lord list. `CustomBattleService.GetCommanderIdsForFaction` branches on `ICustomBattleCommandersProvider.HasCuratedEntry` and returns the exact list, bypassing the 2-segment-id regex, the `takeMax` cap, and the culture filter; unconfigured factions keep the default top-3 alphabetical. Validating `Lazy` singleton provider; master `GetCommanderIds()` left regex-filtered. Also reassigned 3 lesser Nazgûl (`lord_1_48_1/2/3`) `dolguldur`→`mordor`.
+
+**Deep-review (5 agents): clean** — Standards PASS, Compat all-verified (no new API surface), Efficiency 0 HIGH (UI-path micro-opts only, mostly pre-existing), Completeness COMPLETE, Data-flow 6 traced / 0 gaps (all 43 ids verified to resolve).
+
+**Codex (gpt-5.5 xhigh): 0 CRITICAL / 1 HIGH / 0 MED / 1 LOW.** DISPUTED 5 of 6 Known Suspects with decompiled evidence; verified all 43 shipped ids. **HIGH (all 5 deep-review agents missed):** a curated faction whose ids all fail to resolve leaves the dropdown on the vanilla global unfiltered list instead of falling back to the faction's real lords — the fail-safe was load-layer only, not runtime-resolvability. Fixed: service filters curated ids by character existence + falls through to default when none survive; +2 fallback tests +2 shipped-data regression tests (61→65 CustomBattles tests, all green). **LOW:** doc "No external configuration files" drift — fixed.
+
+**Process:** the feature was committed (`656daae8`) then reviewed at the user's request; fixes land in a follow-up commit. Issue #302. RCA: `docs/reviews/rca-custom-battle-lords-2026-06-27.md`. Codex prompt + raw output: `docs/reviews/codex-adversarial-custom-battle-lords-2026-06-27.{prompt.md,md}`. Lesson: a "fall back to default" fail-safe must cover runtime-unresolvable inputs, not just load-invalid ones.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

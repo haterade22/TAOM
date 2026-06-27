@@ -2,6 +2,50 @@
 
 ## 2026-06-27
 
+### feat(alignment-desertion): opposed-alignment troops desert daily
+
+New feature: troops whose culture is opposed in alignment to their lord (Free vs Evil) desert each
+day — an Evil-aligned lord sheds Good troops, a Good-aligned lord sheds Evil troops — to clear
+mixed-alignment armies, parties, and garrisons faster. Default rate 50%/day per troop type (min 1).
+
+- New `Main/Features/AlignmentDesertion/`: pure `AlignmentDesertionService` (decision matrix) + thin
+  `AlignmentDesertionBehavior` (`DailyTickPartyEvent` for mobile parties incl. army members,
+  `DailyTickSettlementEvent` for garrisons). Behavior does the roster I/O (snapshot → service → apply
+  `MemberRoster.AddToCounts`); the service is TaleWorlds-free and 100% unit-tested (ADR-002/007). No
+  SyncData — recomputed daily from live rosters.
+- Reuses the Execution `IAlignmentService`. Owner side resolves via the leader/owner clan's kingdom
+  StringId (`GetKingdomSide`); troop side resolves via the troop's culture StringId through a new
+  `GetCultureSide`. Neutral on either side never deserts; named heroes never desert.
+- **Data fix:** `gondor` and `mordor` culture ids were absent from `execution/alignment.json` (only the
+  `empire_w`/`empire_s` kingdom keys were). Added `"gondor": "free"`, `"mordor": "evil"` so Gondor/Mordor
+  troops side correctly. Inert for existing kingdom-keyed consumers (AlignmentRecruitment/Execution/
+  Diplomacy never look up those keys). Bandit/minor cultures stay absent → Neutral → never desert.
+- MCM group "World/Alignment Desertion": master toggle, daily rate (0–100%, default 50%), and four
+  independent gates — Apply To Player / AI Lords / Mobile Parties / Garrisons (player can self-exempt
+  while AI stays gated, or vice versa). Config defaults in
+  `alignment_desertion/alignment_desertion_config.json` (validated on load; NaN/out-of-range rate →
+  default 0.5 + warning, per the "Config Providers MUST Validate" rule).
+- Player-party desertion shows a quick-info popup (`{=taom_align_desertion}`); garrison purges are
+  silent + logged.
+
+### fix(custom-battles): curated faction with all-unresolvable ids falls back to default (#302, Codex review)
+
+Codex adversarial review (1 HIGH + 1 LOW; 5 of 6 Known Suspects DISPUTED, all 43 shipped ids verified):
+
+- HIGH: a curated faction whose ids ALL fail to resolve (typo'd JSON / a removed-or-renamed lord) kept
+  `HasCuratedEntry == true`, `SideCommanderFilter` skipped every null, and the UI patch's `count==0`
+  early-return left the dropdown on the vanilla GLOBAL unfiltered commander list — not a fallback to the
+  faction's real lords. The "fall back to default" fail-safe was implemented only at the provider/load
+  layer; resolvability is only knowable at runtime. Fix: `CustomBattleService` now filters curated ids by
+  character existence and falls through to the default per-culture path when none survive (logs a warning).
+  +2 fallback tests + a shipped-data regression test (`CustomBattleCommandersShippedDataTests`)
+  cross-checking the real JSON against `lords.xml`/`lords.xslt`. CustomBattles tests 61 → 65, all green.
+- LOW: `docs/features/custom-battles.md` Configuration section still said "No external configuration
+  files" — corrected.
+
+RCA: `docs/reviews/rca-custom-battle-lords-2026-06-27.md`. Lesson (LESSONS-LEARNED → GameModels & Services):
+a "fall back to default" fail-safe must cover runtime-unresolvable inputs, not just load-invalid ones.
+
 ### feat(custom-battles): curated per-faction commander lists
 
 The Custom Battle commander dropdown showed the first 3 lords of a culture sorted alphabetically by id
@@ -1656,6 +1700,28 @@ Docs: `docs/features/troll-race.md` + `docs/ai-includes/troll-race-arp-retargeti
 with the proven pipeline, the IK-vs-deform clarification, and the assimp-headless RCA.
 
 ## 2026-06-13
+
+### fix(chariot): render the 2nd horse + correct the FALSE "~40 per-mesh bone limit" across 9 docs (issue #279)
+
+The Wainrider chariot shipped working but rendered only ONE horse — the second was the disjoint half
+of a per-horse mesh split, and a fully-disjoint full-body mesh in the `<AdditionalMeshes>` slot does
+not render (the base mesh always draws). Proven by an Option-E base/additional swap in the item XML
+(no Blender): the missing horse stayed missing regardless of which horse was base → the failure follows
+the additional slot, not the mesh. **Fix: merge both horses into ONE mesh (54 active bones) — both now
+render in-game.** The per-horse split was motivated by a **"~40 per-draw bone palette" that does not
+exist**: the war elephant renders as ONE mesh skinned to **59 active bones** (measured in Blender), and
+the chariot's merged mesh to 54. The only real bone cap is the engine's `Skeleton.MaxBoneCount = 64`
+(skeleton-total, not per-mesh; author ≤63). The warg split (the cited "precedent") is for its FUR only
+(cloth simulation) — cloth-driven, not bone-driven; the doc's "split is bone-driven, not just cloth" was
+exactly backwards. The spider's own RCA already refuted the cap ("AV persisted with the split mesh"); the
+spider render-AV's true cause stays unestablished. Corrected the claim across `CLAUDE.md`,
+`docs/ai-includes/creature-mount-authoring.md`, `docs/features/spider-skeleton-animation-pipeline.md`,
+`docs/features/spider.md`, `docs/features/spider/wolf-parity-and-render-tests.md`, `docs/features/chariot.md`,
+`docs/reference/engine/agent-spawn-and-render-pipeline.md`, `docs/reference/bannerlord-engine-and-toolchain.md`,
+`docs/reference/lotrlome-spider-mount-changes.md`, the spider RCA, and `LESSONS-LEARNED.md` (Animation &
+Skeleton). New memory `feedback_no_40_bone_per_mesh_limit.md`. Found via an exhaustive 4-reader + critic
+doc sweep (the critic caught an overclaim in the first-draft rule). FBX re-merge + IK re-transplant
+(17648 B, gate passed); 5 Metameshes; in-game verified. Issue #279 complete.
 
 ### fix(spider): restore the loose spider_skeleton resource dropped by the Blender-loop mesh re-export (riderless-spider regression)
 

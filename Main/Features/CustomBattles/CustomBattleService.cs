@@ -73,10 +73,21 @@ public class CustomBattleService : ICustomBattleService
 
         // Curated override: a configured faction shows EXACTLY its ordered list — bypassing the
         // IsValidCommander regex (so 3-segment ids appear), the culture filter (so a cross-culture
-        // lord may be listed), and takeMax (curated lists can exceed the cap). Unresolvable ids are
-        // warned + skipped downstream in SideCommanderFilter.
+        // lord may be listed), and takeMax (curated lists can exceed the cap). Curated ids are
+        // filtered to those that actually exist as characters; if NONE survive (every id is a
+        // typo / removed lord), we fall through to the default per-culture path rather than leaving
+        // the dropdown on the unfiltered global list (Codex review 2026-06-27 finding #1).
         if (_commandersProvider.HasCuratedEntry(factionId))
-            return _commandersProvider.GetCuratedCommanderIds(factionId);
+        {
+            var curated = _commandersProvider.GetCuratedCommanderIds(factionId)
+                .Where(CharacterExists)
+                .ToList();
+            if (curated.Count > 0)
+                return curated;
+
+            _logger.LogWarning($"CustomBattleService: curated faction '{factionId}' resolved to no existing commanders — falling back to default selection");
+            // fall through to the default per-culture path below
+        }
 
         try
         {
@@ -141,6 +152,24 @@ public class CustomBattleService : ICustomBattleService
 
         _characterCache = _objectManager.GetAllCharacterInfos().ToList();
         return _characterCache;
+    }
+
+    // Existence check by id only (culture/regex agnostic) — used to drop curated commander ids that
+    // don't resolve to a real character, without re-applying the IsValidCommander regex or culture
+    // filter the curated path is meant to bypass.
+    private HashSet<string> _characterIdCache;
+
+    private bool CharacterExists(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+            return false;
+
+        if (_characterIdCache == null)
+            _characterIdCache = new HashSet<string>(
+                GetCharacterCache().Where(c => !string.IsNullOrEmpty(c.Id)).Select(c => c.Id),
+                StringComparer.OrdinalIgnoreCase);
+
+        return _characterIdCache.Contains(id);
     }
 
     private static readonly Regex _kingdomLordId =

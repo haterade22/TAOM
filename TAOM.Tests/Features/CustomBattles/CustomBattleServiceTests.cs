@@ -407,9 +407,12 @@ public class CustomBattleServiceTests
         var curated = new List<string> { "lord_1_17", "lord_1_15", "lord_1_63" };
         _commandersProvider.HasCuratedEntry("mordor").Returns(true);
         _commandersProvider.GetCuratedCommanderIds("mordor").Returns(curated);
-        // Character cache deliberately contains a different mordor lord to prove the default path is skipped
+        // All curated ids exist as characters; lord_other is a default-path lord that must NOT appear (curated wins).
         _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
         {
+            new() { Id = "lord_1_17", IsHero = true, CultureId = "mordor" },
+            new() { Id = "lord_1_15", IsHero = true, CultureId = "mordor" },
+            new() { Id = "lord_1_63", IsHero = true, CultureId = "mordor" },
             new() { Id = "lord_other", IsHero = true, CultureId = "mordor" }
         });
 
@@ -427,6 +430,15 @@ public class CustomBattleServiceTests
         var curated = new List<string> { "lord_4_1", "lord_4_3_1", "lord_4_3_2", "lord_4_7", "lord_4_16" };
         _commandersProvider.HasCuratedEntry("vlandia").Returns(true);
         _commandersProvider.GetCuratedCommanderIds("vlandia").Returns(curated);
+        // All 5 exist as characters — existence is id-only, so 3-segment ids survive (the regex is not applied on the curated path).
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "lord_4_1", IsHero = true, CultureId = "vlandia" },
+            new() { Id = "lord_4_3_1", IsHero = true, CultureId = "vlandia" },
+            new() { Id = "lord_4_3_2", IsHero = true, CultureId = "vlandia" },
+            new() { Id = "lord_4_7", IsHero = true, CultureId = "vlandia" },
+            new() { Id = "lord_4_16", IsHero = true, CultureId = "vlandia" }
+        });
 
         // Act — takeMax=3 must be ignored on the curated path
         var result = _sut.GetCommanderIdsForFaction("vlandia", 3);
@@ -456,6 +468,51 @@ public class CustomBattleServiceTests
         // Assert — returned despite culture mismatch
         Assert.AreEqual(2, result.Count);
         CollectionAssert.AreEqual((System.Collections.ICollection)curated, (System.Collections.ICollection)result);
+    }
+
+    [TestMethod]
+    public void GetCommanderIdsForFaction_CuratedFaction_AllIdsUnresolvable_FallsBackToDefault()
+    {
+        // Arrange — curated faction lists only ids that don't exist as characters (typos / removed lords).
+        // The faction's REAL lords still exist via the default path. (Codex review 2026-06-27 finding #1.)
+        _commandersProvider.HasCuratedEntry("mordor").Returns(true);
+        _commandersProvider.GetCuratedCommanderIds("mordor").Returns(new List<string> { "lord_typo_1", "lord_typo_2" });
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "lord_real_1", IsHero = true, CultureId = "mordor" },
+            new() { Id = "lord_real_2", IsHero = true, CultureId = "mordor" }
+        });
+
+        // Act
+        var result = _sut.GetCommanderIdsForFaction("mordor", 3);
+
+        // Assert — falls back to the default per-culture path, NOT the unresolvable curated ids or the global list
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual("lord_real_1", result[0]);
+        Assert.AreEqual("lord_real_2", result[1]);
+        CollectionAssert.DoesNotContain((System.Collections.ICollection)result, "lord_typo_1");
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("falling back to default")));
+    }
+
+    [TestMethod]
+    public void GetCommanderIdsForFaction_CuratedFaction_PartiallyResolvable_ReturnsOnlyExistingInOrder()
+    {
+        // Arrange — curated list has two real ids and a typo; only the real ids exist.
+        _commandersProvider.HasCuratedEntry("mordor").Returns(true);
+        _commandersProvider.GetCuratedCommanderIds("mordor").Returns(new List<string> { "lord_1_17", "lord_typo", "lord_1_15" });
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            new() { Id = "lord_1_17", IsHero = true, CultureId = "mordor" },
+            new() { Id = "lord_1_15", IsHero = true, CultureId = "mordor" }
+        });
+
+        // Act
+        var result = _sut.GetCommanderIdsForFaction("mordor", 3);
+
+        // Assert — typo dropped; real ids kept in CURATED order (17 before 15 = not alphabetical -> curated path, no fallback)
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual("lord_1_17", result[0]);
+        Assert.AreEqual("lord_1_15", result[1]);
     }
 
     [TestMethod]

@@ -74,7 +74,7 @@ Same pattern for Factions and Troops.
 
 ## Configuration
 
-No external configuration files. All data loaded dynamically from `Game.Current.ObjectManager` at runtime.
+One external configuration file: `custom_battle/custom_battle_commanders.json` (the curated per-faction commander lists — see "Curated commander lists" above). Everything else (factions, the default commander selection, formation troops) is loaded dynamically from `Game.Current.ObjectManager` at runtime. A faction with no curated entry — or a curated entry whose ids don't resolve to any live character — falls back to the dynamic default selection below.
 
 ### Faction Selection Criteria
 - `CanHaveSettlement = true`
@@ -139,8 +139,9 @@ No external configuration files. All data loaded dynamically from `Game.Current.
 
 | Test File | Methods | Coverage |
 |-----------|---------|----------|
-| `TAOM.Tests/Features/CustomBattles/CustomBattleServiceTests.cs` | 28 | Faction filtering, commander filtering, formation mapping, takeMax cap, null/empty edge cases + **6 curated-branch tests** (curated order preserved, regex+cap bypass, culture-filter bypass, non-curated default path, null guard precedes provider, master list unchanged) |
+| `TAOM.Tests/Features/CustomBattles/CustomBattleServiceTests.cs` | 30 | Faction filtering, commander filtering, formation mapping, takeMax cap, null/empty edge cases + **8 curated-branch tests** (curated order preserved, regex+cap bypass, culture-filter bypass, all-unresolvable → fallback-to-default, partially-resolvable → only-existing-in-order, non-curated default path, null guard precedes provider, master list unchanged) |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleCommandersProviderTests.cs` | 16 | Config load + validation: order preserved (incl. 3-segment/>3-length), case-insensitive keys, missing/malformed file, no-factions-map, empty/whitespace id, dedupe, empty/unknown faction key, all-invalid faction not registered, info-not-warning, lazy caching |
+| `TAOM.Tests/Features/CustomBattles/CustomBattleCommandersShippedDataTests.cs` | 2 | Shipped-data regression: every curated faction key is a known culture + curated, and every shipped lord id exists as a real NPCCharacter in `lords.xml`/`lords.xslt` |
 | `TAOM.Tests/Features/CustomBattles/CuratedDropdownIndependenceTests.cs` | 1 | Pins the master-list/dropdown decoupling (curated id absent from `GetCommanderIds()` still resolves) |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleCommandersHookTests.cs` | 3 | Resolution, null filtering, empty case |
 | `TAOM.Tests/Features/CustomBattles/CustomBattleFactionsHookTests.cs` | 3 | Resolution, null filtering, empty case |
@@ -181,6 +182,7 @@ The formation mapping uses culture militia properties from `BasicCultureObject`/
 
 ## Changelog
 
+- 2026-06-27 — Codex review fix: a curated faction whose ids ALL fail to resolve (typo / removed lord) now falls back to the default per-culture selection instead of leaving the dropdown on the vanilla global list. The service filters curated ids by character existence; if none survive it logs a warning and uses the default path. Added 2 fallback tests + a shipped-data regression test (`CustomBattleCommandersShippedDataTests`) that cross-checks every shipped id against `lords.xml`/`lords.xslt`. Also fixed a "No external configuration files" doc-drift line. RCA: `docs/reviews/rca-custom-battle-lords-2026-06-27.md`.
 - 2026-06-27 — Added curated per-faction commander lists (`custom_battle/custom_battle_commanders.json` + validating `CustomBattleCommandersProvider`). A configured faction shows an exact ordered list of named lords, bypassing the alphabetical cap, the 2-segment-id regex, and the culture filter; unconfigured factions keep the default. Ships lists for Mordor, Gondor, Rohan, Mirkwood, Rivendell, Lothlórien, Isengard, Erebor. Also reassigned the 3 lesser Nazgûl (`lord_1_48_1/2/3`) from `dolguldur` to `mordor` culture (Khamûl stays Dol Guldur).
 - 2026-05-13 — Verified the `CustomBattleSideVM.OnCultureSelection(BasicCultureObject)` private signature against the installed CustomBattle DLL and documented the assembly path inline so the Patch19 hook target won't silently break (#162).
 - 2026-05-04 — Commander dropdown now filters per-culture and caps at 3 via the new `ISideCommanderFilter`; added `OnCultureSelection`/`RefreshValues` postfixes and the `CommanderSelectorRebuilder` safe-rebuild helper (Codex Review 30 P1).
