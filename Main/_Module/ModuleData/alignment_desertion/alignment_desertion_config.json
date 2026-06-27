@@ -1,0 +1,8 @@
+{
+  "Enabled": true,
+  "Rate": 0.5,
+  "ApplyToAi": true,
+  "ApplyToPlayer": true,
+  "ApplyToParties": true,
+  "ApplyToGarrisons": true
+}

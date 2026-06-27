@@ -15,6 +15,7 @@ using TAOM.Features.Encyclopedia;
 using TAOM.Features.RaceAge;
 using TAOM.Features.Execution;
 using TAOM.Features.AlignmentRecruitment;
+using TAOM.Features.AlignmentDesertion;
 using TAOM.Features.NazgulFamily;
 using TAOM.Features.NavalTravel;
 using TAOM.Features.StartupResources;
@@ -83,6 +84,7 @@ public static class IoC
         RaceAgeIoC.RegisterRaceAgeFeature(container);
         ExecutionIoC.RegisterExecutionFeature(container);
         RecruitmentAlignmentIoC.RegisterAlignmentRecruitmentFeature(container);
+        AlignmentDesertionIoC.RegisterAlignmentDesertionFeature(container);
         NazgulFamilyIoC.RegisterNazgulFamilyFeature(container);
         NavalTravelIoC.RegisterNavalTravelFeature(container);
         EncyclopediaIoC.RegisterEncyclopediaFeature(container);

@@ -565,6 +565,13 @@ public class SubModule : MBSubModuleBase
                 IoC.Resolve<ICastleRecruitmentService>(),
                 IoC.Resolve<IModLogger>()));
 
+            // AlignmentDesertion — opposed-alignment troops (Free vs Evil) desert daily from mobile
+            // parties and garrisons. Registered unconditionally so the MCM master toggle takes effect
+            // at runtime; stateless (no SyncData). Reuses the Execution IAlignmentService.
+            campaignStarter.AddBehavior(new Features.AlignmentDesertion.Hooks.AlignmentDesertionBehavior(
+                IoC.Resolve<Features.AlignmentDesertion.IAlignmentDesertionService>(),
+                IoC.Resolve<IModLogger>()));
+
             // EliteEmissary — buy a faction's elite troops for its special resource at key settlements.
             // Registered unconditionally so the MCM master toggle takes effect at runtime; stateless (no SyncData).
             campaignStarter.AddBehavior(new Features.EliteEmissary.Hooks.EliteEmissaryBehavior(

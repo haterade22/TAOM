@@ -571,6 +571,38 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When ON (default), AI lords' parties can also sail. When OFF, only the player sails and AI stays on land — the conservative option if AI naval routing looks odd.")]
     public bool NavalTravelApplyToAi { get; set; } = true;
 
+    // --- World / Alignment Desertion ---
+
+    [SettingPropertyGroup("World/Alignment Desertion", GroupOrder = 38)]
+    [SettingPropertyBool("Enable Alignment Desertion", Order = 0,
+        HintText = "When enabled, troops whose culture is opposed in alignment to their lord (Free vs Evil) desert each day — an Evil lord sheds Good troops and a Good lord sheds Evil troops. Alignment comes from execution/alignment.json. Neutral cultures (Umbar etc.) never desert. When off, vanilla.")]
+    public bool EnableAlignmentDesertion { get; set; } = true;
+
+    [SettingPropertyGroup("World/Alignment Desertion")]
+    [SettingPropertyFloatingInteger("Daily Desertion Rate", 0f, 1f, "#0%", Order = 1,
+        HintText = "Fraction of each opposed-alignment troop type that deserts per day (minimum 1 per type). Default 0.50 = half per day. Higher clears mixed parties/garrisons faster.")]
+    public float AlignmentDesertionRate { get; set; } = 0.5f;
+
+    [SettingPropertyGroup("World/Alignment Desertion")]
+    [SettingPropertyBool("Apply To Player", Order = 2,
+        HintText = "When ON (default), YOUR party and garrisons shed opposed-alignment troops. When OFF, you may keep mixed-alignment troops (AI is still affected if 'Apply To AI Lords' is on).")]
+    public bool EnableAlignmentDesertionPlayer { get; set; } = true;
+
+    [SettingPropertyGroup("World/Alignment Desertion")]
+    [SettingPropertyBool("Apply To AI Lords", Order = 3,
+        HintText = "When ON (default), AI lords' parties and garrisons also shed opposed-alignment troops. When OFF, only the player is affected (if 'Apply To Player' is on).")]
+    public bool EnableAlignmentDesertionAi { get; set; } = true;
+
+    [SettingPropertyGroup("World/Alignment Desertion")]
+    [SettingPropertyBool("Apply To Mobile Parties", Order = 4,
+        HintText = "When ON (default), lords' field parties (including army members) shed opposed troops. When OFF, only garrisons are affected (if 'Apply To Garrisons' is on).")]
+    public bool EnableAlignmentDesertionParties { get; set; } = true;
+
+    [SettingPropertyGroup("World/Alignment Desertion")]
+    [SettingPropertyBool("Apply To Garrisons", Order = 5,
+        HintText = "When ON (default), settlement garrisons shed opposed troops (e.g. a conquered fief's old-culture defenders leave). When OFF, only mobile parties are affected (if 'Apply To Mobile Parties' is on).")]
+    public bool EnableAlignmentDesertionGarrisons { get; set; } = true;
+
     // --- Map UI / Settlement Nameplates ---
 
     [SettingPropertyGroup("Map UI/Settlement Nameplates", GroupOrder = 40)]

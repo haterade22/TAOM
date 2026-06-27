@@ -28,7 +28,10 @@ public class AlignmentServiceTests
             { "empire_s", "evil" },
             { "isengard", "evil" },
             { "gundabad", "evil" },
-            { "umbar", "neutral" }
+            { "umbar", "neutral" },
+            // Custom-culture keys whose ids differ from their kingdom id (empire_w/empire_s).
+            { "gondor", "free" },
+            { "mordor", "evil" }
         });
 
         _sut = new AlignmentService(_configProvider, _logger);
@@ -62,6 +65,38 @@ public class AlignmentServiceTests
     public void GetKingdomSide_Null_ReturnsNeutral()
     {
         Assert.AreEqual(FactionSide.Neutral, _sut.GetKingdomSide(null));
+    }
+
+    [TestMethod]
+    public void GetCultureSide_GondorCulture_ReturnsFree()
+    {
+        // gondor culture id != empire_w kingdom id — must resolve via the explicit gondor entry.
+        Assert.AreEqual(FactionSide.Free, _sut.GetCultureSide("gondor"));
+    }
+
+    [TestMethod]
+    public void GetCultureSide_MordorCulture_ReturnsEvil()
+    {
+        Assert.AreEqual(FactionSide.Evil, _sut.GetCultureSide("mordor"));
+    }
+
+    [TestMethod]
+    public void GetCultureSide_NeutralCulture_ReturnsNeutral()
+    {
+        Assert.AreEqual(FactionSide.Neutral, _sut.GetCultureSide("umbar"));
+    }
+
+    [TestMethod]
+    public void GetCultureSide_UnknownCulture_ReturnsNeutral()
+    {
+        // Bandit/minor cultures (umbar_corsairs, gondor_soldiers, ...) are absent → Neutral → never desert.
+        Assert.AreEqual(FactionSide.Neutral, _sut.GetCultureSide("umbar_corsairs"));
+    }
+
+    [TestMethod]
+    public void GetCultureSide_Null_ReturnsNeutral()
+    {
+        Assert.AreEqual(FactionSide.Neutral, _sut.GetCultureSide(null));
     }
 
     [TestMethod]

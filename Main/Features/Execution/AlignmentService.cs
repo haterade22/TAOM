@@ -29,12 +29,16 @@ public class AlignmentService : IAlignmentService
         logger.LogInfo($"AlignmentService: Loaded {_kingdomSides.Count} kingdom alignments");
     }
 
-    public FactionSide GetKingdomSide(string kingdomId)
+    public FactionSide GetKingdomSide(string kingdomId) => GetSide(kingdomId);
+
+    public FactionSide GetCultureSide(string cultureId) => GetSide(cultureId);
+
+    private FactionSide GetSide(string id)
     {
-        if (string.IsNullOrEmpty(kingdomId))
+        if (string.IsNullOrEmpty(id))
             return FactionSide.Neutral;
 
-        return _kingdomSides.TryGetValue(kingdomId, out var side) ? side : FactionSide.Neutral;
+        return _kingdomSides.TryGetValue(id, out var side) ? side : FactionSide.Neutral;
     }
 
     public bool AreEnemyAlignments(string kingdomIdA, string kingdomIdB)

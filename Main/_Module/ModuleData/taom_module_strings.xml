@@ -2312,4 +2312,7 @@
   <!-- its translation keys ({=LjUhEJxz}/{=l4pRw7pO}) so all 12 languages resolve free.  -->
   <string id="str_convoy_party_name" text="{=LjUhEJxz}Caravan of {OWNER.NAME}" />
   <string id="str_armed_convoy_party_name" text="{=l4pRw7pO}Armed Caravan of {OWNER.NAME}" />
+
+  <!-- AlignmentDesertion -->
+  <string id="taom_align_desertion" text="{=taom_align_desertion}{COUNT} troops deserted — they refuse to serve a lord of the opposing alignment." />
 </strings>
