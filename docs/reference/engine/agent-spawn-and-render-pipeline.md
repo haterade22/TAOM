@@ -102,12 +102,15 @@ creature is the engine-supported way to render a non-humanoid body with no human
 1. The spider spawns `FromHorseObj` (correctly — to skip `AddSkinMeshes` / the humanoid skin). Confirmed: that path
    adds no skin; the spider's visual is its **mount mesh** (the `spider_mount_a` item's `sk_spider_forest_c` mesh).
 2. The AV is in **native `preload_for_rendering`** (Agent.cs:4923→5189→IMBAgent.cs:533) — the GPU upload of that
-   mesh's skinned vertices + **per-mesh bone palette** (a native cap, ~40 bones/draw). The spider's mesh references
-   more bones than the cap → native AV. **Nothing in managed code can fix it; it's a mesh asset problem.**
+   mesh's skinned vertices. **CORRECTION (2026-06-13): the original "per-mesh bone palette, ~40 bones/draw" cause is
+   FALSE.** No such per-mesh cap exists — the elephant renders as ONE mesh skinned to 59 active bones (chariot 54).
+   The only bone cap is `Skeleton.MaxBoneCount = 64` (skeleton-total, not per-mesh; author ≤63). The spider's
+   `preload` AV is real but its **true cause is unestablished** — do not attribute it to a per-mesh bone count.
+   See `feedback_no_40_bone_per_mesh_limit`.
 3. **The spawn *path* is not the cause.** The upstream pack's wolf uses the public `SpawnMonster` chain above and renders fine;
-   the spider reflects the *same* `CreateAgent`+`BuildAgent` chain. Both reach the same native `preload`. The wolf's
-   mesh fits the palette; the spider's doesn't. → **Fix is the mesh** (un-split single mesh / re-author skin to ≤cap),
-   not the spawn code. The RCA's recommended cheapest experiment (the wolf's public `SpawnMonster` + single un-split
+   the spider reflects the *same* `CreateAgent`+`BuildAgent` chain. Both reach the same native `preload`. The fix lives in
+   the mesh asset, not the spawn code — but NOT "re-author to ≤40 bones" (refuted above); keep the body in one mesh ≤63
+   bones. The RCA's recommended cheapest experiment (the wolf's public `SpawnMonster` + single un-split
    mesh) follows directly from this trace.
 
 ## TAOM relevance map

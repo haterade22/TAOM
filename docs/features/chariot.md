@@ -80,10 +80,14 @@ directly, and vanilla rein/harness systems (`horse_harness_rein_skel`) work unmo
   unless set in the editor): `anim_horse_all`/`anim_horse_all2` → `chariot_skeleton`
   (`0c6f9d61-…`), `animsallchariotrider` → vanilla `human_skeleton` (`dd7f3586-…`, stable GUID —
   matches what the upstream pack's own rider master referenced).
-- **Per-mesh bone palette**: the upstream pack's single 54-bone horse mesh exceeds the ~40-bone per-draw palette
-  (the spider render-AV lesson), so the FBX ships split per horse: `chariot_horse_brown` (A bones)
-  + `chariot_horse_brown_2` (B bones), all LODs ≤40 bones. The Kit folds the 29 Blender objects
-  into 6 Metameshes.
+- **Single mesh — both horses (NO bone-count split).** The chariot horse mesh is ONE mesh skinned to
+  **54 active bones** containing both horses. An earlier per-horse split (`chariot_horse_brown` +
+  `chariot_horse_brown_2`) was **REVERTED 2026-06-13**: the disjoint 2nd horse as an `AdditionalMesh`
+  would not render (only the base mesh drew — confirmed by an Option-E base/additional swap). The
+  "~40-bone per-draw palette" that motivated the split is **false** — the elephant renders as one mesh
+  skinned to **59 active bones**, so 54 in one mesh is safe. There is no per-mesh bone limit; the only
+  cap is `Skeleton.MaxBoneCount = 64` (author ≤63). The merge fixed the missing horse. The Kit folds
+  the merged Blender LODs into 5 Metameshes. See `feedback_no_40_bone_per_mesh_limit`.
 - **Materials are 100% vanilla**: `horse_brown_mat`, `horse_tail_mane`, `horse_harness_e_test`,
   `horse_harness_imperial_b`, `roman_statue_chariot` (the vanilla hippodrome cart material —
   the upstream pack's cart texture set IS the vanilla statue set). FBX material slot names must be the bare
@@ -107,7 +111,7 @@ directly, and vanilla rein/harness systems (`horse_harness_rein_skel`) work unmo
 | `monster_usage_sets.xml` | upstream-pack `chariot` usage set verbatim |
 | `action_sets.xslt` | `act_chariot_*` → `chariot_rider_*` rows injected into `as_human_warrior` (rider STANDS; same mechanism as the elephant block) + 4 mount actions → `chariot_mount_rider_from_right` |
 | `monster_usage_sets.xslt` | `mount_id="chariot"`: 6 mountings (chariot mount actions + vanilla horse dismounts), 8 falls + 8 strikes (vanilla `act_fall_rider_*`/`act_rider_only_fall_*`) |
-| `LOTRLOME_items/LOTRAOM_horses.xml` | `taom_chariot_a`: mesh `chariot_horse_brown`; AdditionalMeshes `chariot_horse_brown_2` + mane + `chariot_harness_e_rein` + `chariot_ride` (NOT `chariot_ride_alt` — dead texture refs in the upstream pack itself); maneuver 25 / speed 55 / charge 200; `is_merchandise=false` |
+| `LOTRLOME_items/LOTRAOM_horses.xml` | `taom_chariot_a`: mesh `chariot_horse_brown` (a single mesh with BOTH horses, 54 active bones — the per-horse split was reverted, see above); AdditionalMeshes = mane + `chariot_harness_e_rein` + `chariot_ride` (NOT `chariot_ride_alt` — dead texture refs in the upstream pack itself); maneuver 25 / speed 55 / charge 200; `is_merchandise=false` |
 
 ## Configuration
 
@@ -144,13 +148,47 @@ INVENTORY.md.
 
 ## Status / pending
 
-- ✅ ModuleData, compiled assets (skeleton+6 Metameshes w/ upstream-pack IK transplant, 3 masters, 24 clips), validators
-- ⏳ **In-game full-path verification** (spider-RCA checklist: inventory tableau, mission mount,
-  all gaits, standing rider, mount death, formation, gate/bridge pathing for the 2-horse footprint)
-- ⏳ `/deep-review` + `/review-codex` before the closing commit
-- Follow-ups: black/white horse variants + `wide_chariot` (drop-in: same split, items exist in the upstream pack),
-  proper mount-death clips (currently `chariot_stand_1` freeze), localization pass for
-  `{=taom_chariot_a}`, fix `tools/blender/creature_anim_ops.py` stale `primary_bone_axis='X'` (L13)
+- ✅ ModuleData, compiled assets (skeleton + 5 Metameshes w/ upstream-pack IK transplant, 3 masters, 24 clips), validators
+- ✅ **In-game verified 2026-06-13** — both horses render and animate in step, rider + cart + full gait set,
+  IK intact (deep-review fixes + the single-mesh re-merge landed).
+- ✅ `/deep-review` complete (6 reviewers + adversarial verify; HIGH jump-clip typo + parity gaps fixed, RCA filed).
+- Follow-ups: black/white horse variants + `wide_chariot` (drop-in: single merged mesh, items exist in the
+  upstream pack), proper mount-death clips (currently `chariot_stand_1` freeze), localization pass for
+  `{=taom_chariot_a}`, fix `tools/blender/creature_anim_ops.py` stale `primary_bone_axis='X'` (L13),
+  parameterize `tools/audit_mount_parity.py` to cover the chariot vs vanilla-horse baseline.
+
+## The missing second horse — resolved (2026-06-13)
+
+The first in-game test rendered the chariot + rider + cart + ONE horse; the second was absent. Root cause,
+confirmed empirically (not theorized): a fully-disjoint full-body mesh in the `AdditionalMesh` slot does not
+render — the base mesh always draws, the additional disjoint horse never did (proven by an Option-E
+base/additional swap: the missing horse stayed missing regardless of which horse was base). The per-horse
+split that created that disjoint additional was motivated by a **false** "~40 per-draw bone limit". The
+elephant disproves it (one mesh, 59 active bones, renders), so merging both horses into one 54-bone mesh is
+safe and is the fix. The only real bone cap is `Skeleton.MaxBoneCount = 64` (author ≤63). Full correction +
+cross-creature guidance: `feedback_no_40_bone_per_mesh_limit`; the spider/authoring/engine docs were corrected
+in the same pass.
+
+## Rhûn barding (swappable HorseHarness, 2026-06-13)
+
+The chariot wears two-horse barding via a HorseHarness item, built from the single Rhûn kataphrakt
+armor (`LRD_horse_armour_4`) duplicated to both horse positions: copy A at +0.5X on the A-bones, copy B
+at −0.5X with vertex groups renamed `…→…B` on the B-bones (the chariot's horse B is a pure −1.0X
+translate of A, so a translate — not a mirror — aligns it), joined per LOD → `chariot_horse_armour_rhun`
+(42 active bones, 2 materials). Same construction as `chariot_horse_harness_imperial_b`; both are now
+HorseHarness items (`taom_chariot_armour_rhun` / `taom_chariot_armour_imperial`, `family_type="4"` to
+match the chariot), the Rhûn one equipped on the wainrider chariot troops.
+
+Two non-obvious authoring rules came out of this (both in `feedback_custom_mount_harness_rules` +
+`docs/ai-includes/creature-mount-authoring.md` Phase-4 rows 5–6):
+- **A custom-skeleton harness mesh must ship INSIDE the creature FBX** that defines the skeleton (where
+  imperial_b lives). A standalone `_notused` harness FBX **crashes the Kit** because the editor binds its
+  `B`-set/cart bones to the stock horse skeleton, which lacks them. (First attempt crashed on import.)
+- **A HorseHarness suppresses the Horse item's `<AdditionalMeshes>`** (native mount-compositing). The cart
+  was an AdditionalMesh and vanished the moment the barding was worn. Fix: the cart + reins are the
+  vehicle, not accessories — baked into the base `chariot_horse_brown` mesh (now 59 active bones) so they
+  always render; only the mane stays an AdditionalMesh (hidden by the barding's `mane_cover_type="all"`
+  anyway). All three render together, verified in-game.
 
 ## Changelog
 

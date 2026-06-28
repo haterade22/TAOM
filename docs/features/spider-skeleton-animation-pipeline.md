@@ -175,7 +175,7 @@ The combat bite-collision uses the **front legs' outer bones** (`SpiderConfig` f
 ---
 
 ## Deliverables (all in `E:\LOTRAOMAssets\_auto_workspace\`)
-- **`spider_correct.fbx`** — `spider_skeleton` (62 bones, **untouched**) + all 3 variants **split L/R for the per-mesh bone cap**: `sk_spider_forest_{a,b,c}` (base, 33 bones) + `sk_spider_forest_{a,b,c}_2` (additional, 30 bones), all 6 LODs (primary Y). See "Mesh-split" below. (The original single-mesh export is regenerable from the haterade blend.)
+- **`spider_correct.fbx`** — `spider_skeleton` (62 bones, **untouched**) + all 3 variants split L/R (`sk_spider_forest_{a,b,c}` base 33 bones + `sk_spider_forest_{a,b,c}_2` additional 30 bones, all 6 LODs, primary Y). **NOTE (corrected 2026-06-13): the split was done on a now-refuted "per-mesh bone cap" premise — see the corrected "Mesh-split" section below. It is NOT needed for bone count; a single mesh may skin the whole ≤63-bone skeleton.** (The original single-mesh export is regenerable from the haterade blend.)
 - **`spider_correct_geo.tpac`** (in LOTRLOME_Armory) — imported + **IK/ragdoll transplanted** (62 bodies, 61 D6). `.backup` saved.
 - **`spider_walk.fbx`** — forward walk (`sp_walk_1_001`) LOCAL-retargeted onto `spider_skeleton` (`spider_skeleton_notused` root). Body grounded; legs need per-leg polish.
 - **`spider_test_anim.fbx`** — crude leg-curl test (validated the anim pipeline).
@@ -184,11 +184,30 @@ The combat bite-collision uses the **front legs' outer bones** (`SpiderConfig` f
 ## Source-of-truth reference: the WARG (works in-game)
 `E:\Steam\...\Modules\Alliance.Wargs` — `AssetSources/2_lotr/monster/warg/Warg_Rig_V5.fbx` (rig, root `Skeleton_Warg`), `animations/*.fbx` (anim roots `Skeleton_Warg_notused`), `Assets/.../animations/*_geo.tpac` (compiled clips). This is where the `_notused` convention + the working-creature structure were confirmed.
 
-## Mesh-split for the per-mesh bone limit (the render AV fix) — done 2026-06-05
+## Mesh-split — the "per-mesh bone limit" was a MISDIAGNOSIS (corrected 2026-06-13)
 
-**The bug.** `sk_spider_forest_c` weights to **58 bones in one mesh**. Bannerlord's native per-draw bone palette is **~40** (NOT the 64-bone `Skeleton.MaxBoneCount` — that's a separate, higher cap), so a single 58-bone mesh overflows it → `AccessViolationException` in `Agent.PreloadForRendering` at spawn. (The skeleton is 62 bones; older notes' "62-bone mesh" conflated skeleton-count with mesh-bone-usage — the mesh uses 58.)
+> **⚠️ THE ~40 PER-MESH BONE LIMIT DOES NOT EXIST.** This section originally claimed a single mesh
+> could skin to only ~40 bones and that the spider's `PreloadForRendering` AV came from overflowing it.
+> That is **false** and was disproven during the chariot port (issue #279). Authoritative correction —
+> memory `feedback_no_40_bone_per_mesh_limit.md`:
+> - **The only bone limit is `Skeleton.MaxBoneCount = 64`** (engine code), a cap on TOTAL bones per
+>   *skeleton*, NOT per mesh. **Author skeletons to ≤63** for safety. There is no smaller per-mesh cap.
+> - **Two in-game proofs:** the war elephant renders as ONE mesh skinned to **59 active bones**; the
+>   chariot renders as ONE mesh skinned to **54 active bones** (both horses). Both > 40.
+> - **The warg is split ONLY for its FUR** — `warg_low_fur` is a separate mesh so the fur can
+>   cloth-simulate / move independently of the body. The split is **cloth-driven, not bone-driven**
+>   (the original "bone-driven, not just cloth" line below was exactly backwards).
+> - **The spider's L/R split was therefore unnecessary for bone count** (62-bone skeleton ≤ 64). Its
+>   single-mesh AV's true cause is **unestablished** — do not cite ~40, do not invent a replacement.
+>   (That `PreloadForRendering` render AV is distinct from the spider's separate `TickAnimations` AV,
+>   which was the missing `quad_movement` tag — different call site, different fix.)
 
-**The warg proves the rule** (measured in Blender from `Warg_Rig_V5.fbx`): a **49-bone** `Skeleton_Warg`, but every mesh is authored ≤40 — `warg_low` sits at *exactly* 40, `warg_low_fur` 35. The body renders across several meshes (base `warg_low` + `<AdditionalMeshes>` `warg_low_fur`), each with its own ≤40 palette. The split is bone-driven, not just cloth.
+**Historical record (the 2026-06-05 belief, now corrected).** `sk_spider_forest_c` weights to 58 bones
+in one mesh; this was *believed* to overflow a "~40 per-draw palette" and cause the
+`AccessViolationException` in `Agent.PreloadForRendering` at spawn. The warg's meshes were cited as
+proof (`warg_low` ≈ 40 bones, `warg_low_fur` 35) — but those figures are the warg's own design (its
+body + a separate cloth-sim fur mesh), not evidence of an engine cap. The split was done anyway and the
+AV went away, but the elephant (59 bones, one mesh, no AV) shows the ~40 reasoning was wrong.
 
 **The fix (in `spider_correct.fbx`).** Split each `sk_spider_forest_{a,b,c}` along the body midline into a base (Left, **33 bones**) + a `_2` additional (Right, **30 bones**), all 6 LODs, clamping cross-midline weights so each half references only its side's legs + the 10 central bones (`root_m`, `spine1/2_m`, `chest_m`, `head_m`, `joint12-16_m`). The 62-bone skeleton is left **byte-identical**. Scripted in Blender via the MCP: per vertex, take the dominant-bone side (`_l`/`_r`/`_m` suffix) → duplicate → delete the other side's verts → drop the other side's vertex groups → renormalize → remove empty groups.
 

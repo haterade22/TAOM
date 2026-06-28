@@ -1716,6 +1716,21 @@ with the proven pipeline, the IK-vs-deform clarification, and the assimp-headles
 
 ## 2026-06-13
 
+### feat(chariot): Rhûn swappable barding (two-horse HorseHarness) + 2 mount-harness authoring rules (issue #279)
+
+Gave the Wainrider chariot two-horse Rhûn kataphrakt barding as a swappable HorseHarness. Built from the
+single `LRD_horse_armour_4` duplicated to both horse positions (A-bones +0.5X, B-bones -0.5X via group
+rename + translate, joined per LOD → `chariot_horse_armour_rhun`, 42 active bones), mirroring the existing
+`chariot_horse_harness_imperial_b` construction. Both are now HorseHarness items (`taom_chariot_armour_rhun`
+/ `_imperial`, `family_type="4"` matching the chariot); the Rhûn one equips on the wainrider chariot troops.
+Both horses armored + cart + barding render together, verified in-game. Two non-obvious rules surfaced and
+are documented (`feedback_custom_mount_harness_rules` + creature-mount-authoring Phase-4 rows 5-6):
+**(1)** a custom-skeleton harness mesh must ship INSIDE the creature FBX that defines the skeleton — a
+standalone `_notused` harness FBX crashes the Kit (editor binds the B-set/cart bones to the stock horse
+skeleton, which lacks them). **(2)** a HorseHarness suppresses the Horse item's `<AdditionalMeshes>` (native
+compositing) — so the cart + reins (the vehicle, not accessories) were baked into the base `chariot_horse_brown`
+mesh (now 59 active bones, ≤63 cap) to always render; only the mane stays an AdditionalMesh. Validators PASS.
+
 ### fix(chariot): render the 2nd horse + correct the FALSE "~40 per-mesh bone limit" across 9 docs (issue #279)
 
 The Wainrider chariot shipped working but rendered only ONE horse — the second was the disjoint half

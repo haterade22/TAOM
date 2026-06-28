@@ -31,12 +31,15 @@ non-humanoid roster troop, so three shapes were tried:
    root cause took until 2026-06-11 to find (below).
 2. **Detached riderless combatant (2026-06-04 → 06-05)** — `Mission.SpawnAgent` prefix
    hand-building a `FromHorseObj` spider with native wield guards. Worked in battle, then hit a
-   `PreloadForRendering` AV from the 58-bone single mesh (per-mesh GPU palette ≈ 40) and was
-   PAUSED. The whole machinery (Patch45, wield guards, spawn service, move task) was **deleted
+   `PreloadForRendering` AV from the 58-bone single mesh (*believed then* to be a "per-mesh GPU palette
+   ≈ 40" overflow — **that cause is FALSE, corrected 2026-06-13**: no per-mesh cap exists, the elephant
+   renders 59 active bones in one mesh; the AV's true cause is unestablished — `feedback_no_40_bone_per_mesh_limit`)
+   and was PAUSED. The whole machinery (Patch45, wield guards, spawn service, move task) was **deleted
    2026-06-10**.
 3. **Rideable mount, take two (2026-06-10 → 06-11, current)** — after the war elephant proved
-   the ridden-mount lane end-to-end, the spider was converted back: mesh split L/R to fit the
-   bone palette, mount surface authored, and the tableau/mission AVs root-caused to a **missing
+   the ridden-mount lane end-to-end, the spider was converted back: mesh split L/R (on the now-refuted
+   bone-palette premise — the split was unnecessary for bone count, a single mesh skins the whole
+   ≤63-bone skeleton), mount surface authored, and the tableau/mission AVs root-caused to a **missing
    `quad_movement` clip tag** (the actual fix). This file documents that architecture.
 
 ## THE ROOT CAUSE (2026-06-10/11 investigation)

@@ -64,7 +64,9 @@ then know these requirements BEFORE replacing, and run the gate AFTER.
 | 1 | **The Skeleton resource** — a mesh/geo re-export ships **mesh-only**, dropping `<creature>_skeleton` | `CreateAgentSkeleton("<creature>_skeleton")` → null → **RIDERLESS mount** (graceful, NO crash — easy to miss) | the skeleton must exist as a `type=Skeleton` resource in a **live (non-`.backup`) loose tpac**, exactly like the working elephant (`elephant_skeleton` **bundled with the mesh** in live loose `mesh/adod_elephant_geo.tpac`) | **Re-BUNDLE it into the new mesh tpac**: `tools/tpac_skeleton_inject.py <new_mesh.tpac> <backup_with_skeleton.tpac> <skel_name> <out.tpac>` → skeleton + meshes in ONE tpac (the proven structure). Do NOT use `tpac_skeleton_extract.py` (a STANDALONE skeleton-only tpac CRASHED the engine — recursive worker-thread native AV; spider 2026-06-14). Do NOT rename the action_set's `skeleton=` to a mesh name; do NOT fully revert (the backup's un-split mesh re-hits #4). RCA: spider 2026-06-13/14 |
 | 2 | **The `quad_movement` tag** on a measured-gait clip (Kit recompile loses it) | `Skeleton.TickAnimations` AV (`+0x10`) on the FIRST mission tick, every mount context | byte-scan each `monster_usage_movements`-bound clip's deployed `_anm.tpac` for `quad_movement` | byte-graft the tag from a tagged sibling (spider.md "How-to"), or re-tag in the Kit |
 | 3 | **A binding target** (a rename orphans an `animation="X"`) | degenerate record → AV / null when resolved | every `animation=` in `as_<c>` + children + the rider partial must resolve to a real resource in a deployed tpac | re-point the binding to the correct existing clip; never bind a name no tpac carries |
-| 4 | **The mesh split** (re-export ships the un-split >38-bone mesh) | `Agent.PreloadForRendering` AV at spawn | per-mesh bone palette ≤ ~38–40; keep the L/R split, recombined via the item's `<AdditionalMeshes>` | keep/restore the split-mesh export |
+| 4 | ~~**The mesh split**~~ **— RETIRED (corrected 2026-06-13): there is NO per-mesh bone limit** | — | **The only bone cap is `Skeleton.MaxBoneCount = 64` (engine code), a SKELETON-total cap, not per-mesh. Author skeletons ≤63. A single mesh skins the whole skeleton — proven: elephant 59 active bones / chariot 54, both one mesh, both render.** | **Never split a body for bone count.** Keep the whole body in ONE mesh. Split a mesh ONLY for a genuinely separate sub-mesh — e.g. the warg's `warg_low_fur` is split so the FUR can cloth-simulate independently (cloth-driven, not bone-driven). A fully-disjoint full-body `<AdditionalMeshes>` mesh may not render (chariot 2nd horse). See `feedback_no_40_bone_per_mesh_limit` |
+| 5 | **HorseHarness on the mount** suppresses the Horse item's `<AdditionalMeshes>` | always-render parts (a chariot's cart) vanish the moment a harness is equipped | native mount-compositing drops Horse-item AdditionalMeshes when the HorseHarness slot is filled (chariot 2026-06-13: barding dropped the cart) | put anything that must ALWAYS render (vehicle/cart/reins) in the **base mesh**, not `<AdditionalMeshes>`; leave only optional geometry (mane) as an AdditionalMesh. See `feedback_custom_mount_harness_rules` |
+| 6 | **Custom-skeleton harness** shipped as a standalone FBX | **Kit CRASHES on import** (native, no rgl_log) when the harness skin uses bones outside the stock horse skeleton (`B`-set, cart bones) and Type=horse is picked | the editor binds a standalone `_notused` harness to the built-in horse skeleton, which lacks the custom bones | build the harness mesh INSIDE the creature FBX that defines the skeleton (where `chariot_horse_harness_imperial_b` lives); the HorseHarness item references it by metamesh name. `family_type` on the Horse item + harness must match. See `feedback_custom_mount_harness_rules` |
 
 Two more invariants the swap must preserve: the **skeleton resource NAME must equal the
 action_set's `skeleton="…"`** (the Blender armature name becomes the skeleton name; the FBX-export
@@ -92,8 +94,8 @@ Add a new creature to the tool's `CREATURES` config. Skeleton/tag/binding intern
 
 | Requirement | Rule | Failure mode if violated |
 |---|---|---|
-| Skeleton bone count | ≤ 64 bones total (engine cap) | import failure / corrupt rig |
-| Per-mesh bone palette | ≤ ~38-40 bones per mesh — **split large rigs into L/R half-meshes**, recombine via the item's `<AdditionalMeshes>` (warg precedent: body + fur) | `Agent.PreloadForRendering` AV at spawn (spider 2026-06-05) |
+| Skeleton bone count | **≤ 63 bones** (engine cap is `Skeleton.MaxBoneCount = 64`; author ≤63 for a 1-bone safety margin) | import failure / corrupt rig |
+| ~~Per-mesh bone palette~~ | **NO per-mesh bone limit (corrected 2026-06-13).** A single mesh skins the whole skeleton — elephant 59 active bones / chariot 54, one mesh each, both render. Do NOT split a body for bone count. Split a mesh ONLY for a genuinely separate sub-mesh (the warg splits `warg_low_fur` so the FUR cloth-simulates independently — cloth-driven, not bone-driven). | — (the old ~40 cap was a misdiagnosis; see `feedback_no_40_bone_per_mesh_limit`) |
 | Physics | bodies + joints transplanted onto the final skeleton in the same tpac | ragdoll-less corpses, collision holes |
 | Movement clips | authored **IN-PLACE** (zero net root travel) — the engine translates the agent | double-speed slide if root motion baked (verified vs warg 2026-06-03) |
 
@@ -200,9 +202,10 @@ monster leaves null native entries → spawn AV.
 
 ## Phase 6 — Item + troop + recruitment
 
-- Horse-slot ITEM (`ItemType.Horse`) with `HorseComponent monster="<monster_id>"`; split meshes
-  recombined via `<AdditionalMeshes>`; `horse_harness` optional (family-1 fits horse harnesses —
-  the player-side mount-lock prevents abuse, Phase 7).
+- Horse-slot ITEM (`ItemType.Horse`) with `HorseComponent monster="<monster_id>"`; keep the body in
+  ONE mesh (no bone-count split — see Phase-4 row 4); `<AdditionalMeshes>` only for genuinely separate
+  sub-meshes (accessories, or a cloth-sim mesh like the warg's fur); `horse_harness` optional (family-1
+  fits horse harnesses — the player-side mount-lock prevents abuse, Phase 7).
 - Rider TROOP equips the item in the Horse slot → vanilla cavalry spawn does everything else.
 - Recruitment via the standard pools (`VolunteerRecruitmentService`) or clan-restricted
   (`harad_elephant_rider` precedent).
@@ -243,7 +246,7 @@ crash. Keep the previous decompile as `_shipping_build_vX.Y.Z` (the 1.4.5 baseli
 
 1. Non-humanoid mounts ARE viable — the "never make creatures mounts" verdict was reversed
    2026-06-11 (`quad_movement` was the real killer, not the mount architecture).
-2. Per-mesh bone palette → split meshes + `<AdditionalMeshes>` (spider 06-05).
+2. ~~Per-mesh bone palette → split meshes~~ — **RETIRED: no per-mesh bone limit (corrected 06-13). Keep the body in one mesh; the only cap is the 64-bone skeleton. See `feedback_no_40_bone_per_mesh_limit`.**
 3. Per-pace `direction="none"` reference row or ÷0 (spider 06-04).
 4. `quad_movement` + step points on gait clips or universal mount-context AV (THE root cause,
    06-10/11).

@@ -17,8 +17,10 @@ Decompiled `ADOD_Beasts.dll` + `NativeHook.dll` (the wolf "has a lot of code"):
 - The wolf's code — `ADODBeastsWolfAgentComponent` (~600 lines), `ADODBeastsMissionLogic` (~460), and
   `NativeHook.dll`'s 3 EasyHook hooks (`Agent_AiTick`, `Agent_Tick`,
   `AgentMovementAndDynamicsSystem_UpdateFlags`) — is **all movement/AI. ZERO render hooks.**
-- So the wolf **renders through the stock engine path with no render code** — purely because its mesh
-  fits the native per-mesh bone-palette cap (single-mesh `Type="Animal"`, 57-bone skeleton).
+- So the wolf **renders through the stock engine path with no render code** (single-mesh `Type="Animal"`,
+  57-bone skeleton). **NOTE (corrected 2026-06-13): the "native per-mesh bone-palette cap" framing here is
+  FALSE** — no per-mesh cap exists (the elephant renders 59 active bones in one mesh); the only cap is the
+  64-bone `Skeleton.MaxBoneCount`. See `feedback_no_40_bone_per_mesh_limit`.
 - Therefore **no code (managed or native) fixes the spider AV. It's the mesh.** → workstream A.
 - The upstream pack's creatures aren't even roster troops (wolf = scripted companion via public
   `Mission.SpawnMonster(mountItem, default rider, …)`; elephant = ridden mount + howdah). The spider's
@@ -90,7 +92,8 @@ Point the item at a **known-good single creature mesh** and keep `monster="Monst
 
 ### A4 — Re-author `spider_correct.fbx` skin  *(Blender/Kit, expensive; the real fix if A2/A3 say "mesh")*
 
-Clamp ≤4 influences/vertex, drop zero-weight influences, genuinely minimal per-mesh palette (≤~40),
+Clamp ≤4 influences/vertex, drop zero-weight influences (~~genuinely minimal per-mesh palette (≤~40)~~ —
+**the ≤40 target was a misdiagnosis, corrected 2026-06-13; no per-mesh cap exists, only the 64-bone skeleton**),
 export skeleton+mesh in **one** FBX, regenerate the tpac, re-run
 `python tools/tpac_skeleton_transplant.py` to restore the IK ragdoll.
 

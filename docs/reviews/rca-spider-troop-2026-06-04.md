@@ -1,5 +1,15 @@
 # RCA — Recruitable Giant Spider Troop (2026-06-04)
 
+> **⚠️ CORRECTION (2026-06-13): every "per-mesh bone palette ~40–58" claim in this document is FALSE.**
+> There is no per-mesh / per-draw bone limit. The war elephant renders as ONE mesh skinned to **59 active
+> bones** (the chariot 54). The only bone cap is `Skeleton.MaxBoneCount = 64` (skeleton-total; author ≤63).
+> This RCA's own evidence already pointed at the refutation: the L/R mesh-split was *built, tested in-game,
+> and the AV PERSISTED* ("Refuted — AV persisted with the split mesh", §"Counter-examples"; "the bone-cap
+> fix was already tried", §"By elimination") — so the split never fixed the spider AV. The render AV's true
+> cause is **unestablished**; do not attribute it to bone count. The separately-root-caused mount-context AV
+> was the missing `quad_movement` clip tag (a different call site, `TickAnimations`). Authoritative
+> correction + cross-creature guidance: memory `feedback_no_40_bone_per_mesh_limit`.
+
 > **Status: redesigned mid-day.** The in-place `Mission.SpawnAgent` `Monster`-swap approach reviewed in the appendix below passed deep-review with no *code* bugs — then crashed **in-game** with a native AccessViolation, because letting vanilla `SpawnAgent` run on the swapped agent builds a humanoid skin (`dg_uruk`) on the spider skeleton. It was replaced the same day with a **detached non-humanoid combatant** (`CreationType.FromHorseObj`) spawn that never builds a humanoid skin. This top section is the RCA of that redesign + its five-layer crash journey + the architecture investigation. The appendix is retained as the (now-superseded) swap approach's review.
 
 ## Redesign — detached non-humanoid combatant
@@ -12,7 +22,7 @@
 |---|-------|-----------|-----|
 | 1 | `DivideByZeroException` (native `CreateAgent`) | Spider anim files were registered in `LOTRLOME_Armory/ModuleData/project.mbproj` under **custom** `soln_spider_*` ids the runtime silently ignores → the `as_spider` action set was never loaded | Move anim files to top-level under **recognized** ids (`soln_action_sets`/`_types`/`_monster_usage_sets`). *Lesson: the engine loads `project.mbproj` files only for a fixed id allowlist; custom ids are dropped silently. Read `rgl_log` to confirm which files the engine actually opens.* |
 | 2 | `AccessViolation` in `BuildAgent → PreloadForRendering` | (a) render data uninitialized — the free-mount path seats a `MountCreationKey` we omitted; (b) a `(0,0)` deploy direction normalized to a NaN frame | Reflected `Agent.SetMountInitialValues(name, MountCreationKey.GetRandomMountKeyString(...))` + a `Vec2.Forward` guard on invalid/zero direction |
-| 3 | `AccessViolation` in `PreloadForRendering` (mesh) | `sk_spider_forest_c` is a single **62-bone** mesh that overflows the native per-mesh bone palette (~40–58). `Skeleton.MaxBoneCount=64` is a *separate* skeleton cap | **Open** — needs a Modding-Kit mesh-split into sub-meshes ≤ ~40 bones. Proven via the warg stand-in (warg mesh renders through the identical code path) |
+| 3 | `AccessViolation` in `PreloadForRendering` (mesh) | ~~`sk_spider_forest_c` overflows the native per-mesh bone palette (~40–58)~~ — **THIS ROW'S CAUSE IS FALSE (corrected 2026-06-13).** There is NO per-mesh bone palette; the elephant renders 59 active bones in ONE mesh (chariot 54). The only cap is `Skeleton.MaxBoneCount = 64` (skeleton-total). The spider's `PreloadForRendering` AV is real but its **true cause is unestablished**. | ~~mesh-split ≤~40 bones~~ — superseded: a body is never split for bone count (it's not the cause). The L/R split shipped but was unnecessary on these grounds. See `feedback_no_40_bone_per_mesh_limit`. |
 | 4 | `NullReferenceException` in `Agent.GetPrimaryWieldedItemIndex` | Vanilla `MissionBattleSideSpawnContext.SpawnTroops` calls `agent.WieldInitialWeapons()` on every spawned agent; its first line derefs the spider's uninitialized native wield pointer (`0xee0`) | `Agent_WieldInitialWeapons_SpiderSkip_Patch` — skip wielding for the spider (it bites via its Monster, never wields) |
 | 5a | `NullReferenceException` in `Agent.IsRangedCached` | Joining a formation → `QueryLibrary.IsInfantry → IsRangedCached → Equipment.ContainsNonConsumableRangedWeaponWithAmmo()` derefs the **null `MissionEquipment`** (the mount build never creates one) | `EnsureMissionEquipment` → `agent.InitializeMissionEquipment(null,null)` builds an empty (weaponless) `MissionEquipment` from the SpawnEquipment → weapon-cache queries return `false` |
 | 5b | native `AccessViolation` in `Agent.GetMissileRange` | Formation membership → `TeamAIGeneral.OnUnitAddedToFormationForTheFirstTime → BehaviorSkirmish → FormationQuerySystem` reads per-unit `agent.MaximumMissileRange → GetMissileRange()` (native) which walks the **uninitialized native weapon struct** | **Gated off** + investigated root fix `InitializeNativeWeaponState` (see below) |

@@ -172,8 +172,10 @@ Pulling the above together — to add a renderable, animated, fighting custom cr
    (`IsHumanoid`, `Mountable`, …). The 1.4.X-native pattern (ArtemsHunts' animals) is `monster_usage="horse"` +
    a custom `action_set` bound to the creature skeleton.
 2. **Skeleton + mesh** (tpac): import the FBX in the Kit → `*_geo.tpac`; patch SkeletonUserData (bodies/IK/Usage)
-   with `tpac_skeleton_transplant.py`. Render gotcha: the **per-mesh bone-palette cap** (native, ~40) — a single
-   mesh referencing too many bones AVs in `PreloadForRendering` (the spider's unsolved blocker).
+   with `tpac_skeleton_transplant.py`. Bone cap: `Skeleton.MaxBoneCount = 64` (skeleton-total; author ≤63). **There
+   is NO per-mesh bone-palette cap — corrected 2026-06-13:** the "~40 per-mesh" gotcha was a misdiagnosis (the
+   elephant renders 59 active bones in one mesh, the chariot 54). A single mesh skins the whole skeleton; never
+   split a body for bone count. See `feedback_no_40_bone_per_mesh_limit`.
 3. **Clips** (tpac): one clip per action, each with the **right `AnimFlags`** per type (movement → `synch_with_movement`+`cyclic`;
    attack → `lock_movement`+`enforce_all`; priority in the low byte) — see the clip-flags reference. A clip needs
    both its `_anm.tpac` AND correct flags.
