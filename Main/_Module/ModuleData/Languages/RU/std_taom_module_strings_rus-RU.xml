@@ -3126,7 +3126,6 @@
 
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="Угасающий народ — мало пополнений" />
 
-    <string id="taom_faction_high_kingdom_of_lindon_weakness_2" text="Не может расширяться далеко от Гаваней" />
 
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10% к скорости отряда в степи (Степные колесничие)" />
 
@@ -3434,7 +3433,6 @@
 
     <string id="taom_faction_kingdom_of_imladris_weakness_1" text="Угасающий народ — мало пополнений" />
 
-    <string id="taom_faction_kingdom_of_imladris_weakness_2" text="Невозможно расширяться далеко от долины" />
 
     <string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="+10% скорости отряда в лесу (Лесное Королевство)" />
 

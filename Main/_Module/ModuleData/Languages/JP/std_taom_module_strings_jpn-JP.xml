@@ -3126,7 +3126,6 @@
 
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="衰退する民 — 補充兵が少ない" />
 
-    <string id="taom_faction_high_kingdom_of_lindon_weakness_2" text="港から遠くへ拡張できない" />
 
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="草原での部隊速度+10%(草原戦車兵)" />
 
@@ -3434,7 +3433,6 @@
 
     <string id="taom_faction_kingdom_of_imladris_weakness_1" text="消えゆく民――補充兵が少ない" />
 
-    <string id="taom_faction_kingdom_of_imladris_weakness_2" text="谷から遠く拡張できない" />
 
     <string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="森林で部隊速度+10%(森の王国)" />
 

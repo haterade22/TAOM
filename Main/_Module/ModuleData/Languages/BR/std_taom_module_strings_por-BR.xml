@@ -3126,7 +3126,6 @@
 
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="Povo em declínio — poucos substitutos" />
 
-    <string id="taom_faction_high_kingdom_of_lindon_weakness_2" text="Não pode expandir para longe dos Portos" />
 
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10% de velocidade do grupo na estepe (Cocheiros da Estepe)" />
 
@@ -3434,7 +3433,6 @@
 
     <string id="taom_faction_kingdom_of_imladris_weakness_1" text="Povo em declínio — poucos substitutos" />
 
-    <string id="taom_faction_kingdom_of_imladris_weakness_2" text="Não pode expandir longe do vale" />
 
     <string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="+10% de velocidade do grupo na floresta (Reino da Floresta)" />
 

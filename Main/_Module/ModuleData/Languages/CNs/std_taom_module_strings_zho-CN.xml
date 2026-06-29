@@ -3126,7 +3126,6 @@
 
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="衰落的种族——很少有补充" />
 
-    <string id="taom_faction_high_kingdom_of_lindon_weakness_2" text="无法远离海港扩张" />
 
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10%草原队伍速度(草原战车兵)" />
 
@@ -3434,7 +3433,6 @@
 
     <string id="taom_faction_kingdom_of_imladris_weakness_1" text="逝去的民族——补充稀少" />
 
-    <string id="taom_faction_kingdom_of_imladris_weakness_2" text="无法远离山谷扩张" />
 
     <string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="+10% 森林中队伍速度(林地王国)" />
 

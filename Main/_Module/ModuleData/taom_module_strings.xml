@@ -1763,7 +1763,6 @@
 	<string id="taom_faction_high_kingdom_of_lindon_trait_3" text="{=taom_faction_high_kingdom_of_lindon_trait_3}Last of the High Elves" />
 	<string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="{=taom_faction_high_kingdom_of_lindon_weakness_0}Elven Pride raises influence costs" />
 	<string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="{=taom_faction_high_kingdom_of_lindon_weakness_1}Fading people — few replacements" />
-	<string id="taom_faction_high_kingdom_of_lindon_weakness_2" text="{=taom_faction_high_kingdom_of_lindon_weakness_2}Cannot expand far from the Havens" />
 	<string id="taom_faction_khudorom_of_khand_bonus_0" text="{=taom_faction_khudorom_of_khand_bonus_0}+10% party speed on steppe (Steppe Charioteers)" />
 	<string id="taom_faction_khudorom_of_khand_bonus_1" text="{=taom_faction_khudorom_of_khand_bonus_1}50% less forest speed penalty + 15% sight range (Battanian, inherited)" />
 	<string id="taom_faction_khudorom_of_khand_bonus_2" text="{=taom_faction_khudorom_of_khand_bonus_2}+20% chance for veteran militia in towns (Battanian, inherited)" />
@@ -1917,7 +1916,6 @@
 	<string id="taom_faction_kingdom_of_imladris_trait_3" text="{=taom_faction_kingdom_of_imladris_trait_3}Hidden Valley" />
 	<string id="taom_faction_kingdom_of_imladris_weakness_0" text="{=taom_faction_kingdom_of_imladris_weakness_0}Elven Pride raises influence costs" />
 	<string id="taom_faction_kingdom_of_imladris_weakness_1" text="{=taom_faction_kingdom_of_imladris_weakness_1}Fading people — few replacements" />
-	<string id="taom_faction_kingdom_of_imladris_weakness_2" text="{=taom_faction_kingdom_of_imladris_weakness_2}Cannot expand far from the valley" />
 	<string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="{=taom_faction_kingdom_of_lasgalen_bonus_0}+10% party speed in forest (Woodland Realm)" />
 	<string id="taom_faction_kingdom_of_lasgalen_bonus_1" text="{=taom_faction_kingdom_of_lasgalen_bonus_1}+25% militia veteran chance (Silvan Wardens)" />
 	<string id="taom_faction_kingdom_of_lasgalen_bonus_2" text="{=taom_faction_kingdom_of_lasgalen_bonus_2}+3 party morale (Woodland Bonds)" />

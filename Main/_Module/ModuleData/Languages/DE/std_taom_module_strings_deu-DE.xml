@@ -3126,7 +3126,6 @@
 
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="Schwindendes Volk — wenig Ersatz" />
 
-    <string id="taom_faction_high_kingdom_of_lindon_weakness_2" text="Kann nicht weit von den Häfen expandieren" />
 
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10% Parteigeschwindigkeit in der Steppe (Steppenstreitwagenfahrer)" />
 
@@ -3434,7 +3433,6 @@
 
     <string id="taom_faction_kingdom_of_imladris_weakness_1" text="Schwindendes Volk — wenig Ersatz" />
 
-    <string id="taom_faction_kingdom_of_imladris_weakness_2" text="Kann sich nicht weit vom Tal ausbreiten" />
 
     <string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="+10% Truppengeschwindigkeit im Wald (Waldlandreich)" />
 

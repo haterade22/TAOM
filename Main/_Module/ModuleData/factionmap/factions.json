@@ -75,8 +75,7 @@
     ],
     "weaknesses": [
       "{=taom_faction_high_kingdom_of_lindon_weakness_0}Elven Pride raises influence costs",
-      "{=taom_faction_high_kingdom_of_lindon_weakness_1}Fading people — few replacements",
-      "{=taom_faction_high_kingdom_of_lindon_weakness_2}Cannot expand far from the Havens"
+      "{=taom_faction_high_kingdom_of_lindon_weakness_1}Fading people — few replacements"
     ],
     "difficulty": 2
   },
@@ -425,8 +424,7 @@
     ],
     "weaknesses": [
       "{=taom_faction_kingdom_of_imladris_weakness_0}Elven Pride raises influence costs",
-      "{=taom_faction_kingdom_of_imladris_weakness_1}Fading people — few replacements",
-      "{=taom_faction_kingdom_of_imladris_weakness_2}Cannot expand far from the valley"
+      "{=taom_faction_kingdom_of_imladris_weakness_1}Fading people — few replacements"
     ],
     "difficulty": 1
   },

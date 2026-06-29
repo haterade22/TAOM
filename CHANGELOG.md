@@ -1,6 +1,22 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
-## 2026-06-27
+## 2026-06-29
+
+### fix(factionmap): drop the misleading "Cannot expand far from…" faction weakness (Imladris + Lindon)
+
+The character-creation faction screen listed "Cannot expand far from the valley" (Imladris) and
+"Cannot expand far from the Havens" (Lindon) under Weaknesses. Both were flavor text with no code
+backing — `factionmap/factions.json` weaknesses are display-only (`FactionConfigProvider` →
+`FactionDisplayHelper`), and nothing in ArmyTargeting / KingdomDecisionPermission / Diplomacy / any
+feat restricts where a faction may expand or which settlements it can capture. A player read the line
+as a real mechanic ("can't capture castles"), so it was removed.
+
+- Deleted `weakness_2` from `kingdom_of_imladris` + `high_kingdom_of_lindon` in
+  `factionmap/factions.json`, plus the now-orphaned `<string>` defs from `taom_module_strings.xml` and
+  all 12 `Languages/*/std_taom_module_strings_*.xml` (14 files, 26 lines).
+- Each faction keeps its other two weaknesses; `weakness_0` ("Elven Pride raises influence costs") is
+  the real one — it maps to the coded `+25% army influence cost` feat.
+- ModuleData validator green; all 14 edited files parse (JSON + XML).
 
 ### fix(alignment-desertion): Codex review — gate party path to lord/main parties
 

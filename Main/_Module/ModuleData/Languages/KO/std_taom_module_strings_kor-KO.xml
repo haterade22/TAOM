@@ -3126,7 +3126,6 @@
 
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="쇠퇴하는 민족 — 보충병이 거의 없음" />
 
-    <string id="taom_faction_high_kingdom_of_lindon_weakness_2" text="항구에서 멀리 확장할 수 없음" />
 
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="초원에서 부대 속도 +10% (초원 전차병)" />
 
@@ -3434,7 +3433,6 @@
 
     <string id="taom_faction_kingdom_of_imladris_weakness_1" text="쇠퇴하는 민족 — 보충 인력 부족" />
 
-    <string id="taom_faction_kingdom_of_imladris_weakness_2" text="계곡에서 멀리 확장할 수 없음" />
 
     <string id="taom_faction_kingdom_of_lasgalen_bonus_0" text="숲에서 부대 이동 속도 +10% (숲속 왕국)" />
 
