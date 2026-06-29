@@ -510,7 +510,8 @@ public class SubModule : MBSubModuleBase
             campaignStarter.AddModel(new TaomInventoryCapacityModel(careerPassives));
             var elephantAttackService = IoC.Resolve<Features.Elephant.IElephantAttackService>();
             var spiderAttackService = IoC.Resolve<ISpiderAttackService>();
-            campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService));
+            var mumakilAttackService = IoC.Resolve<Features.Mumakil.IMumakilAttackService>();
+            campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService, mumakilAttackService));
             campaignStarter.AddModel<AgentApplyDamageModel>(new TaomAgentApplyDamageModel(careerAgentStat));
             campaignStarter.AddModel(new TaomClanTierModel(careerPassiveService));
 
@@ -820,6 +821,7 @@ public class SubModule : MBSubModuleBase
         mission.AddMissionBehavior(new WargMissionBehavior());
         mission.AddMissionBehavior(new SpiderMissionBehavior());
         mission.AddMissionBehavior(new Features.Elephant.ElephantMissionBehavior());
+        mission.AddMissionBehavior(new Features.Mumakil.MumakilMissionBehavior());
         mission.AddMissionBehavior(new SiegeDismountMissionBehavior());
         mission.AddMissionBehavior(new MixedFormationsMissionBehavior());
         mission.AddMissionBehavior(new SmartCavalryAIMissionBehavior());

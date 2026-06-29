@@ -101,9 +101,10 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
     private static void InitializeHaradClans()
     {
         AddClan("clan_aserai_1",
-            ("harad_levy",           7),
-            ("harad_noble",          3),
-            ("harad_elephant_rider", 1));
+            ("harad_levy",            7),
+            ("harad_noble",           3),
+            ("harad_elephant_rider",  1),
+            ("harad_mumakil_rider",   1));
     }
 
     // --- Dunland (Culture.empire) Culture Fallback ---
@@ -613,7 +614,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         ("dg_uruk_foul",              2),  // uruk line entry
         ("dg_khamul_shadow_initiate", 3),
         ("dg_orc_scout",              1),  // ranged-orc line entry (dg_orc_scout -> dg_orc_archer)
-        ("taom_spider_creature",     40),  // TEMP-SPIDER-TEST: weight 1 -> 40 for campaign battle testing; REVERT before commit.
+        ("taom_spider_creature",      1),  // Giant Spider rider — rare settlement-path tail (keeps pool total 18).
     };
 
     // --- Dol Guldur Clan Mappings ---
@@ -652,7 +653,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
             new VolunteerChance("dg_orc_scout", 1),     // ranged-orc line entry
             // Giant spider — culture-fallback recruit for any Dol Guldur fief not in the per-settlement
             // map above. Spawns + fights as the spider Monster via the vanilla cavalry spawn (ridden mount).
-            new VolunteerChance("taom_spider_creature", 40)  // TEMP-SPIDER-TEST: weight 1 -> 40 for campaign battle testing; REVERT before commit.
+            new VolunteerChance("taom_spider_creature", 1)  // Giant Spider — rare culture-fallback recruit (keeps pool total 17).
         };
     }
 

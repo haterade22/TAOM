@@ -224,7 +224,15 @@ This is a deliberate behavior CHANGE from the donor mod, verified by decompiling
 randomly among `attack_1..3` at 0.001/tick with no left/right awareness, no cooldowns, and never uses `attack_4`
 (which IS bound to a real clip — `action_types.xml` 99–102, `action_sets.xml` 59684–59687).
 
-### Bow rider + lethal damage rebalance — 2026-06-15
+### Reverted to spear + Cavalry charge — 2026-06-29
+
+The 2026-06-15 bow-rider experiment below was **reversed** (project-owner decision): as a `HorseArcher` the formation
+skirmished at range so the elephant never closed to trample. Both the elephant **and** the Mûmakil rider are now
+`default_group="Cavalry"` armed with a spear (`eastern_spear_4_t4`) + `aserai_sword_3_t3`, with the bow + both
+`bodkin_arrows_b` quivers removed — so the formation **charges** and the auto-trample/tusk BT actually fires. The
+per-kind damage bands (next section) are unchanged. See [mumakil.md](mumakil.md).
+
+### Bow rider + lethal damage rebalance — 2026-06-15 (SUPERSEDED by the 2026-06-29 charge revert above)
 
 In-game feedback (elephant confirmed working in battle): the rider was useless and the attacks too weak. Two changes:
 

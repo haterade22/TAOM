@@ -2,6 +2,43 @@
 
 ## 2026-06-29
 
+### feat(mumakil): ridden Harad war beast (Phase 1) — a scaled-up war elephant
+
+The Mûmakil (Oliphaunt): a 3× ridden Harad mount that auto-tramples + tusk-swings and charges into melee. Built as a
+near-exact clone of the War Elephant attack feature (minus the howdah), reusing the elephant rig (`elephant_skeleton`,
+60 bones), the `as_elephant` action set, and every elephant clip — so NO new animation / `quad_movement` / action-set
+work and no native crash guards.
+
+- **Size = Horse-item `BodyLength`**, not a Monster field (there is none): `taom_mumakil` item `body_length="300"` →
+  `SetInitialAgentScale(3.0)`, which scales skeleton + ragdoll + collision capsule uniformly.
+- New `Main/Features/Mumakil/` (config, pure `MumakilAttackService` + 24 tests, `MumakilBehaviorTree`,
+  `MumakilMissionBehavior` keyed on `Monster.StringId=="taom_mumakil"`, IoC). Mount-lock via a 4th injected
+  `IMumakilAttackService` in `TaomAgentStatCalculateModel`; wired in `IoC.cs` + `SubModule.cs`.
+- `harad_mumakil_rider` (`troops_harad.xml`) recruitable from `clan_aserai_1` (Ayerikkä). External LOTRLOME data
+  (`lotr_monster_mumakil.xml` reusing `as_elephant`/`elephant`; `taom_mumakil` Horse item; SubModule.xml) lives in the
+  game install, not this repo.
+- Collision `<body_capsule>` enlarged + lengthened vs the elephant's (the elephant-proportioned capsule was too small
+  for the longer 3× mesh — enemies ran into the visual mesh before colliding).
+- `tools/audit_mount_parity.py` + `tools/verify_mount_assets.py` extended for `mumakil`.
+- 5-agent `/deep-review` clean (0 standards/API/perf/data-flow findings); RCA: `docs/reviews/rca-mumakil-2026-06-29.md`.
+  Feature doc: `docs/features/mumakil.md`. In-game confirmed.
+
+### refactor(harad-mounts): elephant + Mûmakil riders charge instead of horse-archer
+
+Both `harad_elephant_rider` and `harad_mumakil_rider` switched from `HorseArcher` to `Cavalry` and re-armed with a
+spear (`eastern_spear_4_t4`) + sword (bow + both `bodkin_arrows_b` quivers removed). As `HorseArcher` the formation
+skirmished at range so the mount never closed to trample; as `Cavalry` it charges and the auto-trample/tusk BT fires.
+Reverses the elephant's 2026-06-15 bow-rider experiment.
+
+### fix(dolguldur-recruitment): revert committed TEMP spider weight (40 → 1)
+
+`VolunteerRecruitmentService` shipped a `// TEMP-SPIDER-TEST … REVERT before commit` weight of 40 (Dol Guldur
+settlement + culture pools) that was committed by mistake — it set Dol Guldur giant-spider recruitment to ~69%
+(intended ~5%) and inflated the pool totals so 9 `*_MaxRoll_*` recruitment tests failed (all returning the first
+troop). Reverted to weight 1; pool totals back to 18 / 17; full suite green (3650 passed). Lesson codified in
+`docs/reviews/LESSONS-LEARNED.md` (Testing & QA): a weighted-pool change breaks tests that stub
+`_random.Next(<hardcoded total>)`.
+
 ### fix(factionmap): drop the misleading "Cannot expand far from…" faction weakness (Imladris + Lindon)
 
 The character-creation faction screen listed "Cannot expand far from the valley" (Imladris) and

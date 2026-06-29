@@ -94,6 +94,7 @@ public static class IoC
         WargIoC.RegisterWargFeature(container);
         SpiderIoC.RegisterSpiderFeature(container);
         Features.Elephant.ElephantIoC.RegisterElephantFeature(container);
+        Features.Mumakil.MumakilIoC.RegisterMumakilFeature(container);
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);
         MainMenuCustomizerIoC.RegisterMainMenuCustomizerFeature(container);

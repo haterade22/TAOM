@@ -144,7 +144,7 @@
 
     <NPCCharacter
         id="harad_elephant_rider"
-        default_group="HorseArcher"
+        default_group="Cavalry"
         level="51"
         name="{=harad_elephant_rider_name}[Aharad] Elephant Rider"
         occupation="Soldier"
@@ -183,16 +183,10 @@
             <EquipmentRoster>
                 <equipment
                     slot="Item0"
-                    id="Item.bodkin_arrows_b" />
+                    id="Item.eastern_spear_4_t4" />
                 <equipment
                     slot="Item1"
                     id="Item.aserai_sword_3_t3" />
-                <equipment
-                    slot="Item2"
-                    id="Item.steppe_heavy_bow" />
-                <equipment
-                    slot="Item3"
-                    id="Item.bodkin_arrows_b" />
                 <equipment
                     slot="Head"
                     id="Item.haradrim_head" />
@@ -211,6 +205,72 @@
                 <equipment
                     slot="HorseHarness"
                     id="Item.sk_elephant_armor_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="harad_mumakil_rider"
+        default_group="Cavalry"
+        level="51"
+        name="{=harad_mumakil_rider_name}[Aharad] Mumakil Rider"
+        occupation="Soldier"
+        culture="Culture.aserai">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="220" />
+            <skill
+                id="Riding"
+                value="385" />
+            <skill
+                id="OneHanded"
+                value="345" />
+            <skill
+                id="TwoHanded"
+                value="150" />
+            <skill
+                id="Polearm"
+                value="380" />
+            <skill
+                id="Bow"
+                value="290" />
+            <skill
+                id="Crossbow"
+                value="40" />
+            <skill
+                id="Throwing"
+                value="80" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.eastern_spear_4_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.aserai_sword_3_t3" />
+                <equipment
+                    slot="Head"
+                    id="Item.haradrim_head" />
+                <equipment
+                    slot="Body"
+                    id="Item.haradrim_torso" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.haradrim_gloves" />
+                <equipment
+                    slot="Leg"
+                    id="Item.haradrim_boots" />
+                <!-- Mûmakil mount. No HorseHarness — the war-platform is baked into the mount mesh
+                     (Item.taom_mumakil AdditionalMeshes); Phase 1 has no platform crew/howdah. -->
+                <equipment
+                    slot="Horse"
+                    id="Item.taom_mumakil" />
             </EquipmentRoster>
         </Equipments>
     </NPCCharacter>

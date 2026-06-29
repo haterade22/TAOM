@@ -3,6 +3,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.Elephant;
+using TAOM.Features.Mumakil;
 using TAOM.Features.Spider;
 
 namespace TAOM.Features.CareerSystem.Models;
@@ -17,21 +18,26 @@ namespace TAOM.Features.CareerSystem.Models;
 // 2026-06-10: same lock extended to the ridden giant spider (ISpiderAttackService.IsSpiderMonster).
 // 2026-06-12: the Rhûn war chariot (issue #279) deliberately has NO mount-lock — maintainer wants
 // chariots remountable mid-battle (upstream-chariot-pack parity; the item's riding difficulty 120 is the only gate).
+// 2026-06-29: same lock extended to the ridden Mûmakil (IMumakilAttackService.IsMumakilMonster) — scaled-up elephant.
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerAgentStatService _agentStatService;
     private readonly IElephantAttackService _elephant;
     private readonly ISpiderAttackService _spider;
+    private readonly IMumakilAttackService _mumakil;
 
-    public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider)
+    public TaomAgentStatCalculateModel(ICareerAgentStatService agentStatService, IElephantAttackService elephant, ISpiderAttackService spider, IMumakilAttackService mumakil)
     {
         _agentStatService = agentStatService;
         _elephant = elephant;
         _spider = spider;
+        _mumakil = mumakil;
     }
 
     public override bool CanAgentRideMount(Agent agent, Agent targetMount)
-        => _elephant.IsElephantMonster(targetMount?.Monster?.StringId) || _spider.IsSpiderMonster(targetMount?.Monster?.StringId)
+        => _elephant.IsElephantMonster(targetMount?.Monster?.StringId)
+            || _spider.IsSpiderMonster(targetMount?.Monster?.StringId)
+            || _mumakil.IsMumakilMonster(targetMount?.Monster?.StringId)
             ? false
             : base.CanAgentRideMount(agent, targetMount);
 
@@ -63,6 +69,8 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
             ? ElephantConfig.MountDifficulty
             : _spider.IsSpiderMonster(agent?.Monster?.StringId)
                 ? SpiderConfig.MountDifficulty
-                : agentDrivenProperties.MountDifficulty;
+                : _mumakil.IsMumakilMonster(agent?.Monster?.StringId)
+                    ? MumakilConfig.MountDifficulty
+                    : agentDrivenProperties.MountDifficulty;
     }
 }

@@ -53,6 +53,21 @@ CREATURES = {
         "usage_id": "elephant",
         "rider_prefix": "act_elephant_",
     },
+    # Mûmakil = a SCALED-UP elephant that SHARES the elephant rig (skeleton="elephant_skeleton") + the
+    # as_elephant action set + every elephant clip. Its own mesh tpac (creature/mumakil) carries NO skeleton or
+    # animation resources — those live in the elephant tree — so the skeleton/clip/binding checks search BOTH
+    # dirs via extra_asset_dirs. The mumakil mesh MUST reference skeleton="elephant_skeleton" (rename from the
+    # imported "elephant_skeleton_unused" on re-export, like the elephant's own mesh did) — verify the mesh tpac
+    # separately with tools/tpac_skeleton_scan.py (this gate confirms the shared skeleton/clips are sound).
+    "mumakil": {
+        "asset_dir": r"Modules\LOTRLOME_Armory\Assets\creature\mumakil",
+        "extra_asset_dirs": [r"Modules\LOTRLOME_Armory\Assets\creature\elephant"],
+        "action_sets_xml": r"Modules\LOTRLOME_Armory\ModuleData\action_sets.xml",
+        "usage_xml": r"Modules\LOTRLOME_Armory\ModuleData\monster_usage_sets.xml",
+        "action_set_ids": ["as_elephant", "as_elephant_town_and_village", "as_elephant_map"],
+        "usage_id": "elephant",
+        "rider_prefix": "act_elephant_",
+    },
 }
 
 
@@ -102,18 +117,23 @@ def main():
         sys.exit(2)
     c = CREATURES[args[0]]
     asset_dir = os.path.join(game, c["asset_dir"])
+    # Skeleton-sharing mounts (Mûmakil reuses the elephant rig+clips) search the donor dir too.
+    asset_dirs = [asset_dir] + [os.path.join(game, d) for d in c.get("extra_asset_dirs", [])]
     as_xml = open(os.path.join(game, c["action_sets_xml"]), encoding="utf-8-sig").read()
     usage_xml = open(os.path.join(game, c["usage_xml"]), encoding="utf-8-sig").read()
 
-    # live (non-.backup) loose tpacs under the creature asset dir
+    # live (non-.backup) loose tpacs under the creature asset dir (+ any shared donor dirs)
     live_tpacs = []
-    for dp, _, fn in os.walk(asset_dir):
-        for f in fn:
-            if f.endswith(".tpac"):
-                live_tpacs.append(os.path.join(dp, f))
+    for ad in asset_dirs:
+        for dp, _, fn in os.walk(ad):
+            for f in fn:
+                if f.endswith(".tpac"):
+                    live_tpacs.append(os.path.join(dp, f))
     fails = []
     print(f"=== verify_mount_assets: {args[0]} ===")
-    print(f"  asset dir: {asset_dir}  ({len(live_tpacs)} live tpac files)")
+    extra = c.get("extra_asset_dirs")
+    print(f"  asset dir: {asset_dir}  ({len(live_tpacs)} live tpac files"
+          f"{', incl. shared: ' + ', '.join(extra) if extra else ''})")
 
     # ---- CHECK 1: SKELETON present in a live loose tpac ----
     main_block = action_set_block(as_xml, c["action_set_ids"][0])

@@ -25,12 +25,16 @@ FILES = {
         "spider":   LOTR + r"\Monsters\LOTR\lotr_monster_spider.xml",
         "warg":     WARG + r"\Monsters\LOTR\lotr_monster_warg.xml",
         "elephant": LOTR + r"\Monsters\LOTR\lotr_monster_elephant.xml",
+        # Mûmakil = scaled-up elephant; should diff ZERO vs elephant except the id (taom_mumakil).
+        "mumakil":  LOTR + r"\Monsters\LOTR\lotr_monster_mumakil.xml",
         "horse":    NATIVE + r"\monsters.xml",
     },
     "usage": {
         "spider":   (LOTR + r"\monster_usage_sets.xml", "spider"),
         "warg":     (WARG + r"\MonsterUsage\LOTR\lotr_monster_usage_warg.xml", "warg"),
         "elephant": (LOTR + r"\monster_usage_sets.xml", "elephant"),
+        # Mûmakil reuses the elephant usage set verbatim (same skeleton/clips) — parity by construction.
+        "mumakil":  (LOTR + r"\monster_usage_sets.xml", "elephant"),
         "horse":    (NATIVE + r"\monster_usage_sets.xml", "horse"),
     },
     "action_types": [
@@ -42,6 +46,8 @@ FILES = {
         "spider":   (LOTR + r"\action_sets.xml", "as_spider"),
         "warg":     (WARG + r"\Animations\action_sets_warg.xml", "as_warg"),
         "elephant": (LOTR + r"\action_sets.xml", "as_elephant"),
+        # Mûmakil reuses the elephant action set verbatim (same skeleton/clips) — parity by construction.
+        "mumakil":  (LOTR + r"\action_sets.xml", "as_elephant"),
     },
     "rider_partials": {
         "spider (LOTRLOME)": LOTR + r"\action_sets.xml",
@@ -49,7 +55,7 @@ FILES = {
     },
 }
 
-MOUNTS = ["spider", "warg", "elephant"]
+MOUNTS = ["spider", "warg", "elephant", "mumakil"]
 
 
 def parse(path):
@@ -57,7 +63,7 @@ def parse(path):
 
 
 # ---------- A. Monster attributes ----------
-MONSTER_IDS = {"spider": "spider", "warg": "warg", "elephant": "taom_war_elephant", "horse": "horse"}
+MONSTER_IDS = {"spider": "spider", "warg": "warg", "elephant": "taom_war_elephant", "mumakil": "taom_mumakil", "horse": "horse"}
 
 
 def monster_elem(name):
