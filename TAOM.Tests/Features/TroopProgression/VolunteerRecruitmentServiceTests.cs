@@ -1452,6 +1452,97 @@ public class VolunteerRecruitmentServiceTests
         }
     }
 
+    // --- Conditional pools survive CultureConversion (Minas Morgul / town_ES2 fix) ---
+    // A conditional pool gates on the LIVE owner culture (OwnerCultureId), not the settlement's original
+    // culture, so it must outrank the converted-culture CultureMap fallback once a fief has converted.
+
+    [TestMethod]
+    public void GetVolunteerTroopId_Converted_To_Gondor_GondorOwner_ReturnsIthilGuard()
+    {
+        // A fully culture-converted (Gondor) Minas Morgul that is still Gondor-owned must keep recruiting
+        // Ithil Guards. Pre-fix this returned the generic CultureMap["gondor"] (Anorien) pool because the
+        // converted branch skipped the conditional check.
+        _random.Next(Arg.Any<int>()).Returns(0);
+        VolunteerRecruitmentService.AddSettlementConditional(
+            "town_ES2_test_converted_gondor",
+            ctx => ctx.OwnerCultureId == "gondor",
+            ("gondor_ith_watcher", 1),
+            ("gondor_ith_veteran", 1));
+        try
+        {
+            var context = new VolunteerContext(
+                settlementId: "town_ES2_test_converted_gondor",
+                boundSettlementId: null,
+                ownerClanId: null,
+                cultureId: "mordor",
+                ownerCultureId: "gondor",
+                settlementCultureId: "gondor",
+                isConvertedSettlement: true);
+
+            var result = _sut.GetVolunteerTroopId(context);
+
+            // Conditional satisfied (Gondor owner) → conditional pool used → roll 0 → first entry watcher.
+            Assert.AreEqual("gondor_ith_watcher", result);
+        }
+        finally
+        {
+            VolunteerRecruitmentService.TryRemoveConditionalSettlement("town_ES2_test_converted_gondor");
+        }
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_Converted_ConditionalPredicateFalse_ReturnsConvertedCulturePool()
+    {
+        // Converted fief whose conditional predicate is NOT satisfied (non-Gondor owner): the conditional
+        // must NOT fire, and resolution falls to the converted-culture pool (CultureMap["gondor"]).
+        _random.Next(Arg.Any<int>()).Returns(0);
+        VolunteerRecruitmentService.AddSettlementConditional(
+            "town_test_converted_nongondor",
+            ctx => ctx.OwnerCultureId == "gondor",
+            ("gondor_ith_watcher", 1),
+            ("gondor_ith_veteran", 1));
+        try
+        {
+            var context = new VolunteerContext(
+                settlementId: "town_test_converted_nongondor",
+                boundSettlementId: null,
+                ownerClanId: null,
+                cultureId: "mordor",
+                ownerCultureId: "mordor",     // owner is NOT gondor → predicate false
+                settlementCultureId: "gondor",
+                isConvertedSettlement: true);
+
+            var result = _sut.GetVolunteerTroopId(context);
+
+            // Predicate false → converted-culture fallback (gondor culture pool), not Ithil Guards.
+            Assert.AreEqual("gondor_ano_peasant", result);
+        }
+        finally
+        {
+            VolunteerRecruitmentService.TryRemoveConditionalSettlement("town_test_converted_nongondor");
+        }
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_Converted_NoConditional_ReturnsConvertedCulturePool()
+    {
+        // Regression guard: a normal converted fief (no conditional pool) still recruits the converted
+        // culture's troops — the common CultureConversion case must be unchanged by the conditional-first fix.
+        _random.Next(Arg.Any<int>()).Returns(0);
+        var context = new VolunteerContext(
+            settlementId: "town_test_converted_plain",
+            boundSettlementId: null,
+            ownerClanId: null,
+            cultureId: "mordor",
+            ownerCultureId: "gondor",
+            settlementCultureId: "gondor",
+            isConvertedSettlement: true);
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual("gondor_ano_peasant", result);
+    }
+
     [TestMethod]
     public void AddSettlementConditional_NullPredicate_Throws()
     {

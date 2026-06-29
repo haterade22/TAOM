@@ -438,12 +438,17 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         List<VolunteerChance> pool;
         if (context.IsConvertedSettlement && context.SettlementCultureId != null)
         {
-            // CultureConversion: a conquered fief that has fully converted recruits the NEW culture's
-            // troops, bypassing the settlement/clan pools (which hold the ORIGINAL culture's regional
-            // troops). SettlementCultureId == the converted Settlement.Culture; conversion is gated on
-            // HasCulturePool, so this normally hits. If somehow absent, fall through to the standard
-            // cascade rather than returning naked (no regression vs. pre-feature behavior).
-            pool = ResolvePool(context.SettlementCultureId, CultureMap) ?? ResolveStandardCascade(context);
+            // CultureConversion: a converted fief recruits the NEW culture's troops, bypassing the
+            // per-settlement/clan pools (which hold the ORIGINAL culture's regional troops). EXCEPTION:
+            // conditional pools (e.g. Ithil Guard at town_ES2) gate on the LIVE owner culture, not the
+            // settlement's original culture, so they remain valid after conversion and must outrank the
+            // generic converted-culture fallback — else converting Minas Morgul to gondor silently drops
+            // the Ithil Guard pool for generic Anorien recruits. Conversion is gated on HasCulturePool,
+            // so the CultureMap lookup normally hits; the trailing cascade is a safety net.
+            pool = ResolveConditionalPool(context.SettlementId, context)
+                ?? ResolveConditionalPool(context.BoundSettlementId, context)
+                ?? ResolvePool(context.SettlementCultureId, CultureMap)
+                ?? ResolveStandardCascade(context);
         }
         else
         {
