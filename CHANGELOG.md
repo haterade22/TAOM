@@ -2,6 +2,11 @@
 
 ## 2026-06-29
 
+### docs(mumakil): CLAUDE.md Key Paths entry + elephant bow→spear correction
+
+Added the Mûmakil row to the CLAUDE.md Key Paths table, and corrected the War Elephant entry's stale "bow archer"
+note to reflect the 2026-06-29 spear/`Cavalry` charge revert.
+
 ### feat(mumakil): ridden Harad war beast (Phase 1) — a scaled-up war elephant
 
 The Mûmakil (Oliphaunt): a 3× ridden Harad mount that auto-tramples + tusk-swings and charges into melee. Built as a
