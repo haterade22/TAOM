@@ -161,6 +161,16 @@ public class SubModule : MBSubModuleBase
 
         _harmony.PatchCategory("Patch18_CulturalFeats");
         _harmony.PatchCategory("Patch19_CustomBattles");
+
+        // Patch58_SkipCampaignIntro — Prefix on SandBoxGameManager.OnLoadFinished that skips the vanilla
+        // SandBox campaign intro video on a NEW game (mirrors the engine's own IsDevelopmentMode no-video
+        // bypass), dropping straight into character creation; save-loads run vanilla untouched. Applied here
+        // in OnSubModuleLoad (process-static one-shot) — NOT the late OnGameInitializationFinished batch —
+        // because the target fires during the new-game load sequence (after campaign init but before
+        // character creation), so the patch must already be attached before any new game can start. Any
+        // binding failure inside the prefix falls back to the vanilla video. See docs/features/skip-campaign-intro.md.
+        Features.SkipCampaignIntro.Hooks.Patch58_SkipCampaignIntro.Initialize(IoC.Resolve<IModLogger>());
+        _harmony.PatchCategory("Patch58_SkipCampaignIntro");
         // Patch0_BattleScenes: loads TAOM's sp_battle_scenes.xml (full 0-255 map_indices coverage) so the
         // TAOM_Map Main_map grid's extended indices (158-255) resolve to real battle terrains instead of
         // FailedAsserting against vanilla's 1-157 table. Re-enabled 2026-06-01 (TAOM_Map ships Main_map +

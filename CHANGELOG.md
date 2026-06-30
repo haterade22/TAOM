@@ -1,5 +1,30 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-06-30
+
+### feat(skip-campaign-intro): skip the vanilla campaign intro video on new game
+
+Starting a new game ("Enter The Age Of Men") now goes straight into character creation instead of playing the
+vanilla SandBox `campaign_intro.ivf` cutscene (the Calradia intro the player had to Escape past every time).
+
+`Patch58_SkipCampaignIntro` is a Harmony **Prefix** on `SandBoxGameManager.OnLoadFinished`. The engine already
+has a built-in intro skip — in development mode `OnLoadFinished` calls the private `LaunchSandboxCharacterCreation()`
+directly instead of building a `VideoPlaybackState` — so the Prefix forces that same no-video path for a normal new
+game: it calls `LaunchSandboxCharacterCreation()`, sets the trailing `MBGameManager.IsLoaded = true`, and returns
+false so the original never creates the video state. Save-game loads (`LoadingSavedGame`) take a different engine
+branch and run vanilla untouched; any missing reflection binding or exception falls back to the vanilla intro, so
+the skip can never break new-game start. Hardcoded always-skip — no MCM toggle.
+
+Applied in `SubModule.OnSubModuleLoad` (process-static one-shot), not the late `OnGameInitializationFinished` batch:
+`OnLoadFinished` fires during the new-game load (after campaign init, before character creation), so the patch must
+be attached before any new game can start. Bindings verified against the installed 1.4.6 `SandBox.dll` /
+`TaleWorlds.MountAndBlade.dll`; two drift-guard tests pin the internal reflection lookups, and the existing
+`HarmonyPatchBindingTests` covers the patch target.
+
+- New: `Main/Features/SkipCampaignIntro/Hooks/Patch58_SkipCampaignIntro.cs`,
+  `TAOM.Tests/Features/SkipCampaignIntro/Patch58SkipCampaignIntroTests.cs`.
+- See `docs/features/skip-campaign-intro.md`.
+
 ## 2026-06-29
 
 ### feat(dale-troops): assign Dale Armory shields to 19 Dale/Lake-town troops
