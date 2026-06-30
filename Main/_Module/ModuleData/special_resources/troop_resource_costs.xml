@@ -21,6 +21,7 @@
        resource_id here is documentation only. Harad/aserai players pay War Drums; Dol Guldur
        players pay War Spoils. -->
   <Troop id="harad_elephant_rider" resource_id="war_drums" recruit_cost="50" daily_upkeep="10" merchant_cost="70" />
+  <Troop id="harad_mumakil_rider" resource_id="war_drums" recruit_cost="2000" daily_upkeep="500" />
   <Troop id="taom_spider_creature" resource_id="war_spoils" recruit_cost="5" daily_upkeep="1" merchant_cost="18" />
 
   <!-- ============================================================================
