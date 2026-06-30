@@ -115,6 +115,22 @@ HEAD_ARMORS = [
     ArmorItem("sk_gd_anf_cav_helmet_heavy_a", "Anfalas Cavalry Helmet A", "head", "heavy", "Plate"),
     ArmorItem("sk_gd_anf_cav_helmet_heavy_b", "Anfalas Cavalry Helmet B", "head", "heavy", "Plate"),
 
+    # ---- Anfalas Noble (6) — KEYforce noble drop 2026-06 ----
+    ArmorItem("sk_gd_anf_lon_helmet_med_a", "Anfalas Noble Helmet A", "head", "medium", "Plate"),
+    ArmorItem("sk_gd_anf_lon_helmet_med_b", "Anfalas Noble Helmet B", "head", "medium", "Plate"),
+    ArmorItem("sk_gd_anf_lon_helmet_heavy_a", "Anfalas Noble Heavy Helmet A", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_anf_lon_helmet_heavy_b", "Anfalas Noble Heavy Helmet B", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_anf_lon_helmet_elite_a", "Anfalas Noble Elite Helmet A", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_anf_lon_helmet_elite_b", "Anfalas Noble Elite Helmet B", "head", "elite", "Plate"),
+
+    # ---- Lossarnach Noble (6) — KEYforce noble drop 2026-06 ----
+    ArmorItem("sk_gd_los_noble_helmet_med_a", "Lossarnach Noble Helmet A", "head", "medium", "Plate"),
+    ArmorItem("sk_gd_los_noble_helmet_med_b", "Lossarnach Noble Helmet B", "head", "medium", "Plate"),
+    ArmorItem("sk_gd_los_noble_helmet_heavy_a", "Lossarnach Noble Heavy Helmet A", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_los_noble_helmet_heavy_b", "Lossarnach Noble Heavy Helmet B", "head", "heavy", "Plate"),
+    ArmorItem("sk_gd_los_noble_helmet_elite_a", "Lossarnach Noble Elite Helmet A", "head", "elite", "Plate"),
+    ArmorItem("sk_gd_los_noble_helmet_elite_b", "Lossarnach Noble Elite Helmet B", "head", "elite", "Plate"),
+
     # ---- Serelond (4) ----
     ArmorItem("sk_gd_sere_helmet_heavy_a", "Serelond Heavy Helmet", "head", "heavy", "Plate"),
     ArmorItem("sk_gd_sere_helmet_elite_a", "Serelond Elite Helmet A", "head", "elite", "Plate"),
@@ -154,6 +170,13 @@ BODY_ARMORS = [
     ArmorItem("sk_gd_los_inf_chest_heavy_a", "Lossarnach Heavy Armour", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
     ArmorItem("sk_gd_los_inf_chest_elite_a", "Lossarnach Elite Armour", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
 
+    # ---- Lossarnach Noble (5) — KEYforce noble drop 2026-06 ----
+    ArmorItem("sk_gd_los_nob_chainmail_a", "Lossarnach Noble Chainmail", "body", "light", "Chainmail", covers_body=True),
+    ArmorItem("sk_gd_los_nob_chest_med_a", "Lossarnach Noble Armour", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
+    ArmorItem("sk_gd_los_nob_chest_heavy_a", "Lossarnach Noble Heavy Armour A", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+    ArmorItem("sk_gd_los_nob_chest_heavy_b", "Lossarnach Noble Heavy Armour B", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+    ArmorItem("sk_gd_los_nob_chest_lord_a", "Lossarnach Noble Lord Armour", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
+
     # ---- Pinnath Gelin (6) ----
     ArmorItem("sk_gd_pin_chainmail_a", "Pinnath Gelin Chainmail A", "body", "light", "Chainmail", covers_body=True),
     ArmorItem("sk_gd_pin_chainmail_b", "Pinnath Gelin Chainmail B", "body", "light", "Chainmail", covers_body=True),
@@ -174,6 +197,12 @@ BODY_ARMORS = [
     ArmorItem("sk_gd_anf_inf_chest_med_b", "Anfalas Armour B", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
     ArmorItem("sk_gd_anf_inf_chest_heavy_a", "Anfalas Heavy Armour A", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
     ArmorItem("sk_gd_anf_inf_chest_heavy_b", "Anfalas Heavy Armour B", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+
+    # ---- Anfalas Noble (4) — KEYforce noble drop 2026-06 (mesh prefix sk_gd_lon_*) ----
+    ArmorItem("sk_gd_lon_nob_chainmail_a", "Anfalas Noble Chainmail", "body", "light", "Chainmail", covers_body=True),
+    ArmorItem("sk_gd_lon_nob_chest_med_a", "Anfalas Noble Armour", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
+    ArmorItem("sk_gd_lon_nob_chest_heavy_a", "Anfalas Noble Heavy Armour", "body", "heavy", "Plate", covers_body=True, arm_armor_stat=14),
+    ArmorItem("sk_gd_lon_nob_chest_lord_a", "Anfalas Noble Lord Armour", "body", "elite", "Plate", covers_body=True, arm_armor_stat=20),
 
     # ---- Serelond (4) ----
     ArmorItem("sk_gd_sere_chest_med_a", "Serelond Armour", "body", "medium", "Plate", covers_body=True, arm_armor_stat=10),
@@ -217,6 +246,12 @@ SHOULDER_ARMORS = [
     ArmorItem("sk_gd_los_pauld_inf_elite_a", "Lossarnach Elite Pauldron", "shoulder", "elite", "Plate"),
     ArmorItem("sk_gd_los_pauld_cape_inf_elite_a", "Lossarnach Cape Pauldron", "shoulder", "elite", "Plate"),
 
+    # ---- Lossarnach Noble (4) — KEYforce noble drop 2026-06 ----
+    ArmorItem("sk_gd_los_pauld_nob_heavy_a", "Lossarnach Noble Heavy Pauldron", "shoulder", "heavy", "Plate"),
+    ArmorItem("sk_gd_los_pauld_nob_elite_a", "Lossarnach Noble Elite Pauldron", "shoulder", "elite", "Plate"),
+    ArmorItem("sk_gd_los_pauld_cape_nob_elite_a", "Lossarnach Noble Cape Pauldron", "shoulder", "elite", "Plate"),
+    ArmorItem("sk_gd_los_pauld_cape_nob_lord_a", "Lossarnach Noble Lord Cape Pauldron", "shoulder", "elite", "Plate"),
+
     # ---- Serelond (6) ----
     ArmorItem("sk_gd_sere_pauld_light_a", "Serelond Light Pauldron", "shoulder", "light", "Plate"),
     ArmorItem("sk_gd_sere_pauld_med_a", "Serelond Medium Pauldron", "shoulder", "medium", "Plate"),
@@ -233,6 +268,11 @@ SHOULDER_ARMORS = [
 ARM_ARMORS = [
     # ---- Lossarnach (1) ----
     ArmorItem("sk_gd_los_bracer_inf_med_a", "Lossarnach Infantry Bracer", "arm", "medium", "Plate", covers_hands=True),
+
+    # ---- Lossarnach Noble (3) — KEYforce noble drop 2026-06 ----
+    ArmorItem("sk_gd_los_bracer_noble_med_a", "Lossarnach Noble Bracer", "arm", "medium", "Plate", covers_hands=True),
+    ArmorItem("sk_gd_los_bracer_noble_heavy_a", "Lossarnach Noble Heavy Bracer", "arm", "heavy", "Plate", covers_hands=True),
+    ArmorItem("sk_gd_los_bracer_noble_elite_a", "Lossarnach Noble Elite Bracer", "arm", "elite", "Plate", covers_hands=True),
 
     # ---- Serelond (4) ----
     ArmorItem("sk_gd_sere_bracer_med_a", "Serelond Medium Bracer", "arm", "medium", "Plate", covers_hands=True),
