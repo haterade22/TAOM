@@ -32,13 +32,14 @@
       }
     },
     {
-      "description": "Bar Melui and bound villages: Lossarnach Regular only",
+      "description": "Bar Melui and bound villages: Lossarnach Regular + Noble",
       "settlements": ["town_EW7", "village_EW7_1", "village_EW7_2", "village_EW7_3"],
       "troops": {
         "gondor_loss_lumberman": 25,
         "gondor_loss_woodsman": 25,
         "gondor_loss_axebearer": 25,
-        "gondor_loss_skirmisher": 25
+        "gondor_loss_skirmisher": 25,
+        "gondor_loss_noble": 20
       }
     },
     {
@@ -91,16 +92,16 @@
       }
     },
     {
-      "description": "Dol Amroth: Belfalas + Dol Amroth",
+      "description": "Dol Amroth: Dol Amroth (Swan Knights) heavily favored ~9:1 over Belfalas in the princes' seat",
       "settlements": ["town_EW5"],
       "troops": {
-        "gondor_bel_recruit": 12,
-        "gondor_bel_footman": 12,
-        "gondor_bel_hunter": 12,
-        "gondor_bel_bowman": 12,
-        "gondor_bel_soldier": 12,
-        "gondor_da_noble": 20,
-        "gondor_da_footman": 20
+        "gondor_da_noble": 60,
+        "gondor_da_footman": 30,
+        "gondor_bel_recruit": 4,
+        "gondor_bel_footman": 2,
+        "gondor_bel_hunter": 2,
+        "gondor_bel_bowman": 1,
+        "gondor_bel_soldier": 1
       }
     },
     {

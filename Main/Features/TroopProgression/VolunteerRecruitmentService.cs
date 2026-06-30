@@ -560,7 +560,7 @@ public class VolunteerRecruitmentService : IVolunteerRecruitmentService
         AddClan("clan_empire_west_2", ("gondor_bel_recruit", 7),    ("gondor_da_noble", 3));
         AddClan("clan_empire_west_3", ("gondor_leb_militia", 7),    ("gondor_pel_skirmisher", 3));
         AddClan("clan_empire_west_4", ("gondor_lam_clansman", 7),   ("gondor_cal_noble", 3));
-        AddClan("clan_empire_west_5", ("gondor_loss_lumberman", 7), ("gondor_loss_axebearer", 3));
+        AddClan("clan_empire_west_5", ("gondor_loss_lumberman", 6), ("gondor_loss_axebearer", 2), ("gondor_loss_noble", 2));
         AddClan("clan_empire_west_6", ("gondor_pg_volunteer", 8),   ("gondor_pg_volunteer", 2));
         AddClan("clan_empire_west_7", ("gondor_lam_clansman", 7),   ("gondor_cal_noble", 3));
         AddClan("clan_empire_west_8",

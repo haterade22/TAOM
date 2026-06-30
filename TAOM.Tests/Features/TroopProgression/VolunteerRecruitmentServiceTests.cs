@@ -291,6 +291,33 @@ public class VolunteerRecruitmentServiceTests
     }
 
     [TestMethod]
+    // clan_empire_west_5 (Lossarnach) ClanMap pool: lumberman(6) + axebearer(2) + noble(2) = total 10.
+    // This is the SAFETY-NET layer. In-game, gondor.json populates SettlementMap for every Gondor
+    // settlement and SettlementMap outranks ClanMap in ResolveStandardCascade, so the PRIMARY path for
+    // the Lossarnach Noble line is its gondor.json "Bar Melui" (town_EW7) settlement group — the unit
+    // harness doesn't load that JSON, so this test exercises the clan fallback that fires when a fief has
+    // no settlement pool. Both layers carry the noble (mirrors how every Gondor noble is wired).
+    [DataRow(0, "gondor_loss_lumberman")]   // lumberman covers rolls 0..5
+    [DataRow(5, "gondor_loss_lumberman")]
+    [DataRow(6, "gondor_loss_axebearer")]   // axebearer covers rolls 6..7
+    [DataRow(7, "gondor_loss_axebearer")]
+    [DataRow(8, "gondor_loss_noble")]       // noble covers rolls 8..9
+    [DataRow(9, "gondor_loss_noble")]
+    public void GetVolunteerTroopId_LossarnachClan_BoundaryRolls_ReturnExpectedTroop(int roll, string expectedTroopId)
+    {
+        _random.Next(10).Returns(roll);
+        var context = new VolunteerContext(
+            settlementId: "unknown_settlement",
+            boundSettlementId: null,
+            ownerClanId: "clan_empire_west_5",
+            cultureId: "gondor");
+
+        var result = _sut.GetVolunteerTroopId(context);
+
+        Assert.AreEqual(expectedTroopId, result);
+    }
+
+    [TestMethod]
     // castle_EW15 / castle_EW16 (Amonost / Erethir, both owned by clan_empire_west_10 / Methir):
     // har_conscript(7) + met_noble(3) — total 10
     [DataRow("castle_EW15", 0, "gondor_har_conscript")]

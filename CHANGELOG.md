@@ -2,6 +2,73 @@
 
 ## 2026-06-29
 
+### feat(dale-troops): assign Dale Armory shields to 19 Dale/Lake-town troops
+
+Swapped the generic vanilla shields on the Dale roster for the culture-specific `wm_dale_shield_*` meshes from
+LOTRLOME_Armory (`[Dale] Heavy Shield I–IX` = `a01–a09`, `[Dale] Shield I–III` = `b01–b03`). Mapped by **display
+name**, not id — the Dale crossbow/swordsman lines carry the "Royal goes last" id↔name desync (e.g. display "Royal
+Crossbowman" is id `dale_master_crossbowman`).
+
+- **Melee + cavalry (13 troops)** — replaced the existing `Item1` shield (`heavy_horsemans_kite_shield` /
+  `horsemans_heater_shield` / `sturgia_*`) in every battle roster. Heavy cavalry/elite infantry take the heavy
+  `a`-series; lighter cavalry + levy take the `b`-series.
+- **Ranged (6 troops: Bowman, Marksman, Barding, 3 Crossbowmen)** — had no shield (bow/ammo/sword fill Item0–2), so the
+  Dale shield was **added at `Item4`** as a melee sidearm they can raise in close combat (per request).
+- `dale_running_river_warden` (Royal Swordsman) keeps its second, two-handed great-axe roster shieldless; only the
+  shield-bearing roster was swapped.
+- Requested "Heavy Shield XII" for the Veteran Crossbowman doesn't exist (Armory tops out at IX) → used the only unused
+  variant, **Heavy Shield VII** (`a07`).
+
+`validate_moduledata.py` clean (all 25 swaps + 12 inserts resolve against the Armory; no `BROKEN_ITEM_REF`). Edited
+`troops/troops_dale.xml` only.
+
+### fix(gondor-clans): reconcile clan → default_party_template bindings to recruitment regions
+
+The Gondor clans' `default_party_template` in `spclans.xslt` were scrambled relative to the regions each clan actually
+recruits — surfaced while wiring the Lossarnach Noble line (its party-template stacks were landing on the Dol Amroth
+house). Re-pointed all six mismatched clans (`west_1/3/4` were already correct) so each flies the army of its primary
+recruit region:
+
+| Clan | House | Now flies | Was |
+|------|-------|-----------|-----|
+| `clan_empire_west_2` | Imrazôrionath (Dol Amroth princes) | `dol_amroth` (Swan Knights) | `lossarnach` |
+| `clan_empire_west_5` | Ausirionath | `lossarnach` | `pinnath_gelin` |
+| `clan_empire_west_6` | Halboronionath | `pinnath_gelin` | `ithilien` |
+| `clan_empire_west_7` | Malandilionath | `calembel` | `dol_amroth` |
+| `clan_empire_west_8` | Olindurionath | `anfalas` | `belfalas` |
+| `clan_empire_west_9` | Danuhirionath | `blackroot_vale` | `calembel` |
+
+House of **Imrazôr** is the canonical Dol Amroth princely line, so `west_2` now fields Swan Knights instead of Lossarnach
+axemen — and the restored **Lossarnach Noble line** correctly flies on `west_5` (the real Lossarnach clan). Also tuned the
+**Dol Amroth city** (`town_EW5`) volunteer pool to favour the Swan-Knight line (`gondor_da_noble`) ~9:1 over Belfalas in
+the princes' seat (`recruitment_pools/gondor.json`), while keeping Belfalas represented. `validate_moduledata` clean;
+3659 tests pass. Pre-existing scramble; `west_10–14` (Methir/Cair Andros/Linhir/Tolfalas/Anfalas) carry no `spclans.xslt`
+template override and are left for a follow-up.
+
+### feat(gondor-armor): KEYforce noble drop — Anfalas + Lossarnach noble armor + restored Lossarnach Noble line
+
+KEYforce's 2026-06-26 drop shipped noble-tier meshes for the southern-Gondor fiefs. Authored 28 new `sk_gd_*` Armory
+items, every mesh id **verified against the source `.tpac` TOCs** rather than guessed — the ids do NOT follow a clean
+per-region prefix: Anfalas noble chests are `sk_gd_lon_nob_chest_*` (prefix `lon`, not `anf`) while its helmets are
+`sk_gd_anf_lon_helmet_*`; Lossarnach noble helmets spell out `sk_gd_los_noble_helmet_*` but its chests abbreviate
+`sk_gd_los_nob_chest_*`.
+
+- **Anfalas noble** (10 items: 6 helmets + 4 chests) — swapped onto `gondor_anf_vet_infantry` + `gondor_anf_vet_cavalry` (Head+Body).
+- **Lossarnach noble** (18 items: 6 helmets + 5 chests + 4 pauldrons + 3 bracers).
+- **Restored the Lossarnach Noble troop line** (retired in #99 for lack of meshes): 5 axemen
+  `gondor_loss_noble` → `_veteran` → `_sergeant` → `_warden` → `_captain` (T4–T8). Player-recruitable from Lossarnach
+  (Bar Melui / `town_EW7`) via the live `recruitment_pools/gondor.json` settlement group (weight 20, mirroring
+  `gondor_ser_noble`); `clan_empire_west_5` ClanMap is the safety-net layer (SettlementMap outranks it in the cascade, so
+  the JSON group is the path that actually fires). Fielded by `kingdom_hero_party_gondor_lossarnach_template`.
+- Items via the existing `tools/generate_gondor_armor_phase2.py`; troop + recruitment data with a new TDD boundary-roll
+  test (`GetVolunteerTroopId_LossarnachClan_BoundaryRolls`). `validate_moduledata` + `validate_all_troop_refs` clean; 3659 tests pass.
+- **Pending — recompile AssetPackages atomically with this XML:** the noble meshes are KEYforce *source* tpacs under
+  `Assets/gondor_assets/` and are NOT yet in the runtime `AssetPackages/` bundles (last compiled 2026-06-20, six days
+  before the drop) — they must be recompiled via the Bannerlord Modding Kit before the armor renders. The Anfalas vet
+  Head/Body swap repoints **two currently-clothed troops** (`gondor_anf_vet_infantry`/`_cavalry`) onto these unbundled
+  meshes, so shipping this XML *without* the recompile regresses them to head+body underwear — ship the bundle and XML
+  together. The new Lossarnach nobles + Serelond/Belfalas/Pinnath items from the same drop are in the same unbundled state.
+
 ### docs(mumakil): CLAUDE.md Key Paths entry + elephant bow→spear correction
 
 Added the Mûmakil row to the CLAUDE.md Key Paths table, and corrected the War Elephant entry's stale "bow archer"

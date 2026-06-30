@@ -1864,6 +1864,11 @@
 			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_loss_vet_axe_thrower" />
 			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_loss_vet_axebearer" />
 			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_loss_vet_guard" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.gondor_loss_noble" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.gondor_loss_noble_veteran" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_loss_noble_sergeant" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_loss_noble_warden" />
+			<PartyTemplateStack min_value="0" max_value="1" troop="NPCCharacter.gondor_loss_noble_captain" />
 			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.gondor_ano_militia" />
 		</stacks>
 	</MBPartyTemplate>

@@ -164,7 +164,7 @@
       <xsl:attribute name="banner_key">11.202.149.1528.1528.764.732.1.0.0.10015.172.2000.600.600.764.726.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FFB02A23</xsl:attribute>
       <xsl:attribute name="color2">FFEDE3CF</xsl:attribute>
-      <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_gondor_lossarnach_template</xsl:attribute>
+      <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_gondor_dol_amroth_template</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -203,7 +203,7 @@
       <xsl:attribute name="banner_key">11.2.149.1528.1528.764.732.1.0.0.10024.172.2000.650.650.764.760.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FF2E7D32</xsl:attribute>
       <xsl:attribute name="color2">FFE6DEB8</xsl:attribute>
-      <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_gondor_pinnath_gelin_template</xsl:attribute>
+      <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_gondor_lossarnach_template</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -216,7 +216,7 @@
       <xsl:attribute name="banner_key">11.126.149.1528.1528.764.732.1.0.0.10026.172.2000.700.700.764.820.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FF35513A</xsl:attribute>
       <xsl:attribute name="color2">FFB9C2BC</xsl:attribute>
-      <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_gondor_ithilien_template</xsl:attribute>
+      <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_gondor_pinnath_gelin_template</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -229,7 +229,7 @@
       <xsl:attribute name="banner_key">11.161.166.1528.1528.764.764.1.0.0.10027.172.171.650.600.765.760.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FF1E6FA0</xsl:attribute>
       <xsl:attribute name="color2">FFE8EEF2</xsl:attribute>
-      <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_gondor_dol_amroth_template</xsl:attribute>
+      <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_gondor_calembel_template</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -242,7 +242,7 @@
       <xsl:attribute name="banner_key">11.242.262.1528.1528.764.764.1.0.0.10011.35.171.600.600.760.775.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FF1C6E78</xsl:attribute>
       <xsl:attribute name="color2">FFD8E4E0</xsl:attribute>
-      <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_gondor_belfalas_template</xsl:attribute>
+      <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_gondor_anfalas_template</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>
@@ -255,7 +255,7 @@
       <xsl:attribute name="banner_key">11.172.149.1528.1528.764.732.1.0.0.503.2000.2000.377.377.764.760.0.0.0.503.172.2000.342.342.764.760.0.0.0.503.2000.2000.300.300.764.760.0.0.0</xsl:attribute>
       <xsl:attribute name="color">FF3C5A34</xsl:attribute>
       <xsl:attribute name="color2">FFC8B27A</xsl:attribute>
-      <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_gondor_calembel_template</xsl:attribute>
+      <xsl:attribute name="default_party_template">PartyTemplate.kingdom_hero_party_gondor_blackroot_vale_template</xsl:attribute>
       <xsl:apply-templates select="node()"/>
     </xsl:copy>
   </xsl:template>

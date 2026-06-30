@@ -706,6 +706,190 @@
   <!-- ============================================================ -->
   <!-- LOSSARNACH NOBLE (T4-T8) -->
   <!-- ============================================================ -->
+  <NPCCharacter
+      id="gondor_loss_noble"
+      default_group="Infantry"
+      level="16"
+      name="{=aom_gondor_loss_noble_name}[Gondor] Lossarnach Noble"
+      occupation="Soldier"
+      is_basic_troop="true"
+      culture="Culture.gondor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gondor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="85" />
+      <skill id="Riding" value="20" />
+      <skill id="OneHanded" value="110" />
+      <skill id="TwoHanded" value="90" />
+      <skill id="Polearm" value="80" />
+      <skill id="Bow" value="15" />
+      <skill id="Crossbow" value="10" />
+      <skill id="Throwing" value="30" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.gondor_loss_noble_veteran" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_a" />
+        <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
+        <equipment slot="Head" id="Item.sk_gd_los_noble_helmet_med_a" />
+        <equipment slot="Body" id="Item.sk_gd_los_nob_chainmail_a" />
+        <equipment slot="Cape" id="Item.sk_gd_los_pauld_nob_heavy_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_los_bracer_noble_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+      </EquipmentRoster>
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter
+      id="gondor_loss_noble_veteran"
+      default_group="Infantry"
+      level="21"
+      name="{=aom_gondor_loss_noble_veteran_name}[Gondor] Lossarnach Noble Veteran"
+      occupation="Soldier"
+      culture="Culture.gondor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gondor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="100" />
+      <skill id="Riding" value="20" />
+      <skill id="OneHanded" value="150" />
+      <skill id="TwoHanded" value="115" />
+      <skill id="Polearm" value="100" />
+      <skill id="Bow" value="15" />
+      <skill id="Crossbow" value="10" />
+      <skill id="Throwing" value="40" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.gondor_loss_noble_sergeant" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_b" />
+        <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
+        <equipment slot="Head" id="Item.sk_gd_los_noble_helmet_med_b" />
+        <equipment slot="Body" id="Item.sk_gd_los_nob_chest_med_a" />
+        <equipment slot="Cape" id="Item.sk_gd_los_pauld_nob_heavy_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_los_bracer_noble_med_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+      </EquipmentRoster>
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter
+      id="gondor_loss_noble_sergeant"
+      default_group="Infantry"
+      level="26"
+      name="{=aom_gondor_loss_noble_sergeant_name}[Gondor] Lossarnach Noble Sergeant"
+      occupation="Soldier"
+      culture="Culture.gondor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gondor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="105" />
+      <skill id="Riding" value="25" />
+      <skill id="OneHanded" value="190" />
+      <skill id="TwoHanded" value="160" />
+      <skill id="Polearm" value="150" />
+      <skill id="Bow" value="20" />
+      <skill id="Crossbow" value="15" />
+      <skill id="Throwing" value="60" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.gondor_loss_noble_warden" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_a" />
+        <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
+        <equipment slot="Head" id="Item.sk_gd_los_noble_helmet_heavy_a" />
+        <equipment slot="Body" id="Item.sk_gd_los_nob_chest_heavy_a" />
+        <equipment slot="Cape" id="Item.sk_gd_los_pauld_nob_elite_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_los_bracer_noble_heavy_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
+      </EquipmentRoster>
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter
+      id="gondor_loss_noble_warden"
+      default_group="Infantry"
+      level="31"
+      name="{=aom_gondor_loss_noble_warden_name}[Gondor] Lossarnach Noble Warden"
+      occupation="Soldier"
+      culture="Culture.gondor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gondor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="125" />
+      <skill id="Riding" value="30" />
+      <skill id="OneHanded" value="240" />
+      <skill id="TwoHanded" value="215" />
+      <skill id="Polearm" value="200" />
+      <skill id="Bow" value="25" />
+      <skill id="Crossbow" value="20" />
+      <skill id="Throwing" value="70" />
+    </skills>
+    <upgrade_targets>
+      <upgrade_target id="NPCCharacter.gondor_loss_noble_captain" />
+    </upgrade_targets>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_b" />
+        <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
+        <equipment slot="Head" id="Item.sk_gd_los_noble_helmet_heavy_b" />
+        <equipment slot="Body" id="Item.sk_gd_los_nob_chest_heavy_b" />
+        <equipment slot="Cape" id="Item.sk_gd_los_pauld_cape_nob_elite_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_los_bracer_noble_elite_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
+      </EquipmentRoster>
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <NPCCharacter
+      id="gondor_loss_noble_captain"
+      default_group="Infantry"
+      level="36"
+      name="{=aom_gondor_loss_noble_captain_name}[Gondor] Lossarnach Noble Captain"
+      occupation="Soldier"
+      culture="Culture.gondor">
+    <face>
+      <face_key_template value="BodyProperty.fighter_gondor" />
+    </face>
+    <skills>
+      <skill id="Athletics" value="145" />
+      <skill id="Riding" value="35" />
+      <skill id="OneHanded" value="290" />
+      <skill id="TwoHanded" value="255" />
+      <skill id="Polearm" value="240" />
+      <skill id="Bow" value="30" />
+      <skill id="Crossbow" value="25" />
+      <skill id="Throwing" value="80" />
+    </skills>
+    <upgrade_targets />
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_lossarnach_1h_axe_silver_full_a" />
+        <equipment slot="Item1" id="Item.gond_shield_one_greyscale" />
+        <equipment slot="Head" id="Item.sk_gd_los_noble_helmet_elite_a" />
+        <equipment slot="Body" id="Item.sk_gd_los_nob_chest_lord_a" />
+        <equipment slot="Cape" id="Item.sk_gd_los_pauld_cape_nob_lord_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_los_bracer_noble_elite_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
+      </EquipmentRoster>
+      <EquipmentSet id="battania_troop_civilian_template_t2" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
   <!-- ============================================================ -->
   <!-- LEBENNIN REGULAR (T2-T7) -->
   <!-- ============================================================ -->
@@ -4259,8 +4443,8 @@
         <equipment slot="Item0" id="Item.wm_gondor_sword_a08" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Item2" id="Item.wm_gondor_spear" />
-        <equipment slot="Head" id="Item.sk_gd_anf_inf_helmet_heavy_c" />
-        <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_heavy_b" />
+        <equipment slot="Head" id="Item.sk_gd_anf_lon_helmet_elite_a" />
+        <equipment slot="Body" id="Item.sk_gd_lon_nob_chest_heavy_a" />
         <equipment slot="Cape" id="Item.sk_gd_osg_pauld_cape_inf_elite_b" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_heavy_a" />
@@ -4335,8 +4519,8 @@
         <equipment slot="Item0" id="Item.wm_gondor_sword_a07" />
         <equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
         <equipment slot="Item2" id="Item.wm_gondor_spear" />
-        <equipment slot="Head" id="Item.sk_gd_anf_cav_helmet_heavy_b" />
-        <equipment slot="Body" id="Item.sk_gd_anf_inf_chest_heavy_a" />
+        <equipment slot="Head" id="Item.sk_gd_anf_lon_helmet_heavy_a" />
+        <equipment slot="Body" id="Item.sk_gd_lon_nob_chest_med_a" />
         <equipment slot="Cape" id="Item.sk_gd_ano_pauld_inf_elite_a" />
         <equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
         <equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
