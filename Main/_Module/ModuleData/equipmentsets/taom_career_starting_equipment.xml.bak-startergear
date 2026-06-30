@@ -31,11 +31,8 @@
             <Equipment slot="Item0" id="Item.wm_gondor_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_gondor_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_gondor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_gondor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_gondor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_gondor_cape_a" />
+            <Equipment slot="Body"  id="Item.starter_ranged_gondor_body_a" />
+            <Equipment slot="Leg"   id="Item.starter_ranged_gondor_leg_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -44,11 +41,8 @@
             <Equipment slot="Item0" id="Item.wm_gondor_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_gondor_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_gondor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_gondor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_gondor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_gondor_cape_a" />
+            <Equipment slot="Body"  id="Item.starter_ranged_gondor_body_a" />
+            <Equipment slot="Leg"   id="Item.starter_ranged_gondor_leg_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -59,11 +53,8 @@
             <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_gondor_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_gondor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_gondor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_gondor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_gondor_cape_a" />
+            <Equipment slot="Body"  id="Item.starter_cavalry_gondor_body_a" />
+            <Equipment slot="Leg"   id="Item.starter_cavalry_gondor_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.starter_cavalry_gondor_horse_armor_a" />
         </EquipmentSet>
@@ -74,11 +65,8 @@
             <Equipment slot="Item0" id="Item.wm_gondor_spear_a" />
             <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
             <Equipment slot="Item2" id="Item.wm_gondor_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_gondor_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_gondor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_gondor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_gondor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_gondor_cape_a" />
+            <Equipment slot="Body"  id="Item.starter_cavalry_gondor_body_a" />
+            <Equipment slot="Leg"   id="Item.starter_cavalry_gondor_leg_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.starter_cavalry_gondor_horse_armor_a" />
         </EquipmentSet>
@@ -91,11 +79,8 @@
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
-            <Equipment slot="Head" id="Item.starter_infantry_gondor_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_gondor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_gondor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_gondor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_gondor_cape_a" />
+            <Equipment slot="Body"  id="Item.starter_infantry_gondor_body_a" />
+            <Equipment slot="Leg"   id="Item.starter_infantry_gondor_leg_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -104,11 +89,8 @@
             <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_gondor_shield_a02" />
             <Equipment slot="Item2" id="Item.wm_gondor_spear_a" />
-            <Equipment slot="Head" id="Item.starter_infantry_gondor_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_gondor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_gondor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_gondor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_gondor_cape_a" />
+            <Equipment slot="Body"  id="Item.starter_infantry_gondor_body_a" />
+            <Equipment slot="Leg"   id="Item.starter_infantry_gondor_leg_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -121,11 +103,8 @@
             <Equipment slot="Item0" id="Item.hunting_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_mordor_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_mordor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_mordor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_mordor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_mordor_cape_a" />
+            <Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+            <Equipment slot="Leg" id="Item.sk_md_orc_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -134,11 +113,8 @@
             <Equipment slot="Item0" id="Item.hunting_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_mordor_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_mordor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_mordor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_mordor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_mordor_cape_a" />
+            <Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+            <Equipment slot="Leg" id="Item.sk_md_orc_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -147,11 +123,8 @@
             <Equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_mordor_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_mordor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_mordor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_mordor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_mordor_cape_a" />
+            <Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+            <Equipment slot="Leg" id="Item.sk_md_orc_boots_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
             <Equipment slot="HorseHarness" id="Item.warg_saddle" />
         </EquipmentSet>
@@ -162,11 +135,8 @@
             <Equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_mordor_set1_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_mordor_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_mordor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_mordor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_mordor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_mordor_cape_a" />
+            <Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+            <Equipment slot="Leg" id="Item.sk_md_orc_boots_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
             <Equipment slot="HorseHarness" id="Item.warg_saddle" />
         </EquipmentSet>
@@ -177,11 +147,8 @@
             <Equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_mordor_set1_polearm_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_mordor_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_mordor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_mordor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_mordor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_mordor_cape_a" />
+            <Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+            <Equipment slot="Leg" id="Item.sk_md_orc_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -190,11 +157,8 @@
             <Equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_mordor_set1_polearm_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_mordor_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_mordor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_mordor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_mordor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_mordor_cape_a" />
+            <Equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+            <Equipment slot="Leg" id="Item.sk_md_orc_boots_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -207,11 +171,8 @@
             <Equipment slot="Item0" id="Item.wm_isengard_bow_a01" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_ranged_isengard_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_isengard_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_isengard_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_isengard_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_isengard_cape_a" />
+            <Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
+            <Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -220,11 +181,8 @@
             <Equipment slot="Item0" id="Item.wm_isengard_bow_a01" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_ranged_isengard_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_isengard_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_isengard_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_isengard_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_isengard_cape_a" />
+            <Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
+            <Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -233,11 +191,8 @@
             <Equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_isengard_shield_a01" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_cavalry_isengard_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_isengard_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_isengard_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_isengard_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_isengard_cape_a" />
+            <Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
+            <Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
             <Equipment slot="Horse" id="Item.warg_brown" />
             <Equipment slot="HorseHarness" id="Item.warg_saddle" />
         </EquipmentSet>
@@ -248,11 +203,8 @@
             <Equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_isengard_shield_a01" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_cavalry_isengard_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_isengard_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_isengard_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_isengard_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_isengard_cape_a" />
+            <Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
+            <Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
             <Equipment slot="Horse" id="Item.warg_brown" />
             <Equipment slot="HorseHarness" id="Item.warg_saddle" />
         </EquipmentSet>
@@ -263,11 +215,8 @@
             <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
             <Equipment slot="Item1" id="Item.wm_isengard_shield_a01" />
             <Equipment slot="Item2" id="Item.wm_gundabad_spear_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_isengard_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_isengard_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_isengard_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_isengard_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_isengard_cape_a" />
+            <Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
+            <Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -276,11 +225,8 @@
             <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
             <Equipment slot="Item1" id="Item.wm_isengard_shield_a01" />
             <Equipment slot="Item2" id="Item.wm_gundabad_spear_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_isengard_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_isengard_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_isengard_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_isengard_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_isengard_cape_a" />
+            <Equipment slot="Body" id="Item.sk_uruk_hai_tunic_a1" />
+            <Equipment slot="Leg" id="Item.sk_uruk_hai_shoes_a1" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -293,11 +239,8 @@
             <Equipment slot="Item0" id="Item.hunting_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_gundabad_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_gundabad_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_gundabad_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_gundabad_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_gundabad_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_gundabad_cape_a" />
+            <Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -306,11 +249,8 @@
             <Equipment slot="Item0" id="Item.hunting_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_gundabad_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_gundabad_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_gundabad_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_gundabad_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_gundabad_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_gundabad_cape_a" />
+            <Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -319,11 +259,8 @@
             <Equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
             <Equipment slot="Item2" id="Item.wm_gundabad_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_gundabad_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_gundabad_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_gundabad_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_gundabad_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_gundabad_cape_a" />
+            <Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
             <Equipment slot="HorseHarness" id="Item.warg_saddle" />
         </EquipmentSet>
@@ -334,11 +271,8 @@
             <Equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
             <Equipment slot="Item2" id="Item.wm_gundabad_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_gundabad_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_gundabad_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_gundabad_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_gundabad_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_gundabad_cape_a" />
+            <Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
             <Equipment slot="HorseHarness" id="Item.warg_saddle" />
         </EquipmentSet>
@@ -349,11 +283,8 @@
             <Equipment slot="Item0" id="Item.wm_gundabad_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
             <Equipment slot="Item2" id="Item.wm_gundabad_spear_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_gundabad_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_gundabad_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_gundabad_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_gundabad_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_gundabad_cape_a" />
+            <Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -362,11 +293,8 @@
             <Equipment slot="Item0" id="Item.wm_gundabad_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
             <Equipment slot="Item2" id="Item.wm_gundabad_spear_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_gundabad_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_gundabad_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_gundabad_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_gundabad_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_gundabad_cape_a" />
+            <Equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -379,11 +307,8 @@
             <Equipment slot="Item0" id="Item.hunting_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_dolguldur_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_dolguldur_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_dolguldur_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_dolguldur_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_dolguldur_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -392,11 +317,8 @@
             <Equipment slot="Item0" id="Item.hunting_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_dolguldur_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_dolguldur_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_dolguldur_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_dolguldur_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_dolguldur_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -405,11 +327,8 @@
             <Equipment slot="Item0" id="Item.wm_dol_goldur_halberd_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_dolguldur_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_dolguldur_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_dolguldur_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_dolguldur_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_dolguldur_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
             <Equipment slot="HorseHarness" id="Item.warg_saddle" />
         </EquipmentSet>
@@ -420,11 +339,8 @@
             <Equipment slot="Item0" id="Item.wm_dol_goldur_halberd_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_dol_goldur_1h_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_dolguldur_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_dolguldur_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_dolguldur_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_dolguldur_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_dolguldur_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             <Equipment slot="Horse" id="Item.warg_brown" />
             <Equipment slot="HorseHarness" id="Item.warg_saddle" />
         </EquipmentSet>
@@ -435,11 +351,8 @@
             <Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_dol_goldur_axe_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_dolguldur_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_dolguldur_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_dolguldur_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_dolguldur_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_dolguldur_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -448,11 +361,8 @@
             <Equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_dol_goldur_axe_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_dolguldur_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_dolguldur_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_dolguldur_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_dolguldur_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_dolguldur_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -465,11 +375,8 @@
             <Equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_a" />
             <Equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
             <Equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
-            <Equipment slot="Head" id="Item.starter_ranged_erebor_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_erebor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_erebor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_erebor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_erebor_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+            <Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -478,11 +385,8 @@
             <Equipment slot="Item0" id="Item.sm_dwarf_erebor_bow_a" />
             <Equipment slot="Item1" id="Item.sk_dwarf_erebor_arrow_a" />
             <Equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
-            <Equipment slot="Head" id="Item.starter_ranged_erebor_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_erebor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_erebor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_erebor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_erebor_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+            <Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -491,11 +395,8 @@
             <Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
-            <Equipment slot="Head" id="Item.starter_cavalry_erebor_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_erebor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_erebor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_erebor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_erebor_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+            <Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -506,11 +407,8 @@
             <Equipment slot="Item0" id="Item.sm_dwarf_erebor_spear_a" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.sm_dwarf_erebor_1h_axe_a" />
-            <Equipment slot="Head" id="Item.starter_cavalry_erebor_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_erebor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_erebor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_erebor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_erebor_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+            <Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -521,11 +419,8 @@
             <Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.sm_dwarf_erebor_spear_a" />
-            <Equipment slot="Head" id="Item.starter_infantry_erebor_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_erebor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_erebor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_erebor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_erebor_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+            <Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -534,11 +429,8 @@
             <Equipment slot="Item0" id="Item.sm_dwarf_erebor_1h_axe_a" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.sm_dwarf_erebor_spear_a" />
-            <Equipment slot="Head" id="Item.starter_infantry_erebor_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_erebor_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_erebor_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_erebor_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_erebor_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dwarf_erebor_chest_leather_light_a" />
+            <Equipment slot="Leg" id="Item.sk_dwarf_erebor_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -551,11 +443,8 @@
             <Equipment slot="Item0" id="Item.wm_mirkwood_bow_a01" />
             <Equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
             <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_rivendell_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_rivendell_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_rivendell_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_rivendell_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_rivendell_cape_a" />
+            <Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+            <Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -564,11 +453,8 @@
             <Equipment slot="Item0" id="Item.wm_mirkwood_bow_a01" />
             <Equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
             <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_rivendell_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_rivendell_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_rivendell_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_rivendell_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_rivendell_cape_a" />
+            <Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+            <Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -577,11 +463,8 @@
             <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_rivendell_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_rivendell_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_rivendell_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_rivendell_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_rivendell_cape_a" />
+            <Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+            <Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -592,11 +475,8 @@
             <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_rivendell_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_rivendell_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_rivendell_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_rivendell_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_rivendell_cape_a" />
+            <Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+            <Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -607,11 +487,8 @@
             <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_rivendell_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_rivendell_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_rivendell_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_rivendell_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_rivendell_cape_a" />
+            <Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+            <Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -620,11 +497,8 @@
             <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_rivendell_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_rivendell_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_rivendell_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_rivendell_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_rivendell_cape_a" />
+            <Equipment slot="Body" id="Item.rivendell_torso_light_light_tier1" />
+            <Equipment slot="Leg" id="Item.rivendell_boots_leather1" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -637,11 +511,8 @@
             <Equipment slot="Item0" id="Item.wm_mirkwood_bow_a01" />
             <Equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
             <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_mirkwood_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_mirkwood_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_mirkwood_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_mirkwood_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_mirkwood_cape_a" />
+            <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+            <Equipment slot="Leg" id="Item.mirkwood_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -650,11 +521,8 @@
             <Equipment slot="Item0" id="Item.wm_mirkwood_bow_a01" />
             <Equipment slot="Item1" id="Item.wm_elven_arrow_v1_a" />
             <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_mirkwood_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_mirkwood_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_mirkwood_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_mirkwood_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_mirkwood_cape_a" />
+            <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+            <Equipment slot="Leg" id="Item.mirkwood_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -663,11 +531,8 @@
             <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
             <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_mirkwood_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_mirkwood_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_mirkwood_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_mirkwood_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_mirkwood_cape_a" />
+            <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+            <Equipment slot="Leg" id="Item.mirkwood_boots" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -678,11 +543,8 @@
             <Equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
             <Equipment slot="Item2" id="Item.wm_rivendell_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_mirkwood_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_mirkwood_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_mirkwood_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_mirkwood_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_mirkwood_cape_a" />
+            <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+            <Equipment slot="Leg" id="Item.mirkwood_boots" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -693,11 +555,8 @@
             <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
             <Equipment slot="Item2" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_mirkwood_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_mirkwood_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_mirkwood_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_mirkwood_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_mirkwood_cape_a" />
+            <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+            <Equipment slot="Leg" id="Item.mirkwood_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -706,11 +565,8 @@
             <Equipment slot="Item0" id="Item.wm_rivendell_sword_a01" />
             <Equipment slot="Item1" id="Item.wm_mirkwood_shield_a01" />
             <Equipment slot="Item2" id="Item.wm_rivendell_spear_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_mirkwood_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_mirkwood_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_mirkwood_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_mirkwood_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_mirkwood_cape_a" />
+            <Equipment slot="Body" id="Item.mkwd_inf3_chest" />
+            <Equipment slot="Leg" id="Item.mirkwood_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -723,11 +579,8 @@
             <Equipment slot="Item0" id="Item.wm_rohan_ws_bow_starter" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_vlandia_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_vlandia_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_vlandia_cape_a" />
+            <Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -736,11 +589,8 @@
             <Equipment slot="Item0" id="Item.wm_rohan_ws_bow_starter" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_vlandia_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_vlandia_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_vlandia_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_vlandia_cape_a" />
+            <Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -749,11 +599,8 @@
             <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_vlandia_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_vlandia_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_vlandia_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_vlandia_cape_a" />
+            <Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -764,11 +611,8 @@
             <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_vlandia_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_vlandia_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_vlandia_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_vlandia_cape_a" />
+            <Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -779,11 +623,8 @@
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_vlandia_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_vlandia_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_vlandia_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_vlandia_cape_a" />
+            <Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -792,11 +633,8 @@
             <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_vlandia_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_vlandia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_vlandia_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_vlandia_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_vlandia_cape_a" />
+            <Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -809,11 +647,8 @@
             <Equipment slot="Item0" id="Item.hunting_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_ranged_empire_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_empire_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_empire_cape_a" />
+            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_light_a" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -822,11 +657,8 @@
             <Equipment slot="Item0" id="Item.hunting_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_ranged_empire_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_empire_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_empire_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_empire_cape_a" />
+            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_light_a" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -835,11 +667,8 @@
             <Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_cavalry_empire_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_empire_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_empire_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_empire_cape_a" />
+            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_light_a" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -850,11 +679,8 @@
             <Equipment slot="Item0" id="Item.dunland_caerdh_spear_a" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_cavalry_empire_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_empire_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_empire_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_empire_cape_a" />
+            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_light_a" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -865,11 +691,8 @@
             <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.dunland_caerdh_spear_a" />
-            <Equipment slot="Head" id="Item.starter_infantry_empire_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_empire_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_empire_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_empire_cape_a" />
+            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_light_a" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -878,11 +701,8 @@
             <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.dunland_caerdh_spear_a" />
-            <Equipment slot="Head" id="Item.starter_infantry_empire_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_empire_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_empire_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_empire_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_empire_cape_a" />
+            <Equipment slot="Body" id="Item.dunland_caerdh_chainmail_light_a" />
+            <Equipment slot="Leg" id="Item.dunland_caerdh_boots_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -895,11 +715,8 @@
             <Equipment slot="Item0" id="Item.wm_harad_bow_a01" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_harad_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_aserai_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_aserai_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_aserai_cape_a" />
+            <Equipment slot="Body" id="Item.harad08_torso" />
+            <Equipment slot="Leg" id="Item.harad08_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -908,11 +725,8 @@
             <Equipment slot="Item0" id="Item.wm_harad_bow_a01" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.wm_harad_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_ranged_aserai_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_aserai_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_aserai_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_aserai_cape_a" />
+            <Equipment slot="Body" id="Item.harad08_torso" />
+            <Equipment slot="Leg" id="Item.harad08_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -921,11 +735,8 @@
             <Equipment slot="Item0" id="Item.wm_harad_spear_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_harad_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_aserai_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_aserai_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_aserai_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_aserai_cape_a" />
+            <Equipment slot="Body" id="Item.harad08_torso" />
+            <Equipment slot="Leg" id="Item.harad08_boots" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -936,11 +747,8 @@
             <Equipment slot="Item0" id="Item.wm_harad_spear_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_harad_sword_a01" />
-            <Equipment slot="Head" id="Item.starter_cavalry_aserai_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_aserai_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_aserai_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_aserai_cape_a" />
+            <Equipment slot="Body" id="Item.harad08_torso" />
+            <Equipment slot="Leg" id="Item.harad08_boots" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -951,11 +759,8 @@
             <Equipment slot="Item0" id="Item.wm_harad_sword_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_harad_spear_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_aserai_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_aserai_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_aserai_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_aserai_cape_a" />
+            <Equipment slot="Body" id="Item.harad08_torso" />
+            <Equipment slot="Leg" id="Item.harad08_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -964,11 +769,8 @@
             <Equipment slot="Item0" id="Item.wm_harad_sword_a01" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.wm_harad_spear_a01" />
-            <Equipment slot="Head" id="Item.starter_infantry_aserai_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_aserai_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_aserai_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_aserai_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_aserai_cape_a" />
+            <Equipment slot="Body" id="Item.harad08_torso" />
+            <Equipment slot="Leg" id="Item.harad08_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -981,11 +783,8 @@
             <Equipment slot="Item0" id="Item.composite_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_ranged_khuzait_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_khuzait_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_khuzait_cape_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.easterling02_v1_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -994,11 +793,8 @@
             <Equipment slot="Item0" id="Item.composite_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_ranged_khuzait_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_khuzait_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_khuzait_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_khuzait_cape_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.easterling02_v1_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -1007,11 +803,8 @@
             <Equipment slot="Item0" id="Item.easterling_spear" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_cavalry_khuzait_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_khuzait_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_khuzait_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_khuzait_cape_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.easterling02_v1_boots" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -1022,11 +815,8 @@
             <Equipment slot="Item0" id="Item.easterling_spear" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_cavalry_khuzait_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_khuzait_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_khuzait_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_khuzait_cape_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.easterling02_v1_boots" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -1037,11 +827,8 @@
             <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.easterling_spear" />
-            <Equipment slot="Head" id="Item.starter_infantry_khuzait_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_khuzait_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_khuzait_cape_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.easterling02_v1_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -1050,11 +837,8 @@
             <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.easterling_spear" />
-            <Equipment slot="Head" id="Item.starter_infantry_khuzait_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_khuzait_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_khuzait_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_khuzait_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_khuzait_cape_a" />
+            <Equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+            <Equipment slot="Leg" id="Item.easterling02_v1_boots" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -1067,11 +851,8 @@
             <Equipment slot="Item0" id="Item.hunting_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_ranged_sturgia_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_sturgia_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_sturgia_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -1080,11 +861,8 @@
             <Equipment slot="Item0" id="Item.hunting_bow" />
             <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_ranged_sturgia_head_a" />
-            <Equipment slot="Body" id="Item.starter_ranged_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_ranged_sturgia_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_ranged_sturgia_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_ranged_sturgia_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -1093,11 +871,8 @@
             <Equipment slot="Item0" id="Item.northern_spear_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_cavalry_sturgia_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_sturgia_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_sturgia_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_sturgia_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -1108,11 +883,8 @@
             <Equipment slot="Item0" id="Item.northern_spear_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.empire_sword_1_t2" />
-            <Equipment slot="Head" id="Item.starter_cavalry_sturgia_head_a" />
-            <Equipment slot="Body" id="Item.starter_cavalry_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_cavalry_sturgia_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_cavalry_sturgia_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_cavalry_sturgia_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
             <Equipment slot="Horse" id="Item.saddle_horse" />
             <Equipment slot="HorseHarness" id="Item.light_harness" />
         </EquipmentSet>
@@ -1123,11 +895,8 @@
             <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.northern_spear_1_t2" />
-            <Equipment slot="Head" id="Item.starter_infantry_sturgia_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_sturgia_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_sturgia_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_sturgia_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
         </EquipmentSet>
     </EquipmentRoster>
 
@@ -1136,11 +905,8 @@
             <Equipment slot="Item0" id="Item.empire_sword_1_t2" />
             <Equipment slot="Item1" id="Item.battered_kite_shield" />
             <Equipment slot="Item2" id="Item.northern_spear_1_t2" />
-            <Equipment slot="Head" id="Item.starter_infantry_sturgia_head_a" />
-            <Equipment slot="Body" id="Item.starter_infantry_sturgia_body_a" />
-            <Equipment slot="Leg" id="Item.starter_infantry_sturgia_leg_a" />
-            <Equipment slot="Gloves" id="Item.starter_infantry_sturgia_gloves_a" />
-            <Equipment slot="Cape" id="Item.starter_infantry_sturgia_cape_a" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
         </EquipmentSet>
     </EquipmentRoster>
 

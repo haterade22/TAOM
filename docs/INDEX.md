@@ -64,6 +64,7 @@
 - [weapon-creation-workflow](ai-includes/weapon-creation-workflow.md) — manual Step A–Z guide: FBX → tpac → 4 XML files → validate → in-game (bows/shields = no decimals)
 - [dale](features/dale.md) — Dale culture authoring (armor, troops, Lake-Town recruitment override) — proof-of-life for full-culture authoring
 - [tournament-armor-assignment](features/tournament-armor-assignment.md) — per-participant culture armor in TaomTournamentModel
+- [starting-equipment-tuning](features/starting-equipment-tuning.md) — keep CC starter gear cheap to resell: how item value actually works (`DefaultItemValueModel` exponential `2.75^tier` + explicit `value=` override), the per-culture `starter_*` clone-with-low-stats pattern (5/7/9 anchors), the generator + roster-wirer tools
 - See also: CLAUDE.md "Equipment & Armory" for canonical-folder table per item-ID prefix
 
 ### Sieges

@@ -15,38 +15,34 @@
 -->
 <StartupResources>
   <!-- Elven cultures -->
-  <Culture id="rivendell"   gold="600000" influence="1000" playerGold="10000" />
-  <Culture id="lothlorien"  gold="600000" influence="1000" playerGold="10000" />
-  <Culture id="mirkwood"    gold="600000" influence="1000" playerGold="8000"  />
+  <Culture id="rivendell"   gold="600000" influence="1000" playerGold="4000"  />
+  <Culture id="lothlorien"  gold="600000" influence="1000" playerGold="4000"  />
+  <Culture id="mirkwood"    gold="600000" influence="1000" playerGold="4000"  />
 
   <!-- Dwarven cultures -->
-  <Culture id="erebor"      gold="50000"  influence="150"  playerGold="7500"  />
+  <Culture id="erebor"      gold="50000"  influence="150"  playerGold="3500"  />
 
   <!-- Human Good cultures -->
-  <Culture id="gondor"      gold="50000"  influence="500"  playerGold="5000"  />
-  <Culture id="vlandia"     gold="50000"  influence="50"   playerGold="5000"  />
-  <Culture id="sturgia"     gold="50000"  influence="50"   playerGold="5000"  />
+  <Culture id="gondor"      gold="50000"  influence="500"  playerGold="2000"  />
+  <Culture id="vlandia"     gold="50000"  influence="50"   playerGold="2000"  />
+  <Culture id="sturgia"     gold="50000"  influence="50"   playerGold="2000"  />
 
   <!-- Human Evil / Eastern cultures -->
-  <Culture id="empire"      gold="50000"  influence="100"  playerGold="4000"  />
-  <Culture id="battania"    gold="50000"  influence="100"  playerGold="4000"  />
-  <Culture id="aserai"      gold="50000"  influence="100"  playerGold="4000"  />
-  <Culture id="khuzait"     gold="50000"  influence="1000" playerGold="4000"  />
+  <Culture id="empire"      gold="50000"  influence="100"  playerGold="2000"  />
+  <Culture id="battania"    gold="50000"  influence="100"  playerGold="2000"  />
+  <Culture id="aserai"      gold="50000"  influence="100"  playerGold="2000"  />
+  <Culture id="khuzait"     gold="50000"  influence="1000" playerGold="2000"  />
 
   <!-- Independent Harad-region kingdoms (full kingdoms with NPC clans + lords; Shaghana 9 lords, Abanissa 8 lords) -->
-  <!-- KNOWN GAP: as of 2026-05-06, neither culture has narrative menu options in
-       parents/childhood/education/youth/adulthood JSON. A player picking these at the CC culture step
-       would hit an empty narrative page and crash on advance (see issue #111 for the full menu-coverage port).
-       The NPC `gold`/`influence` rows below are still valid (NPC lords + clans use them at new-game start);
-       the `playerGold` rows are functionally dead until narrative coverage lands. Codex Phase 3 review
-       2026-05-06 caught this gap. -->
-  <Culture id="shaghana"    gold="50000"  influence="100"  playerGold="4000"  />
-  <Culture id="abanissa"    gold="50000"  influence="100"  playerGold="4000"  />
+  <!-- Both cultures are now fully playable in character creation (the issue-#111 narrative-menu
+       coverage has landed), so their `playerGold` rows below are live. -->
+  <Culture id="shaghana"    gold="50000"  influence="100"  playerGold="2000"  />
+  <Culture id="abanissa"    gold="50000"  influence="100"  playerGold="2000"  />
 
   <!-- Orcish / Dark cultures -->
-  <Culture id="mordor"      gold="50000"  influence="500"  playerGold="6000"  />
-  <Culture id="isengard"    gold="200000" influence="2000" playerGold="6000"  />
-  <Culture id="gundabad"    gold="200000" influence="2000" playerGold="6000"  />
-  <Culture id="dolguldur"   gold="200000" influence="2000" playerGold="6000"  />
-  <Culture id="umbar"       gold="200000" influence="500"  playerGold="6000"  />
+  <Culture id="mordor"      gold="50000"  influence="500"  playerGold="2000"  />
+  <Culture id="isengard"    gold="200000" influence="2000" playerGold="2000"  />
+  <Culture id="gundabad"    gold="200000" influence="2000" playerGold="2000"  />
+  <Culture id="dolguldur"   gold="200000" influence="2000" playerGold="2000"  />
+  <Culture id="umbar"       gold="200000" influence="500"  playerGold="2000"  />
 </StartupResources>

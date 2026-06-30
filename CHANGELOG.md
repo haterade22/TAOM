@@ -2,6 +2,106 @@
 
 ## 2026-06-30
 
+### balance(starting-equipment): tune down character-creation starter gear (sellable for ~20K)
+
+Players could sell their character-creation starting kit for ~20,000 denars. Root cause was **not** the armor
+the targets first suggested — `DefaultItemValueModel.CalculateValue` prices an item as `~num2 * 2.75^Tier`
+(exponential in tier), and an explicit `value=` in the item XML *overrides* that computation
+(`ItemObject.Deserialize` uses the attribute when present, else `DetermineValue()`). Two drivers:
+
+1. **Three crafted starter weapons carried hand-set values** — `wm_gondor_spear_a` (6000, Gondor cav/inf),
+   `sm_dwarf_erebor_1h_axe_a` (6000, Erebor all archetypes), `dunland_caerdh_spear_a` (4000, Dunland cav/inf).
+   Removed the `value=` attribute from each so they fall through to the (much lower) tier-based computation.
+2. **Several culture "starter" chests were heavy** and computed to huge values via the exponential — worst was
+   `mkwd_inf3_chest` (body 28 + leg 25 + arm 10 → tier ~5.9 → tens of thousands alone). Every non-Gondor culture
+   reused one troop chest+boots across all three archetypes.
+
+Fix: dedicated low-stat starter armor for **all 13 career cultures**, 5 slots × 3 archetypes, anchored at
+**Ranged ~5 / Cavalry ~7 / Infantry ~9** primary armor (cape/gloves a touch lower), carrying no explicit `value=`
+so resale stays trivial. Gondor's existing `starter_*` items were lowered in place; the other 12 cultures were
+authored by the new `tools/generate_starter_armor.py` (180 items) — it clones each culture's own items
+(borrowing mesh/material/cover flags so they render) and re-sets only the slot stat, stripping the inflating
+secondary armor numbers. `tools/wire_career_starter_armor.py` then rewired all 78 career rosters to use the
+starter armor for Head/Body/Leg/Gloves/Cape while keeping each roster's weapons and mount untouched.
+
+Item definitions live in the external `LOTRLOME_Armory` module (not the repo); originals backed up as
+`*.bak-startergear`. Verified: `validate_moduledata.py` PASS (no broken refs across 5,984 items), build green,
+3,661 tests pass. Residuals (follow-ups): the culture-default layer (`taom_char_creation_equipment.xml`, the
+careerless path) and the three fallback cultures with no career rosters (Lothlorien/Umbar/Khand) are unchanged;
+the 180 new `{=starter_*}` item names use inline-default text and are not yet harvested into the loc pipeline;
+item weights were left as the donor's (only armor stats were lowered).
+
+### balance(armor-harad): ladder harad's monolithic weights (Phase 3, first culture)
+
+Added a surgical `--weights-only` mode to `tools/rebalance_armor.py` and applied it to harad. The mode ladders ONLY
+the weight of each item to its armor-derived tier (`tier_from_value` finds the nearest baseline+mod target; weight =
+that tier's baseline × the cultural weight_mult) and leaves armor stats + material untouched — so a monolithic-weight
+slot can be fixed without re-stating armor through the brittle name-keyword detector. It is guarded: it only ladders a
+slot that is **currently** monolithic-weight, so it can never collapse an already-varied slot. (That guard exists
+because the first cut regressed harad's shoulder — its uniform armor mapped every item to one tier and one weight;
+caught by the analyzer, reverted, and fixed before shipping.)
+
+harad's 4 frozen slots now ladder (body 9.5→6.8/11.0, head 2.0→1.3/2.1/3.8, arm 1.0→1.3/1.7/2.1, leg 1.6→1.3/2.1/3.0),
+so a light Haradrim skirmisher's kit is now lighter than its elite — the audit's HIGH-priority harad fix. Armor values
+are byte-identical to the pre-edit backup (verified by diff across all 5 slots). harad drops from 4 analyzer errors to
+0; the 2 remaining warnings are intended ceiling caps (harad is light by design). The whole armory is now 21 errors
+(was 25). `dunland` and `rohan` were attempted with the same pass and **reverted** — they are blocked on the
+identity/armor decisions (dunland body armor is over-tiered for a light raider, so weight-follows-armor moves it the
+wrong way; rohan's combat boots have uniform armor and need an armor mid-tier, not a weight pass). See the
+`--weights-only` applicability note in `docs/features/armor-balance.md`. Edits target the live LOTRLOME_Armory module.
+
+### tools(armor-balance): roster-derived tiering (Phase 2)
+
+New `tools/derive_armor_tiers.py` — read-only. The brittle part of armor balance is tier *detection*:
+`rebalance_armor.detect_tier` guesses from name keywords, which collapses Dale's keyword-less `A01` (15 armor)
+and `A03` (24 armor) helmets onto one "light" tier. The authoritative signal is the inverse — an item's tier is
+set by the LEVEL of the troop that wears it. This tool joins every `troops_*.xml` roster to the live armory by
+item id (equipment slots `Head/Body/Leg/Gloves→arm/Cape→shoulder`, ids `Item.<id>`), and for each item derives a
+tier from its wearers. Reuse-safe: an item worn at several levels anchors to its LOWEST wearer, so it never
+over-arms the lower troops (verified — Dale's `archer_a03`, worn at L16 and L26, anchors to L16).
+
+Tier precedence: explicit id keyword → roster anchor band (`≤13 light · 14-18 medium · 19-28 heavy · 29-38 elite ·
+39+ lord`, calibrated on Dale) → unworn. It writes the map to `tools/data/armor_roster_tiers.json` and a report to
+`tools/reports/armor-balance/ROSTER-TIERS.md` listing each item's wearers, anchor, derived tier, and current-vs-target
+delta. Run over the live tree: 2,801 items, 1,777 roster-worn, 1,024 unworn — and it confirmed the audit's standout
+gaps (arnor/mercenary/thenn have NO dedicated roster, so their items are unworn and can't be roster-tiered). UNDER is
+the actionable re-stat signal (under-progressed lines); OVER is often intended (heavy `b`-line or deliberately-strong
+cultures) and is disambiguated by the report's `Line` column, not auto-applied. Documented in
+`docs/features/armor-balance.md`. The level-band target is a reference; scale-vs-accept per line is a Phase-3 call.
+
+### tools(armor-balance): repoint rebalancer at the live armory + add a read-only analyzer
+
+Phase 1 of an armor rebalance. `tools/rebalance_armor.py` was writing to `taommod/src/data/armory/` — a
+3-month-stale Node/TS web project, not the `LOTRLOME_Armory` module the game loads — so any `--apply` was a silent
+no-op in-game (the live-vs-shadow trap). Repointed `ARMORY_DIR` to the live `LOTRLOME_Armory/ModuleData/LOTRLOME_items`
+tree via `_default_armory_dir()` (honors `$BANNERLORD_GAME_DIR`, falls back to the Steam install, `--armory-path`
+override). Added the missing `dale` entry to `CULTURAL_MODS` (`+1`/`×1.05`; it previously ran on the neutral default).
+Refactored `main()` to argparse and added a **scope guard**: `--apply` now refuses a blanket run, requiring
+`--cultures a,b,c` or an explicit `--all`, so the hand-authored cultures (`PRESERVE_CULTURES`: gondor, mordor,
+isengard, dol_guldur, gundabad, erebor, iron_hills) can't be flattened by the keyword tier-guesser.
+
+New `tools/analyze_armor_balance.py` — read-only, the armor analog of `analyze_troop_balance.py`. It `import`s the
+curve from `rebalance_armor.py` (single source of truth), reads the live tree, excludes hero/boss items, and emits a
+per-culture HTML/MD/JSON report to `tools/reports/armor-balance/`. It flags the defect classes the 2026-06-30
+18-culture audit found by hand: **monolithic per-slot weight/armor** (the #1 recurring defect — a slot frozen at one
+value across tiers), missing `material_type`/cover attributes, 0-armor combat items, and elite-ceiling shortfalls. Run
+against the live tree it independently reproduced the audit (harad monolithic everywhere, iron_hills arm frozen at
+25/3.5, mirkwood no progression): 18 cultures, ~2,800 items, 25 errors / 21 warnings. Documented in
+`docs/features/armor-balance.md`, including the **roster-derived tiering** principle (an item's tier = the level of the
+troop that wears it × its light/heavy line) that Phase 2 will use to replace the brittle keyword tier-detection.
+
+### balance(startup-gold): cut player starting gold across all cultures
+
+Reduced the `playerGold` granted to the player at character-creation finalize. Previous values ran 4,000–10,000
+denars by culture; the new spread is Elves (`rivendell`/`lothlorien`/`mirkwood`) 4,000, dwarf (`erebor`) 3,500, and
+every other culture (orcs + all humans, 15 cultures) 2,000. NPC lord wealth (`gold`) and clan `influence` are
+unchanged.
+
+Single-file data edit to `Main/_Module/ModuleData/startup_resources/startup_resources_config.xml` — only the
+`playerGold` attribute changed per `<Culture>` row. No C# change; `PlayerStartupGoldService` reads the values
+verbatim. The StartupResources tests use synthetic in-memory fixtures (not the live XML), so they are unaffected.
+Config is `Reuse.Singleton` — takes effect on the next Bannerlord process restart, not a save reload.
+
 ### feat(skip-campaign-intro): skip the vanilla campaign intro video on new game
 
 Starting a new game ("Enter The Age Of Men") now goes straight into character creation instead of playing the

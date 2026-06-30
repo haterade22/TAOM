@@ -54,17 +54,15 @@ Each `<Culture>` element maps a culture ID to gold (per Lord hero) and influence
 
 ### Current Values
 
-NPC-lord gold/influence values are tuning knobs and may drift; consult `startup_resources_config.xml` for the live values. The table below reflects the playerGold seeds added with this feature.
+NPC-lord gold/influence values are tuning knobs and may drift; consult `startup_resources_config.xml` for the live values. The table below reflects the live `playerGold` values after the 2026-06-30 downward rebalance.
 
 | Culture | playerGold | Rationale |
 |---------|-----------|-----------|
-| rivendell, lothlorien | 10,000 | Elven wealth, generous to descendants of the houses |
-| mirkwood | 8,000 | Elven, but more austere woodland realm |
-| erebor | 7,500 | Dwarven hoard culture rewards new heroes |
-| mordor, isengard, gundabad, dolguldur, umbar | 6,000 | Dark factions arm their recruits well |
-| gondor, vlandia (Rohan), sturgia (Dale) | 5,000 | Standard human good kingdoms |
-| empire (Dunland), battania (Khand), aserai (Harad), khuzait (Rhun) | 4,000 | Tribal / eastern cultures, modest start |
-| shaghana (eastern Harad reach), abanissa (deep south Harad) | 4,000 | Independent Harad-region kingdoms — full peers of Aserai with their own NPC clans, lords, and ruler titles (Taskral / Châjaphân), not sub-cultures |
+| rivendell, lothlorien, mirkwood | 4,000 | Elven wealth — the highest player start |
+| erebor | 3,500 | Dwarven hoard culture, just below the elves |
+| all other cultures — gondor, vlandia (Rohan), sturgia (Dale), empire (Dunland), battania (Khand), aserai (Harad), khuzait (Rhun), shaghana, abanissa, mordor, isengard, gundabad, dolguldur, umbar | 2,000 | Flat baseline for every human + orc culture |
+
+`shaghana` (eastern Harad reach) and `abanissa` (deep south Harad) are independent Harad-region kingdoms — full peers of Aserai with their own NPC clans, lords, and ruler titles (Taskral / Châjaphân), not sub-cultures — and are now selectable in character creation, so their `playerGold` is live.
 
 ## Key Files
 
@@ -141,6 +139,7 @@ The `titleType` is sourced from `manager.CharacterCreationContent.SelectedTitleT
 
 ## Changelog
 
+- 2026-06-30 — Rebalanced `playerGold` downward across all cultures: Elves (rivendell/lothlorien/mirkwood) 4,000, erebor 3,500, every other culture 2,000 (previously 4,000–10,000). NPC `gold`/`influence` unchanged. Data-only edit to `startup_resources_config.xml`.
 - 2026-05-13 — Added `ParseGold`/`ParseInfluence` validation to the config provider (TryParse + range/finite checks, matching `ParsePlayerGold`); negative gold and NaN influence now revert with a warning instead of flowing through (closes #136).
 - 2026-05-06 — Added per-culture `playerGold` (player starting funds at CC finalize) and youth-option equipment persistence onto `Hero.MainHero.BattleEquipment`/`CivilianEquipment`; seeded `playerGold` per culture and added missing `empire`/`shaghana`/`abanissa` rows.
 - 2026-04-06 — Initial feature: culture-based startup gold to Lord heroes and influence to clans at new-game creation via `StartupResourcesBehavior` (index 1), data-driven by `startup_resources_config.xml`.

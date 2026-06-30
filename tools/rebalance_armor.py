@@ -12,6 +12,7 @@ Usage:
     python rebalance_armor.py --export-csv    # Export tier classification to CSV
 """
 
+import argparse
 import xml.etree.ElementTree as ET
 import os
 import sys
@@ -20,7 +21,28 @@ import re
 import csv
 from collections import defaultdict
 
-ARMORY_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'taommod', 'src', 'data', 'armory')
+
+def _default_armory_dir():
+    """Resolve the LIVE LOTRLOME_Armory item tree (the one the game loads).
+
+    Honors $BANNERLORD_GAME_DIR if set (the game install is the user's domain and
+    may move); otherwise falls back to the known Steam install. The previous target
+    (../../taommod/src/data/armory) was a STALE shadow tree the engine never reads —
+    see docs/features/armor-balance.md.
+    """
+    game_dir = os.environ.get('BANNERLORD_GAME_DIR') or \
+        r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord"
+    return os.path.join(game_dir, 'Modules', 'LOTRLOME_Armory', 'ModuleData', 'LOTRLOME_items')
+
+
+ARMORY_DIR = _default_armory_dir()
+
+# Hand-authored cultures (#99 Gondor; #211/#212 Mordor/Isengard/Dol Guldur/Gundabad/Erebor/Iron Hills).
+# A blanket --apply would flatten deliberate tuning, so applying across ALL cultures requires the
+# explicit --all flag. Scope a normal run with --cultures. See docs/features/armor-balance.md.
+PRESERVE_CULTURES = {
+    'gondor', 'mordor', 'isengard', 'dol_guldur', 'gundabad', 'erebor', 'iron_hills',
+}
 
 SLOT_TYPES = {
     'head_armors.xml': 'head',
@@ -103,10 +125,11 @@ CULTURAL_MODS = {
     'mirkwood':    {'protection': 5,  'weight_mult': 0.65},
     'lothlorien':  {'protection': 5,  'weight_mult': 0.70},
 
-    # Men of the West: balanced
+    # Men of the West/North: balanced
     'gondor':      {'protection': 1,  'weight_mult': 1.00},
     'rohan':       {'protection': -2, 'weight_mult': 0.90},
     'arnor':       {'protection': 2,  'weight_mult': 1.00},
+    'dale':        {'protection': 1,  'weight_mult': 1.05},  # hardy northern men; was absent (ran on neutral default)
 
     # Evil Men
     'harad':       {'protection': -3, 'weight_mult': 0.85},
@@ -381,6 +404,26 @@ def calculate_stats(tier, slot_type, culture, variant_num=0):
     return result
 
 
+def tier_from_value(primary, slot_type, culture):
+    """Map an item's CURRENT primary armor to the nearest combat tier (for --weights-only laddering).
+
+    Used when we want weight to track the item's existing (correct) armor without re-stating armor or
+    relying on the brittle name-keyword detector. Compares the value to each tier's baseline+mod target
+    and returns the closest combat tier.
+    """
+    if primary is None:
+        return 'medium'
+    best, best_d = 'light', None
+    for tier in ['light', 'medium', 'heavy', 'elite', 'lord']:
+        target = _get_primary_stat(calculate_stats(tier, slot_type, culture), slot_type)
+        if target is None:
+            continue
+        d = abs(primary - target)
+        if best_d is None or d < best_d:
+            best, best_d = tier, d
+    return best
+
+
 # =============================================================================
 # Regex-based XML Replacement
 # =============================================================================
@@ -471,8 +514,13 @@ def parse_current_values(armor_elem, slot_type):
     return values
 
 
-def process_file(filepath, slot_type, dry_run=True):
-    """Process a single armor XML file. Returns list of change records."""
+def process_file(filepath, slot_type, dry_run=True, weights_only=False):
+    """Process a single armor XML file. Returns list of change records.
+
+    weights_only=True ladders ONLY the weight (tier follows the item's current armor value via
+    tier_from_value); armor stats + material_type are left untouched. This is the surgical fix for
+    a monolithic-weight slot without re-stating armor through the brittle name-keyword detector.
+    """
     filename = os.path.basename(filepath)
 
     tree = ET.parse(filepath)
@@ -480,6 +528,21 @@ def process_file(filepath, slot_type, dry_run=True):
 
     changes = []
     item_changes = {}  # For regex writing
+
+    # weights-only safety: ONLY ladder a slot that is CURRENTLY monolithic-weight (all items one
+    # weight), so we can never collapse an already-varied slot (e.g. harad shoulder, whose uniform
+    # armor would otherwise map every item to one tier and one weight). A non-monolithic slot is left
+    # untouched; a monolithic slot with uniform armor stays monolithic (a no-op, never a regression).
+    ladder_this_slot = True
+    if weights_only:
+        cur_weights = []
+        for it in root.findall('.//Item'):
+            if it.find('.//Armor') is not None and it.get('weight') is not None:
+                try:
+                    cur_weights.append(float(it.get('weight')))
+                except ValueError:
+                    pass
+        ladder_this_slot = len(set(cur_weights)) <= 1 and len(cur_weights) >= 4
 
     for item in root.findall('.//Item'):
         item_id = item.get('id', '')
@@ -495,35 +558,51 @@ def process_file(filepath, slot_type, dry_run=True):
         current_material = armor_elem.get('material_type', '')
         current_modifier = armor_elem.get('modifier_group', '')
 
-        # Detect culture and tier
+        # Detect culture
         culture = detect_culture(filepath, item_name)
-        tier = detect_tier(item_id, item_name, current_values, slot_type)
+        variant_num = 0
 
-        # Get variant number for +1 progression
-        variant_num = extract_variant_number(item_name)
-        if variant_num == 0:
-            variant_num = extract_variant_from_id(item_id)
+        if weights_only:
+            # Weight follows the item's CURRENT armor value; armor + material untouched.
+            new_values = {}
+            new_material = current_material
+            new_modifier = current_modifier
+            if ladder_this_slot:
+                primary = _get_primary_stat(current_values, slot_type)
+                tier = tier_from_value(primary, slot_type, culture)
+                new_weight = calculate_stats(tier, slot_type, culture)['weight']
+            else:
+                tier = 'medium'  # informational only; slot is left as-is
+                new_weight = current_weight
+            has_change = ladder_this_slot and new_weight != current_weight
+        else:
+            tier = detect_tier(item_id, item_name, current_values, slot_type)
 
-        # Calculate new stats
-        new_stats = calculate_stats(tier, slot_type, culture, variant_num)
+            # Get variant number for +1 progression
+            variant_num = extract_variant_number(item_name)
+            if variant_num == 0:
+                variant_num = extract_variant_from_id(item_id)
 
-        # Build change dict (only for stats that exist in current item)
-        new_values = {}
-        for stat in ['head_armor', 'body_armor', 'arm_armor', 'leg_armor']:
-            if stat in current_values and stat in new_stats:
-                new_values[stat] = new_stats[stat]
+            # Calculate new stats
+            new_stats = calculate_stats(tier, slot_type, culture, variant_num)
 
-        new_weight = new_stats['weight']
-        new_material = new_stats['material_type']
-        new_modifier = new_stats['modifier_group']
+            # Build change dict (only for stats that exist in current item)
+            new_values = {}
+            for stat in ['head_armor', 'body_armor', 'arm_armor', 'leg_armor']:
+                if stat in current_values and stat in new_stats:
+                    new_values[stat] = new_stats[stat]
 
-        # Check if anything changed
-        has_change = (
-            new_weight != current_weight or
-            new_material != current_material or
-            new_modifier != current_modifier or
-            any(new_values.get(s) != current_values.get(s) for s in current_values)
-        )
+            new_weight = new_stats['weight']
+            new_material = new_stats['material_type']
+            new_modifier = new_stats['modifier_group']
+
+            # Check if anything changed
+            has_change = (
+                new_weight != current_weight or
+                new_material != current_material or
+                new_modifier != current_modifier or
+                any(new_values.get(s) != current_values.get(s) for s in current_values)
+            )
 
         # Record
         change_record = {
@@ -547,11 +626,14 @@ def process_file(filepath, slot_type, dry_run=True):
         changes.append(change_record)
 
         if has_change:
-            write_changes = dict(new_values)
-            write_changes['weight'] = new_weight
-            write_changes['material_type'] = new_material
-            write_changes['modifier_group'] = new_modifier
-            item_changes[item_id] = write_changes
+            if weights_only:
+                item_changes[item_id] = {'weight': new_weight}
+            else:
+                write_changes = dict(new_values)
+                write_changes['weight'] = new_weight
+                write_changes['material_type'] = new_material
+                write_changes['modifier_group'] = new_modifier
+                item_changes[item_id] = write_changes
 
     # Apply via regex
     if not dry_run and item_changes:
@@ -705,33 +787,57 @@ def export_csv(all_changes, csv_path):
 # =============================================================================
 
 def main():
-    if len(sys.argv) < 2 or sys.argv[1] not in ('--dry-run', '--apply', '--export-csv'):
-        print("Usage: python rebalance_armor.py --dry-run|--apply|--export-csv")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description="Armor rebalancing for TAOM (writes to the LIVE LOTRLOME_Armory tree).")
+    grp = parser.add_mutually_exclusive_group(required=True)
+    grp.add_argument('--dry-run', action='store_true', help='Preview changes (no writes)')
+    grp.add_argument('--apply', action='store_true', help='Write changes to the live armory XML')
+    grp.add_argument('--export-csv', action='store_true', help='Export tier classification to CSV')
+    parser.add_argument('--armory-path', default=ARMORY_DIR,
+                        help='Override the armory base dir (default: live LOTRLOME_Armory)')
+    parser.add_argument('--cultures', default='',
+                        help='Comma-separated culture folders to restrict to (e.g. dale,rhun)')
+    parser.add_argument('--all', action='store_true',
+                        help='Required to --apply across ALL cultures (safety guard for preserved cultures)')
+    parser.add_argument('--weights-only', action='store_true',
+                        help='Ladder ONLY weights (tier follows current armor value); leave armor + material untouched')
+    args = parser.parse_args()
 
-    mode = sys.argv[1]
-    dry_run = mode != '--apply'
+    dry_run = not args.apply
+    requested = {c.strip() for c in args.cultures.split(',') if c.strip()}
 
-    if mode == '--apply':
-        print("\n*** APPLYING CHANGES ***\n")
-    elif mode == '--export-csv':
+    # Safety guard: refuse a blanket --apply that could flatten hand-authored cultures.
+    if args.apply and not requested and not args.all:
+        print("ERROR: refusing a blanket --apply. Scope it with --cultures a,b,c, "
+              "or pass --all to deliberately rewrite EVERY culture (incl. preserved: "
+              f"{', '.join(sorted(PRESERVE_CULTURES))}).")
+        sys.exit(2)
+    if args.apply and args.all:
+        print("\n*** APPLYING CHANGES TO ALL CULTURES ***\n")
+    elif args.apply:
+        print(f"\n*** APPLYING CHANGES (scoped: {', '.join(sorted(requested))}) ***\n")
+    elif args.export_csv:
         print("\n*** EXPORT CSV MODE ***\n")
     else:
         print("\n*** DRY RUN ***\n")
 
     # Resolve armory path
-    armory_dir = os.path.normpath(ARMORY_DIR)
+    armory_dir = os.path.normpath(args.armory_path)
     if not os.path.isdir(armory_dir):
         print(f"ERROR: Armory directory not found: {armory_dir}")
         sys.exit(1)
 
     print(f"Armory directory: {armory_dir}")
 
-    # Find all culture directories
+    # Find all culture directories (optionally restricted by --cultures)
     culture_dirs = sorted([
         d for d in os.listdir(armory_dir)
-        if os.path.isdir(os.path.join(armory_dir, d))
+        if os.path.isdir(os.path.join(armory_dir, d)) and (not requested or d in requested)
     ])
+    if requested:
+        missing = requested - set(culture_dirs)
+        if missing:
+            print(f"WARNING: requested cultures not found as folders: {', '.join(sorted(missing))}")
     print(f"Found {len(culture_dirs)} culture directories: {', '.join(culture_dirs)}")
 
     all_changes = []
@@ -746,17 +852,17 @@ def main():
                 continue
 
             print(f"  Processing {culture_dir}/{armor_file}...")
-            changes = process_file(filepath, slot_type, dry_run=dry_run)
+            changes = process_file(filepath, slot_type, dry_run=dry_run, weights_only=args.weights_only)
             all_changes.extend(changes)
             files_processed += 1
 
     print_report(all_changes)
 
-    if mode == '--export-csv':
+    if args.export_csv:
         csv_path = os.path.join(os.path.dirname(__file__), 'armor_rebalance.csv')
         export_csv(all_changes, csv_path)
 
-    if mode == '--apply':
+    if args.apply:
         print(f"\n*** Changes written to {files_processed} files ***")
     else:
         print(f"\n*** {files_processed} files analyzed (no changes written) ***")
