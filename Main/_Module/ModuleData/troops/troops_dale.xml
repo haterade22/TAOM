@@ -527,7 +527,7 @@
                 <equipment slot="Item0" id="Item.dale_longbow_a" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_a" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
-                <equipment slot="Item4" id="Item.wm_dale_shield_a06" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a06" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_a02" />
                 <equipment slot="Body" id="Item.sk_dale_chest_archer_a02" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a02" />
@@ -538,7 +538,7 @@
                 <equipment slot="Item0" id="Item.dale_longbow_a" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
-                <equipment slot="Item4" id="Item.wm_dale_shield_a06" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a06" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_a02" />
                 <equipment slot="Body" id="Item.sk_dale_chest_archer_a02" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a02" />
@@ -576,7 +576,7 @@
                 <equipment slot="Item0" id="Item.dale_longbow_a" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_b" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
-                <equipment slot="Item4" id="Item.wm_dale_shield_a05" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a05" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_a03" />
                 <equipment slot="Body" id="Item.sk_dale_chest_archer_a03" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a03" />
@@ -587,7 +587,7 @@
                 <equipment slot="Item0" id="Item.dale_longbow_a" />
                 <equipment slot="Item1" id="Item.bodkin_arrows_c" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
-                <equipment slot="Item4" id="Item.wm_dale_shield_a05" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a05" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_a03" />
                 <equipment slot="Body" id="Item.sk_dale_chest_archer_a03" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a03" />
@@ -623,7 +623,7 @@
                 <equipment slot="Item0" id="Item.dale_longbow_a" />
                 <equipment slot="Item1" id="Item.barbed_arrows" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
-                <equipment slot="Item4" id="Item.wm_dale_shield_a04" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a04" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
                 <equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
@@ -634,7 +634,7 @@
                 <equipment slot="Item0" id="Item.dale_longbow_a" />
                 <equipment slot="Item1" id="Item.barbed_arrows" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
-                <equipment slot="Item4" id="Item.wm_dale_shield_a04" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a04" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
                 <equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
@@ -719,7 +719,7 @@
                 <equipment slot="Item0" id="Item.crossbow_d" />
                 <equipment slot="Item1" id="Item.bolt_b" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
-                <equipment slot="Item4" id="Item.wm_dale_shield_a07" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a07" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_b02" />
                 <equipment slot="Body" id="Item.sk_dale_chest_archer_b02" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b02" />
@@ -730,7 +730,7 @@
                 <equipment slot="Item0" id="Item.crossbow_d" />
                 <equipment slot="Item1" id="Item.bolt_b" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
-                <equipment slot="Item4" id="Item.wm_dale_shield_a07" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a07" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_b02" />
                 <equipment slot="Body" id="Item.sk_dale_chest_archer_b02" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b02" />
@@ -768,7 +768,7 @@
                 <equipment slot="Item0" id="Item.crossbow_e" />
                 <equipment slot="Item1" id="Item.bolt_c" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
-                <equipment slot="Item4" id="Item.wm_dale_shield_a09" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a09" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_b03" />
                 <equipment slot="Body" id="Item.sk_dale_chest_archer_b03" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b03" />
@@ -779,7 +779,7 @@
                 <equipment slot="Item0" id="Item.crossbow_e" />
                 <equipment slot="Item1" id="Item.bolt_d" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
-                <equipment slot="Item4" id="Item.wm_dale_shield_a09" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a09" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_b03" />
                 <equipment slot="Body" id="Item.sk_dale_chest_archer_b03" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b03" />
@@ -815,7 +815,7 @@
                 <equipment slot="Item0" id="Item.crossbow_f" />
                 <equipment slot="Item1" id="Item.bolt_d" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
-                <equipment slot="Item4" id="Item.wm_dale_shield_a08" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a08" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_b04" />
                 <equipment slot="Body" id="Item.sk_dale_chest_archer_b04" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b04" />
@@ -826,7 +826,7 @@
                 <equipment slot="Item0" id="Item.crossbow_f" />
                 <equipment slot="Item1" id="Item.bolt_e" />
                 <equipment slot="Item2" id="Item.dale_sword_a" />
-                <equipment slot="Item4" id="Item.wm_dale_shield_a08" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a08" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_archer_b04" />
                 <equipment slot="Body" id="Item.sk_dale_chest_archer_b04" />
                 <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b04" />
@@ -1489,7 +1489,8 @@
         <Equipments>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.dale_spear_a" />
-                <equipment slot="Item1" id="Item.sturgia_old_shield_a" />
+               <equipment slot="Item1" id="Item.dale_sword_c" />
+                <equipment slot="Item2" id="Item.wm_dale_shield_a08" />
                 <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
                 <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
                 <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
@@ -1559,8 +1560,8 @@
         <upgrade_targets></upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.dale_winged_spear_a" />
-                <equipment slot="Item1" id="Item.sturgia_infantry_shield_a" />
+                <equipment slot="Item0" id="Item.dale_winged_spear_a" />  
+              <equipment slot="Item1" id="Item.wm_dale_shield_a08" />
                 <equipment slot="Item2" id="Item.dale_sword_b" />
                 <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a03" />
                 <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a03" />
