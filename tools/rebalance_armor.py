@@ -133,9 +133,9 @@ CULTURAL_MODS = {
 
     # Evil Men
     'harad':       {'protection': -3, 'weight_mult': 0.85},
-    'rhun':        {'protection': 0,  'weight_mult': 1.00},
+    'rhun':        {'protection': 0,  'weight_mult': 0.90},  # best cavalry in the game -> mobile (was 1.00)
     'umbar':       {'protection': -1, 'weight_mult': 0.90},
-    'dunland':     {'protection': -2, 'weight_mult': 0.95},
+    'dunland':     {'protection': -2, 'weight_mult': 0.85},  # raiders/skirmishers by nature -> light (was 0.95)
 
     # Orcs & Uruk-hai
     'isengard':    {'protection': 2,  'weight_mult': 1.15},
@@ -176,6 +176,35 @@ HERO_NAMES = {
     'khamul', 'gothmog', 'lurtz', 'sharku',
     'grimbold', 'erkenbrand', 'gamling', 'hama',
 }
+
+# Hero / boss / fixed-display item id substrings excluded from re-stat (in addition to HERO_NAMES,
+# matched against the display name). Mirrors analyze_armor_balance.EXCLUDE_ID_SUBSTRINGS.
+EXCLUDE_ID_SUBSTRINGS = ('lotr_troll', 'cave_troll', 'glorfindel', 'gf_', 'dain_crown')
+
+
+def is_excluded(item_id, display_name):
+    """True for hero / boss / fixed-display items that must NOT be re-stated onto the troop curve."""
+    idl = (item_id or '').lower()
+    nl = (display_name or '').lower()
+    if any(s in idl for s in EXCLUDE_ID_SUBSTRINGS):
+        return True
+    return any(h and h in nl for h in HERO_NAMES)
+
+
+def load_roster_tier_map():
+    """Load {item_id: tier} from the derive_armor_tiers.py map (tools/data/armor_roster_tiers.json).
+
+    Returns ({item_id: tier}, generatedAt) — tier is the roster/id-derived tier ('light'..'lord') or
+    None for unworn items. Used by --tier-source roster so the apply uses authoritative roster tiers
+    instead of the brittle name-keyword detector.
+    """
+    map_path = os.path.join(os.path.dirname(__file__), 'data', 'armor_roster_tiers.json')
+    if not os.path.exists(map_path):
+        return None, None
+    import json as _json
+    with open(map_path, 'r', encoding='utf-8') as f:
+        data = _json.load(f)
+    return {iid: rec.get('tier') for iid, rec in data.get('items', {}).items()}, data.get('generatedAt')
 
 # Roman numeral pattern for variant detection
 ROMAN_NUMERAL_RE = re.compile(r'\b(I{1,3}|IV|V|VI{0,3}|IX|X{0,3}I{0,3}V?I{0,3})\b')
@@ -514,13 +543,20 @@ def parse_current_values(armor_elem, slot_type):
     return values
 
 
-def process_file(filepath, slot_type, dry_run=True, weights_only=False):
+def process_file(filepath, slot_type, dry_run=True, weights_only=False,
+                 tier_source='keyword', roster_map=None, no_lower_armor=False):
     """Process a single armor XML file. Returns list of change records.
 
-    weights_only=True ladders ONLY the weight (tier follows the item's current armor value via
-    tier_from_value); armor stats + material_type are left untouched. This is the surgical fix for
-    a monolithic-weight slot without re-stating armor through the brittle name-keyword detector.
+    tier_source='roster' picks each item's tier from the derive_armor_tiers.py map (authoritative —
+    the level of the troop that wears the item) instead of the brittle name-keyword detector; unworn
+    and hero/boss items are skipped (left untouched). tier_source='keyword' is the legacy detector.
+
+    weights_only=True writes ONLY the weight (armor + material untouched). Combined with the keyword
+    source it ladders by the item's current armor value and is guarded to currently-monolithic slots;
+    combined with the roster source it sets weight by the roster tier (no guard needed — roster tiers
+    already vary). Default (weights_only=False) is a full re-stat: armor + weight + material.
     """
+    roster_map = roster_map or {}
     filename = os.path.basename(filepath)
 
     tree = ET.parse(filepath)
@@ -562,47 +598,55 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False):
         culture = detect_culture(filepath, item_name)
         variant_num = 0
 
-        if weights_only:
-            # Weight follows the item's CURRENT armor value; armor + material untouched.
-            new_values = {}
-            new_material = current_material
-            new_modifier = current_modifier
-            if ladder_this_slot:
-                primary = _get_primary_stat(current_values, slot_type)
-                tier = tier_from_value(primary, slot_type, culture)
-                new_weight = calculate_stats(tier, slot_type, culture)['weight']
+        # --- pick the tier and the write mode ('skip' | 'weight' | 'full') ---
+        if tier_source == 'roster':
+            roster_tier = roster_map.get(item_id)
+            if is_excluded(item_id, item_name) or roster_tier is None:
+                tier, mode = 'medium', 'skip'   # hero/boss or unworn: leave untouched
             else:
-                tier = 'medium'  # informational only; slot is left as-is
-                new_weight = current_weight
-            has_change = ladder_this_slot and new_weight != current_weight
+                # Troops cap at elite (owner decision: elite = levels 31-51; 'lord' is hero-only).
+                tier = 'elite' if roster_tier == 'lord' else roster_tier
+                mode = 'weight' if weights_only else 'full'
+        elif weights_only:
+            if ladder_this_slot:
+                tier = tier_from_value(_get_primary_stat(current_values, slot_type), slot_type, culture)
+                mode = 'weight'
+            else:
+                tier, mode = 'medium', 'skip'   # slot already weight-varied; never collapse it
         else:
             tier = detect_tier(item_id, item_name, current_values, slot_type)
+            variant_num = extract_variant_number(item_name) or extract_variant_from_id(item_id)
+            mode = 'full'
 
-            # Get variant number for +1 progression
-            variant_num = extract_variant_number(item_name)
-            if variant_num == 0:
-                variant_num = extract_variant_from_id(item_id)
-
-            # Calculate new stats
+        # --- compute the new stats for the chosen mode ---
+        if mode == 'skip':
+            new_values, new_weight = {}, current_weight
+            new_material, new_modifier, has_change = current_material, current_modifier, False
+        else:
             new_stats = calculate_stats(tier, slot_type, culture, variant_num)
-
-            # Build change dict (only for stats that exist in current item)
-            new_values = {}
-            for stat in ['head_armor', 'body_armor', 'arm_armor', 'leg_armor']:
-                if stat in current_values and stat in new_stats:
-                    new_values[stat] = new_stats[stat]
-
             new_weight = new_stats['weight']
-            new_material = new_stats['material_type']
-            new_modifier = new_stats['modifier_group']
-
-            # Check if anything changed
-            has_change = (
-                new_weight != current_weight or
-                new_material != current_material or
-                new_modifier != current_modifier or
-                any(new_values.get(s) != current_values.get(s) for s in current_values)
-            )
+            if mode == 'weight':
+                new_values, new_material, new_modifier = {}, current_material, current_modifier
+                has_change = new_weight != current_weight
+            else:  # full re-stat: armor + weight + material
+                new_values = {}
+                for s in ['head_armor', 'body_armor', 'arm_armor', 'leg_armor']:
+                    if s in current_values and s in new_stats:
+                        tgt = new_stats[s]
+                        # no_lower_armor: never reduce a stat (raise under-tiered items, keep the rest).
+                        new_values[s] = max(tgt, current_values[s]) if no_lower_armor else tgt
+                # no_lower_armor also preserves material (don't downgrade Plate->Leather, which could
+                # affect modifier rolls); material is a separate cosmetic pass for "do not nerf" cultures.
+                if no_lower_armor:
+                    new_material, new_modifier = current_material, current_modifier
+                else:
+                    new_material, new_modifier = new_stats['material_type'], new_stats['modifier_group']
+                has_change = (
+                    new_weight != current_weight or
+                    new_material != current_material or
+                    new_modifier != current_modifier or
+                    any(new_values.get(s) != current_values.get(s) for s in current_values)
+                )
 
         # Record
         change_record = {
@@ -626,7 +670,7 @@ def process_file(filepath, slot_type, dry_run=True, weights_only=False):
         changes.append(change_record)
 
         if has_change:
-            if weights_only:
+            if mode == 'weight':
                 item_changes[item_id] = {'weight': new_weight}
             else:
                 write_changes = dict(new_values)
@@ -797,14 +841,32 @@ def main():
                         help='Override the armory base dir (default: live LOTRLOME_Armory)')
     parser.add_argument('--cultures', default='',
                         help='Comma-separated culture folders to restrict to (e.g. dale,rhun)')
+    parser.add_argument('--slots', default='',
+                        help='Comma-separated slots to restrict to (head,body,arm,leg,shoulder); default all')
     parser.add_argument('--all', action='store_true',
                         help='Required to --apply across ALL cultures (safety guard for preserved cultures)')
     parser.add_argument('--weights-only', action='store_true',
                         help='Ladder ONLY weights (tier follows current armor value); leave armor + material untouched')
+    parser.add_argument('--tier-source', choices=['keyword', 'roster'], default='keyword',
+                        help="Tier source: 'roster' uses the derive_armor_tiers map (authoritative roster tiers, "
+                             "skips hero/unworn); 'keyword' uses the legacy name detector (default)")
+    parser.add_argument('--no-lower-armor', action='store_true',
+                        help='Never reduce an armor stat (raise under-tiered items, keep the rest). '
+                             'Use for "do not nerf" cultures (e.g. dunland).')
     args = parser.parse_args()
 
     dry_run = not args.apply
     requested = {c.strip() for c in args.cultures.split(',') if c.strip()}
+    requested_slots = {s.strip() for s in args.slots.split(',') if s.strip()}
+
+    roster_map = None
+    if args.tier_source == 'roster':
+        roster_map, gen = load_roster_tier_map()
+        if roster_map is None:
+            print("ERROR: --tier-source roster needs tools/data/armor_roster_tiers.json. "
+                  "Run: python tools/derive_armor_tiers.py")
+            sys.exit(2)
+        print(f"Roster tier map: {len(roster_map)} items (generated {gen})")
 
     # Safety guard: refuse a blanket --apply that could flatten hand-authored cultures.
     if args.apply and not requested and not args.all:
@@ -847,12 +909,16 @@ def main():
         culture_path = os.path.join(armory_dir, culture_dir)
 
         for armor_file, slot_type in SLOT_TYPES.items():
+            if requested_slots and slot_type not in requested_slots:
+                continue
             filepath = os.path.join(culture_path, armor_file)
             if not os.path.exists(filepath):
                 continue
 
             print(f"  Processing {culture_dir}/{armor_file}...")
-            changes = process_file(filepath, slot_type, dry_run=dry_run, weights_only=args.weights_only)
+            changes = process_file(filepath, slot_type, dry_run=dry_run, weights_only=args.weights_only,
+                                    tier_source=args.tier_source, roster_map=roster_map,
+                                    no_lower_armor=args.no_lower_armor)
             all_changes.extend(changes)
             files_processed += 1
 

@@ -49,9 +49,9 @@ Cultural mods (`CULTURAL_MODS`) express identity — e.g. dwarves high-protectio
 | erebor | +4 | ×1.05 | | mirkwood | +5 | ×0.65 |
 | arnor | +2 | ×1.00 | | gondor | +1 | ×1.00 |
 | isengard | +2 | ×1.15 | | **dale** | +1 | ×1.05 |
-| rhun | 0 | ×1.00 | | gundabad | 0 | ×1.15 |
+| rhun | 0 | ×0.90 | | gundabad | 0 | ×1.15 |
 | dol_guldur | 0 | ×1.10 | | mercenary | 0 | ×1.00 |
-| rohan | −2 | ×0.90 | | dunland | −2 | ×0.95 |
+| rohan | −2 | ×0.90 | | dunland | −2 | ×0.85 |
 | mordor | −1 | ×1.10 | | umbar | −1 | ×0.90 |
 | harad | −3 | ×0.85 | | thenn | −3 | ×1.05 |
 | troll | +8 | ×2.00 (boss — excluded) | | lothlorien* | +5 | ×0.70 |
@@ -68,7 +68,7 @@ This roster walk is implemented in **`tools/derive_armor_tiers.py`** (Phase 2). 
 
 Tier-signal precedence per item: (1) an explicit tier keyword in the id (`_light_`/`_med_`/`_heavy_`/`_elite_`/`_lord_`) — the author's own label; (2) the roster anchor band (lowest wearer level) for keyword-less items (the Dale case); (3) **unworn** — no troop references it (arnor, mercenary, thenn have no dedicated roster, so all their items fall here and keep name/value tiering).
 
-Level→tier bands (calibrated on Dale ground truth; tunable): `≤13 light · 14-18 medium · 19-28 heavy · 29-38 elite · 39+ lord`.
+Level→tier bands (calibrated on Dale ground truth + the owner's elite=31-51 decision): `≤13 light · 14-18 medium · 19-30 heavy · 31-51 elite`. The armor `lord` tier is hero-only (named lords/heroes, excluded from rosters) — no troop is roster-tiered `lord`.
 
 Reading the map: **UNDER** = the item is weaker than its wearer's level implies (an under-progressed line — the primary actionable signal). **OVER** is often *intended* — a heavy `b`-line item worn by a heavy troop at its level, or a deliberately-strong culture (rivendell); the report's `Line` column + the culture's identity disambiguate, so OVER is reviewed, not auto-applied. The map computes the level-band target as a **reference** — whether to scale an under-progressed line up or accept it (e.g. Dale's flat `a`-line) is a Phase-3 design call.
 
@@ -124,7 +124,18 @@ It does **not** judge qualitative identity (e.g. "rhun weighs too much for caval
 
 18 cultures, ~2,800 items: **21 errors, 21 warnings** (down from 25 errors after the harad fix). The analyzer independently reproduced the audit's structural findings (iron_hills arm 25/3.5, mirkwood no progression, etc.).
 
-**Phase 3 progress:** `harad` is fixed — `--weights-only` laddered its 4 monolithic-weight slots (head/body/arm/leg) onto the tier curve with armor byte-untouched (the audit's HIGH-priority harad rec). `dunland` and `rohan` were attempted and reverted: they are blocked on the identity/armor decisions (dunland's armor is over-tiered for a light raider, so weight-follows-armor goes the wrong way; rohan's combat boots have uniform armor and need an armor mid-tier first). The remaining inconsistent cultures and the 6 open balance decisions (curve-vs-redesign, mordor scope, "elite"=peak-or-breadth, etc.) are recorded in the planning artifact and the audit JSON.
+**Phase 3 progress:** `harad` is fixed — `--weights-only` laddered its 4 monolithic-weight slots (head/body/arm/leg) onto the tier curve with armor byte-untouched. `dol_guldur` pauldron_med_c `body_armor=8`→30 typo fixed (matches its `_med_a/b` siblings; was weaker than the lights).
+
+**Owner decisions encoded (2026-06-30):** elite = troop levels 31-51 (→ bands above; lord = hero-only); dunland are raiders/skirmishers → light (`weight_mult` 0.95→0.85); rhun has the best cavalry in the game → mobile (`weight_mult` 1.00→0.90).
+
+**Across-the-board sweep complete (2026-06-30).** Armory-wide: **20 analyzer errors → 2**, `validate_all_troop_refs` PASS (no item id changed). Method: `--no-lower-armor` full re-tiers for cultures with broken armor progression (dale, rohan, arnor, mirkwood — 0 stats lowered, only raised); roster `--weights-only` for weight-only issues (rhun mobile, rivendell light, gundabad, isengard — armor byte-untouched); targeted preserve fixes (iron_hills arm 25→14/18/22/25/31, dol_guldur leg weight, erebor 62 beard-covers, the Dain hero rebase above his troops); thenn body spread via keyword re-tier.
+
+- **Clean (8):** dale, erebor, gondor, iron_hills, mordor, rhun, rohan, troll.
+- **Minor (0 errors):** arnor, dol_guldur, dunland, gundabad, harad, isengard, mercenary, thenn.
+- **Remaining 2 errors:** mirkwood + rivendell shoulder slots are monolithic-*armor* (few shoulder items, all at the elite value). Clearing them requires lowering low-tier shoulder coverage — vetoed by "do not nerf" — so they are flagged-not-fixed (arguably a heuristic false-positive for cultures with limited shoulder meshes).
+- **Deferred:** mercenary's 37 items are mis-tagged `Culture.gondor` (pool into Gondor merchants). Retagging needs the neutral-pool culture decision; left untouched rather than guessed.
+
+Full pre-sweep backup at `…/scratchpad/FULL_armory_backup_*`. Remaining design decisions (optional): mordor relabel-vs-split; whether to nerf the 2 elf shoulder slots; the mercenary retag target.
 
 ## Dependencies
 
@@ -141,6 +152,8 @@ The analyzer is read-only and self-verifying: running it against the live tree m
 **Fix a culture's monolithic weight slot:** use `rebalance_armor.py --apply --weights-only --cultures <c>`. It ladders ONLY the weight to each item's armor-derived tier (`tier_from_value`) and leaves armor + material untouched, so it can't mangle hand-tuned armor through the keyword detector. It is guarded — it only touches a slot that is **currently monolithic-weight**, so it can never collapse an already-varied slot (the harad-shoulder regression, fixed 2026-06-30). Back up the culture folder first; re-run the analyzer to confirm the error cleared.
 
 **`--weights-only` applicability (important):** it is correct ONLY when the slot's armor is varied AND correctly tiered, because weight follows armor. It is the right tool where the armor is already right and only the weight is frozen (harad body/head/leg). It is the WRONG tool when: (a) the armor is itself uniform — it can't ladder (no-op, e.g. rohan's combat boots, iron_hills arm), those need an armor mid-tier first; or (b) the armor is over-tiered for the culture's intended weight class — it would propagate that into heavier weights (e.g. dunland body 30-45 → 12-21kg, the opposite of the light-raider intent). Cultures in (b) need the identity decision (lower armor + material) before any weight pass.
+
+**Re-tier a whole culture from its rosters:** `python tools/derive_armor_tiers.py` (refresh the map), then `rebalance_armor.py --dry-run --tier-source roster --cultures <c>` and read the proposed changes. Each worn item is re-stated to its troop-level tier (hero/unworn skipped), capped at elite. Add `--no-lower-armor` for a "do not nerf" culture (raises under-tiered items, never reduces, preserves material). Add `--weights-only` to set weight by roster tier without touching armor (e.g. a mobility trim that spares elite plate). Always dry-run first — the dunland dry-run caught a wrong-direction change before applying.
 
 **Add/adjust a cultural identity:** edit `CULTURAL_MODS[culture]`; dry-run; the analyzer's "In CULTURAL_MODS" column flags any culture still on the neutral default.
 

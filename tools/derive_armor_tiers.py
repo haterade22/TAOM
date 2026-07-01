@@ -56,18 +56,18 @@ SLOT_ORDER = ['head', 'body', 'arm', 'leg', 'shoulder']
 TIER_ORDER = ['light', 'medium', 'heavy', 'elite', 'lord']
 
 # Level -> tier band. TAOM troop levels run {1,6,11,16,21,26,31,36,41,46,51}. Calibrated against
-# Dale ground truth (L6/L11 wear the light a01 chest; L16 medium; L21/26 heavy; L31 elite). These
-# bands are a documented, tunable reference, not a verdict — see the module docstring.
+# Dale ground truth (L6/L11 wear the light a01 chest; L16 medium; L21/26 heavy) and the project
+# owner's decision (2026-06-30): ELITE TROOPS ARE DEFINED BY LEVELS 31-51. The armor 'lord' tier is
+# therefore hero-only (named lords/heroes, excluded from rosters) and is never assigned from a troop
+# level here. Tunable reference, not a verdict — see the module docstring.
 def level_to_tier(level):
     if level <= 13:
         return 'light'
     if level <= 18:
         return 'medium'
-    if level <= 28:
+    if level <= 30:
         return 'heavy'
-    if level <= 38:
-        return 'elite'
-    return 'lord'
+    return 'elite'  # L31-51
 
 
 def id_keyword_tier(item_id):

@@ -1,16 +1,16 @@
 """Generate low-stat career-archetype starter armor for the 12 non-Gondor cultures.
 
 Mirrors the hand-authored Gondor pattern (LOTRLOME_items/gondor/starter_armors.xml):
-for each culture x archetype x slot, clone an existing culture item (so mesh / material /
-cover flags / gender variations render correctly), strip its armor numbers, and re-set
+for each culture x archetype, clone the culture's chest + boots items (so mesh / material /
+cover flags / gender variations render correctly), strip their armor numbers, and re-set
 ONLY the slot's primary stat to the TAOM starter anchor:
 
-    Ranged = ~5   Cavalry = ~7   Infantry = ~9   (cape/gloves a touch lower)
+    Ranged = ~5   Cavalry = ~7   Infantry = ~9
 
-Items carry NO explicit value=, so DefaultItemValueModel prices them from their (now tiny)
-tier -> trivial resale. Body/Leg donors are the items each culture's career roster already
-uses; Head/Cape/Gloves donors are the lowest-stat item of that Type in the culture folder
-(only the mesh is borrowed -- stats are overridden regardless).
+Only Body + Leg are authored: the starter kit is chest + legs + weapons (+ mount for
+cavalry) by design -- no helmet, shoulders/cape, or gloves. Items carry NO explicit value=,
+so DefaultItemValueModel prices them from their (now tiny) tier -> trivial resale. Donors
+are the chest/boots items each culture's career roster already uses.
 
 Writes <folder>/starter_armors.xml per culture (auto-loads via the folder's existing
 <XmlName id="Items" path="LOTRLOME_items/<folder>"/> registration). Gondor is excluded
@@ -177,18 +177,12 @@ def generate_culture(taom, folder, body_donor, leg_donor, armory):
         warnings.append("body donor %s not found" % body_donor)
     if donors["leg"] is None:
         warnings.append("leg donor %s not found" % leg_donor)
-    donors["head"] = lowest_of_type(by_type, "HeadArmor", "head_armor")
-    donors["cape"] = lowest_of_type(by_type, "Cape", "body_armor")
-    donors["gloves"] = lowest_of_type(by_type, "HandArmor", "arm_armor")
-    for slot in ("head", "cape", "gloves"):
-        if donors[slot] is None:
-            warnings.append("no %s donor (Type=%s) in folder" % (slot, SLOT_TYPE[slot]))
 
     blocks = []
     for arch in ("ranged", "cavalry", "infantry"):
         tmpl = TEMPLATES[arch]
         blocks.append("\n    <!-- %s %s -->" % (CULTURE_DISPLAY[taom], ARCH_DISPLAY[arch]))
-        for slot in ("head", "body", "leg", "cape", "gloves"):
+        for slot in ("body", "leg"):
             donor = donors[slot]
             if donor is None:
                 continue
@@ -199,7 +193,7 @@ def generate_culture(taom, folder, body_donor, leg_donor, armory):
                                          armor_overrides(slot, tmpl)))
 
     donor_summary = {s: (donors[s].attrib.get("id") if donors[s] else None)
-                     for s in ("head", "body", "leg", "cape", "gloves")}
+                     for s in ("body", "leg")}
     header = (
         '<?xml version="1.0" encoding="utf-8"?>\n'
         '<!--\n'

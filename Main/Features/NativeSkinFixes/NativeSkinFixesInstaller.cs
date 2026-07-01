@@ -98,30 +98,51 @@ public static class NativeSkinFixesInstaller
             return;
         }
 
-        // Install each hook. They're independent — if one fails the others
-        // still get a chance, and the user gets the partial benefit.
-        bool a = CoversHeadHookInterop.TryInstall(logger);
-        bool b = HairClothHookInterop.TryInstall(logger);
-        bool c = FaceMeshObserveHookInterop.TryInstall(logger);
-        AllHooksInstalled = a && b && c;
+        // Install the hooks. The two CLOTH hooks are a coupled REQUIRED pair:
+        // FaceMeshObserve suppresses the static hair that HairCloth animates, so
+        // one without the other is an incoherent half-state (the lone-HairCloth
+        // state that preceded the 2026-06-30 infinite-load / CTD). CoversHead is
+        // INDEPENDENT — it fixes the covers_head hand-morph freeze, unrelated to
+        // cloth. As of the v1.4.6 port all three targets ARE pinned, so
+        // CoversHead installs too; it stays structurally OPTIONAL (its failure
+        // does not roll back the cloth pair) so that a future engine bump which
+        // breaks only its pattern still ships the cloth fix. HairCloth degrades
+        // gracefully without CoversHead (rescues cloth for covered heads too — a
+        // minor cosmetic effect, never a crash).
+        bool coversHead = CoversHeadHookInterop.TryInstall(logger);      // optional
+        bool hairCloth  = HairClothHookInterop.TryInstall(logger);       // required
+        bool faceMesh   = FaceMeshObserveHookInterop.TryInstall(logger); // required
+        bool clothPair  = hairCloth && faceMesh;
+        AllHooksInstalled = coversHead && clothPair;
 
-        // User-facing banner. Distinct text for success vs degraded so the
-        // user understands whether engine hooks are live or vanilla rendering
-        // is still in effect. Color reinforces the same signal.
-        string bannerKey = AllHooksInstalled ? LoadedMessageKey   : DegradedMessageKey;
-        var    bannerCol = AllHooksInstalled
-            ? new Color(0.6f, 0.8f, 1f)        // soft blue for full success
-            : new Color(1f, 0.7f, 0.3f);       // amber for degraded
-        InformationManager.DisplayMessage(new InformationMessage(
-            new TextObject(bannerKey).ToString(),
-            bannerCol));
-
-        if (!AllHooksInstalled)
+        // REQUIRED-PAIR all-or-nothing: if either cloth hook failed to install,
+        // roll ALL three back so nothing is left half-applied. A lone live
+        // native detour is a corruption vector, not a partial benefit.
+        if (!clothPair)
         {
+            CoversHeadHookInterop.Uninstall();
+            HairClothHookInterop.Uninstall();
+            FaceMeshObserveHookInterop.Uninstall();
             logger.LogWarning(
-                "[NativeSkinFixes] at least one hook failed — see NativeSkinFixes.log under " +
+                $"[NativeSkinFixes] required cloth pair incomplete (hair_cloth={hairCloth} " +
+                $"face_mesh={faceMesh}) — rolled back to fully inert. See NativeSkinFixes.log under " +
                 "Documents\\Mount and Blade II Bannerlord\\Logs\\TAOM\\ for details");
+            InformationManager.DisplayMessage(new InformationMessage(
+                new TextObject(DegradedMessageKey).ToString(),
+                new Color(1f, 0.7f, 0.3f)));   // amber for degraded
+            return;
         }
+
+        // Cloth pair is live -> the feature is doing its main job (hair/beard
+        // cloth physics). CoversHead is best-effort; log its actual state so a
+        // reader knows whether the hand-morph fix is on.
+        if (!coversHead)
+            logger.LogInfo(
+                "[NativeSkinFixes] cloth hooks active; CoversHead inert " +
+                "(target not pinned for this build) — covers_head hand-morph fix disabled");
+        InformationManager.DisplayMessage(new InformationMessage(
+            new TextObject(LoadedMessageKey).ToString(),
+            new Color(0.6f, 0.8f, 1f)));   // soft blue — feature active
     }
 
     /// <summary>

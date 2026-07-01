@@ -2,11 +2,13 @@
 
 For every <EquipmentRoster id="player_career_{culture}_{archetype}_{m|f}"> in
 taom_career_starting_equipment.xml, keep the weapon (Item0-2) and mount (Horse/
-HorseHarness) slots exactly as-is, and set the five armor slots to the dedicated
-starter items:  starter_{archetype}_{culture}_{slot}_a  (slot = head/body/leg/gloves/cape).
+HorseHarness) slots exactly as-is, set Body + Leg to the dedicated starter items
+(starter_{archetype}_{culture}_{body|leg}_a), and CLEAR Head/Cape/Gloves so the starter
+kit is chest + legs + weapons only.
 
-This makes the career layer fully govern the kit's armor (Head/Cape/Gloves previously
-fell through to the culture-default troop armor). Idempotent: re-running is a no-op.
+The career roster is applied via Equipment.FillFrom, which copies all 12 slots -- so a
+slot the roster omits is emptied on the player (it does NOT inherit the culture-default).
+Removing Head/Cape/Gloves here therefore leaves those slots bare. Idempotent.
 
 Usage:
     python tools/wire_career_starter_armor.py            # dry-run sample
@@ -20,9 +22,9 @@ CAREER = os.path.join(os.path.dirname(__file__), "..", "Main", "_Module",
                       "ModuleData", "equipmentsets", "taom_career_starting_equipment.xml")
 CAREER = os.path.abspath(CAREER)
 
-ARMOR_SLOTS = ["Head", "Body", "Leg", "Gloves", "Cape"]
-EMIT_ORDER = ["Item0", "Item1", "Item2", "Head", "Body", "Leg", "Gloves", "Cape",
-              "Horse", "HorseHarness"]
+ARMOR_SLOTS = ["Body", "Leg"]
+REMOVE_SLOTS = ["Head", "Gloves", "Cape"]   # starter kit = chest + legs (+ weapons/mount) only
+EMIT_ORDER = ["Item0", "Item1", "Item2", "Body", "Leg", "Horse", "HorseHarness"]
 ID_RE = re.compile(r"player_career_(?P<c>.+)_(?P<a>ranged|cavalry|infantry)_(?P<g>[mf])$")
 
 
@@ -41,6 +43,8 @@ def transform(text):
             slots[slot] = iid
         for slot in ARMOR_SLOTS:
             slots[slot] = "starter_%s_%s_%s_a" % (arch, culture, slot.lower())
+        for slot in REMOVE_SLOTS:
+            slots.pop(slot, None)
         lines = []
         for slot in EMIT_ORDER:
             if slot in slots:

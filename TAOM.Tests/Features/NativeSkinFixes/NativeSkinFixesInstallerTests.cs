@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features;
 using TAOM.Features.NativeSkinFixes;
 
 namespace TAOM.Tests.Features.NativeSkinFixes;
@@ -59,6 +60,23 @@ public class NativeSkinFixesInstallerTests
         // any word that happens to contain "editor" elsewhere (the engine
         // launcher exes don't, but the test pins the contract for future edits).
         Assert.IsFalse(NativeSkinFixesInstaller.IsEditorProcess(@"C:\path\with\nothing\matching.exe"));
+    }
+
+    [TestMethod]
+    public void EnableNativeSkinFixes_DefaultsToTrue_ForVerifiedV146Build()
+    {
+        // ON by default as of the v1.4.6 native port (2026-06-30). All 7 hook
+        // targets were authored + verified against the installed v1.4.6
+        // TaleWorlds.Native.dll (RTTI-anchored disassembly + interior byte-
+        // triangulation for the two functions whose prologues changed); each
+        // pattern single-matches its expected RVA, and every struct offset the
+        // hooks use was verified stable. The MCM toggle remains the opt-OUT for
+        // anyone who hits instability, and the installer's required-cloth-pair
+        // all-or-nothing + fail-closed pattern scan keep a future engine bump
+        // safe (a pattern miss => inert, never a wrong-address hook). Flipping
+        // this default back to false must be a deliberate response to a real
+        // regression, not a silent refactor.
+        Assert.IsTrue(new TaomSettings().EnableNativeSkinFixes);
     }
 
     [TestMethod]

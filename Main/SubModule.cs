@@ -314,7 +314,22 @@ public class SubModule : MBSubModuleBase
         // and pattern-scans TaleWorlds.Native.dll for the hook targets at
         // install time. Failure is logged and the game continues vanilla — no
         // crash, no NRE. See docs/features/native-skin-fixes.md.
-        NativeSkinFixesInstaller.Install(IoC.Resolve<IModLogger>());
+        //
+        // GATED OFF BY DEFAULT (MCM "Native Skin Fixes → Enable Native Skin
+        // Fixes"). These hooks write to hardcoded offsets inside the native
+        // engine DLL; a pattern/offset mismatch for the installed game build
+        // corrupts memory (the 2026-06-30 infinite-load / battle CTD). The gate
+        // is fail-closed: if MCM isn't available this early, Instance is null
+        // and we skip install. Opt in only once the byte patterns are authored
+        // + verified for the installed build.
+        bool nsfEnabled = false;
+        try { nsfEnabled = TaomSettings.Instance?.EnableNativeSkinFixes == true; }
+        catch { /* MCM not ready — fail closed */ }
+        if (nsfEnabled)
+            NativeSkinFixesInstaller.Install(IoC.Resolve<IModLogger>());
+        else
+            IoC.Resolve<IModLogger>().LogInfo(
+                "[NativeSkinFixes] disabled (MCM 'Enable Native Skin Fixes' is off) — engine rendering is vanilla");
 
         // Pre-compile Shaders — RE-ENABLED 2026-06-17 (issue #287). Walks the all-characters battle
         // (character/equipment shaders) then each TAOM battle scene (terrain + forced-atmosphere

@@ -2,6 +2,44 @@
 
 ## 2026-06-30
 
+### feat(native-skin-fixes): port all 7 native hooks to Bannerlord v1.4.6 + activate
+
+NativeSkinFixes shipped as `<PATTERN_TBD>` stubs since the 2026-05-26 in-repo port — the byte patterns for the
+covers_head hand-morph fix + hair/beard cloth physics were never authored for a shipped engine. A hand-built DLL
+with stale v1.4.0-era offsets was the root cause of a battle-load infinite-load / CTD (native AV in
+`TAOM.NativeSkinFixes.dll`). All 7 targets were re-derived from scratch against the installed v1.4.6
+`TaleWorlds.Native.dll`.
+
+- **New RE tool `tools/native_sig_author.py`** (capstone + pefile, no IDA/Ghidra): RTTI vtable resolution,
+  disassembly, IDA-pattern uniqueness scan, rip-relative xref, function-start finder, old→new prologue `diff`, and
+  interior byte-triangulation. The user downgraded the game to v1.3.15 to supply a genuine reference DLL.
+- **All 7 patterns authored + verified** single-match at their v1.4.6 RVAs: `add_skin_meshes`=0x61C7D0,
+  `cloth_factory`=0x35B0C0, `AddToList`=0xC3E90, `GpuInit`=0x2936E0, `HasClothData`=0x2C45A0,
+  `NotifyPhysics`=0x34BA20, `render_list_build`=0x625670. Every struct offset + vtable index the hooks use was
+  verified against the RTTI-resolved `Face_mesh` / `rglCloth_simulator_component` vtables; the cloth/Face_mesh
+  layout is stable v1.3.15→v1.4.6. `*Hook.cpp` needed no changes — only `Signatures.h`.
+- **Method:** 5/7 functions have byte-identical v1.3.15 prologues (matched directly); the 2 whose prologues
+  changed (`cloth_factory`, `add_skin_meshes`) were pinned by interior byte-triangulation.
+- **RCA (mid-port):** the first deploy hooked a shared-body SIBLING of the cloth factory (`0x35AF00`, takes
+  rdx=byte-flag) instead of the real `0x35B0C0` (rdx=mesh) → per-call SEH-caught AV (no CTD, but inert + log spam).
+  Fixed by triangulating the 1.3.15 factory (166 votes) and verifying the argument signature. Lesson: a
+  shared-body sibling defeats structural body-matching — verify which register is the dereferenced pointer.
+- **Safety rails:** `EnableNativeSkinFixes` MCM toggle (default ON for verified v1.4.6, fail-closed if MCM not
+  ready); required-cloth-pair all-or-nothing install (HairCloth+FaceMeshObserve both-or-neither); CoversHead
+  structurally optional so a future pattern break there still ships the cloth fix. +1 test pins the default.
+
+Files: `Dependencies/NativeSkinFixes.NativeHooks/Signatures.h`, `Main/Features/NativeSkinFixes/NativeSkinFixesInstaller.cs`,
+`Main/Features/TaomSettings.cs`, `Main/SubModule.cs`, `tools/native_sig_author.py`, rebuilt `TAOM.NativeSkinFixes.dll`,
+`docs/features/native-skin-fixes.md`.
+
+In-game confirmed (v1.4.6.115628, 2026-06-30): a full battle loaded and ran ~20 min with all 3 hooks installed, all 7
+targets resolved at their expected RVAs (`cloth_factory` at the corrected `0x35b0c0`), and **zero `sample-AV`** lines —
+the AV storm from the wrong-sibling factory is gone. The cloth-rescue effect itself isn't visually confirmed yet (the
+test battle had no cloth-flagged-hair troops, so nothing to rescue); needs a Rohan/elf/Dale battle to observe.
+
+Not-tested: the cloth-physics visual on cloth-hair troops (no such troops in the verification battle).
+Research: interior byte-triangulation against a downgraded v1.3.15 reference DLL.
+
 ### balance(starting-equipment): tune down character-creation starter gear (sellable for ~20K)
 
 Players could sell their character-creation starting kit for ~20,000 denars. Root cause was **not** the armor
@@ -16,20 +54,84 @@ the targets first suggested — `DefaultItemValueModel.CalculateValue` prices an
    `mkwd_inf3_chest` (body 28 + leg 25 + arm 10 → tier ~5.9 → tens of thousands alone). Every non-Gondor culture
    reused one troop chest+boots across all three archetypes.
 
-Fix: dedicated low-stat starter armor for **all 13 career cultures**, 5 slots × 3 archetypes, anchored at
-**Ranged ~5 / Cavalry ~7 / Infantry ~9** primary armor (cape/gloves a touch lower), carrying no explicit `value=`
-so resale stays trivial. Gondor's existing `starter_*` items were lowered in place; the other 12 cultures were
-authored by the new `tools/generate_starter_armor.py` (180 items) — it clones each culture's own items
-(borrowing mesh/material/cover flags so they render) and re-sets only the slot stat, stripping the inflating
-secondary armor numbers. `tools/wire_career_starter_armor.py` then rewired all 78 career rosters to use the
-starter armor for Head/Body/Leg/Gloves/Cape while keeping each roster's weapons and mount untouched.
+Fix: dedicated low-stat starter armor for **all 13 career cultures** — chest (Body) + legs (Leg) only, per
+archetype, anchored at **Ranged ~5 / Cavalry ~7 / Infantry ~9** body armor, carrying no explicit `value=` so
+resale stays trivial. The starter kit is deliberately **chest + legs + weapons only** (+ mount for cavalry) — no
+helmet, shoulders/cape, or gloves. Gondor's existing `starter_*` items were lowered in place; the other 12
+cultures were authored by the new `tools/generate_starter_armor.py` (72 items) — it clones each culture's own
+chest/boots items (borrowing mesh/material/cover flags so they render) and re-sets only the slot stat, stripping
+the inflating secondary armor numbers. `tools/wire_career_starter_armor.py` then rewired all 78 career rosters to
+set Body + Leg from the starter items and CLEAR Head/Cape/Gloves, keeping each roster's weapons and mount
+untouched. (The career roster is applied via `Equipment.FillFrom`, which copies all 12 slots — so a slot the
+roster omits is emptied on the player, not inherited from the culture-default; this is also why the pre-change
+kit never included a helmet/cape/gloves.)
 
 Item definitions live in the external `LOTRLOME_Armory` module (not the repo); originals backed up as
-`*.bak-startergear`. Verified: `validate_moduledata.py` PASS (no broken refs across 5,984 items), build green,
-3,661 tests pass. Residuals (follow-ups): the culture-default layer (`taom_char_creation_equipment.xml`, the
-careerless path) and the three fallback cultures with no career rosters (Lothlorien/Umbar/Khand) are unchanged;
-the 180 new `{=starter_*}` item names use inline-default text and are not yet harvested into the loc pipeline;
+`*.bak-startergear`. Verified: `validate_moduledata.py` PASS (no broken refs across 5,867 items), build green,
+3,661 tests pass (the lone failure in the run — `EnableNativeSkinFixes_DefaultsToTrue` — is an unrelated
+in-progress NativeSkinFixes v1.4.6 change, not this data edit). Residuals (follow-ups): the culture-default layer
+(`taom_char_creation_equipment.xml`, the careerless path) and the three fallback cultures with no career rosters
+(Lothlorien/Umbar/Khand) are unchanged; the 72 new `{=starter_*}` item names use inline-default text and are not
+yet harvested into the loc pipeline;
 item weights were left as the donor's (only armor stats were lowered).
+
+### balance(armor): across-the-board re-tier sweep (Phase 3 complete)
+
+Applied the roster-driven engine across every culture that needed it, working in verified batches with a full
+pre-sweep backup. Armory-wide: **20 analyzer errors → 2**, 21 → 16 warnings, and `validate_all_troop_refs` PASSes
+(no item id was ever changed, only stats/weight/material/cover — no underwear bug). Added a `--slots` filter for
+targeted slot fixes.
+
+- **`--no-lower-armor` full re-tiers** (raise under-tiered to curve, ladder weight, cap at elite, never reduce, skip
+  hero/unworn): dale (now Clean), rohan (Clean), arnor, mirkwood. Verified 0 armor stats lowered across all four
+  (raises: dale 126, mirkwood 24, rohan 45, arnor 33).
+- **Roster `--weights-only`** (weight by tier, armor byte-untouched): rhun (Clean — the 0.90 mobile mod, armor
+  preserved), rivendell (the 0.70 light mod, strong armor preserved), gundabad (Clean), isengard (Clean). Verified 0
+  armor changed across all four.
+- **Targeted preserve fixes:** iron_hills arm slot re-tiered (`--slots arm`) from the frozen 25/3.5 to 14/18/22/25/31
+  with laddered weight → iron_hills Clean; dol_guldur leg weight laddered → Clean; erebor — 62/64 helmets given
+  `beard_cover_type="all"` → Clean; the Dain hero set rebased above its own troop ceiling (chest 42→56, bracers
+  14-22→33, helmets →48-50; the audit's hero-inversion fix). thenn body spread via keyword re-tier → 0 errors.
+
+**Clean (8):** dale, erebor, gondor, iron_hills, mordor, rhun, rohan, troll. **Minor (0 errors):** arnor, dol_guldur,
+dunland, gundabad, harad, isengard, mercenary, thenn. **Remaining 2 errors:** mirkwood + rivendell shoulder slots are
+monolithic-*armor* (few shoulder items, all at the elite value) — clearing them requires lowering low-tier shoulder
+coverage, which the owner's "do not nerf" decision rules out, so they are left as flagged-not-fixed. **Deferred:**
+mercenary's 37 items are mis-tagged `Culture.gondor` (pool into Gondor merchants) — retagging needs the neutral-pool
+culture decision and is left untouched rather than guessed.
+
+### balance(armor): roster-driven apply engine + dunland re-tier (Phase 3)
+
+`rebalance_armor.py` gained `--tier-source roster` — the real Phase-3 engine. Instead of guessing an item's tier
+from name keywords, it reads each item's authoritative tier from the `derive_armor_tiers.py` map (the level of the
+troop that wears it), skipping hero/boss (`is_excluded`) and unworn items. It composes with `--weights-only` (set
+weight by roster tier) or runs a full re-stat (armor + weight + material). Troop tiers are capped at **elite** (owner
+decision: elite = levels 31-51; the `lord` armor tier is hero-only). A new `--no-lower-armor` flag never reduces an
+armor stat (raises under-tiered items, leaves the rest) and preserves material — for "do not nerf" cultures.
+
+Applied to **dunland** (`--tier-source roster --no-lower-armor`), resolving the owner's decision that Dunland are
+skirmishers but must not be nerfed (armor has battle value). Verified against the pre-edit backup: **0 armor stats
+lowered anywhere**, 104 raised to curve, material unchanged, max body_armor = 48 (elite cap, never the lord-tier 58).
+The flat 10.0 body weight is now a real ladder (6.8 light / 15.3 heavy / 18.7 elite) — light skirmishers are mobile,
+the elite plate is appropriately heavy, and Dunland sits 15% lighter than peers per tier (weight_mult 0.85). dunland
+drops from 1 analyzer error to 0. The dry-run first showed a straight curve would have *lowered* the light items
+(30→18) and raised the top to lord-plate — caught and corrected via the cap + no-lower-armor flags before applying.
+
+### balance(armor): encode owner identity decisions + fix dol_guldur pauldron typo (Phase 3)
+
+Three project-owner armor decisions (2026-06-30) are now encoded in the curve. (1) **Elite troops are levels
+31-51** — `derive_armor_tiers.level_to_tier` now bands `≤13 light · 14-18 medium · 19-30 heavy · 31-51 elite`, and
+the armor `lord` tier is hero-only (no troop is roster-tiered lord; 82 L39+ items that were `lord` are now `elite`).
+(2) **Dunland are raiders/skirmishers → light**: `CULTURAL_MODS['dunland']` weight_mult 0.95→0.85. (3) **Rhun has the
+best cavalry in the game → mobile**: `CULTURAL_MODS['rhun']` weight_mult 1.00→0.90. The analyzer + derive reports were
+regenerated against the updated curve so their targets reflect the decisions.
+
+Also fixed a confirmed data typo: `sk_dg_uruk_pauldron_med_c` carried `body_armor=8` while its `_med_a/_med_b`
+siblings are 30 — a "medium" pauldron weaker than the light ones (a tier inversion the audit flagged). Set to 30 to
+match the siblings; `arm_armor=8` left as-is (the correct medium-shoulder baseline). dol_guldur is a preserve culture,
+but this is one of its approved targeted bug-fixes. Backup taken; edit is the single attribute. The live-armor
+re-stats that apply the dunland/rhun weight decisions are the next deliberate step (dunland armor-down to light tiers;
+rhun rank-and-file weight trim sparing the named elite plate).
 
 ### balance(armor-harad): ladder harad's monolithic weights (Phase 3, first culture)
 

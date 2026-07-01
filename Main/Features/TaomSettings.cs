@@ -35,6 +35,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Corrects garrison food consumption (Troop Weight no longer inflates it for elite garrisons) and applies the tunable food knobs in settlement_food/settlement_food_config.json (consumption divisors, base/village/flat production, storage caps). Off = vanilla engine food math (garrison food stays weighted). Config edits need an app restart.")]
     public bool EnableSettlementFoodTuning { get; set; } = true;
 
+    // --- Native Skin Fixes ---
+
+    [SettingPropertyGroup("Native Skin Fixes")]
+    [SettingPropertyBool("Enable Native Skin Fixes", Order = 0,
+        HintText = "Installs the native MinHook detours that fix engine rendering bugs TaleWorlds won't: the covers_head hand-morph freeze (jazz-hands under closed helms) + hair/beard cloth physics. ON by default — all 7 hook targets are authored + verified against Bannerlord v1.4.6's TaleWorlds.Native.dll (RTTI-anchored disassembly + interior byte-triangulation; each pattern single-matches its expected address). Turn OFF to fully disable the native hooks (vanilla rendering) if you ever hit instability. Requires an app restart to take effect.")]
+    public bool EnableNativeSkinFixes { get; set; } = true;
+
     // --- Castle Recruitment ---
 
     [SettingPropertyGroup("Castle Recruitment")]

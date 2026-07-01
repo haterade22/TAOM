@@ -37,22 +37,24 @@ Two stacked rosters build the player's kit at CC finalize (see `Main/Features/Ch
 2. **Career override** — `player_career_{culture}_{archetype}_{m|f}` in
    `taom_career_starting_equipment.xml`, merged on top via `Equipment.FillFrom`.
 
-The career layer governs a careered player's kit. It sets weapons (Item0-2), the five armor slots
-(Head/Body/Leg/Gloves/Cape) and, for cavalry, Horse/HorseHarness.
+The career layer governs a careered player's kit — it is applied via `Equipment.FillFrom`, which copies **all 12
+equipment slots**, so it is a *complete replacement*, not an overlay: any slot the career roster omits is emptied
+on the player (it does NOT inherit the culture-default). The career roster sets weapons (Item0-2), chest (Body) +
+legs (Leg), and — for cavalry — Horse/HorseHarness. It deliberately leaves **Head, Cape, and Gloves empty**, so
+the starter kit is chest + legs + weapons only.
 
 ### Starter armor
 
-Dedicated items named `starter_{archetype}_{culture}_{slot}_a` live in each culture folder's
-`LOTRLOME_items/<folder>/starter_armors.xml` (external `LOTRLOME_Armory` module). They are visual clones of the
-culture's own items (mesh/material/cover flags borrowed) with armor re-set to the anchors and **no `value=`**:
+Dedicated items named `starter_{archetype}_{culture}_{body|leg}_a` (chest + boots only) live in each culture
+folder's `LOTRLOME_items/<folder>/starter_armors.xml` (external `LOTRLOME_Armory` module). They are visual clones
+of the culture's own chest/boots items (mesh/material/cover flags borrowed) with armor re-set to the anchors and
+**no `value=`**:
 
-| Archetype | primary armor anchor |
+| Archetype | body/leg armor anchor |
 |---|---|
 | Ranged | ~5 |
 | Cavalry | ~7 |
 | Infantry | ~9 |
-
-Cape/gloves sit a touch below the anchor (minor pieces; capes carry a high value multiplier).
 
 ### Starter weapons
 
@@ -65,8 +67,8 @@ player — an acceptable side effect (a starter-tier weapon worth 6,000 was effe
 
 | Tool | Purpose |
 |---|---|
-| `tools/generate_starter_armor.py` | Author low-stat starter armor (5 slots × 3 archetypes) for the 12 non-Gondor career cultures by cloning each culture's items and stripping/re-setting stats. `--apply` writes `<folder>/starter_armors.xml`; default dry-run. Gondor is hand-tuned, excluded. |
-| `tools/wire_career_starter_armor.py` | Rewire `taom_career_starting_equipment.xml` so every career roster points its five armor slots at the matching `starter_*` items, preserving weapons + mounts. Idempotent. |
+| `tools/generate_starter_armor.py` | Author low-stat starter armor — chest (Body) + legs (Leg) × 3 archetypes — for the 12 non-Gondor career cultures by cloning each culture's chest/boots items and stripping/re-setting stats. `--apply` writes `<folder>/starter_armors.xml`; default dry-run. Gondor is hand-tuned, excluded. |
+| `tools/wire_career_starter_armor.py` | Rewire `taom_career_starting_equipment.xml` so every career roster sets Body + Leg from the matching `starter_*` items and clears Head/Cape/Gloves, preserving weapons + mounts. Idempotent. |
 
 Re-run both after adding a new career culture or changing the anchors (edit `TEMPLATES` in the generator).
 

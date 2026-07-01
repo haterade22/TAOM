@@ -112,11 +112,25 @@ The six byte patterns scanned at boot. Each entry has:
 | `byteOffsetFromMatch` | `int` | Usually `0`. Non-zero when the pattern anchors a unique caller and we offset to the callee. |
 | `historicalRva` | `long long` | v1.3.15 reference RVA, informational only (helps IDA navigation when re-authoring) |
 
-### Current values
+### Current values (Bannerlord v1.4.6 — authored 2026-06-30)
 
-The seven signatures (3 hook targets + 4 helpers) currently ship as
-`<PATTERN_TBD>` placeholders — see "Pattern authoring" below for the workflow
-to fill them in.
+All 7 signatures are authored + statically verified against the installed v1.4.6
+`TaleWorlds.Native.dll` (each is a single match at the RVA below). See the
+"v1.4.6 native port" section below for the method and the RVA/verification map.
+
+| Signature | v1.4.6 RVA | How pinned |
+|-----------|-----------|-----------|
+| `add_skin_meshes_to_agent_entity` (CoversHead) | `0x61C7D0` | interior byte-triangulation (prologue changed + heavy inlining) |
+| `cloth_factory` (HairCloth) | `0x35B0C0` | interior byte-triangulation of the 1.3.15 factory (166 votes); rdx=mesh signature verified |
+| `AddToList` | `0x0C3E90` | cloth_factory call graph (identical prologue) |
+| `GpuInit` | `0x2936E0` | cloth_factory call graph (identical prologue) |
+| `HasClothData` | `0x2C45A0` | cloth_factory call graph (identical prologue) |
+| `NotifyPhysics` | `0x34BA20` | cloth_factory call graph (identical prologue) |
+| `render_list_build` (FaceMeshObserve) | `0x625670` | +0xE0-from-submeshes fingerprint (identical prologue) |
+
+RVAs are informational; the shipped DLL resolves each function by byte-pattern
+scan at boot (survives minor relocation). Re-author per the workflow below when
+porting to a new engine version.
 
 ## Key Files
 
@@ -128,7 +142,9 @@ to fill them in.
 | `Main/Features/NativeSkinFixes/Interop/HairClothHookInterop.cs` | P/Invoke surface for `HairClothHook_Install` / `_Uninstall` |
 | `Main/Features/NativeSkinFixes/Interop/FaceMeshObserveHookInterop.cs` | P/Invoke surface for `FaceMeshObserveHook_Install` / `_Uninstall` |
 | `Dependencies/NativeSkinFixes.NativeHooks/dllmain.cpp` | DLL entry — initializes logger on attach, uninstalls hooks on detach |
-| `Dependencies/NativeSkinFixes.NativeHooks/Signatures.h` | Central registry of byte patterns + historical RVAs |
+| `Dependencies/NativeSkinFixes.NativeHooks/Signatures.h` | Central registry of byte patterns + historical RVAs (v1.4.6 patterns authored 2026-06-30) |
+| `tools/native_sig_author.py` | RE helper that authored the v1.4.6 patterns — RTTI vtable resolution, disasm, IDA-pattern uniqueness scan, rip-relative xref, function-start finder, old→new prologue `diff`, interior byte-triangulation. See "v1.4.6 native port" below. |
+| `Main/Features/TaomSettings.cs` (`EnableNativeSkinFixes`) | MCM toggle "Native Skin Fixes → Enable Native Skin Fixes" gating the install at boot |
 | `Dependencies/NativeSkinFixes.NativeHooks/SignatureScanner.{h,cpp}` | IDA-pattern parser + linear scan over `.text` section |
 | `Dependencies/NativeSkinFixes.NativeHooks/CoversHeadHook.{h,cpp}` | Hook 1: forces `HeadVisible` bit ON so Face_mesh is always created |
 | `Dependencies/NativeSkinFixes.NativeHooks/HairClothHook.{h,cpp}` | Hook 2: rescues orphan cloth at `Face_mesh+0x1A0` + re-enters factory for beard cloth at `+0x108` |
@@ -191,24 +207,110 @@ they stop the regression at the source):
 3. The `validate-xml` CI job (`.github/workflows/build.yml`) re-runs the same
    check on the committed binary.
 
-> The byte-pattern signatures still ship as `<PATTERN_TBD>` placeholders (see
-> "Open follow-ups"), so even once the DLL loads, the hooks stay inert until the
-> patterns are authored. The static-CRT fix is a **prerequisite** — it makes the
-> DLL *loadable* on player machines — not the feature's activation.
+> As of 2026-06-30 all 7 byte patterns are authored for v1.4.6 (see "v1.4.6
+> native port" below), so the static-CRT-linked DLL both loads AND installs its
+> hooks. The static-CRT fix remains a prerequisite for the DLL to load at all.
 
 ## Tests
 
-- `TAOM.Tests/Features/NativeSkinFixes/NativeSkinFixesInstallerTests.cs` — 8
+- `TAOM.Tests/Features/NativeSkinFixes/NativeSkinFixesInstallerTests.cs` — 11
   tests covering the editor-mode skip predicate (null / empty / normal client
-  / editor / mixed case / false-positive guard) and the localization key
-  wiring (key format + non-empty default).
+  / editor / mixed case / false-positive guard), the localization key wiring
+  (key format + non-empty default), and the `EnableNativeSkinFixes` default
+  (pins the MCM master toggle so a refactor can't silently change it).
 
 The native interop layer (LoadLibrary, GetProcAddress, MinHook trampoline
 install, byte-pattern scan against the live `TaleWorlds.Native.dll` image)
 cannot be unit-tested — it requires a hosted Bannerlord process. Verify these
 manually via the live-game checklist below.
 
+## v1.4.6 native port (2026-06-30)
+
+The port from the v1.3.15 reference to the installed v1.4.6 build, and the
+tooling + hard-won lessons behind it. Context: TAOM was crashing / infinite-
+loading into battle because a hand-built DLL carried v1.4.0-era offsets against
+the v1.4.6 engine. All 7 targets were re-derived from scratch against the
+installed `TaleWorlds.Native.dll`.
+
+### The toolkit: `tools/native_sig_author.py`
+
+No IDA/Ghidra was used — a scripted `capstone` + `pefile` helper did the work
+(subcommands): `rtti <name>` (resolve a class's vtable RVA from its RTTI type
+descriptor), `vtable <name>` (dump vtable slots), `disasm <rva>`, `scan
+"<pattern>"` (IDA-pattern uniqueness test — same semantics as the C++ scanner),
+`fxref <rva>` (fast rip-relative/`E8` xref), `funcstart <rva>` (int3-padding
+boundary), `diff --old <dll>` (capture old prologues + scan the new DLL), and
+the interior-triangulation logic used inline for the two hard functions. Point
+it at the installed client DLL (its default) or `--dll <path>`.
+
+### Methods that worked (and the order to try them)
+
+1. **RTTI-anchored offset verification.** `Face_mesh` and
+   `rglCloth_simulator_component` both keep RTTI type names in v1.4.6, so their
+   vtables resolve directly. Every struct offset + vtable index the hooks use
+   was proven against them — e.g. `Face_mesh vtable[0xA0]` = `mov eax,6;ret`
+   (the type discriminator), `vtable[0xA8]` reads `[+0x1A0]` (cloth), cloth
+   `vtable[0x1F0]` writes the scene to `[+0x28]`, `vtable[0xF0]` forwards via
+   `[+0x48]` (renderable). The cloth/Face_mesh layout is STABLE v1.3.15→v1.4.6.
+2. **Prologue diff** (`diff --old`). 5 of 7 targets have BYTE-IDENTICAL
+   prologues in the genuine v1.3.15 DLL (AddToList/GpuInit/HasClothData/
+   NotifyPhysics/render_list_build) — a pattern from either build matches both.
+3. **Interior byte-triangulation** for the 2 functions whose prologues changed
+   (`cloth_factory`, `add_skin_meshes`). Build a wildcarded byte-stream of the
+   whole 1.3.15 function, slide a 40-byte window across it, scan each window in
+   the new DLL, and for every window that matches exactly once compute
+   `newRVA − windowOffset` — the mode of that value is the new function start.
+   `add_skin_meshes` got 22 votes → `0x61C7D0`; the `cloth_factory` RCA below
+   got 166.
+
+### RCA: the shared-body sibling (why the first deploy threw)
+
+The first v1.4.6 deploy hooked `0x35AF00` as `cloth_factory` — identified by its
+body replicating the hook's cloth-registration writes (type dispatch,
+`+0x1E8/+0x208` lists, cloth-ctor call). **It was the wrong function.** `0x35AF00`
+is an ADJACENT SIBLING that shares that registration body but takes `rdx` as a
+BYTE FLAG (`movzx r14d,dl`), not the mesh pointer. In-game, the HairCloth
+post-process received `rdx` values like `0x18`/`0xD`/`0x1D` (indices) where it
+expected a `Face_mesh*` → per-call access violation. The SEH `__except` caught
+every one (no CTD, game playable) but the feature did nothing and spammed
+`sample-AV` log lines.
+
+The real factory is `0x35B0C0`: it does `mov rbx,rdx; mov rax,[rdx];
+call[rax+0x28]` then `mov rax,[rbx]; call[rax+0xA0]` — it DEREFERENCES `rdx` as
+the mesh and dispatches on its type, the exact `(rcx=factory, rdx=mesh)`
+signature the hook needs. It was pinned by interior triangulation of the 1.3.15
+factory (166 votes), its prologue is byte-identical to 1.3.15 (the prologue
+never changed — the earlier "changed prologue" note had compared the wrong
+sibling), and all 12 factory-struct offsets match 1.3.15 (96% whole-body
+overlap).
+
+**LESSON (recorded in `Signatures.h` + LESSONS-LEARNED): a shared-body sibling
+defeats structural body-matching. Pin by interior triangulation, and ALWAYS
+verify the ARGUMENT SIGNATURE (which register is the pointer you dereference),
+not just that the body looks right.** After this, all three hooks' signatures
+were re-checked: `cloth_factory` rcx=factory/rdx=mesh, `add_skin_meshes`
+rcx=AgentVisuals/rdx=SkinGenParams\* (writes `[rdx]|=1`), `render_list_build`
+rcx=Face_mesh — the last two were correct, which is why only HairCloth threw.
+
+### Safety rails (added with the port)
+
+- **MCM master toggle** `EnableNativeSkinFixes` (`TaomSettings`), gated in
+  `SubModule.OnBeforeInitialModuleScreenSetAsRoot`, fail-closed if MCM isn't
+  ready. Default ON for verified v1.4.6; flip OFF to fully disable.
+- **Required-cloth-pair all-or-nothing.** HairCloth + FaceMeshObserve are a
+  coupled pair (FaceMeshObserve suppresses the static hair HairCloth animates);
+  if either fails to resolve, ALL hooks roll back (no lone-hook half-state).
+  CoversHead is structurally optional — its failure never rolls back the pair —
+  so a future engine bump that breaks only its pattern still ships the cloth fix.
+- The scanner is **fail-closed**: a pattern miss (or `<PATTERN_TBD>` stub) → the
+  hook doesn't install, never a wrong-address hook.
+
 ## How to author the byte patterns (when a Bannerlord patch breaks scanning)
+
+> The fastest path is now `tools/native_sig_author.py` (see "v1.4.6 native port"
+> above) rather than a manual IDA session — especially `diff --old <old-dll>`
+> plus interior triangulation for functions whose prologue changed. The manual
+> IDA workflow below still applies if you prefer it.
 
 The signatures ship as `<PATTERN_TBD>` placeholders. When the scanner can't
 find a target, the corresponding hook logs `"... pattern did not match
@@ -286,24 +388,36 @@ practice (only `CoversHeadHook` writes, and only during AgentVisuals init).
 
 ## Changelog
 
+- 2026-06-30 — feat: author + verify all 7 byte patterns for **Bannerlord v1.4.6** and activate the feature (RTTI-anchored disassembly + interior byte-triangulation via `tools/native_sig_author.py`; no IDA). Added the `EnableNativeSkinFixes` MCM toggle (default ON) + required-cloth-pair all-or-nothing install. RCA in-line: the first deploy hooked a shared-body SIBLING of the cloth factory (`0x35AF00`, rdx=byte-flag) instead of the real `0x35B0C0` (rdx=mesh) → per-call SEH-caught AVs; fixed by triangulating the 1.3.15 factory (166 votes) and verifying the argument signature. **In-game confirmed** (v1.4.6.115628): full battle stable ~20 min, all 7 resolved, zero `sample-AV`.
 - 2026-06-18 — fix: ship a static-CRT DLL (`/MTd`) so the native DLL loads for players instead of failing with `LoadLibrary` Win32 error 126; documented the Build & CRT requirement (the byte-pattern signatures still ship as `<PATTERN_TBD>` placeholders).
 - 2026-05-26 — feat: adopt + port NativeSkinFixes into TAOM (v1.4.5, in-repo, pattern-scanning) — C++ source vendored under `Dependencies/NativeSkinFixes.NativeHooks/`, C# wrapper inlined into `TAOM.dll`, hardcoded RVAs replaced with byte-pattern scanning, unified logging, boot banner, and 8 installer unit tests.
 - 2026-04-10 — feat: fork the community NativeSkinFixes mod into TAOM — covers_head morph (jazz-hands) fix + hair/beard cloth physics via a C++ native DLL with 3 MinHook detours and a C# P/Invoke interop layer (7 RVAs verified against Bannerlord v1.4.0).
 
 ## GitHub Issue
 
-- **Issue:** TODO — create on next session via `/issue feature "Adopt NativeSkinFixes into TAOM (v1.4.5 port, in-repo)"`
-- **Status:** Open (scaffolding shipped 2026-05-26; v1.4.5 byte patterns
-  pending an IDA session)
+- **Issue:** TODO — create via `/issue feature "NativeSkinFixes v1.4.6 native port (all 7 patterns authored + verified)"`
+- **Status:** v1.4.6 patterns authored + verified 2026-06-30. In-game confirmed
+  same day (v1.4.6.115628): a full battle ran ~20 min, all 3 hooks installed,
+  all 7 resolved at expected RVAs (`cloth_factory` at the corrected `0x35B0C0`),
+  **zero `sample-AV`**. Stability confirmed; the cloth-rescue visual is not yet
+  observed (see follow-up).
 
 ## Open follow-ups
 
-The seven signatures ship as `<PATTERN_TBD>` placeholders — the scanner
-architecture and harness are reviewed-and-verified, but the patterns need to
-be authored by disassembling `TaleWorlds.Native.dll` v1.4.5 (see "Pattern
-authoring" above). Until then the C++ side reports "pattern not authored for
-this build (stub)" and the hooks stay inert. Game runs vanilla in the
-meantime — no crash, just no fix.
+- **Observe the cloth-physics effect on cloth-hair troops.** Stability is
+  confirmed (zero AVs, battle stable), but the verification battle (looters +
+  Gondor line) had no cloth-flagged hair/beard, so the hook fired without
+  finding anything to rescue (no `sample-processing`/`sample-success` lines).
+  Fight a **Rohan / elf / Dale** battle to see the hook actually register hair/
+  beard cloth (the log should then show `sample-processing` with real Face_mesh
+  pointers + `sample-success`), and to visually confirm the animated cloth.
+- **CoversHead `+0x830` exactness.** `add_skin_meshes` is confirmed
+  (`0x61C7D0`) and its mask write (`+0x00` bit 0x01) is verified. The
+  `AgentVisuals+0x830` Face_mesh pointer read is verified in-bounds (the struct
+  extends to `+0x8D0`) and is read-only (fed to a tracking set), so a slight
+  mismatch is cosmetic at worst — but the exact field hasn't been traced to a
+  callee write. Confirm the render suppression works in-game before relying on
+  the covers_head fix visually.
 
 ---
 
