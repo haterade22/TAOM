@@ -395,7 +395,7 @@ practice (only `CoversHeadHook` writes, and only during AgentVisuals init).
 
 ## GitHub Issue
 
-- **Issue:** TODO — create via `/issue feature "NativeSkinFixes v1.4.6 native port (all 7 patterns authored + verified)"`
+- **Issue:** [#304](https://github.com/haterade22/TAOM/issues/304) — NativeSkinFixes: Bannerlord v1.4.6 native port (all 7 hooks authored + verified). Closed 2026-06-30.
 - **Status:** v1.4.6 patterns authored + verified 2026-06-30. In-game confirmed
   same day (v1.4.6.115628): a full battle ran ~20 min, all 3 hooks installed,
   all 7 resolved at expected RVAs (`cloth_factory` at the corrected `0x35B0C0`),
