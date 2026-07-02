@@ -29,9 +29,9 @@ public class ElephantMissionBehavior : MissionLogic
     private readonly IElephantAttackService _service;
     private readonly IModLogger _logger;
     private readonly HashSet<string> _loggedErrors = new();
-    // Shadow list of attached BT components, for dead-agent pruning. The engine's Agent.Tick auto-ticks each
-    // component (v1.4.5) — we never tick them manually; we only drop dead elephants from this list.
-    private readonly List<(Agent agent, BehaviorTreeAgentComponent comp)> _elephantComponents = new();
+    // Attach/prune bookkeeping (shadow list, dedup, late-attach counting) — shared tracker,
+    // see CreatureTreeTracker for the discipline notes.
+    private readonly CreatureTreeTracker _tracker;
     private bool _initialized;
     private bool _treesAdded;
 
@@ -39,6 +39,8 @@ public class ElephantMissionBehavior : MissionLogic
     {
         _service = IoC.Resolve<IElephantAttackService>();
         _logger = IoC.Resolve<IModLogger>();
+        _tracker = new CreatureTreeTracker("ElephantTree", "[Elephant]",
+            a => _service.IsCreatureMonster(a.Monster?.StringId), _logger);
     }
 
     public override void OnAgentBuild(Agent agent, Banner banner)
@@ -47,7 +49,7 @@ public class ElephantMissionBehavior : MissionLogic
 
         // Late-spawn BT attach: only after Initialize has registered "ElephantTree" (first OnMissionTick).
         // Elephants that built before that are caught by the first-tick scan in OnMissionTick.
-        if (_treesAdded) TryAttachElephantTree(agent);
+        if (_treesAdded) _tracker.TryLateAttach(agent);
 
         // Howdah: when the mahout rider builds (human, mounted on an elephant, wearing sk_elephant_armor_a),
         // instantiate the howdah seat entity above the elephant's neck. Clean-room port of the upstream
@@ -216,17 +218,13 @@ public class ElephantMissionBehavior : MissionLogic
             if (!_treesAdded)
             {
                 _treesAdded = true;
-                int count = 0;
-                foreach (Agent a in Mission.Current.AllAgents)
-                    if (TryAttachElephantTree(a)) count++;
+                int count = _tracker.AttachAll(Mission.Current.AllAgents);
                 _logger.LogInfo($"[Elephant] Attached behavior trees to {count} elephant(s)");
             }
 
             // Prune dead elephants from the shadow list. Agent.Tick auto-ticks each BT component (v1.4.5) —
             // there is no manual tick here; we only drop dead elephants so the list doesn't grow unbounded.
-            for (int i = _elephantComponents.Count - 1; i >= 0; i--)
-                if (!_elephantComponents[i].agent.IsActive())
-                    _elephantComponents.RemoveAt(i);
+            _tracker.PruneDead();
         }
         catch (Exception ex)
         {
@@ -236,28 +234,9 @@ public class ElephantMissionBehavior : MissionLogic
         }
     }
 
-    // Attaches an ElephantBehaviorTree component to the agent if it is an elephant not already tracked.
-    // Returns true when a tree was newly attached. Safe to call before/after the first-tick scan (de-duplicates).
-    private bool TryAttachElephantTree(Agent agent)
-    {
-        if (agent == null || !_service.IsCreatureMonster(agent.Monster?.StringId)) return false;
-        for (int i = 0; i < _elephantComponents.Count; i++)
-            if (_elephantComponents[i].agent == agent) return false;   // already attached
-
-        var comp = new BehaviorTreeAgentComponent(agent, "ElephantTree", Array.Empty<object>());
-        agent.AddComponent(comp);
-        if (comp.Tree != null)
-        {
-            _elephantComponents.Add((agent, comp));
-            return true;
-        }
-        _logger.LogError($"[Elephant] BT build failed for {agent.Name} (Rider={agent.RiderAgent?.Name ?? "null"})");
-        return false;
-    }
-
     public override void OnRemoveBehavior()
     {
-        _elephantComponents.Clear();
+        _tracker.Clear();
         base.OnRemoveBehavior();
     }
 }

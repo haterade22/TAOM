@@ -2,6 +2,18 @@
 
 ## 2026-07-01
 
+### refactor(advanced-combat): extract shared CreatureTreeTracker from the three cloned creature MissionBehaviors
+
+Spider/Elephant/Mûmakil MissionBehaviors each carried an identical ~40-line attach/prune block (shadow component
+list, dedup TryAttach keyed on the Monster predicate, first-tick scan, late-spawn attach, dead-agent pruning) —
+and the copies had already drifted: Spider/Mûmakil gained late-attach telemetry the elephant copy never did. The
+bookkeeping now lives once in `Main/Features/AdvancedCombat/CreatureTreeTracker.cs`; the three behaviors keep
+their own log tags, Armory-drift guards, and feature-specific work (howdah, summaries). Two deliberate log-only
+deltas: the elephant gains the late-attach counter + first-late log (drift repair), and all three share the
+tracker's build-failed message shape. The warg keeps its own wiring (different predicate mechanism + wording +
+extra infra — forcing it in fails the simplicity bar). Boundary code, game-tested per ADR-008. Round-2 target R4.
+Branch: `refactor/round2-cleanups`.
+
 ### test(behavior-trees): characterization tests for the inlined BT builder (zero coverage before)
 
 The vendored-then-inlined `BehaviorTrees` builder (`Main/BehaviorTrees/BehaviorTreesCore.cs`) is load-bearing for
