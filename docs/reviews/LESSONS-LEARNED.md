@@ -1102,3 +1102,13 @@ When porting a native hook target to a new engine build, a structural body-match
 - **Why missed:** The v1.4.6 NativeSkinFixes port pinned `cloth_factory` at `0x35AF00` because its body replicated the HairCloth hook's exact cloth-registration writes (type dispatch, `+0x1E8/+0x208` lists, cloth-ctor call). But `0x35AF00` is an adjacent sibling that shares that body and takes `rdx` as a BYTE FLAG (`movzx r14d,dl`), not the mesh pointer the 1.3.15 factory (and our hook) expect. In-game the hook received `rdx` = small integers (0x18/0xD/0x1D) where it dereferenced a `Face_mesh*` → per-call AV. The SEH caught them (no CTD) but the feature was inert and spammed `sample-AV`. The real factory `0x35B0C0` does `mov rax,[rdx]; call[rax+0x28]` — it dereferences `rdx` as the mesh. Static verification (patterns single-match at expected RVAs, offsets confirmed) all PASSED for the wrong function, because I never verified the calling signature.
 - **Prevent:** (1) For every hook target, add a one-line "signature" assertion to the disasm workflow: which arg register is dereferenced first, and is it the pointer type the hook casts it to? (2) Reach for interior triangulation, not single-point structural matching, whenever a build changes prologues (`tools/native_sig_author.py` has both). (3) Treat "all 7 patterns single-match at expected RVAs" as necessary-not-sufficient — the definitive gate is the in-game log showing `sample-processing` with real pointers, never `sample-AV`. The `Signatures.h` comment for `cloth_factory` carries the full RCA.
 - **Source:** `docs/features/native-skin-fixes.md` ("v1.4.6 native port" → RCA) + `Dependencies/NativeSkinFixes.NativeHooks/Signatures.h` (kClothFactory comment), 2026-06-30.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/race-age-system.md](../features/race-age-system.md)
+
+<!-- backlinks-end -->

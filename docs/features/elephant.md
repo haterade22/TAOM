@@ -774,6 +774,7 @@ bump as of 2026-06-12.
 
 - [docs/ai-includes/creature-animation-blender-mcp-workflow.md](../ai-includes/creature-animation-blender-mcp-workflow.md)
 - [docs/ai-includes/creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md)
+- [docs/features/mumakil.md](./mumakil.md)
 - [docs/features/spider.md](./spider.md)
 - [docs/features/volunteer-recruitment.md](./volunteer-recruitment.md)
 - [docs/INDEX.md](../INDEX.md)

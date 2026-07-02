@@ -117,3 +117,13 @@ unification (#305) the formerly-cloned internals are SHARED:** `MumakilAttackSer
 Platform crew (archers on the war-tower) — deferred for the same physics-contact reason the elephant howdah crew is
 disabled (force-spawned crew inside the mount collision capsule cause the "slide"). Re-enabling requires the
 crew↔mount collision fix (shared `FaceGroupId`). See [elephant.md](elephant.md) "Slide root-cause isolation".
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/elephant.md](./elephant.md)
+
+<!-- backlinks-end -->
