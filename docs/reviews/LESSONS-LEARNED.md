@@ -372,6 +372,12 @@ When a refactor renames/moves/deletes types, folders, or public methods, grep th
 - **Prevent:** the refactoring-specialist agent's Method now includes a mandatory step 6 "Documentation sweep" (grep old identifiers repo-wide with no file-type filter; classify hits living-vs-historical; update living, leave historical). Orchestrator-led refactors follow the same step. The `/deep-review` completeness agent's stale-doc check (added this session) is the backstop.
 - **Source:** docs/reviews/rca-refactor-stack-2026-07-01.md
 
+### A commit message's claimed deltas are part of the diff — verify each one before committing
+When a commit message or CHANGELOG entry claims a deliberate behavioral delta ("X now also logs Y", "gains Z"), grep the staged diff for each claimed delta before committing. Refactor review discipline points one way only (hunt *unintended* changes in moved code); nothing checks that *promised* changes actually landed, so a half-delivered intent ships as a documented lie.
+- **Why missed:** round-2 R4 (2026-07-01) claimed "the elephant gains the late-attach counter + first-late log" — the mid-mission half was wired but the mission-end summary (present in the Spider/Mûmakil siblings) was not. The claim was written from intent, not read back from the diff. Caught by the deep-review standards + wiring-parity agents comparing the three behaviors side-by-side.
+- **Prevent:** treat claimed deltas like claimed counts/hashes under `evidence-over-claims.md` §C — produce them FROM the diff. For sibling-parity refactors, diff the siblings against each other at the same call sites, not just new-vs-old per file.
+- **Source:** docs/reviews/rca-round2-cleanups-2026-07-01.md
+
 ## Misc
 
 ### Confirm a cumulative-isolation suspect with a single-variable control

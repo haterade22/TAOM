@@ -236,7 +236,11 @@ public class ElephantMissionBehavior : MissionLogic
 
     public override void OnRemoveBehavior()
     {
+        if (_treesAdded)
+            _logger.LogInfo($"[Elephant] Mission end: {_tracker.LateAttachCount} tree(s) late-attached, {_tracker.AliveCount} elephant(s) alive at end");
         _tracker.Clear();
+        // Clear error dedup so a fresh mission can re-log genuinely new occurrences (spider/mumakil parity).
+        _loggedErrors.Clear();
         base.OnRemoveBehavior();
     }
 }

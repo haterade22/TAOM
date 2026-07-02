@@ -2,6 +2,15 @@
 
 ## 2026-07-01
 
+### fix(elephant)+review(round2): deliver the promised mission-end telemetry + round-2 RCA
+
+Round-2 deep review (5 dimensions + adversarial verification): behavior preservation, efficiency, and wiring
+parity all clean; one confirmed finding — R4's claimed "elephant gains late-attach telemetry" was only
+half-delivered (mid-mission first-late log wired, mission-end summary missing). Fixed:
+`ElephantMissionBehavior.OnRemoveBehavior` now emits the Spider/Mûmakil-parity summary and clears the error
+dedup. RCA: `docs/reviews/rca-round2-cleanups-2026-07-01.md`; new LESSONS-LEARNED rule — a commit message's
+claimed deltas are part of the diff, verify each before committing. Issues #309-#312 cover round 2.
+
 ### refactor(advanced-combat): extract shared CreatureTreeTracker from the three cloned creature MissionBehaviors
 
 Spider/Elephant/Mûmakil MissionBehaviors each carried an identical ~40-line attach/prune block (shadow component
