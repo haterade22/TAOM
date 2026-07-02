@@ -17,6 +17,11 @@ public class BasicTableauRaceGuard : IBasicTableauRaceGuard
 
     private static readonly HashSet<int> TableauSafeRaces = new HashSet<int> { HumanBaseRace };
 
-    public int ResolveSafeRace(int race) =>
+    // TEMP-URUK-TABLEAU-TEST: pass-through so the Load Game preview feeds the REAL race to the
+    // agentless native build — empirically decides whether uruk heads AV like dwarf heads (#295)
+    // or render fine (race-correct-preview plan, decision gate A vs B). DO NOT COMMIT.
+    public int ResolveSafeRace(int race) => race;
+
+    private int ResolveSafeRaceProduction(int race) =>
         TableauSafeRaces.Contains(race) ? race : HumanBaseRace;
 }
