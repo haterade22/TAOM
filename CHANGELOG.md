@@ -2,6 +2,15 @@
 
 ## 2026-07-02
 
+### refactor(special-resources): unify the three earning-notification blocks
+
+`SpecialResourcesBehavior` carried three near-identical resolve→guard→display blocks (`NotifyEarning`,
+`NotifyEarningDelta`, and an inline copy in `OnMapEventEnded`). One `NotifyEarning(..., float? before = null)`
+helper now covers all earning toasts (null = running-total display; non-null = positive-delta-only). Deliberate
+display-only wording change, verified in the diff: the victory toast reads "+N X from victory" (was "+N X earned
+from victory"), matching the other delta toasts. Round-4 micro-cleanup O1; display text only, no service logic
+touched. Branch: `refactor/round4-micro-cleanups`.
+
 ### chore(research-infra): decompile dump refreshed to v1.4.6 — category tree no longer lags installed
 
 The `E:\Decompiled_Bannerlord\` category browse tree (Campaign/, MountAndBlade/, …) was still the v1.4.5

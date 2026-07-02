@@ -255,7 +255,6 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
             var playerCount = hero.PartyBelongedTo?.MemberRoster?.TotalManCount ?? 1;
             var ratio = (float)enemyCount / playerCount;
 
-            var resource = _service.ResolveResource(kingdomId, cultureId);
             var before = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
 
             if (mapEvent.IsSiegeAssault || mapEvent.IsSiegeOutside)
@@ -263,17 +262,9 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
             else
                 _service.EarnFromBattle(hero.StringId, kingdomId, cultureId, ratio);
 
-            if (resource != null)
-            {
-                var after = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
-                var earned = after - before;
-                if (earned > 0f)
-                {
-                    InformationManager.DisplayMessage(new InformationMessage(
-                        $"+{earned:F0} {resource.DisplayName} earned from victory",
-                        Colors.Green));
-                }
-            }
+            // Deliberate display-only wording change (round-4 O1): "+N X from victory"
+            // (was "+N X earned from victory") — unified with the other delta toasts.
+            NotifyEarning(hero.StringId, kingdomId, cultureId, "victory", before);
         }
     }
 
@@ -302,7 +293,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         {
             var before = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
             _service.EarnFromPrisoners(hero.StringId, kingdomId, cultureId, count);
-            NotifyEarningDelta(kingdomId, cultureId, hero.StringId, before, "prisoners");
+            NotifyEarning(hero.StringId, kingdomId, cultureId, "prisoners", before);
         }
     }
 
@@ -343,24 +334,25 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         _service.ChargeRecruitCost(hero.StringId, kingdomId, cultureId, character.StringId, count);
     }
 
-    private void NotifyEarning(string heroId, string kingdomId, string cultureId, string source)
+    // Unified earning toast (round-4 O1 — was NotifyEarning + NotifyEarningDelta + an inline copy in
+    // OnMapEventEnded): resolves the hero's resource, then displays either the running total
+    // (before == null — sources whose earn call has no readable delta) or the positive delta earned
+    // across the earn call (before != null; non-positive deltas stay silent).
+    private void NotifyEarning(string heroId, string kingdomId, string cultureId, string source, float? before = null)
     {
         var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
         var amount = _service.GetCurrentAmount(heroId, kingdomId, cultureId);
-        InformationManager.DisplayMessage(new InformationMessage(
-            $"{resource.DisplayName} earned from {source} (total: {amount:F0})",
-            Colors.Green));
-    }
+        if (before == null)
+        {
+            InformationManager.DisplayMessage(new InformationMessage(
+                $"{resource.DisplayName} earned from {source} (total: {amount:F0})",
+                Colors.Green));
+            return;
+        }
 
-    private void NotifyEarningDelta(string kingdomId, string cultureId, string heroId, float before, string source)
-    {
-        var resource = _service.ResolveResource(kingdomId, cultureId);
-        if (resource == null) return;
-
-        var after = _service.GetCurrentAmount(heroId, kingdomId, cultureId);
-        var earned = after - before;
+        var earned = amount - before.Value;
         if (earned > 0f)
         {
             InformationManager.DisplayMessage(new InformationMessage(
