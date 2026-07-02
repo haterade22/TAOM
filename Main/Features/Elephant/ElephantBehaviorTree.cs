@@ -3,28 +3,30 @@ using BehaviorTrees;
 using BehaviorTreeWrapper.BlackBoardClasses;
 using BehaviorTreeWrapper.Tasks;
 using TAOM.Features.AdvancedCombat.BaseBehaviorTree;
-using TAOM.Features.Elephant.BehaviorTreeElements;
+using TAOM.Features.ElephantLike;
+using TAOM.Features.ElephantLike.BehaviorTreeElements;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.Elephant;
 
 /// <summary>
 /// Behavior tree for the AI war-elephant — the warg's per-agent BT pattern (see <c>WargBehaviorTree</c>) applied
-/// to the elephant. Built per elephant by <see cref="ElephantMissionBehavior"/> via a
-/// <c>BehaviorTreeAgentComponent</c>; the engine auto-ticks it each frame.
+/// to the elephant, built from the SHARED elephant-like nodes bound to <see cref="ElephantCombat.Profile"/>.
+/// Built per elephant by <see cref="ElephantMissionBehavior"/> via a <c>BehaviorTreeAgentComponent</c>; the
+/// engine auto-ticks it each frame.
 ///
 /// Attack model (2026-06-10, replaces the upstream pack's random per-tick roll): when a live enemy is in front of the tusks,
 /// the elephant fires the TRAMPLE if off cooldown (10s, priority); otherwise a LEFT/RIGHT tusk swing picked by
 /// the enemy's bearing if the side-attack cooldown (4s) allows; otherwise the tree idles and the engine's regular
 /// mount AI (rider cavalry AI + native charge) simply continues — the BT only layers attacks on top of it.
-/// The "already mid-attack-animation" gate inside <see cref="EnemyInTrampleRangeDecorator"/> prevents chaining
+/// The "already mid-attack-animation" gate inside <see cref="ElephantLikeEngageDecorator"/> prevents chaining
 /// a swing into a playing trample.
 ///
-/// Blackboard: cooldown stamps + target bearing (<see cref="IBTElephantBlackboard"/>) shared across the nodes;
+/// Blackboard: cooldown stamps + target bearing (<see cref="IBTElephantLikeBlackboard"/>) shared across the nodes;
 /// the rider is read off <c>Agent.RiderAgent</c> in the leaves, as the warg does. Phase 2 (player-triggered
 /// trample, enrage/charge) slots in as new branches under "has rider" without disturbing these.
 /// </summary>
-public class ElephantBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTElephantBlackboard
+public class ElephantBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTElephantLikeBlackboard
 {
     public BTBlackboardValue<Agent> Agent { get; set; }
     public BTBlackboardValue<DateTime?> TrampleLastFired { get; set; }
@@ -45,17 +47,18 @@ public class ElephantBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTElephant
     public static new BehaviorTree BuildTree(object[] objects)
     {
         if (objects[0] is not Agent agent) return null;
+        var profile = ElephantCombat.Profile;
         return StartBuildingTree(new ElephantBehaviorTree(agent))
             .AddSelector("main")
                 .AddSelector("has rider", new HasRiderDecorator())
                     .AddSelector("ai controlled", new IsAiControlledDecorator())
-                        .AddSelector("enemy in range", new EnemyInTrampleRangeDecorator())
-                            .AddSequence("trample", new AttackOffCooldownDecorator(ElephantAttackKind.Trample, ElephantConfig.TrampleCooldownSeconds))
-                                .AddTask(new ElephantTrampleTask())
+                        .AddSelector("enemy in range", new ElephantLikeEngageDecorator(profile))
+                            .AddSequence("trample", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.Trample, ElephantConfig.TrampleCooldownSeconds))
+                                .AddTask(new ElephantLikeTrampleTask(profile))
                                 .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))     // settle before next eval
                             .Up()
-                            .AddSequence("side attack", new AttackOffCooldownDecorator(ElephantAttackKind.SideAttack, ElephantConfig.SideAttackCooldownSeconds))
-                                .AddTask(new ElephantSideAttackTask())
+                            .AddSequence("side attack", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.SideAttack, ElephantConfig.SideAttackCooldownSeconds))
+                                .AddTask(new ElephantLikeSideAttackTask(profile))
                                 .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))
                             .Up()
                         .Up()                                                     // both on cooldown → falls through

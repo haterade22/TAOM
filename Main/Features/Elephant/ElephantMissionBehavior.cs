@@ -19,8 +19,8 @@ namespace TAOM.Features.Elephant;
 /// (<see cref="TAOM.Features.Warg.WargMissionBehavior"/>) applied to the elephant. The tree drives the auto-trample
 /// (a behavioral 1-for-1 of the upstream pack's <c>OnTickAsAI</c>): an AI-ridden elephant occasionally plays an attack animation
 /// and deals a radial knockdown to enemies within <see cref="ElephantConfig.TrampleRadius"/>. The pure gate + damage
-/// formula live in <see cref="IElephantAttackService"/> (unit-tested); the engine work lives in the BT leaf nodes
-/// (<c>EnemyInTrampleRangeDecorator</c> + <c>ElephantTrampleTask</c>). This behavior also instantiates the howdah
+/// formula live in <see cref="IElephantAttackService"/> (unit-tested); the engine work lives in the SHARED BT leaf
+/// nodes (<c>ElephantLikeEngageDecorator</c> + <c>ElephantLikeTrampleTask</c>). This behavior also instantiates the howdah
 /// when the mahout builds (see <see cref="TryInstantiateHowdah"/>). The rider/ai-controlled branch structure is the
 /// foundation for richer creature AI — player-triggered trample, enrage/charge — in later phases.
 /// </summary>
@@ -59,7 +59,7 @@ public class ElephantMissionBehavior : MissionLogic
     private void TryInstantiateHowdah(Agent agent)
     {
         if (agent == null || !agent.IsHuman || agent.MountAgent == null) return;
-        if (!_service.IsElephantMonster(agent.MountAgent.Monster?.StringId)) return;
+        if (!_service.IsCreatureMonster(agent.MountAgent.Monster?.StringId)) return;
 
         try
         {
@@ -198,7 +198,7 @@ public class ElephantMissionBehavior : MissionLogic
         // Armory-drift guard: the attack clip names live in the EXTERNAL LOTRLOME action_types.xml and
         // ActionIndexCache resolves eagerly — a rename there silently yields act_none, and playing act_none on
         // channel 0 kills the locomotion cycle (the "slide" bug that shipped 2026-06-09). Detect at mission start.
-        if (BehaviorTreeElements.ElephantAttackActions.AnyUnresolved())
+        if (ElephantCombat.Profile.AnyUnresolved())
             _logger.LogError(
                 "[Elephant] One or more attack actions resolved to act_none — LOTRLOME action_types drift? " +
                 $"Expected {ElephantConfig.TrampleActionName}/{ElephantConfig.SideAttackLeftActionName}/" +
@@ -240,7 +240,7 @@ public class ElephantMissionBehavior : MissionLogic
     // Returns true when a tree was newly attached. Safe to call before/after the first-tick scan (de-duplicates).
     private bool TryAttachElephantTree(Agent agent)
     {
-        if (agent == null || !_service.IsElephantMonster(agent.Monster?.StringId)) return false;
+        if (agent == null || !_service.IsCreatureMonster(agent.Monster?.StringId)) return false;
         for (int i = 0; i < _elephantComponents.Count; i++)
             if (_elephantComponents[i].agent == agent) return false;   // already attached
 

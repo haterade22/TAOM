@@ -3,19 +3,23 @@ using BehaviorTreeWrapper.BlackBoardClasses;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace TAOM.Features.Mumakil.BehaviorTreeElements;
+namespace TAOM.Features.ElephantLike.BehaviorTreeElements;
 
 /// <summary>
-/// Engage gate for the Mûmakil attack branches: passes when a live enemy is within
-/// <see cref="MumakilConfig.TrampleTriggerRange"/> in front of the beast and it is not already mid-attack. On a
-/// passing scan it writes the best enemy's signed bearing to the blackboard so <see cref="MumakilSideAttackTask"/>
-/// can pick the matching left/right swing. The pure decision is <see cref="IMumakilAttackService.ShouldEngage"/>;
-/// this is boundary code (touches Mission/Agent directly). 1-for-1 with the elephant's engage decorator.
+/// Engage gate for the elephant-like attack branches: passes when a live enemy is within the profile's
+/// <see cref="ElephantLikeCombatProfile.TrampleTriggerRange"/> in front of the creature and the creature is not
+/// already mid-attack. On a passing scan it writes the best enemy's signed bearing to the blackboard so
+/// <see cref="ElephantLikeSideAttackTask"/> can pick the matching left/right swing. The pure decision is
+/// <see cref="IElephantLikeAttackService.ShouldEngage"/>; this is boundary code (touches Mission/Agent directly),
+/// like the warg's target-scan decorators. The 2026-06-10 cooldown rework removed the upstream pack's per-tick
+/// probability roll — the AttackOffCooldownDecorator branches downstream are the rate limiter now, and the scan
+/// cadence is bounded by the idle SleepTask sibling in the tree (warg's NoEnemyCloseDecorator economics).
 /// </summary>
-public class MumakilEngageDecorator : BTReturnFalseDecorator, IBTBannerlordBase, IBTMumakilBlackboard
+public class ElephantLikeEngageDecorator : BTReturnFalseDecorator, IBTBannerlordBase, IBTElephantLikeBlackboard
 {
     private readonly MBList<Agent> _scratch = new();
-    private IMumakilAttackService _service;
+    private readonly ElephantLikeCombatProfile _profile;
+    private IElephantLikeAttackService _service;
 
     private BTBlackboardValue<Agent> _agent;
     private BTBlackboardValue<System.DateTime?> _trampleLastFired;
@@ -26,29 +30,31 @@ public class MumakilEngageDecorator : BTReturnFalseDecorator, IBTBannerlordBase,
     public BTBlackboardValue<System.DateTime?> SideAttackLastFired { get => _sideAttackLastFired; set => _sideAttackLastFired = value; }
     public BTBlackboardValue<float> TargetBearing { get => _targetBearing; set => _targetBearing = value; }
 
+    public ElephantLikeEngageDecorator(ElephantLikeCombatProfile profile) => _profile = profile;
+
     public override bool Evaluate()
     {
-        Agent mumakil = Agent.GetValue();
-        if (mumakil == null || !mumakil.IsActive()) return false;
-        Agent rider = mumakil.RiderAgent;
+        Agent creature = Agent.GetValue();
+        if (creature == null || !creature.IsActive()) return false;
+        Agent rider = creature.RiderAgent;
         if (rider == null) return false;                                            // gated upstream; defensive
-        if (!mumakil.ActionSet.IsValid) return false;
+        if (!creature.ActionSet.IsValid) return false;
 
         // Index comparison against our own attack caches — zero-alloc (no per-eval native GetName() marshal)
-        // and immune to other action names containing "attack".
-        bool alreadyAttacking = MumakilAttackActions.IsMumakilAttack(mumakil.GetCurrentAction(0));
+        // and immune to other action names containing "attack" (review finding 2026-06-10).
+        bool alreadyAttacking = _profile.IsAttack(creature.GetCurrentAction(0));
         if (alreadyAttacking) return false;                                          // cheap exit before the scan
 
         // One scan at the (larger) damage radius; the gate uses the BEST-facing enemy within the trigger range.
-        Mission.Current.GetNearbyAgents(mumakil.Position.AsVec2, MumakilConfig.TrampleRadius, _scratch);
-        Vec3 lookDir = mumakil.LookDirection;
+        Mission.Current.GetNearbyAgents(creature.Position.AsVec2, _profile.TrampleRadius, _scratch);
+        Vec3 lookDir = creature.LookDirection;
         float bestFacingDot = -1f;
         float bestBearing = 0f;
         foreach (Agent a in _scratch)
         {
-            if (a == null || a == mumakil || !a.IsActive() || !a.IsEnemyOf(rider)) continue;
-            Vec3 offset = a.Position - mumakil.Position;
-            if (offset.Length > MumakilConfig.TrampleTriggerRange) continue;
+            if (a == null || a == creature || !a.IsActive() || !a.IsEnemyOf(rider)) continue;
+            Vec3 offset = a.Position - creature.Position;
+            if (offset.Length > _profile.TrampleTriggerRange) continue;
             Vec3 toEnemy = offset.NormalizedCopy();
             float dot = Vec3.DotProduct(toEnemy, lookDir);
             if (dot > bestFacingDot)
@@ -60,7 +66,7 @@ public class MumakilEngageDecorator : BTReturnFalseDecorator, IBTBannerlordBase,
             }
         }
 
-        _service ??= IoC.Resolve<IMumakilAttackService>();
+        _service ??= _profile.ResolveService();
         if (!_service.ShouldEngage(bestFacingDot, alreadyAttacking: false)) return false;
 
         TargetBearing.SetValue(bestBearing);

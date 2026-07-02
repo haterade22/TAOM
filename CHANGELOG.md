@@ -1,5 +1,19 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-07-01
+
+### refactor(elephant-like): unify Elephant + Mumakil duplicated attack code into a shared ElephantLike layer
+
+The Mûmakil's attack service, BT task base, cooldown/engage decorators, blackboard interface, and action caches
+were byte-identical clones of the war elephant's (only type names + config constants differed — verified by
+name-substituted diff). Both features now bind a shared `Main/Features/ElephantLike/` layer: a pure
+`ElephantLikeAttackService` base (ctor-bound tuning) behind per-creature marker interfaces (IoC registration +
+`TaomAgentStatCalculateModel` injection unchanged), and shared BT nodes parameterized by an
+`ElephantLikeCombatProfile` (scan ranges, blow magnitude, clip caches, lazy service resolver).
+`IsElephantMonster`/`IsMumakilMonster` collapse to `IsCreatureMonster`. Zero behavior change — 3668 tests green
+before and after, net −125 LOC. Branch: `refactor/elephant-mumakil-unify` (plan T1 of the 2026-07-01 refactor
+target audit).
+
 ## 2026-06-30
 
 ### feat(native-skin-fixes): port all 7 native hooks to Bannerlord v1.4.6 + activate

@@ -48,7 +48,7 @@ public class SpatialGrid
     /// <summary>
     /// Zero-alloc overload: clears <paramref name="buffer"/> and fills it with the agents in radius. Use from
     /// per-eval BT hot paths (e.g. the creature engage decorators) with a reusable field buffer to avoid a fresh
-    /// List allocation every scan — the elephant's <c>EnemyInTrampleRangeDecorator</c> uses the equivalent
+    /// List allocation every scan — the shared <c>ElephantLikeEngageDecorator</c> uses the equivalent
     /// <c>Mission.GetNearbyAgents(..., scratch)</c> form. The allocating overload above delegates here.
     /// </summary>
     public void GetAgentsInRadius(Vec3 center, float radius, List<Agent> buffer)

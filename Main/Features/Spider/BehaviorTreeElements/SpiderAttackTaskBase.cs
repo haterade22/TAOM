@@ -11,7 +11,7 @@ namespace TAOM.Features.Spider.BehaviorTreeElements;
 /// Shared template for spider attacks: stamps the derived class's cooldown, then fires the bone-collision
 /// CustomAttack for the derived kind via <see cref="ISpiderAttackService.SpiderAttack"/> (the service resolves the
 /// clip + bones by kind/velocity/bearing and applies damage through HandleSpiderTargetHit → the NaN-guarded
-/// CustomAttacksUtils.TakeDamage). Boundary code, mirroring the elephant's ElephantAttackTaskBase — but keeps the
+/// CustomAttacksUtils.TakeDamage). Boundary code, mirroring the shared ElephantLikeAttackTaskBase — but keeps the
 /// spider's bone-collision damage instead of the elephant's radial AoE.
 /// </summary>
 public abstract class SpiderAttackTaskBase : BTTask, IBTBannerlordBase, IBTSpiderBlackboard

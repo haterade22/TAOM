@@ -6,7 +6,7 @@ namespace TAOM.Features.Spider.BehaviorTreeElements;
 /// <summary>
 /// Shared blackboard state for the spider behavior tree (cooldown stamps + target bearing).
 /// The builder reflection-copies these properties from the tree onto every node implementing this interface.
-/// Mirrors <c>IBTElephantBlackboard</c>.
+/// Mirrors <c>IBTElephantLikeBlackboard</c>.
 /// </summary>
 public interface IBTSpiderBlackboard : IBTBlackboard
 {

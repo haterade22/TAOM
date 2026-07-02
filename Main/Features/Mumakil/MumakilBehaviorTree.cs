@@ -3,25 +3,27 @@ using BehaviorTrees;
 using BehaviorTreeWrapper.BlackBoardClasses;
 using BehaviorTreeWrapper.Tasks;
 using TAOM.Features.AdvancedCombat.BaseBehaviorTree;
-using TAOM.Features.Mumakil.BehaviorTreeElements;
+using TAOM.Features.ElephantLike;
+using TAOM.Features.ElephantLike.BehaviorTreeElements;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.Mumakil;
 
 /// <summary>
-/// Behavior tree for the AI Mûmakil — the warg/elephant per-agent BT pattern. Built per Mûmakil by
+/// Behavior tree for the AI Mûmakil — the warg/elephant per-agent BT pattern, built from the SHARED
+/// elephant-like nodes bound to <see cref="MumakilCombat.Profile"/>. Built per Mûmakil by
 /// <see cref="MumakilMissionBehavior"/> via a <c>BehaviorTreeAgentComponent</c>; the engine auto-ticks it each frame.
 ///
 /// Attack model (elephant parity): when a live enemy is in front, the beast fires the TRAMPLE if off cooldown
 /// (10s, priority); otherwise a LEFT/RIGHT tusk swing picked by the enemy's bearing if the side-attack cooldown
 /// (4s) allows; otherwise the tree idles and the engine's regular mount AI (rider cavalry AI + native charge)
 /// simply continues — the BT only layers attacks on top of it. The "already mid-attack-animation" gate inside
-/// <see cref="MumakilEngageDecorator"/> prevents chaining a swing into a playing trample.
+/// <see cref="ElephantLikeEngageDecorator"/> prevents chaining a swing into a playing trample.
 ///
-/// Blackboard: cooldown stamps + target bearing (<see cref="IBTMumakilBlackboard"/>) shared across the nodes;
-/// the rider is read off <c>Agent.RiderAgent</c> in the leaves.
+/// Blackboard: cooldown stamps + target bearing (<see cref="IBTElephantLikeBlackboard"/>) shared across the
+/// nodes; the rider is read off <c>Agent.RiderAgent</c> in the leaves.
 /// </summary>
-public class MumakilBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTMumakilBlackboard
+public class MumakilBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTElephantLikeBlackboard
 {
     public BTBlackboardValue<Agent> Agent { get; set; }
     public BTBlackboardValue<DateTime?> TrampleLastFired { get; set; }
@@ -42,17 +44,18 @@ public class MumakilBehaviorTree : BehaviorTree, IBTBannerlordBase, IBTMumakilBl
     public static new BehaviorTree BuildTree(object[] objects)
     {
         if (objects[0] is not Agent agent) return null;
+        var profile = MumakilCombat.Profile;
         return StartBuildingTree(new MumakilBehaviorTree(agent))
             .AddSelector("main")
                 .AddSelector("has rider", new HasRiderDecorator())
                     .AddSelector("ai controlled", new IsAiControlledDecorator())
-                        .AddSelector("enemy in range", new MumakilEngageDecorator())
-                            .AddSequence("trample", new MumakilAttackOffCooldownDecorator(BehaviorTreeElements.MumakilAttackKind.Trample, MumakilConfig.TrampleCooldownSeconds))
-                                .AddTask(new MumakilTrampleTask())
+                        .AddSelector("enemy in range", new ElephantLikeEngageDecorator(profile))
+                            .AddSequence("trample", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.Trample, MumakilConfig.TrampleCooldownSeconds))
+                                .AddTask(new ElephantLikeTrampleTask(profile))
                                 .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))     // settle before next eval
                             .Up()
-                            .AddSequence("side attack", new MumakilAttackOffCooldownDecorator(BehaviorTreeElements.MumakilAttackKind.SideAttack, MumakilConfig.SideAttackCooldownSeconds))
-                                .AddTask(new MumakilSideAttackTask())
+                            .AddSequence("side attack", new ElephantLikeAttackOffCooldownDecorator(profile, ElephantLikeAttackKind.SideAttack, MumakilConfig.SideAttackCooldownSeconds))
+                                .AddTask(new ElephantLikeSideAttackTask(profile))
                                 .AddTask(new SleepTask(new(0, 0, 0, 0, 300)))
                             .Up()
                         .Up()                                                     // both on cooldown → falls through

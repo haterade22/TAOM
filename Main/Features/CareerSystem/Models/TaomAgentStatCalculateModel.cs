@@ -35,9 +35,9 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
     }
 
     public override bool CanAgentRideMount(Agent agent, Agent targetMount)
-        => _elephant.IsElephantMonster(targetMount?.Monster?.StringId)
+        => _elephant.IsCreatureMonster(targetMount?.Monster?.StringId)
             || _spider.IsSpiderMonster(targetMount?.Monster?.StringId)
-            || _mumakil.IsMumakilMonster(targetMount?.Monster?.StringId)
+            || _mumakil.IsCreatureMonster(targetMount?.Monster?.StringId)
             ? false
             : base.CanAgentRideMount(agent, targetMount);
 
@@ -65,11 +65,11 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
             agentDrivenProperties);
 
         // Creature mount-lock (1-for-1 with the upstream beasts pack): a near-infinite MountDifficulty so non-rider AI can't take it.
-        agentDrivenProperties.MountDifficulty = _elephant.IsElephantMonster(agent?.Monster?.StringId)
+        agentDrivenProperties.MountDifficulty = _elephant.IsCreatureMonster(agent?.Monster?.StringId)
             ? ElephantConfig.MountDifficulty
             : _spider.IsSpiderMonster(agent?.Monster?.StringId)
                 ? SpiderConfig.MountDifficulty
-                : _mumakil.IsMumakilMonster(agent?.Monster?.StringId)
+                : _mumakil.IsCreatureMonster(agent?.Monster?.StringId)
                     ? MumakilConfig.MountDifficulty
                     : agentDrivenProperties.MountDifficulty;
     }

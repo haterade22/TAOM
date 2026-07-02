@@ -4,7 +4,6 @@ using BehaviorTrees;
 using BehaviorTreeWrapper;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
-using TAOM.Features.Mumakil.BehaviorTreeElements;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
@@ -47,7 +46,7 @@ public class MumakilMissionBehavior : MissionLogic
         // Armory-drift guard: the attack clip names live in the EXTERNAL LOTRLOME action_types.xml and
         // ActionIndexCache resolves eagerly — a rename there silently yields act_none, and playing act_none
         // on channel 0 kills the locomotion cycle (the elephant "slide" class). Detect at mission start.
-        if (MumakilAttackActions.AnyUnresolved())
+        if (MumakilCombat.Profile.AnyUnresolved())
             _logger.LogError(
                 "[Mumakil] One or more attack actions resolved to act_none — LOTRLOME action_types drift? " +
                 $"Expected {MumakilConfig.TrampleActionName}/{MumakilConfig.SideAttackLeftActionName}/" +
@@ -101,7 +100,7 @@ public class MumakilMissionBehavior : MissionLogic
     // Returns true when a tree was newly attached. Safe pre/post the first-tick scan (de-duplicates).
     private bool TryAttachMumakilTree(Agent agent)
     {
-        if (agent == null || !_service.IsMumakilMonster(agent.Monster?.StringId)) return false;
+        if (agent == null || !_service.IsCreatureMonster(agent.Monster?.StringId)) return false;
         for (int i = 0; i < _mumakilComponents.Count; i++)
             if (_mumakilComponents[i].agent == agent) return false;   // already attached
 

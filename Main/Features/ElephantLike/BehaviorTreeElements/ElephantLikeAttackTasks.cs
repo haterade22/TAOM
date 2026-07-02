@@ -7,19 +7,22 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace TAOM.Features.Mumakil.BehaviorTreeElements;
+namespace TAOM.Features.ElephantLike.BehaviorTreeElements;
 
 /// <summary>
-/// Shared template for Mûmakil attacks: plays the derived class's attack animation on channel 0, stamps the
+/// Shared template for elephant-like attacks: plays the derived class's attack animation on channel 0, stamps the
 /// derived class's cooldown, and deals radial knockdown damage (`CustomAttacksUtils.TakeDamage`) to every live
-/// enemy within <see cref="MumakilConfig.TrampleRadius"/>. Damage amount from the pure
-/// <see cref="IMumakilAttackService.ComputeInflictedDamage"/> (shield-block-aware). Boundary code, 1-for-1 with
-/// the elephant's <c>ElephantAttackTaskBase</c>.
+/// enemy within the profile's <see cref="ElephantLikeCombatProfile.TrampleRadius"/>. Damage amount from the pure
+/// <see cref="IElephantLikeAttackService.ComputeInflictedDamage"/> (the upstream pack's formula,
+/// shield-block-aware). Boundary code, mirroring the warg's <c>WargAttackTask</c>.
 /// </summary>
-public abstract class MumakilAttackTaskBase : BTTask, IBTBannerlordBase, IBTMumakilBlackboard
+public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IBTElephantLikeBlackboard
 {
     private readonly MBList<Agent> _scratch = new();
-    private IMumakilAttackService _service;
+    private IElephantLikeAttackService _service;
+
+    /// <summary>The creature's boundary tuning (ranges, clips, service resolver).</summary>
+    protected readonly ElephantLikeCombatProfile Profile;
 
     private BTBlackboardValue<Agent> _agent;
     private BTBlackboardValue<DateTime?> _trampleLastFired;
@@ -30,36 +33,38 @@ public abstract class MumakilAttackTaskBase : BTTask, IBTBannerlordBase, IBTMuma
     public BTBlackboardValue<DateTime?> SideAttackLastFired { get => _sideAttackLastFired; set => _sideAttackLastFired = value; }
     public BTBlackboardValue<float> TargetBearing { get => _targetBearing; set => _targetBearing = value; }
 
+    protected ElephantLikeAttackTaskBase(ElephantLikeCombatProfile profile) => Profile = profile;
+
     /// <summary>The attack animation to play this firing (side attacks pick by <see cref="TargetBearing"/>).</summary>
     protected abstract ActionIndexCache GetAttackAction();
 
     /// <summary>Stamp this attack kind's cooldown (write DateTime.Now into the matching blackboard value).</summary>
     protected abstract void StampCooldown(DateTime now);
 
-    /// <summary>Which attack this task is — selects the damage band in <see cref="IMumakilAttackService.ComputeInflictedDamage"/>.</summary>
-    protected abstract MumakilAttackKind AttackKind { get; }
+    /// <summary>Which attack this task is — selects the damage band in <see cref="IElephantLikeAttackService.ComputeInflictedDamage"/>.</summary>
+    protected abstract ElephantLikeAttackKind AttackKind { get; }
 
     public override BTTaskStatus Execute()
     {
-        Agent mumakil = Agent.GetValue();
-        if (mumakil == null || !mumakil.IsActive()) return BTTaskStatus.FinishedWithFalse;
-        Agent rider = mumakil.RiderAgent;
+        Agent creature = Agent.GetValue();
+        if (creature == null || !creature.IsActive()) return BTTaskStatus.FinishedWithFalse;
+        Agent rider = creature.RiderAgent;
         if (rider == null) return BTTaskStatus.FinishedWithFalse;
 
-        mumakil.SetActionChannel(0, GetAttackAction());
+        creature.SetActionChannel(0, GetAttackAction());
         StampCooldown(DateTime.Now);
 
-        _service ??= IoC.Resolve<IMumakilAttackService>();
-        Mission.Current.GetNearbyAgents(mumakil.Position.AsVec2, MumakilConfig.TrampleRadius, _scratch);
+        _service ??= Profile.ResolveService();
+        Mission.Current.GetNearbyAgents(creature.Position.AsVec2, Profile.TrampleRadius, _scratch);
         foreach (Agent victim in _scratch)
         {
-            if (victim == null || victim == mumakil || !victim.IsActive() || !victim.IsEnemyOf(rider)) continue;
-            // Only a SHIELD block reduces the damage; weapon parries take full damage.
+            if (victim == null || victim == creature || !victim.IsActive() || !victim.IsEnemyOf(rider)) continue;
+            // Upstream-pack parity: only a SHIELD block reduces the damage; weapon parries take full damage.
             // (Fully-qualified — the `Agent` blackboard property shadows the Agent type.)
             bool blocking = victim.GetCurrentActionType(1) == TaleWorlds.MountAndBlade.Agent.ActionCodeType.DefendShield;
             // Roll per victim so each enemy caught in the radius takes an independent hit within the kind's band.
             int damage = _service.ComputeInflictedDamage(AttackKind, blocking, MBRandom.RandomFloat);
-            CustomAttacksUtils.TakeDamage(victim, mumakil, damage, MumakilConfig.TrampleBlowMagnitude, knockDown: !blocking);
+            CustomAttacksUtils.TakeDamage(victim, creature, damage, Profile.TrampleBlowMagnitude, knockDown: !blocking);
         }
         return BTTaskStatus.FinishedWithTrue;
     }
@@ -67,28 +72,32 @@ public abstract class MumakilAttackTaskBase : BTTask, IBTBannerlordBase, IBTMuma
 
 /// <summary>
 /// The trample (double-sweep thrash) — the priority attack, 10s cooldown. Alternates randomly between the two
-/// near-identical thrash clips (attack_3/attack_4) for variety.
+/// near-identical thrash clips (attack_3/attack_4) for variety; the upstream pack never played attack_4 at all.
 /// </summary>
-public class MumakilTrampleTask : MumakilAttackTaskBase
+public class ElephantLikeTrampleTask : ElephantLikeAttackTaskBase
 {
+    public ElephantLikeTrampleTask(ElephantLikeCombatProfile profile) : base(profile) { }
+
     protected override ActionIndexCache GetAttackAction()
-        => MBRandom.RandomFloat < 0.5f ? MumakilAttackActions.Trample : MumakilAttackActions.TrampleAlt;
+        => MBRandom.RandomFloat < 0.5f ? Profile.Trample : Profile.TrampleAlt;
 
     protected override void StampCooldown(DateTime now) => TrampleLastFired.SetValue(now);
 
-    protected override MumakilAttackKind AttackKind => MumakilAttackKind.Trample;
+    protected override ElephantLikeAttackKind AttackKind => ElephantLikeAttackKind.Trample;
 }
 
 /// <summary>
 /// Left/right tusk swing — fired while the trample recharges, 4s cooldown. Picks the swing matching the best
-/// enemy's bearing (written by <see cref="MumakilEngageDecorator"/>): positive = LEFT, negative = RIGHT.
+/// enemy's bearing (written by <see cref="ElephantLikeEngageDecorator"/>): positive = LEFT, negative = RIGHT.
 /// </summary>
-public class MumakilSideAttackTask : MumakilAttackTaskBase
+public class ElephantLikeSideAttackTask : ElephantLikeAttackTaskBase
 {
+    public ElephantLikeSideAttackTask(ElephantLikeCombatProfile profile) : base(profile) { }
+
     protected override ActionIndexCache GetAttackAction()
-        => TargetBearing.GetValue() >= 0f ? MumakilAttackActions.SwingLeft : MumakilAttackActions.SwingRight;
+        => TargetBearing.GetValue() >= 0f ? Profile.SwingLeft : Profile.SwingRight;
 
     protected override void StampCooldown(DateTime now) => SideAttackLastFired.SetValue(now);
 
-    protected override MumakilAttackKind AttackKind => MumakilAttackKind.SideAttack;
+    protected override ElephantLikeAttackKind AttackKind => ElephantLikeAttackKind.SideAttack;
 }
