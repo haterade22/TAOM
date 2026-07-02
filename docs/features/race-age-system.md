@@ -80,6 +80,7 @@ Every race has an explicit entry. The `defaultRace` ("human") is used as a fallb
 | elf | 10000 | 18 | 0.15x | Effectively immortal (maxAge 10000), very rare children |
 | nazghul | 10000 | 18 | 0.0x | Immortal flag, no children |
 | saruman | 10000 | 18 | 0.0x | Immortal flag, no children |
+| sauron | 10000 | 18 | 0.0x | Immortal flag, no children — lord_1_17's dedicated race (verbatim elf clone, adult min_scale 1.40, NPC-only; #321) |
 
 **Elf vs Nazgul immortality:** Elves use `maxAge: 10000` without the `immortal` flag — they effectively never die of age, but can still have rare children (`fertilityMod: 0.15`, `fertilityEnd: 300`). Nazgul/Saruman use `"immortal": true` which additionally blocks all fertility. Any race not in the config falls back to human defaults.
 
@@ -133,6 +134,7 @@ Every race has an explicit entry. The `defaultRace` ("human") is used as a fallb
 
 1. If the hero's race is immortal → return 0 (no children)
 2. If hero has no spouse → return 0
+2b. If the **spouse's** race is immortal → return 0. The engine only ever calls this model for the FEMALE (`PregnancyCampaignBehavior.DailyTickHero` gates on `hero.IsFemale`), so an immortal FATHER (Sauron with consort Morgha, #321) is only blocked by this spouse-side check — his own race entry never reaches step 1.
 3. If hero's age is outside race-specific `[comesOfAge, fertilityEnd]` window → return 0
 4. Calculate age-decline factor: the fertility curve spans the full racial window, declining linearly from peak (1.2) at `comesOfAge` to floor (0.12) at `fertilityEnd`
 5. Apply vanilla clan population cap (based on clan tier) and children penalty (quadratic decay)
@@ -188,7 +190,6 @@ The daily tick iterates all alive heroes to check age-based death. Several optim
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
-
 ## Changelog
 
 - 2026-06-23 — Restored the `DeliverOffSpring_RaceAssert_Patch` transpiler (`Patch13_RaceAge`) to suppress the harmless `mother.Race == father.Race` SilentAssert on cross-race births (#283).

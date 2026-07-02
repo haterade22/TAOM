@@ -21,9 +21,11 @@ public class CombatMechanicsConfig
     {
         ["dwarf"] = new RaceCombatModifiers { CtbDefenseBonus = 15f, KnockdownResistanceMultiplier = 2.5f, StaggerThresholdMultiplier = 1.5f },
         ["elf"] = new RaceCombatModifiers { CtbAttackBonus = 20f, RemoveNonOverheadPenalty = true },
-        // Sauron (lord_1_17) was race "elf" until #321 split him into his own race; mirror elf so
-        // the split doesn't silently drop his modifiers. Tune independently from here on.
-        ["sauron"] = new RaceCombatModifiers { CtbAttackBonus = 20f, RemoveNonOverheadPenalty = true },
+        // Sauron (lord_1_17) was race "elf" until #321 split him into his own race; the CTB/overhead
+        // baseline mirrors elf so the split dropped nothing. On top: charge-knockdown resistance above
+        // the dwarf ceiling (2.5) and the strongest swing-energy bias (orc 0.15) — the 1.40-scale
+        // Dark Lord keeps elf Monster weight 80, so the resistance row is what stops horse-bowling.
+        ["sauron"] = new RaceCombatModifiers { CtbAttackBonus = 20f, RemoveNonOverheadPenalty = true, KnockdownResistanceMultiplier = 3.0f, SwingEnergyBonusFactor = 0.20f },
         ["orc"] = new RaceCombatModifiers { SwingEnergyBonusFactor = 0.15f },
         ["uruk_hai"] = new RaceCombatModifiers { SwingEnergyBonusFactor = 0.10f, KnockdownResistanceMultiplier = 1.25f },
     };
@@ -45,13 +47,13 @@ public class CrushThroughConfig
     public bool MonsterAutoCrushEnabled { get; set; } = true;
     public List<string> MonsterCrushMonsterIds { get; set; } = new List<string>
     {
-        "cave_troll", "hill_troll", "taom_war_elephant", "taom_mumakil", "spider",
+        "cave_troll", "hill_troll", "taom_war_elephant", "taom_mumakil", "spider", "sauron",
     };
 
     public bool OrcShieldCrushEnabled { get; set; } = true;
     public List<string> OrcShieldCrushRaces { get; set; } = new List<string>
     {
-        "orc", "goblin", "uruk", "uruk_hai", "pale_uruk", "dg_uruk",
+        "orc", "goblin", "uruk", "uruk_hai", "pale_uruk", "dg_uruk", "sauron",
     };
 }
 
@@ -81,7 +83,7 @@ public class CreatureCombatConfig
     public bool CleaveEnabled { get; set; } = true;
     public List<string> CleaveMonsterIds { get; set; } = new List<string>
     {
-        "cave_troll", "hill_troll", "taom_mumakil",
+        "cave_troll", "hill_troll", "taom_mumakil", "sauron",
     };
     public float CleaveRemainingMomentumFactor { get; set; } = 0.3f;
 

@@ -10,9 +10,9 @@
     "energyRampMarginFactor": 0.27,
     "nonOverheadPenaltyFactor": 0.5,
     "monsterAutoCrushEnabled": true,
-    "monsterCrushMonsterIds": ["cave_troll", "hill_troll", "taom_war_elephant", "taom_mumakil", "spider"],
+    "monsterCrushMonsterIds": ["cave_troll", "hill_troll", "taom_war_elephant", "taom_mumakil", "spider", "sauron"],
     "orcShieldCrushEnabled": true,
-    "orcShieldCrushRaces": ["orc", "goblin", "uruk", "uruk_hai", "pale_uruk", "dg_uruk"]
+    "orcShieldCrushRaces": ["orc", "goblin", "uruk", "uruk_hai", "pale_uruk", "dg_uruk", "sauron"]
   },
   "chargeKnockdown": {
     "enabled": true,
@@ -27,7 +27,7 @@
   },
   "creatures": {
     "cleaveEnabled": true,
-    "cleaveMonsterIds": ["cave_troll", "hill_troll", "taom_mumakil"],
+    "cleaveMonsterIds": ["cave_troll", "hill_troll", "taom_mumakil", "sauron"],
     "cleaveRemainingMomentumFactor": 0.3,
     "unstoppableEnabled": true,
     "unstoppableDamageThresholds": {
@@ -49,7 +49,7 @@
   "raceModifiers": {
     "dwarf": { "ctbDefenseBonus": 15, "knockdownResistanceMultiplier": 2.5, "staggerThresholdMultiplier": 1.5 },
     "elf": { "ctbAttackBonus": 20, "removeNonOverheadPenalty": true },
-    "sauron": { "ctbAttackBonus": 20, "removeNonOverheadPenalty": true },
+    "sauron": { "ctbAttackBonus": 20, "removeNonOverheadPenalty": true, "knockdownResistanceMultiplier": 3.0, "swingEnergyBonusFactor": 0.20 },
     "orc": { "swingEnergyBonusFactor": 0.15 },
     "uruk_hai": { "swingEnergyBonusFactor": 0.10, "knockdownResistanceMultiplier": 1.25 }
   }

@@ -151,8 +151,6 @@
 			<Equipment slot="Gloves" id="Item.sauron_vambraces" />
 			<Equipment slot="Leg" id="Item.sauron_greaves" />
 			<Equipment slot="Cape" id="Item.sauron_pauldrons" />
-			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -164,8 +162,6 @@
 			<Equipment slot="Gloves" id="Item.sauron_vambraces" />
 			<Equipment slot="Leg" id="Item.sauron_greaves" />
 			<Equipment slot="Cape" id="Item.sauron_pauldrons" />
-			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
-			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
 	</EquipmentRoster>
 

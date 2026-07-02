@@ -12,13 +12,30 @@ a verbatim elf clone (same `sk_elf_basemesh_a1_*` meshes, `human_skeleton`, 10 m
 the END of LOTRLOME_Armory `skins.xml` + 5 Monster entries in `monsters.xml` (live install AND
 `docs/reference/lotrlome-armory-snapshot/`, `.bak-sauron` backups) — race ints are skins.xml merge-order indices,
 so append-at-end preserves every existing race id. Only deltas from elf: **adult `min_scale` 1.07/1.06 → 1.40**
-(movie-towering; child/teen/tween/toddler skins untouched) and the race id. No `as_sauron_*` action_sets — the
-Monster references `as_human_warrior` directly (elf pattern), and facegen sets are CC-only: the race is **NPC-only**
+(movie-towering; child/teen/tween/toddler skins untouched) and the race id. No `as_sauron_*` action_sets — battles
+use `Monster.ActionSetCode` = `as_human_warrior`; settlement/map suffixed lookups (`as_sauron_lord`/`_map`) resolve
+via the engine's native silent fallback on missing action-set ids (the elf-proven path — `as_elf_map` fires for
+every elf lord party icon today). Facegen sets are CC-only: the race is **NPC-only**
 (no `cultures.json` `races[]` lists it, so Patch9's allow-list dropdown can never offer it). Aging: `immortal: true`
 in `race_age_config.json` (verbatim saruman — the other Maia). CombatMechanics parity: `["sauron"]` mirrors
 `["elf"]` (CtbAttackBonus 20, RemoveNonOverheadPenalty) in BOTH the compiled defaults and
 `combat_mechanics_config.json` (the JSON dict REPLACES compiled defaults), so the race split doesn't silently drop
 his modifiers — pinned by `GetConfig_MissingFile_SauronDefaultsMirrorElf`.
+
+Deep-review (6 agents) caught one HIGH before commit: the engine's pregnancy check runs on the FEMALE only
+(`PregnancyCampaignBehavior.DailyTickHero` gates on `hero.IsFemale`), so Sauron's immortal entry alone never
+gated conception with Morgha (`lord_1_18`, race-unset → human, fertile) — `TaomPregnancyModel` now also returns
+0 when the SPOUSE's race is immortal, making the "no future children" promise real for immortal fathers
+(Sauron today; any wraith/Saruman pairing later). RCA: `docs/reviews/rca-sauron-race-2026-07-02.md`.
+
+Combat tuning (user decision, resolves the review's deferred weight question): the `sauron` race joins every
+offensive CombatMechanics capability + charge-knockdown resistance, in BOTH config surfaces (compiled defaults
++ JSON): `knockdownResistanceMultiplier` **3.0** (above the dwarf ceiling 2.5 — the 1.40-scale Dark Lord keeps
+elf Monster weight 80, so this row is what stops horse-bowling), `swingEnergyBonusFactor` **0.20** (strongest;
+orc 0.15), `monsterCrushMonsterIds` + `sauron` (swings auto-crush any non-shield block, troll tier),
+`orcShieldCrushRaces` + `sauron` (crushes shield blocks too, energy/skill-gated — AI-only by that mechanic's
+design, and Sauron is NPC-only anyway), `cleaveMonsterIds` + `sauron` (hits keep 30% momentum and slice through).
+Pinned by `GetConfig_MissingFile_SauronOffenseAndKnockdownDefaults` + updated list-count tests.
 
 Save-compat: new campaigns only (heroes snapshot race + equipment at campaign start; `RacePersistenceService`
 restores the captured race on legacy saves) — existing saves keep the mounted elf-race Sauron by design.

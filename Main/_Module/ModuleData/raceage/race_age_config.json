@@ -14,6 +14,7 @@
     "hill_troll": { "maxAge": 500,   "becomeOld": 470,  "comesOfAge": 18, "middleAge": 100,  "fertilityEnd": 200,  "fertilityMod": 0.1 },
     "elf":        { "maxAge": 10000, "becomeOld": 9970, "comesOfAge": 18, "middleAge": 100,  "fertilityEnd": 300,  "fertilityMod": 0.15 },
     "nazghul":    { "maxAge": 10000, "becomeOld": 9970, "comesOfAge": 18, "middleAge": 100,  "fertilityEnd": 0,    "fertilityMod": 0.0, "immortal": true },
-    "saruman":    { "maxAge": 10000, "becomeOld": 9970, "comesOfAge": 18, "middleAge": 100,  "fertilityEnd": 0,    "fertilityMod": 0.0, "immortal": true }
+    "saruman":    { "maxAge": 10000, "becomeOld": 9970, "comesOfAge": 18, "middleAge": 100,  "fertilityEnd": 0,    "fertilityMod": 0.0, "immortal": true },
+    "sauron":     { "maxAge": 10000, "becomeOld": 9970, "comesOfAge": 18, "middleAge": 100,  "fertilityEnd": 0,    "fertilityMod": 0.0, "immortal": true }
   }
 }

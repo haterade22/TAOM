@@ -25,6 +25,12 @@ public class TaomPregnancyModel : DefaultPregnancyModel
         if (hero.Spouse == null)
             return 0f;
 
+        // The engine only ever passes the FEMALE here (PregnancyCampaignBehavior.DailyTickHero
+        // gates on hero.IsFemale), so an immortal FATHER (Sauron, Saruman, a wraith) must be
+        // blocked via the spouse's race or his immortal flag never gates conception (#321).
+        if (_raceAgeService.IsImmortal(hero.Spouse.CharacterObject.Race))
+            return 0f;
+
         int comesOfAge = _raceAgeService.GetComesOfAge(race);
         int fertilityEnd = _raceAgeService.GetFertilityEndAge(race);
 

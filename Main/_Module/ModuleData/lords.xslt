@@ -1057,7 +1057,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.mordor</xsl:attribute>
-            <xsl:attribute name="race">elf</xsl:attribute>
+            <xsl:attribute name="race">sauron</xsl:attribute>
             <xsl:attribute name="skill_template">SkillSet.taom_sauron_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>

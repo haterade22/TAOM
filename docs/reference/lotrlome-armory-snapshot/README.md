@@ -56,6 +56,8 @@ After restoring from this snapshot — or after any LOTRLOME update — `action_
 
 The races `hill_troll`, `nazghul`, and `saruman` also have `_facegen` entries in LOTRLOME but are not consumed by any TAOM culture; they're listed here only so a future re-snapshot doesn't accidentally drop them.
 
+The `sauron` race (issue #321 — verbatim elf clone for lord_1_17, adult `min_scale` 1.40, appended at the END of `skins.xml`/`monsters.xml`) is NPC-only and **intentionally has NO `_facegen` entries**: facegen action_sets are required only for CC-playable races, and no culture's `cultures.json` `races[]` lists `sauron`. Do not "fix" this in a future facegen audit. No `as_sauron_*` action_sets exist by design — **two mechanisms cover it** (deep-review #321 compat agent, decompiled v1.4.6): battles/conversations use `Monster.ActionSetCode` = `as_human_warrior` directly; settlement scenes and the campaign map GENERATE suffixed names from the base monster id (`as_sauron_lord`, `as_sauron_map` via `ActionSetCode.GenerateActionSetNameWithSuffix` / `MBGlobals.GetActionSetWithSuffix`) which don't exist and resolve through the engine's **native silent fallback** on missing action-set ids — the same proven path elf rides today (`as_elf_map` fires for every elf lord's party icon, zero errors across months of campaigns). Optional deterministic hardening if curated civilian animations are ever wanted: `base_monster="human"` on `sauron_settlement` (flattens generated names to existing `as_human_*`, the `orc_settlement_fast` pattern).
+
 **Quick sanity check after any restore** (run from a shell with grep):
 ```bash
 grep -oE 'id="as_[a-z_]+_facegen"' "E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/LOTRLOME_Armory/ModuleData/action_sets.xml" | sort -u
@@ -100,7 +102,8 @@ To find *which* sets need fixing (not just dwarf), run **`python tools/audit_act
 
 ## Snapshot date
 
-2026-06-25 — `action_sets.xml` patched in place: +423 missing Native 1.4.6 action types added to `as_dwarf_warrior` for engine parity (+1311 lines, additions-only; the dwarf water-CTD fix). Done via `tools/patch_dwarf_action_parity.py`, NOT a full re-snapshot — so the snapshot still lags the LIVE file on the spider/elephant/chariot creature sets added during the June 2026 mount work (10 action_sets present in LIVE, absent here). Re-snapshot those separately if they ever need a restore.
+2026-07-02 — `skins.xml` + `monsters.xml` patched in place: appended race `sauron` (verbatim elf clone, adult `min_scale` 1.40, 5 Monster entries; issue #321) to BOTH the live files and this snapshot via a scripted append-at-end (`.bak-sauron` backups left beside the live files). No `action_sets.xml` change — the race is NPC-only and needs no facegen sets.
+Previous: 2026-06-25 — `action_sets.xml` patched in place: +423 missing Native 1.4.6 action types added to `as_dwarf_warrior` for engine parity (+1311 lines, additions-only; the dwarf water-CTD fix). Done via `tools/patch_dwarf_action_parity.py`, NOT a full re-snapshot — so the snapshot still lags the LIVE file on the spider/elephant/chariot creature sets added during the June 2026 mount work (10 action_sets present in LIVE, absent here). Re-snapshot those separately if they ever need a restore.
 Previous: 2026-05-22 — `action_sets.xml` re-snapshotted with elf CC parent entries appended.
 Previous: 2026-05-04 — initial snapshot with the 1.3 action-type alias edits across the 12 pre-existing facegen sets.
 

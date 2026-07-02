@@ -49,7 +49,7 @@ public class CombatMechanicsConfigProviderTests
         Assert.AreEqual(25f, c.CrushThrough.ExtraCrushThroughEnergyThreshold, 0.0001f);
         Assert.AreEqual(30, c.CrushThrough.SkillDeadZone);
         Assert.AreEqual(6f, c.ChargeKnockdown.NeutralWeightRatio, 0.0001f);
-        Assert.AreEqual(3, c.Creatures.CleaveMonsterIds.Count);
+        Assert.AreEqual(4, c.Creatures.CleaveMonsterIds.Count);
         Assert.AreEqual(5, c.RaceModifiers.Count);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("not found")));
     }
@@ -58,11 +58,26 @@ public class CombatMechanicsConfigProviderTests
     public void GetConfig_MissingFile_SauronDefaultsMirrorElf()
     {
         // Sauron (lord_1_17) was race "elf" until issue #321 split him into his own race;
-        // the compiled default must keep his former elf combat modifiers.
+        // the compiled default must keep his former elf CTB/overhead baseline (his Dark Lord
+        // additions on top are pinned separately below).
         var c = _sut.GetConfig();
 
         Assert.AreEqual(c.RaceModifiers["elf"].CtbAttackBonus, c.RaceModifiers["sauron"].CtbAttackBonus, 0.0001f);
         Assert.AreEqual(c.RaceModifiers["elf"].RemoveNonOverheadPenalty, c.RaceModifiers["sauron"].RemoveNonOverheadPenalty);
+    }
+
+    [TestMethod]
+    public void GetConfig_MissingFile_SauronOffenseAndKnockdownDefaults()
+    {
+        // #321 follow-up (user decision): the Dark Lord gets the full offensive set + charge
+        // knockdown resistance above the dwarf ceiling (2.5).
+        var c = _sut.GetConfig();
+
+        Assert.AreEqual(3.0f, c.RaceModifiers["sauron"].KnockdownResistanceMultiplier, 0.0001f);
+        Assert.AreEqual(0.20f, c.RaceModifiers["sauron"].SwingEnergyBonusFactor, 0.0001f);
+        CollectionAssert.Contains(c.CrushThrough.MonsterCrushMonsterIds, "sauron");
+        CollectionAssert.Contains(c.CrushThrough.OrcShieldCrushRaces, "sauron");
+        CollectionAssert.Contains(c.Creatures.CleaveMonsterIds, "sauron");
     }
 
     [TestMethod]
@@ -110,7 +125,7 @@ public class CombatMechanicsConfigProviderTests
 
         Assert.AreEqual(0.3f, c.CrushThrough.MaxSkillChance, 0.0001f);
         Assert.AreEqual(30, c.CrushThrough.SkillDeadZone);
-        Assert.AreEqual(5, c.CrushThrough.MonsterCrushMonsterIds.Count);
+        Assert.AreEqual(6, c.CrushThrough.MonsterCrushMonsterIds.Count);
         Assert.AreEqual(6f, c.ChargeKnockdown.NeutralWeightRatio, 0.0001f);
         Assert.AreEqual(5, c.RaceModifiers.Count);
     }
