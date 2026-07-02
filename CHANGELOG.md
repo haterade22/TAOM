@@ -2,6 +2,18 @@
 
 ## 2026-07-01
 
+### refactor(troop-progression): split VolunteerRecruitmentService per-culture pools into partial-class files
+
+The 994-line service is now a 264-line core (maps, JSON loader, conditional→settlement→clan→culture cascade,
+weighted pick, test helpers) plus 15 per-culture partial-class files under
+`Main/Features/TroopProgression/RecruitmentPools/` — each culture's pools and their design-rationale comments
+(Codex findings, user specs) live together, moved verbatim; the static ctor is unchanged. **Deliberate deviation
+from plan T5's JSON migration:** the existing Gondor pattern is JSON-override-with-hand-written-fallback, so
+extending it to 14 more cultures would have created a dual source of truth per culture and stranded the
+rationale comments (JSON has none) while the 2,698-line test suite pins the hand-written maps — rejected per
+`simplicity-criterion.md`; the split delivers the modularity goal with zero functional change. 3688 tests
+green. Branch: `refactor/recruitment-pool-split` (plan T5, restructured).
+
 ### refactor(faction-map): extract PolygonWidget hit-test math to unit-tested AlphaHitMap + PolygonPointParser
 
 `PolygonWidget` (1,140 lines, previously zero unit coverage) now delegates its pixel-accurate hit testing to
