@@ -2,6 +2,15 @@
 
 ## 2026-07-01
 
+### refactor(core-validation): consolidate copy-pasted SafeClamp helpers into TAOM.Core.Validation.SettingClamp
+
+The byte-identical private `SafeClamp` (float, NaN-guarded) / `SafeClampInt` helpers copy-pasted across the
+SmartCavalryAI, BanditManagement, CultureConversion, and CastleRecruitment settings providers now live once as
+`SettingClamp.Clamp` overloads beside `FiniteFloatValidator`, with 15 new tests pinning the exact semantics —
+including the asymmetry the consolidation surfaced: a NULL setting takes the default and flows through the range
+clamp, while a NaN/Infinity setting returns the compiled default verbatim (early return). Providers keep their
+per-knob ranges; only the mechanism is shared. Round-2 target R2. Branch: `refactor/round2-cleanups`.
+
 ### refactor(companion-tactics): delete four orphaned BattleActionBar action enums
 
 `ShieldAction`, `PolearmAction`, `CavalryAction`, `RangedAction` (Main/Features/CompanionTactics/BattleActionBar/Models/)

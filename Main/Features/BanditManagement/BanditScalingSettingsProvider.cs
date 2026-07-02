@@ -1,3 +1,4 @@
+using TAOM.Core.Validation;
 using TAOM.Features;
 
 namespace TAOM.Features.BanditManagement;
@@ -14,22 +15,22 @@ public sealed class BanditScalingSettingsProvider : IBanditScalingSettingsProvid
     public bool IsEnabled => TaomSettings.Instance?.EnableBanditScaling ?? true;
 
     public float DensityCurve =>
-        SafeClamp(TaomSettings.Instance?.BanditDensityCurve, _defaults.DensityCurve, 0f, 5f);
+        SettingClamp.Clamp(TaomSettings.Instance?.BanditDensityCurve, _defaults.DensityCurve, 0f, 5f);
 
     public float PartySizeCurve =>
-        SafeClamp(TaomSettings.Instance?.BanditPartySizeCurve, _defaults.PartySizeCurve, 0f, 5f);
+        SettingClamp.Clamp(TaomSettings.Instance?.BanditPartySizeCurve, _defaults.PartySizeCurve, 0f, 5f);
 
     public float BossFightCurve =>
-        SafeClamp(TaomSettings.Instance?.BanditBossFightCurve, _defaults.BossFightCurve, 0f, 5f);
+        SettingClamp.Clamp(TaomSettings.Instance?.BanditBossFightCurve, _defaults.BossFightCurve, 0f, 5f);
 
     public int MaxHideoutsPerFactionCap =>
-        SafeClampInt(TaomSettings.Instance?.BanditMaxHideoutsPerFaction, _defaults.MaxHideoutsPerFactionCap, 1, 100);
+        SettingClamp.Clamp(TaomSettings.Instance?.BanditMaxHideoutsPerFaction, _defaults.MaxHideoutsPerFactionCap, 1, 100);
 
     public int MaxPartiesPerHideoutCap =>
-        SafeClampInt(TaomSettings.Instance?.BanditMaxPartiesPerHideout, _defaults.MaxPartiesPerHideoutCap, 1, 20);
+        SettingClamp.Clamp(TaomSettings.Instance?.BanditMaxPartiesPerHideout, _defaults.MaxPartiesPerHideoutCap, 1, 20);
 
     public int InitialHideoutsPerFaction =>
-        SafeClampInt(TaomSettings.Instance?.BanditInitialHideoutsPerFaction, _defaults.InitialHideoutsPerFaction, 1, 30);
+        SettingClamp.Clamp(TaomSettings.Instance?.BanditInitialHideoutsPerFaction, _defaults.InitialHideoutsPerFaction, 1, 30);
 
     // No MCM knob for MinPartiesToInfest -- it's a JSON-only advanced tuning value with a strict
     // upper bound derived from the live MCM cap (not the JSON default), so the invariant
@@ -44,18 +45,5 @@ public sealed class BanditScalingSettingsProvider : IBanditScalingSettingsProvid
             if (v > cap) v = cap;
             return v;
         }
-    }
-
-    private static float SafeClamp(float? value, float defaultValue, float min, float max)
-    {
-        var v = value ?? defaultValue;
-        if (float.IsNaN(v) || float.IsInfinity(v)) return defaultValue;
-        return v < min ? min : v > max ? max : v;
-    }
-
-    private static int SafeClampInt(int? value, int defaultValue, int min, int max)
-    {
-        var v = value ?? defaultValue;
-        return v < min ? min : v > max ? max : v;
     }
 }

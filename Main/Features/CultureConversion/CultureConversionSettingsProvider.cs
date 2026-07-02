@@ -1,3 +1,4 @@
+using TAOM.Core.Validation;
 using TAOM.Features;
 
 namespace TAOM.Features.CultureConversion;
@@ -23,7 +24,7 @@ public sealed class CultureConversionSettingsProvider : ICultureConversionSettin
     public bool IsEnabled => TaomSettings.Instance?.EnableCultureConversion ?? _defaults.Enabled;
 
     public int RequiredHoldDays =>
-        SafeClampInt(TaomSettings.Instance?.CultureConversionHoldDays, _defaults.RequiredHoldDays, MinHoldDays, MaxHoldDays);
+        SettingClamp.Clamp(TaomSettings.Instance?.CultureConversionHoldDays, _defaults.RequiredHoldDays, MinHoldDays, MaxHoldDays);
 
     public bool RequireStableLoyalty =>
         TaomSettings.Instance?.CultureConversionRequireStableLoyalty ?? _defaults.RequireStableLoyalty;
@@ -31,10 +32,4 @@ public sealed class CultureConversionSettingsProvider : ICultureConversionSettin
     public float MinLoyaltyToConvert => _defaults.MinLoyaltyToConvert;
 
     public bool ConvertPlayerOwnedSettlements => _defaults.ConvertPlayerOwnedSettlements;
-
-    private static int SafeClampInt(int? value, int defaultValue, int min, int max)
-    {
-        var v = value ?? defaultValue;
-        return v < min ? min : v > max ? max : v;
-    }
 }

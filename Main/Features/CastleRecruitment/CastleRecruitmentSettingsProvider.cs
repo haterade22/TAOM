@@ -1,3 +1,4 @@
+using TAOM.Core.Validation;
 using TAOM.Features;
 
 namespace TAOM.Features.CastleRecruitment;
@@ -21,11 +22,5 @@ public sealed class CastleRecruitmentSettingsProvider : ICastleRecruitmentSettin
     public bool IsAiEnabled => TaomSettings.Instance?.EnableCastleRecruitmentAi ?? _defaults.AiEnabled;
 
     public int NotablesPerCastle =>
-        SafeClampInt(TaomSettings.Instance?.CastleNotablesPerCastle, _defaults.NotablesPerCastle, 1, 5);
-
-    private static int SafeClampInt(int? value, int defaultValue, int min, int max)
-    {
-        var v = value ?? defaultValue;
-        return v < min ? min : v > max ? max : v;
-    }
+        SettingClamp.Clamp(TaomSettings.Instance?.CastleNotablesPerCastle, _defaults.NotablesPerCastle, 1, 5);
 }
