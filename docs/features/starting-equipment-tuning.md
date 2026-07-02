@@ -72,6 +72,25 @@ player — an acceptable side effect (a starter-tier weapon worth 6,000 was effe
 
 Re-run both after adding a new career culture or changing the anchors (edit `TEMPLATES` in the generator).
 
+## Verifying in-game (MANDATORY — validators cannot catch this)
+
+`validate_moduledata.py` PASS + a green build + green tests do **NOT** prove the items load in-engine — none of
+them start a campaign. Bannerlord registers each `LOTRLOME_items/<culture>` directory at **process launch** and
+globs it for `*.xml` at **campaign start**, with no hot-reload (`Module.cs:246→1032`; `Campaign.cs:1471
+LoadXML("Items")` → `MBObjectManager.cs:894/900/901/903 GetFiles("*.xml")`). A starter file authored *after* the
+game launched is null in-engine → the character is **naked** after selecting a career.
+
+So after running `generate_starter_armor.py` / `wire_career_starter_armor.py` you MUST:
+
+1. **Fully restart Bannerlord** (close to desktop, relaunch) — a running game will not pick up the new files.
+2. Start a **new game**, pick a **non-Gondor** culture, select a career, and confirm chest + legs render.
+3. Repeat for one cavalry pick (mount + chest/legs).
+
+This is exactly why the first ship showed every non-Gondor character naked while Gondor — whose `starter_armors.xml`
+pre-existed the launch — was fine (RCA 2026-06-30; see `docs/reviews/LESSONS-LEARNED.md` "A NEW item XML file only
+loads at process launch"). Keep backups on a non-`.xml` extension: the glob is `*.xml`, so a `*.xml` backup left in
+the folder loads as a duplicate item id.
+
 ## Key files
 
 | File | Role |

@@ -2,6 +2,25 @@
 
 ## 2026-07-02
 
+### fix(starting-equipment): non-Gondor characters naked after career until a full game restart (+ prevention)
+
+The 2026-06-30 starter-armor change authored 12 new `LOTRLOME_items/<culture>/starter_armors.xml` files. On first
+play every **non-Gondor** character was naked after selecting a career (Gondor fine). Not a data defect: Bannerlord
+loads managed item XML in two one-shot phases — it **registers** each `<XmlName id="Items"
+path="LOTRLOME_items/<culture>">` *directory* at process launch (`Module.cs:246→1032`) and **globs** it
+(`DirectoryInfo.GetFiles("*.xml")`) at campaign start (`Campaign.cs:1471 LoadXML("Items")` →
+`MBObjectManager.cs:894/900/901/903`), with no hot-reload. A file created **after** launch is invisible until a
+full restart; Gondor's `starter_armors.xml` pre-existed the last launch, which is why only it was clothed. A full
+restart loads all 12 files (user-confirmed) — no data change needed. Mechanism decompile-verified and
+adversarially checked (workflow `naked-regression-prevention`).
+
+Prevention (the reason `validate_moduledata` PASS + green build + green tests didn't catch it — none start a
+campaign or instantiate `MBObjectManager`): documented the new-file/restart blind spot in
+`.claude/rules/moduledata-validation.md` (auto-loads on ModuleData edits) and
+`docs/features/starting-equipment-tuning.md`; added an RCA lesson to `docs/reviews/LESSONS-LEARNED.md`; and both
+`tools/generate_starter_armor.py` and `tools/wire_career_starter_armor.py` now print a RESTART-REQUIRED +
+verify-in-game reminder after `--apply`.
+
 ### fix(battle-balance): new-campaign CTD — throwing `PartyBase.Owner` getter banned assembly-wide (crash 0b462fd8)
 
 Every v2.0.8.0 campaign crashed within its first in-game day: the engine's settlement daily tick feeds every

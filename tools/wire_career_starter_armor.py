@@ -77,6 +77,12 @@ def main():
         with open(CAREER, "w", encoding="utf-8") as fh:
             fh.write(out)
         print("Rewrote %d rosters -> %s" % (n, CAREER))
+        print("\n" + "!" * 64)
+        print("RESTART REQUIRED - the rosters now reference starter_* items whose XML")
+        print("files load only at a fresh game launch (no hot-reload). Fully restart")
+        print("Bannerlord and confirm a non-Gondor career character is CLOTHED in-game;")
+        print("a green validate_moduledata does NOT prove the running game loaded them.")
+        print("!" * 64)
     else:
         # show two transformed samples
         for rid in ("player_career_gondor_ranged_m", "player_career_mirkwood_infantry_m"):

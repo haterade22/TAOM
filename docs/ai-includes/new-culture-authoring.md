@@ -103,6 +103,8 @@ Register the new folder in `LOTRLOME_Armory/SubModule.xml`:
 
 **Smoke test**: `python -c "import xml.etree.ElementTree as ET; ET.parse('<armory>/.../<culture>/head_armors.xml')"` — fast well-formedness check before booting the game.
 
+> ⚠ Well-formedness ≠ loaded in-engine. A NEW armor XML file (and a NEW `<XmlName id="Items">` folder registration) only takes effect after a full game **RESTART** — Bannerlord registers the item directory at process launch and globs it (`GetFiles("*.xml")`) at campaign start, with no hot-reload. `validate_all_troop_refs.py` / `validate_moduledata.py` passing does NOT prove the engine loaded the new files; restart + visually confirm troops are clothed in-game (naked-with-green-validator = new-file-not-loaded-until-restart). See `.claude/rules/moduledata-validation.md` ("PASS ≠ in-game loaded").
+
 ---
 
 ## Phase 2: Troop tree design + generator
@@ -272,6 +274,8 @@ Add `InitializeXxxCulture()`, optionally `InitializeXxxSettlements()`, optionall
 ## Phase 4: Validation gate
 
 Run these in order. Any FAIL blocks commit.
+
+> ⚠ These prove refs resolve **on disk**, not that the engine loaded new files. A new-culture ship writes brand-new armor XML files AND a new `<XmlName id="Items">` folder registration — both take effect only after a full game **RESTART** (Bannerlord registers the item directory at launch, globs it at campaign start, no hot-reload). A green `validate_all_troop_refs.py` with naked troops in-game = new-file-not-loaded-until-restart, not a data defect. Restart + visually confirm clothed before commit. See `.claude/rules/moduledata-validation.md`.
 
 ```bash
 # 1. Underwear-bug gate — every sk_<culture>_* armor ref resolves.

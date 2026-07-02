@@ -35,7 +35,7 @@
 | **Build** | `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true` | Use this, NOT `./build.ps1`, during agent work (avoids `out/` contention). |
 | **Test** | `dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true` | Add `--filter "FullyQualifiedName~X"` to narrow. |
 | Engine-binding gate | `dotnet test TAOM.Tests/TAOM.Tests.csproj --filter "TestCategory=BindingVerification"` | Verifies patch/GameModel/reflection bindings resolve against the installed engine. |
-| Troop equipment refs | `python tools/validate_all_troop_refs.py` | Underwear-bug gate across all 7 culture troop XMLs. |
+| Troop equipment refs | `python tools/validate_all_troop_refs.py` | Underwear-bug gate across all 7 culture troop XMLs. Proves refs resolve **on disk** — NOT that the engine loaded a NEW item file (those load only at a full game restart; naked-in-game with a green gate = new-file-not-loaded, not a data defect). |
 | API signature snapshot | `pwsh tools/snapshot_api_surface.ps1 [-Check]` | Regenerate / verify the committed v1.4.5 signature snapshot. |
 | **Native crash site naming** | `python tools/native_crash_triage.py --rva 0x<EventLog-fault-offset>` (or `--ip 0x<RIP> --base 0x<module-base>`) | Names a native CTD site WITHOUT symbols: pdata function bounds, hexdump, referenced strings, caller chains. Full protocol (Event Log, debugger setup): `.claude/skills/native-crash-triage/SKILL.md`. |
 | **Creature-mount data parity** | `python tools/audit_mount_parity.py` | Diffs a mount's Monster/usage/action surfaces vs warg/elephant/horse. Run BEFORE battle-testing creature changes; extend its `FILES`/`MOUNTS` maps for new creatures. |

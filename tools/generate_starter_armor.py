@@ -244,6 +244,14 @@ def main():
     print("=" * 60)
     print("TOTAL: %d items across %d cultures (%s)" %
           (total_items, len(CULTURES), "APPLIED" if args.apply else "DRY-RUN"))
+    if args.apply:
+        print("\n" + "!" * 64)
+        print("RESTART REQUIRED - new/edited item XML loads only at a fresh game launch")
+        print("(folder-globbed at campaign start; no hot-reload). A green")
+        print("validate_moduledata does NOT mean the running game sees these items.")
+        print("Fully restart Bannerlord, start a NEW game, and confirm a non-Gondor")
+        print("career character is CLOTHED before considering this done.")
+        print("!" * 64)
 
 
 if __name__ == "__main__":
