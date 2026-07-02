@@ -2,6 +2,13 @@
 
 ## 2026-07-01
 
+### refactor(companion-tactics): delete four orphaned BattleActionBar action enums
+
+`ShieldAction`, `PolearmAction`, `CavalryAction`, `RangedAction` (Main/Features/CompanionTactics/BattleActionBar/Models/)
+had zero references outside their own definition files — repo-wide grep across C#, XML, and prefabs; the single
+`RangedAction` hit was a substring in a test-method NAME, not a type usage. Deletion holding parity (3688 tests
+green). Round-2 target R1 from the vetted duplication/dead-code survey. Branch: `refactor/round2-cleanups`.
+
 ### review(refactor-stack): 6-dimension deep review — code clean, 2 stale-doc findings fixed + prevention installed
 
 `/deep-review` of the 4-branch refactor stack (#305-#308) via a 6-agent workflow (standards, installed-DLL API
