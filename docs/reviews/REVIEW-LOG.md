@@ -1414,6 +1414,18 @@ User report: an uruk save previewed as a bald human on the Load Game screen. Roo
 
 ---
 
+## Review 68 — SettlementEconomy town-gold regen (2026-07-02)
+
+User report: towns drain to 0 gold and never recover. Root cause (verified installed 1.4.6): vanilla regen constants (`0.25 × (10000 + P×12 − gold)` daily) vs TAOM's ~2× drains (~2.2× computed LOTRLOME loot values + 22% more villager deliveries). New feature `Main/Features/SettlementEconomy/`: thin `TaomSettlementEconomyModel` overriding ONLY `GetTownGoldChange` → pure `SettlementEconomyService` (banker's-rounding parity) → validated JSON config (shipped base **25000**, slope/rate vanilla) + MCM toggle. 29 tests. Data companions: prosperity analyzer + lift-only quantile rebaseline for TAOM_Map (dry-run validated; `--apply` deferred to user). Follow-ups #318 (LOTRLOME values) + #319 (CultureMarketplace filter defeats the price-crash guard).
+
+**Deep-review (6 agents: 5 core + Step 2c tooling): C# clean across all 5 dimensions; tooling agent found 2 HIGH + 1 MED.** HIGHs: the rebaseline's optional flags broke its idempotency claim (`--preserve`/`--pin-zero-village` left frozen fiefs in the ranking population → per-run rank drift; `--town-uplift` stacked cumulatively). Fixed (frozen fiefs excluded from ranking; uplift applied pre-clamp) and proven per flag combination (0 changes on run 2, all 6 combos). MED: BOM idiom divergence from the tools/README convention — resolved by sanctioning the byte-round-trip alternative. API-compat advisory (null-town guard deferred an NRE to base) also fixed. RCA: `docs/reviews/rca-settlement-economy-2026-07-02.md`; LESSONS-LEARNED "Build, Tooling & Workflow" gained "Test an advertised tool invariant per flag combination".
+
+**Codex (gpt-5.5 xhigh): 0 P1 / 0 P2 / 1 P3 — VERDICT CLEAN.** Rounding parity CONFIRMED bit-identical; castle exclusion verified via all-assembly caller sweep (zero `GetTownGoldChange` references outside TaleWorlds.CampaignSystem); 10-day convergence + toggle-OFF transition hand-computed benign; config cross-reference zero drift. P3 (validation permits self-defeating-but-finite configs, e.g. `rate=0`) = documented design intent; resolved with a feature-doc note, no code change. Codex sandbox couldn't run dotnet tests (MSBuild SDK probe) — local suite 3,755 green.
+
+**Process:** both reviews ran BEFORE any commit; the 2 tooling HIGHs were fixed before Codex dispatch, and Codex was told not to re-report them unless the fixes were wrong (it didn't). Codex prompt + raw output: `docs/reviews/codex-adversarial-settlement-economy-2026-07-02.{prompt.md,md}`. Lesson: an advertised tool invariant (idempotency) must be tested per flag combination — the default-path proof does not transfer to flags that mutate the output outside the core transform.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

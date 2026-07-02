@@ -2,6 +2,41 @@
 
 ## 2026-07-02
 
+### chore(research-infra): decompile dump refreshed to v1.4.6 — category tree no longer lags installed
+
+The `E:\Decompiled_Bannerlord\` category browse tree (Campaign/, MountAndBlade/, …) was still the v1.4.5
+decompile (manifest 2026-05-30) while the installed engine and the `_shipping_build`/`_editor_build`
+dual decompile (regenerated 2026-06-12) were v1.4.6 — every research task carried a "dump is one version
+behind" caveat. Preserved the v1.4.5 category tree + manifest to `_categories_v1.4.5\` (joining the
+existing `_shipping_build_v1.4.5\` baseline), regenerated via `tools/decompile_to_folder.ps1 -Force`
+(59 DLLs, 60s), verified the new manifest reads v1.4.6 and spot-checked `GetTownGoldChange` against the
+installed-DLL formula. CLAUDE.md version caveats updated (4 sites); `taom-src` on installed DLLs remains
+authoritative for signatures after any future bump.
+
+### feat(settlement-economy): tunable town market-gold regeneration — towns no longer stay broke (#317)
+
+User reports: town markets drain to 0 gold and never recover, so players can't sell loot. A 10-agent
+investigation (formulas verified on installed 1.4.6) found no TAOM bug — an equilibrium mismatch: the engine
+regenerates town gold daily toward `10000 + Prosperity×12` at 25% of the deficit (`GetTownGoldChange`, sole
+caller `ItemConsumptionBehavior.UpdateTownGold`), but TAOM's drains run ~2× vanilla (LOTRLOME loot computes to
+~2.2× vanilla item values via the engine's `2.75^tier` formula — #318; +22% villager deliveries at 2.78 avg
+bound villages/town), so wartime loot dumps + deliveries pin towns at ~0. Refuted: garrison wages (clan
+expense, never `Town.Gold`); CultureMarketplace injection (moves no gold). Fix: `TaomSettlementEconomyModel :
+DefaultSettlementEconomyModel` (SettlementFood donor pattern — thin model → pure `SettlementEconomyService`
+with banker's-rounding parity → validated `SettlementEconomyConfigProvider`) overriding ONLY
+`GetTownGoldChange`, knobs in `settlement_economy/settlement_economy_config.json`, **shipped base 25000**
+(slope 12 / rate 0.25 stay vanilla — base-heavy buffing gives collapsed towns 2.5× faster recovery while
+median towns gain ~29%; adversarial review confirmed no runaway loop, drains are goods-bounded). Castles never
+reach the override (`DailyTickTownEvent` iterates `Town.AllTowns` only). MCM "Settlement Economy" master
+toggle (off = base passthrough = vanilla); applies to existing saves (~90% convergence in 8 days). 29 tests.
+Data companions: `tools/analyze_settlement_prosperity.py` (read-only report; found 89 castles flat @600 + 31
+towns flat @3500 generator defaults) + `tools/rebalance_settlement_prosperity.py` (lift-only vanilla
+quantile-map, dry-run validated: 141 raised / 0 lowered; `--apply` deferred to user — edits the live TAOM_Map
+module). Follow-ups filed: #318 (LOTRLOME value rebaseline), #319 (CultureMarketplace filter defeats the
+price-crash anti-farming guard; its stale "60-item cap" doc line corrected to 200). New engine-reference
+section "Town gold — the market wallet" in `docs/reference/engine/settlement-economy-food-prosperity.md`;
+feature doc `docs/features/settlement-economy.md`.
+
 ### fix(hero-race): uruk saves preview true-to-race on the Load Game screen (per-race allow-list)
 
 User report: a new uruk (Mordor) campaign previewed as a bald human on the save list, though CC and in-game

@@ -176,6 +176,51 @@ The fix recovers ~12.5 food/day here; raising `prosperityFoodDivisor` to 60 woul
 term to −50 and bring the example net positive. The prosperity term is the bigger absolute lever — the
 knobs exist for exactly that.
 
+## Town gold — the market wallet (`Town.Gold`)
+
+Verified on installed v1.4.6 (taom-src) during the #317 investigation. Town market gold is a
+separate pool from food/prosperity — it is what the player sees as the merchant's money in the
+trade screen (`InventoryScreenHelper.cs:123-128`).
+
+### Daily regeneration (the only minting source besides resident consumption)
+
+`ItemConsumptionBehavior.DailyTickTown` → `UpdateTownGold` (:73-77) →
+`DefaultSettlementEconomyModel.GetTownGoldChange` (:75-79):
+
+```csharp
+float num = 10000f + town.Prosperity * 12f - (float)town.Gold;
+return MathF.Round(0.25f * num);
+```
+
+Equilibrium target `10000 + Prosperity×12`; 25% of the deficit recovered per day; **negative above
+the target** (self-damping mean-reversion). Initial town gold: 20,000 (`Town.InitialTownGold`).
+**Castles never receive this tick** — `DailyTickTownEvent` iterates `Town.AllTowns` (towns only;
+`CampaignPeriodicEventManager.cs:238` → `Town.cs:294-296`), and `GetTownGoldChange` has exactly one
+engine caller.
+
+### Drains and inflows (all drains bounded by goods value, never by pool size)
+
+| Flow | Direction | Site |
+|------|-----------|------|
+| Daily regen (above) | ± | `ItemConsumptionBehavior.cs:76` |
+| Resident consumption — town sells stock to simulated residents, budget = prosperity-scaled demand × priceIndex^0.3 | + | `MakeConsumption` :170, `CalculateDailySettlementBudgetForItemCategory` |
+| Villager deliveries — town buys, spend capped at `town.Gold/price` (can pin a town at ~0) | − | `SellGoodsForTradeAction.cs:52-57` |
+| AI-lord loot sales (proceeds → lord's personal gold) | − | `PartiesSellLootCampaignBehavior.cs:25-39` |
+| Caravan sales to town (double-capped by town gold) | − | `CaravansCampaignBehavior.cs:1179-1193` |
+| Player loot sales in the trade screen | − | `InventoryScreenHelper.cs:123-128` |
+| Workshops: town pays for outputs / workshop pays for inputs | −/+ | `WorkshopsCampaignBehavior.cs:844-868` |
+| Tariff skim when anyone buys FROM the town (70% town commission → `TradeTaxAccumulated` → owner clan) | − | `SellItemsAction.cs:70,86-91` |
+
+**Garrison wages never touch town gold** — they are a clan expense
+(`DefaultClanFinanceModel.AddPartyExpense` :825-862 deducts from the clan leader or the party's
+`PartyTradeGold`). Prosperity never reads gold, so there is no gold→prosperity feedback loop.
+
+**TAOM-specific:** drains run ~2× vanilla (2.2× LOTRLOME computed item values #318; +22% villager
+deliveries from 2.78 avg bound villages/town), which pinned towns at ~0 gold —
+`TaomSettlementEconomyModel` (Main/Features/SettlementEconomy/, #317) exposes the three formula
+constants as knobs, shipping base 25000. See
+[docs/features/settlement-economy.md](../../features/settlement-economy.md).
+
 ## See also
 
 - [campaign-tick-time-and-party-ai.md](campaign-tick-time-and-party-ai.md) — the DailyTick heartbeat

@@ -30,7 +30,7 @@ Pure CampaignBehavior layer — no Harmony patch needed, because `Settlement.Ite
 
 - **Auto-derived item pool**: On first daily tick (or `OnGameLoaded`/`OnNewGameCreated`), scan every `ItemObject` in `MBObjectManager` and group by `Culture.StringId`. Items missing the culture attribute fall through to an ID-prefix table (`sm_mordor_` → mordor, `wm_isengard_` → isengard, etc.) so shields aren't excluded.
 - **Optional XML overrides**: `culture_marketplace_config.xml` lets authors blacklist specific item IDs (keep Anduril quest-only) or boost weights (make certain Minas Tirith helms more common in Gondor markets). The provider validates every weight with `FiniteFloatValidator` and reverts NaN / Infinity / negative / >1000 values to 1.0 with a warning, per the project config-validation rule.
-- **Daily injection with cap**: For each town on `DailyTickSettlementEvent`, read the owner culture, draw K=6 weighted-random items from the pool, and add via `Settlement.ItemRoster.AddToCounts`. A per-town distinct-item cap (60) prevents unbounded growth — vanilla's price-driven trade flow handles depletion organically.
+- **Daily injection with cap**: For each town on `DailyTickSettlementEvent`, read the owner culture, draw K=6 weighted-random items from the pool, and add via `Settlement.ItemRoster.AddToCounts`. A per-town distinct-item cap (`PerTownTotalRosterCap` = 200 since 2026-05-20; counts distinct roster entries, not total quantity) prevents unbounded growth — vanilla's price-driven trade flow handles depletion organically.
 - **Dynamic ownership**: Culture is read fresh from `town.OwnerClan?.Culture?.StringId` on every tick. Conquest immediately shifts the pool used for the next injection.
 
 ### Component Diagram
