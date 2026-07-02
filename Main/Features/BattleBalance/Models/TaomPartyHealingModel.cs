@@ -54,10 +54,10 @@ public class TaomPartyHealingModel : DefaultPartyHealingModel
 
         // Career passive: TroopRegeneration increases survival chance. GetSurvivalChance returns a
         // raw float (not ExplainedNumber), so the multiplicative apply stays inline here.
-        var hero = party.Owner ?? party.LeaderHero;
-        if (hero != null)
+        var heroId = CareerPassiveHero.ResolveId(party);
+        if (heroId != null)
         {
-            float magnitude = _careerPassives.GetPassiveMagnitude(hero.StringId, PassiveEffectType.TroopRegeneration);
+            float magnitude = _careerPassives.GetPassiveMagnitude(heroId, PassiveEffectType.TroopRegeneration);
             if (magnitude != 0f)
                 result = Math.Min(1f, result * (1f + magnitude));
         }
@@ -68,9 +68,10 @@ public class TaomPartyHealingModel : DefaultPartyHealingModel
     public override ExplainedNumber GetDailyHealingHpForHeroes(PartyBase party, bool isPrisoners, bool includeDescriptions = false)
     {
         var result = base.GetDailyHealingHpForHeroes(party, isPrisoners, includeDescriptions);
-        // Career passive: HealthRegeneration boosts the party's hero daily HP recovery. Owner ??
-        // LeaderHero matches the sibling GetSurvivalChance resolution above.
-        _careerPassives.ApplyFactor((party?.Owner ?? party?.LeaderHero)?.StringId, ref result, PassiveEffectType.HealthRegeneration);
+        // Career passive: HealthRegeneration boosts the party's hero daily HP recovery. Resolved
+        // via CareerPassiveHero, never party.Owner — the engine getter throws for ownerless
+        // settlement parties and this override runs on every settlement daily tick (crash 0b462fd8).
+        _careerPassives.ApplyFactor(CareerPassiveHero.ResolveId(party), ref result, PassiveEffectType.HealthRegeneration);
         return result;
     }
 

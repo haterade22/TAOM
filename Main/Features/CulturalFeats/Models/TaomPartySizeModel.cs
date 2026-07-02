@@ -29,7 +29,7 @@ public class TaomPartySizeModel : DefaultPartySizeLimitModel
         // PartySize passives are authored as flat counts ("+2 party size"), so apply via ApplyFlat
         // (result.Add). ApplyFactor would treat magnitude=2 as +200% (x3 the base) — the "+2 -> +150"
         // bug. Culture party-size feats above remain factor-based (ApplyPartySizeFeats uses AddFactor).
-        _careerPassives.ApplyFlat((party.Owner ?? party.LeaderHero)?.StringId, ref result, PassiveEffectType.PartySize);
+        _careerPassives.ApplyFlat(CareerPassiveHero.ResolveId(party), ref result, PassiveEffectType.PartySize);
         return result;
     }
 }

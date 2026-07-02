@@ -1,5 +1,34 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-07-02
+
+### fix(battle-balance): new-campaign CTD — throwing `PartyBase.Owner` getter banned assembly-wide (crash 0b462fd8)
+
+Every v2.0.8.0 campaign crashed within its first in-game day: the engine's settlement daily tick feeds every
+`settlement.Party` into `TaomPartyHealingModel.GetDailyHealingHpForHeroes` (added in the 2026-06-26 career
+pip-bonus wiring, `9034e5dc`), which resolved the career-passive hero via `party?.Owner`. `PartyBase.get_Owner`
+throws for a settlement party whose `OwnerClan` is null — `Settlement.Owner => OwnerClan.Leader`, unguarded —
+and TAOM_Map's `retirement_retreat` (the lone `CustomSettlementComponent` settlement among 988) is exactly that.
+A `?.` on the result cannot guard a getter that throws internally (`adapters.md`, the #281 family — this is the
+third shipping instance of the class, and the #281 fix itself had planted `party.Owner?.Culture` inside the
+"null-safe" `ResolvePartyCulture` chokepoint).
+
+- New `CareerPassiveHero.ResolveId` (`Main/Features/CareerSystem/`): `(party?.MobileParty?.Owner ??
+  party?.LeaderHero)?.StringId` — `MobileParty.Owner` (`=> _partyComponent?.PartyOwner`) is the safe owner
+  accessor; owner-first order preserved so player-owned caravans/garrisons led by non-career companions still
+  resolve to the player. All 6 career-passive call sites route through it (PartyHealing ×2, PartySize,
+  PartyTroopUpgrade, BattleReward, Raid); `ResolvePartyCulture`'s owner limb swaps to
+  `party.MobileParty?.Owner?.Culture`.
+- **Prevention:** `PartyOwnerGetterBanTests` walks the raw IL of every method body in `TAOM.dll` (incl. generic
+  definitions and compiler-generated types) and bans `PartyBase.get_Owner` outright. RED at 7 violations
+  pre-fix — it found a 7th site (`TaomRaidModel`, `attackerSide?.LeaderParty?.Owner`) that text grep missed —
+  GREEN post-fix.
+- Intended behavior deltas (deep-review-verified negligible): settlement parties no longer resolve a
+  career-passive hero (passives are player-hero-exclusive; `settlement.Party` rosters hold no combat members),
+  and settlement-party culture feats fall to the `Settlement.Culture` field (vanilla `HasFeat`'s own final limb).
+- 5-agent deep review: standards/compat/efficiency/completeness/data-flow all PASS; installed-1.4.6 verification
+  of all 10 `PartyComponent.PartyOwner` overrides confirms the replacement chain cannot throw for any
+  validly-constructed party. RCA: `docs/reviews/rca-party-owner-getter-nre-2026-07-02.md`.
 ## 2026-07-01
 
 ### chore(hooks): remove CLAUDE.md from config-protection's blocked list (user decision)
