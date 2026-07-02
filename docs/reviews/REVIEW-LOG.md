@@ -1402,6 +1402,18 @@ New feature: troops whose CULTURE alignment (Free vs Evil) is opposed to their l
 
 ---
 
+## Review 67 — Patch55 race allow-list (2026-07-02)
+
+User report: an uruk save previewed as a bald human on the Load Game screen. Root cause was TAOM's own Patch55 coercing EVERY custom race to human (dwarf had proven the #295 morph AV; no other race was tested). An instrumented pass-through build proved the agentless native build renders uruk fine, so `BasicTableauRaceGuard` was refactored from the hardcoded int set (`{0}`) to a name-based per-race empirical allow-list (`TableauSafeRaceNames = {"uruk"}`) resolved per call via `IRaceManager` (validate-before-lookup, throw fail-safe → human). Committed `4697ada5`, issue #316.
+
+**Deep-review (5 agents): clean — 0 findings.** Standards PASS; Compat 8/8 verified against installed v1.4.6 (incl. sole-instantiation-site sweep of every game DLL); Efficiency 0; Completeness COMPLETE; Data-flow 6 traced / 0 gaps (confirmed Mordor CC race = exactly `"uruk"`; `uruk_hai`/`pale_uruk`/`dg_uruk` are distinct ids that correctly stay coerced; no pre-`OnLoadCommonFinished` RaceManager call path exists). Agent 2's process note (the `____race` field injection isn't covered by generic target resolution) was implemented in-session as `Patch55BasicTableauRaceGuardBindingTests` (Patch58 precedent).
+
+**Codex (gpt-5.5 xhigh): 0 P1 / 0 P2 / 0 P3 — VERDICT CLEAN.** All 6 Known Suspects DISPUTED with decompiled installed-DLL evidence (cross-session race-index drift = vanilla-equivalent residual the guard cannot detect — the visual code carries only a format version, no race-table fingerprint; single-sample verification = documented by-design residual, narrowed by its own 10-entry skins.xml audit showing shared skeleton/head mesh across gender/maturity; init-latch unreachable today; catch-all justified since Harmony doesn't swallow prefix exceptions; void-Prefix + ref-field-injection semantics confirmed; mock-reality divergence none). Codex sandbox couldn't run dotnet tests (env restriction, not a failure) — local suite 3726 green.
+
+**Process:** review ran pre-commit (deep-review) + post-commit (Codex, dispatched pre-commit, returned after the user-requested push); no fixes needed, no RCA (zero confirmed findings). Codex prompt + raw output: `docs/reviews/codex-adversarial-patch55-race-allowlist-2026-07-02.{prompt.md,md}`. Lesson (process, positive): the per-race empirical verification recipe (temp pass-through → render test → name-based allow-list) converts a wholesale crash-guard tradeoff into an incrementally reversible one.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

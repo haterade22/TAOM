@@ -19,6 +19,9 @@ stay coerced; the per-race verification recipe is documented in `docs/features/h
 (safe-race pass-through, casing, dwarf/elf coercion, invalid-id + fallback-trap pins, throw fail-safe) + a
 `Patch55` binding drift-guard pinning `BasicCharacterTableau._race` as `int` against the installed engine
 (the `____race` field injection isn't covered by the generic `HarmonyPatchBindingTests` target resolution).
+Reviews: 5-agent deep review 0 findings; Codex adversarial review CLEAN (0 P1/P2/P3 — all 6 Known Suspects
+disputed with decompiled evidence; cross-session race-index drift classified vanilla-equivalent residual).
+Review 67 in `docs/reviews/REVIEW-LOG.md`; issue #316; commit `4697ada5` + review-artifacts follow-up.
 
 ### balance(party-templates): stack maxes raised to 50 — bandit + kingdom hero parties (#315)
 
