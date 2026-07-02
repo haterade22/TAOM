@@ -1,0 +1,5 @@
+{
+  "townGoldBase": 25000,
+  "townGoldPerProsperity": 12,
+  "townGoldRegenRate": 0.25
+}

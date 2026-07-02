@@ -35,6 +35,13 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Corrects garrison food consumption (Troop Weight no longer inflates it for elite garrisons) and applies the tunable food knobs in settlement_food/settlement_food_config.json (consumption divisors, base/village/flat production, storage caps). Off = vanilla engine food math (garrison food stays weighted). Config edits need an app restart.")]
     public bool EnableSettlementFoodTuning { get; set; } = true;
 
+    // --- Settlement Economy ---
+
+    [SettingPropertyGroup("Settlement Economy")]
+    [SettingPropertyBool("Enable Settlement Economy Tuning", Order = 0,
+        HintText = "Regenerates town market gold toward a higher target (base 25000 vs vanilla 10000) so drained town markets recover — tunable in settlement_economy/settlement_economy_config.json (base, gold per prosperity, daily regen rate). Applies to existing saves immediately. Off = vanilla engine gold math. Config edits need an app restart.")]
+    public bool EnableSettlementEconomyTuning { get; set; } = true;
+
     // --- Native Skin Fixes ---
 
     [SettingPropertyGroup("Native Skin Fixes")]
