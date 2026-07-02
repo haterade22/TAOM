@@ -37,15 +37,65 @@ import os, re
 
 NAMES = {
     # V - Rohan (Anglo-Saxon)
+    "castle_village_V1_1": "Mearhtun",    # Rohirric from vanilla-Vlandian "Usanc" (horse ranch)
+    "village_V1_1": "Eoworth",            # Rohirric from vanilla-Vlandian "Calioc" (horse ranch)
     "castle_village_V1_2": "Seolforhamm",
+    "castle_village_V2_1": "Cornstede",   # Rohirric from "Hongard" (wheat)
+    "castle_village_V2_2": "Hengestun",   # Rohirric from "Ferton" (horse ranch)
+    "village_V2_1": "Wealdham",           # Rohirric from "Mareiven" (lumberjack)
+    "village_V2_2": "Æcertun",            # Rohirric from "Oritan" (wheat)
+    "castle_village_V3_1": "Fischam",     # Rohirric from "Drapand" (fisherman)
+    "castle_village_V3_2": "Stodham",     # Rohirric from "Valanby" (horse ranch; OE stod=stud)
+    "village_V3_2": "Swintun",            # Rohirric from "Rulund" (swine)
+    "village_V3_3": "Berewic",            # Rohirric from "Larnac" (wheat/barley)
+    "castle_village_V4_1": "Horsham",     # Rohirric from "Ormanfard" (horse ranch; OE hors+ham)
     "castle_village_V4_2": "Linhamm",
     "castle_village_V4_3": "Sídwic",
+    "castle_village_V5_1": "Fleaxham",    # Rohirric from "Tirby" (flax)
+    "castle_village_V5_2": "Eofeld",      # Rohirric from "Sirindac" (horse ranch)
+    "village_V5_1": "Oreham",             # Rohirric from "Furbec" (silver mine; OE ora=ore)
+    "village_V5_2": "Merham",             # Rohirric from "Meroc" (fisherman; OE mere=lake)
     "village_V1_3": "Lámford",
+    "castle_village_V6_2": "Huntham",     # Rohirric from "Deriat" (trapper)
+    "village_V6_1": "Rygeham",            # Rohirric from "Arromanc" (wheat/rye)
+    "village_V6_2": "Neatham",            # Rohirric from "Mot" (cattle; OE neat=cattle)
+    "village_V6_3": "Wicgham",            # Rohirric from "Alorstan" (horse ranch; OE wicg=steed)
     "village_V3_1": "Sealtburg",
     "village_V4_1": "Eldholt",
     "village_V4_2": "Swinmoor",
     "village_V4_3": "Wulfhamm",
+    "castle_village_V7_1": "Feldham",     # Rohirric from "Talivel" (wheat/field)
+    "castle_village_V7_2": "Grafton",     # Rohirric from "Rodetan" (iron mine; OE graf=digging)
+    "village_V7_1": "Eoleah",             # Rohirric from "Savinth" (horse ranch; OE eo+leah=horse-meadow)
+    "village_V7_2": "Wudetun",            # Rohirric from "Vesin" (lumberjack; OE wudu=wood)
     "village_V7_3": "Hwætland",
+
+    # S - Dale (Old Norse / Dalish; matches the already-Norse towns Dale/Eldby/Vargfell)
+    "castle_village_S1_1": "Nautby",      # from vanilla-Slavic "Ustokol" (cattle; ON naut+by)
+    "castle_village_S1_2": "Hrossdal",    # from vanilla-Slavic "Zhemyan" (horse ranch; horse-dale)
+    "village_S1_1": "Veidholt",           # from vanilla-Slavic "Rodobas" (trapper; hunting-wood)
+    "village_S1_3": "Fiskvik",            # from vanilla-Slavic "Kargrev" (fisher; fish-bay)
+    "castle_village_S2_1": "Linby",       # from vanilla-Slavic "Mazhadan" (flax)
+    "castle_village_S2_2": "Hestby",      # from vanilla-Slavic "Forin" (horse ranch; ON hestr)
+    "village_S2_1": "Akrby",              # from vanilla-Slavic "Safna" (wheat; field)
+    "village_S2_2": "Jarnfell",           # from vanilla-Slavic "Marabrot" (iron mine; iron-fell)
+    "castle_village_S3_1": "Kornby",      # from vanilla-Slavic "Nevyansk" (wheat; grain)
+    "castle_village_S3_2": "Stodby",      # from vanilla-Slavic "Dnin" (horse ranch; ON stod=stud)
+    "village_S3_1": "Engby",              # from vanilla-Slavic "Chornobas" (wheat; meadow)
+    "village_S3_2": "Fiskby",             # from vanilla-Slavic "Skorin" (fisher; fish)
+    "castle_village_S4_1": "Skinnby",     # from vanilla-Slavic "Kranirog" (trapper; fur)
+    "castle_village_S4_2": "Nautdal",     # from vanilla-Slavic "Ismilkorg" (cattle-dale)
+    "village_S4_1": "Vatnby",             # from vanilla-Slavic "Borchovagorka" (fisher; lake)
+    "village_S4_3": "Jarndal",            # from vanilla-Slavic "Omkany" (iron mine; iron-dale)
+    "village_S4_4": "Skogdal",            # from vanilla-Slavic "Yangutum" (lumberjack; forest)
+    "castle_village_S5_1": "Jarnby",      # from vanilla-Slavic "Ov" (iron mine)
+    "castle_village_S5_2": "Veidby",      # from vanilla-Slavic "Ferkh" (trapper; hunt)
+    "village_S5_1": "Saudby",             # from vanilla-Slavic "Visibrot" (sheep; ON saudr)
+    "village_S5_2": "Fedal",              # from vanilla-Slavic "Bukits" (cattle; ON fe-dale)
+    "castle_village_S6_1": "Nautfell",    # from vanilla-Slavic "Takor" (cattle-hill)
+    "castle_village_S6_2": "Fiskdal",     # from vanilla-Slavic "Dvorusta" (fisher; fish-dale)
+    "castle_village_S7_1": "Vikby",       # from vanilla-Slavic "Urikskala" (fisher; bay)
+    "castle_village_S7_2": "Akrdal",      # from vanilla-Slavic "Alov" (wheat; field-dale)
 
     # L - Lothlórien (Sindarin)
     "castle_village_L1_1": "Glórinant",
@@ -106,11 +156,31 @@ NAMES = {
     "village_E4_4": "Kibil-bizar",
 
     # EN - Dunland (Welsh/Brythonic)
+    "village_EN1_1": "Cwmhaearn",         # Welsh-ified from vanilla-Greek "Marathea" (iron-valley)
+    "village_EN1_2": "Dolwen",            # Welsh-ified from vanilla-Greek "Stathymos" (fair-meadow)
+    "village_EN1_3": "Aberlyn",           # Welsh-ified from vanilla-Greek "Gymos" (rivermouth)
+    "village_EN2_1": "Aberglas",          # Welsh-ified from vanilla-Greek "Alosea" (blue rivermouth)
+    "village_EN2_2": "Nant Arian",        # Welsh-ified from vanilla-Greek "Jeracos" (silver-stream)
     "castle_village_EN3_3": "Caer Dunwyr",
     "village_EN2_3": "Lhan Penrhos",
+    "castle_village_EN3_1": "Brynbuarth", # Welsh-ified from vanilla-Greek "Rhesos" (cattle-hill)
+    "castle_village_EN3_2": "Maeswen",    # Welsh-ified from vanilla-Greek "Dyopalis" (fair field)
+    "village_EN3_1": "Dolgoch",           # Welsh-ified from vanilla-Greek "Enoisa"
     "village_EN3_2": "Caer Haearn",
+    "castle_village_EN4_1": "Brynmawr",   # Welsh-ified from vanilla-Greek "Gaos"
+    "castle_village_EN4_2": "Waunfawr",   # Welsh-ified from vanilla-Greek "Themys" (moor/sheep)
+    "castle_village_EN5_1": "Nantglas",   # Welsh-ified from vanilla-Greek "Atrion"
+    "castle_village_EN5_2": "Bryncoch",   # Welsh-ified from vanilla-Greek "Masangara"
+    "castle_village_EN6_1": "Nanthalen",  # Welsh-ified from vanilla-Greek "Ataconia" (salt)
+    "castle_village_EN6_2": "Bryncelyn",  # Welsh-ified from vanilla-Greek "Potamis"
+    "castle_village_EN7_1": "Bryndu",     # Welsh-ified from vanilla-Greek "Epinosa"
+    "castle_village_EN7_2": "Coedmawr",   # Welsh-ified from vanilla-Greek "Pons" (wood, now lumberjack)
+    "castle_village_EN8_1": "Maesgwyn",   # Welsh-ified from vanilla-Greek "Syratos" (field, now wheat)
+    "castle_village_EN8_2": "Glynhaearn", # Welsh-ified from vanilla-Greek "Tememos" (iron-glen, now iron mine)
 
     # I - Isengard (Sindarin)
+    "castle_village_isengard_a": "Nan Angren", # de-placeholdered from "Isengard Castle Village" (Isen=Angren)
+    "village_isengard_a": "Curunlad",          # de-placeholdered from "Isengard Village" (Curunír/Saruman's vale)
     "castle_village_I1_1": "Nan Methed",
     "castle_village_I1_2": "Anggath",
     "castle_village_I1_3": "Sarn-orod",
@@ -119,16 +189,46 @@ NAMES = {
     "castle_village_I2_3": "Bar-noss",
 
     # ES - Mordor (Black Speech + Sindarin)
+    "castle_village_ES1_1": "Dûrthrak",   # Mordor from vanilla "Odrysa" (lumberjack; dark-haul)
+    "castle_village_ES1_2": "Nûrnhai",    # Mordor from vanilla "Caira" (wheat; Nurn folk)
+    "village_ES1_2": "Bûrz-salth",        # Mordor from vanilla "Polisia" (salt; dark-salt)
+    "village_ES1_3": "Snagador",          # Mordor from vanilla "Tegresos" (sheep; slave-land)
+    "village_ES1_4": "Angbûrz",           # Mordor from vanilla "Erebulos" (iron mine; iron-dark)
+    "castle_village_ES2_1": "Gorthûm",    # Mordor from vanilla "Corenia" (wheat)
+    "castle_village_ES2_2": "Ang-mauz",   # Mordor from vanilla "Metachia" (iron mine)
+    "village_ES2_2": "Nûrn-hoth",         # Mordor from vanilla "Gorcorys" (wheat; Nurn-host)
+    "village_ES2_3": "Sereg-had",         # Mordor from vanilla "Avalyps" (wheat; blood-field)
     "castle_village_ES3_3": "Lhûgsen",
+    "castle_village_ES3_1": "Bûrzum",     # Mordor from vanilla "Melion" (swine; Black Speech "darkness")
+    "castle_village_ES3_2": "Dûr-mauz",   # Mordor from vanilla "Sagolina" (silver mine)
+    "village_ES3_1": "Roch-bûrz",         # Mordor from vanilla "Canoros" (horse ranch; dark-horse)
+    "village_ES3_2": "Naerhad",           # Mordor from vanilla "Tevea" (cattle; woe-field)
     "castle_village_ES4_3": "Gûl-mauz",
+    "castle_village_ES4_1": "Lûgnen",     # Mordor from vanilla "Lavenia" (fisher; Nurnen eel-water)
+    "castle_village_ES4_2": "Nûrn-mad",   # Mordor from vanilla "Ethemisa" (wheat; Nurn-food)
+    "village_ES4_1": "Bûrznar",           # Mordor from vanilla "Sagora" (sheep)
+    "village_ES4_3": "Morroch",           # Mordor from vanilla "Canterion" (horse ranch; dark-horse)
     "castle_village_ES5_3": "Naurghai",
+    "castle_village_ES5_1": "Bûrz-glob",  # Mordor from vanilla "Morenia" (clay; dark-clay)
+    "castle_village_ES5_2": "Gûl-salth",  # Mordor from vanilla "Atphynia" (salt)
+    "village_ES5_1": "Gorthnar",          # Mordor from vanilla "Lanthas" (sheep)
+    "village_ES5_2": "Dûr-salth",         # Mordor from vanilla "Lartusys" (salt)
+    "village_ES5_3": "Angnaur",           # Mordor from vanilla "Parasemnos" (iron mine; iron-fire)
     "castle_village_ES5_4": "Nûrn-kâlan",
+    "castle_village_ES7_1": "Taur-bûrz",  # Mordor from vanilla "Jogurys" (lumberjack; dark-forest)
+    "castle_village_ES7_2": "Gûl-nûrn",   # Mordor from vanilla "Eunalica" (wheat; Nurn)
     "castle_village_ES7_3": "Wath-bûrz",
+    "castle_village_ES8_1": "Sereg-nûrn", # Mordor from vanilla "Chanopsis" (wheat; Nurn)
+    "castle_village_ES8_2": "Naer-mauz",  # Mordor from vanilla "Popsia" (silver mine)
     "castle_village_ES8_3": "Lûg-salth",
     "castle_village_ES8_4": "Lúgthrak",
     "village_ES1_1": "Borzhai",
     "village_ES2_1": "Morgul-hai",
     "village_ES4_2": "Seregfain",
+    "castle_village_ES6_1": "Krimp-bûrz", # Mordor from vanilla "Sestadaim" (iron mine)
+    "castle_village_ES6_2": "Naergûr",    # Mordor from vanilla "Amycon" (sheep; woe-herd)
+    "village_ES6_1": "Gûl-glob",          # Mordor from vanilla "Saldannis" (clay)
+    "village_ES6_2": "Gorth-nûrn",        # Mordor from vanilla "Spotia" (wheat; Nurn)
     "village_ES6_3": "Naerlug",
     "village_ES6_4": "Naerkrimp",
 
@@ -163,6 +263,15 @@ NAMES = {
     "castle_village_EW16_2": "Celeberein",
     "castle_village_EW16_3": "Erengwath",
     "village_EW3_3": "Anduinbrethil",
+    "castle_village_EW6_4": "Doronlad",   # de-duped from second "Sardol" (timber village, Morlad)
+    "village_EW6_1": "Falasbar",          # de-duped from second "Melgobas" (Anfalas coast fisher village)
+    "castle_village_EW7_4": "Amon Gelin", # renamed from "Green Hills Steading Mouth" (vineyard, Bar-en-Siril)
+    "village_EW8_2": "Parthlann",         # Sindarized from Rohan-style "Cressfeld" (cattle pasture, Pinnath Gelin)
+    "village_EW8_3": "Iaulad",            # Sindarized from Rohan-style "Cornworth" (wheat, Pinnath Gelin)
+    "castle_village_EW9_1": "Faslond",    # de-placeholdered from "South Harbor" (fisher, Tolfalas/Belfalas coast)
+    "castle_village_EW9_2": "Amrúnbar",   # de-placeholdered from "East Landing" (cattle, Tolfalas/Belfalas)
+    "castle_village_EW9_3": "Angorod",    # de-placeholdered from "Highland" (iron mine, Tolfalas/Belfalas)
+    "castle_village_EW9_4": "Erynbar",    # de-placeholdered from "Belfalas Village" (lumberjack, Belfalas)
 
     # R - Rivendell (Sindarin)
     "castle_village_R2_1": "Hithaeglin",
@@ -181,6 +290,10 @@ NAMES = {
     "village_R1_2": "Imladtawar",
     "village_R1_3": "Imladrochrim",
     "village_R1_4": "Glanduin-host",
+
+    # MM - Misty Mountain Orcs (Black Speech) — dedup from gundabad twins
+    "village_MM2_2": "Dush-krimp",        # de-duped from "Düglar-tang" (gundabad keeps that name)
+    "castle_village_MM4_1": "Skar-gosh",  # de-duped from "Shôrd-krish" (gundabad keeps that name)
 
     # G - Gundabad (Black Speech)
     "castle_village_G1_1": "Bagmosh",

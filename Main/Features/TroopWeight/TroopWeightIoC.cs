@@ -1,4 +1,5 @@
 using DryIoc;
+using TAOM.Features.TroopWeight.Diagnostics;
 using TAOM.Features.TroopWeight.Hooks;
 
 namespace TAOM.Features.TroopWeight;
@@ -9,6 +10,10 @@ public static class TroopWeightIoC
     {
         container.Register<ITroopWeightXmlLoader, TroopWeightXmlLoader>(Reuse.Singleton);
         container.Register<ITroopWeightService, TroopWeightService>(Reuse.Singleton);
+
+        // TEMPORARY: troop-count diagnostic behavior (special-currency undercount investigation).
+        // Remove alongside TroopCountDiagnosticsBehavior once the root cause is pinned.
+        container.Register<TroopCountDiagnosticsBehavior>(Reuse.Singleton);
 
         container.Register<IOnPartyBaseNumberOfAllMembers, PartyBaseNumberOfAllMembersHook>(Reuse.Singleton);
         container.Register<IOnPartyBaseNumberOfRegularMembers, PartyBaseNumberOfRegularMembersHook>(Reuse.Singleton);

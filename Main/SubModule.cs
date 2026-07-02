@@ -28,6 +28,7 @@ using TAOM.Features.StartupResources;
 using TAOM.Features.NamedCompanions;
 using TAOM.Features.TroopProgression;
 using TAOM.Features.TroopWeight;
+using TAOM.Features.TroopWeight.Diagnostics;
 using TAOM.Features.TroopWeight.Hooks;
 using TAOM.Features.AtmospherePersistence.Hooks;
 using TAOM.Features.TroopProgression.Models;
@@ -548,6 +549,10 @@ public class SubModule : MBSubModuleBase
             specialResourceService, specialResourceStorage, specialResourceConfig, specialResourceLogger);
         campaignStarter.AddBehavior(specialResourceBehavior);
         PartyScreenLogic_AddCommand_Patch.SetBehavior(specialResourceBehavior);
+
+        // TEMPORARY: troop-count diagnostic (special-currency undercount investigation). Dumps the
+        // main party's raw + weighted counts to the log on party-screen open. Remove with the behavior.
+        campaignStarter.AddBehavior(IoC.Resolve<TroopCountDiagnosticsBehavior>());
 
         var careerDataService = IoC.Resolve<ICareerDataService>();
         var careerRegistry = IoC.Resolve<ICareerRegistry>();

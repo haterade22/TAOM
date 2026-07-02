@@ -137,6 +137,24 @@ name-substituted diff). Both features now bind a shared `Main/Features/ElephantL
 before and after, net −125 LOC. Branch: `refactor/elephant-mumakil-unify` (plan T1 of the 2026-07-01 refactor
 target audit).
 
+### diag(troop-weight): add temporary troop-count diagnostic for special-currency undercount report
+
+A player reported 30 troops (10 special-currency) showing as 20 on the campaign-map nameplate + party-size
+counter. Static analysis ruled out every TAOM mechanism as a cause of an *undercount*: Patch17 TroopWeight is
+increase-only, a missing weight entry defaults to 1.0, the display hooks walk the full roster, and no roster-add
+path bypasses `AddToCounts`. The symptom needs runtime roster state (wounded vs. troops living outside the main
+party vs. a stale cached count) to resolve, so this ships an instrumented build to capture it.
+
+- **`TroopCountDiagnosticsBehavior`** (`Main/Features/TroopWeight/Diagnostics/`) — on party-screen open, logs the
+  main party's raw + weighted counts (per-slot bodies, wounded, resolved weight, special-currency flag,
+  `EnableTroopWeight`) under a `[TroopCountDiag]` prefix, plus a scan of where the player's special-currency
+  troops live across clan war parties + garrisons. Runs regardless of the Troop Weight setting; whole path is
+  try/catch'd.
+- Pure, unit-tested `TroopCountDiagnosticsFormatter` (6 tests) owns the line formatting incl. a slot-bodies vs.
+  `TotalManCount` MISMATCH detector for the stale-count hypothesis.
+- **Temporary** — registered in `TroopWeightIoC` + `SubModule`; both the behavior and its registrations are to be
+  removed once the log pins the root cause and the real fix lands.
+
 ## 2026-06-30
 
 ### feat(native-skin-fixes): port all 7 native hooks to Bannerlord v1.4.6 + activate
