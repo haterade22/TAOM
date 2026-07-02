@@ -17,11 +17,14 @@ namespace TAOM.Features.HeroRace.Hooks;
 ///
 /// The Prefix coerces the private <c>_race</c> field to a render-safe race (the human base) for races
 /// whose heads lack the data, so the cold main-menu Load Game preview cannot CTD. The decision lives
-/// in <see cref="IBasicTableauRaceGuard"/> (ADR-002/007). Scope is narrow by construction: only the
-/// Save/Load preview uses BasicCharacterTableau — the in-game inventory / character-creation tableaus
-/// use the AgentVisuals path (CharacterTableau) and already render custom races correctly, so they are
-/// untouched. Tradeoff: an affected custom-race save shows a human-headed preview (with correct
-/// equipment) until the head morph data is authored asset-side (issue #295) — acceptable vs. a crash.
+/// in <see cref="IBasicTableauRaceGuard"/> (ADR-002/007) — a per-race EMPIRICAL allow-list keyed by
+/// race NAME (ids shift with skins.xml merge order): races proven to render in an in-game test pass
+/// through true-to-race (uruk verified 2026-07-02); dwarf is proven unsafe (#295) and every
+/// unverified race coerces. Scope is narrow by construction: only the Save/Load preview uses
+/// BasicCharacterTableau — the in-game inventory / character-creation tableaus use the AgentVisuals
+/// path (CharacterTableau) and already render custom races correctly, so they are untouched.
+/// Tradeoff: an unverified custom-race save shows a human-headed preview (with correct equipment)
+/// until its race is render-verified or its head morph data is authored asset-side (issue #295).
 ///
 /// CRITICAL timing (Codex C1, issue #299): this is its OWN category applied from
 /// <c>SubModule.OnBeforeInitialModuleScreenSetAsRoot</c>, NOT the sibling CharacterTableau patches'

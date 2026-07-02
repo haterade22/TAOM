@@ -2,6 +2,24 @@
 
 ## 2026-07-02
 
+### fix(hero-race): uruk saves preview true-to-race on the Load Game screen (per-race allow-list)
+
+User report: a new uruk (Mordor) campaign previewed as a bald human on the save list, though CC and in-game
+rendered correctly. Root cause was TAOM's own `Patch55_BasicTableauRaceGuard` (2026-06-24, #299): it coerced
+**every** custom race to human in the `BasicCharacterTableau` agentless native build because a **dwarf** head had
+proven the morph-data AV (#295) — no other race was ever tested. An instrumented pass-through build showed the
+native build renders **uruk fine** (all uruk skins ride `human_skeleton` with `sk_uruk_basemesh_a_*` meshes), so
+the wholesale coercion was too broad for it. `BasicTableauRaceGuard` refactored from a hardcoded int set (`{0}`)
+to a name-based `TableauSafeRaceNames` (uruk verified 2026-07-02) resolved per call via `IRaceManager` — ids are
+skins.xml merge-order indices and shift with the module set; validate-before-lookup so an invalid id coerces
+instead of riding the `GetRaceNameFromId` "human" fallback; any resolution throw fails safe to the human base
+(worst case a human thumbnail, never a CTD). Cold-menu name resolution verified safe: `FaceGen.CreateInstance()`
+runs from the engine's native `OnLoadCommonFinished` before the initial screen. Dwarf and all unverified races
+stay coerced; the per-race verification recipe is documented in `docs/features/hero-race.md`. 9 guard tests
+(safe-race pass-through, casing, dwarf/elf coercion, invalid-id + fallback-trap pins, throw fail-safe) + a
+`Patch55` binding drift-guard pinning `BasicCharacterTableau._race` as `int` against the installed engine
+(the `____race` field injection isn't covered by the generic `HarmonyPatchBindingTests` target resolution).
+
 ### balance(party-templates): stack maxes raised to 50 — bandit + kingdom hero parties (#315)
 
 Map bandit parties averaged 20-25. Spawn size is `min + (max-min) × ratio` per template stack, the bandit ratio
