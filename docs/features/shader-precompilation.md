@@ -185,6 +185,8 @@ If a culture's characters are not getting compiled, verify:
 
 ## Referenced by
 
+- [docs/features/atmosphere-persistence.md](./atmosphere-persistence.md)
+- [docs/features/battle-load-diagnostics.md](./battle-load-diagnostics.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

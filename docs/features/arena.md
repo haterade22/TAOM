@@ -143,6 +143,7 @@ If another custom-skeleton race is ever a tournament participant and clips insid
 
 ## Referenced by
 
+- [docs/features/tournament-armor-assignment.md](./tournament-armor-assignment.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

@@ -229,3 +229,15 @@ constants as knobs, shipping base 25000. See
   (`Settlement.Culture` not engine-saved; castle `.Village == null`).
 - [docs/features/troop-weight-system.md](../../features/troop-weight-system.md) — the weighted
   `NumberOfAllMembers` getter that this model corrects for the garrison food term.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/settlement-economy.md](../../features/settlement-economy.md)
+- [docs/features/settlement-food.md](../../features/settlement-food.md)
+- [docs/INDEX.md](../../INDEX.md)
+
+<!-- backlinks-end -->

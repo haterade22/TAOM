@@ -97,3 +97,13 @@ names in `monsters.xml` MUST exactly match the creature's skeleton** — and why
 ## Evidence (file:line, v1.4.5)
 - `TaleWorlds.Core/Monster.cs` `Deserialize`: action_set/female/monster_usage @304-318; weight/hit_points/num_paces/speeds/jump @327-367; arm/jump/charge/family_type @470-495; the full bone map @496-559 (`DeserializeBoneIndex`/`DeserializeBoneIndexArray`, `validateHasParentBone`); foot-IK @523-530; rein bones @531-559; capsules/flags/eye-heights sub-nodes parsed in the same method.
 - Consumed: `Monster.FillAnimationSystemData` (`TaleWorlds.MountAndBlade.cs`:101588) + `CreateAgent` (`Mission.cs`:4040-4053) + `FillCapsuleData`/`FillSpawnData`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+
+<!-- backlinks-end -->

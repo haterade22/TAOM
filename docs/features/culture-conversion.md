@@ -139,3 +139,14 @@ MCM knobs (merged over JSON by [`CultureConversionSettingsProvider`](../../Main/
 ## Changelog
 
 - 2026-06-02 — Introduced the `Main/Features/CultureConversion/` module: conquered cross-culture towns/castles (and bound villages) gradually flip `Settlement.Culture` after a configurable hold period, recruiting the new owner's troops and dropping the foreign-occupier loyalty penalty; reconquest-to-original reverts. Adds a converted-settlement recruitment branch (`HasCulturePool` gate + `VolunteerContext` fields), persisted records re-applied on load, JSON + MCM "Culture Conversion" config. Includes deep-review + Codex fixes (stale-record purge on culture-removal, `HasCulturePool` playable-culture gate adding Rohan/Harad).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/culture-marketplace.md](./culture-marketplace.md)
+- [docs/features/revolt-tuning.md](./revolt-tuning.md)
+
+<!-- backlinks-end -->

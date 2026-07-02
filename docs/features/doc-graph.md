@@ -146,3 +146,15 @@ These were considered and intentionally **not** built in v1 (scope + ROI; see th
 
 - **Issue:** [#276](https://github.com/haterade22/TAOM/issues/276) — Doc-graph analytics (ADR-010 Phase 5)
 - **Status:** Open
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/agent-operating-manual.md](../ai-includes/agent-operating-manual.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reviews/adopt-graphify-2026-06-08.md](../reviews/adopt-graphify-2026-06-08.md)
+
+<!-- backlinks-end -->

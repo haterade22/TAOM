@@ -107,3 +107,13 @@ Pending Codex's parallel review (background task `bo71dfzxs`). Once Codex lands:
 3. Defer Cluster C (loc propagation) and Cluster H (layout) — flag as follow-ups.
 4. Re-verify: `dotnet test TAOM.Tests` + `./build.ps1 -RunTests`.
 5. REVIEW-LOG.md + AGENTS.md update + meta-RCA on the skipped-review-gates process violation.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

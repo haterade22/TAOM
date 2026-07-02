@@ -65,3 +65,13 @@ The ported regex categories are **advisory (INFO) on a TAOM self-audit** and **f
 - **Windows Defender quarantines on-disk webshell/malware signature files** before the scanner can read them; the auditor fail-opens on unreadable files (correct), and the tests therefore drive YARA in-memory. A real foreign-repo scan on a machine with aggressive AV may see some signature files skipped — the heavyweight SkillSpector path (or disabling AV in a sandbox) is the fallback.
 - `yara-python` was `pip install`ed locally to verify the layer; it is optional and not added to any TAOM requirements manifest.
 - `CLAUDE.md` was left unedited (the new `tools/yara_rules/` path + auditor categories warrant a one-line note, but `CLAUDE.md`/`AGENTS.md` are shared files pushed in the user's batch per the adoption convention + config-protection hook).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

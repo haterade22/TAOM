@@ -158,3 +158,13 @@ The analyzer is read-only and self-verifying: running it against the live tree m
 **Add/adjust a cultural identity:** edit `CULTURAL_MODS[culture]`; dry-run; the analyzer's "In CULTURAL_MODS" column flags any culture still on the neutral default.
 
 **Exclude a new hero/boss item from the curve:** add its id substring to `EXCLUDE_ID_SUBSTRINGS` or its name to `HERO_NAMES`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/starting-equipment-tuning.md](./starting-equipment-tuning.md)
+
+<!-- backlinks-end -->

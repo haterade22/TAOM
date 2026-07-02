@@ -297,6 +297,7 @@ The pipeline is project-agnostic. Run `--init` from any directory containing wea
 
 ## Referenced by
 
+- [docs/ai-includes/weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

@@ -68,3 +68,13 @@ rider surfaces it. The in-game battle-test is the irreplaceable gate for creatur
 - `dotnet build Main/TAOM.csproj` — succeeds. Combat suites green (105). Full suite 3169 green.
 - **In-game (2026-06-15): campaign battle, many spiders, enemies meleeing riders — no `0x3` crash** (user-confirmed).
 - The Harmony patch is verified by APPLYING it in-game (the crash stopping proves both apply + fix), per `harmony-patches.md`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/spider.md](../features/spider.md)
+
+<!-- backlinks-end -->

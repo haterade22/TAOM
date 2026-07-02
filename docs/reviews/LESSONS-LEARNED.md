@@ -1035,6 +1035,12 @@ When a feature inspects an engine string (scene name, ID, faction key, settlemen
 - **Prevent:** for any `sceneName.Contains("X")` / `factionId.StartsWith("Z")` substring/prefix check against engine-produced strings, grep `Main/_Module/ModuleData/*.xml` (all settlement/faction/kingdom/culture XML, not just feature-specific custom XML) for the substring before shipping; switch to an authoritative engine flag or exact-string whitelist if overlap exists. Applies to all 7 features in the external-developer port (SiegeDismount, MixedFormations, SmartCavalryAI, FiefManagement, QuickActions, EquipPresets, CompanionTactics).
 - **Source:** memory/feedback_substring_keyword_matches_external_data.md
 
+### Per-hero GameModel: identify the engine's SUBJECT hero before claiming couple/family semantics
+A GameModel that receives one `Hero` and returns a per-hero answer implements couple-/family-level behavior ONLY for the hero the engine actually passes in. Decompile the CALLER and find the subject-selection site before writing any rule of the form "X's flag prevents a couple/family outcome." Concrete case (v1.4.6): `PregnancyCampaignBehavior.DailyTickHero:92` gates on `hero.IsFemale` and `RefreshSpouseVisit:120` passes the FEMALE to `PregnancyModel.GetDailyChanceOfPregnancyForHero` — so an `immortal: true` race entry on a male hero (Sauron #321) never gated conception; his human consort (`lord_1_18`, race-unset) rolled at full fertility, and the CHANGELOG's "blocks any future children" claim was false as shipped. Fix: gate symmetrically — `TaomPregnancyModel` now also returns 0 when `hero.Spouse`'s race is immortal.
+- **Why missed:** the race entry copied the saruman precedent and trusted the immortal flag's documented semantics ("blocks all fertility") without tracing WHO the engine passes to the model; the two prior immortal races never exposed the hole (wraith spouses stripped by NazgulFamily; Saruman unmarried). The feature doc described the model's internal steps accurately but was silent about the engine's calling convention.
+- **Prevent:** for any per-hero model override (pregnancy, age death, wages, relations), decompile the engine caller and name the subject hero in the feature doc; implement flag-driven couple/family effects symmetrically (check both partners) or prove the subject is always the flagged party. TAOM's mixed-race couples make the asymmetric case the NORM, not the edge.
+- **Source:** docs/reviews/rca-sauron-race-2026-07-02.md (finding 1)
+
 ---
 
 ## Localization & UI

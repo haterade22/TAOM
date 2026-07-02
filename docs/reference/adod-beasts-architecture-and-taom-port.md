@@ -211,3 +211,17 @@ identity; the hand-iterate-and-`Tick` loop (redundant — `Agent.Tick` auto-tick
 - Animation clip flags (for the creature clip authoring): [bannerlord-animation-clip-flags.md](bannerlord-animation-clip-flags.md)
 - Elephant feature: [elephant.md](../features/elephant.md) · Spider feature + render RCA: [spider.md](../features/spider.md), [rca-spider-troop-2026-06-04.md](../reviews/rca-spider-troop-2026-06-04.md)
 - Full decompiled source (both builds): `E:\Decompiled_Bannerlord\{_shipping_build,_editor_build}\` (regen: `tools/decompile_bannerlord.ps1`)
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/engine/agent-spawn-and-render-pipeline.md](engine/agent-spawn-and-render-pipeline.md)
+- [docs/reference/engine/gamemodel-system.md](engine/gamemodel-system.md)
+- [docs/reference/engine/mount-and-rider-runtime.md](engine/mount-and-rider-runtime.md)
+- [docs/reference/engine/save-system.md](engine/save-system.md)
+
+<!-- backlinks-end -->

@@ -117,3 +117,13 @@ JSON syntax check                           ->  valid
 - [`docs/reviews/rca-faction-map-phase2-2026-06-01.md`](rca-faction-map-phase2-2026-06-01.md) — sibling RCA for the deep-review fix shipped earlier (`7f0de78`).
 - `.claude/rules/simplicity-criterion.md` — Yes/No matrix used to reject the special-units name accuracy MED and the `_su_` naming LOW.
 - `.claude/rules/evidence-over-claims.md` — verify-before-acting (applied to vanilla decompile + XSLT trace).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/faction-map.md](../features/faction-map.md)
+
+<!-- backlinks-end -->

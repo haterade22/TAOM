@@ -322,6 +322,7 @@ Open an issue on GitHub or reach out on the mod's Discord channel.
 
 ## Referenced by
 
+- [docs/ai-includes/weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

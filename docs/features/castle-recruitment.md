@@ -118,3 +118,13 @@ Boundary classes (`CastleRecruitmentBehavior`, `CastleNotableMaintainer`, the `P
 ## Changelog
 
 - 2026-05-31 — Recruit troops from castles (player + AI): new `CastleRecruitment` module (Patch42) — castle "Recruit troops" menu, AI scoring/travel/drain via two transpilers + `HourlyTickParty` postfix, `HeroCreator.CreateNotable` castle notables with castle-safe occupations and daily volunteer fill, issue/quest suppression, MCM "Castle Recruitment" group + `castle_recruitment_config.json` (master/AI toggles, notables-per-castle 1-5 default 3).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/culture-conversion.md](./culture-conversion.md)
+
+<!-- backlinks-end -->

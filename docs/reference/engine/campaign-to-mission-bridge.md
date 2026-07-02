@@ -103,3 +103,13 @@ the single point where the all-managed campaign layer (Phase 16) hands off to th
 - `CampaignMission.cs`:12 (`static class`), :22 (`OpenBattleMission(rec)`), :69 (`OpenBattleMission`→`CampaignMissionManager`).
 - `MissionState.cs`:11 (`: GameState`), :31 (`Current`), :33 (`CurrentMission`), :60 (`OnMissionStateActivate`), :312 (`OpenNew`→`CreateState<MissionState>`+`HandleOpenNew`+`PushState`), :316-330 (default behaviors: `BasicMissionHandler`/`CasualtyHandler`/`AgentCommonAILogic`).
 - Linked: campaign-object-graph.md (Phase 16, the parties), mission-and-missionbehavior-lifecycle.md (Phase 4), agent-spawn-and-render-pipeline.md (Phase 1), gauntletui-viewmodel-screen.md (Phase 11, CreateState/PushState), formations-and-team-ai.md (Phase 13, deferred patch). Gotchas: `feedback_gamestate_creation_pattern`, `feedback_movementorder_cctor_mission_current`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+
+<!-- backlinks-end -->

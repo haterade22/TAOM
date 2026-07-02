@@ -123,3 +123,13 @@ python -m unittest tools.tests.test_validate_mesh_refs        # this tool only
 ## Changelog
 
 - 2026-06-01 — Added `tools/validate_mesh_refs.py`, a pure-stdlib three-tier mesh / collision-body existence validator (Tier A authoritative `rgl_log` cross-ref, Tier B offline `.tpac` TOC for visual meshes, Tier C coarse `bo_` byte-scan); first run found 3 real Armory data bugs and 30 new tests were added.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/battle-load-diagnostics.md](./battle-load-diagnostics.md)
+
+<!-- backlinks-end -->

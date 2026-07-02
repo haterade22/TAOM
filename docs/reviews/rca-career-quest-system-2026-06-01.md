@@ -82,3 +82,13 @@ System.ArgumentException: An item with the same key has already been added.
 ## Verdict
 
 READY. 1 HIGH (deep-review) + 5 Codex Phase-2 findings + 1 Codex Phase-3 finding (superseded by the rename) + 1 in-game `Module.Initialize` crash — all fixed in-session. The `DefeatEnemyLords` rename corrected the objective's game-semantics (capture, not execute) and the SaveId collision was the only launch-blocker. Final: build 0 err (deploy OK with game closed), suite **2877 pass / 0 fail / 2 skipped**. In-game `Module.Initialize` now clears the save-definer context (user to confirm the relaunch).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

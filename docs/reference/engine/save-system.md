@@ -83,3 +83,14 @@ may reference native resources (an `MBObjectBase`'s `MBGUID`), but the persisten
 - `TaleWorlds.SaveSystem.cs`:1046 (`SaveableTypeDefiner`), 1052 (ctor `_saveBaseId`), 1123-1126 (`AddClassDefinition` → `_saveBaseId + saveId`), 1129-1135 (`AddClassDefinitionWithCustomFields`), 1167 (`AddEnumDefinition`), 1112 (`AddBasicTypeDefinition`), 1062-1100 (`Define*` virtuals), 134 (`SaveableFieldAttribute`).
 - TAOM precedent + the collision rule: memory `feedback_saveable_typedefiner_localid_offset`; the upstream pack's `ADODBeastsSaveDefiner` (the wolf) in the [upstream-pack comparison](../adod-beasts-architecture-and-taom-port.md).
 - `CampaignBehaviorBase.SyncData(IDataStore)` — the per-behavior persistence override (TAOM features override it widely).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/engine/issue-and-quest-system.md](./issue-and-quest-system.md)
+
+<!-- backlinks-end -->

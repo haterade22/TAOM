@@ -77,3 +77,13 @@ No test changes — all fixes are inside collector/service paths that the existi
 Phase 1 (deep-review) RCA complete. Five of six findings are the same root-cause pattern that has shipped THREE times in 19 days — the prevention rule exists but isn't being applied at design time. Process improvement is required at the author level, not new rule documentation.
 
 Proceeding to Phase 2 (`/review-codex` adversarial pass) next.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/rca-cultural-feats-wave1-2026-06-07.md](./rca-cultural-feats-wave1-2026-06-07.md)
+
+<!-- backlinks-end -->

@@ -304,8 +304,11 @@ _See the repository-root `CHANGELOG.md` for full chronological history._
 ## Referenced by
 
 - [docs/features/battle-balance.md](./battle-balance.md)
+- [docs/features/career-quest-system.md](./career-quest-system.md)
+- [docs/features/starting-equipment-tuning.md](./starting-equipment-tuning.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/research/karpathy-autoresearch.md](../research/karpathy-autoresearch.md)
+- [docs/reviews/rca-career-phantom-passives-2026-06-26.md](../reviews/rca-career-phantom-passives-2026-06-26.md)
 - [docs/reviews/rca-career-starting-equipment-2026-05-19.md](../reviews/rca-career-starting-equipment-2026-05-19.md)
 
 <!-- backlinks-end -->

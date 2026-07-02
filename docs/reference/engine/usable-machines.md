@@ -86,3 +86,13 @@ C#), running on `GameEntity`s whose transforms/physics are native (Phase 8). The
 - `MissionObject.cs`:10 (`abstract : ScriptComponentBehavior`); `UsableMissionObject.cs`:360 (`OnUse(Agent, sbyte)`); `StandingPoint.cs`:11 (`: UsableMissionObject`) + subtypes (`StandingPointWith{TeamLimit,AgentLimit,WeaponRequirement,VolumeBox}`, `StandingPointForRangedArea`).
 - `UsableMachine.cs`:13 (`: SynchedMissionObject, IFocusable, IOrderable, IDetachment`), 55 (`StandingPoints` MBList); `UsableMachineAIBase.cs`:12 (the AI driver); `SiegeWeapon.cs`:11 (`: UsableMachine, ITargetable` — vanilla template).
 - Worked example + drift table: [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanism.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+
+<!-- backlinks-end -->

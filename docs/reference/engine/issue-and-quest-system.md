@@ -242,3 +242,14 @@ IssuesCampaignBehavior.OnSettlementDailyTick (saturation check, towns 1-3 / vill
 [campaignevents-and-campaignbehavior](./campaignevents-and-campaignbehavior.md),
 [submodule lifecycle](./submodule-lifecycle-and-harmony.md), [save-system](./save-system.md), and the TAOM
 implementation [lotr-issues.md](../../features/lotr-issues.md) (shipped 2026-06-20).*
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/lotr-issues.md](../../features/lotr-issues.md)
+- [docs/INDEX.md](../../INDEX.md)
+
+<!-- backlinks-end -->

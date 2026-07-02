@@ -132,3 +132,13 @@ NaN/Infinity literals and the rate-0 accepted extreme).
   the engine's full food/prosperity/gold loop, including the town-gold drain/inflow map.
 - [settlement-food.md](settlement-food.md) — the donor pattern (thin model + pure service +
   validated config + MCM toggle).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reference/engine/settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)
+
+<!-- backlinks-end -->

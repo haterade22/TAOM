@@ -148,6 +148,7 @@ Hero skills bake at hero CREATION. Existing campaigns keep their old (vanilla Sk
 ## Referenced by
 
 - [docs/ai-includes/lord-skills-authoring.md](../ai-includes/lord-skills-authoring.md)
+- [docs/features/lord-perk-review.md](./lord-perk-review.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

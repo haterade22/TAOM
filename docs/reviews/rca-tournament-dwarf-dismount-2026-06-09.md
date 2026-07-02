@@ -96,3 +96,13 @@ Lesson reinforced: the build/tests passing said nothing about the patch *applyin
 
 - **Memory:** [`feedback_tournament_horse_from_weapon_template_not_armor`](../../../.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_tournament_horse_from_weapon_template_not_armor.md) — the tournament mount is sourced from the culture weapon template via `PrepareForMatch`, not from `GetParticipantArmor`; to gate it, postfix `PrepareForMatch` and clear slots 10/11. Generalises the "enumerate every producer of an assembled value" lesson. Linked to [[nonhumanoid-creature-troop-not-mount]] (the broad custom-skeleton-can't-be-mounted principle) and [[dwarf-race-npc-needs-dwarf-skeleton-armor]] (sibling custom-skeleton equipment trap).
 - **No new rule file** — the existing data-flow review remit already covers "trace every producer"; this is a fresh instance, not a gap in the rules.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/arena.md](../features/arena.md)
+
+<!-- backlinks-end -->

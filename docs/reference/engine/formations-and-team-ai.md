@@ -118,3 +118,13 @@ exception.
 - `TeamAIComponent.cs`:12 (`abstract`), :36/:48 (tactics list + current), :301 (max-weight pick), :129 (`AddTacticOption`).
 - `Agent.cs`:1098 (`Formation` setter), :1014 (`Detachment`/`IDetachment` — Phase 12 link).
 - TAOM patches: `Patch31_SmartCavalryAI`, `Patch30` MixedFormations, `Patch35` CompanionTactics, shared `Patch_MissionTime_SetMovementOrder` (CLAUDE.md). Gotcha memories: `feedback_movementorder_cctor_mission_current`, `feedback_taleworlds_invariant_check_explicit`, `feedback_detect_engine_threading_via_mt_suffix`, `feedback_cross_feature_handshake_via_shared_adapter`, `feedback_replicate_vanilla_safety_gates_in_prefix`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+
+<!-- backlinks-end -->

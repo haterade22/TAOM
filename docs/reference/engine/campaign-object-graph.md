@@ -92,3 +92,14 @@ layer is where TAOM features live precisely because it's pure managed simulation
 - `Settlement.cs`:26 (`sealed : MBObjectBase, IMapPoint, …`), :70 (`Culture` field), :83/:85 (`Town`/`Village`), :107 (`Owner`), :292 (`MapFaction`), :317 (`BoundVillages`), :369/:381/:405 (`IsTown`/`IsCastle`/`IsVillage`), :489 (`OwnerClan` via Town/Village.Bound/Hideout).
 - `PartyBase.cs`:21 (`sealed : IBattleCombatant`), :119/:122 (`Settlement`/`MobileParty`), :129/:132 (`MemberRoster`/`PrisonRoster`).
 - Linked: object-system-mbobjectmanager.md (Phase 5), save-system.md (Phase 6), campaignevents-and-campaignbehavior.md (Phase 9). Gotcha memories: `feedback_widening_settlement_type_gate_audit`, `feedback_faction_map_update_with_cultural_feats`, `feedback_campaign_coupled_property_in_editor`, `kingdom-culture-mapping`; rules `adapters.md`, `csharp-architecture.md` (entity-state matrix).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/engine/settlement-economy-food-prosperity.md](./settlement-economy-food-prosperity.md)
+
+<!-- backlinks-end -->

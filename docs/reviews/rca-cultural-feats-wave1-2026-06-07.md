@@ -122,3 +122,14 @@ factions.json -> JSON valid, 0 U+2212
 - `feedback_faction_map_update_with_cultural_feats` — the lockstep faction-map rule, honored.
 - `feedback_audit_findings_not_always_correct` + `evidence-over-claims.md` — each Codex finding verified against source before acting (all 3 confirmed).
 - [`docs/reviews/rca-crash-report-2026-05-25.md`](rca-crash-report-2026-05-25.md) — the prior skipped-review meta-finding this repeats.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/cultural-feats.md](../features/cultural-feats.md)
+- [docs/research/cultural-feats-roadmap.md](../research/cultural-feats-roadmap.md)
+
+<!-- backlinks-end -->

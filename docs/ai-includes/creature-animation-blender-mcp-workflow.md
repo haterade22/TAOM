@@ -224,9 +224,11 @@ Each links its backing memory; the session's meta-lesson is last.
 
 ## Referenced by
 
+- [docs/ai-includes/troll-race-arp-retargeting-workflow.md](./troll-race-arp-retargeting-workflow.md)
 - [docs/features/chariot.md](../features/chariot.md)
 - [docs/features/elephant.md](../features/elephant.md)
 - [docs/features/spider-skeleton-animation-pipeline.md](../features/spider-skeleton-animation-pipeline.md)
 - [docs/features/spider.md](../features/spider.md)
+- [docs/reference/substance-painter-mcp-setup.md](../reference/substance-painter-mcp-setup.md)
 
 <!-- backlinks-end -->

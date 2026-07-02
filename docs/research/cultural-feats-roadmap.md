@@ -110,3 +110,14 @@ Existing `Taom*Model`s with untapped methods on the same vanilla base (extend th
 ## Implementation procedure
 
 Per-feat steps are in [`docs/features/cultural-feats.md` → How-To: Add a new feat](../features/cultural-feats.md#add-a-new-feat-to-an-existing-culture). Process discipline (learned the hard way in Wave 1): **run `/deep-review` + `/review-codex` BEFORE the closing commit, and open the GitHub issue before committing** — see `feedback_review_before_commit_not_after`. For Q-class feats, also add the per-(culture,axis) dispatch test AND pin production metadata (`feedback_mirror_table_drifts_from_production`).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/cultural-feats.md](../features/cultural-feats.md)
+- [docs/reviews/rca-cultural-feats-wave1-2026-06-07.md](../reviews/rca-cultural-feats-wave1-2026-06-07.md)
+
+<!-- backlinks-end -->

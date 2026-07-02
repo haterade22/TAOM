@@ -371,7 +371,6 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
-
 ## Changelog
 
 - 2026-06-19 — Career-ability pips now visibly light up on point-take: new `career_point_pip_lit` ring sprite (brightened + glow halo) for the taken state, widened alpha gaps on the other states, baked + committed.

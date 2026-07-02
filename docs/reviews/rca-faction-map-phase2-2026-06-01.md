@@ -82,3 +82,13 @@ PowerShell XML smoke                                    -> module_strings: OK (1
 - [`feedback_faction_map_update_with_cultural_feats.md`](C:/Users/mikew/.claude/projects/c--Users-mikew-source-repos-TAOM/memory/feedback_faction_map_update_with_cultural_feats.md) — the standing instruction this whole session traces to.
 - `.claude/rules/evidence-over-claims.md` — verify-before-acting discipline.
 - `.claude/rules/simplicity-criterion.md` — Yes/No matrix used to reject the two MED findings as scope creep.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/reviews/rca-faction-map-phase2-codex-2026-06-01.md](./rca-faction-map-phase2-codex-2026-06-01.md)
+
+<!-- backlinks-end -->

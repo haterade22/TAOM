@@ -82,3 +82,13 @@ managed, which is why it's the clean extension point.
 - `TaleWorlds.MountAndBlade.cs`:61602 (`GetModel<T>` backward scan = last-wins), 61614 (`AddModel(GameModel)`), 61619 (`AddModel<T>(MBGameModel<T>)` decorator), 75691 (`MissionGameModels`).
 - `TaleWorlds.CampaignSystem.cs`:43100 (`GameModels` = `Campaign.Current.Models`), 23206/23218/23223 (campaign-side `GetModel`/`AddModel`).
 - TAOM: `Main/SubModule.cs OnGameStart` `AddModel` calls; `.claude/rules/gamemodels.md` + `csharp-patterns.md` (the Override Pattern); CLAUDE.md GameModel table (~40 overrides).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+
+<!-- backlinks-end -->

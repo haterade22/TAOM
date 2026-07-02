@@ -82,3 +82,14 @@ Upstream: attribute + per-agent damage threshold. TAOM: per-monster-id damage th
 ## Mechanic 8 — shield penetration + damage correction
 
 Upstream: perk/trait-driven runtime `CanPenetrateShield`/`MultiplePenetration` grants in `DecideMissileWeaponFlags`, plus a `CalculateShieldDamage` correction dividing by 0.3 when penetration flags were added at runtime only — a workaround for native underestimation of shield damage for runtime-added flags (TaleWorlds forum threads 470085 + 470117, filed ~1.2.x; **must be re-verified on 1.4.6 in a control battle** — the correction ships config-gated). TAOM: grants come from config item-id + weapon-class lists (default `Javelin` class), applied after base (preserving the vanilla Javelin+Impale perk grant).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/combat-mechanics.md](../features/combat-mechanics.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

@@ -135,6 +135,7 @@ _No dated entries mapped from the global `CHANGELOG.md` yet — this section is 
 
 ## Referenced by
 
+- [docs/features/lotr-issues.md](./lotr-issues.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

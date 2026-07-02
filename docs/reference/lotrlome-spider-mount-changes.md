@@ -196,3 +196,14 @@ time. After the spider ships, sweep all `.bak-*` files.
     jump table got the same 45-row expansion proactively (its set shared the template; its
     jump_start was already `actt_dash`; it has no `CanAttack`). End-to-end workflow distilled to
     `docs/ai-includes/creature-mount-authoring.md`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md)
+- [docs/features/spider.md](../features/spider.md)
+
+<!-- backlinks-end -->

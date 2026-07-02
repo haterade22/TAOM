@@ -108,3 +108,16 @@ already runs on a live `MissionLogic.OnMissionTick` (drift #1 pre-fixed). Adding
 sub-feature** layered on top; it does not change the existing trample/mount-lock. It is the bigger lift of the two
 (3 engine classes + prefabs + crew config + 4 drift fixes), so sequence it **after** the single-rider trample is
 confirmed in-game.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/elephant.md](../elephant.md)
+- [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/adod-beasts-architecture-and-taom-port.md](../../reference/adod-beasts-architecture-and-taom-port.md)
+- [docs/reference/bannerlord-engine-and-toolchain.md](../../reference/bannerlord-engine-and-toolchain.md)
+
+<!-- backlinks-end -->

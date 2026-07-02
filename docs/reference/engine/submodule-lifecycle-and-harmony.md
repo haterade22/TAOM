@@ -74,3 +74,15 @@ TAOM crosses that boundary only via **MinHook** (NativeSkinFixes byte-pattern ho
 - `Main/SubModule.cs`:82 (`: MBSubModuleBase`), :91 (`OnSubModuleLoad`), :104 (`new Harmony("com.taom.mod")`), :133-242 (`PatchCategory("PatchNN_X")` ×N + conditional :109 CrashReport), :207-235 (`.Initialize` static wiring), :247 (`OnBeforeInitialModuleScreenSetAsRoot`), :294 (`OnGameStart` → `AddBehavior`/`AddModel` :310-391+), :512 (`OnGameInitializationFinished`), :640 (`OnMissionBehaviorInitialize` — deferred MovementOrder category), :704 (`OnApplicationTick`), :726 (`OnSubModuleUnloaded`).
 - TAOM patch catalogue + categories: `CLAUDE.md` "Harmony Patch Categories" + "GameModel Overrides". Defensive infra: `Dependencies/Foundation/PatchShield`. Gotcha memories: `feedback_movementorder_cctor_mission_current`, `feedback_transpiler_ordinal_plus_anchor_failsafe`, `feedback_hotpath_private_method_open_delegate`, `feedback_harmony_owner_allowlist_from_vendored_dll_enumeration`.
 - Linked: gamemodel-system.md (Phase 7, AddModel), campaignevents-and-campaignbehavior.md (Phase 9, AddBehavior), formations-and-team-ai.md / campaign-to-mission-bridge.md (Phases 13/17, deferred patch), bannerlord-engine-and-toolchain.md (the native/MinHook boundary).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/lotr-issues.md](../../features/lotr-issues.md)
+- [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/engine/issue-and-quest-system.md](./issue-and-quest-system.md)
+
+<!-- backlinks-end -->

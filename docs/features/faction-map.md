@@ -189,6 +189,7 @@ One entry per region id (matching faction id). Fields:
 
 ## Referenced by
 
+- [docs/features/character-creation.md](./character-creation.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

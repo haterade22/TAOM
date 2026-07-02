@@ -163,6 +163,7 @@ Use the MCM panel: **TAOM → Troop Power → Tier7Power / Tier8Power / Tier9Pow
 
 ## Referenced by
 
+- [docs/features/troop-skill-balance.md](./troop-skill-balance.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

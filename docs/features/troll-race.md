@@ -162,3 +162,13 @@ the troll ever needs movement that human-skeleton overrides can't express.
 - 2026-06-14 — `feat(troll-race)`: enabled the `cave_troll` as a live Mordor unit (`is_basic_troop="false"`, added to the Mordor party template) on `human_skeleton` reusing the full human anim set, and proved the bespoke-skeleton retarget pipeline end-to-end.
 - 2026-06-13 — `feat(troll-race)`: adopted Auto-Rig Pro, proved the human→troll retargeting pipeline, and scaffolded the troll race (feature doc + authoring recipe).
 - 2026-05-14 — Phase 9c: disabled troll content in-place (the `cave_troll` troop + two troll-themed careers) while preserving all artifacts for later re-enable.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/troll-race-arp-retargeting-workflow.md](../ai-includes/troll-race-arp-retargeting-workflow.md)
+
+<!-- backlinks-end -->

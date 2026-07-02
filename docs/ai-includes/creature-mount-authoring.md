@@ -272,3 +272,16 @@ crash. Keep the previous decompile as `_shipping_build_vX.Y.Z` (the 1.4.5 baseli
     recursive worker-thread native AV (spider 2026-06-14): a standalone skeleton tpac is an unproven
     structure, and every shipping creature bundles its skeleton WITH the mesh. (spider rework
     2026-06-13/14). See the "Replacing FBX/TPAC files" section at the top.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/creature-animation-blender-mcp-workflow.md](./creature-animation-blender-mcp-workflow.md)
+- [docs/features/elephant.md](../features/elephant.md)
+- [docs/features/spider.md](../features/spider.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

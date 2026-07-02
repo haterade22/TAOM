@@ -332,3 +332,14 @@ ships as a downloadable Release zip. Export tuned offsets to JSON and patch them
 - [item-equipment-model.md](../reference/engine/item-equipment-model.md) — engine `ItemObject`/`ItemComponent`/`Equipment` model
 - CLAUDE.md "Equipment & Armory" — canonical-folder table per item-ID prefix
 - memory `kingdom-culture-mapping` — full LOTR-faction → culture-id table
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/weapon-xml-pipeline.md](../features/weapon-xml-pipeline.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

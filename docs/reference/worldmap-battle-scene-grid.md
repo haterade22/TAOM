@@ -241,5 +241,6 @@ kept for context.
 - [docs/features/battle-scenes.md](../features/battle-scenes.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/reference/scene-reference-audit.md](./scene-reference-audit.md)
+- [docs/reviews/rca-worldmap-grid-loose-import-crash-2026-06-01.md](../reviews/rca-worldmap-grid-loose-import-crash-2026-06-01.md)
 
 <!-- backlinks-end -->

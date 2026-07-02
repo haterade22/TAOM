@@ -229,6 +229,7 @@ Edit attributes on the `<Resource>` element. Each resource can have independent 
 
 ## Referenced by
 
+- [docs/features/elite-emissary.md](./elite-emissary.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

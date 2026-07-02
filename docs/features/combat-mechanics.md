@@ -105,3 +105,13 @@ All overrides are per-hit. Services precompute lookups at construction (monster-
 - Per-race `knockdownResistanceMultiplier` applies only to the owned charge branch in v1; extending it to vanilla weapon knockdowns belongs in `TaomAgentStatCalculateModel.GetKnockDownResistance`.
 - Troll Monster weight (160) equals uruk — if horse-vs-troll knockdowns still feel too likely, raise troll weights in LOTRLOME `monsters.xml` (data change, separate commit).
 - Creature synthetic blows (spider/elephant BT via `RegisterBlow`) bypass `DecideCrushedThrough` but do route through the shrug-off/knockdown deciders — spot-check in control battles that unstoppable thresholds don't neuter the creatures' own received-stagger feel.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

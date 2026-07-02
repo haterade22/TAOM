@@ -93,3 +93,13 @@ behavior framework itself is managed, which is why it's the safe, no-Harmony ext
 - `MissionBehavior.cs`:9 (base), 15 (`BehaviorType` abstract), 21/25/17 (init), 53/57 (agent create/build), 69 (`OnAgentHit`), 146/138 (`OnMissionTick`/`OnPreMissionTick`), 121/126 (`OnEndMissionInternal`/`OnEndMission`), 130 (`OnRemoveBehavior`).
 - `MissionLogic.cs`:7-9 (`: MissionBehavior`, `BehaviorType => Logic`), 11/17/22 (`OnEndMissionRequest`/`MissionEnded`/`OnBattleEnded`).
 - `Mission.cs`:4603 `AddMissionBehavior` (the `as MissionLogic` null-cast @4610), 4619 `GetMissionBehavior<T>`, 4631 `RemoveMissionBehavior`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+
+<!-- backlinks-end -->

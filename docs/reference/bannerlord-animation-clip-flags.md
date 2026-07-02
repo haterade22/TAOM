@@ -174,3 +174,16 @@ adjacent duration floats — the Animation metadata layout isn't reverse-enginee
 `tpac_clip_flags.py` (read the exact baked flags; optionally patch them to avoid per-clip Kit clicking) is a
 high-value follow-up: it would let us read the upstream pack's exact per-clip flags authoritatively and set the spider's
 programmatically. Until then: read/set flags in the Kit's Animation Clip Inspector.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/adod-beasts-architecture-and-taom-port.md](./adod-beasts-architecture-and-taom-port.md)
+- [docs/reference/bannerlord-engine-and-toolchain.md](./bannerlord-engine-and-toolchain.md)
+- [docs/reference/engine/animation-binding-and-playback.md](engine/animation-binding-and-playback.md)
+
+<!-- backlinks-end -->

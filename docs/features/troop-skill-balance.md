@@ -121,3 +121,14 @@ Save-compat: troop skills are read from XML at agent spawn, so a rebaseline appl
 - [troop-weight-system.md](troop-weight-system.md) — army-composition weighting (orthogonal to skills).
 - [battle-balance.md](battle-balance.md) — tier power, casualty rates, blunt/cut ratios (GameModel side).
 - [troop-tree-revamp.md](troop-tree-revamp.md) — #212 roster changes that drove most of this pass's corrections.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/armor-balance.md](./armor-balance.md)
+- [docs/features/lord-perk-review.md](./lord-perk-review.md)
+
+<!-- backlinks-end -->

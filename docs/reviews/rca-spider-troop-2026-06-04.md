@@ -205,3 +205,16 @@ Before the troop approach, the spider was built as a **rideable mount** (creatur
 
 - **Live-agent render:** whether the spider shows all 8 legs. The per-mesh bone-render limit was the *mount-path* symptom (4 of 8 legs); it is unproven on the *live-agent* spawn path and can only be confirmed by recruiting a spider and taking it to battle.
 - **Fang bone indices (23/37/43)** are documented placeholders copied from the warg — bites may land on the wrong contact points until a runtime bone dump resolves the real `joint5_l/r` / `joint12_m` indices on `as_spider`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/elephant.md](../features/elephant.md)
+- [docs/features/spider.md](../features/spider.md)
+- [docs/features/spider/wolf-parity-and-render-tests.md](../features/spider/wolf-parity-and-render-tests.md)
+- [docs/reference/adod-beasts-architecture-and-taom-port.md](../reference/adod-beasts-architecture-and-taom-port.md)
+
+<!-- backlinks-end -->

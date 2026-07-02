@@ -187,3 +187,15 @@ Pulling the above together — to add a renderable, animated, fighting custom cr
 
 References: [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanism.md) (UsableMachine crew),
 [spider.md](../features/spider.md) + its RCA (render AV), [elephant.md](../features/elephant.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/adod-beasts-architecture-and-taom-port.md](./adod-beasts-architecture-and-taom-port.md)
+- [docs/reference/engine/agent-spawn-and-render-pipeline.md](engine/agent-spawn-and-render-pipeline.md)
+
+<!-- backlinks-end -->

@@ -119,3 +119,13 @@ the folder loads as a duplicate item id.
 - [../reference/engine/item-equipment-model.md](../reference/engine/item-equipment-model.md) — `ItemObject` /
   `ItemComponent` engine model (where `Value` / `Tierf` live).
 - CLAUDE.md "Equipment & Armory" — the canonical LOTRLOME folder per item-ID prefix.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

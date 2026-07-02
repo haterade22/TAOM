@@ -85,3 +85,15 @@ instance state on the element. The fixed `EquipmentIndex` slots give the engine 
 - `Equipment.cs`:12 (the slot set; armor-slot iteration `NumAllWeaponSlots..ArmorItemEndSlot`).
 - Registration: `RegisterType<ItemObject>("Item","Items",4u)` (Core.cs:14288, Phase 5). Spawn use: `EquipItemsFromSpawnEquipment` (Phase 1).
 - TAOM gotchas: `feedback_adapter_modifier_preserving_overload`, `feedback_inventory_mutations_via_vanilla_inventorylogic`, `feedback_lotrlome_armor_cover_attributes`; `.claude/rules/moduledata-validation.md`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/weapon-creation-workflow.md](../../ai-includes/weapon-creation-workflow.md)
+- [docs/features/starting-equipment-tuning.md](../../features/starting-equipment-tuning.md)
+- [docs/INDEX.md](../../INDEX.md)
+
+<!-- backlinks-end -->

@@ -224,3 +224,14 @@ T-pose — extend the set as needed; the loop above is mechanical per clip. (`tr
 per clip (or batch). 4. **ARP → Export** each (settings in C). 5. Kit-compile FBX → tpac (skeleton +
 clips). 6. Author `as_troll_warrior` + the race data ([troll-race.md](../features/troll-race.md)).
 7. Custom-Battle test.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/creature-animation-blender-mcp-workflow.md](./creature-animation-blender-mcp-workflow.md)
+- [docs/features/troll-race.md](../features/troll-race.md)
+
+<!-- backlinks-end -->

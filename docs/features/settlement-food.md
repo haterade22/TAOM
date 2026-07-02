@@ -125,3 +125,15 @@ bound villages once; the service is O(villages). Config is cached at first acces
 ## Changelog
 
 - 2026-06-18 — `feat(settlement-food)` (#289): added `TaomSettlementFoodModel` fixing the Troop-Weight garrison food starvation (garrison term uses raw body count) plus MCM/JSON-tunable food knobs (consumption divisors, base/village/flat production, storage caps); MCM master toggle on by default.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/settlement-economy.md](./settlement-economy.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/engine/settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)
+
+<!-- backlinks-end -->

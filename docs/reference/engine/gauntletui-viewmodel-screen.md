@@ -80,3 +80,13 @@ is managed (yours).
 - `TaleWorlds.Engine.GauntletUI/GauntletLayer.cs`:13 (`: ScreenLayer`), 119 (`LoadMovie(movieName, ViewModel)`).
 - `TaleWorlds.ScreenSystem/ScreenBase.cs`:7; `TaleWorlds.Core/GameState.cs`:7 (`: MBObjectBase`); `IGameStateListener.cs`:3-12 (`OnActivate`/`OnDeactivate`/`OnInitialize`/`OnFinalize`).
 - TAOM gotcha memories: `feedback_gamestate_listener`, `feedback_gamestate_creation_pattern`, `feedback_gauntlet_overlay_input_wiring`, `feedback_prefer_public_setter_over_reflected_notify`, `feedback_taleworlds_vm_setter_decompile`, `feedback_localization_textobject`, `feedback_sprite_atlas_baked_regen_required`. Feature doc: `docs/features/gui-sprite-system.md`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+
+<!-- backlinks-end -->

@@ -250,6 +250,8 @@ Weight values are continuous floats — any positive value works. Common tiers:
 
 ## Referenced by
 
+- [docs/features/troop-skill-balance.md](./troop-skill-balance.md)
 - [docs/INDEX.md](../INDEX.md)
+- [docs/reference/engine/settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)
 
 <!-- backlinks-end -->

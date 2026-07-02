@@ -254,6 +254,7 @@ Branches off `gondor_pg_spearman.upgrade_target` (now expands to `vet_spearman |
 
 ## Referenced by
 
+- [docs/features/troop-skill-balance.md](./troop-skill-balance.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

@@ -166,3 +166,14 @@ troops, equipment-sets, child/teen/lord/education equipment templates, wanderers
 block + cultural_feats, clans/lords/heroes, diplomacy, **alignment.json**, faction-map card, **cultures.json**,
 **cc_body_properties.xml**, **the 4 CC narrative menus**, recruitment pools, **a worldmap-scene entity for
 every settlement**, and the C# feat wiring. Guarded by `ConfigIdValidationTests.NewCultures_HaveCharacterCreationMenuEntries`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/new-factions-misty-mountains-lindon.md](../features/new-factions-misty-mountains-lindon.md)
+- [docs/reviews/REVIEW-LOG.md](./REVIEW-LOG.md)
+
+<!-- backlinks-end -->

@@ -84,3 +84,13 @@ half: the engine (native scene driver) calls back into the C# virtuals (`[Engine
 - `TaleWorlds.Engine/GameEntity.cs`:10 (`sealed : NativeObject`), 379/398/403 (`Instantiate` overloads), 504/516/529 (`GetFirstScriptOfType[Recursive/InFamily]`).
 - `TaleWorlds.Engine/ScriptComponentBehavior.cs`:9 (`abstract : DotNetObject`), 11-22 (`TickRequirement`), 78 (`CacheEditableFieldsForAllScriptComponents`), 82 (`Construct`), 174 (`SetScene`), 180 (`OnInit` `[EngineCallback]`), 185/191 (`HandleOnRemoved`/`OnRemoved`), 38/54 (`GameEntity`/`Scene`).
 - TAOM: `Main/SceneScripts/` (CS_Road), `docs/features/scene-scripts.md`, `feedback_editor_fields_are_config`; the howdah prefab pattern in [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanism.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+
+<!-- backlinks-end -->

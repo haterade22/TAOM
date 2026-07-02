@@ -218,10 +218,10 @@ Character creation runs once per new game. All data is loaded and cached on firs
 
 ## Referenced by
 
+- [docs/features/starting-equipment-tuning.md](./starting-equipment-tuning.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
-
 ## Changelog
 
 - 2026-05-30 — Zeroed the Career CC stage bonuses (`career_menu.json`, 49 entries): `focus/skill_level/attribute_to_add → 0` and `skills`/`attribute` arrays cleared, so a selected career renders a clean zero-bonus line; career still drives specialization + starting equipment.

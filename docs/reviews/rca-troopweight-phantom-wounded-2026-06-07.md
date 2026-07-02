@@ -77,3 +77,13 @@ This is the `feedback_codex_caught_api_misread` / `feedback_audit_findings_not_a
 The `GameMenuPartyItemVM.PartyWoundedSize` setter bug is a *vanilla* defect (`value != _partySize` instead of `_partyWoundedSize`) that only bites when our weighted wounded happens to equal the current PartySize. None of the 5 agents decompiled the *setter body* of the VM property they were writing to — they verified the property exists + is public-set (Compatibility agent) but not its guard logic. **Preventive action (memory `feedback_taleworlds_vm_setter_decompile` already exists for exactly this — "decompile the setter BODY before mutating a TaleWorlds VM property post-construction"): this fix is a fresh instance of that rule; the deep-review Compatibility agent prompt should add "for any VM property the patch WRITES, paste the setter body and check its guard," not just confirm the setter is public.** Logged to AGENTS.md + REVIEW-LOG.
 
 **Post-fix verification:** build 0 errors; TroopWeight tests 43/43; full suite re-run below.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/troop-weight-system.md](../features/troop-weight-system.md)
+
+<!-- backlinks-end -->

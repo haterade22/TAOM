@@ -92,3 +92,14 @@ managed, which is why `GetObject<T>(stringId)` is a normal, safe call.
 - `TaleWorlds.ObjectSystem.cs`:310 (`MBObjectManager`), 670 (`RegisterType<T>`), 746 (`RegisterPresumedObject<T>`), 813/867/981/994 (`GetObject` overloads; 867 null-on-missing).
 - `TaleWorlds.Core.cs`:14286 `RegisterType<Monster>("Monster","Monsters",2u)`, 14288 `RegisterType<ItemObject>("Item","Items",4u)`; CampaignSystem registers NPCCharacter@16/Culture@17/Faction@18/Kingdom@20/PartyTemplate@24/Settlement@25 etc.
 - `LoadXML` call sites: `TaleWorlds.CampaignSystem.cs`:10688+ (`SPCultures`/`Concepts`/`Items`/`EquipmentRosters`/`partyTemplates`).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/engine/save-system.md](./save-system.md)
+
+<!-- backlinks-end -->

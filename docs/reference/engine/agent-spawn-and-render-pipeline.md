@@ -132,3 +132,15 @@ spider's fix lives in the **mesh asset** (tpac), not in C#.
 - `Mission.cs`: `SpawnAgent`:4074, `SpawnTroop`:4418, `SpawnMonster`:4394/4399-4416, `CreateHorseAgentFromRosterElements`:4525-4534 (CreateAgent FromHorseObj:4528, SetMountInitialValues:4533), `CreateAgent`:4040-4054, `BuildAgent`:4007-4038 (PreloadForRendering:4025).
 - `Agent.cs`: `EquipItemsFromSpawnEquipment`:4529-4567 (switch FromRoster/FromCharacterObj→AddSkinMeshes:4560; FromHorseObj falls through), `AddSkinMeshes`:5405-5411, `PreloadForRendering`:4923 → `PreloadForRenderingAux`:5189 (`MBAPI.IMBAgent.PreloadForRendering`).
 - `IMBAgent.cs`:533 — `[EngineMethod("preload_for_rendering")]` (native).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/engine/animation-binding-and-playback.md](./animation-binding-and-playback.md)
+- [docs/reference/engine/monster-model.md](./monster-model.md)
+
+<!-- backlinks-end -->

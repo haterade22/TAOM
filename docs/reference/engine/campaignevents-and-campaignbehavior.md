@@ -90,3 +90,14 @@ from Phase 5). No native boundary here — it's pure managed campaign simulation
 - `IMbEvent.cs`:5-30 (`AddNonSerializedListener` + `ClearListeners` only; no `RemoveNonSerializedListener`; arities `IMbEvent<T>`…`<T1..T5>`).
 - `CampaignEvents.cs` (the static event registry), `MbEvent.cs` (`MbEvent`/dispatcher), `Campaign.cs` (`GetCampaignBehavior<T>`).
 - TAOM precedent + gotchas: memories `feedback_imbevent_remove_one_unavailable`, `feedback_campaignbehavior_no_ongameend`; behaviors registered in `Main/SubModule.cs OnGameStart` via `AddBehavior`.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/engine/issue-and-quest-system.md](./issue-and-quest-system.md)
+
+<!-- backlinks-end -->

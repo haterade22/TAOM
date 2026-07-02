@@ -232,6 +232,7 @@ Restart Bannerlord (the config is `Reuse.Singleton` and cached for the process l
 
 ## Referenced by
 
+- [docs/features/culture-conversion.md](./culture-conversion.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

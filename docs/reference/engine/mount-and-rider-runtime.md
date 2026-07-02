@@ -84,3 +84,14 @@ actually sitting on the bone* is native — which is why `Mount` only flags inte
 - `Agent.cs`:642 (`IsMount`=`AgentFlag.Mountable`), :718 (`RiderAgent`), :720 (`HasMount`), :1001-1011 (`MountAgent` get=`GetMountAgentAux`, set=`SetMountAgent`+`UpdateAgentStats`), :4787-4802 (`Mount` two-phase via `EventControlFlag.Mount`/`Dismount`+`SetInteractionAgent`).
 - `Monster.cs`:168 (`RiderSitBoneIndex`), :551 (`rider_sit_bone` deserialize, `validateHasParentBone:false`), :152-184 (Rein bones), :44 (`MonsterUsage`), :86 (`FamilyType`).
 - Linked phases: agent-spawn-and-render-pipeline.md (Phase 1, FromHorseObj), monster-model.md (Phase 3, bone-by-name), item-equipment-model.md (Phase 10, `Equipment[Horse]`/`HorseComponent`), usable-machines.md (Phase 12, howdah crew), [howdah-crew-mechanism.md](../features/elephant/howdah-crew-mechanism.md), [adod-beasts-architecture-and-taom-port.md](../adod-beasts-architecture-and-taom-port.md).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/creature-mount-authoring.md](../../ai-includes/creature-mount-authoring.md)
+- [docs/INDEX.md](../../INDEX.md)
+
+<!-- backlinks-end -->

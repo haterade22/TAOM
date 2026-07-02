@@ -111,6 +111,7 @@ A tester suspected this patch (`Patch16_AtmospherePersistence`) of causing the n
 
 ## Referenced by
 
+- [docs/features/shader-precompilation.md](./shader-precompilation.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->

@@ -85,3 +85,15 @@ It reuses `lint_docs`'s link parser rather than copy-pasting it (`build_backlink
 - [.claude/skills/doc-graph/SKILL.md](../../.claude/skills/doc-graph/SKILL.md) — the repeatable-workflow entry point
 - [ADR-010](../adrs/010-knowledge-base-architecture.md) Phase 5 amendment
 - This review + CHANGELOG + INDEX.md entry
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/adrs/010-knowledge-base-architecture.md](../adrs/010-knowledge-base-architecture.md)
+- [docs/features/doc-graph.md](../features/doc-graph.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

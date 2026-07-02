@@ -110,3 +110,14 @@ missing `_anm`? clip flags unset? — check in that order.
 - `Agent.ActionSet` — `Agent.cs`:696 (native `GetActionSetNo`); `SetActionSet` — `Agent.cs`:2574 (native + suffixed-set swap, used by `SpawnTroop` Mission.cs:4480); `SetActionChannel` — `Agent.cs`:2368-2372 (native pass-through; index + `(ulong)AnimFlags`); `GetCurrentAction` — `Agent.cs`:2748.
 - Consumed at creation: `CreateAgent` — `Mission.cs`:4042 (`monster.FillAnimationSystemData(stepSize, false, isFemale)`); initial action played in `BuildAgent` — `Mission.cs`:4026-4030 (`SetActionChannel`).
 - Native: `IMBAgent` `[EngineMethod]` `set_action_channel` / `set_action_set` / `get_action_set_no`; `IMBAnimation` `get_animation_flags` (the clip-flags doc).
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../../INDEX.md)
+- [docs/reference/engine/monster-model.md](./monster-model.md)
+
+<!-- backlinks-end -->

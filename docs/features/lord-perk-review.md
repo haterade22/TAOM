@@ -97,3 +97,14 @@ is actually run (a separate later pass).
 
 - [troop-skill-balance.md](troop-skill-balance.md) — the troop analog (review → rebaseline).
 - [lord-skills.md](lord-skills.md) + [../ai-includes/lord-skills-authoring.md](../ai-includes/lord-skills-authoring.md) — the TAOM SkillSet/archetype system that authors the lord skills this report reviews.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/armor-balance.md](./armor-balance.md)
+- [docs/features/nazgul-family.md](./nazgul-family.md)
+
+<!-- backlinks-end -->

@@ -54,3 +54,13 @@ Pulled the runnable surface (`hooks/*.js`, `hooks.json`, `package.json`) and rea
 ## Attribution
 
 Reuse-ladder framing imported from **ponytail** (DietrichGebert), MIT-licensed, and rewritten for TAOM's TaleWorlds/ADR domain. No ponytail code or files were vendored.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

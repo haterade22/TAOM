@@ -369,3 +369,14 @@ Ring](war-of-the-ring.md) feature. Register saveables in the same `726900801` se
   procedural issues with LOTR-authored issues.
 - **Status:** Implemented; in-game smoke (issue spawns, text renders, accept→progress→complete, save/load) is the
   remaining user-side validation gate.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/engine/issue-and-quest-system.md](../reference/engine/issue-and-quest-system.md)
+
+<!-- backlinks-end -->

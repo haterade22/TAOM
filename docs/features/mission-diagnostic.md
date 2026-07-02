@@ -100,6 +100,7 @@ When a user reports a crash, search the attached `taom_debug_*.log` for `[Missio
 
 ## Referenced by
 
+- [docs/features/battle-load-diagnostics.md](./battle-load-diagnostics.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
