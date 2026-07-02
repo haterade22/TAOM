@@ -2,6 +2,18 @@
 
 ## 2026-07-01
 
+### refactor(hero-race): extract RaceTableauPositioning from CharacterTableauService (4x duplicated, untested)
+
+The per-race tableau frame-offset block was duplicated FOUR times inside `CharacterTableauService`
+(character + mount frames in both refresh paths) with zero tests, and its axis mapping is deliberately
+unintuitive (config `Horizontal`→`origin.y`, `Vertical`→`origin.z`, `Zoom`→`origin.x` — camera-relative naming
+from the donor CharacterAvatarPatch config). The offset math + the case-insensitive config-lookup builder now
+live in pure `RaceTableauPositioning` with 8 tests pinning the axis mapping, null-item passthrough,
+struct-copy non-mutation, and lookup semantics (case-insensitive, skip-empty, last-wins). Service behavior
+byte-identical. Round-3 target R5 (the survey's other two untested-pure-logic claims —
+PlainTextCrashReportRenderer + ShaderPrecompileRunner — were FALSE: both already have test files; caught by
+inline vet after the survey's vet agents were rate-limited). Branch: `refactor/round2-cleanups`.
+
 ### fix(elephant)+review(round2): deliver the promised mission-end telemetry + round-2 RCA
 
 Round-2 deep review (5 dimensions + adversarial verification): behavior preservation, efficiency, and wiring

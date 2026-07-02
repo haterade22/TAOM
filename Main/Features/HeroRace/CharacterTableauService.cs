@@ -24,23 +24,7 @@ public class CharacterTableauService : ICharacterTableauService
     {
         _raceManager = raceManager ?? throw new ArgumentNullException(nameof(raceManager));
         _config = RacePositionConfig.LoadConfig("CharacterAvatarPatch");
-        _configLookup = BuildConfigLookup(_config);
-    }
-
-    private static Dictionary<string, RacePositionConfigItem> BuildConfigLookup(RacePositionConfig config)
-    {
-        var lookup = new Dictionary<string, RacePositionConfigItem>(StringComparer.OrdinalIgnoreCase);
-        if (config?.Items != null)
-        {
-            foreach (var item in config.Items)
-            {
-                if (!string.IsNullOrEmpty(item.Race))
-                {
-                    lookup[item.Race] = item;
-                }
-            }
-        }
-        return lookup;
+        _configLookup = RaceTableauPositioning.BuildLookup(_config);
     }
 
     public void RefreshCharacterTableau(CharacterTableau tableau, Equipment oldEquipment = null)
@@ -92,24 +76,8 @@ public class CharacterTableauService : ICharacterTableauService
             _configLookup.TryGetValue(raceName, out var configitem);
             _configLookup.TryGetValue("mount_" + raceName, out var mountconfigitem);
 
-            MatrixFrame charframe = initialSpawnFrame;
-            MatrixFrame mountframe = characterMountPositionFrame;
-
-            if (configitem != null)
-            {
-                charframe = new MatrixFrame(initialSpawnFrame.rotation, initialSpawnFrame.origin);
-                charframe.origin.y = charframe.origin.y + configitem.Horizontal;
-                charframe.origin.z = charframe.origin.z + configitem.Vertical;
-                charframe.origin.x = charframe.origin.x + configitem.Zoom;
-            }
-
-            if (mountconfigitem != null)
-            {
-                mountframe = new MatrixFrame(characterMountPositionFrame.rotation, characterMountPositionFrame.origin);
-                mountframe.origin.y = mountframe.origin.y + mountconfigitem.Horizontal;
-                mountframe.origin.z = mountframe.origin.z + mountconfigitem.Vertical;
-                mountframe.origin.x = mountframe.origin.x + mountconfigitem.Zoom;
-            }
+            MatrixFrame charframe = RaceTableauPositioning.ApplyOffset(initialSpawnFrame, configitem);
+            MatrixFrame mountframe = RaceTableauPositioning.ApplyOffset(characterMountPositionFrame, mountconfigitem);
 
             MatrixFrame frame = (isCharacterMountPlacesSwapped ? mountframe : charframe);
             if (!isCharacterMountPlacesSwapped)
@@ -201,24 +169,8 @@ public class CharacterTableauService : ICharacterTableauService
             _configLookup.TryGetValue(raceName, out var configitem);
             _configLookup.TryGetValue("mount_" + raceName, out var mountconfigitem);
 
-            MatrixFrame charframe = mountCharacterPositionFrame;
-            MatrixFrame mountframe = mountSpawnPoint;
-
-            if (configitem != null)
-            {
-                charframe = new MatrixFrame(mountCharacterPositionFrame.rotation, mountCharacterPositionFrame.origin);
-                charframe.origin.y = charframe.origin.y + configitem.Horizontal;
-                charframe.origin.z = charframe.origin.z + configitem.Vertical;
-                charframe.origin.x = charframe.origin.x + configitem.Zoom;
-            }
-
-            if (mountconfigitem != null)
-            {
-                mountframe = new MatrixFrame(mountSpawnPoint.rotation, mountSpawnPoint.origin);
-                mountframe.origin.y = mountframe.origin.y + mountconfigitem.Horizontal;
-                mountframe.origin.z = mountframe.origin.z + mountconfigitem.Vertical;
-                mountframe.origin.x = mountframe.origin.x + mountconfigitem.Zoom;
-            }
+            MatrixFrame charframe = RaceTableauPositioning.ApplyOffset(mountCharacterPositionFrame, configitem);
+            MatrixFrame mountframe = RaceTableauPositioning.ApplyOffset(mountSpawnPoint, mountconfigitem);
 
             MatrixFrame frame = (isCharacterMountPlacesSwapped ? charframe : mountframe);
             if (isCharacterMountPlacesSwapped)
