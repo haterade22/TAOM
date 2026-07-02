@@ -28,7 +28,7 @@ public class TaomPartyTroopUpgradeModel : DefaultPartyTroopUpgradeModel
             CultureFeatAdapter.FromOrNull(party),
             characterObject.IsMounted,
             ref result);
-        _careerPassives.ApplyFactor((party.Owner ?? party.LeaderHero)?.StringId, ref result, PassiveEffectType.TroopUpgradeCost);
+        _careerPassives.ApplyFactor(CareerPassiveHero.ResolveId(party), ref result, PassiveEffectType.TroopUpgradeCost);
         return result;
     }
 }

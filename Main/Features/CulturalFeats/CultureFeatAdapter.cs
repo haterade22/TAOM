@@ -65,11 +65,14 @@ public sealed class CultureFeatAdapter : ICultureFeatAdapter
             return null;
         // party.Culture is `MapFaction.Culture` with no null guard — it NREs when
         // MapFaction is null (faction-less lord party during army siege-start strength
-        // calc). Use the null-safe MapFaction?.Culture equivalent; every step is `?.`
-        // per .claude/rules/adapters.md (TaleWorlds getters crash before your null check).
+        // calc). party.Owner is ALSO a throwing getter (Settlement.Owner => OwnerClan.Leader,
+        // OwnerClan null for a Village/Town/Hideout-less settlement like retirement_retreat —
+        // crash 0b462fd8), so owner resolves via the safe MobileParty.Owner; the
+        // Settlement.Culture field fallback (safe: plain saveable field) covers settlement
+        // parties. Per .claude/rules/adapters.md: guard the inner object, not the result.
         return party.LeaderHero?.Culture
             ?? party.MapFaction?.Culture
-            ?? party.Owner?.Culture
+            ?? party.MobileParty?.Owner?.Culture
             ?? party.Settlement?.Culture;
     }
 }
