@@ -14,8 +14,9 @@ namespace TAOM.Tests.Features.SettlementGuards;
 // MANUAL Harmony patching (no [HarmonyPatchCategory]) because both target methods
 // (GuardsCampaignBehavior.TakeGuardAgentDataFromGarrisonTroopList + GetSuitableSpear) are private
 // instance methods that AccessTools cannot resolve via attribute-based discovery. The patches are
-// applied directly in Main/SubModule.cs via _harmony.Patch(...) plus an Initialize(_service) call
-// that wires the static IoC reference each patch's Prefix reads.
+// applied in Main/ManualPatchApplicator.cs (extracted from SubModule.OnGameInitializationFinished,
+// which calls ManualPatchApplicator.ApplyAll(_harmony)) via harmony.Patch(...) plus an
+// Initialize(_service) call that wires the static IoC reference each patch's Prefix reads.
 //
 // The audit-motivating regression class (#121, Messengers): a manual-patch feature is uniquely
 // vulnerable to "wired in code but never plugged into SubModule" because there is no Harmony
@@ -41,40 +42,55 @@ public class SettlementGuardsWiringTests
     }
 
     [TestMethod]
-    public void MainSubModule_AppliesManualHarmonyPatches()
+    public void MainSubModule_InvokesManualPatchApplicator()
     {
         var subModuleSource = ReadProjectSource("Main", "SubModule.cs");
         if (subModuleSource == null)
             Assert.Inconclusive("Main/SubModule.cs not found — run from repo root or check working directory");
 
-        // Both manual patch sites must be present. The pattern is:
-        //   var target = <PatchClass>.TargetMethod();
-        //   if (target != null) _harmony.Patch(target, prefix: new HarmonyMethod(...));
-        StringAssert.Contains(subModuleSource, "GuardsCampaignBehavior_TakeGuardAgentData_Patch.TargetMethod()",
-            "Main/SubModule.cs must call GuardsCampaignBehavior_TakeGuardAgentData_Patch.TargetMethod() and then " +
-            "_harmony.Patch(...) on the result. Without it, custom settlement guards do not apply.");
-
-        StringAssert.Contains(subModuleSource, "GuardsCampaignBehavior_GetSuitableSpear_Patch.TargetMethod()",
-            "Main/SubModule.cs must call GuardsCampaignBehavior_GetSuitableSpear_Patch.TargetMethod() and then " +
-            "_harmony.Patch(...) on the result. Without it, per-culture spear assignment does not apply.");
+        // The manual-patch block was extracted to ManualPatchApplicator (ADR-002); the entry point
+        // must still invoke it or NO manual patch (SettlementGuards, BannerColor visuals,
+        // CompanionTactics tooltip) applies.
+        StringAssert.Contains(subModuleSource, "ManualPatchApplicator.ApplyAll(_harmony);",
+            "Main/SubModule.cs::OnGameInitializationFinished must call ManualPatchApplicator.ApplyAll(_harmony). " +
+            "Without it, none of the manual (private-target) Harmony patches apply.");
     }
 
     [TestMethod]
-    public void MainSubModule_InitializesBothPatchClassesWithService()
+    public void ManualPatchApplicator_AppliesManualHarmonyPatches()
     {
-        var subModuleSource = ReadProjectSource("Main", "SubModule.cs");
-        if (subModuleSource == null)
-            Assert.Inconclusive("Main/SubModule.cs not found — run from repo root or check working directory");
+        var applicatorSource = ReadProjectSource("Main", "ManualPatchApplicator.cs");
+        if (applicatorSource == null)
+            Assert.Inconclusive("Main/ManualPatchApplicator.cs not found — run from repo root or check working directory");
+
+        // Both manual patch sites must be present. The pattern is:
+        //   var target = <PatchClass>.TargetMethod();
+        //   if (target != null) harmony.Patch(target, prefix: new HarmonyMethod(...));
+        StringAssert.Contains(applicatorSource, "GuardsCampaignBehavior_TakeGuardAgentData_Patch.TargetMethod()",
+            "ManualPatchApplicator must call GuardsCampaignBehavior_TakeGuardAgentData_Patch.TargetMethod() and then " +
+            "harmony.Patch(...) on the result. Without it, custom settlement guards do not apply.");
+
+        StringAssert.Contains(applicatorSource, "GuardsCampaignBehavior_GetSuitableSpear_Patch.TargetMethod()",
+            "ManualPatchApplicator must call GuardsCampaignBehavior_GetSuitableSpear_Patch.TargetMethod() and then " +
+            "harmony.Patch(...) on the result. Without it, per-culture spear assignment does not apply.");
+    }
+
+    [TestMethod]
+    public void ManualPatchApplicator_InitializesBothPatchClassesWithService()
+    {
+        var applicatorSource = ReadProjectSource("Main", "ManualPatchApplicator.cs");
+        if (applicatorSource == null)
+            Assert.Inconclusive("Main/ManualPatchApplicator.cs not found — run from repo root or check working directory");
 
         // The patches' Prefix bodies read static _service set by Initialize(). Without the
         // Initialize call, _service stays null and the Prefix early-exits (identical failure
         // mode to the #122 BannerColor regression).
-        StringAssert.Contains(subModuleSource, "GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(",
-            "Main/SubModule.cs must call GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(...) " +
+        StringAssert.Contains(applicatorSource, "GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(",
+            "ManualPatchApplicator must call GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(...) " +
             "before any guard spawn fires. Without it the Prefix's _service field stays null.");
 
-        StringAssert.Contains(subModuleSource, "GuardsCampaignBehavior_GetSuitableSpear_Patch.Initialize(",
-            "Main/SubModule.cs must call GuardsCampaignBehavior_GetSuitableSpear_Patch.Initialize(...) " +
+        StringAssert.Contains(applicatorSource, "GuardsCampaignBehavior_GetSuitableSpear_Patch.Initialize(",
+            "ManualPatchApplicator must call GuardsCampaignBehavior_GetSuitableSpear_Patch.Initialize(...) " +
             "before any guard spawn fires. Without it the Prefix's _service field stays null.");
     }
 

@@ -808,72 +808,10 @@ public class SubModule : MBSubModuleBase
         _harmony.PatchCategory("Patch43_BattleLoadDiagnostics");
         IoC.Resolve<Features.BattleLoadDiagnostics.BattleLoadStallWatchdog>().Start();
 
-        // CompanionTactics — manual patch for the PRIVATE method
-        // OrderOfBattleHeroItemVM.GetCaptainTooltip (private in v1.3.15, can't use
-        // [HarmonyPatch] attribute binding).
-        var captainTooltipTarget = AccessTools.Method(typeof(OrderOfBattleHeroItemVM), "GetCaptainTooltip");
-        if (captainTooltipTarget != null)
-            _harmony.Patch(captainTooltipTarget, postfix: new HarmonyMethod(
-                typeof(Features.CompanionTactics.Roles.Hooks.Patch35_OOBHeroItem_GetCaptainTooltip),
-                nameof(Features.CompanionTactics.Roles.Hooks.Patch35_OOBHeroItem_GetCaptainTooltip.Postfix)));
-        else
-            IoC.Resolve<IModLogger>().LogWarning("[CompanionTactics] OrderOfBattleHeroItemVM.GetCaptainTooltip not found — captain tooltip role hint will not appear");
-
-        var settlementGuardService = IoC.Resolve<ISettlementGuardService>();
-        GuardsCampaignBehavior_TakeGuardAgentData_Patch.Initialize(settlementGuardService);
-        GuardsCampaignBehavior_GetSuitableSpear_Patch.Initialize(settlementGuardService);
-
-        // Manual patches for private GuardsCampaignBehavior methods (SandBox.dll)
-        var takeGuardTarget = GuardsCampaignBehavior_TakeGuardAgentData_Patch.TargetMethod();
-        if (takeGuardTarget != null)
-            _harmony.Patch(takeGuardTarget, prefix: new HarmonyMethod(
-                typeof(GuardsCampaignBehavior_TakeGuardAgentData_Patch),
-                nameof(GuardsCampaignBehavior_TakeGuardAgentData_Patch.Prefix)));
-        else
-            IoC.Resolve<IModLogger>().LogWarning("[SettlementGuards] TakeGuardAgentDataFromGarrisonTroopList not found — custom guards will not apply");
-
-        var spearTarget = GuardsCampaignBehavior_GetSuitableSpear_Patch.TargetMethod();
-        if (spearTarget != null)
-            _harmony.Patch(spearTarget, prefix: new HarmonyMethod(
-                typeof(GuardsCampaignBehavior_GetSuitableSpear_Patch),
-                nameof(GuardsCampaignBehavior_GetSuitableSpear_Patch.Prefix)));
-        else
-            IoC.Resolve<IModLogger>().LogWarning("[SettlementGuards] GetSuitableSpear not found — culture-specific spears will not apply");
-
-        // Manual patch for private MobilePartyVisual method (SandBox.View.dll)
-        var mobilePartyTarget = MobilePartyVisual_AddCharacterToPartyIcon_Patch.TargetMethod();
-        if (mobilePartyTarget != null)
-            _harmony.Patch(mobilePartyTarget, postfix: new HarmonyMethod(
-                typeof(MobilePartyVisual_AddCharacterToPartyIcon_Patch),
-                nameof(MobilePartyVisual_AddCharacterToPartyIcon_Patch.Postfix)));
-        else
-            IoC.Resolve<IModLogger>().LogWarning("[BannerColor] MobilePartyVisual.AddCharacterToPartyIcon not found — party icon colors will not persist");
-
-        // Manual patch for AgentVisuals.Create (TaleWorlds.MountAndBlade.View.dll)
-        var agentVisualsCreateTarget = AgentVisuals_Create_Patch.TargetMethod();
-        if (agentVisualsCreateTarget != null)
-            _harmony.Patch(agentVisualsCreateTarget, prefix: new HarmonyMethod(
-                typeof(AgentVisuals_Create_Patch),
-                nameof(AgentVisuals_Create_Patch.Prefix)));
-        else
-            IoC.Resolve<IModLogger>().LogWarning("[BannerColor] AgentVisuals.Create not found — clan color randomness suppression will not apply");
-
-        // Manual patches for MapConversationTableau (private methods in SandBox.View.dll)
-        var leaderTarget = MapConversationTableau_SpawnOpponentLeader_Patch.TargetMethod();
-        if (leaderTarget != null)
-            _harmony.Patch(leaderTarget, postfix: new HarmonyMethod(
-                typeof(MapConversationTableau_SpawnOpponentLeader_Patch),
-                nameof(MapConversationTableau_SpawnOpponentLeader_Patch.Postfix)));
-        else
-            IoC.Resolve<IModLogger>().LogWarning("[BannerColor] MapConversationTableau.SpawnOpponentLeader not found — conversation tableau leader colors will not apply");
-
-        var bodyguardTarget = MapConversationTableau_SpawnOpponentBodyguard_Patch.TargetMethod();
-        if (bodyguardTarget != null)
-            _harmony.Patch(bodyguardTarget, postfix: new HarmonyMethod(
-                typeof(MapConversationTableau_SpawnOpponentBodyguard_Patch),
-                nameof(MapConversationTableau_SpawnOpponentBodyguard_Patch.Postfix)));
-        else
-            IoC.Resolve<IModLogger>().LogWarning("[BannerColor] MapConversationTableau.SpawnOpponentBodyguardCharacter not found — conversation tableau bodyguard colors will not apply");
+        // Manual patches for PRIVATE engine methods (AccessTools-resolved targets; can't use
+        // [HarmonyPatch] attribute binding + PatchCategory). Extracted verbatim to
+        // ManualPatchApplicator (ADR-002); apply order unchanged, each fail-safes with a warning.
+        ManualPatchApplicator.ApplyAll(_harmony);
     }
 
     public override void OnMissionBehaviorInitialize(Mission mission)

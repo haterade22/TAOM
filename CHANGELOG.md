@@ -2,6 +2,15 @@
 
 ## 2026-07-01
 
+### refactor(submodule): extract the private-target manual-patch block to ManualPatchApplicator
+
+The ~66-line run of AccessTools-resolved `_harmony.Patch(...)` calls for PRIVATE engine methods
+(SettlementGuards ×2, BannerColor MobilePartyVisual/AgentVisuals/MapConversationTableau ×2, CompanionTactics
+captain tooltip) moves verbatim from `OnGameInitializationFinished` to `Main/ManualPatchApplicator.ApplyAll`,
+apply order + fail-safe warnings unchanged. `SettlementGuardsWiringTests` re-pinned to the new location plus a
+new assert that SubModule still invokes `ApplyAll`. SubModule.cs is down to ~930 lines from 944 pre-T2. Build +
+3669 tests green. Branch: `refactor/submodule-slim` (plan T3).
+
 ### refactor(submodule): extract OnGameStart registration block into ordered registration methods (ADR-002)
 
 OnGameStart carried ~250 inline lines of behavior/model registration. The block now lives in seven private
