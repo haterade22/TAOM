@@ -2,6 +2,21 @@
 
 ## 2026-07-02
 
+### balance(party-templates): stack maxes raised to 50 — bandit + kingdom hero parties (#315)
+
+Map bandit parties averaged 20-25. Spawn size is `min + (max-min) × ratio` per template stack, the bandit ratio
+averages ~0.2 early game, and `Patch39_BanditPartySize` caps its scaling at each stack's `max_value` — so the
+template max is the binding lever. Per user direction (literal per-stack reading, chosen over a total-≈50
+scaling with consequences stated): `max_value="50"` on every stack of the 8 bandit cultures' raider + boss
+templates and all 221 `kingdom_hero_party_*` templates (2,607 stacks). The 1/1 hideout-boss hero stacks stay
+1/1 (one boss is load-bearing for the boss conversation); `min_value` untouched; looters stay vanilla. Applied
+via the new idempotent `tools/raise_party_template_maxes.py` (`--dry-run`/`--apply`, CRLF/BOM-preserving).
+Expected: bandit parties ~30-75 early game, up to ~200 endgame. Accepted trade-offs: lord spawns can exceed the
+party-size limit (engine adds the templated roster verbatim — no clamp; over-limit lords can't recruit and pay
+big wages until attrition) and mercenary/outlaw templates lose their fixed min=max compositions. Value-only
+change — save-compatible; full game restart required to load the new values; already-spawned parties keep their
+size.
+
 ### fix(starting-equipment): non-Gondor characters naked after career until a full game restart (+ prevention)
 
 The 2026-06-30 starter-armor change authored 12 new `LOTRLOME_items/<culture>/starter_armors.xml` files. On first
