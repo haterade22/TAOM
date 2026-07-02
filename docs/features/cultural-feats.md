@@ -331,9 +331,10 @@ GameModel overrides are thin entry points (delegate to `base` + apply feat modif
 ## Referenced by
 
 - [docs/INDEX.md](../INDEX.md)
+- [docs/research/cultural-feats-roadmap.md](../research/cultural-feats-roadmap.md)
+- [docs/reviews/rca-culturefeat-partyculture-nre-2026-06-15.md](../reviews/rca-culturefeat-partyculture-nre-2026-06-15.md)
 
 <!-- backlinks-end -->
-
 ## Changelog
 
 - 2026-06-15 — Guarded the `PartyBase.Culture` NRE in party-culture feat resolution: the `ResolvePartyCulture` chokepoint plus a `PartyBaseHelper.HasFeat` Prefix that protects the vanilla `base.X()` calls.
