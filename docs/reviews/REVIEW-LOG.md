@@ -1426,6 +1426,18 @@ User report: towns drain to 0 gold and never recover. Root cause (verified insta
 
 ---
 
+## Review 69 — CombatMechanics (2026-07-02)
+
+New feature (#320): clean-room adaptation of five TOR_Core combat mechanics (GPLv3 — spec-doc-only implementation, `docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md`) + two TAOM-original systems (weight-driven charge knockdown from `Monster.Weight` ratios; per-race combat-modifier table). `TaomCombatMechanicsModel` derives from the now-abstract CareerSystem `TaomAgentApplyDamageModel` in the engine's single `AgentApplyDamageModel` slot; 9 thin overrides → 4 pure services + race resolver; 107 tests. Built via 5 parallel builder agents against frozen contracts — a first for a C# feature.
+
+**Deep-review (6 agents: 5 core + spec-conformance): 8 findings, all fixed in-session.** Standards/compat/spec-math PASS. Standouts: per-hit `Substring` allocation in cleave normalization (HIGH — replaced with construction-time variant expansion, which also fixed a cross-service config-semantics divergence); engine-input NaN polarity holes (`momentumRemaining <= 0f` passes NaN — 4th instance of the NaN-gate class, new LESSONS-LEARNED rule "positive-polarity gates on engine floats"); `GetHorseChargePenetration` bypassing the master toggle; MCM slider bypassing the JSON ordering invariant. Root-cause pattern: **parallel-builder seams** — every finding lived at a boundary between independently-authored components; new LESSONS-LEARNED rule "shared sub-problems get ONE prescribed solution in the contract". RCA: `docs/reviews/rca-combat-mechanics-2026-07-02.md`.
+
+**Codex (gpt-5.5 xhigh): 0 P1 / 0 P2 / 2 P3 — VERDICT CLEAN.** All six seeded Known Suspects DISPUTED-as-bugs with decompile evidence: monster-vs-shield fall-through is spec-conformant; shield blocks carry damage into `InflictedDamage` via `ComputeBlowDamageOnShield` (cleave chains through damaging blocks); `BasicCharacterObject.Race` and `IRaceManager` share the FaceGen id space; `ChargeDamageCallback` sets KnockBack on the same `Blow` before the knockdown call; stagger multiplier applies once; MCM-over-JSON matches the AlignmentDesertion precedent. Codex independently re-derived the calibration arithmetic (horse-vs-man Branch B == vanilla verdict; dwarf 118-threshold vs damage 50; mûmakil Branch A at ratio ~125). P3s closed: monster-id lists not resolvability-validated (documented known limitation — typo = inert; an adapter for a diagnostic fails the simplicity criterion) + cleave MCM hint overpromised the zero-shield-damage edge (hint reworded).
+
+**Process:** both reviews ran BEFORE any commit; issue #320 opened before close-out (deep-review completeness agent caught it missing — the plan had deferred it to close-out, against CLAUDE.md's create-before-implementation rule). Codex prompt + extracted review: `docs/reviews/codex-adversarial-combat-mechanics-2026-07-02.{prompt.md,md}` (1.3MB session log discarded, final message kept).
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

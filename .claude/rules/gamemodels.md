@@ -59,7 +59,7 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 }
 ```
 
-## Existing Overrides (31 total)
+## Existing Overrides (32 total)
 
 | Model | Base | Feature |
 |-------|------|---------|
@@ -94,3 +94,4 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 | `TaomDiplomacyModel` | `DefaultDiplomacyModel` | `Diplomacy` |
 | `TaomExecutionRelationModel` | `DefaultExecutionRelationModel` | `Execution` |
 | `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | `Encyclopedia` |
+| `TaomCombatMechanicsModel` | `TaomAgentApplyDamageModel` (CareerSystem, **abstract** — career passives via inheritance; ultimately `SandboxAgentApplyDamageModel`) | `CombatMechanics` |

@@ -210,6 +210,12 @@ When two agents or two review passes disagree on a TaleWorlds API signature, re-
 
 ## Build, Tooling & Workflow
 
+### Parallel-builder briefs: shared sub-problems get ONE prescribed solution in the contract
+When fanning a feature out to parallel builder agents, any sub-problem two or more builders both face (id normalization, NaN handling, validation invariants, hot-path allocation patterns) must be solved ONCE in the shared contract/brief — never left to per-builder judgment. Independently-correct builders otherwise produce divergent solutions at the seams: CombatMechanics' two crush/cleave services normalized settlement-variant monster ids differently (runtime Substring-per-hit vs construction-time set expansion), which was both a per-hit allocation AND a config-semantics inconsistency (a suffixed config entry matched in one service and not the other); the MCM slider and the JSON validator enforced different ordering rules for the same value.
+- **Why missed:** each builder passed its own brief — the orchestrator's brief itself prescribed the allocating helper for one builder while the sibling invented the better pattern. No single author saw both sides; per-component review can't catch cross-component divergence.
+- **Prevent:** before dispatching parallel builders, list the sub-problems that appear in more than one brief and pin ONE solution in the shared contracts. After integration, run a cross-consistency review pass (data-flow + efficiency agents over the seams, not just per-file checks).
+- **Source:** docs/reviews/rca-combat-mechanics-2026-07-02.md (findings 1+6).
+
 ### Substring keyword matching on names false-matches — use word-boundary or an explicit allowlist
 A classifier that flags items by `if marker in (id + name).lower()` will over-match when the marker is a substring of an unrelated word. The `analyze_troop_balance.py` creature detector used `'mount'` as a marker and wrongly exempted **46 troops** — every `mistymountainorcs_*` ("misty**MOUNT**ainorcs") plus every "Mountain Guard" — from formula judging, and warg/elephant *rider* markers swept in humanoid riders too. The fix narrowed the exempt set to genuine non-humanoid tokens (`troll`, `creature`) + an explicit id allowlist (`{cave_troll}`), and moved riders to a separate non-exempt tag.
 - **Why missed:** the marker list was written for the obvious case (elephant/spider/mount troops) without auditing what *else* those substrings hit across the real id/name space. A 47-count "special troops" total in the first run was the tell — far more than the ~2 genuine creatures.
@@ -419,6 +425,12 @@ When CC/rendering breaks for one race, check XML config references before invest
 ---
 
 ## Testing & QA
+
+### Write engine-float decision gates as positive requirements — NaN must FAIL the gate
+`FiniteFloatValidator` on config floats does NOT protect runtime ENGINE inputs (momentum, velocity, resistance handed to a GameModel per hit). An inverted early-exit guard like `if (momentumRemaining <= 0f) return false;` lets NaN through — every NaN comparison is false — so garbage input takes the ACTIVE branch. Write the gate as the positive requirement (`!(momentumRemaining > 0f)` / `momentumRemaining > 0f` required to proceed), or explicitly `float.IsNaN(...) → fall through to base`. For owned-verdict services (bool? patterns), NaN inputs should return null (defer to vanilla), never an owned true/false computed from garbage. Add a NaN unit test per gate.
+- **Why missed:** 4th instance of the NaN-gate class (Career cooldown #31, EditorCacheRebuild #38, CS_Road 2026-05-13, CombatMechanics 2026-07-02). The rule lived in "Config Providers MUST Validate" — scoped to config/MCM/editor fields, all of which WERE covered; the engine-runtime-input side had no rule, so `ShouldForceSliceThrough`'s `<= 0f` guard and `ChargeKnockdownService`'s NaN-to-owned-false both shipped to review. Caught only because the spec-conformance agent's prompt carried an explicit "NaN polarity on every gate" audit criterion.
+- **Prevent:** when writing any per-hit/per-tick decision on an engine-sourced float, check the comparison's polarity against NaN before moving on; include the NaN-polarity audit line in review prompts for math-heavy features.
+- **Source:** docs/reviews/rca-combat-mechanics-2026-07-02.md (findings 3+4).
 
 ### Changing a weighted recruitment pool breaks tests that stub `_random.Next(<hardcoded total>)`
 `VolunteerRecruitmentService.PickWeighted` rolls `_random.Next(totalWeight)` where `totalWeight` is the SUM of the pool's weights. Tests stub a specific `_random.Next(N).Returns(roll)` for the pool's *current* total N. Add/remove a troop or change a weight and N changes; the stub no longer matches, NSubstitute returns the default `0`, and `PickWeighted` returns the FIRST troop — so every "top bucket / max roll" test silently fails by returning the lowest troop.

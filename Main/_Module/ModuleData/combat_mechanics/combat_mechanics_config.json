@@ -1,0 +1,56 @@
+{
+  "enabled": true,
+  "crushThrough": {
+    "skillBasedEnabled": true,
+    "extraCrushThroughEnergyThreshold": 25.0,
+    "skillDeadZone": 30,
+    "skillTargetDelta": 200,
+    "maxSkillChance": 0.5,
+    "skillCurveExponent": 0.008097,
+    "energyRampMarginFactor": 0.27,
+    "nonOverheadPenaltyFactor": 0.5,
+    "monsterAutoCrushEnabled": true,
+    "monsterCrushMonsterIds": ["cave_troll", "hill_troll", "taom_war_elephant", "taom_mumakil", "spider"],
+    "orcShieldCrushEnabled": true,
+    "orcShieldCrushRaces": ["orc", "goblin", "uruk", "uruk_hai", "pale_uruk", "dg_uruk"]
+  },
+  "chargeKnockdown": {
+    "enabled": true,
+    "includeRiderWeight": true,
+    "neutralWeightRatio": 6.0,
+    "autoKnockdownWeightRatio": 8.0,
+    "autoKnockdownMinSpeedFactor": 0.4,
+    "defaultChargeSpeedReference": 4.3,
+    "minPenetrationFactor": 0.25,
+    "maxPenetrationFactor": 2.5,
+    "horseChargePenetration": 0.4
+  },
+  "creatures": {
+    "cleaveEnabled": true,
+    "cleaveMonsterIds": ["cave_troll", "hill_troll", "taom_mumakil"],
+    "cleaveRemainingMomentumFactor": 0.3,
+    "unstoppableEnabled": true,
+    "unstoppableDamageThresholds": {
+      "cave_troll": 15,
+      "hill_troll": 15,
+      "taom_war_elephant": 25,
+      "taom_mumakil": 30,
+      "spider": 10
+    }
+  },
+  "shieldPenetration": {
+    "enabled": true,
+    "weaponClasses": ["Javelin"],
+    "itemIds": [],
+    "addMultiplePenetration": true,
+    "runtimeShieldDamageCorrectionEnabled": true,
+    "runtimeShieldDamageCorrectionDivisor": 0.3
+  },
+  "raceModifiers": {
+    "dwarf": { "ctbDefenseBonus": 15, "knockdownResistanceMultiplier": 2.5, "staggerThresholdMultiplier": 1.5 },
+    "elf": { "ctbAttackBonus": 20, "removeNonOverheadPenalty": true },
+    "sauron": { "ctbAttackBonus": 20, "removeNonOverheadPenalty": true },
+    "orc": { "swingEnergyBonusFactor": 0.15 },
+    "uruk_hai": { "swingEnergyBonusFactor": 0.10, "knockdownResistanceMultiplier": 1.25 }
+  }
+}

@@ -98,6 +98,7 @@ public static class IoC
         Features.Mumakil.MumakilIoC.RegisterMumakilFeature(container);
         CustomBattlesIoC.RegisterCustomBattlesFeature(container);
         BattleBalanceIoC.RegisterBattleBalanceFeature(container);
+        Features.CombatMechanics.CombatMechanicsIoC.RegisterCombatMechanicsFeature(container);
         MainMenuCustomizerIoC.RegisterMainMenuCustomizerFeature(container);
         ShaderPrecompilationIoC.RegisterShaderPrecompilationFeature(container);
         SiegeDefenseIoC.RegisterSiegeDefenseFeature(container);

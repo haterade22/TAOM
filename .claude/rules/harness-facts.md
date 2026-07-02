@@ -161,6 +161,16 @@ When multiple feature ports run simultaneously in the TAOM working tree, an exte
 
 **RCA reference:** `docs/reviews/rca-companiontactics-2026-05-06.md` documents the full session lost to this watcher (~2 hours).
 
+## Parallel builder briefs: shared sub-problems get ONE prescribed solution (EMPIRICAL: TAOM 2026-07-02, CombatMechanics)
+
+When fanning a feature out to parallel builder agents against shared contracts, any sub-problem that appears in MORE THAN ONE brief (id normalization, NaN handling, validation invariants, hot-path allocation patterns) must be solved once in the shared contract/foundation files — never left to per-builder judgment. Independently-correct builders otherwise diverge at the seams, and per-component review structurally cannot catch it:
+
+- Two CombatMechanics services normalized settlement-variant monster ids differently (runtime `Substring`-per-hit vs construction-time set expansion) — simultaneously a per-hit allocation AND a config-semantics inconsistency (a suffixed config entry matched in one service, never in the other).
+- The MCM slider clamp and the JSON validator enforced different ordering rules for the same value (each authored by a different hand).
+- The config-NaN rule was applied rigorously by the provider builder while the engine-input NaN side had no owner at all.
+
+**Pre-dispatch checklist:** (1) list sub-problems appearing in ≥2 briefs; (2) pin one solution in the shared contracts or a shared helper; (3) after integration, run a cross-consistency review over the seams (data-flow + efficiency agents), not only per-file checks. All four seam findings were caught by the cross-cutting review agents, none by per-component work. RCA: `docs/reviews/rca-combat-mechanics-2026-07-02.md`; LESSONS-LEARNED "Build, Tooling & Workflow".
+
 ## Worktree isolation for parallel agent runs (DOC-BACKED + EMPIRICAL)
 
 **Rule:** when spawning multiple `Agent` calls in one message that may edit overlapping single-owner files (`Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Main/IoC.cs`, `Main/SubModule.cs`, `Directory.Build.props`), pass `isolation: "worktree"` on each call. Each agent then operates in its own git worktree on a temporary branch — the shared TAOM working tree is never touched in parallel, and the build watcher cascade above cannot fire.

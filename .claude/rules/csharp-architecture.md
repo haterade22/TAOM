@@ -83,6 +83,7 @@ Any provider or boundary class that exposes user-editable values must validate s
 4. **For every `float`/`double` field: reject `NaN` and `±Infinity` BEFORE the range check.** IEEE-754 NaN comparisons always return `false`, so `value < min || value > max` evaluates `false` for NaN and the bad value sneaks through. Use `TAOM.Core.Validation.FiniteFloatValidator.IsFinite[InRange|AtMost|AtLeast]` — never write bare `< min || > max` checks on floats. **This bug has shipped three times** (Career cooldown review #31 — NaN cooldown made ability "always ready"; EditorCacheRebuild review #38 — NaN smoke-test tolerance silently disabled the parallel-safety gate; scene-scripts CS_Road 2026-05-13 — NaN `Width` / `ElevationOffset` / `RepeatU`/`RepeatV` flowed through to native `Mesh.AddTriangle` because the rule was only documented for category 1 and the script-author didn't classify editor fields as config).
 5. Log a warning and fall back to the compiled default for any field that fails — never silently apply a bad value
 6. Emit a summary warning when any reversion occurred so the user knows to look at prior warnings
+7. **When a value is settable from BOTH JSON and MCM, enforce the same range/ordering invariants at BOTH surfaces (or centralize the clamp).** Two entry points validated by different authors drift: CombatMechanics (2026-07-02) — the JSON provider enforced `autoKnockdownWeightRatio ≥ neutralWeightRatio` (Branch A below neutral would auto-floor ordinary horse charges), but the MCM slider clamped to a bare `[2,30]`, so slider values 2–5 recreated exactly the state the JSON invariant existed to prevent. Fix pattern: the settings provider derives its clamp floor from the validated config (`Math.Max(sliderMin, ceil(neutral))`), and the MCM hint documents the floor.
 
 **Why:** Review #25 (RevoltTuning) found a HIGH bug where the provider logged "Loaded" success for any parseable file. A plausible user edit like a sign-flipped penalty `1.0` (should be `-1.0`) would silently flip the feature from "soften revolts" to "accelerate revolts" with no warning. Syntax-error tests (missing file, malformed JSON) did not cover this class of failure.
 
@@ -91,6 +92,26 @@ Any provider or boundary class that exposes user-editable values must validate s
 **Test requirement:** Tests must cover semantically-invalid-but-parseable values for every validated field — not just missing-file and malformed-JSON cases. One test per validation rule.
 
 **Doc requirement:** When documenting "edit this file to retune," state the reload scope explicitly. `Reuse.Singleton` providers (the TAOM default) cache for the entire Bannerlord process — changes require a full application restart, not a new campaign or save-load. Never claim "next game load" without cross-checking the DryIoc lifetime.
+
+## Engine-Float Decision Gates: NaN Must FAIL the Gate (MANDATORY — the runtime sibling of the config rule above)
+
+The rule above protects floats at LOAD time. It does nothing for floats the ENGINE hands in at RUNTIME — momentum, velocity, damage, resistance, health, distance — which arrive per hit/per tick and can be NaN when native state is corrupt. Every NaN comparison returns `false`, so the safety of a gate depends entirely on its polarity:
+
+```csharp
+// ❌ WRONG — inverted early-exit: NaN <= 0f is false, so NaN PASSES into the active branch
+if (momentumRemaining <= 0f) return false;
+/* ... proceed to force SlicedThrough with NaN momentum ... */
+
+// ✅ RIGHT — positive requirement: NaN > 0f is false, so NaN fails the gate
+if (!(momentumRemaining > 0f)) return false;
+
+// ✅ RIGHT — owned-verdict services defer to vanilla on garbage, never emit a verdict computed from NaN
+if (float.IsNaN(speedFactor) || float.IsNaN(context.VictimKnockDownResistance)) return null;
+```
+
+**Rule:** for every decision gate on an engine-sourced float, write the gate as a **positive requirement** to proceed (or add an explicit `float.IsNaN` guard), and for `bool?` fall-through services return `null` on non-finite input so vanilla decides instead of an owned true/false computed from garbage. Add one NaN unit test per gate.
+
+**Why:** 4th instance of the NaN-gate bug class (Career cooldown #31, EditorCacheRebuild #38, CS_Road 2026-05-13 — all CONFIG floats, which produced the loader rule; CombatMechanics 2026-07-02 — ENGINE floats: `momentumRemaining <= 0f` passed NaN and could force cleave chains, a NaN charge velocity became an owned `false` suppressing knockdowns vanilla would grant). Each recurrence happened because the rule's scope was one category narrower than the bug. This section closes the runtime category; if a 5th instance appears in a category this section doesn't name, widen the scope again rather than patching the instance. Enforced at review time by `/deep-review` Agent 5 rule 4b. RCA: `docs/reviews/rca-combat-mechanics-2026-07-02.md`.
 
 ## Lookup Functions With Fallbacks: Validate Before Lookup (MANDATORY)
 

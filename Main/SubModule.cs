@@ -63,6 +63,7 @@ using TAOM.Features.SpecialResources;
 using TAOM.Features.SpecialResources.Hooks;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Models;
+using TAOM.Features.CombatMechanics.Models;
 using TAOM.Features.SettlementGuards;
 using TAOM.Features.SettlementGuards.Hooks;
 using TAOM.Features.RevoltTuning;
@@ -590,7 +591,17 @@ public class SubModule : MBSubModuleBase
         var spiderAttackService = IoC.Resolve<ISpiderAttackService>();
         var mumakilAttackService = IoC.Resolve<Features.Mumakil.IMumakilAttackService>();
         campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService, mumakilAttackService));
-        campaignStarter.AddModel<AgentApplyDamageModel>(new TaomAgentApplyDamageModel(careerAgentStat));
+        // CombatMechanics (2026-07-02): TaomCombatMechanicsModel DERIVES from the (now abstract)
+        // TaomAgentApplyDamageModel — one AgentApplyDamageModel slot, career passives via
+        // inheritance + TOR-derived mechanics on top (docs/features/combat-mechanics.md).
+        campaignStarter.AddModel<AgentApplyDamageModel>(new TaomCombatMechanicsModel(
+            careerAgentStat,
+            IoC.Resolve<Features.CombatMechanics.ICrushThroughService>(),
+            IoC.Resolve<Features.CombatMechanics.IChargeKnockdownService>(),
+            IoC.Resolve<Features.CombatMechanics.ICreatureCombatService>(),
+            IoC.Resolve<Features.CombatMechanics.IShieldPenetrationService>(),
+            IoC.Resolve<Features.CombatMechanics.ICombatMechanicsConfigProvider>(),
+            IoC.Resolve<Features.CombatMechanics.ICombatMechanicsSettingsProvider>()));
         campaignStarter.AddModel(new TaomClanTierModel(careerPassiveService));
     }
 

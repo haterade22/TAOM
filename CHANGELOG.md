@@ -2,6 +2,94 @@
 
 ## 2026-07-02
 
+### feat(sauron): grounded Dark Lord + dedicated `sauron` race — towering, immortal, NPC-only (#321)
+
+Sauron (`lord_1_17`) now fights on foot: the `Horse` (`charger`) + `HorseHarness` slots were removed from both
+`sauron_bat_equipment` and `sauron_civ_equipment` (`taom_equipment_sets_mordor.xml`); `default_group="Infantry"`
+was already set in `lords.xslt`, so the mount was the only thing putting him in the saddle. He also moves off the
+shared `elf` race onto his own **`sauron` race** so height and per-race combat tuning can target him alone:
+a verbatim elf clone (same `sk_elf_basemesh_a1_*` meshes, `human_skeleton`, 10 maturity/gender skins) appended at
+the END of LOTRLOME_Armory `skins.xml` + 5 Monster entries in `monsters.xml` (live install AND
+`docs/reference/lotrlome-armory-snapshot/`, `.bak-sauron` backups) — race ints are skins.xml merge-order indices,
+so append-at-end preserves every existing race id. Only deltas from elf: **adult `min_scale` 1.07/1.06 → 1.40**
+(movie-towering; child/teen/tween/toddler skins untouched) and the race id. No `as_sauron_*` action_sets — the
+Monster references `as_human_warrior` directly (elf pattern), and facegen sets are CC-only: the race is **NPC-only**
+(no `cultures.json` `races[]` lists it, so Patch9's allow-list dropdown can never offer it). Aging: `immortal: true`
+in `race_age_config.json` (verbatim saruman — the other Maia). CombatMechanics parity: `["sauron"]` mirrors
+`["elf"]` (CtbAttackBonus 20, RemoveNonOverheadPenalty) in BOTH the compiled defaults and
+`combat_mechanics_config.json` (the JSON dict REPLACES compiled defaults), so the race split doesn't silently drop
+his modifiers — pinned by `GetConfig_MissingFile_SauronDefaultsMirrorElf`.
+
+Save-compat: new campaigns only (heroes snapshot race + equipment at campaign start; `RacePersistenceService`
+restores the captured race on legacy saves) — existing saves keep the mounted elf-race Sauron by design.
+In-game verification owed: full restart + new campaign (Armory XML loads at process launch).
+
+### chore(review-infra): mechanize the CombatMechanics RCA preventions — NaN-gate + parallel-builder rules now load, not just sit in the RCA
+
+The rca-combat-mechanics RCA promised three preventive actions; promises don't fire on the next feature, rules do.
+All are now mechanized: **(1)** `.claude/rules/csharp-architecture.md` gained "Engine-Float Decision Gates: NaN Must
+FAIL the Gate" — the runtime sibling of the config-float rule (4th NaN-gate instance proved the scope was one
+category too narrow each time; inverted early-exits like `x <= 0f` pass NaN, gates must be positive requirements,
+`bool?` services return null on non-finite input) — plus config-rule point 7: dual-surface JSON+MCM values enforce
+the same invariants at both surfaces. **(2)** `/deep-review` Agent 5 gained rule 4b (engine-float NaN-polarity audit
+on every gate) and the toggle-coverage rule 2b gained the master-toggle fold check (enumerate EVERY override incl.
+constant getters when a hint promises "off = vanilla" — the `GetHorseChargePenetration` miss). **(3)**
+`harness-facts.md` gained "Parallel builder briefs: shared sub-problems get ONE prescribed solution" (pre-dispatch
+checklist; the CombatMechanics findings all lived at builder seams) + CLAUDE.md briefing item 6 pointing at it.
+LESSONS-LEARNED entries for both rule classes were appended earlier the same session; the RCA's codify section now
+records each action as DONE with file refs. Review log: REVIEW-LOG entry 69; AGENTS.md lessons updated to 69 reviews.
+
+### feat(combat): CombatMechanics — crush-through, creature cleave/unstoppable, weight-based charge knockdown, shield penetration, race modifiers (#320)
+
+Clean-room adaptation of five mechanics from The Old Realms' `TORAgentApplyDamageModel` (TheOldRealms/TOR_Core
+commit `d8ded52`, GPLv3 — no code copied; constants/formulas recorded as facts in
+`docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md`, the normative spec), plus two TAOM-original systems.
+New `TaomCombatMechanicsModel` occupies the engine's single `AgentApplyDamageModel` slot by DERIVING from the
+CareerSystem `TaomAgentApplyDamageModel` (now `abstract` — career damage passives ride via inheritance;
+registration swapped at the one `AddModel<AgentApplyDamageModel>` site in `SubModule.cs`). Nine thin overrides
+delegate to four pure services (`CrushThroughService`, `ChargeKnockdownService`, `CreatureCombatService`,
+`ShieldPenetrationService`) + a shared `RaceCombatModifiersResolver` (lazy race-name validation — the registry
+is engine state — with validate-before-lookup so invalid race ids get Neutral, never the "human" fallback row).
+
+Mechanics: **skill-based crush-through-block** (exponential skill-gap curve over a 30-point dead zone, capped
+50% at Δ200, energy-gated at 25 with a momentum ramp, off-angle ×0.5; the vanilla 58f overhead path is
+untouched); **monster auto-CTB** (troll/mûmakil/elephant/spider swings crush any non-shield block); **AI-orc
+shield-CTB** (orc-family races crush even shield blocks, energy/skill-gated, never the player); **creature
+cleave** (troll/mûmakil hits keep 30% momentum AND force SlicedThrough past vanilla's chain-terminating
+Bounced/Stuck branches — both overrides verified necessary from the 1.4.6 momentum wiring); **creature
+stagger immunity** (per-monster damage thresholds; shrug-off also suppresses knockback/knockdown/dismount by
+engine design); **weight-driven charge knockdown** (TAOM-original: `Monster.Weight` ratio × charge speed ×
+per-race resistance — Branch A auto-floors at ratio ≥8 [mûmakil 9999 vs man 80 ≈ 125], Branch B scales the
+vanilla `DecideCombatEffect` penetration by weight ratio around neutral 6.0 = Native horse+rider/human so
+horse-vs-man stays ≈ vanilla, and keeps the 0.7-dot KnockBack gate; horses can't floor 160-weight trolls);
+**shield penetration** (config item-id/weapon-class lists — default javelins — grant
+CanPenetrateShield/MultiplePenetration after base, preserving the vanilla Javelin+Impale grant; runtime-flag
+shield-damage ÷0.3 correction for the native underestimation, config-gated pending a 1.4.6 control-battle
+re-verify); **per-race combat modifiers** (one JSON table: dwarf ctbDefense +15 / knockdown-resist 2.5× /
+stagger 1.5×, elf ctbAttack +20 + no off-angle penalty, orc "Brute" swing-energy +15%, uruk_hai +10% + 1.25×;
+"tree-spirits dig in" is a future data row, not code).
+
+Config `combat_mechanics/combat_mechanics_config.json` (validated: FiniteFloatValidator before every range,
+ordering invariants, unknown weapon-class/race-name entries skipped+warned, `ObjectCreationHandling.Replace`
+so JSON lists replace compiled defaults; app-restart reload scope) + MCM "Combat Mechanics" (GroupOrder 24,
+master + 8 mechanic toggles + 2 sliders; master off = exactly pre-feature behavior). 107 new tests
+(decision-matrix boundaries: dead zone 30/31, energy-gate 25, damage==threshold, roll==chance; one test per
+config validation rule; NaN-gate regressions on engine inputs; `CombatMechanicsModelInvariantsTests`
+reflection-pins the derivation + abstract parent + exact override set under the BindingVerification harness).
+Full suite 3862 green; API snapshot refreshed (44 GameModels) and `-Check`-reproducing. Engine facts verified
+against installed 1.4.6 via ilspycmd (`DecideCrushedThrough`/knockdown/momentum call-site flow,
+`Monster.Weight`, `RelativeSpeedLimitForCharge` float.MaxValue default, WeaponFlags bit values). 6-agent deep
+review (standards/compat/efficiency/completeness/data-flow/spec-conformance): all 8 findings fixed in-session
+— per-hit Substring normalization replaced with construction-time variant expansion, engine-input NaN gates
+rewritten to positive polarity (4th instance of the NaN-gate class — new LESSONS-LEARNED rule),
+`GetHorseChargePenetration` now folds the mechanic toggle, MCM slider floor aligned to the JSON ordering
+invariant, enum-name cache for the missile/shield paths. RCA: `docs/reviews/rca-combat-mechanics-2026-07-02.md`.
+Owed in-game: control battles (mûmakil charge, troll cleave, dwarf line vs cavalry, javelin-vs-shield
+correction A/B).
+
+Research: SandboxAgentApplyDamageModel, MissionCombatMechanicsHelper, Mission.ChargeDamageCallback/CreateMeleeBlow, Monster, AttackInformation (installed 1.4.6)
+Save-compat: No SyncData, no save-format impact — pure GameModel + config.
+
 ### refactor(special-resources): unify the three earning-notification blocks
 
 `SpecialResourcesBehavior` carried three near-identical resolve→guard→display blocks (`NotifyEarning`,

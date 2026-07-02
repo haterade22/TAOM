@@ -12,7 +12,10 @@ namespace TAOM.Features.CareerSystem.Models;
 // active-buff logic lives in ICareerAgentStatService. This file does primitive
 // extraction from `AttackInformation` and short-circuits the base shrug-off path.
 // Closes deferred audit-issue #142 inline-logic P2.
-public class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
+// Abstract since 2026-07-02: registered only via a derived model (TaomCombatMechanicsModel) —
+// the engine holds ONE AgentApplyDamageModel slot, so combat-mechanics overrides layer on top
+// of the career passives through inheritance.
+public abstract class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
 {
     private readonly ICareerAgentStatService _agentStatService;
 

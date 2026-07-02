@@ -248,8 +248,9 @@ A subagent runs in its own context with a **strict tool allowlist** and does NOT
 3. **The relevant tool reminder** — e.g. "for TaleWorlds signatures use `pwsh tools/taom-src.ps1 path <Type>`"; "build/test with `dotnet … -p:DisableModuleCopy=true`, not `./build.ps1`".
 4. **Explicit scope** — which dirs/files are in bounds; `Main/IoC.cs` / `Main/SubModule.cs` are single-owner (recommend edits, don't make them).
 5. **Which convention docs to read** — point at the specific `docs/ai-includes/*` or `.claude/rules/*` for the task, since they may not have auto-loaded.
+6. **For PARALLEL builders: pin shared sub-problems once.** Any sub-problem appearing in ≥2 briefs (id normalization, NaN handling, validation invariants, hot-path patterns) gets ONE prescribed solution in the shared contracts — per-builder judgment diverges at the seams. See `.claude/rules/harness-facts.md` "Parallel builder briefs" (CombatMechanics RCA, 2026-07-02).
 
-Pure read-only research agents (`Explore`, `Plan`) need only items 1–2 + scope; building/editing agents need all five.
+Pure read-only research agents (`Explore`, `Plan`) need only items 1–2 + scope; building/editing agents need all five (six when fanning out in parallel).
 
 When you dispatch a subagent to **implement then review** work, follow the two-stage review ordering (spec compliance before code quality) in [agent-teams.md](./docs/ai-includes/agent-teams.md#subagent-review-ordering-verify-spec-before-quality).
 
@@ -342,6 +343,7 @@ When you dispatch a subagent to **implement then review** work, follow the two-s
 | CharacterCreation | `Main/Features/CharacterCreation/` |
 | AtmospherePersistence | `Main/Features/AtmospherePersistence/` |
 | AdvancedCombat | `Main/Features/AdvancedCombat/` (SpatialGrid, BoneCollision, CustomAttacks) |
+| CombatMechanics | `Main/Features/CombatMechanics/` (TOR-derived combat feel via `TaomCombatMechanicsModel` — crush-through/cleave/unstoppable/charge-knockdown/shield-pen + race modifiers; 4 pure services + validated config `combat_mechanics/combat_mechanics_config.json`; see the GameModel table row + `docs/features/combat-mechanics.md`) |
 | CulturalFeats | `Main/Features/CulturalFeats/` (TaomCulturalFeats, 16 GameModel overrides) |
 | CustomBattles | `Main/Features/CustomBattles/` (Custom battle factions, commanders, troops) |
 | Arena | `Main/Features/Arena/` (TaomTournamentModel — per-participant culture armor) |
@@ -458,6 +460,7 @@ When you dispatch a subagent to **implement then review** work, follow the two-s
 | `TaomPartyNavigationModel` | `DefaultPartyNavigationModel` | **PARKED 2026-06-26 — NOT registered (commented out in `SubModule.cs`, #120/#296); vanilla model is used.** Naval travel: grants naval capability + makes water terrain navigable (faithful port of NavalDLC's `NavalPartyNavigationModel`, ship-gate → config/MCM gate); the same model drives `DisableUnwalkableNavigationMeshes` so water navmesh stays enabled. Sailing is player-initiated via `sailModifierKey` (NavalTravel feature, #296) |
 | `TaomMarriageModel` | `DefaultMarriageModel` | NazgulFamily: the 9 Ringwraith lord ids (Witch-King + Khamûl + 7 Nazgûl) are ineligible for marriage so they never gain a spouse/children — overrides `IsSuitableForMarriage` + `IsCoupleSuitableForMarriage` (false for wraiths); everything non-wraith falls through to vanilla. Paired with the `heroes.xslt` family strip + `NazgulFamilyBehavior` retro-clear |
 | `TaomSettlementEconomyModel` | `DefaultSettlementEconomyModel` | Tunable town market-gold regen (#317 — towns drained to 0 by 2.2× LOTRLOME loot values + 22% more villager deliveries never recovered). Overrides ONLY `GetTownGoldChange`: `rate × (base + P×perProsperity − gold)` with JSON knobs, **shipped base 25000** (slope/rate vanilla). Castles never reach it (tick = `Town.AllTowns` only — re-verify on engine bump); toggle off = base passthrough. SettlementEconomy feature |
+| `TaomCombatMechanicsModel` | `TaomAgentApplyDamageModel` (CareerSystem parent, **abstract** since 2026-07-02) → `SandboxAgentApplyDamageModel` | CombatMechanics: TOR-derived combat feel in the single `AgentApplyDamageModel` slot — skill-based crush-through-block (exponential skill-gap curve, energy-gated), monster auto-CTB (troll/mûmakil/elephant/spider swings crush non-shield blocks), AI-orc shield-CTB, troll/mûmakil cleave (momentum 0.3× + forced SlicedThrough past vanilla's Bounced/Stuck chain-terminators), creature stagger-immunity thresholds, **weight-driven charge knockdown** (`Monster.Weight` ratio × charge speed × per-race resistance; mûmakil flattens infantry, horses can't floor trolls, dwarves resist 2.5×), config-granted shield penetration (+runtime-flag shield-damage correction), per-race modifier table (`raceModifiers` in `combat_mechanics/combat_mechanics_config.json`). Career damage passives inherited from the abstract parent. MCM "Combat Mechanics" (GroupOrder 24), master off = pre-feature behavior. Clean-room GPLv3 adaptation of TOR_Core mechanics — spec: `docs/reviews/adopt-tor-combat-mechanics-2026-07-02.md`. See `docs/features/combat-mechanics.md` |
 
 ## Harmony Patch Categories
 

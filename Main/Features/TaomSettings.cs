@@ -617,6 +617,63 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When ON (default), settlement garrisons shed opposed troops (e.g. a conquered fief's old-culture defenders leave). When OFF, only mobile parties are affected (if 'Apply To Mobile Parties' is on).")]
     public bool EnableAlignmentDesertionGarrisons { get; set; } = true;
 
+    // --- Combat Mechanics (CombatMechanics feature — crush-through, cleave, charge knockdown) ---
+
+    [SettingPropertyGroup("Combat Mechanics", GroupOrder = 24)]
+    [SettingPropertyBool("Enable Combat Mechanics", Order = 0,
+        HintText = "Master toggle for the TOR-derived combat feel pack: skill-based crush-through, monster/orc crush-through, creature cleave, creature stagger immunity, weight-based charge knockdown, shield penetration, race combat modifiers. When off, everything below is inert and combat behaves exactly as before this feature.")]
+    public bool EnableCombatMechanics { get; set; } = true;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyBool("Skill-Based Crush-Through", Order = 1,
+        HintText = "High-energy swings from an attacker who greatly outskills the defender have a chance to crush through the block (chance grows with skill gap and swing momentum; off-angle swings are penalized). Tuning constants live in combat_mechanics_config.json.")]
+    public bool EnableSkillCrushThrough { get; set; } = true;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyBool("Monster Crush-Through", Order = 2,
+        HintText = "Troll, mumakil, war elephant and giant spider melee attacks can only be blocked with a SHIELD — a bare-weapon block is crushed through automatically.")]
+    public bool EnableMonsterCrushThrough { get; set; } = true;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyBool("Orc Shield Crush-Through", Order = 3,
+        HintText = "AI orc/uruk swings can crush through even SHIELD blocks (energy- and skill-gated) — turtling against an orc horde is no longer safe. Never applies to the player's own attacks.")]
+    public bool EnableOrcShieldCrush { get; set; } = true;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyBool("Creature Cleave", Order = 4,
+        HintText = "Troll and mumakil swings slice through a victim and carry 30% momentum into the next — one swing can hit multiple soldiers, including through shield blocks that take damage (a zero-damage block still stops the swing).")]
+    public bool EnableCreatureCleave { get; set; } = true;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyBool("Creature Stagger Immunity", Order = 5,
+        HintText = "Big creatures shrug off hits below a per-creature damage threshold — no flinch-locking a troll with arrows. Thresholds live in combat_mechanics_config.json.")]
+    public bool EnableCreatureUnstoppable { get; set; } = true;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyBool("Weight-Based Charge Knockdown", Order = 6,
+        HintText = "Mount charges knock down based on relative weight (charger + rider vs victim), charge speed and the victim's race resistance: a mumakil bowls over infantry, a horse can't floor a troll, dwarves stand their ground.")]
+    public bool EnableChargeKnockdown { get; set; } = true;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyBool("Shield Penetration", Order = 7,
+        HintText = "Missiles from config-listed weapon classes/items (default: javelins) can penetrate shields and damage the soldier behind. Includes a shield-damage correction for a native underestimation bug.")]
+    public bool EnableShieldPenetration { get; set; } = true;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyBool("Race Combat Modifiers", Order = 8,
+        HintText = "Per-race combat flavor from combat_mechanics_config.json: dwarves resist knockdown and stagger, elves crush through better and strike true from any angle, orcs swing with brute momentum. When off, all races use neutral values.")]
+    public bool EnableRaceCombatModifiers { get; set; } = true;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyFloatingInteger("Crush-Through Max Chance", 0f, 1f, "#0%", Order = 9,
+        HintText = "Ceiling for the skill-based crush-through chance, reached at a huge skill gap with a full-momentum swing. Default 50%.")]
+    public float CrushThroughMaxChance { get; set; } = 0.5f;
+
+    [SettingPropertyGroup("Combat Mechanics")]
+    [SettingPropertyInteger("Auto-Knockdown Weight Ratio", 2, 30, Order = 10,
+        HintText = "Charger-to-victim weight ratio at which a charge ALWAYS knocks the victim down regardless of resistance (mumakil vs man is ~125). Default 8. Lower = heavy cavalry flattens infantry more often. Values below the neutral weight ratio (default 6 = ordinary horse+rider vs man) are treated as the neutral ratio so every plain horse charge doesn't auto-floor.")]
+    public int ChargeAutoKnockdownWeightRatio { get; set; } = 8;
+
     // --- Map UI / Settlement Nameplates ---
 
     [SettingPropertyGroup("Map UI/Settlement Nameplates", GroupOrder = 40)]
