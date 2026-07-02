@@ -47,10 +47,7 @@ public class PolygonWidget : ImageWidget
     private Sprite _loadedSprite;
 
     // Alpha hit-test data (1 byte per pixel, stored row-major)
-    private byte[] _alphaMap;
-    private int _texWidth;
-    private int _texHeight;
-    private const byte AlphaThreshold = 20; // pixel alpha > this = opaque for hit-testing
+    private AlphaHitMap _hitMap; // pixel-accurate hit testing (null = fallback to bbox)
 
     // Hover animation
     private float _hoverOffset;
@@ -818,18 +815,16 @@ public class PolygonWidget : ImageWidget
             _loadedSprite = new RuntimeSprite(twoDimTex, twoDimTex.Width, twoDimTex.Height);
             Sprite = _loadedSprite;
             _textureLoaded = true;
-            _texWidth = twoDimTex.Width;
-            _texHeight = twoDimTex.Height;
 
             // Extract alpha map from PNG file for pixel-accurate hit testing
             try
             {
-                _alphaMap = LoadAlphaMapFromPng(file, _texWidth, _texHeight);
+                _hitMap = LoadAlphaMapFromPng(file, twoDimTex.Width, twoDimTex.Height);
             }
             catch (Exception alphaEx)
             {
                 FactionMapPaths.LogError($"[{_regionName}] Alpha map failed: {alphaEx.Message}");
-                _alphaMap = null; // fallback to bbox-only hit testing
+                _hitMap = null; // fallback to bbox-only hit testing
             }
 
         }
@@ -939,12 +934,9 @@ public class PolygonWidget : ImageWidget
     /// The alpha map is downsampled by 4x in each dimension to save memory.
     /// Uses MAX alpha in each 4x4 block to avoid missing edge pixels.
     /// </summary>
-    private static byte[] LoadAlphaMapFromPng(string pngPath, int texWidth, int texHeight)
+    // PNG/bitmap boundary only — the downsample + lookup math lives in AlphaHitMap (unit-tested).
+    private static AlphaHitMap LoadAlphaMapFromPng(string pngPath, int texWidth, int texHeight)
     {
-        const int DS = 4;
-        int mapW = (texWidth + DS - 1) / DS;
-        int mapH = (texHeight + DS - 1) / DS;
-
         using (var bmp = new System.Drawing.Bitmap(pngPath))
         {
             var rect = new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height);
@@ -953,36 +945,8 @@ public class PolygonWidget : ImageWidget
 
             try
             {
-                byte[] alphaMap = new byte[mapW * mapH];
-                int stride = bmpData.Stride;
-                IntPtr scan0 = bmpData.Scan0;
-
-                unsafe
-                {
-                    byte* ptr = (byte*)scan0.ToPointer();
-                    for (int my = 0; my < mapH; my++)
-                    {
-                        for (int mx = 0; mx < mapW; mx++)
-                        {
-                            byte maxAlpha = 0;
-                            int startY = my * DS;
-                            int startX = mx * DS;
-                            int endY = Math.Min(startY + DS, bmp.Height);
-                            int endX = Math.Min(startX + DS, bmp.Width);
-                            for (int sy = startY; sy < endY; sy++)
-                            {
-                                for (int sx = startX; sx < endX; sx++)
-                                {
-                                    byte a = ptr[sy * stride + sx * 4 + 3];
-                                    if (a > maxAlpha) maxAlpha = a;
-                                }
-                            }
-                            alphaMap[my * mapW + mx] = maxAlpha;
-                        }
-                    }
-                }
-
-                return alphaMap;
+                return AlphaHitMap.FromArgbPixels(
+                    bmpData.Scan0, bmpData.Stride, bmp.Width, bmp.Height, texWidth, texHeight);
             }
             finally
             {
@@ -1022,51 +986,20 @@ public class PolygonWidget : ImageWidget
         }
     }
 
-    private string PointsToString()
-    {
-        if (_pointCount == 0) return "";
-        var parts = new string[_pointCount];
-        for (int i = 0; i < _pointCount; i++)
-            parts[i] = $"{_pointsX[i]:F3},{_pointsY[i]:F3}";
-        return string.Join(";", parts);
-    }
+    // Parsing/formatting delegate to PolygonPointParser (unit-tested; invariant culture BOTH ways —
+    // the old inline PointsToString interpolated with the CURRENT culture, breaking round-trips on
+    // comma-decimal locales).
+    private string PointsToString() => PolygonPointParser.Format(_pointsX, _pointsY, _pointCount);
 
     private void ParsePoints(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            _pointsX = Array.Empty<float>();
-            _pointsY = Array.Empty<float>();
-            _pointCount = 0;
-            return;
-        }
-
-        var pointStrings = value.Split(';');
-        var xList = new System.Collections.Generic.List<float>();
-        var yList = new System.Collections.Generic.List<float>();
-
-        foreach (var ps in pointStrings)
-        {
-            var coords = ps.Trim().Split(',');
-            if (coords.Length >= 2 &&
-                float.TryParse(coords[0].Trim(), System.Globalization.NumberStyles.Float,
-                    System.Globalization.CultureInfo.InvariantCulture, out float x) &&
-                float.TryParse(coords[1].Trim(), System.Globalization.NumberStyles.Float,
-                    System.Globalization.CultureInfo.InvariantCulture, out float y))
-            {
-                xList.Add(x);
-                yList.Add(y);
-            }
-        }
-
-        _pointsX = xList.ToArray();
-        _pointsY = yList.ToArray();
+        (_pointsX, _pointsY) = PolygonPointParser.Parse(value);
         _pointCount = _pointsX.Length;
     }
 
     private bool IsMouseOnOpaquePixel()
     {
-        if (_alphaMap == null || _texWidth <= 0 || _texHeight <= 0)
+        if (_hitMap == null)
             return true; // no alpha data -- fallback to bbox
 
         var mousePos = EventManager.MousePosition;
@@ -1077,26 +1010,7 @@ public class PolygonWidget : ImageWidget
         float widgetH = Size.Y;
         if (widgetW <= 0 || widgetH <= 0) return false;
 
-        float normX = localX / widgetW;
-        float normY = localY / widgetH;
-
-        if (normX < 0f || normX >= 1f || normY < 0f || normY >= 1f)
-            return false;
-
-        const int DS = 4;
-        int mapW = (_texWidth + DS - 1) / DS;
-        int mapH = (_texHeight + DS - 1) / DS;
-
-        int mapX = (int)(normX * mapW);
-        int mapY = (int)(normY * mapH);
-        mapX = Math.Max(0, Math.Min(mapX, mapW - 1));
-        mapY = Math.Max(0, Math.Min(mapY, mapH - 1));
-
-        int idx = mapY * mapW + mapX;
-        if (idx < 0 || idx >= _alphaMap.Length)
-            return false;
-
-        return _alphaMap[idx] > AlphaThreshold;
+        return _hitMap.IsOpaqueAtNormalized(localX / widgetW, localY / widgetH);
     }
 
     protected override bool OnPreviewMousePressed()

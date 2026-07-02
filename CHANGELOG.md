@@ -2,6 +2,18 @@
 
 ## 2026-07-01
 
+### refactor(faction-map): extract PolygonWidget hit-test math to unit-tested AlphaHitMap + PolygonPointParser
+
+`PolygonWidget` (1,140 lines, previously zero unit coverage) now delegates its pixel-accurate hit testing to
+`AlphaHitMap` (downsampled max-alpha build + normalized opaque lookup, the off-by-one-prone index math; the
+DS=4 constant was duplicated in builder and lookup and is now single-sourced) and its `Points` parsing to
+`PolygonPointParser` — both TaleWorlds-free, 19 new tests, TDD (RED confirmed before implementing). One
+deliberate fix: `PointsToString` formatted with the CURRENT culture while parsing was invariant, breaking
+round-trips on comma-decimal locales; formatting is now invariant both ways. Plan-scope deviation: no
+point-in-polygon code exists (hit-testing was always alpha-map only) and the hover tween is 4 lines — the
+planned `AnimatedFloat` extraction was rejected per the simplicity criterion. Build + 3688 tests green.
+Branch: `refactor/polygon-widget-math` (plan T4).
+
 ### refactor(submodule): extract the private-target manual-patch block to ManualPatchApplicator
 
 The ~66-line run of AccessTools-resolved `_harmony.Patch(...)` calls for PRIVATE engine methods
