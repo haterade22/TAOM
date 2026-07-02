@@ -2,6 +2,15 @@
 
 ## 2026-07-01
 
+### refactor(submodule): extract OnGameStart registration block into ordered registration methods (ADR-002)
+
+OnGameStart carried ~250 inline lines of behavior/model registration. The block now lives in seven private
+static registration methods (`RegisterProgressionAndIdentity` → `RegisterCampaignLifeBehaviors`) invoked in the
+original statement order from a slim coordinator that hoists the shared `careerPassives`/`culturalFeats`
+resolves. Pure mechanical move — every AddBehavior/AddModel/RemoveBehaviors/SuppressAll call is verbatim and
+order-preserved (script-verified token counts). Build + 3668 tests green. Branch: `refactor/submodule-slim`
+(plan T2).
+
 ### refactor(elephant-like): unify Elephant + Mumakil duplicated attack code into a shared ElephantLike layer
 
 The Mûmakil's attack service, BT task base, cooldown/engage decorators, blackboard interface, and action caches

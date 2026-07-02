@@ -379,251 +379,301 @@ public class SubModule : MBSubModuleBase
 
         if (gameStarterObject is CampaignGameStarter campaignStarter)
         {
-            var racePersistenceService = IoC.Resolve<IRacePersistenceService>();
-            campaignStarter.AddBehavior(new RacePersistenceBehavior(racePersistenceService));
-
-            var bannerInjectionService = IoC.Resolve<IBannerInjectionService>();
-            var bannerExclusionService = IoC.Resolve<IBannerExclusionService>();
-            campaignStarter.AddBehavior(new BannerInjectionBehavior(bannerInjectionService, bannerExclusionService));
-
-            var ccContentService = IoC.Resolve<ICharacterCreationContentService>();
-            var ccLogger = IoC.Resolve<IModLogger>();
-            campaignStarter.AddBehavior(new CharacterCreationRegistrationBehavior(ccContentService, ccLogger));
-
-            campaignStarter.RemoveBehaviors<InitialChildGenerationCampaignBehavior>();
-            var childGenService = IoC.Resolve<IInitialChildGenerationService>();
-            campaignStarter.AddBehavior(new TaomInitialChildGenerationBehavior(childGenService));
-
-            var costService = IoC.Resolve<ITroopCostService>();
+            // Registration order is preserved exactly from the pre-extraction inline block:
+            // vanilla-behavior removals precede their TAOM replacements, and the LotrIssues suppression
+            // must run inside this OnGameStart (after Sandbox registered its behaviors) — so the
+            // groups below are invoked in the original statement order.
             // Phase 9b #173 — careerPassives resolved once for the whole CulturalFeats + CareerSystem
             // + TroopProgression model registration block. Replaces all CareerPassiveHelper static
             // calls with instance-injected ICareerPassiveService.
             var careerPassives = IoC.Resolve<TAOM.Features.CareerSystem.ICareerPassiveService>();
-            // Phase 9b #180 / partial #148 — IWageModifierService extraction. Hoists garrison-wage
-            // feat loop + Mordor/Gundabad/Umbar party-wage feats + Rohan mounted-wage scaling +
-            // recruitment-cost feats out of the model body, satisfying gamemodels.md rule 4.
-            var wageModifiers = IoC.Resolve<IWageModifierService>();
-            var volunteerService = IoC.Resolve<IVolunteerTierService>();
-            var recruitmentService = IoC.Resolve<IVolunteerRecruitmentService>();
-            var volunteerContextAdapter = IoC.Resolve<IVolunteerContextAdapter>();
-            // Hoisted: TaomVolunteerModel now consumes ICulturalFeatsService for the village
-            // volunteer-respawn-rate feats (Dunland/Gundabad/Dol Guldur/Mordor). The later
-            // "Cultural feat models" block reuses this same `culturalFeats` reference.
+            // Hoisted: TaomVolunteerModel consumes ICulturalFeatsService for the village
+            // volunteer-respawn-rate feats (Dunland/Gundabad/Dol Guldur/Mordor); the cultural-feat
+            // model group reuses this same reference.
             var culturalFeats = IoC.Resolve<TAOM.Features.CulturalFeats.ICulturalFeatsService>();
-            var recruitmentAlignment = IoC.Resolve<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentService>();
-            campaignStarter.AddModel(new TaomCharacterStatsModel());
-            campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers));
-            campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment));
 
-            // NavalTravel — PARKED 2026-06-26: TAOM_Map's navmesh isn't set up to take advantage of naval
-            // travel (no naval region navmesh → AI can't route at sea; #296/#120), so the feature is disabled
-            // at the wiring level — registering nothing keeps vanilla DefaultPartyNavigationModel + vanilla
-            // navmesh regardless of any persisted MCM toggle. All code/tests/fixes are preserved for re-enable.
-            // RE-ENABLE: uncomment this model registration + the Patch54/Patch57 blocks in
-            // OnGameInitializationFinished, and flip the `enabled` defaults back to true.
-            // campaignStarter.AddModel(new TaomPartyNavigationModel(IoC.Resolve<INavalTravelService>(), IoC.Resolve<IModLogger>()));
-
-            var raceAgeService = IoC.Resolve<IRaceAgeService>();
-            var heroAgeAdapter = IoC.Resolve<IHeroAgeAdapter>();
-            var raceAgeLogger = IoC.Resolve<IModLogger>();
-            campaignStarter.AddBehavior(new RaceAgeBehavior(raceAgeService, heroAgeAdapter, raceAgeLogger));
-            campaignStarter.AddModel(new TaomAgeModel(raceAgeService));
-            campaignStarter.AddModel(new TaomPregnancyModel(raceAgeService));
-            campaignStarter.AddModel(new TaomHeroCreationModel());
-
-            // Ringwraiths (Witch-King + Nazgûl) take no spouse/parents/children: block their marriage
-            // (so no spouse ⇒ no children) + a defensive clear-on-load for pre-feature saves.
-            var nazgulRegistry = IoC.Resolve<INazgulRegistry>();
-            campaignStarter.AddModel(new TaomMarriageModel(nazgulRegistry));
-            campaignStarter.AddBehavior(new NazgulFamilyBehavior(nazgulRegistry, IoC.Resolve<IModLogger>()));
-
-            var diplomacyService = IoC.Resolve<IDiplomacyService>();
-            var wotrService = IoC.Resolve<IWarOfTheRingService>();
-            var diplomacyLogger = IoC.Resolve<IModLogger>();
-            campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService, diplomacyLogger));
-            campaignStarter.AddBehavior(new PlayerAllianceProposalBehavior(diplomacyService, diplomacyLogger));
-            campaignStarter.AddModel(new TaomAllianceModel(diplomacyService));
-            campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService));
-            campaignStarter.AddModel(new TaomDiplomacyModel(wotrService));
-
-            var wotrLogger = IoC.Resolve<IModLogger>();
-            campaignStarter.AddBehavior(new WarOfTheRingBehavior(wotrService, wotrLogger));
-
-            var siegeDefenseService = IoC.Resolve<ISiegeDefenseService>();
-            var siegeDefenseLogger = IoC.Resolve<IModLogger>();
-            campaignStarter.AddBehavior(new SiegeDefenseBehavior(siegeDefenseService, siegeDefenseLogger));
-            campaignStarter.AddModel(new TaomSiegeEventModel(IoC.Resolve<ISiegeEngineAvailabilityService>()));
-
-            var executionRelationService = IoC.Resolve<IExecutionRelationService>();
-            var playerContext = IoC.Resolve<IPlayerContextAdapter>();
-            campaignStarter.AddModel(new TaomExecutionRelationModel(executionRelationService, playerContext));
-
-            // Cultural feat models — Phase 9b #144/#176: dispatch logic extracted to
-            // ICulturalFeatsService. Each model is now a thin boundary that converts
-            // CultureObject → ICultureFeatAdapter and delegates (gamemodels.md rule 4).
-            // `culturalFeats` is resolved above (hoisted for TaomVolunteerModel).
-            campaignStarter.AddModel(new TaomArmyManagementModel(culturalFeats));
-            campaignStarter.AddModel(new TaomPartySpeedModel(culturalFeats, careerPassives));
-            campaignStarter.AddModel(new TaomSettlementProsperityModel(culturalFeats));
-            campaignStarter.AddModel(new TaomSettlementMilitiaModel(culturalFeats));
-            campaignStarter.AddModel(new TaomBuildingConstructionModel(culturalFeats));
-            campaignStarter.AddModel(new TaomVillageProductionModel(culturalFeats));
-            campaignStarter.AddModel(new TaomCaravanModel(culturalFeats));
-            campaignStarter.AddModel(new TaomBattleRewardModel(culturalFeats, careerPassives));
-            campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()));
-            campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(culturalFeats, careerPassives));
-            campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives));
-            campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats));
-            campaignStarter.AddModel(new TaomSettlementLoyaltyModel(culturalFeats, IoC.Resolve<IRevoltTuningConfigProvider>()));
-            campaignStarter.AddModel(new TaomSettlementFoodModel(IoC.Resolve<ISettlementFoodService>(), IoC.Resolve<ISettlementFoodConfigProvider>()));
-            campaignStarter.AddModel(new TaomBanditDensityModel(IoC.Resolve<IBanditScalingService>()));
-            campaignStarter.AddModel(new TaomPartyMoraleModel(culturalFeats, careerPassives));
-            campaignStarter.AddModel(new TaomSmithingModel(culturalFeats, careerPassives));
-            campaignStarter.AddModel(new TaomClanFinanceModel(culturalFeats));
-            campaignStarter.AddModel(new TaomRaidModel(culturalFeats, careerPassives));
-            campaignStarter.AddModel(new TaomNotableSpawnModel(culturalFeats));
-
-            // Battle balance models
-            var battleBalanceSettings = IoC.Resolve<IBattleBalanceSettingsProvider>();
-            var battleBalanceConfig = IoC.Resolve<IBattleBalanceConfigProvider>();
-            campaignStarter.AddModel(new TaomMilitaryPowerModel(battleBalanceSettings, battleBalanceConfig));
-            campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings));
-            campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig, IoC.Resolve<ICareerPassiveService>()));
-
-            campaignStarter.AddModel(new TaomInformationRestrictionModel(IoC.Resolve<IEncyclopediaSettingsProvider>()));
-
-            var armyTargetingService = IoC.Resolve<IArmyTargetingService>();
-            campaignStarter.AddModel(new TaomTargetScoreModel(armyTargetingService));
-
-            var specialResourceService = IoC.Resolve<ISpecialResourceService>();
-            var specialResourceStorage = IoC.Resolve<ISpecialResourceStorageService>();
-            var specialResourceConfig = IoC.Resolve<ISpecialResourceConfigProvider>();
-            var specialResourceLogger = IoC.Resolve<IModLogger>();
-            var specialResourceBehavior = new SpecialResourcesBehavior(
-                specialResourceService, specialResourceStorage, specialResourceConfig, specialResourceLogger);
-            campaignStarter.AddBehavior(specialResourceBehavior);
-            PartyScreenLogic_AddCommand_Patch.SetBehavior(specialResourceBehavior);
-
-            var careerDataService = IoC.Resolve<ICareerDataService>();
-            var careerRegistry = IoC.Resolve<ICareerRegistry>();
-            var careerPassiveService = IoC.Resolve<ICareerPassiveService>();
-            var careerLogger = IoC.Resolve<IModLogger>();
-            campaignStarter.AddBehavior(new CareerPersistenceBehavior(careerDataService, careerLogger));
-            var careerCreationHandler = IoC.Resolve<ICareerCreationHandler>();
-            var careerAbilityServiceForBehavior = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAbilityService>();
-            campaignStarter.AddBehavior(new CareerCampaignBehavior(
-                careerDataService, careerRegistry, careerPassiveService, careerCreationHandler, careerAbilityServiceForBehavior, careerLogger));
-
-            var careerAdapterFactory = IoC.Resolve<ICareerHeroAdapterFactory>();
-            // CareerSwitchDialogueBehavior used to take ICareerSwitchService too; that dependency
-            // moved to GauntletCareerScreen.OnChooseSwitchTarget (Codex Review #32 cleanup).
-            campaignStarter.AddBehavior(new CareerSwitchDialogueBehavior(
-                careerDataService, careerRegistry, careerAdapterFactory, careerLogger));
-
-            // Career-tied quest system (Phase 6) — offers/starts tier quests; CareerQuest : QuestBase
-            // is registered for saving by the auto-discovered CareerQuestSaveableTypeDefiner.
-            var careerQuestService = IoC.Resolve<Features.CareerSystem.ICareerQuestService>();
-            campaignStarter.AddBehavior(new Features.CareerSystem.Quests.CareerQuestCampaignBehavior(
-                careerDataService, careerQuestService, careerLogger));
-
-            // Career system GameModels — reuse careerPassiveService resolved above (line 334).
-            // Phase 9b #142 — agent-stat extraction: TaomAgentStatCalculateModel /
-            // TaomAgentApplyDamageModel now delegate UpdateAgentStats + damage-amp/red +
-            // shrug-off logic to ICareerAgentStatService (gamemodels.md rule 4).
-            var careerAgentStat = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAgentStatService>();
-            campaignStarter.AddModel(new TaomMapVisibilityModel(careerPassives));
-            campaignStarter.AddModel(new TaomInventoryCapacityModel(careerPassives));
-            var elephantAttackService = IoC.Resolve<Features.Elephant.IElephantAttackService>();
-            var spiderAttackService = IoC.Resolve<ISpiderAttackService>();
-            var mumakilAttackService = IoC.Resolve<Features.Mumakil.IMumakilAttackService>();
-            campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService, mumakilAttackService));
-            campaignStarter.AddModel<AgentApplyDamageModel>(new TaomAgentApplyDamageModel(careerAgentStat));
-            campaignStarter.AddModel(new TaomClanTierModel(careerPassiveService));
-
-            var goldService = IoC.Resolve<IStartupGoldService>();
-            var influenceService = IoC.Resolve<IStartupInfluenceService>();
-            var startupLogger = IoC.Resolve<IModLogger>();
-            campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService, startupLogger));
-
-            var namedCompanionService = IoC.Resolve<INamedCompanionService>();
-            campaignStarter.AddBehavior(new NamedCompanionBehavior(namedCompanionService));
-
-            // QuickActions: per-save inventory-search-box persistence (SyncData round-trips
-            // even when EnableInventorySearch is OFF — disabled = inert, not absent).
-            campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.QuickActions.Hooks.InventorySearchCampaignBehavior>());
-
-            // EquipPresets: per-save preset persistence + orphan pruning. Unconditional registration
-            // so the SyncData round-trip preserves presets even when EnableEquipmentPresets is OFF
-            // (the MCM hint promises "existing presets are inert (preserved in save)").
-            campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.EquipPresets.Hooks.EquipmentPresetCampaignBehavior>());
-
-            // FiefManagement (Patch36) — register UNCONDITIONALLY so the menu is always present
-            // and the EnableFiefManagement MCM toggle takes effect immediately at runtime.
-            campaignStarter.AddBehavior(new FiefHubCampaignBehavior(
-                IoC.Resolve<IFiefHubMenuPresenter>(),
-                IoC.Resolve<IFiefManagementSettingsProvider>()));
-
-            // CompanionTactics (Patch35) — FormationPresets persistence behavior. Registered
-            // unconditionally so SyncData round-trips even when EnableFormationPresets is OFF.
-            campaignStarter.AddBehavior(new Features.CompanionTactics.FormationPresets.Hooks.FormationPresetCampaignBehavior(
-                IoC.Resolve<Features.CompanionTactics.FormationPresets.IFormationPresetService>(),
-                IoC.Resolve<IModLogger>()));
-
-            // Messengers — paid messenger dispatch + dialog hooks + per-save SyncData persistence.
-            // Registered unconditionally so saves round-trip pending messengers even when
-            // EnableMessengers is OFF (disabled = inert, not absent).
-            campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.Messengers.MessengerCampaignBehavior>());
-
-            // CultureMarketplace (#207) — daily injection of LOTRLOME items into town markets
-            // keyed by owner culture. No SyncData (stock lives in vanilla Settlement.ItemRoster).
-            campaignStarter.AddBehavior(new Features.CultureMarketplace.CultureMarketplaceBehavior(
-                IoC.Resolve<Features.CultureMarketplace.ICultureItemPoolService>(),
-                IoC.Resolve<Features.CultureMarketplace.ICultureMarketplaceInjectionService>(),
-                IoC.Resolve<Features.CultureMarketplace.ICultureMarketplaceMaintenanceService>(),
-                IoC.Resolve<ITownRosterAdapter>(),
-                IoC.Resolve<Features.CultureMarketplace.Domain.MarketplaceTuning>(),
-                IoC.Resolve<IModLogger>()));
-
-            // CastleRecruitment (Patch42) — castle notable population + maintenance + volunteer fill +
-            // player "Recruit troops" castle menu + issue/quest suppression for castle notables.
-            // Registered unconditionally so the MCM master toggle takes effect at runtime.
-            campaignStarter.AddBehavior(new CastleRecruitmentBehavior(
-                IoC.Resolve<ICastleRecruitmentService>(),
-                IoC.Resolve<IModLogger>()));
-
-            // AlignmentDesertion — opposed-alignment troops (Free vs Evil) desert daily from mobile
-            // parties and garrisons. Registered unconditionally so the MCM master toggle takes effect
-            // at runtime; stateless (no SyncData). Reuses the Execution IAlignmentService.
-            campaignStarter.AddBehavior(new Features.AlignmentDesertion.Hooks.AlignmentDesertionBehavior(
-                IoC.Resolve<Features.AlignmentDesertion.IAlignmentDesertionService>(),
-                IoC.Resolve<IModLogger>()));
-
-            // EliteEmissary — buy a faction's elite troops for its special resource at key settlements.
-            // Registered unconditionally so the MCM master toggle takes effect at runtime; stateless (no SyncData).
-            campaignStarter.AddBehavior(new Features.EliteEmissary.Hooks.EliteEmissaryBehavior(
-                IoC.Resolve<Features.EliteEmissary.IEliteEmissaryService>(),
-                IoC.Resolve<Features.EliteEmissary.IEliteEmissarySettingsProvider>(),
-                IoC.Resolve<Features.EliteEmissary.IEliteEmissaryConfigProvider>(),
-                IoC.Resolve<ISettlementOwnerAdapter>(),
-                IoC.Resolve<IModLogger>()));
-
-            // CultureConversion — conquered cross-culture fiefs gradually adopt the new owner's culture
-            // (troops, militia, identity). Registered unconditionally so SyncData round-trips conversion
-            // records and completed overrides re-apply on load even when the MCM toggle is off.
-            campaignStarter.AddBehavior(new Features.CultureConversion.Hooks.CultureConversionBehavior(
-                IoC.Resolve<Features.CultureConversion.ICultureConversionService>(),
-                IoC.Resolve<Features.CultureConversion.ICultureConversionStore>(),
-                IoC.Resolve<IModLogger>()));
-
-            // LotrIssues — suppress ALL 43 vanilla procedural issue behaviors (Sandbox registered them
-            // before this OnGameStart) and register the single LOTR custom-issue dispatcher in their
-            // place. New-campaign feature: a pre-suppression save keeps in-flight vanilla issues until
-            // they resolve, since their behaviors are only absent for newly-started campaigns here.
-            Features.LotrIssues.LotrIssueSuppression.SuppressAll(campaignStarter, IoC.Resolve<IModLogger>());
-            campaignStarter.AddBehavior(new Features.LotrIssues.LotrIssuesCampaignBehavior(
-                IoC.Resolve<Features.LotrIssues.ILotrIssueService>(),
-                IoC.Resolve<IModLogger>()));
+            RegisterProgressionAndIdentity(campaignStarter, careerPassives, culturalFeats);
+            RegisterRaceAgeAndFamily(campaignStarter);
+            RegisterDiplomacyAndConflict(campaignStarter);
+            RegisterCulturalFeatModels(campaignStarter, culturalFeats, careerPassives);
+            RegisterBattleBalanceAndTargeting(campaignStarter);
+            RegisterSpecialResourcesAndCareers(campaignStarter, careerPassives);
+            RegisterCampaignLifeBehaviors(campaignStarter);
         }
+    }
+
+    // Character identity, creation, and troop-progression registrations (ADR-002 extraction of the
+    // former OnGameStart inline block — bodies are verbatim, order unchanged).
+    private static void RegisterProgressionAndIdentity(
+        CampaignGameStarter campaignStarter,
+        ICareerPassiveService careerPassives,
+        TAOM.Features.CulturalFeats.ICulturalFeatsService culturalFeats)
+    {
+        var racePersistenceService = IoC.Resolve<IRacePersistenceService>();
+        campaignStarter.AddBehavior(new RacePersistenceBehavior(racePersistenceService));
+
+        var bannerInjectionService = IoC.Resolve<IBannerInjectionService>();
+        var bannerExclusionService = IoC.Resolve<IBannerExclusionService>();
+        campaignStarter.AddBehavior(new BannerInjectionBehavior(bannerInjectionService, bannerExclusionService));
+
+        var ccContentService = IoC.Resolve<ICharacterCreationContentService>();
+        var ccLogger = IoC.Resolve<IModLogger>();
+        campaignStarter.AddBehavior(new CharacterCreationRegistrationBehavior(ccContentService, ccLogger));
+
+        campaignStarter.RemoveBehaviors<InitialChildGenerationCampaignBehavior>();
+        var childGenService = IoC.Resolve<IInitialChildGenerationService>();
+        campaignStarter.AddBehavior(new TaomInitialChildGenerationBehavior(childGenService));
+
+        var costService = IoC.Resolve<ITroopCostService>();
+        // Phase 9b #180 / partial #148 — IWageModifierService extraction. Hoists garrison-wage
+        // feat loop + Mordor/Gundabad/Umbar party-wage feats + Rohan mounted-wage scaling +
+        // recruitment-cost feats out of the model body, satisfying gamemodels.md rule 4.
+        var wageModifiers = IoC.Resolve<IWageModifierService>();
+        var volunteerService = IoC.Resolve<IVolunteerTierService>();
+        var recruitmentService = IoC.Resolve<IVolunteerRecruitmentService>();
+        var volunteerContextAdapter = IoC.Resolve<IVolunteerContextAdapter>();
+        var recruitmentAlignment = IoC.Resolve<TAOM.Features.AlignmentRecruitment.IRecruitmentAlignmentService>();
+        campaignStarter.AddModel(new TaomCharacterStatsModel());
+        campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers));
+        campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment));
+
+        // NavalTravel — PARKED 2026-06-26: TAOM_Map's navmesh isn't set up to take advantage of naval
+        // travel (no naval region navmesh → AI can't route at sea; #296/#120), so the feature is disabled
+        // at the wiring level — registering nothing keeps vanilla DefaultPartyNavigationModel + vanilla
+        // navmesh regardless of any persisted MCM toggle. All code/tests/fixes are preserved for re-enable.
+        // RE-ENABLE: uncomment this model registration + the Patch54/Patch57 blocks in
+        // OnGameInitializationFinished, and flip the `enabled` defaults back to true.
+        // campaignStarter.AddModel(new TaomPartyNavigationModel(IoC.Resolve<INavalTravelService>(), IoC.Resolve<IModLogger>()));
+    }
+
+    // Race-appropriate aging/pregnancy/hero-creation + the Ringwraith family block.
+    private static void RegisterRaceAgeAndFamily(CampaignGameStarter campaignStarter)
+    {
+        var raceAgeService = IoC.Resolve<IRaceAgeService>();
+        var heroAgeAdapter = IoC.Resolve<IHeroAgeAdapter>();
+        var raceAgeLogger = IoC.Resolve<IModLogger>();
+        campaignStarter.AddBehavior(new RaceAgeBehavior(raceAgeService, heroAgeAdapter, raceAgeLogger));
+        campaignStarter.AddModel(new TaomAgeModel(raceAgeService));
+        campaignStarter.AddModel(new TaomPregnancyModel(raceAgeService));
+        campaignStarter.AddModel(new TaomHeroCreationModel());
+
+        // Ringwraiths (Witch-King + Nazgûl) take no spouse/parents/children: block their marriage
+        // (so no spouse ⇒ no children) + a defensive clear-on-load for pre-feature saves.
+        var nazgulRegistry = IoC.Resolve<INazgulRegistry>();
+        campaignStarter.AddModel(new TaomMarriageModel(nazgulRegistry));
+        campaignStarter.AddBehavior(new NazgulFamilyBehavior(nazgulRegistry, IoC.Resolve<IModLogger>()));
+    }
+
+    // Diplomacy / War of the Ring / siege defense / execution-relation registrations.
+    private static void RegisterDiplomacyAndConflict(CampaignGameStarter campaignStarter)
+    {
+        var diplomacyService = IoC.Resolve<IDiplomacyService>();
+        var wotrService = IoC.Resolve<IWarOfTheRingService>();
+        var diplomacyLogger = IoC.Resolve<IModLogger>();
+        campaignStarter.AddBehavior(new DiplomacyBehavior(diplomacyService, diplomacyLogger));
+        campaignStarter.AddBehavior(new PlayerAllianceProposalBehavior(diplomacyService, diplomacyLogger));
+        campaignStarter.AddModel(new TaomAllianceModel(diplomacyService));
+        campaignStarter.AddModel(new TaomKingdomDecisionPermissionModel(diplomacyService, wotrService));
+        campaignStarter.AddModel(new TaomDiplomacyModel(wotrService));
+
+        var wotrLogger = IoC.Resolve<IModLogger>();
+        campaignStarter.AddBehavior(new WarOfTheRingBehavior(wotrService, wotrLogger));
+
+        var siegeDefenseService = IoC.Resolve<ISiegeDefenseService>();
+        var siegeDefenseLogger = IoC.Resolve<IModLogger>();
+        campaignStarter.AddBehavior(new SiegeDefenseBehavior(siegeDefenseService, siegeDefenseLogger));
+        campaignStarter.AddModel(new TaomSiegeEventModel(IoC.Resolve<ISiegeEngineAvailabilityService>()));
+
+        var executionRelationService = IoC.Resolve<IExecutionRelationService>();
+        var playerContext = IoC.Resolve<IPlayerContextAdapter>();
+        campaignStarter.AddModel(new TaomExecutionRelationModel(executionRelationService, playerContext));
+    }
+
+    // Cultural feat models — Phase 9b #144/#176: dispatch logic extracted to
+    // ICulturalFeatsService. Each model is a thin boundary that converts
+    // CultureObject → ICultureFeatAdapter and delegates (gamemodels.md rule 4).
+    // `culturalFeats` is passed in (hoisted resolve, shared with TaomVolunteerModel).
+    private static void RegisterCulturalFeatModels(
+        CampaignGameStarter campaignStarter,
+        TAOM.Features.CulturalFeats.ICulturalFeatsService culturalFeats,
+        ICareerPassiveService careerPassives)
+    {
+        campaignStarter.AddModel(new TaomArmyManagementModel(culturalFeats));
+        campaignStarter.AddModel(new TaomPartySpeedModel(culturalFeats, careerPassives));
+        campaignStarter.AddModel(new TaomSettlementProsperityModel(culturalFeats));
+        campaignStarter.AddModel(new TaomSettlementMilitiaModel(culturalFeats));
+        campaignStarter.AddModel(new TaomBuildingConstructionModel(culturalFeats));
+        campaignStarter.AddModel(new TaomVillageProductionModel(culturalFeats));
+        campaignStarter.AddModel(new TaomCaravanModel(culturalFeats));
+        campaignStarter.AddModel(new TaomBattleRewardModel(culturalFeats, careerPassives));
+        campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()));
+        campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(culturalFeats, careerPassives));
+        campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives));
+        campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats));
+        campaignStarter.AddModel(new TaomSettlementLoyaltyModel(culturalFeats, IoC.Resolve<IRevoltTuningConfigProvider>()));
+        campaignStarter.AddModel(new TaomSettlementFoodModel(IoC.Resolve<ISettlementFoodService>(), IoC.Resolve<ISettlementFoodConfigProvider>()));
+        campaignStarter.AddModel(new TaomBanditDensityModel(IoC.Resolve<IBanditScalingService>()));
+        campaignStarter.AddModel(new TaomPartyMoraleModel(culturalFeats, careerPassives));
+        campaignStarter.AddModel(new TaomSmithingModel(culturalFeats, careerPassives));
+        campaignStarter.AddModel(new TaomClanFinanceModel(culturalFeats));
+        campaignStarter.AddModel(new TaomRaidModel(culturalFeats, careerPassives));
+        campaignStarter.AddModel(new TaomNotableSpawnModel(culturalFeats));
+    }
+
+    // Battle-balance / encyclopedia-visibility / army-targeting model registrations.
+    private static void RegisterBattleBalanceAndTargeting(CampaignGameStarter campaignStarter)
+    {
+        var battleBalanceSettings = IoC.Resolve<IBattleBalanceSettingsProvider>();
+        var battleBalanceConfig = IoC.Resolve<IBattleBalanceConfigProvider>();
+        campaignStarter.AddModel(new TaomMilitaryPowerModel(battleBalanceSettings, battleBalanceConfig));
+        campaignStarter.AddModel(new TaomCombatSimulationModel(battleBalanceSettings));
+        campaignStarter.AddModel(new TaomPartyHealingModel(battleBalanceSettings, battleBalanceConfig, IoC.Resolve<ICareerPassiveService>()));
+
+        campaignStarter.AddModel(new TaomInformationRestrictionModel(IoC.Resolve<IEncyclopediaSettingsProvider>()));
+
+        var armyTargetingService = IoC.Resolve<IArmyTargetingService>();
+        campaignStarter.AddModel(new TaomTargetScoreModel(armyTargetingService));
+    }
+
+    // Special-resource economy + the career system (behaviors, quests, and career GameModels).
+    private static void RegisterSpecialResourcesAndCareers(
+        CampaignGameStarter campaignStarter,
+        ICareerPassiveService careerPassives)
+    {
+        var specialResourceService = IoC.Resolve<ISpecialResourceService>();
+        var specialResourceStorage = IoC.Resolve<ISpecialResourceStorageService>();
+        var specialResourceConfig = IoC.Resolve<ISpecialResourceConfigProvider>();
+        var specialResourceLogger = IoC.Resolve<IModLogger>();
+        var specialResourceBehavior = new SpecialResourcesBehavior(
+            specialResourceService, specialResourceStorage, specialResourceConfig, specialResourceLogger);
+        campaignStarter.AddBehavior(specialResourceBehavior);
+        PartyScreenLogic_AddCommand_Patch.SetBehavior(specialResourceBehavior);
+
+        var careerDataService = IoC.Resolve<ICareerDataService>();
+        var careerRegistry = IoC.Resolve<ICareerRegistry>();
+        var careerPassiveService = IoC.Resolve<ICareerPassiveService>();
+        var careerLogger = IoC.Resolve<IModLogger>();
+        campaignStarter.AddBehavior(new CareerPersistenceBehavior(careerDataService, careerLogger));
+        var careerCreationHandler = IoC.Resolve<ICareerCreationHandler>();
+        var careerAbilityServiceForBehavior = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAbilityService>();
+        campaignStarter.AddBehavior(new CareerCampaignBehavior(
+            careerDataService, careerRegistry, careerPassiveService, careerCreationHandler, careerAbilityServiceForBehavior, careerLogger));
+
+        var careerAdapterFactory = IoC.Resolve<ICareerHeroAdapterFactory>();
+        // CareerSwitchDialogueBehavior used to take ICareerSwitchService too; that dependency
+        // moved to GauntletCareerScreen.OnChooseSwitchTarget (Codex Review #32 cleanup).
+        campaignStarter.AddBehavior(new CareerSwitchDialogueBehavior(
+            careerDataService, careerRegistry, careerAdapterFactory, careerLogger));
+
+        // Career-tied quest system (Phase 6) — offers/starts tier quests; CareerQuest : QuestBase
+        // is registered for saving by the auto-discovered CareerQuestSaveableTypeDefiner.
+        var careerQuestService = IoC.Resolve<Features.CareerSystem.ICareerQuestService>();
+        campaignStarter.AddBehavior(new Features.CareerSystem.Quests.CareerQuestCampaignBehavior(
+            careerDataService, careerQuestService, careerLogger));
+
+        // Career system GameModels — reuse the hoisted careerPassives resolve.
+        // Phase 9b #142 — agent-stat extraction: TaomAgentStatCalculateModel /
+        // TaomAgentApplyDamageModel now delegate UpdateAgentStats + damage-amp/red +
+        // shrug-off logic to ICareerAgentStatService (gamemodels.md rule 4).
+        var careerAgentStat = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAgentStatService>();
+        campaignStarter.AddModel(new TaomMapVisibilityModel(careerPassives));
+        campaignStarter.AddModel(new TaomInventoryCapacityModel(careerPassives));
+        var elephantAttackService = IoC.Resolve<Features.Elephant.IElephantAttackService>();
+        var spiderAttackService = IoC.Resolve<ISpiderAttackService>();
+        var mumakilAttackService = IoC.Resolve<Features.Mumakil.IMumakilAttackService>();
+        campaignStarter.AddModel<AgentStatCalculateModel>(new TaomAgentStatCalculateModel(careerAgentStat, elephantAttackService, spiderAttackService, mumakilAttackService));
+        campaignStarter.AddModel<AgentApplyDamageModel>(new TaomAgentApplyDamageModel(careerAgentStat));
+        campaignStarter.AddModel(new TaomClanTierModel(careerPassiveService));
+    }
+
+    // Campaign-life behaviors: startup resources, companions, inventory/equipment QoL, fief +
+    // formation tooling, messengers, marketplace, castle recruitment, alignment systems, culture
+    // conversion, and the LOTR issue takeover (suppression stays inside OnGameStart, last in order).
+    private static void RegisterCampaignLifeBehaviors(CampaignGameStarter campaignStarter)
+    {
+        var goldService = IoC.Resolve<IStartupGoldService>();
+        var influenceService = IoC.Resolve<IStartupInfluenceService>();
+        var startupLogger = IoC.Resolve<IModLogger>();
+        campaignStarter.AddBehavior(new StartupResourcesBehavior(goldService, influenceService, startupLogger));
+
+        var namedCompanionService = IoC.Resolve<INamedCompanionService>();
+        campaignStarter.AddBehavior(new NamedCompanionBehavior(namedCompanionService));
+
+        // QuickActions: per-save inventory-search-box persistence (SyncData round-trips
+        // even when EnableInventorySearch is OFF — disabled = inert, not absent).
+        campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.QuickActions.Hooks.InventorySearchCampaignBehavior>());
+
+        // EquipPresets: per-save preset persistence + orphan pruning. Unconditional registration
+        // so the SyncData round-trip preserves presets even when EnableEquipmentPresets is OFF
+        // (the MCM hint promises "existing presets are inert (preserved in save)").
+        campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.EquipPresets.Hooks.EquipmentPresetCampaignBehavior>());
+
+        // FiefManagement (Patch36) — register UNCONDITIONALLY so the menu is always present
+        // and the EnableFiefManagement MCM toggle takes effect immediately at runtime.
+        campaignStarter.AddBehavior(new FiefHubCampaignBehavior(
+            IoC.Resolve<IFiefHubMenuPresenter>(),
+            IoC.Resolve<IFiefManagementSettingsProvider>()));
+
+        // CompanionTactics (Patch35) — FormationPresets persistence behavior. Registered
+        // unconditionally so SyncData round-trips even when EnableFormationPresets is OFF.
+        campaignStarter.AddBehavior(new Features.CompanionTactics.FormationPresets.Hooks.FormationPresetCampaignBehavior(
+            IoC.Resolve<Features.CompanionTactics.FormationPresets.IFormationPresetService>(),
+            IoC.Resolve<IModLogger>()));
+
+        // Messengers — paid messenger dispatch + dialog hooks + per-save SyncData persistence.
+        // Registered unconditionally so saves round-trip pending messengers even when
+        // EnableMessengers is OFF (disabled = inert, not absent).
+        campaignStarter.AddBehavior(IoC.Resolve<TAOM.Features.Messengers.MessengerCampaignBehavior>());
+
+        // CultureMarketplace (#207) — daily injection of LOTRLOME items into town markets
+        // keyed by owner culture. No SyncData (stock lives in vanilla Settlement.ItemRoster).
+        campaignStarter.AddBehavior(new Features.CultureMarketplace.CultureMarketplaceBehavior(
+            IoC.Resolve<Features.CultureMarketplace.ICultureItemPoolService>(),
+            IoC.Resolve<Features.CultureMarketplace.ICultureMarketplaceInjectionService>(),
+            IoC.Resolve<Features.CultureMarketplace.ICultureMarketplaceMaintenanceService>(),
+            IoC.Resolve<ITownRosterAdapter>(),
+            IoC.Resolve<Features.CultureMarketplace.Domain.MarketplaceTuning>(),
+            IoC.Resolve<IModLogger>()));
+
+        // CastleRecruitment (Patch42) — castle notable population + maintenance + volunteer fill +
+        // player "Recruit troops" castle menu + issue/quest suppression for castle notables.
+        // Registered unconditionally so the MCM master toggle takes effect at runtime.
+        campaignStarter.AddBehavior(new CastleRecruitmentBehavior(
+            IoC.Resolve<ICastleRecruitmentService>(),
+            IoC.Resolve<IModLogger>()));
+
+        // AlignmentDesertion — opposed-alignment troops (Free vs Evil) desert daily from mobile
+        // parties and garrisons. Registered unconditionally so the MCM master toggle takes effect
+        // at runtime; stateless (no SyncData). Reuses the Execution IAlignmentService.
+        campaignStarter.AddBehavior(new Features.AlignmentDesertion.Hooks.AlignmentDesertionBehavior(
+            IoC.Resolve<Features.AlignmentDesertion.IAlignmentDesertionService>(),
+            IoC.Resolve<IModLogger>()));
+
+        // EliteEmissary — buy a faction's elite troops for its special resource at key settlements.
+        // Registered unconditionally so the MCM master toggle takes effect at runtime; stateless (no SyncData).
+        campaignStarter.AddBehavior(new Features.EliteEmissary.Hooks.EliteEmissaryBehavior(
+            IoC.Resolve<Features.EliteEmissary.IEliteEmissaryService>(),
+            IoC.Resolve<Features.EliteEmissary.IEliteEmissarySettingsProvider>(),
+            IoC.Resolve<Features.EliteEmissary.IEliteEmissaryConfigProvider>(),
+            IoC.Resolve<ISettlementOwnerAdapter>(),
+            IoC.Resolve<IModLogger>()));
+
+        // CultureConversion — conquered cross-culture fiefs gradually adopt the new owner's culture
+        // (troops, militia, identity). Registered unconditionally so SyncData round-trips conversion
+        // records and completed overrides re-apply on load even when the MCM toggle is off.
+        campaignStarter.AddBehavior(new Features.CultureConversion.Hooks.CultureConversionBehavior(
+            IoC.Resolve<Features.CultureConversion.ICultureConversionService>(),
+            IoC.Resolve<Features.CultureConversion.ICultureConversionStore>(),
+            IoC.Resolve<IModLogger>()));
+
+        // LotrIssues — suppress ALL 43 vanilla procedural issue behaviors (Sandbox registered them
+        // before this OnGameStart) and register the single LOTR custom-issue dispatcher in their
+        // place. New-campaign feature: a pre-suppression save keeps in-flight vanilla issues until
+        // they resolve, since their behaviors are only absent for newly-started campaigns here.
+        Features.LotrIssues.LotrIssueSuppression.SuppressAll(campaignStarter, IoC.Resolve<IModLogger>());
+        campaignStarter.AddBehavior(new Features.LotrIssues.LotrIssuesCampaignBehavior(
+            IoC.Resolve<Features.LotrIssues.ILotrIssueService>(),
+            IoC.Resolve<IModLogger>()));
     }
 
     public override void OnGameInitializationFinished(Game game)
