@@ -2,6 +2,17 @@
 
 ## 2026-07-01
 
+### test(behavior-trees): characterization tests for the inlined BT builder (zero coverage before)
+
+The vendored-then-inlined `BehaviorTrees` builder (`Main/BehaviorTrees/BehaviorTreesCore.cs`) is load-bearing for
+all four creature features but had no tests. 9 new tests pin the semantics the creature trees depend on: the
+blackboard reflection-copy shares the tree's `BTBlackboardValue` INSTANCES with nodes and decorators at Add* time
+(so trees must initialize blackboard values in their ctor — a post-build reassignment does not propagate), a node
+whose blackboard interface the tree lacks fails the build with `MissingTreeBlackBoardException`, get-only
+blackboard properties fail with `IncorrectPropertyException`, non-blackboard interfaces are ignored, `Up()` past
+the root throws, and a trivial tree executes its task exactly once per `RunTree`. Round-2 target R3. Branch:
+`refactor/round2-cleanups`.
+
 ### refactor(core-validation): consolidate copy-pasted SafeClamp helpers into TAOM.Core.Validation.SettingClamp
 
 The byte-identical private `SafeClamp` (float, NaN-guarded) / `SafeClampInt` helpers copy-pasted across the
