@@ -17,6 +17,7 @@ path.write_bytes((b"\xef\xbb\xbf" if had_bom else b"") + text.encode("utf-8"))  
 
 - **Never** write the BOM as a string literal `"﻿"` (fragile if the `.py` is re-encoded).
 - **Never** read with plain `utf-8` (leaves the BOM as a stray U+FEFF in the decoded string).
+- **Sanctioned alternative** (used by `Assign-SettlementOwners.py` + `rebalance_settlement_prosperity.py`): the full byte round-trip — `raw = open(path,'rb').read()`, `text = raw.decode('utf-8')` (BOM survives as a leading U+FEFF *character*), regex edits, `open(path,'wb').write(text.encode('utf-8'))` (re-emits the BOM bytes). Equally byte-faithful because both read and write are binary-mode (no CRLF translation) and the BOM travels inside the string; the "never plain utf-8" rule above targets the mixed pattern (`utf-8` decode + `write_text`), not this symmetric one. Pick either idiom; don't mix them in one script.
 - Back up before destructive writes: `path.with_suffix(path.suffix + ".bak").write_bytes(path.read_bytes())`.
 - Scene/asset/id comparisons must be **case-insensitive** (Windows lookup is) — lowercase both sides.
 
@@ -62,6 +63,8 @@ Reference: `docs/reviews/rca-scene-tooling-2026-05-28.md` (why this convention e
 | `rebalance_weapons.py` | Points-based weapon damage with per-culture multipliers | `--dry-run`, `--apply`, `--export-csv` |
 | `rebalance_lords.py` | Baseline + cultural modifier + age scaling for all lords | `--dry-run`, `--apply`, `--export-csv`, `--skills-only` |
 | `audit_cc_bonuses.py` | Audit character-creation skill/attribute/focus bonuses per culture (per-stage uniformity, value-aware worst-case concentration, vanilla-budget comparison, full menu dump). `--apply` zeroes the career-stage payload + culture-base bonus via formatting-preserving line edits (CRLF + inline arrays preserved, writes `.bak`). Reads the 6 `charactercreation/*_menu.json` + `cultures.json` + career eligibility from `career_system/taom_careers.xml`. | `--report` (default), `--out`, `--export-csv`, `--dry-run`, `--apply` |
+| `analyze_settlement_prosperity.py` | Read-only starting-prosperity report: LIVE TAOM_Map vs vanilla per class, flat-cluster flags, town gold-equilibrium columns (#317). Reports to `tools/reports/settlement-prosperity/`. | `--stdout`, `--cluster-threshold`, `--game-dir` |
+| `rebalance_settlement_prosperity.py` | Lift-only per-class vanilla quantile-map rebaseline of TAOM_Map starting prosperity (LIVE external file, `.bak`, idempotent; seeds NEW campaigns only — #317). | `--dry-run` (default), `--apply`, `--allow-lower`, `--town-uplift`, `--pin-zero-village`, `--preserve`, `--game-dir` |
 
 ## Lords & Equipment Assignment
 

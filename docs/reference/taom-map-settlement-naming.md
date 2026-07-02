@@ -211,6 +211,8 @@ Bannerlord's default font (LiberationSans-derived) supports:
 | [`tools/Apply-MapVillageNames.py`](../../tools/Apply-MapVillageNames.py) | The bulk-rename script (live external module) |
 | [`tools/Assign-RhunSettlementOwners.py`](../../tools/Assign-RhunSettlementOwners.py) | Distribute RU-region settlement ownership across clans (live external module) |
 | [`tools/Assign-SettlementOwners.py`](../../tools/Assign-SettlementOwners.py) | Generalized multi-region ownership distributor (SPEC-driven; Dale/Isengard/Dunland/Harad/Umbar/Khand/Dol Guldur/Gundabad) |
+| [`tools/analyze_settlement_prosperity.py`](../../tools/analyze_settlement_prosperity.py) | Read-only starting-prosperity report vs vanilla (live external module; #317) |
+| [`tools/rebalance_settlement_prosperity.py`](../../tools/rebalance_settlement_prosperity.py) | Lift-only prosperity quantile-map rebaseline (live external module; new campaigns only; #317) |
 | [`tools/Apply-SettlementNames.ps1`](../../tools/Apply-SettlementNames.ps1) | Older PowerShell tool — targets the STALE TAOM-repo snapshot |
 | [`tools/Generate-Settlements.ps1`](../../tools/Generate-Settlements.ps1) | Regenerates settlements.xml from scene data (TAOM-repo snapshot only) |
 | [`tools/Settlement-Breakdown.ps1`](../../tools/Settlement-Breakdown.ps1) | Reports settlement counts by region |
