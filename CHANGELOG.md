@@ -2,6 +2,15 @@
 
 ## 2026-07-01
 
+### docs(claude-md): update the Elephant/Mûmakil + VolunteerRecruitment Key Paths rows for the 2026-07-01 refactors
+
+USER-AUTHORIZED CLAUDE.md edit (config-protection deliberately bypassed by explicit instruction, hook untouched):
+the War Elephant and Mûmakil rows now describe the shared `Main/Features/ElephantLike/` BT nodes bound via
+`ElephantCombat.Profile`/`MumakilCombat.Profile` and the thin service bindings (#305) instead of the deleted
+`BehaviorTreeElements/` folders and `ElephantAttackActions`; the VolunteerRecruitment row points at the
+`RecruitmentPools/VolunteerRecruitmentService.<Culture>.cs` partial split (#308). Closes the "known remainder"
+from `rca-refactor-stack-2026-07-01.md`.
+
 ### refactor(hero-race): extract RaceTableauPositioning from CharacterTableauService (4x duplicated, untested)
 
 The per-race tableau frame-offset block was duplicated FOUR times inside `CharacterTableauService`
