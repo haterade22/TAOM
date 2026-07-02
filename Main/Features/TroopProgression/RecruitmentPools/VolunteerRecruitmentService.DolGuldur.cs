@@ -9,6 +9,28 @@ namespace TAOM.Features.TroopProgression;
 // clan > culture (troops.md).
 public partial class VolunteerRecruitmentService
 {
+    // Settlement pool (total 18): goblins common, orcs the mid-line meat, a uruk entry, khamul shadow
+    // elite, a rare ranged-orc entry, and the spider RIDER at the rare tail (a goblin cavalry troop
+    // whose Horse slot carries the Giant Spider mount — vanilla cavalry spawn, no patch).
+    private static readonly (string, int)[] DolGuldurSettlementPool =
+    {
+        ("dg_goblin_slave",           7),
+        ("dg_orc_recruit",            4),  // orc line + warg line entry
+        ("dg_uruk_foul",              2),  // uruk line entry
+        ("dg_khamul_shadow_initiate", 3),
+        ("dg_orc_scout",              1),  // ranged-orc line entry (dg_orc_scout -> dg_orc_archer)
+        ("taom_spider_creature",      1),  // Giant Spider rider — rare settlement-path tail (keeps pool total 18).
+    };
+
+    private static readonly (string, int)[] DolGuldurClanPool =
+    {
+        ("dg_goblin_slave",           7),
+        ("dg_orc_recruit",            4),  // orc line + warg line entry
+        ("dg_uruk_foul",              2),  // uruk line entry
+        ("dg_khamul_shadow_initiate", 3),
+        ("dg_orc_scout",              1),  // ranged-orc line entry
+    };
+
     // --- Dol Guldur Settlement Mappings ---
 
     private static void InitializeDolGuldurSettlements()

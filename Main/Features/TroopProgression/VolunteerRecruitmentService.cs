@@ -158,50 +158,6 @@ public partial class VolunteerRecruitmentService : IVolunteerRecruitmentService
         return pool[pool.Count - 1].CharacterId;
     }
 
-    // Settlement pool (total 18): goblins common, orcs the mid-line meat, a uruk entry, khamul shadow
-    // elite, a rare ranged-orc entry, and the spider RIDER at the rare tail (a goblin cavalry troop
-    // whose Horse slot carries the Giant Spider mount — vanilla cavalry spawn, no patch).
-    private static readonly (string, int)[] DolGuldurSettlementPool =
-    {
-        ("dg_goblin_slave",           7),
-        ("dg_orc_recruit",            4),  // orc line + warg line entry
-        ("dg_uruk_foul",              2),  // uruk line entry
-        ("dg_khamul_shadow_initiate", 3),
-        ("dg_orc_scout",              1),  // ranged-orc line entry (dg_orc_scout -> dg_orc_archer)
-        ("taom_spider_creature",      1),  // Giant Spider rider — rare settlement-path tail (keeps pool total 18).
-    };
-
-    private static readonly (string, int)[] DolGuldurClanPool =
-    {
-        ("dg_goblin_slave",           7),
-        ("dg_orc_recruit",            4),  // orc line + warg line entry
-        ("dg_uruk_foul",              2),  // uruk line entry
-        ("dg_khamul_shadow_initiate", 3),
-        ("dg_orc_scout",              1),  // ranged-orc line entry
-    };
-
-    // --- Erebor Settlement Mappings ---
-
-    // Erebor recruitment is a mix of Erebor + Iron Hills troops (same blend as the culture pool):
-    // Erebor-leaning 8:4 weight (miner 5 / noble 3 / Iron Hills recruit 2 / Iron Hills noble 2).
-    // Applied to BOTH settlements and clans — settlement pools are checked first, so the mix must
-    // live there too or it would never surface in the mapped Erebor towns/castles.
-    // Total 15. The two trailing entries are reachability fixes (appended last so the existing
-    // cumulative ranges of the first four are unchanged): the Iron Pass line (ironpass_recruit ->
-    // warrior -> infantry -> axeman -> ... + the ironpass_arbalest ranged sub-line) and the
-    // Erebor Oathsworn elite line (erebor_oathsworn -> legionary -> royal_legionary) were fielded
-    // by AI lords but orphaned from every pool. Iron Pass recruit at modest weight (2); the L36
-    // Oathsworn elite as a rare line-entry (1).
-    private static readonly (string, int)[] EreborMix =
-    {
-        ("erebor_reg_miner",       5),
-        ("erebor_noble",           3),
-        ("iron_hills_reg_recruit", 2),
-        ("iron_hills_noble",       2),
-        ("ironpass_recruit",       2),  // Iron Pass line entry
-        ("erebor_oathsworn",       1),  // Oathsworn elite line entry
-    };
-
     // --- Helpers ---
 
     private static void AddSettlement(string settlementId, params (string troopId, int weight)[] entries)
