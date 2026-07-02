@@ -29,8 +29,11 @@ fi
 BASENAME=$(basename "$FILE_PATH")
 
 # Protected files list
+# CLAUDE.md removed 2026-07-02 by explicit user decision (solo developer; the agent keeps
+# CLAUDE.md current as living documentation, and the block forced manual approval on every
+# routine doc correction). Directory.Build.props / settings*.json / ADRs stay protected —
+# those guard against the agent weakening build config, permissions, and architecture decisions.
 PROTECTED_FILES=(
-  "CLAUDE.md"
   "Directory.Build.props"
   "settings.json"
   "settings.local.json"

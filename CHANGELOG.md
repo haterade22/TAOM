@@ -2,6 +2,15 @@
 
 ## 2026-07-01
 
+### chore(hooks): remove CLAUDE.md from config-protection's blocked list (user decision)
+
+`config-protection.sh` no longer blocks Edit/Write to CLAUDE.md — explicit user decision (2026-07-02, solo
+developer): the agent maintains CLAUDE.md as living documentation and the block forced a manual approval on
+every routine doc correction (e.g. the #305 rename remainder). The hook itself stays: Directory.Build.props,
+settings.json/settings.local.json, and ADRs remain protected — those gates guard against the agent weakening
+build config, permissions, and architecture decisions rather than against collaborators. CLAUDE.md's Hooks
+table updated to match.
+
 ### docs(claude-md): update the Elephant/Mûmakil + VolunteerRecruitment Key Paths rows for the 2026-07-01 refactors
 
 USER-AUTHORIZED CLAUDE.md edit (config-protection deliberately bypassed by explicit instruction, hook untouched):
