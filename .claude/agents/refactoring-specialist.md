@@ -69,6 +69,12 @@ If the test suite isn't green going in, fix the tests first via the appropriate 
    - Thin entry points (ADR-002, <150 lines) — extracting a method to satisfy this rule is fine, but the method body's logic should be in a service, not a helper at the entry-point layer
    - Constructor injection (no `IoC.Resolve` in services per `feedback_no_service_locator_in_services.md`)
 
+6. **Documentation sweep (MANDATORY when the refactor renamed/moved/deleted any type, folder, or public method).** Grep the repo for every OLD identifier and path with NO file-type filter — the sweep must cover `docs/**/*.md` and `CLAUDE.md`, not just `*.cs`. Classify each hit:
+   - **Living docs** (`docs/features/*.md`, `docs/ai-includes/*.md`, `CLAUDE.md` Key Paths blurbs, `docs/reference/*`) — UPDATE to the new names/paths, noting the rename inline where history matters ("was `X` before the YYYY-MM-DD refactor").
+   - **Historical records** (past CHANGELOG entries, `docs/reviews/rca-*.md`, audit snapshots, REVIEW-LOG) — LEAVE UNTOUCHED; they describe the state at their time.
+   - **CLAUDE.md** is edit-gated by `config-protection.sh` — report the exact needed correction instead of editing it yourself.
+   Why: the 2026-07-01 ElephantLike unification swept only `*.cs` and shipped dead links in `docs/features/elephant.md`/`mumakil.md` (caught by `/deep-review`; RCA `docs/reviews/rca-refactor-stack-2026-07-01.md`; LESSONS-LEARNED "Build, Tooling & Workflow").
+
 ## Output
 
 ```

@@ -2,6 +2,18 @@
 
 ## 2026-07-01
 
+### review(refactor-stack): 6-dimension deep review — code clean, 2 stale-doc findings fixed + prevention installed
+
+`/deep-review` of the 4-branch refactor stack (#305-#308) via a 6-agent workflow (standards, installed-DLL API
+compat, efficiency, completeness, data flow, behavior-preservation diff audit) + adversarial verification: **zero
+code findings** — registration parity, Harmony wiring, ctor argument order, engine signatures, hot-path caching
+all held. Two confirmed findings, both stale docs: `docs/features/elephant.md` + `mumakil.md` still pointed at the
+deleted `BehaviorTreeElements/` folders and pre-unification type names — fixed. RCA:
+`docs/reviews/rca-refactor-stack-2026-07-01.md`; durable prevention: LESSONS-LEARNED "structural refactor sweeps
+must cover living docs" + a mandatory Documentation-sweep step 6 in the refactoring-specialist agent. Known
+remainder: CLAUDE.md lines 372-373 carry the same stale names — edit blocked by config-protection (needs user
+approval). GitHub issues #305/#306/#307/#308 filed for the four refactors.
+
 ### refactor(troop-progression): split VolunteerRecruitmentService per-culture pools into partial-class files
 
 The 994-line service is now a 264-line core (maps, JSON loader, conditional→settlement→clan→culture cascade,

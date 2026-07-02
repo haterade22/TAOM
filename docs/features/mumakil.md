@@ -56,13 +56,17 @@ actually fires. (This reverses the elephant's 2026-06-15 bow-rider experiment.)
 
 ### C# (clone of the elephant attack feature, minus howdah)
 
-`Main/Features/Mumakil/` mirrors `Main/Features/Elephant/` without the howdah: a pure `MumakilAttackService`
-(`IsMumakilMonster` / `ShouldEngage` / `IsOffCooldown` / `ComputeInflictedDamage`, 24 unit tests), a per-agent
-`MumakilBehaviorTree` (trample on a 10s cooldown → left/right tusk swing on a 4s cooldown → idle), attached by
+`Main/Features/Mumakil/` mirrors `Main/Features/Elephant/` without the howdah. **Since the 2026-07-01 ElephantLike
+unification (#305) the formerly-cloned internals are SHARED:** `MumakilAttackService` is a thin binding of
+[`ElephantLikeAttackService`](../../Main/Features/ElephantLike/ElephantLikeAttackService.cs) (ctor passes the
+`MumakilConfig` constants; `IsCreatureMonster` / `ShouldEngage` / `IsOffCooldown` / `ComputeInflictedDamage`,
+24 unit tests) behind the marker interface `IMumakilAttackService : IElephantLikeAttackService`; the per-agent
+`MumakilBehaviorTree` (trample on a 10s cooldown → left/right tusk swing on a 4s cooldown → idle) builds the shared
+`ElephantLike` BT nodes bound to [`MumakilCombat.Profile`](../../Main/Features/Mumakil/MumakilCombat.cs), attached by
 `MumakilMissionBehavior` keyed on `Monster.StringId == "taom_mumakil"`. The mount-lock lives in the shared
 `TaomAgentStatCalculateModel` (a 4th injected `IMumakilAttackService` → `CanAgentRideMount=false` +
 `MountDifficulty=999`). Attack clips reuse the elephant's `act_elephant_attack_1..4` (shared `as_elephant` set);
-`MumakilAttackActions.AnyUnresolved()` logs at mission start if a future Armory rename breaks them.
+`MumakilCombat.Profile.AnyUnresolved()` logs at mission start if a future Armory rename breaks them.
 
 ## Configuration / data
 
@@ -72,7 +76,7 @@ actually fires. (This reverses the elephant's 2026-06-15 bow-rider experiment.)
 | `lotr_monster_mumakil.xml` (LOTRLOME_Armory) | Monster `id="taom_mumakil"`, `action_set="as_elephant"`, `monster_usage="elephant"`, enlarged `<body_capsule>`. Registered in `LOTRLOME_Armory/SubModule.xml`. |
 | `LOTRAOM_horses.xml` (LOTRLOME_Armory) | Horse item `taom_mumakil`: mesh `sk_mumakil_basemesh_a1`, platform via `<AdditionalMeshes>`, **`body_length="300"`** (= 3.0×), no HorseHarness. |
 | `troops_harad.xml` | `harad_mumakil_rider` — `Cavalry`, spear + sword, Horse=`Item.taom_mumakil`, no HorseHarness. |
-| `VolunteerRecruitmentService.InitializeHaradClans` | `harad_mumakil_rider` in `clan_aserai_1` (weight 1 of 12). |
+| `VolunteerRecruitmentService.InitializeHaradClans` (in [`RecruitmentPools/VolunteerRecruitmentService.Harad.cs`](../../Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.Harad.cs) since the 2026-07-01 pool split, #308) | `harad_mumakil_rider` in `clan_aserai_1` (weight 1 of 12). |
 
 > **The Monster XML, Horse item, mesh, and SubModule.xml registration live in the external `LOTRLOME_Armory` module
 > (the game install), NOT this repo** — same as the elephant. They are not version-controlled here.
@@ -82,9 +86,9 @@ actually fires. (This reverses the elephant's 2026-06-15 bow-rider experiment.)
 | File | Role |
 |------|------|
 | `Main/Features/Mumakil/MumakilConfig.cs` | Tuning constants (id, mount-lock, gates, cooldowns, damage, clips). |
-| `Main/Features/Mumakil/IMumakilAttackService.cs` + `MumakilAttackService.cs` | Pure decision logic (no TaleWorlds deps). |
+| `Main/Features/Mumakil/IMumakilAttackService.cs` + `MumakilAttackService.cs` | Pure decision logic (no TaleWorlds deps) — thin binding of the shared `ElephantLikeAttackService` since 2026-07-01 (#305). |
 | `Main/Features/Mumakil/MumakilMissionBehavior.cs` | Boundary: registers + attaches the per-agent BT (keyed on Monster id). |
-| `Main/Features/Mumakil/MumakilBehaviorTree.cs` + `BehaviorTreeElements/` | The trample/tusk behavior tree (warg/elephant pattern). |
+| `Main/Features/Mumakil/MumakilBehaviorTree.cs` + `MumakilCombat.cs` | The trample/tusk behavior tree — builds the SHARED nodes in `Main/Features/ElephantLike/BehaviorTreeElements/` bound to `MumakilCombat.Profile`. |
 | `Main/Features/Mumakil/MumakilIoC.cs` | Registers `IMumakilAttackService` (Singleton). |
 | `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` | Mount-lock (shared with elephant/spider). |
 | `Main/IoC.cs`, `Main/SubModule.cs` | Wiring (IoC reg, service resolve + ctor arg, `AddMissionBehavior`). |
@@ -93,7 +97,7 @@ actually fires. (This reverses the elephant's 2026-06-15 bow-rider experiment.)
 
 ## Tests
 
-- `MumakilAttackServiceTests` — 24 tests (IsMumakilMonster, ShouldEngage, IsOffCooldown, ComputeInflictedDamage),
+- `MumakilAttackServiceTests` — 24 tests (IsCreatureMonster, ShouldEngage, IsOffCooldown, ComputeInflictedDamage),
   mirroring the elephant's. BT elements + mission behavior are tested via game (warg/elephant/ADR-008 precedent).
 - `VolunteerRecruitmentServiceTests` — the `clan_aserai_1` pool tests cover the new Mûmakil bucket (`Next(12)`).
 

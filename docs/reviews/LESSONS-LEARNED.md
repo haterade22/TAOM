@@ -366,6 +366,12 @@ For a "what can we use from here?" repo share, do an exhaustive review: open the
 - **Prevent:** Output structure: Context → What's new → What we already match → What to skip → Recommended minimum action → Files that would change. Evaluate each interesting piece against the existing `.claude/`. In plan mode, write the assessment to the plan file then ExitPlanMode. This is the review depth the `/adopt-external` workflow encodes.
 - **Source:** memory/feedback_repo_review_thoroughness.md
 
+### A structural refactor's leftover-reference sweep must cover living docs, not just code
+When a refactor renames/moves/deletes types, folders, or public methods, grep the ENTIRE repo for the old names — and fix the hits in **living documentation** (`docs/features/*.md`, `docs/ai-includes/*.md`, `CLAUDE.md` Key Paths blurbs), not only `*.cs`. Historical records (past CHANGELOG entries, `docs/reviews/rca-*.md`, audit snapshots, REVIEW-LOG) describe the state at their time and are left untouched. CLAUDE.md edits are gated by `config-protection.sh` — surface the needed correction to the user instead of forcing it.
+- **Why missed:** the 2026-07-01 overnight refactor stack (ElephantLike unification, #305) deleted `Elephant/BehaviorTreeElements/` + `Mumakil/BehaviorTreeElements/` and renamed 6 types; the post-refactor leftover sweep grepped `*.cs` only, so `docs/features/elephant.md` + `mumakil.md` kept dead links and dead type names. Caught by the `/deep-review` completeness agent (2 confirmed MED/LOW findings — the only findings in an otherwise-clean 6-dimension review).
+- **Prevent:** the refactoring-specialist agent's Method now includes a mandatory step 6 "Documentation sweep" (grep old identifiers repo-wide with no file-type filter; classify hits living-vs-historical; update living, leave historical). Orchestrator-led refactors follow the same step. The `/deep-review` completeness agent's stale-doc check (added this session) is the backstop.
+- **Source:** docs/reviews/rca-refactor-stack-2026-07-01.md
+
 ## Misc
 
 ### Confirm a cumulative-isolation suspect with a single-variable control
