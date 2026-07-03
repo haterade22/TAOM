@@ -44,7 +44,7 @@
                                                                 <skill id="Tactics" value="250" />
                                                                 <skill id="Roguery" value="210" />
                                                                 <skill id="Charm" value="200" />
-                                                                <skill id="Leadership" value="265" />
+                                                                <skill id="Leadership" value="130" />
                                                                 <skill id="Trade" value="170" />
                                                                 <skill id="Steward" value="220" />
                                                                 <skill id="Medicine" value="150" />
@@ -99,7 +99,7 @@
                                                                 <skill id="Tactics" value="250" />
                                                                 <skill id="Roguery" value="210" />
                                                                 <skill id="Charm" value="200" />
-                                                                <skill id="Leadership" value="265" />
+                                                                <skill id="Leadership" value="130" />
                                                                 <skill id="Trade" value="170" />
                                                                 <skill id="Steward" value="220" />
                                                                 <skill id="Medicine" value="150" />
@@ -133,7 +133,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_marauder_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -153,7 +153,7 @@
                                                                 <skill id="Tactics" value="190" />
                                                                 <skill id="Roguery" value="240" />
                                                                 <skill id="Charm" value="140" />
-                                                                <skill id="Leadership" value="180" />
+                                                                <skill id="Leadership" value="80" />
                                                                 <skill id="Trade" value="130" />
                                                                 <skill id="Steward" value="150" />
                                                                 <skill id="Medicine" value="120" />
@@ -188,7 +188,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -208,7 +208,7 @@
                                                                 <skill id="Tactics" value="130" />
                                                                 <skill id="Roguery" value="60" />
                                                                 <skill id="Charm" value="240" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="80" />
                                                                 <skill id="Trade" value="180" />
                                                                 <skill id="Steward" value="240" />
                                                                 <skill id="Medicine" value="210" />
@@ -242,7 +242,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -262,7 +262,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="60" />
                                                                 <skill id="Charm" value="160" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="90" />
                                                                 <skill id="Trade" value="90" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="90" />
@@ -296,7 +296,7 @@
             <xsl:attribute name="default_group">Cavalry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -316,7 +316,7 @@
                                                                 <skill id="Tactics" value="130" />
                                                                 <skill id="Roguery" value="60" />
                                                                 <skill id="Charm" value="140" />
-                                                                <skill id="Leadership" value="120" />
+                                                                <skill id="Leadership" value="55" />
                                                                 <skill id="Trade" value="80" />
                                                                 <skill id="Steward" value="110" />
                                                                 <skill id="Medicine" value="80" />
@@ -1241,7 +1241,7 @@
                                                                                                                                                                 <skill id="Tactics" value="180" />
                                                                                                                                                                 <skill id="Roguery" value="200" />
                                                                                                                                                                 <skill id="Charm" value="120" />
-                                                                                                                                                                <skill id="Leadership" value="160" />
+                                                                                                                                                                <skill id="Leadership" value="100" />
                                                                                                                                                                 <skill id="Trade" value="100" />
                                                                                                                                                                 <skill id="Steward" value="130" />
                                                                                                                                                                 <skill id="Medicine" value="70" />
@@ -1295,7 +1295,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="200" />
                                                                 <skill id="Charm" value="120" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="100" />
                                                                 <skill id="Trade" value="100" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="70" />
@@ -1730,7 +1730,7 @@
                                                                                                                 <skill id="Tactics" value="160" />
                                                                                                                 <skill id="Roguery" value="210" />
                                                                                                                 <skill id="Charm" value="130" />
-                                                                                                                <skill id="Leadership" value="150" />
+                                                                                                                <skill id="Leadership" value="100" />
                                                                                                                 <skill id="Trade" value="130" />
                                                                                                                 <skill id="Steward" value="180" />
                                                                                                                 <skill id="Medicine" value="120" />
@@ -1785,7 +1785,7 @@
                                                                 <skill id="Tactics" value="160" />
                                                                 <skill id="Roguery" value="210" />
                                                                 <skill id="Charm" value="130" />
-                                                                <skill id="Leadership" value="150" />
+                                                                <skill id="Leadership" value="100" />
                                                                 <skill id="Trade" value="130" />
                                                                 <skill id="Steward" value="180" />
                                                                 <skill id="Medicine" value="120" />
@@ -1840,7 +1840,7 @@
                 <skill id="Tactics" value="160" />
                 <skill id="Roguery" value="210" />
                 <skill id="Charm" value="130" />
-                <skill id="Leadership" value="150" />
+                <skill id="Leadership" value="100" />
                 <skill id="Trade" value="130" />
                 <skill id="Steward" value="180" />
                 <skill id="Medicine" value="120" />
@@ -1894,7 +1894,7 @@
                                                                                                                 <skill id="Tactics" value="180" />
                                                                                                                 <skill id="Roguery" value="200" />
                                                                                                                 <skill id="Charm" value="120" />
-                                                                                                                <skill id="Leadership" value="160" />
+                                                                                                                <skill id="Leadership" value="100" />
                                                                                                                 <skill id="Trade" value="100" />
                                                                                                                 <skill id="Steward" value="130" />
                                                                                                                 <skill id="Medicine" value="70" />
@@ -2204,7 +2204,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_marauder_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2224,7 +2224,7 @@
                                                                                                                 <skill id="Tactics" value="255" />
                                                                                                                 <skill id="Roguery" value="240" />
                                                                                                                 <skill id="Charm" value="180" />
-                                                                                                                <skill id="Leadership" value="270" />
+                                                                                                                <skill id="Leadership" value="80" />
                                                                                                                 <skill id="Trade" value="140" />
                                                                                                                 <skill id="Steward" value="200" />
                                                                                                                 <skill id="Medicine" value="90" />
@@ -2278,7 +2278,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="200" />
                                                                 <skill id="Charm" value="120" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="100" />
                                                                 <skill id="Trade" value="100" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="70" />
@@ -2332,7 +2332,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="200" />
                                                                 <skill id="Charm" value="120" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="100" />
                                                                 <skill id="Trade" value="100" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="70" />
@@ -2386,7 +2386,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="200" />
                                                                 <skill id="Charm" value="120" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="100" />
                                                                 <skill id="Trade" value="100" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="70" />
@@ -2605,7 +2605,7 @@
                                                                                                                                                                                                                 <skill id="Tactics" value="160" />
                                                                                                                                                                                                                 <skill id="Roguery" value="210" />
                                                                                                                                                                                                                 <skill id="Charm" value="130" />
-                                                                                                                                                                                                                <skill id="Leadership" value="150" />
+                                                                                                                                                                                                                <skill id="Leadership" value="100" />
                                                                                                                                                                                                                 <skill id="Trade" value="130" />
                                                                                                                                                                                                                 <skill id="Steward" value="180" />
                                                                                                                                                                                                                 <skill id="Medicine" value="120" />
@@ -2659,7 +2659,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="200" />
                                                                 <skill id="Charm" value="120" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="100" />
                                                                 <skill id="Trade" value="100" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="70" />
@@ -2713,7 +2713,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="200" />
                                                                 <skill id="Charm" value="120" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="100" />
                                                                 <skill id="Trade" value="100" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="70" />
@@ -2767,7 +2767,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="200" />
                                                                 <skill id="Charm" value="120" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="100" />
                                                                 <skill id="Trade" value="100" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="70" />
@@ -2821,7 +2821,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="200" />
                                                                 <skill id="Charm" value="120" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="100" />
                                                                 <skill id="Trade" value="100" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="70" />
@@ -2855,7 +2855,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_marauder_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -2875,7 +2875,7 @@
                 <skill id="Tactics" value="255" />
                 <skill id="Roguery" value="240" />
                 <skill id="Charm" value="180" />
-                <skill id="Leadership" value="270" />
+                <skill id="Leadership" value="80" />
                 <skill id="Trade" value="140" />
                 <skill id="Steward" value="200" />
                 <skill id="Medicine" value="90" />
@@ -2930,7 +2930,7 @@
                 <skill id="Tactics" value="160" />
                 <skill id="Roguery" value="210" />
                 <skill id="Charm" value="130" />
-                <skill id="Leadership" value="150" />
+                <skill id="Leadership" value="100" />
                 <skill id="Trade" value="130" />
                 <skill id="Steward" value="180" />
                 <skill id="Medicine" value="120" />
@@ -2984,7 +2984,7 @@
                                                                                                                                                                 <skill id="Tactics" value="180" />
                                                                                                                                                                 <skill id="Roguery" value="200" />
                                                                                                                                                                 <skill id="Charm" value="120" />
-                                                                                                                                                                <skill id="Leadership" value="160" />
+                                                                                                                                                                <skill id="Leadership" value="100" />
                                                                                                                                                                 <skill id="Trade" value="100" />
                                                                                                                                                                 <skill id="Steward" value="130" />
                                                                                                                                                                 <skill id="Medicine" value="70" />
@@ -3559,7 +3559,7 @@
             <xsl:attribute name="default_group">Infantry</xsl:attribute>
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.dolguldur</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_orc_warrior_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_north_orc_warrior_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -3579,7 +3579,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="200" />
                                                                 <skill id="Charm" value="120" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="75" />
                                                                 <skill id="Trade" value="100" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="70" />
@@ -3798,7 +3798,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="200" />
                                                                 <skill id="Charm" value="120" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="100" />
                                                                 <skill id="Trade" value="100" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="70" />
@@ -4073,7 +4073,7 @@
                                                                                                                 <skill id="Tactics" value="200" />
                                                                                                                 <skill id="Roguery" value="200" />
                                                                                                                 <skill id="Charm" value="160" />
-                                                                                                                <skill id="Leadership" value="200" />
+                                                                                                                <skill id="Leadership" value="100" />
                                                                                                                 <skill id="Trade" value="120" />
                                                                                                                 <skill id="Steward" value="170" />
                                                                                                                 <skill id="Medicine" value="140" />
@@ -4108,7 +4108,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4128,7 +4128,7 @@
                                                                 <skill id="Tactics" value="100" />
                                                                 <skill id="Roguery" value="50" />
                                                                 <skill id="Charm" value="180" />
-                                                                <skill id="Leadership" value="120" />
+                                                                <skill id="Leadership" value="55" />
                                                                 <skill id="Trade" value="130" />
                                                                 <skill id="Steward" value="170" />
                                                                 <skill id="Medicine" value="150" />
@@ -4163,7 +4163,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4183,7 +4183,7 @@
                                                                 <skill id="Tactics" value="100" />
                                                                 <skill id="Roguery" value="50" />
                                                                 <skill id="Charm" value="180" />
-                                                                <skill id="Leadership" value="120" />
+                                                                <skill id="Leadership" value="55" />
                                                                 <skill id="Trade" value="130" />
                                                                 <skill id="Steward" value="170" />
                                                                 <skill id="Medicine" value="150" />
@@ -4218,7 +4218,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4238,7 +4238,7 @@
                                                                 <skill id="Tactics" value="130" />
                                                                 <skill id="Roguery" value="60" />
                                                                 <skill id="Charm" value="240" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="80" />
                                                                 <skill id="Trade" value="180" />
                                                                 <skill id="Steward" value="240" />
                                                                 <skill id="Medicine" value="210" />
@@ -4273,7 +4273,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4293,7 +4293,7 @@
                                                                 <skill id="Tactics" value="100" />
                                                                 <skill id="Roguery" value="50" />
                                                                 <skill id="Charm" value="180" />
-                                                                <skill id="Leadership" value="120" />
+                                                                <skill id="Leadership" value="55" />
                                                                 <skill id="Trade" value="130" />
                                                                 <skill id="Steward" value="170" />
                                                                 <skill id="Medicine" value="150" />
@@ -4328,7 +4328,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_marauder_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4348,7 +4348,7 @@
                                                                 <skill id="Tactics" value="190" />
                                                                 <skill id="Roguery" value="240" />
                                                                 <skill id="Charm" value="140" />
-                                                                <skill id="Leadership" value="180" />
+                                                                <skill id="Leadership" value="80" />
                                                                 <skill id="Trade" value="130" />
                                                                 <skill id="Steward" value="150" />
                                                                 <skill id="Medicine" value="120" />
@@ -4403,7 +4403,7 @@
                                                                 <skill id="Tactics" value="200" />
                                                                 <skill id="Roguery" value="200" />
                                                                 <skill id="Charm" value="160" />
-                                                                <skill id="Leadership" value="200" />
+                                                                <skill id="Leadership" value="100" />
                                                                 <skill id="Trade" value="120" />
                                                                 <skill id="Steward" value="170" />
                                                                 <skill id="Medicine" value="140" />
@@ -4438,7 +4438,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_marauder_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4458,7 +4458,7 @@
                 <skill id="Tactics" value="190" />
                 <skill id="Roguery" value="240" />
                 <skill id="Charm" value="140" />
-                <skill id="Leadership" value="180" />
+                <skill id="Leadership" value="80" />
                 <skill id="Trade" value="130" />
                 <skill id="Steward" value="150" />
                 <skill id="Medicine" value="120" />
@@ -4493,7 +4493,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4513,7 +4513,7 @@
                 <skill id="Tactics" value="130" />
                 <skill id="Roguery" value="60" />
                 <skill id="Charm" value="240" />
-                <skill id="Leadership" value="160" />
+                <skill id="Leadership" value="80" />
                 <skill id="Trade" value="180" />
                 <skill id="Steward" value="240" />
                 <skill id="Medicine" value="210" />
@@ -4548,7 +4548,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4568,7 +4568,7 @@
                 <skill id="Tactics" value="100" />
                 <skill id="Roguery" value="50" />
                 <skill id="Charm" value="180" />
-                <skill id="Leadership" value="120" />
+                <skill id="Leadership" value="55" />
                 <skill id="Trade" value="130" />
                 <skill id="Steward" value="170" />
                 <skill id="Medicine" value="150" />
@@ -4603,7 +4603,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4623,7 +4623,7 @@
                 <skill id="Tactics" value="100" />
                 <skill id="Roguery" value="50" />
                 <skill id="Charm" value="180" />
-                <skill id="Leadership" value="120" />
+                <skill id="Leadership" value="55" />
                 <skill id="Trade" value="130" />
                 <skill id="Steward" value="170" />
                 <skill id="Medicine" value="150" />
@@ -4658,7 +4658,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_marauder_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4678,7 +4678,7 @@
                                                                                                                                                                                                                                                                 <skill id="Tactics" value="190" />
                                                                                                                                                                                                                                                                 <skill id="Roguery" value="240" />
                                                                                                                                                                                                                                                                 <skill id="Charm" value="140" />
-                                                                                                                                                                                                                                                                <skill id="Leadership" value="180" />
+                                                                                                                                                                                                                                                                <skill id="Leadership" value="80" />
                                                                                                                                                                                                                                                                 <skill id="Trade" value="130" />
                                                                                                                                                                                                                                                                 <skill id="Steward" value="150" />
                                                                                                                                                                                                                                                                 <skill id="Medicine" value="120" />
@@ -4713,7 +4713,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_dunland_raider_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_marauder_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -4733,7 +4733,7 @@
                                                                 <skill id="Tactics" value="190" />
                                                                 <skill id="Roguery" value="240" />
                                                                 <skill id="Charm" value="140" />
-                                                                <skill id="Leadership" value="180" />
+                                                                <skill id="Leadership" value="80" />
                                                                 <skill id="Trade" value="130" />
                                                                 <skill id="Steward" value="150" />
                                                                 <skill id="Medicine" value="120" />
@@ -5228,7 +5228,7 @@
                                                                                                                                                                                                                                                                                                                                                                 <skill id="Tactics" value="200" />
                                                                                                                                                                                                                                                                                                                                                                 <skill id="Roguery" value="200" />
                                                                                                                                                                                                                                                                                                                                                                 <skill id="Charm" value="160" />
-                                                                                                                                                                                                                                                                                                                                                                <skill id="Leadership" value="200" />
+                                                                                                                                                                                                                                                                                                                                                                <skill id="Leadership" value="100" />
                                                                                                                                                                                                                                                                                                                                                                 <skill id="Trade" value="120" />
                                                                                                                                                                                                                                                                                                                                                                 <skill id="Steward" value="170" />
                                                                                                                                                                                                                                                                                                                                                                 <skill id="Medicine" value="140" />
@@ -5283,7 +5283,7 @@
                 <skill id="Tactics" value="200" />
                 <skill id="Roguery" value="200" />
                 <skill id="Charm" value="160" />
-                <skill id="Leadership" value="200" />
+                <skill id="Leadership" value="100" />
                 <skill id="Trade" value="120" />
                 <skill id="Steward" value="170" />
                 <skill id="Medicine" value="140" />
@@ -5318,7 +5318,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5338,7 +5338,7 @@
                                                                                                                 <skill id="Tactics" value="100" />
                                                                                                                 <skill id="Roguery" value="50" />
                                                                                                                 <skill id="Charm" value="180" />
-                                                                                                                <skill id="Leadership" value="120" />
+                                                                                                                <skill id="Leadership" value="55" />
                                                                                                                 <skill id="Trade" value="130" />
                                                                                                                 <skill id="Steward" value="170" />
                                                                                                                 <skill id="Medicine" value="150" />
@@ -5373,7 +5373,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -5393,7 +5393,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="60" />
                                                                 <skill id="Charm" value="160" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="90" />
                                                                 <skill id="Trade" value="90" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="90" />
@@ -6523,7 +6523,7 @@
                                                                                                                                                                                                                                                                                                                 <skill id="Tactics" value="160" />
                                                                                                                                                                                                                                                                                                                 <skill id="Roguery" value="210" />
                                                                                                                                                                                                                                                                                                                 <skill id="Charm" value="130" />
-                                                                                                                                                                                                                                                                                                                <skill id="Leadership" value="150" />
+                                                                                                                                                                                                                                                                                                                <skill id="Leadership" value="100" />
                                                                                                                                                                                                                                                                                                                 <skill id="Trade" value="130" />
                                                                                                                                                                                                                                                                                                                 <skill id="Steward" value="180" />
                                                                                                                                                                                                                                                                                                                 <skill id="Medicine" value="120" />
@@ -6578,7 +6578,7 @@
                 <skill id="Tactics" value="180" />
                 <skill id="Roguery" value="200" />
                 <skill id="Charm" value="120" />
-                <skill id="Leadership" value="160" />
+                <skill id="Leadership" value="100" />
                 <skill id="Trade" value="100" />
                 <skill id="Steward" value="130" />
                 <skill id="Medicine" value="70" />
@@ -20073,7 +20073,7 @@
                 <skill id="Tactics" value="200" />
                 <skill id="Roguery" value="200" />
                 <skill id="Charm" value="160" />
-                <skill id="Leadership" value="200" />
+                <skill id="Leadership" value="100" />
                 <skill id="Trade" value="120" />
                 <skill id="Steward" value="170" />
                 <skill id="Medicine" value="140" />
@@ -20108,7 +20108,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20128,7 +20128,7 @@
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="Tactics" value="130" />
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="Roguery" value="60" />
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="Charm" value="140" />
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <skill id="Leadership" value="120" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <skill id="Leadership" value="55" />
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="Trade" value="80" />
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="Steward" value="110" />
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="Medicine" value="80" />
@@ -20163,7 +20163,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20183,7 +20183,7 @@
                                                                 <skill id="Tactics" value="100" />
                                                                 <skill id="Roguery" value="50" />
                                                                 <skill id="Charm" value="180" />
-                                                                <skill id="Leadership" value="120" />
+                                                                <skill id="Leadership" value="55" />
                                                                 <skill id="Trade" value="130" />
                                                                 <skill id="Steward" value="170" />
                                                                 <skill id="Medicine" value="150" />
@@ -20218,7 +20218,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20238,7 +20238,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="60" />
                                                                 <skill id="Charm" value="160" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="90" />
                                                                 <skill id="Trade" value="90" />
                                                                 <skill id="Steward" value="130" />
                                                                 <skill id="Medicine" value="90" />
@@ -20273,7 +20273,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20293,7 +20293,7 @@
                                                                 <skill id="Tactics" value="130" />
                                                                 <skill id="Roguery" value="60" />
                                                                 <skill id="Charm" value="240" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="80" />
                                                                 <skill id="Trade" value="180" />
                                                                 <skill id="Steward" value="240" />
                                                                 <skill id="Medicine" value="210" />
@@ -20328,7 +20328,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20348,7 +20348,7 @@
                 <skill id="Tactics" value="100" />
                 <skill id="Roguery" value="50" />
                 <skill id="Charm" value="180" />
-                <skill id="Leadership" value="120" />
+                <skill id="Leadership" value="55" />
                 <skill id="Trade" value="130" />
                 <skill id="Steward" value="170" />
                 <skill id="Medicine" value="150" />
@@ -20383,7 +20383,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20403,7 +20403,7 @@
                 <skill id="Tactics" value="180" />
                 <skill id="Roguery" value="60" />
                 <skill id="Charm" value="160" />
-                <skill id="Leadership" value="160" />
+                <skill id="Leadership" value="90" />
                 <skill id="Trade" value="90" />
                 <skill id="Steward" value="130" />
                 <skill id="Medicine" value="90" />
@@ -20438,7 +20438,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20458,7 +20458,7 @@
                 <skill id="Tactics" value="130" />
                 <skill id="Roguery" value="60" />
                 <skill id="Charm" value="140" />
-                <skill id="Leadership" value="120" />
+                <skill id="Leadership" value="55" />
                 <skill id="Trade" value="80" />
                 <skill id="Steward" value="110" />
                 <skill id="Medicine" value="80" />
@@ -20768,7 +20768,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20788,7 +20788,7 @@
                 <skill id="Tactics" value="100" />
                 <skill id="Roguery" value="50" />
                 <skill id="Charm" value="180" />
-                <skill id="Leadership" value="120" />
+                <skill id="Leadership" value="55" />
                 <skill id="Trade" value="130" />
                 <skill id="Steward" value="170" />
                 <skill id="Medicine" value="150" />
@@ -20823,7 +20823,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lord_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lord_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20843,7 +20843,7 @@
                 <skill id="Tactics" value="130" />
                 <skill id="Roguery" value="60" />
                 <skill id="Charm" value="140" />
-                <skill id="Leadership" value="120" />
+                <skill id="Leadership" value="55" />
                 <skill id="Trade" value="80" />
                 <skill id="Steward" value="110" />
                 <skill id="Medicine" value="80" />
@@ -20878,7 +20878,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20898,7 +20898,7 @@
                 <skill id="Tactics" value="100" />
                 <skill id="Roguery" value="50" />
                 <skill id="Charm" value="180" />
-                <skill id="Leadership" value="120" />
+                <skill id="Leadership" value="55" />
                 <skill id="Trade" value="130" />
                 <skill id="Steward" value="170" />
                 <skill id="Medicine" value="150" />
@@ -20933,7 +20933,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -20953,7 +20953,7 @@
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="Tactics" value="180" />
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="Roguery" value="60" />
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="Charm" value="160" />
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <skill id="Leadership" value="160" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <skill id="Leadership" value="90" />
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="Trade" value="90" />
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="Steward" value="130" />
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <skill id="Medicine" value="90" />
@@ -20988,7 +20988,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -21008,7 +21008,7 @@
                 <skill id="Tactics" value="130" />
                 <skill id="Roguery" value="60" />
                 <skill id="Charm" value="240" />
-                <skill id="Leadership" value="160" />
+                <skill id="Leadership" value="80" />
                 <skill id="Trade" value="180" />
                 <skill id="Steward" value="240" />
                 <skill id="Medicine" value="210" />
@@ -21043,7 +21043,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_young_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_young_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -21063,7 +21063,7 @@
                 <skill id="Tactics" value="100" />
                 <skill id="Roguery" value="50" />
                 <skill id="Charm" value="180" />
-                <skill id="Leadership" value="120" />
+                <skill id="Leadership" value="55" />
                 <skill id="Trade" value="130" />
                 <skill id="Steward" value="170" />
                 <skill id="Medicine" value="150" />
@@ -21098,7 +21098,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">false</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_knight_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_knight_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -21118,7 +21118,7 @@
                 <skill id="Tactics" value="180" />
                 <skill id="Roguery" value="60" />
                 <skill id="Charm" value="160" />
-                <skill id="Leadership" value="160" />
+                <skill id="Leadership" value="90" />
                 <skill id="Trade" value="90" />
                 <skill id="Steward" value="130" />
                 <skill id="Medicine" value="90" />
@@ -21263,7 +21263,7 @@
             <xsl:attribute name="is_hero">true</xsl:attribute>
             <xsl:attribute name="is_female">true</xsl:attribute>
             <xsl:attribute name="culture">Culture.empire</xsl:attribute>
-            <xsl:attribute name="skill_template">SkillSet.taom_lady_skills</xsl:attribute>
+            <xsl:attribute name="skill_template">SkillSet.taom_dunland_lady_skills</xsl:attribute>
             <xsl:attribute name="occupation">Lord</xsl:attribute>
             <xsl:attribute name="face_mesh_cache">true</xsl:attribute>
             <face>
@@ -21283,7 +21283,7 @@
                                                                 <skill id="Tactics" value="130" />
                                                                 <skill id="Roguery" value="60" />
                                                                 <skill id="Charm" value="240" />
-                                                                <skill id="Leadership" value="160" />
+                                                                <skill id="Leadership" value="80" />
                                                                 <skill id="Trade" value="180" />
                                                                 <skill id="Steward" value="240" />
                                                                 <skill id="Medicine" value="210" />

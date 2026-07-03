@@ -169,6 +169,24 @@ BASE_ARCHETYPES = {
                                      Riding=110,Athletics=200,Crafting=180,Scouting=170,Tactics=160,Roguery=210,
                                      Charm=130,Leadership=150,Trade=130,Steward=180,Medicine=120,Engineering=160),
                          traits=dict(Honor=-2,Generosity=-2,Calculating=2,Mercy=-2,Valor=1,Egalitarian=-1,Oligarchic=0,Authoritarian=1)),
+    # NORTH ORCS — gundabad/mistymountainorcs/goblin/dolguldur variants of the orc trio with
+    # deep Leadership cuts (270->175 / 160->75 / 150->60) so their lords can't host armies big
+    # enough to crush Rivendell/Lothlorien. Mordor + Isengard stay on the base orc sets.
+    # Applied via archetype_alias (gundabad/dolguldur) + tools/repoint_north_orc_lords.py
+    # (goblin/mistymountainorcs, which have no CULTURES entry). Everything except Leadership
+    # is identical to the parent archetype.
+    'north_orc_chieftain':dict(skills=dict(OneHanded=275,TwoHanded=265,Polearm=240,Bow=170,Crossbow=110,Throwing=190,
+                                     Riding=190,Athletics=265,Crafting=140,Scouting=240,Tactics=255,Roguery=240,
+                                     Charm=180,Leadership=175,Trade=140,Steward=200,Medicine=90,Engineering=180),
+                         traits=dict(Honor=-2,Generosity=-1,Calculating=2,Mercy=-2,Valor=2,Egalitarian=-1,Oligarchic=1,Authoritarian=2)),
+    'north_orc_warrior':dict(skills=dict(OneHanded=235,TwoHanded=220,Polearm=215,Bow=140,Crossbow=90,Throwing=160,
+                                     Riding=150,Athletics=240,Crafting=110,Scouting=200,Tactics=180,Roguery=200,
+                                     Charm=120,Leadership=75,Trade=100,Steward=130,Medicine=70,Engineering=120),
+                         traits=dict(Honor=-2,Generosity=-2,Calculating=1,Mercy=-2,Valor=2,Egalitarian=-1,Oligarchic=0,Authoritarian=1)),
+    'north_orc_female': dict(skills=dict(OneHanded=170,TwoHanded=160,Polearm=160,Bow=160,Crossbow=110,Throwing=140,
+                                     Riding=110,Athletics=200,Crafting=180,Scouting=170,Tactics=160,Roguery=210,
+                                     Charm=130,Leadership=60,Trade=130,Steward=180,Medicine=120,Engineering=160),
+                         traits=dict(Honor=-2,Generosity=-2,Calculating=2,Mercy=-2,Valor=1,Egalitarian=-1,Oligarchic=0,Authoritarian=1)),
     'nazgul':       dict(skills=dict(OneHanded=290,TwoHanded=270,Polearm=290,Bow=210,Crossbow=180,Throwing=210,
                                      Riding=290,Athletics=285,Crafting=210,Scouting=290,Tactics=295,Roguery=290,
                                      Charm=280,Leadership=295,Trade=190,Steward=260,Medicine=170,Engineering=240),
@@ -189,9 +207,13 @@ BASE_ARCHETYPES = {
                          traits=dict(Honor=-2,Generosity=-2,Calculating=2,Mercy=-2,Valor=1,Egalitarian=-2,Oligarchic=2,Authoritarian=2)),
 
     # DUNLAND — Norse-themed shieldmaidens + raiders, Saruman's allies
+    # Leadership nerf (same army-size pass as the north orcs, softer): warrior 200->100,
+    # brenin 265->130 (in place — dunland-exclusive sets); shared archetypes get dunland_*
+    # variants below via archetype_alias. dunland_raider keeps 180 for its 2 mirkwood users;
+    # dunland lords move to dunland_marauder (80).
     'dunland_warrior': dict(skills=dict(OneHanded=245,TwoHanded=215,Polearm=215,Bow=170,Crossbow=80,Throwing=170,
                                         Riding=180,Athletics=255,Crafting=120,Scouting=220,Tactics=200,Roguery=200,
-                                        Charm=160,Leadership=200,Trade=120,Steward=170,Medicine=140,Engineering=120),
+                                        Charm=160,Leadership=100,Trade=120,Steward=170,Medicine=140,Engineering=120),
                             traits=dict(Honor=1,Generosity=0,Calculating=1,Mercy=-1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
     'dunland_raider': dict(skills=dict(OneHanded=235,TwoHanded=200,Polearm=210,Bow=200,Crossbow=80,Throwing=190,
                                        Riding=200,Athletics=265,Crafting=110,Scouting=255,Tactics=190,Roguery=240,
@@ -199,8 +221,28 @@ BASE_ARCHETYPES = {
                            traits=dict(Honor=0,Generosity=0,Calculating=1,Mercy=-1,Valor=2,Egalitarian=1,Oligarchic=-1,Authoritarian=0)),
     'dunland_brenin': dict(skills=dict(OneHanded=265,TwoHanded=235,Polearm=240,Bow=180,Crossbow=80,Throwing=180,
                                        Riding=200,Athletics=255,Crafting=130,Scouting=230,Tactics=250,Roguery=210,
-                                       Charm=200,Leadership=265,Trade=170,Steward=220,Medicine=150,Engineering=150),
+                                       Charm=200,Leadership=130,Trade=170,Steward=220,Medicine=150,Engineering=150),
                            traits=dict(Honor=1,Generosity=1,Calculating=2,Mercy=-1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),
+    'dunland_marauder': dict(skills=dict(OneHanded=235,TwoHanded=200,Polearm=210,Bow=200,Crossbow=80,Throwing=190,
+                                       Riding=200,Athletics=265,Crafting=110,Scouting=255,Tactics=190,Roguery=240,
+                                       Charm=140,Leadership=80,Trade=130,Steward=150,Medicine=120,Engineering=110),
+                           traits=dict(Honor=0,Generosity=0,Calculating=1,Mercy=-1,Valor=2,Egalitarian=1,Oligarchic=-1,Authoritarian=0)),
+    'dunland_knight': dict(skills=dict(OneHanded=230,TwoHanded=180,Polearm=220,Bow=100,Crossbow=70,Throwing=120,
+                                       Riding=250,Athletics=240,Crafting=60,Scouting=140,Tactics=180,Roguery=60,
+                                       Charm=160,Leadership=90,Trade=90,Steward=130,Medicine=90,Engineering=100),
+                           traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=0)),
+    'dunland_lady': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=70,Crossbow=50,Throwing=50,
+                                     Riding=140,Athletics=110,Crafting=140,Scouting=110,Tactics=130,Roguery=60,
+                                     Charm=240,Leadership=80,Trade=180,Steward=240,Medicine=210,Engineering=130),
+                         traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
+    'dunland_young_lord': dict(skills=dict(OneHanded=160,TwoHanded=120,Polearm=140,Bow=90,Crossbow=70,Throwing=100,
+                                       Riding=190,Athletics=180,Crafting=60,Scouting=140,Tactics=130,Roguery=60,
+                                       Charm=140,Leadership=55,Trade=80,Steward=110,Medicine=80,Engineering=80),
+                           traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=0)),
+    'dunland_young_lady': dict(skills=dict(OneHanded=40,TwoHanded=20,Polearm=30,Bow=70,Crossbow=40,Throwing=40,
+                                       Riding=120,Athletics=100,Crafting=110,Scouting=90,Tactics=100,Roguery=50,
+                                       Charm=180,Leadership=55,Trade=130,Steward=170,Medicine=150,Engineering=100),
+                           traits=dict(Honor=1,Generosity=1,Calculating=1,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
 
     # HARADRIM — desert peoples, scimitar + mumakil, scarlet+gold
     'haradrim_lord': dict(skills=dict(OneHanded=235,TwoHanded=170,Polearm=215,Bow=210,Crossbow=110,Throwing=180,
@@ -520,6 +562,11 @@ CULTURES = {
         'culture_id': 'dolguldur',
         'lore_name': 'Dol Guldur',
         'race': 'orc',
+        # North-orc Leadership nerf: resolve the orc trio to the low-Leadership variants
+        # (armies must not crush Rivendell/Lothlorien). nazgul/scout/warg/berserker unaliased.
+        'archetype_alias': {'orc_chieftain': 'north_orc_chieftain',
+                            'orc_warrior': 'north_orc_warrior',
+                            'orc_female': 'north_orc_female'},
         'keyword_archetypes': [
             (['shadow of the east','second chief','khamul','khamûl','black easterling'], 'nazgul'),
             (['captain','chieftain','lord','overseer'], 'orc_chieftain'),
@@ -547,6 +594,11 @@ CULTURES = {
         'culture_id': 'gundabad',
         'lore_name': 'Mount Gundabad',
         'race': 'orc',
+        # North-orc Leadership nerf — see dolguldur note. Bolgath (lord_G4_1) keeps his
+        # per-NPC canonical set (Led 185, above the 175 chieftain tier).
+        'archetype_alias': {'orc_chieftain': 'north_orc_chieftain',
+                            'orc_warrior': 'north_orc_warrior',
+                            'orc_female': 'north_orc_female'},
         'keyword_archetypes': [
             (['bolg','azog','king'], 'orc_chieftain'),
             (['captain','chieftain','warlord'], 'orc_chieftain'),
@@ -562,7 +614,7 @@ CULTURES = {
             'lord_G4_1': dict(archetype='orc_chieftain',
                 skills=dict(OneHanded=285,TwoHanded=275,Polearm=250,Bow=180,Crossbow=120,Throwing=200,
                             Riding=200,Athletics=275,Crafting=140,Scouting=250,Tactics=265,Roguery=250,
-                            Charm=190,Leadership=280,Trade=140,Steward=210,Medicine=90,Engineering=190)),  # Bolgath — Bolg-evoking
+                            Charm=190,Leadership=185,Trade=140,Steward=210,Medicine=90,Engineering=190)),  # Bolgath — Bolg-evoking; Led 280->185 (north-orc army-size nerf, ruler stays above chieftain 175)
             'lord_G5_1': dict(archetype='orc_chieftain'),  # Vorzak
         },
     },
@@ -635,6 +687,15 @@ CULTURES = {
         'culture_id': 'empire',
         'lore_name': 'Dunland',
         'race': 'man',
+        # Dunland Leadership nerf (softer sibling of the north-orc pass): shared man
+        # archetypes resolve to dunland_* variants; dunland_raider -> dunland_marauder so
+        # the 2 mirkwood lords on the shared raider set keep Led 180. brenin/warrior are
+        # dunland-exclusive and carry the cut in place. matriarch/elder unaliased (unused).
+        'archetype_alias': {'knight': 'dunland_knight',
+                            'lady': 'dunland_lady',
+                            'young_lord': 'dunland_young_lord',
+                            'young_lady': 'dunland_young_lady',
+                            'dunland_raider': 'dunland_marauder'},
         'keyword_archetypes': [
             (['brenin','king of dunland','hereditary chief'], 'dunland_brenin'),
             (['raid','raider','strike without warning','silently'], 'dunland_raider'),
@@ -931,6 +992,15 @@ def archetype_from_bio(bio: str, age: int, female: bool, culture_data: dict) -> 
     return default_archetype(age, female, culture_data)
 
 
+def resolve_archetype_alias(arch_name: str, culture_data: dict) -> str:
+    """Per-culture archetype substitution (e.g. gundabad orc_warrior -> north_orc_warrior).
+
+    Keeps shared archetypes intact for other cultures while a culture with an
+    `archetype_alias` dict resolves to its own variant. Canonical NPCs with explicit
+    `skills=` bypass this (they own a per-NPC set)."""
+    return culture_data.get('archetype_alias', {}).get(arch_name, arch_name)
+
+
 def get_skills_traits(npc_id: str, age: int, female: bool, bio: str, culture_data: dict) -> tuple[dict, dict]:
     canonical = culture_data.get('canonical', {})
     if npc_id in canonical:
@@ -938,11 +1008,11 @@ def get_skills_traits(npc_id: str, age: int, female: bool, bio: str, culture_dat
         if 'skills' in c and 'traits' in c:
             return c['skills'], c['traits']
         arch_name = c.get('archetype', archetype_from_bio(bio, age, female, culture_data))
-        arch = BASE_ARCHETYPES[arch_name]
+        arch = BASE_ARCHETYPES[resolve_archetype_alias(arch_name, culture_data)]
         sk = dict(arch['skills']); sk.update(c.get('skills', {}))
         tr = dict(arch['traits']); tr.update(c.get('traits', {}))
         return sk, tr
-    arch = BASE_ARCHETYPES[archetype_from_bio(bio, age, female, culture_data)]
+    arch = BASE_ARCHETYPES[resolve_archetype_alias(archetype_from_bio(bio, age, female, culture_data), culture_data)]
     return dict(arch['skills']), dict(arch['traits'])
 
 
@@ -950,14 +1020,14 @@ def get_skill_template_name(npc_id: str, age: int, female: bool, bio: str, cultu
     """Return the TAOM SkillSet id this NPC should reference via skill_template.
 
     - Canonical NPC with explicit `skills=` override: taom_canonical_<id>_skills
-    - Otherwise: taom_<archetype>_skills
+    - Otherwise: taom_<archetype>_skills (after archetype_alias resolution)
     """
     canonical = culture_data.get('canonical', {})
     if npc_id in canonical and 'skills' in canonical[npc_id]:
         return f'taom_canonical_{npc_id}_skills'
     if npc_id in canonical and 'archetype' in canonical[npc_id]:
-        return f"taom_{canonical[npc_id]['archetype']}_skills"
-    return f'taom_{archetype_from_bio(bio, age, female, culture_data)}_skills'
+        return f"taom_{resolve_archetype_alias(canonical[npc_id]['archetype'], culture_data)}_skills"
+    return f'taom_{resolve_archetype_alias(archetype_from_bio(bio, age, female, culture_data), culture_data)}_skills'
 
 
 def build_skill_sets_xml() -> str:

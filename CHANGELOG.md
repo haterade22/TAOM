@@ -2,6 +2,29 @@
 
 ## 2026-07-02
 
+### balance(lords): evil-faction lord Leadership nerf — Gundabad / Misty Orcs / Goblins / Dol Guldur / Dunland (#322)
+
+Those five cultures' lords hosted armies big enough to crush Rivendell and Lothlórien; Leadership (the army-size
+driver) is cut to per-archetype targets while **Mordor + Isengard keep the base orc sets**. Average lord Leadership:
+gundabad 168→81, mistymountainorcs 164→76, goblin 160→74, dolguldur 169→81, dunland 174→84 — vs Rivendell 212 /
+Lothlórien 214 (unchanged, as are mordor/isengard/mirkwood — bleed-checked).
+
+- **New variant archetypes** (only Leadership differs from the parent): `north_orc_chieftain` 175 /
+  `north_orc_warrior` 75 / `north_orc_female` 60; `dunland_knight` 90 / `dunland_lady` 80 /
+  `dunland_young_lord` 55 / `dunland_young_lady` 55 / `dunland_marauder` 80 (forked from `dunland_raider`,
+  whose 2 mirkwood users keep 180). In-place cuts on dunland-exclusive sets: `dunland_warrior` 200→100,
+  `dunland_brenin` 265→130; Gundabad's canonical Bolgath (`lord_G4_1`) 280→185 (ruler stays above his chieftains).
+- **`archetype_alias`** — new per-culture hook in `tools/apply_culture_skills_traits.py` so gundabad/dolguldur/dunland
+  resolve shared archetypes to their variants on any future generator run (no un-nerf on regen).
+- **`tools/repoint_evil_lord_skillsets.py`** (new, one-off, `--dry-run`/`--apply`) did the actual swap for all five
+  cultures — 510 `skill_template` swaps + 544 inline-`<skills>` Leadership doc-parity updates across
+  `characters/lords.xml` + `lords.xslt` — instead of the generator's `process_file`, whose per-NPC re-resolution
+  can't reproduce the live hand-tuned assignments (the 1f7a7a9a 149-lord drift; goblin/mistymountainorcs have no
+  CULTURES entry at all). Post-condition + idempotency verified (0 swaps on re-run).
+- Verified: per-culture averages match predictions exactly; `validate_moduledata` PASS; zero dangling SkillSet refs;
+  lords.xslt well-formed with all 396 template ids present in vanilla SandBox `lords.xml`.
+- **Save-compat:** hero skills bake at hero creation — new campaigns only; existing saves keep old stats.
+
 ### chore(lord-skills): sync SkillSet generator to the hand-tuned live XML (1f7a7a9a maintenance debt)
 
 `tools/apply_culture_skills_traits.py` had drifted from `taom_lord_skill_sets.xml` since the legendary-lord

@@ -1077,7 +1077,7 @@
     <skill id="Tactics" value="265" />
     <skill id="Roguery" value="250" />
     <skill id="Charm" value="190" />
-    <skill id="Leadership" value="280" />
+    <skill id="Leadership" value="185" />
     <skill id="Trade" value="140" />
     <skill id="Steward" value="210" />
     <skill id="Medicine" value="90" />
@@ -1577,11 +1577,71 @@
     <skill id="Tactics" value="250" />
     <skill id="Roguery" value="210" />
     <skill id="Charm" value="200" />
-    <skill id="Leadership" value="265" />
+    <skill id="Leadership" value="130" />
     <skill id="Trade" value="170" />
     <skill id="Steward" value="220" />
     <skill id="Medicine" value="150" />
     <skill id="Engineering" value="150" />
+  </SkillSet>
+  <SkillSet id="taom_dunland_knight_skills">
+    <skill id="OneHanded" value="230" />
+    <skill id="TwoHanded" value="180" />
+    <skill id="Polearm" value="220" />
+    <skill id="Bow" value="100" />
+    <skill id="Crossbow" value="70" />
+    <skill id="Throwing" value="120" />
+    <skill id="Riding" value="250" />
+    <skill id="Athletics" value="240" />
+    <skill id="Crafting" value="60" />
+    <skill id="Scouting" value="140" />
+    <skill id="Tactics" value="180" />
+    <skill id="Roguery" value="60" />
+    <skill id="Charm" value="160" />
+    <skill id="Leadership" value="90" />
+    <skill id="Trade" value="90" />
+    <skill id="Steward" value="130" />
+    <skill id="Medicine" value="90" />
+    <skill id="Engineering" value="100" />
+  </SkillSet>
+  <SkillSet id="taom_dunland_lady_skills">
+    <skill id="OneHanded" value="60" />
+    <skill id="TwoHanded" value="30" />
+    <skill id="Polearm" value="50" />
+    <skill id="Bow" value="70" />
+    <skill id="Crossbow" value="50" />
+    <skill id="Throwing" value="50" />
+    <skill id="Riding" value="140" />
+    <skill id="Athletics" value="110" />
+    <skill id="Crafting" value="140" />
+    <skill id="Scouting" value="110" />
+    <skill id="Tactics" value="130" />
+    <skill id="Roguery" value="60" />
+    <skill id="Charm" value="240" />
+    <skill id="Leadership" value="80" />
+    <skill id="Trade" value="180" />
+    <skill id="Steward" value="240" />
+    <skill id="Medicine" value="210" />
+    <skill id="Engineering" value="130" />
+  </SkillSet>
+  <SkillSet id="taom_dunland_marauder_skills">
+    <skill id="OneHanded" value="235" />
+    <skill id="TwoHanded" value="200" />
+    <skill id="Polearm" value="210" />
+    <skill id="Bow" value="200" />
+    <skill id="Crossbow" value="80" />
+    <skill id="Throwing" value="190" />
+    <skill id="Riding" value="200" />
+    <skill id="Athletics" value="265" />
+    <skill id="Crafting" value="110" />
+    <skill id="Scouting" value="255" />
+    <skill id="Tactics" value="190" />
+    <skill id="Roguery" value="240" />
+    <skill id="Charm" value="140" />
+    <skill id="Leadership" value="80" />
+    <skill id="Trade" value="130" />
+    <skill id="Steward" value="150" />
+    <skill id="Medicine" value="120" />
+    <skill id="Engineering" value="110" />
   </SkillSet>
   <SkillSet id="taom_dunland_raider_skills">
     <skill id="OneHanded" value="235" />
@@ -1617,11 +1677,51 @@
     <skill id="Tactics" value="200" />
     <skill id="Roguery" value="200" />
     <skill id="Charm" value="160" />
-    <skill id="Leadership" value="200" />
+    <skill id="Leadership" value="100" />
     <skill id="Trade" value="120" />
     <skill id="Steward" value="170" />
     <skill id="Medicine" value="140" />
     <skill id="Engineering" value="120" />
+  </SkillSet>
+  <SkillSet id="taom_dunland_young_lady_skills">
+    <skill id="OneHanded" value="40" />
+    <skill id="TwoHanded" value="20" />
+    <skill id="Polearm" value="30" />
+    <skill id="Bow" value="70" />
+    <skill id="Crossbow" value="40" />
+    <skill id="Throwing" value="40" />
+    <skill id="Riding" value="120" />
+    <skill id="Athletics" value="100" />
+    <skill id="Crafting" value="110" />
+    <skill id="Scouting" value="90" />
+    <skill id="Tactics" value="100" />
+    <skill id="Roguery" value="50" />
+    <skill id="Charm" value="180" />
+    <skill id="Leadership" value="55" />
+    <skill id="Trade" value="130" />
+    <skill id="Steward" value="170" />
+    <skill id="Medicine" value="150" />
+    <skill id="Engineering" value="100" />
+  </SkillSet>
+  <SkillSet id="taom_dunland_young_lord_skills">
+    <skill id="OneHanded" value="160" />
+    <skill id="TwoHanded" value="120" />
+    <skill id="Polearm" value="140" />
+    <skill id="Bow" value="90" />
+    <skill id="Crossbow" value="70" />
+    <skill id="Throwing" value="100" />
+    <skill id="Riding" value="190" />
+    <skill id="Athletics" value="180" />
+    <skill id="Crafting" value="60" />
+    <skill id="Scouting" value="140" />
+    <skill id="Tactics" value="130" />
+    <skill id="Roguery" value="60" />
+    <skill id="Charm" value="140" />
+    <skill id="Leadership" value="55" />
+    <skill id="Trade" value="80" />
+    <skill id="Steward" value="110" />
+    <skill id="Medicine" value="80" />
+    <skill id="Engineering" value="80" />
   </SkillSet>
   <SkillSet id="taom_dwarf_king_skills">
     <skill id="OneHanded" value="275" />
@@ -2142,6 +2242,66 @@
     <skill id="Steward" value="260" />
     <skill id="Medicine" value="170" />
     <skill id="Engineering" value="240" />
+  </SkillSet>
+  <SkillSet id="taom_north_orc_chieftain_skills">
+    <skill id="OneHanded" value="275" />
+    <skill id="TwoHanded" value="265" />
+    <skill id="Polearm" value="240" />
+    <skill id="Bow" value="170" />
+    <skill id="Crossbow" value="110" />
+    <skill id="Throwing" value="190" />
+    <skill id="Riding" value="190" />
+    <skill id="Athletics" value="265" />
+    <skill id="Crafting" value="140" />
+    <skill id="Scouting" value="240" />
+    <skill id="Tactics" value="255" />
+    <skill id="Roguery" value="240" />
+    <skill id="Charm" value="180" />
+    <skill id="Leadership" value="175" />
+    <skill id="Trade" value="140" />
+    <skill id="Steward" value="200" />
+    <skill id="Medicine" value="90" />
+    <skill id="Engineering" value="180" />
+  </SkillSet>
+  <SkillSet id="taom_north_orc_female_skills">
+    <skill id="OneHanded" value="170" />
+    <skill id="TwoHanded" value="160" />
+    <skill id="Polearm" value="160" />
+    <skill id="Bow" value="160" />
+    <skill id="Crossbow" value="110" />
+    <skill id="Throwing" value="140" />
+    <skill id="Riding" value="110" />
+    <skill id="Athletics" value="200" />
+    <skill id="Crafting" value="180" />
+    <skill id="Scouting" value="170" />
+    <skill id="Tactics" value="160" />
+    <skill id="Roguery" value="210" />
+    <skill id="Charm" value="130" />
+    <skill id="Leadership" value="60" />
+    <skill id="Trade" value="130" />
+    <skill id="Steward" value="180" />
+    <skill id="Medicine" value="120" />
+    <skill id="Engineering" value="160" />
+  </SkillSet>
+  <SkillSet id="taom_north_orc_warrior_skills">
+    <skill id="OneHanded" value="235" />
+    <skill id="TwoHanded" value="220" />
+    <skill id="Polearm" value="215" />
+    <skill id="Bow" value="140" />
+    <skill id="Crossbow" value="90" />
+    <skill id="Throwing" value="160" />
+    <skill id="Riding" value="150" />
+    <skill id="Athletics" value="240" />
+    <skill id="Crafting" value="110" />
+    <skill id="Scouting" value="200" />
+    <skill id="Tactics" value="180" />
+    <skill id="Roguery" value="200" />
+    <skill id="Charm" value="120" />
+    <skill id="Leadership" value="75" />
+    <skill id="Trade" value="100" />
+    <skill id="Steward" value="130" />
+    <skill id="Medicine" value="70" />
+    <skill id="Engineering" value="120" />
   </SkillSet>
   <SkillSet id="taom_orc_berserker_skills">
     <skill id="OneHanded" value="240" />
