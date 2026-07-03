@@ -44,8 +44,30 @@ DUNLAND_SWAPS = {
     'SkillSet.taom_young_lady_skills': 'SkillSet.taom_dunland_young_lady_skills',
     'SkillSet.taom_dunland_raider_skills': 'SkillSet.taom_dunland_marauder_skills',
 }
-# culture attr value -> swap map (dunland uses the repurposed vanilla empire culture;
-# elf cultures get inline parity only — their sets were +100-Steward'd in place)
+# 2026-07-03 retune: gondor/dale/rohan variants of the shared man archetypes
+GONDOR_SWAPS = {
+    'SkillSet.taom_knight_skills': 'SkillSet.taom_gondor_knight_skills',
+    'SkillSet.taom_lady_skills': 'SkillSet.taom_gondor_lady_skills',
+    'SkillSet.taom_young_lady_skills': 'SkillSet.taom_gondor_young_lady_skills',
+    'SkillSet.taom_young_lord_skills': 'SkillSet.taom_gondor_young_lord_skills',
+    'SkillSet.taom_matriarch_skills': 'SkillSet.taom_gondor_matriarch_skills',
+    'SkillSet.taom_lord_skills': 'SkillSet.taom_gondor_lord_skills',
+}
+DALE_SWAPS = {
+    'SkillSet.taom_knight_skills': 'SkillSet.taom_dale_knight_skills',
+    'SkillSet.taom_lady_skills': 'SkillSet.taom_dale_lady_skills',
+    'SkillSet.taom_young_lady_skills': 'SkillSet.taom_dale_young_lady_skills',
+    'SkillSet.taom_young_lord_skills': 'SkillSet.taom_dale_young_lord_skills',
+}
+ROHAN_SWAPS = {
+    'SkillSet.taom_knight_skills': 'SkillSet.taom_rohan_knight_skills',
+    'SkillSet.taom_lady_skills': 'SkillSet.taom_rohan_lady_skills',
+    'SkillSet.taom_young_lady_skills': 'SkillSet.taom_rohan_young_lady_skills',
+    'SkillSet.taom_young_lord_skills': 'SkillSet.taom_rohan_young_lord_skills',
+}
+# culture attr value -> swap map (dunland uses the repurposed vanilla empire culture,
+# dale=sturgia, rohan=vlandia; cultures with an empty map get inline parity only —
+# their sets are edited in place)
 CULTURE_SWAPS = {
     'Culture.goblin': ORC_SWAPS,
     'Culture.mistymountainorcs': ORC_SWAPS,
@@ -55,44 +77,32 @@ CULTURE_SWAPS = {
     'Culture.rivendell': {},
     'Culture.lothlorien': {},
     'Culture.mirkwood': {},
+    'Culture.gondor': GONDOR_SWAPS,
+    'Culture.sturgia': DALE_SWAPS,
+    'Culture.vlandia': ROHAN_SWAPS,
+    'Culture.erebor': {},
 }
-# inline-skill values per FINAL template (swapped targets + in-place-edited sets)
-PARITY_BY_TEMPLATE = {
-    # evil-faction Leadership nerf (#322)
-    'SkillSet.taom_north_orc_chieftain_skills': {'Leadership': 175},
-    'SkillSet.taom_north_orc_warrior_skills': {'Leadership': 75},
-    'SkillSet.taom_north_orc_female_skills': {'Leadership': 60},
-    'SkillSet.taom_dunland_knight_skills': {'Leadership': 90},
-    'SkillSet.taom_dunland_lady_skills': {'Leadership': 80},
-    'SkillSet.taom_dunland_young_lord_skills': {'Leadership': 55},
-    'SkillSet.taom_dunland_young_lady_skills': {'Leadership': 55},
-    'SkillSet.taom_dunland_marauder_skills': {'Leadership': 80},
-    'SkillSet.taom_dunland_warrior_skills': {'Leadership': 100},
-    'SkillSet.taom_dunland_brenin_skills': {'Leadership': 130},
-    'SkillSet.taom_canonical_lord_G4_1_skills': {'Leadership': 185},
-    # elf Steward boost (+100, party size = 0.25/point of Steward)
-    'SkillSet.taom_elf_king_skills': {'Steward': 385},
-    'SkillSet.taom_elf_queen_skills': {'Steward': 390},
-    'SkillSet.taom_elf_lady_skills': {'Steward': 365},
-    'SkillSet.taom_elf_lord_skills': {'Steward': 355},
-    'SkillSet.taom_elf_warrior_skills': {'Steward': 300},
-    'SkillSet.taom_elf_archer_skills': {'Steward': 300},
-    'SkillSet.taom_elf_young_skills': {'Steward': 290},
-    'SkillSet.taom_canonical_lord_L1_1_skills': {'Steward': 415},
-    'SkillSet.taom_canonical_lord_L1_2_skills': {'Steward': 350},
-    'SkillSet.taom_canonical_lord_M1_1_skills': {'Steward': 360},
-    'SkillSet.taom_canonical_lord_M1_11_skills': {'Steward': 338},
-    'SkillSet.taom_canonical_lord_R1_1_skills': {'Steward': 400},
-    'SkillSet.taom_canonical_lord_R1_3_skills': {'Steward': 300},
-    'SkillSet.taom_canonical_lord_R1_4_skills': {'Steward': 300},
-    'SkillSet.taom_canonical_lord_R1_5_skills': {'Steward': 365},
-    'SkillSet.taom_canonical_lord_R2_1_skills': {'Steward': 342},
-}
+# Inline parity (2026-07-03 rework): instead of a hand-maintained per-template value map,
+# the FULL inline <skills> block of every managed-culture lord is synced to its resolved
+# SkillSet's values, read straight from taom_lord_skill_sets.xml. The engine only reads the
+# SkillSet; inline blocks are documentation, and this keeps analyze_lord_balance.py's
+# inline-vs-SkillSet mismatch check clean for every culture this script manages.
+SETS_XML = REPO / "Main" / "_Module" / "ModuleData" / "taom_lord_skill_sets.xml"
+
+
+def load_set_values():
+    import xml.etree.ElementTree as ET
+    root = ET.parse(SETS_XML).getroot()
+    return {f"SkillSet.{ss.get('id')}": {s.get('id'): int(s.get('value')) for s in ss.findall('skill')}
+            for ss in root.findall('.//SkillSet')}
+
+
+SET_VALUES = load_set_values()
 # Lords with NO skill_template: the inline block IS engine-authoritative. Absolute values.
 # (empty since lord_R3_1 graduated to a real SkillSet via TEMPLATE_ASSIGN below)
 INLINE_OVERRIDES = {}
 # Per-NPC template ASSIGNMENT for lords that had no skill_template attr at all — the attr is
-# inserted into the NPCCharacter tag; inline parity then follows PARITY_BY_TEMPLATE.
+# inserted into the NPCCharacter tag; inline parity then follows the SET_VALUES sync.
 # Child lords (age<14, e.g. lord_M1_12/L1_3/R1_11/R2_11) are deliberately NOT assigned adult
 # sets — vanilla spc_*_rookie templates are the correct child-hero treatment (generator skips age<14).
 TEMPLATE_ASSIGN = {
@@ -145,10 +155,10 @@ def process(text: str, mode: str, label: str, stats: dict) -> str:
                 stats[f'{label}:{template.split(".")[-1]}->{new_template.split(".")[-1]}'] = \
                     stats.get(f'{label}:{template.split(".")[-1]}->{new_template.split(".")[-1]}', 0) + 1
                 template = new_template
-            for skill, value in PARITY_BY_TEMPLATE.get(template, {}).items():
+            for skill, value in SET_VALUES.get(template, {}).items():
                 block, n = skill_line(skill).subn(rf'\g<1>{value}\g<3>', block)
                 if n:
-                    stats[f'{label}:inline-{skill.lower()}'] = stats.get(f'{label}:inline-{skill.lower()}', 0) + n
+                    stats[f'{label}:inline-sync'] = stats.get(f'{label}:inline-sync', 0) + n
             if not template:
                 for skill, value in INLINE_OVERRIDES.get(npc_id, {}).items():
                     block, n = skill_line(skill).subn(rf'\g<1>{value}\g<3>', block)

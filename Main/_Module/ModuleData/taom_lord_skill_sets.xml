@@ -54,12 +54,12 @@
     <skill id="Athletics" value="110" />
     <skill id="Crafting" value="150" />
     <skill id="Scouting" value="120" />
-    <skill id="Tactics" value="160" />
+    <skill id="Tactics" value="185" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="255" />
-    <skill id="Leadership" value="180" />
+    <skill id="Leadership" value="206" />
     <skill id="Trade" value="200" />
-    <skill id="Steward" value="255" />
+    <skill id="Steward" value="263" />
     <skill id="Medicine" value="215" />
     <skill id="Engineering" value="150" />
   </SkillSet>
@@ -74,12 +74,12 @@
     <skill id="Athletics" value="150" />
     <skill id="Crafting" value="170" />
     <skill id="Scouting" value="160" />
-    <skill id="Tactics" value="160" />
+    <skill id="Tactics" value="185" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="220" />
-    <skill id="Leadership" value="180" />
+    <skill id="Leadership" value="206" />
     <skill id="Trade" value="200" />
-    <skill id="Steward" value="240" />
+    <skill id="Steward" value="248" />
     <skill id="Medicine" value="220" />
     <skill id="Engineering" value="160" />
   </SkillSet>
@@ -94,12 +94,12 @@
     <skill id="Athletics" value="225" />
     <skill id="Crafting" value="110" />
     <skill id="Scouting" value="250" />
-    <skill id="Tactics" value="255" />
+    <skill id="Tactics" value="280" />
     <skill id="Roguery" value="110" />
     <skill id="Charm" value="190" />
-    <skill id="Leadership" value="240" />
+    <skill id="Leadership" value="266" />
     <skill id="Trade" value="140" />
-    <skill id="Steward" value="215" />
+    <skill id="Steward" value="223" />
     <skill id="Medicine" value="150" />
     <skill id="Engineering" value="180" />
   </SkillSet>
@@ -114,12 +114,12 @@
     <skill id="Athletics" value="140" />
     <skill id="Crafting" value="160" />
     <skill id="Scouting" value="170" />
-    <skill id="Tactics" value="170" />
+    <skill id="Tactics" value="195" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="215" />
-    <skill id="Leadership" value="170" />
+    <skill id="Leadership" value="196" />
     <skill id="Trade" value="180" />
-    <skill id="Steward" value="235" />
+    <skill id="Steward" value="243" />
     <skill id="Medicine" value="210" />
     <skill id="Engineering" value="150" />
   </SkillSet>
@@ -134,12 +134,12 @@
     <skill id="Athletics" value="130" />
     <skill id="Crafting" value="130" />
     <skill id="Scouting" value="130" />
-    <skill id="Tactics" value="140" />
+    <skill id="Tactics" value="165" />
     <skill id="Roguery" value="60" />
     <skill id="Charm" value="230" />
-    <skill id="Leadership" value="170" />
+    <skill id="Leadership" value="196" />
     <skill id="Trade" value="180" />
-    <skill id="Steward" value="235" />
+    <skill id="Steward" value="243" />
     <skill id="Medicine" value="210" />
     <skill id="Engineering" value="130" />
   </SkillSet>
@@ -154,12 +154,12 @@
     <skill id="Athletics" value="230" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="150" />
-    <skill id="Tactics" value="170" />
+    <skill id="Tactics" value="195" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="180" />
-    <skill id="Leadership" value="160" />
+    <skill id="Leadership" value="186" />
     <skill id="Trade" value="100" />
-    <skill id="Steward" value="140" />
+    <skill id="Steward" value="148" />
     <skill id="Medicine" value="100" />
     <skill id="Engineering" value="100" />
   </SkillSet>
@@ -174,12 +174,12 @@
     <skill id="Athletics" value="255" />
     <skill id="Crafting" value="80" />
     <skill id="Scouting" value="180" />
-    <skill id="Tactics" value="230" />
+    <skill id="Tactics" value="255" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="210" />
-    <skill id="Leadership" value="235" />
+    <skill id="Leadership" value="261" />
     <skill id="Trade" value="140" />
-    <skill id="Steward" value="200" />
+    <skill id="Steward" value="208" />
     <skill id="Medicine" value="130" />
     <skill id="Engineering" value="140" />
   </SkillSet>
@@ -194,12 +194,12 @@
     <skill id="Athletics" value="255" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="275" />
-    <skill id="Tactics" value="170" />
+    <skill id="Tactics" value="195" />
     <skill id="Roguery" value="120" />
     <skill id="Charm" value="160" />
-    <skill id="Leadership" value="150" />
+    <skill id="Leadership" value="176" />
     <skill id="Trade" value="140" />
-    <skill id="Steward" value="130" />
+    <skill id="Steward" value="138" />
     <skill id="Medicine" value="100" />
     <skill id="Engineering" value="90" />
   </SkillSet>
@@ -234,12 +234,12 @@
     <skill id="Athletics" value="280" />
     <skill id="Crafting" value="189" />
     <skill id="Scouting" value="300" />
-    <skill id="Tactics" value="295" />
+    <skill id="Tactics" value="320" />
     <skill id="Roguery" value="189" />
     <skill id="Charm" value="255" />
-    <skill id="Leadership" value="189" />
+    <skill id="Leadership" value="215" />
     <skill id="Trade" value="189" />
-    <skill id="Steward" value="189" />
+    <skill id="Steward" value="197" />
     <skill id="Medicine" value="189" />
     <skill id="Engineering" value="189" />
   </SkillSet>
@@ -254,12 +254,12 @@
     <skill id="Athletics" value="245" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="170" />
-    <skill id="Tactics" value="200" />
+    <skill id="Tactics" value="225" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="180" />
-    <skill id="Leadership" value="190" />
+    <skill id="Leadership" value="216" />
     <skill id="Trade" value="110" />
-    <skill id="Steward" value="150" />
+    <skill id="Steward" value="158" />
     <skill id="Medicine" value="110" />
     <skill id="Engineering" value="110" />
   </SkillSet>
@@ -274,12 +274,12 @@
     <skill id="Athletics" value="120" />
     <skill id="Crafting" value="170" />
     <skill id="Scouting" value="140" />
-    <skill id="Tactics" value="180" />
+    <skill id="Tactics" value="205" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="255" />
-    <skill id="Leadership" value="200" />
+    <skill id="Leadership" value="226" />
     <skill id="Trade" value="220" />
-    <skill id="Steward" value="265" />
+    <skill id="Steward" value="273" />
     <skill id="Medicine" value="230" />
     <skill id="Engineering" value="160" />
   </SkillSet>
@@ -294,12 +294,12 @@
     <skill id="Athletics" value="140" />
     <skill id="Crafting" value="120" />
     <skill id="Scouting" value="170" />
-    <skill id="Tactics" value="265" />
+    <skill id="Tactics" value="290" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="235" />
-    <skill id="Leadership" value="255" />
+    <skill id="Leadership" value="281" />
     <skill id="Trade" value="200" />
-    <skill id="Steward" value="255" />
+    <skill id="Steward" value="263" />
     <skill id="Medicine" value="170" />
     <skill id="Engineering" value="200" />
   </SkillSet>
@@ -314,12 +314,12 @@
     <skill id="Athletics" value="250" />
     <skill id="Crafting" value="80" />
     <skill id="Scouting" value="160" />
-    <skill id="Tactics" value="220" />
+    <skill id="Tactics" value="245" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="170" />
-    <skill id="Leadership" value="210" />
+    <skill id="Leadership" value="236" />
     <skill id="Trade" value="100" />
-    <skill id="Steward" value="170" />
+    <skill id="Steward" value="178" />
     <skill id="Medicine" value="110" />
     <skill id="Engineering" value="130" />
   </SkillSet>
@@ -334,12 +334,12 @@
     <skill id="Athletics" value="120" />
     <skill id="Crafting" value="200" />
     <skill id="Scouting" value="140" />
-    <skill id="Tactics" value="180" />
+    <skill id="Tactics" value="205" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="245" />
-    <skill id="Leadership" value="190" />
+    <skill id="Leadership" value="216" />
     <skill id="Trade" value="230" />
-    <skill id="Steward" value="275" />
+    <skill id="Steward" value="283" />
     <skill id="Medicine" value="225" />
     <skill id="Engineering" value="170" />
   </SkillSet>
@@ -354,12 +354,12 @@
     <skill id="Athletics" value="200" />
     <skill id="Crafting" value="60" />
     <skill id="Scouting" value="130" />
-    <skill id="Tactics" value="130" />
+    <skill id="Tactics" value="155" />
     <skill id="Roguery" value="60" />
     <skill id="Charm" value="140" />
-    <skill id="Leadership" value="120" />
+    <skill id="Leadership" value="146" />
     <skill id="Trade" value="90" />
-    <skill id="Steward" value="120" />
+    <skill id="Steward" value="128" />
     <skill id="Medicine" value="80" />
     <skill id="Engineering" value="90" />
   </SkillSet>
@@ -374,12 +374,12 @@
     <skill id="Athletics" value="194" />
     <skill id="Crafting" value="194" />
     <skill id="Scouting" value="194" />
-    <skill id="Tactics" value="194" />
+    <skill id="Tactics" value="219" />
     <skill id="Roguery" value="194" />
     <skill id="Charm" value="194" />
-    <skill id="Leadership" value="285" />
+    <skill id="Leadership" value="311" />
     <skill id="Trade" value="194" />
-    <skill id="Steward" value="258" />
+    <skill id="Steward" value="266" />
     <skill id="Medicine" value="194" />
     <skill id="Engineering" value="194" />
   </SkillSet>
@@ -394,12 +394,12 @@
     <skill id="Athletics" value="110" />
     <skill id="Crafting" value="140" />
     <skill id="Scouting" value="110" />
-    <skill id="Tactics" value="140" />
+    <skill id="Tactics" value="165" />
     <skill id="Roguery" value="60" />
     <skill id="Charm" value="215" />
-    <skill id="Leadership" value="160" />
+    <skill id="Leadership" value="186" />
     <skill id="Trade" value="185" />
-    <skill id="Steward" value="235" />
+    <skill id="Steward" value="243" />
     <skill id="Medicine" value="200" />
     <skill id="Engineering" value="140" />
   </SkillSet>
@@ -414,12 +414,12 @@
     <skill id="Athletics" value="190" />
     <skill id="Crafting" value="110" />
     <skill id="Scouting" value="160" />
-    <skill id="Tactics" value="140" />
+    <skill id="Tactics" value="165" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="200" />
-    <skill id="Leadership" value="130" />
+    <skill id="Leadership" value="156" />
     <skill id="Trade" value="130" />
-    <skill id="Steward" value="170" />
+    <skill id="Steward" value="178" />
     <skill id="Medicine" value="140" />
     <skill id="Engineering" value="100" />
   </SkillSet>
@@ -434,12 +434,12 @@
     <skill id="Athletics" value="210" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="200" />
-    <skill id="Tactics" value="160" />
+    <skill id="Tactics" value="185" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="170" />
-    <skill id="Leadership" value="160" />
+    <skill id="Leadership" value="186" />
     <skill id="Trade" value="100" />
-    <skill id="Steward" value="130" />
+    <skill id="Steward" value="138" />
     <skill id="Medicine" value="100" />
     <skill id="Engineering" value="100" />
   </SkillSet>
@@ -454,12 +454,12 @@
     <skill id="Athletics" value="184" />
     <skill id="Crafting" value="184" />
     <skill id="Scouting" value="184" />
-    <skill id="Tactics" value="184" />
+    <skill id="Tactics" value="209" />
     <skill id="Roguery" value="184" />
     <skill id="Charm" value="184" />
-    <skill id="Leadership" value="248" />
+    <skill id="Leadership" value="274" />
     <skill id="Trade" value="184" />
-    <skill id="Steward" value="184" />
+    <skill id="Steward" value="192" />
     <skill id="Medicine" value="184" />
     <skill id="Engineering" value="184" />
   </SkillSet>
@@ -474,12 +474,12 @@
     <skill id="Athletics" value="177" />
     <skill id="Crafting" value="177" />
     <skill id="Scouting" value="177" />
-    <skill id="Tactics" value="177" />
+    <skill id="Tactics" value="202" />
     <skill id="Roguery" value="177" />
     <skill id="Charm" value="177" />
-    <skill id="Leadership" value="260" />
+    <skill id="Leadership" value="286" />
     <skill id="Trade" value="177" />
-    <skill id="Steward" value="177" />
+    <skill id="Steward" value="185" />
     <skill id="Medicine" value="177" />
     <skill id="Engineering" value="177" />
   </SkillSet>
@@ -494,12 +494,12 @@
     <skill id="Athletics" value="235" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="180" />
-    <skill id="Tactics" value="200" />
+    <skill id="Tactics" value="225" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="180" />
-    <skill id="Leadership" value="210" />
+    <skill id="Leadership" value="236" />
     <skill id="Trade" value="110" />
-    <skill id="Steward" value="170" />
+    <skill id="Steward" value="178" />
     <skill id="Medicine" value="100" />
     <skill id="Engineering" value="120" />
   </SkillSet>
@@ -514,12 +514,12 @@
     <skill id="Athletics" value="130" />
     <skill id="Crafting" value="180" />
     <skill id="Scouting" value="160" />
-    <skill id="Tactics" value="200" />
+    <skill id="Tactics" value="225" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="255" />
-    <skill id="Leadership" value="210" />
+    <skill id="Leadership" value="236" />
     <skill id="Trade" value="240" />
-    <skill id="Steward" value="265" />
+    <skill id="Steward" value="273" />
     <skill id="Medicine" value="235" />
     <skill id="Engineering" value="170" />
   </SkillSet>
@@ -534,12 +534,12 @@
     <skill id="Athletics" value="195" />
     <skill id="Crafting" value="195" />
     <skill id="Scouting" value="195" />
-    <skill id="Tactics" value="195" />
+    <skill id="Tactics" value="220" />
     <skill id="Roguery" value="195" />
     <skill id="Charm" value="195" />
-    <skill id="Leadership" value="275" />
+    <skill id="Leadership" value="301" />
     <skill id="Trade" value="195" />
-    <skill id="Steward" value="195" />
+    <skill id="Steward" value="203" />
     <skill id="Medicine" value="195" />
     <skill id="Engineering" value="195" />
   </SkillSet>
@@ -554,12 +554,12 @@
     <skill id="Athletics" value="235" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="170" />
-    <skill id="Tactics" value="180" />
+    <skill id="Tactics" value="205" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="180" />
-    <skill id="Leadership" value="180" />
+    <skill id="Leadership" value="206" />
     <skill id="Trade" value="110" />
-    <skill id="Steward" value="150" />
+    <skill id="Steward" value="158" />
     <skill id="Medicine" value="100" />
     <skill id="Engineering" value="110" />
   </SkillSet>
@@ -574,12 +574,12 @@
     <skill id="Athletics" value="315" />
     <skill id="Crafting" value="210" />
     <skill id="Scouting" value="210" />
-    <skill id="Tactics" value="295" />
+    <skill id="Tactics" value="320" />
     <skill id="Roguery" value="210" />
     <skill id="Charm" value="210" />
-    <skill id="Leadership" value="310" />
+    <skill id="Leadership" value="336" />
     <skill id="Trade" value="210" />
-    <skill id="Steward" value="210" />
+    <skill id="Steward" value="218" />
     <skill id="Medicine" value="210" />
     <skill id="Engineering" value="210" />
   </SkillSet>
@@ -594,12 +594,12 @@
     <skill id="Athletics" value="187" />
     <skill id="Crafting" value="187" />
     <skill id="Scouting" value="187" />
-    <skill id="Tactics" value="255" />
+    <skill id="Tactics" value="280" />
     <skill id="Roguery" value="187" />
     <skill id="Charm" value="255" />
-    <skill id="Leadership" value="290" />
+    <skill id="Leadership" value="316" />
     <skill id="Trade" value="225" />
-    <skill id="Steward" value="310" />
+    <skill id="Steward" value="318" />
     <skill id="Medicine" value="187" />
     <skill id="Engineering" value="235" />
   </SkillSet>
@@ -614,12 +614,12 @@
     <skill id="Athletics" value="140" />
     <skill id="Crafting" value="160" />
     <skill id="Scouting" value="150" />
-    <skill id="Tactics" value="230" />
+    <skill id="Tactics" value="255" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="250" />
-    <skill id="Leadership" value="210" />
+    <skill id="Leadership" value="236" />
     <skill id="Trade" value="230" />
-    <skill id="Steward" value="275" />
+    <skill id="Steward" value="283" />
     <skill id="Medicine" value="180" />
     <skill id="Engineering" value="210" />
   </SkillSet>
@@ -634,12 +634,12 @@
     <skill id="Athletics" value="110" />
     <skill id="Crafting" value="180" />
     <skill id="Scouting" value="140" />
-    <skill id="Tactics" value="210" />
+    <skill id="Tactics" value="235" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="295" />
-    <skill id="Leadership" value="240" />
+    <skill id="Leadership" value="266" />
     <skill id="Trade" value="250" />
-    <skill id="Steward" value="295" />
+    <skill id="Steward" value="303" />
     <skill id="Medicine" value="260" />
     <skill id="Engineering" value="170" />
   </SkillSet>
@@ -654,12 +654,12 @@
     <skill id="Athletics" value="203" />
     <skill id="Crafting" value="203" />
     <skill id="Scouting" value="203" />
-    <skill id="Tactics" value="203" />
+    <skill id="Tactics" value="228" />
     <skill id="Roguery" value="203" />
     <skill id="Charm" value="280" />
-    <skill id="Leadership" value="300" />
+    <skill id="Leadership" value="326" />
     <skill id="Trade" value="203" />
-    <skill id="Steward" value="203" />
+    <skill id="Steward" value="211" />
     <skill id="Medicine" value="203" />
     <skill id="Engineering" value="203" />
   </SkillSet>
@@ -674,12 +674,12 @@
     <skill id="Athletics" value="225" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="170" />
-    <skill id="Tactics" value="190" />
+    <skill id="Tactics" value="213" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="160" />
-    <skill id="Leadership" value="170" />
+    <skill id="Leadership" value="182" />
     <skill id="Trade" value="110" />
-    <skill id="Steward" value="150" />
+    <skill id="Steward" value="157" />
     <skill id="Medicine" value="100" />
     <skill id="Engineering" value="100" />
   </SkillSet>
@@ -694,12 +694,12 @@
     <skill id="Athletics" value="225" />
     <skill id="Crafting" value="90" />
     <skill id="Scouting" value="170" />
-    <skill id="Tactics" value="190" />
+    <skill id="Tactics" value="213" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="190" />
-    <skill id="Leadership" value="170" />
+    <skill id="Leadership" value="182" />
     <skill id="Trade" value="120" />
-    <skill id="Steward" value="180" />
+    <skill id="Steward" value="187" />
     <skill id="Medicine" value="160" />
     <skill id="Engineering" value="100" />
   </SkillSet>
@@ -714,12 +714,12 @@
     <skill id="Athletics" value="245" />
     <skill id="Crafting" value="90" />
     <skill id="Scouting" value="205" />
-    <skill id="Tactics" value="250" />
+    <skill id="Tactics" value="273" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="205" />
-    <skill id="Leadership" value="265" />
+    <skill id="Leadership" value="277" />
     <skill id="Trade" value="150" />
-    <skill id="Steward" value="225" />
+    <skill id="Steward" value="232" />
     <skill id="Medicine" value="140" />
     <skill id="Engineering" value="170" />
   </SkillSet>
@@ -734,12 +734,12 @@
     <skill id="Athletics" value="215" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="170" />
-    <skill id="Tactics" value="160" />
+    <skill id="Tactics" value="183" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="170" />
-    <skill id="Leadership" value="160" />
+    <skill id="Leadership" value="172" />
     <skill id="Trade" value="110" />
-    <skill id="Steward" value="140" />
+    <skill id="Steward" value="147" />
     <skill id="Medicine" value="100" />
     <skill id="Engineering" value="100" />
   </SkillSet>
@@ -754,12 +754,12 @@
     <skill id="Athletics" value="235" />
     <skill id="Crafting" value="90" />
     <skill id="Scouting" value="190" />
-    <skill id="Tactics" value="275" />
+    <skill id="Tactics" value="298" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="240" />
-    <skill id="Leadership" value="295" />
+    <skill id="Leadership" value="307" />
     <skill id="Trade" value="160" />
-    <skill id="Steward" value="255" />
+    <skill id="Steward" value="262" />
     <skill id="Medicine" value="140" />
     <skill id="Engineering" value="160" />
   </SkillSet>
@@ -774,12 +774,12 @@
     <skill id="Athletics" value="235" />
     <skill id="Crafting" value="80" />
     <skill id="Scouting" value="200" />
-    <skill id="Tactics" value="230" />
+    <skill id="Tactics" value="253" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="190" />
-    <skill id="Leadership" value="230" />
+    <skill id="Leadership" value="242" />
     <skill id="Trade" value="140" />
-    <skill id="Steward" value="205" />
+    <skill id="Steward" value="212" />
     <skill id="Medicine" value="130" />
     <skill id="Engineering" value="150" />
   </SkillSet>
@@ -794,12 +794,12 @@
     <skill id="Athletics" value="215" />
     <skill id="Crafting" value="200" />
     <skill id="Scouting" value="200" />
-    <skill id="Tactics" value="170" />
+    <skill id="Tactics" value="193" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="180" />
-    <skill id="Leadership" value="180" />
+    <skill id="Leadership" value="192" />
     <skill id="Trade" value="215" />
-    <skill id="Steward" value="200" />
+    <skill id="Steward" value="207" />
     <skill id="Medicine" value="160" />
     <skill id="Engineering" value="120" />
   </SkillSet>
@@ -814,12 +814,12 @@
     <skill id="Athletics" value="200" />
     <skill id="Crafting" value="180" />
     <skill id="Scouting" value="190" />
-    <skill id="Tactics" value="140" />
+    <skill id="Tactics" value="163" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="160" />
-    <skill id="Leadership" value="150" />
+    <skill id="Leadership" value="162" />
     <skill id="Trade" value="190" />
-    <skill id="Steward" value="180" />
+    <skill id="Steward" value="187" />
     <skill id="Medicine" value="140" />
     <skill id="Engineering" value="110" />
   </SkillSet>
@@ -834,12 +834,12 @@
     <skill id="Athletics" value="255" />
     <skill id="Crafting" value="100" />
     <skill id="Scouting" value="200" />
-    <skill id="Tactics" value="220" />
+    <skill id="Tactics" value="243" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="215" />
-    <skill id="Leadership" value="200" />
+    <skill id="Leadership" value="212" />
     <skill id="Trade" value="130" />
-    <skill id="Steward" value="210" />
+    <skill id="Steward" value="217" />
     <skill id="Medicine" value="200" />
     <skill id="Engineering" value="110" />
   </SkillSet>
@@ -854,12 +854,12 @@
     <skill id="Athletics" value="250" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="215" />
-    <skill id="Tactics" value="235" />
+    <skill id="Tactics" value="258" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="200" />
-    <skill id="Leadership" value="235" />
+    <skill id="Leadership" value="247" />
     <skill id="Trade" value="140" />
-    <skill id="Steward" value="200" />
+    <skill id="Steward" value="207" />
     <skill id="Medicine" value="130" />
     <skill id="Engineering" value="140" />
   </SkillSet>
@@ -874,12 +874,12 @@
     <skill id="Athletics" value="245" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="235" />
-    <skill id="Tactics" value="230" />
+    <skill id="Tactics" value="253" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="185" />
-    <skill id="Leadership" value="220" />
+    <skill id="Leadership" value="232" />
     <skill id="Trade" value="130" />
-    <skill id="Steward" value="185" />
+    <skill id="Steward" value="192" />
     <skill id="Medicine" value="130" />
     <skill id="Engineering" value="130" />
   </SkillSet>
@@ -894,12 +894,12 @@
     <skill id="Athletics" value="235" />
     <skill id="Crafting" value="80" />
     <skill id="Scouting" value="245" />
-    <skill id="Tactics" value="225" />
+    <skill id="Tactics" value="248" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="180" />
-    <skill id="Leadership" value="215" />
+    <skill id="Leadership" value="227" />
     <skill id="Trade" value="130" />
-    <skill id="Steward" value="195" />
+    <skill id="Steward" value="202" />
     <skill id="Medicine" value="130" />
     <skill id="Engineering" value="140" />
   </SkillSet>
@@ -914,12 +914,12 @@
     <skill id="Athletics" value="130" />
     <skill id="Crafting" value="160" />
     <skill id="Scouting" value="120" />
-    <skill id="Tactics" value="150" />
+    <skill id="Tactics" value="173" />
     <skill id="Roguery" value="60" />
     <skill id="Charm" value="250" />
-    <skill id="Leadership" value="200" />
+    <skill id="Leadership" value="212" />
     <skill id="Trade" value="210" />
-    <skill id="Steward" value="255" />
+    <skill id="Steward" value="262" />
     <skill id="Medicine" value="215" />
     <skill id="Engineering" value="140" />
   </SkillSet>
@@ -934,12 +934,12 @@
     <skill id="Athletics" value="275" />
     <skill id="Crafting" value="80" />
     <skill id="Scouting" value="240" />
-    <skill id="Tactics" value="265" />
+    <skill id="Tactics" value="288" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="220" />
-    <skill id="Leadership" value="275" />
+    <skill id="Leadership" value="287" />
     <skill id="Trade" value="130" />
-    <skill id="Steward" value="200" />
+    <skill id="Steward" value="207" />
     <skill id="Medicine" value="130" />
     <skill id="Engineering" value="140" />
   </SkillSet>
@@ -954,12 +954,12 @@
     <skill id="Athletics" value="140" />
     <skill id="Crafting" value="140" />
     <skill id="Scouting" value="130" />
-    <skill id="Tactics" value="160" />
+    <skill id="Tactics" value="183" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="235" />
-    <skill id="Leadership" value="180" />
+    <skill id="Leadership" value="192" />
     <skill id="Trade" value="190" />
-    <skill id="Steward" value="240" />
+    <skill id="Steward" value="247" />
     <skill id="Medicine" value="205" />
     <skill id="Engineering" value="130" />
   </SkillSet>
@@ -974,12 +974,12 @@
     <skill id="Athletics" value="230" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="190" />
-    <skill id="Tactics" value="200" />
+    <skill id="Tactics" value="223" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="170" />
-    <skill id="Leadership" value="180" />
+    <skill id="Leadership" value="192" />
     <skill id="Trade" value="110" />
-    <skill id="Steward" value="160" />
+    <skill id="Steward" value="167" />
     <skill id="Medicine" value="110" />
     <skill id="Engineering" value="110" />
   </SkillSet>
@@ -994,12 +994,12 @@
     <skill id="Athletics" value="220" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="190" />
-    <skill id="Tactics" value="180" />
+    <skill id="Tactics" value="203" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="170" />
-    <skill id="Leadership" value="170" />
+    <skill id="Leadership" value="182" />
     <skill id="Trade" value="110" />
-    <skill id="Steward" value="150" />
+    <skill id="Steward" value="157" />
     <skill id="Medicine" value="100" />
     <skill id="Engineering" value="110" />
   </SkillSet>
@@ -1014,12 +1014,12 @@
     <skill id="Athletics" value="255" />
     <skill id="Crafting" value="80" />
     <skill id="Scouting" value="215" />
-    <skill id="Tactics" value="240" />
+    <skill id="Tactics" value="263" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="195" />
-    <skill id="Leadership" value="235" />
+    <skill id="Leadership" value="247" />
     <skill id="Trade" value="120" />
-    <skill id="Steward" value="185" />
+    <skill id="Steward" value="192" />
     <skill id="Medicine" value="130" />
     <skill id="Engineering" value="130" />
   </SkillSet>
@@ -1054,12 +1054,12 @@
     <skill id="Athletics" value="240" />
     <skill id="Crafting" value="255" />
     <skill id="Scouting" value="180" />
-    <skill id="Tactics" value="235" />
+    <skill id="Tactics" value="375" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="220" />
-    <skill id="Leadership" value="250" />
+    <skill id="Leadership" value="377" />
     <skill id="Trade" value="220" />
-    <skill id="Steward" value="240" />
+    <skill id="Steward" value="313" />
     <skill id="Medicine" value="160" />
     <skill id="Engineering" value="255" />
   </SkillSet>
@@ -1079,7 +1079,7 @@
     <skill id="Charm" value="190" />
     <skill id="Leadership" value="185" />
     <skill id="Trade" value="140" />
-    <skill id="Steward" value="210" />
+    <skill id="Steward" value="157" />
     <skill id="Medicine" value="90" />
     <skill id="Engineering" value="190" />
   </SkillSet>
@@ -1194,10 +1194,10 @@
     <skill id="Athletics" value="290" />
     <skill id="Crafting" value="260" />
     <skill id="Scouting" value="300" />
-    <skill id="Tactics" value="305" />
+    <skill id="Tactics" value="366" />
     <skill id="Roguery" value="260" />
     <skill id="Charm" value="325" />
-    <skill id="Leadership" value="325" />
+    <skill id="Leadership" value="397" />
     <skill id="Trade" value="260" />
     <skill id="Steward" value="415" />
     <skill id="Medicine" value="305" />
@@ -1214,10 +1214,10 @@
     <skill id="Athletics" value="315" />
     <skill id="Crafting" value="250" />
     <skill id="Scouting" value="250" />
-    <skill id="Tactics" value="250" />
+    <skill id="Tactics" value="311" />
     <skill id="Roguery" value="250" />
     <skill id="Charm" value="250" />
-    <skill id="Leadership" value="290" />
+    <skill id="Leadership" value="362" />
     <skill id="Trade" value="250" />
     <skill id="Steward" value="350" />
     <skill id="Medicine" value="250" />
@@ -1234,10 +1234,10 @@
     <skill id="Athletics" value="305" />
     <skill id="Crafting" value="238" />
     <skill id="Scouting" value="295" />
-    <skill id="Tactics" value="238" />
+    <skill id="Tactics" value="299" />
     <skill id="Roguery" value="238" />
     <skill id="Charm" value="238" />
-    <skill id="Leadership" value="238" />
+    <skill id="Leadership" value="310" />
     <skill id="Trade" value="238" />
     <skill id="Steward" value="338" />
     <skill id="Medicine" value="238" />
@@ -1254,10 +1254,10 @@
     <skill id="Athletics" value="300" />
     <skill id="Crafting" value="260" />
     <skill id="Scouting" value="260" />
-    <skill id="Tactics" value="260" />
+    <skill id="Tactics" value="321" />
     <skill id="Roguery" value="260" />
     <skill id="Charm" value="260" />
-    <skill id="Leadership" value="300" />
+    <skill id="Leadership" value="372" />
     <skill id="Trade" value="260" />
     <skill id="Steward" value="360" />
     <skill id="Medicine" value="260" />
@@ -1274,10 +1274,10 @@
     <skill id="Athletics" value="290" />
     <skill id="Crafting" value="260" />
     <skill id="Scouting" value="260" />
-    <skill id="Tactics" value="305" />
+    <skill id="Tactics" value="366" />
     <skill id="Roguery" value="260" />
     <skill id="Charm" value="300" />
-    <skill id="Leadership" value="310" />
+    <skill id="Leadership" value="382" />
     <skill id="Trade" value="260" />
     <skill id="Steward" value="400" />
     <skill id="Medicine" value="325" />
@@ -1294,10 +1294,10 @@
     <skill id="Athletics" value="290" />
     <skill id="Crafting" value="180" />
     <skill id="Scouting" value="275" />
-    <skill id="Tactics" value="260" />
+    <skill id="Tactics" value="321" />
     <skill id="Roguery" value="130" />
     <skill id="Charm" value="225" />
-    <skill id="Leadership" value="235" />
+    <skill id="Leadership" value="307" />
     <skill id="Trade" value="160" />
     <skill id="Steward" value="300" />
     <skill id="Medicine" value="215" />
@@ -1314,10 +1314,10 @@
     <skill id="Athletics" value="290" />
     <skill id="Crafting" value="180" />
     <skill id="Scouting" value="275" />
-    <skill id="Tactics" value="260" />
+    <skill id="Tactics" value="321" />
     <skill id="Roguery" value="130" />
     <skill id="Charm" value="225" />
-    <skill id="Leadership" value="235" />
+    <skill id="Leadership" value="307" />
     <skill id="Trade" value="160" />
     <skill id="Steward" value="300" />
     <skill id="Medicine" value="215" />
@@ -1334,10 +1334,10 @@
     <skill id="Athletics" value="240" />
     <skill id="Crafting" value="240" />
     <skill id="Scouting" value="220" />
-    <skill id="Tactics" value="215" />
+    <skill id="Tactics" value="276" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="290" />
-    <skill id="Leadership" value="210" />
+    <skill id="Leadership" value="282" />
     <skill id="Trade" value="220" />
     <skill id="Steward" value="365" />
     <skill id="Medicine" value="280" />
@@ -1354,10 +1354,10 @@
     <skill id="Athletics" value="310" />
     <skill id="Crafting" value="242" />
     <skill id="Scouting" value="242" />
-    <skill id="Tactics" value="242" />
+    <skill id="Tactics" value="303" />
     <skill id="Roguery" value="242" />
     <skill id="Charm" value="242" />
-    <skill id="Leadership" value="242" />
+    <skill id="Leadership" value="314" />
     <skill id="Trade" value="242" />
     <skill id="Steward" value="342" />
     <skill id="Medicine" value="242" />
@@ -1394,12 +1394,12 @@
     <skill id="Athletics" value="215" />
     <skill id="Crafting" value="80" />
     <skill id="Scouting" value="220" />
-    <skill id="Tactics" value="150" />
+    <skill id="Tactics" value="175" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="170" />
-    <skill id="Leadership" value="140" />
+    <skill id="Leadership" value="166" />
     <skill id="Trade" value="130" />
-    <skill id="Steward" value="140" />
+    <skill id="Steward" value="148" />
     <skill id="Medicine" value="100" />
     <skill id="Engineering" value="100" />
   </SkillSet>
@@ -1414,12 +1414,12 @@
     <skill id="Athletics" value="235" />
     <skill id="Crafting" value="90" />
     <skill id="Scouting" value="245" />
-    <skill id="Tactics" value="210" />
+    <skill id="Tactics" value="235" />
     <skill id="Roguery" value="100" />
     <skill id="Charm" value="180" />
-    <skill id="Leadership" value="200" />
+    <skill id="Leadership" value="226" />
     <skill id="Trade" value="200" />
-    <skill id="Steward" value="180" />
+    <skill id="Steward" value="188" />
     <skill id="Medicine" value="120" />
     <skill id="Engineering" value="140" />
   </SkillSet>
@@ -1434,12 +1434,12 @@
     <skill id="Athletics" value="177" />
     <skill id="Crafting" value="177" />
     <skill id="Scouting" value="255" />
-    <skill id="Tactics" value="177" />
+    <skill id="Tactics" value="202" />
     <skill id="Roguery" value="177" />
     <skill id="Charm" value="177" />
-    <skill id="Leadership" value="177" />
+    <skill id="Leadership" value="203" />
     <skill id="Trade" value="177" />
-    <skill id="Steward" value="177" />
+    <skill id="Steward" value="185" />
     <skill id="Medicine" value="177" />
     <skill id="Engineering" value="177" />
   </SkillSet>
@@ -1454,12 +1454,12 @@
     <skill id="Athletics" value="255" />
     <skill id="Crafting" value="100" />
     <skill id="Scouting" value="255" />
-    <skill id="Tactics" value="215" />
+    <skill id="Tactics" value="240" />
     <skill id="Roguery" value="90" />
     <skill id="Charm" value="170" />
-    <skill id="Leadership" value="210" />
+    <skill id="Leadership" value="236" />
     <skill id="Trade" value="120" />
-    <skill id="Steward" value="170" />
+    <skill id="Steward" value="178" />
     <skill id="Medicine" value="130" />
     <skill id="Engineering" value="120" />
   </SkillSet>
@@ -1523,6 +1523,46 @@
     <skill id="Medicine" value="140" />
     <skill id="Engineering" value="130" />
   </SkillSet>
+  <SkillSet id="taom_dale_knight_skills">
+    <skill id="OneHanded" value="230" />
+    <skill id="TwoHanded" value="180" />
+    <skill id="Polearm" value="220" />
+    <skill id="Bow" value="100" />
+    <skill id="Crossbow" value="70" />
+    <skill id="Throwing" value="120" />
+    <skill id="Riding" value="250" />
+    <skill id="Athletics" value="240" />
+    <skill id="Crafting" value="60" />
+    <skill id="Scouting" value="140" />
+    <skill id="Tactics" value="202" />
+    <skill id="Roguery" value="60" />
+    <skill id="Charm" value="160" />
+    <skill id="Leadership" value="160" />
+    <skill id="Trade" value="90" />
+    <skill id="Steward" value="130" />
+    <skill id="Medicine" value="90" />
+    <skill id="Engineering" value="100" />
+  </SkillSet>
+  <SkillSet id="taom_dale_lady_skills">
+    <skill id="OneHanded" value="60" />
+    <skill id="TwoHanded" value="30" />
+    <skill id="Polearm" value="50" />
+    <skill id="Bow" value="70" />
+    <skill id="Crossbow" value="50" />
+    <skill id="Throwing" value="50" />
+    <skill id="Riding" value="140" />
+    <skill id="Athletics" value="110" />
+    <skill id="Crafting" value="140" />
+    <skill id="Scouting" value="110" />
+    <skill id="Tactics" value="152" />
+    <skill id="Roguery" value="60" />
+    <skill id="Charm" value="240" />
+    <skill id="Leadership" value="160" />
+    <skill id="Trade" value="180" />
+    <skill id="Steward" value="240" />
+    <skill id="Medicine" value="210" />
+    <skill id="Engineering" value="130" />
+  </SkillSet>
   <SkillSet id="taom_dale_lord_skills">
     <skill id="OneHanded" value="215" />
     <skill id="TwoHanded" value="155" />
@@ -1534,7 +1574,7 @@
     <skill id="Athletics" value="240" />
     <skill id="Crafting" value="110" />
     <skill id="Scouting" value="230" />
-    <skill id="Tactics" value="220" />
+    <skill id="Tactics" value="242" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="200" />
     <skill id="Leadership" value="235" />
@@ -1542,6 +1582,46 @@
     <skill id="Steward" value="215" />
     <skill id="Medicine" value="140" />
     <skill id="Engineering" value="170" />
+  </SkillSet>
+  <SkillSet id="taom_dale_young_lady_skills">
+    <skill id="OneHanded" value="40" />
+    <skill id="TwoHanded" value="20" />
+    <skill id="Polearm" value="30" />
+    <skill id="Bow" value="70" />
+    <skill id="Crossbow" value="40" />
+    <skill id="Throwing" value="40" />
+    <skill id="Riding" value="120" />
+    <skill id="Athletics" value="100" />
+    <skill id="Crafting" value="110" />
+    <skill id="Scouting" value="90" />
+    <skill id="Tactics" value="122" />
+    <skill id="Roguery" value="50" />
+    <skill id="Charm" value="180" />
+    <skill id="Leadership" value="120" />
+    <skill id="Trade" value="130" />
+    <skill id="Steward" value="170" />
+    <skill id="Medicine" value="150" />
+    <skill id="Engineering" value="100" />
+  </SkillSet>
+  <SkillSet id="taom_dale_young_lord_skills">
+    <skill id="OneHanded" value="160" />
+    <skill id="TwoHanded" value="120" />
+    <skill id="Polearm" value="140" />
+    <skill id="Bow" value="90" />
+    <skill id="Crossbow" value="70" />
+    <skill id="Throwing" value="100" />
+    <skill id="Riding" value="190" />
+    <skill id="Athletics" value="180" />
+    <skill id="Crafting" value="60" />
+    <skill id="Scouting" value="140" />
+    <skill id="Tactics" value="152" />
+    <skill id="Roguery" value="60" />
+    <skill id="Charm" value="140" />
+    <skill id="Leadership" value="120" />
+    <skill id="Trade" value="80" />
+    <skill id="Steward" value="110" />
+    <skill id="Medicine" value="80" />
+    <skill id="Engineering" value="80" />
   </SkillSet>
   <SkillSet id="taom_desert_lady_skills">
     <skill id="OneHanded" value="60" />
@@ -1734,12 +1814,12 @@
     <skill id="Athletics" value="250" />
     <skill id="Crafting" value="275" />
     <skill id="Scouting" value="180" />
-    <skill id="Tactics" value="265" />
+    <skill id="Tactics" value="405" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="230" />
-    <skill id="Leadership" value="290" />
+    <skill id="Leadership" value="417" />
     <skill id="Trade" value="240" />
-    <skill id="Steward" value="275" />
+    <skill id="Steward" value="348" />
     <skill id="Medicine" value="170" />
     <skill id="Engineering" value="275" />
   </SkillSet>
@@ -1754,12 +1834,12 @@
     <skill id="Athletics" value="170" />
     <skill id="Crafting" value="255" />
     <skill id="Scouting" value="140" />
-    <skill id="Tactics" value="170" />
+    <skill id="Tactics" value="310" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="240" />
-    <skill id="Leadership" value="190" />
+    <skill id="Leadership" value="317" />
     <skill id="Trade" value="220" />
-    <skill id="Steward" value="260" />
+    <skill id="Steward" value="333" />
     <skill id="Medicine" value="220" />
     <skill id="Engineering" value="200" />
   </SkillSet>
@@ -1774,12 +1854,12 @@
     <skill id="Athletics" value="225" />
     <skill id="Crafting" value="240" />
     <skill id="Scouting" value="170" />
-    <skill id="Tactics" value="215" />
+    <skill id="Tactics" value="355" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="190" />
-    <skill id="Leadership" value="225" />
+    <skill id="Leadership" value="352" />
     <skill id="Trade" value="200" />
-    <skill id="Steward" value="220" />
+    <skill id="Steward" value="293" />
     <skill id="Medicine" value="150" />
     <skill id="Engineering" value="240" />
   </SkillSet>
@@ -1794,12 +1874,12 @@
     <skill id="Athletics" value="240" />
     <skill id="Crafting" value="180" />
     <skill id="Scouting" value="160" />
-    <skill id="Tactics" value="180" />
+    <skill id="Tactics" value="320" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="140" />
-    <skill id="Leadership" value="155" />
+    <skill id="Leadership" value="282" />
     <skill id="Trade" value="130" />
-    <skill id="Steward" value="160" />
+    <skill id="Steward" value="233" />
     <skill id="Medicine" value="110" />
     <skill id="Engineering" value="180" />
   </SkillSet>
@@ -1814,12 +1894,12 @@
     <skill id="Athletics" value="200" />
     <skill id="Crafting" value="170" />
     <skill id="Scouting" value="140" />
-    <skill id="Tactics" value="140" />
+    <skill id="Tactics" value="280" />
     <skill id="Roguery" value="60" />
     <skill id="Charm" value="140" />
-    <skill id="Leadership" value="130" />
+    <skill id="Leadership" value="257" />
     <skill id="Trade" value="140" />
-    <skill id="Steward" value="150" />
+    <skill id="Steward" value="223" />
     <skill id="Medicine" value="110" />
     <skill id="Engineering" value="160" />
   </SkillSet>
@@ -1894,12 +1974,12 @@
     <skill id="Athletics" value="160" />
     <skill id="Crafting" value="110" />
     <skill id="Scouting" value="180" />
-    <skill id="Tactics" value="270" />
+    <skill id="Tactics" value="295" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="220" />
-    <skill id="Leadership" value="260" />
+    <skill id="Leadership" value="286" />
     <skill id="Trade" value="180" />
-    <skill id="Steward" value="240" />
+    <skill id="Steward" value="248" />
     <skill id="Medicine" value="160" />
     <skill id="Engineering" value="190" />
   </SkillSet>
@@ -1914,10 +1994,10 @@
     <skill id="Athletics" value="290" />
     <skill id="Crafting" value="180" />
     <skill id="Scouting" value="290" />
-    <skill id="Tactics" value="240" />
+    <skill id="Tactics" value="301" />
     <skill id="Roguery" value="110" />
     <skill id="Charm" value="220" />
-    <skill id="Leadership" value="210" />
+    <skill id="Leadership" value="282" />
     <skill id="Trade" value="160" />
     <skill id="Steward" value="300" />
     <skill id="Medicine" value="190" />
@@ -1934,10 +2014,10 @@
     <skill id="Athletics" value="290" />
     <skill id="Crafting" value="270" />
     <skill id="Scouting" value="290" />
-    <skill id="Tactics" value="290" />
+    <skill id="Tactics" value="351" />
     <skill id="Roguery" value="120" />
     <skill id="Charm" value="285" />
-    <skill id="Leadership" value="290" />
+    <skill id="Leadership" value="362" />
     <skill id="Trade" value="240" />
     <skill id="Steward" value="385" />
     <skill id="Medicine" value="275" />
@@ -1954,10 +2034,10 @@
     <skill id="Athletics" value="230" />
     <skill id="Crafting" value="240" />
     <skill id="Scouting" value="210" />
-    <skill id="Tactics" value="210" />
+    <skill id="Tactics" value="271" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="270" />
-    <skill id="Leadership" value="200" />
+    <skill id="Leadership" value="272" />
     <skill id="Trade" value="220" />
     <skill id="Steward" value="365" />
     <skill id="Medicine" value="260" />
@@ -1974,10 +2054,10 @@
     <skill id="Athletics" value="280" />
     <skill id="Crafting" value="240" />
     <skill id="Scouting" value="270" />
-    <skill id="Tactics" value="265" />
+    <skill id="Tactics" value="326" />
     <skill id="Roguery" value="110" />
     <skill id="Charm" value="250" />
-    <skill id="Leadership" value="255" />
+    <skill id="Leadership" value="327" />
     <skill id="Trade" value="200" />
     <skill id="Steward" value="355" />
     <skill id="Medicine" value="240" />
@@ -1994,10 +2074,10 @@
     <skill id="Athletics" value="270" />
     <skill id="Crafting" value="275" />
     <skill id="Scouting" value="265" />
-    <skill id="Tactics" value="290" />
+    <skill id="Tactics" value="351" />
     <skill id="Roguery" value="110" />
     <skill id="Charm" value="295" />
-    <skill id="Leadership" value="290" />
+    <skill id="Leadership" value="362" />
     <skill id="Trade" value="265" />
     <skill id="Steward" value="390" />
     <skill id="Medicine" value="285" />
@@ -2014,10 +2094,10 @@
     <skill id="Athletics" value="285" />
     <skill id="Crafting" value="170" />
     <skill id="Scouting" value="255" />
-    <skill id="Tactics" value="240" />
+    <skill id="Tactics" value="301" />
     <skill id="Roguery" value="110" />
     <skill id="Charm" value="210" />
-    <skill id="Leadership" value="220" />
+    <skill id="Leadership" value="292" />
     <skill id="Trade" value="160" />
     <skill id="Steward" value="300" />
     <skill id="Medicine" value="190" />
@@ -2034,10 +2114,10 @@
     <skill id="Athletics" value="240" />
     <skill id="Crafting" value="170" />
     <skill id="Scouting" value="220" />
-    <skill id="Tactics" value="190" />
+    <skill id="Tactics" value="251" />
     <skill id="Roguery" value="90" />
     <skill id="Charm" value="200" />
-    <skill id="Leadership" value="180" />
+    <skill id="Leadership" value="252" />
     <skill id="Trade" value="170" />
     <skill id="Steward" value="290" />
     <skill id="Medicine" value="180" />
@@ -2061,6 +2141,126 @@
     <skill id="Trade" value="130" />
     <skill id="Steward" value="120" />
     <skill id="Medicine" value="90" />
+    <skill id="Engineering" value="80" />
+  </SkillSet>
+  <SkillSet id="taom_gondor_knight_skills">
+    <skill id="OneHanded" value="230" />
+    <skill id="TwoHanded" value="180" />
+    <skill id="Polearm" value="220" />
+    <skill id="Bow" value="100" />
+    <skill id="Crossbow" value="70" />
+    <skill id="Throwing" value="120" />
+    <skill id="Riding" value="250" />
+    <skill id="Athletics" value="240" />
+    <skill id="Crafting" value="60" />
+    <skill id="Scouting" value="140" />
+    <skill id="Tactics" value="205" />
+    <skill id="Roguery" value="60" />
+    <skill id="Charm" value="160" />
+    <skill id="Leadership" value="186" />
+    <skill id="Trade" value="90" />
+    <skill id="Steward" value="138" />
+    <skill id="Medicine" value="90" />
+    <skill id="Engineering" value="100" />
+  </SkillSet>
+  <SkillSet id="taom_gondor_lady_skills">
+    <skill id="OneHanded" value="60" />
+    <skill id="TwoHanded" value="30" />
+    <skill id="Polearm" value="50" />
+    <skill id="Bow" value="70" />
+    <skill id="Crossbow" value="50" />
+    <skill id="Throwing" value="50" />
+    <skill id="Riding" value="140" />
+    <skill id="Athletics" value="110" />
+    <skill id="Crafting" value="140" />
+    <skill id="Scouting" value="110" />
+    <skill id="Tactics" value="155" />
+    <skill id="Roguery" value="60" />
+    <skill id="Charm" value="240" />
+    <skill id="Leadership" value="186" />
+    <skill id="Trade" value="180" />
+    <skill id="Steward" value="248" />
+    <skill id="Medicine" value="210" />
+    <skill id="Engineering" value="130" />
+  </SkillSet>
+  <SkillSet id="taom_gondor_lord_skills">
+    <skill id="OneHanded" value="220" />
+    <skill id="TwoHanded" value="160" />
+    <skill id="Polearm" value="210" />
+    <skill id="Bow" value="120" />
+    <skill id="Crossbow" value="90" />
+    <skill id="Throwing" value="120" />
+    <skill id="Riding" value="220" />
+    <skill id="Athletics" value="220" />
+    <skill id="Crafting" value="80" />
+    <skill id="Scouting" value="180" />
+    <skill id="Tactics" value="245" />
+    <skill id="Roguery" value="70" />
+    <skill id="Charm" value="190" />
+    <skill id="Leadership" value="266" />
+    <skill id="Trade" value="140" />
+    <skill id="Steward" value="218" />
+    <skill id="Medicine" value="110" />
+    <skill id="Engineering" value="150" />
+  </SkillSet>
+  <SkillSet id="taom_gondor_matriarch_skills">
+    <skill id="OneHanded" value="50" />
+    <skill id="TwoHanded" value="25" />
+    <skill id="Polearm" value="40" />
+    <skill id="Bow" value="60" />
+    <skill id="Crossbow" value="40" />
+    <skill id="Throwing" value="40" />
+    <skill id="Riding" value="130" />
+    <skill id="Athletics" value="90" />
+    <skill id="Crafting" value="170" />
+    <skill id="Scouting" value="130" />
+    <skill id="Tactics" value="215" />
+    <skill id="Roguery" value="70" />
+    <skill id="Charm" value="285" />
+    <skill id="Leadership" value="246" />
+    <skill id="Trade" value="240" />
+    <skill id="Steward" value="293" />
+    <skill id="Medicine" value="245" />
+    <skill id="Engineering" value="160" />
+  </SkillSet>
+  <SkillSet id="taom_gondor_young_lady_skills">
+    <skill id="OneHanded" value="40" />
+    <skill id="TwoHanded" value="20" />
+    <skill id="Polearm" value="30" />
+    <skill id="Bow" value="70" />
+    <skill id="Crossbow" value="40" />
+    <skill id="Throwing" value="40" />
+    <skill id="Riding" value="120" />
+    <skill id="Athletics" value="100" />
+    <skill id="Crafting" value="110" />
+    <skill id="Scouting" value="90" />
+    <skill id="Tactics" value="125" />
+    <skill id="Roguery" value="50" />
+    <skill id="Charm" value="180" />
+    <skill id="Leadership" value="146" />
+    <skill id="Trade" value="130" />
+    <skill id="Steward" value="178" />
+    <skill id="Medicine" value="150" />
+    <skill id="Engineering" value="100" />
+  </SkillSet>
+  <SkillSet id="taom_gondor_young_lord_skills">
+    <skill id="OneHanded" value="160" />
+    <skill id="TwoHanded" value="120" />
+    <skill id="Polearm" value="140" />
+    <skill id="Bow" value="90" />
+    <skill id="Crossbow" value="70" />
+    <skill id="Throwing" value="100" />
+    <skill id="Riding" value="190" />
+    <skill id="Athletics" value="180" />
+    <skill id="Crafting" value="60" />
+    <skill id="Scouting" value="140" />
+    <skill id="Tactics" value="155" />
+    <skill id="Roguery" value="60" />
+    <skill id="Charm" value="140" />
+    <skill id="Leadership" value="146" />
+    <skill id="Trade" value="80" />
+    <skill id="Steward" value="118" />
+    <skill id="Medicine" value="80" />
     <skill id="Engineering" value="80" />
   </SkillSet>
   <SkillSet id="taom_haradrim_cav_skills">
@@ -2114,12 +2314,12 @@
     <skill id="Athletics" value="210" />
     <skill id="Crafting" value="190" />
     <skill id="Scouting" value="200" />
-    <skill id="Tactics" value="160" />
+    <skill id="Tactics" value="183" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="170" />
-    <skill id="Leadership" value="170" />
+    <skill id="Leadership" value="182" />
     <skill id="Trade" value="210" />
-    <skill id="Steward" value="200" />
+    <skill id="Steward" value="207" />
     <skill id="Medicine" value="150" />
     <skill id="Engineering" value="120" />
   </SkillSet>
@@ -2174,7 +2374,7 @@
     <skill id="Athletics" value="220" />
     <skill id="Crafting" value="80" />
     <skill id="Scouting" value="180" />
-    <skill id="Tactics" value="220" />
+    <skill id="Tactics" value="242" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="190" />
     <skill id="Leadership" value="240" />
@@ -2194,7 +2394,7 @@
     <skill id="Athletics" value="90" />
     <skill id="Crafting" value="170" />
     <skill id="Scouting" value="130" />
-    <skill id="Tactics" value="190" />
+    <skill id="Tactics" value="212" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="285" />
     <skill id="Leadership" value="220" />
@@ -2259,7 +2459,7 @@
     <skill id="Charm" value="180" />
     <skill id="Leadership" value="175" />
     <skill id="Trade" value="140" />
-    <skill id="Steward" value="200" />
+    <skill id="Steward" value="147" />
     <skill id="Medicine" value="90" />
     <skill id="Engineering" value="180" />
   </SkillSet>
@@ -2279,7 +2479,7 @@
     <skill id="Charm" value="130" />
     <skill id="Leadership" value="60" />
     <skill id="Trade" value="130" />
-    <skill id="Steward" value="180" />
+    <skill id="Steward" value="127" />
     <skill id="Medicine" value="120" />
     <skill id="Engineering" value="160" />
   </SkillSet>
@@ -2299,7 +2499,7 @@
     <skill id="Charm" value="120" />
     <skill id="Leadership" value="75" />
     <skill id="Trade" value="100" />
-    <skill id="Steward" value="130" />
+    <skill id="Steward" value="77" />
     <skill id="Medicine" value="70" />
     <skill id="Engineering" value="120" />
   </SkillSet>
@@ -2454,14 +2654,94 @@
     <skill id="Athletics" value="240" />
     <skill id="Crafting" value="70" />
     <skill id="Scouting" value="200" />
-    <skill id="Tactics" value="200" />
+    <skill id="Tactics" value="223" />
     <skill id="Roguery" value="70" />
     <skill id="Charm" value="180" />
-    <skill id="Leadership" value="200" />
+    <skill id="Leadership" value="212" />
     <skill id="Trade" value="110" />
-    <skill id="Steward" value="160" />
+    <skill id="Steward" value="167" />
     <skill id="Medicine" value="110" />
     <skill id="Engineering" value="100" />
+  </SkillSet>
+  <SkillSet id="taom_rohan_knight_skills">
+    <skill id="OneHanded" value="230" />
+    <skill id="TwoHanded" value="180" />
+    <skill id="Polearm" value="220" />
+    <skill id="Bow" value="100" />
+    <skill id="Crossbow" value="70" />
+    <skill id="Throwing" value="120" />
+    <skill id="Riding" value="250" />
+    <skill id="Athletics" value="240" />
+    <skill id="Crafting" value="60" />
+    <skill id="Scouting" value="140" />
+    <skill id="Tactics" value="203" />
+    <skill id="Roguery" value="60" />
+    <skill id="Charm" value="160" />
+    <skill id="Leadership" value="172" />
+    <skill id="Trade" value="90" />
+    <skill id="Steward" value="137" />
+    <skill id="Medicine" value="90" />
+    <skill id="Engineering" value="100" />
+  </SkillSet>
+  <SkillSet id="taom_rohan_lady_skills">
+    <skill id="OneHanded" value="60" />
+    <skill id="TwoHanded" value="30" />
+    <skill id="Polearm" value="50" />
+    <skill id="Bow" value="70" />
+    <skill id="Crossbow" value="50" />
+    <skill id="Throwing" value="50" />
+    <skill id="Riding" value="140" />
+    <skill id="Athletics" value="110" />
+    <skill id="Crafting" value="140" />
+    <skill id="Scouting" value="110" />
+    <skill id="Tactics" value="153" />
+    <skill id="Roguery" value="60" />
+    <skill id="Charm" value="240" />
+    <skill id="Leadership" value="172" />
+    <skill id="Trade" value="180" />
+    <skill id="Steward" value="247" />
+    <skill id="Medicine" value="210" />
+    <skill id="Engineering" value="130" />
+  </SkillSet>
+  <SkillSet id="taom_rohan_young_lady_skills">
+    <skill id="OneHanded" value="40" />
+    <skill id="TwoHanded" value="20" />
+    <skill id="Polearm" value="30" />
+    <skill id="Bow" value="70" />
+    <skill id="Crossbow" value="40" />
+    <skill id="Throwing" value="40" />
+    <skill id="Riding" value="120" />
+    <skill id="Athletics" value="100" />
+    <skill id="Crafting" value="110" />
+    <skill id="Scouting" value="90" />
+    <skill id="Tactics" value="123" />
+    <skill id="Roguery" value="50" />
+    <skill id="Charm" value="180" />
+    <skill id="Leadership" value="132" />
+    <skill id="Trade" value="130" />
+    <skill id="Steward" value="177" />
+    <skill id="Medicine" value="150" />
+    <skill id="Engineering" value="100" />
+  </SkillSet>
+  <SkillSet id="taom_rohan_young_lord_skills">
+    <skill id="OneHanded" value="160" />
+    <skill id="TwoHanded" value="120" />
+    <skill id="Polearm" value="140" />
+    <skill id="Bow" value="90" />
+    <skill id="Crossbow" value="70" />
+    <skill id="Throwing" value="100" />
+    <skill id="Riding" value="190" />
+    <skill id="Athletics" value="180" />
+    <skill id="Crafting" value="60" />
+    <skill id="Scouting" value="140" />
+    <skill id="Tactics" value="153" />
+    <skill id="Roguery" value="60" />
+    <skill id="Charm" value="140" />
+    <skill id="Leadership" value="132" />
+    <skill id="Trade" value="80" />
+    <skill id="Steward" value="117" />
+    <skill id="Medicine" value="80" />
+    <skill id="Engineering" value="80" />
   </SkillSet>
   <SkillSet id="taom_sauron_skills">
     <skill id="OneHanded" value="320" />
@@ -2494,12 +2774,12 @@
     <skill id="Athletics" value="240" />
     <skill id="Crafting" value="80" />
     <skill id="Scouting" value="180" />
-    <skill id="Tactics" value="210" />
+    <skill id="Tactics" value="233" />
     <skill id="Roguery" value="80" />
     <skill id="Charm" value="200" />
-    <skill id="Leadership" value="180" />
+    <skill id="Leadership" value="192" />
     <skill id="Trade" value="120" />
-    <skill id="Steward" value="190" />
+    <skill id="Steward" value="197" />
     <skill id="Medicine" value="170" />
     <skill id="Engineering" value="100" />
   </SkillSet>

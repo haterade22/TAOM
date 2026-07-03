@@ -1,5 +1,34 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-07-03
+
+### balance(lords): multi-culture Steward/Leadership/Tactics retune (#326)
+
+Second balance pass on lord army stats, to resolved-lord average targets (children/rookie-template
+lords excluded, per the established child treatment). Landed (resolved avg, target):
+
+- **Elves** (mirkwood/lothlórien/rivendell): Leadership +72, Tactics +61 on all elf archetype +
+  canonical sets — pooled resolved avg lands 299.8 Led / 300.2 Tac (per-culture 291–312 spread from
+  set-mix composition; the three cultures share the elf sets, so per-culture exactness would need
+  absurd per-canonical residuals).
+- **Gondor** 200/200/190 (S/L/T, exact): +8/+26/+25 across 34 canonical sets + `elder_lord` in place;
+  6 new `gondor_*` forks of the shared man sets (knight/lady/young_lady/young_lord/matriarch/lord).
+- **Erebor** 280/300/310 (exact): +73/+127/+140 on the 5 dwarf sets + canonical E1_2 — dwarves are now
+  the premier non-elf commanders.
+- **Rohan** 180/180/190 (exact): +7/+12/+23 on rider/shieldmaiden/horse_breeder + 18 canonicals;
+  4 `rohan_*` forks.
+- **Dale** Tactics 175 (exact): +22 on `dale_lord` + matriarch/lord (dale-only after the gondor forks)
+  + 4 `dale_*` forks (Tactics-only).
+- **North orcs** (gundabad/dolguldur/goblin/mistymountainorcs — misty included per user call):
+  Steward −53 on the north_orc trio + Bolgath — pooled resolved avg exactly 100 (per-culture 91–104).
+- Shared base sets (`taom_knight/lady/young_*/matriarch/lord`) are UNCHANGED for
+  shaghana/abanissa/rhun/harad/umbar/khand — verified byte-identical averages.
+- Mechanics: 14 new fork archetypes + 3 `archetype_alias` maps in the generator (145 sets total,
+  regen acceptance = exactly the planned cells); repoint script now syncs the FULL inline `<skills>`
+  block from `taom_lord_skill_sets.xml` for every managed-culture lord (replaces the hand-maintained
+  parity map; 187 template swaps, post-condition + idempotency PASS).
+- **Save-compat:** hero skills bake at creation — NEW campaigns only.
+
 ## 2026-07-02
 
 ### content(lords): elf lord expansion — Lothlórien 10 adults (+2 new clans), Rivendell 20 adults (#324)

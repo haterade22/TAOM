@@ -28,7 +28,7 @@ TRAIT_ORDER = ['Honor','Generosity','Calculating','Mercy','Valor','Egalitarian',
 # ============================================================================
 BASE_ARCHETYPES = {
     'lord':         dict(skills=dict(OneHanded=220,TwoHanded=160,Polearm=210,Bow=120,Crossbow=90,Throwing=120,
-                                     Riding=220,Athletics=220,Crafting=80,Scouting=180,Tactics=220,Roguery=70,
+                                     Riding=220,Athletics=220,Crafting=80,Scouting=180,Tactics=242,Roguery=70,
                                      Charm=190,Leadership=240,Trade=140,Steward=210,Medicine=110,Engineering=150),
                          traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=1)),
     'knight':       dict(skills=dict(OneHanded=230,TwoHanded=180,Polearm=220,Bow=100,Crossbow=70,Throwing=120,
@@ -44,12 +44,12 @@ BASE_ARCHETYPES = {
                                      Charm=240,Leadership=160,Trade=180,Steward=240,Medicine=210,Engineering=130),
                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
     'matriarch':    dict(skills=dict(OneHanded=50,TwoHanded=25,Polearm=40,Bow=60,Crossbow=40,Throwing=40,
-                                     Riding=130,Athletics=90,Crafting=170,Scouting=130,Tactics=190,Roguery=70,
+                                     Riding=130,Athletics=90,Crafting=170,Scouting=130,Tactics=212,Roguery=70,
                                      Charm=285,Leadership=220,Trade=240,Steward=285,Medicine=245,Engineering=160),
                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=1)),
     'elder_lord':   dict(skills=dict(OneHanded=200,TwoHanded=150,Polearm=190,Bow=90,Crossbow=70,Throwing=90,
-                                     Riding=180,Athletics=160,Crafting=110,Scouting=180,Tactics=270,Roguery=80,
-                                     Charm=220,Leadership=260,Trade=180,Steward=240,Medicine=160,Engineering=190),
+                                     Riding=180,Athletics=160,Crafting=110,Scouting=180,Tactics=295,Roguery=80,
+                                     Charm=220,Leadership=286,Trade=180,Steward=248,Medicine=160,Engineering=190),
                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=2,Authoritarian=1)),
     'young_lord':   dict(skills=dict(OneHanded=160,TwoHanded=120,Polearm=140,Bow=90,Crossbow=70,Throwing=100,
                                      Riding=190,Athletics=180,Crafting=60,Scouting=140,Tactics=130,Roguery=60,
@@ -70,21 +70,21 @@ BASE_ARCHETYPES = {
 
     # ROHAN-SPECIFIC
     'rider':        dict(skills=dict(OneHanded=240,TwoHanded=180,Polearm=255,Bow=140,Crossbow=40,Throwing=130,
-                                     Riding=270,Athletics=240,Crafting=70,Scouting=200,Tactics=200,Roguery=70,
-                                     Charm=180,Leadership=200,Trade=110,Steward=160,Medicine=110,Engineering=100),
+                                     Riding=270,Athletics=240,Crafting=70,Scouting=200,Tactics=223,Roguery=70,
+                                     Charm=180,Leadership=212,Trade=110,Steward=167,Medicine=110,Engineering=100),
                          traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
     'shieldmaiden': dict(skills=dict(OneHanded=240,TwoHanded=200,Polearm=225,Bow=150,Crossbow=60,Throwing=140,
-                                     Riding=255,Athletics=240,Crafting=80,Scouting=180,Tactics=210,Roguery=80,
-                                     Charm=200,Leadership=180,Trade=120,Steward=190,Medicine=170,Engineering=100),
+                                     Riding=255,Athletics=240,Crafting=80,Scouting=180,Tactics=233,Roguery=80,
+                                     Charm=200,Leadership=192,Trade=120,Steward=197,Medicine=170,Engineering=100),
                          traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
     'horse_breeder':dict(skills=dict(OneHanded=170,TwoHanded=120,Polearm=180,Bow=130,Crossbow=40,Throwing=110,
-                                     Riding=290,Athletics=210,Crafting=190,Scouting=200,Tactics=160,Roguery=80,
-                                     Charm=170,Leadership=170,Trade=210,Steward=200,Medicine=150,Engineering=120),
+                                     Riding=290,Athletics=210,Crafting=190,Scouting=200,Tactics=183,Roguery=80,
+                                     Charm=170,Leadership=182,Trade=210,Steward=207,Medicine=150,Engineering=120),
                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=1,Valor=1,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
 
     # DALE / NORTHMEN — Bowman culture (Bard's line)
     'dale_lord':    dict(skills=dict(OneHanded=215,TwoHanded=155,Polearm=205,Bow=260,Crossbow=120,Throwing=170,
-                                     Riding=215,Athletics=240,Crafting=110,Scouting=230,Tactics=220,Roguery=80,
+                                     Riding=215,Athletics=240,Crafting=110,Scouting=230,Tactics=242,Roguery=80,
                                      Charm=200,Leadership=235,Trade=210,Steward=215,Medicine=140,Engineering=170),
                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
     'dale_bowman':  dict(skills=dict(OneHanded=190,TwoHanded=130,Polearm=170,Bow=270,Crossbow=140,Throwing=170,
@@ -94,54 +94,54 @@ BASE_ARCHETYPES = {
 
     # DWARVES — Heavy melee, high Smithing/Crafting/Engineering, slow but tough
     'dwarf_king':   dict(skills=dict(OneHanded=275,TwoHanded=280,Polearm=240,Bow=130,Crossbow=180,Throwing=140,
-                                     Riding=150,Athletics=250,Crafting=275,Scouting=180,Tactics=265,Roguery=80,
-                                     Charm=230,Leadership=290,Trade=240,Steward=275,Medicine=170,Engineering=275),
+                                     Riding=150,Athletics=250,Crafting=275,Scouting=180,Tactics=405,Roguery=80,
+                                     Charm=230,Leadership=417,Trade=240,Steward=348,Medicine=170,Engineering=275),
                          traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=2,Authoritarian=1)),
     'dwarf_lord':   dict(skills=dict(OneHanded=240,TwoHanded=255,Polearm=215,Bow=110,Crossbow=160,Throwing=130,
-                                     Riding=130,Athletics=225,Crafting=240,Scouting=170,Tactics=215,Roguery=70,
-                                     Charm=190,Leadership=225,Trade=200,Steward=220,Medicine=150,Engineering=240),
+                                     Riding=130,Athletics=225,Crafting=240,Scouting=170,Tactics=355,Roguery=70,
+                                     Charm=190,Leadership=352,Trade=200,Steward=293,Medicine=150,Engineering=240),
                          traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=2,Authoritarian=1)),
     'dwarf_warrior':dict(skills=dict(OneHanded=235,TwoHanded=265,Polearm=200,Bow=100,Crossbow=140,Throwing=130,
-                                     Riding=120,Athletics=240,Crafting=180,Scouting=160,Tactics=180,Roguery=70,
-                                     Charm=140,Leadership=155,Trade=130,Steward=160,Medicine=110,Engineering=180),
+                                     Riding=120,Athletics=240,Crafting=180,Scouting=160,Tactics=320,Roguery=70,
+                                     Charm=140,Leadership=282,Trade=130,Steward=233,Medicine=110,Engineering=180),
                          traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=0)),
     'dwarf_lady':   dict(skills=dict(OneHanded=140,TwoHanded=130,Polearm=110,Bow=80,Crossbow=110,Throwing=90,
-                                     Riding=100,Athletics=170,Crafting=255,Scouting=140,Tactics=170,Roguery=70,
-                                     Charm=240,Leadership=190,Trade=220,Steward=260,Medicine=220,Engineering=200),
+                                     Riding=100,Athletics=170,Crafting=255,Scouting=140,Tactics=310,Roguery=70,
+                                     Charm=240,Leadership=317,Trade=220,Steward=333,Medicine=220,Engineering=200),
                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
     'dwarf_young':  dict(skills=dict(OneHanded=170,TwoHanded=190,Polearm=150,Bow=80,Crossbow=130,Throwing=100,
-                                     Riding=110,Athletics=200,Crafting=170,Scouting=140,Tactics=140,Roguery=60,
-                                     Charm=140,Leadership=130,Trade=140,Steward=150,Medicine=110,Engineering=160),
+                                     Riding=110,Athletics=200,Crafting=170,Scouting=140,Tactics=280,Roguery=60,
+                                     Charm=140,Leadership=257,Trade=140,Steward=223,Medicine=110,Engineering=160),
                          traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=0)),
 
     # ELVES — Centuries of mastery; combat + diplomacy + crafting all high
     'elf_king':     dict(skills=dict(OneHanded=290,TwoHanded=250,Polearm=295,Bow=295,Crossbow=200,Throwing=210,
-                                     Riding=280,Athletics=290,Crafting=270,Scouting=290,Tactics=290,Roguery=120,
-                                     Charm=285,Leadership=290,Trade=240,Steward=385,Medicine=275,Engineering=240),
+                                     Riding=280,Athletics=290,Crafting=270,Scouting=290,Tactics=351,Roguery=120,
+                                     Charm=285,Leadership=362,Trade=240,Steward=385,Medicine=275,Engineering=240),
                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=2,Authoritarian=1)),
     'elf_lord':     dict(skills=dict(OneHanded=270,TwoHanded=230,Polearm=265,Bow=275,Crossbow=180,Throwing=190,
-                                     Riding=255,Athletics=280,Crafting=240,Scouting=270,Tactics=265,Roguery=110,
-                                     Charm=250,Leadership=255,Trade=200,Steward=355,Medicine=240,Engineering=210),
+                                     Riding=255,Athletics=280,Crafting=240,Scouting=270,Tactics=326,Roguery=110,
+                                     Charm=250,Leadership=327,Trade=200,Steward=355,Medicine=240,Engineering=210),
                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
     'elf_warrior':  dict(skills=dict(OneHanded=275,TwoHanded=240,Polearm=275,Bow=265,Crossbow=170,Throwing=190,
-                                     Riding=240,Athletics=285,Crafting=170,Scouting=255,Tactics=240,Roguery=110,
-                                     Charm=210,Leadership=220,Trade=160,Steward=300,Medicine=190,Engineering=170),
+                                     Riding=240,Athletics=285,Crafting=170,Scouting=255,Tactics=301,Roguery=110,
+                                     Charm=210,Leadership=292,Trade=160,Steward=300,Medicine=190,Engineering=170),
                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
     'elf_archer':   dict(skills=dict(OneHanded=235,TwoHanded=180,Polearm=240,Bow=295,Crossbow=190,Throwing=210,
-                                     Riding=220,Athletics=290,Crafting=180,Scouting=290,Tactics=240,Roguery=110,
-                                     Charm=220,Leadership=210,Trade=160,Steward=300,Medicine=190,Engineering=160),
+                                     Riding=220,Athletics=290,Crafting=180,Scouting=290,Tactics=301,Roguery=110,
+                                     Charm=220,Leadership=282,Trade=160,Steward=300,Medicine=190,Engineering=160),
                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
     'elf_lady':     dict(skills=dict(OneHanded=180,TwoHanded=130,Polearm=170,Bow=220,Crossbow=150,Throwing=150,
-                                     Riding=210,Athletics=230,Crafting=240,Scouting=210,Tactics=210,Roguery=80,
-                                     Charm=270,Leadership=200,Trade=220,Steward=365,Medicine=260,Engineering=190),
+                                     Riding=210,Athletics=230,Crafting=240,Scouting=210,Tactics=271,Roguery=80,
+                                     Charm=270,Leadership=272,Trade=220,Steward=365,Medicine=260,Engineering=190),
                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
     'elf_queen':    dict(skills=dict(OneHanded=240,TwoHanded=200,Polearm=240,Bow=270,Crossbow=190,Throwing=200,
-                                     Riding=260,Athletics=270,Crafting=275,Scouting=265,Tactics=290,Roguery=110,
-                                     Charm=295,Leadership=290,Trade=265,Steward=390,Medicine=285,Engineering=230),
+                                     Riding=260,Athletics=270,Crafting=275,Scouting=265,Tactics=351,Roguery=110,
+                                     Charm=295,Leadership=362,Trade=265,Steward=390,Medicine=285,Engineering=230),
                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=2,Authoritarian=1)),
     'elf_young':    dict(skills=dict(OneHanded=210,TwoHanded=160,Polearm=200,Bow=230,Crossbow=140,Throwing=160,
-                                     Riding=210,Athletics=240,Crafting=170,Scouting=220,Tactics=190,Roguery=90,
-                                     Charm=200,Leadership=180,Trade=170,Steward=290,Medicine=180,Engineering=170),
+                                     Riding=210,Athletics=240,Crafting=170,Scouting=220,Tactics=251,Roguery=90,
+                                     Charm=200,Leadership=252,Trade=170,Steward=290,Medicine=180,Engineering=170),
                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
 
     # ORCS / URUKS — Brutal combat, low diplomacy/mercy
@@ -177,15 +177,15 @@ BASE_ARCHETYPES = {
     # is identical to the parent archetype.
     'north_orc_chieftain':dict(skills=dict(OneHanded=275,TwoHanded=265,Polearm=240,Bow=170,Crossbow=110,Throwing=190,
                                      Riding=190,Athletics=265,Crafting=140,Scouting=240,Tactics=255,Roguery=240,
-                                     Charm=180,Leadership=175,Trade=140,Steward=200,Medicine=90,Engineering=180),
+                                     Charm=180,Leadership=175,Trade=140,Steward=147,Medicine=90,Engineering=180),
                          traits=dict(Honor=-2,Generosity=-1,Calculating=2,Mercy=-2,Valor=2,Egalitarian=-1,Oligarchic=1,Authoritarian=2)),
     'north_orc_warrior':dict(skills=dict(OneHanded=235,TwoHanded=220,Polearm=215,Bow=140,Crossbow=90,Throwing=160,
                                      Riding=150,Athletics=240,Crafting=110,Scouting=200,Tactics=180,Roguery=200,
-                                     Charm=120,Leadership=75,Trade=100,Steward=130,Medicine=70,Engineering=120),
+                                     Charm=120,Leadership=75,Trade=100,Steward=77,Medicine=70,Engineering=120),
                          traits=dict(Honor=-2,Generosity=-2,Calculating=1,Mercy=-2,Valor=2,Egalitarian=-1,Oligarchic=0,Authoritarian=1)),
     'north_orc_female': dict(skills=dict(OneHanded=170,TwoHanded=160,Polearm=160,Bow=160,Crossbow=110,Throwing=140,
                                      Riding=110,Athletics=200,Crafting=180,Scouting=170,Tactics=160,Roguery=210,
-                                     Charm=130,Leadership=60,Trade=130,Steward=180,Medicine=120,Engineering=160),
+                                     Charm=130,Leadership=60,Trade=130,Steward=127,Medicine=120,Engineering=160),
                          traits=dict(Honor=-2,Generosity=-2,Calculating=2,Mercy=-2,Valor=1,Egalitarian=-1,Oligarchic=0,Authoritarian=1)),
     'nazgul':       dict(skills=dict(OneHanded=290,TwoHanded=270,Polearm=290,Bow=210,Crossbow=180,Throwing=210,
                                      Riding=290,Athletics=285,Crafting=210,Scouting=290,Tactics=295,Roguery=290,
@@ -295,6 +295,38 @@ BASE_ARCHETYPES = {
                                         Riding=170,Athletics=255,Crafting=140,Scouting=230,Tactics=225,Roguery=240,
                                         Charm=200,Leadership=215,Trade=220,Steward=200,Medicine=130,Engineering=180),
                             traits=dict(Honor=-1,Generosity=0,Calculating=2,Mercy=-1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=1)),
+
+    # 2026-07-03 retune forks — per-culture variants of shared man archetypes
+    # (gondor S+8/L+26/T+25, dale T+22, rohan S+7/L+12/T+23); resolved via
+    # archetype_alias; base sets stay for shaghana/abanissa/rhun/harad/umbar/khand.
+    'gondor_knight': dict(skills=dict(OneHanded=230,TwoHanded=180,Polearm=220,Bow=100,Crossbow=70,Throwing=120,Riding=250,Athletics=240,Crafting=60,Scouting=140,Tactics=205,Roguery=60,Charm=160,Leadership=186,Trade=90,Steward=138,Medicine=90,Engineering=100),
+                   traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=0)),
+    'gondor_lady': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=70,Crossbow=50,Throwing=50,Riding=140,Athletics=110,Crafting=140,Scouting=110,Tactics=155,Roguery=60,Charm=240,Leadership=186,Trade=180,Steward=248,Medicine=210,Engineering=130),
+                   traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
+    'gondor_young_lady': dict(skills=dict(OneHanded=40,TwoHanded=20,Polearm=30,Bow=70,Crossbow=40,Throwing=40,Riding=120,Athletics=100,Crafting=110,Scouting=90,Tactics=125,Roguery=50,Charm=180,Leadership=146,Trade=130,Steward=178,Medicine=150,Engineering=100),
+                   traits=dict(Honor=1,Generosity=1,Calculating=1,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
+    'gondor_young_lord': dict(skills=dict(OneHanded=160,TwoHanded=120,Polearm=140,Bow=90,Crossbow=70,Throwing=100,Riding=190,Athletics=180,Crafting=60,Scouting=140,Tactics=155,Roguery=60,Charm=140,Leadership=146,Trade=80,Steward=118,Medicine=80,Engineering=80),
+                   traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=0)),
+    'gondor_matriarch': dict(skills=dict(OneHanded=50,TwoHanded=25,Polearm=40,Bow=60,Crossbow=40,Throwing=40,Riding=130,Athletics=90,Crafting=170,Scouting=130,Tactics=215,Roguery=70,Charm=285,Leadership=246,Trade=240,Steward=293,Medicine=245,Engineering=160),
+                   traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=1)),
+    'gondor_lord': dict(skills=dict(OneHanded=220,TwoHanded=160,Polearm=210,Bow=120,Crossbow=90,Throwing=120,Riding=220,Athletics=220,Crafting=80,Scouting=180,Tactics=245,Roguery=70,Charm=190,Leadership=266,Trade=140,Steward=218,Medicine=110,Engineering=150),
+                   traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=1)),
+    'dale_knight': dict(skills=dict(OneHanded=230,TwoHanded=180,Polearm=220,Bow=100,Crossbow=70,Throwing=120,Riding=250,Athletics=240,Crafting=60,Scouting=140,Tactics=202,Roguery=60,Charm=160,Leadership=160,Trade=90,Steward=130,Medicine=90,Engineering=100),
+                   traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=0)),
+    'dale_lady': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=70,Crossbow=50,Throwing=50,Riding=140,Athletics=110,Crafting=140,Scouting=110,Tactics=152,Roguery=60,Charm=240,Leadership=160,Trade=180,Steward=240,Medicine=210,Engineering=130),
+                   traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
+    'dale_young_lady': dict(skills=dict(OneHanded=40,TwoHanded=20,Polearm=30,Bow=70,Crossbow=40,Throwing=40,Riding=120,Athletics=100,Crafting=110,Scouting=90,Tactics=122,Roguery=50,Charm=180,Leadership=120,Trade=130,Steward=170,Medicine=150,Engineering=100),
+                   traits=dict(Honor=1,Generosity=1,Calculating=1,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
+    'dale_young_lord': dict(skills=dict(OneHanded=160,TwoHanded=120,Polearm=140,Bow=90,Crossbow=70,Throwing=100,Riding=190,Athletics=180,Crafting=60,Scouting=140,Tactics=152,Roguery=60,Charm=140,Leadership=120,Trade=80,Steward=110,Medicine=80,Engineering=80),
+                   traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=0)),
+    'rohan_knight': dict(skills=dict(OneHanded=230,TwoHanded=180,Polearm=220,Bow=100,Crossbow=70,Throwing=120,Riding=250,Athletics=240,Crafting=60,Scouting=140,Tactics=203,Roguery=60,Charm=160,Leadership=172,Trade=90,Steward=137,Medicine=90,Engineering=100),
+                   traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=0)),
+    'rohan_lady': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=70,Crossbow=50,Throwing=50,Riding=140,Athletics=110,Crafting=140,Scouting=110,Tactics=153,Roguery=60,Charm=240,Leadership=172,Trade=180,Steward=247,Medicine=210,Engineering=130),
+                   traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
+    'rohan_young_lady': dict(skills=dict(OneHanded=40,TwoHanded=20,Polearm=30,Bow=70,Crossbow=40,Throwing=40,Riding=120,Athletics=100,Crafting=110,Scouting=90,Tactics=123,Roguery=50,Charm=180,Leadership=132,Trade=130,Steward=177,Medicine=150,Engineering=100),
+                   traits=dict(Honor=1,Generosity=1,Calculating=1,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
+    'rohan_young_lord': dict(skills=dict(OneHanded=160,TwoHanded=120,Polearm=140,Bow=90,Crossbow=70,Throwing=100,Riding=190,Athletics=180,Crafting=60,Scouting=140,Tactics=153,Roguery=60,Charm=140,Leadership=132,Trade=80,Steward=117,Medicine=80,Engineering=80),
+                   traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=0)),
 }
 
 
@@ -306,6 +338,13 @@ CULTURES = {
     # GONDOR — Men of the West
     # ====================================================================
     'gondor': {
+        # 2026-07-03 retune: resolve shared man archetypes to gondor variants
+        'archetype_alias': {'knight': 'gondor_knight',
+                            'lady': 'gondor_lady',
+                            'young_lady': 'gondor_young_lady',
+                            'young_lord': 'gondor_young_lord',
+                            'matriarch': 'gondor_matriarch',
+                            'lord': 'gondor_lord'},
         'culture_id': 'gondor',
         'lore_name': 'Gondor',
         'race': 'man',
@@ -318,89 +357,89 @@ CULTURES = {
         ],
         'canonical': {
             # Stewards
-            'lord_1_7': dict(skills=dict(OneHanded=170,TwoHanded=120,Polearm=150,Bow=130,Crossbow=110,Throwing=100,Riding=190,Athletics=187,Crafting=187,Scouting=187,Tactics=255,Roguery=187,Charm=255,Leadership=290,Trade=225,Steward=310,Medicine=187,Engineering=235),
+            'lord_1_7': dict(skills=dict(OneHanded=170,TwoHanded=120,Polearm=150,Bow=130,Crossbow=110,Throwing=100,Riding=190,Athletics=187,Crafting=187,Scouting=187,Tactics=280,Roguery=187,Charm=255,Leadership=316,Trade=225,Steward=318,Medicine=187,Engineering=235),
                           traits=dict(Honor=1,Generosity=0,Calculating=2,Mercy=-1,Valor=1,Egalitarian=-1,Oligarchic=2,Authoritarian=2)),  # Denethor
-            'lord_1_75': dict(skills=dict(OneHanded=325,TwoHanded=210,Polearm=290,Bow=210,Crossbow=210,Throwing=210,Riding=210,Athletics=315,Crafting=210,Scouting=210,Tactics=295,Roguery=210,Charm=210,Leadership=310,Trade=210,Steward=210,Medicine=210,Engineering=210),
+            'lord_1_75': dict(skills=dict(OneHanded=325,TwoHanded=210,Polearm=290,Bow=210,Crossbow=210,Throwing=210,Riding=210,Athletics=315,Crafting=210,Scouting=210,Tactics=320,Roguery=210,Charm=210,Leadership=336,Trade=210,Steward=218,Medicine=210,Engineering=210),
                           traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),  # Boromir
-            'lord_1_34': dict(skills=dict(OneHanded=250,TwoHanded=186,Polearm=189,Bow=310,Crossbow=189,Throwing=189,Riding=189,Athletics=280,Crafting=189,Scouting=300,Tactics=295,Roguery=189,Charm=255,Leadership=189,Trade=189,Steward=189,Medicine=189,Engineering=189),
+            'lord_1_34': dict(skills=dict(OneHanded=250,TwoHanded=186,Polearm=189,Bow=310,Crossbow=189,Throwing=189,Riding=189,Athletics=280,Crafting=189,Scouting=300,Tactics=320,Roguery=189,Charm=255,Leadership=215,Trade=189,Steward=197,Medicine=189,Engineering=189),
                           traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=2,Oligarchic=0,Authoritarian=-1)),  # Faramir
-            'lord_1_8':  dict(skills=dict(OneHanded=130,TwoHanded=90,Polearm=110,Bow=80,Crossbow=70,Throwing=70,Riding=170,Athletics=140,Crafting=160,Scouting=150,Tactics=230,Roguery=80,Charm=250,Leadership=210,Trade=230,Steward=275,Medicine=180,Engineering=210),
+            'lord_1_8':  dict(skills=dict(OneHanded=130,TwoHanded=90,Polearm=110,Bow=80,Crossbow=70,Throwing=70,Riding=170,Athletics=140,Crafting=160,Scouting=150,Tactics=255,Roguery=80,Charm=250,Leadership=236,Trade=230,Steward=283,Medicine=180,Engineering=210),
                           traits=dict(Honor=2,Generosity=1,Calculating=2,Mercy=1,Valor=1,Egalitarian=0,Oligarchic=2,Authoritarian=1)),  # Hurioneth
-            'lord_1_44': dict(skills=dict(OneHanded=260,TwoHanded=210,Polearm=250,Bow=110,Crossbow=90,Throwing=120,Riding=180,Athletics=250,Crafting=80,Scouting=160,Tactics=220,Roguery=70,Charm=170,Leadership=210,Trade=100,Steward=170,Medicine=110,Engineering=130),
+            'lord_1_44': dict(skills=dict(OneHanded=260,TwoHanded=210,Polearm=250,Bow=110,Crossbow=90,Throwing=120,Riding=180,Athletics=250,Crafting=80,Scouting=160,Tactics=245,Roguery=70,Charm=170,Leadership=236,Trade=100,Steward=178,Medicine=110,Engineering=130),
                           traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=2)),  # Nemos
             # Dol Amroth
-            'lord_1_9':  dict(skills=dict(OneHanded=285,TwoHanded=209,Polearm=295,Bow=203,Crossbow=203,Throwing=203,Riding=320,Athletics=203,Crafting=203,Scouting=203,Tactics=203,Roguery=203,Charm=280,Leadership=300,Trade=203,Steward=203,Medicine=203,Engineering=203),
+            'lord_1_9':  dict(skills=dict(OneHanded=285,TwoHanded=209,Polearm=295,Bow=203,Crossbow=203,Throwing=203,Riding=320,Athletics=203,Crafting=203,Scouting=203,Tactics=228,Roguery=203,Charm=280,Leadership=326,Trade=203,Steward=211,Medicine=203,Engineering=203),
                           traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),  # Imrahil
-            'lord_1_9_5': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=70,Crossbow=50,Throwing=50,Riding=160,Athletics=110,Crafting=180,Scouting=140,Tactics=210,Roguery=80,Charm=295,Leadership=240,Trade=250,Steward=295,Medicine=260,Engineering=170),
+            'lord_1_9_5': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=70,Crossbow=50,Throwing=50,Riding=160,Athletics=110,Crafting=180,Scouting=140,Tactics=235,Roguery=80,Charm=295,Leadership=266,Trade=250,Steward=303,Medicine=260,Engineering=170),
                           traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Lothwen
-            'lord_1_25': dict(skills=dict(OneHanded=265,TwoHanded=190,Polearm=250,Bow=140,Crossbow=100,Throwing=140,Riding=285,Athletics=255,Crafting=80,Scouting=180,Tactics=230,Roguery=70,Charm=210,Leadership=235,Trade=140,Steward=200,Medicine=130,Engineering=140),
+            'lord_1_25': dict(skills=dict(OneHanded=265,TwoHanded=190,Polearm=250,Bow=140,Crossbow=100,Throwing=140,Riding=285,Athletics=255,Crafting=80,Scouting=180,Tactics=255,Roguery=70,Charm=210,Leadership=261,Trade=140,Steward=208,Medicine=130,Engineering=140),
                           traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),  # Elphir
-            'lord_1_35': dict(skills=dict(OneHanded=250,TwoHanded=200,Polearm=235,Bow=140,Crossbow=100,Throwing=150,Riding=270,Athletics=245,Crafting=70,Scouting=170,Tactics=200,Roguery=80,Charm=180,Leadership=190,Trade=110,Steward=150,Medicine=110,Engineering=110),
+            'lord_1_35': dict(skills=dict(OneHanded=250,TwoHanded=200,Polearm=235,Bow=140,Crossbow=100,Throwing=150,Riding=270,Athletics=245,Crafting=70,Scouting=170,Tactics=225,Roguery=80,Charm=180,Leadership=216,Trade=110,Steward=158,Medicine=110,Engineering=110),
                           traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=0)),  # Erchirion
-            'lord_1_24': dict(skills=dict(OneHanded=210,TwoHanded=170,Polearm=195,Bow=130,Crossbow=80,Throwing=120,Riding=240,Athletics=230,Crafting=70,Scouting=150,Tactics=170,Roguery=70,Charm=180,Leadership=160,Trade=100,Steward=140,Medicine=100,Engineering=100),
+            'lord_1_24': dict(skills=dict(OneHanded=210,TwoHanded=170,Polearm=195,Bow=130,Crossbow=80,Throwing=120,Riding=240,Athletics=230,Crafting=70,Scouting=150,Tactics=195,Roguery=70,Charm=180,Leadership=186,Trade=100,Steward=148,Medicine=100,Engineering=100),
                           traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Amrothos
-            'lord_1_10': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=150,Athletics=110,Crafting=150,Scouting=120,Tactics=160,Roguery=70,Charm=255,Leadership=180,Trade=200,Steward=255,Medicine=215,Engineering=150),
+            'lord_1_10': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=150,Athletics=110,Crafting=150,Scouting=120,Tactics=185,Roguery=70,Charm=255,Leadership=206,Trade=200,Steward=263,Medicine=215,Engineering=150),
                           traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Aranel
-            'lord_1_23': dict(skills=dict(OneHanded=70,TwoHanded=40,Polearm=60,Bow=90,Crossbow=70,Throwing=60,Riding=160,Athletics=130,Crafting=130,Scouting=130,Tactics=140,Roguery=60,Charm=230,Leadership=170,Trade=180,Steward=235,Medicine=210,Engineering=130),
+            'lord_1_23': dict(skills=dict(OneHanded=70,TwoHanded=40,Polearm=60,Bow=90,Crossbow=70,Throwing=60,Riding=160,Athletics=130,Crafting=130,Scouting=130,Tactics=165,Roguery=60,Charm=230,Leadership=196,Trade=180,Steward=243,Medicine=210,Engineering=130),
                           traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Caladwen
             # Earnurionath
-            'lord_1_11': dict(skills=dict(OneHanded=235,TwoHanded=185,Polearm=225,Bow=160,Crossbow=120,Throwing=140,Riding=215,Athletics=225,Crafting=110,Scouting=250,Tactics=255,Roguery=110,Charm=190,Leadership=240,Trade=140,Steward=215,Medicine=150,Engineering=180),
+            'lord_1_11': dict(skills=dict(OneHanded=235,TwoHanded=185,Polearm=225,Bow=160,Crossbow=120,Throwing=140,Riding=215,Athletics=225,Crafting=110,Scouting=250,Tactics=280,Roguery=110,Charm=190,Leadership=266,Trade=140,Steward=223,Medicine=150,Engineering=180),
                           traits=dict(Honor=2,Generosity=1,Calculating=2,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=1)),  # Ciryandur
-            'lord_1_111': dict(skills=dict(OneHanded=80,TwoHanded=50,Polearm=70,Bow=110,Crossbow=80,Throwing=70,Riding=170,Athletics=150,Crafting=170,Scouting=160,Tactics=160,Roguery=80,Charm=220,Leadership=180,Trade=200,Steward=240,Medicine=220,Engineering=160),
+            'lord_1_111': dict(skills=dict(OneHanded=80,TwoHanded=50,Polearm=70,Bow=110,Crossbow=80,Throwing=70,Riding=170,Athletics=150,Crafting=170,Scouting=160,Tactics=185,Roguery=80,Charm=220,Leadership=206,Trade=200,Steward=248,Medicine=220,Engineering=160),
                           traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=1,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Elarwen
-            'lord_1_12': dict(skills=dict(OneHanded=70,TwoHanded=40,Polearm=60,Bow=110,Crossbow=80,Throwing=60,Riding=170,Athletics=140,Crafting=160,Scouting=170,Tactics=170,Roguery=70,Charm=215,Leadership=170,Trade=180,Steward=235,Medicine=210,Engineering=150),
+            'lord_1_12': dict(skills=dict(OneHanded=70,TwoHanded=40,Polearm=60,Bow=110,Crossbow=80,Throwing=60,Riding=170,Athletics=140,Crafting=160,Scouting=170,Tactics=195,Roguery=70,Charm=215,Leadership=196,Trade=180,Steward=243,Medicine=210,Engineering=150),
                           traits=dict(Honor=2,Generosity=1,Calculating=2,Mercy=1,Valor=1,Egalitarian=0,Oligarchic=1,Authoritarian=0)),  # Findariel
-            'lord_1_26': dict(skills=dict(OneHanded=170,TwoHanded=110,Polearm=150,Bow=160,Crossbow=100,Throwing=120,Riding=285,Athletics=255,Crafting=70,Scouting=275,Tactics=170,Roguery=120,Charm=160,Leadership=150,Trade=140,Steward=130,Medicine=100,Engineering=90),
+            'lord_1_26': dict(skills=dict(OneHanded=170,TwoHanded=110,Polearm=150,Bow=160,Crossbow=100,Throwing=120,Riding=285,Athletics=255,Crafting=70,Scouting=275,Tactics=195,Roguery=120,Charm=160,Leadership=176,Trade=140,Steward=138,Medicine=100,Engineering=90),
                           traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Hirgon
             # Barahirionath
-            'lord_1_40': dict(skills=dict(OneHanded=180,TwoHanded=130,Polearm=170,Bow=110,Crossbow=90,Throwing=100,Riding=160,Athletics=140,Crafting=120,Scouting=170,Tactics=265,Roguery=80,Charm=235,Leadership=255,Trade=200,Steward=255,Medicine=170,Engineering=200),
+            'lord_1_40': dict(skills=dict(OneHanded=180,TwoHanded=130,Polearm=170,Bow=110,Crossbow=90,Throwing=100,Riding=160,Athletics=140,Crafting=120,Scouting=170,Tactics=290,Roguery=80,Charm=235,Leadership=281,Trade=200,Steward=263,Medicine=170,Engineering=200),
                           traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=1,Valor=1,Egalitarian=0,Oligarchic=2,Authoritarian=1)),  # Borhador
-            'lord_1_40_1': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=160,Athletics=120,Crafting=170,Scouting=140,Tactics=180,Roguery=70,Charm=255,Leadership=200,Trade=220,Steward=265,Medicine=230,Engineering=160),
+            'lord_1_40_1': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=160,Athletics=120,Crafting=170,Scouting=140,Tactics=205,Roguery=70,Charm=255,Leadership=226,Trade=220,Steward=273,Medicine=230,Engineering=160),
                           traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Lindariel
             'lord_1_46': dict(archetype='lord'),  # Malrior
-            'lord_1_46_1': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=140,Athletics=110,Crafting=140,Scouting=110,Tactics=140,Roguery=60,Charm=215,Leadership=160,Trade=185,Steward=235,Medicine=200,Engineering=140),
+            'lord_1_46_1': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=140,Athletics=110,Crafting=140,Scouting=110,Tactics=165,Roguery=60,Charm=215,Leadership=186,Trade=185,Steward=243,Medicine=200,Engineering=140),
                           traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=1,Valor=0,Egalitarian=0,Oligarchic=1,Authoritarian=1)),  # Thorwen
             # Lossarnach
-            'lord_1_45': dict(skills=dict(OneHanded=240,TwoHanded=295,Polearm=200,Bow=194,Crossbow=194,Throwing=194,Riding=194,Athletics=194,Crafting=194,Scouting=194,Tactics=194,Roguery=194,Charm=194,Leadership=285,Trade=194,Steward=258,Medicine=194,Engineering=194),
+            'lord_1_45': dict(skills=dict(OneHanded=240,TwoHanded=295,Polearm=200,Bow=194,Crossbow=194,Throwing=194,Riding=194,Athletics=194,Crafting=194,Scouting=194,Tactics=219,Roguery=194,Charm=194,Leadership=311,Trade=194,Steward=266,Medicine=194,Engineering=194),
                           traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Forlong
-            'lord_1_45_1': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=160,Athletics=120,Crafting=200,Scouting=140,Tactics=180,Roguery=70,Charm=245,Leadership=190,Trade=230,Steward=275,Medicine=225,Engineering=170),
+            'lord_1_45_1': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=160,Athletics=120,Crafting=200,Scouting=140,Tactics=205,Roguery=70,Charm=245,Leadership=216,Trade=230,Steward=283,Medicine=225,Engineering=170),
                           traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Berethiel
-            'lord_1_45_2': dict(skills=dict(OneHanded=180,TwoHanded=150,Polearm=170,Bow=110,Crossbow=80,Throwing=110,Riding=200,Athletics=200,Crafting=60,Scouting=130,Tactics=130,Roguery=60,Charm=140,Leadership=120,Trade=90,Steward=120,Medicine=80,Engineering=90),
+            'lord_1_45_2': dict(skills=dict(OneHanded=180,TwoHanded=150,Polearm=170,Bow=110,Crossbow=80,Throwing=110,Riding=200,Athletics=200,Crafting=60,Scouting=130,Tactics=155,Roguery=60,Charm=140,Leadership=146,Trade=90,Steward=128,Medicine=80,Engineering=90),
                           traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Caldamir/Brandir
             'lord_1_45_3': dict(archetype='elder_lord'),  # Rumil/Borlong
-            'lord_1_57':   dict(archetype='knight', skills=dict(OneHanded=240,TwoHanded=180,Polearm=230,Bow=130,Crossbow=100,Throwing=120,Riding=210,Athletics=235,Crafting=70,Scouting=180,Tactics=200,Roguery=80,Charm=180,Leadership=210,Trade=110,Steward=170,Medicine=100,Engineering=120),
+            'lord_1_57':   dict(archetype='knight', skills=dict(OneHanded=240,TwoHanded=180,Polearm=230,Bow=130,Crossbow=100,Throwing=120,Riding=210,Athletics=235,Crafting=70,Scouting=180,Tactics=225,Roguery=80,Charm=180,Leadership=236,Trade=110,Steward=178,Medicine=100,Engineering=120),
                           traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=1)),  # Baranor
             'lord_1_57_1': dict(archetype='young_lady'),  # Calathiel
             # Pinnath Gelin
-            'lord_1_52': dict(skills=dict(OneHanded=250,TwoHanded=180,Polearm=255,Bow=184,Crossbow=184,Throwing=184,Riding=275,Athletics=184,Crafting=184,Scouting=184,Tactics=184,Roguery=184,Charm=184,Leadership=248,Trade=184,Steward=184,Medicine=184,Engineering=184),
+            'lord_1_52': dict(skills=dict(OneHanded=250,TwoHanded=180,Polearm=255,Bow=184,Crossbow=184,Throwing=184,Riding=275,Athletics=184,Crafting=184,Scouting=184,Tactics=209,Roguery=184,Charm=184,Leadership=274,Trade=184,Steward=192,Medicine=184,Engineering=184),
                           traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Hirluin
-            'lord_1_52_1': dict(archetype='young_lady', skills=dict(OneHanded=140,TwoHanded=80,Polearm=120,Bow=170,Crossbow=110,Throwing=110,Riding=180,Athletics=190,Crafting=110,Scouting=160,Tactics=140,Roguery=70,Charm=200,Leadership=130,Trade=130,Steward=170,Medicine=140,Engineering=100),
+            'lord_1_52_1': dict(archetype='young_lady', skills=dict(OneHanded=140,TwoHanded=80,Polearm=120,Bow=170,Crossbow=110,Throwing=110,Riding=180,Athletics=190,Crafting=110,Scouting=160,Tactics=165,Roguery=70,Charm=200,Leadership=156,Trade=130,Steward=178,Medicine=140,Engineering=100),
                           traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Anariel/Arador
-            'lord_1_52_2': dict(archetype='young_lord', skills=dict(OneHanded=180,TwoHanded=140,Polearm=180,Bow=200,Crossbow=110,Throwing=140,Riding=200,Athletics=210,Crafting=70,Scouting=200,Tactics=160,Roguery=70,Charm=170,Leadership=160,Trade=100,Steward=130,Medicine=100,Engineering=100),
+            'lord_1_52_2': dict(archetype='young_lord', skills=dict(OneHanded=180,TwoHanded=140,Polearm=180,Bow=200,Crossbow=110,Throwing=140,Riding=200,Athletics=210,Crafting=70,Scouting=200,Tactics=185,Roguery=70,Charm=170,Leadership=186,Trade=100,Steward=138,Medicine=100,Engineering=100),
                           traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Barandor/Arvedui
             'lord_1_52_4': dict(archetype='matriarch'),  # Nauriel
             'lord_1_62':   dict(archetype='knight'),  # Oromar
             # Lamedon
-            'lord_1_53': dict(skills=dict(OneHanded=270,TwoHanded=172,Polearm=242,Bow=177,Crossbow=177,Throwing=177,Riding=255,Athletics=177,Crafting=177,Scouting=177,Tactics=177,Roguery=177,Charm=177,Leadership=260,Trade=177,Steward=177,Medicine=177,Engineering=177),
+            'lord_1_53': dict(skills=dict(OneHanded=270,TwoHanded=172,Polearm=242,Bow=177,Crossbow=177,Throwing=177,Riding=255,Athletics=177,Crafting=177,Scouting=177,Tactics=202,Roguery=177,Charm=177,Leadership=286,Trade=177,Steward=185,Medicine=177,Engineering=177),
                           traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),  # Angbor
-            'lord_1_73':   dict(archetype='knight', skills=dict(OneHanded=235,TwoHanded=190,Polearm=225,Bow=120,Crossbow=90,Throwing=130,Riding=220,Athletics=235,Crafting=70,Scouting=170,Tactics=180,Roguery=70,Charm=180,Leadership=180,Trade=110,Steward=150,Medicine=100,Engineering=110),
+            'lord_1_73':   dict(archetype='knight', skills=dict(OneHanded=235,TwoHanded=190,Polearm=225,Bow=120,Crossbow=90,Throwing=130,Riding=220,Athletics=235,Crafting=70,Scouting=170,Tactics=205,Roguery=70,Charm=180,Leadership=206,Trade=110,Steward=158,Medicine=100,Engineering=110),
                           traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Narmir
             'lord_1_73_1': dict(archetype='lady'),  # Belwen/Popilia
             # Anfalas
-            'lord_1_71':   dict(skills=dict(OneHanded=290,TwoHanded=200,Polearm=195,Bow=205,Crossbow=195,Throwing=195,Riding=195,Athletics=195,Crafting=195,Scouting=195,Tactics=195,Roguery=195,Charm=195,Leadership=275,Trade=195,Steward=195,Medicine=195,Engineering=195),
+            'lord_1_71':   dict(skills=dict(OneHanded=290,TwoHanded=200,Polearm=195,Bow=205,Crossbow=195,Throwing=195,Riding=195,Athletics=195,Crafting=195,Scouting=195,Tactics=220,Roguery=195,Charm=195,Leadership=301,Trade=195,Steward=203,Medicine=195,Engineering=195),
                           traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Golasgil
-            'lord_1_71_1': dict(skills=dict(OneHanded=65,TwoHanded=35,Polearm=55,Bow=90,Crossbow=70,Throwing=55,Riding=160,Athletics=130,Crafting=180,Scouting=160,Tactics=200,Roguery=80,Charm=255,Leadership=210,Trade=240,Steward=265,Medicine=235,Engineering=170),
+            'lord_1_71_1': dict(skills=dict(OneHanded=65,TwoHanded=35,Polearm=55,Bow=90,Crossbow=70,Throwing=55,Riding=160,Athletics=130,Crafting=180,Scouting=160,Tactics=225,Roguery=80,Charm=255,Leadership=236,Trade=240,Steward=273,Medicine=235,Engineering=170),
                           traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Laswen
             # Morthond
-            'lord_WE9_l':  dict(skills=dict(OneHanded=205,TwoHanded=172,Polearm=177,Bow=290,Crossbow=177,Throwing=177,Riding=177,Athletics=177,Crafting=177,Scouting=255,Tactics=177,Roguery=177,Charm=177,Leadership=177,Trade=177,Steward=177,Medicine=177,Engineering=177),
+            'lord_WE9_l':  dict(skills=dict(OneHanded=205,TwoHanded=172,Polearm=177,Bow=290,Crossbow=177,Throwing=177,Riding=177,Athletics=177,Crafting=177,Scouting=255,Tactics=202,Roguery=177,Charm=177,Leadership=203,Trade=177,Steward=185,Medicine=177,Engineering=177),
                           traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=0,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=1)),  # Duinhir
-            'lord_WE9_u':  dict(archetype='ranger', skills=dict(OneHanded=200,TwoHanded=150,Polearm=190,Bow=275,Crossbow=130,Throwing=160,Riding=170,Athletics=255,Crafting=100,Scouting=255,Tactics=215,Roguery=90,Charm=170,Leadership=210,Trade=120,Steward=170,Medicine=130,Engineering=120),
+            'lord_WE9_u':  dict(archetype='ranger', skills=dict(OneHanded=200,TwoHanded=150,Polearm=190,Bow=275,Crossbow=130,Throwing=160,Riding=170,Athletics=255,Crafting=100,Scouting=255,Tactics=240,Roguery=90,Charm=170,Leadership=236,Trade=120,Steward=178,Medicine=130,Engineering=120),
                           traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Duilin
             'lord_WE9_u2': dict(archetype='lady'),  # Rosfin
             # Anfalas family
-            'lord_WE8_c':  dict(archetype='young_lord', skills=dict(OneHanded=180,TwoHanded=140,Polearm=170,Bow=200,Crossbow=110,Throwing=140,Riding=190,Athletics=215,Crafting=80,Scouting=220,Tactics=150,Roguery=80,Charm=170,Leadership=140,Trade=130,Steward=140,Medicine=100,Engineering=100),
+            'lord_WE8_c':  dict(archetype='young_lord', skills=dict(OneHanded=180,TwoHanded=140,Polearm=170,Bow=200,Crossbow=110,Throwing=140,Riding=190,Athletics=215,Crafting=80,Scouting=220,Tactics=175,Roguery=80,Charm=170,Leadership=166,Trade=130,Steward=148,Medicine=100,Engineering=100),
                           traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Pelendur
-            'lord_WE8_u':  dict(archetype='knight', skills=dict(OneHanded=215,TwoHanded=165,Polearm=205,Bow=215,Crossbow=135,Throwing=160,Riding=180,Athletics=235,Crafting=90,Scouting=245,Tactics=210,Roguery=100,Charm=180,Leadership=200,Trade=200,Steward=180,Medicine=120,Engineering=140),
+            'lord_WE8_u':  dict(archetype='knight', skills=dict(OneHanded=215,TwoHanded=165,Polearm=205,Bow=215,Crossbow=135,Throwing=160,Riding=180,Athletics=235,Crafting=90,Scouting=245,Tactics=235,Roguery=100,Charm=180,Leadership=226,Trade=200,Steward=188,Medicine=120,Engineering=140),
                           traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Barandil
             'lord_WE8_1':  dict(archetype='lady'),  # Dorwen (Anfalas)
         },
@@ -424,8 +463,8 @@ CULTURES = {
             'lord_E1_1': dict(archetype='dwarf_king'),  # Dáin II Ironfoot — King under the Mountain, dies at Battle of Dale
             'lord_E1_2': dict(archetype='dwarf_lord',   # Thorin III Stonehelm — Dáin's son, becomes King after
                 skills=dict(OneHanded=250,TwoHanded=265,Polearm=225,Bow=120,Crossbow=170,Throwing=140,
-                            Riding=130,Athletics=240,Crafting=255,Scouting=180,Tactics=235,Roguery=70,
-                            Charm=220,Leadership=250,Trade=220,Steward=240,Medicine=160,Engineering=255)),
+                            Riding=130,Athletics=240,Crafting=255,Scouting=180,Tactics=375,Roguery=70,
+                            Charm=220,Leadership=377,Trade=220,Steward=313,Medicine=160,Engineering=255)),
             'lord_E1_3': dict(archetype='dwarf_lady'),  # Dísa — royal kin lady
             'lord_E1_4': dict(archetype='dwarf_lord'),  # Náin — royal kin
             'lord_E1_5': dict(archetype='dwarf_lord'),  # Durin — royal kin (heir-name)
@@ -437,6 +476,11 @@ CULTURES = {
     # DALE / NORTHMEN of Esgaroth — Bardings (sturgia)
     # ====================================================================
     'dale': {
+        # 2026-07-03 retune: resolve shared man archetypes to dale variants
+        'archetype_alias': {'knight': 'dale_knight',
+                            'lady': 'dale_lady',
+                            'young_lady': 'dale_young_lady',
+                            'young_lord': 'dale_young_lord'},
         'culture_id': 'sturgia',
         'lore_name': 'Dale / Bardings',
         'race': 'man',
@@ -474,9 +518,9 @@ CULTURES = {
         ],
         'canonical': {
             'lord_M1_1': dict(archetype='elf_king',    # Thranduil — split from shared elf_king set (1f7a7a9a)
-                              skills=dict(OneHanded=300,TwoHanded=255,Polearm=300,Bow=300,Crossbow=260,Throwing=260,Riding=285,Athletics=300,Crafting=260,Scouting=260,Tactics=260,Roguery=260,Charm=260,Leadership=300,Trade=260,Steward=360,Medicine=260,Engineering=260)),
+                              skills=dict(OneHanded=300,TwoHanded=255,Polearm=300,Bow=300,Crossbow=260,Throwing=260,Riding=285,Athletics=300,Crafting=260,Scouting=260,Tactics=321,Roguery=260,Charm=260,Leadership=372,Trade=260,Steward=360,Medicine=260,Engineering=260)),
             'lord_M1_11': dict(archetype='elf_archer',  # Legolas — prince of Mirkwood, master archer
-                skills=dict(OneHanded=285,TwoHanded=242,Polearm=238,Bow=330,Crossbow=238,Throwing=260,Riding=265,Athletics=305,Crafting=238,Scouting=295,Tactics=238,Roguery=238,Charm=238,Leadership=238,Trade=238,Steward=338,Medicine=238,Engineering=238)),
+                skills=dict(OneHanded=285,TwoHanded=242,Polearm=238,Bow=330,Crossbow=238,Throwing=260,Riding=265,Athletics=305,Crafting=238,Scouting=295,Tactics=299,Roguery=238,Charm=238,Leadership=310,Trade=238,Steward=338,Medicine=238,Engineering=238)),
             'lord_M1_2': dict(archetype='elf_queen'),   # Lothuial — TAOM-invented queen
             'lord_M1_3': dict(archetype='elf_warrior'), # Feren — captain
             'lord_M1_4': dict(archetype='elf_lord'),    # Galion — butler/steward
@@ -500,22 +544,22 @@ CULTURES = {
         ],
         'canonical': {
             'lord_R1_1': dict(archetype='elf_king',     # Elrond — master of Rivendell, ancient (~6500 yrs)
-                skills=dict(OneHanded=290,TwoHanded=260,Polearm=260,Bow=260,Crossbow=260,Throwing=260,Riding=260,Athletics=290,Crafting=260,Scouting=260,Tactics=305,Roguery=260,Charm=300,Leadership=310,Trade=260,Steward=400,Medicine=325,Engineering=260)),
+                skills=dict(OneHanded=290,TwoHanded=260,Polearm=260,Bow=260,Crossbow=260,Throwing=260,Riding=260,Athletics=290,Crafting=260,Scouting=260,Tactics=366,Roguery=260,Charm=300,Leadership=382,Trade=260,Steward=400,Medicine=325,Engineering=260)),
             'lord_R1_2': dict(archetype='elf_queen'),   # Celebrían — wife of Elrond, daughter of Galadriel
             'lord_R1_3': dict(archetype='elf_warrior', # Elladan — twin son, fought with Dúnedain rangers
                 skills=dict(OneHanded=280,TwoHanded=240,Polearm=275,Bow=275,Crossbow=180,Throwing=200,
-                            Riding=275,Athletics=290,Crafting=180,Scouting=275,Tactics=260,Roguery=130,
-                            Charm=225,Leadership=235,Trade=160,Steward=300,Medicine=215,Engineering=170)),
+                            Riding=275,Athletics=290,Crafting=180,Scouting=275,Tactics=321,Roguery=130,
+                            Charm=225,Leadership=307,Trade=160,Steward=300,Medicine=215,Engineering=170)),
             'lord_R1_4': dict(archetype='elf_warrior', # Elrohir — twin
                 skills=dict(OneHanded=280,TwoHanded=240,Polearm=275,Bow=275,Crossbow=180,Throwing=200,
-                            Riding=275,Athletics=290,Crafting=180,Scouting=275,Tactics=260,Roguery=130,
-                            Charm=225,Leadership=235,Trade=160,Steward=300,Medicine=215,Engineering=170)),
+                            Riding=275,Athletics=290,Crafting=180,Scouting=275,Tactics=321,Roguery=130,
+                            Charm=225,Leadership=307,Trade=160,Steward=300,Medicine=215,Engineering=170)),
             'lord_R1_5': dict(archetype='elf_lady',    # Arwen Undómiel — Evenstar
                 skills=dict(OneHanded=180,TwoHanded=130,Polearm=170,Bow=230,Crossbow=160,Throwing=160,
-                            Riding=245,Athletics=240,Crafting=240,Scouting=220,Tactics=215,Roguery=80,
-                            Charm=290,Leadership=210,Trade=220,Steward=365,Medicine=280,Engineering=200)),
+                            Riding=245,Athletics=240,Crafting=240,Scouting=220,Tactics=276,Roguery=80,
+                            Charm=290,Leadership=282,Trade=220,Steward=365,Medicine=280,Engineering=200)),
             'lord_R2_1': dict(archetype='elf_warrior', # Glorfindel — slayer of a Balrog, prince of the Noldor
-                skills=dict(OneHanded=315,TwoHanded=295,Polearm=300,Bow=241,Crossbow=242,Throwing=242,Riding=285,Athletics=310,Crafting=242,Scouting=242,Tactics=242,Roguery=242,Charm=242,Leadership=242,Trade=242,Steward=342,Medicine=242,Engineering=242)),
+                skills=dict(OneHanded=315,TwoHanded=295,Polearm=300,Bow=241,Crossbow=242,Throwing=242,Riding=285,Athletics=310,Crafting=242,Scouting=242,Tactics=303,Roguery=242,Charm=242,Leadership=314,Trade=242,Steward=342,Medicine=242,Engineering=242)),
             # third Rivendell clan leader (placeholder name, age 30) — was template-less (inline-only
             # stats); assigned elf_lord via tools/repoint_evil_lord_skillsets.py 2026-07-02. NOTE:
             # lord_R3_2 (Círdan) has an orphaned canonical set — no such NPC exists in lords.xml/xslt.
@@ -621,7 +665,7 @@ CULTURES = {
             'lord_G4_1': dict(archetype='orc_chieftain',
                 skills=dict(OneHanded=285,TwoHanded=275,Polearm=250,Bow=180,Crossbow=120,Throwing=200,
                             Riding=200,Athletics=275,Crafting=140,Scouting=250,Tactics=265,Roguery=250,
-                            Charm=190,Leadership=185,Trade=140,Steward=210,Medicine=90,Engineering=190)),  # Bolgath — Bolg-evoking; Led 280->185 (north-orc army-size nerf, ruler stays above chieftain 175)
+                            Charm=190,Leadership=185,Trade=140,Steward=157,Medicine=90,Engineering=190)),  # Bolgath — Bolg-evoking; Led 280->185 (north-orc army-size nerf, ruler stays above chieftain 175)
             'lord_G5_1': dict(archetype='orc_chieftain'),  # Vorzak
         },
     },
@@ -681,9 +725,9 @@ CULTURES = {
         ],
         'canonical': {
             'lord_L1_1': dict(archetype='elf_queen',   # Galadriel — Ring-bearer, ancient Noldor; max-tier
-                skills=dict(OneHanded=285,TwoHanded=260,Polearm=260,Bow=260,Crossbow=260,Throwing=260,Riding=260,Athletics=290,Crafting=260,Scouting=300,Tactics=305,Roguery=260,Charm=325,Leadership=325,Trade=260,Steward=415,Medicine=305,Engineering=260)),
+                skills=dict(OneHanded=285,TwoHanded=260,Polearm=260,Bow=260,Crossbow=260,Throwing=260,Riding=260,Athletics=290,Crafting=260,Scouting=300,Tactics=366,Roguery=260,Charm=325,Leadership=397,Trade=260,Steward=415,Medicine=305,Engineering=260)),
             'lord_L1_2': dict(archetype='elf_king',    # Celeborn — Lord of Lothlórien, ancient Sindar
-                skills=dict(OneHanded=320,TwoHanded=300,Polearm=310,Bow=245,Crossbow=250,Throwing=250,Riding=250,Athletics=315,Crafting=250,Scouting=250,Tactics=250,Roguery=250,Charm=250,Leadership=290,Trade=250,Steward=350,Medicine=250,Engineering=250)),
+                skills=dict(OneHanded=320,TwoHanded=300,Polearm=310,Bow=245,Crossbow=250,Throwing=250,Riding=250,Athletics=315,Crafting=250,Scouting=250,Tactics=311,Roguery=250,Charm=250,Leadership=362,Trade=250,Steward=350,Medicine=250,Engineering=250)),
             # 2026-07-02 lord expansion (tools/author_elf_lords.py) — archetype pins so a
             # future regen reproduces the authored non-default assignments:
             'lord_L2_2': dict(archetype='elf_lord'),   # Thandirion — Warden-captain, owner of clan_lothlorien_2
@@ -825,6 +869,11 @@ CULTURES = {
     },
 
     'rohan': {  # vlandia
+        # 2026-07-03 retune: resolve shared man archetypes to rohan variants
+        'archetype_alias': {'knight': 'rohan_knight',
+                            'lady': 'rohan_lady',
+                            'young_lady': 'rohan_young_lady',
+                            'young_lord': 'rohan_young_lord'},
         'culture_id': 'vlandia',
         'lore_name': 'Rohan',
         'race': 'man',
@@ -842,14 +891,14 @@ CULTURES = {
             # Théoden — King of Rohan, restored to vigor, dies Pelennor (~71)
             'lord_4_1': dict(
                 skills=dict(OneHanded=270,TwoHanded=220,Polearm=255,Bow=140,Crossbow=50,Throwing=130,
-                            Riding=290,Athletics=235,Crafting=90,Scouting=190,Tactics=275,Roguery=80,
-                            Charm=240,Leadership=295,Trade=160,Steward=255,Medicine=140,Engineering=160),
+                            Riding=290,Athletics=235,Crafting=90,Scouting=190,Tactics=298,Roguery=80,
+                            Charm=240,Leadership=307,Trade=160,Steward=262,Medicine=140,Engineering=160),
                 traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),
             # Éomer — Third Marshal, future King
             'lord_4_3_1': dict(
                 skills=dict(OneHanded=285,TwoHanded=235,Polearm=285,Bow=160,Crossbow=50,Throwing=160,
-                            Riding=295,Athletics=275,Crafting=80,Scouting=240,Tactics=265,Roguery=80,
-                            Charm=220,Leadership=275,Trade=130,Steward=200,Medicine=130,Engineering=140),
+                            Riding=295,Athletics=275,Crafting=80,Scouting=240,Tactics=288,Roguery=80,
+                            Charm=220,Leadership=287,Trade=130,Steward=207,Medicine=130,Engineering=140),
                 traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),
             # Théodred — Second Marshal, dies at Fords of Isen
             'lord_4_7': dict(
@@ -860,95 +909,95 @@ CULTURES = {
             # Éowyn — slew Witch-King, House of Healing later
             'lord_4_24_1': dict(
                 skills=dict(OneHanded=250,TwoHanded=215,Polearm=230,Bow=160,Crossbow=60,Throwing=140,
-                            Riding=260,Athletics=255,Crafting=100,Scouting=200,Tactics=220,Roguery=80,
-                            Charm=215,Leadership=200,Trade=130,Steward=210,Medicine=200,Engineering=110),
+                            Riding=260,Athletics=255,Crafting=100,Scouting=200,Tactics=243,Roguery=80,
+                            Charm=215,Leadership=212,Trade=130,Steward=217,Medicine=200,Engineering=110),
                 traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
             # Erkenbrand — Lord of Westfold, Hornburg commander
             'lord_4_16': dict(
                 skills=dict(OneHanded=265,TwoHanded=215,Polearm=270,Bow=150,Crossbow=50,Throwing=140,
-                            Riding=265,Athletics=245,Crafting=90,Scouting=205,Tactics=250,Roguery=70,
-                            Charm=205,Leadership=265,Trade=150,Steward=225,Medicine=140,Engineering=170),
+                            Riding=265,Athletics=245,Crafting=90,Scouting=205,Tactics=273,Roguery=70,
+                            Charm=205,Leadership=277,Trade=150,Steward=232,Medicine=140,Engineering=170),
                 traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),
             # Grimbold — Westfold marshal, hero of Fords of Isen, dies Pelennor
             'lord_4_6': dict(
                 skills=dict(OneHanded=265,TwoHanded=215,Polearm=275,Bow=140,Crossbow=50,Throwing=140,
-                            Riding=260,Athletics=255,Crafting=80,Scouting=215,Tactics=240,Roguery=70,
-                            Charm=195,Leadership=235,Trade=120,Steward=185,Medicine=130,Engineering=130),
+                            Riding=260,Athletics=255,Crafting=80,Scouting=215,Tactics=263,Roguery=70,
+                            Charm=195,Leadership=247,Trade=120,Steward=192,Medicine=130,Engineering=130),
                 traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
             # Théodwyn — Théoden's sister, mother of Eomer/Eowyn (deceased in canon — but in roster)
             'lord_4_3': dict(
                 skills=dict(OneHanded=70,TwoHanded=40,Polearm=60,Bow=90,Crossbow=40,Throwing=60,
-                            Riding=200,Athletics=140,Crafting=140,Scouting=130,Tactics=160,Roguery=70,
-                            Charm=235,Leadership=180,Trade=190,Steward=240,Medicine=205,Engineering=130),
+                            Riding=200,Athletics=140,Crafting=140,Scouting=130,Tactics=183,Roguery=70,
+                            Charm=235,Leadership=192,Trade=190,Steward=247,Medicine=205,Engineering=130),
                 traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
             # Elfhild — Théoden's queen, died in childbirth (in roster as past character)
             'lord_4_2': dict(
                 skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=40,Throwing=50,
-                            Riding=180,Athletics=130,Crafting=160,Scouting=120,Tactics=150,Roguery=60,
-                            Charm=250,Leadership=200,Trade=210,Steward=255,Medicine=215,Engineering=140),
+                            Riding=180,Athletics=130,Crafting=160,Scouting=120,Tactics=173,Roguery=60,
+                            Charm=250,Leadership=212,Trade=210,Steward=262,Medicine=215,Engineering=140),
                 traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
             # Merthu — Lady of the Hornburg, Erkenbrand's wife
             'lord_4_16_1': dict(archetype='lady'),
             # Amalgun — heir to Erkenbrand (young heir lord)
             'lord_4_18': dict(archetype='young_lord',
                 skills=dict(OneHanded=200,TwoHanded=160,Polearm=210,Bow=130,Crossbow=40,Throwing=130,
-                            Riding=235,Athletics=215,Crafting=70,Scouting=170,Tactics=160,Roguery=70,
-                            Charm=170,Leadership=160,Trade=110,Steward=140,Medicine=100,Engineering=100)),
+                            Riding=235,Athletics=215,Crafting=70,Scouting=170,Tactics=183,Roguery=70,
+                            Charm=170,Leadership=172,Trade=110,Steward=147,Medicine=100,Engineering=100)),
             # Deorwyn — heir to Grimbold
             'lord_4_6_1': dict(archetype='young_lord',
                 skills=dict(OneHanded=210,TwoHanded=170,Polearm=225,Bow=140,Crossbow=40,Throwing=130,
-                            Riding=240,Athletics=220,Crafting=70,Scouting=190,Tactics=180,Roguery=70,
-                            Charm=170,Leadership=170,Trade=110,Steward=150,Medicine=100,Engineering=110)),
+                            Riding=240,Athletics=220,Crafting=70,Scouting=190,Tactics=203,Roguery=70,
+                            Charm=170,Leadership=182,Trade=110,Steward=157,Medicine=100,Engineering=110)),
             # Varmund — commands garrison of Aldburg
             'lord_4_20': dict(archetype='lord',
                 skills=dict(OneHanded=245,TwoHanded=190,Polearm=255,Bow=140,Crossbow=50,Throwing=130,
-                            Riding=255,Athletics=235,Crafting=80,Scouting=200,Tactics=230,Roguery=70,
-                            Charm=190,Leadership=230,Trade=140,Steward=205,Medicine=130,Engineering=150)),
+                            Riding=255,Athletics=235,Crafting=80,Scouting=200,Tactics=253,Roguery=70,
+                            Charm=190,Leadership=242,Trade=140,Steward=212,Medicine=130,Engineering=150)),
             # Ingeltrud — Lady of Aldburg
             'lord_4_20_1': dict(archetype='lady'),
             # Marhath — leads horse breeders
             'lord_4_23': dict(archetype='horse_breeder'),
             'lord_4_23_2': dict(archetype='horse_breeder',
                 skills=dict(OneHanded=180,TwoHanded=130,Polearm=190,Bow=140,Crossbow=40,Throwing=120,
-                            Riding=290,Athletics=215,Crafting=200,Scouting=200,Tactics=170,Roguery=70,
-                            Charm=180,Leadership=180,Trade=215,Steward=200,Medicine=160,Engineering=120)),
+                            Riding=290,Athletics=215,Crafting=200,Scouting=200,Tactics=193,Roguery=70,
+                            Charm=180,Leadership=192,Trade=215,Steward=207,Medicine=160,Engineering=120)),
             'lord_4_23_3': dict(archetype='horse_breeder',
                 skills=dict(OneHanded=170,TwoHanded=120,Polearm=180,Bow=130,Crossbow=40,Throwing=110,
-                            Riding=275,Athletics=200,Crafting=180,Scouting=190,Tactics=140,Roguery=70,
-                            Charm=160,Leadership=150,Trade=190,Steward=180,Medicine=140,Engineering=110)),
+                            Riding=275,Athletics=200,Crafting=180,Scouting=190,Tactics=163,Roguery=70,
+                            Charm=160,Leadership=162,Trade=190,Steward=187,Medicine=140,Engineering=110)),
             # Lucand — commands Eastemnet riders
             'lord_4_25': dict(archetype='rider',
                 skills=dict(OneHanded=255,TwoHanded=195,Polearm=270,Bow=150,Crossbow=40,Throwing=140,
-                            Riding=275,Athletics=250,Crafting=70,Scouting=215,Tactics=235,Roguery=70,
-                            Charm=200,Leadership=235,Trade=140,Steward=200,Medicine=130,Engineering=140)),
+                            Riding=275,Athletics=250,Crafting=70,Scouting=215,Tactics=258,Roguery=70,
+                            Charm=200,Leadership=247,Trade=140,Steward=207,Medicine=130,Engineering=140)),
             # Peric — commands Gap of Rohan
             'lord_4_26': dict(archetype='rider',
                 skills=dict(OneHanded=250,TwoHanded=190,Polearm=265,Bow=150,Crossbow=40,Throwing=140,
-                            Riding=270,Athletics=245,Crafting=70,Scouting=235,Tactics=230,Roguery=80,
-                            Charm=185,Leadership=220,Trade=130,Steward=185,Medicine=130,Engineering=130)),
+                            Riding=270,Athletics=245,Crafting=70,Scouting=235,Tactics=253,Roguery=80,
+                            Charm=185,Leadership=232,Trade=130,Steward=192,Medicine=130,Engineering=130)),
             # Fasthelm Morcargas — southern watch commander
             'lord_4_28': dict(archetype='lord',
                 skills=dict(OneHanded=235,TwoHanded=180,Polearm=245,Bow=160,Crossbow=50,Throwing=140,
-                            Riding=255,Athletics=235,Crafting=80,Scouting=245,Tactics=225,Roguery=80,
-                            Charm=180,Leadership=215,Trade=130,Steward=195,Medicine=130,Engineering=140)),
+                            Riding=255,Athletics=235,Crafting=80,Scouting=245,Tactics=248,Roguery=80,
+                            Charm=180,Leadership=227,Trade=130,Steward=202,Medicine=130,Engineering=140)),
             'lord_4_28_2': dict(archetype='young_lady'),
             # Silvind — shieldmaiden of Westfold
             'lord_4_12': dict(archetype='shieldmaiden',
                 skills=dict(OneHanded=220,TwoHanded=190,Polearm=205,Bow=140,Crossbow=50,Throwing=130,
-                            Riding=235,Athletics=225,Crafting=90,Scouting=170,Tactics=190,Roguery=80,
-                            Charm=190,Leadership=170,Trade=120,Steward=180,Medicine=160,Engineering=100)),
+                            Riding=235,Athletics=225,Crafting=90,Scouting=170,Tactics=213,Roguery=80,
+                            Charm=190,Leadership=182,Trade=120,Steward=187,Medicine=160,Engineering=100)),
             # Lasand — Westfold garrison
             'lord_4_121': dict(archetype='knight',
                 skills=dict(OneHanded=220,TwoHanded=170,Polearm=235,Bow=140,Crossbow=50,Throwing=120,
-                            Riding=240,Athletics=225,Crafting=70,Scouting=170,Tactics=190,Roguery=70,
-                            Charm=160,Leadership=170,Trade=110,Steward=150,Medicine=100,Engineering=100)),
+                            Riding=240,Athletics=225,Crafting=70,Scouting=170,Tactics=213,Roguery=70,
+                            Charm=160,Leadership=182,Trade=110,Steward=157,Medicine=100,Engineering=100)),
             # Elbet — Erkenbrand's household
             'lord_4_17': dict(archetype='knight'),
             # Unthery — Westfold captain
             'lord_4_5': dict(archetype='knight',
                 skills=dict(OneHanded=235,TwoHanded=180,Polearm=245,Bow=140,Crossbow=50,Throwing=130,
-                            Riding=250,Athletics=230,Crafting=70,Scouting=190,Tactics=200,Roguery=70,
-                            Charm=170,Leadership=180,Trade=110,Steward=160,Medicine=110,Engineering=110)),
+                            Riding=250,Athletics=230,Crafting=70,Scouting=190,Tactics=223,Roguery=70,
+                            Charm=170,Leadership=192,Trade=110,Steward=167,Medicine=110,Engineering=110)),
             # Furnhard — Eomer's trusted rider
             'lord_4_8': dict(archetype='rider'),
             # Thomund — Westfold company commander
