@@ -74,6 +74,9 @@ Reference: `docs/reviews/rca-scene-tooling-2026-05-28.md` (why this convention e
 | `assign_xslt_lord_equipment.py` | Assign LOTR equipment to XSLT-transformed lords in `lords.xslt` | `--dry-run`, `--apply` |
 | `complete_lords_xslt.py` | Make all vanilla lord attributes explicit in `lords.xslt` (no passthrough) | `--dry-run`, `--apply`, `--export-csv` |
 | `fix_lord_cultures_and_mounts.py` | Fix lord cultures + add mounts to battle equipment templates | `--dry-run`, `--apply` |
+| `apply_culture_skills_traits.py` | **Lord SkillSet generator** — source of truth for `taom_lord_skill_sets.xml` (74 archetypes incl. per-culture balance variants, canonical overrides, `archetype_alias`). Pre-flight: regen on a clean tree must diff empty before any `--apply`. See `docs/ai-includes/lord-skills-authoring.md`. | `--skillsets-only`, `--culture <key>`, `--all-cultures`, `--apply` |
+| `repoint_evil_lord_skillsets.py` | Balance-pass repoint/parity (#322/#323/#326): culture-scoped skill_template swaps onto variant sets + full inline-`<skills>` sync from the sets XML + `TEMPLATE_ASSIGN` for template-less adults. Safe alternative to per-culture generator re-resolution on drifted cultures. | `--dry-run` (default), `--apply` |
+| `author_elf_lords.py` | One-off lord/clan authoring reference (#324): complete NPCCharacter+Hero+Faction wiring for 10 new elf lords + 2 Lothlórien clans; copy this pattern for future lord expansions (parties/clan is tier-capped). | `--dry-run` (default), `--apply` |
 
 ## Cleanup (One-Shot)
 

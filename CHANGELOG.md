@@ -2,6 +2,19 @@
 
 ## 2026-07-03
 
+### docs(lords): lord-skills docs caught up to the balance arc (#322–#326)
+
+`docs/ai-includes/lord-skills-authoring.md` (the `/lord-skills` source of truth) rewritten where stale:
+regen-drift pre-flight + repoint-script contract in Quick reference, archetype catalog renumbered to current
+values (74 archetypes; elf/dwarf command tiers), new "Per-culture balance variants (`archetype_alias`)" section
+with the fork/alias/repoint rules, post-#326 power-threshold tiering, 7 new gotcha rows (generator drift,
+per-culture regen unsafety, shared-set bleed, stale culture maps, child-lord rule, diff re-anchoring), file map +
+verification checklist extended. Also: CLAUDE.md Rebalancing Tools table + tools/README gain
+`apply_culture_skills_traits.py` / `repoint_evil_lord_skillsets.py` / `author_elf_lords.py` rows;
+`docs/features/lord-perk-review.md` documents the khand/mirkwood grouping fix + the inline-sync mismatch cleanup;
+4 lessons appended to LESSONS-LEARNED (generator drift, diff-presentation surgery, re-themed culture maps,
+shared-set fork discipline).
+
 ### balance(lords): multi-culture Steward/Leadership/Tactics retune (#326)
 
 Second balance pass on lord army stats, to resolved-lord average targets (children/rookie-template

@@ -51,6 +51,14 @@ from `bannerlord_perks.json`, and resolves authoritative skills from `taom_lord_
   identical skills ⇒ identical perks), so a 150-lord/3-profile culture is small while a 115-lord/46-profile
   culture (Gondor's canonical heroes) is larger but still browsable.
 - **`index.html`:** per-culture lord/profile/legendary/avg-total table + the data-quality summary.
+- **Culture grouping (fixed 2026-07-03, commit `12b06e47`):** report cultures come from
+  `rebalance_lords.CULTURE_MAP`; it long carried a stale `battania → mirkwood` entry, so every report before the
+  fix folded the **41 Khand Variag lords into "mirkwood"** (71 = 30 elves + 41 Variags) and would have applied
+  elven cultural mods to Variags on a rebalance. Reports now show `khand` (41, `Culture.battania`) and `mirkwood`
+  (30, `Culture.mirkwood`) separately — distrust the mirkwood row in any older report.
+- **Inline-vs-SkillSet mismatches:** largely resolved for balance-managed cultures as of #326 —
+  `tools/repoint_evil_lord_skillsets.py` now syncs the full inline `<skills>` block from
+  `taom_lord_skill_sets.xml` for every lord of a culture it manages.
 
 ### No single-formula "parity" lens (deliberate)
 The troop report colored each troop vs a single formula curve. Lords have **two** skill systems —

@@ -396,6 +396,18 @@ When a commit message or CHANGELOG entry claims a deliberate behavioral delta ("
 - **Prevent:** treat claimed deltas like claimed counts/hashes under `evidence-over-claims.md` §C — produce them FROM the diff. For sibling-parity refactors, diff the siblings against each other at the same call sites, not just new-vs-old per file.
 - **Source:** docs/reviews/rca-round2-cleanups-2026-07-01.md
 
+### Generated data files get hand-edited downstream — regen must diff empty BEFORE any --apply
+`taom_lord_skill_sets.xml` says "Generated ... do not edit by hand", but the legendary-lord hierarchy commit (1f7a7a9a) hand-tuned 14 canonical sets and hand-added 3 (Sauron/Witch-King/Thranduil) without syncing the generator. The next blind `--apply` would have reverted all 14 and DELETED Sauron's set the day after #321 shipped. The drift was caught only because the balance plan mandated a regen-idempotency pre-check.
+- **Why missed:** the hand-edit commit documented its own debt in a CHANGELOG note ("update its canonical entries first if regenerating") — documentation is not enforcement, and two months later nobody re-reads a CHANGELOG note before running a generator.
+- **Prevent:** the pre-flight is now codified in `docs/ai-includes/lord-skills-authoring.md` (Quick reference + gotchas): regen on a clean tree, require an empty `git diff`, sync the generator first on any drift (done in 874e7574 with a regen==committed acceptance check). Applies to EVERY "generated — do not hand-edit" artifact in the repo.
+- **Source:** commits 1f7a7a9a (debt) + 874e7574 (sync); #322 session 2026-07-02.
+
+### git diff presentation is not file content — verify block equality before staging surgery
+During #326 close-out, `git diff` showed lord_BC2_2's face-tag block as removed (then re-added elsewhere): pure diff re-anchoring noise around adjacent skill-value changes, not a real edit. A "surgical hunk exclusion" built on that presentation reverse-applied a phantom hunk into the index and had to be unwound; comparing the actual block between `git show HEAD:file` and the worktree proved them near-identical in seconds.
+- **Why missed:** a parallel session owned uncommitted work in the same tree, so an unexplained "removal" pattern-matched to "their edit — exclude it" instead of "diff artifact — verify it". The exclusion machinery was built before the block-level comparison was made.
+- **Prevent:** before any partial-staging surgery keyed off a diff hunk, extract the touched block from HEAD and worktree and compare CONTENT (regex the element out of both). If they match, the hunk is presentation. Cheap, and it inverts the default: verify first, machinery second.
+- **Source:** #326 session 2026-07-03; evidence-over-claims §C applied to git output.
+
 ## Misc
 
 ### Confirm a cumulative-isolation suspect with a single-variable control
@@ -659,6 +671,18 @@ A new TAOM **custom** culture whose clans have lords MUST have entries in the fo
 - **Why missed:** RCA issue #267 (2026-06-02) — the goblin/mistymountainorcs clone produced troops/npcs/equipment-sets/wanderers but missed all four template categories, so every new game crashed creating a goblin lord's child. `validate_moduledata` does NOT model culture→template-flag coverage and no review agent enumerated it. A "missing Armory item" hypothesis was refuted (a missing item yields an empty slot, not a null `Equipment`).
 - **Prevent:** Author (or clone via `tools/insert_new_factions.py`) all four categories in `Main/_Module/ModuleData/equipmentsets/`: `taom_child_equipment_templates.xml` (`IsChildEquipmentTemplate`+`IsLordTemplate`), `taom_lord_template_equipment.xml` (adult `IsLordTemplate` + teen `IsTeenagerEquipmentTemplate`), `taom_education_equipment_templates.xml` (`child_education_equipments_stage_*_<culture>`). Regression-guarded by `ConfigIdValidationTests.ChildGenerationCultures_HaveChildTeenAndLordEquipmentTemplates`. Same "add a faction → update EVERY culture-keyed system" family as [[feedback_faction_map_update_with_cultural_feats]] and [[feedback_clone_leftover_display_text]].
 - **Source:** memory/feedback_new_culture_equipment_templates_for_child_gen.md
+
+### Re-themed vanilla cultures: purge the old mapping from EVERY tool, or reports and rebalances lie
+TAOM re-themed vanilla `battania` to Khand (Variags, evil), but `rebalance_lords.CULTURE_MAP` still said battania→mirkwood from an earlier era. Every lord report folded 41 Variags into "mirkwood" (71 = 30 elves + 41 Variags), a rebalance would have handed them ELVEN cultural modifiers, and the real Woodland Realm (`Culture.mirkwood`) fell through the map to NO modifiers. Balance decisions were made off the polluted rows for two turns before the generator's `khand: culture_id=battania` entry exposed the conflict.
+- **Why missed:** the map lived in a different tool from the one that re-themed the culture; nothing cross-checks `CULTURE_MAP` against `CULTURES[*]['culture_id']` or `taom_spcultures` renames. The polluted "mirkwood" row looked plausible (71 lords, mid-pack stats).
+- **Prevent:** when a vanilla culture is re-themed, grep ALL of tools/ for the vanilla id and re-map every hit (fixed in 12b06e47 with the full mapping table in a comment: empire=dunland, sturgia=dale, vlandia=rohan, khuzait=rhun, battania=khand). When two tools disagree on a culture mapping, the generator's `culture_id` + `taom_spcultures.xml` rename are authoritative.
+- **Source:** commit 12b06e47; #323 session 2026-07-02.
+
+### Balance passes on shared SkillSets: fork per-culture variants; average targets are pooled-exact only
+Lord SkillSets are shared aggressively (the orc trio feeds 6 cultures; `taom_knight_skills` feeds 8). Editing a shared set in place bleeds the change into cultures outside the pass — so a per-culture balance change forks a variant (copy with only the balance skills changed) + `archetype_alias` + a repoint, leaving the base set untouched (verified byte-identical averages for the 6 bystander cultures in #326). Corollary: when several cultures SHARE their sets (3 elf realms, 4 north-orc cultures), a target average lands exactly only POOLED — per-culture results spread ±10 by set-mix composition, and forcing per-culture exactness would need absurd per-canonical residuals (Thranduil at Led ~500).
+- **Why missed (near-miss class):** the first nerf draft planned in-place cuts to the orc trio before the usage scan showed mordor + isengard on the same sets; the elf boost would have hit 2 mirkwood lords still parked on `taom_dunland_raider_skills`.
+- **Prevent:** every lord balance pass starts with the set-usage scan (culture × set × count, shared-outside flag), forks where shared, bumps culture-exclusive canonicals uniformly (preserves hand-tuned hierarchy order), and ends with the non-target-culture byte-identity check. Codified in `docs/ai-includes/lord-skills-authoring.md` "Per-culture balance variants".
+- **Source:** #322/#323/#326 sessions 2026-07-02/03.
 
 ## Harmony & IL (Patches, Transpilers, Prefixes, Patch Lifecycle)
 

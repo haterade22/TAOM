@@ -210,11 +210,34 @@ Dry-run (preview without writing): omit `--apply`.
 
 The script is **idempotent** — re-running with no source changes produces no diff.
 
+**MANDATORY pre-flight before ANY `--apply`: verify the generator matches the committed XML.**
+`taom_lord_skill_sets.xml` has been hand-edited downstream at least once (the 1f7a7a9a
+legendary-lord hierarchy) — a blind regen would have reverted 14 hand-tuned canonical sets and
+**deleted** Sauron's/the Witch-King's sets. The generator was synced back in `874e7574`, but the
+check stays cheap and permanent: run `--skillsets-only --apply` on a CLEAN tree and require
+`git diff` to be empty (or id-sort-only) before layering your change. Non-empty diff = someone
+hand-edited the XML again → sync the generator's canonical entries FIRST (see the gotcha table).
+
+**Per-culture `--culture X --apply` is UNSAFE for repointing live lords.** `process_file`
+re-resolves every NPC's archetype from bios/keywords, and the live XML carries hand-tuned
+assignments it cannot reproduce (the documented 149-lord drift — e.g. the Nazgûl unified on
+`taom_nazgul_skills`). For narrow skill_template swaps and inline-doc parity, use
+[`tools/repoint_evil_lord_skillsets.py`](../../tools/repoint_evil_lord_skillsets.py) instead:
+culture-scoped template swap maps + a full inline-`<skills>` sync read straight from the sets
+XML, post-condition + idempotency checked. Reserve `--culture X --apply` for cultures whose
+assignments the generator genuinely owns end-to-end.
+
 ---
 
 ## Archetype catalog
 
-35 archetypes in [`BASE_ARCHETYPES`](../../tools/apply_culture_skills_traits.py). Each defines 18 skill values + 8 personality trait values. The catalog below shows the primary specialty + Leadership (matters for the +1 party-size perk at 275+) + key trait alignment.
+74 archetypes in [`BASE_ARCHETYPES`](../../tools/apply_culture_skills_traits.py): the lore
+archetypes below plus **per-culture balance variants** (see the subsection after Other Cultures).
+Each defines 18 skill values + 8 personality trait values. The catalog shows the primary
+specialty + Leadership + key trait alignment. **Numbers below are as of the 2026-07-03 retune
+(#326); `BASE_ARCHETYPES` is the source of truth when they drift.** Army-size mechanics: party
+size scales with the leader's **Steward** (+0.25/point, `StewardPartySizeBonus`); Leadership
+feeds morale, garrisons, and party size only via perks.
 
 ### Men of the West (Gondor / Rohan / Dale)
 
@@ -224,15 +247,15 @@ The script is **idempotent** — re-running with no source changes produces no d
 | `knight` | OneHanded 230 / Riding 250 | 160 | Honor +2, Valor +2 | Adult cavalry warrior, vassal / heir-apparent |
 | `ranger` | Bow 270 / Scouting 270 / Athletics 260 | 190 | Mercy +2, Valor +2 | Faramir archetype: woodsman, ranger captain |
 | `lady` | Charm 240 / Steward 240 / Medicine 210 | 160 | Generosity +2, Mercy +2 | Adult female noble / wife, court manager |
-| `matriarch` | Charm 285 / Steward 285 / Medicine 245 | 220 | Calculating +2, Mercy +2 | Elder female (60+), wisdom peak |
-| `elder_lord` | Tactics 270 / Leadership 260 | 260 | Calculating +2, Oligarchic +2 | Older male (60+), retired warrior + wise counsel |
+| `matriarch` | Charm 285 / Steward 285 / Medicine 245 | 220 | Calculating +2, Mercy +2 | Elder female (60+), wisdom peak (Tac 212 — dale-only since the gondor fork) |
+| `elder_lord` | Tactics 295 / Leadership 286 | 286 | Calculating +2, Oligarchic +2 | Older male (60+), retired warrior + wise counsel (gondor-exclusive; carries the #326 gondor deltas) |
 | `young_lord` | OneHanded 160 / Riding 190 | 120 | Honor +1, Valor +2 | 14-25 male heir, trained but green |
 | `young_lady` | Charm 180 / Steward 170 | 120 | Mercy +2 | 14-25 female, courtly training |
 | `steward` | Steward 275 / Charm 260 / Trade 240 | 220 | Calculating +2, Oligarchic +2 | Húrioneth archetype: administrator / diplomat |
 | `errand_rider` | Riding 280 / Scouting 270 | 140 | Honor +2, Valor +2 | Hirgon archetype: messenger / scout |
-| `rider` | Polearm 255 / Riding 270 | 200 | Honor +2, Generosity +2 | Rohirric heavy cavalry (low Crossbow) |
-| `shieldmaiden` | OneHanded 240 / Polearm 225 / Riding 255 | 180 | Honor +2, Valor +2 | Éowyn archetype: combat-capable noblewoman |
-| `horse_breeder` | Riding 290 / Crafting 190 / Trade 210 | 170 | Honor +2, Generosity +2 | Rohan grasslands horsemaster |
+| `rider` | Polearm 255 / Riding 270 | 212 | Honor +2, Generosity +2 | Rohirric heavy cavalry (low Crossbow; rohan-exclusive, carries #326 rohan deltas) |
+| `shieldmaiden` | OneHanded 240 / Polearm 225 / Riding 255 | 192 | Honor +2, Valor +2 | Éowyn archetype: combat-capable noblewoman |
+| `horse_breeder` | Riding 290 / Crafting 190 / Trade 210 | 182 | Honor +2, Generosity +2 | Rohan grasslands horsemaster |
 | `dale_lord` | Bow 260 / Trade 210 | 235 | Honor +2, Valor +2 | Bardings noble; bowman-merchant emphasis |
 | `dale_bowman` | Bow 270 / Athletics 245 | 180 | Honor +2, Valor +2 | Bardings non-noble bowman |
 
@@ -240,23 +263,30 @@ The script is **idempotent** — re-running with no source changes produces no d
 
 | Archetype | Primary | Leadership | Key Traits | Use when |
 |---|---|---|---|---|
-| `dwarf_king` | TwoHanded 280 / Engineering 275 / Crafting 275 | 290 | Honor +2, Oligarchic +2 | Dáin II tier: king under the mountain |
-| `dwarf_lord` | OneHanded 240 / TwoHanded 255 / Crafting 240 | 225 | Honor +2, Oligarchic +2 | Standard dwarven noble |
-| `dwarf_warrior` | TwoHanded 265 / OneHanded 235 | 155 | Honor +2, Valor +2 | Iron Hills veteran |
-| `dwarf_lady` | Crafting 255 / Steward 260 / Charm 240 | 190 | Generosity +2, Mercy +2 | Adult female dwarf (combat capable but lower) |
-| `dwarf_young` | OneHanded 170 / TwoHanded 190 | 130 | Honor +2, Valor +2 | Apprentice dwarf (still 60+ years old in lore terms) |
+| `dwarf_king` | TwoHanded 280 / Tactics 405 / Steward 348 | 417 | Honor +2, Oligarchic +2 | Dáin II tier: king under the mountain |
+| `dwarf_lord` | TwoHanded 255 / Tactics 355 / Steward 293 | 352 | Honor +2, Oligarchic +2 | Standard dwarven noble |
+| `dwarf_warrior` | TwoHanded 265 / Tactics 320 | 282 | Honor +2, Valor +2 | Iron Hills veteran |
+| `dwarf_lady` | Steward 333 / Tactics 310 / Crafting 255 | 317 | Generosity +2, Mercy +2 | Adult female dwarf (combat capable but lower) |
+| `dwarf_young` | Tactics 280 / TwoHanded 190 | 257 | Honor +2, Valor +2 | Apprentice dwarf (still 60+ years old in lore terms) |
+
+> Dwarves got the #326 command retune (S+73 / L+127 / T+140): resolved averages exactly 280 Stw /
+> 300 Led / 310 Tac — the premier non-elf commanders by design. Sets are erebor-exclusive.
 
 ### Elves (Mirkwood / Rivendell / Lothlórien)
 
 | Archetype | Primary | Leadership | Key Traits | Use when |
 |---|---|---|---|---|
-| `elf_king` | Polearm 295 / Bow 295 / Athletics 290 | 290 | Honor +2, Calculating +2 | Thranduil tier: regional king |
-| `elf_queen` | Charm 295 / Steward 290 / Medicine 285 | 290 | Honor +2, Calculating +2 | Galadriel-tier (note: she gets Charm 300 via canonical override) |
-| `elf_lord` | Bow 275 / OneHanded 270 / Polearm 265 | 255 | Honor +2, Mercy +2 | Standard centuries-trained noble |
-| `elf_warrior` | OneHanded 275 / Polearm 275 | 220 | Honor +2, Valor +2 | Glorfindel-tier warrior (canonical bumps OneHanded to 295) |
-| `elf_archer` | Bow 295 / Scouting 290 / Athletics 290 | 210 | Honor +2, Valor +2 | Legolas archetype |
-| `elf_lady` | Charm 270 / Medicine 260 / Steward 265 | 200 | Calculating +2, Mercy +2 | Elf noblewoman (still combat-capable) |
-| `elf_young` | Bow 230 / Athletics 240 | 180 | Honor +2, Valor +2 | Junior elf (apparent age 20s — actually centuries) |
+| `elf_king` | Polearm 295 / Bow 295 / Steward 385 | 362 | Honor +2, Calculating +2 | Thranduil tier: regional king |
+| `elf_queen` | Charm 295 / Steward 390 / Medicine 285 | 362 | Honor +2, Calculating +2 | Galadriel-tier (note: she gets Charm 300 via canonical override) |
+| `elf_lord` | Bow 275 / OneHanded 270 / Steward 355 | 327 | Honor +2, Mercy +2 | Standard centuries-trained noble |
+| `elf_warrior` | OneHanded 275 / Polearm 275 / Steward 300 | 292 | Honor +2, Valor +2 | Glorfindel-tier warrior (canonical bumps OneHanded to 295) |
+| `elf_archer` | Bow 295 / Scouting 290 / Steward 300 | 282 | Honor +2, Valor +2 | Legolas archetype |
+| `elf_lady` | Charm 270 / Steward 365 / Medicine 260 | 272 | Calculating +2, Mercy +2 | Elf noblewoman (still combat-capable) |
+| `elf_young` | Bow 230 / Athletics 240 / Steward 290 | 252 | Honor +2, Valor +2 | Junior elf (apparent age 20s — actually centuries) |
+
+> Elf sets carry the full army-stat program: Steward +100 (#323) then Leadership +72 / Tactics +61
+> (#326) — culture resolved averages ≈300 Led/Tac, 305–340 Steward. They are exclusive to the three
+> elf cultures (verified — safe to edit in place).
 
 ### Mordor / Dol Guldur / Gundabad / Isengard
 
@@ -276,9 +306,9 @@ The script is **idempotent** — re-running with no source changes produces no d
 
 | Archetype | Primary | Leadership | Use when |
 |---|---|---|---|
-| `dunland_warrior` | OneHanded 245 / TwoHanded 215 / Athletics 255 | 200 | Norse-themed shieldmaiden |
-| `dunland_raider` | Bow 200 / Athletics 265 / Roguery 240 | 180 | Hillfolk raid leader |
-| `dunland_brenin` | OneHanded 265 / Leadership 265 / Tactics 250 | 265 | Brenin = chieftain (Brenin Wulf tier) |
+| `dunland_warrior` | OneHanded 245 / TwoHanded 215 / Athletics 255 | 100 | Norse-themed shieldmaiden (#322 army-size nerf) |
+| `dunland_raider` | Bow 200 / Athletics 265 / Roguery 240 | 180 | Hillfolk raid leader (dunland lords moved to `dunland_marauder`; kept at 180 for any future non-dunland user) |
+| `dunland_brenin` | OneHanded 265 / Tactics 250 | 130 | Brenin = chieftain (Brenin Wulf tier; #322 nerf) |
 | `haradrim_lord` | OneHanded 235 / Riding 260 / Trade 220 | 235 | Desert noble |
 | `haradrim_cav` | Polearm 240 / Riding 280 | 180 | Mounted Haradrim |
 | `mumak_rider` | Polearm 255 / Bow 240 / Riding 255 | 210 | Mûmakil crew |
@@ -291,16 +321,55 @@ The script is **idempotent** — re-running with no source changes produces no d
 | `corsair_lord` | OneHanded 260 / Trade 265 / Roguery 265 | 255 | Umbar BN pirate noble |
 | `corsair_captain` | OneHanded 240 / Trade 220 / Roguery 240 | 215 | Umbar ship captain |
 
-### Power thresholds
+### Per-culture balance variants (`archetype_alias`)
 
-- **0-199** — apprentice / minor noble / non-combatant
-- **200-269** — competent regional lord / archetype peak
-- **270-279** — exceptional specialist (canonical heroes' primary skill)
-- **280-294** — pinnacle (Boromir, Imrahil, Faramir, Dáin, Thranduil, Elrond)
-- **295-299** — legendary (Galadriel, Glorfindel in their specialty)
-- **300** — only Galadriel (Charm + Leadership) and Denethor (Steward) — these are JUSTIFIED by canonical lore
+The 2026-07 army-size balance arc (#322/#323/#326) introduced **per-culture variant archetypes**
+for sets shared across cultures. The base sets stay untouched for every culture NOT in the
+balance pass; a variant is an exact copy with only the balance-relevant skills changed, and the
+culture's `CULTURES` entry carries an `archetype_alias` dict so archetype resolution lands on the
+variant on any future regen:
 
-**Leadership ≥275** triggers the engine's +1 party-size perk threshold. Reserve for: Imrahil, Boromir, Denethor, Théoden, Éomer, Erkenbrand, Dáin II, Elrond, Galadriel, Celeborn, Thranduil, Nazgûl, Uglûk.
+```python
+'gondor': {
+    'archetype_alias': {'knight': 'gondor_knight', 'lady': 'gondor_lady', ...},
+```
+
+| Variant family | Cultures | Deltas vs base | Why forked |
+|---|---|---|---|
+| `north_orc_{chieftain,warrior,female}` | gundabad, dolguldur, goblin, mistymountainorcs | Led −95/−85/−90 (#322), Stw −53 (#326) | base orc trio shared with mordor + isengard (untouched) |
+| `dunland_{knight,lady,young_lord,young_lady,marauder}` | dunland | Led cuts to 90/80/55/55/80 (#322) | knight/lady/young sets shared with 8 cultures; raider shared history |
+| `gondor_{knight,lady,young_lady,young_lord,matriarch,lord}` | gondor | S+8 / L+26 / T+25 (#326) | same shared man sets |
+| `dale_{knight,lady,young_lady,young_lord}` | dale | T+22 (#326) | same |
+| `rohan_{knight,lady,young_lady,young_lord}` | rohan | S+7 / L+12 / T+23 (#326) | same |
+
+Six cultures currently carry `archetype_alias`: gondor, dale, rohan, dunland, dolguldur,
+gundabad. (goblin + mistymountainorcs have NO `CULTURES` entry — their lords were repointed
+directly by `tools/repoint_evil_lord_skillsets.py` and no regen path touches them.)
+
+**Rules when balancing a culture whose lords sit on shared sets:**
+1. Never edit the shared base set in place — fork a variant, alias, repoint. The #326 pass
+   verified shaghana/abanissa/rhun/harad/umbar/khand byte-identical afterward; keep it that way.
+2. Canonical (per-NPC) sets are always safe in place — bump them uniformly with the culture's
+   delta so the hand-tuned hierarchy's internal ORDER survives (#326 moved 63 canonicals this way).
+3. Average targets land exactly only for single-culture sets. Cultures SHARING sets (the 3 elf
+   realms; the 4 north-orc cultures) hit the target as a pooled average with a ±10 per-culture
+   spread from set-mix composition — accept it; per-culture exactness requires absurd
+   per-canonical residuals (Thranduil at Led ~500 to drag mirkwood's warrior-heavy mix up).
+
+### Power thresholds (post-#326 tiering)
+
+The pre-2026-07 "300 is legendary" scale is obsolete — the army-stat program deliberately pushed
+command stats (Steward/Leadership/Tactics) past it. Current tiering for the COMMAND axis:
+
+- **≤100** — army-size-nerfed evil cultures (north orcs Led 60–175 / Stw 77–147; dunland Led 55–130)
+- **150–250** — baseline human/orc command tier (base shared sets; mordor/isengard unchanged)
+- **~280–310** — retuned free-folk command averages (gondor 200/200/190 S/L/T, rohan 180/180/190,
+  erebor 280/300/310, elves ≈300 Led/Tac, elf Steward 300–390)
+- **340–420** — rulers + canonical legends (Galadriel Stw 415/Led 397, Elrond 400/382, dwarf_king 417 Led)
+
+COMBAT skills still follow the old scale (270–330 = canonical hero specialty; Legolas Bow 330,
+Sauron 330s). Party size = leader Steward × 0.25; Leadership feeds morale + garrison + perks
+(`UltimateLeader` scales per point above the epic threshold), Tactics drives autoresolve.
 
 ---
 
@@ -406,6 +475,8 @@ Before declaring done:
 
 - [ ] All three XML files well-formed (Python `ET.parse` smoke test).
 - [ ] Script is idempotent: re-running with no source changes produces no diff (`git status` shows clean after second `--apply`).
+- [ ] Generator-vs-committed drift pre-check ran BEFORE your change (regen on clean tree → empty diff).
+- [ ] If a balance pass: non-target cultures' averages verified byte-identical (the `analyze_lord_balance`-based table), and shared sets forked rather than edited in place.
 - [ ] In-game Encyclopedia spot-check on at least one canonical hero per touched culture.
 - [ ] If touched a Leadership-285+ character, confirm the +1 party-size perk shows in-game (Encyclopedia → Perks).
 - [ ] Children (age <14) still using `spc_*_skills_rookie` vanilla SkillSets unless they're canonical overrides (Nazgûl with placeholder age 9/11 are the exception — they bypass the child skip).
@@ -429,6 +500,12 @@ Real failure modes from past sessions. Read these before you ship.
 | `0Harmony.dll` lock when Bannerlord is running → `./build.ps1` fails | `.claude/rules/environment-failures.md` | Close Bannerlord OR skip the build — XML data changes don't need it. Use the Python XML parse smoke test instead |
 | Save-compat: hero skills bake at hero CREATION | n/a (engine behavior) | Existing campaigns keep old stats. New campaigns + un-spawned heroes use the new SkillSets. Flag this in PR descriptions and CHANGELOG |
 | Forgetting to register a new XML file in SubModule.xml → engine doesn't load it → fix has no effect | n/a | If you create a new ModuleData XML file, add an `<XmlNode>` entry to `Main/_Module/SubModule.xml` with the appropriate `id=` (SkillSets / NPCCharacters / etc.) and `path=` (file basename without `.xml`) |
+| **Generated XML hand-edited downstream** — 1f7a7a9a hand-tuned `taom_lord_skill_sets.xml`; a later blind regen would have reverted 14 canonical sets and DELETED Sauron's | commit 874e7574 (sync) | Before any `--apply`: regen on a clean tree, require empty `git diff`. Drift found → sync the generator's canonical entries to the live XML FIRST (acceptance: regen == committed semantically) |
+| **`--culture X --apply` clobbers hand-tuned assignments** — per-NPC re-resolution can't reproduce the live 149-lord drift (unified Nazgûl etc.) | #322 design | Narrow swaps/parity go through `tools/repoint_evil_lord_skillsets.py` (template swap maps + full inline sync from the sets XML), never through `process_file` on a drifted culture |
+| **Editing a shared set in place bleeds into other cultures** — the orc trio feeds 6 cultures, `taom_knight_skills` feeds 8 | #322/#326 design | Fork a per-culture variant + `archetype_alias` + repoint (see "Per-culture balance variants"). Verify non-target culture averages byte-identical afterward |
+| **Stale culture maps after reculturing** — `rebalance_lords.CULTURE_MAP` said battania→mirkwood long after battania became Khand: Variag lords wore ELF cultural mods and polluted every "mirkwood" report (71 = 30 elves + 41 Variags) | commit 12b06e47 | When a vanilla culture is re-themed, grep EVERY tool for the old mapping (`CULTURE_MAP`, `CULTURES`, validators). battania=khand, empire=dunland, sturgia=dale, vlandia=rohan, khuzait=rhun |
+| **Child lords (age<14) must stay on vanilla `spc_*_rookie` templates** — two are literally named "PlaceHolder Child"; adult sets on a 6-year-old is wrong | #323 follow-up | The generator's age<14 skip is the codified rule; canonical entries bypass it ONLY for placeholder-age immortals (Nazgûl). Template-less ADULTS (lord_R3_1 case) get a real set via `TEMPLATE_ASSIGN` |
+| **Diff re-anchoring reads as phantom edits** — a big inline-skill sync made `git diff` present lord_BC2_2's face-tag block as removed+re-added; a "surgical hunk exclusion" based on that presentation nearly corrupted the index | #326 session | Before staging surgery, compare the actual BLOCK content between HEAD and worktree (`git show HEAD:file` + regex), not the diff's presentation of it |
 
 ---
 
@@ -436,7 +513,10 @@ Real failure modes from past sessions. Read these before you ship.
 
 | Path | Role |
 |---|---|
-| [`tools/apply_culture_skills_traits.py`](../../tools/apply_culture_skills_traits.py) | Generator (source of truth — `BASE_ARCHETYPES` + `CULTURES` dicts) |
+| [`tools/apply_culture_skills_traits.py`](../../tools/apply_culture_skills_traits.py) | Generator (source of truth — `BASE_ARCHETYPES` + `CULTURES` dicts incl. `archetype_alias`) |
+| [`tools/repoint_evil_lord_skillsets.py`](../../tools/repoint_evil_lord_skillsets.py) | Balance-pass repoint/parity: culture-scoped skill_template swaps, full inline-`<skills>` sync from the sets XML, `TEMPLATE_ASSIGN` for template-less adults (`--dry-run`/`--apply`) |
+| [`tools/author_elf_lords.py`](../../tools/author_elf_lords.py) | One-off new-lord authoring reference (#324): full NPCCharacter+Hero+Faction wiring, inline skills from live SkillSets, donor face keys, clan party-slot math |
+| [`tools/analyze_lord_balance.py`](../../tools/analyze_lord_balance.py) | Read-only per-culture stats + perk review; the verification lens for every balance pass |
 | [`tools/generate_culture_issue_drafts.py`](../../tools/generate_culture_issue_drafts.py) | Per-culture GitHub issue draft generator |
 | [`Main/_Module/ModuleData/taom_lord_skill_sets.xml`](../../Main/_Module/ModuleData/taom_lord_skill_sets.xml) | Generated — 120 SkillSets (DO NOT hand-edit) |
 | [`Main/_Module/ModuleData/characters/lords.xml`](../../Main/_Module/ModuleData/characters/lords.xml) | TAOM-NET-NEW NPCCharacters (wins over XSLT-transformed vanilla at runtime) |
