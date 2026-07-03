@@ -208,7 +208,12 @@ CULTURE_MAP = {
     'Culture.sturgia': 'dale',
     'Culture.aserai': 'harad',
     'Culture.vlandia': 'rohan',
-    'Culture.battania': 'mirkwood',
+    # battania is KHAND (Variags — taom_spcultures renames it; apply_culture_skills_traits'
+    # 'khand' entry owns culture_id battania). It was wrongly mapped to 'mirkwood' until
+    # 2026-07-02, which applied ELVEN cultural mods to Variag lords and folded 41 Khand lords
+    # into "mirkwood" in every report. Khand has no CULTURAL_MODS entry -> baseline curve
+    # (same treatment as mordor/goblin/mistymountainorcs).
+    'Culture.battania': 'khand',
     'Culture.khuzait': 'rhun',
     # TAOM custom cultures
     'Culture.dolguldur': 'dolguldur',
@@ -216,6 +221,9 @@ CULTURE_MAP = {
     'Culture.gundabad': 'gundabad',
     'Culture.isengard': 'isengard',
     'Culture.lothlorien': 'lothlorien',
+    # the real Woodland Realm — its lords carry Culture.mirkwood; without this entry they fell
+    # through CULTURE_MAP.get() to '' and received NO cultural mods (the elf mods went to Khand)
+    'Culture.mirkwood': 'mirkwood',
     'Culture.rivendell': 'rivendell',
     'Culture.umbar': 'umbar',
 }
