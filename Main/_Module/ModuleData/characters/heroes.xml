@@ -220,6 +220,18 @@
 		id="lord_R2_11"
 		father="Hero.lord_R2_1"
 		faction="Faction.clan_rivendell_2" />
+<Hero
+		id="lord_R2_2"
+		faction="Faction.clan_rivendell_2"
+		text="{=aom_lord_R2_2_desc}Gildor Inglorion of the House of Finrod has long wandered the westlands; in these darkening days his company keeps to Imladris and the banner of Glorfindel." />
+<Hero
+		id="lord_R2_3"
+		faction="Faction.clan_rivendell_2"
+		text="{=aom_lord_R2_3_desc}Erestor, chief of the counsellors of the house of Elrond, sets aside the ledger for the sword when the passes of the Misty Mountains grow restless." />
+<Hero
+		id="lord_R2_4"
+		faction="Faction.clan_rivendell_2"
+		text="{=aom_lord_R2_4_desc}Lindir of Imladris, quicker to song than to war, has nonetheless learned the ways of blade and bow as the Wild grows bold." />
 
 	<!-- Patreon supporter hero: Chägermeister, last scion of Elen-Nolmarë -->
 	<Hero
@@ -392,8 +404,36 @@
 		faction="Faction.clan_lothlorien_1" />
 	<Hero
 		id="lord_L2_1"
-		faction="Faction.clan_lothlorien_1"
+		faction="Faction.clan_lothlorien_2"
 		text="{=caurmínas_description}A noble Elf-lord of Lothlórien, born beneath the golden boughs of the mallorn trees. Wise beyond his years, he served as a warden of the Golden Wood and counselor to Lady Galadriel. His keen mind and steadfast heart earned him renown among the Galadhrim. Though he seldom drew his blade, his presence alone inspired calm and courage. Caurmínas was said to walk often beneath moonlit leaves, speaking softly to the trees of ancient days. When the Shadow rose once more, he stood unbroken, a guardian of light and memory, ever faithful to the spirit of Lothlórien." />
+<Hero
+		id="lord_L2_2"
+		faction="Faction.clan_lothlorien_2"
+		text="{=aom_lord_L2_2_desc}Thandirion, Warden-captain of the Naith, commands the hidden crossings of the Celebrant and answers only to the Lord and Lady of the Galadhrim." />
+<Hero
+		id="lord_L2_3"
+		faction="Faction.clan_lothlorien_2"
+		text="{=aom_lord_L2_3_desc}Baranthir keeps the northern eaves of the Golden Wood, where his patrols have turned back orc-bands out of Moria beyond counting." />
+<Hero
+		id="lord_L2_4"
+		faction="Faction.clan_lothlorien_2"
+		text="{=aom_lord_L2_4_desc}Aeglossen is counted among the surest bows of the Galadhrim; it is said no shaft of his has ever been found far from a foe." />
+<Hero
+		id="lord_L2_5"
+		faction="Faction.clan_lothlorien_2"
+		text="{=aom_lord_L2_5_desc}Nimlothiel orders the provisioning of the wardens upon the borders, and the talans of the Naith stand ready at her word." />
+<Hero
+		id="lord_L3_1"
+		faction="Faction.clan_lothlorien_3"
+		text="{=aom_lord_L3_1_desc}Malthorn leads Nos Malgalad, a house that has not forgotten Amdir who fell at Dagorlad, and keeps that memory sharp upon its spears." />
+<Hero
+		id="lord_L3_2"
+		faction="Faction.clan_lothlorien_3"
+		text="{=aom_lord_L3_2_desc}Galuvir of the Egladil drills the young of the Golden Wood in blade and bow against the gathering dark in Dol Guldur." />
+<Hero
+		id="lord_L3_3"
+		faction="Faction.clan_lothlorien_3"
+		text="{=aom_lord_L3_3_desc}Silivren tends the stores and songs of Nos Malgalad alike, for in Lorien the two have never been far apart." />
 
 	<!-- ============================================== -->
 	<!-- ISENGARD HEROES (isengard culture)             -->

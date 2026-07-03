@@ -520,6 +520,9 @@ CULTURES = {
             # stats); assigned elf_lord via tools/repoint_evil_lord_skillsets.py 2026-07-02. NOTE:
             # lord_R3_2 (Círdan) has an orphaned canonical set — no such NPC exists in lords.xml/xslt.
             'lord_R3_1': dict(archetype='elf_lord'),
+            # 2026-07-02 lord expansion (tools/author_elf_lords.py): Erestor is a counsellor,
+            # not a line warrior — pinned so regen keeps him off the elf_warrior default.
+            'lord_R2_3': dict(archetype='elf_lord'),   # Erestor — chief counsellor of Elrond's house
         },
     },
 
@@ -681,6 +684,11 @@ CULTURES = {
                 skills=dict(OneHanded=285,TwoHanded=260,Polearm=260,Bow=260,Crossbow=260,Throwing=260,Riding=260,Athletics=290,Crafting=260,Scouting=300,Tactics=305,Roguery=260,Charm=325,Leadership=325,Trade=260,Steward=415,Medicine=305,Engineering=260)),
             'lord_L1_2': dict(archetype='elf_king',    # Celeborn — Lord of Lothlórien, ancient Sindar
                 skills=dict(OneHanded=320,TwoHanded=300,Polearm=310,Bow=245,Crossbow=250,Throwing=250,Riding=250,Athletics=315,Crafting=250,Scouting=250,Tactics=250,Roguery=250,Charm=250,Leadership=290,Trade=250,Steward=350,Medicine=250,Engineering=250)),
+            # 2026-07-02 lord expansion (tools/author_elf_lords.py) — archetype pins so a
+            # future regen reproduces the authored non-default assignments:
+            'lord_L2_2': dict(archetype='elf_lord'),   # Thandirion — Warden-captain, owner of clan_lothlorien_2
+            'lord_L2_4': dict(archetype='elf_archer'), # Aeglossen — Galadhrim bow
+            'lord_L3_1': dict(archetype='elf_lord'),   # Malthorn — owner of clan_lothlorien_3
         },
     },
 

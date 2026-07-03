@@ -2,6 +2,27 @@
 
 ## 2026-07-02
 
+### content(lords): elf lord expansion — Lothlórien 10 adults (+2 new clans), Rivendell 20 adults (#324)
+
+Party size per lord was fixed by #323, but army COUNT is capped per clan (tier<3: 1 party, t3-4: 2, t5+: 3 —
+`DefaultClanTierModel`). Lothlórien had 3 adult lords in one clan; Nos Glorfindel (t6, 3 slots) had one. Now:
+
+- **+7 Lothlórien lords, +2 clans**: `clan_lothlorien_2` **Wardens of the Naith** (t6 — Thandirion elf_lord owner,
+  Baranthir, Aeglossen elf_archer, Nimlothiel elf_lady, + existing Caurmínas moved in from clan 1, fixing his
+  L2-id-in-clan-1 mismatch) and `clan_lothlorien_3` **Nos Malgalad** (t5 — Malthorn elf_lord owner, Galuvir,
+  Silivren elf_lady). Kingdom party slots 3 → 9; 10 adult lords, adult avg Steward 340.5.
+- **+3 Rivendell lords** into Nos Glorfindel: Gildor Inglorion, Erestor (elf_lord counsellor), Lindir — clan now
+  fills its 3 slots; kingdom at 20 adult lords, adult avg Steward 334.4.
+- Authored by new one-off `tools/author_elf_lords.py` (--dry-run/--apply, well-formedness gate): NPCCharacter
+  blocks (inline skills = live SkillSet values incl. the Steward boost, archetype traits, culture equipment
+  templates a–e rotated, donor elf face keys per the existing shared-key convention) + Hero lore blurbs + Faction
+  blocks (banner keys donated from existing elf clans). 4 canonical archetype pins added to the generator
+  (regen-stable, byte-identical sets file). `validate_moduledata` PASS.
+- Names avoid collisions — Haldir/Rúmil/Orophin already exist as Mirkwood lords, so Lothlórien's new lords use
+  invented Sindarin names; Rivendell reuses canon Imladris figures.
+- **Save-compat:** new heroes/clans appear on NEW campaigns only. Localization keys (`{=aom_*}`) ship with inline
+  English defaults; 12-language propagation is a follow-up (`/localize`).
+
 ### fix(tools): Culture.battania is Khand, not Mirkwood — rebalance_lords mapping corrected
 
 `rebalance_lords.CULTURE_MAP` still carried the pre-mirkwood-culture `battania → mirkwood` entry, so the 41 Variag

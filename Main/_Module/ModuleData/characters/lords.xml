@@ -22788,6 +22788,342 @@
             <EquipmentSet id="lothlorien_civ_template_default_d" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
+    <NPCCharacter id="lord_L2_2" race="elf" name="{=aom_lord_L2_2_name}Thandirion" age="34" voice="earnest" is_hero="true" is_female="false" culture="Culture.lothlorien" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lord_skills">
+        <face>
+            <BodyProperties version="4" age="34.0" weight="0.25" build="0.45" key="0000CC0000003003E77FF80E81B7100118EE88105FBF11800FF60FEE8F86686000EE36030E71E0E0000000000000000000000000000000000000000043CC4142" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="270" />
+            <skill id="TwoHanded" value="230" />
+            <skill id="Polearm" value="265" />
+            <skill id="Bow" value="275" />
+            <skill id="Crossbow" value="180" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="255" />
+            <skill id="Athletics" value="280" />
+            <skill id="Crafting" value="240" />
+            <skill id="Scouting" value="270" />
+            <skill id="Tactics" value="265" />
+            <skill id="Roguery" value="110" />
+            <skill id="Charm" value="250" />
+            <skill id="Leadership" value="255" />
+            <skill id="Trade" value="200" />
+            <skill id="Steward" value="355" />
+            <skill id="Medicine" value="240" />
+            <skill id="Engineering" value="210" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="lothlorien_bat_template_medium_a" />
+            <EquipmentSet id="lothlorien_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_L2_3" race="elf" name="{=aom_lord_L2_3_name}Baranthir" age="27" voice="curt" is_hero="true" is_female="false" culture="Culture.lothlorien" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="27.0" weight="0.25" build="0.45" key="0028280FD7FC23C299C2761C4AC1A5954778548899A66659788878746A9D9629000F16530FA7699C000000000000000000000000000000000000000000F47140" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="240" />
+            <skill id="Polearm" value="275" />
+            <skill id="Bow" value="265" />
+            <skill id="Crossbow" value="170" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="240" />
+            <skill id="Athletics" value="285" />
+            <skill id="Crafting" value="170" />
+            <skill id="Scouting" value="255" />
+            <skill id="Tactics" value="240" />
+            <skill id="Roguery" value="110" />
+            <skill id="Charm" value="210" />
+            <skill id="Leadership" value="220" />
+            <skill id="Trade" value="160" />
+            <skill id="Steward" value="300" />
+            <skill id="Medicine" value="190" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="lothlorien_bat_template_medium_b" />
+            <EquipmentSet id="lothlorien_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_L2_4" race="elf" name="{=aom_lord_L2_4_name}Aeglossen" age="23" voice="softspoken" is_hero="true" is_female="false" culture="Culture.lothlorien" occupation="Lord" default_group="Ranged" face_mesh_cache="true" skill_template="SkillSet.taom_elf_archer_skills">
+        <face>
+            <BodyProperties version="4" age="23.0" weight="0.25" build="0.45" key="0005B40A400000028771188F38770004088D88778888888888886F8D546AF01100F206030FE8888800000000000000000000000000000000000000007FF43005" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="235" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="240" />
+            <skill id="Bow" value="295" />
+            <skill id="Crossbow" value="190" />
+            <skill id="Throwing" value="210" />
+            <skill id="Riding" value="220" />
+            <skill id="Athletics" value="290" />
+            <skill id="Crafting" value="180" />
+            <skill id="Scouting" value="290" />
+            <skill id="Tactics" value="240" />
+            <skill id="Roguery" value="110" />
+            <skill id="Charm" value="220" />
+            <skill id="Leadership" value="210" />
+            <skill id="Trade" value="160" />
+            <skill id="Steward" value="300" />
+            <skill id="Medicine" value="190" />
+            <skill id="Engineering" value="160" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="lothlorien_bat_template_medium_c" />
+            <EquipmentSet id="lothlorien_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_L2_5" race="elf" name="{=aom_lord_L2_5_name}Nimlothiel" age="26" voice="earnest" is_hero="true" is_female="true" culture="Culture.lothlorien" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
+        <face>
+            <BodyProperties version="4" age="26.0" weight="0.25" build="0.45" key="0000700000003005E77CE80EEFF01FF018FE88105FBF11800FF60FEE8EBF68F100DE06030D71E0E0000000000000000000000000000000000000000043AC2103" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="180" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="220" />
+            <skill id="Crossbow" value="150" />
+            <skill id="Throwing" value="150" />
+            <skill id="Riding" value="210" />
+            <skill id="Athletics" value="230" />
+            <skill id="Crafting" value="240" />
+            <skill id="Scouting" value="210" />
+            <skill id="Tactics" value="210" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="270" />
+            <skill id="Leadership" value="200" />
+            <skill id="Trade" value="220" />
+            <skill id="Steward" value="365" />
+            <skill id="Medicine" value="260" />
+            <skill id="Engineering" value="190" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="lothlorien_bat_template_medium_d" />
+            <EquipmentSet id="lothlorien_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_L3_1" race="elf" name="{=aom_lord_L3_1_name}Malthorn" age="41" voice="ironic" is_hero="true" is_female="false" culture="Culture.lothlorien" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lord_skills">
+        <face>
+            <BodyProperties version="4" age="41.0" weight="0.25" build="0.45" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="270" />
+            <skill id="TwoHanded" value="230" />
+            <skill id="Polearm" value="265" />
+            <skill id="Bow" value="275" />
+            <skill id="Crossbow" value="180" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="255" />
+            <skill id="Athletics" value="280" />
+            <skill id="Crafting" value="240" />
+            <skill id="Scouting" value="270" />
+            <skill id="Tactics" value="265" />
+            <skill id="Roguery" value="110" />
+            <skill id="Charm" value="250" />
+            <skill id="Leadership" value="255" />
+            <skill id="Trade" value="200" />
+            <skill id="Steward" value="355" />
+            <skill id="Medicine" value="240" />
+            <skill id="Engineering" value="210" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="lothlorien_bat_template_medium_e" />
+            <EquipmentSet id="lothlorien_civ_template_default_e" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_L3_2" race="elf" name="{=aom_lord_L3_2_name}Galuvir" age="24" voice="curt" is_hero="true" is_female="false" culture="Culture.lothlorien" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="24.0" weight="0.25" build="0.45" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="240" />
+            <skill id="Polearm" value="275" />
+            <skill id="Bow" value="265" />
+            <skill id="Crossbow" value="170" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="240" />
+            <skill id="Athletics" value="285" />
+            <skill id="Crafting" value="170" />
+            <skill id="Scouting" value="255" />
+            <skill id="Tactics" value="240" />
+            <skill id="Roguery" value="110" />
+            <skill id="Charm" value="210" />
+            <skill id="Leadership" value="220" />
+            <skill id="Trade" value="160" />
+            <skill id="Steward" value="300" />
+            <skill id="Medicine" value="190" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="lothlorien_bat_template_medium_a" />
+            <EquipmentSet id="lothlorien_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_L3_3" race="elf" name="{=aom_lord_L3_3_name}Silivren" age="29" voice="softspoken" is_hero="true" is_female="true" culture="Culture.lothlorien" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
+        <face>
+            <BodyProperties version="4" age="29.0" weight="0.25" build="0.45" key="00005400000000031683A74D6581724774C78063588BC601C4B6C72B8DE5863200B816030B85A80000000000000000000000000000000000000000003B6C9002" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="180" />
+            <skill id="TwoHanded" value="130" />
+            <skill id="Polearm" value="170" />
+            <skill id="Bow" value="220" />
+            <skill id="Crossbow" value="150" />
+            <skill id="Throwing" value="150" />
+            <skill id="Riding" value="210" />
+            <skill id="Athletics" value="230" />
+            <skill id="Crafting" value="240" />
+            <skill id="Scouting" value="210" />
+            <skill id="Tactics" value="210" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="270" />
+            <skill id="Leadership" value="200" />
+            <skill id="Trade" value="220" />
+            <skill id="Steward" value="365" />
+            <skill id="Medicine" value="260" />
+            <skill id="Engineering" value="190" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="2" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="1" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="lothlorien_bat_template_medium_b" />
+            <EquipmentSet id="lothlorien_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
     <!-- Culture.mirkwood -->
     <NPCCharacter id="lord_M1_1" race="elf" name="{=aom_lord_M1_1_name}Thranduil" age="30" voice="ironic" default_group="Cavalry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_M1_1_skills">
         <face>
@@ -27884,6 +28220,150 @@
         <Equipments>
             <EquipmentSet id="rivendell_bat_template_medium_c" />
             <EquipmentSet id="rivendell_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_R2_2" race="elf" name="{=aom_lord_R2_2_name}Gildor" age="38" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="38.0" weight="0.25" build="0.45" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="240" />
+            <skill id="Polearm" value="275" />
+            <skill id="Bow" value="265" />
+            <skill id="Crossbow" value="170" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="240" />
+            <skill id="Athletics" value="285" />
+            <skill id="Crafting" value="170" />
+            <skill id="Scouting" value="255" />
+            <skill id="Tactics" value="240" />
+            <skill id="Roguery" value="110" />
+            <skill id="Charm" value="210" />
+            <skill id="Leadership" value="220" />
+            <skill id="Trade" value="160" />
+            <skill id="Steward" value="300" />
+            <skill id="Medicine" value="190" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="rivendell_bat_template_medium_c" />
+            <EquipmentSet id="rivendell_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_R2_3" race="elf" name="{=aom_lord_R2_3_name}Erestor" age="44" voice="softspoken" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lord_skills">
+        <face>
+            <BodyProperties version="4" age="44.0" weight="0.25" build="0.45" key="0000000F000016029A797961AA0103D841B0830030ECF600921531198EF3BC9400951603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="270" />
+            <skill id="TwoHanded" value="230" />
+            <skill id="Polearm" value="265" />
+            <skill id="Bow" value="275" />
+            <skill id="Crossbow" value="180" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="255" />
+            <skill id="Athletics" value="280" />
+            <skill id="Crafting" value="240" />
+            <skill id="Scouting" value="270" />
+            <skill id="Tactics" value="265" />
+            <skill id="Roguery" value="110" />
+            <skill id="Charm" value="250" />
+            <skill id="Leadership" value="255" />
+            <skill id="Trade" value="200" />
+            <skill id="Steward" value="355" />
+            <skill id="Medicine" value="240" />
+            <skill id="Engineering" value="210" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="rivendell_bat_template_medium_d" />
+            <EquipmentSet id="rivendell_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_R2_4" race="elf" name="{=aom_lord_R2_4_name}Lindir" age="21" voice="curt" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+        <face>
+            <BodyProperties version="4" age="21.0" weight="0.25" build="0.45" key="00020006C00016029A797961AA0103D841B0830030ECF600921531198EF3BC94009B6603098C7F4732430001330223550000000000001977000000004D245002" />
+            <hair_tags>
+                <hair_tag name="battania" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="battania" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="275" />
+            <skill id="TwoHanded" value="240" />
+            <skill id="Polearm" value="275" />
+            <skill id="Bow" value="265" />
+            <skill id="Crossbow" value="170" />
+            <skill id="Throwing" value="190" />
+            <skill id="Riding" value="240" />
+            <skill id="Athletics" value="285" />
+            <skill id="Crafting" value="170" />
+            <skill id="Scouting" value="255" />
+            <skill id="Tactics" value="240" />
+            <skill id="Roguery" value="110" />
+            <skill id="Charm" value="210" />
+            <skill id="Leadership" value="220" />
+            <skill id="Trade" value="160" />
+            <skill id="Steward" value="300" />
+            <skill id="Medicine" value="190" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="rivendell_bat_template_medium_e" />
+            <EquipmentSet id="rivendell_civ_template_default_e" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <!-- Patreon supporter lord: Chägermeister (clan Elen-Nolmarë) -->
