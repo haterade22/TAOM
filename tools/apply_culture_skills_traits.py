@@ -173,6 +173,12 @@ BASE_ARCHETYPES = {
                                      Riding=290,Athletics=285,Crafting=210,Scouting=290,Tactics=295,Roguery=290,
                                      Charm=280,Leadership=295,Trade=190,Steward=260,Medicine=170,Engineering=240),
                          traits=dict(Honor=-2,Generosity=-2,Calculating=2,Mercy=-2,Valor=2,Egalitarian=-2,Oligarchic=2,Authoritarian=2)),
+    # sauron — hand-tuned in 1f7a7a9a (legendary-lord hierarchy); synced from live XML
+    'sauron':       dict(skills=dict(OneHanded=320,TwoHanded=310,Polearm=320,Bow=283,Crossbow=281,Throwing=281,Riding=281,Athletics=320,Crafting=330,Scouting=281,Tactics=330,Roguery=320,Charm=281,Leadership=330,Trade=281,Steward=281,Medicine=300,Engineering=320),
+                         traits=dict(Honor=-2,Generosity=-2,Calculating=2,Mercy=-2,Valor=2,Egalitarian=-2,Oligarchic=2,Authoritarian=2)),
+    # witch_king — hand-tuned in 1f7a7a9a (legendary-lord hierarchy); synced from live XML
+    'witch_king':       dict(skills=dict(OneHanded=315,TwoHanded=251,Polearm=300,Bow=246,Crossbow=246,Throwing=246,Riding=305,Athletics=300,Crafting=246,Scouting=246,Tactics=315,Roguery=310,Charm=246,Leadership=320,Trade=246,Steward=246,Medicine=235,Engineering=246),
+                         traits=dict(Honor=-2,Generosity=-2,Calculating=2,Mercy=-2,Valor=2,Egalitarian=-2,Oligarchic=2,Authoritarian=2)),
     'black_numenorean': dict(skills=dict(OneHanded=255,TwoHanded=210,Polearm=240,Bow=210,Crossbow=170,Throwing=180,
                                          Riding=240,Athletics=255,Crafting=200,Scouting=240,Tactics=260,Roguery=240,
                                          Charm=270,Leadership=260,Trade=240,Steward=255,Medicine=190,Engineering=240),
@@ -270,18 +276,18 @@ CULTURES = {
         ],
         'canonical': {
             # Stewards
-            'lord_1_7': dict(skills=dict(OneHanded=170,TwoHanded=130,Polearm=180,Bow=130,Crossbow=90,Throwing=100,Riding=200,Athletics=170,Crafting=150,Scouting=220,Tactics=280,Roguery=130,Charm=270,Leadership=290,Trade=230,Steward=300,Medicine=160,Engineering=240),
+            'lord_1_7': dict(skills=dict(OneHanded=170,TwoHanded=120,Polearm=150,Bow=130,Crossbow=110,Throwing=100,Riding=190,Athletics=187,Crafting=187,Scouting=187,Tactics=255,Roguery=187,Charm=255,Leadership=290,Trade=225,Steward=310,Medicine=187,Engineering=235),
                           traits=dict(Honor=1,Generosity=0,Calculating=2,Mercy=-1,Valor=1,Egalitarian=-1,Oligarchic=2,Authoritarian=2)),  # Denethor
-            'lord_1_75': dict(skills=dict(OneHanded=295,TwoHanded=255,Polearm=240,Bow=160,Crossbow=110,Throwing=170,Riding=260,Athletics=285,Crafting=80,Scouting=210,Tactics=250,Roguery=70,Charm=230,Leadership=285,Trade=110,Steward=180,Medicine=130,Engineering=160),
+            'lord_1_75': dict(skills=dict(OneHanded=325,TwoHanded=210,Polearm=290,Bow=210,Crossbow=210,Throwing=210,Riding=210,Athletics=315,Crafting=210,Scouting=210,Tactics=295,Roguery=210,Charm=210,Leadership=310,Trade=210,Steward=210,Medicine=210,Engineering=210),
                           traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),  # Boromir
-            'lord_1_34': dict(skills=dict(OneHanded=240,TwoHanded=190,Polearm=220,Bow=275,Crossbow=140,Throwing=180,Riding=210,Athletics=275,Crafting=110,Scouting=290,Tactics=270,Roguery=120,Charm=230,Leadership=250,Trade=120,Steward=220,Medicine=170,Engineering=160),
+            'lord_1_34': dict(skills=dict(OneHanded=250,TwoHanded=186,Polearm=189,Bow=310,Crossbow=189,Throwing=189,Riding=189,Athletics=280,Crafting=189,Scouting=300,Tactics=295,Roguery=189,Charm=255,Leadership=189,Trade=189,Steward=189,Medicine=189,Engineering=189),
                           traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=2,Oligarchic=0,Authoritarian=-1)),  # Faramir
             'lord_1_8':  dict(skills=dict(OneHanded=130,TwoHanded=90,Polearm=110,Bow=80,Crossbow=70,Throwing=70,Riding=170,Athletics=140,Crafting=160,Scouting=150,Tactics=230,Roguery=80,Charm=250,Leadership=210,Trade=230,Steward=275,Medicine=180,Engineering=210),
                           traits=dict(Honor=2,Generosity=1,Calculating=2,Mercy=1,Valor=1,Egalitarian=0,Oligarchic=2,Authoritarian=1)),  # Hurioneth
             'lord_1_44': dict(skills=dict(OneHanded=260,TwoHanded=210,Polearm=250,Bow=110,Crossbow=90,Throwing=120,Riding=180,Athletics=250,Crafting=80,Scouting=160,Tactics=220,Roguery=70,Charm=170,Leadership=210,Trade=100,Steward=170,Medicine=110,Engineering=130),
                           traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=2)),  # Nemos
             # Dol Amroth
-            'lord_1_9':  dict(skills=dict(OneHanded=290,TwoHanded=220,Polearm=275,Bow=180,Crossbow=120,Throwing=160,Riding=290,Athletics=260,Crafting=110,Scouting=230,Tactics=275,Roguery=90,Charm=270,Leadership=290,Trade=180,Steward=250,Medicine=170,Engineering=190),
+            'lord_1_9':  dict(skills=dict(OneHanded=285,TwoHanded=209,Polearm=295,Bow=203,Crossbow=203,Throwing=203,Riding=320,Athletics=203,Crafting=203,Scouting=203,Tactics=203,Roguery=203,Charm=280,Leadership=300,Trade=203,Steward=203,Medicine=203,Engineering=203),
                           traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),  # Imrahil
             'lord_1_9_5': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=70,Crossbow=50,Throwing=50,Riding=160,Athletics=110,Crafting=180,Scouting=140,Tactics=210,Roguery=80,Charm=295,Leadership=240,Trade=250,Steward=295,Medicine=260,Engineering=170),
                           traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=0,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Lothwen
@@ -313,7 +319,7 @@ CULTURES = {
             'lord_1_46_1': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=140,Athletics=110,Crafting=140,Scouting=110,Tactics=140,Roguery=60,Charm=215,Leadership=160,Trade=185,Steward=235,Medicine=200,Engineering=140),
                           traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=1,Valor=0,Egalitarian=0,Oligarchic=1,Authoritarian=1)),  # Thorwen
             # Lossarnach
-            'lord_1_45': dict(skills=dict(OneHanded=235,TwoHanded=210,Polearm=255,Bow=110,Crossbow=90,Throwing=130,Riding=160,Athletics=150,Crafting=110,Scouting=170,Tactics=235,Roguery=70,Charm=210,Leadership=250,Trade=210,Steward=250,Medicine=140,Engineering=190),
+            'lord_1_45': dict(skills=dict(OneHanded=240,TwoHanded=295,Polearm=200,Bow=194,Crossbow=194,Throwing=194,Riding=194,Athletics=194,Crafting=194,Scouting=194,Tactics=194,Roguery=194,Charm=194,Leadership=285,Trade=194,Steward=258,Medicine=194,Engineering=194),
                           traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Forlong
             'lord_1_45_1': dict(skills=dict(OneHanded=60,TwoHanded=30,Polearm=50,Bow=80,Crossbow=60,Throwing=50,Riding=160,Athletics=120,Crafting=200,Scouting=140,Tactics=180,Roguery=70,Charm=245,Leadership=190,Trade=230,Steward=275,Medicine=225,Engineering=170),
                           traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Berethiel
@@ -324,7 +330,7 @@ CULTURES = {
                           traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=1)),  # Baranor
             'lord_1_57_1': dict(archetype='young_lady'),  # Calathiel
             # Pinnath Gelin
-            'lord_1_52': dict(skills=dict(OneHanded=235,TwoHanded=180,Polearm=245,Bow=230,Crossbow=120,Throwing=160,Riding=215,Athletics=255,Crafting=80,Scouting=230,Tactics=215,Roguery=80,Charm=250,Leadership=235,Trade=140,Steward=195,Medicine=140,Engineering=140),
+            'lord_1_52': dict(skills=dict(OneHanded=250,TwoHanded=180,Polearm=255,Bow=184,Crossbow=184,Throwing=184,Riding=275,Athletics=184,Crafting=184,Scouting=184,Tactics=184,Roguery=184,Charm=184,Leadership=248,Trade=184,Steward=184,Medicine=184,Engineering=184),
                           traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Hirluin
             'lord_1_52_1': dict(archetype='young_lady', skills=dict(OneHanded=140,TwoHanded=80,Polearm=120,Bow=170,Crossbow=110,Throwing=110,Riding=180,Athletics=190,Crafting=110,Scouting=160,Tactics=140,Roguery=70,Charm=200,Leadership=130,Trade=130,Steward=170,Medicine=140,Engineering=100),
                           traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Anariel/Arador
@@ -333,18 +339,18 @@ CULTURES = {
             'lord_1_52_4': dict(archetype='matriarch'),  # Nauriel
             'lord_1_62':   dict(archetype='knight'),  # Oromar
             # Lamedon
-            'lord_1_53': dict(skills=dict(OneHanded=265,TwoHanded=215,Polearm=255,Bow=130,Crossbow=110,Throwing=150,Riding=230,Athletics=250,Crafting=100,Scouting=210,Tactics=245,Roguery=80,Charm=200,Leadership=260,Trade=150,Steward=210,Medicine=140,Engineering=160),
+            'lord_1_53': dict(skills=dict(OneHanded=270,TwoHanded=172,Polearm=242,Bow=177,Crossbow=177,Throwing=177,Riding=255,Athletics=177,Crafting=177,Scouting=177,Tactics=177,Roguery=177,Charm=177,Leadership=260,Trade=177,Steward=177,Medicine=177,Engineering=177),
                           traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=1)),  # Angbor
             'lord_1_73':   dict(archetype='knight', skills=dict(OneHanded=235,TwoHanded=190,Polearm=225,Bow=120,Crossbow=90,Throwing=130,Riding=220,Athletics=235,Crafting=70,Scouting=170,Tactics=180,Roguery=70,Charm=180,Leadership=180,Trade=110,Steward=150,Medicine=100,Engineering=110),
                           traits=dict(Honor=2,Generosity=2,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Narmir
             'lord_1_73_1': dict(archetype='lady'),  # Belwen/Popilia
             # Anfalas
-            'lord_1_71':   dict(skills=dict(OneHanded=215,TwoHanded=165,Polearm=210,Bow=225,Crossbow=140,Throwing=170,Riding=180,Athletics=245,Crafting=110,Scouting=255,Tactics=230,Roguery=110,Charm=195,Leadership=225,Trade=230,Steward=210,Medicine=140,Engineering=170),
+            'lord_1_71':   dict(skills=dict(OneHanded=290,TwoHanded=200,Polearm=195,Bow=205,Crossbow=195,Throwing=195,Riding=195,Athletics=195,Crafting=195,Scouting=195,Tactics=195,Roguery=195,Charm=195,Leadership=275,Trade=195,Steward=195,Medicine=195,Engineering=195),
                           traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Golasgil
             'lord_1_71_1': dict(skills=dict(OneHanded=65,TwoHanded=35,Polearm=55,Bow=90,Crossbow=70,Throwing=55,Riding=160,Athletics=130,Crafting=180,Scouting=160,Tactics=200,Roguery=80,Charm=255,Leadership=210,Trade=240,Steward=265,Medicine=235,Engineering=170),
                           traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),  # Laswen
             # Morthond
-            'lord_WE9_l':  dict(skills=dict(OneHanded=205,TwoHanded=160,Polearm=215,Bow=290,Crossbow=140,Throwing=160,Riding=190,Athletics=265,Crafting=110,Scouting=265,Tactics=245,Roguery=90,Charm=180,Leadership=240,Trade=150,Steward=210,Medicine=140,Engineering=140),
+            'lord_WE9_l':  dict(skills=dict(OneHanded=205,TwoHanded=172,Polearm=177,Bow=290,Crossbow=177,Throwing=177,Riding=177,Athletics=177,Crafting=177,Scouting=255,Tactics=177,Roguery=177,Charm=177,Leadership=177,Trade=177,Steward=177,Medicine=177,Engineering=177),
                           traits=dict(Honor=2,Generosity=1,Calculating=1,Mercy=0,Valor=2,Egalitarian=0,Oligarchic=1,Authoritarian=1)),  # Duinhir
             'lord_WE9_u':  dict(archetype='ranger', skills=dict(OneHanded=200,TwoHanded=150,Polearm=190,Bow=275,Crossbow=130,Throwing=160,Riding=170,Athletics=255,Crafting=100,Scouting=255,Tactics=215,Roguery=90,Charm=170,Leadership=210,Trade=120,Steward=170,Medicine=130,Engineering=120),
                           traits=dict(Honor=2,Generosity=1,Calculating=0,Mercy=1,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),  # Duilin
@@ -425,11 +431,10 @@ CULTURES = {
             (['lord','noble'], 'elf_lord'),
         ],
         'canonical': {
-            'lord_M1_1': dict(archetype='elf_king'),    # Thranduil
+            'lord_M1_1': dict(archetype='elf_king',    # Thranduil — split from shared elf_king set (1f7a7a9a)
+                              skills=dict(OneHanded=300,TwoHanded=255,Polearm=300,Bow=300,Crossbow=260,Throwing=260,Riding=285,Athletics=300,Crafting=260,Scouting=260,Tactics=260,Roguery=260,Charm=260,Leadership=300,Trade=260,Steward=260,Medicine=260,Engineering=260)),
             'lord_M1_11': dict(archetype='elf_archer',  # Legolas — prince of Mirkwood, master archer
-                skills=dict(OneHanded=270,TwoHanded=210,Polearm=265,Bow=295,Crossbow=200,Throwing=220,
-                            Riding=255,Athletics=295,Crafting=190,Scouting=290,Tactics=255,Roguery=120,
-                            Charm=240,Leadership=235,Trade=180,Steward=210,Medicine=210,Engineering=180)),
+                skills=dict(OneHanded=285,TwoHanded=242,Polearm=238,Bow=330,Crossbow=238,Throwing=260,Riding=265,Athletics=305,Crafting=238,Scouting=295,Tactics=238,Roguery=238,Charm=238,Leadership=238,Trade=238,Steward=238,Medicine=238,Engineering=238)),
             'lord_M1_2': dict(archetype='elf_queen'),   # Lothuial — TAOM-invented queen
             'lord_M1_3': dict(archetype='elf_warrior'), # Feren — captain
             'lord_M1_4': dict(archetype='elf_lord'),    # Galion — butler/steward
@@ -453,9 +458,7 @@ CULTURES = {
         ],
         'canonical': {
             'lord_R1_1': dict(archetype='elf_king',     # Elrond — master of Rivendell, ancient (~6500 yrs)
-                skills=dict(OneHanded=285,TwoHanded=255,Polearm=290,Bow=290,Crossbow=210,Throwing=220,
-                            Riding=275,Athletics=285,Crafting=280,Scouting=285,Tactics=295,Roguery=130,
-                            Charm=295,Leadership=295,Trade=260,Steward=295,Medicine=295,Engineering=270)),
+                skills=dict(OneHanded=290,TwoHanded=260,Polearm=260,Bow=260,Crossbow=260,Throwing=260,Riding=260,Athletics=290,Crafting=260,Scouting=260,Tactics=305,Roguery=260,Charm=300,Leadership=310,Trade=260,Steward=300,Medicine=325,Engineering=260)),
             'lord_R1_2': dict(archetype='elf_queen'),   # Celebrían — wife of Elrond, daughter of Galadriel
             'lord_R1_3': dict(archetype='elf_warrior', # Elladan — twin son, fought with Dúnedain rangers
                 skills=dict(OneHanded=280,TwoHanded=240,Polearm=275,Bow=275,Crossbow=180,Throwing=200,
@@ -470,9 +473,7 @@ CULTURES = {
                             Riding=245,Athletics=240,Crafting=240,Scouting=220,Tactics=215,Roguery=80,
                             Charm=290,Leadership=210,Trade=220,Steward=265,Medicine=280,Engineering=200)),
             'lord_R2_1': dict(archetype='elf_warrior', # Glorfindel — slayer of a Balrog, prince of the Noldor
-                skills=dict(OneHanded=295,TwoHanded=265,Polearm=295,Bow=270,Crossbow=190,Throwing=210,
-                            Riding=290,Athletics=295,Crafting=220,Scouting=270,Tactics=275,Roguery=110,
-                            Charm=260,Leadership=270,Trade=180,Steward=220,Medicine=210,Engineering=190)),
+                skills=dict(OneHanded=315,TwoHanded=295,Polearm=300,Bow=241,Crossbow=242,Throwing=242,Riding=285,Athletics=310,Crafting=242,Scouting=242,Tactics=242,Roguery=242,Charm=242,Leadership=242,Trade=242,Steward=242,Medicine=242,Engineering=242)),
         },
     },
 
@@ -621,13 +622,9 @@ CULTURES = {
         ],
         'canonical': {
             'lord_L1_1': dict(archetype='elf_queen',   # Galadriel — Ring-bearer, ancient Noldor; max-tier
-                skills=dict(OneHanded=250,TwoHanded=210,Polearm=255,Bow=275,Crossbow=200,Throwing=210,
-                            Riding=270,Athletics=275,Crafting=290,Scouting=275,Tactics=295,Roguery=110,
-                            Charm=300,Leadership=300,Trade=275,Steward=295,Medicine=290,Engineering=240)),
+                skills=dict(OneHanded=285,TwoHanded=260,Polearm=260,Bow=260,Crossbow=260,Throwing=260,Riding=260,Athletics=290,Crafting=260,Scouting=300,Tactics=305,Roguery=260,Charm=325,Leadership=325,Trade=260,Steward=315,Medicine=305,Engineering=260)),
             'lord_L1_2': dict(archetype='elf_king',    # Celeborn — Lord of Lothlórien, ancient Sindar
-                skills=dict(OneHanded=290,TwoHanded=250,Polearm=295,Bow=290,Crossbow=200,Throwing=210,
-                            Riding=275,Athletics=290,Crafting=265,Scouting=290,Tactics=290,Roguery=120,
-                            Charm=285,Leadership=290,Trade=240,Steward=285,Medicine=275,Engineering=240)),
+                skills=dict(OneHanded=320,TwoHanded=300,Polearm=310,Bow=245,Crossbow=250,Throwing=250,Riding=250,Athletics=315,Crafting=250,Scouting=250,Tactics=250,Roguery=250,Charm=250,Leadership=290,Trade=250,Steward=250,Medicine=250,Engineering=250)),
         },
     },
 

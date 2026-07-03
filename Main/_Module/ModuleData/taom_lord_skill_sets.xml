@@ -1243,6 +1243,26 @@
     <skill id="Medicine" value="238" />
     <skill id="Engineering" value="238" />
   </SkillSet>
+  <SkillSet id="taom_canonical_lord_M1_1_skills">
+    <skill id="OneHanded" value="300" />
+    <skill id="TwoHanded" value="255" />
+    <skill id="Polearm" value="300" />
+    <skill id="Bow" value="300" />
+    <skill id="Crossbow" value="260" />
+    <skill id="Throwing" value="260" />
+    <skill id="Riding" value="285" />
+    <skill id="Athletics" value="300" />
+    <skill id="Crafting" value="260" />
+    <skill id="Scouting" value="260" />
+    <skill id="Tactics" value="260" />
+    <skill id="Roguery" value="260" />
+    <skill id="Charm" value="260" />
+    <skill id="Leadership" value="300" />
+    <skill id="Trade" value="260" />
+    <skill id="Steward" value="260" />
+    <skill id="Medicine" value="260" />
+    <skill id="Engineering" value="260" />
+  </SkillSet>
   <SkillSet id="taom_canonical_lord_R1_1_skills">
     <skill id="OneHanded" value="290" />
     <skill id="TwoHanded" value="260" />
@@ -2283,6 +2303,26 @@
     <skill id="Medicine" value="110" />
     <skill id="Engineering" value="100" />
   </SkillSet>
+  <SkillSet id="taom_sauron_skills">
+    <skill id="OneHanded" value="320" />
+    <skill id="TwoHanded" value="310" />
+    <skill id="Polearm" value="320" />
+    <skill id="Bow" value="283" />
+    <skill id="Crossbow" value="281" />
+    <skill id="Throwing" value="281" />
+    <skill id="Riding" value="281" />
+    <skill id="Athletics" value="320" />
+    <skill id="Crafting" value="330" />
+    <skill id="Scouting" value="281" />
+    <skill id="Tactics" value="330" />
+    <skill id="Roguery" value="320" />
+    <skill id="Charm" value="281" />
+    <skill id="Leadership" value="330" />
+    <skill id="Trade" value="281" />
+    <skill id="Steward" value="281" />
+    <skill id="Medicine" value="300" />
+    <skill id="Engineering" value="320" />
+  </SkillSet>
   <SkillSet id="taom_shieldmaiden_skills">
     <skill id="OneHanded" value="240" />
     <skill id="TwoHanded" value="200" />
@@ -2363,6 +2403,26 @@
     <skill id="Medicine" value="130" />
     <skill id="Engineering" value="130" />
   </SkillSet>
+  <SkillSet id="taom_witch_king_skills">
+    <skill id="OneHanded" value="315" />
+    <skill id="TwoHanded" value="251" />
+    <skill id="Polearm" value="300" />
+    <skill id="Bow" value="246" />
+    <skill id="Crossbow" value="246" />
+    <skill id="Throwing" value="246" />
+    <skill id="Riding" value="305" />
+    <skill id="Athletics" value="300" />
+    <skill id="Crafting" value="246" />
+    <skill id="Scouting" value="246" />
+    <skill id="Tactics" value="315" />
+    <skill id="Roguery" value="310" />
+    <skill id="Charm" value="246" />
+    <skill id="Leadership" value="320" />
+    <skill id="Trade" value="246" />
+    <skill id="Steward" value="246" />
+    <skill id="Medicine" value="235" />
+    <skill id="Engineering" value="246" />
+  </SkillSet>
   <SkillSet id="taom_young_lady_skills">
     <skill id="OneHanded" value="40" />
     <skill id="TwoHanded" value="20" />
@@ -2402,65 +2462,5 @@
     <skill id="Steward" value="110" />
     <skill id="Medicine" value="80" />
     <skill id="Engineering" value="80" />
-  </SkillSet>
-  <SkillSet id="taom_sauron_skills">
-    <skill id="OneHanded" value="320" />
-    <skill id="TwoHanded" value="310" />
-    <skill id="Polearm" value="320" />
-    <skill id="Bow" value="283" />
-    <skill id="Crossbow" value="281" />
-    <skill id="Throwing" value="281" />
-    <skill id="Riding" value="281" />
-    <skill id="Athletics" value="320" />
-    <skill id="Crafting" value="330" />
-    <skill id="Scouting" value="281" />
-    <skill id="Tactics" value="330" />
-    <skill id="Roguery" value="320" />
-    <skill id="Charm" value="281" />
-    <skill id="Leadership" value="330" />
-    <skill id="Trade" value="281" />
-    <skill id="Steward" value="281" />
-    <skill id="Medicine" value="300" />
-    <skill id="Engineering" value="320" />
-  </SkillSet>
-  <SkillSet id="taom_witch_king_skills">
-    <skill id="OneHanded" value="315" />
-    <skill id="TwoHanded" value="251" />
-    <skill id="Polearm" value="300" />
-    <skill id="Bow" value="246" />
-    <skill id="Crossbow" value="246" />
-    <skill id="Throwing" value="246" />
-    <skill id="Riding" value="305" />
-    <skill id="Athletics" value="300" />
-    <skill id="Crafting" value="246" />
-    <skill id="Scouting" value="246" />
-    <skill id="Tactics" value="315" />
-    <skill id="Roguery" value="310" />
-    <skill id="Charm" value="246" />
-    <skill id="Leadership" value="320" />
-    <skill id="Trade" value="246" />
-    <skill id="Steward" value="246" />
-    <skill id="Medicine" value="235" />
-    <skill id="Engineering" value="246" />
-  </SkillSet>
-  <SkillSet id="taom_canonical_lord_M1_1_skills">
-    <skill id="OneHanded" value="300" />
-    <skill id="TwoHanded" value="255" />
-    <skill id="Polearm" value="300" />
-    <skill id="Bow" value="300" />
-    <skill id="Crossbow" value="260" />
-    <skill id="Throwing" value="260" />
-    <skill id="Riding" value="285" />
-    <skill id="Athletics" value="300" />
-    <skill id="Crafting" value="260" />
-    <skill id="Scouting" value="260" />
-    <skill id="Tactics" value="260" />
-    <skill id="Roguery" value="260" />
-    <skill id="Charm" value="260" />
-    <skill id="Leadership" value="300" />
-    <skill id="Trade" value="260" />
-    <skill id="Steward" value="260" />
-    <skill id="Medicine" value="260" />
-    <skill id="Engineering" value="260" />
   </SkillSet>
 </SkillSets>

@@ -2,6 +2,17 @@
 
 ## 2026-07-02
 
+### chore(lord-skills): sync SkillSet generator to the hand-tuned live XML (1f7a7a9a maintenance debt)
+
+`tools/apply_culture_skills_traits.py` had drifted from `taom_lord_skill_sets.xml` since the legendary-lord
+hierarchy commit hand-edited the XML (its own CHANGELOG note flagged this: "update its canonical entries first
+if regenerating"). A blind `--apply` would have reverted 14 hand-tuned canonical-lord sets and **deleted**
+`taom_sauron_skills` / `taom_witch_king_skills` / `taom_canonical_lord_M1_1_skills` (Sauron #321 would have lost
+his stats). Synced: the 14 canonical `skills=` dicts now carry the live values, Thranduil (`lord_M1_1`) gained his
+explicit dict, and `sauron` + `witch_king` are BASE_ARCHETYPES entries. Acceptance: regen output == committed XML
+semantically (123 sets, zero value drift); the only file change is deterministic id-sorting of the 3 hand-appended
+sets. Generator is once again safe to re-run.
+
 ### feat(sauron): grounded Dark Lord + dedicated `sauron` race — towering, immortal, NPC-only (#321)
 
 Sauron (`lord_1_17`) now fights on foot: the `Horse` (`charger`) + `HorseHarness` slots were removed from both
