@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- TAOM Additional Clans - All Cultures -->
 <Factions>
 
@@ -746,7 +746,7 @@
 		color="FF184031"
 		color2="FFC0E3B5"
 		default_party_template="PartyTemplate.kingdom_hero_party_lothlorien_lothlorien_1_template"
-		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
+		banner_key="11.205.205.1528.1528.764.764.1.0.0.17005.290.171.502.502.764.764.0.0.0" />
   <!-- ============================================== -->
   <!-- ISENGARD CLANS (isengard culture)              -->
   <!-- Uruk-hai war bands of the White Hand           -->

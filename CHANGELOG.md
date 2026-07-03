@@ -7,10 +7,12 @@
 New-game startup grants (`startup_resources_config.xml`; new campaigns only):
 
 - Elves (rivendell/lothlorien/mirkwood): influence 1000 → **2000** per clan (gold stays 600k per lord).
-- Erebor: gold 50k → **1M**, influence 150 → **1000**.
+- Erebor: gold 50k → **800k**, influence 150 → **1000**.
+- Khuzait (Easterlings): gold 50k → **75k** (influence stays 1000).
 - Gondor: gold 50k → **100k**, influence 500 → **1000**.
-- Isengard/Gundabad/Dol Guldur: gold 200k → **75k**, influence 2000 → **500**.
-- `playerGold` and all other cultures (incl. Umbar at 200k/500 — deliberate) unchanged.
+- Isengard/Dol Guldur: gold 200k → **75k**, influence 2000 → **500**; Gundabad: gold 200k → **75k**, influence 2000 → **1000**.
+- Umbar: influence 500 → **1000** (gold stays 200k).
+- `playerGold` and all other cultures unchanged.
 
 ### feat(culture-conversion): notables now convert with the settlement — foreign-culture notables replaced at conversion (#325)
 

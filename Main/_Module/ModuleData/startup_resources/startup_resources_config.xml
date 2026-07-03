@@ -15,15 +15,15 @@
 -->
 <StartupResources>
   <!-- Elven cultures -->
-  <Culture id="rivendell"   gold="600000" influence="1000" playerGold="4000"  />
-  <Culture id="lothlorien"  gold="600000" influence="1000" playerGold="4000"  />
-  <Culture id="mirkwood"    gold="600000" influence="1000" playerGold="4000"  />
+  <Culture id="rivendell"   gold="600000" influence="2000" playerGold="4000"  />
+  <Culture id="lothlorien"  gold="600000" influence="2000" playerGold="4000"  />
+  <Culture id="mirkwood"    gold="600000" influence="2000" playerGold="4000"  />
 
   <!-- Dwarven cultures -->
-  <Culture id="erebor"      gold="50000"  influence="150"  playerGold="3500"  />
+  <Culture id="erebor"      gold="800000" influence="1000" playerGold="3500"  />
 
   <!-- Human Good cultures -->
-  <Culture id="gondor"      gold="50000"  influence="500"  playerGold="2000"  />
+  <Culture id="gondor"      gold="100000" influence="1000" playerGold="2000"  />
   <Culture id="vlandia"     gold="50000"  influence="50"   playerGold="2000"  />
   <Culture id="sturgia"     gold="50000"  influence="50"   playerGold="2000"  />
 
@@ -31,7 +31,7 @@
   <Culture id="empire"      gold="50000"  influence="100"  playerGold="2000"  />
   <Culture id="battania"    gold="50000"  influence="100"  playerGold="2000"  />
   <Culture id="aserai"      gold="50000"  influence="100"  playerGold="2000"  />
-  <Culture id="khuzait"     gold="50000"  influence="1000" playerGold="2000"  />
+  <Culture id="khuzait"     gold="75000"  influence="1000" playerGold="2000"  />
 
   <!-- Independent Harad-region kingdoms (full kingdoms with NPC clans + lords; Shaghana 9 lords, Abanissa 8 lords) -->
   <!-- Both cultures are now fully playable in character creation (the issue-#111 narrative-menu
@@ -41,8 +41,8 @@
 
   <!-- Orcish / Dark cultures -->
   <Culture id="mordor"      gold="50000"  influence="500"  playerGold="2000"  />
-  <Culture id="isengard"    gold="200000" influence="2000" playerGold="2000"  />
-  <Culture id="gundabad"    gold="200000" influence="2000" playerGold="2000"  />
-  <Culture id="dolguldur"   gold="200000" influence="2000" playerGold="2000"  />
-  <Culture id="umbar"       gold="200000" influence="500"  playerGold="2000"  />
+  <Culture id="isengard"    gold="75000"  influence="500"  playerGold="2000"  />
+  <Culture id="gundabad"    gold="75000"  influence="1000" playerGold="2000"  />
+  <Culture id="dolguldur"   gold="75000"  influence="500"  playerGold="2000"  />
+  <Culture id="umbar"       gold="200000" influence="1000" playerGold="2000"  />
 </StartupResources>
