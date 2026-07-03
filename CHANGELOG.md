@@ -2,6 +2,26 @@
 
 ## 2026-07-02
 
+### fix(tools): Culture.battania is Khand, not Mirkwood — rebalance_lords mapping corrected
+
+`rebalance_lords.CULTURE_MAP` still carried the pre-mirkwood-culture `battania → mirkwood` entry, so the 41 Variag
+lords (taom_spcultures renames battania to Khand) received **elven** cultural modifiers on any `--apply` and were
+folded into "mirkwood" in every balance report (71 = 30 elves + 41 Variags — the earlier session tables had this
+pollution). Now `battania → khand` (no CULTURAL_MODS entry → baseline curve, same as mordor/goblin), and the real
+Woodland Realm gained its missing `Culture.mirkwood → mirkwood` entry — without it those 30 lords fell through to
+NO mods while Khand wore their elf bonuses. Reports now show khand (41) and mirkwood (30) separately.
+
+### balance(lords): lord_R3_1 assigned a real elf SkillSet; child lords stay on rookie templates (#323 follow-up)
+
+Of the 5 elf lords outside the TAOM SkillSet system, only one was a real gap: `lord_R3_1` (adult, age 30, owner of
+the third Rivendell clan, placeholder name) had **no skill_template at all** — he now resolves to
+`taom_elf_lord_skills` (Steward 355) via a canonical entry in the generator + a new `TEMPLATE_ASSIGN` mechanism in
+`tools/repoint_evil_lord_skillsets.py` that inserts the missing attribute. The other 4 (`lord_M1_12`, `lord_L1_3`,
+`lord_R1_11`, `lord_R2_11`) are **children aged 6-12** (two literally named "PlaceHolder Child") — vanilla
+`spc_*_rookie` templates are the correct child-hero treatment (the generator deliberately skips age<14), so they
+keep them. Also noted: Círdan's `taom_canonical_lord_R3_2_skills` is orphaned — no `lord_R3_2` NPC exists.
+Adult-only elf Steward now: lothlórien 355 / rivendell 337 / mirkwood 333.
+
 ### balance(lords): elf lord Steward +100 — Rivendell / Lothlórien / Mirkwood party size (#323)
 
 Follow-up to #322 after the mechanics correction: **Steward** is the direct party-size driver

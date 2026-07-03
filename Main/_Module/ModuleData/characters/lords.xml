@@ -27887,7 +27887,7 @@
         </Equipments>
     </NPCCharacter>
     <!-- Patreon supporter lord: Chägermeister (clan Elen-Nolmarë) -->
-    <NPCCharacter id="lord_R3_1" name="{=aom_lord_R3_1_name}Chägermeister" age="30" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" race="elf" occupation="Lord" default_group="Cavalry" face_mesh_cache="true">
+    <NPCCharacter id="lord_R3_1" skill_template="SkillSet.taom_elf_lord_skills" name="{=aom_lord_R3_1_name}Chägermeister" age="30" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" race="elf" occupation="Lord" default_group="Cavalry" face_mesh_cache="true">
         <face>
           <BodyProperties version="4" age="22.25" weight="0.3102" build="0.7477"  key="001BD40E4000101A5D821644918C8A77064A789A37B9B8C50D30207287B07CC000FB56030FD6DA7D00000000000000000000000000000000000000002BF40004"  />
           <hair_tags>
@@ -27916,7 +27916,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="300" />
+            <skill id="Steward" value="355" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>

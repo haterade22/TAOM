@@ -89,8 +89,14 @@ PARITY_BY_TEMPLATE = {
     'SkillSet.taom_canonical_lord_R2_1_skills': {'Steward': 342},
 }
 # Lords with NO skill_template: the inline block IS engine-authoritative. Absolute values.
-INLINE_OVERRIDES = {
-    'lord_R3_1': {'Steward': 300},  # rivendell, template-less; 200 + 100
+# (empty since lord_R3_1 graduated to a real SkillSet via TEMPLATE_ASSIGN below)
+INLINE_OVERRIDES = {}
+# Per-NPC template ASSIGNMENT for lords that had no skill_template attr at all — the attr is
+# inserted into the NPCCharacter tag; inline parity then follows PARITY_BY_TEMPLATE.
+# Child lords (age<14, e.g. lord_M1_12/L1_3/R1_11/R2_11) are deliberately NOT assigned adult
+# sets — vanilla spc_*_rookie templates are the correct child-hero treatment (generator skips age<14).
+TEMPLATE_ASSIGN = {
+    'lord_R3_1': 'SkillSet.taom_elf_lord_skills',  # adult clan leader, was inline-only
 }
 
 XML_BLOCK = re.compile(r'<NPCCharacter\s+id="([^"]+)"[^>]*>.*?</NPCCharacter>', re.DOTALL)
@@ -127,6 +133,12 @@ def process(text: str, mode: str, label: str, stats: dict) -> str:
         swaps = CULTURE_SWAPS.get(culture)
         if swaps is not None:
             template = block_template(block, mode)
+            if not template and npc_id in TEMPLATE_ASSIGN and mode == 'xml':
+                new = TEMPLATE_ASSIGN[npc_id]
+                block = re.sub(rf'(<NPCCharacter\s+id="{re.escape(npc_id)}")',
+                               rf'\g<1> skill_template="{new}"', block, count=1)
+                template = new
+                stats[f'{label}:assign-{npc_id}'] = 1
             new_template = swaps.get(template, template)
             if new_template != template:
                 block = block.replace(template, new_template)

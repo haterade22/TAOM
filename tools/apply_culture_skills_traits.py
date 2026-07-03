@@ -516,6 +516,10 @@ CULTURES = {
                             Charm=290,Leadership=210,Trade=220,Steward=365,Medicine=280,Engineering=200)),
             'lord_R2_1': dict(archetype='elf_warrior', # Glorfindel — slayer of a Balrog, prince of the Noldor
                 skills=dict(OneHanded=315,TwoHanded=295,Polearm=300,Bow=241,Crossbow=242,Throwing=242,Riding=285,Athletics=310,Crafting=242,Scouting=242,Tactics=242,Roguery=242,Charm=242,Leadership=242,Trade=242,Steward=342,Medicine=242,Engineering=242)),
+            # third Rivendell clan leader (placeholder name, age 30) — was template-less (inline-only
+            # stats); assigned elf_lord via tools/repoint_evil_lord_skillsets.py 2026-07-02. NOTE:
+            # lord_R3_2 (Círdan) has an orphaned canonical set — no such NPC exists in lords.xml/xslt.
+            'lord_R3_1': dict(archetype='elf_lord'),
         },
     },
 
