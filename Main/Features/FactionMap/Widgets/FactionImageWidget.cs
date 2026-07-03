@@ -77,8 +77,7 @@ public class FactionImageWidget : ImageWidget
                 return;
             }
 
-            var twoDimTex = new TwoDimTexture(new TaleWorlds.Engine.GauntletUI.EngineTexture(engineTex));
-            Sprite = new RuntimeSprite(twoDimTex, twoDimTex.Width, twoDimTex.Height);
+            Sprite = RuntimeSpriteFactory.FromEngineTexture(engineTex);
             _textureLoaded = true;
             _loadedImageId = _imageId;
         }

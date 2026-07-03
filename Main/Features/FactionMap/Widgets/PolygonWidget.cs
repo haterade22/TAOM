@@ -811,15 +811,14 @@ public class PolygonWidget : ImageWidget
                 return;
             }
 
-            var twoDimTex = new TwoDimTexture(new TaleWorlds.Engine.GauntletUI.EngineTexture(engineTex));
-            _loadedSprite = new RuntimeSprite(twoDimTex, twoDimTex.Width, twoDimTex.Height);
+            _loadedSprite = RuntimeSpriteFactory.FromEngineTexture(engineTex);
             Sprite = _loadedSprite;
             _textureLoaded = true;
 
             // Extract alpha map from PNG file for pixel-accurate hit testing
             try
             {
-                _hitMap = LoadAlphaMapFromPng(file, twoDimTex.Width, twoDimTex.Height);
+                _hitMap = LoadAlphaMapFromPng(file, _loadedSprite.Width, _loadedSprite.Height);
             }
             catch (Exception alphaEx)
             {
@@ -870,8 +869,7 @@ public class PolygonWidget : ImageWidget
                 return;
             }
 
-            var twoDimTex = new TwoDimTexture(new TaleWorlds.Engine.GauntletUI.EngineTexture(engineTex));
-            _emblemSprite = new RuntimeSprite(twoDimTex, twoDimTex.Width, twoDimTex.Height);
+            _emblemSprite = RuntimeSpriteFactory.FromEngineTexture(engineTex);
             _emblemLoaded = true;
         }
         catch (Exception ex)
@@ -917,8 +915,7 @@ public class PolygonWidget : ImageWidget
                 return;
             }
 
-            var twoDimTex = new TwoDimTexture(new TaleWorlds.Engine.GauntletUI.EngineTexture(engineTex));
-            _bannerSprite = new RuntimeSprite(twoDimTex, twoDimTex.Width, twoDimTex.Height);
+            _bannerSprite = RuntimeSpriteFactory.FromEngineTexture(engineTex);
             _bannerLoaded = true;
         }
         catch (Exception ex)

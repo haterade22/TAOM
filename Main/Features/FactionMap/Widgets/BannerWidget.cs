@@ -285,13 +285,12 @@ public class BannerWidget : ImageWidget
                 return;
             }
 
-            var twoDimTex = new TwoDimTexture(new TaleWorlds.Engine.GauntletUI.EngineTexture(engineTex));
-            _loadedSprite = new RuntimeSprite(twoDimTex, twoDimTex.Width, twoDimTex.Height);
+            _loadedSprite = RuntimeSpriteFactory.FromEngineTexture(engineTex);
             Sprite = _loadedSprite;
             _textureLoaded = true;
 
-            _bannerWidth = twoDimTex.Width;
-            _bannerHeight = twoDimTex.Height;
+            _bannerWidth = _loadedSprite.Width;
+            _bannerHeight = _loadedSprite.Height;
         }
         catch (Exception ex)
         {
