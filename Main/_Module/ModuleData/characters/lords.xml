@@ -22617,7 +22617,7 @@
             <skill id="Charm" value="300" />
             <skill id="Leadership" value="300" />
             <skill id="Trade" value="275" />
-            <skill id="Steward" value="295" />
+            <skill id="Steward" value="415" />
             <skill id="Medicine" value="290" />
             <skill id="Engineering" value="240" />
         </skills>
@@ -22665,7 +22665,7 @@
             <skill id="Charm" value="285" />
             <skill id="Leadership" value="290" />
             <skill id="Trade" value="240" />
-            <skill id="Steward" value="285" />
+            <skill id="Steward" value="350" />
             <skill id="Medicine" value="275" />
             <skill id="Engineering" value="240" />
         </skills>
@@ -22769,7 +22769,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -22818,7 +22818,7 @@
             <skill id="Charm" value="285" />
             <skill id="Leadership" value="290" />
             <skill id="Trade" value="240" />
-            <skill id="Steward" value="285" />
+            <skill id="Steward" value="360" />
             <skill id="Medicine" value="275" />
             <skill id="Engineering" value="240" />
         </skills>
@@ -22863,7 +22863,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="290" />
             <skill id="Trade" value="265" />
-            <skill id="Steward" value="290" />
+            <skill id="Steward" value="390" />
             <skill id="Medicine" value="285" />
             <skill id="Engineering" value="230" />
         </skills>
@@ -22911,7 +22911,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -22959,7 +22959,7 @@
             <skill id="Charm" value="250" />
             <skill id="Leadership" value="255" />
             <skill id="Trade" value="200" />
-            <skill id="Steward" value="255" />
+            <skill id="Steward" value="355" />
             <skill id="Medicine" value="240" />
             <skill id="Engineering" value="210" />
         </skills>
@@ -23004,7 +23004,7 @@
             <skill id="Charm" value="270" />
             <skill id="Leadership" value="200" />
             <skill id="Trade" value="220" />
-            <skill id="Steward" value="265" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="260" />
             <skill id="Engineering" value="190" />
         </skills>
@@ -23052,7 +23052,7 @@
             <skill id="Charm" value="240" />
             <skill id="Leadership" value="235" />
             <skill id="Trade" value="180" />
-            <skill id="Steward" value="210" />
+            <skill id="Steward" value="338" />
             <skill id="Medicine" value="210" />
             <skill id="Engineering" value="180" />
         </skills>
@@ -23152,7 +23152,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -23197,7 +23197,7 @@
             <skill id="Charm" value="270" />
             <skill id="Leadership" value="200" />
             <skill id="Trade" value="220" />
-            <skill id="Steward" value="265" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="260" />
             <skill id="Engineering" value="190" />
         </skills>
@@ -23245,7 +23245,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -23290,7 +23290,7 @@
             <skill id="Charm" value="270" />
             <skill id="Leadership" value="200" />
             <skill id="Trade" value="220" />
-            <skill id="Steward" value="265" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="260" />
             <skill id="Engineering" value="190" />
         </skills>
@@ -23338,7 +23338,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -23386,7 +23386,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -23431,7 +23431,7 @@
             <skill id="Charm" value="270" />
             <skill id="Leadership" value="200" />
             <skill id="Trade" value="220" />
-            <skill id="Steward" value="265" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="260" />
             <skill id="Engineering" value="190" />
         </skills>
@@ -23479,7 +23479,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -23524,7 +23524,7 @@
             <skill id="Charm" value="270" />
             <skill id="Leadership" value="200" />
             <skill id="Trade" value="220" />
-            <skill id="Steward" value="265" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="260" />
             <skill id="Engineering" value="190" />
         </skills>
@@ -23572,7 +23572,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -23617,7 +23617,7 @@
             <skill id="Charm" value="270" />
             <skill id="Leadership" value="200" />
             <skill id="Trade" value="220" />
-            <skill id="Steward" value="265" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="260" />
             <skill id="Engineering" value="190" />
         </skills>
@@ -23665,7 +23665,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -23710,7 +23710,7 @@
             <skill id="Charm" value="270" />
             <skill id="Leadership" value="200" />
             <skill id="Trade" value="220" />
-            <skill id="Steward" value="265" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="260" />
             <skill id="Engineering" value="190" />
         </skills>
@@ -23758,7 +23758,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -23806,7 +23806,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -23851,7 +23851,7 @@
             <skill id="Charm" value="270" />
             <skill id="Leadership" value="200" />
             <skill id="Trade" value="220" />
-            <skill id="Steward" value="265" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="260" />
             <skill id="Engineering" value="190" />
         </skills>
@@ -23899,7 +23899,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -23944,7 +23944,7 @@
             <skill id="Charm" value="270" />
             <skill id="Leadership" value="200" />
             <skill id="Trade" value="220" />
-            <skill id="Steward" value="265" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="260" />
             <skill id="Engineering" value="190" />
         </skills>
@@ -23992,7 +23992,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -24037,7 +24037,7 @@
             <skill id="Charm" value="270" />
             <skill id="Leadership" value="200" />
             <skill id="Trade" value="220" />
-            <skill id="Steward" value="265" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="260" />
             <skill id="Engineering" value="190" />
         </skills>
@@ -24085,7 +24085,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -24133,7 +24133,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -24178,7 +24178,7 @@
             <skill id="Charm" value="270" />
             <skill id="Leadership" value="200" />
             <skill id="Trade" value="220" />
-            <skill id="Steward" value="265" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="260" />
             <skill id="Engineering" value="190" />
         </skills>
@@ -27522,7 +27522,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="295" />
             <skill id="Trade" value="260" />
-            <skill id="Steward" value="295" />
+            <skill id="Steward" value="400" />
             <skill id="Medicine" value="295" />
             <skill id="Engineering" value="270" />
         </skills>
@@ -27567,7 +27567,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="290" />
             <skill id="Trade" value="265" />
-            <skill id="Steward" value="290" />
+            <skill id="Steward" value="390" />
             <skill id="Medicine" value="285" />
             <skill id="Engineering" value="230" />
         </skills>
@@ -27615,7 +27615,7 @@
             <skill id="Charm" value="225" />
             <skill id="Leadership" value="235" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="215" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -27663,7 +27663,7 @@
             <skill id="Charm" value="225" />
             <skill id="Leadership" value="235" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="215" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -27708,7 +27708,7 @@
             <skill id="Charm" value="290" />
             <skill id="Leadership" value="210" />
             <skill id="Trade" value="220" />
-            <skill id="Steward" value="265" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="280" />
             <skill id="Engineering" value="200" />
         </skills>
@@ -27811,7 +27811,7 @@
             <skill id="Charm" value="260" />
             <skill id="Leadership" value="270" />
             <skill id="Trade" value="180" />
-            <skill id="Steward" value="220" />
+            <skill id="Steward" value="342" />
             <skill id="Medicine" value="210" />
             <skill id="Engineering" value="190" />
         </skills>
@@ -27916,7 +27916,7 @@
             <skill id="Charm" value="210" />
             <skill id="Leadership" value="220" />
             <skill id="Trade" value="160" />
-            <skill id="Steward" value="200" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="190" />
             <skill id="Engineering" value="170" />
         </skills>
@@ -53929,7 +53929,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="295" />
             <skill id="Trade" value="260" />
-            <skill id="Steward" value="295" />
+            <skill id="Steward" value="385" />
             <skill id="Medicine" value="295" />
             <skill id="Engineering" value="270" />
         </skills>
@@ -53977,7 +53977,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="295" />
             <skill id="Trade" value="260" />
-            <skill id="Steward" value="295" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="295" />
             <skill id="Engineering" value="270" />
         </skills>
@@ -54025,7 +54025,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="295" />
             <skill id="Trade" value="260" />
-            <skill id="Steward" value="295" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="295" />
             <skill id="Engineering" value="270" />
         </skills>
@@ -54073,7 +54073,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="295" />
             <skill id="Trade" value="260" />
-            <skill id="Steward" value="295" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="295" />
             <skill id="Engineering" value="270" />
         </skills>
@@ -54118,7 +54118,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="290" />
             <skill id="Trade" value="265" />
-            <skill id="Steward" value="290" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="285" />
             <skill id="Engineering" value="230" />
         </skills>
@@ -54163,7 +54163,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="290" />
             <skill id="Trade" value="265" />
-            <skill id="Steward" value="290" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="285" />
             <skill id="Engineering" value="230" />
         </skills>
@@ -54211,7 +54211,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="295" />
             <skill id="Trade" value="260" />
-            <skill id="Steward" value="295" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="295" />
             <skill id="Engineering" value="270" />
         </skills>
@@ -54259,7 +54259,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="295" />
             <skill id="Trade" value="260" />
-            <skill id="Steward" value="295" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="295" />
             <skill id="Engineering" value="270" />
         </skills>
@@ -54307,7 +54307,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="295" />
             <skill id="Trade" value="260" />
-            <skill id="Steward" value="295" />
+            <skill id="Steward" value="300" />
             <skill id="Medicine" value="295" />
             <skill id="Engineering" value="270" />
         </skills>
@@ -54352,7 +54352,7 @@
             <skill id="Charm" value="295" />
             <skill id="Leadership" value="290" />
             <skill id="Trade" value="265" />
-            <skill id="Steward" value="290" />
+            <skill id="Steward" value="365" />
             <skill id="Medicine" value="285" />
             <skill id="Engineering" value="230" />
         </skills>

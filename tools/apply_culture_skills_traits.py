@@ -117,31 +117,31 @@ BASE_ARCHETYPES = {
     # ELVES — Centuries of mastery; combat + diplomacy + crafting all high
     'elf_king':     dict(skills=dict(OneHanded=290,TwoHanded=250,Polearm=295,Bow=295,Crossbow=200,Throwing=210,
                                      Riding=280,Athletics=290,Crafting=270,Scouting=290,Tactics=290,Roguery=120,
-                                     Charm=285,Leadership=290,Trade=240,Steward=285,Medicine=275,Engineering=240),
+                                     Charm=285,Leadership=290,Trade=240,Steward=385,Medicine=275,Engineering=240),
                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=2,Authoritarian=1)),
     'elf_lord':     dict(skills=dict(OneHanded=270,TwoHanded=230,Polearm=265,Bow=275,Crossbow=180,Throwing=190,
                                      Riding=255,Athletics=280,Crafting=240,Scouting=270,Tactics=265,Roguery=110,
-                                     Charm=250,Leadership=255,Trade=200,Steward=255,Medicine=240,Engineering=210),
+                                     Charm=250,Leadership=255,Trade=200,Steward=355,Medicine=240,Engineering=210),
                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
     'elf_warrior':  dict(skills=dict(OneHanded=275,TwoHanded=240,Polearm=275,Bow=265,Crossbow=170,Throwing=190,
                                      Riding=240,Athletics=285,Crafting=170,Scouting=255,Tactics=240,Roguery=110,
-                                     Charm=210,Leadership=220,Trade=160,Steward=200,Medicine=190,Engineering=170),
+                                     Charm=210,Leadership=220,Trade=160,Steward=300,Medicine=190,Engineering=170),
                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
     'elf_archer':   dict(skills=dict(OneHanded=235,TwoHanded=180,Polearm=240,Bow=295,Crossbow=190,Throwing=210,
                                      Riding=220,Athletics=290,Crafting=180,Scouting=290,Tactics=240,Roguery=110,
-                                     Charm=220,Leadership=210,Trade=160,Steward=200,Medicine=190,Engineering=160),
+                                     Charm=220,Leadership=210,Trade=160,Steward=300,Medicine=190,Engineering=160),
                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=0,Authoritarian=0)),
     'elf_lady':     dict(skills=dict(OneHanded=180,TwoHanded=130,Polearm=170,Bow=220,Crossbow=150,Throwing=150,
                                      Riding=210,Athletics=230,Crafting=240,Scouting=210,Tactics=210,Roguery=80,
-                                     Charm=270,Leadership=200,Trade=220,Steward=265,Medicine=260,Engineering=190),
+                                     Charm=270,Leadership=200,Trade=220,Steward=365,Medicine=260,Engineering=190),
                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=1,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
     'elf_queen':    dict(skills=dict(OneHanded=240,TwoHanded=200,Polearm=240,Bow=270,Crossbow=190,Throwing=200,
                                      Riding=260,Athletics=270,Crafting=275,Scouting=265,Tactics=290,Roguery=110,
-                                     Charm=295,Leadership=290,Trade=265,Steward=290,Medicine=285,Engineering=230),
+                                     Charm=295,Leadership=290,Trade=265,Steward=390,Medicine=285,Engineering=230),
                          traits=dict(Honor=2,Generosity=2,Calculating=2,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=2,Authoritarian=1)),
     'elf_young':    dict(skills=dict(OneHanded=210,TwoHanded=160,Polearm=200,Bow=230,Crossbow=140,Throwing=160,
                                      Riding=210,Athletics=240,Crafting=170,Scouting=220,Tactics=190,Roguery=90,
-                                     Charm=200,Leadership=180,Trade=170,Steward=190,Medicine=180,Engineering=170),
+                                     Charm=200,Leadership=180,Trade=170,Steward=290,Medicine=180,Engineering=170),
                          traits=dict(Honor=2,Generosity=2,Calculating=1,Mercy=2,Valor=2,Egalitarian=1,Oligarchic=1,Authoritarian=0)),
 
     # ORCS / URUKS — Brutal combat, low diplomacy/mercy
@@ -474,9 +474,9 @@ CULTURES = {
         ],
         'canonical': {
             'lord_M1_1': dict(archetype='elf_king',    # Thranduil — split from shared elf_king set (1f7a7a9a)
-                              skills=dict(OneHanded=300,TwoHanded=255,Polearm=300,Bow=300,Crossbow=260,Throwing=260,Riding=285,Athletics=300,Crafting=260,Scouting=260,Tactics=260,Roguery=260,Charm=260,Leadership=300,Trade=260,Steward=260,Medicine=260,Engineering=260)),
+                              skills=dict(OneHanded=300,TwoHanded=255,Polearm=300,Bow=300,Crossbow=260,Throwing=260,Riding=285,Athletics=300,Crafting=260,Scouting=260,Tactics=260,Roguery=260,Charm=260,Leadership=300,Trade=260,Steward=360,Medicine=260,Engineering=260)),
             'lord_M1_11': dict(archetype='elf_archer',  # Legolas — prince of Mirkwood, master archer
-                skills=dict(OneHanded=285,TwoHanded=242,Polearm=238,Bow=330,Crossbow=238,Throwing=260,Riding=265,Athletics=305,Crafting=238,Scouting=295,Tactics=238,Roguery=238,Charm=238,Leadership=238,Trade=238,Steward=238,Medicine=238,Engineering=238)),
+                skills=dict(OneHanded=285,TwoHanded=242,Polearm=238,Bow=330,Crossbow=238,Throwing=260,Riding=265,Athletics=305,Crafting=238,Scouting=295,Tactics=238,Roguery=238,Charm=238,Leadership=238,Trade=238,Steward=338,Medicine=238,Engineering=238)),
             'lord_M1_2': dict(archetype='elf_queen'),   # Lothuial — TAOM-invented queen
             'lord_M1_3': dict(archetype='elf_warrior'), # Feren — captain
             'lord_M1_4': dict(archetype='elf_lord'),    # Galion — butler/steward
@@ -500,22 +500,22 @@ CULTURES = {
         ],
         'canonical': {
             'lord_R1_1': dict(archetype='elf_king',     # Elrond — master of Rivendell, ancient (~6500 yrs)
-                skills=dict(OneHanded=290,TwoHanded=260,Polearm=260,Bow=260,Crossbow=260,Throwing=260,Riding=260,Athletics=290,Crafting=260,Scouting=260,Tactics=305,Roguery=260,Charm=300,Leadership=310,Trade=260,Steward=300,Medicine=325,Engineering=260)),
+                skills=dict(OneHanded=290,TwoHanded=260,Polearm=260,Bow=260,Crossbow=260,Throwing=260,Riding=260,Athletics=290,Crafting=260,Scouting=260,Tactics=305,Roguery=260,Charm=300,Leadership=310,Trade=260,Steward=400,Medicine=325,Engineering=260)),
             'lord_R1_2': dict(archetype='elf_queen'),   # Celebrían — wife of Elrond, daughter of Galadriel
             'lord_R1_3': dict(archetype='elf_warrior', # Elladan — twin son, fought with Dúnedain rangers
                 skills=dict(OneHanded=280,TwoHanded=240,Polearm=275,Bow=275,Crossbow=180,Throwing=200,
                             Riding=275,Athletics=290,Crafting=180,Scouting=275,Tactics=260,Roguery=130,
-                            Charm=225,Leadership=235,Trade=160,Steward=200,Medicine=215,Engineering=170)),
+                            Charm=225,Leadership=235,Trade=160,Steward=300,Medicine=215,Engineering=170)),
             'lord_R1_4': dict(archetype='elf_warrior', # Elrohir — twin
                 skills=dict(OneHanded=280,TwoHanded=240,Polearm=275,Bow=275,Crossbow=180,Throwing=200,
                             Riding=275,Athletics=290,Crafting=180,Scouting=275,Tactics=260,Roguery=130,
-                            Charm=225,Leadership=235,Trade=160,Steward=200,Medicine=215,Engineering=170)),
+                            Charm=225,Leadership=235,Trade=160,Steward=300,Medicine=215,Engineering=170)),
             'lord_R1_5': dict(archetype='elf_lady',    # Arwen Undómiel — Evenstar
                 skills=dict(OneHanded=180,TwoHanded=130,Polearm=170,Bow=230,Crossbow=160,Throwing=160,
                             Riding=245,Athletics=240,Crafting=240,Scouting=220,Tactics=215,Roguery=80,
-                            Charm=290,Leadership=210,Trade=220,Steward=265,Medicine=280,Engineering=200)),
+                            Charm=290,Leadership=210,Trade=220,Steward=365,Medicine=280,Engineering=200)),
             'lord_R2_1': dict(archetype='elf_warrior', # Glorfindel — slayer of a Balrog, prince of the Noldor
-                skills=dict(OneHanded=315,TwoHanded=295,Polearm=300,Bow=241,Crossbow=242,Throwing=242,Riding=285,Athletics=310,Crafting=242,Scouting=242,Tactics=242,Roguery=242,Charm=242,Leadership=242,Trade=242,Steward=242,Medicine=242,Engineering=242)),
+                skills=dict(OneHanded=315,TwoHanded=295,Polearm=300,Bow=241,Crossbow=242,Throwing=242,Riding=285,Athletics=310,Crafting=242,Scouting=242,Tactics=242,Roguery=242,Charm=242,Leadership=242,Trade=242,Steward=342,Medicine=242,Engineering=242)),
         },
     },
 
@@ -674,9 +674,9 @@ CULTURES = {
         ],
         'canonical': {
             'lord_L1_1': dict(archetype='elf_queen',   # Galadriel — Ring-bearer, ancient Noldor; max-tier
-                skills=dict(OneHanded=285,TwoHanded=260,Polearm=260,Bow=260,Crossbow=260,Throwing=260,Riding=260,Athletics=290,Crafting=260,Scouting=300,Tactics=305,Roguery=260,Charm=325,Leadership=325,Trade=260,Steward=315,Medicine=305,Engineering=260)),
+                skills=dict(OneHanded=285,TwoHanded=260,Polearm=260,Bow=260,Crossbow=260,Throwing=260,Riding=260,Athletics=290,Crafting=260,Scouting=300,Tactics=305,Roguery=260,Charm=325,Leadership=325,Trade=260,Steward=415,Medicine=305,Engineering=260)),
             'lord_L1_2': dict(archetype='elf_king',    # Celeborn — Lord of Lothlórien, ancient Sindar
-                skills=dict(OneHanded=320,TwoHanded=300,Polearm=310,Bow=245,Crossbow=250,Throwing=250,Riding=250,Athletics=315,Crafting=250,Scouting=250,Tactics=250,Roguery=250,Charm=250,Leadership=290,Trade=250,Steward=250,Medicine=250,Engineering=250)),
+                skills=dict(OneHanded=320,TwoHanded=300,Polearm=310,Bow=245,Crossbow=250,Throwing=250,Riding=250,Athletics=315,Crafting=250,Scouting=250,Tactics=250,Roguery=250,Charm=250,Leadership=290,Trade=250,Steward=350,Medicine=250,Engineering=250)),
         },
     },
 

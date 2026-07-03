@@ -2,6 +2,27 @@
 
 ## 2026-07-02
 
+### balance(lords): elf lord Steward +100 — Rivendell / Lothlórien / Mirkwood party size (#323)
+
+Follow-up to #322 after the mechanics correction: **Steward** is the direct party-size driver
+(`StewardPartySizeBonus` = +0.25 party size per point, `DefaultSkillEffects.cs:281` → `DefaultPartySizeLimitModel.cs:266`,
+v1.4.6); Leadership feeds party size only via perks (and morale/garrison). All lords of the three elf cultures get
+**+100 Steward** (= +25 party size each): rivendell avg 211→300, lothlórien 194→269, mirkwood 225→322. Everyone else
+byte-unchanged on both skills.
+
+- All `taom_elf_*` sets are elf-exclusive (verified) → pure **in-place** boost: 7 elf archetypes + 9 elf canonical
+  sets (Galadriel 415, Elrond 400, Thranduil 360, Celeborn 350, Glorfindel 342, Legolas 338…), plus the
+  template-less `lord_R3_1` whose engine-authoritative inline block went 200→300. No forks, no repointing.
+- `tools/repoint_evil_lord_skillsets.py` generalized into the balance-pass parity tool: per-template
+  Leadership+Steward parity map + `INLINE_OVERRIDES` for template-less lords.
+- **Finding:** the 41 `Culture.battania` lords are **Khand Variags** (evil — `taom_spcultures` renames battania to
+  Variag; the generator's `khand` entry owns it), but `rebalance_lords.CULTURE_MAP` still says battania→mirkwood, so
+  the analyzer folds them into "mirkwood" (71 = 30 elves + 41 Variags) and the rebalance curve would hand them elven
+  modifiers. Correctly excluded here; stale mapping left for a follow-up pass.
+- Not covered: 5 elf lords on vanilla `spc_*_rookie` templates (M1_12, L1_3, R1_11, R2_11 + 1) — the pre-existing
+  93-lord vanilla-template gap.
+- **Save-compat:** new campaigns only (hero skills bake at creation).
+
 ### balance(lords): evil-faction lord Leadership nerf — Gundabad / Misty Orcs / Goblins / Dol Guldur / Dunland (#322)
 
 Those five cultures' lords hosted armies big enough to crush Rivendell and Lothlórien; Leadership (the army-size
