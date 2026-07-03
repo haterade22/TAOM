@@ -210,6 +210,12 @@ When two agents or two review passes disagree on a TaleWorlds API signature, re-
 
 ## Build, Tooling & Workflow
 
+### Every numeric claim in a CHANGELOG/doc/commit body comes from a command run this session, not recall
+The CultureConversion notable-replacement CHANGELOG entry claimed "+10" new tests; the diff had 9. The number was recalled ("about ten") while authoring the entry instead of counted. Second confirmed instance of the evidence-over-claims §C fabrication class (first: the 2026-05-30 hotfix-review doc authored before its proving diff was read).
+- **Why missed:** the entry was written at the end of a long implementation flow where the author "knew" the test count; §C's never-invent list explicitly includes counts, but the rule fired on tool OUTPUT recall, and a self-authored diff felt exempt. It isn't — your own diff is tool output too.
+- **Prevent:** before writing any count/percentage/id into a durable artifact, produce it with a command in the same session (`git diff | grep -c "\[TestMethod\]"`, `grep -c`, `wc -l`) and paste from that output. The deep-review completeness agent cross-checks CHANGELOG numerics against the diff — keep that check in its prompt.
+- **Source:** docs/reviews/rca-culture-conversion-notables-2026-07-03.md (finding 1); prior instance `feedback_no_write_before_reading_tool_output.md`.
+
 ### Parallel-builder briefs: shared sub-problems get ONE prescribed solution in the contract
 When fanning a feature out to parallel builder agents, any sub-problem two or more builders both face (id normalization, NaN handling, validation invariants, hot-path allocation patterns) must be solved ONCE in the shared contract/brief — never left to per-builder judgment. Independently-correct builders otherwise produce divergent solutions at the seams: CombatMechanics' two crush/cleave services normalized settlement-variant monster ids differently (runtime Substring-per-hit vs construction-time set expansion), which was both a per-hit allocation AND a config-semantics inconsistency (a suffixed config entry matched in one service and not the other); the MCM slider and the JSON validator enforced different ordering rules for the same value.
 - **Why missed:** each builder passed its own brief — the orchestrator's brief itself prescribed the allocating helper for one builder while the sibling invented the better pattern. No single author saw both sides; per-component review can't catch cross-component divergence.

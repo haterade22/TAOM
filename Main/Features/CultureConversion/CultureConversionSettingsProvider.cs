@@ -32,4 +32,7 @@ public sealed class CultureConversionSettingsProvider : ICultureConversionSettin
     public float MinLoyaltyToConvert => _defaults.MinLoyaltyToConvert;
 
     public bool ConvertPlayerOwnedSettlements => _defaults.ConvertPlayerOwnedSettlements;
+
+    public bool ReplaceNotablesOnConversion =>
+        TaomSettings.Instance?.CultureConversionReplaceNotables ?? _defaults.ReplaceNotablesOnConversion;
 }

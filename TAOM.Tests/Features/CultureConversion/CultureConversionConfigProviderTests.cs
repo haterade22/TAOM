@@ -48,7 +48,8 @@ public class CultureConversionConfigProviderTests
   ""requiredHoldDays"": 30,
   ""requireStableLoyalty"": true,
   ""minLoyaltyToConvert"": 40,
-  ""convertPlayerOwnedSettlements"": false
+  ""convertPlayerOwnedSettlements"": false,
+  ""replaceNotablesOnConversion"": false
 }");
 
         var config = _sut.GetConfig();
@@ -58,6 +59,18 @@ public class CultureConversionConfigProviderTests
         Assert.IsTrue(config.RequireStableLoyalty);
         Assert.AreEqual(40f, config.MinLoyaltyToConvert, 0.001f);
         Assert.IsFalse(config.ConvertPlayerOwnedSettlements);
+        Assert.IsFalse(config.ReplaceNotablesOnConversion);
+    }
+
+    [TestMethod]
+    public void GetConfig_ReplaceNotablesFieldMissing_DefaultsTrue()
+    {
+        // Pre-feature config files won't have the field — it must default on.
+        WriteConfig(@"{ ""requiredHoldDays"": 60 }");
+
+        var config = _sut.GetConfig();
+
+        Assert.IsTrue(config.ReplaceNotablesOnConversion);
     }
 
     [TestMethod]

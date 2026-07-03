@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TAOM.Features.CultureConversion.Domain;
 
 namespace TAOM.Adapters;
 
@@ -32,4 +33,15 @@ public interface ICultureConversionAdapter
 
     /// <summary>Clears every notable's volunteer slots so the daily refill repopulates from the new culture's pool.</summary>
     void ResetVolunteers(string settlementId);
+
+    /// <summary>Snapshot of the settlement's notables (empty if the settlement can't be resolved).</summary>
+    IReadOnlyList<ConvertibleNotable> GetNotables(string settlementId);
+
+    /// <summary>
+    /// Replaces one notable with a same-occupation notable drawn from the settlement's CURRENT culture
+    /// templates: transfers workshops/alleys/caravans old→new, cancels the old notable's issue, then
+    /// removes the old hero. Returns false (and logs) when the replacement is skipped fail-safe —
+    /// e.g. the hero can't be resolved or the culture has no template for the occupation.
+    /// </summary>
+    bool ReplaceNotable(string heroId);
 }

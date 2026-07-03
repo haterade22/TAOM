@@ -2,6 +2,48 @@
 
 ## 2026-07-03
 
+### balance(startup-resources): retune per-culture lord gold + clan influence
+
+New-game startup grants (`startup_resources_config.xml`; new campaigns only):
+
+- Elves (rivendell/lothlorien/mirkwood): influence 1000 → **2000** per clan (gold stays 600k per lord).
+- Erebor: gold 50k → **1M**, influence 150 → **1000**.
+- Gondor: gold 50k → **100k**, influence 500 → **1000**.
+- Isengard/Gundabad/Dol Guldur: gold 200k → **75k**, influence 2000 → **500**.
+- `playerGold` and all other cultures (incl. Umbar at 200k/500 — deliberate) unchanged.
+
+### feat(culture-conversion): notables now convert with the settlement — foreign-culture notables replaced at conversion (#325)
+
+Review confirmed the reported gap: a Mordor-captured Gondor town flipped `Settlement.Culture` (recruitment,
+militia, loyalty) after the hold period, but its notables stayed Gondorian forever — nothing in TAOM or vanilla
+ever changes a living notable's `Hero.Culture`, and vanilla turnover can't fix it (a notable dying at power ≥ 100
+spawns a relative that COPIES the old culture; only rare low-power propertyless notables disappear for the weekly
+deficit refill to backfill from the converted culture).
+
+- `ApplyConversion` now replaces each still-alive, culture-mismatched notable in the town/castle + bound villages,
+  AFTER the culture flip (replacement templates come from the NEW culture's `NotableTemplates`).
+- Per notable, `CultureConversionAdapter.ReplaceNotable` runs the order-critical engine sequence: template
+  pre-check (CreateNotable NREs on a missing occupation template — skip+warn instead) → spawn same-occupation
+  replacement → transfer workshops/alleys/caravans (`ApplyByDeath`/`SetOwner`/`TransferCaravanOwnership` — before
+  removal, or the engine destroys/reassigns them) → cancel any issue/quest (`CompleteIssueWithCancel`; relations
+  deliberately NOT transferred) → zero power (suppresses the vanilla old-culture heir spawn at
+  `NotableDisappearPowerLimit`) → `KillCharacterAction.ApplyByRemove`.
+- Fail-safe throughout: any per-notable skip keeps the old notable + warns, never blocks the conversion or the
+  daily tick. One-shot at conversion — the on-load re-apply never replaces. Restore-to-original replaces
+  symmetrically.
+- New `replaceNotablesOnConversion` JSON field + MCM "Replace Notables On Conversion" (default on).
+- Data audit (one-off script): every conversion-eligible culture — all `taom_spcultures.xml` cultures + the 6
+  vanilla-id cultures re-templated in `spcultures.xslt` — covers all 5 notable occupations; the pre-check fail-safe
+  is currently unreachable for real cultures.
+- Tests: +9 (8 service replacement decisions incl. flip-before-replace ordering + fail-continue + re-apply guard;
+  1 config default). Full suite 3873 green. Engine signatures verified against installed 1.4.6 via `taom-src`.
+- Reviews: `/deep-review` (5 agents — 0 code findings; 2 process findings fixed, RCA
+  `docs/reviews/rca-culture-conversion-notables-2026-07-03.md`) + Codex adversarial (gpt-5.5 xhigh) VERDICT
+  CLEAN, all 6 seeded Known Suspects disputed with decompile evidence (Review 70).
+
+**Save-compat:** additive — no new SyncData; pre-feature converted settlements keep their old notables (documented
+limitation; reconquest + re-conversion catches them up).
+
 ### docs(lords): lord-skills docs caught up to the balance arc (#322–#326)
 
 `docs/ai-includes/lord-skills-authoring.md` (the `/lord-skills` source of truth) rewritten where stale:

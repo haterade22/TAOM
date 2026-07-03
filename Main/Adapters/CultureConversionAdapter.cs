@@ -1,7 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Core.Logging;
+using TAOM.Features.CultureConversion.Domain;
 
 namespace TAOM.Adapters;
 
@@ -94,6 +98,79 @@ public class CultureConversionAdapter : ICultureConversionAdapter
                 continue;
             for (int i = 0; i < slots.Length; i++)
                 slots[i] = null;
+        }
+    }
+
+    public IReadOnlyList<ConvertibleNotable> GetNotables(string settlementId)
+    {
+        var result = new List<ConvertibleNotable>();
+        var notables = Settlement.Find(settlementId)?.Notables;
+        if (notables == null)
+            return result;
+
+        foreach (Hero notable in notables)
+        {
+            if (notable == null)
+                continue;
+            result.Add(new ConvertibleNotable(notable.StringId, notable.Culture?.StringId, notable.IsAlive));
+        }
+        return result;
+    }
+
+    public bool ReplaceNotable(string heroId)
+    {
+        try
+        {
+            var hero = Campaign.Current?.CampaignObjectManager?.Find<Hero>(heroId);
+            if (hero == null || !hero.IsAlive || !hero.IsNotable || hero.CurrentSettlement == null)
+            {
+                _logger.LogWarning($"CultureConversionAdapter: cannot replace notable '{heroId}' — unresolvable, dead, non-notable, or not in a settlement");
+                return false;
+            }
+
+            var settlement = hero.CurrentSettlement;
+            var occupation = hero.Occupation;
+
+            // CreateNotable NREs when the culture has no template for the occupation
+            // (GetRandomTemplateByOccupation returns null on an empty filtered list) — pre-check and keep the old notable.
+            var templates = settlement.Culture?.NotableTemplates;
+            if (templates == null || !templates.Any(t => t != null && t.Occupation == occupation))
+            {
+                _logger.LogWarning($"CultureConversionAdapter: culture '{settlement.Culture?.StringId}' has no {occupation} notable template — keeping '{heroId}'");
+                return false;
+            }
+
+            var replacement = HeroCreator.CreateNotable(occupation, settlement);
+            if (replacement == null)
+            {
+                _logger.LogWarning($"CultureConversionAdapter: CreateNotable returned null for {occupation} in '{settlement.StringId}' — keeping '{heroId}'");
+                return false;
+            }
+
+            // Transfers must precede removal: OnHeroKilled destroys any caravans the victim still owns,
+            // and the engine's workshop/alley death listeners reassign/null whatever wasn't moved.
+            foreach (var workshop in hero.OwnedWorkshops.ToList())
+                ChangeOwnerOfWorkshopAction.ApplyByDeath(workshop, replacement);
+            foreach (var alley in hero.OwnedAlleys.ToList())
+                alley.SetOwner(replacement);
+            foreach (var caravan in hero.OwnedCaravans.ToList())
+                CaravanPartyComponent.TransferCaravanOwnership(caravan.MobileParty, replacement, settlement);
+
+            // Cancel (not transfer) any issue/quest; leaves Issue == null so ApplyByRemove's
+            // notable-has-quest assert and IssueManager's death handling both no-op.
+            hero.Issue?.CompleteIssueWithCancel();
+
+            // A notable dying at Power >= NotableDisappearPowerLimit spawns a RELATIVE that copies
+            // the OLD culture (NotablesCampaignBehavior.OnHeroKilled) — zero power so no heir appears.
+            hero.AddPower(-hero.Power);
+
+            KillCharacterAction.ApplyByRemove(hero);
+            return true;
+        }
+        catch (System.Exception ex)
+        {
+            _logger.LogError($"CultureConversionAdapter: replacing notable '{heroId}' failed: {ex.Message}");
+            return false;
         }
     }
 }

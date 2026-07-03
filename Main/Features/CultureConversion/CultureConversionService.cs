@@ -15,8 +15,9 @@ namespace TAOM.Features.CultureConversion;
 ///   - A cross-culture conquest starts a hold-timer toward the new owner's culture (gated on the
 ///     target being a recruitable culture and, optionally, on not being player-owned).
 ///   - After <c>RequiredHoldDays</c> (and an optional loyalty floor) the fief converts:
-///     <c>Settlement.Culture</c> + bound villages flip to the new culture, notable volunteer slots are
-///     cleared so recruits repopulate from the new pool.
+///     <c>Settlement.Culture</c> + bound villages flip to the new culture, foreign-culture notables are
+///     replaced with new-culture ones (toggleable; property transfers, relations reset), and notable
+///     volunteer slots are cleared so recruits repopulate from the new pool.
 ///   - Converting back to the original culture removes the override entirely (restores vanilla
 ///     same-culture loyalty state). Re-conquest mid-timer restarts/cancels as the owner changes.
 /// </summary>
@@ -150,10 +151,12 @@ public class CultureConversionService : ICultureConversionService
     private void ApplyConversion(SettlementConversionRecord record, string targetCulture)
     {
         _adapter.SetSettlementCulture(record.SettlementId, targetCulture);
+        ReplaceForeignNotables(record.SettlementId, targetCulture);
         _adapter.ResetVolunteers(record.SettlementId);
         foreach (var villageId in _adapter.GetBoundVillageSettlementIds(record.SettlementId))
         {
             _adapter.SetSettlementCulture(villageId, targetCulture);
+            ReplaceForeignNotables(villageId, targetCulture);
             _adapter.ResetVolunteers(villageId);
         }
 
@@ -171,6 +174,23 @@ public class CultureConversionService : ICultureConversionService
             record.AppliedCultureId = targetCulture;
             _store.Put(record);
             _logger.LogInfo($"CultureConversion: {record.SettlementId} converted to {targetCulture}");
+        }
+    }
+
+    // Replacement must run AFTER SetSettlementCulture: the adapter draws the replacement's template
+    // from the settlement's CURRENT culture. A skipped notable (no template, unresolvable hero) is
+    // kept and logged — it never blocks the conversion itself.
+    private void ReplaceForeignNotables(string settlementId, string targetCulture)
+    {
+        if (!_settings.ReplaceNotablesOnConversion)
+            return;
+
+        foreach (var notable in _adapter.GetNotables(settlementId))
+        {
+            if (!notable.IsAlive || notable.CultureId == targetCulture)
+                continue;
+            if (!_adapter.ReplaceNotable(notable.HeroId))
+                _logger.LogWarning($"CultureConversion: kept notable {notable.HeroId} in {settlementId} — replacement skipped");
         }
     }
 

@@ -37,11 +37,14 @@ public class CultureConversionServiceTests
         _settings.RequireStableLoyalty.Returns(false);
         _settings.MinLoyaltyToConvert.Returns(50f);
         _settings.ConvertPlayerOwnedSettlements.Returns(true);
+        _settings.ReplaceNotablesOnConversion.Returns(true);
         _recruitment.HasCulturePool(Arg.Any<string>()).Returns(true);
         _adapter.GetBoundVillageSettlementIds(Arg.Any<string>()).Returns(new List<string>());
         _adapter.IsFortification(Arg.Any<string>()).Returns(true);
         _adapter.IsPlayerOwned(Arg.Any<string>()).Returns(false);
         _adapter.SetSettlementCulture(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
+        _adapter.GetNotables(Arg.Any<string>()).Returns(new List<ConvertibleNotable>());
+        _adapter.ReplaceNotable(Arg.Any<string>()).Returns(true);
     }
 
     // Gondor town conquered by a Mordor clan.
@@ -271,6 +274,135 @@ public class CultureConversionServiceTests
         Assert.AreEqual(0, _store.Count, "Restoring the original culture must remove the record.");
     }
 
+    // --- Notable replacement at conversion ---
+
+    [TestMethod]
+    public void RunDailyChecks_AfterHold_ReplacesForeignNotablesInTownAndVillages()
+    {
+        GivenCrossCultureConquest();
+        _adapter.GetBoundVillageSettlementIds(Town).Returns(new List<string> { "village_ES1_1" });
+        _adapter.GetNotables(Town).Returns(new List<ConvertibleNotable>
+        {
+            new ConvertibleNotable("merchant_1", "gondor", isAlive: true),
+        });
+        _adapter.GetNotables("village_ES1_1").Returns(new List<ConvertibleNotable>
+        {
+            new ConvertibleNotable("headman_1", "gondor", isAlive: true),
+        });
+        _sut.OnSettlementConquered(Town, 100.0);
+
+        _sut.RunDailyChecks(150.0);
+
+        _adapter.Received().ReplaceNotable("merchant_1");
+        _adapter.Received().ReplaceNotable("headman_1");
+    }
+
+    [TestMethod]
+    public void RunDailyChecks_CultureFlipsBeforeNotablesReplaced()
+    {
+        // Replacements draw templates from Settlement.Culture — the flip MUST land first.
+        GivenCrossCultureConquest();
+        _adapter.GetNotables(Town).Returns(new List<ConvertibleNotable>
+        {
+            new ConvertibleNotable("merchant_1", "gondor", isAlive: true),
+        });
+        _sut.OnSettlementConquered(Town, 100.0);
+
+        _sut.RunDailyChecks(150.0);
+
+        Received.InOrder(() =>
+        {
+            _adapter.SetSettlementCulture(Town, "mordor");
+            _adapter.ReplaceNotable("merchant_1");
+        });
+    }
+
+    [TestMethod]
+    public void RunDailyChecks_NotableAlreadyTargetCulture_NotReplaced()
+    {
+        GivenCrossCultureConquest();
+        _adapter.GetNotables(Town).Returns(new List<ConvertibleNotable>
+        {
+            new ConvertibleNotable("orc_merchant", "mordor", isAlive: true),
+        });
+        _sut.OnSettlementConquered(Town, 100.0);
+
+        _sut.RunDailyChecks(150.0);
+
+        _adapter.DidNotReceive().ReplaceNotable(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void RunDailyChecks_DeadNotable_NotReplaced()
+    {
+        GivenCrossCultureConquest();
+        _adapter.GetNotables(Town).Returns(new List<ConvertibleNotable>
+        {
+            new ConvertibleNotable("dead_merchant", "gondor", isAlive: false),
+        });
+        _sut.OnSettlementConquered(Town, 100.0);
+
+        _sut.RunDailyChecks(150.0);
+
+        _adapter.DidNotReceive().ReplaceNotable(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void RunDailyChecks_ReplaceNotablesToggleOff_ConvertsWithoutReplacing()
+    {
+        _settings.ReplaceNotablesOnConversion.Returns(false);
+        GivenCrossCultureConquest();
+        _adapter.GetNotables(Town).Returns(new List<ConvertibleNotable>
+        {
+            new ConvertibleNotable("merchant_1", "gondor", isAlive: true),
+        });
+        _sut.OnSettlementConquered(Town, 100.0);
+
+        _sut.RunDailyChecks(150.0);
+
+        _adapter.Received().SetSettlementCulture(Town, "mordor");
+        _adapter.DidNotReceive().ReplaceNotable(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void RunDailyChecks_ReplaceNotableFails_LogsAndContinues_ConversionStillApplied()
+    {
+        GivenCrossCultureConquest();
+        _adapter.GetNotables(Town).Returns(new List<ConvertibleNotable>
+        {
+            new ConvertibleNotable("merchant_1", "gondor", isAlive: true),
+            new ConvertibleNotable("merchant_2", "gondor", isAlive: true),
+        });
+        _adapter.ReplaceNotable("merchant_1").Returns(false);
+        _sut.OnSettlementConquered(Town, 100.0);
+
+        _sut.RunDailyChecks(150.0);
+
+        _adapter.Received().ReplaceNotable("merchant_2");
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("merchant_1")));
+        Assert.IsTrue(_store.TryGet(Town, out var record) && record.IsConverted,
+            "A skipped notable must not block the conversion itself.");
+    }
+
+    [TestMethod]
+    public void ReconquestBackToOriginalCulture_AlsoReplacesNotables()
+    {
+        // Symmetry: Gondor retaking a mordor-converted town replaces the orc notables too.
+        GivenCrossCultureConquest(original: "gondor", owner: "mordor");
+        _sut.OnSettlementConquered(Town, 100.0);
+        _sut.RunDailyChecks(150.0);
+
+        _adapter.GetOwnerCultureId(Town).Returns("gondor");
+        _adapter.GetNotables(Town).Returns(new List<ConvertibleNotable>
+        {
+            new ConvertibleNotable("orc_merchant", "mordor", isAlive: true),
+        });
+        _sut.OnSettlementConquered(Town, 200.0);
+        _sut.RunDailyChecks(250.0);
+
+        _adapter.Received().ReplaceNotable("orc_merchant");
+    }
+
     // --- ReapplyConvertedCultures (save-load) ---
 
     [TestMethod]
@@ -337,5 +469,20 @@ public class CultureConversionServiceTests
         _sut.ReapplyConvertedCultures();
 
         _adapter.DidNotReceive().ResetVolunteers(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ReapplyConvertedCultures_DoesNotReplaceNotables()
+    {
+        // Replacement is a one-shot at conversion time; a save-load re-apply must never repeat it.
+        _store.Put(new SettlementConversionRecord(Town, "gondor", appliedCultureId: "mordor"));
+        _adapter.GetNotables(Town).Returns(new List<ConvertibleNotable>
+        {
+            new ConvertibleNotable("merchant_1", "gondor", isAlive: true),
+        });
+
+        _sut.ReapplyConvertedCultures();
+
+        _adapter.DidNotReceive().ReplaceNotable(Arg.Any<string>());
     }
 }

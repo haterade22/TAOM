@@ -7,4 +7,5 @@ public interface ICultureConversionSettingsProvider
     bool RequireStableLoyalty { get; }
     float MinLoyaltyToConvert { get; }
     bool ConvertPlayerOwnedSettlements { get; }
+    bool ReplaceNotablesOnConversion { get; }
 }

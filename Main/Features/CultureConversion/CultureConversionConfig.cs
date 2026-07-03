@@ -16,4 +16,10 @@ public class CultureConversionConfig
 
     /// <summary>When false, settlements owned by the player's clan never convert (AI conquests still do).</summary>
     public bool ConvertPlayerOwnedSettlements { get; set; } = true;
+
+    /// <summary>
+    /// When true, conversion also replaces each notable whose culture differs from the new culture
+    /// with a same-occupation notable from the new culture's templates (property transfers, relations reset).
+    /// </summary>
+    public bool ReplaceNotablesOnConversion { get; set; } = true;
 }

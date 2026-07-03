@@ -1438,6 +1438,18 @@ New feature (#320): clean-room adaptation of five TOR_Core combat mechanics (GPL
 
 ---
 
+## Review 70 — CultureConversion notable replacement (2026-07-03)
+
+User report confirmed: a Mordor-captured Gondor town flips `Settlement.Culture` at conversion but its notables stay Gondorian forever — no TAOM/vanilla path re-cultures a living notable, and vanilla heir replacement COPIES the dead notable's culture. New: `ApplyConversion` now replaces still-alive culture-mismatched notables (town + villages, after the culture flip) via `CultureConversionAdapter.ReplaceNotable` — template pre-check → `CreateNotable` → workshop/alley/caravan transfer → issue cancel → power-zero (heir-spawn suppression) → `ApplyByRemove`. Toggle default on. 9 new tests; suite 3873 green. Issue #325.
+
+**Deep-review (5 agents): 2 process findings, 0 code findings.** Standards PASS; Compat 24/24 verified on installed 1.4.6 (heir gate, `IssueFinalized` ordering, transfer APIs; only interacting patch Patch14 is a no-op for `Lost`); Efficiency 0 HIGH (2 LOW rejected per simplicity criterion); Data-flow 10 traced / 0 gaps (snapshot loop safe vs `_notablesCache` recollection; NaN-power lands on the safe side of the heir gate). Completeness caught: CHANGELOG test count fabricated ("+10" vs actual 9 — evidence-over-claims §C repeat, fixed + LESSONS-LEARNED entry) and the missing GitHub issue (created as #325 before the closing commit). RCA: `docs/reviews/rca-culture-conversion-notables-2026-07-03.md`.
+
+**Codex (gpt-5.5 xhigh): 0 P1 / 0 P2 / 0 P3 — VERDICT CLEAN.** All 6 seeded Known Suspects DISPUTED-as-bugs with decompiled evidence (heir suppression sound — `Power` field-backed, unclamped; `CompleteIssueWithCancel` deterministically nulls `Hero.Issue` before the kill assert; DTO-snapshot loop immune to mid-tick mutation; property-transfer APIs precondition-free and vanilla-identical to the heir path; template pre-check exactly mirrors the engine's null-return condition; no re-entrancy). Residual observation (non-blocking, no fix): `ReplaceNotable` is non-transactional after the replacement spawns — no concrete normal-case throw path exists after the pre-check; accepted residual, noted in the feature doc's in-game verification list.
+
+**Process:** both reviews ran BEFORE any commit; the two deep-review process findings were fixed before Codex dispatch. Codex prompt + extracted review: `docs/reviews/codex-adversarial-culture-conversion-notables-2026-07-03.{prompt.md,md}` (794KB session log discarded, final message kept). No AGENTS.md update — zero false positives, no new miss category.
+
+---
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

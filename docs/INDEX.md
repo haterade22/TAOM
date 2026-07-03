@@ -80,6 +80,7 @@
 - [settlement-guards](features/settlement-guards.md) — per-settlement guard pools, clan/culture fallback (Patch28)
 - [settlement-nameplate-fade](features/settlement-nameplate-fade.md) — distance-based nameplate fade (Patch38)
 - [revolt-tuning](features/revolt-tuning.md) — JSON-tunable revolt soft-nerf, TaomSettlementLoyaltyModel
+- [culture-conversion](features/culture-conversion.md) — conquered fiefs gradually adopt the owner's culture: Settlement.Culture flip + notable replacement (#325) + converted-recruitment branch
 - [settlement-food](features/settlement-food.md) — garrison food-leak fix + tunable food, TaomSettlementFoodModel
 - [startup-resources](features/startup-resources.md) — per-culture player startup gold/items
 - [cultural-feats](features/cultural-feats.md) — 16 culture-feat GameModel overrides (Patch18)

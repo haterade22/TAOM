@@ -65,6 +65,7 @@ public class CultureConversionConfigProvider : ICultureConversionConfigProvider
             RequireStableLoyalty = parsed.RequireStableLoyalty,
             MinLoyaltyToConvert = parsed.MinLoyaltyToConvert,
             ConvertPlayerOwnedSettlements = parsed.ConvertPlayerOwnedSettlements,
+            ReplaceNotablesOnConversion = parsed.ReplaceNotablesOnConversion,
         };
 
         var defaults = new CultureConversionConfig();
