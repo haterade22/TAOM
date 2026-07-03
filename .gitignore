@@ -131,3 +131,10 @@ docs/raw/**/*.mp4
 docs/raw/**/*.mov
 docs/raw/**/*.zip
 docs/raw/**/*.tar.gz
+
+# Tool-sandbox scratch that regenerates inside the repo root:
+# .dotnet_cli_home/ — the sandboxed Bash env points DOTNET_CLI_HOME at the CWD,
+# so dotnet build/test recreate first-run sentinels + queued telemetry here.
+# .codex_tmp*/ — Codex CLI sandbox temp dirs (restrictive ACLs spam git warnings).
+.dotnet_cli_home/
+.codex_tmp*/
