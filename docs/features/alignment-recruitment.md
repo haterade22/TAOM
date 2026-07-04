@@ -2,7 +2,7 @@
 
 ## Overview
 
-A recruiter (player or AI lord) cannot recruit volunteer troops from a settlement controlled by an enemy-aligned kingdom. A Free-aligned lord (Gondor, Rohan, the Elves, Dwarves, Dale) is barred from recruiting in an Evil-controlled settlement (Mordor, Isengard, Dol Guldur, Gundabad, Dunland, Khand, Rhûn, the orc/goblin factions), and — by default — the reverse. Neutral factions (Umbar, Shaghana, Abanissa) recruit and are recruited from freely.
+A recruiter (player or AI lord) cannot recruit volunteer troops from a settlement controlled by an enemy-aligned kingdom. A Free-aligned lord (Gondor, Rohan, the Elves, Dwarves, Dale) is barred from recruiting in an Evil-controlled settlement (Mordor, Isengard, Dol Guldur, Gundabad, Dunland, Rhûn, the orc/goblin factions), and — by default — the reverse. Neutral factions (Umbar, Shaghana, Abanissa, Khand) recruit and are recruited from freely.
 
 ## Why This Exists
 

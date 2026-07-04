@@ -59,7 +59,7 @@ public class MomentumEnrollmentService : IMomentumEnrollmentService
                         changed = true;
                     }
                     break;
-                // Neutral (Umbar/Shaghana/Abanissa) never enrolls. Khand (battania) is Evil.
+                // Neutral (Umbar/Shaghana/Abanissa/Khand) never enrolls.
             }
         }
 

@@ -87,7 +87,7 @@ A flat JSON object mapping kingdom `StringId` to alignment string.
 | `gundabad` | evil | — |
 | `dolguldur` | evil | — |
 | `khuzait` (Easterlings) | evil | — |
-| `battania` (Khand) | evil | — |
+| `battania` (Khand) | neutral | tribal / mercenary — both sides can target |
 | `aserai` (Harad) | evil | — |
 | `umbar` | neutral | corsair / mercenary — both sides can target |
 | `shaghana` | neutral | tribal — both sides can target |

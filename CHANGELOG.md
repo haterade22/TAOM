@@ -1,5 +1,12 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-07-04
+
+### balance(alignment): Khand (battania) is now Neutral, not Evil
+
+Changed `execution/alignment.json` `battania` from `evil` to `neutral`. Khand is a shared alignment key, so this applies to ALL alignment-aware systems, not just the War of the Ring meter: it no longer enrolls on the Evil side of the momentum war, no longer blocks/ is blocked by recruitment, its troops no longer desert over alignment, and it gets neutral execution-relation + diplomacy treatment. Updated the enrollment comment + the three alignment feature docs. New-campaign + live-save effective (config read at load; the momentum meter drops Khand on the next enrollment sweep).
+
+
 ## 2026-07-03
 
 ### fix(momentum): reload reset + blank banners + Relative-Strength 0 + narrow columns (#327)

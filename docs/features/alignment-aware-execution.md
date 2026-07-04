@@ -217,7 +217,7 @@ The mapping is stored in `Main/_Module/ModuleData/execution/alignment.json`:
   "gundabad": "evil",     // Gundabad
   "dolguldur": "evil",    // Dol Guldur
   "khuzait": "evil",      // Easterlings
-  "battania": "evil",     // Khand
+  "battania": "neutral",  // Khand
   "aserai": "evil",       // Harad
   "umbar": "neutral"      // Umbar (Corsairs)
 }
@@ -242,7 +242,7 @@ The mapping is stored in `Main/_Module/ModuleData/execution/alignment.json`:
 | `gundabad` | Gundabad | Evil | Custom kingdom |
 | `dolguldur` | Dol Guldur | Evil | Custom kingdom |
 | `khuzait` | Easterlings | Evil | Khuzait |
-| `battania` | Khand | Evil | Battania |
+| `battania` | Khand | Neutral | Battania |
 | `aserai` | Harad | Evil | Aserai |
 | `umbar` | Umbar | Neutral | Custom kingdom |
 
