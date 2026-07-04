@@ -212,4 +212,37 @@ public class MomentumEnrollmentServiceTests
         Assert.AreEqual(freeBefore, _state.Free.KingdomIds.Count);
         Assert.AreEqual(evilBefore, _state.Evil.KingdomIds.Count);
     }
+
+    [TestMethod]
+    public void SweepEnrollment_EnrolledKingdomBecameNeutral_RemovedFromSide()
+    {
+        // The Khand case: alignment.json flipped an enrolled kingdom to Neutral. The next
+        // sweep must drop it from its side (its kingdom-side AND culture-side are Neutral).
+        _sut.SweepEnrollment(_state);
+        Assert.IsTrue(_state.Evil.ContainsKingdom("empire_s"));
+
+        _alignmentService.GetKingdomSide("empire_s").Returns(FactionSide.Neutral);
+        // GetKingdomCultureId("empire_s") is unmocked → null → culture fallback = Neutral.
+
+        bool changed = _sut.SweepEnrollment(_state);
+
+        Assert.IsTrue(changed);
+        Assert.IsFalse(_state.DoesKingdomTakePart("empire_s"));
+    }
+
+    [TestMethod]
+    public void SweepEnrollment_EnrolledKingdomFlippedSides_MovesToNewSide()
+    {
+        // An enrolled Evil kingdom whose alignment flips to Free is removed from Evil and
+        // re-added to Free in the same sweep.
+        _sut.SweepEnrollment(_state);
+        Assert.IsTrue(_state.Evil.ContainsKingdom("empire_s"));
+
+        _alignmentService.GetKingdomSide("empire_s").Returns(FactionSide.Free);
+
+        _sut.SweepEnrollment(_state);
+
+        Assert.IsFalse(_state.Evil.ContainsKingdom("empire_s"));
+        Assert.IsTrue(_state.Free.ContainsKingdom("empire_s"));
+    }
 }

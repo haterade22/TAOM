@@ -96,21 +96,32 @@ public class MomentumEnrollmentService : IMomentumEnrollmentService
         return string.IsNullOrEmpty(cultureId) ? FactionSide.Neutral : _alignmentService.GetCultureSide(cultureId);
     }
 
-    // Reconcile the enrolled sets against the live (non-eliminated) kingdom set. Handles
-    // a KingdomDestroyed event that was missed because the feature was toggled OFF at the
-    // time — without this, a wiped side keeps a stale id and its count never reaches 0,
-    // permanently blocking the elimination-victory check (Codex #327 MED).
+    // Reconcile the enrolled sets against the CURRENT world: drop any enrolled kingdom that
+    // is (a) no longer live — a KingdomDestroyed missed because the feature was toggled OFF
+    // (without this a wiped side keeps a stale id and its count never reaches 0, blocking the
+    // elimination-victory check, Codex #327 MED); or (b) still live but whose side no longer
+    // matches where it's enrolled — an alignment.json edit (e.g. Khand → Neutral) or a
+    // culture/kingdom change. The enroll loop then re-adds it to the correct side if it moved
+    // Free↔Evil. Without (b), a kingdom already enrolled before its alignment changed would be
+    // stuck on the old side on an existing save.
     private bool PruneStaleKingdoms(MomentumWarState state, IReadOnlyList<string> liveKingdomIds)
     {
         var live = new HashSet<string>(liveKingdomIds);
         bool changed = false;
 
-        foreach (var staleId in state.Free.KingdomIds.Concat(state.Evil.KingdomIds).Where(id => !live.Contains(id)).ToList())
+        changed |= PruneSide(state, state.Free, live, FactionSide.Free);
+        changed |= PruneSide(state, state.Evil, live, FactionSide.Evil);
+        return changed;
+    }
+
+    private bool PruneSide(MomentumWarState state, MomentumSideData side, HashSet<string> live, FactionSide enrolledSide)
+    {
+        bool changed = false;
+        foreach (var id in side.KingdomIds.Where(id => !live.Contains(id) || ResolveSide(id) != enrolledSide).ToList())
         {
-            if (RemoveKingdom(state, staleId))
+            if (RemoveKingdom(state, id))
                 changed = true;
         }
-
         return changed;
     }
 }
