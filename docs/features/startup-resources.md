@@ -139,7 +139,7 @@ The `titleType` is sourced from `manager.CharacterCreationContent.SelectedTitleT
 
 ## Changelog
 
-- 2026-07-03 — Retuned NPC-lord `gold` + clan `influence`: elves (rivendell/lothlorien/mirkwood) influence 1,000 → 1,500 (gold stays 600k); erebor 50k → 800k / 150 → 1,000; gondor 50k → 100k / 500 → 1,000; khuzait gold 50k → 75k; isengard/dolguldur 200k → 75k / 2,000 → 500; gundabad 200k → 75k / 2,000 → 1,000; umbar influence 500 → 1,000 (gold stays 200k). All `playerGold` values unchanged. Data-only edit to `startup_resources_config.xml`.
+- 2026-07-03 — Retuned NPC-lord `gold` + clan `influence`: elves (rivendell/lothlorien/mirkwood) influence 1,000 → 1,250 (gold stays 600k); erebor 50k → 800k / 150 → 1,000; gondor 50k → 100k / 500 → 1,000; khuzait gold 50k → 75k; isengard/dolguldur 200k → 75k / 2,000 → 500; gundabad 200k → 75k / 2,000 → 1,000; umbar influence 500 → 1,000 (gold stays 200k). All `playerGold` values unchanged. Data-only edit to `startup_resources_config.xml`.
 - 2026-06-30 — Rebalanced `playerGold` downward across all cultures: Elves (rivendell/lothlorien/mirkwood) 4,000, erebor 3,500, every other culture 2,000 (previously 4,000–10,000). NPC `gold`/`influence` unchanged. Data-only edit to `startup_resources_config.xml`.
 - 2026-05-13 — Added `ParseGold`/`ParseInfluence` validation to the config provider (TryParse + range/finite checks, matching `ParsePlayerGold`); negative gold and NaN influence now revert with a warning instead of flowing through (closes #136).
 - 2026-05-06 — Added per-culture `playerGold` (player starting funds at CC finalize) and youth-option equipment persistence onto `Hero.MainHero.BattleEquipment`/`CivilianEquipment`; seeded `playerGold` per culture and added missing `empire`/`shaghana`/`abanissa` rows.

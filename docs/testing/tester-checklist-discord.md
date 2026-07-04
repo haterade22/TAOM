@@ -183,7 +183,7 @@ Welcome testers! Work through each section below and report any **crashes, visua
 - Player hero gets culture `playerGold` at character creation (lord gold skips the player clan)
 
 **Influence Distribution**
-- Elven clans: ~2,000 starting influence
+- Elven clans: ~1,250 starting influence
 - Erebor clans: ~1,000 influence
 - Gondor clans: ~1,000 influence
 - Check AI clans in encyclopedia to verify
