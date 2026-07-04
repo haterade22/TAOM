@@ -2,6 +2,39 @@
 
 ## 2026-07-03
 
+### feat(momentum): War of the Ring momentum — Evil vs Good progress tracking, victory, and map UI (#327)
+
+Port of LOTRAOM 1.2.12's "Momentum" system onto TAOM 1.4.6, wired into the existing WotR phase machine
+(`Main/Features/WarOfTheRingMomentum/` + `UI/`; ~20 services/VMs, 140 new tests, feature branch `feature/wotr-momentum`).
+
+- **Scoring**: signed Free↔Evil momentum from battles won (scaled by casualties ÷ loser-side strength, cap 300),
+  sieges (+250), raids (+200), armies gathered (+200), and a daily strength-differential award (cap 300); events
+  decay after 21d/21d/21d/7d/12h. Player participation multiplies gains ×1.5 (MCM-tunable) and records toward the
+  victory gate. Sides come from dynamic enrollment: every `alignment.json` Free/Evil kingdom sweeps in at FullWar
+  (covers player-founded kingdoms; Neutral never enrolls; enrollment never declares wars — Diplomacy owns stances).
+- **Victory**: at ±500 internal momentum (MCM 100–2000) or one side eliminated — gated on ≥5 player events (both
+  sides, LOTRAOM parity) — the war ENDS: new `WarPhase.WarEnded` terminal state lifts all three peace-block layers
+  (they key off `IsWarOfTheRingActive`/`ShouldBlockPeace`), cross-side at-war pairs peace out via
+  `IAllianceAdapter.MakePeace` (ordering pinned by test), a localized inquiry announces the winner, meter freezes.
+- **UI**: persistent on-map "War of the Ring" slider (MapView + GauntletLayer, appears at FullWar, MCM-hideable)
+  opening a popup — faction banners (Gondor/Mordor), leaders/allies rows, per-type momentum breakdown with
+  accumulating tooltips, total-stats table. TAOM's fork-residue MomentumView prefabs reused (already 1.4.x-migrated);
+  edits: `StaticDiplomacyButton` (Diplomacy-mod dependency) deleted, dead `ListWidget` (removed in 1.4.6) replaced,
+  labels localized, `KingdomIcon.xml` deleted. Zero new sprites/fonts.
+- **Persistence**: primitive-dict SyncData `_taom_wotr_momentum` (Messengers pattern, no SaveableTypeDefiner);
+  fixes LOTRAOM's unpersisted player victory gate. Phase + outcome persist in the Diplomacy behavior.
+- **Deliberate deviations from LOTRAOM (bugs not ported)**: config event values are internal-scale units — the
+  donor added them raw while comparing raw÷100 against the threshold, so its own tuning comments ("~2 sieges for
+  victory") were off by 100× and the meter barely moved; raids now require an ENROLLED kingdom (donor sided raids
+  by culture, so every looter raid fed Evil +200); alliance-stance reflection dropped (`StanceType.Alliance` does
+  not exist on 1.4.6 — would throw at runtime); indicator VM event-subscription leak fixed.
+- Config `momentum/momentum.json` (validated, defaults = donor's shipped XML values) + MCM "War of the Ring/Momentum"
+  (enable, map meter, threshold, multiplier, player gate). Strings `taom_wotr_strings.xml` (localization pass pending).
+- 1.4.6 drift handled: `Kingdom.CurrentTotalStrength`, `MapEventSide.TroopCasualties`, `ArmyGathered(Army, IMapPoint)`,
+  `BannerImageIdentifierVM`, `GauntletLayer(string,int)`, banned `PartyBase.Owner` getter avoided via `MobileParty?.Owner`.
+
+Not-tested: in-game meter/popup rendering + victory flow (control campaign pending; testMode phase2Day=3 fast-path).
+
 ### balance(startup-resources): retune per-culture lord gold + clan influence
 
 New-game startup grants (`startup_resources_config.xml`; new campaigns only):

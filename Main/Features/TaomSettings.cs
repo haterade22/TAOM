@@ -122,6 +122,38 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Uses short delays (2/5 days) for rapid testing. Overrides Phase 1/2 days.")]
     public bool TestMode { get; set; }
 
+    // --- War of the Ring / Momentum (#327) ---
+
+    [SettingPropertyGroup("War of the Ring/Momentum")]
+    [SettingPropertyBool("Enable Momentum Tracking", Order = 0,
+        HintText = "Tracks Evil vs Good war progress from battles, sieges, raids, armies and relative strength. Reaching the victory threshold ENDS the war. Default: on.")]
+    public bool MomentumEnabled { get; set; } = true;
+
+    [SettingPropertyGroup("War of the Ring/Momentum")]
+    [SettingPropertyBool("Show Map Meter", Order = 1,
+        HintText = "Shows the on-map War of the Ring slider once the full war begins. Click it for the detailed breakdown. Default: on.")]
+    public bool ShowWarOfTheRingMapMeter { get; set; } = true;
+
+    [SettingPropertyGroup("War of the Ring/Momentum")]
+    [SettingPropertyInteger("Victory Threshold", 100, 2000, Order = 2,
+        HintText = "Momentum lead one side needs to win the war outright. Default 500.")]
+    public int MomentumVictoryThreshold { get; set; } = 500;
+
+    [SettingPropertyGroup("War of the Ring/Momentum")]
+    [SettingPropertyFloatingInteger("Player Participation Multiplier", 1.0f, 3.0f, "#0.00", Order = 3,
+        HintText = "Momentum gains are multiplied by this when your party takes part in the event. Default 1.5.")]
+    public float MomentumParticipationMultiplier { get; set; } = 1.5f;
+
+    [SettingPropertyGroup("War of the Ring/Momentum")]
+    [SettingPropertyBool("Require Player Participation For Victory", Order = 4,
+        HintText = "When on, the war cannot end until you have fought in enough momentum events yourself. Default: on.")]
+    public bool MomentumRequirePlayerForVictory { get; set; } = true;
+
+    [SettingPropertyGroup("War of the Ring/Momentum")]
+    [SettingPropertyInteger("Minimum Player Events For Victory", 0, 20, Order = 5,
+        HintText = "How many battles/sieges you must take part in before either side can win. Default 5.")]
+    public int MomentumMinPlayerEvents { get; set; } = 5;
+
     // --- Battle Balance / Troop Power ---
 
     [SettingPropertyGroup("Battle Balance/Troop Power")]

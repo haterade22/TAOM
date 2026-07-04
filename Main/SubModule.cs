@@ -482,6 +482,9 @@ public class SubModule : MBSubModuleBase
 
         var wotrLogger = IoC.Resolve<IModLogger>();
         campaignStarter.AddBehavior(new WarOfTheRingBehavior(wotrService, wotrLogger));
+        // WotR Momentum #327 — Evil-vs-Good progress tracking + victory; behavior is a
+        // Reuse.Singleton (it carries the state store's persistence dict).
+        campaignStarter.AddBehavior(IoC.Resolve<Features.WarOfTheRingMomentum.WarOfTheRingMomentumBehavior>());
 
         var siegeDefenseService = IoC.Resolve<ISiegeDefenseService>();
         var siegeDefenseLogger = IoC.Resolve<IModLogger>();

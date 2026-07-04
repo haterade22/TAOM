@@ -1,0 +1,25 @@
+{
+  "enabled": true,
+  "victoryThreshold": 500,
+  "softCapDivisor": 300.0,
+  "events": {
+    "maxBattleMomentum": 300,
+    "siegeMomentum": 250,
+    "raidMomentum": 200,
+    "armyMomentum": 200,
+    "maxStrengthMomentum": 300
+  },
+  "durationsHours": {
+    "battleWon": 504,
+    "siege": 504,
+    "raid": 504,
+    "armyGathered": 168,
+    "relativeStrength": 12
+  },
+  "player": {
+    "requireParticipationForVictory": true,
+    "participationMultiplier": 1.5,
+    "minimumPlayerEventsForVictory": 5
+  },
+  "strengthRatioForMaxMomentum": 4.0
+}

@@ -82,6 +82,7 @@ public static class IoC
         CharacterCreationIoC.RegisterCharacterCreationFeature(container);
         InitialChildGenerationIoC.RegisterInitialChildGenerationFeature(container);
         DiplomacyIoC.RegisterDiplomacyFeature(container);
+        Features.WarOfTheRingMomentum.WarOfTheRingMomentumIoC.RegisterWarOfTheRingMomentumFeature(container);
         RaceAgeIoC.RegisterRaceAgeFeature(container);
         ExecutionIoC.RegisterExecutionFeature(container);
         RecruitmentAlignmentIoC.RegisterAlignmentRecruitmentFeature(container);
