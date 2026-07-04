@@ -1,10 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Turkish" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Turkish" />
+  </tags>
+  <strings>
+    <string id="taom_emissary_menu" text="Hükümdar temsilcisiyle konuş" />
+    <string id="taom_emissary_no_trade" text="Burada bu hükümdar için seçkin birlik ticareti bulunmuyor." />
+    <string id="taom_emissary_greet" text="Halkımızın sunabileceği en iyi savaşçıları mı arıyorsun? Adını söyle, seninler olsunlar — doğru fiyata." />
+    <string id="taom_emissary_buy" text="Seçkin birlikler satın almak istiyorum." />
+    <string id="taom_emissary_leave" text="Bugün değil." />
+    <string id="taom_emissary_list_title" text="Seçkin Birlikler" />
+    <string id="taom_emissary_list_desc" text="Bakiye: {AMOUNT} {RESOURCE}" />
+    <string id="taom_emissary_offer_line" text="{NAME} — {COST} {RESOURCE}" />
+    <string id="taom_emissary_offer_afford" text="{MAX} adete kadar alabilirsin." />
+    <string id="taom_emissary_offer_cant" text="Yeterli {RESOURCE} yok." />
+    <string id="taom_emissary_select" text="Seç" />
+    <string id="taom_emissary_back" text="Geri" />
+    <string id="taom_emissary_qty_title" text="Kaç {TROOP}?" />
+    <string id="taom_emissary_qty_desc" text="Her biri {COST} {RESOURCE} değerinde. Sende {BALANCE} var." />
+    <string id="taom_emissary_qty_line" text="{QTY} (×{COST} = {TOTAL} {RESOURCE})" />
+    <string id="taom_emissary_confirm" text="İşe Al" />
+    <string id="taom_emissary_bought" text="{COST} {RESOURCE} karşılığında {QTY} {TROOP} işe alındı." />
+    <string id="taom_emissary_cant_afford" text="Yeterli {RESOURCE} yok — {COST} gerekli." />
+    <string id="taom_emissary_no_resource" text="Bu yerleşimde elçi ticareti bulunmuyor." />
+    <string id="taom_emissary_no_offers" text="Elçinin şu anda sunabileceği seçkin birlik yok." />
+    <string id="taom_emissary_failed" text="Elçi anlaşmayı tamamlayamadı." />
+  </strings>
+</base>

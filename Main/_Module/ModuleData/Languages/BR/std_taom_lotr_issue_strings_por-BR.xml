@@ -1,10 +1,318 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Portuguese (Brazilian)" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Portuguese (Brazilian)" />
+  </tags>
+  <strings>
+    <string id="taom_lotr_issue_grain_title" text="{ISSUE_SETTLEMENT} Precisa de Grãos para Semeadura" />
+    <string id="taom_lotr_issue_grain_desc" text="O povo de {ISSUE_SETTLEMENT} perdeu seus grãos para semeadura e passará fome a menos que os campos sejam semeados." />
+    <string id="taom_lotr_issue_grain_brief" text="A sombra tem sido dura conosco, viajante. Ratos e um inverno amargo levaram nosso grão-semente. Sem grãos para semear, não duraremos o ano." />
+    <string id="taom_lotr_issue_grain_accept" text="Não há nada a ser feito?" />
+    <string id="taom_lotr_issue_grain_expl" text="Se puderes nos trazer {COUNT} medidas de grãos, poderíamos semear os campos antes que a estação mude. Não temos moedas para comprar tanto assim." />
+    <string id="taom_lotr_issue_grain_soln" text="Encontrarei esses grãos para vós." />
+    <string id="taom_lotr_issue_grain_task" text="Coletar grãos ({COUNT})" />
+    <string id="taom_lotr_issue_supplies_title" text="Uma Hoste em Necessidade de Provisões" />
+    <string id="taom_lotr_issue_supplies_desc" text="Um senhor reunindo forças para a guerra precisa de grãos para alimentar a hoste reunida antes de marchar." />
+    <string id="taom_lotr_issue_supplies_brief" text="Meus soldados se reúnem, mas uma espada não enche a barriga. Sem grãos para alimentá-los, esta hoste se dispersará antes mesmo de entrar em campo." />
+    <string id="taom_lotr_issue_supplies_accept" text="Quanto grão precisais?" />
+    <string id="taom_lotr_issue_supplies_expl" text="Traze-me {COUNT} medidas de grãos e meus homens marcharão de barriga cheia. Faze isso e o reino se lembrará." />
+    <string id="taom_lotr_issue_supplies_soln" text="Trarei grãos para vossa hoste." />
+    <string id="taom_lotr_issue_supplies_task" text="Levar grãos à hoste ({COUNT})" />
+    <string id="taom_lotr_issue_draught_title" text="{ISSUE_SETTLEMENT} Precisa de Animais de Carga" />
+    <string id="taom_lotr_issue_draught_desc" text="A aldeia de {ISSUE_SETTLEMENT} perdeu seus bois de tração e não consegue trabalhar os campos." />
+    <string id="taom_lotr_issue_draught_brief" text="Nossos bois foram levados -- alguns por saqueadores, alguns pela fome. Sem bestas para puxar o arado, o solo permanece duro e os campos não são semeados." />
+    <string id="taom_lotr_issue_draught_accept" text="O que ajudaria?" />
+    <string id="taom_lotr_issue_draught_expl" text="Se puderes nos trazer {COUNT} cabeças de gado, poderíamos lavrar a terra novamente antes que a estação mude." />
+    <string id="taom_lotr_issue_draught_soln" text="Vos trarei gado." />
+    <string id="taom_lotr_issue_draught_task" text="Entregar gado ({COUNT})" />
+    <string id="taom_lotr_issue_crafting_title" text="{ISSUE_SETTLEMENT} Precisa de Ferro" />
+    <string id="taom_lotr_issue_crafting_desc" text="O ferreiro de {ISSUE_SETTLEMENT} ficou sem ferro e não pode consertar ferramenta nem lâmina." />
+    <string id="taom_lotr_issue_crafting_brief" text="A forja está fria, viajante. Sem ferro o ferreiro não pode ferrar um cavalo nem consertar uma relha de arado, e a aldeia sofre por isso." />
+    <string id="taom_lotr_issue_crafting_accept" text="Onde conseguireis ferro?" />
+    <string id="taom_lotr_issue_crafting_expl" text="Traze-nos {COUNT} barras de ferro e a forja ressoará novamente. Não temos moedas para comprar tanto assim." />
+    <string id="taom_lotr_issue_crafting_soln" text="Encontrarei ferro para vós." />
+    <string id="taom_lotr_issue_crafting_task" text="Entregar ferro ({COUNT})" />
+    <string id="taom_lotr_issue_tools_title" text="{ISSUE_SETTLEMENT} Precisa de Ferramentas" />
+    <string id="taom_lotr_issue_tools_desc" text="O povo de {ISSUE_SETTLEMENT} carece de ferramentas para trabalhar suas terras e produzir seus bens." />
+    <string id="taom_lotr_issue_tools_brief" text="Nossas foices estão completamente enferrujadas e nossos martelos quebrados. O trabalho honesto é lento sem ferramentas honestas." />
+    <string id="taom_lotr_issue_tools_accept" text="Do que precisais?" />
+    <string id="taom_lotr_issue_tools_expl" text="Se nos trouxeres {COUNT} conjuntos de ferramentas, a aldeia poderia se reerguer e prosperar novamente." />
+    <string id="taom_lotr_issue_tools_soln" text="Vos trarei ferramentas." />
+    <string id="taom_lotr_issue_tools_task" text="Entregar ferramentas ({COUNT})" />
+    <string id="taom_lotr_issue_horses_title" text="Um Senhor Necessitado de Cavalos" />
+    <string id="taom_lotr_issue_horses_desc" text="Um senhor perdeu montarias na guerra e pelo desgaste e precisa de cavalos novos para seus cavaleiros." />
+    <string id="taom_lotr_issue_horses_brief" text="A guerra é cruel com os cavalos, viajante. Os meus se exauriram em estradas duras, e um cavaleiro sem montaria não passa de um lanceiro lento." />
+    <string id="taom_lotr_issue_horses_accept" text="Quantos cavalos precisais?" />
+    <string id="taom_lotr_issue_horses_expl" text="Traze-me {COUNT} cavalos saudáveis e meus cavaleiros cavalgarão novamente. Serás bem pago por eles." />
+    <string id="taom_lotr_issue_horses_soln" text="Vos trarei cavalos." />
+    <string id="taom_lotr_issue_horses_task" text="Entregar cavalos ({COUNT})" />
+    <string id="taom_lotr_issue_recruits_title" text="Sangue Novo para o Bando" />
+    <string id="taom_lotr_issue_recruits_desc" text="Um líder de gangue quer foras-da-lei capturados recrutados à força para seu serviço." />
+    <string id="taom_lotr_issue_recruits_brief" text="Uma gangue é tão forte quanto seus números, e os meus estão fracos. Traga-me cativos sem amor pela lei e farei uso deles." />
+    <string id="taom_lotr_issue_recruits_accept" text="Que tipo de cativos?" />
+    <string id="taom_lotr_issue_recruits_expl" text="Traga-me {COUNT} cativos bandidos e verei que sejam postos para trabalhar. Há moedas nisso para você, sem perguntas." />
+    <string id="taom_lotr_issue_recruits_soln" text="Trarei cativos para você." />
+    <string id="taom_lotr_issue_recruits_task" text="Entregar cativos bandidos ({COUNT})" />
+    <string id="taom_lotr_issue_laborers_title" text="Mãos para as Minas" />
+    <string id="taom_lotr_issue_laborers_desc" text="Um proprietário de terras precisa de braços fortes para trabalho duro e aceitará bandidos capturados." />
+    <string id="taom_lotr_issue_laborers_brief" text="As escavações precisam de trabalhadores e homens livres não descerão lá. Traga-me bandidos em correntes e eles ganharão seu sustento com uma picareta." />
+    <string id="taom_lotr_issue_laborers_accept" text="Você quer prisioneiros?" />
+    <string id="taom_lotr_issue_laborers_expl" text="Traga-me {COUNT} cativos bandidos para as turmas de trabalho e pagarei pelo incômodo de capturá-los." />
+    <string id="taom_lotr_issue_laborers_soln" text="Trarei cativos para você." />
+    <string id="taom_lotr_issue_laborers_task" text="Entregar cativos bandidos ({COUNT})" />
+    <string id="taom_lotr_issue_banditbase_title" text="Um Covil Perto de {ISSUE_SETTLEMENT}" />
+    <string id="taom_lotr_issue_banditbase_desc" text="Um ninho de saqueadores assola as estradas perto de {ISSUE_SETTLEMENT}." />
+    <string id="taom_lotr_issue_banditbase_brief" text="Há um covil maldito deles nas colinas, viajante. Eles tomam nossos bens e nossa gente, e a guarda é muito reduzida para exterminá-los." />
+    <string id="taom_lotr_issue_banditbase_accept" text="Onde fica este covil?" />
+    <string id="taom_lotr_issue_banditbase_expl" text="Destrua os saqueadores que assombram nossas estradas e nós o recompensaremos. A terra respirará aliviada por isso." />
+    <string id="taom_lotr_issue_banditbase_soln" text="Eu os expurgarei." />
+    <string id="taom_lotr_issue_outlaws_title" text="Foras-da-Lei nas Rotas Comerciais" />
+    <string id="taom_lotr_issue_outlaws_desc" text="Bandos de saqueadores estão estrangulando o comércio de um mercador e precisam ser destruídos." />
+    <string id="taom_lotr_issue_outlaws_brief" text="Minhas caravanas não podem passar por causa dos saqueadores nas estradas. Destrua bandos suficientes e o comércio poderá fluir novamente." />
+    <string id="taom_lotr_issue_outlaws_accept" text="Quantos bandos?" />
+    <string id="taom_lotr_issue_outlaws_expl" text="Derrote os bandos que assolam as estradas -- algumas boas vitórias dispersarão o resto -- e pagarei generosamente." />
+    <string id="taom_lotr_issue_outlaws_soln" text="Limparei as estradas." />
+    <string id="taom_lotr_issue_poachers_title" text="Um Bando de Caçadores Ilegais" />
+    <string id="taom_lotr_issue_poachers_desc" text="Um grande bando de caçadores ilegais está arruinando o comércio de caça de um mercador." />
+    <string id="taom_lotr_issue_poachers_brief" text="Caçadores ilegais se tornaram ousados e numerosos -- eles despojam os bosques completamente e expulsam caçadores honestos. Alguém deve detê-los." />
+    <string id="taom_lotr_issue_poachers_accept" text="Onde eles vagueiam?" />
+    <string id="taom_lotr_issue_poachers_expl" text="Derrote o bando de caçadores ilegais e os bosques serão nossos novamente. Há moedas nisso para você." />
+    <string id="taom_lotr_issue_poachers_soln" text="Cuidarei deles." />
+    <string id="taom_lotr_issue_captured_title" text="Meus Homens em Correntes" />
+    <string id="taom_lotr_issue_captured_desc" text="O povo de um líder de gangue foi capturado por caçadores de recompensas e ele quer libertá-los." />
+    <string id="taom_lotr_issue_captured_brief" text="Caçadores de recompensas levaram alguns dos meus rapazes e pretendem vendê-los. Destrua os malditos que os seguram e há moedas nisso -- moedas discretas." />
+    <string id="taom_lotr_issue_captured_accept" text="Quem os mantém?" />
+    <string id="taom_lotr_issue_captured_expl" text="Encontre o bando que levou meus homens e destrua-o. Faça isso e será pago, sem perguntas." />
+    <string id="taom_lotr_issue_captured_soln" text="Libertarei seus homens." />
+    <string id="taom_lotr_issue_deserters_title" text="Desertores Ameaçam {ISSUE_SETTLEMENT}" />
+    <string id="taom_lotr_issue_deserters_desc" text="Um bando de desertores extorque {ISSUE_SETTLEMENT} e matou aqueles que recusaram." />
+    <string id="taom_lotr_issue_deserters_brief" text="Homens quebrados com espadas vêm por nosso grão e nossas moedas, e derramaram sangue. Não podemos combatê-los sozinhos." />
+    <string id="taom_lotr_issue_deserters_accept" text="Eu vou ajudar. Onde estão eles?" />
+    <string id="taom_lotr_issue_deserters_expl" text="Fique à espreita e destrua os desertores quando chegarem. Livre-nos deles e terá nosso agradecimento e nossas moedas." />
+    <string id="taom_lotr_issue_deserters_soln" text="Eu acabarei com seus saques." />
+    <string id="taom_lotr_issue_commons_title" text="Problemas nas Terras Comuns" />
+    <string id="taom_lotr_issue_commons_desc" text="Rivais armados estão tomando as terras comuns de pastagem de uma vila à força." />
+    <string id="taom_lotr_issue_commons_brief" text="Homens violentos tomaram nossas terras de pastagem e expulsam qualquer um que se aproxime. Nossos rebanhos passam fome enquanto eles as controlam." />
+    <string id="taom_lotr_issue_commons_accept" text="Quem são eles?" />
+    <string id="taom_lotr_issue_commons_expl" text="Expulse os rivais de nossas terras comuns pela força e o pasto será nosso novamente. Pagaremos o que pudermos." />
+    <string id="taom_lotr_issue_commons_soln" text="Eu os expulsarei." />
+    <string id="taom_lotr_issue_rivalgang_title" text="Um Rival se Aproxima" />
+    <string id="taom_lotr_issue_rivalgang_desc" text="Uma gangue rival está invadindo o território de um chefe do crime e deve ser eliminada." />
+    <string id="taom_lotr_issue_rivalgang_brief" text="Outro bando acha que pode tomar o que é meu. Quebre-os nos becos e as ruas ficarão quietas novamente -- e você será pago." />
+    <string id="taom_lotr_issue_rivalgang_accept" text="Onde eles se reúnem?" />
+    <string id="taom_lotr_issue_rivalgang_expl" text="Derrote a gangue rival e faça deles um exemplo. Faça isso e haverá boas moedas esperando." />
+    <string id="taom_lotr_issue_rivalgang_soln" text="Considere feito." />
+    <string id="taom_lotr_issue_spy_title" text="Um Espião Inimigo" />
+    <string id="taom_lotr_issue_spy_desc" text="Um senhor suspeita que um agente inimigo conspira contra ele e quer que o grupo do espião seja caçado." />
+    <string id="taom_lotr_issue_spy_brief" text="Há uma víbora na grama -- um agente de meus inimigos, movendo-se com um bando de assassinos. Encontre-os e acabe com eles antes que ataquem." />
+    <string id="taom_lotr_issue_spy_accept" text="Como os reconhecerei?" />
+    <string id="taom_lotr_issue_spy_expl" text="Cace o grupo do espião e destrua-o. Livre-me desta ameaça e será bem recompensado." />
+    <string id="taom_lotr_issue_spy_soln" text="Eu os caçarei." />
+    <string id="taom_lotr_issue_revolt_title" text="Um Nobre Renegado" />
+    <string id="taom_lotr_issue_revolt_desc" text="Um nobre inferior levantou os camponeses em revolta e deve ser subjugado." />
+    <string id="taom_lotr_issue_revolt_brief" text="Um senhorzinho agita os camponeses contra seus superiores e reúne homens armados. Quebre sua força antes que a revolta se espalhe." />
+    <string id="taom_lotr_issue_revolt_accept" text="Onde ele se reúne?" />
+    <string id="taom_lotr_issue_revolt_expl" text="Derrote o renegado e sua ralé e a ordem será restaurada. Você será recompensado por seu serviço." />
+    <string id="taom_lotr_issue_revolt_soln" text="Eu subjugarei esta revolta." />
+    <string id="taom_lotr_issue_company_title" text="Uma Companhia de Problemas" />
+    <string id="taom_lotr_issue_company_desc" text="Um bando de mercenários contratados para assediar um senhor deve ser expulso." />
+    <string id="taom_lotr_issue_company_brief" text="Meus inimigos lançaram uma companhia de mercenários em minhas terras. Eles queimam e pilham sob as moedas de outro. Quebre-os para mim." />
+    <string id="taom_lotr_issue_company_accept" text="Onde eles saqueiam?" />
+    <string id="taom_lotr_issue_company_expl" text="Derrote a companhia mercenária e minhas terras conhecerão a paz novamente. Eu o pagarei bem." />
+    <string id="taom_lotr_issue_company_soln" text="Eu os quebrarei." />
+    <string id="taom_lotr_issue_prodigal_title" text="Um Parente Endividado" />
+    <string id="taom_lotr_issue_prodigal_desc" text="O jovem parente de um senhor caiu nas mãos de uma gangue que o mantém por suas dívidas." />
+    <string id="taom_lotr_issue_prodigal_brief" text="Um jovem primo tolo meu caiu entre ladrões e agora eles o mantêm preso por suas dívidas. Quebre a gangue e liberte-o." />
+    <string id="taom_lotr_issue_prodigal_accept" text="Onde ele está sendo mantido?" />
+    <string id="taom_lotr_issue_prodigal_expl" text="Derrote a gangue que mantém meu parente e traga-o de volta. Pagarei sua dívida muitas vezes por seu trabalho." />
+    <string id="taom_lotr_issue_prodigal_soln" text="Eu libertarei seu parente." />
+    <string id="taom_lotr_issue_rival_title" text="Um Rival Odiado" />
+    <string id="taom_lotr_issue_rival_desc" text="Um lorde quer que um lorde rival seja capturado vivo em batalha." />
+    <string id="taom_lotr_issue_rival_brief" text="Há um lorde que gostaria de ver humilhado -- capturado vivo e rebaixado. Capture um lorde inimigo em batalha e considerarei um grande serviço." />
+    <string id="taom_lotr_issue_rival_accept" text="Quereis ele vivo?" />
+    <string id="taom_lotr_issue_rival_expl" text="Capture um lorde inimigo como prisioneiro em batalha e o feito estará completo. Sereis ricamente recompensado." />
+    <string id="taom_lotr_issue_rival_soln" text="Trarei um lorde cativo." />
+    <string id="taom_lotr_issue_caravanambush_title" text="Uma Emboscada na Estrada" />
+    <string id="taom_lotr_issue_caravanambush_desc" text="Saqueadores prepararam uma emboscada para a caravana de um mercador e devem ser derrotados primeiro." />
+    <string id="taom_lotr_issue_caravanambush_brief" text="Tenho notícias de que bandidos aguardam em espera pela minha caravana na estrada à frente. Caia na armadilha deles e acabe com eles antes que me sangrem até secar." />
+    <string id="taom_lotr_issue_caravanambush_accept" text="Onde aguardam em espera?" />
+    <string id="taom_lotr_issue_caravanambush_expl" text="Encontre os saqueadores esperando em emboscada e destrua-os. Limpe a estrada e minhas mercadorias -- e vossa recompensa -- chegarão." />
+    <string id="taom_lotr_issue_caravanambush_soln" text="Quebrarei a emboscada deles." />
+    <string id="taom_lotr_issue_escortcaravan_title" text="Limpar a Rota Comercial" />
+    <string id="taom_lotr_issue_escortcaravan_desc" text="A caravana de um mercador não pode passar até que os bandos saqueadores na estrada sejam derrotados." />
+    <string id="taom_lotr_issue_escortcaravan_brief" text="Minhas carroças não ousam rolar enquanto saqueadores assombram a estrada. Derrote bandos suficientes e o caminho estará aberto para o comércio honesto novamente." />
+    <string id="taom_lotr_issue_escortcaravan_accept" text="Quantos bloqueiam o caminho?" />
+    <string id="taom_lotr_issue_escortcaravan_expl" text="Derrote os bandos que ameaçam a rota comercial e minhas caravanas voltarão a rolar. Pagarei bem pela passagem segura." />
+    <string id="taom_lotr_issue_escortcaravan_soln" text="Limparei o caminho." />
+    <string id="taom_lotr_issue_herd_title" text="Um Rebanho para {ISSUE_SETTLEMENT}" />
+    <string id="taom_lotr_issue_herd_desc" text="O povo de {ISSUE_SETTLEMENT} precisa que gado seja conduzido até eles para reconstruir seus rebanhos." />
+    <string id="taom_lotr_issue_herd_brief" text="Lobos e coisas piores reduziram nossos rebanhos a nada, viajante. Sem animais para criar, a aldeia não verá outro inverno farto." />
+    <string id="taom_lotr_issue_herd_accept" text="O que quereis que eu traga?" />
+    <string id="taom_lotr_issue_herd_expl" text="Conduza {COUNT} cabeças de ovelhas até nós e nossos rebanhos poderão crescer novamente. Pagaremos o que a aldeia puder poupar." />
+    <string id="taom_lotr_issue_herd_soln" text="Trarei um rebanho." />
+    <string id="taom_lotr_issue_herd_task" text="Entregar gado ({COUNT})" />
+    <string id="taom_lotr_issue_snare_title" text="Uma Armadilha para os Gananciosos" />
+    <string id="taom_lotr_issue_snare_desc" text="Um líder de gangue quer que um bando de rivais gananciosos seja atraído para uma armadilha e destruído." />
+    <string id="taom_lotr_issue_snare_brief" text="Há um grupo ganancioso que roubaria as próprias mães. Atraia-os e acabe com eles, e dividiremos o que carregavam -- discretamente." />
+    <string id="taom_lotr_issue_snare_accept" text="Quem são esses rivais?" />
+    <string id="taom_lotr_issue_snare_expl" text="Arme a armadilha para o bando ganancioso e elimine-os. Faça isso com discrição e haverá uma bolsa gorda para vós." />
+    <string id="taom_lotr_issue_snare_soln" text="Verei isso feito." />
+    <string id="taom_lotr_issue_cantsell_title" text="Mercadorias Sem Mercado" />
+    <string id="taom_lotr_issue_cantsell_desc" text="As mercadorias de um artesão estão se acumulando sem vender e precisam ser levadas a um mercado que as queira." />
+    <string id="taom_lotr_issue_cantsell_brief" text="Minhas prateleiras gemem com mercadorias que ninguém aqui comprará, viajante. Se meu ofício pudesse alcançar uma cidade que o precisa, não morreria de fome em minha própria bancada." />
+    <string id="taom_lotr_issue_cantsell_accept" text="O que produzis?" />
+    <string id="taom_lotr_issue_cantsell_expl" text="Traga-me {COUNT} cargas de cerâmica para enviar aos melhores mercados e pagarei uma parte do comércio." />
+    <string id="taom_lotr_issue_cantsell_soln" text="Verei vossas mercadorias se moverem." />
+    <string id="taom_lotr_issue_cantsell_task" text="Reunir cerâmica para comercializar ({COUNT})" />
+    <string id="taom_lotr_issue_overpriced_title" text="Materiais Caros" />
+    <string id="taom_lotr_issue_overpriced_desc" text="Um artesão não pode pagar pelas matérias-primas que seu ofício exige e precisa que sejam trazidas a preço baixo." />
+    <string id="taom_lotr_issue_overpriced_brief" text="O preço do bom couro subiu além de toda razão, e meu ofício morre por falta dele. Traga-me um pouco a um custo honesto e me lembrarei disso." />
+    <string id="taom_lotr_issue_overpriced_accept" text="Do que você precisa?" />
+    <string id="taom_lotr_issue_overpriced_expl" text="Traga-me {COUNT} cargas de couro e minha oficina cantará novamente. Pagarei justamente pelo incômodo." />
+    <string id="taom_lotr_issue_overpriced_soln" text="Encontrarei couro para você." />
+    <string id="taom_lotr_issue_overpriced_task" text="Entregar couro ({COUNT})" />
+    <string id="taom_lotr_issue_offload_title" text="Mercadorias Quentes para Mover" />
+    <string id="taom_lotr_issue_offload_desc" text="Um líder de gangue possui mercadorias roubadas para despachar e precisa de uma mão discreta para carregá-las." />
+    <string id="taom_lotr_issue_offload_brief" text="Tenho uma pilha de mercadorias que não devem ser vistas pelos olhos errados. Carregue-as para mim e haverá moedas limpas esperando -- sem perguntas, sem nomes." />
+    <string id="taom_lotr_issue_offload_accept" text="O que estou carregando?" />
+    <string id="taom_lotr_issue_offload_expl" text="Consiga {COUNT} cargas dessas mercadorias e mova-as discretamente. Faça bem feito e o próximo trabalho também será seu." />
+    <string id="taom_lotr_issue_offload_soln" text="Moverei suas mercadorias." />
+    <string id="taom_lotr_issue_offload_task" text="Adquirir as mercadorias ({COUNT})" />
+    <string id="taom_lotr_issue_revenue_title" text="O Dízimo em Espécie" />
+    <string id="taom_lotr_issue_revenue_desc" text="Um proprietário de terras é devedor de um dízimo em grãos que as fazendas distantes não pagaram." />
+    <string id="taom_lotr_issue_revenue_brief" text="As fazendas me devem seu dízimo e o pagam em grãos, não em moedas -- quando pagam. Colete o que é devido e traga, e você terá uma parte." />
+    <string id="taom_lotr_issue_revenue_accept" text="Quanto é devido?" />
+    <string id="taom_lotr_issue_revenue_expl" text="Traga {COUNT} medidas de grãos conforme o dízimo exige e pagarei uma parte justa pela coleta." />
+    <string id="taom_lotr_issue_revenue_soln" text="Recolherei seu dízimo." />
+    <string id="taom_lotr_issue_revenue_task" text="Coletar o dízimo de grãos ({COUNT})" />
+    <string id="taom_lotr_issue_arttrade_title" text="Um Empreendimento no Comércio" />
+    <string id="taom_lotr_issue_arttrade_desc" text="Um aspirante a comerciante precisa de mercadorias trazidas para obter lucro e provar que o empreendimento é sólido." />
+    <string id="taom_lotr_issue_arttrade_brief" text="Pretendo fazer minha fortuna no comércio, viajante, mas preciso das mercadorias para começar. Traga-me o estoque e o transformarei em ouro para nós dois." />
+    <string id="taom_lotr_issue_arttrade_accept" text="De que estoque você precisa?" />
+    <string id="taom_lotr_issue_arttrade_expl" text="Traga-me {COUNT} cargas de óleo para colocar o empreendimento em movimento e você compartilhará do lucro quando for vendido." />
+    <string id="taom_lotr_issue_arttrade_soln" text="Abastecerei seu empreendimento." />
+    <string id="taom_lotr_issue_arttrade_task" text="Entregar estoque comercial ({COUNT})" />
+    <string id="taom_lotr_issue_smugglers_title" text="Quebrando os Contrabandistas" />
+    <string id="taom_lotr_issue_smugglers_desc" text="Uma rede de contrabando está prejudicando o comércio honesto e um comerciante quer que seja desmantelada." />
+    <string id="taom_lotr_issue_smugglers_brief" text="Uma rede de contrabandistas inunda o mercado com mercadorias que não pagaram pedágio, e comerciantes honestos são arruinados por isso. Quebre suas rotas e o comércio se corrigirá." />
+    <string id="taom_lotr_issue_smugglers_accept" text="Por onde eles transportam suas mercadorias?" />
+    <string id="taom_lotr_issue_smugglers_expl" text="Derrote os contrabandistas e disperse sua rede. Livre as estradas deles e pagarei pelo serviço." />
+    <string id="taom_lotr_issue_smugglers_soln" text="Quebrarei a rede deles." />
+    <string id="taom_lotr_issue_gangweapons_title" text="Armas para Tomar" />
+    <string id="taom_lotr_issue_gangweapons_desc" text="Um líder de gangue quer que o arsenal de armas de um rival seja tomado à força." />
+    <string id="taom_lotr_issue_gangweapons_brief" text="Um grupo rival detém um belo arsenal de armas, e meus rapazes lutam com facas enferrujadas. Quebre-os e o arsenal será nosso -- e uma parte será sua." />
+    <string id="taom_lotr_issue_gangweapons_accept" text="Onde fica esse arsenal?" />
+    <string id="taom_lotr_issue_gangweapons_expl" text="Derrote o bando que detém as armas e elas serão minhas para tomar. Faça isso e haverá boas moedas em sua mão." />
+    <string id="taom_lotr_issue_gangweapons_soln" text="Tomarei o arsenal deles." />
+    <string id="taom_lotr_issue_garrison_title" text="Defendendo as Muralhas" />
+    <string id="taom_lotr_issue_garrison_desc" text="A guarnição de um senhor está sob pressão e precisa que os inimigos que a assediam sejam repelidos." />
+    <string id="taom_lotr_issue_garrison_brief" text="Minha guarnição está sobrecarregada e o inimigo nos pressiona a cada momento. Quebre os bandos que assediam minhas muralhas e dará aos meus homens espaço para respirar." />
+    <string id="taom_lotr_issue_garrison_accept" text="Quem vos pressiona?" />
+    <string id="taom_lotr_issue_garrison_expl" text="Derrotai os inimigos que assediam minha guarnição e os muros resistirão. O reino vos recompensará por isso." />
+    <string id="taom_lotr_issue_garrison_soln" text="Socorrerei vossa guarnição." />
+    <string id="taom_lotr_issue_conquest_title" text="Quebrando a Força do Inimigo" />
+    <string id="taom_lotr_issue_conquest_desc" text="Um senhor que planeja uma conquista precisa que as forças de campo do inimigo sejam destroçadas antes de marchar." />
+    <string id="taom_lotr_issue_conquest_brief" text="Pretendo tomar o que é meu por direito, mas a força do inimigo se interpõe no caminho. Quebrai suas forças em campo e o prêmio cairá com mais facilidade." />
+    <string id="taom_lotr_issue_conquest_accept" text="O que desejais que eu faça?" />
+    <string id="taom_lotr_issue_conquest_expl" text="Derrotai as forças do inimigo e enfraquecei seu domínio. Fazei isso e uma parte dos despojos da conquista será vossa." />
+    <string id="taom_lotr_issue_conquest_soln" text="Quebrarei sua força." />
+    <string id="taom_lotr_issue_raid_title" text="Levando a Guerra ao Inimigo" />
+    <string id="taom_lotr_issue_raid_desc" text="Um senhor quer que as terras do inimigo sejam assoladas e suas incursões destruídas." />
+    <string id="taom_lotr_issue_raid_brief" text="É hora de o inimigo sentir a guerra em seu próprio solo. Caçai suas incursões e passai-as ao fio da espada, e suas terras conhecerão o medo." />
+    <string id="taom_lotr_issue_raid_accept" text="Onde devo atacar?" />
+    <string id="taom_lotr_issue_raid_expl" text="Derrotai os grupos inimigos que percorrem suas fronteiras. Ensanguentai suas terras e sereis bem recompensado." />
+    <string id="taom_lotr_issue_raid_soln" text="Levarei a guerra a eles." />
+    <string id="taom_lotr_issue_scout_title" text="Olhos sobre o Inimigo" />
+    <string id="taom_lotr_issue_scout_desc" text="Um senhor precisa que as patrulhas do inimigo sejam quebradas para que seus batedores possam ver as fronteiras claramente." />
+    <string id="taom_lotr_issue_scout_brief" text="Estou cego aos movimentos do inimigo enquanto suas patrulhas percorrem a fronteira. Quebrai-as e clareai minha visão, e saberei onde atacar." />
+    <string id="taom_lotr_issue_scout_accept" text="Onde suas patrulhas percorrem?" />
+    <string id="taom_lotr_issue_scout_expl" text="Derrotai as patrulhas inimigas que protegem a fronteira para que meus batedores possam passar. Fazei isso e sereis pago por isso." />
+    <string id="taom_lotr_issue_scout_soln" text="Limparei a fronteira." />
+    <string id="taom_lotr_issue_knight_title" text="O Favor de um Campeão" />
+    <string id="taom_lotr_issue_knight_desc" text="Uma nobre deseja ver seu favor levado à vitória nas justas." />
+    <string id="taom_lotr_issue_knight_brief" text="Desejo que um campeão porte meu favor no torneio e conquiste glória em meu nome. Triunfai nas justas e ganhareis minha eterna gratidão." />
+    <string id="taom_lotr_issue_knight_accept" text="Desejais que eu lute nas justas?" />
+    <string id="taom_lotr_issue_knight_expl" text="Vencei um torneio portando meu favor e a honra será de ambos. Sereis recompensado pela vitória." />
+    <string id="taom_lotr_issue_knight_soln" text="Vencerei por vós." />
+    <string id="taom_lotr_issue_tutor_title" text="Para a Educação do Herdeiro" />
+    <string id="taom_lotr_issue_tutor_desc" text="Um senhor quer que tecidos finos e bens sejam trazidos para equipar a educação de seu herdeiro com o estilo apropriado." />
+    <string id="taom_lotr_issue_tutor_brief" text="Meu herdeiro deve ser educado como convém à nossa linhagem, com finos trajes e os apetrechos do saber. Trazei-me o que é necessário e o rapaz não carecerá de nada." />
+    <string id="taom_lotr_issue_tutor_accept" text="O que devo trazer?" />
+    <string id="taom_lotr_issue_tutor_expl" text="Trazei-me {COUNT} rolos de veludo para vestir meu herdeiro como um senhor deve ser vestido, e sereis bem pago por isso." />
+    <string id="taom_lotr_issue_tutor_soln" text="Providenciarei para vosso herdeiro." />
+    <string id="taom_lotr_issue_tutor_task" text="Entregar tecido fino ({COUNT})" />
+    <string id="taom_lotr_issue_training_title" text="Batizando os Vassalos em Sangue" />
+    <string id="taom_lotr_issue_training_desc" text="Um proprietário de terras quer que seus vassalos inexperientes sejam batizados em sangue contra inimigos reais em campo." />
+    <string id="taom_lotr_issue_training_brief" text="Meus vassalos são fracos e inexperientes, e homens fracos morrem na primeira batalha. Conduzi-os contra inimigos reais e fazei deles soldados endurecidos." />
+    <string id="taom_lotr_issue_training_accept" text="Desejais que sejam batizados em sangue?" />
+    <string id="taom_lotr_issue_training_expl" text="Vencei algumas batalhas difíceis e ensinai a meus vassalos o ofício da guerra. Endurecei-os e sereis pago pelo ensinamento." />
+    <string id="taom_lotr_issue_training_soln" text="Farei soldados deles." />
+    <string id="taom_lotr_issue_inn_title" text="Enganado e Ferido" />
+    <string id="taom_lotr_issue_inn_desc" text="Um notável foi enganado e teve sua propriedade roubada por vigaristas e quer que lhes seja ensinada uma dura lição." />
+    <string id="taom_lotr_issue_inn_brief" text="Um bando de trapaceiros e espertalhões tomou minha propriedade com dados viciados e documentos falsos. Quebre-os por mim e talvez eu ainda possa erguer minha cabeça nesta cidade." />
+    <string id="taom_lotr_issue_inn_accept" text="Quem enganou você?" />
+    <string id="taom_lotr_issue_inn_expl" text="Encontre os vigaristas e quebre-os. Ensine-lhes uma lição que não esquecerão e eu o recompensarei como puder." />
+    <string id="taom_lotr_issue_inn_soln" text="Vou acertar as contas." />
+    <string id="taom_lotr_issue_feud_title" text="Uma Rixa Antiga" />
+    <string id="taom_lotr_issue_feud_desc" text="Uma rixa amarga se transformou em derramamento de sangue e um senhor quer que os homens armados da facção rival sejam quebrados." />
+    <string id="taom_lotr_issue_feud_brief" text="Há sangue ruim entre minha casa e outra, antigo e profundo, e agora chegou às espadas. Quebre seus homens armados e a rixa poderá finalmente ser resolvida." />
+    <string id="taom_lotr_issue_feud_accept" text="Com quem você mantém rixa?" />
+    <string id="taom_lotr_issue_feud_expl" text="Derrote os homens da facção rival e termine esta rixa pela força. Faça isso e minha casa estará em dívida com você." />
+    <string id="taom_lotr_issue_feud_soln" text="Vou terminar esta rixa." />
+    <string id="taom_lotr_issue_daughter_title" text="Uma Filha Sequestrada" />
+    <string id="taom_lotr_issue_daughter_desc" text="A filha de um notável foi sequestrada por uma gangue e sua família quer libertá-la." />
+    <string id="taom_lotr_issue_daughter_brief" text="Minha filha -- levaram minha filha, viajante, e exigem um resgate que não posso pagar. Quebre os cães que a mantêm e traga-a de volta para mim." />
+    <string id="taom_lotr_issue_daughter_accept" text="Onde ela está sendo mantida?" />
+    <string id="taom_lotr_issue_daughter_expl" text="Encontre a gangue que levou minha menina e destrua-a. Traga-a em segurança para casa e lhe darei tudo que tenho para oferecer." />
+    <string id="taom_lotr_issue_daughter_soln" text="Vou trazê-la para casa." />
+    <string id="taom_lotr_issue_betting_title" text="Uma Aposta Certa" />
+    <string id="taom_lotr_issue_betting_desc" text="Um líder de gangue apostou pesado no torneio e precisa de um lutador para fazer sua aposta valer." />
+    <string id="taom_lotr_issue_betting_brief" text="Apostei uma bolsa pesada no próximo torneio, e não gosto de perder. Vença por mim e há uma gorda parte dos ganhos nisso para você." />
+    <string id="taom_lotr_issue_betting_accept" text="Você quer que eu vença o torneio?" />
+    <string id="taom_lotr_issue_betting_expl" text="Vença um torneio e faça minha aposta valer. Leve o prêmio e eu o verei bem recompensado pelos ganhos." />
+    <string id="taom_lotr_issue_betting_soln" text="Vou ganhar sua aposta." />
+    <string id="taom_lotr_issue_special_title" text="Ferro para a Forja" />
+    <string id="taom_lotr_issue_special_desc" text="Um líder de gangue quer ferro fino trazido para forjar um conjunto de lâminas especiais." />
+    <string id="taom_lotr_issue_special_brief" text="Quero lâminas feitas -- de verdade, não o lixo que meus rapazes carregam -- e isso exige bom ferro. Traga-me o metal e verei os ferreiros colocados para trabalhar." />
+    <string id="taom_lotr_issue_special_accept" text="Quanto ferro?" />
+    <string id="taom_lotr_issue_special_expl" text="Traga-me {COUNT} barras de bom ferro para a forja e há moedas nisso -- as lâminas são problema meu." />
+    <string id="taom_lotr_issue_special_soln" text="Vou lhe trazer ferro." />
+    <string id="taom_lotr_issue_special_task" text="Entregar ferro ({COUNT})" />
+    <string id="taom_lotr_issue_fallback_title" text="Um Pedido de Ajuda" />
+    <string id="taom_lotr_issue_fallback_desc" text="Um local precisa de mercadorias entregues." />
+    <string id="taom_lotr_issue_fallback_brief" text="Estamos em necessidade, viajante." />
+    <string id="taom_lotr_issue_fallback_accept" text="Como posso ajudar?" />
+    <string id="taom_lotr_issue_fallback_expl" text="Traga-nos {COUNT} {ITEM} e estaremos salvos." />
+    <string id="taom_lotr_issue_fallback_soln" text="Vou trazer o que você precisa." />
+    <string id="taom_lotr_issue_common_accepted" text="Traga {COUNT} {ITEM} para {QUEST_SETTLEMENT}." />
+    <string id="taom_lotr_issue_common_ready" text="Você tem o suficiente para completar a tarefa. Retorne para {QUEST_SETTLEMENT} para entregá-los." />
+    <string id="taom_lotr_issue_common_cancel" text="O acordo foi cancelado." />
+    <string id="taom_lotr_issue_common_timeout" text="Você falhou em entregar os bens a tempo." />
+    <string id="taom_lotr_issue_common_offer_accept" text="Obrigado. Não esquecerei esta gentileza." />
+    <string id="taom_lotr_issue_common_have_you" text="Você trouxe o que precisamos?" />
+    <string id="taom_lotr_issue_common_thanks" text="Que você seja abençoado, viajante. Você nos salvou." />
+    <string id="taom_lotr_issue_common_await" text="Aguardamos seu retorno." />
+    <string id="taom_lotr_issue_common_turnin" text="Sim. Aqui está." />
+    <string id="taom_lotr_issue_common_working" text="Ainda não — estou trabalhando nisso." />
+    <string id="taom_lotr_issue_common_not_enough" text="Você ainda não tem o suficiente." />
+    <string id="taom_lotr_issue_common_task" text="Coletar Bens" />
+    <string id="taom_lotr_issue_pers_expl" text="Traga-me {COUNT} cativos e eu lhe pagarei bem." />
+    <string id="taom_lotr_issue_pers_soln" text="Trarei cativos para você." />
+    <string id="taom_lotr_issue_pers_accepted" text="Entregue {COUNT} bandidos cativos em {QUEST_SETTLEMENT}." />
+    <string id="taom_lotr_issue_pers_ready" text="Você tem cativos suficientes. Retorne a {QUEST_SETTLEMENT} para entregá-los." />
+    <string id="taom_lotr_issue_pers_timeout" text="Você falhou em entregar os cativos a tempo." />
+    <string id="taom_lotr_issue_pers_have" text="Você trouxe os cativos?" />
+    <string id="taom_lotr_issue_pers_thanks" text="Eles servirão perfeitamente. Você tem minha gratidão." />
+    <string id="taom_lotr_issue_pers_turnin" text="Sim. Aqui estão eles." />
+    <string id="taom_lotr_issue_pers_not_enough" text="Você ainda não tem cativos suficientes." />
+    <string id="taom_lotr_issue_pers_task" text="Capturar bandidos" />
+    <string id="taom_lotr_issue_combat_expl" text="Lide com nossos inimigos e você será recompensado." />
+    <string id="taom_lotr_issue_combat_soln" text="Eu lidarei com eles." />
+    <string id="taom_lotr_issue_combat_task_capture" text="Capturar lordes inimigos ({COUNT})" />
+    <string id="taom_lotr_issue_combat_task_tourney" text="Vencer torneios ({COUNT})" />
+    <string id="taom_lotr_issue_combat_task_defeat" text="Derrotar os saqueadores ({COUNT})" />
+    <string id="taom_lotr_issue_combat_timeout" text="Você falhou em lidar com a ameaça a tempo." />
+  </strings>
+</base>

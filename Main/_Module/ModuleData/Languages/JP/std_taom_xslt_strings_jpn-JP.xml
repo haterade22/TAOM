@@ -1,2882 +1,1441 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-
-      type="string">
-
-  <tags>
-
-    <tag language="Japanese" />
-
-  </tags>
-
-  <strings>
-
-    <string id="TAOM_dunland" text="ドゥンランド" />
-
-    <string id="TAOM_dunland_short" text="ドゥンランド" />
-
-    <string id="TAOM_dunland_title" text="ドゥンランド諸部族" />
-
-    <string id="TAOM_dunland_ruler" text="ブレニン" />
-
-    <string id="TAOM_dunland_desc" text="ドゥンランドは、起伏のある丘陵と深い森に覆われた荒々しく未開の土地であり、獰猛で独立心の強いドゥンランド人の故郷である。しばしば疎外され、隣人と対立してきたドゥンランドの民は、何世紀にもわたる闘争と生存によって鍛えられてきた。彼らの族長は力と狡猾さをもって統率し、復讐と自由という共通の旗印のもとに部族を統一する。獰猛な戦士と熟練した狩人として知られるドゥンランド人は、斧、槍、弓を好み、先祖代々の土地との深い結びつきから生まれた粘り強さで戦う。彼らのやり方は他者には原始的に映るかもしれないが、ドゥンランド人は誇り高く機知に富み、中つ国における正当な地位を取り戻す準備ができている。" />
-
-    <string id="TAOM_gondor" text="ゴンドール" />
-
-    <string id="TAOM_gondor_short" text="ゴンドール" />
-
-    <string id="TAOM_gondor_title" text="ゴンドール執政国" />
-
-    <string id="TAOM_gondor_ruler" text="執政" />
-
-    <string id="TAOM_gondor_desc" text="ゴンドールは、中つ国において力と不屈の精神を誇る砦として聳え立ち、白き石造りの高い塔、古き血統、そして熟練した軍団で知られている。ヌーメノールの滅亡後、エレンディルとその息子たちによって建国されたゴンドールは、長きにわたり東方に増大する闇から人間の国々を守ってきた。首都ミナス・ティリスを擁するこの王国は、その勇気、規律、そして自由の民への忠誠で名高い。モルドールとの長年の戦いに苦しめられながらも、ゴンドールの戦士たちと執政たちは希望を守り続け、王の帰還によってかつての栄光が取り戻される日を待ち望んでいる。" />
-
-    <string id="TAOM_mordor" text="モルドール" />
-
-    <string id="TAOM_mordor_short" text="モルドール" />
-
-    <string id="TAOM_mordor_title" text="モルドール統治領" />
-
-    <string id="TAOM_mordor_ruler" text="冥王" />
-
-    <string id="TAOM_mordor_desc" text="モルドールは、闇の中で鍛えられ、冥王サウロンによって支配される暗黒の荒涼たる領域である。聳え立つ黒き山脈の背後に位置するこの王国は、オークの軍勢、無慈悲なトロール、そして戦争の武器を鍛える燃え盛る炉に満ちている。バラド=ドゥアの要塞から、サウロンは中つ国全土に支配を広げようとする止めようのない軍勢を指揮する。モルドールの空は灰に覆われ、その大地は不毛であり、サウロンの歪んだ野望と闇の魔法にふさわしい領土となっている。" />
-
-    <string id="TAOM_dale" text="谷間の国" />
-
-    <string id="TAOM_dale_short" text="谷間の国" />
-
-    <string id="TAOM_dale_title" text="谷間の国王国" />
-
-    <string id="TAOM_dale_ruler" text="王" />
-
-    <string id="TAOM_dale_desc" text="流れ川の水がはなれ山の影と出会う場所に、谷間の国は立っている。人間の都市は五軍の合戦の余波の中、廃墟から再建された。かつては音楽と歓喜の場所であり、交易と黄金の市場広場の都であった谷間の国は、エレボールの庇護のもとで繁栄していた。その商人たちはケルドゥインを下る素早い船を操り、街路には笑い声が響き渡り、人々は平和を知っていた。しかし平和は竜の到来によって粉々に打ち砕かれた。北方からの翼ある死神スマウグが炎と怒りをもってエレボールに降り立ち、谷間の国が最初に苦しんだ。都市は焼かれ、人々は逃げ、そして約二世紀の間、誇り高き円屋根の塔は沈黙し崩壊し、悲しみの記念碑として立ち続けた。だが廃墟は谷間の国の物語の終わりではない。竜の死とともに、弓の使い手バルドは再び旗を掲げ、民を故郷へと呼び戻した。灰と石から谷間の国は再び立ち上がった。かつてのままではなく、より偉大に。バルド王とその息子バインのもと、都市は再び栄え、城壁は強固に、人々は誇り高く、その眼差しは常に警戒を怠らない。谷間の国の人々は数において強大ではなく、魔法において古えでもないが、彼らは不屈にして真実である。" />
-
-    <string id="TAOM_harad" text="ハラド" />
-
-    <string id="TAOM_harad_short" text="ハラド" />
-
-    <string id="TAOM_harad_title" text="ハルワンのタスクララン" />
-
-    <string id="TAOM_harad_ruler" text="タスクラル" />
-
-    <string id="TAOM_harad_desc" text="ハラドは、ゴンドールの南方に広がる広大で多様な地域であり、乾燥した砂漠、緑豊かなジャングル、肥沃なオアシスを包含している。その地理は住民と同じくらい多様で、広大な砂丘が深い森へと続き、生命に満ちた河川が流れている。ハラドの歴史は古代の伝承に彩られており、壮大な都市と要塞が大地に点在し、その遺産が時代を超えて響き渡る統治者たちによって築かれた。ハラドワイスの大砂漠は北の辺境と中心地を分かち、その南の海岸は交易と海賊行為で賑わっている。サウロンの旗印のもとに統一されたハラドの多くの部族と王国は、深く根付いた伝統を戦争努力へと注ぎ込み、この活気ある土地を文化と紛争の拠点へと変えている。" />
-
-    <string id="TAOM_rohan" text="ローハン" />
-
-    <string id="TAOM_rohan_short" text="ローハン" />
-
-    <string id="TAOM_rohan_title" text="ローハン王国" />
-
-    <string id="TAOM_rohan_ruler" text="王" />
-
-    <string id="TAOM_rohan_desc" text="馬の国として知られるローハンは、開けた平原となだらかな丘陵が広がる広大な王国であり、そこには強力なローハンの騎士たち――熟練した騎馬民と獰猛な戦士たち――が住んでいる。伝説のゴンドール救援の騎行の後、若きエオルによって建国されたローハンは、長きにわたりゴンドールの忠実な同盟国として、モルドールの闇に対峙してきた。エドラスの黄金の館メドゥセルドから、その王たちは馬と騎手の絆によって生きる誇り高く不屈の民を統治している。ローハンの騎士たちは騎兵突撃、勇気の歌、そして揺るぎない勇敢さで名高い。サルマンの影が彼らの国境を脅かしているが、ローハンの息子と娘たちは常に武器を取る呼びかけに応える準備ができており、故郷と中つ国の自由の民を守り続けている。" />
-
-    <string id="TAOM_khand" text="カンド" />
-
-    <string id="TAOM_khand_short" text="カンド" />
-
-    <string id="TAOM_khand_title" text="カンドの風駆ける者たち" />
-
-    <string id="TAOM_khand_ruler" text="クドリアグ" />
-
-    <string id="TAOM_khand_desc" text="カンドは起伏のある草原と乾燥した平原が広がる荒々しい土地で、モルドールの南東に位置し、東と西を結ぶ重要な回廊として機能している。その民であるヴァリアグ族は獰猛で遊牧的であり、素早い馬と致命的な曲刀で知られている。過酷な環境で生きる彼らは略奪者と戦士としての技を磨き上げ、しばしば隣人と衝突し、最高額を提示する者のために傭兵として仕えてきた。カンドの忠誠は長らく冥王によって求められており、その戦士の多くはモルドールの影の下で戦いに赴いた。しかしヴァリアグ族は誇り高く独立心の強い民であり、風に吹かれる平原に点在する要塞化された野営地から統治する氏族と族長に第一の忠誠を誓っている。" />
-
-    <string id="TAOM_rhun" text="ルーン" />
-
-    <string id="TAOM_rhun_short" text="ルーン" />
-
-    <string id="TAOM_rhun_title" text="ルーンの黄金の王国" />
-
-    <string id="TAOM_rhun_ruler" text="ローケ=カン" />
-
-    <string id="TAOM_rhun_desc" text="ルーンの海の遥か彼方、枯れた草原と忘れ去られた帝国の赤い砂塵の向こうに、広大で謎に包まれた東方が広がる。ここに住む東夷は、ゴンドールの興隆よりも古い歴史を持つ誇り高き古の民である。彼らの土地は広い空の下に果てしなく広がり、内海の岸辺から既知の世界の果てを示す影の山々まで続いている。東夷は単一の国家ではなく、部族と王国の織りなす綴れ織りであり、力への崇拝と西方への長き恨みの記憶においてのみ団結している。ある者は力と復讐の約束に惹かれ、冥王に自ら進んで仕えた。別の者は抵抗し、古き道と更に古き神々にしがみついている。彼らの戦士は規律と戦車と弓の習熟で恐れられており、その黄金の鎧は東の太陽の下で炎のように輝く。" />
-
-    <string id="aom_dunland_male_name_1" text="ブロダー" />
-
-    <string id="aom_dunland_male_name_2" text="ダンリック" />
-
-    <string id="aom_dunland_male_name_3" text="エオガン" />
-
-    <string id="aom_dunland_male_name_4" text="グリムダル" />
-
-    <string id="aom_dunland_male_name_5" text="サルン" />
-
-    <string id="aom_dunland_male_name_6" text="カドック" />
-
-    <string id="aom_dunland_male_name_7" text="モードラン" />
-
-    <string id="aom_dunland_male_name_8" text="フィンリック" />
-
-    <string id="aom_dunland_male_name_9" text="カエドック" />
-
-    <string id="aom_dunland_male_name_10" text="トーラン" />
-
-    <string id="aom_dunland_male_name_11" text="ラグノール" />
-
-    <string id="aom_dunland_male_name_12" text="エルドリック" />
-
-    <string id="aom_dunland_male_name_13" text="ハルリック" />
-
-    <string id="aom_dunland_male_name_14" text="ウルリック" />
-
-    <string id="aom_dunland_male_name_15" text="ケルノック" />
-
-    <string id="aom_dunland_male_name_16" text="ブリノール" />
-
-    <string id="aom_dunland_male_name_17" text="ゴラン" />
-
-    <string id="aom_dunland_male_name_18" text="トードック" />
-
-    <string id="aom_dunland_male_name_19" text="フィンリック" />
-
-    <string id="aom_dunland_male_name_20" text="ハロック" />
-
-    <string id="aom_dunland_male_name_21" text="カエラン" />
-
-    <string id="aom_dunland_male_name_22" text="ウルダー" />
-
-    <string id="aom_dunland_male_name_23" text="ソラン" />
-
-    <string id="aom_dunland_male_name_24" text="グレルリック" />
-
-    <string id="aom_dunland_male_name_25" text="ブラドール" />
-
-    <string id="aom_dunland_male_name_26" text="モーラン" />
-
-    <string id="aom_dunland_male_name_27" text="アードリック" />
-
-    <string id="aom_dunland_male_name_28" text="カドロック" />
-
-    <string id="aom_dunland_male_name_29" text="グラルドール" />
-
-    <string id="aom_dunland_male_name_30" text="ファーノック" />
-
-    <string id="aom_dunland_male_name_31" text="ウルリック" />
-
-    <string id="aom_dunland_male_name_32" text="ブレンドック" />
-
-    <string id="aom_dunland_male_name_33" text="エアドリック" />
-
-    <string id="aom_dunland_male_name_34" text="スラルドール" />
-
-    <string id="aom_dunland_male_name_35" text="ウルガン" />
-
-    <string id="aom_dunland_male_name_36" text="ゴラン" />
-
-    <string id="aom_dunland_male_name_37" text="ラグナルド" />
-
-    <string id="aom_dunland_male_name_38" text="ダンモール" />
-
-    <string id="aom_dunland_male_name_39" text="ソールリク" />
-
-    <string id="aom_dunland_male_name_40" text="フィンワルド" />
-
-    <string id="aom_dunland_male_name_41" text="ブリルダン" />
-
-    <string id="aom_dunland_male_name_42" text="グランサール" />
-
-    <string id="aom_dunland_male_name_43" text="ハルモド" />
-
-    <string id="aom_dunland_male_name_44" text="スリダン" />
-
-    <string id="aom_dunland_male_name_45" text="エオルルンド" />
-
-    <string id="aom_dunland_male_name_46" text="ガレス" />
-
-    <string id="aom_dunland_male_name_47" text="ハーウィク" />
-
-    <string id="aom_dunland_male_name_48" text="ギルダン" />
-
-    <string id="aom_dunland_male_name_49" text="ウルフラム" />
-
-    <string id="aom_dunland_male_name_50" text="ソーラグ" />
-
-    <string id="aom_dunland_female_name_1" text="ブリンディス" />
-
-    <string id="aom_dunland_female_name_2" text="エイディス" />
-
-    <string id="aom_dunland_female_name_3" text="モルウィン" />
-
-    <string id="aom_dunland_female_name_4" text="グリスラ" />
-
-    <string id="aom_dunland_female_name_5" text="ハルダ" />
-
-    <string id="aom_dunland_female_name_6" text="シラ" />
-
-    <string id="aom_dunland_female_name_7" text="カエドウィン" />
-
-    <string id="aom_dunland_female_name_8" text="エルリン" />
-
-    <string id="aom_dunland_female_name_9" text="フィンウィン" />
-
-    <string id="aom_dunland_female_name_10" text="サルダ" />
-
-    <string id="aom_dunland_female_name_11" text="グレルウィン" />
-
-    <string id="aom_dunland_female_name_12" text="ハーウィン" />
-
-    <string id="aom_dunland_female_name_13" text="アルディス" />
-
-    <string id="aom_dunland_female_name_14" text="ウィンラ" />
-
-    <string id="aom_dunland_female_name_15" text="ブリテア" />
-
-    <string id="aom_dunland_female_name_16" text="エオッラ" />
-
-    <string id="aom_dunland_female_name_17" text="シルダ" />
-
-    <string id="aom_dunland_female_name_18" text="グランナ" />
-
-    <string id="aom_dunland_female_name_19" text="エルウィン" />
-
-    <string id="aom_dunland_female_name_20" text="モルラ" />
-
-    <string id="aom_dunland_female_name_21" text="ハーラ" />
-
-    <string id="aom_dunland_female_name_22" text="フィンラ" />
-
-    <string id="aom_dunland_female_name_23" text="グリッサ" />
-
-    <string id="aom_dunland_female_name_24" text="スリッサ" />
-
-    <string id="aom_dunland_female_name_25" text="ハルウィン" />
-
-    <string id="aom_dunland_female_name_26" text="カエリン" />
-
-    <string id="aom_dunland_female_name_27" text="グレルウィン" />
-
-    <string id="aom_dunland_female_name_28" text="サラ" />
-
-    <string id="aom_dunland_female_name_29" text="モッラ" />
-
-    <string id="aom_dunland_female_name_30" text="ブリナ" />
-
-    <string id="aom_dunland_female_name_31" text="シルダ" />
-
-    <string id="aom_dunland_female_name_32" text="エリス" />
-
-    <string id="aom_dunland_female_name_33" text="カエルウィン" />
-
-    <string id="aom_dunland_female_name_34" text="アルドラ" />
-
-    <string id="aom_dunland_female_name_35" text="ハッラ" />
-
-    <string id="aom_dunland_female_name_36" text="ウィンラ" />
-
-    <string id="aom_dunland_female_name_37" text="シルダ" />
-
-    <string id="aom_dunland_female_name_38" text="グレスラ" />
-
-    <string id="aom_dunland_female_name_39" text="フィンウィン" />
-
-    <string id="aom_dunland_female_name_40" text="エルラ" />
-
-    <string id="aom_dunland_female_name_41" text="モルウィン" />
-
-    <string id="aom_dunland_female_name_42" text="ハルダ" />
-
-    <string id="aom_dunland_female_name_43" text="カエドラ" />
-
-    <string id="aom_dunland_female_name_44" text="サンナ" />
-
-    <string id="aom_dunland_female_name_45" text="ブリンデル" />
-
-    <string id="aom_dunland_female_name_46" text="グリスウィン" />
-
-    <string id="aom_dunland_female_name_47" text="エイディス" />
-
-    <string id="aom_dunland_female_name_48" text="フィンラ" />
-
-    <string id="aom_dunland_female_name_49" text="ハルウィン" />
-
-    <string id="aom_dunland_female_name_50" text="ウィンナ" />
-
-    <string id="aom_dunland_clan_name_01" text="赤き狼団" />
-
-    <string id="aom_dunland_clan_name_02" text="鉄の牙団" />
-
-    <string id="aom_dunland_clan_name_03" text="石砕き団" />
-
-    <string id="aom_dunland_clan_name_04" text="影の狩人団" />
-
-    <string id="aom_dunland_clan_name_05" text="丘陵略奪団" />
-
-    <string id="aom_dunland_clan_name_06" text="野生の刃団" />
-
-    <string id="aom_dunland_clan_name_07" text="嵐喚び団" />
-
-    <string id="aom_dunland_clan_name_08" text="血の鴉団" />
-
-    <string id="aom_dunland_clan_name_09" text="骨の槍団" />
-
-    <string id="aom_dunland_clan_name_10" text="地揺らし団" />
-
-    <string id="aom_dunland_clan_name_11" text="棘の盾団" />
-
-    <string id="aom_dunland_clan_name_12" text="影狼団" />
-
-    <string id="aom_dunland_clan_name_13" text="折れ斧団" />
-
-    <string id="aom_dunland_clan_name_14" text="鴉の眼族" />
-
-    <string id="aom_dunland_clan_name_15" text="霜遠吠え族" />
-
-    <string id="aom_dunland_clan_name_16" text="鉄縛族" />
-
-    <string id="aom_dunland_clan_name_17" text="石の拳族" />
-
-    <string id="aom_dunland_clan_name_18" text="吼える疾風族" />
-
-    <string id="aom_dunland_clan_name_19" text="山陰族" />
-
-    <string id="aom_harad_male_name_1" text="アザラン" />
-
-    <string id="aom_harad_male_name_2" text="ザミール" />
-
-    <string id="aom_harad_male_name_3" text="カリード" />
-
-    <string id="aom_harad_male_name_4" text="ラシード" />
-
-    <string id="aom_harad_male_name_5" text="ナジール" />
-
-    <string id="aom_harad_male_name_6" text="ジャミール" />
-
-    <string id="aom_harad_male_name_7" text="ハシム" />
-
-    <string id="aom_harad_male_name_8" text="ファラージ" />
-
-    <string id="aom_harad_male_name_9" text="サヒム" />
-
-    <string id="aom_harad_male_name_10" text="タリーク" />
-
-    <string id="aom_harad_male_name_11" text="バシム" />
-
-    <string id="aom_harad_male_name_12" text="カリーム" />
-
-    <string id="aom_harad_male_name_13" text="サリーム" />
-
-    <string id="aom_harad_male_name_14" text="ラヤン" />
-
-    <string id="aom_harad_male_name_15" text="ザファル" />
-
-    <string id="aom_harad_male_name_16" text="ヤシル" />
-
-    <string id="aom_harad_male_name_17" text="ハキーム" />
-
-    <string id="aom_harad_male_name_18" text="イブラヒム" />
-
-    <string id="aom_harad_male_name_19" text="ファイサル" />
-
-    <string id="aom_harad_male_name_20" text="ナジーブ" />
-
-    <string id="aom_harad_male_name_21" text="ムニール" />
-
-    <string id="aom_harad_male_name_22" text="アシュラフ" />
-
-    <string id="aom_harad_male_name_23" text="ザクワン" />
-
-    <string id="aom_harad_male_name_24" text="アジーム" />
-
-    <string id="aom_harad_male_name_25" text="スライマーン" />
-
-    <string id="aom_harad_male_name_26" text="ハキム" />
-
-    <string id="aom_harad_male_name_27" text="ジブリール" />
-
-    <string id="aom_harad_male_name_28" text="ターヒル" />
-
-    <string id="aom_harad_male_name_29" text="ラフィーク" />
-
-    <string id="aom_harad_male_name_30" text="マリク" />
-
-    <string id="aom_harad_male_name_31" text="ザーヒル" />
-
-    <string id="aom_harad_male_name_32" text="アシム" />
-
-    <string id="aom_harad_male_name_33" text="ナビール" />
-
-    <string id="aom_harad_male_name_34" text="オマル" />
-
-    <string id="aom_harad_male_name_35" text="カシム" />
-
-    <string id="aom_harad_male_name_36" text="ハリム" />
-
-    <string id="aom_harad_male_name_37" text="マンスール" />
-
-    <string id="aom_harad_male_name_38" text="ヤヒヤ" />
-
-    <string id="aom_harad_male_name_39" text="シャキール" />
-
-    <string id="aom_harad_male_name_40" text="アディル" />
-
-    <string id="aom_harad_male_name_41" text="マフディ" />
-
-    <string id="aom_harad_male_name_42" text="ファヒム" />
-
-    <string id="aom_harad_male_name_43" text="ラティフ" />
-
-    <string id="aom_harad_male_name_44" text="ラミーズ" />
-
-    <string id="aom_harad_male_name_45" text="タミーム" />
-
-    <string id="aom_harad_male_name_46" text="ヤズィード" />
-
-    <string id="aom_harad_male_name_47" text="カマル" />
-
-    <string id="aom_harad_male_name_48" text="ハッサン" />
-
-    <string id="aom_harad_male_name_49" text="アジーム" />
-
-    <string id="aom_harad_male_name_50" text="ズバイド" />
-
-    <string id="aom_harad_female_name_1" text="ザヒラ" />
-
-    <string id="aom_harad_female_name_2" text="ナディア" />
-
-    <string id="aom_harad_female_name_3" text="ヤスミン" />
-
-    <string id="aom_harad_female_name_4" text="アミラ" />
-
-    <string id="aom_harad_female_name_5" text="レイラ" />
-
-    <string id="aom_harad_female_name_6" text="ラニア" />
-
-    <string id="aom_harad_female_name_7" text="ジャミラ" />
-
-    <string id="aom_harad_female_name_8" text="ハフサ" />
-
-    <string id="aom_harad_female_name_9" text="ズライカ" />
-
-    <string id="aom_harad_female_name_10" text="アミナ" />
-
-    <string id="aom_harad_female_name_11" text="サリマ" />
-
-    <string id="aom_harad_female_name_12" text="ラミア" />
-
-    <string id="aom_harad_female_name_13" text="サミラ" />
-
-    <string id="aom_harad_female_name_14" text="ナジーラ" />
-
-    <string id="aom_harad_female_name_15" text="ルカイヤ" />
-
-    <string id="aom_harad_female_name_16" text="ハリマ" />
-
-    <string id="aom_harad_female_name_17" text="アジザ" />
-
-    <string id="aom_harad_female_name_18" text="ハディージャ" />
-
-    <string id="aom_harad_female_name_19" text="ファドワ" />
-
-    <string id="aom_harad_female_name_20" text="サフィヤ" />
-
-    <string id="aom_harad_female_name_21" text="アーリア" />
-
-    <string id="aom_harad_female_name_22" text="ナワル" />
-
-    <string id="aom_harad_female_name_23" text="ブシュラ" />
-
-    <string id="aom_harad_female_name_24" text="ザフラ" />
-
-    <string id="aom_harad_female_name_25" text="リハナ" />
-
-    <string id="aom_harad_female_name_26" text="スマヤ" />
-
-    <string id="aom_harad_female_name_27" text="ナイマ" />
-
-    <string id="aom_harad_female_name_28" text="ラシダ" />
-
-    <string id="aom_harad_female_name_29" text="ザイナブ" />
-
-    <string id="aom_harad_female_name_30" text="シャイマ" />
-
-    <string id="aom_harad_female_name_31" text="ムニラ" />
-
-    <string id="aom_harad_female_name_32" text="ファティマ" />
-
-    <string id="aom_harad_female_name_33" text="シリン" />
-
-    <string id="aom_harad_female_name_34" text="サニヤ" />
-
-    <string id="aom_harad_female_name_35" text="マリカ" />
-
-    <string id="aom_harad_female_name_36" text="アフィヤ" />
-
-    <string id="aom_harad_female_name_37" text="ザイン" />
-
-    <string id="aom_harad_female_name_38" text="ファリダ" />
-
-    <string id="aom_harad_female_name_39" text="アマニ" />
-
-    <string id="aom_harad_female_name_40" text="ナジラ" />
-
-    <string id="aom_harad_female_name_41" text="フダ" />
-
-    <string id="aom_harad_female_name_42" text="ラフマ" />
-
-    <string id="aom_harad_female_name_43" text="ヤミラ" />
-
-    <string id="aom_harad_female_name_44" text="シャマ" />
-
-    <string id="aom_harad_female_name_45" text="タミナ" />
-
-    <string id="aom_harad_female_name_46" text="ズバイダ" />
-
-    <string id="aom_harad_female_name_47" text="ラビヤ" />
-
-    <string id="aom_harad_female_name_48" text="アスマ" />
-
-    <string id="aom_harad_female_name_49" text="ラティファ" />
-
-    <string id="aom_harad_female_name_50" text="サイダ" />
-
-    <string id="aom_harad_clan_name_01" text="灼熱の砂" />
-
-    <string id="aom_harad_clan_name_02" text="黄金の刃" />
-
-    <string id="aom_harad_clan_name_03" text="砂漠の太陽" />
-
-    <string id="aom_harad_clan_name_04" text="赤き槍" />
-
-    <string id="aom_harad_clan_name_05" text="砂丘の騎手" />
-
-    <string id="aom_harad_clan_name_06" text="焦熱の風" />
-
-    <string id="aom_harad_clan_name_07" text="砂嵐の戦士" />
-
-    <string id="aom_harad_clan_name_08" text="蛇の牙" />
-
-    <string id="aom_harad_clan_name_09" text="黒き蠍" />
-
-    <string id="aom_harad_clan_name_10" text="ムマキルの守護者" />
-
-    <string id="aom_harad_clan_name_11" text="オアシスの守護者" />
-
-    <string id="aom_harad_clan_name_12" text="炎の烙印" />
-
-    <string id="aom_harad_clan_name_13" text="深紅の盾" />
-
-    <string id="aom_harad_clan_name_14" text="黄金の三日月" />
-
-    <string id="aom_harad_clan_name_15" text="静寂の影" />
-
-    <string id="aom_harad_clan_name_16" text="陽撃ち" />
-
-    <string id="aom_harad_clan_name_17" text="砂丘の守護者" />
-
-    <string id="aom_harad_clan_name_18" text="蛇乗り" />
-
-    <string id="aom_harad_clan_name_19" text="燃え立つ蹄" />
-
-    <string id="aom_harad_clan_name_20" text="黄昏の砂" />
-
-    <string id="aom_rohan_male_name_1" text="エアドレド" />
-
-    <string id="aom_rohan_male_name_2" text="エオムンド" />
-
-    <string id="aom_rohan_male_name_3" text="ケオル" />
-
-    <string id="aom_rohan_male_name_4" text="アゼルリック" />
-
-    <string id="aom_rohan_male_name_5" text="ベオルフセルム" />
-
-    <string id="aom_rohan_male_name_6" text="エアルドウルフ" />
-
-    <string id="aom_rohan_male_name_7" text="ウルフガル" />
-
-    <string id="aom_rohan_male_name_8" text="セオドリック" />
-
-    <string id="aom_rohan_male_name_9" text="エアルリック" />
-
-    <string id="aom_rohan_male_name_10" text="ブリフトウルフ" />
-
-    <string id="aom_rohan_male_name_11" text="セオドウィネ" />
-
-    <string id="aom_rohan_male_name_12" text="キンリック" />
-
-    <string id="aom_rohan_male_name_13" text="エオルメンリック" />
-
-    <string id="aom_rohan_male_name_14" text="エアドヘルム" />
-
-    <string id="aom_rohan_male_name_15" text="アルドウルフ" />
-
-    <string id="aom_rohan_male_name_16" text="フリスガル" />
-
-    <string id="aom_rohan_male_name_17" text="オスウィネ" />
-
-    <string id="aom_rohan_male_name_18" text="レオフウィネ" />
-
-    <string id="aom_rohan_male_name_19" text="セオバルド" />
-
-    <string id="aom_rohan_male_name_20" text="ウィンフリス" />
-
-    <string id="aom_rohan_male_name_21" text="ヘレワルド" />
-
-    <string id="aom_rohan_male_name_22" text="エオセイン" />
-
-    <string id="aom_rohan_male_name_23" text="グスリック" />
-
-    <string id="aom_rohan_male_name_24" text="セオウルフ" />
-
-    <string id="aom_rohan_male_name_25" text="フラムリック" />
-
-    <string id="aom_rohan_male_name_26" text="エアドガル" />
-
-    <string id="aom_rohan_male_name_27" text="ヘレモド" />
-
-    <string id="aom_rohan_male_name_28" text="ベオルンヘルム" />
-
-    <string id="aom_rohan_male_name_29" text="シゲフレド" />
-
-    <string id="aom_rohan_male_name_30" text="セオデンリック" />
-
-    <string id="aom_rohan_male_name_31" text="エアルウルフ" />
-
-    <string id="aom_rohan_male_name_32" text="ガルムンド" />
-
-    <string id="aom_rohan_male_name_33" text="フロスガル" />
-
-    <string id="aom_rohan_male_name_34" text="エオワルド" />
-
-    <string id="aom_rohan_male_name_35" text="ケオウルフ" />
-
-    <string id="aom_rohan_male_name_36" text="ファラムンド" />
-
-    <string id="aom_rohan_male_name_37" text="アゼルヘルム" />
-
-    <string id="aom_rohan_male_name_38" text="エオフォル" />
-
-    <string id="aom_rohan_male_name_39" text="ウィンスタン" />
-
-    <string id="aom_rohan_male_name_40" text="ヘレウィネ" />
-
-    <string id="aom_rohan_male_name_41" text="グスウィネ" />
-
-    <string id="aom_rohan_male_name_42" text="キュンウィネ" />
-
-    <string id="aom_rohan_male_name_43" text="アエルフリク" />
-
-    <string id="aom_rohan_male_name_44" text="ウルフスタン" />
-
-    <string id="aom_rohan_male_name_45" text="ベオルフトウィネ" />
-
-    <string id="aom_rohan_male_name_46" text="セオムンド" />
-
-    <string id="aom_rohan_male_name_47" text="ケオウィネ" />
-
-    <string id="aom_rohan_male_name_48" text="セオドヘルム" />
-
-    <string id="aom_rohan_male_name_49" text="レオフヘルム" />
-
-    <string id="aom_rohan_male_name_50" text="アエルフウィネ" />
-
-    <string id="aom_rohan_male_name_51" text="ウルフノス" />
-
-    <string id="aom_rohan_male_name_52" text="セルワード" />
-
-    <string id="aom_rohan_male_name_53" text="セルメ" />
-
-    <string id="aom_rohan_male_name_54" text="エオルムレド" />
-
-    <string id="aom_rohan_male_name_55" text="アエルウィン" />
-
-    <string id="aom_rohan_male_name_56" text="イルフガル" />
-
-    <string id="aom_rohan_male_name_57" text="アルフガル" />
-
-    <string id="aom_rohan_male_name_58" text="ウルファル" />
-
-    <string id="aom_rohan_male_name_59" text="レオファル" />
-
-    <string id="aom_rohan_male_name_60" text="レオフリク" />
-
-    <string id="aom_rohan_female_name_1" text="エアドギフ" />
-
-    <string id="aom_rohan_female_name_2" text="セオドウィン" />
-
-    <string id="aom_rohan_female_name_3" text="アゼルヒルド" />
-
-    <string id="aom_rohan_female_name_4" text="キュネスリス" />
-
-    <string id="aom_rohan_female_name_5" text="ベオルスヒルド" />
-
-    <string id="aom_rohan_female_name_6" text="フリスウィン" />
-
-    <string id="aom_rohan_female_name_7" text="ウィンフリス" />
-
-    <string id="aom_rohan_female_name_8" text="エオルメンヒルド" />
-
-    <string id="aom_rohan_female_name_9" text="ヒルディス" />
-
-    <string id="aom_rohan_female_name_10" text="エオウィンネ" />
-
-    <string id="aom_rohan_female_name_11" text="レオフウィン" />
-
-    <string id="aom_rohan_female_name_12" text="エアルヒルド" />
-
-    <string id="aom_rohan_female_name_13" text="セオウィン" />
-
-    <string id="aom_rohan_female_name_14" text="ウィンフリーダ" />
-
-    <string id="aom_rohan_female_name_15" text="アルドギフ" />
-
-    <string id="aom_rohan_female_name_16" text="ヘレリンド" />
-
-    <string id="aom_rohan_female_name_17" text="ブリュンヒルド" />
-
-    <string id="aom_rohan_female_name_18" text="シゲウィン" />
-
-    <string id="aom_rohan_female_name_19" text="エアドウィン" />
-
-    <string id="aom_rohan_female_name_20" text="キュンウィン" />
-
-    <string id="aom_rohan_female_name_21" text="ヒルドレッド" />
-
-    <string id="aom_rohan_female_name_22" text="エセルウィン" />
-
-    <string id="aom_rohan_female_name_23" text="ケオルウィン" />
-
-    <string id="aom_rohan_female_name_24" text="フリスリンド" />
-
-    <string id="aom_rohan_female_name_25" text="セオディス" />
-
-    <string id="aom_rohan_female_name_26" text="エセルフリーダ" />
-
-    <string id="aom_rohan_female_name_27" text="ベオルヒルド" />
-
-    <string id="aom_rohan_female_name_28" text="エオルムヒルド" />
-
-    <string id="aom_rohan_female_name_29" text="レオフヒルド" />
-
-    <string id="aom_rohan_female_name_30" text="アルドウィン" />
-
-    <string id="aom_rohan_female_name_31" text="ウィンヒルド" />
-
-    <string id="aom_rohan_female_name_32" text="ヒルドウィン" />
-
-    <string id="aom_rohan_female_name_33" text="エアドフリーダ" />
-
-    <string id="aom_rohan_female_name_34" text="セオドリン" />
-
-    <string id="aom_rohan_female_name_35" text="キュンフリス" />
-
-    <string id="aom_rohan_female_name_36" text="グスウィン" />
-
-    <string id="aom_rohan_female_name_37" text="ヒルドウィンネ" />
-
-    <string id="aom_rohan_female_name_38" text="エアルフリーダ" />
-
-    <string id="aom_rohan_female_name_39" text="シギス" />
-
-    <string id="aom_rohan_female_name_40" text="ウィンフリシア" />
-
-    <string id="aom_rohan_female_name_41" text="エアドギサ" />
-
-    <string id="aom_rohan_female_name_42" text="エセルレーダ" />
-
-    <string id="aom_rohan_female_name_43" text="ベオルスウィン" />
-
-    <string id="aom_rohan_female_name_44" text="フリスギフ" />
-
-    <string id="aom_rohan_female_name_45" text="セオドフリス" />
-
-    <string id="aom_rohan_female_name_46" text="ウィンヒルダ" />
-
-    <string id="aom_rohan_female_name_47" text="エアルフリス" />
-
-    <string id="aom_rohan_female_name_48" text="キュネシルド" />
-
-    <string id="aom_rohan_female_name_49" text="エアルウィン" />
-
-    <string id="aom_rohan_female_name_50" text="エアドウィンネ" />
-
-    <string id="aom_rohan_clan_name_01" text="ハロルディング" />
-
-    <string id="aom_rohan_clan_name_02" text="エアルフェニング" />
-
-    <string id="aom_rohan_clan_name_03" text="アルドリンガス" />
-
-    <string id="aom_rohan_clan_name_04" text="ハマインガス" />
-
-    <string id="aom_rohan_clan_name_05" text="アルングリミング" />
-
-    <string id="aom_rohan_clan_name_06" text="スウェオルドボラ" />
-
-    <string id="aom_rohan_clan_name_07" text="ウンデミング" />
-
-    <string id="aom_rohan_clan_name_08" text="マロヴァンディング" />
-
-    <string id="aom_rohan_clan_name_09" text="カルムンダス" />
-
-    <string id="aom_rohan_clan_name_10" text="エアルミンディング" />
-
-    <string id="aom_rhun_male_name_1" text="カルルド" />
-
-    <string id="aom_rhun_male_name_2" text="トルガシュ" />
-
-    <string id="aom_rhun_male_name_3" text="ヴァスキル" />
-
-    <string id="aom_rhun_male_name_4" text="ラジール" />
-
-    <string id="aom_rhun_male_name_5" text="ナズルク" />
-
-    <string id="aom_rhun_male_name_6" text="サルン" />
-
-    <string id="aom_rhun_male_name_7" text="ダグリム" />
-
-    <string id="aom_rhun_male_name_8" text="ザルナシュ" />
-
-    <string id="aom_rhun_male_name_9" text="ヴァルレク" />
-
-    <string id="aom_rhun_male_name_10" text="ファズリク" />
-
-    <string id="aom_rhun_male_name_11" text="オルズン" />
-
-    <string id="aom_rhun_male_name_12" text="クルガル" />
-
-    <string id="aom_rhun_male_name_13" text="ドゥルザグ" />
-
-    <string id="aom_rhun_male_name_14" text="マロク" />
-
-    <string id="aom_rhun_male_name_15" text="ザグリム" />
-
-    <string id="aom_rhun_male_name_16" text="ナラシュ" />
-
-    <string id="aom_rhun_male_name_17" text="タリク" />
-
-    <string id="aom_rhun_male_name_18" text="ヴァズリク" />
-
-    <string id="aom_rhun_male_name_19" text="ウズラド" />
-
-    <string id="aom_rhun_male_name_20" text="ゾーラム" />
-
-    <string id="aom_rhun_male_name_21" text="ラシャド" />
-
-    <string id="aom_rhun_male_name_22" text="バルカン" />
-
-    <string id="aom_rhun_male_name_23" text="サルグル" />
-
-    <string id="aom_rhun_male_name_24" text="スルガン" />
-
-    <string id="aom_rhun_male_name_25" text="ヴァリム" />
-
-    <string id="aom_rhun_male_name_26" text="マズリク" />
-
-    <string id="aom_rhun_male_name_27" text="カルザル" />
-
-    <string id="aom_rhun_male_name_28" text="ナショル" />
-
-    <string id="aom_rhun_male_name_29" text="グラシュ" />
-
-    <string id="aom_rhun_male_name_30" text="ドゥルザグ" />
-
-    <string id="aom_rhun_male_name_31" text="ザルカル" />
-
-    <string id="aom_rhun_male_name_32" text="トラク" />
-
-    <string id="aom_rhun_male_name_33" text="ファルヌル" />
-
-    <string id="aom_rhun_male_name_34" text="マルズク" />
-
-    <string id="aom_rhun_male_name_35" text="ザルン" />
-
-    <string id="aom_rhun_male_name_36" text="ナルク" />
-
-    <string id="aom_rhun_male_name_37" text="サルガン" />
-
-    <string id="aom_rhun_male_name_38" text="サーミク" />
-
-    <string id="aom_rhun_male_name_39" text="ダズリク" />
-
-    <string id="aom_rhun_male_name_40" text="カルヌル" />
-
-    <string id="aom_rhun_male_name_41" text="ヴァシュキル" />
-
-    <string id="aom_rhun_male_name_42" text="ローダン" />
-
-    <string id="aom_rhun_male_name_43" text="タズルク" />
-
-    <string id="aom_rhun_male_name_44" text="ゴラシュ" />
-
-    <string id="aom_rhun_male_name_45" text="ナズリン" />
-
-    <string id="aom_rhun_male_name_46" text="サルカル" />
-
-    <string id="aom_rhun_male_name_47" text="マザド" />
-
-    <string id="aom_rhun_male_name_48" text="オルズリク" />
-
-    <string id="aom_rhun_male_name_49" text="ザルナク" />
-
-    <string id="aom_rhun_male_name_50" text="ファルズク" />
-
-    <string id="aom_rhun_female_name_1" text="ラジラ" />
-
-    <string id="aom_rhun_female_name_2" text="タズミナ" />
-
-    <string id="aom_rhun_female_name_3" text="ヴァジラ" />
-
-    <string id="aom_rhun_female_name_4" text="マズリカ" />
-
-    <string id="aom_rhun_female_name_5" text="ザリナ" />
-
-    <string id="aom_rhun_female_name_6" text="カリラ" />
-
-    <string id="aom_rhun_female_name_7" text="オルジラ" />
-
-    <string id="aom_rhun_female_name_8" text="ドゥルザンナ" />
-
-    <string id="aom_rhun_female_name_9" text="ナリマ" />
-
-    <string id="aom_rhun_female_name_10" text="サリラ" />
-
-    <string id="aom_rhun_female_name_11" text="ヴァリラ" />
-
-    <string id="aom_rhun_female_name_12" text="ダジラ" />
-
-    <string id="aom_rhun_female_name_13" text="ラミラ" />
-
-    <string id="aom_rhun_female_name_14" text="ファジラ" />
-
-    <string id="aom_rhun_female_name_15" text="ウズリラ" />
-
-    <string id="aom_rhun_female_name_16" text="ザリナ" />
-
-    <string id="aom_rhun_female_name_17" text="クリサ" />
-
-    <string id="aom_rhun_female_name_18" text="バルキラ" />
-
-    <string id="aom_rhun_female_name_19" text="ナリザ" />
-
-    <string id="aom_rhun_female_name_20" text="サルニラ" />
-
-    <string id="aom_rhun_female_name_21" text="ラシラ" />
-
-    <string id="aom_rhun_female_name_22" text="マザラ" />
-
-    <string id="aom_rhun_female_name_23" text="ヴァルシラ" />
-
-    <string id="aom_rhun_female_name_24" text="ザルニラ" />
-
-    <string id="aom_rhun_female_name_25" text="サルキラ" />
-
-    <string id="aom_rhun_female_name_26" text="ファルニザ" />
-
-    <string id="aom_rhun_female_name_27" text="ゴリザ" />
-
-    <string id="aom_rhun_female_name_28" text="ナジラ" />
-
-    <string id="aom_rhun_female_name_29" text="カルニラ" />
-
-    <string id="aom_rhun_female_name_30" text="トリラ" />
-
-    <string id="aom_rhun_female_name_31" text="ドゥリナ" />
-
-    <string id="aom_rhun_female_name_32" text="ヴァシラ" />
-
-    <string id="aom_rhun_female_name_33" text="ナリザ" />
-
-    <string id="aom_rhun_female_name_34" text="ファズリム" />
-
-    <string id="aom_rhun_female_name_35" text="マジーラ" />
-
-    <string id="aom_rhun_female_name_36" text="カリア" />
-
-    <string id="aom_rhun_female_name_37" text="サルニザ" />
-
-    <string id="aom_rhun_female_name_38" text="オルリナ" />
-
-    <string id="aom_rhun_female_name_39" text="ルハナ" />
-
-    <string id="aom_rhun_female_name_40" text="サルニザ" />
-
-    <string id="aom_rhun_female_name_41" text="ザリラ" />
-
-    <string id="aom_rhun_female_name_42" text="ラジナ" />
-
-    <string id="aom_rhun_female_name_43" text="ドゥルシラ" />
-
-    <string id="aom_rhun_female_name_44" text="バルキラ" />
-
-    <string id="aom_rhun_female_name_45" text="サリザ" />
-
-    <string id="aom_rhun_female_name_46" text="マジナ" />
-
-    <string id="aom_rhun_female_name_47" text="ナリリア" />
-
-    <string id="aom_rhun_female_name_48" text="ファルニナ" />
-
-    <string id="aom_rhun_female_name_49" text="ザリマ" />
-
-    <string id="aom_rhun_female_name_50" text="オルジナ" />
-
-    <string id="aom_rhun_clan_name_01" text="鉄の槍" />
-
-    <string id="aom_rhun_clan_name_02" text="黄金の三日月刀" />
-
-    <string id="aom_rhun_clan_name_03" text="紅の旗印" />
-
-    <string id="aom_rhun_clan_name_04" text="燃える刃" />
-
-    <string id="aom_rhun_clan_name_05" text="ルーンの血族" />
-
-    <string id="aom_rhun_clan_name_06" text="紅の戦士" />
-
-    <string id="aom_rhun_clan_name_07" text="黒の盾" />
-
-    <string id="aom_rhun_clan_name_08" text="嵐を呼ぶ者" />
-
-    <string id="aom_rhun_clan_name_09" text="緋色の守護者" />
-
-    <string id="aom_rhun_clan_name_10" text="黄金の大群" />
-
-    <string id="aom_empire_name" text="ドゥンランド人" />
-
-    <string id="aom_empire_desc" text="ドゥンランド人は、ローハンの西方、荒々しい丘陵地帯と未開の大地に住む、頑強で獰猛な民である。祖先の土地を侵略したと見なすローハン人に対し、長年の恨みを抱いており、共通の遺産と激しい独立心によって結ばれている。ゲリラ戦と生存術に長けており、狡猾さと獰猛さで敵を圧倒する。しばしば単なる丘陵の民として軽視されるが、ドゥンランド人は誇り高く不屈の民であり、自らの土地と生活様式を激しく守り抜く。ローハンに対する深い恨みに駆られ、闇の勢力と同盟を結び、復讐と失われた土地の回復を目指している。" />
-
-    <string id="aom_aserai_name" text="ハラドリム" />
-
-    <string id="aom_aserai_desc" text="ハラドリムは、遠い南方の砂漠とサバンナから来た誇り高く獰猛な民である。ムマキルのような異国の獣を操る技術で名高く、その戦士たちは戦場で技術、回復力、致命的な精確さを兼ね備えている。ハラドは極端な土地であり、灼熱の太陽、黄金の砂、そして鮮やかなオアシスがある。その民は古代の伝統、部族への忠誠、そして首長と王たちの呼びかけによって結ばれている。しばしば闇の勢力と同盟を結び、ハラドリムはゴンドールへの復讐と、サウロンが約束する力と支配によって駆り立てられている。" />
-
-    <string id="aom_vlandia_name" text="ローハンの騎士" />
-
-    <string id="aom_vlandia_desc" text="ローハンの騎士、またはローハンの馬の王たちは、比類なき騎兵隊と馬との深い絆で名高い。誇り高く自由な精神を持つ彼らは、リッダーマークの広がる平原に住み、エドラスのような村や要塞で暮らしている。王に導かれ、民に忠実なローハンの騎士たちは、名誉、忠誠、勇気を重んじる。彼らの戦士たちは恐れることなく戦場へ駆け、中つ国の闇に対する抵抗の中核を成している。伝統に忠実でありながら、ローハンの騎士たちは常に自らの土地と同盟者を守る準備ができており、槍、剣、盾を正確に操る。" />
-
-    <string id="aom_khuzait_name" text="東夷" />
-
-    <string id="aom_khuzait_desc" text="東夷は、遥か彼方のルーンの地から来た多様で恐るべき民である。サウロンへの忠誠で知られる彼らは、精密さと規律をもって戦争へと進軍し、湾曲した刃、槍、そして戦場に響き渡る巨大な戦太鼓を振るう。彼らの黄金の鎧と深紅の旗印は、その激しい誇りと武芸の腕前を映し出している。氏族と部族に分かれた東夷は、強力な族長のもとに団結し、中つ国の自由の民に対してルーンの力をもたらす。" />
-
-    <string id="TAOM_sturgia_culture" text="バルド人" />
-
-    <string id="TAOM_sturgia_desc" text="弓の名手バルドにちなんで名付けられたデイルのバルド人は、スマウグの影から故郷を取り戻した後、台頭した誇り高く勤勉な民である。はなれ山と長い湖の間に位置するデイルは、交易と文化の中心地として栄えている。回復力と職人技で知られるバルド人は、武器と鎧の鍛造に優れ、エレボールのドワーフたちにも匹敵する。規律ある弓兵、頑強な剣士、機敏な散兵で構成される彼らの軍隊は、激しい決意をもって自らの土地を守る。高貴な指導者のもとに団結したバルド人は、常に警戒を怠らず、迫りくる闇に対して警備し、豊かな遺産を守り続けている。" />
-
-    <string id="TAOM_battania_culture" text="ヴァリアグ" />
-
-    <string id="TAOM_battania_desc" text="カンドのヴァリアグは、モルドールの東にある乾燥した険しい土地から来た獰猛で好戦的な民である。傭兵としての腕前とサウロンへの忠誠で知られるヴァリアグは、比類なき獰猛さで戦う。彼らは素早い軍馬に乗って戦場に赴き、湾曲した刃と長槍を致命的な正確さで振るう。複雑な装飾が施された青銅と深紅の鎧は、彼らの誇り高く武芸的な遺産を反映している。部族と氏族に分かれたヴァリアグは、強力な戦長のもとに団結し、冥王の敵に恐怖と混沌をもたらす。" />
-
-    <string id="TAOM_clan_empire_north_1" text="狼の一族" />
-
-    <string id="TAOM_clan_empire_north_2" text="猪の一族" />
-
-    <string id="TAOM_clan_empire_north_3" text="牛の一族" />
-
-    <string id="TAOM_clan_empire_north_4" text="熊の一族" />
-
-    <string id="TAOM_clan_empire_north_5" text="大鴉の一族" />
-
-    <string id="TAOM_clan_empire_north_6" text="鷹の一族" />
-
-    <string id="TAOM_clan_empire_north_7" text="竜の一族" />
-
-    <string id="TAOM_clan_empire_north_8" text="鹿の一族" />
-
-    <string id="TAOM_clan_empire_north_9" text="アヴァンクの一族" />
-
-    <string id="TAOM_clan_empire_west_1" text="フーリニオナス家" />
-
-    <string id="TAOM_clan_empire_west_2" text="イムラゾールイオナス家" />
-
-    <string id="TAOM_clan_empire_west_3" text="エアルヌリオナス家" />
-
-    <string id="TAOM_clan_empire_west_4" text="バラヒリオナス家" />
-
-    <string id="TAOM_clan_empire_west_5" text="アウシリオナス家" />
-
-    <string id="TAOM_clan_empire_west_6" text="ハルボロニオナス家" />
-
-    <string id="TAOM_clan_empire_west_7" text="マランディリオナス家" />
-
-    <string id="TAOM_clan_empire_west_8" text="オリンドゥリオナス家" />
-
-    <string id="TAOM_clan_empire_west_9" text="ダヌヒリオナス家" />
-
-    <string id="TAOM_clan_empire_south_1" text="ドールグベース" />
-
-    <string id="TAOM_clan_empire_south_2" text="ゴエアルネディアド" />
-
-    <string id="TAOM_clan_empire_south_3" text="メルコンディリ" />
-
-    <string id="TAOM_clan_empire_south_4" text="モールグカル" />
-
-    <string id="TAOM_clan_empire_south_5" text="ボルグルーキグ" />
-
-    <string id="TAOM_clan_empire_south_6" text="カーム・ラグールズ" />
-
-    <string id="TAOM_clan_empire_south_7" text="ブラグズーキシュ" />
-
-    <string id="TAOM_clan_empire_south_8" text="コーラヒーム" />
-
-    <string id="TAOM_clan_empire_south_9" text="ワーヴリム" />
-
-    <string id="TAOM_clan_sturgia_1" text="ギリオン家" />
-
-    <string id="TAOM_clan_sturgia_2" text="バルド家" />
-
-    <string id="TAOM_clan_sturgia_3" text="ブランド家" />
-
-    <string id="TAOM_clan_sturgia_4" text="ベイン家" />
-
-    <string id="TAOM_clan_sturgia_5" text="エスガロス家" />
-
-    <string id="TAOM_clan_sturgia_6" text="河の一族" />
-
-    <string id="TAOM_clan_sturgia_7" text="射手の一族" />
-
-    <string id="TAOM_clan_sturgia_8" text="長い湖の一族" />
-
-    <string id="TAOM_clan_sturgia_9" text="竜殺しの一族" />
-
-    <string id="TAOM_clan_aserai_1" text="アイェリッカ" />
-
-    <string id="TAOM_clan_aserai_2" text="カドノマーア" />
-
-    <string id="TAOM_clan_aserai_3" text="カマラカ" />
-
-    <string id="TAOM_clan_aserai_4" text="カルマキリオニ" />
-
-    <string id="TAOM_clan_aserai_5" text="タクフィミン" />
-
-    <string id="TAOM_clan_aserai_6" text="メドヤノマ" />
-
-    <string id="TAOM_clan_aserai_7" text="ジヤロッカ" />
-
-    <string id="TAOM_clan_aserai_8" text="アワザリカ" />
-
-    <string id="TAOM_clan_aserai_9" text="イケンダカ" />
-
-    <string id="TAOM_clan_vlandia_1" text="エオルリング家" />
-
-    <string id="TAOM_clan_vlandia_2" text="ケルディシング家" />
-
-    <string id="TAOM_clan_vlandia_3" text="グリミンガス家" />
-
-    <string id="TAOM_clan_vlandia_4" text="フェランディング家" />
-
-    <string id="TAOM_clan_vlandia_5" text="オスキュテリング家" />
-
-    <string id="TAOM_clan_vlandia_6" text="オードレイシング家" />
-
-    <string id="TAOM_clan_vlandia_7" text="エゼルラフィング家" />
-
-    <string id="TAOM_clan_vlandia_8" text="グリンモーディング家" />
-
-    <string id="TAOM_clan_vlandia_9" text="ドゥーニング家" />
-
-    <string id="TAOM_clan_vlandia_10" text="エオフォリング家" />
-
-    <string id="TAOM_clan_vlandia_11" text="トルダギング家" />
-
-    <string id="TAOM_clan_battania_1" text="ヴァンガリス" />
-
-    <string id="TAOM_clan_battania_2" text="アラズ" />
-
-    <string id="TAOM_clan_battania_3" text="トラバイ" />
-
-    <string id="TAOM_clan_battania_4" text="コルヴァシュ" />
-
-    <string id="TAOM_clan_battania_5" text="クルダン" />
-
-    <string id="TAOM_clan_battania_6" text="ウルダシュ" />
-
-    <string id="TAOM_clan_battania_7" text="カルハタイ" />
-
-    <string id="TAOM_clan_battania_8" text="ヴァリヤシュ" />
-
-    <string id="TAOM_ghilman_name" text="蛇の守護隊" />
-
-    <string id="TAOM_ghilman_short" text="蛇の守護隊" />
-
-    <string id="TAOM_ghilman_text" text="蛇の守護隊は、近ハラドの蛇の王に仕える騎馬兵である。エフェル・ドゥアスの南に広がる草原で鞍の上で育った彼らは、中つ国の南方全域において騎馬弓兵として比類なき存在である。ハラドとモルドールの間に平和が訪れる時代には、守護隊はハラドリムの領主や、その黄金の報酬を支払える余裕のある他の勢力にその技を売る。" />
-
-    <string id="TAOM_legion_name" text="灰色の一党" />
-
-    <string id="TAOM_legion_short" text="灰色の一党" />
-
-    <string id="TAOM_legion_text" text="灰色の一党は、遥か昔に王国を失ったアルノールの王たちの末裔である、ドゥーネダインの野伏の最後の組織された同胞団である。彼らは自らの家を持たず北方を駆け巡り、その名を忘れられた土地に平和をもたらす。エレンディルの血統への忠誠が第一であるが、放浪の途中で文明の地を通る際には、中つ国の諸侯から契約を受ける。" />
-
-    <string id="TAOM_skolderbrotva_name" text="エレボールの斧兵" />
-
-    <string id="TAOM_skolderbrotva_short" text="斧兵" />
-
-    <string id="TAOM_skolderbrotva_text" text="エレボールの斧兵は、トーリン王の戦いを生き抜いた歴戦の兵士たちで、平時の生活が性に合わなかった者たちである。ドワーフの館での近接戦闘――盾の壁、短斧、つるはし――で訓練された彼らは、いかなる地形でも強力だが、エレボールと人間の王国を結ぶ山道では特に優れている。報酬を払える者なら誰からでも契約を受けるが、エレボールやリヴェンデルに対して斧を振るうことはない。" />
-
-    <string id="TAOM_company_name" text="海賊の刃" />
-
-    <string id="TAOM_company_short" text="海賊" />
-
-    <string id="TAOM_company_text" text="海賊の刃は、ウンバールの港から来た歴戦の海上戦士たちで、陸上でその技を売ることにした者たちである。彼らは船上戦の好まれる武器であるクロスボウで戦い、揺れる甲板上と同じように包囲戦でも力を発揮する。傷だらけのヌーメノールの亡命者である隊長は、評判こそが最も価値ある積荷であることを知り、鉄の規律で彼らを契約に従わせている。" />
-
-    <string id="TAOM_beni_zilal_name" text="盲いた眼" />
-
-    <string id="TAOM_beni_zilal_short" text="盲いた眼" />
-
-    <string id="TAOM_beni_zilal_text" text="盲いた眼は、ハラドの沿岸と深い砂漠を股にかける密輸業者、盗品商、殺し屋たちの同胞団である。彼らは忘れ去られたハラドリムの王に仕えた暗殺者の教団の末裔と言われており、その手法――毒、影、そして秘密の活用――は変わっていない。静かに敵対者を排除したい領主や、税関検査なしに貨物を運ばせたい商人は、金貨と封印された手紙を置く場所を知っている。" />
-
-    <string id="TAOM_wolfskins_name" text="ヴァリアグの略奪者" />
-
-    <string id="TAOM_wolfskins_short" text="略奪者" />
-
-    <string id="TAOM_wolfskins_text" text="ヴァリアグの略奪者は、カンドの草原から来た若きヴァリアグの戦士たちの戦団で、青年期を儀式的な戦争状態で過ごす。彼らは調理された食物を所有せず、恒久的な屋根の下で眠らず、慈悲を示さない。ほとんどは最終的に氏族の定住生活に戻るが、決して戻らない者もおり、彼らが略奪者を形成する――カンドの街道を襲い、ハラドやゴンドールの国境を越えて略奪する無法者たちである。" />
-
-    <string id="TAOM_brotherhood_name" text="ダンランドの略奪団" />
-
-    <string id="TAOM_brotherhood_short" text="略奪団" />
-
-    <string id="TAOM_brotherhood_text" text="ダンランドの略奪団は、今はローハンの民が支配する谷間にかつて住んでいた丘の氏族の壊れた残党である。彼らの祖父たちは肥沃な土地から岩だらけの高地へと追いやられ、その恨みを略奪者の哲学へと育ててきた。南方人や王の配下から奪うものはすべて、盗まれたものを取り戻すだけだと。実際には彼らは山賊だが、丘を通るすべての山羊道を知る危険な存在である。" />
-
-    <string id="TAOM_hidden_hand_name" text="サウロンの口の従者" />
-
-    <string id="TAOM_hidden_hand_short" text="下僕" />
-
-    <string id="TAOM_hidden_hand_text" text="口の下僕はバラド=ドゥアの目であり、黒門の彼方で活動する――モルドールと国境を接する民の中に潜む密告者、実行者、そして間者である。サウロンの軍勢がまだ届かぬところで、これらの工作員は貢物を集め、異論を封じる。彼らは賄賂、脅迫、静かなる殺人を用いて働き、冥王に対するいかなる陰謀も根を張る前に引き抜かれ粉砕されることを確実にする。" />
-
-    <string id="TAOM_lakepike_name" text="長い湖の略奪者" />
-
-    <string id="TAOM_lakepike_short" text="略奪者" />
-
-    <string id="TAOM_lakepike_text" text="長い湖の略奪者は、エスガロスの立派な灯りから遠く離れた、長い湖の陰の岸辺にある葦床と腐りかけた古い桟橋に住んでいる。彼らは偽りの提灯で艀を隠れた浅瀬に誘い込み、積荷を剥ぎ取って町自体の故買屋を通じて売ることで生計を立てている。湖の町の長官とデイルの商人たちの努力にもかかわらず、略奪者は波止場の酒場にあまりにも多くの友人を持っており、簡単には追い出せない。" />
-
-    <string id="TAOM_embers_name" text="瞼なき目の教団" />
-
-    <string id="TAOM_embers_short" text="目の教団" />
-
-    <string id="TAOM_embers_text" text="瞼なき目の教団は黒きヌーメノール人の伝統に根ざした秘密結社であり、サウロンを神王として崇拝し、彼が再び立ち上がる時に忠実な者たちを栄光に導くと信じている。彼らはダンランドの持たざる者たちや王国の忘れられた片隅で勧誘を行い、神の恵みと地上の力を約束する。実際には、彼らの指導者たちはバラド=ドゥアの工作員に従っており、細胞構造による組織はいかなる領主の正義によっても根絶することがほぼ不可能である。" />
-
-    <string id="TAOM_jawwal_name" text="砂の騎手" />
-
-    <string id="TAOM_jawwal_short" text="砂の騎手" />
-
-    <string id="TAOM_jawwal_text" text="砂の騎手は、エフェル・ドゥアスと遥か南の海の間にある水なき荒野の支配者である、ハラドの奥地の遊牧砂漠部族である。彼らは自分たちだけが知る道を渡り、自分たちの領域を横断する勇敢な隊商から貢物を要求する。近ハラドの定住領主たちは彼らを厄介者として扱うが、砂の騎手は定住領主たちを砂漠が既に自由に与えたものを盗んだ盗人と見なしている。" />
-
-    <string id="TAOM_karakhuzaits_name" text="野生の東夷" />
-
-    <string id="TAOM_karakhuzaits_short" text="野生の民" />
-
-    <string id="TAOM_karakhuzaits_text" text="野生の東夷は、ルーンの海の征服されざる草原部族であり、彼らを支配しようとしたすべての領主――ルーンの族長、モルドールの副官、デイルの王――の権威に抵抗してきた。彼らはケルドゥイン川の東の草原を渡り歩き、馬を集め、家畜を襲い、武装護衛なしに彼らの草原を横断する愚かな隊商から通行税を徴収する。" />
-
-    <string id="TAOM_forest_people_name" text="ドルーエダイン" />
-
-    <string id="TAOM_forest_people_short" text="ウォーズ" />
-
-    <string id="TAOM_forest_people_text" text="ドルーエダインは、人間からウォーズまたは森の野人として知られる古代の民であり、ドルーアダンの深い森とエレド・ニムライスの隠れた谷に住んでいる。彼らは火で土地を清め、灰の豊かな土壌で必要なものを育て、土地が枯れると移動する――中つ国の定住民が決して理解せず、気にも留めなかった生き方である。ドルーエダインは領主を求めず、税を払わず、ただ森の静寂に委ねられることだけを求める。" />
-
-    <string id="TAOM_eleftheroi_name" text="ベオルニング" />
-
-    <string id="TAOM_eleftheroi_short" text="ベオルニング" />
-
-    <string id="TAOM_eleftheroi_text" text="ベオルニングは、霧ふり山脈と闇の森の間のアンドゥイン川の谷に住む偉大な森人であり、ベオルンの血統の皮膚変化者に率いられている。彼らは自分たちの領域をオークに横断させず、カロックの浅瀬で通行料を徴収して監視活動の資金とし、中つ国のいかなる王にも従わない。エルフやドワーフとは取引や会話をするが、許可なく彼らの森を行軍する軍隊は、ベオルニングが非常に大きな牙を持っていることを知るだろう。" />
-
-    <string id="TAOM_clan_khuzait_1" text="フーズ" />
-
-    <string id="TAOM_clan_khuzait_2" text="サルリアン" />
-
-    <string id="TAOM_clan_khuzait_3" text="ニカティアン" />
-
-    <string id="TAOM_clan_khuzait_4" text="カルミアン" />
-
-    <string id="TAOM_clan_khuzait_5" text="アムドゥリド" />
-
-    <string id="TAOM_clan_khuzait_6" text="クンドラール" />
-
-    <string id="TAOM_clan_khuzait_7" text="クザイティアン" />
-
-    <string id="TAOM_clan_khuzait_8" text="マシャキアン" />
-
-    <string id="TAOM_clan_khuzait_9" text="ボゾルガニス" />
-
-    <string id="aom_lord_1_1_name" text="ブレニン・ウルフ、鉄の手" />
-
-    <string id="aom_lord_1_2_name" text="フレイヤ・ウルフハート" />
-
-    <string id="aom_lord_1_3_name" text="ゴルウルフ、猪" />
-
-    <string id="aom_lord_1_4_name" text="ブリュンヒルド・アイアンクロー" />
-
-    <string id="aom_lord_1_5_name" text="オスリック・ザ・ワイルド" />
-
-    <string id="aom_lord_1_6_name" text="トールヴァルド・オックスホーン" />
-
-    <string id="aom_lord_1_7_name" text="デネソール二世、ゴンドールの執政" />
-
-    <string id="aom_lord_1_8_name" text="フーリオネス" />
-
-    <string id="aom_lord_1_9_name" text="イムラヒル、ドル・アムロスの大公" />
-
-    <string id="aom_lord_1_10_name" text="アラネル" />
-
-    <string id="aom_lord_1_25_name" text="エルフィア" />
-
-    <string id="aom_lord_1_35_name" text="エルヒリオン" />
-
-    <string id="aom_lord_1_11_name" text="キリヤンドゥア" />
-
-    <string id="aom_lord_1_111_name" text="エラルウェン" />
-
-    <string id="aom_lord_1_12_name" text="フィンダリエル" />
-
-    <string id="aom_lord_1_14_name" text="サウロンの口" />
-
-    <string id="aom_lord_1_15_name" text="アングマールの魔王" />
-
-    <string id="aom_lord_1_155_name" text="ナズグール、闇の司令官" />
-
-    <string id="aom_lord_1_16_name" text="ナズグール、ウンバールの騎士" />
-
-    <string id="aom_lord_1_17_name" text="サウロン" />
-
-    <string id="aom_lord_1_177_name" text="ホノラトゥス" />
-
-    <string id="aom_lord_1_18_name" text="ジャシーア" />
-
-    <string id="aom_lord_1_21_name" text="フェンリック・ザ・レッドウルフ" />
-
-    <string id="aom_lord_1_22_name" text="ビョルンリック・ストロングアーム" />
-
-    <string id="aom_lord_1_23_name" text="カラドウェン" />
-
-    <string id="aom_lord_1_24_name" text="アムロソス" />
-
-    <string id="aom_lord_1_75_name" text="ボロミア" />
-
-    <string id="aom_lord_1_26_name" text="ヒアゴン" />
-
-    <string id="aom_lord_1_27_name" text="マウグラシュ" />
-
-    <string id="aom_lord_1_28_name" text="ナズグール、裏切り者" />
-
-    <string id="aom_lord_1_29_name" text="サニオン" />
-
-    <string id="aom_lord_1_31_name" text="ザルサ・ブラックファング" />
-
-    <string id="aom_lord_1_32_name" text="エルドラ・ボアソング" />
-
-    <string id="aom_lord_1_33_name" text="ブリギッド・ザ・ハウリング" />
-
-    <string id="aom_lord_1_422_name" text="ドレングルフ・アイアンタスク" />
-
-    <string id="aom_lord_1_34_name" text="ファラミア" />
-
-    <string id="aom_lord_1_36_name" text="イヴリニエル" />
-
-    <string id="aom_lord_1_37_name" text="ゴシャンク" />
-
-    <string id="aom_lord_1_38_name" text="ナズグール、不死者" />
-
-    <string id="aom_lord_1_39_name" text="デバナ" />
-
-    <string id="aom_lord_1_41_name" text="ベレグンド・ウルフボーン" />
-
-    <string id="aom_lord_1_411_name" text="グリムウルフ・アイアンファング" />
-
-    <string id="aom_lord_1_42_name" text="フロドガル・アイアンハイド" />
-
-    <string id="aom_lord_1_43_name" text="ゴルムンド・オックスフランク" />
-
-    <string id="aom_lord_1_44_name" text="ネモス" />
-
-    <string id="aom_lord_1_47_name" text="ウルボス" />
-
-    <string id="aom_lord_1_49_name" text="オブロン" />
-
-    <string id="aom_lord_1_20_name" text="アストリッド・ベアクロウ" />
-
-    <string id="aom_lord_1_64_name" text="ソルムンド・グリズリーヒュー" />
-
-    <string id="aom_lord_1_50_name" text="コーウィン・レイヴンアイ" />
-
-    <string id="aom_lord_1_66_name" text="タルリック・クロウコール" />
-
-    <string id="aom_lord_1_51_name" text="ハルドリック・タロンストライク" />
-
-    <string id="aom_lord_1_58_name" text="ゴルヴィン・ザ・フェル" />
-
-    <string id="aom_lord_1_70_name" text="ヴェイラ・ザ・シャドウ" />
-
-    <string id="aom_lord_1_67_name" text="エオルウィン・フェザーボルト" />
-
-    <string id="aom_lord_1_40_name" text="ボルハドール" />
-
-    <string id="aom_lord_1_46_name" text="マルリオール" />
-
-    <string id="aom_lord_1_45_name" text="フォルロング、ロサルナハの領主" />
-
-    <string id="aom_lord_1_57_name" text="バラノール" />
-
-    <string id="aom_lord_1_52_name" text="ヒアルイン、ピンナス・ゲリンの領主" />
-
-    <string id="aom_lord_1_53_name" text="アングボール、ラメドンの領主" />
-
-    <string id="aom_lord_1_71_name" text="ゴラスギル、アンファラスの領主" />
-
-    <string id="aom_lord_1_73_name" text="ナルミール" />
-
-    <string id="aom_lord_1_62_name" text="オロマール" />
-
-    <string id="aom_lord_1_30_name" text="ゴスモグ、モルグルの副官" />
-
-    <string id="aom_lord_1_48_name" text="カムール、東夷" />
-
-    <string id="aom_lord_1_54_name" text="シャグラト、キリス・ウンゴルの隊長" />
-
-    <string id="aom_lord_1_55_name" text="マスモグ" />
-
-    <string id="aom_lord_1_63_name" text="ゴルバグ、ミナス・モルグルの隊長" />
-
-    <string id="aom_lord_1_56_name" text="トアムンド、鉄槌" />
-
-    <string id="aom_lord_1_68_name" text="Gorthak" />
-
-    <string id="aom_lord_1_69_name" text="Grukhash" />
-
-    <string id="aom_lord_1_72_name" text="ボルグ" />
-
-    <string id="aom_lord_1_74_name" text="Bûrznak" />
-
-    <string id="aom_lord_1_1_1_name" text="エルディス・グレイクロウ" />
-
-    <string id="aom_lord_1_1_2_name" text="シッガ・ウィルムベイン" />
-
-    <string id="aom_lord_1_1_3_name" text="シグルン・ボアファング" />
-
-    <string id="aom_lord_1_1_4_name" text="ティラ・ブラッドタスク" />
-
-    <string id="aom_lord_1_1_5_name" text="ヒルダ・ボーンクラッシャー" />
-
-    <string id="aom_lord_1_1_6_name" text="ユルサ、冬の猪" />
-
-    <string id="aom_lord_1_1_7_name" text="フレイディス・オックスメイン" />
-
-    <string id="aom_lord_1_1_8_name" text="エイラ・シャドウクロウ" />
-
-    <string id="aom_lord_1_1_9_name" text="シフラ・ボーンウォーカー" />
-
-    <string id="aom_lord_1_1_10_name" text="ハルディス・レッドミスト" />
-
-    <string id="aom_lord_1_1_11_name" text="ユルラ・ゴーストペルト" />
-
-    <string id="aom_lord_1_1_15_name" text="アエルウィン・ホークアイ" />
-
-    <string id="aom_lord_1_1_16_name" text="ブリアンナ・ウィングダート" />
-
-    <string id="aom_lord_1_27_1_name" text="ヴェリナ" />
-
-    <string id="aom_lord_1_27_2_name" text="スロズナク" />
-
-    <string id="aom_lord_1_27_3_name" text="ヴァシリア" />
-
-    <string id="aom_lord_1_47_1_name" text="ミナ" />
-
-    <string id="aom_lord_1_47_2_name" text="カシレア" />
-
-    <string id="aom_lord_1_47_3_name" text="コランベア" />
-
-    <string id="aom_lord_1_49_1_name" text="トリスタニア" />
-
-    <string id="aom_lord_1_49_2_name" text="ゴルディアナ" />
-
-    <string id="aom_lord_1_1_12_name" text="フレイヤ・クロウレンド" />
-
-    <string id="aom_lord_1_1_13_name" text="グンドルン・アイアンポウ" />
-
-    <string id="aom_lord_1_1_14_name" text="モルギス" />
-
-    <string id="aom_lord_1_1_17_name" text="ブラノク・フェザーシャフト" />
-
-    <string id="aom_lord_1_40_1_name" text="リンダリエル" />
-
-    <string id="aom_lord_1_46_1_name" text="ソルウェン" />
-
-    <string id="aom_lord_1_45_1_name" text="ベレシエル" />
-
-    <string id="aom_lord_1_45_2_name" text="カルダミア" />
-
-    <string id="aom_lord_1_45_3_name" text="ルーミル" />
-
-    <string id="aom_lord_1_57_1_name" text="カラシエル" />
-
-    <string id="aom_lord_1_57_2_name" text="イムロス" />
-
-    <string id="aom_lord_1_52_1_name" text="アナリエル" />
-
-    <string id="aom_lord_1_52_2_name" text="バランドール" />
-
-    <string id="aom_lord_1_73_1_name" text="ベルウェン" />
-
-    <string id="aom_lord_1_62_1_name" text="アリサ" />
-
-    <string id="aom_lord_1_30_1_name" text="スヴァラ・レッドファング" />
-
-    <string id="aom_lord_1_30_2_name" text="Mogra" />
-
-    <string id="aom_lord_1_30_3_name" text="Snaga" />
-
-    <string id="aom_lord_1_48_1_name" text="ナズグール、穢れし者" />
-
-    <string id="aom_lord_1_48_2_name" text="ナズグール、北国人の影" />
-
-    <string id="aom_lord_1_48_3_name" text="ナズグール、ウンバールの影" />
-
-    <string id="aom_lord_1_54_1_name" text="コンスタリア" />
-
-    <string id="aom_lord_1_55_1_name" text="メゲシア" />
-
-    <string id="aom_lord_1_63_1_name" text="ヴァラリア" />
-
-    <string id="aom_lord_1_63_2_name" text="コマタサ" />
-
-    <string id="aom_lord_1_63_3_name" text="エリディレア" />
-
-    <string id="aom_lord_1_56_1_name" text="グウェンナ" />
-
-    <string id="aom_lord_1_56_2_name" text="ルスティカ" />
-
-    <string id="aom_lord_1_68_1_name" text="シルヴィナ" />
-
-    <string id="aom_lord_1_69_1_name" text="アレリアナ" />
-
-    <string id="aom_lord_1_69_2_name" text="ドラシラ" />
-
-    <string id="aom_lord_1_72_1_name" text="ヴィヴィアナ" />
-
-    <string id="aom_lord_1_74_1_name" text="ゼナ" />
-
-    <string id="aom_lord_2_1_name" text="バルド2世" />
-
-    <string id="aom_lord_2_2_name" text="アスタ" />
-
-    <string id="aom_lord_2_3_name" text="トーリン3世・ストーンヘルム" />
-
-    <string id="aom_lord_2_4_name" text="シガ" />
-
-    <string id="aom_lord_2_5_name" text="オリ" />
-
-    <string id="aom_lord_2_6_name" text="エルタ" />
-
-    <string id="aom_lord_2_7_name" text="シミル" />
-
-    <string id="aom_lord_2_8_name" text="ウリク" />
-
-    <string id="aom_lord_2_9_name" text="レク" />
-
-    <string id="aom_lord_2_10_name" text="ヴァラ" />
-
-    <string id="aom_lord_2_11_name" text="イドルン" />
-
-    <string id="aom_lord_2_111_name" text="ロジヴォル" />
-
-    <string id="aom_lord_2_12_name" text="スヴァナ" />
-
-    <string id="aom_lord_2_121_name" text="オスヴェン" />
-
-    <string id="aom_lord_2_13_name" text="ヴィダル" />
-
-    <string id="aom_lord_2_14_name" text="イスヴァン" />
-
-    <string id="aom_lord_2_15_name" text="ラタゴスト" />
-
-    <string id="aom_lord_2_16_name" text="ボフール" />
-
-    <string id="aom_lord_2_17_name" text="トーリン2世・オーケンシールド" />
-
-    <string id="aom_lord_2_18_name" text="グローイン" />
-
-    <string id="aom_lord_2_19_name" text="ドワーリン" />
-
-    <string id="aom_lord_2_20_name" text="オイン" />
-
-    <string id="aom_lord_2_21_name" text="スヴェドルン" />
-
-    <string id="aom_lord_2_22_name" text="ラショネク" />
-
-    <string id="aom_lord_2_23_name" text="ガルデン" />
-
-    <string id="aom_lord_2_24_name" text="アルヴァル" />
-
-    <string id="aom_lord_2_4_1_name" text="アポラネア" />
-
-    <string id="aom_lord_2_7_1_name" text="ミミル" />
-
-    <string id="aom_lord_2_13_1_name" text="リリジャ" />
-
-    <string id="aom_lord_2_13_2_name" text="アンドルタ" />
-
-    <string id="aom_lord_2_13_3_name" text="ルダ" />
-
-    <string id="aom_lord_2_13_4_name" text="テタ" />
-
-    <string id="aom_lord_2_14_1_name" text="ヴァルカヴァ" />
-
-    <string id="aom_lord_2_14_2_name" text="ザヴェレナ" />
-
-    <string id="aom_lord_2_14_3_name" text="ヴィジュドゥナ" />
-
-    <string id="aom_lord_2_15_1_name" text="ヤチャナ" />
-
-    <string id="aom_lord_2_15_2_name" text="ミランカ" />
-
-    <string id="aom_lord_2_15_3_name" text="ヴェリナ" />
-
-    <string id="aom_lord_2_15_4_name" text="ボヴァン" />
-
-    <string id="aom_lord_2_16_1_name" text="チャスカ" />
-
-    <string id="aom_lord_2_17_1_name" text="ドラチャ" />
-
-    <string id="aom_lord_2_18_1_name" text="ゾリカ" />
-
-    <string id="aom_lord_2_19_1_name" text="ヴィトミラ" />
-
-    <string id="aom_lord_2_20_1_name" text="キシャ" />
-
-    <string id="aom_lord_2_21_1_name" text="イズデンカ" />
-
-    <string id="aom_lord_2_22_1_name" text="ジェネヴァ" />
-
-    <string id="aom_lord_2_23_1_name" text="ズラトカ" />
-
-    <string id="aom_lord_2_24_1_name" text="ゾリナ" />
-
-    <string id="aom_dead_lord_2_1_name" text="老オレク" />
-
-    <string id="aom_dead_lord_2_2_name" text="ヴァラ" />
-
-    <string id="aom_lord_3_1_name" text="カドゥラク" />
-
-    <string id="aom_lord_3_2_name" text="ハラド用プレースホルダー" />
-
-    <string id="aom_lord_3_3_name" text="カレミア" />
-
-    <string id="aom_lord_3_4_name" text="マラー" />
-
-    <string id="aom_lord_3_5_name" text="ハルディア" />
-
-    <string id="aom_lord_3_51_name" text="ハカン" />
-
-    <string id="aom_lord_3_6_name" text="ルマ" />
-
-    <string id="aom_lord_3_7_name" text="ディユル" />
-
-    <string id="aom_lord_3_8_name" text="アッダス" />
-
-    <string id="aom_lord_3_9_name" text="ウサイル" />
-
-    <string id="aom_lord_3_10_name" text="アニダ" />
-
-    <string id="aom_lord_3_11_name" text="アルワ" />
-
-    <string id="aom_lord_3_12_name" text="マナン" />
-
-    <string id="aom_lord_3_13_name" text="ヌカル" />
-
-    <string id="aom_lord_3_14_name" text="タムザ" />
-
-    <string id="aom_lord_3_15_name" text="グジド" />
-
-    <string id="aom_lord_3_16_name" text="ルーミル" />
-
-    <string id="aom_lord_3_17_name" text="オロフィン" />
-
-    <string id="aom_lord_3_18_name" text="アランソン" />
-
-    <string id="aom_lord_3_19_name" text="アエシリオン" />
-
-    <string id="aom_lord_3_20_name" text="カリス" />
-
-    <string id="aom_lord_3_21_name" text="ウクハイ" />
-
-    <string id="aom_lord_3_22_name" text="ドゥイリン" />
-
-    <string id="aom_lord_3_23_name" text="カヒン" />
-
-    <string id="aom_lord_3_3_1_name" text="ターリク" />
-
-    <string id="aom_lord_3_13_1_name" text="シーラ" />
-
-    <string id="aom_lord_3_13_2_name" text="ラザナ" />
-
-    <string id="aom_lord_3_14_1_name" text="ササイサ" />
-
-    <string id="aom_lord_3_15_1_name" text="シムラ" />
-
-    <string id="aom_lord_3_15_2_name" text="ブシラ" />
-
-    <string id="aom_lord_3_16_1_name" text="ファリナ" />
-
-    <string id="aom_lord_3_17_1_name" text="シャイマ" />
-
-    <string id="aom_lord_3_17_2_name" text="サニト" />
-
-    <string id="aom_lord_3_18_1_name" text="ファルザナ" />
-
-    <string id="aom_lord_3_18_2_name" text="ハフィサ" />
-
-    <string id="aom_lord_3_18_3_name" text="ズアド" />
-
-    <string id="aom_lord_3_18_4_name" text="ジャルファル" />
-
-    <string id="aom_lord_3_19_1_name" text="サルマ" />
-
-    <string id="aom_lord_3_19_2_name" text="ズライカ" />
-
-    <string id="aom_lord_3_19_3_name" text="スルハナ" />
-
-    <string id="aom_lord_3_20_1_name" text="ジュディラ" />
-
-    <string id="aom_lord_3_20_2_name" text="アジナ" />
-
-    <string id="aom_lord_3_21_1_name" text="アシサ" />
-
-    <string id="aom_lord_3_22_1_name" text="ヤミナ" />
-
-    <string id="aom_lord_3_22_2_name" text="スナ" />
-
-    <string id="aom_lord_3_22_3_name" text="ザヌワ" />
-
-    <string id="aom_lord_3_22_4_name" text="ハジャラ" />
-
-    <string id="aom_lord_3_23_1_name" text="スカイナ" />
-
-    <string id="aom_dead_lord_3_1_name" text="ニムル" />
-
-    <string id="aom_lord_4_1_name" text="セオデン" />
-
-    <string id="aom_lord_4_2_name" text="エルフヒルド" />
-
-    <string id="aom_lord_4_4_name" text="エルシルド" />
-
-    <string id="aom_lord_4_5_name" text="ウンセリー" />
-
-    <string id="aom_lord_4_6_name" text="グリムボルド・グリミンガス" />
-
-    <string id="aom_lord_4_7_name" text="セオドレド・エオルリング" />
-
-    <string id="aom_lord_4_8_name" text="フルンハルド" />
-
-    <string id="aom_lord_4_9_name" text="ソムンド" />
-
-    <string id="aom_lord_4_10_name" text="エリス" />
-
-    <string id="aom_lord_4_11_name" text="リエナ" />
-
-    <string id="aom_lord_4_12_name" text="シルヴィンド" />
-
-    <string id="aom_lord_4_121_name" text="ラサンド" />
-
-    <string id="aom_lord_4_13_name" text="ロムンド" />
-
-    <string id="aom_lord_4_14_name" text="モルコン" />
-
-    <string id="aom_lord_4_141_name" text="アモルコン" />
-
-    <string id="aom_lord_4_15_name" text="エルドゥランド" />
-
-    <string id="aom_lord_4_16_name" text="エルケンブランド・フェランディング" />
-
-    <string id="aom_lord_4_17_name" text="エルベト" />
-
-    <string id="aom_lord_4_18_name" text="アマルグン" />
-
-    <string id="aom_lord_4_181_name" text="アルサムンド" />
-
-    <string id="aom_lord_4_19_name" text="アセラ" />
-
-    <string id="aom_lord_4_20_name" text="ヴァルムンド" />
-
-    <string id="aom_lord_4_21_name" text="クスレード・オルドラキング" />
-
-    <string id="aom_lord_4_22_name" text="ウルフ・ケルムンディング" />
-
-    <string id="aom_lord_4_23_name" text="マルハス・マルハド" />
-
-    <string id="aom_lord_4_24_name" text="グリマ・グリモーディング" />
-
-    <string id="aom_lord_4_25_name" text="ルカンド" />
-
-    <string id="aom_lord_4_26_name" text="ペリック" />
-
-    <string id="aom_lord_4_27_name" text="エレ・エセルラフィング" />
-
-    <string id="aom_lord_4_28_name" text="ファストヘルム・モルカーガス" />
-
-    <string id="aom_lord_4_3_1_name" text="エオメル・エオフォリング" />
-
-    <string id="aom_lord_4_6_1_name" text="デオルウィン・グリミンガス" />
-
-    <string id="aom_lord_4_16_1_name" text="メルスー・フェランディング" />
-
-    <string id="aom_lord_4_20_1_name" text="インゲルトルート" />
-
-    <string id="aom_lord_4_22_1_name" text="スンニファ・ケルムンディング" />
-
-    <string id="aom_lord_4_23_1_name" text="ウルフウィン・マルハド" />
-
-    <string id="aom_lord_4_23_2_name" text="エレドゥラン・マルハド" />
-
-    <string id="aom_lord_4_23_3_name" text="エレドゥラン" />
-
-    <string id="aom_lord_4_25_1_name" text="ベルトリアナ" />
-
-    <string id="aom_lord_4_27_1_name" text="ウェールブルフ・エセルラフィング" />
-
-    <string id="aom_lord_4_28_1_name" text="モルカー" />
-
-    <string id="aom_lord_4_28_2_name" text="ヘレスウィス" />
-
-    <string id="aom_lord_V11_l_name" text="レオムンド・デアフリンガス" />
-
-    <string id="aom_lord_4_26_1_name" text="ライガルダ" />
-
-    <string id="aom_lord_4_24_1_name" text="アダルトルート" />
-
-    <string id="aom_lord_4_24_2_name" text="グドンヘルダ" />
-
-    <string id="aom_lord_4_24_3_name" text="インゴンデ" />
-
-    <string id="aom_lord_4_24_4_name" text="イルムガルト" />
-
-    <string id="aom_lord_4_3_name" text="アルドリック" />
-
-    <string id="aom_lord_V11_c1_name" text="エレンダラ" />
-
-    <string id="aom_lord_V11_c2_name" text="ダグニック" />
-
-    <string id="aom_lord_V11_u_name" text="ヴォレリック" />
-
-    <string id="aom_lord_V9_u_name" text="ウルンドゥルフ" />
-
-    <string id="aom_lord_5_1_name" text="ヴァルグール、カンドの最高戦将" />
-
-    <string id="aom_lord_5_7_name" text="カンド プレースホルダー" />
-
-    <string id="aom_lord_5_3_name" text="エルゲオン" />
-
-    <string id="aom_lord_5_4_name" text="ニウィン" />
-
-    <string id="aom_lord_5_5_name" text="メリディル" />
-
-    <string id="aom_lord_5_6_name" text="アルカエア" />
-
-    <string id="aom_lord_5_8_name" text="セイン" />
-
-    <string id="aom_lord_5_9_name" text="クルハルン" />
-
-    <string id="aom_lord_5_91_name" text="テガン" />
-
-    <string id="aom_lord_5_10_name" text="コレイン" />
-
-    <string id="aom_lord_5_11_name" text="アリンネス" />
-
-    <string id="aom_lord_5_12_name" text="ウィスイン" />
-
-    <string id="aom_lord_5_13_name" text="ムインセル" />
-
-    <string id="aom_lord_5_131_name" text="ラス" />
-
-    <string id="aom_lord_5_15_name" text="プリンドール" />
-
-    <string id="aom_lord_5_14_name" text="ルイハン" />
-
-    <string id="aom_lord_5_16_name" text="アエロン" />
-
-    <string id="aom_lord_5_17_name" text="アラドウィル" />
-
-    <string id="aom_lord_5_18_name" text="ブラノク" />
-
-    <string id="aom_lord_5_19_name" text="フェナガン" />
-
-    <string id="aom_lord_5_20_name" text="シアラムス" />
-
-    <string id="aom_lord_5_21_name" text="カーフィド" />
-
-    <string id="aom_lord_5_22_name" text="フィアラド" />
-
-    <string id="aom_lord_5_1_1_name" text="ランダムデュード" />
-
-    <string id="aom_lord_5_3_1_name" text="ラナオン" />
-
-    <string id="aom_lord_5_3_2_name" text="ラドグアル" />
-
-    <string id="aom_lord_5_5_1_name" text="エイリー" />
-
-    <string id="aom_lord_5_13_1_name" text="ベアサグ" />
-
-    <string id="aom_lord_5_15_1_name" text="フロレー" />
-
-    <string id="aom_lord_5_15_2_name" text="ベイトリン" />
-
-    <string id="aom_lord_5_15_3_name" text="ディアーヴァイン" />
-
-    <string id="aom_lord_5_14_1_name" text="イーバー" />
-
-    <string id="aom_lord_5_16_1_name" text="リアシン" />
-
-    <string id="aom_lord_5_16_2_name" text="ガウェン" />
-
-    <string id="aom_lord_5_17_1_name" text="ブリガン" />
-
-    <string id="aom_lord_5_18_1_name" text="ショーナグ" />
-
-    <string id="aom_lord_5_21_1_name" text="ベアサグ" />
-
-    <string id="aom_lord_5_21_2_name" text="タオルシェ" />
-
-    <string id="aom_lord_6_1_name" text="ザミク・ザミアン" />
-
-    <string id="aom_lord_6_2_name" text="マライア" />
-
-    <string id="aom_lord_6_3_name" text="バガイ" />
-
-    <string id="aom_lord_6_4_name" text="グールティルム・サルリアン" />
-
-    <string id="aom_lord_6_5_name" text="イルボ・ニカシアン" />
-
-    <string id="aom_lord_6_51_name" text="カダ" />
-
-    <string id="aom_lord_6_6_name" text="スラン" />
-
-    <string id="aom_lord_6_7_name" text="チャガン" />
-
-    <string id="aom_lord_6_8_name" text="エスル" />
-
-    <string id="aom_lord_6_81_name" text="ナヤンタイ" />
-
-    <string id="aom_lord_6_9_name" text="テムン" />
-
-    <string id="aom_lord_6_10_name" text="アリジン" />
-
-    <string id="aom_lord_6_101_name" text="ボラト" />
-
-    <string id="aom_lord_6_11_name" text="ヤナ" />
-
-    <string id="aom_lord_6_12_name" text="アバガイ" />
-
-    <string id="aom_lord_6_13_name" text="ボルトゥ" />
-
-    <string id="aom_lord_6_15_name" text="オラグル" />
-
-    <string id="aom_lord_6_16_name" text="アクヴォス・カルミアン" />
-
-    <string id="aom_lord_6_17_name" text="アムドゥール・アムドゥリド" />
-
-    <string id="aom_lord_6_18_name" text="ルースカン・クンドラル" />
-
-    <string id="aom_lord_6_19_name" text="ヴァケラルタン・クンドラル" />
-
-    <string id="aom_lord_6_20_name" text="クルブラ・マシャキアン" />
-
-    <string id="aom_lord_6_21_name" text="モルク・イルノリア" />
-
-    <string id="aom_lord_6_22_name" text="シャカル2世・シャカリアン" />
-
-    <string id="aom_lord_6_23_name" text="フーズ=マルゴーズ・フーズ" />
-
-    <string id="aom_lord_6_24_name" text="ニカス・アデキグ" />
-
-    <string id="aom_lord_6_15_1_name" text="コリジン" />
-
-    <string id="aom_lord_6_15_2_name" text="セチェン" />
-
-    <string id="aom_lord_6_16_1_name" text="チャンブイ" />
-
-    <string id="aom_lord_6_16_2_name" text="ウナゲン" />
-
-    <string id="aom_lord_6_17_1_name" text="エルゲネ" />
-
-    <string id="aom_lord_6_17_2_name" text="イェスム" />
-
-    <string id="aom_lord_6_18_1_name" text="ティルン" />
-
-    <string id="aom_lord_6_18_2_name" text="チャグン" />
-
-    <string id="aom_lord_6_19_1_name" text="ソカタイ" />
-
-    <string id="aom_lord_6_19_2_name" text="コルテ" />
-
-    <string id="aom_lord_6_20_1_name" text="ジグル" />
-
-    <string id="aom_lord_K8_u_name" text="ボロンチャル" />
-
-    <string id="aom_lord_6_21_1_name" text="エサチェイ" />
-
-    <string id="aom_lord_6_22_1_name" text="エセレン" />
-
-    <string id="aom_lord_K9_l_name" text="ヴァラスミル・マシャキアン" />
-
-    <string id="aom_lord_K9_s_name" text="セヴィン" />
-
-    <string id="aom_lord_K9_c1_name" text="アルトゥ" />
-
-    <string id="aom_lord_K9_c2_name" text="メラ" />
-
-    <string id="aom_dead_lord_6_1_name" text="ウルクフン" />
-
-    <string id="aom_dead_lord_6_2_name" text="ソルン" />
-
-    <string id="aom_dead_lord_6_3_name" text="クユグ" />
-
-    <string id="aom_dead_lord_6_4_name" text="ウンドゥル" />
-
-    <string id="aom_lord_A9_c_name" text="ディラ" />
-
-    <string id="aom_lord_A9_l_name" text="カラダン" />
-
-    <string id="aom_lord_A9_s_name" text="ティカ" />
-
-    <string id="aom_lord_A9_u_name" text="カバン" />
-
-    <string id="aom_lord_B8_c_name" text="グアラン" />
-
-    <string id="aom_lord_B8_l_name" text="マイレアス" />
-
-    <string id="aom_lord_B8_s_name" text="ロダラク" />
-
-    <string id="aom_lord_NE7_u_name" text="黒き牙のハルドリック" />
-
-    <string id="aom_lord_NE8_c1_name" text="鉄床のケルディック" />
-
-    <string id="aom_lord_NE8_c2_name" text="モルウェン" />
-
-    <string id="aom_lord_NE8_l_name" text="迅速なるエアドリック" />
-
-    <string id="aom_lord_NE8_s_name" text="アエロリア" />
-
-    <string id="aom_lord_NE9_d_name" text="蛇撃ちのシルヴァ" />
-
-    <string id="aom_lord_NE9_l_name" text="鱗断ちのヴァルソル" />
-
-    <string id="aom_lord_NE9_s_name" text="牙削りのルリク" />
-
-    <string id="aom_lord_S8_u_name" text="ガリク" />
-
-    <string id="aom_lord_S9_c_name" text="フォリム" />
-
-    <string id="aom_lord_S9_l_name" text="ボンブール" />
-
-    <string id="aom_lord_S9_m_name" text="ダキラ" />
-
-    <string id="aom_lord_S9_u_name" text="チャスティミール" />
-
-    <string id="aom_lord_SE8_c_name" text="イタリア" />
-
-    <string id="aom_lord_SE9_c1_name" text="パガリオス" />
-
-    <string id="aom_lord_SE9_c2_name" text="ディアスカ" />
-
-    <string id="aom_lord_SE9_l_name" text="ウルク隊長グリシュナーク" />
-
-    <string id="aom_lord_SE9_s_name" text="ヨンナ" />
-
-    <string id="aom_lord_WE8_c_name" text="ペレンドゥア" />
-
-    <string id="aom_lord_WE8_u_name" text="バランディル" />
-
-    <string id="aom_lord_WE9_l_name" text="ドゥインヒア" />
-
-    <string id="aom_lord_WE9_u_name" text="ドゥイリン" />
-
-    <string id="aom_lord_WE9_u2_name" text="ロスフィン" />
-
-    <string id="TAOM_hero_dead_2_1" text="この年老いたバルド家の領主は、東夷の襲撃者に対してデイルを守って倒れた。彼の犠牲は山岳地帯の峠を守り、王国中で歌に歌われている。" />
-
-    <string id="TAOM_hero_dead_2_2" text="戦後に続いた冬の疫病で亡くなったデイルの貴婦人。庶民への慈善活動で知られていた。" />
-
-    <string id="TAOM_hero_dead_3_1" text="黒門の合戦で砂漠の騎兵隊を率いたハラドリムの軍閥。ゴンドールの矢に倒れたが、南方では殉教者として崇敬されている。" />
-
-    <string id="TAOM_hero_dead_6_1" text="リューンの旗の下に東夷諸部族を初めて統一した偉大なるハーン。彼の征服によって黄金の国の国境はリューンの海の岸辺にまで押し広げられた。" />
-
-    <string id="TAOM_hero_dead_6_2" text="自由の民との戦いで倒れた尊敬されるノヤン。彼の未亡人グルティルムは今や鉄の意志で一族を率いている。" />
-
-    <string id="TAOM_hero_dead_6_3" text="アルキト一族の首席ノヤン。騎射戦術における彼の戦術的才能は東夷戦士たちの世代全体に影響を与えた。" />
-
-    <string id="TAOM_hero_dead_6_4" text="アルキト一族の貴族にして偉大なるノヤンの息子。若くして死んだが、戦士としての才能を示していた。" />
-
-    <string id="TAOM_hero_1_1" text="ブレニン・ウルフは鉄の拳でドゥンランドの荒々しい諸部族を支配している。アイアンハンドとして知られる彼は、征服と策略によって散在する丘陵部族を統一した。彼はローハンの馬の国の王たちに奪われた土地を取り戻すことを夢見ている。" />
-
-    <string id="TAOM_hero_1_2" text="フレイヤ・ウルフハートはブレニン・ウルフの猛々しい妻である。斧と盾の技で戦士たちの間で尊敬を集めている。" />
-
-    <string id="TAOM_hero_1_41" text="ベレグンド・ウルフボーンはドゥンランドの信頼される隊長であり、ローハンの集落を襲撃する技で知られている。" />
-
-    <string id="TAOM_hero_1_411" text="グリムウルフ・アイアンファングはローハンに対する襲撃と戦争という父の遺産を受け継いでいる。" />
-
-    <string id="TAOM_hero_1_31" text="ズルサ・ブラックファングはアイアンハンドの後継者であり、父の遺産にふさわしいことを証明しようと熱望している。" />
-
-    <string id="TAOM_hero_1_1_1" text="エルディス・グレイクローはドゥンランドの猛々しい女戦士であり、戦場での獰猛さで名高い。" />
-
-    <string id="TAOM_hero_1_1_2" text="シッガ・ワームベインは山道で大蛇を討ち取ったことでその名を得た。" />
-
-    <string id="TAOM_hero_1_21" text="フェンリク・ザ・レッドウルフは敵の領土深くへの襲撃隊を率いている。" />
-
-    <string id="TAOM_hero_1_3" text="ゴルウルフ・ザ・ボアは国境集落への残忍な襲撃で知られる野蛮な族長である。" />
-
-    <string id="TAOM_hero_1_4" text="ブルンヒルド・アイアンクローはゴルウルフの恐るべき妻であり、夫と同等の戦闘技術を持つ。" />
-
-    <string id="TAOM_hero_1_22" text="ビョルンリク・ストロングアームは戦場で大戦斧を振るう強力な戦士である。" />
-
-    <string id="TAOM_hero_1_42" text="フロドガル・アイアンハイドは一族の闘士として仕え、その鎧は数え切れない戦いの傷で覆われている。" />
-
-    <string id="TAOM_hero_1_32" text="エルドラ・ボアソングは両親の激しい伝統を受け継いでいる。" />
-
-    <string id="TAOM_hero_1_422" text="ドレングルフ・アイアンタスクは戦場で己の価値を証明しようと熱望する若い戦士である。" />
-
-    <string id="TAOM_hero_1_1_3" text="シグルン・ボアファングは敵陣への恐れ知らずの突撃で知られている。" />
-
-    <string id="TAOM_hero_1_1_4" text="ティーラ・ブラッドタスクは数え切れない勝利を通じてその異名を得た。" />
-
-    <string id="TAOM_hero_1_1_5" text="ヒルダ・ボーンクラッシャーは戦闘における壊滅的な力で恐れられている。" />
-
-    <string id="TAOM_hero_1_1_6" text="ユルサ・ザ・ウィンターボアは敵が最も攻撃を予期しない厳しい季節に襲撃を率いる。" />
-
-    <string id="TAOM_hero_1_5" text="オスリク・ザ・ワイルドは予測不可能な戦術で多くの勝利を収めた族長である。彼の一族は古代ドゥンランド王の血を引くと主張している。" />
-
-    <string id="TAOM_hero_1_1_7" text="フレイディス・オックスメインはオスリクの妻であり、戦士としてだけでなく熟練した癒し手でもある。" />
-
-    <string id="TAOM_hero_1_1_8" text="エイラ・シャドウクローは敵の陣営を音もなく移動し、警告なしに襲撃する。" />
-
-    <string id="TAOM_hero_1_6" text="トールヴァルド・オックスホーンはオスリクの後継者であり、既に父の野生の精神を示している。" />
-
-    <string id="TAOM_hero_1_33" text="ブリジッド・ザ・ハウリングは山道を通って戦隊を率いている。" />
-
-    <string id="TAOM_hero_1_43" text="ゴルムンド・オックスフランクは族長の信頼される副官として仕えている。" />
-
-    <string id="TAOM_hero_1_1_9" text="シフラ・ボーンウォーカーは戦後に倒れた者たちの間を歩き、戦死者から戦利品を集める。" />
-
-    <string id="TAOM_hero_1_1_10" text="ハルディス・レッドミストは戦場に駆け込むたびに血の跡を残す。" />
-
-    <string id="TAOM_hero_1_1_11" text="ユルラ・ゴーストペルトは白い狼の皮をまとい、戦場で彼女を守護すると言われている。" />
-
-    <string id="TAOM_hero_1_1_12" text="フレイヤ・クローレンドは猛々しい盾乙女たちの戦隊を率いて戦場に臨む。幼少期から戦士として訓練を受け、一度も敗北を知らない。" />
-
-    <string id="TAOM_hero_1_1_13" text="グンドルン・アイアンポーは数え切れない剣の柄で傷ついた手を持つ歴戦の戦士である。" />
-
-    <string id="TAOM_hero_1_20" text="アストリッド・ベアクローは獰猛な戦闘スタイルと熊皮の外套で知られている。" />
-
-    <string id="TAOM_hero_1_64" text="ソルムンド・グリズリーヒューは大型両手斧で敵陣を切り裂く。" />
-
-    <string id="TAOM_hero_1_1_14" text="モルギスは古代の丘の精霊たちと交信する神秘的な人物である。" />
-
-    <string id="TAOM_hero_1_1_17" text="ブラノク・フェザーシャフトはドゥンランド人の中で最高の射手であり、百歩離れた渡り鳥の目を射抜くことができる。" />
-
-    <string id="TAOM_hero_1_50" text="コーウィン・レイヴンアイは鳥の飛翔に前兆を見出し、戦の事柄について一族に助言する。" />
-
-    <string id="TAOM_hero_1_66" text="タルリク・クロウコールはあらゆる鳥の鳴き声を真似ることができ、それを戦場での合図として使う。" />
-
-    <string id="TAOM_hero_1_1_15" text="アエルウィン・ホークアイは国境を巡回する丘陵の斥候部隊を指揮している。" />
-
-    <string id="TAOM_hero_1_1_16" text="ブリアンナ・ウィングダートは母から弓術を学び、今ではその技量で母を上回っている。" />
-
-    <string id="TAOM_hero_1_51" text="ハルドリック・タロンストライクは高い岩山から待ち伏せを指揮する。" />
-
-    <string id="TAOM_hero_1_67" text="エオルウィン・フェザーボルトは刃よりも弓を好み、影から敵を射抜く。" />
-
-    <string id="TAOM_hero_1_58" text="冷酷者ゴーヴィンは、ドゥネダインの間でさえその残虐さが伝説となっている厳格な族長である。" />
-
-    <string id="TAOM_hero_1_70" text="影のヴェイラは敵陣営に音もなく忍び込み、夜闇で喉を掻き切る。" />
-
-    <string id="TAOM_hero_NE7_u" text="一族の族長の助言者として仕える歴戦の戦士。" />
-
-    <string id="TAOM_hero_NE8_l" text="山岳氏族の族長、長年の国境戦争で鍛え抜かれた者。" />
-
-    <string id="TAOM_hero_NE8_s" text="族長の妻、癒しの術と薬草学に長けている。" />
-
-    <string id="TAOM_hero_NE8_c1" text="一族の長子、幼少期から戦術を叩き込まれた者。" />
-
-    <string id="TAOM_hero_NE8_c2" text="氏族長の第二子、狡猾さと野心で知られる。" />
-
-    <string id="TAOM_hero_1_56" text="トルムンド・ザ・ハンマーは、戦鎚による壊滅的な突撃によってその名を得た。" />
-
-    <string id="TAOM_hero_1_56_1" text="グウェンナはトルムンドの妻であり、彼が遠征する間、一族の領地を管理している。" />
-
-    <string id="TAOM_hero_NE9_l" text="年老いた族長、その知恵は全てのドゥネダインの氏族から求められている。" />
-
-    <string id="TAOM_hero_NE9_s" text="老族長の息子、戦いで己を証明することに熱心である。" />
-
-    <string id="TAOM_hero_NE9_d" text="氏族の娘、戦闘と外交の両方の訓練を受けている。" />
-
-    <string id="TAOM_hero_1_7" text="デネソール二世、ゴンドールの執政、ミナス・ティリスの白の塔から統治している。かつては偉大なる智者であったが、誇り高く頑固になっている。彼は王の帰還に抵抗し、モルドールの影からゴンドールを救えるのは自分だけだと信じている。" />
-
-    <string id="TAOM_hero_1_75" text="ボロミア、デネソールの長男、ゴンドールの将軍である。名高き偉大なる戦士であり、闇に対して民を守るためのあらゆる武器を求めている。" />
-
-    <string id="TAOM_hero_1_8" text="フーリオネスはフーリニオナス家に仕え、ゴンドールの執政たちの伝承を守り続ける忠実な守護者である。" />
-
-    <string id="TAOM_hero_1_34" text="ファラミア、デネソールの次男、イシリアンの野伏の隊長である。父に見過ごされているが、その智慧、慈悲、静かなる強さゆえに部下たちに愛されている。" />
-
-    <string id="TAOM_hero_1_24" text="アムロソス、イムラヒルの末息子、まだ若いが既に一族の武勇と高貴な気質を示している。" />
-
-    <string id="TAOM_hero_1_44" text="ネモスは塔の守護隊の隊長であり、執政を守ることを誓っている。" />
-
-    <string id="TAOM_hero_1_9" text="イムラヒル二世、ドル・アムロスの公子、ゴンドール最大の騎士である。その血統にはエルフの血が流れており、全領土で最も麗しき君主と言われている。彼の白鳥の騎士団は中つ国全土で伝説となっている。" />
-
-    <string id="TAOM_hero_1_9_5" text="ロスウェン、ドル・アムロスの公女、数十年にわたってゴンドールへの奉仕においてイムラヒルの傍らに立ち続けている。その優雅さと静かなる智慧で知られている。" />
-
-    <string id="TAOM_hero_1_10" text="アラネル、エルフィアの妻、その威厳と鋭い知性で知られるゴンドールの貴婦人である。" />
-
-    <string id="TAOM_hero_1_35" text="エルキリオン、イムラヒルの次男、ドル・アムロスの騎士として仕えている。戦いにおいて大胆であり家に忠実、父の白鳥の騎士団と共に駆ける。" />
-
-    <string id="TAOM_hero_1_25" text="エルフィア、イムラヒルの長男、ドル・アムロスの後継者である。武芸における正確さをもって白鳥の騎士団を指揮し、父の高貴な態度を受け継いでいる。" />
-
-    <string id="TAOM_hero_1_23" text="カラドウェン、エルキリオンの妻、二人の結びつきを通じてイムラゾーリオナス家に加わった。静かなる勇気を持つ女性である。" />
-
-    <string id="TAOM_hero_1_11" text="キリャンドゥールはゴンドールの北部防衛を指揮する、多くのオークの襲撃を経験した歴戦の勇士である。領土の境界を守ることにおいて組織的かつ不屈である。" />
-
-    <string id="TAOM_hero_1_111" text="エラルウェン、ヒアゴンの妻、その回復力と実践的な智慧で知られる辺境の女性である。" />
-
-    <string id="TAOM_hero_1_12" text="フィンダリエル、キリャンドゥールの妻、細心の注意と知性をもって家の事務を管理している。" />
-
-    <string id="TAOM_hero_1_36" text="イヴリニエル、キリャンドゥールの娘、ゴンドールの北部辺境で育ち、父の不屈の精神と母の智慧の両方を示している。" />
-
-    <string id="TAOM_hero_1_26" text="ヒアゴン、キリャンドゥールの弟、ゴンドールの使者騎手として仕えている。迅速かつ信頼できる者であり、領土の諸侯の間で伝言を運ぶ。" />
-
-    <string id="TAOM_hero_1_40" text="ボルハドール、バラヒリオナス家の君主、ゴンドール最長老の諸侯の一人である。長年の歳月が彼に智慧を与えたが、肉体は年齢とともに衰えている。その助言は全ての者から尊敬されている。" />
-
-    <string id="TAOM_hero_1_40_1" text="リンダリエル、ボルハドールの妻、長年にわたって彼らの家の力であり続けている。ゴンドールの貴族の中で優雅かつ不変の存在である。" />
-
-    <string id="TAOM_hero_1_46" text="マルリオール、ボルハドールの息子、老いた君主の代わりに父の務めを引き継いでいる。着実で頼りになる者であり、一族から尊敬されている。" />
-
-    <string id="TAOM_hero_1_46_1" text="ソルウェン、マルリオールの妻、静かなる決意をもって家を管理する有能な女性である。" />
-
-    <string id="TAOM_hero_1_45" text="太っちょフォルロング、ロッサールナハの君主、封土からミナス・ティリスの防衛に最大の軍勢を率いている。その巨体にもかかわらず、激しく経験豊富な戦士である。" />
-
-    <string id="TAOM_hero_1_45_1" text="ベレシエル、フォルロングの妻、ロッサールナハの貴婦人である。夫が戦場へ向かう間、肥沃な谷を監督している。" />
-
-    <string id="TAOM_hero_1_45_2" text="カルダミア、フォルロングの若き息子、最近成人し、己を証明することに熱心に戦場へ駆ける。" />
-
-    <string id="TAOM_hero_1_45_3" text="ルーミル、フォルロングの兄、アウシリオナス家における安定した存在である。長年の奉仕が親族からの尊敬を得ている。" />
-
-    <string id="TAOM_hero_1_57" text="バラノールはロッサールナハ部隊の隊長を務め、フォルロング卿の信頼厚き将校である。" />
-
-    <string id="TAOM_hero_1_57_1" text="カラシエルはカルダミアの妻であり、ロッサールナハの若き貴族の女性である。" />
-
-    <string id="TAOM_hero_1_57_2" text="イムロスはバラノールの娘であり、ロッサールナハの谷でゴンドールの貴族の道を学んでいる。" />
-
-    <string id="TAOM_hero_1_52" text="美しきヒアルイン、ピンナス・ゲリンの領主は、ゴンドールの丘陵から緑衣の戦士たちを率いる。彼は執政への勇気と忠誠で知られている。" />
-
-    <string id="TAOM_hero_1_52_4" text="ナウリエルはヒアルインの妻であり、ピンナス・ゲリンの貴婦人として、緑の丘の人々への不屈の精神と思いやりで知られている。" />
-
-    <string id="TAOM_hero_1_52_1" text="アナリエルはヒアルインの娘であり、ピンナス・ゲリンの戦士たちの中で育ち、戦いにおいて自分の力を発揮できる。" />
-
-    <string id="TAOM_hero_1_52_2" text="バランドールはヒアルインの息子であり、いつかピンナス・ゲリンの戦士たちを率いるために訓練している。彼は父の緑衣の部隊と共に騎行する。" />
-
-    <string id="TAOM_hero_1_62" text="オロマールはアナリエルの夫であり、彼らの結婚を通じてハルボロニオナス家に加わった。彼はピンナス・ゲリンの領主に忠実に仕える。" />
-
-    <string id="TAOM_hero_1_62_1" text="イスフィンはバランドールの妻であり、優美さで知られる緑の丘の女性である。" />
-
-    <string id="TAOM_hero_1_53" text="恐れ知らずのアングボール、ラメドンの領主は、死者の軍勢が彼の領地を行進した時でさえ部下たちを結集させた。彼は大胆で素早く行動する。" />
-
-    <string id="TAOM_hero_1_73" text="ナルミアはアングボールの弟であり、ラメドンの防衛に尽力している。彼は兄の経験にはまだ及ばないが、同じ勇気を共有している。" />
-
-    <string id="TAOM_hero_1_73_1" text="ベルウェンはアングボールの妻であり、ラメドンの防衛において夫のそばに不動の姿勢で立っている。" />
-
-    <string id="TAOM_hero_1_71" text="ゴラスギル、アンファラスの領主は、海賊の襲撃に対して長い海岸線を指揮する。彼は数十年にわたりゴンドールの海岸を守ってきた歴戦の海の領主である。" />
-
-    <string id="TAOM_hero_1_71_1" text="ラスウェンはゴラスギルの妻であり、夫が海路を守る間、アンファラスの沿岸集落を監督している。" />
-
-    <string id="TAOM_hero_WE8_c" text="ペレンドゥアはゴラスギルの息子であり、いつか父がしてきたようにアンファラスの海岸を守るために訓練されている。" />
-
-    <string id="TAOM_hero_WE8_u" text="バランディルはゴラスギルの兄弟であり、アンファラスの沿岸警備隊の隊長を務めている。" />
-
-    <string id="TAOM_hero_WE9_l" text="ドゥインヒア、モルソンドの領主は、黒根谷から弓兵たちをゴンドールの防衛へと率いる。彼は厳格で有能な指揮官である。" />
-
-    <string id="TAOM_hero_WE9_u" text="ドゥイリンはドゥインヒアの長男であり、自らの弓兵部隊を率い、ゴンドールの防衛において父と共に戦う。" />
-
-    <string id="TAOM_hero_WE9_u2" text="ロスフィンはドゥインヒアの妻であり、夫の不在中に黒根谷の事務を管理している。" />
-
-    <string id="TAOM_hero_1_14" text="サウロンの口は冥王の権威をもって語る。かつて黒きヌーメノール人であった彼は、悪への長年の奉仕の後、自らの名を忘れてしまった。彼は黒門の守備隊を指揮する。" />
-
-    <string id="TAOM_hero_1_27" text="マウグラシュは純粋な残虐性と狡猾さによって出世したオーク隊長である。" />
-
-    <string id="TAOM_hero_1_27_1" text="ヴェリナは闇の塔に仕える黒きヌーメノール人の魔女である。" />
-
-    <string id="TAOM_hero_1_27_2" text="スロズナクは西方の地への襲撃隊を率いている。" />
-
-    <string id="TAOM_hero_1_27_3" text="ヴァシリアは影の中で冥王に仕えている。" />
-
-    <string id="TAOM_hero_1_37" text="ゴシャンクは冷酷な効率でモルドールのオーク連隊を指揮している。" />
-
-    <string id="TAOM_hero_1_47" text="ウルボスはオークの監督であり、滅びの山の鍛冶場で奴隷を駆り立てている。" />
-
-    <string id="TAOM_hero_1_47_1" text="ミナはモルドールの闇の力に仕えている。" />
-
-    <string id="TAOM_hero_1_47_2" text="カシレアは影の僕である。" />
-
-    <string id="TAOM_hero_1_47_3" text="コランベアはモルドールの闇の中に住んでいる。" />
-
-    <string id="TAOM_hero_1_15" text="アングマールの魔王、ナズグルの長は、サウロンの最も恐るべき僕である。彼はかつて人間の偉大なる王であったが、力の指輪によって不死の幽鬼へと堕落した。" />
-
-    <string id="TAOM_hero_1_155" text="闇の元帥は戦いにおいてナズグルを指揮し、魔王に次ぐ地位にある。" />
-
-    <string id="TAOM_hero_1_16" text="ウンバールの騎士は指輪を受け取る前、海賊の領主であった。" />
-
-    <string id="TAOM_hero_1_28" text="裏切り者は堕落する前、東方の王であった。" />
-
-    <string id="TAOM_hero_1_38" text="不死者は不老不死を求めた魔術師王であったが、見出したのは永遠の隷属のみであった。" />
-
-    <string id="TAOM_hero_1_48" text="東夷のカムール、九人の指輪の幽鬼の第二位は、力の指輪を受け取る前、ルーンの偉大なる王国を統治していた。" />
-
-    <string id="TAOM_hero_1_48_1" text="汚れし者は騎行する先々に堕落を広める。" />
-
-    <string id="TAOM_hero_1_48_2" text="北国人の影は寒冷の地で狩りをする。" />
-
-    <string id="TAOM_hero_1_48_3" text="ウンバールの影は南方の海岸に出没する。" />
-
-    <string id="TAOM_hero_1_177" text="ホノラトゥスはモルドールの軍の将校を務めている。" />
-
-    <string id="TAOM_hero_1_29" text="サニオンは要塞を指揮する黒きヌーメノール人の隊長である。" />
-
-    <string id="TAOM_hero_1_17" text="偉大なるサウロン、モルドールの冥王。このエントリーは彼の恐るべき鎧を表示するためだけに存在する。" />
-
-    <string id="TAOM_hero_1_18" text="ジャセアはモルドールの闇の階層に仕える。" />
-
-    <string id="TAOM_hero_1_39" text="デバナは影の僕であり、闇の技に長けている。" />
-
-    <string id="TAOM_hero_1_30" text="モルグルの副官ゴスモグは、ペレンノール野の戦いでモルドールの軍勢を指揮する。残忍で狡猾なオークであり、最前線から指揮を執る。" />
-
-    <string id="TAOM_hero_1_30_1" text="スヴァラ・レッドファングは、ゴスモグの指揮下にあるオークの隊長である。" />
-
-    <string id="TAOM_hero_1_49" text="オブロンはモルドールのオークの中隊を率いる。" />
-
-    <string id="TAOM_hero_1_49_1" text="トリスタニアは闇の軍勢に仕える。" />
-
-    <string id="TAOM_hero_1_49_2" text="ゴルディアナは暗黒の塔の影に住まう。" />
-
-    <string id="TAOM_hero_1_30_2" text="カリニアはモルドールの闇の力に仕える。" />
-
-    <string id="TAOM_hero_1_30_3" text="シネシオスは影の僕である。" />
-
-    <string id="TAOM_hero_1_56_2" text="Rustica rides to war alongside her father Tormund, a fierce young warrior of the clan." />
-
-    <string id="TAOM_hero_1_63_2" text="コマタサは戦争のために生み出されたオークである。" />
-
-    <string id="TAOM_hero_1_63_3" text="エリディレアは闇の階層に仕える。" />
-
-    <string id="TAOM_hero_1_63" text="ミナス・モルグルの隊長ゴルバグは、死の都の守備隊を率いる。オークの中でも狡猾である。" />
-
-    <string id="TAOM_hero_1_63_1" text="ヴァラリアは死者の城砦に仕える。" />
-
-    <string id="TAOM_hero_1_74" text="ザカニスはオークの連隊を指揮する。" />
-
-    <string id="TAOM_hero_1_74_1" text="ゼナはモルドールの闇の主に仕える。" />
-
-    <string id="TAOM_hero_1_54" text="キリス・ウンゴルの隊長シャグラトは、モルドールへの峠を守る。オークの間でも残虐さで知られている。" />
-
-    <string id="TAOM_hero_1_54_1" text="コンスタリアはキリス・ウンゴルの塔に仕える。" />
-
-    <string id="TAOM_hero_1_68" text="タロスは峠に仕えるオークの隊長である。" />
-
-    <string id="TAOM_hero_1_68_1" text="シルヴィナは蜘蛛の峠の守備隊に仕える。" />
-
-    <string id="TAOM_hero_1_69_2" text="ドラシラは闇の軍勢に仕える。" />
-
-    <string id="TAOM_hero_1_69" text="ニフォンはモルドールの国境の要塞を指揮する。" />
-
-    <string id="TAOM_hero_1_69_1" text="アレリアナは国境地帯に仕える。" />
-
-    <string id="TAOM_hero_1_55" text="マスモグは強力なウルク=ハイの戦長である。" />
-
-    <string id="TAOM_hero_1_55_1" text="メゲシアは闇の力に仕える。" />
-
-    <string id="TAOM_hero_1_72" text="ボルグは強力なオークの族長であり、汚れし者アゾグの子孫である。" />
-
-    <string id="TAOM_hero_1_72_1" text="ヴィヴィアナは闇の階層に仕える。" />
-
-    <string id="TAOM_hero_SE8_c" text="モルドールの穴蔵で生み出されたオーク。" />
-
-    <string id="TAOM_hero_SE9_l" text="モルドールの要塞を指揮する黒きヌーメノール人の領主。" />
-
-    <string id="TAOM_hero_SE9_s" text="闇の力を持つ黒きヌーメノール人の魔女。" />
-
-    <string id="TAOM_hero_SE9_c1" text="黒きヌーメノール人の家系の跡継ぎであり、闇の技を修めた者。" />
-
-    <string id="TAOM_hero_SE9_c2" text="黒きヌーメノール人の領主の第二子。" />
-
-    <string id="TAOM_hero_2_1" text="バルド二世、谷間の国の王は、竜スマウグを討った伝説の弓の名手バルドの孫である。はなれ山のドワーフと同盟を結び、エレボールの麓の繁栄する王国を統治している。" />
-
-    <string id="TAOM_hero_2_2" text="アスタは谷間の国の女王であり、その知恵と優雅さで愛されている。" />
-
-    <string id="TAOM_hero_2_13_1" text="リリザは谷間の国の貴族の家の娘である。" />
-
-    <string id="TAOM_hero_2_13_2" text="アンドルタは王の屋敷に仕える。" />
-
-    <string id="TAOM_hero_2_13_3" text="ルダは谷間の国の若き貴婦人である。" />
-
-    <string id="TAOM_hero_2_13_4" text="テタは谷間の国の貴族の娘である。" />
-
-    <string id="TAOM_hero_2_7" text="シミルは谷間の国の王子であり、父の王位の継承者である。" />
-
-    <string id="TAOM_hero_2_7_1" text="ミミルは谷間の国の王家の王子である。" />
-
-    <string id="TAOM_hero_2_10" text="ヴァラは谷間の国の王女であり、外交と統治術の訓練を受けている。" />
-
-    <string id="TAOM_hero_2_13" text="ヴィダルは北方辺境の領主であり、東夷の侵入から守っている。" />
-
-    <string id="TAOM_hero_2_3" text="石兜のソリン三世は山の下の王であり、エレボールのドワーフを統治している。彼は谷間の国との古来の同盟を維持し、影に対抗する準備を整えている。" />
-
-    <string id="TAOM_hero_2_4" text="シガはドゥリンの一族のドワーフ貴族の女性である。" />
-
-    <string id="TAOM_hero_2_4_1" text="アポラネアは高貴な血筋のドワーフの乙女である。" />
-
-    <string id="TAOM_hero_2_8" text="ウリクはエレボールのドワーフ王子であり、鍛冶術と戦術に優れている。" />
-
-    <string id="TAOM_hero_2_11" text="イドルンは王室護衛のドワーフ戦士である。" />
-
-    <string id="TAOM_hero_2_111" text="ロジヴォルは山の門を守るドワーフ戦士である。" />
-
-    <string id="TAOM_hero_2_5" text="オリはトーリン・オーケンシールドの仲間の一人の子孫であるドワーフの領主である。彼はエレボールと谷間の国の間の交易路を管理している。" />
-
-    <string id="TAOM_hero_2_6" text="エルタはオリの妻であり、宝石切削の技術で知られている。" />
-
-    <string id="TAOM_hero_2_9" text="レクはオリの領地の後継者であり、交易と戦闘の両方で訓練を受けている。" />
-
-    <string id="TAOM_hero_2_12" text="スヴァナは交易家の娘である。" />
-
-    <string id="TAOM_hero_2_121" text="オスヴェンは山と都市の間の隊商を管理している。" />
-
-    <string id="TAOM_hero_2_14" text="イスヴァンは東方辺境の領主であり、長い湖を守っている。" />
-
-    <string id="TAOM_hero_2_14_1" text="ヴァルカヴァはイスヴァン卿の妻である。" />
-
-    <string id="TAOM_hero_2_14_2" text="ザヴェレナは東方領地の後継者である。" />
-
-    <string id="TAOM_hero_2_14_3" text="ヴィジドゥナは東方辺境の若き貴族である。" />
-
-    <string id="TAOM_hero_2_16" text="ボフールはエレボールのドワーフ領主であり、伝説の一行の子孫である。" />
-
-    <string id="TAOM_hero_2_16_1" text="チャスカはボフールの妻であり、治癒術に優れている。" />
-
-    <string id="TAOM_hero_2_21" text="スヴェドルンは湖の町の守備隊を指揮している。" />
-
-    <string id="TAOM_hero_2_21_1" text="イズデンカは湖の町の業務を管理している。" />
-
-    <string id="TAOM_hero_2_17" text="トーリン・オーケンシールド二世は竜のスマウグからエレボールを奪還した英雄として記憶されている。彼の精神は子孫を鼓舞している。" />
-
-    <string id="TAOM_hero_2_17_1" text="ドラチャは古き王の記憶を守り続けている。" />
-
-    <string id="TAOM_hero_2_22" text="ラショネクは谷間の国の戦士たちを指揮している。" />
-
-    <string id="TAOM_hero_2_22_1" text="ジェネヴァはラショネクの妻である。" />
-
-    <string id="TAOM_hero_2_24" text="アルヴァルは谷間の国の守備隊の隊長である。" />
-
-    <string id="TAOM_hero_2_24_1" text="ゾリナは谷間の国の貴族の女性である。" />
-
-    <string id="TAOM_hero_2_18" text="グローインはエレボールのドワーフ領主であり、旅の仲間のギムリの父である。" />
-
-    <string id="TAOM_hero_2_18_1" text="ゾリカはグローインの妻であり、有名なギムリの母である。" />
-
-    <string id="TAOM_hero_2_23" text="ガルデンは谷間の国の南部守備隊を指揮している。" />
-
-    <string id="TAOM_hero_2_23_1" text="ズラトカはガルデンの娘である。" />
-
-    <string id="TAOM_hero_2_15" text="ラタゴストは賢明な助言者であり、国事について王に助言を行っている。" />
-
-    <string id="TAOM_hero_2_15_1" text="ヤチャナは王宮に仕えている。" />
-
-    <string id="TAOM_hero_2_15_2" text="ミランカは宮廷の貴族の女性である。" />
-
-    <string id="TAOM_hero_2_15_3" text="ヴェリナは王家に仕えている。" />
-
-    <string id="TAOM_hero_2_15_4" text="ボヴァンは谷間の国の若き貴族である。" />
-
-    <string id="TAOM_hero_2_19" text="ドワーリンは名高いドワーフ戦士であり、元の一行の最後の生き残りである。" />
-
-    <string id="TAOM_hero_2_19_1" text="ヴィトミラはドワーリンと共に仕えている。" />
-
-    <string id="TAOM_hero_2_20" text="オーインはドワーフの長老であり、古の知識と治癒術の守護者である。" />
-
-    <string id="TAOM_hero_2_20_1" text="キシャはオインの妻で、薬草の知識に長けている。" />
-
-    <string id="TAOM_hero_S8_u" text="山の館を守る歴戦の古参兵。" />
-
-    <string id="TAOM_hero_3_1" text="カドゥラクはハラドのタスクラルであり、南方軍の最高司令官である。彼はゴンドールに対抗してモルドールと同盟を結び、ムマキルの戦象を率いて民の敵と戦う。" />
-
-    <string id="TAOM_hero_3_2" text="高い地位を持つハラドリムの貴族女性。" />
-
-    <string id="TAOM_hero_3_7" text="ディユルはタスクラルの後継者であり、ムマク騎乗者の道を学んでいる。" />
-
-    <string id="TAOM_hero_3_10" text="アニダはタスクラルの娘で、宮廷政治に通じている。" />
-
-    <string id="TAOM_hero_3_13" text="ヌカルはハラドの精鋭蛇衛兵を指揮している。" />
-
-    <string id="TAOM_hero_3_13_1" text="シラはヌカルの妻である。" />
-
-    <string id="TAOM_hero_3_13_2" text="ラザナは蛇衛兵指揮官の娘である。" />
-
-    <string id="TAOM_hero_3_8" text="アダスはハラドリムの戦士王子である。" />
-
-    <string id="TAOM_hero_3_11" text="アルワは砂漠部族の王女である。" />
-
-    <string id="TAOM_hero_3_3" text="カレミアは東ハラドリムの族長であり、オアシス集落の領主である。" />
-
-    <string id="TAOM_hero_3_3_1" text="タリクは東のオアシス領主の後継者である。" />
-
-    <string id="TAOM_hero_3_4" text="マラーはカレミアの妻であり、その知恵で知られている。" />
-
-    <string id="TAOM_hero_3_5" text="ハルディアは沿岸ハラドリムを指揮し、ウンバールの海賊と同盟を結んでいる。" />
-
-    <string id="TAOM_hero_3_51" text="ハカンは沿岸部族の海の船長である。" />
-
-    <string id="TAOM_hero_3_12" text="マナンはゴンドールの沿岸集落を襲撃している。" />
-
-    <string id="TAOM_hero_3_20" text="カリスは敵地への襲撃隊を指揮している。" />
-
-    <string id="TAOM_hero_3_20_1" text="ジュディラはカリスの妻である。" />
-
-    <string id="TAOM_hero_3_20_2" text="アジナは襲撃隊長の娘である。" />
-
-    <string id="TAOM_hero_3_6" text="ルマはハルディアの妻であり、彼らの沿岸領地を管理している。" />
-
-    <string id="TAOM_hero_3_9" text="ウサイルは沿岸領地の後継者である。" />
-
-    <string id="TAOM_hero_3_14" text="タムザは砂漠の荒野を越える隊商を率いている。" />
-
-    <string id="TAOM_hero_3_14_1" text="ササイタは砂漠の交易路を管理している。" />
-
-    <string id="TAOM_hero_3_15" text="グジドは深南部のムマク騎乗者を指揮している。" />
-
-    <string id="TAOM_hero_3_15_1" text="シムラはムマクの領主の妻である。" />
-
-    <string id="TAOM_hero_3_15_2" text="ブシラは若いムマク騎乗者を訓練している。" />
-
-    <string id="TAOM_hero_3_16" text="ルミルは黄金の旗印部族の族長である。" />
-
-    <string id="TAOM_hero_3_16_1" text="ファリナは黄金の旗印族長の妻である。" />
-
-    <string id="TAOM_hero_3_17" text="オロフィンは極南の蛇騎兵を指揮している。" />
-
-    <string id="TAOM_hero_3_17_1" text="シャイマはオロフィンの妻である。" />
-
-    <string id="TAOM_hero_3_17_2" text="サニトは蛇騎兵の後継者である。" />
-
-    <string id="TAOM_hero_3_21" text="ウカイは北方の隊商を襲う砂漠の略奪者を率いている。" />
-
-    <string id="TAOM_hero_3_21_1" text="アシサは略奪隊長の妻である。" />
-
-    <string id="TAOM_hero_3_18" text="アランソンは南方の裕福な商人王子である。" />
-
-    <string id="TAOM_hero_3_18_1" text="ファルザナは商人王子の娘である。" />
-
-    <string id="TAOM_hero_3_18_2" text="ハフィサは交易の繋がりを管理している。" />
-
-    <string id="TAOM_hero_3_18_3" text="ズアドは修行中の若い商人である。" />
-
-    <string id="TAOM_hero_3_18_4" text="ジャルファルは交易隊商を護衛している。" />
-
-    <string id="TAOM_hero_3_19" text="アエシリオンは北方辺境の要塞を指揮している。" />
-
-    <string id="TAOM_hero_3_19_1" text="サルマは辺境司令官の妻である。" />
-
-    <string id="TAOM_hero_3_19_2" text="ズライカは辺境守備隊で訓練を受けている。" />
-
-    <string id="TAOM_hero_3_19_3" text="スルハナは辺境の貴族である。" />
-
-    <string id="TAOM_hero_3_23" text="カヒンは敵地への斥候を率いる。" />
-
-    <string id="TAOM_hero_3_23_1" text="スカイナは斥候隊長の妻である。" />
-
-    <string id="TAOM_hero_3_22" text="ドゥイリンは砂漠の部族の弓兵を指揮する。" />
-
-    <string id="TAOM_hero_3_22_1" text="ヤミナは弓兵隊長の妻である。" />
-
-    <string id="TAOM_hero_3_22_2" text="スナは若き弓兵たちを訓練する。" />
-
-    <string id="TAOM_hero_3_22_3" text="ザヌワは部族の熟練した弓兵である。" />
-
-    <string id="TAOM_hero_3_22_4" text="ハジャラは砂漠の監視塔を守る。" />
-
-    <string id="TAOM_hero_4_1" text="ローハンの王セオデンは、エドラスのメドゥセルドから統治する。かつてサルマンの従僕グリマに惑わされていたが、ガンダルフによって解放され、ヘルム峡谷とペレンノール野の戦いで民を栄光へと導いた。" />
-
-    <string id="TAOM_hero_4_2" text="エルフヒルドはローハンの王妃であり、セオドレドの母であった。彼女は出産時に亡くなり、その悲しみはセオデンの治世に影を落とした。" />
-
-    <string id="TAOM_hero_4_7" text="セオドレドはセオデン王の一人息子であり、ローハンの王子であった。彼はサルマンのウルク=ハイに対してアイゼンの浅瀬を守って倒れた。" />
-
-    <string id="TAOM_hero_4_10" text="エリスはロヒアリムの宮廷の貴婦人である。" />
-
-    <string id="TAOM_hero_4_13" text="ロムンドは王の親衛隊の隊長として仕える。" />
-
-    <string id="TAOM_hero_4_14" text="モルコンは王の側近として信頼される隊長である。" />
-
-    <string id="TAOM_hero_4_141" text="アモルコンは親衛隊で親族とともに仕える。" />
-
-    <string id="TAOM_hero_4_15" text="エルドゥランドはセオデンの側近の騎士である。" />
-
-    <string id="TAOM_hero_4_3" text="セオドウィンはセオデン王の妹であり、エオメルとエオウィンの母であった。夫エオムンドがオークに殺された後、悲しみのあまり世を去った。" />
-
-    <string id="TAOM_hero_4_3_1" text="エオメル・エアディグは辺境領第三元帥であり、セオデンの甥にして王位継承者である。彼は東谷の騎士たちを激しい忠誠心をもって率いる。" />
-
-    <string id="TAOM_hero_4_4" text="エルシルドはエオフォリングの貴婦人である。" />
-
-    <string id="TAOM_hero_4_8" text="フルンハードはエオメルの指揮下で信頼される騎士として仕える。" />
-
-    <string id="TAOM_hero_4_11" text="リエナは王家に仕える。" />
-
-    <string id="TAOM_hero_4_6" text="グリムスラーデのグリンボルドは西谷の騎士たちを指揮する。勇猛な戦士であり、アイゼンの浅瀬を守り抜き、後にペレンノール野で英雄的な死を遂げた。" />
-
-    <string id="TAOM_hero_4_6_1" text="デオルウィンはグリンボルドの指揮を継ぐ後継者である。" />
-
-    <string id="TAOM_hero_4_5" text="ウンセリーは西谷の騎士の隊長として仕える。" />
-
-    <string id="TAOM_hero_4_9" text="トムンドは西谷の騎士隊を指揮する。" />
-
-    <string id="TAOM_hero_4_12" text="シルヴィンドは西谷の盾の乙女である。" />
-
-    <string id="TAOM_hero_4_121" text="ラサンドは西谷の守備隊に仕える。" />
-
-    <string id="TAOM_hero_4_16" text="西谷領主エルケンブランドは角笛城の要塞を指揮する。彼はヘルム峡谷でガンダルフとともに到着し、戦局を覆した。" />
-
-    <string id="TAOM_hero_4_16_1" text="メルスはエルケンブランドの妻であり、角笛城の貴婦人である。" />
-
-    <string id="TAOM_hero_4_17" text="エルベトはエルケンブランドの側近に仕える。" />
-
-    <string id="TAOM_hero_4_18" text="アマルグンはエルケンブランドの後継者である。" />
-
-    <string id="TAOM_hero_4_181" text="アルサムンドは角笛城守備隊の隊長として仕える。" />
-
-    <string id="TAOM_hero_4_19" text="アセラは深き谷を守る盾の乙女である。" />
-
-    <string id="TAOM_hero_4_25" text="ルカンドは東エムネトの騎士たちを指揮する。" />
-
-    <string id="TAOM_hero_4_25_1" text="ベルトリアナはルカンドの妻である。" />
-
-    <string id="TAOM_hero_4_21" text="オルドラキングのクスラエドは東の国境を巡回する。" />
-
-    <string id="TAOM_hero_4_20" text="ヴァルムンドはアルドブルグの守備隊を指揮する。" />
-
-    <string id="TAOM_hero_4_20_1" text="インゲルトルドはヴァルムンドの妻であり、アルドブルグの貴婦人である。" />
-
-    <string id="TAOM_hero_4_22" text="ウルフ・ケルムンディングは北の谷の騎兵を率いる。" />
-
-    <string id="TAOM_hero_4_22_1" text="スンニファはウルフの妻である。" />
-
-    <string id="TAOM_hero_4_23" text="マルハスは南の草原の馬飼いたちを率いる。" />
-
-    <string id="TAOM_hero_4_23_1" text="ウルフウィンはマルハスの娘であり、熟練の騎手である。" />
-
-    <string id="TAOM_hero_4_23_2" text="エレドゥランは王の軍のために軍馬を訓練する。" />
-
-    <string id="TAOM_hero_4_23_3" text="若きエレドゥランは馬番として仕える。" />
-
-    <string id="TAOM_hero_4_24" text="蛇の舌グリマはセオデンの顧問であったが、密かにサルマンのスパイであった。彼の囁く嘘は王の心を毒したが、ガンダルフがその呪縛を解いた。" />
-
-    <string id="TAOM_hero_4_24_1" text="ローハンの姫君エオウィンは、エオメルの妹でありセオデンの姪である。彼女はペレンノール野でアングマールの魔王を討ち、時代の恐怖を打ち倒した。" />
-
-    <string id="TAOM_hero_4_24_2" text="エルフグリムは王家の騎兵として仕える。" />
-
-    <string id="TAOM_hero_4_24_3" text="ヘルブランドは王の館を守る。" />
-
-    <string id="TAOM_hero_4_24_4" text="ジークベルフトはローハンの国境を巡察する。" />
-
-    <string id="TAOM_hero_4_26" text="ペリックはローハンの隘路沿いの騎兵を指揮する。" />
-
-    <string id="TAOM_hero_4_26_1" text="ライインガルダは隘路の盾乙女である。" />
-
-    <string id="TAOM_hero_4_27" text="エール・エゼルラフィングはダンランドの略奪からフォールドを守る。" />
-
-    <string id="TAOM_hero_4_27_1" text="ワエルブルグはエールの妻である。" />
-
-    <string id="TAOM_hero_V9_u" text="地元の領主に助言する熟練の騎兵。" />
-
-    <string id="TAOM_hero_4_28" text="ファストヘルム・モルカルガスは南の監視所を指揮する。" />
-
-    <string id="TAOM_hero_4_28_1" text="モルカルはファストヘルムの息子である。" />
-
-    <string id="TAOM_hero_4_28_2" text="ヘレスウィズは南の監視隊長の娘である。" />
-
-    <string id="TAOM_hero_5_1" text="カンドの大将軍ヴァルグルは、獰猛なヴァリアグの騎馬兵を率いる。モルドールとの同盟により、彼の戦士たちは中つ国の戦いでゴンドールに立ち向かう。" />
-
-    <string id="TAOM_hero_5_1_1" text="大将軍の従者の戦士。" />
-
-    <string id="TAOM_hero_5_3" text="エルゲオンは東方のヴァリアグ氏族を率いる族長であり、その迅速な騎兵戦術で知られている。" />
-
-    <string id="TAOM_hero_5_3_1" text="ラナオンはエルゲオンの戦団の後継者である。" />
-
-    <string id="TAOM_hero_5_3_2" text="ラドグアルはエルゲオンの軍の隊長として仕える。" />
-
-    <string id="TAOM_hero_5_4" text="ニィウィンはエルゲオンの妻であり、癒しの術に長けている。" />
-
-    <string id="TAOM_hero_5_5" text="メリディルはゴンドールの地への略奪者を率いる。" />
-
-    <string id="TAOM_hero_5_5_1" text="エイリーは氏族の馬の群れを管理する。" />
-
-    <string id="TAOM_hero_5_6" text="アルカエアはメリディルの妻である。" />
-
-    <string id="TAOM_hero_5_7" text="カンドのヴァリアグ戦士族長。" />
-
-    <string id="TAOM_hero_5_8" text="セインはヴァリアグ騎兵隊を指揮する。" />
-
-    <string id="TAOM_hero_5_9" text="クルハーンは名声を高めつつあるヴァリアグの戦士である。" />
-
-    <string id="TAOM_hero_5_91" text="テガンはクルハーンと共に仕える。" />
-
-    <string id="TAOM_hero_5_10" text="コーレインは大将軍の宮廷のヴァリアグ貴族である。" />
-
-    <string id="TAOM_hero_5_11" text="アリンネスはヴァリアグの貴婦人である。" />
-
-    <string id="TAOM_hero_5_12" text="ウィスウィンは若きヴァリアグの騎兵を訓練する。" />
-
-    <string id="TAOM_hero_5_13" text="ミュインサーは北方の地域で略奪者を指揮する。" />
-
-    <string id="TAOM_hero_5_131" text="ラスはミュインサーの指揮下で仕える。" />
-
-    <string id="TAOM_hero_5_13_1" text="ベアサグは北方氏族のヴァリアグの戦士である。" />
-
-    <string id="TAOM_hero_5_15" text="プリンドールはカンドへの山岳峠を守る。" />
-
-    <string id="TAOM_hero_5_15_1" text="フロライはその山岳の守護者の娘である。" />
-
-    <string id="TAOM_hero_5_15_2" text="ベイトリンは山道を巡回している。" />
-
-    <string id="TAOM_hero_5_15_3" text="ディアルヴァインは高地の峠を守っている。" />
-
-    <string id="TAOM_hero_5_14" text="ルイチャンは西部平原のヴァリアグ騎兵を指揮している。" />
-
-    <string id="TAOM_hero_5_14_1" text="エアビルはルイチャンの妻である。" />
-
-    <string id="TAOM_hero_5_16" text="エアロンは中央草原の戦士たちを率いている。" />
-
-    <string id="TAOM_hero_5_16_1" text="リアシンはエアロンの妻である。" />
-
-    <string id="TAOM_hero_5_16_2" text="ガウェンはエアロンの戦団の後継者である。" />
-
-    <string id="TAOM_hero_5_17" text="アラドウィルは東部辺境軍を指揮している。" />
-
-    <string id="TAOM_hero_5_17_1" text="ブリガンはアラドウィルの妻である。" />
-
-    <string id="TAOM_hero_5_18" text="ブラノクは敵地への斥候を率いている。" />
-
-    <string id="TAOM_hero_5_18_1" text="セオナグはブラノクの妻である。" />
-
-    <string id="TAOM_hero_5_19" text="フェナガンは決闘の技で知られるヴァリアグの勇士である。" />
-
-    <string id="TAOM_hero_5_20" text="シアラムスはカンドの戦車戦士たちを指揮している。" />
-
-    <string id="TAOM_hero_5_21" text="カルフィドは国境沿いのヴァリアグ略奪隊を率いている。" />
-
-    <string id="TAOM_hero_5_21_1" text="ベアサグはカルフィドの妻である。" />
-
-    <string id="TAOM_hero_5_21_2" text="タオルセはカルフィドの略奪隊の後継者である。" />
-
-    <string id="TAOM_hero_5_22" text="フィアラドは南部交易路を守っている。" />
-
-    <string id="TAOM_hero_6_1" text="ルーンのロケ・カン、ザミク・ザミアンは東夷の黄金の国を統治している。彼の祖先はサウロンに仕えており、彼もその暗黒の同盟を続け、西方の地を征服することを夢見ている。" />
-
-    <string id="TAOM_hero_6_2" text="マライアはロケ・カンの妻であり、黄金の国の女王である。" />
-
-    <string id="TAOM_hero_6_3" text="バガイは王室護衛隊の隊長を務めている。" />
-
-    <string id="TAOM_hero_6_4" text="グルティルム・サルリアンはルーンの西方軍を指揮している。夫の死後、彼女は鉄の決意をもって指揮権を引き継いだ。" />
-
-    <string id="TAOM_hero_6_5" text="イルボ・ニカティアンは東部草原の名高い騎馬弓兵、アルキト氏族を率いている。" />
-
-    <string id="TAOM_hero_6_51" text="カダはアルキト氏族の後継者である。" />
-
-    <string id="TAOM_hero_6_6" text="スランは南部部族の戦士たちを指揮している。" />
-
-    <string id="TAOM_hero_6_7" text="チャガンはルーンの王子であり、黄金の国の後継者である。" />
-
-    <string id="TAOM_hero_6_8" text="エスルはグルティルムの軍の戦士である。" />
-
-    <string id="TAOM_hero_6_81" text="ナヤンタイはグルティルムの軍の隊長を務めている。" />
-
-    <string id="TAOM_hero_6_9" text="テムンはアルキト氏族の戦士である。" />
-
-    <string id="TAOM_hero_6_10" text="アリジンは王家の王子である。" />
-
-    <string id="TAOM_hero_6_101" text="ボラトは王室に仕えている。" />
-
-    <string id="TAOM_hero_6_11" text="ヤナはグルティルムの軍の貴族である。" />
-
-    <string id="TAOM_hero_6_12" text="アバガイはアルキトの所領の後継者である。" />
-
-    <string id="TAOM_hero_6_13" text="ボルトゥは王家の貴族である。" />
-
-    <string id="TAOM_hero_6_15" text="オラグルはアルキトの騎馬弓兵を率いている。" />
-
-    <string id="TAOM_hero_6_15_1" text="コリジンはオラグルの妻である。" />
-
-    <string id="TAOM_hero_6_15_2" text="セチェンはオラグルの指揮権の後継者である。" />
-
-    <string id="TAOM_hero_6_16" text="アクヴォス・カルミアンはルーンの南部国境を指揮している。" />
-
-    <string id="TAOM_hero_6_16_1" text="チャンブイはアクヴォスの妻である。" />
-
-    <string id="TAOM_hero_6_16_2" text="ウナゲンはアクヴォスの指揮権の後継者である。" />
-
-    <string id="TAOM_hero_6_17" text="アムドゥール・アムドゥリドは東部草原の強力な氏族を率いている。" />
-
-    <string id="TAOM_hero_6_17_1" text="エルゲネはアムドゥルの妻である。" />
-
-    <string id="TAOM_hero_6_17_2" text="イェスムはアムドゥリド家の領地の後継者である。" />
-
-    <string id="TAOM_hero_6_18" text="ルスカン・クンドラルは西部諸州の戦士たちを指揮する。" />
-
-    <string id="TAOM_hero_6_18_1" text="ティルンはルスカンの妻である。" />
-
-    <string id="TAOM_hero_6_18_2" text="チャグンはクンドラル家の後継者である。" />
-
-    <string id="TAOM_hero_6_19" text="ヴァケラルタン・クンドラルはルスカンの兄弟で、騎兵斥候を指揮する。" />
-
-    <string id="TAOM_hero_6_19_1" text="ソカタイはヴァケラルタンの妻である。" />
-
-    <string id="TAOM_hero_6_19_2" text="コルテはヴァケラルタンの斥候隊の後継者である。" />
-
-    <string id="TAOM_hero_6_20" text="クルブラ・マシャキアンはルーンの北部部族を指揮する。" />
-
-    <string id="TAOM_hero_6_20_1" text="ジグルはクルブラの妻である。" />
-
-    <string id="TAOM_hero_K8_u" text="北部の族長に助言する熟練の戦士。" />
-
-    <string id="TAOM_hero_6_21" text="モッルク・イルノリアは強力な馬上戦士の一族を指揮する。" />
-
-    <string id="TAOM_hero_6_21_1" text="エサチェイはモッルクの妻である。" />
-
-    <string id="TAOM_hero_6_22" text="シャカル二世・シャカリアンはルーンの海沿いの裕福な交易一族を統治する。" />
-
-    <string id="TAOM_hero_6_22_1" text="エセレンはシャカルの妻である。" />
-
-    <string id="TAOM_hero_6_23" text="フズ=マルゴズ・フズは西部辺境沿いの要塞守備隊を指揮する。" />
-
-    <string id="TAOM_hero_6_24" text="ニカス・アデキグはルーンへの南部峠を守る。" />
-
-    <string id="TAOM_hero_A9_l" text="南部荒地のハラドリムの族長。" />
-
-    <string id="TAOM_hero_A9_s" text="南部荒地の族長の妻。" />
-
-    <string id="TAOM_hero_A9_c" text="南部荒地の族長の後継者。" />
-
-    <string id="TAOM_hero_A9_u" text="南部部族の戦士。" />
-
-    <string id="TAOM_hero_V11_l" text="西部谷のローハンの領主。" />
-
-    <string id="TAOM_hero_V11_u" text="領主に助言する歴戦の騎手。" />
-
-    <string id="TAOM_hero_V11_c1" text="西部谷の領地の後継者。" />
-
-    <string id="TAOM_hero_V11_c2" text="西部谷の領主の第二子。" />
-
-    <string id="TAOM_hero_S9_l" text="北部への道を守るデイルの貴族。" />
-
-    <string id="TAOM_hero_S9_m" text="北部バルディング一族の女家長。" />
-
-    <string id="TAOM_hero_S9_c" text="北部領地の若き後継者。" />
-
-    <string id="TAOM_hero_S9_u" text="北部守備隊の熟練戦士。" />
-
-    <string id="TAOM_hero_K9_l" text="遠方の東夷部族の族長。" />
-
-    <string id="TAOM_hero_K9_s" text="遠方の族長の妻。" />
-
-    <string id="TAOM_hero_K9_c1" text="遠方の部族領地の後継者。" />
-
-    <string id="TAOM_hero_K9_c2" text="遠方の族長の第二子。" />
-
-    <string id="TAOM_hero_B8_l" text="東部丘陵地のヴァリアグ軍閥の長。" />
-
-    <string id="TAOM_hero_B8_s" text="ヴァリアグ軍閥の長の妻。" />
-
-    <string id="TAOM_hero_B8_c" text="ヴァリアグ軍閥の長の後継者。" />
-
-  </strings>
-
-</base>
-
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Japanese" />
+  </tags>
+  <strings>
+    <string id="TAOM_dunland" text="ドゥンランド" />
+    <string id="TAOM_dunland_short" text="ドゥンランド" />
+    <string id="TAOM_dunland_title" text="ドゥンランド諸部族" />
+    <string id="TAOM_dunland_ruler" text="ブレニン" />
+    <string id="TAOM_dunland_desc" text="ドゥンランドは、起伏のある丘陵と深い森に覆われた荒々しく未開の土地であり、獰猛で独立心の強いドゥンランド人の故郷である。しばしば疎外され、隣人と対立してきたドゥンランドの民は、何世紀にもわたる闘争と生存によって鍛えられてきた。彼らの族長は力と狡猾さをもって統率し、復讐と自由という共通の旗印のもとに部族を統一する。獰猛な戦士と熟練した狩人として知られるドゥンランド人は、斧、槍、弓を好み、先祖代々の土地との深い結びつきから生まれた粘り強さで戦う。彼らのやり方は他者には原始的に映るかもしれないが、ドゥンランド人は誇り高く機知に富み、中つ国における正当な地位を取り戻す準備ができている。" />
+    <string id="TAOM_gondor" text="ゴンドール" />
+    <string id="TAOM_gondor_short" text="ゴンドール" />
+    <string id="TAOM_gondor_title" text="ゴンドール執政国" />
+    <string id="TAOM_gondor_ruler" text="執政" />
+    <string id="TAOM_gondor_desc" text="ゴンドールは、中つ国において力と不屈の精神を誇る砦として聳え立ち、白き石造りの高い塔、古き血統、そして熟練した軍団で知られている。ヌーメノールの滅亡後、エレンディルとその息子たちによって建国されたゴンドールは、長きにわたり東方に増大する闇から人間の国々を守ってきた。首都ミナス・ティリスを擁するこの王国は、その勇気、規律、そして自由の民への忠誠で名高い。モルドールとの長年の戦いに苦しめられながらも、ゴンドールの戦士たちと執政たちは希望を守り続け、王の帰還によってかつての栄光が取り戻される日を待ち望んでいる。" />
+    <string id="TAOM_mordor" text="モルドール" />
+    <string id="TAOM_mordor_short" text="モルドール" />
+    <string id="TAOM_mordor_title" text="モルドール統治領" />
+    <string id="TAOM_mordor_ruler" text="冥王" />
+    <string id="TAOM_mordor_desc" text="モルドールは、闇の中で鍛えられ、冥王サウロンによって支配される暗黒の荒涼たる領域である。聳え立つ黒き山脈の背後に位置するこの王国は、オークの軍勢、無慈悲なトロール、そして戦争の武器を鍛える燃え盛る炉に満ちている。バラド=ドゥアの要塞から、サウロンは中つ国全土に支配を広げようとする止めようのない軍勢を指揮する。モルドールの空は灰に覆われ、その大地は不毛であり、サウロンの歪んだ野望と闇の魔法にふさわしい領土となっている。" />
+    <string id="TAOM_dale" text="谷間の国" />
+    <string id="TAOM_dale_short" text="谷間の国" />
+    <string id="TAOM_dale_title" text="谷間の国王国" />
+    <string id="TAOM_dale_ruler" text="王" />
+    <string id="TAOM_dale_desc" text="流れ川の水がはなれ山の影と出会う場所に、谷間の国は立っている。人間の都市は五軍の合戦の余波の中、廃墟から再建された。かつては音楽と歓喜の場所であり、交易と黄金の市場広場の都であった谷間の国は、エレボールの庇護のもとで繁栄していた。その商人たちはケルドゥインを下る素早い船を操り、街路には笑い声が響き渡り、人々は平和を知っていた。しかし平和は竜の到来によって粉々に打ち砕かれた。北方からの翼ある死神スマウグが炎と怒りをもってエレボールに降り立ち、谷間の国が最初に苦しんだ。都市は焼かれ、人々は逃げ、そして約二世紀の間、誇り高き円屋根の塔は沈黙し崩壊し、悲しみの記念碑として立ち続けた。だが廃墟は谷間の国の物語の終わりではない。竜の死とともに、弓の使い手バルドは再び旗を掲げ、民を故郷へと呼び戻した。灰と石から谷間の国は再び立ち上がった。かつてのままではなく、より偉大に。バルド王とその息子バインのもと、都市は再び栄え、城壁は強固に、人々は誇り高く、その眼差しは常に警戒を怠らない。谷間の国の人々は数において強大ではなく、魔法において古えでもないが、彼らは不屈にして真実である。" />
+    <string id="TAOM_harad" text="ハラド" />
+    <string id="TAOM_harad_short" text="ハラド" />
+    <string id="TAOM_harad_title" text="ハルワンのタスクララン" />
+    <string id="TAOM_harad_ruler" text="タスクラル" />
+    <string id="TAOM_harad_desc" text="ハラドは、ゴンドールの南方に広がる広大で多様な地域であり、乾燥した砂漠、緑豊かなジャングル、肥沃なオアシスを包含している。その地理は住民と同じくらい多様で、広大な砂丘が深い森へと続き、生命に満ちた河川が流れている。ハラドの歴史は古代の伝承に彩られており、壮大な都市と要塞が大地に点在し、その遺産が時代を超えて響き渡る統治者たちによって築かれた。ハラドワイスの大砂漠は北の辺境と中心地を分かち、その南の海岸は交易と海賊行為で賑わっている。サウロンの旗印のもとに統一されたハラドの多くの部族と王国は、深く根付いた伝統を戦争努力へと注ぎ込み、この活気ある土地を文化と紛争の拠点へと変えている。" />
+    <string id="TAOM_rohan" text="ローハン" />
+    <string id="TAOM_rohan_short" text="ローハン" />
+    <string id="TAOM_rohan_title" text="ローハン王国" />
+    <string id="TAOM_rohan_ruler" text="王" />
+    <string id="TAOM_rohan_desc" text="馬の国として知られるローハンは、開けた平原となだらかな丘陵が広がる広大な王国であり、そこには強力なローハンの騎士たち――熟練した騎馬民と獰猛な戦士たち――が住んでいる。伝説のゴンドール救援の騎行の後、若きエオルによって建国されたローハンは、長きにわたりゴンドールの忠実な同盟国として、モルドールの闇に対峙してきた。エドラスの黄金の館メドゥセルドから、その王たちは馬と騎手の絆によって生きる誇り高く不屈の民を統治している。ローハンの騎士たちは騎兵突撃、勇気の歌、そして揺るぎない勇敢さで名高い。サルマンの影が彼らの国境を脅かしているが、ローハンの息子と娘たちは常に武器を取る呼びかけに応える準備ができており、故郷と中つ国の自由の民を守り続けている。" />
+    <string id="TAOM_khand" text="カンド" />
+    <string id="TAOM_khand_short" text="カンド" />
+    <string id="TAOM_khand_title" text="カンドの風駆ける者たち" />
+    <string id="TAOM_khand_ruler" text="クドリアグ" />
+    <string id="TAOM_khand_desc" text="カンドは起伏のある草原と乾燥した平原が広がる荒々しい土地で、モルドールの南東に位置し、東と西を結ぶ重要な回廊として機能している。その民であるヴァリアグ族は獰猛で遊牧的であり、素早い馬と致命的な曲刀で知られている。過酷な環境で生きる彼らは略奪者と戦士としての技を磨き上げ、しばしば隣人と衝突し、最高額を提示する者のために傭兵として仕えてきた。カンドの忠誠は長らく冥王によって求められており、その戦士の多くはモルドールの影の下で戦いに赴いた。しかしヴァリアグ族は誇り高く独立心の強い民であり、風に吹かれる平原に点在する要塞化された野営地から統治する氏族と族長に第一の忠誠を誓っている。" />
+    <string id="TAOM_rhun" text="ルーン" />
+    <string id="TAOM_rhun_short" text="ルーン" />
+    <string id="TAOM_rhun_title" text="ルーンの黄金の王国" />
+    <string id="TAOM_rhun_ruler" text="ローケ=カン" />
+    <string id="TAOM_rhun_desc" text="ルーンの海の遥か彼方、枯れた草原と忘れ去られた帝国の赤い砂塵の向こうに、広大で謎に包まれた東方が広がる。ここに住む東夷は、ゴンドールの興隆よりも古い歴史を持つ誇り高き古の民である。彼らの土地は広い空の下に果てしなく広がり、内海の岸辺から既知の世界の果てを示す影の山々まで続いている。東夷は単一の国家ではなく、部族と王国の織りなす綴れ織りであり、力への崇拝と西方への長き恨みの記憶においてのみ団結している。ある者は力と復讐の約束に惹かれ、冥王に自ら進んで仕えた。別の者は抵抗し、古き道と更に古き神々にしがみついている。彼らの戦士は規律と戦車と弓の習熟で恐れられており、その黄金の鎧は東の太陽の下で炎のように輝く。" />
+    <string id="aom_dunland_male_name_1" text="ブロダー" />
+    <string id="aom_dunland_male_name_2" text="ダンリック" />
+    <string id="aom_dunland_male_name_3" text="エオガン" />
+    <string id="aom_dunland_male_name_4" text="グリムダル" />
+    <string id="aom_dunland_male_name_5" text="サルン" />
+    <string id="aom_dunland_male_name_6" text="カドック" />
+    <string id="aom_dunland_male_name_7" text="モードラン" />
+    <string id="aom_dunland_male_name_8" text="フィンリック" />
+    <string id="aom_dunland_male_name_9" text="カエドック" />
+    <string id="aom_dunland_male_name_10" text="トーラン" />
+    <string id="aom_dunland_male_name_11" text="ラグノール" />
+    <string id="aom_dunland_male_name_12" text="エルドリック" />
+    <string id="aom_dunland_male_name_13" text="ハルリック" />
+    <string id="aom_dunland_male_name_14" text="ウルリック" />
+    <string id="aom_dunland_male_name_15" text="ケルノック" />
+    <string id="aom_dunland_male_name_16" text="ブリノール" />
+    <string id="aom_dunland_male_name_17" text="ゴラン" />
+    <string id="aom_dunland_male_name_18" text="トードック" />
+    <string id="aom_dunland_male_name_19" text="フィンリック" />
+    <string id="aom_dunland_male_name_20" text="ハロック" />
+    <string id="aom_dunland_male_name_21" text="カエラン" />
+    <string id="aom_dunland_male_name_22" text="ウルダー" />
+    <string id="aom_dunland_male_name_23" text="ソラン" />
+    <string id="aom_dunland_male_name_24" text="グレルリック" />
+    <string id="aom_dunland_male_name_25" text="ブラドール" />
+    <string id="aom_dunland_male_name_26" text="モーラン" />
+    <string id="aom_dunland_male_name_27" text="アードリック" />
+    <string id="aom_dunland_male_name_28" text="カドロック" />
+    <string id="aom_dunland_male_name_29" text="グラルドール" />
+    <string id="aom_dunland_male_name_30" text="ファーノック" />
+    <string id="aom_dunland_male_name_31" text="ウルリック" />
+    <string id="aom_dunland_male_name_32" text="ブレンドック" />
+    <string id="aom_dunland_male_name_33" text="エアドリック" />
+    <string id="aom_dunland_male_name_34" text="スラルドール" />
+    <string id="aom_dunland_male_name_35" text="ウルガン" />
+    <string id="aom_dunland_male_name_36" text="ゴラン" />
+    <string id="aom_dunland_male_name_37" text="ラグナルド" />
+    <string id="aom_dunland_male_name_38" text="ダンモール" />
+    <string id="aom_dunland_male_name_39" text="ソールリク" />
+    <string id="aom_dunland_male_name_40" text="フィンワルド" />
+    <string id="aom_dunland_male_name_41" text="ブリルダン" />
+    <string id="aom_dunland_male_name_42" text="グランサール" />
+    <string id="aom_dunland_male_name_43" text="ハルモド" />
+    <string id="aom_dunland_male_name_44" text="スリダン" />
+    <string id="aom_dunland_male_name_45" text="エオルルンド" />
+    <string id="aom_dunland_male_name_46" text="ガレス" />
+    <string id="aom_dunland_male_name_47" text="ハーウィク" />
+    <string id="aom_dunland_male_name_48" text="ギルダン" />
+    <string id="aom_dunland_male_name_49" text="ウルフラム" />
+    <string id="aom_dunland_male_name_50" text="ソーラグ" />
+    <string id="aom_dunland_female_name_1" text="ブリンディス" />
+    <string id="aom_dunland_female_name_2" text="エイディス" />
+    <string id="aom_dunland_female_name_3" text="モルウィン" />
+    <string id="aom_dunland_female_name_4" text="グリスラ" />
+    <string id="aom_dunland_female_name_5" text="ハルダ" />
+    <string id="aom_dunland_female_name_6" text="シラ" />
+    <string id="aom_dunland_female_name_7" text="カエドウィン" />
+    <string id="aom_dunland_female_name_8" text="エルリン" />
+    <string id="aom_dunland_female_name_9" text="フィンウィン" />
+    <string id="aom_dunland_female_name_10" text="サルダ" />
+    <string id="aom_dunland_female_name_11" text="グレルウィン" />
+    <string id="aom_dunland_female_name_12" text="ハーウィン" />
+    <string id="aom_dunland_female_name_13" text="アルディス" />
+    <string id="aom_dunland_female_name_14" text="ウィンラ" />
+    <string id="aom_dunland_female_name_15" text="ブリテア" />
+    <string id="aom_dunland_female_name_16" text="エオッラ" />
+    <string id="aom_dunland_female_name_17" text="シルダ" />
+    <string id="aom_dunland_female_name_18" text="グランナ" />
+    <string id="aom_dunland_female_name_19" text="エルウィン" />
+    <string id="aom_dunland_female_name_20" text="モルラ" />
+    <string id="aom_dunland_female_name_21" text="ハーラ" />
+    <string id="aom_dunland_female_name_22" text="フィンラ" />
+    <string id="aom_dunland_female_name_23" text="グリッサ" />
+    <string id="aom_dunland_female_name_24" text="スリッサ" />
+    <string id="aom_dunland_female_name_25" text="ハルウィン" />
+    <string id="aom_dunland_female_name_26" text="カエリン" />
+    <string id="aom_dunland_female_name_27" text="グレルウィン" />
+    <string id="aom_dunland_female_name_28" text="サラ" />
+    <string id="aom_dunland_female_name_29" text="モッラ" />
+    <string id="aom_dunland_female_name_30" text="ブリナ" />
+    <string id="aom_dunland_female_name_31" text="シルダ" />
+    <string id="aom_dunland_female_name_32" text="エリス" />
+    <string id="aom_dunland_female_name_33" text="カエルウィン" />
+    <string id="aom_dunland_female_name_34" text="アルドラ" />
+    <string id="aom_dunland_female_name_35" text="ハッラ" />
+    <string id="aom_dunland_female_name_36" text="ウィンラ" />
+    <string id="aom_dunland_female_name_37" text="シルダ" />
+    <string id="aom_dunland_female_name_38" text="グレスラ" />
+    <string id="aom_dunland_female_name_39" text="フィンウィン" />
+    <string id="aom_dunland_female_name_40" text="エルラ" />
+    <string id="aom_dunland_female_name_41" text="モルウィン" />
+    <string id="aom_dunland_female_name_42" text="ハルダ" />
+    <string id="aom_dunland_female_name_43" text="カエドラ" />
+    <string id="aom_dunland_female_name_44" text="サンナ" />
+    <string id="aom_dunland_female_name_45" text="ブリンデル" />
+    <string id="aom_dunland_female_name_46" text="グリスウィン" />
+    <string id="aom_dunland_female_name_47" text="エイディス" />
+    <string id="aom_dunland_female_name_48" text="フィンラ" />
+    <string id="aom_dunland_female_name_49" text="ハルウィン" />
+    <string id="aom_dunland_female_name_50" text="ウィンナ" />
+    <string id="aom_dunland_clan_name_01" text="赤き狼団" />
+    <string id="aom_dunland_clan_name_02" text="鉄の牙団" />
+    <string id="aom_dunland_clan_name_03" text="石砕き団" />
+    <string id="aom_dunland_clan_name_04" text="影の狩人団" />
+    <string id="aom_dunland_clan_name_05" text="丘陵略奪団" />
+    <string id="aom_dunland_clan_name_06" text="野生の刃団" />
+    <string id="aom_dunland_clan_name_07" text="嵐喚び団" />
+    <string id="aom_dunland_clan_name_08" text="血の鴉団" />
+    <string id="aom_dunland_clan_name_09" text="骨の槍団" />
+    <string id="aom_dunland_clan_name_10" text="地揺らし団" />
+    <string id="aom_dunland_clan_name_11" text="棘の盾団" />
+    <string id="aom_dunland_clan_name_12" text="影狼団" />
+    <string id="aom_dunland_clan_name_13" text="折れ斧団" />
+    <string id="aom_dunland_clan_name_14" text="鴉の眼族" />
+    <string id="aom_dunland_clan_name_15" text="霜遠吠え族" />
+    <string id="aom_dunland_clan_name_16" text="鉄縛族" />
+    <string id="aom_dunland_clan_name_17" text="石の拳族" />
+    <string id="aom_dunland_clan_name_18" text="吼える疾風族" />
+    <string id="aom_dunland_clan_name_19" text="山陰族" />
+    <string id="aom_harad_male_name_1" text="アザラン" />
+    <string id="aom_harad_male_name_2" text="ザミール" />
+    <string id="aom_harad_male_name_3" text="カリード" />
+    <string id="aom_harad_male_name_4" text="ラシード" />
+    <string id="aom_harad_male_name_5" text="ナジール" />
+    <string id="aom_harad_male_name_6" text="ジャミール" />
+    <string id="aom_harad_male_name_7" text="ハシム" />
+    <string id="aom_harad_male_name_8" text="ファラージ" />
+    <string id="aom_harad_male_name_9" text="サヒム" />
+    <string id="aom_harad_male_name_10" text="タリーク" />
+    <string id="aom_harad_male_name_11" text="バシム" />
+    <string id="aom_harad_male_name_12" text="カリーム" />
+    <string id="aom_harad_male_name_13" text="サリーム" />
+    <string id="aom_harad_male_name_14" text="ラヤン" />
+    <string id="aom_harad_male_name_15" text="ザファル" />
+    <string id="aom_harad_male_name_16" text="ヤシル" />
+    <string id="aom_harad_male_name_17" text="ハキーム" />
+    <string id="aom_harad_male_name_18" text="イブラヒム" />
+    <string id="aom_harad_male_name_19" text="ファイサル" />
+    <string id="aom_harad_male_name_20" text="ナジーブ" />
+    <string id="aom_harad_male_name_21" text="ムニール" />
+    <string id="aom_harad_male_name_22" text="アシュラフ" />
+    <string id="aom_harad_male_name_23" text="ザクワン" />
+    <string id="aom_harad_male_name_24" text="アジーム" />
+    <string id="aom_harad_male_name_25" text="スライマーン" />
+    <string id="aom_harad_male_name_26" text="ハキム" />
+    <string id="aom_harad_male_name_27" text="ジブリール" />
+    <string id="aom_harad_male_name_28" text="ターヒル" />
+    <string id="aom_harad_male_name_29" text="ラフィーク" />
+    <string id="aom_harad_male_name_30" text="マリク" />
+    <string id="aom_harad_male_name_31" text="ザーヒル" />
+    <string id="aom_harad_male_name_32" text="アシム" />
+    <string id="aom_harad_male_name_33" text="ナビール" />
+    <string id="aom_harad_male_name_34" text="オマル" />
+    <string id="aom_harad_male_name_35" text="カシム" />
+    <string id="aom_harad_male_name_36" text="ハリム" />
+    <string id="aom_harad_male_name_37" text="マンスール" />
+    <string id="aom_harad_male_name_38" text="ヤヒヤ" />
+    <string id="aom_harad_male_name_39" text="シャキール" />
+    <string id="aom_harad_male_name_40" text="アディル" />
+    <string id="aom_harad_male_name_41" text="マフディ" />
+    <string id="aom_harad_male_name_42" text="ファヒム" />
+    <string id="aom_harad_male_name_43" text="ラティフ" />
+    <string id="aom_harad_male_name_44" text="ラミーズ" />
+    <string id="aom_harad_male_name_45" text="タミーム" />
+    <string id="aom_harad_male_name_46" text="ヤズィード" />
+    <string id="aom_harad_male_name_47" text="カマル" />
+    <string id="aom_harad_male_name_48" text="ハッサン" />
+    <string id="aom_harad_male_name_49" text="アジーム" />
+    <string id="aom_harad_male_name_50" text="ズバイド" />
+    <string id="aom_harad_female_name_1" text="ザヒラ" />
+    <string id="aom_harad_female_name_2" text="ナディア" />
+    <string id="aom_harad_female_name_3" text="ヤスミン" />
+    <string id="aom_harad_female_name_4" text="アミラ" />
+    <string id="aom_harad_female_name_5" text="レイラ" />
+    <string id="aom_harad_female_name_6" text="ラニア" />
+    <string id="aom_harad_female_name_7" text="ジャミラ" />
+    <string id="aom_harad_female_name_8" text="ハフサ" />
+    <string id="aom_harad_female_name_9" text="ズライカ" />
+    <string id="aom_harad_female_name_10" text="アミナ" />
+    <string id="aom_harad_female_name_11" text="サリマ" />
+    <string id="aom_harad_female_name_12" text="ラミア" />
+    <string id="aom_harad_female_name_13" text="サミラ" />
+    <string id="aom_harad_female_name_14" text="ナジーラ" />
+    <string id="aom_harad_female_name_15" text="ルカイヤ" />
+    <string id="aom_harad_female_name_16" text="ハリマ" />
+    <string id="aom_harad_female_name_17" text="アジザ" />
+    <string id="aom_harad_female_name_18" text="ハディージャ" />
+    <string id="aom_harad_female_name_19" text="ファドワ" />
+    <string id="aom_harad_female_name_20" text="サフィヤ" />
+    <string id="aom_harad_female_name_21" text="アーリア" />
+    <string id="aom_harad_female_name_22" text="ナワル" />
+    <string id="aom_harad_female_name_23" text="ブシュラ" />
+    <string id="aom_harad_female_name_24" text="ザフラ" />
+    <string id="aom_harad_female_name_25" text="リハナ" />
+    <string id="aom_harad_female_name_26" text="スマヤ" />
+    <string id="aom_harad_female_name_27" text="ナイマ" />
+    <string id="aom_harad_female_name_28" text="ラシダ" />
+    <string id="aom_harad_female_name_29" text="ザイナブ" />
+    <string id="aom_harad_female_name_30" text="シャイマ" />
+    <string id="aom_harad_female_name_31" text="ムニラ" />
+    <string id="aom_harad_female_name_32" text="ファティマ" />
+    <string id="aom_harad_female_name_33" text="シリン" />
+    <string id="aom_harad_female_name_34" text="サニヤ" />
+    <string id="aom_harad_female_name_35" text="マリカ" />
+    <string id="aom_harad_female_name_36" text="アフィヤ" />
+    <string id="aom_harad_female_name_37" text="ザイン" />
+    <string id="aom_harad_female_name_38" text="ファリダ" />
+    <string id="aom_harad_female_name_39" text="アマニ" />
+    <string id="aom_harad_female_name_40" text="ナジラ" />
+    <string id="aom_harad_female_name_41" text="フダ" />
+    <string id="aom_harad_female_name_42" text="ラフマ" />
+    <string id="aom_harad_female_name_43" text="ヤミラ" />
+    <string id="aom_harad_female_name_44" text="シャマ" />
+    <string id="aom_harad_female_name_45" text="タミナ" />
+    <string id="aom_harad_female_name_46" text="ズバイダ" />
+    <string id="aom_harad_female_name_47" text="ラビヤ" />
+    <string id="aom_harad_female_name_48" text="アスマ" />
+    <string id="aom_harad_female_name_49" text="ラティファ" />
+    <string id="aom_harad_female_name_50" text="サイダ" />
+    <string id="aom_harad_clan_name_01" text="灼熱の砂" />
+    <string id="aom_harad_clan_name_02" text="黄金の刃" />
+    <string id="aom_harad_clan_name_03" text="砂漠の太陽" />
+    <string id="aom_harad_clan_name_04" text="赤き槍" />
+    <string id="aom_harad_clan_name_05" text="砂丘の騎手" />
+    <string id="aom_harad_clan_name_06" text="焦熱の風" />
+    <string id="aom_harad_clan_name_07" text="砂嵐の戦士" />
+    <string id="aom_harad_clan_name_08" text="蛇の牙" />
+    <string id="aom_harad_clan_name_09" text="黒き蠍" />
+    <string id="aom_harad_clan_name_10" text="ムマキルの守護者" />
+    <string id="aom_harad_clan_name_11" text="オアシスの守護者" />
+    <string id="aom_harad_clan_name_12" text="炎の烙印" />
+    <string id="aom_harad_clan_name_13" text="深紅の盾" />
+    <string id="aom_harad_clan_name_14" text="黄金の三日月" />
+    <string id="aom_harad_clan_name_15" text="静寂の影" />
+    <string id="aom_harad_clan_name_16" text="陽撃ち" />
+    <string id="aom_harad_clan_name_17" text="砂丘の守護者" />
+    <string id="aom_harad_clan_name_18" text="蛇乗り" />
+    <string id="aom_harad_clan_name_19" text="燃え立つ蹄" />
+    <string id="aom_harad_clan_name_20" text="黄昏の砂" />
+    <string id="aom_rohan_male_name_1" text="エアドレド" />
+    <string id="aom_rohan_male_name_2" text="エオムンド" />
+    <string id="aom_rohan_male_name_3" text="ケオル" />
+    <string id="aom_rohan_male_name_4" text="アゼルリック" />
+    <string id="aom_rohan_male_name_5" text="ベオルフセルム" />
+    <string id="aom_rohan_male_name_6" text="エアルドウルフ" />
+    <string id="aom_rohan_male_name_7" text="ウルフガル" />
+    <string id="aom_rohan_male_name_8" text="セオドリック" />
+    <string id="aom_rohan_male_name_9" text="エアルリック" />
+    <string id="aom_rohan_male_name_10" text="ブリフトウルフ" />
+    <string id="aom_rohan_male_name_11" text="セオドウィネ" />
+    <string id="aom_rohan_male_name_12" text="キンリック" />
+    <string id="aom_rohan_male_name_13" text="エオルメンリック" />
+    <string id="aom_rohan_male_name_14" text="エアドヘルム" />
+    <string id="aom_rohan_male_name_15" text="アルドウルフ" />
+    <string id="aom_rohan_male_name_16" text="フリスガル" />
+    <string id="aom_rohan_male_name_17" text="オスウィネ" />
+    <string id="aom_rohan_male_name_18" text="レオフウィネ" />
+    <string id="aom_rohan_male_name_19" text="セオバルド" />
+    <string id="aom_rohan_male_name_20" text="ウィンフリス" />
+    <string id="aom_rohan_male_name_21" text="ヘレワルド" />
+    <string id="aom_rohan_male_name_22" text="エオセイン" />
+    <string id="aom_rohan_male_name_23" text="グスリック" />
+    <string id="aom_rohan_male_name_24" text="セオウルフ" />
+    <string id="aom_rohan_male_name_25" text="フラムリック" />
+    <string id="aom_rohan_male_name_26" text="エアドガル" />
+    <string id="aom_rohan_male_name_27" text="ヘレモド" />
+    <string id="aom_rohan_male_name_28" text="ベオルンヘルム" />
+    <string id="aom_rohan_male_name_29" text="シゲフレド" />
+    <string id="aom_rohan_male_name_30" text="セオデンリック" />
+    <string id="aom_rohan_male_name_31" text="エアルウルフ" />
+    <string id="aom_rohan_male_name_32" text="ガルムンド" />
+    <string id="aom_rohan_male_name_33" text="フロスガル" />
+    <string id="aom_rohan_male_name_34" text="エオワルド" />
+    <string id="aom_rohan_male_name_35" text="ケオウルフ" />
+    <string id="aom_rohan_male_name_36" text="ファラムンド" />
+    <string id="aom_rohan_male_name_37" text="アゼルヘルム" />
+    <string id="aom_rohan_male_name_38" text="エオフォル" />
+    <string id="aom_rohan_male_name_39" text="ウィンスタン" />
+    <string id="aom_rohan_male_name_40" text="ヘレウィネ" />
+    <string id="aom_rohan_male_name_41" text="グスウィネ" />
+    <string id="aom_rohan_male_name_42" text="キュンウィネ" />
+    <string id="aom_rohan_male_name_43" text="アエルフリク" />
+    <string id="aom_rohan_male_name_44" text="ウルフスタン" />
+    <string id="aom_rohan_male_name_45" text="ベオルフトウィネ" />
+    <string id="aom_rohan_male_name_46" text="セオムンド" />
+    <string id="aom_rohan_male_name_47" text="ケオウィネ" />
+    <string id="aom_rohan_male_name_48" text="セオドヘルム" />
+    <string id="aom_rohan_male_name_49" text="レオフヘルム" />
+    <string id="aom_rohan_male_name_50" text="アエルフウィネ" />
+    <string id="aom_rohan_male_name_51" text="ウルフノス" />
+    <string id="aom_rohan_male_name_52" text="セルワード" />
+    <string id="aom_rohan_male_name_53" text="セルメ" />
+    <string id="aom_rohan_male_name_54" text="エオルムレド" />
+    <string id="aom_rohan_male_name_55" text="アエルウィン" />
+    <string id="aom_rohan_male_name_56" text="イルフガル" />
+    <string id="aom_rohan_male_name_57" text="アルフガル" />
+    <string id="aom_rohan_male_name_58" text="ウルファル" />
+    <string id="aom_rohan_male_name_59" text="レオファル" />
+    <string id="aom_rohan_male_name_60" text="レオフリク" />
+    <string id="aom_rohan_female_name_1" text="エアドギフ" />
+    <string id="aom_rohan_female_name_2" text="セオドウィン" />
+    <string id="aom_rohan_female_name_3" text="アゼルヒルド" />
+    <string id="aom_rohan_female_name_4" text="キュネスリス" />
+    <string id="aom_rohan_female_name_5" text="ベオルスヒルド" />
+    <string id="aom_rohan_female_name_6" text="フリスウィン" />
+    <string id="aom_rohan_female_name_7" text="ウィンフリス" />
+    <string id="aom_rohan_female_name_8" text="エオルメンヒルド" />
+    <string id="aom_rohan_female_name_9" text="ヒルディス" />
+    <string id="aom_rohan_female_name_10" text="エオウィンネ" />
+    <string id="aom_rohan_female_name_11" text="レオフウィン" />
+    <string id="aom_rohan_female_name_12" text="エアルヒルド" />
+    <string id="aom_rohan_female_name_13" text="セオウィン" />
+    <string id="aom_rohan_female_name_14" text="ウィンフリーダ" />
+    <string id="aom_rohan_female_name_15" text="アルドギフ" />
+    <string id="aom_rohan_female_name_16" text="ヘレリンド" />
+    <string id="aom_rohan_female_name_17" text="ブリュンヒルド" />
+    <string id="aom_rohan_female_name_18" text="シゲウィン" />
+    <string id="aom_rohan_female_name_19" text="エアドウィン" />
+    <string id="aom_rohan_female_name_20" text="キュンウィン" />
+    <string id="aom_rohan_female_name_21" text="ヒルドレッド" />
+    <string id="aom_rohan_female_name_22" text="エセルウィン" />
+    <string id="aom_rohan_female_name_23" text="ケオルウィン" />
+    <string id="aom_rohan_female_name_24" text="フリスリンド" />
+    <string id="aom_rohan_female_name_25" text="セオディス" />
+    <string id="aom_rohan_female_name_26" text="エセルフリーダ" />
+    <string id="aom_rohan_female_name_27" text="ベオルヒルド" />
+    <string id="aom_rohan_female_name_28" text="エオルムヒルド" />
+    <string id="aom_rohan_female_name_29" text="レオフヒルド" />
+    <string id="aom_rohan_female_name_30" text="アルドウィン" />
+    <string id="aom_rohan_female_name_31" text="ウィンヒルド" />
+    <string id="aom_rohan_female_name_32" text="ヒルドウィン" />
+    <string id="aom_rohan_female_name_33" text="エアドフリーダ" />
+    <string id="aom_rohan_female_name_34" text="セオドリン" />
+    <string id="aom_rohan_female_name_35" text="キュンフリス" />
+    <string id="aom_rohan_female_name_36" text="グスウィン" />
+    <string id="aom_rohan_female_name_37" text="ヒルドウィンネ" />
+    <string id="aom_rohan_female_name_38" text="エアルフリーダ" />
+    <string id="aom_rohan_female_name_39" text="シギス" />
+    <string id="aom_rohan_female_name_40" text="ウィンフリシア" />
+    <string id="aom_rohan_female_name_41" text="エアドギサ" />
+    <string id="aom_rohan_female_name_42" text="エセルレーダ" />
+    <string id="aom_rohan_female_name_43" text="ベオルスウィン" />
+    <string id="aom_rohan_female_name_44" text="フリスギフ" />
+    <string id="aom_rohan_female_name_45" text="セオドフリス" />
+    <string id="aom_rohan_female_name_46" text="ウィンヒルダ" />
+    <string id="aom_rohan_female_name_47" text="エアルフリス" />
+    <string id="aom_rohan_female_name_48" text="キュネシルド" />
+    <string id="aom_rohan_female_name_49" text="エアルウィン" />
+    <string id="aom_rohan_female_name_50" text="エアドウィンネ" />
+    <string id="aom_rohan_clan_name_01" text="ハロルディング" />
+    <string id="aom_rohan_clan_name_02" text="エアルフェニング" />
+    <string id="aom_rohan_clan_name_03" text="アルドリンガス" />
+    <string id="aom_rohan_clan_name_04" text="ハマインガス" />
+    <string id="aom_rohan_clan_name_05" text="アルングリミング" />
+    <string id="aom_rohan_clan_name_06" text="スウェオルドボラ" />
+    <string id="aom_rohan_clan_name_07" text="ウンデミング" />
+    <string id="aom_rohan_clan_name_08" text="マロヴァンディング" />
+    <string id="aom_rohan_clan_name_09" text="カルムンダス" />
+    <string id="aom_rohan_clan_name_10" text="エアルミンディング" />
+    <string id="aom_rhun_male_name_1" text="カルルド" />
+    <string id="aom_rhun_male_name_2" text="トルガシュ" />
+    <string id="aom_rhun_male_name_3" text="ヴァスキル" />
+    <string id="aom_rhun_male_name_4" text="ラジール" />
+    <string id="aom_rhun_male_name_5" text="ナズルク" />
+    <string id="aom_rhun_male_name_6" text="サルン" />
+    <string id="aom_rhun_male_name_7" text="ダグリム" />
+    <string id="aom_rhun_male_name_8" text="ザルナシュ" />
+    <string id="aom_rhun_male_name_9" text="ヴァルレク" />
+    <string id="aom_rhun_male_name_10" text="ファズリク" />
+    <string id="aom_rhun_male_name_11" text="オルズン" />
+    <string id="aom_rhun_male_name_12" text="クルガル" />
+    <string id="aom_rhun_male_name_13" text="ドゥルザグ" />
+    <string id="aom_rhun_male_name_14" text="マロク" />
+    <string id="aom_rhun_male_name_15" text="ザグリム" />
+    <string id="aom_rhun_male_name_16" text="ナラシュ" />
+    <string id="aom_rhun_male_name_17" text="タリク" />
+    <string id="aom_rhun_male_name_18" text="ヴァズリク" />
+    <string id="aom_rhun_male_name_19" text="ウズラド" />
+    <string id="aom_rhun_male_name_20" text="ゾーラム" />
+    <string id="aom_rhun_male_name_21" text="ラシャド" />
+    <string id="aom_rhun_male_name_22" text="バルカン" />
+    <string id="aom_rhun_male_name_23" text="サルグル" />
+    <string id="aom_rhun_male_name_24" text="スルガン" />
+    <string id="aom_rhun_male_name_25" text="ヴァリム" />
+    <string id="aom_rhun_male_name_26" text="マズリク" />
+    <string id="aom_rhun_male_name_27" text="カルザル" />
+    <string id="aom_rhun_male_name_28" text="ナショル" />
+    <string id="aom_rhun_male_name_29" text="グラシュ" />
+    <string id="aom_rhun_male_name_30" text="ドゥルザグ" />
+    <string id="aom_rhun_male_name_31" text="ザルカル" />
+    <string id="aom_rhun_male_name_32" text="トラク" />
+    <string id="aom_rhun_male_name_33" text="ファルヌル" />
+    <string id="aom_rhun_male_name_34" text="マルズク" />
+    <string id="aom_rhun_male_name_35" text="ザルン" />
+    <string id="aom_rhun_male_name_36" text="ナルク" />
+    <string id="aom_rhun_male_name_37" text="サルガン" />
+    <string id="aom_rhun_male_name_38" text="サーミク" />
+    <string id="aom_rhun_male_name_39" text="ダズリク" />
+    <string id="aom_rhun_male_name_40" text="カルヌル" />
+    <string id="aom_rhun_male_name_41" text="ヴァシュキル" />
+    <string id="aom_rhun_male_name_42" text="ローダン" />
+    <string id="aom_rhun_male_name_43" text="タズルク" />
+    <string id="aom_rhun_male_name_44" text="ゴラシュ" />
+    <string id="aom_rhun_male_name_45" text="ナズリン" />
+    <string id="aom_rhun_male_name_46" text="サルカル" />
+    <string id="aom_rhun_male_name_47" text="マザド" />
+    <string id="aom_rhun_male_name_48" text="オルズリク" />
+    <string id="aom_rhun_male_name_49" text="ザルナク" />
+    <string id="aom_rhun_male_name_50" text="ファルズク" />
+    <string id="aom_rhun_female_name_1" text="ラジラ" />
+    <string id="aom_rhun_female_name_2" text="タズミナ" />
+    <string id="aom_rhun_female_name_3" text="ヴァジラ" />
+    <string id="aom_rhun_female_name_4" text="マズリカ" />
+    <string id="aom_rhun_female_name_5" text="ザリナ" />
+    <string id="aom_rhun_female_name_6" text="カリラ" />
+    <string id="aom_rhun_female_name_7" text="オルジラ" />
+    <string id="aom_rhun_female_name_8" text="ドゥルザンナ" />
+    <string id="aom_rhun_female_name_9" text="ナリマ" />
+    <string id="aom_rhun_female_name_10" text="サリラ" />
+    <string id="aom_rhun_female_name_11" text="ヴァリラ" />
+    <string id="aom_rhun_female_name_12" text="ダジラ" />
+    <string id="aom_rhun_female_name_13" text="ラミラ" />
+    <string id="aom_rhun_female_name_14" text="ファジラ" />
+    <string id="aom_rhun_female_name_15" text="ウズリラ" />
+    <string id="aom_rhun_female_name_16" text="ザリナ" />
+    <string id="aom_rhun_female_name_17" text="クリサ" />
+    <string id="aom_rhun_female_name_18" text="バルキラ" />
+    <string id="aom_rhun_female_name_19" text="ナリザ" />
+    <string id="aom_rhun_female_name_20" text="サルニラ" />
+    <string id="aom_rhun_female_name_21" text="ラシラ" />
+    <string id="aom_rhun_female_name_22" text="マザラ" />
+    <string id="aom_rhun_female_name_23" text="ヴァルシラ" />
+    <string id="aom_rhun_female_name_24" text="ザルニラ" />
+    <string id="aom_rhun_female_name_25" text="サルキラ" />
+    <string id="aom_rhun_female_name_26" text="ファルニザ" />
+    <string id="aom_rhun_female_name_27" text="ゴリザ" />
+    <string id="aom_rhun_female_name_28" text="ナジラ" />
+    <string id="aom_rhun_female_name_29" text="カルニラ" />
+    <string id="aom_rhun_female_name_30" text="トリラ" />
+    <string id="aom_rhun_female_name_31" text="ドゥリナ" />
+    <string id="aom_rhun_female_name_32" text="ヴァシラ" />
+    <string id="aom_rhun_female_name_33" text="ナリザ" />
+    <string id="aom_rhun_female_name_34" text="ファズリム" />
+    <string id="aom_rhun_female_name_35" text="マジーラ" />
+    <string id="aom_rhun_female_name_36" text="カリア" />
+    <string id="aom_rhun_female_name_37" text="サルニザ" />
+    <string id="aom_rhun_female_name_38" text="オルリナ" />
+    <string id="aom_rhun_female_name_39" text="ルハナ" />
+    <string id="aom_rhun_female_name_40" text="サルニザ" />
+    <string id="aom_rhun_female_name_41" text="ザリラ" />
+    <string id="aom_rhun_female_name_42" text="ラジナ" />
+    <string id="aom_rhun_female_name_43" text="ドゥルシラ" />
+    <string id="aom_rhun_female_name_44" text="バルキラ" />
+    <string id="aom_rhun_female_name_45" text="サリザ" />
+    <string id="aom_rhun_female_name_46" text="マジナ" />
+    <string id="aom_rhun_female_name_47" text="ナリリア" />
+    <string id="aom_rhun_female_name_48" text="ファルニナ" />
+    <string id="aom_rhun_female_name_49" text="ザリマ" />
+    <string id="aom_rhun_female_name_50" text="オルジナ" />
+    <string id="aom_rhun_clan_name_01" text="鉄の槍" />
+    <string id="aom_rhun_clan_name_02" text="黄金の三日月刀" />
+    <string id="aom_rhun_clan_name_03" text="紅の旗印" />
+    <string id="aom_rhun_clan_name_04" text="燃える刃" />
+    <string id="aom_rhun_clan_name_05" text="ルーンの血族" />
+    <string id="aom_rhun_clan_name_06" text="紅の戦士" />
+    <string id="aom_rhun_clan_name_07" text="黒の盾" />
+    <string id="aom_rhun_clan_name_08" text="嵐を呼ぶ者" />
+    <string id="aom_rhun_clan_name_09" text="緋色の守護者" />
+    <string id="aom_rhun_clan_name_10" text="黄金の大群" />
+    <string id="aom_empire_name" text="ドゥンランド人" />
+    <string id="aom_empire_desc" text="ドゥンランド人は、ローハンの西方、荒々しい丘陵地帯と未開の大地に住む、頑強で獰猛な民である。祖先の土地を侵略したと見なすローハン人に対し、長年の恨みを抱いており、共通の遺産と激しい独立心によって結ばれている。ゲリラ戦と生存術に長けており、狡猾さと獰猛さで敵を圧倒する。しばしば単なる丘陵の民として軽視されるが、ドゥンランド人は誇り高く不屈の民であり、自らの土地と生活様式を激しく守り抜く。ローハンに対する深い恨みに駆られ、闇の勢力と同盟を結び、復讐と失われた土地の回復を目指している。" />
+    <string id="aom_aserai_name" text="ハラドリム" />
+    <string id="aom_aserai_desc" text="ハラドリムは、遠い南方の砂漠とサバンナから来た誇り高く獰猛な民である。ムマキルのような異国の獣を操る技術で名高く、その戦士たちは戦場で技術、回復力、致命的な精確さを兼ね備えている。ハラドは極端な土地であり、灼熱の太陽、黄金の砂、そして鮮やかなオアシスがある。その民は古代の伝統、部族への忠誠、そして首長と王たちの呼びかけによって結ばれている。しばしば闇の勢力と同盟を結び、ハラドリムはゴンドールへの復讐と、サウロンが約束する力と支配によって駆り立てられている。" />
+    <string id="aom_vlandia_name" text="ローハンの騎士" />
+    <string id="aom_vlandia_desc" text="ローハンの騎士、またはローハンの馬の王たちは、比類なき騎兵隊と馬との深い絆で名高い。誇り高く自由な精神を持つ彼らは、リッダーマークの広がる平原に住み、エドラスのような村や要塞で暮らしている。王に導かれ、民に忠実なローハンの騎士たちは、名誉、忠誠、勇気を重んじる。彼らの戦士たちは恐れることなく戦場へ駆け、中つ国の闇に対する抵抗の中核を成している。伝統に忠実でありながら、ローハンの騎士たちは常に自らの土地と同盟者を守る準備ができており、槍、剣、盾を正確に操る。" />
+    <string id="aom_khuzait_name" text="東夷" />
+    <string id="aom_khuzait_desc" text="東夷は、遥か彼方のルーンの地から来た多様で恐るべき民である。サウロンへの忠誠で知られる彼らは、精密さと規律をもって戦争へと進軍し、湾曲した刃、槍、そして戦場に響き渡る巨大な戦太鼓を振るう。彼らの黄金の鎧と深紅の旗印は、その激しい誇りと武芸の腕前を映し出している。氏族と部族に分かれた東夷は、強力な族長のもとに団結し、中つ国の自由の民に対してルーンの力をもたらす。" />
+    <string id="TAOM_sturgia_culture" text="バルド人" />
+    <string id="TAOM_sturgia_desc" text="弓の名手バルドにちなんで名付けられたデイルのバルド人は、スマウグの影から故郷を取り戻した後、台頭した誇り高く勤勉な民である。はなれ山と長い湖の間に位置するデイルは、交易と文化の中心地として栄えている。回復力と職人技で知られるバルド人は、武器と鎧の鍛造に優れ、エレボールのドワーフたちにも匹敵する。規律ある弓兵、頑強な剣士、機敏な散兵で構成される彼らの軍隊は、激しい決意をもって自らの土地を守る。高貴な指導者のもとに団結したバルド人は、常に警戒を怠らず、迫りくる闇に対して警備し、豊かな遺産を守り続けている。" />
+    <string id="TAOM_battania_culture" text="ヴァリアグ" />
+    <string id="TAOM_battania_desc" text="カンドのヴァリアグは、モルドールの東にある乾燥した険しい土地から来た獰猛で好戦的な民である。傭兵としての腕前とサウロンへの忠誠で知られるヴァリアグは、比類なき獰猛さで戦う。彼らは素早い軍馬に乗って戦場に赴き、湾曲した刃と長槍を致命的な正確さで振るう。複雑な装飾が施された青銅と深紅の鎧は、彼らの誇り高く武芸的な遺産を反映している。部族と氏族に分かれたヴァリアグは、強力な戦長のもとに団結し、冥王の敵に恐怖と混沌をもたらす。" />
+    <string id="TAOM_clan_empire_north_1" text="狼の一族" />
+    <string id="TAOM_clan_empire_north_2" text="猪の一族" />
+    <string id="TAOM_clan_empire_north_3" text="牛の一族" />
+    <string id="TAOM_clan_empire_north_4" text="熊の一族" />
+    <string id="TAOM_clan_empire_north_5" text="大鴉の一族" />
+    <string id="TAOM_clan_empire_north_6" text="鷹の一族" />
+    <string id="TAOM_clan_empire_north_7" text="竜の一族" />
+    <string id="TAOM_clan_empire_north_8" text="鹿の一族" />
+    <string id="TAOM_clan_empire_north_9" text="アヴァンクの一族" />
+    <string id="TAOM_clan_empire_west_1" text="フーリニオナス家" />
+    <string id="TAOM_clan_empire_west_2" text="イムラゾールイオナス家" />
+    <string id="TAOM_clan_empire_west_3" text="エアルヌリオナス家" />
+    <string id="TAOM_clan_empire_west_4" text="バラヒリオナス家" />
+    <string id="TAOM_clan_empire_west_5" text="アウシリオナス家" />
+    <string id="TAOM_clan_empire_west_6" text="ハルボロニオナス家" />
+    <string id="TAOM_clan_empire_west_7" text="マランディリオナス家" />
+    <string id="TAOM_clan_empire_west_8" text="オリンドゥリオナス家" />
+    <string id="TAOM_clan_empire_west_9" text="ダヌヒリオナス家" />
+    <string id="TAOM_clan_empire_south_1" text="ドールグベース" />
+    <string id="TAOM_clan_empire_south_2" text="ゴエアルネディアド" />
+    <string id="TAOM_clan_empire_south_3" text="メルコンディリ" />
+    <string id="TAOM_clan_empire_south_4" text="モールグカル" />
+    <string id="TAOM_clan_empire_south_5" text="ボルグルーキグ" />
+    <string id="TAOM_clan_empire_south_6" text="カーム・ラグールズ" />
+    <string id="TAOM_clan_empire_south_7" text="ブラグズーキシュ" />
+    <string id="TAOM_clan_empire_south_8" text="コーラヒーム" />
+    <string id="TAOM_clan_empire_south_9" text="ワーヴリム" />
+    <string id="TAOM_clan_sturgia_1" text="ギリオン家" />
+    <string id="TAOM_clan_sturgia_2" text="バルド家" />
+    <string id="TAOM_clan_sturgia_3" text="ブランド家" />
+    <string id="TAOM_clan_sturgia_4" text="ベイン家" />
+    <string id="TAOM_clan_sturgia_5" text="エスガロス家" />
+    <string id="TAOM_clan_sturgia_6" text="河の一族" />
+    <string id="TAOM_clan_sturgia_7" text="射手の一族" />
+    <string id="TAOM_clan_sturgia_8" text="長い湖の一族" />
+    <string id="TAOM_clan_sturgia_9" text="竜殺しの一族" />
+    <string id="TAOM_clan_aserai_1" text="アイェリッカ" />
+    <string id="TAOM_clan_aserai_2" text="カドノマーア" />
+    <string id="TAOM_clan_aserai_3" text="カマラカ" />
+    <string id="TAOM_clan_aserai_4" text="カルマキリオニ" />
+    <string id="TAOM_clan_aserai_5" text="タクフィミン" />
+    <string id="TAOM_clan_aserai_6" text="メドヤノマ" />
+    <string id="TAOM_clan_aserai_7" text="ジヤロッカ" />
+    <string id="TAOM_clan_aserai_8" text="アワザリカ" />
+    <string id="TAOM_clan_aserai_9" text="イケンダカ" />
+    <string id="TAOM_clan_vlandia_1" text="エオルリング家" />
+    <string id="TAOM_clan_vlandia_2" text="ケルディシング家" />
+    <string id="TAOM_clan_vlandia_3" text="グリミンガス家" />
+    <string id="TAOM_clan_vlandia_4" text="フェランディング家" />
+    <string id="TAOM_clan_vlandia_5" text="オスキュテリング家" />
+    <string id="TAOM_clan_vlandia_6" text="オードレイシング家" />
+    <string id="TAOM_clan_vlandia_7" text="エゼルラフィング家" />
+    <string id="TAOM_clan_vlandia_8" text="グリンモーディング家" />
+    <string id="TAOM_clan_vlandia_9" text="ドゥーニング家" />
+    <string id="TAOM_clan_vlandia_10" text="エオフォリング家" />
+    <string id="TAOM_clan_vlandia_11" text="トルダギング家" />
+    <string id="TAOM_clan_battania_1" text="ヴァンガリス" />
+    <string id="TAOM_clan_battania_2" text="アラズ" />
+    <string id="TAOM_clan_battania_3" text="トラバイ" />
+    <string id="TAOM_clan_battania_4" text="コルヴァシュ" />
+    <string id="TAOM_clan_battania_5" text="クルダン" />
+    <string id="TAOM_clan_battania_6" text="ウルダシュ" />
+    <string id="TAOM_clan_battania_7" text="カルハタイ" />
+    <string id="TAOM_clan_battania_8" text="ヴァリヤシュ" />
+    <string id="TAOM_ghilman_name" text="蛇の守護隊" />
+    <string id="TAOM_ghilman_short" text="蛇の守護隊" />
+    <string id="TAOM_ghilman_text" text="蛇の守護隊は、近ハラドの蛇の王に仕える騎馬兵である。エフェル・ドゥアスの南に広がる草原で鞍の上で育った彼らは、中つ国の南方全域において騎馬弓兵として比類なき存在である。ハラドとモルドールの間に平和が訪れる時代には、守護隊はハラドリムの領主や、その黄金の報酬を支払える余裕のある他の勢力にその技を売る。" />
+    <string id="TAOM_legion_name" text="灰色の一党" />
+    <string id="TAOM_legion_short" text="灰色の一党" />
+    <string id="TAOM_legion_text" text="灰色の一党は、遥か昔に王国を失ったアルノールの王たちの末裔である、ドゥーネダインの野伏の最後の組織された同胞団である。彼らは自らの家を持たず北方を駆け巡り、その名を忘れられた土地に平和をもたらす。エレンディルの血統への忠誠が第一であるが、放浪の途中で文明の地を通る際には、中つ国の諸侯から契約を受ける。" />
+    <string id="TAOM_skolderbrotva_name" text="エレボールの斧兵" />
+    <string id="TAOM_skolderbrotva_short" text="斧兵" />
+    <string id="TAOM_skolderbrotva_text" text="エレボールの斧兵は、トーリン王の戦いを生き抜いた歴戦の兵士たちで、平時の生活が性に合わなかった者たちである。ドワーフの館での近接戦闘――盾の壁、短斧、つるはし――で訓練された彼らは、いかなる地形でも強力だが、エレボールと人間の王国を結ぶ山道では特に優れている。報酬を払える者なら誰からでも契約を受けるが、エレボールやリヴェンデルに対して斧を振るうことはない。" />
+    <string id="TAOM_company_name" text="海賊の刃" />
+    <string id="TAOM_company_short" text="海賊" />
+    <string id="TAOM_company_text" text="海賊の刃は、ウンバールの港から来た歴戦の海上戦士たちで、陸上でその技を売ることにした者たちである。彼らは船上戦の好まれる武器であるクロスボウで戦い、揺れる甲板上と同じように包囲戦でも力を発揮する。傷だらけのヌーメノールの亡命者である隊長は、評判こそが最も価値ある積荷であることを知り、鉄の規律で彼らを契約に従わせている。" />
+    <string id="TAOM_beni_zilal_name" text="盲いた眼" />
+    <string id="TAOM_beni_zilal_short" text="盲いた眼" />
+    <string id="TAOM_beni_zilal_text" text="盲いた眼は、ハラドの沿岸と深い砂漠を股にかける密輸業者、盗品商、殺し屋たちの同胞団である。彼らは忘れ去られたハラドリムの王に仕えた暗殺者の教団の末裔と言われており、その手法――毒、影、そして秘密の活用――は変わっていない。静かに敵対者を排除したい領主や、税関検査なしに貨物を運ばせたい商人は、金貨と封印された手紙を置く場所を知っている。" />
+    <string id="TAOM_wolfskins_name" text="ヴァリアグの略奪者" />
+    <string id="TAOM_wolfskins_short" text="略奪者" />
+    <string id="TAOM_wolfskins_text" text="ヴァリアグの略奪者は、カンドの草原から来た若きヴァリアグの戦士たちの戦団で、青年期を儀式的な戦争状態で過ごす。彼らは調理された食物を所有せず、恒久的な屋根の下で眠らず、慈悲を示さない。ほとんどは最終的に氏族の定住生活に戻るが、決して戻らない者もおり、彼らが略奪者を形成する――カンドの街道を襲い、ハラドやゴンドールの国境を越えて略奪する無法者たちである。" />
+    <string id="TAOM_brotherhood_name" text="ダンランドの略奪団" />
+    <string id="TAOM_brotherhood_short" text="略奪団" />
+    <string id="TAOM_brotherhood_text" text="ダンランドの略奪団は、今はローハンの民が支配する谷間にかつて住んでいた丘の氏族の壊れた残党である。彼らの祖父たちは肥沃な土地から岩だらけの高地へと追いやられ、その恨みを略奪者の哲学へと育ててきた。南方人や王の配下から奪うものはすべて、盗まれたものを取り戻すだけだと。実際には彼らは山賊だが、丘を通るすべての山羊道を知る危険な存在である。" />
+    <string id="TAOM_hidden_hand_name" text="サウロンの口の従者" />
+    <string id="TAOM_hidden_hand_short" text="下僕" />
+    <string id="TAOM_hidden_hand_text" text="口の下僕はバラド=ドゥアの目であり、黒門の彼方で活動する――モルドールと国境を接する民の中に潜む密告者、実行者、そして間者である。サウロンの軍勢がまだ届かぬところで、これらの工作員は貢物を集め、異論を封じる。彼らは賄賂、脅迫、静かなる殺人を用いて働き、冥王に対するいかなる陰謀も根を張る前に引き抜かれ粉砕されることを確実にする。" />
+    <string id="TAOM_lakepike_name" text="長い湖の略奪者" />
+    <string id="TAOM_lakepike_short" text="略奪者" />
+    <string id="TAOM_lakepike_text" text="長い湖の略奪者は、エスガロスの立派な灯りから遠く離れた、長い湖の陰の岸辺にある葦床と腐りかけた古い桟橋に住んでいる。彼らは偽りの提灯で艀を隠れた浅瀬に誘い込み、積荷を剥ぎ取って町自体の故買屋を通じて売ることで生計を立てている。湖の町の長官とデイルの商人たちの努力にもかかわらず、略奪者は波止場の酒場にあまりにも多くの友人を持っており、簡単には追い出せない。" />
+    <string id="TAOM_embers_name" text="瞼なき目の教団" />
+    <string id="TAOM_embers_short" text="目の教団" />
+    <string id="TAOM_embers_text" text="瞼なき目の教団は黒きヌーメノール人の伝統に根ざした秘密結社であり、サウロンを神王として崇拝し、彼が再び立ち上がる時に忠実な者たちを栄光に導くと信じている。彼らはダンランドの持たざる者たちや王国の忘れられた片隅で勧誘を行い、神の恵みと地上の力を約束する。実際には、彼らの指導者たちはバラド=ドゥアの工作員に従っており、細胞構造による組織はいかなる領主の正義によっても根絶することがほぼ不可能である。" />
+    <string id="TAOM_jawwal_name" text="砂の騎手" />
+    <string id="TAOM_jawwal_short" text="砂の騎手" />
+    <string id="TAOM_jawwal_text" text="砂の騎手は、エフェル・ドゥアスと遥か南の海の間にある水なき荒野の支配者である、ハラドの奥地の遊牧砂漠部族である。彼らは自分たちだけが知る道を渡り、自分たちの領域を横断する勇敢な隊商から貢物を要求する。近ハラドの定住領主たちは彼らを厄介者として扱うが、砂の騎手は定住領主たちを砂漠が既に自由に与えたものを盗んだ盗人と見なしている。" />
+    <string id="TAOM_karakhuzaits_name" text="野生の東夷" />
+    <string id="TAOM_karakhuzaits_short" text="野生の民" />
+    <string id="TAOM_karakhuzaits_text" text="野生の東夷は、ルーンの海の征服されざる草原部族であり、彼らを支配しようとしたすべての領主――ルーンの族長、モルドールの副官、デイルの王――の権威に抵抗してきた。彼らはケルドゥイン川の東の草原を渡り歩き、馬を集め、家畜を襲い、武装護衛なしに彼らの草原を横断する愚かな隊商から通行税を徴収する。" />
+    <string id="TAOM_forest_people_name" text="ドルーエダイン" />
+    <string id="TAOM_forest_people_short" text="ウォーズ" />
+    <string id="TAOM_forest_people_text" text="ドルーエダインは、人間からウォーズまたは森の野人として知られる古代の民であり、ドルーアダンの深い森とエレド・ニムライスの隠れた谷に住んでいる。彼らは火で土地を清め、灰の豊かな土壌で必要なものを育て、土地が枯れると移動する――中つ国の定住民が決して理解せず、気にも留めなかった生き方である。ドルーエダインは領主を求めず、税を払わず、ただ森の静寂に委ねられることだけを求める。" />
+    <string id="TAOM_eleftheroi_name" text="ベオルニング" />
+    <string id="TAOM_eleftheroi_short" text="ベオルニング" />
+    <string id="TAOM_eleftheroi_text" text="ベオルニングは、霧ふり山脈と闇の森の間のアンドゥイン川の谷に住む偉大な森人であり、ベオルンの血統の皮膚変化者に率いられている。彼らは自分たちの領域をオークに横断させず、カロックの浅瀬で通行料を徴収して監視活動の資金とし、中つ国のいかなる王にも従わない。エルフやドワーフとは取引や会話をするが、許可なく彼らの森を行軍する軍隊は、ベオルニングが非常に大きな牙を持っていることを知るだろう。" />
+    <string id="TAOM_clan_khuzait_1" text="フーズ" />
+    <string id="TAOM_clan_khuzait_2" text="サルリアン" />
+    <string id="TAOM_clan_khuzait_3" text="ニカティアン" />
+    <string id="TAOM_clan_khuzait_4" text="カルミアン" />
+    <string id="TAOM_clan_khuzait_5" text="アムドゥリド" />
+    <string id="TAOM_clan_khuzait_6" text="クンドラール" />
+    <string id="TAOM_clan_khuzait_7" text="クザイティアン" />
+    <string id="TAOM_clan_khuzait_8" text="マシャキアン" />
+    <string id="TAOM_clan_khuzait_9" text="ボゾルガニス" />
+    <string id="aom_lord_1_1_name" text="ブレニン・ウルフ、鉄の手" />
+    <string id="aom_lord_1_2_name" text="フレイヤ・ウルフハート" />
+    <string id="aom_lord_1_3_name" text="ゴルウルフ、猪" />
+    <string id="aom_lord_1_4_name" text="ブリュンヒルド・アイアンクロー" />
+    <string id="aom_lord_1_5_name" text="オスリック・ザ・ワイルド" />
+    <string id="aom_lord_1_6_name" text="トールヴァルド・オックスホーン" />
+    <string id="aom_lord_1_7_name" text="デネソール二世、ゴンドールの執政" />
+    <string id="aom_lord_1_8_name" text="フーリオネス" />
+    <string id="aom_lord_1_9_name" text="イムラヒル、ドル・アムロスの大公" />
+    <string id="aom_lord_1_10_name" text="アラネル" />
+    <string id="aom_lord_1_25_name" text="エルフィア" />
+    <string id="aom_lord_1_35_name" text="エルヒリオン" />
+    <string id="aom_lord_1_11_name" text="キリヤンドゥア" />
+    <string id="aom_lord_1_111_name" text="エラルウェン" />
+    <string id="aom_lord_1_12_name" text="フィンダリエル" />
+    <string id="aom_lord_1_14_name" text="サウロンの口" />
+    <string id="aom_lord_1_15_name" text="アングマールの魔王" />
+    <string id="aom_lord_1_155_name" text="ナズグール、闇の司令官" />
+    <string id="aom_lord_1_16_name" text="ナズグール、ウンバールの騎士" />
+    <string id="aom_lord_1_17_name" text="サウロン" />
+    <string id="aom_lord_1_177_name" text="ホノラトゥス" />
+    <string id="aom_lord_1_18_name" text="ジャシーア" />
+    <string id="aom_lord_1_21_name" text="フェンリック・ザ・レッドウルフ" />
+    <string id="aom_lord_1_22_name" text="ビョルンリック・ストロングアーム" />
+    <string id="aom_lord_1_23_name" text="カラドウェン" />
+    <string id="aom_lord_1_24_name" text="アムロソス" />
+    <string id="aom_lord_1_75_name" text="ボロミア" />
+    <string id="aom_lord_1_26_name" text="ヒアゴン" />
+    <string id="aom_lord_1_27_name" text="マウグラシュ" />
+    <string id="aom_lord_1_28_name" text="ナズグール、裏切り者" />
+    <string id="aom_lord_1_29_name" text="サニオン" />
+    <string id="aom_lord_1_31_name" text="ザルサ・ブラックファング" />
+    <string id="aom_lord_1_32_name" text="エルドラ・ボアソング" />
+    <string id="aom_lord_1_33_name" text="ブリギッド・ザ・ハウリング" />
+    <string id="aom_lord_1_422_name" text="ドレングルフ・アイアンタスク" />
+    <string id="aom_lord_1_34_name" text="ファラミア" />
+    <string id="aom_lord_1_36_name" text="イヴリニエル" />
+    <string id="aom_lord_1_37_name" text="ゴシャンク" />
+    <string id="aom_lord_1_38_name" text="ナズグール、不死者" />
+    <string id="aom_lord_1_39_name" text="デバナ" />
+    <string id="aom_lord_1_41_name" text="ベレグンド・ウルフボーン" />
+    <string id="aom_lord_1_411_name" text="グリムウルフ・アイアンファング" />
+    <string id="aom_lord_1_42_name" text="フロドガル・アイアンハイド" />
+    <string id="aom_lord_1_43_name" text="ゴルムンド・オックスフランク" />
+    <string id="aom_lord_1_44_name" text="ネモス" />
+    <string id="aom_lord_1_47_name" text="ウルボス" />
+    <string id="aom_lord_1_49_name" text="オブロン" />
+    <string id="aom_lord_1_20_name" text="アストリッド・ベアクロウ" />
+    <string id="aom_lord_1_64_name" text="ソルムンド・グリズリーヒュー" />
+    <string id="aom_lord_1_50_name" text="コーウィン・レイヴンアイ" />
+    <string id="aom_lord_1_66_name" text="タルリック・クロウコール" />
+    <string id="aom_lord_1_51_name" text="ハルドリック・タロンストライク" />
+    <string id="aom_lord_1_58_name" text="ゴルヴィン・ザ・フェル" />
+    <string id="aom_lord_1_70_name" text="ヴェイラ・ザ・シャドウ" />
+    <string id="aom_lord_1_67_name" text="エオルウィン・フェザーボルト" />
+    <string id="aom_lord_1_40_name" text="ボルハドール" />
+    <string id="aom_lord_1_46_name" text="マルリオール" />
+    <string id="aom_lord_1_45_name" text="フォルロング、ロサルナハの領主" />
+    <string id="aom_lord_1_57_name" text="バラノール" />
+    <string id="aom_lord_1_52_name" text="ヒアルイン、ピンナス・ゲリンの領主" />
+    <string id="aom_lord_1_53_name" text="アングボール、ラメドンの領主" />
+    <string id="aom_lord_1_71_name" text="ゴラスギル、アンファラスの領主" />
+    <string id="aom_lord_1_73_name" text="ナルミール" />
+    <string id="aom_lord_1_62_name" text="オロマール" />
+    <string id="aom_lord_1_30_name" text="ゴスモグ、モルグルの副官" />
+    <string id="aom_lord_1_48_name" text="カムール、東夷" />
+    <string id="aom_lord_1_54_name" text="シャグラト、キリス・ウンゴルの隊長" />
+    <string id="aom_lord_1_55_name" text="マスモグ" />
+    <string id="aom_lord_1_63_name" text="ゴルバグ、ミナス・モルグルの隊長" />
+    <string id="aom_lord_1_56_name" text="トアムンド、鉄槌" />
+    <string id="aom_lord_1_68_name" text="サロス" />
+    <string id="aom_lord_1_69_name" text="ニフォン" />
+    <string id="aom_lord_1_72_name" text="ボルグ" />
+    <string id="aom_lord_1_74_name" text="ザカニス" />
+    <string id="aom_lord_1_1_1_name" text="エルディス・グレイクロウ" />
+    <string id="aom_lord_1_1_2_name" text="シッガ・ウィルムベイン" />
+    <string id="aom_lord_1_1_3_name" text="シグルン・ボアファング" />
+    <string id="aom_lord_1_1_4_name" text="ティラ・ブラッドタスク" />
+    <string id="aom_lord_1_1_5_name" text="ヒルダ・ボーンクラッシャー" />
+    <string id="aom_lord_1_1_6_name" text="ユルサ、冬の猪" />
+    <string id="aom_lord_1_1_7_name" text="フレイディス・オックスメイン" />
+    <string id="aom_lord_1_1_8_name" text="エイラ・シャドウクロウ" />
+    <string id="aom_lord_1_1_9_name" text="シフラ・ボーンウォーカー" />
+    <string id="aom_lord_1_1_10_name" text="ハルディス・レッドミスト" />
+    <string id="aom_lord_1_1_11_name" text="ユルラ・ゴーストペルト" />
+    <string id="aom_lord_1_1_15_name" text="アエルウィン・ホークアイ" />
+    <string id="aom_lord_1_1_16_name" text="ブリアンナ・ウィングダート" />
+    <string id="aom_lord_1_27_1_name" text="ヴェリナ" />
+    <string id="aom_lord_1_27_2_name" text="スロズナク" />
+    <string id="aom_lord_1_27_3_name" text="ヴァシリア" />
+    <string id="aom_lord_1_47_1_name" text="ミナ" />
+    <string id="aom_lord_1_47_2_name" text="カシレア" />
+    <string id="aom_lord_1_47_3_name" text="コランベア" />
+    <string id="aom_lord_1_49_1_name" text="トリスタニア" />
+    <string id="aom_lord_1_49_2_name" text="ゴルディアナ" />
+    <string id="aom_lord_1_1_12_name" text="フレイヤ・クロウレンド" />
+    <string id="aom_lord_1_1_13_name" text="グンドルン・アイアンポウ" />
+    <string id="aom_lord_1_1_14_name" text="モルギス" />
+    <string id="aom_lord_1_1_17_name" text="ブラノク・フェザーシャフト" />
+    <string id="aom_lord_1_40_1_name" text="リンダリエル" />
+    <string id="aom_lord_1_46_1_name" text="ソルウェン" />
+    <string id="aom_lord_1_45_1_name" text="ベレシエル" />
+    <string id="aom_lord_1_45_2_name" text="カルダミア" />
+    <string id="aom_lord_1_45_3_name" text="ルーミル" />
+    <string id="aom_lord_1_57_1_name" text="カラシエル" />
+    <string id="aom_lord_1_57_2_name" text="イムロス" />
+    <string id="aom_lord_1_52_1_name" text="アナリエル" />
+    <string id="aom_lord_1_52_2_name" text="バランドール" />
+    <string id="aom_lord_1_73_1_name" text="ベルウェン" />
+    <string id="aom_lord_1_62_1_name" text="アリサ" />
+    <string id="aom_lord_1_30_1_name" text="スヴァラ・レッドファング" />
+    <string id="aom_lord_1_30_2_name" text="カリニア" />
+    <string id="aom_lord_1_30_3_name" text="シュネシオス" />
+    <string id="aom_lord_1_48_1_name" text="ナズグール、穢れし者" />
+    <string id="aom_lord_1_48_2_name" text="ナズグール、北国人の影" />
+    <string id="aom_lord_1_48_3_name" text="ナズグール、ウンバールの影" />
+    <string id="aom_lord_1_54_1_name" text="コンスタリア" />
+    <string id="aom_lord_1_55_1_name" text="メゲシア" />
+    <string id="aom_lord_1_63_1_name" text="ヴァラリア" />
+    <string id="aom_lord_1_63_2_name" text="コマタサ" />
+    <string id="aom_lord_1_63_3_name" text="エリディレア" />
+    <string id="aom_lord_1_56_1_name" text="グウェンナ" />
+    <string id="aom_lord_1_56_2_name" text="ルスティカ" />
+    <string id="aom_lord_1_68_1_name" text="シルヴィナ" />
+    <string id="aom_lord_1_69_1_name" text="アレリアナ" />
+    <string id="aom_lord_1_69_2_name" text="ドラシラ" />
+    <string id="aom_lord_1_72_1_name" text="ヴィヴィアナ" />
+    <string id="aom_lord_1_74_1_name" text="ゼナ" />
+    <string id="aom_lord_2_1_name" text="バルド2世" />
+    <string id="aom_lord_2_2_name" text="アスタ" />
+    <string id="aom_lord_2_3_name" text="トーリン3世・ストーンヘルム" />
+    <string id="aom_lord_2_4_name" text="シガ" />
+    <string id="aom_lord_2_5_name" text="オリ" />
+    <string id="aom_lord_2_6_name" text="エルタ" />
+    <string id="aom_lord_2_7_name" text="シミル" />
+    <string id="aom_lord_2_8_name" text="ウリク" />
+    <string id="aom_lord_2_9_name" text="レク" />
+    <string id="aom_lord_2_10_name" text="ヴァラ" />
+    <string id="aom_lord_2_11_name" text="イドルン" />
+    <string id="aom_lord_2_111_name" text="ロジヴォル" />
+    <string id="aom_lord_2_12_name" text="スヴァナ" />
+    <string id="aom_lord_2_121_name" text="オスヴェン" />
+    <string id="aom_lord_2_13_name" text="ヴィダル" />
+    <string id="aom_lord_2_14_name" text="イスヴァン" />
+    <string id="aom_lord_2_15_name" text="ラタゴスト" />
+    <string id="aom_lord_2_16_name" text="ボフール" />
+    <string id="aom_lord_2_17_name" text="トーリン2世・オーケンシールド" />
+    <string id="aom_lord_2_18_name" text="グローイン" />
+    <string id="aom_lord_2_19_name" text="ドワーリン" />
+    <string id="aom_lord_2_20_name" text="オイン" />
+    <string id="aom_lord_2_21_name" text="スヴェドルン" />
+    <string id="aom_lord_2_22_name" text="ラショネク" />
+    <string id="aom_lord_2_23_name" text="ガルデン" />
+    <string id="aom_lord_2_24_name" text="アルヴァル" />
+    <string id="aom_lord_2_4_1_name" text="アポラネア" />
+    <string id="aom_lord_2_7_1_name" text="ミミル" />
+    <string id="aom_lord_2_13_1_name" text="リリジャ" />
+    <string id="aom_lord_2_13_2_name" text="アンドルタ" />
+    <string id="aom_lord_2_13_3_name" text="ルダ" />
+    <string id="aom_lord_2_13_4_name" text="テタ" />
+    <string id="aom_lord_2_14_1_name" text="ヴァルカヴァ" />
+    <string id="aom_lord_2_14_2_name" text="ザヴェレナ" />
+    <string id="aom_lord_2_14_3_name" text="ヴィジュドゥナ" />
+    <string id="aom_lord_2_15_1_name" text="ヤチャナ" />
+    <string id="aom_lord_2_15_2_name" text="ミランカ" />
+    <string id="aom_lord_2_15_3_name" text="ヴェリナ" />
+    <string id="aom_lord_2_15_4_name" text="ボヴァン" />
+    <string id="aom_lord_2_16_1_name" text="チャスカ" />
+    <string id="aom_lord_2_17_1_name" text="ドラチャ" />
+    <string id="aom_lord_2_18_1_name" text="ゾリカ" />
+    <string id="aom_lord_2_19_1_name" text="ヴィトミラ" />
+    <string id="aom_lord_2_20_1_name" text="キシャ" />
+    <string id="aom_lord_2_21_1_name" text="イズデンカ" />
+    <string id="aom_lord_2_22_1_name" text="ジェネヴァ" />
+    <string id="aom_lord_2_23_1_name" text="ズラトカ" />
+    <string id="aom_lord_2_24_1_name" text="ゾリナ" />
+    <string id="aom_dead_lord_2_1_name" text="老オレク" />
+    <string id="aom_dead_lord_2_2_name" text="ヴァラ" />
+    <string id="aom_lord_3_1_name" text="カドゥラク" />
+    <string id="aom_lord_3_2_name" text="ハラド用プレースホルダー" />
+    <string id="aom_lord_3_3_name" text="カレミア" />
+    <string id="aom_lord_3_4_name" text="マラー" />
+    <string id="aom_lord_3_5_name" text="ハルディア" />
+    <string id="aom_lord_3_51_name" text="ハカン" />
+    <string id="aom_lord_3_6_name" text="ルマ" />
+    <string id="aom_lord_3_7_name" text="ディユル" />
+    <string id="aom_lord_3_8_name" text="アッダス" />
+    <string id="aom_lord_3_9_name" text="ウサイル" />
+    <string id="aom_lord_3_10_name" text="アニダ" />
+    <string id="aom_lord_3_11_name" text="アルワ" />
+    <string id="aom_lord_3_12_name" text="マナン" />
+    <string id="aom_lord_3_13_name" text="ヌカル" />
+    <string id="aom_lord_3_14_name" text="タムザ" />
+    <string id="aom_lord_3_15_name" text="グジド" />
+    <string id="aom_lord_3_16_name" text="ルーミル" />
+    <string id="aom_lord_3_17_name" text="オロフィン" />
+    <string id="aom_lord_3_18_name" text="アランソン" />
+    <string id="aom_lord_3_19_name" text="アエシリオン" />
+    <string id="aom_lord_3_20_name" text="カリス" />
+    <string id="aom_lord_3_21_name" text="ウクハイ" />
+    <string id="aom_lord_3_22_name" text="ドゥイリン" />
+    <string id="aom_lord_3_23_name" text="カヒン" />
+    <string id="aom_lord_3_3_1_name" text="ターリク" />
+    <string id="aom_lord_3_13_1_name" text="シーラ" />
+    <string id="aom_lord_3_13_2_name" text="ラザナ" />
+    <string id="aom_lord_3_14_1_name" text="ササイサ" />
+    <string id="aom_lord_3_15_1_name" text="シムラ" />
+    <string id="aom_lord_3_15_2_name" text="ブシラ" />
+    <string id="aom_lord_3_16_1_name" text="ファリナ" />
+    <string id="aom_lord_3_17_1_name" text="シャイマ" />
+    <string id="aom_lord_3_17_2_name" text="サニト" />
+    <string id="aom_lord_3_18_1_name" text="ファルザナ" />
+    <string id="aom_lord_3_18_2_name" text="ハフィサ" />
+    <string id="aom_lord_3_18_3_name" text="ズアド" />
+    <string id="aom_lord_3_18_4_name" text="ジャルファル" />
+    <string id="aom_lord_3_19_1_name" text="サルマ" />
+    <string id="aom_lord_3_19_2_name" text="ズライカ" />
+    <string id="aom_lord_3_19_3_name" text="スルハナ" />
+    <string id="aom_lord_3_20_1_name" text="ジュディラ" />
+    <string id="aom_lord_3_20_2_name" text="アジナ" />
+    <string id="aom_lord_3_21_1_name" text="アシサ" />
+    <string id="aom_lord_3_22_1_name" text="ヤミナ" />
+    <string id="aom_lord_3_22_2_name" text="スナ" />
+    <string id="aom_lord_3_22_3_name" text="ザヌワ" />
+    <string id="aom_lord_3_22_4_name" text="ハジャラ" />
+    <string id="aom_lord_3_23_1_name" text="スカイナ" />
+    <string id="aom_dead_lord_3_1_name" text="ニムル" />
+    <string id="aom_lord_4_1_name" text="セオデン" />
+    <string id="aom_lord_4_2_name" text="エルフヒルド" />
+    <string id="aom_lord_4_4_name" text="エルシルド" />
+    <string id="aom_lord_4_5_name" text="ウンセリー" />
+    <string id="aom_lord_4_6_name" text="グリムボルド・グリミンガス" />
+    <string id="aom_lord_4_7_name" text="セオドレド・エオルリング" />
+    <string id="aom_lord_4_8_name" text="フルンハルド" />
+    <string id="aom_lord_4_9_name" text="ソムンド" />
+    <string id="aom_lord_4_10_name" text="エリス" />
+    <string id="aom_lord_4_11_name" text="リエナ" />
+    <string id="aom_lord_4_12_name" text="シルヴィンド" />
+    <string id="aom_lord_4_121_name" text="ラサンド" />
+    <string id="aom_lord_4_13_name" text="ロムンド" />
+    <string id="aom_lord_4_14_name" text="モルコン" />
+    <string id="aom_lord_4_141_name" text="アモルコン" />
+    <string id="aom_lord_4_15_name" text="エルドゥランド" />
+    <string id="aom_lord_4_16_name" text="エルケンブランド・フェランディング" />
+    <string id="aom_lord_4_17_name" text="エルベト" />
+    <string id="aom_lord_4_18_name" text="アマルグン" />
+    <string id="aom_lord_4_181_name" text="アルサムンド" />
+    <string id="aom_lord_4_19_name" text="アセラ" />
+    <string id="aom_lord_4_20_name" text="ヴァルムンド" />
+    <string id="aom_lord_4_21_name" text="クスレード・オルドラキング" />
+    <string id="aom_lord_4_22_name" text="ウルフ・ケルムンディング" />
+    <string id="aom_lord_4_23_name" text="マルハス・マルハド" />
+    <string id="aom_lord_4_24_name" text="グリマ・グリモーディング" />
+    <string id="aom_lord_4_25_name" text="ルカンド" />
+    <string id="aom_lord_4_26_name" text="ペリック" />
+    <string id="aom_lord_4_27_name" text="エレ・エセルラフィング" />
+    <string id="aom_lord_4_28_name" text="ファストヘルム・モルカーガス" />
+    <string id="aom_lord_4_3_1_name" text="エオメル・エオフォリング" />
+    <string id="aom_lord_4_6_1_name" text="デオルウィン・グリミンガス" />
+    <string id="aom_lord_4_16_1_name" text="メルスー・フェランディング" />
+    <string id="aom_lord_4_20_1_name" text="インゲルトルート" />
+    <string id="aom_lord_4_22_1_name" text="スンニファ・ケルムンディング" />
+    <string id="aom_lord_4_23_1_name" text="ウルフウィン・マルハド" />
+    <string id="aom_lord_4_23_2_name" text="エレドゥラン・マルハド" />
+    <string id="aom_lord_4_23_3_name" text="エレドゥラン" />
+    <string id="aom_lord_4_25_1_name" text="ベルトリアナ" />
+    <string id="aom_lord_4_27_1_name" text="ウェールブルフ・エセルラフィング" />
+    <string id="aom_lord_4_28_1_name" text="モルカー" />
+    <string id="aom_lord_4_28_2_name" text="ヘレスウィス" />
+    <string id="aom_lord_V11_l_name" text="レオムンド・デアフリンガス" />
+    <string id="aom_lord_4_26_1_name" text="ライガルダ" />
+    <string id="aom_lord_4_24_1_name" text="アダルトルート" />
+    <string id="aom_lord_4_24_2_name" text="グドンヘルダ" />
+    <string id="aom_lord_4_24_3_name" text="インゴンデ" />
+    <string id="aom_lord_4_24_4_name" text="イルムガルト" />
+    <string id="aom_lord_4_3_name" text="アルドリック" />
+    <string id="aom_lord_V11_c1_name" text="エレンダラ" />
+    <string id="aom_lord_V11_c2_name" text="ダグニック" />
+    <string id="aom_lord_V11_u_name" text="ヴォレリック" />
+    <string id="aom_lord_V9_u_name" text="ウルンドゥルフ" />
+    <string id="aom_lord_5_1_name" text="ヴァルグール、カンドの最高戦将" />
+    <string id="aom_lord_5_7_name" text="カンド プレースホルダー" />
+    <string id="aom_lord_5_3_name" text="エルゲオン" />
+    <string id="aom_lord_5_4_name" text="ニウィン" />
+    <string id="aom_lord_5_5_name" text="メリディル" />
+    <string id="aom_lord_5_6_name" text="アルカエア" />
+    <string id="aom_lord_5_8_name" text="セイン" />
+    <string id="aom_lord_5_9_name" text="クルハルン" />
+    <string id="aom_lord_5_91_name" text="テガン" />
+    <string id="aom_lord_5_10_name" text="コレイン" />
+    <string id="aom_lord_5_11_name" text="アリンネス" />
+    <string id="aom_lord_5_12_name" text="ウィスイン" />
+    <string id="aom_lord_5_13_name" text="ムインセル" />
+    <string id="aom_lord_5_131_name" text="ラス" />
+    <string id="aom_lord_5_15_name" text="プリンドール" />
+    <string id="aom_lord_5_14_name" text="ルイハン" />
+    <string id="aom_lord_5_16_name" text="アエロン" />
+    <string id="aom_lord_5_17_name" text="アラドウィル" />
+    <string id="aom_lord_5_18_name" text="ブラノク" />
+    <string id="aom_lord_5_19_name" text="フェナガン" />
+    <string id="aom_lord_5_20_name" text="シアラムス" />
+    <string id="aom_lord_5_21_name" text="カーフィド" />
+    <string id="aom_lord_5_22_name" text="フィアラド" />
+    <string id="aom_lord_5_1_1_name" text="ランダムデュード" />
+    <string id="aom_lord_5_3_1_name" text="ラナオン" />
+    <string id="aom_lord_5_3_2_name" text="ラドグアル" />
+    <string id="aom_lord_5_5_1_name" text="エイリー" />
+    <string id="aom_lord_5_13_1_name" text="ベアサグ" />
+    <string id="aom_lord_5_15_1_name" text="フロレー" />
+    <string id="aom_lord_5_15_2_name" text="ベイトリン" />
+    <string id="aom_lord_5_15_3_name" text="ディアーヴァイン" />
+    <string id="aom_lord_5_14_1_name" text="イーバー" />
+    <string id="aom_lord_5_16_1_name" text="リアシン" />
+    <string id="aom_lord_5_16_2_name" text="ガウェン" />
+    <string id="aom_lord_5_17_1_name" text="ブリガン" />
+    <string id="aom_lord_5_18_1_name" text="ショーナグ" />
+    <string id="aom_lord_5_21_1_name" text="ベアサグ" />
+    <string id="aom_lord_5_21_2_name" text="タオルシェ" />
+    <string id="aom_lord_6_1_name" text="ザミク・ザミアン" />
+    <string id="aom_lord_6_2_name" text="マライア" />
+    <string id="aom_lord_6_3_name" text="バガイ" />
+    <string id="aom_lord_6_4_name" text="グールティルム・サルリアン" />
+    <string id="aom_lord_6_5_name" text="イルボ・ニカシアン" />
+    <string id="aom_lord_6_51_name" text="カダ" />
+    <string id="aom_lord_6_6_name" text="スラン" />
+    <string id="aom_lord_6_7_name" text="チャガン" />
+    <string id="aom_lord_6_8_name" text="エスル" />
+    <string id="aom_lord_6_81_name" text="ナヤンタイ" />
+    <string id="aom_lord_6_9_name" text="テムン" />
+    <string id="aom_lord_6_10_name" text="アリジン" />
+    <string id="aom_lord_6_101_name" text="ボラト" />
+    <string id="aom_lord_6_11_name" text="ヤナ" />
+    <string id="aom_lord_6_12_name" text="アバガイ" />
+    <string id="aom_lord_6_13_name" text="ボルトゥ" />
+    <string id="aom_lord_6_15_name" text="オラグル" />
+    <string id="aom_lord_6_16_name" text="アクヴォス・カルミアン" />
+    <string id="aom_lord_6_17_name" text="アムドゥール・アムドゥリド" />
+    <string id="aom_lord_6_18_name" text="ルースカン・クンドラル" />
+    <string id="aom_lord_6_19_name" text="ヴァケラルタン・クンドラル" />
+    <string id="aom_lord_6_20_name" text="クルブラ・マシャキアン" />
+    <string id="aom_lord_6_21_name" text="モルク・イルノリア" />
+    <string id="aom_lord_6_22_name" text="シャカル2世・シャカリアン" />
+    <string id="aom_lord_6_23_name" text="フーズ=マルゴーズ・フーズ" />
+    <string id="aom_lord_6_24_name" text="ニカス・アデキグ" />
+    <string id="aom_lord_6_15_1_name" text="コリジン" />
+    <string id="aom_lord_6_15_2_name" text="セチェン" />
+    <string id="aom_lord_6_16_1_name" text="チャンブイ" />
+    <string id="aom_lord_6_16_2_name" text="ウナゲン" />
+    <string id="aom_lord_6_17_1_name" text="エルゲネ" />
+    <string id="aom_lord_6_17_2_name" text="イェスム" />
+    <string id="aom_lord_6_18_1_name" text="ティルン" />
+    <string id="aom_lord_6_18_2_name" text="チャグン" />
+    <string id="aom_lord_6_19_1_name" text="ソカタイ" />
+    <string id="aom_lord_6_19_2_name" text="コルテ" />
+    <string id="aom_lord_6_20_1_name" text="ジグル" />
+    <string id="aom_lord_K8_u_name" text="ボロンチャル" />
+    <string id="aom_lord_6_21_1_name" text="エサチェイ" />
+    <string id="aom_lord_6_22_1_name" text="エセレン" />
+    <string id="aom_lord_K9_l_name" text="ヴァラスミル・マシャキアン" />
+    <string id="aom_lord_K9_s_name" text="セヴィン" />
+    <string id="aom_lord_K9_c1_name" text="アルトゥ" />
+    <string id="aom_lord_K9_c2_name" text="メラ" />
+    <string id="aom_dead_lord_6_1_name" text="ウルクフン" />
+    <string id="aom_dead_lord_6_2_name" text="ソルン" />
+    <string id="aom_dead_lord_6_3_name" text="クユグ" />
+    <string id="aom_dead_lord_6_4_name" text="ウンドゥル" />
+    <string id="aom_lord_A9_c_name" text="ディラ" />
+    <string id="aom_lord_A9_l_name" text="カラダン" />
+    <string id="aom_lord_A9_s_name" text="ティカ" />
+    <string id="aom_lord_A9_u_name" text="カバン" />
+    <string id="aom_lord_B8_c_name" text="グアラン" />
+    <string id="aom_lord_B8_l_name" text="マイレアス" />
+    <string id="aom_lord_B8_s_name" text="ロダラク" />
+    <string id="aom_lord_NE7_u_name" text="黒き牙のハルドリック" />
+    <string id="aom_lord_NE8_c1_name" text="鉄床のケルディック" />
+    <string id="aom_lord_NE8_c2_name" text="モルウェン" />
+    <string id="aom_lord_NE8_l_name" text="迅速なるエアドリック" />
+    <string id="aom_lord_NE8_s_name" text="アエロリア" />
+    <string id="aom_lord_NE9_d_name" text="蛇撃ちのシルヴァ" />
+    <string id="aom_lord_NE9_l_name" text="鱗断ちのヴァルソル" />
+    <string id="aom_lord_NE9_s_name" text="牙削りのルリク" />
+    <string id="aom_lord_S8_u_name" text="ガリク" />
+    <string id="aom_lord_S9_c_name" text="フォリム" />
+    <string id="aom_lord_S9_l_name" text="ボンブール" />
+    <string id="aom_lord_S9_m_name" text="ダキラ" />
+    <string id="aom_lord_S9_u_name" text="チャスティミール" />
+    <string id="aom_lord_SE8_c_name" text="イタリア" />
+    <string id="aom_lord_SE9_c1_name" text="パガリオス" />
+    <string id="aom_lord_SE9_c2_name" text="ディアスカ" />
+    <string id="aom_lord_SE9_l_name" text="ウルク隊長グリシュナーク" />
+    <string id="aom_lord_SE9_s_name" text="ヨンナ" />
+    <string id="aom_lord_WE8_c_name" text="ペレンドゥア" />
+    <string id="aom_lord_WE8_u_name" text="バランディル" />
+    <string id="aom_lord_WE9_l_name" text="ドゥインヒア" />
+    <string id="aom_lord_WE9_u_name" text="ドゥイリン" />
+    <string id="aom_lord_WE9_u2_name" text="ロスフィン" />
+    <string id="TAOM_hero_dead_2_1" text="この年老いたバルド家の領主は、東夷の襲撃者に対してデイルを守って倒れた。彼の犠牲は山岳地帯の峠を守り、王国中で歌に歌われている。" />
+    <string id="TAOM_hero_dead_2_2" text="戦後に続いた冬の疫病で亡くなったデイルの貴婦人。庶民への慈善活動で知られていた。" />
+    <string id="TAOM_hero_dead_3_1" text="黒門の合戦で砂漠の騎兵隊を率いたハラドリムの軍閥。ゴンドールの矢に倒れたが、南方では殉教者として崇敬されている。" />
+    <string id="TAOM_hero_dead_6_1" text="リューンの旗の下に東夷諸部族を初めて統一した偉大なるハーン。彼の征服によって黄金の国の国境はリューンの海の岸辺にまで押し広げられた。" />
+    <string id="TAOM_hero_dead_6_2" text="自由の民との戦いで倒れた尊敬されるノヤン。彼の未亡人グルティルムは今や鉄の意志で一族を率いている。" />
+    <string id="TAOM_hero_dead_6_3" text="アルキト一族の首席ノヤン。騎射戦術における彼の戦術的才能は東夷戦士たちの世代全体に影響を与えた。" />
+    <string id="TAOM_hero_dead_6_4" text="アルキト一族の貴族にして偉大なるノヤンの息子。若くして死んだが、戦士としての才能を示していた。" />
+    <string id="TAOM_hero_1_1" text="ブレニン・ウルフは鉄の拳でドゥンランドの荒々しい諸部族を支配している。アイアンハンドとして知られる彼は、征服と策略によって散在する丘陵部族を統一した。彼はローハンの馬の国の王たちに奪われた土地を取り戻すことを夢見ている。" />
+    <string id="TAOM_hero_1_2" text="フレイヤ・ウルフハートはブレニン・ウルフの猛々しい妻である。斧と盾の技で戦士たちの間で尊敬を集めている。" />
+    <string id="TAOM_hero_1_41" text="ベレグンド・ウルフボーンはドゥンランドの信頼される隊長であり、ローハンの集落を襲撃する技で知られている。" />
+    <string id="TAOM_hero_1_411" text="グリムウルフ・アイアンファングはローハンに対する襲撃と戦争という父の遺産を受け継いでいる。" />
+    <string id="TAOM_hero_1_31" text="ズルサ・ブラックファングはアイアンハンドの後継者であり、父の遺産にふさわしいことを証明しようと熱望している。" />
+    <string id="TAOM_hero_1_1_1" text="エルディス・グレイクローはドゥンランドの猛々しい女戦士であり、戦場での獰猛さで名高い。" />
+    <string id="TAOM_hero_1_1_2" text="シッガ・ワームベインは山道で大蛇を討ち取ったことでその名を得た。" />
+    <string id="TAOM_hero_1_21" text="フェンリク・ザ・レッドウルフは敵の領土深くへの襲撃隊を率いている。" />
+    <string id="TAOM_hero_1_3" text="ゴルウルフ・ザ・ボアは国境集落への残忍な襲撃で知られる野蛮な族長である。" />
+    <string id="TAOM_hero_1_4" text="ブルンヒルド・アイアンクローはゴルウルフの恐るべき妻であり、夫と同等の戦闘技術を持つ。" />
+    <string id="TAOM_hero_1_22" text="ビョルンリク・ストロングアームは戦場で大戦斧を振るう強力な戦士である。" />
+    <string id="TAOM_hero_1_42" text="フロドガル・アイアンハイドは一族の闘士として仕え、その鎧は数え切れない戦いの傷で覆われている。" />
+    <string id="TAOM_hero_1_32" text="エルドラ・ボアソングは両親の激しい伝統を受け継いでいる。" />
+    <string id="TAOM_hero_1_422" text="ドレングルフ・アイアンタスクは戦場で己の価値を証明しようと熱望する若い戦士である。" />
+    <string id="TAOM_hero_1_1_3" text="シグルン・ボアファングは敵陣への恐れ知らずの突撃で知られている。" />
+    <string id="TAOM_hero_1_1_4" text="ティーラ・ブラッドタスクは数え切れない勝利を通じてその異名を得た。" />
+    <string id="TAOM_hero_1_1_5" text="ヒルダ・ボーンクラッシャーは戦闘における壊滅的な力で恐れられている。" />
+    <string id="TAOM_hero_1_1_6" text="ユルサ・ザ・ウィンターボアは敵が最も攻撃を予期しない厳しい季節に襲撃を率いる。" />
+    <string id="TAOM_hero_1_5" text="オスリク・ザ・ワイルドは予測不可能な戦術で多くの勝利を収めた族長である。彼の一族は古代ドゥンランド王の血を引くと主張している。" />
+    <string id="TAOM_hero_1_1_7" text="フレイディス・オックスメインはオスリクの妻であり、戦士としてだけでなく熟練した癒し手でもある。" />
+    <string id="TAOM_hero_1_1_8" text="エイラ・シャドウクローは敵の陣営を音もなく移動し、警告なしに襲撃する。" />
+    <string id="TAOM_hero_1_6" text="トールヴァルド・オックスホーンはオスリクの後継者であり、既に父の野生の精神を示している。" />
+    <string id="TAOM_hero_1_33" text="ブリジッド・ザ・ハウリングは山道を通って戦隊を率いている。" />
+    <string id="TAOM_hero_1_43" text="ゴルムンド・オックスフランクは族長の信頼される副官として仕えている。" />
+    <string id="TAOM_hero_1_1_9" text="シフラ・ボーンウォーカーは戦後に倒れた者たちの間を歩き、戦死者から戦利品を集める。" />
+    <string id="TAOM_hero_1_1_10" text="ハルディス・レッドミストは戦場に駆け込むたびに血の跡を残す。" />
+    <string id="TAOM_hero_1_1_11" text="ユルラ・ゴーストペルトは白い狼の皮をまとい、戦場で彼女を守護すると言われている。" />
+    <string id="TAOM_hero_1_1_12" text="フレイヤ・クローレンドは猛々しい盾乙女たちの戦隊を率いて戦場に臨む。幼少期から戦士として訓練を受け、一度も敗北を知らない。" />
+    <string id="TAOM_hero_1_1_13" text="グンドルン・アイアンポーは数え切れない剣の柄で傷ついた手を持つ歴戦の戦士である。" />
+    <string id="TAOM_hero_1_20" text="アストリッド・ベアクローは獰猛な戦闘スタイルと熊皮の外套で知られている。" />
+    <string id="TAOM_hero_1_64" text="ソルムンド・グリズリーヒューは大型両手斧で敵陣を切り裂く。" />
+    <string id="TAOM_hero_1_1_14" text="モルギスは古代の丘の精霊たちと交信する神秘的な人物である。" />
+    <string id="TAOM_hero_1_1_17" text="ブラノク・フェザーシャフトはドゥンランド人の中で最高の射手であり、百歩離れた渡り鳥の目を射抜くことができる。" />
+    <string id="TAOM_hero_1_50" text="コーウィン・レイヴンアイは鳥の飛翔に前兆を見出し、戦の事柄について一族に助言する。" />
+    <string id="TAOM_hero_1_66" text="タルリク・クロウコールはあらゆる鳥の鳴き声を真似ることができ、それを戦場での合図として使う。" />
+    <string id="TAOM_hero_1_1_15" text="アエルウィン・ホークアイは国境を巡回する丘陵の斥候部隊を指揮している。" />
+    <string id="TAOM_hero_1_1_16" text="ブリアンナ・ウィングダートは母から弓術を学び、今ではその技量で母を上回っている。" />
+    <string id="TAOM_hero_1_51" text="ハルドリック・タロンストライクは高い岩山から待ち伏せを指揮する。" />
+    <string id="TAOM_hero_1_67" text="エオルウィン・フェザーボルトは刃よりも弓を好み、影から敵を射抜く。" />
+    <string id="TAOM_hero_1_58" text="冷酷者ゴーヴィンは、ドゥネダインの間でさえその残虐さが伝説となっている厳格な族長である。" />
+    <string id="TAOM_hero_1_70" text="影のヴェイラは敵陣営に音もなく忍び込み、夜闇で喉を掻き切る。" />
+    <string id="TAOM_hero_NE7_u" text="一族の族長の助言者として仕える歴戦の戦士。" />
+    <string id="TAOM_hero_NE8_l" text="山岳氏族の族長、長年の国境戦争で鍛え抜かれた者。" />
+    <string id="TAOM_hero_NE8_s" text="族長の妻、癒しの術と薬草学に長けている。" />
+    <string id="TAOM_hero_NE8_c1" text="一族の長子、幼少期から戦術を叩き込まれた者。" />
+    <string id="TAOM_hero_NE8_c2" text="氏族長の第二子、狡猾さと野心で知られる。" />
+    <string id="TAOM_hero_1_56" text="トルムンド・ザ・ハンマーは、戦鎚による壊滅的な突撃によってその名を得た。" />
+    <string id="TAOM_hero_1_56_1" text="グウェンナはトルムンドの妻であり、彼が遠征する間、一族の領地を管理している。" />
+    <string id="TAOM_hero_NE9_l" text="年老いた族長、その知恵は全てのドゥネダインの氏族から求められている。" />
+    <string id="TAOM_hero_NE9_s" text="老族長の息子、戦いで己を証明することに熱心である。" />
+    <string id="TAOM_hero_NE9_d" text="氏族の娘、戦闘と外交の両方の訓練を受けている。" />
+    <string id="TAOM_hero_1_7" text="デネソール二世、ゴンドールの執政、ミナス・ティリスの白の塔から統治している。かつては偉大なる智者であったが、誇り高く頑固になっている。彼は王の帰還に抵抗し、モルドールの影からゴンドールを救えるのは自分だけだと信じている。" />
+    <string id="TAOM_hero_1_75" text="ボロミア、デネソールの長男、ゴンドールの将軍である。名高き偉大なる戦士であり、闇に対して民を守るためのあらゆる武器を求めている。" />
+    <string id="TAOM_hero_1_8" text="フーリオネスはフーリニオナス家に仕え、ゴンドールの執政たちの伝承を守り続ける忠実な守護者である。" />
+    <string id="TAOM_hero_1_34" text="ファラミア、デネソールの次男、イシリアンの野伏の隊長である。父に見過ごされているが、その智慧、慈悲、静かなる強さゆえに部下たちに愛されている。" />
+    <string id="TAOM_hero_1_24" text="アムロソス、イムラヒルの末息子、まだ若いが既に一族の武勇と高貴な気質を示している。" />
+    <string id="TAOM_hero_1_44" text="ネモスは塔の守護隊の隊長であり、執政を守ることを誓っている。" />
+    <string id="TAOM_hero_1_9" text="イムラヒル二世、ドル・アムロスの公子、ゴンドール最大の騎士である。その血統にはエルフの血が流れており、全領土で最も麗しき君主と言われている。彼の白鳥の騎士団は中つ国全土で伝説となっている。" />
+    <string id="TAOM_hero_1_9_5" text="ロスウェン、ドル・アムロスの公女、数十年にわたってゴンドールへの奉仕においてイムラヒルの傍らに立ち続けている。その優雅さと静かなる智慧で知られている。" />
+    <string id="TAOM_hero_1_10" text="アラネル、エルフィアの妻、その威厳と鋭い知性で知られるゴンドールの貴婦人である。" />
+    <string id="TAOM_hero_1_35" text="エルキリオン、イムラヒルの次男、ドル・アムロスの騎士として仕えている。戦いにおいて大胆であり家に忠実、父の白鳥の騎士団と共に駆ける。" />
+    <string id="TAOM_hero_1_25" text="エルフィア、イムラヒルの長男、ドル・アムロスの後継者である。武芸における正確さをもって白鳥の騎士団を指揮し、父の高貴な態度を受け継いでいる。" />
+    <string id="TAOM_hero_1_23" text="カラドウェン、エルキリオンの妻、二人の結びつきを通じてイムラゾーリオナス家に加わった。静かなる勇気を持つ女性である。" />
+    <string id="TAOM_hero_1_11" text="キリャンドゥールはゴンドールの北部防衛を指揮する、多くのオークの襲撃を経験した歴戦の勇士である。領土の境界を守ることにおいて組織的かつ不屈である。" />
+    <string id="TAOM_hero_1_111" text="エラルウェン、ヒアゴンの妻、その回復力と実践的な智慧で知られる辺境の女性である。" />
+    <string id="TAOM_hero_1_12" text="フィンダリエル、キリャンドゥールの妻、細心の注意と知性をもって家の事務を管理している。" />
+    <string id="TAOM_hero_1_36" text="イヴリニエル、キリャンドゥールの娘、ゴンドールの北部辺境で育ち、父の不屈の精神と母の智慧の両方を示している。" />
+    <string id="TAOM_hero_1_26" text="ヒアゴン、キリャンドゥールの弟、ゴンドールの使者騎手として仕えている。迅速かつ信頼できる者であり、領土の諸侯の間で伝言を運ぶ。" />
+    <string id="TAOM_hero_1_40" text="ボルハドール、バラヒリオナス家の君主、ゴンドール最長老の諸侯の一人である。長年の歳月が彼に智慧を与えたが、肉体は年齢とともに衰えている。その助言は全ての者から尊敬されている。" />
+    <string id="TAOM_hero_1_40_1" text="リンダリエル、ボルハドールの妻、長年にわたって彼らの家の力であり続けている。ゴンドールの貴族の中で優雅かつ不変の存在である。" />
+    <string id="TAOM_hero_1_46" text="マルリオール、ボルハドールの息子、老いた君主の代わりに父の務めを引き継いでいる。着実で頼りになる者であり、一族から尊敬されている。" />
+    <string id="TAOM_hero_1_46_1" text="ソルウェン、マルリオールの妻、静かなる決意をもって家を管理する有能な女性である。" />
+    <string id="TAOM_hero_1_45" text="太っちょフォルロング、ロッサールナハの君主、封土からミナス・ティリスの防衛に最大の軍勢を率いている。その巨体にもかかわらず、激しく経験豊富な戦士である。" />
+    <string id="TAOM_hero_1_45_1" text="ベレシエル、フォルロングの妻、ロッサールナハの貴婦人である。夫が戦場へ向かう間、肥沃な谷を監督している。" />
+    <string id="TAOM_hero_1_45_2" text="カルダミア、フォルロングの若き息子、最近成人し、己を証明することに熱心に戦場へ駆ける。" />
+    <string id="TAOM_hero_1_45_3" text="ルーミル、フォルロングの兄、アウシリオナス家における安定した存在である。長年の奉仕が親族からの尊敬を得ている。" />
+    <string id="TAOM_hero_1_57" text="バラノールはロッサールナハ部隊の隊長を務め、フォルロング卿の信頼厚き将校である。" />
+    <string id="TAOM_hero_1_57_1" text="カラシエルはカルダミアの妻であり、ロッサールナハの若き貴族の女性である。" />
+    <string id="TAOM_hero_1_57_2" text="イムロスはバラノールの娘であり、ロッサールナハの谷でゴンドールの貴族の道を学んでいる。" />
+    <string id="TAOM_hero_1_52" text="美しきヒアルイン、ピンナス・ゲリンの領主は、ゴンドールの丘陵から緑衣の戦士たちを率いる。彼は執政への勇気と忠誠で知られている。" />
+    <string id="TAOM_hero_1_52_4" text="ナウリエルはヒアルインの妻であり、ピンナス・ゲリンの貴婦人として、緑の丘の人々への不屈の精神と思いやりで知られている。" />
+    <string id="TAOM_hero_1_52_1" text="アナリエルはヒアルインの娘であり、ピンナス・ゲリンの戦士たちの中で育ち、戦いにおいて自分の力を発揮できる。" />
+    <string id="TAOM_hero_1_52_2" text="バランドールはヒアルインの息子であり、いつかピンナス・ゲリンの戦士たちを率いるために訓練している。彼は父の緑衣の部隊と共に騎行する。" />
+    <string id="TAOM_hero_1_62" text="オロマールはアナリエルの夫であり、彼らの結婚を通じてハルボロニオナス家に加わった。彼はピンナス・ゲリンの領主に忠実に仕える。" />
+    <string id="TAOM_hero_1_62_1" text="イスフィンはバランドールの妻であり、優美さで知られる緑の丘の女性である。" />
+    <string id="TAOM_hero_1_53" text="恐れ知らずのアングボール、ラメドンの領主は、死者の軍勢が彼の領地を行進した時でさえ部下たちを結集させた。彼は大胆で素早く行動する。" />
+    <string id="TAOM_hero_1_73" text="ナルミアはアングボールの弟であり、ラメドンの防衛に尽力している。彼は兄の経験にはまだ及ばないが、同じ勇気を共有している。" />
+    <string id="TAOM_hero_1_73_1" text="ベルウェンはアングボールの妻であり、ラメドンの防衛において夫のそばに不動の姿勢で立っている。" />
+    <string id="TAOM_hero_1_71" text="ゴラスギル、アンファラスの領主は、海賊の襲撃に対して長い海岸線を指揮する。彼は数十年にわたりゴンドールの海岸を守ってきた歴戦の海の領主である。" />
+    <string id="TAOM_hero_1_71_1" text="ラスウェンはゴラスギルの妻であり、夫が海路を守る間、アンファラスの沿岸集落を監督している。" />
+    <string id="TAOM_hero_WE8_c" text="ペレンドゥアはゴラスギルの息子であり、いつか父がしてきたようにアンファラスの海岸を守るために訓練されている。" />
+    <string id="TAOM_hero_WE8_u" text="バランディルはゴラスギルの兄弟であり、アンファラスの沿岸警備隊の隊長を務めている。" />
+    <string id="TAOM_hero_WE9_l" text="ドゥインヒア、モルソンドの領主は、黒根谷から弓兵たちをゴンドールの防衛へと率いる。彼は厳格で有能な指揮官である。" />
+    <string id="TAOM_hero_WE9_u" text="ドゥイリンはドゥインヒアの長男であり、自らの弓兵部隊を率い、ゴンドールの防衛において父と共に戦う。" />
+    <string id="TAOM_hero_WE9_u2" text="ロスフィンはドゥインヒアの妻であり、夫の不在中に黒根谷の事務を管理している。" />
+    <string id="TAOM_hero_1_14" text="サウロンの口は冥王の権威をもって語る。かつて黒きヌーメノール人であった彼は、悪への長年の奉仕の後、自らの名を忘れてしまった。彼は黒門の守備隊を指揮する。" />
+    <string id="TAOM_hero_1_27" text="マウグラシュは純粋な残虐性と狡猾さによって出世したオーク隊長である。" />
+    <string id="TAOM_hero_1_27_1" text="ヴェリナは闇の塔に仕える黒きヌーメノール人の魔女である。" />
+    <string id="TAOM_hero_1_27_2" text="スロズナクは西方の地への襲撃隊を率いている。" />
+    <string id="TAOM_hero_1_27_3" text="ヴァシリアは影の中で冥王に仕えている。" />
+    <string id="TAOM_hero_1_37" text="ゴシャンクは冷酷な効率でモルドールのオーク連隊を指揮している。" />
+    <string id="TAOM_hero_1_47" text="ウルボスはオークの監督であり、滅びの山の鍛冶場で奴隷を駆り立てている。" />
+    <string id="TAOM_hero_1_47_1" text="ミナはモルドールの闇の力に仕えている。" />
+    <string id="TAOM_hero_1_47_2" text="カシレアは影の僕である。" />
+    <string id="TAOM_hero_1_47_3" text="コランベアはモルドールの闇の中に住んでいる。" />
+    <string id="TAOM_hero_1_15" text="アングマールの魔王、ナズグルの長は、サウロンの最も恐るべき僕である。彼はかつて人間の偉大なる王であったが、力の指輪によって不死の幽鬼へと堕落した。" />
+    <string id="TAOM_hero_1_155" text="闇の元帥は戦いにおいてナズグルを指揮し、魔王に次ぐ地位にある。" />
+    <string id="TAOM_hero_1_16" text="ウンバールの騎士は指輪を受け取る前、海賊の領主であった。" />
+    <string id="TAOM_hero_1_28" text="裏切り者は堕落する前、東方の王であった。" />
+    <string id="TAOM_hero_1_38" text="不死者は不老不死を求めた魔術師王であったが、見出したのは永遠の隷属のみであった。" />
+    <string id="TAOM_hero_1_48" text="東夷のカムール、九人の指輪の幽鬼の第二位は、力の指輪を受け取る前、ルーンの偉大なる王国を統治していた。" />
+    <string id="TAOM_hero_1_48_1" text="汚れし者は騎行する先々に堕落を広める。" />
+    <string id="TAOM_hero_1_48_2" text="北国人の影は寒冷の地で狩りをする。" />
+    <string id="TAOM_hero_1_48_3" text="ウンバールの影は南方の海岸に出没する。" />
+    <string id="TAOM_hero_1_177" text="ホノラトゥスはモルドールの軍の将校を務めている。" />
+    <string id="TAOM_hero_1_29" text="サニオンは要塞を指揮する黒きヌーメノール人の隊長である。" />
+    <string id="TAOM_hero_1_17" text="偉大なるサウロン、モルドールの冥王。このエントリーは彼の恐るべき鎧を表示するためだけに存在する。" />
+    <string id="TAOM_hero_1_18" text="ジャセアはモルドールの闇の階層に仕える。" />
+    <string id="TAOM_hero_1_39" text="デバナは影の僕であり、闇の技に長けている。" />
+    <string id="TAOM_hero_1_30" text="モルグルの副官ゴスモグは、ペレンノール野の戦いでモルドールの軍勢を指揮する。残忍で狡猾なオークであり、最前線から指揮を執る。" />
+    <string id="TAOM_hero_1_30_1" text="スヴァラ・レッドファングは、ゴスモグの指揮下にあるオークの隊長である。" />
+    <string id="TAOM_hero_1_49" text="オブロンはモルドールのオークの中隊を率いる。" />
+    <string id="TAOM_hero_1_49_1" text="トリスタニアは闇の軍勢に仕える。" />
+    <string id="TAOM_hero_1_49_2" text="ゴルディアナは暗黒の塔の影に住まう。" />
+    <string id="TAOM_hero_1_30_2" text="カリニアはモルドールの闇の力に仕える。" />
+    <string id="TAOM_hero_1_30_3" text="シネシオスは影の僕である。" />
+    <string id="TAOM_hero_1_56_2" text="ルスティカは闇の軍勢に仕える。" />
+    <string id="TAOM_hero_1_63_2" text="コマタサは戦争のために生み出されたオークである。" />
+    <string id="TAOM_hero_1_63_3" text="エリディレアは闇の階層に仕える。" />
+    <string id="TAOM_hero_1_63" text="ミナス・モルグルの隊長ゴルバグは、死の都の守備隊を率いる。オークの中でも狡猾である。" />
+    <string id="TAOM_hero_1_63_1" text="ヴァラリアは死者の城砦に仕える。" />
+    <string id="TAOM_hero_1_74" text="ザカニスはオークの連隊を指揮する。" />
+    <string id="TAOM_hero_1_74_1" text="ゼナはモルドールの闇の主に仕える。" />
+    <string id="TAOM_hero_1_54" text="キリス・ウンゴルの隊長シャグラトは、モルドールへの峠を守る。オークの間でも残虐さで知られている。" />
+    <string id="TAOM_hero_1_54_1" text="コンスタリアはキリス・ウンゴルの塔に仕える。" />
+    <string id="TAOM_hero_1_68" text="タロスは峠に仕えるオークの隊長である。" />
+    <string id="TAOM_hero_1_68_1" text="シルヴィナは蜘蛛の峠の守備隊に仕える。" />
+    <string id="TAOM_hero_1_69_2" text="ドラシラは闇の軍勢に仕える。" />
+    <string id="TAOM_hero_1_69" text="ニフォンはモルドールの国境の要塞を指揮する。" />
+    <string id="TAOM_hero_1_69_1" text="アレリアナは国境地帯に仕える。" />
+    <string id="TAOM_hero_1_55" text="マスモグは強力なウルク=ハイの戦長である。" />
+    <string id="TAOM_hero_1_55_1" text="メゲシアは闇の力に仕える。" />
+    <string id="TAOM_hero_1_72" text="ボルグは強力なオークの族長であり、汚れし者アゾグの子孫である。" />
+    <string id="TAOM_hero_1_72_1" text="ヴィヴィアナは闇の階層に仕える。" />
+    <string id="TAOM_hero_SE8_c" text="モルドールの穴蔵で生み出されたオーク。" />
+    <string id="TAOM_hero_SE9_l" text="モルドールの要塞を指揮する黒きヌーメノール人の領主。" />
+    <string id="TAOM_hero_SE9_s" text="闇の力を持つ黒きヌーメノール人の魔女。" />
+    <string id="TAOM_hero_SE9_c1" text="黒きヌーメノール人の家系の跡継ぎであり、闇の技を修めた者。" />
+    <string id="TAOM_hero_SE9_c2" text="黒きヌーメノール人の領主の第二子。" />
+    <string id="TAOM_hero_2_1" text="バルド二世、谷間の国の王は、竜スマウグを討った伝説の弓の名手バルドの孫である。はなれ山のドワーフと同盟を結び、エレボールの麓の繁栄する王国を統治している。" />
+    <string id="TAOM_hero_2_2" text="アスタは谷間の国の女王であり、その知恵と優雅さで愛されている。" />
+    <string id="TAOM_hero_2_13_1" text="リリザは谷間の国の貴族の家の娘である。" />
+    <string id="TAOM_hero_2_13_2" text="アンドルタは王の屋敷に仕える。" />
+    <string id="TAOM_hero_2_13_3" text="ルダは谷間の国の若き貴婦人である。" />
+    <string id="TAOM_hero_2_13_4" text="テタは谷間の国の貴族の娘である。" />
+    <string id="TAOM_hero_2_7" text="シミルは谷間の国の王子であり、父の王位の継承者である。" />
+    <string id="TAOM_hero_2_7_1" text="ミミルは谷間の国の王家の王子である。" />
+    <string id="TAOM_hero_2_10" text="ヴァラは谷間の国の王女であり、外交と統治術の訓練を受けている。" />
+    <string id="TAOM_hero_2_13" text="ヴィダルは北方辺境の領主であり、東夷の侵入から守っている。" />
+    <string id="TAOM_hero_2_3" text="石兜のソリン三世は山の下の王であり、エレボールのドワーフを統治している。彼は谷間の国との古来の同盟を維持し、影に対抗する準備を整えている。" />
+    <string id="TAOM_hero_2_4" text="シガはドゥリンの一族のドワーフ貴族の女性である。" />
+    <string id="TAOM_hero_2_4_1" text="アポラネアは高貴な血筋のドワーフの乙女である。" />
+    <string id="TAOM_hero_2_8" text="ウリクはエレボールのドワーフ王子であり、鍛冶術と戦術に優れている。" />
+    <string id="TAOM_hero_2_11" text="イドルンは王室護衛のドワーフ戦士である。" />
+    <string id="TAOM_hero_2_111" text="ロジヴォルは山の門を守るドワーフ戦士である。" />
+    <string id="TAOM_hero_2_5" text="オリはトーリン・オーケンシールドの仲間の一人の子孫であるドワーフの領主である。彼はエレボールと谷間の国の間の交易路を管理している。" />
+    <string id="TAOM_hero_2_6" text="エルタはオリの妻であり、宝石切削の技術で知られている。" />
+    <string id="TAOM_hero_2_9" text="レクはオリの領地の後継者であり、交易と戦闘の両方で訓練を受けている。" />
+    <string id="TAOM_hero_2_12" text="スヴァナは交易家の娘である。" />
+    <string id="TAOM_hero_2_121" text="オスヴェンは山と都市の間の隊商を管理している。" />
+    <string id="TAOM_hero_2_14" text="イスヴァンは東方辺境の領主であり、長い湖を守っている。" />
+    <string id="TAOM_hero_2_14_1" text="ヴァルカヴァはイスヴァン卿の妻である。" />
+    <string id="TAOM_hero_2_14_2" text="ザヴェレナは東方領地の後継者である。" />
+    <string id="TAOM_hero_2_14_3" text="ヴィジドゥナは東方辺境の若き貴族である。" />
+    <string id="TAOM_hero_2_16" text="ボフールはエレボールのドワーフ領主であり、伝説の一行の子孫である。" />
+    <string id="TAOM_hero_2_16_1" text="チャスカはボフールの妻であり、治癒術に優れている。" />
+    <string id="TAOM_hero_2_21" text="スヴェドルンは湖の町の守備隊を指揮している。" />
+    <string id="TAOM_hero_2_21_1" text="イズデンカは湖の町の業務を管理している。" />
+    <string id="TAOM_hero_2_17" text="トーリン・オーケンシールド二世は竜のスマウグからエレボールを奪還した英雄として記憶されている。彼の精神は子孫を鼓舞している。" />
+    <string id="TAOM_hero_2_17_1" text="ドラチャは古き王の記憶を守り続けている。" />
+    <string id="TAOM_hero_2_22" text="ラショネクは谷間の国の戦士たちを指揮している。" />
+    <string id="TAOM_hero_2_22_1" text="ジェネヴァはラショネクの妻である。" />
+    <string id="TAOM_hero_2_24" text="アルヴァルは谷間の国の守備隊の隊長である。" />
+    <string id="TAOM_hero_2_24_1" text="ゾリナは谷間の国の貴族の女性である。" />
+    <string id="TAOM_hero_2_18" text="グローインはエレボールのドワーフ領主であり、旅の仲間のギムリの父である。" />
+    <string id="TAOM_hero_2_18_1" text="ゾリカはグローインの妻であり、有名なギムリの母である。" />
+    <string id="TAOM_hero_2_23" text="ガルデンは谷間の国の南部守備隊を指揮している。" />
+    <string id="TAOM_hero_2_23_1" text="ズラトカはガルデンの娘である。" />
+    <string id="TAOM_hero_2_15" text="ラタゴストは賢明な助言者であり、国事について王に助言を行っている。" />
+    <string id="TAOM_hero_2_15_1" text="ヤチャナは王宮に仕えている。" />
+    <string id="TAOM_hero_2_15_2" text="ミランカは宮廷の貴族の女性である。" />
+    <string id="TAOM_hero_2_15_3" text="ヴェリナは王家に仕えている。" />
+    <string id="TAOM_hero_2_15_4" text="ボヴァンは谷間の国の若き貴族である。" />
+    <string id="TAOM_hero_2_19" text="ドワーリンは名高いドワーフ戦士であり、元の一行の最後の生き残りである。" />
+    <string id="TAOM_hero_2_19_1" text="ヴィトミラはドワーリンと共に仕えている。" />
+    <string id="TAOM_hero_2_20" text="オーインはドワーフの長老であり、古の知識と治癒術の守護者である。" />
+    <string id="TAOM_hero_2_20_1" text="キシャはオインの妻で、薬草の知識に長けている。" />
+    <string id="TAOM_hero_S8_u" text="山の館を守る歴戦の古参兵。" />
+    <string id="TAOM_hero_3_1" text="カドゥラクはハラドのタスクラルであり、南方軍の最高司令官である。彼はゴンドールに対抗してモルドールと同盟を結び、ムマキルの戦象を率いて民の敵と戦う。" />
+    <string id="TAOM_hero_3_2" text="高い地位を持つハラドリムの貴族女性。" />
+    <string id="TAOM_hero_3_7" text="ディユルはタスクラルの後継者であり、ムマク騎乗者の道を学んでいる。" />
+    <string id="TAOM_hero_3_10" text="アニダはタスクラルの娘で、宮廷政治に通じている。" />
+    <string id="TAOM_hero_3_13" text="ヌカルはハラドの精鋭蛇衛兵を指揮している。" />
+    <string id="TAOM_hero_3_13_1" text="シラはヌカルの妻である。" />
+    <string id="TAOM_hero_3_13_2" text="ラザナは蛇衛兵指揮官の娘である。" />
+    <string id="TAOM_hero_3_8" text="アダスはハラドリムの戦士王子である。" />
+    <string id="TAOM_hero_3_11" text="アルワは砂漠部族の王女である。" />
+    <string id="TAOM_hero_3_3" text="カレミアは東ハラドリムの族長であり、オアシス集落の領主である。" />
+    <string id="TAOM_hero_3_3_1" text="タリクは東のオアシス領主の後継者である。" />
+    <string id="TAOM_hero_3_4" text="マラーはカレミアの妻であり、その知恵で知られている。" />
+    <string id="TAOM_hero_3_5" text="ハルディアは沿岸ハラドリムを指揮し、ウンバールの海賊と同盟を結んでいる。" />
+    <string id="TAOM_hero_3_51" text="ハカンは沿岸部族の海の船長である。" />
+    <string id="TAOM_hero_3_12" text="マナンはゴンドールの沿岸集落を襲撃している。" />
+    <string id="TAOM_hero_3_20" text="カリスは敵地への襲撃隊を指揮している。" />
+    <string id="TAOM_hero_3_20_1" text="ジュディラはカリスの妻である。" />
+    <string id="TAOM_hero_3_20_2" text="アジナは襲撃隊長の娘である。" />
+    <string id="TAOM_hero_3_6" text="ルマはハルディアの妻であり、彼らの沿岸領地を管理している。" />
+    <string id="TAOM_hero_3_9" text="ウサイルは沿岸領地の後継者である。" />
+    <string id="TAOM_hero_3_14" text="タムザは砂漠の荒野を越える隊商を率いている。" />
+    <string id="TAOM_hero_3_14_1" text="ササイタは砂漠の交易路を管理している。" />
+    <string id="TAOM_hero_3_15" text="グジドは深南部のムマク騎乗者を指揮している。" />
+    <string id="TAOM_hero_3_15_1" text="シムラはムマクの領主の妻である。" />
+    <string id="TAOM_hero_3_15_2" text="ブシラは若いムマク騎乗者を訓練している。" />
+    <string id="TAOM_hero_3_16" text="ルミルは黄金の旗印部族の族長である。" />
+    <string id="TAOM_hero_3_16_1" text="ファリナは黄金の旗印族長の妻である。" />
+    <string id="TAOM_hero_3_17" text="オロフィンは極南の蛇騎兵を指揮している。" />
+    <string id="TAOM_hero_3_17_1" text="シャイマはオロフィンの妻である。" />
+    <string id="TAOM_hero_3_17_2" text="サニトは蛇騎兵の後継者である。" />
+    <string id="TAOM_hero_3_21" text="ウカイは北方の隊商を襲う砂漠の略奪者を率いている。" />
+    <string id="TAOM_hero_3_21_1" text="アシサは略奪隊長の妻である。" />
+    <string id="TAOM_hero_3_18" text="アランソンは南方の裕福な商人王子である。" />
+    <string id="TAOM_hero_3_18_1" text="ファルザナは商人王子の娘である。" />
+    <string id="TAOM_hero_3_18_2" text="ハフィサは交易の繋がりを管理している。" />
+    <string id="TAOM_hero_3_18_3" text="ズアドは修行中の若い商人である。" />
+    <string id="TAOM_hero_3_18_4" text="ジャルファルは交易隊商を護衛している。" />
+    <string id="TAOM_hero_3_19" text="アエシリオンは北方辺境の要塞を指揮している。" />
+    <string id="TAOM_hero_3_19_1" text="サルマは辺境司令官の妻である。" />
+    <string id="TAOM_hero_3_19_2" text="ズライカは辺境守備隊で訓練を受けている。" />
+    <string id="TAOM_hero_3_19_3" text="スルハナは辺境の貴族である。" />
+    <string id="TAOM_hero_3_23" text="カヒンは敵地への斥候を率いる。" />
+    <string id="TAOM_hero_3_23_1" text="スカイナは斥候隊長の妻である。" />
+    <string id="TAOM_hero_3_22" text="ドゥイリンは砂漠の部族の弓兵を指揮する。" />
+    <string id="TAOM_hero_3_22_1" text="ヤミナは弓兵隊長の妻である。" />
+    <string id="TAOM_hero_3_22_2" text="スナは若き弓兵たちを訓練する。" />
+    <string id="TAOM_hero_3_22_3" text="ザヌワは部族の熟練した弓兵である。" />
+    <string id="TAOM_hero_3_22_4" text="ハジャラは砂漠の監視塔を守る。" />
+    <string id="TAOM_hero_4_1" text="ローハンの王セオデンは、エドラスのメドゥセルドから統治する。かつてサルマンの従僕グリマに惑わされていたが、ガンダルフによって解放され、ヘルム峡谷とペレンノール野の戦いで民を栄光へと導いた。" />
+    <string id="TAOM_hero_4_2" text="エルフヒルドはローハンの王妃であり、セオドレドの母であった。彼女は出産時に亡くなり、その悲しみはセオデンの治世に影を落とした。" />
+    <string id="TAOM_hero_4_7" text="セオドレドはセオデン王の一人息子であり、ローハンの王子であった。彼はサルマンのウルク=ハイに対してアイゼンの浅瀬を守って倒れた。" />
+    <string id="TAOM_hero_4_10" text="エリスはロヒアリムの宮廷の貴婦人である。" />
+    <string id="TAOM_hero_4_13" text="ロムンドは王の親衛隊の隊長として仕える。" />
+    <string id="TAOM_hero_4_14" text="モルコンは王の側近として信頼される隊長である。" />
+    <string id="TAOM_hero_4_141" text="アモルコンは親衛隊で親族とともに仕える。" />
+    <string id="TAOM_hero_4_15" text="エルドゥランドはセオデンの側近の騎士である。" />
+    <string id="TAOM_hero_4_3" text="セオドウィンはセオデン王の妹であり、エオメルとエオウィンの母であった。夫エオムンドがオークに殺された後、悲しみのあまり世を去った。" />
+    <string id="TAOM_hero_4_3_1" text="エオメル・エアディグは辺境領第三元帥であり、セオデンの甥にして王位継承者である。彼は東谷の騎士たちを激しい忠誠心をもって率いる。" />
+    <string id="TAOM_hero_4_4" text="エルシルドはエオフォリングの貴婦人である。" />
+    <string id="TAOM_hero_4_8" text="フルンハードはエオメルの指揮下で信頼される騎士として仕える。" />
+    <string id="TAOM_hero_4_11" text="リエナは王家に仕える。" />
+    <string id="TAOM_hero_4_6" text="グリムスラーデのグリンボルドは西谷の騎士たちを指揮する。勇猛な戦士であり、アイゼンの浅瀬を守り抜き、後にペレンノール野で英雄的な死を遂げた。" />
+    <string id="TAOM_hero_4_6_1" text="デオルウィンはグリンボルドの指揮を継ぐ後継者である。" />
+    <string id="TAOM_hero_4_5" text="ウンセリーは西谷の騎士の隊長として仕える。" />
+    <string id="TAOM_hero_4_9" text="トムンドは西谷の騎士隊を指揮する。" />
+    <string id="TAOM_hero_4_12" text="シルヴィンドは西谷の盾の乙女である。" />
+    <string id="TAOM_hero_4_121" text="ラサンドは西谷の守備隊に仕える。" />
+    <string id="TAOM_hero_4_16" text="西谷領主エルケンブランドは角笛城の要塞を指揮する。彼はヘルム峡谷でガンダルフとともに到着し、戦局を覆した。" />
+    <string id="TAOM_hero_4_16_1" text="メルスはエルケンブランドの妻であり、角笛城の貴婦人である。" />
+    <string id="TAOM_hero_4_17" text="エルベトはエルケンブランドの側近に仕える。" />
+    <string id="TAOM_hero_4_18" text="アマルグンはエルケンブランドの後継者である。" />
+    <string id="TAOM_hero_4_181" text="アルサムンドは角笛城守備隊の隊長として仕える。" />
+    <string id="TAOM_hero_4_19" text="アセラは深き谷を守る盾の乙女である。" />
+    <string id="TAOM_hero_4_25" text="ルカンドは東エムネトの騎士たちを指揮する。" />
+    <string id="TAOM_hero_4_25_1" text="ベルトリアナはルカンドの妻である。" />
+    <string id="TAOM_hero_4_21" text="オルドラキングのクスラエドは東の国境を巡回する。" />
+    <string id="TAOM_hero_4_20" text="ヴァルムンドはアルドブルグの守備隊を指揮する。" />
+    <string id="TAOM_hero_4_20_1" text="インゲルトルドはヴァルムンドの妻であり、アルドブルグの貴婦人である。" />
+    <string id="TAOM_hero_4_22" text="ウルフ・ケルムンディングは北の谷の騎兵を率いる。" />
+    <string id="TAOM_hero_4_22_1" text="スンニファはウルフの妻である。" />
+    <string id="TAOM_hero_4_23" text="マルハスは南の草原の馬飼いたちを率いる。" />
+    <string id="TAOM_hero_4_23_1" text="ウルフウィンはマルハスの娘であり、熟練の騎手である。" />
+    <string id="TAOM_hero_4_23_2" text="エレドゥランは王の軍のために軍馬を訓練する。" />
+    <string id="TAOM_hero_4_23_3" text="若きエレドゥランは馬番として仕える。" />
+    <string id="TAOM_hero_4_24" text="蛇の舌グリマはセオデンの顧問であったが、密かにサルマンのスパイであった。彼の囁く嘘は王の心を毒したが、ガンダルフがその呪縛を解いた。" />
+    <string id="TAOM_hero_4_24_1" text="ローハンの姫君エオウィンは、エオメルの妹でありセオデンの姪である。彼女はペレンノール野でアングマールの魔王を討ち、時代の恐怖を打ち倒した。" />
+    <string id="TAOM_hero_4_24_2" text="エルフグリムは王家の騎兵として仕える。" />
+    <string id="TAOM_hero_4_24_3" text="ヘルブランドは王の館を守る。" />
+    <string id="TAOM_hero_4_24_4" text="ジークベルフトはローハンの国境を巡察する。" />
+    <string id="TAOM_hero_4_26" text="ペリックはローハンの隘路沿いの騎兵を指揮する。" />
+    <string id="TAOM_hero_4_26_1" text="ライインガルダは隘路の盾乙女である。" />
+    <string id="TAOM_hero_4_27" text="エール・エゼルラフィングはダンランドの略奪からフォールドを守る。" />
+    <string id="TAOM_hero_4_27_1" text="ワエルブルグはエールの妻である。" />
+    <string id="TAOM_hero_V9_u" text="地元の領主に助言する熟練の騎兵。" />
+    <string id="TAOM_hero_4_28" text="ファストヘルム・モルカルガスは南の監視所を指揮する。" />
+    <string id="TAOM_hero_4_28_1" text="モルカルはファストヘルムの息子である。" />
+    <string id="TAOM_hero_4_28_2" text="ヘレスウィズは南の監視隊長の娘である。" />
+    <string id="TAOM_hero_5_1" text="カンドの大将軍ヴァルグルは、獰猛なヴァリアグの騎馬兵を率いる。モルドールとの同盟により、彼の戦士たちは中つ国の戦いでゴンドールに立ち向かう。" />
+    <string id="TAOM_hero_5_1_1" text="大将軍の従者の戦士。" />
+    <string id="TAOM_hero_5_3" text="エルゲオンは東方のヴァリアグ氏族を率いる族長であり、その迅速な騎兵戦術で知られている。" />
+    <string id="TAOM_hero_5_3_1" text="ラナオンはエルゲオンの戦団の後継者である。" />
+    <string id="TAOM_hero_5_3_2" text="ラドグアルはエルゲオンの軍の隊長として仕える。" />
+    <string id="TAOM_hero_5_4" text="ニィウィンはエルゲオンの妻であり、癒しの術に長けている。" />
+    <string id="TAOM_hero_5_5" text="メリディルはゴンドールの地への略奪者を率いる。" />
+    <string id="TAOM_hero_5_5_1" text="エイリーは氏族の馬の群れを管理する。" />
+    <string id="TAOM_hero_5_6" text="アルカエアはメリディルの妻である。" />
+    <string id="TAOM_hero_5_7" text="カンドのヴァリアグ戦士族長。" />
+    <string id="TAOM_hero_5_8" text="セインはヴァリアグ騎兵隊を指揮する。" />
+    <string id="TAOM_hero_5_9" text="クルハーンは名声を高めつつあるヴァリアグの戦士である。" />
+    <string id="TAOM_hero_5_91" text="テガンはクルハーンと共に仕える。" />
+    <string id="TAOM_hero_5_10" text="コーレインは大将軍の宮廷のヴァリアグ貴族である。" />
+    <string id="TAOM_hero_5_11" text="アリンネスはヴァリアグの貴婦人である。" />
+    <string id="TAOM_hero_5_12" text="ウィスウィンは若きヴァリアグの騎兵を訓練する。" />
+    <string id="TAOM_hero_5_13" text="ミュインサーは北方の地域で略奪者を指揮する。" />
+    <string id="TAOM_hero_5_131" text="ラスはミュインサーの指揮下で仕える。" />
+    <string id="TAOM_hero_5_13_1" text="ベアサグは北方氏族のヴァリアグの戦士である。" />
+    <string id="TAOM_hero_5_15" text="プリンドールはカンドへの山岳峠を守る。" />
+    <string id="TAOM_hero_5_15_1" text="フロライはその山岳の守護者の娘である。" />
+    <string id="TAOM_hero_5_15_2" text="ベイトリンは山道を巡回している。" />
+    <string id="TAOM_hero_5_15_3" text="ディアルヴァインは高地の峠を守っている。" />
+    <string id="TAOM_hero_5_14" text="ルイチャンは西部平原のヴァリアグ騎兵を指揮している。" />
+    <string id="TAOM_hero_5_14_1" text="エアビルはルイチャンの妻である。" />
+    <string id="TAOM_hero_5_16" text="エアロンは中央草原の戦士たちを率いている。" />
+    <string id="TAOM_hero_5_16_1" text="リアシンはエアロンの妻である。" />
+    <string id="TAOM_hero_5_16_2" text="ガウェンはエアロンの戦団の後継者である。" />
+    <string id="TAOM_hero_5_17" text="アラドウィルは東部辺境軍を指揮している。" />
+    <string id="TAOM_hero_5_17_1" text="ブリガンはアラドウィルの妻である。" />
+    <string id="TAOM_hero_5_18" text="ブラノクは敵地への斥候を率いている。" />
+    <string id="TAOM_hero_5_18_1" text="セオナグはブラノクの妻である。" />
+    <string id="TAOM_hero_5_19" text="フェナガンは決闘の技で知られるヴァリアグの勇士である。" />
+    <string id="TAOM_hero_5_20" text="シアラムスはカンドの戦車戦士たちを指揮している。" />
+    <string id="TAOM_hero_5_21" text="カルフィドは国境沿いのヴァリアグ略奪隊を率いている。" />
+    <string id="TAOM_hero_5_21_1" text="ベアサグはカルフィドの妻である。" />
+    <string id="TAOM_hero_5_21_2" text="タオルセはカルフィドの略奪隊の後継者である。" />
+    <string id="TAOM_hero_5_22" text="フィアラドは南部交易路を守っている。" />
+    <string id="TAOM_hero_6_1" text="ルーンのロケ・カン、ザミク・ザミアンは東夷の黄金の国を統治している。彼の祖先はサウロンに仕えており、彼もその暗黒の同盟を続け、西方の地を征服することを夢見ている。" />
+    <string id="TAOM_hero_6_2" text="マライアはロケ・カンの妻であり、黄金の国の女王である。" />
+    <string id="TAOM_hero_6_3" text="バガイは王室護衛隊の隊長を務めている。" />
+    <string id="TAOM_hero_6_4" text="グルティルム・サルリアンはルーンの西方軍を指揮している。夫の死後、彼女は鉄の決意をもって指揮権を引き継いだ。" />
+    <string id="TAOM_hero_6_5" text="イルボ・ニカティアンは東部草原の名高い騎馬弓兵、アルキト氏族を率いている。" />
+    <string id="TAOM_hero_6_51" text="カダはアルキト氏族の後継者である。" />
+    <string id="TAOM_hero_6_6" text="スランは南部部族の戦士たちを指揮している。" />
+    <string id="TAOM_hero_6_7" text="チャガンはルーンの王子であり、黄金の国の後継者である。" />
+    <string id="TAOM_hero_6_8" text="エスルはグルティルムの軍の戦士である。" />
+    <string id="TAOM_hero_6_81" text="ナヤンタイはグルティルムの軍の隊長を務めている。" />
+    <string id="TAOM_hero_6_9" text="テムンはアルキト氏族の戦士である。" />
+    <string id="TAOM_hero_6_10" text="アリジンは王家の王子である。" />
+    <string id="TAOM_hero_6_101" text="ボラトは王室に仕えている。" />
+    <string id="TAOM_hero_6_11" text="ヤナはグルティルムの軍の貴族である。" />
+    <string id="TAOM_hero_6_12" text="アバガイはアルキトの所領の後継者である。" />
+    <string id="TAOM_hero_6_13" text="ボルトゥは王家の貴族である。" />
+    <string id="TAOM_hero_6_15" text="オラグルはアルキトの騎馬弓兵を率いている。" />
+    <string id="TAOM_hero_6_15_1" text="コリジンはオラグルの妻である。" />
+    <string id="TAOM_hero_6_15_2" text="セチェンはオラグルの指揮権の後継者である。" />
+    <string id="TAOM_hero_6_16" text="アクヴォス・カルミアンはルーンの南部国境を指揮している。" />
+    <string id="TAOM_hero_6_16_1" text="チャンブイはアクヴォスの妻である。" />
+    <string id="TAOM_hero_6_16_2" text="ウナゲンはアクヴォスの指揮権の後継者である。" />
+    <string id="TAOM_hero_6_17" text="アムドゥール・アムドゥリドは東部草原の強力な氏族を率いている。" />
+    <string id="TAOM_hero_6_17_1" text="エルゲネはアムドゥルの妻である。" />
+    <string id="TAOM_hero_6_17_2" text="イェスムはアムドゥリド家の領地の後継者である。" />
+    <string id="TAOM_hero_6_18" text="ルスカン・クンドラルは西部諸州の戦士たちを指揮する。" />
+    <string id="TAOM_hero_6_18_1" text="ティルンはルスカンの妻である。" />
+    <string id="TAOM_hero_6_18_2" text="チャグンはクンドラル家の後継者である。" />
+    <string id="TAOM_hero_6_19" text="ヴァケラルタン・クンドラルはルスカンの兄弟で、騎兵斥候を指揮する。" />
+    <string id="TAOM_hero_6_19_1" text="ソカタイはヴァケラルタンの妻である。" />
+    <string id="TAOM_hero_6_19_2" text="コルテはヴァケラルタンの斥候隊の後継者である。" />
+    <string id="TAOM_hero_6_20" text="クルブラ・マシャキアンはルーンの北部部族を指揮する。" />
+    <string id="TAOM_hero_6_20_1" text="ジグルはクルブラの妻である。" />
+    <string id="TAOM_hero_K8_u" text="北部の族長に助言する熟練の戦士。" />
+    <string id="TAOM_hero_6_21" text="モッルク・イルノリアは強力な馬上戦士の一族を指揮する。" />
+    <string id="TAOM_hero_6_21_1" text="エサチェイはモッルクの妻である。" />
+    <string id="TAOM_hero_6_22" text="シャカル二世・シャカリアンはルーンの海沿いの裕福な交易一族を統治する。" />
+    <string id="TAOM_hero_6_22_1" text="エセレンはシャカルの妻である。" />
+    <string id="TAOM_hero_6_23" text="フズ=マルゴズ・フズは西部辺境沿いの要塞守備隊を指揮する。" />
+    <string id="TAOM_hero_6_24" text="ニカス・アデキグはルーンへの南部峠を守る。" />
+    <string id="TAOM_hero_A9_l" text="南部荒地のハラドリムの族長。" />
+    <string id="TAOM_hero_A9_s" text="南部荒地の族長の妻。" />
+    <string id="TAOM_hero_A9_c" text="南部荒地の族長の後継者。" />
+    <string id="TAOM_hero_A9_u" text="南部部族の戦士。" />
+    <string id="TAOM_hero_V11_l" text="西部谷のローハンの領主。" />
+    <string id="TAOM_hero_V11_u" text="領主に助言する歴戦の騎手。" />
+    <string id="TAOM_hero_V11_c1" text="西部谷の領地の後継者。" />
+    <string id="TAOM_hero_V11_c2" text="西部谷の領主の第二子。" />
+    <string id="TAOM_hero_S9_l" text="北部への道を守るデイルの貴族。" />
+    <string id="TAOM_hero_S9_m" text="北部バルディング一族の女家長。" />
+    <string id="TAOM_hero_S9_c" text="北部領地の若き後継者。" />
+    <string id="TAOM_hero_S9_u" text="北部守備隊の熟練戦士。" />
+    <string id="TAOM_hero_K9_l" text="遠方の東夷部族の族長。" />
+    <string id="TAOM_hero_K9_s" text="遠方の族長の妻。" />
+    <string id="TAOM_hero_K9_c1" text="遠方の部族領地の後継者。" />
+    <string id="TAOM_hero_K9_c2" text="遠方の族長の第二子。" />
+    <string id="TAOM_hero_B8_l" text="東部丘陵地のヴァリアグ軍閥の長。" />
+    <string id="TAOM_hero_B8_s" text="ヴァリアグ軍閥の長の妻。" />
+    <string id="TAOM_hero_B8_c" text="ヴァリアグ軍閥の長の後継者。" />
+  </strings>
+</base>

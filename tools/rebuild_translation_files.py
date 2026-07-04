@@ -124,7 +124,7 @@ def rebuild_language(lang):
             return cache[sid], "cache"
         return english, "english_fallback"
 
-    # ─── TAOM module: 6 source XMLs ─────────────────────────────────────────────
+    # ─── TAOM module: 10 source XMLs ────────────────────────────────────────────
     taom_sources = [
         ("taom_module_strings.xml",                       f"std_taom_module_strings_{locale}.xml"),
         ("taom_wanderer_strings.xml",                     f"std_taom_wanderer_strings_{locale}.xml"),
@@ -133,6 +133,9 @@ def rebuild_language(lang):
         ("taom_career_strings.xml",                       f"std_taom_career_strings_{locale}.xml"),
         ("taom_messenger_strings.xml",                    f"std_taom_messenger_strings_{locale}.xml"),
         ("taom_xslt_strings.xml",                         f"std_taom_xslt_strings_{locale}.xml"),
+        ("taom_wotr_strings.xml",                          f"std_taom_wotr_strings_{locale}.xml"),
+        ("taom_lotr_issue_strings.xml",                   f"std_taom_lotr_issue_strings_{locale}.xml"),
+        ("taom_emissary_strings.xml",                     f"std_taom_emissary_strings_{locale}.xml"),
     ]
     taom_target_dir = REPO_ROOT / "Main" / "_Module" / "ModuleData" / "Languages" / lang
     for src_rel, tgt_name in taom_sources:

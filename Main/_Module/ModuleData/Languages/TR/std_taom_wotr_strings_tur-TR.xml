@@ -1,10 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Turkish" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Turkish" />
+  </tags>
+  <strings>
+    <string id="taom_wotr_title" text="Yüzük Savaşı" />
+    <string id="taom_wotr_leaders" text="Liderler" />
+    <string id="taom_wotr_allies" text="Müttefikler" />
+    <string id="taom_wotr_breakdown_header" text="Momentum Dağılımı" />
+    <string id="taom_wotr_total_stats_header" text="Toplam İstatistikler" />
+    <string id="taom_wotr_total" text="Toplam: {MOMENTUM}" />
+    <string id="taom_wotr_battles_won" text="Kazanılan Savaşlar" />
+    <string id="taom_wotr_villages_raided" text="Yağmalanan Köyler" />
+    <string id="taom_wotr_fiefs_captured" text="Ele Geçirilen Topraklar" />
+    <string id="taom_wotr_army_gathered" text="Toplanan Ordular" />
+    <string id="taom_wotr_relative_strength" text="Göreli Güç" />
+    <string id="taom_wotr_enemies_killed" text="Öldürülen Düşmanlar" />
+    <string id="taom_wotr_settlements_captured" text="Ele Geçirilen Yerleşimler" />
+    <string id="taom_wotr_momentum" text="Momentum" />
+    <string id="taom_wotr_desc_battle" text="{WINNER_LEADER} liderliğindeki {WINNER_FACTION} ordusu, {LOSER_LEADER} liderliğindeki {LOSER_FACTION} ordusunu yok etti ve {CASUALTIES} düşman öldürdü." />
+    <string id="taom_wotr_desc_siege" text="{LEADER} liderliğindeki {FACTION} ordusu, {SETTLEMENT}'i ele geçirdi." />
+    <string id="taom_wotr_desc_raid" text="{FACTION}'a ait {PARTY}, {SETTLEMENT} köyünü yağmaladı." />
+    <string id="taom_wotr_desc_army" text="{LEADER} liderliğinde bir ordu toplandı." />
+    <string id="taom_wotr_desc_strength" text="Düşmanlarımızdan %{PERCENTAGE} daha güçlüyüz!" />
+    <string id="taom_wotr_victory_title" text="Savaşın Sonu" />
+    <string id="taom_wotr_victory_free" text="Savaş bitti. Özgür Halklar direndi ve çocukları için geleceği kazandı. Yaşasın özgürlük!" />
+    <string id="taom_wotr_victory_evil" text="İnsanların ve Elflerin krallıkları ezildi. Yaşasın Sauron!" />
+    <string id="taom_wotr_continue" text="Devam Et" />
+  </strings>
+</base>

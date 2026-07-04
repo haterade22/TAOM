@@ -1,10 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Spanish (LA)" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Spanish (LA)" />
+  </tags>
+  <strings>
+    <string id="taom_wotr_title" text="Guerra del Anillo" />
+    <string id="taom_wotr_leaders" text="Líderes" />
+    <string id="taom_wotr_allies" text="Aliados" />
+    <string id="taom_wotr_breakdown_header" text="Desglose de Impulso" />
+    <string id="taom_wotr_total_stats_header" text="Estadísticas Totales" />
+    <string id="taom_wotr_total" text="Total: {MOMENTUM}" />
+    <string id="taom_wotr_battles_won" text="Batallas Ganadas" />
+    <string id="taom_wotr_villages_raided" text="Aldeas Saqueadas" />
+    <string id="taom_wotr_fiefs_captured" text="Feudos Capturados" />
+    <string id="taom_wotr_army_gathered" text="Ejércitos Reunidos" />
+    <string id="taom_wotr_relative_strength" text="Fuerza Relativa" />
+    <string id="taom_wotr_enemies_killed" text="Enemigos Eliminados" />
+    <string id="taom_wotr_settlements_captured" text="Asentamientos Capturados" />
+    <string id="taom_wotr_momentum" text="Impulso" />
+    <string id="taom_wotr_desc_battle" text="El ejército de {WINNER_FACTION}, liderado por {WINNER_LEADER}, destruyó al ejército de {LOSER_FACTION}, liderado por {LOSER_LEADER}, eliminando a {CASUALTIES}." />
+    <string id="taom_wotr_desc_siege" text="El ejército de {FACTION}, liderado por {LEADER}, capturó {SETTLEMENT}." />
+    <string id="taom_wotr_desc_raid" text="{PARTY} de {FACTION} saqueó la aldea de {SETTLEMENT}." />
+    <string id="taom_wotr_desc_army" text="Un ejército liderado por {LEADER} se ha reunido." />
+    <string id="taom_wotr_desc_strength" text="¡Somos {PERCENTAGE}% más fuertes que nuestros enemigos!" />
+    <string id="taom_wotr_victory_title" text="Fin de la Guerra" />
+    <string id="taom_wotr_victory_free" text="La guerra ha terminado. Los Pueblos Libres han perseverado y ganado el futuro para sus hijos. ¡Larga vida a la libertad!" />
+    <string id="taom_wotr_victory_evil" text="Los reinos de los Hombres y los Elfos por igual han sido aplastados. ¡Larga vida a Sauron!" />
+    <string id="taom_wotr_continue" text="Continuar" />
+  </strings>
+</base>

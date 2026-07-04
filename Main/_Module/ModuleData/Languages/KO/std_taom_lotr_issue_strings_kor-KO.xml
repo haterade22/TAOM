@@ -1,10 +1,318 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Korean" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="taom_lotr_issue_grain_title" text="{ISSUE_SETTLEMENT}에 종자곡물 필요" />
+    <string id="taom_lotr_issue_grain_desc" text="{ISSUE_SETTLEMENT}의 백성들이 종자곡물을 잃어 밭에 씨를 뿌리지 못하면 굶주리게 될 것입니다." />
+    <string id="taom_lotr_issue_grain_brief" text="어둠이 우리를 힘들게 했소, 나그네. 쥐들과 혹독한 겨울이 우리의 종자를 앗아갔소. 뿌릴 곡물이 없으면, 우리는 올해를 넘기지 못할 것이오." />
+    <string id="taom_lotr_issue_grain_accept" text="어찌할 방도가 없소?" />
+    <string id="taom_lotr_issue_grain_expl" text="당신이 우리에게 {COUNT} 말의 곡물을 가져다주면, 계절이 바뀌기 전에 밭에 씨를 뿌릴 수 있을 것이오. 우리는 그만큼을 살 돈이 없소." />
+    <string id="taom_lotr_issue_grain_soln" text="그 곡물을 구해드리겠습니다." />
+    <string id="taom_lotr_issue_grain_task" text="곡물 수집 ({COUNT})" />
+    <string id="taom_lotr_issue_supplies_title" text="양식이 필요한 군대" />
+    <string id="taom_lotr_issue_supplies_desc" text="전쟁을 위해 군대를 소집한 영주가 출정 전 모인 군대를 먹일 곡물이 필요합니다." />
+    <string id="taom_lotr_issue_supplies_brief" text="내 병사들이 모여들지만, 칼로는 배를 채울 수 없소. 그들을 먹일 곡물이 없으면, 이 군대는 전장에 나서기도 전에 흩어질 것이오." />
+    <string id="taom_lotr_issue_supplies_accept" text="얼마나 많은 곡물이 필요하오?" />
+    <string id="taom_lotr_issue_supplies_expl" text="내게 {COUNT} 말의 곡물을 가져오면 내 병사들은 배불리 먹고 진군할 수 있소. 이 일을 해주면 왕국이 기억할 것이오." />
+    <string id="taom_lotr_issue_supplies_soln" text="군대를 위한 곡물을 가져오겠습니다." />
+    <string id="taom_lotr_issue_supplies_task" text="군대에 곡물 전달 ({COUNT})" />
+    <string id="taom_lotr_issue_draught_title" text="{ISSUE_SETTLEMENT}에 짐승이 필요합니다" />
+    <string id="taom_lotr_issue_draught_desc" text="{ISSUE_SETTLEMENT} 마을이 밭을 갈 소를 잃어 일을 할 수 없습니다." />
+    <string id="taom_lotr_issue_draught_brief" text="우리의 소들이 빼앗겼소 -- 일부는 약탈자들에게, 일부는 기근으로. 쟁기를 끌 짐승이 없으면, 땅은 굳어지고 밭은 씨 뿌리지 못한 채 남게 되오." />
+    <string id="taom_lotr_issue_draught_accept" text="무엇이 도움이 되겠소?" />
+    <string id="taom_lotr_issue_draught_expl" text="당신이 우리에게 {COUNT} 마리의 소를 몰아주시면, 계절이 바뀌기 전에 다시 땅을 갈 수 있을 것이오." />
+    <string id="taom_lotr_issue_draught_soln" text="소를 가져다드리겠습니다." />
+    <string id="taom_lotr_issue_draught_task" text="소 전달 ({COUNT})" />
+    <string id="taom_lotr_issue_crafting_title" text="{ISSUE_SETTLEMENT}에 철이 필요합니다" />
+    <string id="taom_lotr_issue_crafting_desc" text="{ISSUE_SETTLEMENT}의 대장장이가 철이 떨어져 연장도 칼날도 고칠 수 없습니다." />
+    <string id="taom_lotr_issue_crafting_brief" text="대장간이 차갑게 서 있소, 나그네. 철이 없으면 대장장이는 말굽도 박을 수 없고 쟁기날도 고칠 수 없으니, 마을이 고통받고 있소." />
+    <string id="taom_lotr_issue_crafting_accept" text="어디서 철을 구하시겠소?" />
+    <string id="taom_lotr_issue_crafting_expl" text="우리에게 {COUNT} 개의 철괴를 가져다주면 대장간이 다시 울릴 것이오. 우리는 그만큼을 살 돈이 없소." />
+    <string id="taom_lotr_issue_crafting_soln" text="철을 구해드리겠습니다." />
+    <string id="taom_lotr_issue_crafting_task" text="철 전달 ({COUNT})" />
+    <string id="taom_lotr_issue_tools_title" text="{ISSUE_SETTLEMENT}에 연장이 필요합니다" />
+    <string id="taom_lotr_issue_tools_desc" text="{ISSUE_SETTLEMENT}의 사람들이 땅을 경작하고 물건을 만들 연장이 부족합니다." />
+    <string id="taom_lotr_issue_tools_brief" text="우리의 낫은 녹슬어 망가지고 망치는 부러졌소. 제대로 된 연장 없이는 정직한 일도 더딘 일이오." />
+    <string id="taom_lotr_issue_tools_accept" text="무엇이 필요하오?" />
+    <string id="taom_lotr_issue_tools_expl" text="당신이 우리에게 {COUNT} 벌의 연장을 가져다주면, 마을이 제자리를 찾고 다시 번영할 수 있을 것이오." />
+    <string id="taom_lotr_issue_tools_soln" text="연장을 가져다드리겠습니다." />
+    <string id="taom_lotr_issue_tools_task" text="연장 전달 ({COUNT})" />
+    <string id="taom_lotr_issue_horses_title" text="말이 필요한 영주" />
+    <string id="taom_lotr_issue_horses_desc" text="한 영주가 전쟁과 소모로 말을 잃어 기병들에게 새 말이 필요합니다." />
+    <string id="taom_lotr_issue_horses_brief" text="전쟁은 말에게 가혹하오, 나그네. 내 말들은 힘든 길에서 지쳐 쓰러졌소. 말 없는 기병은 그저 느린 창병일 뿐이오." />
+    <string id="taom_lotr_issue_horses_accept" text="얼마나 많은 말이 필요하오?" />
+    <string id="taom_lotr_issue_horses_expl" text="내게 {COUNT} 마리의 건강한 말을 가져오면 내 기병들이 다시 말을 탈 수 있소. 그 대가는 후하게 지불하겠소." />
+    <string id="taom_lotr_issue_horses_soln" text="말을 가져다드리겠습니다." />
+    <string id="taom_lotr_issue_horses_task" text="말 전달 ({COUNT})" />
+    <string id="taom_lotr_issue_recruits_title" text="조직을 위한 신선한 피" />
+    <string id="taom_lotr_issue_recruits_desc" text="조직 두목이 붙잡힌 무법자들을 자신의 부하로 편입시키고자 한다." />
+    <string id="taom_lotr_issue_recruits_brief" text="조직은 그 수만큼 강한 법. 내 조직은 인원이 부족하오. 법을 싫어하는 포로들을 데려오면 내가 쓸모있게 만들겠소." />
+    <string id="taom_lotr_issue_recruits_accept" text="어떤 포로를 원하시오?" />
+    <string id="taom_lotr_issue_recruits_expl" text="산적 포로 {COUNT}명을 데려오면 일을 시키겠소. 대가는 지불하지. 묻지도 따지지도 않고 말이오." />
+    <string id="taom_lotr_issue_recruits_soln" text="포로들을 데려오겠소." />
+    <string id="taom_lotr_issue_recruits_task" text="산적 포로 인도 ({COUNT})" />
+    <string id="taom_lotr_issue_laborers_title" text="광산을 위한 일손" />
+    <string id="taom_lotr_issue_laborers_desc" text="지주가 힘든 노동을 위한 강한 일손이 필요하여 붙잡힌 산적들을 받으려 한다." />
+    <string id="taom_lotr_issue_laborers_brief" text="광산에는 일꾼이 필요한데 자유민들은 그곳에 내려가려 하지 않소. 쇠사슬에 묶인 산적들을 데려오면 곡괭이로 제 몫을 하게 만들겠소." />
+    <string id="taom_lotr_issue_laborers_accept" text="죄수들을 원하시오?" />
+    <string id="taom_lotr_issue_laborers_expl" text="노동대에 보낼 산적 포로 {COUNT}명을 데려오면 잡아온 수고에 대가를 지불하겠소." />
+    <string id="taom_lotr_issue_laborers_soln" text="포로들을 데려오겠소." />
+    <string id="taom_lotr_issue_laborers_task" text="산적 포로 인도 ({COUNT})" />
+    <string id="taom_lotr_issue_banditbase_title" text="{ISSUE_SETTLEMENT} 근처의 소굴" />
+    <string id="taom_lotr_issue_banditbase_desc" text="약탈자들의 소굴이 {ISSUE_SETTLEMENT} 근처 도로를 노리고 있다." />
+    <string id="taom_lotr_issue_banditbase_brief" text="언덕에 그자들의 더러운 소굴이 있소, 나그네. 놈들은 우리 물건과 사람들을 빼앗아가는데, 경비대는 수가 적어 소탕하지 못하고 있소." />
+    <string id="taom_lotr_issue_banditbase_accept" text="그 소굴이 어디 있소?" />
+    <string id="taom_lotr_issue_banditbase_expl" text="우리 도로를 괴롭히는 약탈자들을 쳐부수면 보상을 하겠소. 이 땅이 한결 편히 숨 쉴 수 있을 것이오." />
+    <string id="taom_lotr_issue_banditbase_soln" text="놓들을 쓸어버리겠소." />
+    <string id="taom_lotr_issue_outlaws_title" text="무역로의 무법자들" />
+    <string id="taom_lotr_issue_outlaws_desc" text="약탈 무리들이 상인의 무역을 옥죄고 있어 격파해야 한다." />
+    <string id="taom_lotr_issue_outlaws_brief" text="도로의 약탈자들 때문에 내 대상들이 지나갈 수 없소. 놈들의 무리를 충분히 격파하면 무역이 다시 흐를 수 있을 것이오." />
+    <string id="taom_lotr_issue_outlaws_accept" text="무리가 얼마나 되오?" />
+    <string id="taom_lotr_issue_outlaws_expl" text="도로를 괴롭히는 무리들을 격파하시오 -- 몇 번 제대로 승리하면 나머지는 흩어질 것이오 -- 그러면 후하게 보상하겠소." />
+    <string id="taom_lotr_issue_outlaws_soln" text="도로를 소탕하겠소." />
+    <string id="taom_lotr_issue_poachers_title" text="밀렵꾼 떼" />
+    <string id="taom_lotr_issue_poachers_desc" text="대규모 밀렵꾼 무리가 상인의 사냥 장사를 망치고 있다." />
+    <string id="taom_lotr_issue_poachers_brief" text="밀렵꾼들이 대담해지고 숫자도 늘었소 -- 놈들은 숲을 홀랑 벗겨가고 정직한 사냥꾼들을 쫓아내오. 누군가가 놈들을 쓰러뜨려야 하오." />
+    <string id="taom_lotr_issue_poachers_accept" text="놈들이 어디서 활동하오?" />
+    <string id="taom_lotr_issue_poachers_expl" text="밀렵꾼 무리를 격파하면 숲이 다시 우리 것이 되겠소. 대가는 있소." />
+    <string id="taom_lotr_issue_poachers_soln" text="놈들을 처리하겠소." />
+    <string id="taom_lotr_issue_captured_title" text="쇠사슬에 묶인 내 부하들" />
+    <string id="taom_lotr_issue_captured_desc" text="조직 두목의 부하들이 현상금 사냥꾼들에게 붙잡혔고 그는 그들을 풀어주길 원한다." />
+    <string id="taom_lotr_issue_captured_brief" text="현상금 사냥꾼들이 내 부하 몇을 잡아가 팔아먹으려 하오. 놈들을 부숴버리면 대가를 주겠소 -- 조용한 대가 말이오." />
+    <string id="taom_lotr_issue_captured_accept" text="누가 붙잡고 있소?" />
+    <string id="taom_lotr_issue_captured_expl" text="내 부하들을 잡아간 무리를 찾아 쳐부수시오. 그러면 대가를 받을 것이오, 묻지도 따지지도 않고." />
+    <string id="taom_lotr_issue_captured_soln" text="당신 부하들을 풀어주겠소." />
+    <string id="taom_lotr_issue_deserters_title" text="{ISSUE_SETTLEMENT}을 노리는 탈영병들" />
+    <string id="taom_lotr_issue_deserters_desc" text="탈영병 무리가 {ISSUE_SETTLEMENT}에서 갈취를 하고 거부한 자들을 죽였다." />
+    <string id="taom_lotr_issue_deserters_brief" text="검을 든 패잔병들이 우리의 곡식과 돈을 노리고 왔고, 피를 흘렸습니다. 우리 혼자서는 그들과 맞설 수 없습니다." />
+    <string id="taom_lotr_issue_deserters_accept" text="도와주겠소. 그들이 어디 있소?" />
+    <string id="taom_lotr_issue_deserters_expl" text="매복하고 있다가 그들이 왔을 때 패잔병들을 제압하십시오. 그들을 없애주시면 우리의 감사와 돈을 드리겠습니다." />
+    <string id="taom_lotr_issue_deserters_soln" text="그들의 약탈을 끝내주겠소." />
+    <string id="taom_lotr_issue_commons_title" text="공유지의 분쟁" />
+    <string id="taom_lotr_issue_commons_desc" text="무장한 적대자들이 마을의 방목 공유지를 무력으로 점거하고 있습니다." />
+    <string id="taom_lotr_issue_commons_brief" text="거친 자들이 우리 방목지를 점거하고 가까이 오는 자는 누구든 쫓아냅니다. 그들이 차지하는 동안 우리 가축들은 굶주립니다." />
+    <string id="taom_lotr_issue_commons_accept" text="그들이 누구요?" />
+    <string id="taom_lotr_issue_commons_expl" text="무력으로 공유지에서 적대자들을 몰아내면 목초지가 다시 우리 것이 됩니다. 가능한 한 보상을 드리겠습니다." />
+    <string id="taom_lotr_issue_commons_soln" text="그들을 몰아내겠소." />
+    <string id="taom_lotr_issue_rivalgang_title" text="침입하는 라이벌" />
+    <string id="taom_lotr_issue_rivalgang_desc" text="라이벌 갱단이 범죄 두목의 영역을 침범하고 있어 진압해야 합니다." />
+    <string id="taom_lotr_issue_rivalgang_brief" text="다른 조직이 내 것을 빼앗을 수 있다고 생각하는 모양이군. 골목에서 그들을 쳐부수면 거리가 다시 조용해질 것이고 -- 당신은 돈을 받는다." />
+    <string id="taom_lotr_issue_rivalgang_accept" text="그들이 어디에 모이오?" />
+    <string id="taom_lotr_issue_rivalgang_expl" text="라이벌 갱단을 격퇴하고 본보기를 보이시오. 해내면 좋은 돈이 기다리고 있소." />
+    <string id="taom_lotr_issue_rivalgang_soln" text="해결했다고 보시오." />
+    <string id="taom_lotr_issue_spy_title" text="적의 첩자" />
+    <string id="taom_lotr_issue_spy_desc" text="한 영주가 적의 요원이 자신을 공격하고 있다고 의심하며 그 첩자의 일행을 추적하기를 원합니다." />
+    <string id="taom_lotr_issue_spy_brief" text="풀밭에 독사가 있소 -- 내 적들의 첩자가 무리의 암살자들과 함께 움직이고 있소. 그들을 찾아 공격하기 전에 처치하시오." />
+    <string id="taom_lotr_issue_spy_accept" text="어떻게 알아보겠소?" />
+    <string id="taom_lotr_issue_spy_expl" text="첩자의 일행을 추적하여 섬멸하시오. 이 위협을 제거해주면 후하게 보상하겠소." />
+    <string id="taom_lotr_issue_spy_soln" text="추적하여 처리하겠소." />
+    <string id="taom_lotr_issue_revolt_title" text="반역자 귀족" />
+    <string id="taom_lotr_issue_revolt_desc" text="하급 귀족이 농민들을 선동하여 반란을 일으켰고 진압해야 합니다." />
+    <string id="taom_lotr_issue_revolt_brief" text="하찮은 소영주가 농민들을 선동하여 상급자들에게 대항하게 하고 무장 병력을 모으고 있소. 반란이 퍼지기 전에 그의 세력을 분쇄하시오." />
+    <string id="taom_lotr_issue_revolt_accept" text="어디에서 병력을 모으고 있소?" />
+    <string id="taom_lotr_issue_revolt_expl" text="반역자와 그의 오합지졸을 격파하면 질서가 회복될 것이오. 당신의 봉사에 보상하겠소." />
+    <string id="taom_lotr_issue_revolt_soln" text="이 반란을 진압하겠소." />
+    <string id="taom_lotr_issue_company_title" text="골칫거리 용병단" />
+    <string id="taom_lotr_issue_company_desc" text="한 영주를 괴롭히기 위해 고용된 용병 무리를 몰아내야 합니다." />
+    <string id="taom_lotr_issue_company_brief" text="내 적들이 내 영지에 용병단을 풀어놓았소. 그들은 다른 자의 돈을 받고 불태우고 약탈하고 있소. 그들을 분쇄해주시오." />
+    <string id="taom_lotr_issue_company_accept" text="어디서 약탈하고 있소?" />
+    <string id="taom_lotr_issue_company_expl" text="용병단을 격파하면 내 영지가 다시 평화를 얻을 것이오. 후하게 보상하겠소." />
+    <string id="taom_lotr_issue_company_soln" text="분쇄하겠소." />
+    <string id="taom_lotr_issue_prodigal_title" text="빚진 친족" />
+    <string id="taom_lotr_issue_prodigal_desc" text="한 영주의 젊은 친족이 갱단에 빠져 빚 때문에 붙잡혀 있습니다." />
+    <string id="taom_lotr_issue_prodigal_brief" text="내 어리석은 젊은 사촌이 도적들에게 빠져 이제 그들이 빚을 빌미로 그를 붙잡고 있소. 갱단을 분쇄하고 그를 구출하시오." />
+    <string id="taom_lotr_issue_prodigal_accept" text="어디에 붙잡혀 있소?" />
+    <string id="taom_lotr_issue_prodigal_expl" text="내 친족을 붙잡고 있는 갱단을 격파하고 그를 데려오시오. 수고에 대해 빚의 몇 배로 보상하겠소." />
+    <string id="taom_lotr_issue_prodigal_soln" text="당신의 친족을 구출하겠소." />
+    <string id="taom_lotr_issue_rival_title" text="증오하는 적수" />
+    <string id="taom_lotr_issue_rival_desc" text="한 영주가 적대 영주를 전투에서 생포하길 원한다." />
+    <string id="taom_lotr_issue_rival_brief" text="굴욕을 안겨주고 싶은 영주가 있소. 생포해서 무릎 꿇리고 싶소. 전투에서 적 영주를 사로잡으면 큰 공로로 치겠소." />
+    <string id="taom_lotr_issue_rival_accept" text="살려서 잡아오라는 말씀입니까?" />
+    <string id="taom_lotr_issue_rival_expl" text="전투에서 적 영주를 포로로 잡으면 임무는 완수되는 것이오. 후한 보상을 받을 것이오." />
+    <string id="taom_lotr_issue_rival_soln" text="포로가 된 영주를 데려오겠습니다." />
+    <string id="taom_lotr_issue_caravanambush_title" text="길 위의 매복" />
+    <string id="taom_lotr_issue_caravanambush_desc" text="약탈자들이 상인의 대상을 매복 공격하려 하니 먼저 격파해야 한다." />
+    <string id="taom_lotr_issue_caravanambush_brief" text="도적들이 앞길에서 내 대상을 기다리고 있다는 소식을 들었소. 그들의 함정을 먼저 치고 박살내시오. 더 이상 내 피를 빨아먹게 둘 순 없소." />
+    <string id="taom_lotr_issue_caravanambush_accept" text="어디서 기다리고 있습니까?" />
+    <string id="taom_lotr_issue_caravanambush_expl" text="매복 중인 약탈자들을 찾아 섬멸하시오. 길을 깨끗이 하면 내 물건과 당신의 보상이 무사히 지나갈 것이오." />
+    <string id="taom_lotr_issue_caravanambush_soln" text="그들의 매복을 분쇄하겠습니다." />
+    <string id="taom_lotr_issue_escortcaravan_title" text="교역로 정화" />
+    <string id="taom_lotr_issue_escortcaravan_desc" text="상인의 대상이 길 위의 약탈 무리를 격파하기 전엔 지나갈 수 없다." />
+    <string id="taom_lotr_issue_escortcaravan_brief" text="약탈자들이 길을 배회하는 한 내 수레는 감히 굴러갈 수 없소. 그들 무리를 충분히 격파하면 정직한 교역의 길이 다시 열릴 것이오." />
+    <string id="taom_lotr_issue_escortcaravan_accept" text="얼마나 많이 길을 막고 있습니까?" />
+    <string id="taom_lotr_issue_escortcaravan_expl" text="교역로를 위협하는 무리들을 격파하면 내 대상이 다시 굴러갈 것이오. 안전한 통행에 대해 후하게 대가를 치르겠소." />
+    <string id="taom_lotr_issue_escortcaravan_soln" text="길을 열어드리겠습니다." />
+    <string id="taom_lotr_issue_herd_title" text="{ISSUE_SETTLEMENT}을 위한 가축 떼" />
+    <string id="taom_lotr_issue_herd_desc" text="{ISSUE_SETTLEMENT}의 백성들은 가축 떼를 재건하기 위해 가축을 몰아다 줄 사람이 필요합니다." />
+    <string id="taom_lotr_issue_herd_brief" text="늑대와 그보다 나쁜 것들이 우리 가축을 거의 전멸시켰소, 나그네. 번식시킬 짐승이 없으면 마을은 다음 풍요로운 겨울을 보지 못할 것이오." />
+    <string id="taom_lotr_issue_herd_accept" text="무엇을 가져오길 원하십니까?" />
+    <string id="taom_lotr_issue_herd_expl" text="{COUNT}마리의 양을 몰고 와주시오. 그러면 우리 가축이 다시 번성할 수 있을 것이오. 마을이 낼 수 있는 만큼 지불하겠소." />
+    <string id="taom_lotr_issue_herd_soln" text="가축 떼를 데려오겠습니다." />
+    <string id="taom_lotr_issue_herd_task" text="가축 배달 ({COUNT})" />
+    <string id="taom_lotr_issue_snare_title" text="욕심쟁이를 위한 함정" />
+    <string id="taom_lotr_issue_snare_desc" text="한 무리의 두목이 탐욕스러운 경쟁자들을 함정으로 유인해 섬멸하길 원한다." />
+    <string id="taom_lotr_issue_snare_brief" text="제 어미까지 털어먹을 탐욕스러운 놈들이 있소. 그들을 유인해서 박살내시오. 그들이 가진 걸 나눠 갖겠소 -- 조용히 말이오." />
+    <string id="taom_lotr_issue_snare_accept" text="그 경쟁자들은 누구입니까?" />
+    <string id="taom_lotr_issue_snare_expl" text="탐욕스러운 무리에게 함정을 작동시켜 제압하시오. 깨끗하게 처리하면 두둑한 주머니가 당신 것이오." />
+    <string id="taom_lotr_issue_snare_soln" text="해내겠습니다." />
+    <string id="taom_lotr_issue_cantsell_title" text="시장 없는 물건들" />
+    <string id="taom_lotr_issue_cantsell_desc" text="한 장인의 물건이 팔리지 않아 쌓여가고 있으니 필요로 하는 시장으로 운반해야 한다." />
+    <string id="taom_lotr_issue_cantsell_brief" text="내 선반은 여기서 아무도 사지 않는 물건으로 삐걱거리고 있소, 나그네. 내 작품이 필요로 하는 마을에 닿을 수만 있다면, 내 작업대에서 굶어 죽지 않을 텐데." />
+    <string id="taom_lotr_issue_cantsell_accept" text="무엇을 만드십니까?" />
+    <string id="taom_lotr_issue_cantsell_expl" text="더 나은 시장으로 보낼 도자기 {COUNT}짐을 가져오시오. 교역 이익의 일부를 드리겠소." />
+    <string id="taom_lotr_issue_cantsell_soln" text="당신의 물건이 움직이게 하겠습니다." />
+    <string id="taom_lotr_issue_cantsell_task" text="교역할 도자기 모으기 ({COUNT})" />
+    <string id="taom_lotr_issue_overpriced_title" text="값비싼 재료" />
+    <string id="taom_lotr_issue_overpriced_desc" text="한 장인이 자신의 기술에 필요한 원재료를 구할 여력이 없어 싸게 가져다 줄 이가 필요하다." />
+    <string id="taom_lotr_issue_overpriced_brief" text="좋은 가죽의 가격이 이치에 맞지 않을 정도로 올랐고, 내 기술은 그것이 없어 죽어가고 있소. 합리적인 가격에 가죽을 가져다주면 은혜를 잊지 않겠소." />
+    <string id="taom_lotr_issue_overpriced_accept" text="무엇이 필요하십니까?" />
+    <string id="taom_lotr_issue_overpriced_expl" text="{COUNT}짐의 가죽을 가져다주면 내 작업장이 다시 노래할 것이오. 그 수고에 대해 정당한 대가를 지불하겠소." />
+    <string id="taom_lotr_issue_overpriced_soln" text="가죽을 구해드리겠습니다." />
+    <string id="taom_lotr_issue_overpriced_task" text="가죽 배달 ({COUNT})" />
+    <string id="taom_lotr_issue_offload_title" text="빼돌려야 할 물건" />
+    <string id="taom_lotr_issue_offload_desc" text="한 갱단 두목이 처분해야 할 훔친 물건이 있어 조용히 운반할 사람을 찾고 있다." />
+    <string id="taom_lotr_issue_offload_brief" text="잘못된 눈에 띄어선 안 되는 물건들이 한 무더기 있소. 날 위해 이걸 운반해주면 깨끗한 돈이 기다리고 있을 것이오 -- 질문도 없고, 이름도 없소." />
+    <string id="taom_lotr_issue_offload_accept" text="제가 무엇을 운반하는 겁니까?" />
+    <string id="taom_lotr_issue_offload_expl" text="{COUNT}짐의 이 물건들을 구해서 조용히 옮기시오. 잘 해내면 다음 일도 당신 것이오." />
+    <string id="taom_lotr_issue_offload_soln" text="물건을 옮겨드리겠습니다." />
+    <string id="taom_lotr_issue_offload_task" text="물건 확보 ({COUNT})" />
+    <string id="taom_lotr_issue_revenue_title" text="현물 십일조" />
+    <string id="taom_lotr_issue_revenue_desc" text="한 지주가 외곽 농장들로부터 받지 못한 곡물 십일조를 받을 권리가 있다." />
+    <string id="taom_lotr_issue_revenue_brief" text="농장들이 나에게 십일조를 빚지고 있는데, 동전이 아닌 곡물로 내야 하오 -- 그나마 낼 때 말이오. 빚진 것을 거두어 가져오시오, 그러면 몫을 주겠소." />
+    <string id="taom_lotr_issue_revenue_accept" text="얼마나 빚지고 있습니까?" />
+    <string id="taom_lotr_issue_revenue_expl" text="십일조로 요구되는 {COUNT}단위의 곡물을 가져오면 수금에 대한 정당한 몫을 주겠소." />
+    <string id="taom_lotr_issue_revenue_soln" text="십일조를 거두어드리겠습니다." />
+    <string id="taom_lotr_issue_revenue_task" text="곡물 십일조 수집 ({COUNT})" />
+    <string id="taom_lotr_issue_arttrade_title" text="무역의 모험" />
+    <string id="taom_lotr_issue_arttrade_desc" text="상인 지망생이 이익을 내고 사업의 타당성을 증명하기 위해 물건을 들여와야 한다." />
+    <string id="taom_lotr_issue_arttrade_brief" text="나는 무역으로 재산을 모으려 하오, 여행자여, 하지만 시작할 물건이 필요하오. 재고를 가져다주면 우리 둘 다를 위해 그것을 금으로 만들어드리겠소." />
+    <string id="taom_lotr_issue_arttrade_accept" text="어떤 재고가 필요하십니까?" />
+    <string id="taom_lotr_issue_arttrade_expl" text="사업을 굴리기 위해 {COUNT}짐의 기름을 가져다주면 팔렸을 때 이익을 나누겠소." />
+    <string id="taom_lotr_issue_arttrade_soln" text="사업에 재고를 채워드리겠습니다." />
+    <string id="taom_lotr_issue_arttrade_task" text="무역 재고 배달 ({COUNT})" />
+    <string id="taom_lotr_issue_smugglers_title" text="밀수꾼 소탕" />
+    <string id="taom_lotr_issue_smugglers_desc" text="밀수 조직이 정직한 무역을 방해하고 있어 한 상인이 그들을 소탕하기를 원한다." />
+    <string id="taom_lotr_issue_smugglers_brief" text="밀수꾼들의 조직이 통행료를 내지 않은 물건으로 시장을 넘쳐나게 하고 있고, 정직한 상인들이 그 때문에 파산하고 있소. 그들의 행로를 끊으면 무역이 바로잡힐 것이오." />
+    <string id="taom_lotr_issue_smugglers_accept" text="그들이 어디로 물건을 운반합니까?" />
+    <string id="taom_lotr_issue_smugglers_expl" text="밀수꾼들을 물리치고 그들의 조직을 흩어놓으시오. 길에서 그들을 몰아내면 그 대가를 지불하겠소." />
+    <string id="taom_lotr_issue_smugglers_soln" text="그들의 조직을 소탕하겠습니다." />
+    <string id="taom_lotr_issue_gangweapons_title" text="빼앗을 무기" />
+    <string id="taom_lotr_issue_gangweapons_desc" text="한 갱단 두목이 경쟁자의 무기 은닉처를 무력으로 탈취하기를 원한다." />
+    <string id="taom_lotr_issue_gangweapons_brief" text="경쟁 조직이 훌륭한 무기 은닉처를 차지하고 있는데, 내 부하들은 녹슨 칼로 싸우고 있소. 그들을 깨부수면 은닉처는 우리 것이오 -- 그리고 몫은 당신 것이오." />
+    <string id="taom_lotr_issue_gangweapons_accept" text="이 은닉처가 어디 있습니까?" />
+    <string id="taom_lotr_issue_gangweapons_expl" text="무기를 보유한 무리를 물리치면 그 무기는 내가 가질 것이오. 해내면 좋은 돈이 당신 손에 들어갈 것이오." />
+    <string id="taom_lotr_issue_gangweapons_soln" text="그들의 은닉처를 탈취하겠습니다." />
+    <string id="taom_lotr_issue_garrison_title" text="성벽 수비" />
+    <string id="taom_lotr_issue_garrison_desc" text="한 영주의 수비대가 압박받고 있어 괴롭히는 적들을 몰아내야 한다." />
+    <string id="taom_lotr_issue_garrison_brief" text="내 수비대는 병력이 부족하고 적들은 사방에서 우리를 압박하고 있소. 내 성벽을 괴롭히는 무리들을 격파해 주시오. 그러면 내 병사들이 숨 돌릴 여유를 갖게 될 것이오." />
+    <string id="taom_lotr_issue_garrison_accept" text="누가 압박하고 있소?" />
+    <string id="taom_lotr_issue_garrison_expl" text="내 수비대를 괴롭히는 적들을 격파하시오. 그러면 성벽은 지켜질 것이오. 왕국이 그에 대한 보상을 할 것이오." />
+    <string id="taom_lotr_issue_garrison_soln" text="당신의 수비대를 구원하겠소." />
+    <string id="taom_lotr_issue_conquest_title" text="적의 전력 분쇄" />
+    <string id="taom_lotr_issue_conquest_desc" text="정복을 계획하는 영주는 진군하기 전에 적의 야전군을 격파해야 한다." />
+    <string id="taom_lotr_issue_conquest_brief" text="정당히 내 것인 것을 되찾으려 하나, 적의 전력이 길을 가로막고 있소. 야전에서 그의 군대를 격파하시오. 그러면 전리품을 더 쉽게 차지할 수 있을 것이오." />
+    <string id="taom_lotr_issue_conquest_accept" text="무엇을 하길 바라시오?" />
+    <string id="taom_lotr_issue_conquest_expl" text="적의 군대를 격파하여 그의 지배력을 약화시키시오. 그리 한다면 정복의 전리품 중 일부가 당신의 것이 될 것이오." />
+    <string id="taom_lotr_issue_conquest_soln" text="그의 전력을 분쇄하겠소." />
+    <string id="taom_lotr_issue_raid_title" text="적에게 전쟁 가져가기" />
+    <string id="taom_lotr_issue_raid_desc" text="한 영주가 적의 영토를 약탈하고 그들의 약탈대를 섬멸하기를 원한다." />
+    <string id="taom_lotr_issue_raid_brief" text="이제 적이 자신의 땅에서 전쟁을 느낄 때가 되었소. 그의 약탈대를 추적하여 칼로 베어버리시오. 그러면 그의 땅은 공포를 알게 될 것이오." />
+    <string id="taom_lotr_issue_raid_accept" text="어디를 공격해야 하오?" />
+    <string id="taom_lotr_issue_raid_expl" text="그의 국경을 배회하는 적의 부대를 격파하시오. 그의 땅에 피를 뿌리면 후한 보상을 받을 것이오." />
+    <string id="taom_lotr_issue_raid_soln" text="그들에게 전쟁을 가져가겠소." />
+    <string id="taom_lotr_issue_scout_title" text="적에 대한 감시" />
+    <string id="taom_lotr_issue_scout_desc" text="한 영주가 정찰병들이 국경 지대를 명확히 볼 수 있도록 적의 순찰대를 격파해야 한다." />
+    <string id="taom_lotr_issue_scout_brief" text="적의 순찰대가 국경을 배회하는 동안 나는 적의 움직임을 알 수 없소. 그들을 격파하고 내 시야를 확보하시오. 그러면 어디를 공격해야 할지 알 수 있을 것이오." />
+    <string id="taom_lotr_issue_scout_accept" text="그의 순찰대는 어디를 배회하오?" />
+    <string id="taom_lotr_issue_scout_expl" text="국경을 엄호하는 적의 순찰대를 격파하여 내 정찰병들이 지나갈 수 있게 하시오. 그리 한다면 그에 대한 대가를 받을 것이오." />
+    <string id="taom_lotr_issue_scout_soln" text="국경을 정리하겠소." />
+    <string id="taom_lotr_issue_knight_title" text="용사의 은총" />
+    <string id="taom_lotr_issue_knight_desc" text="한 귀부인이 마상 창시합에서 자신의 은총이 승리로 이어지길 바란다." />
+    <string id="taom_lotr_issue_knight_brief" text="마상 창시합에서 내 은총을 지닌 용사가 내 이름으로 영광을 얻길 바라오. 시합에서 승리한다면 나의 영원한 감사를 얻게 될 것이오." />
+    <string id="taom_lotr_issue_knight_accept" text="시합에서 싸우길 원하시오?" />
+    <string id="taom_lotr_issue_knight_expl" text="내 은총을 지니고 마상 창시합에서 승리하시오. 그 영예는 우리 둘 모두의 것이오. 승리에 대한 보상을 받게 될 것이오." />
+    <string id="taom_lotr_issue_knight_soln" text="당신을 위해 승리하겠소." />
+    <string id="taom_lotr_issue_tutor_title" text="후계자의 교육을 위하여" />
+    <string id="taom_lotr_issue_tutor_desc" text="한 영주가 후계자의 교육을 적절한 방식으로 갖추기 위해 고급 직물과 물품들을 가져오길 원한다." />
+    <string id="taom_lotr_issue_tutor_brief" text="내 후계자는 우리 가문에 걸맞게 교육받아야 하오. 고급 의복과 학문의 도구들로 말이오. 필요한 것들을 가져오면 그 아이는 아무것도 부족함이 없을 것이오." />
+    <string id="taom_lotr_issue_tutor_accept" text="무엇을 가져와야 하오?" />
+    <string id="taom_lotr_issue_tutor_expl" text="내 후계자를 영주답게 입힐 수 있도록 벨벳 {COUNT}필을 가져오시오. 그러면 그에 대한 후한 대가를 받을 것이오." />
+    <string id="taom_lotr_issue_tutor_soln" text="당신의 후계자를 위해 준비하겠소." />
+    <string id="taom_lotr_issue_tutor_task" text="고급 직물 전달 ({COUNT})" />
+    <string id="taom_lotr_issue_training_title" text="가신들의 전투 경험" />
+    <string id="taom_lotr_issue_training_desc" text="한 지주가 미숙한 가신들을 야전에서 실제 적들과 싸우게 하여 전투 경험을 쌓게 하려 한다." />
+    <string id="taom_lotr_issue_training_brief" text="내 가신들은 나약하고 경험이 없소. 나약한 자들은 첫 전투에서 죽기 마련이오. 그들을 이끌고 실전에서 싸워 강인한 병사로 만드시오." />
+    <string id="taom_lotr_issue_training_accept" text="전투 경험을 쌓게 하고 싶으신 것이오?" />
+    <string id="taom_lotr_issue_training_expl" text="치열한 전투에서 승리하여 내 가신들에게 전쟁의 기술을 가르치시오. 그들을 단련시키면 그 교육에 대한 대가를 받을 것이오." />
+    <string id="taom_lotr_issue_training_soln" text="그들을 전사로 만들어주겠습니다." />
+    <string id="taom_lotr_issue_inn_title" text="사기와 고통" />
+    <string id="taom_lotr_issue_inn_desc" text="명망가가 사기꾼들에게 재산을 빼앗겼고, 그들에게 호된 교훈을 주고 싶어한다." />
+    <string id="taom_lotr_issue_inn_brief" text="사기꾼 무리가 속임수 주사위와 위조 문서로 내 재산을 가져갔소. 그들을 응징해주시오, 그래야 내가 이 마을에서 다시 고개를 들 수 있을 것이오." />
+    <string id="taom_lotr_issue_inn_accept" text="누가 당신을 속였습니까?" />
+    <string id="taom_lotr_issue_inn_expl" text="사기꾼들을 찾아서 응징하시오. 그들에게 절대 잊지 못할 교훈을 주면 내 능력껏 보상하겠소." />
+    <string id="taom_lotr_issue_inn_soln" text="빚을 갚아드리겠습니다." />
+    <string id="taom_lotr_issue_feud_title" text="오래된 불화" />
+    <string id="taom_lotr_issue_feud_desc" text="뿌리 깊은 불화가 유혈사태로 번졌고, 영주는 적대 세력의 무장 병력을 격파하길 원한다." />
+    <string id="taom_lotr_issue_feud_brief" text="우리 가문과 다른 가문 사이에는 깊고 오래된 악연이 있소. 이제 칼부림까지 번졌소. 그들의 무장 병력을 격파하면 이 불화도 마침내 끝날 것이오." />
+    <string id="taom_lotr_issue_feud_accept" text="누구와 불화 중이십니까?" />
+    <string id="taom_lotr_issue_feud_expl" text="적대 세력의 병력을 격파하고 무력으로 이 불화를 끝내시오. 그렇게 하면 우리 가문이 당신께 빚을 지게 될 것이오." />
+    <string id="taom_lotr_issue_feud_soln" text="이 불화를 끝내겠습니다." />
+    <string id="taom_lotr_issue_daughter_title" text="납치된 딸" />
+    <string id="taom_lotr_issue_daughter_desc" text="명망가의 딸이 갱단에게 납치당했고, 가족은 그녀를 구출하길 원한다." />
+    <string id="taom_lotr_issue_daughter_brief" text="내 딸을... 여행자여, 그들이 내 딸을 납치해서 내가 감당할 수 없는 몸값을 요구하고 있소. 그녀를 붙잡고 있는 놈들을 응징하고 내게 데려와 주시오." />
+    <string id="taom_lotr_issue_daughter_accept" text="어디에 갇혀 있습니까?" />
+    <string id="taom_lotr_issue_daughter_expl" text="내 딸을 납치한 갱단을 찾아 격파하시오. 그녀를 무사히 집으로 데려오면 내가 줄 수 있는 모든 것을 드리겠소." />
+    <string id="taom_lotr_issue_daughter_soln" text="그녀를 집으로 데려오겠습니다." />
+    <string id="taom_lotr_issue_betting_title" text="확실한 내기" />
+    <string id="taom_lotr_issue_betting_desc" text="갱단 두목이 마상시합에 큰돈을 걸었고, 그의 내기를 성공시킬 전사가 필요하다." />
+    <string id="taom_lotr_issue_betting_brief" text="다음 마상시합에 큰돈을 걸었소. 나는 지는 걸 싫어하오. 날 위해 이겨주면 상금의 두둑한 몫을 주겠소." />
+    <string id="taom_lotr_issue_betting_accept" text="제가 마상시합에서 우승하길 원하십니까?" />
+    <string id="taom_lotr_issue_betting_expl" text="마상시합에서 우승해서 내 내기를 성공시키시오. 상금을 받으면 당신께 후한 보상을 드리겠소." />
+    <string id="taom_lotr_issue_betting_soln" text="당신의 내기를 성공시키겠습니다." />
+    <string id="taom_lotr_issue_special_title" text="대장간을 위한 철" />
+    <string id="taom_lotr_issue_special_desc" text="갱단 두목이 특별한 검을 제작하기 위해 양질의 철을 원한다." />
+    <string id="taom_lotr_issue_special_brief" text="칼을 만들고 싶소 -- 제대로 된 것 말이오, 내 부하들이 들고 다니는 쓰레기 같은 게 아니라. 그러려면 좋은 철이 필요하오. 금속을 가져다주면 대장장이들을 시켜 작업하게 하겠소." />
+    <string id="taom_lotr_issue_special_accept" text="얼마나 많은 철이 필요합니까?" />
+    <string id="taom_lotr_issue_special_expl" text="대장간을 위해 좋은 철 {COUNT}개를 가져오면 돈을 주겠소 -- 칼은 내 일이오." />
+    <string id="taom_lotr_issue_special_soln" text="철을 가져다 드리겠습니다." />
+    <string id="taom_lotr_issue_special_task" text="철 전달 ({COUNT})" />
+    <string id="taom_lotr_issue_fallback_title" text="도움 요청" />
+    <string id="taom_lotr_issue_fallback_desc" text="주민이 물품 배달이 필요하다." />
+    <string id="taom_lotr_issue_fallback_brief" text="우리에게 도움이 필요합니다, 여행자여." />
+    <string id="taom_lotr_issue_fallback_accept" text="어떻게 도와드릴까요?" />
+    <string id="taom_lotr_issue_fallback_expl" text="{ITEM} {COUNT}개를 가져다주시면 우리가 살 수 있을 것입니다." />
+    <string id="taom_lotr_issue_fallback_soln" text="필요한 것을 가져다 드리겠습니다." />
+    <string id="taom_lotr_issue_common_accepted" text="{ITEM} {COUNT}개를 {QUEST_SETTLEMENT}에 가져가시오." />
+    <string id="taom_lotr_issue_common_ready" text="임무를 완료할 만큼 충분히 가지고 있습니다. {QUEST_SETTLEMENT}로 돌아가서 전달하십시오." />
+    <string id="taom_lotr_issue_common_cancel" text="합의가 취소되었습니다." />
+    <string id="taom_lotr_issue_common_timeout" text="제시간에 물품을 전달하지 못했습니다." />
+    <string id="taom_lotr_issue_common_offer_accept" text="감사합니다. 이 은혜를 잊지 않겠습니다." />
+    <string id="taom_lotr_issue_common_have_you" text="우리에게 필요한 것을 가져오셨습니까?" />
+    <string id="taom_lotr_issue_common_thanks" text="축복을 받으소서, 여행자여. 당신이 우리를 구원했습니다." />
+    <string id="taom_lotr_issue_common_await" text="당신의 귀환을 기다리겠습니다." />
+    <string id="taom_lotr_issue_common_turnin" text="네. 여기 있습니다." />
+    <string id="taom_lotr_issue_common_working" text="아직 아닙니다 — 작업 중입니다." />
+    <string id="taom_lotr_issue_common_not_enough" text="아직 충분하지 않습니다." />
+    <string id="taom_lotr_issue_common_task" text="물품 수집" />
+    <string id="taom_lotr_issue_pers_expl" text="{COUNT}명의 포로를 데려오면 후한 보상을 드리겠습니다." />
+    <string id="taom_lotr_issue_pers_soln" text="포로를 데려오겠습니다." />
+    <string id="taom_lotr_issue_pers_accepted" text="{QUEST_SETTLEMENT}에 {COUNT}명의 산적 포로를 전달하십시오." />
+    <string id="taom_lotr_issue_pers_ready" text="충분한 포로를 확보했습니다. {QUEST_SETTLEMENT}로 돌아가서 넘겨주십시오." />
+    <string id="taom_lotr_issue_pers_timeout" text="제시간에 포로를 전달하지 못했습니다." />
+    <string id="taom_lotr_issue_pers_have" text="포로들을 데려오셨습니까?" />
+    <string id="taom_lotr_issue_pers_thanks" text="훌륭합니다. 감사드립니다." />
+    <string id="taom_lotr_issue_pers_turnin" text="네. 여기 있습니다." />
+    <string id="taom_lotr_issue_pers_not_enough" text="아직 포로가 충분하지 않습니다." />
+    <string id="taom_lotr_issue_pers_task" text="산적 포로 생포" />
+    <string id="taom_lotr_issue_combat_expl" text="우리의 적들을 처리하면 보상을 받을 것입니다." />
+    <string id="taom_lotr_issue_combat_soln" text="제가 처리하겠습니다." />
+    <string id="taom_lotr_issue_combat_task_capture" text="적 영주 포로 생포 ({COUNT})" />
+    <string id="taom_lotr_issue_combat_task_tourney" text="토너먼트 우승 ({COUNT})" />
+    <string id="taom_lotr_issue_combat_task_defeat" text="약탈자 격퇴 ({COUNT})" />
+    <string id="taom_lotr_issue_combat_timeout" text="제시간에 위협을 처리하지 못했습니다." />
+  </strings>
+</base>

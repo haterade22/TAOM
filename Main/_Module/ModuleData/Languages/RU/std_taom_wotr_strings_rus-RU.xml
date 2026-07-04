@@ -1,10 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Russian" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Russian" />
+  </tags>
+  <strings>
+    <string id="taom_wotr_title" text="Война Кольца" />
+    <string id="taom_wotr_leaders" text="Предводители" />
+    <string id="taom_wotr_allies" text="Союзники" />
+    <string id="taom_wotr_breakdown_header" text="Разбивка по импульсу" />
+    <string id="taom_wotr_total_stats_header" text="Общая статистика" />
+    <string id="taom_wotr_total" text="Всего: {MOMENTUM}" />
+    <string id="taom_wotr_battles_won" text="Выиграно битв" />
+    <string id="taom_wotr_villages_raided" text="Разграблено деревень" />
+    <string id="taom_wotr_fiefs_captured" text="Захвачено владений" />
+    <string id="taom_wotr_army_gathered" text="Собрано армий" />
+    <string id="taom_wotr_relative_strength" text="Относительная сила" />
+    <string id="taom_wotr_enemies_killed" text="Врагов убито" />
+    <string id="taom_wotr_settlements_captured" text="Поселений захвачено" />
+    <string id="taom_wotr_momentum" text="Импульс" />
+    <string id="taom_wotr_desc_battle" text="Армия {WINNER_FACTION} под предводительством {WINNER_LEADER} уничтожила армию {LOSER_FACTION} под предводительством {LOSER_LEADER}, убив {CASUALTIES}." />
+    <string id="taom_wotr_desc_siege" text="Армия {FACTION} под предводительством {LEADER} захватила {SETTLEMENT}." />
+    <string id="taom_wotr_desc_raid" text="{PARTY} из {FACTION} разграбил деревню {SETTLEMENT}." />
+    <string id="taom_wotr_desc_army" text="Собралась армия под предводительством {LEADER}." />
+    <string id="taom_wotr_desc_strength" text="Мы на {PERCENTAGE}% сильнее наших врагов!" />
+    <string id="taom_wotr_victory_title" text="Конец войны" />
+    <string id="taom_wotr_victory_free" text="Война окончена. Свободные Народы выстояли и завоевали будущее для своих детей. Да здравствует свобода!" />
+    <string id="taom_wotr_victory_evil" text="Королевства Людей и Эльфов сокрушены. Да здравствует Саурон!" />
+    <string id="taom_wotr_continue" text="Продолжить" />
+  </strings>
+</base>

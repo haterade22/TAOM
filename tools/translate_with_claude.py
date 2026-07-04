@@ -117,6 +117,8 @@ def english_source_files(module: str) -> list[tuple[Path, str]]:
             ("taom_messenger_strings.xml",                    "std_taom_messenger_strings_{locale}.xml"),
             ("taom_xslt_strings.xml",                         "std_taom_xslt_strings_{locale}.xml"),
             ("taom_wotr_strings.xml",                         "std_taom_wotr_strings_{locale}.xml"),
+            ("taom_lotr_issue_strings.xml",                   "std_taom_lotr_issue_strings_{locale}.xml"),
+            ("taom_emissary_strings.xml",                     "std_taom_emissary_strings_{locale}.xml"),
         ]:
             src = REPO_ROOT / "Main" / "_Module" / "ModuleData" / src_name
             if src.exists():
@@ -297,6 +299,41 @@ You MUST respond with ONLY a JSON array, no other text. Schema:
 Every input entry MUST have an output entry with the SAME id. Do not skip entries."""
 
 
+def _extract_translations(data) -> dict[str, str]:
+    """Map a parsed API response to {id: translated}, tolerating the shapes the model
+    actually emits. Prescribed form is [{"id":.., "translated":..}]; it sometimes returns
+    an alternate value key, a single-key wrapper object, or the bare {id: translated}
+    mapping — accepting all of them keeps a shape drift from wiping a 40-entry batch to 0."""
+    value_keys = ("translated", "translation", "text", "value", "output")
+    # Unwrap a single-key wrapper like {"translations": [...]}.
+    if isinstance(data, dict) and len(data) == 1:
+        only = next(iter(data.values()))
+        if isinstance(only, list):
+            data = only
+    result: dict[str, str] = {}
+    if isinstance(data, list):
+        for item in data:
+            if not isinstance(item, dict) or "id" not in item:
+                continue
+            for vk in value_keys:
+                val = item.get(vk)
+                if isinstance(val, str):
+                    result[str(item["id"])] = val
+                    break
+    elif isinstance(data, dict):
+        if "id" in data and any(vk in data for vk in value_keys):
+            for vk in value_keys:
+                val = data.get(vk)
+                if isinstance(val, str):
+                    result[str(data["id"])] = val
+                    break
+        else:
+            for sid, val in data.items():
+                if isinstance(val, str):
+                    result[str(sid)] = val
+    return result
+
+
 def call_claude(client, target_language: str, batch: list[Entry]) -> dict[str, str]:
     """Translate a batch via the Claude API. Returns {id: translated_text}."""
     user_payload = [{"id": e.string_id, "text": e.english_text} for e in batch]
@@ -321,11 +358,10 @@ def call_claude(client, target_language: str, batch: list[Entry]) -> dict[str, s
                 text = re.sub(r"^```(?:json)?\n?", "", text)
                 text = re.sub(r"\n?```$", "", text)
             data = json.loads(text)
-            # Tolerate per-item key issues — skip bad items rather than fail the batch
-            result_map = {}
-            for item in data:
-                if isinstance(item, dict) and "id" in item and "translated" in item:
-                    result_map[item["id"]] = item["translated"]
+            # Tolerate the response shapes the model actually emits (alternate value key,
+            # single-key wrapper, or the bare {id: text} object) — a shape drift used to
+            # wipe an entire 40-entry batch to 0/40 even though the JSON parsed fine.
+            result_map = _extract_translations(data)
             return result_map, usage
         except json.JSONDecodeError as e:
             if attempt == MAX_RETRIES - 1:

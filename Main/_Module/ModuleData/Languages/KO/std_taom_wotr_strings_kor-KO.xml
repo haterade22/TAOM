@@ -1,10 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Korean" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="taom_wotr_title" text="반지 전쟁" />
+    <string id="taom_wotr_leaders" text="지도자" />
+    <string id="taom_wotr_allies" text="동맹" />
+    <string id="taom_wotr_breakdown_header" text="기세 세부사항" />
+    <string id="taom_wotr_total_stats_header" text="전체 통계" />
+    <string id="taom_wotr_total" text="총계: {MOMENTUM}" />
+    <string id="taom_wotr_battles_won" text="승리한 전투" />
+    <string id="taom_wotr_villages_raided" text="약탈한 마을" />
+    <string id="taom_wotr_fiefs_captured" text="점령한 영지" />
+    <string id="taom_wotr_army_gathered" text="집결한 군대" />
+    <string id="taom_wotr_relative_strength" text="상대적 전력" />
+    <string id="taom_wotr_enemies_killed" text="처치한 적" />
+    <string id="taom_wotr_settlements_captured" text="점령한 정착지" />
+    <string id="taom_wotr_momentum" text="기세" />
+    <string id="taom_wotr_desc_battle" text="{WINNER_LEADER}이(가) 이끄는 {WINNER_FACTION}의 군대가 {LOSER_LEADER}이(가) 이끄는 {LOSER_FACTION}의 군대를 격파하고 {CASUALTIES}명을 살해했습니다." />
+    <string id="taom_wotr_desc_siege" text="{LEADER}이(가) 이끄는 {FACTION}의 군대가 {SETTLEMENT}을(를) 점령했습니다." />
+    <string id="taom_wotr_desc_raid" text="{FACTION}의 {PARTY}이(가) {SETTLEMENT} 마을을 약탈했습니다." />
+    <string id="taom_wotr_desc_army" text="{LEADER}이(가) 이끄는 군대가 집결했습니다." />
+    <string id="taom_wotr_desc_strength" text="우리는 적보다 {PERCENTAGE}% 더 강합니다!" />
+    <string id="taom_wotr_victory_title" text="전쟁의 종결" />
+    <string id="taom_wotr_victory_free" text="전쟁이 끝났습니다. 자유 민족들이 견뎌내어 자손들을 위한 미래를 쟁취했습니다. 자유 만세!" />
+    <string id="taom_wotr_victory_evil" text="인간과 엘프의 왕국들이 모두 무너졌습니다. 사우론 만세!" />
+    <string id="taom_wotr_continue" text="계속" />
+  </strings>
+</base>

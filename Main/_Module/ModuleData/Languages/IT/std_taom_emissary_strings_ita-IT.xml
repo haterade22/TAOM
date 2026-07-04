@@ -1,10 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Italian" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Italian" />
+  </tags>
+  <strings>
+    <string id="taom_emissary_menu" text="Parla con l'emissario della fazione" />
+    <string id="taom_emissary_no_trade" text="Non c'è commercio d'élite per questa fazione qui." />
+    <string id="taom_emissary_greet" text="Cerchi i migliori guerrieri che il nostro popolo possa offrire? Nominali, e saranno tuoi — al giusto prezzo." />
+    <string id="taom_emissary_buy" text="Desidero acquistare unità d'élite." />
+    <string id="taom_emissary_leave" text="Non oggi." />
+    <string id="taom_emissary_list_title" text="Unità d'Élite" />
+    <string id="taom_emissary_list_desc" text="Saldo: {AMOUNT} {RESOURCE}" />
+    <string id="taom_emissary_offer_line" text="{NAME} — {COST} {RESOURCE}" />
+    <string id="taom_emissary_offer_afford" text="Puoi permetterti fino a {MAX}." />
+    <string id="taom_emissary_offer_cant" text="{RESOURCE} insufficienti." />
+    <string id="taom_emissary_select" text="Seleziona" />
+    <string id="taom_emissary_back" text="Indietro" />
+    <string id="taom_emissary_qty_title" text="Quanti {TROOP}?" />
+    <string id="taom_emissary_qty_desc" text="Ognuno costa {COST} {RESOURCE}. Hai {BALANCE}." />
+    <string id="taom_emissary_qty_line" text="{QTY} (×{COST} = {TOTAL} {RESOURCE})" />
+    <string id="taom_emissary_confirm" text="Recluta" />
+    <string id="taom_emissary_bought" text="Reclutati {QTY} {TROOP} per {COST} {RESOURCE}." />
+    <string id="taom_emissary_cant_afford" text="{RESOURCE} insufficienti — servono {COST}." />
+    <string id="taom_emissary_no_resource" text="Non c'è commercio con emissari in questo insediamento." />
+    <string id="taom_emissary_no_offers" text="L'emissario non ha unità d'élite da offrire al momento." />
+    <string id="taom_emissary_failed" text="L'emissario non è riuscito a completare l'accordo." />
+  </strings>
+</base>

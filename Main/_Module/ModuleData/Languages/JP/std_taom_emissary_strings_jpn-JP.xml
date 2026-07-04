@@ -1,10 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Japanese" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Japanese" />
+  </tags>
+  <strings>
+    <string id="taom_emissary_menu" text="勢力の使節と話す" />
+    <string id="taom_emissary_no_trade" text="この勢力のエリート取引はここにはない。" />
+    <string id="taom_emissary_greet" text="我が民が提供できる最高の戦士を求めておられるか?名を言えば、あなたのものだ――相応の対価と引き換えにな。" />
+    <string id="taom_emissary_buy" text="エリート部隊を購入したい。" />
+    <string id="taom_emissary_leave" text="今日はやめておく。" />
+    <string id="taom_emissary_list_title" text="エリート部隊" />
+    <string id="taom_emissary_list_desc" text="残高: {AMOUNT} {RESOURCE}" />
+    <string id="taom_emissary_offer_line" text="{NAME} — {COST} {RESOURCE}" />
+    <string id="taom_emissary_offer_afford" text="最大{MAX}まで購入可能。" />
+    <string id="taom_emissary_offer_cant" text="{RESOURCE}が不足している。" />
+    <string id="taom_emissary_select" text="選択" />
+    <string id="taom_emissary_back" text="戻る" />
+    <string id="taom_emissary_qty_title" text="{TROOP}を何人?" />
+    <string id="taom_emissary_qty_desc" text="1人につき{COST} {RESOURCE}。所持数は{BALANCE}。" />
+    <string id="taom_emissary_qty_line" text="{QTY}人 (×{COST} = {TOTAL} {RESOURCE})" />
+    <string id="taom_emissary_confirm" text="雇用" />
+    <string id="taom_emissary_bought" text="{QTY}人の{TROOP}を{COST} {RESOURCE}で雇用した。" />
+    <string id="taom_emissary_cant_afford" text="{RESOURCE}が不足しています — {COST}必要です。" />
+    <string id="taom_emissary_no_resource" text="この入植地には使節の取引がありません。" />
+    <string id="taom_emissary_no_offers" text="使節は現在提供できる精鋭部隊を持っていません。" />
+    <string id="taom_emissary_failed" text="使節は取引を完了できませんでした。" />
+  </strings>
+</base>

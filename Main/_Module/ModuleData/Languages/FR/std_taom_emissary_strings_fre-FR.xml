@@ -1,10 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="French" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="French" />
+  </tags>
+  <strings>
+    <string id="taom_emissary_menu" text="Parler avec l'émissaire de la faction" />
+    <string id="taom_emissary_no_trade" text="Il n'y a pas de commerce d'élite pour cette faction ici." />
+    <string id="taom_emissary_greet" text="Vous cherchez les meilleurs guerriers que notre peuple puisse offrir ? Nommez-les, et ils sont à vous — pour le juste prix." />
+    <string id="taom_emissary_buy" text="Je souhaite acheter des unités d'élite." />
+    <string id="taom_emissary_leave" text="Pas aujourd'hui." />
+    <string id="taom_emissary_list_title" text="Unités d'élite" />
+    <string id="taom_emissary_list_desc" text="Solde : {AMOUNT} {RESOURCE}" />
+    <string id="taom_emissary_offer_line" text="{NAME} — {COST} {RESOURCE}" />
+    <string id="taom_emissary_offer_afford" text="Vous pouvez vous permettre jusqu'à {MAX}." />
+    <string id="taom_emissary_offer_cant" text="Pas assez de {RESOURCE}." />
+    <string id="taom_emissary_select" text="Sélectionner" />
+    <string id="taom_emissary_back" text="Retour" />
+    <string id="taom_emissary_qty_title" text="Combien de {TROOP} ?" />
+    <string id="taom_emissary_qty_desc" text="Chacun coûte {COST} {RESOURCE}. Vous avez {BALANCE}." />
+    <string id="taom_emissary_qty_line" text="{QTY} (×{COST} = {TOTAL} {RESOURCE})" />
+    <string id="taom_emissary_confirm" text="Recruter" />
+    <string id="taom_emissary_bought" text="Recruté {QTY} {TROOP} pour {COST} {RESOURCE}." />
+    <string id="taom_emissary_cant_afford" text="Pas assez de {RESOURCE} — besoin de {COST}." />
+    <string id="taom_emissary_no_resource" text="Il n'y a pas de commerce d'émissaire dans cette colonie." />
+    <string id="taom_emissary_no_offers" text="L'émissaire n'a pas d'unités d'élite à offrir pour le moment." />
+    <string id="taom_emissary_failed" text="L'émissaire n'a pas pu conclure la transaction." />
+  </strings>
+</base>

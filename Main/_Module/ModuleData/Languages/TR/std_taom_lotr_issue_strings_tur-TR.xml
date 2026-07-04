@@ -1,10 +1,318 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Turkish" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Turkish" />
+  </tags>
+  <strings>
+    <string id="taom_lotr_issue_grain_title" text="{ISSUE_SETTLEMENT} Tohum Buğdayına İhtiyaç Duyuyor" />
+    <string id="taom_lotr_issue_grain_desc" text="{ISSUE_SETTLEMENT} halkı tohum buğdayını kaybetti ve tarlalar ekilmezse aç kalacaklar." />
+    <string id="taom_lotr_issue_grain_brief" text="Gölge bize ağır geldi, yolcu. Fareler ve acımasız bir kış tohum mısırımızı aldı. Ekmek için buğday olmadan yılı çıkaramayız." />
+    <string id="taom_lotr_issue_grain_accept" text="Yapılabilecek hiçbir şey yok mu?" />
+    <string id="taom_lotr_issue_grain_expl" text="Bize {COUNT} ölçek tahıl getirebilirseniz, mevsim dönmeden tarlaları ekebiliriz. Bu kadarını satın alacak paramız yok." />
+    <string id="taom_lotr_issue_grain_soln" text="O tahılı sizin için bulacağım." />
+    <string id="taom_lotr_issue_grain_task" text="Tahıl topla ({COUNT})" />
+    <string id="taom_lotr_issue_supplies_title" text="Erzak İhtiyacında Bir Ordu" />
+    <string id="taom_lotr_issue_supplies_desc" text="Savaş için toplanmakta olan bir lord, yola çıkmadan önce toplanan orduyu beslemek için tahıla ihtiyaç duyuyor." />
+    <string id="taom_lotr_issue_supplies_brief" text="Askerlerim toplanıyor ama kılıç mideyi doyurmuyor. Onları besleyecek tahıl olmadan, bu ordu savaş meydanına çıkmadan dağılacak." />
+    <string id="taom_lotr_issue_supplies_accept" text="Ne kadar tahıla ihtiyacınız var?" />
+    <string id="taom_lotr_issue_supplies_expl" text="Bana {COUNT} ölçek tahıl getir, adamlarım tok karınla yürüyüşe çıksın. Bunu yaparsan diyar bunu hatırlayacak." />
+    <string id="taom_lotr_issue_supplies_soln" text="Ordunuz için tahıl getireceğim." />
+    <string id="taom_lotr_issue_supplies_task" text="Orduya tahıl götür ({COUNT})" />
+    <string id="taom_lotr_issue_draught_title" text="{ISSUE_SETTLEMENT} Yük Hayvanlarına İhtiyaç Duyuyor" />
+    <string id="taom_lotr_issue_draught_desc" text="{ISSUE_SETTLEMENT} köyü koşum öküzlerini kaybetti ve tarlaları işleyemiyor." />
+    <string id="taom_lotr_issue_draught_brief" text="Öküzlerimiz alındı -- kimi akıncılar aldı, kimi açlık. Saban çekecek hayvan olmadan toprak sert duruyor ve tarlalar ekilmiyor." />
+    <string id="taom_lotr_issue_draught_accept" text="Ne yardımcı olur?" />
+    <string id="taom_lotr_issue_draught_expl" text="Bize {COUNT} baş sığır getirebilirseniz, mevsim dönmeden toprağı tekrar açabiliriz." />
+    <string id="taom_lotr_issue_draught_soln" text="Size sığır getireceğim." />
+    <string id="taom_lotr_issue_draught_task" text="Sığır teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_crafting_title" text="{ISSUE_SETTLEMENT} Demire İhtiyaç Duyuyor" />
+    <string id="taom_lotr_issue_crafting_desc" text="{ISSUE_SETTLEMENT} demircisinin demiri tükendi ve ne alet ne de kılıç onarabiliyor." />
+    <string id="taom_lotr_issue_crafting_brief" text="Demirci soğuk duruyor, yolcu. Demir olmadan demirci ne at nalı çakabilir ne saban ucu onarabilir, köy bundan zarar görüyor." />
+    <string id="taom_lotr_issue_crafting_accept" text="Demiri nereden bulurdunuz?" />
+    <string id="taom_lotr_issue_crafting_expl" text="Bize {COUNT} külçe demir getirin, demirci yeniden çınlasın. Bu kadarını satın alacak paramız yok." />
+    <string id="taom_lotr_issue_crafting_soln" text="Size demir bulacağım." />
+    <string id="taom_lotr_issue_crafting_task" text="Demir teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_tools_title" text="{ISSUE_SETTLEMENT} Alete İhtiyaç Duyuyor" />
+    <string id="taom_lotr_issue_tools_desc" text="{ISSUE_SETTLEMENT} halkının topraklarını işlemek ve mallarını üretmek için gerekli aletleri yok." />
+    <string id="taom_lotr_issue_tools_brief" text="Orağımız paslanıp dökülmüş, çekiçlerimiz kırılmış. Dürüst iş, dürüst alet olmadan yavaş iştir." />
+    <string id="taom_lotr_issue_tools_accept" text="Neye ihtiyacınız var?" />
+    <string id="taom_lotr_issue_tools_expl" text="Bize {COUNT} takım alet getirirseniz, köy kendini toparlar ve yeniden refaha erer." />
+    <string id="taom_lotr_issue_tools_soln" text="Size alet getireceğim." />
+    <string id="taom_lotr_issue_tools_task" text="Alet teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_horses_title" text="At İhtiyacında Bir Lord" />
+    <string id="taom_lotr_issue_horses_desc" text="Bir lord savaşta ve yıpranmada atlarını kaybetmiş durumda ve süvarileri için taze atlara ihtiyacı var." />
+    <string id="taom_lotr_issue_horses_brief" text="Savaş atlara acımasızdır, yolcu. Benimkiler sert yollarda tükendi ve bineği olmayan süvari yalnızca yavaş bir mızraklıdır." />
+    <string id="taom_lotr_issue_horses_accept" text="Kaç ata ihtiyacınız var?" />
+    <string id="taom_lotr_issue_horses_expl" text="Bana {COUNT} sağlam at getir, süvarilerim yeniden ata binsin. Bunlar için iyi ödeneceksin." />
+    <string id="taom_lotr_issue_horses_soln" text="Size at getireceğim." />
+    <string id="taom_lotr_issue_horses_task" text="At teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_recruits_title" text="Çete İçin Taze Kan" />
+    <string id="taom_lotr_issue_recruits_desc" text="Bir çete lideri yakalanan haydutların kendi hizmetine sokulmasını istiyor." />
+    <string id="taom_lotr_issue_recruits_brief" text="Bir çete ancak sayısı kadar güçlüdür ve benimki azaldı. Bana yasaya sevgisi olmayan esirler getir, onları kullanıma sokarım." />
+    <string id="taom_lotr_issue_recruits_accept" text="Ne tür esirler?" />
+    <string id="taom_lotr_issue_recruits_expl" text="Bana {COUNT} haydut esiri getir, işe yaramalarını sağlarım. Sana da altın var, soru sorulmaz." />
+    <string id="taom_lotr_issue_recruits_soln" text="Sana esirler getireceğim." />
+    <string id="taom_lotr_issue_recruits_task" text="Haydut esirlerini teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_laborers_title" text="Madenler İçin Eller" />
+    <string id="taom_lotr_issue_laborers_desc" text="Bir toprak sahibi ağır iş için güçlü sırtlara ihtiyaç duyuyor ve yakalanan haydutları alacak." />
+    <string id="taom_lotr_issue_laborers_brief" text="Kazılara işçi lazım ve özgür insanlar oraya gitmek istemiyor. Bana zincirlenmiş haydutlar getir, kazmayla ekmeğini kazanırlar." />
+    <string id="taom_lotr_issue_laborers_accept" text="Mahkum mu istiyorsun?" />
+    <string id="taom_lotr_issue_laborers_expl" text="Bana işçi takımları için {COUNT} haydut esiri getir, onları yakaladığın zahmete karşılık sana ödeme yaparım." />
+    <string id="taom_lotr_issue_laborers_soln" text="Sana esirler getireceğim." />
+    <string id="taom_lotr_issue_laborers_task" text="Haydut esirlerini teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_banditbase_title" text="{ISSUE_SETTLEMENT} Yakınında Bir İn" />
+    <string id="taom_lotr_issue_banditbase_desc" text="{ISSUE_SETTLEMENT} yakınındaki yollarda bir akıncı yuvası avlanıyor." />
+    <string id="taom_lotr_issue_banditbase_brief" text="Tepelerde onların iğrenç bir yuvası var, yolcu. Mallarımızı ve insanlarımızı alıyorlar ve nöbet köklerini kazımak için çok az." />
+    <string id="taom_lotr_issue_banditbase_accept" text="Bu in nerede?" />
+    <string id="taom_lotr_issue_banditbase_expl" text="Yollarımıza musallat olan akıncıları dağıt, seni ödüllendireceğiz. Topraklar bunun için rahat nefes alacak." />
+    <string id="taom_lotr_issue_banditbase_soln" text="Onları temizleyeceğim." />
+    <string id="taom_lotr_issue_outlaws_title" text="Ticaret Yollarındaki Haydutlar" />
+    <string id="taom_lotr_issue_outlaws_desc" text="Yağmacı çeteler bir tüccarın ticaretini boğuyor ve dağıtılmaları gerek." />
+    <string id="taom_lotr_issue_outlaws_brief" text="Kervanlarım yollardaki akıncılar yüzünden geçemiyor. Çetelerinden yeterince dağıt, ticaret tekrar akabilir." />
+    <string id="taom_lotr_issue_outlaws_accept" text="Kaç çete?" />
+    <string id="taom_lotr_issue_outlaws_expl" text="Yolları veba gibi saran çeteleri yok et -- birkaç iyi zafer geri kalanını dağıtır -- ve sana cömertçe ödeme yaparım." />
+    <string id="taom_lotr_issue_outlaws_soln" text="Yolları temizleyeceğim." />
+    <string id="taom_lotr_issue_poachers_title" text="Bir Kaçak Avcı Çetesi" />
+    <string id="taom_lotr_issue_poachers_desc" text="Büyük bir kaçak avcı çetesi bir tüccarın av ticaretini mahvediyor." />
+    <string id="taom_lotr_issue_poachers_brief" text="Kaçak avcılar cesurlaştı ve çoğaldı -- ormanları çıplak soyuyor ve dürüst avcıları kovuyorlar. Biri onları yere sermelidir." />
+    <string id="taom_lotr_issue_poachers_accept" text="Nerede dolaşıyorlar?" />
+    <string id="taom_lotr_issue_poachers_expl" text="Kaçak avcı çetesini yok et, ormanlar tekrar bizim olacak. Sana altın var." />
+    <string id="taom_lotr_issue_poachers_soln" text="Onlarla ilgileneceğim." />
+    <string id="taom_lotr_issue_captured_title" text="Zincirdeki Adamlarım" />
+    <string id="taom_lotr_issue_captured_desc" text="Bir çete liderinin adamları ödül avcıları tarafından alındı ve onların kurtarılmasını istiyor." />
+    <string id="taom_lotr_issue_captured_brief" text="Ödül avcıları adamlarımdan birkaçını aldı ve satmaya niyetliler. Onları tutan alçakları dağıt, karşılığında altın var -- sessiz altın." />
+    <string id="taom_lotr_issue_captured_accept" text="Onları kim tutuyor?" />
+    <string id="taom_lotr_issue_captured_expl" text="Adamlarımı alan çeteyi bul ve dağıt. Bunu yap, sana ödeme yapılacak, soru sorulmaz." />
+    <string id="taom_lotr_issue_captured_soln" text="Adamlarını kurtaracağım." />
+    <string id="taom_lotr_issue_deserters_title" text="Firariler {ISSUE_SETTLEMENT}'e Saldırıyor" />
+    <string id="taom_lotr_issue_deserters_desc" text="Bir firari çetesi {ISSUE_SETTLEMENT}'ten haraç alıyor ve reddedenleri öldürdü." />
+    <string id="taom_lotr_issue_deserters_brief" text="Kılıçlı kırık adamlar tahılımız ve altınımız için geliyor, kan döktüler. Onlarla tek başımıza savaşamayız." />
+    <string id="taom_lotr_issue_deserters_accept" text="Yardım edeceğim. Neredeler?" />
+    <string id="taom_lotr_issue_deserters_expl" text="Pusuya yat ve firariler geldiklerinde onları kes. Bizi onlardan kurtar, teşekkürlerimizi ve paramızı kazanırsın." />
+    <string id="taom_lotr_issue_deserters_soln" text="Yağmalarına son vereceğim." />
+    <string id="taom_lotr_issue_commons_title" text="Ortak Arazide Sorun" />
+    <string id="taom_lotr_issue_commons_desc" text="Silahlı rakipler bir köyün otlak arazisini zorla ele geçiriyor." />
+    <string id="taom_lotr_issue_commons_brief" text="Sert adamlar otlak arazimizi aldılar ve yaklaşan herkesi kovuyorlar. Onlar orayı tutarken sürülerimiz açlıktan ölüyor." />
+    <string id="taom_lotr_issue_commons_accept" text="Kimler bunlar?" />
+    <string id="taom_lotr_issue_commons_expl" text="Rakipleri ortak arazimizden zorla kov, otlak yeniden bizim olacak. Elimizden geleni ödeyeceğiz." />
+    <string id="taom_lotr_issue_commons_soln" text="Onları kovacağım." />
+    <string id="taom_lotr_issue_rivalgang_title" text="Bir Rakip Giriyor" />
+    <string id="taom_lotr_issue_rivalgang_desc" text="Rakip bir çete bir suç patronunun bölgesine zorla giriyor ve etkisiz hale getirilmesi gerekiyor." />
+    <string id="taom_lotr_issue_rivalgang_brief" text="Başka bir örgüt benimkini alabileceğini sanıyor. Onları ara sokaklarda kır, sokaklar yeniden sessiz olur -- ve sen de ödülünü alırsın." />
+    <string id="taom_lotr_issue_rivalgang_accept" text="Nerede toplanıyorlar?" />
+    <string id="taom_lotr_issue_rivalgang_expl" text="Rakip çeteyi yenilgiye uğrat ve onlardan ibret alınsın. Bunu yap, bol para seni bekliyor." />
+    <string id="taom_lotr_issue_rivalgang_soln" text="Oldu bile." />
+    <string id="taom_lotr_issue_spy_title" text="Düşman Bir Casus" />
+    <string id="taom_lotr_issue_spy_desc" text="Bir lord, bir düşman ajanının kendisine karşı hareket ettiğinden şüpheleniyor ve casusun grubunun avlanmasını istiyor." />
+    <string id="taom_lotr_issue_spy_brief" text="Çimlerin arasında bir engerek var -- düşmanlarımın bir ajanı, bir grup haydutla birlikte hareket ediyor. Onları bul ve yok et, saldırmadan önce." />
+    <string id="taom_lotr_issue_spy_accept" text="Onları nasıl tanıyacağım?" />
+    <string id="taom_lotr_issue_spy_expl" text="Casusun grubunu avla ve yok et. Beni bu tehditten kurtar, cömertçe ödüllendirileceksin." />
+    <string id="taom_lotr_issue_spy_soln" text="Onları avlayacağım." />
+    <string id="taom_lotr_issue_revolt_title" text="Asi Bir Soylu" />
+    <string id="taom_lotr_issue_revolt_desc" text="Küçük bir soylu köylüleri isyana kışkırttı ve bastırılması gerekiyor." />
+    <string id="taom_lotr_issue_revolt_brief" text="Sıradan bir beyefendi köylüleri efendilerine karşı kışkırtıyor ve silahlı adamlar topluyor. İsyan yayılmadan gücünü kır." />
+    <string id="taom_lotr_issue_revolt_accept" text="Nerede toplanıyor?" />
+    <string id="taom_lotr_issue_revolt_expl" text="Asiyi ve ayaktakımını yenilgiye uğrat, düzen yeniden sağlanacak. Hizmetin için ödüllendirileceksin." />
+    <string id="taom_lotr_issue_revolt_soln" text="Bu isyanı bastıracağım." />
+    <string id="taom_lotr_issue_company_title" text="Bir Bela Bölüğü" />
+    <string id="taom_lotr_issue_company_desc" text="Bir lordu taciz etmek için tutulan paralı askerlerden oluşan bir grup kovulmalı." />
+    <string id="taom_lotr_issue_company_brief" text="Düşmanlarım topraklarıma bir paralı asker bölüğü saldı. Başkasının altınıyla yakıp yıkıyorlar. Onları benim için kır." />
+    <string id="taom_lotr_issue_company_accept" text="Nereyi yağmalıyorlar?" />
+    <string id="taom_lotr_issue_company_expl" text="Paralı asker bölüğünü yenilgiye uğrat, topraklarım yeniden huzur bulacak. Seni iyi ödüllendireceğim." />
+    <string id="taom_lotr_issue_company_soln" text="Onları kıracağım." />
+    <string id="taom_lotr_issue_prodigal_title" text="Borçlu Bir Akraba" />
+    <string id="taom_lotr_issue_prodigal_desc" text="Bir lordun genç akrabası bir çeteye bulaştı ve borçları için onu elinde tutuyor." />
+    <string id="taom_lotr_issue_prodigal_brief" text="Aptal genç bir kuzenim hırsızların arasına düştü ve şimdi borçları karşılığında onu ellerinde tutuyorlar. Çeteyi kır ve onu kurtar." />
+    <string id="taom_lotr_issue_prodigal_accept" text="Nerede tutuluyor?" />
+    <string id="taom_lotr_issue_prodigal_expl" text="Akrabamı elinde tutan çeteyi yenilgiye uğrat ve onu çıkar. Çekmene değecek, borcunu kat kat ödeyeceğim." />
+    <string id="taom_lotr_issue_prodigal_soln" text="Akrabanı kurtaracağım." />
+    <string id="taom_lotr_issue_rival_title" text="Nefret Edilen Bir Rakip" />
+    <string id="taom_lotr_issue_rival_desc" text="Bir lord, rakip bir lordun savaşta sağ yakalanmasını istiyor." />
+    <string id="taom_lotr_issue_rival_brief" text="Alçaltılmış görmek istediğim bir lord var -- sağ yakalanıp yere serilmiş. Bir düşman lordu savaşta esir al ve bunu büyük bir hizmet sayacağım." />
+    <string id="taom_lotr_issue_rival_accept" text="Onu sağ mı istiyorsun?" />
+    <string id="taom_lotr_issue_rival_expl" text="Bir düşman lordu savaşta esir al ve iş bitsin. Cömertçe ödüllendirileceksin." />
+    <string id="taom_lotr_issue_rival_soln" text="Sana esir bir lord getireceğim." />
+    <string id="taom_lotr_issue_caravanambush_title" text="Yolda Bir Pusu" />
+    <string id="taom_lotr_issue_caravanambush_desc" text="Yağmacılar bir tüccarın kervanı için pusu kurmuş ve önce kırılmaları gerekiyor." />
+    <string id="taom_lotr_issue_caravanambush_brief" text="Haydutların ilerideki yolda kervanım için pusuya yattığına dair haber aldım. Tuzaklarını boz ve beni kurutmadan onları dağıt." />
+    <string id="taom_lotr_issue_caravanambush_accept" text="Nerede pusuya yatmışlar?" />
+    <string id="taom_lotr_issue_caravanambush_expl" text="Pusuda bekleyen yağmacıları bul ve yok et. Yolu temizle, mallarım -- ve ödülün -- ulaşsın." />
+    <string id="taom_lotr_issue_caravanambush_soln" text="Pusularını kıracağım." />
+    <string id="taom_lotr_issue_escortcaravan_title" text="Ticaret Yolunu Temizle" />
+    <string id="taom_lotr_issue_escortcaravan_desc" text="Bir tüccarın kervanı, yoldaki yağmacı çeteleri kırılana kadar geçemez." />
+    <string id="taom_lotr_issue_escortcaravan_brief" text="Yağmacılar yolda kol geziyorken arabalarım yuvarlanamaz. Çetelerinin yeterince kır ve yol dürüst ticaret için tekrar açılsın." />
+    <string id="taom_lotr_issue_escortcaravan_accept" text="Kaç kişi yolu kesiyor?" />
+    <string id="taom_lotr_issue_escortcaravan_expl" text="Ticaret yolunu tehdit eden çeteleri yen ve kervanlarım tekrar yola çıksın. Güvenli geçiş için sana iyi para vereceğim." />
+    <string id="taom_lotr_issue_escortcaravan_soln" text="Yolu temizleyeceğim." />
+    <string id="taom_lotr_issue_herd_title" text="{ISSUE_SETTLEMENT} için Bir Sürü" />
+    <string id="taom_lotr_issue_herd_desc" text="{ISSUE_SETTLEMENT} halkının sürülerini yeniden inşa etmek için kendilerine hayvan sürülmesi gerekiyor." />
+    <string id="taom_lotr_issue_herd_brief" text="Kurtlar ve daha kötüleri sürülerimizi hiçe indirdi, gezgin. Üretecek hayvan olmadan köy bir bolluk kışı daha göremez." />
+    <string id="taom_lotr_issue_herd_accept" text="Ne getirmemi istersiniz?" />
+    <string id="taom_lotr_issue_herd_expl" text="Bize {COUNT} baş koyun sür ve sürülerimiz tekrar büyüyebilir. Köyün ayırabileceği kadarını öderiz." />
+    <string id="taom_lotr_issue_herd_soln" text="Size bir sürü getireceğim." />
+    <string id="taom_lotr_issue_herd_task" text="Hayvan teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_snare_title" text="Açgözlüler için Tuzak" />
+    <string id="taom_lotr_issue_snare_desc" text="Bir çete lideri, açgözlü rakiplerinden oluşan bir çetenin tuzağa çekilip yok edilmesini istiyor." />
+    <string id="taom_lotr_issue_snare_brief" text="Kendi analarını bile soyacak açgözlü bir takım var. Onları tuzağa çek ve dağıt, taşıdıklarını paylaşırız -- sessizce." />
+    <string id="taom_lotr_issue_snare_accept" text="Bu rakipler kimler?" />
+    <string id="taom_lotr_issue_snare_expl" text="Açgözlü çeteye tuzağı kur ve onları devir. Temiz yap işini, şişman bir kese seni bekliyor." />
+    <string id="taom_lotr_issue_snare_soln" text="Halledeceğim." />
+    <string id="taom_lotr_issue_cantsell_title" text="Pazarsız Mallar" />
+    <string id="taom_lotr_issue_cantsell_desc" text="Bir zanaatkarın malları satılmadan yığılıyor ve onlara ihtiyaç duyan bir pazara taşınması gerekiyor." />
+    <string id="taom_lotr_issue_cantsell_brief" text="Raflarım burada kimsenin almadığı mallarla dolup taşıyor, gezgin. Zanaatım ihtiyaç duyan bir kasabaya ulaşabilseydi, kendi tezgahımda aç kalmazdım." />
+    <string id="taom_lotr_issue_cantsell_accept" text="Ne üretiyorsun?" />
+    <string id="taom_lotr_issue_cantsell_expl" text="Daha iyi pazarlara göndermem için bana {COUNT} yük çömlek getir, sana ticaretten pay vereceğim." />
+    <string id="taom_lotr_issue_cantsell_soln" text="Mallarının hareket etmesini sağlayacağım." />
+    <string id="taom_lotr_issue_cantsell_task" text="Ticaret için çömlek topla ({COUNT})" />
+    <string id="taom_lotr_issue_overpriced_title" text="Pahalı Malzemeler" />
+    <string id="taom_lotr_issue_overpriced_desc" text="Bir zanaatkar, zanaatının gerektirdiği ham maddeleri karşılayamıyor ve ucuza getirilmesine ihtiyacı var." />
+    <string id="taom_lotr_issue_overpriced_brief" text="İyi derinin fiyatı tüm aklın ötesine tırmandı ve zanaatım onun yokluğundan ölüyor. Bana dürüst bir fiyata biraz getir, hatırlayacağım." />
+    <string id="taom_lotr_issue_overpriced_accept" text="Neye ihtiyacın var?" />
+    <string id="taom_lotr_issue_overpriced_expl" text="Bana {COUNT} yük deri getir, atölyem yeniden şarkı söyleyecek. Zahmete karşılık sana layığınca ödeme yapacağım." />
+    <string id="taom_lotr_issue_overpriced_soln" text="Sana deri bulacağım." />
+    <string id="taom_lotr_issue_overpriced_task" text="Deri teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_offload_title" text="Elden Çıkarılacak Mallar" />
+    <string id="taom_lotr_issue_offload_desc" text="Bir çete lideri çalıntı malları nakletmek için sessiz bir el arıyor." />
+    <string id="taom_lotr_issue_offload_brief" text="Yanlış gözler tarafından görülmemesi gereken bir yığın malım var. Bunları benim için taşı, temiz para bekliyor -- soru yok, isim yok." />
+    <string id="taom_lotr_issue_offload_accept" text="Ne taşıyorum?" />
+    <string id="taom_lotr_issue_offload_expl" text="Bana bu mallardan {COUNT} yük getir ve sessizce taşı. İyi yaparsan bir sonraki iş de senin olur." />
+    <string id="taom_lotr_issue_offload_soln" text="Mallarını taşıyacağım." />
+    <string id="taom_lotr_issue_offload_task" text="Malları temin et ({COUNT})" />
+    <string id="taom_lotr_issue_revenue_title" text="Ayni Vergi" />
+    <string id="taom_lotr_issue_revenue_desc" text="Bir toprak sahibine çevre çiftliklerin ödemediği tahıl vergisi borçludur." />
+    <string id="taom_lotr_issue_revenue_brief" text="Çiftlikler bana öşürlerini borçlu ve bunu altın değil tahıl olarak ödüyorlar -- ödediklerinde tabii. Borçlu olunanı topla ve getir, payını alırsın." />
+    <string id="taom_lotr_issue_revenue_accept" text="Ne kadar borçlular?" />
+    <string id="taom_lotr_issue_revenue_expl" text="Verginin gerektirdiği gibi {COUNT} ölçü tahıl getir, toplama karşılığında sana adil bir pay vereceğim." />
+    <string id="taom_lotr_issue_revenue_soln" text="Vergini toplayacağım." />
+    <string id="taom_lotr_issue_revenue_task" text="Tahıl vergisini topla ({COUNT})" />
+    <string id="taom_lotr_issue_arttrade_title" text="Ticaret Girişimi" />
+    <string id="taom_lotr_issue_arttrade_desc" text="Tüccar olmak isteyen biri kâr edip girişiminin sağlam olduğunu kanıtlamak için mal getirtmek istiyor." />
+    <string id="taom_lotr_issue_arttrade_brief" text="Ticarette servet yapmayı düşünüyorum yolcu, ama başlamak için mala ihtiyacım var. Bana stok getir, ikimiz için de altına çevireceğim." />
+    <string id="taom_lotr_issue_arttrade_accept" text="Hangi stoka ihtiyacın var?" />
+    <string id="taom_lotr_issue_arttrade_expl" text="Girişimi başlatmak için bana {COUNT} yük yağ getir, satıldığında kârdan sen de pay alacaksın." />
+    <string id="taom_lotr_issue_arttrade_soln" text="Girişimini stokla dolduracağım." />
+    <string id="taom_lotr_issue_arttrade_task" text="Ticaret stoku teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_smugglers_title" text="Kaçakçıları Dağıtmak" />
+    <string id="taom_lotr_issue_smugglers_desc" text="Bir kaçakçılık çetesi dürüst ticareti baltalıyor ve bir tüccar bunun dağıtılmasını istiyor." />
+    <string id="taom_lotr_issue_smugglers_brief" text="Bir kaçakçı çetesi piyasayı gümrük ödememiş mallarla dolduruyor ve dürüst tüccarlar bunun yüzünden mahvoluyor. Onların işini bitir, ticaret düzelecek." />
+    <string id="taom_lotr_issue_smugglers_accept" text="Mallarını nerede taşıyorlar?" />
+    <string id="taom_lotr_issue_smugglers_expl" text="Kaçakçıları yenilgiye uğrat ve çetelerini dağıt. Yolları onlardan temizle, hizmetin için sana ödeme yapacağım." />
+    <string id="taom_lotr_issue_smugglers_soln" text="Çetelerini dağıtacağım." />
+    <string id="taom_lotr_issue_gangweapons_title" text="Ele Geçirilecek Silahlar" />
+    <string id="taom_lotr_issue_gangweapons_desc" text="Bir çete lideri rakibinin silah deposunun zor kullanarak ele geçirilmesini istiyor." />
+    <string id="taom_lotr_issue_gangweapons_brief" text="Rakip bir grup güzel bir silah deposunun üstünde oturuyor, benim adamlarımsa paslı bıçaklarla dövüşüyor. Onları kır, depo bizim olsun -- payın da senin." />
+    <string id="taom_lotr_issue_gangweapons_accept" text="Bu depo nerede?" />
+    <string id="taom_lotr_issue_gangweapons_expl" text="Silahları elinde tutan çeteyi yenilgiye uğrat, silahlar benim olacak. Bunu yap, eline iyi para geçecek." />
+    <string id="taom_lotr_issue_gangweapons_soln" text="Depolarını ele geçireceğim." />
+    <string id="taom_lotr_issue_garrison_title" text="Surları Tutmak" />
+    <string id="taom_lotr_issue_garrison_desc" text="Bir lordun garnizonu zor durumda ve onu taciz eden düşmanların püskürtülmesi gerekiyor." />
+    <string id="taom_lotr_issue_garrison_brief" text="Garnizonum gergin ve düşman her an bize baskı yapıyor. Surlarımı taciz eden çeteleri kır, adamlarıma nefes alacak alan ver." />
+    <string id="taom_lotr_issue_garrison_accept" text="Seni kim sıkıştırıyor?" />
+    <string id="taom_lotr_issue_garrison_expl" text="Garnizonuma saldıranları yenilgiye uğrat, surlar dayanacaktır. Krallık bunu sana ödüllendirecek." />
+    <string id="taom_lotr_issue_garrison_soln" text="Garnizonunuzu rahatlatacağım." />
+    <string id="taom_lotr_issue_conquest_title" text="Düşmanın Gücünü Kırmak" />
+    <string id="taom_lotr_issue_conquest_desc" text="Fetih planlayan bir lord, yürümeden önce düşmanın saha kuvvetlerinin kırılmasına ihtiyaç duyar." />
+    <string id="taom_lotr_issue_conquest_brief" text="Haklı olarak benim olanı almak niyetindeyim, ama düşmanın gücü yolumu kesiyor. Sahada kuvvetlerini kır, ödül daha kolay düşecek." />
+    <string id="taom_lotr_issue_conquest_accept" text="Ne yapmamı istersiniz?" />
+    <string id="taom_lotr_issue_conquest_expl" text="Düşmanın kuvvetlerini yenilgiye uğrat ve tutunma gücünü zayıflat. Bunu yap ve fethin ganimetlerinden payın senin olsun." />
+    <string id="taom_lotr_issue_conquest_soln" text="Gücünü kıracağım." />
+    <string id="taom_lotr_issue_raid_title" text="Savaşı Düşmana Taşımak" />
+    <string id="taom_lotr_issue_raid_desc" text="Bir lord, düşmanın topraklarının yağmalanmasını ve akın birliklerinin yok edilmesini istiyor." />
+    <string id="taom_lotr_issue_raid_brief" text="Düşmanın savaşı kendi toprağında hissetmesinin zamanı geldi. Akın birliklerini avla ve kılıçtan geçir, toprakları korkuyu öğrensin." />
+    <string id="taom_lotr_issue_raid_accept" text="Nereye vurayım?" />
+    <string id="taom_lotr_issue_raid_expl" text="Sınırlarında dolanan düşman birliklerini yenilgiye uğrat. Topraklarını kanla suyla ve iyi ödüllendirileceksin." />
+    <string id="taom_lotr_issue_raid_soln" text="Savaşı onlara taşıyacağım." />
+    <string id="taom_lotr_issue_scout_title" text="Düşman Üzerinde Gözler" />
+    <string id="taom_lotr_issue_scout_desc" text="Bir lord, casuslarının sınır topraklarını net görebilmesi için düşman devriyelerinin kırılmasına ihtiyaç duyuyor." />
+    <string id="taom_lotr_issue_scout_brief" text="Devriyeleri sınırda dolaşırken düşmanın hareketlerine karşı körüm. Onları kır ve görüşümü aç, nereye vuracağımı bileceğim." />
+    <string id="taom_lotr_issue_scout_accept" text="Devriyeleri nerede dolaşıyor?" />
+    <string id="taom_lotr_issue_scout_expl" text="Sınırı koruyan düşman devriyelerini yenilgiye uğrat ki casuslarım geçebilsin. Bunu yap ve bunun için ödüllendirileceksin." />
+    <string id="taom_lotr_issue_scout_soln" text="Sınırı temizleyeceğim." />
+    <string id="taom_lotr_issue_knight_title" text="Bir Şampiyonun Hediyesi" />
+    <string id="taom_lotr_issue_knight_desc" text="Soylu bir kadın, hediyeliğinin turnuvalarda zafere taşınmasını istiyor." />
+    <string id="taom_lotr_issue_knight_brief" text="Bir şampiyonun turnuvada hediyeliğimi taşımasını ve adıma şan kazanmasını isterim. Meydanda zafer kazan ve kalıcı minnettarlığımı kazanırsın." />
+    <string id="taom_lotr_issue_knight_accept" text="Turnuvada savaşmamı mı istiyorsunuz?" />
+    <string id="taom_lotr_issue_knight_expl" text="Hediyeliğimi taşıyarak bir turnuvayı kazan ve onur ikimizin de olsun. Zafer için ödüllendirileceksin." />
+    <string id="taom_lotr_issue_knight_soln" text="Sizin için kazanacağım." />
+    <string id="taom_lotr_issue_tutor_title" text="Varsin Eğitimi İçin" />
+    <string id="taom_lotr_issue_tutor_desc" text="Bir lord, varisinin eğitimini uygun tarzda donatmak için ince kumaş ve malların getirilmesini istiyor." />
+    <string id="taom_lotr_issue_tutor_brief" text="Varisin soyumuza yakışır şekilde, güzel giysilerle ve öğrenimin gerekleryle eğitilmeli. İhtiyaçları getir, çocuk hiçbir şeyden yoksun kalmayacak." />
+    <string id="taom_lotr_issue_tutor_accept" text="Ne getirmeliyim?" />
+    <string id="taom_lotr_issue_tutor_expl" text="Bana {COUNT} top kadife getir ki varisimi bir lord gibi giydirebileyim, bunun için iyi ödüllendirileceksin." />
+    <string id="taom_lotr_issue_tutor_soln" text="Varisiniz için tedarik edeceğim." />
+    <string id="taom_lotr_issue_tutor_task" text="İnce kumaş teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_training_title" text="Adamları Savaşa Alıştırmak" />
+    <string id="taom_lotr_issue_training_desc" text="Bir toprak sahibi, tecrübesiz adamlarının sahada gerçek düşmanlara karşı savaşa alıştırılmasını istiyor." />
+    <string id="taom_lotr_issue_training_brief" text="Adamlarım yumuşak ve tecrübesiz, yumuşak adamlar ilk savaşta ölür. Onları gerçek düşmanlara karşı yönet ve sert askerler yap." />
+    <string id="taom_lotr_issue_training_accept" text="Savaşa alıştırılmalarını mı istiyorsunuz?" />
+    <string id="taom_lotr_issue_training_expl" text="Sert savaşlar kazan ve adamlarıma savaş sanatını öğret. Onları sertleştir ve öğretmen için ödüllendirileceksin." />
+    <string id="taom_lotr_issue_training_soln" text="Onları asker yapacağım." />
+    <string id="taom_lotr_issue_inn_title" text="Dolandırılmış ve Kırılmış" />
+    <string id="taom_lotr_issue_inn_desc" text="Bir soylu, mülkü dolandırıcılar tarafından ele geçirildiği için onlara sert bir ders verilmesini istiyor." />
+    <string id="taom_lotr_issue_inn_brief" text="Bir sürü hilekâr ve dolandırıcı hileli zarlarla ve sahte belgelerle malımı aldı. Onları benim için kır ve bu kasabada belki yine başımı dik tutabilirim." />
+    <string id="taom_lotr_issue_inn_accept" text="Seni kim dolandırdı?" />
+    <string id="taom_lotr_issue_inn_expl" text="Dolandırıcıları bul ve onları kır. Unutmayacakları bir ders ver, ben de sana gücüm yettiğince ödül vereceğim." />
+    <string id="taom_lotr_issue_inn_soln" text="Hesabı ben göreceğim." />
+    <string id="taom_lotr_issue_feud_title" text="Eski Bir Kan Davası" />
+    <string id="taom_lotr_issue_feud_desc" text="Acı bir kan davası kana bulandı ve bir lord, rakip hanedan mensuplarının silahlı adamlarının kırılmasını istiyor." />
+    <string id="taom_lotr_issue_feud_brief" text="Hanemle başka bir hane arasında eski ve derin bir kan davası var, şimdi de iş kılıçlara döküldü. Onların silahlı adamlarını kır, belki bu kan davası sonunda sona erer." />
+    <string id="taom_lotr_issue_feud_accept" text="Kiminle kan davasınız var?" />
+    <string id="taom_lotr_issue_feud_expl" text="Rakip hanedan mensuplarının adamlarını yen ve bu kan davasını güç kullanarak bitir. Bunu yap, hanem sana borçlu kalacak." />
+    <string id="taom_lotr_issue_feud_soln" text="Bu kan davasını bitireceğim." />
+    <string id="taom_lotr_issue_daughter_title" text="Kaçırılan Kız" />
+    <string id="taom_lotr_issue_daughter_desc" text="Bir soylunun kızı bir çete tarafından kaçırıldı ve ailesi onun kurtarılmasını istiyor." />
+    <string id="taom_lotr_issue_daughter_brief" text="Kızım -- kızımı aldılar yolcu, ve ödeyemeyeceğim bir fidye istiyorlar. Onu tutan o alçakları kır ve onu bana getir." />
+    <string id="taom_lotr_issue_daughter_accept" text="Nerede tutuluyor?" />
+    <string id="taom_lotr_issue_daughter_expl" text="Kızımı alan çeteyi bul ve kır. Onu sağ salim eve getir, sana verebileceğim her şeyi vereceğim." />
+    <string id="taom_lotr_issue_daughter_soln" text="Onu eve getireceğim." />
+    <string id="taom_lotr_issue_betting_title" text="Kesin Bahis" />
+    <string id="taom_lotr_issue_betting_desc" text="Bir çete lideri turnuva için ağır bahis koydu ve bahsinin tutması için bir dövüşçüye ihtiyacı var." />
+    <string id="taom_lotr_issue_betting_brief" text="Bir sonraki turnuvaya ağır bir kese koydum ve kaybetmeyi sevmem. Benim için kazan, kazançtan sana koca bir pay var." />
+    <string id="taom_lotr_issue_betting_accept" text="Turnuvayı kazanmamı mı istiyorsun?" />
+    <string id="taom_lotr_issue_betting_expl" text="Bir turnuva kazan ve bahsimi kazandır. Ödülü al, kazançtan seni iyi ödüllendireceğim." />
+    <string id="taom_lotr_issue_betting_soln" text="Bahsini kazandıracağım." />
+    <string id="taom_lotr_issue_special_title" text="Demirci İçin Demir" />
+    <string id="taom_lotr_issue_special_desc" text="Bir çete lideri özel kılıçlar dövürmek için kaliteli demir istiyor." />
+    <string id="taom_lotr_issue_special_brief" text="Kılıç yaptırmak istiyorum -- düzgün kılıçlar, adamlarımın taşıdığı çöp değil -- ve bunun için iyi demir gerek. Bana madeni getir, demircileri işe koyacağım." />
+    <string id="taom_lotr_issue_special_accept" text="Ne kadar demir?" />
+    <string id="taom_lotr_issue_special_expl" text="Demirci için bana {COUNT} kaliteli demir külçesi getir, karşılığında para var -- kılıçlar benim işim." />
+    <string id="taom_lotr_issue_special_soln" text="Sana demir getireceğim." />
+    <string id="taom_lotr_issue_special_task" text="Demir teslim et ({COUNT})" />
+    <string id="taom_lotr_issue_fallback_title" text="Yardım Talebi" />
+    <string id="taom_lotr_issue_fallback_desc" text="Bir yerli, malların teslim edilmesini istiyor." />
+    <string id="taom_lotr_issue_fallback_brief" text="İhtiyaç içindeyiz, yolcu." />
+    <string id="taom_lotr_issue_fallback_accept" text="Nasıl yardım edebilirim?" />
+    <string id="taom_lotr_issue_fallback_expl" text="Bize {COUNT} {ITEM} getir, kurtulmuş oluruz." />
+    <string id="taom_lotr_issue_fallback_soln" text="İhtiyacınız olanı getireceğim." />
+    <string id="taom_lotr_issue_common_accepted" text="{QUEST_SETTLEMENT} bölgesine {COUNT} {ITEM} getir." />
+    <string id="taom_lotr_issue_common_ready" text="Görevi tamamlamak için yeterince var. Teslim etmek için {QUEST_SETTLEMENT} bölgesine dön." />
+    <string id="taom_lotr_issue_common_cancel" text="Anlaşma iptal edildi." />
+    <string id="taom_lotr_issue_common_timeout" text="Malları zamanında teslim edememedin." />
+    <string id="taom_lotr_issue_common_offer_accept" text="Teşekkür ederim. Bu iyiliği unutmayacağım." />
+    <string id="taom_lotr_issue_common_have_you" text="İhtiyacımız olanı getirdin mi?" />
+    <string id="taom_lotr_issue_common_thanks" text="Tanrı seni korusun, yolcu. Bizi kurtardın." />
+    <string id="taom_lotr_issue_common_await" text="Dönüşünü bekliyoruz." />
+    <string id="taom_lotr_issue_common_turnin" text="Evet. İşte burada." />
+    <string id="taom_lotr_issue_common_working" text="Henüz değil — üzerinde çalışıyorum." />
+    <string id="taom_lotr_issue_common_not_enough" text="Henüz yeterince yok." />
+    <string id="taom_lotr_issue_common_task" text="Mal Topla" />
+    <string id="taom_lotr_issue_pers_expl" text="Bana {COUNT} esir getir, seni iyi ödüllendireceğim." />
+    <string id="taom_lotr_issue_pers_soln" text="Sana esirler getireceğim." />
+    <string id="taom_lotr_issue_pers_accepted" text="{QUEST_SETTLEMENT} bölgesine {COUNT} haydut esiri teslim et." />
+    <string id="taom_lotr_issue_pers_ready" text="Yeterli esirin var. Onları teslim etmek için {QUEST_SETTLEMENT} bölgesine dön." />
+    <string id="taom_lotr_issue_pers_timeout" text="Esirleri zamanında teslim edememedin." />
+    <string id="taom_lotr_issue_pers_have" text="Esirleri getirdin mi?" />
+    <string id="taom_lotr_issue_pers_thanks" text="Gayet uygun olacaklar. Teşekkürlerimi sunuyorum." />
+    <string id="taom_lotr_issue_pers_turnin" text="Evet. İşte buradalar." />
+    <string id="taom_lotr_issue_pers_not_enough" text="Henüz yeterli esirin yok." />
+    <string id="taom_lotr_issue_pers_task" text="Haydut esirleri al" />
+    <string id="taom_lotr_issue_combat_expl" text="Düşmanlarımızla ilgilen, ödüllendirileceksin." />
+    <string id="taom_lotr_issue_combat_soln" text="Onlarla ilgileneceğim." />
+    <string id="taom_lotr_issue_combat_task_capture" text="Düşman lordları yakala ({COUNT})" />
+    <string id="taom_lotr_issue_combat_task_tourney" text="Turnuvaları kazan ({COUNT})" />
+    <string id="taom_lotr_issue_combat_task_defeat" text="Akıncıları yok et ({COUNT})" />
+    <string id="taom_lotr_issue_combat_timeout" text="Tehditle zamanında ilgilenememedin." />
+  </strings>
+</base>

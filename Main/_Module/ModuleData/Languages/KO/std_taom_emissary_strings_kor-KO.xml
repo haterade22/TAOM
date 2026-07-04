@@ -1,10 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Korean" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="taom_emissary_menu" text="세력 사절과 대화" />
+    <string id="taom_emissary_no_trade" text="이곳에는 이 세력의 정예 거래가 없습니다." />
+    <string id="taom_emissary_greet" text="우리 민족이 제공할 수 있는 최고의 전사들을 찾으시나요? 말씀만 하시면 됩니다 — 적절한 대가만 있다면 말입니다." />
+    <string id="taom_emissary_buy" text="정예 부대를 구매하고 싶습니다." />
+    <string id="taom_emissary_leave" text="오늘은 아닙니다." />
+    <string id="taom_emissary_list_title" text="정예 부대" />
+    <string id="taom_emissary_list_desc" text="보유량: {AMOUNT} {RESOURCE}" />
+    <string id="taom_emissary_offer_line" text="{NAME} — {COST} {RESOURCE}" />
+    <string id="taom_emissary_offer_afford" text="최대 {MAX}명까지 구매할 수 있습니다." />
+    <string id="taom_emissary_offer_cant" text="{RESOURCE}이(가) 부족합니다." />
+    <string id="taom_emissary_select" text="선택" />
+    <string id="taom_emissary_back" text="뒤로" />
+    <string id="taom_emissary_qty_title" text="{TROOP} 몇 명을 구매하시겠습니까?" />
+    <string id="taom_emissary_qty_desc" text="각각 {COST} {RESOURCE}입니다. 보유량: {BALANCE}." />
+    <string id="taom_emissary_qty_line" text="{QTY} (×{COST} = {TOTAL} {RESOURCE})" />
+    <string id="taom_emissary_confirm" text="모집" />
+    <string id="taom_emissary_bought" text="{RESOURCE} {COST}(으)로 {TROOP} {QTY}명을 모집했습니다." />
+    <string id="taom_emissary_cant_afford" text="{RESOURCE}이(가) 부족합니다 — {COST} 필요." />
+    <string id="taom_emissary_no_resource" text="이 정착지에는 사절 거래가 없습니다." />
+    <string id="taom_emissary_no_offers" text="사절이 현재 제공할 정예 부대가 없습니다." />
+    <string id="taom_emissary_failed" text="사절이 거래를 완료할 수 없었습니다." />
+  </strings>
+</base>

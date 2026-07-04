@@ -1,10 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Traditional Chinese" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Traditional Chinese" />
+  </tags>
+  <strings>
+    <string id="taom_emissary_menu" text="與陣營使者交談" />
+    <string id="taom_emissary_no_trade" text="此處沒有這個陣營的精英交易。" />
+    <string id="taom_emissary_greet" text="你想要我們族人能提供的最精銳戰士?說出他們的名字,只要價錢合適,他們就是你的了。" />
+    <string id="taom_emissary_buy" text="我想購買精英單位。" />
+    <string id="taom_emissary_leave" text="今天不了。" />
+    <string id="taom_emissary_list_title" text="精英單位" />
+    <string id="taom_emissary_list_desc" text="餘額:{AMOUNT} {RESOURCE}" />
+    <string id="taom_emissary_offer_line" text="{NAME} — {COST} {RESOURCE}" />
+    <string id="taom_emissary_offer_afford" text="你最多可以買得起{MAX}個。" />
+    <string id="taom_emissary_offer_cant" text="{RESOURCE}不足。" />
+    <string id="taom_emissary_select" text="選擇" />
+    <string id="taom_emissary_back" text="返回" />
+    <string id="taom_emissary_qty_title" text="要招募多少個{TROOP}?" />
+    <string id="taom_emissary_qty_desc" text="每個需要{COST} {RESOURCE}。你擁有{BALANCE}。" />
+    <string id="taom_emissary_qty_line" text="{QTY} (×{COST} = {TOTAL} {RESOURCE})" />
+    <string id="taom_emissary_confirm" text="招募" />
+    <string id="taom_emissary_bought" text="花費{COST} {RESOURCE}招募了{QTY}個{TROOP}。" />
+    <string id="taom_emissary_cant_afford" text="{RESOURCE}不足 — 需要{COST}。" />
+    <string id="taom_emissary_no_resource" text="此定居點沒有使者貿易。" />
+    <string id="taom_emissary_no_offers" text="使者目前沒有精銳部隊可供招募。" />
+    <string id="taom_emissary_failed" text="使者無法完成交易。" />
+  </strings>
+</base>

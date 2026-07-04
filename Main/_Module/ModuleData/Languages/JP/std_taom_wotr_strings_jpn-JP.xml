@@ -1,10 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Japanese" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Japanese" />
+  </tags>
+  <strings>
+    <string id="taom_wotr_title" text="指輪戦争" />
+    <string id="taom_wotr_leaders" text="指導者" />
+    <string id="taom_wotr_allies" text="同盟国" />
+    <string id="taom_wotr_breakdown_header" text="勢力の内訳" />
+    <string id="taom_wotr_total_stats_header" text="総計" />
+    <string id="taom_wotr_total" text="合計: {MOMENTUM}" />
+    <string id="taom_wotr_battles_won" text="勝利した戦闘" />
+    <string id="taom_wotr_villages_raided" text="略奪した村" />
+    <string id="taom_wotr_fiefs_captured" text="占領した領地" />
+    <string id="taom_wotr_army_gathered" text="集結した軍勢" />
+    <string id="taom_wotr_relative_strength" text="相対戦力" />
+    <string id="taom_wotr_enemies_killed" text="倒した敵" />
+    <string id="taom_wotr_settlements_captured" text="占領した集落" />
+    <string id="taom_wotr_momentum" text="勢力" />
+    <string id="taom_wotr_desc_battle" text="{WINNER_LEADER}率いる{WINNER_FACTION}の軍が、{LOSER_LEADER}率いる{LOSER_FACTION}の軍を壊滅させ、{CASUALTIES}名を討ち取った。" />
+    <string id="taom_wotr_desc_siege" text="{LEADER}率いる{FACTION}の軍が{SETTLEMENT}を占領した。" />
+    <string id="taom_wotr_desc_raid" text="{FACTION}の{PARTY}が{SETTLEMENT}の村を略奪した。" />
+    <string id="taom_wotr_desc_army" text="{LEADER}率いる軍勢が集結した。" />
+    <string id="taom_wotr_desc_strength" text="我らは敵より{PERCENTAGE}%強い!" />
+    <string id="taom_wotr_victory_title" text="戦争の終結" />
+    <string id="taom_wotr_victory_free" text="戦争は終わった。自由の民は耐え抜き、子らのための未来を勝ち取った。自由万歳!" />
+    <string id="taom_wotr_victory_evil" text="人間とエルフの国々は悉く砕かれた。サウロン万歳!" />
+    <string id="taom_wotr_continue" text="続ける" />
+  </strings>
+</base>

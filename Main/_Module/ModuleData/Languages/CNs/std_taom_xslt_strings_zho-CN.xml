@@ -1,2882 +1,1441 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-
-      type="string">
-
-  <tags>
-
-    <tag language="Simplified Chinese" />
-
-  </tags>
-
-  <strings>
-
-    <string id="TAOM_dunland" text="登兰德" />
-
-    <string id="TAOM_dunland_short" text="登兰德" />
-
-    <string id="TAOM_dunland_title" text="登兰德部族" />
-
-    <string id="TAOM_dunland_ruler" text="酋长" />
-
-    <string id="TAOM_dunland_desc" text="登兰德是一片崎岖而未被驯服的土地,拥有起伏的丘陵和茂密的森林,是凶悍而独立的登兰德人的家园。他们常常被边缘化,与邻居不和,经过数个世纪的斗争与生存而变得坚韧。他们的酋长以力量和狡猾来领导,在复仇与自由的共同旗帜下团结各个部族。登兰德人以凶猛的战士和熟练的猎人而闻名,他们偏爱使用斧头、长矛和弓箭,以源自对祖先土地的深厚联系的顽强精神战斗。尽管他们的方式在其他人看来可能显得原始,但登兰德人骄傲而足智多谋,随时准备在中土世界夺回他们应有的地位。" />
-
-    <string id="TAOM_gondor" text="刚铎" />
-
-    <string id="TAOM_gondor_short" text="刚铎" />
-
-    <string id="TAOM_gondor_title" text="刚铎摄政王国" />
-
-    <string id="TAOM_gondor_ruler" text="摄政王" />
-
-    <string id="TAOM_gondor_desc" text="刚铎屹立于中土世界,是力量与坚韧的骄傲堡垒,以其高耸的白石城市、古老的血统和精锐的军队而闻名。刚铎由埃兰迪尔及其子嗣在努门诺尔陷落后建立,长期以来一直守卫着人类的国度,抵御来自东方日益增长的黑暗势力。以米那斯提力斯为首都,这个王国以其英勇、纪律和对自由民族的忠诚而著称。尽管多年来与魔多冲突不断,刚铎的战士和摄政王们仍然保持着希望,等待着国王归来,恢复昔日的荣光。" />
-
-    <string id="TAOM_mordor" text="魔多" />
-
-    <string id="TAOM_mordor_short" text="魔多" />
-
-    <string id="TAOM_mordor_title" text="魔多统治领" />
-
-    <string id="TAOM_mordor_ruler" text="黑暗魔君" />
-
-    <string id="TAOM_mordor_desc" text="魔多是一片黑暗、荒凉的国度,在阴影中铸就,由黑暗魔君索伦统治。这个王国隐藏在高耸的黑色山脉之后,充斥着兽人大军、残酷的巨魔和锻造战争武器的炽热熔炉。索伦从巴拉多要塞指挥着一支势不可挡的力量,准备将他的统治扩展到整个中土世界。魔多的天空弥漫着灰烬,土地一片荒芜,是索伦扭曲的野心和黑暗魔法的完美领地。" />
-
-    <string id="TAOM_dale" text="河谷邦" />
-
-    <string id="TAOM_dale_short" text="河谷邦" />
-
-    <string id="TAOM_dale_title" text="河谷邦王国" />
-
-    <string id="TAOM_dale_ruler" text="国王" />
-
-    <string id="TAOM_dale_desc" text="在奔流河的水域与孤山的阴影交汇之处,矗立着河谷邦。这座人类之城在五军之战后从废墟中重建。曾经是音乐与欢乐、贸易与金色市场大厅的所在地,河谷邦在埃尔伯的庇护下繁荣发展。它的商人驾驶快船沿着凯尔督因河航行,街道上回荡着笑声,人民享受着和平。但当恶龙来临时,和平被打破了。来自北方的飞翼死神史矛革带着烈焰与怒火降临埃尔伯,河谷邦首当其冲。城市化为火海,人民逃离,近两个世纪以来,骄傲的圆顶塔楼寂静而破碎,成为悲伤的纪念碑。然而,废墟并非河谷邦故事的终结。随着恶龙之死,神箭手巴德再次举起旗帜,召唤他的人民回家。河谷邦从灰烬与石头中再次崛起,不是恢复旧貌,而是变得更加强大。在国王巴德及其子贝恩的统治下,城市再次繁荣,城墙坚固,人民骄傲,目光永远警惕。河谷邦的人民数量不多,也没有古老的魔法,但他们坚定而真诚。" />
-
-    <string id="TAOM_harad" text="哈拉德" />
-
-    <string id="TAOM_harad_short" text="哈拉德" />
-
-    <string id="TAOM_harad_title" text="哈尔万塔斯克拉兰" />
-
-    <string id="TAOM_harad_ruler" text="塔斯克拉尔" />
-
-    <string id="TAOM_harad_desc" text="哈拉德位于刚铎以南,是一片广阔而多样的地区,包括干旱的沙漠、茂密的丛林和肥沃的绿洲。其地理环境与人民一样多样,广袤的沙丘让位于茂密的森林和充满生机的河流。哈拉德的历史浸透着古老的传说,宏伟的城市和要塞点缀在这片土地上,由那些遗产回荡千古的统治者所建。哈拉德威斯大沙漠将其北部边境与腹地分隔开来,而其南部海岸则充满贸易与海盗活动。在索伦的旗帜下团结起来,哈拉德的众多部落和王国将其根深蒂固的传统融入战争努力,将这片充满活力的土地转变为文化与冲突的强国。" />
-
-    <string id="TAOM_rohan" text="洛汗" />
-
-    <string id="TAOM_rohan_short" text="洛汗" />
-
-    <string id="TAOM_rohan_title" text="洛汗王国" />
-
-    <string id="TAOM_rohan_ruler" text="国王" />
-
-    <string id="TAOM_rohan_desc" text="洛汗被称为骠骑国,是一片广阔的开阔平原和起伏丘陵的王国,强大的洛汗骠骑——熟练的骑手和凶猛的战士——居住于此。由年轻的埃奥尔在他传奇性地驰援刚铎后建立,洛汗长期以来一直是刚铎对抗魔多黑暗势力的坚定盟友。从埃多拉斯的金色大厅梅杜塞尔德,其国王统治着一个骄傲而坚韧的民族,他们以马与骑手的纽带生活。洛汗骠骑以其骑兵冲锋、英勇的歌谣和坚定不移的勇气而闻名。尽管萨鲁曼的阴影威胁着他们的边境,洛汗的儿女们仍然随时准备响应号召,保卫他们的家园和中土世界的自由民族。" />
-
-    <string id="TAOM_khand" text="坎德" />
-
-    <string id="TAOM_khand_short" text="坎德" />
-
-    <string id="TAOM_khand_title" text="坎德御风者" />
-
-    <string id="TAOM_khand_ruler" text="库德里亚格" />
-
-    <string id="TAOM_khand_desc" text="坎德是一片崎岖的土地,拥有起伏的草原和干旱的平原,位于魔多东南部,是东西方之间的重要走廊。其人民瓦瑞亚格人凶猛而游牧,以其快马和致命的弯刀而闻名。生活在恶劣的环境中,他们磨练了作为掠夺者和战士的技能,经常与邻居发生冲突,并为出价最高者充当雇佣兵。坎德的忠诚长期以来一直被黑暗魔君争取,许多战士在魔多的阴影下参战。然而瓦瑞亚格人是一个骄傲而独立的民族,首先忠于他们的部族和酋长,这些酋长从散布在风吹草原上的设防营地统治。" />
-
-    <string id="TAOM_rhun" text="鲁恩" />
-
-    <string id="TAOM_rhun_short" text="鲁恩" />
-
-    <string id="TAOM_rhun_title" text="鲁恩黄金国度" />
-
-    <string id="TAOM_rhun_ruler" text="洛克-坎" />
-
-    <string id="TAOM_rhun_desc" text="在鲁恩内海之外,越过枯萎的草原和被遗忘帝国的红色尘土,坐落着广袤而神秘的东方。这里居住着东夷人,一个骄傲而古老的民族,他们的历史甚至早于刚铎的崛起。他们的土地在辽阔的天空下无尽延伸,从内陆海的海岸到标志着已知世界边缘的阴影山脉。东夷人并非单一的国家,而是由部落和王国编织成的锦绣,仅因对力量的崇敬和对西方长久的怨恨记忆而团结。有些人心甘情愿地侍奉黑暗魔君,被权力和复仇的承诺所吸引;另一些人则抵抗,坚守着古老的方式和更古老的神祇。他们的战士因纪律严明和精通战车与弓箭而令人畏惧,他们的金色盔甲在东方的阳光下闪耀如火。" />
-
-    <string id="aom_dunland_male_name_1" text="布罗达" />
-
-    <string id="aom_dunland_male_name_2" text="邓里克" />
-
-    <string id="aom_dunland_male_name_3" text="伊欧甘" />
-
-    <string id="aom_dunland_male_name_4" text="格林达尔" />
-
-    <string id="aom_dunland_male_name_5" text="萨恩" />
-
-    <string id="aom_dunland_male_name_6" text="卡多克" />
-
-    <string id="aom_dunland_male_name_7" text="莫德兰" />
-
-    <string id="aom_dunland_male_name_8" text="芬里克" />
-
-    <string id="aom_dunland_male_name_9" text="凯多克" />
-
-    <string id="aom_dunland_male_name_10" text="托兰" />
-
-    <string id="aom_dunland_male_name_11" text="拉格诺" />
-
-    <string id="aom_dunland_male_name_12" text="埃尔德里克" />
-
-    <string id="aom_dunland_male_name_13" text="哈尔里克" />
-
-    <string id="aom_dunland_male_name_14" text="乌尔里克" />
-
-    <string id="aom_dunland_male_name_15" text="塞尔诺克" />
-
-    <string id="aom_dunland_male_name_16" text="布赖诺" />
-
-    <string id="aom_dunland_male_name_17" text="戈兰" />
-
-    <string id="aom_dunland_male_name_18" text="托多克" />
-
-    <string id="aom_dunland_male_name_19" text="芬里克" />
-
-    <string id="aom_dunland_male_name_20" text="哈罗克" />
-
-    <string id="aom_dunland_male_name_21" text="凯兰" />
-
-    <string id="aom_dunland_male_name_22" text="乌尔达" />
-
-    <string id="aom_dunland_male_name_23" text="索兰" />
-
-    <string id="aom_dunland_male_name_24" text="格雷里克" />
-
-    <string id="aom_dunland_male_name_25" text="布拉多" />
-
-    <string id="aom_dunland_male_name_26" text="莫兰" />
-
-    <string id="aom_dunland_male_name_27" text="阿德里克" />
-
-    <string id="aom_dunland_male_name_28" text="卡德罗克" />
-
-    <string id="aom_dunland_male_name_29" text="格拉尔多" />
-
-    <string id="aom_dunland_male_name_30" text="法尔诺克" />
-
-    <string id="aom_dunland_male_name_31" text="乌尔里克" />
-
-    <string id="aom_dunland_male_name_32" text="布伦多克" />
-
-    <string id="aom_dunland_male_name_33" text="埃德里克" />
-
-    <string id="aom_dunland_male_name_34" text="斯拉尔多" />
-
-    <string id="aom_dunland_male_name_35" text="乌尔甘" />
-
-    <string id="aom_dunland_male_name_36" text="戈兰" />
-
-    <string id="aom_dunland_male_name_37" text="拉格纳尔德" />
-
-    <string id="aom_dunland_male_name_38" text="邓莫" />
-
-    <string id="aom_dunland_male_name_39" text="索尔利克" />
-
-    <string id="aom_dunland_male_name_40" text="芬瓦尔德" />
-
-    <string id="aom_dunland_male_name_41" text="布里尔丹" />
-
-    <string id="aom_dunland_male_name_42" text="格兰萨尔" />
-
-    <string id="aom_dunland_male_name_43" text="哈尔莫德" />
-
-    <string id="aom_dunland_male_name_44" text="瑟里丹" />
-
-    <string id="aom_dunland_male_name_45" text="埃尔隆德" />
-
-    <string id="aom_dunland_male_name_46" text="加雷斯" />
-
-    <string id="aom_dunland_male_name_47" text="哈维克" />
-
-    <string id="aom_dunland_male_name_48" text="吉尔丹" />
-
-    <string id="aom_dunland_male_name_49" text="乌尔弗拉姆" />
-
-    <string id="aom_dunland_male_name_50" text="索拉格" />
-
-    <string id="aom_dunland_female_name_1" text="布林迪丝" />
-
-    <string id="aom_dunland_female_name_2" text="埃迪丝" />
-
-    <string id="aom_dunland_female_name_3" text="莫温" />
-
-    <string id="aom_dunland_female_name_4" text="格里斯拉" />
-
-    <string id="aom_dunland_female_name_5" text="哈尔达" />
-
-    <string id="aom_dunland_female_name_6" text="瑟拉" />
-
-    <string id="aom_dunland_female_name_7" text="凯德温" />
-
-    <string id="aom_dunland_female_name_8" text="艾尔琳" />
-
-    <string id="aom_dunland_female_name_9" text="芬温" />
-
-    <string id="aom_dunland_female_name_10" text="萨尔达" />
-
-    <string id="aom_dunland_female_name_11" text="格雷尔温" />
-
-    <string id="aom_dunland_female_name_12" text="哈温" />
-
-    <string id="aom_dunland_female_name_13" text="奥尔迪丝" />
-
-    <string id="aom_dunland_female_name_14" text="温拉" />
-
-    <string id="aom_dunland_female_name_15" text="布丽西娅" />
-
-    <string id="aom_dunland_female_name_16" text="埃奥拉" />
-
-    <string id="aom_dunland_female_name_17" text="瑟尔达" />
-
-    <string id="aom_dunland_female_name_18" text="格兰娜" />
-
-    <string id="aom_dunland_female_name_19" text="艾尔温" />
-
-    <string id="aom_dunland_female_name_20" text="莫拉" />
-
-    <string id="aom_dunland_female_name_21" text="哈拉" />
-
-    <string id="aom_dunland_female_name_22" text="芬拉" />
-
-    <string id="aom_dunland_female_name_23" text="格里萨" />
-
-    <string id="aom_dunland_female_name_24" text="瑟里萨" />
-
-    <string id="aom_dunland_female_name_25" text="哈尔温" />
-
-    <string id="aom_dunland_female_name_26" text="凯琳" />
-
-    <string id="aom_dunland_female_name_27" text="格雷尔温" />
-
-    <string id="aom_dunland_female_name_28" text="萨拉" />
-
-    <string id="aom_dunland_female_name_29" text="莫拉" />
-
-    <string id="aom_dunland_female_name_30" text="布丽娜" />
-
-    <string id="aom_dunland_female_name_31" text="希尔达" />
-
-    <string id="aom_dunland_female_name_32" text="埃利斯" />
-
-    <string id="aom_dunland_female_name_33" text="凯尔温" />
-
-    <string id="aom_dunland_female_name_34" text="奥德拉" />
-
-    <string id="aom_dunland_female_name_35" text="哈拉" />
-
-    <string id="aom_dunland_female_name_36" text="温拉" />
-
-    <string id="aom_dunland_female_name_37" text="西尔达" />
-
-    <string id="aom_dunland_female_name_38" text="格蕾斯拉" />
-
-    <string id="aom_dunland_female_name_39" text="芬温" />
-
-    <string id="aom_dunland_female_name_40" text="埃尔拉" />
-
-    <string id="aom_dunland_female_name_41" text="莫温" />
-
-    <string id="aom_dunland_female_name_42" text="哈尔达" />
-
-    <string id="aom_dunland_female_name_43" text="凯德拉" />
-
-    <string id="aom_dunland_female_name_44" text="萨娜" />
-
-    <string id="aom_dunland_female_name_45" text="布林德尔" />
-
-    <string id="aom_dunland_female_name_46" text="格里斯温" />
-
-    <string id="aom_dunland_female_name_47" text="艾迪丝" />
-
-    <string id="aom_dunland_female_name_48" text="芬拉" />
-
-    <string id="aom_dunland_female_name_49" text="哈温" />
-
-    <string id="aom_dunland_female_name_50" text="温娜" />
-
-    <string id="aom_dunland_clan_name_01" text="红狼氏族" />
-
-    <string id="aom_dunland_clan_name_02" text="铁牙氏族" />
-
-    <string id="aom_dunland_clan_name_03" text="碎石者氏族" />
-
-    <string id="aom_dunland_clan_name_04" text="暗影猎人氏族" />
-
-    <string id="aom_dunland_clan_name_05" text="山丘劫掠者氏族" />
-
-    <string id="aom_dunland_clan_name_06" text="狂野之刃氏族" />
-
-    <string id="aom_dunland_clan_name_07" text="唤风者氏族" />
-
-    <string id="aom_dunland_clan_name_08" text="血鸦氏族" />
-
-    <string id="aom_dunland_clan_name_09" text="白骨之矛氏族" />
-
-    <string id="aom_dunland_clan_name_10" text="震地者氏族" />
-
-    <string id="aom_dunland_clan_name_11" text="荆棘之盾氏族" />
-
-    <string id="aom_dunland_clan_name_12" text="影狼氏族" />
-
-    <string id="aom_dunland_clan_name_13" text="断斧氏族" />
-
-    <string id="aom_dunland_clan_name_14" text="鸦眼氏族" />
-
-    <string id="aom_dunland_clan_name_15" text="霜嚎氏族" />
-
-    <string id="aom_dunland_clan_name_16" text="铁缚者氏族" />
-
-    <string id="aom_dunland_clan_name_17" text="石拳氏族" />
-
-    <string id="aom_dunland_clan_name_18" text="呼啸狂风氏族" />
-
-    <string id="aom_dunland_clan_name_19" text="山影氏族" />
-
-    <string id="aom_harad_male_name_1" text="阿扎兰" />
-
-    <string id="aom_harad_male_name_2" text="扎米尔" />
-
-    <string id="aom_harad_male_name_3" text="哈立德" />
-
-    <string id="aom_harad_male_name_4" text="拉希德" />
-
-    <string id="aom_harad_male_name_5" text="纳齐尔" />
-
-    <string id="aom_harad_male_name_6" text="贾米尔" />
-
-    <string id="aom_harad_male_name_7" text="哈西姆" />
-
-    <string id="aom_harad_male_name_8" text="法拉吉" />
-
-    <string id="aom_harad_male_name_9" text="萨希姆" />
-
-    <string id="aom_harad_male_name_10" text="塔里克" />
-
-    <string id="aom_harad_male_name_11" text="巴西姆" />
-
-    <string id="aom_harad_male_name_12" text="卡里姆" />
-
-    <string id="aom_harad_male_name_13" text="萨利姆" />
-
-    <string id="aom_harad_male_name_14" text="拉扬" />
-
-    <string id="aom_harad_male_name_15" text="扎法尔" />
-
-    <string id="aom_harad_male_name_16" text="亚西尔" />
-
-    <string id="aom_harad_male_name_17" text="哈基姆" />
-
-    <string id="aom_harad_male_name_18" text="易卜拉欣" />
-
-    <string id="aom_harad_male_name_19" text="费萨尔" />
-
-    <string id="aom_harad_male_name_20" text="纳吉布" />
-
-    <string id="aom_harad_male_name_21" text="穆尼尔" />
-
-    <string id="aom_harad_male_name_22" text="阿什拉夫" />
-
-    <string id="aom_harad_male_name_23" text="扎克万" />
-
-    <string id="aom_harad_male_name_24" text="阿齐姆" />
-
-    <string id="aom_harad_male_name_25" text="苏莱曼" />
-
-    <string id="aom_harad_male_name_26" text="哈基姆" />
-
-    <string id="aom_harad_male_name_27" text="吉卜利勒" />
-
-    <string id="aom_harad_male_name_28" text="塔希尔" />
-
-    <string id="aom_harad_male_name_29" text="拉菲克" />
-
-    <string id="aom_harad_male_name_30" text="马利克" />
-
-    <string id="aom_harad_male_name_31" text="扎希尔" />
-
-    <string id="aom_harad_male_name_32" text="阿西姆" />
-
-    <string id="aom_harad_male_name_33" text="纳比尔" />
-
-    <string id="aom_harad_male_name_34" text="奥马尔" />
-
-    <string id="aom_harad_male_name_35" text="卡西姆" />
-
-    <string id="aom_harad_male_name_36" text="哈利姆" />
-
-    <string id="aom_harad_male_name_37" text="曼苏尔" />
-
-    <string id="aom_harad_male_name_38" text="叶海亚" />
-
-    <string id="aom_harad_male_name_39" text="沙基尔" />
-
-    <string id="aom_harad_male_name_40" text="阿迪尔" />
-
-    <string id="aom_harad_male_name_41" text="马赫迪" />
-
-    <string id="aom_harad_male_name_42" text="法希姆" />
-
-    <string id="aom_harad_male_name_43" text="拉提夫" />
-
-    <string id="aom_harad_male_name_44" text="拉米兹" />
-
-    <string id="aom_harad_male_name_45" text="塔米姆" />
-
-    <string id="aom_harad_male_name_46" text="亚齐德" />
-
-    <string id="aom_harad_male_name_47" text="卡马尔" />
-
-    <string id="aom_harad_male_name_48" text="哈桑" />
-
-    <string id="aom_harad_male_name_49" text="阿齐姆" />
-
-    <string id="aom_harad_male_name_50" text="祖拜德" />
-
-    <string id="aom_harad_female_name_1" text="扎希拉" />
-
-    <string id="aom_harad_female_name_2" text="娜迪亚" />
-
-    <string id="aom_harad_female_name_3" text="亚丝敏" />
-
-    <string id="aom_harad_female_name_4" text="阿米拉" />
-
-    <string id="aom_harad_female_name_5" text="蕾拉" />
-
-    <string id="aom_harad_female_name_6" text="拉尼娅" />
-
-    <string id="aom_harad_female_name_7" text="贾米拉" />
-
-    <string id="aom_harad_female_name_8" text="哈芙萨" />
-
-    <string id="aom_harad_female_name_9" text="祖蕾卡" />
-
-    <string id="aom_harad_female_name_10" text="阿米娜" />
-
-    <string id="aom_harad_female_name_11" text="萨利玛" />
-
-    <string id="aom_harad_female_name_12" text="拉米娅" />
-
-    <string id="aom_harad_female_name_13" text="萨米拉" />
-
-    <string id="aom_harad_female_name_14" text="纳齐拉" />
-
-    <string id="aom_harad_female_name_15" text="鲁卡娅" />
-
-    <string id="aom_harad_female_name_16" text="哈利玛" />
-
-    <string id="aom_harad_female_name_17" text="阿齐莎" />
-
-    <string id="aom_harad_female_name_18" text="卡迪嘉" />
-
-    <string id="aom_harad_female_name_19" text="法德瓦" />
-
-    <string id="aom_harad_female_name_20" text="萨菲娅" />
-
-    <string id="aom_harad_female_name_21" text="阿莉娅" />
-
-    <string id="aom_harad_female_name_22" text="纳瓦尔" />
-
-    <string id="aom_harad_female_name_23" text="布什拉" />
-
-    <string id="aom_harad_female_name_24" text="扎赫拉" />
-
-    <string id="aom_harad_female_name_25" text="里哈娜" />
-
-    <string id="aom_harad_female_name_26" text="苏玛雅" />
-
-    <string id="aom_harad_female_name_27" text="奈玛" />
-
-    <string id="aom_harad_female_name_28" text="拉希达" />
-
-    <string id="aom_harad_female_name_29" text="宰纳卜" />
-
-    <string id="aom_harad_female_name_30" text="莎伊玛" />
-
-    <string id="aom_harad_female_name_31" text="穆尼拉" />
-
-    <string id="aom_harad_female_name_32" text="法蒂玛" />
-
-    <string id="aom_harad_female_name_33" text="希琳" />
-
-    <string id="aom_harad_female_name_34" text="萨尼娅" />
-
-    <string id="aom_harad_female_name_35" text="玛利卡" />
-
-    <string id="aom_harad_female_name_36" text="阿菲娅" />
-
-    <string id="aom_harad_female_name_37" text="扎因" />
-
-    <string id="aom_harad_female_name_38" text="法里达" />
-
-    <string id="aom_harad_female_name_39" text="阿玛尼" />
-
-    <string id="aom_harad_female_name_40" text="纳齐拉" />
-
-    <string id="aom_harad_female_name_41" text="胡达" />
-
-    <string id="aom_harad_female_name_42" text="拉赫玛" />
-
-    <string id="aom_harad_female_name_43" text="亚米拉" />
-
-    <string id="aom_harad_female_name_44" text="莎玛" />
-
-    <string id="aom_harad_female_name_45" text="塔米娜" />
-
-    <string id="aom_harad_female_name_46" text="祖拜达" />
-
-    <string id="aom_harad_female_name_47" text="拉比娅" />
-
-    <string id="aom_harad_female_name_48" text="阿斯玛" />
-
-    <string id="aom_harad_female_name_49" text="拉蒂法" />
-
-    <string id="aom_harad_female_name_50" text="赛伊达" />
-
-    <string id="aom_harad_clan_name_01" text="燃烧之沙" />
-
-    <string id="aom_harad_clan_name_02" text="金色刀刃" />
-
-    <string id="aom_harad_clan_name_03" text="沙漠烈日" />
-
-    <string id="aom_harad_clan_name_04" text="赤红长矛" />
-
-    <string id="aom_harad_clan_name_05" text="沙丘骑士" />
-
-    <string id="aom_harad_clan_name_06" text="灼热之风" />
-
-    <string id="aom_harad_clan_name_07" text="沙暴战士" />
-
-    <string id="aom_harad_clan_name_08" text="蛇牙" />
-
-    <string id="aom_harad_clan_name_09" text="黑蝎" />
-
-    <string id="aom_harad_clan_name_10" text="猛玛守护者" />
-
-    <string id="aom_harad_clan_name_11" text="绿洲守卫" />
-
-    <string id="aom_harad_clan_name_12" text="烈火之印" />
-
-    <string id="aom_harad_clan_name_13" text="绯红盾卫" />
-
-    <string id="aom_harad_clan_name_14" text="金色新月" />
-
-    <string id="aom_harad_clan_name_15" text="静默之影" />
-
-    <string id="aom_harad_clan_name_16" text="日光击者" />
-
-    <string id="aom_harad_clan_name_17" text="沙丘守望者" />
-
-    <string id="aom_harad_clan_name_18" text="蛇影骑士" />
-
-    <string id="aom_harad_clan_name_19" text="烈焰铁蹄" />
-
-    <string id="aom_harad_clan_name_20" text="暮光之沙" />
-
-    <string id="aom_rohan_male_name_1" text="埃德雷德" />
-
-    <string id="aom_rohan_male_name_2" text="埃欧蒙德" />
-
-    <string id="aom_rohan_male_name_3" text="凯奥尔" />
-
-    <string id="aom_rohan_male_name_4" text="埃塞尔里克" />
-
-    <string id="aom_rohan_male_name_5" text="贝奥赫特赫尔姆" />
-
-    <string id="aom_rohan_male_name_6" text="埃尔德武夫" />
-
-    <string id="aom_rohan_male_name_7" text="沃夫加" />
-
-    <string id="aom_rohan_male_name_8" text="塞奥德里克" />
-
-    <string id="aom_rohan_male_name_9" text="埃尔里克" />
-
-    <string id="aom_rohan_male_name_10" text="布里赫特武夫" />
-
-    <string id="aom_rohan_male_name_11" text="塞奥德温" />
-
-    <string id="aom_rohan_male_name_12" text="辛里克" />
-
-    <string id="aom_rohan_male_name_13" text="埃欧门里克" />
-
-    <string id="aom_rohan_male_name_14" text="埃德赫尔姆" />
-
-    <string id="aom_rohan_male_name_15" text="阿尔德武夫" />
-
-    <string id="aom_rohan_male_name_16" text="弗里斯加" />
-
-    <string id="aom_rohan_male_name_17" text="奥斯温" />
-
-    <string id="aom_rohan_male_name_18" text="莱奥夫温" />
-
-    <string id="aom_rohan_male_name_19" text="塞奥巴尔德" />
-
-    <string id="aom_rohan_male_name_20" text="温弗里斯" />
-
-    <string id="aom_rohan_male_name_21" text="赫里沃德" />
-
-    <string id="aom_rohan_male_name_22" text="埃欧塞因" />
-
-    <string id="aom_rohan_male_name_23" text="古斯里克" />
-
-    <string id="aom_rohan_male_name_24" text="塞奥武夫" />
-
-    <string id="aom_rohan_male_name_25" text="弗拉姆里克" />
-
-    <string id="aom_rohan_male_name_26" text="埃德加" />
-
-    <string id="aom_rohan_male_name_27" text="赫里莫德" />
-
-    <string id="aom_rohan_male_name_28" text="贝奥恩赫尔姆" />
-
-    <string id="aom_rohan_male_name_29" text="西格弗雷德" />
-
-    <string id="aom_rohan_male_name_30" text="塞奥登里克" />
-
-    <string id="aom_rohan_male_name_31" text="埃尔武夫" />
-
-    <string id="aom_rohan_male_name_32" text="加蒙德" />
-
-    <string id="aom_rohan_male_name_33" text="赫罗斯加" />
-
-    <string id="aom_rohan_male_name_34" text="埃欧瓦尔德" />
-
-    <string id="aom_rohan_male_name_35" text="凯奥武夫" />
-
-    <string id="aom_rohan_male_name_36" text="法拉蒙德" />
-
-    <string id="aom_rohan_male_name_37" text="埃塞尔赫尔姆" />
-
-    <string id="aom_rohan_male_name_38" text="埃欧佛" />
-
-    <string id="aom_rohan_male_name_39" text="温斯坦" />
-
-    <string id="aom_rohan_male_name_40" text="赫雷文" />
-
-    <string id="aom_rohan_male_name_41" text="古斯文" />
-
-    <string id="aom_rohan_male_name_42" text="辛文" />
-
-    <string id="aom_rohan_male_name_43" text="埃尔弗里克" />
-
-    <string id="aom_rohan_male_name_44" text="伍尔夫斯坦" />
-
-    <string id="aom_rohan_male_name_45" text="贝奥赫特文" />
-
-    <string id="aom_rohan_male_name_46" text="塞奥蒙德" />
-
-    <string id="aom_rohan_male_name_47" text="切奥文" />
-
-    <string id="aom_rohan_male_name_48" text="塞奥德赫尔姆" />
-
-    <string id="aom_rohan_male_name_49" text="莱奥夫赫尔姆" />
-
-    <string id="aom_rohan_male_name_50" text="埃尔夫文" />
-
-    <string id="aom_rohan_male_name_51" text="伍尔夫诺斯" />
-
-    <string id="aom_rohan_male_name_52" text="塞尔沃德" />
-
-    <string id="aom_rohan_male_name_53" text="塞尔姆" />
-
-    <string id="aom_rohan_male_name_54" text="埃奥姆雷德" />
-
-    <string id="aom_rohan_male_name_55" text="埃尔温" />
-
-    <string id="aom_rohan_male_name_56" text="伊尔夫加尔" />
-
-    <string id="aom_rohan_male_name_57" text="阿尔夫加尔" />
-
-    <string id="aom_rohan_male_name_58" text="乌尔法尔" />
-
-    <string id="aom_rohan_male_name_59" text="莱奥法尔" />
-
-    <string id="aom_rohan_male_name_60" text="莱奥弗里克" />
-
-    <string id="aom_rohan_female_name_1" text="埃德吉芙" />
-
-    <string id="aom_rohan_female_name_2" text="塞奥德温" />
-
-    <string id="aom_rohan_female_name_3" text="埃塞尔希尔德" />
-
-    <string id="aom_rohan_female_name_4" text="辛妮思丽丝" />
-
-    <string id="aom_rohan_female_name_5" text="贝奥尔希尔德" />
-
-    <string id="aom_rohan_female_name_6" text="弗里思温" />
-
-    <string id="aom_rohan_female_name_7" text="温弗里丝" />
-
-    <string id="aom_rohan_female_name_8" text="埃奥尔门希尔德" />
-
-    <string id="aom_rohan_female_name_9" text="希尔迪丝" />
-
-    <string id="aom_rohan_female_name_10" text="伊奥温妮" />
-
-    <string id="aom_rohan_female_name_11" text="莱奥芙温" />
-
-    <string id="aom_rohan_female_name_12" text="埃尔希尔德" />
-
-    <string id="aom_rohan_female_name_13" text="塞奥温" />
-
-    <string id="aom_rohan_female_name_14" text="温弗里达" />
-
-    <string id="aom_rohan_female_name_15" text="阿尔德吉芙" />
-
-    <string id="aom_rohan_female_name_16" text="赫雷林德" />
-
-    <string id="aom_rohan_female_name_17" text="布伦希尔德" />
-
-    <string id="aom_rohan_female_name_18" text="西格温" />
-
-    <string id="aom_rohan_female_name_19" text="埃德温" />
-
-    <string id="aom_rohan_female_name_20" text="辛温" />
-
-    <string id="aom_rohan_female_name_21" text="希尔德蕾德" />
-
-    <string id="aom_rohan_female_name_22" text="埃塞尔温" />
-
-    <string id="aom_rohan_female_name_23" text="塞奥温" />
-
-    <string id="aom_rohan_female_name_24" text="弗里丝琳德" />
-
-    <string id="aom_rohan_female_name_25" text="塞奥迪丝" />
-
-    <string id="aom_rohan_female_name_26" text="埃塞尔弗丽达" />
-
-    <string id="aom_rohan_female_name_27" text="贝奥希尔德" />
-
-    <string id="aom_rohan_female_name_28" text="伊欧姆希尔德" />
-
-    <string id="aom_rohan_female_name_29" text="莱奥弗希尔德" />
-
-    <string id="aom_rohan_female_name_30" text="阿尔德温" />
-
-    <string id="aom_rohan_female_name_31" text="温希尔德" />
-
-    <string id="aom_rohan_female_name_32" text="希尔德温" />
-
-    <string id="aom_rohan_female_name_33" text="埃德弗丽达" />
-
-    <string id="aom_rohan_female_name_34" text="塞奥德琳" />
-
-    <string id="aom_rohan_female_name_35" text="辛弗里丝" />
-
-    <string id="aom_rohan_female_name_36" text="古丝温" />
-
-    <string id="aom_rohan_female_name_37" text="希尔德温妮" />
-
-    <string id="aom_rohan_female_name_38" text="埃赫弗丽达" />
-
-    <string id="aom_rohan_female_name_39" text="西吉丝" />
-
-    <string id="aom_rohan_female_name_40" text="温弗丽西娅" />
-
-    <string id="aom_rohan_female_name_41" text="埃德吉莎" />
-
-    <string id="aom_rohan_female_name_42" text="埃塞尔雷达" />
-
-    <string id="aom_rohan_female_name_43" text="贝奥瑟温" />
-
-    <string id="aom_rohan_female_name_44" text="弗里丝吉芙" />
-
-    <string id="aom_rohan_female_name_45" text="塞奥德弗里丝" />
-
-    <string id="aom_rohan_female_name_46" text="温希尔达" />
-
-    <string id="aom_rohan_female_name_47" text="埃赫弗里丝" />
-
-    <string id="aom_rohan_female_name_48" text="辛妮希尔德" />
-
-    <string id="aom_rohan_female_name_49" text="埃赫温" />
-
-    <string id="aom_rohan_female_name_50" text="埃德温妮" />
-
-    <string id="aom_rohan_clan_name_01" text="哈罗丁家族" />
-
-    <string id="aom_rohan_clan_name_02" text="埃尔芬家族" />
-
-    <string id="aom_rohan_clan_name_03" text="阿尔多林加斯家族" />
-
-    <string id="aom_rohan_clan_name_04" text="哈迈因加斯家族" />
-
-    <string id="aom_rohan_clan_name_05" text="阿恩格里明家族" />
-
-    <string id="aom_rohan_clan_name_06" text="斯维尔德博拉家族" />
-
-    <string id="aom_rohan_clan_name_07" text="温德明家族" />
-
-    <string id="aom_rohan_clan_name_08" text="马罗万丁家族" />
-
-    <string id="aom_rohan_clan_name_09" text="卡尔蒙达斯家族" />
-
-    <string id="aom_rohan_clan_name_10" text="厄尔明丁" />
-
-    <string id="aom_rhun_male_name_1" text="卡尔鲁德" />
-
-    <string id="aom_rhun_male_name_2" text="托尔加什" />
-
-    <string id="aom_rhun_male_name_3" text="瓦斯基尔" />
-
-    <string id="aom_rhun_male_name_4" text="拉齐尔" />
-
-    <string id="aom_rhun_male_name_5" text="纳兹鲁克" />
-
-    <string id="aom_rhun_male_name_6" text="塔伦" />
-
-    <string id="aom_rhun_male_name_7" text="达格里姆" />
-
-    <string id="aom_rhun_male_name_8" text="扎尔纳什" />
-
-    <string id="aom_rhun_male_name_9" text="瓦尔莱克" />
-
-    <string id="aom_rhun_male_name_10" text="法兹里克" />
-
-    <string id="aom_rhun_male_name_11" text="奥尔尊" />
-
-    <string id="aom_rhun_male_name_12" text="库尔加尔" />
-
-    <string id="aom_rhun_male_name_13" text="杜尔扎格" />
-
-    <string id="aom_rhun_male_name_14" text="马洛克" />
-
-    <string id="aom_rhun_male_name_15" text="扎格里姆" />
-
-    <string id="aom_rhun_male_name_16" text="纳拉什" />
-
-    <string id="aom_rhun_male_name_17" text="塔赫里克" />
-
-    <string id="aom_rhun_male_name_18" text="瓦兹里克" />
-
-    <string id="aom_rhun_male_name_19" text="乌兹拉德" />
-
-    <string id="aom_rhun_male_name_20" text="卓拉姆" />
-
-    <string id="aom_rhun_male_name_21" text="拉沙德" />
-
-    <string id="aom_rhun_male_name_22" text="巴尔汗" />
-
-    <string id="aom_rhun_male_name_23" text="萨古尔" />
-
-    <string id="aom_rhun_male_name_24" text="图尔甘" />
-
-    <string id="aom_rhun_male_name_25" text="瓦里姆" />
-
-    <string id="aom_rhun_male_name_26" text="马兹里克" />
-
-    <string id="aom_rhun_male_name_27" text="卡尔扎尔" />
-
-    <string id="aom_rhun_male_name_28" text="纳肖尔" />
-
-    <string id="aom_rhun_male_name_29" text="古拉什" />
-
-    <string id="aom_rhun_male_name_30" text="杜尔扎格" />
-
-    <string id="aom_rhun_male_name_31" text="扎尔卡尔" />
-
-    <string id="aom_rhun_male_name_32" text="托拉克" />
-
-    <string id="aom_rhun_male_name_33" text="法尔努尔" />
-
-    <string id="aom_rhun_male_name_34" text="马尔祖克" />
-
-    <string id="aom_rhun_male_name_35" text="扎伦" />
-
-    <string id="aom_rhun_male_name_36" text="纳鲁克" />
-
-    <string id="aom_rhun_male_name_37" text="萨尔甘" />
-
-    <string id="aom_rhun_male_name_38" text="图尔米克" />
-
-    <string id="aom_rhun_male_name_39" text="达兹里克" />
-
-    <string id="aom_rhun_male_name_40" text="卡努尔" />
-
-    <string id="aom_rhun_male_name_41" text="瓦什基尔" />
-
-    <string id="aom_rhun_male_name_42" text="罗丹" />
-
-    <string id="aom_rhun_male_name_43" text="塔兹鲁克" />
-
-    <string id="aom_rhun_male_name_44" text="戈拉什" />
-
-    <string id="aom_rhun_male_name_45" text="纳兹林" />
-
-    <string id="aom_rhun_male_name_46" text="萨尔卡尔" />
-
-    <string id="aom_rhun_male_name_47" text="马扎德" />
-
-    <string id="aom_rhun_male_name_48" text="奥兹里克" />
-
-    <string id="aom_rhun_male_name_49" text="扎纳克" />
-
-    <string id="aom_rhun_male_name_50" text="法尔祖克" />
-
-    <string id="aom_rhun_female_name_1" text="拉齐拉" />
-
-    <string id="aom_rhun_female_name_2" text="塔兹米娜" />
-
-    <string id="aom_rhun_female_name_3" text="瓦齐拉" />
-
-    <string id="aom_rhun_female_name_4" text="马兹里卡" />
-
-    <string id="aom_rhun_female_name_5" text="扎赫丽娜" />
-
-    <string id="aom_rhun_female_name_6" text="卡丽拉" />
-
-    <string id="aom_rhun_female_name_7" text="奥兹拉" />
-
-    <string id="aom_rhun_female_name_8" text="杜尔赞娜" />
-
-    <string id="aom_rhun_female_name_9" text="娜丽玛" />
-
-    <string id="aom_rhun_female_name_10" text="萨丽拉" />
-
-    <string id="aom_rhun_female_name_11" text="瓦丽拉" />
-
-    <string id="aom_rhun_female_name_12" text="达齐拉" />
-
-    <string id="aom_rhun_female_name_13" text="拉米拉" />
-
-    <string id="aom_rhun_female_name_14" text="法齐拉" />
-
-    <string id="aom_rhun_female_name_15" text="乌兹丽拉" />
-
-    <string id="aom_rhun_female_name_16" text="扎丽娜" />
-
-    <string id="aom_rhun_female_name_17" text="库丽莎" />
-
-    <string id="aom_rhun_female_name_18" text="巴尔基拉" />
-
-    <string id="aom_rhun_female_name_19" text="娜丽莎" />
-
-    <string id="aom_rhun_female_name_20" text="萨尼拉" />
-
-    <string id="aom_rhun_female_name_21" text="拉希拉" />
-
-    <string id="aom_rhun_female_name_22" text="马扎拉" />
-
-    <string id="aom_rhun_female_name_23" text="瓦希拉" />
-
-    <string id="aom_rhun_female_name_24" text="扎尼拉" />
-
-    <string id="aom_rhun_female_name_25" text="萨尔基拉" />
-
-    <string id="aom_rhun_female_name_26" text="法尼莎" />
-
-    <string id="aom_rhun_female_name_27" text="戈丽莎" />
-
-    <string id="aom_rhun_female_name_28" text="纳齐拉" />
-
-    <string id="aom_rhun_female_name_29" text="卡尼拉" />
-
-    <string id="aom_rhun_female_name_30" text="托里拉" />
-
-    <string id="aom_rhun_female_name_31" text="杜里娜" />
-
-    <string id="aom_rhun_female_name_32" text="瓦希拉" />
-
-    <string id="aom_rhun_female_name_33" text="纳里扎" />
-
-    <string id="aom_rhun_female_name_34" text="法兹里姆" />
-
-    <string id="aom_rhun_female_name_35" text="玛兹希拉" />
-
-    <string id="aom_rhun_female_name_36" text="卡莉娅" />
-
-    <string id="aom_rhun_female_name_37" text="萨尔尼扎" />
-
-    <string id="aom_rhun_female_name_38" text="奥琳娜" />
-
-    <string id="aom_rhun_female_name_39" text="鲁哈娜" />
-
-    <string id="aom_rhun_female_name_40" text="萨尔尼扎" />
-
-    <string id="aom_rhun_female_name_41" text="扎利拉" />
-
-    <string id="aom_rhun_female_name_42" text="拉兹娜" />
-
-    <string id="aom_rhun_female_name_43" text="杜尔希拉" />
-
-    <string id="aom_rhun_female_name_44" text="巴尔基拉" />
-
-    <string id="aom_rhun_female_name_45" text="萨里扎" />
-
-    <string id="aom_rhun_female_name_46" text="玛兹娜" />
-
-    <string id="aom_rhun_female_name_47" text="纳里莉娅" />
-
-    <string id="aom_rhun_female_name_48" text="法尔尼娜" />
-
-    <string id="aom_rhun_female_name_49" text="扎利玛" />
-
-    <string id="aom_rhun_female_name_50" text="奥尔兹娜" />
-
-    <string id="aom_rhun_clan_name_01" text="铁矛氏族" />
-
-    <string id="aom_rhun_clan_name_02" text="金弯刀氏族" />
-
-    <string id="aom_rhun_clan_name_03" text="红旗氏族" />
-
-    <string id="aom_rhun_clan_name_04" text="燃烧之刃氏族" />
-
-    <string id="aom_rhun_clan_name_05" text="鲁恩之血氏族" />
-
-    <string id="aom_rhun_clan_name_06" text="深红战士氏族" />
-
-    <string id="aom_rhun_clan_name_07" text="黑盾氏族" />
-
-    <string id="aom_rhun_clan_name_08" text="唤风者氏族" />
-
-    <string id="aom_rhun_clan_name_09" text="猩红守卫氏族" />
-
-    <string id="aom_rhun_clan_name_10" text="金帐汗国氏族" />
-
-    <string id="aom_empire_name" text="登兰德人" />
-
-    <string id="aom_empire_desc" text="登兰德人是一个粗犷而凶猛的民族,居住在洛汗以西的荒野山丘和未开化之地。他们长期憎恨洛汗骑士,视其为侵占祖地的入侵者,因共同的传统和强烈的独立精神而团结在一起。他们擅长游击战和生存技能,依靠狡诈和凶猛战胜敌人。尽管常被视为简单的山地居民,登兰德人却是一个自豪而坚韧的民族,誓死保护自己的土地和生活方式。在对洛汗根深蒂固的怨恨驱使下,他们与黑暗势力结盟,寻求复仇并收复失地。" />
-
-    <string id="aom_aserai_name" text="哈拉德人" />
-
-    <string id="aom_aserai_desc" text="哈拉德人是来自遥远南方沙漠和稀树草原的骄傲而凶猛的民族。他们以驯服奇异巨兽如猛犸巨象而闻名,战士们在战斗中展现出技巧、坚韧和致命的精准。哈拉德是一片极端之地,有着炽热的骄阳、金色的沙漠和生机勃勃的绿洲。其人民因古老的传统、对部落的忠诚以及对酋长和国王的响应而团结一致。哈拉德人常与黑暗势力结盟,他们受对刚铎的复仇之心驱使,也被索伦许诺的权力和统治所吸引。" />
-
-    <string id="aom_vlandia_name" text="洛汗骑士" />
-
-    <string id="aom_vlandia_desc" text="洛汗骑士,即洛汗的骑马领主,以其无与伦比的骑兵和与战马的深厚羁绊而闻名。他们骄傲而自由奔放,居住在骑士国连绵起伏的平原上,生活在伊多拉斯等村庄和要塞中。在国王的领导下,洛汗骑士忠于人民,珍视荣誉、忠诚和勇气。他们的战士无畏地投入战斗,构成中土世界抵抗黑暗势力的脊梁。尽管坚守传统,洛汗骑士随时准备保卫自己的土地和盟友,精准地挥舞着长矛、剑和盾牌。" />
-
-    <string id="aom_khuzait_name" text="东方人" />
-
-    <string id="aom_khuzait_desc" text="东方人是来自鲁恩遥远之地的多样而可怕的民族。他们以效忠索伦而闻名,精准而纪律严明地开赴战场,挥舞着弯刀、长矛和在战场上回响的巨大战鼓。他们的金色盔甲和深红旗帜彰显着他们的强烈自豪感和武功。东方人分为不同的氏族和部落,在强大酋长的统一下,将鲁恩的力量投向中土世界的自由民族。" />
-
-    <string id="TAOM_sturgia_culture" text="河谷国" />
-
-    <string id="TAOM_sturgia_desc" text="河谷国的巴德人,以弓箭手巴德命名,是一个骄傲而勤劳的民族,在从恶龙史矛革的阴影中夺回家园后崛起。河谷国坐落在孤山与长湖之间,作为贸易与文化的枢纽而繁荣兴盛。巴德人以坚韧和精湛的工艺闻名,在锻造武器和盔甲方面的技艺甚至可与埃尔波尔的矮人相媲美。他们的军队由纪律严明的弓箭手、坚定的剑士和敏捷的散兵组成,以强烈的决心保卫着自己的土地。在高贵领袖的统一下,巴德人时刻保持警惕,抵御不断侵蚀的黑暗,守护着他们丰厚的传承。" />
-
-    <string id="TAOM_battania_culture" text="瓦瑞亚格人" />
-
-    <string id="TAOM_battania_desc" text="坎德的瓦瑞亚格人是一个凶猛好战的民族,来自魔多以东干燥而崎岖的土地。瓦瑞亚格人以雇佣兵的勇猛和对索伦的忠诚而闻名,作战时异常凶残。他们骑着迅捷的战马冲入战场,挥舞弯刀和长矛,精准致命。他们的青铜与深红色盔甲,饰以精致的图案,反映着他们骄傲的尚武传统。瓦瑞亚格人分为部落和氏族,在强大的战争领主统领下团结一致,为黑暗魔王的敌人带来恐惧和混乱。" />
-
-    <string id="TAOM_clan_empire_north_1" text="布莱德-卢斯" />
-
-    <string id="TAOM_clan_empire_north_2" text="图尔赫-卢斯" />
-
-    <string id="TAOM_clan_empire_north_3" text="乌赫-卢斯" />
-
-    <string id="TAOM_clan_empire_north_4" text="阿尔斯-卢斯" />
-
-    <string id="TAOM_clan_empire_north_5" text="基格弗兰-卢斯" />
-
-    <string id="TAOM_clan_empire_north_6" text="赫博格-卢斯" />
-
-    <string id="TAOM_clan_empire_north_7" text="德莱格-卢斯" />
-
-    <string id="TAOM_clan_empire_north_8" text="卡鲁-卢斯" />
-
-    <string id="TAOM_clan_empire_north_9" text="阿万克-卢斯" />
-
-    <string id="TAOM_clan_empire_west_1" text="胡林奥纳斯家族" />
-
-    <string id="TAOM_clan_empire_west_2" text="伊姆拉佐尔奥纳斯家族" />
-
-    <string id="TAOM_clan_empire_west_3" text="埃阿努尔奥纳斯家族" />
-
-    <string id="TAOM_clan_empire_west_4" text="巴拉希尔奥纳斯家族" />
-
-    <string id="TAOM_clan_empire_west_5" text="奥西尔奥纳斯家族" />
-
-    <string id="TAOM_clan_empire_west_6" text="哈尔博隆奥纳斯家族" />
-
-    <string id="TAOM_clan_empire_west_7" text="马兰迪尔奥纳斯家族" />
-
-    <string id="TAOM_clan_empire_west_8" text="奥林杜尔奥纳斯家族" />
-
-    <string id="TAOM_clan_empire_west_9" text="达努希尔奥纳斯家族" />
-
-    <string id="TAOM_clan_empire_south_1" text="多尔古贝斯" />
-
-    <string id="TAOM_clan_empire_south_2" text="格阿尔内迪亚德" />
-
-    <string id="TAOM_clan_empire_south_3" text="梅尔孔迪利" />
-
-    <string id="TAOM_clan_empire_south_4" text="莫尔古卡尔" />
-
-    <string id="TAOM_clan_empire_south_5" text="博尔格鲁基格" />
-
-    <string id="TAOM_clan_empire_south_6" text="卡姆·拉古尔兹" />
-
-    <string id="TAOM_clan_empire_south_7" text="布拉格祖基什" />
-
-    <string id="TAOM_clan_empire_south_8" text="科拉希姆" />
-
-    <string id="TAOM_clan_empire_south_9" text="瓦夫里姆" />
-
-    <string id="TAOM_clan_sturgia_1" text="吉里昂家族" />
-
-    <string id="TAOM_clan_sturgia_2" text="巴德家族" />
-
-    <string id="TAOM_clan_sturgia_3" text="布兰德家族" />
-
-    <string id="TAOM_clan_sturgia_4" text="贝恩家族" />
-
-    <string id="TAOM_clan_sturgia_5" text="伊斯加洛斯家族" />
-
-    <string id="TAOM_clan_sturgia_6" text="河流家族" />
-
-    <string id="TAOM_clan_sturgia_7" text="弓箭手家族" />
-
-    <string id="TAOM_clan_sturgia_8" text="长湖家族" />
-
-    <string id="TAOM_clan_sturgia_9" text="屠龙者家族" />
-
-    <string id="TAOM_clan_aserai_1" text="阿耶里卡" />
-
-    <string id="TAOM_clan_aserai_2" text="卡德诺玛" />
-
-    <string id="TAOM_clan_aserai_3" text="卡玛拉卡" />
-
-    <string id="TAOM_clan_aserai_4" text="卡尔马西利奥尼" />
-
-    <string id="TAOM_clan_aserai_5" text="塔克菲明" />
-
-    <string id="TAOM_clan_aserai_6" text="梅贾诺玛" />
-
-    <string id="TAOM_clan_aserai_7" text="齐亚洛卡" />
-
-    <string id="TAOM_clan_aserai_8" text="奥瓦利卡" />
-
-    <string id="TAOM_clan_aserai_9" text="伊肯达卡" />
-
-    <string id="TAOM_clan_vlandia_1" text="伊欧林家族" />
-
-    <string id="TAOM_clan_vlandia_2" text="塞尔迪辛家族" />
-
-    <string id="TAOM_clan_vlandia_3" text="格里明加斯家族" />
-
-    <string id="TAOM_clan_vlandia_4" text="费兰丁家族" />
-
-    <string id="TAOM_clan_vlandia_5" text="奥斯凯特林家族" />
-
-    <string id="TAOM_clan_vlandia_6" text="奥德拉辛家族" />
-
-    <string id="TAOM_clan_vlandia_7" text="埃塞拉芬家族" />
-
-    <string id="TAOM_clan_vlandia_8" text="格里莫丁家族" />
-
-    <string id="TAOM_clan_vlandia_9" text="杜宁家族" />
-
-    <string id="TAOM_clan_vlandia_10" text="伊欧佛林家族" />
-
-    <string id="TAOM_clan_vlandia_11" text="托达金家族" />
-
-    <string id="TAOM_clan_battania_1" text="范加里斯" />
-
-    <string id="TAOM_clan_battania_2" text="阿拉兹" />
-
-    <string id="TAOM_clan_battania_3" text="托拉拜" />
-
-    <string id="TAOM_clan_battania_4" text="科瓦什" />
-
-    <string id="TAOM_clan_battania_5" text="库尔丹" />
-
-    <string id="TAOM_clan_battania_6" text="乌尔达什" />
-
-    <string id="TAOM_clan_battania_7" text="卡尔哈泰" />
-
-    <string id="TAOM_clan_battania_8" text="瓦里亚什" />
-
-    <string id="TAOM_ghilman_name" text="蛇卫" />
-
-    <string id="TAOM_ghilman_short" text="蛇卫" />
-
-    <string id="TAOM_ghilman_text" text="蛇卫是效忠于近哈拉德蛇王的骑兵部队。他们在埃菲尔督阿斯南部的起伏平原上生于马鞍,成长于马背,作为弓骑兵在中土大陆南部诸地无可匹敌。在哈拉德与魔多和平共处的年代里,蛇卫会将其服务出售给哈拉德诸领主以及任何富得起支付黄金酬劳的势力。" />
-
-    <string id="TAOM_legion_name" text="灰衣团" />
-
-    <string id="TAOM_legion_short" text="灰衣团" />
-
-    <string id="TAOM_legion_text" text="灰衣团是登丹人游侠最后的有组织兄弟会,他们是很久以前失去王国的阿尔诺诸王的后裔。他们驰骋于北方各地而无固定家园,在那些已遗忘他们名字的土地上维持和平。虽然他们首先效忠于埃兰迪尔的血脉,但当他们的游历将他们带到文明之地时,也会接受中土大陆各地领主的雇佣。" />
-
-    <string id="TAOM_skolderbrotva_name" text="埃尔波尔斧兵" />
-
-    <string id="TAOM_skolderbrotva_short" text="斧兵" />
-
-    <string id="TAOM_skolderbrotva_text" text="埃尔波尔斧兵是索林国王麾下战役的老兵,他们发现和平时代不适合自己的性情。他们精通矮人大厅的近战技艺——盾墙、短斧、鹤嘴锄——在任何地形上都十分强悍,但在连接埃尔波尔与人类诸国的山隘中尤为出色。他们会接受任何付得起酬劳者的雇佣,但绝不会对埃尔波尔或瑞文戴尔举起斧头。" />
-
-    <string id="TAOM_company_name" text="海盗之刃" />
-
-    <string id="TAOM_company_short" text="海盗" />
-
-    <string id="TAOM_company_text" text="海盗之刃是来自昂巴港口的资深海战士,他们已转向在陆地上出售自己的技能。他们以弩兵身份作战——这是船上战斗的首选武器——在攻城战中如同在颠簸的甲板上一样自如。他们的首领是一位满脸伤疤的努门诺尔流亡者,他以铁血纪律约束着他们遵守契约,深知他们的声誉是最宝贵的财富。" />
-
-    <string id="TAOM_beni_zilal_name" text="盲眼会" />
-
-    <string id="TAOM_beni_zilal_short" text="盲眼会" />
-
-    <string id="TAOM_beni_zilal_text" text="盲眼会是一个在哈拉德海岸与深沙漠地带活动的走私者、销赃者和雇佣杀手兄弟会。据说他们是曾服务于一位被遗忘的哈拉德国王的刺客教派的后裔,他们的手段——毒药、阴影以及秘密的利用——至今未变。希望悄悄除掉对手的领主,或需要在不经海关检查的情况下运送货物的商人,都知道该在何处留下一枚金币和一封密信。" />
-
-    <string id="TAOM_wolfskins_name" text="瓦里亚格劫掠者" />
-
-    <string id="TAOM_wolfskins_short" text="劫掠者" />
-
-    <string id="TAOM_wolfskins_text" text="瓦里亚格劫掠者是来自康德草原的年轻瓦里亚格战士战帮,他们在成年初期处于一种仪式性战争状态:不得拥有熟食,不得睡在永久性屋顶之下,不得施以仁慈。虽然大多数人最终会回归氏族的定居生活,但有些人永远不会,这些人组成了劫掠者——在康德道路上作恶并越境劫掠哈拉德和刚多的亡命之徒。" />
-
-    <string id="TAOM_brotherhood_name" text="登兰德掠夺者" />
-
-    <string id="TAOM_brotherhood_short" text="掠夺者" />
-
-    <string id="TAOM_brotherhood_text" text="登兰德掠夺者是一个山地氏族的破碎残余,该氏族曾居住在如今由洛汗人统治的山谷中。他们的祖父辈被从肥沃的土地驱赶到岩石高地,他们将这种怨恨培养成了掠夺者的哲学:从南方人或国王手下那里夺取的一切,不过是夺回被偷走之物的恢复。实际上他们是强盗,但却是危险的强盗,熟知穿越山地的每一条羊肠小道。" />
-
-    <string id="TAOM_hidden_hand_name" text="魔口的仆从" />
-
-    <string id="TAOM_hidden_hand_short" text="仆从" />
-
-    <string id="TAOM_hidden_hand_text" text="魔口的仆从是巴拉多之眼在黑门之外的触手——渗透在魔多边境各族中的线人、打手和间谍。在索隆的军队尚未抵达之处,这些特工负责收取贡品、镇压异议。他们通过贿赂、勒索和悄无声息的谋杀手段,确保任何反抗黑魔王的阴谋在萌芽之际就被连根拔起、彻底碾碎。" />
-
-    <string id="TAOM_lakepike_name" text="长湖破坏者" />
-
-    <string id="TAOM_lakepike_short" text="破坏者" />
-
-    <string id="TAOM_lakepike_text" text="长湖破坏者栖身于长湖阴暗岸边的芦苇丛和朽烂的旧码头中,远离埃斯加洛斯体面的灯火。他们以假灯笼诱使驳船触礁暗滩为生,然后劫掠货物,通过镇上的销赃渠道出手。尽管湖镇镇长和河谷城商人竭力打击,破坏者在码头区酒馆中有太多朋友,难以被轻易铲除。" />
-
-    <string id="TAOM_embers_name" text="无睑之眼教派" />
-
-    <string id="TAOM_embers_short" text="魔眼教派" />
-
-    <string id="TAOM_embers_text" text="无睑之眼教派是一个根植于黑努门诺尔传统的秘密组织,将索隆尊为神王,相信他再度崛起时将让忠诚者重获荣耀。他们在登兰德的失意者和王国被遗忘的角落中招募成员,许诺神恩和尘世权力。实际上,他们的领袖听命于巴拉多的特工,其单元化结构使任何领主的正义都几乎无法将其根除。" />
-
-    <string id="TAOM_jawwal_name" text="沙漠骑手" />
-
-    <string id="TAOM_jawwal_short" text="沙漠骑手" />
-
-    <string id="TAOM_jawwal_text" text="沙漠骑手是哈拉德腹地深处的游牧沙漠部族,是埃菲尔督阿斯山脉与遥远南方海洋之间无水荒原的主宰。他们沿着只有自己知晓的路线游走,向任何胆敢穿越其领地的商队索取贡品。近哈拉德的定居领主视他们为麻烦;而沙漠骑手则认为这些定居领主是窃贼,偷走了沙漠早已自由赐予的东西。" />
-
-    <string id="TAOM_karakhuzaits_name" text="野蛮东夷" />
-
-    <string id="TAOM_karakhuzaits_short" text="野蛮者" />
-
-    <string id="TAOM_karakhuzaits_text" text="野蛮东夷是鲁恩内海未被征服的草原部族,他们抵抗过每一位试图制服他们的领主——无论是鲁恩酋长、魔多副官,还是河谷城国王。他们在凯尔督因河以东的草原上驰骋,收拢野马、劫掠牲畜,向任何愚蠢到未带武装护卫就试图穿越其草原的商队收取过路费。" />
-
-    <string id="TAOM_forest_people_name" text="督伊甸人" />
-
-    <string id="TAOM_forest_people_short" text="野人" />
-
-    <string id="TAOM_forest_people_text" text="督伊甸人,被人类称为野人或林中野人,是居住在督伊甸森林深处和白色山脉隐秘山谷中的古老民族。他们用火清理土地,在富含灰烬的土壤上种植所需之物,待土地贫瘠后便迁移——这种生活方式是中土世界的定居民族从未理解也从未费心去理解的。督伊甸人不要领主,不纳税赋,只求在森林的寂静中不被打扰。" />
-
-    <string id="TAOM_eleftheroi_name" text="比翁一族" />
-
-    <string id="TAOM_eleftheroi_short" text="比翁人" />
-
-    <string id="TAOM_eleftheroi_text" text="比翁一族是居住在迷雾山脉与幽暗密林之间安都因河谷的伟大林中居民,由比翁血脉的换皮者领导。他们不允许任何半兽人穿越其领地,在卡洛克浅滩收取通行费以资助守卫,不向中土世界的任何国王效忠。虽然他们会与精灵和矮人交易交谈,但任何未经许可穿越其森林的军队都会发现,比翁人的牙齿非常大。" />
-
-    <string id="TAOM_clan_khuzait_1" text="胡兹" />
-
-    <string id="TAOM_clan_khuzait_2" text="萨卢里安" />
-
-    <string id="TAOM_clan_khuzait_3" text="尼卡西安" />
-
-    <string id="TAOM_clan_khuzait_4" text="卡尔米安" />
-
-    <string id="TAOM_clan_khuzait_5" text="阿姆杜里德" />
-
-    <string id="TAOM_clan_khuzait_6" text="昆多拉" />
-
-    <string id="TAOM_clan_khuzait_7" text="库扎伊西安" />
-
-    <string id="TAOM_clan_khuzait_8" text="马沙基安" />
-
-    <string id="TAOM_clan_khuzait_9" text="博佐尔加尼斯" />
-
-    <string id="aom_lord_1_1_name" text="布雷宁·伍尔夫，铁手" />
-
-    <string id="aom_lord_1_2_name" text="芙蕾雅·狼心" />
-
-    <string id="aom_lord_1_3_name" text="高伍尔夫，野猪" />
-
-    <string id="aom_lord_1_4_name" text="布伦希尔德·铁爪" />
-
-    <string id="aom_lord_1_5_name" text="野人奥斯里克" />
-
-    <string id="aom_lord_1_6_name" text="牛角托瓦尔德" />
-
-    <string id="aom_lord_1_7_name" text="迪耐瑟二世,刚铎摄政王" />
-
-    <string id="aom_lord_1_8_name" text="胡里昂奈丝" />
-
-    <string id="aom_lord_1_9_name" text="伊姆拉希尔,多尔安罗斯亲王" />
-
-    <string id="aom_lord_1_10_name" text="阿拉奈尔" />
-
-    <string id="aom_lord_1_25_name" text="埃尔菲尔" />
-
-    <string id="aom_lord_1_35_name" text="埃希里昂" />
-
-    <string id="aom_lord_1_11_name" text="基里安杜尔" />
-
-    <string id="aom_lord_1_111_name" text="埃拉尔雯" />
-
-    <string id="aom_lord_1_12_name" text="芬达瑞尔" />
-
-    <string id="aom_lord_1_14_name" text="索伦之口" />
-
-    <string id="aom_lord_1_15_name" text="安格马巫王" />
-
-    <string id="aom_lord_1_155_name" text="戒灵,黑暗元帅" />
-
-    <string id="aom_lord_1_16_name" text="戒灵,昂巴骑士" />
-
-    <string id="aom_lord_1_17_name" text="索伦" />
-
-    <string id="aom_lord_1_177_name" text="霍诺拉图斯" />
-
-    <string id="aom_lord_1_18_name" text="贾西娅" />
-
-    <string id="aom_lord_1_21_name" text="红狼芬里克" />
-
-    <string id="aom_lord_1_22_name" text="强臂比约恩里克" />
-
-    <string id="aom_lord_1_23_name" text="卡拉德雯" />
-
-    <string id="aom_lord_1_24_name" text="安洛索斯" />
-
-    <string id="aom_lord_1_75_name" text="波罗米尔" />
-
-    <string id="aom_lord_1_26_name" text="希尔贡" />
-
-    <string id="aom_lord_1_27_name" text="毛格拉什" />
-
-    <string id="aom_lord_1_28_name" text="戒灵,背叛者" />
-
-    <string id="aom_lord_1_29_name" text="萨尼昂" />
-
-    <string id="aom_lord_1_31_name" text="黑牙扎尔萨" />
-
-    <string id="aom_lord_1_32_name" text="野猪之歌埃尔德拉" />
-
-    <string id="aom_lord_1_33_name" text="嚎叫者布丽吉德" />
-
-    <string id="aom_lord_1_422_name" text="铁牙德伦古尔夫" />
-
-    <string id="aom_lord_1_34_name" text="法拉米尔" />
-
-    <string id="aom_lord_1_36_name" text="伊芙瑞妮尔" />
-
-    <string id="aom_lord_1_37_name" text="戈尚克" />
-
-    <string id="aom_lord_1_38_name" text="戒灵,不死者" />
-
-    <string id="aom_lord_1_39_name" text="黛芭娜" />
-
-    <string id="aom_lord_1_41_name" text="狼裔贝雷贡德" />
-
-    <string id="aom_lord_1_411_name" text="铁牙格林沃夫" />
-
-    <string id="aom_lord_1_42_name" text="铁皮赫罗德加" />
-
-    <string id="aom_lord_1_43_name" text="牛胁戈尔蒙德" />
-
-    <string id="aom_lord_1_44_name" text="尼莫斯" />
-
-    <string id="aom_lord_1_47_name" text="乌尔博斯" />
-
-    <string id="aom_lord_1_49_name" text="奥布隆" />
-
-    <string id="aom_lord_1_20_name" text="阿斯特丽德·熊爪" />
-
-    <string id="aom_lord_1_64_name" text="索蒙德·灰熊劈" />
-
-    <string id="aom_lord_1_50_name" text="科温·鸦眼" />
-
-    <string id="aom_lord_1_66_name" text="塔尔里克·鸦鸣" />
-
-    <string id="aom_lord_1_51_name" text="哈德里克·利爪击" />
-
-    <string id="aom_lord_1_58_name" text="戈文·凶徒" />
-
-    <string id="aom_lord_1_70_name" text="薇拉·暗影" />
-
-    <string id="aom_lord_1_67_name" text="埃奥温·羽箭" />
-
-    <string id="aom_lord_1_40_name" text="博哈多" />
-
-    <string id="aom_lord_1_46_name" text="马尔里奥" />
-
-    <string id="aom_lord_1_45_name" text="佛隆，洛桑纳赫领主" />
-
-    <string id="aom_lord_1_57_name" text="巴拉诺" />
-
-    <string id="aom_lord_1_52_name" text="希尔鲁因，皮那斯基林领主" />
-
-    <string id="aom_lord_1_53_name" text="安格博，拉麦顿领主" />
-
-    <string id="aom_lord_1_71_name" text="戈拉斯吉尔，安法拉斯领主" />
-
-    <string id="aom_lord_1_73_name" text="纳米尔" />
-
-    <string id="aom_lord_1_62_name" text="奥罗马" />
-
-    <string id="aom_lord_1_30_name" text="葛斯魔格，魔窟副官" />
-
-    <string id="aom_lord_1_48_name" text="卡穆尔，东方人" />
-
-    <string id="aom_lord_1_54_name" text="夏格拉，西力斯昂哥队长" />
-
-    <string id="aom_lord_1_55_name" text="马斯莫格" />
-
-    <string id="aom_lord_1_63_name" text="高巴格，米那斯魔窟队长" />
-
-    <string id="aom_lord_1_56_name" text="托蒙德，铁锤" />
-
-    <string id="aom_lord_1_68_name" text="Gorthak" />
-
-    <string id="aom_lord_1_69_name" text="Grukhash" />
-
-    <string id="aom_lord_1_72_name" text="波格" />
-
-    <string id="aom_lord_1_74_name" text="Bûrznak" />
-
-    <string id="aom_lord_1_1_1_name" text="艾尔迪丝·灰爪" />
-
-    <string id="aom_lord_1_1_2_name" text="希嘉·屠龙者" />
-
-    <string id="aom_lord_1_1_3_name" text="希格伦·野猪牙" />
-
-    <string id="aom_lord_1_1_4_name" text="瑟拉·血獠" />
-
-    <string id="aom_lord_1_1_5_name" text="希尔达·碎骨者" />
-
-    <string id="aom_lord_1_1_6_name" text="伊尔莎，冬野猪" />
-
-    <string id="aom_lord_1_1_7_name" text="弗蕾迪丝·公牛鬃" />
-
-    <string id="aom_lord_1_1_8_name" text="艾拉·影爪" />
-
-    <string id="aom_lord_1_1_9_name" text="希弗拉·尸行者" />
-
-    <string id="aom_lord_1_1_10_name" text="哈迪丝·红雾" />
-
-    <string id="aom_lord_1_1_11_name" text="伊拉·鬼皮" />
-
-    <string id="aom_lord_1_1_15_name" text="艾尔温·鹰眼" />
-
-    <string id="aom_lord_1_1_16_name" text="布里安娜·翼镖" />
-
-    <string id="aom_lord_1_27_1_name" text="维莉娜" />
-
-    <string id="aom_lord_1_27_2_name" text="斯罗兹纳克" />
-
-    <string id="aom_lord_1_27_3_name" text="瓦西莉亚" />
-
-    <string id="aom_lord_1_47_1_name" text="米娜" />
-
-    <string id="aom_lord_1_47_2_name" text="卡西瑞亚" />
-
-    <string id="aom_lord_1_47_3_name" text="科兰贝亚" />
-
-    <string id="aom_lord_1_49_1_name" text="特里斯塔尼亚" />
-
-    <string id="aom_lord_1_49_2_name" text="戈迪安娜" />
-
-    <string id="aom_lord_1_1_12_name" text="芙蕾雅·裂爪" />
-
-    <string id="aom_lord_1_1_13_name" text="冈德伦·铁掌" />
-
-    <string id="aom_lord_1_1_14_name" text="摩吉斯" />
-
-    <string id="aom_lord_1_1_17_name" text="布拉诺克·羽杆" />
-
-    <string id="aom_lord_1_40_1_name" text="林达瑞尔" />
-
-    <string id="aom_lord_1_46_1_name" text="索尔温" />
-
-    <string id="aom_lord_1_45_1_name" text="贝瑞希尔" />
-
-    <string id="aom_lord_1_45_2_name" text="卡尔达米尔" />
-
-    <string id="aom_lord_1_45_3_name" text="鲁米尔" />
-
-    <string id="aom_lord_1_57_1_name" text="卡拉希尔" />
-
-    <string id="aom_lord_1_57_2_name" text="伊姆洛斯" />
-
-    <string id="aom_lord_1_52_1_name" text="阿娜瑞尔" />
-
-    <string id="aom_lord_1_52_2_name" text="巴兰多" />
-
-    <string id="aom_lord_1_73_1_name" text="贝尔温" />
-
-    <string id="aom_lord_1_62_1_name" text="阿瑞莎" />
-
-    <string id="aom_lord_1_30_1_name" text="斯瓦拉·红牙" />
-
-    <string id="aom_lord_1_30_2_name" text="Mogra" />
-
-    <string id="aom_lord_1_30_3_name" text="Snaga" />
-
-    <string id="aom_lord_1_48_1_name" text="戒灵·污染者" />
-
-    <string id="aom_lord_1_48_2_name" text="戒灵·北方人之影" />
-
-    <string id="aom_lord_1_48_3_name" text="戒灵·昂巴之影" />
-
-    <string id="aom_lord_1_54_1_name" text="康斯塔莉亚" />
-
-    <string id="aom_lord_1_55_1_name" text="梅盖希亚" />
-
-    <string id="aom_lord_1_63_1_name" text="瓦拉莉亚" />
-
-    <string id="aom_lord_1_63_2_name" text="科玛塔萨" />
-
-    <string id="aom_lord_1_63_3_name" text="埃莉迪莉亚" />
-
-    <string id="aom_lord_1_56_1_name" text="格温娜" />
-
-    <string id="aom_lord_1_56_2_name" text="鲁斯蒂卡" />
-
-    <string id="aom_lord_1_68_1_name" text="西尔维娜" />
-
-    <string id="aom_lord_1_69_1_name" text="阿蕾莉安娜" />
-
-    <string id="aom_lord_1_69_2_name" text="多拉希拉" />
-
-    <string id="aom_lord_1_72_1_name" text="薇薇安娜" />
-
-    <string id="aom_lord_1_74_1_name" text="泽娜" />
-
-    <string id="aom_lord_2_1_name" text="巴德二世" />
-
-    <string id="aom_lord_2_2_name" text="阿斯塔" />
-
-    <string id="aom_lord_2_3_name" text="索林三世·石盔" />
-
-    <string id="aom_lord_2_4_name" text="西加" />
-
-    <string id="aom_lord_2_5_name" text="欧力" />
-
-    <string id="aom_lord_2_6_name" text="埃尔塔" />
-
-    <string id="aom_lord_2_7_name" text="西米尔" />
-
-    <string id="aom_lord_2_8_name" text="乌里克" />
-
-    <string id="aom_lord_2_9_name" text="莱克" />
-
-    <string id="aom_lord_2_10_name" text="瓦拉" />
-
-    <string id="aom_lord_2_11_name" text="伊德伦" />
-
-    <string id="aom_lord_2_111_name" text="罗日沃尔" />
-
-    <string id="aom_lord_2_12_name" text="斯瓦娜" />
-
-    <string id="aom_lord_2_121_name" text="奥斯文" />
-
-    <string id="aom_lord_2_13_name" text="维达尔" />
-
-    <string id="aom_lord_2_14_name" text="伊斯万" />
-
-    <string id="aom_lord_2_15_name" text="拉塔戈斯特" />
-
-    <string id="aom_lord_2_16_name" text="波佛" />
-
-    <string id="aom_lord_2_17_name" text="索林二世·橡木盾" />
-
-    <string id="aom_lord_2_18_name" text="葛罗音" />
-
-    <string id="aom_lord_2_19_name" text="德瓦林" />
-
-    <string id="aom_lord_2_20_name" text="欧音" />
-
-    <string id="aom_lord_2_21_name" text="斯韦多恩" />
-
-    <string id="aom_lord_2_22_name" text="拉绍内克" />
-
-    <string id="aom_lord_2_23_name" text="加尔登" />
-
-    <string id="aom_lord_2_24_name" text="阿尔瓦" />
-
-    <string id="aom_lord_2_4_1_name" text="阿波拉妮娅" />
-
-    <string id="aom_lord_2_7_1_name" text="米米尔" />
-
-    <string id="aom_lord_2_13_1_name" text="莉莉扎" />
-
-    <string id="aom_lord_2_13_2_name" text="安德鲁塔" />
-
-    <string id="aom_lord_2_13_3_name" text="露达" />
-
-    <string id="aom_lord_2_13_4_name" text="泰塔" />
-
-    <string id="aom_lord_2_14_1_name" text="瓦尔卡娃" />
-
-    <string id="aom_lord_2_14_2_name" text="扎薇蕾娜" />
-
-    <string id="aom_lord_2_14_3_name" text="维日杜娜" />
-
-    <string id="aom_lord_2_15_1_name" text="雅恰娜" />
-
-    <string id="aom_lord_2_15_2_name" text="米兰卡" />
-
-    <string id="aom_lord_2_15_3_name" text="维琳娜" />
-
-    <string id="aom_lord_2_15_4_name" text="博万" />
-
-    <string id="aom_lord_2_16_1_name" text="提亚斯卡" />
-
-    <string id="aom_lord_2_17_1_name" text="德拉查" />
-
-    <string id="aom_lord_2_18_1_name" text="佐丽卡" />
-
-    <string id="aom_lord_2_19_1_name" text="维托米拉" />
-
-    <string id="aom_lord_2_20_1_name" text="基莎" />
-
-    <string id="aom_lord_2_21_1_name" text="伊兹登卡" />
-
-    <string id="aom_lord_2_22_1_name" text="热涅娃" />
-
-    <string id="aom_lord_2_23_1_name" text="兹拉特卡" />
-
-    <string id="aom_lord_2_24_1_name" text="佐丽娜" />
-
-    <string id="aom_dead_lord_2_1_name" text="老奥莱克" />
-
-    <string id="aom_dead_lord_2_2_name" text="瓦拉" />
-
-    <string id="aom_lord_3_1_name" text="卡杜拉克" />
-
-    <string id="aom_lord_3_2_name" text="哈拉德占位符" />
-
-    <string id="aom_lord_3_3_name" text="卡勒米尔" />
-
-    <string id="aom_lord_3_4_name" text="玛拉" />
-
-    <string id="aom_lord_3_5_name" text="哈尔迪尔" />
-
-    <string id="aom_lord_3_51_name" text="哈坎" />
-
-    <string id="aom_lord_3_6_name" text="鲁玛" />
-
-    <string id="aom_lord_3_7_name" text="迪尤尔" />
-
-    <string id="aom_lord_3_8_name" text="阿达斯" />
-
-    <string id="aom_lord_3_9_name" text="乌赛尔" />
-
-    <string id="aom_lord_3_10_name" text="阿尼达" />
-
-    <string id="aom_lord_3_11_name" text="阿尔瓦" />
-
-    <string id="aom_lord_3_12_name" text="玛南" />
-
-    <string id="aom_lord_3_13_name" text="努卡尔" />
-
-    <string id="aom_lord_3_14_name" text="萨姆扎" />
-
-    <string id="aom_lord_3_15_name" text="古齐德" />
-
-    <string id="aom_lord_3_16_name" text="鲁米尔" />
-
-    <string id="aom_lord_3_17_name" text="奥洛芬" />
-
-    <string id="aom_lord_3_18_name" text="阿兰松" />
-
-    <string id="aom_lord_3_19_name" text="埃西里昂" />
-
-    <string id="aom_lord_3_20_name" text="卡里斯" />
-
-    <string id="aom_lord_3_21_name" text="乌凯" />
-
-    <string id="aom_lord_3_22_name" text="杜伊林" />
-
-    <string id="aom_lord_3_23_name" text="卡欣" />
-
-    <string id="aom_lord_3_3_1_name" text="塔里克" />
-
-    <string id="aom_lord_3_13_1_name" text="西拉" />
-
-    <string id="aom_lord_3_13_2_name" text="拉扎娜" />
-
-    <string id="aom_lord_3_14_1_name" text="萨赛萨" />
-
-    <string id="aom_lord_3_15_1_name" text="希姆拉" />
-
-    <string id="aom_lord_3_15_2_name" text="布希拉" />
-
-    <string id="aom_lord_3_16_1_name" text="法丽娜" />
-
-    <string id="aom_lord_3_17_1_name" text="莎伊玛" />
-
-    <string id="aom_lord_3_17_2_name" text="萨尼特" />
-
-    <string id="aom_lord_3_18_1_name" text="法尔扎娜" />
-
-    <string id="aom_lord_3_18_2_name" text="哈菲萨" />
-
-    <string id="aom_lord_3_18_3_name" text="祖阿德" />
-
-    <string id="aom_lord_3_18_4_name" text="贾尔法尔" />
-
-    <string id="aom_lord_3_19_1_name" text="萨尔玛" />
-
-    <string id="aom_lord_3_19_2_name" text="祖莱卡" />
-
-    <string id="aom_lord_3_19_3_name" text="苏尔哈娜" />
-
-    <string id="aom_lord_3_20_1_name" text="朱迪拉" />
-
-    <string id="aom_lord_3_20_2_name" text="阿齐娜" />
-
-    <string id="aom_lord_3_21_1_name" text="阿希萨" />
-
-    <string id="aom_lord_3_22_1_name" text="亚米娜" />
-
-    <string id="aom_lord_3_22_2_name" text="苏娜" />
-
-    <string id="aom_lord_3_22_3_name" text="扎努瓦" />
-
-    <string id="aom_lord_3_22_4_name" text="哈贾拉" />
-
-    <string id="aom_lord_3_23_1_name" text="苏凯娜" />
-
-    <string id="aom_dead_lord_3_1_name" text="尼姆尔" />
-
-    <string id="aom_lord_4_1_name" text="希优顿" />
-
-    <string id="aom_lord_4_2_name" text="埃尔芙希尔德" />
-
-    <string id="aom_lord_4_4_name" text="埃尔希尔德" />
-
-    <string id="aom_lord_4_5_name" text="温塞里" />
-
-    <string id="aom_lord_4_6_name" text="格林伯德·格里明加斯" />
-
-    <string id="aom_lord_4_7_name" text="希优德雷德·伊欧林" />
-
-    <string id="aom_lord_4_8_name" text="弗恩哈德" />
-
-    <string id="aom_lord_4_9_name" text="索蒙德" />
-
-    <string id="aom_lord_4_10_name" text="埃莉丝" />
-
-    <string id="aom_lord_4_11_name" text="利艾娜" />
-
-    <string id="aom_lord_4_12_name" text="希尔温德" />
-
-    <string id="aom_lord_4_121_name" text="拉桑德" />
-
-    <string id="aom_lord_4_13_name" text="罗蒙德" />
-
-    <string id="aom_lord_4_14_name" text="莫尔孔" />
-
-    <string id="aom_lord_4_141_name" text="阿莫尔孔" />
-
-    <string id="aom_lord_4_15_name" text="埃尔杜兰德" />
-
-    <string id="aom_lord_4_16_name" text="埃肯布兰德·费兰丁" />
-
-    <string id="aom_lord_4_17_name" text="埃尔贝特" />
-
-    <string id="aom_lord_4_18_name" text="阿马尔贡" />
-
-    <string id="aom_lord_4_181_name" text="阿尔萨蒙德" />
-
-    <string id="aom_lord_4_19_name" text="阿塞拉" />
-
-    <string id="aom_lord_4_20_name" text="瓦尔蒙德" />
-
-    <string id="aom_lord_4_21_name" text="库斯雷德·奥德拉辛" />
-
-    <string id="aom_lord_4_22_name" text="伍尔夫·塞尔蒙丁" />
-
-    <string id="aom_lord_4_23_name" text="马尔哈斯·马尔哈德" />
-
-    <string id="aom_lord_4_24_name" text="葛力马·格里莫丁" />
-
-    <string id="aom_lord_4_25_name" text="卢坎德" />
-
-    <string id="aom_lord_4_26_name" text="佩里克" />
-
-    <string id="aom_lord_4_27_name" text="埃勒·埃塞拉芬" />
-
-    <string id="aom_lord_4_28_name" text="法斯泰尔姆·莫卡加斯" />
-
-    <string id="aom_lord_4_3_1_name" text="伊欧墨·伊欧弗林" />
-
-    <string id="aom_lord_4_6_1_name" text="迪奥温·格里明加斯" />
-
-    <string id="aom_lord_4_16_1_name" text="梅尔苏·费兰丁" />
-
-    <string id="aom_lord_4_20_1_name" text="英格特鲁德" />
-
-    <string id="aom_lord_4_22_1_name" text="孙妮法·塞尔蒙丁" />
-
-    <string id="aom_lord_4_23_1_name" text="伍尔夫温·马尔哈德" />
-
-    <string id="aom_lord_4_23_2_name" text="埃勒杜兰·马尔哈德" />
-
-    <string id="aom_lord_4_23_3_name" text="埃勒杜兰" />
-
-    <string id="aom_lord_4_25_1_name" text="贝尔特莉安娜" />
-
-    <string id="aom_lord_4_27_1_name" text="韦尔堡·埃塞拉芬" />
-
-    <string id="aom_lord_4_28_1_name" text="莫卡" />
-
-    <string id="aom_lord_4_28_2_name" text="赫蕾丝维丝" />
-
-    <string id="aom_lord_V11_l_name" text="利奥蒙德·迪弗林加斯" />
-
-    <string id="aom_lord_4_26_1_name" text="莱茵加达" />
-
-    <string id="aom_lord_4_24_1_name" text="阿达尔特鲁德" />
-
-    <string id="aom_lord_4_24_2_name" text="古登黑尔达" />
-
-    <string id="aom_lord_4_24_3_name" text="英贡德" />
-
-    <string id="aom_lord_4_24_4_name" text="伊姆加德" />
-
-    <string id="aom_lord_4_3_name" text="奥德里克" />
-
-    <string id="aom_lord_V11_c1_name" text="埃伦达拉" />
-
-    <string id="aom_lord_V11_c2_name" text="达古尼克" />
-
-    <string id="aom_lord_V11_u_name" text="沃勒里克" />
-
-    <string id="aom_lord_V9_u_name" text="乌伦杜尔夫" />
-
-    <string id="aom_lord_5_1_name" text="瓦古尔,侃德的大军阀" />
-
-    <string id="aom_lord_5_7_name" text="侃德占位符" />
-
-    <string id="aom_lord_5_3_name" text="埃尔戈恩" />
-
-    <string id="aom_lord_5_4_name" text="尼温" />
-
-    <string id="aom_lord_5_5_name" text="梅利迪尔" />
-
-    <string id="aom_lord_5_6_name" text="阿尔凯娅" />
-
-    <string id="aom_lord_5_8_name" text="塞因" />
-
-    <string id="aom_lord_5_9_name" text="库尔哈恩" />
-
-    <string id="aom_lord_5_91_name" text="特根" />
-
-    <string id="aom_lord_5_10_name" text="科雷因" />
-
-    <string id="aom_lord_5_11_name" text="阿林内丝" />
-
-    <string id="aom_lord_5_12_name" text="威图因" />
-
-    <string id="aom_lord_5_13_name" text="穆因瑟" />
-
-    <string id="aom_lord_5_131_name" text="拉斯" />
-
-    <string id="aom_lord_5_15_name" text="普林多" />
-
-    <string id="aom_lord_5_14_name" text="卢伊汉" />
-
-    <string id="aom_lord_5_16_name" text="埃伦" />
-
-    <string id="aom_lord_5_17_name" text="阿拉德维尔" />
-
-    <string id="aom_lord_5_18_name" text="布拉诺克" />
-
-    <string id="aom_lord_5_19_name" text="费纳根" />
-
-    <string id="aom_lord_5_20_name" text="希亚拉穆斯" />
-
-    <string id="aom_lord_5_21_name" text="卡菲德" />
-
-    <string id="aom_lord_5_22_name" text="菲亚拉德" />
-
-    <string id="aom_lord_5_1_1_name" text="随机家伙" />
-
-    <string id="aom_lord_5_3_1_name" text="拉纳昂" />
-
-    <string id="aom_lord_5_3_2_name" text="拉多古尔" />
-
-    <string id="aom_lord_5_5_1_name" text="艾丽" />
-
-    <string id="aom_lord_5_13_1_name" text="贝萨格" />
-
-    <string id="aom_lord_5_15_1_name" text="弗洛拉" />
-
-    <string id="aom_lord_5_15_2_name" text="贝特林" />
-
-    <string id="aom_lord_5_15_3_name" text="迪尔万" />
-
-    <string id="aom_lord_5_14_1_name" text="埃比尔" />
-
-    <string id="aom_lord_5_16_1_name" text="利亚辛" />
-
-    <string id="aom_lord_5_16_2_name" text="加温" />
-
-    <string id="aom_lord_5_17_1_name" text="布里根" />
-
-    <string id="aom_lord_5_18_1_name" text="肖娜格" />
-
-    <string id="aom_lord_5_21_1_name" text="贝萨格" />
-
-    <string id="aom_lord_5_21_2_name" text="陶斯" />
-
-    <string id="aom_lord_6_1_name" text="扎米克·扎米安" />
-
-    <string id="aom_lord_6_2_name" text="玛拉亚" />
-
-    <string id="aom_lord_6_3_name" text="巴盖" />
-
-    <string id="aom_lord_6_4_name" text="古尔提姆·萨卢里安" />
-
-    <string id="aom_lord_6_5_name" text="伊尔博·尼卡提安" />
-
-    <string id="aom_lord_6_51_name" text="卡达" />
-
-    <string id="aom_lord_6_6_name" text="苏兰" />
-
-    <string id="aom_lord_6_7_name" text="察罕" />
-
-    <string id="aom_lord_6_8_name" text="埃苏尔" />
-
-    <string id="aom_lord_6_81_name" text="纳延泰" />
-
-    <string id="aom_lord_6_9_name" text="铁木恩" />
-
-    <string id="aom_lord_6_10_name" text="阿里金" />
-
-    <string id="aom_lord_6_101_name" text="博拉特" />
-
-    <string id="aom_lord_6_11_name" text="亚娜" />
-
-    <string id="aom_lord_6_12_name" text="阿巴盖" />
-
-    <string id="aom_lord_6_13_name" text="博尔图" />
-
-    <string id="aom_lord_6_15_name" text="奥拉古尔" />
-
-    <string id="aom_lord_6_16_name" text="阿克沃斯·卡米安" />
-
-    <string id="aom_lord_6_17_name" text="阿姆杜尔·阿姆杜里德" />
-
-    <string id="aom_lord_6_18_name" text="鲁斯坎·昆多拉" />
-
-    <string id="aom_lord_6_19_name" text="瓦赫拉尔坦·昆多拉" />
-
-    <string id="aom_lord_6_20_name" text="库鲁布拉·马沙基安" />
-
-    <string id="aom_lord_6_21_name" text="莫卢克·伊尔诺利亚" />
-
-    <string id="aom_lord_6_22_name" text="沙哈尔二世·沙哈利安" />
-
-    <string id="aom_lord_6_23_name" text="胡兹-玛尔戈兹·胡兹" />
-
-    <string id="aom_lord_6_24_name" text="尼卡斯·阿德基格" />
-
-    <string id="aom_lord_6_15_1_name" text="霍里金" />
-
-    <string id="aom_lord_6_15_2_name" text="塞琴" />
-
-    <string id="aom_lord_6_16_1_name" text="占布伊" />
-
-    <string id="aom_lord_6_16_2_name" text="乌纳根" />
-
-    <string id="aom_lord_6_17_1_name" text="额尔格涅" />
-
-    <string id="aom_lord_6_17_2_name" text="也速木" />
-
-    <string id="aom_lord_6_18_1_name" text="梯伦" />
-
-    <string id="aom_lord_6_18_2_name" text="察衮" />
-
-    <string id="aom_lord_6_19_1_name" text="索哈泰" />
-
-    <string id="aom_lord_6_19_2_name" text="科尔特" />
-
-    <string id="aom_lord_6_20_1_name" text="吉古尔" />
-
-    <string id="aom_lord_K8_u_name" text="博龙察尔" />
-
-    <string id="aom_lord_6_21_1_name" text="埃萨切" />
-
-    <string id="aom_lord_6_22_1_name" text="埃塞伦" />
-
-    <string id="aom_lord_K9_l_name" text="瓦拉斯米尔·马沙基安" />
-
-    <string id="aom_lord_K9_s_name" text="塞文" />
-
-    <string id="aom_lord_K9_c1_name" text="阿尔图" />
-
-    <string id="aom_lord_K9_c2_name" text="梅拉" />
-
-    <string id="aom_dead_lord_6_1_name" text="乌尔昆" />
-
-    <string id="aom_dead_lord_6_2_name" text="索伦" />
-
-    <string id="aom_dead_lord_6_3_name" text="库尤格" />
-
-    <string id="aom_dead_lord_6_4_name" text="温杜尔" />
-
-    <string id="aom_lord_A9_c_name" text="迪拉" />
-
-    <string id="aom_lord_A9_l_name" text="卡拉丹" />
-
-    <string id="aom_lord_A9_s_name" text="提卡" />
-
-    <string id="aom_lord_A9_u_name" text="卡班" />
-
-    <string id="aom_lord_B8_c_name" text="瓜兰" />
-
-    <string id="aom_lord_B8_l_name" text="麦雷亚斯" />
-
-    <string id="aom_lord_B8_s_name" text="罗达拉克" />
-
-    <string id="aom_lord_NE7_u_name" text="黑牙哈德里克" />
-
-    <string id="aom_lord_NE8_c1_name" text="铁砧塞尔迪克" />
-
-    <string id="aom_lord_NE8_c2_name" text="莫雯" />
-
-    <string id="aom_lord_NE8_l_name" text="迅捷埃德里克" />
-
-    <string id="aom_lord_NE8_s_name" text="艾洛莉娅" />
-
-    <string id="aom_lord_NE9_d_name" text="蛇击希尔瓦" />
-
-    <string id="aom_lord_NE9_l_name" text="裂鳞瓦尔索" />
-
-    <string id="aom_lord_NE9_s_name" text="咬牙鲁里克" />
-
-    <string id="aom_lord_S8_u_name" text="加利克" />
-
-    <string id="aom_lord_S9_c_name" text="佛林" />
-
-    <string id="aom_lord_S9_l_name" text="庞伯" />
-
-    <string id="aom_lord_S9_m_name" text="达基拉" />
-
-    <string id="aom_lord_S9_u_name" text="查斯提米尔" />
-
-    <string id="aom_lord_SE8_c_name" text="伊塔莉亚" />
-
-    <string id="aom_lord_SE9_c1_name" text="帕加里奥斯" />
-
-    <string id="aom_lord_SE9_c2_name" text="迪亚斯卡" />
-
-    <string id="aom_lord_SE9_l_name" text="强兽人队长格里什纳克" />
-
-    <string id="aom_lord_SE9_s_name" text="约娜" />
-
-    <string id="aom_lord_WE8_c_name" text="佩伦杜尔" />
-
-    <string id="aom_lord_WE8_u_name" text="巴兰迪尔" />
-
-    <string id="aom_lord_WE9_l_name" text="杜因希尔" />
-
-    <string id="aom_lord_WE9_u_name" text="杜林" />
-
-    <string id="aom_lord_WE9_u2_name" text="罗斯芬" />
-
-    <string id="TAOM_hero_dead_2_1" text="这位年长的巴丁家族领主在抵御东夷袭击者进攻河谷城时阵亡。他的牺牲守住了山口要道,其事迹在整个王国中被传唱。" />
-
-    <string id="TAOM_hero_dead_2_2" text="河谷城的一位贵族女性,在战后的冬瘟中逝世。她以对平民的慈善而闻名。" />
-
-    <string id="TAOM_hero_dead_3_1" text="一位哈拉德军阀,在黑门之战中率领沙漠骑兵作战。他死于刚铎的箭雨之下,但在南方被尊为烈士。" />
-
-    <string id="TAOM_hero_dead_6_1" text="首次统一东夷部落、将其聚于鲁恩旗帜之下的伟大可汗。他的征服将黄金王国的边界推进至鲁恩海滨。" />
-
-    <string id="TAOM_hero_dead_6_2" text="一位受人敬重的那颜,在与自由民族的战斗中阵亡。他的遗孀古尔提姆现以铁腕统领着他们的氏族。" />
-
-    <string id="TAOM_hero_dead_6_3" text="阿尔基特氏族的首席那颜。他在马背射箭战术方面的卓越才能影响了整整一代东夷战士。" />
-
-    <string id="TAOM_hero_dead_6_4" text="阿尔基特氏族的贵族,伟大那颜之子。他英年早逝,但已显露出作为战士的天赋。" />
-
-    <string id="TAOM_hero_1_1" text="布雷宁·伍尔夫以铁腕统治着登兰德的野蛮氏族。被称为铁手的他通过征服与谋略统一了分散的山地部落。他梦想着夺回被洛汗骠骑国占据的土地。" />
-
-    <string id="TAOM_hero_1_2" text="芙蕾雅·狼心是布雷宁·伍尔夫勇猛的妻子。她因精通斧盾战技而在战士中备受尊敬。" />
-
-    <string id="TAOM_hero_1_41" text="贝雷刚德·狼裔是登兰德值得信赖的队长,以袭击洛汗定居点的技巧而闻名。" />
-
-    <string id="TAOM_hero_1_411" text="格里姆伍尔夫·铁牙继承了他父亲对洛汗发动袭击和战争的传统。" />
-
-    <string id="TAOM_hero_1_31" text="兹尔莎·黑牙是铁手家族的继承人,渴望证明自己配得上父亲的遗产。" />
-
-    <string id="TAOM_hero_1_1_1" text="艾尔迪丝·灰爪是登兰德的一位凶猛女战士,以其在战斗中的勇猛而闻名。" />
-
-    <string id="TAOM_hero_1_1_2" text="西嘉·屠龙者因在山口斩杀一条巨蛇而获此称号。" />
-
-    <string id="TAOM_hero_1_21" text="红狼芬里克率领突袭队深入敌境。" />
-
-    <string id="TAOM_hero_1_3" text="野猪戈伍尔夫是一位野蛮的酋长,以其对边境定居点的残暴袭击而闻名。" />
-
-    <string id="TAOM_hero_1_4" text="布伦希尔德·铁爪是戈伍尔夫令人敬畏的妻子,战斗技巧与丈夫不相上下。" />
-
-    <string id="TAOM_hero_1_22" text="比约恩里克·强臂是一位在战斗中挥舞巨型战斧的强大战士。" />
-
-    <string id="TAOM_hero_1_42" text="赫罗德加·铁皮担任氏族的勇士,他的盔甲上布满无数战斗留下的伤痕。" />
-
-    <string id="TAOM_hero_1_32" text="艾尔德拉·野猪之歌继承了她父母的凶猛传统。" />
-
-    <string id="TAOM_hero_1_422" text="德伦古尔夫·铁獠是一位年轻战士,渴望在战斗中证明自己的价值。" />
-
-    <string id="TAOM_hero_1_1_3" text="西格伦·野猪牙以其无畏冲入敌阵而闻名。" />
-
-    <string id="TAOM_hero_1_1_4" text="瑟拉·血獠通过无数次胜利赢得了她的称号。" />
-
-    <string id="TAOM_hero_1_1_5" text="希尔达·碎骨者因其在战斗中毁灭性的力量而令人畏惧。" />
-
-    <string id="TAOM_hero_1_1_6" text="冬野猪伊尔莎在最严酷的季节率领突袭,在敌人最无防备时发动攻击。" />
-
-    <string id="TAOM_hero_1_5" text="狂野的奥斯里克是一位酋长,他难以预测的战术为他赢得了许多胜利。他的氏族声称是古代登兰德国王的后裔。" />
-
-    <string id="TAOM_hero_1_1_7" text="弗蕾迪丝·牛鬃是奥斯里克的妻子,既是技艺高超的治疗者也是战士。" />
-
-    <string id="TAOM_hero_1_1_8" text="艾拉·影爪悄无声息地穿过敌营,发动突然袭击。" />
-
-    <string id="TAOM_hero_1_6" text="托瓦尔德·牛角是奥斯里克的继承人,已经展现出他父亲的狂野精神。" />
-
-    <string id="TAOM_hero_1_33" text="呼啸的布里吉德率领战团穿越山口。" />
-
-    <string id="TAOM_hero_1_43" text="戈尔蒙德·牛侧作为氏族首领值得信赖的副官。" />
-
-    <string id="TAOM_hero_1_1_9" text="西弗拉·行骨者在战后行走于阵亡者之间,从死者身上收集战利品。" />
-
-    <string id="TAOM_hero_1_1_10" text="哈尔迪丝·红雾所到之处都留下一道血迹。" />
-
-    <string id="TAOM_hero_1_1_11" text="伊尔拉·幽灵皮穿着白狼皮,据说能在战斗中给予她保护。" />
-
-    <string id="TAOM_hero_1_1_12" text="芙蕾雅·利爪撕裂率领一支勇猛的盾女战团投入战斗。她从童年就接受战士训练,从未尝过败绩。" />
-
-    <string id="TAOM_hero_1_1_13" text="贡德伦·铁掌是一位老兵战士,双手布满无数次握剑留下的伤疤。" />
-
-    <string id="TAOM_hero_1_20" text="阿斯特丽德·熊爪以其凶猛的战斗风格和熊皮斗篷而闻名。" />
-
-    <string id="TAOM_hero_1_64" text="索蒙德·灰熊劈用他的巨型双手斧劈开敌阵。" />
-
-    <string id="TAOM_hero_1_1_14" text="摩吉丝是一位神秘人物,与古老山丘的灵魂交流。" />
-
-    <string id="TAOM_hero_1_1_17" text="布拉诺克·羽箭是登兰德人中最优秀的弓箭手,能在百步之外射中乌鸦的眼睛。" />
-
-    <string id="TAOM_hero_1_50" text="科尔温·鸦眼从鸟的飞行中看到预兆,并在战争事务上为氏族提供建议。" />
-
-    <string id="TAOM_hero_1_66" text="塔尔里克·鸦鸣能模仿任何鸟类的叫声,在战斗中用作信号。" />
-
-    <string id="TAOM_hero_1_1_15" text="艾尔温·鹰眼指挥一支在边境巡逻的山地斥候队。" />
-
-    <string id="TAOM_hero_1_1_16" text="布里安娜·翼镖从母亲那里学习射箭,现在技艺已超越母亲。" />
-
-    <string id="TAOM_hero_1_51" text="哈尔德里克·爪击从高耸的峭壁上发动伏击。" />
-
-    <string id="TAOM_hero_1_67" text="埃奥温·羽箭偏爱弓而非刃,从阴影中发动攻击。" />
-
-    <string id="TAOM_hero_1_58" text="凶残的戈尔文是一位阴郁的酋长,他的残暴即使在登兰德人中也是传奇。" />
-
-    <string id="TAOM_hero_1_70" text="暗影维拉悄无声息地潜入敌营,在夜间割喉。" />
-
-    <string id="TAOM_hero_NE7_u" text="一位经验丰富的战士,担任氏族酋长的顾问。" />
-
-    <string id="TAOM_hero_NE8_l" text="山地氏族的酋长,经历多年边境战争的磨砺而变得坚韧。" />
-
-    <string id="TAOM_hero_NE8_s" text="酋长的妻子,精通医术和草药学。" />
-
-    <string id="TAOM_hero_NE8_c1" text="氏族的长子,自幼接受战争训练。" />
-
-    <string id="TAOM_hero_NE8_c2" text="氏族首领的次子,以狡黠和野心闻名。" />
-
-    <string id="TAOM_hero_1_56" text="铁锤托蒙德因挥舞战锤发动毁灭性的冲锋而得名。" />
-
-    <string id="TAOM_hero_1_56_1" text="格温娜是托蒙德的妻子,在他征战时管理氏族的领地。" />
-
-    <string id="TAOM_hero_NE9_l" text="一位年迈的酋长,他的智慧为所有登兰德氏族所仰赖。" />
-
-    <string id="TAOM_hero_NE9_s" text="老酋长的儿子,渴望在战斗中证明自己。" />
-
-    <string id="TAOM_hero_NE9_d" text="氏族的女儿,接受过战斗和外交的双重训练。" />
-
-    <string id="TAOM_hero_1_7" text="迪耐瑟二世,刚铎的宰相,从米那斯提力斯的白塔统治王国。他曾是智慧超群之人,但如今变得骄傲而固执。他抗拒国王的归来,坚信只有自己才能拯救刚铎免受魔多阴影的侵袭。" />
-
-    <string id="TAOM_hero_1_75" text="波罗米尔,迪耐瑟的长子,是刚铎的将军统帅。他是一位声名显赫的伟大战士,寻求任何武器来保卫他的人民抵御黑暗。" />
-
-    <string id="TAOM_hero_1_8" text="胡里昂奈斯效忠于胡里尼昂纳斯家族,是刚铎宰相传承知识的坚定守护者。" />
-
-    <string id="TAOM_hero_1_34" text="法拉米尔,迪耐瑟的次子,是伊西利恩游侠队长。虽然被父亲忽视,但他因智慧、仁慈和沉静的力量而深受部下爱戴。" />
-
-    <string id="TAOM_hero_1_24" text="安罗索斯,伊姆拉希尔的幼子,虽然年轻,但已展现出家族的尚武精神和高贵品格。" />
-
-    <string id="TAOM_hero_1_44" text="奈摩斯是白塔卫队的队长,宣誓保护宰相。" />
-
-    <string id="TAOM_hero_1_9" text="伊姆拉希尔二世,多尔安罗斯亲王,是刚铎最伟大的骑士。他的血统中流淌着精灵的血液,据说是整个王国中最英俊的领主。他的天鹅骑士在整个中土世界都是传奇。" />
-
-    <string id="TAOM_hero_1_9_5" text="洛丝温,多尔安罗斯的王妃,数十年来一直陪伴伊姆拉希尔为刚铎效力。她以优雅和静谧的智慧闻名。" />
-
-    <string id="TAOM_hero_1_10" text="阿拉奈尔,埃尔菲尔的妻子,是一位以尊贵和敏锐头脑闻名的刚铎贵妇。" />
-
-    <string id="TAOM_hero_1_35" text="埃尔希里昂,伊姆拉希尔的次子,担任多尔安罗斯的骑士。他在战斗中勇敢无畏,忠于家族,与父亲的天鹅骑士并肩作战。" />
-
-    <string id="TAOM_hero_1_25" text="埃尔菲尔,伊姆拉希尔的长子,是多尔安罗斯的继承人。他以精准的军事指挥统率天鹅骑士,继承了父亲高贵的气度。" />
-
-    <string id="TAOM_hero_1_23" text="卡拉德温,埃尔希里昂的妻子,通过联姻加入伊姆拉佐尔昂纳斯家族。她是一位沉静而勇敢的女性。" />
-
-    <string id="TAOM_hero_1_11" text="西瑞安杜尔统领刚铎北部防线,是经历过多次兽人袭击的资深老兵。他在守卫王国边境时有条不紊且不屈不挠。" />
-
-    <string id="TAOM_hero_1_111" text="埃拉温,希尔贡的妻子,是一位来自边境的女性,以坚韧和务实的智慧闻名。" />
-
-    <string id="TAOM_hero_1_12" text="芬达瑞尔,西瑞安杜尔的妻子,用心和智慧管理着家族事务。" />
-
-    <string id="TAOM_hero_1_36" text="伊芙瑞妮尔,西瑞安杜尔的女儿,在刚铎北部边境长大,既展现了父亲的坚韧,也展现了母亲的智慧。" />
-
-    <string id="TAOM_hero_1_26" text="希尔贡,西瑞安杜尔的兄弟,担任刚铎的传令骑士。他迅捷可靠,在王国诸领主之间传递消息。" />
-
-    <string id="TAOM_hero_1_40" text="波哈多,巴拉希尔昂纳斯家族的领主,是刚铎最年长的领主之一。漫长的岁月赋予了他智慧,尽管身体因年迈而衰弱。他的建议受到所有人的尊重。" />
-
-    <string id="TAOM_hero_1_40_1" text="林达瑞尔,波哈多的妻子,多年来一直是他们家族的支柱。她在刚铎贵族中是一个优雅而持久的存在。" />
-
-    <string id="TAOM_hero_1_46" text="马尔里奥,波哈多的儿子,随着父亲年迈而接过了他的职责。他稳重可靠,受到氏族的尊敬。" />
-
-    <string id="TAOM_hero_1_46_1" text="索温,马尔里奥的妻子,是一位能干的女性,以沉静的决心管理着家族。" />
-
-    <string id="TAOM_hero_1_45" text="胖子佛龙,洛萨纳奇的领主,率领来自封地最大的军队前往米那斯提力斯参与防御。尽管体型肥胖,他却是一位凶猛而经验丰富的战士。" />
-
-    <string id="TAOM_hero_1_45_1" text="贝雷希尔,佛龙的妻子,是洛萨纳奇的夫人。丈夫出征时,她监管着肥沃的山谷。" />
-
-    <string id="TAOM_hero_1_45_2" text="卡尔达米尔,佛龙的幼子,刚刚成年,满怀热情地奔赴战场以证明自己。" />
-
-    <string id="TAOM_hero_1_45_3" text="鲁米尔,佛龙的兄长,是奥希尔昂纳斯家族中稳重的存在。他多年的效力为他赢得了族人的尊敬。" />
-
-    <string id="TAOM_hero_1_57" text="巴拉诺尔担任洛萨纳奇军团的队长,是佛龙领主值得信赖的军官。" />
-
-    <string id="TAOM_hero_1_57_1" text="卡拉希尔,卡尔达米尔的妻子,是洛萨纳奇的年轻贵妇。" />
-
-    <string id="TAOM_hero_1_57_2" text="伊姆洛斯是巴拉诺尔的女儿,在洛萨纳奇的山谷中学习刚铎贵族的礼仪。" />
-
-    <string id="TAOM_hero_1_52" text="英俊的希尔卢因,佩兰纳斯吉林的领主,率领身着绿衣的战士从刚铎的山地而来。他以英勇和忠于宰相而闻名。" />
-
-    <string id="TAOM_hero_1_52_4" text="瑙瑞尔,希尔卢因的妻子,是佩兰纳斯吉林的夫人,以坚定和关怀绿色山地的人民而闻名。" />
-
-    <string id="TAOM_hero_1_52_1" text="阿纳瑞尔,希尔路因之女,成长于皮那斯盖林的战士之中,能在战斗中独当一面。" />
-
-    <string id="TAOM_hero_1_52_2" text="巴兰多,希尔路因之子,训练以期有朝一日能率领皮那斯盖林的战士。他与父亲的绿衣部队并肩作战。" />
-
-    <string id="TAOM_hero_1_62" text="奥罗玛,阿纳瑞尔之夫,通过婚姻加入了哈尔博罗尼昂纳斯家族。他忠诚地侍奉皮那斯盖林领主。" />
-
-    <string id="TAOM_hero_1_62_1" text="伊丝芬,巴兰多之妻,是绿山地区以优雅闻名的女子。" />
-
-    <string id="TAOM_hero_1_53" text="无畏的安博,拉麦顿领主,即使亡灵大军穿过他的领地时,他也集结了他的部下。他勇敢果断,行动迅速。" />
-
-    <string id="TAOM_hero_1_73" text="纳米尔,安博的弟弟,服务于拉麦顿的防御。他与兄长一样勇敢,虽然经验尚浅。" />
-
-    <string id="TAOM_hero_1_73_1" text="贝尔雯,安博之妻,在拉麦顿的防御中坚定地站在丈夫身边。" />
-
-    <string id="TAOM_hero_1_71" text="戈拉斯吉尔,安法拉斯领主,统领漫长的海岸线抵御海盗袭击。他是一位饱经风霜的海上领主,数十年来一直守卫着刚铎的海岸。" />
-
-    <string id="TAOM_hero_1_71_1" text="拉丝雯,戈拉斯吉尔之妻,在丈夫守卫海上航道时监督着安法拉斯的沿海定居点。" />
-
-    <string id="TAOM_hero_WE8_c" text="佩伦杜尔,戈拉斯吉尔之子,正在接受训练,以期有朝一日能像他父亲一样守卫安法拉斯海岸。" />
-
-    <string id="TAOM_hero_WE8_u" text="巴兰迪尔,戈拉斯吉尔的兄弟,担任安法拉斯海岸守备队的队长。" />
-
-    <string id="TAOM_hero_WE9_l" text="杜因希尔,摩尔松德领主,率领来自黑根谷的弓箭手保卫刚铎。他是一位严厉而能干的指挥官。" />
-
-    <string id="TAOM_hero_WE9_u" text="杜林,杜因希尔的长子,率领自己的弓箭手部队,与父亲并肩作战保卫刚铎。" />
-
-    <string id="TAOM_hero_WE9_u2" text="罗丝芬,杜因希尔之妻,在丈夫不在时管理黑根谷的事务。" />
-
-    <string id="TAOM_hero_1_14" text="索伦之口以黑暗魔君的权威发言。他曾是黑色努门诺尔人,在为邪恶效力了漫长岁月后已经忘记了自己的名字。他统领着黑门的守备部队。" />
-
-    <string id="TAOM_hero_1_27" text="莫格拉什是一名凭借纯粹的残暴和狡诈晋升的半兽人队长。" />
-
-    <string id="TAOM_hero_1_27_1" text="维瑞娜是一名为黑塔效力的黑色努门诺尔女巫。" />
-
-    <string id="TAOM_hero_1_27_2" text="索罗兹纳克率领袭击队深入西方诸国。" />
-
-    <string id="TAOM_hero_1_27_3" text="瓦西莉娅在暗中为黑暗魔君效力。" />
-
-    <string id="TAOM_hero_1_37" text="戈尚克以残酷的效率指挥着一支魔多半兽人军团。" />
-
-    <string id="TAOM_hero_1_47" text="乌尔博斯是一名半兽人监工,在末日火山的熔炉中驱使奴隶劳作。" />
-
-    <string id="TAOM_hero_1_47_1" text="米娜为魔多的黑暗力量效力。" />
-
-    <string id="TAOM_hero_1_47_2" text="卡西瑞娅是阴影的仆从。" />
-
-    <string id="TAOM_hero_1_47_3" text="科兰贝娅栖身于魔多的黑暗之中。" />
-
-    <string id="TAOM_hero_1_15" text="安格马巫王,戒灵之首,是索伦最可怕的仆从。他曾是人类的伟大君王,被力量之戒腐化成了不死的幽灵。" />
-
-    <string id="TAOM_hero_1_155" text="黑暗元帅在战斗中指挥戒灵,仅次于巫王。" />
-
-    <string id="TAOM_hero_1_16" text="昂巴骑士在获得戒指之前曾是海盗领主。" />
-
-    <string id="TAOM_hero_1_28" text="背叛者在堕落之前曾是东方的国王。" />
-
-    <string id="TAOM_hero_1_38" text="不朽者曾是追求永生的术士之王,却只找到了永恒的奴役。" />
-
-    <string id="TAOM_hero_1_48" text="东夷卡穆尔,戒灵中的次席,在接受力量之戒前曾统治着鲁恩的一个伟大王国。" />
-
-    <string id="TAOM_hero_1_48_1" text="污染者所到之处都传播腐化。" />
-
-    <string id="TAOM_hero_1_48_2" text="北方人的阴影在寒冷之地猎杀。" />
-
-    <string id="TAOM_hero_1_48_3" text="昂巴之影出没于南方海岸。" />
-
-    <string id="TAOM_hero_1_177" text="霍诺拉图斯在魔多军队中担任军官。" />
-
-    <string id="TAOM_hero_1_29" text="萨尼昂是一名指挥要塞的黑色努门诺尔队长。" />
-
-    <string id="TAOM_hero_1_17" text="伟大的索伦,魔多黑暗魔君。此条目仅用于展示他可怕的盔甲。" />
-
-    <string id="TAOM_hero_1_18" text="贾西娅在魔多的黑暗等级制度中效力。" />
-
-    <string id="TAOM_hero_1_39" text="德芭娜是阴影的仆从,精通黑暗技艺。" />
-
-    <string id="TAOM_hero_1_30" text="哥斯魔格,魔窟中尉,在帕兰诺平原指挥魔多军队。他是一名残暴而狡猾的半兽人,身先士卒。" />
-
-    <string id="TAOM_hero_1_30_1" text="红牙斯瓦拉是哥斯魔格麾下的一名半兽人队长。" />
-
-    <string id="TAOM_hero_1_49" text="奥布隆率领一支魔多半兽人部队。" />
-
-    <string id="TAOM_hero_1_49_1" text="崔斯塔妮娅效力于黑暗势力。" />
-
-    <string id="TAOM_hero_1_49_2" text="戈尔迪安娜居住在黑塔的阴影之下。" />
-
-    <string id="TAOM_hero_1_30_2" text="卡利尼娅效力于魔多的黑暗力量。" />
-
-    <string id="TAOM_hero_1_30_3" text="赛奈西奥斯是阴影的仆从。" />
-
-    <string id="TAOM_hero_1_56_2" text="Rustica rides to war alongside her father Tormund, a fierce young warrior of the clan." />
-
-    <string id="TAOM_hero_1_63_2" text="科马塔萨是为战争而生的半兽人。" />
-
-    <string id="TAOM_hero_1_63_3" text="伊莉迪莉娅效力于黑暗等级制度。" />
-
-    <string id="TAOM_hero_1_63" text="米那斯魔窟队长戈巴格率领这座死城的守军。即使以半兽人的标准来看,他也十分狡诈。" />
-
-    <string id="TAOM_hero_1_63_1" text="瓦拉莉娅在死者之城堡中服役。" />
-
-    <string id="TAOM_hero_1_74" text="扎卡尼斯指挥一支半兽人军团。" />
-
-    <string id="TAOM_hero_1_74_1" text="泽娜效力于魔多的黑暗主人。" />
-
-    <string id="TAOM_hero_1_54" text="西力斯昂哥队长夏格拉特守卫通往魔多的关隘。即使在半兽人中,他也以残忍而闻名。" />
-
-    <string id="TAOM_hero_1_54_1" text="康斯塔莉娅在西力斯昂哥塔楼中服役。" />
-
-    <string id="TAOM_hero_1_68" text="萨罗斯是在关隘服役的半兽人队长。" />
-
-    <string id="TAOM_hero_1_68_1" text="西尔维娜在蜘蛛关隘的守军中服役。" />
-
-    <string id="TAOM_hero_1_69_2" text="朵拉希拉在黑暗军队中服役。" />
-
-    <string id="TAOM_hero_1_69" text="尼丰指挥魔多边境上的一座堡垒。" />
-
-    <string id="TAOM_hero_1_69_1" text="阿瑞莉安娜在边境地区服役。" />
-
-    <string id="TAOM_hero_1_55" text="马斯摩格是一位强大的强兽人战争首领。" />
-
-    <string id="TAOM_hero_1_55_1" text="梅盖西娅效力于黑暗力量。" />
-
-    <string id="TAOM_hero_1_72" text="波尔格是一位强大的半兽人酋长,是污秽者阿佐格的后裔。" />
-
-    <string id="TAOM_hero_1_72_1" text="薇薇安娜效力于黑暗等级制度。" />
-
-    <string id="TAOM_hero_SE8_c" text="在魔多深坑中培育的半兽人。" />
-
-    <string id="TAOM_hero_SE9_l" text="指挥魔多一座堡垒的黑色努门诺尔领主。" />
-
-    <string id="TAOM_hero_SE9_s" text="拥有黑暗力量的黑色努门诺尔女巫。" />
-
-    <string id="TAOM_hero_SE9_c1" text="黑色努门诺尔家族的继承人,受训于黑暗法术。" />
-
-    <string id="TAOM_hero_SE9_c2" text="黑色努门诺尔领主的次子。" />
-
-    <string id="TAOM_hero_2_1" text="河谷国王巴德二世是传奇人物弓箭手巴德的孙子,后者曾射杀史矛革。他统治着伊鲁伯山脚下繁荣的王国,与孤山的矮人结盟。" />
-
-    <string id="TAOM_hero_2_2" text="阿斯塔是河谷国的王后,因其智慧与优雅而深受爱戴。" />
-
-    <string id="TAOM_hero_2_13_1" text="莉莉扎是巴德家族贵族的女儿。" />
-
-    <string id="TAOM_hero_2_13_2" text="安德鲁塔在国王的宫廷中服役。" />
-
-    <string id="TAOM_hero_2_13_3" text="鲁达是河谷国的年轻贵族女性。" />
-
-    <string id="TAOM_hero_2_13_4" text="泰塔是河谷国的贵族之女。" />
-
-    <string id="TAOM_hero_2_7" text="西米尔是河谷国的王子,是其父王位的继承人。" />
-
-    <string id="TAOM_hero_2_7_1" text="米米尔是河谷国王室的王子。" />
-
-    <string id="TAOM_hero_2_10" text="瓦拉是河谷国的公主,受训于外交与治国之术。" />
-
-    <string id="TAOM_hero_2_13" text="维达尔是北方边境的领主,防御东方人的入侵。" />
-
-    <string id="TAOM_hero_2_3" text="山下之王索林三世·石盔统治着伊鲁伯的矮人。他维持着与河谷国的古老同盟,随时准备抵御阴影。" />
-
-    <string id="TAOM_hero_2_4" text="西格是都灵家族的矮人女贵族。" />
-
-    <string id="TAOM_hero_2_4_1" text="阿波拉妮娅是一位出身高贵的矮人少女。" />
-
-    <string id="TAOM_hero_2_8" text="乌里克是埃尔伯王子,精通锻造工艺与战争之道。" />
-
-    <string id="TAOM_hero_2_11" text="伊德伦是皇家卫队的矮人战士。" />
-
-    <string id="TAOM_hero_2_111" text="罗日沃尔是守卫山门的矮人战士。" />
-
-    <string id="TAOM_hero_2_5" text="欧力是索林·橡木盾同伴后裔的矮人领主。他管理着埃尔伯与河谷城之间的贸易路线。" />
-
-    <string id="TAOM_hero_2_6" text="埃尔塔是欧力的妻子,以宝石切割技艺闻名。" />
-
-    <string id="TAOM_hero_2_9" text="莱克是欧力产业的继承人,在贸易和战斗方面都受过训练。" />
-
-    <string id="TAOM_hero_2_12" text="斯瓦娜是贸易家族的女儿。" />
-
-    <string id="TAOM_hero_2_121" text="奥斯文管理着山脉与城市之间的商队。" />
-
-    <string id="TAOM_hero_2_14" text="伊斯万是东部边境的领主,守卫长湖。" />
-
-    <string id="TAOM_hero_2_14_1" text="瓦尔卡娃是伊斯万领主的妻子。" />
-
-    <string id="TAOM_hero_2_14_2" text="扎韦列娜是东部领地的继承人。" />
-
-    <string id="TAOM_hero_2_14_3" text="维日杜娜是东部边境的年轻贵族。" />
-
-    <string id="TAOM_hero_2_16" text="波佛是埃尔伯的矮人领主,传奇远征队的后裔。" />
-
-    <string id="TAOM_hero_2_16_1" text="蒂娅斯卡是波佛的妻子,精通医疗术。" />
-
-    <string id="TAOM_hero_2_21" text="斯韦多恩指挥长湖镇的守备军。" />
-
-    <string id="TAOM_hero_2_21_1" text="伊兹登卡管理长湖镇的事务。" />
-
-    <string id="TAOM_hero_2_17" text="索林二世·橡木盾被铭记为从史矛革手中夺回埃尔伯的英雄。他的精神激励着他的后裔。" />
-
-    <string id="TAOM_hero_2_17_1" text="德拉查保存着老国王的记忆。" />
-
-    <string id="TAOM_hero_2_22" text="拉绍内克指挥河谷城的战士。" />
-
-    <string id="TAOM_hero_2_22_1" text="热涅娃是拉绍内克的妻子。" />
-
-    <string id="TAOM_hero_2_24" text="阿尔瓦是河谷卫队的队长。" />
-
-    <string id="TAOM_hero_2_24_1" text="佐丽娜是河谷城的贵族夫人。" />
-
-    <string id="TAOM_hero_2_18" text="葛罗因是埃尔伯的矮人领主,远征队成员金雳的父亲。" />
-
-    <string id="TAOM_hero_2_18_1" text="佐里卡是葛罗因的妻子,著名的金雳之母。" />
-
-    <string id="TAOM_hero_2_23" text="加尔登指挥河谷城的南方守备军。" />
-
-    <string id="TAOM_hero_2_23_1" text="兹拉特卡是加尔登的女儿。" />
-
-    <string id="TAOM_hero_2_15" text="拉塔戈斯特是一位智慧的顾问,就国家大事向国王提供建议。" />
-
-    <string id="TAOM_hero_2_15_1" text="亚查娜在王室宫廷中任职。" />
-
-    <string id="TAOM_hero_2_15_2" text="米兰卡是宫廷的贵族女子。" />
-
-    <string id="TAOM_hero_2_15_3" text="薇莉娜服务于王室家族。" />
-
-    <string id="TAOM_hero_2_15_4" text="博万是河谷城的年轻贵族。" />
-
-    <string id="TAOM_hero_2_19" text="德瓦林是声名显赫的矮人战士,最初远征队的最后幸存者。" />
-
-    <string id="TAOM_hero_2_19_1" text="维托米拉与德瓦林并肩服务。" />
-
-    <string id="TAOM_hero_2_20" text="欧音是矮人长者,古老学识与医疗术的守护者。" />
-
-    <string id="TAOM_hero_2_20_1" text="基莎是欧音的妻子,精通草药学识。" />
-
-    <string id="TAOM_hero_S8_u" text="一位守卫山中大厅的满脸风霜的老兵。" />
-
-    <string id="TAOM_hero_3_1" text="卡杜拉克是哈拉德的塔斯克拉尔,南方军队的最高统帅。他率领猛犸战象对抗他族人的敌人,与魔多结盟对抗刚铎。" />
-
-    <string id="TAOM_hero_3_2" text="一位地位显赫的哈拉德贵族夫人。" />
-
-    <string id="TAOM_hero_3_7" text="迪尤尔是塔斯克拉尔的继承人,接受猛犸骑手之道的训练。" />
-
-    <string id="TAOM_hero_3_10" text="阿尼达是塔斯克拉的女儿,精通宫廷政治。" />
-
-    <string id="TAOM_hero_3_13" text="努卡尔统领哈拉德的精锐蛇卫队。" />
-
-    <string id="TAOM_hero_3_13_1" text="西拉是努卡尔的妻子。" />
-
-    <string id="TAOM_hero_3_13_2" text="拉扎娜是蛇卫队指挥官的女儿。" />
-
-    <string id="TAOM_hero_3_8" text="阿达斯是一位哈拉德林战士王子。" />
-
-    <string id="TAOM_hero_3_11" text="阿尔瓦是沙漠部落的公主。" />
-
-    <string id="TAOM_hero_3_3" text="卡勒米尔是东方哈拉德林的酋长,绿洲定居点的领主。" />
-
-    <string id="TAOM_hero_3_3_1" text="塔里克是东方绿洲领主的继承人。" />
-
-    <string id="TAOM_hero_3_4" text="玛拉是卡勒米尔的妻子,以其智慧闻名。" />
-
-    <string id="TAOM_hero_3_5" text="哈尔迪尔统领沿海哈拉德林,与昂巴海盗结盟。" />
-
-    <string id="TAOM_hero_3_51" text="哈坎是沿海部落的一位船长。" />
-
-    <string id="TAOM_hero_3_12" text="马南袭击刚铎的沿海定居点。" />
-
-    <string id="TAOM_hero_3_20" text="卡里斯指挥突袭队伍进入敌境。" />
-
-    <string id="TAOM_hero_3_20_1" text="朱迪拉是卡里斯的妻子。" />
-
-    <string id="TAOM_hero_3_20_2" text="阿齐娜是一位突袭队长的女儿。" />
-
-    <string id="TAOM_hero_3_6" text="鲁玛是哈尔迪尔的妻子,管理他们的沿海领地。" />
-
-    <string id="TAOM_hero_3_9" text="乌赛尔是沿海领地的继承人。" />
-
-    <string id="TAOM_hero_3_14" text="萨姆扎率领商队穿越沙漠荒原。" />
-
-    <string id="TAOM_hero_3_14_1" text="萨赛莎管理沙漠贸易路线。" />
-
-    <string id="TAOM_hero_3_15" text="古齐德统领极南地区的穆玛克骑手。" />
-
-    <string id="TAOM_hero_3_15_1" text="希姆拉是穆玛克领主的妻子。" />
-
-    <string id="TAOM_hero_3_15_2" text="布希拉训练年轻的穆玛克骑手。" />
-
-    <string id="TAOM_hero_3_16" text="鲁米尔是金旗部落的酋长。" />
-
-    <string id="TAOM_hero_3_16_1" text="法里娜是金旗酋长的妻子。" />
-
-    <string id="TAOM_hero_3_17" text="奥罗芬统领极南地区的巨蛇骑手。" />
-
-    <string id="TAOM_hero_3_17_1" text="莎伊玛是奥罗芬的妻子。" />
-
-    <string id="TAOM_hero_3_17_2" text="萨尼特是巨蛇骑手的继承人。" />
-
-    <string id="TAOM_hero_3_21" text="乌凯率领沙漠袭击者对抗北方商队。" />
-
-    <string id="TAOM_hero_3_21_1" text="阿希莎是袭击队长的妻子。" />
-
-    <string id="TAOM_hero_3_18" text="阿兰松是南方富有的商人王子。" />
-
-    <string id="TAOM_hero_3_18_1" text="法尔扎娜是商人王子的女儿。" />
-
-    <string id="TAOM_hero_3_18_2" text="哈菲莎管理贸易联系。" />
-
-    <string id="TAOM_hero_3_18_3" text="祖阿德是一位年轻的见习商人。" />
-
-    <string id="TAOM_hero_3_18_4" text="贾尔法尔守卫贸易商队。" />
-
-    <string id="TAOM_hero_3_19" text="埃瑟里昂统领北方边境的一座要塞。" />
-
-    <string id="TAOM_hero_3_19_1" text="萨尔玛是边境指挥官的妻子。" />
-
-    <string id="TAOM_hero_3_19_2" text="祖莱卡在边境驻军中训练。" />
-
-    <string id="TAOM_hero_3_19_3" text="苏尔哈娜是边境的贵族。" />
-
-    <string id="TAOM_hero_3_23" text="卡欣率领侦察兵进入敌境。" />
-
-    <string id="TAOM_hero_3_23_1" text="苏凯娜是侦察兵指挥官的妻子。" />
-
-    <string id="TAOM_hero_3_22" text="杜林指挥着沙漠部落的弓箭手。" />
-
-    <string id="TAOM_hero_3_22_1" text="雅米娜是弓箭手指挥官的妻子。" />
-
-    <string id="TAOM_hero_3_22_2" text="苏娜训练年轻的弓箭手。" />
-
-    <string id="TAOM_hero_3_22_3" text="扎努瓦是部落中一名技艺高超的弓箭手。" />
-
-    <string id="TAOM_hero_3_22_4" text="哈贾拉守卫着沙漠中的瞭望塔。" />
-
-    <string id="TAOM_hero_4_1" text="洛汗国王希优顿从伊多拉斯的金殿梅杜塞尔德进行统治。他曾被萨鲁曼的仆人葛力马蛊惑,后被甘道夫解救,并率领他的人民在圣盔谷和帕兰诺平原上赢得荣耀。" />
-
-    <string id="TAOM_hero_4_2" text="艾尔菲尔德曾是洛汗的王后,希优德的母亲。她死于难产,这悲伤为希优顿的统治蒙上了阴影。" />
-
-    <string id="TAOM_hero_4_7" text="希优德是希优顿国王的独子,洛汗王子。他在艾森河渡口保卫战中阵亡,对抗萨鲁曼的强兽人。" />
-
-    <string id="TAOM_hero_4_10" text="埃利斯是洛希尔宫廷中的一位贵族女士。" />
-
-    <string id="TAOM_hero_4_13" text="罗蒙德担任皇家卫队的队长。" />
-
-    <string id="TAOM_hero_4_14" text="莫尔孔是国王家族中一位值得信赖的队长。" />
-
-    <string id="TAOM_hero_4_141" text="阿莫尔孔与他的族人一同在卫队中服役。" />
-
-    <string id="TAOM_hero_4_15" text="埃尔杜兰德是希优顿家族的一名骑士。" />
-
-    <string id="TAOM_hero_4_3" text="希优德温是希优顿国王的姐妹,伊欧墨和伊欧温的母亲。她的丈夫伊欧蒙德被半兽人杀害后,她悲痛而死。" />
-
-    <string id="TAOM_hero_4_3_1" text="伊欧墨·伊阿迪格,骠骑国第三元帅,是希优顿的外甥和王位继承人。他以无比的忠诚率领着东谷的骑士们。" />
-
-    <string id="TAOM_hero_4_4" text="埃尔希尔德是伊欧佛林家族的一位贵族女士。" />
-
-    <string id="TAOM_hero_4_8" text="弗恩哈德是伊欧墨麾下一位值得信赖的骑士。" />
-
-    <string id="TAOM_hero_4_11" text="莉娜在王室家族中服役。" />
-
-    <string id="TAOM_hero_4_6" text="格里姆斯莱德的格林伯德指挥着西谷的骑士。他是一位勇猛的战士,曾坚守艾森河渡口,后来在帕兰诺平原英勇战死。" />
-
-    <string id="TAOM_hero_4_6_1" text="迪奥温是格林伯德指挥权的继承人。" />
-
-    <string id="TAOM_hero_4_5" text="昂瑟里担任西谷骑士的队长。" />
-
-    <string id="TAOM_hero_4_9" text="索蒙德指挥着西谷骑士的一支队伍。" />
-
-    <string id="TAOM_hero_4_12" text="西尔温德是西谷的一名盾女。" />
-
-    <string id="TAOM_hero_4_121" text="拉桑德在西谷守备队中服役。" />
-
-    <string id="TAOM_hero_4_16" text="西谷领主埃肯布兰德指挥着号角堡要塞。他与甘道夫一起抵达圣盔谷,扭转了战局。" />
-
-    <string id="TAOM_hero_4_16_1" text="梅尔苏是埃肯布兰德的妻子,号角堡的女主人。" />
-
-    <string id="TAOM_hero_4_17" text="埃尔贝特在埃肯布兰德的家族中服役。" />
-
-    <string id="TAOM_hero_4_18" text="阿马尔贡是埃肯布兰德的继承人。" />
-
-    <string id="TAOM_hero_4_181" text="阿萨蒙德担任号角堡守备队的队长。" />
-
-    <string id="TAOM_hero_4_19" text="阿塞拉是一名守卫深谷的盾女。" />
-
-    <string id="TAOM_hero_4_25" text="卢坎德指挥着东艾姆内特的骑士。" />
-
-    <string id="TAOM_hero_4_25_1" text="贝特莉安娜是卢坎德的妻子。" />
-
-    <string id="TAOM_hero_4_21" text="奥德莱辛之子库斯雷德巡逻着东部边境。" />
-
-    <string id="TAOM_hero_4_20" text="瓦蒙德指挥着奥德堡守备队。" />
-
-    <string id="TAOM_hero_4_20_1" text="因格特鲁德是瓦蒙德的妻子,奥德堡的女主人。" />
-
-    <string id="TAOM_hero_4_22" text="塞尔蒙丁之子伍尔夫率领着北方山谷的骑士。" />
-
-    <string id="TAOM_hero_4_22_1" text="桑妮法是伍尔夫的妻子。" />
-
-    <string id="TAOM_hero_4_23" text="马尔哈斯率领着南方草原的马匹饲养者。" />
-
-    <string id="TAOM_hero_4_23_1" text="伍尔夫温是马尔哈斯的女儿,一名技艺高超的骑手。" />
-
-    <string id="TAOM_hero_4_23_2" text="埃勒杜兰为国王的军队训练战马。" />
-
-    <string id="TAOM_hero_4_23_3" text="年轻的埃勒杜兰担任马匹管理员。" />
-
-    <string id="TAOM_hero_4_24" text="葛力马·巧言曾是希优顿的顾问,暗中是萨鲁曼的间谍。他低语的谎言毒害了国王的心智,直到甘道夫打破了魔咒。" />
-
-    <string id="TAOM_hero_4_24_1" text="洛汗的伊欧温夫人,是伊欧墨的妹妹、希优顿的侄女。她在帕兰诺平原杀死了戒灵之王,击倒了时代的恐怖。" />
-
-    <string id="TAOM_hero_4_24_2" text="埃尔夫格里姆担任王室骑兵。" />
-
-    <string id="TAOM_hero_4_24_3" text="赫鲁布兰德守卫国王的大殿。" />
-
-    <string id="TAOM_hero_4_24_4" text="西格贝尔特巡逻洛汗边境。" />
-
-    <string id="TAOM_hero_4_26" text="佩里克指挥洛汗隘口沿线的骑兵。" />
-
-    <string id="TAOM_hero_4_26_1" text="雷茵加尔达是隘口的盾女。" />
-
-    <string id="TAOM_hero_4_27" text="埃塞拉芬之子埃勒守卫褶地,抵御登兰德人的袭击。" />
-
-    <string id="TAOM_hero_4_27_1" text="韦尔堡是埃勒的妻子。" />
-
-    <string id="TAOM_hero_V9_u" text="一位经验丰富的骑手,为当地领主出谋划策。" />
-
-    <string id="TAOM_hero_4_28" text="莫卡加斯之子法斯特海姆指挥南方哨所。" />
-
-    <string id="TAOM_hero_4_28_1" text="莫卡是法斯特海姆之子。" />
-
-    <string id="TAOM_hero_4_28_2" text="赫蕾西丝是南方哨所指挥官的女儿。" />
-
-    <string id="TAOM_hero_5_1" text="瓦尔古尔,坎德的最高战争领主,率领凶悍的瓦瑞格骑兵。他与魔多的联盟使他的战士在中土大陆的战争中对抗刚铎。" />
-
-    <string id="TAOM_hero_5_1_1" text="最高战争领主随从中的战士。" />
-
-    <string id="TAOM_hero_5_3" text="埃尔盖昂是一位酋长,率领东方的瓦瑞格部族,以其迅捷的骑兵战术闻名。" />
-
-    <string id="TAOM_hero_5_3_1" text="拉纳昂是埃尔盖昂战团的继承人。" />
-
-    <string id="TAOM_hero_5_3_2" text="拉多古尔在埃尔盖昂的军队中担任队长。" />
-
-    <string id="TAOM_hero_5_4" text="尼温是埃尔盖昂的妻子,精通医疗技艺。" />
-
-    <string id="TAOM_hero_5_5" text="梅利迪尔率领掠夺者进入刚铎的土地。" />
-
-    <string id="TAOM_hero_5_5_1" text="艾利德管理部族的马群。" />
-
-    <string id="TAOM_hero_5_6" text="阿尔凯亚是梅利迪尔的妻子。" />
-
-    <string id="TAOM_hero_5_7" text="坎德的一位瓦瑞格战士酋长。" />
-
-    <string id="TAOM_hero_5_8" text="赛恩指挥一支瓦瑞格骑兵连。" />
-
-    <string id="TAOM_hero_5_9" text="库尔哈恩是一位声誉日隆的瓦瑞格战士。" />
-
-    <string id="TAOM_hero_5_91" text="泰根与库尔哈恩并肩作战。" />
-
-    <string id="TAOM_hero_5_10" text="科雷因是最高战争领主宫廷的瓦瑞格贵族。" />
-
-    <string id="TAOM_hero_5_11" text="阿林内丝是一位瓦瑞格女贵族。" />
-
-    <string id="TAOM_hero_5_12" text="威苏因训练年轻的瓦瑞格骑手。" />
-
-    <string id="TAOM_hero_5_13" text="穆因塞尔在北方地区指挥掠夺者。" />
-
-    <string id="TAOM_hero_5_131" text="拉思在穆因塞尔的指挥下服役。" />
-
-    <string id="TAOM_hero_5_13_1" text="贝萨格是北方部族的瓦瑞格战士。" />
-
-    <string id="TAOM_hero_5_15" text="普林多尔守卫通往坎德的山口。" />
-
-    <string id="TAOM_hero_5_15_1" text="弗洛莱德是山口守卫者的女儿。" />
-
-    <string id="TAOM_hero_5_15_2" text="贝特林巡逻山道。" />
-
-    <string id="TAOM_hero_5_15_3" text="迪亚尔拜因守卫高山隘口。" />
-
-    <string id="TAOM_hero_5_14" text="卢伊昌指挥西部平原的瓦瑞格骑兵。" />
-
-    <string id="TAOM_hero_5_14_1" text="埃比尔是卢伊昌的妻子。" />
-
-    <string id="TAOM_hero_5_16" text="埃隆率领中央草原的战士。" />
-
-    <string id="TAOM_hero_5_16_1" text="莉雅辛是埃隆的妻子。" />
-
-    <string id="TAOM_hero_5_16_2" text="加文是埃隆战团的继承人。" />
-
-    <string id="TAOM_hero_5_17" text="阿拉德威尔统帅东部边境部队。" />
-
-    <string id="TAOM_hero_5_17_1" text="布里甘是阿拉德威尔的妻子。" />
-
-    <string id="TAOM_hero_5_18" text="布拉诺克率领斥候深入敌境。" />
-
-    <string id="TAOM_hero_5_18_1" text="肖娜格是布拉诺克的妻子。" />
-
-    <string id="TAOM_hero_5_19" text="费纳甘是一位以决斗技艺闻名的瓦瑞亚格勇士。" />
-
-    <string id="TAOM_hero_5_20" text="西亚拉穆斯统帅康德的战车武士。" />
-
-    <string id="TAOM_hero_5_21" text="卡菲德率领瓦瑞亚格掠夺者沿边境作战。" />
-
-    <string id="TAOM_hero_5_21_1" text="贝萨格是卡菲德的妻子。" />
-
-    <string id="TAOM_hero_5_21_2" text="陶尔斯是卡菲德掠夺团的继承人。" />
-
-    <string id="TAOM_hero_5_22" text="菲亚拉德守卫南方贸易路线。" />
-
-    <string id="TAOM_hero_6_1" text="扎米克·扎米安,鲁恩的洛克汗,统治着东夷人的黄金国度。他的祖先曾侍奉索隆,他延续着那黑暗的同盟,梦想着征服西方的土地。" />
-
-    <string id="TAOM_hero_6_2" text="玛拉雅是洛克汗的妻子,黄金国度的王后。" />
-
-    <string id="TAOM_hero_6_3" text="巴盖担任皇家卫队的队长。" />
-
-    <string id="TAOM_hero_6_4" text="古尔蒂尔姆·萨卢里安统帅鲁恩的西方军队。在丈夫死后,她以钢铁般的决心接管了指挥权。" />
-
-    <string id="TAOM_hero_6_5" text="伊尔博·尼卡提安率领阿尔基特氏族,东部草原上著名的马弓手。" />
-
-    <string id="TAOM_hero_6_51" text="哈达是阿尔基特氏族的继承人。" />
-
-    <string id="TAOM_hero_6_6" text="苏兰统帅南方部落的战士。" />
-
-    <string id="TAOM_hero_6_7" text="查干是鲁恩的王子,黄金国度的继承人。" />
-
-    <string id="TAOM_hero_6_8" text="埃苏尔是古尔蒂尔姆军中的战士。" />
-
-    <string id="TAOM_hero_6_81" text="纳颜泰担任古尔蒂尔姆军中的队长。" />
-
-    <string id="TAOM_hero_6_9" text="特蒙是阿尔基特氏族的战士。" />
-
-    <string id="TAOM_hero_6_10" text="阿里金是王室的王子。" />
-
-    <string id="TAOM_hero_6_101" text="博拉特在王室家族中服务。" />
-
-    <string id="TAOM_hero_6_11" text="雅娜是古尔蒂尔姆军中的贵族。" />
-
-    <string id="TAOM_hero_6_12" text="阿巴盖是阿尔基特领地的继承人。" />
-
-    <string id="TAOM_hero_6_13" text="博尔图是王室的贵族。" />
-
-    <string id="TAOM_hero_6_15" text="奥拉古尔率领阿尔基特马弓手。" />
-
-    <string id="TAOM_hero_6_15_1" text="霍里金是奥拉古尔的妻子。" />
-
-    <string id="TAOM_hero_6_15_2" text="塞琴是奥拉古尔麾下的继承人。" />
-
-    <string id="TAOM_hero_6_16" text="阿克沃斯·卡米安统帅鲁恩的南部边境。" />
-
-    <string id="TAOM_hero_6_16_1" text="钱布伊是阿克沃斯的妻子。" />
-
-    <string id="TAOM_hero_6_16_2" text="乌纳根是阿克沃斯麾下的继承人。" />
-
-    <string id="TAOM_hero_6_17" text="阿姆杜尔·阿姆杜里德率领东部草原上的强大氏族。" />
-
-    <string id="TAOM_hero_6_17_1" text="埃尔格内是阿姆杜尔的妻子。" />
-
-    <string id="TAOM_hero_6_17_2" text="耶苏姆是阿姆杜里德领地的继承人。" />
-
-    <string id="TAOM_hero_6_18" text="卢斯坎·孔多拉统帅西部行省的战士。" />
-
-    <string id="TAOM_hero_6_18_1" text="蒂伦是卢斯坎的妻子。" />
-
-    <string id="TAOM_hero_6_18_2" text="查贡是孔多拉的继承人。" />
-
-    <string id="TAOM_hero_6_19" text="瓦赫拉尔坦·昆多拉尔是卢斯坎的兄弟,指挥骑兵斥候。" />
-
-    <string id="TAOM_hero_6_19_1" text="索哈泰是瓦赫拉尔坦的妻子。" />
-
-    <string id="TAOM_hero_6_19_2" text="科尔特是瓦赫拉尔坦斥候队的继承人。" />
-
-    <string id="TAOM_hero_6_20" text="库鲁布拉·马沙基安统帅鲁恩北方部落。" />
-
-    <string id="TAOM_hero_6_20_1" text="吉古尔是库鲁布拉的妻子。" />
-
-    <string id="TAOM_hero_K8_u" text="一位经验丰富的战士,为北方酋长提供建议。" />
-
-    <string id="TAOM_hero_6_21" text="莫卢克·伊尔诺里亚统帅一个强大的骑兵氏族。" />
-
-    <string id="TAOM_hero_6_21_1" text="埃萨切伊是莫卢克的妻子。" />
-
-    <string id="TAOM_hero_6_22" text="沙哈尔二世·沙哈利安统治鲁恩海的一个富有的贸易氏族。" />
-
-    <string id="TAOM_hero_6_22_1" text="埃塞伦是沙哈尔的妻子。" />
-
-    <string id="TAOM_hero_6_23" text="胡兹-玛戈兹·胡兹指挥西部边境沿线的要塞驻军。" />
-
-    <string id="TAOM_hero_6_24" text="尼卡斯·阿德基格守卫通往鲁恩的南方关隘。" />
-
-    <string id="TAOM_hero_A9_l" text="南方荒原的哈拉德林酋长。" />
-
-    <string id="TAOM_hero_A9_s" text="南方荒原酋长的妻子。" />
-
-    <string id="TAOM_hero_A9_c" text="南方荒原酋长的继承人。" />
-
-    <string id="TAOM_hero_A9_u" text="南方部落的战士。" />
-
-    <string id="TAOM_hero_V11_l" text="西谷的洛汗领主。" />
-
-    <string id="TAOM_hero_V11_u" text="一位为领主提供建议的老练骑手。" />
-
-    <string id="TAOM_hero_V11_c1" text="西谷领地的继承人。" />
-
-    <string id="TAOM_hero_V11_c2" text="西谷领主的次子。" />
-
-    <string id="TAOM_hero_S9_l" text="守卫北方通道的河谷邦贵族。" />
-
-    <string id="TAOM_hero_S9_m" text="北方巴丁氏族的族母。" />
-
-    <string id="TAOM_hero_S9_c" text="北方领地的年轻继承人。" />
-
-    <string id="TAOM_hero_S9_u" text="北方驻军的老练战士。" />
-
-    <string id="TAOM_hero_K9_l" text="遥远东夷部落的酋长。" />
-
-    <string id="TAOM_hero_K9_s" text="遥远酋长的妻子。" />
-
-    <string id="TAOM_hero_K9_c1" text="遥远部落领地的继承人。" />
-
-    <string id="TAOM_hero_K9_c2" text="遥远酋长的次子。" />
-
-    <string id="TAOM_hero_B8_l" text="东方山地的瓦瑞亚格军阀。" />
-
-    <string id="TAOM_hero_B8_s" text="瓦瑞亚格军阀的妻子。" />
-
-    <string id="TAOM_hero_B8_c" text="瓦瑞亚格军阀的继承人。" />
-
-  </strings>
-
-</base>
-
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Simplified Chinese" />
+  </tags>
+  <strings>
+    <string id="TAOM_dunland" text="登兰德" />
+    <string id="TAOM_dunland_short" text="登兰德" />
+    <string id="TAOM_dunland_title" text="登兰德部族" />
+    <string id="TAOM_dunland_ruler" text="酋长" />
+    <string id="TAOM_dunland_desc" text="登兰德是一片崎岖而未被驯服的土地,拥有起伏的丘陵和茂密的森林,是凶悍而独立的登兰德人的家园。他们常常被边缘化,与邻居不和,经过数个世纪的斗争与生存而变得坚韧。他们的酋长以力量和狡猾来领导,在复仇与自由的共同旗帜下团结各个部族。登兰德人以凶猛的战士和熟练的猎人而闻名,他们偏爱使用斧头、长矛和弓箭,以源自对祖先土地的深厚联系的顽强精神战斗。尽管他们的方式在其他人看来可能显得原始,但登兰德人骄傲而足智多谋,随时准备在中土世界夺回他们应有的地位。" />
+    <string id="TAOM_gondor" text="刚铎" />
+    <string id="TAOM_gondor_short" text="刚铎" />
+    <string id="TAOM_gondor_title" text="刚铎摄政王国" />
+    <string id="TAOM_gondor_ruler" text="摄政王" />
+    <string id="TAOM_gondor_desc" text="刚铎屹立于中土世界,是力量与坚韧的骄傲堡垒,以其高耸的白石城市、古老的血统和精锐的军队而闻名。刚铎由埃兰迪尔及其子嗣在努门诺尔陷落后建立,长期以来一直守卫着人类的国度,抵御来自东方日益增长的黑暗势力。以米那斯提力斯为首都,这个王国以其英勇、纪律和对自由民族的忠诚而著称。尽管多年来与魔多冲突不断,刚铎的战士和摄政王们仍然保持着希望,等待着国王归来,恢复昔日的荣光。" />
+    <string id="TAOM_mordor" text="魔多" />
+    <string id="TAOM_mordor_short" text="魔多" />
+    <string id="TAOM_mordor_title" text="魔多统治领" />
+    <string id="TAOM_mordor_ruler" text="黑暗魔君" />
+    <string id="TAOM_mordor_desc" text="魔多是一片黑暗、荒凉的国度,在阴影中铸就,由黑暗魔君索伦统治。这个王国隐藏在高耸的黑色山脉之后,充斥着兽人大军、残酷的巨魔和锻造战争武器的炽热熔炉。索伦从巴拉多要塞指挥着一支势不可挡的力量,准备将他的统治扩展到整个中土世界。魔多的天空弥漫着灰烬,土地一片荒芜,是索伦扭曲的野心和黑暗魔法的完美领地。" />
+    <string id="TAOM_dale" text="河谷邦" />
+    <string id="TAOM_dale_short" text="河谷邦" />
+    <string id="TAOM_dale_title" text="河谷邦王国" />
+    <string id="TAOM_dale_ruler" text="国王" />
+    <string id="TAOM_dale_desc" text="在奔流河的水域与孤山的阴影交汇之处,矗立着河谷邦。这座人类之城在五军之战后从废墟中重建。曾经是音乐与欢乐、贸易与金色市场大厅的所在地,河谷邦在埃尔伯的庇护下繁荣发展。它的商人驾驶快船沿着凯尔督因河航行,街道上回荡着笑声,人民享受着和平。但当恶龙来临时,和平被打破了。来自北方的飞翼死神史矛革带着烈焰与怒火降临埃尔伯,河谷邦首当其冲。城市化为火海,人民逃离,近两个世纪以来,骄傲的圆顶塔楼寂静而破碎,成为悲伤的纪念碑。然而,废墟并非河谷邦故事的终结。随着恶龙之死,神箭手巴德再次举起旗帜,召唤他的人民回家。河谷邦从灰烬与石头中再次崛起,不是恢复旧貌,而是变得更加强大。在国王巴德及其子贝恩的统治下,城市再次繁荣,城墙坚固,人民骄傲,目光永远警惕。河谷邦的人民数量不多,也没有古老的魔法,但他们坚定而真诚。" />
+    <string id="TAOM_harad" text="哈拉德" />
+    <string id="TAOM_harad_short" text="哈拉德" />
+    <string id="TAOM_harad_title" text="哈尔万塔斯克拉兰" />
+    <string id="TAOM_harad_ruler" text="塔斯克拉尔" />
+    <string id="TAOM_harad_desc" text="哈拉德位于刚铎以南,是一片广阔而多样的地区,包括干旱的沙漠、茂密的丛林和肥沃的绿洲。其地理环境与人民一样多样,广袤的沙丘让位于茂密的森林和充满生机的河流。哈拉德的历史浸透着古老的传说,宏伟的城市和要塞点缀在这片土地上,由那些遗产回荡千古的统治者所建。哈拉德威斯大沙漠将其北部边境与腹地分隔开来,而其南部海岸则充满贸易与海盗活动。在索伦的旗帜下团结起来,哈拉德的众多部落和王国将其根深蒂固的传统融入战争努力,将这片充满活力的土地转变为文化与冲突的强国。" />
+    <string id="TAOM_rohan" text="洛汗" />
+    <string id="TAOM_rohan_short" text="洛汗" />
+    <string id="TAOM_rohan_title" text="洛汗王国" />
+    <string id="TAOM_rohan_ruler" text="国王" />
+    <string id="TAOM_rohan_desc" text="洛汗被称为骠骑国,是一片广阔的开阔平原和起伏丘陵的王国,强大的洛汗骠骑——熟练的骑手和凶猛的战士——居住于此。由年轻的埃奥尔在他传奇性地驰援刚铎后建立,洛汗长期以来一直是刚铎对抗魔多黑暗势力的坚定盟友。从埃多拉斯的金色大厅梅杜塞尔德,其国王统治着一个骄傲而坚韧的民族,他们以马与骑手的纽带生活。洛汗骠骑以其骑兵冲锋、英勇的歌谣和坚定不移的勇气而闻名。尽管萨鲁曼的阴影威胁着他们的边境,洛汗的儿女们仍然随时准备响应号召,保卫他们的家园和中土世界的自由民族。" />
+    <string id="TAOM_khand" text="坎德" />
+    <string id="TAOM_khand_short" text="坎德" />
+    <string id="TAOM_khand_title" text="坎德御风者" />
+    <string id="TAOM_khand_ruler" text="库德里亚格" />
+    <string id="TAOM_khand_desc" text="坎德是一片崎岖的土地,拥有起伏的草原和干旱的平原,位于魔多东南部,是东西方之间的重要走廊。其人民瓦瑞亚格人凶猛而游牧,以其快马和致命的弯刀而闻名。生活在恶劣的环境中,他们磨练了作为掠夺者和战士的技能,经常与邻居发生冲突,并为出价最高者充当雇佣兵。坎德的忠诚长期以来一直被黑暗魔君争取,许多战士在魔多的阴影下参战。然而瓦瑞亚格人是一个骄傲而独立的民族,首先忠于他们的部族和酋长,这些酋长从散布在风吹草原上的设防营地统治。" />
+    <string id="TAOM_rhun" text="鲁恩" />
+    <string id="TAOM_rhun_short" text="鲁恩" />
+    <string id="TAOM_rhun_title" text="鲁恩黄金国度" />
+    <string id="TAOM_rhun_ruler" text="洛克-坎" />
+    <string id="TAOM_rhun_desc" text="在鲁恩内海之外,越过枯萎的草原和被遗忘帝国的红色尘土,坐落着广袤而神秘的东方。这里居住着东夷人,一个骄傲而古老的民族,他们的历史甚至早于刚铎的崛起。他们的土地在辽阔的天空下无尽延伸,从内陆海的海岸到标志着已知世界边缘的阴影山脉。东夷人并非单一的国家,而是由部落和王国编织成的锦绣,仅因对力量的崇敬和对西方长久的怨恨记忆而团结。有些人心甘情愿地侍奉黑暗魔君,被权力和复仇的承诺所吸引;另一些人则抵抗,坚守着古老的方式和更古老的神祇。他们的战士因纪律严明和精通战车与弓箭而令人畏惧,他们的金色盔甲在东方的阳光下闪耀如火。" />
+    <string id="aom_dunland_male_name_1" text="布罗达" />
+    <string id="aom_dunland_male_name_2" text="邓里克" />
+    <string id="aom_dunland_male_name_3" text="伊欧甘" />
+    <string id="aom_dunland_male_name_4" text="格林达尔" />
+    <string id="aom_dunland_male_name_5" text="萨恩" />
+    <string id="aom_dunland_male_name_6" text="卡多克" />
+    <string id="aom_dunland_male_name_7" text="莫德兰" />
+    <string id="aom_dunland_male_name_8" text="芬里克" />
+    <string id="aom_dunland_male_name_9" text="凯多克" />
+    <string id="aom_dunland_male_name_10" text="托兰" />
+    <string id="aom_dunland_male_name_11" text="拉格诺" />
+    <string id="aom_dunland_male_name_12" text="埃尔德里克" />
+    <string id="aom_dunland_male_name_13" text="哈尔里克" />
+    <string id="aom_dunland_male_name_14" text="乌尔里克" />
+    <string id="aom_dunland_male_name_15" text="塞尔诺克" />
+    <string id="aom_dunland_male_name_16" text="布赖诺" />
+    <string id="aom_dunland_male_name_17" text="戈兰" />
+    <string id="aom_dunland_male_name_18" text="托多克" />
+    <string id="aom_dunland_male_name_19" text="芬里克" />
+    <string id="aom_dunland_male_name_20" text="哈罗克" />
+    <string id="aom_dunland_male_name_21" text="凯兰" />
+    <string id="aom_dunland_male_name_22" text="乌尔达" />
+    <string id="aom_dunland_male_name_23" text="索兰" />
+    <string id="aom_dunland_male_name_24" text="格雷里克" />
+    <string id="aom_dunland_male_name_25" text="布拉多" />
+    <string id="aom_dunland_male_name_26" text="莫兰" />
+    <string id="aom_dunland_male_name_27" text="阿德里克" />
+    <string id="aom_dunland_male_name_28" text="卡德罗克" />
+    <string id="aom_dunland_male_name_29" text="格拉尔多" />
+    <string id="aom_dunland_male_name_30" text="法尔诺克" />
+    <string id="aom_dunland_male_name_31" text="乌尔里克" />
+    <string id="aom_dunland_male_name_32" text="布伦多克" />
+    <string id="aom_dunland_male_name_33" text="埃德里克" />
+    <string id="aom_dunland_male_name_34" text="斯拉尔多" />
+    <string id="aom_dunland_male_name_35" text="乌尔甘" />
+    <string id="aom_dunland_male_name_36" text="戈兰" />
+    <string id="aom_dunland_male_name_37" text="拉格纳尔德" />
+    <string id="aom_dunland_male_name_38" text="邓莫" />
+    <string id="aom_dunland_male_name_39" text="索尔利克" />
+    <string id="aom_dunland_male_name_40" text="芬瓦尔德" />
+    <string id="aom_dunland_male_name_41" text="布里尔丹" />
+    <string id="aom_dunland_male_name_42" text="格兰萨尔" />
+    <string id="aom_dunland_male_name_43" text="哈尔莫德" />
+    <string id="aom_dunland_male_name_44" text="瑟里丹" />
+    <string id="aom_dunland_male_name_45" text="埃尔隆德" />
+    <string id="aom_dunland_male_name_46" text="加雷斯" />
+    <string id="aom_dunland_male_name_47" text="哈维克" />
+    <string id="aom_dunland_male_name_48" text="吉尔丹" />
+    <string id="aom_dunland_male_name_49" text="乌尔弗拉姆" />
+    <string id="aom_dunland_male_name_50" text="索拉格" />
+    <string id="aom_dunland_female_name_1" text="布林迪丝" />
+    <string id="aom_dunland_female_name_2" text="埃迪丝" />
+    <string id="aom_dunland_female_name_3" text="莫温" />
+    <string id="aom_dunland_female_name_4" text="格里斯拉" />
+    <string id="aom_dunland_female_name_5" text="哈尔达" />
+    <string id="aom_dunland_female_name_6" text="瑟拉" />
+    <string id="aom_dunland_female_name_7" text="凯德温" />
+    <string id="aom_dunland_female_name_8" text="艾尔琳" />
+    <string id="aom_dunland_female_name_9" text="芬温" />
+    <string id="aom_dunland_female_name_10" text="萨尔达" />
+    <string id="aom_dunland_female_name_11" text="格雷尔温" />
+    <string id="aom_dunland_female_name_12" text="哈温" />
+    <string id="aom_dunland_female_name_13" text="奥尔迪丝" />
+    <string id="aom_dunland_female_name_14" text="温拉" />
+    <string id="aom_dunland_female_name_15" text="布丽西娅" />
+    <string id="aom_dunland_female_name_16" text="埃奥拉" />
+    <string id="aom_dunland_female_name_17" text="瑟尔达" />
+    <string id="aom_dunland_female_name_18" text="格兰娜" />
+    <string id="aom_dunland_female_name_19" text="艾尔温" />
+    <string id="aom_dunland_female_name_20" text="莫拉" />
+    <string id="aom_dunland_female_name_21" text="哈拉" />
+    <string id="aom_dunland_female_name_22" text="芬拉" />
+    <string id="aom_dunland_female_name_23" text="格里萨" />
+    <string id="aom_dunland_female_name_24" text="瑟里萨" />
+    <string id="aom_dunland_female_name_25" text="哈尔温" />
+    <string id="aom_dunland_female_name_26" text="凯琳" />
+    <string id="aom_dunland_female_name_27" text="格雷尔温" />
+    <string id="aom_dunland_female_name_28" text="萨拉" />
+    <string id="aom_dunland_female_name_29" text="莫拉" />
+    <string id="aom_dunland_female_name_30" text="布丽娜" />
+    <string id="aom_dunland_female_name_31" text="希尔达" />
+    <string id="aom_dunland_female_name_32" text="埃利斯" />
+    <string id="aom_dunland_female_name_33" text="凯尔温" />
+    <string id="aom_dunland_female_name_34" text="奥德拉" />
+    <string id="aom_dunland_female_name_35" text="哈拉" />
+    <string id="aom_dunland_female_name_36" text="温拉" />
+    <string id="aom_dunland_female_name_37" text="西尔达" />
+    <string id="aom_dunland_female_name_38" text="格蕾斯拉" />
+    <string id="aom_dunland_female_name_39" text="芬温" />
+    <string id="aom_dunland_female_name_40" text="埃尔拉" />
+    <string id="aom_dunland_female_name_41" text="莫温" />
+    <string id="aom_dunland_female_name_42" text="哈尔达" />
+    <string id="aom_dunland_female_name_43" text="凯德拉" />
+    <string id="aom_dunland_female_name_44" text="萨娜" />
+    <string id="aom_dunland_female_name_45" text="布林德尔" />
+    <string id="aom_dunland_female_name_46" text="格里斯温" />
+    <string id="aom_dunland_female_name_47" text="艾迪丝" />
+    <string id="aom_dunland_female_name_48" text="芬拉" />
+    <string id="aom_dunland_female_name_49" text="哈温" />
+    <string id="aom_dunland_female_name_50" text="温娜" />
+    <string id="aom_dunland_clan_name_01" text="红狼氏族" />
+    <string id="aom_dunland_clan_name_02" text="铁牙氏族" />
+    <string id="aom_dunland_clan_name_03" text="碎石者氏族" />
+    <string id="aom_dunland_clan_name_04" text="暗影猎人氏族" />
+    <string id="aom_dunland_clan_name_05" text="山丘劫掠者氏族" />
+    <string id="aom_dunland_clan_name_06" text="狂野之刃氏族" />
+    <string id="aom_dunland_clan_name_07" text="唤风者氏族" />
+    <string id="aom_dunland_clan_name_08" text="血鸦氏族" />
+    <string id="aom_dunland_clan_name_09" text="白骨之矛氏族" />
+    <string id="aom_dunland_clan_name_10" text="震地者氏族" />
+    <string id="aom_dunland_clan_name_11" text="荆棘之盾氏族" />
+    <string id="aom_dunland_clan_name_12" text="影狼氏族" />
+    <string id="aom_dunland_clan_name_13" text="断斧氏族" />
+    <string id="aom_dunland_clan_name_14" text="鸦眼氏族" />
+    <string id="aom_dunland_clan_name_15" text="霜嚎氏族" />
+    <string id="aom_dunland_clan_name_16" text="铁缚者氏族" />
+    <string id="aom_dunland_clan_name_17" text="石拳氏族" />
+    <string id="aom_dunland_clan_name_18" text="呼啸狂风氏族" />
+    <string id="aom_dunland_clan_name_19" text="山影氏族" />
+    <string id="aom_harad_male_name_1" text="阿扎兰" />
+    <string id="aom_harad_male_name_2" text="扎米尔" />
+    <string id="aom_harad_male_name_3" text="哈立德" />
+    <string id="aom_harad_male_name_4" text="拉希德" />
+    <string id="aom_harad_male_name_5" text="纳齐尔" />
+    <string id="aom_harad_male_name_6" text="贾米尔" />
+    <string id="aom_harad_male_name_7" text="哈西姆" />
+    <string id="aom_harad_male_name_8" text="法拉吉" />
+    <string id="aom_harad_male_name_9" text="萨希姆" />
+    <string id="aom_harad_male_name_10" text="塔里克" />
+    <string id="aom_harad_male_name_11" text="巴西姆" />
+    <string id="aom_harad_male_name_12" text="卡里姆" />
+    <string id="aom_harad_male_name_13" text="萨利姆" />
+    <string id="aom_harad_male_name_14" text="拉扬" />
+    <string id="aom_harad_male_name_15" text="扎法尔" />
+    <string id="aom_harad_male_name_16" text="亚西尔" />
+    <string id="aom_harad_male_name_17" text="哈基姆" />
+    <string id="aom_harad_male_name_18" text="易卜拉欣" />
+    <string id="aom_harad_male_name_19" text="费萨尔" />
+    <string id="aom_harad_male_name_20" text="纳吉布" />
+    <string id="aom_harad_male_name_21" text="穆尼尔" />
+    <string id="aom_harad_male_name_22" text="阿什拉夫" />
+    <string id="aom_harad_male_name_23" text="扎克万" />
+    <string id="aom_harad_male_name_24" text="阿齐姆" />
+    <string id="aom_harad_male_name_25" text="苏莱曼" />
+    <string id="aom_harad_male_name_26" text="哈基姆" />
+    <string id="aom_harad_male_name_27" text="吉卜利勒" />
+    <string id="aom_harad_male_name_28" text="塔希尔" />
+    <string id="aom_harad_male_name_29" text="拉菲克" />
+    <string id="aom_harad_male_name_30" text="马利克" />
+    <string id="aom_harad_male_name_31" text="扎希尔" />
+    <string id="aom_harad_male_name_32" text="阿西姆" />
+    <string id="aom_harad_male_name_33" text="纳比尔" />
+    <string id="aom_harad_male_name_34" text="奥马尔" />
+    <string id="aom_harad_male_name_35" text="卡西姆" />
+    <string id="aom_harad_male_name_36" text="哈利姆" />
+    <string id="aom_harad_male_name_37" text="曼苏尔" />
+    <string id="aom_harad_male_name_38" text="叶海亚" />
+    <string id="aom_harad_male_name_39" text="沙基尔" />
+    <string id="aom_harad_male_name_40" text="阿迪尔" />
+    <string id="aom_harad_male_name_41" text="马赫迪" />
+    <string id="aom_harad_male_name_42" text="法希姆" />
+    <string id="aom_harad_male_name_43" text="拉提夫" />
+    <string id="aom_harad_male_name_44" text="拉米兹" />
+    <string id="aom_harad_male_name_45" text="塔米姆" />
+    <string id="aom_harad_male_name_46" text="亚齐德" />
+    <string id="aom_harad_male_name_47" text="卡马尔" />
+    <string id="aom_harad_male_name_48" text="哈桑" />
+    <string id="aom_harad_male_name_49" text="阿齐姆" />
+    <string id="aom_harad_male_name_50" text="祖拜德" />
+    <string id="aom_harad_female_name_1" text="扎希拉" />
+    <string id="aom_harad_female_name_2" text="娜迪亚" />
+    <string id="aom_harad_female_name_3" text="亚丝敏" />
+    <string id="aom_harad_female_name_4" text="阿米拉" />
+    <string id="aom_harad_female_name_5" text="蕾拉" />
+    <string id="aom_harad_female_name_6" text="拉尼娅" />
+    <string id="aom_harad_female_name_7" text="贾米拉" />
+    <string id="aom_harad_female_name_8" text="哈芙萨" />
+    <string id="aom_harad_female_name_9" text="祖蕾卡" />
+    <string id="aom_harad_female_name_10" text="阿米娜" />
+    <string id="aom_harad_female_name_11" text="萨利玛" />
+    <string id="aom_harad_female_name_12" text="拉米娅" />
+    <string id="aom_harad_female_name_13" text="萨米拉" />
+    <string id="aom_harad_female_name_14" text="纳齐拉" />
+    <string id="aom_harad_female_name_15" text="鲁卡娅" />
+    <string id="aom_harad_female_name_16" text="哈利玛" />
+    <string id="aom_harad_female_name_17" text="阿齐莎" />
+    <string id="aom_harad_female_name_18" text="卡迪嘉" />
+    <string id="aom_harad_female_name_19" text="法德瓦" />
+    <string id="aom_harad_female_name_20" text="萨菲娅" />
+    <string id="aom_harad_female_name_21" text="阿莉娅" />
+    <string id="aom_harad_female_name_22" text="纳瓦尔" />
+    <string id="aom_harad_female_name_23" text="布什拉" />
+    <string id="aom_harad_female_name_24" text="扎赫拉" />
+    <string id="aom_harad_female_name_25" text="里哈娜" />
+    <string id="aom_harad_female_name_26" text="苏玛雅" />
+    <string id="aom_harad_female_name_27" text="奈玛" />
+    <string id="aom_harad_female_name_28" text="拉希达" />
+    <string id="aom_harad_female_name_29" text="宰纳卜" />
+    <string id="aom_harad_female_name_30" text="莎伊玛" />
+    <string id="aom_harad_female_name_31" text="穆尼拉" />
+    <string id="aom_harad_female_name_32" text="法蒂玛" />
+    <string id="aom_harad_female_name_33" text="希琳" />
+    <string id="aom_harad_female_name_34" text="萨尼娅" />
+    <string id="aom_harad_female_name_35" text="玛利卡" />
+    <string id="aom_harad_female_name_36" text="阿菲娅" />
+    <string id="aom_harad_female_name_37" text="扎因" />
+    <string id="aom_harad_female_name_38" text="法里达" />
+    <string id="aom_harad_female_name_39" text="阿玛尼" />
+    <string id="aom_harad_female_name_40" text="纳齐拉" />
+    <string id="aom_harad_female_name_41" text="胡达" />
+    <string id="aom_harad_female_name_42" text="拉赫玛" />
+    <string id="aom_harad_female_name_43" text="亚米拉" />
+    <string id="aom_harad_female_name_44" text="莎玛" />
+    <string id="aom_harad_female_name_45" text="塔米娜" />
+    <string id="aom_harad_female_name_46" text="祖拜达" />
+    <string id="aom_harad_female_name_47" text="拉比娅" />
+    <string id="aom_harad_female_name_48" text="阿斯玛" />
+    <string id="aom_harad_female_name_49" text="拉蒂法" />
+    <string id="aom_harad_female_name_50" text="赛伊达" />
+    <string id="aom_harad_clan_name_01" text="燃烧之沙" />
+    <string id="aom_harad_clan_name_02" text="金色刀刃" />
+    <string id="aom_harad_clan_name_03" text="沙漠烈日" />
+    <string id="aom_harad_clan_name_04" text="赤红长矛" />
+    <string id="aom_harad_clan_name_05" text="沙丘骑士" />
+    <string id="aom_harad_clan_name_06" text="灼热之风" />
+    <string id="aom_harad_clan_name_07" text="沙暴战士" />
+    <string id="aom_harad_clan_name_08" text="蛇牙" />
+    <string id="aom_harad_clan_name_09" text="黑蝎" />
+    <string id="aom_harad_clan_name_10" text="猛玛守护者" />
+    <string id="aom_harad_clan_name_11" text="绿洲守卫" />
+    <string id="aom_harad_clan_name_12" text="烈火之印" />
+    <string id="aom_harad_clan_name_13" text="绯红盾卫" />
+    <string id="aom_harad_clan_name_14" text="金色新月" />
+    <string id="aom_harad_clan_name_15" text="静默之影" />
+    <string id="aom_harad_clan_name_16" text="日光击者" />
+    <string id="aom_harad_clan_name_17" text="沙丘守望者" />
+    <string id="aom_harad_clan_name_18" text="蛇影骑士" />
+    <string id="aom_harad_clan_name_19" text="烈焰铁蹄" />
+    <string id="aom_harad_clan_name_20" text="暮光之沙" />
+    <string id="aom_rohan_male_name_1" text="埃德雷德" />
+    <string id="aom_rohan_male_name_2" text="埃欧蒙德" />
+    <string id="aom_rohan_male_name_3" text="凯奥尔" />
+    <string id="aom_rohan_male_name_4" text="埃塞尔里克" />
+    <string id="aom_rohan_male_name_5" text="贝奥赫特赫尔姆" />
+    <string id="aom_rohan_male_name_6" text="埃尔德武夫" />
+    <string id="aom_rohan_male_name_7" text="沃夫加" />
+    <string id="aom_rohan_male_name_8" text="塞奥德里克" />
+    <string id="aom_rohan_male_name_9" text="埃尔里克" />
+    <string id="aom_rohan_male_name_10" text="布里赫特武夫" />
+    <string id="aom_rohan_male_name_11" text="塞奥德温" />
+    <string id="aom_rohan_male_name_12" text="辛里克" />
+    <string id="aom_rohan_male_name_13" text="埃欧门里克" />
+    <string id="aom_rohan_male_name_14" text="埃德赫尔姆" />
+    <string id="aom_rohan_male_name_15" text="阿尔德武夫" />
+    <string id="aom_rohan_male_name_16" text="弗里斯加" />
+    <string id="aom_rohan_male_name_17" text="奥斯温" />
+    <string id="aom_rohan_male_name_18" text="莱奥夫温" />
+    <string id="aom_rohan_male_name_19" text="塞奥巴尔德" />
+    <string id="aom_rohan_male_name_20" text="温弗里斯" />
+    <string id="aom_rohan_male_name_21" text="赫里沃德" />
+    <string id="aom_rohan_male_name_22" text="埃欧塞因" />
+    <string id="aom_rohan_male_name_23" text="古斯里克" />
+    <string id="aom_rohan_male_name_24" text="塞奥武夫" />
+    <string id="aom_rohan_male_name_25" text="弗拉姆里克" />
+    <string id="aom_rohan_male_name_26" text="埃德加" />
+    <string id="aom_rohan_male_name_27" text="赫里莫德" />
+    <string id="aom_rohan_male_name_28" text="贝奥恩赫尔姆" />
+    <string id="aom_rohan_male_name_29" text="西格弗雷德" />
+    <string id="aom_rohan_male_name_30" text="塞奥登里克" />
+    <string id="aom_rohan_male_name_31" text="埃尔武夫" />
+    <string id="aom_rohan_male_name_32" text="加蒙德" />
+    <string id="aom_rohan_male_name_33" text="赫罗斯加" />
+    <string id="aom_rohan_male_name_34" text="埃欧瓦尔德" />
+    <string id="aom_rohan_male_name_35" text="凯奥武夫" />
+    <string id="aom_rohan_male_name_36" text="法拉蒙德" />
+    <string id="aom_rohan_male_name_37" text="埃塞尔赫尔姆" />
+    <string id="aom_rohan_male_name_38" text="埃欧佛" />
+    <string id="aom_rohan_male_name_39" text="温斯坦" />
+    <string id="aom_rohan_male_name_40" text="赫雷文" />
+    <string id="aom_rohan_male_name_41" text="古斯文" />
+    <string id="aom_rohan_male_name_42" text="辛文" />
+    <string id="aom_rohan_male_name_43" text="埃尔弗里克" />
+    <string id="aom_rohan_male_name_44" text="伍尔夫斯坦" />
+    <string id="aom_rohan_male_name_45" text="贝奥赫特文" />
+    <string id="aom_rohan_male_name_46" text="塞奥蒙德" />
+    <string id="aom_rohan_male_name_47" text="切奥文" />
+    <string id="aom_rohan_male_name_48" text="塞奥德赫尔姆" />
+    <string id="aom_rohan_male_name_49" text="莱奥夫赫尔姆" />
+    <string id="aom_rohan_male_name_50" text="埃尔夫文" />
+    <string id="aom_rohan_male_name_51" text="伍尔夫诺斯" />
+    <string id="aom_rohan_male_name_52" text="塞尔沃德" />
+    <string id="aom_rohan_male_name_53" text="塞尔姆" />
+    <string id="aom_rohan_male_name_54" text="埃奥姆雷德" />
+    <string id="aom_rohan_male_name_55" text="埃尔温" />
+    <string id="aom_rohan_male_name_56" text="伊尔夫加尔" />
+    <string id="aom_rohan_male_name_57" text="阿尔夫加尔" />
+    <string id="aom_rohan_male_name_58" text="乌尔法尔" />
+    <string id="aom_rohan_male_name_59" text="莱奥法尔" />
+    <string id="aom_rohan_male_name_60" text="莱奥弗里克" />
+    <string id="aom_rohan_female_name_1" text="埃德吉芙" />
+    <string id="aom_rohan_female_name_2" text="塞奥德温" />
+    <string id="aom_rohan_female_name_3" text="埃塞尔希尔德" />
+    <string id="aom_rohan_female_name_4" text="辛妮思丽丝" />
+    <string id="aom_rohan_female_name_5" text="贝奥尔希尔德" />
+    <string id="aom_rohan_female_name_6" text="弗里思温" />
+    <string id="aom_rohan_female_name_7" text="温弗里丝" />
+    <string id="aom_rohan_female_name_8" text="埃奥尔门希尔德" />
+    <string id="aom_rohan_female_name_9" text="希尔迪丝" />
+    <string id="aom_rohan_female_name_10" text="伊奥温妮" />
+    <string id="aom_rohan_female_name_11" text="莱奥芙温" />
+    <string id="aom_rohan_female_name_12" text="埃尔希尔德" />
+    <string id="aom_rohan_female_name_13" text="塞奥温" />
+    <string id="aom_rohan_female_name_14" text="温弗里达" />
+    <string id="aom_rohan_female_name_15" text="阿尔德吉芙" />
+    <string id="aom_rohan_female_name_16" text="赫雷林德" />
+    <string id="aom_rohan_female_name_17" text="布伦希尔德" />
+    <string id="aom_rohan_female_name_18" text="西格温" />
+    <string id="aom_rohan_female_name_19" text="埃德温" />
+    <string id="aom_rohan_female_name_20" text="辛温" />
+    <string id="aom_rohan_female_name_21" text="希尔德蕾德" />
+    <string id="aom_rohan_female_name_22" text="埃塞尔温" />
+    <string id="aom_rohan_female_name_23" text="塞奥温" />
+    <string id="aom_rohan_female_name_24" text="弗里丝琳德" />
+    <string id="aom_rohan_female_name_25" text="塞奥迪丝" />
+    <string id="aom_rohan_female_name_26" text="埃塞尔弗丽达" />
+    <string id="aom_rohan_female_name_27" text="贝奥希尔德" />
+    <string id="aom_rohan_female_name_28" text="伊欧姆希尔德" />
+    <string id="aom_rohan_female_name_29" text="莱奥弗希尔德" />
+    <string id="aom_rohan_female_name_30" text="阿尔德温" />
+    <string id="aom_rohan_female_name_31" text="温希尔德" />
+    <string id="aom_rohan_female_name_32" text="希尔德温" />
+    <string id="aom_rohan_female_name_33" text="埃德弗丽达" />
+    <string id="aom_rohan_female_name_34" text="塞奥德琳" />
+    <string id="aom_rohan_female_name_35" text="辛弗里丝" />
+    <string id="aom_rohan_female_name_36" text="古丝温" />
+    <string id="aom_rohan_female_name_37" text="希尔德温妮" />
+    <string id="aom_rohan_female_name_38" text="埃赫弗丽达" />
+    <string id="aom_rohan_female_name_39" text="西吉丝" />
+    <string id="aom_rohan_female_name_40" text="温弗丽西娅" />
+    <string id="aom_rohan_female_name_41" text="埃德吉莎" />
+    <string id="aom_rohan_female_name_42" text="埃塞尔雷达" />
+    <string id="aom_rohan_female_name_43" text="贝奥瑟温" />
+    <string id="aom_rohan_female_name_44" text="弗里丝吉芙" />
+    <string id="aom_rohan_female_name_45" text="塞奥德弗里丝" />
+    <string id="aom_rohan_female_name_46" text="温希尔达" />
+    <string id="aom_rohan_female_name_47" text="埃赫弗里丝" />
+    <string id="aom_rohan_female_name_48" text="辛妮希尔德" />
+    <string id="aom_rohan_female_name_49" text="埃赫温" />
+    <string id="aom_rohan_female_name_50" text="埃德温妮" />
+    <string id="aom_rohan_clan_name_01" text="哈罗丁家族" />
+    <string id="aom_rohan_clan_name_02" text="埃尔芬家族" />
+    <string id="aom_rohan_clan_name_03" text="阿尔多林加斯家族" />
+    <string id="aom_rohan_clan_name_04" text="哈迈因加斯家族" />
+    <string id="aom_rohan_clan_name_05" text="阿恩格里明家族" />
+    <string id="aom_rohan_clan_name_06" text="斯维尔德博拉家族" />
+    <string id="aom_rohan_clan_name_07" text="温德明家族" />
+    <string id="aom_rohan_clan_name_08" text="马罗万丁家族" />
+    <string id="aom_rohan_clan_name_09" text="卡尔蒙达斯家族" />
+    <string id="aom_rohan_clan_name_10" text="厄尔明丁" />
+    <string id="aom_rhun_male_name_1" text="卡尔鲁德" />
+    <string id="aom_rhun_male_name_2" text="托尔加什" />
+    <string id="aom_rhun_male_name_3" text="瓦斯基尔" />
+    <string id="aom_rhun_male_name_4" text="拉齐尔" />
+    <string id="aom_rhun_male_name_5" text="纳兹鲁克" />
+    <string id="aom_rhun_male_name_6" text="塔伦" />
+    <string id="aom_rhun_male_name_7" text="达格里姆" />
+    <string id="aom_rhun_male_name_8" text="扎尔纳什" />
+    <string id="aom_rhun_male_name_9" text="瓦尔莱克" />
+    <string id="aom_rhun_male_name_10" text="法兹里克" />
+    <string id="aom_rhun_male_name_11" text="奥尔尊" />
+    <string id="aom_rhun_male_name_12" text="库尔加尔" />
+    <string id="aom_rhun_male_name_13" text="杜尔扎格" />
+    <string id="aom_rhun_male_name_14" text="马洛克" />
+    <string id="aom_rhun_male_name_15" text="扎格里姆" />
+    <string id="aom_rhun_male_name_16" text="纳拉什" />
+    <string id="aom_rhun_male_name_17" text="塔赫里克" />
+    <string id="aom_rhun_male_name_18" text="瓦兹里克" />
+    <string id="aom_rhun_male_name_19" text="乌兹拉德" />
+    <string id="aom_rhun_male_name_20" text="卓拉姆" />
+    <string id="aom_rhun_male_name_21" text="拉沙德" />
+    <string id="aom_rhun_male_name_22" text="巴尔汗" />
+    <string id="aom_rhun_male_name_23" text="萨古尔" />
+    <string id="aom_rhun_male_name_24" text="图尔甘" />
+    <string id="aom_rhun_male_name_25" text="瓦里姆" />
+    <string id="aom_rhun_male_name_26" text="马兹里克" />
+    <string id="aom_rhun_male_name_27" text="卡尔扎尔" />
+    <string id="aom_rhun_male_name_28" text="纳肖尔" />
+    <string id="aom_rhun_male_name_29" text="古拉什" />
+    <string id="aom_rhun_male_name_30" text="杜尔扎格" />
+    <string id="aom_rhun_male_name_31" text="扎尔卡尔" />
+    <string id="aom_rhun_male_name_32" text="托拉克" />
+    <string id="aom_rhun_male_name_33" text="法尔努尔" />
+    <string id="aom_rhun_male_name_34" text="马尔祖克" />
+    <string id="aom_rhun_male_name_35" text="扎伦" />
+    <string id="aom_rhun_male_name_36" text="纳鲁克" />
+    <string id="aom_rhun_male_name_37" text="萨尔甘" />
+    <string id="aom_rhun_male_name_38" text="图尔米克" />
+    <string id="aom_rhun_male_name_39" text="达兹里克" />
+    <string id="aom_rhun_male_name_40" text="卡努尔" />
+    <string id="aom_rhun_male_name_41" text="瓦什基尔" />
+    <string id="aom_rhun_male_name_42" text="罗丹" />
+    <string id="aom_rhun_male_name_43" text="塔兹鲁克" />
+    <string id="aom_rhun_male_name_44" text="戈拉什" />
+    <string id="aom_rhun_male_name_45" text="纳兹林" />
+    <string id="aom_rhun_male_name_46" text="萨尔卡尔" />
+    <string id="aom_rhun_male_name_47" text="马扎德" />
+    <string id="aom_rhun_male_name_48" text="奥兹里克" />
+    <string id="aom_rhun_male_name_49" text="扎纳克" />
+    <string id="aom_rhun_male_name_50" text="法尔祖克" />
+    <string id="aom_rhun_female_name_1" text="拉齐拉" />
+    <string id="aom_rhun_female_name_2" text="塔兹米娜" />
+    <string id="aom_rhun_female_name_3" text="瓦齐拉" />
+    <string id="aom_rhun_female_name_4" text="马兹里卡" />
+    <string id="aom_rhun_female_name_5" text="扎赫丽娜" />
+    <string id="aom_rhun_female_name_6" text="卡丽拉" />
+    <string id="aom_rhun_female_name_7" text="奥兹拉" />
+    <string id="aom_rhun_female_name_8" text="杜尔赞娜" />
+    <string id="aom_rhun_female_name_9" text="娜丽玛" />
+    <string id="aom_rhun_female_name_10" text="萨丽拉" />
+    <string id="aom_rhun_female_name_11" text="瓦丽拉" />
+    <string id="aom_rhun_female_name_12" text="达齐拉" />
+    <string id="aom_rhun_female_name_13" text="拉米拉" />
+    <string id="aom_rhun_female_name_14" text="法齐拉" />
+    <string id="aom_rhun_female_name_15" text="乌兹丽拉" />
+    <string id="aom_rhun_female_name_16" text="扎丽娜" />
+    <string id="aom_rhun_female_name_17" text="库丽莎" />
+    <string id="aom_rhun_female_name_18" text="巴尔基拉" />
+    <string id="aom_rhun_female_name_19" text="娜丽莎" />
+    <string id="aom_rhun_female_name_20" text="萨尼拉" />
+    <string id="aom_rhun_female_name_21" text="拉希拉" />
+    <string id="aom_rhun_female_name_22" text="马扎拉" />
+    <string id="aom_rhun_female_name_23" text="瓦希拉" />
+    <string id="aom_rhun_female_name_24" text="扎尼拉" />
+    <string id="aom_rhun_female_name_25" text="萨尔基拉" />
+    <string id="aom_rhun_female_name_26" text="法尼莎" />
+    <string id="aom_rhun_female_name_27" text="戈丽莎" />
+    <string id="aom_rhun_female_name_28" text="纳齐拉" />
+    <string id="aom_rhun_female_name_29" text="卡尼拉" />
+    <string id="aom_rhun_female_name_30" text="托里拉" />
+    <string id="aom_rhun_female_name_31" text="杜里娜" />
+    <string id="aom_rhun_female_name_32" text="瓦希拉" />
+    <string id="aom_rhun_female_name_33" text="纳里扎" />
+    <string id="aom_rhun_female_name_34" text="法兹里姆" />
+    <string id="aom_rhun_female_name_35" text="玛兹希拉" />
+    <string id="aom_rhun_female_name_36" text="卡莉娅" />
+    <string id="aom_rhun_female_name_37" text="萨尔尼扎" />
+    <string id="aom_rhun_female_name_38" text="奥琳娜" />
+    <string id="aom_rhun_female_name_39" text="鲁哈娜" />
+    <string id="aom_rhun_female_name_40" text="萨尔尼扎" />
+    <string id="aom_rhun_female_name_41" text="扎利拉" />
+    <string id="aom_rhun_female_name_42" text="拉兹娜" />
+    <string id="aom_rhun_female_name_43" text="杜尔希拉" />
+    <string id="aom_rhun_female_name_44" text="巴尔基拉" />
+    <string id="aom_rhun_female_name_45" text="萨里扎" />
+    <string id="aom_rhun_female_name_46" text="玛兹娜" />
+    <string id="aom_rhun_female_name_47" text="纳里莉娅" />
+    <string id="aom_rhun_female_name_48" text="法尔尼娜" />
+    <string id="aom_rhun_female_name_49" text="扎利玛" />
+    <string id="aom_rhun_female_name_50" text="奥尔兹娜" />
+    <string id="aom_rhun_clan_name_01" text="铁矛氏族" />
+    <string id="aom_rhun_clan_name_02" text="金弯刀氏族" />
+    <string id="aom_rhun_clan_name_03" text="红旗氏族" />
+    <string id="aom_rhun_clan_name_04" text="燃烧之刃氏族" />
+    <string id="aom_rhun_clan_name_05" text="鲁恩之血氏族" />
+    <string id="aom_rhun_clan_name_06" text="深红战士氏族" />
+    <string id="aom_rhun_clan_name_07" text="黑盾氏族" />
+    <string id="aom_rhun_clan_name_08" text="唤风者氏族" />
+    <string id="aom_rhun_clan_name_09" text="猩红守卫氏族" />
+    <string id="aom_rhun_clan_name_10" text="金帐汗国氏族" />
+    <string id="aom_empire_name" text="登兰德人" />
+    <string id="aom_empire_desc" text="登兰德人是一个粗犷而凶猛的民族,居住在洛汗以西的荒野山丘和未开化之地。他们长期憎恨洛汗骑士,视其为侵占祖地的入侵者,因共同的传统和强烈的独立精神而团结在一起。他们擅长游击战和生存技能,依靠狡诈和凶猛战胜敌人。尽管常被视为简单的山地居民,登兰德人却是一个自豪而坚韧的民族,誓死保护自己的土地和生活方式。在对洛汗根深蒂固的怨恨驱使下,他们与黑暗势力结盟,寻求复仇并收复失地。" />
+    <string id="aom_aserai_name" text="哈拉德人" />
+    <string id="aom_aserai_desc" text="哈拉德人是来自遥远南方沙漠和稀树草原的骄傲而凶猛的民族。他们以驯服奇异巨兽如猛犸巨象而闻名,战士们在战斗中展现出技巧、坚韧和致命的精准。哈拉德是一片极端之地,有着炽热的骄阳、金色的沙漠和生机勃勃的绿洲。其人民因古老的传统、对部落的忠诚以及对酋长和国王的响应而团结一致。哈拉德人常与黑暗势力结盟,他们受对刚铎的复仇之心驱使,也被索伦许诺的权力和统治所吸引。" />
+    <string id="aom_vlandia_name" text="洛汗骑士" />
+    <string id="aom_vlandia_desc" text="洛汗骑士,即洛汗的骑马领主,以其无与伦比的骑兵和与战马的深厚羁绊而闻名。他们骄傲而自由奔放,居住在骑士国连绵起伏的平原上,生活在伊多拉斯等村庄和要塞中。在国王的领导下,洛汗骑士忠于人民,珍视荣誉、忠诚和勇气。他们的战士无畏地投入战斗,构成中土世界抵抗黑暗势力的脊梁。尽管坚守传统,洛汗骑士随时准备保卫自己的土地和盟友,精准地挥舞着长矛、剑和盾牌。" />
+    <string id="aom_khuzait_name" text="东方人" />
+    <string id="aom_khuzait_desc" text="东方人是来自鲁恩遥远之地的多样而可怕的民族。他们以效忠索伦而闻名,精准而纪律严明地开赴战场,挥舞着弯刀、长矛和在战场上回响的巨大战鼓。他们的金色盔甲和深红旗帜彰显着他们的强烈自豪感和武功。东方人分为不同的氏族和部落,在强大酋长的统一下,将鲁恩的力量投向中土世界的自由民族。" />
+    <string id="TAOM_sturgia_culture" text="河谷国" />
+    <string id="TAOM_sturgia_desc" text="河谷国的巴德人,以弓箭手巴德命名,是一个骄傲而勤劳的民族,在从恶龙史矛革的阴影中夺回家园后崛起。河谷国坐落在孤山与长湖之间,作为贸易与文化的枢纽而繁荣兴盛。巴德人以坚韧和精湛的工艺闻名,在锻造武器和盔甲方面的技艺甚至可与埃尔波尔的矮人相媲美。他们的军队由纪律严明的弓箭手、坚定的剑士和敏捷的散兵组成,以强烈的决心保卫着自己的土地。在高贵领袖的统一下,巴德人时刻保持警惕,抵御不断侵蚀的黑暗,守护着他们丰厚的传承。" />
+    <string id="TAOM_battania_culture" text="瓦瑞亚格人" />
+    <string id="TAOM_battania_desc" text="坎德的瓦瑞亚格人是一个凶猛好战的民族,来自魔多以东干燥而崎岖的土地。瓦瑞亚格人以雇佣兵的勇猛和对索伦的忠诚而闻名,作战时异常凶残。他们骑着迅捷的战马冲入战场,挥舞弯刀和长矛,精准致命。他们的青铜与深红色盔甲,饰以精致的图案,反映着他们骄傲的尚武传统。瓦瑞亚格人分为部落和氏族,在强大的战争领主统领下团结一致,为黑暗魔王的敌人带来恐惧和混乱。" />
+    <string id="TAOM_clan_empire_north_1" text="布莱德-卢斯" />
+    <string id="TAOM_clan_empire_north_2" text="图尔赫-卢斯" />
+    <string id="TAOM_clan_empire_north_3" text="乌赫-卢斯" />
+    <string id="TAOM_clan_empire_north_4" text="阿尔斯-卢斯" />
+    <string id="TAOM_clan_empire_north_5" text="基格弗兰-卢斯" />
+    <string id="TAOM_clan_empire_north_6" text="赫博格-卢斯" />
+    <string id="TAOM_clan_empire_north_7" text="德莱格-卢斯" />
+    <string id="TAOM_clan_empire_north_8" text="卡鲁-卢斯" />
+    <string id="TAOM_clan_empire_north_9" text="阿万克-卢斯" />
+    <string id="TAOM_clan_empire_west_1" text="胡林奥纳斯家族" />
+    <string id="TAOM_clan_empire_west_2" text="伊姆拉佐尔奥纳斯家族" />
+    <string id="TAOM_clan_empire_west_3" text="埃阿努尔奥纳斯家族" />
+    <string id="TAOM_clan_empire_west_4" text="巴拉希尔奥纳斯家族" />
+    <string id="TAOM_clan_empire_west_5" text="奥西尔奥纳斯家族" />
+    <string id="TAOM_clan_empire_west_6" text="哈尔博隆奥纳斯家族" />
+    <string id="TAOM_clan_empire_west_7" text="马兰迪尔奥纳斯家族" />
+    <string id="TAOM_clan_empire_west_8" text="奥林杜尔奥纳斯家族" />
+    <string id="TAOM_clan_empire_west_9" text="达努希尔奥纳斯家族" />
+    <string id="TAOM_clan_empire_south_1" text="多尔古贝斯" />
+    <string id="TAOM_clan_empire_south_2" text="格阿尔内迪亚德" />
+    <string id="TAOM_clan_empire_south_3" text="梅尔孔迪利" />
+    <string id="TAOM_clan_empire_south_4" text="莫尔古卡尔" />
+    <string id="TAOM_clan_empire_south_5" text="博尔格鲁基格" />
+    <string id="TAOM_clan_empire_south_6" text="卡姆·拉古尔兹" />
+    <string id="TAOM_clan_empire_south_7" text="布拉格祖基什" />
+    <string id="TAOM_clan_empire_south_8" text="科拉希姆" />
+    <string id="TAOM_clan_empire_south_9" text="瓦夫里姆" />
+    <string id="TAOM_clan_sturgia_1" text="吉里昂家族" />
+    <string id="TAOM_clan_sturgia_2" text="巴德家族" />
+    <string id="TAOM_clan_sturgia_3" text="布兰德家族" />
+    <string id="TAOM_clan_sturgia_4" text="贝恩家族" />
+    <string id="TAOM_clan_sturgia_5" text="伊斯加洛斯家族" />
+    <string id="TAOM_clan_sturgia_6" text="河流家族" />
+    <string id="TAOM_clan_sturgia_7" text="弓箭手家族" />
+    <string id="TAOM_clan_sturgia_8" text="长湖家族" />
+    <string id="TAOM_clan_sturgia_9" text="屠龙者家族" />
+    <string id="TAOM_clan_aserai_1" text="阿耶里卡" />
+    <string id="TAOM_clan_aserai_2" text="卡德诺玛" />
+    <string id="TAOM_clan_aserai_3" text="卡玛拉卡" />
+    <string id="TAOM_clan_aserai_4" text="卡尔马西利奥尼" />
+    <string id="TAOM_clan_aserai_5" text="塔克菲明" />
+    <string id="TAOM_clan_aserai_6" text="梅贾诺玛" />
+    <string id="TAOM_clan_aserai_7" text="齐亚洛卡" />
+    <string id="TAOM_clan_aserai_8" text="奥瓦利卡" />
+    <string id="TAOM_clan_aserai_9" text="伊肯达卡" />
+    <string id="TAOM_clan_vlandia_1" text="伊欧林家族" />
+    <string id="TAOM_clan_vlandia_2" text="塞尔迪辛家族" />
+    <string id="TAOM_clan_vlandia_3" text="格里明加斯家族" />
+    <string id="TAOM_clan_vlandia_4" text="费兰丁家族" />
+    <string id="TAOM_clan_vlandia_5" text="奥斯凯特林家族" />
+    <string id="TAOM_clan_vlandia_6" text="奥德拉辛家族" />
+    <string id="TAOM_clan_vlandia_7" text="埃塞拉芬家族" />
+    <string id="TAOM_clan_vlandia_8" text="格里莫丁家族" />
+    <string id="TAOM_clan_vlandia_9" text="杜宁家族" />
+    <string id="TAOM_clan_vlandia_10" text="伊欧佛林家族" />
+    <string id="TAOM_clan_vlandia_11" text="托达金家族" />
+    <string id="TAOM_clan_battania_1" text="范加里斯" />
+    <string id="TAOM_clan_battania_2" text="阿拉兹" />
+    <string id="TAOM_clan_battania_3" text="托拉拜" />
+    <string id="TAOM_clan_battania_4" text="科瓦什" />
+    <string id="TAOM_clan_battania_5" text="库尔丹" />
+    <string id="TAOM_clan_battania_6" text="乌尔达什" />
+    <string id="TAOM_clan_battania_7" text="卡尔哈泰" />
+    <string id="TAOM_clan_battania_8" text="瓦里亚什" />
+    <string id="TAOM_ghilman_name" text="蛇卫" />
+    <string id="TAOM_ghilman_short" text="蛇卫" />
+    <string id="TAOM_ghilman_text" text="蛇卫是效忠于近哈拉德蛇王的骑兵部队。他们在埃菲尔督阿斯南部的起伏平原上生于马鞍,成长于马背,作为弓骑兵在中土大陆南部诸地无可匹敌。在哈拉德与魔多和平共处的年代里,蛇卫会将其服务出售给哈拉德诸领主以及任何富得起支付黄金酬劳的势力。" />
+    <string id="TAOM_legion_name" text="灰衣团" />
+    <string id="TAOM_legion_short" text="灰衣团" />
+    <string id="TAOM_legion_text" text="灰衣团是登丹人游侠最后的有组织兄弟会,他们是很久以前失去王国的阿尔诺诸王的后裔。他们驰骋于北方各地而无固定家园,在那些已遗忘他们名字的土地上维持和平。虽然他们首先效忠于埃兰迪尔的血脉,但当他们的游历将他们带到文明之地时,也会接受中土大陆各地领主的雇佣。" />
+    <string id="TAOM_skolderbrotva_name" text="埃尔波尔斧兵" />
+    <string id="TAOM_skolderbrotva_short" text="斧兵" />
+    <string id="TAOM_skolderbrotva_text" text="埃尔波尔斧兵是索林国王麾下战役的老兵,他们发现和平时代不适合自己的性情。他们精通矮人大厅的近战技艺——盾墙、短斧、鹤嘴锄——在任何地形上都十分强悍,但在连接埃尔波尔与人类诸国的山隘中尤为出色。他们会接受任何付得起酬劳者的雇佣,但绝不会对埃尔波尔或瑞文戴尔举起斧头。" />
+    <string id="TAOM_company_name" text="海盗之刃" />
+    <string id="TAOM_company_short" text="海盗" />
+    <string id="TAOM_company_text" text="海盗之刃是来自昂巴港口的资深海战士,他们已转向在陆地上出售自己的技能。他们以弩兵身份作战——这是船上战斗的首选武器——在攻城战中如同在颠簸的甲板上一样自如。他们的首领是一位满脸伤疤的努门诺尔流亡者,他以铁血纪律约束着他们遵守契约,深知他们的声誉是最宝贵的财富。" />
+    <string id="TAOM_beni_zilal_name" text="盲眼会" />
+    <string id="TAOM_beni_zilal_short" text="盲眼会" />
+    <string id="TAOM_beni_zilal_text" text="盲眼会是一个在哈拉德海岸与深沙漠地带活动的走私者、销赃者和雇佣杀手兄弟会。据说他们是曾服务于一位被遗忘的哈拉德国王的刺客教派的后裔,他们的手段——毒药、阴影以及秘密的利用——至今未变。希望悄悄除掉对手的领主,或需要在不经海关检查的情况下运送货物的商人,都知道该在何处留下一枚金币和一封密信。" />
+    <string id="TAOM_wolfskins_name" text="瓦里亚格劫掠者" />
+    <string id="TAOM_wolfskins_short" text="劫掠者" />
+    <string id="TAOM_wolfskins_text" text="瓦里亚格劫掠者是来自康德草原的年轻瓦里亚格战士战帮,他们在成年初期处于一种仪式性战争状态:不得拥有熟食,不得睡在永久性屋顶之下,不得施以仁慈。虽然大多数人最终会回归氏族的定居生活,但有些人永远不会,这些人组成了劫掠者——在康德道路上作恶并越境劫掠哈拉德和刚多的亡命之徒。" />
+    <string id="TAOM_brotherhood_name" text="登兰德掠夺者" />
+    <string id="TAOM_brotherhood_short" text="掠夺者" />
+    <string id="TAOM_brotherhood_text" text="登兰德掠夺者是一个山地氏族的破碎残余,该氏族曾居住在如今由洛汗人统治的山谷中。他们的祖父辈被从肥沃的土地驱赶到岩石高地,他们将这种怨恨培养成了掠夺者的哲学:从南方人或国王手下那里夺取的一切,不过是夺回被偷走之物的恢复。实际上他们是强盗,但却是危险的强盗,熟知穿越山地的每一条羊肠小道。" />
+    <string id="TAOM_hidden_hand_name" text="魔口的仆从" />
+    <string id="TAOM_hidden_hand_short" text="仆从" />
+    <string id="TAOM_hidden_hand_text" text="魔口的仆从是巴拉多之眼在黑门之外的触手——渗透在魔多边境各族中的线人、打手和间谍。在索隆的军队尚未抵达之处,这些特工负责收取贡品、镇压异议。他们通过贿赂、勒索和悄无声息的谋杀手段,确保任何反抗黑魔王的阴谋在萌芽之际就被连根拔起、彻底碾碎。" />
+    <string id="TAOM_lakepike_name" text="长湖破坏者" />
+    <string id="TAOM_lakepike_short" text="破坏者" />
+    <string id="TAOM_lakepike_text" text="长湖破坏者栖身于长湖阴暗岸边的芦苇丛和朽烂的旧码头中,远离埃斯加洛斯体面的灯火。他们以假灯笼诱使驳船触礁暗滩为生,然后劫掠货物,通过镇上的销赃渠道出手。尽管湖镇镇长和河谷城商人竭力打击,破坏者在码头区酒馆中有太多朋友,难以被轻易铲除。" />
+    <string id="TAOM_embers_name" text="无睑之眼教派" />
+    <string id="TAOM_embers_short" text="魔眼教派" />
+    <string id="TAOM_embers_text" text="无睑之眼教派是一个根植于黑努门诺尔传统的秘密组织,将索隆尊为神王,相信他再度崛起时将让忠诚者重获荣耀。他们在登兰德的失意者和王国被遗忘的角落中招募成员,许诺神恩和尘世权力。实际上,他们的领袖听命于巴拉多的特工,其单元化结构使任何领主的正义都几乎无法将其根除。" />
+    <string id="TAOM_jawwal_name" text="沙漠骑手" />
+    <string id="TAOM_jawwal_short" text="沙漠骑手" />
+    <string id="TAOM_jawwal_text" text="沙漠骑手是哈拉德腹地深处的游牧沙漠部族,是埃菲尔督阿斯山脉与遥远南方海洋之间无水荒原的主宰。他们沿着只有自己知晓的路线游走,向任何胆敢穿越其领地的商队索取贡品。近哈拉德的定居领主视他们为麻烦;而沙漠骑手则认为这些定居领主是窃贼,偷走了沙漠早已自由赐予的东西。" />
+    <string id="TAOM_karakhuzaits_name" text="野蛮东夷" />
+    <string id="TAOM_karakhuzaits_short" text="野蛮者" />
+    <string id="TAOM_karakhuzaits_text" text="野蛮东夷是鲁恩内海未被征服的草原部族,他们抵抗过每一位试图制服他们的领主——无论是鲁恩酋长、魔多副官,还是河谷城国王。他们在凯尔督因河以东的草原上驰骋,收拢野马、劫掠牲畜,向任何愚蠢到未带武装护卫就试图穿越其草原的商队收取过路费。" />
+    <string id="TAOM_forest_people_name" text="督伊甸人" />
+    <string id="TAOM_forest_people_short" text="野人" />
+    <string id="TAOM_forest_people_text" text="督伊甸人,被人类称为野人或林中野人,是居住在督伊甸森林深处和白色山脉隐秘山谷中的古老民族。他们用火清理土地,在富含灰烬的土壤上种植所需之物,待土地贫瘠后便迁移——这种生活方式是中土世界的定居民族从未理解也从未费心去理解的。督伊甸人不要领主,不纳税赋,只求在森林的寂静中不被打扰。" />
+    <string id="TAOM_eleftheroi_name" text="比翁一族" />
+    <string id="TAOM_eleftheroi_short" text="比翁人" />
+    <string id="TAOM_eleftheroi_text" text="比翁一族是居住在迷雾山脉与幽暗密林之间安都因河谷的伟大林中居民,由比翁血脉的换皮者领导。他们不允许任何半兽人穿越其领地,在卡洛克浅滩收取通行费以资助守卫,不向中土世界的任何国王效忠。虽然他们会与精灵和矮人交易交谈,但任何未经许可穿越其森林的军队都会发现,比翁人的牙齿非常大。" />
+    <string id="TAOM_clan_khuzait_1" text="胡兹" />
+    <string id="TAOM_clan_khuzait_2" text="萨卢里安" />
+    <string id="TAOM_clan_khuzait_3" text="尼卡西安" />
+    <string id="TAOM_clan_khuzait_4" text="卡尔米安" />
+    <string id="TAOM_clan_khuzait_5" text="阿姆杜里德" />
+    <string id="TAOM_clan_khuzait_6" text="昆多拉" />
+    <string id="TAOM_clan_khuzait_7" text="库扎伊西安" />
+    <string id="TAOM_clan_khuzait_8" text="马沙基安" />
+    <string id="TAOM_clan_khuzait_9" text="博佐尔加尼斯" />
+    <string id="aom_lord_1_1_name" text="布雷宁·伍尔夫，铁手" />
+    <string id="aom_lord_1_2_name" text="芙蕾雅·狼心" />
+    <string id="aom_lord_1_3_name" text="高伍尔夫，野猪" />
+    <string id="aom_lord_1_4_name" text="布伦希尔德·铁爪" />
+    <string id="aom_lord_1_5_name" text="野人奥斯里克" />
+    <string id="aom_lord_1_6_name" text="牛角托瓦尔德" />
+    <string id="aom_lord_1_7_name" text="迪耐瑟二世,刚铎摄政王" />
+    <string id="aom_lord_1_8_name" text="胡里昂奈丝" />
+    <string id="aom_lord_1_9_name" text="伊姆拉希尔,多尔安罗斯亲王" />
+    <string id="aom_lord_1_10_name" text="阿拉奈尔" />
+    <string id="aom_lord_1_25_name" text="埃尔菲尔" />
+    <string id="aom_lord_1_35_name" text="埃希里昂" />
+    <string id="aom_lord_1_11_name" text="基里安杜尔" />
+    <string id="aom_lord_1_111_name" text="埃拉尔雯" />
+    <string id="aom_lord_1_12_name" text="芬达瑞尔" />
+    <string id="aom_lord_1_14_name" text="索伦之口" />
+    <string id="aom_lord_1_15_name" text="安格马巫王" />
+    <string id="aom_lord_1_155_name" text="戒灵,黑暗元帅" />
+    <string id="aom_lord_1_16_name" text="戒灵,昂巴骑士" />
+    <string id="aom_lord_1_17_name" text="索伦" />
+    <string id="aom_lord_1_177_name" text="霍诺拉图斯" />
+    <string id="aom_lord_1_18_name" text="贾西娅" />
+    <string id="aom_lord_1_21_name" text="红狼芬里克" />
+    <string id="aom_lord_1_22_name" text="强臂比约恩里克" />
+    <string id="aom_lord_1_23_name" text="卡拉德雯" />
+    <string id="aom_lord_1_24_name" text="安洛索斯" />
+    <string id="aom_lord_1_75_name" text="波罗米尔" />
+    <string id="aom_lord_1_26_name" text="希尔贡" />
+    <string id="aom_lord_1_27_name" text="毛格拉什" />
+    <string id="aom_lord_1_28_name" text="戒灵,背叛者" />
+    <string id="aom_lord_1_29_name" text="萨尼昂" />
+    <string id="aom_lord_1_31_name" text="黑牙扎尔萨" />
+    <string id="aom_lord_1_32_name" text="野猪之歌埃尔德拉" />
+    <string id="aom_lord_1_33_name" text="嚎叫者布丽吉德" />
+    <string id="aom_lord_1_422_name" text="铁牙德伦古尔夫" />
+    <string id="aom_lord_1_34_name" text="法拉米尔" />
+    <string id="aom_lord_1_36_name" text="伊芙瑞妮尔" />
+    <string id="aom_lord_1_37_name" text="戈尚克" />
+    <string id="aom_lord_1_38_name" text="戒灵,不死者" />
+    <string id="aom_lord_1_39_name" text="黛芭娜" />
+    <string id="aom_lord_1_41_name" text="狼裔贝雷贡德" />
+    <string id="aom_lord_1_411_name" text="铁牙格林沃夫" />
+    <string id="aom_lord_1_42_name" text="铁皮赫罗德加" />
+    <string id="aom_lord_1_43_name" text="牛胁戈尔蒙德" />
+    <string id="aom_lord_1_44_name" text="尼莫斯" />
+    <string id="aom_lord_1_47_name" text="乌尔博斯" />
+    <string id="aom_lord_1_49_name" text="奥布隆" />
+    <string id="aom_lord_1_20_name" text="阿斯特丽德·熊爪" />
+    <string id="aom_lord_1_64_name" text="索蒙德·灰熊劈" />
+    <string id="aom_lord_1_50_name" text="科温·鸦眼" />
+    <string id="aom_lord_1_66_name" text="塔尔里克·鸦鸣" />
+    <string id="aom_lord_1_51_name" text="哈德里克·利爪击" />
+    <string id="aom_lord_1_58_name" text="戈文·凶徒" />
+    <string id="aom_lord_1_70_name" text="薇拉·暗影" />
+    <string id="aom_lord_1_67_name" text="埃奥温·羽箭" />
+    <string id="aom_lord_1_40_name" text="博哈多" />
+    <string id="aom_lord_1_46_name" text="马尔里奥" />
+    <string id="aom_lord_1_45_name" text="佛隆，洛桑纳赫领主" />
+    <string id="aom_lord_1_57_name" text="巴拉诺" />
+    <string id="aom_lord_1_52_name" text="希尔鲁因，皮那斯基林领主" />
+    <string id="aom_lord_1_53_name" text="安格博，拉麦顿领主" />
+    <string id="aom_lord_1_71_name" text="戈拉斯吉尔，安法拉斯领主" />
+    <string id="aom_lord_1_73_name" text="纳米尔" />
+    <string id="aom_lord_1_62_name" text="奥罗马" />
+    <string id="aom_lord_1_30_name" text="葛斯魔格，魔窟副官" />
+    <string id="aom_lord_1_48_name" text="卡穆尔，东方人" />
+    <string id="aom_lord_1_54_name" text="夏格拉，西力斯昂哥队长" />
+    <string id="aom_lord_1_55_name" text="马斯莫格" />
+    <string id="aom_lord_1_63_name" text="高巴格，米那斯魔窟队长" />
+    <string id="aom_lord_1_56_name" text="托蒙德，铁锤" />
+    <string id="aom_lord_1_68_name" text="萨罗斯" />
+    <string id="aom_lord_1_69_name" text="尼丰" />
+    <string id="aom_lord_1_72_name" text="波格" />
+    <string id="aom_lord_1_74_name" text="扎卡尼斯" />
+    <string id="aom_lord_1_1_1_name" text="艾尔迪丝·灰爪" />
+    <string id="aom_lord_1_1_2_name" text="希嘉·屠龙者" />
+    <string id="aom_lord_1_1_3_name" text="希格伦·野猪牙" />
+    <string id="aom_lord_1_1_4_name" text="瑟拉·血獠" />
+    <string id="aom_lord_1_1_5_name" text="希尔达·碎骨者" />
+    <string id="aom_lord_1_1_6_name" text="伊尔莎，冬野猪" />
+    <string id="aom_lord_1_1_7_name" text="弗蕾迪丝·公牛鬃" />
+    <string id="aom_lord_1_1_8_name" text="艾拉·影爪" />
+    <string id="aom_lord_1_1_9_name" text="希弗拉·尸行者" />
+    <string id="aom_lord_1_1_10_name" text="哈迪丝·红雾" />
+    <string id="aom_lord_1_1_11_name" text="伊拉·鬼皮" />
+    <string id="aom_lord_1_1_15_name" text="艾尔温·鹰眼" />
+    <string id="aom_lord_1_1_16_name" text="布里安娜·翼镖" />
+    <string id="aom_lord_1_27_1_name" text="维莉娜" />
+    <string id="aom_lord_1_27_2_name" text="斯罗兹纳克" />
+    <string id="aom_lord_1_27_3_name" text="瓦西莉亚" />
+    <string id="aom_lord_1_47_1_name" text="米娜" />
+    <string id="aom_lord_1_47_2_name" text="卡西瑞亚" />
+    <string id="aom_lord_1_47_3_name" text="科兰贝亚" />
+    <string id="aom_lord_1_49_1_name" text="特里斯塔尼亚" />
+    <string id="aom_lord_1_49_2_name" text="戈迪安娜" />
+    <string id="aom_lord_1_1_12_name" text="芙蕾雅·裂爪" />
+    <string id="aom_lord_1_1_13_name" text="冈德伦·铁掌" />
+    <string id="aom_lord_1_1_14_name" text="摩吉斯" />
+    <string id="aom_lord_1_1_17_name" text="布拉诺克·羽杆" />
+    <string id="aom_lord_1_40_1_name" text="林达瑞尔" />
+    <string id="aom_lord_1_46_1_name" text="索尔温" />
+    <string id="aom_lord_1_45_1_name" text="贝瑞希尔" />
+    <string id="aom_lord_1_45_2_name" text="卡尔达米尔" />
+    <string id="aom_lord_1_45_3_name" text="鲁米尔" />
+    <string id="aom_lord_1_57_1_name" text="卡拉希尔" />
+    <string id="aom_lord_1_57_2_name" text="伊姆洛斯" />
+    <string id="aom_lord_1_52_1_name" text="阿娜瑞尔" />
+    <string id="aom_lord_1_52_2_name" text="巴兰多" />
+    <string id="aom_lord_1_73_1_name" text="贝尔温" />
+    <string id="aom_lord_1_62_1_name" text="阿瑞莎" />
+    <string id="aom_lord_1_30_1_name" text="斯瓦拉·红牙" />
+    <string id="aom_lord_1_30_2_name" text="卡琳尼亚" />
+    <string id="aom_lord_1_30_3_name" text="辛奈西奥斯" />
+    <string id="aom_lord_1_48_1_name" text="戒灵·污染者" />
+    <string id="aom_lord_1_48_2_name" text="戒灵·北方人之影" />
+    <string id="aom_lord_1_48_3_name" text="戒灵·昂巴之影" />
+    <string id="aom_lord_1_54_1_name" text="康斯塔莉亚" />
+    <string id="aom_lord_1_55_1_name" text="梅盖希亚" />
+    <string id="aom_lord_1_63_1_name" text="瓦拉莉亚" />
+    <string id="aom_lord_1_63_2_name" text="科玛塔萨" />
+    <string id="aom_lord_1_63_3_name" text="埃莉迪莉亚" />
+    <string id="aom_lord_1_56_1_name" text="格温娜" />
+    <string id="aom_lord_1_56_2_name" text="鲁斯蒂卡" />
+    <string id="aom_lord_1_68_1_name" text="西尔维娜" />
+    <string id="aom_lord_1_69_1_name" text="阿蕾莉安娜" />
+    <string id="aom_lord_1_69_2_name" text="多拉希拉" />
+    <string id="aom_lord_1_72_1_name" text="薇薇安娜" />
+    <string id="aom_lord_1_74_1_name" text="泽娜" />
+    <string id="aom_lord_2_1_name" text="巴德二世" />
+    <string id="aom_lord_2_2_name" text="阿斯塔" />
+    <string id="aom_lord_2_3_name" text="索林三世·石盔" />
+    <string id="aom_lord_2_4_name" text="西加" />
+    <string id="aom_lord_2_5_name" text="欧力" />
+    <string id="aom_lord_2_6_name" text="埃尔塔" />
+    <string id="aom_lord_2_7_name" text="西米尔" />
+    <string id="aom_lord_2_8_name" text="乌里克" />
+    <string id="aom_lord_2_9_name" text="莱克" />
+    <string id="aom_lord_2_10_name" text="瓦拉" />
+    <string id="aom_lord_2_11_name" text="伊德伦" />
+    <string id="aom_lord_2_111_name" text="罗日沃尔" />
+    <string id="aom_lord_2_12_name" text="斯瓦娜" />
+    <string id="aom_lord_2_121_name" text="奥斯文" />
+    <string id="aom_lord_2_13_name" text="维达尔" />
+    <string id="aom_lord_2_14_name" text="伊斯万" />
+    <string id="aom_lord_2_15_name" text="拉塔戈斯特" />
+    <string id="aom_lord_2_16_name" text="波佛" />
+    <string id="aom_lord_2_17_name" text="索林二世·橡木盾" />
+    <string id="aom_lord_2_18_name" text="葛罗音" />
+    <string id="aom_lord_2_19_name" text="德瓦林" />
+    <string id="aom_lord_2_20_name" text="欧音" />
+    <string id="aom_lord_2_21_name" text="斯韦多恩" />
+    <string id="aom_lord_2_22_name" text="拉绍内克" />
+    <string id="aom_lord_2_23_name" text="加尔登" />
+    <string id="aom_lord_2_24_name" text="阿尔瓦" />
+    <string id="aom_lord_2_4_1_name" text="阿波拉妮娅" />
+    <string id="aom_lord_2_7_1_name" text="米米尔" />
+    <string id="aom_lord_2_13_1_name" text="莉莉扎" />
+    <string id="aom_lord_2_13_2_name" text="安德鲁塔" />
+    <string id="aom_lord_2_13_3_name" text="露达" />
+    <string id="aom_lord_2_13_4_name" text="泰塔" />
+    <string id="aom_lord_2_14_1_name" text="瓦尔卡娃" />
+    <string id="aom_lord_2_14_2_name" text="扎薇蕾娜" />
+    <string id="aom_lord_2_14_3_name" text="维日杜娜" />
+    <string id="aom_lord_2_15_1_name" text="雅恰娜" />
+    <string id="aom_lord_2_15_2_name" text="米兰卡" />
+    <string id="aom_lord_2_15_3_name" text="维琳娜" />
+    <string id="aom_lord_2_15_4_name" text="博万" />
+    <string id="aom_lord_2_16_1_name" text="提亚斯卡" />
+    <string id="aom_lord_2_17_1_name" text="德拉查" />
+    <string id="aom_lord_2_18_1_name" text="佐丽卡" />
+    <string id="aom_lord_2_19_1_name" text="维托米拉" />
+    <string id="aom_lord_2_20_1_name" text="基莎" />
+    <string id="aom_lord_2_21_1_name" text="伊兹登卡" />
+    <string id="aom_lord_2_22_1_name" text="热涅娃" />
+    <string id="aom_lord_2_23_1_name" text="兹拉特卡" />
+    <string id="aom_lord_2_24_1_name" text="佐丽娜" />
+    <string id="aom_dead_lord_2_1_name" text="老奥莱克" />
+    <string id="aom_dead_lord_2_2_name" text="瓦拉" />
+    <string id="aom_lord_3_1_name" text="卡杜拉克" />
+    <string id="aom_lord_3_2_name" text="哈拉德占位符" />
+    <string id="aom_lord_3_3_name" text="卡勒米尔" />
+    <string id="aom_lord_3_4_name" text="玛拉" />
+    <string id="aom_lord_3_5_name" text="哈尔迪尔" />
+    <string id="aom_lord_3_51_name" text="哈坎" />
+    <string id="aom_lord_3_6_name" text="鲁玛" />
+    <string id="aom_lord_3_7_name" text="迪尤尔" />
+    <string id="aom_lord_3_8_name" text="阿达斯" />
+    <string id="aom_lord_3_9_name" text="乌赛尔" />
+    <string id="aom_lord_3_10_name" text="阿尼达" />
+    <string id="aom_lord_3_11_name" text="阿尔瓦" />
+    <string id="aom_lord_3_12_name" text="玛南" />
+    <string id="aom_lord_3_13_name" text="努卡尔" />
+    <string id="aom_lord_3_14_name" text="萨姆扎" />
+    <string id="aom_lord_3_15_name" text="古齐德" />
+    <string id="aom_lord_3_16_name" text="鲁米尔" />
+    <string id="aom_lord_3_17_name" text="奥洛芬" />
+    <string id="aom_lord_3_18_name" text="阿兰松" />
+    <string id="aom_lord_3_19_name" text="埃西里昂" />
+    <string id="aom_lord_3_20_name" text="卡里斯" />
+    <string id="aom_lord_3_21_name" text="乌凯" />
+    <string id="aom_lord_3_22_name" text="杜伊林" />
+    <string id="aom_lord_3_23_name" text="卡欣" />
+    <string id="aom_lord_3_3_1_name" text="塔里克" />
+    <string id="aom_lord_3_13_1_name" text="西拉" />
+    <string id="aom_lord_3_13_2_name" text="拉扎娜" />
+    <string id="aom_lord_3_14_1_name" text="萨赛萨" />
+    <string id="aom_lord_3_15_1_name" text="希姆拉" />
+    <string id="aom_lord_3_15_2_name" text="布希拉" />
+    <string id="aom_lord_3_16_1_name" text="法丽娜" />
+    <string id="aom_lord_3_17_1_name" text="莎伊玛" />
+    <string id="aom_lord_3_17_2_name" text="萨尼特" />
+    <string id="aom_lord_3_18_1_name" text="法尔扎娜" />
+    <string id="aom_lord_3_18_2_name" text="哈菲萨" />
+    <string id="aom_lord_3_18_3_name" text="祖阿德" />
+    <string id="aom_lord_3_18_4_name" text="贾尔法尔" />
+    <string id="aom_lord_3_19_1_name" text="萨尔玛" />
+    <string id="aom_lord_3_19_2_name" text="祖莱卡" />
+    <string id="aom_lord_3_19_3_name" text="苏尔哈娜" />
+    <string id="aom_lord_3_20_1_name" text="朱迪拉" />
+    <string id="aom_lord_3_20_2_name" text="阿齐娜" />
+    <string id="aom_lord_3_21_1_name" text="阿希萨" />
+    <string id="aom_lord_3_22_1_name" text="亚米娜" />
+    <string id="aom_lord_3_22_2_name" text="苏娜" />
+    <string id="aom_lord_3_22_3_name" text="扎努瓦" />
+    <string id="aom_lord_3_22_4_name" text="哈贾拉" />
+    <string id="aom_lord_3_23_1_name" text="苏凯娜" />
+    <string id="aom_dead_lord_3_1_name" text="尼姆尔" />
+    <string id="aom_lord_4_1_name" text="希优顿" />
+    <string id="aom_lord_4_2_name" text="埃尔芙希尔德" />
+    <string id="aom_lord_4_4_name" text="埃尔希尔德" />
+    <string id="aom_lord_4_5_name" text="温塞里" />
+    <string id="aom_lord_4_6_name" text="格林伯德·格里明加斯" />
+    <string id="aom_lord_4_7_name" text="希优德雷德·伊欧林" />
+    <string id="aom_lord_4_8_name" text="弗恩哈德" />
+    <string id="aom_lord_4_9_name" text="索蒙德" />
+    <string id="aom_lord_4_10_name" text="埃莉丝" />
+    <string id="aom_lord_4_11_name" text="利艾娜" />
+    <string id="aom_lord_4_12_name" text="希尔温德" />
+    <string id="aom_lord_4_121_name" text="拉桑德" />
+    <string id="aom_lord_4_13_name" text="罗蒙德" />
+    <string id="aom_lord_4_14_name" text="莫尔孔" />
+    <string id="aom_lord_4_141_name" text="阿莫尔孔" />
+    <string id="aom_lord_4_15_name" text="埃尔杜兰德" />
+    <string id="aom_lord_4_16_name" text="埃肯布兰德·费兰丁" />
+    <string id="aom_lord_4_17_name" text="埃尔贝特" />
+    <string id="aom_lord_4_18_name" text="阿马尔贡" />
+    <string id="aom_lord_4_181_name" text="阿尔萨蒙德" />
+    <string id="aom_lord_4_19_name" text="阿塞拉" />
+    <string id="aom_lord_4_20_name" text="瓦尔蒙德" />
+    <string id="aom_lord_4_21_name" text="库斯雷德·奥德拉辛" />
+    <string id="aom_lord_4_22_name" text="伍尔夫·塞尔蒙丁" />
+    <string id="aom_lord_4_23_name" text="马尔哈斯·马尔哈德" />
+    <string id="aom_lord_4_24_name" text="葛力马·格里莫丁" />
+    <string id="aom_lord_4_25_name" text="卢坎德" />
+    <string id="aom_lord_4_26_name" text="佩里克" />
+    <string id="aom_lord_4_27_name" text="埃勒·埃塞拉芬" />
+    <string id="aom_lord_4_28_name" text="法斯泰尔姆·莫卡加斯" />
+    <string id="aom_lord_4_3_1_name" text="伊欧墨·伊欧弗林" />
+    <string id="aom_lord_4_6_1_name" text="迪奥温·格里明加斯" />
+    <string id="aom_lord_4_16_1_name" text="梅尔苏·费兰丁" />
+    <string id="aom_lord_4_20_1_name" text="英格特鲁德" />
+    <string id="aom_lord_4_22_1_name" text="孙妮法·塞尔蒙丁" />
+    <string id="aom_lord_4_23_1_name" text="伍尔夫温·马尔哈德" />
+    <string id="aom_lord_4_23_2_name" text="埃勒杜兰·马尔哈德" />
+    <string id="aom_lord_4_23_3_name" text="埃勒杜兰" />
+    <string id="aom_lord_4_25_1_name" text="贝尔特莉安娜" />
+    <string id="aom_lord_4_27_1_name" text="韦尔堡·埃塞拉芬" />
+    <string id="aom_lord_4_28_1_name" text="莫卡" />
+    <string id="aom_lord_4_28_2_name" text="赫蕾丝维丝" />
+    <string id="aom_lord_V11_l_name" text="利奥蒙德·迪弗林加斯" />
+    <string id="aom_lord_4_26_1_name" text="莱茵加达" />
+    <string id="aom_lord_4_24_1_name" text="阿达尔特鲁德" />
+    <string id="aom_lord_4_24_2_name" text="古登黑尔达" />
+    <string id="aom_lord_4_24_3_name" text="英贡德" />
+    <string id="aom_lord_4_24_4_name" text="伊姆加德" />
+    <string id="aom_lord_4_3_name" text="奥德里克" />
+    <string id="aom_lord_V11_c1_name" text="埃伦达拉" />
+    <string id="aom_lord_V11_c2_name" text="达古尼克" />
+    <string id="aom_lord_V11_u_name" text="沃勒里克" />
+    <string id="aom_lord_V9_u_name" text="乌伦杜尔夫" />
+    <string id="aom_lord_5_1_name" text="瓦古尔,侃德的大军阀" />
+    <string id="aom_lord_5_7_name" text="侃德占位符" />
+    <string id="aom_lord_5_3_name" text="埃尔戈恩" />
+    <string id="aom_lord_5_4_name" text="尼温" />
+    <string id="aom_lord_5_5_name" text="梅利迪尔" />
+    <string id="aom_lord_5_6_name" text="阿尔凯娅" />
+    <string id="aom_lord_5_8_name" text="塞因" />
+    <string id="aom_lord_5_9_name" text="库尔哈恩" />
+    <string id="aom_lord_5_91_name" text="特根" />
+    <string id="aom_lord_5_10_name" text="科雷因" />
+    <string id="aom_lord_5_11_name" text="阿林内丝" />
+    <string id="aom_lord_5_12_name" text="威图因" />
+    <string id="aom_lord_5_13_name" text="穆因瑟" />
+    <string id="aom_lord_5_131_name" text="拉斯" />
+    <string id="aom_lord_5_15_name" text="普林多" />
+    <string id="aom_lord_5_14_name" text="卢伊汉" />
+    <string id="aom_lord_5_16_name" text="埃伦" />
+    <string id="aom_lord_5_17_name" text="阿拉德维尔" />
+    <string id="aom_lord_5_18_name" text="布拉诺克" />
+    <string id="aom_lord_5_19_name" text="费纳根" />
+    <string id="aom_lord_5_20_name" text="希亚拉穆斯" />
+    <string id="aom_lord_5_21_name" text="卡菲德" />
+    <string id="aom_lord_5_22_name" text="菲亚拉德" />
+    <string id="aom_lord_5_1_1_name" text="随机家伙" />
+    <string id="aom_lord_5_3_1_name" text="拉纳昂" />
+    <string id="aom_lord_5_3_2_name" text="拉多古尔" />
+    <string id="aom_lord_5_5_1_name" text="艾丽" />
+    <string id="aom_lord_5_13_1_name" text="贝萨格" />
+    <string id="aom_lord_5_15_1_name" text="弗洛拉" />
+    <string id="aom_lord_5_15_2_name" text="贝特林" />
+    <string id="aom_lord_5_15_3_name" text="迪尔万" />
+    <string id="aom_lord_5_14_1_name" text="埃比尔" />
+    <string id="aom_lord_5_16_1_name" text="利亚辛" />
+    <string id="aom_lord_5_16_2_name" text="加温" />
+    <string id="aom_lord_5_17_1_name" text="布里根" />
+    <string id="aom_lord_5_18_1_name" text="肖娜格" />
+    <string id="aom_lord_5_21_1_name" text="贝萨格" />
+    <string id="aom_lord_5_21_2_name" text="陶斯" />
+    <string id="aom_lord_6_1_name" text="扎米克·扎米安" />
+    <string id="aom_lord_6_2_name" text="玛拉亚" />
+    <string id="aom_lord_6_3_name" text="巴盖" />
+    <string id="aom_lord_6_4_name" text="古尔提姆·萨卢里安" />
+    <string id="aom_lord_6_5_name" text="伊尔博·尼卡提安" />
+    <string id="aom_lord_6_51_name" text="卡达" />
+    <string id="aom_lord_6_6_name" text="苏兰" />
+    <string id="aom_lord_6_7_name" text="察罕" />
+    <string id="aom_lord_6_8_name" text="埃苏尔" />
+    <string id="aom_lord_6_81_name" text="纳延泰" />
+    <string id="aom_lord_6_9_name" text="铁木恩" />
+    <string id="aom_lord_6_10_name" text="阿里金" />
+    <string id="aom_lord_6_101_name" text="博拉特" />
+    <string id="aom_lord_6_11_name" text="亚娜" />
+    <string id="aom_lord_6_12_name" text="阿巴盖" />
+    <string id="aom_lord_6_13_name" text="博尔图" />
+    <string id="aom_lord_6_15_name" text="奥拉古尔" />
+    <string id="aom_lord_6_16_name" text="阿克沃斯·卡米安" />
+    <string id="aom_lord_6_17_name" text="阿姆杜尔·阿姆杜里德" />
+    <string id="aom_lord_6_18_name" text="鲁斯坎·昆多拉" />
+    <string id="aom_lord_6_19_name" text="瓦赫拉尔坦·昆多拉" />
+    <string id="aom_lord_6_20_name" text="库鲁布拉·马沙基安" />
+    <string id="aom_lord_6_21_name" text="莫卢克·伊尔诺利亚" />
+    <string id="aom_lord_6_22_name" text="沙哈尔二世·沙哈利安" />
+    <string id="aom_lord_6_23_name" text="胡兹-玛尔戈兹·胡兹" />
+    <string id="aom_lord_6_24_name" text="尼卡斯·阿德基格" />
+    <string id="aom_lord_6_15_1_name" text="霍里金" />
+    <string id="aom_lord_6_15_2_name" text="塞琴" />
+    <string id="aom_lord_6_16_1_name" text="占布伊" />
+    <string id="aom_lord_6_16_2_name" text="乌纳根" />
+    <string id="aom_lord_6_17_1_name" text="额尔格涅" />
+    <string id="aom_lord_6_17_2_name" text="也速木" />
+    <string id="aom_lord_6_18_1_name" text="梯伦" />
+    <string id="aom_lord_6_18_2_name" text="察衮" />
+    <string id="aom_lord_6_19_1_name" text="索哈泰" />
+    <string id="aom_lord_6_19_2_name" text="科尔特" />
+    <string id="aom_lord_6_20_1_name" text="吉古尔" />
+    <string id="aom_lord_K8_u_name" text="博龙察尔" />
+    <string id="aom_lord_6_21_1_name" text="埃萨切" />
+    <string id="aom_lord_6_22_1_name" text="埃塞伦" />
+    <string id="aom_lord_K9_l_name" text="瓦拉斯米尔·马沙基安" />
+    <string id="aom_lord_K9_s_name" text="塞文" />
+    <string id="aom_lord_K9_c1_name" text="阿尔图" />
+    <string id="aom_lord_K9_c2_name" text="梅拉" />
+    <string id="aom_dead_lord_6_1_name" text="乌尔昆" />
+    <string id="aom_dead_lord_6_2_name" text="索伦" />
+    <string id="aom_dead_lord_6_3_name" text="库尤格" />
+    <string id="aom_dead_lord_6_4_name" text="温杜尔" />
+    <string id="aom_lord_A9_c_name" text="迪拉" />
+    <string id="aom_lord_A9_l_name" text="卡拉丹" />
+    <string id="aom_lord_A9_s_name" text="提卡" />
+    <string id="aom_lord_A9_u_name" text="卡班" />
+    <string id="aom_lord_B8_c_name" text="瓜兰" />
+    <string id="aom_lord_B8_l_name" text="麦雷亚斯" />
+    <string id="aom_lord_B8_s_name" text="罗达拉克" />
+    <string id="aom_lord_NE7_u_name" text="黑牙哈德里克" />
+    <string id="aom_lord_NE8_c1_name" text="铁砧塞尔迪克" />
+    <string id="aom_lord_NE8_c2_name" text="莫雯" />
+    <string id="aom_lord_NE8_l_name" text="迅捷埃德里克" />
+    <string id="aom_lord_NE8_s_name" text="艾洛莉娅" />
+    <string id="aom_lord_NE9_d_name" text="蛇击希尔瓦" />
+    <string id="aom_lord_NE9_l_name" text="裂鳞瓦尔索" />
+    <string id="aom_lord_NE9_s_name" text="咬牙鲁里克" />
+    <string id="aom_lord_S8_u_name" text="加利克" />
+    <string id="aom_lord_S9_c_name" text="佛林" />
+    <string id="aom_lord_S9_l_name" text="庞伯" />
+    <string id="aom_lord_S9_m_name" text="达基拉" />
+    <string id="aom_lord_S9_u_name" text="查斯提米尔" />
+    <string id="aom_lord_SE8_c_name" text="伊塔莉亚" />
+    <string id="aom_lord_SE9_c1_name" text="帕加里奥斯" />
+    <string id="aom_lord_SE9_c2_name" text="迪亚斯卡" />
+    <string id="aom_lord_SE9_l_name" text="强兽人队长格里什纳克" />
+    <string id="aom_lord_SE9_s_name" text="约娜" />
+    <string id="aom_lord_WE8_c_name" text="佩伦杜尔" />
+    <string id="aom_lord_WE8_u_name" text="巴兰迪尔" />
+    <string id="aom_lord_WE9_l_name" text="杜因希尔" />
+    <string id="aom_lord_WE9_u_name" text="杜林" />
+    <string id="aom_lord_WE9_u2_name" text="罗斯芬" />
+    <string id="TAOM_hero_dead_2_1" text="这位年长的巴丁家族领主在抵御东夷袭击者进攻河谷城时阵亡。他的牺牲守住了山口要道,其事迹在整个王国中被传唱。" />
+    <string id="TAOM_hero_dead_2_2" text="河谷城的一位贵族女性,在战后的冬瘟中逝世。她以对平民的慈善而闻名。" />
+    <string id="TAOM_hero_dead_3_1" text="一位哈拉德军阀,在黑门之战中率领沙漠骑兵作战。他死于刚铎的箭雨之下,但在南方被尊为烈士。" />
+    <string id="TAOM_hero_dead_6_1" text="首次统一东夷部落、将其聚于鲁恩旗帜之下的伟大可汗。他的征服将黄金王国的边界推进至鲁恩海滨。" />
+    <string id="TAOM_hero_dead_6_2" text="一位受人敬重的那颜,在与自由民族的战斗中阵亡。他的遗孀古尔提姆现以铁腕统领着他们的氏族。" />
+    <string id="TAOM_hero_dead_6_3" text="阿尔基特氏族的首席那颜。他在马背射箭战术方面的卓越才能影响了整整一代东夷战士。" />
+    <string id="TAOM_hero_dead_6_4" text="阿尔基特氏族的贵族,伟大那颜之子。他英年早逝,但已显露出作为战士的天赋。" />
+    <string id="TAOM_hero_1_1" text="布雷宁·伍尔夫以铁腕统治着登兰德的野蛮氏族。被称为铁手的他通过征服与谋略统一了分散的山地部落。他梦想着夺回被洛汗骠骑国占据的土地。" />
+    <string id="TAOM_hero_1_2" text="芙蕾雅·狼心是布雷宁·伍尔夫勇猛的妻子。她因精通斧盾战技而在战士中备受尊敬。" />
+    <string id="TAOM_hero_1_41" text="贝雷刚德·狼裔是登兰德值得信赖的队长,以袭击洛汗定居点的技巧而闻名。" />
+    <string id="TAOM_hero_1_411" text="格里姆伍尔夫·铁牙继承了他父亲对洛汗发动袭击和战争的传统。" />
+    <string id="TAOM_hero_1_31" text="兹尔莎·黑牙是铁手家族的继承人,渴望证明自己配得上父亲的遗产。" />
+    <string id="TAOM_hero_1_1_1" text="艾尔迪丝·灰爪是登兰德的一位凶猛女战士,以其在战斗中的勇猛而闻名。" />
+    <string id="TAOM_hero_1_1_2" text="西嘉·屠龙者因在山口斩杀一条巨蛇而获此称号。" />
+    <string id="TAOM_hero_1_21" text="红狼芬里克率领突袭队深入敌境。" />
+    <string id="TAOM_hero_1_3" text="野猪戈伍尔夫是一位野蛮的酋长,以其对边境定居点的残暴袭击而闻名。" />
+    <string id="TAOM_hero_1_4" text="布伦希尔德·铁爪是戈伍尔夫令人敬畏的妻子,战斗技巧与丈夫不相上下。" />
+    <string id="TAOM_hero_1_22" text="比约恩里克·强臂是一位在战斗中挥舞巨型战斧的强大战士。" />
+    <string id="TAOM_hero_1_42" text="赫罗德加·铁皮担任氏族的勇士,他的盔甲上布满无数战斗留下的伤痕。" />
+    <string id="TAOM_hero_1_32" text="艾尔德拉·野猪之歌继承了她父母的凶猛传统。" />
+    <string id="TAOM_hero_1_422" text="德伦古尔夫·铁獠是一位年轻战士,渴望在战斗中证明自己的价值。" />
+    <string id="TAOM_hero_1_1_3" text="西格伦·野猪牙以其无畏冲入敌阵而闻名。" />
+    <string id="TAOM_hero_1_1_4" text="瑟拉·血獠通过无数次胜利赢得了她的称号。" />
+    <string id="TAOM_hero_1_1_5" text="希尔达·碎骨者因其在战斗中毁灭性的力量而令人畏惧。" />
+    <string id="TAOM_hero_1_1_6" text="冬野猪伊尔莎在最严酷的季节率领突袭,在敌人最无防备时发动攻击。" />
+    <string id="TAOM_hero_1_5" text="狂野的奥斯里克是一位酋长,他难以预测的战术为他赢得了许多胜利。他的氏族声称是古代登兰德国王的后裔。" />
+    <string id="TAOM_hero_1_1_7" text="弗蕾迪丝·牛鬃是奥斯里克的妻子,既是技艺高超的治疗者也是战士。" />
+    <string id="TAOM_hero_1_1_8" text="艾拉·影爪悄无声息地穿过敌营,发动突然袭击。" />
+    <string id="TAOM_hero_1_6" text="托瓦尔德·牛角是奥斯里克的继承人,已经展现出他父亲的狂野精神。" />
+    <string id="TAOM_hero_1_33" text="呼啸的布里吉德率领战团穿越山口。" />
+    <string id="TAOM_hero_1_43" text="戈尔蒙德·牛侧作为氏族首领值得信赖的副官。" />
+    <string id="TAOM_hero_1_1_9" text="西弗拉·行骨者在战后行走于阵亡者之间,从死者身上收集战利品。" />
+    <string id="TAOM_hero_1_1_10" text="哈尔迪丝·红雾所到之处都留下一道血迹。" />
+    <string id="TAOM_hero_1_1_11" text="伊尔拉·幽灵皮穿着白狼皮,据说能在战斗中给予她保护。" />
+    <string id="TAOM_hero_1_1_12" text="芙蕾雅·利爪撕裂率领一支勇猛的盾女战团投入战斗。她从童年就接受战士训练,从未尝过败绩。" />
+    <string id="TAOM_hero_1_1_13" text="贡德伦·铁掌是一位老兵战士,双手布满无数次握剑留下的伤疤。" />
+    <string id="TAOM_hero_1_20" text="阿斯特丽德·熊爪以其凶猛的战斗风格和熊皮斗篷而闻名。" />
+    <string id="TAOM_hero_1_64" text="索蒙德·灰熊劈用他的巨型双手斧劈开敌阵。" />
+    <string id="TAOM_hero_1_1_14" text="摩吉丝是一位神秘人物,与古老山丘的灵魂交流。" />
+    <string id="TAOM_hero_1_1_17" text="布拉诺克·羽箭是登兰德人中最优秀的弓箭手,能在百步之外射中乌鸦的眼睛。" />
+    <string id="TAOM_hero_1_50" text="科尔温·鸦眼从鸟的飞行中看到预兆,并在战争事务上为氏族提供建议。" />
+    <string id="TAOM_hero_1_66" text="塔尔里克·鸦鸣能模仿任何鸟类的叫声,在战斗中用作信号。" />
+    <string id="TAOM_hero_1_1_15" text="艾尔温·鹰眼指挥一支在边境巡逻的山地斥候队。" />
+    <string id="TAOM_hero_1_1_16" text="布里安娜·翼镖从母亲那里学习射箭,现在技艺已超越母亲。" />
+    <string id="TAOM_hero_1_51" text="哈尔德里克·爪击从高耸的峭壁上发动伏击。" />
+    <string id="TAOM_hero_1_67" text="埃奥温·羽箭偏爱弓而非刃,从阴影中发动攻击。" />
+    <string id="TAOM_hero_1_58" text="凶残的戈尔文是一位阴郁的酋长,他的残暴即使在登兰德人中也是传奇。" />
+    <string id="TAOM_hero_1_70" text="暗影维拉悄无声息地潜入敌营,在夜间割喉。" />
+    <string id="TAOM_hero_NE7_u" text="一位经验丰富的战士,担任氏族酋长的顾问。" />
+    <string id="TAOM_hero_NE8_l" text="山地氏族的酋长,经历多年边境战争的磨砺而变得坚韧。" />
+    <string id="TAOM_hero_NE8_s" text="酋长的妻子,精通医术和草药学。" />
+    <string id="TAOM_hero_NE8_c1" text="氏族的长子,自幼接受战争训练。" />
+    <string id="TAOM_hero_NE8_c2" text="氏族首领的次子,以狡黠和野心闻名。" />
+    <string id="TAOM_hero_1_56" text="铁锤托蒙德因挥舞战锤发动毁灭性的冲锋而得名。" />
+    <string id="TAOM_hero_1_56_1" text="格温娜是托蒙德的妻子,在他征战时管理氏族的领地。" />
+    <string id="TAOM_hero_NE9_l" text="一位年迈的酋长,他的智慧为所有登兰德氏族所仰赖。" />
+    <string id="TAOM_hero_NE9_s" text="老酋长的儿子,渴望在战斗中证明自己。" />
+    <string id="TAOM_hero_NE9_d" text="氏族的女儿,接受过战斗和外交的双重训练。" />
+    <string id="TAOM_hero_1_7" text="迪耐瑟二世,刚铎的宰相,从米那斯提力斯的白塔统治王国。他曾是智慧超群之人,但如今变得骄傲而固执。他抗拒国王的归来,坚信只有自己才能拯救刚铎免受魔多阴影的侵袭。" />
+    <string id="TAOM_hero_1_75" text="波罗米尔,迪耐瑟的长子,是刚铎的将军统帅。他是一位声名显赫的伟大战士,寻求任何武器来保卫他的人民抵御黑暗。" />
+    <string id="TAOM_hero_1_8" text="胡里昂奈斯效忠于胡里尼昂纳斯家族,是刚铎宰相传承知识的坚定守护者。" />
+    <string id="TAOM_hero_1_34" text="法拉米尔,迪耐瑟的次子,是伊西利恩游侠队长。虽然被父亲忽视,但他因智慧、仁慈和沉静的力量而深受部下爱戴。" />
+    <string id="TAOM_hero_1_24" text="安罗索斯,伊姆拉希尔的幼子,虽然年轻,但已展现出家族的尚武精神和高贵品格。" />
+    <string id="TAOM_hero_1_44" text="奈摩斯是白塔卫队的队长,宣誓保护宰相。" />
+    <string id="TAOM_hero_1_9" text="伊姆拉希尔二世,多尔安罗斯亲王,是刚铎最伟大的骑士。他的血统中流淌着精灵的血液,据说是整个王国中最英俊的领主。他的天鹅骑士在整个中土世界都是传奇。" />
+    <string id="TAOM_hero_1_9_5" text="洛丝温,多尔安罗斯的王妃,数十年来一直陪伴伊姆拉希尔为刚铎效力。她以优雅和静谧的智慧闻名。" />
+    <string id="TAOM_hero_1_10" text="阿拉奈尔,埃尔菲尔的妻子,是一位以尊贵和敏锐头脑闻名的刚铎贵妇。" />
+    <string id="TAOM_hero_1_35" text="埃尔希里昂,伊姆拉希尔的次子,担任多尔安罗斯的骑士。他在战斗中勇敢无畏,忠于家族,与父亲的天鹅骑士并肩作战。" />
+    <string id="TAOM_hero_1_25" text="埃尔菲尔,伊姆拉希尔的长子,是多尔安罗斯的继承人。他以精准的军事指挥统率天鹅骑士,继承了父亲高贵的气度。" />
+    <string id="TAOM_hero_1_23" text="卡拉德温,埃尔希里昂的妻子,通过联姻加入伊姆拉佐尔昂纳斯家族。她是一位沉静而勇敢的女性。" />
+    <string id="TAOM_hero_1_11" text="西瑞安杜尔统领刚铎北部防线,是经历过多次兽人袭击的资深老兵。他在守卫王国边境时有条不紊且不屈不挠。" />
+    <string id="TAOM_hero_1_111" text="埃拉温,希尔贡的妻子,是一位来自边境的女性,以坚韧和务实的智慧闻名。" />
+    <string id="TAOM_hero_1_12" text="芬达瑞尔,西瑞安杜尔的妻子,用心和智慧管理着家族事务。" />
+    <string id="TAOM_hero_1_36" text="伊芙瑞妮尔,西瑞安杜尔的女儿,在刚铎北部边境长大,既展现了父亲的坚韧,也展现了母亲的智慧。" />
+    <string id="TAOM_hero_1_26" text="希尔贡,西瑞安杜尔的兄弟,担任刚铎的传令骑士。他迅捷可靠,在王国诸领主之间传递消息。" />
+    <string id="TAOM_hero_1_40" text="波哈多,巴拉希尔昂纳斯家族的领主,是刚铎最年长的领主之一。漫长的岁月赋予了他智慧,尽管身体因年迈而衰弱。他的建议受到所有人的尊重。" />
+    <string id="TAOM_hero_1_40_1" text="林达瑞尔,波哈多的妻子,多年来一直是他们家族的支柱。她在刚铎贵族中是一个优雅而持久的存在。" />
+    <string id="TAOM_hero_1_46" text="马尔里奥,波哈多的儿子,随着父亲年迈而接过了他的职责。他稳重可靠,受到氏族的尊敬。" />
+    <string id="TAOM_hero_1_46_1" text="索温,马尔里奥的妻子,是一位能干的女性,以沉静的决心管理着家族。" />
+    <string id="TAOM_hero_1_45" text="胖子佛龙,洛萨纳奇的领主,率领来自封地最大的军队前往米那斯提力斯参与防御。尽管体型肥胖,他却是一位凶猛而经验丰富的战士。" />
+    <string id="TAOM_hero_1_45_1" text="贝雷希尔,佛龙的妻子,是洛萨纳奇的夫人。丈夫出征时,她监管着肥沃的山谷。" />
+    <string id="TAOM_hero_1_45_2" text="卡尔达米尔,佛龙的幼子,刚刚成年,满怀热情地奔赴战场以证明自己。" />
+    <string id="TAOM_hero_1_45_3" text="鲁米尔,佛龙的兄长,是奥希尔昂纳斯家族中稳重的存在。他多年的效力为他赢得了族人的尊敬。" />
+    <string id="TAOM_hero_1_57" text="巴拉诺尔担任洛萨纳奇军团的队长,是佛龙领主值得信赖的军官。" />
+    <string id="TAOM_hero_1_57_1" text="卡拉希尔,卡尔达米尔的妻子,是洛萨纳奇的年轻贵妇。" />
+    <string id="TAOM_hero_1_57_2" text="伊姆洛斯是巴拉诺尔的女儿,在洛萨纳奇的山谷中学习刚铎贵族的礼仪。" />
+    <string id="TAOM_hero_1_52" text="英俊的希尔卢因,佩兰纳斯吉林的领主,率领身着绿衣的战士从刚铎的山地而来。他以英勇和忠于宰相而闻名。" />
+    <string id="TAOM_hero_1_52_4" text="瑙瑞尔,希尔卢因的妻子,是佩兰纳斯吉林的夫人,以坚定和关怀绿色山地的人民而闻名。" />
+    <string id="TAOM_hero_1_52_1" text="阿纳瑞尔,希尔路因之女,成长于皮那斯盖林的战士之中,能在战斗中独当一面。" />
+    <string id="TAOM_hero_1_52_2" text="巴兰多,希尔路因之子,训练以期有朝一日能率领皮那斯盖林的战士。他与父亲的绿衣部队并肩作战。" />
+    <string id="TAOM_hero_1_62" text="奥罗玛,阿纳瑞尔之夫,通过婚姻加入了哈尔博罗尼昂纳斯家族。他忠诚地侍奉皮那斯盖林领主。" />
+    <string id="TAOM_hero_1_62_1" text="伊丝芬,巴兰多之妻,是绿山地区以优雅闻名的女子。" />
+    <string id="TAOM_hero_1_53" text="无畏的安博,拉麦顿领主,即使亡灵大军穿过他的领地时,他也集结了他的部下。他勇敢果断,行动迅速。" />
+    <string id="TAOM_hero_1_73" text="纳米尔,安博的弟弟,服务于拉麦顿的防御。他与兄长一样勇敢,虽然经验尚浅。" />
+    <string id="TAOM_hero_1_73_1" text="贝尔雯,安博之妻,在拉麦顿的防御中坚定地站在丈夫身边。" />
+    <string id="TAOM_hero_1_71" text="戈拉斯吉尔,安法拉斯领主,统领漫长的海岸线抵御海盗袭击。他是一位饱经风霜的海上领主,数十年来一直守卫着刚铎的海岸。" />
+    <string id="TAOM_hero_1_71_1" text="拉丝雯,戈拉斯吉尔之妻,在丈夫守卫海上航道时监督着安法拉斯的沿海定居点。" />
+    <string id="TAOM_hero_WE8_c" text="佩伦杜尔,戈拉斯吉尔之子,正在接受训练,以期有朝一日能像他父亲一样守卫安法拉斯海岸。" />
+    <string id="TAOM_hero_WE8_u" text="巴兰迪尔,戈拉斯吉尔的兄弟,担任安法拉斯海岸守备队的队长。" />
+    <string id="TAOM_hero_WE9_l" text="杜因希尔,摩尔松德领主,率领来自黑根谷的弓箭手保卫刚铎。他是一位严厉而能干的指挥官。" />
+    <string id="TAOM_hero_WE9_u" text="杜林,杜因希尔的长子,率领自己的弓箭手部队,与父亲并肩作战保卫刚铎。" />
+    <string id="TAOM_hero_WE9_u2" text="罗丝芬,杜因希尔之妻,在丈夫不在时管理黑根谷的事务。" />
+    <string id="TAOM_hero_1_14" text="索伦之口以黑暗魔君的权威发言。他曾是黑色努门诺尔人,在为邪恶效力了漫长岁月后已经忘记了自己的名字。他统领着黑门的守备部队。" />
+    <string id="TAOM_hero_1_27" text="莫格拉什是一名凭借纯粹的残暴和狡诈晋升的半兽人队长。" />
+    <string id="TAOM_hero_1_27_1" text="维瑞娜是一名为黑塔效力的黑色努门诺尔女巫。" />
+    <string id="TAOM_hero_1_27_2" text="索罗兹纳克率领袭击队深入西方诸国。" />
+    <string id="TAOM_hero_1_27_3" text="瓦西莉娅在暗中为黑暗魔君效力。" />
+    <string id="TAOM_hero_1_37" text="戈尚克以残酷的效率指挥着一支魔多半兽人军团。" />
+    <string id="TAOM_hero_1_47" text="乌尔博斯是一名半兽人监工,在末日火山的熔炉中驱使奴隶劳作。" />
+    <string id="TAOM_hero_1_47_1" text="米娜为魔多的黑暗力量效力。" />
+    <string id="TAOM_hero_1_47_2" text="卡西瑞娅是阴影的仆从。" />
+    <string id="TAOM_hero_1_47_3" text="科兰贝娅栖身于魔多的黑暗之中。" />
+    <string id="TAOM_hero_1_15" text="安格马巫王,戒灵之首,是索伦最可怕的仆从。他曾是人类的伟大君王,被力量之戒腐化成了不死的幽灵。" />
+    <string id="TAOM_hero_1_155" text="黑暗元帅在战斗中指挥戒灵,仅次于巫王。" />
+    <string id="TAOM_hero_1_16" text="昂巴骑士在获得戒指之前曾是海盗领主。" />
+    <string id="TAOM_hero_1_28" text="背叛者在堕落之前曾是东方的国王。" />
+    <string id="TAOM_hero_1_38" text="不朽者曾是追求永生的术士之王,却只找到了永恒的奴役。" />
+    <string id="TAOM_hero_1_48" text="东夷卡穆尔,戒灵中的次席,在接受力量之戒前曾统治着鲁恩的一个伟大王国。" />
+    <string id="TAOM_hero_1_48_1" text="污染者所到之处都传播腐化。" />
+    <string id="TAOM_hero_1_48_2" text="北方人的阴影在寒冷之地猎杀。" />
+    <string id="TAOM_hero_1_48_3" text="昂巴之影出没于南方海岸。" />
+    <string id="TAOM_hero_1_177" text="霍诺拉图斯在魔多军队中担任军官。" />
+    <string id="TAOM_hero_1_29" text="萨尼昂是一名指挥要塞的黑色努门诺尔队长。" />
+    <string id="TAOM_hero_1_17" text="伟大的索伦,魔多黑暗魔君。此条目仅用于展示他可怕的盔甲。" />
+    <string id="TAOM_hero_1_18" text="贾西娅在魔多的黑暗等级制度中效力。" />
+    <string id="TAOM_hero_1_39" text="德芭娜是阴影的仆从,精通黑暗技艺。" />
+    <string id="TAOM_hero_1_30" text="哥斯魔格,魔窟中尉,在帕兰诺平原指挥魔多军队。他是一名残暴而狡猾的半兽人,身先士卒。" />
+    <string id="TAOM_hero_1_30_1" text="红牙斯瓦拉是哥斯魔格麾下的一名半兽人队长。" />
+    <string id="TAOM_hero_1_49" text="奥布隆率领一支魔多半兽人部队。" />
+    <string id="TAOM_hero_1_49_1" text="崔斯塔妮娅效力于黑暗势力。" />
+    <string id="TAOM_hero_1_49_2" text="戈尔迪安娜居住在黑塔的阴影之下。" />
+    <string id="TAOM_hero_1_30_2" text="卡利尼娅效力于魔多的黑暗力量。" />
+    <string id="TAOM_hero_1_30_3" text="赛奈西奥斯是阴影的仆从。" />
+    <string id="TAOM_hero_1_56_2" text="鲁斯蒂卡在黑暗军队中服役。" />
+    <string id="TAOM_hero_1_63_2" text="科马塔萨是为战争而生的半兽人。" />
+    <string id="TAOM_hero_1_63_3" text="伊莉迪莉娅效力于黑暗等级制度。" />
+    <string id="TAOM_hero_1_63" text="米那斯魔窟队长戈巴格率领这座死城的守军。即使以半兽人的标准来看,他也十分狡诈。" />
+    <string id="TAOM_hero_1_63_1" text="瓦拉莉娅在死者之城堡中服役。" />
+    <string id="TAOM_hero_1_74" text="扎卡尼斯指挥一支半兽人军团。" />
+    <string id="TAOM_hero_1_74_1" text="泽娜效力于魔多的黑暗主人。" />
+    <string id="TAOM_hero_1_54" text="西力斯昂哥队长夏格拉特守卫通往魔多的关隘。即使在半兽人中,他也以残忍而闻名。" />
+    <string id="TAOM_hero_1_54_1" text="康斯塔莉娅在西力斯昂哥塔楼中服役。" />
+    <string id="TAOM_hero_1_68" text="萨罗斯是在关隘服役的半兽人队长。" />
+    <string id="TAOM_hero_1_68_1" text="西尔维娜在蜘蛛关隘的守军中服役。" />
+    <string id="TAOM_hero_1_69_2" text="朵拉希拉在黑暗军队中服役。" />
+    <string id="TAOM_hero_1_69" text="尼丰指挥魔多边境上的一座堡垒。" />
+    <string id="TAOM_hero_1_69_1" text="阿瑞莉安娜在边境地区服役。" />
+    <string id="TAOM_hero_1_55" text="马斯摩格是一位强大的强兽人战争首领。" />
+    <string id="TAOM_hero_1_55_1" text="梅盖西娅效力于黑暗力量。" />
+    <string id="TAOM_hero_1_72" text="波尔格是一位强大的半兽人酋长,是污秽者阿佐格的后裔。" />
+    <string id="TAOM_hero_1_72_1" text="薇薇安娜效力于黑暗等级制度。" />
+    <string id="TAOM_hero_SE8_c" text="在魔多深坑中培育的半兽人。" />
+    <string id="TAOM_hero_SE9_l" text="指挥魔多一座堡垒的黑色努门诺尔领主。" />
+    <string id="TAOM_hero_SE9_s" text="拥有黑暗力量的黑色努门诺尔女巫。" />
+    <string id="TAOM_hero_SE9_c1" text="黑色努门诺尔家族的继承人,受训于黑暗法术。" />
+    <string id="TAOM_hero_SE9_c2" text="黑色努门诺尔领主的次子。" />
+    <string id="TAOM_hero_2_1" text="河谷国王巴德二世是传奇人物弓箭手巴德的孙子,后者曾射杀史矛革。他统治着伊鲁伯山脚下繁荣的王国,与孤山的矮人结盟。" />
+    <string id="TAOM_hero_2_2" text="阿斯塔是河谷国的王后,因其智慧与优雅而深受爱戴。" />
+    <string id="TAOM_hero_2_13_1" text="莉莉扎是巴德家族贵族的女儿。" />
+    <string id="TAOM_hero_2_13_2" text="安德鲁塔在国王的宫廷中服役。" />
+    <string id="TAOM_hero_2_13_3" text="鲁达是河谷国的年轻贵族女性。" />
+    <string id="TAOM_hero_2_13_4" text="泰塔是河谷国的贵族之女。" />
+    <string id="TAOM_hero_2_7" text="西米尔是河谷国的王子,是其父王位的继承人。" />
+    <string id="TAOM_hero_2_7_1" text="米米尔是河谷国王室的王子。" />
+    <string id="TAOM_hero_2_10" text="瓦拉是河谷国的公主,受训于外交与治国之术。" />
+    <string id="TAOM_hero_2_13" text="维达尔是北方边境的领主,防御东方人的入侵。" />
+    <string id="TAOM_hero_2_3" text="山下之王索林三世·石盔统治着伊鲁伯的矮人。他维持着与河谷国的古老同盟,随时准备抵御阴影。" />
+    <string id="TAOM_hero_2_4" text="西格是都灵家族的矮人女贵族。" />
+    <string id="TAOM_hero_2_4_1" text="阿波拉妮娅是一位出身高贵的矮人少女。" />
+    <string id="TAOM_hero_2_8" text="乌里克是埃尔伯王子,精通锻造工艺与战争之道。" />
+    <string id="TAOM_hero_2_11" text="伊德伦是皇家卫队的矮人战士。" />
+    <string id="TAOM_hero_2_111" text="罗日沃尔是守卫山门的矮人战士。" />
+    <string id="TAOM_hero_2_5" text="欧力是索林·橡木盾同伴后裔的矮人领主。他管理着埃尔伯与河谷城之间的贸易路线。" />
+    <string id="TAOM_hero_2_6" text="埃尔塔是欧力的妻子,以宝石切割技艺闻名。" />
+    <string id="TAOM_hero_2_9" text="莱克是欧力产业的继承人,在贸易和战斗方面都受过训练。" />
+    <string id="TAOM_hero_2_12" text="斯瓦娜是贸易家族的女儿。" />
+    <string id="TAOM_hero_2_121" text="奥斯文管理着山脉与城市之间的商队。" />
+    <string id="TAOM_hero_2_14" text="伊斯万是东部边境的领主,守卫长湖。" />
+    <string id="TAOM_hero_2_14_1" text="瓦尔卡娃是伊斯万领主的妻子。" />
+    <string id="TAOM_hero_2_14_2" text="扎韦列娜是东部领地的继承人。" />
+    <string id="TAOM_hero_2_14_3" text="维日杜娜是东部边境的年轻贵族。" />
+    <string id="TAOM_hero_2_16" text="波佛是埃尔伯的矮人领主,传奇远征队的后裔。" />
+    <string id="TAOM_hero_2_16_1" text="蒂娅斯卡是波佛的妻子,精通医疗术。" />
+    <string id="TAOM_hero_2_21" text="斯韦多恩指挥长湖镇的守备军。" />
+    <string id="TAOM_hero_2_21_1" text="伊兹登卡管理长湖镇的事务。" />
+    <string id="TAOM_hero_2_17" text="索林二世·橡木盾被铭记为从史矛革手中夺回埃尔伯的英雄。他的精神激励着他的后裔。" />
+    <string id="TAOM_hero_2_17_1" text="德拉查保存着老国王的记忆。" />
+    <string id="TAOM_hero_2_22" text="拉绍内克指挥河谷城的战士。" />
+    <string id="TAOM_hero_2_22_1" text="热涅娃是拉绍内克的妻子。" />
+    <string id="TAOM_hero_2_24" text="阿尔瓦是河谷卫队的队长。" />
+    <string id="TAOM_hero_2_24_1" text="佐丽娜是河谷城的贵族夫人。" />
+    <string id="TAOM_hero_2_18" text="葛罗因是埃尔伯的矮人领主,远征队成员金雳的父亲。" />
+    <string id="TAOM_hero_2_18_1" text="佐里卡是葛罗因的妻子,著名的金雳之母。" />
+    <string id="TAOM_hero_2_23" text="加尔登指挥河谷城的南方守备军。" />
+    <string id="TAOM_hero_2_23_1" text="兹拉特卡是加尔登的女儿。" />
+    <string id="TAOM_hero_2_15" text="拉塔戈斯特是一位智慧的顾问,就国家大事向国王提供建议。" />
+    <string id="TAOM_hero_2_15_1" text="亚查娜在王室宫廷中任职。" />
+    <string id="TAOM_hero_2_15_2" text="米兰卡是宫廷的贵族女子。" />
+    <string id="TAOM_hero_2_15_3" text="薇莉娜服务于王室家族。" />
+    <string id="TAOM_hero_2_15_4" text="博万是河谷城的年轻贵族。" />
+    <string id="TAOM_hero_2_19" text="德瓦林是声名显赫的矮人战士,最初远征队的最后幸存者。" />
+    <string id="TAOM_hero_2_19_1" text="维托米拉与德瓦林并肩服务。" />
+    <string id="TAOM_hero_2_20" text="欧音是矮人长者,古老学识与医疗术的守护者。" />
+    <string id="TAOM_hero_2_20_1" text="基莎是欧音的妻子,精通草药学识。" />
+    <string id="TAOM_hero_S8_u" text="一位守卫山中大厅的满脸风霜的老兵。" />
+    <string id="TAOM_hero_3_1" text="卡杜拉克是哈拉德的塔斯克拉尔,南方军队的最高统帅。他率领猛犸战象对抗他族人的敌人,与魔多结盟对抗刚铎。" />
+    <string id="TAOM_hero_3_2" text="一位地位显赫的哈拉德贵族夫人。" />
+    <string id="TAOM_hero_3_7" text="迪尤尔是塔斯克拉尔的继承人,接受猛犸骑手之道的训练。" />
+    <string id="TAOM_hero_3_10" text="阿尼达是塔斯克拉的女儿,精通宫廷政治。" />
+    <string id="TAOM_hero_3_13" text="努卡尔统领哈拉德的精锐蛇卫队。" />
+    <string id="TAOM_hero_3_13_1" text="西拉是努卡尔的妻子。" />
+    <string id="TAOM_hero_3_13_2" text="拉扎娜是蛇卫队指挥官的女儿。" />
+    <string id="TAOM_hero_3_8" text="阿达斯是一位哈拉德林战士王子。" />
+    <string id="TAOM_hero_3_11" text="阿尔瓦是沙漠部落的公主。" />
+    <string id="TAOM_hero_3_3" text="卡勒米尔是东方哈拉德林的酋长,绿洲定居点的领主。" />
+    <string id="TAOM_hero_3_3_1" text="塔里克是东方绿洲领主的继承人。" />
+    <string id="TAOM_hero_3_4" text="玛拉是卡勒米尔的妻子,以其智慧闻名。" />
+    <string id="TAOM_hero_3_5" text="哈尔迪尔统领沿海哈拉德林,与昂巴海盗结盟。" />
+    <string id="TAOM_hero_3_51" text="哈坎是沿海部落的一位船长。" />
+    <string id="TAOM_hero_3_12" text="马南袭击刚铎的沿海定居点。" />
+    <string id="TAOM_hero_3_20" text="卡里斯指挥突袭队伍进入敌境。" />
+    <string id="TAOM_hero_3_20_1" text="朱迪拉是卡里斯的妻子。" />
+    <string id="TAOM_hero_3_20_2" text="阿齐娜是一位突袭队长的女儿。" />
+    <string id="TAOM_hero_3_6" text="鲁玛是哈尔迪尔的妻子,管理他们的沿海领地。" />
+    <string id="TAOM_hero_3_9" text="乌赛尔是沿海领地的继承人。" />
+    <string id="TAOM_hero_3_14" text="萨姆扎率领商队穿越沙漠荒原。" />
+    <string id="TAOM_hero_3_14_1" text="萨赛莎管理沙漠贸易路线。" />
+    <string id="TAOM_hero_3_15" text="古齐德统领极南地区的穆玛克骑手。" />
+    <string id="TAOM_hero_3_15_1" text="希姆拉是穆玛克领主的妻子。" />
+    <string id="TAOM_hero_3_15_2" text="布希拉训练年轻的穆玛克骑手。" />
+    <string id="TAOM_hero_3_16" text="鲁米尔是金旗部落的酋长。" />
+    <string id="TAOM_hero_3_16_1" text="法里娜是金旗酋长的妻子。" />
+    <string id="TAOM_hero_3_17" text="奥罗芬统领极南地区的巨蛇骑手。" />
+    <string id="TAOM_hero_3_17_1" text="莎伊玛是奥罗芬的妻子。" />
+    <string id="TAOM_hero_3_17_2" text="萨尼特是巨蛇骑手的继承人。" />
+    <string id="TAOM_hero_3_21" text="乌凯率领沙漠袭击者对抗北方商队。" />
+    <string id="TAOM_hero_3_21_1" text="阿希莎是袭击队长的妻子。" />
+    <string id="TAOM_hero_3_18" text="阿兰松是南方富有的商人王子。" />
+    <string id="TAOM_hero_3_18_1" text="法尔扎娜是商人王子的女儿。" />
+    <string id="TAOM_hero_3_18_2" text="哈菲莎管理贸易联系。" />
+    <string id="TAOM_hero_3_18_3" text="祖阿德是一位年轻的见习商人。" />
+    <string id="TAOM_hero_3_18_4" text="贾尔法尔守卫贸易商队。" />
+    <string id="TAOM_hero_3_19" text="埃瑟里昂统领北方边境的一座要塞。" />
+    <string id="TAOM_hero_3_19_1" text="萨尔玛是边境指挥官的妻子。" />
+    <string id="TAOM_hero_3_19_2" text="祖莱卡在边境驻军中训练。" />
+    <string id="TAOM_hero_3_19_3" text="苏尔哈娜是边境的贵族。" />
+    <string id="TAOM_hero_3_23" text="卡欣率领侦察兵进入敌境。" />
+    <string id="TAOM_hero_3_23_1" text="苏凯娜是侦察兵指挥官的妻子。" />
+    <string id="TAOM_hero_3_22" text="杜林指挥着沙漠部落的弓箭手。" />
+    <string id="TAOM_hero_3_22_1" text="雅米娜是弓箭手指挥官的妻子。" />
+    <string id="TAOM_hero_3_22_2" text="苏娜训练年轻的弓箭手。" />
+    <string id="TAOM_hero_3_22_3" text="扎努瓦是部落中一名技艺高超的弓箭手。" />
+    <string id="TAOM_hero_3_22_4" text="哈贾拉守卫着沙漠中的瞭望塔。" />
+    <string id="TAOM_hero_4_1" text="洛汗国王希优顿从伊多拉斯的金殿梅杜塞尔德进行统治。他曾被萨鲁曼的仆人葛力马蛊惑,后被甘道夫解救,并率领他的人民在圣盔谷和帕兰诺平原上赢得荣耀。" />
+    <string id="TAOM_hero_4_2" text="艾尔菲尔德曾是洛汗的王后,希优德的母亲。她死于难产,这悲伤为希优顿的统治蒙上了阴影。" />
+    <string id="TAOM_hero_4_7" text="希优德是希优顿国王的独子,洛汗王子。他在艾森河渡口保卫战中阵亡,对抗萨鲁曼的强兽人。" />
+    <string id="TAOM_hero_4_10" text="埃利斯是洛希尔宫廷中的一位贵族女士。" />
+    <string id="TAOM_hero_4_13" text="罗蒙德担任皇家卫队的队长。" />
+    <string id="TAOM_hero_4_14" text="莫尔孔是国王家族中一位值得信赖的队长。" />
+    <string id="TAOM_hero_4_141" text="阿莫尔孔与他的族人一同在卫队中服役。" />
+    <string id="TAOM_hero_4_15" text="埃尔杜兰德是希优顿家族的一名骑士。" />
+    <string id="TAOM_hero_4_3" text="希优德温是希优顿国王的姐妹,伊欧墨和伊欧温的母亲。她的丈夫伊欧蒙德被半兽人杀害后,她悲痛而死。" />
+    <string id="TAOM_hero_4_3_1" text="伊欧墨·伊阿迪格,骠骑国第三元帅,是希优顿的外甥和王位继承人。他以无比的忠诚率领着东谷的骑士们。" />
+    <string id="TAOM_hero_4_4" text="埃尔希尔德是伊欧佛林家族的一位贵族女士。" />
+    <string id="TAOM_hero_4_8" text="弗恩哈德是伊欧墨麾下一位值得信赖的骑士。" />
+    <string id="TAOM_hero_4_11" text="莉娜在王室家族中服役。" />
+    <string id="TAOM_hero_4_6" text="格里姆斯莱德的格林伯德指挥着西谷的骑士。他是一位勇猛的战士,曾坚守艾森河渡口,后来在帕兰诺平原英勇战死。" />
+    <string id="TAOM_hero_4_6_1" text="迪奥温是格林伯德指挥权的继承人。" />
+    <string id="TAOM_hero_4_5" text="昂瑟里担任西谷骑士的队长。" />
+    <string id="TAOM_hero_4_9" text="索蒙德指挥着西谷骑士的一支队伍。" />
+    <string id="TAOM_hero_4_12" text="西尔温德是西谷的一名盾女。" />
+    <string id="TAOM_hero_4_121" text="拉桑德在西谷守备队中服役。" />
+    <string id="TAOM_hero_4_16" text="西谷领主埃肯布兰德指挥着号角堡要塞。他与甘道夫一起抵达圣盔谷,扭转了战局。" />
+    <string id="TAOM_hero_4_16_1" text="梅尔苏是埃肯布兰德的妻子,号角堡的女主人。" />
+    <string id="TAOM_hero_4_17" text="埃尔贝特在埃肯布兰德的家族中服役。" />
+    <string id="TAOM_hero_4_18" text="阿马尔贡是埃肯布兰德的继承人。" />
+    <string id="TAOM_hero_4_181" text="阿萨蒙德担任号角堡守备队的队长。" />
+    <string id="TAOM_hero_4_19" text="阿塞拉是一名守卫深谷的盾女。" />
+    <string id="TAOM_hero_4_25" text="卢坎德指挥着东艾姆内特的骑士。" />
+    <string id="TAOM_hero_4_25_1" text="贝特莉安娜是卢坎德的妻子。" />
+    <string id="TAOM_hero_4_21" text="奥德莱辛之子库斯雷德巡逻着东部边境。" />
+    <string id="TAOM_hero_4_20" text="瓦蒙德指挥着奥德堡守备队。" />
+    <string id="TAOM_hero_4_20_1" text="因格特鲁德是瓦蒙德的妻子,奥德堡的女主人。" />
+    <string id="TAOM_hero_4_22" text="塞尔蒙丁之子伍尔夫率领着北方山谷的骑士。" />
+    <string id="TAOM_hero_4_22_1" text="桑妮法是伍尔夫的妻子。" />
+    <string id="TAOM_hero_4_23" text="马尔哈斯率领着南方草原的马匹饲养者。" />
+    <string id="TAOM_hero_4_23_1" text="伍尔夫温是马尔哈斯的女儿,一名技艺高超的骑手。" />
+    <string id="TAOM_hero_4_23_2" text="埃勒杜兰为国王的军队训练战马。" />
+    <string id="TAOM_hero_4_23_3" text="年轻的埃勒杜兰担任马匹管理员。" />
+    <string id="TAOM_hero_4_24" text="葛力马·巧言曾是希优顿的顾问,暗中是萨鲁曼的间谍。他低语的谎言毒害了国王的心智,直到甘道夫打破了魔咒。" />
+    <string id="TAOM_hero_4_24_1" text="洛汗的伊欧温夫人,是伊欧墨的妹妹、希优顿的侄女。她在帕兰诺平原杀死了戒灵之王,击倒了时代的恐怖。" />
+    <string id="TAOM_hero_4_24_2" text="埃尔夫格里姆担任王室骑兵。" />
+    <string id="TAOM_hero_4_24_3" text="赫鲁布兰德守卫国王的大殿。" />
+    <string id="TAOM_hero_4_24_4" text="西格贝尔特巡逻洛汗边境。" />
+    <string id="TAOM_hero_4_26" text="佩里克指挥洛汗隘口沿线的骑兵。" />
+    <string id="TAOM_hero_4_26_1" text="雷茵加尔达是隘口的盾女。" />
+    <string id="TAOM_hero_4_27" text="埃塞拉芬之子埃勒守卫褶地,抵御登兰德人的袭击。" />
+    <string id="TAOM_hero_4_27_1" text="韦尔堡是埃勒的妻子。" />
+    <string id="TAOM_hero_V9_u" text="一位经验丰富的骑手,为当地领主出谋划策。" />
+    <string id="TAOM_hero_4_28" text="莫卡加斯之子法斯特海姆指挥南方哨所。" />
+    <string id="TAOM_hero_4_28_1" text="莫卡是法斯特海姆之子。" />
+    <string id="TAOM_hero_4_28_2" text="赫蕾西丝是南方哨所指挥官的女儿。" />
+    <string id="TAOM_hero_5_1" text="瓦尔古尔,坎德的最高战争领主,率领凶悍的瓦瑞格骑兵。他与魔多的联盟使他的战士在中土大陆的战争中对抗刚铎。" />
+    <string id="TAOM_hero_5_1_1" text="最高战争领主随从中的战士。" />
+    <string id="TAOM_hero_5_3" text="埃尔盖昂是一位酋长,率领东方的瓦瑞格部族,以其迅捷的骑兵战术闻名。" />
+    <string id="TAOM_hero_5_3_1" text="拉纳昂是埃尔盖昂战团的继承人。" />
+    <string id="TAOM_hero_5_3_2" text="拉多古尔在埃尔盖昂的军队中担任队长。" />
+    <string id="TAOM_hero_5_4" text="尼温是埃尔盖昂的妻子,精通医疗技艺。" />
+    <string id="TAOM_hero_5_5" text="梅利迪尔率领掠夺者进入刚铎的土地。" />
+    <string id="TAOM_hero_5_5_1" text="艾利德管理部族的马群。" />
+    <string id="TAOM_hero_5_6" text="阿尔凯亚是梅利迪尔的妻子。" />
+    <string id="TAOM_hero_5_7" text="坎德的一位瓦瑞格战士酋长。" />
+    <string id="TAOM_hero_5_8" text="赛恩指挥一支瓦瑞格骑兵连。" />
+    <string id="TAOM_hero_5_9" text="库尔哈恩是一位声誉日隆的瓦瑞格战士。" />
+    <string id="TAOM_hero_5_91" text="泰根与库尔哈恩并肩作战。" />
+    <string id="TAOM_hero_5_10" text="科雷因是最高战争领主宫廷的瓦瑞格贵族。" />
+    <string id="TAOM_hero_5_11" text="阿林内丝是一位瓦瑞格女贵族。" />
+    <string id="TAOM_hero_5_12" text="威苏因训练年轻的瓦瑞格骑手。" />
+    <string id="TAOM_hero_5_13" text="穆因塞尔在北方地区指挥掠夺者。" />
+    <string id="TAOM_hero_5_131" text="拉思在穆因塞尔的指挥下服役。" />
+    <string id="TAOM_hero_5_13_1" text="贝萨格是北方部族的瓦瑞格战士。" />
+    <string id="TAOM_hero_5_15" text="普林多尔守卫通往坎德的山口。" />
+    <string id="TAOM_hero_5_15_1" text="弗洛莱德是山口守卫者的女儿。" />
+    <string id="TAOM_hero_5_15_2" text="贝特林巡逻山道。" />
+    <string id="TAOM_hero_5_15_3" text="迪亚尔拜因守卫高山隘口。" />
+    <string id="TAOM_hero_5_14" text="卢伊昌指挥西部平原的瓦瑞格骑兵。" />
+    <string id="TAOM_hero_5_14_1" text="埃比尔是卢伊昌的妻子。" />
+    <string id="TAOM_hero_5_16" text="埃隆率领中央草原的战士。" />
+    <string id="TAOM_hero_5_16_1" text="莉雅辛是埃隆的妻子。" />
+    <string id="TAOM_hero_5_16_2" text="加文是埃隆战团的继承人。" />
+    <string id="TAOM_hero_5_17" text="阿拉德威尔统帅东部边境部队。" />
+    <string id="TAOM_hero_5_17_1" text="布里甘是阿拉德威尔的妻子。" />
+    <string id="TAOM_hero_5_18" text="布拉诺克率领斥候深入敌境。" />
+    <string id="TAOM_hero_5_18_1" text="肖娜格是布拉诺克的妻子。" />
+    <string id="TAOM_hero_5_19" text="费纳甘是一位以决斗技艺闻名的瓦瑞亚格勇士。" />
+    <string id="TAOM_hero_5_20" text="西亚拉穆斯统帅康德的战车武士。" />
+    <string id="TAOM_hero_5_21" text="卡菲德率领瓦瑞亚格掠夺者沿边境作战。" />
+    <string id="TAOM_hero_5_21_1" text="贝萨格是卡菲德的妻子。" />
+    <string id="TAOM_hero_5_21_2" text="陶尔斯是卡菲德掠夺团的继承人。" />
+    <string id="TAOM_hero_5_22" text="菲亚拉德守卫南方贸易路线。" />
+    <string id="TAOM_hero_6_1" text="扎米克·扎米安,鲁恩的洛克汗,统治着东夷人的黄金国度。他的祖先曾侍奉索隆,他延续着那黑暗的同盟,梦想着征服西方的土地。" />
+    <string id="TAOM_hero_6_2" text="玛拉雅是洛克汗的妻子,黄金国度的王后。" />
+    <string id="TAOM_hero_6_3" text="巴盖担任皇家卫队的队长。" />
+    <string id="TAOM_hero_6_4" text="古尔蒂尔姆·萨卢里安统帅鲁恩的西方军队。在丈夫死后,她以钢铁般的决心接管了指挥权。" />
+    <string id="TAOM_hero_6_5" text="伊尔博·尼卡提安率领阿尔基特氏族,东部草原上著名的马弓手。" />
+    <string id="TAOM_hero_6_51" text="哈达是阿尔基特氏族的继承人。" />
+    <string id="TAOM_hero_6_6" text="苏兰统帅南方部落的战士。" />
+    <string id="TAOM_hero_6_7" text="查干是鲁恩的王子,黄金国度的继承人。" />
+    <string id="TAOM_hero_6_8" text="埃苏尔是古尔蒂尔姆军中的战士。" />
+    <string id="TAOM_hero_6_81" text="纳颜泰担任古尔蒂尔姆军中的队长。" />
+    <string id="TAOM_hero_6_9" text="特蒙是阿尔基特氏族的战士。" />
+    <string id="TAOM_hero_6_10" text="阿里金是王室的王子。" />
+    <string id="TAOM_hero_6_101" text="博拉特在王室家族中服务。" />
+    <string id="TAOM_hero_6_11" text="雅娜是古尔蒂尔姆军中的贵族。" />
+    <string id="TAOM_hero_6_12" text="阿巴盖是阿尔基特领地的继承人。" />
+    <string id="TAOM_hero_6_13" text="博尔图是王室的贵族。" />
+    <string id="TAOM_hero_6_15" text="奥拉古尔率领阿尔基特马弓手。" />
+    <string id="TAOM_hero_6_15_1" text="霍里金是奥拉古尔的妻子。" />
+    <string id="TAOM_hero_6_15_2" text="塞琴是奥拉古尔麾下的继承人。" />
+    <string id="TAOM_hero_6_16" text="阿克沃斯·卡米安统帅鲁恩的南部边境。" />
+    <string id="TAOM_hero_6_16_1" text="钱布伊是阿克沃斯的妻子。" />
+    <string id="TAOM_hero_6_16_2" text="乌纳根是阿克沃斯麾下的继承人。" />
+    <string id="TAOM_hero_6_17" text="阿姆杜尔·阿姆杜里德率领东部草原上的强大氏族。" />
+    <string id="TAOM_hero_6_17_1" text="埃尔格内是阿姆杜尔的妻子。" />
+    <string id="TAOM_hero_6_17_2" text="耶苏姆是阿姆杜里德领地的继承人。" />
+    <string id="TAOM_hero_6_18" text="卢斯坎·孔多拉统帅西部行省的战士。" />
+    <string id="TAOM_hero_6_18_1" text="蒂伦是卢斯坎的妻子。" />
+    <string id="TAOM_hero_6_18_2" text="查贡是孔多拉的继承人。" />
+    <string id="TAOM_hero_6_19" text="瓦赫拉尔坦·昆多拉尔是卢斯坎的兄弟,指挥骑兵斥候。" />
+    <string id="TAOM_hero_6_19_1" text="索哈泰是瓦赫拉尔坦的妻子。" />
+    <string id="TAOM_hero_6_19_2" text="科尔特是瓦赫拉尔坦斥候队的继承人。" />
+    <string id="TAOM_hero_6_20" text="库鲁布拉·马沙基安统帅鲁恩北方部落。" />
+    <string id="TAOM_hero_6_20_1" text="吉古尔是库鲁布拉的妻子。" />
+    <string id="TAOM_hero_K8_u" text="一位经验丰富的战士,为北方酋长提供建议。" />
+    <string id="TAOM_hero_6_21" text="莫卢克·伊尔诺里亚统帅一个强大的骑兵氏族。" />
+    <string id="TAOM_hero_6_21_1" text="埃萨切伊是莫卢克的妻子。" />
+    <string id="TAOM_hero_6_22" text="沙哈尔二世·沙哈利安统治鲁恩海的一个富有的贸易氏族。" />
+    <string id="TAOM_hero_6_22_1" text="埃塞伦是沙哈尔的妻子。" />
+    <string id="TAOM_hero_6_23" text="胡兹-玛戈兹·胡兹指挥西部边境沿线的要塞驻军。" />
+    <string id="TAOM_hero_6_24" text="尼卡斯·阿德基格守卫通往鲁恩的南方关隘。" />
+    <string id="TAOM_hero_A9_l" text="南方荒原的哈拉德林酋长。" />
+    <string id="TAOM_hero_A9_s" text="南方荒原酋长的妻子。" />
+    <string id="TAOM_hero_A9_c" text="南方荒原酋长的继承人。" />
+    <string id="TAOM_hero_A9_u" text="南方部落的战士。" />
+    <string id="TAOM_hero_V11_l" text="西谷的洛汗领主。" />
+    <string id="TAOM_hero_V11_u" text="一位为领主提供建议的老练骑手。" />
+    <string id="TAOM_hero_V11_c1" text="西谷领地的继承人。" />
+    <string id="TAOM_hero_V11_c2" text="西谷领主的次子。" />
+    <string id="TAOM_hero_S9_l" text="守卫北方通道的河谷邦贵族。" />
+    <string id="TAOM_hero_S9_m" text="北方巴丁氏族的族母。" />
+    <string id="TAOM_hero_S9_c" text="北方领地的年轻继承人。" />
+    <string id="TAOM_hero_S9_u" text="北方驻军的老练战士。" />
+    <string id="TAOM_hero_K9_l" text="遥远东夷部落的酋长。" />
+    <string id="TAOM_hero_K9_s" text="遥远酋长的妻子。" />
+    <string id="TAOM_hero_K9_c1" text="遥远部落领地的继承人。" />
+    <string id="TAOM_hero_K9_c2" text="遥远酋长的次子。" />
+    <string id="TAOM_hero_B8_l" text="东方山地的瓦瑞亚格军阀。" />
+    <string id="TAOM_hero_B8_s" text="瓦瑞亚格军阀的妻子。" />
+    <string id="TAOM_hero_B8_c" text="瓦瑞亚格军阀的继承人。" />
+  </strings>
+</base>

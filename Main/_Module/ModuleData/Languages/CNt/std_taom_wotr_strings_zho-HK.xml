@@ -1,10 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Traditional Chinese" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Traditional Chinese" />
+  </tags>
+  <strings>
+    <string id="taom_wotr_title" text="魔戒聖戰" />
+    <string id="taom_wotr_leaders" text="領袖" />
+    <string id="taom_wotr_allies" text="盟友" />
+    <string id="taom_wotr_breakdown_header" text="聲勢明細" />
+    <string id="taom_wotr_total_stats_header" text="總體數據" />
+    <string id="taom_wotr_total" text="總計：{MOMENTUM}" />
+    <string id="taom_wotr_battles_won" text="已勝戰役" />
+    <string id="taom_wotr_villages_raided" text="已劫掠村莊" />
+    <string id="taom_wotr_fiefs_captured" text="已奪取封地" />
+    <string id="taom_wotr_army_gathered" text="已集結軍隊" />
+    <string id="taom_wotr_relative_strength" text="相對實力" />
+    <string id="taom_wotr_enemies_killed" text="已殺敵人" />
+    <string id="taom_wotr_settlements_captured" text="已奪取定居點" />
+    <string id="taom_wotr_momentum" text="聲勢" />
+    <string id="taom_wotr_desc_battle" text="{WINNER_FACTION}的軍隊在{WINNER_LEADER}的率領下，擊潰了由{LOSER_LEADER}率領的{LOSER_FACTION}軍隊，殺敵{CASUALTIES}人。" />
+    <string id="taom_wotr_desc_siege" text="{FACTION}的軍隊在{LEADER}的率領下，攻佔了{SETTLEMENT}。" />
+    <string id="taom_wotr_desc_raid" text="{FACTION}的{PARTY}襲擊了{SETTLEMENT}村莊。" />
+    <string id="taom_wotr_desc_army" text="一支由{LEADER}率領的軍隊已經集結。" />
+    <string id="taom_wotr_desc_strength" text="我們比敵人強大{PERCENTAGE}%！" />
+    <string id="taom_wotr_victory_title" text="戰爭終結" />
+    <string id="taom_wotr_victory_free" text="戰爭結束了。自由人民堅持到了最後，為他們的子孫贏得了未來。自由萬歲！" />
+    <string id="taom_wotr_victory_evil" text="人類與精靈的王國已然覆滅。索倫萬歲！" />
+    <string id="taom_wotr_continue" text="繼續" />
+  </strings>
+</base>

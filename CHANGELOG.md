@@ -2,6 +2,16 @@
 
 ## 2026-07-04
 
+### chore(localization): full 11-language AI rerun + translator gap-file / parser fixes
+
+Re-ran the AI translation pipeline (`translate_with_claude.py` → `rebuild_translation_files.py`) across all 11 AI-translated languages for every module — TAOM + TAOM_Map (settlements) + LOTRLOME_Armory. Filled the three shipped string files that both scripts had silently skipped, so they had been English-only in every non-PL language: `taom_wotr_strings` (23, momentum UI), `taom_lotr_issue_strings` (308), `taom_emissary_strings` (21). ~6,000 strings translated; $6.14 total.
+
+- **Source-list gap fix** — added `lotr_issue` + `emissary` to `translate_with_claude.py`'s `english_source_files` and `wotr` / `lotr_issue` / `emissary` to `rebuild_translation_files.py`'s `taom_sources`; both now cover all 10 shipped `std_taom_*` files.
+- **Parser hardening** — `_extract_translations` accepts the JSON response shapes the model actually emits (alternate value key, single-key wrapper, bare `{id: text}` map), not only the prescribed array. A shape drift had been wiping whole 40-string batches to 0/40 (323 strings failed the first pass; a retry after the fix rescued all but 7).
+- **Residual** — 7 gender-conditional `{?GENDER}…{?}…{\?}` strings in `taom_module_strings.xml` (DE/CNs/FR/KO/TR) stay English; the placeholder-integrity guard rejected translations that changed the conditional-token count.
+
+PL untouched (community hand-translated). TAOM_Map + LOTRLOME_Armory outputs write to the game install (external modules), not this repo. Validation: `LanguageDataXmlTests` 22/22.
+
 ### feat(momentum): endless war by default — victory is now opt-in (#327)
 
 Added a victory on/off toggle (`victoryEnabled` JSON + MCM "Enable Victory"), **default OFF = endless war**. `MomentumVictoryService` returns None when off, so no side ever wins — the War of the Ring is tracked open-endedly. Reason: with the (intentionally) runaway momentum, an enabled threshold-victory fires almost immediately once the player has ~5 events, which ends the war anticlimactically (a play-tester hit "Long live Sauron!" unexpectedly). The victory machinery is fully wired + tested; enabling it is best paired with a future bounded-momentum rebalance. On load with victory off, a war that ended under a prior build is un-frozen (momentum/kingdoms/stats kept) so the meter resumes — an already-ended save becomes endless again.

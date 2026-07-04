@@ -1,10 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-      type="string">
-  <tags>
-    <tag language="Russian" />
-  </tags>
-  <strings>
-  </strings>
-</base>
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Russian" />
+  </tags>
+  <strings>
+    <string id="taom_emissary_menu" text="Поговорить с эмиссаром фракции" />
+    <string id="taom_emissary_no_trade" text="Здесь нет элитной торговли для этой фракции." />
+    <string id="taom_emissary_greet" text="Ищешь лучших воинов, что может предложить наш народ? Назови их — и они твои, за соответствующую цену." />
+    <string id="taom_emissary_buy" text="Я хочу приобрести элитные войска." />
+    <string id="taom_emissary_leave" text="Не сегодня." />
+    <string id="taom_emissary_list_title" text="Элитные войска" />
+    <string id="taom_emissary_list_desc" text="Баланс: {AMOUNT} {RESOURCE}" />
+    <string id="taom_emissary_offer_line" text="{NAME} — {COST} {RESOURCE}" />
+    <string id="taom_emissary_offer_afford" text="Вы можете позволить себе до {MAX}." />
+    <string id="taom_emissary_offer_cant" text="Недостаточно {RESOURCE}." />
+    <string id="taom_emissary_select" text="Выбрать" />
+    <string id="taom_emissary_back" text="Назад" />
+    <string id="taom_emissary_qty_title" text="Сколько {TROOP}?" />
+    <string id="taom_emissary_qty_desc" text="Каждый стоит {COST} {RESOURCE}. У вас есть {BALANCE}." />
+    <string id="taom_emissary_qty_line" text="{QTY} (×{COST} = {TOTAL} {RESOURCE})" />
+    <string id="taom_emissary_confirm" text="Нанять" />
+    <string id="taom_emissary_bought" text="Нанято {QTY} {TROOP} за {COST} {RESOURCE}." />
+    <string id="taom_emissary_cant_afford" text="Недостаточно {RESOURCE} — требуется {COST}." />
+    <string id="taom_emissary_no_resource" text="В этом поселении нет торговли с эмиссаром." />
+    <string id="taom_emissary_no_offers" text="У эмиссара сейчас нет элитных отрядов для предложения." />
+    <string id="taom_emissary_failed" text="Эмиссар не смог завершить сделку." />
+  </strings>
+</base>
