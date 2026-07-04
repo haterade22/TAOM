@@ -49,6 +49,17 @@ Codex (`gpt-5.5`, xhigh) reviewed the post-deep-review diff. 1 HIGH, 2 MED, 2 LO
 
 **Codex pass root cause (C1):** the highest-value Codex finding is a *keying-change* gap — when a port changes WHAT a classification is keyed on (culture → kingdom-id), it silently drops every input the old key covered that the new key doesn't. Neither the deep-review agents nor I asked the inverse question ("what resolves to the default/Neutral bucket, and is that set the same as the donor's?"). This is a distinct failure mode from the faithful-port *behavior* gaps (findings 1/3/7) — those inherited donor code verbatim; this one deliberately *changed* a mechanism and didn't re-audit the changed mechanism's blind spots.
 
+## In-game play-test regression (self-inflicted by a review fix)
+
+Play-testing surfaced two live-only defects, both from the deep-review efficiency fix (#4):
+
+| # | Sev | Bug | Root cause |
+|---|-----|-----|------------|
+| P1 | HIGH | Momentum popup Leaders/Allies banners blank; daily Relative-Strength award stuck at 0/0. | The efficiency fix (finding #4) swapped `Kingdom.All.FirstOrDefault(k => k.StringId==id)` for `MBObjectManager.GetObject<Kingdom>(id)` in `KingdomStrengthAdapter` + `MomentumPopupVM.ResolveKingdom`. `MBObjectManager` does NOT resolve campaign kingdoms → null → blank banners (popup) + 0 strength (award never fires). An UNVERIFIED API swap that compiled and passed all unit tests (they mock the adapter). Reverted to the vanilla `Kingdom.All` idiom; the scan was never hot. LESSONS-LEARNED "Adapters & TaleWorlds API". |
+| P2 | HIGH | Total stats + momentum reset on every save/reload. | The store was synced as a `Dictionary<string,string>` (~1000 entries deep-campaign); the engine `IDataStore` didn't round-trip the container at scale. Switched to JSON-encoding the dict to a single string and syncing the string (`_taom_wotr_momentum_v2`). |
+
+Meta-lesson: finding #4 is the clearest example this feature produced of an "optimization" that traded correctness for an imperceptible gain — the deep-review agent flagged a non-hot linear scan as HIGH, and the fix (an unverified API substitution) shipped a live regression that the whole test suite couldn't see because the adapter is mocked. `simplicity-criterion.md` + "Verify Before Reference" both should have blocked it; the discipline gap was accepting a review finding's severity and "fixing" it without verifying the replacement API. Also a minor UI polish (popup number columns widened 50→120 for 5-6 digit totals).
+
 ## LESSONS-LEARNED entries appended
 
 - Localization & UI: hotkey-category / queried-key verification on ported UI.

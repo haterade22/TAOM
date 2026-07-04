@@ -4,7 +4,6 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core.ViewModelCollection.ImageIdentifiers;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
-using TaleWorlds.ObjectSystem;
 using TAOM.Features.WarOfTheRingMomentum.Domain;
 
 namespace TAOM.Features.WarOfTheRingMomentum.UI;
@@ -191,6 +190,10 @@ public sealed class MomentumPopupVM : ViewModel
     {
         if (string.IsNullOrEmpty(kingdomId))
             return null;
-        return MBObjectManager.Instance?.GetObject<Kingdom>(kingdomId);
+        // Kingdom.All (== Campaign.Current.Kingdoms), the vanilla idiom. MBObjectManager
+        // .GetObject<Kingdom>(id) does NOT resolve campaign kingdoms → returned null → the
+        // Leaders/Allies banner lists came back empty (blank rows). ~30-kingdom scan, run
+        // only on popup rebuild — not a hot path.
+        return Kingdom.All?.FirstOrDefault(k => k?.StringId == kingdomId);
     }
 }

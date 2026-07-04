@@ -2,10 +2,11 @@
 
 ## 2026-07-03
 
-### fix(momentum): stats/momentum reset on reload + narrow popup number columns (#327)
+### fix(momentum): reload reset + blank banners + Relative-Strength 0 + narrow columns (#327)
 
-Two in-game issues found during play-testing:
+In-game play-testing found three issues (two of them self-inflicted by the deep-review efficiency "fix"):
 
+- **Blank Leaders/Allies banners + Relative-Strength stuck at 0/0:** the deep-review efficiency fix had swapped `Kingdom.All.FirstOrDefault(k => k.StringId==id)` for `MBObjectManager.GetObject<Kingdom>(id)` in `KingdomStrengthAdapter` + `MomentumPopupVM.ResolveKingdom`. `MBObjectManager` does NOT resolve campaign kingdoms → null → blank banners + every side strength 0 (so the daily strength award never fired). Reverted to the vanilla `Kingdom.All` idiom (the scan was never a hot path). Unit tests missed it because they mock the adapter — live-only regression.
 - **State reset on save/reload:** the momentum store was synced as a `Dictionary<string,string>` (up to ~1000 entries in a deep campaign), which did not round-trip through the engine's `IDataStore` at scale — total stats and momentum reset every load. Now the store dictionary is JSON-encoded to a single string and that string is synced (key `_taom_wotr_momentum_v2`); a single string is unbounded and needs no container definition. Existing test-saves reset once (old dict-format key is ignored), then persist.
 - **Popup number columns wrapped** (`12200` rendered as `200-`/`00`): the four value `TextWidget`s were pinned at `SuggestedWidth=50`, too narrow for 5-6 digit totals. Widened to 120.
 
@@ -59,7 +60,7 @@ Codex (1 HIGH, 2 MED, 2 LOW, all confirmed + fixed; RCA `docs/reviews/rca-wotr-m
 
 New-game startup grants (`startup_resources_config.xml`; new campaigns only):
 
-- Elves (rivendell/lothlorien/mirkwood): influence 1000 → **1500** per clan (gold stays 600k per lord).
+- Elves (rivendell/lothlorien/mirkwood): influence 1000 → **1250** per clan (gold stays 600k per lord).
 - Erebor: gold 50k → **800k**, influence 150 → **1000**.
 - Khuzait (Easterlings): gold 50k → **75k** (influence stays 1000).
 - Gondor: gold 50k → **100k**, influence 500 → **1000**.
