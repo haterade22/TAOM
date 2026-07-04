@@ -104,3 +104,14 @@ All 4 hooks lazy-cache their `IoC.Resolve` (`??=`); the `CanTradeWith` hook lazy
 
 - Deep-review RCA: `docs/reviews/rca-caravan-trade-2026-07-04.md` (HIGH war-gate Neutral-inversion caught + fixed).
 - Engine background: `docs/reference/engine/settlement-economy-food-prosperity.md` §Caravans.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/INDEX.md](../INDEX.md)
+- [docs/reference/engine/settlement-economy-food-prosperity.md](../reference/engine/settlement-economy-food-prosperity.md)
+
+<!-- backlinks-end -->

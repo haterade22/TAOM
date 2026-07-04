@@ -165,3 +165,14 @@ The feature was play-tested iteratively after the reviews; the notable live-only
 | Player-founded kingdom never enrolled | enrollment keyed on kingdom-id via `alignment.json` (dynamic ids absent) | culture fallback |
 | Khand shown as Evil | data: `battania` was `evil` | set Neutral in `alignment.json` + sweep reconciliation |
 | Map bar pinned to one end / Total an ever-growing negative | threshold-normalized slider + runaway momentum | ratio slider + colored bounded Total |
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/features/war-of-the-ring.md](./war-of-the-ring.md)
+- [docs/INDEX.md](../INDEX.md)
+
+<!-- backlinks-end -->

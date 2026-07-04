@@ -262,6 +262,7 @@ The WotR system **extends** the existing Diplomacy feature, not replaces it:
 ## Referenced by
 
 - [docs/features/alignment-aware-execution.md](./alignment-aware-execution.md)
+- [docs/features/war-of-the-ring-momentum.md](./war-of-the-ring-momentum.md)
 - [docs/INDEX.md](../INDEX.md)
 
 <!-- backlinks-end -->
