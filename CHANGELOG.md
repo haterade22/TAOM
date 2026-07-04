@@ -2,6 +2,14 @@
 
 ## 2026-07-04
 
+### fix(momentum): map bar now moves + colored balance total (#327)
+
+Two play-test UI issues:
+
+- **Map slider was pinned to one end and never moved.** It normalized the raw momentum lead against the victory threshold (500), but in a long war the lead accumulates many times past that (trimmed-at-cap events never subtract; the player gate can hold the war open), so it clamped forever. Replaced with a RELATIVE balance ratio `(free − evil)/(free + evil)` mapped to −100..+100 — the bar stays readable at any magnitude. Sign flipped so **positive = Free ahead = bar fills right toward the green end** (was positive = Evil), matching green-good intuition.
+- **Popup total was an ever-growing negative number in near-invisible dark text.** Now shows the bounded balance magnitude (0–100), colored **green when the Free Peoples lead, red when Evil leads** (parchment when even) — direction by color, so the sign isn't needed; also fixes the readability.
+
+
 ### balance(alignment): Khand (battania) is now Neutral, not Evil
 
 Changed `execution/alignment.json` `battania` from `evil` to `neutral`. Khand is a shared alignment key, so this applies to ALL alignment-aware systems, not just the War of the Ring meter: it no longer enrolls on the Evil side of the momentum war, no longer blocks/ is blocked by recruitment, its troops no longer desert over alignment, and it gets neutral execution-relation + diplomacy treatment. Updated the enrollment comment + the three alignment feature docs. New-campaign + live-save effective (config read at load; the momentum meter drops Khand on the next enrollment sweep).

@@ -158,7 +158,7 @@
 											</Children>
 										</ListPanel>
 
-										<TextWidget HorizontalAlignment="Center" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="Momentum.TitleSmall.Text" Text="@Momentum"/>
+										<TextWidget HorizontalAlignment="Center" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="Momentum.TitleSmall.Text" Color="@MomentumColor" Text="@Momentum"/>
 
 										<Widget WidthSizePolicy = "StretchToParent" HeightSizePolicy = "Fixed" SuggestedHeight="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Sprite="GradientDivider_9" AlphaFactor="0.4" MarginLeft="10" MarginRight="10" MarginTop="10" MarginBottom="10"/>
 

@@ -25,29 +25,57 @@ public class MomentumQueryServiceTests
     }
 
     [TestMethod]
-    public void SliderValue_FreeAhead_IsNegative()
+    public void SliderValue_FreeAhead_IsPositive()
     {
-        // +250 internal at threshold 500 → 50% victory progress → slider −50 (Free = left).
+        // Ratio balance, positive = Free. Free 25000 vs Evil 0 → fully Free → +100.
         _stateStore.State.Free.EditMomentum(250 * MomentumWarState.MomentumScale);
 
-        Assert.AreEqual(-50, _sut.SliderValue);
+        Assert.AreEqual(100, _sut.SliderValue);
     }
 
     [TestMethod]
-    public void SliderValue_EvilAhead_IsPositive()
+    public void SliderValue_EvilAhead_IsNegative()
     {
         _stateStore.State.Evil.EditMomentum(250 * MomentumWarState.MomentumScale);
 
-        Assert.AreEqual(50, _sut.SliderValue);
+        Assert.AreEqual(-100, _sut.SliderValue);
     }
 
     [TestMethod]
-    public void SliderValue_BeyondThreshold_ClampsAt100()
+    public void SliderValue_FreeTwiceEvil_IsPositiveThird()
     {
-        // Player gate can hold the war open past the threshold.
-        _stateStore.State.Evil.EditMomentum(800 * MomentumWarState.MomentumScale);
+        // Free 20000 vs Evil 10000 → (2−1)/(2+1) = +33 (Free moderately ahead).
+        _stateStore.State.Free.EditMomentum(200 * MomentumWarState.MomentumScale);
+        _stateStore.State.Evil.EditMomentum(100 * MomentumWarState.MomentumScale);
 
-        Assert.AreEqual(100, _sut.SliderValue);
+        Assert.AreEqual(33, _sut.SliderValue);
+    }
+
+    [TestMethod]
+    public void SliderValue_HugeRunawayLead_StillMovesNotPinned()
+    {
+        // The bug: a long-war runaway lead used to clamp the bar to one end forever.
+        // With the ratio, a close-but-large contest reads near center, never hard-pinned.
+        _stateStore.State.Free.EditMomentum(1_000_000);
+        _stateStore.State.Evil.EditMomentum(1_100_000);
+
+        int v = _sut.SliderValue;
+        Assert.IsTrue(v < 0 && v > -20, $"expected a small negative (Evil slightly ahead), got {v}");
+    }
+
+    [TestMethod]
+    public void SliderValue_NoMomentum_IsZero()
+    {
+        Assert.AreEqual(0, _sut.SliderValue);
+    }
+
+    [TestMethod]
+    public void SliderValue_BothSidesEqual_IsZero()
+    {
+        _stateStore.State.Free.EditMomentum(5000);
+        _stateStore.State.Evil.EditMomentum(5000);
+
+        Assert.AreEqual(0, _sut.SliderValue);
     }
 
     [TestMethod]

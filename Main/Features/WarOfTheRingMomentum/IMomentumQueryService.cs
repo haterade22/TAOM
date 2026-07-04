@@ -7,9 +7,10 @@ namespace TAOM.Features.WarOfTheRingMomentum;
 
 /// <summary>
 /// Read facade for the UI layer (map slider + popup). The slider sign convention is
-/// pinned HERE and only here: positive = Evil ahead (LOTRAOM visual parity — the map
-/// slider fills rightward toward Mordor), computed as
-/// −1 × internal/threshold × 100, clamped to ±100.
+/// pinned HERE and only here: <b>positive = Free ahead</b> (the bar fills rightward toward
+/// the green end when the Free Peoples lead; negative = Evil, toward red). It is a RATIO of
+/// the two sides' momentum, not a victory-threshold fraction, so the bar keeps moving in a
+/// long war instead of clamping to one end.
 /// </summary>
 public interface IMomentumQueryService
 {
@@ -20,7 +21,7 @@ public interface IMomentumQueryService
     /// <summary>Signed internal momentum: positive = Free ahead.</summary>
     float InternalMomentum { get; }
 
-    /// <summary>Map-slider value: −100..+100, POSITIVE = EVIL ahead (victory-progress normalized).</summary>
+    /// <summary>Map-slider value: −100..+100, POSITIVE = FREE ahead (relative-balance ratio).</summary>
     int SliderValue { get; }
 
     int VictoryThreshold { get; }

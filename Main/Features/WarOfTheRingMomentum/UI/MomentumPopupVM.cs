@@ -23,6 +23,10 @@ public sealed class MomentumPopupVM : ViewModel
     private static readonly MomentumActionType[] ActionTypes =
         (MomentumActionType[])Enum.GetValues(typeof(MomentumActionType));
 
+    private static readonly Color FreeColor = new Color(0.36f, 0.82f, 0.36f);    // green — Free ahead
+    private static readonly Color EvilColor = new Color(0.87f, 0.28f, 0.26f);    // red — Evil ahead
+    private static readonly Color NeutralColor = new Color(0.90f, 0.86f, 0.78f); // parchment — even
+
     private readonly IMomentumQueryService _query;
     private readonly Action _onClose;
 
@@ -63,6 +67,7 @@ public sealed class MomentumPopupVM : ViewModel
     // ---- live-rebuilt state ----
 
     [DataSourceProperty] public string Momentum { get; private set; }
+    [DataSourceProperty] public Color MomentumColor { get; private set; } = NeutralColor;
     [DataSourceProperty] public ImageIdentifierVM GoodAllianceVisual { get; private set; }
     [DataSourceProperty] public ImageIdentifierVM EvilAllianceVisual { get; private set; }
     [DataSourceProperty] public MBBindingList<FactionRelationshipVM> GoodFactionLeader { get; private set; }
@@ -76,10 +81,17 @@ public sealed class MomentumPopupVM : ViewModel
 
     private void Rebuild()
     {
+        // Show the bounded relative balance (SliderValue, −100..+100, positive = Free) rather
+        // than the raw runaway InternalMomentum. The magnitude (0–100) reads as "how far ahead",
+        // and the colour carries the direction (green = Free, red = Evil) so the sign isn't needed.
+        int balance = _query.SliderValue;
         var total = new TextObject("{=taom_wotr_total}Total: {MOMENTUM}");
-        total.SetTextVariable("MOMENTUM", (int)_query.InternalMomentum);
+        total.SetTextVariable("MOMENTUM", Math.Abs(balance));
         Momentum = total.ToString();
         OnPropertyChangedWithValue(Momentum, nameof(Momentum));
+
+        MomentumColor = balance > 0 ? FreeColor : balance < 0 ? EvilColor : NeutralColor;
+        OnPropertyChangedWithValue(MomentumColor, nameof(MomentumColor));
 
         RebuildLeadersAndBanners();
         RebuildParticipants();

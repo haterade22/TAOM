@@ -29,12 +29,22 @@ public class MomentumQueryService : IMomentumQueryService
     {
         get
         {
-            // LOTRAOM parity (MomentumIndicatorItemVM): −1 × internal/threshold × 100.
-            // Clamped because momentum can exceed the threshold while the player
-            // victory gate holds the war open.
-            float threshold = Math.Max(1, VictoryThreshold);
-            int raw = -1 * (int)(InternalMomentum / threshold * 100f);
-            return Math.Max(-100, Math.Min(100, raw));
+            // RELATIVE balance of the two sides' momentum, mapped to [-100, +100].
+            // POSITIVE = FREE ahead (bar fills right, toward the green end); negative = Evil.
+            //
+            // Deliberately NOT the old "-internal / victoryThreshold × 100": in a long war the
+            // accumulated momentum grows many times past the victory threshold (trimmed-at-cap
+            // events never subtract, and the player gate can hold the war open), so the
+            // threshold-normalized value permanently clamped to one end and the bar never moved.
+            // A ratio keeps the bar alive and readable regardless of magnitude.
+            long freeM = Math.Max(0L, _stateStore.State.Free.SideMomentum);
+            long evilM = Math.Max(0L, _stateStore.State.Evil.SideMomentum);
+            long total = freeM + evilM;
+            if (total == 0L)
+                return 0;
+
+            long value = (freeM - evilM) * 100L / total;
+            return (int)Math.Max(-100L, Math.Min(100L, value));
         }
     }
 
