@@ -107,15 +107,15 @@ public class LanguageDataXmlTests
     }
 
     [TestMethod]
-    public void AllLanguageDirs_HaveExactlyNineLanguageFiles()
+    public void AllLanguageDirs_HaveExactlyTenLanguageFiles()
     {
         foreach (var lang in SupportedLanguageDirs)
         {
             var path = Path.Combine(LanguagesPath, lang, "language_data.xml");
             var doc = XDocument.Load(path);
             var count = doc.Descendants("LanguageFile").Count();
-            Assert.AreEqual(9, count,
-                $"Languages/{lang}/language_data.xml should declare exactly 9 LanguageFile entries (module, wanderer, companion, cc, career, messenger, lotr_issue, xslt, emissary)");
+            Assert.AreEqual(10, count,
+                $"Languages/{lang}/language_data.xml should declare exactly 10 LanguageFile entries (module, wanderer, companion, cc, career, messenger, lotr_issue, xslt, emissary, wotr)");
         }
     }
 

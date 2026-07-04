@@ -116,6 +116,7 @@ def english_source_files(module: str) -> list[tuple[Path, str]]:
             ("taom_career_strings.xml",                       "std_taom_career_strings_{locale}.xml"),
             ("taom_messenger_strings.xml",                    "std_taom_messenger_strings_{locale}.xml"),
             ("taom_xslt_strings.xml",                         "std_taom_xslt_strings_{locale}.xml"),
+            ("taom_wotr_strings.xml",                         "std_taom_wotr_strings_{locale}.xml"),
         ]:
             src = REPO_ROOT / "Main" / "_Module" / "ModuleData" / src_name
             if src.exists():
