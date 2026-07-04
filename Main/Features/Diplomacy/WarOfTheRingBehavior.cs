@@ -14,6 +14,8 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
     // transitions on every load. Currently idempotent (AreAtWar guards), but ANY non-idempotent side
     // effect added later (notifications, influence, story flags) would replay.
     private int _persistedPhase = (int)WarPhase.Peace;
+    // WotR Momentum #327 — persisted outcome, same int-backed convention as phase.
+    private int _persistedOutcome = (int)WarOutcome.None;
 
     public WarOfTheRingBehavior(IWarOfTheRingService wotrService, IModLogger logger)
     {
@@ -24,7 +26,11 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
     public override void RegisterEvents()
     {
         _logger.LogInfo("[WarOfTheRing] WarOfTheRingBehavior registering events");
-        CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ => _persistedPhase = (int)WarPhase.Peace);
+        CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ =>
+        {
+            _persistedPhase = (int)WarPhase.Peace;
+            _persistedOutcome = (int)WarOutcome.None;
+        });
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
     }
@@ -34,12 +40,19 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
         // Phase 9b #129 P1 — persist phase across save-load. Stored as int (enum-backed) since
         // dataStore primitives are safer than enum direct.
         if (dataStore.IsSaving)
+        {
             _persistedPhase = (int)_wotrService.CurrentPhase;
+            _persistedOutcome = (int)_wotrService.Outcome;
+        }
 
         dataStore.SyncData("WarOfTheRing_CurrentPhase", ref _persistedPhase);
+        dataStore.SyncData("WarOfTheRing_Outcome", ref _persistedOutcome);
 
         if (dataStore.IsLoading)
+        {
             _wotrService.SetPhaseFromSave((WarPhase)_persistedPhase);
+            _wotrService.SetOutcomeFromSave((WarOutcome)_persistedOutcome);
+        }
     }
 
     private void OnSessionLaunched(CampaignGameStarter campaignGameStarter)

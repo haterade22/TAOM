@@ -220,4 +220,120 @@ public class WarOfTheRingServiceTests
         _allianceAdapter.Received(1).DeclareWar("isengard", "vlandia");
         _allianceAdapter.Received(1).DeclareWar("empire", "vlandia");
     }
+
+    // ---- WotR Momentum #327: EndWar / WarEnded terminal state ----
+
+    [TestMethod]
+    public void Outcome_AtStart_IsNone()
+    {
+        CreateSut();
+        Assert.AreEqual(WarOutcome.None, _sut.Outcome);
+    }
+
+    [TestMethod]
+    public void EndWar_FromFullWar_SetsWarEndedPhaseAndOutcome()
+    {
+        CreateSut();
+        _sut.CheckPhaseTransition(45f);
+
+        _sut.EndWar(WarOutcome.FreeVictory);
+
+        Assert.AreEqual(WarPhase.WarEnded, _sut.CurrentPhase);
+        Assert.AreEqual(WarOutcome.FreeVictory, _sut.Outcome);
+    }
+
+    [TestMethod]
+    public void EndWar_SetsIsWarOfTheRingActiveFalse()
+    {
+        CreateSut();
+        _sut.CheckPhaseTransition(45f);
+        Assert.IsTrue(_sut.IsWarOfTheRingActive);
+
+        _sut.EndWar(WarOutcome.EvilVictory);
+
+        Assert.IsFalse(_sut.IsWarOfTheRingActive);
+    }
+
+    [TestMethod]
+    public void EndWar_LiftsShouldBlockPeaceForHostilePairs()
+    {
+        _diplomacyService.GetRelationshipTier("empire_w", "empire_s").Returns(AllianceTier.Hostile);
+        CreateSut();
+        _sut.CheckPhaseTransition(45f);
+        Assert.IsTrue(_sut.ShouldBlockPeace("empire_w", "empire_s"));
+
+        _sut.EndWar(WarOutcome.FreeVictory);
+
+        Assert.IsFalse(_sut.ShouldBlockPeace("empire_w", "empire_s"));
+    }
+
+    [TestMethod]
+    public void EndWar_CalledTwice_KeepsFirstOutcome()
+    {
+        CreateSut();
+        _sut.CheckPhaseTransition(45f);
+
+        _sut.EndWar(WarOutcome.FreeVictory);
+        _sut.EndWar(WarOutcome.EvilVictory);
+
+        Assert.AreEqual(WarOutcome.FreeVictory, _sut.Outcome);
+        Assert.AreEqual(WarPhase.WarEnded, _sut.CurrentPhase);
+    }
+
+    [TestMethod]
+    public void EndWar_NoneOutcome_DoesNothing()
+    {
+        CreateSut();
+        _sut.CheckPhaseTransition(45f);
+
+        _sut.EndWar(WarOutcome.None);
+
+        Assert.AreEqual(WarPhase.FullWar, _sut.CurrentPhase);
+        Assert.AreEqual(WarOutcome.None, _sut.Outcome);
+    }
+
+    [TestMethod]
+    public void CheckPhaseTransition_AfterWarEnded_StaysWarEnded()
+    {
+        CreateSut();
+        _sut.CheckPhaseTransition(45f);
+        _sut.EndWar(WarOutcome.FreeVictory);
+
+        _sut.CheckPhaseTransition(1000f);
+
+        Assert.AreEqual(WarPhase.WarEnded, _sut.CurrentPhase);
+    }
+
+    [TestMethod]
+    public void SetPhaseFromSave_WarEnded_RoundTrips()
+    {
+        CreateSut();
+        _sut.SetPhaseFromSave(WarPhase.WarEnded);
+
+        Assert.AreEqual(WarPhase.WarEnded, _sut.CurrentPhase);
+        Assert.IsFalse(_sut.IsWarOfTheRingActive);
+    }
+
+    [TestMethod]
+    public void SetOutcomeFromSave_RestoresOutcome()
+    {
+        CreateSut();
+        _sut.SetOutcomeFromSave(WarOutcome.EvilVictory);
+
+        Assert.AreEqual(WarOutcome.EvilVictory, _sut.Outcome);
+    }
+
+    [TestMethod]
+    public void EndWar_AfterLoadedWarEndedPhaseWithNoOutcome_SetsOutcome()
+    {
+        // Load-reconcile path: an older/interrupted save can carry phase WarEnded
+        // with no persisted outcome — Momentum's reconcile calls EndWar(store.Victor).
+        CreateSut();
+        _sut.SetPhaseFromSave(WarPhase.WarEnded);
+
+        _sut.EndWar(WarOutcome.FreeVictory);
+
+        Assert.AreEqual(WarOutcome.FreeVictory, _sut.Outcome);
+        Assert.AreEqual(WarPhase.WarEnded, _sut.CurrentPhase);
+    }
 }

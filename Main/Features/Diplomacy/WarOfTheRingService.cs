@@ -15,6 +15,27 @@ public class WarOfTheRingService : IWarOfTheRingService
 
     public WarPhase CurrentPhase { get; private set; } = WarPhase.Peace;
     public bool IsWarOfTheRingActive => CurrentPhase == WarPhase.FullWar;
+    public WarOutcome Outcome { get; private set; } = WarOutcome.None;
+
+    // WotR Momentum #327 — terminal transition. First non-None outcome wins; the phase flip
+    // to WarEnded is what lifts all three peace-block layers (they key off FullWar via
+    // IsWarOfTheRingActive/ShouldBlockPeace). Peace-out of live wars is the momentum victory
+    // service's job, ordered AFTER this call so MakePeaceAction is no longer blocked.
+    public void EndWar(WarOutcome outcome)
+    {
+        if (outcome == WarOutcome.None) return;
+        if (Outcome != WarOutcome.None) return;
+
+        Outcome = outcome;
+        CurrentPhase = WarPhase.WarEnded;
+        _logger.LogInfo($"War of the Ring: war ended — {outcome}");
+    }
+
+    public void SetOutcomeFromSave(WarOutcome outcome)
+    {
+        Outcome = outcome;
+        _logger.LogInfo($"War of the Ring: Outcome restored from save → {outcome}");
+    }
 
     // Phase 9b #129 P1 — exposed for SyncData round-trip without giving public setter.
     // Behavior's SyncData calls SetPhaseFromSave during load to rehydrate.
@@ -49,6 +70,8 @@ public class WarOfTheRingService : IWarOfTheRingService
 
     public void CheckPhaseTransition(float elapsedDays)
     {
+        // WotR Momentum #327 — WarEnded is terminal; never re-enter the escalation ladder.
+        if (CurrentPhase == WarPhase.WarEnded) return;
         if (!GetEffectiveEnabled()) return;
 
         var (phase1Day, phase2Day) = GetEffectivePhaseDays();
