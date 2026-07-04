@@ -95,7 +95,8 @@
 - [banner-injection](features/banner-injection.md) — player banner persistence
 - [banner-color-persistence](features/banner-color-persistence.md) — clan colors everywhere (Patch23 + Patch24)
 - [named-companions](features/named-companions.md) — 18 lore companions as recruitable wanderers
-- [war-of-the-ring](features/war-of-the-ring.md) — endgame WotR phase
+- [war-of-the-ring](features/war-of-the-ring.md) — endgame WotR phase machine (Peace→IsengardWar→FullWar→WarEnded)
+- [war-of-the-ring-momentum](features/war-of-the-ring-momentum.md) — Evil-vs-Good progress meter + on-map bar/popup + victory-ends-the-war (#327)
 - [diplomacy](features/diplomacy.md), [army-targeting](features/army-targeting.md) — see also TaomTargetScoreModel + Patch22 (border proximity floor)
 
 ### Sandbox, lifecycle, & UI

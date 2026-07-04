@@ -38,13 +38,25 @@ Every service is pure and unit-tested; the behavior holds no logic beyond routin
 
 ### Enrollment (deviation from LOTRAOM, justified)
 
-LOTRAOM enrolled kingdoms from its own war-event scripting. TAOM's phase machine already owns war declaration, so momentum **enrolls dynamically**: on session launch and each daily tick while `CurrentPhase == FullWar`, every kingdom whose `IAlignmentService.GetKingdomSide` is Free or Evil is swept into its side (Neutral excluded). Enrollment is bookkeeping only — it never declares wars or alliances (the donor's `StanceType.Alliance` reflection is impossible on 1.4.6 anyway; the enum has no `Alliance` value). Dynamic enrollment automatically covers player-founded and revolt kingdoms that scripted enrollment could not.
+LOTRAOM enrolled kingdoms from its own war-event scripting. TAOM's phase machine already owns war declaration, so momentum **enrolls dynamically**: on session launch and each daily tick while `CurrentPhase == FullWar`, every kingdom whose side is Free or Evil is swept into that side (Neutral excluded). Enrollment is bookkeeping only — it never declares wars or alliances (the donor's `StanceType.Alliance` reflection is impossible on 1.4.6 anyway; the enum has no `Alliance` value).
+
+Side resolution is `IAlignmentService.GetKingdomSide(kingdomId)` (keyed on kingdom StringId via `execution/alignment.json`), **falling back to `GetCultureSide(kingdom.Culture.StringId)` when the kingdom id is Neutral/absent**. The culture fallback is what covers **player-founded and revolt kingdoms** — their runtime StringId (`new_kingdom*`) isn't in `alignment.json`, so without it the player's own kingdom would resolve Neutral and never appear on the meter (Codex #327 HIGH).
+
+Each sweep also **reconciles** the enrolled sets against the current world: it drops any enrolled kingdom that is no longer live (a `KingdomDestroyed` missed while the feature was toggled off) OR whose current side no longer matches where it's enrolled (an `alignment.json` edit — e.g. Khand/`battania` flipped to Neutral — or a runtime culture change). The enroll loop then re-adds it to the correct side if it moved Free↔Evil. Without this, a kingdom enrolled before its alignment changed stayed stuck on the old side on an existing save.
 
 ### Victory ↔ phase-machine integration
 
 `WarPhase` gained a terminal `WarEnded` value and `IWarOfTheRingService` gained `EndWar(WarOutcome)` / `Outcome`. All three peace-block layers (`TaomDiplomacyModel.IsAtConstantWar`, `TaomKingdomDecisionPermissionModel`, the `MakePeaceAction` prefix) route through `IsWarOfTheRingActive` / `ShouldBlockPeace`, which key off `CurrentPhase == FullWar` — so flipping the phase to `WarEnded` lifts all three at once with **zero patch changes**.
 
 The victory sequence order is load-bearing (pinned by a `Received.InOrder` test): **freeze the state → `EndWar` → peace-out cross-side pairs**. `MakePeaceAction` is blocked until the phase leaves `FullWar`, so peace must come after `EndWar`. Both victories are gated on the player-participation requirement (LOTRAOM parity — the donor gates the Evil branch too). A load-reconcile in `OnSessionLaunched` calls `EndWar` if a save says the momentum war ended but the phase machine hasn't caught up (idempotent).
+
+## UI & display
+
+**On-map bar** (`MomentumMapIndicator.xml` + `MomentumIndicatorMapView`): a persistent "War of the Ring" slider on the campaign map, added at FullWar and removed on victory (or when either MCM toggle is off). Its value is `IMomentumQueryService.SliderValue` — a **relative-balance ratio** `(free − evil) / (free + evil)` mapped to −100..+100, **positive = Free ahead** (the handle fills rightward toward the green end; negative = Evil, toward red). It is deliberately NOT a victory-threshold fraction: in a long war the accumulated momentum grows many times past the threshold, so a threshold-normalized value clamped to one end and the bar never moved. The ratio stays readable at any magnitude.
+
+**Detail popup** (`MomentumView.xml` + `MomentumPopupController`/`MomentumPopupVM`): faction banners (Gondor/Mordor leaders), Leaders/Allies rows (the enrolled kingdoms, banners rendered from each kingdom's `Banner` via `BannerImageIdentifierVM`), a per-`MomentumActionType` breakdown table with accumulating tooltips, and a Total Stats table (kills/settlements captured/villages raided). It ctor-computes and live-recomputes on `MomentumChanged` while open (unsubscribes on close). The **"Total:" line shows the bounded balance magnitude (0–100), colored green when the Free Peoples lead, red when Evil leads, parchment when even** — direction is carried by colour so the sign isn't needed (and it fixes the near-invisible dark default text). Opened by clicking the bar; closed by the button or Escape (`GenericPanelGameKeyCategory` "Exit").
+
+Kingdoms are resolved by StringId with `Kingdom.All.FirstOrDefault(k => k.StringId == id)` (the vanilla idiom) — **not** `MBObjectManager.GetObject<Kingdom>`, which does not resolve campaign kingdoms and returned null (blank banners + zero strength).
 
 ## Configuration
 
@@ -86,8 +98,8 @@ The string transport (rather than syncing the `Dictionary<string,string>` direct
 | `MomentumEnrollmentService.cs` | side membership sweep |
 | `MomentumVictoryService.cs` | victory decision + ordered peace-out |
 | `PlayerMomentumService.cs` | participation multiplier + victory gate |
-| `MomentumStateStore.cs` | flat-dict SyncData + `MomentumChanged` event |
-| `MomentumQueryService.cs` | UI read facade (pins the `positive = Evil` slider sign) |
+| `MomentumStateStore.cs` | serialize/deserialize state ↔ flat dict (JSON-stringified for SyncData by the behavior) + `MomentumChanged` event |
+| `MomentumQueryService.cs` | UI read facade (pins the ratio `SliderValue`, `positive = Free`) |
 | `MomentumConfigProvider.cs` + `MomentumSettingsProvider.cs` | validated JSON + MCM-over-JSON |
 | `MomentumTextService.cs` | localized event-description composer |
 | `WarOfTheRingMomentumBehavior.cs` | thin campaign-event entry point + SyncData |
@@ -105,7 +117,7 @@ The string transport (rather than syncing the `Dictionary<string,string>` direct
 
 ## Tests
 
-`TAOM.Tests/Features/WarOfTheRingMomentum/` — 142 tests across 9 files: domain math (scale, tanh removed, queue-cap trim), config validation (one per rule), state-store round-trip (NaN reject, malformed skip, pipe-in-description, re-cap), player service (gate, multiplier, tie), event service (scoring, decay, filters, donor-parity quirks), enrollment (never-Neutral, dedup, removal), victory (threshold/elimination, player gate, `EndWar`-before-`MakePeace` ordering, idempotence), query facade (slider sign, clamp). Plus the extended `WarOfTheRingServiceTests` for the `WarEnded`/`EndWar` phase transition.
+`TAOM.Tests/Features/WarOfTheRingMomentum/` — ~155 tests across 9 files: domain math (scale, queue-cap trim), config validation (one per rule), state-store round-trip (NaN reject, malformed skip, pipe-in-description, re-cap), player service (gate, multiplier, tie), event service (scoring, decay, filters, battle-ratio clamp, donor-parity quirks), enrollment (never-Neutral, dedup, elimination + alignment-change reconciliation, player-founded culture fallback), victory (threshold/elimination, player gate, `EndWar`-before-`MakePeace` ordering, idempotence), query facade (ratio slider sign, runaway-doesn't-pin, zero/equal). Plus the extended `WarOfTheRingServiceTests` for the `WarEnded`/`EndWar` phase transition. The adapters (`KingdomStrengthAdapter`, `WarEventSnapshotAdapter`) and the behavior/VMs are boundary code (mocked in service tests; live-only per ADR-008) — note this is why the `MBObjectManager` kingdom-resolution regression passed the whole suite yet broke in-game.
 
 ## How-To
 
@@ -122,13 +134,28 @@ The string transport (rather than syncing the `Dictionary<string,string>` direct
 - **No alliance-stance setting**: `StanceType.Alliance` doesn't exist on 1.4.6; TAOM Diplomacy owns stances anyway.
 - **Raid/army don't apply the participation multiplier or victory-gate credit**: donor parity — LOTRAOM applied both only to battles and sieges. Documented on the snapshot DTOs.
 - **Dropped the dead tanh soft-cap** (`softCapDivisor`/`DisplayMomentum`): never wired into the donor's UI either; removed per the simplicity criterion.
+- **Slider is a relative-balance ratio, positive = Free** (donor + first cut used a threshold fraction, positive = Evil): the threshold fraction pinned to one end in a long war, and positive = Evil clashed with the green-good colour. See UI & display.
+- **Khand (`battania`) is Neutral, not Evil** (2026-07-04 balance decision): changed in the shared `execution/alignment.json`, so it applies to all alignment features, not just the meter.
 
 ## Known limitations
 
+- **Momentum accumulates without bound.** Events trimmed at the per-type cap (100) never subtract back out (LOTRAOM parity), and the player-participation gate can hold the war open indefinitely, so `InternalMomentum` can grow far past the victory threshold in a long campaign. The victory *check* still works (threshold or elimination), but the raw magnitude is not a bounded "score" — which is exactly why the map bar and the popup Total both use the bounded balance ratio, not the raw value. A future rebalance could make cap-trim subtract (bounding momentum to the decaying event window) if a bounded score is wanted.
 - Event descriptions freeze in the write-time language (stored resolved in the save).
 - A battle resolving earlier in the campaign day than the daily enrollment sweep on the exact day FullWar first triggers is dropped (war "begins" that tick).
-- Popup "Total:" reads positive = Free ahead while the slider reads positive = Evil ahead — each self-consistent within its own layout; no on-screen number is shared.
 
 ## Status
 
-Built + 142 tests green + deep-reviewed (5 agents, 6 findings fixed — RCA `docs/reviews/rca-wotr-momentum-2026-07-03.md`) + Codex-reviewed. **In-game verification (meter render, popup, victory flow, save/reload) owed** — rendering ≠ live per `gui-ui.md`.
+Built + ~155 tests green + deep-reviewed (5 agents, 6 findings fixed) + Codex-reviewed (1 HIGH + 4 lower, all fixed) — RCA `docs/reviews/rca-wotr-momentum-2026-07-03.md`. **In-game confirmed:** map bar renders + moves, popup renders with faction banners, Relative-Strength award works, Khand dropped from Evil. **Still owed:** save/reload persistence round-trip and the full victory flow (inquiry → wars end → meter freezes) under a live game. Not yet merged to trunk (`/finish-branch`); AI localization pass pending (`ANTHROPIC_API_KEY`).
+
+## Play-test fix history (2026-07-03 → 07-04)
+
+The feature was play-tested iteratively after the reviews; the notable live-only fixes (all on `feature/wotr-momentum`, detailed in the RCA + CHANGELOG):
+
+| Symptom | Root cause | Fix |
+|---------|-----------|-----|
+| Blank Leaders/Allies banners + Relative-Strength 0/0 | deep-review "efficiency fix" swapped `Kingdom.All.FirstOrDefault` → `MBObjectManager.GetObject<Kingdom>`, which returns null for campaign kingdoms | reverted to `Kingdom.All` |
+| Total stats + momentum reset every reload | store synced as a `Dictionary<string,string>` (~1000 entries) didn't round-trip the engine `IDataStore` at scale | JSON-encode the dict to one string, sync the string (`_taom_wotr_momentum_v2`) |
+| Popup number columns wrapped (`12200`→`200-`/`00`) | value columns pinned at `SuggestedWidth=50` | widened to 120 |
+| Player-founded kingdom never enrolled | enrollment keyed on kingdom-id via `alignment.json` (dynamic ids absent) | culture fallback |
+| Khand shown as Evil | data: `battania` was `evil` | set Neutral in `alignment.json` + sweep reconciliation |
+| Map bar pinned to one end / Total an ever-growing negative | threshold-normalized slider + runaway momentum | ratio slider + colored bounded Total |

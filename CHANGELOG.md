@@ -2,6 +2,11 @@
 
 ## 2026-07-04
 
+### docs(momentum): refresh feature doc + index the feature (#327)
+
+Brought `docs/features/war-of-the-ring-momentum.md` current with all play-test fixes (kingdom resolution, JSON-string persistence, culture-fallback + reconciling enrollment, Khand-neutral, ratio slider, colored Total), added a UI & display section + a play-test fix-history table + the runaway-momentum known-limitation, and indexed the feature in `docs/INDEX.md` + CLAUDE.md Key Paths (it was undocumented in both).
+
+
 ### fix(momentum): map bar now moves + colored balance total (#327)
 
 Two play-test UI issues:
