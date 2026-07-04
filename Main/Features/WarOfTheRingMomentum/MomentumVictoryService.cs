@@ -37,6 +37,10 @@ public class MomentumVictoryService : IMomentumVictoryService
 
     public WarOutcome CheckAndApplyVictory(MomentumWarState state)
     {
+        // Endless-war mode (default): the war is tracked but never resolves via momentum.
+        if (!_settings.VictoryEnabled)
+            return WarOutcome.None;
+
         if (state == null || state.HasWarEnded || !state.HasWarStarted)
             return WarOutcome.None;
 

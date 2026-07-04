@@ -1,5 +1,6 @@
 {
   "enabled": true,
+  "victoryEnabled": false,
   "victoryThreshold": 500,
   "events": {
     "maxBattleMomentum": 300,

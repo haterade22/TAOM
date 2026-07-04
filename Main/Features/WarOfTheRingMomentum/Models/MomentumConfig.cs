@@ -11,7 +11,15 @@ public class MomentumConfig
 {
     public bool Enabled { get; set; } = true;
 
-    /// <summary>Internal momentum magnitude at which one side wins the war.</summary>
+    /// <summary>
+    /// When false (default) the War of the Ring never ends via momentum — endless-war mode.
+    /// Victory (threshold win + elimination + the player gate) is fully wired but dormant until
+    /// this is enabled; best paired with a future bounded-momentum rebalance so the threshold is
+    /// meaningful (see docs/features/war-of-the-ring-momentum.md "Known limitations").
+    /// </summary>
+    public bool VictoryEnabled { get; set; } = false;
+
+    /// <summary>Internal momentum magnitude at which one side wins the war (only when VictoryEnabled).</summary>
     public int VictoryThreshold { get; set; } = 500;
 
     public MomentumEventValuesConfig Events { get; set; } = new();

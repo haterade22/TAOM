@@ -2,7 +2,9 @@
 
 ## Overview
 
-Tracks Evil-vs-Good war progress on a signed "momentum" meter fed by battles, sieges, raids, army-gatherings, and a daily strength differential. A persistent on-map slider shows who is winning; clicking it opens a detail popup (faction banners, leaders/allies, per-type breakdown, total stats). When one side's momentum lead reaches the victory threshold — or one side's kingdoms are all destroyed — the War of the Ring **ends**: an inquiry announces the winner, the peace-block is lifted, at-war kingdoms make peace, and the meter freezes.
+Tracks Evil-vs-Good war progress on a signed "momentum" meter fed by battles, sieges, raids, army-gatherings, and a daily strength differential. A persistent on-map slider shows who is winning; clicking it opens a detail popup (faction banners, leaders/allies, per-type breakdown, total stats).
+
+**By default the war is endless** — momentum is tracked but no side ever wins. The victory mechanic (a side reaching the victory threshold, or eliminating the other, gated on player participation → an end-of-war inquiry + peace) is fully wired but **opt-in via `victoryEnabled` / the MCM "Enable Victory" toggle** (default off). See "Victory" and "Known limitations".
 
 Ported from LOTRAOM 1.2.12's "Momentum" system onto TAOM 1.4.6 (issue #327).
 
@@ -48,7 +50,9 @@ Each sweep also **reconciles** the enrolled sets against the current world: it d
 
 `WarPhase` gained a terminal `WarEnded` value and `IWarOfTheRingService` gained `EndWar(WarOutcome)` / `Outcome`. All three peace-block layers (`TaomDiplomacyModel.IsAtConstantWar`, `TaomKingdomDecisionPermissionModel`, the `MakePeaceAction` prefix) route through `IsWarOfTheRingActive` / `ShouldBlockPeace`, which key off `CurrentPhase == FullWar` — so flipping the phase to `WarEnded` lifts all three at once with **zero patch changes**.
 
-The victory sequence order is load-bearing (pinned by a `Received.InOrder` test): **freeze the state → `EndWar` → peace-out cross-side pairs**. `MakePeaceAction` is blocked until the phase leaves `FullWar`, so peace must come after `EndWar`. Both victories are gated on the player-participation requirement (LOTRAOM parity — the donor gates the Evil branch too). A load-reconcile in `OnSessionLaunched` calls `EndWar` if a save says the momentum war ended but the phase machine hasn't caught up (idempotent).
+Victory is **opt-in**: `MomentumVictoryService.CheckAndApplyVictory` returns `None` immediately when `IMomentumSettingsProvider.VictoryEnabled` is false (the default — endless war), so nothing ever ends. When enabled, the sequence order is load-bearing (pinned by a `Received.InOrder` test): **freeze the state → `EndWar` → peace-out cross-side pairs**. `MakePeaceAction` is blocked until the phase leaves `FullWar`, so peace must come after `EndWar`. Both victories are gated on the player-participation requirement (LOTRAOM parity — the donor gates the Evil branch too).
+
+Load reconcile in `OnSessionLaunched`: with victory **disabled**, a war that ended under a prior victory-enabled build is **un-frozen** (its momentum/kingdoms/stats kept, only the ended flags reset) so the meter and tracking resume — this is how an already-ended save becomes endless again. With victory **enabled**, it instead calls `EndWar` if the save says the momentum war ended but the phase machine hasn't caught up (idempotent).
 
 ## UI & display
 
@@ -65,7 +69,8 @@ Kingdoms are resolved by StringId with `Kingdom.All.FirstOrDefault(k => k.String
 | Field | Default | Meaning |
 |-------|---------|---------|
 | `enabled` | true | JSON fallback for the master toggle |
-| `victoryThreshold` | 500 | internal momentum lead to win |
+| `victoryEnabled` | **false** | when off, the war is endless (tracked, never resolves); on = a side can win |
+| `victoryThreshold` | 500 | internal momentum lead to win (only when `victoryEnabled`) |
 | `events.maxBattleMomentum` | 300 | battle cap (scaled by casualties ÷ loser strength) |
 | `events.siegeMomentum` | 250 | fixed per captured settlement |
 | `events.raidMomentum` | 200 | fixed per raided village |
@@ -77,7 +82,7 @@ Kingdoms are resolved by StringId with `Kingdom.All.FirstOrDefault(k => k.String
 | `player.minimumPlayerEventsForVictory` | 5 | player events needed before either side can win |
 | `strengthRatioForMaxMomentum` | 4.0 | how many × stronger a side must be for the max daily award |
 
-**MCM** ("War of the Ring/Momentum" group, `TaomSettings`): `MomentumEnabled`, `ShowWarOfTheRingMapMeter`, `MomentumVictoryThreshold` (100–2000), `MomentumParticipationMultiplier` (1.0–3.0), `MomentumRequirePlayerForVictory`, `MomentumMinPlayerEvents` (0–20). MCM values win over JSON; both surfaces clamp to the same ranges.
+**MCM** ("War of the Ring/Momentum" group, `TaomSettings`): `MomentumEnabled`, `ShowWarOfTheRingMapMeter`, **`MomentumVictoryEnabled`** (default off = endless), `MomentumVictoryThreshold` (100–2000), `MomentumParticipationMultiplier` (1.0–3.0), `MomentumRequirePlayerForVictory`, `MomentumMinPlayerEvents` (0–20). MCM values win over JSON; both surfaces clamp to the same ranges.
 
 Defaults equal LOTRAOM's shipped `momentum_config.xml`, so the out-of-box balance matches the donor (minus the 100× scale bug).
 
@@ -139,7 +144,8 @@ The string transport (rather than syncing the `Dictionary<string,string>` direct
 
 ## Known limitations
 
-- **Momentum accumulates without bound — and the war is intentionally open-ended (user decision, 2026-07-04).** Events trimmed at the per-type cap (100) never subtract back out (LOTRAOM parity), and the player-participation gate can hold the war open indefinitely, so `InternalMomentum` can grow far past the victory threshold in a long campaign. This means a threshold victory typically will NOT fire once the lead has run away — **this is the chosen behaviour: the War of the Ring runs open-endedly, tracked but not force-resolved.** The victory machinery still exists and works (elimination of a side always ends it; a threshold win fires if the player has met the gate before the lead runs away), so nothing is dead. The map bar and popup Total use the bounded balance ratio, not the raw magnitude, so the runaway value is never shown. **Do NOT "fix" this as an oversight.** If a bounded, always-resolving score is wanted later, the change is to make cap-trim subtract (bounding momentum to the decaying event window) — a deliberate future rebalance, not a bug.
+- **The war is endless by default (`victoryEnabled = false`, user decision 2026-07-04).** Victory is turned OFF at the toggle, so no side ever wins — the momentum is tracked open-endedly. This is the chosen behaviour; **do NOT "fix" it as an oversight.** The victory machinery is fully wired and tested — flip `victoryEnabled` / the MCM "Enable Victory" toggle to turn it on.
+- **Momentum accumulates without bound.** Events trimmed at the per-type cap (100) never subtract back out (LOTRAOM parity), and the player-participation gate can hold the war open, so `InternalMomentum` grows far past the victory threshold in a long campaign. This is *why* victory was made opt-in: with runaway momentum an enabled threshold-victory fires almost immediately once the player has ~5 events (anticlimactic). Before enabling victory for a real playthrough, pair it with a bounded-momentum rebalance — make cap-trim subtract (bounding momentum to the decaying event window) so the threshold is meaningful. The map bar and popup Total use the bounded balance *ratio*, not the raw magnitude, so the runaway value is never shown to the player.
 - Event descriptions freeze in the write-time language (stored resolved in the save).
 - A battle resolving earlier in the campaign day than the daily enrollment sweep on the exact day FullWar first triggers is dropped (war "begins" that tick).
 

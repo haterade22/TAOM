@@ -135,6 +135,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public bool ShowWarOfTheRingMapMeter { get; set; } = true;
 
     [SettingPropertyGroup("War of the Ring/Momentum")]
+    [SettingPropertyBool("Enable Victory (End the War)", Order = 6,
+        HintText = "When OFF (default) the War of the Ring is endless — momentum is tracked but no side ever wins. Turn ON to let a side win at the Victory Threshold (or by eliminating the other), which ends the war and makes peace. Default: off (endless).")]
+    public bool MomentumVictoryEnabled { get; set; } = false;
+
+    [SettingPropertyGroup("War of the Ring/Momentum")]
     [SettingPropertyInteger("Victory Threshold", 100, 2000, Order = 2,
         HintText = "Momentum lead one side needs to win the war outright. Default 500.")]
     public int MomentumVictoryThreshold { get; set; } = 500;

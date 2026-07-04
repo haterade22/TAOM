@@ -29,6 +29,7 @@ public class MomentumVictoryServiceTests
         _allianceAdapter = Substitute.For<IAllianceAdapter>();
         _logger = Substitute.For<IModLogger>();
 
+        _settings.VictoryEnabled.Returns(true); // most tests exercise victory; endless-war has its own test
         _settings.VictoryThreshold.Returns(500);
         _settings.RequireParticipationForVictory.Returns(true);
         _playerService.HasPlayerMetVictoryRequirement().Returns(true);
@@ -49,6 +50,29 @@ public class MomentumVictoryServiceTests
             _state.Free.EditMomentum(internalValue * MomentumWarState.MomentumScale);
         else
             _state.Evil.EditMomentum(-internalValue * MomentumWarState.MomentumScale);
+    }
+
+    // ---- Endless-war mode (victory disabled) ----
+
+    [TestMethod]
+    public void CheckAndApplyVictory_VictoryDisabled_ReturnsNoneEvenPastThreshold()
+    {
+        _settings.VictoryEnabled.Returns(false);
+        SetInternalMomentum(5000); // far past threshold
+
+        Assert.AreEqual(WarOutcome.None, _sut.CheckAndApplyVictory(_state));
+        Assert.IsFalse(_state.HasWarEnded);
+        _wotrService.DidNotReceive().EndWar(Arg.Any<WarOutcome>());
+    }
+
+    [TestMethod]
+    public void CheckAndApplyVictory_VictoryDisabled_NoEliminationWinEither()
+    {
+        _settings.VictoryEnabled.Returns(false);
+        _state.Evil.RemoveKingdom("empire_s"); // Evil eliminated
+
+        Assert.AreEqual(WarOutcome.None, _sut.CheckAndApplyVictory(_state));
+        Assert.IsFalse(_state.HasWarEnded);
     }
 
     // ---- Threshold wins ----

@@ -109,10 +109,23 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
 
     private void OnSessionLaunched(CampaignGameStarter starter)
     {
+        var state = _stateStore.State;
+
+        if (!_settings.VictoryEnabled)
+        {
+            // Endless-war mode: un-freeze a war that ended under a prior victory-enabled build/session
+            // so the meter + tracking resume. Momentum/kingdoms/stats are kept; only the ended flags
+            // reset. The Diplomacy phase is left as-is (if it went WarEnded, peace simply isn't
+            // re-blocked — fine for an endless meter; new campaigns never reach WarEnded with victory off).
+            if (state.HasWarEnded)
+            {
+                state.RestoreFlags(warStarted: state.HasWarStarted, warEnded: false, victor: WarOutcome.None);
+                _logger.LogInfo("[Momentum] Victory disabled (endless war) — un-froze the previously-ended momentum war");
+            }
+        }
         // Load-reconcile: a save written mid-victory (or by a pre-fix build) can carry an
         // ended momentum war while the phase machine still says FullWar. EndWar is idempotent.
-        var state = _stateStore.State;
-        if (state.HasWarEnded && _wotrService.CurrentPhase != WarPhase.WarEnded)
+        else if (state.HasWarEnded && _wotrService.CurrentPhase != WarPhase.WarEnded)
         {
             _logger.LogInfo("[Momentum] Load-reconcile: momentum war ended but phase machine wasn't — ending war");
             _wotrService.EndWar(state.Victor);

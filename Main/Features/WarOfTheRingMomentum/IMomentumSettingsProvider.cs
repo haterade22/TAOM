@@ -8,6 +8,10 @@ namespace TAOM.Features.WarOfTheRingMomentum;
 public interface IMomentumSettingsProvider
 {
     bool MomentumEnabled { get; }
+
+    /// <summary>When false the War of the Ring never ends via momentum — endless-war mode (default).</summary>
+    bool VictoryEnabled { get; }
+
     int VictoryThreshold { get; }
     float ParticipationMultiplier { get; }
     bool RequireParticipationForVictory { get; }

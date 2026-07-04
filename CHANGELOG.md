@@ -2,6 +2,11 @@
 
 ## 2026-07-04
 
+### feat(momentum): endless war by default — victory is now opt-in (#327)
+
+Added a victory on/off toggle (`victoryEnabled` JSON + MCM "Enable Victory"), **default OFF = endless war**. `MomentumVictoryService` returns None when off, so no side ever wins — the War of the Ring is tracked open-endedly. Reason: with the (intentionally) runaway momentum, an enabled threshold-victory fires almost immediately once the player has ~5 events, which ends the war anticlimactically (a play-tester hit "Long live Sauron!" unexpectedly). The victory machinery is fully wired + tested; enabling it is best paired with a future bounded-momentum rebalance. On load with victory off, a war that ended under a prior build is un-frozen (momentum/kingdoms/stats kept) so the meter resumes — an already-ended save becomes endless again.
+
+
 ### docs(momentum): refresh feature doc + index the feature (#327)
 
 Brought `docs/features/war-of-the-ring-momentum.md` current with all play-test fixes (kingdom resolution, JSON-string persistence, culture-fallback + reconciling enrollment, Khand-neutral, ratio slider, colored Total), added a UI & display section + a play-test fix-history table + the runaway-momentum known-limitation, and indexed the feature in `docs/INDEX.md` + CLAUDE.md Key Paths (it was undocumented in both).

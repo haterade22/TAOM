@@ -48,6 +48,7 @@ public class MomentumConfigProviderTests
     {
         WriteConfig(@"{
   ""enabled"": false,
+  ""victoryEnabled"": true,
   ""victoryThreshold"": 600,
   ""events"": { ""maxBattleMomentum"": 111, ""siegeMomentum"": 222, ""raidMomentum"": 333, ""armyMomentum"": 444, ""maxStrengthMomentum"": 555 },
   ""durationsHours"": { ""battleWon"": 100, ""siege"": 200, ""raid"": 300, ""armyGathered"": 400, ""relativeStrength"": 6 },
@@ -58,6 +59,7 @@ public class MomentumConfigProviderTests
         var config = _sut.GetConfig();
 
         Assert.IsFalse(config.Enabled);
+        Assert.IsTrue(config.VictoryEnabled);
         Assert.AreEqual(600, config.VictoryThreshold);
         Assert.AreEqual(111, config.Events.MaxBattleMomentum);
         Assert.AreEqual(222, config.Events.SiegeMomentum);
@@ -80,6 +82,7 @@ public class MomentumConfigProviderTests
     {
         var config = _sut.GetConfig();
 
+        Assert.IsFalse(config.VictoryEnabled); // default = endless war
         Assert.AreEqual(500, config.VictoryThreshold);
         Assert.AreEqual(300, config.Events.MaxBattleMomentum);
         Assert.AreEqual(250, config.Events.SiegeMomentum);

@@ -24,6 +24,8 @@ public class MomentumSettingsProvider : IMomentumSettingsProvider
 
     public bool MomentumEnabled => Mcm?.MomentumEnabled ?? Config.Enabled;
 
+    public bool VictoryEnabled => Mcm?.MomentumVictoryEnabled ?? Config.VictoryEnabled;
+
     public int VictoryThreshold =>
         Mcm != null ? Math.Max(1, Mcm.MomentumVictoryThreshold) : Config.VictoryThreshold;
 
