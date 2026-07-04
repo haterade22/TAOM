@@ -120,7 +120,7 @@
 																	<Children>
 																		<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IsEnabled="false">
 																			<Children>
-																				<TextWidget DataSource="{..}" WidthSizePolicy="Fixed" SuggestedWidth="50" HeightSizePolicy="CoverChildren" Brush="Info.Text" Brush.TextHorizontalAlignment="Center" Text="@Number1"/>
+																				<TextWidget DataSource="{..}" WidthSizePolicy="Fixed" SuggestedWidth="120" HeightSizePolicy="CoverChildren" Brush="Info.Text" Brush.TextHorizontalAlignment="Center" Text="@Number1"/>
 																			</Children>
 																		</ListPanel>
 																	</Children>
@@ -146,7 +146,7 @@
 																	<Children>
 																		<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IsEnabled="false">
 																			<Children>
-																				<TextWidget DataSource="{..}" WidthSizePolicy="Fixed" SuggestedWidth="50" HeightSizePolicy="CoverChildren" Brush="Info.Text" Brush.TextHorizontalAlignment="Center" Text="@Number2"/>
+																				<TextWidget DataSource="{..}" WidthSizePolicy="Fixed" SuggestedWidth="120" HeightSizePolicy="CoverChildren" Brush="Info.Text" Brush.TextHorizontalAlignment="Center" Text="@Number2"/>
 																			</Children>
 																		</ListPanel>
 																	</Children>
@@ -171,7 +171,7 @@
 														<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
 															<Children>
 																<!-- 1.4.6: ListWidget no longer exists — direct TextWidget binding -->
-																<TextWidget WidthSizePolicy="Fixed" SuggestedWidth="50" HeightSizePolicy="CoverChildren" MarginLeft="15" Brush="Info.Text" Brush.TextHorizontalAlignment="Center" Text="@Number1"/>
+																<TextWidget WidthSizePolicy="Fixed" SuggestedWidth="120" HeightSizePolicy="CoverChildren" MarginLeft="15" Brush="Info.Text" Brush.TextHorizontalAlignment="Center" Text="@Number1"/>
 															</Children>
 														</ListPanel>
 													</ItemTemplate>
@@ -190,7 +190,7 @@
 														<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
 															<Children>
 																<!-- 1.4.6: ListWidget no longer exists — direct TextWidget binding -->
-																<TextWidget WidthSizePolicy="Fixed" SuggestedWidth="50" HeightSizePolicy="CoverChildren" MarginLeft="15" Brush="Info.Text" Brush.TextHorizontalAlignment="Center" Text="@Number2"/>
+																<TextWidget WidthSizePolicy="Fixed" SuggestedWidth="120" HeightSizePolicy="CoverChildren" MarginLeft="15" Brush="Info.Text" Brush.TextHorizontalAlignment="Center" Text="@Number2"/>
 															</Children>
 														</ListPanel>
 													</ItemTemplate>

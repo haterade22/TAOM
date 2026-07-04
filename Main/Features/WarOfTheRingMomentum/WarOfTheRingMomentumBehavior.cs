@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Map;
 using TaleWorlds.CampaignSystem.MapEvents;
@@ -32,7 +34,13 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
     private readonly UI.IMomentumUIService _uiService;
     private readonly IModLogger _logger;
 
-    private Dictionary<string, string> _persisted = new();
+    // Persisted as a single JSON STRING, not a Dictionary<string,string>. A deep campaign
+    // fills the momentum store with up to ~1000 event entries; syncing that as a dictionary
+    // container did not round-trip through the engine's IDataStore at scale (stats/momentum
+    // reset on reload). A single string is the most robust SyncData primitive — unbounded,
+    // no container definition. Key renamed to "_v2" so an old-format (dict) save just loads
+    // as absent → fresh state (a one-time reset on the first load after this change).
+    private string _persistedJson = string.Empty;
 
     public WarOfTheRingMomentumBehavior(
         IMomentumStateStore stateStore,
@@ -75,12 +83,28 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
     public override void SyncData(IDataStore dataStore)
     {
         if (dataStore.IsSaving)
-            _persisted = _stateStore.Serialize();
+            _persistedJson = JsonConvert.SerializeObject(_stateStore.Serialize());
 
-        dataStore.SyncData("_taom_wotr_momentum", ref _persisted);
+        dataStore.SyncData("_taom_wotr_momentum_v2", ref _persistedJson);
 
         if (dataStore.IsLoading)
-            _stateStore.Deserialize(_persisted);
+            _stateStore.Deserialize(ParsePersisted(_persistedJson));
+    }
+
+    private Dictionary<string, string> ParsePersisted(string json)
+    {
+        if (string.IsNullOrEmpty(json))
+            return null; // Deserialize(null) → fresh state.
+
+        try
+        {
+            return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[Momentum] Could not parse persisted momentum state, resetting: {ex.Message}");
+            return null;
+        }
     }
 
     private void OnSessionLaunched(CampaignGameStarter starter)

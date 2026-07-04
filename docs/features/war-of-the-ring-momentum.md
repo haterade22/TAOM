@@ -71,7 +71,9 @@ Defaults equal LOTRAOM's shipped `momentum_config.xml`, so the out-of-box balanc
 
 ## Persistence
 
-Primitive-dict SyncData (Messengers pattern — no `SaveableTypeDefiner`), key `_taom_wotr_momentum`, serialized by `MomentumStateStore`: war flags, victor, per-side momentum/kingdoms/stats, every event queue, and the player-event list. **Event descriptions are stored resolved** (in the write-time language — a documented limitation; a save made in English shows English event tooltips after switching to French). The Diplomacy behavior persists the phase + outcome as ints. This fixes a real LOTRAOM bug: the donor never persisted the player victory-gate events, so victory progress silently reset on reload.
+`MomentumStateStore` serializes the whole war state to a `Dictionary<string,string>` (war flags, victor, per-side momentum/kingdoms/stats, every event queue, the player-event list). The behavior then **JSON-encodes that dictionary to a single string** and syncs the *string* under key `_taom_wotr_momentum_v2`.
+
+The string transport (rather than syncing the `Dictionary<string,string>` directly like Messengers) is deliberate: a deep campaign fills the store with up to ~1,000 event entries, and syncing that as a dictionary container did not round-trip through the engine's `IDataStore` at scale — momentum and total stats reset on reload. A single `string` is the most robust `SyncData` primitive (unbounded, no container definition). A corrupt/absent string loads as fresh state (logged). The `_v2` key means an old dict-format save loads as absent → one-time reset on the first load after the change. **Event descriptions are stored resolved** (in the write-time language — a documented limitation; a save made in English shows English event tooltips after switching to French). The Diplomacy behavior persists the phase + outcome as ints. This fixes a real LOTRAOM bug: the donor never persisted the player victory-gate events, so victory progress silently reset on reload.
 
 ## Key Files
 

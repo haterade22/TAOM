@@ -2,6 +2,16 @@
 
 ## 2026-07-03
 
+### fix(momentum): stats/momentum reset on reload + narrow popup number columns (#327)
+
+Two in-game issues found during play-testing:
+
+- **State reset on save/reload:** the momentum store was synced as a `Dictionary<string,string>` (up to ~1000 entries in a deep campaign), which did not round-trip through the engine's `IDataStore` at scale — total stats and momentum reset every load. Now the store dictionary is JSON-encoded to a single string and that string is synced (key `_taom_wotr_momentum_v2`); a single string is unbounded and needs no container definition. Existing test-saves reset once (old dict-format key is ignored), then persist.
+- **Popup number columns wrapped** (`12200` rendered as `200-`/`00`): the four value `TextWidget`s were pinned at `SuggestedWidth=50`, too narrow for 5-6 digit totals. Widened to 120.
+
+
+## 2026-07-03
+
 ### feat(momentum): War of the Ring momentum — Evil vs Good progress tracking, victory, and map UI (#327)
 
 Port of LOTRAOM 1.2.12's "Momentum" system onto TAOM 1.4.6, wired into the existing WotR phase machine
