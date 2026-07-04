@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+
+	<!-- ============================================== -->
+	<!-- War of the Ring Momentum (#327)                -->
+	<!-- UI labels                                      -->
+	<!-- ============================================== -->
+
+	<string id="taom_wotr_title" text="War of the Ring" />
+	<string id="taom_wotr_leaders" text="Leaders" />
+	<string id="taom_wotr_allies" text="Allies" />
+	<string id="taom_wotr_breakdown_header" text="Momentum Breakdown" />
+	<string id="taom_wotr_total_stats_header" text="Total Stats" />
+	<string id="taom_wotr_total" text="Total: {MOMENTUM}" />
+	<string id="taom_wotr_battles_won" text="Battles Won" />
+	<string id="taom_wotr_villages_raided" text="Villages Raided" />
+	<string id="taom_wotr_fiefs_captured" text="Fiefs Captured" />
+	<string id="taom_wotr_army_gathered" text="Armies Gathered" />
+	<string id="taom_wotr_relative_strength" text="Relative Strength" />
+	<string id="taom_wotr_enemies_killed" text="Enemies Killed" />
+	<string id="taom_wotr_settlements_captured" text="Settlements Captured" />
+	<string id="taom_wotr_momentum" text="Momentum" />
+
+	<!-- Momentum event descriptions (breakdown tooltips) -->
+	<string id="taom_wotr_desc_battle" text="Army of {WINNER_FACTION}, led by {WINNER_LEADER}, destroyed the army of {LOSER_FACTION}, led by {LOSER_LEADER}, killing {CASUALTIES}." />
+	<string id="taom_wotr_desc_siege" text="Army of {FACTION}, led by {LEADER}, captured {SETTLEMENT}." />
+	<string id="taom_wotr_desc_raid" text="{PARTY} of {FACTION} raided the village of {SETTLEMENT}." />
+	<string id="taom_wotr_desc_army" text="An army led by {LEADER} has gathered." />
+	<string id="taom_wotr_desc_strength" text="We are {PERCENTAGE}% stronger than our enemies!" />
+
+	<!-- Victory inquiry -->
+	<string id="taom_wotr_victory_title" text="End of the War" />
+	<string id="taom_wotr_victory_free" text="The war is over. The Free Peoples have persevered, and won the future for their children. Long live freedom!" />
+	<string id="taom_wotr_victory_evil" text="The realms of Men and Elf alike have been crushed. Long live Sauron!" />
+	<string id="taom_wotr_continue" text="Continue" />
+
+</strings>

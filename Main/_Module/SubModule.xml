@@ -816,6 +816,14 @@
         <GameType value="EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- War of the Ring Momentum UI + event strings (#327) -->
+    <XmlNode>
+      <XmlName id="GameText" path="taom_wotr_strings"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <XmlNode>
       <XmlName id="GameText" path="taom_messenger_strings"/>
       <IncludedGameTypes>

@@ -36,14 +36,12 @@
 									</Children>
 								</Widget>
 
-								<StaticDiplomacyButton Parameter.FontSize="24" HorizontalAlignment="Right" MarginRight="50" MarginTop="10" Parameter.HintDataSource="{HelpHint}" Parameter.YOffset="3" />
-
 								<ListPanel MarginTop="60" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" HorizontalAlignment="Center">
 									<Children>
 										<!-- Leaders -->
 										<Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="20">
 											<Children>
-												<TextWidget ClipContents="false" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Text="Leaders" />
+												<TextWidget ClipContents="false" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Text="@LeadersLabel" />
 											</Children>
 										</Widget>
 
@@ -69,7 +67,7 @@
 										<!-- Alliances -->
 										<Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="20">
 											<Children>
-												<TextWidget ClipContents="false" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Text="Allies" />
+												<TextWidget ClipContents="false" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Text="@AlliesLabel" />
 											</Children>
 										</Widget>
 										<ListPanel VerticalAlignment="Top" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" >
@@ -111,7 +109,7 @@
 
 										<Widget WidthSizePolicy = "StretchToParent" HeightSizePolicy = "Fixed" SuggestedHeight="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Sprite="GradientDivider_9" AlphaFactor="0.4" MarginLeft="10" MarginRight="10" MarginTop="10" MarginBottom="10"/>
 										<!-- momentum breakdown -->
-										<TextWidget HorizontalAlignment="Center" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.SubPage.Info.Text" Text="Momentum Breakdown"/>
+										<TextWidget HorizontalAlignment="Center" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.SubPage.Info.Text" Text="@BreakdownLabel"/>
 										<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="10">
 											<Children>
 												<ListPanel DataSource="{MomentumBreakdown}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
@@ -172,15 +170,8 @@
 													<ItemTemplate>
 														<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
 															<Children>
-																<ListWidget DataSource="{ValueFaction1}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginLeft="15" >
-																	<Children>
-																		<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IsEnabled="false">
-																			<Children>
-																				<TextWidget DataSource="{..}" WidthSizePolicy="Fixed" SuggestedWidth="50" HeightSizePolicy="CoverChildren" Brush="Info.Text" Brush.TextHorizontalAlignment="Center" Text="@Number1"/>
-																			</Children>
-																		</ListPanel>
-																	</Children>
-																</ListWidget>
+																<!-- 1.4.6: ListWidget no longer exists — direct TextWidget binding -->
+																<TextWidget WidthSizePolicy="Fixed" SuggestedWidth="50" HeightSizePolicy="CoverChildren" MarginLeft="15" Brush="Info.Text" Brush.TextHorizontalAlignment="Center" Text="@Number1"/>
 															</Children>
 														</ListPanel>
 													</ItemTemplate>
@@ -198,15 +189,8 @@
 													<ItemTemplate>
 														<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
 															<Children>
-																<ListWidget DataSource="{ValueFaction2}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginLeft="15" >
-																	<Children>
-																		<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IsEnabled="false">
-																			<Children>
-																				<TextWidget DataSource="{..}" WidthSizePolicy="Fixed" SuggestedWidth="50" HeightSizePolicy="CoverChildren" Brush="Info.Text" Brush.TextHorizontalAlignment="Center" Text="@Number2"/>
-																			</Children>
-																		</ListPanel>
-																	</Children>
-																</ListWidget>
+																<!-- 1.4.6: ListWidget no longer exists — direct TextWidget binding -->
+																<TextWidget WidthSizePolicy="Fixed" SuggestedWidth="50" HeightSizePolicy="CoverChildren" MarginLeft="15" Brush="Info.Text" Brush.TextHorizontalAlignment="Center" Text="@Number2"/>
 															</Children>
 														</ListPanel>
 													</ItemTemplate>
@@ -221,7 +205,7 @@
 					</Children>
 				</BrushWidget>
 				<!--Close Popup Button-->
-				<ButtonWidget Id="ClosePopupWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Popup.CloseButton.Width" SuggestedHeight="!Popup.CloseButton.Height" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="500" PositionYOffset="-400" Brush="Popup.CloseButton" Command.Click="OnComplete"/>
+				<ButtonWidget Id="ClosePopupWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Popup.CloseButton.Width" SuggestedHeight="!Popup.CloseButton.Height" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="500" PositionYOffset="-400" Brush="Popup.CloseButton" Command.Click="ExecuteClose"/>
 			</Children>
 		</Widget>
 	</Window>
