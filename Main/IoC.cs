@@ -38,6 +38,7 @@ using TAOM.Features.SettlementGuards;
 using TAOM.Features.NamedCompanions;
 using TAOM.Features.RevoltTuning;
 using TAOM.Features.SettlementEconomy;
+using TAOM.Features.CaravanTrade;
 using TAOM.Features.SettlementFood;
 using TAOM.Features.BanditManagement;
 using TAOM.Features.CastleRecruitment;
@@ -112,6 +113,7 @@ public static class IoC
         RevoltTuningIoC.RegisterRevoltTuningFeature(container);
         SettlementFoodIoC.RegisterSettlementFoodFeature(container);
         SettlementEconomyIoC.RegisterSettlementEconomyFeature(container);
+        CaravanTradeIoC.RegisterCaravanTradeFeature(container);
         BanditManagementIoC.RegisterBanditManagementFeature(container);
         CastleRecruitmentIoC.RegisterCastleRecruitmentFeature(container);
         EliteEmissaryIoC.RegisterEliteEmissaryFeature(container);

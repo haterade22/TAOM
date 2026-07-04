@@ -72,7 +72,7 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 | `TaomSettlementMilitiaModel` | `DefaultSettlementMilitiaModel` | `CulturalFeats` |
 | `TaomBuildingConstructionModel` | `DefaultBuildingConstructionModel` | `CulturalFeats` |
 | `TaomVillageProductionModel` | `DefaultVillageProductionCalculatorModel` | `CulturalFeats` |
-| `TaomCaravanModel` | `DefaultCaravanModel` | `CulturalFeats` |
+| `TaomCaravanModel` | `DefaultCaravanModel` | `CulturalFeats` + `CaravanTrade` |
 | `TaomBattleRewardModel` | `DefaultBattleRewardModel` | `CulturalFeats` |
 | `TaomPartyTroopUpgradeModel` | `DefaultPartyTroopUpgradeModel` | `CulturalFeats` |
 | `TaomPartySizeModel` | `DefaultPartySizeLimitModel` | `CulturalFeats` |

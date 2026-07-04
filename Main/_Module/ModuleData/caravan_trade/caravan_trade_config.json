@@ -1,0 +1,21 @@
+{
+  "_comment": "AI/player caravan trade tuning (TAOM CaravanTrade feature). Master toggle + Range Multiplier + War Trade Policy + Basket Diversity Floor are also on the MCM 'Caravan Trade' page and override the matching fields below at runtime; the rest are JSON-only advanced knobs. Singleton-cached: edits require an app restart. Invalid values revert to these defaults with a warning in the log.",
+
+  "enabled": true,
+  "applyToPlayerCaravans": true,
+
+  "_comment_range": "Lever 2/3 — how far caravans range and how strongly distance is rewarded. rangeMultiplier scales the vanilla 'very far' ceiling [1..4]. The re-weight strips vanilla's 1/days spike and re-applies 1/(nearFieldFlattenDays+days)^distanceDecayExponent, clamped by maxCompensation. Lower distanceDecayExponent = ranges further. nearFieldFlattenDays ties near towns so profit decides. antiShuttlePenalty cuts the score of the town just left.",
+  "rangeMultiplier": 1.6,
+  "distanceDecayExponent": 0.5,
+  "nearFieldFlattenDays": 2.0,
+  "maxCompensation": 6.0,
+  "antiShuttlePenalty": 0.35,
+
+  "_comment_war": "Lever 1 — one of None (vanilla, war blocks trade), IgnoreWar (trade anywhere non-besieged), SameAlignmentAndNeutral (default: trade with same-side or neutral factions but not the enemy side).",
+  "warTradePolicy": "SameAlignmentAndNeutral",
+
+  "_comment_diversity": "Lever 4 — fuller baskets. budgetFactorFloor [0..1] raises poor caravans' buying power so more categories clear the buy gate. initialTradeGold is a floor (never lowers vanilla's large/main-hero bonus). maxGoldPerCategory defaults to vanilla 1500.",
+  "budgetFactorFloor": 0.35,
+  "initialTradeGold": 15000,
+  "maxGoldPerCategory": 1500
+}

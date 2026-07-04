@@ -111,8 +111,10 @@ which **excludes garrisons, militia, caravans, villagers, bandits**. Consequence
 
 ## Caravans — `DefaultCaravanModel`
 
-Caravans are trade parties: they buy/sell goods in town markets for money (`TaomCaravanModel` only
-tweaks Umbar's forming cost). They **do not deliver food to a garrison or town**. Food enters a town
+Caravans are trade parties: they buy/sell goods in town markets for money. (`TaomCaravanModel` tweaks
+Umbar's forming cost + CaravanTrade's initial-trade-gold / per-category buy caps, and `Patch59_CaravanTrade`
+reshapes caravan destination ranging, war-time trade, and basket breadth — see
+[caravan-trade](../../features/caravan-trade.md).) They **do not deliver food to a garrison or town**. Food enters a town
 only as marketplace sales of `BonusToFoodStores` items (food a caravan happens to sell counts there,
 like any seller). If towns are food-starved, caravans are not the lever.
 

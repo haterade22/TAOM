@@ -42,6 +42,34 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Regenerates town market gold toward a higher target (base 25000 vs vanilla 10000) so drained town markets recover — tunable in settlement_economy/settlement_economy_config.json (base, gold per prosperity, daily regen rate). Applies to existing saves immediately. Off = vanilla engine gold math. Config edits need an app restart.")]
     public bool EnableSettlementEconomyTuning { get; set; } = true;
 
+    // --- Caravan Trade ---
+
+    [SettingPropertyGroup("Caravan Trade")]
+    [SettingPropertyBool("Enable Caravan Trade Overhaul", Order = 0,
+        HintText = "Makes AI/player caravans range beyond the local town cluster instead of shuttling between very-close towns, trade across the endless Free-vs-Evil war (per War Trade Policy below), and carry fuller baskets. Off = exact vanilla caravan behavior. Advanced curve knobs live in caravan_trade/caravan_trade_config.json; config edits need an app restart.")]
+    public bool EnableCaravanTrade { get; set; } = true;
+
+    [SettingPropertyGroup("Caravan Trade")]
+    [SettingPropertyBool("Apply To Player Caravans", Order = 1,
+        HintText = "When on, your OWN caravans also range further, trade cross-war, and buy fuller baskets (they may enter contested territory and risk attack). Off scopes the selection re-weight + basket diversity off your clan's caravans. Note: the wider distance ceiling is engine-global (shared by all caravans) and the war-trade gate scopes at your whole faction, so those two levers aren't fully isolated to non-player caravans — but with this off your caravans still route by vanilla's nearest-first selection.")]
+    public bool CaravanTradeApplyToPlayer { get; set; } = true;
+
+    [SettingPropertyGroup("Caravan Trade")]
+    [SettingPropertyFloatingInteger("Caravan Range Multiplier", 1.0f, 4.0f, "#0.0", Order = 2,
+        HintText = "How much further caravans range past the vanilla distance ceiling. 1.0 = vanilla reach; higher = they visit more distant, more profitable markets. Default: 1.6.")]
+    public float CaravanRangeMultiplier { get; set; } = 1.6f;
+
+    [SettingPropertyGroup("Caravan Trade")]
+    [SettingPropertyDropdown("War Trade Policy", Order = 3,
+        HintText = "Which towns caravans may trade with despite the war. Vanilla = war blocks trade (the cause of the shuttle). Same Side + Neutral = trade with same-alignment or neutral factions but not the enemy side (default, lore-friendly). Ignore War = trade anywhere non-besieged.")]
+    public Dropdown<string> CaravanWarTradePolicy { get; set; } = new Dropdown<string>(
+        new[] { "Vanilla (war blocks)", "Same Side + Neutral", "Ignore War" }, 1);
+
+    [SettingPropertyGroup("Caravan Trade")]
+    [SettingPropertyFloatingInteger("Basket Diversity Floor", 0.0f, 1.0f, "#0.00", Order = 4,
+        HintText = "Raises poor caravans' buying power so they stock several goods instead of one. 0 = vanilla (poor caravans buy a single item); higher = fuller baskets. Default: 0.35.")]
+    public float CaravanBudgetDiversityFloor { get; set; } = 0.35f;
+
     // --- Native Skin Fixes ---
 
     [SettingPropertyGroup("Native Skin Fixes")]

@@ -225,6 +225,11 @@ public class SubModule : MBSubModuleBase
         // No TAOM patch is on the stack; aggressive Patch22 targeting just makes it more reachable.
         // Crash report 2026-06-17. See the patch's doc-comment.
         _harmony.PatchCategory("Patch49_ArmyGatheringNreGuard");
+        // Patch59: CaravanTrade — four postfixes on CaravansCampaignBehavior private methods
+        // (war gate, destination re-weight, range envelope, budget-factor floor) so AI/player caravans
+        // range past the local town cluster instead of shuttling. Campaign-behavior target, so applied
+        // in this campaign-phase block alongside the other AI patches.
+        _harmony.PatchCategory("Patch59_CaravanTrade");
         _harmony.PatchCategory("Patch30_MixedFormations");
         // Patch_MissionTime_SetMovementOrder (shared by Patch31_SmartCavalryAI +
         // Patch35_CompanionTactics' Formation.SetMovementOrder hook) is applied in
@@ -511,7 +516,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomSettlementMilitiaModel(culturalFeats));
         campaignStarter.AddModel(new TaomBuildingConstructionModel(culturalFeats));
         campaignStarter.AddModel(new TaomVillageProductionModel(culturalFeats));
-        campaignStarter.AddModel(new TaomCaravanModel(culturalFeats));
+        campaignStarter.AddModel(new TaomCaravanModel(culturalFeats, IoC.Resolve<TAOM.Features.CaravanTrade.ICaravanTradeService>()));
         campaignStarter.AddModel(new TaomBattleRewardModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()));
         campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(culturalFeats, careerPassives));
