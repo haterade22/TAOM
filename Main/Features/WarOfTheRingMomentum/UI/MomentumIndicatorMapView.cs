@@ -84,6 +84,7 @@ public class MomentumIndicatorMapView : MapView
 
         if (_layerAsGauntletLayer != null)
         {
+            _layerAsGauntletLayer.InputRestrictions.ResetInputRestrictions();
             MapScreen.Instance?.RemoveLayer(_layerAsGauntletLayer);
             _layerAsGauntletLayer = null;
         }

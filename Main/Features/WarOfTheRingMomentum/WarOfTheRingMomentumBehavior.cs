@@ -100,6 +100,10 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
 
     private void OnDailyTick()
     {
+        // RefreshMapMeter must run even when disabled so the master toggle can RETRACT an
+        // already-shown meter (its wantMeter folds MomentumEnabled). Do it before the guard.
+        RefreshMapMeter();
+
         if (!_settings.MomentumEnabled)
             return;
 
@@ -198,7 +202,10 @@ public class WarOfTheRingMomentumBehavior : CampaignBehaviorBase
 
         var outcome = _victoryService.CheckAndApplyVictory(state);
         if (outcome != WarOutcome.None)
+        {
             ShowVictoryInquiry(outcome);
+            RefreshMapMeter(); // elimination victory removes the meter, same as the daily-tick path
+        }
 
         _stateStore.NotifyMomentumChanged();
     }

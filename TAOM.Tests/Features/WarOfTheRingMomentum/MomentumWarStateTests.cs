@@ -43,51 +43,6 @@ public class MomentumWarStateTests
         Assert.AreEqual(-3f, _sut.InternalMomentum);
     }
 
-    // ---- DisplayMomentum (tanh soft cap) ----
-
-    [TestMethod]
-    public void GetDisplayMomentum_ZeroMomentum_IsZero()
-    {
-        Assert.AreEqual(0f, _sut.GetDisplayMomentum(300f));
-    }
-
-    [TestMethod]
-    public void GetDisplayMomentum_InternalEqualsDivisor_IsTanhOfOne()
-    {
-        // internal 300 (= 30000 raw), divisor 300 → tanh(1)×100 ≈ 76.159
-        _sut.Free.EditMomentum(30000);
-        Assert.AreEqual(76.159f, _sut.GetDisplayMomentum(300f), 0.01f);
-    }
-
-    [TestMethod]
-    public void GetDisplayMomentum_HugeMomentum_NeverExceeds100()
-    {
-        _sut.Free.EditMomentum(int.MaxValue / 2);
-        float display = _sut.GetDisplayMomentum(300f);
-        Assert.IsTrue(display <= 100f);
-        Assert.IsTrue(display > 99f);
-    }
-
-    [TestMethod]
-    public void GetDisplayMomentum_Symmetric()
-    {
-        _sut.Free.EditMomentum(45000);
-        float freeAhead = _sut.GetDisplayMomentum(300f);
-
-        var mirrored = new MomentumWarState();
-        mirrored.Evil.EditMomentum(45000);
-        float evilAhead = mirrored.GetDisplayMomentum(300f);
-
-        Assert.AreEqual(freeAhead, -evilAhead, 0.0001f);
-    }
-
-    [TestMethod]
-    public void GetDisplayMomentum_LargerDivisor_MoreGradual()
-    {
-        _sut.Free.EditMomentum(30000);
-        Assert.IsTrue(_sut.GetDisplayMomentum(600f) < _sut.GetDisplayMomentum(300f));
-    }
-
     // ---- Lifecycle flags ----
 
     [TestMethod]

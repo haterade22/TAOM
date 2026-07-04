@@ -1,4 +1,3 @@
-using System;
 using TAOM.Features.Diplomacy.Models;
 
 namespace TAOM.Features.WarOfTheRingMomentum.Domain;
@@ -23,12 +22,6 @@ public class MomentumWarState
 
     /// <summary>Signed momentum: positive = Free ahead, negative = Evil ahead.</summary>
     public float InternalMomentum => (Free.SideMomentum - Evil.SideMomentum) / (float)MomentumScale;
-
-    /// <summary>tanh soft-cap onto ±100 for display.</summary>
-    public float GetDisplayMomentum(float softCapDivisor)
-    {
-        return (float)(Math.Tanh(InternalMomentum / softCapDivisor) * 100.0);
-    }
 
     public MomentumSideData GetSide(MomentumSide side)
     {

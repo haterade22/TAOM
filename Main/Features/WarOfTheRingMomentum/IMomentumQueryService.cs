@@ -20,9 +20,6 @@ public interface IMomentumQueryService
     /// <summary>Signed internal momentum: positive = Free ahead.</summary>
     float InternalMomentum { get; }
 
-    /// <summary>tanh-soft-capped ±100 display value: positive = Free ahead.</summary>
-    float DisplayMomentum { get; }
-
     /// <summary>Map-slider value: −100..+100, POSITIVE = EVIL ahead (victory-progress normalized).</summary>
     int SliderValue { get; }
 

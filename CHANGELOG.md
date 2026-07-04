@@ -39,7 +39,7 @@ Not-tested: in-game meter/popup rendering + victory flow (control campaign pendi
 
 New-game startup grants (`startup_resources_config.xml`; new campaigns only):
 
-- Elves (rivendell/lothlorien/mirkwood): influence 1000 → **2000** per clan (gold stays 600k per lord).
+- Elves (rivendell/lothlorien/mirkwood): influence 1000 → **1500** per clan (gold stays 600k per lord).
 - Erebor: gold 50k → **800k**, influence 150 → **1000**.
 - Khuzait (Easterlings): gold 50k → **75k** (influence stays 1000).
 - Gondor: gold 50k → **100k**, influence 500 → **1000**.

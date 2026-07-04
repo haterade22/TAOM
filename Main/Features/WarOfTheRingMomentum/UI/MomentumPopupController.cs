@@ -38,7 +38,10 @@ public class MomentumPopupController
         _screen = screen;
         _layer = new GauntletLayer("MomentumPopup", 209);
         _layer.InputRestrictions.SetInputRestrictions();
-        _layer.Input.RegisterHotKeyCategory(HotKeyManager.GetCategory("GenericCampaignPanelsGameKeyCategory"));
+        // "Exit" (Escape) lives in GenericPanelGameKeyCategory, NOT the ...CampaignPanels...
+        // category (which has only window-toggle keys) — using the wrong one silently
+        // disables Escape-close. TAOM precedent: GauntletFiefManagementScreen.
+        _layer.Input.RegisterHotKeyCategory(HotKeyManager.GetCategory("GenericPanelGameKeyCategory"));
         _layer.IsFocusLayer = true;
         _vm = new MomentumPopupVM(_query, Close);
         _movie = _layer.LoadMovie("MomentumView", _vm);

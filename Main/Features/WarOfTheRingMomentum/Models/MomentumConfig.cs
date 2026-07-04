@@ -14,9 +14,6 @@ public class MomentumConfig
     /// <summary>Internal momentum magnitude at which one side wins the war.</summary>
     public int VictoryThreshold { get; set; } = 500;
 
-    /// <summary>Display soft-cap: tanh(internal / divisor) × 100. Higher = more gradual.</summary>
-    public float SoftCapDivisor { get; set; } = 300f;
-
     public MomentumEventValuesConfig Events { get; set; } = new();
     public MomentumDurationsConfig DurationsHours { get; set; } = new();
     public MomentumPlayerConfig Player { get; set; } = new();

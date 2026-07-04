@@ -11,7 +11,6 @@ namespace TAOM.Tests.Features.WarOfTheRingMomentum;
 public class MomentumQueryServiceTests
 {
     private MomentumStateStore _stateStore = null!;
-    private IMomentumConfigProvider _configProvider = null!;
     private IMomentumSettingsProvider _settings = null!;
     private MomentumQueryService _sut = null!;
 
@@ -19,12 +18,10 @@ public class MomentumQueryServiceTests
     public void Setup()
     {
         _stateStore = new MomentumStateStore(Substitute.For<IModLogger>());
-        _configProvider = Substitute.For<IMomentumConfigProvider>();
-        _configProvider.GetConfig().Returns(new MomentumConfig());
         _settings = Substitute.For<IMomentumSettingsProvider>();
         _settings.VictoryThreshold.Returns(500);
 
-        _sut = new MomentumQueryService(_stateStore, _configProvider, _settings);
+        _sut = new MomentumQueryService(_stateStore, _settings);
     }
 
     [TestMethod]
@@ -51,14 +48,6 @@ public class MomentumQueryServiceTests
         _stateStore.State.Evil.EditMomentum(800 * MomentumWarState.MomentumScale);
 
         Assert.AreEqual(100, _sut.SliderValue);
-    }
-
-    [TestMethod]
-    public void DisplayMomentum_UsesConfiguredDivisor()
-    {
-        _stateStore.State.Free.EditMomentum(300 * MomentumWarState.MomentumScale);
-
-        Assert.AreEqual(76.159f, _sut.DisplayMomentum, 0.01f);
     }
 
     [TestMethod]

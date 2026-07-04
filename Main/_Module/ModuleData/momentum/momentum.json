@@ -1,7 +1,6 @@
 {
   "enabled": true,
   "victoryThreshold": 500,
-  "softCapDivisor": 300.0,
   "events": {
     "maxBattleMomentum": 300,
     "siegeMomentum": 250,

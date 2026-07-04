@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core.ViewModelCollection.ImageIdentifiers;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using TaleWorlds.ObjectSystem;
 using TAOM.Features.WarOfTheRingMomentum.Domain;
 
 namespace TAOM.Features.WarOfTheRingMomentum.UI;
@@ -19,6 +20,9 @@ public sealed class MomentumPopupVM : ViewModel
 {
     private const string FreeLeaderKingdomId = "empire_w"; // Gondor
     private const string EvilLeaderKingdomId = "empire_s"; // Mordor
+
+    private static readonly MomentumActionType[] ActionTypes =
+        (MomentumActionType[])Enum.GetValues(typeof(MomentumActionType));
 
     private readonly IMomentumQueryService _query;
     private readonly Action _onClose;
@@ -129,7 +133,7 @@ public sealed class MomentumPopupVM : ViewModel
     private void RebuildBreakdown()
     {
         MomentumBreakdown.Clear();
-        foreach (MomentumActionType type in Enum.GetValues(typeof(MomentumActionType)))
+        foreach (MomentumActionType type in ActionTypes)
         {
             MomentumBreakdown.Add(new BreakdownVM(
                 ActionTypeLabel(type),
@@ -187,6 +191,6 @@ public sealed class MomentumPopupVM : ViewModel
     {
         if (string.IsNullOrEmpty(kingdomId))
             return null;
-        return Kingdom.All?.FirstOrDefault(k => k?.StringId == kingdomId);
+        return MBObjectManager.Instance?.GetObject<Kingdom>(kingdomId);
     }
 }

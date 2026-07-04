@@ -73,13 +73,6 @@ public class MomentumConfigProvider : IMomentumConfigProvider
             rejected = true;
         }
 
-        if (!FiniteFloatValidator.IsFiniteInRange(parsed.SoftCapDivisor, 1f, 100000f))
-        {
-            Warn($"softCapDivisor={parsed.SoftCapDivisor} must be finite in [1,100000]", defaults.SoftCapDivisor);
-            parsed.SoftCapDivisor = defaults.SoftCapDivisor;
-            rejected = true;
-        }
-
         rejected |= ValidateEventValue("maxBattleMomentum", () => parsed.Events.MaxBattleMomentum, v => parsed.Events.MaxBattleMomentum = v, defaults.Events.MaxBattleMomentum);
         rejected |= ValidateEventValue("siegeMomentum", () => parsed.Events.SiegeMomentum, v => parsed.Events.SiegeMomentum = v, defaults.Events.SiegeMomentum);
         rejected |= ValidateEventValue("raidMomentum", () => parsed.Events.RaidMomentum, v => parsed.Events.RaidMomentum = v, defaults.Events.RaidMomentum);

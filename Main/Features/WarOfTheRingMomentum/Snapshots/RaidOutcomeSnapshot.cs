@@ -4,6 +4,8 @@ namespace TAOM.Features.WarOfTheRingMomentum.Snapshots;
 /// Flat DTO of a completed village raid. Deliberate deviation from LOTRAOM: the raider
 /// must be an ENROLLED kingdom (LOTRAOM sided raids by culture with no enrollment check,
 /// so every looter raid fed Evil +200 — a systemic bias, not a mechanic).
+/// No PlayerInvolved field BY DESIGN — donor parity: LOTRAOM applied the participation
+/// multiplier + victory-gate credit only to battles and sieges, never raids/army-gatherings.
 /// </summary>
 public class RaidOutcomeSnapshot
 {

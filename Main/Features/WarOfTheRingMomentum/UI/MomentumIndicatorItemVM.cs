@@ -36,7 +36,10 @@ public sealed class MomentumIndicatorItemVM : ViewModel
     public void OnMomentumChanged()
     {
         Momentum = _query.SliderValue;
-        IsIndicatorVisible = _settings.ShowMapMeter && _query.HasWarStarted && !_query.HasWarEnded;
+        // Fold the master toggle too — the behavior removes the whole MapView when disabled,
+        // but this 1s-poll hide is the belt-and-suspenders so the slider vanishes immediately.
+        IsIndicatorVisible = _settings.MomentumEnabled && _settings.ShowMapMeter
+                             && _query.HasWarStarted && !_query.HasWarEnded;
     }
 
     [DataSourceProperty]

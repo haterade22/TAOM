@@ -49,7 +49,6 @@ public class MomentumConfigProviderTests
         WriteConfig(@"{
   ""enabled"": false,
   ""victoryThreshold"": 600,
-  ""softCapDivisor"": 400.0,
   ""events"": { ""maxBattleMomentum"": 111, ""siegeMomentum"": 222, ""raidMomentum"": 333, ""armyMomentum"": 444, ""maxStrengthMomentum"": 555 },
   ""durationsHours"": { ""battleWon"": 100, ""siege"": 200, ""raid"": 300, ""armyGathered"": 400, ""relativeStrength"": 6 },
   ""player"": { ""requireParticipationForVictory"": false, ""participationMultiplier"": 2.0, ""minimumPlayerEventsForVictory"": 8 },
@@ -60,7 +59,6 @@ public class MomentumConfigProviderTests
 
         Assert.IsFalse(config.Enabled);
         Assert.AreEqual(600, config.VictoryThreshold);
-        Assert.AreEqual(400f, config.SoftCapDivisor, 0.001f);
         Assert.AreEqual(111, config.Events.MaxBattleMomentum);
         Assert.AreEqual(222, config.Events.SiegeMomentum);
         Assert.AreEqual(333, config.Events.RaidMomentum);
@@ -130,20 +128,6 @@ public class MomentumConfigProviderTests
         WriteConfig(@"{ ""victoryThreshold"": 0 }");
         Assert.AreEqual(500, _sut.GetConfig().VictoryThreshold);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("victoryThreshold")));
-    }
-
-    [TestMethod]
-    public void GetConfig_SoftCapDivisorNaN_RevertsToDefault()
-    {
-        WriteConfig(@"{ ""softCapDivisor"": ""NaN"" }");
-        Assert.AreEqual(300f, _sut.GetConfig().SoftCapDivisor, 0.001f);
-    }
-
-    [TestMethod]
-    public void GetConfig_SoftCapDivisorZero_RevertsToDefault()
-    {
-        WriteConfig(@"{ ""softCapDivisor"": 0 }");
-        Assert.AreEqual(300f, _sut.GetConfig().SoftCapDivisor, 0.001f);
     }
 
     [TestMethod]

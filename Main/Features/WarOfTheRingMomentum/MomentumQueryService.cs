@@ -9,16 +9,13 @@ namespace TAOM.Features.WarOfTheRingMomentum;
 public class MomentumQueryService : IMomentumQueryService
 {
     private readonly IMomentumStateStore _stateStore;
-    private readonly IMomentumConfigProvider _configProvider;
     private readonly IMomentumSettingsProvider _settings;
 
     public MomentumQueryService(
         IMomentumStateStore stateStore,
-        IMomentumConfigProvider configProvider,
         IMomentumSettingsProvider settings)
     {
         _stateStore = stateStore;
-        _configProvider = configProvider;
         _settings = settings;
     }
 
@@ -27,9 +24,6 @@ public class MomentumQueryService : IMomentumQueryService
     public WarOutcome Victor => _stateStore.State.Victor;
 
     public float InternalMomentum => _stateStore.State.InternalMomentum;
-
-    public float DisplayMomentum =>
-        _stateStore.State.GetDisplayMomentum(_configProvider.GetConfig().SoftCapDivisor);
 
     public int SliderValue
     {
