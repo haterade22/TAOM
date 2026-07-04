@@ -156,17 +156,21 @@ war_of_the_ring.json     TaomSettings (MCM)
           (DailyTick — uses CampaignStartTime)
 ```
 
-### Stateless Design
+### Phase state (mostly time-derived, phase + outcome persisted)
 
-The WotR system stores **no save data**. Each campaign tick:
+Phase escalation is driven by elapsed campaign days, so it survives save/load without migration. Each campaign tick:
 1. Calculates elapsed campaign days via `CampaignStartTime.ElapsedDaysUntilNow` (engine-provided, survives save/load)
 2. Compares against phase thresholds (from MCM or JSON config)
 3. Declares wars only for pairs not already at war (`AreAtWar` guard)
 4. Peace blocking checks elapsed time in real-time
 
-The behavior uses the engine's built-in `Campaign.Current.Models.CampaignTimeModel.CampaignStartTime.ElapsedDaysUntilNow` — the same pattern vanilla uses internally. This is computed from the persisted `MapTimeTracker` ticks and the deterministic campaign start constant. No custom `SyncData` serialization is needed, avoiding any save/load performance impact.
+`WarOfTheRingBehavior.SyncData` persists two ints: `WarOfTheRing_CurrentPhase` (Phase 9b #129 — so past-Phase2 saves don't replay transitions) and `WarOfTheRing_Outcome` (WotR-momentum #327 — the victor once the war ends). Both are additive keys; older saves lacking them load as `Peace` / `None` (vanilla `SyncData` returns false on a missing key without overwriting the ref). The elapsed-time computation still drives escalation; the persisted phase just avoids re-firing transitions on load.
 
-Benefits: MCM config changes take effect immediately on next tick. No save migration needed. Phase state is reconstructed from elapsed time on every tick, so save/load is seamless.
+Benefits: MCM config changes take effect immediately on next tick. No save migration needed (new keys default safely).
+
+### Phases
+
+`WarPhase` (`Main/Features/Diplomacy/Models/WarPhase.cs`) has four values: `Peace` → `IsengardWar` → `FullWar` → `WarEnded`. The first three are the escalation ladder; **`WarEnded`** is a terminal state set by `IWarOfTheRingService.EndWar(WarOutcome)` when the [War of the Ring Momentum](war-of-the-ring-momentum.md) feature's victory condition fires. Because all three peace-block layers key off `IsWarOfTheRingActive` / `ShouldBlockPeace` (which are true only in `FullWar`), flipping to `WarEnded` lifts the peace block so the winning side's momentum service can peace-out the war.
 
 ### MCM Integration via ITaomSettingsProvider
 
@@ -179,7 +183,7 @@ MCM settings are accessed through an injected `ITaomSettingsProvider` interface 
 
 | File | Purpose |
 |------|---------|
-| `Main/Features/Diplomacy/Models/WarPhase.cs` | Phase enum (Peace/IsengardWar/FullWar) |
+| `Main/Features/Diplomacy/Models/WarPhase.cs` | Phase enum (Peace/IsengardWar/FullWar/WarEnded) |
 | `Main/Features/Diplomacy/Models/WarOfTheRingConfig.cs` | Config data models |
 | `Main/Features/Diplomacy/Models/TaomDiplomacyModel.cs` | GameModel — IsAtConstantWar override |
 | `Main/Features/Diplomacy/IWarOfTheRingService.cs` | Service interface |

@@ -175,7 +175,10 @@ public class MomentumEventService : IMomentumEventService
             return 0;
 
         // ×100 at full precision — this is the "battle precision" the ×100 store exists for.
-        float percentageLost = casualties / loserSideStrength;
+        // Clamp the ratio at 1.0 so a single lopsided endgame battle (casualties > the
+        // loser side's residual strength) can't blow past MaxBattleMomentum and instant-win
+        // the war — the config documents this value as a CAP (Codex #327 MED).
+        float percentageLost = Math.Min(casualties / loserSideStrength, 1f);
         int baseMomentum = (int)Math.Round(percentageLost * Config.Events.MaxBattleMomentum * MomentumWarState.MomentumScale);
 
         if (playerInvolved)

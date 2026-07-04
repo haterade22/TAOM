@@ -71,6 +71,12 @@ public class AllianceAdapter : IAllianceAdapter
         }
     }
 
+    public string GetKingdomCultureId(string kingdomId)
+    {
+        // Kingdom.Culture is a plain saveable field (safe once the kingdom is non-null).
+        return FindKingdom(kingdomId)?.Culture?.StringId;
+    }
+
     private static Kingdom FindKingdom(string stringId)
     {
         return Kingdom.All.FirstOrDefault(k => k.StringId == stringId);

@@ -5,6 +5,14 @@ namespace TAOM.Adapters;
 public interface IAllianceAdapter
 {
     IReadOnlyList<string> GetAllKingdomIds();
+
+    /// <summary>
+    /// The kingdom's Culture StringId, or null when the kingdom or its culture is
+    /// unresolvable. Used by WotR-momentum enrollment to side player-founded kingdoms
+    /// (whose kingdom StringId isn't in alignment.json) by their culture.
+    /// </summary>
+    string GetKingdomCultureId(string kingdomId);
+
     bool AreAllied(string kingdomAId, string kingdomBId);
     void StartAlliance(string kingdomAId, string kingdomBId);
     bool AreAtWar(string kingdomAId, string kingdomBId);

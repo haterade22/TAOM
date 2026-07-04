@@ -35,6 +35,16 @@ Port of LOTRAOM 1.2.12's "Momentum" system onto TAOM 1.4.6, wired into the exist
 
 Not-tested: in-game meter/popup rendering + victory flow (control campaign pending; testMode phase2Day=3 fast-path).
 
+### fix(momentum): Codex adversarial-review findings (#327)
+
+Codex (1 HIGH, 2 MED, 2 LOW, all confirmed + fixed; RCA `docs/reviews/rca-wotr-momentum-2026-07-03.md` Codex-pass section):
+
+- HIGH: a player-FOUNDED kingdom (id not in `alignment.json`) resolved Neutral and never enrolled — the player's own war contributions weren't counted and their kingdom never showed on the meter. Enrollment now falls back to the kingdom's CULTURE side (`GetKingdomCultureId` → `GetCultureSide`), reproducing LOTRAOM's culture-based siding for dynamically-created kingdoms.
+- MED: battle momentum `casualties/loserStrength` is now clamped at 1.0 so a lopsided endgame battle can't blow past the documented `MaxBattleMomentum` cap and instant-win the war.
+- MED: the enrollment sweep now prunes enrolled ids absent from the live kingdom set, so a kingdom destroyed while the feature was toggled off can't linger and block the elimination-victory count.
+- LOW ×2: corrected `war-of-the-ring.md` (WarEnded phase + persisted phase/outcome) and an enrollment comment (Khand/`battania` is Evil, not Neutral).
+- +6 regression tests; full suite 4,021 green.
+
 ### balance(startup-resources): retune per-culture lord gold + clan influence
 
 New-game startup grants (`startup_resources_config.xml`; new campaigns only):

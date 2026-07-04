@@ -135,4 +135,81 @@ public class MomentumEnrollmentServiceTests
     {
         Assert.IsFalse(_sut.RemoveKingdom(_state, "nope"));
     }
+
+    // ---- Codex #327: player-founded kingdom culture fallback ----
+
+    [TestMethod]
+    public void SweepEnrollment_PlayerFoundedKingdom_EnrollsByCulture()
+    {
+        // A dynamically-created kingdom id isn't in alignment.json → GetKingdomSide Neutral;
+        // but its culture IS classified, so it must still enroll on that culture's side.
+        _allianceAdapter.GetAllKingdomIds().Returns(new List<string>
+        {
+            "empire_w", "vlandia", "empire_s", "umbar", "new_kingdom"
+        });
+        _alignmentService.GetKingdomSide("new_kingdom").Returns(FactionSide.Neutral);
+        _allianceAdapter.GetKingdomCultureId("new_kingdom").Returns("gondor");
+        _alignmentService.GetCultureSide("gondor").Returns(FactionSide.Free);
+
+        _sut.SweepEnrollment(_state);
+
+        Assert.IsTrue(_state.Free.ContainsKingdom("new_kingdom"));
+    }
+
+    [TestMethod]
+    public void SweepEnrollment_NeutralKingdomWithNeutralCulture_StillExcluded()
+    {
+        // The culture fallback must not enroll a genuinely-neutral kingdom.
+        _allianceAdapter.GetKingdomCultureId("umbar").Returns("umbar");
+        _alignmentService.GetCultureSide("umbar").Returns(FactionSide.Neutral);
+
+        _sut.SweepEnrollment(_state);
+
+        Assert.IsFalse(_state.DoesKingdomTakePart("umbar"));
+    }
+
+    [TestMethod]
+    public void SweepEnrollment_KingdomWithSideAlreadyKnown_DoesNotConsultCulture()
+    {
+        _sut.SweepEnrollment(_state);
+
+        // empire_w resolved Free by kingdom id — the culture fallback must not run for it.
+        _allianceAdapter.DidNotReceive().GetKingdomCultureId("empire_w");
+    }
+
+    // ---- Codex #327: prune stale enrolled ids ----
+
+    [TestMethod]
+    public void SweepEnrollment_EnrolledKingdomNoLongerLive_PrunedFromSide()
+    {
+        // empire_s enrolled, then destroyed while the feature was disabled (RemoveKingdom
+        // never fired). On the next sweep it's gone from GetAllKingdomIds → must be pruned
+        // so the elimination-victory count can reach 0.
+        _sut.SweepEnrollment(_state);
+        Assert.IsTrue(_state.Evil.ContainsKingdom("empire_s"));
+
+        _allianceAdapter.GetAllKingdomIds().Returns(new List<string>
+        {
+            "empire_w", "vlandia", "umbar" // empire_s eliminated
+        });
+
+        bool changed = _sut.SweepEnrollment(_state);
+
+        Assert.IsTrue(changed);
+        Assert.IsFalse(_state.Evil.ContainsKingdom("empire_s"));
+        Assert.AreEqual(0, _state.Evil.KingdomIds.Count);
+    }
+
+    [TestMethod]
+    public void SweepEnrollment_AllLiveKingdomsStillEnrolled_NoPrune()
+    {
+        _sut.SweepEnrollment(_state);
+        var freeBefore = _state.Free.KingdomIds.Count;
+        var evilBefore = _state.Evil.KingdomIds.Count;
+
+        _sut.SweepEnrollment(_state);
+
+        Assert.AreEqual(freeBefore, _state.Free.KingdomIds.Count);
+        Assert.AreEqual(evilBefore, _state.Evil.KingdomIds.Count);
+    }
 }

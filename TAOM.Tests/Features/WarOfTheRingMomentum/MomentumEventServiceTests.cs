@@ -251,6 +251,18 @@ public class MomentumEventServiceTests
         _playerService.DidNotReceive().RecordPlayerEvent(Arg.Any<MomentumActionType>());
     }
 
+    [TestMethod]
+    public void ProcessBattle_CasualtiesExceedLoserStrength_CapsAtMaxBattleMomentum()
+    {
+        // Endgame: Free side reduced to 50 total strength (2 kingdoms × 25), 500 casualties.
+        // Ratio 10 must clamp to 1.0 → exactly MaxBattleMomentum(300) × 100 = 30000, NOT 300000.
+        SetSideStrengths(25f, 1000f);
+
+        _sut.ProcessBattle(ValidBattle(), _state, 100.0);
+
+        Assert.AreEqual(30000, _state.Evil.SideMomentum);
+    }
+
     // ---- ProcessSiege ----
 
     [TestMethod]

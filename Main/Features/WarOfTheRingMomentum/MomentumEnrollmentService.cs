@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.Diplomacy;
@@ -33,13 +35,15 @@ public class MomentumEnrollmentService : IMomentumEnrollmentService
         if (_wotrService.CurrentPhase != WarPhase.FullWar)
             return false;
 
-        bool changed = false;
-        foreach (var kingdomId in _allianceAdapter.GetAllKingdomIds())
+        var liveKingdomIds = _allianceAdapter.GetAllKingdomIds();
+        bool changed = PruneStaleKingdoms(state, liveKingdomIds);
+
+        foreach (var kingdomId in liveKingdomIds)
         {
             if (state.DoesKingdomTakePart(kingdomId))
                 continue;
 
-            switch (_alignmentService.GetKingdomSide(kingdomId))
+            switch (ResolveSide(kingdomId))
             {
                 case FactionSide.Free:
                     if (state.Free.AddKingdom(kingdomId))
@@ -55,7 +59,7 @@ public class MomentumEnrollmentService : IMomentumEnrollmentService
                         changed = true;
                     }
                     break;
-                // Neutral (Umbar/Khand etc.) never enrolls.
+                // Neutral (Umbar/Shaghana/Abanissa) never enrolls. Khand (battania) is Evil.
             }
         }
 
@@ -75,5 +79,38 @@ public class MomentumEnrollmentService : IMomentumEnrollmentService
         if (removed)
             _logger.LogInfo($"[Momentum] {kingdomId} removed from the war (kingdom destroyed)");
         return removed;
+    }
+
+    // Side = kingdom-id alignment, falling back to the kingdom's CULTURE when the
+    // kingdom id isn't in alignment.json. This catches player-founded / dynamically
+    // created kingdoms (id like "new_kingdom") whose culture IS classified — without
+    // it, the player's own kingdom would resolve Neutral and never enroll, hiding the
+    // whole feature from a player who founds a kingdom (Codex #327 HIGH).
+    private FactionSide ResolveSide(string kingdomId)
+    {
+        var side = _alignmentService.GetKingdomSide(kingdomId);
+        if (side != FactionSide.Neutral)
+            return side;
+
+        var cultureId = _allianceAdapter.GetKingdomCultureId(kingdomId);
+        return string.IsNullOrEmpty(cultureId) ? FactionSide.Neutral : _alignmentService.GetCultureSide(cultureId);
+    }
+
+    // Reconcile the enrolled sets against the live (non-eliminated) kingdom set. Handles
+    // a KingdomDestroyed event that was missed because the feature was toggled OFF at the
+    // time — without this, a wiped side keeps a stale id and its count never reaches 0,
+    // permanently blocking the elimination-victory check (Codex #327 MED).
+    private bool PruneStaleKingdoms(MomentumWarState state, IReadOnlyList<string> liveKingdomIds)
+    {
+        var live = new HashSet<string>(liveKingdomIds);
+        bool changed = false;
+
+        foreach (var staleId in state.Free.KingdomIds.Concat(state.Evil.KingdomIds).Where(id => !live.Contains(id)).ToList())
+        {
+            if (RemoveKingdom(state, staleId))
+                changed = true;
+        }
+
+        return changed;
     }
 }
