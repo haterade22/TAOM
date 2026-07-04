@@ -46,6 +46,13 @@ deficit refill to backfill from the converted culture).
 **Save-compat:** additive — no new SyncData; pre-feature converted settlements keep their old notables (documented
 limitation; reconquest + re-conversion catches them up).
 
+### balance(lords): north-orc Leadership raised to 130 average (#328)
+
+The #322 cut left gundabad/dolguldur/goblin/mistymountainorcs lords at 74-84 avg Leadership — too weak on
+morale/garrison scaling. +52 on the `north_orc_*` trio (227/127/112) + Bolgath (237): pooled resolved average
+lands exactly 130.2 (per-culture 126-133). Mordor/Isengard/Dunland verified untouched; Steward stays ~100.
+New campaigns only.
+
 ### docs(lords): lord-skills docs caught up to the balance arc (#322–#326)
 
 `docs/ai-includes/lord-skills-authoring.md` (the `/lord-skills` source of truth) rewritten where stale:

@@ -177,15 +177,15 @@ BASE_ARCHETYPES = {
     # is identical to the parent archetype.
     'north_orc_chieftain':dict(skills=dict(OneHanded=275,TwoHanded=265,Polearm=240,Bow=170,Crossbow=110,Throwing=190,
                                      Riding=190,Athletics=265,Crafting=140,Scouting=240,Tactics=255,Roguery=240,
-                                     Charm=180,Leadership=175,Trade=140,Steward=147,Medicine=90,Engineering=180),
+                                     Charm=180,Leadership=227,Trade=140,Steward=147,Medicine=90,Engineering=180),
                          traits=dict(Honor=-2,Generosity=-1,Calculating=2,Mercy=-2,Valor=2,Egalitarian=-1,Oligarchic=1,Authoritarian=2)),
     'north_orc_warrior':dict(skills=dict(OneHanded=235,TwoHanded=220,Polearm=215,Bow=140,Crossbow=90,Throwing=160,
                                      Riding=150,Athletics=240,Crafting=110,Scouting=200,Tactics=180,Roguery=200,
-                                     Charm=120,Leadership=75,Trade=100,Steward=77,Medicine=70,Engineering=120),
+                                     Charm=120,Leadership=127,Trade=100,Steward=77,Medicine=70,Engineering=120),
                          traits=dict(Honor=-2,Generosity=-2,Calculating=1,Mercy=-2,Valor=2,Egalitarian=-1,Oligarchic=0,Authoritarian=1)),
     'north_orc_female': dict(skills=dict(OneHanded=170,TwoHanded=160,Polearm=160,Bow=160,Crossbow=110,Throwing=140,
                                      Riding=110,Athletics=200,Crafting=180,Scouting=170,Tactics=160,Roguery=210,
-                                     Charm=130,Leadership=60,Trade=130,Steward=127,Medicine=120,Engineering=160),
+                                     Charm=130,Leadership=112,Trade=130,Steward=127,Medicine=120,Engineering=160),
                          traits=dict(Honor=-2,Generosity=-2,Calculating=2,Mercy=-2,Valor=1,Egalitarian=-1,Oligarchic=0,Authoritarian=1)),
     'nazgul':       dict(skills=dict(OneHanded=290,TwoHanded=270,Polearm=290,Bow=210,Crossbow=180,Throwing=210,
                                      Riding=290,Athletics=285,Crafting=210,Scouting=290,Tactics=295,Roguery=290,
@@ -665,7 +665,7 @@ CULTURES = {
             'lord_G4_1': dict(archetype='orc_chieftain',
                 skills=dict(OneHanded=285,TwoHanded=275,Polearm=250,Bow=180,Crossbow=120,Throwing=200,
                             Riding=200,Athletics=275,Crafting=140,Scouting=250,Tactics=265,Roguery=250,
-                            Charm=190,Leadership=185,Trade=140,Steward=157,Medicine=90,Engineering=190)),  # Bolgath — Bolg-evoking; Led 280->185 (north-orc army-size nerf, ruler stays above chieftain 175)
+                            Charm=190,Leadership=237,Trade=140,Steward=157,Medicine=90,Engineering=190)),  # Bolgath — Bolg-evoking; Led 280->185 (north-orc army-size nerf, ruler stays above chieftain 175)
             'lord_G5_1': dict(archetype='orc_chieftain'),  # Vorzak
         },
     },

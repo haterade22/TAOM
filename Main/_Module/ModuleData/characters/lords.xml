@@ -2098,7 +2098,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -2146,7 +2146,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2194,7 +2194,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2242,7 +2242,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2290,7 +2290,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2338,7 +2338,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2386,7 +2386,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2431,7 +2431,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -2476,7 +2476,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -2524,7 +2524,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -2572,7 +2572,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2620,7 +2620,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2668,7 +2668,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2716,7 +2716,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2764,7 +2764,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2812,7 +2812,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2860,7 +2860,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -2905,7 +2905,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -2950,7 +2950,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -2998,7 +2998,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -3046,7 +3046,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -3094,7 +3094,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -3142,7 +3142,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -3190,7 +3190,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -3238,7 +3238,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -3286,7 +3286,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -3334,7 +3334,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -3379,7 +3379,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -3424,7 +3424,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -3472,7 +3472,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -3517,7 +3517,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -3565,7 +3565,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -3610,7 +3610,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -3655,7 +3655,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -3700,7 +3700,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -3745,7 +3745,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -3790,7 +3790,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -3838,7 +3838,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -3886,7 +3886,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -3934,7 +3934,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -3982,7 +3982,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -4030,7 +4030,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -4078,7 +4078,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -4126,7 +4126,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -4174,7 +4174,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -4222,7 +4222,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -4270,7 +4270,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -4315,7 +4315,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -4360,7 +4360,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -4408,7 +4408,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -4456,7 +4456,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -4504,7 +4504,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -4549,7 +4549,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -4594,7 +4594,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -4639,7 +4639,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -4684,7 +4684,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -4729,7 +4729,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -4774,7 +4774,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -4819,7 +4819,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -4868,7 +4868,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -4916,7 +4916,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -4964,7 +4964,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -5012,7 +5012,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -5060,7 +5060,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -5108,7 +5108,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -5153,7 +5153,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -5198,7 +5198,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -5243,7 +5243,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -5288,7 +5288,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -5337,7 +5337,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -5385,7 +5385,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -5433,7 +5433,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -5481,7 +5481,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -5529,7 +5529,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -5574,7 +5574,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -5619,7 +5619,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -5664,7 +5664,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -5709,7 +5709,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -5758,7 +5758,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -5806,7 +5806,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -5854,7 +5854,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -5902,7 +5902,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -5950,7 +5950,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -5995,7 +5995,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -6040,7 +6040,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -6085,7 +6085,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -6134,7 +6134,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -6182,7 +6182,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -6230,7 +6230,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -6278,7 +6278,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -6323,7 +6323,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -6368,7 +6368,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -6413,7 +6413,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -6462,7 +6462,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -6510,7 +6510,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -6558,7 +6558,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -6606,7 +6606,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -6651,7 +6651,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -6696,7 +6696,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -6745,7 +6745,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -6793,7 +6793,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -6841,7 +6841,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -6886,7 +6886,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -6931,7 +6931,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -6980,7 +6980,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -7028,7 +7028,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -7076,7 +7076,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -7124,7 +7124,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -7172,7 +7172,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -7217,7 +7217,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -7262,7 +7262,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -7307,7 +7307,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -7352,7 +7352,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -7401,7 +7401,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -7449,7 +7449,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -7497,7 +7497,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -7545,7 +7545,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -7590,7 +7590,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -7635,7 +7635,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -7680,7 +7680,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -7729,7 +7729,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -7777,7 +7777,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -7825,7 +7825,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -7873,7 +7873,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -7918,7 +7918,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -7963,7 +7963,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -14897,7 +14897,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -14945,7 +14945,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -14993,7 +14993,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15041,7 +15041,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15089,7 +15089,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15137,7 +15137,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15185,7 +15185,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15233,7 +15233,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15278,7 +15278,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -15323,7 +15323,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -15371,7 +15371,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -15419,7 +15419,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15467,7 +15467,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15515,7 +15515,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15563,7 +15563,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15611,7 +15611,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15659,7 +15659,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15707,7 +15707,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15752,7 +15752,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -15797,7 +15797,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -15845,7 +15845,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -15893,7 +15893,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15941,7 +15941,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -15989,7 +15989,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16037,7 +16037,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16085,7 +16085,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16133,7 +16133,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16181,7 +16181,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16226,7 +16226,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -16271,7 +16271,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -16319,7 +16319,7 @@
             <skill id="Tactics" value="265" />
             <skill id="Roguery" value="250" />
             <skill id="Charm" value="190" />
-            <skill id="Leadership" value="185" />
+            <skill id="Leadership" value="237" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="157" />
             <skill id="Medicine" value="90" />
@@ -16367,7 +16367,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16415,7 +16415,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16463,7 +16463,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16511,7 +16511,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16559,7 +16559,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16607,7 +16607,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16655,7 +16655,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16700,7 +16700,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -16745,7 +16745,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -16793,7 +16793,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -16841,7 +16841,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16889,7 +16889,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16937,7 +16937,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -16985,7 +16985,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17033,7 +17033,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17081,7 +17081,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17129,7 +17129,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17174,7 +17174,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -17219,7 +17219,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -17268,7 +17268,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -17316,7 +17316,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17364,7 +17364,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17412,7 +17412,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17460,7 +17460,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17508,7 +17508,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17553,7 +17553,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -17598,7 +17598,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -17643,7 +17643,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -17688,7 +17688,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -17737,7 +17737,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -17785,7 +17785,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17833,7 +17833,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17881,7 +17881,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17929,7 +17929,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -17977,7 +17977,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -18022,7 +18022,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -18067,7 +18067,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -18112,7 +18112,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -18157,7 +18157,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -18206,7 +18206,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -18254,7 +18254,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -18302,7 +18302,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -18350,7 +18350,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -18398,7 +18398,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -18446,7 +18446,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -18491,7 +18491,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -18536,7 +18536,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -18581,7 +18581,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -18626,7 +18626,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -18675,7 +18675,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -18723,7 +18723,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -18771,7 +18771,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -18819,7 +18819,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -18867,7 +18867,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -18915,7 +18915,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -18960,7 +18960,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -19005,7 +19005,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -19050,7 +19050,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -19095,7 +19095,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -19144,7 +19144,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -19192,7 +19192,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -19240,7 +19240,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -19288,7 +19288,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -19336,7 +19336,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -19384,7 +19384,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -19429,7 +19429,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -19474,7 +19474,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -19519,7 +19519,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -19564,7 +19564,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -43601,7 +43601,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -43649,7 +43649,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -43697,7 +43697,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -43745,7 +43745,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -43793,7 +43793,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -43841,7 +43841,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -43886,7 +43886,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -43931,7 +43931,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -43979,7 +43979,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44027,7 +44027,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44075,7 +44075,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44123,7 +44123,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44171,7 +44171,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44219,7 +44219,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44264,7 +44264,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -44309,7 +44309,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -44357,7 +44357,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44405,7 +44405,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44453,7 +44453,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44501,7 +44501,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44549,7 +44549,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44597,7 +44597,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44642,7 +44642,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -44687,7 +44687,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -44735,7 +44735,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44783,7 +44783,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44831,7 +44831,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44879,7 +44879,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44927,7 +44927,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -44975,7 +44975,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45020,7 +45020,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -45065,7 +45065,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -45113,7 +45113,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45161,7 +45161,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45209,7 +45209,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45257,7 +45257,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45305,7 +45305,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45353,7 +45353,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45398,7 +45398,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -45443,7 +45443,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -45493,7 +45493,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -45541,7 +45541,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45589,7 +45589,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45637,7 +45637,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45685,7 +45685,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45733,7 +45733,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45778,7 +45778,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -45823,7 +45823,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -45871,7 +45871,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45919,7 +45919,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -45967,7 +45967,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46015,7 +46015,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46063,7 +46063,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46111,7 +46111,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46156,7 +46156,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -46201,7 +46201,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -46249,7 +46249,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46297,7 +46297,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46345,7 +46345,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46393,7 +46393,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46441,7 +46441,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46489,7 +46489,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46534,7 +46534,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -46579,7 +46579,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -46627,7 +46627,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46675,7 +46675,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46723,7 +46723,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46771,7 +46771,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46819,7 +46819,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46867,7 +46867,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -46912,7 +46912,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -46957,7 +46957,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -47005,7 +47005,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47053,7 +47053,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47101,7 +47101,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47149,7 +47149,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47197,7 +47197,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47245,7 +47245,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47290,7 +47290,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -47335,7 +47335,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -47383,7 +47383,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -47431,7 +47431,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47479,7 +47479,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47527,7 +47527,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47575,7 +47575,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47623,7 +47623,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47668,7 +47668,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -47713,7 +47713,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -47758,7 +47758,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -47803,7 +47803,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -47851,7 +47851,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -47899,7 +47899,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47947,7 +47947,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -47995,7 +47995,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -48043,7 +48043,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -48091,7 +48091,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -48136,7 +48136,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -48181,7 +48181,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -48226,7 +48226,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -48271,7 +48271,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -48319,7 +48319,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -48367,7 +48367,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -48415,7 +48415,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -48463,7 +48463,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -48511,7 +48511,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -48559,7 +48559,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -48604,7 +48604,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -48649,7 +48649,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -48694,7 +48694,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -48739,7 +48739,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -48787,7 +48787,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -48835,7 +48835,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -48883,7 +48883,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -48931,7 +48931,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -48979,7 +48979,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -49027,7 +49027,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -49072,7 +49072,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -49117,7 +49117,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -49162,7 +49162,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -49207,7 +49207,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -49255,7 +49255,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -49303,7 +49303,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -49351,7 +49351,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -49399,7 +49399,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -49447,7 +49447,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -49495,7 +49495,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -49540,7 +49540,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -49585,7 +49585,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -49630,7 +49630,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -49675,7 +49675,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -49723,7 +49723,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -49771,7 +49771,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -49819,7 +49819,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -49867,7 +49867,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -49915,7 +49915,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -49963,7 +49963,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -50008,7 +50008,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -50053,7 +50053,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -50098,7 +50098,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -50143,7 +50143,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -50191,7 +50191,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -50239,7 +50239,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -50287,7 +50287,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -50335,7 +50335,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -50383,7 +50383,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -50431,7 +50431,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -50476,7 +50476,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -50521,7 +50521,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -50566,7 +50566,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -50611,7 +50611,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -50659,7 +50659,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -50707,7 +50707,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -50755,7 +50755,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -50803,7 +50803,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -50851,7 +50851,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -50899,7 +50899,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -50944,7 +50944,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -50989,7 +50989,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -51034,7 +51034,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -51079,7 +51079,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -51127,7 +51127,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -51175,7 +51175,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -51223,7 +51223,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -51271,7 +51271,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -51319,7 +51319,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -51367,7 +51367,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -51412,7 +51412,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -51457,7 +51457,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -51502,7 +51502,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -51547,7 +51547,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -51595,7 +51595,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -51643,7 +51643,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -51691,7 +51691,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -51739,7 +51739,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -51787,7 +51787,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -51835,7 +51835,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -51880,7 +51880,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -51925,7 +51925,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -51970,7 +51970,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52015,7 +52015,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52060,7 +52060,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52105,7 +52105,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52150,7 +52150,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52195,7 +52195,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52240,7 +52240,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52285,7 +52285,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52330,7 +52330,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52375,7 +52375,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52420,7 +52420,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52465,7 +52465,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52515,7 +52515,7 @@
             <skill id="Tactics" value="255" />
             <skill id="Roguery" value="240" />
             <skill id="Charm" value="180" />
-            <skill id="Leadership" value="175" />
+            <skill id="Leadership" value="227" />
             <skill id="Trade" value="140" />
             <skill id="Steward" value="147" />
             <skill id="Medicine" value="90" />
@@ -52563,7 +52563,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -52611,7 +52611,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -52659,7 +52659,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -52707,7 +52707,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -52755,7 +52755,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -52800,7 +52800,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52845,7 +52845,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -52893,7 +52893,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -52941,7 +52941,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -52989,7 +52989,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53037,7 +53037,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53085,7 +53085,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53133,7 +53133,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53178,7 +53178,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -53223,7 +53223,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -53271,7 +53271,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53319,7 +53319,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53367,7 +53367,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53415,7 +53415,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53463,7 +53463,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53511,7 +53511,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53556,7 +53556,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -53601,7 +53601,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -53649,7 +53649,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53697,7 +53697,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53745,7 +53745,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53793,7 +53793,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53841,7 +53841,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53889,7 +53889,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -53934,7 +53934,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -53979,7 +53979,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -54027,7 +54027,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -54075,7 +54075,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -54123,7 +54123,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -54171,7 +54171,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -54219,7 +54219,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -54267,7 +54267,7 @@
             <skill id="Tactics" value="180" />
             <skill id="Roguery" value="200" />
             <skill id="Charm" value="120" />
-            <skill id="Leadership" value="75" />
+            <skill id="Leadership" value="127" />
             <skill id="Trade" value="100" />
             <skill id="Steward" value="77" />
             <skill id="Medicine" value="70" />
@@ -54312,7 +54312,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />
@@ -54357,7 +54357,7 @@
             <skill id="Tactics" value="160" />
             <skill id="Roguery" value="210" />
             <skill id="Charm" value="130" />
-            <skill id="Leadership" value="60" />
+            <skill id="Leadership" value="112" />
             <skill id="Trade" value="130" />
             <skill id="Steward" value="127" />
             <skill id="Medicine" value="120" />

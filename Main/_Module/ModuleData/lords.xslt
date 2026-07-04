@@ -3579,7 +3579,7 @@
                                                                 <skill id="Tactics" value="180" />
                                                                 <skill id="Roguery" value="200" />
                                                                 <skill id="Charm" value="120" />
-                                                                <skill id="Leadership" value="75" />
+                                                                <skill id="Leadership" value="127" />
                                                                 <skill id="Trade" value="100" />
                                                                 <skill id="Steward" value="77" />
                                                                 <skill id="Medicine" value="70" />
