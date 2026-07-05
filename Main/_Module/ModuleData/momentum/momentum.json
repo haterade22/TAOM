@@ -4,7 +4,7 @@
   "victoryThreshold": 500,
   "events": {
     "maxBattleMomentum": 300,
-    "siegeMomentum": 400,
+    "siegeMomentum": 250,
     "raidMomentum": 50,
     "armyMomentum": 200,
     "maxStrengthMomentum": 0

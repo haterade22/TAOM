@@ -2192,7 +2192,7 @@
       <Width>191</Width>
       <Height>26</Height>
       <SheetX>1658</SheetX>
-      <SheetY>3025</SheetY>
+      <SheetY>3027</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2201,7 +2201,7 @@
       <Width>191</Width>
       <Height>26</Height>
       <SheetX>1857</SheetX>
-      <SheetY>3025</SheetY>
+      <SheetY>3027</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -2237,7 +2237,7 @@
       <Width>191</Width>
       <Height>26</Height>
       <SheetX>2056</SheetX>
-      <SheetY>3025</SheetY>
+      <SheetY>3027</SheetY>
       <CategoryName>ui_taom</CategoryName>
     </SpritePart>
     <SpritePart>
@@ -5232,7 +5232,7 @@
       <SheetID>3</SheetID>
       <Name>WarOfTheRing\wotr_frame</Name>
       <Width>700</Width>
-      <Height>164</Height>
+      <Height>166</Height>
       <SheetX>1662</SheetX>
       <SheetY>2853</SheetY>
       <CategoryName>ui_taom</CategoryName>
