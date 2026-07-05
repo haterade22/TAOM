@@ -28,8 +28,8 @@ namespace TAOM.Features.SkipCampaignIntro.Hooks;
 /// own <c>[HarmonyPatch]</c> target (<c>OnLoadFinished</c>) is covered by <c>HarmonyPatchBindingTests</c>.
 /// </para>
 /// </summary>
-[HarmonyPatchCategory("Patch58_SkipCampaignIntro")]
 [HarmonyPatch(typeof(SandBoxGameManager), nameof(SandBoxGameManager.OnLoadFinished))]
+[HarmonyPatchCategory("Patch58_SkipCampaignIntro")]
 public static class Patch58_SkipCampaignIntro
 {
     /// <summary>Private <c>SandBoxGameManager.LaunchSandboxCharacterCreation()</c> — pushes the CC state.</summary>
