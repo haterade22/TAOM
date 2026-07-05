@@ -30,4 +30,28 @@
 		</Styles>
 	</Brush>
 
+	<!-- War of the Ring momentum bar: custom LOTR-themed art (ui_taom\WarOfTheRing).
+	     Fill = clean red|green track that sits inside the obsidian frame's channel;
+	     Handle = the One Ring, sliding toward the Eye (Evil, left) or the White Tree (Free, right). -->
+	<Brush Name="WarOfTheRing.Bar.Fill">
+		<Layers>
+			<BrushLayer Name="Default" Sprite="WarOfTheRing\wotr_fill" />
+		</Layers>
+		<Styles>
+			<Style Name="Default">
+				<BrushLayer Name="Default" />
+			</Style>
+		</Styles>
+	</Brush>
+	<Brush Name="WarOfTheRing.Bar.Handle">
+		<Layers>
+			<BrushLayer Name="Default" Sprite="WarOfTheRing\wotr_ring" />
+		</Layers>
+		<Styles>
+			<Style Name="Default">
+				<BrushLayer Name="Default" />
+			</Style>
+		</Styles>
+	</Brush>
+
 </Brushes>

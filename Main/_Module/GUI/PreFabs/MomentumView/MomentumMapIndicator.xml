@@ -1,9 +1,4 @@
 ﻿<Prefab>
-	<Constants>
-		<!-- Pruned to the single constant the body uses; the removed set included a
-		     reference to Conversation.Relation.Handle, a brush 1.4.6 no longer ships. -->
-		<Constant Name="Conversation.Relation.Handle.Width" BrushLayer="Default" BrushName="Kingdom.Support.Handle" BrushValueType="Width" />
-	</Constants>
 	<Window>
 
 		<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top">
@@ -12,15 +7,22 @@
 					<Children>
 						<TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Brush="Kingdom.TitleSmall.Text" Text="@Text" MarginTop="50" PositionYOffset="10" ClipContents="false"/>
 
-						<SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="350" SuggestedHeight="65" HorizontalAlignment="Center" DoNotUpdateHandleSize="true" Brush="Kingdom.Support.Fill" Handle="SliderHandle" IsDiscrete="true" Locked="false" MaxValueInt="100" MinValueInt="-100" ValueInt="@Momentum" MarginTop="10" IsEnabled="false">
+						<!-- Custom obsidian+gold frame (Eye of Sauron left / White Tree right) as the opaque
+						     background; the fill + One Ring handle are sized to the frame's recessed channel
+						     (measured 55.4% x 34.2% of the frame, centered) and drawn on top. -->
+						<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="94" HorizontalAlignment="Center" MarginTop="10">
 							<Children>
-		                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="65" HorizontalAlignment="Center" Sprite="SPKingdom\progress_bar_frame" PositionYOffset="0" PositionXOffset="2" />
-								<ImageWidget Brush="Kingdom.Support.Handle" Id="SliderHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Conversation.Relation.Handle.Width" SuggestedHeight="75" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="false">
+								<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="94" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="WarOfTheRing\wotr_frame" />
+								<SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="222" SuggestedHeight="32" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotUpdateHandleSize="true" Brush="WarOfTheRing.Bar.Fill" Handle="SliderHandle" IsDiscrete="true" Locked="false" MaxValueInt="100" MinValueInt="-100" ValueInt="@Momentum" IsEnabled="false">
 									<Children>
+										<ImageWidget Brush="WarOfTheRing.Bar.Handle" Id="SliderHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="44" SuggestedHeight="44" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="false">
+											<Children>
+											</Children>
+										</ImageWidget>
 									</Children>
-								</ImageWidget>
+								</SliderWidget>
 							</Children>
-						</SliderWidget>
+						</Widget>
 					</Children>
 				</ButtonWidget>
 			</Children>

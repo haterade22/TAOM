@@ -2,6 +2,18 @@
 
 ## 2026-07-04
 
+### feat(momentum): reskin the War of the Ring map bar with custom LOTR art
+
+The on-map momentum bar dropped its generic native widgets (`Kingdom.Support.Fill` / `SPKingdom\progress_bar_frame` / `Kingdom.Support.Handle`) for three custom LOTR-themed sprites under `GUI/SpriteParts/ui_taom/WarOfTheRing/` (Imagine-generated source, cut + composited to transparent PNGs locally with PIL — background removal needed a paid Imagine plan, so the cutouts were done with a corner flood-key for the frame/fill and a soft distance-matte for the Ring's glow):
+
+- **`wotr_frame.png`** (700×164) — an obsidian+gold casing, the **Eye of Sauron (Evil) at the left end** and the **White Tree of Gondor (Free) at the right**, with a recessed channel between them (matches the bar's `positive = Free = right` convention). Opaque background.
+- **`wotr_fill.png`** (360×57) — a clean red\|green track (`WarOfTheRing.Bar.Fill` brush) sized to sit inside the channel. A smooth red→green gradient muddies to brown/grey at the midpoint, so a two-tone split was chosen instead.
+- **`wotr_ring.png`** (150×151) — the One Ring (`WarOfTheRing.Bar.Handle` brush), the sliding handle; it travels toward the Eye when Evil leads, toward the Tree when the Free Peoples lead.
+
+`MomentumMapIndicator.xml` was restructured so the frame is the opaque background and the `SliderWidget` (fill + Ring handle) draws on top, sized + centered to the channel — measured at **55.4% × 34.2%** of the frame, centered on both axes, so alignment needs no margins. Brushes added to `Main/_Module/GUI/Brushes/BalanceOfPower.xml`. All bindings (`@Momentum`, `@IsIndicatorVisible`, click→popup) are unchanged; this is cosmetic only, no C#.
+
+**Not-tested:** the three sprites are loose PNGs that must be packed by the editor sprite-generation (`SpriteSheetGenerator.exe` + the `ui_taom_*_tex.tpac` texture-compile) before they render — a loose PNG is blank until baked. Sizes/alignment are first estimates; the bake + one in-game tuning pass are the remaining step (baked ≠ visible). Feature doc: `docs/features/war-of-the-ring-momentum.md` "UI & display".
+
 ### chore(logging): trim now-redundant per-tick diagnostics from four working features
 
 A single 2.5-hour session produced a 21 MB / 169,676-line `taom_debug_*.log` — 97.5% of it per-tick tracing from features that are now confirmed working (and the log is bundled into crash reports via `IModLogger.LogFilePath`, so it bloated every crash ZIP). `FileLogger` has no level filter, so the noise was removed at the call sites; all WARNING/ERROR lines and the one-time "feature loaded" INFO markers are kept.

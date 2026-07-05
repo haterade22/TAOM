@@ -58,6 +58,16 @@ Load reconcile in `OnSessionLaunched`: with victory **disabled**, a war that end
 
 **On-map bar** (`MomentumMapIndicator.xml` + `MomentumIndicatorMapView`): a persistent "War of the Ring" slider on the campaign map, added at FullWar and removed on victory (or when either MCM toggle is off). Its value is `IMomentumQueryService.SliderValue` — a **relative-balance ratio** `(free − evil) / (free + evil)` mapped to −100..+100, **positive = Free ahead** (the handle fills rightward toward the green end; negative = Evil, toward red). It is deliberately NOT a victory-threshold fraction: in a long war the accumulated momentum grows many times past the threshold, so a threshold-normalized value clamped to one end and the bar never moved. The ratio stays readable at any magnitude.
 
+**Custom themed art** (`GUI/SpriteParts/ui_taom/WarOfTheRing/`, category `ui_taom` = `AlwaysLoad`): the bar dropped the native `Kingdom.Support.*` / `SPKingdom\progress_bar_frame` widgets for three LOTR-themed sprites (Imagine-generated source, cut + composited to transparent PNGs locally with PIL):
+
+| Sprite | File | Role in prefab |
+|--------|------|----------------|
+| Obsidian+gold frame | `wotr_frame.png` (700×164) | opaque **background** — Eye of Sauron (Evil) at the LEFT end, White Tree of Gondor (Free) at the RIGHT end, with a recessed channel between them (matches `positive = Free = right`) |
+| Red\|green track | `wotr_fill.png` (360×57) | `WarOfTheRing.Bar.Fill` brush — the `SliderWidget` background, sized to the channel |
+| The One Ring | `wotr_ring.png` (150×151) | `WarOfTheRing.Bar.Handle` brush — the sliding handle; travels toward the Eye (Evil winning) or the Tree (Free winning) |
+
+Layering (Option B): the frame is the opaque background `Widget`; the `SliderWidget` (fill + Ring handle) is a sibling **drawn on top**, sized + centered to the channel (measured **55.4% × 34.2%** of the frame, centered both axes — so `HorizontalAlignment`/`VerticalAlignment="Center"` aligns it without margins). Container 400×94, channel-slider 222×32, Ring handle 44×44 (overhangs the channel for a bead look). Brushes live in `Main/_Module/GUI/Brushes/BalanceOfPower.xml`. **Bake pending:** the three loose PNGs must be packed by the editor sprite-generation (`SpriteSheetGenerator.exe` + the texture-compile pass that writes `ui_taom_*_tex.tpac`) before they render — a loose PNG is blank until baked (see [gui-sprite-system.md](./gui-sprite-system.md)). Sizes/alignment are first estimates; expect one in-game tuning pass (baked ≠ visible).
+
 **Detail popup** (`MomentumView.xml` + `MomentumPopupController`/`MomentumPopupVM`): faction banners (Gondor/Mordor leaders), Leaders/Allies rows (the enrolled kingdoms, banners rendered from each kingdom's `Banner` via `BannerImageIdentifierVM`), a per-`MomentumActionType` breakdown table with accumulating tooltips, and a Total Stats table (kills/settlements captured/villages raided). It ctor-computes and live-recomputes on `MomentumChanged` while open (unsubscribes on close). The **"Total:" line shows the bounded balance magnitude (0–100), colored green when the Free Peoples lead, red when Evil leads, parchment when even** — direction is carried by colour so the sign isn't needed (and it fixes the near-invisible dark default text). Opened by clicking the bar; closed by the button or Escape (`GenericPanelGameKeyCategory` "Exit").
 
 Kingdoms are resolved by StringId with `Kingdom.All.FirstOrDefault(k => k.StringId == id)` (the vanilla idiom) — **not** `MBObjectManager.GetObject<Kingdom>`, which does not resolve campaign kingdoms and returned null (blank banners + zero strength).
@@ -113,7 +123,9 @@ The string transport (rather than syncing the `Dictionary<string,string>` direct
 | `UI/MomentumPopupController.cs` + `MomentumPopupVM.cs` | detail popup |
 | `UI/MomentumIndicatorItemVM.cs`, `MomentumIndicatorVM.cs`, `FactionRelationshipVM.cs`, `BreakdownVM.cs` | VMs |
 | `Main/Adapters/WarEventSnapshotAdapter.cs` + `KingdomStrengthAdapter.cs` | engine boundary |
-| `Main/_Module/GUI/PreFabs/MomentumView/*.xml` | prefabs (fork residue, 1.4.x-migrated) |
+| `Main/_Module/GUI/PreFabs/MomentumView/*.xml` | prefabs (fork residue, 1.4.x-migrated); `MomentumMapIndicator.xml` rewired to the custom bar art |
+| `Main/_Module/GUI/SpriteParts/ui_taom/WarOfTheRing/wotr_{frame,fill,ring}.png` | custom bar sprites (obsidian frame / red-green track / One Ring handle) — bake via editor `SpriteSheetGenerator` |
+| `Main/_Module/GUI/Brushes/BalanceOfPower.xml` | `WarOfTheRing.Bar.Fill` / `.Handle` brushes + the momentum text brushes |
 | `Main/_Module/ModuleData/taom_wotr_strings.xml` | 24 localization keys |
 
 ## Dependencies
