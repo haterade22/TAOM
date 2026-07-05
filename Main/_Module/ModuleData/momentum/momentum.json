@@ -5,7 +5,7 @@
   "events": {
     "maxBattleMomentum": 300,
     "siegeMomentum": 250,
-    "raidMomentum": 200,
+    "raidMomentum": 100,
     "armyMomentum": 200,
     "maxStrengthMomentum": 300
   },

@@ -45,12 +45,17 @@ public sealed class MomentumPopupVM : ViewModel
         StatsBreakdown = new MBBindingList<BreakdownVM>();
 
         Rebuild();
-        _query.MomentumChanged += Rebuild;
+        // Only the NUMBERS live-update on momentum change. The banner/roster VMs are built
+        // once (below): rebuilding them on every event re-created their BannerImageIdentifierVM,
+        // and banner textures render asynchronously, so a fresh event replaced each VM before
+        // its texture finished — the banners flashed in and vanished. Enrolled factions don't
+        // change during the popup's brief lifetime, so a one-time build is correct.
+        _query.MomentumChanged += RefreshNumbers;
     }
 
     public override void OnFinalize()
     {
-        _query.MomentumChanged -= Rebuild;
+        _query.MomentumChanged -= RefreshNumbers;
         base.OnFinalize();
     }
 
@@ -79,7 +84,16 @@ public sealed class MomentumPopupVM : ViewModel
     [DataSourceProperty] public MBBindingList<BreakdownVM> MomentumBreakdown { get; private set; }
     [DataSourceProperty] public MBBindingList<BreakdownVM> StatsBreakdown { get; private set; }
 
+    // Full build — banners + rosters (once, at open) plus the numbers.
     private void Rebuild()
+    {
+        RebuildLeadersAndBanners();
+        RebuildParticipants();
+        RefreshNumbers();
+    }
+
+    // Numbers only — safe to run on every MomentumChanged (no async banner-texture VMs here).
+    private void RefreshNumbers()
     {
         // Show the bounded relative balance (SliderValue, −100..+100, positive = Free) rather
         // than the raw runaway InternalMomentum. The magnitude (0–100) reads as "how far ahead",
@@ -93,8 +107,6 @@ public sealed class MomentumPopupVM : ViewModel
         MomentumColor = balance > 0 ? FreeColor : balance < 0 ? EvilColor : NeutralColor;
         OnPropertyChangedWithValue(MomentumColor, nameof(MomentumColor));
 
-        RebuildLeadersAndBanners();
-        RebuildParticipants();
         RebuildBreakdown();
         RebuildStats();
     }
