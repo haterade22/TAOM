@@ -58,7 +58,7 @@ Load reconcile in `OnSessionLaunched`: with victory **disabled**, a war that end
 
 **On-map bar** (`MomentumMapIndicator.xml` + `MomentumIndicatorMapView`): a persistent "War of the Ring" slider on the campaign map, added at FullWar and removed on victory (or when either MCM toggle is off). Its value is `IMomentumQueryService.SliderValue` — a **relative-balance ratio** `(free − evil) / (free + evil)` mapped to −100..+100, **positive = Free ahead** (the handle fills rightward toward the green end; negative = Evil, toward red). It is deliberately NOT a victory-threshold fraction: in a long war the accumulated momentum grows many times past the threshold, so a threshold-normalized value clamped to one end and the bar never moved. The ratio stays readable at any magnitude.
 
-**Custom themed art** (`GUI/SpriteParts/ui_taom/WarOfTheRing/`, category `ui_taom` = `AlwaysLoad`): the bar dropped the native `Kingdom.Support.*` / `SPKingdom\progress_bar_frame` widgets for three LOTR-themed sprites (Imagine-generated source, cut + composited to transparent PNGs locally with PIL):
+**Custom themed art** (`GUI/SpriteParts/ui_taom/WarOfTheRing/`, category `ui_taom` = `AlwaysLoad`): the bar dropped the native `Kingdom.Support.*` / `SPKingdom\progress_bar_frame` widgets for three LOTR-themed sprites (Imagine-generated source; the fill + Ring cut to transparent PNGs locally with PIL, the obsidian frame supplied pre-cut with a clean anti-aliased alpha):
 
 | Sprite | File | Role in prefab |
 |--------|------|----------------|
