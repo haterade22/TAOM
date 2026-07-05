@@ -20,8 +20,12 @@ public sealed class MomentumPopupVM : ViewModel
     private const string FreeLeaderKingdomId = "empire_w"; // Gondor
     private const string EvilLeaderKingdomId = "empire_s"; // Mordor
 
+    // RelativeStrength is retired (maxStrengthMomentum = 0): Evil out-strengths Free for most of
+    // a campaign, so the daily differential just handed Evil free points. Excluded from the
+    // breakdown so no dead "Relative Strength 0/0" row shows.
     private static readonly MomentumActionType[] ActionTypes =
-        (MomentumActionType[])Enum.GetValues(typeof(MomentumActionType));
+        ((MomentumActionType[])Enum.GetValues(typeof(MomentumActionType)))
+        .Where(t => t != MomentumActionType.RelativeStrength).ToArray();
 
     private static readonly Color FreeColor = new Color(0.36f, 0.82f, 0.36f);    // green — Free ahead
     private static readonly Color EvilColor = new Color(0.87f, 0.28f, 0.26f);    // red — Evil ahead

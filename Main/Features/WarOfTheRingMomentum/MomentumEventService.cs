@@ -144,6 +144,13 @@ public class MomentumEventService : IMomentumEventService
 
     private void AwardDailyStrengthMomentum(MomentumWarState state, double nowHours)
     {
+        // Disabled when maxStrengthMomentum <= 0. Evil out-strengths the Free Peoples for most
+        // of a campaign, so the daily strength differential just fed Evil free momentum every
+        // day regardless of what either side actually DID. Removed from the equation (JSON = 0);
+        // set events.maxStrengthMomentum > 0 to bring it back.
+        if (Config.Events.MaxStrengthMomentum <= 0)
+            return;
+
         float freeStrength = GetSideStrength(state.Free);
         float evilStrength = GetSideStrength(state.Evil);
 

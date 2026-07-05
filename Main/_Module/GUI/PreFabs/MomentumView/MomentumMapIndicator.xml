@@ -1,28 +1,34 @@
-﻿<Prefab>
+<Prefab>
 	<Window>
 
 		<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top">
 			<Children>
 				<ButtonWidget DataSource="{MomentumIndicator}" IsVisible="@IsIndicatorVisible" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Command.Click="OpenDetailedBalanceOfPowerView" DoNotPassEventsToChildren="true" UpdateChildrenStates="true">
 					<Children>
-						<TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Brush="Kingdom.TitleSmall.Text" Text="@Text" MarginTop="50" PositionYOffset="10" ClipContents="false"/>
-
-						<!-- Custom obsidian+gold frame (Eye of Sauron left / White Tree right) as the opaque
-						     background; the fill + One Ring handle are sized to the frame's recessed channel
-						     (measured 55.4% x 34.2% of the frame, centered) and drawn on top. -->
-						<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="94" HorizontalAlignment="Center" MarginTop="10">
+						<!-- Bar on top, title stacked BELOW it (clear of the frame) via a vertical ListPanel. -->
+						<ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom">
 							<Children>
-								<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="94" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="WarOfTheRing\wotr_frame" />
-								<SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="222" SuggestedHeight="32" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotUpdateHandleSize="true" Brush="WarOfTheRing.Bar.Fill" Handle="SliderHandle" IsDiscrete="true" Locked="false" MaxValueInt="100" MinValueInt="-100" ValueInt="@Momentum" IsEnabled="false">
+								<!-- Custom obsidian+gold frame (Eye of Sauron left / White Tree right) as the opaque
+								     background; the fill + One Ring handle are sized to the frame's recessed channel
+								     (measured 55.3% x 34.3% of the frame, centered) and drawn on top. -->
+								<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="94" HorizontalAlignment="Center">
 									<Children>
-										<ImageWidget Brush="WarOfTheRing.Bar.Handle" Id="SliderHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="44" SuggestedHeight="44" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="false">
+										<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="94" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="WarOfTheRing\wotr_frame" />
+										<SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="222" SuggestedHeight="32" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotUpdateHandleSize="true" Brush="WarOfTheRing.Bar.Fill" Handle="SliderHandle" IsDiscrete="true" Locked="false" MaxValueInt="100" MinValueInt="-100" ValueInt="@Momentum" IsEnabled="false">
 											<Children>
+												<ImageWidget Brush="WarOfTheRing.Bar.Handle" Id="SliderHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="44" SuggestedHeight="44" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="false">
+													<Children>
+													</Children>
+												</ImageWidget>
 											</Children>
-										</ImageWidget>
+										</SliderWidget>
 									</Children>
-								</SliderWidget>
+								</Widget>
+
+								<!-- Title BELOW the bar, clear of the frame. -->
+								<TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Brush="Kingdom.TitleSmall.Text" Text="@Text" ClipContents="false" MarginTop="6"/>
 							</Children>
-						</Widget>
+						</ListPanel>
 					</Children>
 				</ButtonWidget>
 			</Children>

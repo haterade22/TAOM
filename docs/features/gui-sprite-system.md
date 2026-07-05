@@ -137,6 +137,7 @@ Static review (including `/deep-review` + Codex) can confirm bake *shape* but **
 
 - **Prefab XML** is loaded at runtime (not baked). A normal `./build.ps1` copies `Main/_Module/**` to the game install, or — for a fast prefab-only iteration — copy the single file to `<game>/Modules/TAOM/GUI/Prefabs/<Feature>/<Screen>.xml`. No regen needed for a prefab-only change.
 - **A new/changed sprite PNG** must be deployed to the game install AND the generator re-run there (it rewrites the install's `GUI/<Module>SpriteData.xml` + `AssetSources/` + `Assets/`). **Then sync the regenerated manifest + `AssetSources/` + `Assets/` back into the repo** so a later `./build.ps1` doesn't clobber the bake with the stale repo manifest. Verify the sync with `diff` — repo and install `<Module>SpriteData.xml` should be byte-identical.
+  - **Sync back ONLY those three (`GUI/<Module>SpriteData.xml` + `AssetSources/` + `Assets/`) — NOT `GUI/PreFabs/` or `GUI/Brushes/`.** An over-broad install→repo sync copies the install's (older) prefabs back over the repo and silently reverts any uncommitted prefab/brush edits that hadn't been deployed yet. This bit the WotR-momentum bar twice (2026-07-05): the title-reposition and the popup side-swap both looked "unchanged in-game" because the repo edits had been reverted by the bake sync. Prefabs/brushes flow **repo→install** (via `build.ps1`), never the other way.
 
 ### Sprite gotchas (consolidated — each links a memory)
 

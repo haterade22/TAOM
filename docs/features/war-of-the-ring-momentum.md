@@ -82,10 +82,10 @@ Kingdoms are resolved by StringId with `Kingdom.All.FirstOrDefault(k => k.String
 | `victoryEnabled` | **false** | when off, the war is endless (tracked, never resolves); on = a side can win |
 | `victoryThreshold` | 500 | internal momentum lead to win (only when `victoryEnabled`) |
 | `events.maxBattleMomentum` | 300 | battle cap (scaled by casualties ÷ loser strength) |
-| `events.siegeMomentum` | 250 | fixed per captured settlement |
-| `events.raidMomentum` | 100 | fixed per raided village (was 200 — halved 2026-07-04: Good factions rarely raid, so raids structurally over-fed Evil) |
+| `events.siegeMomentum` | 400 | fixed per captured settlement (was 250 — raised 2026-07-05: taking a fief is the war's real objective, now the highest per-event weight) |
+| `events.raidMomentum` | 50 | fixed per raided village (was 200 → 100 → 50 over 2026-07-04/05: Good factions rarely raid, so raids structurally over-fed Evil) |
 | `events.armyMomentum` | 200 | fixed per army gathered |
-| `events.maxStrengthMomentum` | 300 | daily strength-differential cap |
+| `events.maxStrengthMomentum` | **0** | daily strength-differential cap — **retired 2026-07-05** (was 300): Evil out-strengths Free for most of a campaign, so it just fed Evil free daily momentum. At 0 the award is skipped and the `RelativeStrength` row is dropped from the breakdown; set > 0 to bring it back |
 | `durationsHours.*` | 504/504/504/168/12 | decay windows |
 | `player.requireParticipationForVictory` | true | war can't end until the player has fought enough |
 | `player.participationMultiplier` | 1.5 | momentum ×1.5 when the player takes part |
