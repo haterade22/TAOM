@@ -17,13 +17,18 @@ public class MomentumEventServiceTests
     private IKingdomStrengthAdapter _strengthAdapter = null!;
     private IMomentumTextService _textService = null!;
     private MomentumWarState _state = null!;
+    private MomentumConfig _config = null!;
     private MomentumEventService _sut = null!;
 
     [TestInitialize]
     public void Setup()
     {
         _configProvider = Substitute.For<IMomentumConfigProvider>();
-        _configProvider.GetConfig().Returns(new MomentumConfig());
+        _config = new MomentumConfig();
+        // Isolate the battle-won math tests from the enemies-killed source (kills fire on every
+        // battle); the dedicated kill-momentum tests below re-enable it explicitly.
+        _config.Events.KillMomentumPerHundred = 0;
+        _configProvider.GetConfig().Returns(_config);
 
         _playerService = Substitute.For<IPlayerMomentumService>();
         _playerService.GetParticipationMultiplier(true).Returns(1.5f);
@@ -39,6 +44,7 @@ public class MomentumEventServiceTests
         _textService.RaidDescription(default, default, default).ReturnsForAnyArgs("raid");
         _textService.ArmyGatheredDescription(default).ReturnsForAnyArgs("army");
         _textService.StrengthDescription(default).ReturnsForAnyArgs("strength");
+        _textService.KillsDescription(default).ReturnsForAnyArgs("kills");
 
         _state = new MomentumWarState();
         _state.MarkWarStarted();
@@ -261,6 +267,66 @@ public class MomentumEventServiceTests
         _sut.ProcessBattle(ValidBattle(), _state, 100.0);
 
         Assert.AreEqual(30000, _state.Evil.SideMomentum);
+    }
+
+    // ---- ProcessBattle: enemies-killed momentum ----
+
+    [TestMethod]
+    public void ProcessBattle_KillMomentumEnabled_BothSidesScoreForKills()
+    {
+        SetSideStrengths(1000f, 1000f);
+        _config.Events.KillMomentumPerHundred = 10;
+
+        _sut.ProcessBattle(ValidBattle(), _state, 100.0);
+
+        // Evil (attacker) killed 500 → 500×10 = 5000; Free (defender) killed 100 → 1000.
+        var evilKill = _state.Evil.GetEvents(MomentumActionType.EnemiesKilled).Single();
+        var freeKill = _state.Free.GetEvents(MomentumActionType.EnemiesKilled).Single();
+        Assert.AreEqual(5000, evilKill.Value);
+        Assert.AreEqual(1000, freeKill.Value);
+        Assert.AreEqual(100.0 + 504.0, evilKill.EndTimeHours, 0.0001);
+    }
+
+    [TestMethod]
+    public void ProcessBattle_KillMomentumEnabled_AccruesEvenForInvalidBattleType()
+    {
+        // Kill momentum tracks the kill STAT, which accrues before the validity filter.
+        SetSideStrengths(1000f, 1000f);
+        _config.Events.KillMomentumPerHundred = 10;
+        var battle = ValidBattle();
+        battle.IsValidBattleType = false;
+
+        _sut.ProcessBattle(battle, _state, 100.0);
+
+        Assert.AreEqual(5000, _state.Evil.GetEvents(MomentumActionType.EnemiesKilled).Single().Value);
+        Assert.AreEqual(1000, _state.Free.GetEvents(MomentumActionType.EnemiesKilled).Single().Value);
+        Assert.AreEqual(0, _state.Evil.GetEvents(MomentumActionType.BattleWon).Count());
+    }
+
+    [TestMethod]
+    public void ProcessBattle_KillMomentumDisabled_NoEnemiesKilledEvents()
+    {
+        SetSideStrengths(1000f, 1000f);
+        _config.Events.KillMomentumPerHundred = 0;
+
+        _sut.ProcessBattle(ValidBattle(), _state, 100.0);
+
+        Assert.AreEqual(0, _state.Evil.GetEvents(MomentumActionType.EnemiesKilled).Count());
+        Assert.AreEqual(0, _state.Free.GetEvents(MomentumActionType.EnemiesKilled).Count());
+    }
+
+    [TestMethod]
+    public void ProcessBattle_KillMomentumEnabled_SideThatKilledNobodyGetsNoEvent()
+    {
+        SetSideStrengths(1000f, 1000f);
+        _config.Events.KillMomentumPerHundred = 10;
+        var battle = ValidBattle();
+        battle.AttackerCasualties = 0; // Free (defender) killed nobody
+
+        _sut.ProcessBattle(battle, _state, 100.0);
+
+        Assert.AreEqual(1, _state.Evil.GetEvents(MomentumActionType.EnemiesKilled).Count());
+        Assert.AreEqual(0, _state.Free.GetEvents(MomentumActionType.EnemiesKilled).Count());
     }
 
     // ---- ProcessSiege ----

@@ -14,4 +14,5 @@ public interface IMomentumTextService
     string RaidDescription(string partyName, string factionName, string settlementName);
     string ArmyGatheredDescription(string leaderName);
     string StrengthDescription(int percentStronger);
+    string KillsDescription(int casualties);
 }

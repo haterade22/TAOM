@@ -50,8 +50,8 @@ public class MomentumConfigProviderTests
   ""enabled"": false,
   ""victoryEnabled"": true,
   ""victoryThreshold"": 600,
-  ""events"": { ""maxBattleMomentum"": 111, ""siegeMomentum"": 222, ""raidMomentum"": 333, ""armyMomentum"": 444, ""maxStrengthMomentum"": 555 },
-  ""durationsHours"": { ""battleWon"": 100, ""siege"": 200, ""raid"": 300, ""armyGathered"": 400, ""relativeStrength"": 6 },
+  ""events"": { ""maxBattleMomentum"": 111, ""siegeMomentum"": 222, ""raidMomentum"": 333, ""armyMomentum"": 444, ""maxStrengthMomentum"": 555, ""killMomentumPerHundred"": 12 },
+  ""durationsHours"": { ""battleWon"": 100, ""siege"": 200, ""raid"": 300, ""armyGathered"": 400, ""relativeStrength"": 6, ""enemiesKilled"": 336 },
   ""player"": { ""requireParticipationForVictory"": false, ""participationMultiplier"": 2.0, ""minimumPlayerEventsForVictory"": 8 },
   ""strengthRatioForMaxMomentum"": 3.0
 }");
@@ -66,6 +66,8 @@ public class MomentumConfigProviderTests
         Assert.AreEqual(333, config.Events.RaidMomentum);
         Assert.AreEqual(444, config.Events.ArmyMomentum);
         Assert.AreEqual(555, config.Events.MaxStrengthMomentum);
+        Assert.AreEqual(12, config.Events.KillMomentumPerHundred);
+        Assert.AreEqual(336, config.DurationsHours.EnemiesKilled);
         Assert.AreEqual(100, config.DurationsHours.BattleWon);
         Assert.AreEqual(200, config.DurationsHours.Siege);
         Assert.AreEqual(300, config.DurationsHours.Raid);
@@ -139,6 +141,17 @@ public class MomentumConfigProviderTests
         WriteConfig(@"{ ""events"": { ""siegeMomentum"": -50 } }");
         Assert.AreEqual(250, _sut.GetConfig().Events.SiegeMomentum);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("siegeMomentum")));
+    }
+
+    [TestMethod]
+    public void GetConfig_NegativeKillMomentum_RevertsToDefault()
+    {
+        WriteConfig(@"{ ""events"": { ""killMomentumPerHundred"": -5 } }");
+
+        var config = _sut.GetConfig();
+
+        Assert.AreEqual(10, config.Events.KillMomentumPerHundred);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("killMomentumPerHundred")));
     }
 
     [TestMethod]

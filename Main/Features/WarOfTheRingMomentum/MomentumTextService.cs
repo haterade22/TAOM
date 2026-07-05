@@ -52,4 +52,11 @@ public class MomentumTextService : IMomentumTextService
         text.SetTextVariable("PERCENTAGE", percentStronger);
         return text.ToString();
     }
+
+    public string KillsDescription(int casualties)
+    {
+        var text = new TextObject("{=taom_wotr_desc_kills}Our forces slew {CASUALTIES} enemies in battle.");
+        text.SetTextVariable("CASUALTIES", casualties);
+        return text.ToString();
+    }
 }

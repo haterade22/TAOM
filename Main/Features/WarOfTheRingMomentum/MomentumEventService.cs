@@ -56,6 +56,12 @@ public class MomentumEventService : IMomentumEventService
         state.GetSide(attackerSide).TotalStats.AddKills(battle.DefenderCasualties);
         state.GetSide(defenderSide).TotalStats.AddKills(battle.AttackerCasualties);
 
+        // Enemies-killed momentum: raw attrition (NOT strength-normalized like BattleWon, whose
+        // casualties/loserStrength ratio keeps it tiny). Each side scores for the enemies it killed,
+        // on the same battles as the kill stat above — so the war's kill count actually feeds the meter.
+        AwardKillMomentum(state, attackerSide, battle.DefenderCasualties, nowHours);
+        AwardKillMomentum(state, defenderSide, battle.AttackerCasualties, nowHours);
+
         if (!battle.IsValidBattleType || !battle.DefenderIsMobileParty
             || !battle.AttackerIsKingdomFaction || !battle.DefenderIsKingdomFaction)
             return;
@@ -173,6 +179,17 @@ public class MomentumEventService : IMomentumEventService
 
         AddEvent(state, freeIsStronger ? MomentumSide.Free : MomentumSide.Evil,
             MomentumActionType.RelativeStrength, value, description, nowHours);
+    }
+
+    private void AwardKillMomentum(MomentumWarState state, MomentumSide side, int kills, double nowHours)
+    {
+        // value is on the ×100 store scale: displayed = value/100 = kills × KillMomentumPerHundred / 100
+        // (so KillMomentumPerHundred is "displayed momentum per 100 kills"). 0 disables.
+        if (kills <= 0 || Config.Events.KillMomentumPerHundred <= 0)
+            return;
+
+        int value = kills * Config.Events.KillMomentumPerHundred;
+        AddEvent(state, side, MomentumActionType.EnemiesKilled, value, _textService.KillsDescription(kills), nowHours);
     }
 
     private int CalculateBattleMomentum(MomentumWarState state, string loserKingdomId, int casualties, bool playerInvolved)

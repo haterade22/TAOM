@@ -78,12 +78,14 @@ public class MomentumConfigProvider : IMomentumConfigProvider
         rejected |= ValidateEventValue("raidMomentum", () => parsed.Events.RaidMomentum, v => parsed.Events.RaidMomentum = v, defaults.Events.RaidMomentum);
         rejected |= ValidateEventValue("armyMomentum", () => parsed.Events.ArmyMomentum, v => parsed.Events.ArmyMomentum = v, defaults.Events.ArmyMomentum);
         rejected |= ValidateEventValue("maxStrengthMomentum", () => parsed.Events.MaxStrengthMomentum, v => parsed.Events.MaxStrengthMomentum = v, defaults.Events.MaxStrengthMomentum);
+        rejected |= ValidateEventValue("killMomentumPerHundred", () => parsed.Events.KillMomentumPerHundred, v => parsed.Events.KillMomentumPerHundred = v, defaults.Events.KillMomentumPerHundred);
 
         rejected |= ValidateDuration("battleWon", () => parsed.DurationsHours.BattleWon, v => parsed.DurationsHours.BattleWon = v, defaults.DurationsHours.BattleWon);
         rejected |= ValidateDuration("siege", () => parsed.DurationsHours.Siege, v => parsed.DurationsHours.Siege = v, defaults.DurationsHours.Siege);
         rejected |= ValidateDuration("raid", () => parsed.DurationsHours.Raid, v => parsed.DurationsHours.Raid = v, defaults.DurationsHours.Raid);
         rejected |= ValidateDuration("armyGathered", () => parsed.DurationsHours.ArmyGathered, v => parsed.DurationsHours.ArmyGathered = v, defaults.DurationsHours.ArmyGathered);
         rejected |= ValidateDuration("relativeStrength", () => parsed.DurationsHours.RelativeStrength, v => parsed.DurationsHours.RelativeStrength = v, defaults.DurationsHours.RelativeStrength);
+        rejected |= ValidateDuration("enemiesKilled", () => parsed.DurationsHours.EnemiesKilled, v => parsed.DurationsHours.EnemiesKilled = v, defaults.DurationsHours.EnemiesKilled);
 
         if (!FiniteFloatValidator.IsFiniteInRange(parsed.Player.ParticipationMultiplier, 1f, 100f))
         {

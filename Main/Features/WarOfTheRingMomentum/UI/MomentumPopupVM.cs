@@ -198,6 +198,8 @@ public sealed class MomentumPopupVM : ViewModel
                 return new TextObject("{=taom_wotr_fiefs_captured}Fiefs Captured").ToString();
             case MomentumActionType.ArmyGathered:
                 return new TextObject("{=taom_wotr_army_gathered}Armies Gathered").ToString();
+            case MomentumActionType.EnemiesKilled:
+                return new TextObject("{=taom_wotr_enemies_killed}Enemies Killed").ToString();
             case MomentumActionType.RelativeStrength:
                 return new TextObject("{=taom_wotr_relative_strength}Relative Strength").ToString();
             default:

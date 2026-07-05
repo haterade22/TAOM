@@ -11,5 +11,6 @@ public enum MomentumActionType
     BattleWon,
     VillageRaided,
     Sieges,
-    RelativeStrength
+    RelativeStrength,
+    EnemiesKilled
 }

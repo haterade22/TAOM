@@ -3,18 +3,20 @@
   "victoryEnabled": false,
   "victoryThreshold": 500,
   "events": {
-    "maxBattleMomentum": 300,
-    "siegeMomentum": 250,
+    "maxBattleMomentum": 350,
+    "siegeMomentum": 400,
     "raidMomentum": 50,
     "armyMomentum": 200,
-    "maxStrengthMomentum": 0
+    "maxStrengthMomentum": 0,
+    "killMomentumPerHundred": 10
   },
   "durationsHours": {
     "battleWon": 504,
     "siege": 504,
     "raid": 504,
     "armyGathered": 168,
-    "relativeStrength": 12
+    "relativeStrength": 12,
+    "enemiesKilled": 504
   },
   "player": {
     "requireParticipationForVictory": true,

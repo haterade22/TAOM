@@ -40,6 +40,10 @@ public class MomentumEventValuesConfig
     public int ArmyMomentum { get; set; } = 200;
     /// <summary>Cap for the daily strength-differential award.</summary>
     public int MaxStrengthMomentum { get; set; } = 300;
+    /// <summary>Momentum per 100 enemies killed in battle — raw attrition, NOT strength-normalized
+    /// like BattleWon (so a war's kill count actually feeds the meter). Displayed = kills × this ÷ 100.
+    /// 0 disables the Enemies-Killed source entirely (no award, no breakdown row).</summary>
+    public int KillMomentumPerHundred { get; set; } = 10;
 }
 
 public class MomentumDurationsConfig
@@ -49,6 +53,7 @@ public class MomentumDurationsConfig
     public int Raid { get; set; } = 504;
     public int ArmyGathered { get; set; } = 168;     // 7 days
     public int RelativeStrength { get; set; } = 12;  // 12 hours
+    public int EnemiesKilled { get; set; } = 504;    // 21 days, like battles
 
     public int GetHours(MomentumActionType type)
     {
@@ -59,6 +64,7 @@ public class MomentumDurationsConfig
             case MomentumActionType.VillageRaided: return Raid;
             case MomentumActionType.ArmyGathered: return ArmyGathered;
             case MomentumActionType.RelativeStrength: return RelativeStrength;
+            case MomentumActionType.EnemiesKilled: return EnemiesKilled;
             default: return BattleWon;
         }
     }

@@ -27,6 +27,7 @@
 	<string id="taom_wotr_desc_raid" text="{PARTY} of {FACTION} raided the village of {SETTLEMENT}." />
 	<string id="taom_wotr_desc_army" text="An army led by {LEADER} has gathered." />
 	<string id="taom_wotr_desc_strength" text="We are {PERCENTAGE}% stronger than our enemies!" />
+	<string id="taom_wotr_desc_kills" text="Our forces slew {CASUALTIES} enemies in battle." />
 
 	<!-- Victory inquiry -->
 	<string id="taom_wotr_victory_title" text="End of the War" />
