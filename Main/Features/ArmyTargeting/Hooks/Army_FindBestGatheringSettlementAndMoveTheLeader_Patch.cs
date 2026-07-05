@@ -1,7 +1,8 @@
 using System;
 using HarmonyLib;
-using TAOM.Core.Logging;
+using TAOM.Features.ArmyTargeting.Diagnostics;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Settlements;
 
 namespace TAOM.Features.ArmyTargeting.Hooks;
 
@@ -24,28 +25,33 @@ namespace TAOM.Features.ArmyTargeting.Hooks;
 /// skips relocating its gathering leader this tick (vanilla already null-guards
 /// <c>AiBehaviorObject</c> downstream — Army.cs:480-490/564) and re-plans next tick — strictly
 /// better than a CTD. Mirrors the Patch47/48 vanilla-crash-guard pattern.
+///
+/// DIAGNOSTICS: before swallowing, it records the army/kingdom/focus-settlement context to
+/// <see cref="ISiegeGatheringDiagnosticsService"/> so the dead-end sieges become a reviewable
+/// to-fix list (one deduplicated WARNING per problem siege) instead of a silent breadcrumb. The
+/// whole diagnostic path is inside the try/catch — if it throws, the NRE is still suppressed, so
+/// the crash guard is never weakened. Harmony injects <c>__instance</c> (the Army) and the original
+/// <c>focusSettlement</c> argument into the finalizer.
 /// </summary>
 [HarmonyPatch(typeof(Army), "FindBestGatheringSettlementAndMoveTheLeader")]
 [HarmonyPatchCategory("Patch49_ArmyGatheringNreGuard")]
 public static class Army_FindBestGatheringSettlementAndMoveTheLeader_Patch
 {
-    private static IModLogger _logger;
+    private static ISiegeGatheringDiagnosticsService _diagnostics;
 
     [HarmonyFinalizer]
-    public static Exception Finalizer(Exception __exception)
+    public static Exception Finalizer(Exception __exception, Army __instance, Settlement focusSettlement)
     {
         if (!(__exception is NullReferenceException)) return __exception;
 
         try
         {
-            _logger ??= IoC.Resolve<IModLogger>();
-            _logger?.LogDebug(
-                "ArmyGatheringGuard: suppressed vanilla NRE in Army.FindBestGatheringSettlementAndMoveTheLeader " +
-                "(army has no resolvable gathering fortification).");
+            _diagnostics ??= IoC.Resolve<ISiegeGatheringDiagnosticsService>();
+            _diagnostics?.Record(SiegeGatheringFailureInfo.FromArmy(__instance, focusSettlement));
         }
         catch
         {
-            // IoC not ready / logging failure must never re-throw out of a Finalizer.
+            // IoC not ready / diagnostics failure must never re-throw out of a Finalizer.
         }
 
         return null; // swallow — the map tick continues, no CTD

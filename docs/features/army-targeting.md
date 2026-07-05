@@ -132,6 +132,11 @@ Three sections. All optional — missing entries default to vanilla behaviour.
 | `Main/Features/ArmyTargeting/ArmyTargetingSettingsProvider.cs` | Reads MCM `TaomSettings.Instance` with fallback defaults |
 | `Main/Features/ArmyTargeting/ArmyTargetingIoC.cs` | DryIoc Singleton registration |
 | `Main/Features/ArmyTargeting/Hooks/AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch.cs` | Harmony Postfix — substitutes border proximity floor for priority-list targets |
+| `Main/Features/ArmyTargeting/Hooks/Army_FindBestGatheringSettlementAndMoveTheLeader_Patch.cs` | Patch49 Harmony Finalizer — swallows the vanilla siege-start NRE + records diagnostics |
+| `Main/Features/ArmyTargeting/Diagnostics/SiegeGatheringFailureInfo.cs` | Boundary DTO + `FromArmy` factory (sole sealed-type reader; fortification census) |
+| `Main/Features/ArmyTargeting/Diagnostics/SiegeGatheringFailureReason.cs` | Failure classification enum |
+| `Main/Features/ArmyTargeting/Diagnostics/ISiegeGatheringDiagnosticsService.cs` | Diagnostics service interface |
+| `Main/Features/ArmyTargeting/Diagnostics/SiegeGatheringDiagnosticsService.cs` | Classify + dedup + format + WARNING/DEBUG log |
 | `Main/Features/TaomSettings.cs` | MCM property declarations |
 | `Main/_Module/ModuleData/configs/army_targeting.json` | Faction priority lists |
 
@@ -152,6 +157,11 @@ No TaleWorlds adapter interfaces are required — the service works exclusively 
   - `GetTargetMultiplier` (12): feature disabled, commitment stickiness, non-committed, null committed, first/middle/last priority entry, combined commitment+priority, null faction, unknown faction, empty list, single-entry list
   - `GetStrengthMultiplier` (5): feature disabled, null faction, configured value, unknown faction, scale applied
   - `GetDistanceCompensation` (3): faction not in priority list, target not in priority list, target in list with scale
+- `TAOM.Tests/Features/ArmyTargeting/SiegeGatheringDiagnosticsServiceTests.cs` — 14 tests:
+  - `Classify` (6): kingdom-null, no-fortifications, all-under-siege, fortifications-available (NoReachable), counts-unavailable, null-info
+  - `Record` (4): first occurrence → WARNING once, same siege twice → WARNING+DEBUG, distinct sieges → WARNING each, null info → no log
+  - `Format` (4): key fields present, counts-unavailable → `n/a`, NaN positions → `?`, null/blank fields render safely
+  - (`FromArmy` boundary + the finalizer are in-game-validated per ADR-008 — no unit tests)
 
 ## How to Add a New Faction Priority List
 
@@ -184,8 +194,41 @@ No TaleWorlds adapter interfaces are required — the service works exclusively 
 
 **Implemented:** `Patch22_ArmyTargeting` — Harmony Postfix on `CalculateDistanceScoreForBesieging`. When `bestDistanceScore == 0` and the target is in the faction's priority list, substitutes `BorderProximityFloor` (MCM, default 0.15). This ensures `GetTargetScoreForFaction` is at least called for priority targets.
 
+## Patch49 — Siege-gathering dead-end guard + diagnostics
+
+### The vanilla crash
+
+`Army.FindBestGatheringSettlementAndMoveTheLeader` (called from `Army.OnSiegeStarted` on the map tick that starts a siege) dereferences `settlement.GatePosition` at `Army.cs:726` **with no null guard** when a besieger army can't resolve a gathering fortification — every `Kingdom.Settlements` fortification is under siege / out of range **and** `SettlementHelper.FindNearestFortificationToMobileParty` returns null. A null `Kingdom` (kingdomless leader clan) throws in the same method at `Army.cs:659`. This is a vanilla missing-null-guard; TAOM's aggressive cross-map siege targeting (Patch22, above) only makes it more reachable. Crash report 2026-06-17 (issue #285), Bannerlord v1.4.6.
+
+### The guard
+
+`Patch49_ArmyGatheringNreGuard` — a Harmony **Finalizer** on `FindBestGatheringSettlementAndMoveTheLeader` that swallows **only** `NullReferenceException` (rethrows anything else) and returns null. The broken army skips relocating its gathering leader this tick (vanilla already null-guards `AiBehaviorObject` downstream at Army.cs:480-490/564) and re-plans next tick — strictly better than a CTD. Finalizer (not Prefix) is the right pattern for a *managed* NRE; contrast Patch47/48/57's prevent-the-call Prefixes for *native* AVs a finalizer can't catch. Registered unconditionally in `SubModule.OnSubModuleLoad` right after `Patch22_ArmyTargeting`.
+
+> **Debugger note:** a Finalizer runs *after* the throw, so under an attached debugger with break-on-`NullReferenceException` enabled this still surfaces as a **first-chance exception** at `Army.cs:726` (`Source = "0Harmony"`, a `[Lightweight Function]` frame). That is expected — pressing Continue lets the finalizer suppress it; there is no CTD in shipped play. Don't chase the first-chance break; read the diagnostics log instead.
+
+### The diagnostics (what makes dead-end sieges reviewable)
+
+The finalizer records the failure context to `ISiegeGatheringDiagnosticsService` before swallowing, turning a silent breadcrumb into a to-fix list. The whole diagnostic path is inside the finalizer's try/catch, so if it ever throws the NRE is still suppressed — the crash guard is never weakened.
+
+- **Boundary DTO** `SiegeGatheringFailureInfo.FromArmy(Army, Settlement)` — the sole reader of sealed types (ADR-007 boundary, mirrors `TownFoodSnapshot.FromTown`). Every access is null-guarded; it walks `Kingdom.Settlements` **once** to census `total` / `under-siege` fortifications (no MapDistanceModel re-run).
+- **Classification** (`SiegeGatheringFailureReason`, inferred from the census): `KingdomNull` → `NoFortifications` → `AllFortificationsUnderSiege` → `NoReachableFortification` (the interesting map/navmesh case — fortifications exist but none is navigable from the leader party) → `Unknown`.
+- **Service** `SiegeGatheringDiagnosticsService` dedups by `(kingdomId, focusSettlementId)`: the **first** occurrence logs full detail at **WARNING**; repeats increment a counter and drop to DEBUG so WARNINGs never spam. Routed through the existing `IModLogger` → `Logs/taom_debug_{timestamp}.log`; grep the `[SiegeDiag]` tag.
+
+Example line (one per distinct problem siege):
+
+```
+[WARNING] [SiegeDiag] Army 'Yazdâr Army' (leader Yazdâr, clan clan_sh_8, kingdom Shaghâna [Shaghana])
+could not resolve a gathering fortification for focus 'Kôth Rau' [town_SH_koth_rau, culture shaghana,
+faction Shaghana]. Reason=NoReachableFortification. Fortifications: 6 total, 2 under siege.
+Leader@(412.3,180.7) focus@(455.1,205.9). Time=Winter 3, 1118.
+```
+
+To fix a flagged siege: look at the kingdom's fortification census + the leader/focus positions. `AllFortificationsUnderSiege` is usually transient; `NoFortifications` / `NoReachableFortification` point at map data (give the kingdom a reachable fortress, or a navmesh/region gap between the leader party and its nearest fort — e.g. the TAOM_Map naval navmesh gaps, #120).
+
 ## Changelog
 
+- 2026-07-05 — Enriched `Patch49_ArmyGatheringNreGuard` with `ISiegeGatheringDiagnosticsService`: the finalizer now records army/kingdom/focus-settlement context + a fortification census, deduplicated into one `[SiegeDiag]` WARNING per problem siege, so dead-end sieges are reviewable instead of a silent breadcrumb. +14 tests. Guard behavior unchanged.
+- 2026-06-17 — Added `Patch49_ArmyGatheringNreGuard` (issue #285): Harmony Finalizer swallowing the vanilla siege-start NRE in `Army.FindBestGatheringSettlementAndMoveTheLeader` (`Army.cs:726` null `GatePosition` / `:659` null `Kingdom`).
 - 2026-04-04 — Phase 2: added `Patch22_ArmyTargeting` Harmony Postfix on `CalculateDistanceScoreForBesieging` substituting a "Border Proximity Floor" (default 0.15) for priority targets vanilla scores at 0.
 - 2026-04-04 — Added evil-faction aggression (`FactionAggressionMultipliers` strength-gate bypass) + large-map distance compensation (`FactionDistanceRangeMultipliers`) to `TaomTargetScoreModel`, with MCM aggression/long-range sliders.
 - 2026-04-03 — Initial feature: `TaomTargetScoreModel` adds Besieger army commitment stickiness + JSON faction priority lists, with MCM toggle, Commitment Multiplier, and Priority List Boost.

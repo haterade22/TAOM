@@ -1,5 +1,18 @@
 # CHANGELOG — TAOM (Tales From the Age of Men)
 
+## 2026-07-05
+
+### feat(diagnostics): log which sieges hit the vanilla gathering dead end
+
+`Patch49_ArmyGatheringNreGuard` already swallows the vanilla siege-start NRE in `Army.FindBestGatheringSettlementAndMoveTheLeader` (`Army.cs:726` null `GatePosition`) so a besieger army that can't resolve a gathering fortification no longer CTDs — but the finalizer logged only a context-free `LogDebug` breadcrumb, so there was no way to see *which* sieges are broken. The guard now records the failure context before swallowing, turning the dead end into a reviewable to-fix list.
+
+- New `ISiegeGatheringDiagnosticsService` (+ `SiegeGatheringDiagnosticsService`): classifies each failure (`KingdomNull` / `NoFortifications` / `AllFortificationsUnderSiege` / `NoReachableFortification` / `Unknown`), **dedups by `(kingdom, focus settlement)`** — first occurrence logs full detail at **WARNING**, repeats increment a counter and drop to DEBUG so WARNINGs never spam. Routed through the existing `IModLogger` → `Logs/taom_debug_*.log`; grep the `[SiegeDiag]` tag.
+- Boundary DTO `SiegeGatheringFailureInfo.FromArmy(Army, Settlement)` is the sole sealed-type reader (ADR-002/007, mirrors `TownFoodSnapshot.FromTown`): army/leader/clan/kingdom + focus settlement id/name/culture/faction + a one-pass `Kingdom.Settlements` fortification census (total / under-siege) + leader & focus map positions + campaign time. Every access is null-guarded — it never throws a secondary exception.
+- The finalizer widens to inject Harmony's `__instance` + `focusSettlement`; the whole diagnostic path sits inside the existing try/catch, so if it ever throws the NRE is still suppressed — **the crash guard is never weakened, behavior is otherwise unchanged**.
+- +14 tests (`SiegeGatheringDiagnosticsServiceTests`): every `Classify` branch, dedup/level routing, and null/NaN-safe `Format`. Full suite green (4106 passed). `FromArmy` + the finalizer stay in-game-validated (ADR-008).
+
+Note: the guard runs *after* the throw, so under an attached debugger the NRE still surfaces as a first-chance exception at `Army.cs:726` (`Source = "0Harmony"`) — expected, not a guard failure; press Continue and read the `[SiegeDiag]` log. See `docs/features/army-targeting.md` "Patch49".
+
 ## 2026-07-04
 
 ### feat(momentum): reskin the War of the Ring map bar with custom LOTR art
@@ -22,6 +35,8 @@ Play-test follow-ups during iteration:
 - **Relative Strength retired** (`momentum.json` `maxStrengthMomentum` 300→0) — Evil out-strengths the Free Peoples for most of a campaign, so the daily strength-differential award handed Evil free momentum every day regardless of what either side did. `MomentumEventService.AwardDailyStrengthMomentum` now early-returns when the cap is ≤ 0, and `RelativeStrength` is excluded from the popup breakdown so no dead "Relative Strength 0/0" row shows. Config-reversible (set the cap > 0). 145 momentum tests green.
 - **Map-bar title moved below** — the taller custom frame overlapped the "War of the Ring" title (the `ButtonWidget` drew it on top via a stale `MarginTop`). Title + bar now stack in a vertical `ListPanel` with the title **below** the frame. (Note: the editor sprite-bake's post-run sync copies the install's `GUI/PreFabs/` back over the repo, which reverted this + the popup side-swap once — re-applied; deploy repo→install and don't sync prefabs install→repo.)
 - **Popup banner flicker** (`MomentumPopupVM`) — leader/ally banners flashed in and vanished. Root cause: the popup live-recomputes on every `MomentumChanged`, and each `Rebuild` re-created the `BannerImageIdentifierVM`s; banner textures render asynchronously, so a fresh event replaced each VM before its texture finished. Fixed by building the banner/roster VMs **once** at open and refreshing only the numbers (total/color/breakdown/stats) on change — the enrolled factions don't change during the popup's brief life. Not a reskin regression (pre-existing in the live-recompute path).
+
+New helper `tools/sync_sprite_bake.ps1` — copies ONLY the editor sprite-bake outputs (manifest + `AssetSources/GauntletUI/` + `Assets/GauntletUI/`, mirrored) from the game install back to the repo, and nothing else. Replaces the manual whole-folder copy that was silently reverting repo prefab/brush/JSON edits (the root cause of the "it keeps using the old png / my change didn't take" churn this session). Source files flow repo→install via `build.ps1` only.
 
 **Not-tested:** the three sprites are loose PNGs that must be packed by the editor sprite-generation (`SpriteSheetGenerator.exe` + the `ui_taom_*_tex.tpac` texture-compile) before they render — a loose PNG is blank until baked. Sizes/alignment are first estimates; the bake + one in-game tuning pass are the remaining step (baked ≠ visible). Feature doc: `docs/features/war-of-the-ring-momentum.md` "UI & display".
 
