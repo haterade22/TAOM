@@ -140,15 +140,11 @@ public class SpecialResourceService : ISpecialResourceService
         if (resource == null) return;
 
         var net = ComputeDailyNet(heroId, resource, ownedTownCount, troopsWithUpkeep);
-        var before = _storage.Get(heroId, resource.Id);
 
         if (net >= 0)
             AddCapped(heroId, resource, net);
         else
             _storage.Add(heroId, resource.Id, net);
-
-        var after = _storage.Get(heroId, resource.Id);
-        _logger.LogDebug($"[SpecRes] DAILY: net={net:+0.0;-0.0} ({ownedTownCount} towns) | {before:F0}→{after:F0}");
     }
 
     public float GetProjectedDailyNet(string heroId, string kingdomId, string cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)

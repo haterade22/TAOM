@@ -28,7 +28,7 @@ public class PlayerMomentumServiceTests
         _settings.ParticipationMultiplier.Returns(1.5f);
         _playerContext.GetPlayerKingdomId().Returns("");
 
-        _sut = new PlayerMomentumService(_stateStore, _settings, _playerContext, _logger);
+        _sut = new PlayerMomentumService(_stateStore, _settings, _playerContext);
     }
 
     // ---- RecordPlayerEvent ----

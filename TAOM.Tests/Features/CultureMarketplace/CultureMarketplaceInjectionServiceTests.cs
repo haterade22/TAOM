@@ -54,6 +54,21 @@ public class CultureMarketplaceInjectionServiceTests
     }
 
     [TestMethod]
+    public void SelectItems_MissingPool_LogsNoPoolWarningOncePerCulture()
+    {
+        _poolService.GetPool("undefined").Returns((CultureItemPool)null);
+        var sut = NewSut();
+
+        sut.SelectItems("undefined", 0, new Random(42));
+        sut.SelectItems("undefined", 0, new Random(42));
+
+        // Log-hygiene guard: "No pool for culture" is a static per-session fact — the
+        // pool set builds once, so a pool-less culture stays pool-less. It must log once,
+        // not on every daily tick (this was ~17k lines in a single session).
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("No pool for culture 'undefined'")));
+    }
+
+    [TestMethod]
     public void SelectItems_AtCap_ReturnsEmpty()
     {
         _poolService.GetPool("gondor").Returns(MakePool("gondor", ("a", 1f), ("b", 1f)));

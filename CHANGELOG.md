@@ -2,6 +2,18 @@
 
 ## 2026-07-04
 
+### chore(logging): trim now-redundant per-tick diagnostics from four working features
+
+A single 2.5-hour session produced a 21 MB / 169,676-line `taom_debug_*.log` — 97.5% of it per-tick tracing from features that are now confirmed working (and the log is bundled into crash reports via `IModLogger.LogFilePath`, so it bloated every crash ZIP). `FileLogger` has no level filter, so the noise was removed at the call sites; all WARNING/ERROR lines and the one-time "feature loaded" INFO markers are kept.
+
+- **AlignmentDesertion** — the `AlignmentDesertionBehavior` desertion log (INFO, 60,432 lines this session, **0** of them player-relevant) now gates on `isPlayerOwned`, so only the player's own desertions record; AI-kingdom desertions no longer log.
+- **CultureMarketplace** — the per-town daily summary (DEBUG, ~87.9k lines; 89% were `+0 injected` no-ops) reverts to its pre-2026-05-21 `>0` gate (logs only when a pass changed the roster); the per-tick "No pool for culture X" (~16.9k) and "no owner culture" lines gain once-per-culture / once-per-settlement `HashSet` guards.
+- **Momentum** — deleted the per-battle `Player event recorded` DEBUG counter (~1.3k) and removed the now-dead injected `IModLogger` from `PlayerMomentumService` (enrollment/victory INFO is unaffected).
+- **SpecialResources** — deleted the per-day `DAILY: net=…` DEBUG (~1.1k). The resolve/`CanAfford` DEBUG lines were left as-is (already once-per-key guarded, or bounded to the open party screen); every resource-reward line stays INFO.
+- **Diplomacy** — dropped the two allowed-path `AllianceActionHook` DEBUG lines; the blocked-path INFO stays.
+
+Net: ~170k → ~2k lines per session, with every meaningful marker preserved. One regression test pins the CultureMarketplace once-per-culture guard. Full suite 4087 pass.
+
 ### feat(caravan): AI caravans range further, trade across the war, carry fuller baskets
 
 New `CaravanTrade` feature (`Patch59_CaravanTrade`) — four Harmony postfixes on vanilla `CaravansCampaignBehavior` private methods plus two `TaomCaravanModel` overrides, all delegating to a pure `ICaravanTradeService`. Fixes the "caravans shuttle between Minas Tirith and East/West Osgiliath and only buy one good" behavior. Mirrors the `ArmyTargeting` service+config+MCM pattern; **master-off = exact vanilla**, fully save-clean (no `SyncData`).

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Adapters;
@@ -35,6 +36,10 @@ public class CultureMarketplaceBehavior : CampaignBehaviorBase
     // Deep-review 2026-05-21 (Data Flow #8): OnNewGameCreatedPartialFollowUpEvent fires for
     // i ∈ [0, 99]. One-shot flag prevents re-running the uncapped initial sweep 98 times.
     private bool _initialSweepDone;
+
+    // Log-hygiene: an owner-less town is a rare/static condition; warn once per settlement
+    // rather than on every daily tick.
+    private readonly HashSet<string> _warnedNoOwnerCulture = new(StringComparer.OrdinalIgnoreCase);
 
     public CultureMarketplaceBehavior(
         ICultureItemPoolService poolService,
@@ -133,7 +138,9 @@ public class CultureMarketplaceBehavior : CampaignBehaviorBase
         var cultureId = _townAdapter.GetCurrentCultureId(settlement);
         if (string.IsNullOrEmpty(cultureId))
         {
-            _logger.LogDebug($"[CultureMarketplace] Skip {_townAdapter.GetSettlementId(settlement)}: no owner culture");
+            var sid = _townAdapter.GetSettlementId(settlement);
+            if (_warnedNoOwnerCulture.Add(sid))
+                _logger.LogDebug($"[CultureMarketplace] Skip {sid}: no owner culture");
             return;
         }
 
@@ -149,10 +156,9 @@ public class CultureMarketplaceBehavior : CampaignBehaviorBase
                 added++;
         }
 
-        // 2026-05-21 diagnostic: log every tick unconditionally (was gated on >0). The
-        // user reported foreign items at Rivendell but town_R1 had zero log entries —
-        // we need to know whether the tick fires at all and what each pass produces.
-        // Filter + roster count + picks-count surface the full decision context.
-        _logger.LogDebug($"[CultureMarketplace] {_townAdapter.GetSettlementId(settlement)} ({cultureId}): rosterCount={rosterCount}, picks={picks.Count}, +{added} injected, +{topUp} guaranteed, -{removed} foreign");
+        // Log-hygiene: only record a town when a pass actually changed the roster; the
+        // "+0 injected, +0 guaranteed, -0 foreign" no-op case was ~89% of the daily volume.
+        if (added > 0 || topUp > 0 || removed > 0)
+            _logger.LogDebug($"[CultureMarketplace] {_townAdapter.GetSettlementId(settlement)} ({cultureId}): rosterCount={rosterCount}, picks={picks.Count}, +{added} injected, +{topUp} guaranteed, -{removed} foreign");
     }
 }

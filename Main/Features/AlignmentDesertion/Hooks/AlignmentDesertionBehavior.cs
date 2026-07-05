@@ -126,7 +126,10 @@ public class AlignmentDesertionBehavior : CampaignBehaviorBase
         if (total <= 0)
             return;
 
-        _logger.LogInfo($"[AlignDesert] {total} opposed-alignment troops deserted (kingdom={kingdomId}, player={isPlayerOwned}, garrison={isGarrison})");
+        // Log-hygiene: only the player's own desertions are worth recording; AI-kingdom
+        // desertions fire on every party/garrison daily and never surface to the player.
+        if (isPlayerOwned)
+            _logger.LogInfo($"[AlignDesert] {total} opposed-alignment troops deserted (kingdom={kingdomId}, garrison={isGarrison})");
 
         if (showPlayerPopup)
         {

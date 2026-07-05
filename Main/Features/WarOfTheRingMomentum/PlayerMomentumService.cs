@@ -1,5 +1,4 @@
 using TAOM.Adapters;
-using TAOM.Core.Logging;
 using TAOM.Features.WarOfTheRingMomentum.Domain;
 
 namespace TAOM.Features.WarOfTheRingMomentum;
@@ -15,18 +14,15 @@ public class PlayerMomentumService : IPlayerMomentumService
     private readonly IMomentumStateStore _stateStore;
     private readonly IMomentumSettingsProvider _settings;
     private readonly IPlayerContextAdapter _playerContext;
-    private readonly IModLogger _logger;
 
     public PlayerMomentumService(
         IMomentumStateStore stateStore,
         IMomentumSettingsProvider settings,
-        IPlayerContextAdapter playerContext,
-        IModLogger logger)
+        IPlayerContextAdapter playerContext)
     {
         _stateStore = stateStore;
         _settings = settings;
         _playerContext = playerContext;
-        _logger = logger;
     }
 
     public void RecordPlayerEvent(MomentumActionType actionType)
@@ -37,8 +33,6 @@ public class PlayerMomentumService : IPlayerMomentumService
         int maxEvents = _settings.MinimumPlayerEventsForVictory * 2;
         while (events.Count > maxEvents)
             events.RemoveAt(0);
-
-        _logger.LogDebug($"[Momentum] Player event recorded: {actionType}. Total player events: {events.Count}");
     }
 
     public bool HasPlayerMetVictoryRequirement()

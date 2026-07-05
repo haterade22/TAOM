@@ -11,6 +11,10 @@ public class CultureMarketplaceInjectionService : ICultureMarketplaceInjectionSe
     private readonly MarketplaceTuning _tuning;
     private readonly IModLogger _logger;
 
+    // Log-hygiene: a pool-less culture is a static fact for the session (pools build once),
+    // so warn only the first time each culture is seen, not on every daily tick.
+    private readonly HashSet<string> _warnedMissingPools = new(StringComparer.OrdinalIgnoreCase);
+
     public CultureMarketplaceInjectionService(
         ICultureItemPoolService poolService,
         MarketplaceTuning tuning,
@@ -38,7 +42,8 @@ public class CultureMarketplaceInjectionService : ICultureMarketplaceInjectionSe
         var pool = _poolService.GetPool(cultureId);
         if (pool == null || pool.Items.Count == 0 || pool.TotalWeight <= 0f)
         {
-            _logger.LogDebug($"[CultureMarketplace] No pool for culture '{cultureId}' — no items injected");
+            if (_warnedMissingPools.Add(cultureId))
+                _logger.LogDebug($"[CultureMarketplace] No pool for culture '{cultureId}' — no items injected");
             return Array.Empty<string>();
         }
 

@@ -19,8 +19,6 @@ public class AllianceActionHook : IOnAllianceAction
         var isPermanent = _diplomacyService.GetRelationshipTier(kingdomAId, kingdomBId) == AllianceTier.Permanent;
         if (isPermanent)
             _logger.LogInfo($"[Diplomacy] Alliance end blocked: {kingdomAId} <-> {kingdomBId} (Permanent)");
-        else
-            _logger.LogDebug($"[Diplomacy] Alliance end allowed: {kingdomAId} <-> {kingdomBId}");
         return isPermanent;
     }
 
@@ -29,8 +27,6 @@ public class AllianceActionHook : IOnAllianceAction
         var blocked = !_diplomacyService.IsWarAllowed(factionAId, factionBId);
         if (blocked)
             _logger.LogInfo($"[Diplomacy] War declaration blocked: {factionAId} <-> {factionBId}");
-        else
-            _logger.LogDebug($"[Diplomacy] War declaration allowed: {factionAId} <-> {factionBId}");
         return blocked;
     }
 }
